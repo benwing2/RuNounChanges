@@ -345,6 +345,7 @@ labels["Vietnamese Classical Chinese"] = {
 labels["Mandarin"] = {
 	Wikidata = "Q9192",
 	regional_categories = true,
+	parent = true,
 }
 
 labels["dialectal Mandarin"] = {
@@ -582,6 +583,7 @@ labels["Malaysian Mandarin"] = {
 	aliases = {"Malaysia Mandarin"},
 	Wikidata = "Q13646143",
 	plain_categories = true,
+	parent = "Non-Mainland Mandarin",
 }
 
 labels["Muping Mandarin"] = {
@@ -622,6 +624,15 @@ labels["Northeastern Mandarin"] = {
 	parent = true,
 }
 
+labels["Non-Mainland Mandarin"] = {
+	prep = "by",
+	region = "ethnic Chinese outside of [[mainland China]], including in [[Hong Kong]] and [[Macau]] due to their special history",
+	aliases = {"non-Mainland Mandarin", "non-mainland Mandarin"},
+	plain_categories = true,
+	parent = true,
+	othercat = "Non-Mainland Chinese",
+}
+
 -- FIXME: Category missing.
 labels["Philippine Mandarin"] = {
 	prep = "by",
@@ -629,6 +640,7 @@ labels["Philippine Mandarin"] = {
 	aliases = {"Philippines Mandarin"},
 	Wikidata = "Q7185155",
 	plain_categories = true,
+	parent = "Non-Mainland Mandarin",
 }
 
 -- FIXME: Category missing.
@@ -658,6 +670,7 @@ labels["Singapore Mandarin"] = {
 	aliases = {"Singaporean Mandarin"},
 	Wikidata = "Q1048980",
 	plain_categories = true,
+	parent = "Non-Mainland Mandarin",
 }
 
 labels["Southwestern Mandarin"] = {
@@ -678,6 +691,7 @@ labels["Taiwanese Mandarin"] = {
 	aliases = {"Taiwan Mandarin"},
 	Wikidata = "Q262828",
 	plain_categories = true,
+	parent = "Non-Mainland Mandarin",
 }
 
 labels["Tianjin Mandarin"] = {
@@ -762,6 +776,7 @@ labels["Xinjiang Mandarin"] = {
 	aliases = {"Xinjiang"},
 	Wikidata = "Q93684068",
 	plain_categories = true,
+	parent = true,
 }
 
 labels["Xuzhou Mandarin"] = {
@@ -887,44 +902,62 @@ labels["Zigong Sichuanese"] = {
 ------------------------------------------ Min ------------------------------------------
 
 labels["Min"] = {
+	def = "a broad group of {{w|Sinitic languages}} spoken in most of [[Fujian]] Province in southeast [[China]]; in nearly all of coastal [[Taiwan]]; in coastal eastern [[Guangdong]] Province; on the [[Leizhou]] Peninsula in southernmost [[Guangdong]] Province; on [[Hainan]] Island south of [[Guangdong]]; in isolated pockets in southern [[Zhejiang]] Province; and in overseas communities across [[Southeast Asia]] as well as [[Japan]], the [[United States]] and [[Canada]]",
 	Wikidata = "Q56504",
 	regional_categories = true,
+	parent = true,
 }
 
 labels["Central Min"] = {
+	reigon = "the {{w|Sha River}} valley in the [[prefecture-level city]] of [[Sanming]] in central mountainous [[Fujian]] Province in southeastern [[China]], consisting of the [[county-level city]] of [[Yong'an]], the urban {{w|Sanyuan District|Sanyuan}} and {{w|Meilie District}}s of [[Sanming]], and the {{w|Shaxian District}} (formerly {{w|Sha County}})",
 	aliases = {"Min Zhong"},
 	Wikidata = "Q56435",
 	regional_categories = true,
+	parent = "Inland Min",
 }
 
 labels["Coastal Min"] = {
+	def = "a family of {{w|Sinitic languages}} spoken in coastal [[Fujian]] Province in southeast [[China]]; in nearly all of coastal [[Taiwan]]; in coastal eastern [[Guangdong]] Province; on the [[Leizhou]] Peninsula in southernmost [[Guangdong]] Province; on [[Hainan]] Island south of [[Guangdong]]; in isolated pockets in southern [[Zhejiang]] Province; and in overseas communities across [[Southeast Asia]] as well as [[Japan]], the [[United States]] and [[Canada]]",
+	addl = "The vast majority of {{catlink|Min Chinese}} speakers are Coastal Min speakers, but the {{catlink|Inland Min Chinese}} languages show much greater variety.",
 	aliases = {"coastal Min"},
 	Wikidata = "Q20667215",
+	parent = "Min",
 }
 
 -- The following violates normal conventions, which would use "Hainanese Min' or 'Hainan Min'. But it matches the
 -- 'Hainanese' language and Wikipedia.
 labels["Hainanese"] = {
+	region = "the coastal parts of [[Hainan]] Island south of [[Guangdong]] Province in southern [[China]], as well as by {{w|Overseas Chinese}} in [[Singapore]], [[Malaysia]], [[Thailand]], [[Indonesia]], [[Cambodia]] and [[Vietnam]]",
+	addl = "The phylogeny of Hainanese is debated, with some classifying it as part of [[:Category:Southern Min Chinese|Southern Min]] but others leaving it as a separate primary branch of [[:Category:Coastal Min Chinese|Coastal Min]] or grouping it with [[:Category:Leizhou Min Chinese|Leizhou Min]] into a Qiong-Lei group.",
 	aliases = {"Hainan Min", "Hainanese Min", "Hainan Min Chinese"},
 	Wikidata = "Q934541",
 	regional_categories = true,
+	parent = "Coastal Min",
 }
 
 labels["Inland Min"] = {
+	def = "a family of {{w|Sinitic languages}} spoken in inland [[Fujian]] Province in southeast [[China]]",
+	addl = "Although the Inland Min languages represent less than 10% of {{catlink|Min Chinese}} speakers, they show much greater variety compared with {{catlink|Coastal Min Chinese}}.",
 	aliases = {"inland Min"},
 	Wikidata = "Q20667237",
+	parent = "Min",
 }
 
 labels["Leizhou Min"] = {
+	region = "the {{w|Leizhou Penisula}}, particularly the [[county-level city]] of [[Leizhou]]; {{w|Mazhang}} District and parts of [[Xiashan District]] of the [[prefecture-level city]] of [[Zhanjiang]]; {{w|Xuwen County}} and most parts of [[Suixi County, Guangdong|Suixi County]] in [[Zhanjiang]]; as well as by migrants in [[Hong Kong]], [[Macau]], [[Taiwan]], [[Singapore]], [[Malaysia]], [[Indonesia]] and the [[United States]]",
 	aliases = {"Leizhou"},
 	Wikidata = "Q1988433",
 	regional_categories = true,
+	parent = "Coastal Min",
 }
 
 labels["Puxian Min"] = {
+	prep = "between",
+	region = "[[:Category:Southern Min Chinese|Southern Min]] and [[:Category:Eastern Min Chinese|Eastern Min]] territory in coastal [[Fujian]] Province in southeastern [[China]], especially in the urban parts of the [[prefecture-level city]] of [[Putian]] and in {{w|Xianyou County}}; in some parts of [[Fuzhou]] and [[Quanzhou]]; in {{w|Wuqiu Township, Kinmen County}}, under the jurisdiction of [[Taiwan]]; and {{w|Overseas Chinese|overseas}} in [[Malayia]], [[Indonesia]] and [[Singapore]]",
 	aliases = {"Puxian", "Pu-Xian Min", "Pu-Xian", "Xinghua", "Hinghwa"},
 	Wikidata = "Q56583",
 	regional_categories = true,
+	parent = "Coastal Min",
 }
 
 -- FIXME: Category missing.
@@ -932,11 +965,14 @@ labels["Shaojiang Min"] = {
 	aliases = {"Shaojiang"},
 	Wikidata = "Q3431451",
 	regional_categories = true,
+	parent = "Inland Min",
 }
 
 labels["Zhongshan Min"] = {
+	aliases = {"Zhongshan"},
 	Wikidata = "Q8070958",
 	regional_categories = true,
+	parent = "Coastal Min",
 }
 
 ---------------------- Eastern Min ----------------------
@@ -963,18 +999,19 @@ labels["Changle Eastern Min"] = {
 
 -- FIXME: Category missing.
 labels["Fu'an Eastern Min"] = {
-	-- A subvariety of Funing Eastern Min; the representative variety.
+	-- The representative variety of Funing Eastern Min.
 	aliases = {"Fu'an"},
 	Wikidata = "Q7216573",
 	plain_categories = true,
+	parent = "Funing Eastern Min",
 }
 
 -- FIXME: Category missing.
 labels["Fuding Eastern Min"] = {
-	-- A subvariety of Funing Eastern Min.
 	aliases = {"Fuding", "Tongshan", "Tongshan Eastern Min"},
 	Wikidata = "Q19853248",
 	plain_categories = true,
+	parent = "Funing Eastern Min",
 }
 
 -- FIXME: Category missing.
@@ -988,26 +1025,27 @@ labels["Funing Eastern Min"] = {
 
 -- FIXME: Category missing.
 labels["Fuqing Eastern Min"] = {
-	-- A subvariety of Houguan Eastern Min.
 	aliases = {"Fuqing"},
 	Wikidata = "Q15895753",
 	plain_categories = true,
+	parent = "Houguan Eastern Min",
 }
 
 -- FIXME: Category missing.
 labels["Fuzhou Eastern Min"] = {
-	-- A subvariety of Houguan Eastern Min; the representative variety.
+	-- The representative variety of Houguan Eastern Min.
 	aliases = {"Fuzhou"},
 	Wikidata = "Q35571",
 	plain_categories = true,
+	parent = "Houguan Eastern Min",
 }
 
 -- FIXME: Category missing.
 labels["Gutian Eastern Min"] = {
-	-- A subvariety of Houguan Eastern Min.
 	aliases = {"Gutian"},
 	Wikidata = "Q18944085",
 	plain_categories = true,
+	parent = "Houguan Eastern Min",
 }
 
 -- FIXME: Category missing.
@@ -1030,10 +1068,10 @@ labels["Houguan Eastern Min"] = {
 
 -- FIXME: Category missing.
 labels["Lianjiang Eastern Min"] = {
-	-- A subvariety of Fuzhou Eastern Min, which is a subvariety of Houguan Eastern Min.
 	aliases = {"Lianjiang"},
 	Wikidata = "Q19856291",
 	plain_categories = true,
+	parent = "Fuzhou Eastern Min", -- a subvariety of Houguan Eastern Min
 }
 
 -- FIXME: Category missing.
@@ -1050,58 +1088,58 @@ labels["Manjiang Eastern Min"] = {
 
 -- FIXME: Category missing.
 labels["Matsu Eastern Min"] = {
-	-- A subvariety of Fuzhou Eastern Min, which is a subvariety of Houguan Eastern Min.
 	aliases = {"Matsu"},
 	Wikidata = "Q19599280",
 	plain_categories = true,
+	parent = "Fuzhou Eastern Min", -- a subvariety of Houguan Eastern Min
 }
 
 -- FIXME: Category missing.
 labels["Minqing Eastern Min"] = {
-	-- A subvariety of Houguan Eastern Min.
 	aliases = {"Minqing"},
 	Wikidata = "Q48897247",
 	plain_categories = true,
+	parent = "Houguan Eastern Min",
 }
 
 -- FIXME: Category missing.
 labels["Ningde Eastern Min"] = {
-	-- A subvariety of Funing Eastern Min.
 	aliases = {"Ningde"},
 	Wikidata = "Q18941249",
 	plain_categories = true,
+	parent = "Funing Eastern Min",
 }
 
 -- FIXME: Category missing.
 labels["Shouning Eastern Min"] = {
-	-- A subvariety of Funing Eastern Min.
 	aliases = {"Shouning"},
 	Wikidata = "Q19852223",
 	plain_categories = true,
+	parent = "Funing Eastern Min",
 }
 
 -- FIXME: Category missing.
 labels["Xiapu Eastern Min"] = {
-	-- A subvariety of Funing Eastern Min.
 	aliases = {"Xiapu"},
 	Wikidata = "Q15899756",
 	plain_categories = true,
+	parent = "Funing Eastern Min",
 }
 
 -- FIXME: Category missing.
 labels["Zherong Eastern Min"] = {
-	-- A subvariety of Funing Eastern Min.
 	aliases = {"Zherong"},
 	Wikidata = "Q19852850",
 	plain_categories = true,
+	parent = "Funing Eastern Min",
 }
 
 -- FIXME: Category missing.
 labels["Zhouning Eastern Min"] = {
-	-- A subvariety of Funing Eastern Min.
 	aliases = {"Zhouning", "Zhoudun", "Zhoudun Eastern Min"},
 	Wikidata = "Q19852132",
 	plain_categories = true,
+	parent = "Funing Eastern Min",
 }
 
 ---------------------- Northern Min ----------------------
@@ -1185,6 +1223,7 @@ labels["Southern Min"] = {
 	Wikidata = "Q36495",
 	regional_categories = true,
 	track = true,
+	parent = "Coastal Min",
 }
 
 labels["dialectal Southern Min"] = {
@@ -1197,6 +1236,7 @@ labels["Datian Min"] = {
 	aliases = {"Datian"},
 	Wikidata = "Q19855572",
 	regional_categories = true,
+	parent = "Southern Min",
 }
 
 -- FIXME: Category missing.
@@ -1204,6 +1244,15 @@ labels["Haklau Min"] = {
 	aliases = {"Hoklo Min", "Haklau", "Hoklo"},
 	Wikidata = "Q120755728",
 	regional_categories = true,
+	parent = "Southern Min",
+}
+
+-- FIXME: Category missing.
+labels["Zhenan Min"] = {
+	aliases = {"Zhenan"},
+	Wikidata = "Q3846710",
+	regional_categories = true,
+	parent = "Southern Min",
 }
 
 ---------------- Hokkien ----------------
@@ -1663,6 +1712,7 @@ labels["Jinxiang Wu"] = {
 -- FIXME: Category missing.
 labels["Jingjiang Wu"] = {
 	region = "the [[county-level city]] of [[Jingjiang]] in southeast [[Jiangsu]] Province in eastern [[China]]",
+	addl = "The current urban center of Jingjiang uses a {{catlink|Jianghuai Mandarin}} variety, but the Wu variety is still spoken in the rural coastal parts, thus gaining the nickname {{lang|zh|老岸話}} ('Old Coast Speech')",
 	aliases = {"Lao'an", "Jingjiang", "Lao'an"},
 	Wikipedia = "zh:老岸话", -- no Wikidata item yet
 	plain_categories = true,
@@ -1679,7 +1729,7 @@ labels["Lin'an Wu"] = {
 }
 
 labels["Linshao Wu"] = {
-	region = "much of north-central [[Zhejiang]] Province in eastern [[China]], including especially the central part of the city of [[Shaoxing]] as well as some parts (but not the central part) of [[Hangzhou]]",
+	region = "much of north-central [[Zhejiang]] Province in eastern [[China]], including especially the central part of the city of [[Shaoxing]] as well as parts of [[Hangzhou]] south of the [[Qiantang]] River.",
 	aliases = {"Linshao", "Lin-Shao Wu", "Lin-Shao"},
 	Wikidata = "Q7489194", -- article for Shaoxing dialect, the representative variety
 	plain_categories = true,
@@ -1687,8 +1737,8 @@ labels["Linshao Wu"] = {
 }
 
 labels["Ningbonese Wu"] = {
-	region = "the [[prefecture-level city|prefecture-level cities]] of [[Ningbo]] and [[Zhoushan]] in northeastern [[Zhejiang]] Province in eastern [[China]]",
-	aliases = {"Ningbonese", "Ningbo Wu", "Ningbo"},
+	region = "the [[prefecture-level city]] of [[Ningbo]] in northeastern [[Zhejiang]] Province in eastern [[China]]",
+	aliases = {"Ningbonese", "Ningbo Wu", "Ningbo", "Ningponese"},
 	-- FIXME: Consider removing the following exception and letting it display as 'Ningbonese Wu'.
 	display = "Ningbonese",
 	Wikidata = "Q3972199",
@@ -1727,6 +1777,7 @@ labels["Old Langxi Wu"] = {
 -- FIXME: Category missing.
 labels["Piling Wu"] = {
 	region = "much of southern [[Jiangsu]] Province (including especially the city of [[Changzhou]]) as well as a few parts of southeastern [[Anhui]] Province, in eastern [[China]]",
+	addl = "It is noteworthy for acting as a transitional area between {{catlink|Jianghuai Mandarin}} and Northern Wu.",
 	aliases = {"Piling"},
 	Wikidata = "Q1021819", -- article for Changzhou dialect
 	plain_categories = true,
@@ -1743,7 +1794,7 @@ labels["Shadi Wu"] = {
 
 -- FIXME: Category missing.
 labels["Shanghainese Wu"] = {
-	region = "the central districts and surrounding areas of [[Shanghai]] in eastern [[China]]",
+	region = "much of [[Shanghai]] in eastern [[China]], including suburban and rural regions",
 	aliases = {"Shanghai Wu", "Shanghainese"},
 	-- FIXME: Consider removing the following exception and letting it display as 'Shanghainese Wu'.
 	display = "Shanghainese",
@@ -1791,7 +1842,7 @@ labels["Songjiang Wu"] = {
 -- FIXME: Category missing.
 labels["Sujiahu Wu"] = {
 	region = "the city of [[Shanghai]] as well as adjacent areas to the north (in southern [[Jiangsu]] Province) and the south (in northern [[Zhejiang]] Province)",
-	addl = "It is named after the cities of [[Suzhou]]  (''Su''), [[Jiaxing]] (''Jia'') and [[Shanghai]] (''Hu'', the abbreviation of Shanghai, based on an old name for {{w|Suzhou Creek}}, which passes through the center of Shanghai). It also encompasses the varieties spoken in [[Wuxi]], [[Changshu]] and [[Nantong]]. Although it is a common grouping, it may be areal in nature and not a proper [[clade]].",
+	addl = "It is named after the cities of [[Suzhou]]  (''Su''), [[Jiaxing]] (''Jia'') and [[Shanghai]] (''Hu''). It also encompasses the varieties spoken in [[Wuxi]], [[Changshu]] and [[Nantong]].",
 	aliases = {"Sujiahu", "Su-Jia-Hu Wu", "Su-Jia-Hu", "Suhujia Wu", "Suhujia", "Su-Hu-Jia Wu", "Su-Hu-Jia"}, -- not Suzhou-Jiaxing-Huzhou
 	Wikidata = "Q17036256",
 	-- display = "[[w:Suzhou dialect|Su]][[w:zh:嘉興話|jia]][[w:Shanghainese|hu]] [[w:Wu Chinese|Wu]]",
@@ -1811,7 +1862,7 @@ labels["Suzhounese Wu"] = {
 
 -- FIXME: Category missing.
 labels["Tiaoxi Wu"] = {
-	region = "nearly all of the [[prefecture-level city]] of [[Huzhou]] in northwestern [[Zhejiang]] Province in eastern [[China]], as well as parts of [[Jiaxing]] and [[Hangzhou]] (in [[Zhejiang]] Province) and [[Suzhou]] (in [[Jiangsu]] Province)",
+	region = "nearly all of the [[prefecture-level city]] of [[Huzhou]] in northwestern [[Zhejiang]] Province in eastern [[China]], as well as parts of [[Jiaxing]], [[Hangzhou]] (in [[Zhejiang]] Province) and [[Suzhou]] (in [[Jiangsu]] Province)",
 	aliases = {"Tiaoxi"},
 	Wikidata = "Q110104620",
 	plain_categories = true,
@@ -1838,7 +1889,7 @@ labels["Tongxiang Wu"] = {
 
 -- FIXME: Category missing.
 labels["Urban Shanghainese Wu"] = {
-	region = "the city center of [[Shanghai]] in eastern [[China]]; generally on the west bank of the [[Huangpu]] River",
+	region = "the city center of [[Shanghai]] in eastern [[China]]; generally on the west bank of the [[Huangpu]] River in the area known as [[Puxi]]",
 	addl = "Urban Shanghainese is changing rapidly and can be further subdivided into Old, Middle, New and Newest periods.",
 	aliases = {"Urban Shanghai Wu", "Urban Shanghainese", "Urban Shanghai"},
 	Wikipedia = "Shanghainese#Classification",
@@ -1952,7 +2003,8 @@ labels["Chuqu Wu"] = {
 
 -- FIXME: Category missing.
 labels["Chuzhou Wu"] = {
-	region = "a region approximately coinciding with (but slightly larger than) the historical {{m|zh|處州|tr=Chǔzhōu}} Prefecture (see {{w|lang=zh|處州}}), consisting of the modern-day [[prefecture-level city]] of [[Lishui]] in southwestern [[Zhejiang]] Province and {{w|Wuyi County}} to the north, as well as {{w|Pucheng County, Fujian|Pucheng County}} in far northern [[Fujian]] Province",
+	region = "the [[prefecture-level city]] of [[Lishui]] in southwestern [[Zhejiang]] Province and {{w|Wuyi County}} to the north, as well as {{w|Pucheng County, Fujian|Pucheng County}} in far northern [[Fujian]] Province",
+	addl = "It is named after the historical {{m|zh|處州|tr=Chǔzhōu}} Prefecture (see {{w|lang=zh|處州}}), which largely coincided with the modern-day boundaries of Lishui.",
 	aliases = {"Chuzhou"},
 	-- Undefined in Chinese Wikipedia
 	plain_categories = true,
@@ -2148,10 +2200,10 @@ labels["Pan'an Wu"] = {
 }
 
 -- FIXME: Category missing.
-labels["Pucheng Ou Wu"] = {
+labels["Pucheng Oujiang Wu"] = {
 	region = "four villages in the walled {{w|lang=zh|蒲壮所城|Puzhuangsuo City}} in Pucheng Township, {{w|Cangnan County}} in the southernmost part of the [[prefecture-level city]] of [[Wenzhou]] in southeastern [[Zhejiang]] Province in eastern [[China]]",
 	addl = "It is a dialect island of Wu Chinese surrounded by {{w|Zhenan Min}} speakers, and is not to be confused with {{catlink|Pucheng Wu}}, a variety of {{catlink|Chuqu Wu}} (rather than {{catlink|Oujiang Wu}}) spoken in a different Pucheng ({{w|Pucheng County, Fujian|Pucheng County}} in [[Fujian]] Province).",
-	aliases = {"Pucheng Ou"},
+	aliases = {"Pucheng Ou", "Pucheng Auish"},
 	Wikipedia = "zh:蒲城瓯语", -- no Wikidata item yet
 	plain_categories = true,
 	parent = "Oujiang Wu",
@@ -2161,7 +2213,7 @@ labels["Pucheng Ou Wu"] = {
 labels["Pucheng Wu"] = {
 	-- no "Pucheng" alias because per Wikipedia, Northern Min (Shibei dialect) is also spoken
 	region = "the northern part of {{w|Pucheng County, Fujian|Pucheng County}} in far northern [[Fujian]] Province, bordering [[Zhejiang]] Province, in eastern [[China]]",
-	addl = "Not to be confused with {{catlink|Pucheng Ou Wu}}, a variety of {{catlink|Oujiang Wu}} (rather than {{catlink|Chuqu Wu}}) spoken in a different Pucheng (Pucheng Township, {{w|Cangnan County}}, in [[Zhejiang]] Province).",
+	addl = "Not to be confused with {{catlink|Pucheng Oujiang Wu}}, a variety of {{catlink|Oujiang Wu}} (rather than {{catlink|Chuqu Wu}}) spoken in a different Pucheng (Pucheng Township, {{w|Cangnan County}}, in [[Zhejiang]] Province).",
 	Wikipedia = "zh:浦城话", -- no Wikidata item yet
 	Wikidata = "Q1338032", -- article on Pucheng County, Fujian
 	plain_categories = true,
