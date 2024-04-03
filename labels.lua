@@ -72,13 +72,16 @@ function export.get_langs_to_extract_wikipedia_articles_from_wikidata(lang)
 	return wikipedia_langs
 end
 
--- Fetch the categories to add to a page, given that the label `label` with language `lang` has been seen. `labdata` is
--- the label data structure for `label`, fetched from the appropriate submodule. If `term_mode` is specified, the label
--- was invoked using {{tl|tlb}}; otherwise, {{tl|lb}}. The return value is a list of the actual categories, unless
--- `for_doc` is specified, in which case the categories returned are marked up for display on a documentation page.
--- If `for_doc` is given, `lang` may be nil to format the categories in a language-independent fashion; otherwise, it
--- must be specified.
-local function fetch_categories(label, labdata, lang, term_mode, for_doc)
+--[==[
+Fetch the categories to add to a page, given that the label whose canonical form is `canon_label` with language `lang`
+has been seen. `labdata` is the label data structure for `label`, fetched from the appropriate submodule. If `term_mode`
+is specified, the label was invoked using {{tl|tlb}}; otherwise, {{tl|lb}}. The return value is a list of the actual
+categories, unless `for_doc` is specified, in which case the categories returned are marked up for display on a
+documentation page. If `for_doc` is given, `lang` may be nil to format the categories in a language-independent fashion;
+otherwise, it must be specified. If `category_types` is specified, it should be a set object (i.e. with category types
+as keys and {true} as values), and only categories of the specified types will be returned.
+]==]
+function export.fetch_categories(canon_label, labdata, lang, term_mode, for_doc, category_types)
 	local categories = {}
 
 	local langcode, canonical_name
@@ -93,7 +96,11 @@ local function fetch_categories(label, labdata, lang, term_mode, for_doc)
 	end
 
 	local empty_list = {}
-	local function canonicalize_categories(cats)
+	local function get_cats(cat_type)
+		if category_types and not category_types[cat_type] then
+			return empty_list
+		end
+		local cats = labdata[cat_type]
 		if not cats then
 			return empty_list
 		end
@@ -103,11 +110,11 @@ local function fetch_categories(label, labdata, lang, term_mode, for_doc)
 		return cats
 	end
 
-	local topical_categories = canonicalize_categories(labdata.topical_categories)
-	local sense_categories = canonicalize_categories(labdata.sense_categories)
-	local pos_categories = canonicalize_categories(labdata.pos_categories)
-	local regional_categories = canonicalize_categories(labdata.regional_categories)
-	local plain_categories = canonicalize_categories(labdata.plain_categories)
+	local topical_categories = get_cats("topical_categories")
+	local sense_categories = get_cats("sense_categories")
+	local pos_categories = get_cats("pos_categories")
+	local regional_categories = get_cats("regional_categories")
+	local plain_categories = get_cats("plain_categories")
 
 	local function insert_cat(cat, sense_cat)
 		if for_doc then
@@ -126,27 +133,27 @@ local function fetch_categories(label, labdata, lang, term_mode, for_doc)
 	end
 
 	for _, cat in ipairs(topical_categories) do
-		insert_cat(langcode .. ":" .. (cat == true and ucfirst(label) or cat))
+		insert_cat(langcode .. ":" .. (cat == true and ucfirst(canon_label) or cat))
 	end
 	
 	for _, cat in ipairs(sense_categories) do
 		if cat == true then
-			cat = label
+			cat = canon_label
 		end
 		cat = (term_mode and cat .. " terms" ) or "terms with " .. cat .. " senses"
 		insert_cat(canonical_name .. " " .. cat, true)
 	end
 
 	for _, cat in ipairs(pos_categories) do
-		insert_cat(canonical_name .. " " .. (cat == true and label or cat))
+		insert_cat(canonical_name .. " " .. (cat == true and canon_label or cat))
 	end
 	
 	for _, cat in ipairs(regional_categories) do
-		insert_cat((cat == true and ucfirst(label) or cat) .. " " .. canonical_name)
+		insert_cat((cat == true and ucfirst(canon_label) or cat) .. " " .. canonical_name)
 	end
 	
 	for _, cat in ipairs(plain_categories) do
-		insert_cat(cat == true and ucfirst(label) or cat)
+		insert_cat(cat == true and ucfirst(canon_label) or cat)
 	end
 
 	return categories
@@ -286,8 +293,7 @@ Return information on a label. On input `data` is an object with the following f
 * `nocat`: If true, don't add the label to any categories.
 * `already_seen`: An object used to track labels already seen, so they aren't displayed twice. Tracking is according
   to the display form of the label, so if two labels have the same display form, the second one won't be displayed
-  (but its categories will still be added). This must be specified even if this functionality isn't needed; use { {}}
-  in that case.
+  (but its categories will still be added).
 
 The return value is an object with the following fields:
 * `raw_label`: The original label that was passed in.
@@ -371,7 +377,7 @@ function export.get_label_info(data)
 	
 	-- Track label text. If label text was previously used, don't show it, but include the categories.
 	-- For an example, see [[hypocretin]].
-	if data.already_seen[label_for_already_seen] then
+	if data.already_seen and data.already_seen[label_for_already_seen] then
 		ret.label = ""
 	else
 		if displayed_label:find("{") then
@@ -383,7 +389,7 @@ function export.get_label_info(data)
 	if data.nocat then
 		ret.formatted_categories = ""
 	else
-		local cats = fetch_categories(label, labdata, data.lang, data.term_mode, data.for_doc)
+		local cats = export.fetch_categories(label, labdata, data.lang, data.term_mode, data.for_doc)
 		for _, cat in ipairs(cats) do
 			table.insert(ret.categories, cat)
 		end
@@ -401,7 +407,7 @@ function export.get_label_info(data)
 
 	ret.data = labdata
 
-	if label_for_already_seen then
+	if label_for_already_seen and data.already_seen then
 		data.already_seen[label_for_already_seen] = true
 	end
 
