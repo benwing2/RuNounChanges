@@ -11,9 +11,9 @@
 local export = {}
 
 -- Named constants for all modules used, to make it easier to swap out sandbox versions.
+local alternative_forms_module = "Module:alternative forms"
 local check_isxn_module = "Module:check isxn"
 local debug_track_module = "Module:debug/track"
-local dialect_tags_module = "Module:dialect tags"
 local italics_module = "Module:italics"
 local languages_module = "Module:languages"
 local links_module = "Module:links"
@@ -124,13 +124,26 @@ local function yesno(val, default)
 	return require(yesno_module)(val, default)
 end
 
--- Convert a raw tag= param (or nil) to a list of formatted dialect tags; unrecognized tags are passed through
--- unchanged. Return nil if nil passed in.
-local function tags_to_dialects(lang, tags)
-	if not tags then
+-- Convert a raw tag= param (or nil) to a list of tag info objects of the format described in
+-- [[Module:alternative forms]] (similar to the return value of get_label_info() in [[Module:labels]]). Unrecognized
+-- tags will end up with an unchanged display form, as for labels. Return nil if nil passed in.
+local function get_tag_info(raw_tags, lang)
+	if not raw_tags then
 		return nil
 	end
-	return require(dialect_tags_module).make_dialects(split_on_comma(tags), lang)
+	return require(alternative_forms_module).get_tag_info(split_on_comma(raw_tags), lang)
+end
+
+-- Parse a raw tag= param (or nil) to individual tag info objects and then concatenate them appropriately into a
+-- qualifier input, respecting flags like `omit_preComma` and `omit_postSpace` in the label specs.
+local function parse_and_format_tags(raw_tags, lang)
+	local tags = get_tag_info(raw_tags, lang)
+	if tags then
+		tags = require(alternative_forms_module).concatenate_tags(tags, nil, nil, "no outer CSS class")
+		if tags ~= "" then -- not sure tags can be an empty string but it seems possible in some circumstances
+			return {tags}
+		end
+	end
 end
 
 -- Convert a comma-separated list of language codes to a comma-separated list of language names. `fullname` is the
@@ -2530,7 +2543,7 @@ function export.quote_t(frame)
 			subst = args.subst,
 			lit = args.lit,
 			footer = args.footer,
-			qq = tags_to_dialects(lang, args.tag),
+			qq = parse_and_format_tags(args.tag, lang),
 			quote = "quote-meta",
 			orig = origtext,
 			origlang = origtextlang,
@@ -2540,7 +2553,7 @@ function export.quote_t(frame)
 			origtr = args.origtr,
 			origts = args.origts,
 			origsubst = args.origsubst,
-			origqq = tags_to_dialects(lang, args.origtag),
+			origqq = parse_and_format_tags(args.origtag, lang),
 		}
 		ins(require(usex_module).format_usex(usex_data))
 	end
