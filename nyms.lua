@@ -51,9 +51,9 @@ local function get_thesaurus_text(lang, args, maxindex)
 		local sc = lang:findBestScript(term):getCode()
 		local fragment = term:find("#")
 		if fragment then
-			link = "[[" .. args[2][maxindex] .. "|Thesaurus:" .. wrap_span(term:sub(1, fragment-1), lang:getCode(), sc) .. "]]"
+			link = "[[" .. args[2][maxindex] .. "#" .. lang:getCanonicalName() .. "|Thesaurus:" .. wrap_span(term:sub(1, fragment-1), lang:getCode(), sc) .. "]]"
 		else
-			link = "[[" .. args[2][maxindex] .. "|Thesaurus:" .. wrap_span(term, lang:getCode(), sc) .. "]]"
+			link = "[[" .. args[2][maxindex] .. "#" .. lang:getCanonicalName() .. "|Thesaurus:" .. wrap_span(term, lang:getCode(), sc) .. "]]"
 		end
 		
 		table.insert(thesaurus_links, 1, link)
