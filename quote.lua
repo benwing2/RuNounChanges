@@ -38,7 +38,7 @@ local rsplit = mw.text.split
 local rgsplit = mw.text.gsplit
 local ulen = mw.ustring.len
 local usub = mw.ustring.sub
-local u = mw.ustring.char
+local u = require("Module:string/char")
 
 -- Use HTML entities here to avoid parsing issues (esp. with brackets)
 local SEMICOLON_SPACE = "&#59; "
@@ -542,7 +542,7 @@ local function format_annotated_text(textobj, tag_text, tag_gloss)
 
 			if tr == "-" then
 				tr = nil
-			elseif not tr and sc and not sc:getCode():find("Latn") then -- Latn, Latnx or a lang-specific variant
+			elseif not tr and sc and not sc:getCode():find("Lat") then -- Latn, Latf, Latg, pjt-Latn
 				-- might return nil
 				local text_for_tr = text
 				if subst then
@@ -554,14 +554,11 @@ local function format_annotated_text(textobj, tag_text, tag_gloss)
 				tr = (lang:transliterate(text_for_tr, sc))
 			end
 
-			text = require(links_module).embedded_language_links(
-				{
-					term = text,
-					lang = lang,
-					sc = sc,
-				},
-				false
-			)
+			text = require(links_module).embedded_language_links{
+				term = text,
+				lang = lang,
+				sc = sc,
+			}
 			if lang:getCode() ~= "und" or sc:getCode() ~= "Latn" then
 				text = require(script_utilities_module).tag_text(text, lang, sc)
 			end
@@ -625,14 +622,11 @@ local function format_annotated_text(textobj, tag_text, tag_gloss)
 				end
 				lang = lang or require(languages_module).getByCode("und", true)
 				sc = sc or require(scripts_module).findBestScriptWithoutLang(ff.val)
-				local val = require(links_module).embedded_language_links(
-					{
-						term = ff.val,
-						lang = lang,
-						sc = sc
-					},
-					false
-				)
+				local val = require(links_module).embedded_language_links{
+					term = ff.val,
+					lang = lang,
+					sc = sc
+				}
 				if lang:getCode() ~= "und" or sc:getCode() ~= "Latn" then
 					val = require(script_utilities_module).tag_text(val, lang, sc)
 				end
@@ -892,7 +886,7 @@ local function format_date_args(a, get_full_paramname, alias_map, parampref, par
 		error(("Only one of |%s= or |%s= should be specified"):format(pname("start_date"), pname("start_year")))
 	end
 	if start_date and start_month then
-		error(("|%s= should only be specified in conjunction with |%s=, not with |%="):
+		error(("|%s= should only be specified in conjunction with |%s=, not with |%s="):
 			format(pname("start_month"), pname("start_year"), pname("start_date")))
 	end
 	if (start_date or start_year) and not (date or year) then
@@ -916,6 +910,9 @@ local function format_date_args(a, get_full_paramname, alias_map, parampref, par
 		else
 			-- Boldface a year spec if it's not already boldface.
 			if bold_year and not yearobj.text:find("'''") then
+				-- Clone the year object before modifying it because we may use it later to check against the current
+				-- year (if we're dealing with start_year).
+				yearobj = require(table_module).shallowcopy(yearobj)
 				yearobj.text = "'''" .. yearobj.text .. "'''"
 				if yearobj.alt then
 					yearobj.alt = "'''" .. yearobj.alt .. "'''"
@@ -951,7 +948,11 @@ local function format_date_args(a, get_full_paramname, alias_map, parampref, par
 
 		if cur_year ~= beg_year then
 			-- Different years; insert current date in full.
-			ins(dash)
+			if not cur_month or cur_month == beg_month then
+				ins("–")
+			else
+				ins(dash)
+			end
 			ins(format_date_or_year_month(date, yearobj, monthobj, day_explicitly_given, "date"))
 		elseif cur_month and cur_month ~= beg_month then
 			local month_ins = monthobj and format_annotated_text(monthobj) or cur_month
@@ -961,7 +962,11 @@ local function format_date_args(a, get_full_paramname, alias_map, parampref, par
 				ins(month_ins)
 				ins(" " .. cur_day)
 			else
-				ins("–")
+				if beg_day then
+					ins(dash)
+				else
+					ins("–")
+				end
 				ins(month_ins)
 			end
 		elseif cur_day and cur_day ~= beg_day then
@@ -2645,7 +2650,7 @@ function export.call_quote_template(frame)
 		other_direct_args.footer = frame:expandTemplate { title = "small", args = {args.footer} }
 	end
 	other_direct_args.brackets = args.brackets
-	if not other_direct_args.authorlink and not other_direct_args.author:find("[%[<]") then
+	if not other_direct_args.authorlink and other_direct_args.author and not other_direct_args.author:find("[%[<]") and not other_direct_args.author:match("w:") then
 		other_direct_args.authorlink = other_direct_args.author
 	end
 	for _, param in ipairs(params_to_propagate) do
