@@ -3,7 +3,7 @@ local export = {}
 local m_languages = require("Module:languages")
 local m_links = require("Module:links")
 local put_module = "Module:parse utilities"
-local dialect_tags_module = "Module:dialect tags"
+local alternative_forms_module = "Module:alternative forms"
 local rsplit = mw.text.split
 
 local function wrap_span(text, lang, sc)
@@ -27,13 +27,13 @@ local function split_on_comma(term)
 end
 
 
--- Convert a raw tag= param (or nil) to a list of formatted dialect tags; unrecognized tags are passed through
+-- Convert a raw tag= param (or nil) to a list of formatted label tags; unrecognized tags are passed through
 -- unchanged. Return nil if nil passed in.
-local function tags_to_dialects(lang, tags)
+local function get_tag_info(tags, lang)
 	if not tags then
 		return nil
 	end
-	return require(dialect_tags_module).make_dialects(split_on_comma(tags), lang)
+	return require(alternative_forms_module).get_tag_info(split_on_comma(tags), lang)
 end
 
 local function get_thesaurus_text(lang, args, maxindex)
@@ -215,17 +215,17 @@ function export.nyms(frame)
 	for i, item in ipairs(items) do
 		local tag_text = ""
 		if item.tag then
-			local tags = tags_to_dialects(lang, item.tag)
+			local tags = get_tag_info(item.tag, lang)
 			if tags then
-				tag_text = " " .. require("Module:qualifier").format_qualifier(tags, "[", "]")
+				tag_text = " " .. require(alternative_forms_module).concatenate_tags(tags, "[", "]")
 			end
 		end
 		items[i] = item.joiner .. (item.q and require("Module:qualifier").format_qualifier(item.q) .. " " or "") .. m_links.full_link(item.term)
 			.. (item.qq and " " .. require("Module:qualifier").format_qualifier(item.qq) or "") .. tag_text
 	end
 
-	local dialects = tags_to_dialects(lang, args.tag)
-	local tag_postq = dialects and " " .. require(dialect_tags_module).post_format_dialects(dialects) or ""
+	local tags = get_tag_info(args.tag, lang)
+	local tag_postq = tags and " &mdash; " .. require(alternative_forms_module).concatenate_tags(tags) or ""
 	return "<span class=\"nyms " .. nym_type_class .. "\"><span class=\"defdate\">" .. 
 		mw.getContentLanguage():ucfirst(nym_type) .. ((#items > 1 or thesaurus ~= "") and "s" or "") ..
 		":</span> " .. table.concat(items) .. tag_postq .. thesaurus .. "</span>"
