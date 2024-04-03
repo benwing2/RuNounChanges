@@ -4,7 +4,7 @@ local listToSet = require("Module:table/listToSet")
 local rsplit = mw.text.split
 
 local put_module = "Module:parse utilities"
-local dialect_tags_module = "Module:dialect tags"
+local alternative_forms_module = "Module:alternative forms"
 
 local export = {}
 
@@ -74,13 +74,14 @@ local function add_index_separated_list_param(params, param, type, alias_of)
 		list = param, allow_holes = true, require_index = true}
 end
 
--- Convert a raw tag= param (or nil) to a list of formatted dialect tags; unrecognized tags are passed through
--- unchanged. Return nil if nil passed in.
-local function tags_to_dialects(tags, lang)
+-- Convert a raw tag= param (or nil) to a list of tag info objects of the format described in
+-- [[Module:alternative forms]] (similar to the return value of get_label_info() in [[Module:labels]]). Unrecognized
+-- tags will end up with an unchanged display form, as for labels. Return nil if nil passed in.
+local function get_tag_info(tags, lang)
 	if not tags then
 		return nil
 	end
-	return require(dialect_tags_module).make_dialects(split_on_comma(tags), lang)
+	return require(alternative_forms_module).get_tag_info(split_on_comma(tags), lang)
 end
 
 -- Return a function of one argument `arg` (a param name), which fetches args[`arg`] if index == 0, else
@@ -144,7 +145,13 @@ local function get_pre_qualifiers(args, index, lang)
 	local quals
 
 	if index > 0 then
-		quals = tags_to_dialects(val("tag"), lang)
+		local tags = get_tag_info(val("tag"), lang)
+		if tags then
+			tags = require(alternative_forms_module).concatenate_tags(tags, nil, nil, "no outer CSS class")
+			if tags ~= "" then -- not sure tags can be an empty string but it seems possible in some circumstances
+				quals = {tags}
+			end
+		end
 	end
 	if val("q") then
 		quals = quals or {}
@@ -187,9 +194,9 @@ local function get_post_qualifiers(args, index, lang)
 		insert(postqs, require("Module:qualifier").format_qualifier(val("qq")))
 	end
 	if index == 0 then
-		local dialects = tags_to_dialects(val("tag"), lang)
-		if dialects then
-			insert(postqs, require(dialect_tags_module).post_format_dialects(dialects))
+		local tags = get_tag_info(val("tag"), lang)
+		if tags then
+			insert(postqs, "&mdash; " .. require(alternative_forms_module).concatenate_tags(tags))
 		end
 	end
 	if #postqs > 0 then
