@@ -909,7 +909,7 @@ labels["Min"] = {
 }
 
 labels["Central Min"] = {
-	reigon = "the {{w|Sha River}} valley in the [[prefecture-level city]] of [[Sanming]] in central mountainous [[Fujian]] Province in southeastern [[China]], consisting of the [[county-level city]] of [[Yong'an]], the urban {{w|Sanyuan District|Sanyuan}} and {{w|Meilie District}}s of [[Sanming]], and the {{w|Shaxian District}} (formerly {{w|Sha County}})",
+	region = "the {{w|Sha River}} valley in the [[prefecture-level city]] of [[Sanming]] in central mountainous [[Fujian]] Province in southeastern [[China]], consisting of the [[county-level city]] of [[Yong'an]], the urban {{w|Sanyuan District|Sanyuan}} and {{w|Meilie District}}s of [[Sanming]], and the {{w|Shaxian District}} (formerly {{w|Sha County}})",
 	aliases = {"Min Zhong"},
 	Wikidata = "Q56435",
 	regional_categories = true,
@@ -962,6 +962,8 @@ labels["Puxian Min"] = {
 
 -- FIXME: Category missing.
 labels["Shaojiang Min"] = {
+	region = "an area centered on the western part of the [[prefecture-level city]] of [[Nanping]] in northwest [[Fujian]] Province, specifically in {{w|Guangze County}}, western {{w|Shunchang County}} and the [[county-level city]] of [[Shaowu]], as well as {{w|Jiangle County}} under the jurisdiction of the [[prefecture-level city]] of [[Sanming]]",
+	addl = "The classification of Shaojiang Min is disputed, as it is transitional between {{catlink|Northern Min Chinese}} and {{catlink|Gan Chinese}}.",
 	aliases = {"Shaojiang"},
 	Wikidata = "Q3431451",
 	regional_categories = true,
@@ -969,6 +971,8 @@ labels["Shaojiang Min"] = {
 }
 
 labels["Zhongshan Min"] = {
+	def = "a group of three {{catlink|Coastal Min Chinese}} dialect islands in the [[prefecture-level city]] of [[Zhongshan]] in southern [[Guangdong]] Province in southern [[China]]",
+	addl = "The three dialects may not form a [[clade]]. Some researchers, e.g. {{w|Nicholas Bodman}}, believe that the [[:Category:Longdu Zhongshan Min|Longdu]] and [[:Category:Nanlang Zhongshan Min|Nanlang]] dialects belong to {{catlink|Eastern Min Chinese}} while the [[:Category:Sanxiang Zhongshan Min|Sanxiang]] dialect belongs to {{catlink|Southern Min Chinese}}.",
 	aliases = {"Zhongshan"},
 	Wikidata = "Q8070958",
 	regional_categories = true,
@@ -978,9 +982,11 @@ labels["Zhongshan Min"] = {
 ---------------------- Eastern Min ----------------------
 
 labels["Eastern Min"] = {
+	def = "a branch of the {{w|Sinitic languages}} spoken in eastern [[Fujian]] Province in southeast [[China]], as well as in parts of extreme southern [[Zhejiang]] Province to the north of Fujian and in the [[Matsu]] Islands (belonging to [[Taiwan]])",
 	aliases = {"Min Dong"},
 	Wikidata = "Q36455",
 	regional_categories = true,
+	parent = "Coastal Min",
 }
 
 labels["dialectal Eastern Min"] = {
@@ -991,15 +997,17 @@ labels["dialectal Eastern Min"] = {
 
 -- FIXME: Category missing.
 labels["Changle Eastern Min"] = {
-	-- A subvariety of Fuzhou Eastern Min, which is a subvariety of Houguan Eastern Min.
+	region = "[[Changle]] District, an urban district of the [[prefecture-level city]] of [[Fuzhou]], the capital of [[Fujian]] Province in southeast [[China]]",
 	aliases = {"Changle"},
 	Wikidata = "Q19856351",
 	plain_categories = true,
+	parent = "Fuzhou Eastern Min",
 }
 
 -- FIXME: Category missing.
 labels["Fu'an Eastern Min"] = {
 	-- The representative variety of Funing Eastern Min.
+	region = "the urban part of the [[county-level city]] of [[Fu'an]] in northeastern [[Fujian]] Province in southeast [[China]]",
 	aliases = {"Fu'an"},
 	Wikidata = "Q7216573",
 	plain_categories = true,
@@ -1008,6 +1016,7 @@ labels["Fu'an Eastern Min"] = {
 
 -- FIXME: Category missing.
 labels["Fuding Eastern Min"] = {
+	region = "most parts of the [[county-level city]] of {{w|Fuding}} in far northeastern [[Fujian]] Province in southeast [[China]]",
 	aliases = {"Fuding", "Tongshan", "Tongshan Eastern Min"},
 	Wikidata = "Q19853248",
 	plain_categories = true,
@@ -1017,41 +1026,26 @@ labels["Fuding Eastern Min"] = {
 -- FIXME: Category missing.
 labels["Funing Eastern Min"] = {
 	-- A primary branch; should possibly be called North Eastern Min.
+	region = "most parts of the [[prefecture-level city]] of [[Ningde]] in northeastern [[Fujian]] Province in southeast [[China]] (except for {{w|Gutian County}} and {{w|Pingnan County, Fujian|Pingnan County}})",
 	aliases = {"Funing"},
 	Wikidata = "Q18943896",
 	plain_categories = true,
-	parent = true,
+	parent = "Eastern Min",
 }
 
 -- FIXME: Category missing.
 labels["Fuqing Eastern Min"] = {
+	region = "the [[county-level city]] of [[Fuqing]] in eastern [[Fujian]] Province in southeast [[China]]",
 	aliases = {"Fuqing"},
 	Wikidata = "Q15895753",
 	plain_categories = true,
-	parent = "Houguan Eastern Min",
+	parent = "Fuzhou Eastern Min",
 }
 
 -- FIXME: Category missing.
 labels["Fuzhou Eastern Min"] = {
-	-- The representative variety of Houguan Eastern Min.
-	aliases = {"Fuzhou"},
-	Wikidata = "Q35571",
-	plain_categories = true,
-	parent = "Houguan Eastern Min",
-}
-
--- FIXME: Category missing.
-labels["Gutian Eastern Min"] = {
-	aliases = {"Gutian"},
-	Wikidata = "Q18944085",
-	plain_categories = true,
-	parent = "Houguan Eastern Min",
-}
-
--- FIXME: Category missing.
-labels["Houguan Eastern Min"] = {
 	-- A primary branch; should possibly be called South Eastern Min.
-	-- Other varieties of Houguan Eastern Min not given entries here because they have no associated Wikipedia
+	-- Other varieties of Fuzhou (Houguan) Eastern Min not given entries here because they have no associated Wikipedia
 	-- articles or Wikidata entries:
 	  -- Minhou Eastern Min
 	  -- Youxi Eastern Min
@@ -1060,10 +1054,21 @@ labels["Houguan Eastern Min"] = {
 	  -- Pingnan Eastern Min
 	  -- Pingtan Eastern Min
 	  -- Luoyuan Eastern Min
-	aliases = {"Houguan"},
-	Wikidata = "Q18943758",
+	aliases = {"Fuzhou", "Houguan Eastern Min", "Houguan"},
+	-- Of the following two, the first one is for [[w:Fuzhou dialect]], which describes the broad sense of the
+	-- "Fuzhou dialect", which is the same as Houguan; the second one is for [[w:zh:侯官片]] = "Houguan subgroup".
+	-- The narrow sense of "Fuzhou dialect" uses the label "Urban Fouzhou Eastern Min".
+	Wikidata = {"Q35571", "Q18943758"},
 	plain_categories = true,
-	parent = true,
+	parent = "Eastern Min",
+}
+
+-- FIXME: Category missing.
+labels["Gutian Eastern Min"] = {
+	aliases = {"Gutian"},
+	Wikidata = "Q18944085",
+	plain_categories = true,
+	parent = "Fuzhou Eastern Min",
 }
 
 -- FIXME: Category missing.
@@ -1071,7 +1076,7 @@ labels["Lianjiang Eastern Min"] = {
 	aliases = {"Lianjiang"},
 	Wikidata = "Q19856291",
 	plain_categories = true,
-	parent = "Fuzhou Eastern Min", -- a subvariety of Houguan Eastern Min
+	parent = "Fuzhou Eastern Min",
 }
 
 -- FIXME: Category missing.
@@ -1083,7 +1088,7 @@ labels["Manjiang Eastern Min"] = {
 	aliases = {"Manjiang", "Manhua Eastern Min", "Manhua", "Mango Eastern Min", "Mango"},
 	Wikidata = "Q3431721",
 	plain_categories = true,
-	parent = true,
+	parent = "Eastern Min",
 }
 
 -- FIXME: Category missing.
@@ -1091,7 +1096,7 @@ labels["Matsu Eastern Min"] = {
 	aliases = {"Matsu"},
 	Wikidata = "Q19599280",
 	plain_categories = true,
-	parent = "Fuzhou Eastern Min", -- a subvariety of Houguan Eastern Min
+	parent = "Fuzhou Eastern Min",
 }
 
 -- FIXME: Category missing.
@@ -1099,7 +1104,7 @@ labels["Minqing Eastern Min"] = {
 	aliases = {"Minqing"},
 	Wikidata = "Q48897247",
 	plain_categories = true,
-	parent = "Houguan Eastern Min",
+	parent = "Fuzhou Eastern Min",
 }
 
 -- FIXME: Category missing.
@@ -1116,6 +1121,15 @@ labels["Shouning Eastern Min"] = {
 	Wikidata = "Q19852223",
 	plain_categories = true,
 	parent = "Funing Eastern Min",
+}
+
+-- FIXME: Category missing.
+labels["Urban Fuzhou Eastern Min"] = {
+	-- The representative variety of Fuzhou (Houguan) Eastern Min.
+	aliases = {"Urban Fuzhou"},
+	Wikidata = "Q35571",
+	plain_categories = true,
+	parent = "Fuzhou Eastern Min",
 }
 
 -- FIXME: Category missing.
@@ -1687,7 +1701,7 @@ labels["Jinhui Wu"] = {
 	aliases = {"Jinhui", "Dangdai Wu", "Dangdai", "Dônđäc"},
 	Wikidata = "Q16259341",
 	plain_categories = true,
-	parent = "Sujiahu Wu",
+	parent = "Shanghainese Wu",
 }
 
 -- FIXME: Category missing.
@@ -1795,6 +1809,7 @@ labels["Shadi Wu"] = {
 -- FIXME: Category missing.
 labels["Shanghainese Wu"] = {
 	region = "much of [[Shanghai]] in eastern [[China]], including suburban and rural regions",
+	addl = "Entries here include terms used in urban Shanghai.",
 	aliases = {"Shanghai Wu", "Shanghainese"},
 	-- FIXME: Consider removing the following exception and letting it display as 'Shanghainese Wu'.
 	display = "Shanghainese",
