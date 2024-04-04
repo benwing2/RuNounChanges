@@ -110,13 +110,14 @@ def process_text_on_page(index, pagetitle, text):
 
   text = re.sub(r"\n\n+", "\n\n", text)
   if removed_cats:
-    notes.append("remove categories: %s" % ",".join(removed_cats))
+    notes.append("remove categories: %s%s" % (",".join(removed_cats), " (%s)" % args.comment if args.comment else ""))
   if text != origtext and not notes:
     notes.append("condense 3+ newlines")
   return text, notes
 
 parser = blib.create_argparser("Remove categories based on a regex", include_pagefile=True, include_stdin=True)
 parser.add_argument("--regex", required=True, help="Regex matching full category name to remove.")
+parser.add_argument("--comment", help="Comment fragment to add to comments indicating what is removed.")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
