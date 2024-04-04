@@ -1174,17 +1174,20 @@ labels["Zhouning Eastern Min"] = {
 ---------------------- Northern Min ----------------------
 
 labels["Northern Min"] = {
+	def = "a branch of the {{catlink|Inland Min}} languages spoken in the [[prefecture-level city]] of [[Nanping]] in northwestern [[Fujian]] Province in southeast [[China]]",
 	aliases = {"Min Bei"},
 	Wikidata = "Q36457",
 	regional_categories = true,
+	parent = "Inland Min",
 }
 
 -- FIXME: Category missing.
 labels["Chong'an Northern Min"] = {
-	-- A subvariety of Xixi Northern Min.
+	region = "the [[county-level city]] of {{w|Wuyishan, Fujian|Wuyishan}} (formerly Chong'an County) in northwestern [[Fujian]] Province in southeast [[China]]",
 	aliases = {"Chong'an", "Wuyishan Northern Min", "Wuyishan"},
 	Wikidata = "Q19855654",
 	plain_categories = true,
+	parent = "Xixi Northern Min",
 }
 
 -- FIXME: Category missing.
@@ -1193,7 +1196,7 @@ labels["Dongxi Northern Min"] = {
 	-- means "east", but the second xī does not mean "west" but more like "stream" or "creek".
 	-- No Wikidata link or Wikipedia entry for this
 	plain_categories = true,
-	parent = true,
+	parent = "Northern Min",
 }
 
 -- FIXME: Category missing.
@@ -1202,47 +1205,53 @@ labels["Xixi Northern Min"] = {
 	-- xī means "west", but the second xī does not mean "west" but more like "stream" or "creek".
 	-- No Wikidata link or Wikipedia entry for this
 	plain_categories = true,
-	parent = true,
+	parent = "Northern Min",
 }
 
 -- FIXME: Category missing.
 labels["Jian'ou Northern Min"] = {
-	-- A subvariety of Dongxi Northern Min; the representative variety.
+	-- The representative variety of Dongxi Northern Min.
+	region = "the [[county-level city]] of [[Jian'ou]] in northern [[Fujian]] Province in southeast [[China]]",
 	aliases = {"Jian'ou"},
 	Wikidata = "Q6191447",
 	plain_categories = true,
+	parent = "Dongxi Northern Min",
 }
 
 -- FIXME: Category missing.
 labels["Jianyang Northern Min"] = {
-	-- A subvariety of Xixi Northern Min; the representative variety.
+	-- The representative variety of Xixi Northern Min.
+	region = "[[Jianyang]] District of the [[prefecture-level city]] of [[Nanping]] in northwestern [[Fujian]] Province in southeast [[China]]",
 	aliases = {"Jianyang"},
 	Wikidata = "Q16930647",
 	plain_categories = true,
+	parent = "Xixi Northern Min",
 }
 
 -- FIXME: Category missing.
 labels["Nanping Northern Min"] = {
-	-- A subvariety of Dongxi Northern Min.
 	aliases = {"Nanping"},
 	Wikidata = "Q68534", -- the entry for the city of Nanping; currently no article for the lect
 	plain_categories = true,
+	parent = "Dongxi Northern Min",
 }
 
 -- FIXME: Category missing.
 labels["Songxi Northern Min"] = {
-	-- A subvariety of Dongxi Northern Min.
+	region = "{{w|Songxi County}} in northern [[Fujian]] Province in southeast [[China]]",
 	aliases = {"Songxi"},
 	Wikidata = "Q19855892",
 	plain_categories = true,
+	parent = "Dongxi Northern Min",
 }
 
 -- FIXME: Category missing.
 labels["Zhenghe Northern Min"] = {
-	-- A subvariety of Dongxi Northern Min.
+	region = "{{w|Zhenghe County}} in northern [[Fujian]] Province in southeast [[China]]",
 	aliases = {"Zhenghe"},
 	Wikidata = "Q19855758",
 	plain_categories = true,
+	parent = "Dongxi Northern Min",
 }
 
 ---------------------- Southern Min ----------------------
@@ -1287,211 +1296,301 @@ labels["Zhenan Min"] = {
 ---------------- Hokkien ----------------
 
 labels["Hokkien"] = {
+	region = "[[Fujian]] Province in southeastern [[mainland China]]; [[Taiwan]]; and {{w|Overseas Chinese|overseas}} in various countries",
+	country = "China,Taiwan,Singapore,Malaysia,the Philippines,Indonesia,Cambodia,Myanmar,Hong Kong,Thailand,Brunei",
 	Wikidata = "Q1624231",
 	regional_categories = true,
+	parent = "Southern Min",
+	othercat = "Hokkien lemmas",
 }
 
 labels["Anxi Hokkien"] = {
-	-- A type of Quanzhou Hokkien.
+	region = "{{w|Anxi County}} in the prefecture-level city of [[Quanzhou]] in southern [[Fujian]] Province in southeastern [[China]]",
 	aliases = {"Anxi"},
 	Wikipedia = "zh:安溪县#語言文化",
+	Wikidata = "Q613673", -- Anxi County
 	plain_categories = true,
+	parent = "Quanzhou Hokkien",
 }
 
 labels["Changtai Hokkien"] = {
-	-- A type of Zhangzhou Hokkien.
+	region = "[[Changtai]] District in the prefecture-level city of [[Zhangzhou]] in southeastern [[Fujian]] Province in southeastern [[China]]",
 	aliases = {"Changtai"},
 	Wikipedia = "Changtai, Zhangzhou#Local Dialect",
+	Wikidata = "Q1062148", -- [[w:Changtai, Zhangzhou]]
 	plain_categories = true,
+	parent = "Zhangzhou Hokkien",
 }
 
 labels["Hsinchu Hokkien"] = {
-	-- Taiwanese. Per [[w:Taiwanese_Hokkien#Quanzhou–Zhangzhou inclinations]], mixed Quanzhou-Zhangzhou dialect
-	-- similar to Tong'an accent.
+	region = "[[Hsinchu]] in northwestern [[Taiwan]]",
+	-- Following info from [[w:Taiwanese_Hokkien#Quanzhou–Zhangzhou inclinations]].
+	addl = "It is a mixed [[:Category:Quanzhou Hokkien|Quanzhou]]-[[:Category:Zhangzhou Hokkien|Zhangzhou]] variety similar to {{catlink|Tong'an Hokkien}}.",
 	aliases = {"Hsinchu"},
 	Wikipedia = "zh:新竹市#語言",
 	plain_categories = true,
+	parent = "Taiwanese Hokkien",
 }
 
 labels["Hui'an Hokkien"] = {
-	-- Mostly spoken in Hui'an in southern Fujian.
+	region = "[[Hui'an]] County in southern [[Fujian]] Province in southeastern [[China]]",
 	aliases = {"Hui'an"},
 	Wikidata = "Q16241797",
 	plain_categories = true,
+	parent = true,
 }
 
 -- FIXME: Same as Medan Hokkien?
 labels["Indonesian Hokkien"] = {
+	region = "[[Indonesia]], especially in the city of [[Medan]] in [[North Sumatra]]",
+	country = "Indonesia",
 	aliases = {"Indonesia Hokkien"},
 	Wikidata = "Q6805114", -- article for Medan Hokkien
 	plain_categories = true,
+	parent = "Overseas Hokkien",
+	othercat = "Indonesian Chinese",
 }
 
 labels["Jinjiang Hokkien"] = {
+	region = "the city of [[Jinjiang]], near [[Quanzhou]] in the southern part of [[Fujian]] Province in southeastern [[China]]",
 	aliases = {"Jinjiang"},
 	Wikidata = "Q2251677", -- article for Quanzhou Hokkien
 	plain_categories = true,
+	parent = true, -- or Quanzhou Hokkien?
 }
 
 labels["Kaohsiung Hokkien"] = {
 	-- Taiwanese. Per [[w:Taiwanese_Hokkien#Quanzhou–Zhangzhou inclinations]], mixed Quanzhou-Zhangzhou dialect
 	-- similar to Amoy accent.
+	region = "[[Kaohsiung]] in southern [[Taiwan]]",
 	aliases = {"Kaohsiung"},
 	Wikipedia = "Kaohsiung#Languages",
 	plain_categories = true,
+	parent = "Taiwanese Hokkien",
 }
 
 labels["Kinmen Hokkien"] = {
-	-- Taiwanese. Per [[w:Kinmen#Language]], mostly Quanzhou dialect (but in Wuchiu/Wuqiu Township, Puxian Min is
-	-- spoken).
+	region = "[[Kinmen]] County, a group of [[Taiwanese]] islands off the coast of [[Mainland China]], near [[Xiamen]] (although in {{w|Wuqiu, Kinmen|Wuqiu Township}}, {{catlink|Puxian Min}} is spoken)",
+	addl = "Mostly derived from {{catlink|Quanzhou Hokkien}}.",
 	aliases = {"Kinmen"},
 	Wikipedia = "Kinmen#Language",
 	plain_categories = true,
+	parent = "Taiwanese Hokkien",
 }
 
 labels["Longyan Hokkien"] = {
+	region = "urban [[Longyan]] in southwestern [[Fujian]] Province in southeastern [[China]]",
 	aliases = {"Longyan"},
 	Wikidata = "Q6674568",
 	plain_categories = true,
+	parent = true,
 }
 
 labels["Lukang Hokkien"] = {
-	-- Taiwanese. Per [[w:Taiwanese_Hokkien#Quanzhou–Zhangzhou inclinations]], based on Quanzhou accent.
+	region = "[[Lukang]] Township in [[Changhua]] County, [[Taiwan]]",
 	Wikidata = "Q701693", -- article on Lukang Township
 	plain_categories = true,
+	parent = "Taiwanese Hokkien",
+	-- Following info from [[w:Taiwanese_Hokkien#Quanzhou–Zhangzhou inclinations]].
+	othercat = "Quanzhou Hokkien",
 }
 
 labels["Malaysian Hokkien"] = {
+	region = "Malaysia",
+	addl = "There are two markedly different varieties: {{catlink|Southern Malaysian Hokkien}} (based on {{catlink|Quanzhou Hokkien}}) and {{catlink|Penang Hokkien}} (based on {{catlink|Zhangzhou Hokkien}}).",
 	aliases = {"Malaysia Hokkien"},
-	Wikidata = "Q7570322", -- article on Southern Peninsular Malaysian Hokkien
 	plain_categories = true,
+	parent = "Overseas Hokkien",
+	othercat = "Malaysian Chinese",
 }
 
 labels["Magong Hokkien"] = {
-	-- Taiwanese. Apparently a subdialect of Penghu Hokkien.
+	region = "[[Magong]], the seat of [[Penghu]] County (the [[Pescadores]] Islands) in [[Taiwan]])",
 	aliases = {"Magong"},
 	Wikidata = "Q701428", -- article on Magong city in Penghu County
 	plain_categories = true,
+	parent = "Penghu Hokkien",
 }
 
 labels["Medan Hokkien"] = {
-	-- Spoken in Indonesia.
+	region = "[[Medan]], the capital city of [[North Sumatra]] province in [[Indonesia]]",
 	Wikidata = "Q6805114",
 	plain_categories = true,
+	parent = "Indonesian Hokkien",
+	othercat = "Zhangzhou Hokkien",
+}
+
+labels["Overseas Hokkien"] = {
+	prep = "outside of",
+	region = "[[mainland China]], [[Taiwan]], [[Hong Kong]] and [[Macau]]",
+	Wikipedia = "Hoklo people#Diaspora",
+	plain_categories = true,
+	parent = true,
+	othercats = "Overseas Chinese",
 }
 
 labels["Penang Hokkien"] = {
-	-- Malaysian.
+	region = "the state of [[Penang]] in northwestern {{w|Peninsular Malaysia}}",
 	aliases = {"Penang"},
 	Wikidata = "Q11120689",
 	plain_categories = true,
+	parent = "Malaysian Hokkien",
+	othercat = "Zhangzhou Hokkien",
 }
 
 labels["Penghu Hokkien"] = {
-	-- Taiwanese. Per [[w:Penghu#Language]], mostly Tong'an dialect.
+	region = "[[Penghu]] County in [[Taiwan]], also known as the [[Pescadores]] Islands",
+	addl = "Mostly derived from {{catlink|Tong'an Hokkien}}.",
 	aliases = {"Penghu"},
 	Wikipedia = "Penghu#Language",
 	plain_categories = true,
+	parent = "Taiwanese Hokkien",
 }
 
 labels["Philippine Hokkien"] = {
+	region = "[[Manila]] in the [[Philippines]]",
+	country = "the Philippines",
 	aliases = {"PH Hokkien", "Ph Hokkien", "PH", "PHH", "Philippines Hokkien"},
 	Wikidata = "Q3236692",
 	plain_categories = true,
+	parent = "Overseas Hokkien",
+	othercat = "Quanzhou Hokkien,Philippine Chinese",
 }
 
 labels["Quanzhou Hokkien"] = {
+	region = "the city of [[Quanzhou]] and surrounding area, in the southern part of [[Fujian]] Province in southeastern [[China]]",
 	aliases = {"Quanzhou", "Chinchew", "Choanchew"},
 	Wikidata = "Q2251677",
 	plain_categories = true,
+	parent = true,
 }
 
 labels["Sanxia Hokkien"] = {
-	-- Taiwanese.
+	region = "{{w|Sanxia District}}, in the southwestern part of [[New Taipei]], [[Taiwan]]",
+	aliases = {"Sanxia"},
 	Wikidata = "Q570349", -- article on Sanxia District (in New Taipei City)
 	plain_categories = true,
+	parent = "Taiwanese Hokkien",
 }
 
 -- We use 'Singapore Hokkien' not 'Singaporean Hokkien' despite the Wikipedia article both to match all the other
 -- Singapore language varieties (which say 'Singapore' not 'Singaporean') and because the form with 'Singapore' seeems
 -- actually more common in Google Scholar.
 labels["Singapore Hokkien"] = {
+	region = "Singapore",
 	aliases = {"Singaporean Hokkien"},
 	Wikidata = "Q3846528",
 	plain_categories = true,
+	parent = "Overseas Hokkien",
+	othercat = "Singapore Chinese",
+}
+
+labels["Southern Malaysian Hokkien"] = {
+	region = "central and southern {{w|Peninsular Malaysia}}",
+	aliases = {"Southern Malaysia Hokkien", "Southern Peninsular Malaysian Hokkien", "Southern Peninsular Malaysia Hokkien"},
+	Wikidata = "Q7570322",
+	plain_categories = true,
+	parent = "Malaysian Hokkien",
+	othercat = "Quanzhou Hokkien",
 }
 
 labels["Taichung Hokkien"] = {
-	-- Taiwanese. Per [[w:Taiwanese_Hokkien#Quanzhou–Zhangzhou inclinations]], mostly Zhangzhou dialect.
+	region = "[[Taichung]], in central [[Taiwan]]",
 	-- No alias for Taichung because there's also Taichung Mandarin ([[w:zh:台中腔]]).
+	addl = "Mostly derived from {{catlink|Zhangzhou Hokkien}}.", -- per [[w:Taiwanese_Hokkien#Quanzhou–Zhangzhou inclinations]]
 	Wikidata = "Q245023", -- article on Taichung
 	plain_categories = true,
+	parent = "Taiwanese Hokkien",
+	othercat = "Zhangzhou Hokkien",
 }
 
 labels["Tainan Hokkien"] = {
-	-- Taiwanese. Per [[w:zh:臺灣話#方言差]], part of "臺南混合腔" = "Tainan mixed dialect".
+	-- Per [[w:zh:臺灣話#方言差]], part of "臺南混合腔" = "Tainan mixed dialect".
+	region = "[[Tainan]], in southern [[Taiwan]]",
 	aliases = {"Tainan"},
 	Wikipedia = "zh:臺南市#語言",
+	Wikidata = "Q140631", -- article on Tainan
 	plain_categories = true,
+	parent = "Taiwanese Hokkien",
 }
 
 labels["Taipei Hokkien"] = {
-	-- Taiwanese. Per [[w:Taiwanese_Hokkien#Quanzhou–Zhangzhou inclinations]], mixed Quanzhou-Zhangzhou dialect
-	-- similar to Tong'an accent.
+	region = "[[Taipei]], the capital of [[Taiwan]], in the north",
+	addl = "It is a mixed [[:Category:Quanzhou Hokkien|Quanzhou]]-[[:Category:Zhangzhou Hokkien|Zhangzhou]] variety similar to {{catlink|Tong'an Hokkien}}.", -- per [[w:Taiwanese_Hokkien#Quanzhou–Zhangzhou inclinations]]
 	Wikidata = "Q1867", -- article on Taipei
 	plain_categories = true,
+	parent = "Taiwanese Hokkien",
 }
 
 labels["Taiwanese Hokkien"] = {
+	region = "Taiwan",
 	aliases = {"Taiwanese Southern Min", "Taiwanese Min Nan", "Taiwan Hokkien", "Taiwan Southern Min", "Taiwan Min Nan"},
 	Wikidata = "Q36778",
 	plain_categories = true,
 	track = true,
+	parent = true,
+	othercat = "Taiwanese Chinese",
 }
 
 labels["Tong'an Hokkien"] = {
-	-- Taiwanese. Per [[zh:同安区#語言]], one of four main dialects of Hokkien in the southern Fujian region,
-	-- along with Quanzhou, Zhangzhou and Xiamen.
+	-- Per [[zh:同安区#語言]], one of four main dialects of Hokkien in the southern Fujian region,
+	-- along with Quanzhou, Zhangzhou and Xiamen. But that doesn't quite make sense, as Tong'an is part of Xiamen.
+	region = "[[Tong'an]] District of the [[prefecture-level city]] of [[Xiamen]] in southeastern [[Fujian]] Province in southeastern [[China]]",
 	aliases = {"Tong'an"},
 	Wikipedia = "zh:同安区#語言",
+	Wikidata = "Q1025342",
 	plain_categories = true,
+	parent = "Xiamen Hokkien",
 }
 
 labels["Xiamen Hokkien"] = {
+	region = "the [[prefecture-level city]] of [[Xiamen]] and surrounding area, in southeastern [[Fujian]] Province in southeastern [[China]]",
 	aliases = {"Xiamen", "Amoy"},
 	Wikidata = "Q2705752",
 	plain_categories = true,
+	parent = true,
 }
 
 labels["Yilan Hokkien"] = {
-	-- Taiwanese. Per [[w:zh:臺灣話]], relatively pure Zhangzhou Hokkien.
+	region = "[[Yilan]] County in northeastern [[Taiwan]]",
+	addl = "It is relatively pure {{catlink|Zhangzhou Hokkien}}.", -- per [[w:zh:臺灣話]]
 	aliases = {"Yilan"},
 	Wikipedia = "zh:漳州话#與其他閩南語方言的比較",
+	Wikidata = "Q237258", -- Yilan County, Taiwan
 	plain_categories = true,
+	parent = "Taiwanese Hokkien",
+	othercat = "Zhangzhou Hokkien",
 }
 
 labels["Yongchun Hokkien"] = {
+	region = "[[Yongchun]] County in the [[prefecture-level city]] of [[Quanzhou]] in southeastern [[Fujian]] Province in southeastern [[China]]; also {{w|Overseas Chinese|overseas}} in [[Taiwan]], [[Malaysia]], [[Singapore]], [[Indonesia]], [[Philippines]], [[Brunei]] and [[Myanmar]]",
 	aliases = {"Yongchun"},
 	Wikidata = "Q65118728",
 	plain_categories = true,
+	parent = "Quanzhou Hokkien",
 }
 
 labels["Zhao'an Hokkien"] = {
+	region = "{{w|Zhao'an County}} in southernmost [[Fujian]] Province in southeastern [[China]]",
 	Wikipedia = "zh:詔安縣#詔安閩南語",
 	plain_categories = true,
+	parent = "Zhangzhou Hokkien",
 }
 
 labels["Zhangping Hokkien"] = {
-	-- A type of Zhangzhou Hokkien.
+	region = "the [[county-level city]] of {{w|Zhangping}} in southwestern [[Fujian]] Province in southeastern [[China]]",
 	aliases = {"Zhangping"},
 	Wikidata = "Q15937822",
 	plain_categories = true,
+	parent = "Zhangzhou Hokkien",
 }
 
 labels["Zhangzhou Hokkien"] = {
+	region = "the [[prefecture-level city]] of [[Zhangzhou]] and surrounding areas, in southern [[Fujian]] Province in southeastern [[China]]",
 	aliases = {"Zhangzhou", "Changchew"},
 	Wikidata = "Q8070492",
 	plain_categories = true,
+	parent = true,
 }
 
 ---------------- Teochew ----------------
@@ -2028,7 +2127,7 @@ labels["Chuqu Wu"] = {
 	aliases = {"Chuqu"},
 	Wikidata = "Q5116499",
 	plain_categories = true,
-	parent = true,
+	parent = "Southern Wu",
 }
 
 -- FIXME: Category missing.
@@ -2217,7 +2316,7 @@ labels["Oujiang Wu"] = {
 	aliases = {"Oujiang"},
 	Wikidata = "Q710218", -- article for Wenzhounese
 	plain_categories = true,
-	parent = true,
+	parent = "Southern Wu",
 }
 
 -- FIXME: Category missing.
@@ -2360,7 +2459,7 @@ labels["Taizhou Wu"] = {
 	aliases = {"Taizhou"},
 	Wikidata = "Q7676678",
 	plain_categories = true,
-	parent = true,
+	parent = "Southern Wu",
 }
 
 -- FIXME: Category missing.
@@ -2453,7 +2552,7 @@ labels["Wuzhou Wu"] = {
 	aliases = {"Wuzhou"},
 	Wikidata = "Q2779891",
 	plain_categories = true,
-	parent = true,
+	parent = "Southern Wu",
 }
 
 labels["Xuanzhou Wu"] = {
