@@ -34,13 +34,13 @@ end
 -- linked to where CODE is the language code of `lang`, and you can find all entries in the combination of `track_id`
 -- and `lang` by visiting [[Special:WhatLinksHere/Template:tracking/headword/TRACK_ID/CODE]]. This makes it possible to
 -- isolate only the entries with a specific tracking property that are in a given language. Note that if `lang`
--- references at etymology-only language, both that language's code and its non-etymological parent's code are tracked.
+-- references at etymology-only language, both that language's code and its full parent's code are tracked.
 local function track(track_id, lang)
 	local tracking_page = "headword/" .. track_id
 	local m_debug_track = require("Module:debug/track")
 	if lang and lang:hasType("etymology-only") then
 		m_debug_track{tracking_page, tracking_page .. "/" .. lang:getCode(),
-			tracking_page .. "/" .. lang:getNonEtymologicalCode()}
+			tracking_page .. "/" .. lang:getFullCode()}
 	elseif lang then
 		m_debug_track{tracking_page, tracking_page .. "/" .. lang:getCode()}
 	else
@@ -159,7 +159,7 @@ function export.add_multiword_links(head, default)
 	end
 
 	--Escape any remaining square brackets to stop them breaking links (e.g. "[citation needed]").
-	head = require("Module:utilities").make_entities(head, "[]")
+	head = require("Module:string/encode entities")(head, "[]")
 
 	--[=[
 	use this when workaround is no longer needed:
@@ -287,9 +287,9 @@ local function format_headword(data)
 			saw_translit_page = true
 		end
 		-- If data.lang is an etymology-only language and we didn't find a translation page for it, fall back to the
-		-- non-etymology-only parent.
+		-- full parent.
 		if not saw_translit_page and data.lang:hasType("etymology-only") then
-			langname = data.lang:getNonEtymologicalName()
+			langname = data.lang:getFullName()
 			transliteration_page = mw.title.new(langname .. " transliteration", "Wiktionary")
 			
 			if transliteration_page and transliteration_page.exists then
@@ -321,7 +321,7 @@ local function format_genders(data)
 		end
 		local pos_for_cat
 		if not data.nogendercat and not m_data.no_gender_cat[data.lang:getCode()] and
-			not m_data.no_gender_cat[data.lang:getNonEtymologicalCode()] then
+			not m_data.no_gender_cat[data.lang:getFullCode()] then
 			local pos_category = data.pos_category:gsub("^reconstructed ", "")
 			pos_for_cat = m_data.pos_for_gender_number_cat[pos_category]
 		end
@@ -400,7 +400,7 @@ local function format_inflection_parts(data, parts)
 		parts_output = (parts.label and " " or "") .. concat(parts)
 	elseif parts.request then
 		parts_output = " <small>[please provide]</small>"
-		insert(data.categories, "Requests for inflections in " .. data.lang:getNonEtymologicalName() .. " entries")
+		insert(data.categories, "Requests for inflections in " .. data.lang:getFullName() .. " entries")
 	else
 		parts_output = ""
 	end
@@ -518,7 +518,7 @@ do
 		-- that.
 		if type(tbl) ~= "table" then
 			if m_data.raw_defaultsort ~= sortkey then
-				insert(lang_cats, lang:getNonEtymologicalName() .. " terms with non-redundant non-automated sortkeys")
+				insert(lang_cats, lang:getFullName() .. " terms with non-redundant non-automated sortkeys")
 			end
 			return
 		end
@@ -531,17 +531,17 @@ do
 			end
 		end
 		if redundant then
-			insert(lang_cats, lang:getNonEtymologicalName() .. " terms with redundant sortkeys")
+			insert(lang_cats, lang:getFullName() .. " terms with redundant sortkeys")
 		end
 		if different then
-			insert(lang_cats, lang:getNonEtymologicalName() .. " terms with non-redundant non-automated sortkeys")
+			insert(lang_cats, lang:getFullName() .. " terms with non-redundant non-automated sortkeys")
 		end
 		return sortkey
 	end
 	
 	-- FIXME: generalise how these are added, instead of doing them one-by-one.
 	function export.maintenance_cats(m_data, lang, lang_cats, page_cats)
-		lang = lang:getNonEtymological() -- since we are just generating categories
+		lang = lang:getFull() -- since we are just generating categories
 		local canonical = lang:getCanonicalName()
 		if m_data.unsupported_title then
 			insert(page_cats, "Unsupported titles")
@@ -604,9 +604,9 @@ function export.full_headword(data)
 	------------ 2. Initialize pagename etc. ------------
 
 	local langcode = data.lang:getCode()
-	local full_langcode = data.lang:getNonEtymologicalCode()
+	local full_langcode = data.lang:getFullCode()
 	local langname = data.lang:getCanonicalName()
-	local full_langname = data.lang:getNonEtymologicalName()
+	local full_langname = data.lang:getFullName()
 
 	if data.pagename then -- for testing, doc pages, etc.
 		data.title = mw.title.new(data.pagename)
@@ -934,43 +934,43 @@ function export.full_headword(data)
 
 	-- Reconstructed terms often use weird combinations of scripts and realistically aren't spelled so much as notated.
 	if namespace ~= "Reconstruction" then
-		local u = require("Module:string/char")
-		 -- commas, periods, spaces and hyphens and combining diacritics should not trigger 'terms written in multiple scripts'
-		local canon_subpage = data.title.subpageText:gsub("[,. %-]", "")
-		canon_subpage = rsub(canon_subpage, "[" .. u(0x0300) .. "-" .. u(0x036F) .. "]", "")
-		local first_script = data.heads[1].sc
-		local first_script_code = first_script:getCode()
-		error(first_script_code)
-		if first_script_code == "Latn" then
-			-- If the script is Latin, don't consider any ASCII non-letter symbols as non-Latin.
-			canon_subpage = canon_subpage:gsub("[ -@%[-`{-~]", "")
-			-- Likewise with spacing modifier characters, which include things like Hawaiian okina (ʻ).
-			canon_subpage = rsub(canon_subpage, "[" .. u(0x02B0) .. "-" .. u(0x02FF) .. "]", "")
-			if full_langcode == "sla-pro" then
-				-- Hack! Cyrillic soft and hard signs shouldn't count when mixed into Proto-Slavic Latin terms.
-				canon_subpage = rsub(canon_subpage, "[ьъ]", "")
+		-- Determine how many real scripts are found in the pagename, where we exclude symbols and such. We exclude
+		-- scripts whose `character_category` is false as well as Zmth (mathematical notation symbols), which has a
+		-- category of "Mathematical notation symbols". When counting scripts, we need to elide language-specific
+		-- variants because e.g. Beng and as-Beng have slightly different characters but we don't want to consider them
+		-- two different scripts (e.g. [[এৰ]] has two characters which are detected respectively as Beng and as-Beng).
+		local seen_scripts = {}
+		local num_seen_scripts = 0
+		local num_loops = 0
+		local canon_pagename = m_data.pagename
+		local script_data = mw.loadData("Module:scripts/data") 
+		while true do
+			if canon_pagename == "" or num_seen_scripts >= 2 or num_loops >= 10 then
+				break
 			end
-		elseif first_script_code == "Cyrl" then
-			-- Apostrophes show up routinely in Belarusian and Ukrainian terms such as Belarusian [[камп'ютар]], Ukrainian [[комп'ютер]]
-			canon_subpage = canon_subpage:gsub("'", "")
-		elseif first_script_code == "fa-Arab" or first_script_code == "ota-Arab" then -- FIXME: others?
-			-- fa-Arab and ota-Arab terms routinely have U+200C in them; don't let that trigger.
-			canon_subpage = canon_subpage:gsub(u(0x200c), "")
-		elseif first_script_code == "Beng" and full_langcode == "pi" then
-			canon_subpage = canon_subpage:gsub("ৰ", "") -- in as-Beng rather than Beng
-			canon_subpage = canon_subpage:gsub(u(0x200d), "") -- per [[User:RichardW57]]
-		elseif first_script_code == "Sinh" then
-			canon_subpage = canon_subpage:gsub(u(0x200d), "") -- per [[User:RichardW57]]
-		elseif first_script_code == "Hant" or first_script_code == "Hans" or first_script_code == "Hani" then
-			-- Exclude full-width punctuation.
-			canon_subpage = rsub(canon_subpage, "[" .. u(0xFF01) .. "-" .. u(0xFF20) .. u(0xFF3B) .. "-" .. u(0xFF40) ..
-				u(0xFF5B) .. "-" .. u(0xFF64) .. "]", "")
+			-- Make sure we don't get into a loop checking the same script over and over again; happens with e.g. [[ᠪᡳ]]
+			num_loops = num_loops + 1
+			local pagename_script = require("Module:scripts/charToScript").findBestScriptWithoutLang(canon_pagename, "None only as last resort")
+			local script_chars = pagename_script:getCharacters()
+			if not script_chars then
+				-- we are stuck; this happens with None
+				break
+			end
+			local script_code = pagename_script:getCode()
+			local replaced
+			canon_pagename, replaced = rsubn(canon_pagename, "[" .. script_chars .. "]", "")
+			if replaced and script_code ~= "Zmth" and script_data[script_code] and
+				script_data[script_code].character_category ~= false then
+				script_code = script_code:gsub("^.-%-", "")
+				if not seen_scripts[script_code] then
+					seen_scripts[script_code] = true
+					num_seen_scripts = num_seen_scripts + 1
+				end
+			end
 		end
-		local script_chars = first_script:getCharacters()
-		if script_chars then -- FIXME: can it happen that this returns nil?
-			if rfind(canon_subpage, "[" .. script_chars .. "]") and rfind(canon_subpage, "[^" .. script_chars .. "]") then
-				insert(data.categories, full_langname .. " terms written in multiple scripts")
-			end
+
+		if num_seen_scripts > 1 then
+			insert(data.categories, full_langname .. " terms written in multiple scripts")
 		end
 	end
 	
