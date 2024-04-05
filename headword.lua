@@ -282,24 +282,18 @@ local function format_headword(data)
 		local transliteration_page = mw.title.new(langname .. " transliteration", "Wiktionary")
 		local saw_translit_page = false
 
-		if transliteration_page then
-			local success, exists = pcall(function () return transliteration_page.exists end)
-			if success and exists then
-				translits_formatted = " [[Wiktionary:" .. langname .. " transliteration|•]]" .. translits_formatted
-				saw_translit_page = true
-			end
+		if transliteration_page and transliteration_page.exists then
+			translits_formatted = " [[Wiktionary:" .. langname .. " transliteration|•]]" .. translits_formatted
+			saw_translit_page = true
 		end
 		-- If data.lang is an etymology-only language and we didn't find a translation page for it, fall back to the
 		-- non-etymology-only parent.
 		if not saw_translit_page and data.lang:hasType("etymology-only") then
 			langname = data.lang:getNonEtymologicalName()
 			transliteration_page = mw.title.new(langname .. " transliteration", "Wiktionary")
-
-			if transliteration_page then
-				local success, exists = pcall(function () return transliteration_page.exists end)
-				if success and exists then
-					translits_formatted = " [[Wiktionary:" .. langname .. " transliteration|•]]" .. translits_formatted
-				end
+			
+			if transliteration_page and transliteration_page.exists then
+				translits_formatted = " [[Wiktionary:" .. langname .. " transliteration|•]]" .. translits_formatted
 			end
 		end
 	else
@@ -359,10 +353,11 @@ local function format_inflection_parts(data, parts)
 			))
 		end
 
-		-- Here the final part 'or data.nolink' allows to have 'nolink=true'
-		-- right into the 'data' table to disable links of the entire headword
+		-- Here the final part 'or data.nolinkinfl' allows to have 'nolinkinfl=true'
+		-- right into the 'data' table to disable inflection links of the entire headword
 		-- when inflected forms aren't entry-worthy, e.g.: in Vulgar Latin
-		local nolink = part.face == "hypothetical" or part.nolink or data.nolink
+		local nolinkinfl = part.face == "hypothetical" or (part.nolink and track("nolink") or part.nolinkinfl) or (
+			data.nolink and track("nolink") or data.nolinkinfl)
 
 		local formatted
 		if part.label then
@@ -382,8 +377,8 @@ local function format_inflection_parts(data, parts)
 			end
 			formatted = require("Module:links").full_link(
 				{
-					term = not nolink and part.term or nil,
-					alt = part.alt or (nolink and part.term or nil),
+					term = not nolinkinfl and part.term or nil,
+					alt = part.alt or (nolinkinfl and part.term or nil),
 					lang = part.lang or data.lang,
 					sc = part.sc or parts.sc or nil,
 					id = part.id,
@@ -567,8 +562,7 @@ do
 			handle_raw_sortkeys(tbl, sortkey, m_data, lang, lang_cats)
 			insert(lang_cats, canonical .. " entries with language name categories using raw markup")
 		end
-		local current_L2 = require("Module:utilities").get_current_L2()
-		if current_L2 and current_L2 ~= canonical then
+		if require("Module:utilities").get_current_L2() ~= canonical then
 			insert(lang_cats, canonical .. " entries with incorrect language header")
 		end
 		if m_data.pagename_displaytitle_conflict then
@@ -669,7 +663,7 @@ function export.full_headword(data)
 	init_and_find_maximum_index(data, "whole_page_categories")
 	local pos_category_already_present = false
 	if #data.categories > 0 then
-		local escaped_langname = require("Module:pattern utilities").pattern_escape(full_langname)
+		local escaped_langname = require("Module:string/pattern escape")(full_langname)
 		local matches_lang_pattern = "^" .. escaped_langname .. " "
 		for _, cat in ipairs(data.categories) do
 			-- Does the category begin with the language name? If not, tag it with a tracking category.
@@ -732,8 +726,8 @@ function export.full_headword(data)
 	local unmodified_default_head = default_head
 
 	-- Add links to multi-word page names when appropriate
-	if not m_data.no_multiword_links[langcode] and not m_data.no_multiword_links[full_langcode] and not is_reconstructed
-		and export.head_is_multiword(default_head) then
+	if not data.nolinkhead and not m_data.no_multiword_links[langcode] and not m_data.no_multiword_links[full_langcode]
+		and	not is_reconstructed and export.head_is_multiword(default_head) then
 		default_head = export.add_multiword_links(default_head, true)
 	end
 
@@ -938,6 +932,48 @@ function export.full_headword(data)
 		end
 	end
 
+	-- Reconstructed terms often use weird combinations of scripts and realistically aren't spelled so much as notated.
+	if namespace ~= "Reconstruction" then
+		local u = require("Module:string/char")
+		 -- commas, periods, spaces and hyphens and combining diacritics should not trigger 'terms written in multiple scripts'
+		local canon_subpage = data.title.subpageText:gsub("[,. %-]", "")
+		canon_subpage = rsub(canon_subpage, "[" .. u(0x0300) .. "-" .. u(0x036F) .. "]", "")
+		local first_script = data.heads[1].sc
+		local first_script_code = first_script:getCode()
+		error(first_script_code)
+		if first_script_code == "Latn" then
+			-- If the script is Latin, don't consider any ASCII non-letter symbols as non-Latin.
+			canon_subpage = canon_subpage:gsub("[ -@%[-`{-~]", "")
+			-- Likewise with spacing modifier characters, which include things like Hawaiian okina (ʻ).
+			canon_subpage = rsub(canon_subpage, "[" .. u(0x02B0) .. "-" .. u(0x02FF) .. "]", "")
+			if full_langcode == "sla-pro" then
+				-- Hack! Cyrillic soft and hard signs shouldn't count when mixed into Proto-Slavic Latin terms.
+				canon_subpage = rsub(canon_subpage, "[ьъ]", "")
+			end
+		elseif first_script_code == "Cyrl" then
+			-- Apostrophes show up routinely in Belarusian and Ukrainian terms such as Belarusian [[камп'ютар]], Ukrainian [[комп'ютер]]
+			canon_subpage = canon_subpage:gsub("'", "")
+		elseif first_script_code == "fa-Arab" or first_script_code == "ota-Arab" then -- FIXME: others?
+			-- fa-Arab and ota-Arab terms routinely have U+200C in them; don't let that trigger.
+			canon_subpage = canon_subpage:gsub(u(0x200c), "")
+		elseif first_script_code == "Beng" and full_langcode == "pi" then
+			canon_subpage = canon_subpage:gsub("ৰ", "") -- in as-Beng rather than Beng
+			canon_subpage = canon_subpage:gsub(u(0x200d), "") -- per [[User:RichardW57]]
+		elseif first_script_code == "Sinh" then
+			canon_subpage = canon_subpage:gsub(u(0x200d), "") -- per [[User:RichardW57]]
+		elseif first_script_code == "Hant" or first_script_code == "Hans" or first_script_code == "Hani" then
+			-- Exclude full-width punctuation.
+			canon_subpage = rsub(canon_subpage, "[" .. u(0xFF01) .. "-" .. u(0xFF20) .. u(0xFF3B) .. "-" .. u(0xFF40) ..
+				u(0xFF5B) .. "-" .. u(0xFF64) .. "]", "")
+		end
+		local script_chars = first_script:getCharacters()
+		if script_chars then -- FIXME: can it happen that this returns nil?
+			if rfind(canon_subpage, "[" .. script_chars .. "]") and rfind(canon_subpage, "[^" .. script_chars .. "]") then
+				insert(data.categories, full_langname .. " terms written in multiple scripts")
+			end
+		end
+	end
+	
 	-- Categorise for unusual characters. Takes into account combining characters, so that we can categorise for characters with diacritics that aren't encoded as atomic characters (e.g. U̠). These can be in two formats: single combining characters (i.e. character + diacritic(s)) or double combining characters (i.e. character + diacritic(s) + character). Each can have any number of diacritics.
 	local standard = data.lang:getStandardCharacters()
 	if standard and not non_categorizable(data) then
