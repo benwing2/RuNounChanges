@@ -150,7 +150,7 @@ local function make_language(code, data, useRequire)
 			return mw.loadData(modulename)
 		end
 	end
-	
+
 	-- Temporarily convert various formatting characters to PUA to prevent them from being disrupted by the substitution process.
 	local function doTempSubstitutions(text, subbedChars, keepCarets, noTrim)
 		-- Clone so that we don't insert any extra patterns into the table in package.loaded. For some reason, using require seems to keep memory use down; probably because the table is always cloned.
@@ -196,7 +196,7 @@ local function make_language(code, data, useRequire)
 			:gsub("\2", "%]%]")
 		return text, subbedChars
 	end
-	
+
 	-- Reinsert any formatting that was temporarily substituted.
 	local function undoTempSubstitutions(text, subbedChars)
 		local pe = require("Module:string/pattern escape")
@@ -211,7 +211,7 @@ local function make_language(code, data, useRequire)
 			:gsub("\2", "%]%]")
 		return text
 	end
-	
+
 	-- Check if the raw text is an unsupported title, and if so return that. Otherwise, remove HTML entities. We do the pre-conversion to avoid loading the unsupported title list unnecessarily.
 	local function checkNoEntities(text)
 		local textNoEnc = require("Module:string/decode entities")(text)
@@ -221,7 +221,7 @@ local function make_language(code, data, useRequire)
 			return textNoEnc
 		end
 	end
-	
+
 	-- If no script object is provided (or if it's invalid or None), get one.
 	local function checkScript(text, self, sc)
 		if not checkObject("script", true, sc) or sc:getCode() == "None" then
@@ -230,12 +230,12 @@ local function make_language(code, data, useRequire)
 			return sc
 		end
 	end
-	
+
 	local function normalize(text, sc)
 		text = sc:fixDiscouragedSequences(text)
 		return sc:toFixedNFD(text)
 	end
-	
+
 	-- Split the text into sections, based on the presence of temporarily substituted formatting characters, then iterate over each one to apply substitutions. This avoids putting PUA characters through language-specific modules, which may be unequipped for them.
 	local function iterateSectionSubstitutions(text, subbedChars, keepCarets, self, sc, substitution_data, function_name)
 		local pe = require("Module:string/pattern escape")
@@ -276,20 +276,20 @@ local function make_language(code, data, useRequire)
 				end
 			end
 		end
-		
+
 		-- Trim, unless there are only spacing characters, while ignoring any final formatting characters.
 		text = text and text
 			:gsub("^([\128-\191\244]*)%s+(%S)", "%1%2")
 			:gsub("(%S)%s+([\128-\191\244]*)$", "%1%2")
-		
+
 		-- Remove duplicate categories.
 		if #cats > 1 then
 			cats = require("Module:table").removeDuplicates(cats)
 		end
-		
+
 		return text, fail, cats, subbedChars
 	end
-	
+
 	-- Process carets (and any escapes). Default to simple removal, if no pattern/replacement is given.
 	local function processCarets(text, pattern, repl)
 		local rep
@@ -302,7 +302,7 @@ local function make_language(code, data, useRequire)
 			:gsub("\3", "\\")
 			:gsub("\4", "^")
 	end
-	
+
 	-- Remove carets if they are used to capitalize parts of transliterations (unless they have been escaped).
 	local function removeCarets(text, sc)
 		if not sc:hasCapitalization() and sc:isTransliterated() and text:match("%^") then
@@ -311,19 +311,19 @@ local function make_language(code, data, useRequire)
 			return text
 		end
 	end
-	
+
 	local Language = {}
-	
+
 	--[==[Returns the language code of the language. Example: {{code|lua|"fr"}} for French.]==]
 	function Language:getCode()
 		return self._code
 	end
-	
+
 	--[==[Returns the canonical name of the language. This is the name used to represent that language on Wiktionary, and is guaranteed to be unique to that language alone. Example: {{code|lua|"French"}} for French.]==]
 	function Language:getCanonicalName()
 		return self._rawData[1]
 	end
-	
+
 	--[==[Returns the display form of the language. The display form of a language, family or script is the form it takes when appearing as the ''SOURCE'' in categories such as <code>English terms derived from ''SOURCE''</code> or <code>English given names from ''SOURCE''</code>, and is also the displayed text in <code>:makeCategoryLink</code> links. For regular and etymology languages, this is the same as the canonical name, but for families, it reads "NAME languages" (e.g. {{code|lua|"Indo-Iranian languages"}}), and for scripts, it reads "NAME script" (e.g. {{code|lua|"Arabic script"}}).]==]
 	function Language:getDisplayForm()
 		if not self._displayForm then
@@ -341,7 +341,7 @@ local function make_language(code, data, useRequire)
 		end
 		return self._displayForm
 	end
-	
+
 	--[==[Returns a table of the "other names" that the language is known by, excluding the canonical name. The names are not guaranteed to be unique, in that sometimes more than one language is known by the same name. Example: {{code|lua|{"Manx Gaelic", "Northern Manx", "Southern Manx"} }} for [[:Category:Manx language|Manx]]. If <code>onlyOtherNames</code> is given and is non-{{code|lua|nil}}, only names explicitly listed in the <code>otherNames</code> field are returned; otherwise, names listed under <code>otherNames</code>, <code>aliases</code> and <code>varieties</code> are combined together and returned. For example, for Manx, Manx Gaelic is listed as an alias, while Northern Manx and Southern Manx are listed as varieties. It should be noted that the <code>otherNames</code> field itself is deprecated, and entries listed there should eventually be moved to either <code>aliases</code> or <code>varieties</code>.]==]
 	function Language:getOtherNames(onlyOtherNames)
 		if #self._stack == 1 then
@@ -349,7 +349,7 @@ local function make_language(code, data, useRequire)
 		end
 		return require("Module:language-like").getOtherNames(self, onlyOtherNames)
 	end
-	
+
 	--[==[Returns a table of the aliases that the language is known by, excluding the canonical name. Aliases are synonyms for the language in question. The names are not guaranteed to be unique, in that sometimes more than one language is known by the same name. Example: {{code|lua|{"High German", "New High German", "Deutsch"} }} for [[:Category:German language|German]].]==]
 	function Language:getAliases()
 		if #self._stack == 1 then
@@ -357,7 +357,7 @@ local function make_language(code, data, useRequire)
 		end
 		return self._rawData.aliases or (self._extraData and self._extraData.aliases) or {}
 	end
-	
+
 	--[==[Returns a table of the known subvarieties of a given language, excluding subvarieties that have been given explicit etymology language codes. The names are not guaranteed to be unique, in that sometimes a given name refers to a subvariety of more than one language. Example: {{code|lua|{"Southern Aymara", "Central Aymara"} }} for [[:Category:Aymara language|Aymara]]. Note that the returned value can have nested tables in it, when a subvariety goes by more than one name. Example: {{code|lua|{"North Azerbaijani", "South Azerbaijani", {"Afshar", "Afshari", "Afshar Azerbaijani", "Afchar"}, {"Qashqa'i", "Qashqai", "Kashkay"}, "Sonqor"} }} for [[:Category:Azerbaijani language|Azerbaijani]]. Here, for example, Afshar, Afshari, Afshar Azerbaijani and Afchar all refer to the same subvariety, whose preferred name is Afshar (the one listed first). To avoid a return value with nested tables in it, specify a non-{{code|lua|nil}} value for the <code>flatten</code> parameter; in that case, the return value would be {{code|lua|{"North Azerbaijani", "South Azerbaijani", "Afshar", "Afshari", "Afshar Azerbaijani", "Afchar", "Qashqa'i", "Qashqai", "Kashkay", "Sonqor"} }}.]==]
 	function Language:getVarieties(flatten)
 		if #self._stack == 1 then
@@ -365,7 +365,7 @@ local function make_language(code, data, useRequire)
 		end
 		return require("Module:language-like").getVarieties(self, flatten)
 	end
-	
+
 	--[==[Given a list of types as strings, returns true if the language has all of them. 
 
 The possible types are
@@ -391,7 +391,7 @@ The possible types are
 							  constructed languages ([[WT:CFI#Constructed languages]]). Its entries must therefore
 							  be in the Appendix namespace, but they are not reconstructed and therefore should
 							  not have * prefixed in links.
-]==]	
+]==]
 	function Language:hasType(...)
 		if not self._type then
 			self._type = {language = true}
@@ -411,7 +411,7 @@ The possible types are
 		end
 		return true
 	end
-	
+
 	--[==[Returns a table containing <code>WikimediaLanguage</code> objects (see [[Module:wikimedia languages]]), which represent languages and their codes as they are used in Wikimedia projects for interwiki linking and such. More than one object may be returned, as a single Wiktionary language may correspond to multiple Wikimedia languages. For example, Wiktionary's single code <code>sh</code> (Serbo-Croatian) maps to four Wikimedia codes: <code>sh</code> (Serbo-Croatian), <code>bs</code> (Bosnian), <code>hr</code> (Croatian) and <code>sr</code> (Serbian).
 	The code for the Wikimedia language is retrieved from the <code>wikimedia_codes</code> property in the data modules. If that property is not present, the code of the current language is used. If none of the available codes is actually a valid Wikimedia code, an empty table is returned.]==]
 	function Language:getWikimediaLanguages()
@@ -425,14 +425,14 @@ The possible types are
 		end
 		return self._wikimediaLanguageObjects
 	end
-	
+
 	function Language:getWikimediaLanguageCodes()
 		if not self._wikimediaLanguageCodes then
 			self._wikimediaLanguageCodes = self._rawData.wikimedia_codes or {self:getCode()}
 		end
 		return self._wikimediaLanguageCodes
 	end
-	
+
 	--[==[
 	Returns the name of the Wikipedia article for the language. `project` specifies the language and project to retrieve
 	the article from, defaulting to {"enwiki"} for the English Wikipedia. Normally if specified it should be the project
@@ -483,11 +483,11 @@ The possible types are
 		end
 		return cached_value or nil
 	end
-	
+
 	function Language:makeWikipediaLink()
 		return "[[w:" .. self:getWikipediaArticle() .. "|" .. self:getCanonicalName() .. "]]"
 	end
-	
+
 	--[==[Returns the Wikidata item id for the language or <code>nil</code>. This corresponds to the the second field in the data modules.]==]
 	function Language:getWikidataItem()
 		if not self._WikidataItem then
@@ -500,7 +500,7 @@ The possible types are
 		end
 		return self._WikidataItem
 	end
-	
+
 	--[==[Returns a table of <code>Script</code> objects for all scripts that the language is written in. See [[Module:scripts]].]==]
 	function Language:getScripts()
 		if not self._scriptObjects then
@@ -515,7 +515,7 @@ The possible types are
 		end
 		return self._scriptObjects
 	end
-	
+
 	--[==[Returns the table of script codes in the language's data file.]==]
 	function Language:getScriptCodes()
 		if not self._scriptCodes then
@@ -523,19 +523,19 @@ The possible types are
 		end
 		return self._scriptCodes
 	end
-	
+
 	--[==[Given some text, this function iterates through the scripts of a given language and tries to find the script that best matches the text. It returns a {{code|lua|Script}} object representing the script. If no match is found at all, it returns the {{code|lua|None}} script object.]==]
 	function Language:findBestScript(text, forceDetect)
 		if (not text) or text == "" or text == "-" then
 			return require("Module:scripts").getByCode("None", nil, nil, useRequire)
 		end
-		
+
 		if table.concat(self:getScriptCodes()) == "All" then
 			return require("Module:scripts").findBestScriptWithoutLang(text)
 		end
-		
+
 		local scripts = self:getScripts()
-		
+
 		if not scripts[2] and not forceDetect then
 			-- Necessary, because Hani covers the entire Han range (while the Hant & Hans lists don't list shared characters).
 			if scripts[1]:getCode():match("^Han") and require("Module:scripts").getByCode("Hani", nil, nil, useRequire):countCharacters(text) > 0 then
@@ -546,10 +546,10 @@ The possible types are
 				return require("Module:scripts").getByCode("None", nil, nil, useRequire)
 			end
 		end
-		
+
 		return require("Module:languages/findBestScript")(export, self, text, scripts, forceDetect, useRequire)
 	end
-	
+
 	--[==[Returns a <code>Family</code> object for the language family that the language belongs to. See [[Module:families]].]==]
 	function Language:getFamily()
 		if self._familyObject == nil then
@@ -563,7 +563,7 @@ The possible types are
 		end
 		return self._familyObject or nil
 	end
-	
+
 	--[==[Returns the family code in the language's data file.]==]
 	function Language:getFamilyCode()
 		if not self._familyCode then
@@ -571,7 +571,7 @@ The possible types are
 		end
 		return self._familyCode
 	end
-	
+
 	function Language:getFamilyName()
 		if self._familyName == nil then
 			local family = self:getFamily()
@@ -583,7 +583,7 @@ The possible types are
 		end
 		return self._familyName or nil
 	end
-	
+
 	--[==[Check whether the language belongs to `family` (which can be a family code or object). A list of objects can be given in place of `family`; in that case, return true if the language belongs to any of the specified families. Note that some languages (in particular, certain creoles) can have multiple immediate ancestors potentially belonging to different families; in that case, return true if the language belongs to any of the specified families.]==]
 	function Language:inFamily(...)
 		--checkObject("family", nil, ...)
@@ -612,7 +612,7 @@ The possible types are
 		end
 		return false
 	end
-	
+
 	function Language:getParent()
 		if self._parentObject == nil then
 			local parentCode = self:getParentCode()
@@ -624,14 +624,14 @@ The possible types are
 		end
 		return self._parentObject or nil
 	end
-	
+
 	function Language:getParentCode()
 		if not self._parentCode then
 			self._parentCode = self._rawData[5]
 		end
 		return self._parentCode
 	end
-	
+
 	function Language:getParentName()
 		if self._parentName == nil then
 			local parent = self:getParent()
@@ -643,7 +643,7 @@ The possible types are
 		end
 		return self._parentName or nil
 	end
-	
+
 	function Language:getParentChain()
 		if not self._parentChain then
 			self._parentChain = {}
@@ -655,7 +655,7 @@ The possible types are
 		end
 		return self._parentChain
 	end
-	
+
 	function Language:hasParent(...)
 		--checkObject("language", nil, ...)
 		for _, otherlang in ipairs{...} do
@@ -669,7 +669,7 @@ The possible types are
 		end
 		return false
 	end
-	
+
 	--[==[If the language is an etymology language, this iterates through parents until a regular language or family is found, and the corresponding object is returned. If the language is a regular language, then it simply returns the language.]==]
 	function Language:getNonEtymological()
 		if not self._nonEtymologicalObject then
@@ -682,11 +682,11 @@ The possible types are
 		end
 		return self._nonEtymologicalObject
 	end
-	
+
 	function Language:getNonEtymologicalCode()
 		return self._nonEtymologicalCode or self:getCode()
 	end
-	
+
 	function Language:getNonEtymologicalName()
 		if self._nonEtymologicalName == nil then
 			local nonEtymological = self:getNonEtymological()
@@ -698,7 +698,7 @@ The possible types are
 		end
 		return self._nonEtymologicalName or nil
 	end
-	
+
 	--[==[Returns a table of <code class="nf">Language</code> objects for all languages that this language is directly descended from. Generally this is only a single language, but creoles, pidgins and mixed languages can have multiple ancestors.]==]
 	function Language:getAncestors()
 		if not self._ancestorObjects then
@@ -731,7 +731,7 @@ The possible types are
 		end
 		return self._ancestorObjects
 	end
-	
+
 	do
 		-- Avoid a language being its own ancestor via class inheritance. We only need to check for this if the language has inherited an ancestor table from its parent, because we never want to drop ancestors that have been explicitly set in the data.
 		-- Recursively iterate over ancestors until we either find self or run out. If self is found, return true.
@@ -751,7 +751,7 @@ The possible types are
 				end
 			end
 		end
-		
+
 		--[==[Returns a table of <code class="nf">Language</code> codes for all languages that this language is directly descended from. Generally this is only a single language, but creoles, pidgins and mixed languages can have multiple ancestors.]==]
 		function Language:getAncestorCodes()
 			if self._ancestorCodes then
@@ -781,11 +781,11 @@ The possible types are
 			return codes
 		end
 	end
-	
+
 	--[==[Given a list of language objects or codes, returns true if at least one of them is an ancestor. This includes any etymology-only children of that ancestor. If the language's ancestor(s) are etymology-only languages, it will also return true for those language parent(s) (e.g. if Vulgar Latin is the ancestor, it will also return true for its parent, Latin). However, a parent is excluded from this if the ancestor is also ancestral to that parent (e.g. if Classical Persian is the ancestor, Persian would return false, because Classical Persian is also ancestral to Persian).]==]
 	function Language:hasAncestor(...)
 		--checkObject("language", nil, ...)
-		
+
 		local function iterateOverAncestorTree(node, func, parent_check)
 			local ancestors = node:getAncestors()
 			local ancestorsParents = {}
@@ -812,7 +812,7 @@ The possible types are
 				if ret then return ret end
 			end
 		end
-		
+
 		local function do_iteration(otherlang, parent_check)
 			-- otherlang can't be self
 			if (type(otherlang) == "string" and otherlang or otherlang:getCode()) == self:getCode() then
@@ -834,7 +834,7 @@ The possible types are
 				parent_check = false
 			until not otherlang
 		end
-		
+
 		local parent_check = true
 		for _, otherlang in ipairs{...} do
 			local ret = do_iteration(otherlang, parent_check)
@@ -844,7 +844,7 @@ The possible types are
 		end
 		return false
 	end
-	
+
 	function Language:getAncestorChain()
 		if not self._ancestorChain then
 			self._ancestorChain = {}
@@ -858,7 +858,7 @@ The possible types are
 		end
 		return self._ancestorChain
 	end
-	
+
 	local function fetch_descendants(self, format)
 		local languages = require("Module:languages/code to canonical name")
 		local etymology_languages = require("Module:etymology languages/code to canonical name")
@@ -891,28 +891,28 @@ The possible types are
 		end
 		return descendants
 	end
-	
+
 	function Language:getDescendants()
 		if not self._descendantObjects then
 			self._descendantObjects = fetch_descendants(self, "object")
 		end
 		return self._descendantObjects
 	end
-	
+
 	function Language:getDescendantCodes()
 		if not self._descendantCodes then
 			self._descendantCodes = fetch_descendants(self, "code")
 		end
 		return self._descendantCodes
 	end
-	
+
 	function Language:getDescendantNames()
 		if not self._descendantNames then
 			self._descendantNames = fetch_descendants(self, "name")
 		end
 		return self._descendantNames
 	end
-	
+
 	function Language:hasDescendant(...)
 		for _, lang in ipairs{...} do
 			if type(lang) == "string" then
@@ -924,7 +924,7 @@ The possible types are
 		end
 		return false
 	end
-	
+
 	local function fetch_children(self, format)
 		local m_etym_data = require("Module:etymology languages/data")
 		local self_code = self:getCode()
@@ -948,28 +948,28 @@ The possible types are
 		end
 		return children
 	end
-	
+
 	function Language:getChildren()
 		if not self._childObjects then
 			self._childObjects = fetch_children(self, "object")
 		end
 		return self._childObjects
 	end
-	
+
 	function Language:getChildrenCodes()
 		if not self._childCodes then
 			self._childCodes = fetch_children(self, "code")
 		end
 		return self._childCodes
 	end
-	
+
 	function Language:getChildrenNames()
 		if not self._childNames then
 			self._childNames = fetch_children(self, "name")
 		end
 		return self._childNames
 	end
-	
+
 	function Language:hasChild(...)
 		local lang = ...
 		if not lang then
@@ -982,7 +982,7 @@ The possible types are
 		end
 		return self:hasChild(select(2, ...))
 	end
-	
+
 	--[==[Returns the name of the main category of that language. Example: {{code|lua|"French language"}} for French, whose category is at [[:Category:French language]]. Unless optional argument <code>nocap</code> is given, the language name at the beginning of the returned value will be capitalized. This capitalization is correct for category names, but not if the language name is lowercase and the returned value of this function is used in the middle of a sentence.]==]
 	function Language:getCategoryName(nocap)
 		if not self._categoryName then
@@ -1002,12 +1002,12 @@ The possible types are
 			return mw.getContentLanguage():ucfirst(self._categoryName)
 		end
 	end
-	
+
 	--[==[Creates a link to the category; the link text is the canonical name.]==]
 	function Language:makeCategoryLink()
 		return "[[:Category:" .. self:getCategoryName() .. "|" .. self:getDisplayForm() .. "]]"
 	end
-	
+
 	function Language:getStandardCharacters(sc)
 		if type(self._rawData.standardChars) ~= "table" then
 			return self._rawData.standardChars
@@ -1028,16 +1028,16 @@ The possible types are
 			end
 		end
 	end
-	
+
 	--[==[Make the entry name (i.e. the correct page name).]==]
 	function Language:makeEntryName(text, sc)
 		if (not text) or text == "" then
 			return text, nil, {}
 		end
-		
+
 		-- Remove directional characters.
 		text = remove_directional_chars(text)
-		
+
 		-- Set `unsupported` as true if certain conditions are met.
 		local unsupported
 		-- Check if there's an unsupported character. \239\191\189 is the replacement character U+FFFD, which can't be typed directly here due to an abuse filter. Unix-style dot-slash notation is also unsupported, as it is used for relative paths in links, as are 3 or more consecutive tildes.
@@ -1058,22 +1058,22 @@ The possible types are
 				unsupported = true
 			end
 		end
-		
+
 		-- Check if the text is a listed unsupported title.
 		local unsupportedTitles = conditionalRequire("Module:links/data").unsupported_titles
 		if unsupportedTitles[text] then
 			return "Unsupported titles/" .. unsupportedTitles[text], nil, {}
 		end
-		
+
 		sc = checkScript(text, self, sc)
-		
+
 		local fail, cats
 		text = normalize(text, sc)
 		text, fail, cats = iterateSectionSubstitutions(text, nil, nil, self, sc, self._rawData.entry_name, "makeEntryName")
-		
+
 	text = mw.ustring.match(text, "^[¿¡]?(.-[^%s%p].-)%s*[؟?!;՛՜ ՞ ՟？！︖︕।॥။၊་།]?$") or text
-		
-		
+
+
 		-- Escape unsupported characters so they can be used in titles. ` is used as a delimiter for this, so a raw use of it in an unsupported title is also escaped here to prevent interference; this is only done with unsupported titles, though, so inclusion won't in itself mean a title is treated as unsupported (which is why it's excluded from the earlier test).
 		if unsupported then
 			local unsupported_characters = conditionalRequire("Module:links/data").unsupported_characters
@@ -1087,10 +1087,10 @@ The possible types are
 				end)
 			text = "Unsupported titles/" .. text
 		end
-		
+
 		return text, fail, cats
 	end
-	
+
 	--[==[Generates alternative forms using a specified method, and returns them as a table. If no method is specified, returns a table containing only the input term.]==]
 	function Language:generateForms(text, sc)
 		if self._rawData.generate_forms then
@@ -1100,7 +1100,7 @@ The possible types are
 			return {text}
 		end
 	end
-	
+
 	--[==[Creates a sort key for the given entry name, following the rules appropriate for the language. This removes diacritical marks from the entry name if they are not considered significant for sorting, and may perform some other changes. Any initial hyphen is also removed, and anything parentheses is removed as well.
 	The <code>sort_key</code> setting for each language in the data modules defines the replacements made by this function, or it gives the name of the module that takes the entry name and returns a sortkey.]==]
 	function Language:makeSortKey(text, sc)
@@ -1114,18 +1114,18 @@ The possible types are
 		text = ugsub(text, "[\194\173" .. dir_char .. "]", "")
 		text = mw.text.unstrip(text)
 			:gsub("<[^<>]+>", "")
-		
+
 		text = mw.uri.decode(text, "PATH")
 		text = checkNoEntities(text)
-		
+
 		-- Remove initial hyphens and * unless the term only consists of spacing + punctuation characters.
 		text = ugsub(text, "^([􀀀-􏿽]*)[-־ـ᠊*]+([􀀀-􏿽]*)(.*[^%s%p].*)", "%1%2%3")
-		
+
 		sc = checkScript(text, self, sc)
-		
+
 		text = normalize(text, sc)
 		text = removeCarets(text, sc)
-		
+
 		-- For languages with dotted dotless i, ensure that "İ" is sorted as "i", and "I" is sorted as "ı".
 		if self:hasDottedDotlessI() then
 			text = text
@@ -1139,9 +1139,9 @@ The possible types are
 		if not sc:sortByScraping() then
 			text = text:ulower()
 		end
-		
+
 		text, fail, cats = iterateSectionSubstitutions(text, nil, nil, self, sc, self._rawData.sort_key, "makeSortKey")
-		
+
 		if not sc:sortByScraping() then
 			if self:hasDottedDotlessI() and not self._rawData.sort_key then
 				text = text
@@ -1151,31 +1151,31 @@ The possible types are
 			end
 			text = text:uupper()
 		end
-		
+
 		-- Remove parentheses, as long as they are either preceded or followed by something.
 		text = text
 			:gsub("(.)[()]+", "%1")
 			:gsub("[()]+(.)", "%1")
-		
+
 		text = escape_risky_characters(text)
 		return text, fail, cats
 	end
-	
+
 	--[==[Create the form used as as a basis for display text and transliteration.]==]
 	local function processDisplayText(text, self, sc, keepCarets, keepPrefixes)
 		local subbedChars = {}
 		text, subbedChars = doTempSubstitutions(text, subbedChars, keepCarets)
-		
+
 		text = mw.uri.decode(text, "PATH")
 		text = checkNoEntities(text)
-		
+
 		sc = checkScript(text, self, sc)
 		local fail, cats
 		text = normalize(text, sc)
 		text, fail, cats, subbedChars = iterateSectionSubstitutions(text, subbedChars, keepCarets, self, sc, self._rawData.display_text, "makeDisplayText")
-		
+
 		text = removeCarets(text, sc)
-		
+
 		-- Remove any interwiki link prefixes (unless they have been escaped or this has been disabled).
 		if text:match(":") and not keepPrefixes then
 			local rep
@@ -1207,25 +1207,25 @@ The possible types are
 				:gsub("\3", "\\")
 				:gsub("\4", ":")
 		end
-		
+
 		return text, fail, cats, subbedChars
 	end
-	
+
 	--[==[Make the display text (i.e. what is displayed on the page).]==]
 	function Language:makeDisplayText(text, sc, keepPrefixes)
 		if (not text) or text == "" then
 			return text, nil, {}
 		end
-		
+
 		text = remove_directional_chars(text)
-		
+
 		local fail, cats, subbedChars
 		text, fail, cats, subbedChars = processDisplayText(text, self, sc, nil, keepPrefixes)
-		
+
 		text = escape_risky_characters(text)
 		return undoTempSubstitutions(text, subbedChars), fail, cats
 	end
-	
+
 	--[==[Transliterates the text from the given script into the Latin script (see [[Wiktionary:Transliteration and romanization]]). The language must have the <code>translit</code> property for this to work; if it is not present, {{code|lua|nil}} is returned.
 	Returns three values:
 	# The transliteration.
@@ -1248,18 +1248,18 @@ The possible types are
 		if not (sc:isTransliterated() or module_override) then
 			return nil, true, {}
 		end
-		
+
 		-- Remove any strip markers and directional characters.
 		text = mw.text.unstrip(text)
 		text = remove_directional_chars(text)
-		
+
 		-- Get the display text with the keepCarets flag set.
 		local fail, cats, subbedChars
 		text, fail, cats, subbedChars = processDisplayText(text, self, sc, true)
-		
+
 		-- Transliterate (using the module override if applicable).
 		text, fail, cats, subbedChars = iterateSectionSubstitutions(text, subbedChars, true, self, sc, module_override or self._rawData.translit, "tr")
-		
+
 		-- Incomplete transliterations return nil.
 		if text then
 			if sc:countCharacters(text) > 0 then
@@ -1272,49 +1272,49 @@ The possible types are
 		else
 			return nil, true, cats
 		end
-		
+
 		text = escape_risky_characters(text)
 		text = undoTempSubstitutions(text, subbedChars)
-		
+
 		-- If the script does not use capitalization, then capitalize any letters of the transliteration which are immediately preceded by a caret (and remove the caret).
 		if text and not sc:hasCapitalization() and text:match("%^") then
 			text = processCarets(text, "%^([\128-\191\244]*%*?)([^\128-\191\244][\128-\191]*)", function(m1, m2)
 				return m1 .. m2:uupper()
 			end)
 		end
-		
+
 		-- Track module overrides.
 		if module_override ~= nil then
 			track("module_override")
 		end
-		
+
 		fail = text == nil and (not not fail) or false
-		
+
 		return text, fail, cats
 	end
-	
+
 	function Language:overrideManualTranslit()
 		return not not self._rawData.override_translit
 	end
-	
+
 	--[==[Returns {{code|lua|true}} if the language has a transliteration module, or {{code|lua|false}} if it doesn't.]==]
 	function Language:hasTranslit()
 		return not not self._rawData.translit
 	end
-	
+
 	function Language:link_tr()
 		return not not self._rawData.link_tr
 	end
-	
+
 	--[==[Returns {{code|lua|true}} if the language uses the letters I/ı and İ/i, or {{code|lua|false}} if it doesn't.]==]
 	function Language:hasDottedDotlessI()
 		return not not self._rawData.dotted_dotless_i
 	end
-	
+
 	function Language:toJSON(returnTable)
 		local entryNamePatterns = nil
 		local entryNameRemoveDiacritics = nil
-		
+
 		if self._rawData.entry_name then
 			entryNameRemoveDiacritics = self._rawData.entry_name.remove_diacritics
 			if self._rawData.entry_name.from then
@@ -1324,7 +1324,7 @@ The possible types are
 				end
 			end
 		end
-		
+
 		if not self._type then
 			self:hasType()
 		end
@@ -1353,16 +1353,16 @@ The possible types are
 			wikimediaLanguages = self:getWikimediaLanguageCodes(),
 			wikidataItem = self:getWikidataItem(),
 		}
-		
+
 		ret = require("Module:table").deepcopy(ret)
-	
+
 		if returnTable then
 			return ret
 		else
 			return require("Module:JSON").toJSON(ret)
 		end
 	end
-	
+
 	--[==[
 	<span style="color: #BA0000">This function is not for use in entries or other content pages.</span>
 	Returns a blob of data about the language. The format of this blob is undocumented, and perhaps unstable; it's intended for things like the module's own unit-tests, which are "close friends" with the module and will be kept up-to-date as the format changes.
@@ -1378,7 +1378,7 @@ The possible types are
 		end
 		return rawData
 	end
-	
+
 	--[==[<span style="color: #BA0000">This function is not for use in entries or other content pages.</span>
 	Returns a blob of data about the language that contains the "extra data". Much like with getRawData, the format of this blob is undocumented, and perhaps unstable; it's intended for things like the module's own unit-tests, which are "close friends" with the module and will be kept up-to-date as the format changes.]==]
 	function Language:getRawExtraData()
@@ -1387,7 +1387,7 @@ The possible types are
 		end
 		return self._extraData
 	end
-	
+
 	local function getRawExtraLanguageData(code)
 		local modulename = export.getExtraDataModuleName(code)
 		return modulename and conditionalRequire("Module:" .. modulename)[code] or nil
@@ -1400,7 +1400,7 @@ The possible types are
 			self._extraData = getRawExtraLanguageData(self:getCode()) or {}
 		end
 	end
-	
+
 	return Language
 end
 
@@ -1434,7 +1434,7 @@ do
 			return lang._stack[#lang._stack][k], true
 		end
 	end
-	
+
 	-- Data that is appended by each generation.
 	local function append_data(lang, t, k)
 		if k == "type" then
@@ -1448,7 +1448,7 @@ do
 			return nil, true
 		end
 	end
-	
+
 	local function inherit_data(lang, t, k)
 		local i = #lang._stack
 		while not lang._stack[i][k] and i > 1 do
@@ -1456,16 +1456,16 @@ do
 		end
 		return lang._stack[i][k]
 	end
-	
+
 	local function make_stack(code, input_code, data, parent, useRequire)
 		parent.__index = parent
-		
+
 		local lang = {_code = input_code}
 		-- This can only happen if dontCanonicalizeAliases is passed to make_object().
 		if code ~= input_code then
 			lang._main_code = code
 		end
-		
+
 		-- Full language.
 		if not parent._stack then
 			-- Create stack, accessed with rawData metamethod.
@@ -1510,20 +1510,20 @@ do
 			-- Copy non-etymological code.
 			lang._nonEtymologicalCode = parent._nonEtymologicalCode
 		end
-		
+
 		return setmetatable(lang, parent)
 	end
-	
+
 	function export.makeObject(code, data, useRequire, dontCanonicalizeAliases)
 		if not data then
 			return nil
 		end
-		
+
 		-- Convert any aliases.
 		local input_code = code
 		code = normalize_code(code)
 		input_code = dontCanonicalizeAliases and input_code or code
-	
+
 		if data.type:find("family") and not data[5] then
 			return require("Module:families").makeObject(code, data, useRequire)
 		else
@@ -1553,7 +1553,7 @@ function export.getByCode(code, paramForError, allowEtymLang, allowFamily, useRe
 		end
 		error("The function getByCode expects a string as its first argument, but received " .. typ .. ".")
 	end
-	
+
 	local function conditionalRequire(modulename)
 		if useRequire then
 			return require(modulename)
@@ -1588,9 +1588,9 @@ function export.getByCode(code, paramForError, allowEtymLang, allowFamily, useRe
 		end
 		return true
 	end
-	
+
 	local modulename = export.getDataModuleName(code)
-	
+
 	local function get_data(code)
 		return modulename and
 			track_bad_code(code) and conditionalRequire("Module:" .. modulename)[code] or
@@ -1598,15 +1598,15 @@ function export.getByCode(code, paramForError, allowEtymLang, allowFamily, useRe
 			(allowFamily and conditionalRequire("Module:families/data")[code]) or
 			(allowEtymLang and allowFamily and require("Module:families/track-bad-etym-code")(code) and conditionalRequire("Module:families/data/etymology")[code])
 	end
-	
+
 	local data = get_data(code) or get_data(normalize_code(code))
-	
+
 	local retval = code and data and export.makeObject(code, data, useRequire)
-	
+
 	if not retval and paramForError then
 		require("Module:languages/errorGetBy").code(code, paramForError, allowEtymLang, allowFamily)
 	end
-	
+
 	return retval
 end
 
@@ -1621,10 +1621,10 @@ function export.getByCanonicalName(name, errorIfInvalid, allowEtymLang, allowFam
 			return mw.loadData(modulename)
 		end
 	end
-	
+
 	local byName = conditionalRequire("Module:languages/canonical names")
 	local code = byName and byName[name]
-	
+
 	if not code and allowEtymLang then
 		byName = conditionalRequire("Module:etymology languages/canonical names")
 		code = byName and byName[name] or
@@ -1635,19 +1635,19 @@ function export.getByCanonicalName(name, errorIfInvalid, allowEtymLang, allowFam
 			-- FIXME: This is not ideal, as it allows " languages" to be appended to any etymology-only language, too.
 			byName[name:match("^(.*) languages$")]
 	end
-	
+
 	if not code and allowFamily then
 		byName = conditionalRequire("Module:families/canonical names")
 		code = byName and byName[name] or
 			byName[name:match("^(.*) languages$")]
 	end
-	
+
 	local retval = code and export.getByCode(code, errorIfInvalid, allowEtymLang, allowFamily, useRequire)
-	
+
 	if not retval and errorIfInvalid then
 		require("Module:languages/errorGetBy").canonicalName(name, allowEtymLang, allowFamily)
 	end
-	
+
 	return retval
 end
 
