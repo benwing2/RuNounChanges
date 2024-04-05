@@ -2,36 +2,28 @@ local concat = table.concat
 local get_etym_lang = require("Module:etymology languages").getByCanonicalName
 local gsub = mw.ustring.gsub
 local insert = table.insert
+local set = require("Module:utilities/set")
 local split = mw.text.split
 local trim = mw.text.trim
-local u = mw.ustring.char
-
-local function track(track_id)
-	local tracking_page = "headword/" .. track_id
-	local m_debug_track = require("Module:debug/track")
-	m_debug_track(tracking_page)
-	return true
-end
+local type_or_class = require("Module:parser").type_or_class
+local u = require("Module:string/char")
 
 local frame = mw.getCurrentFrame()
 local title = mw.title.getCurrentTitle()
 local content = title:getContent()
-	:gsub("<!%-%-.-%-%->", "")
-	:gsub("<!%-%-.*", "")
 local content_lang = mw.getContentLanguage()
 
 local data = {}
 
 ------ 1. Lists that will be converted into sets. ------
 
-data.invariable = {
+data.invariable = set{
 	"cmavo",
 	"cmene",
 	"fu'ivla",
 	"gismu",
 	"Han tu",
 	"hanja",
-	"hanzi",
 	"jyutping",
 	"kanji",
 	"lujvo",
@@ -41,7 +33,7 @@ data.invariable = {
 	"romaji",
 }
 
-data.lemmas = {
+data.lemmas = set{
 	"abbreviations",
 	"acronyms",
 	"adjectives",
@@ -62,13 +54,13 @@ data.lemmas = {
 	"counters",
 	"determiners",
 	"diacritical marks",
+	"digraphs",
 	"equative adjectives",
 	"fu'ivla",
 	"gismu",
 	"Han characters",
 	"Han tu",
 	"hanja",
-	"hanzi",
 	"ideophones",
 	"idioms",
 	"infixes",
@@ -109,7 +101,7 @@ data.lemmas = {
 	"verbs",
 }
 
-data.nonlemmas = {
+data.nonlemmas = set{
 	"active participle forms",
 	"active participles",
 	"adjectival participles",
@@ -194,12 +186,12 @@ data.nonlemmas = {
 }
 
 -- These langauges will not have links to separate parts of the headword.
-data.no_multiword_links = {
+data.no_multiword_links = set{
 	"zh",
 }
 
 -- These languages will not have "LANG multiword terms" categories added.
-data.no_multiword_cat = {
+data.no_multiword_cat = set{
 	-------- Languages without spaces between words (sometimes spaces between phrases) --------
 	"blt", -- Tai Dam
 	"ja", -- Japanese
@@ -209,6 +201,7 @@ data.no_multiword_cat = {
 	"mnw", -- Mon
 	"my", -- Burmese
 	"nan", -- Min Nan (some words in Latin script; hyphens between syllables)
+	"nan-hbl", -- Hokkien (some words in Latin script; hyphens between syllables)
 	"nod", -- Northern Thai
 	"ojp", -- Old Japanese
 	"shn", -- Shan
@@ -399,7 +392,7 @@ data.no_multiword_cat = {
 }
 
 -- In these languages, the hyphen is not considered a word separator for the "multiword terms" category.
-data.hyphen_not_multiword_sep = {
+data.hyphen_not_multiword_sep = set{
 	"akk", -- Akkadian; hyphens between syllables
 	"akl", -- Aklanon; hyphens for mid-word glottal stops
 	"ber-pro", -- Proto-Berber; morphemes separated by hyphens
@@ -422,13 +415,13 @@ data.hyphen_not_multiword_sep = {
 }
 
 -- These languages will not have "LANG masculine nouns" and similar categories added.
-data.no_gender_cat = {
+data.no_gender_cat = set{
 	-- Languages without gender but which use the gender field for other purposes
 	"ja",
 	"th",
 }
 
-data.notranslit = {
+data.notranslit = set{
 	"ams",
 	"az",
 	"bbc",
@@ -446,6 +439,10 @@ data.notranslit = {
 	"mul",
 	"mvi",
 	"nan",
+	"nan-hbl",
+	"nan-hnm",
+	"nan-luh",
+	"nan-tws",
 	"oj",
 	"okn",
 	"ryn",
@@ -468,7 +465,7 @@ data.notranslit = {
 }
 
 -- Script codes for which a script-tagged display title will be added.
-data.toBeTagged = {
+data.toBeTagged = set{
 	"Ahom",
 	"Arab",
 		"fa-Arab",
@@ -568,6 +565,7 @@ data.toBeTagged = {
 	"Orkh",
 	"Orya",
 	"Osma",
+	"Ougr",
 	"Palm",
 	"Phag",
 	"Phli",
@@ -619,12 +617,11 @@ data.toBeTagged = {
 -- Parts of speech which will not be categorised in categories like "English terms spelled with É" if
 -- the term is the character in question (e.g. the letter entry for English [[é]]). This contrasts with
 -- entries like the French adjective [[m̂]], which is a one-letter word spelled with the letter.
-data.pos_not_spelled_with_self = {
+data.pos_not_spelled_with_self = set{
 	"diacritical marks",
 	"Han characters",
 	"Han tu",
 	"hanja",
-	"hanzi",
 	"kanji",
 	"letters",
 	"ligatures",
@@ -633,14 +630,6 @@ data.pos_not_spelled_with_self = {
 	"numerals",
 	"symbols",
 }
-
--- Convert lists into sets.
-for key, list in pairs(data) do
-	data[key] = {}
-	for _, item in ipairs(list) do
-		data[key][item] = true
-	end
-end
 
 ------ 2. Lists that will not be converted into sets. ------
 
@@ -656,6 +645,7 @@ data.pos_aliases = {
 	cnum = "cardinal number",
 	conj = "conjunction",
 	conv = "converb",
+	hanzi = "Han character",
 	int = "interjection",
 	interj = "interjection",
 	intj = "interjection",
@@ -1033,8 +1023,8 @@ local comb_chars = {
 		{0xE0100, 0xE01EF},
 	}
 }
-for key, set in pairs(comb_chars) do
-	comb_chars[key] = char_ranges_to_pattern(set)
+for key, charset in pairs(comb_chars) do
+	comb_chars[key] = char_ranges_to_pattern(charset)
 end
 comb_chars.both = comb_chars.single .. comb_chars.double .. comb_chars.vs
 comb_chars = {
@@ -1127,7 +1117,7 @@ data.explode_pagename = explode_pagename
 data.pagename_len = pagename_len
 
 -- Generate DEFAULTSORT.
-data.encoded_pagename = mw.text.encode(data.pagename)
+data.encoded_pagename = require("Module:string/encode entities")(data.pagename, nil, true)
 data.pagename_defaultsort = require("Module:languages").getByCode("mul"):makeSortKey(data.encoded_pagename)
 frame:callParserFunction(
 	"DEFAULTSORT",
@@ -1135,21 +1125,45 @@ frame:callParserFunction(
 )
 data.raw_defaultsort = title.text:uupper()
 
--- Get section numbers for the page.
+-- Get section numbers for the page, and note raw wikitext use of {{DEFAULTSORT:}} and {{DISPLAYTITLE:}}.
+-- Note: HTML comments shouldn't be removed from `content` until after this step, as they can affect the result.
 do
-	local page_L2s = {}
-	local i = 0
-	for lvl, heading in content:gmatch("%f[^%z\n](=+)([^\n\r]+)%1[\t ]*%f[%z\n]") do
-		i = i + 1
-		if #lvl == 2 then
-			page_L2s[i] = trim(heading)
+	local page_L2s, defaultsort, displaytitle = {}
+	
+	local function iterate(node)
+		local node_type = type_or_class(node)
+		if node_type == "heading" and node.level == 2 then
+			local name = node:get_name()
+			if name:find("\n", 1, true) then
+				return
+			end
+			page_L2s[node.section] = name
+		elseif node_type == "template" and not (defaultsort and displaytitle) then
+			local name = node:get_name()
+			if name == "DEFAULTSORT" then
+				defaultsort = frame:expandTemplate{
+					title = "tracking category",
+					args = {"Pages with DEFAULTSORT conflicts"}
+				}
+			elseif name == "DISPLAYTITLE" then
+				displaytitle = frame:expandTemplate{
+					title = "tracking category",
+					args = {"Pages with DISPLAYTITLE conflicts"}
+				}
+			end
 		end
 	end
+	
+	for node in require("Module:template parser").parse(content):__pairs("next_node") do
+		iterate(node)
+	end
+	
 	data.page_L2s = page_L2s
+	data.pagename_defaultsort_conflict = defaultsort
+	data.pagename_displaytitle_conflict = displaytitle
 end
 
 ------ 4. Parse page for maintenance categories. ------
-content = content:gsub("%[%[", "\1"):gsub("]]", "\2")
 -- Use of tab characters.
 if content:find("\t") then
 	data.tab_characters = frame:expandTemplate{
@@ -1158,26 +1172,14 @@ if content:find("\t") then
 	}
 end
 -- Unencoded character(s) in title.
-local IDS = {
-	["⿰"] = true, ["⿱"] = true, ["⿲"] = true, ["⿳"] = true,
-	["⿴"] = true, ["⿵"] = true, ["⿶"] = true, ["⿷"] = true,
-	["⿸"] = true, ["⿹"] = true, ["⿺"] = true, ["⿻"] = true,
-	["⿼"] = true, ["⿽"] = true, ["⿾"] = true, ["⿿"] = true,
-	["㇯"] = true
-}
+local IDS = set{"⿰", "⿱", "⿲", "⿳", "⿴", "⿵", "⿶", "⿷", "⿸", "⿹", "⿺", "⿻", "⿼", "⿽", "⿾", "⿿", "㇯"}
 for char in pairs(explode_pagename) do
 	if IDS[char] and char ~= data.pagename then
 		data.unencoded_char = true
 		break
 	end
 end
--- Raw wikitext use of {{DISPLAYTITLE:}}.
-if content:find("{{%s*DISPLAYTITLE:.-}}") then
-	data.pagename_displaytitle_conflict = frame:expandTemplate{
-		title = "tracking category",
-		args = {"Pages with DISPLAYTITLE conflicts"}
-	}
-end
+
 -- Raw wikitext use of a topic or langname category. Also check if any raw sortkeys have been used.
 do
 	-- All chars treated as spaces in links (including categories).
@@ -1217,7 +1219,7 @@ do
 		end
 		name = etym_langnames[name] and name or content_lang:lcfirst(name)
 		if etym_langnames[name] then
-			name = get_etym_lang(name):getNonEtymologicalName()
+			name = get_etym_lang(name):getFullName()
 			return add_cat_table(name, sortkey, wikitext_langname_cat)
 		end
 	end
@@ -1265,7 +1267,11 @@ do
 		until n == 0
 	end
 	
-	for prefix, cat in content:gmatch("\1([^\1\2]-[Cc][Aa][Tt][^\1\2]-):([^\1]-)\2") do
+	for prefix, cat in content:gsub("<!%-%-.-%-%->", "")
+		:gsub("<!%-%-.*", "")
+		:gsub("%[%[", "\1")
+		:gsub("]]", "\2")
+		:gmatch("\1([^\1\2]-[Cc][Aa][Tt][^\1\2]-):([^\1]-)\2") do
 		prefix = trim(prefix, spaces):lower()
 		if prefix == "cat" or prefix == "category" then
 			process_category(cat)
