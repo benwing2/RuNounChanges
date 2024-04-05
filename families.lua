@@ -2,37 +2,37 @@ local export = {}
 
 function export.makeObject(code, data, useRequire)
 	local Family = {}
-	
+
 	function Family:getCode()
 		return self._code
 	end
-	
+
 	function Family:getCanonicalName()
 		return self._rawData[1]
 	end
-	
+
 	function Family:getDisplayForm()
 		return self:getCategoryName("nocap")
 	end
-	
+
 	function Family:getOtherNames(onlyOtherNames)
 		return require("Module:language-like").getOtherNames(self, onlyOtherNames)
 	end
-	
+
 	function Family:getAliases()
 		return self._rawData.aliases or {}
 	end
-	
+
 	function Family:getVarieties(flatten)
 		return require("Module:language-like").getVarieties(self, flatten)
 	end
-	
+
 	--function Family:getAllNames()
 	--	return self._rawData.names
 	--end
-	
+
 	--[==[Given a list of types as strings, returns true if the family has all of them. 
-	
+
 	The following types are recognized:
 	* {family}: This object is a family.
 	* {full}: This object is a "full" family. This includes all families but a couple of etymology-only
@@ -41,7 +41,7 @@ function export.makeObject(code, data, useRequire)
 						are currently only two such families, for Old Iranian languages and Middle Iranian
 						languages (which do not represent proper clades and have no proto-languages, hence
 						cannot be full families).
-	]==]	
+	]==]
 	function Family:hasType(...)
 		if not self._type then
 			self._type = {family = true}
@@ -63,7 +63,7 @@ function export.makeObject(code, data, useRequire)
 		end
 		return true
 	end
-	
+
 	--[==[Returns a {Family} object for the superfamily that the family belongs to.]==]
 	function Family:getFamily()
 		if self._familyObject == nil then
@@ -76,7 +76,7 @@ function export.makeObject(code, data, useRequire)
 		end
 		return self._familyObject or nil
 	end
-	
+
 	--[==[Returns the code of the family's superfamily.]==]
 	function Family:getFamilyCode()
 		if not self._familyCode then
@@ -84,7 +84,7 @@ function export.makeObject(code, data, useRequire)
 		end
 		return self._familyCode
 	end
-	
+
 	--[==[Returns the canonical name of the family's superfamily.]==]
 	function Family:getFamilyName()
 		if self._familyName == nil then
@@ -97,7 +97,7 @@ function export.makeObject(code, data, useRequire)
 		end
 		return self._familyName or nil
 	end
-	
+
 	--[==[Check whether the family belongs to {superfamily} (which can be a family code or object), and returns a boolean. If more than one is given, returns {true} if the family belongs to any of them. A family is '''not''' considered to belong to itself.]==]
 	function Family:inFamily(...)
 		for _, superfamily in ipairs{...} do
@@ -120,7 +120,7 @@ function export.makeObject(code, data, useRequire)
 			end
 		end
 	end
-	
+
 	function Family:getParent()
 		if self._parentObject == nil then
 			local parentCode = self:getParentCode()
@@ -132,14 +132,14 @@ function export.makeObject(code, data, useRequire)
 		end
 		return self._parentObject or nil
 	end
-	
+
 	function Family:getParentCode()
 		if not self._parentCode then
 			self._parentCode = self._rawData[5]
 		end
 		return self._parentCode
 	end
-	
+
 	function Family:getParentName()
 		if self._parentName == nil then
 			local parent = self:getParent()
@@ -151,7 +151,7 @@ function export.makeObject(code, data, useRequire)
 		end
 		return self._parentName or nil
 	end
-	
+
 	function Family:getParentChain()
 		if not self._parentChain then
 			self._parentChain = {}
@@ -163,7 +163,7 @@ function export.makeObject(code, data, useRequire)
 		end
 		return self._parentChain
 	end
-	
+
 	function Family:hasParent(...)
 		--checkObject("family", nil, ...)
 		for _, other_family in ipairs{...} do
@@ -177,7 +177,7 @@ function export.makeObject(code, data, useRequire)
 		end
 		return false
 	end
-	
+
 	--[==[If the family is etymology-only, iterates through its parents until a regular family is found and returns it. If the family is a regular family, then it simply returns itself.]==]
 	function Family:getNonEtymological()
 		if not self._nonEtymologicalObject then
@@ -190,11 +190,11 @@ function export.makeObject(code, data, useRequire)
 		end
 		return self._nonEtymologicalObject
 	end
-	
+
 	function Family:getNonEtymologicalCode()
 		return self._nonEtymologicalCode or self:getCode()
 	end
-	
+
 	function Family:getNonEtymologicalName()
 		if self._nonEtymologicalName == nil then
 			local nonEtymological = self:getNonEtymological()
@@ -206,14 +206,14 @@ function export.makeObject(code, data, useRequire)
 		end
 		return self._nonEtymologicalName or nil
 	end
-	
+
 	function Family:getProtoLanguage()
 		if self._protoLanguageObject == nil then
 			self._protoLanguageObject = require("Module:languages").getByCode(self._rawData.protoLanguage or self:getCode() .. "-pro", nil, true, nil, useRequire) or false
 		end
 		return self._protoLanguageObject or nil
 	end
-	
+
 	function Family:getProtoLanguageCode()
 		if self._protoLanguageCode == nil then
 			local protoLanguage = self:getProtoLanguage()
@@ -221,14 +221,14 @@ function export.makeObject(code, data, useRequire)
 		end
 		return self._protoLanguageCode or nil
 	end
-	
+
 	function Family:getProtoLanguageName()
 		if not self._protoLanguageName then
 			self._protoLanguageName = self:getProtoLanguage():getCanonicalName()
 		end
 		return self._protoLanguageName
 	end
-	
+
 	function Family:hasAncestor(...)
 		-- Go up the family tree until a protolanguage is found.
 		local family = self
@@ -253,7 +253,7 @@ function export.makeObject(code, data, useRequire)
 		-- If not, check the protolanguage's ancestry.
 		return protolang:hasAncestor(...)
 	end
-	
+
 	local function fetch_descendants(self, format)
 		local languages = require("Module:languages/code to canonical name")
 		local etymology_languages = require("Module:etymology languages/code to canonical name")
@@ -277,28 +277,28 @@ function export.makeObject(code, data, useRequire)
 		end
 		return descendants
 	end
-	
+
 	function Family:getDescendants()
 		if not self._descendantObjects then
 			self._descendantObjects = fetch_descendants(self, "object")
 		end
 		return self._descendantObjects
 	end
-	
+
 	function Family:getDescendantCodes()
 		if not self._descendantCodes then
 			self._descendantCodes = fetch_descendants(self, "code")
 		end
 		return self._descendantCodes
 	end
-	
+
 	function Family:getDescendantNames()
 		if not self._descendantNames then
 			self._descendantNames = fetch_descendants(self, "name")
 		end
 		return self._descendantNames
 	end
-	
+
 	function Family:hasDescendant(...)
 		for _, lang in ipairs{...} do
 			if type(lang) == "string" then
@@ -310,10 +310,10 @@ function export.makeObject(code, data, useRequire)
 		end
 		return false
 	end
-	
+
 	function Family:getCategoryName(nocap)
 		local name = self._rawData[1]
-	
+
 		-- If the name already has "languages" in it, don't add it.
 		if not name:find("[Ll]anguages$") then
 			name = name .. " languages"
@@ -323,34 +323,34 @@ function export.makeObject(code, data, useRequire)
 		end
 		return name
 	end
-	
+
 	function Family:makeCategoryLink()
 		return "[[:Category:" .. self:getCategoryName() .. "|" .. self:getDisplayForm() .. "]]"
 	end
-	
+
 	function Family:getWikidataItem()
 		local item = self._rawData[2] or self._rawData.wikidata_item
-		
+
 		if not item then
 			return nil
 		end
-		
+
 		if type(item) ~= "number" then
 			error("The method getWikidataItem expects the item to be stored as a number, but it is currently a " .. type(code) .. ".")
 		end
-	
+
 		return "Q" .. item
 	end
-	
+
 	function Family:getWikipediaArticle()
 		return (self:getWikidataItem() and mw.wikibase and mw.wikibase.sitelink(self:getWikidataItem(), 'enwiki')) or
 			self:getCategoryName()
 	end
-	
+
 	function Family:makeWikipediaLink()
 		return "[[w:" .. self:getWikipediaArticle() .. "|" .. self:getCanonicalName() .. "]]"
 	end
-	
+
 	function Family:toJSON()
 		if not self._type then
 			self:hasType()
@@ -359,7 +359,7 @@ function export.makeObject(code, data, useRequire)
 		for type in pairs(self._type) do
 			table.insert(types, type)
 		end
-		
+
 		local ret = {
 			canonicalName = self:getCanonicalName(),
 			categoryName = self:getCategoryName("nocap"),
@@ -372,16 +372,16 @@ function export.makeObject(code, data, useRequire)
 			type = types,
 			wikidataItem = self:getWikidataItem(),
 		}
-	
+
 		return require("Module:JSON").toJSON(ret)
 	end
-	
+
 	function Family:getRawData()
 		return self._rawData
 	end
-	
+
 	Family.__index = Family
-	
+
 	return data and setmetatable({ _rawData = data, _code = code }, Family) or nil
 end
 
@@ -393,17 +393,17 @@ function export.getByCode(code, useRequire)
 			return mw.loadData(modulename)
 		end
 	end
-	
+
 	local data = conditionalRequire("Module:families/data")[code]
 	if data then
 		return export.makeObject(code, data, useRequire)
 	end
-	
+
 	data = require("Module:families/track-bad-etym-code")(code) and conditionalRequire("Module:families/data/etymology")[code]
 	if data then
 		return require("Module:languages").makeObject(code, data, useRequire)
 	end
-	
+
 	return nil
 end
 
@@ -415,7 +415,7 @@ function export.getByCanonicalName(name, useRequire)
 			return mw.loadData(modulename)
 		end
 	end
-	
+
 	local byName = conditionalRequire("Module:families/canonical names")
 	local code = byName and byName[name] or
 		byName[name:match("^(.*) languages$")]
