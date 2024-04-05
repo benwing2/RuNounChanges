@@ -133,12 +133,12 @@ end
 
 -- Convert risky characters to HTML entities, which minimizes interference once returned (e.g. for "sms:a", "<!-- -->" etc.).
 local function escape_risky_characters(text)
-	local make_entities = require("Module:utilities").make_entities
+	local encode_entities = require("Module:string/encode entities")
 	-- Spacing characters in isolation generally need to be escaped in order to be properly processed by the MediaWiki software.
 	if not mw.ustring.match(text, "%S") then
-		return make_entities(text, text)
+		return encode_entities(text, text)
 	else
-		return make_entities(text, "!#%&*+/:;<=>?@[\\]_{|}")
+		return encode_entities(text, "!#%&*+/:;<=>?@[\\]_{|}")
 	end
 end
 
@@ -212,18 +212,9 @@ local function make_language(code, data, useRequire)
 		return text
 	end
 	
-	-- Convert any HTML entities.
-	local function noEntities(text)
-		if text:match("&[^;]+;") then
-			return require("Module:utilities").get_entities(text)
-		else
-			return text
-		end
-	end
-	
 	-- Check if the raw text is an unsupported title, and if so return that. Otherwise, remove HTML entities. We do the pre-conversion to avoid loading the unsupported title list unnecessarily.
 	local function checkNoEntities(text)
-		local textNoEnc = noEntities(text)
+		local textNoEnc = require("Module:string/decode entities")(text)
 		if textNoEnc ~= text and conditionalRequire("Module:links/data").unsupported_titles[text] then
 			return text
 		else
@@ -443,24 +434,54 @@ The possible types are
 	end
 	
 	--[==[
-	Returns the name of the Wikipedia article for the language. If the property {wikipedia_article} is present in the
-	data module it will be used first, otherwise a sitelink will be generated from {:getWikidataItem} (if set). Otherwise
-	{:getCategoryName} is used as fallback, unless `noCategoryFallback` is specified, in which case {nil} is returned.]==]
-	function Language:getWikipediaArticle(noCategoryFallback)
-		if self._wikipedia_article == nil then
-			if self._rawData.wikipedia_article then
-				self._wikipedia_article = self._rawData.wikipedia_article
-			elseif self:getWikidataItem() and mw.wikibase then
-				self._wikipedia_article = mw.wikibase.sitelink(self:getWikidataItem(), 'enwiki')
+	Returns the name of the Wikipedia article for the language. `project` specifies the language and project to retrieve
+	the article from, defaulting to {"enwiki"} for the English Wikipedia. Normally if specified it should be the project
+	code for a specific-language Wikipedia e.g. "zhwiki" for the Chinese Wikipedia, but it can be any project, including
+	non-Wikipedia ones. If the project is the English Wikipedia and the property {wikipedia_article} is present in the data
+	module it will be used first. In all other cases, a sitelink will be generated from {:getWikidataItem} (if set). The
+	resulting value (or lack of value) is cached so that subsequent calls are fast. If no value could be determined, and
+	`noCategoryFallback` is {false}, {:getCategoryName} is used as fallback; otherwise, {nil} is returned. Note that if
+	`noCategoryFallback` is {nil} or omitted, it defaults to {false} if the project is the English Wikipedia, otherwise
+	to {true}. In other words, under normal circumstances, if the English Wikipedia article couldn't be retrieved, the
+	return value will fall back to a link to the language's category, but this won't normally happen for any other project.
+	]==]
+	function Language:getWikipediaArticle(noCategoryFallback, project)
+		project = project or "enwiki"
+		local cached_value
+		if project == "enwiki" then
+			cached_value = self._wikipedia_article
+			if cached_value == nil then
+				cached_value = self._rawData.wikipedia_article
 			end
-			if not self._wikipedia_article then
-				self._wikipedia_article = false
+		else
+			-- If the project isn't enwiki, default to no category fallback, but this can be overridden by specifying the
+			-- value `false`.
+			if noCategoryFallback == nil then
+				noCategoryFallback = true
+			end
+			if self._non_en_wikipedia_articles == nil then
+				self._non_en_wikipedia_articles = {}
+			end
+			cached_value = self._non_en_wikipedia_articles[project]
+		end
+		if cached_value == nil then -- not false
+			if self:getWikidataItem() and mw.wikibase then
+				cached_value = mw.wikibase.sitelink(self:getWikidataItem(), project)
+			end
+			if not cached_value then
+				cached_value = false
 			end
 		end
-		if not self._wikipedia_article and not noCategoryFallback then
+		-- Now cache the determined value.
+		if project == "enwiki" then
+			self._wikipedia_article = cached_value
+		else
+			self._non_en_wikipedia_articles[project] = cached_value
+		end
+		if not cached_value and not noCategoryFallback then
 			return self:getCategoryName():gsub("Creole language", "Creole")
 		end
-		return self._wikipedia_article or nil
+		return cached_value or nil
 	end
 	
 	function Language:makeWikipediaLink()
