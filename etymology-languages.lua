@@ -3,13 +3,13 @@ local export = {}
 function export.makeObject(code)
 	local data = mw.loadData("Module:etymology languages/data")[code]
 	code = data and data.main_code or code
-	
+
 	if not data then
 		return nil
 	end
-	
+
 	local EtymologyLanguage = require("Module:languages").getByCode(data[5], nil, true, true)
-	
+
 	local familyCode
 	if EtymologyLanguage:hasType("family") then
 		-- Substrates are treated as child languages of "undetermined".
@@ -21,15 +21,15 @@ function export.makeObject(code)
 	end
 	-- Delete cached _type table to prevent the new object's hasType method from finding it via the metatable, as it only includes the parent's types.
 	EtymologyLanguage._type = nil
-	
+
 	if not EtymologyLanguage then
 		return nil
 	end
-	
+
 	EtymologyLanguage.__index = EtymologyLanguage
-	
+
 	local lang = {_code = code}
-	
+
 	-- Parent is full language.
 	if not EtymologyLanguage._stack then
 		-- Create stack, accessed with rawData metamethod.
@@ -76,9 +76,9 @@ function export.makeObject(code)
 		-- Copy non-etymological code.
 		lang._nonEtymologicalCode = EtymologyLanguage._nonEtymologicalCode
 	end
-	
+
 	lang._familyCode = familyCode
-	
+
 	return setmetatable(lang, EtymologyLanguage)
 end
 
@@ -92,11 +92,11 @@ function export.getByCanonicalName(name)
 		byName[name:gsub(" [Ss]ubstrate$", "")] or
 		byName[name:gsub("^a ", "")] or
 		byName[name:gsub("^a ", ""):gsub(" [Ss]ubstrate$", "")]
-	
+
 	if not code then
 		return nil
 	end
-	
+
 	return export.makeObject(code)
 end
 
