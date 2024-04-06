@@ -3,12 +3,9 @@ local pos_functions = {}
 
 local force_cat = false -- for testing; if true, categories appear in non-mainspace pages
 
-local u = mw.ustring.char
 local rfind = mw.ustring.find
 local rmatch = mw.ustring.match
-local rsplit = mw.text.split
 
-local m_links = require("Module:links")
 local m_table = require("Module:table")
 local com = require("Module:es-common")
 local headword_module = "Module:headword"
@@ -18,13 +15,10 @@ local es_verb_module = "Module:es-verb"
 local lang = require("Module:languages").getByCode("es")
 local langname = lang:getCanonicalName()
 
-local PAGENAME = mw.title.getCurrentTitle().text
-
-local V = com.V -- vowel regex class
-local AV = com.AV -- accented vowel regex class
-local C = com.C -- consonant regex class
+local PAGENAME = mw.loadData("Module:headword/data").pagename
 
 local rsub = com.rsub
+local usub = mw.ustring.sub
 
 local function track(page)
 	require("Module:debug").track("es-headword/" .. page)
@@ -56,7 +50,7 @@ function export.show(frame)
 
 	local args = require("Module:parameters").process(parargs, params)
 
-	local pagename = args.pagename or mw.title.getCurrentTitle().text
+	local pagename = args.pagename or PAGENAME
 
 	local user_specified_heads = args.head
 	local heads = user_specified_heads
@@ -276,7 +270,7 @@ local function do_adjective(args, data, pos, is_suffix, is_superlative)
 					table.insert(feminine_plurals, {term = defpl, q = quals})
 				end
 			else
-				table.insert(feminine_plural, {term = replace_hash_with_lemma(fpl, lemma), q = quals})
+				table.insert(feminine_plurals, {term = replace_hash_with_lemma(fpl, lemma), q = quals})
 			end
 		end
 
@@ -380,12 +374,18 @@ local function do_adjective(args, data, pos, is_suffix, is_superlative)
 			-- Make sure there are feminines given and not same as lemma.
 			if not fem_like_lemma then
 				insert_inflection(feminines, "feminine", "f|s")
+			elseif args.gneut then
+				data.genders = {"gneut"}
 			else
 				data.genders = {"mf"}
 			end
 
 			if fem_pl_like_masc_pl then
-				insert_inflection(masculine_plurals, "masculine and feminine plural", "p")
+				if args.gneut then
+					insert_inflection(masculine_plurals, "plural", "p")
+				else
+					insert_inflection(masculine_plurals, "masculine and feminine plural", "p")
+				end
 			else
 				insert_inflection(masculine_plurals, "masculine plural", "m|p")
 				insert_inflection(feminine_plurals, "feminine plural", "f|p")
@@ -409,26 +409,27 @@ local function get_adjective_params(adjtype)
 		["inv"] = {type = "boolean"}, --invariable
 		["sp"] = {}, -- special indicator: "first", "first-last", etc.
 		["f"] = {list = true}, --feminine form(s)
-		["f_qual"] = {list = "f=_qual", allow_holes = true},
+		["f_qual"] = {list = "f\1_qual", allow_holes = true},
 		["pl"] = {list = true}, --plural override(s)
-		["pl_qual"] = {list = "pl=_qual", allow_holes = true},
+		["pl_qual"] = {list = "pl\1_qual", allow_holes = true},
 		["mpl"] = {list = true}, --masculine plural override(s)
-		["mpl_qual"] = {list = "mpl=_qual", allow_holes = true},
+		["mpl_qual"] = {list = "mpl\1_qual", allow_holes = true},
 		["fpl"] = {list = true}, --feminine plural override(s)
-		["fpl_qual"] = {list = "fpl=_qual", allow_holes = true},
+		["fpl_qual"] = {list = "fpl\1_qual", allow_holes = true},
 	}
 	if adjtype == "base" then
 		params["mapoc"] = {list = true} --masculine apocopated (before a noun)
-		params["mapoc_qual"] = {list = "mapoc=_qual", allow_holes = true}
+		params["mapoc_qual"] = {list = "mapoc\1_qual", allow_holes = true}
 		params["comp"] = {list = true} --comparative(s)
-		params["comp_qual"] = {list = "comp=_qual", allow_holes = true}
+		params["comp_qual"] = {list = "comp\1_qual", allow_holes = true}
 		params["sup"] = {list = true} --superlative(s)
-		params["sup_qual"] = {list = "sup=_qual", allow_holes = true}
+		params["sup_qual"] = {list = "sup\1_qual", allow_holes = true}
 		params["dim"] = {list = true} --diminutive(s)
-		params["dim_qual"] = {list = "dim=_qual", allow_holes = true}
+		params["dim_qual"] = {list = "dim\1_qual", allow_holes = true}
 		params["aug"] = {list = true} --augmentative(s)
-		params["aug_qual"] = {list = "aug=_qual", allow_holes = true}
+		params["aug_qual"] = {list = "aug\1_qual", allow_holes = true}
 		params["fonly"] = {type = "boolean"} -- feminine only
+		params["gneut"] = {type = "boolean"} -- gender-neutral adjective e.g. [[latine]]
 		params["hascomp"] = {} -- has comparative
 	end
 	if adjtype == "sup" then
@@ -489,7 +490,7 @@ pos_functions["adverbs"] = {
 	params = {
 		["sup"] = {list = true}, --superlative(s)
 	},
-	func = function(args, data, frame)
+	func = function(args, data)
 		if #args.sup > 0 then
 			check_all_missing(data, args.sup, "adverbs")
 			args.sup.label = "superlative"
@@ -507,7 +508,7 @@ pos_functions["cardinal numbers"] = {
 		["f"] = {list = true}, --feminine(s)
 		["mapoc"] = {list = true}, --masculine apocopated form(s)
 	},
-	func = function(args, data, frame)
+	func = function(args, data)
 		data.pos_category = "numerals"
 		table.insert(data.categories, 1, langname .. " cardinal numbers")
 
@@ -548,7 +549,7 @@ local function process_genders(data, genders, g_qual)
 end
 
 -- Display additional inflection information for a noun
-local function do_noun(args, data, pos, is_suffix, is_proper)
+local function do_noun(args, data, pos, is_suffix)
 	local is_plurale_tantum = false
 	local has_singular = false
 	if is_suffix then
@@ -813,23 +814,23 @@ end
 local function get_noun_params(is_proper)
 	return {
 		[1] = {list = "g", required = not is_proper, default = "?"}, --gender
-		["g_qual"] = {list = "g=_qual", allow_holes = true},
+		["g_qual"] = {list = "g\1_qual", allow_holes = true},
 		[2] = {list = "pl"}, --plural override(s)
-		-- ["pl_qual"] = {list = "pl=_qual", allow_holes = true},
+		-- ["pl_qual"] = {list = "pl\1_qual", allow_holes = true},
 		["f"] = {list = true}, --feminine form(s)
-		-- ["f_qual"] = {list = "f=_qual", allow_holes = true},
+		-- ["f_qual"] = {list = "f\1_qual", allow_holes = true},
 		["m"] = {list = true}, --masculine form(s)
-		-- ["m_qual"] = {list = "m=_qual", allow_holes = true},
+		-- ["m_qual"] = {list = "m\1_qual", allow_holes = true},
 		["fpl"] = {list = true}, --feminine plural override(s)
-		-- ["fpl_qual"] = {list = "fpl=_qual", allow_holes = true},
+		-- ["fpl_qual"] = {list = "fpl\1_qual", allow_holes = true},
 		["mpl"] = {list = true}, --masculine plural override(s)
-		-- ["mpl_qual"] = {list = "mpl=_qual", allow_holes = true},
+		-- ["mpl_qual"] = {list = "mpl\1_qual", allow_holes = true},
 		["dim"] = {list = true}, --diminutive(s)
-		-- ["dim_qual"] = {list = "dim=_qual", allow_holes = true},
+		-- ["dim_qual"] = {list = "dim\1_qual", allow_holes = true},
 		["aug"] = {list = true}, --diminutive(s)
-		-- ["aug_qual"] = {list = "aug=_qual", allow_holes = true},
+		-- ["aug_qual"] = {list = "aug\1_qual", allow_holes = true},
 		["pej"] = {list = true}, --pejorative(s)
-		-- ["pej_qual"] = {list = "pej=_qual", allow_holes = true},
+		-- ["pej_qual"] = {list = "pej\1_qual", allow_holes = true},
 	}
 end
 
@@ -855,17 +856,17 @@ pos_functions["verbs"] = {
 	params = {
 		[1] = {},
 		["pres"] = {list = true}, --present
-		["pres_qual"] = {list = "pres=_qual", allow_holes = true},
+		["pres_qual"] = {list = "pres\1_qual", allow_holes = true},
 		["pret"] = {list = true}, --preterite
-		["pret_qual"] = {list = "pret=_qual", allow_holes = true},
+		["pret_qual"] = {list = "pret\1_qual", allow_holes = true},
 		["part"] = {list = true}, --participle
-		["part_qual"] = {list = "part=_qual", allow_holes = true},
+		["part_qual"] = {list = "part\1_qual", allow_holes = true},
 		["pagename"] = {}, -- for testing
 		["noautolinktext"] = {type = "boolean"},
 		["noautolinkverb"] = {type = "boolean"},
 		["attn"] = {type = "boolean"},
 	},
-	func = function(args, data, frame)
+	func = function(args, data)
 		local preses, prets, parts
 
 		if args.attn then
@@ -1042,13 +1043,13 @@ pos_functions["verbs"] = {
 pos_functions["phrases"] = {
 	params = {
 		["g"] = {list = true},
-		["g_qual"] = {list = "g=_qual", allow_holes = true},
+		["g_qual"] = {list = "g\1_qual", allow_holes = true},
 		["m"] = {list = true},
-		["m_qual"] = {list = "m=_qual", allow_holes = true},
+		["m_qual"] = {list = "m\1_qual", allow_holes = true},
 		["f"] = {list = true},
-		["f_qual"] = {list = "f=_qual", allow_holes = true},
+		["f_qual"] = {list = "f\1_qual", allow_holes = true},
 	},
-	func = function(args, data, is_suffix)
+	func = function(args, data)
 		data.genders = {}
 		process_genders(data, args.g, args.g_qual)
 		insert_ancillary_inflection(data, args.m, args.m_qual, "masculine", "phrases")
@@ -1064,9 +1065,9 @@ pos_functions["suffix forms"] = {
 	params = {
 		[1] = {required = true, list = true},
 		["g"] = {list = true},
-		["g_qual"] = {list = "g=_qual", allow_holes = true},
+		["g_qual"] = {list = "g\1_qual", allow_holes = true},
 	},
-	func = function(args, data, is_suffix)
+	func = function(args, data)
 		data.genders = {}
 		process_genders(data, args.g, args.g_qual)
 		local suffix_type = {}
