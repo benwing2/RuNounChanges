@@ -210,6 +210,7 @@ function export.show(frame)
 		pos_category = poscat,
 		categories = {},
 		heads = heads,
+		no_redundant_head_cat = #args.head == 0,
 		genders = {},
 		inflections = {},
 		categories = {},
@@ -234,10 +235,14 @@ local allowed_genders = {
 	["f"] = true,
 	["mf"] = true,
 	["mfbysense"] = true,
+	["mfequiv"] = true,
+	["gneut"] = true,
 	["m-p"] = true,
 	["f-p"] = true,
 	["mf-p"] = true,
 	["mfbysense-p"] = true,
+	["mfequiv-p"] = true,
+	["gneut-p"] = true,
 }
 
 local additional_allowed_pronoun_genders = {
@@ -281,7 +286,7 @@ local function get_noun_pos(pos)
 				infls.label = label
 				for i, infl in ipairs(infls) do
 					if quals[i] then
-						infls[i] = {term = infl, qualifiers = {quals[i]}}
+						infls[i] = {term = infl, q = {quals[i]}}
 					end
 				end
 			end
@@ -472,6 +477,7 @@ local function get_pronoun_pos()
 			["mpqual"] = {list = true, allow_holes = true},
 			["p"] = {list = true},
 			["pqual"] = {list = true, allow_holes = true},
+			["type"] = {list = true},
 			},
 		func = function(args, data)
 			-- Gather genders
@@ -481,7 +487,7 @@ local function get_pronoun_pos()
 				infls.label = label
 				for i, infl in ipairs(infls) do
 					if quals[i] then
-						infls[i] = {term = infl, qualifiers = {quals[i]}}
+						infls[i] = {term = infl, q = {quals[i]}}
 					end
 				end
 			end
@@ -524,6 +530,34 @@ local function get_pronoun_pos()
 			end
 			if #args["p"] > 0 then
 				table.insert(data.inflections, args["p"])
+			end
+			
+			-- Categorize by "type"
+			local pos = "pronouns"
+			for _, ty in ipairs(args.type) do
+				local category, label
+				if ty == "indefinite" then
+					category = "indefinite"
+				elseif ty == "interrogative" then
+					category = "interrogative"
+				elseif ty == "personal" then
+					category = "personal"
+				elseif ty == "possessive" then
+					category = "possessive"
+				elseif ty == "reflexive" then
+					category = "reflexive"
+				elseif ty == "relative" then
+					category = "relative"
+				end
+				if category then
+					if type(category) == "table" then
+						for _, cat in ipairs(category) do
+							table.insert(data.categories, langname .. " " .. cat .. " " .. pos)
+						end
+					else
+						table.insert(data.categories, langname .. " " .. category .. " " .. pos)
+					end
+				end
 			end
 		end
 	}
@@ -641,13 +675,13 @@ local function do_adjective(pos)
 						if type(infl) == "table" then
 							for _, inf in ipairs(infl) do
 								if quals[i] then
-									table.insert(infls, {term = inf, qualifiers = {quals[i]}})
+									table.insert(infls, {term = inf, q = {quals[i]}})
 								else
 									table.insert(infls, inf)
 								end
 							end
 						elseif quals[i] then
-							table.insert(infls, {term = infl, qualifiers = {quals[i]}})
+							table.insert(infls, {term = infl, q = {quals[i]}})
 						else
 							table.insert(infls, infl)
 						end
@@ -681,7 +715,7 @@ local function do_adjective(pos)
 				table.insert(data.inflections, {label = "singular only"})
 				if not (args[1] == "mf" or #args.f == 0 and rfind(data.pagename, "e$")) then
 					-- Handle feminines
-					process_inflection("feminine plural", "fp", "f|p", function()
+					process_inflection("feminine singular", "f", "f", function()
 						return add_suffix(get_current(), "e", args.sp)
 					end)
 				end
