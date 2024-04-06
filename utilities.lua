@@ -1,24 +1,17 @@
-local decode = mw.text.decode
-local u = mw.ustring.char
+local codepoint = require("Module:string/codepoint")
+local decode_entities = require("Module:string/decode entities")
+local gsub = string.gsub
+local match = string.match
+local tonumber = tonumber
+local trim = mw.text.trim
+local type = type
+local u = require("Module:string/char")
+local ugsub = mw.ustring.gsub
+local unstripNoWiki = mw.text.unstripNoWiki
 
 local data = mw.loadData("Module:utilities/data")
-local notneeded = data.notneeded
-local neededhassubpage = data.neededhassubpage
 
 local export = {}
-
-function export.require_when_needed(text)
-	return setmetatable({}, {
-		__index = function(t, k)
-			t = require(text)
-			return t[k]
-		end,
-		__call = function(t, ...)
-			t = require(text)
-			return t(...)
-		end
-	})
-end
 
 -- A helper function to escape magic characters in a string.
 -- Magic characters: ^$()%.[]*+-?
@@ -29,93 +22,126 @@ function export.pattern_escape(text)
 	return (text:gsub("[%^$()%%.[%]*+%-?]", "%%%0"))
 end
 
--- A helper function to resolve HTML entities into plaintext.
+-- Converts decimal to hexadecimal.
+-- Note: About three times as fast as the hex library.
+function export.dec_to_hex(dec)
+	dec = tonumber(dec)
+	if not dec or dec % 1 ~= 0 then
+		error("Input should be a decimal integer.")
+	end
+	return ("%x"):format(dec):upper()
+end
+
 do
-	local entities
-	
-	local function get_named_entity(entity)
-		entities = entities or mw.loadData("Module:data/entities")
-		return entities[entity]
+	local function check_level(lvl)
+		if type(lvl) ~= "number" then
+			error("Heading levels must be numbers.")
+		elseif lvl < 1 or lvl > 6 or lvl % 1 ~= 0 then
+			error("Heading levels must be integers between 1 and 6.")
+		end
+		return lvl
 	end
 	
-	-- Catches entities with capital X, which aren't supported by default.
-	local function get_numbered_entity(entity)
-		entity = entity:lower()
-		local ret = decode(entity)
-		if ret ~= entity then
-			return ret
+	-- A helper function which iterates over the headings in `text`, which should be the content of a page or (main) section.
+	-- Each iteration returns three values: `sec` (the section title), `lvl` (the section level) and `loc` (the index of the section in the given text, from the first equals sign). The section title will be automatically trimmed, and any HTML entities will be resolved.
+	-- The optional parameter `a` (which should be an integer between 1 and 6) can be used to ensure that only headings of the specified level are iterated over. If `b` is also given, then they are treated as a range.
+	-- The optional parameters `a` and `b` can be used to specify a range, so that only headings with levels in that range are returned. If only `a` is given
+	function export.find_headings(text, a, b)
+		a = a and check_level(a) or nil
+		b = b and check_level(b) or a or nil
+		local start, loc, lvl, sec = 1
+		
+		return function()
+			repeat
+				loc, lvl, sec, start = text:match("()%f[^%z\n\r](==?=?=?=?=?)([^\n\r]+)%2[\t ]*%f[%z\n\r]()", start)
+				lvl = lvl and #lvl
+			until not (sec and a) or (lvl >= a and lvl <= b)
+			return sec and trim(decode_entities(sec)) or nil, lvl, loc
 		end
 	end
-		
-	function export.get_entities(text)
-		return (text:gsub("&([^#&;]+);", get_named_entity)
-			:gsub("&#[Xx]?%x+;", get_numbered_entity)
-		)
-	end
-end
-
--- A helper function to convert plaintext into HTML entities where these match the characters given in set.
--- By default, this resolves any pre-existing entities into plaintext first, to allow mixed input and to avoid accidental double-conversion. This can be turned off with the raw parameter.
-function export.make_entities(text, set, raw)
-	text = not raw and export.get_entities(text) or text
-	return mw.text.encode(text, set)
-end
-
--- A helper function to return the content of a page section.
--- `content` is raw wikitext, `name` is the requested section, and `level` is an optional parameter that specifies the required section heading level. If `level` is not supplied, then the first section called `name` is returned.
--- `name` can either be a string or table of section names. If a table, each name represents a section that has the next as a subsection. For example, {"Spanish", "Noun"} will return the first matching section called "Noun" under a section called "Spanish". These do not have to be at adjacent levels ("Noun" might be L4, while "Spanish" is L2). If `level` is given, it refers to the last name in the table (i.e. the name of the section to be returned).
--- The returned section includes all of its subsections.
--- If no matching section is found, returns nil.
-function export.get_section(content, names, level)
-	local trim = mw.text.trim
-	local function _section(content, name, level)
+	
+	local function get_section(content, name, level)
 		if not (content and name) then
 			return nil
-		elseif level and level > 6 then
-			error("Heading level cannot be greater than 6.")
-		elseif name:find("[\n\r]") then
+		elseif name:match("[\n\r]") then
 			error("Heading name cannot contain a newline.")
 		end
-		name = trim(name)
+		level = level and check_level(level) or nil
+		name = trim(decode_entities(name))
 		local start
-		for loc, lvl, sec in content:gmatch("()%f[^%z\n\r](=+)([^\n\r]+)%2[\t ]*%f[%z\n\r]") do
-			lvl = #lvl
-			if not start then
-				if lvl > 6 then
-					local ex = ("="):rep(lvl - 6)
-					sec = ex .. sec .. ex
-					lvl = 6
-				end
-				if (
-					(not level or lvl == level) and
-					trim(sec) == name
-				) then
-					start = loc
-					level = lvl
-				end
-			elseif level == 6 or lvl <= level then
+		for sec, lvl, loc in export.find_headings(content, level and 1 or nil, level) do
+			if start and lvl <= level then
 				return content:sub(start, loc - 1)
+			elseif not start and (not level or lvl == level) and sec == name then
+				start, level = loc, lvl
 			end
 		end
 		return start and content:sub(start)
 	end
 	
-	if type(names) == "string" then
-		return _section(content, names, level)
-	else
+	-- A helper function to return the content of a page section.
+	-- `content` is raw wikitext, `name` is the requested section, and `level` is an optional parameter that specifies the required section heading level. If `level` is not supplied, then the first section called `name` is returned.
+	-- `name` can either be a string or table of section names. If a table, each name represents a section that has the next as a subsection. For example, {"Spanish", "Noun"} will return the first matching section called "Noun" under a section called "Spanish". These do not have to be at adjacent levels ("Noun" might be L4, while "Spanish" is L2). If `level` is given, it refers to the last name in the table (i.e. the name of the section to be returned).
+	-- The returned section includes all of its subsections.
+	-- If no matching section is found, returns nil.
+	function export.get_section(content, names, level)
+		if type(names) == "string" then
+			return get_section(content, names, level)
+		end
 		local names_len = #names
 		if names_len > 6 then
 			error("Not possible specify more than 5 subsections: headings only go up to level 6.")
 		end
 		for i, name in ipairs(names) do
-			if i == names_len then
-				content = _section(content, name, level)
-			else
-				content = _section(content, name)
-			end
+			content = get_section(content, name, i == names_len and level or nil)
 		end
 		return content
 	end
+end
+
+-- A function which returns the number of the page section which contains the current #invoke.
+do
+	local function _section(frame, offset, h)
+		frame:extensionTag("nowiki", "HEADING\1" .. offset)
+		return h - offset
+	end
+	
+	local i = 0
+	function export.get_current_section()
+		local frame = mw.getCurrentFrame()
+		-- Headings have to be unique, or they get assigned an old value.
+		local h = tonumber(frame:preprocess("=" .. u(0xF0000 + i) .. "=", ""):match("%d+"))
+		-- For some reason, [[Special:ExpandTemplates]] doesn't generate the strip marker, so if that happens we simply abort early.
+		if not h then
+			return 0
+		end
+		i = i + 1
+		local n = tonumber(frame:extensionTag("nowiki"):match("[%dA-F]+"), 16)
+		while n > 0 do
+			n = n - 1
+			local offset = unstripNoWiki(("\127'\"`UNIQ--nowiki-%08X-QINU`\"'\127"):format(n))
+				:match("HEADING\1(%d+)")
+			if offset then
+				return _section(frame, offset + 1, h)
+			end
+		end
+		return _section(frame, 0, h)
+	end
+end
+
+-- A function which returns the name of the L2 language section which contains the current #invoke.
+function export.get_current_L2()
+	local section = export.get_current_section()
+	if section == 0 then
+		return nil
+	end
+	local page_L2s = mw.loadData("Module:headword/data").page_L2s
+	local L2 = page_L2s[section]
+	while not L2 and section > 0 do
+		section = section - 1
+		L2 = page_L2s[section]
+	end
+	return L2
 end
 
 -- A helper function to strip wiki markup, giving the plaintext of what is displayed on the page.
@@ -141,25 +167,21 @@ function export.get_plaintext(text)
 		function(capture)
 			return capture:match("https?://[^%s%]]+%s([^%]]+)") or ""
 		end)
-	
-	text = text
-		:gsub("\1", "[[")
-		:gsub("\2", "]]")
-	
-	-- Any remaining square brackets aren't involved in links, but must be escaped to avoid creating new links.
-	text = text:gsub("[%[%]]", mw.text.nowiki)
-		
-	-- Strip bold, italics and soft hyphens.
-	text = text
+		-- Any remaining square brackets aren't involved in links, but must be escaped to avoid creating new links.
+		:gsub("\1", "&#91;&#91;")
+		:gsub("\2", "&#93;&#93;")
+		:gsub("%[", "&#91;")
+		:gsub("]", "&#93;")
+		-- Strip bold, italics and soft hyphens.
 		:gsub("('*)'''(.-'*)'''", "%1%2")
 		:gsub("('*)''(.-'*)''", "%1%2")
 		:gsub("­", "")
 	
 	-- Get any HTML entities.
 	-- Note: don't decode URL percent encoding, as it shouldn't be used in display text and may cause problems if % is used.
-	text = export.get_entities(text)
+	text = decode_entities(text)
 	
-	return mw.text.trim(text)
+	return trim(text)
 end
 
 function export.plain_gsub(text, pattern, replacement)
@@ -197,11 +219,10 @@ function export.plain_gsub(text, pattern, replacement)
 	
 	pattern = export.pattern_escape(pattern)
 	
-	local gsub = require("Module:string utilities").gsub
 	if invoked then
-		return (gsub(text, pattern, replacement))
+		return (ugsub(text, pattern, replacement))
 	else
-		return gsub(text, pattern, replacement)
+		return ugsub(text, pattern, replacement)
 	end
 end
 
@@ -209,23 +230,23 @@ end
 Format the categories with the appropriate sort key. CATEGORIES is a list of
 categories.
 	-- LANG is an object encapsulating a language; if nil, the object for
-	   language code 'und' (undetermined) will be used.
+		language code 'und' (undetermined) will be used.
 	-- SORT_KEY is placed in the category invocation, and indicates how the
-	   page will sort in the respective category. Normally this should be nil,
-	   and a default sort key based on the subpage name (the part after the
-	   colon) will be used.
+		page will sort in the respective category. Normally this should be nil,
+		and a default sort key based on the subpage name (the part after the
+		colon) will be used.
 	-- SORT_BASE lets you override the default sort key used when SORT_KEY is
-	   nil. Normally, this should be nil, and a language-specific default sort
-	   key is computed from the subpage name (e.g. for Russian this converts
-	   Cyrillic ё to a string consisting of Cyrillic е followed by U+10FFFF,
-	   so that effectively ё sorts after е instead of the default Wikimedia
-	   sort, which (I think) is based on Unicode sort order and puts ё after я,
-	   the last letter of the Cyrillic alphabet.
+		nil. Normally, this should be nil, and a language-specific default sort
+		key is computed from the subpage name (e.g. for Russian this converts
+		Cyrillic ё to a string consisting of Cyrillic е followed by U+10FFFF,
+		so that effectively ё sorts after е instead of the default Wikimedia
+		sort, which (I think) is based on Unicode sort order and puts ё after я,
+		the last letter of the Cyrillic alphabet.
 	-- FORCE_OUTPUT forces normal output in all namespaces. Normally, nothing
-	   is output if the page isn't in the main, Appendix:, Reconstruction: or
-	   Citations: namespaces.
+		is output if the page isn't in the main, Appendix:, Reconstruction: or
+		Citations: namespaces.
 	-- SC is a script object; if nil, the default will be used from the sort
-	   base.
+		base.
 ]]
 function export.format_categories(categories, lang, sort_key, sort_base, force_output, sc)
 	if type(lang) == "table" and not lang.getCode then
@@ -247,11 +268,14 @@ function export.format_categories(categories, lang, sort_key, sort_base, force_o
 			if not lang then
 				lang = require("Module:languages").getByCode("und")
 			end
-			sort_base = (lang:makeSortKey(sort_base or pagename, sc))
+			sort_base = lang:makeSortKey(sort_base or pagename, sc)
 			if sort_key and sort_key ~= "" then
-				-- Gather some statistics regarding sort keys
-				if not no_track and sort_key:uupper() == sort_base then
-					table.insert(categories, "Sort key tracking/redundant")
+				if lang:getCode() ~= "und" then
+					if sort_key:uupper() == sort_base then
+						table.insert(categories, lang:getFullName() .. " terms with redundant sortkeys")
+					else
+						table.insert(categories, lang:getFullName() .. " terms with non-redundant non-automated sortkeys")
+					end
 				end
 			else
 				sort_key = sort_base
@@ -284,11 +308,11 @@ function export.catfix(lang, sc)
 		error('The second argument to the function "catfix" should be a script object from [[Module:scripts]].')
 	end
 	local canonicalName = lang:getCanonicalName()
-	local nonEtymologicalName = lang:getNonEtymologicalName()
+	local nonEtymologicalName = lang:getFullName()
 
 	-- To add script classes to links on pages created by category boilerplate templates.
 	if not sc then
-		sc = data.catfix_scripts[lang:getCode()] or data.catfix_scripts[lang:getNonEtymologicalCode()]
+		sc = data.catfix_scripts[lang:getCode()] or data.catfix_scripts[lang:getFullCode()]
 		if sc then
 			sc = require("Module:scripts").getByCode(sc)
 		end
@@ -320,24 +344,6 @@ function export.catfix_template(frame)
 	end
 	
 	return export.catfix(lang, sc)
-end
-
--- Not exporting because it is not used yet.
-local function getDateTense(frame) 
-	local name_num_mapping = {["January"] = 1, ["February"] = 2, ["March"] = 3, ["April"] = 4, ["May"] = 5, ["June"] = 6, 
-		["July"] = 7, ["August"] = 8, ["September"] = 9, ["October"] = 10, ["November"] = 11, ["December"] = 12, 
-		[1] = 1, [2] = 2, [3] = 3, [4] = 4, [5] = 5, [6] = 6, [7] = 7, [8] = 8, [9] = 9, [10] = 10, [11] = 11, [12] = 12}
-	local month = name_num_mapping[frame.args[2]]
-	local date = os.time({year = frame.args[1], day = frame.args[3], month = month})
-	local today = os.time() -- 12 AM/PM
-	local diff = os.difftime(date, today)
-	local daylength = 24 * 3600
-	
-	if diff < -daylength / 2 then return "past"
-	else 
-		if diff > daylength / 2  then return "future"
-		else return "present" end
-	end
 end
 
 function export.make_id(lang, str)
