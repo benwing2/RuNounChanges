@@ -381,17 +381,18 @@ local function get_verb_pos()
 		{"freq", "frequentative"},
 	}
 	
-	local params = {
-		[langs_supported[langcode].head_is_1 and 2 or 1] = {default = "?"},
-		["def"] = {type = "boolean"},
-	}
-	for _, spec in ipairs(verb_inflection_specs) do
-		local param, desc = unpack(spec)
-		params[param] = {list = true, disallow_holes = true}
-	end
-
 	return {
-		params = params,
+		params = function(langcode)
+			local params = {
+				[langs_supported[langcode].head_is_1 and 2 or 1] = {default = "?"},
+				["def"] = {type = "boolean"},
+			}
+			for _, spec in ipairs(verb_inflection_specs) do
+				local param, desc = unpack(spec)
+				params[param] = {list = true, disallow_holes = true}
+			end
+			return params
+		end,
 		func = function(args, data)
 			local allowed_aspects = require("Module:table/listToSet") {
 				"pf", "impf", "biasp", "both", "impf-det", "impf-indet", "impf-freq", "?"
@@ -590,13 +591,14 @@ pos_functions["adverbs"] = get_adj_adv_pos("adverb")
 ----------------------------------------------- Participles --------------------------------------------
 
 local function get_part_pos()
-	local params = {
-		[langs_supported[langcode].head_is_1 and 2 or 1] = {},
-		["a"] = {list = true, disallow_holes = true},
-	}
 
 	return {
-		params = params,
+		params = function(langcode)
+			return {
+				[langs_supported[langcode].head_is_1 and 2 or 1] = {},
+				["a"] = {list = true, disallow_holes = true},
+			}
+		end,
 		func = function(args, data)
 			if data.langcode ~= "pl" then
 				error("Internal error: Unable to handle languages other than Polish for participles: " .. data.langname)
