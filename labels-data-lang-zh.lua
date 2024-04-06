@@ -152,6 +152,7 @@ labels["Yingyi Gan"] = {
 ------------------------------------------ Hakka ------------------------------------------
 
 labels["Hakka"] = {
+	def = "the {{w|Hakka Chinese}} branch of {{w|Sinitic languages|Sinitic}}",
 	Wikidata = "Q33375",
 	regional_categories = true,
 	parent = true,
@@ -168,6 +169,7 @@ labels["Dabu Hakka"] = {
 	Wikidata = "Q19855566",
 	plain_categories = true,
 	parent = true,
+	othercat = "Taiwanese Hakka",
 }
 
 -- FIXME: Category missing.
@@ -187,12 +189,15 @@ labels["Hailu Hakka"] = {
 	Wikidata = "Q19855025", -- see also Q17038519 "Hailu Hakka" in Wikidata, which duplicates Q19855025 and redirects to it in Chinese Wikipedia
 	plain_categories = true,
 	parent = true,
+	othercat = "Taiwanese Hakka,Overseas Hakka",
 }
 
 labels["Hong Kong Hakka"] = {
+	region = "Hong Kong",
 	Wikidata = "Q2675834",
 	plain_categories = true,
 	parent = true,
+	othercat = "Hong Kong Chinese",
 }
 
 labels["Huiyang Hakka"] = {
@@ -215,7 +220,8 @@ labels["Malaysian Huiyang Hakka"] = {
 	aliases = {"Malaysia Huiyang Hakka"},
 	Wikidata = "Q16873881", -- article for Huiyang Hakka
 	plain_categories = true,
-	parent = "Huiyang Hakka",
+	parent = "Overseas Hakka",
+	othercat = "Huiyang Hakka",
 }
 
 labels["Meixian Hakka"] = {
@@ -225,6 +231,7 @@ labels["Meixian Hakka"] = {
 	Wikidata = "Q839295",
 	plain_categories = true,
 	parent = true,
+	othercat = "Overseas Hakka",
 }
 
 labels["Northern Sixian Hakka"] = {
@@ -235,12 +242,22 @@ labels["Northern Sixian Hakka"] = {
 	parent = "Sixian Hakka",
 }
 
+labels["Overseas Hakka"] = {
+	prep = "outside of",
+	region = "[[mainland China]], [[Taiwan]], [[Hong Kong]] and [[Macau]]",
+	Wikipedia = "Hakka people#Hakkas elsewhere",
+	plain_categories = true,
+	parent = true,
+	othercat = "Overseas Chinese",
+}
+
 labels["Raoping Hakka"] = {
 	region = "{{w|Raoping County}} in [[Guangdong]] as well as [[Taoyuan]], [[Hsinchu]], [[Miaoli]] and [[Taichung]] in [[Taiwan]]",
 	-- No Raoping alias because Chaoshan Min is also spoken.
 	Wikidata = "Q19854038",
 	plain_categories = true,
 	parent = true,
+	othercat = "Taiwanese Hakka",
 }
 
 labels["Sixian Hakka"] = {
@@ -268,18 +285,18 @@ labels["Shangyou Hakka"] = {
 
 labels["Taiwanese Hakka"] = {
 	region = "Taiwan",
-	parent = {"+", "C:Taiwanese Chinese"},
 	aliases = {"Taiwan Hakka"},
 	Wikidata = "Q2391532",
 	plain_categories = true,
 	parent = true,
+	othercat = "Taiwanese Chinese",
 }
 
 -- Skipped: Wuluo Hakka; appears to originate in Pingtung County, Taiwan and be part of Southern Sixian Hakka, maybe
 -- related to the Wuluo River, but extremely obscure; can't find anything about the dialect in Google.
 
 labels["Yudu Hakka"] = {
-	region = "{{w|Yudu County}} in the south of [[Jiangxi]] Province, in southeast [[China]]",
+	region = "{{w|Yudu County}} in southern [[Jiangxi]] Province, in southeast [[China]]",
 	aliases = {"Yudu"},
 	Wikidata = "Q1816748", -- article for Yudu County
 	plain_categories = true,
@@ -301,6 +318,7 @@ labels["Zhao'an Hakka"] = {
 	Wikidata = "Q6703311",
 	plain_categories = true,
 	parent = true,
+	othercat = "Taiwanese Hakka",
 }
 
 ------------------------------------------ Jin ------------------------------------------
@@ -1426,7 +1444,7 @@ labels["Overseas Hokkien"] = {
 	Wikipedia = "Hoklo people#Diaspora",
 	plain_categories = true,
 	parent = true,
-	othercats = "Overseas Chinese",
+	othercat = "Overseas Chinese",
 }
 
 labels["Penang Hokkien"] = {
