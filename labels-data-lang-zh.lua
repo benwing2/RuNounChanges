@@ -3121,4 +3121,70 @@ labels["North America"] = {
 	regional_categories = {"Canadian", "American"},
 }
 
+-- the remaining labels moved from [[Module:labels/data/regional]]
+
+labels["Brunei"] = {
+	Wikipedia = "Ethnic Chinese in Brunei",
+	regional_categories = "Bruneian",
+	parent = "Overseas",
+}
+
+labels["Canada"] = {
+	aliases = {"Canadian"},
+	Wikipedia = "Chinese Canadians",
+	regional_categories = {"Canadian"},
+	parent_label = "North America",
+}
+
+labels["Cuba"] = {
+	aliases = {"Cuban"},
+	Wikipedia = true,
+	regional_categories = "Cuban",
+	parent = "Overseas",
+}
+
+labels["Indonesia"] = {
+	aliases = {"Indonesian"},
+	Wikipedia = true,
+	regional_categories = "Indonesian",
+	parent = "Overseas",
+}
+
+labels["Mexico"] = {
+	aliases = {"Mexican"},
+	Wikipedia = true,
+	regional_categories = "Mexican",
+	parent = "Overseas",
+}
+
+labels["Dandong"] = {
+	Wikipedia = true,
+	regional_categories = true,
+}
+
+labels["Gansu"] = {
+	Wikipedia = "Gansu, China",
+	regional_categories = true,
+}
+
+labels["Mongolia"] = {
+	Wikipedia = "Ethnic Chinese in Mongolia",
+	regional_categories = "Mongolian",
+	parent = "Overseas",
+}
+
+labels["South Korea"] = {
+	aliases = {"South Korean"},
+	Wikipedia = "Chinese people in Korea",
+	regional_categories = "South Korean",
+	parent = "Overseas",
+}
+
+labels["Vietnam"] = {
+	aliases = {"Vietnamese"},
+	Wikipedia = "Hoa people",
+	regional_categories = "Vietnamese",
+	parent = "Overseas",
+}
+
 return require("Module:labels").finalize_data(labels)
