@@ -353,7 +353,7 @@ function export.show(frame)
 	local page_maintenance_cats = {}
 	
 	maintenance_cats(
-		headword_data,
+		headword_data.page,
 		lang,
 		lang_maintenance_cats,
 		page_maintenance_cats
