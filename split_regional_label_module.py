@@ -167,8 +167,13 @@ else:
               category_prefixes[plaincat])))
         for prefix, lang in category_prefixes[plaincat]:
           langs_for_label.add(blib.languages_byCanonicalName[lang]["code"])
+      langs_for_label = sorted(list(langs_for_label))
       keep = False
-      if len(langs_for_label) > 3:
+      if not langs_for_label:
+        pagemsg("WARNING: No languages for regional label '%s'" % labelobj.label)
+        keep = True
+        lines_before_label.append("-- WARNING: No existing languages or categories associated with label; add to `langs` as needed")
+      elif len(langs_for_label) > 3:
         pagemsg("WARNING: Not removing regional label '%s' with %s languages %s > 3" % (
           labelobj.label, len(langs_for_label), ",".join(langs_for_label)))
         keep = True
@@ -179,7 +184,7 @@ else:
         keep = True
       if keep:
         if labelobj.label != "regional":
-          labelobj.langs = sorted(list(langs_for_label))
+          labelobj.langs = langs_for_label
         filtered_regional_label_data.append(lines_before_label)
         filtered_regional_label_data.append(labelobj)
       else:
@@ -204,9 +209,10 @@ else:
     else:
       lines_before_label.extend(labelobj)
 
+  filtered_regional_label_data.append(["", 'return require("Module:labels").finalize_data(labels)'])
   new_regional_lines = clean_label_module.output_labels(filtered_regional_label_data)
   blib.do_handle_stdin_retval(
-      args, ("\n".join(new_regional_lines), "moving %s label(s) to lang-specific modules" % num_removed_labels),
+      args, ("\n".join(new_regional_lines), "move %s label(s) to lang-specific modules" % num_removed_labels),
       regional_module_text, None, pagemsg, is_find_regex=True, edit=True)
 
   blib.do_pagefile_cats_refs(args, start, end, process_text_on_page, edit=True, stdin=True)
