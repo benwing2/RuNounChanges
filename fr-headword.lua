@@ -181,7 +181,7 @@ function export.show(frame)
 	local parargs = frame:getParent().args
 	local args = require("Module:parameters").process(parargs, params)
 
-	local pagename = args.pagename or mw.title.getCurrentTitle().text
+	local subpage = args.pagename or mw.title.getCurrentTitle().subpageText
 
 	local heads = args["head"]
 	if pos_functions[poscat] and pos_functions[poscat].param1_is_head and args[1] then
@@ -189,10 +189,10 @@ function export.show(frame)
 	end
 	if args.nolinkhead then
 		if #heads == 0 then
-			heads = {pagename}
+			heads = {subpage}
 		end
 	else
-		local auto_linked_head = require("Module:romance utilities").add_lemma_links(pagename, args.splithyph,
+		local auto_linked_head = require("Module:romance utilities").add_lemma_links(subpage, args.splithyph,
 			no_split_apostrophe_words)
 		if #heads == 0 then
 			heads = {auto_linked_head}
@@ -214,10 +214,11 @@ function export.show(frame)
 		genders = {},
 		inflections = {},
 		categories = {},
-		pagename = pagename
+		pagename = args.pagename,
+		subpage = subpage
 	}
 
-	if pagename:find("^%-") and suffix_categories[poscat] then
+	if subpage:find("^%-") and suffix_categories[poscat] then
 		data.pos_category = "suffixes"
 		local singular_poscat = poscat:gsub("s$", "")
 		table.insert(data.categories, langname .. " " .. singular_poscat .. "-forming suffixes")
@@ -267,7 +268,7 @@ local function get_noun_pos(pos)
 			["dimqual"] = {list = true, allow_holes = true},
 			},
 		func = function(args, data)
-			local lemma = data.pagename
+			local lemma = data.subpage
 			local is_proper = pos == "proper nouns"
 
 			if pos == "cardinal nouns" then
@@ -624,7 +625,7 @@ local function do_adjective(pos)
 			["intr"] = {type = "boolean"},
 			},
 		func = function(args, data)
-			local lemma = data.pagename
+			local lemma = data.subpage
 			if pos == "cardinal adjectives" then
 				pos = "numerals"
 				data.pos_category = "numerals"
@@ -702,7 +703,7 @@ local function do_adjective(pos)
 			end
 
 			local function get_current()
-				return #args.current > 0 and args.current or {data.pagename}
+				return #args.current > 0 and args.current or {data.subpage}
 			end
 
 			if args.onlyg == "p" then
@@ -713,7 +714,7 @@ local function do_adjective(pos)
 				end
 			elseif args.onlyg == "s" then
 				table.insert(data.inflections, {label = "singular only"})
-				if not (args[1] == "mf" or #args.f == 0 and rfind(data.pagename, "e$")) then
+				if not (args[1] == "mf" or #args.f == 0 and rfind(data.subpage, "e$")) then
 					-- Handle feminines
 					process_inflection("feminine singular", "f", "f", function()
 						return add_suffix(get_current(), "e", args.sp)
@@ -741,8 +742,8 @@ local function do_adjective(pos)
 				local gender = args[1]
 				-- Default to mf if base form ends in -e and no feminine,
 				-- feminine plural or gender specified
-				if not gender and #args.f == 0 and #args.fp == 0 and rfind(data.pagename, "e$")
-					and not rfind(data.pagename, " ") then
+				if not gender and #args.f == 0 and #args.fp == 0 and rfind(data.subpage, "e$")
+					and not rfind(data.subpage, " ") then
 					gender = "mf"
 				end
 
@@ -768,7 +769,7 @@ local function do_adjective(pos)
 				if not args.inv and gender ~= "mf" then
 					-- Handle masculine form if not same as lemma; e.g. [[sûr de soi]] with m=+, m2=sûr de lui
 					process_inflection("masculine singular", "m", "m|s",
-						function() return {data.pagename} end, "explicit default only")
+						function() return {data.subpage} end, "explicit default only")
 
 					-- Handle case of special masculine singular before vowel
 					process_inflection("masculine singular before vowel", "mv", "m|s")
