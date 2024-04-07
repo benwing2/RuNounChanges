@@ -1,5 +1,22 @@
 local export = {}
 
+-- Named constants for all modules used, to make it easier to swap out sandbox versions.
+local debug_track_module = "Module:debug/track"
+local gender_and_number_module = "Module:gender and number"
+local headword_data_module = "Module:headword/data"
+local headword_page_module = "Module:headword/page"
+local links_module = "Module:links"
+local palindromes_module = "Module:palindromes"
+local qualifier_module = "Module:qualifier"
+local scripts_module = "Module:scripts"
+local scripts_data_module = "Module:scripts/data"
+local script_utilities_module = "Module:script utilities"
+local script_utilities_data_module = "Module:script utilities/data"
+local string_encode_entities_module = "Module:string/encode entities"
+local string_pattern_escape_module = "Module:string/pattern escape"
+local table_module = "Module:table"
+local utilities_module = "Module:utilities"
+
 local concat = table.concat
 local insert = table.insert
 local rgmatch = mw.ustring.gmatch
@@ -10,7 +27,7 @@ local rmatch = mw.ustring.match
 local toNFC = mw.ustring.toNFC
 local toNFD = mw.ustring.toNFD
 
-local m_data = mw.loadData("Module:headword/data")
+local m_data = mw.loadData(headword_data_module)
 
 local isLemma = m_data.lemmas
 local isNonLemma = m_data.nonlemmas
@@ -37,7 +54,7 @@ end
 -- references at etymology-only language, both that language's code and its full parent's code are tracked.
 local function track(track_id, lang)
 	local tracking_page = "headword/" .. track_id
-	local m_debug_track = require("Module:debug/track")
+	local m_debug_track = require(debug_track_module)
 	if lang and lang:hasType("etymology-only") then
 		m_debug_track{tracking_page, tracking_page .. "/" .. lang:getCode(),
 			tracking_page .. "/" .. lang:getFullCode()}
@@ -51,7 +68,7 @@ end
 
 
 local function text_in_script(text, script_code)
-	local sc = require("Module:scripts").getByCode(script_code)
+	local sc = require(scripts_module).getByCode(script_code)
 	if not sc then
 		error("Internal error: Bad script code " .. script_code)
 	end
@@ -92,12 +109,12 @@ local function format_term_with_qualifiers_and_refs(part, formatted, j)
 
 	left_qualifiers = part.q and #part.q > 0 and part.q
 	if left_qualifiers then
-		left_qualifiers = require("Module:qualifier").format_qualifier(left_qualifiers) .. " "
+		left_qualifiers = require(qualifier_module).format_qualifier(left_qualifiers) .. " "
 	end
 
 	right_qualifiers = part.qq and #part.qq > 0 and part.qq
 	if right_qualifiers then
-		right_qualifiers = " " .. require("Module:qualifier").format_qualifier(right_qualifiers)
+		right_qualifiers = " " .. require(qualifier_module).format_qualifier(right_qualifiers)
 	end
 	if part.refs and #part.refs > 0 then
 		local refs = {}
@@ -159,7 +176,7 @@ function export.add_multiword_links(head, default)
 	end
 
 	--Escape any remaining square brackets to stop them breaking links (e.g. "[citation needed]").
-	head = require("Module:string/encode entities")(head, "[]")
+	head = require(string_encode_entities_module)(head, "[]")
 
 	--[=[
 	use this when workaround is no longer needed:
@@ -175,14 +192,14 @@ function export.add_multiword_links(head, default)
 end
 
 
-local function non_categorizable(data)
-	return data.title:inNamespace("Appendix") and data.title.text:find("^Gestures/")
+local function non_categorizable(full_raw_pagename)
+	return full_raw_pagename:find("^Appendix:Gestures/")
 end
 
 
 -- Format a headword with transliterations.
 local function format_headword(data)
-	local m_scriptutils = require("Module:script utilities")
+	local m_scriptutils = require(script_utilities_module)
 
 	-- Are there non-empty transliterations?
 	local has_translits = false
@@ -207,7 +224,7 @@ local function format_headword(data)
 
 		-- Apply processing to the headword, for formatting links and such.
 		if head.term:find("[[", nil, true) and head.sc:getCode() ~= "Imag" then
-			formatted = require("Module:links").language_link{term = head.term, lang = data.lang}
+			formatted = require(links_module).language_link{term = head.term, lang = data.lang}
 		else
 			formatted = data.lang:makeDisplayText(head.term, head.sc, true)
 		end
@@ -325,7 +342,7 @@ local function format_genders(data)
 			local pos_category = data.pos_category:gsub("^reconstructed ", "")
 			pos_for_cat = m_data.pos_for_gender_number_cat[pos_category]
 		end
-		local text, cats = require("Module:gender and number").format_genders(data.genders, data.lang, pos_for_cat)
+		local text, cats = require(gender_and_number_module).format_genders(data.genders, data.lang, pos_for_cat)
 		for _, cat in ipairs(cats) do
 			insert(data.categories, cat)
 		end
@@ -347,7 +364,7 @@ local function format_inflection_parts(data, parts)
 		local face = part.face or "bold"
 		if face ~= "bold" and face ~= "plain" and face ~= "hypothetical" then
 			error("The face `" .. face .. "` " .. (
-				mw.loadData("Module:script utilities/data").faces[face] and
+				mw.loadData(script_utilities_data_module).faces[face] and
 				"should not be used for non-headword terms on the headword line." or
 				"is invalid."
 			))
@@ -375,7 +392,7 @@ local function format_inflection_parts(data, parts)
 			if tr ~= "-" then
 				any_part_translit = true
 			end
-			formatted = require("Module:links").full_link(
+			formatted = require(links_module).full_link(
 				{
 					term = not nolinkinfl and part.term or nil,
 					alt = part.alt or (nolinkinfl and part.term or nil),
@@ -511,13 +528,13 @@ do
 	-- by tracking if they are the same or different from the automatically-
 	-- generated sortkey, so that we can track them in maintenance
 	-- categories.
-	local function handle_raw_sortkeys(tbl, sortkey, m_data, lang, lang_cats)
-		sortkey = sortkey or lang:makeSortKey(m_data.pagename)
+	local function handle_raw_sortkeys(tbl, sortkey, page, lang, lang_cats)
+		sortkey = sortkey or lang:makeSortKey(page.pagename)
 		-- If there are raw categories with no sortkey, then they will be
 		-- sorted based on the default MediaWiki sortkey, so we check against
 		-- that.
 		if type(tbl) ~= "table" then
-			if m_data.raw_defaultsort ~= sortkey then
+			if page.raw_defaultsort ~= sortkey then
 				insert(lang_cats, lang:getFullName() .. " terms with non-redundant non-automated sortkeys")
 			end
 			return
@@ -540,36 +557,36 @@ do
 	end
 	
 	-- FIXME: generalise how these are added, instead of doing them one-by-one.
-	function export.maintenance_cats(m_data, lang, lang_cats, page_cats)
+	function export.maintenance_cats(page, lang, lang_cats, page_cats)
 		lang = lang:getFull() -- since we are just generating categories
 		local canonical = lang:getCanonicalName()
-		if m_data.unsupported_title then
+		if page.unsupported_title then
 			insert(page_cats, "Unsupported titles")
 		end
-		if m_data.tab_characters then
+		if page.tab_characters then
 			insert(page_cats, "Pages with tab characters")
 		end
-		if m_data.unencoded_char then
+		if page.unencoded_char then
 			insert(page_cats, "Terms containing unencoded characters")
 		end
-		local tbl, sortkey = m_data.wikitext_topic_cat[lang:getCode()]
+		local tbl, sortkey = page.wikitext_topic_cat[lang:getCode()]
 		if tbl then
-			sortkey = handle_raw_sortkeys(tbl, sortkey, m_data, lang, lang_cats)
+			sortkey = handle_raw_sortkeys(tbl, sortkey, page, lang, lang_cats)
 			insert(lang_cats, canonical .. " entries with topic categories using raw markup")
 		end
-		tbl = m_data.wikitext_langname_cat[canonical]
+		tbl = page.wikitext_langname_cat[canonical]
 		if tbl then
-			handle_raw_sortkeys(tbl, sortkey, m_data, lang, lang_cats)
+			handle_raw_sortkeys(tbl, sortkey, page, lang, lang_cats)
 			insert(lang_cats, canonical .. " entries with language name categories using raw markup")
 		end
-		if require("Module:utilities").get_current_L2() ~= canonical then
+		if require(utilities_module).get_current_L2() ~= canonical then
 			insert(lang_cats, canonical .. " entries with incorrect language header")
 		end
-		if m_data.pagename_displaytitle_conflict then
-			insert(page_cats, m_data.pagename_displaytitle_conflict)
+		if page.pagename_displaytitle_conflict then
+			insert(page_cats, page.pagename_displaytitle_conflict)
 		end
-		if m_data.raw_sortkey then
-			insert(page_cats, m_data.raw_sortkey)
+		if page.raw_sortkey then
+			insert(page_cats, page.raw_sortkey)
 		end
 	end
 end
@@ -581,11 +598,11 @@ This is used by {{temp|head}} and various language-specific headword templates (
 See [[#Further explanations for full_headword()]]
 ]==]
 function export.full_headword(data)
-	local remove_links = require("Module:links").remove_links
-	local format_categories = require("Module:utilities").format_categories
+	local remove_links = require(links_module).remove_links
+	local format_categories = require(utilities_module).format_categories
 
 	-- Prevent data from being destructively modified.
-	local data = require("Module:table").shallowcopy(data)
+	local data = require(table_module).shallowcopy(data)
 
 	------------ 1. Basic checks for old-style (multi-arg) calling convention. ------------
 
@@ -608,20 +625,15 @@ function export.full_headword(data)
 	local langname = data.lang:getCanonicalName()
 	local full_langname = data.lang:getFullName()
 
+	local page
 	if data.pagename then -- for testing, doc pages, etc.
-		data.title = mw.title.new(data.pagename)
-		if not data.title then
-			error(("Bad value for `data.pagename`: '%s'"):format(data.pagename))
-		end
+		page = require(headword_page_module).process_page(data.pagename)
 	else
-		data.title = mw.title.getCurrentTitle()
+		page = m_data.page
 	end
 
-	local pagename = data.title.text
-	local namespace = data.title.nsText
-
 	-- Check the namespace against the language type.
-	if namespace == "" then
+	if page.namespace == "" then
 		if data.lang:hasType("reconstructed") then
 			error("Entries in " .. langname .. " must be placed in the Reconstruction: namespace")
 		elseif data.lang:hasType("appendix-constructed") then
@@ -663,7 +675,7 @@ function export.full_headword(data)
 	init_and_find_maximum_index(data, "whole_page_categories")
 	local pos_category_already_present = false
 	if #data.categories > 0 then
-		local escaped_langname = require("Module:string/pattern escape")(full_langname)
+		local escaped_langname = require(string_pattern_escape_module)(full_langname)
 		local matches_lang_pattern = "^" .. escaped_langname .. " "
 		for _, cat in ipairs(data.categories) do
 			-- Does the category begin with the language name? If not, tag it with a tracking category.
@@ -718,12 +730,11 @@ function export.full_headword(data)
 	------------ 5. Create a default headword, and add links to multiword page names. ------------
 
 	-- Determine if term is reconstructed
-	local is_reconstructed = namespace == "Reconstruction" or data.lang:hasType("reconstructed")
+	local is_reconstructed = page.namespace == "Reconstruction" or data.lang:hasType("reconstructed")
 
 	-- Create a default headword based on the pagename, which is determined in
 	-- advance by the data module so that it only needs to be done once.
-	local default_head = m_data.pagename
-	local unmodified_default_head = default_head
+	local default_head = page.pagename
 
 	-- Add links to multi-word page names when appropriate
 	if not data.nolinkhead and not m_data.no_multiword_links[langcode] and not m_data.no_multiword_links[full_langcode]
@@ -757,7 +768,7 @@ function export.full_headword(data)
 		local auto_sc = data.lang:findBestScript(head.term)
 		if (
 			auto_sc:getCode() == "None" and
-			require("Module:scripts").findBestScriptWithoutLang(head.term):getCode() ~= "None"
+			require(scripts_module).findBestScriptWithoutLang(head.term):getCode() ~= "None"
 		) then
 			insert(data.categories, full_langname .. " terms in nonstandard scripts")
 		end
@@ -839,10 +850,10 @@ function export.full_headword(data)
 
 		-- Link to the transliteration entry for languages that require this.
 		if head.tr and data.lang:link_tr() then
-			head.tr = require("Module:links").full_link {
+			head.tr = require(links_module).full_link {
 				term = head.tr,
 				lang = data.lang,
-				sc = require("Module:scripts").getByCode("Latn"),
+				sc = require(scripts_module).getByCode("Latn"),
 				tr = "-"
 			}
 		end
@@ -860,24 +871,24 @@ function export.full_headword(data)
 	-- about the best we can do (alternatively we could potentially do script detection on the pagename).
 	local dt_script = data.heads[1].sc
 	local dt_script_code = dt_script:getCode()
-	local page_non_ascii = namespace == "" and not pagename:find("^[%z\1-\127]+$")
-	local unsupported_pagename, unsupported = pagename:gsub("^Unsupported titles/", "")
-	if unsupported == 1 and m_data.unsupported_titles[unsupported_pagename] then
-		display_title = 'Unsupported titles/<span class="' .. dt_script_code .. '">' .. m_data.unsupported_titles[unsupported_pagename] .. '</span>'
+	local page_non_ascii = page.namespace == "" and not page.pagename:find("^[%z\1-\127]+$")
+	local unsupported_pagename, unsupported = page.full_raw_pagename:gsub("^Unsupported titles/", "")
+	if unsupported == 1 and page.unsupported_titles[unsupported_pagename] then
+		display_title = 'Unsupported titles/<span class="' .. dt_script_code .. '">' .. page.unsupported_titles[unsupported_pagename] .. '</span>'
 	elseif page_non_ascii and toBeTagged[dt_script_code]
-		or (dt_script_code == "Jpan" and (text_in_script(pagename, "Hira") or text_in_script(pagename, "Kana")))
-		or (dt_script_code == "Kore" and text_in_script(pagename, "Hang")) then
-		display_title = '<span class="' .. dt_script_code .. '">' .. pagename .. '</span>'
+		or (dt_script_code == "Jpan" and (text_in_script(page.pagename, "Hira") or text_in_script(page.pagename, "Kana")))
+		or (dt_script_code == "Kore" and text_in_script(page.pagename, "Hang")) then
+		display_title = '<span class="' .. dt_script_code .. '">' .. page.full_raw_pagename .. '</span>'
 	-- Keep Han entries region-neutral in the display title.
 	elseif page_non_ascii and (dt_script_code == "Hant" or dt_script_code == "Hans") then
-		display_title = '<span class="Hani">' .. pagename .. '</span>'
-	elseif namespace == "Reconstruction" then
+		display_title = '<span class="Hani">' .. page.full_raw_pagename .. '</span>'
+	elseif page.namespace == "Reconstruction" then
 		display_title, matched = rsubn(
-			data.title.fullText,
+			page.full_raw_pagename,
 			"^(Reconstruction:[^/]+/)(.+)$",
 			function(before, term)
 				return before ..
-					require("Module:script utilities").tag_text(
+					require(script_utilities_module).tag_text(
 						term,
 						data.lang,
 						dt_script
@@ -920,7 +931,7 @@ function export.full_headword(data)
 			-- Exclude hyphens if the data module states that they should for this language
 			checkpattern = ".[%s፡]."
 		end
-		if rmatch(unmodified_default_head, checkpattern) and not non_categorizable(data) then
+		if rmatch(page.pagename, checkpattern) and not non_categorizable(page.full_raw_pagename) then
 			insert(data.categories, full_langname .. " multiword terms")
 		end
 	end
@@ -933,7 +944,25 @@ function export.full_headword(data)
 	end
 
 	-- Reconstructed terms often use weird combinations of scripts and realistically aren't spelled so much as notated.
-	if namespace ~= "Reconstruction" then
+	if page.namespace ~= "Reconstruction" then
+		-- Map from languages to a string containing the characters to ignore when considering whether a term has
+		-- multiple written scripts in it. Typically these are Greek or Cyrillic letters used for their phonetic
+		-- values.
+		local characters_to_ignore = {
+			["acy"] = "δθ", -- Cypriot Arabic
+			["byk"] = "θ", -- Biao
+			["cdy"] = "θ", -- Chadong
+			["coo"] = "χ", -- Comox; FIXME: others? E.g. Greek theta (θ)?
+			["izh"] = "ь", -- Ingrian
+			["oui"] = "γβ", -- Old Uyghur: FIXME: others? E.g. Greek delta (δ)?
+			["pox"] = "χ", -- Polabian
+			["rom"] = "Θ", -- Romani: International Standard
+			["str"] = "χθ", -- Saanich; uses two Greek letters
+			["za"] = "зч", -- Zhuang; 1957-1982 alphabet used two Cyrillic letters (as well as some others like
+						   -- ƃ, ƅ, ƨ, ɯ and ɵ that look like Cyrillic or Greek but are actually Latin)
+			["zlw-slv"] = "χђћ", -- Slovincian; FIXME: χ is Greek, the other two are Cyrillic, but I'm not sure
+								 -- the currect characters are being chosen in the entry names
+		}
 		-- Determine how many real scripts are found in the pagename, where we exclude symbols and such. We exclude
 		-- scripts whose `character_category` is false as well as Zmth (mathematical notation symbols), which has a
 		-- category of "Mathematical notation symbols". When counting scripts, we need to elide language-specific
@@ -942,15 +971,19 @@ function export.full_headword(data)
 		local seen_scripts = {}
 		local num_seen_scripts = 0
 		local num_loops = 0
-		local canon_pagename = m_data.pagename
-		local script_data = mw.loadData("Module:scripts/data") 
+		local canon_pagename = page.pagename
+		local ch_to_ignore = characters_to_ignore[full_langcode]
+		if ch_to_ignore then
+			canon_pagename = rsub(canon_pagename, "[" .. ch_to_ignore .. "]", "")
+		end
+		local script_data = mw.loadData(scripts_data_module)
 		while true do
 			if canon_pagename == "" or num_seen_scripts >= 2 or num_loops >= 10 then
 				break
 			end
 			-- Make sure we don't get into a loop checking the same script over and over again; happens with e.g. [[ᠪᡳ]]
 			num_loops = num_loops + 1
-			local pagename_script = require("Module:scripts/charToScript").findBestScriptWithoutLang(canon_pagename, "None only as last resort")
+			local pagename_script = require(scripts_module).findBestScriptWithoutLang(canon_pagename, "None only as last resort")
 			local script_chars = pagename_script:getCharacters()
 			if not script_chars then
 				-- we are stuck; this happens with None
@@ -976,7 +1009,7 @@ function export.full_headword(data)
 	
 	-- Categorise for unusual characters. Takes into account combining characters, so that we can categorise for characters with diacritics that aren't encoded as atomic characters (e.g. U̠). These can be in two formats: single combining characters (i.e. character + diacritic(s)) or double combining characters (i.e. character + diacritic(s) + character). Each can have any number of diacritics.
 	local standard = data.lang:getStandardCharacters()
-	if standard and not non_categorizable(data) then
+	if standard and not non_categorizable(page.full_raw_pagename) then
 		local function char_category(char)
 			local specials = {
 				["#"] = "number sign",
@@ -991,7 +1024,7 @@ function export.full_headword(data)
 				["|"] = "vertical line",
 				["}"] = "braces",
 				["ß"] = "ẞ",
-				["ͅ"] = "",
+				["\205\133"] = "", -- this is UTF-8 for U+0345 ( ͅ)
 				["\239\191\189"] = "replacement character",
 			}
 			char = toNFD(char)
@@ -1011,24 +1044,24 @@ function export.full_headword(data)
 			for code in pairs(standard_chars_scripts) do
 				local sc_standard = data.lang:getStandardCharacters(code)
 				if sc_standard then
-					if m_data.pagename_len > 1 then
+					if page.pagename_len > 1 then
 						local explode_standard = {}
 						local function explode(char)
 							explode_standard[char] = true
 							return ""
 						end
-						local sc_standard = rsub(sc_standard, m_data.comb_chars.combined_double, explode)
-						sc_standard = rsub(sc_standard, m_data.comb_chars.combined_single, explode)
+						local sc_standard = rsub(sc_standard, page.comb_chars.combined_double, explode)
+						sc_standard = rsub(sc_standard,page.comb_chars.combined_single, explode)
 							:gsub("[%z\1-\127\194-\244][\128-\191]*", explode)
 						local num_cat_inserted
-						for char in pairs(m_data.explode_pagename) do
+						for char in pairs(page.explode_pagename) do
 							if not explode_standard[char] then
 								if char:find("[0-9]") then
 									if not num_cat_inserted then
 										insert(data.categories, full_langname .. " terms spelled with numbers")
 										num_cat_inserted = true
 									end
-								elseif rfind(char, m_data.emoji_pattern) then
+								elseif rfind(char, page.emoji_pattern) then
 									insert(data.categories, full_langname .. " terms spelled with emoji")
 								else
 									local upper = char_category(char)
@@ -1042,12 +1075,12 @@ function export.full_headword(data)
 					end
 					-- If a diacritic doesn't appear in any of the standard characters, also categorise for it generally.
 					sc_standard = toNFD(sc_standard)
-					for diacritic in rgmatch(m_data.decompose_pagename, m_data.comb_chars.diacritics_single) do
+					for diacritic in rgmatch(page.decompose_pagename, page.comb_chars.diacritics_single) do
 						if not rmatch(sc_standard, diacritic) then
 							insert(data.categories, full_langname .. " terms spelled with ◌" .. diacritic)
 						end
 					end
-					for diacritic in rgmatch(m_data.decompose_pagename, m_data.comb_chars.diacritics_double) do
+					for diacritic in rgmatch(page.decompose_pagename, page.comb_chars.diacritics_double) do
 						if not rmatch(sc_standard, diacritic) then
 							insert(data.categories, full_langname .. " terms spelled with ◌" .. diacritic .. "◌")
 						end
@@ -1055,8 +1088,8 @@ function export.full_headword(data)
 				end
 			end
 		-- Ancient Greek, Hindi and Lao handled the old way for now, as their standard chars still need to be converted to the new format (because there are a lot of them).
-		elseif ulen(m_data.pagename) ~= 1 then
-			for character in rgmatch(m_data.pagename, "([^" .. standard .. "])") do
+		elseif ulen(page.pagename) ~= 1 then
+			for character in rgmatch(page.pagename, "([^" .. standard .. "])") do
 				local upper = char_category(character)
 				if not rmatch(upper, "[" .. standard .. "]") then
 					character = upper
@@ -1067,7 +1100,7 @@ function export.full_headword(data)
 	end
 	
 	if data.heads[1].sc:isSystem("alphabet") then
-		local pagename, i = m_data.pagename:ulower(), 2
+		local pagename, i = page.pagename:ulower(), 2
 		while rmatch(pagename, "(%a)" .. ("%1"):rep(i)) do
 			i = i + 1
 			insert(data.categories, full_langname .. " terms with " .. i .. " consecutive instances of the same letter")
@@ -1075,17 +1108,17 @@ function export.full_headword(data)
 	end
 	
 	-- Categorise for palindromes
-	if not data.nopalindromecat and namespace ~= "Reconstruction" and ulen(data.title.subpageText) > 2
+	if not data.nopalindromecat and page.namespace ~= "Reconstruction" and ulen(page.pagename) > 2
 		-- FIXME: Use of first script here seems hacky. What is the clean way of doing this in the presence of
 		-- multiple scripts?
-		and require("Module:palindromes").is_palindrome(data.title.subpageText, data.lang, data.heads[1].sc) then
+		and require(palindromes_module).is_palindrome(page.pagename, data.lang, data.heads[1].sc) then
 		insert(data.categories, full_langname .. " palindromes")
 	end
 
-	if namespace == "" and not data.lang:hasType("reconstructed") then
-		local m_links = require("Module:links")
+	if page.namespace == "" and not data.lang:hasType("reconstructed") then
+		local m_links = require(links_module)
 		for _, head in ipairs(data.heads) do
-			if data.title.prefixedText ~= m_links.get_link_page(remove_links(head.term), data.lang, head.sc) then
+			if page.full_raw_pagename ~= m_links.get_link_page(remove_links(head.term), data.lang, head.sc) then
 				-- [[Special:WhatLinksHere/Template:tracking/headword/pagename spelling mismatch]]
 				-- [[Special:WhatLinksHere/Template:tracking/headword/pagename spelling mismatch/LANGCODE]]
 				track("pagename spelling mismatch", data.lang)
@@ -1095,7 +1128,7 @@ function export.full_headword(data)
 	end
 
 	-- Add to various maintenance categories.
-	export.maintenance_cats(m_data, data.lang, data.categories, data.whole_page_categories)
+	export.maintenance_cats(page, data.lang, data.categories, data.whole_page_categories)
 
 	------------ 9. Format and return headwords, genders, inflections and categories. ------------
 
@@ -1108,7 +1141,7 @@ function export.full_headword(data)
 
 	-- Language-specific categories.
 	local cats = format_categories(
-		data.categories, data.lang, data.sort_key, m_data.encoded_pagename,
+		data.categories, data.lang, data.sort_key, page.encoded_pagename,
 		data.force_cat_output or test_force_categories, data.heads[1].sc
 	)
 	-- Language-agnostic categories.
