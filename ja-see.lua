@@ -720,7 +720,7 @@ function export.show(frame)
 	
 	-- Standard maintenance categories usually done by [[Module:headword]].
 	local lang_cats, page_cats = {}, {}
-	maintenance_cats(headword_data, lang, lang_cats, page_cats)
+	maintenance_cats(headword_data.page, lang, lang_cats, page_cats)
 	insert(result, format_cat(lang_cats, lang))
 	insert(result, format_cat(page_cats, nil, "-"))
 	
