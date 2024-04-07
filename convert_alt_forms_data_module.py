@@ -103,6 +103,13 @@ def process_text_on_page(index, pagename, text):
         linemsg("WARNING: Unable to locate canonical label '%s' for aliases: %s" % (canon, line))
         label_lines.append(line)
         continue
+      if alias == canon:
+        linemsg("WARNING: Not appending alias '%s' same as canonical label: %s" % (canon, line))
+        continue
+      if alias in labels_seen[indexed_labels[canon]].aliases:
+        linemsg("WARNING: Not appending alias '%s' already seen in alias(es) '%s' for canonical label '%s': %s" % (
+          alias, ",".join(labels_seen[indexed_labels[canon]].aliases), canon, line))
+        continue
       labels_seen[indexed_labels[canon]].aliases.append(alias)
       continue
 
