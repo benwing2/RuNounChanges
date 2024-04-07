@@ -479,7 +479,7 @@ labels["Abzhywa"] = {
 
 labels["Sadz"] = {
 	aliases = {"Asadzwa"},
-	Wikipedia = "Sadz_dialect", -- FIXME: {{alt}} label Wikipedia value '"Sadz dialect"' different from existing
+	Wikipedia = "Sadz dialect",
 	regional_categories = true,
 }
 
@@ -818,7 +818,7 @@ labels["Boghazkeui"] = {
 
 labels["El-Amarna"] = {
 	aliases = {"EA", "El Amarna", "Amarna", "Am."},
-	Wikipedia = true, -- FIXME: {{alt}} label Wikipedia value '"Amarna"' different from existing
+	Wikipedia = "Amarna",
 	regional_categories = true,
 }
 
@@ -830,14 +830,9 @@ labels["Mari"] = {
 
 labels["Ras Shamra"] = {
 	aliases = {"RS", "Ugarit", "Ug."},
-	Wikipedia = true,
+	Wikipedia = "Ugarit",
 	regional_categories = true,
 }
--- FIXME: WARNING: {{alt}} label 'Ras Sharma' has alias 'RS' matching existing alias 'RS' of label 'Ras Shamra', inserting commented-out
--- labels["Ras Sharma"] = {
--- 	aliases = {"RS", "Ugarit", "Ug."},
--- 	Wikipedia = "Ugarit",
--- }
 
 -- sumerogram labels according to Labat
 
@@ -994,47 +989,47 @@ Page 11 Module:labels/data/lang/an: -------- begin text --------
 local labels = {}
 
 labels["Ansotano"] = {
-	Wikipedia = "en:Ansó Aragonese", -- FIXME: {{alt}} label Wikipedia value '"Ansó"' different from existing
+	Wikipedia = {"Ansó Aragonese", "Ansó"},
 	regional_categories = true,
 }
 
 labels["Belsetán"] = {
-	Wikipedia = "an:Aragonés belsetán", -- FIXME: {{alt}} label Wikipedia value '"Bielsa"' different from existing
+	Wikipedia = {"es:Aragonés belsetano", "Bielsa"},
 	regional_categories = true,
 }
 
 labels["Benasquese"] = {
-	Wikipedia = "en:Benasquese dialect", -- FIXME: {{alt}} label Wikipedia value '"Benasque"' different from existing
+	Wikipedia = {"Benasquese dialect", "Benasque"},
 	regional_categories = true,
 }
 
 labels["Cheso"] = {
-	Wikipedia = "en:Hecho Aragonese", -- FIXME: {{alt}} label Wikipedia value '"Valle de Hecho"' different from existing
+	Wikipedia = {"Hecho Aragonese", "Valle de Hecho"},
 	regional_categories = true,
 }
 
 labels["Chistabín"] = {
-	Wikipedia = "es:Aragonés chistabino", -- FIXME: {{alt}} label Wikipedia value '"False"' different from existing
+	Wikipedia = "es:Aragonés chistabino",
 	regional_categories = true,
 }
 
 labels["Low Ribagorçan"] = {
-	Wikipedia = "es:Aragonés bajorribagorzano", -- FIXME: {{alt}} label Wikipedia value '"False"' different from existing
+	Wikipedia = "es:Aragonés bajorribagorzano",
 	regional_categories = true,
 }
 
 labels["Sobrepuerto"] = {
-	Wikipedia = "es:Aragonés de Sobrepuerto", -- FIXME: {{alt}} label Wikipedia value '"False"' different from existing
+	Wikipedia = "es:Aragonés de Sobrepuerto",
 	regional_categories = true,
 }
 
 labels["Somontano"] = {
-	Wikipedia = "es:Aragonés somontanés", -- FIXME: {{alt}} label Wikipedia value '"False"' different from existing
+	Wikipedia = "es:Aragonés somontanés",
 	regional_categories = true,
 }
 
 labels["Tensino"] = {
-	Wikipedia = "es:Aragonés tensino", -- FIXME: {{alt}} label Wikipedia value '"Tena Valley"' different from existing
+	Wikipedia = {"es:Aragonés tensino", "Tena Valley"},
 	regional_categories = true,
 }
 return require("Module:labels").finalize_data(labels)
@@ -1069,7 +1064,7 @@ Page 12 Module:labels/data/lang/ang: -------- begin text --------
 local labels = {}
 
 labels["Anglian"] = {
-	Wikipedia = "Anglian dialect", -- FIXME: {{alt}} label Wikipedia value '"Old English"' different from existing
+	Wikipedia = "Anglian dialect",
 	regional_categories = true,
 }
 
@@ -1078,7 +1073,6 @@ labels["Early West Saxon"] = {
 	regional_categories = true,
 }
 
---This will conflict with a Kentish dialect label for Modern English, if someone wants to make one.
 labels["Kentish"] = {
 	Wikipedia = "Kentish dialect (Old English)",
 	regional_categories = true,
@@ -1099,7 +1093,7 @@ labels["Mercian"] = {
 }
 
 labels["Northumbrian"] = {
-	Wikipedia = "Northumbrian Old English", -- FIXME: {{alt}} label Wikipedia value '"Northumbrian dialect"' different from existing
+	Wikipedia = "Northumbrian Old English",
 	regional_categories = {true, "Anglian"},
 }
 
@@ -1184,6 +1178,8 @@ Page 14 Module:labels/data/lang/ar: Would save with comment = clean categories i
 Page 14 Module:labels/data/lang/ar: -------- begin text --------
 local labels = {}
 
+-- FIXME! Some labels below link to the articles on the colloquial varieties of a given location, but these categories/
+-- labels are supposed to be for location-specific uses of *Standard Arabic*.
 labels["West Arabian"] = {
 	aliases = {"Hejazi Arabic"},
 	display = "Hejazi",
@@ -1239,13 +1235,9 @@ labels["Sudan"] = {
 
 labels["Tunisia"] = {
 	aliases = {"Tunisian"},
-	Wikipedia = true,
+	Wikipedia = {true, "Tunisian Arabic"},
 	regional_categories = "Tunisian",
 }
--- FIXME: WARNING: {{alt}} label 'Tunisian' matches existing alias 'Tunisian' of label 'Tunisia', inserting commented-out
--- labels["Tunisian"] = {
--- 	Wikipedia = "Tunisian Arabic",
--- }
 
 labels["Galilee"] = {
 	aliases = {"Galilean"},
@@ -1800,12 +1792,6 @@ labels["Kurdamir"] = {
 	Wikipedia = "Kurdamir District",
 	regional_categories = true,
 }
--- FIXME: WARNING: {{alt}} label 'Kürdəmir' matches existing alias 'Kürdəmir' of label 'Kurdamir', inserting commented-out
--- labels["Kürdəmir"] = {
--- 	aliases = {"Kurdamir"},
--- 	display = "Kurdamir",
--- 	Wikipedia = "Kurdamir",
--- }
 
 labels["Barda"] = {
 	aliases = {"Bərdə"},
@@ -2750,20 +2736,28 @@ Page 27 Module:labels/data/lang/ca: -------- begin text --------
 local labels = {}
 
 labels["Eastern Catalan"] = {
-	aliases = {"eastern"},
+	aliases = {"eastern", "Eastern"},
 	Wikipedia = "Catalan dialects",
 	plain_categories = true,
 }
 
+labels["Central Catalan"] = {
+	aliases = {"central", "Central"},
+	Wikipedia = true,
+	-- currently no category as this is the standard form
+}
+
 labels["Northern Catalan"] = {
-	aliases = {"Roussillonese", "northern"},
+	aliases = {"Roussillonese", "northern", "Northern"},
+	Wikipedia = true,
+	plain_categories = true,
+}
+
+labels["Western Catalan"] = {
+	aliases = {"western", "Western"},
 	Wikipedia = "Catalan dialects",
 	plain_categories = true,
 }
--- FIXME: WARNING: {{alt}} label 'Northern' matches existing alias 'northern' of label 'Northern Catalan', inserting commented-out
--- labels["Northern"] = {
--- 	Wikipedia = "Northern Catalan",
--- }
 
 labels["Valencian"] = {
 	aliases = {"Valencia", "València"},
@@ -2771,52 +2765,28 @@ labels["Valencian"] = {
 	plain_categories = true,
 }
 
-labels["Western Catalan"] = {
-	aliases = {"western"},
-	Wikipedia = "Catalan dialects",
-	plain_categories = true,
+labels["Algherese"] = {
+	aliases = {"Alghero", "Alguer"},
+	Wikipedia = "Algherese dialect",
+	regional_categories = true,
 }
 
-labels["Alghero"] = {
-	aliases = {"Algherese"},
-	Wikipedia = true,
-	regional_categories = "Algherese",
+labels["Balearic"] = {
+	aliases = {"Balearics", "Balearic Islands", "Balear", "Baleares", "Balears"},
+	Wikipedia = "Balearic Catalan",
+	regional_categories = true,
 }
--- FIXME: WARNING: {{alt}} label 'Algherese' matches existing alias 'Algherese' of label 'Alghero', inserting commented-out
--- labels["Algherese"] = {
--- 	aliases = {"Alguer", "Alguerese"},
--- 	Wikipedia = "Algherese dialect",
--- }
-
-labels["Balearics"] = {
-	aliases = {"Balearic", "Balearic Islands", "Baleares", "Balears"},
-	Wikipedia = "Balearic Islands",
-	regional_categories = "Balearic",
-}
--- FIXME: WARNING: {{alt}} label 'Balearic' matches existing alias 'Balearic' of label 'Balearics', inserting commented-out
--- labels["Balearic"] = {
--- 	aliases = {"Balear", "Balearics"},
--- 	Wikipedia = "Balearic Catalan",
--- }
 
 labels["Mallorca"] = {
 	aliases = {"Mallorcan", "Majorca"},
-	Wikipedia = true,
+	Wikipedia = {"Balearic Catalan", true},
 	regional_categories = "Mallorcan",
 }
--- FIXME: WARNING: {{alt}} label 'Majorcan' has alias 'Mallorca' matching existing label 'Mallorca', inserting commented-out
--- labels["Majorcan"] = {
--- 	aliases = {"Mallorca", "Majorca"},
--- 	Wikipedia = "Balearic Catalan",
--- }
 
-labels["Central"] = {
-	Wikipedia = "Central Catalan",
-}
-
-labels["Minorcan"] = {
-	aliases = {"Menorca", "Minorca"},
+labels["Menorca"] = {
+	aliases = {"Minorca", "Menorcan", "Minorcan"},
 	Wikipedia = "Balearic Catalan",
+	regional_categories = "Menorcan",
 }
 
 labels["pre-2016"] = {
@@ -2906,11 +2876,6 @@ labels["Bohol"] = {
 	Wikipedia = "Boholano dialect",
 	regional_categories = "Boholano",
 }
--- FIXME: WARNING: {{alt}} label 'Boholano' matches existing alias 'Boholano' of label 'Bohol', inserting commented-out
--- labels["Boholano"] = {
--- 	aliases = {"Bohol", "Binol-anon"},
--- 	Wikipedia = "Boholano dialect",
--- }
 
 labels["Caraga"] = {
 	aliases = {"Caraga Bisaya", "Binisayang Caraga"},
@@ -2960,16 +2925,11 @@ labels["Southern Leyte"] = {
 	regional_categories = true,
 }
 
-labels["Urban Cebu"] = {
-	aliases = {"Metro Cebu", "Urban Cebuano"},
+labels["Metro Cebu"] = {
+	aliases = {"Urban Cebu", "Urban Cebuano"},
 	Wikipedia = true,
-	regional_categories = "Metro Cebu",
+	regional_categories = true,
 }
--- FIXME: WARNING: {{alt}} label 'Metro Cebu' matches existing alias 'Metro Cebu' of label 'Urban Cebu', inserting commented-out
--- labels["Metro Cebu"] = {
--- 	aliases = {"Urban Cebuano"},
--- 	Wikipedia = true,
--- }
 
 return require("Module:labels").finalize_data(labels)
 -------- end text --------
@@ -2993,25 +2953,25 @@ Page 31 Module:labels/data/lang/ch: Skipped, no changes
 Page 31 Module:labels/data/lang/ch: -------- begin text --------
 local labels = {}
 
--- kludge, needed here for [[Template:standard spelling of]] et al
-
 labels["Guam"] = {
 	aliases = {"Guåhan", "Guamanian"},
 	Wikipedia = true,
 	regional_categories = true,
 }
 
+labels["Northern Mariana Islands"] = {
+	aliases = {"CNMI", "Notte Mariånas"},
+	Wikipedia = true,
+	regional_categories = true,
+}
+
+-- the following needed for [[Template:standard spelling of]] et al
+
 labels["Guam spelling"] = {
 	aliases = {"Guam form"},
 	display = "Guam spelling",
 	Wikipedia = "Chamorro_language#Orthography",
 	plain_categories = "Guam Chamorro forms",
-}
-
-labels["Northern Mariana Islands"] = {
-	aliases = {"CNMI", "Notte Mariånas"},
-	Wikipedia = true,
-	regional_categories = true,
 }
 
 labels["Northern Mariana Islands spelling"] = {
@@ -3864,11 +3824,10 @@ labels["Southern German"] = {
 	plain_categories = true,
 }
 
-labels["Swiss German"] = {
-	aliases = {"Switzerland German"},
-	display = "Switzerland",
-	Wikipedia = true,
-	regional_categories = "Switzerland",
+labels["Switzerland"] = {
+	aliases = {"Swiss", "Swiss German", "Switzerland German", "ch"},
+	Wikipedia = "Swiss German",
+	regional_categories = true,
 }
 
 labels["Switzerland and Liechtenstein spelling"] = {
@@ -3891,7 +3850,7 @@ labels["Namibia"] = {
 
 labels["Austria"] = {
 	aliases = {"Austrian", "at"},
-	Wikipedia = true, -- FIXME: {{alt}} label Wikipedia value '"Austrian German"' different from existing
+	Wikipedia = "Austrian German",
 	regional_categories = "Austrian",
 }
 
@@ -3915,7 +3874,7 @@ labels["Germany"] = {
 
 labels["Liechtenstein"] = {
 	aliases = {"li"},
-	Wikipedia = true, -- FIXME: {{alt}} label Wikipedia value '"Liechtenstein German"' different from existing
+	Wikipedia = "Liechtenstein German",
 	regional_categories = true,
 }
 
@@ -3948,31 +3907,11 @@ labels["Vienna"] = {
 	regional_categories = "Viennese",
 }
 
--- FIXME: WARNING: {{alt}} label 'Luxembourg' matches existing regional label 'Luxembourg', inserting both commented-out
--- labels["Luxembourg"] = {
--- 	aliases = {"lu", "Luxembourgian"},
--- 	Wikipedia = "Luxembourgian German",
--- }
--- FIXME: corresponding regional label follows:
--- labels["Luxembourg"] = {
--- 	aliases = {"Luxembourgish", "Luxemburg", "Luxemburgish"},
--- 	Wikipedia = true,
--- 	langs = {"de", "fr"},
--- 	regional_categories = "Luxembourgish",
--- }
-
--- FIXME: WARNING: {{alt}} label 'Switzerland' matches existing regional label 'Switzerland', inserting both commented-out
--- labels["Switzerland"] = {
--- 	aliases = {"ch", "Swiss"},
--- 	Wikipedia = "Swiss German",
--- }
--- FIXME: corresponding regional label follows:
--- labels["Switzerland"] = {
--- 	aliases = {"Swiss", "Swiss German"}, -- some German entries use this alias; let -sche know if it causes problems
--- 	Wikipedia = true,
--- 	langs = {"de", "fr", "gsw", "it", "ru"},
--- 	regional_categories = true,
--- }
+labels["Luxembourg"] = {
+	aliases = {"Luxembourgish", "Luxemburg", "Luxemburgish", "lu"},
+	Wikipedia = "Luxembourgian German",
+	regional_categories = "Luxembourgish",
+}
 
 return require("Module:labels").finalize_data(labels)
 -------- end text --------
@@ -4151,19 +4090,19 @@ labels["Cretan"] = {
 }
 
 labels["Demotic"] = {
-	display = "[[Demotic Greek#English|Demotic]]", -- FIXME: {{alt}} label display value '"[[Demotic Greek|Demotic]]"' different from existing
+	Wikipedia = "Demotic Greek",
 	regional_categories = true,
 }
 
 labels["Kaliarda"] = {
 	aliases = {"Kaliarnta"},
-	display = "[[Kaliarda]]",
+	Wikipedia = true,
 	plain_categories = true,
 }
 
 labels["Katharevousa"] = {
 	aliases = {"kth"},
-	display = "[[Katharevousa#English|Katharevousa]]", -- FIXME: {{alt}} label display value '"[[Katharevousa]]"' different from existing
+	Wikipedia = true,
 	plain_categories = true,
 }
 
@@ -4186,7 +4125,7 @@ labels["polytonic"] = {
 
 labels["Italiot"] = {
 	aliases = {"Italiot Greek"},
-	display = "[[Italiot]]", -- change to [[Italiot Greek]] if there's an entry
+	Wikipedia = "Italiot Greek",
 }
 
 return require("Module:labels").finalize_data(labels)
@@ -4280,11 +4219,38 @@ Page 52 Module:labels/data/lang/en: Would save with comment = clean categories i
 Page 52 Module:labels/data/lang/en: -------- begin text --------
 local labels = {}
 
+------------------------------------ North America -----------------------------------
+
+labels["North America"] = {
+	aliases = {"North American"},
+	display = "[[Canada]], [[American English|US]]",
+	regional_categories = {"Canadian", "American"},
+}
+
 ----------- Canada categories ---------------
+
+labels["Canada"] = {
+	aliases = {"Canada English", "Canadian", "Canadian English"},
+	Wikipedia = "Canadian English",
+	regional_categories = "Canadian",
+}
+
+labels["Acadia"] = {
+	aliases = {"Acadian"},
+	display = "Acadian",
+	Wikipedia = true,
+	regional_categories = "Acadian",
+}
 
 labels["Alberta"] = {
 	Wikipedia = true,
 	regional_categories = "Canadian",
+}
+
+labels["Atlantic Canada"] = {
+	aliases = {"Atlantic Canadian"},
+	Wikipedia = true,
+	regional_categories = "Atlantic Canadian",
 }
 
 labels["British Columbia"] = {
@@ -4298,9 +4264,31 @@ labels["Canadian Prairies"] = {
 	regional_categories = "Canadian",
 }
 
+labels["Labrador"] = {
+	Wikipedia = true,
+	regional_categories = true,
+}
+
 labels["Manitoba"] = {
 	Wikipedia = true,
 	regional_categories = "Canadian",
+}
+
+labels["Multicultural Toronto English"] = {
+	aliases = {"Greater Toronto English", "Greater Toronto Area", "MTE", "GTE", "GTA"},
+	display = "MTE",
+	Wikipedia = true,
+	plain_categories = true,
+}
+
+labels["New Brunswick"] = {
+	Wikipedia = true,
+	regional_categories = "Atlantic Canadian",
+}
+
+labels["Newfoundland"] = {
+	Wikipedia = "Newfoundland English",
+	regional_categories = true,
 }
 
 labels["Northwest Territories"] = {
@@ -4314,9 +4302,36 @@ labels["Northwestern Ontario"] = {
 	regional_categories = "Canadian",
 }
 
+labels["Nova Scotia"] = {
+	aliases = {"Nova Scotian"},
+	Wikipedia = true,
+	regional_categories = "Atlantic Canadian",
+}
+
+labels["Nunavut"] = {
+	regional_categories = "Canadian",
+}
+
 labels["Ontario"] = {
 	Wikipedia = true,
 	regional_categories = "Canadian",
+}
+
+labels["Prince Edward Island"] = {
+	Wikipedia = true,
+	regional_categories = "Atlantic Canadian",
+}
+
+labels["Quebec"] = {
+	aliases = {"Québec"},
+	Wikipedia = true,
+	regional_categories = true,
+}
+
+labels["Saskatchewan"] = {
+	aliases = {"SK"},
+	Wikipedia = true,
+	regional_categories = true,
 }
 
 labels["Yukon"] = {
@@ -4324,7 +4339,13 @@ labels["Yukon"] = {
 	regional_categories = "Canadian",
 }
 
------------ Miscellaneous categories (SORT ME!), mostly dialects ---------------
+----------- US categories ---------------
+
+labels["US"] = {
+	aliases = {"U.S.", "United States", "United States of America", "USA", "US English", "U.S. English", "America", "American", "American English", "en-US"}, -- America/American: should these be aliases of 'North America'?
+	Wikipedia = "American English",
+	regional_categories = "American",
+}
 
 labels["African-American Vernacular English"] = {
 	aliases = {"AAVE", "African American Vernacular English", "ebonics", "BVE"},
@@ -4338,6 +4359,233 @@ labels["African-American English"] = {
 	display = "African-American English",
 	plain_categories = true,
 }
+
+labels["Midland US"] = {
+	aliases = {"Midland U.S.", "North Midland US", "Northern Midland US", "South Midland US", "Southern Midland US"},
+	Wikipedia = "Midland American English",
+	regional_categories = true,
+}
+
+labels["Pennsylvania Dutch English"] = {
+	Wikipedia = true,
+	plain_categories = true,
+}
+
+labels["Southern US English"] = {
+	aliases = {"Southern American English", "Southern US", "Southern U.S.", "southern US", "southern U.S.", "US South", "U.S. South", "US Southern", "U.S. Southern"},
+	display = "Southern US",
+	Wikipedia = "Southern American English",
+	plain_categories = true,
+}
+
+labels["Southwestern US English"] = {
+	aliases = {"Southwestern American English", "Southwestern US", "Southwestern U.S.", "southwestern US", "southwestern U.S.", "US Southwest", "U.S. Southwest", "Southwest US", "Southwest U.S.", "southwest US", "southwest U.S."},
+	display = "Southwestern US",
+	Wikipedia = "Southwestern United States",
+	plain_categories = true,
+}
+
+labels["Western Pennsylvania English"] = {
+	aliases = {"Western Pennsylvania dialect", "Pittsburgh English", "Pittsburghese"},
+	display = "Western Pennsylvania",
+	Wikipedia = true,
+	plain_categories = true,
+}
+
+labels["Alaska"] = {
+	aliases = {"Alaskan"},
+	Wikipedia = true,
+	regional_categories = true,
+}
+
+labels["Appalachia"] = {
+	aliases = {"Appalachian"},
+	Wikipedia = true,
+	regional_categories = "Appalachian",
+}
+
+labels["Arizona"] = {
+	aliases = {"Arizonan"},
+	Wikipedia = true,
+	regional_categories = true,
+}
+
+labels["Arkansas"] = {
+	aliases = {"Arkansan"},
+	Wikipedia = true,
+	regional_categories = "Arkansan",
+}
+
+labels["Baltimore"] = {
+	Wikipedia = true,
+	regional_categories = true,
+}
+
+labels["California"] = {
+	aliases = {"Californian"},
+	Wikipedia = true,
+	regional_categories = true,
+}
+
+labels["Chicago"] = {
+	Wikipedia = true,
+	regional_categories = true,
+}
+
+labels["Cincinnati"] = {
+	Wikipedia = true,
+	regional_categories = true,
+}
+
+labels["Colorado"] = {
+	aliases = {"Coloradan", "Coloradoan"},
+	Wikipedia = true,
+	regional_categories = true,
+}
+
+labels["Connecticut"] = {
+	aliases = {"Connecticuter", "Connecticutian"},
+	Wikipedia = true,
+	regional_categories = true,
+}
+
+labels["District of Columbia"] = {
+	aliases = {"DC", "Washington, D.C.", "D.C.", "Washington, DC"},
+	Wikipedia = true,
+	regional_categories = "DC",
+}
+
+labels["Florida"] = {
+	aliases = {"Floridian", "FL"},
+	Wikipedia = true,
+	regional_categories = true,
+}
+
+labels["Georgia (US)"] = {
+	display = "[[w:Georgia (U.S. state)|Georgia]]",
+	regional_categories = true,
+}
+
+labels["Hawaii"] = {
+	aliases = {"Hawaiian"},
+	Wikipedia = true,
+	regional_categories = "Hawaiian",
+}
+
+labels["Maine"] = {
+	display = "[[Maine]]",
+	regional_categories = true,
+}
+
+labels["Maryland"] = {
+	Wikipedia = true,
+	regional_categories = true,
+}
+
+labels["Michigan"] = {
+	Wikipedia = true,
+	regional_categories = true,
+}
+
+labels["Midwest US"] = {
+	aliases = {"Midwestern US", "US Midwest"},
+	display = "[[w:Midwestern United States|Midwestern US]]",
+	regional_categories = true,
+}
+
+labels["Mississippi"] = {
+	aliases = {"Mississippian"},
+	Wikipedia = true,
+	regional_categories = true,
+}
+
+labels["New England"] = {
+	Wikipedia = true,
+	regional_categories = true,
+}
+
+labels["New Jersey"] = {
+	Wikipedia = true,
+	regional_categories = true,
+}
+
+labels["New Mexico"] = {
+	aliases = {"New Mexican"},
+	Wikipedia = true,
+	regional_categories = true,
+}
+
+labels["New York"] = {
+	aliases = {"NY"},
+	Wikipedia = true,
+	regional_categories = true,
+}
+
+labels["North Carolina"] = {
+	aliases = {"North Carolinian", "NC"},
+	Wikipedia = true,
+	regional_categories = true,
+}
+
+labels["Northeast US"] = {
+	aliases = {"Northeastern US", "US Northeast"},
+	display = "[[w:Northeastern United States|Northeastern US]]",
+	regional_categories = true,
+}
+
+labels["Northwestern US"] = {
+	aliases = {"northwestern US"},
+	Wikipedia = "Northwestern United States",
+	regional_categories = true,
+}
+
+labels["Ohio"] = {
+	aliases = {"Ohioan", "OH"},
+	Wikipedia = true,
+	regional_categories = true,
+}
+
+labels["Pennsylvania"] = {
+	aliases = {"Pennsylvanian"},
+	Wikipedia = true,
+	regional_categories = true,
+}
+
+labels["Rhode Island"] = {
+	Wikipedia = true,
+	regional_categories = true,
+}
+
+labels["South Carolina"] = {
+	aliases = {"South Carolinian", "SC"},
+	Wikipedia = true,
+	regional_categories = true,
+}
+
+labels["Upper Midwest US"] = {
+	aliases = {"Upper Midwestern US"},
+	display = "[[w:Upper Midwest|Upper Midwestern US]]",
+	regional_categories = true,
+}
+
+labels["Virginia"] = {
+	aliases = {"Virginian"},
+	Wikipedia = true,
+	regional_categories = true,
+}
+
+labels["Western US"] = {
+	aliases = {"western US"},
+	Wikipedia = "Western United States",
+	regional_categories = true,
+}
+
+labels["Wisconsin"] = {
+	Wikipedia = true,
+	regional_categories = true,
+}
+
+----------- Miscellaneous categories (SORT ME!), mostly dialects ---------------
 
 labels["Australian English"] = {
 	display = "Australia",
@@ -4364,10 +4612,10 @@ labels["Birmingham"] = {
 	regional_categories = true,
 }
 
-labels["British English"] = {
-	display = "British",
-	Wikipedia = true,
-	plain_categories = true,
+labels["British"] = {
+ 	aliases = {"Brit", "Britain", "Great Britain", "en-GB"},
+	Wikipedia = "British English",
+	regional_categories = true,
 }
 
 labels["British Indian English"] = {
@@ -4380,12 +4628,6 @@ labels["British Indian English"] = {
 labels["British Pakistani"] = {
 	aliases = {"British Pakistani English"},
 	display = "British Pakistani",
-	Wikipedia = true,
-	plain_categories = true,
-}
-
-labels["Canadian English"] = {
-	display = "Canada",
 	Wikipedia = true,
 	plain_categories = true,
 }
@@ -4413,11 +4655,6 @@ labels["Early Modern English"] = {
 	Wikipedia = true,
 	plain_categories = true,
 }
--- FIXME: WARNING: {{alt}} label 'Early Modern' matches existing alias 'Early Modern' of label 'Early Modern English', inserting commented-out
--- labels["Early Modern"] = {
--- 	aliases = {"EME"},
--- 	Wikipedia = "Early Modern English",
--- }
 
 labels["East Anglian English"] = {
 	display = "East Anglia",
@@ -4468,6 +4705,7 @@ labels["Manglish"] = {
 	Wikipedia = true,
 	plain_categories = true,
 }
+
 labels["Mid-Ulster English"] = {
 	aliases = {"Standard Northern Irish", "Mid Ulster English"},
 	Wikipedia = true,
@@ -4480,22 +4718,9 @@ labels["Midlands English"] = {
 	plain_categories = true,
 }
 
-labels["Midland US"] = {
-	aliases = {"Midland U.S.", "North Midland US", "Northern Midland US", "South Midland US", "Southern Midland US"},
-	Wikipedia = "Midland American English",
-	regional_categories = true,
-}
-
 labels["Multicultural London English"] = {
 	aliases = {"MLE"},
 	display = "MLE",
-	Wikipedia = true,
-	plain_categories = true,
-}
-
-labels["Multicultural Toronto English"] = {
-	aliases = {"Greater Toronto English", "Greater Toronto Area", "MTE", "GTE", "GTA"},
-	display = "MTE",
 	Wikipedia = true,
 	plain_categories = true,
 }
@@ -4514,19 +4739,8 @@ labels["New Zealand English"] = {
 
 labels["Non-Oxford British spelling"] = {
 	aliases = {"non-Oxford British spelling", "Non-Oxford", "non-Oxford", "Not Oxford", "not Oxford"},
-	display = "Non-[[w:Oxford spelling|Oxford]] [[British English]]",
+	display = "non-[[w:Oxford spelling|Oxford]] [[British English]]",
 	plain_categories = "British English forms",
-}
--- FIXME: WARNING: {{alt}} label 'non-Oxford' matches existing alias 'non-Oxford' of label 'Non-Oxford British spelling', inserting commented-out
--- labels["non-Oxford"] = {
--- 	display = "non-Oxford British English",
--- 	Wikipedia = "Oxford spelling",
--- }
-
-labels["North America"] = {
-	aliases = {"North American"},
-	display = "[[Canada]], [[American English|US]]",
-	regional_categories = {"Canadian", "American"},
 }
 
 labels["Northern Territory"] = {
@@ -4535,25 +4749,10 @@ labels["Northern Territory"] = {
 	regional_categories = "Australian",
 }
 
-labels["Nunavut"] = {
-	regional_categories = "Canadian",
-}
-
 labels["Oxford British spelling"] = {
-	aliases = {"Oxford"},
+	aliases = {"Oxford", "en-GB-oxendict"},
 	display = "[[w:Oxford spelling|Oxford]] [[British English]]",
 	plain_categories = "Oxford spellings",
-}
--- FIXME: WARNING: {{alt}} label 'Oxford' matches existing alias 'Oxford' of label 'Oxford British spelling', inserting commented-out
--- labels["Oxford"] = {
--- 	aliases = {"en-GB-oxendict"},
--- 	display = "Oxford British English",
--- 	Wikipedia = "Oxford spelling",
--- }
-
-labels["Pennsylvania Dutch English"] = {
-	Wikipedia = true,
-	plain_categories = true,
 }
 
 labels["Philippine English"] = {
@@ -4610,33 +4809,12 @@ labels["Southern England English"] = {
 	plain_categories = true,
 }
 
-labels["Southern US English"] = {
-	aliases = {"Southern American English", "Southern US", "Southern U.S.", "southern US", "southern U.S.", "US South", "U.S. South", "US Southern", "U.S. Southern"},
-	display = "Southern US",
-	Wikipedia = "Southern American English",
-	plain_categories = true,
-}
-
-labels["Southwestern US English"] = {
-	aliases = {"Southwestern American English", "Southwestern US", "Southwestern U.S.", "southwestern US", "southwestern U.S.", "US Southwest", "U.S. Southwest", "Southwest US", "Southwest U.S.", "southwest US", "southwest U.S."},
-	display = "Southwestern US",
-	Wikipedia = "Southwestern United States",
-	plain_categories = true,
-}
-
 labels["Sussex"] = {
 	Wikipedia = "Sussex dialect",
 	regional_categories = true,
 }
 
 -- Tyneside: see Geordie
-
-labels["US English"] = {
-	aliases = {"U.S. English", "American English"},
-	display = "US",
-	Wikipedia = "American English",
-	regional_categories = "American",
-}
 
 labels["Victoria"] = {
 	Wikipedia = "Victoria (state)",
@@ -4659,13 +4837,6 @@ labels["West Country English"] = {
 labels["West Midlands English"] = {
 	aliases = {"West Midlands dialect"},
 	display = "West Midlands",
-	Wikipedia = true,
-	plain_categories = true,
-}
-
-labels["Western Pennsylvania English"] = {
-	aliases = {"Western Pennsylvania dialect", "Pittsburgh English", "Pittsburghese"},
-	display = "Western Pennsylvania",
 	Wikipedia = true,
 	plain_categories = true,
 }
@@ -4860,254 +5031,16 @@ labels["Zimbabwe"] = {
 	regional_categories = true,
 }
 
-labels["Acadia"] = {
-	aliases = {"Acadian"},
-	display = "Acadian",
-	Wikipedia = true,
-	regional_categories = "Acadian",
-}
-
-labels["Alaska"] = {
-	aliases = {"Alaskan"},
-	Wikipedia = true,
-	regional_categories = true,
-}
-
-labels["Appalachia"] = {
-	aliases = {"Appalachian"},
-	Wikipedia = true,
-	regional_categories = "Appalachian",
-}
-
-labels["Arizona"] = {
-	aliases = {"Arizonan"},
-	Wikipedia = true,
-	regional_categories = true,
-}
-
-labels["Arkansas"] = {
-	aliases = {"Arkansan"},
-	Wikipedia = true,
-	regional_categories = "Arkansan",
-}
-
-labels["Atlantic Canada"] = {
-	aliases = {"Atlantic Canadian"},
-	Wikipedia = true,
-	regional_categories = "Atlantic Canadian",
-}
-
-labels["Baltimore"] = {
-	Wikipedia = true,
-	regional_categories = true,
-}
-
 labels["Bermuda"] = {
 	aliases = {"Bermudan", "Bermudian"},
 	Wikipedia = true,
 	regional_categories = "Bermudian",
 }
 
-labels["California"] = {
-	aliases = {"Californian"},
-	Wikipedia = true,
-	regional_categories = true,
-}
-
-labels["Chicago"] = {
-	Wikipedia = true,
-	regional_categories = true,
-}
-
-labels["Cincinnati"] = {
-	Wikipedia = true,
-	regional_categories = true,
-}
-
-labels["Colorado"] = {
-	aliases = {"Coloradan", "Coloradoan"},
-	Wikipedia = true,
-	regional_categories = true,
-}
-
-labels["Connecticut"] = {
-	aliases = {"Connecticuter", "Connecticutian"},
-	Wikipedia = true,
-	regional_categories = true,
-}
-
-labels["District of Columbia"] = {
-	aliases = {"DC", "Washington, D.C.", "D.C.", "Washington, DC"},
-	Wikipedia = true,
-	regional_categories = "DC",
-}
-
-labels["Florida"] = {
-	aliases = {"Floridian", "FL"},
-	Wikipedia = true,
-	regional_categories = true,
-}
-
-labels["Georgia (US)"] = {
-	display = "[[w:Georgia (U.S. state)|Georgia]]",
-	regional_categories = true,
-}
-
-labels["Labrador"] = {
-	Wikipedia = true,
-	regional_categories = true,
-}
-
-labels["Maine"] = {
-	display = "[[Maine]]",
-	regional_categories = true,
-}
-
-labels["Maryland"] = {
-	Wikipedia = true,
-	regional_categories = true,
-}
-
 labels["Mexico"] = {
 	aliases = {"Mexican"},
 	Wikipedia = true,
 	regional_categories = "Mexican",
-}
-
-labels["Michigan"] = {
-	Wikipedia = true,
-	regional_categories = true,
-}
-
-labels["Midwest US"] = {
-	aliases = {"Midwestern US", "US Midwest"},
-	display = "[[w:Midwestern United States|Midwestern US]]",
-	regional_categories = true,
-}
-
-labels["Mississippi"] = {
-	aliases = {"Mississippian"},
-	Wikipedia = true,
-	regional_categories = true,
-}
-
-labels["New Brunswick"] = {
-	Wikipedia = true,
-	regional_categories = "Atlantic Canadian",
-}
-
-labels["New England"] = {
-	Wikipedia = true,
-	regional_categories = true,
-}
-
-labels["New Jersey"] = {
-	Wikipedia = true,
-	regional_categories = true,
-}
-
-labels["New Mexico"] = {
-	aliases = {"New Mexican"},
-	Wikipedia = true,
-	regional_categories = true,
-}
-
-labels["New York"] = {
-	aliases = {"NY"},
-	Wikipedia = true,
-	regional_categories = true,
-}
-
-labels["Newfoundland"] = {
-	Wikipedia = "Newfoundland English",
-	regional_categories = true,
-}
-
-labels["North Carolina"] = {
-	aliases = {"North Carolinian", "NC"},
-	Wikipedia = true,
-	regional_categories = true,
-}
-
-labels["Northeast US"] = {
-	aliases = {"Northeastern US", "US Northeast"},
-	display = "[[w:Northeastern United States|Northeastern US]]",
-	regional_categories = true,
-}
-
-labels["Northwestern US"] = {
-	aliases = {"northwestern US"},
-	Wikipedia = "Northwestern United States",
-	regional_categories = true,
-}
-
-labels["Nova Scotia"] = {
-	aliases = {"Nova Scotian"},
-	Wikipedia = true,
-	regional_categories = "Atlantic Canadian",
-}
-
-labels["Ohio"] = {
-	aliases = {"Ohioan", "OH"},
-	Wikipedia = true,
-	regional_categories = true,
-}
-
-labels["Pennsylvania"] = {
-	aliases = {"Pennsylvanian"},
-	Wikipedia = true,
-	regional_categories = true,
-}
-
-labels["Prince Edward Island"] = {
-	Wikipedia = true,
-	regional_categories = "Atlantic Canadian",
-}
-
-labels["Quebec"] = {
-	aliases = {"Québec"},
-	Wikipedia = true,
-	regional_categories = true,
-}
-
-labels["Rhode Island"] = {
-	Wikipedia = true,
-	regional_categories = true,
-}
-
-labels["Saskatchewan"] = {
-	aliases = {"SK"},
-	Wikipedia = true,
-	regional_categories = true,
-}
-
-labels["South Carolina"] = {
-	aliases = {"South Carolinian", "SC"},
-	Wikipedia = true,
-	regional_categories = true,
-}
-
-labels["Upper Midwest US"] = {
-	aliases = {"Upper Midwestern US"},
-	display = "[[w:Upper Midwest|Upper Midwestern US]]",
-	regional_categories = true,
-}
-
-labels["Virginia"] = {
-	aliases = {"Virginian"},
-	Wikipedia = true,
-	regional_categories = true,
-}
-
-labels["Western US"] = {
-	aliases = {"western US"},
-	Wikipedia = "Western United States",
-	regional_categories = true,
-}
-
-labels["Wisconsin"] = {
-	Wikipedia = true,
-	regional_categories = true,
 }
 
 labels["Caribbean"] = {
@@ -5584,12 +5517,6 @@ labels["Yorkshire"] = {
 	regional_categories = true,
 }
 
-labels["Hawaii"] = {
-	aliases = {"Hawaiian"},
-	Wikipedia = true,
-	regional_categories = "Hawaiian",
-}
-
 labels["New Zealand"] = {
 	aliases = {"NZ"},
 	Wikipedia = true,
@@ -5607,32 +5534,6 @@ labels["Commonwealth"] = {
 	Wikipedia = "Commonwealth of Nations",
 	regional_categories = true,
 }
-
--- FIXME: WARNING: {{alt}} label 'American' matches existing regional alias 'American' of label 'US', inserting both commented-out
--- labels["American"] = {
--- 	aliases = {"en-US", "US"},
--- 	Wikipedia = "American and British English spelling differences",
--- }
--- FIXME: corresponding regional label follows:
--- labels["US"] = {
--- 	aliases = {"U.S.", "United States", "United States of America", "USA", "America", "American"}, -- America/American: should these be aliases of 'North America'?
--- 	Wikipedia = "United States",
--- 	langs = {"de", "en", "hi", "is", "it", "ja", "ko", "nl", "pt", "ru", "tli", "ur", "vi", "yi", "zh"},
--- 	regional_categories = "American",
--- }
-
--- FIXME: WARNING: {{alt}} label 'British' matches existing regional alias 'British' of label 'Britain', inserting both commented-out
--- labels["British"] = {
--- 	aliases = {"UK"},
--- 	Wikipedia = "American and British English spelling differences",
--- }
--- FIXME: corresponding regional label follows:
--- labels["Britain"] = {
--- 	aliases = {"Brit", "British", "Great Britain"},
--- 	Wikipedia = "Great Britain",
--- 	langs = {"bn", "en", "ur", "vi", "zh"},
--- 	regional_categories = "British",
--- }
 
 return require("Module:labels").finalize_data(labels)
 -------- end text --------
@@ -6745,62 +6646,45 @@ Page 62 Module:labels/data/lang/fr: Would save with comment = clean categories i
 Page 62 Module:labels/data/lang/fr: -------- begin text --------
 local labels = {}
 
-labels["Cajun French"] = {
-	display = "Cajun",
-	Wikipedia = true,
-	plain_categories = true,
-}
-
-labels["European French"] = {
-	display = "Europe",
-	Wikipedia = true,
-	plain_categories = true,
-}
-
-labels["Ivory Coast French"] = {
-	aliases = {"Ivory Coast", "Côte d’Ivoire", "Côte d'Ivoire", "Cote d’Ivoire", "Cote d'Ivoire", "Ivorian"},
-	display = "Ivory Coast",
-	Wikipedia = "African French#Abidjan French vocabulary",
-	regional_categories = "Ivorian",
-}
-
-labels["Ivory Coast French slang"] = {
-	aliases = {"nouchi", "Nouchi", "noussi", "Noussi", "Ivory Coast slang", "Côte d’Ivoire slang", "Côte d'Ivoire slang", "Cote d’Ivoire slang", "Cote d'Ivoire slang", "Ivorian slang"},
-	display = "Ivory Coast slang",
-	Wikipedia = "fr:Nouchi",
-	regional_categories = "Ivorian",
-}
-
-labels["Louisiana French"] = {
-	aliases = {"LA French"},
-	display = "Louisiana",
-	Wikipedia = "Cajun French",
-	plain_categories = true,
-}
-
-labels["Missouri French"] = {
-	aliases = {"Missourian French", "MO French"},
-	display = "Missouri",
-	Wikipedia = true,
-	plain_categories = true,
-}
-
-labels["Île-de-France French"] = {
-	display = "Île-de-France",
-	Wikipedia = "Île-de-France",
-	plain_categories = true,
+labels["Acadia"] = {
+	aliases = {"Acadian", "acd"},
+ 	Wikipedia = "Acadian French",
+	regional_categories = "Acadian",
 }
 
 labels["Africa"] = {
 	aliases = {"African"},
-	Wikipedia = true,
+	Wikipedia = "African French",
 	regional_categories = "African",
 }
 
 labels["Algeria"] = {
 	aliases = {"Algerian"},
-	Wikipedia = true,
+	Wikipedia = {"French language in Algeria", "African French#Algerian French"},
 	regional_categories = "Algerian",
+}
+
+labels["Antilles"] = {
+	Wikipedia = true,
+	regional_categories = true,
+}
+
+labels["Aostan"] = {
+	aliases = {"Aosta", "aos"},
+	Wikipedia = "Aostan French",
+	regional_categories = true,
+}
+
+labels["Atlantic Canada"] = {
+	aliases = {"Atlantic Canadian"},
+	Wikipedia = "French language in Canada#The Maritimes",
+	regional_categories = "Atlantic Canadian",
+}
+
+labels["Belgium"] = {
+	aliases = {"Belgian", "bel"},
+	Wikipedia = "Belgian French",
+	regional_categories = "Belgian",
 }
 
 labels["Benin"] = {
@@ -6808,102 +6692,28 @@ labels["Benin"] = {
 	regional_categories = "Beninese",
 }
 
-labels["Mali"] = {
-	aliases = {"Malian"},
-	Wikipedia = true,
-	regional_categories = "Malian",
-}
-
-labels["Morocco"] = {
-	aliases = {"Moroccan"},
-	Wikipedia = true,
-	regional_categories = "Moroccan",
-}
-
-labels["Rwanda"] = {
-	aliases = {"Rwandan"},
-	Wikipedia = true,
-	regional_categories = "Rwandan",
-}
-
-labels["Réunion"] = {
-	Wikipedia = true,
+labels["Cajun"] = {
+	aliases = {"Cajun French", "caj"},
+	Wikipedia = "Cajun French",
 	regional_categories = true,
 }
 
-labels["Tunisia"] = {
-	aliases = {"Tunisian"},
-	Wikipedia = true,
-	regional_categories = "Tunisian",
+labels["Cambodia"] = {
+	aliases = {"Cambodian French", "Cambodian", "cam"},
+	Wikipedia = "French language in Cambodia",
+	regional_categories = "Cambodian",
 }
 
-labels["West Africa"] = {
-	aliases = {"West African"},
-	Wikipedia = true,
-	regional_categories = "West African",
+labels["Europe"] = {
+	aliases = {"European", "European French"},
+	Wikipedia = "European French",
+	regional_categories = "European",
 }
 
-labels["Acadia"] = {
-	aliases = {"Acadian"},
-	display = "Acadian",
+labels["French Guiana"] = {
+	aliases = {"Guianese", "gui"},
 	Wikipedia = true,
-	regional_categories = "Acadian",
-}
--- FIXME: WARNING: {{alt}} label 'acd' has alias 'Acadian' matching existing alias 'Acadian' of label 'Acadia', inserting commented-out
--- labels["acd"] = {
--- 	aliases = {"Acadian"},
--- 	display = "Acadian",
--- 	Wikipedia = "Acadian French",
--- }
-
-labels["Atlantic Canada"] = {
-	aliases = {"Atlantic Canadian"},
-	Wikipedia = true,
-	regional_categories = "Atlantic Canadian",
-}
-
-labels["New Brunswick"] = {
-	Wikipedia = true,
-	regional_categories = "Atlantic Canadian",
-}
-
-labels["Newfoundland"] = {
-	Wikipedia = "Newfoundland English",
-	regional_categories = true,
-}
--- FIXME: WARNING: {{alt}} label 'nfl' has alias 'Newfoundland' matching existing label 'Newfoundland', inserting commented-out
--- labels["nfl"] = {
--- 	aliases = {"Newfoundland"},
--- 	display = "Newfoundland",
--- 	Wikipedia = "Newfoundland French",
--- }
-
-labels["Nova Scotia"] = {
-	aliases = {"Nova Scotian"},
-	Wikipedia = true,
-	regional_categories = "Atlantic Canadian",
-}
-
-labels["Prince Edward Island"] = {
-	Wikipedia = true,
-	regional_categories = "Atlantic Canadian",
-}
-
-labels["Quebec"] = {
-	aliases = {"Québec"},
-	Wikipedia = true,
-	regional_categories = true,
-}
--- FIXME: WARNING: {{alt}} label 'que' has alias 'Quebec' matching existing label 'Quebec', inserting commented-out
--- labels["que"] = {
--- 	aliases = {"Quebec"},
--- 	display = "Quebec",
--- 	Wikipedia = "Quebec French",
--- }
-
-labels["Antilles"] = {
-	Wikipedia = true,
-	regional_categories = true,
+	regional_categories = "Guianese",
 }
 
 labels["Haiti"] = {
@@ -6911,14 +6721,109 @@ labels["Haiti"] = {
 	regional_categories = "Haitian",
 }
 
+labels["Île-de-France"] = {
+	aliases = {"Île-de-France French"},
+	Wikipedia = true,
+	regional_categories = true,
+}
+
+labels["India"] = {
+	aliases = {"Indian", "Indian French", "ind"},
+	Wikipedia = "Indian French",
+	regional_categories = "Indian",
+}
+
+labels["Ivory Coast slang"] = {
+	aliases = {"nouchi", "Nouchi", "noussi", "Noussi", "Ivory Coast French slang", "Côte d’Ivoire slang", "Côte d'Ivoire slang", "Cote d’Ivoire slang", "Cote d'Ivoire slang", "Ivorian slang"},
+	Wikipedia = "fr:Nouchi",
+	regional_categories = "Ivorian",
+}
+
+labels["Ivory Coast"] = {
+	aliases = {"Ivory Coast French", "Côte d’Ivoire", "Côte d'Ivoire", "Cote d’Ivoire", "Cote d'Ivoire", "Ivorian"},
+	Wikipedia = "African French#Abidjan French vocabulary",
+	regional_categories = "Ivorian",
+}
+
+labels["Jersey Legal"] = {
+	aliases = {"Jersey Legal French", "jer"},
+	Wikipedia = "Jersey Legal French",
+	regional_categories = true,
+}
+
+labels["Laos"] = {
+	aliases = {"Lao", "Lao French", "Laotian", "Laotian French", "lao"},
+	Wikipedia = "French language in Laos",
+	regional_categories = "Lao",
+}
+
 labels["Lorraine"] = {
 	Wikipedia = true,
 	regional_categories = true,
 }
 
+labels["Louisiana"] = {
+	aliases = {"Louisiana French", "LA French", "New Orleans", "lou"},
+	Wikipedia = "Louisiana French",
+	regional_categories = true,
+}
+
+labels["Mali"] = {
+	aliases = {"Malian"},
+	Wikipedia = "Malians in France",
+	regional_categories = "Malian",
+}
+
 labels["Marseille"] = {
 	Wikipedia = true,
 	regional_categories = true,
+}
+
+labels["Meridional"] = {
+	aliases = {"mer"},
+	Wikipedia = "Meridional French",
+	regional_categories = true,
+}
+
+labels["Missouri"] = {
+	aliases = {"Missouri French", "Missourian French", "MO French", "Missourian", "St Louis, Missouri", "St. Louis, Missouri", "mis"},
+	Wikipedia = "Missouri French",
+	regional_categories = true,
+}
+
+labels["Morocco"] = {
+	aliases = {"Moroccan"},
+	Wikipedia = "French language in Morocco",
+	regional_categories = "Moroccan",
+}
+
+labels["New Brunswick"] = {
+	Wikipedia = "French language in Canada#The Maritimes",
+	regional_categories = "Atlantic Canadian",
+}
+
+labels["New Caledonia"] = {
+	aliases = {"New Caledonian", "cal"},
+	Wikipedia = "Caldoche",
+	regional_categories = "New Caledonian",
+}
+
+labels["New England"] = {
+	aliases = {"nwe"},
+	Wikipedia = "New England French",
+	regional_categories = true,
+}
+
+labels["Newfoundland"] = {
+ 	aliases = {"nfl"},
+	Wikipedia = "Newfoundland French",
+	regional_categories = true,
+}
+
+labels["Nova Scotia"] = {
+	aliases = {"Nova Scotian"},
+	Wikipedia = "French language in Canada#The Maritimes",
+	regional_categories = "Atlantic Canadian",
 }
 
 labels["Picardy"] = {
@@ -6927,151 +6832,67 @@ labels["Picardy"] = {
 	regional_categories = "Picard",
 }
 
+labels["Prince Edward Island"] = {
+	Wikipedia = "French language in Canada#The Maritimes",
+	regional_categories = "Atlantic Canadian",
+}
+
 --don't add Provençal as an alias
 labels["Provence"] = {
 	Wikipedia = true,
 	regional_categories = true,
 }
 
-labels["aos"] = {
-	aliases = {"Aostan"},
-	display = "Aostan",
-	Wikipedia = "Aostan French",
+labels["Quebec"] = {
+	aliases = {"Québec", "que"},
+ 	Wikipedia = "Quebec French",
+	regional_categories = true,
 }
 
--- FIXME: WARNING: {{alt}} label 'bel' has alias 'Belgian' matching existing regional alias 'Belgian' of label 'Belgium', inserting both commented-out
--- labels["bel"] = {
--- 	aliases = {"Belgian"},
--- 	display = "Belgian",
--- 	Wikipedia = "Belgian French",
--- }
--- FIXME: corresponding regional label follows:
--- labels["Belgium"] = {
--- 	aliases = {"Belgian"},
--- 	Wikipedia = true,
--- 	langs = {"de", "fr", "gmw-cfr", "nl"},
--- 	regional_categories = "Belgian",
--- }
-
-labels["cam"] = {
-	aliases = {"Cambodian French"},
-	display = "Cambodian French",
-	Wikipedia = "French language in Cambodia",
+labels["Réunion"] = {
+	Wikipedia = true,
+	regional_categories = true,
 }
 
--- FIXME: WARNING: {{alt}} label 'caj' has alias 'Cajun' matching existing regional label 'Cajun', inserting both commented-out
--- labels["caj"] = {
--- 	aliases = {"Cajun"},
--- 	display = "Cajun",
--- 	Wikipedia = "Cajun French",
--- }
--- FIXME: corresponding regional label follows:
--- labels["Cajun"] = {
--- 	display = "[[w:Cajun|Louisiana]]",
--- 	track = true,
--- 	langs = {"en", "es", "fr", "vi"},
--- 	regional_categories = "Louisiana",
--- }
-
-labels["gui"] = {
-	aliases = {"Guianese"},
-	display = "Guianese",
-	Wikipedia = "French Guiana",
+labels["Rwanda"] = {
+	aliases = {"Rwandan"},
+	Wikipedia = true,
+	regional_categories = "Rwandan",
 }
 
-labels["ind"] = {
-	aliases = {"Indian French"},
-	display = "Indian French",
-	Wikipedia = "Indian French",
+labels["Switzerland"] = {
+	aliases = {"Swiss", "Swiss French", "swi"},
+	Wikipedia = "Swiss French",
+	regional_categories = true,
 }
 
-labels["jer"] = {
-	aliases = {"Jersey Legal"},
-	display = "Jersey Legal",
-	Wikipedia = "Jersey Legal French",
+labels["T-V"] = {
+	display = "T–V distinction",
+	Wikipedia = "T–V distinction",
 }
 
-labels["lao"] = {
-	aliases = {"Lao French"},
-	display = "Lao",
-	Wikipedia = "French language in Laos",
+labels["Tunisia"] = {
+	aliases = {"Tunisian"},
+	Wikipedia = "Languages of Tunisia#French",
+	regional_categories = "Tunisian",
 }
 
--- FIXME: WARNING: {{alt}} label 'lou' has alias 'Louisiana' matching existing regional label 'Louisiana', inserting both commented-out
--- labels["lou"] = {
--- 	aliases = {"Louisiana"},
--- 	display = "Louisiana",
--- 	Wikipedia = "Louisiana French",
--- }
--- FIXME: corresponding regional label follows:
--- labels["Louisiana"] = {
--- 	aliases = {"New Orleans"},
--- 	Wikipedia = true,
--- 	langs = {"en", "es", "fr", "vi"},
--- 	regional_categories = true,
--- }
-
-labels["mer"] = {
-	aliases = {"Meridional"},
-	display = "Meridional",
-	Wikipedia = "Meridional French",
-}
-
--- FIXME: WARNING: {{alt}} label 'mis' has alias 'Missouri' matching existing regional label 'Missouri', inserting both commented-out
--- labels["mis"] = {
--- 	aliases = {"Missouri"},
--- 	display = "Missouri",
--- 	Wikipedia = "Missouri French",
--- }
--- FIXME: corresponding regional label follows:
--- labels["Missouri"] = {
--- 	aliases = {"Missourian", "St Louis, Missouri", "St. Louis, Missouri"},
--- 	Wikipedia = true,
--- 	langs = {"en", "fr"},
--- 	regional_categories = true,
--- }
-
-labels["cal"] = {
-	aliases = {"New Caledonian"},
-	display = "New Caledonian",
-	Wikipedia = "Caldoche",
-}
-
-labels["nwe"] = {
-	aliases = {"New England"},
-	display = "New England",
-	Wikipedia = "New England French",
-}
-
--- FIXME: WARNING: {{alt}} label 'swi' has alias 'Swiss' matching existing regional alias 'Swiss' of label 'Switzerland', inserting both commented-out
--- labels["swi"] = {
--- 	aliases = {"Swiss"},
--- 	display = "Swiss",
--- 	Wikipedia = "Swiss French",
--- }
--- FIXME: corresponding regional label follows:
--- labels["Switzerland"] = {
--- 	aliases = {"Swiss", "Swiss German"}, -- some German entries use this alias; let -sche know if it causes problems
--- 	Wikipedia = true,
--- 	langs = {"de", "fr", "gsw", "it", "ru"},
--- 	regional_categories = true,
--- }
-
-labels["vie"] = {
-	aliases = {"Vietnamese"},
-	display = "Vietnamese",
+labels["Vietnam"] = {
+	aliases = {"Vietnamese", "vie"},
 	Wikipedia = "French language in Vietnam",
+	regional_categories = "Vietnamese",
 }
 
-labels["win"] = {
-	aliases = {"West Indies"},
-	display = "West Indies",
+labels["West Africa"] = {
+	aliases = {"West African"},
+	Wikipedia = true,
+	regional_categories = "West African",
+}
+
+labels["West Indies"] = {
+	aliases = {"win"},
 	Wikipedia = "French West Indies",
-}
-
-labels["pre-1990"] = {
-	aliases = {"pre-1990 spelling"},
-	display = "[[French spelling reforms of 1990|pre-1990 spelling]]",
+	regional_categories = true,
 }
 
 labels["post-1990"] = {
@@ -7079,9 +6900,9 @@ labels["post-1990"] = {
 	display = "[[French spelling reforms of 1990|post-1990 spelling]]",
 }
 
-labels["T-V"] = {
-	display = "T–V distinction",
-	Wikipedia = "T–V distinction",
+labels["pre-1990"] = {
+	aliases = {"pre-1990 spelling"},
+	display = "[[French spelling reforms of 1990|pre-1990 spelling]]",
 }
 
 return require("Module:labels").finalize_data(labels)
@@ -7256,15 +7077,9 @@ labels["Cois Fharraige"] = {
 	Wikipedia = "Gaeltacht Cois Fharraige",
 	regional_categories = true,
 }
--- FIXME: WARNING: {{alt}} label 'CF' matches existing alias 'CF' of label 'Cois Fharraige', inserting commented-out
--- labels["CF"] = {
--- 	aliases = {"Cois Fharraige"},
--- 	display = "Cois Fharraige",
--- 	Wikipedia = "Gaeltacht Cois Fharraige",
--- }
 
 labels["Connacht"] = {
-	Wikipedia = true, -- FIXME: {{alt}} label Wikipedia value '"Connacht Irish"' different from existing
+	Wikipedia = "Connacht Irish",
 	regional_categories = true,
 }
 
@@ -7281,12 +7096,12 @@ labels["Cork"] = {
 }
 
 labels["Galway"] = {
-	Wikipedia = "Gaeltacht#Galway_Gaeltacht", -- FIXME: {{alt}} label Wikipedia value '"Gaeltacht#Galway Gaeltacht"' different from existing
+	Wikipedia = "Gaeltacht#Galway Gaeltacht",
 	regional_categories = true,
 }
 
 labels["Kerry"] = {
-	Wikipedia = "Kerry Gaeltacht", -- FIXME: {{alt}} label Wikipedia value '"Gaeltacht#Kerry Gaeltacht"' different from existing
+	Wikipedia = "Kerry Gaeltacht",
 	regional_categories = true,
 }
 
@@ -7296,18 +7111,18 @@ labels["Mayo"] = {
 }
 
 labels["Waterford"] = {
-	Wikipedia = "Gaeltacht na nDéise", -- FIXME: {{alt}} label Wikipedia value '"Gaeltacht#Waterford Gaeltacht"' different from existing
+	Wikipedia = "Gaeltacht na nDéise",
 	regional_categories = true,
 }
 
 labels["Munster"] = {
-	Wikipedia = true, -- FIXME: {{alt}} label Wikipedia value '"Munster Irish"' different from existing
+	Wikipedia = "Munster Irish",
 	regional_categories = true,
 }
 
 labels["Ulster"] = {
 	aliases = {"Donegal"},
-	Wikipedia = true, -- FIXME: {{alt}} label Wikipedia value '"Ulster Irish"' different from existing
+	Wikipedia = "Ulster Irish",
 	regional_categories = true,
 }
 
@@ -7593,13 +7408,13 @@ labels["Kirchröadsj"] = {
 
 labels["Kölsch"] = {
 	aliases = {"Colognian", "Cologne", "Köln", "ksh"},
-	Wikipedia = "Colognian language", -- FIXME: {{alt}} label Wikipedia value '"Colognian"' different from existing
+	Wikipedia = "Colognian",
 	plain_categories = true,
 }
 
 labels["Moselle Franconian"] = {
 	aliases = {"Moselfränkisch", "mf"},
-	Wikipedia = "Moselle Franconian dialects", -- FIXME: {{alt}} label Wikipedia value '"Moselle Franconian language"' different from existing
+	Wikipedia = "Moselle Franconian language",
 	plain_categories = true,
 }
 
@@ -7611,14 +7426,9 @@ labels["Ripuarian"] = {
 
 labels["Limburgan Ripuarian"] = {
 	aliases = {"Tri-state Limburgish", "Limburgan-Ripuarian", "Southeast Limburgish dialect", "Limburgan-Ripuarian Transitional Dialects"},
-	Wikipedia = "Southeast Limburgish",
+	Wikipedia = "Southeast Limburgish dialect",
 	plain_categories = "Limburgan-Ripuarian transitional dialects",
 }
--- FIXME: WARNING: {{alt}} label 'Limburgan-Ripuarian Transitional Dialects' matches existing alias 'Limburgan-Ripuarian Transitional Dialects' of label 'Limburgan Ripuarian', inserting commented-out
--- labels["Limburgan-Ripuarian Transitional Dialects"] = {
--- 	aliases = {"Southeast Limburgish dialect", "Tri-state Limburgish", "Limburgan Ripuarian"},
--- 	Wikipedia = "Southeast Limburgish dialect",
--- }
 
 return require("Module:labels").finalize_data(labels)
 -------- end text --------
@@ -8142,149 +7952,102 @@ Page 78 Module:labels/data/lang/grc: Would save with comment = clean categories 
 Page 78 Module:labels/data/lang/grc: -------- begin text --------
 local labels = {}
 
+
 labels["Aeolic"] = {
-	aliases = {"Aeolic Greek"},
+	aliases = {"Aeolic Greek", "aio"},
 	Wikipedia = "Aeolic Greek",
 	plain_categories = "Aeolic Greek",
 }
--- FIXME: WARNING: {{alt}} label 'aio' has alias 'Aeolic' matching existing label 'Aeolic', inserting commented-out
--- labels["aio"] = {
--- 	aliases = {"Aeolic"},
--- 	display = "Aeolic",
--- 	Wikipedia = "Aeolic Greek",
--- }
+
+labels["Arcadian"] = {
+	aliases = {"ara"},
+	Wikipedia = "Arcadocypriot Greek#Arcadian",
+	plain_categories = "Arcadocypriot Greek",
+}
 
 labels["Arcadocypriot"] = {
-	aliases = {"Arcadocypriot Greek"},
+	aliases = {"Arcadocypriot Greek", "ark"},
 	Wikipedia = "Arcadocypriot Greek",
 	plain_categories = "Arcadocypriot Greek",
 }
--- FIXME: WARNING: {{alt}} label 'ark' has alias 'Arcadocypriot' matching existing label 'Arcadocypriot', inserting commented-out
--- labels["ark"] = {
--- 	aliases = {"Arcadocypriot"},
--- 	display = "Arcadocypriot",
--- 	Wikipedia = "Arcadocypriot Greek",
--- }
+
+labels["Argolic"] = {
+	aliases = {"arg"},
+	Wikipedia = "Doric Greek#Argolic",
+	plain_categories = "Doric Greek",
+}
 
 labels["Attic"] = {
-	aliases = {"Attic Greek"},
+	aliases = {"Attic Greek", "att"},
 	Wikipedia = "Attic Greek",
 	plain_categories = "Attic Greek",
 }
--- FIXME: WARNING: {{alt}} label 'att' has alias 'Attic' matching existing label 'Attic', inserting commented-out
--- labels["att"] = {
--- 	aliases = {"Attic"},
--- 	display = "Attic",
--- 	Wikipedia = "Attic Greek",
--- }
 
 labels["Boeotian"] = {
-	aliases = {"Boeotian Greek"},
+	aliases = {"Boeotian Greek", "boi"},
 	Wikipedia = "Boeotian Greek",
 	plain_categories = "Boeotian Greek",
 }
--- FIXME: WARNING: {{alt}} label 'boi' has alias 'Boeotian' matching existing label 'Boeotian', inserting commented-out
--- labels["boi"] = {
--- 	aliases = {"Boeotian"},
--- 	display = "Boeotian",
--- 	Wikipedia = "Aeolic Greek",
--- }
 
-labels["Old Attic"] = {
-	aliases = {"Old Attic Greek"},
-	Wikipedia = "Attic Greek",
-	plain_categories = "Attic Greek",
+labels["Bucolic Doric"] = {
+	aliases = {"buc"},
+	Wikipedia = "Theocritus",
+	plain_categories = "Doric Greek",
 }
--- FIXME: WARNING: {{alt}} label 'ato' has alias 'Old Attic' matching existing label 'Old Attic', inserting commented-out
--- labels["ato"] = {
--- 	aliases = {"Old Attic"},
--- 	display = "Old Attic",
--- 	Wikipedia = "Attic Greek",
--- }
 
 labels["Byzantine"] = {
-	aliases = {"Byzantine Greek", "Medieval Greek", "Byzantium"},
+	aliases = {"Byzantine Greek", "Medieval", "Medieval Greek", "Byzantium", "gkm"},
 	Wikipedia = "Medieval Greek",
 	plain_categories = "Byzantine Greek",
 }
--- FIXME: WARNING: {{alt}} label 'gkm' has alias 'Byzantine' matching existing label 'Byzantine', inserting commented-out
--- labels["gkm"] = {
--- 	aliases = {"Byzantine", "Medieval"},
--- 	display = "Byzantine",
--- 	Wikipedia = "Medieval Greek",
--- }
 
-labels["Doric"] = {
-	aliases = {"Megarian", "Doric Greek", "Megarian Greek"},
+labels["Choral Doric"] = {
+	aliases = {"cho"},
 	Wikipedia = "Doric Greek",
 	plain_categories = "Doric Greek",
 }
--- FIXME: WARNING: {{alt}} label 'dor' has alias 'Doric' matching existing label 'Doric', inserting commented-out
--- labels["dor"] = {
--- 	aliases = {"Doric"},
--- 	display = "Doric",
--- 	Wikipedia = "Doric Greek",
--- }
--- FIXME: WARNING: {{alt}} label 'meg' has alias 'Megarian' matching existing alias 'Megarian' of label 'Doric', inserting commented-out (also duplicates label(s) 'dor')
--- labels["meg"] = {
--- 	aliases = {"Megarian"},
--- 	display = "Megarian",
--- 	Wikipedia = "Doric Greek",
--- }
 
-labels["Epic"] = {
-	aliases = {"Homeric", "Epic Greek", "Homeric Greek"},
-	Wikipedia = "Homeric Greek",
-	plain_categories = "Epic Greek",
-}
--- FIXME: WARNING: {{alt}} label 'epi' has alias 'Epic' matching existing label 'Epic', inserting commented-out
--- labels["epi"] = {
--- 	aliases = {"Epic"},
--- 	display = "Epic",
--- 	Wikipedia = "Homeric Greek",
--- }
--- FIXME: WARNING: {{alt}} label 'hom' has alias 'Homeric' matching existing alias 'Homeric' of label 'Epic', inserting commented-out (also duplicates label(s) 'epi')
--- labels["hom"] = {
--- 	aliases = {"Homeric"},
--- 	display = "Homeric",
--- 	Wikipedia = "Homeric Greek",
--- }
-
-labels["Ionic"] = {
-	aliases = {"Ionic Greek"},
-	Wikipedia = "Ionic Greek",
-	plain_categories = "Ionic Greek",
-}
--- FIXME: WARNING: {{alt}} label 'ion' has alias 'Ionic' matching existing label 'Ionic', inserting commented-out
--- labels["ion"] = {
--- 	aliases = {"Ionic"},
--- 	display = "Ionic",
--- 	Wikipedia = "Ionic Greek",
--- }
-
-labels["Koine"] = {
-	aliases = {"Hellenistic", "Hellenistic Koine", "Koine Greek", "Hellenistic Greek", "Hellenistic Koine Greek"},
-	Wikipedia = "Koine Greek",
-	plain_categories = "Koine Greek",
-}
--- FIXME: WARNING: {{alt}} label 'koi' has alias 'Koine' matching existing label 'Koine', inserting commented-out
--- labels["koi"] = {
--- 	aliases = {"Koine"},
--- 	display = "Koine",
--- 	Wikipedia = "Koine Greek",
--- }
-
-labels["Laconian"] = {
-	aliases = {"Laconian Greek"},
-	Wikipedia = "Doric Greek#Laconian",
+labels["Coan"] = {
+	aliases = {"koa"},
+	Wikipedia = "Doric Greek",
 	plain_categories = "Doric Greek",
 }
--- FIXME: WARNING: {{alt}} label 'lak' has alias 'Laconian' matching existing label 'Laconian', inserting commented-out
--- labels["lak"] = {
--- 	aliases = {"Laconian"},
--- 	display = "Laconian",
--- 	Wikipedia = "Doric Greek#Laconian",
--- }
+
+labels["Corcyraean"] = {
+	aliases = {"kor"},
+	Wikipedia = "Doric Greek",
+	plain_categories = "Doric Greek",
+}
+
+labels["Corinthian"] = {
+	aliases = {"krn"},
+	Wikipedia = "Doric Greek#Corinthian",
+	plain_categories = "Doric Greek",
+}
+
+labels["Cretan"] = {
+	aliases = {"kre"},
+	Wikipedia = "Doric Greek#Cretan",
+	plain_categories = "Doric Greek",
+}
+
+labels["Cypriot"] = {
+	aliases = {"cypriot", "Cyprus", "kyp"},
+	Wikipedia = "Arcadocypriot Greek#Cypriotic",
+	regional_categories = true,
+}
+
+labels["Delphic"] = {
+	aliases = {"del"},
+	Wikipedia = "Doric Greek#Northwest Greek",
+	plain_categories = "Doric Greek",
+}
+
+labels["Doric"] = {
+	aliases = {"Doric Greek", "dor"},
+	Wikipedia = "Doric Greek",
+	plain_categories = "Doric Greek",
+}
 
 labels["Egypt"] = {
 	aliases = {"Egyptian"},
@@ -8292,32 +8055,138 @@ labels["Egypt"] = {
 	regional_categories = "Egyptian",
 }
 
+labels["Elean"] = {
+	aliases = {"ele"},
+	Wikipedia = "Doric Greek#Northwest Greek",
+	plain_categories = "Doric Greek",
+}
+
+labels["Epic"] = {
+	aliases = {"Epic Greek", "epi"},
+	Wikipedia = "Homeric Greek",
+	plain_categories = "Epic Greek",
+}
+
+labels["Epidauran"] = {
+	aliases = {"epd"},
+	Wikipedia = "Doric Greek",
+	plain_categories = "Doric Greek",
+}
+
+labels["Euboean"] = {
+	aliases = {"eub"},
+	Wikipedia = "Ionic Greek",
+	plain_categories = "Ionic Greek",
+}
+
+labels["Heraclean"] = {
+	aliases = {"her"},
+	Wikipedia = "Doric Greek",
+	plain_categories = "Doric Greek",
+}
+
+labels["Homeric"] = {
+	aliases = {"Homeric Greek", "hom"},
+	Wikipedia = "Homeric Greek",
+	plain_categories = "Epic Greek",
+}
+
+labels["Ionic"] = {
+	aliases = {"Ionic Greek", "ion"},
+	Wikipedia = "Ionic Greek",
+	plain_categories = "Ionic Greek",
+}
+
+labels["Koine"] = {
+	aliases = {"Hellenistic", "Hellenistic Koine", "Koine Greek", "Hellenistic Greek", "Hellenistic Koine Greek", "koi"},
+	Wikipedia = "Koine Greek",
+	plain_categories = "Koine Greek",
+}
+
+labels["Laconian"] = {
+	aliases = {"Laconian Greek", "lak"},
+	Wikipedia = "Doric Greek#Laconian",
+	plain_categories = "Doric Greek",
+}
+
+labels["Later poetic"] = {
+	aliases = {"lat"},
+	Wikipedia = "Greek literature#Hellenistic",
+}
+
+labels["Lesbian"] = {
+	aliases = {"les"},
+	Wikipedia = "Aeolic Greek",
+	plain_categories = "Aeolic Greek",
+}
+
+labels["Locrian"] = {
+	aliases = {"lok"},
+	Wikipedia = "Locrian Greek",
+	plain_categories = "Doric Greek",
+}
+
+labels["Lyric"] = {
+	aliases = {"lur", "lyr"},
+}
+
+labels["Megarian"] = {
+	aliases = {"Megarian Greek", "Megara", "meg"},
+	Wikipedia = "Doric Greek",
+	plain_categories = "Doric Greek",
+}
+
+labels["Mycenaean"] = {
+	aliases = {"muk", "myk"},
+	Wikipedia = "Mycenaean Greek language",
+}
+
+labels["Old Attic"] = {
+	aliases = {"Old Attic Greek", "ato"},
+	Wikipedia = "Attic Greek",
+	plain_categories = "Attic Greek",
+}
+
+labels["Pamphylian"] = {
+	aliases = {"pam"},
+	Wikipedia = "Pamphylian Greek",
+	plain_categories = "Pamphylian Greek",
+}
+
+labels["Phocian"] = {
+	aliases = {"pho"},
+	Wikipedia = "Doric Greek#Northwest Greek",
+	plain_categories = "Doric Greek",
+}
+
+labels["Poetic"] = {
+	aliases = {"poi"},
+}
+
+labels["Rhodian"] = {
+	aliases = {"rho"},
+	Wikipedia = "Doric Greek",
+	plain_categories = "Doric Greek",
+}
+
+labels["Theran"] = {
+	aliases = {"thr"},
+	Wikipedia = "Doric Greek",
+	plain_categories = "Doric Greek",
+}
+
+labels["Thessalian"] = {
+	aliases = {"the"},
+	Wikipedia = "Aeolic Greek",
+	plain_categories = "Aeolic Greek",
+}
+
+labels["Tragic"] = {
+	aliases = {"tra"},
+}
+
 labels["apocopic"] = {
 	Wikipedia = "Apocope",
-}
-
-labels["ara"] = {
-	aliases = {"Arcadian"},
-	display = "Arcadian",
-	Wikipedia = "Arcadocypriot Greek#Arcadian",
-}
-
-labels["arg"] = {
-	aliases = {"Argolic"},
-	display = "Argolic",
-	Wikipedia = "Doric Greek#Argolic",
-}
-
-labels["buc"] = {
-	aliases = {"Bucolic Doric"},
-	display = "Bucolic Doric",
-	Wikipedia = "Theocritus",
-}
-
-labels["cho"] = {
-	aliases = {"Choral Doric"},
-	display = "Choral Doric",
-	Wikipedia = "Doric Greek",
 }
 
 labels["contracted"] = {
@@ -8325,146 +8194,9 @@ labels["contracted"] = {
 	display = "[[Appendix:Ancient Greek contraction|contracted]]",
 }
 
-labels["del"] = {
-	aliases = {"Delphic"},
-	display = "Delphic",
-	Wikipedia = "Doric Greek#Northwest Greek",
-}
-
-labels["ele"] = {
-	aliases = {"Elean"},
-	display = "Elean",
-	Wikipedia = "Doric Greek#Northwest Greek",
-}
-
-labels["epd"] = {
-	aliases = {"Epidaurian"},
-	display = "Epidaurian",
-	Wikipedia = "Doric Greek",
-}
-
-labels["eub"] = {
-	aliases = {"Euboean"},
-	display = "Euboean",
-	Wikipedia = "Ionic Greek",
-}
-
-labels["her"] = {
-	aliases = {"Heraclean"},
-	display = "Heraclean",
-	Wikipedia = "Doric Greek",
-}
-
-labels["koa"] = {
-	aliases = {"Coan"},
-	display = "Coan",
-	Wikipedia = "Doric Greek",
-}
-
-labels["kor"] = {
-	aliases = {"Corcyraean"},
-	display = "Corcyraean",
-	Wikipedia = "Doric Greek",
-}
-
-labels["kre"] = {
-	aliases = {"Cretan"},
-	display = "Cretan",
-	Wikipedia = "Doric Greek#Cretan",
-}
-
-labels["krn"] = {
-	aliases = {"Corinthian"},
-	display = "Corinthian",
-	Wikipedia = "Doric Greek#Corinthian",
-}
-
--- FIXME: WARNING: {{alt}} label 'kyp' has alias 'Cypriot' matching existing regional alias 'Cypriot' of label 'Cyprus', inserting both commented-out
--- labels["kyp"] = {
--- 	aliases = {"Cypriot"},
--- 	display = "Cypriot",
--- 	Wikipedia = "Arcadocypriot Greek#Cypriotic",
--- }
--- FIXME: corresponding regional label follows:
--- labels["Cyprus"] = {
--- 	aliases = {"cypriot", "Cypriot"},
--- 	Wikipedia = true,
--- 	langs = {"ar", "el", "tr"},
--- 	regional_categories = "Cypriot",
--- }
-
-labels["lat"] = {
-	aliases = {"Later poetic"},
-	display = "Later poetic",
-	Wikipedia = "Greek literature#Hellenistic",
-}
-
-labels["les"] = {
-	aliases = {"Lesbian"},
-	display = "Lesbian",
-	Wikipedia = "Aeolic Greek",
-}
-
-labels["lok"] = {
-	aliases = {"Locrian"},
-	display = "Locrian",
-	Wikipedia = "Locrian Greek",
-}
-
-labels["lyr"] = {
-	aliases = {"lur", "Lyric"},
-	display = "Lyric",
-}
-
 labels["movable nu"] = {
 	aliases = {"with movable nu"},
 	display = "with [[w:Movable nu|movable nu]]",
-}
-
-labels["myk"] = {
-	aliases = {"muk", "Mycenaean"},
-	display = "Mycenaean",
-	Wikipedia = "Mycenaean Greek language",
-}
-
-labels["pam"] = {
-	aliases = {"Pamphylian"},
-	display = "Pamphylian",
-	Wikipedia = "Pamphylian Greek",
-}
-
-labels["pho"] = {
-	aliases = {"Phocian"},
-	display = "Phocian",
-	Wikipedia = "Doric Greek#Northwest Greek",
-}
-
-labels["poi"] = {
-	aliases = {"Poetic"},
-	display = "Poetic",
-}
-
-labels["rho"] = {
-	aliases = {"Rhodian"},
-	display = "Rhodian",
-	Wikipedia = "Doric Greek",
-}
-
-labels["the"] = {
-	aliases = {"Thessalian"},
-	display = "Thessalian",
-	Wikipedia = "Aeolic Greek",
-}
-
-labels["thr"] = {
-	aliases = {"Theran"},
-	display = "Theran",
-	Wikipedia = "Doric Greek",
-}
-
-labels["tra"] = {
-	aliases = {"Tragic"},
-	display = "Tragic",
 }
 
 return require("Module:labels").finalize_data(labels)
@@ -9663,11 +9395,6 @@ labels["Eastern Armenian"] = {
 	Wikipedia = true,
 	plain_categories = true,
 }
--- FIXME: WARNING: {{alt}} label 'Eastern' matches existing alias 'Eastern' of label 'Eastern Armenian', inserting commented-out
--- labels["Eastern"] = {
--- 	display = "Eastern Armenian",
--- 	Wikipedia = "Eastern Armenian",
--- }
 
 labels["Ghazakh"] = {
 	aliases = {"Qazakh", "Qazax", "Gazakh", "Kazakh", "Łazax"},
@@ -9734,43 +9461,18 @@ labels["Western Armenian"] = {
 	Wikipedia = true,
 	plain_categories = true,
 }
--- FIXME: WARNING: {{alt}} label 'Western' matches existing alias 'Western' of label 'Western Armenian', inserting commented-out
--- labels["Western"] = {
--- 	display = "Western Armenian",
--- 	Wikipedia = "Western Armenian",
--- }
 
 labels["traditional orthography"] = {
 	aliases = {"TAO", "tao", "TO", "to", "Mesropian", "Mesrobian"},
 	Wikipedia = "Classical Armenian orthography",
 	plain_categories = "Armenian Traditional orthography forms",
 }
--- FIXME: WARNING: {{alt}} label 'tao' matches existing alias 'tao' of label 'traditional orthography', inserting commented-out
--- labels["tao"] = {
--- 	display = "traditional orthography spelling",
--- 	Wikipedia = "Traditional Armenian orthography",
--- }
--- FIXME: WARNING: {{alt}} label 'TAO' matches existing alias 'TAO' of label 'traditional orthography', inserting commented-out (also duplicates label(s) 'tao')
--- labels["TAO"] = {
--- 	display = "traditional orthography spelling",
--- 	Wikipedia = "Traditional Armenian orthography",
--- }
 
 labels["1922–1940 reformed orthography"] = {
 	aliases = {"RAO", "rao"},
 	Wikipedia = "Armenian orthography reform",
 	plain_categories = "Armenian superseded forms",
 }
--- FIXME: WARNING: {{alt}} label 'rao' matches existing alias 'rao' of label '1922–1940 reformed orthography', inserting commented-out
--- labels["rao"] = {
--- 	display = "reformed orthography spelling in 1922–1940",
--- 	Wikipedia = "Armenian orthography reform",
--- }
--- FIXME: WARNING: {{alt}} label 'RAO' matches existing alias 'RAO' of label '1922–1940 reformed orthography', inserting commented-out (also duplicates label(s) 'rao')
--- labels["RAO"] = {
--- 	display = "reformed orthography spelling in 1922–1940",
--- 	Wikipedia = "Armenian orthography reform",
--- }
 
 labels["Adana"] = {
 	aliases = {"Atana"},
@@ -11798,7 +11500,7 @@ labels["Kutaisi"] = {
 }
 
 labels["Upper Kartli"] = {
-	Wikipedia = "ka:Zemo Kartli", -- FIXME: {{alt}} label Wikipedia value '"Zemo Kartli"' different from existing
+	Wikipedia = "Zemo Kartli",
 	regional_categories = "Kartli",
 }
 
@@ -11815,7 +11517,7 @@ labels["Meskheti"] = {
 
 labels["Adjara"] = {
 	aliases = {"Ajara", "Adjaria", "Adjaran", "Adjarian", "Acharuli", "Adjaruli", "Acharian", "აჭარა"},
-	Wikipedia = "Adjaran dialect", -- FIXME: {{alt}} label Wikipedia value '"Adjara"' different from existing
+	Wikipedia = "Adjaran dialect",
 	regional_categories = true,
 }
 
@@ -12328,7 +12030,7 @@ labels["Koryo-mar"] = {
 
 labels["North Korea"] = {
 	aliases = {"North Korean", "north", "Munhwao"},
-	Wikipedia = true, -- FIXME: {{alt}} label Wikipedia value '"North Korean standard language"' different from existing
+	Wikipedia = "North Korean standard language",
 	regional_categories = "North",
 }
 
@@ -12346,7 +12048,7 @@ labels["Pyongan"] = {
 
 labels["South Korea"] = {
 	aliases = {"South Korean", "south"},
-	Wikipedia = true, -- FIXME: {{alt}} label Wikipedia value '"Korean language"' different from existing
+	Wikipedia = "South Korean standard language",
 	regional_categories = "South",
 }
 
@@ -12403,7 +12105,7 @@ labels["Harbin"] = {
 }
 
 labels["Jeju"] = {
-	Wikipedia = "Jeju Province", -- FIXME: {{alt}} label Wikipedia value '"Jeju language"' different from existing
+	Wikipedia = "Jeju Province", -- {{alt}} label Wikipedia value is "Jeju language" but I assume that's different from Jeju Korean
 	regional_categories = true,
 }
 
@@ -13188,13 +12890,13 @@ labels["Genk"] = {
 
 labels["Maastrichtian"] = {
 	aliases = {"Mestreechs", "Maastricht"},
-	Wikipedia = "Maastrichtian dialect", -- FIXME: {{alt}} label Wikipedia value '"Maastrichtian Limburgish"' different from existing
+	Wikipedia = "Maastrichtian dialect",
 	regional_categories = true,
 }
 
 labels["Tongeren"] = {
 	aliases = {"Tungers"},
-	Wikipedia = true, -- FIXME: {{alt}} label Wikipedia value '"Tongeren dialect"' different from existing
+	Wikipedia = "Tongeren dialect",
 	regional_categories = true,
 }
 
@@ -13220,7 +12922,7 @@ labels["Kapel in 't Zand"] = {
 
 labels["Venlo"] = {
 	aliases = {"Venloos"},
-	Wikipedia = true, -- FIXME: {{alt}} label Wikipedia value '"Venlo dialect"' different from existing
+	Wikipedia = "Venlo dialect",
 	regional_categories = true,
 }
 
@@ -13231,7 +12933,7 @@ labels["Schinnen"] = {
 
 labels["Sittard"] = {
 	aliases = {"Zittesj"},
-	Wikipedia = true, -- FIXME: {{alt}} label Wikipedia value '"Sittard dialect"' different from existing
+	Wikipedia = "Sittard dialect",
 	regional_categories = true,
 }
 
@@ -13248,7 +12950,7 @@ labels["Kempen-Viersen"] = {
 
 labels["Krefeld"] = {
 	aliases = {"Krieewelsch"},
-	Wikipedia = true, -- FIXME: {{alt}} label Wikipedia value '"Krefeld dialect"' different from existing
+	Wikipedia = "Krefeld dialect",
 	regional_categories = true,
 }
 
@@ -13286,7 +12988,7 @@ labels["Gulpen"] = {
 
 labels["Heerlen"] = {
 	aliases = {"Heëlesj"},
-	Wikipedia = true, -- FIXME: {{alt}} label Wikipedia value '"Heerlen dialect"' different from existing
+	Wikipedia = "Heerlen dialect",
 	regional_categories = true,
 }
 
@@ -14343,7 +14045,7 @@ labels["Apulia"] = {
 -- Spelling schemes
 
 labels["col"] = {
-	display = "colloquial alternative", -- FIXME: {{alt}} label display value '"colloquial alternative spelling"' different from existing
+	display = "colloquial alternative spelling",
 }
 
 return require("Module:labels").finalize_data(labels)
@@ -14957,20 +14659,15 @@ labels['pre-1917'] = {
 }
 
 labels['pre-1901'] = {
-	aliases = {"Landsmål", "Landsmaal", "landsmål", "landsmaal", "Aasen", "aasen", "1901"},
-	display = "[[Wiktionary:Norwegian_Nynorsk_spelling_reforms#1901|Landsmål]]", -- FIXME: {{alt}} label display value '"[[Wiktionary:Norwegian_Nynorsk_spelling_reforms#1901|pre-1901]]"' different from existing
+	aliases = {"Landsmål", "Landsmaal", "landsmål", "landsmaal", "Aasen", "aasen", "1901", "ldm", "lm"},
+	display = "[[Wiktionary:Norwegian Nynorsk spelling reforms#1901|pre-1901 (Landsmål)]]",
 	plain_categories = {"Norwegian Nynorsk pre-1901 forms", "Landsmål"},
 }
--- FIXME: WARNING: {{alt}} label 'Landsmål' matches existing alias 'Landsmål' of label 'pre-1901', inserting commented-out
--- labels["Landsmål"] = {
--- 	aliases = {"ldm", "lm"},
--- 	display = "[[Wiktionary:Norwegian_Nynorsk_spelling_reforms#1901|pre-1901]]",
--- }
 
 labels['Midlandsnormalen'] = {
 	aliases = {"midlandnormalen", "mln", "mdl"},
 	display = "Midlandsnormalen",
-	Wikipedia = "nn:Midlandsnormalen", -- FIXME: {{alt}} label Wikipedia value '"nn:Hn/Midlandsnormalen"' different from existing
+	Wikipedia = "nn:Hn/Midlandsnormalen",
 	plain_categories = "Midlandsnormalen Norwegian",
 }
 
@@ -15386,7 +15083,7 @@ labels["Limousin"] = {
 }
 
 labels["Mistralian"] = {
-	Wikipedia = "Occitan language#Writing system", -- FIXME: {{alt}} label Wikipedia value '"Mistralian norm"' different from existing
+	Wikipedia = "Mistralian norm",
 	regional_categories = true,
 }
 
@@ -16335,7 +16032,7 @@ labels["Mozambique"] = {
 
 labels["São Tomé and Príncipe"] = {
 	aliases = {"Santomean", "São Tomé", "São Toméan", "Sao Tomean", "st", "Sao Tome and Principe", "Sao Tome"},
-	Wikipedia = true, -- FIXME: {{alt}} label Wikipedia value '"São Tomé and Príncipe Portuguese"' different from existing
+	Wikipedia = "São Tomé and Príncipe Portuguese",
 	regional_categories = "Santomean",
 }
 
@@ -16788,7 +16485,6 @@ local labels = {}
 
 labels["Ravenna"] = {
 	aliases = {"R"},
-	display = "Ravenna",
 	Wikipedia = true,
 	regional_categories = "Ravennate",
 }
@@ -16800,190 +16496,157 @@ labels["Central Romagnol"] = {
 
 labels["Rimini"] = {
 	aliases = {"Rm"},
-	display = "Rimini",
 	Wikipedia = true,
 	regional_categories = "Riminese",
 }
 
 labels["Rural Riminese"] = {
 	aliases = {"Rur"},
-	display = "Rural Riminese",
 	Wikipedia = "Rimini",
 	regional_categories = true,
 }
 
 labels["San Marino"] = {
 	aliases = {"SM"},
-	display = "San Marino",
 	Wikipedia = true,
 	regional_categories = "Sammarinese",
 }
 
 labels["Serravalle"] = {
 	aliases = {"Se"},
-	display = "Serravalle",
 	Wikipedia = true,
 	regional_categories = "Serravallese",
 }
 
 labels["Ville Unite"] = {
 	aliases = {"V", "VU"},
-	display = "Ville Unite",
 	regional_categories = true,
 }
 
 labels["Lavezzola"] = {
 	aliases = {"La"},
-	display = "Lavezzola",
 	regional_categories = "Lavezzolese",
 }
 
 labels["Lugo"] = {
 	aliases = {"L"},
-	display = "Lughese",
 	Wikipedia = "Lugo, Emilia-Romagna",
 	regional_categories = "Lughese",
 }
 
 labels["Rural Lugo"] = {
 	aliases = {"RL"},
-	display = "Rural Lugo", -- FIXME: {{alt}} label display value '"Rural Lughese"' different from existing
 	Wikipedia = "Lugo, Emilia-Romagna",
 	regional_categories = "Rural Lughese",
 }
 
-labels["Faentino antico"] = {
-	aliases = {"Fa"},
-	display = "Old Faentino",
-	regional_categories = "Old Faentino",
+labels["Old Faentino"] = {
+	aliases = {"Faentino antico", "Fa"},
+	regional_categories = true,
 }
 
 labels["Bassa Romagna"] = {
 	aliases = {"Ba"},
-	display = "Bassa Romagna",
 	regional_categories = true,
 }
 
 labels["Imola"] = {
 	aliases = {"I"},
-	display = "Imola",
 	Wikipedia = true,
 	regional_categories = "Imolese",
 }
 
 labels["Sesto Imolese"] = {
 	aliases = {"S"},
-	display = "Sesto Imolese",
 	regional_categories = true,
 }
 
 labels["Castel Bolognese"] = {
 	aliases = {"CB"},
-	display = "Castel Bolognese",
 	Wikipedia = true,
 	regional_categories = "Castellano",
 }
 
 labels["Faenza"] = {
 	aliases = {"F"},
-	display = "Faenza",
 	Wikipedia = true,
 	regional_categories = "Faentino",
 }
 
-labels["Sant’Agata sul Santerno"] = {
-	aliases = {"Sn", "SA"},
-	display = "Sant’Agata sul Santerno",
-	Wikipedia = "Sant'Agata sul Santerno", -- FIXME: {{alt}} label Wikipedia value '"Sant’Agata sul Santerno"' different from existing
+labels["Sant'Agata sul Santerno"] = {
+	aliases = {"Sn", "SA", "Sant’Agata sul Santerno"},
+	Wikipedia = true,
 	regional_categories = "Santagatese",
 }
 
 labels["Alfonsine"] = {
 	aliases = {"A"},
-	display = "Alfonsine",
 	Wikipedia = true,
 	regional_categories = "Alfonsinese",
 }
 
 labels["Massa Lombarda"] = {
 	aliases = {"M"},
-	display = "Massa Lombarda",
 	Wikipedia = true,
 	regional_categories = true,
 }
 
 labels["Santarcangelo"] = {
 	aliases = {"Sa"},
-	display = "Santarcangelo",
 	Wikipedia = "Santarcangelo di Romagna",
 	regional_categories = "Santarcangiolese",
 }
 
 labels["Conselice"] = {
 	aliases = {"Co"},
-	display = "Conselice",
 	Wikipedia = true,
 	regional_categories = true,
 }
 
 labels["Filo"] = {
 	aliases = {"Fi"},
-	display = "Filo",
 	Wikipedia = true,
 	regional_categories = true,
 }
 
 labels["Cattolica"] = {
 	aliases = {"Ca"},
-	display = "Cattolica",
 	Wikipedia = true,
 	regional_categories = true,
 }
 
 labels["Pesaro"] = {
 	aliases = {"P"},
-	display = "Pesaro",
 	Wikipedia = true,
 	regional_categories = "Pesarese",
 }
 
 labels["Cervia"] = {
 	aliases = {"Cv"},
-	display = "Cervia",
 	Wikipedia = true,
 	regional_categories = true,
 }
 
 labels["Castiglione di Cervia"] = {
 	aliases = {"CC"},
-	display = "Castiglione di Cervia",
 	Wikipedia = true,
 	regional_categories = true,
 }
 
 labels["Sarsina e Careste"] = {
-	aliases = {"SC"},
-	display = "Sarsina e Careste",
+	aliases = {"SC", "Sarsina, Careste"},
 	Wikipedia = "Sarsina",
 	regional_categories = "Sarsinate",
 }
--- FIXME: WARNING: {{alt}} label 'Sarsina, Careste' has alias 'SC' matching existing alias 'SC' of label 'Sarsina e Careste', inserting commented-out
--- labels["Sarsina, Careste"] = {
--- 	aliases = {"SC"},
--- 	display = "Sarsina e Careste",
--- 	Wikipedia = "Sarsina",
--- }
 
 labels["Forlì"] = {
 	aliases = {"Fo"},
-	display = "Forlì",
 	Wikipedia = true,
 	regional_categories = "Forlivese",
 }
 
 labels["Cesena"] = {
 	aliases = {"C", "Ce"},
-	display = "Cesena",
 	Wikipedia = true,
 	regional_categories = "Cesenate",
 }
@@ -17488,7 +17151,7 @@ labels["Pannonia"] = {
 labels["Prešov"] = {
 	aliases = {"Presov"},
 	display = "Prešov Rusyn",
-	Wikipedia = true, -- FIXME: {{alt}} label Wikipedia value '"Rusyn_language#Prešov_Rusyn"' different from existing
+	Wikipedia = "Rusyn language#Prešov Rusyn",
 	regional_categories = true,
 }
 
@@ -17879,7 +17542,7 @@ labels["Corleone"] = {
 
 labels["Pantelleria"] = {
 	aliases = {"Pantesco"},
-	Wikipedia = true, -- FIXME: {{alt}} label Wikipedia value '"Pantesco dialect"' different from existing
+	Wikipedia = "Pantesco dialect",
 	regional_categories = "Pantesco",
 }
 
@@ -18285,24 +17948,20 @@ local labels = {}
 
 labels["Chakavian"] = {
 	aliases = {"Čakavian"},
-	display = "[[Chakavian]]",
 	Wikipedia = true,
 	regional_categories = true,
 }
 
 labels["Ekavian"] = {
-	display = "[[Ekavian]]",
-	Wikipedia = "Shtokavian#Yat_reflexes",
+	Wikipedia = "Shtokavian#Yat reflexes",
 }
 
 labels["Ikavian"] = {
-	display = "[[Ikavian]]",
-	Wikipedia = "Shtokavian#Yat_reflexes",
+	Wikipedia = "Shtokavian#Yat reflexes",
 	regional_categories = true,
 }
 
 labels["Kajkavian"] = {
-	display = "[[Kajkavian]]",
 	Wikipedia = true,
 	regional_categories = true,
 }
@@ -18314,13 +17973,13 @@ labels["Torlakian"] = {
 
 labels["Bosnia"] = {
 	aliases = {"Bosnian", "bs"},
-	Wikipedia = true, -- FIXME: {{alt}} label Wikipedia value '"Bosnian language"' different from existing
+	Wikipedia = "Bosnian language",
 	regional_categories = "Bosnian",
 }
 
 labels["Croatia"] = {
 	aliases = {"Croatian", "hr"},
-	Wikipedia = true, -- FIXME: {{alt}} label Wikipedia value '"Croatian language"' different from existing
+	Wikipedia = "Croatian language",
 	regional_categories = "Croatian",
 }
 
@@ -18332,13 +17991,13 @@ labels["Dalmatia"] = {
 
 labels["Montenegro"] = {
 	aliases = {"Montenegrin", "cnr"},
-	Wikipedia = true,
+	Wikipedia = "Montenegrin language",
 	regional_categories = "Montenegrin",
 }
 
 labels["Serbia"] = {
 	aliases = {"Serbian", "sr"},
-	Wikipedia = true, -- FIXME: {{alt}} label Wikipedia value '"Serbian language"' different from existing
+	Wikipedia = "Serbian language",
 	regional_categories = "Serbian",
 }
 
@@ -18349,7 +18008,7 @@ labels["Vojvodina"] = {
 
 labels["Ijekavian"] = {
 	aliases = {"Jekavian"},
-	Wikipedia = "Shtokavian#Yat_reflexes",
+	Wikipedia = "Shtokavian#Yat reflexes",
 }
 
 labels["Shtokavian"] = {
@@ -18782,7 +18441,7 @@ labels["East"] = {
 
 labels["West"] = {
 	aliases = {"WestPS", "NorthPS", "WestSouthPS", "EastSouthPS"},
-	display = "[[w:West Slavic languages|West Slavic]]", -- FIXME: {{alt}} label display value '"[[w:West Slavic languages|West Slavic]] "' different from existing
+	display = "[[w:West Slavic languages|West Slavic]]",
 	regional_categories = "Western regional",
 }
 
@@ -19719,7 +19378,7 @@ labels["Cavite"] = {
 
 labels["Marinduque"] = {
 	aliases = {"Marinduque Tagalog", "Marinduqueño", "Marindukihin"},
-	Wikipedia = "Marinduque#Language", -- FIXME: {{alt}} label Wikipedia value '"Marinduque"' different from existing
+	Wikipedia = "Marinduque#Language",
 	pos_categories = "dialectal terms",
 	regional_categories = true,
 }
