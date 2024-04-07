@@ -26,12 +26,17 @@ def process_text_on_page(pageindex, pagetitle, text):
           pagemsg("Replaced %s with %s" % (origt, str(t)))
           notes.append("{{sense}} -> {{antsense}} in Antonyms section")
           changed = True
+        if tn == "s":
+          blib.set_template_name(t, "as")
+          pagemsg("Replaced %s with %s" % (origt, str(t)))
+          notes.append("{{s}} -> {{as}} in Antonyms section")
+          changed = True
       if changed:
         subsections[secno] = str(parsed)
   text = "".join(subsections)
   return text, notes
 
-parser = blib.create_argparser("Convert {{sense}} to {{antsense}} in =Antonyms= sections", include_pagefile=True, include_stdin=True)
+parser = blib.create_argparser("Convert {{sense}}/{{s}} to {{antsense}}/{{as}} in =Antonyms= sections", include_pagefile=True, include_stdin=True)
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
