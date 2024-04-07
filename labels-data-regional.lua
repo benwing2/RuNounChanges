@@ -971,13 +971,6 @@ labels["Australia"] = {
 -- AO F
 -- AO G
 
-labels["Guam"] = {
-	aliases = {"Guåhan", "Guamanian"},
-	langs = {"ch", "en"},
-	Wikipedia = true,
-	regional_categories = true,
-}
-
 -- AO H
 
 -- AO I
