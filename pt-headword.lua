@@ -110,17 +110,17 @@ function export.show(frame)
 
 	local args = require("Module:parameters").process(parargs, params)
 
-	local pagename = args.pagename or mw.title.getCurrentTitle().text
+	local subpage = args.pagename or mw.title.getCurrentTitle().subpageText
 
 	local user_specified_heads = args.head
 	local heads = user_specified_heads
 	if args.nolinkhead then
 		if #heads == 0 then
-			heads = {pagename}
+			heads = {subpage}
 		end
 	else
 		local romut = require(romut_module)
-		local auto_linked_head = romut.add_links_to_multiword_term(pagename, args.splithyph, nil,
+		local auto_linked_head = romut.add_links_to_multiword_term(subpage, args.splithyph, nil,
 			include_hyphen_prefixes)
 		if #heads == 0 then
 			heads = {auto_linked_head}
@@ -143,13 +143,13 @@ function export.show(frame)
 		no_redundant_head_cat = #user_specified_heads == 0,
 		genders = {},
 		inflections = {},
-		pagename = pagename,
+		pagename = args.pagename,
 		id = args.id,
 		force_cat_output = force_cat,
 	}
 
 	local is_suffix = false
-	if pagename:find("^%-") and poscat ~= "suffix forms" then
+	if subpage:find("^%-") and poscat ~= "suffix forms" then
 		is_suffix = true
 		data.pos_category = "suffixes"
 		local singular_poscat = require("Module:string utilities").singularize(poscat)
