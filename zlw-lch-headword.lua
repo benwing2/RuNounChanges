@@ -101,12 +101,12 @@ local param_mods = {
 	qq = {store = "insert"},
 }
 
--- Parse the inflections specified by the raw arguments in `infls`. `pagename` is the pagename, used to substitute
+-- Parse the inflections specified by the raw arguments in `infls`. `subpage` is the subpage, used to substitute
 -- # in arguments. Parse inline modifiers attached to the raw arguments. Return `infls` if there are any inflections,
 -- otherwise nil. WARNING: Destructively modifies `infls`.
-local function parse_inflection(infls, pagename)
+local function parse_inflection(infls, subpage)
 	local function generate_obj(term, parse_err)
-		return {term = term:gsub("#", pagename)}
+		return {term = term:gsub("#", subpage)}
 	end
 
 	for i, infl in ipairs(infls) do
@@ -198,13 +198,13 @@ function export.show(frame)
 	local parargs = frame:getParent().args
 	local args = require("Module:parameters").process(parargs, params)
 
-	local pagename = args.pagename or mw.title.getCurrentTitle().subpageText
+	local subpage = args.pagename or mw.title.getCurrentTitle().subpageText
 
 	local user_specified_heads = args[head_is_1 and 1 or "head"]
 	local heads = user_specified_heads
 	if args.nolink then
 		if #heads == 0 then
-			heads = {pagename}
+			heads = {subpage}
 		end
 	end
 
@@ -221,14 +221,15 @@ function export.show(frame)
 		genders = {},
 		inflections = {},
 		categories = {},
-		pagename = pagename,
+		pagename = args.pagename,
+		subpage = subpage,
 		id = args.id,
 		force_cat_output = force_cat,
 	}
 
 	data.is_suffix = false
 	if args.suffix or (
-		not args.nosuffix and pagename:find("^%-") and poscat ~= "suffixes" and poscat ~= "suffix forms"
+		not args.nosuffix and subpage:find("^%-") and poscat ~= "suffixes" and poscat ~= "suffix forms"
 	) then
 		data.is_suffix = true
 		data.pos_category = "suffixes"
@@ -241,7 +242,7 @@ function export.show(frame)
 		pos_functions[poscat].func(args, data)
 	end
 
-	local abbrs = parse_inflection(args.abbr, pagename)
+	local abbrs = parse_inflection(args.abbr, subpage)
 	insert_inflection(data, abbrs, "abbreviation")
 
 	if args.json then
@@ -357,7 +358,7 @@ local function get_noun_pos(is_proper)
 			-- Process all inflections.
 			for _, spec in ipairs(get_noun_inflection_specs(data.langcode)) do
 				local param, desc = unpack(spec)
-				local infls = parse_inflection(args[param], data.pagename)
+				local infls = parse_inflection(args[param], data.subpage)
 				insert_inflection(data, infls, desc)
 			end
 		end
@@ -448,7 +449,7 @@ local function get_verb_pos()
 			-- Process all inflections.
 			for _, spec in ipairs(verb_inflection_specs) do
 				local param, desc = unpack(spec)
-				local infls = parse_inflection(args[param], data.pagename)
+				local infls = parse_inflection(args[param], data.subpage)
 				if infls then
 					if param == "pf" and not pf_allowed then
 						error("Aspectual-pair perfectives not allowed with perfective-only verb")
@@ -497,7 +498,7 @@ local function get_adj_adv_pos(pos)
 			return params
 		end,
 		func = function(args, data)
-			local comps = parse_inflection(args[data.head_is_1 and 2 or 1], data.pagename)
+			local comps = parse_inflection(args[data.head_is_1 and 2 or 1], data.subpage)
 			if comps then
 				lang_data = langs_supported[data.langcode]
 				if comps[1].term == "-" then
@@ -518,17 +519,17 @@ local function get_adj_adv_pos(pos)
 						if not lang_data.peri_comp then
 							error("Don't know how to form periphrastic comparatives for " .. data.langname)
 						end
-						comp.term = ("[[%s]] [[%s]]"):format(lang_data.peri_comp, data.pagename)
+						comp.term = ("[[%s]] [[%s]]"):format(lang_data.peri_comp, data.subpage)
 						if lang_data.sup then
 							table.insert(default_sups, {term = ("[[%s%s]] [[%s]]"):format(
-								lang_data.sup, lang_data.peri_comp, data.pagename), q = comp.q, qq = comp.qq, id = comp.id})
+								lang_data.sup, lang_data.peri_comp, data.subpage), q = comp.q, qq = comp.qq, id = comp.id})
 						end
 					elseif lang_data.sup then
 						table.insert(default_sups, {term = ("%s%s"):format(lang_data.sup, comp.term), q = comp.q, qq = comp.qq,
 							id = comp.id})
 					end
 				end
-				local sups = parse_inflection(args.sup, data.pagename)
+				local sups = parse_inflection(args.sup, data.subpage)
 				if not sups then
 					sups = args.nodefsup and {} or {{term = "+"}}
 				end
@@ -564,9 +565,9 @@ local function get_adj_adv_pos(pos)
 				insert_inflection(data, comps, "comparative", {form = "comparative"})
 				insert_inflection(data, combined_sups, "superlative", {form = "superlative"})
 				if data.langcode == "pl" then
-					local mpcomp = parse_inflection(args.mpcomp, data.pagename)
+					local mpcomp = parse_inflection(args.mpcomp, data.subpage)
 					insert_inflection(data, mpcomp, "Middle Polish comparative")
-					local mpsup = parse_inflection(args.mpsup, data.pagename)
+					local mpsup = parse_inflection(args.mpsup, data.subpage)
 					insert_inflection(data, mpsup, "Middle Polish superlative")
 				end
 			end
@@ -575,10 +576,10 @@ local function get_adj_adv_pos(pos)
 					table.insert(data.inflections, {label = glossary_link("indeclinable")})
 					table.insert(data.categories, data.langname .. " indeclinable adjectives")
 				end
-				local infls = parse_inflection(args.adv, data.pagename)
+				local infls = parse_inflection(args.adv, data.subpage)
 				insert_inflection(data, infls, "derived adverb")
 			end
-			local infls = parse_inflection(args.dim, data.pagename)
+			local infls = parse_inflection(args.dim, data.subpage)
 			insert_inflection(data, infls, "diminutive")
 		end,
 	}
@@ -651,7 +652,7 @@ local function get_part_pos()
 					return false
 				end
 				for _, ending in ipairs(endings) do
-					if rfind(data.pagename, ending) then
+					if rfind(data.subpage, ending) then
 						return true
 					end
 				end
@@ -670,12 +671,12 @@ local function get_part_pos()
 				ptype = "cont-adv"
 			elseif matches_parttype("ant_adv") then
 				ptype = "ant-adv"
-			elseif (data.pagename:find("%-participle$") or data.pagename:find("%-part$")) and
+			elseif (data.subpage:find("%-participle$") or data.subpage:find("%-part$")) and
 				mw.title.getCurrentTitle().nsText == "Template" then
 				ptype = "pass"
 			else
-				error(("Missing %s participle type and can't infer from pagename '%s'"):format(data.langname,
-					data.pagename))
+				error(("Missing %s participle type and can't infer from subpage '%s'"):format(data.langname,
+					data.subpage))
 			end
 
 			if ptype == "act" then
