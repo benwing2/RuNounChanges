@@ -27,7 +27,7 @@ function export.headword(frame)
 	local type = frame.args["1"] ~= "" and frame.args["1"]
 	local head = frame:getParent().args["head"]
 	if not head or head == "" then
-		head = mw.loadData("Module:headword/data").pagename
+		head = mw.loadData("Module:headword/data").page.pagename
 	end
 	local langCode = frame.args["lang"] or "mul"
 	local lang = require("Module:languages").getByCode(langCode)

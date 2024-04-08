@@ -114,7 +114,7 @@ do
 			categories,
 			require("Module:languages").getByCode("en"),
 			nil,
-			(load_data("Module:headword/data").encoded_pagename
+			(load_data("Module:headword/data").page.encoded_pagename
 				:gsub("/translations$", ""))
 		) or ""
 		
@@ -192,7 +192,7 @@ local function top(args, title, navhead)
 		insert(categories, "Translation table header lacks gloss")
 	end
 	
-	local pagename, subpage = load_data("Module:headword/data").encoded_pagename
+	local pagename, subpage = load_data("Module:headword/data").page.encoded_pagename
 		:gsub("/translations$", "")
 	
 	if subpage == 1 then
@@ -376,7 +376,7 @@ function export.needed(frame)
 				{"Requests for translations into " .. langname},
 				require("Module:languages").getByCode("en"),
 				sort or nil,
-				not sort and (load_data("Module:headword/data").encoded_pagename
+				not sort and (load_data("Module:headword/data").page.encoded_pagename
 					:gsub("/translations$", "")) or nil
 			)
 		end
@@ -418,7 +418,7 @@ function export.no_attested(frame)
 			{langname .. " unattested translations"},
 			require("Module:languages").getByCode("en"),
 			sort or nil,
-			(load_data("Module:headword/data").encoded_pagename
+			(load_data("Module:headword/data").page.encoded_pagename
 				:gsub("/translations$", ""))
 		)
 	end

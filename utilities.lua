@@ -135,7 +135,7 @@ function export.get_current_L2()
 	if section == 0 then
 		return nil
 	end
-	local page_L2s = mw.loadData("Module:headword/data").page_L2s
+	local page_L2s = mw.loadData("Module:headword/data").page.page_L2s
 	local L2 = page_L2s[section]
 	while not L2 and section > 0 do
 		section = section - 1
@@ -260,8 +260,8 @@ function export.format_categories(categories, lang, sort_key, sort_base, force_o
 
 	if force_output or allowedNamespaces[title_obj.namespace] or title_obj.prefixedText == "Wiktionary:Sandbox" then
 		local headword_data = mw.loadData("Module:headword/data")
-		local pagename = headword_data.pagename
-		local pagename_defaultsort = headword_data.pagename_defaultsort
+		local pagename = headword_data.page.pagename
+		local pagename_defaultsort = headword_data.page.pagename_defaultsort
 		
 		-- Generate a default sort key.
 		if sort_key ~= "-" then

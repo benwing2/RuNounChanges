@@ -252,7 +252,7 @@ end
 -- do the work of [[Template:ja-kanji]], [[Template:ryu-kanji]] etc.
 -- should probably be folded into [[Module:Jpan-headword]]
 function export.kanji(frame)
-	pagename = pagename or load_data("Module:headword/data").pagename
+	pagename = pagename or load_data("Module:headword/data").page.pagename
 	-- only do this if this entry is a kanji page and not some user's page
 	if namespace == "" then
 		local params = {
