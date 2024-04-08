@@ -731,27 +731,6 @@ The possible types are
 		return self._fullName or nil
 	end
 
-	--[==[
-	Older entry point equivalent to {getFull()}. Will be going away.
-	]==]
-	function Language:getNonEtymological()
-		return self:getFull()
-	end
-
-	--[==[
-	Older entry point equivalent to {getFullCode()}. Will be going away.
-	]==]
-	function Language:getNonEtymologicalCode()
-		return self:getFullCode()
-	end
-
-	--[==[
-	Older entry point equivalent to {getFullName()}. Will be going away.
-	]==]
-	function Language:getNonEtymologicalName()
-		return self:getFullName()
-	end
-
 	--[==[Returns a table of <code class="nf">Language</code> objects for all languages that this language is directly descended from. Generally this is only a single language, but creoles, pidgins and mixed languages can have multiple ancestors.]==]
 	function Language:getAncestors()
 		if not self._ancestorObjects then
