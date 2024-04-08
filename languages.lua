@@ -324,7 +324,14 @@ local function make_language(code, data, useRequire)
 		return self._rawData[1]
 	end
 
-	--[==[Returns the display form of the language. The display form of a language, family or script is the form it takes when appearing as the ''SOURCE'' in categories such as <code>English terms derived from ''SOURCE''</code> or <code>English given names from ''SOURCE''</code>, and is also the displayed text in <code>:makeCategoryLink</code> links. For regular and etymology languages, this is the same as the canonical name, but for families, it reads "NAME languages" (e.g. {{code|lua|"Indo-Iranian languages"}}), and for scripts, it reads "NAME script" (e.g. {{code|lua|"Arabic script"}}).]==]
+	--[==[
+	Return the display form of the language. The display form of a language, family or script is the form it takes when
+	appearing as the <code><var>source</var></code> in categories such as <code>English terms derived from
+	<var>source</var></code> or <code>English given names from <var>source</var></code>, and is also the displayed text
+	in {makeCategoryLink()} links. For full and etymology-only languages, this is the same as the canonical name, but
+	for families, it reads <code>"<var>name</var> languages"</code> (e.g. {"Indo-Iranian languages"}), and for scripts,
+	it reads <code>"<var>name</var> script"</code> (e.g. {"Arabic script"}).
+	]==]
 	function Language:getDisplayForm()
 		if not self._displayForm then
 			local form = self:getCanonicalName()
@@ -358,7 +365,19 @@ local function make_language(code, data, useRequire)
 		return self._rawData.aliases or (self._extraData and self._extraData.aliases) or {}
 	end
 
-	--[==[Returns a table of the known subvarieties of a given language, excluding subvarieties that have been given explicit etymology language codes. The names are not guaranteed to be unique, in that sometimes a given name refers to a subvariety of more than one language. Example: {{code|lua|{"Southern Aymara", "Central Aymara"} }} for [[:Category:Aymara language|Aymara]]. Note that the returned value can have nested tables in it, when a subvariety goes by more than one name. Example: {{code|lua|{"North Azerbaijani", "South Azerbaijani", {"Afshar", "Afshari", "Afshar Azerbaijani", "Afchar"}, {"Qashqa'i", "Qashqai", "Kashkay"}, "Sonqor"} }} for [[:Category:Azerbaijani language|Azerbaijani]]. Here, for example, Afshar, Afshari, Afshar Azerbaijani and Afchar all refer to the same subvariety, whose preferred name is Afshar (the one listed first). To avoid a return value with nested tables in it, specify a non-{{code|lua|nil}} value for the <code>flatten</code> parameter; in that case, the return value would be {{code|lua|{"North Azerbaijani", "South Azerbaijani", "Afshar", "Afshari", "Afshar Azerbaijani", "Afchar", "Qashqa'i", "Qashqai", "Kashkay", "Sonqor"} }}.]==]
+	--[==[
+	Return a table of the known subvarieties of a given language, excluding subvarieties that have been given
+	explicit etymology-only language codes. The names are not guaranteed to be unique, in that sometimes a given name
+	refers to a subvariety of more than one language. Example: {{code|lua|{"Southern Aymara", "Central Aymara"} }} for
+	[[:Category:Aymara language|Aymara]]. Note that the returned value can have nested tables in it, when a subvariety
+	goes by more than one name. Example: {{code|lua|{"North Azerbaijani", "South Azerbaijani", {"Afshar", "Afshari",
+	"Afshar Azerbaijani", "Afchar"}, {"Qashqa'i", "Qashqai", "Kashkay"}, "Sonqor"} }} for
+	[[:Category:Azerbaijani language|Azerbaijani]]. Here, for example, Afshar, Afshari, Afshar Azerbaijani and Afchar
+	all refer to the same subvariety, whose preferred name is Afshar (the one listed first). To avoid a return value
+	with nested tables in it, specify a non-{{code|lua|nil}} value for the <code>flatten</code> parameter; in that case,
+	the return value would be {{code|lua|{"North Azerbaijani", "South Azerbaijani", "Afshar", "Afshari",
+	"Afshar Azerbaijani", "Afchar", "Qashqa'i", "Qashqai", "Kashkay", "Sonqor"} }}.
+	]==]
 	function Language:getVarieties(flatten)
 		if #self._stack == 1 then
 			self:loadInExtraData()
@@ -395,7 +414,7 @@ The possible types are
 	function Language:hasType(...)
 		if not self._type then
 			self._type = {language = true}
-			if self:getNonEtymologicalCode() == self:getCode() then
+			if self:getFullCode() == self:getCode() then
 				self._type.full = true
 			else
 				self._type["etymology-only"] = true
@@ -670,33 +689,67 @@ The possible types are
 		return false
 	end
 
-	--[==[If the language is an etymology language, this iterates through parents until a regular language or family is found, and the corresponding object is returned. If the language is a regular language, then it simply returns the language.]==]
+	--[==[
+	If the language is etymology-only, this iterates through parents until a full language or family is found, and the
+	corresponding object is returned. If the language is a full language, then it simply returns itself.
+	]==]
+	function Language:getFull()
+		if not self._fullObject then
+			local fullCode = self:getFullCode()
+			if fullCode ~= self:getCode() then
+				self._fullObject = export.getByCode(fullCode, nil, nil, nil, useRequire)
+			else
+				self._fullObject = self
+			end
+		end
+		return self._fullObject
+	end
+
+	--[==[
+	If the language is an etymology-only language, this iterates through parents until a full language or family is
+	found, and the corresponding code is returned. If the language is a full language, then it simply returns the
+	language code.
+	]==]
+	function Language:getFullCode()
+		return self._fullCode or self:getCode()
+	end
+
+	--[==[
+	If the language is an etymology-only language, this iterates through parents until a full language or family is
+	found, and the corresponding canonical name is returned. If the language is a full language, then it simply returns
+	the canonical name of the language.
+	]==]
+	function Language:getFullName()
+		if self._fullName == nil then
+			local full = self:getFull()
+			if full then
+				self._fullName = full:getCanonicalName()
+			else
+				self._fullName = false
+			end
+		end
+		return self._fullName or nil
+	end
+
+	--[==[
+	Older entry point equivalent to {getFull()}. Will be going away.
+	]==]
 	function Language:getNonEtymological()
-		if not self._nonEtymologicalObject then
-			local nonEtymologicalCode = self:getNonEtymologicalCode()
-			if nonEtymologicalCode ~= self:getCode() then
-				self._nonEtymologicalObject = export.getByCode(nonEtymologicalCode, nil, nil, nil, useRequire)
-			else
-				self._nonEtymologicalObject = self
-			end
-		end
-		return self._nonEtymologicalObject
+		return self:getFull()
 	end
 
+	--[==[
+	Older entry point equivalent to {getFullCode()}. Will be going away.
+	]==]
 	function Language:getNonEtymologicalCode()
-		return self._nonEtymologicalCode or self:getCode()
+		return self:getFullCode()
 	end
 
+	--[==[
+	Older entry point equivalent to {getFullName()}. Will be going away.
+	]==]
 	function Language:getNonEtymologicalName()
-		if self._nonEtymologicalName == nil then
-			local nonEtymological = self:getNonEtymological()
-			if nonEtymological then
-				self._nonEtymologicalName = nonEtymological:getCanonicalName()
-			else
-				self._nonEtymologicalName = false
-			end
-		end
-		return self._nonEtymologicalName or nil
+		return self:getFullName()
 	end
 
 	--[==[Returns a table of <code class="nf">Language</code> objects for all languages that this language is directly descended from. Generally this is only a single language, but creoles, pidgins and mixed languages can have multiple ancestors.]==]
@@ -712,7 +765,7 @@ The possible types are
 				local fam = self:getFamily()
 				local protoLang = fam and fam:getProtoLanguage() or nil
 				-- For the cases where the current language is the proto-language
-				-- of its family, or an etymology language that is ancestral to that
+				-- of its family, or an etymology-only language that is ancestral to that
 				-- proto-language, we need to step up a level higher right from the
 				-- start.
 				if protoLang and (
@@ -876,7 +929,7 @@ The possible types are
 					(
 						family:getProtoLanguageCode() == self:getCode() or -- Self is the protolanguage.
 						self:hasDescendant(lang) or -- Full hasDescendant check.
-						(lang:getNonEtymologicalCode() == self:getCode() and not self:hasAncestor(lang)) -- Etymology-only child which isn't an ancestor.
+						(lang:getFullCode() == self:getCode() and not self:hasAncestor(lang)) -- Etymology-only child which isn't an ancestor.
 					)
 				) then
 					if format == "object" then
@@ -987,7 +1040,7 @@ The possible types are
 	function Language:getCategoryName(nocap)
 		if not self._categoryName then
 			local name = self:getCanonicalName()
-			-- Only add " language" if a regular language.
+			-- Only add " language" if a full language.
 			if #self._stack == 1 then
 				-- If the name already has "language" in it, don't add it.
 				if not name:match("[Ll]anguage$") then
@@ -1348,7 +1401,7 @@ The possible types are
 			varieties = self:getVarieties(),
 			scripts = self:getScriptCodes(),
 			parent = self._parentCode or nil,
-			nonEtymological = self._nonEtymologicalCode or nil,
+			full = self._fullCode or nil,
 			type = types,
 			wikimediaLanguages = self:getWikimediaLanguageCodes(),
 			wikidataItem = self:getWikidataItem(),
@@ -1499,16 +1552,16 @@ do
 					error("not allowed to edit rawData")
 				end
 			})
-			-- Non-etymological code is the parent code.
-			lang._nonEtymologicalCode = parent._code or code
+			-- Full code is the parent code.
+			lang._fullCode = parent._code or code
 		-- Etymology-only.
 		else
 			-- Copy over rawData and stack to the new object, and add new layer to stack.
 			lang._rawData = parent._rawData
 			lang._stack = parent._stack
 			insert(lang._stack, data)
-			-- Copy non-etymological code.
-			lang._nonEtymologicalCode = parent._nonEtymologicalCode
+			-- Copy full code.
+			lang._fullCode = parent._fullCode
 		end
 
 		return setmetatable(lang, parent)
@@ -1538,7 +1591,7 @@ do
 	end
 end
 
---[==[Finds the language whose code matches the one provided. If it exists, it returns a <code class="nf">Language</code> object representing the language. Otherwise, it returns {{code|lua|nil}}, unless <code class="n">paramForError</code> is given, in which case an error is generated. If <code class="n">paramForError</code> is {{code|lua|true}}, a generic error message mentioning the bad code is generated; otherwise <code class="n">paramForError</code> should be a string or number specifying the parameter that the code came from, and this parameter will be mentioned in the error message along with the bad code. If <code class="n">allowEtymLang</code> is specified, etymology language codes are allowed and looked up along with normal language codes. If <code class="n">allowFamily</code> is specified, language family codes are allowed and looked up along with normal language codes.]==]
+--[==[Finds the language whose code matches the one provided. If it exists, it returns a <code class="nf">Language</code> object representing the language. Otherwise, it returns {{code|lua|nil}}, unless <code class="n">paramForError</code> is given, in which case an error is generated. If <code class="n">paramForError</code> is {{code|lua|true}}, a generic error message mentioning the bad code is generated; otherwise <code class="n">paramForError</code> should be a string or number specifying the parameter that the code came from, and this parameter will be mentioned in the error message along with the bad code. If <code class="n">allowEtymLang</code> is specified, etymology-only language codes are allowed and looked up along with normal language codes. If <code class="n">allowFamily</code> is specified, language family codes are allowed and looked up along with normal language codes.]==]
 function export.getByCode(code, paramForError, allowEtymLang, allowFamily, useRequire)
 	if type(code) ~= "string" then
 		local typ
@@ -1610,9 +1663,9 @@ function export.getByCode(code, paramForError, allowEtymLang, allowFamily, useRe
 	return retval
 end
 
---[==[Finds the language whose canonical name (the name used to represent that language on Wiktionary) or other name matches the one provided. If it exists, it returns a <code class="nf">Language</code> object representing the language. Otherwise, it returns {{code|lua|nil}}, unless <code class="n">paramForError</code> is given, in which case an error is generated. If <code class="n">allowEtymLang</code> is specified, etymology language codes are allowed and looked up along with normal language codes. If <code class="n">allowFamily</code> is specified, language family codes are allowed and looked up along with normal language codes.
+--[==[Finds the language whose canonical name (the name used to represent that language on Wiktionary) or other name matches the one provided. If it exists, it returns a <code class="nf">Language</code> object representing the language. Otherwise, it returns {{code|lua|nil}}, unless <code class="n">paramForError</code> is given, in which case an error is generated. If <code class="n">allowEtymLang</code> is specified, etymology-only language codes are allowed and looked up along with normal language codes. If <code class="n">allowFamily</code> is specified, language family codes are allowed and looked up along with normal language codes.
 The canonical name of languages should always be unique (it is an error for two languages on Wiktionary to share the same canonical name), so this is guaranteed to give at most one result.
-This function is powered by [[Module:languages/canonical names]], which contains a pre-generated mapping of non-etymology-language canonical names to codes. It is generated by going through the [[:Category:Language data modules]] for non-etymology languages. When <code class="n">allowEtymLang</code> is specified for the above function, [[Module:etymology languages/canonical names]] may also be used, and when <code class="n">allowFamily</code> is specified for the above function, [[Module:families/canonical names]] may also be used.]==]
+This function is powered by [[Module:languages/canonical names]], which contains a pre-generated mapping of full-language canonical names to codes. It is generated by going through the [[:Category:Language data modules]] for full languages. When <code class="n">allowEtymLang</code> is specified for the above function, [[Module:etymology languages/canonical names]] may also be used, and when <code class="n">allowFamily</code> is specified for the above function, [[Module:families/canonical names]] may also be used.]==]
 function export.getByCanonicalName(name, errorIfInvalid, allowEtymLang, allowFamily, useRequire)
 	local function conditionalRequire(modulename)
 		if useRequire then
