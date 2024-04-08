@@ -15592,48 +15592,27 @@ Page 162 Module:labels/data/lang/pam: -------- begin text --------
 local labels = {}
 
 labels["Súlat Bacúlud"] = {
-	aliases = {"Bacolor", "Bacolor spelling"},
-	display = "Súlat Bacúlud",
-	Wikipedia = "Reforms of Kapampangan orthography",
+	aliases = {"Bacolor", "Bacolor spelling", "Baculud", "Sulat Baculud"},
+	Wikipedia = {"Reforms of Kapampangan orthography", "Kapampangan language#Orthography"},
 	plain_categories = "Bacolor Kapampangan forms",
 }
--- FIXME: WARNING: {{alt}} label 'Bacolor' matches existing alias 'Bacolor' of label 'Súlat Bacúlud', inserting commented-out
--- labels["Bacolor"] = {
--- 	aliases = {"Baculud", "Súlat Bacúlud", "Sulat Baculud"},
--- 	display = "Súlat Bacúlud",
--- 	Wikipedia = "Kapampangan language#Orthography",
--- }
 
 labels["Súlat Wáwâ"] = {
-	aliases = {"Guagua", "Guagua spelling"},
-	display = "Súlat Wáwâ",
-	Wikipedia = "Reforms of Kapampangan orthography",
+	aliases = {"Guagua", "Guagua spelling", "Wawa", "Sulat Wawa"},
+	Wikipedia = {"Reforms of Kapampangan orthography", "Kapampangan language#Orthography"},
 	plain_categories = "Guagua Kapampangan forms",
 }
--- FIXME: WARNING: {{alt}} label 'Guagua' matches existing alias 'Guagua' of label 'Súlat Wáwâ', inserting commented-out
--- labels["Guagua"] = {
--- 	aliases = {"Wawa", "Sulat Wawa", "Súlat Wáwâ"},
--- 	display = "Súlat Wáwâ",
--- 	Wikipedia = "Reforms of Kapampangan orthography",
--- }
 
 labels["Ámung Sámson"] = {
-	aliases = {"Samson", "Samson spelling"},
-	display = "Ámung Sámson",
-	Wikipedia = "Reforms of Kapampangan orthography",
+	aliases = {"Samson", "Samson spelling", "Amung Samson", "Ámung Samson"},
+	Wikipedia = {"Reforms of Kapampangan orthography", "Kapampangan language#Orthography"},
 	plain_categories = "Ámung Sámson forms",
 }
--- FIXME: WARNING: {{alt}} label 'Samson' matches existing alias 'Samson' of label 'Ámung Sámson', inserting commented-out
--- labels["Samson"] = {
--- 	aliases = {"Amung Samson", "Ámung Sámson", "Ámung Samson"},
--- 	display = "Ámung Sámson",
--- 	Wikipedia = "Reforms of Kapampangan orthography",
--- }
 
-labels["Batiauan"] = {
-	aliases = {"Batiáuan", "Batiawan", "Batiáwan", "Batyawan", "Batyáwan", "Revised Guagua", "Revised Wáwâ", "Revised Wawa"},
-	display = "Batiáuan",
-	Wikipedia = "Reforms of Kapampangan orthography",
+labels["Batiáuan"] = {
+	aliases = {"Batiauan", "Batiawan", "Batiáwan", "Batyawan", "Batyáwan", "Revised Guagua", "Revised Wáwâ", "Revised Wawa"},
+	Wikipedia = {"Reforms of Kapampangan orthography", "Kapampangan language#Orthography"},
+	plain_categories = "Batiáuan forms",
 }
 
 labels["Abecedario"] = {
