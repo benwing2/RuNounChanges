@@ -66,7 +66,7 @@ function export.makeObject(code)
 			end
 		})
 		-- Non-etymological code is the parent code.
-		lang._nonEtymologicalCode = EtymologyLanguage._code
+		lang._fullCode = EtymologyLanguage._code
 	-- Parent is etymology language.
 	else
 		-- Copy over rawData and stack to the new object, and add new layer to stack.
@@ -74,7 +74,7 @@ function export.makeObject(code)
 		lang._stack = EtymologyLanguage._stack
 		table.insert(lang._stack, data)
 		-- Copy non-etymological code.
-		lang._nonEtymologicalCode = EtymologyLanguage._nonEtymologicalCode
+		lang._fullCode = EtymologyLanguage._fullCode
 	end
 
 	lang._familyCode = familyCode
