@@ -1244,7 +1244,8 @@ def do_pagefile_cats_refs(args, start, end, process, default_pages=[], default_c
     sections, sections_by_lang, _ = split_text_into_sections(text, pagemsg)
 
     if lang not in sections_by_lang:
-      pagemsg("WARNING: Can't find %s section, skipping" % lang)
+      # Too noisy.
+      # pagemsg("WARNING: Can't find %s section, skipping" % lang)
       return None
     else:
       j = sections_by_lang[lang]
