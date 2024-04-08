@@ -82,6 +82,7 @@ def combine_comments(a, b):
     return a
   return "%s, %s" % (a, re.sub("^ *-- *", "", b))
 
+existing_label_module_langs_seen = set()
 def process_text_on_page_for_label_objects(index, pagename, text):
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagename, txt))
@@ -93,6 +94,8 @@ def process_text_on_page_for_label_objects(index, pagename, text):
   langcode = None
   langname = None
   m = re.search("^Module:labels/data/lang/(.*)$", pagename)
+  if m:
+    existing_label_module_langs_seen.add(m.group(1))
   if not m:
     m = re.search("^Module:(.*):Dialects$", pagename)
   if m:
@@ -423,12 +426,15 @@ def comment_out(labelobj, dupmsg):
   new_lines = output_labels([labelobj])
   return ["-- FIXME: %s" % dupmsg] + ["-- %s" % line for line in new_lines]
 
+max_label_index_seen = 0
 def process_text_on_page(index, pagename, text):
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagename, txt))
   def errandpagemsg(txt):
     errandmsg("Page %s %s: %s" % (index, pagename, txt))
 
+  global max_label_index_seen
+  max_label_index_seen = max(max_label_index_seen, index)
   retval = process_text_on_page_for_label_objects(index, pagename, text)
   if retval is None:
     return
@@ -686,3 +692,25 @@ if __name__ == "__main__":
       alt_data_modules[code] = process_text_on_page_for_label_objects(index, module_name, modtext)
 
   blib.do_pagefile_cats_refs(args, start, end, process_text_on_page, edit=True, stdin=True)
+
+  for index, alt_langcode in enumerate(sorted(list(alt_data_modules.keys()))):
+    if alt_langcode not in existing_label_module_langs_seen:
+      lang_specific_module = "Module:labels/data/lang/%s" % alt_langcode
+      def pagemsg(txt):
+        msg("Page %s %s: %s" % (index + max_label_index_seen + 1, lang_specific_module, txt))
+      labelobjs_with_text = []
+      labelobjs_with_text.append(["local labels = {}"])
+      labels_seen = alt_data_modules[alt_langcode].labels_seen
+      for labelobj in labels_seen:
+        if isinstance(labelobj, LabelData):
+          labelobjs_with_text.append([""])
+          labelobjs_with_text.append(labelobj)
+        else:
+          labelobjs_with_text.append(labelobj)
+      labelobjs_with_text.append(['return require("Module:labels").finalize_data(labels)'])
+      new_lang_specific_lines = output_labels(labelobjs_with_text)
+      blib.do_handle_stdin_retval(
+        args, ("\n".join(new_lang_specific_lines),
+               "move %s {{alt}} label(s) from [[Module:%s:dialects]] into new label data module" % (
+               len(list(x for x in labels_seen if isinstance(x, LabelData))), alt_langcode)), 
+        "", None, pagemsg, is_find_regex=True, edit=True)
