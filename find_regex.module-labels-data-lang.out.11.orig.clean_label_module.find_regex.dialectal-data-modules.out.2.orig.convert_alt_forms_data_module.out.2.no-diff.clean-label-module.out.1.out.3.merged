@@ -1,4 +1,4 @@
-Beginning at Sat Apr  6 23:03:56 2024
+Beginning at Sun Apr  7 18:33:34 2024
 Page 0 labels-data-regional.lua: WARNING: Couldn't process label 'Classical' line: langs = {"ar", "az", "ca", "fa", "id", "ja", "jv", "kum", "la", "ms", "quc", "sa", "tl", "zh"},
 Page 0 labels-data-regional.lua: WARNING: Couldn't process label 'Epigraphic' line: langs = {"grc", "inc-pra", "pgd", "sa"},
 Page 0 labels-data-regional.lua: WARNING: Couldn't process label 'Burundi' line: langs = {},
@@ -1039,8 +1039,8 @@ labels["Tensino"] = {
 }
 return require("Module:labels").finalize_data(labels)
 -------- end text --------
-Page 12 Module:labels/data/lang/ang: Ignoring regional alias 'Kentish' of label 'Kent' duplicating lang-specific label
-Page 12 Module:labels/data/lang/ang: Ignoring regional alias 'Northumbrian' of label 'Northumbria' duplicating lang-specific label
+Page 12 Module:labels/data/lang/ang: WARNING: Alias set members 'Kent,Kent dialect,Kentish dialect' of regional label 'Kent' with aliases 'Kentish,Kentish dialect,Kent dialect' are bleeding through with respect to lang-specific label 'Kentish' with aliases ''
+Page 12 Module:labels/data/lang/ang: WARNING: Alias set members 'North East England,North-East England,Northeast England,Northumberland,Northumbria' of regional label 'Northumbria' with aliases 'Northumbrian,Northumberland,Northeast England,North-East England,North East England' are bleeding through with respect to lang-specific label 'Northumbrian' with aliases ''
 Page 12 Module:labels/data/lang/ang: WARNING: {{alt}} label 'Anglian' has Wikipedia value '"Old English"' different from existing '"Anglian dialect"'
 Page 12 Module:labels/data/lang/ang: WARNING: {{alt}} label 'Northumbrian' has Wikipedia value '"Northumbrian dialect"' different from existing '"Northumbrian Old English"'
 Page 12 Module:labels/data/lang/ang: Diff:
@@ -1055,7 +1055,21 @@ Page 12 Module:labels/data/lang/ang: Diff:
  	regional_categories = true,
  }
  
-@@ -31,7 +31,7 @@
+@@ -15,6 +15,13 @@
+ 	Wikipedia = "Kentish dialect (Old English)",
+ 	regional_categories = true,
+ }
++-- FIXME: WARNING: Alias set members 'Kent,Kent dialect,Kentish dialect' of regional label 'Kent' with aliases 'Kentish,Kentish dialect,Kent dialect' are bleeding through with respect to lang-specific label 'Kentish' with aliases ''; regional label definition follows:
++-- labels["Kent"] = {
++-- 	aliases = {"Kentish", "Kentish dialect", "Kent dialect"},
++-- 	Wikipedia = true,
++-- 	langs = {"ang", "en", "enm"},
++-- 	regional_categories = "Kentish",
++-- }
+ 
+ labels["Late Old English"] = {
+ 	plain_categories = true,
+@@ -31,9 +38,16 @@
  }
  
  labels["Northumbrian"] = {
@@ -1063,7 +1077,16 @@ Page 12 Module:labels/data/lang/ang: Diff:
 +	Wikipedia = "Northumbrian Old English", -- FIXME: {{alt}} label Wikipedia value '"Northumbrian dialect"' different from existing
  	regional_categories = {true, "Anglian"},
  }
++-- FIXME: WARNING: Alias set members 'North East England,North-East England,Northeast England,Northumberland,Northumbria' of regional label 'Northumbria' with aliases 'Northumbrian,Northumberland,Northeast England,North-East England,North East England' are bleeding through with respect to lang-specific label 'Northumbrian' with aliases ''; regional label definition follows:
++-- labels["Northumbria"] = {
++-- 	aliases = {"Northumbrian", "Northumberland", "Northeast England", "North-East England", "North East England"},
++-- 	Wikipedia = "Northumbria (modern)",
++-- 	langs = {"ang", "en"},
++-- 	regional_categories = "Northumbrian",
++-- }
  
+ labels["West Saxon"] = {
+ 	Wikipedia = "West Saxon dialect",
 Page 12 Module:labels/data/lang/ang: Would save with comment = clean categories in label data module; incorporate 5 {{alt}} label(s) (0 new) from [[Module:ang:dialects]] into label data module
 Page 12 Module:labels/data/lang/ang: -------- begin text --------
 local labels = {}
@@ -1083,6 +1106,13 @@ labels["Kentish"] = {
 	Wikipedia = "Kentish dialect (Old English)",
 	regional_categories = true,
 }
+-- FIXME: WARNING: Alias set members 'Kent,Kent dialect,Kentish dialect' of regional label 'Kent' with aliases 'Kentish,Kentish dialect,Kent dialect' are bleeding through with respect to lang-specific label 'Kentish' with aliases ''; regional label definition follows:
+-- labels["Kent"] = {
+-- 	aliases = {"Kentish", "Kentish dialect", "Kent dialect"},
+-- 	Wikipedia = true,
+-- 	langs = {"ang", "en", "enm"},
+-- 	regional_categories = "Kentish",
+-- }
 
 labels["Late Old English"] = {
 	plain_categories = true,
@@ -1102,6 +1132,13 @@ labels["Northumbrian"] = {
 	Wikipedia = "Northumbrian Old English", -- FIXME: {{alt}} label Wikipedia value '"Northumbrian dialect"' different from existing
 	regional_categories = {true, "Anglian"},
 }
+-- FIXME: WARNING: Alias set members 'North East England,North-East England,Northeast England,Northumberland,Northumbria' of regional label 'Northumbria' with aliases 'Northumbrian,Northumberland,Northeast England,North-East England,North East England' are bleeding through with respect to lang-specific label 'Northumbrian' with aliases ''; regional label definition follows:
+-- labels["Northumbria"] = {
+-- 	aliases = {"Northumbrian", "Northumberland", "Northeast England", "North-East England", "North East England"},
+-- 	Wikipedia = "Northumbria (modern)",
+-- 	langs = {"ang", "en"},
+-- 	regional_categories = "Northumbrian",
+-- }
 
 labels["West Saxon"] = {
 	Wikipedia = "West Saxon dialect",
@@ -3771,15 +3808,29 @@ labels["Hyderabad"] = {
 
 return require("Module:labels").finalize_data(labels)
 -------- end text --------
-Page 45 Module:labels/data/lang/de: Ignoring regional alias 'Swiss German' of label 'Switzerland' duplicating lang-specific label
+Page 45 Module:labels/data/lang/de: WARNING: Alias set members 'Swiss,Switzerland' of regional label 'Switzerland' with aliases 'Swiss,Swiss German' are bleeding through with respect to lang-specific label 'Swiss German' with aliases 'Switzerland German'
 Page 45 Module:labels/data/lang/de: WARNING: {{alt}} label 'Austria' has Wikipedia value '"Austrian German"' different from existing '"Austria"'
 Page 45 Module:labels/data/lang/de: WARNING: {{alt}} label 'Liechtenstein' has Wikipedia value '"Liechtenstein German"' different from existing '"Liechtenstein"'
 Page 45 Module:labels/data/lang/de: WARNING: {{alt}} label 'Luxembourg' matches existing regional label 'Luxembourg', inserting both commented-out
-Page 45 Module:labels/data/lang/de: WARNING: {{alt}} label 'Switzerland' matches existing regional label 'Switzerland', inserting both commented-out
+Page 45 Module:labels/data/lang/de: Didn't see {{alt}} label 'Switzerland', appending
 Page 45 Module:labels/data/lang/de: Diff:
 --- 
 +++ 
-@@ -55,8 +55,8 @@
+@@ -35,6 +35,13 @@
+ 	Wikipedia = true,
+ 	regional_categories = "Switzerland",
+ }
++-- FIXME: WARNING: Alias set members 'Swiss,Switzerland' of regional label 'Switzerland' with aliases 'Swiss,Swiss German' are bleeding through with respect to lang-specific label 'Swiss German' with aliases 'Switzerland German'; regional label definition follows:
++-- labels["Switzerland"] = {
++-- 	aliases = {"Swiss", "Swiss German"}, -- some German entries use this alias; let -sche know if it causes problems
++-- 	Wikipedia = true,
++-- 	langs = {"de", "fr", "gsw", "it", "ru"},
++-- 	regional_categories = true,
++-- }
+ 
+ labels["Switzerland and Liechtenstein spelling"] = {
+ 	aliases = {"SLDE"},
+@@ -55,8 +62,8 @@
  }
  
  labels["Austria"] = {
@@ -3790,7 +3841,7 @@ Page 45 Module:labels/data/lang/de: Diff:
  	regional_categories = "Austrian",
  }
  
-@@ -79,7 +79,8 @@
+@@ -79,7 +86,8 @@
  }
  
  labels["Liechtenstein"] = {
@@ -3800,7 +3851,7 @@ Page 45 Module:labels/data/lang/de: Diff:
  	regional_categories = true,
  }
  
-@@ -112,4 +113,30 @@
+@@ -112,4 +120,22 @@
  	regional_categories = "Viennese",
  }
  
@@ -3817,21 +3868,13 @@ Page 45 Module:labels/data/lang/de: Diff:
 +-- 	regional_categories = "Luxembourgish",
 +-- }
 +
-+-- FIXME: WARNING: {{alt}} label 'Switzerland' matches existing regional label 'Switzerland', inserting both commented-out
-+-- labels["Switzerland"] = {
-+-- 	aliases = {"ch", "Swiss"},
-+-- 	Wikipedia = "Swiss German",
-+-- }
-+-- FIXME: corresponding regional label follows:
-+-- labels["Switzerland"] = {
-+-- 	aliases = {"Swiss", "Swiss German"}, -- some German entries use this alias; let -sche know if it causes problems
-+-- 	Wikipedia = true,
-+-- 	langs = {"de", "fr", "gsw", "it", "ru"},
-+-- 	regional_categories = true,
-+-- }
++labels["Switzerland"] = {
++	aliases = {"ch", "Swiss"},
++	Wikipedia = "Swiss German",
++}
 +
  return require("Module:labels").finalize_data(labels)
-Page 45 Module:labels/data/lang/de: Would save with comment = clean categories in label data module; incorporate 4 {{alt}} label(s) (0 new) from [[Module:de:dialects]] into label data module
+Page 45 Module:labels/data/lang/de: Would save with comment = clean categories in label data module; incorporate 4 {{alt}} label(s) (1 new) from [[Module:de:dialects]] into label data module
 Page 45 Module:labels/data/lang/de: -------- begin text --------
 local labels = {}
 
@@ -3870,6 +3913,13 @@ labels["Swiss German"] = {
 	Wikipedia = true,
 	regional_categories = "Switzerland",
 }
+-- FIXME: WARNING: Alias set members 'Swiss,Switzerland' of regional label 'Switzerland' with aliases 'Swiss,Swiss German' are bleeding through with respect to lang-specific label 'Swiss German' with aliases 'Switzerland German'; regional label definition follows:
+-- labels["Switzerland"] = {
+-- 	aliases = {"Swiss", "Swiss German"}, -- some German entries use this alias; let -sche know if it causes problems
+-- 	Wikipedia = true,
+-- 	langs = {"de", "fr", "gsw", "it", "ru"},
+-- 	regional_categories = true,
+-- }
 
 labels["Switzerland and Liechtenstein spelling"] = {
 	aliases = {"SLDE"},
@@ -3961,18 +4011,10 @@ labels["Vienna"] = {
 -- 	regional_categories = "Luxembourgish",
 -- }
 
--- FIXME: WARNING: {{alt}} label 'Switzerland' matches existing regional label 'Switzerland', inserting both commented-out
--- labels["Switzerland"] = {
--- 	aliases = {"ch", "Swiss"},
--- 	Wikipedia = "Swiss German",
--- }
--- FIXME: corresponding regional label follows:
--- labels["Switzerland"] = {
--- 	aliases = {"Swiss", "Swiss German"}, -- some German entries use this alias; let -sche know if it causes problems
--- 	Wikipedia = true,
--- 	langs = {"de", "fr", "gsw", "it", "ru"},
--- 	regional_categories = true,
--- }
+labels["Switzerland"] = {
+	aliases = {"ch", "Swiss"},
+	Wikipedia = "Swiss German",
+}
 
 return require("Module:labels").finalize_data(labels)
 -------- end text --------
@@ -4191,9 +4233,7 @@ labels["Italiot"] = {
 
 return require("Module:labels").finalize_data(labels)
 -------- end text --------
-Page 52 Module:labels/data/lang/en: Ignoring regional label 'Nunavut' overridden by corresponding lang-specific label
-Page 52 Module:labels/data/lang/en: Ignoring regional label 'Hong Kong' overridden by corresponding lang-specific label
-Page 52 Module:labels/data/lang/en: Ignoring regional label 'Philippines' overridden by corresponding lang-specific label
+Page 52 Module:labels/data/lang/en: WARNING: Alias set members 'Philippine' of regional label 'Philippines' with aliases 'Philippine' are bleeding through with respect to lang-specific label 'Philippine English' with aliases 'Philippines,Ph. English,PH English,Filipino English,PH'
 Page 52 Module:labels/data/lang/en: WARNING: {{alt}} label 'American' matches existing regional alias 'American' of label 'US', inserting both commented-out
 Page 52 Module:labels/data/lang/en: WARNING: {{alt}} label 'British' matches existing regional alias 'British' of label 'Britain', inserting both commented-out
 Page 52 Module:labels/data/lang/en: WARNING: {{alt}} label 'Early Modern' matches existing alias 'Early Modern' of label 'Early Modern English', inserting commented-out
@@ -4239,7 +4279,21 @@ Page 52 Module:labels/data/lang/en: Diff:
  
  labels["Pennsylvania Dutch English"] = {
  	Wikipedia = true,
-@@ -1308,7 +1324,34 @@
+@@ -266,6 +282,13 @@
+ 	Wikipedia = true,
+ 	plain_categories = true,
+ }
++-- FIXME: WARNING: Alias set members 'Philippine' of regional label 'Philippines' with aliases 'Philippine' are bleeding through with respect to lang-specific label 'Philippine English' with aliases 'Philippines,Ph. English,PH English,Filipino English,PH'; regional label definition follows:
++-- labels["Philippines"] = {
++-- 	aliases = {"Philippine"},
++-- 	Wikipedia = true,
++-- 	langs = {"en", "es", "zh"},
++-- 	regional_categories = "Philippine",
++-- }
+ 
+ labels["Polari"] = {
+ 	display = "[[Polari]]",
+@@ -1308,7 +1331,34 @@
  
  labels["Commonwealth"] = {
  	display = "[[Commonwealth of Nations|Commonwealth]]",
@@ -4562,6 +4616,13 @@ labels["Philippine English"] = {
 	Wikipedia = true,
 	plain_categories = true,
 }
+-- FIXME: WARNING: Alias set members 'Philippine' of regional label 'Philippines' with aliases 'Philippine' are bleeding through with respect to lang-specific label 'Philippine English' with aliases 'Philippines,Ph. English,PH English,Filipino English,PH'; regional label definition follows:
+-- labels["Philippines"] = {
+-- 	aliases = {"Philippine"},
+-- 	Wikipedia = true,
+-- 	langs = {"en", "es", "zh"},
+-- 	regional_categories = "Philippine",
+-- }
 
 labels["Polari"] = {
 	display = "[[Polari]]",
@@ -5706,12 +5767,26 @@ labels["early"] = {
 
 return require("Module:labels").finalize_data(labels)
 -------- end text --------
-Page 54 Module:labels/data/lang/es: Ignoring regional label 'US' overridden by corresponding lang-specific label
+Page 54 Module:labels/data/lang/es: WARNING: Alias set members 'America,American,U.S.,USA,United States,United States of America' of regional label 'US' with aliases 'U.S.,United States,United States of America,USA,America,American' are bleeding through with respect to lang-specific label 'US Spanish' with aliases 'United States Spanish,US'
 Page 54 Module:labels/data/lang/es: Didn't see {{alt}} label 'pre-1815', appending
 Page 54 Module:labels/data/lang/es: Diff:
 --- 
 +++ 
-@@ -294,4 +294,8 @@
+@@ -24,6 +24,13 @@
+ 	Wikipedia = "Spanish language in the United States",
+ 	regional_categories = "United States",
+ }
++-- FIXME: WARNING: Alias set members 'America,American,U.S.,USA,United States,United States of America' of regional label 'US' with aliases 'U.S.,United States,United States of America,USA,America,American' are bleeding through with respect to lang-specific label 'US Spanish' with aliases 'United States Spanish,US'; regional label definition follows:
++-- labels["US"] = {
++-- 	aliases = {"U.S.", "United States", "United States of America", "USA", "America", "American"}, -- America/American: should these be aliases of 'North America'?
++-- 	Wikipedia = "United States",
++-- 	langs = {"de", "en", "hi", "is", "it", "ja", "ko", "nl", "pt", "ru", "tli", "ur", "vi", "yi", "zh"},
++-- 	regional_categories = "American",
++-- }
+ 
+ labels["Paraguay"] = {
+ 	aliases = {"Paraguayan"},
+@@ -294,4 +301,8 @@
  	regional_categories = true,
  }
  
@@ -5748,6 +5823,13 @@ labels["US Spanish"] = {
 	Wikipedia = "Spanish language in the United States",
 	regional_categories = "United States",
 }
+-- FIXME: WARNING: Alias set members 'America,American,U.S.,USA,United States,United States of America' of regional label 'US' with aliases 'U.S.,United States,United States of America,USA,America,American' are bleeding through with respect to lang-specific label 'US Spanish' with aliases 'United States Spanish,US'; regional label definition follows:
+-- labels["US"] = {
+-- 	aliases = {"U.S.", "United States", "United States of America", "USA", "America", "American"}, -- America/American: should these be aliases of 'North America'?
+-- 	Wikipedia = "United States",
+-- 	langs = {"de", "en", "hi", "is", "it", "ja", "ko", "nl", "pt", "ru", "tli", "ur", "vi", "yi", "zh"},
+-- 	regional_categories = "American",
+-- }
 
 labels["Paraguay"] = {
 	aliases = {"Paraguayan"},
@@ -6111,8 +6193,25 @@ local labels = {}
 
 return require("Module:labels").finalize_data(labels)
 -------- end text --------
-Page 57 Module:labels/data/lang/fa: Ignoring regional label 'Classical' overridden by corresponding lang-specific label
-Page 57 Module:labels/data/lang/fa: Skipped, no changes
+Page 57 Module:labels/data/lang/fa: WARNING: Alias set members 'classical' of regional label 'Classical' with aliases 'classical' are bleeding through with respect to lang-specific label 'Classical Persian' with aliases 'Classical,cls'
+Page 57 Module:labels/data/lang/fa: Diff:
+--- 
++++ 
+@@ -22,6 +22,13 @@
+ 	Wikipedia = "Persian language#Classical Persian",
+ 	plain_categories = true,
+ }
++-- FIXME: WARNING: Alias set members 'classical' of regional label 'Classical' with aliases 'classical' are bleeding through with respect to lang-specific label 'Classical Persian' with aliases 'Classical,cls'; regional label definition follows:
++-- labels["Classical"] = {
++-- 	aliases = {"classical"},
++-- 	special_display = "[[Classical <canonical_name>]]",
++-- 	langs = {"ar", "az", "ca", "fa", "id", "ja", "jv", "kum", "la", "ms", "quc", "sa", "tl", "zh"},
++-- 	regional_categories = true,
++-- }
+ 
+ labels["Early Classical"] = {
+ 	aliases = {"early cls"},
+Page 57 Module:labels/data/lang/fa: Would save with comment = clean categories in label data module; incorporate 3 {{alt}} label(s) (0 new) from [[Module:fa:dialects]] into label data module
 Page 57 Module:labels/data/lang/fa: -------- begin text --------
 local labels = {}
 
@@ -6138,6 +6237,13 @@ labels["Classical Persian"] = {
 	Wikipedia = "Persian language#Classical Persian",
 	plain_categories = true,
 }
+-- FIXME: WARNING: Alias set members 'classical' of regional label 'Classical' with aliases 'classical' are bleeding through with respect to lang-specific label 'Classical Persian' with aliases 'Classical,cls'; regional label definition follows:
+-- labels["Classical"] = {
+-- 	aliases = {"classical"},
+-- 	special_display = "[[Classical <canonical_name>]]",
+-- 	langs = {"ar", "az", "ca", "fa", "id", "ja", "jv", "kum", "la", "ms", "quc", "sa", "tl", "zh"},
+-- 	regional_categories = true,
+-- }
 
 labels["Early Classical"] = {
 	aliases = {"early cls"},
@@ -6204,8 +6310,6 @@ labels["Valverdeñu"] = {
 
 return require("Module:labels").finalize_data(labels)
 -------- end text --------
-Page 59 Module:labels/data/lang/ff: Ignoring regional label 'Nigeria' overridden by corresponding lang-specific label
-Page 59 Module:labels/data/lang/ff: Ignoring regional alias 'Nigerian' of label 'Nigeria' duplicating lang-specific alias of label 'Nigerian Fulfulde'
 Page 59 Module:labels/data/lang/ff: Skipped, no changes
 Page 59 Module:labels/data/lang/ff: -------- begin text --------
 local labels = {}
@@ -6266,9 +6370,25 @@ labels["Bagirmi"] = {
 
 return require("Module:labels").finalize_data(labels)
 -------- end text --------
-Page 60 Module:labels/data/lang/fi: Ignoring regional label 'Ostrobothnia' overridden by corresponding lang-specific label
-Page 60 Module:labels/data/lang/fi: Ignoring regional alias 'Ostrobothnian' of label 'Ostrobothnia' duplicating lang-specific alias of label 'Ostrobothnia'
-Page 60 Module:labels/data/lang/fi: Skipped, no changes
+Page 60 Module:labels/data/lang/fi: WARNING: Alias set members 'Österbotten' of regional label 'Ostrobothnia' with aliases 'Ostrobothnian,Österbotten' are bleeding through with respect to lang-specific label 'Ostrobothnia' with aliases 'Ostrobothnian,Pohjanmaa'
+Page 60 Module:labels/data/lang/fi: Diff:
+--- 
++++ 
+@@ -134,6 +134,13 @@
+ 	display = "[[Ostrobothnia]]",
+ 	regional_categories = "Ostrobothnian",
+ }
++-- FIXME: WARNING: Alias set members 'Österbotten' of regional label 'Ostrobothnia' with aliases 'Ostrobothnian,Österbotten' are bleeding through with respect to lang-specific label 'Ostrobothnia' with aliases 'Ostrobothnian,Pohjanmaa'; regional label definition follows:
++-- labels["Ostrobothnia"] = {
++-- 	aliases = {"Ostrobothnian", "Österbotten"},
++-- 	Wikipedia = true,
++-- 	langs = {"fi", "sv"},
++-- 	regional_categories = "Ostrobothnian",
++-- }
+ 
+ labels["South Ostrobothnia"] = {
+ 	aliases = {"South Ostrobothnian", "Etelä-Pohjanmaa", "Southern Ostrobothnia", "Southern Ostrobothnian"},
+Page 60 Module:labels/data/lang/fi: Would save with comment = clean categories in label data module
 Page 60 Module:labels/data/lang/fi: -------- begin text --------
 local labels = {}
 
@@ -6406,6 +6526,13 @@ labels["Ostrobothnia"] = {
 	display = "[[Ostrobothnia]]",
 	regional_categories = "Ostrobothnian",
 }
+-- FIXME: WARNING: Alias set members 'Österbotten' of regional label 'Ostrobothnia' with aliases 'Ostrobothnian,Österbotten' are bleeding through with respect to lang-specific label 'Ostrobothnia' with aliases 'Ostrobothnian,Pohjanmaa'; regional label definition follows:
+-- labels["Ostrobothnia"] = {
+-- 	aliases = {"Ostrobothnian", "Österbotten"},
+-- 	Wikipedia = true,
+-- 	langs = {"fi", "sv"},
+-- 	regional_categories = "Ostrobothnian",
+-- }
 
 labels["South Ostrobothnia"] = {
 	aliases = {"South Ostrobothnian", "Etelä-Pohjanmaa", "Southern Ostrobothnia", "Southern Ostrobothnian"},
@@ -8561,9 +8688,25 @@ labels["Zürich"] = {
 
 return require("Module:labels").finalize_data(labels)
 -------- end text --------
-Page 81 Module:labels/data/lang/gu: Ignoring regional alias 'Kathiawadi' of label 'Kathiyawadi' duplicating lang-specific alias of label 'Kathiawari'
-Page 81 Module:labels/data/lang/gu: Ignoring regional label 'Surati' overridden by corresponding lang-specific label
-Page 81 Module:labels/data/lang/gu: Skipped, no changes
+Page 81 Module:labels/data/lang/gu: WARNING: Alias set members 'Bhawnagari,Gohilwadi,Holadi,Jhalawadi,Kathiyawadi,Sorathi' of regional label 'Kathiyawadi' with aliases 'Kathiawadi,Sorathi,Bhawnagari,Gohilwadi,Holadi,Jhalawadi' are bleeding through with respect to lang-specific label 'Kathiawari' with aliases 'Kathiawadi,Kāṭhiyāvāḍī'
+Page 81 Module:labels/data/lang/gu: Diff:
+--- 
++++ 
+@@ -40,6 +40,13 @@
+ 	Wikipedia = "Kathiawar",
+ 	regional_categories = "Kathiawari ",
+ }
++-- FIXME: WARNING: Alias set members 'Bhawnagari,Gohilwadi,Holadi,Jhalawadi,Kathiyawadi,Sorathi' of regional label 'Kathiyawadi' with aliases 'Kathiawadi,Sorathi,Bhawnagari,Gohilwadi,Holadi,Jhalawadi' are bleeding through with respect to lang-specific label 'Kathiawari' with aliases 'Kathiawadi,Kāṭhiyāvāḍī'; regional label definition follows:
++-- labels["Kathiyawadi"] = {
++-- 	aliases = {"Kathiawadi", "Sorathi", "Bhawnagari", "Gohilwadi", "Holadi", "Jhalawadi"},
++-- 	Wikipedia = "Kathiawar",
++-- 	langs = {},
++-- 	regional_categories = true,
++-- }
+ 
+ labels["East Africa"] = {
+ 	aliases = {"East African"},
+Page 81 Module:labels/data/lang/gu: Would save with comment = clean categories in label data module; incorporate 1 {{alt}} label(s) (0 new) from [[Module:gu:dialects]] into label data module
 Page 81 Module:labels/data/lang/gu: -------- begin text --------
 local labels = {}
 
@@ -8607,6 +8750,13 @@ labels["Kathiawari"] = {
 	Wikipedia = "Kathiawar",
 	regional_categories = "Kathiawari ",
 }
+-- FIXME: WARNING: Alias set members 'Bhawnagari,Gohilwadi,Holadi,Jhalawadi,Kathiyawadi,Sorathi' of regional label 'Kathiyawadi' with aliases 'Kathiawadi,Sorathi,Bhawnagari,Gohilwadi,Holadi,Jhalawadi' are bleeding through with respect to lang-specific label 'Kathiawari' with aliases 'Kathiawadi,Kāṭhiyāvāḍī'; regional label definition follows:
+-- labels["Kathiyawadi"] = {
+-- 	aliases = {"Kathiawadi", "Sorathi", "Bhawnagari", "Gohilwadi", "Holadi", "Jhalawadi"},
+-- 	Wikipedia = "Kathiawar",
+-- 	langs = {},
+-- 	regional_categories = true,
+-- }
 
 labels["East Africa"] = {
 	aliases = {"East African"},
@@ -8883,11 +9033,8 @@ labels["Saint-Domingue"] = {
 
 return require("Module:labels").finalize_data(labels)
 -------- end text --------
-Page 92 Module:labels/data/lang/hy: Ignoring regional alias 'Kazakh' of label 'Kazakhstan' duplicating lang-specific alias of label 'Ghazakh'
-Page 92 Module:labels/data/lang/hy: Ignoring regional label 'Muş' overridden by corresponding lang-specific label
-Page 92 Module:labels/data/lang/hy: Ignoring regional alias 'Mush' of label 'Muş' duplicating lang-specific label
-Page 92 Module:labels/data/lang/hy: Ignoring regional label 'Transylvania' overridden by corresponding lang-specific label
-Page 92 Module:labels/data/lang/hy: Ignoring regional alias 'Transylvanian' of label 'Transylvania' duplicating lang-specific alias of label 'Ardeal'
+Page 92 Module:labels/data/lang/hy: WARNING: Alias set members 'Kazakhstan,Kazakhstani' of regional label 'Kazakhstan' with aliases 'Kazakhstani,Kazakh' are bleeding through with respect to lang-specific label 'Ghazakh' with aliases 'Qazakh,Qazax,Gazakh,Kazakh,Łazax'
+Page 92 Module:labels/data/lang/hy: WARNING: Alias set members 'Transilvania' of regional label 'Transylvania' with aliases 'Transilvania,Transylvanian' are bleeding through with respect to lang-specific label 'Ardeal' with aliases 'Artial,Aṙtial,Ardial,Transylvania,Transylvanian'
 Page 92 Module:labels/data/lang/hy: Didn't see {{alt}} label 'ագլ', appending
 Page 92 Module:labels/data/lang/hy: Didn't see {{alt}} label 'աժտ', appending
 Page 92 Module:labels/data/lang/hy: Didn't see {{alt}} label 'աժդ', appending
@@ -9010,7 +9157,21 @@ Page 92 Module:labels/data/lang/hy: WARNING: {{alt}} label 'Eastern' matches exi
 Page 92 Module:labels/data/lang/hy: Diff:
 --- 
 +++ 
-@@ -23,6 +23,11 @@
+@@ -11,6 +11,13 @@
+ 	Wikipedia = "hy:Առտիալի բարբառ",
+ 	regional_categories = true,
+ }
++-- FIXME: WARNING: Alias set members 'Transilvania' of regional label 'Transylvania' with aliases 'Transilvania,Transylvanian' are bleeding through with respect to lang-specific label 'Ardeal' with aliases 'Artial,Aṙtial,Ardial,Transylvania,Transylvanian'; regional label definition follows:
++-- labels["Transylvania"] = {
++-- 	aliases = {"Transilvania", "Transylvanian"},
++-- 	Wikipedia = true,
++-- 	langs = {"hu", "ro"},
++-- 	regional_categories = "Transylvanian",
++-- }
+ 
+ labels["Aresh"] = {
+ 	aliases = {"Areš"},
+@@ -23,12 +30,24 @@
  	Wikipedia = true,
  	plain_categories = true,
  }
@@ -9022,7 +9183,20 @@ Page 92 Module:labels/data/lang/hy: Diff:
  
  labels["Ghazakh"] = {
  	aliases = {"Qazakh", "Qazax", "Gazakh", "Kazakh", "Łazax"},
-@@ -89,18 +94,43 @@
+ 	Wikipedia = "Kazakh uezd",
+ 	regional_categories = true,
+ }
++-- FIXME: WARNING: Alias set members 'Kazakhstan,Kazakhstani' of regional label 'Kazakhstan' with aliases 'Kazakhstani,Kazakh' are bleeding through with respect to lang-specific label 'Ghazakh' with aliases 'Qazakh,Qazax,Gazakh,Kazakh,Łazax'; regional label definition follows:
++-- labels["Kazakhstan"] = {
++-- 	aliases = {"Kazakhstani", "Kazakh"},
++-- 	Wikipedia = true,
++-- 	langs = {"ru", "ug"},
++-- 	regional_categories = "Kazakhstani",
++-- }
+ 
+ labels["Hamshen"] = {
+ 	aliases = {"Homshetsi", "Homshetsma"},
+@@ -89,18 +108,43 @@
  	Wikipedia = true,
  	plain_categories = true,
  }
@@ -9066,7 +9240,7 @@ Page 92 Module:labels/data/lang/hy: Diff:
  
  labels["Adana"] = {
  	aliases = {"Atana"},
-@@ -292,4 +322,569 @@
+@@ -292,4 +336,569 @@
  	regional_categories = true,
  }
  
@@ -9651,6 +9825,13 @@ labels["Ardeal"] = {
 	Wikipedia = "hy:Առտիալի բարբառ",
 	regional_categories = true,
 }
+-- FIXME: WARNING: Alias set members 'Transilvania' of regional label 'Transylvania' with aliases 'Transilvania,Transylvanian' are bleeding through with respect to lang-specific label 'Ardeal' with aliases 'Artial,Aṙtial,Ardial,Transylvania,Transylvanian'; regional label definition follows:
+-- labels["Transylvania"] = {
+-- 	aliases = {"Transilvania", "Transylvanian"},
+-- 	Wikipedia = true,
+-- 	langs = {"hu", "ro"},
+-- 	regional_categories = "Transylvanian",
+-- }
 
 labels["Aresh"] = {
 	aliases = {"Areš"},
@@ -9674,6 +9855,13 @@ labels["Ghazakh"] = {
 	Wikipedia = "Kazakh uezd",
 	regional_categories = true,
 }
+-- FIXME: WARNING: Alias set members 'Kazakhstan,Kazakhstani' of regional label 'Kazakhstan' with aliases 'Kazakhstani,Kazakh' are bleeding through with respect to lang-specific label 'Ghazakh' with aliases 'Qazakh,Qazax,Gazakh,Kazakh,Łazax'; regional label definition follows:
+-- labels["Kazakhstan"] = {
+-- 	aliases = {"Kazakhstani", "Kazakh"},
+-- 	Wikipedia = true,
+-- 	langs = {"ru", "ug"},
+-- 	regional_categories = "Kazakhstani",
+-- }
 
 labels["Hamshen"] = {
 	aliases = {"Homshetsi", "Homshetsma"},
@@ -11004,8 +11192,25 @@ labels["Sauraseni"] = {
 
 return require("Module:labels").finalize_data(labels)
 -------- end text --------
-Page 97 Module:labels/data/lang/it: Ignoring regional label 'Rome' overridden by corresponding lang-specific label
-Page 97 Module:labels/data/lang/it: Skipped, no changes
+Page 97 Module:labels/data/lang/it: WARNING: Alias set members 'More Romano,Roma,Romano' of regional label 'Rome' with aliases 'Roma,Romano,More Romano' are bleeding through with respect to lang-specific label 'Rome' with aliases ''
+Page 97 Module:labels/data/lang/it: Diff:
+--- 
++++ 
+@@ -46,6 +46,13 @@
+ 	Wikipedia = "Romanesco dialect",
+ 	regional_categories = "Romanesco",
+ }
++-- FIXME: WARNING: Alias set members 'More Romano,Roma,Romano' of regional label 'Rome' with aliases 'Roma,Romano,More Romano' are bleeding through with respect to lang-specific label 'Rome' with aliases ''; regional label definition follows:
++-- labels["Rome"] = {
++-- 	aliases = {"Roma", "Romano", "More Romano"},
++-- 	Wikipedia = true,
++-- 	langs = {},
++-- 	regional_categories = "Roman",
++-- }
+ 
+ labels["Roman"] = {
+ 	aliases = {"Roman Italian", "Romanesco Italian", "Romanesco"},
+Page 97 Module:labels/data/lang/it: Would save with comment = clean categories in label data module
 Page 97 Module:labels/data/lang/it: -------- begin text --------
 local labels = {}
 
@@ -11055,6 +11260,13 @@ labels["Rome"] = {
 	Wikipedia = "Romanesco dialect",
 	regional_categories = "Romanesco",
 }
+-- FIXME: WARNING: Alias set members 'More Romano,Roma,Romano' of regional label 'Rome' with aliases 'Roma,Romano,More Romano' are bleeding through with respect to lang-specific label 'Rome' with aliases ''; regional label definition follows:
+-- labels["Rome"] = {
+-- 	aliases = {"Roma", "Romano", "More Romano"},
+-- 	Wikipedia = true,
+-- 	langs = {},
+-- 	regional_categories = "Roman",
+-- }
 
 labels["Roman"] = {
 	aliases = {"Roman Italian", "Romanesco Italian", "Romanesco"},
@@ -11934,7 +12146,6 @@ labels["Shavsheti"] = {
 
 return require("Module:labels").finalize_data(labels)
 -------- end text --------
-Page 104 Module:labels/data/lang/kca-eas: Ignoring regional label 'Surgut' overridden by corresponding lang-specific label
 Page 104 Module:labels/data/lang/kca-eas: Skipped, no changes
 Page 104 Module:labels/data/lang/kca-eas: -------- begin text --------
 -- KEEP SYNCHRONIZED WITH [[Module:kca-eas:Dialects]]
@@ -11967,27 +12178,24 @@ labels["Vasyugan"] = {
 
 return require("Module:labels").finalize_data(labels)
 -------- end text --------
-Page 105 Module:labels/data/lang/kca-nor: Ignoring regional label 'Kazym' overridden by corresponding lang-specific label
-Page 105 Module:labels/data/lang/kca-nor: Ignoring regional label 'Shuryshkar' overridden by corresponding lang-specific label
-Page 105 Module:labels/data/lang/kca-nor: WARNING: {{alt}} label 'Shuryshkar' matches existing regional label 'Shuryshkar', inserting both commented-out
+Page 105 Module:labels/data/lang/kca-nor: WARNING: Alias set members 'Shurishkar' of regional label 'Shuryshkar' with aliases 'Shurishkar' are bleeding through with respect to lang-specific label 'Shuryshkar' with aliases ''
 Page 105 Module:labels/data/lang/kca-nor: Diff:
 --- 
 +++ 
-@@ -27,4 +27,14 @@
- 	plain_categories = "Middle Ob Khanty",
+@@ -10,6 +10,13 @@
+ 	Wikipedia = "Northern Khanty language",
+ 	plain_categories = "Shuryshkar Khanty",
  }
++-- FIXME: WARNING: Alias set members 'Shurishkar' of regional label 'Shuryshkar' with aliases 'Shurishkar' are bleeding through with respect to lang-specific label 'Shuryshkar' with aliases ''; regional label definition follows:
++-- labels["Shuryshkar"] = {
++-- 	aliases = {"Shurishkar"},
++-- 	Wikipedia = "Shuryshkarsky District",
++-- 	langs = {},
++-- 	regional_categories = true,
++-- }
  
-+-- FIXME: WARNING: {{alt}} label 'Shuryshkar' matches existing regional label 'Shuryshkar', inserting both commented-out
-+-- labels["Shuryshkar"] = {
-+-- 	Wikipedia = "Northern Khanty language",
-+-- }
-+-- FIXME: corresponding regional label follows:
-+-- labels["Shuryshkar"] = {
-+-- 	Wikipedia = "Northern Khanty language",
-+-- 	plain_categories = "Shuryshkar Khanty",
-+-- }
-+
- return require("Module:labels").finalize_data(labels)
+ labels["Obdorsk"] = {
+ 	Wikipedia = "Northern Khanty language",
 Page 105 Module:labels/data/lang/kca-nor: Would save with comment = clean categories in label data module; incorporate 5 {{alt}} label(s) (0 new) from [[Module:kca-nor:dialects]] into label data module
 Page 105 Module:labels/data/lang/kca-nor: -------- begin text --------
 -- KEEP SYNCHRONIZED WITH [[Module:kca-nor:Dialects]]
@@ -12002,6 +12210,13 @@ labels["Shuryshkar"] = {
 	Wikipedia = "Northern Khanty language",
 	plain_categories = "Shuryshkar Khanty",
 }
+-- FIXME: WARNING: Alias set members 'Shurishkar' of regional label 'Shuryshkar' with aliases 'Shurishkar' are bleeding through with respect to lang-specific label 'Shuryshkar' with aliases ''; regional label definition follows:
+-- labels["Shuryshkar"] = {
+-- 	aliases = {"Shurishkar"},
+-- 	Wikipedia = "Shuryshkarsky District",
+-- 	langs = {},
+-- 	regional_categories = true,
+-- }
 
 labels["Obdorsk"] = {
 	Wikipedia = "Northern Khanty language",
@@ -12018,16 +12233,6 @@ labels["Middle Ob"] = {
 	Wikipedia = "Northern Khanty language",
 	plain_categories = "Middle Ob Khanty",
 }
-
--- FIXME: WARNING: {{alt}} label 'Shuryshkar' matches existing regional label 'Shuryshkar', inserting both commented-out
--- labels["Shuryshkar"] = {
--- 	Wikipedia = "Northern Khanty language",
--- }
--- FIXME: corresponding regional label follows:
--- labels["Shuryshkar"] = {
--- 	Wikipedia = "Northern Khanty language",
--- 	plain_categories = "Shuryshkar Khanty",
--- }
 
 return require("Module:labels").finalize_data(labels)
 -------- end text --------
@@ -14099,9 +14304,24 @@ labels["Netherlands"] = {
 
 return require("Module:labels").finalize_data(labels)
 -------- end text --------
-Page 137 Module:labels/data/lang/mt: Ignoring regional label 'Australia' overridden by corresponding lang-specific label
-Page 137 Module:labels/data/lang/mt: Ignoring regional alias 'Australian' of label 'Australia' duplicating lang-specific alias of label 'Australia'
-Page 137 Module:labels/data/lang/mt: Skipped, no changes
+Page 137 Module:labels/data/lang/mt: WARNING: Alias set members 'AU' of regional label 'Australia' with aliases 'AU,Australian' are bleeding through with respect to lang-specific label 'Australia' with aliases 'Australian'
+Page 137 Module:labels/data/lang/mt: Diff:
+--- 
++++ 
+@@ -99,5 +99,12 @@
+ 	Wikipedia = "Maltralian",
+ 	regional_categories = "Australian",
+ }
++-- FIXME: WARNING: Alias set members 'AU' of regional label 'Australia' with aliases 'AU,Australian' are bleeding through with respect to lang-specific label 'Australia' with aliases 'Australian'; regional label definition follows:
++-- labels["Australia"] = {
++-- 	aliases = {"AU", "Australian"},
++-- 	Wikipedia = true,
++-- 	langs = {"de", "el", "en", "it", "ko", "mt", "ru", "zh"},
++-- 	regional_categories = "Australian",
++-- }
+ 
+ return require("Module:labels").finalize_data(labels)
+Page 137 Module:labels/data/lang/mt: Would save with comment = clean categories in label data module
 Page 137 Module:labels/data/lang/mt: -------- begin text --------
 local labels = {}
 	
@@ -14204,6 +14424,13 @@ labels["Australia"] = {
 	Wikipedia = "Maltralian",
 	regional_categories = "Australian",
 }
+-- FIXME: WARNING: Alias set members 'AU' of regional label 'Australia' with aliases 'AU,Australian' are bleeding through with respect to lang-specific label 'Australia' with aliases 'Australian'; regional label definition follows:
+-- labels["Australia"] = {
+-- 	aliases = {"AU", "Australian"},
+-- 	Wikipedia = true,
+-- 	langs = {"de", "el", "en", "it", "ko", "mt", "ru", "zh"},
+-- 	regional_categories = "Australian",
+-- }
 
 return require("Module:labels").finalize_data(labels)
 -------- end text --------
@@ -15619,8 +15846,25 @@ labels["Yenisei Kyrgyz"] = {
 
 return require("Module:labels").finalize_data(labels)
 -------- end text --------
-Page 161 Module:labels/data/lang/pa: Ignoring regional label 'India' overridden by corresponding lang-specific label
-Page 161 Module:labels/data/lang/pa: Skipped, no changes
+Page 161 Module:labels/data/lang/pa: WARNING: Alias set members 'Indian' of regional label 'India' with aliases 'Indian' are bleeding through with respect to lang-specific label 'Eastern Punjab' with aliases 'Charhda,Chadhda,India,Charda Punjab,Eastern Punjabi,East Punjab,Eastern'
+Page 161 Module:labels/data/lang/pa: Diff:
+--- 
++++ 
+@@ -36,6 +36,13 @@
+ 	Wikipedia = "Punjab, India",
+ 	regional_categories = "Indian",
+ }
++-- FIXME: WARNING: Alias set members 'Indian' of regional label 'India' with aliases 'Indian' are bleeding through with respect to lang-specific label 'Eastern Punjab' with aliases 'Charhda,Chadhda,India,Charda Punjab,Eastern Punjabi,East Punjab,Eastern'; regional label definition follows:
++-- labels["India"] = {
++-- 	aliases = {"Indian"},
++-- 	Wikipedia = true,
++-- 	langs = {"bn", "dv", "en", "fa", "ml", "pa", "pt", "ta", "ur"},
++-- 	regional_categories = "Indian",
++-- }
+ 
+ labels["Western Punjab"] = {
+ 	aliases = {"Lehnda", "Lahnda", "Lahnda Punjab", "Pakistan", "Pakistani", "Lehnda Punjab", "Western Punjabi", "West Punjab", "Western"},
+Page 161 Module:labels/data/lang/pa: Would save with comment = clean categories in label data module
 Page 161 Module:labels/data/lang/pa: -------- begin text --------
 local labels = {}
 
@@ -15660,6 +15904,13 @@ labels["Eastern Punjab"] = {
 	Wikipedia = "Punjab, India",
 	regional_categories = "Indian",
 }
+-- FIXME: WARNING: Alias set members 'Indian' of regional label 'India' with aliases 'Indian' are bleeding through with respect to lang-specific label 'Eastern Punjab' with aliases 'Charhda,Chadhda,India,Charda Punjab,Eastern Punjabi,East Punjab,Eastern'; regional label definition follows:
+-- labels["India"] = {
+-- 	aliases = {"Indian"},
+-- 	Wikipedia = true,
+-- 	langs = {"bn", "dv", "en", "fa", "ml", "pa", "pt", "ta", "ur"},
+-- 	regional_categories = "Indian",
+-- }
 
 labels["Western Punjab"] = {
 	aliases = {"Lehnda", "Lahnda", "Lahnda Punjab", "Pakistan", "Pakistani", "Lehnda Punjab", "Western Punjabi", "West Punjab", "Western"},
@@ -17654,7 +17905,7 @@ labels["Gilgiti"] = {
 
 return require("Module:labels").finalize_data(labels)
 -------- end text --------
-Page 189 Module:labels/data/lang/scn: Ignoring regional alias 'ES' of label 'Spain' duplicating lang-specific alias of label 'Eastern Sicily'
+Page 189 Module:labels/data/lang/scn: WARNING: Alias set members 'Spain,Spanish' of regional label 'Spain' with aliases 'Spanish,ES' are bleeding through with respect to lang-specific label 'Eastern Sicily' with aliases 'East Sicily,East,ES'
 Page 189 Module:labels/data/lang/scn: WARNING: {{alt}} label 'cal' has alias 'Calabria' matching existing label 'Calabria', inserting commented-out
 Page 189 Module:labels/data/lang/scn: WARNING: {{alt}} label 'Pantelleria' has Wikipedia value '"Pantesco dialect"' different from existing '"Pantelleria"'
 Page 189 Module:labels/data/lang/scn: WARNING: {{alt}} label 'sal' has alias 'Salento' matching existing label 'Salento', inserting commented-out
@@ -17751,8 +18002,17 @@ Page 189 Module:labels/data/lang/scn: Diff:
  	regional_categories = "Pantesco",
  }
  
-@@ -92,7 +104,7 @@
+@@ -90,9 +102,16 @@
+ 	display = "eastern [[w:Sicily|Sicily]]",
+ 	regional_categories = true,
  }
++-- FIXME: WARNING: Alias set members 'Spain,Spanish' of regional label 'Spain' with aliases 'Spanish,ES' are bleeding through with respect to lang-specific label 'Eastern Sicily' with aliases 'East Sicily,East,ES'; regional label definition follows:
++-- labels["Spain"] = {
++-- 	aliases = {"Spanish", "ES"},
++-- 	Wikipedia = true,
++-- 	langs = {"ca", "es", "la"},
++-- 	regional_categories = "Spanish",
++-- }
  
  labels["Messina"] = {
 -	Wikipedia = "Messina",
@@ -17760,7 +18020,7 @@ Page 189 Module:labels/data/lang/scn: Diff:
  	regional_categories = "Messinese",
  }
  
-@@ -103,12 +115,12 @@
+@@ -103,12 +122,12 @@
  }
  
  labels["Syracuse"] = {
@@ -17775,7 +18035,7 @@ Page 189 Module:labels/data/lang/scn: Diff:
  	regional_categories = "Buscemese",
  }
  
-@@ -120,7 +132,7 @@
+@@ -120,7 +139,7 @@
  -- IDK
  
  labels["Agrigento"] = {
@@ -17890,6 +18150,13 @@ labels["Eastern Sicily"] = {
 	display = "eastern [[w:Sicily|Sicily]]",
 	regional_categories = true,
 }
+-- FIXME: WARNING: Alias set members 'Spain,Spanish' of regional label 'Spain' with aliases 'Spanish,ES' are bleeding through with respect to lang-specific label 'Eastern Sicily' with aliases 'East Sicily,East,ES'; regional label definition follows:
+-- labels["Spain"] = {
+-- 	aliases = {"Spanish", "ES"},
+-- 	Wikipedia = true,
+-- 	langs = {"ca", "es", "la"},
+-- 	regional_categories = "Spanish",
+-- }
 
 labels["Messina"] = {
 	Wikipedia = true,
@@ -18392,12 +18659,26 @@ labels["Riasti"] = {
 
 return require("Module:labels").finalize_data(labels)
 -------- end text --------
-Page 196 Module:labels/data/lang/sl: Ignoring regional alias 'Carinthian' of label 'Carinthia' duplicating lang-specific label
-Page 196 Module:labels/data/lang/sl: Ignoring regional alias 'Hungarian' of label 'Hungary' duplicating lang-specific label
+Page 196 Module:labels/data/lang/sl: WARNING: Alias set members 'Carinthia,Kärnten' of regional label 'Carinthia' with aliases 'Carinthian,Kärnten' are bleeding through with respect to lang-specific label 'Carinthian' with aliases 'Carinthian dialect group'
+Page 196 Module:labels/data/lang/sl: WARNING: Alias set members 'Hungary' of regional label 'Hungary' with aliases 'Hungarian' are bleeding through with respect to lang-specific label 'Hungarian' with aliases ''
 Page 196 Module:labels/data/lang/sl: Diff:
 --- 
 +++ 
-@@ -52,7 +52,7 @@
+@@ -6,6 +6,13 @@
+ 	Wikipedia = "Carinthian dialect group",
+ 	regional_categories = true,
+ }
++-- FIXME: WARNING: Alias set members 'Carinthia,Kärnten' of regional label 'Carinthia' with aliases 'Carinthian,Kärnten' are bleeding through with respect to lang-specific label 'Carinthian' with aliases 'Carinthian dialect group'; regional label definition follows:
++-- labels["Carinthia"] = {
++-- 	aliases = {"Carinthian", "Kärnten"},
++-- 	Wikipedia = true,
++-- 	langs = {"bar", "sl"},
++-- 	regional_categories = "Carinthian",
++-- }
+ 
+ labels["Littoral"] = {
+ 	aliases = {"Littoral dialect group"},
+@@ -52,7 +59,7 @@
  labels["Alpine Slovene"] = {
  	aliases = {"Alpine", "issln.", "issln"},
  	display = "Alpine Slovene (1000–1200)",
@@ -18406,7 +18687,21 @@ Page 196 Module:labels/data/lang/sl: Diff:
  	plain_categories = true,
  }
  
-@@ -259,7 +259,7 @@
+@@ -251,6 +258,13 @@
+ 	display = "parts with greater Hungarian influence",
+ 	regional_categories = "Regional",
+ }
++-- FIXME: WARNING: Alias set members 'Hungary' of regional label 'Hungary' with aliases 'Hungarian' are bleeding through with respect to lang-specific label 'Hungarian' with aliases ''; regional label definition follows:
++-- labels["Hungary"] = {
++-- 	aliases = {"Hungarian"},
++-- 	Wikipedia = true,
++-- 	langs = {"de", "en", "la", "rom"},
++-- 	regional_categories = "Hungarian",
++-- }
+ 
+ labels["Italian"] = {
+ 	display = "parts with greater Italian influence",
+@@ -259,7 +273,7 @@
  
  labels["Yugoslavia"] = {
  	display = "Serbo-Croatism, common especially in Yugoslavia",
@@ -18425,6 +18720,13 @@ labels["Carinthian"] = {
 	Wikipedia = "Carinthian dialect group",
 	regional_categories = true,
 }
+-- FIXME: WARNING: Alias set members 'Carinthia,Kärnten' of regional label 'Carinthia' with aliases 'Carinthian,Kärnten' are bleeding through with respect to lang-specific label 'Carinthian' with aliases 'Carinthian dialect group'; regional label definition follows:
+-- labels["Carinthia"] = {
+-- 	aliases = {"Carinthian", "Kärnten"},
+-- 	Wikipedia = true,
+-- 	langs = {"bar", "sl"},
+-- 	regional_categories = "Carinthian",
+-- }
 
 labels["Littoral"] = {
 	aliases = {"Littoral dialect group"},
@@ -18670,6 +18972,13 @@ labels["Hungarian"] = {
 	display = "parts with greater Hungarian influence",
 	regional_categories = "Regional",
 }
+-- FIXME: WARNING: Alias set members 'Hungary' of regional label 'Hungary' with aliases 'Hungarian' are bleeding through with respect to lang-specific label 'Hungarian' with aliases ''; regional label definition follows:
+-- labels["Hungary"] = {
+-- 	aliases = {"Hungarian"},
+-- 	Wikipedia = true,
+-- 	langs = {"de", "en", "la", "rom"},
+-- 	regional_categories = "Hungarian",
+-- }
 
 labels["Italian"] = {
 	display = "parts with greater Italian influence",
@@ -19257,12 +19566,12 @@ labels["Tanzania"] = {
 
 return require("Module:labels").finalize_data(labels)
 -------- end text --------
-Page 206 Module:labels/data/lang/szl: Ignoring regional label 'Texas' overridden by corresponding lang-specific label
+Page 206 Module:labels/data/lang/szl: WARNING: Alias set members 'TX,Texan' of regional label 'Texas' with aliases 'TX,Texan' are bleeding through with respect to lang-specific label 'Texas' with aliases ''
 Page 206 Module:labels/data/lang/szl: Didn't see {{alt}} label 'Steuer', appending
 Page 206 Module:labels/data/lang/szl: Didn't see {{alt}} label 'Steuer', appending
 Page 206 Module:labels/data/lang/szl: WARNING: {{alt}} label 'Cieszyn' matches existing alias 'Cieszyn' of label 'Cieszyn Silesia', inserting commented-out
 Page 206 Module:labels/data/lang/szl: Didn't see {{alt}} label 'Phonetic', appending
-Page 206 Module:labels/data/lang/szl: WARNING: {{alt}} label 'Texas' matches existing regional label 'Texas', inserting both commented-out
+Page 206 Module:labels/data/lang/szl: WARNING: {{alt}} label 'Texas' has Wikipedia value '"Texan_Silesian"' different from existing '"Texan Silesian"'
 Page 206 Module:labels/data/lang/szl: Diff:
 --- 
 +++ 
@@ -19277,8 +19586,21 @@ Page 206 Module:labels/data/lang/szl: Diff:
  
  labels["Opole"] = {
  	Wikipedia = true,
-@@ -20,19 +24,24 @@
+@@ -15,24 +19,36 @@
+ 	regional_categories = true,
  }
+ labels["Texas"] = {
+-	Wikipedia = "Texan Silesian",
++	Wikipedia = "Texan Silesian", -- FIXME: {{alt}} label Wikipedia value '"Texan_Silesian"' different from existing
+ 	regional_categories = true,
+ }
++-- FIXME: WARNING: Alias set members 'TX,Texan' of regional label 'Texas' with aliases 'TX,Texan' are bleeding through with respect to lang-specific label 'Texas' with aliases ''; regional label definition follows:
++-- labels["Texas"] = {
++-- 	aliases = {"TX", "Texan"},
++-- 	Wikipedia = true,
++-- 	langs = {"de", "en", "es", "szl"},
++-- 	regional_categories = true,
++-- }
  
  labels["Eastern"] = {
 +	display = "Eastern Silesian",
@@ -19302,7 +19624,7 @@ Page 206 Module:labels/data/lang/szl: Diff:
  	regional_categories = true,
  }
  
-@@ -41,4 +50,28 @@
+@@ -41,4 +57,18 @@
  	pos_categories = "reflexive verbs",
  }
  
@@ -19319,16 +19641,6 @@ Page 206 Module:labels/data/lang/szl: Diff:
 +labels["Phonetic"] = {
 +	display = "Phonetic Silesian Alphabet",
 +}
-+
-+-- FIXME: WARNING: {{alt}} label 'Texas' matches existing regional label 'Texas', inserting both commented-out
-+-- labels["Texas"] = {
-+-- 	Wikipedia = "Texan_Silesian",
-+-- }
-+-- FIXME: corresponding regional label follows:
-+-- labels["Texas"] = {
-+-- 	Wikipedia = "Texan Silesian",
-+-- 	regional_categories = true,
-+-- }
 +
  return require("Module:labels").finalize_data(labels)
 Page 206 Module:labels/data/lang/szl: Would save with comment = clean categories in label data module; incorporate 12 {{alt}} label(s) (3 new) from [[Module:szl:dialects]] into label data module
@@ -19354,9 +19666,16 @@ labels["Zaolzie"] = {
 	regional_categories = true,
 }
 labels["Texas"] = {
-	Wikipedia = "Texan Silesian",
+	Wikipedia = "Texan Silesian", -- FIXME: {{alt}} label Wikipedia value '"Texan_Silesian"' different from existing
 	regional_categories = true,
 }
+-- FIXME: WARNING: Alias set members 'TX,Texan' of regional label 'Texas' with aliases 'TX,Texan' are bleeding through with respect to lang-specific label 'Texas' with aliases ''; regional label definition follows:
+-- labels["Texas"] = {
+-- 	aliases = {"TX", "Texan"},
+-- 	Wikipedia = true,
+-- 	langs = {"de", "en", "es", "szl"},
+-- 	regional_categories = true,
+-- }
 
 labels["Eastern"] = {
 	display = "Eastern Silesian",
@@ -19398,16 +19717,6 @@ labels["Steuer"] = {
 labels["Phonetic"] = {
 	display = "Phonetic Silesian Alphabet",
 }
-
--- FIXME: WARNING: {{alt}} label 'Texas' matches existing regional label 'Texas', inserting both commented-out
--- labels["Texas"] = {
--- 	Wikipedia = "Texan_Silesian",
--- }
--- FIXME: corresponding regional label follows:
--- labels["Texas"] = {
--- 	Wikipedia = "Texan Silesian",
--- 	regional_categories = true,
--- }
 
 return require("Module:labels").finalize_data(labels)
 -------- end text --------
@@ -19842,38 +20151,39 @@ labels["North"] = {
 
 return require("Module:labels").finalize_data(labels)
 -------- end text --------
-Page 213 Module:labels/data/lang/tr: Ignoring regional label 'Erzurum' overridden by corresponding lang-specific label
-Page 213 Module:labels/data/lang/tr: Ignoring regional label 'Sivas' overridden by corresponding lang-specific label
-Page 213 Module:labels/data/lang/tr: WARNING: {{alt}} label 'Erzurum' matches existing regional label 'Erzurum', inserting both commented-out
-Page 213 Module:labels/data/lang/tr: WARNING: {{alt}} label 'Sivas' matches existing regional label 'Sivas', inserting both commented-out
+Page 213 Module:labels/data/lang/tr: WARNING: Alias set members 'Erzrum,Karin' of regional label 'Erzurum' with aliases 'Karin,Erzrum' are bleeding through with respect to lang-specific label 'Erzurum' with aliases ''
+Page 213 Module:labels/data/lang/tr: WARNING: Alias set members 'Sebastea,Sebastia' of regional label 'Sivas' with aliases 'Sebastia,Sebastea' are bleeding through with respect to lang-specific label 'Sivas' with aliases ''
 Page 213 Module:labels/data/lang/tr: Diff:
 --- 
 +++ 
-@@ -341,4 +341,24 @@
+@@ -33,6 +33,13 @@
+ 	Wikipedia = "Erzurum Province",
  	regional_categories = true,
  }
++-- FIXME: WARNING: Alias set members 'Erzrum,Karin' of regional label 'Erzurum' with aliases 'Karin,Erzrum' are bleeding through with respect to lang-specific label 'Erzurum' with aliases ''; regional label definition follows:
++-- labels["Erzurum"] = {
++-- 	aliases = {"Karin", "Erzrum"},
++-- 	Wikipedia = true,
++-- 	langs = {"hy", "tr"},
++-- 	regional_categories = true,
++-- }
  
-+-- FIXME: WARNING: {{alt}} label 'Erzurum' matches existing regional label 'Erzurum', inserting both commented-out
-+-- labels["Erzurum"] = {
-+-- 	Wikipedia = "Erzurum Province",
-+-- }
-+-- FIXME: corresponding regional label follows:
-+-- labels["Erzurum"] = {
-+-- 	Wikipedia = "Erzurum Province",
+ labels["Giresun"] = {
+ 	Wikipedia = "Giresun Province",
+@@ -87,6 +94,13 @@
+ 	Wikipedia = "Sivas Province",
+ 	regional_categories = true,
+ }
++-- FIXME: WARNING: Alias set members 'Sebastea,Sebastia' of regional label 'Sivas' with aliases 'Sebastia,Sebastea' are bleeding through with respect to lang-specific label 'Sivas' with aliases ''; regional label definition follows:
++-- labels["Sivas"] = {
++-- 	aliases = {"Sebastia", "Sebastea"},
++-- 	Wikipedia = true,
++-- 	langs = {"hy", "tr"},
 +-- 	regional_categories = true,
 +-- }
-+
-+-- FIXME: WARNING: {{alt}} label 'Sivas' matches existing regional label 'Sivas', inserting both commented-out
-+-- labels["Sivas"] = {
-+-- 	Wikipedia = "Sivas Province",
-+-- }
-+-- FIXME: corresponding regional label follows:
-+-- labels["Sivas"] = {
-+-- 	Wikipedia = "Sivas Province",
-+-- 	regional_categories = true,
-+-- }
-+
- return require("Module:labels").finalize_data(labels)
+ 
+ labels["Sürmene"] = {
+ 	aliases = {"Sourmena", "Issiporto"},
 Page 213 Module:labels/data/lang/tr: Would save with comment = clean categories in label data module; incorporate 21 {{alt}} label(s) (0 new) from [[Module:tr:dialects]] into label data module
 Page 213 Module:labels/data/lang/tr: -------- begin text --------
 local labels = {}
@@ -19911,6 +20221,13 @@ labels["Erzurum"] = {
 	Wikipedia = "Erzurum Province",
 	regional_categories = true,
 }
+-- FIXME: WARNING: Alias set members 'Erzrum,Karin' of regional label 'Erzurum' with aliases 'Karin,Erzrum' are bleeding through with respect to lang-specific label 'Erzurum' with aliases ''; regional label definition follows:
+-- labels["Erzurum"] = {
+-- 	aliases = {"Karin", "Erzrum"},
+-- 	Wikipedia = true,
+-- 	langs = {"hy", "tr"},
+-- 	regional_categories = true,
+-- }
 
 labels["Giresun"] = {
 	Wikipedia = "Giresun Province",
@@ -19965,6 +20282,13 @@ labels["Sivas"] = {
 	Wikipedia = "Sivas Province",
 	regional_categories = true,
 }
+-- FIXME: WARNING: Alias set members 'Sebastea,Sebastia' of regional label 'Sivas' with aliases 'Sebastia,Sebastea' are bleeding through with respect to lang-specific label 'Sivas' with aliases ''; regional label definition follows:
+-- labels["Sivas"] = {
+-- 	aliases = {"Sebastia", "Sebastea"},
+-- 	Wikipedia = true,
+-- 	langs = {"hy", "tr"},
+-- 	regional_categories = true,
+-- }
 
 labels["Sürmene"] = {
 	aliases = {"Sourmena", "Issiporto"},
@@ -20219,26 +20543,6 @@ labels["Kırklareli"] = {
 	regional_categories = true,
 }
 
--- FIXME: WARNING: {{alt}} label 'Erzurum' matches existing regional label 'Erzurum', inserting both commented-out
--- labels["Erzurum"] = {
--- 	Wikipedia = "Erzurum Province",
--- }
--- FIXME: corresponding regional label follows:
--- labels["Erzurum"] = {
--- 	Wikipedia = "Erzurum Province",
--- 	regional_categories = true,
--- }
-
--- FIXME: WARNING: {{alt}} label 'Sivas' matches existing regional label 'Sivas', inserting both commented-out
--- labels["Sivas"] = {
--- 	Wikipedia = "Sivas Province",
--- }
--- FIXME: corresponding regional label follows:
--- labels["Sivas"] = {
--- 	Wikipedia = "Sivas Province",
--- 	regional_categories = true,
--- }
-
 return require("Module:labels").finalize_data(labels)
 -------- end text --------
 Page 214 Module:labels/data/lang/trk-pro: Skipped, no changes
@@ -20324,7 +20628,6 @@ labels["Western Ukraine"] = {
 
 return require("Module:labels").finalize_data(labels)
 -------- end text --------
-Page 218 Module:labels/data/lang/ur: Ignoring regional label 'Lucknow' overridden by corresponding lang-specific label
 Page 218 Module:labels/data/lang/ur: Skipped, no changes
 Page 218 Module:labels/data/lang/ur: -------- begin text --------
 local labels = {}
@@ -22157,7 +22460,6 @@ Page 238 Module:labels/data/lang/zh: WARNING: Couldn't process label 'Yuehai Yue
 Page 238 Module:labels/data/lang/zh: WARNING: Couldn't process label 'Yulin Yue' line: -- A variety of Goulou Yue.
 Page 238 Module:labels/data/lang/zh: WARNING: Saw alias 'Lao'an' of label 'Jingjiang Wu' duplicating alias of label 'Jingjiang Wu'
 Page 238 Module:labels/data/lang/zh: WARNING: Saw alias 'Yiwu' of label 'Yiwu Wu' duplicating alias of label 'Pan'an Wu'
-Page 238 Module:labels/data/lang/zh: Ignoring regional label 'Pontianak' overridden by corresponding lang-specific label
 Page 238 Module:labels/data/lang/zh: Diff:
 --- 
 +++ 
@@ -29227,5 +29529,5 @@ labels["Natal"] = {
 
 return require("Module:labels").finalize_data(labels)
 -------- end text --------
-Elapsed time: 0 mins 3.79 secs
-Ending at Sat Apr  6 23:04:00 2024
+Elapsed time: 0 mins 3.26 secs
+Ending at Sun Apr  7 18:33:38 2024
