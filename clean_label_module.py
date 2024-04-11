@@ -651,7 +651,7 @@ def process_text_on_page(index, pagename, text):
   if retval.saw_old_style_alias:
     notes.append("move old-style alias specs to `aliases =`")
   if num_alt_labels > 0:
-    notes.append("incorporate %s {{alt}} label(s) (%s new) from [[Module:%s:dialects]] into label data module" % (
+    notes.append("incorporate %s {{alt}} label(s) (%s new) from [[Module:%s:Dialects]] into label data module" % (
       num_alt_labels, num_new_alt_labels, retval.langcode))
   return text, notes
 
@@ -711,6 +711,6 @@ if __name__ == "__main__":
       new_lang_specific_lines = output_labels(labelobjs_with_text)
       blib.do_handle_stdin_retval(
         args, ("\n".join(new_lang_specific_lines),
-               "move %s {{alt}} label(s) from [[Module:%s:dialects]] into new label data module" % (
+               "move %s {{alt}} label(s) from [[Module:%s:Dialects]] into new label data module" % (
                len(list(x for x in labels_seen if isinstance(x, LabelData))), alt_langcode)), 
         "", None, pagemsg, is_find_regex=True, edit=True)
