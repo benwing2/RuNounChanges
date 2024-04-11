@@ -9,7 +9,7 @@ local utilities_module = "Module:utilities"
 -- for testing
 local force_cat = false
 
--- Add tracking category for PAGE. The tracking category linked to is [[Template:tracking/labels/PAGE]].
+-- Add tracking category for PAGE. The tracking category linked to is [[Wiktionary:Tracking/labels/PAGE]].
 local function track(page)
 	require("Module:debug/track")("labels/" ..
 		-- avoid including links in pages (may cause error)
@@ -18,8 +18,8 @@ local function track(page)
 end
 
 -- Track a label:
--- [[Special:WhatLinksHere/Template:tracking/labels/label/LABEL]]
--- [[Special:WhatLinksHere/Template:tracking/labels/label/LABEL/LANGCODE]]
+-- [[Special:WhatLinksHere/Wiktionary:Tracking/labels/label/LABEL]]
+-- [[Special:WhatLinksHere/Wiktionary:Tracking/labels/label/LABEL/LANGCODE]]
 local function track_label(label, langcode)
 	label = "label/" .. label
 	track(label)
@@ -86,8 +86,8 @@ function export.fetch_categories(canon_label, labdata, lang, term_mode, for_doc,
 
 	local langcode, canonical_name
 	if lang then
-		langcode = lang:getNonEtymologicalCode()
-		canonical_name = lang:getNonEtymologicalName()
+		langcode = lang:getFullCode()
+		canonical_name = lang:getFullName()
 	elseif for_doc then
 		langcode = "<var>[langcode]</var>"
 		canonical_name = "<var>[language name]</var>"
@@ -168,7 +168,7 @@ function export.get_submodules(lang)
 	local submodules = {}
 
 	-- get language-specific labels from data module
-	local langcode = lang and lang:getNonEtymologicalCode() or nil
+	local langcode = lang and lang:getFullCode() or nil
 
 	if langcode and m_lang_specific_data.langs_with_lang_specific_modules[langcode] then
 		-- prefer per-language label in order to pick subvariety labels over regional ones
@@ -199,7 +199,7 @@ function export.get_displayed_label(label, labdata, lang, deprecated)
 		local function add_language_name(str)
 			if str == "canonical_name" then
 				if lang then
-					return lang:getNonEtymologicalName()
+					return lang:getFullName()
 				else
 					return "<code><var>[language name]</var></code>"
 				end
