@@ -4,18 +4,18 @@ local raw_handlers = {}
 local m_languages = require("Module:languages")
 local m_table = require("Module:table")
 local parse_utilities_module = "Module:parse utilities"
-local pattern_utilities_module = "Module:pattern utilities"
+local string_utilities_module = "Module:string utilities"
 local labels_module = "Module:labels"
 local labels_utilities_module = "Module:labels/utilities"
 local rsplit = mw.text.split
 
 local function track(page)
-	-- [[Special:WhatLinksHere/Template:tracking/poscatboiler/languages/PAGE]]
+	-- [[Special:WhatLinksHere/Wiktionary:Tracking/poscatboiler/languages/PAGE]]
 	return require("Module:debug/track")("poscatboiler/language-varieties/" .. page)
 end
 
 local function pattern_escape(pattern)
-	return require(pattern_utilities_module).pattern_escape(pattern)
+	return require(string_utilities_module).pattern_escape(pattern)
 end
 
 -- This module handles lect/variety categories of all sorts, e.g. regional lect categories such as
@@ -130,7 +130,7 @@ local function get_returnable_lang(lang)
 	if lang:hasType("family") then
 		return nil
 	else
-		return lang:getNonEtymological()
+		return lang:getFull()
 	end
 end
 
@@ -140,7 +140,7 @@ local function get_returnable_lang_code(lang)
 	if lang:hasType("family") then
 		return "und"
 	else
-		return lang:getNonEtymologicalCode()
+		return lang:getFullCode()
 	end
 end
 
@@ -335,7 +335,7 @@ local function find_labels_for_category(category, lang)
 	local full_lang
 	local m_labels_utilities = require(labels_utilities_module)
 	if lang and lang:hasType("language") then
-		full_lang = lang:getNonEtymological()
+		full_lang = lang:getFull()
 		local regional_component = category:match("^(.-) " .. pattern_escape(full_lang:getCanonicalName()) .. "$")
 		if regional_component then
 			regional_cat_labels = m_labels_utilities.find_labels_for_category(regional_component,
@@ -417,8 +417,8 @@ local function get_sorted_labels(category, lang)
 		end
 
 		local function tiebreak()
-			local a_matches_lang = lang and a.lang:getNonEtymologicalCode() == lang:getNonEtymologicalCode()
-			local b_matches_lang = lang and b.lang:getNonEtymologicalCode() == lang:getNonEtymologicalCode()
+			local a_matches_lang = lang and a.lang:getFullCode() == lang:getFullCode()
+			local b_matches_lang = lang and b.lang:getFullCode() == lang:getFullCode()
 			if a_matches_lang and not b_matches_lang then
 				return true
 			elseif b_matches_lang and not a_matches_lang then
@@ -707,7 +707,7 @@ local function dialect_handler(category, raw_args, called_from_inside)
 	end
 
 	-- If no breadcrumb, this often happens when the langname and category are the same (happens only with etym-only
-	-- languages), and the parent category is set below to the non-etym parent, so the breadcrumb should show the
+	-- languages), and the parent category is set below to the full parent, so the breadcrumb should show the
 	-- language name (or equivalently, the category). If the langname and category are different, we should fall back to
 	-- the category. E.g. for Singlish, lang=en is specified and we can't infer a breadcrumb because the dialect name
 	-- doesn't end in "English"; in this case we want the breadcrumb to show "Singlish".
@@ -719,6 +719,13 @@ local function dialect_handler(category, raw_args, called_from_inside)
 		local regionprop = getprop("region")
 		if regionprop then
 			regiondesc = regionprop
+		elseif label_with_parent then
+			-- It's not clear which of the following two are better. The second one uses the actual label display form, which
+			-- might be argued to be better, except that it will often be linked to a Wikipedia article about the dialect rather
+			-- than the place. The first one just uses the canonical label directly (which will later be linked to itself if
+			-- unlinked).
+			regiondesc = label_with_parent.canonical
+			-- regiondesc = require(labels_module).get_displayed_label(label_with_parent.canonical, label_with_parent.labdata, lang)
 		end
 	end
 
@@ -878,7 +885,7 @@ local function dialect_handler(category, raw_args, called_from_inside)
 					table.insert(linked_countries, country)
 				end
 				linked_countries = m_table.serialCommaJoin(linked_countries)
-				linked_regiondesc = linked_regiondesc:gsub("<country>", require(pattern_utilities_module).replacement_escape(linked_countries))
+				linked_regiondesc = linked_regiondesc:gsub("<country>", require(string_utilities_module).replacement_escape(linked_countries))
 			elseif not getprop("nolink") and linkable(linked_regiondesc) then
 				-- Even if nolink not given, don't try to link if HTML or = sign found in linked_regiondesc, otherwise we're
 				-- likely to get an error.
