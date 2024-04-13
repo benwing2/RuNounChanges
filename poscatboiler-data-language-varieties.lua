@@ -735,9 +735,6 @@ local function dialect_handler(category, raw_args, called_from_inside)
 			regiondesc = breadcrumb
 		end
 	end
-	if args.the then
-		regiondesc = "the " .. regiondesc
-	end
 
 	-------------------- 3. Determine labels categorizing into this category. -------------------
 
@@ -798,18 +795,22 @@ local function dialect_handler(category, raw_args, called_from_inside)
 	-- doesn't end in "English"; in this case we want the breadcrumb to show "Singlish".
 	breadcrumb = getprop("breadcrumb") or breadcrumb or category
 
+	local the_prefix
+
 	if args[1] then
 		regiondesc = args[1]
+		the_prefix = ""
 	else
 		local regionprop = getprop("region")
 		if regionprop then
 			regiondesc = regionprop
+			the_prefix = ""
 		elseif label_with_parent then
-			-- It's not clear which of the following two are better. The second one uses the actual label display form, which
-			-- might be argued to be better, except that it will often be linked to a Wikipedia article about the dialect rather
-			-- than the place. The first one just uses the canonical label directly (which will later be linked to itself if
-			-- unlinked). A third possibility is to use `label_with_parent.display` if present, otherwise
-			-- `label_with_parent.canonical`.
+			-- It's not clear which of the following two are better. The second one uses the actual label display form,
+			-- which might be argued to be better, except that it will often be linked to a Wikipedia article about the
+			-- dialect rather than the place. The first one just uses the canonical label directly (which will later be
+			-- linked to itself if unlinked). A third possibility is to use `label_with_parent.display` if present,
+			-- otherwise `label_with_parent.canonical`.
 			regiondesc = label_with_parent.canonical
 			if label_with_parent.display and regiondesc ~= label_with_parent.display then
 				track("display-different-from-canonical")
@@ -817,8 +818,9 @@ local function dialect_handler(category, raw_args, called_from_inside)
 			-- regiondesc = require(labels_module).get_displayed_label(label_with_parent.canonical, label_with_parent.labdata, lang)
 		end
 	end
+	the_prefix = the_prefix or getprop("the") and "the " or ""
 
-	countries = countries or {regiondesc}
+	countries = countries or {regiondesc and the_prefix .. regiondesc or nil}
 	for _, country in ipairs(countries) do
 		if not country:find("[<=]") then
 			country = require("Module:links").remove_links(country)
@@ -954,38 +956,37 @@ local function dialect_handler(category, raw_args, called_from_inside)
 		local lang_en = m_languages.getByCode("en", true)
 
 		local linked_regiondesc = regiondesc
-		if linked_regiondesc then
-			-- Don't try to link if HTML, = sign, template call or embedded link found in text. Embedded links will
-			-- automatically be converted to English links by JavaScript.
-			local function linkable(text)
-				return not text:find("[<={}%[%]|]")
+		-- Don't try to link if HTML, = sign, template call or embedded link found in text. Embedded links will
+		-- automatically be converted to English links by JavaScript.
+		local function linkable(text)
+			return not text:find("[<={}%[%]|]")
+		end
+		if linked_regiondesc:find("<country>") then
+			if not countries then
+				error(("Can't specify <country> in region description '%s' when country= not given"):format(linked_regiondesc))
 			end
-			if linked_regiondesc:find("<country>") then
-				if not countries then
-					error(("Can't specify <country> in region description '%s' when country= not given"):format(linked_regiondesc))
+			-- Link the countries individually before calling serialCommaJoin(), which inserts HTML.
+			local linked_countries = {}
+			for _, country in ipairs(countries) do
+				if linkable(country) then
+					country = require("Module:links").full_link { lang = lang_en, term = country }
 				end
-				-- Link the countries individually before calling serialCommaJoin(), which inserts HTML.
-				local linked_countries = {}
-				for _, country in ipairs(countries) do
-					if linkable(country) then
-						country = require("Module:links").full_link { lang = lang_en, term = country }
-					end
-					table.insert(linked_countries, country)
-				end
-				linked_countries = m_table.serialCommaJoin(linked_countries)
-				linked_regiondesc = linked_regiondesc:gsub("<country>",
-					require(string_utilities_module).replacement_escape(linked_countries))
-			elseif not getprop("nolink") and linkable(linked_regiondesc) then
-				-- Even if nolink not given, don't try to link if HTML or = sign found in linked_regiondesc, otherwise
-				-- we're likely to get an error.
-				if page_exists(linked_regiondesc) then
-					-- Only construct a Wiktionary link if the page exists; otherwise construct a Wikipedia link.
-					linked_regiondesc = require("Module:links").full_link { lang = lang_en, term = linked_regiondesc }
-				else
-					linked_regiondesc = ("[[w:%s|%s]]"):format(linked_regiondesc, linked_regiondesc)
-				end
+				table.insert(linked_countries, country)
+			end
+			linked_countries = m_table.serialCommaJoin(linked_countries)
+			linked_regiondesc = linked_regiondesc:gsub("<country>",
+				require(string_utilities_module).replacement_escape(linked_countries))
+		elseif not getprop("nolink") and linkable(linked_regiondesc) then
+			-- Even if nolink not given, don't try to link if HTML or = sign found in linked_regiondesc, otherwise
+			-- we're likely to get an error.
+			if page_exists(linked_regiondesc) then
+				-- Only construct a Wiktionary link if the page exists; otherwise construct a Wikipedia link.
+				linked_regiondesc = require("Module:links").full_link { lang = lang_en, term = linked_regiondesc }
+			else
+				linked_regiondesc = ("[[w:%s|%s]]"):format(linked_regiondesc, linked_regiondesc)
 			end
 		end
+		linked_regiondesc = the_prefix .. linked_regiondesc
 		local verb = getprop("verb") or "spoken"
 		local prep = getprop("prep")
 
