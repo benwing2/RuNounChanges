@@ -25,6 +25,14 @@ end
 
 -- FIXME: Eliminate the word "dialect" here and in the {{auto cat}} parameter in favor of "lect" or "variety".
 
+--[=[
+FIXME:
+
+1. Support multiple parents. [DONE]
+2. Support cat: in parents to indicate a category. [DONE]
+3. When linking a description without embedded links, use the equivalent of {{wtorw}} to auto-link to Wikipedia. [DONE]
+4. Support the = true. [DONE]
+]=]
 
 -----------------------------------------------------------------------------
 --                                                                         --
@@ -72,6 +80,11 @@ end
 
 local function lcfirst(text)
 	return mw.getContentLanguage():lcfirst(text)
+end
+
+local function page_exists(page)
+	local title = mw.title.new(page)
+	return title and title.exists
 end
 
 
@@ -479,29 +492,83 @@ local function get_categories_for_label(label, lang)
 end
 
 
-local function get_default_parent_cat_from_sorted_labels(sorted_labels, category)
+-- Given the sorted labels that categorize into `category`, return the parent categories for the first label that specifies
+-- any parents. `default` is the default parent category, usually "Regional LANG" or (if noreg=1 is specified) "Varieties of LANG";
+-- it is used if the parent is explicitly given as `true` or "+" (or one of these values occurs among others), or if a parent label
+-- was given but didn't categorize into any regional or plain categories, or if no labels with parents could be found. If
+-- `all_cats` is specified, all categories associated with all specified parent labels (if more than one is present) are returned;
+-- otherwise, only the categories for the first parent label are returned.
+--
+-- Returns two values: the list of parent categories and the label object from which the categories were derived (or nil if no
+-- label object could be found with a `parent` field, in which case the return value of the list of categories is a simple-element
+-- list consisting of `default`). The format of the parent category list is such that the list can directly be specified as the
+-- value of the `parents` field returned by the raw handler. This means that usually the individual list elements are strings
+-- (referring to raw poscat labels), but they may be strings prefixed by "Category:" (for arbitrary categories), or objects of the
+-- form {name = "CATEGORY", lang = "LANGCODE", is_label = true} for poscat language labels.
+local function get_parents_from_sorted_labels(sorted_labels, category, default, all_cats)
 	for _, labobj in ipairs(sorted_labels) do
 		local parent = labobj.labdata.parent
+		if parent == true then
+			parent = {parent}
+		elseif parent and type(parent) == "string" then
+			parent = split_on_comma(parent)
+		end
+		local function get_parent_cats(par)
+			if par == true or par == "+" then
+				return {default}
+			end
+			if par:find("^cat:") then
+				return {"Category:" .. par:gsub("^cat:", "")}
+			end
+			if par:find("^Category:") then
+				return {par}
+			end
+			if par:find("^rawposcat:") then
+				return {(par:gsub("^rawposcat:", ""))}
+			end
+			if par:find("^poscat:") then
+				local langcode, label = par:match("^poscat:([^:]+):(.*)$")
+				if not langcode then
+					error(("Parent poscatboiler language label '%s' for label '%s' for category '%s' (defined in module [[%s]]) needs to be of the form 'poscat:LANGCODE:LABEL'"):format(
+						par, labobj.canonical, category, labobj.module))
+				end
+				return {{name = label, lang = langcode, is_label = true}}
+			end
+			local this_cats = get_categories_for_label(par, labobj.lang)
+			if not this_cats then
+				error(("Parent label '%s' for label '%s' for category '%s' (defined in module [[%s]]) couldn't be located"):format(
+					par, labobj.canonical, category, labobj.module))
+			end
+			return this_cats
+		end
 		if parent then
-			if parent == true then
-				-- use default parent
-				return nil, labobj
+			if type(parent) ~= "table" then
+				error(("Internal error: Expected a string, boolean `true` or list for the value of the parent field for label '%s' for category '%s' (defined in module [[%s]]), but saw type '%s': %s"):format(
+					labobj.canonical, category, labobj.module, type(parent), mw.dumpObjecct(parent)))
 			end
-			local cats = get_categories_for_label(parent, labobj.lang)
-			if not cats then
-				error(("Label '%s' for category '%s' (defined in module [[%s]]) specified parent label '%s' but that parent label couldn't be located"):format(
-					labobj.canonical, category, labobj.module, parent))
+			local cats
+			if all_cats then
+				cats = {}
+				for _, par in ipairs(parent) do
+					local this_cats = get_parent_cats(par)
+					for _, this_cat in ipairs(this_cats) do
+						m_table.insertIfNot(cats, this_cat)
+					end
+				end
+			else
+				cats = get_parent_cats(parent[1])
 			end
+
 			if #cats > 0 then
-				return cats[1], labobj
+				return cats, labobj
 			end
 			-- FIXME: If the parent doesn't specify any categories, should we try the next parent or fall back
 			-- to the parent determined through get_default_parent_cat_from_category() (which is what we currently
 			-- do)?
-			return nil, labobj
+			return {default}, labobj
 		end
 	end
-	return nil, nil
+	return {default}, nil
 end
 
 
@@ -571,14 +638,20 @@ local function dialect_handler(category, raw_args, called_from_inside)
 				-- If we can't parse the scraped {{auto cat}} spec, return default values. This helps e.g. in converting
 				-- from the old {{dialectboiler}} template and generally when adding new varieties.
 				track("dialect")
-				local default_parent_cat
+				local parents
 				local all_labels, sorted_labels = get_sorted_labels(category, lang)
+				local default_parent_cat_from_category = get_default_parent_cat_from_category(category, lang)
 				if sorted_labels then
-					default_parent_cat = get_default_parent_cat_from_sorted_labels(sorted_labels, category)
+					parents = get_parents_from_sorted_labels(sorted_labels, category, default_parent_cat_from_category)
+				else
+					parents = {default_parent_cat_from_category}
 				end
-				if not default_parent_cat then
-					default_parent_cat = get_default_parent_cat_from_category(category, lang)
+				local first_parent_cat = parents[1]
+				if type(first_parent_cat) ~= "string" or first_parent_cat:find("^Category:") then
+					-- Only keep `first_parent_cat` if it refers to a raw poscat label (which is probably a dialect handler label).
+					first_parent_cat = nil
 				end
+
 				-- NOTE: When called from inside, the description doesn't matter; nor do any parents other than the
 				-- first. This is because called_from_inside is only set when computing the breadcrumb trail, which
 				-- only needs the language, first parent and breadcrumb.
@@ -586,11 +659,11 @@ local function dialect_handler(category, raw_args, called_from_inside)
 					-- FIXME, allow etymological codes here
 					lang = get_returnable_lang_code(lang),
 					description = "Foo",
-					parents = {default_parent_cat},
+					parents = parents,
 					breadcrumb = breadcrumb or lang:getCanonicalName(),
 					umbrella = false,
 					can_be_empty = true,
-				}, determine_lect_type(category, lang, default_parent_cat)
+				}, determine_lect_type(category, lang, first_parent_cat)
 			end
 		else
 			return nil
@@ -609,6 +682,7 @@ local function dialect_handler(category, raw_args, called_from_inside)
 		lang = {},
 		verb = {},
 		prep = {},
+		the = {type = "boolean"},
 		def = {},
 		fulldef = {},
 		addl = {},
@@ -661,6 +735,9 @@ local function dialect_handler(category, raw_args, called_from_inside)
 			regiondesc = breadcrumb
 		end
 	end
+	if args.the then
+		regiondesc = "the " .. regiondesc
+	end
 
 	-------------------- 3. Determine labels categorizing into this category. -------------------
 
@@ -670,8 +747,7 @@ local function dialect_handler(category, raw_args, called_from_inside)
 
 	-- The first label with a parent is used to fetch additional properties, such as region= and addl=.
 
-	local parents = {}
-
+	local parents
 	local first_parent_cat = args.cat
 	local label_with_parent
 
@@ -679,14 +755,23 @@ local function dialect_handler(category, raw_args, called_from_inside)
 		return args[prop] or label_with_parent and label_with_parent.labdata[prop]
 	end
 
-	if not first_parent_cat and sorted_labels then
-		first_parent_cat, label_with_parent = get_default_parent_cat_from_sorted_labels(sorted_labels, category)
+	if first_parent_cat then
+		parents = {first_parent_cat}
+	else
+		local default_parent_cat_from_category = get_default_parent_cat_from_category(category, lang, getprop("noreg"))
+		if sorted_labels then
+			parents, label_with_parent = get_parents_from_sorted_labels(sorted_labels, category, default_parent_cat_from_category,
+				"all cats")
+		else
+			parents = {default_parent_cat_from_category}
+		end
+		first_parent_cat = parents[1]
 	end
-	if not first_parent_cat then
-		first_parent_cat = get_default_parent_cat_from_category(category, lang, getprop("noreg"))
+	if type(first_parent_cat) ~= "string" or first_parent_cat:find("^Category:") then
+		-- Only keep `first_parent_cat` if it refers to a raw poscat label (which is probably a dialect handler label).
+		-- WARNING: Code below using `first_parent_cat` must handle nil.
+		first_parent_cat = nil
 	end
-
-	table.insert(parents, first_parent_cat)
 
 	local othercat = getprop("othercat")
 	if othercat and type(othercat) == "string" then
@@ -723,8 +808,12 @@ local function dialect_handler(category, raw_args, called_from_inside)
 			-- It's not clear which of the following two are better. The second one uses the actual label display form, which
 			-- might be argued to be better, except that it will often be linked to a Wikipedia article about the dialect rather
 			-- than the place. The first one just uses the canonical label directly (which will later be linked to itself if
-			-- unlinked).
+			-- unlinked). A third possibility is to use `label_with_parent.display` if present, otherwise
+			-- `label_with_parent.canonical`.
 			regiondesc = label_with_parent.canonical
+			if label_with_parent.display and regiondesc ~= label_with_parent.display then
+				track("display-different-from-canonical")
+			end
 			-- regiondesc = require(labels_module).get_displayed_label(label_with_parent.canonical, label_with_parent.labdata, lang)
 		end
 	end
@@ -734,8 +823,7 @@ local function dialect_handler(category, raw_args, called_from_inside)
 		if not country:find("[<=]") then
 			country = require("Module:links").remove_links(country)
 			local cat = "Category:Languages of " .. country
-			local cat_page = mw.title.new(cat)
-			if cat_page and cat_page.exists then
+			if page_exists(cat) then
 				table.insert(parents, cat)
 			end
 		end
@@ -870,7 +958,7 @@ local function dialect_handler(category, raw_args, called_from_inside)
 			-- Don't try to link if HTML, = sign, template call or embedded link found in text. Embedded links will
 			-- automatically be converted to English links by JavaScript.
 			local function linkable(text)
-				return not text:find("[<={}%[%]]")
+				return not text:find("[<={}%[%]|]")
 			end
 			if linked_regiondesc:find("<country>") then
 				if not countries then
@@ -885,11 +973,17 @@ local function dialect_handler(category, raw_args, called_from_inside)
 					table.insert(linked_countries, country)
 				end
 				linked_countries = m_table.serialCommaJoin(linked_countries)
-				linked_regiondesc = linked_regiondesc:gsub("<country>", require(string_utilities_module).replacement_escape(linked_countries))
+				linked_regiondesc = linked_regiondesc:gsub("<country>",
+					require(string_utilities_module).replacement_escape(linked_countries))
 			elseif not getprop("nolink") and linkable(linked_regiondesc) then
-				-- Even if nolink not given, don't try to link if HTML or = sign found in linked_regiondesc, otherwise we're
-				-- likely to get an error.
-				linked_regiondesc = require("Module:links").full_link { lang = lang_en, term = linked_regiondesc }
+				-- Even if nolink not given, don't try to link if HTML or = sign found in linked_regiondesc, otherwise
+				-- we're likely to get an error.
+				if page_exists(linked_regiondesc) then
+					-- Only construct a Wiktionary link if the page exists; otherwise construct a Wikipedia link.
+					linked_regiondesc = require("Module:links").full_link { lang = lang_en, term = linked_regiondesc }
+				else
+					linked_regiondesc = ("[[w:%s|%s]]"):format(linked_regiondesc, linked_regiondesc)
+				end
 			end
 		end
 		local verb = getprop("verb") or "spoken"
