@@ -338,6 +338,8 @@ function export.get_label_info(data)
 			if lang_in_list then
 				break
 			end
+			-- make sure to assign labdata to nil again in case this is the last iteration of the loop
+			labdata = nil
 		end
 	end
 	labdata = labdata or {}
@@ -463,13 +465,10 @@ function export.show_labels(data)
 
 	if data.lang then
 		local lang_functions_module = export.lang_specific_data_modules_prefix .. data.lang:getCode() .. "/functions"
-		local title = mw.title.new(lang_functions_module)
-		if title and title.exists then
-			local m_lang_functions = require(lang_functions_module)
-			if m_lang_functions.postprocess_handlers then
-				for _, handler in ipairs(m_lang_functions.postprocess_handlers) do
-					handler(data)
-				end
+		local m_lang_functions = require(utilities_module).safe_require(lang_functions_module)
+		if m_lang_functions and m_lang_functions.postprocess_handlers then
+			for _, handler in ipairs(m_lang_functions.postprocess_handlers) do
+				handler(data)
 			end
 		end
 	end
