@@ -1844,7 +1844,7 @@ class ParamWithInlineModifier(object):
           retval = thisval
         else:
           raise ParseException("Modifier %s occurs twice, with values '%s' and '%s'" % (mod, retval, thisval))
-      return retval
+    return retval
 
   def set_modifier(self, mod, val):
     if isinstance(val, list):
@@ -2659,14 +2659,15 @@ def split_text_into_sections(pagetext, pagemsg):
   return sections, sections_by_lang, section_langs
 
 # Split `secbody` (the body of a language section, as returned by find_modifiable_lang_section()) into subsections.
-# Return a tuple of three values:
-#   `subsections`, `subsections_by_header`, `subsection_levels`
+# Return a tuple of four values:
+#   `subsections`, `subsections_by_header`, `subsection_headers`, `subsection_levels`
 # `subsections` is a list of the text of the sections, where odd-numbered elements contain headers and even-numbered
 # elements contain text between headers. `subsections_by_header` is a dictionary from header name to a list of the
-# indices of the sections with that header (indices are to the section text, not the header text). `subsection_levels`
-# is a dictionary from section index (only for even-numbered sections starting with 2) to the header level of that
-# section (as determined by the number of equal signs of the section header). The original language section body can
-# be reconstructed by concatenating the values of `subsections` with a blank string between them.
+# indices of the sections with that header (indices are to the section text, not the header text). `subsection_headers`
+# is a dictionary from section index (only for even-numbered sections starting with 2) to the header of that section.
+# `subsection_levels` is similar to `subsection_headers` but the values indicate the the header level of that section
+# (as determined by the number of equal signs of the section header). The original language section body can be
+# reconstructed by concatenating the values of `subsections` with a blank string between them.
 def split_text_into_subsections(secbody, pagemsg):
   subsections = re.split(r"(^==+[^=\n]+==+[ \t]*\n)", secbody, 0, re.M)
   subsection_headers = {}
