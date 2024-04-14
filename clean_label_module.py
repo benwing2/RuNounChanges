@@ -4,6 +4,7 @@
 import pywikibot, re, sys, argparse
 from dataclasses import dataclass, field
 from collections import defaultdict
+from typing import Any, Callable
 
 import blib
 from blib import getparam, rmparam, set_template_name, msg, errandmsg, site, tname
@@ -11,25 +12,33 @@ from blib import getparam, rmparam, set_template_name, msg, errandmsg, site, tna
 blib.getLanguageData()
 
 @dataclass
-class StrProperties:
-  Wikipedia: str = None
-  Wikipedia_comment: str = None
-  Wiktionary: str = None
-  Wiktionary_comment: str = None
-  Wikidata: str = None
-  Wikidata_comment: str = None
-  display: str = None
-  display_comment: str = None
-  special_display: str = None
-  special_display_comment: str = None
-  glossary: str = None
-  glossary_comment: str = None
+class Field:
+  value: Any
+  comment: str = None
 
 @dataclass
-class BoolProperties:
-  track: bool = None
-  omit_preComma: bool = None
-  omit_postComma: bool = None
+class FieldReference:
+  field: str
+  output: Callable[[], str]
+
+class Properties:
+  Wikipedia: Field = None
+  Wiktionary: Field = None
+  Wikidata: Field = None
+  display: Field = None
+  special_display: Field = None
+  glossary: Field = None
+  track: Field = None
+  omit_preComma: Field = None
+  omit_postComma: Field = None
+  topical_categories: Field = None
+  sense_categories: Field = None
+  pos_categories: Field = None
+  regional_categories: Field = None
+  plain_categories: Field = None
+  aliases: Field = None
+  deprecated_aliases: Field = None
+  langs: Field = None
 
 @dataclass
 class CategorySpec:
@@ -44,16 +53,7 @@ class LabelData:
   first_label_line: str
   label_lines: list
   last_label_line: str
-  topical_categories: CategorySpec
-  sense_categories: CategorySpec
-  pos_categories: CategorySpec
-  regional_categories: CategorySpec
-  plain_categories: CategorySpec
-  str_properties: StrProperties
-  bool_properties: BoolProperties
-  aliases: CategorySpec = field(default_factory=CategorySpec)
-  deprecated_aliases: CategorySpec = field(default_factory=CategorySpec)
-  langs: list = None
+  fields: dict
   lines_after: list = field(default_factory=list)
 
 @dataclass
