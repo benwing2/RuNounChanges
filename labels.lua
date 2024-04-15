@@ -10,22 +10,15 @@ local utilities_module = "Module:utilities"
 local force_cat = false
 
 -- Add tracking category for PAGE. The tracking category linked to is [[Wiktionary:Tracking/labels/PAGE]].
-local function track(page)
-	require("Module:debug/track")("labels/" ..
-		-- avoid including links in pages (may cause error)
-		page:gsub("%[", "("):gsub("%]", ")"):gsub("|", "!"))
-	return true
-end
-
--- Track a label:
--- [[Special:WhatLinksHere/Wiktionary:Tracking/labels/label/LABEL]]
--- [[Special:WhatLinksHere/Wiktionary:Tracking/labels/label/LABEL/LANGCODE]]
-local function track_label(label, langcode)
-	label = "label/" .. label
-	track(label)
+local function track(page, langcode)
+	-- avoid including links in pages (may cause error)
+	page = page:gsub("%[", "("):gsub("%]", ")"):gsub("|", "!")
 	if langcode then
-		track(label .. "/" .. langcode)
+		require("Module:debug/track") { "labels/" .. page, "labels/" .. page .. "/" .. langcode }
+	else
+		require("Module:debug/track")("labels/" .. page)
 	end
+	return true
 end
 
 local function ucfirst(txt)
@@ -316,30 +309,57 @@ function export.get_label_info(data)
 	local deprecated = false
 	local labdata
 	local submodule
+	local data_langcode = data.lang and data.lang:getCode() or nil
 
 	local submodules_to_check = export.get_submodules(data.lang)
 	for _, submodule_to_check in ipairs(submodules_to_check) do
 		submodule = mw.loadData(submodule_to_check)
-		labdata = submodule[label]
-		if labdata then
+		local this_labdata = submodule[label]
+		local resolved_label
+		if type(this_labdata) == "string" then
+			resolved_label = this_labdata
+			this_labdata = submodule[this_labdata]
+			if not this_labdata then
+				error(("Internal error: Label alias '%s' points to '%s', which is undefined in module [[%s]]"):format(
+					label, resolved_label, submodule_to_check))
+			end
+			if type(this_labdata) == "string" then
+				error(("Internal error: Label alias '%s' points to '%s', which is also an alias (of '%s') in module [[%s]]"):format(
+					label, resolved_label, this_labdata, submodule_to_check))
+			end
+		end
+		if this_labdata then
 			-- Make sure either there's no lang restriction, or we're processing lang-independent, or our language
 			-- is among the listed languages. Otherwise, continue processing (which could conceivably pick up a
 			-- lang-appropriate version of the label in another label data module).
-			if not labdata.langs or not data.lang then
+			if not this_labdata.langs or not data_langcode then
+				labdata = this_labdata
+				label = resolved_label or label
 				break
 			end
 			local lang_in_list = false
-			for _, langcode in ipairs(labdata.langs) do
-				if langcode == data.lang:getCode() then
+			for _, langcode in ipairs(this_labdata.langs) do
+				if langcode == data_langcode then
 					lang_in_list = true
 					break
 				end
 			end
 			if lang_in_list then
+				labdata = this_labdata
+				label = resolved_label or label
 				break
+			else
+				-- Track use of a label that fails the lang restriction.
+				-- [[Special:WhatLinksHere/Wiktionary:Tracking/labels/wrong-lang-label]]
+				-- [[Special:WhatLinksHere/Wiktionary:Tracking/labels/wrong-lang-label/LANGCODE]]
+				-- [[Special:WhatLinksHere/Wiktionary:Tracking/labels/wrong-lang-label/LABEL]]
+				-- [[Special:WhatLinksHere/Wiktionary:Tracking/labels/wrong-lang-label/LABEL/LANGCODE]]
+				track("wrong-lang-label", data_langcode)
+				track("wrong-lang-label/" .. label, data_langcode)
+				if resolved_label then
+					track("wrong-lang-label/" .. resolved_label, data_langcode)
+				end
 			end
-			-- make sure to assign labdata to nil again in case this is the last iteration of the loop
-			labdata = nil
 		end
 	end
 	labdata = labdata or {}
@@ -347,18 +367,19 @@ function export.get_label_info(data)
 	if labdata.deprecated then
 		deprecated = true
 	end
-	if type(labdata) == "string" or labdata.alias_of then
-		label = labdata.alias_of or labdata
+	if label ~= orig_label then
+		-- Note that this is an alias and store the canonical version.
 		ret.canonical = label
-		labdata = submodule[label] or {}
 	end
 
 	if labdata.track then
 		-- Track label (after converting aliases to canonical form; but also track original label (alias) if different
 		-- from canonical label). It is too expensive to track all labels.
-		track_label(label, langcode)
+		-- [[Special:WhatLinksHere/Wiktionary:Tracking/labels/label/LABEL]]
+		-- [[Special:WhatLinksHere/Wiktionary:Tracking/labels/label/LABEL/LANGCODE]]
+		track("label/" .. label, data_langcode)
 		if label ~= orig_label then
-			track_label(orig_label, langcode)
+			track("label/" .. orig_label, data_langcode)
 		end
 	end
 
