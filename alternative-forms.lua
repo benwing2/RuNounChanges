@@ -11,55 +11,18 @@ local function track(page)
 end
 
 --[==[
-See if the language's dialectal data module in `dialect_data` has a tag corresponding to the `tag` argument.
-Return the display form of the tag if so; otherwise, return {nil}.
-]==]
-function export.get_tag(tag, dialect_data)
-	local data = dialect_data[tag] or ( dialect_data.labels and dialect_data.labels[tag] )
-	local alias_of = ( dialect_data.aliases and dialect_data.aliases[tag] )
-	if not data then
-		if alias_of then
-			data = dialect_data[alias_of] or ( dialect_data.labels and dialect_data.labels[alias_of] )
-		end
-	end
-	if data then
-		local display = data.display or tag
-		if data.appendix then
-			tag = '[[Appendix:' .. data.appendix .. '|' .. display .. ']]'
-		else
-			local target = data.link
-			tag = target and '[[w:'.. target .. '|' .. display .. ']]' or display
-		end
-		return tag
-	end
-	return nil
-end
-
---[==[
 Return a list of objects corresponding to the raw label tags in `raw_tags`, where "label tags" are the tags after two
-vertical bars in {{tl|alt}}. Each object is of the format returned by `get_label_info` in [[Module:labels]], except that
-if a tag was fetched from the dialect data modules (which will be going away) instead of from the label data modules,
-the object will currently contain only a `label` field containing the display form.
+vertical bars in {{tl|alt}}. Each object is of the format returned by `get_label_info` in [[Module:labels]], as the
+separate dialectal data modules have been removed.
+
+NOTE: This function no longer does anything other than call {get_label_info()} in [[Module:labels]].
 ]==]
 function export.get_tag_info(raw_tags, lang)
-	local dialect_page = 'Module:'.. lang:getCode() ..':Dialects'
-	local dialect_info
-	if raw_tags[1] then
-		dialect_info = mw.title.new(dialect_page).exists and mw.loadData(dialect_page) or false
-	end
-
 	local tags = {}
 
 	for _, tag in ipairs(raw_tags) do
-		local display = dialect_info and export.get_tag(tag, dialect_info)
-		if display then
-			display = {
-				label = display
-			}
-		else
-			-- Pass in nocat to avoid extra work, since we won't use the categories.
-			display = require(labels_module).get_label_info { label = tag, lang = lang, nocat = true }
-		end
+		-- Pass in nocat to avoid extra work, since we won't use the categories.
+		local display = require(labels_module).get_label_info { label = tag, lang = lang, nocat = true }
 		table.insert(tags, display)
 	end
 
@@ -266,9 +229,9 @@ function export.display_alternative_forms(parent_args, pagename, show_tags_after
 					-- FIXME: If we don't need it, remove the call to track() below, add `break` below, and wrap
 					-- the `for` loop in `if not any_param_at_index then` for efficiency purposes.
 					-- break
-					-- [[Special:WhatLinksHere/Template:tracking/alter/alt]]
-					-- [[Special:WhatLinksHere/Template:tracking/alter/id]]
-					-- [[Special:WhatLinksHere/Template:tracking/alter/tr]]
+					-- [[Special:WhatLinksHere/Wiktionary:Tracking/alter/alt]]
+					-- [[Special:WhatLinksHere/Wiktionary:Tracking/alter/id]]
+					-- [[Special:WhatLinksHere/Wiktionary:Tracking/alter/tr]]
 					-- [etc.]
 					track(k)
 				end
@@ -391,42 +354,6 @@ function export.display_alternative_forms(parent_args, pagename, show_tags_after
 
 	return table.concat(items)
 end
-
---[==[
-Interface function to load the label data module named `module_name` and convert label data for language object `lang`
-to the format needed in dialect data modules. This is temporary, as the dialect data modules will be going away.
-]==]
-function export.convert_labels_data_module(module_name, lang)
-	local submodule = mw.loadData(module_name)
-	local labels = {}
-	local aliases = {}
-	local m_labels = require(labels_module)
-	for label, labdata in pairs(submodule) do
-		if type(labdata) == "string" then
-			aliases[label] = labdata
-		else
-			labels[label] = {
-				display = m_labels.get_displayed_label(label, labdata, lang)
-			}
-		end
-	end
-	return {
-		labels = labels,
-		aliases = aliases,
-	}
-end
-
-
---[==[
-Interface function to convert label data for language code `langcode` to the format needed in dialect data modules.
-This is temporary, as the dialect data modules will be going away.
-]==]
-function export.convert_labels_data(langcode)
-	local lang = require("Module:languages").getByCode(langcode, true, "allow etym")
-	local labels_module_name = ("Module:labels/data/lang/%s"):format(langcode)
-	return export.convert_labels_data_module(labels_module_name, lang)
-end
-
 
 --[==[
 Template-callable function for displaying alternative forms.
