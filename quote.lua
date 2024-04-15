@@ -31,14 +31,18 @@ local usex_templates_module = "Module:usex/templates"
 local utilities_module = "Module:utilities"
 local yesno_module = "Module:yesno"
 
-local rsubn = mw.ustring.gsub
-local rmatch = mw.ustring.match
-local rfind = mw.ustring.find
-local rsplit = mw.text.split
-local rgsplit = mw.text.gsplit
-local ulen = mw.ustring.len
-local usub = mw.ustring.sub
-local u = require("Module:string/char")
+local m_string_utils = require(string_utilities_module)
+
+local utils_pluralize = m_string_utils.pluralize
+local rsubn = m_string_utils.gsub
+local rmatch = m_string_utils.match
+local rfind = m_string_utils.find
+local rsplit = m_string_utils.split
+local rgsplit = m_string_utils.gsplit
+local ulen = m_string_utils.len
+local usub = m_string_utils.sub
+local u = m_string_utils.char
+local upper = m_string_utils.upper
 
 -- Use HTML entities here to avoid parsing issues (esp. with brackets)
 local SEMICOLON_SPACE = "&#59; "
@@ -113,7 +117,7 @@ local function split_on_comma(term)
 	if term:find(",%s") then
 		return require(parse_utilities_module).split_on_comma(term)
 	else
-		return rsplit(term, ",")
+		return rsplit(term, ",", true)
 	end
 end
 
@@ -149,7 +153,7 @@ end
 -- Convert a comma-separated list of language codes to a comma-separated list of language names. `fullname` is the
 -- name of the parameter from which the list of language codes was fetched.
 local function format_langs(langs, fullname)
-	langs = rsplit(langs, ",")
+	langs = rsplit(langs, "%s*,%s*")
 	for i, langcode in ipairs(langs) do
 		local lang = require(languages_module).getByCode(langcode, fullname, "allow etym")
 		langs[i] = lang:getCanonicalName()
@@ -163,10 +167,10 @@ end
 
 
 local function get_first_lang(langs, fullname, get_non_etym, required)
-	local langcode = langs and rsplit(langs, ",")[1] or not required and "und" or nil
+	local langcode = langs and rsplit(langs, ",", true)[1] or not required and "und" or nil
 	local lang = require(languages_module).getByCode(langcode, fullname, "allow etym")
 	if get_non_etym then
-		lang = lang:getNonEtymological()
+		lang = lang:getFull()
 	end
 	return lang
 end
@@ -567,11 +571,18 @@ local function format_annotated_text(textobj, tag_text, tag_gloss)
 				tr = (lang:transliterate(text_for_tr, sc))
 			end
 
-			text = require(links_module).embedded_language_links{
-				term = text,
-				lang = lang,
-				sc = sc,
-			}
+			if text:find("%[%[") then
+				-- FIXME: embedded_language_links() replaces % signs with their URL-encoded equivalents,
+				-- which messes up URL's that may be present (e.g. if chapterurl= is given). IMO this
+				-- should not happen, and embedded_language_links() should do nothing if no embedded links
+				-- are present. To work around this, only call embedded_language_links() when there are
+				-- embedded links present.
+				text = require(links_module).embedded_language_links{
+					term = text,
+					lang = lang,
+					sc = sc,
+				}
+			end
 			if lang:getCode() ~= "und" or sc:getCode() ~= "Latn" then
 				text = require(script_utilities_module).tag_text(text, lang, sc)
 			end
@@ -828,7 +839,7 @@ local function format_date_args(a, get_full_paramname, alias_map, parampref, par
 		end
 		local english_month = timestamp:find("[A-Z]")
 		local canon_timestamp = mw.text.trim((timestamp:gsub("[^0-9]+", " ")))
-		local seen_nums = rsplit(canon_timestamp, " ")
+		local seen_nums = rsplit(canon_timestamp, " ", true)
 		local saw_one = false
 		for _, num in ipairs(seen_nums) do
 			if num == "1" or num == "01" then
@@ -1021,16 +1032,15 @@ end
 local function pluralize(txt)
 	-- Try to shortcut loading [[Module:string utilities]].
 	if txt:find("[sxzhy%]]$") then
-		return require(string_utilities_module).pluralize(txt)
+		return utils_pluralize(txt)
 	else
 		return txt .. "s"
 	end
 end
 
-
 -- Display the source line of the quote, above the actual quote text. This contains the majority of the logic of this
 -- module (formerly contained in {{quote-meta/source}}).
-function export.source(args, alias_map)
+function export.source(args, alias_map, format_as_cite)
 	local tracking_categories = {}
 
 	local argslang = args.lang or args[1]
@@ -1172,6 +1182,33 @@ function export.source(args, alias_map)
 	-- Mary Bloggs" (if there's an author preceding).
 	local author_outputted = false
 
+	-- When formatting as a citation, the priority is to display a name and a date before the book/chapter title
+	-- this tracks whether or not the author/date has been displayed
+	local date_outputted = false
+	local formatted_date = nil
+	local formatted_origdate = nil
+	local function add_date(no_paren)
+		if not date_outputted then
+			if no_paren then
+				sep = ", "
+			else
+				sep = " "
+			end
+			if formatted_date then
+				if no_paren then
+					add(formatted_date)
+				else
+					add("(" .. formatted_date .. ")")
+				end
+			end
+			if formatted_origdate then
+				add(SPACE_LBRAC .. formatted_origdate .. RBRAC)
+			end
+			sep = ", "
+			date_outputted = true
+		end
+	end
+
 	local function is_anonymous(val)
 		return rfind(val, "^[Aa]nonymous$") or rfind(val, "^[Aa]non%.?$")
 	end
@@ -1197,9 +1234,10 @@ function export.source(args, alias_map)
 	-- * `trans_last` is the value of the corresponding parameter holding the gloss/translation of the last name
 	--    (e.g. "trans-last"), and `trans_last_fullname` is the full parameter name holding that value (or nil for
 	--    no such parameter).
+	-- * `last_first` if set, when parameters `first` and `last` are used, display the author name as "last, first"
 	local function add_author(author, author_fullname, trans_author, trans_author_fullname, authorlink,
 		authorlink_fullname, trans_authorlink, trans_authorlink_fullname, first, first_fullname, trans_first,
-		trans_first_fullname, last, last_fullname, trans_last, trans_last_fullname)
+		trans_first_fullname, last, last_fullname, trans_last, trans_last_fullname, last_first)
 		local function make_author_with_url(txt, txtparam, authorlink, authorlink_param)
 			if authorlink then
 				if authorlink:find("%[%[") then
@@ -1255,7 +1293,11 @@ function export.source(args, alias_map)
 			-- Author separated into first name + last name. We don't currently support non-Latin-script
 			-- authors separated this way and probably never will.
 			if first then
-				author = first .. " " .. last
+				if last_first then
+					author = last .. ", " .. first
+				else
+					author = first .. " " .. last
+				end
 			else
 				author = last
 			end
@@ -1407,7 +1449,7 @@ function export.source(args, alias_map)
 			formatted = numeric_prefix .. make_chapter_with_url(chap)
 		elseif rfind(cleaned_chap, "^[mdclxviMDCLXVI]+$") and require(roman_numerals_module).roman_to_arabic(cleaned_chap, true) then
 			-- Roman chapter number
-			formatted = numeric_prefix .. make_chapter_with_url(mw.ustring.upper(chap))
+			formatted = numeric_prefix .. make_chapter_with_url(upper(chap))
 		else
 			-- Must be a chapter name
 			local chapterobj = parse_annotated_text(chap, chap_fullname, a("trans-" .. param))
@@ -1427,68 +1469,11 @@ function export.source(args, alias_map)
 		return formatted
 	end
 
-	------------------- Now we start outputting text ----------------------
-
-	-- Set this now so a() works just below.
-	get_full_paramname = make_get_full_paramname("")
-
-	if args.brackets then
-		add("[")
-	end
-
-	local need_comma = false
-	local formatted_date, need_date = format_date_args(a, get_full_paramname, alias_map, nil, nil, "bold year",
-		"Can we [[:Category:Requests for date|date]] this quote?")
-	if formatted_date then
-		need_comma = true
-		add(formatted_date)
-	end
-
-	-- Fetch origdate=/origyear=/origmonth= and format appropriately.
-	local formatted_origdate = format_date_args(a, get_full_paramname, alias_map, "orig")
-	if formatted_origdate then
-		need_comma = true
-		add(SPACE_LBRAC .. formatted_origdate .. RBRAC)
-	end
-
-	if need_comma then
-		sep = ", "
-	end
-
-	-- Find maximum indexed author or last name.
-	local maxind = math.max(args.author.maxindex, args.last.maxindex)
-	-- Include max index of ancillary params so we get an error message about their use without the primary params.
-	local ancillary_params = { "trans-author", "authorlink", "trans-authorlink", "first", "trans-first", "trans-last" }
-	for _, ancillary in ipairs(ancillary_params) do
-		maxind = math.max(maxind, args[ancillary].maxindex)
-	end
-
-	local num_authors = 0
-	for i = 1, maxind do
-		local ind = i == 1 and "" or i
-		local author = args.author[i]
-		local last = args.last[i]
-		if args.author[i] or args.last[i] then
-			local this_num_authors = add_author(args.author[i], "author" .. ind, args["trans-author"][i],
-				"trans-author" .. ind, args.authorlink[i], "authorlink" .. ind, args["trans-authorlink"][i],
-				"trans-authorlink" .. ind, args.first[i], "first" .. ind, args["trans-first"][i], "trans-first" .. ind,
-				args.last[i], "last" .. ind, args["trans-last"][i], "trans-last" .. ind)
-			num_authors = num_authors + this_num_authors
-			sep = ", "
-		else
-			for _, cant_have in ipairs(ancillary_params) do
-				if args[cant_have][i] then
-					error(("Can't have |%s%s= without |author%s= or |last%s="):format(cant_have, ind, ind, ind))
-				end
-			end
-		end
-	end
-
 	-- This handles everything after displaying the author, starting with the chapter and ending with page, column,
 	-- line and then other=. It is currently called twice: Once to handle the main portion of the citation, and once to
 	-- handle a "newversion" citation. `ind` is either "" for the main portion or a number (currently only 2) for a
 	-- "newversion" citation. In a few places we conditionalize on `ind` to take actions depending on its value.
-	local function postauthor(ind, num_authors)
+	local function postauthor(ind, num_authors, format_as_cite)
 		get_full_paramname = make_get_full_paramname(ind)
 
 		if author_outputted then
@@ -1510,24 +1495,12 @@ function export.source(args, alias_map)
 
 		add_authorlike("quotee", "quoting ", ", quotee", ", quotees")
 
+		if format_as_cite and author_outputted and not date_outputted then
+			add_date()
+			sep = " "
+		end
+
 		add_authorlike("chapter_tlr", "translated by ", ", transl.", nil, " translator")
-
-		local formatted_chapter = format_chapterlike("chapter", "chapter ", "“", "”")
-		if formatted_chapter then
-			add_with_sep(formatted_chapter)
-			if not a("notitle") then
-				add("in ")
-				author_outputted = false
-			end
-		end
-
-		local mainauthor = parse_and_format_multivalued_annotated_text("mainauthor")
-		if mainauthor then
-			add_with_sep(mainauthor)
-			author_outputted = true
-		end
-
-		add_authorlike("tlr", "translated by ", ", transl.", nil, " translator")
 
 		local function add_sg_and_pl_authorlike(noun, verbed)
 			local sgparam = noun
@@ -1546,13 +1519,107 @@ function export.source(args, alias_map)
 			end
 		end
 
-		add_sg_and_pl_authorlike("editor", "edited")
-		add_sg_and_pl_authorlike("compiler", "compiled")
-		add_sg_and_pl_authorlike("director", "directed")
+		local formatted_chapter = format_chapterlike("chapter", "chapter ", "“", "”")
+		local chapter_outputted = false
+		local function add_chapter()
+			if formatted_chapter then
+				add_with_sep(formatted_chapter)
+				if not a("notitle") then
+					add("in ")
+					author_outputted = false
+				end
+				formatted_chapter = nil
+			end
+		end
 
-		add_authorlike("lyricist", nil, " (lyrics)", nil, " lyricist")
-		add_authorlike("lyrics-translator", nil, " (translation)", nil, " lyrics translator")
-		add_authorlike("composer", nil, " (music)", nil, " composer")
+		local function add_actor_role(format_as_cite)
+			local role = parse_and_format_multivalued_annotated_text("role", "and")
+			local actor_val, actor_fullname = a_with_name("actor")
+			local actor_objs = parse_multivalued_annotated_text(actor_val, actor_fullname)
+			local actor = format_multivalued_annotated_text(actor_objs, "and")
+
+			if format_as_cite then
+				if role then
+					if actor then
+						add_with_sep(actor)
+					end
+					sep = nil
+					add_with_sep(" as " .. role)
+				elseif actor then
+					add_with_sep(actor .. " (" .. (#actor_objs > 1 and "actors" or "actor") .. ")")
+				end
+			else
+				if role then
+					add_with_sep("spoken by " .. role)
+					if actor then
+						sep = nil
+						add_with_sep(" (" .. actor .. ")")
+					end
+				elseif actor then
+					add_with_sep(actor .. " (" .. (#actor_objs > 1 and "actors" or "actor") .. ")")
+				end
+			end
+		end
+
+
+		if format_as_cite then
+
+			if date_outputted then
+				add_chapter()
+			end
+
+			output_len = #output
+
+			local mainauthor = parse_and_format_multivalued_annotated_text("mainauthor")
+			if mainauthor then
+				add_with_sep(mainauthor)
+			end
+
+			-- quote-* templates display "jobbed by name" after the author, controlled by the author_outputted flag
+			author_outputted = false
+
+			add_authorlike("tlr", "translated by ", ", transl.", nil, " translator")
+			author_outputted = false
+
+			add_sg_and_pl_authorlike("editor", "edited")
+			add_sg_and_pl_authorlike("compiler", "compiled")
+			add_sg_and_pl_authorlike("director", "directed")
+
+			add_authorlike("lyricist", nil, " (lyrics)", nil, " lyricist")
+			add_authorlike("lyrics-translator", nil, " (translation)", nil, " lyrics translator")
+			add_authorlike("composer", nil, " (music)", nil, " composer")
+			add_actor_role("format_as_cite")
+
+			-- if the output length has changed, a credit name has been printed
+			-- and we can print the date
+			if output_len ~= #output then
+				author_outputted = true
+				add_date()
+			end
+
+			add_chapter()
+
+		else
+
+			add_chapter()
+
+			local mainauthor = parse_and_format_multivalued_annotated_text("mainauthor")
+			if mainauthor then
+				add_with_sep(mainauthor)
+				author_outputted = true
+			end
+
+			add_authorlike("tlr", "translated by ", ", transl.", nil, " translator")
+
+			add_sg_and_pl_authorlike("editor", "edited")
+			add_sg_and_pl_authorlike("compiler", "compiled")
+			add_sg_and_pl_authorlike("director", "directed")
+
+			add_authorlike("lyricist", nil, " (lyrics)", nil, " lyricist")
+			add_authorlike("lyrics-translator", nil, " (translation)", nil, " lyrics translator")
+			add_authorlike("composer", nil, " (music)", nil, " composer")
+		end
+
 
 		local title, title_fullname = a_with_name("title")
 		local need_comma = false
@@ -1596,6 +1663,14 @@ function export.source(args, alias_map)
 			verify_title_supplied(urls_fullname)
 			sep = nil
 			add("&lrm;<sup>" .. urls .. "</sup>")
+		end
+
+		-- display (in Language) if language is provided and is not English
+		if format_as_cite and ind == "" and ine(args[1]) and ine(args[1]) ~= "und" and ine(args[1]) ~= "en" then
+			langs = format_langs(args.lang or args[1], "1")
+			if langs then
+				add(" (in " .. langs .. ")")
+			end
 		end
 
 		if need_comma then
@@ -1789,19 +1864,9 @@ function export.source(args, alias_map)
 			sep = " "
 			add_with_sep("ft. " .. feat)
 		end
-	
-		local role = parse_and_format_multivalued_annotated_text("role", "and")
-		local actor_val, actor_fullname = a_with_name("actor")
-		local actor_objs = parse_multivalued_annotated_text(actor_val, actor_fullname)
-		local actor = format_multivalued_annotated_text(actor_objs, "and")
-		if role then
-			add_with_sep("spoken by " .. role)
-			if actor then
-				sep = nil
-				add_with_sep(" (" .. actor .. ")")
-			end
-		elseif actor then
-			add_with_sep(actor .. " (" .. (#actor_objs > 1 and "actors" or "actor") .. ")")
+
+		if not format_as_cite then
+			add_actor_role()
 		end
 
 		local others = parse_and_format_annotated_text("others")
@@ -1824,6 +1889,10 @@ function export.source(args, alias_map)
 			add_with_sep(publisher)
 		elseif location then
 			add_with_sep(location)
+		end
+
+		if not date_outputted then
+			add_date("no_paren")
 		end
 
 		local source = parse_and_format_multivalued_annotated_text("source", "and")
@@ -1921,6 +1990,7 @@ function export.source(args, alias_map)
 		add_identifier("pmid", "[https://www.ncbi.nlm.nih.gov/pubmed/", " →PMID]")
 		add_identifier("pmcid", "[https://www.ncbi.nlm.nih.gov/pmc/articles/", "/ →PMCID]")
 		add_identifier("ssrn", "[https://ssrn.com/abstract=", " →SSRN]")
+		-- add_identifier("urn", "", "", urn)
 		local id = a("id")
 		if id then
 			small(id)
@@ -2010,51 +2080,165 @@ function export.source(args, alias_map)
 		end
 	end
 
-	-- Display all the text that comes after the author, for the main portion.
-	postauthor("", num_authors)
+	local function add_authors(args, last_first)
+		-- Find maximum indexed author or last name.
+		local maxind = math.max(args.author.maxindex, args.last.maxindex)
+		-- Include max index of ancillary params so we get an error message about their use without the primary params.
+		local ancillary_params = { "trans-author", "authorlink", "trans-authorlink", "first", "trans-first", "trans-last" }
+		for _, ancillary in ipairs(ancillary_params) do
+			maxind = math.max(maxind, args[ancillary].maxindex)
+		end
 
-	author_outputted = false
-
-	-- If there's a "newversion" section, add the new-version text.
-	if has_newversion() then
-		sep = nil
-		--Test for new version of work.
-		add(SEMICOLON_SPACE)
-		if args.newversion then -- newversion= is intended for English text, e.g. "quoted in" or "republished as".
-			add(args.newversion)
-		elseif not args.edition2 then
-			if has_new_title_or_author() then
-				add("republished as")
+		local num_authors = 0
+		for i = 1, maxind do
+			local ind = i == 1 and "" or i
+			local author = args.author[i]
+			local last = args.last[i]
+			if args.author[i] or args.last[i] then
+				local this_num_authors = add_author(args.author[i], "author" .. ind, args["trans-author"][i],
+					"trans-author" .. ind, args.authorlink[i], "authorlink" .. ind, args["trans-authorlink"][i],
+					"trans-authorlink" .. ind, args.first[i], "first" .. ind, args["trans-first"][i], "trans-first" .. ind,
+					args.last[i], "last" .. ind, args["trans-last"][i], "trans-last" .. ind, last_first)
+				num_authors = num_authors + this_num_authors
+				sep = ", "
 			else
-				add("republished")
+				for _, cant_have in ipairs(ancillary_params) do
+					if args[cant_have][i] then
+						error(("Can't have |%s%s= without |author%s= or |last%s="):format(cant_have, ind, ind, ind))
+					end
+				end
 			end
 		end
-		add(" ")
-		sep = ""
-	else
-		sep = ", "
+		return num_authors
 	end
 
-	-- Add the newversion author(s).
-	if args["2ndauthor"] or args["2ndlast"] then
-		num_authors = add_author(args["2ndauthor"], "2ndauthor", nil, nil, args["2ndauthorlink"], "2ndauthorlink", nil,
-			nil, args["2ndfirst"], "2ndfirst", nil, nil, args["2ndlast"], "2ndlast", nil, nil)
-		sep = ", "
-	else
-		for _, cant_have in ipairs { "2ndauthorlink", "2ndfirst" } do
-			if args[cant_have] then
-				error(("Can't have |%s= without |2ndauthor= or |2ndlast="):format(cant_have))
+	local function add_newversion()
+		-- If there's a "newversion" section, add the new-version text.
+		if has_newversion() then
+			sep = nil
+			--Test for new version of work.
+			add(SEMICOLON_SPACE)
+			if args.newversion then -- newversion= is intended for English text, e.g. "quoted in" or "republished as".
+				add(args.newversion)
+			elseif not args.edition2 then
+				if has_new_title_or_author() then
+					add("republished as")
+				else
+					add("republished")
+				end
 			end
+			add(" ")
+			return ""
+		else
+			return ", "
 		end
 	end
 
-	-- Display all the text that comes after the author, for the "newversion" section.
-	postauthor(2, num_authors)
+	------------------- Now we start outputting text ----------------------
+
+	local need_comma = false
+
+	-- Set this now so a() works just below.
+	get_full_paramname = make_get_full_paramname("")
+
+	if args.brackets then
+		add("[")
+	end
+
+	if format_as_cite then
+		num_authors = add_authors(args, "last_first")
+        if author_outputted then
+			sep = " "
+		end
+
+		local need_date
+		formatted_date, need_date = format_date_args(a, get_full_paramname, alias_map, nil, nil, nil,
+			"Can we [[:Category:Requests for date|date]] this quote?")
+
+		-- Fetch origdate=/origyear=/origmonth= and format appropriately.
+		formatted_origdate = format_date_args(a, get_full_paramname, alias_map, "orig")
+
+		-- Display all the text that comes after the author, for the main portion.
+		postauthor("", num_authors, "format_as_cite")
+
+		author_outputted = false
+
+		sep = add_newversion()
+
+		-- Add the newversion author(s).
+		if args["2ndauthor"] or args["2ndlast"] then
+			num_authors = add_author(args["2ndauthor"], "2ndauthor", nil, nil, args["2ndauthorlink"], "2ndauthorlink", nil,
+				nil, args["2ndfirst"], "2ndfirst", nil, nil, args["2ndlast"], "2ndlast", nil, nil, "last_first")
+			sep = ", "
+		else
+			for _, cant_have in ipairs { "2ndauthorlink", "2ndfirst" } do
+				if args[cant_have] then
+					error(("Can't have |%s= without |2ndauthor= or |2ndlast="):format(cant_have))
+				end
+			end
+		end
+
+		-- Display all the text that comes after the author, for the "newversion" section.
+		postauthor(2, num_authors, "format_as_cite")
+
+	else
+
+		local formatted_date, need_date = format_date_args(a, get_full_paramname, alias_map, nil, nil, "bold year",
+			"Can we [[:Category:Requests for date|date]] this quote?")
+		if formatted_date then
+			need_comma = true
+			add(formatted_date)
+		end
+
+		-- Fetch origdate=/origyear=/origmonth= and format appropriately.
+		local formatted_origdate = format_date_args(a, get_full_paramname, alias_map, "orig")
+		if formatted_origdate then
+			need_comma = true
+			add(SPACE_LBRAC .. formatted_origdate .. RBRAC)
+		end
+
+		if need_comma then
+			sep = ", "
+		end
+
+		date_outputted = true
+
+		num_authors = add_authors(args)
+
+		-- Display all the text that comes after the author, for the main portion.
+		postauthor("", num_authors)
+
+		author_outputted = false
+
+		sep = add_newversion()
+
+		-- Add the newversion author(s).
+		if args["2ndauthor"] or args["2ndlast"] then
+			num_authors = add_author(args["2ndauthor"], "2ndauthor", nil, nil, args["2ndauthorlink"], "2ndauthorlink", nil,
+				nil, args["2ndfirst"], "2ndfirst", nil, nil, args["2ndlast"], "2ndlast", nil, nil)
+			sep = ", "
+		else
+			for _, cant_have in ipairs { "2ndauthorlink", "2ndfirst" } do
+				if args[cant_have] then
+					error(("Can't have |%s= without |2ndauthor= or |2ndlast="):format(cant_have))
+				end
+			end
+		end
+
+		-- Display all the text that comes after the author, for the "newversion" section.
+		postauthor(2, num_authors)
+
+	end
+
+	if args.usenodot and not args.nodot then
+		add(".")
+	end
 
 	if not args.nocolon then
 		sep = nil
 		add(":")
 	end
+
 
 	-- Concatenate output portions to form output text.
 	local output_text = table.concat(output)
@@ -2099,7 +2283,7 @@ function export.source(args, alias_map)
 			end
 		end
 		if ok_to_add_cat then
-			table.insert(categories, termlang:getNonEtymologicalName() .. " terms with quotations")
+			table.insert(categories, termlang:getFullName() .. " terms with quotations")
 		end
 		if need_date then
 			local argslangobj = get_first_lang(argslang, 1)
@@ -2178,7 +2362,7 @@ local function process_type_aliases(args, typ, newversion, alias_map)
 		local canon, aliases, with_newversion = unpack(alias_spec)
 		if with_newversion or not newversion then
 			canon = canon .. ind
-			aliases = rsplit(aliases, ",")
+			aliases = rsplit(aliases, ",", true)
 			local saw_alias = nil
 			for _, alias in ipairs(aliases) do
 				if rfind(alias, "^[0-9]+$") then
@@ -2221,7 +2405,7 @@ local function clone_args(direct_args, parent_args)
 	-- Processing parent args must come first so that direct args override parent args. Note that if a direct arg is
 	-- specified but is blank, it will still override the parent arg (with nil).
 	for pname, param in pairs(parent_args) do
-		-- [[Special:WhatLinksHere/Template:tracking/quote/param/PARAM]]
+		-- [[Special:WhatLinksHere/Wiktionary:Tracking/quote/param/PARAM]]
 		track("param/" .. pname)
 		args[pname] = ine(param)
 	end
@@ -2324,18 +2508,17 @@ local function clone_args(direct_args, parent_args)
 	return args, alias_map
 end
 
--- External interface, meant to be called from a template. Replaces {{quote-meta}} and meant to be the primary
--- interface for {{quote-*}} templates.
-function export.quote_t(frame)
+local function get_args(frame_args, parent_args, require_lang)
 	-- FIXME: We are processing arguments twice, once in clone_args() and then again in [[Module:parameters]]. This is
 	-- wasteful of memory.
-	local parent_args = frame:getParent().args
-	local cloned_args, alias_map = clone_args(frame.args, parent_args)
+
+	local cloned_args, alias_map = clone_args(frame_args, parent_args)
 	local deprecated = ine(parent_args.lang)
 
 	-- First, the "single" params that don't have FOO2 or FOOn versions.
 	local params = {
-		[deprecated and "lang" or 1] = {required = true, default = "und"},
+        -- FIXME: temporary, set required=1 when cite- calls use 1= as lang
+		[deprecated and "lang" or 1] = {required = require_lang, default = "und"},
 		newversion = {},
 		["2ndauthor"] = {},
 		["2ndauthorlink"] = {},
@@ -2374,6 +2557,10 @@ function export.quote_t(frame)
 		orignormsc = {},
 		origsubst = {},
 		origtag = {},
+
+		["usenodot"] = {type = "boolean"},
+		["nodot"] = {type = "boolean"},
+
 	}
 
 	-- Then the list params (which have FOOn versions).
@@ -2419,7 +2606,7 @@ function export.quote_t(frame)
 		"worklang", "termlang", "origlang", "origworklang",
 
 		-- ID params
-		"bibcode", "doi", "isbn", "issn", "jstor", "lccn", "oclc", "ol", "pmid", "pmcid", "ssrn", "id",
+		"bibcode", "doi", "isbn", "issn", "jstor", "lccn", "oclc", "ol", "pmid", "pmcid", "ssrn", "urn", "id",
 
 		-- misc date params; most date params handled below
 		"archivedate", "accessdate", "nodate",
@@ -2452,6 +2639,7 @@ function export.quote_t(frame)
 		{"pmid", "PMID"},
 		{"pmcid", "PMCID"},
 		{"ssrn", "SSRN"},
+		{"urn", "URN"},
 	} do
 		local canon, alias = unpack(param12_aliased)
 		params[alias] = {alias_of = canon}
@@ -2474,28 +2662,12 @@ function export.quote_t(frame)
 			params[numeric .. suf .. "2"] = {}
 		end
 	end
-	
-	local args = require(parameters_module).process(cloned_args, params, nil, "quote", "quote_t")
 
-	local parts = {}
-	local function ins(text)
-		table.insert(parts, text)
-	end
+	args = require(parameters_module).process(cloned_args, params, nil, "quote", "quote_t")
+	return args, alias_map
+end
 
-	ins('<div class="citation-whole"><span class="cited-source">')
-	ins(export.source(args, alias_map))
-	ins("</span><dl><dd>")
-
-	local text = args.text
-	local gloss = args.t
-	local tr = args.tr
-	local ts = args.ts
-	local norm = args.norm
-	local sc = args.sc and require(scripts_module).getByCode(args.sc, "sc") or nil
-	local normsc = args.normsc == "auto" and args.normsc or
-		args.normsc and require(scripts_module).getByCode(args.normsc, "normsc") or nil
-
-	-- Fetch original-text parameters.
+local function get_origtext_params(args)
 	local origtext, origtextlang, origsc, orignormsc
 	if args.origtext then
 		-- Wiktionary language codes have at least two lowercase letters followed possibly by lowercase letters and/or
@@ -2521,6 +2693,22 @@ function export.quote_t(frame)
 			end
 		end
 	end
+    return origtext, origtextlang, origsc, orignormsc
+end
+
+local function get_quote(args, usex_args)
+
+	local text = args.text
+	local gloss = args.t
+	local tr = args.tr
+	local ts = args.ts
+	local norm = args.norm
+	local sc = args.sc and require(scripts_module).getByCode(args.sc, "sc") or nil
+	local normsc = args.normsc == "auto" and args.normsc or
+		args.normsc and require(scripts_module).getByCode(args.normsc, "normsc") or nil
+
+	-- Fetch original-text parameters.
+	local origtext, origtextlang, origsc, orignormsc = get_origtext_params(args)
 
 	-- If any quote-related args are present, display the actual quote; otherwise, display nothing.
 	if text or gloss or tr or ts or norm or args.origtext then
@@ -2555,14 +2743,146 @@ function export.quote_t(frame)
 			origsubst = args.origsubst,
 			origqq = parse_and_format_tags(args.origtag, lang),
 		}
-		ins(require(usex_module).format_usex(usex_data))
+
+        if usex_args then
+			for k, v in pairs(usex_args) do
+				usex_data[k] = v
+			end
+		end
+
+		return require(usex_module).format_usex(usex_data)
 	end
+
+end
+
+
+-- External interface, meant to be called from a template. Replaces {{quote-meta}} and meant to be the primary
+-- interface for {{quote-*}} templates.
+function export.quote_t(frame)
+    local args, alias_map = get_args(frame.args, frame:getParent().args, "require_lang")
+
+	local parts = {}
+	local function ins(text)
+		table.insert(parts, text)
+	end
+
+	ins('<div class="citation-whole"><span class="cited-source">')
+	ins(export.source(args, alias_map))
+	ins("</span><dl><dd>")
+
+    --ins(get_quote(args))
+    ins(get_quote(args))
+
 	ins("</dd></dl></div>")
 	local retval = table.concat(parts)
 	return deprecated and frame:expandTemplate{title = "check deprecated lang param usage", args = {retval, lang = args.lang}} or retval
 end
 
 
+local function cite_t(frame)
+	local parent_args = {}
+	for k, v in pairs(frame:getParent().args) do
+		if k == "language" then
+			k = "lang"
+		end
+		parent_args[k] = v
+	end
+
+    -- FIXME: temporary, remove when cite- calls use 1= as lang
+    -- if 1= is defined and is not a valid language code, assume that the cite- template
+    -- is using the older style where 1= is the year. Shift all numbered params by 1
+    -- and set 1= as lang= (if available) or "und"
+    if ine(parent_args[1]) then
+		local langobj = get_first_lang(ine(parent_args[1]))
+
+	    -- 1 is not a valid language code, assume it's a year for backwards compatability
+        -- increase all numbered parameters by 1 to make room for 1= as lang_id(s)
+	    if langobj == nil then
+			for x=10,2,-1 do
+				parent_args[x] = parent_args[x-1]
+			end
+			parent_args[1] = parent_args.lang or "und"
+	    end
+	else
+		parent_args[1] = parent_args.lang or "und"
+    end
+	-- delete "lang" to avoid triggering deprecated lang= handling (used by quote-* templates)
+	parent_args.lang = nil
+
+    local args, alias_map = get_args(frame.args, parent_args)
+	
+	local parts = {}
+	local function ins(text)
+		table.insert(parts, text)
+	end
+
+	-- don't nag for translations
+	if args.text and not args.t then
+		args.t = "-"
+	end
+
+	local len_visible = args.text and ulen(rsubn(args.text, "<[^<>]+>", "")) or 0
+
+	local use_inline_quotes = args.text and ((not args.t or args.t == "-") or len_visible<80) and len_visible<=300 and not string.match(args.text, "<br>")
+	if len_visible == 0 then
+		args.nocolon = true
+	end
+
+	ins('<span class="citation-whole"><span class="cited-source">')
+	ins(export.source(args, alias_map, "format_as_cite"))
+	ins("</span>")
+
+    if use_inline_quotes then
+		-- don't let usex format the footer, otherwise it gets inlined with the rest of the quoted text
+	    local text = get_quote(args, {inline=use_inline_quotes, footer=nil})
+		if text then
+			ins(" “" .. text  .. "”")
+		end
+		if args.footer then
+			ins("<dl><dd>" .. args.footer .. "</dd></dl>")
+		end
+	else
+	    local text = get_quote(args)
+		if text then
+			ins("<dl><dd>" .. text .. "</dd></dl>")
+		end
+	end
+
+	ins("</span>")
+
+	local retval = table.concat(parts)
+	return deprecated and frame:expandTemplate{title = "check deprecated lang param usage", args = {retval, lang = args.lang}} or retval
+end
+
+-- External interface, meant to be called from a template. Replaces {{cite-meta}} and meant to be the primary
+-- interface for {{cite-*}} templates.
+function export.cite_t(frame)
+    -- FIXME: temporary code, catch errors with pcall. If there's an error, fallback to a copy of the old
+    -- template and categorize for cleanup.
+	local success, msg
+	success, msg = pcall(cite_t, frame)
+	if success then
+		return msg
+	end
+
+	local args = {}
+	for k, v in pairs(frame:getParent().args) do
+		if k == "language" then
+			k = "lang"
+		end
+		args[k] = v
+	end
+
+	local template_name = frame:getParent():getTitle()
+	template_name = template_name:gsub("^Template:", "")
+	template_name = template_name:gsub("^User:JeffDoozan/", "")
+    -- handle aliases of "cite-book", no other cite- templates have aliases
+	template_name = (template_name == "cite-text" or template_name == "Cite book" or template_name == "cite book") and "cite-book" or template_name
+
+	local res = frame:expandTemplate{ title = 'User:JeffDoozan/' .. template_name .. '-old', args = args }
+	return res .. '<span class="attentionseeking" title=\'' .. mw.text.nowiki(msg) .. '\'></span>[[Category:Pages using bad params when calling Template:' .. template_name .. ']]'
+
+end
 -- External interface, meant to be called from a template.
 function export.call_quote_template(frame)
 	local iparams = {
