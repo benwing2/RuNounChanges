@@ -297,8 +297,8 @@ local function desc_or_desc_tree(frame, desc_tree)
 		end
 	end
 	
-	if lang:getCode() ~= lang:getNonEtymologicalCode() then
-		-- [[Special:WhatLinksHere/Template:tracking/descendant/etymological]]
+	if lang:getCode() ~= lang:getFullCode() then
+		-- [[Special:WhatLinksHere/Wiktionary:Tracking/descendant/etymological]]
 		track("etymological")
 		track("etymological/" .. lang:getCode())
 	end
@@ -379,7 +379,7 @@ local function desc_or_desc_tree(frame, desc_tree)
 				if termobj.term ~= "-" then -- including term == nil
 					link = require("Module:links").full_link(termobj, nil, true)
 				elseif termobj.ts or termobj.gloss or #termobj.genders > 0 then
-					-- [[Special:WhatLinksHere/Template:tracking/descendant/no term]]
+					-- [[Special:WhatLinksHere/Wiktionary:Tracking/descendant/no term]]
 					track("no term")
 					termobj.term = nil
 					link = require("Module:links").full_link(termobj, nil, true)
@@ -388,7 +388,7 @@ local function desc_or_desc_tree(frame, desc_tree)
 						:gsub("<small>%[Term%?%]</small>&nbsp;", "")
 						:gsub("%[%[Category:[^%[%]]+ term requests%]%]", "")
 				else -- display no link at all
-					-- [[Special:WhatLinksHere/Template:tracking/descendant/no term or annotations]]
+					-- [[Special:WhatLinksHere/Wiktionary:Tracking/descendant/no term or annotations]]
 					track("no term or annotations")
 				end
 				return link
@@ -509,7 +509,7 @@ local function desc_or_desc_tree(frame, desc_tree)
 			descendants[ind] = descendants[ind] or ""
 
 			if term and (desc_tree and not args["noalts"] or not desc_tree and args["alts"]) then
-				-- [[Special:WhatLinksHere/Template:tracking/descendant/alts]]
+				-- [[Special:WhatLinksHere/Wiktionary:Tracking/descendant/alts]]
 				track("alts")
 				alts = m_desctree.getAlternativeForms(lang, sc, term, id)
 			else
@@ -534,13 +534,13 @@ local function desc_or_desc_tree(frame, desc_tree)
 			error("[[Template:desctree]] invoked but no terms to retrieve descendants from")
 		elseif #seen_terms == 1 then
 			error("No Descendants section was found in the entry [[" .. seen_terms[1] ..
-				"]] under the header for " .. lang:getNonEtymologicalName() .. ".")
+				"]] under the header for " .. lang:getFullName() .. ".")
 		else
 			for i, term in ipairs(seen_terms) do
 				seen_terms[i] = "[[" .. term .. "]]"
 			end
 			error("No Descendants section was found in any of the entries " ..
-				concat(seen_terms, ", ") .. " under the header for " .. lang:getNonEtymologicalName() .. ".")
+				concat(seen_terms, ", ") .. " under the header for " .. lang:getFullName() .. ".")
 		end
 	end
 
