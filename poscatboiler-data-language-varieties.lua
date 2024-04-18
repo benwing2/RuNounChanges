@@ -1,3 +1,5 @@
+local export = {}
+
 local raw_categories = {}
 local raw_handlers = {}
 
@@ -220,6 +222,7 @@ local function determine_lect_type(category, lang, default_parent_cat)
 	-- fall back to returning "extant" if all else fails.
 	local parent_type
 	if default_parent_cat then
+		export.register_likely_dialect_parent_cat(default_parent_cat)
 		_, parent_type = memoizing_dialect_handler(default_parent_cat, nil, true)
 	end
 	if parent_type then
@@ -343,6 +346,8 @@ end
 -- all languages will be checked for matching labels that specify `category` as their category using `plain_categories`;
 -- this helps e.g. with varieties of Chinese, whose labels are found in [[Module:labels/data/lang/zh]]. The return value
 -- is a table in the same format as returned by `find_labels_for_category` in [[Module:labels/utilities]].
+--
+-- FIXME: It should be possible to check for categories specified using `regional_categories` even when `lang` is nil.
 local function find_labels_for_category(category, lang)
 	local regional_cat_labels, plain_cat_labels
 	local full_lang
@@ -371,17 +376,18 @@ local function find_labels_for_category(category, lang)
 end
 
 
--- Find the labels for category `category` and language object `lang`. Then filter them down to those that are specified
--- using a lang-specific module and sort them for use in checking properties such as parent and description. We filter
--- down to only lang-specific labels because those specified in a general module (especially
--- [[Module:labels/data/regional]]) won't be able to have proper descriptions and especially parents, which tend to be
--- language-specific. The sort order prioritizes labels that match the category exactly (either through the canonical
--- version or any alias); this is followed by labels that are a prefix of the category (again, either through the
--- canonical version or any alias), so that labels whose categories are specified using `regional_categories` are
--- prioritized. Any other labels are sorted last, so that e.g. if both the label "Alberta" and "Canada" (with alias
--- "Canadian") for lang=en categorize into [[:Category:Canadian English]], we prefer the label "Canada". For cases where
--- e.g. both labels match the category as prefixes, ties are broken by prioritizing the labels found in the
--- lang-specific module whose language matches `lang`.
+-- Find the labels for category `category` and language object `lang` (which can be nil or a family, but in that case,
+-- no labels on a category specified using `regional_categories`; FIXME: it should be possible to implement this). Then
+-- filter them down to those that are specified using a lang-specific module and sort them for use in checking
+-- properties such as parent and description. We filter down to only lang-specific labels because those specified in a
+-- general module (especially [[Module:labels/data/regional]]) won't be able to have proper descriptions and especially
+-- parents, which tend to be language-specific. The sort order prioritizes labels that match the category exactly
+-- (either through the canonical version or any alias); this is followed by labels that are a prefix of the category
+-- (again, either through the canonical version or any alias), so that labels whose categories are specified using
+-- `regional_categories` are prioritized. Any other labels are sorted last, so that e.g. if both the label "Alberta" and
+-- "Canada" (with alias "Canadian") for lang=en categorize into [[:Category:Canadian English]], we prefer the label
+-- "Canada". For cases where e.g. both labels match the category as prefixes, ties are broken by prioritizing the labels
+-- found in the lang-specific module whose language matches `lang`.
 --
 -- Returns two items. The first is a table of all labels categorizing into `category` (subject to the provisos described
 -- in `find_labels_for_category()`), in the same format as returned by `find_labels_for_category` in
@@ -476,7 +482,7 @@ end
 local function get_categories_for_label(label, lang)
 	local m_labels = require(labels_module)
 	local labret = m_labels.get_label_info { label = label, lang = lang }
-	if not labret then
+	if not labret.recognized then
 		return nil
 	end
 	local categories = m_labels.fetch_categories(labret.canonical or label, labret.data, lang, nil, nil,
@@ -505,7 +511,7 @@ end
 -- value of the `parents` field returned by the raw handler. This means that usually the individual list elements are strings
 -- (referring to raw poscat labels), but they may be strings prefixed by "Category:" (for arbitrary categories), or objects of the
 -- form {name = "CATEGORY", lang = "LANGCODE", is_label = true} for poscat language labels.
-local function get_parents_from_sorted_labels(sorted_labels, category, default, all_cats)
+local function get_parents_from_sorted_labels(sorted_labels, category, all_cats)
 	for _, labobj in ipairs(sorted_labels) do
 		local parent = labobj.labdata.parent
 		if parent == true then
@@ -515,7 +521,7 @@ local function get_parents_from_sorted_labels(sorted_labels, category, default, 
 		end
 		local function get_parent_cats(par)
 			if par == true or par == "+" then
-				return {default}
+				return {"+"}
 			end
 			if par:find("^cat:") then
 				return {"Category:" .. par:gsub("^cat:", "")}
@@ -544,7 +550,7 @@ local function get_parents_from_sorted_labels(sorted_labels, category, default, 
 		if parent then
 			if type(parent) ~= "table" then
 				error(("Internal error: Expected a string, boolean `true` or list for the value of the parent field for label '%s' for category '%s' (defined in module [[%s]]), but saw type '%s': %s"):format(
-					labobj.canonical, category, labobj.module, type(parent), mw.dumpObjecct(parent)))
+					labobj.canonical, category, labobj.module, type(parent), mw.dumpObject(parent)))
 			end
 			local cats
 			if all_cats then
@@ -565,27 +571,23 @@ local function get_parents_from_sorted_labels(sorted_labels, category, default, 
 			-- FIXME: If the parent doesn't specify any categories, should we try the next parent or fall back
 			-- to the parent determined through get_default_parent_cat_from_category() (which is what we currently
 			-- do)?
-			return {default}, labobj
+			return {"+"}, labobj
 		end
 	end
-	return {default}, nil
+	return {"+"}, nil
 end
 
+local likely_dialect_parent_cat = {}
 
--- To avoid the need to scrape every category, we keep a list of those categories that satisfy the following:
--- (a) They are a dialect category;
--- (b) They occur as the parent category of some other dialect category;
--- (c) They are not the name of a known language (including etymology-only languages) or contain a known language as a
---     suffix.
--- Condition (c) is necessary because we automatically scrape categories that have a language suffix, since they're
--- likely to be dialect categories.
-local dialect_parent_cats_to_scrape = m_table.listToSet {
-	"Assyrian",
-	"Babylonian",
-	"Limburgan-Ripuarian transitional dialects",
-	"North Sea Germanic",
-	"Ripuarian Franconian",
-}
+-- Register that `cat` is likely to be a dialect cat, so we try to handle it as such in the dialect handler when
+-- we are called on that category. This avoids the need to have manual allow-lists of nonstandardly-named parent
+-- dialect categories to handle, such as [[:Category:Assyrian]], [[:Category:Ripuarian Franconian]] ("Franconian" is
+-- not a language) and [[:Category:Limburgan-Ripuarian transitional dialects]].
+function export.register_likely_dialect_parent_cat(cat)
+	if type(cat) == "string" and not cat:find("^Category:") then
+		likely_dialect_parent_cat[cat] = true
+	end
+end
 
 -- Handle dialect categories such as [[:Category:New Zealand English]], [[:Category:Late Middle English]],
 -- [[:Category:Arbëresh Albanian]], [[:Category:Provençal]] or arbitrarily-named categories like
@@ -615,14 +617,14 @@ local function dialect_handler(category, raw_args, called_from_inside)
 
 		-- If called from inside we won't have any params available. See comment above about this. We scrape the
 		-- category page's call to {{auto cat}} to get the appropriate params, and if that fails, we currently fall back
-		-- to defaults based on the name of the category. Since the call from inside is only to get the parent category
-		-- and breadcrumb, these defaults actually work in most cases but not all; e.g. in the chain
-		-- [[:Category:Regional Yoruba]] -> [[:Category:Central Yoruba]] -> [[:Category:Ekiti Yoruba]] ->
-		-- [[:Category:Akurẹ Yoruba]], if we are forced to use default values, we will produce the right parent for
-		-- [[:Category:Central Yoruba]] but not for [[:Category:Ekiti Yoruba]], where the default parent would be
-		-- [[:Category:Regional Yoruba]] instead of the correct [[:Category:Central Yoruba]].
+		-- to defaults based on the label(s) that categorize(s) into the category or the name of the category. Since the
+		-- call from inside is only to get the parent category and breadcrumb, these defaults actually work in most
+		-- cases but not all; e.g. in the chain [[:Category:Regional Yoruba]] -> [[:Category:Central Yoruba]] ->
+		-- [[:Category:Ekiti Yoruba]] -> [[:Category:Akurẹ Yoruba]], if we are forced to use default values, we will
+		-- produce the right parent for [[:Category:Central Yoruba]] but not for [[:Category:Ekiti Yoruba]], where the
+		-- default parent would be [[:Category:Regional Yoruba]] instead of the correct [[:Category:Central Yoruba]].
 		local lang, breadcrumb = split_region_lang(category)
-		if lang or dialect_parent_cats_to_scrape[category] then
+		if lang or likely_dialect_parent_cat[category] then
 			raw_args = scrape_category_for_auto_cat_args(category)
 			if raw_args and not ine(raw_args.dialect) then
 				-- We are scraping something like [[:Category:American Sign Language]] that ends in a valid language but is not
@@ -630,27 +632,47 @@ local function dialect_handler(category, raw_args, called_from_inside)
 				return nil
 			end
 			if not raw_args then
+				-- If we can't parse the scraped {{auto cat}} spec, return default values. This helps e.g. in converting
+				-- from the old {{dialectboiler}} template and generally when adding new varieties.
+				local parents, label_with_parent
+
+				local function getprop(prop)
+					return -- ine(raw_args[prop]) or
+						label_with_parent and label_with_parent.labdata[prop]
+				end
+
+				local all_labels, sorted_labels = get_sorted_labels(category, lang)
+				if sorted_labels then
+					parents, label_with_parent = get_parents_from_sorted_labels(sorted_labels, category)
+					if not lang and label_with_parent then
+						lang = label_with_parent.lang
+					end
+				else
+					parents = {"+"}
+				end
+
 				if not lang then
 					-- We were instructed to scrape by virtue of `dialect_parent_cats_to_scrape`, but couldn't scrape
 					-- anything.
 					return nil
 				end
-				-- If we can't parse the scraped {{auto cat}} spec, return default values. This helps e.g. in converting
-				-- from the old {{dialectboiler}} template and generally when adding new varieties.
-				track("dialect")
-				local parents
-				local all_labels, sorted_labels = get_sorted_labels(category, lang)
-				local default_parent_cat_from_category = get_default_parent_cat_from_category(category, lang)
-				if sorted_labels then
-					parents = get_parents_from_sorted_labels(sorted_labels, category, default_parent_cat_from_category)
-				else
-					parents = {default_parent_cat_from_category}
+
+				local default_parent_cat_from_category = get_default_parent_cat_from_category(category, lang,
+					getprop("noreg"))
+				for i, parent in ipairs(parents) do
+					if parent == "+" then
+						parents[i] = default_parent_cat_from_category
+					end
 				end
 				local first_parent_cat = parents[1]
 				if type(first_parent_cat) ~= "string" or first_parent_cat:find("^Category:") then
-					-- Only keep `first_parent_cat` if it refers to a raw poscat label (which is probably a dialect handler label).
+					-- Only keep `first_parent_cat` if it refers to a raw poscat label (which is probably a dialect
+					-- handler label).
 					first_parent_cat = nil
 				end
+
+				track("dialect")
+				export.register_likely_dialect_parent_cat(parents[1])
 
 				-- NOTE: When called from inside, the description doesn't matter; nor do any parents other than the
 				-- first. This is because called_from_inside is only set when computing the breadcrumb trail, which
@@ -706,7 +728,7 @@ local function dialect_handler(category, raw_args, called_from_inside)
 			args.type, table.concat(allowed_type_values, ", ")))
 	end
 
-	-------------------- 2. Initialize breadcrumb and regiondesc from category. -------------------
+	-------------------- 2. Initialize breadcrumb, regiondesc and language from category. -------------------
 
 	-- They may be overridden later.
 
@@ -715,10 +737,13 @@ local function dialect_handler(category, raw_args, called_from_inside)
 	category = args.pagename or category
 	if not args.lang then
 		lang, breadcrumb = split_region_lang(category)
-		if not lang then
-			error(("lang= not given and unable to parse language from category '%s'"):format(category))
+		if lang then
+			langname = lang:getCanonicalName()
 		end
-		langname = lang:getCanonicalName()
+		-- The lang and/or breadcrumb may be nil at this point (e.g. we're processing a category like
+		-- [[:Category:Singlish]] or [[:Category:Polari]] that doesn't have a language in it). We don't throw an error
+		-- yet because we may be able to fetch the lang, regiondesc and breadcrumb from a label that categorizes into
+		-- the category.
 		regiondesc = breadcrumb
 	else
 		lang = m_languages.getByCode(args.lang, "lang", "allow etym")
@@ -754,13 +779,27 @@ local function dialect_handler(category, raw_args, called_from_inside)
 
 	if first_parent_cat then
 		parents = {first_parent_cat}
+		if not lang then
+			error(("lang= not given and unable to parse language from category '%s' (didn't check labels categorizing into the category because cat= explicitly given)"):format(category))
+		end
 	else
-		local default_parent_cat_from_category = get_default_parent_cat_from_category(category, lang, getprop("noreg"))
 		if sorted_labels then
-			parents, label_with_parent = get_parents_from_sorted_labels(sorted_labels, category, default_parent_cat_from_category,
-				"all cats")
+			parents, label_with_parent = get_parents_from_sorted_labels(sorted_labels, category, "all cats")
+			if not lang and label_with_parent then
+				lang = label_with_parent.lang
+				langname = lang:getCanonicalName()
+			end
 		else
-			parents = {default_parent_cat_from_category}
+			parents = {"+"}
+		end
+		if not lang then
+			error(("lang= not given, unable to parse language from category '%s' and can't find a label categorizing into the category"):format(category))
+		end
+		local default_parent_cat_from_category = get_default_parent_cat_from_category(category, lang, getprop("noreg"))
+		for i, parent in ipairs(parents) do
+			if parent == "+" then
+				parents[i] = default_parent_cat_from_category
+			end
 		end
 		first_parent_cat = parents[1]
 	end
@@ -844,6 +883,7 @@ local function dialect_handler(category, raw_args, called_from_inside)
 		if refined_lang then
 			break
 		end
+		export.register_likely_dialect_parent_cat(ancestral_cat)
 		local settings, _ = memoizing_dialect_handler(ancestral_cat, nil, true)
 		if not settings then
 			break
@@ -990,6 +1030,9 @@ local function dialect_handler(category, raw_args, called_from_inside)
 		local verb = getprop("verb") or "spoken"
 		local prep = getprop("prep")
 
+		if not langname_for_desc then
+			error(category)
+		end
 		description = ("Terms or senses in %s as %s%s %s."):format(
 			langname_for_desc, verb, prep == "-" and "" or " " .. (prep or "in"), linked_regiondesc)
 	end
@@ -1110,6 +1153,8 @@ local function dialect_handler(category, raw_args, called_from_inside)
 	-------------------- 11. Return the combined structure of all information. -------------------
 
 	track("dialect")
+	export.register_likely_dialect_parent_cat(parents[1])
+
 	return {
 		-- FIXME, allow etymological codes here
 		lang = get_returnable_lang_code(lang),
@@ -1127,6 +1172,7 @@ end
 local memoized_responses = {}
 
 memoizing_dialect_handler = function(category, raw_args, called_from_inside)
+	mw.log(category)
 	local retval = memoized_responses[category]
 	if not retval then
 		retval = {dialect_handler(category, raw_args, called_from_inside)}
@@ -1143,4 +1189,4 @@ table.insert(raw_handlers, function(data)
 end)
 
 
-return {RAW_CATEGORIES = raw_categories, RAW_HANDLERS = raw_handlers}
+return {RAW_CATEGORIES = raw_categories, RAW_HANDLERS = raw_handlers, export = export}
