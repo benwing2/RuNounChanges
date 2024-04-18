@@ -226,7 +226,9 @@ function export.get_displayed_label(label, labdata, lang, deprecated)
 			  macrolanguage that `lang` is part of.
 		]=]
 		local display = labdata.display or label
-		if labdata.glossary then
+		if display:find("%[%[") then
+			displayed_label = display
+		elseif labdata.glossary then
 			local glossary_entry = type(labdata.glossary) == "string" and labdata.glossary or label
 			displayed_label = "[[Appendix:Glossary#" .. glossary_entry .. "|" .. display .. "]]"
 		elseif labdata.Wiktionary then
@@ -286,16 +288,21 @@ Return information on a label. On input `data` is an object with the following f
 * `nocat`: If true, don't add the label to any categories.
 * `already_seen`: An object used to track labels already seen, so they aren't displayed twice. Tracking is according
   to the display form of the label, so if two labels have the same display form, the second one won't be displayed
-  (but its categories will still be added).
+  (but its categories will still be added). If `already_seen` is {nil}, this tracking doesn't happen.
 
 The return value is an object with the following fields:
-* `raw_label`: The original label that was passed in.
-* `canonical`: If the label is an alias, this contains the canonical name of the label.
+* `raw_label`: The original label that was passed in (without any preceding exclamation point).
+* `canonical`: If the label is an alias, this contains the canonical name of the label; otherwise it will be {nil}.
 * `label`: The display form of the label.
-* `categories`: A list of the categories to add the label to.
-* `formatted_categories`: A string containing the formatted categories.
+* `categories`: A list of the categories to add the label to; an empty list of `nocat` was specified.
+* `formatted_categories`: A string containing the formatted categories; an empty string if `nocat` or `for_doc` was
+  specified or if 
 * `deprecated`: True if the label is deprecated.
-* `data`: The data structure for the label, as fetched from the label modules.
+* `display_raw_label`: If true, the label was preceded by ! to indicate that the raw label should be displayed
+  rather than the canonical form.
+* `recognized`: If true, the label was found in some module.
+* `data`: The data structure for the label, as fetched from the label modules. For unrecognized labels, this will
+  be an empty object.
 ]==]
 function export.get_label_info(data)
 	if not data.label then
@@ -304,7 +311,12 @@ function export.get_label_info(data)
 
 	local ret = {categories = {}}
 	local label = data.label
-	local orig_label = label
+	local display_raw_label = false
+	if label:find("^!") then
+		display_raw_label = true
+		label = label:gsub("^!", "")
+	end
+	local raw_label = label
 	ret.raw_label = label
 	local deprecated = false
 	local labdata
@@ -362,33 +374,44 @@ function export.get_label_info(data)
 			end
 		end
 	end
-	labdata = labdata or {}
+	if labdata then
+		ret.recognized = true
+	else
+		labdata = {}
+		ret.recognized = false
+	end
 
 	if labdata.deprecated then
 		deprecated = true
 	end
-	if label ~= orig_label then
+	if label ~= raw_label then
 		-- Note that this is an alias and store the canonical version.
 		ret.canonical = label
 	end
 
 	if labdata.track then
-		-- Track label (after converting aliases to canonical form; but also track original label (alias) if different
+		-- Track label (after converting aliases to canonical form; but also track raw label (alias) if different
 		-- from canonical label). It is too expensive to track all labels.
 		-- [[Special:WhatLinksHere/Wiktionary:Tracking/labels/label/LABEL]]
 		-- [[Special:WhatLinksHere/Wiktionary:Tracking/labels/label/LABEL/LANGCODE]]
 		track("label/" .. label, data_langcode)
-		if label ~= orig_label then
-			track("label/" .. orig_label, data_langcode)
+		if label ~= raw_label then
+			track("label/" .. raw_label, data_langcode)
 		end
 	end
 
 	local displayed_label
-	displayed_label, deprecated = export.get_displayed_label(label, labdata, data.lang, deprecated)
+	displayed_label, deprecated = export.get_displayed_label(display_raw_label and raw_label or label, labdata,
+		data.lang, deprecated)
 	ret.deprecated = deprecated
+	ret.display_raw_label = display_raw_label
 	if deprecated then
 		if not data.nocat then
-			table.insert(ret.categories, "Entries with deprecated labels")
+			local depcat = "Entries with deprecated labels"
+			if data.for_doc then
+				depcat = "<code>" .. depcat .. "</code>"
+			end
+			table.insert(ret.categories, depcat)
 		end
 	end
 
@@ -416,15 +439,19 @@ function export.get_label_info(data)
 		for _, cat in ipairs(cats) do
 			table.insert(ret.categories, cat)
 		end
-		local ns = mw.title.getCurrentTitle().namespace
-		if #ret.categories == 0 or (ns ~= 0 and ns ~= 100 and ns ~= 118) or data.for_doc then
-			-- Only allow categories in the mainspace, appendix and reconstruction namespaces.
+		if #ret.categories == 0 or data.for_doc then
 			-- Don't try to format categories if we're doing this for documentation ({{label/doc}}), because there
 			-- will be HTML in the categories.
 			ret.formatted_categories = ""
 		else
-			ret.formatted_categories = require(utilities_module).format_categories(ret.categories, data.lang,
-				data.sort, nil, force_cat)
+			local ns = mw.title.getCurrentTitle().namespace
+			if ns ~= 0 and ns ~= 100 and ns ~= 118 then
+				-- Only allow categories in the mainspace, appendix and reconstruction namespaces.
+				ret.formatted_categories = ""
+			else
+				ret.formatted_categories = require(utilities_module).format_categories(ret.categories, data.lang,
+					data.sort, nil, force_cat)
+			end
 		end
 	end
 
@@ -436,22 +463,59 @@ function export.get_label_info(data)
 
 	return ret
 end
-	
 
 --[==[
-Format one or more labels for display and categorization. This provides the implementation of the {{tl|label}}/{{tl|lb}}
-and {{tl|term label}}/{{tl|tlb}} templates, and can also be called from a module. The return value is a string to be
-inserted into the generated page, including the display and categories. On input `data` is an object with the following
-fields:
-* `labels`: List of the labels to format.
+Return a list of objects corresponding to the raw label tags in `raw_tags`, where "label tags" are the tags after two
+vertical bars in {{tl|alt}}. Each object is of the format returned by `get_label_info` in [[Module:labels]], as the
+separate dialectal data modules have been removed.
+
+NOTE: This function no longer does anything other than call {get_label_info()} in [[Module:labels]].
+]==]
+function export.get_label_list_info(raw_labels, lang, nocat, already_seen)
+	local label_infos = {}
+
+	for _, label in ipairs(raw_labels) do
+		-- Pass in nocat to avoid extra work, since we won't use the categories.
+		local display = export.get_label_info {
+			label = label, lang = lang, nocat = nocat, already_seen = already_seen
+		}
+		table.insert(label_infos, display)
+	end
+
+	return label_infos
+end
+
+--[==[
+Format one or more already-processed labels for display and categorization. "Already-processed" means that
+{get_label_info()} or {get_label_list_info()} has been called on the raw labels to convert them into objects containing
+information on how to display and categorize the labels. This is a lower-level alternative to {show_labels()} and is
+meant for modules such as [[Module:alternative forms]], [[Module:quote]] and [[Module:etymology/templates/descendant]]
+that support displaying labels along with some other information.
+
+On input `data` is an object with the following fields:
+* `labels`: List of the label objects to format, in the format returned by {get_label_info()}.
 * `lang`: The language of the labels.
-* `term_mode`: If true, the label was invoked using {{tl|tlb}}; otherwise, {{tl|lb}}.
-* `nocat`: If true, don't add the label to any categories.
+* `term_mode`: If true, the label was invoked using {{tl|tlb}}; otherwise, {{tl|lb}}. This only affects categorization.
 * `sort`: Sort key for categorization.
+* `already_seen`: An object used to track labels already seen, so they aren't displayed twice, as documented in
+  {get_label_info()}. To enable this, set this to an empty object. If `already_seen` is {nil}, this tracking doesn't
+  happen, meaning if the same label appears twice, it will be displayed twice.
+* `open`: Open bracket or parenthesis to display before the concatenated labels. If specified, it is wrapped in the
+  {"ib-brac"} CSS class. If {nil}, no open bracket is displayed.
+* `close`: Close bracket or parenthesis to display after the concatenated labels. If specified, it is wrapped in the
+  {"ib-brac"} CSS class. If {nil}, no close bracket is displayed.
+* `no_ib_content`: By default, the concatenated formatted labels inside of the open/close brackets are wrapped in the
+  {"ib-content"} CSS class. Specify this to suppress this wrapping.
+
+Return value is a string containing the contenated labels, optionally surrounded by open/close brackets or parentheses.
+Normally, labels are separated by comma-space sequences, but this may be suppressed for certain labels. If `nocat`
+wasn't given to {get_label_info() or get_label_list_info()}, the label objects will contain formatted categories in
+them, which will be inserted into the returned text. The concatenated text inside of the open/close brackets is normally
+wrapped in the {"ib-content"} CSS class, but this can be suppressed, as mentioned above.
 
 '''WARNING''': This destructively modifies the `data` structure.
 ]==]
-function export.show_labels(data)
+function export.format_processed_labels(data)
 	if not data.labels then
 		error("`data` must now be an object containing the params")
 	end
@@ -466,22 +530,16 @@ function export.show_labels(data)
 	local omit_preSpace = false
 	local omit_postSpace = true
 	
-	data.already_seen = {}
-	
-	for i, label in ipairs(labels) do
+	for _, label in ipairs(labels) do
 		omit_preComma = omit_postComma
 		omit_postComma = false
 		omit_preSpace = omit_postSpace
 		omit_postSpace = false
 
-		data.label = label
-		local ret = export.get_label_info(data)
-
-		ret.omit_comma = omit_preComma or ret.data.omit_preComma
-		omit_postComma = ret.data.omit_postComma
-		ret.omit_space = omit_preSpace or ret.data.omit_preSpace
-		omit_postSpace = ret.data.omit_postSpace
-		labels[i] = ret
+		label.omit_comma = omit_preComma or label.data.omit_preComma
+		omit_postComma = label.data.omit_postComma
+		label.omit_space = omit_preSpace or label.data.omit_preSpace
+		omit_postSpace = label.data.omit_postSpace
 	end
 
 	if data.lang then
@@ -506,10 +564,77 @@ function export.show_labels(data)
 		labels[i] = label .. labelinfo.formatted_categories
 	end
 
+	local function wrap_open_close(val)
+		if val then
+			return "<span class=\"ib-brac\">" .. val .. "</span>"
+		else
+			return ""
+		end
+	end
+
+	local concatenated_labels = table.concat(labels, "")
+	if not data.no_ib_content then
+		concatenated_labels = "<span class=\"ib-content\">" .. concatenated_labels .. "</span>"
+	end
+
+	return wrap_open_close(data.open) .. concatenated_labels .. wrap_open_close(data.close)
+end
+
+--[==[
+Format one or more labels for display and categorization. This provides the implementation of the {{tl|label}}/{{tl|lb}}
+and {{tl|term label}}/{{tl|tlb}} templates, and can also be called from a module. The return value is a string to be
+inserted into the generated page, including the display and categories. On input `data` is an object with the following
+fields:
+* `labels`: List of the labels to format.
+* `lang`: The language of the labels.
+* `term_mode`: If true, the label was invoked using {{tl|tlb}}; otherwise, {{tl|lb}}.
+* `nocat`: If true, don't add the label to any categories.
+* `sort`: Sort key for categorization.
+* `no_track_already_seen`: Don't track already-seen labels. If not specified, already-seen labels are not displayed
+  again, but still categorize. See the documentation of {get_label_info()}.
+* `open`: Open bracket or parenthesis to display before the concatenated labels. If {nil}, defaults to an open
+  parenthesis. Set to {false} to disable.
+* `close`: Close bracket or parenthesis to display after the concatenated labels. If {nil}, defaults to a close
+  parenthesis. Set to {false} to disable.
+
+Compared with {format_processed_labels()}, this function has the following differences:
+# The labels specified in `labels` are raw labels (i.e. strings) rather than formatted objects.
+# The open and close brackets default to parentheses ("round brackets") rather than not being displayed by default.
+# Tracking of already-seen labels is enabled unless explicitly turned off using `no_track_already_seen`.
+# The entire formatted result is wrapped in the {"usage-label-sense"} CSS class (or {"usage-label-term"} if `term_mode`
+  is specified).
+
+'''WARNING''': This destructively modifies the `data` structure.
+]==]
+function export.show_labels(data)
+	if not data.labels then
+		error("`data` must now be an object containing the params")
+	end
+	local labels = data.labels
+	if not labels[1] then
+		error("You must specify at least one label.")
+	end
+
+	if not data.no_track_already_seen then
+		data.already_seen = {}
+	end
+	
+	for i, label in ipairs(labels) do
+		data.label = label
+		local ret = export.get_label_info(data)
+		labels[i] = ret
+	end
+
+	if data.open == nil then
+		data.open = "("
+	end
+	if data.close == nil then
+		data.close = ")"
+	end
+	local formatted = export.format_processed_labels(data)
 	return
-		"<span class=\"" .. (data.term_mode and "usage-label-term" or "usage-label-sense") .. "\"><span class=\"ib-brac\">(</span><span class=\"ib-content\">" ..
-		table.concat(labels, "") ..
-		"</span><span class=\"ib-brac\">)</span></span>"
+		"<span class=\"" .. (data.term_mode and "usage-label-term" or "usage-label-sense") .. "\">" .. formatted ..
+			"</span>"
 end
 
 --[==[Helper function for the data modules.]==]
