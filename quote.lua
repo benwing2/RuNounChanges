@@ -140,7 +140,7 @@ end
 -- Parse a raw lb= param (or nil) to individual label info objects and then concatenate them appropriately into a
 -- qualifier input, respecting flags like `omit_preComma` and `omit_postSpace` in the label specs.
 local function parse_and_format_labels(raw_lb, lang)
-	local labels = get_label_list_info(raw_lb, lang, "nocat")
+	local labels = get_label_list_info(raw_lb, lang)
 	if labels then
 		labels = require(labels_module).format_processed_labels {
 			labels = labels, lang = lang, no_ib_content = true
@@ -2297,42 +2297,57 @@ end
 -- parameter (with "2" added if type2= is being handled), `aliases` is a comma-separated string of aliases (with "2"
 -- added if type2= is being handled, except for numeric params), and `with_newversion` indicates whether we should
 -- process this spec if type2= is being handled.
-local type_alias_specs = {
+local type_specs = {
 	book = {
-		{"author", "3"},
-		{"chapter", "entry", true},
-		{"chapterurl", "entryurl", true},
-		{"trans-chapter", "trans-entry", true},
-		{"chapter_series", "entry_series", true},
-		{"chapter_seriesvolume", "entry_seriesvolume", true},
-		{"chapter_number", "entry_number", true},
-		{"chapter_plain", "entry_plain", true},
-		{"title", "4"},
-		{"url", "5"},
-		{"year", "2"},
-		{"page", "6"},
-		{"text", "7"},
-		{"t", "8"},
+		aliases = {
+			{"author", "3"},
+			{"chapter", "entry", true},
+			{"chapterurl", "entryurl", true},
+			{"trans-chapter", "trans-entry", true},
+			{"chapter_series", "entry_series", true},
+			{"chapter_seriesvolume", "entry_seriesvolume", true},
+			{"chapter_number", "entry_number", true},
+			{"chapter_plain", "entry_plain", true},
+			{"title", "4"},
+			{"url", "5"},
+			{"year", "2"},
+			{"page", "6"},
+			{"text", "7"},
+			{"t", "8"},
+		},
 	},
 	journal = {
-		{"year", "2"},
-		{"author", "3"},
-		{"chapter", "title,article,4", true},
-		{"chapterurl", "titleurl,articleurl", true},
-		{"trans-chapter", "trans-title,trans-article", true},
-		{"chapter_tlr", "article_tlr", true},
-		{"chapter_series", "article_series", true},
-		{"chapter_seriesvolume", "article_seriesvolume", true},
-		{"chapter_number", "article_number", true},
-		{"chapter_plain", "title_plain,article_plain", true},
-		{"title", "journal,magazine,newspaper,work,5", true},
-		{"trans-title", "trans-journal,trans-magazine,trans-newspaper,trans-work", true},
-		{"url", "6"},
-		{"page", "7"},
-		{"source", "newsagency", true},
-		{"text", "8"},
-		{"t", "9"},
+		aliases = {
+			{"year", "2"},
+			{"author", "3"},
+			{"chapter", "title,article,4", true},
+			{"chapterurl", "titleurl,articleurl", true},
+			{"trans-chapter", "trans-title,trans-article", true},
+			{"chapter_tlr", "article_tlr", true},
+			{"chapter_series", "article_series", true},
+			{"chapter_seriesvolume", "article_seriesvolume", true},
+			{"chapter_number", "article_number", true},
+			{"chapter_plain", "title_plain,article_plain", true},
+			{"title", "journal,magazine,newspaper,work,5", true},
+			{"trans-title", "trans-journal,trans-magazine,trans-newspaper,trans-work", true},
+			{"url", "6"},
+			{"page", "7"},
+			{"source", "newsagency", true},
+			{"text", "8"},
+			{"t", "9"},
+		},
 	},
+	["mailing list"] = {
+		set_params = function(get, set)
+			set("author", get("author") or get("email") and " &lt;''" .. get("email") .. "''&rt;")
+			local group_or_list = get("group") or get("list")
+			if group_or_list then
+				set("title", "<kbd>" .. group_or_list .. "</kbd> [[w:Electronic mailing list|mailing list]]")
+			else
+				set(maintenance_line("Please supply mailing list name in group= or list="))
+			end
+			set("section", getp("id") and "message-id
+
 }
 
 
