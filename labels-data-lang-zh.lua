@@ -196,7 +196,7 @@ labels["Hong Kong Hakka"] = {
 	region = "Hong Kong",
 	Wikidata = "Q2675834",
 	plain_categories = true,
-	parent = true,
+	parent = "non-Mainland Hakka",
 	othercat = "Hong Kong Chinese",
 }
 
@@ -220,7 +220,7 @@ labels["Malaysian Huiyang Hakka"] = {
 	aliases = {"Malaysia Huiyang Hakka"},
 	Wikidata = "Q16873881", -- article for Huiyang Hakka
 	plain_categories = true,
-	parent = "Overseas Hakka",
+	parent = "Southeast Asian Hakka",
 	othercat = "Huiyang Hakka",
 }
 
@@ -232,6 +232,16 @@ labels["Meixian Hakka"] = {
 	plain_categories = true,
 	parent = true,
 	othercat = "Overseas Hakka",
+}
+
+labels["non-Mainland Hakka"] = {
+	prep = "by",
+	region = "ethnic Chinese outside of [[mainland China]], including in [[Hong Kong]] and [[Macau]] due to their special history",
+	display = "non-[[w:Mainland China|Mainland]] [[w:Hakka Chinese|Hakka]]",
+	aliases = {"Non-Mainland Hakka", "non-mainland Hakka"},
+	plain_categories = true,
+	parent = true,
+	othercat = "non-Mainland Chinese",
 }
 
 labels["Northern Sixian Hakka"] = {
@@ -247,7 +257,7 @@ labels["Overseas Hakka"] = {
 	region = "[[mainland China]], [[Taiwan]], [[Hong Kong]] and [[Macau]]",
 	Wikipedia = "Hakka people#Hakkas elsewhere",
 	plain_categories = true,
-	parent = true,
+	parent = "non-Mainland Hakka",
 	othercat = "Overseas Chinese",
 }
 
@@ -266,6 +276,14 @@ labels["Sixian Hakka"] = {
 	Wikidata = "Q9668261",
 	plain_categories = true,
 	parent = "Taiwanese Hakka",
+}
+
+labels["Southeast Asian Hakka"] = {
+	region = "[[Southeast Asia]], stretching from [[Myanmar]] ([[Burma]]) in the northwest, to the [[Philippines]] in the northeast, to [[Indonesia]] in the south",
+	Wikipedia = {"Hakka people#Hakkas elsewhere", "Southeast Asia"},
+	plain_categories = true,
+	parent = "Overseas Hakka",
+	othercat = "Southeast Asian Chinese",
 }
 
 labels["Southern Sixian Hakka"] = {
@@ -288,7 +306,7 @@ labels["Taiwanese Hakka"] = {
 	aliases = {"Taiwan Hakka"},
 	Wikidata = "Q2391532",
 	plain_categories = true,
-	parent = true,
+	parent = "non-Mainland Hakka",
 	othercat = "Taiwanese Chinese",
 }
 
@@ -601,7 +619,8 @@ labels["Malaysian Mandarin"] = {
 	aliases = {"Malaysia Mandarin"},
 	Wikidata = "Q13646143",
 	plain_categories = true,
-	parent = "Non-Mainland Mandarin",
+	parent = "Southeast Asian Mandarin",
+	othercat = "Malaysian Chinese",
 }
 
 labels["Muping Mandarin"] = {
@@ -642,13 +661,23 @@ labels["Northeastern Mandarin"] = {
 	parent = true,
 }
 
-labels["Non-Mainland Mandarin"] = {
+labels["non-Mainland Mandarin"] = {
 	prep = "by",
 	region = "ethnic Chinese outside of [[mainland China]], including in [[Hong Kong]] and [[Macau]] due to their special history",
-	aliases = {"non-Mainland Mandarin", "non-mainland Mandarin"},
+	display = "non-[[w:Mainland China|Mainland]] [[w:Mandarin Chinese|Mandarin]]",
+	aliases = {"Non-Mainland Mandarin", "non-mainland Mandarin"},
 	plain_categories = true,
 	parent = true,
-	othercat = "Non-Mainland Chinese",
+	othercat = "non-Mainland Chinese",
+}
+
+labels["Overseas Mandarin"] = {
+	prep = "outside of",
+	region = "[[mainland China]], [[Taiwan]], [[Hong Kong]] and [[Macau]]",
+	Wikipedia = "Overseas Chinese",
+	plain_categories = true,
+	parent = "non-Mainland Mandarin",
+	othercat = "Overseas Chinese",
 }
 
 -- FIXME: Category missing.
@@ -658,7 +687,8 @@ labels["Philippine Mandarin"] = {
 	aliases = {"Philippines Mandarin"},
 	Wikidata = "Q7185155",
 	plain_categories = true,
-	parent = "Non-Mainland Mandarin",
+	parent = "Southeast Asian Mandarin",
+	othercat = "Philippine Chinese",
 }
 
 -- FIXME: Category missing.
@@ -688,7 +718,16 @@ labels["Singapore Mandarin"] = {
 	aliases = {"Singaporean Mandarin"},
 	Wikidata = "Q1048980",
 	plain_categories = true,
-	parent = "Non-Mainland Mandarin",
+	parent = "Southeast Asian Mandarin",
+	othercat = "Singapore Chinese",
+}
+
+labels["Southeast Asian Mandarin"] = {
+	region = "[[Southeast Asia]], stretching from [[Myanmar]] ([[Burma]]) in the northwest, to the [[Philippines]] in the northeast, to [[Indonesia]] in the south",
+	Wikipedia = {"Overseas Chinese", "Southeast Asia"},
+	plain_categories = true,
+	parent = "Overseas Mandarin",
+	othercat = "Southeast Asian Chinese",
 }
 
 labels["Southwestern Mandarin"] = {
@@ -709,7 +748,8 @@ labels["Taiwanese Mandarin"] = {
 	aliases = {"Taiwan Mandarin"},
 	Wikidata = "Q262828",
 	plain_categories = true,
-	parent = "Non-Mainland Mandarin",
+	parent = "non-Mainland Mandarin",
+	othercat = "Taiwanese Chinese",
 }
 
 labels["Tianjin Mandarin"] = {
@@ -1365,7 +1405,7 @@ labels["Indonesian Hokkien"] = {
 	aliases = {"Indonesia Hokkien"},
 	Wikidata = "Q6805114", -- article for Medan Hokkien
 	plain_categories = true,
-	parent = "Overseas Hokkien",
+	parent = "Southeast Asian Hokkien",
 	othercat = "Indonesian Chinese",
 }
 
@@ -1418,7 +1458,7 @@ labels["Malaysian Hokkien"] = {
 	addl = "There are two markedly different varieties: {{catlink|Southern Malaysian Hokkien}} (based on {{catlink|Quanzhou Hokkien}}) and {{catlink|Penang Hokkien}} (based on {{catlink|Zhangzhou Hokkien}}).",
 	aliases = {"Malaysia Hokkien"},
 	plain_categories = true,
-	parent = "Overseas Hokkien",
+	parent = "Southeast Asian Hokkien",
 	othercat = "Malaysian Chinese",
 }
 
@@ -1438,12 +1478,22 @@ labels["Medan Hokkien"] = {
 	othercat = "Zhangzhou Hokkien",
 }
 
+labels["non-Mainland Hokkien"] = {
+	prep = "by",
+	region = "ethnic Chinese outside of [[mainland China]], including in [[Hong Kong]] and [[Macau]] due to their special history",
+	display = "non-[[w:Mainland China|Mainland]] [[w:Hokkien Chinese|Hokkien]]",
+	aliases = {"Non-Mainland Hokkien", "non-mainland Hokkien"},
+	plain_categories = true,
+	parent = true,
+	othercat = "non-Mainland Chinese",
+}
+
 labels["Overseas Hokkien"] = {
 	prep = "outside of",
 	region = "[[mainland China]], [[Taiwan]], [[Hong Kong]] and [[Macau]]",
 	Wikipedia = "Hoklo people#Diaspora",
 	plain_categories = true,
-	parent = true,
+	parent = "non-Mainland Hokkien",
 	othercat = "Overseas Chinese",
 }
 
@@ -1471,7 +1521,7 @@ labels["Philippine Hokkien"] = {
 	aliases = {"PH Hokkien", "Ph Hokkien", "PH", "PHH", "Philippines Hokkien"},
 	Wikidata = "Q3236692",
 	plain_categories = true,
-	parent = "Overseas Hokkien",
+	parent = "Southeast Asian Hokkien",
 	othercat = "Quanzhou Hokkien,Philippine Chinese",
 }
 
@@ -1499,8 +1549,16 @@ labels["Singapore Hokkien"] = {
 	aliases = {"Singaporean Hokkien"},
 	Wikidata = "Q3846528",
 	plain_categories = true,
-	parent = "Overseas Hokkien",
+	parent = "Southeast Asian Hokkien",
 	othercat = "Singapore Chinese",
+}
+
+labels["Southeast Asian Hokkien"] = {
+	region = "[[Southeast Asia]], stretching from [[Myanmar]] ([[Burma]]) in the northwest, to the [[Philippines]] in the northeast, to [[Indonesia]] in the south",
+	Wikipedia = {"Hoklo people#Diaspora", "Southeast Asia"},
+	plain_categories = true,
+	parent = "Overseas Hokkien",
+	othercat = "Southeast Asian Chinese",
 }
 
 labels["Southern Malaysian Hokkien"] = {
@@ -1546,7 +1604,7 @@ labels["Taiwanese Hokkien"] = {
 	Wikidata = "Q36778",
 	plain_categories = true,
 	track = true,
-	parent = true,
+	parent = "non-Mainland Hokkien",
 	othercat = "Taiwanese Chinese",
 }
 
@@ -1633,23 +1691,55 @@ labels["Jieyang Teochew"] = {
 	plain_categories = true,
 }
 
+labels["non-Mainland Teochew"] = {
+	prep = "by",
+	region = "ethnic Chinese outside of [[mainland China]], including in [[Hong Kong]] and [[Macau]] due to their special history",
+	display = "non-[[w:Mainland China|Mainland]] [[w:Teochew Chinese|Teochew]]",
+	aliases = {"Non-Mainland Teochew", "non-mainland Teochew"},
+	plain_categories = true,
+	parent = true,
+	othercat = "non-Mainland Chinese",
+}
+
+labels["Overseas Teochew"] = {
+	prep = "outside of",
+	region = "[[mainland China]], [[Taiwan]], [[Hong Kong]] and [[Macau]]",
+	Wikipedia = "Teochew people",
+	plain_categories = true,
+	parent = "non-Mainland Teochew",
+	othercat = "Overseas Chinese",
+}
+
 labels["Pontianak Teochew"] = {
 	-- spoken in West Kalimantan, Indonesia
-	aliases = {"Pontianak"},
 	Wikidata = "Q14168", -- article for Pontianak; "Pontianak Teochew" has its own Wikidata entry Q106560423, but it has no links
 	plain_categories = true,
+	parent = "Southeast Asian Teochew",
+	othercat = "Pontianak Chinese",
 }
 
 labels["Singapore Teochew"] = {
 	aliases = {"Singaporean Teochew"},
 	Wikipedia = "Teochew people#Teochew immigration to Singapore",
 	plain_categories = true,
+	parent = "Southeast Asian Teochew",
+	othercat = "Singapore Chinese",
+}
+
+labels["Southeast Asian Teochew"] = {
+	region = "[[Southeast Asia]], stretching from [[Myanmar]] ([[Burma]]) in the northwest, to the [[Philippines]] in the northeast, to [[Indonesia]] in the south",
+	Wikipedia = {"Teochew people", "Southeast Asia"},
+	plain_categories = true,
+	parent = "Overseas Teochew",
+	othercat = "Southeast Asian Chinese",
 }
 
 labels["Thai Teochew"] = {
 	aliases = {"Thailand Teochew"},
 	Wikipedia = "Thai Chinese#Language",
 	plain_categories = true,
+	parent = "Southeast Asian Teochew",
+	othercat = "Thai Chinese",
 }
 
 ------------------------------------------ Pinghua ------------------------------------------
@@ -2812,6 +2902,8 @@ labels["Hong Kong Cantonese"] = {
 	aliases = {"HKC"},
 	Wikidata = "Q5894342",
 	plain_categories = true,
+	parent = "non-Mainland Cantonese",
+	othercat = "Hong Kong Chinese",
 }
 
 -- FIXME: Category missing.
@@ -2854,6 +2946,8 @@ labels["Macau Cantonese"] = {
 	aliases = {"Macao Cantonese", "Macanese Cantonese"},
 	Wikidata = "Q113659847",
 	plain_categories = true,
+	parent = "non-Mainland Cantonese",
+	othercat = "Macau Chinese",
 }
 
 -- FIXME: Category missing.
@@ -2861,7 +2955,8 @@ labels["Malaysian Cantonese"] = {
 	-- A subvariety of Cantonese (in the narrow sense), a variety of Yuehai Yue.
 	aliases = {"Malaysia Cantonese"},
 	Wikidata = "Q56272241",
-	plain_categories = true,
+	parent = "Southeast Asian Cantonese",
+	othercat = "Malaysian Chinese",
 }
 
 -- FIXME: Category missing.
@@ -2871,6 +2966,25 @@ labels["Nantou Cantonese"] = {
 	aliases = {"Nantou Yue"}, -- no "Nantou" alias because Nantou is also a city in Taiwan
 	Wikidata = "Q110110348",
 	plain_categories = true,
+}
+
+labels["non-Mainland Cantonese"] = {
+	prep = "by",
+	region = "ethnic Chinese outside of [[mainland China]], including in [[Hong Kong]] and [[Macau]] due to their special history",
+	display = "non-[[w:Mainland China|Mainland]] [[w:Cantonese Chinese|Cantonese]]",
+	aliases = {"Non-Mainland Cantonese", "non-mainland Cantonese"},
+	plain_categories = true,
+	parent = true,
+	othercat = "non-Mainland Chinese",
+}
+
+labels["Overseas Cantonese"] = {
+	prep = "outside of",
+	region = "[[mainland China]], [[Taiwan]], [[Hong Kong]] and [[Macau]]",
+	Wikipedia = "Cantonese people#19th–20th century: Turmoil and migration",
+	plain_categories = true,
+	parent = "non-Mainland Cantonese",
+	othercat = "Overseas Chinese",
 }
 
 -- FIXME: Category missing.
@@ -2922,7 +3036,8 @@ labels["Singapore Cantonese"] = {
 	-- A subvariety of Cantonese (in the narrow sense), a variety of Yuehai Yue.
 	aliases = {"Singaporean Cantonese"},
 	Wikipedia = "Chinese Singaporeans#Cantonese",
-	plain_categories = true,
+	parent = "Southeast Asian Cantonese",
+	othercat = "Singapore Chinese",
 }
 
 -- FIXME: Category missing.
@@ -2939,6 +3054,14 @@ labels["Siyi Yue"] = {
 	Wikidata = "Q2391679",
 	plain_categories = true,
 	parent = true,
+}
+
+labels["Southeast Asian Cantonese"] = {
+	region = "[[Southeast Asia]], stretching from [[Myanmar]] ([[Burma]]) in the northwest, to the [[Philippines]] in the northeast, to [[Indonesia]] in the south",
+	Wikipedia = {"Cantonese people#19th–20th century: Turmoil and migration", "Southeast Asia"},
+	plain_categories = true,
+	parent = "Overseas Cantonese",
+	othercat = "Southeast Asian Chinese",
 }
 
 -- The following violates normal conventions, which would use "Taishan Yue" or "Taishanese Yue". But it matches the
@@ -3107,26 +3230,50 @@ labels["American (&ndash;1980)"] = {
 	aliases = {"America 1", "United States 1", "USA 1", "US 1"},
 	Wikidata = "Q1516704", -- article on History of Chinese Americans
 	regional_categories = true,
+	parent = "US",
 }
 
 labels["American (1980&ndash;)"] = {
 	aliases = {"America 2", "United States 2", "USA 2", "US 2"},
 	Wikidata = "Q1516704", -- article on History of Chinese Americans
 	regional_categories = true,
+	parent = "US",
 }
 
 labels["North America"] = {
 	aliases = {"North American"},
 	display = "[[Canada]], [[American English|US]]",
 	regional_categories = {"Canadian", "American"},
+	parent = "Overseas",
 }
 
 -- the remaining labels moved from [[Module:labels/data/regional]]
 
+labels["Australia"] = {
+	aliases = {"AU", "Australian"},
+	Wikipedia = "Chinese Australians",
+	regional_categories = "Australian",
+	parent = "Overseas",
+}
+
+labels["Britain"] = {
+	aliases = {"Brit", "British", "Great Britain"},
+	Wikipedia = "British Chinese",
+	regional_categories = "British",
+	parent = "Overseas",
+}
+
+labels["UK"] = {
+	aliases = {"United Kingdom"},
+	Wikipedia = "British Chinese",
+	regional_categories = "British",
+	parent = "Overseas",
+}
+
 labels["Brunei"] = {
 	Wikipedia = "Ethnic Chinese in Brunei",
 	regional_categories = "Bruneian",
-	parent = "Overseas",
+	parent = "Southeast Asia",
 }
 
 labels["Canada"] = {
@@ -3136,23 +3283,70 @@ labels["Canada"] = {
 	parent_label = "North America",
 }
 
+labels["Classical"] = {
+	noreg = true,
+	aliases = {"classical"},
+	Wikipedia = "Classical Chinese",
+	regional_categories = true,
+}
+
 labels["Cuba"] = {
 	aliases = {"Cuban"},
-	Wikipedia = true,
+	Wikipedia = "Chinese Cubans",
 	regional_categories = "Cuban",
 	parent = "Overseas",
 }
 
+labels["France"] = {
+	aliases = {"French"},
+	Wikipedia = "Chinese diaspora in France",
+	regional_categories = "French",
+	parent = "Overseas",
+}
+
+labels["Hong Kong"] = {
+	Wikipedia = "Hong Kong Chinese",
+	regional_categories = true,
+	parent = "non-Mainland",
+}
+
 labels["Indonesia"] = {
 	aliases = {"Indonesian"},
-	Wikipedia = true,
+	Wikipedia = {"Language and overseas Chinese communities#Indonesia", "Chinese Indonesians"},
 	regional_categories = "Indonesian",
+	parent = "Southeast Asia",
+}
+
+labels["Japan"] = {
+	langs = {"en", "ru", "zh"},
+	Wikipedia = "Chinese people in Japan",
+	regional_categories = "Japanese",
 	parent = "Overseas",
+}
+
+labels["Macau"] = {
+	aliases = {"Macao", "Macanese"},
+	Wikipedia = true,
+	regional_categories = "Macanese",
+	parent = "non-Mainland",
+}
+
+labels["Mainland China"] = {
+	aliases = {"Mainland", "mainland", "mainland China"},
+	Wikipedia = true,
+	regional_categories = true,
+}
+
+labels["Malaysia"] = {
+	aliases = {"Malaysian"},
+	Wikipedia = "Malaysian Chinese",
+	regional_categories = "Malaysian",
+	parent = "Southeast Asia",
 }
 
 labels["Mexico"] = {
 	aliases = {"Mexican"},
-	Wikipedia = true,
+	Wikipedia = "Mexican Chinese",
 	regional_categories = "Mexican",
 	parent = "Overseas",
 }
@@ -3173,6 +3367,50 @@ labels["Mongolia"] = {
 	parent = "Overseas",
 }
 
+labels["Myanmar"] = {
+	aliases = {"Myanmarese", "Burma", "Burmese"},
+	Wikipedia = "Chinese people in Myanmar",
+	regional_categories = true,
+	parent = "Southeast Asia",
+}
+
+labels["non-Mainland"] = {
+	prep = "by",
+	region = "ethnic Chinese outside of [[mainland China]], including in [[Hong Kong]] and [[Macau]] due to their special history",
+	display = "non-[[w:Mainland China|Mainland]] [[w:Chinese language|Chinese]]",
+	aliases = {"Non-Mainland Chinese", "non-mainland Chinese"},
+	regional_categories = true,
+	parent = true,
+}
+
+labels["Overseas"] = {
+	prep = "outside of",
+	region = "[[mainland China]], [[Taiwan]], [[Hong Kong]] and [[Macau]]",
+	Wikipedia = "Overseas Chinese",
+	regional_categories = true,
+	parent = "non-Mainland",
+}
+
+labels["Philippines"] = {
+	aliases = {"Philippine"},
+	Wikipedia = "Chinese Filipino",
+	regional_categories = "Philippine",
+	parent = "Southeast Asia",
+}
+
+labels["Pontianak"] = {
+	Wikipedia = {"Language and overseas Chinese communities#Indonesia", "Chinese Indonesians"},
+	regional_categories = true,
+	parent = "Indonesia",
+}
+
+labels["Singapore"] = {
+	aliases = {"Singaporean"},
+	Wikipedia = "Singaporean Chinese",
+	regional_categories = true,
+	parent = "Southeast Asia",
+}
+
 labels["South Korea"] = {
 	aliases = {"South Korean"},
 	Wikipedia = "Chinese people in Korea",
@@ -3180,11 +3418,39 @@ labels["South Korea"] = {
 	parent = "Overseas",
 }
 
+labels["Southeast Asia"] = {
+	aliases = {"Southeast Asian", "SEA"},
+	Wikipedia = "Overseas Chinese",
+	regional_categories = "Southeast Asian",
+	parent = "Overseas",
+}
+
+labels["Taiwan"] = {
+	aliases = {"Taiwanese"},
+	Wikipedia = true,
+	regional_categories = "Taiwanese",
+	parent = "non-Mainland",
+}
+
+labels["Thailand"] = {
+	aliases = {"Thai"},
+	Wikipedia = "Thai Chinese",
+	regional_categories = "Thai",
+	parent = "Southeast Asia",
+}
+
+labels["US"] = {
+	aliases = {"U.S.", "United States", "United States of America", "USA", "America", "American"}, -- America/American: should these be aliases of 'North America'?
+	Wikipedia = "History of Chinese Americans",
+	regional_categories = "American",
+	parent = "North America",
+}
+
 labels["Vietnam"] = {
 	aliases = {"Vietnamese"},
 	Wikipedia = "Hoa people",
 	regional_categories = "Vietnamese",
-	parent = "Overseas",
+	parent = "Southeast Asia",
 }
 
 return require("Module:labels").finalize_data(labels)
