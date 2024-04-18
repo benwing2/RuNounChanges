@@ -10,78 +10,6 @@ local function track(page)
 	require("Module:debug/track")("alter/" .. page)
 end
 
---[==[
-Return a list of objects corresponding to the raw label tags in `raw_tags`, where "label tags" are the tags after two
-vertical bars in {{tl|alt}}. Each object is of the format returned by `get_label_info` in [[Module:labels]], as the
-separate dialectal data modules have been removed.
-
-NOTE: This function no longer does anything other than call {get_label_info()} in [[Module:labels]].
-]==]
-function export.get_tag_info(raw_tags, lang)
-	local tags = {}
-
-	for _, tag in ipairs(raw_tags) do
-		-- Pass in nocat to avoid extra work, since we won't use the categories.
-		local display = require(labels_module).get_label_info { label = tag, lang = lang, nocat = true }
-		table.insert(tags, display)
-	end
-
-	return tags
-end
-
---[==[
-Concatenate the tag objects specified in `tags` (the return value of `get_tag_info`). The tags are normally separated
-by comma + space, but the `omit_preComma`, `omit_postComma`, `omit_preSpace` and `omit_postSpace` flags in the label
-data are respected, just as {{tl|lb}} does. The resulting string is tagged with CSS class {ib-content} (as with
-qualifiers), and the commas are tagged with CSS class {ib-comma} (again, as with qualifiers). `open` and `close` are
-optional open and close brackets (in the general sense; e.g. they may be parentheses, square brackets, etc.) to prepend
-and append, respectively, to the concatenated result. If specified, the brackets will be tagged with CSS class
-{ib-brac} (as with qualifiers). If `no_outer_cs_class` is passed in, don't surround the concatenated result with a span
-specifying the {ib-content} CSS class (commas separating labels will still be tagged with {ib-comma}); this allows the
-caller to pass the result to {format_qualifier()} in [[Module:qualifier]].
-
-'''WARNING''': This destructively modifies the `tags` list.
-]==]
-function export.concatenate_tags(tags, open, close, no_outer_css_class)
-	local omit_preComma = false
-	local omit_postComma = true
-	local omit_preSpace = false
-	local omit_postSpace = true
-	
-	for i, tag in ipairs(tags) do
-		omit_preComma = omit_postComma
-		omit_postComma = false
-		omit_preSpace = omit_postSpace
-		omit_postSpace = false
-
-		local to_insert = tag.label
-		local labdata = tag.data
-		if labdata then
-			omit_preComma = omit_preComma or labdata.omit_preComma
-			omit_postComma = labdata.omit_postComma
-			omit_preSpace = omit_preSpace or labdata.omit_preSpace
-			omit_postSpace = labdata.omit_postSpace
-		end
-
-		if to_insert ~= "" then
-			to_insert =
-				(omit_preComma and "" or '<span class="ib-comma">,</span>') ..
-				(omit_preSpace and "" or "&#32;") ..
-				to_insert
-		end
-		tags[i] = to_insert
-	end
-	
-	local ret = table.concat(tags, "")
-	if not no_outer_css_class then
-		ret = "<span class=\"ib-content\">" .. ret .. "</span>"
-	end
-	if open then
-		ret = "<span class=\"ib-brac\">" .. open .. "</span>" .. ret .. "<span class=\"ib-brac\">" .. close .. "</span>"
-	end
-	return ret
-end
-
 -- Per-param modifiers, which can be specified either as separate parameters (e.g. t2=, pos3=) or as inline modifiers
 -- <t:...>, <pos:...>, etc. The key is the name fo the parameter (e.g. "t", "pos") and the value is a table with
 -- elements as follows:
@@ -147,12 +75,12 @@ end
 
 --[==[
 Main function for displaying alternative forms. Extracted out from the template-callable function so this can be
-called by other modules (in particular, [[Module:descendants tree]]). `show_tags_after_terms` (used by
-[[Module:descendants tree]]) causes tags to be placed in brackets after each term rather than at the end using an
+called by other modules (in particular, [[Module:descendants tree]]). `show_labels_after_terms` (used by
+[[Module:descendants tree]]) causes labels to be placed in brackets after each term rather than at the end using an
 em-dash. `allow_self_link` causes terms the same as the pagename to be shown normally; otherwise they are displayed
 unlinked.
 ]==]
-function export.display_alternative_forms(parent_args, pagename, show_tags_after_terms, allow_self_link)
+function export.display_alternative_forms(parent_args, pagename, show_labels_after_terms, allow_self_link)
 	local list_with_holes = { list = true, allow_holes = true }
 	local params = {
 		[1] = { required = true, default = "und" },
@@ -181,7 +109,7 @@ function export.display_alternative_forms(parent_args, pagename, show_tags_after
 	local lang = m_languages.getByCode(args[1], 1)
 	local sc = args["sc"] and require("Module:scripts").getByCode(args["sc"], "sc") or nil
 
-	local raw_tags = {}
+	local raw_labels = {}
 	local items = {}
 
 	-- Find the maximum index among any of the list parameters.
@@ -204,9 +132,9 @@ function export.display_alternative_forms(parent_args, pagename, show_tags_after
 	local termno = 0
 	for i = 1, maxmaxindex do
 		-- If the previous term parameter was empty and we're not on the first term parameter,
-		-- this term parameter and any others contain tags (dialect or other labels).
+		-- this term parameter and any others contain labels.
 		if i > 1 and not prev then
-			raw_tags = {unpack(args[2], i, maxmaxindex)}
+			raw_labels = {unpack(args[2], i, maxmaxindex)}
 			break
 		end
 
@@ -313,8 +241,8 @@ function export.display_alternative_forms(parent_args, pagename, show_tags_after
 		end
 	end
 
-	-- The template must have either items or tags.
-	if items[1] == nil and raw_tags[1] == nil then error("No terms found!") end
+	-- The template must have either items or labels.
+	if items[1] == nil and raw_labels[1] == nil then error("No terms found!") end
 
 	-- If any term had an embedded comma, override all joiners to be semicolons.
 	if use_semicolon then
@@ -325,30 +253,39 @@ function export.display_alternative_forms(parent_args, pagename, show_tags_after
 		end
 	end
 
-	local tags = export.get_tag_info(raw_tags, lang)
+	local labels
+	if #raw_labels > 0 then
+		labels = require(labels_module).get_label_list_info(raw_labels, lang, "nocat")
+	end
 
-	-- Format all the items, including joiners, pre-qualifiers, post-qualifiers and (if `show_tags_after_terms` is
-	-- given) tags.
+	-- Format all the items, including joiners, pre-qualifiers, post-qualifiers and (if `show_labels_after_terms` is
+	-- given) labels.
 	for i, item in ipairs(items) do
 		items[i] = item.joiner .. m_links.full_link(item, nil, allow_self_link, "show qualifiers")
 		-- Temporarily turn this off till we can fix it correctly.
-		if false then -- show_tags_after_terms and #tags > 0 then
-			items[i] = items[i] .. " " .. export.concatenate_tags(tags, "[", "]")
+		if false then -- show_labels_after_terms and labelsthen
+			items[i] = items[i] .. " " .. require(labels_module).format_processed_labels {
+				labels = labels, lang = lang, open = "[", close = "]"
+			}
 		end
 	end
 
 	-- Construct the final output.
-	if not show_tags_after_terms then
-		-- If there are tags, construct them now and append to final output.
-		if #tags > 0 then
-			local tag_label
+	if not show_labels_after_terms then
+		-- If there are labels, construct them now and append to final output.
+		if labels then
+			local formatted_labels
 			if lang:hasTranslit() then
-				tag_label = " &mdash; " .. export.concatenate_tags(tags)
+				formatted_labels = " &mdash; " .. require(labels_module).format_processed_labels {
+					labels = labels, lang = lang
+				}
 			else
-				tag_label = " " .. export.concatenate_tags(tags, "(", ")")
+				formatted_labels = " " .. require(labels_module).format_processed_labels {
+					labels = labels, lang = lang, open = "(", close = ")"
+				}
 			end
 
-			table.insert(items, tag_label)
+			table.insert(items, formatted_labels)
 		end
 	end
 
