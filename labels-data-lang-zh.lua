@@ -240,8 +240,7 @@ labels["non-Mainland Hakka"] = {
 	display = "non-[[w:Mainland China|Mainland]] [[w:Hakka Chinese|Hakka]]",
 	aliases = {"Non-Mainland Hakka", "non-mainland Hakka"},
 	plain_categories = true,
-	parent = true,
-	othercat = "non-Mainland Chinese",
+	parent = "+,non-Mainland",
 }
 
 labels["Northern Sixian Hakka"] = {
@@ -667,8 +666,7 @@ labels["non-Mainland Mandarin"] = {
 	display = "non-[[w:Mainland China|Mainland]] [[w:Mandarin Chinese|Mandarin]]",
 	aliases = {"Non-Mainland Mandarin", "non-mainland Mandarin"},
 	plain_categories = true,
-	parent = true,
-	othercat = "non-Mainland Chinese",
+	parent = "+,non-Mainland",
 }
 
 labels["Overseas Mandarin"] = {
@@ -1433,7 +1431,7 @@ labels["Kinmen Hokkien"] = {
 	aliases = {"Kinmen"},
 	Wikipedia = "Kinmen#Language",
 	plain_categories = true,
-	parent = "Taiwanese Hokkien",
+	parent = "Tong'an Hokkien",
 }
 
 labels["Longyan Hokkien"] = {
@@ -1484,8 +1482,7 @@ labels["non-Mainland Hokkien"] = {
 	display = "non-[[w:Mainland China|Mainland]] [[w:Hokkien Chinese|Hokkien]]",
 	aliases = {"Non-Mainland Hokkien", "non-mainland Hokkien"},
 	plain_categories = true,
-	parent = true,
-	othercat = "non-Mainland Chinese",
+	parent = "+,non-Mainland",
 }
 
 labels["Overseas Hokkien"] = {
@@ -1697,8 +1694,7 @@ labels["non-Mainland Teochew"] = {
 	display = "non-[[w:Mainland China|Mainland]] [[w:Teochew Chinese|Teochew]]",
 	aliases = {"Non-Mainland Teochew", "non-mainland Teochew"},
 	plain_categories = true,
-	parent = true,
-	othercat = "non-Mainland Chinese",
+	parent = "+,non-Mainland",
 }
 
 labels["Overseas Teochew"] = {
@@ -1816,7 +1812,7 @@ labels["Anji Wu"] = {
 labels["Changxing Wu"] = {
 	region = "[[Changxing]] County in northwestern [[Zhejiang]] Province in eastern [[China]]",
 	aliases = {"Changxing"},
-	Wikidata = "Q11126990",
+	Wikidata = "Q111269900",
 	plain_categories = true,
 	parent = "Tiaoxi Wu",
 }
@@ -1855,7 +1851,7 @@ labels["Fuyang Wu"] = {
 	region = "parts of {{w|Fuyang District}} in the city of [[Hangzhou]], the capital of [[Zhejiang]] Province, in eastern [[China]]; located in the northwest part of the province",
 	addl = "The dialect geography in Fuyang District is complex, with multiple dialects from distinct groupings spoken in close proximity and several dialect islands.",
 	aliases = {"Fuyang"},
-	Wikipedia = "zh:富阳话", -- no Wikidata item yet
+	Wikidata = "Q125503323",
 	plain_categories = true,
 	parent = "Linshao Wu",
 }
@@ -2044,7 +2040,7 @@ labels["Shanghainese Wu"] = {
 labels["Shangyu Wu"] = {
 	region = "{{w|Shangyu District}} in northeastern [[Zhejiang]] Province, in eastern [[China]]",
 	aliases = {"Shangyu"},
-	Wikipedia = "zh:上虞話", -- no Wikidata item yet
+	Wikidata = "Q125503340",
 	plain_categories = true,
 	parent = "Linshao Wu",
 }
@@ -2165,7 +2161,7 @@ labels["Xinchang Wu"] = {
 labels["Yixing Wu"] = {
 	region = "the [[county-level city]] of {{w|Yixing}} in southern [[Jiangsu]] Province in eastern [[China]]",
 	aliases = {"Yixing"},
-	Wikipedia = "zh:宜興話", -- no Wikidata item yet
+	Wikidata = "Q125503370",
 	plain_categories = true,
 	parent = "Piling Wu",
 }
@@ -2213,7 +2209,7 @@ labels["Baizhang Wu"] = {
 	region = "{{w|lang=zh|百丈镇_(泰顺县)|Baizhang Township}} in [[Taishun]] County in southern [[Zhejiang]] Province, in eastern [[China]]",
 	addl = "It is a [[dialect island]] surrounded by {{catlink|Jujiang Wu}} speakers and is increasingly endangered, with less than 1,000 speakers remaining.",
 	aliases = {"Baizhang", "Xialu Wu", "Xialu"},
-	Wikipedia = "zh:百丈口话", -- no Wikidata item yet
+	Wikidata = "Q125500187",
 	plain_categories = true,
 	parent = "Oujiang Wu",
 }
@@ -2223,7 +2219,7 @@ labels["Changbei Wu"] = {
 	region = "{{w|Lin'an District}} (formerly the northern part of {{w|lang=zh|昌化县_(浙江省)|Changhua County}}, hence the name) in [[Hangzhou]], the capital of [[Zhejiang]] Province in the northern part, in eastern [[China]]",
 	addl = "It is a divergent subvariety of {{catlink|Xuanzhou Wu}} with significant vocabulary influences from the {{w|Jixi County}} variety of {{w|Huizhou Chinese}} and from Mandarin.",
 	aliases = {"Changbei"},
-	Wikipedia = "zh:昌北话", -- no Wikidata item yet
+	Wikidata = "Q125500172",
 	plain_categories = true,
 	parent = "Xuanzhou Wu", -- per zhwiki, in the Taigao Wu cluster
 }
@@ -2262,7 +2258,7 @@ labels["Duze Wu"] = {
 	region = "{{w|Qujiang, Quzhou|Qujiang District}} of the city of [[Quzhou]] in western [[Zhejiang]] Province in eastern [[China]]",
 	addl = "It is named after the town of Duze ({{m|zh|杜泽}}).",
 	aliases = {"Duze"},
-	Wikipedia = "zh:杜泽话", -- no Wikidata item yet
+	Wikidata = "Q125500167",
 	plain_categories = true,
 	parent = "Longqu Wu", -- a variety of Chuqu Wu
 }
@@ -2335,7 +2331,7 @@ labels["Jinhua Wu"] = {
 labels["Jiuhua Wu"] = {
 	region = "{{w|lang=zh|九华乡_(衢州市)|Jiuhua Township}} in {{w|Kecheng District}} in [[Quzhou]] in western [[Zhejiang]] Province in eastern [[China]]",
 	aliases = {"Jiuhua"},
-	Wikipedia = "zh:九华话", -- no Wikidata item yet
+	Wikidata = "Q125503368",
 	plain_categories = true,
 	parent = "Longqu Wu", -- a variety of Chuqu Wu
 }
@@ -2345,7 +2341,7 @@ labels["Jujiang Wu"] = {
 	region = "northeastern {{w|Taishun County}} in far southern [[Zhejiang]] Province in eastern [[China]]",
 	addl = "It has characteristics of both {{catlink|Oujiang Wu}} and {{catlink|Chuqu Wu}} and is only provisionally assigned to Oujiang Wu.",
 	aliases = {"Jujiang"},
-	Wikipedia = "zh:莒江话", -- no Wikidata item yet
+	Wikidata = "Q125503367",
 	plain_categories = true,
 	parent = "Oujiang Wu", -- possibly? also has characteristics of Chuqu Wu
 }
@@ -2374,7 +2370,7 @@ labels["Lishui Wu"] = {
 labels["Longqu Wu"] = {
 	region = "{{w|Kecheng District}}, {{w|Qujiang District}} and {{w|Longyou County}}, in the [[prefecture-level city]] of [[Quzhou]] in southwestern [[Zhejiang]] Province in eastern [[China]]",
 	aliases = {"Longqu"},
-	Wikipedia = "zh:龙衢小片", -- no Wikidata item yet
+	Wikidata = "Q125503353",
 	plain_categories = true,
 	parent = "Chuqu Wu",
 }
@@ -2430,7 +2426,7 @@ labels["Oujiang Wu"] = {
 -- FIXME: Category missing.
 labels["Pan'an Wu"] = {
 	region = "{{w|Pan'an County}} in central [[Zhejiang]] Province in eastern [[China]]",
-	aliases = {"Yiwu"},
+	aliases = {"Pan'an"},
 	Wikidata = "Q55695855",
 	plain_categories = true,
 	parent = "Wuzhou Wu", -- per zhwiki, in the Yiyong Wu cluster
@@ -2441,7 +2437,7 @@ labels["Pucheng Oujiang Wu"] = {
 	region = "four villages in the walled {{w|lang=zh|蒲壮所城|Puzhuangsuo City}} in Pucheng Township, {{w|Cangnan County}} in the southernmost part of the [[prefecture-level city]] of [[Wenzhou]] in southeastern [[Zhejiang]] Province in eastern [[China]]",
 	addl = "It is a dialect island of Wu Chinese surrounded by {{w|Zhenan Min}} speakers, and is not to be confused with {{catlink|Pucheng Wu}}, a variety of {{catlink|Chuqu Wu}} (rather than {{catlink|Oujiang Wu}}) spoken in a different Pucheng ({{w|Pucheng County, Fujian|Pucheng County}} in [[Fujian]] Province).",
 	aliases = {"Pucheng Ou", "Pucheng Auish"},
-	Wikipedia = "zh:蒲城瓯语", -- no Wikidata item yet
+	Wikidata = "Q125503350",
 	plain_categories = true,
 	parent = "Oujiang Wu",
 }
@@ -2451,8 +2447,7 @@ labels["Pucheng Wu"] = {
 	-- no "Pucheng" alias because per Wikipedia, Northern Min (Shibei dialect) is also spoken
 	region = "the northern part of {{w|Pucheng County, Fujian|Pucheng County}} in far northern [[Fujian]] Province, bordering [[Zhejiang]] Province, in eastern [[China]]",
 	addl = "Not to be confused with {{catlink|Pucheng Oujiang Wu}}, a variety of {{catlink|Oujiang Wu}} (rather than {{catlink|Chuqu Wu}}) spoken in a different Pucheng (Pucheng Township, {{w|Cangnan County}}, in [[Zhejiang]] Province).",
-	Wikipedia = "zh:浦城话", -- no Wikidata item yet
-	Wikidata = "Q1338032", -- article on Pucheng County, Fujian
+	Wikidata = "Q125503346",
 	plain_categories = true,
 	parent = "Chuzhou Wu", -- a variety of Chuqu Wu
 }
@@ -2822,7 +2817,7 @@ labels["Dongguan Cantonese"] = {
 labels["Fangcheng Yue"] = {
 	-- A variety of Qinlian Yue.
 	aliases = {"Fangcheng"},
-	Wikidata = "Q111949144",
+	Wikidata = "Q85885018",
 	plain_categories = true,
 }
 
@@ -2907,7 +2902,7 @@ labels["Hong Kong Cantonese"] = {
 }
 
 -- FIXME: Category missing.
-labels["Huizhou Yue"] = {
+labels["Huazhou Yue"] = {
 	-- A variety of Wuhua Yue.
 	-- No Huizhou alias because of Huizhou Cantonese (a different lect).
 	Wikidata = "Q9484916",
@@ -2974,8 +2969,7 @@ labels["non-Mainland Cantonese"] = {
 	display = "non-[[w:Mainland China|Mainland]] [[w:Cantonese Chinese|Cantonese]]",
 	aliases = {"Non-Mainland Cantonese", "non-mainland Cantonese"},
 	plain_categories = true,
-	parent = true,
-	othercat = "non-Mainland Chinese",
+	parent = "+,non-Mainland",
 }
 
 labels["Overseas Cantonese"] = {
@@ -3318,7 +3312,6 @@ labels["Indonesia"] = {
 }
 
 labels["Japan"] = {
-	langs = {"en", "ru", "zh"},
 	Wikipedia = "Chinese people in Japan",
 	regional_categories = "Japanese",
 	parent = "Overseas",
@@ -3378,7 +3371,7 @@ labels["non-Mainland"] = {
 	prep = "by",
 	region = "ethnic Chinese outside of [[mainland China]], including in [[Hong Kong]] and [[Macau]] due to their special history",
 	display = "non-[[w:Mainland China|Mainland]] [[w:Chinese language|Chinese]]",
-	aliases = {"Non-Mainland Chinese", "non-mainland Chinese"},
+	aliases = {"Non-Mainland", "non-mainland"},
 	regional_categories = true,
 	parent = true,
 }
