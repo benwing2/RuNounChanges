@@ -3,18 +3,24 @@ local export = {}
 local m_languages = require("Module:languages")
 local m_links = require("Module:links")
 local put_module = "Module:parse utilities"
-local alternative_forms_module = "Module:alternative forms"
+local labels_module = "Module:labels"
 local rsplit = mw.text.split
-
-local function wrap_span(text, lang, sc)
-	return '<span class="' .. sc .. '" lang="' .. lang .. '">' .. text .. '</span>'
-end
 
 local param_mods = {"t", "alt", "tr", "ts", "pos", "lit", "id", "sc", "g", "q", "qq"}
 -- Do m_table.listToSet(param_mods) inline, maybe saving memory?
 local param_mod_set = {}
 for _, param_mod in ipairs(param_mods) do
 	param_mod_set[param_mod] = true
+end
+
+
+local function track(page)
+	return require("Module:debug/track")("nyms/" .. page)
+end
+
+
+local function wrap_span(text, lang, sc)
+	return '<span class="' .. sc .. '" lang="' .. lang .. '">' .. text .. '</span>'
 end
 
 
@@ -27,13 +33,13 @@ local function split_on_comma(term)
 end
 
 
--- Convert a raw tag= param (or nil) to a list of formatted label tags; unrecognized tags are passed through
--- unchanged. Return nil if nil passed in.
-local function get_tag_info(tags, lang)
-	if not tags then
+-- Convert a raw lb= param (or nil) to a list of label info objects of the format described in get_label_info() in
+-- [[Module:labels]]). Unrecognized labels will end up with an unchanged display form. Return nil if nil passed in.
+local function get_label_list_info(raw_lb, lang)
+	if not raw_lb then
 		return nil
 	end
-	return require(alternative_forms_module).get_tag_info(split_on_comma(tags), lang)
+	return require(labels_module).get_label_list_info(split_on_comma(raw_lb), lang, "nocat")
 end
 
 local function get_thesaurus_text(lang, args, maxindex)
@@ -78,10 +84,20 @@ function export.nyms(frame)
 	for _, param_mod in ipairs(param_mods) do
 		params[param_mod] = list_with_holes
 	end
-	params.tag = {}
-	params.parttag = {list = "tag", allow_holes = true, require_index = true}
+	params.lb = {}
+	params.partlb = {list = "lb", allow_holes = true, require_index = true}
 
-	local args = require("Module:parameters").process(frame:getParent().args, params, nil, "nyms", "nyms")
+	local parent_args = frame:getParent().args
+
+	-- FIXME: Temporary error message.
+	for arg, _ in pairs(parent_args) do
+		if type(arg) == "string" and arg:find("^tag[0-9]*$") then
+			local lbarg = arg:gsub("^tag", "lb")
+			error(("Use %s= instead of %s="):format(lbarg, arg))
+		end
+	end
+
+	local args = require("Module:parameters").process(parent_args, params, nil, "nyms", "nyms")
 	
 	local nym_type = frame.args[1]
 	local nym_type_class = string.gsub(nym_type, "%s", "-")
@@ -127,7 +143,7 @@ function export.nyms(frame)
 				joiner = i > 1 and (args[2][i - 1] == ";" and "; " or ", ") or "",
 				q = args["q"][syn],
 				qq = args["qq"][syn],
-				tag = args["parttag"][syn],
+				lb = args["partlb"][syn],
 				term = {
 					lang = termlang, term = item, id = args["id"][syn],
 					sc = args["sc"][syn] and require("Module:scripts").getByCode(args["sc"][syn], "sc" .. syn) or nil,
@@ -166,9 +182,9 @@ function export.nyms(frame)
 						parse_err("Modifier " .. run[j] .. " lacks a prefix, should begin with one of '" ..
 							table.concat(param_mods, ":', '") .. ":'")
 					end
-					if param_mod_set[prefix] or prefix == "tag" then
+					if param_mod_set[prefix] or prefix == "lb" then
 						local obj_to_set
-						if prefix == "q" or prefix == "qq" or prefix == "tag" then
+						if prefix == "q" or prefix == "qq" or prefix == "lb" then
 							obj_to_set = termobj
 						else
 							obj_to_set = termobj.term
@@ -185,6 +201,9 @@ function export.nyms(frame)
 							parse_err("Modifier '" .. prefix .. "' occurs twice, second occurrence " .. run[j])
 						end
 						obj_to_set[prefix] = arg
+					elseif prefix == "tag" then
+						-- FIXME: Remove support for <tag:...> in favor of <lb:...>
+						error("Use <lb:...> instead of <tag:...>")
 					else
 						parse_err("Unrecognized prefix '" .. prefix .. "' in modifier " .. run[j])
 					end
@@ -213,22 +232,26 @@ function export.nyms(frame)
 	end
 
 	for i, item in ipairs(items) do
-		local tag_text = ""
-		if item.tag then
-			local tags = get_tag_info(item.tag, lang)
-			if tags then
-				tag_text = " " .. require(alternative_forms_module).concatenate_tags(tags, "[", "]")
+		local label_text = ""
+		if item.lb then
+			local labels = get_label_list_info(item.lb, lang)
+			if labels then
+				label_text = " " .. require(labels_module).format_processed_labels {
+					labels = labels, lang = lang, open = "[", close = "]"
+				}
 			end
 		end
 		items[i] = item.joiner .. (item.q and require("Module:qualifier").format_qualifier(item.q) .. " " or "") .. m_links.full_link(item.term)
-			.. (item.qq and " " .. require("Module:qualifier").format_qualifier(item.qq) or "") .. tag_text
+			.. (item.qq and " " .. require("Module:qualifier").format_qualifier(item.qq) or "") .. label_text
 	end
 
-	local tags = get_tag_info(args.tag, lang)
-	local tag_postq = tags and " &mdash; " .. require(alternative_forms_module).concatenate_tags(tags) or ""
+	local labels = get_label_list_info(args.lb, lang)
+	local label_postq = labels and " &mdash; " .. require(labels_module).format_processed_labels {
+		labels = labels, lang = lang 
+	} or ""
 	return "<span class=\"nyms " .. nym_type_class .. "\"><span class=\"defdate\">" .. 
 		mw.getContentLanguage():ucfirst(nym_type) .. ((#items > 1 or thesaurus ~= "") and "s" or "") ..
-		":</span> " .. table.concat(items) .. tag_postq .. thesaurus .. "</span>"
+		":</span> " .. table.concat(items) .. label_postq .. thesaurus .. "</span>"
 end
 
 
