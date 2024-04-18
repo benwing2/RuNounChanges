@@ -11,7 +11,6 @@
 local export = {}
 
 -- Named constants for all modules used, to make it easier to swap out sandbox versions.
-local alternative_forms_module = "Module:alternative forms"
 local check_isxn_module = "Module:check isxn"
 local debug_track_module = "Module:debug/track"
 local italics_module = "Module:italics"
@@ -141,7 +140,7 @@ end
 -- Parse a raw lb= param (or nil) to individual label info objects and then concatenate them appropriately into a
 -- qualifier input, respecting flags like `omit_preComma` and `omit_postSpace` in the label specs.
 local function parse_and_format_labels(raw_lb, lang)
-	local labels = get_label_list_info(raw_tags, lang, "nocat")
+	local labels = get_label_list_info(raw_lb, lang, "nocat")
 	if labels then
 		labels = require(labels_module).format_processed_labels {
 			labels = labels, lang = lang, no_ib_content = true
@@ -1710,70 +1709,63 @@ function export.source(args, alias_map, format_as_cite)
 			local plval, pl_fullname = a_with_name(plparamname)
 			local plobj = parse_annotated_text(plval, plparamname)
 			local plainval, plain_fullname = parse_and_format_annotated_text_with_name(paramname .. "_plain")
-			local howmany = (sgval and 1 or 0) + (plval and 1 or 0) + (plainval and 1 or 0)
-			if howmany > 1 then
-				local params_specified = {}
-				local function insparam(param)
-					if param then
-						table.insert(params_specified, ("|%s="):format(param))
-					end
-				end
-				insparam(sg_fullname)
-				insparam(pl_fullname)
-				insparam(plain_fullname)
-				error(("Can't specify more than one of %s"):format(
-					require(table_module).serialCommaJoin(params_specified, {dontTag = true})))
-			end
-			if howmany == 0 then
-				return nil
-			end
-			-- Merge page= and pages= and treat alike because people often mix them up in both directions.
+
 			local numspec
-			if plainval then
-				numspec = plainval
+			if not sgval and not plval and not plainval then
+				return
+			elseif plainval and (sgval or plval) then
+				error(("Can't specify " .. plain_fullname .. " with " .. paramname .. " or " .. plparamname))
+			elseif sgval and plval then
+				-- if both singular and plural, display "page 1 of 1-10"
+				numspec = singular_desc .. " " .. sgval .. " of " .. plval
 			else
-				local val = sgobj and sgobj.text or plobj.text
-				if val == "unnumbered" then
-					numspec = "unnumbered " .. singular_desc
+				-- Merge page= and pages= and treat alike because people often mix them up in both directions.
+				if plainval then
+					numspec = plainval
 				else
-					local function get_plural_desc()
-						-- Only call when needed to potentially avoid a module load.
-						return pluralize(singular_desc)
-					end
-					local desc
-					if val:find("^!") then
-						val = val:gsub("^!", "")
-						desc = sgval and singular_desc or get_plural_desc()
+					local val = sgobj and sgobj.text or plobj.text
+					if val == "unnumbered" then
+						numspec = "unnumbered " .. singular_desc
 					else
-						local check_val = val
-						if check_val:find("%[") then
-							check_val = require(links_module).remove_links(check_val)
-							-- convert URL's of the form [URL DISPLAY] to the displayed value
-							check_val = check_val:gsub("%[[^ %[%]]* ([^%[%]]*)%]", "%1")
+						local function get_plural_desc()
+							-- Only call when needed to potentially avoid a module load.
+							return pluralize(singular_desc)
 						end
-						-- in case of negative page numbers (do they exist?), don't treat as multiple pages
-						check_val = check_val:gsub("^%-", "")
-						-- replace HTML entity en-dashes and em-dashes with their literal codes
-						check_val = check_val:gsub("&ndash;", "–")
-						check_val = check_val:gsub("&#8211;", "–")
-						check_val = check_val:gsub("&mdash;", "—")
-						check_val = check_val:gsub("&#8212;", "—")
-						-- Check for en-dash or em-dash, or two numbers (possibly with stuff after like 12a-15b)
-						-- separated by a hyphen or by comma a followed by a space (to avoid firing on thousands separators).
-						if rfind(check_val, "[–—]") or check_val:find(" and ") or rfind(check_val, "[0-9]+[^ ]* *%- *[0-9]+")
-							or rfind(check_val, "[0-9]+[^ ]* *, +[0-9]+")  then
-							desc = get_plural_desc()
+						local desc
+						if val:find("^!") then
+							val = val:gsub("^!", "")
+							desc = sgval and singular_desc or get_plural_desc()
 						else
-							desc = singular_desc
+							local check_val = val
+							if check_val:find("%[") then
+								check_val = require(links_module).remove_links(check_val)
+								-- convert URL's of the form [URL DISPLAY] to the displayed value
+								check_val = check_val:gsub("%[[^ %[%]]* ([^%[%]]*)%]", "%1")
+							end
+							-- in case of negative page numbers (do they exist?), don't treat as multiple pages
+							check_val = check_val:gsub("^%-", "")
+							-- replace HTML entity en-dashes and em-dashes with their literal codes
+							check_val = check_val:gsub("&ndash;", "–")
+							check_val = check_val:gsub("&#8211;", "–")
+							check_val = check_val:gsub("&mdash;", "—")
+							check_val = check_val:gsub("&#8212;", "—")
+							-- Check for en-dash or em-dash, or two numbers (possibly with stuff after like 12a-15b)
+							-- separated by a hyphen or by comma a followed by a space (to avoid firing on thousands separators).
+							if rfind(check_val, "[–—]") or check_val:find(" and ") or rfind(check_val, "[0-9]+[^ ]* *%- *[0-9]+")
+								or rfind(check_val, "[0-9]+[^ ]* *, +[0-9]+")  then
+								desc = get_plural_desc()
+							else
+								desc = singular_desc
+							end
 						end
+						local obj = sgobj or plobj
+						obj.text = val
+						if obj.link:find("^!") then
+							obj.link = obj.link:gsub("^!", "")
+						end
+						val = format_annotated_text(obj)
+						numspec = desc .. " " .. val
 					end
-					local obj = sgobj or plobj
-					obj.text = val
-					if obj.link:find("^!") then
-						obj.link = obj.link:gsub("^!", "")
-					end
-					val = format_annotated_text(obj)
-					numspec = desc .. " " .. val
 				end
 			end
 			local url = a(paramname .. "url")
@@ -2549,7 +2541,6 @@ local function get_args(frame_args, parent_args, require_lang)
 		translation = {alias_of = "t"},
 		gloss = {alias_of = "t"},
 		lb = {},
-		tag = {alias_of = "lb"},
 		brackets = {type = "boolean"},
 		-- original quote params
 		origtext = {},
@@ -2560,7 +2551,6 @@ local function get_args(frame_args, parent_args, require_lang)
 		orignormsc = {},
 		origsubst = {},
 		origlb = {},
-		origtag = {alias_of = "origlb"},
 
 		["usenodot"] = {type = "boolean"},
 		["nodot"] = {type = "boolean"},
@@ -2792,6 +2782,11 @@ local function cite_t(frame)
 		parent_args[k] = v
 	end
 
+	local parts = {}
+	local function ins(text)
+		table.insert(parts, text)
+	end
+
     -- FIXME: temporary, remove when cite- calls use 1= as lang
     -- if 1= is defined and is not a valid language code, assume that the cite- template
     -- is using the older style where 1= is the year. Shift all numbered params by 1
@@ -2802,6 +2797,8 @@ local function cite_t(frame)
 	    -- 1 is not a valid language code, assume it's a year for backwards compatability
         -- increase all numbered parameters by 1 to make room for 1= as lang_id(s)
 	    if langobj == nil then
+			-- add tracking category for cleanup
+			ins("[[Category:Pages using bad params when calling Template:cite-old]]")
 			for x=10,2,-1 do
 				parent_args[x] = parent_args[x-1]
 			end
@@ -2815,11 +2812,6 @@ local function cite_t(frame)
 
     local args, alias_map = get_args(frame.args, parent_args)
 	
-	local parts = {}
-	local function ins(text)
-		table.insert(parts, text)
-	end
-
 	-- don't nag for translations
 	if args.text and not args.t then
 		args.t = "-"
@@ -2897,10 +2889,6 @@ function export.call_quote_template(frame)
 		["propagateparams"] = {list = true},
 	}
 	local iargs, other_direct_args = require(parameters_module).process(frame.args, iparams, "return unknown", "quote", "call_quote_template")
-	local direct_args = {}
-	for pname, param in pairs(other_direct_args) do
-		direct_args[pname] = ine(param)
-	end
 
 	local function process_paramref(paramref)
 		if not paramref then
@@ -2987,8 +2975,17 @@ function export.call_quote_template(frame)
 		other_direct_args.footer = frame:expandTemplate { title = "small", args = {args.footer} }
 	end
 	other_direct_args.brackets = args.brackets
-	if not other_direct_args.authorlink and other_direct_args.author and not other_direct_args.author:find("[%[<]") and not other_direct_args.author:match("w:") then
+	-- Don't copy author to authorlink if Wikipedia link already present or any embedded link or HTML are present; also
+	-- check for left bracket encoded as an HTML entity, which will lead to issues as well.
+	if not other_direct_args.authorlink and other_direct_args.author and
+		not other_direct_args.author:find("[%[<]") and not other_direct_args.author:find("w:") and
+		not other_direct_args.author:find("&#91;") then
 		other_direct_args.authorlink = other_direct_args.author
+	end
+	-- authorlink=- can be used to prevent copying of author= to authorlink= but we don't want to propagate this to
+	-- the actual {{quote-*}} code.
+	if other_direct_args.authorlink == "-" then
+		other_direct_args.authorlink = nil
 	end
 	for _, param in ipairs(params_to_propagate) do
 		if args[param] then
