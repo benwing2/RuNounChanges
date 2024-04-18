@@ -31,9 +31,11 @@ def process_text_on_page(pageindex, pagetitle, text):
       return secbody
     if "Noun" in subsections_by_header:
       id = "nominal"
+      poses = ["noun", "nouns"]
       pagemsg("Inferred id=nominal%s based on existing Noun section" % etymsec_text)
     elif "Adverb" in subsections_by_header:
       id = "adverbial"
+      poses = ["adverb", "adverbs"]
       pagemsg("Inferred id=adverbial%s based on existing Adverb section" % etymsec_text)
     else:
       pagemsg("WARNING: Didn't see either noun or adverb sections%s, skipping" %  etymsec_text)
@@ -56,11 +58,17 @@ def process_text_on_page(pageindex, pagetitle, text):
       tn = tname(t)
       def getp(param):
         return getparam(t, param)
-      if tn in ["af", "affix", "suf", "suffix"]:
+      if tn in ["af", "affix", "surf", "suf", "suffix", "con", "confix"]:
         is_suffix = tn in ["suf", "suffix"]
+        is_confix = tn in ["con", "confix"]
+        no_hyphen = is_suffix or is_confix
         numbered = blib.fetch_param_chain(t, "2")
         for affix_index, affix in enumerate(numbered):
-          if affix == "-ment" or is_suffix and affix == "ment" or affix.startswith("-ment<") or is_suffix and affix.startswith("ment<"):
+          if is_suffix and affix_index == 0:
+            continue
+          if is_confix and affix_index < len(numbered) - 1:
+            continue
+          if affix == "-ment" or no_hyphen and affix == "ment" or affix.startswith("-ment<") or no_hyphen and affix.startswith("ment<"):
             saw_affix_template_with_ment = True
             id_param = "id%s" % ("" if affix_index == 0 else str(affix_index + 1))
             existing_id = getp(id_param)
@@ -71,15 +79,26 @@ def process_text_on_page(pageindex, pagetitle, text):
                 pagemsg("WARNING: Skipping %s with %s=%s%s, different from desired '%s'" % (
                   str(t), id_param, existing_id, etymsec_text, id))
               continue
+            existing_pos = getp("pos")
+            if existing_pos:
+              if existing_pos in poses:
+                pagemsg("Removing %s with pos=%s%s" % (str(t), existing_pos, etymsec_text))
+                rmparam(t, "pos")
+                notes.append("remove pos=%s from {{%s|%s}}%s" % (
+                  existing_pos, tn, getp("1"), etymsec_text))
+              else:
+                pagemsg("WARNING: Skipping %s with unexpected pos=%s%s" % (
+                  str(t), existing_id, etymsec_text))
+                continue
 
-          if affix == "-ment" or is_suffix and affix == "ment":
+          if affix == "-ment" or no_hyphen and affix == "ment":
             new_affix = "%s<id:%s>" % (affix, id)
             pagemsg("Replacing %s=%s with %s=%s in %s%s" % (
               affix_index + 2, affix, affix_index + 2, new_affix, str(t), etymsec_text))
             notes.append("replace %s=%s with %s=%s in {{%s|%s}}%s" % (
               affix_index + 2, affix, affix_index + 2, new_affix, tn, getp("1"), etymsec_text))
             t.add(str(affix_index + 2), new_affix)
-          elif affix.startswith("-ment<") or is_suffix and affix.startswith("ment<"):
+          elif affix.startswith("-ment<") or no_hyphen and affix.startswith("ment<"):
             try:
               inlinemod = blib.parse_inline_modifier(affix)
             except e as ParseException:
