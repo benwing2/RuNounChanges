@@ -28,6 +28,8 @@ def process_text_on_page(index, pagename, text):
         pagemsg("WARNING: Nested translation sections, skipping page, nested opening line follows: %s" % line)
         return
       in_translation_section = True
+      need_aramaic_header = False
+      saw_aramaic_header = False
       opening_trans_line = line
       prev_lang = ""
       prev_indented_lang = ""
@@ -37,6 +39,8 @@ def process_text_on_page(index, pagename, text):
       if not in_translation_section:
         pagemsg("WARNING: Found {{trans-bottom}} not in a translation section")
       else:
+        if need_aramaic_header and not saw_aramaic_header:
+          translation_lines.append(("Aramaic", "", lineind, "* Aramaic:"))
         if not opening_trans_line.startswith("{{checktrans"):
           translation_lines = [(normalize_lang(lang), normalize_lang(indented_lang), lineind, line)
                                for lang, indented_lang, lineind, line in translation_lines]
@@ -157,15 +161,28 @@ def process_text_on_page(index, pagename, text):
             prev_indented_lang = indented_lang
             translation_lines.append((prev_lang, prev_indented_lang, lineind, line))
         else:
-          m = re.search(r"^\* *(%s):(.*)$" % langname_regex, line)
+          m = re.search(r"^\* *((%s):.*)$" % langname_regex, line)
           if not m:
             pagemsg("WARNING: Unrecognized line in translation section: %s" % line)
             translation_lines.append((prev_lang, prev_indented_lang, lineind, line))
           else:
-            lang, rest = m.groups()
-            prev_lang = lang
-            prev_indented_lang = ""
-            translation_lines.append((lang, "", lineind, line))
+            rest, lang = m.groups()
+            if lang != "Aramaic" and (lang.endswith("Aramaic") or lang in [
+              "Mlahsö", "Turoyo", "Classical Syriac", "Hulaulá", "Hértevin", "Koy Sanjaq Surat", "Lishana Deni",
+              "Lishanid Noshan", "Lishán Didán", "Senaya", "Classical Mandaic", "Mandaic"]):
+              pagemsg("Indenting Aramaic variety %s" % lang)
+              notes.append("indent Aramaic variety %s" % lang)
+              line = "*: " + rest
+              prev_lang = "Aramaic"
+              prev_indented_lang = lang
+              translation_lines.append((prev_lang, prev_indented_lang, lineind, line))
+              need_aramaic_header = True
+            else:
+              if lang == "Aramaic":
+                saw_aramaic_header = True
+              prev_lang = lang
+              prev_indented_lang = ""
+              translation_lines.append((lang, "", lineind, line))
     else:
       new_lines.append(line)
 
