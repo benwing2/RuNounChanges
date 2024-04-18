@@ -15,6 +15,7 @@ local alternative_forms_module = "Module:alternative forms"
 local check_isxn_module = "Module:check isxn"
 local debug_track_module = "Module:debug/track"
 local italics_module = "Module:italics"
+local labels_module = "Module:labels"
 local languages_module = "Module:languages"
 local links_module = "Module:links"
 local number_utilities_module = "Module:number utilities"
@@ -128,24 +129,25 @@ local function yesno(val, default)
 	return require(yesno_module)(val, default)
 end
 
--- Convert a raw tag= param (or nil) to a list of tag info objects of the format described in
--- [[Module:alternative forms]] (similar to the return value of get_label_info() in [[Module:labels]]). Unrecognized
--- tags will end up with an unchanged display form, as for labels. Return nil if nil passed in.
-local function get_tag_info(raw_tags, lang)
-	if not raw_tags then
+-- Convert a raw lb= param (or nil) to a list of label info objects of the format described in get_label_info() in
+-- [[Module:labels]]). Unrecognized labels will end up with an unchanged display form. Return nil if nil passed in.
+local function get_label_list_info(raw_lb, lang)
+	if not raw_lb then
 		return nil
 	end
-	return require(alternative_forms_module).get_tag_info(split_on_comma(raw_tags), lang)
+	return require(labels_module).get_label_list_info(split_on_comma(raw_lb), lang, "nocat")
 end
 
--- Parse a raw tag= param (or nil) to individual tag info objects and then concatenate them appropriately into a
+-- Parse a raw lb= param (or nil) to individual label info objects and then concatenate them appropriately into a
 -- qualifier input, respecting flags like `omit_preComma` and `omit_postSpace` in the label specs.
-local function parse_and_format_tags(raw_tags, lang)
-	local tags = get_tag_info(raw_tags, lang)
-	if tags then
-		tags = require(alternative_forms_module).concatenate_tags(tags, nil, nil, "no outer CSS class")
-		if tags ~= "" then -- not sure tags can be an empty string but it seems possible in some circumstances
-			return {tags}
+local function parse_and_format_labels(raw_lb, lang)
+	local labels = get_label_list_info(raw_tags, lang, "nocat")
+	if labels then
+		labels = require(labels_module).format_processed_labels {
+			labels = labels, lang = lang, no_ib_content = true
+		}
+		if labels ~= "" then -- not sure labels can be an empty string but it seems possible in some circumstances
+			return {labels}
 		end
 	end
 end
@@ -2546,7 +2548,8 @@ local function get_args(frame_args, parent_args, require_lang)
 		t = {},
 		translation = {alias_of = "t"},
 		gloss = {alias_of = "t"},
-		tag = {},
+		lb = {},
+		tag = {alias_of = "lb"},
 		brackets = {type = "boolean"},
 		-- original quote params
 		origtext = {},
@@ -2556,7 +2559,8 @@ local function get_args(frame_args, parent_args, require_lang)
 		origsc = {},
 		orignormsc = {},
 		origsubst = {},
-		origtag = {},
+		origlb = {},
+		origtag = {alias_of = "origlb"},
 
 		["usenodot"] = {type = "boolean"},
 		["nodot"] = {type = "boolean"},
@@ -2687,7 +2691,7 @@ local function get_origtext_params(args)
 		orignormsc = args.orignormsc == "auto" and args.orignormsc or
 			args.orignormsc and require(scripts_module).getByCode(args.orignormsc, "orignormsc") or nil
 	else
-		for _, noparam in ipairs { "origtr", "origts", "origsc", "orignorm", "orignormsc", "origsubst", "origtag" } do
+		for _, noparam in ipairs { "origtr", "origts", "origsc", "orignorm", "orignormsc", "origsubst", "origlb" } do
 			if args[noparam] then
 				error(("Cannot specify %s= without origtext="):format(noparam))
 			end
@@ -2731,7 +2735,7 @@ local function get_quote(args, usex_args)
 			subst = args.subst,
 			lit = args.lit,
 			footer = args.footer,
-			qq = parse_and_format_tags(args.tag, lang),
+			qq = parse_and_format_labels(args.lb, lang),
 			quote = "quote-meta",
 			orig = origtext,
 			origlang = origtextlang,
@@ -2741,7 +2745,7 @@ local function get_quote(args, usex_args)
 			origtr = args.origtr,
 			origts = args.origts,
 			origsubst = args.origsubst,
-			origqq = parse_and_format_tags(args.origtag, lang),
+			origqq = parse_and_format_labels(args.origlb, lang),
 		}
 
         if usex_args then
