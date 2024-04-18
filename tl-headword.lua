@@ -125,6 +125,12 @@ function export.show(frame)
 	if pos_functions[poscat] then
 		pos_functions[poscat].func(args, data)
 	end
+	
+	local script = lang:findBestScript(pagename) -- Latn or Tglg
+	-- Disable Baybayin spelling parameter if entry is already in Baybayin
+	if script:getCode() == "Tglg" then
+		args.b = {}
+	end
 
 	for i, bay in ipairs(args.b) do
 		if bay == "+" then
@@ -155,7 +161,6 @@ function export.show(frame)
 		table.insert(data.inflections, args.b)
 	end
 
-	local script = lang:findBestScript(pagename) -- Latn or Tglg
 	if script:getCode() == "Latn" then
 		table.insert(data.categories,
 			("%s terms %s Baybayin script"):format(langname, #args.b > 0 and "with" or "without"))
@@ -164,16 +169,28 @@ function export.show(frame)
 	end
 
 	if script:getCode() == "Latn" then
-		-- See if we need to add a tracking category for missing {{tl-IPA}}
-		local tl_IPA_present
+		-- See if we need to add a tracking category for missing {{tl-pr}}
+		local tl_pr_present
 		local this_title = mw.title.new(pagename)
 		if this_title then
 			local content = this_title:getContent()
-			if content and rmatch(content, "{{tl%-IPA[^}]*}}") then
+			if content and (rmatch(content, "{{tl%-pr}}") or rmatch(content, "{{tl%-pr[|][^}]*}}")) then
+				tl_pr_present = true
+			end
+		end
+		if not tl_pr_present then
+			table.insert(data.categories, ("%s terms without tl-pr template"):format(langname))
+		end
+		
+			-- See if we need to add a tracking category for missing {{tl-IPA}}
+		local tl_IPA_present
+		if this_title then
+			local content = this_title:getContent()
+			if content and rmatch(content, "{{tl%-IPA[^}]*") then
 				tl_IPA_present = true
 			end
 		end
-		if not tl_IPA_present then
+		if not tl_IPA_present and not tl_pr_present then
 			table.insert(data.categories, ("%s terms without tl-IPA template"):format(langname))
 		end
 	end
