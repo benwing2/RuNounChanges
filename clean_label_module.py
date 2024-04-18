@@ -19,26 +19,39 @@ class Field:
 @dataclass
 class FieldReference:
   field: str
-  output: Callable[[], str]
 
 class Properties:
-  Wikipedia: Field = None
-  Wiktionary: Field = None
-  Wikidata: Field = None
-  display: Field = None
-  special_display: Field = None
-  glossary: Field = None
-  track: Field = None
-  omit_preComma: Field = None
-  omit_postComma: Field = None
-  topical_categories: Field = None
-  sense_categories: Field = None
-  pos_categories: Field = None
-  regional_categories: Field = None
-  plain_categories: Field = None
-  aliases: Field = None
-  deprecated_aliases: Field = None
-  langs: Field = None
+  pass
+
+recognized_fields = [
+  "Wikipedia",
+  "Wiktionary",
+  "Wikidata",
+  "display",
+  "special_display",
+  "glossary",
+  "track",
+  "omit_preComma",
+  "omit_postComma",
+  "topical_categories",
+  "sense_categories",
+  "pos_categories",
+  "regional_categories",
+  "plain_categories",
+  "aliases",
+  "deprecated_aliases",
+  "langs",
+  # lect fields
+  "region",
+  "parent",
+  "prep",
+  "verb",
+  "def",
+  "fulldef",
+  "noreg",
+  "nolink",
+  "the",
+]
 
 @dataclass
 class CategorySpec:
@@ -111,19 +124,11 @@ def process_text_on_page_for_label_objects(index, pagename, text):
   indexed_labels = {}
   first_label_line = None
   label_lines = []
+  fields = {}
   label = False
-  topical_categories = CategorySpec()
-  sense_categories = CategorySpec()
-  pos_categories = CategorySpec()
-  regional_categories = CategorySpec()
-  plain_categories = CategorySpec()
-  str_properties = StrProperties()
-  bool_properties = BoolProperties()
-  aliases = CategorySpec()
-  deprecated_aliases = CategorySpec()
 
   either_quote_string_re = '(".*?"|' + "'.*?')"
-  true_or_either_quote_string_re = '(true|".*?"|' + "'.*?')"
+  true_false_or_either_quote_string_re = '(true|false|".*?"|' + "'.*?')"
 
   for lineind, line in enumerate(lines):
     lineno = lineind + 1
@@ -145,14 +150,6 @@ def process_text_on_page_for_label_objects(index, pagename, text):
           continue
         labels_seen[indexed_labels[canon]].aliases.cats.append(alias)
         continue
-      topical_categories = CategorySpec()
-      sense_categories = CategorySpec()
-      pos_categories = CategorySpec()
-      regional_categories = CategorySpec()
-      plain_categories = CategorySpec()
-      aliases = CategorySpec()
-      str_properties = StrProperties()
-      bool_properties = BoolProperties()
       m = re.search(r"^labels *\[%s\] = \{$" % (either_quote_string_re), line.rstrip())
       if not m:
         linemsg("WARNING: Unable to parse labels start line: %s" % line)
@@ -177,9 +174,7 @@ def process_text_on_page_for_label_objects(index, pagename, text):
         else:
           label_lines[-1] += ","
 
-      labels_seen.append(LabelData(label, first_label_line, label_lines, line, topical_categories, sense_categories,
-                                   pos_categories, regional_categories, plain_categories, str_properties,
-                                   bool_properties, aliases, deprecated_aliases))
+      labels_seen.append(LabelData(label, first_label_line, label_lines, line, fields))
       indexed_labels[label] = len(labels_seen) - 1
       label = False
       label_lines = []
@@ -188,38 +183,60 @@ def process_text_on_page_for_label_objects(index, pagename, text):
       origline = line
       line = line.strip()
 
-      def extract_categories(raw_cats):
-        m = re.search(r"^\{(.*)\},?$", raw_cats)
-        if m:
-          inside = m.group(1).strip()
-          if not inside:
-            linemsg("WARNING: Empty category line: %s" % line)
-            return None
-          if inside.endswith(","):
-            inside = inside[:-1].strip()
-          split_cats = re.split(true_or_either_quote_string_re, m.group(1).strip())
-          cats = []
-          for i, split_cat in enumerate(split_cats):
-            if i % 2 == 1:
-              if split_cat == "true":
-                cats.append(True)
-              else:
-                cats.append(split_cat[1:-1])
-            elif ((i == 0 or i == len(split_cats) - 1) and split_cat.strip()
-                  or (i > 0 and i < len(split_cats) - 1) and split_cat.strip() != ","):
-              linemsg("WARNING: Junk '%s' between categories: %s" % (split_cat, line))
-              return None
-          return cats
-        m = re.search(r"^(.*?),?$", raw_cats)
-        assert m
-        inside = m.group(1).strip()
-        if not re.search("^%s$" % true_or_either_quote_string_re, inside):
-          linemsg("WARNING: Unable to parse category line: %s" % line)
+      m = re.search("^([A-Za-z_][A-Za-z0-9]*)%s *= *(.*?),?( *--.*)?$", line)
+      if m:
+        fieldname, rawval, comment = m.groups()
+        if fieldname not in recognized_fields:
+          linemsg("WARNING: Unrecognized field '%s': %s" % (fieldname, line))
+          label_lines.append(origline)
+          continue
+        def parse_single_value(rawval):
+          if re.match("^" + true_false_or_either_quote_string_re + "$", rawval):
+            if rawval == "true":
+              return True
+            if rawval == "false":
+              return True
+            return rawval[1:-1]
           return None
-        if inside == "true":
-          return [True]
+        def parse_value(rawval):
+          single_val = parse_single_value(rawval)
+          if single_val is not None:
+            return single_val
+          m = re.search(r"^\{(.*)\}$", rawval)
+          if m:
+            inside = m.group(1).strip()
+            if not inside:
+              linemsg("WARNING: Empty list for field '%s': %s" % (fieldname, line))
+              return None
+            if inside.endswith(","):
+              inside = inside[:-1].strip()
+            split_vals = re.split(true_false_or_either_quote_string_re, insde)
+            vals = []
+            for i, split_val in enumerate(split_vals):
+              if i % 2 == 1:
+                val = parse_single_value(split_val)
+                if val is None:
+                  linemsg("WARNING: Internal error: Can't parse value '%s' for field '%s': %s" % (
+                    split_val, fieldname, line))
+                  return None
+                vals.append(val)
+              elif ((i == 0 or i == len(split_vals) - 1) and split_val.strip()
+                    or (i > 0 and i < len(split_vals) - 1) and split_val.strip() != ","):
+                linemsg("WARNING: Junk '%s' between values for field '%s': %s" % (split_val, fieldname, line))
+                return None
+            return vals
+          linemsg("WARNING: Unable to parse value '%s' for field '%s': %s" % (rawval, fieldname, line))
+          return None
+
+        val = parse_value(rawval)
+        if val is None:
+          label_lines.append(origline)
+        elif hasattr(fields, fieldname):
+          linemsg("WARNING: Saw field '%s' twice: %s" % (fieldname, line))
+          label_lines.append(origline)
         else:
-          return [inside[1:-1]]
+          setattr(fields, fieldname, Field(val, comment))
+          label_lines.append(FieldReference(fieldname))
 
       def process_cats(prefix, spec, process_one_cat):
         m = re.search("^%s *= *(.*?),?( *--.*)?$" % prefix, line)
@@ -352,54 +369,32 @@ def process_text_on_page_for_label_objects(index, pagename, text):
     labels_seen, langcode, langname, saw_old_style_alias
   )
 
-def output_labels(labels_seen):
+def output_labels(labels_seen, pagemsg):
   new_lines = []
   for labelobj in labels_seen:
     if isinstance(labelobj, LabelData):
       new_lines.append(labelobj.first_label_line)
-      if labelobj.aliases.cats:
-        new_lines.append("\taliases = {%s},%s" % (", ".join('"%s"' % alias for alias in labelobj.aliases.cats),
-                         labelobj.aliases.comment or ""))
-      if labelobj.langs is not None:
-        new_lines.append("\tlangs = {%s}," % ", ".join('"%s"' % lang for lang in labelobj.langs))
-      def output_str_property(propname, default_to_true=False):
-        propval = getattr(labelobj.str_properties, propname)
-        propval_comment = getattr(labelobj.str_properties, propname + "_comment")
-        if propval is None and propval_comment is not None:
-          errandpagemsg("WARNING: Internal error: Saw %s=None but %s_comment=%s" % (
-            propname, propname, propval_comment))
-          return
-        if propval is not None:
-          if default_to_true and propval == '"%s"' % labelobj.label:
-            propval = "true"
-          new_lines.append("\t%s = %s,%s" % (propname, propval, propval_comment or ""))
-      def output_bool_property(propname):
-        propval = getattr(labelobj.bool_properties, propname)
-        if propval is not None:
-          new_lines.append("\t%s = true," % propname)
-      output_str_property("display")
-      output_str_property("special_display")
-      output_str_property("Wikipedia", default_to_true=True)
-      output_str_property("glossary", default_to_true=True)
-      output_str_property("Wiktionary")
-      output_str_property("Wikidata")
-      output_bool_property("track")
-      output_bool_property("omit_preComma")
-      output_bool_property("omit_postComma")
-      new_lines.extend(labelobj.label_lines)
-      def output_cats(spec, prefix):
-        cats = spec.cats
-        if len(cats) == 0:
-          return
-        if len(cats) == 1:
-          new_lines.append("\t%s = %s,%s" % (prefix, cats[0], spec.comment or ""))
+      def output_value(val):
+        if val is True:
+          return "true"
+        elif val is False:
+          return "false"
+        elif type(val) is str:
+          return '"%s"' % val
+        elif type(val) is list:
+          vals = []
+          for v in val:
+            vals.append(output_value(v))
+          return "{%s}" % ", ".join(vals)
         else:
-          new_lines.append("\t%s = {%s},%s" % (prefix, ", ".join(cats), spec.comment or ""))
-      output_cats(labelobj.topical_categories, "topical_categories")
-      output_cats(labelobj.sense_categories, "sense_categories")
-      output_cats(labelobj.pos_categories, "pos_categories")
-      output_cats(labelobj.regional_categories, "regional_categories")
-      output_cats(labelobj.plain_categories, "plain_categories")
+          pagemsg("WARNING: Internal error: Unrecognized field value '%s'" % val)
+          return "nil"
+      for label_line in labelobj.label_lines:
+        if type(label_line) is str:
+          new_lines.append(label_line)
+        else:
+          fieldval = getattr(labelobj.fields, label_line.field)
+          new_lines.append("\t%s = %s,%s" % (label_line.field, output_value(fieldval.value), fieldval.comment or ""))
       new_lines.append(labelobj.last_label_line)
       new_lines.extend(labelobj.lines_after)
     else:
@@ -422,8 +417,8 @@ def extract_extra_lines_at_end(labels_seen):
     extra_lines_at_end = []
   return extra_lines_at_end
 
-def comment_out(labelobj, dupmsg):
-  new_lines = output_labels([labelobj])
+def comment_out(labelobj, dupmsg, pagemsg):
+  new_lines = output_labels([labelobj], pagemsg)
   return ["-- FIXME: %s" % dupmsg] + ["-- %s" % line for line in new_lines]
 
 max_label_index_seen = 0
@@ -475,7 +470,7 @@ def process_text_on_page(index, pagename, text):
       # label's alias set to be overridden by different lang-specific labels, and so for each overridding
       # lang-specific label, we have to check for bleed-through and if so, output the regional label's
       # definition after the relevant lang-specific label definition.
-      regional_alias_set = set(labelobj.aliases.cats) | {labelobj.label}
+      regional_alias_set = set(labelobj.fields.aliases.value) | {labelobj.label}
       any_bleed_through = False
       not_completely_overridden = False
       canon_labels_with_bleed_through = set()
@@ -492,7 +487,8 @@ def process_text_on_page(index, pagename, text):
                 ",".join(sorted(list(bleeding_through_members))), labelobj.label, ",".join(labelobj.aliases.cats),
                 lang_specific_obj.label, ",".join(lang_specific_obj.aliases.cats))
               pagemsg(dupmsg)
-              lang_specific_obj.lines_after.extend(comment_out(labelobj, dupmsg + "; regional label definition follows:"))
+              lang_specific_obj.lines_after.extend(
+                  comment_out(labelobj, dupmsg + "; regional label definition follows:", pagemsg))
         else:
           not_completely_overridden = True
       if not_completely_overridden and not any_bleed_through:
@@ -535,8 +531,8 @@ def process_text_on_page(index, pagename, text):
                 retval.labels_seen.append(lines_before_label)
               else:
                 retval.labels_seen.append([""])
-              retval.labels_seen.append(comment_out(labelobj, dupmsg))
-              retval.labels_seen.append(comment_out(existing, "corresponding regional label follows:"))
+              retval.labels_seen.append(comment_out(labelobj, dupmsg, pagemsg))
+              retval.labels_seen.append(comment_out(existing, "corresponding regional label follows:", pagemsg))
           if existing is None:
             match = ucfirst(labelobj.label)
             existing = labelobjs_by_label.get(match, None)
@@ -575,7 +571,7 @@ def process_text_on_page(index, pagename, text):
                       if canon_labels_duplicating[existing.label] else "")
                     pagemsg(dupmsg)
                     canon_labels_duplicating[existing.label].add(labelobj.label)
-                    existing.lines_after.extend(comment_out(labelobj, dupmsg))
+                    existing.lines_after.extend(comment_out(labelobj, dupmsg, pagemsg))
             if not has_dup_alias:
               num_new_alt_labels += 1
               pagemsg("Didn't see {{alt}} label '%s', appending" % labelobj.label)
@@ -599,7 +595,7 @@ def process_text_on_page(index, pagename, text):
                 if canon_labels_duplicating[existing.label] else "")
               pagemsg(dupmsg)
               canon_labels_duplicating[existing.label].add(match)
-              existing.lines_after.extend(comment_out(labelobj, dupmsg))
+              existing.lines_after.extend(comment_out(labelobj, dupmsg, pagemsg))
           else:
             if labelobj.aliases.cats:
               for alias in labelobj.aliases.cats:
@@ -642,7 +638,7 @@ def process_text_on_page(index, pagename, text):
 
   retval.labels_seen.extend(extra_lines_at_end)
 
-  new_lines = output_labels(retval.labels_seen)
+  new_lines = output_labels(retval.labels_seen, pagemsg)
   text = "\n".join(new_lines)
   text = text.replace("\n\n\n", "\n\n")
   text = re.sub("^    ", "\t", text, 0, re.M)
@@ -708,7 +704,7 @@ if __name__ == "__main__":
         else:
           labelobjs_with_text.append(labelobj)
       labelobjs_with_text.append(['return require("Module:labels").finalize_data(labels)'])
-      new_lang_specific_lines = output_labels(labelobjs_with_text)
+      new_lang_specific_lines = output_labels(labelobjs_with_text, pagemsg)
       blib.do_handle_stdin_retval(
         args, ("\n".join(new_lang_specific_lines),
                "move %s {{alt}} label(s) from [[Module:%s:Dialects]] into new label data module" % (
