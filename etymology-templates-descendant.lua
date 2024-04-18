@@ -4,7 +4,7 @@ local listToSet = require("Module:table/listToSet")
 local rsplit = mw.text.split
 
 local put_module = "Module:parse utilities"
-local alternative_forms_module = "Module:alternative forms"
+local labels_module = "Module:labels"
 
 local export = {}
 
@@ -54,7 +54,7 @@ local calque_alias_set = listToSet(calque_aliases)
 local partial_calque_aliases = {"pcal", "pcalq", "pcalque"}
 local partial_calque_alias_set = listToSet(partial_calque_aliases)
 -- Miscellaneous list params.
-local misc_list_params = {"q", "qq", "tag"}
+local misc_list_params = {"q", "qq", "lb"}
 local misc_list_param_set = listToSet(misc_list_params)
 
 -- Add a "regular" list param such as g=, gloss=, lit=, etc. "Regular" here means that `param` and `param1` are
@@ -74,14 +74,13 @@ local function add_index_separated_list_param(params, param, type, alias_of)
 		list = param, allow_holes = true, require_index = true}
 end
 
--- Convert a raw tag= param (or nil) to a list of tag info objects of the format described in
--- [[Module:alternative forms]] (similar to the return value of get_label_info() in [[Module:labels]]). Unrecognized
--- tags will end up with an unchanged display form, as for labels. Return nil if nil passed in.
-local function get_tag_info(tags, lang)
-	if not tags then
+-- Convert a raw lb= param (or nil) to a list of label info objects of the format described in get_label_info() in
+-- [[Module:labels]]). Unrecognized labels will end up with an unchanged display form. Return nil if nil passed in.
+local function get_label_list_info(raw_lb, lang)
+	if not raw_lb then
 		return nil
 	end
-	return require(alternative_forms_module).get_tag_info(split_on_comma(tags), lang)
+	return require(labels_module).get_label_list_info(split_on_comma(raw_lb), lang, "nocat")
 end
 
 -- Return a function of one argument `arg` (a param name), which fetches args[`arg`] if index == 0, else
@@ -145,11 +144,13 @@ local function get_pre_qualifiers(args, index, lang)
 	local quals
 
 	if index > 0 then
-		local tags = get_tag_info(val("tag"), lang)
-		if tags then
-			tags = require(alternative_forms_module).concatenate_tags(tags, nil, nil, "no outer CSS class")
-			if tags ~= "" then -- not sure tags can be an empty string but it seems possible in some circumstances
-				quals = {tags}
+		local labels = get_label_list_info(val("lb"), lang)
+		if labels then
+			labels = require(labels_module).format_processed_labels {
+				labels = labels, lang = lang, no_ib_content = true
+			}
+			if labels ~= "" then -- not sure labels can be an empty string but it seems possible in some circumstances
+				quals = {labels}
 			end
 		end
 	end
@@ -194,9 +195,14 @@ local function get_post_qualifiers(args, index, lang)
 		insert(postqs, require("Module:qualifier").format_qualifier(val("qq")))
 	end
 	if index == 0 then
-		local tags = get_tag_info(val("tag"), lang)
-		if tags then
-			insert(postqs, "&mdash; " .. require(alternative_forms_module).concatenate_tags(tags))
+		local labels = get_label_list_info(val("lb"), lang)
+		if labels then
+			labels = require(labels_module).format_processed_labels {
+				labels = labels, lang = lang
+			}
+			if labels ~= "" then
+				insert(postqs, "&mdash; " .. labels)
+			end
 		end
 	end
 	if #postqs > 0 then
@@ -248,7 +254,7 @@ local function desc_or_desc_tree(frame, desc_tree)
 	for _, misc_list_param in ipairs(misc_list_params) do
 		add_index_separated_list_param(params, misc_list_param)
 	end
-	
+
 	-- Add other single params.
 	params["sclb"] = boolean
 	params["nolb"] = boolean
@@ -261,6 +267,14 @@ local function desc_or_desc_tree(frame, desc_tree)
 		parent_args = frame.args
 	else
 		parent_args = frame:getParent().args
+	end
+
+	-- FIXME: Temporary error message.
+	for arg, _ in pairs(parent_args) do
+		if type(arg) == "string" and arg:find("^tag[0-9]*$") then
+			local lbarg = arg:gsub("^tag", "lb")
+			error(("Use %s= instead of %s="):format(lbarg, arg))
+		end
 	end
 
 	-- Error to catch most uses of old-style parameters.
@@ -447,6 +461,9 @@ local function desc_or_desc_tree(frame, desc_tree)
 									parse_err("Modifier " .. run[k] .. " should come after the last term")
 								end
 								args["part" .. prefix][ind] = arg
+							elseif prefix == "tag" then
+								-- FIXME: Remove support for <tag:...> in favor of <lb:...>
+								error("Use <lb:...> instead of <tag:...>")
 							else
 								parse_err("Unrecognized prefix '" .. prefix .. "' in modifier " .. run[k])
 							end
