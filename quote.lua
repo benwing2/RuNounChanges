@@ -2293,49 +2293,130 @@ function export.source(args, alias_map, format_as_cite)
 end
 
 
--- Alias specs for type= and type2=. Each spec is `{canon, aliases, with_newversion}` where `canon` is the canonical
+local function set_chapter_plain_for_song_av(p)
+	local track = p.get("track")
+	local time = p.get("time")
+	local at = p.get("at")
+	local chapter_plain_parts = {}
+	local function ins(text)
+		table.insert(chapter_plain_parts, text)
+	end
+	if track then
+		ins("track " .. track)
+		if time or at then
+			ins(", ")
+		end
+	end
+	if time then
+		ins(time .. " from the start")
+		if at then
+			ins(", " .. at)
+		end
+	elseif at then
+		ins(at)
+	end
+	local chapter_plain = table.concat(chapter_plain_parts)
+	if chapter_plain ~= "" then
+		p.set("chapter_plain", chapter_plain)
+	end
+end
+
+
+--[==[
+Type-specific processing (for type= and type2=). The key is the type (which should correspond to the part of the
+template name after 'quote-' or 'cite-') and the value is an object with properties. Currently the only property
+supported is `process`, a function of one argument, which is an object of properties (especially, functions),
+conventionally notated as `p`. The properties supported by `p` are:
+
+* get(param): Retrieve the value of parameter `param`. Return value is nil if the parameter is nonexistent or empty.
+	This automatically converts parameters to their `newversion` form when type2= is being used; most parameters add 2
+	at the end, but `author`, `authorlink`, `first` and `last` become `2ndauthor`, `2ndauthorlink`, `2ndfirst` and
+	`2ndlast`.
+* set(param, value, noerror_if_exists): Set the value of `param` to `value`; if nil, remove the parameter's value.
+	This normally throws an error if `param` already has a value; use `noerror_if_exists` to suppress this.
+]==]
+
+-- template nameEach spec is `{canon, aliases, with_newversion}` where `canon` is the canonical
 -- parameter (with "2" added if type2= is being handled), `aliases` is a comma-separated string of aliases (with "2"
 -- added if type2= is being handled, except for numeric params), and `with_newversion` indicates whether we should
 -- process this spec if type2= is being handled.
 local type_specs = {
+	av = {
+		process = function(p)
+			p.process_aliases {
+				{"author", "writer,writers"},
+				{"chapter", "episode"},
+				{"chapterurl", "episodeurl"},
+				{"trans-chapter", "trans-episode"},
+				{"chapter_series", "episode_series"},
+				{"chapter_seriesvolume", "episode_seriesvolume"},
+				{"chapter_number", "episode_number"},
+				{"chapter_plain", "episode_plain"},
+				{"volume", "season"},
+				{"volumes", "seasons"},
+				{"volume_plain", "season_plain"},
+				{"volumeurl", "seasonurl"},
+				{"platform", "network"},
+			}
+			p.set("volume_prefix", "season")
+			p.set("number_prefix", "episode")
+			set_chapter_plain_for_song_av(p)
+		end,
+		no_error_on = {"track", "time", "at"},
+	},
 	book = {
-		aliases = {
-			{"author", "3"},
-			{"chapter", "entry", true},
-			{"chapterurl", "entryurl", true},
-			{"trans-chapter", "trans-entry", true},
-			{"chapter_series", "entry_series", true},
-			{"chapter_seriesvolume", "entry_seriesvolume", true},
-			{"chapter_number", "entry_number", true},
-			{"chapter_plain", "entry_plain", true},
-			{"title", "4"},
-			{"url", "5"},
-			{"year", "2"},
-			{"page", "6"},
-			{"text", "7"},
-			{"t", "8"},
-		},
+		process = function(p)
+			p.process_aliases {
+				{"author", "3"},
+				{"chapter", "entry"},
+				{"chapterurl", "entryurl"},
+				{"trans-chapter", "trans-entry"},
+				{"chapter_series", "entry_series"},
+				{"chapter_seriesvolume", "entry_seriesvolume"},
+				{"chapter_number", "entry_number"},
+				{"chapter_plain", "entry_plain"},
+				{"title", "4"},
+				{"url", "5"},
+				{"year", "2"},
+				{"page", "6"},
+				{"text", "7"},
+				{"t", "8"},
+			}
+		end,
+	},
+	hansard = {
+		process = function(p)
+			p.process_aliases {
+				{"author", "speaker"},
+				{"chapter", "debate,title"},
+				{"series", "house"},
+			}
+			p.set("title", p.get("report") or "parliamentary debates")
+		end,
+		no_error_on = {"report"},
 	},
 	journal = {
-		aliases = {
-			{"year", "2"},
-			{"author", "3"},
-			{"chapter", "title,article,4", true},
-			{"chapterurl", "titleurl,articleurl", true},
-			{"trans-chapter", "trans-title,trans-article", true},
-			{"chapter_tlr", "article_tlr", true},
-			{"chapter_series", "article_series", true},
-			{"chapter_seriesvolume", "article_seriesvolume", true},
-			{"chapter_number", "article_number", true},
-			{"chapter_plain", "title_plain,article_plain", true},
-			{"title", "journal,magazine,newspaper,work,5", true},
-			{"trans-title", "trans-journal,trans-magazine,trans-newspaper,trans-work", true},
-			{"url", "6"},
-			{"page", "7"},
-			{"source", "newsagency", true},
-			{"text", "8"},
-			{"t", "9"},
-		},
+		process = function(p)
+			p.process_aliases {
+				{"year", "2"},
+				{"author", "3"},
+				{"chapter", "title,article,4"},
+				{"chapterurl", "titleurl,articleurl"},
+				{"trans-chapter", "trans-title,trans-article"},
+				{"chapter_tlr", "article_tlr"},
+				{"chapter_series", "article_series"},
+				{"chapter_seriesvolume", "article_seriesvolume"},
+				{"chapter_number", "article_number"},
+				{"chapter_plain", "title_plain,article_plain"},
+				{"title", "journal,magazine,newspaper,work,5"},
+				{"trans-title", "trans-journal,trans-magazine,trans-newspaper,trans-work"},
+				{"url", "6"},
+				{"page", "7"},
+				{"source", "newsagency"},
+				{"text", "8"},
+				{"t", "9"},
+			}
+		end,
 	},
 	["mailing list"] = {
 		set_params = function(get, set)
@@ -2346,12 +2427,72 @@ local type_specs = {
 			else
 				set(maintenance_line("Please supply mailing list name in group= or list="))
 			end
-			set("section", getp("id") and "message-id
+			set("section", get("id") and "message-id &lt;" .. get("id") .. "&gt;")
+			if not get("url") then
+				local googleid = get("googleid")
+				if googleid then
+					local group = 
+				set("url", get("url") or get("googleid") and "http://groups.google.com/group/{{{group|{{{newsgroup|{{{5|}}}}}}}}}/browse_thread/thread/{{{googleid}}}}}}}}")
+	newsgroup = {
+		process = function(p)
+			-- These must happen before setting title= from group=/newsgroup=.
+			p.process_aliases {
+				{"chapter", "title"},
+				{"trans-chapter", "trans-title"},
+			}
+			local author = p.get("author")
+			local email = p.get("email")
+			if email then
+				p.set("author", (author or "") .. " &lt;''" .. email .. "''&gt;", "noerror")
+			end
+			local group = p.get("group") or p.get("newsgroup")
+			if group then
+				p.set("title", "<kbd>" .. group .. "</kbd>")
+			end
 
+			p.set("title", p.get("report") or "parliamentary debates")
+		end,
+		no_error_on = {"report"},
+	},
+	song = {
+		process = function(p)
+			p.set("default-authorlabel", "(lyrics and music)")
+			p.set("chapter", p.get("title") or maintenance_line("Please provide the song title in title="))
+			set_chapter_plain_for_song_av(p)
+			-- These must happen after retrieving title= for setting chapter=.
+			p.process_aliases {
+				{"chapterurl", "titleurl"},
+				{"trans-chapter", "trans-title"},
+				{"chapter_series", "title_series"},
+				{"chapter_seriesvolume", "title_seriesvolume"},
+				{"chapter_number", "title_number"},
+				{"title", "album,work"},
+				{"trans-title", "trans-album,trans-work"},
+			}
+			local url = p.get("url")
+			local time = p.get("time")
+			local and_t
+			if url and time and url:find("^https://www%.youtube%.com/watch%?v=") then
+				local h, m, s = time:match("^(%d+):(%d%d):(%d%d)$")
+				if h then
+					and_t = ("%sh%sm%ss"):format(h, m, s)
+				else
+					m, s = time:match("^(%d+):(%d%d)$")
+					if m then
+						and_t = m == "0" and ("%ss"):format(s) or ("%sm%ss"):format(m, s)
+					end
+				end
+			end
+			if and_t then
+				p.set("url", url .. and_t, "noerror")
+			end
+		end,
+		no_error_on = {"title", "track", "time", "at"},
+	},
 }
 
 
--- Process interally-handled aliases related to type= or type2=. `args` is a table of arguments; `typ` is the value of
+-- Process internally-handled aliases related to type= or type2=. `args` is a table of arguments; `typ` is the value of
 -- type= or type2=; newversion=true if we're dealing with type2=; alias_map is used to keep track of alias mappings
 -- seen.
 local function process_type_aliases(args, typ, newversion, alias_map)
