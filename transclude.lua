@@ -1,10 +1,12 @@
+local m_str_utils = require("Module:string utilities")
+local m_templateparser = require("Module:template parser")
+
+local remove_comments = m_str_utils.remove_comments
+local replacement_escape = m_str_utils.replacement_escape
+local split = m_str_utils.split
+local u = m_str_utils.char
+
 local export = {}
-
-local rsplit = mw.text.split
-local u = mw.ustring.char
-
-local m_templateparser = require("Module:templateparser")
-local pattern_utilities_module = "Module:pattern utilities"
 
 -- From [[Template:gloss]]
 local gloss_left = "<span class=\"gloss-brac\">(</span><span class=\"gloss-content\">"
@@ -20,11 +22,7 @@ local place_extra_info = {
 	["shire town"] = true,
 }
 
-
--- From [[Module:senseno]]
-local function escape_pattern(text)
-    return text:gsub("([^%w])", "%%%1")
-end
+local pattern_escape = require("Module:string utilities").pattern_escape
 
 -- Ensure that Wikicode (template calls, bracketed links, HTML, bold/italics, etc.) displays literally in error messages
 -- by inserting a Unicode word-joiner symbol after all characters that may trigger Wikicode interpretation. Replacing
@@ -111,7 +109,7 @@ local function handle_definition_template(name, args, transclude_args)
 
 				local function sub_plus(t)
 					if t:find("+") then
-						t = t:gsub("+", require(pattern_utilities_module).replacement_escape(data.source))
+						t = t:gsub("+", replacement_escape(data.source))
 					end
 					return t
 				end
@@ -231,12 +229,12 @@ function export.show(frame)
 	local source = args[2]
 	local source_langcode = "en"
 	local source_lang = require("Module:languages").getByCode(source_langcode)
-	local source_langname = source_lang:getNonEtymologicalName()
-	local ids = args.id and rsplit(args.id, ",") or {"-"}
+	local source_langname = source_lang:getFullName()
+	local ids = args.id and split(args.id, ",") or {"-"}
 	local sort = args["sort"]
 	local copy_sortkey = (sort == nil) and (mw.title.getCurrentTitle() == source)
 	local no_gloss = args["nogloss"]
-	local labels = args["lb"] and rsplit(args["lb"], ";") or {}
+	local labels = args["lb"] and split(args["lb"], ";") or {}
 	local nolb
 	local found_labels = {}
 	local to = args["to"]
@@ -247,8 +245,8 @@ function export.show(frame)
 	end
 
 	-- Remove HTML comments.
-	content = content:gsub("<!%-%-.-%-%->", "")
-	-- Remove <ref></ref>.
+	content = remove_comments(content)
+	-- Remove.<ref></ref>
 	content = content:gsub("< *[rR][eE][fF][^%a>/]*[^>/]*>.-< */ *[rR][eE][fF] *>", "")
 	-- Remove <ref/>.
 	content = content:gsub("< *[rR][eE][fF][^%a>/]*[^>/]*/ *>", "")
@@ -259,16 +257,16 @@ function export.show(frame)
 	for _, id in ipairs(ids) do
 		local line_start, line
 		if id ~= "-" then
-			local senseid_start, senseid_end = content:find("{{ *senseid *| *" .. escape_pattern(source_langcode) .. " *| *" .. escape_pattern(id) .. " *}}")
+			local senseid_start, senseid_end = content:find("{{ *senseid *| *" .. pattern_escape(source_langcode) .. " *| *" .. pattern_escape(id) .. " *}}")
 			if senseid_start == nil then
-				senseid_start, senseid_end = content:find("{{ *sid *| *" .. escape_pattern(source_langcode) .. " *| *" .. escape_pattern(id) .. " *}}")
+				senseid_start, senseid_end = content:find("{{ *sid *| *" .. pattern_escape(source_langcode) .. " *| *" .. pattern_escape(id) .. " *}}")
 			end
 			if senseid_start == nil then
 				local alternatives = nil
-				for id in content:gmatch("{{ *senseid *| *" .. escape_pattern(source_langcode) .. " *| *([^}]*)}}") do
+				for id in content:gmatch("{{ *senseid *| *" .. pattern_escape(source_langcode) .. " *| *([^}]*)}}") do
 					alternatives = alternatives and alternatives .. ", " .. id or id
 				end
-				for id in content:gmatch("{{ *sid *| *" .. escape_pattern(source_langcode) .. " *| *([^}]*)}}") do
+				for id in content:gmatch("{{ *sid *| *" .. pattern_escape(source_langcode) .. " *| *([^}]*)}}") do
 					alternatives = alternatives and alternatives .. ", " .. id or id
 				end
 				if alternatives then
@@ -290,8 +288,7 @@ function export.show(frame)
 			while line_end < content:len() and content:byte(line_end + 1) ~= newline do line_end = line_end + 1 end
 			line = content:sub(def_start, senseid_start - 1) .. content:sub(senseid_end + 1, line_end)
 		else
-			local _, start_source = string.find(content, "==[ \t]*" .. require("Module:pattern utilities").
-				pattern_escape(source_langname) .. "[ \t]*==")
+			local _, start_source = string.find(content, "==[ \t]*" .. pattern_escape(source_langname) .. "[ \t]*==")
 			if not start_source then
 				error(("Couldn't find L2 header for source language '%s' on page [[%s]]"):format(source_langname,
 					source))
@@ -470,7 +467,7 @@ function export.show(frame)
 			if nolb == "+" or nolb == "1" or nolb == "*" then
 				ignore_all_labels = true
 			else
-				labels_to_ignore = rsplit(nolb, ";")
+				labels_to_ignore = split(nolb, ";")
 			end
 		end
 		if not ignore_all_labels then
