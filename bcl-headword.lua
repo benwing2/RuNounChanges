@@ -1,167 +1,303 @@
+-- This module contains code for Bikol Central headword templates.
+-- Templates covered are:
+-- * {{bcl-noun}}, {{bcl-proper noun}};
+-- * {{bcl-verb}};
+-- * {{bcl-adj}};
+-- * {{bcl-adv}};
+-- * {{bcl-num}};
+-- * {{bcl-pron}};
+-- * {{bcl-prep}};
+-- * {{bcl-head}}.
+
 local export = {}
 local pos_functions = {}
 
+local force_cat = false -- for testing; if true, categories appear in non-mainspace pages
+
 local lang = require("Module:languages").getByCode("bcl")
-local PAGENAME = mw.title.getCurrentTitle().text
-local script = lang:findBestScript(PAGENAME) -- Latn or Tglg
+local langname = lang:getCanonicalName()
+
+local rmatch = mw.ustring.match
+local rsplit = mw.text.split
 
 local function track(page)
 	require("Module:debug/track")("bcl-headword/" .. page)
 	return true
 end
 
-function export.show(frame)
-	local tracking_categories = {}
-
-	local args = frame:getParent().args
-	local poscat = frame.args[1] or require("Module:string utilities").pluralize(args["pos"]) or error("Part of speech has not been specified. Please pass parameter to the module invocation.")
-
-	local head = {} -- supports multiple headword
-	local function insert_head(arg)
-		if arg == "" then
-			track("blank-head")
-			arg = PAGENAME
-		end
-		if arg then
-			table.insert(head, arg)
-		end
-	end
-	insert_head(args["head"] or args[1])
-	insert_head(args["head2"] or args[2])
-	insert_head(args["head3"] or args[3])
-
-	local data = {lang = lang, sc = script, pos_category = poscat, categories = {}, heads = head, tr = tr, inflections = {}}
-	
-	local basahan = {label = "Basahan spelling"}
-	local sc_Tglg = require("Module:scripts").getByCode("Tglg")
-	if args["b"] then table.insert(basahan, { term = args["b"], sc = sc_Tglg }) end
-	if args["b2"] then table.insert(basahan, { term = args["b2"], sc = sc_Tglg }) end
-	if args["b3"] then table.insert(basahan, { term = args["b3"], sc = sc_Tglg }) end
-	if script:getCode() == "Latn" then
-		if #basahan > 0 then 
-			table.insert(data.inflections, basahan) 
-			table.insert(data.categories, "Bikol Central terms with Baybayin script")
-		else
-			table.insert(data.categories, "Bikol Central terms without Baybayin script")
-		end
-	elseif script:getCode() == "Tglg" then
-		--Categorize words with Basahan
-        table.insert(data.categories, "Bikol Central terms in Baybayin script")
-    end
-
-	-- Basahan to Latin
-	local tr = args["tr"]
-	if not tr then
-		tr = require("Module:bcl-translit")
-	end
-	
-	-- feminines and masculines
-	local fem = {label = "feminine"}
-	if args["f"] then table.insert(fem, {term = args["f"]}) end
-	if #fem > 0 then table.insert(data.inflections, fem) end
-	
-	local masc = {label = "masculine"}	
-	if args["m"] then table.insert(masc, {term = args["m"]}) end
-	if #masc > 0 then table.insert(data.inflections, masc) end
-	
-	local plural = {label = "plural", accel = {form = "plural"} }	
-	if args["plural"] then table.insert(plural, {term = args["plural"]}) end
-	if #plural > 0 then table.insert(data.inflections, plural) end
-	
-	local collective = {label = "collective" }	
-	if args["collective"] then table.insert(collective, {term = args["collective"]}) end
-	if #collective > 0 then table.insert(data.inflections, collective) end
-
-	if pos_functions[poscat] then
-		pos_functions[poscat](args, data)
-	end
-
-	local content = mw.title.new(PAGENAME):getContent()
-	local code = content and mw.ustring.match(content, "{{bcl%-IPA[^}]*}}")
-
-    --Categorize words without [[Template:bcl-IPA]]
-	if script:getCode() == "Latn" and not code then
-		table.insert(tracking_categories, "Bikol Central terms without bcl-IPA template")
-	end
-
-	return require("Module:headword").full_headword(data) .. require("Module:utilities").format_categories(tracking_categories, lang)
-
+local function ine(val)
+	if val == "" then return nil else return val end
 end
 
-pos_functions["verbs"] = function(args, data)
+local function do_inflection(data, forms, label, accel)
+	if #forms > 0 then
+		forms.label = label
+		if accel then
+			forms.accel = accel
+		end
+		table.insert(data.inflections, forms)
+	end
+end
 
+-- The main entry point.
+-- This is the only function that can be invoked from a template.
+function export.show(frame)
+	local parargs = frame:getParent().args
+	local poscat = frame.args[1]
+	local headarg
+	if poscat then
+		headarg = 1
+	else
+		headarg = 2
+		poscat = ine(parargs[1]) or error("Part of speech must be specified in 1=")
+		poscat = require("Module:string utilities").pluralize(poscat)
+	end
+
+	local params = {
+		[headarg] = {list = "head", disallow_holes = true},
+		["tr"] = {list = true, allow_holes = true},
+		["id"] = {},
+		["b"] = {list = true},
+		["nolink"] = {type = "boolean"},
+		["nolinkhead"] = {type = "boolean", alias_of = "nolink"},
+		["suffix"] = {type = "boolean"},
+		["nosuffix"] = {type = "boolean"},
+		["addlpos"] = {},
+		["json"] = {type = "boolean"},
+		["pagename"] = {}, -- for testing
+		["intens"] = {list = true},
+		-- Yuck, this should be POS-specific but it seems all POS's can be pluralized in Bikol Central?
+		["pl"] = {list = true},
+		["plintens"] = {list = true},
+	}
+	if headarg == 2 then
+		params[1] = {required = true} -- required but ignored as already processed above
+	end
+
+	if pos_functions[poscat] then
+		for key, val in pairs(pos_functions[poscat].params) do
+			params[key] = val
+		end
+	end
+
+	local pl_handled_in_pos
+	if params.pl then
+		pl_handled_in_pos = true
+	else
+		-- Yuck, this should be POS-specific but it seems all POS's can be pluralized in Bikol Central?
+		params["pl"] = {list = true}
+		pl_handled_in_pos = false
+	end
+
+	local args = require("Module:parameters").process(parargs, params)
+
+	local pagename = args.pagename or mw.title.getCurrentTitle().subpageText
+
+	if args.tr.maxindex > #args[headarg] then
+		error("Too many translits specified; use '+' to indicate a default head")
+	end
+
+	local user_specified_heads = args[headarg]
+	local heads = user_specified_heads
+	if args.nolink then
+		if #heads == 0 then
+			heads = {pagename}
+		end
+	end
+
+	for i, head in ipairs(heads) do
+		if head == "+" then
+			head = nil
+		end
+		heads[i] = {
+			term = head,
+			tr = args.tr[i],
+		}
+	end
+
+	local data = {
+		lang = lang,
+		pos_category = poscat,
+		categories = {},
+		heads = heads,
+		user_specified_heads = user_specified_heads,
+		no_redundant_head_cat = #user_specified_heads == 0,
+		inflections = {},
+		pagename = pagename,
+		id = args.id,
+		force_cat_output = force_cat,
+	}
+
+	data.is_suffix = false
+	if args.suffix or (
+		not args.nosuffix and pagename:find("^%-") and poscat ~= "suffixes" and poscat ~= "suffix forms"
+	) then
+		data.is_suffix = true
+		data.pos_category = "suffixes"
+		local singular_poscat = require("Module:string utilities").singularize(poscat)
+		table.insert(data.categories, langname .. " " .. singular_poscat .. "-forming suffixes")
+		table.insert(data.inflections, {label = singular_poscat .. "-forming suffix"})
+		if args.addlpos then
+			for _, addlpos in ipairs(rsplit(args.addlpos, "%s*,%s*")) do
+				table.insert(data.categories, langname .. " " .. addlpos .. "-forming suffixes")
+				table.insert(data.inflections, {label = addlpos .. "-forming suffix"})
+			end
+		end
+	end
+
+	do_inflection(data, args.intens, "intensified")
+	do_inflection(data, args.pl, "plural", {form = "plural"})
+	do_inflection(data, args.plintens, "plural intensified")
+
+	if pos_functions[poscat] then
+		pos_functions[poscat].func(args, data)
+	end
+	
+	local script = lang:findBestScript(pagename) -- Latn or Tglg
+	-- Disable Baybayin spelling parameter if entry is already in Baybayin
+	if script:getCode() == "Tglg" then
+		args.b = {}
+	end
+
+	for i, bay in ipairs(args.b) do
+		if bay == "+" then
+			bay = pagename
+		end
+		local baysc = lang:findBestScript(bay)
+		if baysc:getCode() == "Latn" then
+			bay = frame:expandTemplate { title = "bcl-basahan script", args = { bay }}
+		end
+		args.b[i] = {term = bay, sc = require("Module:scripts").getByCode("Tglg") }
+
+		-- FIXME! Port to Bikol Central.
+		---- See if we need to add a tracking category for missing Baybayin script entry
+		--local script_entry_present
+		--local title = mw.title.new(bay)
+		--if title then
+		--	local bay_content = title:getContent()
+		--	if bay_content and bay_content:find("==" .. langname .. "==") and
+		--		rmatch(bay_content, "{{tl%-bay|[^}]*" .. pagename .. "[^}]*}}") then
+		--		script_entry_present = true
+		--	end
+		--end
+		--if not script_entry_present then
+		--	table.insert(data.categories, ("%s terms with missing Baybayin script entries"):format(langname))
+		--end
+	end
+	if #args.b > 0 then
+		args.b.label = "Basahan spelling"
+		table.insert(data.inflections, args.b)
+	end
+
+	if script:getCode() == "Latn" then
+		table.insert(data.categories,
+			("%s terms %s Baybayin script"):format(langname, #args.b > 0 and "with" or "without"))
+	elseif script:getCode() == "Tglg" then
+		table.insert(data.categories, ("%s terms in Baybayin script"):format(langname))
+	end
+
+	if script:getCode() == "Latn" then
+		-- See if we need to add a tracking category for missing {{bcl-IPA}}
+		local bcl_IPA_present
+		if this_title then
+			local content = this_title:getContent()
+			if content and rmatch(content, "{{bcl%-IPA[^}]*") then
+				bcl_IPA_present = true
+			end
+		end
+		if not bcl_IPA_present then
+			table.insert(data.categories, ("%s terms without bcl-IPA template"):format(langname))
+		end
+	end
+
+	if args.json then
+		return require("Module:JSON").toJSON(data)
+	end
+
+	return require("Module:headword").full_headword(data)
+end
+
+
+pos_functions["adjectives"] = {
     params = {
-		[1] = {alias_of = 'head'},
-		[2] = {alias_of = 'comp'},
-		[3] = {alias_of = 'prog'},
-		[4] = {alias_of = 'cont'},
-		head = {list = true},
-		head2= {},
-		head3= {},
+		["f"] = {list = true},
+		["m"] = {list = true},
+		["sup"] = {list = true},
+	},
+	func = function(args, data)
+		do_inflection(data, args.f, "feminine")
+		do_inflection(data, args.m, "masculine")
+		do_inflection(data, args.sup, "superlative")
+	end,
+}
+
+
+pos_functions["nouns"] = {
+    params = {
+		["f"] = {list = true},
+		["m"] = {list = true},
+		rootword = {type = "boolean"},
+	},
+	func = function(args, data)
+		do_inflection(data, args.f, "feminine")
+		do_inflection(data, args.m, "masculine")
+
+		if args.rootword then
+			table.insert(data.infections, {label = "root word"})
+			table.insert(data.categories, langname .. " roots")
+		end
+	end,
+}
+
+pos_functions["proper nouns"] = pos_functions["nouns"]
+
+
+pos_functions["pronouns"] = {
+    params = {
+		["pl"] = {list = true},
+	},
+	func = function(args, data)
+		do_inflection(data, args.pl, "plural", {form = "plural"})
+	end,
+}
+
+pos_functions["prepositions"] = pos_functions["pronouns"]
+
+
+pos_functions["verbs"] = {
+    params = {
+		[2] = {alias_of = "comp"},
+		[3] = {alias_of = "prog"},
+		[4] = {alias_of = "cont"},
+		[5] = {alias_of = "vnoun"},
 		comp = {list = true},
 		prog = {list = true},
 		cont = {list = true},
-		rootword = {},
-		b= {},
-		b2= {},
-		b3= {},
-		tr= {}
-	}
+		vnoun = {list = true},
+		type = {list = true},
+		rootword = {type = "boolean"},
+	},
+	func = function(args, data)
+		do_inflection(data, args.comp, "complete", {form = "comp"})
+		do_inflection(data, args.prog, "progressive", {form = "prog"})
+		do_inflection(data, args.cont, "contemplative", {form = "cont"})
+		do_inflection(data, args.vnoun, "verbal noun", {form = "vnoun"})
 
-	local args = require("Module:parameters").process(args,params)
-	data.heads = args.head
-	data.id = args.id
-	local pattern = args.pattern
-	
-	args.comp.label = "complete"
-	args.prog.label = "progressive"
-	args.cont.label = "contemplative"
+		if args.rootword then
+			table.insert(data.infections, {label = "root word"})
+			table.insert(data.categories, langname .. " roots")
+		end
 
-	args.comp.accel = {form = "comp"}
-	args.prog.accel = {form = "prog"}
-	args.cont.accel = {form = "cont"}
-
-	if #args.comp > 0 then table.insert(data.inflections, args.comp) end
-	if #args.prog > 0 then table.insert(data.inflections, args.prog) end
-	if #args.cont > 0 then table.insert(data.inflections, args.cont) end
-
-    --Tagging root forms of verbs
-	local rootword = args["rootword"] or nil
-	if require("Module:yesno")(rootword) then 
-		table.insert(data.inflections, {label = "root word"}) 
-		table.insert(data.categories, "Bikol Central roots")
-	end
-
-    --Tagging verb trigger
-    local conjtype = args["type"] or nil
-    if conjtype and conjugation_types[conjtype] then
-		table.insert(data.inflections, {label = conjugation_types[conjtype][1]})
-		table.insert(data.categories, conjugation_types[conjtype][2])
-    end
-    
-        local conjtype = args["type2"] or nil
-    if conjtype and conjugation_types[conjtype] then
-		table.insert(data.inflections, {label = conjugation_types[conjtype][1]})
-		table.insert(data.categories, conjugation_types[conjtype][2])
-	end	
-		
-		    local conjtype = args["type3"] or nil
-    if conjtype and conjugation_types[conjtype] then
-		table.insert(data.inflections, {label = conjugation_types[conjtype][1]})
-		table.insert(data.categories, conjugation_types[conjtype][2])
-    end
-
-end
-
-pos_functions["nouns"] = function(args, data)
-
-	--Tagging root forms of nouns
-	local rootword = args["rootword"] or nil 
-	if require("Module:yesno")(rootword) then 
-		table.insert(data.inflections, {label = "root word"}) 
-		table.insert(data.categories, "Bikol Central roots")
-	end
-
-end
+		--Tagging verb trigger
+		for i, typ in ipairs(args.type) do
+			if not conjugation_types[typ] then
+				error(("Unrecognized " .. langname .. " verb conjugation type '%s'"):format(typ))
+			end
+			-- FIXME! `conjugation_types` undefined, so this will throw an error.
+			table.insert(data.inflections, {label = conjugation_types[typ][1]})
+			table.insert(data.categories, conjugation_types[typ][2])
+		end
+	end,
+}
 
 return export
