@@ -46,7 +46,10 @@ language_sets = {
     "recognize": lambda lang: lang in ["Middle French", "Old French"], # not Louisiana Creole French?
   },
   "Georgian": {},
-  # "German": {}, inconsistent nesting currently, issues with "Low German"
+  # inconsistent nesting currently, issues with "Low German"
+  "German": {
+    "recognize": lambda lang: lang in ["Alemannic German", "Kölsch", "Palatinate German"],
+  },
   "Greek": {
     "recognize": lambda lang: lang.endswith("Greek") or lang in [
       "Kaliarda", "Katharevousa", "Yevanic", "Tsakonian", "Opuntian Locrian", "Ozolian Locrian"],
