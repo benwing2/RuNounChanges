@@ -106,6 +106,18 @@ def lt_remove_accents(text):
     replace(TILDE, "")
   )
 
+def phi_remove_accents(text):
+  return unicodedata.normalize("NFC", unicodedata.normalize("NFD", text).
+    replace(ACUTE, "").replace(GRAVE, "").
+    replace(CIRC, "")
+  )
+
+def ilo_remove_accents(text):
+  return unicodedata.normalize("NFC", unicodedata.normalize("NFD", text).
+    replace(ACUTE, "").replace(GRAVE, "").
+    replace(CIRC, "").replace(DIAER, "")
+  )
+
 def he_remove_accents(text):
   text = re.sub("[\u0591-\u05BD\u05BF-\u05C5\u05C7]", "", text)
   return text
@@ -147,6 +159,7 @@ language_codes_to_properties = {
     'as':["Assamese", lambda x:x, assamese_charset, False],
     'az':["Azerbaijani", lambda x:x, latin_charset, "latin"],
     'ba':["Bashkir", lambda x:x, cyrillic_charset, True],
+    'bcl':["Bikol Central", phi_remove_accents, latin_charset, "latin"],
     'be':["Belarusian", bg_remove_accents, cyrillic_charset, False],
     'bg':["Bulgarian", bg_remove_accents, cyrillic_charset, False],
     'bn':["Bengali", lambda x:x, "ঀ-ঃঅ-ঌএঐও-নপ-রললশ-হ়-ৄেৈো-ৎৗড়ঢ়য়়ৠ-ৣ০-৯", False],
@@ -154,6 +167,7 @@ language_codes_to_properties = {
     'br':["Breton", lambda x:x, latin_charset, "latin"],
     'ca':["Catalan", lambda x:x, latin_charset, "latin"],
     'ce':["Chechen", lambda x:x.replace(MACRON, ""), cyrillic_charset, True],
+    'ceb':["Cebuano", phi_remove_accents, latin_charset, "latin"],
     'cs':["Czech", lambda x:x, latin_charset, "latin"],
     #'cu': ["Old Church Slavonic", lambda x:x.replace("\u0484", ""), cyrillic_charset + glagolitic_charset, False],
     'cv':["Chuvash", lambda x:x, cyrillic_charset, True],
@@ -180,10 +194,12 @@ language_codes_to_properties = {
     'gv':["Manx", lambda x:x, latin_charset, "latin"],
     'he':["Hebrew", he_remove_accents, hebrew_charset, "notranslit"],
     'hi':["Hindi", lambda x:x, "\u0900-\u097F\uA8E0-\uA8FD", False],
+    'hil':["Hiligaynon", phi_remove_accents, latin_charset, "latin"],
     'hu':["Hungarian", lambda x:x, latin_charset, "latin"],
     'hy':["Armenian", hy_remove_accents, "Ա-֏ﬓ-ﬗ", True],
     'ia':["Interlingua", lambda x:x, latin_charset, "latin"],
     'id':["Indonesian", lambda x:x, latin_charset, "latin"],
+    'ilo':["Ilocano", ilo_remove_accents, latin_charset, "latin"],
     'io':["Ido", lambda x:x, latin_charset, "latin"],
     'is':["Icelandic", lambda x:x, latin_charset, "latin"],
     'it':["Italian", lambda x:x, latin_charset, "latin"],
@@ -230,7 +246,7 @@ language_codes_to_properties = {
     'te':["Telugu", lambda x:x, "\u0C00-\u0C7F", True],
     'tg':["Tajik", lambda x:x.replace(ACUTE, ""), cyrillic_charset, True],
     'th':["Thai", lambda x:x, "ก-๛", False],
-    'tl':["Tagalog", lambda x:x, latin_charset, "latin"],
+    'tl':["Tagalog", phi_remove_accents, latin_charset, "latin"],
     'tr':["Turkish", lambda x:x, latin_charset, "latin"],
     'uk':["Ukrainian", bg_remove_accents, cyrillic_charset, False],
     'ur':["Urdu", ur_remove_accents, arabic_charset, "notranslit"],
