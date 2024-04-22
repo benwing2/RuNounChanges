@@ -128,30 +128,30 @@ local hil_war_adj_inflections = {
 
 local langs_supported = {
 	["tl"] = {
-		has_baybayin = true,
-		baybayin_name = "Baybayin",
-		convert_to_baybayin = "tl-baybayin script",
+		has_native_script = true,
+		native_script_name = "Baybayin",
+		convert_to_native_script = "tl-baybayin script",
 		-- NOTE: Here and below, the template names need to be in their canonical form (not shortcuts).
-		baybayin_def = "tl-baybayin",
+		native_script_def = "tl-baybayin",
 		pronun_templates_to_check = {"tl-pr", "tl-IPA"},
 		conjugation_types = tl_conjugation_types,
 		verb_inflections = tl_bcl_verb_inflections,
 	},
 	["bcl"] = {
-		has_baybayin = true,
-		baybayin_name = "Basahan",
-		convert_to_baybayin = "bcl-basahan script",
-		baybayin_def = "bcl-basahan",
+		has_native_script = true,
+		native_script_name = "Basahan",
+		convert_to_native_script = "bcl-basahan script",
+		native_script_def = "bcl-basahan",
 		pronun_templates_to_check = {"bcl-IPA"},
 		has_pl_all_pos = true,
 		has_intens_all_pos = true,
 		verb_inflections = tl_bcl_verb_inflections,
 	},
 	["ceb"] = {
-		has_baybayin = true,
-		baybayin_name = "Badlit",
-		convert_to_baybayin = "bcl-badlit script",
-		baybayin_def = "ceb-badlit",
+		has_native_script = true,
+		native_script_name = "Badlit",
+		convert_to_native_script = "ceb-badlit script",
+		native_script_def = "ceb-badlit",
 		pronun_templates_to_check = {"ceb-IPA"},
 		verb_inflections = {
 			{"inch", {label = "inchoative", form = "realis", alias = {2}}},
@@ -159,10 +159,10 @@ local langs_supported = {
 		},
 	},
 	["ilo"] = {
-		has_baybayin = true,
-		baybayin_name = "Kur-itan",
-		convert_to_baybayin = "ilo-kur-itan script",
-		baybayin_def = "ilo-kur-itan",
+		has_native_script = true,
+		native_script_name = "Kur-itan",
+		convert_to_native_script = "ilo-kur-itan script",
+		native_script_def = "ilo-kur-itan",
 		pronun_templates_to_check = {"ilo-IPA"},
 		conjugation_types = ilo_conjugation_types,
 		verb_inflections = {
@@ -171,16 +171,23 @@ local langs_supported = {
 			{"past_imperf", {label = "past imperfective", form = "past|impfv", alias = {4}}},
 			{"fut", {label = "future", form = "fut", alias = {5}}},
 		},
+		adj_inflections = {
+			{"comp", {label = "comparative", form = "comparative", alias = {2}}},
+			{"mod", {label = "moderative", form = "moderative", alias = {3}}},
+			{"comp_sup", {label = "comparative superlative", form = "comp|sup", alias = {4}}},
+			{"abs_sup", {label = "absolutive superlative", form = "abs|sup", alias = {5}}},
+			{"intens", {label = "intensive", alias = {6}}},
+		},
 	},
 	["hil"] = {
-		has_baybayin = false,
+		has_native_script = false,
 		pronun_templates_to_check = {"hil-IPA"},
 		verb_inflections = hil_war_verb_inflections,
 		noun_inflections = hil_war_noun_inflections,
 		adj_inflections = hil_war_adj_inflections,
 	},
 	["war"] = {
-		has_baybayin = false,
+		has_native_script = false,
 		pronun_templates_to_check = {"war-IPA"},
 		verb_inflections = hil_war_verb_inflections,
 		noun_inflections = hil_war_noun_inflections,
@@ -282,7 +289,7 @@ function export.show(frame)
 		["json"] = {type = "boolean"},
 		["pagename"] = {}, -- for testing
 	}
-	if langprops.has_baybayin then
+	if langprops.has_native_script then
 		params["tr"] = {list = true, allow_holes = true}
 		params["b"] = {list = true}
 	end
@@ -313,7 +320,7 @@ function export.show(frame)
 
 	local pagename = args.pagename or mw.title.getCurrentTitle().subpageText
 
-	if langprops.has_baybayin and args.tr.maxindex > #args[headarg] then
+	if langprops.has_native_script and args.tr.maxindex > #args[headarg] then
 		error("Too many translits specified; use '+' to indicate a default head")
 	end
 
@@ -331,7 +338,7 @@ function export.show(frame)
 		end
 		heads[i] = {
 			term = head,
-			tr = langprops.has_baybayin and args.tr[i] or nil,
+			tr = langprops.has_native_script and args.tr[i] or nil,
 		}
 	end
 
@@ -384,9 +391,9 @@ function export.show(frame)
 	local pattern_escape = require("Module:string utilities").pattern_escape
 
 	local script
-	if langprops.has_baybayin then
+	if langprops.has_native_script then
 		script = lang:findBestScript(pagename) -- Latn or Tglg
-		-- Disable Baybayin spelling parameter if entry is already in Baybayin
+		-- Disable native-script spelling parameter if entry is already in native script.
 		if script:getCode() == "Tglg" then
 			args.b = {}
 		end
@@ -397,18 +404,18 @@ function export.show(frame)
 			end
 			local baysc = lang:findBestScript(bay)
 			if baysc:getCode() == "Latn" then
-				bay = frame:expandTemplate { title = langprops.convert_to_baybayin, args = { bay }}
+				bay = frame:expandTemplate { title = langprops.convert_to_native_script, args = { bay }}
 			end
 			args.b[i] = {term = bay, sc = require("Module:scripts").getByCode("Tglg") }
 
-			-- See if we need to add a tracking category for missing Baybayin script entry
+			-- See if we need to add a tracking category for missing native script entry.
 			local script_entry_present
 			local title = mw.title.new(bay)
 			if title then
 				local bay_content = title:getContent()
 				if bay_content then
 					for name, args, text, index in require(template_parser_module).findTemplates(bay_content) do
-						if name == langprops.baybayin_def then
+						if name == langprops.native_script_def then
 							for i = 1, 10 do
 								if args[i] == pagename then
 									script_entry_present = true
@@ -423,41 +430,45 @@ function export.show(frame)
 				end
 			end
 			if not script_entry_present then
-				table.insert(data.categories, ("%s terms with missing Baybayin script entries"):format(langname))
+				table.insert(data.categories,
+					("%s terms with missing %s script entries"):format(langname, langprops.native_script_name))
 			end
 		end
 		if #args.b > 0 then
-			args.b.label = langprops.baybayin_name .. " spelling"
+			args.b.label = langprops.native_script_name .. " spelling"
 			table.insert(data.inflections, args.b)
 		end
 
 		if script:getCode() == "Latn" then
-			table.insert(data.categories,
-				("%s terms %s Baybayin script"):format(langname, #args.b > 0 and "with" or "without"))
+			table.insert(data.categories, ("%s terms %s %s script"):format(
+				langname, #args.b > 0 and "with" or "without", langprops.native_script_name))
 		elseif script:getCode() == "Tglg" then
-			table.insert(data.categories, ("%s terms in Baybayin script"):format(langname))
+			table.insert(data.categories, ("%s terms in %s script"):format(langname, langprops.native_script_name))
 		end
 	end
 
-	if langprops.pronun_templates_to_check and (not langprops.has_baybayin or script:getCode() == "Latn") then
+	if langprops.pronun_templates_to_check and (not langprops.has_native_script or script:getCode() == "Latn") then
 		-- See if we need to add a tracking category for missing {{tl-pr}}, {{tl-IPA}}, etc.
-		for _, pronun_template in ipairs(langprops.pronun_templates_to_check) do
-			local template_present
-			local this_title = mw.title.new(pagename)
-			if this_title then
-				local content = this_title:getContent()
-				if content then
-					for name, args, text, index in require(template_parser_module).findTemplates(content) do
+		local template_present
+		local this_title = mw.title.new(pagename)
+		if this_title then
+			local content = this_title:getContent()
+			if content then
+				for name, args, text, index in require(template_parser_module).findTemplates(content) do
+					for _, pronun_template in ipairs(langprops.pronun_templates_to_check) do
 						if name == pronun_template then
 							template_present = true
 							break
 						end
 					end
+					if template_present then
+						break
+					end
 				end
 			end
-			if not template_present then
-				table.insert(data.categories, ("%s terms without %s template"):format(langname, pronun_template))
-			end
+		end
+		if not template_present then
+			table.insert(data.categories, ("%s terms without pronunciation template"):format(langname, pronun_template))
 		end
 	end
 
@@ -475,6 +486,7 @@ pos_functions["adjectives"] = {
 			["f"] = {list = true},
 			["m"] = {list = true},
 			["pl"] = {list = true},
+			["comp"] = {list = true},
 			["sup"] = {list = true},
 		}
 		add_params(params, langs_supported[langcode].adj_inflections)
@@ -484,6 +496,7 @@ pos_functions["adjectives"] = {
 		do_inflection(data, args.f, "feminine")
 		do_inflection(data, args.m, "masculine")
 		do_inflection(data, args.pl, "plural", {form = "plural"})
+		do_inflection(data, args.comp, "comparative")
 		do_inflection(data, args.sup, "superlative")
 		do_inflections(args, data, langs_supported[data.langcode].adj_inflections)
 	end,
