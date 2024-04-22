@@ -103,6 +103,20 @@ local ilo_conjugation_types = {
 	["instrument causative II"] = "2nd instrument trigger causative mood", -- panagpa- 
 }
 
+local pag_conjugation_types = {
+	["actor I"] = "1st actor trigger", -- on-/-on-
+	["actor II"] = "2nd actor trigger", --man-
+	["actor potentive I"] = "actor trigger potential mood", -- maka-
+	["actor potentive II"] = "actor trigger potential mood", -- makapag-
+	["object"] = "object trigger", -- -en
+	["object potential"] = "object trigger potential mood", -- ma-
+	["instrument"] = "instrument trigger", -- pag-
+	["instrument potential"] = "instrument trigger potential mood", -- mapag-
+	["instrument causative"] = "1st instrument trigger causative mood", -- pagpa- -an
+	["instrument causative II"] = "2nd instrument trigger causative mood", -- panagpa-
+}
+
+
 -- FIXME: Are these various languages really so different in their verb inflections or is this just a case of
 -- randomly picking a subset of the total inflections?
 local tl_bcl_verb_inflections = {
@@ -118,6 +132,12 @@ local hil_war_verb_inflections = {
 	{"caus", {label = "causative"}},
 	{"freq", {label = "frequentative"}},
 }
+local ilo_pag_verb_inflections = {
+	{"perf", {label = "perfective", form = "pfv", alias = {2}}},
+	{"imperf", {label = "imperfective", form = "impfv", alias = {3}}},
+	{"past_imperf", {label = "past imperfective", form = "past|impfv", alias = {4}}},
+	{"fut", {label = "future", form = "fut", alias = {5}}},
+}
 local hil_war_noun_inflections = {
 	{"dim", {label = "diminutive"}},
 }
@@ -126,17 +146,8 @@ local hil_war_adj_inflections = {
 	{"caus", {label = "causative"}},
 }
 
+-- NOTE: Here and below, the template names need to be in their canonical form (not shortcuts).
 local langs_supported = {
-	["tl"] = {
-		has_native_script = true,
-		native_script_name = "Baybayin",
-		convert_to_native_script = "tl-baybayin script",
-		-- NOTE: Here and below, the template names need to be in their canonical form (not shortcuts).
-		native_script_def = "tl-baybayin",
-		pronun_templates_to_check = {"tl-pr", "tl-IPA"},
-		conjugation_types = tl_conjugation_types,
-		verb_inflections = tl_bcl_verb_inflections,
-	},
 	["bcl"] = {
 		has_native_script = true,
 		native_script_name = "Basahan",
@@ -158,6 +169,13 @@ local langs_supported = {
 			{"imp", {label = "imperative", form = "imp", alias = {3}}},
 		},
 	},
+	["hil"] = {
+		has_native_script = false,
+		pronun_templates_to_check = {"hil-IPA"},
+		verb_inflections = hil_war_verb_inflections,
+		noun_inflections = hil_war_noun_inflections,
+		adj_inflections = hil_war_adj_inflections,
+	},
 	["ilo"] = {
 		has_native_script = true,
 		native_script_name = "Kur-itan",
@@ -165,12 +183,7 @@ local langs_supported = {
 		native_script_def = "ilo-kur-itan",
 		pronun_templates_to_check = {"ilo-IPA"},
 		conjugation_types = ilo_conjugation_types,
-		verb_inflections = {
-			{"perf", {label = "perfective", form = "pfv", alias = {2}}},
-			{"imperf", {label = "imperfective", form = "impfv", alias = {3}}},
-			{"past_imperf", {label = "past imperfective", form = "past|impfv", alias = {4}}},
-			{"fut", {label = "future", form = "fut", alias = {5}}},
-		},
+		verb_inflections = ilo_pag_verb_inflections,
 		adj_inflections = {
 			{"comp", {label = "comparative", form = "comparative", alias = {2}}},
 			{"mod", {label = "moderative", form = "moderative", alias = {3}}},
@@ -179,12 +192,20 @@ local langs_supported = {
 			{"intens", {label = "intensive", alias = {6}}},
 		},
 	},
-	["hil"] = {
+	["pag"] = {
 		has_native_script = false,
-		pronun_templates_to_check = {"hil-IPA"},
-		verb_inflections = hil_war_verb_inflections,
-		noun_inflections = hil_war_noun_inflections,
-		adj_inflections = hil_war_adj_inflections,
+		pronun_templates_to_check = {"pag-IPA"},
+		conjugation_types = pag_conjugation_types,
+		verb_inflections = ilo_pag_verb_inflections,
+	},
+	["tl"] = {
+		has_native_script = true,
+		native_script_name = "Baybayin",
+		convert_to_native_script = "tl-baybayin script",
+		native_script_def = "tl-baybayin",
+		pronun_templates_to_check = {"tl-pr", "tl-IPA"},
+		conjugation_types = tl_conjugation_types,
+		verb_inflections = tl_bcl_verb_inflections,
 	},
 	["war"] = {
 		has_native_script = false,
