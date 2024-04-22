@@ -17,29 +17,146 @@ local force_cat = false -- for testing; if true, categories appear in non-mainsp
 local rmatch = mw.ustring.match
 local rsplit = mw.text.split
 
+local template_parser_module = "Module:template parser"
+
+local tl_conj_type_data = {
+	["actor"] = 5,
+	["actor indirect"] = 0,
+	["actor 2nd indirect"] = 4,
+	["object"] = 11,
+	["locative"] = 2,
+	["benefactive"] = 3,
+	["instrument"] = 2,
+	["reason"] = {4, {1,2,3}},
+	["directional"] = 6,
+	["reference"] = 0,
+	["reciprocal"] = 2
+}
+local tl_conjugation_types = {}
+
+for key, value in pairs(tl_conj_type_data) do
+	local type_count = 0
+	local alternates = {}
+	if type(value) == "number" then
+		type_count = value
+	else
+		type_count = value[1]
+		alternates = value[2]
+	end
+
+	local roman_numeral
+	if type_count == 0 then
+		local trigger = {key, "trigger"}
+		if key == "actor indirect" then
+			trigger[1] = "indirect actor"
+		end
+		tl_conjugation_types[key] = table.concat(trigger, " ")
+	else
+		for i = 1, type_count do
+			roman_numeral = require("Module:roman numerals").arabic_to_roman(tostring(i))
+			local trigger = {require("Module:ordinal")._ordinal(tostring(i)), key, "trigger"}
+			
+			--These could be typos but putting back in to stay consistent
+			if key == "actor 2nd indirect" then
+				trigger[2] = "secondary indirect actor"
+			end
+			
+			tl_conjugation_types[key .. " " .. roman_numeral] = table.concat(trigger, " ")
+			
+			if require("Module:table").contains(alternates, i) then
+				roman_numeral = roman_numeral .. "A"
+				trigger[1] = "alternate " .. trigger[1]
+				tl_conjugation_types[key .. " " .. roman_numeral] = table.concat(trigger, " ")
+			end
+		end
+	end
+end
+
+local ilo_conjugation_types = {
+	["actor I"] = "1st actor trigger", -- um- or -um-
+	["actor II"] = "2nd actor trigger", -- ag-
+	["actor III"] = "3rd actor trigger", -- mang-
+	["actor IV"] = "4th actor trigger", -- ma-
+	["actor potentive I"] = "1st actor trigger potential mood", -- maka-
+	["actor potential II"] = "2nd actor trigger potential mood", -- makapag-
+	["actor causative I"] = "2nd actor trigger potential mood", -- agpa-
+	["actor causative II"] = "2nd actor trigger potential mood", -- mangpa-
+	["object"] = "object trigger", -- -en
+	["object potential"] = "object trigger potential mood", -- ma-
+	["object causative"] = "2nd actor trigger potential mood", -- ipai-
+    ["comitative"] = "comitative trigger", -- ka-
+	["comitative potential"] = "comitative trigger potential mood", -- maka-
+    ["comitative causative I"] = "1st comitative trigger causative mood", -- makapa-
+    ["comitative causative II"] = "2nd comitative trigger causative mood", -- makipa-
+	["locative"] = "locative trigger",-- -an
+	["locative potential"] = "locative trigger potential mood", -- ma- -an
+	["locative causative"] = "locative trigger causative mood", -- pa- -an
+    ["thematic"] = "thematic trigger", -- i-
+    ["thematic potential"] = "thematic trigger potential mood", -- mai-
+	["thematic causative"] = "thematic trigger causative mood", -- ipa-
+	["benefactive"] = "benefactive trigger", -- i- -an
+	["benefactive potential"] = "benefactive trigger potential mood", -- mai- -an
+	["benefactive causative"] = "benefactive trigger causative mood", -- ipa- -an
+	["instrument"] = "instrument trigger", -- pag-
+	["instrument potential"] = "instrument trigger potential mood", -- mapag-
+	["instrument causative"] = "1st instrument trigger causative mood", -- pagpa- -an
+	["instrument causative II"] = "2nd instrument trigger causative mood", -- panagpa- 
+}
+
+-- FIXME: Are these various languages really so different in their verb inflections or is this just a case of
+-- randomly picking a subset of the total inflections?
+local tl_bcl_verb_inflections = {
+	{"comp", {label = "complete", form = "comp", alias = {2}}},
+	{"prog", {label = "progressive", form = "imp", alias = {3}}},
+	{"cont", {label = "contemplative", form = "cont", alias = {4}}},
+	{"vnoun", {label = "verbal noun", form = "vnoun", alias = {5}}},
+}
+local hil_war_verb_inflections = {
+	{"real", {label = "realis", form = "realis", alias = {2}}},
+	{"imp", {label = "imperative", form = "imp", alias = {3}}},
+	{"dim", {label = "diminutive"}},
+	{"caus", {label = "causative"}},
+	{"freq", {label = "frequentative"}},
+}
+local hil_war_noun_inflections = {
+	{"dim", {label = "diminutive"}},
+}
+local hil_war_adj_inflections = {
+	{"dim", {label = "diminutive"}},
+	{"caus", {label = "causative"}},
+}
+
 local langs_supported = {
 	["tl"] = {
 		has_baybayin = true,
 		baybayin_name = "Baybayin",
 		convert_to_baybayin = "tl-baybayin script",
-		baybayin_def = "tl-bay",
+		-- NOTE: Here and below, the template names need to be in their canonical form (not shortcuts).
+		baybayin_def = "tl-baybayin",
 		pronun_templates_to_check = {"tl-pr", "tl-IPA"},
+		conjugation_types = tl_conjugation_types,
+		verb_inflections = tl_bcl_verb_inflections,
 	},
 	["bcl"] = {
 		has_baybayin = true,
 		baybayin_name = "Basahan",
 		convert_to_baybayin = "bcl-basahan script",
-		baybayin_def = "bcl-bas",
+		baybayin_def = "bcl-basahan",
 		pronun_templates_to_check = {"bcl-IPA"},
 		has_pl_all_pos = true,
 		has_intens_all_pos = true,
+		verb_inflections = tl_bcl_verb_inflections,
 	},
 	["ceb"] = {
 		has_baybayin = true,
 		baybayin_name = "Badlit",
 		convert_to_baybayin = "bcl-badlit script",
-		baybayin_def = "ceb-bad",
+		baybayin_def = "ceb-badlit",
 		pronun_templates_to_check = {"ceb-IPA"},
+		verb_inflections = {
+			{"inch", {label = "inchoative", form = "realis", alias = {2}}},
+			{"imp", {label = "imperative", form = "imp", alias = {3}}},
+		},
 	},
 	["ilo"] = {
 		has_baybayin = true,
@@ -47,14 +164,27 @@ local langs_supported = {
 		convert_to_baybayin = "ilo-kur-itan script",
 		baybayin_def = "ilo-kur-itan",
 		pronun_templates_to_check = {"ilo-IPA"},
+		conjugation_types = ilo_conjugation_types,
+		verb_inflections = {
+			{"perf", {label = "perfective", form = "pfv", alias = {2}}},
+			{"imperf", {label = "imperfective", form = "impfv", alias = {3}}},
+			{"past_imperf", {label = "past imperfective", form = "past|impfv", alias = {4}}},
+			{"fut", {label = "future", form = "fut", alias = {5}}},
+		},
 	},
 	["hil"] = {
 		has_baybayin = false,
 		pronun_templates_to_check = {"hil-IPA"},
+		verb_inflections = hil_war_verb_inflections,
+		noun_inflections = hil_war_noun_inflections,
+		adj_inflections = hil_war_adj_inflections,
 	},
 	["war"] = {
 		has_baybayin = false,
 		pronun_templates_to_check = {"war-IPA"},
+		verb_inflections = hil_war_verb_inflections,
+		noun_inflections = hil_war_noun_inflections,
+		adj_inflections = hil_war_adj_inflections,
 	},
 }
 
@@ -68,6 +198,43 @@ end
 local function ine(val)
 	if val == "" then return nil else return val end
 end
+
+local function do_inflection(data, forms, label, accel)
+	if #forms > 0 then
+		forms.label = label
+		if accel then
+			forms.accel = accel
+		end
+		table.insert(data.inflections, forms)
+	end
+end
+
+local function add_params(params, params_spec)
+	if not params_spec then
+		return
+	end
+	for _, spec in ipairs(params_spec) do
+		local arg, argspecs = unpack(spec)
+		params[arg] = {list = true}
+		if argspecs.alias then
+			for _, al in ipairs(argspecs.alias) do
+				params[al] = {alias_of = arg}
+			end
+		end
+	end
+end
+
+local function do_inflections(args, data, params_spec)
+	if not params_spec then
+		return
+	end
+	for _, spec in ipairs(params_spec) do
+		local arg, argspecs = unpack(spec)
+		do_inflection(data, args[arg], argspecs.label, argspecs.form and {form = argspecs.form} or nil)
+	end
+end
+
+----------------------------------------------- Main code --------------------------------------------
 
 -- The main entry point.
 -- This is the only function that can be invoked from a template.
@@ -96,9 +263,13 @@ function export.show(frame)
 		headarg = 1
 	else
 		headarg = 2
-		poscat = ine(parargs[1]) or error("Part of speech must be specified in 1=")
+		poscat = ine(parargs[1]) or
+			mw.title.getCurrentTitle().fullText == "Template:" .. langcode .. "-head" and "interjection" or
+			error("Part of speech must be specified in 1=")
 		poscat = require("Module:string utilities").pluralize(poscat)
 	end
+
+	local langprops = langs_supported[langcode]
 
 	local params = {
 		[headarg] = {list = "head", disallow_holes = true},
@@ -111,8 +282,7 @@ function export.show(frame)
 		["json"] = {type = "boolean"},
 		["pagename"] = {}, -- for testing
 	}
-	local has_baybayin = langs_supported[langcode].has_baybayin
-	if has_baybayin then
+	if langprops.has_baybayin then
 		params["tr"] = {list = true, allow_holes = true}
 		params["b"] = {list = true}
 	end
@@ -121,24 +291,20 @@ function export.show(frame)
 	end
 
 	if pos_functions[poscat] then
-		for key, val in pairs(pos_functions[poscat].params) do
+		for key, val in pairs(pos_functions[poscat].params(langcode)) do
 			params[key] = val
 		end
 	end
 
-	local has_intens_all_pos = langs_supported[langcode].has_intens_all_pos
-	local pl_handled_in_pos
-	if params.pl then
-		pl_handled_in_pos = true
-	else
+	if langprops.has_pl_all_pos and not params.pl then
 		-- Yuck, this should be POS-specific but it seems all POS's can be pluralized in Bikol Central?
 		params["pl"] = {list = true}
-		pl_handled_in_pos = false
+		need_pl_handled = true
 	end
 
-	if langs_supported[langcode].has_intens_all_pos then
+	if langprops.has_intens_all_pos then
 		params["intens"] = {list = true}
-		if langs_supported[langcode].has_pl_all_pos then
+		if langprops.has_pl_all_pos then
 			params["plintens"] = {list = true}
 		end
 	end
@@ -147,7 +313,7 @@ function export.show(frame)
 
 	local pagename = args.pagename or mw.title.getCurrentTitle().subpageText
 
-	if has_baybayin and args.tr.maxindex > #args[headarg] then
+	if langprops.has_baybayin and args.tr.maxindex > #args[headarg] then
 		error("Too many translits specified; use '+' to indicate a default head")
 	end
 
@@ -165,7 +331,7 @@ function export.show(frame)
 		end
 		heads[i] = {
 			term = head,
-			tr = has_baybayin and args.tr[i] or nil,
+			tr = langprops.has_baybayin and args.tr[i] or nil,
 		}
 	end
 
@@ -173,6 +339,7 @@ function export.show(frame)
 		lang = lang,
 		langcode = langcode,
 		langname = langname,
+		pos_category = poscat,
 		categories = {},
 		heads = heads,
 		user_specified_heads = user_specified_heads,
@@ -204,15 +371,21 @@ function export.show(frame)
 		pos_functions[poscat].func(args, data)
 	end
 
-	if 
-	do_inflection(data, args.intens, "intensified")
-	do_inflection(data, args.pl, "plural", {form = "plural"})
-	do_inflection(data, args.plintens, "plural intensified")
+	if need_pl_handled then
+		do_inflection(data, args.pl, "plural", {form = "plural"})
+	end
+	if langprops.has_intens_all_pos then
+		do_inflection(data, args.intens, "intensified")
+		if langprops.has_pl_all_pos then
+			do_inflection(data, args.plintens, "plural intensified")
+		end
+	end
 
 	local pattern_escape = require("Module:string utilities").pattern_escape
 
-	if has_baybayin then
-		local script = lang:findBestScript(pagename) -- Latn or Tglg
+	local script
+	if langprops.has_baybayin then
+		script = lang:findBestScript(pagename) -- Latn or Tglg
 		-- Disable Baybayin spelling parameter if entry is already in Baybayin
 		if script:getCode() == "Tglg" then
 			args.b = {}
@@ -224,7 +397,7 @@ function export.show(frame)
 			end
 			local baysc = lang:findBestScript(bay)
 			if baysc:getCode() == "Latn" then
-				bay = frame:expandTemplate { title = langs_supported[langcode].convert_to_baybayin, args = { bay }}
+				bay = frame:expandTemplate { title = langprops.convert_to_baybayin, args = { bay }}
 			end
 			args.b[i] = {term = bay, sc = require("Module:scripts").getByCode("Tglg") }
 
@@ -233,9 +406,20 @@ function export.show(frame)
 			local title = mw.title.new(bay)
 			if title then
 				local bay_content = title:getContent()
-				if bay_content and bay_content:find("== *" .. pattern_escape(langname) .. " *==") and
-					rmatch(bay_content, "{{tl%-bay|[^}]*" .. pagename .. "[^}]*}}") then
-					script_entry_present = true
+				if bay_content then
+					for name, args, text, index in require(template_parser_module).findTemplates(bay_content) do
+						if name == langprops.baybayin_def then
+							for i = 1, 10 do
+								if args[i] == pagename then
+									script_entry_present = true
+									break
+								end
+							end
+						end
+						if script_entry_present then
+							break
+						end
+					end
 				end
 			end
 			if not script_entry_present then
@@ -243,7 +427,7 @@ function export.show(frame)
 			end
 		end
 		if #args.b > 0 then
-			args.b.label = langs_supported[langcode].baybayin_name .. " spelling"
+			args.b.label = langprops.baybayin_name .. " spelling"
 			table.insert(data.inflections, args.b)
 		end
 
@@ -255,30 +439,25 @@ function export.show(frame)
 		end
 	end
 
-	if not has_baybayin or script:getCode() == "Latn" then
-		-- See if we need to add a tracking category for missing {{tl-pr}}
-		local tl_pr_present
-		local this_title = mw.title.new(pagename)
-		if this_title then
-			local content = this_title:getContent()
-			if content and (rmatch(content, "{{tl%-pr}}") or rmatch(content, "{{tl%-pr[|][^}]*}}")) then
-				tl_pr_present = true
+	if langprops.pronun_templates_to_check and (not langprops.has_baybayin or script:getCode() == "Latn") then
+		-- See if we need to add a tracking category for missing {{tl-pr}}, {{tl-IPA}}, etc.
+		for _, pronun_template in ipairs(langprops.pronun_templates_to_check) do
+			local template_present
+			local this_title = mw.title.new(pagename)
+			if this_title then
+				local content = this_title:getContent()
+				if content then
+					for name, args, text, index in require(template_parser_module).findTemplates(content) do
+						if name == pronun_template then
+							template_present = true
+							break
+						end
+					end
+				end
 			end
-		end
-		if not tl_pr_present then
-			table.insert(data.categories, ("%s terms without tl-pr template"):format(langname))
-		end
-		
-			-- See if we need to add a tracking category for missing {{tl-IPA}}
-		local tl_IPA_present
-		if this_title then
-			local content = this_title:getContent()
-			if content and rmatch(content, "{{tl%-IPA[^}]*") then
-				tl_IPA_present = true
+			if not template_present then
+				table.insert(data.categories, ("%s terms without %s template"):format(langname, pronun_template))
 			end
-		end
-		if not tl_IPA_present and not tl_pr_present then
-			table.insert(data.categories, ("%s terms without tl-IPA template"):format(langname))
 		end
 	end
 
@@ -290,43 +469,44 @@ function export.show(frame)
 end
 
 
-local function do_inflection(data, forms, label, accel)
-	if #forms > 0 then
-		forms.label = label
-		if accel then
-			forms.accel = accel
-		end
-		table.insert(data.inflections, forms)
-	end
-end
-
 pos_functions["adjectives"] = {
-    params = {
-		["f"] = {list = true},
-		["m"] = {list = true},
-		["pl"] = {list = true},
-		["sup"] = {list = true},
-	},
+    params = function(langcode)
+		local params = {
+			["f"] = {list = true},
+			["m"] = {list = true},
+			["pl"] = {list = true},
+			["sup"] = {list = true},
+		}
+		add_params(params, langs_supported[langcode].adj_inflections)
+		return params
+	end,
 	func = function(args, data)
 		do_inflection(data, args.f, "feminine")
 		do_inflection(data, args.m, "masculine")
 		do_inflection(data, args.pl, "plural", {form = "plural"})
 		do_inflection(data, args.sup, "superlative")
+		do_inflections(args, data, langs_supported[data.langcode].adj_inflections)
 	end,
 }
 
 
 pos_functions["nouns"] = {
-    params = {
-		["f"] = {list = true},
-		["m"] = {list = true},
-		["pl"] = {list = true},
-		rootword = {type = "boolean"},
-	},
+    params = function(langcode)
+		local params = {
+			["f"] = {list = true},
+			["m"] = {list = true},
+			["pl"] = {list = true},
+			rootword = {type = "boolean"},
+		}
+		add_params(params, langs_supported[langcode].noun_inflections)
+		return params
+	end,
 	func = function(args, data)
 		do_inflection(data, args.f, "feminine")
 		do_inflection(data, args.m, "masculine")
 		do_inflection(data, args.pl, "plural", {form = "plural"})
+		do_inflections(args, data, langs_supported[data.langcode].noun_inflections)
+
 		if args.rootword then
 			table.insert(data.infections, {label = "root word"})
 			table.insert(data.categories, langname .. " roots")
@@ -338,9 +518,11 @@ pos_functions["proper nouns"] = pos_functions["nouns"]
 
 
 pos_functions["pronouns"] = {
-    params = {
-		["pl"] = {list = true},
-	},
+    params = function(langcode)
+	    return {
+			["pl"] = {list = true},
+		}
+	end,
 	func = function(args, data)
 		do_inflection(data, args.pl, "plural", {form = "plural"})
 	end,
@@ -348,100 +530,36 @@ pos_functions["pronouns"] = {
 
 pos_functions["prepositions"] = pos_functions["pronouns"]
 
-
-local conj_type_data = {
-	["actor"] = 5,
-	["actor indirect"] = 0,
-	["actor 2nd indirect"] = 4,
-	["object"] = 11,
-	["locative"] = 2,
-	["benefactive"] = 3,
-	["instrument"] = 2,
-	["reason"] = {4, {1,2,3}},
-	["directional"] = 6,
-	["reference"] = 0,
-	["reciprocal"] = 2
-}
-local conjugation_types = {}
-
-for key, value in pairs(conj_type_data) do
-	local type_count = 0
-	local alternates = {}
-	if type(value) == "number" then
-		type_count = value
-	else
-		type_count = value[1]
-		alternates = value[2]
-	end
-
-	local roman_numeral
-	if type_count == 0 then
-		local trigger = {key, "trigger"}
-		if key == "actor indirect" then
-			trigger[1] = "indirect actor"
-		end
-		local trigger_display = table.concat(trigger, " ")
-			conjugation_types[key] = {
-			trigger_display, lang:getCanonicalName() .. " " .. trigger_display .. " " .. "verbs"
-		}
-	else
-		for i=1, type_count do
-			roman_numeral = require('Module:roman numerals').arabic_to_roman(tostring(i))
-			local trigger = {require('Module:ordinal')._ordinal(tostring(i)), key, "trigger"}
-			
-			--These could be typos but putting back in to stay consistent
-			if key == "actor 2nd indirect" then
-				trigger[2] = "secondary indirect actor"
-			end
-			
-			local trigger_display = table.concat(trigger, " ")
-			conjugation_types[key .. " " .. roman_numeral] = {
-				trigger_display, lang:getCanonicalName() .. " " .. trigger_display .. " " .. "verbs"
-			}
-			
-			if require("Module:table").contains(alternates, i) then
-				roman_numeral = roman_numeral .. "A"
-				trigger[1] = "alternate " .. trigger[1]
-				local trigger_display = table.concat(trigger, " ")
-				conjugation_types[key .. " " .. roman_numeral] = {
-					trigger_display, lang:getCanonicalName() .. " " .. trigger_display .. " " .. "verbs"
-				}
-			end
-		end
-	end
-end
-
 pos_functions["verbs"] = {
-    params = {
-		[2] = {alias_of = "comp"},
-		[3] = {alias_of = "prog"},
-		[4] = {alias_of = "cont"},
-		[5] = {alias_of = "vnoun"},
-		comp = {list = true},
-		prog = {list = true},
-		cont = {list = true},
-		vnoun = {list = true},
-		type = {list = true},
-		rootword = {type = "boolean"},
-	},
+    params = function(langcode)
+		local params = {
+			rootword = {type = "boolean"},
+		}
+		if langs_supported[langcode].conjugation_types then
+			params.type = {list = true}
+		end
+		add_params(params, langs_supported[langcode].verb_inflections)
+		return params
+	end,
 	func = function(args, data)
-		do_inflection(data, args.comp, "complete", {form = "comp"})
-		do_inflection(data, args.prog, "progressive", {form = "prog"})
-		do_inflection(data, args.cont, "contemplative", {form = "cont"})
-		do_inflection(data, args.vnoun, "verbal noun", {form = "vnoun"})
+		do_inflections(args, data, langs_supported[data.langcode].verb_inflections)
 
 		if args.rootword then
 			table.insert(data.infections, {label = "root word"})
-			table.insert(data.categories, langname .. " roots")
+			table.insert(data.categories, data.langname .. " roots")
 		end
 
-		--Tagging verb trigger
-		for i, typ in ipairs(args.type) do
-			if not conjugation_types[typ] then
-				error(("Unrecognized Tagalog verb conjugation type '%s'"):format(typ))
+		if args.type then
+			-- Tag verb trigger
+			local conjugation_types = langs_supported[data.langcode].conjugation_types
+			for i, typ in ipairs(args.type) do
+				if not conjugation_types[typ] then
+					error(("Unrecognized %s verb conjugation type '%s'"):format(data.langname, typ))
+				end
+				local label = conjugation_types[typ]
+				table.insert(data.inflections, {label = label})
+				table.insert(data.categories, ("%s %s verbs"):format(data.langname, label))
 			end
-			table.insert(data.inflections, {label = conjugation_types[typ][1]})
-			table.insert(data.categories, conjugation_types[typ][2])
 		end
 	end,
 }
