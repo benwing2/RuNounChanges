@@ -149,7 +149,6 @@ local hil_war_adj_inflections = {
 -- NOTE: Here and below, the template names need to be in their canonical form (not shortcuts).
 local langs_supported = {
 	["bcl"] = {
-		has_native_script = true,
 		native_script_name = "Basahan",
 		convert_to_native_script = "bcl-basahan script",
 		native_script_def = "bcl-basahan",
@@ -159,7 +158,6 @@ local langs_supported = {
 		verb_inflections = tl_bcl_verb_inflections,
 	},
 	["ceb"] = {
-		has_native_script = true,
 		native_script_name = "Badlit",
 		convert_to_native_script = "ceb-badlit script",
 		native_script_def = "ceb-badlit",
@@ -170,14 +168,12 @@ local langs_supported = {
 		},
 	},
 	["hil"] = {
-		has_native_script = false,
 		pronun_templates_to_check = {"hil-IPA"},
 		verb_inflections = hil_war_verb_inflections,
 		noun_inflections = hil_war_noun_inflections,
 		adj_inflections = hil_war_adj_inflections,
 	},
 	["ilo"] = {
-		has_native_script = true,
 		native_script_name = "Kur-itan",
 		convert_to_native_script = "ilo-kur-itan script",
 		native_script_def = "ilo-kur-itan",
@@ -192,14 +188,22 @@ local langs_supported = {
 			{"intens", {label = "intensive", alias = {6}}},
 		},
 	},
+	["mrw"] = {
+		arabic_script_name = "batang Arab",
+	},
 	["pag"] = {
-		has_native_script = false,
 		pronun_templates_to_check = {"pag-IPA"},
 		conjugation_types = pag_conjugation_types,
 		verb_inflections = ilo_pag_verb_inflections,
 	},
+	["pam"] = {
+		pronun_templates_to_check = {"pam-IPA"},
+		verb_inflections = {
+			{"perf", {label = "perfective", form = "pfv", alias = {2}}}, -- Use with affixed verbs only.
+			{"prog", {label = "progressive", form = "prog", alias = {3}}}, -- Use with affixed verbs only.
+		},
+	},
 	["tl"] = {
-		has_native_script = true,
 		native_script_name = "Baybayin",
 		convert_to_native_script = "tl-baybayin script",
 		native_script_def = "tl-baybayin",
@@ -207,8 +211,9 @@ local langs_supported = {
 		conjugation_types = tl_conjugation_types,
 		verb_inflections = tl_bcl_verb_inflections,
 	},
+	["tsg"] = {
+	},
 	["war"] = {
-		has_native_script = false,
 		pronun_templates_to_check = {"war-IPA"},
 		verb_inflections = hil_war_verb_inflections,
 		noun_inflections = hil_war_noun_inflections,
@@ -310,9 +315,15 @@ function export.show(frame)
 		["json"] = {type = "boolean"},
 		["pagename"] = {}, -- for testing
 	}
-	if langprops.has_native_script then
-		params["tr"] = {list = true, allow_holes = true}
+	if langprops.native_script_name then
 		params["b"] = {list = true}
+	end
+	if langprops.arabic_script_name then
+		params["j"] = {list = true}
+	end
+	local has_alt_script = langprops.native_script_name or langprops.arabic_script_name
+	if has_alt_script then
+		params["tr"] = {list = true, allow_holes = true}
 	end
 	if headarg == 2 then
 		params[1] = {required = true} -- required but ignored as already processed above
@@ -341,7 +352,7 @@ function export.show(frame)
 
 	local pagename = args.pagename or mw.title.getCurrentTitle().subpageText
 
-	if langprops.has_native_script and args.tr.maxindex > #args[headarg] then
+	if has_alt_script and args.tr.maxindex > #args[headarg] then
 		error("Too many translits specified; use '+' to indicate a default head")
 	end
 
@@ -359,7 +370,7 @@ function export.show(frame)
 		end
 		heads[i] = {
 			term = head,
-			tr = langprops.has_native_script and args.tr[i] or nil,
+			tr = langprops.has_alt_script and args.tr[i] or nil,
 		}
 	end
 
@@ -412,31 +423,29 @@ function export.show(frame)
 	local pattern_escape = require("Module:string utilities").pattern_escape
 
 	local script
-	if langprops.has_native_script then
+	if has_alt_script then
 		script = lang:findBestScript(pagename) -- Latn or Tglg
 		-- Disable native-script spelling parameter if entry is already in native script.
 		if script:getCode() == "Tglg" then
 			args.b = {}
 		end
+		-- Disable Arabic-script spelling parameter if entry is already in Arabic script.
+		if script:getCode() == "Arab" then
+			args.j = {}
+		end
 
-		for i, bay in ipairs(args.b) do
-			if bay == "+" then
-				bay = pagename
+		local function check_for_alt_script_entry(altscript, altscript_def)
+			-- See if we need to add a tracking category for missing alt script entry.
+			if not altscript_def then
+				return false
 			end
-			local baysc = lang:findBestScript(bay)
-			if baysc:getCode() == "Latn" then
-				bay = frame:expandTemplate { title = langprops.convert_to_native_script, args = { bay }}
-			end
-			args.b[i] = {term = bay, sc = require("Module:scripts").getByCode("Tglg") }
-
-			-- See if we need to add a tracking category for missing native script entry.
 			local script_entry_present
-			local title = mw.title.new(bay)
+			local title = mw.title.new(altscript)
 			if title then
-				local bay_content = title:getContent()
-				if bay_content then
-					for name, args, text, index in require(template_parser_module).findTemplates(bay_content) do
-						if name == langprops.native_script_def then
+				local altscript_content = title:getContent()
+				if altscript_content then
+					for name, args, text, index in require(template_parser_module).findTemplates(altscript_content) do
+						if name == altscript_def then
 							for i = 1, 10 do
 								if args[i] == pagename then
 									script_entry_present = true
@@ -450,25 +459,57 @@ function export.show(frame)
 					end
 				end
 			end
-			if not script_entry_present then
-				table.insert(data.categories,
-					("%s terms with missing %s script entries"):format(langname, langprops.native_script_name))
-			end
-		end
-		if #args.b > 0 then
-			args.b.label = langprops.native_script_name .. " spelling"
-			table.insert(data.inflections, args.b)
+			return script_entry_present
 		end
 
-		if script:getCode() == "Latn" then
-			table.insert(data.categories, ("%s terms %s %s script"):format(
-				langname, #args.b > 0 and "with" or "without", langprops.native_script_name))
-		elseif script:getCode() == "Tglg" then
-			table.insert(data.categories, ("%s terms in %s script"):format(langname, langprops.native_script_name))
+		local function handle_alt_script(script_argname, script_code, script_name, convert_to_script, script_def)
+			local script_arg = args[script_argname]
+			if script_arg then
+				for i, alt in ipairs(script_arg) do
+					if alt == "+" then
+						alt = pagename
+					end
+					local altsc = lang:findBestScript(alt)
+					if altsc:getCode() == "Latn" then
+						if convert_to_script then
+							alt = frame:expandTemplate { title = convert_to_script, args = { alt }}
+						else
+							error(("Latin script for %s= not currently supported; supply proper script"):format(
+								script_argname))
+						end
+					end
+					script_arg[i] = {term = alt, sc = require("Module:scripts").getByCode(script_code) }
+
+					if not check_for_alt_script_entry(alt, alt_script_def) then
+						table.insert(data.categories,
+							("%s terms with missing %s script entries"):format(langname, script_name))
+					end
+				end
+				if #script_arg > 0 then
+					script_arg.label = script_name .. " spelling"
+					table.insert(data.inflections, script_arg)
+				end
+
+				if script:getCode() == "Latn" then
+					table.insert(data.categories, ("%s terms %s %s script"):format(
+						langname, #script_arg > 0 and "with" or "without", script_name))
+				elseif script:getCode() == script_code then
+					table.insert(data.categories, ("%s terms in %s script"):format(langname, script_name))
+				end
+			end
+		end
+
+		if langprops.native_script_name then
+			handle_alt_script("b", "Tglg", langprops.native_script_name, langprops.convert_to_native_script,
+				langprops.native_script_def)
+		end
+		if langprops.arabic_script_name then
+			handle_alt_script("j", "Arab", langprops.arabic_script_name, langprops.convert_to_arabic_script,
+				langprops.arabic_script_def)
 		end
 	end
 
-	if langprops.pronun_templates_to_check and (not langprops.has_native_script or script:getCode() == "Latn") then
+	if langprops.pronun_templates_to_check and (not has_alt_script or script:getCode() == "Latn") then
 		-- See if we need to add a tracking category for missing {{tl-pr}}, {{tl-IPA}}, etc.
 		local template_present
 		local this_title = mw.title.new(pagename)
