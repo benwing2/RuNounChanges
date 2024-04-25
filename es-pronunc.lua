@@ -7,6 +7,7 @@ Author: Benwing2
 local export = {}
 
 local m_IPA = require("Module:IPA")
+local m_str_utils = require("Module:string utilities")
 local m_table = require("Module:table")
 local put_module = "Module:parse utilities"
 
@@ -91,15 +92,12 @@ represented using {{es-pr}} as {{es-pr|blutuz<style:distincion>|blutud<style:ses
 
 local lang = require("Module:languages").getByCode("es")
 
-local u = mw.ustring.char
-local rfind = mw.ustring.find
-local rsubn = mw.ustring.gsub
-local rmatch = mw.ustring.match
-local rsplit = mw.text.split
-local ulower = mw.ustring.lower
-local uupper = mw.ustring.upper
-local usub = mw.ustring.sub
-local ulen = mw.ustring.len
+local u = m_str_utils.char
+local rfind = m_str_utils.find
+local rsubn = m_str_utils.gsub
+local rsplit = m_str_utils.split
+local ulower = m_str_utils.lower
+local ulen = m_str_utils.len
 local unfd = mw.ustring.toNFD
 local unfc = mw.ustring.toNFC
 
@@ -132,10 +130,10 @@ local T = "[^" .. vowel .. "lrɾjw" .. separator .. "]" -- obstruent or nasal
 local unstressed_words = m_table.listToSet({
 	"el", "la", "los", "las", -- definite articles
 	"un", -- single-syllable indefinite articles
-	"me", "te", "se", "lo", "le", "nos", "os", -- unstressed object pronouns
+	"me", "te", "se", "lo", "le", "nos", "os", "les", -- unstressed object pronouns
 	"mi", "mis", "tu", "tus", "su", "sus", -- unstressed possessive pronouns
 	"que", "si", -- subordinating conjunctions
-	"y", "e", "o", "u", -- coordinating conjunctions
+	"y", "e", "o", "u", "mas", -- coordinating conjunctions
 	"de", "del", "a", "al", -- basic prepositions + combinations with articles
 	"por", "en", "con", -- other prepositions
 })
@@ -1354,7 +1352,7 @@ local function parse_rhyme(arg, parse_err)
 	local param_mods = {
 		s = {
 			item_dest = "num_syl",
-			convert = function(arg, parse_err),
+			convert = function(arg, parse_err)
 				local nsyls = rsplit(arg, ",")
 				for i, nsyl in ipairs(nsyls) do
 					if not nsyl:find("^[0-9]+$") then
@@ -1451,19 +1449,19 @@ function export.show_pr(frame)
 	local respellings = #args[1] > 0 and args[1] or {"+"}
 	local parsed_respellings = {}
 	local function overall_parse_err(msg, arg, val)
-		error(msg .. ": " .. arg .. "= " .. val)
+		error(msg .. ": " .. arg .. "=" .. val)
 	end
 	local overall_rhyme = args.rhyme and
-		parse_rhyme(args.rhyme, nil, function(msg) overall_parse_err(msg, "rhyme", args.rhyme) end) or nil
+		parse_rhyme(args.rhyme, function(msg) overall_parse_err(msg, "rhyme", args.rhyme) end) or nil
 	local overall_hyph = args.hyph and
-		parse_hyph(args.hyph, nil, function(msg) overall_parse_err(msg, "hyph", args.hyph) end) or nil
+		parse_hyph(args.hyph, function(msg) overall_parse_err(msg, "hyph", args.hyph) end) or nil
 	local overall_hmp = args.hmp and
-		parse_homophone(args.hmp, nil, function(msg) overall_parse_err(msg, "hmp", args.hmp) end) or nil
+		parse_homophone(args.hmp, function(msg) overall_parse_err(msg, "hmp", args.hmp) end) or nil
 	local overall_audio
 	if args.audio then
 		overall_audio = {}
 		for _, audio in ipairs(args.audio) do
-			local parsed_audio = parse_audio(audio, nil, function(msg) overall_parse_err(msg, "audio", audio) end)
+			local parsed_audio = parse_audio(audio, function(msg) overall_parse_err(msg, "audio", audio) end)
 			if #parsed_audio > 1 then
 				error("Internal error: Saw more than one object returned from parse_audio")
 			end
@@ -1530,7 +1528,7 @@ function export.show_pr(frame)
 		else
 			local termobjs = {}
 			local function parse_err(msg)
-				error(msg .. ": " .. i .. "= " .. respelling)
+				error(msg .. ": " .. i .. "=" .. respelling)
 			end
 			for _, term in ipairs(split_on_comma(respelling)) do
 				table.insert(termobjs, parse_respelling(term, pagename, parse_err))
