@@ -1,13 +1,16 @@
 -- This module contains code for Philippine-language headword templates.
--- Templates covered are (e.g. for Tagalog):
--- * {{tl-noun}}, {{tl-proper noun}};
--- * {{tl-verb}};
--- * {{tl-adj}};
--- * {{tl-adv}};
+-- Most languages use the following templates (e.g. for Waray-Waray):
+-- * {{war-noun}}, {{war-proper noun}};
+-- * {{war-verb}};
+-- * {{war-adj}};
+-- * {{war-adv}};
+-- * {{war-head}}.
+-- Tagalog uses the following additional templates:
 -- * {{tl-num}};
 -- * {{tl-pron}};
--- * {{tl-prep}};
--- * {{tl-head}}.
+-- * {{tl-prep}}.
+-- Cebuano uses the following additional templates:
+-- * {{ceb-num}}.
 
 local export = {}
 local pos_functions = {}
@@ -125,7 +128,7 @@ local tl_bcl_verb_inflections = {
 	{"cont", {label = "contemplative", form = "cont", alias = {4}}},
 	{"vnoun", {label = "verbal noun", form = "vnoun", alias = {5}}},
 }
-local hil_war_verb_inflections = {
+local hil_krj_war_verb_inflections = {
 	{"real", {label = "realis", form = "realis", alias = {2}}},
 	{"imp", {label = "imperative", form = "imp", alias = {3}}},
 	{"dim", {label = "diminutive"}},
@@ -138,10 +141,10 @@ local ilo_pag_verb_inflections = {
 	{"past_imperf", {label = "past imperfective", form = "past|impfv", alias = {4}}},
 	{"fut", {label = "future", form = "fut", alias = {5}}},
 }
-local hil_war_noun_inflections = {
+local hil_krj_war_noun_inflections = {
 	{"dim", {label = "diminutive"}},
 }
-local hil_war_adj_inflections = {
+local hil_krj_war_adj_inflections = {
 	{"dim", {label = "diminutive"}},
 	{"caus", {label = "causative"}},
 }
@@ -157,6 +160,9 @@ local langs_supported = {
 		has_intens_all_pos = true,
 		verb_inflections = tl_bcl_verb_inflections,
 	},
+	["cbk"] = {
+		pronun_templates_to_check = {"cbk-IPA"},
+	},
 	["ceb"] = {
 		native_script_name = "Badlit",
 		convert_to_native_script = "ceb-badlit script",
@@ -169,9 +175,9 @@ local langs_supported = {
 	},
 	["hil"] = {
 		pronun_templates_to_check = {"hil-IPA"},
-		verb_inflections = hil_war_verb_inflections,
-		noun_inflections = hil_war_noun_inflections,
-		adj_inflections = hil_war_adj_inflections,
+		verb_inflections = hil_krj_war_verb_inflections,
+		noun_inflections = hil_krj_war_noun_inflections,
+		adj_inflections = hil_krj_war_adj_inflections,
 	},
 	["ilo"] = {
 		native_script_name = "Kur-itan",
@@ -187,6 +193,17 @@ local langs_supported = {
 			{"abs_sup", {label = "absolutive superlative", form = "abs|sup", alias = {5}}},
 			{"intens", {label = "intensive", alias = {6}}},
 		},
+	},
+	["krj"] = {
+		pronun_templates_to_check = {"krj-IPA"},
+		verb_inflections = hil_krj_war_verb_inflections,
+		noun_inflections = hil_krj_war_noun_inflections,
+		adj_inflections = hil_krj_war_adj_inflections,
+	},
+	["mdh"] = {
+		arabic_script_name = "Jawi",
+		native_script_def = "mdh-Jawi",
+		pronun_templates_to_check = {"mdh-IPA"},
 	},
 	["mrw"] = {
 		arabic_script_name = "batang Arab",
@@ -215,9 +232,9 @@ local langs_supported = {
 	},
 	["war"] = {
 		pronun_templates_to_check = {"war-IPA"},
-		verb_inflections = hil_war_verb_inflections,
-		noun_inflections = hil_war_noun_inflections,
-		adj_inflections = hil_war_adj_inflections,
+		verb_inflections = hil_krj_war_verb_inflections,
+		noun_inflections = hil_krj_war_noun_inflections,
+		adj_inflections = hil_krj_war_adj_inflections,
 	},
 }
 
