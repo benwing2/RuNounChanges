@@ -112,7 +112,7 @@ def phi_remove_accents(text):
     replace(CIRC, "")
   )
 
-def ilo_remove_accents(text):
+def phi_diaer_remove_accents(text):
   return unicodedata.normalize("NFC", unicodedata.normalize("NFD", text).
     replace(ACUTE, "").replace(GRAVE, "").
     replace(CIRC, "").replace(DIAER, "")
@@ -199,7 +199,7 @@ language_codes_to_properties = {
     'hy':["Armenian", hy_remove_accents, "Ա-֏ﬓ-ﬗ", True],
     'ia':["Interlingua", lambda x:x, latin_charset, "latin"],
     'id':["Indonesian", lambda x:x, latin_charset, "latin"],
-    'ilo':["Ilocano", ilo_remove_accents, latin_charset, "latin"],
+    'ilo':["Ilocano", phi_diaer_remove_accents, latin_charset, "latin"],
     'io':["Ido", lambda x:x, latin_charset, "latin"],
     'is':["Icelandic", lambda x:x, latin_charset, "latin"],
     'it':["Italian", lambda x:x, latin_charset, "latin"],
@@ -227,6 +227,8 @@ language_codes_to_properties = {
     'oc':["Occitan", lambda x:x, latin_charset, "latin"],
     'or':["Oriya", lambda x:x, "\u0B01-\u0B77", False],
     'pa':["Punjabi", lambda x:x, "\u0A01-\u0A75", "notranslit"],
+    'pag':["Pangasinan", phi_diaer_remove_accents, latin_charset, "latin"],
+    'pam':["Kapampangan", phi_remove_accents, latin_charset, "latin"],
     'pl':["Polish", lambda x:x, latin_charset, "latin"],
     'ps':["Pashto", lambda x:x, arabic_charset, "notranslit"],
     'pt':["Portuguese", lambda x:x, latin_charset, "latin"],
@@ -251,6 +253,7 @@ language_codes_to_properties = {
     'uk':["Ukrainian", bg_remove_accents, cyrillic_charset, False],
     'ur':["Urdu", ur_remove_accents, arabic_charset, "notranslit"],
     'vi':["Vietnamese", lambda x:x, latin_charset, "latin"],
+    'war':["Waray-Waray", phi_remove_accents, latin_charset, "latin"],
     'yi':["Yiddish", lambda x:x, hebrew_charset, False],
 }
 
