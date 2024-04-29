@@ -7,6 +7,8 @@ local m_IPA = require("Module:IPA")
 local m_str_utils = require("Module:string utilities")
 local m_table = require("Module:table")
 local put_module = "Module:parse utilities"
+local headword_data_module = "Module:headword/data"
+local accent_qualifier_data_module = "Module:accent qualifier/data"
 
 local lang = require("Module:languages").getByCode("tl")
 
@@ -81,6 +83,23 @@ local function rsub_repeatedly(term, foo, bar)
 	end
 end
 
+-- Combine two sets of qualifiers, either of which may be nil or a list of qualifiers. Remove duplicate qualifiers.
+-- Return value is nil or a list of qualifiers.
+local function combine_qualifiers(qual1, qual2)
+	if not qual1 then
+		return qual2
+	end
+	if not qual2 then
+		return qual1
+	end
+	local qualifiers = m_table.deepcopy(qual1)
+	for _, qual in ipairs(qual2) do
+		m_table.insertIfNot(qualifiers, qual)
+	end
+	return qualifiers
+end
+
+
 local function decompose(text)
 	-- decompose everything but ñ and ü
 	text = toNFD(text)
@@ -115,7 +134,7 @@ end
 function export.IPA(text)
 	local debug = {}
 
-	text = ulower(text or mw.title.getCurrentTitle().text)
+	text = ulower(text)
 	text = decompose(text)
 	-- convert commas and en/en dashes to IPA foot boundaries
 	text = rsub(text, "%s*[,–—]%s*", " | ")
@@ -497,6 +516,42 @@ function export.show(frame)
 end
 
 
+local function parse_gloss(arg)
+	local pos, gloss
+	if arg:find("%^") then
+		pos, gloss = arg:match("^(.-)%^(.*)$")
+	else
+		gloss = arg
+	end
+	if pos then
+		pos = mw.loadData(headword_data_module).pos_aliases[pos] or pos
+	end
+	return {
+		pos = pos,
+		gloss = gloss,
+	}
+end
+
+
+-- Parse a raw accent spec, which is one or more comma-separated accents, each of which may be aliases listed in the
+-- accent data in [[Module:accent qualifier/data]]. FIXME: The separate accent qualifier data will be going away and
+-- merged into label data, at which point we'll have to rewrite this.
+local function parse_accents(arg)
+	-- Accent group processing
+	local accent_data = mw.loadData(accent_qualifier_data_module)
+
+	-- Split on commas and canonicalize aliases.
+	local accents = rsplit(arg, "%s*,%s*")
+	for i, alias in ipairs(accents) do
+		if accent_data.aliases[alias] then
+			accents[i] = accent_data.aliases[alias]
+		end
+	end
+
+	return accents
+end
+
+
 local function split_syllabified_spelling(spelling)
 	return rsplit(spelling, "%.")
 end
@@ -656,7 +711,7 @@ local function parse_audio(arg, parse_err)
 end
 
 
-local function hyphenate(text)
+local function syllabify_from_spelling(text, pagename)
 	-- Auto hyphenation start --
 	local vowel = vowel .. "ẃý" -- vowel 
 	local V = "[" .. vowel .. "]"
@@ -741,7 +796,8 @@ local function hyphenate(text)
 	end
 
 	-- Fix hyphens --
-	origtext = mw.title.getCurrentTitle().text
+	-- FIXME!!! Why are we relying on looking at the pagename here? This should not be happening.
+	origtext = pagename
 
 	if (table.concat(rsplit(origtext, "-")) ==  table.concat(rsplit(table.concat(rsplit(text, "|")), "-"))) then
 		syllbreak = 0
@@ -756,8 +812,9 @@ local function hyphenate(text)
 		end
 	end
 
-	text = rsplit(text, "|")
-	return text
+	-- FIXME! Hack -- up above we changed periods to vertical bars. The rest of the code expects periods so change
+	-- them back. We should clean up the code above to leave the periods alone.
+	return (text:gsub("|", "%."))
 end
 
 -- Generate all relevant dialect pronunciations and group into styles. See the comment above about dialects and styles.
@@ -1038,46 +1095,7 @@ local function format_all_styles(expressed_styles, format_style)
 end
 
 
-local function dodialect_pronun(parsed, ret, dialect)
-	ret.pronun[dialect] = {}
-	for i, term in ipairs(parsed.terms) do
-		local phonemic, phonetic, differences
-		if term.raw then
-			phonemic = term.raw_phonemic
-			phonetic = term.raw_phonetic
-			differences = construct_default_differences(dialect)
-		else
-			phonemic = export.IPA(term.term, dialect, false)
-			phonetic = export.IPA(term.term, dialect, true)
-			differences = phonemic.differences
-			phonemic = phonemic.text
-			phonetic = phonetic.text
-		end
-		local refs
-		if not term.ref then
-			refs = nil
-		else
-			refs = {}
-			for _, refspec in ipairs(term.ref) do
-				local this_refs = require("Module:references").parse_references(refspec)
-				for _, this_ref in ipairs(this_refs) do
-					table.insert(refs, this_ref)
-				end
-			end
-		end
-
-		ret.pronun[dialect][i] = {
-			raw = term.raw,
-			phonemic = phonemic,
-			phonetic = phonetic,
-			refs = refs,
-			q = term.q,
-			qq = term.qq,
-			a = term.a,
-			aa = term.aa,
-			differences = differences,
-		}
-	end
+local function dodialect_pronun(parsed)
 end
 
 local function generate_pronun(parsed)
@@ -1274,10 +1292,11 @@ function export.show_full(frame)
 	--   rhyme = {RHYME, RHYME, ...},
 	--   hyph = {HYPH, HYPH, ...},
 	--   hmp = {HMP, HMP, ...},
-	--   t = {"GLOSS", "GLOSS", ...},
+	--   t = {GLOSS, GLOSS, ...},
 	--   pre = "PRE-TEXT" or nil,
 	--   post = "POST-TEXT" or nil,
 	--   bullets = NUM_BULLETS,
+	--   accents = {"ACCENT", "ACCENT", ...},
 	-- }
 	--
 	-- In this structure, TERM is an object that usually has the form
@@ -1287,8 +1306,6 @@ function export.show_full(frame)
 	--   ref = {"REF-SPEC", "REF-SPEC", ...},
 	--   q = {"QUALIFIER", "QUALIFIER", ...},
 	--   qq = {"QUALIFIER", "QUALIFIER", ...},
-	--   a = {"ACCENT-QUALIFIER", "ACCENT-QUALIFIER", ...},
-	--   aa = {"ACCENT-QUALIFIER", "ACCENT-QUALIFIER", ...},
 	-- }
 	--
 	-- Note that in this structure, "REF-SPEC" of the form parsable by parse_references() in [[Module:references]].
@@ -1302,8 +1319,6 @@ function export.show_full(frame)
 	--   ref = {"REF-SPEC", "REF-SPEC", ...},
 	--   q = {"QUALIFIER", "QUALIFIER", ...},
 	--   qq = {"QUALIFIER", "QUALIFIER", ...},
-	--   a = {"ACCENT-QUALIFIER", "ACCENT-QUALIFIER", ...},
-	--   aa = {"ACCENT-QUALIFIER", "ACCENT-QUALIFIER", ...},
 	-- }
 	--
 	-- AUDIO is a table of the form
@@ -1311,7 +1326,10 @@ function export.show_full(frame)
 	-- {
 	--   file = "FILE",
 	--   gloss = "GLOSS",
-	--   q, qq, a, aa = (as for TERM),
+	--   q = {"QUALIFIER", "QUALIFIER", ...},
+	--   qq = {"QUALIFIER", "QUALIFIER", ...},
+	--   a = {"ACCENT-QUALIFIER", "ACCENT-QUALIFIER", ...},
+	--   aa = {"ACCENT-QUALIFIER", "ACCENT-QUALIFIER", ...},
 	-- }
 	--
 	-- RHYME is a table of the form
@@ -1319,7 +1337,7 @@ function export.show_full(frame)
 	-- {
 	--   rhyme = "RHYME",
 	--   num_syl = {NUM_SYL, NUM_SYL, ...},
-	--   q, qq, a, aa = (as for TERM),
+	--   q, qq, a, aa = (as for AUDIO),
 	-- }
 	--
 	-- HYPH is a table of the form
@@ -1327,7 +1345,7 @@ function export.show_full(frame)
 	-- {
 	--   syllabification = "SYL.LAB.LES",
 	--   hyph = {"SYL", "LAB", "LES"},
-	--   q, qq, a, aa = (as for TERM),
+	--   q, qq, a, aa = (as for AUDIO),
 	-- }
 	--
 	-- HMP is a table of the form
@@ -1340,9 +1358,15 @@ function export.show_full(frame)
 	--   lit = "LIT" or nil,
 	--   id = "ID" or nil,
 	--   g = {"G", "G", ...},
-	--   q, qq, a, aa = (as for TERM),
+	--   q, qq, a, aa = (as for AUDIO),
 	-- }
 	--
+	-- GLOSS is a table of the form
+	--
+	-- {
+	--   pos = "POS" or nil,
+	--   gloss = "GLOSS",
+	-- }
 	for i, respelling in ipairs(respellings) do
 		if respelling:find("<") then
 			local param_mods = {
@@ -1360,6 +1384,7 @@ function export.show_full(frame)
 				t = {
 					overall = true,
 					store = "insert",
+					convert = parse_gloss,
 				},
 				rhyme = {
 					overall = true,
@@ -1384,8 +1409,11 @@ function export.show_full(frame)
 				ref = { store = "insert" },
 				q = { store = "insert" },
 				qq = { store = "insert" },
-				a = { store = "insert" },
-				aa = { store = "insert" },
+				a = {
+					item_dest = "accents",
+					overall = true,
+					convert = parse_accents, 
+				},
 			}
 
 			local parsed = require(put_module).parse_inline_modifiers(respelling, {
@@ -1394,8 +1422,16 @@ function export.show_full(frame)
 				generate_obj = function(term, parse_err)
 					return parse_respelling(term, pagename, parse_err)
 				end,
+				pre_normalize_modifiers = function(data)
+					local modtext = data.modtext
+					if modtext:find("%^") and not modtext:find("^t:") then
+						modtext = "t:" .. modtext
+					end
+					return modtext
+				end,
 				splitchar = ",",
 				outer_container = {
+					-- FIXME, don't require that these structures always exist
 					audio = {}, rhyme = {}, hyph = {}, hmp = {}, t = {}
 				}
 			})
@@ -1413,6 +1449,7 @@ function export.show_full(frame)
 			end
 			table.insert(parsed_respellings, {
 				terms = termobjs,
+				-- FIXME, don't require that these structures always exist
 				audio = {},
 				rhyme = {},
 				hyph = {},
@@ -1427,7 +1464,7 @@ function export.show_full(frame)
 		local hyphs = {}
 		for _, hyph in ipairs(overall_hyph) do
 			if hyph.syllabification == "+" then
-				hyph.syllabification = syllabify_from_spelling(pagename)
+				hyph.syllabification = syllabify_from_spelling(pagename, pagename)
 				hyph.hyph = split_syllabified_spelling(hyph.syllabification)
 			elseif hyph.syllabification == "-" then
 				overall_hyph = {}
@@ -1436,8 +1473,175 @@ function export.show_full(frame)
 		end
 	end
 
+	local accent_no_count = {"colloquial", "obsolete", "relaxed"}
+	local accent_order = m_table.invert {
+		"Standard Tagalog",
+		"dialectal",
+		"Bataan", 
+		"Bulacan", 
+		"Nueva Ecija", 
+		"Southern Tagalog", 
+		"Cavite", 
+		"Laguna",
+		"Batangas",
+		"Teresa-Morong", 
+		"Tayabas", 
+		"Marinduque", 
+		"Old Tagalog"
+	}
+
+	local function doesnt_count_for_rhyme(list)
+		if not list then
+			return false
+		end
+		for _, item in ipairs(list) do
+			for _, word_no_count in ipairs(accent_no_count) do
+				if item:find("%f[%w]" .. word_no_count .. "%f[%W]") then
+					return true
+				end
+			end
+		end
+		return false
+	end
+
+	-- Gather pronunciation properties for each respelling. 
+	for i=1, #output.IPA do
+		local IPA_object = {
+			data = output.IPA[i],
+			audio = audio_output[i],
+			accent = IPA_accent_list[i],
+			qualifier = IPA_q_list[i],
+			syll_count = true,
+			exclude_rhyme = false
+		}
+
+		table.insert(IPA_object_list, IPA_object)
+	end
+
 	-- Loop over individual respellings, processing each.
 	for _, parsed in ipairs(parsed_respellings) do
+		-- First, sort the specified accents and default to "Standard Tagalog".
+		if not parsed.accents then
+			parsed.accents = {"Standard Tagalog"}
+		end
+
+		-- If multiple accents given, sort according to the accent order listed above. Unrecognized accents go
+		-- at the end.
+		table.sort(parsed.accents, 
+			function(a, b)
+				-- 100 is an arbitrary high number for sorting
+				local acc_a = accent_order[a] or 100
+				local acc_b = accent_order[b] or 100
+				if acc_a == acc_b then
+					-- Fall back to lexical sort.
+					return a < b
+				else
+					return acc_a < acc_b
+				end
+			end
+		)
+		-- If more than one respelling given, then if any accent or qualifier has the words 'colloquial', 'obsolete' or
+		-- 'relaxed' in them, don't generate a rhyme or a '#-syllable word' category.
+		local more_than_one_respelling = #parsed.terms > 1 or #parsed_respellings > 1
+		local is_standard_tagalog = m_table.contains(parsed.accents, "Standard Tagalog")
+		local all_terms_no_rhyme = more_than_one_respelling and doesnt_count_for_rhyme(parsed.accents)
+
+		local retval = {}
+		for i, term in ipairs(parsed.terms) do
+			-- Same check as above for colloquial/obsolete/relaxed but check the qualifiers, which are attached to
+			-- individual respellings rather than a single-line set of respellings.
+			if all_terms_no_rhyme or more_than_one_respelling and (
+				doesnt_count_for_rhyme(term.q) or doesnt_count_for_rhyme(term.qq)
+			) then
+				term.no_rhyme = true
+			end
+
+			local phonemic, phonetic
+			if term.raw then
+				phonemic = term.raw_phonemic
+				phonetic = term.raw_phonetic
+			else
+				local ret = export.IPA(term.term)
+				phonemic = ret.phonemic
+				phonetic = ret.phonetic
+			end
+			local refs
+			if not term.ref then
+				refs = nil
+			else
+				refs = {}
+				for _, refspec in ipairs(term.ref) do
+					local this_refs = require("Module:references").parse_references(refspec)
+					for _, this_ref in ipairs(this_refs) do
+						table.insert(refs, this_ref)
+					end
+				end
+			end
+
+			local pronobj = {
+				raw = term.raw,
+				phonemic = phonemic,
+				phonetic = phonetic,
+				refs = refs,
+				q = term.q,
+				qq = term.qq,
+			}
+
+			table.insert(retval, pronobj)
+
+			-- If [fvz] present in phonemic pronunciation, generate a "more native-sounding" variant with [pbs] in
+			-- place.
+			local fvz_pronobj
+			if phonemic:find("[fvz]") then
+				local fvz_charmap = { ["f"] = "p", ["v"] = "b", ["z"] = "s"}
+				phonemic = phonemic:gsub("[fvz]", fvz_charmap)
+				phonetic = phonetic:gsub("[fvz]", fvz_charmap)
+				fvz_pronobj = {
+					raw = pronobj.raw,
+					phonemic = phonemic,
+					phonetic = phonetic,
+					refs = pronobj.refs,
+					q = combine_qualifiers(pronobj.q, {"more native-sounding"}),
+					qq = pronobj.qq,
+				}
+				table.insert(retval, fvz_pronobj)
+			end
+
+			if m_table.contains(
+			-- If the phonemic form of any generated IPA contains a non-final word ending in a glottal stop, augment the
+			-- IPA's with an additional entry where the phonemic glottal stop becomes optional and the phonetic glottal
+			-- stop is converted to a long vowel.
+			local IPA_count = 1
+			while IPA_count <= #IPA_object_list do
+				local skip = 0
+				-- Manila glottal stop elision
+				if IPA_object_list[IPA_count].data[1]["pron"]:find("ʔ ") and m_table.contains(IPA_object_list[IPA_count].accent, "Standard Tagalog") then
+					if not (IPA_object_list[IPA_count].qualifier) then
+						IPA_object_list[IPA_count].qualifier = {}
+					end
+
+					local gl_qual = m_table.shallowcopy(IPA_object_list[IPA_count].qualifier)
+					local gl_caption = "with glottal stop elision"
+					if not (m_table.tableContains(gl_qual, gl_caption)) then
+						table.insert(gl_qual, gl_caption)
+					end
+					table.insert(IPA_object_list, IPA_count+1, {
+						data = {
+							{["pron"] = rsub(IPA_object_list[IPA_count].data[1]["pron"], "ʔ ", "(ʔ) ")},
+							{["pron"] = rsub(IPA_object_list[IPA_count].data[2]["pron"], "ʔ ", "ː ")}
+						},
+						audio = nil,
+						accent = IPA_object_list[IPA_count].accent,
+						qualifier = gl_qual,
+						syll_count = false,
+						exclude_rhyme = true
+					})
+					skip = skip + 1
+				end
+				IPA_count = IPA_count + 1 + skip
+			end
+
+		end
 		parsed.pronun = generate_pronun(parsed)
 		local no_auto_rhyme = false
 		for _, term in ipairs(parsed.terms) do
@@ -1456,7 +1660,7 @@ function export.show_full(frame)
 			if not overall_hyph and all_words_have_vowels(pagename) then
 				for _, term in ipairs(parsed.terms) do
 					if not term.raw then
-						local syllabification = syllabify_from_spelling(term.term)
+						local syllabification = syllabify_from_spelling(term.term, pagename)
 						local aligned_syll = align_syllabification_to_spelling(syllabification, pagename)
 						if aligned_syll then
 							m_table.insertIfNot(parsed.hyph, generate_hyph_obj(aligned_syll))
@@ -1467,7 +1671,7 @@ function export.show_full(frame)
 		else
 			for _, hyph in ipairs(parsed.hyph) do
 				if hyph.syllabification == "+" then
-					hyph.syllabification = syllabify_from_spelling(pagename)
+					hyph.syllabification = syllabify_from_spelling(pagename, pagename)
 					hyph.hyph = split_syllabified_spelling(hyph.syllabification)
 				elseif hyph.syllabification == "-" then
 					parsed.hyph = {}
@@ -1844,7 +2048,7 @@ function export.show_full(frame)
 	local IPA_q_list = {}
 
 	-- Accent group processing
-	local accent_data = mw.loadData("Module:accent qualifier/data")
+	local accent_data = mw.loadData(accent_qualifier_data_module)
 	local a_args = args["a"]
 
 	-- Each accent parameter in a1=, a2= etc. is one or more comma-separated accents. Split on commas and
