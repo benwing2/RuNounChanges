@@ -855,6 +855,13 @@ function export.parse_inline_modifiers_from_segments(data)
 		if not modtext then
 			parse_err("Internal error: Modifier '" .. group[k] .. "' isn't surrounded by angle brackets")
 		end
+		if props.pre_normalize_modifiers then
+			-- FIXME: For some use cases, we might have to pass more information.
+			modtext = props.pre_normalize_modifiers {
+				modtext = modtext,
+				parse_err = parse_err
+			}
+		end
 		local prefix, val = modtext:match("^([a-zA-Z0-9+_-]+):(.*)$")
 		if not prefix then
 			local valid_prefixes = get_valid_prefixes()
