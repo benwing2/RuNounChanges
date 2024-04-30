@@ -552,6 +552,33 @@ local function parse_accents(arg)
 end
 
 
+-- Return the number of syllables of a phonemic representation, which should have syllable dividers in it but no
+-- hyphens.
+local function get_num_syl_from_phonemic(phonemic)
+	-- Maybe we should just count vowels instead of the below code.
+	phonemic = rsub(phonemic, "|", " ") -- remove IPA foot boundaries
+	local words = rsplit(phonemic, " +")
+	for i, word in ipairs(words) do
+		-- IPA stress marks are syllable divisions if between characters; otherwise just remove.
+		word = rsub(word, "(.)[ˌˈ](.)", "%1.%2")
+		word = rsub(word, "[ˌˈ]", "")
+		words[i] = word
+	end
+	-- There should be a syllable boundary between words.
+	phonemic = table.concat(words, ".")
+	return ulen(rsub(phonemic, "[^.]", "")) + 1
+end
+
+
+-- Get the rhyme by truncating everything up through the last stress mark + any following consonants, and remove
+-- syllable boundary markers.
+local function convert_phonemic_to_rhyme(phonemic)
+	-- NOTE: This works because the phonemic vowels are just [aeiou] possibly with diacritics that are separate
+	-- Unicode chars. If we want to handle things like ɛ or ɔ we need to add them to `vowel`.
+	return rsub(rsub(phonemic, ".*[ˌˈ]", ""), "^[^" .. vowel .. "]*", ""):gsub("%.", ""):gsub("t͡ʃ", "tʃ")
+end
+
+
 local function split_syllabified_spelling(spelling)
 	return rsplit(spelling, "%.")
 end
@@ -595,6 +622,39 @@ end
 
 local function generate_hyph_obj(term)
 	return {syllabification = term, hyph = split_syllabified_spelling(term)}
+end
+
+
+-- Word should already be decomposed.
+local function word_has_vowels(word)
+	return rfind(word, V)
+end
+
+
+local function all_words_have_vowels(term)
+	local words = rsplit(decompose(term), "[ %-]")
+	for i, word in ipairs(words) do
+		-- Allow empty word; this occurs with prefixes and suffixes.
+		if word ~= "" and not word_has_vowels(word) then
+			return false
+		end
+	end
+	return true
+end
+
+
+local function should_generate_rhyme_from_respelling(term)
+	local words = rsplit(decompose(term), " +")
+	return #words == 1 and -- no if multiple words
+		not words[1]:find(".%-.") and -- no if word is composed of hyphenated parts (e.g. [[Austria-Hungría]])
+		not words[1]:find("%-$") and -- no if word is a prefix
+		not (words[1]:find("^%-") and words[1]:find(CFLEX)) and -- no if word is an unstressed suffix
+		word_has_vowels(words[1]) -- no if word has no vowels (e.g. a single letter)
+end
+
+
+local function should_generate_rhyme_from_ipa(ipa)
+	return not ipa:find("%s") and word_has_vowels(decompose(ipa))
 end
 
 
@@ -817,400 +877,91 @@ local function syllabify_from_spelling(text, pagename)
 	return (text:gsub("|", "%."))
 end
 
--- Generate all relevant dialect pronunciations and group into styles. See the comment above about dialects and styles.
--- A "pronunciation" here could be for example the IPA phonemic/phonetic representation of the term or the IPA form of
--- the rhyme that the term belongs to. If `style_spec` is nil, this generates all styles for all dialects, but
--- `style_spec` can also be a style spec such as "seseo" or "distincion+yeismo" (see comment above) to restrict the
--- output. `dodialect` is a function of two arguments, `ret` and `dialect`, where `ret` is the return-value table (see
--- below), and `dialect` is a string naming a particular dialect, such as "distincion-lleismo" or "rioplatense-sheismo".
--- `dodialect` should side-effect the `ret` table by adding an entry to `ret.pronun` for the dialect in question.
---
--- The return value is a table of the form
---
--- {
---   pronun = {DIALECT = {PRONUN, PRONUN, ...}, DIALECT = {PRONUN, PRONUN, ...}, ...},
---   expressed_styles = {STYLE_GROUP, STYLE_GROUP, ...},
--- }
---
--- where:
--- 1. DIALECT is a string such as "distincion-lleismo" naming a specific dialect.
--- 2. PRONUN is a table describing a particular pronunciation. If the dialect is "distincion-lleismo", there should be
---    a field in this table named `differences`, but where other fields may vary depending on the type of pronunciation
---    (e.g. phonemic/phonetic or rhyme). See below for the form of the PRONUN table for phonemic/phonetic pronunciation
---    vs. rhyme and the form of the `differences` field.
--- 3. STYLE_GROUP is a table of the form {tag = "HIDDEN_TAG", styles = {INNER_STYLE, INNER_STYLE, ...}}. This describes
---    a group of related styles (such as those for Latin America) that by default (the "hidden" form) are displayed as
---    a single line, with an icon on the right to "open" the style group into the "shown" form, with multiple lines
---    for each style in the group. The tag of the style group is the text displayed before the pronunciation in the
---    default "hidden" form, such as "Spain" or "Latin America". It can have the special value of `false` to indicate
---    that no tag text is to be displayed. Note that the pronunciation shown in the default "hidden" form is taken
---    from the first style in the style group.
--- 4. INNER_STYLE is a table of the form {tag = "SHOWN_TAG", pronun = {PRONUN, PRONUN, ...}}. This describes a single
---    style (such as for the Andes Mountains in the case where the seseo+lleismo accent differs from all others), to
---    be shown on a single line. `tag` is the text preceding the displayed pronunciation, or `false` if no tag text
---    is to be displayed. PRONUN is a table as described above and describes a particular pronunciation.
---
--- The PRONUN table has the following form for the full phonemic/phonetic pronunciation:
---
--- {
---   phonemic = "PHONEMIC",
---   phonetic = "PHONETIC",
---   differences = {FLAG = BOOLEAN, FLAG = BOOLEAN, ...},
--- }
---
--- Here, `phonemic` is the phonemic pronunciation (displayed as /.../) and `phonetic` is the phonetic pronunciation
--- (displayed as [...]).
---
--- The PRONUN table has the following form for the rhyme pronunciation:
---
--- {
---   rhyme = "RHYME_PRONUN",
---   num_syl = {NUM, NUM, ...},
---   qualifiers = nil or {QUALIFIER, QUALIFIER, ...},
---   differences = {FLAG = BOOLEAN, FLAG = BOOLEAN, ...},
--- }
---
--- Here, `rhyme` is a phonemic pronunciation such as "ado" for [[abogado]] or "iʝa"/"iʎa" for [[tortilla]] (depending
--- on the dialect), and `num_syl` is a list of the possible numbers of syllables for the term(s) that have this rhyme
--- (e.g. {4} for [[abogado]], {3} for [[tortilla]] and {4, 5} for [[biología]], which may be syllabified as
--- bio.lo.gí.a or bi.o.lo.gí.a). `num_syl` is used to generate syllable-count categories such as
--- [[Category:Rhymes:Spanish/ia/4 syllables]] in addition to [[Category:Rhymes:Spanish/ia]]. `num_syl` may be nil to
--- suppress the generation of syllable-count categories; this is typically the case with multiword terms.
--- `qualifiers`, if non-nil, comes from the user using the syntax e.g. <rhyme:iʃa<q:Buenos Aires>>.
---
--- The value of the `differences` field in the PRONUN table (which, as noted above, only needs to be present for the
--- "distincion-lleismo" dialect, and otherwise should be nil) is a table containing flags indicating whether and how
--- the per-dialect pronunciations differ. This is an optimization to avoid having to generate all six dialectal
--- pronunciations and compare them. It has the following form:
---
--- {
---   distincion_different = BOOLEAN,
---   lleismo_different = BOOLEAN,
---   need_rioplat = BOOLEAN,
---   sheismo_different = BOOLEAN,
--- }
---
--- where:
--- 1. `distincion_different` should be `true` if the "distincion" and "seseo" pronunciations differ;
--- 2. `lleismo_different` should be `true` if the "lleismo" and "yeismo" pronunciations differ;
--- 3. `need_rioplat` should be `true` if the Rioplatense pronunciations differ from the seseo+yeismo pronunciation;
--- 4. `sheismo_different` should be `true` if the "sheismo" and "zheismo" pronunciations differ.
-local function express_all_styles(style_spec, dodialect)
-	local ret = {
-		pronun = {},
-		expressed_styles = {},
-	}
-
-	local need_rioplat
-
-	-- Add a style object (see INNER_STYLE above) that represents a particular style to `ret.expressed_styles`.
-	-- `hidden_tag` is the tag text to be used when the style group containing the style is in the default "hidden"
-	-- state (e.g. "Spain", "Latin America" or false if there is only one style group and no tag text should be
-	-- shown), while `tag` is the tag text to be used when the individual style is shown (e.g. a description such as
-	-- "most of Spain and Latin America", "Andes Mountains" or "everywhere but Argentina and Uruguay").
-	-- `representative_dialect` is one of the dialects that this style represents, and whose pronunciation is stored in
-	-- the style object. `matching_styles` is a hyphen separated string listing the isoglosses described by this style.
-	-- For example, if the term has an ''ll'' but no ''c/z'', the `tag` text for the yeismo pronunciation will be
-	-- "most of Spain and Latin America" and `matching_styles` will be "distincion-seseo-yeismo", indicating that
-	-- it corresponds to both the "distincion" and "seseo" isoglosses as well as the "yeismo" isogloss. This is used
-	-- when a particular style spec is given. If `matching_styles` is omitted, it takes its value from
-	-- `representative_dialect`; this is used when the style contains only a single dialect.
-	local function express_style(hidden_tag, tag, representative_dialect, matching_styles)
-		matching_styles = matching_styles or representative_dialect
-		-- If the Rioplatense pronunciation isn't distinctive, add all Rioplatense isoglosses.
-		if not need_rioplat then
-			matching_styles = matching_styles .. "-rioplatense-sheismo-zheismo"
-		end
-		-- If style specified, make sure it matches the requested style.
-		local style_matches
-		if not style_spec then
-			style_matches = true
-		else
-			local style_parts = rsplit(matching_styles, "%-")
-			local or_styles = rsplit(style_spec, "%s*,%s*")
-			for _, or_style in ipairs(or_styles) do
-				local and_styles = rsplit(or_style, "%s*%+%s*")
-				local and_matches = true
-				for _, and_style in ipairs(and_styles) do
-					local negate
-					if and_style:find("^%-") then
-						and_style = and_style:gsub("^%-", "")
-						negate = true
-					end
-					local this_style_matches = false
-					for _, part in ipairs(style_parts) do
-						if part == and_style then
-							this_style_matches = true
-							break
-						end
-					end
-					if negate then
-						this_style_matches = not this_style_matches
-					end
-					if not this_style_matches then
-						and_matches = false
-					end
-				end
-				if and_matches then
-					style_matches = true
-					break
-				end
-			end
-		end
-		if not style_matches then
-			return
-		end
-
-		-- Fetch the representative dialect's pronunciation if not already present.
-		if not ret.pronun[representative_dialect] then
-			dodialect(ret, representative_dialect)
-		end
-		-- Insert the new style into the style group, creating the group if necessary.
-		local new_style = {
-			tag = tag,
-			pronun = ret.pronun[representative_dialect],
-		}
-		for _, hidden_tag_style in ipairs(ret.expressed_styles) do
-			if hidden_tag_style.tag == hidden_tag then
-				table.insert(hidden_tag_style.styles, new_style)
-				return
-			end
-		end
-		table.insert(ret.expressed_styles, {
-			tag = hidden_tag,
-			styles = {new_style},
-		})
-	end
-
-	-- For each type of difference, figure out if the difference exists in any of the given respellings. We do this by
-	-- generating the pronunciation for the dialect "distincion-lleismo", for each respelling. In the process of
-	-- generating the pronunciation for a given respelling, it computes how the other dialects for that respelling
-	-- differ. Then we take the union of these differences across the respellings.
-	dodialect(ret, "distincion-lleismo")
-	local differences = {}
-	for _, difftype in ipairs { "distincion_different", "lleismo_different", "need_rioplat", "sheismo_different" } do
-		for _, pronun in ipairs(ret.pronun["distincion-lleismo"]) do
-			if pronun.differences[difftype] then
-				differences[difftype] = true
-			end
-		end
-	end
-	local distincion_different = differences.distincion_different
-	local lleismo_different = differences.lleismo_different
-	need_rioplat = differences.need_rioplat
-	local sheismo_different = differences.sheismo_different
-
-	-- Now, based on the observed differences, figure out how to combine the individual dialects into styles and
-	-- style groups.
-	if not distincion_different and not lleismo_different then
-		if not need_rioplat then
-			express_style(false, false, "distincion-lleismo", "distincion-seseo-lleismo-yeismo")
-		else
-			express_style(false, "everywhere but Argentina and Uruguay", "distincion-lleismo",
-			"distincion-seseo-lleismo-yeismo")
-		end
-	elseif distincion_different and not lleismo_different then
-		express_style("Spain", "Spain", "distincion-lleismo", "distincion-lleismo-yeismo")
-		express_style("Latin America", "Latin America", "seseo-lleismo", "seseo-lleismo-yeismo")
-	elseif not distincion_different and lleismo_different then
-		express_style(false, "most of Spain and Latin America", "distincion-yeismo", "distincion-seseo-yeismo")
-		express_style(false, "rural northern Spain, Andes Mountains", "distincion-lleismo", "distincion-seseo-lleismo")
-	else
-		express_style("Spain", "most of Spain", "distincion-yeismo")
-		express_style("Latin America", "most of Latin America", "seseo-yeismo")
-		express_style("Spain", "rural northern Spain", "distincion-lleismo")
-		express_style("Latin America", "Andes Mountains", "seseo-lleismo")
-	end
-	if need_rioplat then
-		local hidden_tag = distincion_different and "Latin America" or false
-		if sheismo_different then
-			express_style(hidden_tag, "Buenos Aires and environs", "rioplatense-sheismo", "seseo-rioplatense-sheismo")
-			express_style(hidden_tag, "elsewhere in Argentina and Uruguay", "rioplatense-zheismo", "seseo-rioplatense-zheismo")
-		else
-			express_style(hidden_tag, "Argentina and Uruguay", "rioplatense-sheismo", "seseo-rioplatense-sheismo-zheismo")
-		end
-	end
-
-	-- If only one style group, don't indicate the style.
-	-- Not clear we want this in reality.
-	--if #ret.expressed_styles == 1 then
-	--	ret.expressed_styles[1].tag = false
-	--	if #ret.expressed_styles[1].styles == 1 then
-	--		ret.expressed_styles[1].styles[1].tag = false
-	--	end
-	--end
-
-	return ret
+local function css_wrap(text, classes)
+	return ('<span class="%s">%s</span>'):format(classes, text)
 end
 
-
-local function format_all_styles(expressed_styles, format_style)
-	for i, style_group in ipairs(expressed_styles) do
-		if #style_group.styles == 1 then
-			style_group.formatted, style_group.formatted_len =
-				format_style(style_group.styles[1].tag, style_group.styles[1], i == 1)
-		else
-			style_group.formatted, style_group.formatted_len =
-				format_style(style_group.tag, style_group.styles[1], i == 1)
-			for j, style in ipairs(style_group.styles) do
-				style.formatted, style.formatted_len =
-					format_style(style.tag, style, i == 1 and j == 1)
-			end
-		end
+local function format_glosses(glosses)
+	if #glosses == 0 then
+		return ""
 	end
 
-	local maxlen = 0
-	for i, style_group in ipairs(expressed_styles) do
-		local this_len = style_group.formatted_len
-		if #style_group.styles > 1 then
-			for _, style in ipairs(style_group.styles) do
-				this_len = math.max(this_len, style.formatted_len)
-			end
+	local formatted_glosses = {}
+	for _, glossobj in ipairs(glosses) do
+		local gloss_parts = {}
+		if glossobj.gloss then
+			table.insert(gloss_parts, css_wrap("“", "mention-gloss-double-quote") ..
+				css_wrap(glossobj.gloss, "mention-gloss") .. css_wrap("”", "mention-gloss-double-quote"))
 		end
-		maxlen = math.max(maxlen, this_len)
+		if glossobj.pos then
+			table.insert(gloss_parts, css_wrap(glossobj.pos, "ann-pos"))
+		end
+		table.insert(formatted_glosses, table.concat(gloss_parts, css_wrap(",", "mention-gloss-comma") .. " "))
 	end
 
-	local lines = {}
-
-	local need_major_hack = false
-	for i, style_group in ipairs(expressed_styles) do
-		if #style_group.styles == 1 then
-			table.insert(lines, style_group.formatted)
-			need_major_hack = false
-		else
-			local inline = '\n<div class="vsShow" style="display:none">\n' .. style_group.formatted .. "</div>"
-			local full_prons = {}
-			for _, style in ipairs(style_group.styles) do
-				table.insert(full_prons, style.formatted)
-			end
-			local full = '\n<div class="vsHide">\n' .. table.concat(full_prons, "\n") .. "</div>"
-			local em_length = math.floor(maxlen * 0.68) -- from [[Module:grc-pronunciation]]
-			table.insert(lines, '<div class="vsSwitcher" data-toggle-category="pronunciations" style="width: ' .. em_length .. 'em; max-width:100%;"><span class="vsToggleElement" style="float: right;">&nbsp;</span>' .. inline .. full .. "</div>")
-			need_major_hack = true
-		end
-	end
-
-	-- major hack to get bullets working on the next line after a div box
-	return table.concat(lines, "\n") .. (need_major_hack and "\n<span></span>" or "")
+	return " " .. css_wrap("(", "mention-gloss-paren annotation-paren") ..
+		table.concat(formatted_glosses, css_wrap(";", "mention-gloss-semicolon") .. " ") ..
+		css_wrap(")", "mention-gloss-paren annotation-paren")
 end
 
+local function format_pronuns(parsed)
+	local pronunciations = {}
 
-local function dodialect_pronun(parsed)
-end
+	-- Loop through each pronunciation. For each one, add the phonemic and phonetic versions to `pronunciations`,
+	-- for formatting by [[Module:IPA]].
+	for j, pronun in ipairs(parsed.pronun) do
+		local qs = pronun.q
 
-local function generate_pronun(parsed)
-	local function this_dodialect_pronun(ret, dialect)
-		dodialect_pronun(parsed, ret, dialect)
-	end
+		local first_pronun = #pronunciations + 1
 
-	local ret = express_all_styles(parsed.style, this_dodialect_pronun)
-
-	local function format_style(tag, expressed_style, is_first)
-		local pronunciations = {}
-		local formatted_pronuns = {}
-
-		local function ins(formatted_part)
-			table.insert(formatted_pronuns, formatted_part)
+		if not pronun.phonemic and not pronun.phonetic then
+			error("Internal error: Saw neither phonemic nor phonetic pronunciation")
 		end
 
-		-- Loop through each pronunciation. For each one, add the phonemic and phonetic versions to `pronunciations`,
-		-- for formatting by [[Module:IPA]], and also create an approximation of the formatted version so that we can
-		-- compute the appropriate width of the HTML switcher div box that holds the different per-dialect variants.
-		-- NOTE: The code below constructs the formatted approximation out-of-order in some cases but that doesn't
-		-- currently matter because we assume all characters have the same width. If we change the width computation
-		-- in a way that requires the correct order, we need changes to the code below.
-		for j, pronun in ipairs(expressed_style.pronun) do
-			-- Add tag to left qualifiers if first one
-			-- FIXME: Consider using accent qualifier for the tag instead.
-			local qs = pronun.q
-			if j == 1 and tag then
-				if qs then
-					qs = m_table.deepcopy(qs)
-					table.insert(qs, tag)
-				else
-					qs = {tag}
-				end
-			end
-
-			local first_pronun = #pronunciations + 1
-
-			if not pronun.phonemic and not pronun.phonetic then
-				error("Internal error: Saw neither phonemic nor phonetic pronunciation")
-			end
-
-			if pronun.phonemic then -- missing if 'raw:[...]' given
-				-- don't display syllable division markers in phonemic
-				local slash_pron = "/" .. pronun.phonemic:gsub("%.", "") .. "/"
-				table.insert(pronunciations, {
-					pron = slash_pron,
-				})
-				ins(slash_pron)
-			end
-
-			if pronun.phonetic then -- missing if 'raw:/.../' given
-				local bracket_pron = "[" .. pronun.phonetic .. "]"
-				table.insert(pronunciations, {
-					pron = bracket_pron,
-				})
-				ins(bracket_pron)
-			end
-
-			local last_pronun = #pronunciations
-
-			if qs then
-				pronunciations[first_pronun].q = qs
-			end
-			if pronun.a then
-				pronunciations[first_pronun].a = pronun.a
-			end
-			if j > 1 then
-				pronunciations[first_pronun].separator = ", "
-				ins(", ")
-			end
-			if pronun.qq then
-				pronunciations[last_pronun].qq = pronun.qq
-			end
-			if pronun.aa then
-				pronunciations[last_pronun].aa = pronun.aa
-			end
-			if qs or pronun.a or pronun.qq or pronun.aa then
-				local data = {
-					q = qs,
-					a = pronun.a,
-					qq = pronun.qq,
-					aa = pronun.aa
-				}
-				-- Note: This inserts the actual formatted qualifier text, including HTML and such, but the later call
-				-- to textual_len() removes all HTML and reduces links.
-				ins(require("Module:pron qualifier").format_qualifiers(data, ""))
-			end
-
-			if pronun.refs then
-				pronunciations[last_pronun].refs = pronun.refs
-				-- Approximate the reference using a footnote notation. This will be slightly inaccurate if there are
-				-- more than nine references but that is rare.
-				ins(string.rep("[1]", #pronun.refs))
-			end
-			if first_pronun ~= last_pronun then
-				pronunciations[last_pronun].separator = " "
-				ins(" ")
-			end
+		if pronun.phonemic then -- missing if 'raw:[...]' given
+			-- don't display syllable division markers in phonemic
+			local slash_pron = "/" .. pronun.phonemic:gsub("%.", "") .. "/"
+			table.insert(pronunciations, {
+				pron = slash_pron,
+			})
 		end
 
-		local bullet = string.rep("*", parsed.bullets) .. " "
-		-- Here we construct the formatted line in `formatted`, and also try to construct the equivalent without HTML
-		-- and wiki markup in `formatted_for_len`, so we can compute the approximate textual length for use in sizing
-		-- the toggle box with the "more" button on the right.
-		local pre = is_first and parsed.pre and parsed.pre .. " " or ""
-		local post = is_first and parsed.post and " " .. parsed.post or ""
-		local formatted = bullet .. pre .. m_IPA.format_IPA_full(lang, pronunciations, nil, "") .. post
-		local formatted_for_len = bullet .. pre .. "IPA(key): " .. table.concat(formatted_pronuns) .. post
-		return formatted, textual_len(formatted_for_len)
+		if pronun.phonetic then -- missing if 'raw:/.../' given
+			local bracket_pron = "[" .. pronun.phonetic .. "]"
+			table.insert(pronunciations, {
+				pron = bracket_pron,
+			})
+		end
+
+		local last_pronun = #pronunciations
+
+		if pronun.q then
+			pronunciations[first_pronun].q = pronun.q
+		end
+		if j > 1 then
+			pronunciations[first_pronun].separator = ", "
+		end
+		if pronun.qq then
+			pronunciations[last_pronun].qq = pronun.qq
+		end
+
+		if pronun.refs then
+			pronunciations[last_pronun].refs = pronun.refs
+		end
+		if first_pronun ~= last_pronun then
+			pronunciations[last_pronun].separator = " "
+		end
 	end
 
-	ret.text = format_all_styles(ret.expressed_styles, format_style)
-
-	return ret
+	local bullet = string.rep("*", parsed.bullets) .. " "
+	-- Here we construct the formatted line in `formatted`, and also try to construct the equivalent without HTML
+	-- and wiki markup in `formatted_for_len`, so we can compute the approximate textual length for use in sizing
+	-- the toggle box with the "more" button on the right.
+	local pre = is_first and parsed.pre and parsed.pre .. " " or ""
+	local post = is_first and parsed.post and " " .. parsed.post or ""
+	local formatted = bullet .. pre .. m_IPA.format_IPA_full(lang, pronunciations, nil, "") ..
+		format_glosses(parsed.t) .. post
+	return formatted
 end
 
 
@@ -1365,7 +1116,7 @@ function export.show_full(frame)
 	--
 	-- {
 	--   pos = "POS" or nil,
-	--   gloss = "GLOSS",
+	--   gloss = "GLOSS" or nil,
 	-- }
 	for i, respelling in ipairs(respellings) do
 		if respelling:find("<") then
@@ -1504,20 +1255,6 @@ function export.show_full(frame)
 		return false
 	end
 
-	-- Gather pronunciation properties for each respelling. 
-	for i=1, #output.IPA do
-		local IPA_object = {
-			data = output.IPA[i],
-			audio = audio_output[i],
-			accent = IPA_accent_list[i],
-			qualifier = IPA_q_list[i],
-			syll_count = true,
-			exclude_rhyme = false
-		}
-
-		table.insert(IPA_object_list, IPA_object)
-	end
-
 	-- Loop over individual respellings, processing each.
 	for _, parsed in ipairs(parsed_respellings) do
 		-- First, sort the specified accents and default to "Standard Tagalog".
@@ -1546,7 +1283,7 @@ function export.show_full(frame)
 		local is_standard_tagalog = m_table.contains(parsed.accents, "Standard Tagalog")
 		local all_terms_no_rhyme = more_than_one_respelling and doesnt_count_for_rhyme(parsed.accents)
 
-		local retval = {}
+		local pronuns = {}
 		for i, term in ipairs(parsed.terms) do
 			-- Same check as above for colloquial/obsolete/relaxed but check the qualifiers, which are attached to
 			-- individual respellings rather than a single-line set of respellings.
@@ -1587,62 +1324,42 @@ function export.show_full(frame)
 				qq = term.qq,
 			}
 
-			table.insert(retval, pronobj)
+			table.insert(pronuns, pronobj)
 
 			-- If [fvz] present in phonemic pronunciation, generate a "more native-sounding" variant with [pbs] in
 			-- place.
 			local fvz_pronobj
-			if phonemic:find("[fvz]") then
+			if pronobj.phonemic:find("[fvz]") then
 				local fvz_charmap = { ["f"] = "p", ["v"] = "b", ["z"] = "s"}
-				phonemic = phonemic:gsub("[fvz]", fvz_charmap)
-				phonetic = phonetic:gsub("[fvz]", fvz_charmap)
 				fvz_pronobj = {
 					raw = pronobj.raw,
-					phonemic = phonemic,
-					phonetic = phonetic,
+					phonemic = pronobj.phonemic:gsub("[fvz]", fvz_charmap),
+					phonetic = pronobj.phonetic:gsub("[fvz]", fvz_charmap),
 					refs = pronobj.refs,
 					q = combine_qualifiers(pronobj.q, {"more native-sounding"}),
 					qq = pronobj.qq,
 				}
-				table.insert(retval, fvz_pronobj)
+				table.insert(pronuns, fvz_pronobj)
 			end
 
-			if m_table.contains(
 			-- If the phonemic form of any generated IPA contains a non-final word ending in a glottal stop, augment the
 			-- IPA's with an additional entry where the phonemic glottal stop becomes optional and the phonetic glottal
 			-- stop is converted to a long vowel.
-			local IPA_count = 1
-			while IPA_count <= #IPA_object_list do
-				local skip = 0
-				-- Manila glottal stop elision
-				if IPA_object_list[IPA_count].data[1]["pron"]:find("ʔ ") and m_table.contains(IPA_object_list[IPA_count].accent, "Standard Tagalog") then
-					if not (IPA_object_list[IPA_count].qualifier) then
-						IPA_object_list[IPA_count].qualifier = {}
-					end
-
-					local gl_qual = m_table.shallowcopy(IPA_object_list[IPA_count].qualifier)
-					local gl_caption = "with glottal stop elision"
-					if not (m_table.tableContains(gl_qual, gl_caption)) then
-						table.insert(gl_qual, gl_caption)
-					end
-					table.insert(IPA_object_list, IPA_count+1, {
-						data = {
-							{["pron"] = rsub(IPA_object_list[IPA_count].data[1]["pron"], "ʔ ", "(ʔ) ")},
-							{["pron"] = rsub(IPA_object_list[IPA_count].data[2]["pron"], "ʔ ", "ː ")}
-						},
-						audio = nil,
-						accent = IPA_object_list[IPA_count].accent,
-						qualifier = gl_qual,
-						syll_count = false,
-						exclude_rhyme = true
-					})
-					skip = skip + 1
-				end
-				IPA_count = IPA_count + 1 + skip
+			local pronobj_for_ipa_check = fvz_pronobj or pronobj
+			if is_standard_tagalog and pronobj_for_ipa_check.phonemic:find("ʔ ") then
+				local glottal_stop_pronobj = {
+					raw = pronobj_for_ipa_check.raw,
+					phonemic = pronobj_for_ipa_check:gsub("ʔ ", "(ʔ) "),
+					phonetic = pronobj_for_ipa_check:gsub("ʔ ", "ː "),
+					refs = pronobj_for_ipa_check.refs,
+					q = combine_qualifiers(pronobj_for_ipa_check.q, {"with glottal stop elision"}),
+					qq = pronobj_for_ipa_check.qq,
+				}
+				table.insert(pronuns, glottal_stop_pronobj)
 			end
-
 		end
-		parsed.pronun = generate_pronun(parsed)
+		parsed.pronuns = pronuns
+
 		local no_auto_rhyme = false
 		for _, term in ipairs(parsed.terms) do
 			if term.raw then
@@ -1681,66 +1398,32 @@ function export.show_full(frame)
 		end
 
 		-- Generate the rhymes.
-		local function dodialect_rhymes_from_pronun(rhyme_ret, dialect)
-			rhyme_ret.pronun[dialect] = {}
-			-- It's possible the pronunciation for a passed-in dialect was never generated. This happens e.g. with
-			-- {{es-pr|cebolla<style:seseo>}}. The initial call to generate_pronun() fails to generate a pronunciation
-			-- for the dialect 'distinction-yeismo' because the pronunciation of 'cebolla' differs between distincion
-			-- and seseo and so the seseo style restriction rules out generation of pronunciation for distincion
-			-- dialects (other than 'distincion-lleismo', which always gets generated so as to determine on which axes
-			-- the dialects differ). However, when generating the rhyme, it is based only on -olla, whose pronunciation
-			-- does not differ between distincion and seseo, but does differ between lleismo and yeismo, so it needs to
-			-- generate a yeismo-specific rhyme, and 'distincion-yeismo' is the representative dialect for yeismo in the
-			-- situation where distincion and seseo do not have distinct results (based on the following line in
-			-- express_all_styles()):
-			--   express_style(false, "most of Spain and Latin America", "distincion-yeismo", "distincion-seseo-yeismo")
-			-- In this case we need to generate the missing overall pronunciation ourselves since we need it to generate
-			-- the dialect-specific rhyme pronunciation.
-			if not parsed.pronun.pronun[dialect] then
-				dodialect_pronun(parsed, parsed.pronun, dialect)
-			end
-			for _, pronun in ipairs(parsed.pronun.pronun[dialect]) do
-				-- We should have already excluded multiword terms and terms without vowels from rhyme generation (see
-				-- `no_auto_rhyme` below). But make sure to check that pronun.phonemic exists (it may not if raw
-				-- phonetic-only pronun is given).
-				if pronun.phonemic then
-					-- Count number of syllables by looking at syllable boundaries (including stress marks).
-					local num_syl = get_num_syl_from_phonemic(pronun.phonemic)
-					-- Get the rhyme by truncating everything up through the last stress mark + any following
-					-- consonants, and remove syllable boundary markers.
-					local rhyme = convert_phonemic_to_rhyme(pronun.phonemic)
-					local saw_already = false
-					for _, existing in ipairs(rhyme_ret.pronun[dialect]) do
-						if existing.rhyme == rhyme then
-							saw_already = true
-							-- We already saw this rhyme but possibly with a different number of syllables,
-							-- e.g. if the user specified two pronunciations 'biología' (4 syllables) and
-							-- 'bi.ología' (5 syllables), both of which have the same rhyme /ia/.
-							m_table.insertIfNot(existing.num_syl, num_syl)
-							break
-						end
+		for _, pronun in ipairs(parsed.pronuns) do
+			-- We should have already excluded multiword terms and terms without vowels from rhyme generation (see
+			-- `no_auto_rhyme` below). But make sure to check that pronun.phonemic exists (it may not if raw
+			-- phonetic-only pronun is given).
+			if pronun.phonemic then
+				-- Count number of syllables by looking at syllable boundaries (including stress marks).
+				local num_syl = get_num_syl_from_phonemic(pronun.phonemic)
+				-- Get the rhyme by truncating everything up through the last stress mark + any following
+				-- consonants, and remove syllable boundary markers.
+				local rhyme = convert_phonemic_to_rhyme(pronun.phonemic)
+				local saw_already = false
+				for _, existing in ipairs(rhyme_ret.pronun[dialect]) do
+					if existing.rhyme == rhyme then
+						saw_already = true
+						-- We already saw this rhyme but possibly with a different number of syllables,
+						-- e.g. if the user specified two pronunciations 'biología' (4 syllables) and
+						-- 'bi.ología' (5 syllables), both of which have the same rhyme /ia/.
+						m_table.insertIfNot(existing.num_syl, num_syl)
+						break
 					end
-					if not saw_already then
-						local rhyme_diffs = nil
-						if dialect == "distincion-lleismo" then
-							rhyme_diffs = {}
-							if rhyme:find("θ") then
-								rhyme_diffs.distincion_different = true
-							end
-							if rhyme:find("ʎ") then
-								rhyme_diffs.lleismo_different = true
-							end
-							if rfind(rhyme, "[ʎɟ]") then
-								rhyme_diffs.sheismo_different = true
-								rhyme_diffs.need_rioplat = true
-							end
-						end
-						table.insert(rhyme_ret.pronun[dialect], {
-							rhyme = rhyme,
-							num_syl = {num_syl},
-							differences = rhyme_diffs,
-						})
-					end
+				end
+				if not saw_already then
+					table.insert(rhyme_ret.pronun[dialect], {
+						rhyme = rhyme,
+						num_syl = {num_syl},
+					})
 				end
 			end
 		end
@@ -1963,7 +1646,8 @@ function export.show_full(frame)
 end
 
 
-function export.show_full(frame)
+-- Old entry point for {{tl-pr}}, using old parameters.
+function export.show_full_old(frame)
 	---Process parameters---
 	local parargs = frame:getParent().args
 	local params = {
@@ -1990,11 +1674,126 @@ function export.show_full(frame)
 	---Hyphenation---
 	if args.nohyph == 0 then
 		local hyph_args = args[1]
-
+		
+		local function removeAccents(str)
+			str = toNFD(str)
+			str = rsub(str, ".[" .. TILDE .. DIA .. "]", {
+				["n" .. TILDE] = "ñ",
+				["u" .. DIA] = "ü",
+				["e" .. DIA] = "ë",
+			})
+			str = rsub(str, "(.)" .. accent_c, "%1")
+			return str
+		end
+		
 		local text = hyph_args[1] or mw.title.getCurrentTitle().text
-
+		
+		local function hyphenate(text)
+			-- Auto hyphenation start --
+			local vowel = vowel .. "ẃý" -- vowel 
+			local V = "[" .. vowel .. "]"
+			local C = "[^" .. vowel .. separator .. "]" -- consonant
+			
+			text = removeAccents(text)
+			
+			origtext = text
+			text = string.lower(text)
+			
+			-- put # at word beginning and end and double ## at text/foot boundary beginning/end
+			text = rsub(text, " | ", "# | #")
+			text = "##" .. rsub(text, " ", "# #") .. "##"
+			text = rsub_repeatedly(text, "([.]?)#([.]?)", "#")
+			
+			text = rsub(text, "ng", "ŋ")
+			text = rsub(text, "ch", "ĉ")
+			text = rsub(text, "sh", "ʃ")
+			text = rsub(text, "gui([aeëo])", "gui.%1")
+			text = rsub(text, "r", "ɾ")
+			text = rsub(text, "ɾɾ", "r")
+			
+			text = rsub_repeatedly(text, "([^" .. vowel ..  "])([u])([" .. AC .. MACRON .. "]?)([aeio])("  .. accent_c .. "?)","%1%2%3.%4%5")
+			text = rsub_repeatedly(text, "(" .. V ..  ")([u])([" .. AC .. MACRON .. "]?)([aeio])("  .. accent_c .. "?)","%1.u%3%4%5")
+			text = rsub_repeatedly(text, "(" .. V ..  ")([o])([" .. AC .. MACRON .. "]?)([aei])("  .. accent_c .. "?)","%1.o%3%4%5")
+			text = rsub(text, "([i])([" .. AC .. MACRON .. "])([aeou])("  .. accent_c .. "?)","%1%2#í%3%4")
+			text = rsub(text, "([i])([aeou])(" .. accent_c .. "?)","í%2%3")
+			text = rsub(text, "a([".. AC .."]*)o([#.])","a%1ó%2")
+		
+			text = rsub(text, "y([ˈˌ.]*)([bćĉdfɡhjĵklmnɲŋpɾrsʃtvwɟzʔ#" .. vowel .. "])","ý%1%2")
+			text = rsub(text, "ý(" .. V .. ")", "y%1")
+			text = rsub(text, "w([ˈˌ]?)([bćĉdfɡjĵklmnɲŋpɾrsʃtvwɟzʔ#" .. vowel .. "])","ẃ%1%2")
+			text = rsub(text, "ẃ(" .. V .. ")","w%1")
+		
+			text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*)(" .. C .. V .. ")", "%1.%2")
+			
+			-- "mb", "mp", "nd", "nk", "nt" combinations
+			text = rsub_repeatedly(text, "(m)([bp])([^lɾrɟyw" .. vowel .. separator .."])", "%1%2.%3")
+			text = rsub_repeatedly(text, "(n)([dkt])([^lɾrɟyw" .. vowel .. separator .. "])", "%1%2.%3")
+			text = rsub_repeatedly(text, "(ŋ)([k])([^lɾrɟyw" .. vowel .. separator ..  "])", "%1%2.%3")
+			text = rsub_repeatedly(text, "([ɾr])([bkdfɡklmnpsʃtvz])([^lɾrɟyw" .. vowel .. separator ..  "])", "%1%2.%3")
+			
+			text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*" .. C .. ")(" .. C .. V .. ")", "%1.%2")
+			text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*" .. C .. "+)(" .. C .. C .. V .. ")", "%1.%2")
+			text = rsub_repeatedly(text, "(" .. C .. ")%.s(" .. C .. ")", "%1s.%2")
+			
+			-- Any aeo, or stressed iu, should be syllabically divided from a following aeo or stressed iu.
+			text = rsub_repeatedly(text, "([aeo]" .. accent_c .. "*)([aeo])", "%1.%2")
+			text = rsub_repeatedly(text, "([aeo]" .. accent_c .. "*)(" .. V .. AC .. ")", "%1.%2")
+			text = rsub(text, "([iuə]" .. AC .. ")([aeo])", "%1.%2")
+			text = rsub_repeatedly(text, "([iuə]" .. AC .. ")(" .. V .. AC .. ")", "%1.%2")
+			text = rsub_repeatedly(text, "i(" .. accent_c .. "*)i", "i%1.i")
+			text = rsub_repeatedly(text, "u(" .. accent_c .. "*)u", "u%1.u")
+		
+			text = rsub(text, "ĉ", "ch")
+			text = rsub(text, "ŋ", "ng")
+			text = rsub(text, "ʃ", "sh")
+			text = rsub(text, "r", "rr")
+			text = rsub(text, "ɾ", "r")
+			text = removeAccents(text)
+			
+			text = rsub_repeatedly(text, "([.]+)", ".")
+			text = rsub(text, "[.]?-[.]?", "-")
+			text = rsub(text, "[‿]([^ ])", "|%1")
+			text = rsub(text, "[.]([^ ])", "|%1")
+		
+			text = rsub(text, "([gq])([u])|([ei])", "%1%2%3")
+			text = rsub(text, "([^ 0-9]?)([7])([^ 0-9]?)", "%1%3")
+			text = rsub(text, "([|])+", "%1")
+			
+			-- remove # symbols at word and text boundaries
+			text = rsub_repeatedly(text, "([.]?)#([.]?)", "")
+			
+			-- Fix Capitalization --
+			local syllbreak = 0
+			for i=1, #text do
+			    if text:sub(i,i) == "|" and origtext:sub(i-syllbreak, i-syllbreak) ~= "." and origtext:sub(i-syllbreak, i-syllbreak) ~= "7" then
+			    	syllbreak = syllbreak + 1
+			    elseif origtext:sub(i-syllbreak, i-syllbreak) == text:sub(i,i):upper() then
+			    	text = table.concat({text:sub(1, i-1), text:sub(i,i):upper(), text:sub(i+1)}) 
+			    end
+			end
+			
+			-- Fix hyphens --
+			origtext = mw.title.getCurrentTitle().text
+			
+			if (table.concat(rsplit(origtext, "-")) ==  table.concat(rsplit(table.concat(rsplit(text, "|")), "-"))) then
+				syllbreak = 0
+				for i=1, #text do
+				    if text:sub(i,i) == "|" then
+				    	if origtext:sub(i-syllbreak, i-syllbreak) == "-" then
+					    	text = table.concat({text:sub(1, i-1), "-", text:sub(i+1)}) 
+					    else
+					    	syllbreak = syllbreak + 1
+					    end	
+				    end
+				end
+			end
+			
+			text = rsplit(text, "|")
+			return text
+		end
+		
 		text = hyphenate(text)
-
+		
 		-- Determine whether manual hyphenation is given (more than one numbered argument is present), and
 		-- categorize redundant hyphenations.
 		if (#hyph_args == 1 and hyph_args[1] == mw.title.getCurrentTitle().text) or 
@@ -2003,19 +1802,19 @@ function export.show_full(frame)
 		elseif #hyph_args > 1 then
 			text = hyph_args
 		end
-
+		
 		-- Store hyphenation(s) in hyph_data (passed to [[Module:hyphenation]]) and compute maximum hyph_data
 		-- argument.
 		local max_hyph_ct = 0
 		for key, syllable in pairs(text) do
 			if type(key) == "number" then
-				hyph_data[tonumber(key)+1] = remove_accents(syllable)
+				hyph_data[tonumber(key)+1] = removeAccents(syllable)
 				if tonumber(key)+1 > max_hyph_ct then
 					max_hyph_ct = tonumber(key)+1
 				end
 			end
 		end
-
+		
 		-- Separate the hyphenations and concatenate each one to form a word. Below, we check that each
 		-- hyphenation matches the pagename and categorize into an error category if not.
 		local hyph_check = {}
@@ -2030,13 +1829,13 @@ function export.show_full(frame)
 				table.insert(hyph_check, "")
 			end
 		end
-
+		
 		for _, hyph_word in ipairs(hyph_check) do
 			if (hyph_word ~= mw.title.getCurrentTitle().text) then
-				table.insert(categories, ("%s terms with hyphenation errors"):format(lang:getCanonicalName()))
+				table.insert(categories, ("%s terms with hyphenation errors"):format(lang:getCanonicalName()))	
 			end
 		end
-
+		
 		-- Actually hyphenate.
 		output.syll = require("Module:hyphenation").hyphenate(hyph_data)
 	end
