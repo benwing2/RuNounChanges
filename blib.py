@@ -298,43 +298,84 @@ def find_max_term_index(t, first_numeric=None, named_params=None):
       retval = max(retval, index)
   return retval
 
-# Retrieve a chain of parameters from template T, where the first parameter
-# is named FIRST, and the remainder are named PREF2, PREF3, etc. FIRST can be
-# a list of parameters to try in turn. If FIRSTDEFAULT is given, use if FIRST
-# is missing or empty. This also checks for PREF if not the same as FIRST or
-# (if FIRST is a list) any element of FIRST, and PREF1, because the
-# parameter-handling code checks for both. Finally, it allows gaps in the
-# numbered parameters, because the parameter-handling code allows them.
-def fetch_param_chain(t, first, pref=None, firstdefault=""):
-  is_number = type(first) is not list and re.search("^[0-9]+$", first)
+class ParameterError(Exception):
+  pass
+
+# Retrieve a chain of parameters from template `t`, where the first parameter is named `first`, and the remainder are
+# named `pref`2, `pref`3, etc. If `pref` is omitted (the default), the remainder are named `first`2, `first`3, etc. if
+# `pref` is non-numeric, and sequentially higher numbers if `pref` is numeric. If `pref` is given, `first` can be a list
+# of parameters, any of which can be specified. (If `pref` is not given and `first` is a list, an assertion error is
+# thrown.) The code also checks for a parameter named `pref`1 (or `first`1 if `pref` is omitted), and uses it as the
+# first value if `first` is missing or empty (or, if `first` is a list, all specified parameters are missing or empty).
+# Note that if `first` and `pref` are specified, it is an error (see below) if a parameter named `pref` exists (even if
+# empty), unless the value of `pref` is contained in the `first` list. If `first` is a list, all members are treated as
+# aliases, and it is an error (see below) if more than one parameter in a `first` list has a value (see below). It is
+# likewise an error if `pref`1 and any member of `first` both exist, since they are aliases.
+#
+# Treatment of gaps depends on the value of `holes`. If "close" (the default), holes are closed in the returned list by
+# moving all parameters after the gap down by one. If "allow", holes are left with a value of None in the returned list.
+# If "disallow", it is an error (see below) if any holes are found.
+#
+# Handling of parameter errors (see above) depends on the value of `errors`. If "throw" (the default), ParameterError
+# is thrown. If "return", a string specifying the error message is returned.
+def fetch_param_chain(t, first, pref=None, firstdefault="", holes="close", errors="throw"):
+  is_number = pref is None and type(first) is not list and re.search("^[0-9]+$", first)
+  assert first != "", "first= may not be an empty string"
+  if type(first) is list:
+    assert "" not in first, "first= may not contain an empty string"
+  assert pref != "", "pref= may not be an empty string"
+  assert holes in ["close", "allow", "disallow"], "holes=%s must be one of 'close', 'allow' or 'disallow'" % holes
   if pref is None:
     assert type(first) is not list, "If pref= is omitted, first= must not be a list"
     pref = "" if is_number else first
   ret = []
   if type(first) is not list:
     first = [first]
-  val = None
+  saw_first = None
+  def handle_error(err):
+    if errors == "throw":
+      raise ParameterError(err)
+    return "Parameter error: %s" % err
   for f in first:
     val = getparam(t, f)
     if val:
+      if saw_first is not None:
+        return handle_error("Saw both %s= and %s=, which are aliases: %s" % (saw_first, f, str(t)))
+      saw_first = f
       ret.append(val)
-      break
-  else:
-    # no break
-    if firstdefault:
-      ret.append(firstdefault)
-  if pref and pref not in first:
-    val = getparam(t, pref)
+  if pref:
+    if pref not in first and t.has(pref):
+      return "Parameter error: Saw unrecognized param %s=: %s" % (pref, str(t))
+    param = pref + "1"
+    val = getparam(t, param)
     if val:
+      if saw_first is not None:
+        return handle_error("Saw both %s= and %s=, which are aliases: %s" % (saw_first, param, str(t)))
+      saw_first = param
       ret.append(val)
-  first_num = 1 if not is_number or pref else int(first[0]) + 1
-  maxind = find_max_term_index(t, first_numeric=1) if is_number and not pref else find_max_term_index(t, named_params=[pref])
+  if saw_first is None:
+    ret.append(None)
+  assert pref or is_number
+  first_num = 2 if pref else int(first[0]) + 1
+  maxind = find_max_term_index(t, first_numeric=1) if is_number else find_max_term_index(t, named_params=[pref])
   for i in range(first_num, maxind + 1):
     param = pref + str(i)
-    if param not in first:
-      val = getparam(t, param)
-      if val:
+    val = getparam(t, param) or None
+    if val is None:
+      if holes == "allow":
         ret.append(val)
+      elif holes == "disallow":
+        return handle_error("Saw hole in %s%s= and holes='disallow': %s" % (pref, i, str(t)))
+    else:
+      ret.append(val)
+  if ret[0] is None:
+    if len(ret) > 1:
+      if holes == "close":
+        del ret[0]
+      elif holes == "disallow":
+        return handle_error("Saw hole at beginning and holes='disallow': %s" % str(t))
+    else:
+      return [firstdefault] if firstdefault else []
   return ret
 
 def append_param_to_chain(t, val, firstparam, parampref=None, before=None):
