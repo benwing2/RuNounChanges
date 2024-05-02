@@ -658,6 +658,64 @@ local function should_generate_rhyme_from_ipa(ipa)
 end
 
 
+local function dodialect_specified_rhymes(rhymes, hyphs, parsed_respellings, rhyme_ret, dialect)
+	rhyme_ret.pronun[dialect] = {}
+	for _, rhyme in ipairs(rhymes) do
+		local num_syl = rhyme.num_syl
+		local no_num_syl = false
+
+		-- If user explicitly gave the rhyme but didn't explicitly specify the number of syllables, try to take it from
+		-- the hyphenation.
+		if not num_syl then
+			num_syl = {}
+			for _, hyph in ipairs(hyphs) do
+				if should_generate_rhyme_from_respelling(hyph.syllabification) then
+					local this_num_syl = 1 + ulen(rsub(hyph.syllabification, "[^.]", ""))
+					m_table.insertIfNot(num_syl, this_num_syl)
+				else
+					no_num_syl = true
+					break
+				end
+			end
+			if no_num_syl or #num_syl == 0 then
+				num_syl = nil
+			end
+		end
+
+		-- If that fails and term is single-word, try to take it from the phonemic.
+		if not no_num_syl and not num_syl then
+			for _, parsed in ipairs(parsed_respellings) do
+				for dialect, pronun in pairs(parsed.pronun.pronun[dialect]) do
+					-- Check that pronun.phonemic exists (it may not if raw phonetic-only pronun is given).
+					if pronun.phonemic then
+						if not should_generate_rhyme_from_ipa(pronun.phonemic) then
+							no_num_syl = true
+							break
+						end
+						-- Count number of syllables by looking at syllable boundaries (including stress marks).
+						local this_num_syl = get_num_syl_from_phonemic(pronun.phonemic)
+						m_table.insertIfNot(num_syl, this_num_syl)
+					end
+				end
+				if no_num_syl then
+					break
+				end
+			end
+			if no_num_syl or #num_syl == 0 then
+				num_syl = nil
+			end
+		end
+
+		table.insert(rhyme_ret.pronun[dialect], {
+			rhyme = rhyme.rhyme,
+			num_syl = num_syl,
+			qualifiers = rhyme.qualifiers,
+			differences = construct_default_differences(dialect),
+		})
+	end
+end
+
+
 local function parse_pron_modifier(arg, parse_err, generate_obj, param_mods, no_split_on_comma)
 	local retval = {}
 
@@ -1224,23 +1282,6 @@ function export.show_full(frame)
 		end
 	end
 
-	local accent_no_count = {"colloquial", "obsolete", "relaxed"}
-	local accent_order = m_table.invert {
-		"Standard Tagalog",
-		"dialectal",
-		"Bataan", 
-		"Bulacan", 
-		"Nueva Ecija", 
-		"Southern Tagalog", 
-		"Cavite", 
-		"Laguna",
-		"Batangas",
-		"Teresa-Morong", 
-		"Tayabas", 
-		"Marinduque", 
-		"Old Tagalog"
-	}
-
 	local function doesnt_count_for_rhyme(list)
 		if not list then
 			return false
@@ -1262,21 +1303,6 @@ function export.show_full(frame)
 			parsed.accents = {"Standard Tagalog"}
 		end
 
-		-- If multiple accents given, sort according to the accent order listed above. Unrecognized accents go
-		-- at the end.
-		table.sort(parsed.accents, 
-			function(a, b)
-				-- 100 is an arbitrary high number for sorting
-				local acc_a = accent_order[a] or 100
-				local acc_b = accent_order[b] or 100
-				if acc_a == acc_b then
-					-- Fall back to lexical sort.
-					return a < b
-				else
-					return acc_a < acc_b
-				end
-			end
-		)
 		-- If more than one respelling given, then if any accent or qualifier has the words 'colloquial', 'obsolete' or
 		-- 'relaxed' in them, don't generate a rhyme or a '#-syllable word' category.
 		local more_than_one_respelling = #parsed.terms > 1 or #parsed_respellings > 1
@@ -1397,41 +1423,42 @@ function export.show_full(frame)
 			end
 		end
 
-		-- Generate the rhymes.
-		for _, pronun in ipairs(parsed.pronuns) do
-			-- We should have already excluded multiword terms and terms without vowels from rhyme generation (see
-			-- `no_auto_rhyme` below). But make sure to check that pronun.phonemic exists (it may not if raw
-			-- phonetic-only pronun is given).
-			if pronun.phonemic then
-				-- Count number of syllables by looking at syllable boundaries (including stress marks).
-				local num_syl = get_num_syl_from_phonemic(pronun.phonemic)
-				-- Get the rhyme by truncating everything up through the last stress mark + any following
-				-- consonants, and remove syllable boundary markers.
-				local rhyme = convert_phonemic_to_rhyme(pronun.phonemic)
-				local saw_already = false
-				for _, existing in ipairs(rhyme_ret.pronun[dialect]) do
-					if existing.rhyme == rhyme then
-						saw_already = true
-						-- We already saw this rhyme but possibly with a different number of syllables,
-						-- e.g. if the user specified two pronunciations 'biología' (4 syllables) and
-						-- 'bi.ología' (5 syllables), both of which have the same rhyme /ia/.
-						m_table.insertIfNot(existing.num_syl, num_syl)
-						break
-					end
-				end
-				if not saw_already then
-					table.insert(rhyme_ret.pronun[dialect], {
-						rhyme = rhyme,
-						num_syl = {num_syl},
-					})
-				end
-			end
-		end
-
 		if #parsed.rhyme == 0 then
 			if overall_rhyme or no_auto_rhyme then
 				parsed.rhyme = nil
 			else
+				-- Generate the rhymes.
+				for _, pronun in ipairs(parsed.pronuns) do
+					-- We should have already excluded multiword terms and terms without vowels from rhyme generation (see
+					-- `no_auto_rhyme` below). But make sure to check that pronun.phonemic exists (it may not if raw
+					-- phonetic-only pronun is given).
+					if pronun.phonemic then
+						-- Count number of syllables by looking at syllable boundaries (including stress marks).
+						local num_syl = get_num_syl_from_phonemic(pronun.phonemic)
+						-- Get the rhyme by truncating everything up through the last stress mark + any following
+						-- consonants, and remove syllable boundary markers.
+						local rhyme = convert_phonemic_to_rhyme(pronun.phonemic)
+						local saw_already = false
+						for _, existing in ipairs(parsed.rhyme) do
+							if existing.rhyme == rhyme then
+								saw_already = true
+								-- We already saw this rhyme but possibly with a different number of syllables,
+								-- e.g. if the user specified two pronunciations 'biología' (4 syllables) and
+								-- 'bi.ología' (5 syllables), both of which have the same rhyme /ia/.
+								m_table.insertIfNot(existing.num_syl, num_syl)
+								break
+							end
+						end
+						if not saw_already then
+							table.insert(parsed.rhyme, {
+								rhyme = rhyme,
+								num_syl = {num_syl},
+								local quals = #ipa_full_output.terms > 1 and termobj.qualifiers and #termobj.qualifiers > 0 and termobj.qualifiers or nil
+							})
+						end
+					end
+				end
+
 				parsed.rhyme = express_all_styles(parsed.style, dodialect_rhymes_from_pronun)
 			end
 		else
