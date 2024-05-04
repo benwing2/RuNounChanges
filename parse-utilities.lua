@@ -920,7 +920,7 @@ function export.parse_inline_modifiers_from_segments(data)
 				end
 			elseif store == "insert-flattened" then
 				if not dest[key] then
-					dest[key] = obj
+					dest[key] = converted
 				else
 					for _, obj in ipairs(converted) do
 						table.insert(dest[key], obj)
@@ -928,7 +928,7 @@ function export.parse_inline_modifiers_from_segments(data)
 				end
 			elseif store == "insertIfNot-flattened" then
 				if not dest[key] then
-					dest[key] = obj
+					dest[key] = converted
 				else
 					for _, obj in ipairs(converted) do
 						require("Module:table").insertIfNot(dest[key], obj)
