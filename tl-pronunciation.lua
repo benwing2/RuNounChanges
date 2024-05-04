@@ -18,7 +18,7 @@ FIXME:
 local m_IPA = require("Module:IPA")
 local m_str_utils = require("Module:string utilities")
 local m_table = require("Module:table")
-local put_module = "Module:parse utilities"
+local put_module = "Module:User:Benwing2/parse utilities"
 local headword_data_module = "Module:headword/data"
 local accent_qualifier_module = "Module:accent qualifier"
 local accent_qualifier_data_module = "Module:accent qualifier/data"
@@ -1330,6 +1330,7 @@ function export.show_full(frame)
 		if not list then
 			return false
 		end
+		local accent_no_count = {"colloquial", "obsolete", "relaxed"}
 		for _, item in ipairs(list) do
 			for _, word_no_count in ipairs(accent_no_count) do
 				if item:find("%f[%w]" .. word_no_count .. "%f[%W]") then
@@ -1687,32 +1688,35 @@ function export.show_full(frame)
 		if parsed.bullets < min_num_bullets then
 			min_num_bullets = parsed.bullets
 		end
+		local accent_grouping_offset = 0
 		if parsed.of_several_accents == "first" then
 			ins_line(require(accent_qualifier_module).format_qualifiers(parsed.accents), parsed.bullets)
 		end
 		local pronuns = format_pronuns(parsed)
+		local accent_prefix
 		if not parsed.of_several_accents then
-			ins_line(require(accent_qualifier_module).format_qualifiers(parsed.accents) .. " " .. pronuns,
-				parsed.bullets)
+			accent_prefix = require(accent_qualifier_module).format_qualifiers(parsed.accents) .. " "
 		else
-			ins_line(pronuns, parsed.bullets + 1)
+			accent_prefix = ""
+			accent_grouping_offset = 1
 		end
+		ins_line(accent_prefix .. pronuns, parsed.bullets + accent_grouping_offset)
 		if parsed.audio then
 			-- format_audio() inserts multiple lines and handles bullets by itself.
 			table.insert(textparts, "\n")
 			-- If only one pronunciation set, add the audio with the same number of bullets, otherwise indent audio by
 			-- one more bullet.
 			table.insert(textparts, format_audio(parsed.audio,
-				#parsed_respellings == 1 and parsed.bullets or parsed.bullets + 1))
+				(#parsed_respellings == 1 and parsed.bullets or parsed.bullets + 1) + accent_grouping_offset))
 		end
 		if not all_rhyme_sets_eq and parsed.rhyme then
-			ins_line(format_rhyme(parsed.rhyme), parsed.bullets + 1)
+			ins_line(format_rhyme(parsed.rhyme), parsed.bullets + 1 + accent_grouping_offset)
 		end
 		if not all_hyph_sets_eq and parsed.hyph then
-			ins_line(format_hyphenations(parsed.hyph), parsed.bullets + 1)
+			ins_line(format_hyphenations(parsed.hyph), parsed.bullets + 1 + accent_grouping_offset)
 		end
 		if not all_hmp_sets_eq and parsed.hmp then
-			ins_line(format_homophones(parsed.hmp), parsed.bullets + 1)
+			ins_line(format_homophones(parsed.hmp), parsed.bullets + 1 + accent_grouping_offset)
 		end
 	end
 	if overall_audio then
