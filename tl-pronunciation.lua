@@ -20,6 +20,7 @@ local m_str_utils = require("Module:string utilities")
 local m_table = require("Module:table")
 local put_module = "Module:parse utilities"
 local headword_data_module = "Module:headword/data"
+local accent_qualifier_module = "Module:accent qualifier"
 local accent_qualifier_data_module = "Module:accent qualifier/data"
 
 local lang = require("Module:languages").getByCode("tl")
@@ -32,6 +33,7 @@ local toNFC = mw.ustring.toNFC
 local toNFD = mw.ustring.toNFD
 local trim = mw.text.trim
 local u = m_str_utils.char
+local ulen = m_str_utils.len
 local ulower = m_str_utils.lower
 
 local AC = u(0x0301) -- acute =  ́
@@ -39,7 +41,7 @@ local GR = u(0x0300) -- grave =  ̀
 local CFLEX = u(0x0302) -- circumflex =  ̂
 local TILDE = u(0x0303) -- tilde =  ̃
 local DIA = u(0x0308) -- diaeresis =  ̈
-local MACRON = u(0x0304) -- macron 
+local MACRON = u(0x0304) -- macron =  ̄
 
 local vowel = "aeëəiou" -- vowel
 local V = "[" .. vowel .. "]"
@@ -603,27 +605,37 @@ local function split_syllabified_spelling(spelling)
 end
 
 
--- "Align" syllabification to original spelling by matching character-by-character, allowing for extra syllable and
--- accent markers in the syllabification. If we encounter an extra syllable marker (.), we allow and keep it. If we
--- encounter an extra accent marker in the syllabification, we drop it. In any other case, we return nil indicating
--- the alignment failed.
+-- "Align" syllabified respelling `syllab` to original spelling `spelling` by matching character-by-character, allowing
+-- for extra syllable and accent markers in the syllabification and certain mismatches in the consonants. The goal is to
+-- produce the appropriately syllabified version of the original spelling (the pagename) by matching characters in the
+-- syllabified respelling to the original spelling, putting the syllable boundaries in the appropriate places in the
+-- original spelling. As an example, given syllabified respelling 'a.ma.7ín' and original spelling 'amain', we would
+-- like to produce 'a.ma.in'.
+--
+-- If we encounter an extra syllable marker (.), we allow and keep it. If we encounter an extra accent marker in the
+-- syllabification, we drop it. We allow for mismatches in capitalization and for certain other mismatches, e.g. extra
+-- glottal stops (written 7), h in respelling vs. g or j in the original, etc. If we can't match, we return nil
+-- indicating the alignment failed.
 local function align_syllabification_to_spelling(syllab, spelling)
 	local result = {}
-	local syll_chars = rsplit(decompose(syllab), "")
+	local syll_chars = rsplit(ulower(decompose(syllab)), "")
 	local spelling_chars = rsplit(decompose(spelling), "")
 	local i = 1
 	local j = 1
 	while i <= #syll_chars or j <= #spelling_chars do
-		local ci = syll_chars[i]
+		local uci = syll_chars[i]
 		local cj = spelling_chars[j]
-		if ci == cj then
-			table.insert(result, ci)
+		local ucj = cj and ulower(cj) or nil
+		if uci == ucj or
+			uci == "h" and (ucj == "g" or ucj == "j") then
+			table.insert(result, cj)
 			i = i + 1
 			j = j + 1
-		elseif ci == "." then
-			table.insert(result, ci)
+		elseif uci == "." then
+			table.insert(result, uci)
 			i = i + 1
-		elseif ci == AC or ci == GR or ci == CFLEX then
+		elseif uci == AC or uci == GR or uci == CFLEX or uci == DIA or uci == TILDE or uci == "7" or
+			uci == "y" or uci == "w" or uci == "g" then
 			-- skip character
 			i = i + 1
 		else
@@ -635,7 +647,7 @@ local function align_syllabification_to_spelling(syllab, spelling)
 		-- left-over characters on one side or the other
 		return nil
 	end
-	return unfc(table.concat(result))
+	return toNFC(table.concat(result))
 end
 
 
@@ -1004,7 +1016,7 @@ local function format_pronuns(parsed)
 
 	-- Loop through each pronunciation. For each one, add the phonemic and phonetic versions to `pronunciations`,
 	-- for formatting by [[Module:IPA]].
-	for j, pronun in ipairs(parsed.pronun) do
+	for j, pronun in ipairs(parsed.pronuns) do
 		local qs = pronun.q
 
 		local first_pronun = #pronunciations + 1
@@ -1048,13 +1060,10 @@ local function format_pronuns(parsed)
 		end
 	end
 
-	local bullet = string.rep("*", parsed.bullets) .. " "
 	-- Construct the formatted line in `formatted`.
 	local pre = is_first and parsed.pre and parsed.pre .. " " or ""
 	local post = is_first and parsed.post and " " .. parsed.post or ""
-	local formatted = bullet .. pre .. m_IPA.format_IPA_full(lang, pronunciations, nil, "") ..
-		format_glosses(parsed.t) .. post
-	return formatted
+	return pre .. m_IPA.format_IPA_full(lang, pronunciations, nil, "") .. format_glosses(parsed.t) .. post
 end
 
 
@@ -1097,8 +1106,14 @@ function export.show_full(frame)
 		["hmp"] = {},
 		["audio"] = {list = true},
 		["pagename"] = {},
+		["new"] = {type = "boolean"},
 	}
 	local parargs = frame:getParent().args
+	-- FIXME: Delete this compatibility code when all {{tl|tl-pr}} converted.
+	if not parargs.new then
+		return export.show_full_old(frame)
+	end
+
 	local args = require("Module:parameters").process(parargs, params)
 	local pagename = args.pagename or mw.title.getCurrentTitle().subpageText
 
@@ -1496,6 +1511,9 @@ function export.show_full(frame)
 						--     (although it will be rare to have both left and right qualifiers on a single
 						--     pronunciation).
 						local saw_already = false
+						if not parsed.rhyme then
+							parsed.rhyme = {}
+						end
 						for _, existing in ipairs(parsed.rhyme) do
 							if existing.rhyme == rhyme then
 								saw_already = true
@@ -1592,6 +1610,10 @@ function export.show_full(frame)
 
 	------------------------------ 3. Format IPA, rhymes and hyphenation for display. ---------------------------------
 
+	local function bullet_prefix(num_bullets)
+		return string.rep("*", num_bullets) .. " "
+	end
+
 	local function format_rhyme(rhymes)
 		return require("Module:rhymes").format_rhymes {
 			lang = lang,
@@ -1608,7 +1630,7 @@ function export.show_full(frame)
 		}
 	end
 
-	local function format_homophones(hmps, num_bullets)
+	local function format_homophones(hmps)
 		return require("Module:homophones").format_homophones { lang = lang, homophones = hmps }
 	end
 
@@ -1627,25 +1649,54 @@ function export.show_full(frame)
 				or audio.a and audio.a[1] or audio.aa and audio.aa[1] then
 				text = require("Module:pron qualifier").format_qualifiers(audio, text)
 			end
-			table.insert(ret, string.rep("*", num_bullets) .. " " .. text)
+			table.insert(ret, bullet_prefix(num_bullets) .. text)
 		end
 		return table.concat(ret, "\n")
 	end
 
+	-- Implement grouping by accent. If there is a run of more than one consecutive set of pronunciations with the
+	-- same accent, the accent goes on its own line and the pronunciations with this accent go below with an extra
+	-- bullet.
+	local prev_accents
+	local num_seen_with_these_accents
+	for j, parsed in ipairs(parsed_respellings) do
+		if m_table.deepEquals(prev_accents, parsed.accents) then
+			parsed.of_several_accents = "continuation"
+			num_seen_with_these_accents = num_seen_with_these_accents + 1
+			if num_seen_with_these_accents == 2 then
+				parsed_respellings[j - 1].of_several_accents = "first"
+			end
+		else
+			prev_accents = parsed.accents
+			num_seen_with_these_accents = 1
+		end
+	end
+
+	-- Now actually format the pronunciations.
 	local textparts = {}
+	local first_line = true
 	local function ins_line(linetext, num_bullets)
-		table.insert(textparts, "\n")
-		table.insert(textparts, string.rep("*", num_bullets) .. " " .. linetext)
+		if not first_line then
+			table.insert(textparts, "\n")
+		end
+		first_line = false
+		table.insert(textparts, bullet_prefix(num_bullets) .. linetext)
 	end
 	local min_num_bullets = 9999
 	for j, parsed in ipairs(parsed_respellings) do
 		if parsed.bullets < min_num_bullets then
 			min_num_bullets = parsed.bullets
 		end
-		if j > 1 then
-			table.insert(textparts, "\n")
+		if parsed.of_several_accents == "first" then
+			ins_line(require(accent_qualifier_module).format_qualifiers(parsed.accents), parsed.bullets)
 		end
-		table.insert(textparts, parsed.pronun.text)
+		local pronuns = format_pronuns(parsed)
+		if not parsed.of_several_accents then
+			ins_line(require(accent_qualifier_module).format_qualifiers(parsed.accents) .. " " .. pronuns,
+				parsed.bullets)
+		else
+			ins_line(pronuns, parsed.bullets + 1)
+		end
 		if parsed.audio then
 			-- format_audio() inserts multiple lines and handles bullets by itself.
 			table.insert(textparts, "\n")
