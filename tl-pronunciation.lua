@@ -9,10 +9,18 @@ local export = {}
 FIXME:
 
 1. Review should_generate_rhyme_from_respelling(), e.g. the check for CFLEX.
-2. Update align_syllabification_to_spelling().
+2. Update align_syllabification_to_spelling(). [DONE]
 3. Look into how syllabify_from_spelling() works; needs rewriting.
 4. Delete old {{tl-pr}} code when new code ready.
 5. Group by accent in adjacent lines, and display accent on a separate line if more than one line with that accent.
+   [DONE]
+6. Restore 'Tagalog terms with malumi pronunciation' and similar rhyme categories; also restore 'Tagalog terms with
+   syllabification not matching pagename' (formerly 'Tagalog terms with hyphenation errors'). [DONE]
+7. Use "syllabification" everywhere internally in place of "hyphenation" and in abbrevs. [DONE]
+8. With auto-generated categories, display on a separate line.
+9. Change handling of forcing dot. Currently t.s forces /ts/ instead of /tʃ/; this should be t_s. Currently you have to
+   write si..yasa with double dot to get /sijasa/ not /ʃasa/; this should be single dot, and no dot should indicate
+   the palatalized pronunciation.
 ]==]
 
 local force_cat = true -- enable for testing
@@ -47,6 +55,7 @@ local MACRON = u(0x0304) -- macron =  ̄
 
 local vowel = "aeëəiou" -- vowel
 local V = "[" .. vowel .. "]"
+local NV = "[^" .. vowel .. "]"
 local accent = AC .. GR .. CFLEX .. MACRON
 local accent_c = "[" .. accent .. "]"
 local ipa_stress = "ˈˌ"
@@ -237,7 +246,7 @@ function export.IPA(text, include_phonemic_syllable_boundaries)
 
 	table.insert(debug, text)
 
-	text = rsub_repeatedly(text, "([^" .. vowel ..  "])([u])([" .. AC .. MACRON .. "]?)([aeio])("  .. accent_c .. "?)","%1%2%3.w%4%5")
+	text = rsub_repeatedly(text, "(" .. NV .. ")([u])([" .. AC .. MACRON .. "]?)([aeio])("  .. accent_c .. "?)","%1%2%3.w%4%5")
 	text = rsub_repeatedly(text, "(" .. V ..  ")([u])([" .. AC .. MACRON .. "]?)([aeio])("  .. accent_c .. "?)","%1.w%3%4%5")
 	text = rsub_repeatedly(text, "(" .. V ..  ")([o])([" .. AC .. MACRON .. "]?)([aei])("  .. accent_c .. "?)","%1.w%3%4%5")
 	text = rsub(text, "([i])([" .. AC .. MACRON .. "])([aeou])("  .. accent_c .. "?)","%1%2.y%3%4")
@@ -600,7 +609,7 @@ end
 local function convert_phonemic_to_rhyme(phonemic)
 	-- NOTE: This works because the phonemic vowels are just [aeiou] possibly with diacritics that are separate
 	-- Unicode chars. If we want to handle things like ɛ or ɔ we need to add them to `vowel`.
-	return rsub(rsub(phonemic, ".*[ˌˈ]", ""), "^[^" .. vowel .. "]*", ""):gsub("%.", ""):gsub("t͡ʃ", "tʃ")
+	return rsub(rsub(phonemic, ".*[ˌˈ]", ""), "^" .. NV .. "*", ""):gsub("%.", ""):gsub("t͡ʃ", "tʃ")
 end
 
 
@@ -655,7 +664,7 @@ local function align_syllabification_to_spelling(syllab, spelling)
 end
 
 
-local function generate_hyph_obj(term)
+local function generate_syll_obj(term)
 	return {syllabification = term, hyph = split_syllabified_spelling(term)}
 end
 
@@ -693,19 +702,19 @@ local function should_generate_rhyme_from_ipa(ipa)
 end
 
 
-local function process_specified_rhymes(rhymes, hyphs, parsed_respellings)
+local function process_specified_rhymes(rhymes, sylls, parsed_respellings)
 	local rhyme_ret = {}
 	for _, rhyme in ipairs(rhymes) do
 		local num_syl = rhyme.num_syl
 		local no_num_syl = false
 
 		-- If user explicitly gave the rhyme but didn't explicitly specify the number of syllables, try to take it from
-		-- the hyphenation.
+		-- the syllabification.
 		if not num_syl then
 			num_syl = {}
-			for _, hyph in ipairs(hyphs) do
-				if should_generate_rhyme_from_respelling(hyph.syllabification) then
-					local this_num_syl = 1 + ulen(rsub(hyph.syllabification, "[^.]", ""))
+			for _, syll in ipairs(sylls) do
+				if should_generate_rhyme_from_respelling(syll.syllabification) then
+					local this_num_syl = 1 + ulen(rsub(syll.syllabification, "[^.]", ""))
 					m_table.insertIfNot(num_syl, this_num_syl)
 				else
 					no_num_syl = true
@@ -751,20 +760,20 @@ end
 
 
 -- Parse a pronunciation modifier in `arg`, the argument portion in an inline modifier (after the prefix), which
--- specifies a pronunciation property such as rhyme, hyphenation/syllabification, homophones or audio. The argument
--- can itself have inline modifiers, e.g. <audio:Foo.ogg<a:Colombia>>. The allowed inline modifiers are specified
--- by `param_mods` (of the format expected by `parse_inline_modifiers()`); in addition to any modifiers specified
--- there, the modifiers <q:...>, <qq:...>, <a:...> and <aa:...> are always accepted (and can be repeated).
--- `generate_obj` and `parse_err` are like in `parse_inline_modifiers()` and specify respectively a function to
--- generate the object into which modifier properties are stored given the non-modifier part of the argument, and
--- a function to generate an error message (given the message). Normally, a comma-separated list of pronunciation
--- properties is accepted and parsed, where each element in the list can have its own inline modifiers and where
--- no spaces are allowed next to the commas in order for them to be recognized as separators. If `no_split_on_comma`
--- is given, only a single pronunciation property is accepted. If `has_outer_container` is given, the list of
--- pronunciation properties is embedded in the `terms` property of an outer container, into which other list-level
--- modifiers can also be stored (by setting `overall = "true"` in the respective spec in `param_mods`). The return
--- value is a list if neither `no_split_on_comma` nor `has_outer_container` are given, otherwise a container object
--- (which, in the case of `has_outer_container`, will contain a list inside of it, in the `terms` property).
+-- specifies a pronunciation property such as rhyme, syllabification, homophones or audio. The argument can itself have
+-- inline modifiers, e.g. <audio:Foo.ogg<a:Colombia>>. The allowed inline modifiers are specified by `param_mods` (of
+-- the format expected by `parse_inline_modifiers()`); in addition to any modifiers specified there, the modifiers
+-- <q:...>, <qq:...>, <a:...> and <aa:...> are always accepted (and can be repeated). `generate_obj` and `parse_err` are
+-- like in `parse_inline_modifiers()` and specify respectively a function to generate the object into which modifier
+-- properties are stored given the non-modifier part of the argument, and a function to generate an error message (given
+-- the message). Normally, a comma-separated list of pronunciation properties is accepted and parsed, where each element
+-- in the list can have its own inline modifiers and where no spaces are allowed next to the commas in order for them to
+-- be recognized as separators. If `no_split_on_comma` is given, only a single pronunciation property is accepted. If
+-- `has_outer_container` is given, the list of pronunciation properties is embedded in the `terms` property of an outer
+-- container, into which other list-level modifiers can also be stored (by setting `overall = "true"` in the respective
+-- spec in `param_mods`). The return value is a list if neither `no_split_on_comma` nor `has_outer_container` are given,
+-- otherwise a container object (which, in the case of `has_outer_container`, will contain a list inside of it, in the
+-- `terms` property).
 local function parse_pron_modifier(arg, parse_err, generate_obj, param_mods, no_split_on_comma, has_outer_container)
 	if arg:find("<") then
 		local insert = { store = "insert" }
@@ -820,14 +829,14 @@ local function parse_rhyme(arg, parse_err)
 end
 
 
-local function parse_hyph(arg, parse_err)
+local function parse_syll(arg, parse_err)
 	local param_mods = {
 		cap = { overall = true},
 	}
 
 	-- We need to pass in has_outer_container because we have an overall property <cap:...> (the caption, defaulting
-	-- to "Syllabification") applying to the whole set of hyphenations.
-	return parse_pron_modifier(arg, parse_err, generate_hyph_obj, param_mods, nil, "has outer container")
+	-- to "Syllabification") applying to the whole set of syllabifications.
+	return parse_pron_modifier(arg, parse_err, generate_syll_obj, param_mods, nil, "has outer container")
 end
 
 
@@ -881,7 +890,7 @@ end
 
 
 local function syllabify_from_spelling(text, pagename)
-	-- Auto hyphenation start --
+	-- Auto syllabifications start --
 	local vowel = vowel .. "ẃý" -- vowel 
 	local V = "[" .. vowel .. "]"
 	local C = "[^" .. vowel .. separator .. "]" -- consonant
@@ -903,7 +912,7 @@ local function syllabify_from_spelling(text, pagename)
 	text = rsub(text, "r", "ɾ")
 	text = rsub(text, "ɾɾ", "r")
 
-	text = rsub_repeatedly(text, "([^" .. vowel ..  "])([u])([" .. AC .. MACRON .. "]?)([aeio])("  .. accent_c .. "?)","%1%2%3.%4%5")
+	text = rsub_repeatedly(text, "(" .. NV .. ")([u])([" .. AC .. MACRON .. "]?)([aeio])("  .. accent_c .. "?)","%1%2%3.%4%5")
 	text = rsub_repeatedly(text, "(" .. V ..  ")([u])([" .. AC .. MACRON .. "]?)([aeio])("  .. accent_c .. "?)","%1.u%3%4%5")
 	text = rsub_repeatedly(text, "(" .. V ..  ")([o])([" .. AC .. MACRON .. "]?)([aei])("  .. accent_c .. "?)","%1.o%3%4%5")
 	text = rsub(text, "([i])([" .. AC .. MACRON .. "])([aeou])("  .. accent_c .. "?)","%1%2#í%3%4")
@@ -1106,7 +1115,7 @@ function export.show_full(frame)
 	local params = {
 		[1] = {list = true},
 		["rhyme"] = {},
-		["hyph"] = {},
+		["syll"] = {},
 		["hmp"] = {},
 		["audio"] = {list = true},
 		["pagename"] = {},
@@ -1128,8 +1137,8 @@ function export.show_full(frame)
 	end
 	local overall_rhyme = args.rhyme and
 		parse_rhyme(args.rhyme, function(msg) overall_parse_err(msg, "rhyme", args.rhyme) end) or nil
-	local overall_hyph = args.hyph and
-		parse_hyph(args.hyph, function(msg) overall_parse_err(msg, "hyph", args.hyph) end) or nil
+	local overall_syll = args.syll and
+		parse_syll(args.syll, function(msg) overall_parse_err(msg, "syll", args.syll) end) or nil
 	local overall_hmp = args.hmp and
 		parse_homophone(args.hmp, function(msg) overall_parse_err(msg, "hmp", args.hmp) end) or nil
 	local overall_audio
@@ -1144,14 +1153,14 @@ function export.show_full(frame)
 	-- Parse each respelling. Individual arguments in 1=, 2=, etc. can consist of one or more comma-separated
 	-- respellings, each of which can have inline modifiers <q:...>, <qq:...>, <a:...>, <aa:...> or <ref:...>.
 	-- In addition, the respellings as a whole of a given argument can be followed by various inline modifiers,
-	-- such as <t:...>, <rhyme:...>, <hyph:...>, etc. The result of parsing goes into `parsed_respellings`, which
+	-- such as <t:...>, <rhyme:...>, <syll:...>, etc. The result of parsing goes into `parsed_respellings`, which
 	-- is a list of objects (one per numbered argument), each of which is a table of the form
 	--
 	-- {
 	--   terms = {TERM, TERM, ...},
 	--   audio = {AUDIO, AUDIO, ...},
 	--   rhyme = {RHYME, RHYME, ...},
-	--   hyph = {HYPH, HYPH, ...},
+	--   syll = {SYLL, SYLL, ...},
 	--   hmp = {HMP, HMP, ...},
 	--   t = {GLOSS, GLOSS, ...},
 	--   pre = "PRE-TEXT" or nil,
@@ -1201,7 +1210,7 @@ function export.show_full(frame)
 	--   q, qq, a, aa = (as for AUDIO),
 	-- }
 	--
-	-- HYPH is a table of the form
+	-- SYLL is a table of the form (where `hyph` is required to be named this way for [[Module:hyphenation]])
 	--
 	-- {
 	--   syllabification = "SYL.LAB.LES",
@@ -1252,13 +1261,13 @@ function export.show_full(frame)
 					store = "insert-flattened",
 					convert = parse_rhyme,
 				},
-				hyph = {
+				syll = {
 					overall = true,
-					-- Not `store = "insert-flattened"`. parse_hyph() does not generates a list but a structure where
-					-- the hyphenations are in `terms` and there's an additional overall property `cap` for the caption
-					-- (defaulting to "Syllabification"). FIXME: Rethink whether we even want "insert-flattened" or
-					-- just "insert" for the remaining pronunciation properties.
-					convert = parse_hyph,
+					-- Not `store = "insert-flattened"`. parse_syll() does not generates a list but a structure where
+					-- the syllabifications are in `terms` and there's an additional overall property `cap` for the
+					-- caption (defaulting to "Syllabification"). FIXME: Rethink whether we even want "insert-flattened"
+					-- or just "insert" for the remaining pronunciation properties.
+					convert = parse_syll,
 				},
 				hmp = {
 					overall = true,
@@ -1315,16 +1324,16 @@ function export.show_full(frame)
 		end
 	end
 
-	--------------------------------- 2. Generate IPA, rhymes and hyphenation. ------------------------------------
+	--------------------------------- 2. Generate IPA, rhymes and syllabification. ------------------------------------
 
-	if overall_hyph then
-		local hyphs = {}
-		for _, hyph in ipairs(overall_hyph.terms) do
-			if hyph.syllabification == "+" then
-				hyph.syllabification = syllabify_from_spelling(pagename, pagename)
-				hyph.hyph = split_syllabified_spelling(hyph.syllabification)
-			elseif hyph.syllabification == "-" then
-				overall_hyph = {}
+	if overall_syll then
+		local sylls = {}
+		for _, syll in ipairs(overall_syll.terms) do
+			if syll.syllabification == "+" then
+				syll.syllabification = syllabify_from_spelling(pagename, pagename)
+				syll.hyph = split_syllabified_spelling(syll.syllabification)
+			elseif syll.syllabification == "-" then
+				overall_syll = {}
 				break
 			end
 		end
@@ -1447,28 +1456,28 @@ function export.show_full(frame)
 			end
 		end
 
-		if not parsed.hyph then
-			if not overall_hyph and all_words_have_vowels(pagename) then
+		if not parsed.syll then
+			if not overall_syll and all_words_have_vowels(pagename) then
 				for _, term in ipairs(parsed.terms) do
 					if not term.raw then
 						local syllabification = syllabify_from_spelling(term.term, pagename)
 						local aligned_syll = align_syllabification_to_spelling(syllabification, pagename)
 						if aligned_syll then
-							if not parsed.hyph then
-								parsed.hyph = {terms = {}}
+							if not parsed.syll then
+								parsed.syll = {terms = {}}
 							end
-							m_table.insertIfNot(parsed.hyph.terms, generate_hyph_obj(aligned_syll))
+							m_table.insertIfNot(parsed.syll.terms, generate_syll_obj(aligned_syll))
 						end
 					end
 				end
 			end
 		else
-			for _, hyph in ipairs(parsed.hyph.terms) do
-				if hyph.syllabification == "+" then
-					hyph.syllabification = syllabify_from_spelling(pagename, pagename)
-					hyph.hyph = split_syllabified_spelling(hyph.syllabification)
-				elseif hyph.syllabification == "-" then
-					parsed.hyph = nil
+			for _, syll in ipairs(parsed.syll.terms) do
+				if syll.syllabification == "+" then
+					syll.syllabification = syllabify_from_spelling(pagename, pagename)
+					syll.hyph = split_syllabified_spelling(syll.syllabification)
+				elseif syll.syllabification == "-" then
+					parsed.syll = nil
 					break
 				end
 			end
@@ -1556,7 +1565,7 @@ function export.show_full(frame)
 			if no_rhyme then
 				parsed.rhyme = nil
 			else
-				parsed.rhyme = process_specified_rhymes(parsed.rhyme, parsed.hyph and parsed.hyph.terms or {}, {parsed})
+				parsed.rhyme = process_specified_rhymes(parsed.rhyme, parsed.syll and parsed.syll.terms or {}, {parsed})
 			end
 		end
 	end
@@ -1572,25 +1581,25 @@ function export.show_full(frame)
 		if no_overall_rhyme then
 			overall_rhyme = nil
 		else
-			local all_hyphs
-			if overall_hyph then
-				all_hyphs = overall_hyph
+			local all_sylls
+			if overall_syll then
+				all_sylls = overall_syll
 			else
-				all_hyphs = {}
+				all_sylls = {}
 				for _, parsed in ipairs(parsed_respellings) do
-					if parsed.hyph then
-						for _, hyph in ipairs(parsed.hyph.terms) do
-							m_table.insertIfNot(all_hyphs, hyph)
+					if parsed.syll then
+						for _, syll in ipairs(parsed.syll.terms) do
+							m_table.insertIfNot(all_sylls, syll)
 						end
 					end
 				end
 			end
-			overall_rhyme = process_specified_rhymes(overall_rhyme, all_hyphs, parsed_respellings)
+			overall_rhyme = process_specified_rhymes(overall_rhyme, all_sylls, parsed_respellings)
 		end
 	end
 
 	-- Determine whether all sets of pronunciations have the same value for a pronunciation property (rhymes,
-	-- hyphenations or homophones). If so, we display them them only once at the bottom, otherwise beneath each set,
+	-- syllabifications or homophones). If so, we display them them only once at the bottom, otherwise beneath each set,
 	-- indented. This function takes one argument, the name of a slot specifying the pronunciation property, and
 	-- returns two values, a boolean indicating whether all values are the same and the first value seen (which will
 	-- be the only value seen if all values are the same).
@@ -1610,10 +1619,62 @@ function export.show_full(frame)
 	end
 
 	local all_rhyme_sets_eq, first_rhyme_ret = all_sets_equal("rhyme")
-	local all_hyph_sets_eq, first_hyphs = all_sets_equal("hyph")
+	local all_syll_sets_eq, first_sylls = all_sets_equal("syll")
 	local all_hmp_sets_eq, first_hmps = all_sets_equal("hmp")
 
-	------------------------------ 3. Format IPA, rhymes and hyphenation for display. ---------------------------------
+	------------------------------ 3. Insert categories as appropriate. ---------------------------------
+
+	local categories = {}
+
+	local function get_rhymes_categories(rhymes)
+		if not rhymes then
+			return
+		end
+		for _, rhyme in ipairs(rhymes) do
+			local num_vowels_in_rhyme = #rsub(rhyme.rhyme, NV, "")
+			local penult = num_vowels_in_rhyme == 2
+			local glottal = rhyme.rhyme:find("ʔ$")
+			local pron_cat
+			if penult and glottal then
+				pron_cat = "malumi"
+			elseif penult then
+				pron_cat = "malumay"
+			elseif glottal then
+				pron_cat = "maragsa"
+			else
+				pron_cat = "mabilis"
+			end
+			m_table.insertIfNot(categories,
+				("%s terms with %s pronunciation"):format(lang:getCanonicalName(), pron_cat))
+		end
+	end
+
+	get_rhymes_categories(overall_rhyme)
+	for _, parsed in ipairs(parsed_respellings) do
+		get_rhymes_categories(parsed.rhyme)
+	end
+
+	local function get_syll_categories(sylls)
+		if not sylls then
+			return
+		end
+		for _, syll in ipairs(sylls) do
+			local syll_no_dot = syll.syllabification:gsub("%.", "")
+			if syll_no_dot ~= pagename then
+				mw.log(("For page '%s', saw syllabification '%s' not matching pagename"):format(
+					pagename, syll.syllabification))
+				m_table.insertIfNot(categories, ("%s terms with syllabification not matching pagename"):format(
+					lang:getCanonicalName()))
+			end
+		end
+	end
+
+	get_syll_categories(overall_rhyme)
+	for _, parsed in ipairs(parsed_respellings) do
+		get_syll_categories(parsed.syll)
+	end
+
+	---------------------------- 4. Format IPA, rhymes and syllabification for display. -------------------------------
 
 	local function bullet_prefix(num_bullets)
 		return string.rep("*", num_bullets) .. " "
@@ -1627,11 +1688,11 @@ function export.show_full(frame)
 		}
 	end
 
-	local function format_hyphenations(hyphobj)
+	local function format_syllabifications(syllobj)
 		return require("Module:hyphenation").format_hyphenations {
 			lang = lang,
-			hyphs = hyphobj.terms,
-			caption = hyphobj.cap or "Syllabification"
+			hyphs = syllobj.terms,
+			caption = syllobj.cap or "Syllabification"
 		}
 	end
 
@@ -1716,8 +1777,8 @@ function export.show_full(frame)
 		if not all_rhyme_sets_eq and parsed.rhyme then
 			ins_line(format_rhyme(parsed.rhyme), parsed.bullets + 1 + accent_grouping_offset)
 		end
-		if not all_hyph_sets_eq and parsed.hyph then
-			ins_line(format_hyphenations(parsed.hyph), parsed.bullets + 1 + accent_grouping_offset)
+		if not all_syll_sets_eq and parsed.syll then
+			ins_line(format_syllabifications(parsed.syll), parsed.bullets + 1 + accent_grouping_offset)
 		end
 		if not all_hmp_sets_eq and parsed.hmp then
 			ins_line(format_homophones(parsed.hmp), parsed.bullets + 1 + accent_grouping_offset)
@@ -1734,11 +1795,11 @@ function export.show_full(frame)
 	if overall_rhyme then
 		ins_line(format_rhyme(overall_rhyme), min_num_bullets)
 	end
-	if all_hyph_sets_eq and first_hyphs then
-		ins_line(format_hyphenations(first_hyphs), min_num_bullets)
+	if all_syll_sets_eq and first_sylls then
+		ins_line(format_syllabifications(first_sylls), min_num_bullets)
 	end
-	if overall_hyph then
-		ins_line(format_hyphenations(overall_hyph), min_num_bullets)
+	if overall_syll then
+		ins_line(format_syllabifications(overall_syll), min_num_bullets)
 	end
 	if all_hmp_sets_eq and first_hmps then
 		ins_line(format_homophones(first_hmps), min_num_bullets)
@@ -1747,7 +1808,8 @@ function export.show_full(frame)
 		ins_line(format_homophones(overall_hmp), min_num_bullets)
 	end
 
-	return table.concat(textparts)
+	return table.concat(textparts) ..
+		require("Module:utilities").format_categories(categories, lang, nil, nil, force_cat)
 end
 
 
