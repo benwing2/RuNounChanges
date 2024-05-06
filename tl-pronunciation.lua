@@ -15,6 +15,8 @@ FIXME:
 5. Group by accent in adjacent lines, and display accent on a separate line if more than one line with that accent.
 ]==]
 
+local force_cat = true -- enable for testing
+
 local m_IPA = require("Module:IPA")
 local m_str_utils = require("Module:string utilities")
 local m_table = require("Module:table")
@@ -145,7 +147,7 @@ end
 -- ĵ, ɟ and ĉ are used internally to represent [d͡ʒ], [j] and [t͡ʃ]
 --
 
-function export.IPA(text)
+function export.IPA(text, include_phonemic_syllable_boundaries)
 	local debug = {}
 
 	text = ulower(text)
@@ -456,7 +458,9 @@ function export.IPA(text)
 		    --Change /e/ closer to native pronunciation.
 		    text = rsub(text, "e", "ɛ")
 		else
-			text = rsub(text,"%.","")
+			if not include_phonemic_syllable_boundaries then
+				text = rsub(text,"%.","")
+			end
 			text = rsub(text,"‿", " ")
 		end
 
@@ -573,12 +577,12 @@ local function parse_accents(arg)
 end
 
 
--- Return the number of syllables of a phonemic representation, which should have syllable dividers in it but no
--- hyphens.
-local function get_num_syl_from_phonemic(phonemic)
+-- Return the number of syllables of a phonemic or phonetic representation, which should have syllable dividers in it
+-- but no hyphens.
+local function get_num_syl_from_ipa(pron)
 	-- Maybe we should just count vowels instead of the below code.
-	phonemic = rsub(phonemic, "|", " ") -- remove IPA foot boundaries
-	local words = rsplit(phonemic, " +")
+	pron = rsub(pron, "|", " ") -- remove IPA foot boundaries
+	local words = rsplit(pron, " +")
 	for i, word in ipairs(words) do
 		-- IPA stress marks are syllable divisions if between characters; otherwise just remove.
 		word = rsub(word, "(.)[ˌˈ](.)", "%1.%2")
@@ -586,8 +590,8 @@ local function get_num_syl_from_phonemic(phonemic)
 		words[i] = word
 	end
 	-- There should be a syllable boundary between words.
-	phonemic = table.concat(words, ".")
-	return ulen(rsub(phonemic, "[^.]", "")) + 1
+	pron = table.concat(words, ".")
+	return ulen(rsub(pron, "[^.]", "")) + 1
 end
 
 
@@ -726,7 +730,7 @@ local function process_specified_rhymes(rhymes, hyphs, parsed_respellings)
 							break
 						end
 						-- Count number of syllables by looking at syllable boundaries (including stress marks).
-						local this_num_syl = get_num_syl_from_phonemic(pronun.phonemic)
+						local this_num_syl = get_num_syl_from_ipa(pronun.phonemic)
 						m_table.insertIfNot(num_syl, this_num_syl)
 					end
 				end
@@ -1361,7 +1365,7 @@ function export.show_full(frame)
 				phonemic = term.raw_phonemic
 				phonetic = term.raw_phonetic
 			else
-				local ret = export.IPA(term.term)
+				local ret = export.IPA(term.term, "include phonemic syllable boundaries")
 				phonemic = ret.phonemic
 				phonetic = ret.phonetic
 			end
@@ -1483,7 +1487,7 @@ function export.show_full(frame)
 					-- pronunciation).
 					if pronun.phonemic and not pronun.no_rhyme then
 						-- Count number of syllables by looking at syllable boundaries (including stress marks).
-						local num_syl = get_num_syl_from_phonemic(pronun.phonemic)
+						local num_syl = get_num_syl_from_ipa(pronun.phonemic)
 						-- Get the rhyme by truncating everything up through the last stress mark + any following
 						-- consonants, and remove syllable boundary markers.
 						local rhyme = convert_phonemic_to_rhyme(pronun.phonemic)
