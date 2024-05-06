@@ -467,6 +467,7 @@ function export.IPA(text, include_phonemic_syllable_boundaries)
 		    --Change /e/ closer to native pronunciation.
 		    text = rsub(text, "e", "ɛ")
 		else
+			text = rsub(text,"([n])([ˈˌ#.]?[ɡk])","ŋ%2") -- /n/ before /k/ and /g/ (some proper nouns and loanwords)
 			if not include_phonemic_syllable_boundaries then
 				text = rsub(text,"%.","")
 			end
