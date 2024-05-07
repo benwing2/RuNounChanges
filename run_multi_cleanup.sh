@@ -3,11 +3,13 @@
 langcode=
 langname=
 do_see_also=
+no_synonyms=
 while [ -n "$1" ]; do
   case "$1" in
     --langcode ) langcode="$2"; shift 2 ;;
     --langname ) langname="$2"; shift 2 ;;
     --do-see-also ) do_see_also="--do-see-also"; shift ;;
+    --no-synonyms ) no_synonyms=1; shift ;;
     -- ) shift; break ;;
   esac
 done
@@ -28,6 +30,10 @@ MOVE_SYNONYMS="python3 move_synonyms.py --find-regex --langcode $langcode --lang
 CONVERT_ALT_FORMS="python3 convert_alt_forms.py --find-regex --partial-page"
 MOVE_WIKIPEDIA="python3 move_wikipedia.py --find-regex --partial-page"
 
-CMD="$FIX_LINKS | $DETEMPLATIZE_EN_LINKS | $TEMPLATIZE_CATEGORIES | $MOVE_SYNONYMS | $CONVERT_ALT_FORMS | $MOVE_WIKIPEDIA"
+if [ -n "$no_synonyms" ]; then
+  CMD="$FIX_LINKS | $DETEMPLATIZE_EN_LINKS | $TEMPLATIZE_CATEGORIES | $CONVERT_ALT_FORMS | $MOVE_WIKIPEDIA"
+else
+  CMD="$FIX_LINKS | $DETEMPLATIZE_EN_LINKS | $TEMPLATIZE_CATEGORIES | $MOVE_SYNONYMS | $CONVERT_ALT_FORMS | $MOVE_WIKIPEDIA"
+fi
 
 eval $CMD
