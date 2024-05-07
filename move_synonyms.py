@@ -336,7 +336,7 @@ def process_text_on_page(pageindex, pagetitle, text):
             syns, defnum = m.groups()
           else:
             # Look for '* {{sense|1}} {{l|...}}'
-            m = re.search(r"^\* *\{\{(?:s|sense)\|([0-9]+)\}\} *(.*?)$", line)
+            m = re.search(r"^\* *\{\{(?:s|sense|as|antsense)\|([0-9]+)\}\} *(.*?)$", line)
             if m:
               defnum, syns = m.groups()
             else:
@@ -409,7 +409,7 @@ def process_text_on_page(pageindex, pagetitle, text):
           if m:
             tag, syns = m.groups()
           else:
-            m = re.search(r"^\* *\{\{(?:s|sense)\|([^{}|]*?)\}\} *(.*?)$", line)
+            m = re.search(r"^\* *\{\{(?:s|sense|as|antsense)\|([^{}|]*?)\}\} *(.*?)$", line)
             if m:
               tag, syns = m.groups()
             else:
