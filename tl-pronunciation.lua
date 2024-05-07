@@ -730,7 +730,7 @@ local function process_specified_rhymes(rhymes, sylls, parsed_respellings)
 		-- If that fails and term is single-word, try to take it from the phonemic.
 		if not no_num_syl and not num_syl then
 			for _, parsed in ipairs(parsed_respellings) do
-				for pronun in pairs(parsed.pronuns) do
+				for _, pronun in ipairs(parsed.pronuns) do
 					-- Check that pronun.phonemic exists (it may not if raw phonetic-only pronun is given), and rhyme
 					-- isn't suppressed (which may happen if the term has a qualifier "colloquial", "obsolete" or the
 					-- like or is an auto-generated "glottal stop elision" pronunciation).
@@ -1431,8 +1431,8 @@ function export.show_full(frame)
 			if is_standard_tagalog and pronobj_for_ipa_check.phonemic:find("ʔ ") then
 				local glottal_stop_pronobj = {
 					raw = pronobj_for_ipa_check.raw,
-					phonemic = pronobj_for_ipa_check:gsub("ʔ ", "(ʔ) "),
-					phonetic = pronobj_for_ipa_check:gsub("ʔ ", "ː "),
+					phonemic = pronobj_for_ipa_check.phonemic:gsub("ʔ ", "(ʔ) "),
+					phonetic = pronobj_for_ipa_check.phonetic:gsub("ʔ ", "ː "),
 					refs = pronobj_for_ipa_check.refs,
 					q = combine_qualifiers(pronobj_for_ipa_check.q, {"with glottal stop elision"}),
 					qq = pronobj_for_ipa_check.qq,
