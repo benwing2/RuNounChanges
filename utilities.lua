@@ -1,29 +1,52 @@
-local codepoint = require("Module:string/codepoint")
-local decode_entities = require("Module:string/decode entities")
-local gsub = string.gsub
-local match = string.match
-local tonumber = tonumber
-local trim = mw.text.trim
-local type = type
-local u = require("Module:string/char")
-local ugsub = mw.ustring.gsub
-local unstripNoWiki = mw.text.unstripNoWiki
+local mw = mw
+local mw_text = mw.text
+local package = package
+local table = table
 
-local data = mw.loadData("Module:utilities/data")
+local require = require
+local concat = table.concat
+local decode_entities = require("Module:string utilities").decode_entities
+local get_current_frame = mw.getCurrentFrame
+local insert = table.insert
+local ipairs = ipairs
+local maxn = table.maxn
+local tonumber = tonumber
+local trim = mw_text.trim
+local type = type
+local unstrip = mw_text.unstrip
+local unstripNoWiki = mw_text.unstripNoWiki
 
 local export = {}
 
--- A helper function to escape magic characters in a string.
--- Magic characters: ^$()%.[]*+-?
-function export.pattern_escape(text)
-	if type(text) == "table" then
-		text = text.args[1]
+do
+	local loaded = package.loaded
+	local loader = package.loaders[2]
+	
+	--[==[
+	Like require, but return false if a module does not exist instead of throwing an error.
+	Outputs are cached in {package.loaded}, which is faster for all module types, but much faster for nonexistent modules since require will attempt to use the full loader each time (since they don't get cached in {package.loaded}).
+	Note: although nonexistent modules are cached as {false} in {package.loaded}, they still won't work with conventional require, since it uses a falsy check instead of checking the return value is not {nil}.
+	]==]
+	function export.safe_require(modname)
+		local module = loaded[modname]
+		if module ~= nil then
+			return module
+		end
+		-- The loader returns a function if the module exists, or nil if it doesn't, and checking this is faster than using pcall with require. If found, we still use require instead of loading and caching directly, because require contains safety checks against infinite loading loops (and we do want those to throw an error).
+		module = loader(modname)
+		if module then
+			return require(modname)
+		end
+		loaded[modname] = false
+		return false
 	end
-	return (text:gsub("[%^$()%%.[%]*+%-?]", "%%%0"))
 end
 
--- Converts decimal to hexadecimal.
--- Note: About three times as fast as the hex library.
+--[==[
+Convert decimal to hexadecimal.
+
+Note: About three times as fast as the hex library.
+]==]
 function export.dec_to_hex(dec)
 	dec = tonumber(dec)
 	if not dec or dec % 1 ~= 0 then
@@ -42,10 +65,13 @@ do
 		return lvl
 	end
 	
-	-- A helper function which iterates over the headings in `text`, which should be the content of a page or (main) section.
-	-- Each iteration returns three values: `sec` (the section title), `lvl` (the section level) and `loc` (the index of the section in the given text, from the first equals sign). The section title will be automatically trimmed, and any HTML entities will be resolved.
-	-- The optional parameter `a` (which should be an integer between 1 and 6) can be used to ensure that only headings of the specified level are iterated over. If `b` is also given, then they are treated as a range.
-	-- The optional parameters `a` and `b` can be used to specify a range, so that only headings with levels in that range are returned. If only `a` is given
+	--[==[
+	A helper function which iterates over the headings in `text`, which should be the content of a page or (main) section.
+	
+	Each iteration returns three values: `sec` (the section title), `lvl` (the section level) and `loc` (the index of the section in the given text, from the first equals sign). The section title will be automatically trimmed, and any HTML entities will be resolved.
+	The optional parameter `a` (which should be an integer between 1 and 6) can be used to ensure that only headings of the specified level are iterated over. If `b` is also given, then they are treated as a range.
+	The optional parameters `a` and `b` can be used to specify a range, so that only headings with levels in that range are returned. If only `a` is given ...
+	]==]
 	function export.find_headings(text, a, b)
 		a = a and check_level(a) or nil
 		b = b and check_level(b) or a or nil
@@ -53,7 +79,7 @@ do
 		
 		return function()
 			repeat
-				loc, lvl, sec, start = text:match("()%f[^%z\n\r](==?=?=?=?=?)([^\n\r]+)%2[\t ]*%f[%z\n\r]()", start)
+				loc, lvl, sec, start = text:match("()%f[^%z\n](==?=?=?=?=?)([^\n]+)%2[\t ]*%f[%z\n]()", start)
 				lvl = lvl and #lvl
 			until not (sec and a) or (lvl >= a and lvl <= b)
 			return sec and trim(decode_entities(sec)) or nil, lvl, loc
@@ -63,7 +89,7 @@ do
 	local function get_section(content, name, level)
 		if not (content and name) then
 			return nil
-		elseif name:match("[\n\r]") then
+		elseif name:find("\n", 1, true) then
 			error("Heading name cannot contain a newline.")
 		end
 		level = level and check_level(level) or nil
@@ -79,16 +105,23 @@ do
 		return start and content:sub(start)
 	end
 	
-	-- A helper function to return the content of a page section.
-	-- `content` is raw wikitext, `name` is the requested section, and `level` is an optional parameter that specifies the required section heading level. If `level` is not supplied, then the first section called `name` is returned.
-	-- `name` can either be a string or table of section names. If a table, each name represents a section that has the next as a subsection. For example, {"Spanish", "Noun"} will return the first matching section called "Noun" under a section called "Spanish". These do not have to be at adjacent levels ("Noun" might be L4, while "Spanish" is L2). If `level` is given, it refers to the last name in the table (i.e. the name of the section to be returned).
-	-- The returned section includes all of its subsections.
-	-- If no matching section is found, returns nil.
+	--[==[
+	A helper function to return the content of a page section.
+	
+	`content` is raw wikitext, `name` is the requested section, and `level` is an optional parameter that specifies
+	the required section heading level. If `level` is not supplied, then the first section called `name` is returned.
+	`name` can either be a string or table of section names. If a table, each name represents a section that has the
+	next as a subsection. For example, { {"Spanish", "Noun"}} will return the first matching section called "Noun"
+	under a section called "Spanish". These do not have to be at adjacent levels ("Noun" might be L4, while "Spanish"
+	is L2). If `level` is given, it refers to the last name in the table (i.e. the name of the section to be returned).
+	
+	The returned section includes all of its subsections. If no matching section is found, return {nil}.
+	]==]
 	function export.get_section(content, names, level)
 		if type(names) == "string" then
 			return get_section(content, names, level)
 		end
-		local names_len = #names
+		local names_len = maxn(names)
 		if names_len > 6 then
 			error("Not possible specify more than 5 subsections: headings only go up to level 6.")
 		end
@@ -99,60 +132,63 @@ do
 	end
 end
 
--- A function which returns the number of the page section which contains the current #invoke.
+--[==[
+A function which returns the number of the page section which contains the current {#invoke}.
+]==]
+function export.get_current_section()
+	local frame = get_current_frame()
+	-- We determine the section via the heading strip marker count, since they're numbered sequentially, but the only way to do this is to generate a fake heading via frame:preprocess(). The native parser assigns each heading a unique marker, but frame:preprocess() will return copies of older markers if the heading is identical to one further up the page, so the fake heading has to be unique to the page. The best way to do this is to feed it a heading containing a nowiki marker (which we will need later), since those are always unique.
+	local nowiki_marker = frame:extensionTag("nowiki")
+	-- Note: heading strip markers have a different syntax to the ones used for tags.
+	local h = tonumber(frame:preprocess("=" .. nowiki_marker .. "=")
+		:match("\127'\"`UNIQ%-%-h%-(%d+)%-%-QINU`\"'\127"))
+	-- For some reason, [[Special:ExpandTemplates]] doesn't generate a heading strip marker, so if that happens we simply abort early.
+	if not h then
+		return 0
+	end
+	-- The only way to get the section number is to increment the heading count, so we store the offset in nowiki strip markers which can be retrieved by procedurally unstripping nowiki markers, counting backwards until we find a match.
+	local n, offset = tonumber(nowiki_marker:match("\127'\"`UNIQ%-%-nowiki%-([%dA-F]+)%-QINU`\"'\127"), 16)
+	while not offset and n > 0 do
+		n = n - 1
+		offset = unstripNoWiki(("\127'\"`UNIQ--nowiki-%08X-QINU`\"'\127"):format(n))
+			:match("^HEADING\1(%d+)") -- Prefix "HEADING\1" prevents collisions.
+	end
+	offset = offset and (offset + 1) or 0
+	frame:extensionTag("nowiki", "HEADING\1" .. offset)
+	return h - offset
+end
+
 do
-	local function _section(frame, offset, h)
-		frame:extensionTag("nowiki", "HEADING\1" .. offset)
-		return h - offset
-	end
+	local page_L2s
 	
-	local i = 0
-	function export.get_current_section()
-		local frame = mw.getCurrentFrame()
-		-- Headings have to be unique, or they get assigned an old value.
-		local h = tonumber(frame:preprocess("=" .. u(0xF0000 + i) .. "=", ""):match("%d+"))
-		-- For some reason, [[Special:ExpandTemplates]] doesn't generate the strip marker, so if that happens we simply abort early.
-		if not h then
-			return 0
+	--[==[
+	A function which returns the name of the L2 language section which contains the current {#invoke}.
+	]==]
+	function export.get_current_L2()
+		local section = export.get_current_section()
+		if section == 0 then
+			return nil
 		end
-		i = i + 1
-		local n = tonumber(frame:extensionTag("nowiki"):match("[%dA-F]+"), 16)
-		while n > 0 do
-			n = n - 1
-			local offset = unstripNoWiki(("\127'\"`UNIQ--nowiki-%08X-QINU`\"'\127"):format(n))
-				:match("HEADING\1(%d+)")
-			if offset then
-				return _section(frame, offset + 1, h)
-			end
+		page_L2s = page_L2s or mw.loadData("Module:headword/data").page.page_L2s
+		local L2 = page_L2s[section]
+		while not L2 and section > 0 do
+			section = section - 1
+			L2 = page_L2s[section]
 		end
-		return _section(frame, 0, h)
+		return L2
 	end
 end
 
--- A function which returns the name of the L2 language section which contains the current #invoke.
-function export.get_current_L2()
-	local section = export.get_current_section()
-	if section == 0 then
-		return nil
-	end
-	local page_L2s = mw.loadData("Module:headword/data").page.page_L2s
-	local L2 = page_L2s[section]
-	while not L2 and section > 0 do
-		section = section - 1
-		L2 = page_L2s[section]
-	end
-	return L2
-end
-
--- A helper function to strip wiki markup, giving the plaintext of what is displayed on the page.
+--[==[
+A helper function to strip wiki markup, giving the plaintext of what is displayed on the page.
+]==]
 function export.get_plaintext(text)
 	text = text
 		:gsub("%[%[", "\1")
 		:gsub("%]%]", "\2")
 	
 	-- Remove strip markers and HTML tags.
-	text = mw.text.unstrip(text)
-		:gsub("<[^<>\1\2]+>", "")
+	text = unstrip(text):gsub("<[^<>\1\2]+>", "")
 		
 	-- Parse internal links for the display text, and remove categories.
 	text = require("Module:links").remove_links(text)
@@ -184,149 +220,127 @@ function export.get_plaintext(text)
 	return trim(text)
 end
 
-function export.plain_gsub(text, pattern, replacement)
-	local invoked = false
-	
-	if type(text) == "table" then
-		invoked = true
-		
-		if text.args then
-			local frame = text
-			
-			local params = {
-				[1] = {},
-				[2] = {},
-				[3] = { allow_empty = true },
-			}
-			
-			local args = require("Module:parameters").process(frame.args, params, nil, "utilities", "plain_gsub")
-			
-			text = args[1]
-			pattern = args[2]
-			replacement = args[3]
-		else
-			error("If the first argument to plain_gsub is a table, it should be a frame object.")
-		end
-	else
-		if not ( type(pattern) == "string" or type(pattern) == "number" ) then
-			error("The second argument to plain_gsub should be a string or a number.")
+do
+	local title_obj, category_namespaces, page_data, pagename, pagename_defaultsort
+	--[==[
+	Format the categories with the appropriate sort key.
+	* `categories` is a list of categories.
+	* `lang` is an object encapsulating a language; if {nil}, the object for language code {"und"} (undetermined) will
+	  be used.
+	* `sort_key` is placed in the category invocation, and indicates how the page will sort in the respective category.
+	  Normally this should be {nil}, and a default sort key based on the subpage name (the part after the colon) will
+	  be used.
+	* `sort_base` lets you override the default sort key used when `sort_key` is {nil}. Normally, this should be {nil},
+	  and a language-specific default sort key is computed from the subpage name. For example, for Russian this converts
+	  Cyrillic ё to a string consisting of Cyrillic е followed by U+10FFFF, so that effectively ё sorts after е instead
+	  of the default Wikimedia sort, which (I think) is based on Unicode sort order and puts ё after я, the last letter
+	  of the Cyrillic alphabet.
+	* `force_output` forces normal output in all namespaces. Normally, nothing is output if the page isn't in the main,
+	  Appendix:, Thesaurus:, Reconstruction: or Citations: namespaces.
+	* `sc` is a script object; if nil, the default will be used from the sort base.
+	]==]
+	function export.format_categories(categories, lang, sort_key, sort_base, force_output, sc)
+		if type(lang) == "table" and not lang.getCode then
+			error("The second argument to format_categories should be a language object.")
 		end
 		
-		if not ( type(replacement) == "string" or type(replacement) == "number" ) then
-			error("The third argument to plain_gsub should be a string or a number.")
+		title_obj = title_obj or mw.title.getCurrentTitle()
+		category_namespaces = category_namespaces or mw.loadData("Module:utilities/data").category_namespaces
+		
+		if not (
+			force_output or
+			category_namespaces[title_obj.namespace] or
+			title_obj.prefixedText == "Wiktionary:Sandbox"
+		) then
+			return ""
+		elseif not page_data then
+			page_data = mw.loadData("Module:headword/data").page
+			pagename = page_data.encoded_pagename
+			pagename_defaultsort = page_data.pagename_defaultsort
 		end
-	end
-	
-	pattern = export.pattern_escape(pattern)
-	
-	if invoked then
-		return (ugsub(text, pattern, replacement))
-	else
-		return ugsub(text, pattern, replacement)
-	end
-end
-
---[[
-Format the categories with the appropriate sort key. CATEGORIES is a list of
-categories.
-	-- LANG is an object encapsulating a language; if nil, the object for
-		language code 'und' (undetermined) will be used.
-	-- SORT_KEY is placed in the category invocation, and indicates how the
-		page will sort in the respective category. Normally this should be nil,
-		and a default sort key based on the subpage name (the part after the
-		colon) will be used.
-	-- SORT_BASE lets you override the default sort key used when SORT_KEY is
-		nil. Normally, this should be nil, and a language-specific default sort
-		key is computed from the subpage name (e.g. for Russian this converts
-		Cyrillic ё to a string consisting of Cyrillic е followed by U+10FFFF,
-		so that effectively ё sorts after е instead of the default Wikimedia
-		sort, which (I think) is based on Unicode sort order and puts ё after я,
-		the last letter of the Cyrillic alphabet.
-	-- FORCE_OUTPUT forces normal output in all namespaces. Normally, nothing
-		is output if the page isn't in the main, Appendix:, Reconstruction: or
-		Citations: namespaces.
-	-- SC is a script object; if nil, the default will be used from the sort
-		base.
-]]
-function export.format_categories(categories, lang, sort_key, sort_base, force_output, sc)
-	if type(lang) == "table" and not lang.getCode then
-		error("The second argument to format_categories should be a language object.")
-	end
-
-	local title_obj = mw.title.getCurrentTitle()	
-	local allowedNamespaces = {
-		[0] = true, [100] = true, [110] = true, [114] = true, [118] = true -- (main), Appendix, Thesaurus, Citations, Reconstruction
-	}
-
-	if force_output or allowedNamespaces[title_obj.namespace] or title_obj.prefixedText == "Wiktionary:Sandbox" then
-		local headword_data = mw.loadData("Module:headword/data")
-		local pagename = headword_data.page.pagename
-		local pagename_defaultsort = headword_data.page.pagename_defaultsort
 		
 		-- Generate a default sort key.
-		if sort_key ~= "-" then
-			if not lang then
-				lang = require("Module:languages").getByCode("und")
-			end
-			sort_base = lang:makeSortKey(sort_base or pagename, sc)
-			if sort_key and sort_key ~= "" then
-				if lang:getCode() ~= "und" then
-					if sort_key:uupper() == sort_base then
-						table.insert(categories, lang:getFullName() .. " terms with redundant sortkeys")
-					else
-						table.insert(categories, lang:getFullName() .. " terms with non-redundant non-automated sortkeys")
-					end
-				end
-			else
-				sort_key = sort_base
-			end
-			-- If the sort key is empty, remove it.
-			if sort_key == "" then
-				sort_key = nil
-			end
 		-- If the sort key is "-", bypass the process of generating a sort key altogether. This is desirable when categorising (e.g.) translation requests, as the pages to be categorised are always in English/Translingual.
-		else
+		if sort_key == "-" then
 			sort_key = sort_base and sort_base:uupper() or pagename_defaultsort
+		else
+			lang = lang or require("Module:languages").getByCode("und")
+			sort_base = lang:makeSortKey(sort_base or pagename, sc) or pagename_defaultsort
+			if not sort_key or sort_key == "" then
+				sort_key = sort_base
+			elseif lang:getCode() ~= "und" then
+				insert(categories, lang:getFullName() .. " terms with " .. (
+					sort_key:uupper() == sort_base and "redundant" or
+					"non-redundant non-automated"
+				) .. " sortkeys")
+			end
 		end
 		
-		local out_categories = {}
+		local ret = {}
 		for key, cat in ipairs(categories) do
-			out_categories[key] = "[[Category:" .. cat .. (sort_key and "|" .. sort_key or "") .. "]]"
+			ret[key] = "[[Category:" .. cat .. "|" .. sort_key .. "]]"
 		end
 		
-		return table.concat(out_categories, "")
-	else
-		return ""
+		return concat(ret)
 	end
 end
 
-function export.catfix(lang, sc)
-	if not lang or not lang.getCanonicalName then
-		error('The first argument to the function "catfix" should be a language object from [[Module:languages]] or [[Module:etymology languages]].')
-	end
-	if sc and not sc.getCode then
-		error('The second argument to the function "catfix" should be a script object from [[Module:scripts]].')
-	end
-	local canonicalName = lang:getCanonicalName()
-	local nonEtymologicalName = lang:getFullName()
+do
+	local catfix_scripts
 
-	-- To add script classes to links on pages created by category boilerplate templates.
-	if not sc then
-		sc = data.catfix_scripts[lang:getCode()] or data.catfix_scripts[lang:getFullCode()]
-		if sc then
-			sc = require("Module:scripts").getByCode(sc)
+	--[==[
+	Add a "catfix", which is used on language-specific category pages to add language attributes and often script
+	classes to all entry names. The addition of language attributes and script classes makes the entry names display
+	better (using the language- or script-specific styles specified in [[MediaWiki:Common.css]]), which is particularly
+	important for non-English languages that do not have consistent font support in browsers.
+
+	Language attributes are added for all languages, but script classes are only added for languages with one script
+	listed in their data file, or for languages that have a default script listed in the {catfix_script} list in
+	[[Module:utilities/data]]. Some languages clearly have a default script, but still have other scripts listed in
+	their data file and therefore need their default script to be specified. Others do not have a default script.
+
+	* Serbo-Croatian is regularly written in both the Latin and Cyrillic scripts. Because it uses two scripts,
+	  Serbo-Croatian cannot have a script class applied to entries in its category pages, as only one script class
+	  can be specified at a time.
+	* Russian is usually written in the Cyrillic script ({{cd|Cyrl}}), but Braille ({{cd|Brai}}) is also listed in
+	  its data file. So Russian needs an entry in the {catfix_script} list, so that the {{cd|Cyrl}} (Cyrillic) script
+	  class will be applied to entries in its category pages.
+
+	To find the scripts listed for a language, go to [[Module:languages]] and use the search box to find the data file
+	for the language. To find out what a script code means, search the script code in [[Module:scripts/data]].
+	]==]
+	function export.catfix(lang, sc)
+		if not lang or not lang.getCanonicalName then
+			error('The first argument to the function "catfix" should be a language object from [[Module:languages]] or [[Module:etymology languages]].')
 		end
+		if sc and not sc.getCode then
+			error('The second argument to the function "catfix" should be a script object from [[Module:scripts]].')
+		end
+		local canonicalName = lang:getCanonicalName()
+		local nonEtymologicalName = lang:getFullName()
+	
+		-- To add script classes to links on pages created by category boilerplate templates.
+		if not sc then
+			catfix_scripts = catfix_scripts or mw.loadData("Module:utilities/data").catfix_scripts
+			sc = catfix_scripts[lang:getCode()] or catfix_scripts[lang:getFullCode()]
+			if sc then
+				sc = require("Module:scripts").getByCode(sc)
+			end
+		end
+		
+		local catfix_class = "CATFIX-" .. mw.uri.anchorEncode(canonicalName)
+		if nonEtymologicalName ~= canonicalName then
+			catfix_class = catfix_class .. " CATFIX-" .. mw.uri.anchorEncode(nonEtymologicalName)
+		end
+		return "<span id=\"catfix\" style=\"display:none;\" class=\"" .. catfix_class .. "\">" ..
+			require("Module:script utilities").tag_text("&nbsp;", lang, sc, nil) ..
+			"</span>"
 	end
-
-	local catfix_class = "CATFIX-" .. mw.uri.anchorEncode(canonicalName)
-	if nonEtymologicalName ~= canonicalName then
-		catfix_class = catfix_class .. " CATFIX-" .. mw.uri.anchorEncode(nonEtymologicalName)
-	end
-	return "<span id=\"catfix\" style=\"display:none;\" class=\"" .. catfix_class .. "\">" ..
-		require("Module:script utilities").tag_text("&nbsp;", lang, sc, nil) ..
-		"</span>"
 end
 
+--[==[
+Implementation of the {{tl|catfix}} template.
+]==]
 function export.catfix_template(frame)
 	local params = {
 		[1] = {},
@@ -346,49 +360,14 @@ function export.catfix_template(frame)
 	return export.catfix(lang, sc)
 end
 
-function export.make_id(lang, str)
-	--[[	If called with invoke, first argument is a frame object.
-			If called by a module, first argument is a language object. ]]
-	local invoked = false
-	
-	if type(lang) == "table" then
-		if lang.args then
-			invoked = true
-			
-			local frame = lang
-			
-			local params = {
-				[1] = {},
-				[2] = {},
-			}
-			
-			local args = require("Module:parameters").process(frame:getParent().args, params, nil, "utilities", "make_id")
-			
-			local langCode = args[1]
-			str = args[2]
-			
-			local m_languages = require("Module:languages")
-			lang = m_languages.getByCode(langCode, 1, "allow etym")
-		elseif not lang.getCanonicalName then
-			error("The first argument to make_id should be a language object.")
-		end
-	end
+--[==[
+Given a type (as a string) and an arbitrary number of entities, checks whether all of those entities are language,
+family, script, writing system or Wikimedia language objects. Useful for error handling in functions that require
+one of these kinds of object.
 
-	if not ( type(str) == "string" or type(str) == "number" ) then
-		error("The second argument to make_id should be a string or a number.")
-	end
-	
-	local id = require("Module:senseid").anchor(lang, str)
-	
-	if invoked then
-		return '<li class="senseid" id="' .. id .. '">'
-	else
-		return id
-	end
-end
-
--- Given a type (as a string) and an arbitrary number of entities, checks whether all of those entities are language, family, script, writing system or Wikimedia language objects. Useful for error handling in functions that require one of these kinds of object.
--- If noErr is set, the function returns false instead of throwing an error, which allows customised error handling to be done in the calling function.
+If `noErr` is set, the function returns false instead of throwing an error, which allows customised error handling to
+be done in the calling function.
+]==]
 function export.check_object(typ, noErr, ...)
 	local function fail(message)
 		if noErr then
@@ -402,7 +381,7 @@ function export.check_object(typ, noErr, ...)
 	if #objs == 0 then
 		return fail("Must provide at least one object to check.")
 	end
-	for _, obj in ipairs{...} do
+	for _, obj in ipairs(objs) do
 		if type(obj) ~= "table" or type(obj.hasType) ~= "function" then
 			return fail("Function expected a " .. typ .. " object, but received a " .. type(obj) .. " instead.")
 		elseif not (typ == "object" or obj:hasType(typ)) then
