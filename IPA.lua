@@ -2,15 +2,16 @@ local export = {}
 -- [[Module:IPA/data]]
 
 local m_data = mw.loadData('Module:IPA/data') -- [[Module:IPA/data]]
+local m_str_utils = require("Module:string utilities")
 local m_symbols = mw.loadData('Module:IPA/data/symbols') -- [[Module:IPA/data/symbols]]
 local m_syllables -- [[Module:syllables]]; loaded below if needed
 
-local sub = mw.ustring.sub
-local find = mw.ustring.find
-local gsub = mw.ustring.gsub
-local match = mw.ustring.match
-local gmatch = mw.ustring.gmatch
-local U = mw.ustring.char
+local find = m_str_utils.find
+local gmatch = m_str_utils.gmatch
+local gsub = m_str_utils.gsub
+local len = m_str_utils.len
+local sub = m_str_utils.sub
+local u = m_str_utils.char
 
 local function track(page)
 	require("Module:debug/track")("IPA/" .. page)
@@ -40,7 +41,7 @@ function export.format_IPA_full(lang, items, err, separator, sortKey, no_count)
 	IPAs = export.format_IPA_multiple(lang, items, separator, no_count)
 	
 	if lang and (namespace == "" or namespace == "Reconstruction") then
-		sortKey = sortKey or lang:makeSortKey(mw.title.getCurrentTitle().text)
+		sortKey = sortKey or (lang:makeSortKey(mw.title.getCurrentTitle().text))
 		sortKey = sortKey and ("|" .. sortKey) or ""
 		category = "[[Category:" .. lang:getCanonicalName() .. " terms with IPA pronunciation" .. sortKey .. "]]"
 	else
@@ -157,7 +158,7 @@ function export.format_IPA_multiple(lang, items, separator, no_count)
 
 		table.insert(bits, bit)
 		
-		--[=[	[[Special:WhatLinksHere/Template:tracking/IPA/syntax-error]]
+		--[=[	[[Special:WhatLinksHere/Wiktionary:Tracking/IPA/syntax-error]]
 				The length or gemination symbol should not appear after a syllable break or stress symbol.	]=]
 		
 		if find(item.pron, "[ˈˌ%.][ːˑ]") then
@@ -212,6 +213,7 @@ function export.format_IPA(lang, pron, split_output)
 	
 	if reconstructed then
 		pron = sub(pron, 2)
+		without_links = sub(without_links, 2)
 	end
 	
 	-- If valid, strip the representation marks
@@ -274,44 +276,43 @@ function export.format_IPA(lang, pron, split_output)
 	result = str_gsub(result, "&[^;]+;", "") -- This may catch things that are not valid character entities.
 	result = str_gsub(result, "^%*", "")
 	result = gsub(result, ",%s+", "")
-	result = gsub(result, "⁽[".. m_symbols.superscripts .. "]+⁾", "")
-	result = gsub(result, '[' .. m_symbols.valid .. ']', '')
 	
 	-- VS15
 	local vs15_class = "[" .. m_symbols.add_vs15 .. "]"
-	if mw.ustring.find(pron, vs15_class) then
-		local vs15 = U(0xFE0E)
-		if mw.ustring.find(result, vs15) then
+	if find(pron, vs15_class) then
+		local vs15 = u(0xFE0E)
+		if find(result, vs15) then
 			result = gsub(result, vs15, "")
-			pron = mw.ustring.gsub(pron, vs15, "")
+			pron = gsub(pron, vs15, "")
 		end
-		pron = mw.ustring.gsub(pron, "(" .. vs15_class .. ")", "%1" .. vs15)
+		pron = gsub(pron, "(" .. vs15_class .. ")", "%1" .. vs15)
 	end
 
 	if result ~= '' then
-		local suggestions = {}
 		mw.log(pron, result)
 		local namespace = mw.title.getCurrentTitle().namespace
-		local category
-		if namespace == 0 then
-			-- main namespace
-			category = "IPA pronunciations with invalid IPA characters"
-		elseif namespace == 118 then
-			-- reconstruction namespace
-			category = "IPA pronunciations with invalid IPA characters/reconstruction"
-		else
-			category = "IPA pronunciations with invalid IPA characters/non_mainspace"
-		end
-		for character in gmatch(result, ".") do
-			local suggestion = m_symbols.suggestions[character]
-			if suggestion then
-				table.insert(suggestions, character .. " with " .. suggestion)
+		local suggestions = {}
+		for k, v in pairs(m_symbols.invalid) do
+			if result:match(k) then
+				table.insert(suggestions, k .. " with " .. v)
 			end
-			table.insert(categories, "[[Category:" .. category .. "|" .. character .. "]]")
 		end
-		table.insert(err, "invalid IPA characters (" .. result .. ")")
 		if suggestions[1] then
-			table.insert(err, "replace " .. table.concat(suggestions, ", "))
+			if namespace == 0 or namespace == 118 then
+				error("Invalid IPA: replace " .. mw.text.listToText(suggestions))
+			else
+				table.insert(err, "replace " .. mw.text.listToText(suggestions))
+			end
+		end
+		result = gsub(result, "⁽[".. m_symbols.superscripts .. "]+⁾", "")
+		result = gsub(result, '[' .. m_symbols.valid .. ']', '')
+		if result ~= '' then
+			local category = "IPA pronunciations with invalid IPA characters"
+			if namespace ~= 0 and namespace ~= 118 then
+				category = category .. "/non_mainspace"
+			end
+			table.insert(categories, "[[Category:" .. category .. "]]")
+			table.insert(err, "invalid IPA characters (" .. result .. ")")
 		end
 	end
 	
@@ -321,7 +322,7 @@ function export.format_IPA(lang, pron, split_output)
 	
 	-- Reference inside IPA template usage
 	-- FIXME: Doesn't work; you can't put HTML in module output.
-	--if mw.ustring.find(pron, '</ref>') then
+	--if find(pron, '</ref>') then
 	--	table.insert(categories, "[[Category:IPA pronunciations with reference]]")
 	--end
 	
@@ -331,22 +332,22 @@ function export.format_IPA(lang, pron, split_output)
 			local rest = pron
 			local phonemes = {}
 			
-			while mw.ustring.len(rest) > 0 do
+			while len(rest) > 0 do
 				local longestmatch = ""
 				
 				if sub(rest, 1, 1) == "(" or sub(rest, 1, 1) == ")" then
 					longestmatch = sub(rest, 1, 1)
 				else
 					for _, phoneme in ipairs(valid_phonemes) do
-						if mw.ustring.len(phoneme) > mw.ustring.len(longestmatch) and sub(rest, 1, mw.ustring.len(phoneme)) == phoneme then
+						if len(phoneme) > len(longestmatch) and sub(rest, 1, len(phoneme)) == phoneme then
 							longestmatch = phoneme
 						end
 					end
 				end
 				
-				if mw.ustring.len(longestmatch) > 0 then
+				if len(longestmatch) > 0 then
 					table.insert(phonemes, longestmatch)
-					rest = sub(rest, mw.ustring.len(longestmatch) + 1)
+					rest = sub(rest, len(longestmatch) + 1)
 				else
 					local phoneme = sub(rest, 1, 1)
 					table.insert(phonemes, "<span style=\"color: red\">" .. phoneme .. "</span>")
