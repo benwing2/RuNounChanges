@@ -21,6 +21,18 @@ FIXME:
 9. Change handling of forcing dot. Currently t.s forces /ts/ instead of /tʃ/; this should be t_s. Currently you have to
    write si..yasa with double dot to get /sijasa/ not /ʃasa/; this should be single dot, and no dot should indicate
    the palatalized pronunciation.
+10. If there are auto-generated pronunciations, they should go on a separate line. If there are other pronunciations
+    on the line, indent the auto-generated ones on a separate line under the pronunciation line; otherwise, at the same
+	bullet level. Good test cases: [[F]], [[General Mariano Alvarez]].
+11. Fix bug involving [[Evangelista]] respelled 'Evanghelista' and [[barangay]] respelled 'baranggay'; should recognize
+    for syllabification purposes.
+12. Rhymes should be displayed even if multiword based on the last word, but just not categorize.
+13. DOTOVER should be used to indicate an unstressed word or suffix, e.g. -ȧ to indicate unstressed [[a]] phoneme.
+14. Move hyphen-restoring code in syllabify_from_spelling() to align_syllabification_to_spelling().
+15. Allow h against nothing esp. at beginning of word e.g. in [[Hermogenes]] respelled 'Ermógenes' or 'Ermogenes'.
+    Also [[adhan]] respelled 'adán'.
+16. Unstressed words should not have rhymes, e.g. 'ba' is a letter that isn't normally stressed but is getting a rhyme.
+17. Shouldn't be necessary to write raw: before /.../.
 ]==]
 
 local force_cat = true -- enable for testing
@@ -52,6 +64,7 @@ local CFLEX = u(0x0302) -- circumflex =  ̂
 local TILDE = u(0x0303) -- tilde =  ̃
 local DIA = u(0x0308) -- diaeresis =  ̈
 local MACRON = u(0x0304) -- macron =  ̄
+local DOTOVER = u(0x0307) -- dot over =  ̇
 
 local vowel = "aeëəiou" -- vowel
 local V = "[" .. vowel .. "]"
@@ -64,8 +77,12 @@ local separator = accent .. ipa_stress .. "# ."
 local C = "[^" .. vowel .. separator .. "]" -- consonant
 
 local unstressed_words = m_table.listToSet({
-	"ang", "sa", "nang", "si", "ni", "kay", -- case markers. "Nang" here is for written "ng", but can also work with nang as in the contraction na'ng and the conjunction "nang"
-	"a", "ar", "ay", "ba", "bi", "da", "di", "e", "ef", "eks", "dyi", "i",  "jey", "key", "em", "ma", "en", "pi", "ra", "es", "ta", "ti", "u", "vi", "wa", "way", "ya", "yu", "zey", "zi", -- letter names (abakada and modern Filipino)
+	-- case markers; "nang" here is for written "ng", but can also work with nang as in the contraction na'ng and the
+	-- conjunction "nang"
+	"ang", "sa", "nang", "si", "ni", "kay",
+	-- letter names (abakada and modern Filipino)
+	"a", "ar", "ay", "ba", "bi", "da", "di", "e", "ef", "eks", "dyi", "i",  "jey", "key", "em", "ma", "en", "pi", "ra",
+	"es", "ta", "ti", "u", "vi", "wa", "way", "ya", "yu", "zey", "zi",
 	"ko", "mo", "ka", --single-syllable personal pronouns
 	"na",-- linker, also temporal particle
     "daw", "ga", "ha", "pa", -- particles
@@ -691,9 +708,8 @@ end
 local function should_generate_rhyme_from_respelling(term)
 	local words = rsplit(decompose(term), " +")
 	return #words == 1 and -- no if multiple words
-		not words[1]:find(".%-.") and -- no if word is composed of hyphenated parts (e.g. [[Austria-Hungría]])
 		not words[1]:find("%-$") and -- no if word is a prefix
-		not (words[1]:find("^%-") and words[1]:find(CFLEX)) and -- no if word is an unstressed suffix
+		not (words[1]:find("^%-") and words[1]:find(DOTOVER)) and -- no if word is an unstressed suffix
 		word_has_vowels(words[1]) -- no if word has no vowels (e.g. a single letter)
 end
 
@@ -1711,7 +1727,7 @@ function export.show_full(frame)
 				  caption = audio.gloss
 				}
 			)
-			
+
 			if audio.q and audio.q[1] or audio.qq and audio.qq[1]
 				or audio.a and audio.a[1] or audio.aa and audio.aa[1] then
 				text = require("Module:pron qualifier").format_qualifiers(audio, text)
@@ -1842,7 +1858,7 @@ function export.show_full_old(frame)
 	---Hyphenation---
 	if args.nohyph == 0 then
 		local hyph_args = args[1]
-		
+
 		local function removeAccents(str)
 			str = toNFD(str)
 			str = rsub(str, ".[" .. TILDE .. DIA .. "]", {
@@ -1853,56 +1869,56 @@ function export.show_full_old(frame)
 			str = rsub(str, "(.)" .. accent_c, "%1")
 			return str
 		end
-		
+
 		local text = hyph_args[1] or mw.title.getCurrentTitle().text
-		
+
 		local function hyphenate(text)
 			-- Auto hyphenation start --
 			local vowel = vowel .. "ẃý" -- vowel 
 			local V = "[" .. vowel .. "]"
 			local C = "[^" .. vowel .. separator .. "]" -- consonant
-			
+
 			text = removeAccents(text)
-			
+
 			origtext = text
 			text = string.lower(text)
-			
+
 			-- put # at word beginning and end and double ## at text/foot boundary beginning/end
 			text = rsub(text, " | ", "# | #")
 			text = "##" .. rsub(text, " ", "# #") .. "##"
 			text = rsub_repeatedly(text, "([.]?)#([.]?)", "#")
-			
+
 			text = rsub(text, "ng", "ŋ")
 			text = rsub(text, "ch", "ĉ")
 			text = rsub(text, "sh", "ʃ")
 			text = rsub(text, "gui([aeëo])", "gui.%1")
 			text = rsub(text, "r", "ɾ")
 			text = rsub(text, "ɾɾ", "r")
-			
+
 			text = rsub_repeatedly(text, "([^" .. vowel ..  "])([u])([" .. AC .. MACRON .. "]?)([aeio])("  .. accent_c .. "?)","%1%2%3.%4%5")
 			text = rsub_repeatedly(text, "(" .. V ..  ")([u])([" .. AC .. MACRON .. "]?)([aeio])("  .. accent_c .. "?)","%1.u%3%4%5")
 			text = rsub_repeatedly(text, "(" .. V ..  ")([o])([" .. AC .. MACRON .. "]?)([aei])("  .. accent_c .. "?)","%1.o%3%4%5")
 			text = rsub(text, "([i])([" .. AC .. MACRON .. "])([aeou])("  .. accent_c .. "?)","%1%2#í%3%4")
 			text = rsub(text, "([i])([aeou])(" .. accent_c .. "?)","í%2%3")
 			text = rsub(text, "a([".. AC .."]*)o([#.])","a%1ó%2")
-		
+
 			text = rsub(text, "y([ˈˌ.]*)([bćĉdfɡhjĵklmnɲŋpɾrsʃtvwɟzʔ#" .. vowel .. "])","ý%1%2")
 			text = rsub(text, "ý(" .. V .. ")", "y%1")
 			text = rsub(text, "w([ˈˌ]?)([bćĉdfɡjĵklmnɲŋpɾrsʃtvwɟzʔ#" .. vowel .. "])","ẃ%1%2")
 			text = rsub(text, "ẃ(" .. V .. ")","w%1")
-		
+
 			text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*)(" .. C .. V .. ")", "%1.%2")
-			
+
 			-- "mb", "mp", "nd", "nk", "nt" combinations
 			text = rsub_repeatedly(text, "(m)([bp])([^lɾrɟyw" .. vowel .. separator .."])", "%1%2.%3")
 			text = rsub_repeatedly(text, "(n)([dkt])([^lɾrɟyw" .. vowel .. separator .. "])", "%1%2.%3")
 			text = rsub_repeatedly(text, "(ŋ)([k])([^lɾrɟyw" .. vowel .. separator ..  "])", "%1%2.%3")
 			text = rsub_repeatedly(text, "([ɾr])([bkdfɡklmnpsʃtvz])([^lɾrɟyw" .. vowel .. separator ..  "])", "%1%2.%3")
-			
+
 			text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*" .. C .. ")(" .. C .. V .. ")", "%1.%2")
 			text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*" .. C .. "+)(" .. C .. C .. V .. ")", "%1.%2")
 			text = rsub_repeatedly(text, "(" .. C .. ")%.s(" .. C .. ")", "%1s.%2")
-			
+
 			-- Any aeo, or stressed iu, should be syllabically divided from a following aeo or stressed iu.
 			text = rsub_repeatedly(text, "([aeo]" .. accent_c .. "*)([aeo])", "%1.%2")
 			text = rsub_repeatedly(text, "([aeo]" .. accent_c .. "*)(" .. V .. AC .. ")", "%1.%2")
@@ -1910,26 +1926,26 @@ function export.show_full_old(frame)
 			text = rsub_repeatedly(text, "([iuə]" .. AC .. ")(" .. V .. AC .. ")", "%1.%2")
 			text = rsub_repeatedly(text, "i(" .. accent_c .. "*)i", "i%1.i")
 			text = rsub_repeatedly(text, "u(" .. accent_c .. "*)u", "u%1.u")
-		
+
 			text = rsub(text, "ĉ", "ch")
 			text = rsub(text, "ŋ", "ng")
 			text = rsub(text, "ʃ", "sh")
 			text = rsub(text, "r", "rr")
 			text = rsub(text, "ɾ", "r")
 			text = removeAccents(text)
-			
+
 			text = rsub_repeatedly(text, "([.]+)", ".")
 			text = rsub(text, "[.]?-[.]?", "-")
 			text = rsub(text, "[‿]([^ ])", "|%1")
 			text = rsub(text, "[.]([^ ])", "|%1")
-		
+
 			text = rsub(text, "([gq])([u])|([ei])", "%1%2%3")
 			text = rsub(text, "([^ 0-9]?)([7])([^ 0-9]?)", "%1%3")
 			text = rsub(text, "([|])+", "%1")
-			
+
 			-- remove # symbols at word and text boundaries
 			text = rsub_repeatedly(text, "([.]?)#([.]?)", "")
-			
+
 			-- Fix Capitalization --
 			local syllbreak = 0
 			for i=1, #text do
@@ -1939,10 +1955,10 @@ function export.show_full_old(frame)
 			    	text = table.concat({text:sub(1, i-1), text:sub(i,i):upper(), text:sub(i+1)}) 
 			    end
 			end
-			
+
 			-- Fix hyphens --
 			origtext = mw.title.getCurrentTitle().text
-			
+
 			if (table.concat(rsplit(origtext, "-")) ==  table.concat(rsplit(table.concat(rsplit(text, "|")), "-"))) then
 				syllbreak = 0
 				for i=1, #text do
@@ -1951,17 +1967,17 @@ function export.show_full_old(frame)
 					    	text = table.concat({text:sub(1, i-1), "-", text:sub(i+1)}) 
 					    else
 					    	syllbreak = syllbreak + 1
-					    end	
+					    end
 				    end
 				end
 			end
-			
+
 			text = rsplit(text, "|")
 			return text
 		end
-		
+
 		text = hyphenate(text)
-		
+
 		-- Determine whether manual hyphenation is given (more than one numbered argument is present), and
 		-- categorize redundant hyphenations.
 		if (#hyph_args == 1 and hyph_args[1] == mw.title.getCurrentTitle().text) or 
@@ -1970,7 +1986,7 @@ function export.show_full_old(frame)
 		elseif #hyph_args > 1 then
 			text = hyph_args
 		end
-		
+
 		-- Store hyphenation(s) in hyph_data (passed to [[Module:hyphenation]]) and compute maximum hyph_data
 		-- argument.
 		local max_hyph_ct = 0
@@ -1982,7 +1998,7 @@ function export.show_full_old(frame)
 				end
 			end
 		end
-		
+
 		-- Separate the hyphenations and concatenate each one to form a word. Below, we check that each
 		-- hyphenation matches the pagename and categorize into an error category if not.
 		local hyph_check = {}
@@ -1997,13 +2013,13 @@ function export.show_full_old(frame)
 				table.insert(hyph_check, "")
 			end
 		end
-		
+
 		for _, hyph_word in ipairs(hyph_check) do
 			if (hyph_word ~= mw.title.getCurrentTitle().text) then
-				table.insert(categories, ("%s terms with hyphenation errors"):format(lang:getCanonicalName()))	
+				table.insert(categories, ("%s terms with hyphenation errors"):format(lang:getCanonicalName()))
 			end
 		end
-		
+
 		-- Actually hyphenate.
 		output.syll = require("Module:hyphenation").hyphenate(hyph_data)
 	end
