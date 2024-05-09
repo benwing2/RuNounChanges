@@ -497,7 +497,7 @@ function export.show(frame)
 					end
 					script_arg[i] = {term = alt, sc = require("Module:scripts").getByCode(script_code) }
 
-					if not check_for_alt_script_entry(alt, alt_script_def) then
+					if not check_for_alt_script_entry(alt, script_def) then
 						table.insert(data.categories,
 							("%s terms with missing %s script entries"):format(langname, script_name))
 					end
