@@ -114,7 +114,7 @@ def process_text_on_page(index, pagetitle, text):
       for i, spec in enumerate(specs):
         t.add(str(i + 1), spec)
       if hyph_spec:
-        t.add("hyph", hyph_spec)
+        t.add("syll", hyph_spec)
       if hmp_spec:
         t.add("hmp", hmp_spec)
       t.add("new", "1")
