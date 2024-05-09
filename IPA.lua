@@ -1,9 +1,13 @@
 local export = {}
 -- [[Module:IPA/data]]
 
-local m_data = mw.loadData('Module:IPA/data') -- [[Module:IPA/data]]
+local force_output = false -- for testing
+
+local m_data = mw.loadData("Module:IPA/data") -- [[Module:IPA/data]]
 local m_str_utils = require("Module:string utilities")
-local m_symbols = mw.loadData('Module:IPA/data/symbols') -- [[Module:IPA/data/symbols]]
+local m_symbols = mw.loadData("Module:IPA/data/symbols") -- [[Module:IPA/data/symbols]]
+local syllables_module = "Module:syllables"
+local utilities_module = "Module:utilities"
 local m_syllables -- [[Module:syllables]]; loaded below if needed
 
 local find = m_str_utils.find
@@ -18,11 +22,57 @@ local function track(page)
 	return true
 end
 
-function export.format_IPA_full(lang, items, err, separator, sortKey, no_count)
-	local IPA_key, key_link, err_text, prefix, IPAs, category
+local function process_maybe_split_categories(split_output, prontext, categories, lang, errtext)
+	if split_output ~= "raw" then
+		if categories[1] then
+			categories = require(utilities_module).format_categories(categories, lang, nil, nil, force_output)
+		else
+			categories = ""
+		end
+	end
+	if split_output then -- for use of IPA in links, etc.
+		if errtext then
+			return prontext, categories, errtext
+		else
+			return prontext, categories
+		end
+	else
+		return prontext .. (errtext or "") .. categories
+	end
+end
+
+--[==[
+Format a line of one or more IPA pronunciations as {{tl|IPA}} would do it, i.e. with a preceding {"IPA:"} followed by
+the word {"key"} linking to an Appendix page describing the language's phonology, and with an added category
+{{cd|<var>lang</var> terms with IPA pronunciation}}. Other than the extra preceding text and category, this is identical
+to {format_IPA_multiple()}, and the considerations described there in the documentation apply here as well. Parameters
+accepted are:
+* `lang` is an object representing the language of the pronunciations, which is used when adding cleanup categories for
+   pronunciations with invalid phonemes; for determining how many syllables the pronunciations have in them, in order to
+   add a category such as [[:Category:Italian 2-syllable words]] (for certain languages only); for adding a category
+   {{cd|<var>lang</var> terms with IPA pronunciation}}; and for determining the proper sort keys for categories. Unlike
+   for {format_IPA_multiple()}, `lang` may not be {nil}.
+* `items` is a list of pronunciations, in exactly the same format as for {format_IPA_multiple()}.
+* `err`, if not {nil}, is a string containing an error message to use in place of the link to the language's phonology.
+* `separator`: the overall separator to use when separating formatted items. Defaults to {", "}. Except in the simplest
+  cases, you should consider setting this to an empty string and using the per-item `separator` field in `items`.
+* `sortKey`: explicit sort key used for categories.
+* `no_count`: Suppress adding a {#-syllable words} category such as [[:Category:Italian 2-syllable words]]. Note that
+  only certain languages add such categories to begin with, because it depends on knowing how to count syllables in a
+  given language, which depends on the phonology of the language. Also, this does not suppress the addition of cleanup
+  or other categories. If you need them suppressed, use `split_output` to return the categories separately and ignore
+  them.
+* `split_output`: If not given, the return value is a concatenation of the formatted pronunciation and formatted
+  categories. Otherwise, two values are returned: the formatted pronunciation and the categories. If `split_output` is
+  the value {"raw"}, the categories are returned in list form, where the list elements are a combination of category
+  strings and category objects of the form suitable for passing to {format_categories()} in [[Module:utilities]]. If
+  `split_output` is any other value besides {nil}, the categories are returned as a pre-formatted concatenated string.
+]==]
+function export.format_IPA_full(lang, items, err, separator, sortKey, no_count, split_output)
+	local IPA_key, key_link, err_text, prefix, IPAs, categories
 	local hasKey = m_data.langs_with_infopages
 	local namespace = mw.title.getCurrentTitle().nsText
-	
+
 	if err then
 		err_text = '<span class="error">' .. err .. '</span>'
 	else
@@ -31,47 +81,46 @@ function export.format_IPA_full(lang, items, err, separator, sortKey, no_count)
 		else
 			IPA_key = "wikipedia:" .. lang:getCanonicalName() .. " phonology"
 		end
-		
+
 		key_link = "[[" .. IPA_key .. "|key]]"
 	end
 
-	
+
 	local prefix = "[[Wiktionary:International Phonetic Alphabet|IPA]]<sup>(" .. ( key_link or err_text ) .. ")</sup>:&#32;"
-	
-	IPAs = export.format_IPA_multiple(lang, items, separator, no_count)
-	
+
+	IPAs, categories = export.format_IPA_multiple(lang, items, separator, no_count, "raw")
+
 	if lang and (namespace == "" or namespace == "Reconstruction") then
-		sortKey = sortKey or (lang:makeSortKey(mw.title.getCurrentTitle().text))
-		sortKey = sortKey and ("|" .. sortKey) or ""
-		category = "[[Category:" .. lang:getCanonicalName() .. " terms with IPA pronunciation" .. sortKey .. "]]"
-	else
-		category = ""
+		table.insert(categories, {
+			cat = lang:getCanonicalName() .. " terms with IPA pronunciation",
+			sort_key = sortKey
+		})
 	end
 
-	return prefix .. IPAs .. category
+	return process_maybe_split_categories(split_output, categories, prefix .. IPAs, lang)
 end
 
 local function determine_repr(pron)
 	local repr_mark = {}
 	local repr, reconstructed
-	
+
 	-- remove initial asterisk before representation marks, used on some Reconstruction pages
 	if find(pron, "^%*") then
 		reconstructed = true
 		pron = sub(pron, 2)
 	end
-	
+
 	local representation_types = {
 		['/'] = { right = '/', type = 'phonemic', },
 		['['] = { right = ']', type = 'phonetic', },
 		['⟨'] = { right = '⟩', type = 'orthographic', },
 		['-'] = { type = 'rhyme' },
 	}
-	
+
 	repr_mark.i, repr_mark.f, repr_mark.left, repr_mark.right = find(pron, '^(.).-(.)$')
-	
+
 	local representation_type = representation_types[repr_mark.left]
-	
+
 	if representation_type then
 		if representation_type.right then
 			if repr_mark.right == representation_type.right then
@@ -83,7 +132,7 @@ local function determine_repr(pron)
 	else
 		repr = nil
 	end
-	
+
 	return repr, reconstructed
 end
 
@@ -95,28 +144,78 @@ local function hasInvalidSeparators(transcription)
 	end
 end
 
-function export.format_IPA_multiple(lang, items, separator, no_count)
+--[==[
+Format a line of one or more bare IPA pronunciations (i.e. without any preceding {"IPA:"} and without adding to a
+category {{cd|<var>lang</var> terms with IPA pronunciation}}). Individual pronunciations are formatted using
+{format_IPA()} and are combined with separators, qualifiers, pre-text, post-text, etc. to form a line of pronunciations.
+Parameters accepted are:
+* `lang` is an object representing the language of the pronunciations, which is used when adding cleanup categories for
+   pronunciations with invalid phonemes; for determining how many syllables the pronunciations have in them, in order to
+   add a category such as [[:Category:Italian 2-syllable words]] (for certain languages only); and for computing the
+   proper sort keys for categories. `lang` may be {nil}.
+* `items` is a list of pronunciations, each of which is an object with the following properties:
+** `pron`: the pronunciation, in the same format as is accepted by {format_IPA()}, i.e. it should be either phonemic
+     (surrounded by {/.../}), phonetic (surrounded by {[...]}), orthographic (surrounded by {⟨...⟩}) or a rhyme
+	 (beginning with a hyphen);
+** `pretext`: text to display directly before the formatted pronunciation, inside of any qualifiers or accent
+     qualifiers;
+** `posttext`: text to display directly after the formatted pronunciation, inside of any qualifiers or accent
+     qualifiers;
+** `q` or `qualifiers`: {nil} or a list of left qualifiers (as in {{tl|q}}) to display before the formatted
+     pronunciation; note that `qualifiers` is deprecated;
+** `qq`: {nil} or a list of right qualifiers to display before the formatted pronunciation;
+** `a`: {nil} or a list of left accent qualifiers (as in {{tl|a}}) to display before the formatted pronunciation;
+** `aa`: {nil} or a list of right accent qualifiers to display before the formatted pronunciation;
+** `refs`: {nil} or a list of references or reference specs to add after the pronunciation and any posttext and
+     qualifiers; the value of a list item is either a string containing the reference text (typically a call to a
+	 citation template such as {{tl|cite-book}}, or a template wrapping such a call), or an object with fields `text`
+	 (the reference text), `name` (the name of the reference, as in {{cd|<nowiki><ref name="foo">...</ref></nowiki>}}
+	 or {{cd|<nowiki><ref name="foo" /></nowiki>}}) and/or `group` (the group of the reference, as in
+	 {{cd|<nowiki><ref name="foo" group="bar">...</ref></nowiki>}} or
+	 {{cd|<nowiki><ref name="foo" group="bar"/></nowiki>}}); this uses a parser function to format the reference
+	 appropriately and insert a footnote number that hyperlinks to the actual reference, located in the
+	 {{cd|<nowiki><references /></nowiki>}} section;
+** `note`: {nil} or a single reference string or object of the same format as in `refs`; this is deprecated;
+** `separator`: the separator text to insert directly before the formatted pronunciation and all qualifiers, accent
+   qualifiers and pre-text; if used, you should explicitly set the outer `separator` parameter to an empty string.
+* `separator`: the overall separator to use when separating formatted items. Defaults to {", "}. Except in the simplest
+  cases, you should consider setting this to an empty string and using the per-item `separator` field documented above.
+* `no_count`: Suppress adding a {#-syllable words} category such as [[:Category:Italian 2-syllable words]]. Note that
+  only certain languages add such categories to begin with, because it depends on knowing how to count syllables in a
+  given language, which depends on the phonology of the language. Also, this does not suppress the addition of cleanup
+  categories. If you need them suppressed, use `split_output` to return the categories separately and ignore them.
+* `split_output`: If not given, the return value is a concatenation of the formatted pronunciation and formatted
+  categories. Otherwise, two values are returned: the formatted pronunciation and the categories. If `split_output` is
+  the value {"raw"}, the categories are returned in list form, where the list elements are a combination of category
+  strings and category objects of the form suitable for passing to {format_categories()} in [[Module:utilities]]. If
+  `split_output` is any other value besides {nil}, the categories are returned as a pre-formatted concatenated string.
+]==]
+function export.format_IPA_multiple(lang, items, separator, no_count, split_output)
 	local categories = {}
 	separator = separator or ', '
-	
+
 	-- Format
 	if not items[1] then
 		if mw.title.getCurrentTitle().nsText == "Template" then
 			table.insert(items, {pron = "/aɪ piː ˈeɪ/"})
 		else
-			table.insert(categories, "[[Category:Pronunciation templates without a pronunciation]]")
+			table.insert(categories, "Pronunciation templates without a pronunciation")
 		end
 	end
-	
+
 	local bits = {}
-	
+
 	for _, item in ipairs(items) do
-		local bit = export.format_IPA(lang, item.pron)
-		
+		local bit, item_categories, errtext = export.format_IPA(lang, item.pron, "raw")
+		bit = bit .. errtext
+		for _, cat in ipairs(item_categories) do
+			table.insert(categories, cat)
+		end
+
 		if item.pretext then
 			bit = item.pretext .. bit
 		end
-		
+
 		if item.posttext then
 			bit = bit .. item.posttext
 		end
@@ -157,19 +256,19 @@ function export.format_IPA_multiple(lang, items, separator, no_count)
 		end
 
 		table.insert(bits, bit)
-		
+
 		--[=[	[[Special:WhatLinksHere/Wiktionary:Tracking/IPA/syntax-error]]
 				The length or gemination symbol should not appear after a syllable break or stress symbol.	]=]
-		
+
 		if find(item.pron, "[ˈˌ%.][ːˑ]") then
 			track("syntax-error")
 		end
-		
+
 		if lang then
 			-- Add syllable count if the language's diphthongs are listed in [[Module:syllables]].
 			-- Don't do this if the term has spaces or a liaison mark (‿).
 			if not no_count and mw.title.getCurrentTitle().namespace == 0 then
-				m_syllables = m_syllables or require('Module:syllables')
+				m_syllables = m_syllables or require("Module:syllables")
 				local langcode = lang:getCode()
 				if m_data.langs_to_generate_syllable_count_categories[langcode] then
 					local repr = determine_repr(item.pron)
@@ -182,40 +281,54 @@ function export.format_IPA_multiple(lang, items, separator, no_count)
 					if use_it and not find(item.pron, "[ ‿]") then
 						local syllable_count = m_syllables.getVowels(item.pron, lang)
 						if syllable_count then
-							table.insert(categories, "[[Category:" .. lang:getCanonicalName() .. " " .. syllable_count .. "-syllable words]]")
+							table.insert(categories, lang:getCanonicalName() .. " " .. syllable_count ..
+								"-syllable words")
 						end
 					end
 				end
 			end
 
 			if lang:getCode() == "en" and hasInvalidSeparators(item.pron) then
-				table.insert(categories, "[[Category:IPA for English using .ˈ or .ˌ]]")
+				table.insert(categories, "IPA for English using .ˈ or .ˌ")
 			end
 		end
 	end
 
-	return table.concat(bits, separator) .. table.concat(categories)
+	return process_maybe_split_categories(split_output, categories, table.concat(bits, separator), lang)
 end
 
--- Takes an IPA pronunciation and formats it and adds cleanup categories.
+--[==[
+Format an IPA pronunciation. This wraps the pronunciation in appropriate CSS classes and adds cleanup categories and
+error messages as needed. The pronunciation `pron` should be either phonemic (surrounded by {/.../}), phonetic
+(surrounded by {[...]}), orthographic (surrounded by {⟨...⟩}) or a rhyme (beginning with a hyphen). `lang` indicates the
+language of the pronunciation and can be {nil}. If not {nil}, and the specified language has data in [[Module:IPA/data]]
+indicating the allowed phonemes, then the page will be added to a cleanup category and an error message displayed next
+to the outputted pronunciation. Note that {lang} also determines sort key processing in the added cleanup categories.
+If `split_output` is not given, the return value is a concatenation of the formatted pronunciation, error messages and
+formatted cleanup categories. Otherwise, three values are returned: the formatted pronunciation, the cleanup categories
+and the concatenated error messages. If `split_output` is the value {"raw"}, the cleanup categories are returned in list
+form, where the list elements are a combination of category strings and category objects of the form suitable for
+passing to {format_categories()} in [[Module:utilities]]. If `split_output` is any other value besides {nil}, the
+cleanup categories are returned as a pre-formatted concatenated string.
+]==]
 function export.format_IPA(lang, pron, split_output)
 	local err = {}
 	local categories = {}
-	
+
 	-- Remove wikilinks, so that wikilink brackets are not misinterpreted as
 	-- indicating phonemic transcription
 	local str_gsub = string.gsub
-	local without_links = str_gsub(pron, '%[%[[^|%]]+|([^%]]+)%]%]', '%1')
-	without_links = str_gsub(without_links, '%[%[[^%]]+%]%]', '%1')
-	
+	local without_links = str_gsub(pron, "%[%[[^|%]]+|([^%]]+)%]%]", "%1")
+	without_links = str_gsub(without_links, "%[%[[^%]]+%]%]", "%1")
+
 	-- Detect whether this is a phonemic or phonetic transcription
 	local repr, reconstructed = determine_repr(without_links)
-	
+
 	if reconstructed then
 		pron = sub(pron, 2)
 		without_links = sub(without_links, 2)
 	end
-	
+
 	-- If valid, strip the representation marks
 	if repr == "phonemic" then
 		pron = sub(pron, 2, -2)
@@ -230,15 +343,15 @@ function export.format_IPA(lang, pron, split_output)
 		pron = sub(pron, 2)
 		without_links = sub(without_links, 2)
 	else
-		table.insert(categories, "[[Category:IPA pronunciations with invalid representation marks]]")
+		table.insert(categories, "IPA pronunciations with invalid representation marks")
 		-- table.insert(err, "invalid representation marks")
 		-- Removed because it's annoying when previewing pronunciation pages.
 	end
-	
+
 	if pron == "" then
-		table.insert(categories, "[[Category:IPA pronunciations with no pronunciation present]]")
+		table.insert(categories, "IPA pronunciations with no pronunciation present")
 	end
-	
+
 	-- Check for obsolete and nonstandard symbols
 	for i, symbol in ipairs(m_data.nonstandard) do
 		local result
@@ -247,15 +360,17 @@ function export.format_IPA(lang, pron, split_output)
 				result = {}
 			end
 			table.insert(result, nonstandard)
-			table.insert(categories, "[[Category:IPA pronunciations with obsolete or nonstandard characters|" .. nonstandard .. "]]")
+			table.insert(categories,
+				{cat = "IPA pronunciations with obsolete or nonstandard characters", sort_key = nonstandard}
+			)
 		end
-		
+
 		if result then
 			table.insert(err, "obsolete or nonstandard characters (" .. table.concat(result) .. ")")
 			break
 		end
 	end
-	
+
 	--[[ Check for invalid symbols after removing the following:
 			1. wikilinks (handled above)
 			2. paired HTML tags
@@ -276,7 +391,7 @@ function export.format_IPA(lang, pron, split_output)
 	result = str_gsub(result, "&[^;]+;", "") -- This may catch things that are not valid character entities.
 	result = str_gsub(result, "^%*", "")
 	result = gsub(result, ",%s+", "")
-	
+
 	-- VS15
 	local vs15_class = "[" .. m_symbols.add_vs15 .. "]"
 	if find(pron, vs15_class) then
@@ -288,7 +403,7 @@ function export.format_IPA(lang, pron, split_output)
 		pron = gsub(pron, "(" .. vs15_class .. ")", "%1" .. vs15)
 	end
 
-	if result ~= '' then
+	if result ~= "" then
 		mw.log(pron, result)
 		local namespace = mw.title.getCurrentTitle().namespace
 		local suggestions = {}
@@ -305,36 +420,36 @@ function export.format_IPA(lang, pron, split_output)
 			end
 		end
 		result = gsub(result, "⁽[".. m_symbols.superscripts .. "]+⁾", "")
-		result = gsub(result, '[' .. m_symbols.valid .. ']', '')
-		if result ~= '' then
+		result = gsub(result, "[" .. m_symbols.valid .. "]", "")
+		if result ~= "" then
 			local category = "IPA pronunciations with invalid IPA characters"
 			if namespace ~= 0 and namespace ~= 118 then
 				category = category .. "/non_mainspace"
 			end
-			table.insert(categories, "[[Category:" .. category .. "]]")
+			table.insert(categories, category)
 			table.insert(err, "invalid IPA characters (" .. result .. ")")
 		end
 	end
-	
+
 	if found_HTML then
-		table.insert(categories, "[[Category:IPA pronunciations with paired HTML tags]]")
+		table.insert(categories, "IPA pronunciations with paired HTML tags")
 	end
-	
+
 	-- Reference inside IPA template usage
 	-- FIXME: Doesn't work; you can't put HTML in module output.
 	--if find(pron, '</ref>') then
-	--	table.insert(categories, "[[Category:IPA pronunciations with reference]]")
+	--	table.insert(categories, "IPA pronunciations with reference")
 	--end
-	
+
 	if repr == "phonemic" or repr == "rhyme" then
 		if lang and m_data.phonemes[lang:getCode()] then
 			local valid_phonemes = m_data.phonemes[lang:getCode()]
 			local rest = pron
 			local phonemes = {}
-			
+
 			while len(rest) > 0 do
 				local longestmatch = ""
-				
+
 				if sub(rest, 1, 1) == "(" or sub(rest, 1, 1) == ")" then
 					longestmatch = sub(rest, 1, 1)
 				else
@@ -344,7 +459,7 @@ function export.format_IPA(lang, pron, split_output)
 						end
 					end
 				end
-				
+
 				if len(longestmatch) > 0 then
 					table.insert(phonemes, longestmatch)
 					rest = sub(rest, len(longestmatch) + 1)
@@ -352,14 +467,14 @@ function export.format_IPA(lang, pron, split_output)
 					local phoneme = sub(rest, 1, 1)
 					table.insert(phonemes, "<span style=\"color: red\">" .. phoneme .. "</span>")
 					rest = sub(rest, 2)
-					table.insert(categories, "[[Category:IPA pronunciations with invalid phonemes/" .. lang:getCode() .. "]]")
+					table.insert(categories, "IPA pronunciations with invalid phonemes/" .. lang:getCode())
 					track("invalid phonemes/" .. phoneme)
 				end
 			end
-			
+
 			pron = table.concat(phonemes)
 		end
-		
+
 		if repr == "phonemic" then
 			pron = "/" .. pron .. "/"
 		else
@@ -370,22 +485,19 @@ function export.format_IPA(lang, pron, split_output)
 	elseif repr == "orthographic" then
 		pron = "⟨" .. pron .. "⟩"
 	end
-	
+
 	if reconstructed then
 		pron = "*" .. pron
 	end
-	
+
 	if err[1] then
-		err = '<span class="previewonly error" style="font-size: small;>&#32;' .. table.concat(err, ', ') .. '</span>'
+		err = '<span class="previewonly error" style="font-size: small;>&#32;' .. table.concat(err, ", ") .. "</span>"
 	else
 		err = ""
 	end
-	
-	if split_output then -- for use of IPA in links 
-		return '<span class="IPA">' .. pron .. '</span>', table.concat(categories), err
-	else
-		return '<span class="IPA">' .. pron .. '</span>' .. err .. table.concat(categories)
-	end
+
+	return process_maybe_split_categories(split_output, categories, '<span class="IPA">' .. pron .. "</span>", lang,
+		err)
 end
 
 return export
