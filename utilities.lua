@@ -21,7 +21,7 @@ local export = {}
 do
 	local loaded = package.loaded
 	local loader = package.loaders[2]
-	
+
 	--[==[
 	Like require, but return false if a module does not exist instead of throwing an error.
 	Outputs are cached in {package.loaded}, which is faster for all module types, but much faster for nonexistent modules since require will attempt to use the full loader each time (since they don't get cached in {package.loaded}).
@@ -64,10 +64,10 @@ do
 		end
 		return lvl
 	end
-	
+
 	--[==[
 	A helper function which iterates over the headings in `text`, which should be the content of a page or (main) section.
-	
+
 	Each iteration returns three values: `sec` (the section title), `lvl` (the section level) and `loc` (the index of the section in the given text, from the first equals sign). The section title will be automatically trimmed, and any HTML entities will be resolved.
 	The optional parameter `a` (which should be an integer between 1 and 6) can be used to ensure that only headings of the specified level are iterated over. If `b` is also given, then they are treated as a range.
 	The optional parameters `a` and `b` can be used to specify a range, so that only headings with levels in that range are returned. If only `a` is given ...
@@ -76,7 +76,7 @@ do
 		a = a and check_level(a) or nil
 		b = b and check_level(b) or a or nil
 		local start, loc, lvl, sec = 1
-		
+
 		return function()
 			repeat
 				loc, lvl, sec, start = text:match("()%f[^%z\n](==?=?=?=?=?)([^\n]+)%2[\t ]*%f[%z\n]()", start)
@@ -85,7 +85,7 @@ do
 			return sec and trim(decode_entities(sec)) or nil, lvl, loc
 		end
 	end
-	
+
 	local function get_section(content, name, level)
 		if not (content and name) then
 			return nil
@@ -104,17 +104,17 @@ do
 		end
 		return start and content:sub(start)
 	end
-	
+
 	--[==[
 	A helper function to return the content of a page section.
-	
+
 	`content` is raw wikitext, `name` is the requested section, and `level` is an optional parameter that specifies
 	the required section heading level. If `level` is not supplied, then the first section called `name` is returned.
 	`name` can either be a string or table of section names. If a table, each name represents a section that has the
 	next as a subsection. For example, { {"Spanish", "Noun"}} will return the first matching section called "Noun"
 	under a section called "Spanish". These do not have to be at adjacent levels ("Noun" might be L4, while "Spanish"
 	is L2). If `level` is given, it refers to the last name in the table (i.e. the name of the section to be returned).
-	
+
 	The returned section includes all of its subsections. If no matching section is found, return {nil}.
 	]==]
 	function export.get_section(content, names, level)
@@ -160,7 +160,7 @@ end
 
 do
 	local page_L2s
-	
+
 	--[==[
 	A function which returns the name of the L2 language section which contains the current {#invoke}.
 	]==]
@@ -186,13 +186,13 @@ function export.get_plaintext(text)
 	text = text
 		:gsub("%[%[", "\1")
 		:gsub("%]%]", "\2")
-	
+
 	-- Remove strip markers and HTML tags.
 	text = unstrip(text):gsub("<[^<>\1\2]+>", "")
-		
+
 	-- Parse internal links for the display text, and remove categories.
 	text = require("Module:links").remove_links(text)
-	
+
 	-- Remove files.
 	for _, falsePositive in ipairs({"File", "Image"}) do
 		text = text:gsub("\1" .. falsePositive .. ":[^\1\2]+\2", "")
@@ -212,11 +212,11 @@ function export.get_plaintext(text)
 		:gsub("('*)'''(.-'*)'''", "%1%2")
 		:gsub("('*)''(.-'*)''", "%1%2")
 		:gsub("­", "")
-	
+
 	-- Get any HTML entities.
 	-- Note: don't decode URL percent encoding, as it shouldn't be used in display text and may cause problems if % is used.
 	text = decode_entities(text)
-	
+
 	return trim(text)
 end
 
@@ -224,29 +224,46 @@ do
 	local title_obj, category_namespaces, page_data, pagename, pagename_defaultsort
 	--[==[
 	Format the categories with the appropriate sort key.
-	* `categories` is a list of categories.
+	* `categories` is a list of categories. Each entry in the list can be either a string (the full category, minus
+	  the {"Category:"} prefix) or an object. In the latter case, the object should have fields
+	  ** `cat`: the full category, minus the {"Category:"} prefix (required);
+	  ** `lang`: optional language object to override the overall `lang`;
+	  ** `sort_key`: optional sort key to override the overall `sort_key`;
+	  ** `sort_base`: optional sort base to override the overall `sort_base`;
+	  ** `sc`: optional script object to override the overall `sc`.
 	* `lang` is an object encapsulating a language; if {nil}, the object for language code {"und"} (undetermined) will
-	  be used.
+	  be used. `lang` is used when computing the sort key (either from the subpage name or sort base).
 	* `sort_key` is placed in the category invocation, and indicates how the page will sort in the respective category.
-	  Normally this should be {nil}, and a default sort key based on the subpage name (the part after the colon) will
-	  be used.
-	* `sort_base` lets you override the default sort key used when `sort_key` is {nil}. Normally, this should be {nil},
-	  and a language-specific default sort key is computed from the subpage name. For example, for Russian this converts
-	  Cyrillic ё to a string consisting of Cyrillic е followed by U+10FFFF, so that effectively ё sorts after е instead
-	  of the default Wikimedia sort, which (I think) is based on Unicode sort order and puts ё after я, the last letter
-	  of the Cyrillic alphabet.
+	  Normally '''do not use this'''. Instead, leave it {nil}, and if you need to a control the sort order, use
+	  {sort_base}, so that language-specific normalization is applied on top of the specified sort base. If neither
+	  {sort_key} nor {sort_base} is specified, the default is to apply language-specific normalization to the subpage
+	  name; see below.
+	* `sort_base` lets you override the default sort key while still maintaining appropriate language-specific
+	  normalization. If {nil} is specified, this defaults to the subpage name, which is the portion of the full pagename
+	  after subtracting the namespace prefix (and, in certain namespaces such as {User:}, but notably not in the
+	  mainspace, after subtracting anything up through the final slash). The actual sort key is derived from the sort
+	  base approximately by lowercasing, applying language-specific normalization and then uppercasing; note that the
+	  same process is applied in deriving the sort key when no sort base is specified. For example, for French, Spanish,
+	  etc. the normalization process maps accented letters to their unaccented equivalents, so that e.g. in French,
+	  {{m|fr|ça}} sorts after {{m|fr|ca}} (instead of after the default Wikimedia sort order, which is approximately
+	  based on Unicode sort order and places ç after z) and {{m|fr|côté}} sorts after {{m|fr|coté}} (instead of between
+	  c and d). Similarly, in Russian the normalization process converts Cyrillic ё to a string consisting of Cyrillic е
+	  followed by U+10FFFF, so that effectively ё sorts after е instead of the default Wikimedia sort, which (I think)
+	  puts ё after я, the last letter of the Cyrillic alphabet.
 	* `force_output` forces normal output in all namespaces. Normally, nothing is output if the page isn't in the main,
 	  Appendix:, Thesaurus:, Reconstruction: or Citations: namespaces.
-	* `sc` is a script object; if nil, the default will be used from the sort base.
+	* `sc` is a script object; if nil, the default will be derived from the sort base (or its default value, the
+	  subpage name) by calling {lang:findBestScript()}. The value of `sc` is used during the sort base normalization
+	  process; for example, languages with multiple scripts will often have script-specific normalization processes.
 	]==]
 	function export.format_categories(categories, lang, sort_key, sort_base, force_output, sc)
 		if type(lang) == "table" and not lang.getCode then
 			error("The second argument to format_categories should be a language object.")
 		end
-		
+
 		title_obj = title_obj or mw.title.getCurrentTitle()
 		category_namespaces = category_namespaces or mw.loadData("Module:utilities/data").category_namespaces
-		
+
 		if not (
 			force_output or
 			category_namespaces[title_obj.namespace] or
@@ -258,29 +275,56 @@ do
 			pagename = page_data.encoded_pagename
 			pagename_defaultsort = page_data.pagename_defaultsort
 		end
-		
-		-- Generate a default sort key.
-		-- If the sort key is "-", bypass the process of generating a sort key altogether. This is desirable when categorising (e.g.) translation requests, as the pages to be categorised are always in English/Translingual.
-		if sort_key == "-" then
-			sort_key = sort_base and sort_base:uupper() or pagename_defaultsort
-		else
-			lang = lang or require("Module:languages").getByCode("und")
-			sort_base = lang:makeSortKey(sort_base or pagename, sc) or pagename_defaultsort
-			if not sort_key or sort_key == "" then
-				sort_key = sort_base
-			elseif lang:getCode() ~= "und" then
-				insert(categories, lang:getFullName() .. " terms with " .. (
-					sort_key:uupper() == sort_base and "redundant" or
-					"non-redundant non-automated"
-				) .. " sortkeys")
+
+		local extra_categories
+		local function generate_sort_key(lang, sort_key, sort_base, sc)
+			-- Generate a default sort key.
+			-- If the sort key is "-", bypass the process of generating a sort key altogether. This is desirable when categorising (e.g.) translation requests, as the pages to be categorised are always in English/Translingual.
+			if sort_key == "-" then
+				sort_key = sort_base and sort_base:uupper() or pagename_defaultsort
+			else
+				lang = lang or require("Module:languages").getByCode("und")
+				sort_base = lang:makeSortKey(sort_base or pagename, sc) or pagename_defaultsort
+				if not sort_key or sort_key == "" then
+					sort_key = sort_base
+				elseif lang:getCode() ~= "und" then
+					if not extra_categories then
+						extra_categories = {}
+					end
+					insert(extra_categories, lang:getFullName() .. " terms with " .. (
+						sort_key:uupper() == sort_base and "redundant" or
+						"non-redundant non-automated"
+					) .. " sortkeys")
+				end
+			end
+			return sort_key
+		end
+
+		local ret = {}
+		local default_sort_key = generate_sort_key(sort_key, sort_base, sc)
+		local ins_point = 0
+		local function process_category(cat)
+			local this_sort_key
+			if type(cat) == "string" then
+				this_sort_key = default_sort_key
+			else
+				this_sort_key = generate_sort_key(cat.lang or lang, cat.sort_key or sort_key,
+					cat.sort_base or sort_base, cat.sc or sc)
+				cat = cat.cat
+			end
+			ins_point = ins_point + 1
+			ret[ins_point] = "[[Category:" .. cat .. "|" .. this_sort_key .. "]]"
+		end
+
+		for _, cat in ipairs(categories) do
+			process_category(cat)
+		end
+		if extra_categories then
+			for _, cat in ipairs(extra_categories) do
+				process_category(cat)
 			end
 		end
-		
-		local ret = {}
-		for key, cat in ipairs(categories) do
-			ret[key] = "[[Category:" .. cat .. "|" .. sort_key .. "]]"
-		end
-		
+
 		return concat(ret)
 	end
 end
@@ -318,7 +362,7 @@ do
 		end
 		local canonicalName = lang:getCanonicalName()
 		local nonEtymologicalName = lang:getFullName()
-	
+
 		-- To add script classes to links on pages created by category boilerplate templates.
 		if not sc then
 			catfix_scripts = catfix_scripts or mw.loadData("Module:utilities/data").catfix_scripts
@@ -327,7 +371,7 @@ do
 				sc = require("Module:scripts").getByCode(sc)
 			end
 		end
-		
+
 		local catfix_class = "CATFIX-" .. mw.uri.anchorEncode(canonicalName)
 		if nonEtymologicalName ~= canonicalName then
 			catfix_class = catfix_class .. " CATFIX-" .. mw.uri.anchorEncode(nonEtymologicalName)
@@ -347,16 +391,16 @@ function export.catfix_template(frame)
 		[2] = { alias_of = "sc" },
 		["sc"] = {},
 	}
-	
+
 	local args = require("Module:parameters").process(frame:getParent().args, params, nil, "utilities", "catfix_template")
-	
+
 	local lang = require("Module:languages").getByCode(args[1], 1, "allow etym")
-	
+
 	local sc = args.sc
 	if sc then
 		sc = require("Module:scripts").getByCode(sc, "sc")
 	end
-	
+
 	return export.catfix(lang, sc)
 end
 
@@ -376,7 +420,7 @@ function export.check_object(typ, noErr, ...)
 			error(message, 3)
 		end
 	end
-	
+
 	local objs = {...}
 	if #objs == 0 then
 		return fail("Must provide at least one object to check.")
