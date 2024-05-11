@@ -3,18 +3,20 @@ local export = {}
 local debug_force_cat = false -- if set to true, always display categories even on userspace pages
 
 local m_links = require("Module:links")
+local m_str_utils = require("Module:string utilities")
 local m_utilities = require("Module:utilities")
 local m_table = require("Module:table")
 -- Export this so the category code in [[Module:category tree/poscatboiler/data/terms by etymology]] can access it.
 export.affix_lang_data_module_prefix = "Module:affix/lang-data/"
 
-local u = mw.ustring.char
-local rsub = mw.ustring.gsub
-local usub = mw.ustring.sub
-local ulen = mw.ustring.len
-local rfind = mw.ustring.find
-local rmatch = mw.ustring.match
-
+local rsub = m_str_utils.gsub
+local usub = m_str_utils.sub
+local ulen = m_str_utils.len
+local rfind = m_str_utils.find
+local rmatch = m_str_utils.match
+local pluralize = m_str_utils.pluralize
+local u = m_str_utils.char
+local ucfirst = m_str_utils.ucfirst
 
 -- Export this so the category code in [[Module:category tree/poscatboiler/data/terms by etymology]] can access it.
 export.langs_with_lang_specific_data = {
@@ -134,9 +136,13 @@ don't need to do script detection. Specifically, we only need to do script detec
 
 local ZWNJ = u(0x200C) -- zero-width non-joiner
 local template_hyphens = {
+	["Arab"] = "ـ" .. ZWNJ .. "-", -- tatweel + zero-width non-joiner + regular hyphen
 	["Hebr"] = "־", -- Hebrew-specific hyphen termed "maqqef"
 	-- This covers all Arabic scripts. See above.
-	["Arab"] = "ـ" .. ZWNJ .. "-", -- tatweel + zero-width non-joiner + regular hyphen
+	["Mong"] = "᠊",
+	["mnc-Mong"] = "᠊",
+	["sjo-Mong"] = "᠊",
+	["xwo-Mong"] = "᠊",
 	-- FIXME! What about the following right-to-left scripts?
 	-- Adlm (Adlam)
 	-- Armi (Imperial Aramaic)
@@ -202,11 +208,19 @@ end
 local display_hyphens = {
 	-- This covers all Arabic scripts. See above.
 	["Arab"] = arab_get_display_hyphen,
+	["Bopo"] = no_display_hyphen,
 	["Hani"] = no_display_hyphen,
+	["Hans"] = no_display_hyphen,
+	["Hant"] = no_display_hyphen,
 	-- The following is a mixture of several scripts. Hopefully the specs here are correct!
 	["Jpan"] = no_display_hyphen,
+	["Jurc"] = no_display_hyphen,
+	["Kitl"] = no_display_hyphen,
+	["Kits"] = no_display_hyphen,
 	["Laoo"] = no_display_hyphen,
 	["Nshu"] = no_display_hyphen,
+	["Shui"] = no_display_hyphen,
+	["Tang"] = no_display_hyphen,
 	["Thaa"] = no_display_hyphen,
 	["Thai"] = no_display_hyphen,
 }
@@ -260,7 +274,7 @@ end
 local function make_raw_compound_type(typ, alttext)
 	return {
 		text = glossary_link(typ, alttext),
-		cat = require("Module:string utilities").pluralize(typ),
+		cat = pluralize(typ),
 	}
 end
 
@@ -320,7 +334,7 @@ local function process_compound_type(typ, nocap, notext, has_parts)
 		end
 		local text = typdata.text
 		if not nocap then
-			text = require("Module:string utilities").ucfirst(text)
+			text = ucfirst(text)
 		end
 		local cat = typdata.cat
 		local oftext = typdata.oftext or " of"
@@ -342,24 +356,6 @@ end
 -----------------------------------------------------------------------------------------
 --                                     Utility functions                               --
 -----------------------------------------------------------------------------------------
-
-local function glossary_link(entry, text)
-	text = text or entry
-	return "[[Appendix:Glossary#" .. entry .. "|" .. text .. "]]"
-end
-
-
-local function track(page)
-	if type(page) == "table" then
-		for i, pg in ipairs(page) do
-			page[i] = "affix/" .. pg
-		end
-	else
-		page = "affix/" .. page
-	end
-	require("Module:debug/track")(page)
-end
-
 
 -- Iterate an array up to the greatest integer index found.
 local function ipairs_with_gaps(t)
@@ -391,10 +387,10 @@ function export.concat_parts(lang, parts_formatted, categories, nocat, sort_key,
 	else
 		for i, cat in ipairs(categories) do
 			if type(cat) == "table" then
-				categories[i] = m_utilities.format_categories({lang:getNonEtymologicalName() .. " " .. cat.cat}, lang,
+				categories[i] = m_utilities.format_categories({lang:getFullName() .. " " .. cat.cat}, lang,
 					cat.sort_key, cat.sort_base, force_cat or debug_force_cat)
 			else
-				categories[i] = m_utilities.format_categories({lang:getNonEtymologicalName() .. " " .. cat}, lang,
+				categories[i] = m_utilities.format_categories({lang:getFullName() .. " " .. cat}, lang,
 					sort_key, nil, force_cat or debug_force_cat)
 			end
 		end
@@ -440,10 +436,13 @@ local function canonicalize_part(part, lang, sc)
 	part.part_lang = part.lang
 	part.lang = part.lang or lang
 	part.sc = part.sc or sc
-	if part.term then
-		local fragment
-		part.term, fragment = m_links.get_fragment(part.term)
-		part.fragment = part.fragment or fragment
+	local term = part.term
+	if not term then
+		return
+	elseif not part.fragment then
+		part.term, part.fragment = m_links.get_fragment(term)
+	else
+		part.term = m_links.get_fragment(term)
 	end
 end
 
@@ -463,9 +462,8 @@ function export.link_term(part, data)
 		result = require("Module:etymology").format_derived(data.lang, part, data.sort_key, data.nocat,
 			data.force_cat or debug_force_cat)
 	else
-		-- `allow_self_link` should be true in case of a term in one language derived from the same term in a different
 		-- language (e.g. in a pseudo-loan).
-		result = m_links.full_link(part, "term", true)
+		result = m_links.full_link(part, "term")
 	end
 
 	if part.q then
@@ -650,7 +648,7 @@ local function lookup_affix_mapping(affix, affix_type, lang, scode, thyph_re, lo
 		if mapping then
 			return mapping
 		end
-		local full_langcode = lang:getNonEtymologicalCode()
+		local full_langcode = lang:getFullCode()
 		if full_langcode ~= langcode then
 			mapping = do_lookup_for_langcode(full_langcode)
 			if mapping then
@@ -836,7 +834,9 @@ function export.show_affix(data)
 		-- If link_term is an empty string, either a bare ^ was specified or an empty term was used along with inline
 		-- modifiers. The intention in either case is not to link the term.
 		part.term = link_term ~= "" and link_term or nil
-		part.alt = part.alt or display_term
+		-- If part.alt would be the same as part.term, make it nil, so that it isn't erroneously tracked as being
+		-- redundant alt text.
+		part.alt = part.alt or (display_term ~= link_term and display_term) or nil
 
 		-- Make a link for the part.
 		table.insert(parts_formatted, export.link_term(part, data))
@@ -893,7 +893,7 @@ function export.show_affix(data)
 	if data.surface_analysis then
 		local text = "by " .. glossary_link("surface analysis") .. ", "
 		if not data.nocap then
-			text = require("Module:string utilities").ucfirst(text)
+			text = ucfirst(text)
 		end
 
 		table.insert(text_sections, 1, text)
@@ -940,18 +940,20 @@ function export.show_compound(data)
 			-- If link_term is an empty string, either a bare ^ was specified or an empty term was used along with
 			-- inline modifiers. The intention in either case is not to link the term. Don't add a '*fixed with'
 			-- category in this case, or if the term is in a different language.
+			-- If part.alt would be the same as part.term, make it nil, so that it isn't erroneously tracked as being
+			-- redundant alt text.
 			if link_term and link_term ~= "" and not part.part_lang then
 				table.insert(categories, {cat = data.pos .. " interfixed with " .. make_entry_name_no_links(part.lang,
 					link_term), sort_key = part.sort or data.sort_key})
 			end
 			part.term = link_term ~= "" and link_term or nil
-			part.alt = part.alt or display_term
+			part.alt = part.alt or (display_term ~= link_term and display_term) or nil
 		else
 			if affix_type then
 				local langcode = data.lang:getCode()
 				-- If `data.lang` is an etymology-only language, track both using its code and its full parent's code.
 				track { affix_type, affix_type .. "/lang/" .. langcode }
-				local full_langcode = data.lang:getNonEtymologicalCode()
+				local full_langcode = data.lang:getFullCode()
 				if langcode ~= full_langcode then
 					track(affix_type .. "/lang/" .. full_langcode)
 				end
@@ -1032,7 +1034,9 @@ local function make_part_into_affix(part, lang, sc, affix_type)
 	part.term = link_term
 	-- When we don't specify `do_affix_mapping` to make_affix(), link and display terms (first and second retvals of
 	-- make_affix()) are the same.
-	part.alt = part.alt and export.make_affix(part.alt, part.lang, part.sc, affix_type) or display_term
+	-- If part.alt would be the same as part.term, make it nil, so that it isn't erroneously tracked as being
+	-- redundant alt text.
+	part.alt = part.alt and export.make_affix(part.alt, part.lang, part.sc, affix_type) or (display_term ~= link_term and display_term) or nil
 	local Latn = require("Module:scripts").getByCode("Latn")
 	part.tr = export.make_affix(part.tr, part.lang, Latn, affix_type)
 	part.ts = export.make_affix(part.ts, part.lang, Latn, affix_type)
@@ -1045,7 +1049,7 @@ local function track_wrong_affix_type(template, part, expected_affix_type)
 		if affix_type ~= expected_affix_type then
 			local part_name = expected_affix_type or "base"
 			local langcode = part.lang:getCode()
-			local full_langcode = part.lang:getNonEtymologicalCode()
+			local full_langcode = part.lang:getFullCode()
 			require("Module:debug/track") {
 				template,
 				template .. "/" .. part_name,
