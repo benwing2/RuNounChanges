@@ -247,6 +247,11 @@ local function track(page)
 end
 
 
+local function ine(val)
+	return val ~= "" and val or nil
+end
+
+
 -----------------------------------------------------------------------------------------
 --                                      Compound types                                 --
 -----------------------------------------------------------------------------------------
@@ -816,31 +821,33 @@ function export.show_affix(data)
 	local whole_words = 0
 	local is_affix_or_compound = false
 
-	-- Canonicalize all the parts first because when processing the first part, we may access the second part and need
-	-- it already canonicalized.
+	-- Canonicalize and generate links for all the parts first; then do categorization in a separate step, because when
+	-- processing the first part for categorization, we may access the second part and need it already canonicalized.
 	for i, part in ipairs_with_gaps(data.parts) do
 		part = part or {}
 		data.parts[i] = part
 		canonicalize_part(part, data.lang, data.sc)
-	end
 
-	for i, part in ipairs_with_gaps(data.parts) do
-		part = part or {}
-
-		-- Determine affix type and get link and display terms (see text at top of file).
-		local affix_type, link_term, display_term = export.parse_term_for_affixes(part.term, part.lang, part.sc, nil,
-			not part.alt, nil, part.id)
+		-- Determine affix type and get link and display terms (see text at top of file). Store them in the part
+		-- (in fields that won't clash with fields used by full_link() in [[Module:links]] or link_term()), so they
+		-- can be used in the loop below when categorizing.
+		part.affix_type, part.affix_link_term, part.affix_display_term = export.parse_term_for_affixes(part.term,
+			part.lang, part.sc, nil, not part.alt, nil, part.id)
 
 		-- If link_term is an empty string, either a bare ^ was specified or an empty term was used along with inline
 		-- modifiers. The intention in either case is not to link the term.
-		part.term = link_term ~= "" and link_term or nil
+		part.term = ine(part.affix_link_term)
 		-- If part.alt would be the same as part.term, make it nil, so that it isn't erroneously tracked as being
 		-- redundant alt text.
-		part.alt = part.alt or (display_term ~= link_term and display_term) or nil
+		part.alt = part.alt or (part.affix_display_term ~= part.affix_link_term and part.affix_display_term) or nil
 
 		-- Make a link for the part.
 		table.insert(parts_formatted, export.link_term(part, data))
+	end
 
+	-- Now do categorization.
+	for i, part in ipairs_with_gaps(data.parts) do
+		local affix_type = part.affix_type
 		if affix_type then
 			is_affix_or_compound = true
 			-- We cannot distinguish interfixes from infixes by appearance. Prefer interfixes; infixes will need to
@@ -855,9 +862,12 @@ function export.show_affix(data)
 
 			if i == 1 and data.parts[2] and data.parts[2].term then
 				local part2 = data.parts[2]
-				local part2_affix_type, part2_link_term, part2_display_term = export.parse_term_for_affixes(
-					part2.term, part2.lang, part2.sc, nil, not part2.alt, nil, part.id)
-				part_sort_base = make_entry_name_no_links(part2.lang, part2_link_term)
+				-- If the second-part link term is empty, the user requested an unlinked term; avoid a wikitext error
+				-- by using the alt value if available.
+				part_sort_base = ine(part2.affix_link_term) or ine(part2.alt)
+				if part_sort_base then
+					part_sort_base = make_entry_name_no_links(part2.lang, part_sort_base)
+				end
 			end
 
 			if part.pos and rfind(part.pos, "patronym") then
@@ -870,9 +880,10 @@ function export.show_affix(data)
 			end
 
 			-- Don't add a '*fixed with' category if the link term is empty or is in a different language.
-			if link_term and link_term ~= "" and not part.part_lang then
+			if ine(part.affix_link_term) and not part.part_lang then
 				table.insert(categories, {cat = data.pos .. " " .. affix_type .. "ed with " ..
-					make_entry_name_no_links(part.lang, link_term) .. (part.id and " (" .. part.id .. ")" or ""),
+					make_entry_name_no_links(part.lang, part.affix_link_term) ..
+						(part.id and " (" .. part.id .. ")" or ""),
 					sort_key = part_sort, sort_base = part_sort_base})
 			end
 		else
@@ -1238,9 +1249,15 @@ function export.show_prefix(data)
 	local categories = {}
 
 	if data.prefixes[2] then
-		first_sort_base = make_entry_name_no_links(data.prefixes[2].lang, data.prefixes[2].term)
+		first_sort_base = ine(data.prefixes[2].term) or ine(data.prefixes[2].alt)
+		if first_sort_base then
+			first_sort_base = make_entry_name_no_links(data.prefixes[2].lang, first_sort_base)
+		end
 	elseif data.base then
-		first_sort_base = make_entry_name_no_links(data.base.lang, data.base.term)
+		first_sort_base = ine(data.base.term) or ine(data.base.alt)
+		if first_sort_base then
+			first_sort_base = make_entry_name_no_links(data.base.lang, first_sort_base)
+		end
 	end
 
 	for i, prefix in ipairs(data.prefixes) do
