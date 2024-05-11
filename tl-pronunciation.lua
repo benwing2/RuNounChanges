@@ -17,24 +17,23 @@ FIXME:
 6. Restore 'Tagalog terms with malumi pronunciation' and similar rhyme categories; also restore 'Tagalog terms with
    syllabification not matching pagename' (formerly 'Tagalog terms with hyphenation errors'). [DONE]
 7. Use "syllabification" everywhere internally in place of "hyphenation" and in abbrevs. [DONE]
-8. With auto-generated categories, display on a separate line.
-9. Change handling of forcing dot. Currently t.s forces /ts/ instead of /tʃ/; this should be t_s. Currently you have to
+8. Change handling of forcing dot. Currently t.s forces /ts/ instead of /tʃ/; this should be t_s. Currently you have to
    write si..yasa with double dot to get /sijasa/ not /ʃasa/; this should be single dot, and no dot should indicate
    the palatalized pronunciation.
-10. If there are auto-generated pronunciations, they should go on a separate line. If there are other pronunciations
-    on the line, indent the auto-generated ones on a separate line under the pronunciation line; otherwise, at the same
-	bullet level. Good test cases: [[F]], [[General Mariano Alvarez]].
-11. Fix bug involving [[Evangelista]] respelled 'Evanghelista' and [[barangay]] respelled 'baranggay'; should recognize
+9. If there are auto-generated pronunciations, they should go on a separate line. If there are other pronunciations
+   on the line, indent the auto-generated ones on a separate line under the pronunciation line; otherwise, at the same
+   bullet level. Good test cases: [[F]], [[General Mariano Alvarez]]. [DONE]
+10. Fix bug involving [[Evangelista]] respelled 'Evanghelista' and [[barangay]] respelled 'baranggay'; should recognize
     for syllabification purposes.
-12. Rhymes should be displayed even if multiword based on the last word, but just not categorize.
-13. DOTOVER should be used to indicate an unstressed word or suffix, e.g. -ȧ to indicate unstressed [[a]] phoneme.
-14. Move hyphen-restoring code in syllabify_from_spelling() to align_syllabification_to_spelling().
-15. Allow h against nothing esp. at beginning of word e.g. in [[Hermogenes]] respelled 'Ermógenes' or 'Ermogenes'.
+11. Rhymes should be displayed even if multiword based on the last word, but just not categorize.
+12. DOTOVER should be used to indicate an unstressed word or suffix, e.g. -ȧ to indicate unstressed [[a]] phoneme.
+13. Move hyphen-restoring code in syllabify_from_spelling() to align_syllabification_to_spelling().
+14. Allow h against nothing esp. at beginning of word e.g. in [[Hermogenes]] respelled 'Ermógenes' or 'Ermogenes'.
     Also [[adhan]] respelled 'adán'.
-16. Unstressed words should not have rhymes, e.g. 'ba' is a letter that isn't normally stressed but is getting a rhyme.
-17. Shouldn't be necessary to write raw: before /.../.
-18. Allow w against u e.g. [[Zulueta]] respelled 'Zulweta' (and y against i).
-19. Buendia respelled Buendía syllabifies wrong (as 'Bu.end.ia' when it should be 'Bu.en.di.a').
+15. Unstressed words should not have rhymes, e.g. 'ba' is a letter that isn't normally stressed but is getting a rhyme.
+16. Shouldn't be necessary to write raw: before /.../.
+17. Allow w against u e.g. [[Zulueta]] respelled 'Zulweta' (and y against i).
+18. Buendia respelled Buendía syllabifies wrong (as 'Bu.end.ia' when it should be 'Bu.en.di.a').
 ]==]
 
 local force_cat = true -- enable for testing
@@ -1044,12 +1043,12 @@ local function format_glosses(glosses)
 		css_wrap(")", "mention-gloss-paren annotation-paren")
 end
 
-local function format_pronuns(parsed)
+local function format_pronuns(pronuns)
 	local pronunciations = {}
 
 	-- Loop through each pronunciation. For each one, add the phonemic and phonetic versions to `pronunciations`,
 	-- for formatting by [[Module:IPA]].
-	for j, pronun in ipairs(parsed.pronuns) do
+	for j, pronun in ipairs(pronuns) do
 		local qs = pronun.q
 
 		local first_pronun = #pronunciations + 1
@@ -1093,10 +1092,14 @@ local function format_pronuns(parsed)
 		end
 	end
 
-	-- Construct the formatted line in `formatted`.
+	return m_IPA.format_IPA_full(lang, pronunciations, nil, "")
+end
+
+local function format_pronun_line(parsed)
+	local formatted_pronuns = format_pronuns(parsed.pronuns)
 	local pre = is_first and parsed.pre and parsed.pre .. " " or ""
 	local post = is_first and parsed.post and " " .. parsed.post or ""
-	return pre .. m_IPA.format_IPA_full(lang, pronunciations, nil, "") .. format_glosses(parsed.t) .. post
+	return pre .. formatted_pronuns .. format_glosses(parsed.t) .. post
 end
 
 
@@ -1780,18 +1783,47 @@ function export.show_full(frame)
 				end
 			end
 			-- Now see if there are qualifiers shared among all elements of the next-line pronuns and deduplicate if so.
-			local function deduplicate_qualifiers(field)
+			local function deduplicate_qualifiers(field, keepfirst)
 				local saw_nil = false
-				local qualifiers = {}
 				for _, pronun in ipairs(next_line_pronuns) do
 					if not pronun[field] then
 						saw_nil = true
 						break
-					else
-						table.insert(qualifiers, 
-			local 
-
-
+					end
+				end
+				if not saw_nil then
+					local m_setutil = require(set_utilities_module)
+					local qualifiers = {}
+					for _, pronun in ipairs(next_line_pronuns) do
+						table.insert(qualifiers, m_setutil.list_to_set(pronun[field]))
+					end
+					local all_shared = m_setutil.intersect(unpack(qualifiers))
+					if next(all_shared) then
+						local first_index, last_index
+						if keepfirst then
+							first_index = 2
+							last_index = #pronun
+						else
+							first_index = 1
+							last_index = #pronun - 1
+						end
+						for i = first_index, last_index do
+							local pronun = next_line_pronuns[i]
+							local new_qualifiers = {}
+							for _, q in ipairs(pronun[field]) do
+								if not all_shared[q] then
+									table.insert(new_qualifiers, q)
+								end
+							end
+							pronun[field] = new_qualifiers
+						end
+					end
+				end
+			end
+			parsed.pronuns = this_line_pronuns
+			parsed.next_line_pronuns = next_line_pronuns
+		end
+	end
 
 	-- Now actually format the pronunciations.
 	local textparts = {}
@@ -1812,7 +1844,7 @@ function export.show_full(frame)
 		if parsed.of_several_accents == "first" then
 			ins_line(require(accent_qualifier_module).format_qualifiers(parsed.accents), parsed.bullets)
 		end
-		local pronuns = format_pronuns(parsed)
+		local pronuns = format_pronun_line(parsed)
 		local accent_prefix
 		if not parsed.of_several_accents then
 			accent_prefix = require(accent_qualifier_module).format_qualifiers(parsed.accents) .. " "
@@ -1821,6 +1853,9 @@ function export.show_full(frame)
 			accent_grouping_offset = 1
 		end
 		ins_line(accent_prefix .. pronuns, parsed.bullets + accent_grouping_offset)
+		if parsed.next_line_pronuns then
+			ins_line(format_pronuns(parsed.next_line_pronuns), parsed.bullets + accent_grouping_offset + 1)
+		end
 		if parsed.audio then
 			-- format_audio() inserts multiple lines and handles bullets by itself.
 			table.insert(textparts, "\n")
@@ -2501,6 +2536,15 @@ function export.show_full_old(frame)
 		end
 	end
 
+	if (args["nohyph"] == 0) then
+		if maxn(hyph_data) > #hyph_data or not ( 
+			(maxn(hyph_data) <= 2 and not mw.title.getCurrentTitle().text:find("[-]")) or
+			(one_syllable and not mw.title.getCurrentTitle().text:find("[ -]"))
+		) then
+			table.insert(final_pron_output, "* " .. output.syll) 
+		end
+	end
+
 	-- Homophone processing
 	local hmp_list = {}
 	local hmp_args = args["hmp"]
@@ -2520,15 +2564,6 @@ function export.show_full_old(frame)
 			lang=lang, 
 			homophones=hmp_list
 		}))
-	end
-
-	if (args["nohyph"] == 0) then
-		if maxn(hyph_data) > #hyph_data or not ( 
-			(maxn(hyph_data) <= 2 and not mw.title.getCurrentTitle().text:find("[-]")) or
-			(one_syllable and not mw.title.getCurrentTitle().text:find("[ -]"))
-		) then
-			table.insert(final_pron_output, "* " .. output.syll) 
-		end
 	end
 
 	table.insert(final_pron_output, require("Module:utilities").format_categories(categories, lang))
