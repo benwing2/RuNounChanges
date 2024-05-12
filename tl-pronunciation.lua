@@ -36,7 +36,7 @@ FIXME:
 18. Buendia respelled Buendía syllabifies wrong (as 'Bu.end.ia' when it should be 'Bu.en.di.a').
 ]==]
 
-local force_cat = true -- enable for testing
+local force_cat = false -- enable for testing
 
 local m_IPA = require("Module:IPA")
 local m_str_utils = require("Module:string utilities")
@@ -103,6 +103,11 @@ local special_words = {
 	["mga"] = "manga" .. AC, ["mg̃a"] = "manga" .. AC
 }
 
+local function track(page)
+	require("Module:debug/track")("tl-pronunciation/" .. page)
+	return true
+end
+
 -- version of rsubn() that discards all but the first return value
 local function rsub(term, foo, bar)
 	local retval = rsubn(term, foo, bar)
@@ -144,7 +149,7 @@ local function combine_qualifiers(qual1, qual2)
 end
 
 
-local function decompose(text)
+local function decompose(text, recompose_e_dia)
 	-- decompose everything but ñ and ü
 	text = toNFD(text)
 	text = rsub(text, ".[" .. TILDE .. DIA .. "]", {
@@ -152,14 +157,18 @@ local function decompose(text)
 		["N" .. TILDE] = "Ñ",
 		["u" .. DIA] = "ü",
 		["U" .. DIA] = "Ü",
-		["e" .. DIA] = "ë",
-		["E" .. DIA] = "Ë",
 	})
+	if recompose_e_dia then
+		text = rsub(text, ".[" .. DIA .. "]", {
+			["e" .. DIA] = "ë",
+			["E" .. DIA] = "Ë",
+		})
+	end
 	return text
 end
 
 local function remove_accents(str)
-	str = decompose(str)
+	str = decompose(str, "recompose e-dia")
 	str = rsub(str, "(.)" .. accent_c, "%1")
 	return str
 end
@@ -179,7 +188,7 @@ function export.IPA(text, include_phonemic_syllable_boundaries)
 	local debug = {}
 
 	text = ulower(text)
-	text = decompose(text)
+	text = decompose(text, "recompose e-dia")
 	-- convert commas and en/en dashes to IPA foot boundaries
 	text = rsub(text, "%s*[,–—]%s*", " | ")
 	-- question mark or exclamation point in the middle of a sentence -> IPA foot boundary
@@ -491,6 +500,7 @@ function export.IPA(text, include_phonemic_syllable_boundaries)
 				text = rsub(text,"%.","")
 			end
 			text = rsub(text,"‿", " ")
+			text = rsub(text,"ʰ", "") -- Remove aspiration
 		end
 
 		table.insert(debug, text)
@@ -691,7 +701,8 @@ end
 
 -- Word should already be decomposed.
 local function word_has_vowels(word)
-	return rfind(word, V)
+	word = ulower(word)
+	return rfind(word, V) or word:find("y")
 end
 
 
@@ -711,7 +722,7 @@ local function should_generate_rhyme_from_respelling(term)
 	local words = rsplit(decompose(term), " +")
 	return #words == 1 and -- no if multiple words
 		not words[1]:find("%-$") and -- no if word is a prefix
-		not (words[1]:find("^%-") and words[1]:find(DOTOVER)) and -- no if word is an unstressed suffix
+		not (words[1]:find("^%-") and words[1]:find(MACRON)) and -- no if word is an unstressed suffix
 		word_has_vowels(words[1]) -- no if word has no vowels (e.g. a single letter)
 end
 
@@ -1142,14 +1153,8 @@ function export.show_full(frame)
 		["hmp"] = {},
 		["audio"] = {list = true},
 		["pagename"] = {},
-		["new"] = {type = "boolean"},
 	}
 	local parargs = frame:getParent().args
-	-- FIXME: Delete this compatibility code when all {{tl|tl-pr}} converted.
-	if not parargs.new then
-		return export.show_full_old(frame)
-	end
-
 	local args = require("Module:parameters").process(parargs, params)
 	local pagename = args.pagename or mw.title.getCurrentTitle().subpageText
 
@@ -1900,680 +1905,6 @@ function export.show_full(frame)
 
 	return table.concat(textparts) ..
 		require("Module:utilities").format_categories(categories, lang, nil, nil, force_cat)
-end
-
-
--- Old entry point for {{tl-pr}}, using old parameters.
-function export.show_full_old(frame)
-	---Process parameters---
-	local parargs = frame:getParent().args
-	local params = {
-		[1] = {list = true, allow_holes = true},
-		["IPA"] = {list = true, allow_holes = true},
-		["audio"] = {list = true, allow_holes = true},
-		["audioq"] = {list = true, allow_holes = true},
-		["hmp"] = {list = true},
-		["hmpq"] = {list = true},
-		["a"] = {list = true, allow_holes = true},
-		["q"] = {list = true, allow_holes = true},
-		["hyphcap"] = {default = "Syllabification"},
-		["nohyph"] = {type = "number", default = 0},
-		["norhymes"] = {type = "number", default = 0}
-	}
-	local args = require("Module:parameters").process(parargs, params)
-	local output = {}
-	local categories = {}
-	local hyph_data = { 
-		[1] = lang:getCode(),
-		caption = args["hyphcap"]
-	}
-
-	---Hyphenation---
-	if args.nohyph == 0 then
-		local hyph_args = args[1]
-
-		local function removeAccents(str)
-			str = toNFD(str)
-			str = rsub(str, ".[" .. TILDE .. DIA .. "]", {
-				["n" .. TILDE] = "ñ",
-				["u" .. DIA] = "ü",
-				["e" .. DIA] = "ë",
-			})
-			str = rsub(str, "(.)" .. accent_c, "%1")
-			return str
-		end
-
-		local text = hyph_args[1] or mw.title.getCurrentTitle().text
-
-		local function hyphenate(text)
-			-- Auto hyphenation start --
-			local vowel = vowel .. "ẃý" -- vowel 
-			local V = "[" .. vowel .. "]"
-			local C = "[^" .. vowel .. separator .. "]" -- consonant
-
-			text = removeAccents(text)
-
-			origtext = text
-			text = string.lower(text)
-
-			-- put # at word beginning and end and double ## at text/foot boundary beginning/end
-			text = rsub(text, " | ", "# | #")
-			text = "##" .. rsub(text, " ", "# #") .. "##"
-			text = rsub_repeatedly(text, "([.]?)#([.]?)", "#")
-
-			text = rsub(text, "ng", "ŋ")
-			text = rsub(text, "ch", "ĉ")
-			text = rsub(text, "sh", "ʃ")
-			text = rsub(text, "gui([aeëo])", "gui.%1")
-			text = rsub(text, "r", "ɾ")
-			text = rsub(text, "ɾɾ", "r")
-
-			text = rsub_repeatedly(text, "([^" .. vowel ..  "])([u])([" .. AC .. MACRON .. "]?)([aeio])("  .. accent_c .. "?)","%1%2%3.%4%5")
-			text = rsub_repeatedly(text, "(" .. V ..  ")([u])([" .. AC .. MACRON .. "]?)([aeio])("  .. accent_c .. "?)","%1.u%3%4%5")
-			text = rsub_repeatedly(text, "(" .. V ..  ")([o])([" .. AC .. MACRON .. "]?)([aei])("  .. accent_c .. "?)","%1.o%3%4%5")
-			text = rsub(text, "([i])([" .. AC .. MACRON .. "])([aeou])("  .. accent_c .. "?)","%1%2#í%3%4")
-			text = rsub(text, "([i])([aeou])(" .. accent_c .. "?)","í%2%3")
-			text = rsub(text, "a([".. AC .."]*)o([#.])","a%1ó%2")
-
-			text = rsub(text, "y([ˈˌ.]*)([bćĉdfɡhjĵklmnɲŋpɾrsʃtvwɟzʔ#" .. vowel .. "])","ý%1%2")
-			text = rsub(text, "ý(" .. V .. ")", "y%1")
-			text = rsub(text, "w([ˈˌ]?)([bćĉdfɡjĵklmnɲŋpɾrsʃtvwɟzʔ#" .. vowel .. "])","ẃ%1%2")
-			text = rsub(text, "ẃ(" .. V .. ")","w%1")
-
-			text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*)(" .. C .. V .. ")", "%1.%2")
-
-			-- "mb", "mp", "nd", "nk", "nt" combinations
-			text = rsub_repeatedly(text, "(m)([bp])([^lɾrɟyw" .. vowel .. separator .."])", "%1%2.%3")
-			text = rsub_repeatedly(text, "(n)([dkt])([^lɾrɟyw" .. vowel .. separator .. "])", "%1%2.%3")
-			text = rsub_repeatedly(text, "(ŋ)([k])([^lɾrɟyw" .. vowel .. separator ..  "])", "%1%2.%3")
-			text = rsub_repeatedly(text, "([ɾr])([bkdfɡklmnpsʃtvz])([^lɾrɟyw" .. vowel .. separator ..  "])", "%1%2.%3")
-
-			text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*" .. C .. ")(" .. C .. V .. ")", "%1.%2")
-			text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*" .. C .. "+)(" .. C .. C .. V .. ")", "%1.%2")
-			text = rsub_repeatedly(text, "(" .. C .. ")%.s(" .. C .. ")", "%1s.%2")
-
-			-- Any aeo, or stressed iu, should be syllabically divided from a following aeo or stressed iu.
-			text = rsub_repeatedly(text, "([aeo]" .. accent_c .. "*)([aeo])", "%1.%2")
-			text = rsub_repeatedly(text, "([aeo]" .. accent_c .. "*)(" .. V .. AC .. ")", "%1.%2")
-			text = rsub(text, "([iuə]" .. AC .. ")([aeo])", "%1.%2")
-			text = rsub_repeatedly(text, "([iuə]" .. AC .. ")(" .. V .. AC .. ")", "%1.%2")
-			text = rsub_repeatedly(text, "i(" .. accent_c .. "*)i", "i%1.i")
-			text = rsub_repeatedly(text, "u(" .. accent_c .. "*)u", "u%1.u")
-
-			text = rsub(text, "ĉ", "ch")
-			text = rsub(text, "ŋ", "ng")
-			text = rsub(text, "ʃ", "sh")
-			text = rsub(text, "r", "rr")
-			text = rsub(text, "ɾ", "r")
-			text = removeAccents(text)
-
-			text = rsub_repeatedly(text, "([.]+)", ".")
-			text = rsub(text, "[.]?-[.]?", "-")
-			text = rsub(text, "[‿]([^ ])", "|%1")
-			text = rsub(text, "[.]([^ ])", "|%1")
-
-			text = rsub(text, "([gq])([u])|([ei])", "%1%2%3")
-			text = rsub(text, "([^ 0-9]?)([7])([^ 0-9]?)", "%1%3")
-			text = rsub(text, "([|])+", "%1")
-
-			-- remove # symbols at word and text boundaries
-			text = rsub_repeatedly(text, "([.]?)#([.]?)", "")
-
-			-- Fix Capitalization --
-			local syllbreak = 0
-			for i=1, #text do
-			    if text:sub(i,i) == "|" and origtext:sub(i-syllbreak, i-syllbreak) ~= "." and origtext:sub(i-syllbreak, i-syllbreak) ~= "7" then
-			    	syllbreak = syllbreak + 1
-			    elseif origtext:sub(i-syllbreak, i-syllbreak) == text:sub(i,i):upper() then
-			    	text = table.concat({text:sub(1, i-1), text:sub(i,i):upper(), text:sub(i+1)}) 
-			    end
-			end
-
-			-- Fix hyphens --
-			origtext = mw.title.getCurrentTitle().text
-
-			if (table.concat(rsplit(origtext, "-")) ==  table.concat(rsplit(table.concat(rsplit(text, "|")), "-"))) then
-				syllbreak = 0
-				for i=1, #text do
-				    if text:sub(i,i) == "|" then
-				    	if origtext:sub(i-syllbreak, i-syllbreak) == "-" then
-					    	text = table.concat({text:sub(1, i-1), "-", text:sub(i+1)}) 
-					    else
-					    	syllbreak = syllbreak + 1
-					    end
-				    end
-				end
-			end
-
-			text = rsplit(text, "|")
-			return text
-		end
-
-		text = hyphenate(text)
-
-		-- Determine whether manual hyphenation is given (more than one numbered argument is present), and
-		-- categorize redundant hyphenations.
-		if (#hyph_args == 1 and hyph_args[1] == mw.title.getCurrentTitle().text) or 
-			(#hyph_args > 1 and m_table.deepEquals(text, hyph_args)) then
-				table.insert(categories, ("%s terms with redundant hyphenations"):format(lang:getCanonicalName()))
-		elseif #hyph_args > 1 then
-			text = hyph_args
-		end
-
-		-- Store hyphenation(s) in hyph_data (passed to [[Module:hyphenation]]) and compute maximum hyph_data
-		-- argument.
-		local max_hyph_ct = 0
-		for key, syllable in pairs(text) do
-			if type(key) == "number" then
-				hyph_data[tonumber(key)+1] = removeAccents(syllable)
-				if tonumber(key)+1 > max_hyph_ct then
-					max_hyph_ct = tonumber(key)+1
-				end
-			end
-		end
-
-		-- Separate the hyphenations and concatenate each one to form a word. Below, we check that each
-		-- hyphenation matches the pagename and categorize into an error category if not.
-		local hyph_check = {}
-		for i=2, max_hyph_ct do
-			if (hyph_data[i]) then
-				if(hyph_check[#hyph_check] == nil) then
-					table.insert(hyph_check, hyph_data[i])
-				else
-					hyph_check[#hyph_check] = hyph_check[#hyph_check] .. hyph_data[i]
-				end
-			else
-				table.insert(hyph_check, "")
-			end
-		end
-
-		for _, hyph_word in ipairs(hyph_check) do
-			if (hyph_word ~= mw.title.getCurrentTitle().text) then
-				table.insert(categories, ("%s terms with hyphenation errors"):format(lang:getCanonicalName()))
-			end
-		end
-
-		-- Actually hyphenate.
-		output.syll = require("Module:hyphenation").hyphenate(hyph_data)
-	end
-
-	--IPA pronunciations--
-	local IPA_args = args["IPA"]
-	local IPA_data = {}
-	local IPA_accent_list = {}
-	local IPA_q_list = {}
-
-	-- Accent group processing
-	local accent_data = mw.loadData(accent_qualifier_data_module)
-	local a_args = args["a"]
-
-	-- Each accent parameter in a1=, a2= etc. is one or more comma-separated accents. Split on commas and
-	-- canonicalize aliases.
-	for i, accent in pairs(a_args) do
-		if(tonumber(i)) then
-			IPA_accent_list[i] = rsplit(trim(accent), "%s*,%s*")
-			for j, alias in ipairs(IPA_accent_list[i]) do
-				if accent_data.aliases[alias] then
-					IPA_accent_list[i][j] = accent_data.aliases[alias]
-				end
-			end
-		end
-	end
-
-	-- Qualifier processing
-	local q_args = args["q"]
-
-	-- Split qualifiers on commas and store in IPA_q_list[].
-	for i, qual in pairs(q_args) do
-		if(tonumber(i)) then
-			IPA_q_list[i] = rsplit(trim(qual), "%s*,%s*")
-		end
-	end
-
-	-- Either use the first parameter or the entry title if no IPA1 arg given.
-	if not IPA_args[1] and #args[1] <= 1 then
-		IPA_args[1] = args[1][1] or mw.title.getCurrentTitle().text
-	end
-
-	-- Process each respelling, convert to IPA and store the phonemic and phonetic pronunciations in a two-element list.
-	for i=1, #IPA_args do
-		local input = IPA_args[i]
-		local IPA_format = {}
-
-		if input == "+" then
-			input = mw.title.getCurrentTitle().text
-		end
-
-		--Allows copy of //, [] format
-		if input:match("/([^/]+)/%s*,%s*%[([^%[%]]+)%]") then
-			rsub(input, "/([^/]+)/%s*,%s*%[([^%[%]]+)%]", 
-			function(phonemic, phonetic)
-				table.insert(IPA_format, { pron = "/" .. phonemic .. "/" })
-				table.insert(IPA_format, { pron = "[" .. phonetic .. "]" })
-			end)
-		else
-			local IPA_result = export.IPA(input)
-			table.insert(IPA_format, { pron = "/" .. IPA_result["phonemic"] .. "/" })
-			table.insert(IPA_format, { pron = "[" .. IPA_result["phonetic"] .. "]" })
-		end
-
-		table.insert(IPA_data, IPA_format)
-	end
-
-	output.IPA = IPA_data
-
-	-- Audio processing
-	local audio_args = args["audio"]
-	local audioq_args = args["audioq"]
-	local audio_output = {}
-
-	-- Format each specified audio file using [[Module:audio]].
-	for i, audio in pairs(audio_args) do
-		if(tonumber(i)) then
-			audio_output[i] = require("Module:audio").format_audios({
-				lang=lang, 
-				audios = {{
-					file = audio_args[i],
-					qualifiers = audioq_args[i] and {audioq_args[i]} or nil
-				}},
-				caption = "Audio"
-			})
-		end
-	end
-
-	local final_pron_output = {}
-	local IPA_object_list = {}
-	local IPA_object_groups = {}
-	local one_syllable = false
-	local accent_no_count = {"colloquial", "obsolete", "relaxed"}
-	local accent_order = m_table.invert({
-		"Standard Tagalog",
-		"dialectal",
-		"Bataan", 
-		"Bulacan", 
-		"Nueva Ecija", 
-		"Southern Tagalog", 
-		"Cavite", 
-		"Laguna",
-		"Batangas",
-		"Teresa-Morong", 
-		"Tayabas", 
-		"Marinduque", 
-		"Old Tagalog"
-	})
-
-	output.rhymes = {}
-
-	-- Gather pronunciation properties for each respelling. 
-	for i=1, #output.IPA do
-		local IPA_object = {
-			data = output.IPA[i],
-			audio = audio_output[i],
-			accent = IPA_accent_list[i],
-			qualifier = IPA_q_list[i],
-			syll_count = true,
-			exclude_rhyme = false
-		}
-
-		if not IPA_object.accent then
-			IPA_object.accent = {"Standard Tagalog"}
-		end
-
-		-- If multiple accents given, sort according to the accent order listed above. Unrecognized accents go
-		-- at the end.
-		table.sort(IPA_object.accent, 
-			function(a, b)
-				-- 100 is an arbitrary high number for sorting
-				local acc_a = accent_order[a] or 100
-				local acc_b = accent_order[b] or 100
-				return acc_a < acc_b
-			end
-		)
-
-		-- If more than one respelling given, then if any accent or qualifier has the words 'colloquial',
-		-- 'obsolete' or 'relaxed' in them, don't generate a rhyme or a '#-syllable word' category.
-		-- FIXME: This check should be more stringent as it will wrongly catch cases where the qualifier specifies
-		-- a definition, which includes one of the above words.
-		if #output.IPA > 1 then
-			for _, accent in ipairs(IPA_object.accent) do
-				for _, uncounted in ipairs(accent_no_count) do
-					if accent:match(uncounted) then
-						IPA_object.syll_count = false
-						IPA_object.exclude_rhyme = true
-						break
-					end
-				end
-			end
-
-			if IPA_object.qualifier then
-				for _, qual in ipairs(IPA_object.qualifier) do
-					for _, uncounted in ipairs(accent_no_count) do
-						if qual:match(uncounted) then
-							IPA_object.syll_count = false
-							IPA_object.exclude_rhyme = true
-							break
-						end
-					end
-				end
-			end
-		end
-		table.insert(IPA_object_list, IPA_object)
-	end
-
-	-- If the phonemic form of any generated IPA contains /f/, /v/ or /z/, augment the IPA's with an additional
-	-- entry where /f/ -> /p/, /v/ -> /b/ and /z/ -> /s/, with a qualifier "more native-sounding" appended to the
-	-- existing qualifiers.
-	local IPA_count = 1
-	while IPA_count <= #IPA_object_list do
-		local skip = 0
-		-- F, V, Z
-		if IPA_object_list[IPA_count].data[1]["pron"]:find("[fvz]") then
-			if not (IPA_object_list[IPA_count].qualifier) then
-				IPA_object_list[IPA_count].qualifier = {}
-			end
-
-			local fvz_qual = m_table.shallowcopy(IPA_object_list[IPA_count].qualifier)
-			local fvz_caption = "more native-sounding"
-			if not (m_table.tableContains(fvz_qual, fvz_caption)) then
-				table.insert(fvz_qual, fvz_caption)
-			end
-			local fvz_charmap = { ["f"] = "p", ["v"] = "b", ["z"] = "s"}
-			table.insert(IPA_object_list, IPA_count+1, {
-				data = {
-					{["pron"] = rsub(IPA_object_list[IPA_count].data[1]["pron"], "[fvz]", fvz_charmap)},
-					{["pron"] = rsub(IPA_object_list[IPA_count].data[2]["pron"], "[fvz]", fvz_charmap)}
-				},
-				audio = nil,
-				accent = IPA_object_list[IPA_count].accent,
-				qualifier = fvz_qual,
-				syll_count = true,
-				exclude_rhyme = false
-			})
-			skip = skip + 1
-		end
-		IPA_count = IPA_count + 1 + skip
-	end
-
-	-- If the phonemic form of any generated IPA contains a non-final word ending in a glottal stop (FIXME: do
-	-- we want to restrict this to non-final words and only to word-final glottal stops?), augment the IPA's with
-	-- an additional entry where the phonemic glottal stop becomes optional and the phonetic glottal stop is
-	-- converted to a long vowel.
-	local IPA_count = 1
-	while IPA_count <= #IPA_object_list do
-		local skip = 0
-		-- Manila glottal stop elision
-		if IPA_object_list[IPA_count].data[1]["pron"]:find("ʔ ") and m_table.contains(IPA_object_list[IPA_count].accent, "Standard Tagalog") then
-			if not (IPA_object_list[IPA_count].qualifier) then
-				IPA_object_list[IPA_count].qualifier = {}
-			end
-
-			local gl_qual = m_table.shallowcopy(IPA_object_list[IPA_count].qualifier)
-			local gl_caption = "with glottal stop elision"
-			if not (m_table.tableContains(gl_qual, gl_caption)) then
-				table.insert(gl_qual, gl_caption)
-			end
-			table.insert(IPA_object_list, IPA_count+1, {
-				data = {
-					{["pron"] = rsub(IPA_object_list[IPA_count].data[1]["pron"], "ʔ ", "(ʔ) ")},
-					{["pron"] = rsub(IPA_object_list[IPA_count].data[2]["pron"], "ʔ ", "ː ")}
-				},
-				audio = nil,
-				accent = IPA_object_list[IPA_count].accent,
-				qualifier = gl_qual,
-				syll_count = false,
-				exclude_rhyme = true
-			})
-			skip = skip + 1
-		end
-		IPA_count = IPA_count + 1 + skip
-	end
-
-	IPA_object_list = m_table.removeDuplicates(IPA_object_list)
-
-	-- Group pronunciations by the associated accent set (concatenated accents), and then sort the groups by
-	-- accent according to the order specified above in accent_order, where differences in earlier accents count
-	-- more than differences in later accents.
-	for _, IPA_obj in ipairs(IPA_object_list) do
-		local group_index = table.concat(IPA_obj.accent, ",")
-		if IPA_object_groups[group_index] == nil then
-			IPA_object_groups[group_index] = {}
-		end
-		table.insert(IPA_object_groups[group_index], IPA_obj)
-	end
-
-	local IPA_group_names = m_table.keysToList(IPA_object_groups)
-	table.sort(IPA_group_names, 
-		function(a,b)
-			local accents_a = rsplit(a, ",")
-			local accents_b = rsplit(b, ",")
-			local count = math.max(#accents_a, #accents_b)
-			for i=1, count do
-				if(accents_a[i] ~= accents_b[i]) then
-					-- 100 is an arbitrary high number for sorting
-					local acc_a = accents_a[i] and (accent_order[accents_a[i]] or 100) or 0
-					local acc_b = accents_b[i] and (accent_order[accents_b[i]] or 100) or 0
-					return acc_a < acc_b
-				end
-			end
-		end
-	)
-
-	-- Get the rhyme by truncating everything up through the last stress mark + any following consonants, and remove
-	-- syllable boundary markers.
-	-- NOTE: This works because the phonemic vowels are just [aeiou] possibly with diacritics that are separate
-	-- Unicode chars. If we want to handle things like ɛ or ɔ we need to add them to `vowel`.
-	local function convert_phonemic_to_rhyme(rhyme)
-		rhyme = rsplit(rhyme, " ")
-		rhyme = rhyme[#rhyme]
-		rhyme = rsub(rhyme, "[%[%]/.]", "")
-		rhyme = rsub(rhyme, ".*[ˌˈ]", "")
-		rhyme = rsub(rhyme, "^[^" .. vowel .. "]*", "")
-		return rhyme
-	end
-
-	local clean_up_rhyme = {}
-	local rhyme_order = 1
-
-	local m_data = mw.loadData('Module:IPA/data')
-	m_syllables = require('Module:syllables')
-	local langcode = lang:getCode()
-
-	-- Loop over the sorted accent groups (see above).
-	for idx, ag_ordered in ipairs(IPA_group_names) do
-		local accent_group_data = IPA_object_groups[ag_ordered]
-		local accent_row = {}
-		local row_bullet = "*"
-		table.insert(accent_row, "* " .. (frame:expandTemplate { title = "accent", args = rsplit(ag_ordered, ",")} or ""))
-
-		if (#accent_group_data ~= 1) then
-			row_bullet = "**"
-		end
-
-		-- Loop over the pronunciations in an accent group.
-		for _, a_obj in ipairs(accent_group_data) do
-			-- Determine the pronunciation to use for rhyme determination and get the number of syllables by counting
-			-- vowels, according to the Tagalog specs in [[Module:IPA/data]]. Store in `syll_count` (used later on when
-			-- generating a rhymes category). Set `one_syllable` if only one syllable. FIXME: This is duplicating the
-			-- logic in [[Module:syllable]] and [[Module:IPA]] that computes the syllable count for generating a
-			-- 'Tagalog #-syllable words' category.
-			local rhymes_use = ""
-			if m_data.langs_to_generate_syllable_count_categories[langcode] then
-				if m_data.langs_to_use_phonetic_notation[langcode] then
-					rhymes_use = a_obj.data[2]["pron"]
-				else
-					rhymes_use = a_obj.data[1]["pron"]
-				end
-				if rhymes_use and a_obj.syll_count and not require("Module:string utilities").find(rhymes_use, "[ ‿]") then
-					local syllable_count = m_syllables.getVowels(rhymes_use, lang)
-					if syllable_count then
-						a_obj.syll_count = syllable_count
-						if a_obj.syll_count <= 1 then
-							one_syllable = true
-						end
-					end
-				end
-			end
-
-			-- If we couldn't set `one_syllable`, presumably this means there aren't any vowels (?); assume true if
-			-- we've been instructed to determine the syllable count.
-			if type(a_obj.syll_count) == "boolean" and a_obj.syll_count == true then
-				one_syllable = true
-			end
-
-			-- Format generated phonemic and phonetic IPA using [[Module:IPA]].
-			a_obj.data = m_IPA.format_IPA_full(lang, a_obj.data, nil, nil, nil, not a_obj.syll_count)
-			-- Format qualifier.
-			a_obj_q = require("Module:qualifier").format_qualifier(a_obj.qualifier)
-			-- If there's only one pronunciation in this accent group, it goes on the same line as the accent text;
-			-- otherwise it goes on a separate line, indented (with two bullets, as the accent text line has one
-			-- bullet).
-			if (#accent_group_data == 1) then
-				accent_row[#accent_row] = accent_row[#accent_row] .. " " .. a_obj.data
-			else
-				table.insert(accent_row, row_bullet .. " " .. a_obj.data)
-			end
-
-			-- Add qualifier to output.
-			if(a_obj.qualifier) then
-				accent_row[#accent_row] = accent_row[#accent_row] .. " " .. a_obj_q
-			end
-
-			-- Add audio line to output.
-			if(a_obj.audio) then
-				table.insert(accent_row, row_bullet .. " " ..  a_obj.audio)
-			end
-
-			-- Generate the arguments to pass to [[Module:rhymes]].
-			local get_rhyme = convert_phonemic_to_rhyme(rhymes_use)
-			local combined_qual = m_table.shallowcopy(a_obj.accent)
-			if #IPA_group_names == 1 then
-				combined_qual = {}
-			elseif combined_qual[1] == "Standard Tagalog" then
-				table.remove(combined_qual,1)
-			end
-			if(a_obj.qualifier) then
-				m_table.extendList(combined_qual, a_obj.qualifier)
-				combined_qual = m_table.removeDuplicates(combined_qual or {})
-			end
-
-			if not a_obj.exclude_rhyme then
-				if not (clean_up_rhyme[get_rhyme]) then
-					clean_up_rhyme[get_rhyme] = {
-						num_syl = tonumber(a_obj.syll_count) and {a_obj.syll_count} or nil,
-						qualifiers = combined_qual,
-						order = rhyme_order
-					}
-					rhyme_order = rhyme_order + 1
-				else
-					if (clean_up_rhyme[get_rhyme].num_syl) and tonumber(a_obj.syll_count) then
-						table.insert(clean_up_rhyme[get_rhyme]["num_syl"], a_obj.syll_count)
-					elseif not (clean_up_rhyme[get_rhyme].num_syl) and tonumber(a_obj.syll_count) then
-						clean_up_rhyme[get_rhyme].num_syl = {a_obj.syll_count}
-					end
-
-					if (clean_up_rhyme[get_rhyme].qualifiers) and #clean_up_rhyme[get_rhyme].qualifiers > 0 then
-						if not (combined_qual) or (#combined_qual == 0) then
-							clean_up_rhyme[get_rhyme].qualifiers = nil
-						else
-							m_table.extendList(clean_up_rhyme[get_rhyme].qualifiers, combined_qual )
-						end
-					end
-				end
-			end
-		end
-
-		table.insert(final_pron_output, table.concat(accent_row, "\n"))
-	end
-
-	-- Cleanup Rhymes --
-	for rhy, rhyval in pairs(clean_up_rhyme) do
-		if rhy ~= "" then
-			table.insert(output.rhymes, {
-				rhyme=rhy,
-				num_syl = rhyval["num_syl"],
-				qualifiers = rhyval["qualifiers"] and m_table.removeDuplicates(rhyval["qualifiers"]) or nil,
-				order = rhyval["order"]
-			})
-		end
-	end
-
-	if #output.rhymes > 0 then
-		output.rhymes = m_table.removeDuplicates(output.rhymes)
-		table.sort(output.rhymes, function(a,b)
-			return a.order < b.order
-		end)
-
-		for _, pron_rhym in ipairs(output.rhymes) do
-			local penult = false
-			local glottal = false
-			local pron_cat = ""
-			if(m_syllables.getVowels(pron_rhym.rhyme, lang) == 2) then
-				penult = true
-			end
-			if(pron_rhym.rhyme:find("ʔ$")) then
-				glottal = true
-			end
-
-			if penult and glottal then
-				pron_cat = "malumi"
-			elseif penult then
-				pron_cat = "malumay"
-			elseif glottal then
-				pron_cat = "maragsa"
-			else
-				pron_cat = "mabilis"
-			end
-			table.insert(categories, ("%s terms with %s pronunciation"):format(lang:getCanonicalName(), pron_cat))
-		end
-
-		categories = m_table.removeDuplicates(categories)
-
-		if (args["norhymes"] == 0) then
-			table.insert(final_pron_output, "*" .. require("Module:rhymes").format_rhymes{
-				lang=lang,
-				rhymes=output.rhymes
-			})
-		end
-	end
-
-	if (args["nohyph"] == 0) then
-		if maxn(hyph_data) > #hyph_data or not ( 
-			(maxn(hyph_data) <= 2 and not mw.title.getCurrentTitle().text:find("[-]")) or
-			(one_syllable and not mw.title.getCurrentTitle().text:find("[ -]"))
-		) then
-			table.insert(final_pron_output, "* " .. output.syll) 
-		end
-	end
-
-	-- Homophone processing
-	local hmp_list = {}
-	local hmp_args = args["hmp"]
-	local hmpq_args = args["hmpq"]
-
-	for i, hmp in ipairs(hmp_args) do
-		if(tonumber(i)) then
-			table.insert(hmp_list, {
-				term = hmp_args[i],
-				qualifiers = hmpq_args[i] and {hmpq_args[i]} or nil
-			}) 
-		end
-	end
-
-	if #hmp_list > 0 then
-		table.insert(final_pron_output, "*" .. 	require("Module:homophones").format_homophones({
-			lang=lang, 
-			homophones=hmp_list
-		}))
-	end
-
-	table.insert(final_pron_output, require("Module:utilities").format_categories(categories, lang))
-
-	-- Trim final spaces
-	while(final_pron_output[#final_pron_output] == "") do
-		table.remove(final_pron_output, #final_pron_output)
-	end
-
-	return table.concat(final_pron_output, "\n")
 end
 
 return export
