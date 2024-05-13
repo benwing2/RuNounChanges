@@ -11,29 +11,50 @@ FIXME:
 1. Review should_generate_rhyme_from_respelling(), e.g. the check for CFLEX.
 2. Update align_syllabification_to_spelling(). [DONE]
 3. Look into how syllabify_from_spelling() works; needs rewriting.
-4. Delete old {{tl-pr}} code when new code ready.
+4. Delete old {{tl-pr}} code when new code ready. [DONE]
 5. Group by accent in adjacent lines, and display accent on a separate line if more than one line with that accent.
    [DONE]
 6. Restore 'Tagalog terms with malumi pronunciation' and similar rhyme categories; also restore 'Tagalog terms with
    syllabification not matching pagename' (formerly 'Tagalog terms with hyphenation errors'). [DONE]
 7. Use "syllabification" everywhere internally in place of "hyphenation" and in abbrevs. [DONE]
-8. Change handling of forcing dot. Currently t.s forces /ts/ instead of /tʃ/; this should be t_s. Currently you have to
-   write si..yasa with double dot to get /sijasa/ not /ʃasa/; this should be single dot, and no dot should indicate
-   the palatalized pronunciation.
+8. Change handling of forcing dot. Currently t.s forces /ts/ instead of /tʃ/ (and interferes with syllabification);
+   this should be t_s. Currently you have to write si..yasa with double dot to get /sijasa/ not /ʃasa/; this should be
+   single dot, and no dot should indicate the palatalized pronunciation.
 9. If there are auto-generated pronunciations, they should go on a separate line. If there are other pronunciations
    on the line, indent the auto-generated ones on a separate line under the pronunciation line; otherwise, at the same
    bullet level. Good test cases: [[F]], [[General Mariano Alvarez]]. [DONE]
 10. Fix bug involving [[Evangelista]] respelled 'Evanghelista' and [[barangay]] respelled 'baranggay'; should recognize
-    for syllabification purposes.
+    for syllabification purposes. [DONE]
 11. Rhymes should be displayed even if multiword based on the last word, but just not categorize.
 12. DOTOVER should be used to indicate an unstressed word or suffix, e.g. -ȧ to indicate unstressed [[a]] phoneme.
+    [NOT DONE; USE MACRON, ALREADY SUPPORTED]
 13. Move hyphen-restoring code in syllabify_from_spelling() to align_syllabification_to_spelling().
 14. Allow h against nothing esp. at beginning of word e.g. in [[Hermogenes]] respelled 'Ermógenes' or 'Ermogenes'.
-    Also [[adhan]] respelled 'adán'.
+    Also [[adhan]] respelled 'adán' syllabified 'a.dhan', [[Abdurahman]] respelled 'Abduramán' syllabified
+	'Ab.du.rah.man', [[Agatha]] respelled 'Ágata' syllabified 'A.ga.tha'. [DONE]
 15. Unstressed words should not have rhymes, e.g. 'ba' is a letter that isn't normally stressed but is getting a rhyme.
 16. Shouldn't be necessary to write raw: before /.../.
-17. Allow w against u e.g. [[Zulueta]] respelled 'Zulweta' (and y against i).
-18. Buendia respelled Buendía syllabifies wrong (as 'Bu.end.ia' when it should be 'Bu.en.di.a').
+17. Allow w against u e.g. [[Zulueta]] respelled 'Zulweta', [[Aguado]] respelled 'agwado', syllabified 'Ag.ua.do' (and y
+    against i). [DONE]
+18. Allow l against ll e.g. [[Allan]] respelled 'Alan', syllabified 'A.llan', likewise [[Allahu akbar]] respelled
+    'Alahu akbár' syllabified 'A.lla.hu ak.bar'. [DONE]
+19. Allow s against ss e.g. [[assalamu alaikum]] respelled 'asalamu alaikum', syllabified 'a.ssa.la.mu a.lai.kum'.
+    [DONE]
+20. Allow f against ff e.g. [[Jefferson]] respelled 'Jéferson', syllabified 'Je.ffer.son' and [[Gaffud]] respelled
+    'Gafud', syllabified 'Ga.ffud'. [DONE]
+21. Allow m against mm e.g. [[Gemma]] respelled 'Jema', syllabified 'Ge.mma', and [[ummah]] respelled 'uma', syllabified
+    'u.mmah', and [[nagko-comment]] respelled 'nagko-coment', syllabified 'nag.ko-co.mment'. [DONE]
+22. Allow n against nn e.g. [[sunna]] respelled 'suna', syllabified 'su.nna', and [[Hannah]] respelled 'Hana',
+    syllabified 'Ha.nnah'. [DONE]
+23. Allow b against bb e.g. [[Abby]] respelled 'aby', syllabified 'A.bby'. [DONE]
+24. [[Buendia]] respelled 'Buendía' syllabifies wrong (as 'Bu.end.ia' when it should be 'Bu.en.di.a'). Likewise
+    [[María]] (as Mar.ia instead of Ma.ri.a).
+25. [[Arguelles]] respelled 'Argu.elles' generates correct pronunciation with /gw/ but incorrect syllabification
+    'Ar.guel.les' instead of 'Ar.gu.el.les'.
+26. [[Caguiat]] respelled 'Caguiát' generates correct pronunciation with /gj/ but incorrect syllabification 'Ca.gui.at'
+    instead of 'Ca.guiat' ("hyphenation") or maybe 'Cagu.iat'.
+27. Allow 7 against ' e.g. [[Jumu'ah]] respelled 'Jumu7á' with syllabificaiton 'Ju.mu.'ah'. [DONE]
+28. Allow f against ph e.g. [[Sophia]] respelled 'Sofi.a' with syllabificaiton 'So.phi.a'.
 ]==]
 
 local force_cat = false -- enable for testing
@@ -665,20 +686,91 @@ local function align_syllabification_to_spelling(syllab, spelling)
 	local spelling_chars = rsplit(decompose(spelling), "")
 	local i = 1
 	local j = 1
+	local function matches(uci, ucj)
+		-- Return true if a syllabified respelling character (uci) matches the corresponding spelling char (ucj).
+		-- Both uci and ucj should be lowercase.
+		return uci == ucj or
+			uci == "h" and (ucj == "g" or ucj == "j") or 
+			uci == "j" and ucj == "g" or 
+			uci == "y" and ucj == "i" or
+			uci == "w" and ucj == "u" or
+			uci == "7" and ucj == "'"
+	end
 	while i <= #syll_chars or j <= #spelling_chars do
-		local uci = syll_chars[i]
-		local cj = spelling_chars[j]
-		local ucj = cj and ulower(cj) or nil
-		if uci == ucj or
-			uci == "h" and (ucj == "g" or ucj == "j") then
+		local function syll_at(pos)
+			return syll_chars[pos]
+		end
+		local function spell_at(pos)
+			return spelling_chars[pos]
+		end
+		local function uspell_at(pos)
+			local c = spelling_chars[pos]
+			return c and ulower(c) or nil
+		end
+		local uci = syll_at(i)
+		local cj = spell_at(j)
+		local ucj = uspell_at(j)
+		if uci == "g" and syll_at(i - 1) == "n" and syll_at(i + 1) == "." and matches(syll_at(i + 2), ucj) then
+			-- As a special case, before checking whether the corresponding characters match, we have to skip an extra
+			-- g in an -ng- sequence in the syllabified respelling if the corresponding spelling character matches the
+			-- next respelling character (taking into account the syllable boundary). This is so that e.g.
+			-- syll='ba.rang.gay' matches spelling='barangay'. Otherwise we will match the first respelling g against
+			-- the spelling g and the second respelling g won't match. A similar case occurs with
+			-- syll='E.vang.he.lis.ta' and spelling='Evangelista'.
+			i = i + 1
+		elseif matches(uci, ucj) then
 			table.insert(result, cj)
 			i = i + 1
+			j = j + 1
+		elseif ucj == uspell_at(j - 1) and uci == "." and ucj ~= syll_at(i + 1) then
+			-- See below. We want to allow for a doubled letter in spelling that is pronounced single, and preserve the
+			-- doubled letter. But it's tricky in the presence of syllable boundaries on both sides of the doubled
+			-- letter as well as doubled letters pronounced double. Specifically, there are three possibilities,
+			-- exemplified by:
+			-- (1) syll='Mal.lig', spelling='Mallig' -> 'Mal.lig';
+			-- (2) syll='Ma.lig', spelling='Mallig' -> 'Ma.llig';
+			-- (3) syll='Wil.iam', spelling='William' -> 'Will.iam'.
+			-- If we copy the dot first, we get (1) and (2) right but not (3).
+			-- If we copy the double letter first, we get (2) and (3) right but not (1).
+			-- We choose to copy the dot first except in the situation exemplified by (3), where we copy the doubled
+			-- letter first. The condition above handles (3) (the doubled letter matches against a dot) while not
+			-- interfering with (1) (where the doubled letter also matches against a dot but the next letter in the
+			-- syllabification is the same as the doubled letter, because the doubled letter is pronounced double).
+			table.insert(result, cj)
+			j = j + 1
+		elseif ucj == "h" and uci == "." and ucj ~= syll_at(i + 1) then
+			-- See below for silent h in spelling. This condition is exactly parallel to the one directly above for
+			-- silent doubled letters in spelling and handles the case of syllab='Abduramán', spelling='Abdurahman',
+			-- while should be syllabified 'Ab.du.rah.man'.
+			table.insert(result, cj)
 			j = j + 1
 		elseif uci == "." then
 			table.insert(result, uci)
 			i = i + 1
-		elseif uci == AC or uci == GR or uci == CFLEX or uci == DIA or uci == TILDE or uci == "7" or
-			uci == "y" or uci == "w" or uci == "g" then
+		elseif ucj == uspell_at(j - 1) then
+			-- A doubled letter in spelling that is pronounced single. Examples:
+			-- * syllab='Ma.líg', spelling='Mallig' -> 'Ma.llig' (with l)
+			-- * syllab='Lu.il.yér', spelling='Lhuillier' -> 'Lhu.ill.ier' (with l; a more complex example)
+			-- * syllab='a.sa.la.mu a.lai.kum', spelling='assalamu alaikum' -> 'as.sa.la.mu a.lai.kum' (with s)
+			-- * syllab='Jé.fer.son', spelling='Jefferson' -> 'Je.ffer.son' (with f)
+			-- * syllab='Je.ma', spelling='Gemma' -> 'Ge.mma' (with m)
+			-- * syllab='Ha.na', spelling='Hannah' -> 'Ha.nnah' (with n)
+			-- * syllab='A.by', spelling='Abby' -> 'A.bby' (with b)
+			-- * syllab='Ka.ba', spelling='Kaaba' -> 'Kaa.ba' (with a)
+			-- * syllab='Fu.ji', spelling='Fujii' -> 'Fu.jii' (with i)
+			table.insert(result, cj)
+			j = j + 1
+		elseif ucj == "h" then
+			-- A silent h in spelling. Examples:
+			-- * syllab='adán', spelling='adhan' -> 'a.dhan'
+			-- * syllab='Atanasya', spelling='Athanasia' -> 'A.tha.nas.ia'
+			-- * syllab='Cýntiya', spelling='Cynthia' -> 'Cyn.thi.a'
+			-- * syllab='Ermóhenes', spelling='Hermogenes' -> 'Her.mo.ge.nes'
+			-- * syllab='Abduramán', spelling='Abdurahman' -> 'Ab.du.rah.man'
+			table.insert(result, cj)
+			j = j + 1
+		elseif uci == AC or uci == GR or uci == CFLEX or uci == DIA or uci == TILDE or uci == MACRON or uci == "7" or
+			uci == "y" or uci == "w" then
 			-- skip character
 			i = i + 1
 		else
@@ -987,7 +1079,6 @@ local function syllabify_from_spelling(text, pagename)
 	text = rsub(text, "[.]([^ ])", "|%1")
 
 	text = rsub(text, "([gq])([u])|([ei])", "%1%2%3")
-	text = rsub(text, "([^ 0-9]?)([7])([^ 0-9]?)", "%1%3")
 	text = rsub(text, "([|])+", "%1")
 
 	-- remove # symbols at word and text boundaries
@@ -1007,7 +1098,7 @@ local function syllabify_from_spelling(text, pagename)
 	-- FIXME!!! Why are we relying on looking at the pagename here? This should not be happening.
 	origtext = pagename
 
-	if (table.concat(rsplit(origtext, "-")) ==  table.concat(rsplit(table.concat(rsplit(text, "|")), "-"))) then
+	if (table.concat(rsplit(origtext, "-")) == table.concat(rsplit(table.concat(rsplit(text, "|")), "-"))) then
 		syllbreak = 0
 		for i=1, #text do
 			if text:sub(i,i) == "|" then
