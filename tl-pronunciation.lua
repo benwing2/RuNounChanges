@@ -55,6 +55,8 @@ FIXME:
     instead of 'Ca.guiat' ("hyphenation") or maybe 'Cagu.iat'.
 27. Allow 7 against ' e.g. [[Jumu'ah]] respelled 'Jumu7á' with syllabificaiton 'Ju.mu.'ah'. [DONE]
 28. Allow f against ph e.g. [[Sophia]] respelled 'Sofi.a' with syllabificaiton 'So.phi.a'.
+29. Correctly handle [[gaan]] respelled 'ga7án', and other terms with doubled vowels in them against a glottal stop.
+    [DONE]
 ]==]
 
 local force_cat = false -- enable for testing
@@ -569,6 +571,21 @@ function export.IPA(text, include_phonemic_syllable_boundaries)
 	return tl_IPA_table
 end
 
+-- Meant to be called from a bot.
+function export.IPA_string(frame)
+	local iparams = {
+		[1] = {required = true},
+		["type"] = {required = true},
+		["include_phonemic_syllable_boundaries"] = {type = "boolean"},
+	}
+	local iargs = require("Module:parameters").process(frame.args, iparams)
+	if iargs.type ~= "phonemic" and iargs.type ~= "phonetic" then
+		error(("Saw type='%s' but it must be 'phonemic' or 'phonetic'"):format(iargs.type))
+	end
+	local retval = export.IPA(iargs[1], iargs.include_phonemic_syllable_boundaries)
+	return retval[iargs.type]
+end
+
 function export.show(frame)
 	local params = {
 		[1] = {},
@@ -681,9 +698,15 @@ end
 -- glottal stops (written 7), h in respelling vs. g or j in the original, etc. If we can't match, we return nil
 -- indicating the alignment failed.
 local function align_syllabification_to_spelling(syllab, spelling)
+	--error(("syllab=%s spelling=%s"):format(syllab, spelling))
 	local result = {}
-	local syll_chars = rsplit(ulower(decompose(syllab)), "")
-	local spelling_chars = rsplit(decompose(spelling), "")
+	-- Remove glottal stop (7) from respelling to simplify the code below, because it's never found in the original
+	-- spelling. (FIXME: We should do the same for diacritics, but they're currently removed earlier, in 
+	-- syllabify_from_spelling(). We should probably get rid of the removal there and put it here.)
+	syllab = decompose(syllab):gsub("7", "")
+	spelling = decompose(spelling)
+	local syll_chars = rsplit(ulower(syllab), "")
+	local spelling_chars = rsplit(spelling, "")
 	local i = 1
 	local j = 1
 	local function matches(uci, ucj)
@@ -693,19 +716,18 @@ local function align_syllabification_to_spelling(syllab, spelling)
 			uci == "h" and (ucj == "g" or ucj == "j") or 
 			uci == "j" and ucj == "g" or 
 			uci == "y" and ucj == "i" or
-			uci == "w" and ucj == "u" or
-			uci == "7" and ucj == "'"
+			uci == "w" and ucj == "u"
 	end
 	while i <= #syll_chars or j <= #spelling_chars do
 		local function syll_at(pos)
-			return syll_chars[pos]
+			return syll_chars[pos] or ""
 		end
 		local function spell_at(pos)
-			return spelling_chars[pos]
+			return spelling_chars[pos] or ""
 		end
 		local function uspell_at(pos)
 			local c = spelling_chars[pos]
-			return c and ulower(c) or nil
+			return c and ulower(c) or ""
 		end
 		local uci = syll_at(i)
 		local cj = spell_at(j)
@@ -738,10 +760,13 @@ local function align_syllabification_to_spelling(syllab, spelling)
 			-- syllabification is the same as the doubled letter, because the doubled letter is pronounced double).
 			table.insert(result, cj)
 			j = j + 1
-		elseif ucj == "h" and uci == "." and ucj ~= syll_at(i + 1) then
-			-- See below for silent h in spelling. This condition is exactly parallel to the one directly above for
-			-- silent doubled letters in spelling and handles the case of syllab='Abduramán', spelling='Abdurahman',
-			-- while should be syllabified 'Ab.du.rah.man'.
+		elseif (ucj == "h" or ucj == "'") and uci == "." and ucj ~= syll_at(i + 1) and
+			not rfind(uspell_at(j + 1), V) then
+			-- See below for silent h or apostrophe in spelling. This condition is parallel to the one directly above
+			-- for silent doubled letters in spelling and handles the case of syllab='Abduramán', spelling='Abdurahman',
+			-- which should be syllabified 'Ab.du.rah.man'. But we need a check to see that the next spelling character
+			-- isn't a vowel, because in that case we want the silent letter to go after the period, e.g.
+			-- syllab='Jumu7á', spelling='Jumu'ah' -> 'Ju.mu.'ah' (the 7 is removed above).
 			table.insert(result, cj)
 			j = j + 1
 		elseif uci == "." then
@@ -760,16 +785,17 @@ local function align_syllabification_to_spelling(syllab, spelling)
 			-- * syllab='Fu.ji', spelling='Fujii' -> 'Fu.jii' (with i)
 			table.insert(result, cj)
 			j = j + 1
-		elseif ucj == "h" then
-			-- A silent h in spelling. Examples:
+		elseif ucj == "h" or ucj == "'" then
+			-- A silent h or apostrophe in spelling. Examples:
 			-- * syllab='adán', spelling='adhan' -> 'a.dhan'
 			-- * syllab='Atanasya', spelling='Athanasia' -> 'A.tha.nas.ia'
 			-- * syllab='Cýntiya', spelling='Cynthia' -> 'Cyn.thi.a'
 			-- * syllab='Ermóhenes', spelling='Hermogenes' -> 'Her.mo.ge.nes'
 			-- * syllab='Abduramán', spelling='Abdurahman' -> 'Ab.du.rah.man'
+			-- * syllab='Jumu7á', spelling='Jumu'ah' -> 'Ju.mu.'ah'
 			table.insert(result, cj)
 			j = j + 1
-		elseif uci == AC or uci == GR or uci == CFLEX or uci == DIA or uci == TILDE or uci == MACRON or uci == "7" or
+		elseif uci == AC or uci == GR or uci == CFLEX or uci == DIA or uci == TILDE or uci == MACRON or
 			uci == "y" or uci == "w" then
 			-- skip character
 			i = i + 1
