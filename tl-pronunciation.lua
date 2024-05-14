@@ -326,10 +326,10 @@ function export.IPA(text, include_phonemic_syllable_boundaries)
 	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*)(" .. C .. V .. ")", "%1.%2")
 
 	-- "mb", "mp", "nd", "nk", "nt" combinations
-	text = rsub_repeatedly(text, "(m)([bp])([^hlɾrɟw" .. vowel .. separator .."])", "%1%2.%3")
-	text = rsub_repeatedly(text, "(n)([dkt])([^hlɾrɟw" .. vowel .. separator .. "])", "%1%2.%3")
-	text = rsub_repeatedly(text, "(ŋ)([k])([^hlɾrɟw" .. vowel .. separator ..  "])", "%1%2.%3")
-	text = rsub_repeatedly(text, "([ɾr])([bkdfɡklmnpsʃtvz])([^hlɾrɟyw" .. vowel .. separator ..  "])", "%1%2.%3")
+	text = rsub_repeatedly(text, "(m)([bp])([^hlɾr" .. vowel .. separator .."])(" .. V .. ")", "%1%2.%3%4")
+	text = rsub_repeatedly(text, "(n)([dkt])([^hlɾr" .. vowel .. separator .. "])(" .. V .. ")", "%1%2.%3%4")
+	text = rsub_repeatedly(text, "(ŋ)([k])([^hlɾr" .. vowel .. separator ..  "])(" .. V .. ")", "%1%2.%3%4")
+	text = rsub_repeatedly(text, "([ɾr])([bkdfɡklmnpsʃtvz])([^hlɾr" .. vowel .. separator ..  "])(" .. V .. ")", "%1%2.%3%4")
 
 	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*" .. C .. "+)(" .. C .. C .. V .. ")", "%1.%2")
 	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*" .. C .. ")(" .. C .. V .. ")", "%1.%2")
@@ -1080,10 +1080,10 @@ local function syllabify_from_spelling(text, pagename)
 	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*)(" .. C .. V .. ")", "%1.%2")
 
 	-- "mb", "mp", "nd", "nk", "nt" combinations
-	text = rsub_repeatedly(text, "(m)([bp])([^lɾrɟyw" .. vowel .. separator .."])", "%1%2.%3")
-	text = rsub_repeatedly(text, "(n)([dkt])([^lɾrɟyw" .. vowel .. separator .. "])", "%1%2.%3")
-	text = rsub_repeatedly(text, "(ŋ)([k])([^lɾrɟyw" .. vowel .. separator ..  "])", "%1%2.%3")
-	text = rsub_repeatedly(text, "([ɾr])([bkdfɡklmnpsʃtvz])([^lɾrɟyw" .. vowel .. separator ..  "])", "%1%2.%3")
+	text = rsub_repeatedly(text, "(m)([bp])([^lɾrɟ" .. vowel .. separator .."])(" .. V .. ")", "%1%2.%3%4")
+	text = rsub_repeatedly(text, "(n)([dkt])([^lɾrɟ" .. vowel .. separator .. "])(" .. V .. ")", "%1%2.%3%4")
+	text = rsub_repeatedly(text, "(ŋ)([k])([^lɾrɟ" .. vowel .. separator ..  "])(" .. V .. ")", "%1%2.%3%4")
+	text = rsub_repeatedly(text, "([ɾr])([bkdfɡklmnpsʃtvz])([^lɾrɟ" .. vowel .. separator ..  "])(" .. V .. ")", "%1%2.%3%4")
 
 	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*" .. C .. ")(" .. C .. V .. ")", "%1.%2")
 	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*" .. C .. "+)(" .. C .. C .. V .. ")", "%1.%2")
