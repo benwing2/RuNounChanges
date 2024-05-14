@@ -75,6 +75,9 @@ def process_text_on_page(index, pagetitle, text):
       except blib.ParameterError as e:
         pagemsg("WARNING: %s" % e)
         continue
+      expected_pron_len = max(len(prons), len(audios), len(a_s), len(qs))
+      while len(prons) < expected_pron_len:
+        prons.append(None)
       for i, pron in enumerate(prons):
         pron = pron or "+"
         m = re.search(r"^(/.*/), *(\[.*\])$", pron)
