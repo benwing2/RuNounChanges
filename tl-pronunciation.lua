@@ -54,7 +54,7 @@ FIXME:
 26. [[Caguiat]] respelled 'Caguiát' generates correct pronunciation with /gj/ but incorrect syllabification 'Ca.gui.at'
     instead of 'Ca.guiat' ("hyphenation") or maybe 'Cagu.iat'.
 27. Allow 7 against ' e.g. [[Jumu'ah]] respelled 'Jumu7á' with syllabificaiton 'Ju.mu.'ah'. [DONE]
-28. Allow f against ph e.g. [[Sophia]] respelled 'Sofi.a' with syllabificaiton 'So.phi.a'.
+28. Allow f against ph e.g. [[Sophia]] respelled 'Sofi.a' with syllabificaiton 'So.phi.a'. [NOT DONE; ONLY TWO CASES]
 29. Correctly handle [[gaan]] respelled 'ga7án', and other terms with doubled vowels in them against a glottal stop.
     [DONE]
 ]==]
@@ -293,6 +293,7 @@ function export.IPA(text, include_phonemic_syllable_boundaries)
 	text = rsub(text, "ɾ[.]ɾ", "r")
 
     -- ts
+	text = rsub(text, "t_s", "ć") --not the real sound
 	text = rsub(text, "ts", "ĉ") --not the real sound
 
 	table.insert(debug, text)
@@ -400,9 +401,6 @@ function export.IPA(text, include_phonemic_syllable_boundaries)
 
     table.insert(debug,text)
     
-    --"ph" digraph be "f"
-    text = rsub(text,"ph(" .. V .. ")","f%1")
-   
     --correct final glottal stop placement
     text = rsub(text,"([ˈˌ])ʔ([#]*)([ʔbĉćdfɡhĵɟklmnŋɲpɾrsʃtvwz])(" .. V .. ")","%1%2%3%4ʔ")
 
@@ -496,8 +494,6 @@ function export.IPA(text, include_phonemic_syllable_boundaries)
 	        text = rsub(text,"s([ˈˌ.])ɟ","%1ʃ") -- /s/ before /j/
 	        text = rsub(text,"z([ˈˌ.])ɟ","%1ʒ") -- /z/ before /j/
 	        text = rsub(text,"t([ˈˌ.])ɟ","%1ĉ") -- /t/ before /j/
-	        text = rsub(text,"t([ˈˌ.])s([ɐāeəɪīoʊū])","%1ć%2") -- /t/ before /s/
-	        text = rsub(text,"t([.])s","ts") -- /t/ before /s/
 	        text = rsub(text,"([ˈˌ.])d([ɟj])([ɐāeəɪīoʊū])","%1ĵ%3") -- /dj/ before any vowel following stress
 	        text = rsub(text,"([ˈˌ.])n([ɟj])([ɐāeəɪīoʊū])","%1ɲ%3") -- /nj/ before any vowel following stress
 	        text = rsub(text,"([ˈˌ.])s([ɟj])([ɐāeəɪīoʊū])","%1ʃ%3") -- /sj/ before any vowel following stress
@@ -505,9 +501,6 @@ function export.IPA(text, include_phonemic_syllable_boundaries)
 	        -- text = rsub(text,"([oʊ])([m])([.]?)([ˈ]?)([pb])","u%2%3%4%5") -- /o/ and /ʊ/ before /mb/ or /mp/
 	        text = rsub(text,"([ɐāeəɪīoʊū])(ɾ)([bćĉdfɡĵklmnŋpstvz])([s]?)([#.])","%1ɹ%3%4%5") -- /ɾ/ becoming /ɹ/ before consonants not part of another syllable
 	        
-	        -- fake "t.s" to real "t.s"
-		    text = rsub(text, "[ć]", "t͡s")
-
 	        --final fix for phonetic diphthongs
 		    text = rsub(text,"([ɐ])ɪ̯","aɪ̯") --ay
 		    text = rsub(text,"([ɐ])ʊ̯","aʊ̯") --aw
@@ -548,11 +541,12 @@ function export.IPA(text, include_phonemic_syllable_boundaries)
 		-- convert fake symbols to real ones
 	    local final_conversions = {
 			["ĉ"] = "t͡ʃ", -- fake "ch" to real "ch"
+			["ć"] = "t͡s", -- fake "ts" to real "ts"
 			["ɟ"] =  "j", -- fake "y" to real "y"
 	        ["ĵ"] = "d͡ʒ" -- fake "j" to real "j"
 		}
 
-		text = rsub(text, "[ĉɟĵ]", final_conversions)
+		text = rsub(text, "[ĉćɟĵ]", final_conversions)
 
 		-- Do not have multiple syllable break consecutively
 		text = rsub_repeatedly(text, "([.]+)", ".")
@@ -698,8 +692,10 @@ end
 -- glottal stops (written 7), h in respelling vs. g or j in the original, etc. If we can't match, we return nil
 -- indicating the alignment failed.
 local function align_syllabification_to_spelling(syllab, spelling)
-	--error(("syllab=%s spelling=%s"):format(syllab, spelling))
 	local result = {}
+	local function concat_result()
+		return toNFC(table.concat(result))
+	end
 	-- Remove glottal stop (7) from respelling to simplify the code below, because it's never found in the original
 	-- spelling. (FIXME: We should do the same for diacritics, but they're currently removed earlier, in 
 	-- syllabify_from_spelling(). We should probably get rid of the removal there and put it here.)
@@ -718,17 +714,17 @@ local function align_syllabification_to_spelling(syllab, spelling)
 			uci == "y" and ucj == "i" or
 			uci == "w" and ucj == "u"
 	end
+	local function syll_at(pos)
+		return syll_chars[pos] or ""
+	end
+	local function spell_at(pos)
+		return spelling_chars[pos] or ""
+	end
+	local function uspell_at(pos)
+		local c = spelling_chars[pos]
+		return c and ulower(c) or ""
+	end
 	while i <= #syll_chars or j <= #spelling_chars do
-		local function syll_at(pos)
-			return syll_chars[pos] or ""
-		end
-		local function spell_at(pos)
-			return spelling_chars[pos] or ""
-		end
-		local function uspell_at(pos)
-			local c = spelling_chars[pos]
-			return c and ulower(c) or ""
-		end
 		local uci = syll_at(i)
 		local cj = spell_at(j)
 		local ucj = uspell_at(j)
@@ -801,14 +797,21 @@ local function align_syllabification_to_spelling(syllab, spelling)
 			i = i + 1
 		else
 			-- non-matching character
+			mw.log(("Syllabification alignment mismatch for pagename '%s' (position %s, character %s), syllabified respelling '%s' (position %s, character %s), aligned result so far '%s'"
+				):format(spelling, j, ucj, syllab, i, uci, concat_result()))
 			return nil
 		end
 	end
 	if i <= #syll_chars or j <= #spelling_chars then
 		-- left-over characters on one side or the other
+		mw.log(("Syllabification alignment mismatch for pagename '%s' (%s), syllabified respelling '%s' (%s), aligned result so far '%s'"
+			):format(
+				spelling, j > #spelling_chars and "end of string" or ("position %s, character %s"):format(j, uspell_at(j)),
+				syllab, i > #syll_chars and "end of string" or ("position %s, character %s"):format(i, syll_at(i)),
+				concat_result()))
 		return nil
 	end
-	return toNFC(table.concat(result))
+	return concat_result()
 end
 
 
@@ -1041,6 +1044,7 @@ local function syllabify_from_spelling(text, pagename)
 	-- Auto syllabifications start --
 	local vowel = vowel .. "ẃý" -- vowel 
 	local V = "[" .. vowel .. "]"
+	local NV = "[^" .. vowel .. "]"
 	local C = "[^" .. vowel .. separator .. "]" -- consonant
 
 	text = remove_accents(text)
@@ -1055,6 +1059,7 @@ local function syllabify_from_spelling(text, pagename)
 
 	text = rsub(text, "ng", "ŋ")
 	text = rsub(text, "ch", "ĉ")
+	text = rsub(text, "t_s", "ć")
 	text = rsub(text, "sh", "ʃ")
 	text = rsub(text, "gui([aeëo])", "gui.%1")
 	text = rsub(text, "r", "ɾ")
@@ -1093,6 +1098,7 @@ local function syllabify_from_spelling(text, pagename)
 	text = rsub_repeatedly(text, "u(" .. accent_c .. "*)u", "u%1.u")
 
 	text = rsub(text, "ĉ", "ch")
+	text = rsub(text, "ć", "ts")
 	text = rsub(text, "ŋ", "ng")
 	text = rsub(text, "ʃ", "sh")
 	text = rsub(text, "r", "rr")
@@ -1140,6 +1146,11 @@ local function syllabify_from_spelling(text, pagename)
 	-- FIXME! Hack -- up above we changed periods to vertical bars. The rest of the code expects periods so change
 	-- them back. We should clean up the code above to leave the periods alone.
 	return (text:gsub("|", "%."))
+end
+
+function export.syllabify_and_align(respelling, pagename)
+	local syllabification = syllabify_from_spelling(respelling, pagename)
+	return align_syllabification_to_spelling(syllabification, pagename)
 end
 
 local function css_wrap(text, classes)
@@ -1471,6 +1482,9 @@ function export.show_full(frame)
 
 	--------------------------------- 2. Generate IPA, rhymes and syllabification. ------------------------------------
 
+	-- Used for categorization below.
+	local syllabification_alignment_failed = false
+
 	if overall_syll then
 		local sylls = {}
 		for _, syll in ipairs(overall_syll.terms) do
@@ -1614,6 +1628,8 @@ function export.show_full(frame)
 								parsed.syll = {terms = {}}
 							end
 							m_table.insertIfNot(parsed.syll.terms, generate_syll_obj(aligned_syll))
+						else
+							syllabification_alignment_failed = true
 						end
 					end
 				end
@@ -1819,6 +1835,10 @@ function export.show_full(frame)
 	get_syll_categories(overall_rhyme)
 	for _, parsed in ipairs(parsed_respellings) do
 		get_syll_categories(parsed.syll)
+	end
+
+	if syllabification_alignment_failed then
+		table.insert(categories, ("%s terms where syllabification alignment failed"):format(lang:getCanonicalName()))
 	end
 
 	---------------------------- 4. Format IPA, rhymes and syllabification for display. -------------------------------
