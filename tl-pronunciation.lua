@@ -546,6 +546,7 @@ function export.IPA(text, include_phonemic_syllable_boundaries)
 	        ["ĵ"] = "d͡ʒ" -- fake "j" to real "j"
 		}
 
+		text = rsub(text, "[ć]([ #])", "ts%1")
 		text = rsub(text, "[ĉćɟĵ]", final_conversions)
 
 		-- Do not have multiple syllable break consecutively
@@ -671,7 +672,7 @@ end
 local function convert_phonemic_to_rhyme(phonemic)
 	-- NOTE: This works because the phonemic vowels are just [aeiou] possibly with diacritics that are separate
 	-- Unicode chars. If we want to handle things like ɛ or ɔ we need to add them to `vowel`.
-	return rsub(rsub(phonemic, ".*[ˌˈ]", ""), "^" .. NV .. "*", ""):gsub("%.", ""):gsub("t͡ʃ", "tʃ")
+	return rsub(rsub(phonemic, ".*[ˌˈ]", ""), "^" .. NV .. "*", ""):gsub("%.", "")
 end
 
 
@@ -694,7 +695,8 @@ end
 local function align_syllabification_to_spelling(syllab, spelling)
 	local result = {}
 	local function concat_result()
-		return toNFC(table.concat(result))
+		-- Postprocess to remove dots (syllable boundaries) next to hyphens.
+		return (toNFC(table.concat(result)):gsub("%.%-", "-"):gsub("%-%.", "-"))
 	end
 	-- Remove glottal stop (7) from respelling to simplify the code below, because it's never found in the original
 	-- spelling. (FIXME: We should do the same for diacritics, but they're currently removed earlier, in 
@@ -714,6 +716,9 @@ local function align_syllabification_to_spelling(syllab, spelling)
 			uci == "y" and ucj == "i" or
 			uci == "w" and ucj == "u"
 	end
+	local function silent_spelling_letter(ucj)
+		return ucj == "h" or ucj == "'" or ucj == "-"
+	end
 	local function syll_at(pos)
 		return syll_chars[pos] or ""
 	end
@@ -728,13 +733,15 @@ local function align_syllabification_to_spelling(syllab, spelling)
 		local uci = syll_at(i)
 		local cj = spell_at(j)
 		local ucj = uspell_at(j)
-		if uci == "g" and syll_at(i - 1) == "n" and syll_at(i + 1) == "." and matches(syll_at(i + 2), ucj) then
+		if uci == "g" and syll_at(i - 1) == "n" and syll_at(i + 1) == "." and matches(syll_at(i + 2), ucj) and
+			not matches(syll_at(i + 2), uspell_at(j + 1)) then
 			-- As a special case, before checking whether the corresponding characters match, we have to skip an extra
 			-- g in an -ng- sequence in the syllabified respelling if the corresponding spelling character matches the
 			-- next respelling character (taking into account the syllable boundary). This is so that e.g.
 			-- syll='ba.rang.gay' matches spelling='barangay'. Otherwise we will match the first respelling g against
 			-- the spelling g and the second respelling g won't match. A similar case occurs with
-			-- syll='E.vang.he.lis.ta' and spelling='Evangelista'.
+			-- syll='E.vang.he.lis.ta' and spelling='Evangelista'. But we need an extra condition to not do this hack
+			-- when syll='ba.rang.gay' matches spelling='baranggay'.
 			i = i + 1
 		elseif matches(uci, ucj) then
 			table.insert(result, cj)
@@ -756,7 +763,7 @@ local function align_syllabification_to_spelling(syllab, spelling)
 			-- syllabification is the same as the doubled letter, because the doubled letter is pronounced double).
 			table.insert(result, cj)
 			j = j + 1
-		elseif (ucj == "h" or ucj == "'") and uci == "." and ucj ~= syll_at(i + 1) and
+		elseif silent_spelling_letter(ucj) and uci == "." and ucj ~= syll_at(i + 1) and
 			not rfind(uspell_at(j + 1), V) then
 			-- See below for silent h or apostrophe in spelling. This condition is parallel to the one directly above
 			-- for silent doubled letters in spelling and handles the case of syllab='Abduramán', spelling='Abdurahman',
@@ -781,14 +788,15 @@ local function align_syllabification_to_spelling(syllab, spelling)
 			-- * syllab='Fu.ji', spelling='Fujii' -> 'Fu.jii' (with i)
 			table.insert(result, cj)
 			j = j + 1
-		elseif ucj == "h" or ucj == "'" then
-			-- A silent h or apostrophe in spelling. Examples:
+		elseif silent_spelling_letter(ucj) then
+			-- A silent h, apostrophe or hyphen in spelling. Examples:
 			-- * syllab='adán', spelling='adhan' -> 'a.dhan'
 			-- * syllab='Atanasya', spelling='Athanasia' -> 'A.tha.nas.ia'
 			-- * syllab='Cýntiya', spelling='Cynthia' -> 'Cyn.thi.a'
 			-- * syllab='Ermóhenes', spelling='Hermogenes' -> 'Her.mo.ge.nes'
 			-- * syllab='Abduramán', spelling='Abdurahman' -> 'Ab.du.rah.man'
 			-- * syllab='Jumu7á', spelling='Jumu'ah' -> 'Ju.mu.'ah'
+			-- * syllab='pag7ibig', spelling='pag-ibig' -> 'pag-i.big'
 			table.insert(result, cj)
 			j = j + 1
 		elseif uci == AC or uci == GR or uci == CFLEX or uci == DIA or uci == TILDE or uci == MACRON or
@@ -1485,17 +1493,25 @@ function export.show_full(frame)
 	-- Used for categorization below.
 	local syllabification_alignment_failed = false
 
-	if overall_syll then
-		local sylls = {}
-		for _, syll in ipairs(overall_syll.terms) do
+	-- Canonicalize syllabifications in `sylls` by convering '+' to the default syllabification of the pagename, '#' to
+	-- the pagename itself, and '-' to no syllabification (return `null_syll`). If '-' not seen, return `sylls`.
+	local function canonicalize_syllabification(sylls, null_syll)
+		for _, syll in ipairs(sylls.terms) do
 			if syll.syllabification == "+" then
 				syll.syllabification = syllabify_from_spelling(pagename, pagename)
 				syll.hyph = split_syllabified_spelling(syll.syllabification)
+			elseif syll.syllabification == "#" then
+				syll.syllabification = pagename
+				syll.hyph = {syll.syllabification}
 			elseif syll.syllabification == "-" then
-				overall_syll = {}
-				break
+				return null_syll
 			end
 		end
+		return sylls
+	end
+		
+	if overall_syll then
+		overall_syll = canonicalize_syllabification(overall_syll, {})
 	end
 
 	local function doesnt_count_for_rhyme(list)
@@ -1635,15 +1651,7 @@ function export.show_full(frame)
 				end
 			end
 		else
-			for _, syll in ipairs(parsed.syll.terms) do
-				if syll.syllabification == "+" then
-					syll.syllabification = syllabify_from_spelling(pagename, pagename)
-					syll.hyph = split_syllabified_spelling(syll.syllabification)
-				elseif syll.syllabification == "-" then
-					parsed.syll = nil
-					break
-				end
-			end
+			parsed.syll = canonicalize_syllabification(parsed.syll, nil)
 		end
 
 		if not parsed.rhyme then
