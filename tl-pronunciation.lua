@@ -566,21 +566,6 @@ function export.IPA(text, include_phonemic_syllable_boundaries)
 	return tl_IPA_table
 end
 
--- Meant to be called from a bot.
-function export.IPA_string(frame)
-	local iparams = {
-		[1] = {required = true},
-		["type"] = {required = true},
-		["include_phonemic_syllable_boundaries"] = {type = "boolean"},
-	}
-	local iargs = require("Module:parameters").process(frame.args, iparams)
-	if iargs.type ~= "phonemic" and iargs.type ~= "phonetic" then
-		error(("Saw type='%s' but it must be 'phonemic' or 'phonetic'"):format(iargs.type))
-	end
-	local retval = export.IPA(iargs[1], iargs.include_phonemic_syllable_boundaries)
-	return retval[iargs.type]
-end
-
 function export.show(frame)
 	local params = {
 		[1] = {},
@@ -2050,6 +2035,31 @@ function export.show_full(frame)
 
 	return table.concat(textparts) ..
 		require("Module:utilities").format_categories(categories, lang, nil, nil, force_cat)
+end
+
+-- Meant to be called from a bot.
+function export.pron_json(frame)
+	local iparams = {
+		[1] = {required = true},
+		["pagename"] = {required = true},
+	}
+	local iargs = require("Module:parameters").process(frame.args, iparams)
+	local pronun = export.IPA(iargs[1], "include phonemic syllable boundaries")
+	local syllabification = export.syllabify_and_align(iargs[1], iargs.pagename)
+	local syllabification_from_pagename = syllabify_from_spelling(iargs.pagename, iargs.pagename)
+	local num_syl = get_num_syl_from_ipa(pronun.phonemic)
+	local rhyme = convert_phonemic_to_rhyme(pronun.phonemic)
+	local retval = {
+		pagename = iargs.pagename,
+		respelling = iargs[1],
+		phonemic = pronun.phonemic,
+		phonetic = pronun.phonetic,
+		syllabification = syllabification,
+		syllabification_from_pagename = syllabification_from_pagename,
+		num_syl = num_syl,
+		rhyme = rhyme,
+	}
+	return require("Module:JSON").toJSON(retval)
 end
 
 return export
