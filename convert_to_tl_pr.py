@@ -1,161 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import pywikibot, re, sys, argparse, unicodedata
+import pywikibot, re, sys, argparse, unicodedata, json
 
 import blib
 from blib import getparam, rmparam, msg, errandmsg, site, tname, pname, rsub_repeatedly
-
-AC = "\u0301" # acute =  ́
-GR = "\u0300" # grave =  ̀
-CFLEX = "\u0302" # circumflex =  ̂
-TILDE = "\u0303" # tilde =  ̃
-DIA = "\u0308" # diaeresis =  ̈
-
-SYLDIV = "\uFFF0" # used to represent a user-specific syllable divider (.) so we won't change it
-vowel = "aeiouüyAEIOUÜY"
-V = "[" + vowel + "]" # vowel class
-W = "[jw]" # glide
-accent = AC + GR + CFLEX
-accent_c = "[" + accent + "]"
-stress = AC + GR
-stress_c = "[" + AC + GR + "]"
-ipa_stress = "ˈˌ"
-ipa_stress_c = "[" + ipa_stress + "]"
-separator = accent + ipa_stress + r"# \-." + SYLDIV # hyphen included for syllabifying from spelling
-separator_c = "[" + separator + "]"
-C = "[^" + vowel + separator + "]" # consonant class including h
-C_NOT_H = "[^" + vowel + separator + "h]" # consonant class not including h
-
-def decompose(text):
-  # decompose everything but ñ and ü
-  text = unicodedata.normalize("NFD", text)
-  text = text.replace("n" + TILDE, "ñ")
-  text = text.replace("N" + TILDE, "Ñ")
-  text = text.replace("u" + DIA, "ü")
-  text = text.replace("U" + DIA, "Ü")
-  return text
-
-def syllabify_from_spelling(text):
-  text = decompose(text)
-  TEMP_I = "\uFFF1"
-  TEMP_U = "\uFFF2"
-  TEMP_Y_CONS = "\uFFF3"
-  TEMP_CH = "\uFFF4"
-  TEMP_LL = "\uFFF5"
-  TEMP_RR = "\uFFF6"
-  TEMP_QU = "\uFFF7"
-  TEMP_QU_CAPS = "\uFFF8"
-  TEMP_GU = "\uFFF9"
-  TEMP_GU_CAPS = "\uFFFA"
-  TEMP_SH = "\uFFFB"
-  TEMP_DESH = "\uFFFC"
-  # Change user-specified . into SYLDIV so we don't shuffle it around when dividing into syllables.
-  text = text.replace(".", SYLDIV)
-  text = re.sub("y(" + V + ")", TEMP_Y_CONS + r"\1", text)
-  text = text.replace("ch", TEMP_CH)
-  # We don't want to break -sh- except in desh-, e.g. [[deshuesar]], [[deshonra]], [[deshecho]].
-  text = re.sub("(^|[ -])([Dd])esh", r"\1\2" + TEMP_DESH, text)
-  text = text.replace("sh", TEMP_SH)
-  text = text.replace(TEMP_DESH, "esh")
-  text = text.replace("ll", TEMP_LL)
-  text = text.replace("rr", TEMP_RR)
-  # qu mostly handled correctly automatically, but not in quietud
-  text = re.sub("qu(" + V + ")", TEMP_QU + r"\1", text)
-  text = re.sub("Qu(" + V + ")", TEMP_QU_CAPS + r"\1", text)
-  text = re.sub("gu(" + V + ")", TEMP_GU + r"\1", text)
-  text = re.sub("Gu(" + V + ")", TEMP_GU_CAPS + r"\1", text)
-  vowel_to_glide = { "i": TEMP_I, "u": TEMP_U }
-  # i and u between vowels -> consonant-like substitutions: [[paranoia]], [[baiano]], [[abreuense]], [[alauita]],
-  # [[Malaui]], etc.; also with h, as in [[marihuana]], [[parihuela]], [[antihielo]], [[pelluhuano]], [[náhuatl]],
-  # etc.
-  text = rsub_repeatedly("(" + V + accent_c + "*h?)([iu])(" + V + ")",
-      lambda m: m.group(1) + vowel_to_glide[m.group(2)] + m.group(3), text)
-  # Divide before the last consonant (possibly followed by a glide). We then move the syllable division marker
-  # leftwards over clusters that can form onsets.
-  # Divide VCV as V.CV; but don't divide if C == h, e.g. [[prohibir]] should be prohi.bir.
-  text = rsub_repeatedly("(" + V + accent_c + "*)(" + C_NOT_H + V + ")", r"\1.\2", text)
-  text = rsub_repeatedly("(" + V + accent_c + "*" + C + "+)(" + C + V + ")", r"\1.\2", text)
-  # Puerto Rico + most of Spain divide tl as t.l. Mexico and the Canary Islands have .tl. Unclear what other regions
-  # do. Here we choose to go with .tl. See https://catalog.ldc.upenn.edu/docs/LDC2019S07/Syllabification_Rules_in_Spanish.pdf
-  # and https://www.spanishdict.com/guide/spanish-syllables-and-syllabification-rules.
-  cluster_r = "rɾ"
-  text = re.sub(r"([pbfvkctg])\.([l" + cluster_r + "])", r".\1\2", text)
-  text = re.sub(r"d\.([" + cluster_r + "])", r".d\1", text)
-  text = text.replace("d.r", ".dr")
-  # Per https://catalog.ldc.upenn.edu/docs/LDC2019S07/Syllabification_Rules_in_Spanish.pdf, tl at the end of a word
-  # (as in nahuatl, Popocatepetl etc.) is divided .tl from the previous vowel.
-  text = re.sub("([^. -])tl([ -]|$)", r"\1.tl\2", text)
-  # Any aeo, or stressed iuüy, should be syllabically divided from a following aeo or stressed iuüy.
-  text = rsub_repeatedly("([aeoAEO]" + accent_c + "*)(h?[aeo])", r"\1.\2", text)
-  text = rsub_repeatedly("([aeoAEO]" + accent_c + "*)(h?" + V + stress_c + ")", r"\1.\2", text)
-  text = re.sub("([iuüyIUÜY]" + stress_c + ")(h?[aeo])", r"\1.\2", text)
-  text = rsub_repeatedly("([iuüyIUÜY]" + stress_c + ")(h?" + V + stress_c + ")", r"\1.\2", text)
-  text = rsub_repeatedly("([iI]" + accent_c + "*)(h?i)", r"\1.\2", text)
-  text = rsub_repeatedly("([uU]" + accent_c + "*)(h?u)", r"\1.\2", text)
-  text = text.replace(SYLDIV, ".")
-  text = text.replace(TEMP_I, "i")
-  text = text.replace(TEMP_U, "u")
-  text = text.replace(TEMP_Y_CONS, "y")
-  text = text.replace(TEMP_CH, "ch")
-  text = text.replace(TEMP_SH, "sh")
-  text = text.replace(TEMP_LL, "ll")
-  text = text.replace(TEMP_RR, "rr")
-  text = text.replace(TEMP_QU, "qu")
-  text = text.replace(TEMP_QU_CAPS, "Qu")
-  text = text.replace(TEMP_GU, "gu")
-  text = text.replace(TEMP_GU_CAPS, "Gu")
-  return unicodedata.normalize("NFC", text)
-
-def align_syllabification_to_spelling(syllab, spelling):
-  result = []
-  syll_chars = list(decompose(syllab))
-  spelling_chars = list(decompose(spelling))
-  i = 0
-  j = 0
-  while i < len(syll_chars) or j < len(spelling_chars):
-    ci = syll_chars[i] if i < len(syll_chars) else None
-    cj = spelling_chars[j] if j < len(spelling_chars) else None
-    if ci == cj:
-      result.append(ci)
-      i += 1
-      j += 1
-    elif ci == ".":
-      result.append(ci)
-      i += 1
-    elif ci in [AC, GR, CFLEX]:
-      # skip character
-      i += 1
-    else:
-      return None
-  if i < len(syll_chars) or j < len(spelling_chars):
-    # left-over characters on one side or the other
-    return None
-  return unicodedata.normalize("NFC", "".join(result))
-
-# Return the number of syllables of a phonemic representation, which should have syllable dividers in it but no
-# hyphens.
-def get_num_syl_from_phonemic(phonemic):
-  # Maybe we should just count vowels instead of the below code.
-  phonemic = phonemic.replace("|", " ") # remove IPA foot boundaries
-  words = re.split(" +", phonemic)
-  for i, word in enumerate(words):
-    # IPA stress marks are syllable divisions if between characters; otherwise just remove.
-    word = re.sub("(.)[ˌˈ](.)", r"\1.\2", word)
-    word = re.sub("[ˌˈ]", "", word)
-    words[i] = word
-  # There should be a syllable boundary between words.
-  phonemic = ".".join(words)
-  return len(re.sub("[^.]", "", phonemic)) + 1
-
-
-# Get the rhyme by truncating everything up through the last stress mark + any following consonants, and remove
-# syllable boundary markers.
-def convert_phonemic_to_rhyme(phonemic):
-  # NOTE: This works because the phonemic vowels are just [aeiou] possibly with diacritics that are separate
-  # Unicode chars. If we want to handle things like ɛ or ɔ we need to add them to `vowel`.
-  return re.sub("^[^" + vowel + "]*", "", re.sub(".*[ˌˈ]", "", phonemic)).replace(".", "").replace("t͡ʃ", "tʃ")
-
 
 def process_text_on_page(index, pagetitle, text):
   global args
@@ -219,25 +68,22 @@ def process_text_on_page(index, pagetitle, text):
       if num_tl_IPA == 0:
         pagemsg("WARNING: Didn't see {{tl-IPA}} in Pronunciation section, skipping")
         continue
-      if num_tl_IPA > 1:
-        pagemsg("WARNING: Saw multiple {{tl-IPA}} in Pronunciation section, skipping")
-        continue
       lines = subsections[k + 1].strip().split("\n")
       # Remove blank lines.
       lines = [line for line in lines if line]
+      tl_IPA_lines = []
       hyph_lines = []
       homophone_lines = []
+      rfap_lines = []
       rhyme_lines = []
       must_continue = False
       audioarg = ""
-      arg = ""
-      bare_arg = ""
-      hyphenation_from_respelling = False
-      hyphenation_from_pagetitle = False
       lines_so_far = []
       for lineind, line in enumerate(lines):
         origline = line
         lines_so_far.append(line)
+        if line.startswith("{{rfap"):
+          line = "* " + line
         if "{{wiki" in line:
           m = re.search(r"^(.*?)(\{\{wiki[^{}]*\}\})(.*?)$", line)
           if not m:
@@ -260,36 +106,7 @@ def process_text_on_page(index, pagetitle, text):
         # In case of "* {{tl-IPA|...}}", chop off the "* ".
         line = re.sub(r"^\*\s*(\{\{tl-IPA)", r"\1", line)
         if line.startswith("{{tl-IPA"):
-          if arg:
-            pagemsg("WARNING: Something wrong, already saw {{tl-IPA}}?: %s" % origline)
-            must_continue = True
-            break
-          ipat = verify_template_is_full_line("tl-IPA", line)
-          if ipat is None:
-            must_continue = True
-            break
-          bare_arg = getparam(ipat, "1")
-          normalized_bare_arg = bare_arg or "+"
-          arg = normalized_bare_arg
-          arg_for_hyph = pagetitle if arg == "+" else arg
-          hyphenation_from_pagetitle = syllabify_from_spelling(pagetitle)
-          hyphenation_from_respelling = align_syllabification_to_spelling(
-            syllabify_from_spelling(arg_for_hyph), pagetitle
-          )
-          for param in ipat.params:
-            pn = pname(param)
-            pv = str(param.value)
-            if pn == "1":
-              continue
-            if pn in ["pre", "post", "bullets", "ref"]:
-              arg += "<%s:%s>" % (pn, pv)
-            else:
-              pagemsg("WARNING: Unrecognized param %s=%s in {{tl-IPA}}, skipping: %s" % (
-                pn, pv, origline))
-              must_continue = True
-              break
-          if must_continue:
-            break
+          tl_IPA_lines.append(line)
           continue
         # Get rid of any leading * + whitespace; continue without it though.
         line = re.sub(r"^\*+\s*", "", line, 0, re.U)
@@ -297,6 +114,8 @@ def process_text_on_page(index, pagetitle, text):
           hyph_lines.append("* " + line)
         elif re.search(r"^(\{\{(q|qual|qualifier|q-lite|i|a)\|[^{}]*\}\} )?{\{(homophone|hmp)", line):
           homophone_lines.append("* " + line)
+        elif line.startswith("{{rfap"):
+          rfap_lines.append(line)
         elif re.search(r"^(Audio: *)?\{\{audio", line):
           line = re.sub("^Audio: *", "", line)
           audiot = verify_template_is_full_line("audio", line)
@@ -322,7 +141,7 @@ def process_text_on_page(index, pagetitle, text):
           if audiogloss in ["Audio", "audio"]:
             audiogloss = ""
           if audiogloss:
-            audiogloss = ";%s" % audiogloss
+            audiogloss = "#%s" % audiogloss
           audiopart = "<audio:%s%s>" % (audiofile, audiogloss)
           audioarg += audiopart
           pagemsg("Replacing %s with argument part %s" % (str(audiot), audiopart))
@@ -335,64 +154,136 @@ def process_text_on_page(index, pagetitle, text):
           break
       if must_continue:
         continue
-      if rhyme_lines:
-        must_continue = False
-        for rhyme_line in rhyme_lines:
-          rhymet = verify_template_is_full_line(["rhyme", "rhymes", "rhymes-lite"], rhyme_line)
-          if not rhymet:
-            must_continue = True
-            break
-          if getparam(rhymet, "1") != "tl":
-            pagemsg("WARNING: Wrong language in {{%s}}, not removing: %s" % (tname(rhymet), rhyme_line))
-            must_continue = True
-            break
-          rhymes = blib.fetch_param_chain(rhymet, "2")
-          for rind, rhyme in enumerate(rhymes):
-            nsyl = (getparam(rhymet, "s%s" % (rind + 1)) or getparam(rhymet, "s")).strip()
-            if nsyl:
-              if not re.search("^[0-9]+$", nsyl):
-                pagemsg("WARNING: Bad syllable count in rhyme template: %s" % str(rhymet))
-                must_continue = True
-                break
-              nsyl = int(nsyl)
-            else:
-              nsyl = None
-            pronun = expand_text("{{#invoke:tl-pronunciation|IPA_string|%s}}" % bare_arg)
-            if not pronun:
-              must_continue = True
-              break
-            rhyme_pronun = convert_phonemic_to_rhyme(pronun)
-            rhyme_nsyl = get_num_syl_from_phonemic(pronun)
-            if rhyme == rhyme_pronun:
-              if nsyl is None:
-                pagemsg("Removing rhyme %s, same as pronunciation-based rhyme for spelling '%s': %s"
-                    % (rhyme, bare_arg, str(rhymet)))
-              elif nsyl == rhyme_nsyl:
-                pagemsg("Removing rhyme %s, same as pronunciation-based rhyme for spelling '%s' and syllable count %s matches: %s"
-                    % (rhyme, bare_arg, nsyl, str(rhymet)))
-              elif pagetitle in allow_mismatching_nsyl:
-                pagemsg("Removing rhyme %s, same as pronunciation-based rhyme for spelling '%s'; syllable count %s mismatches pronunciation syllable count %s but is known to be incorrect so is ignored: %s"
-                    % (rhyme, bare_arg, nsyl, rhyme_nsyl, str(rhymet)))
-                extra_notes.append("ignore known-incorrect syllable count %s in {{%s}}" % (nsyl, tname(rhymet)))
 
-            else:
-              pagemsg("WARNING: For spelling '%s', rhyme %s%s not same as pronunciation-based rhyme: %s"
-                  % (bare_arg, rhyme, " with explicit syllable count %s" % nsyl if nsyl is not None else "",
-                    str(rhymet)))
-              must_continue = True
-              break
-          if must_continue:
-            break
+      respellings = []
+      respelling_args = []
+      for tl_IPA_line in tl_IPA_lines:
+        tl_IPA_qualifier_text = None
+        m = re.search(r"^(\{\{tl-IPA[^{}]*\}\}) \{\{(?:q|qual|qualifier|q-lite|i)\|([^{}|=]*)\}\}$", tl_IPA_line)
+        if m:
+          tl_IPA_line, tl_IPA_qualifier_text = m.groups()
+        ipat = verify_template_is_full_line("tl-IPA", tl_IPA_line)
+        if ipat is None:
+          must_continue = True
+          break
+        bare_arg = getparam(ipat, "1")
+        for param in ipat.params:
+          pn = pname(param)
+          pv = str(param.value)
+          if pn == "1":
+            continue
+          pagemsg("WARNING: Unrecognized param %s=%s in {{tl-IPA}}, skipping: %s" % (
+            pn, pv, origline))
+          must_continue = True
+          break
+        if must_continue:
+          break
+        respellings.append((bare_arg, tl_IPA_qualifier_text))
+        respelling_args.append("%s%s" % (
+          bare_arg or "+", "<qq:%s>" % tl_IPA_qualifier_text if tl_IPA_qualifier_text else ""))
       if must_continue:
         continue
-      if not arg:
-        pagemsg("WARNING: Something wrong, didn't see {{tl-IPA}}?")
-        continue
-      arg += audioarg
+      pronun = None
+      if rhyme_lines or hyph_lines:
+        pron_json_args = [respelling or pagetitle for respelling, qualifier in respellings]
+        pronuns = expand_text("{{#invoke:tl-pronunciation|pron_json|%s|pagename=%s}}" % (
+          "|".join(pron_json_args), pagetitle))
+        if not pronuns:
+          continue
+        pronuns = json.loads(pronuns)
+        syllabification_from_pagetitle = pronuns.get("syllabification_from_pagename", "")
+        syllabifications_from_respelling = []
+        rhyme_pronuns = []
+        for pronun, (respelling, qualifier) in zip(pronuns["data"], respellings):
+          if qualifier and re.search(r"\b(colloquial|obsolete|relaxed)\b", qualifier):
+            pagemsg("Skipping respelling '%s' with qualifier '%s'" % (respelling, qualifier))
+            continue
+          syllabification_from_respelling = pronun.get("syllabification", "")
+          if not syllabification_from_respelling:
+            pagemsg("Unable to syllabify respelling '%s'" % respelling)
+          else:
+            for existing_respelling, existing_syllab in syllabifications_from_respelling:
+              if existing_syllab == syllabification_from_respelling:
+                break
+            else: # no break
+              syllabifications_from_respelling.append((respelling, syllabification_from_respelling))
+          rhyme_pronun = pronun["rhyme"]
+          rhyme_nsyl = pronun["num_syl"]
+          for existing_respelling, existing_rhyme, existing_nsyl in rhyme_pronuns:
+            if existing_rhyme == rhyme_pronun and existing_nsyl == rhyme_nsyl:
+              break
+          else: # no break
+            rhyme_pronuns.append((respelling, rhyme_pronun, rhyme_nsyl))
 
+      if rhyme_lines:
+        if len(rhyme_lines) > 1:
+          pagemsg("WARNING: Multiple rhyme lines, not removing: %s" % ", ".join(rhyme_lines))
+          continue
+        rhyme_line = rhyme_lines[0]
+        rhymet = verify_template_is_full_line(["rhyme", "rhymes", "rhymes-lite"], rhyme_line)
+        if not rhymet:
+          continue
+        if getparam(rhymet, "1") != "tl":
+          pagemsg("WARNING: Wrong language in {{%s}}, not removing: %s" % (tname(rhymet), rhyme_line))
+          continue
+        rhymes = blib.fetch_param_chain(rhymet, "2")
+        if len(rhymes) > 1:
+          pagemsg("WARNING: Saw more than one rhyme in {{%s}}: %s" % (tname(rhymet), rhyme_line))
+          continue
+        rhyme = rhymes[0]
+        nsyl = (getparam(rhymet, "s1") or getparam(rhymet, "s")).strip()
+        if nsyl:
+          if not re.search("^[0-9]+$", nsyl):
+            pagemsg("WARNING: Bad syllable count in rhyme template: %s" % str(rhymet))
+            continue
+          nsyl = int(nsyl)
+        else:
+          nsyl = None
+        if len(rhyme_pronuns) > 1:
+          pagemsg("WARNING: Saw multiple auto-generated rhymes, can't handle: %s" % ",".join(
+            "%s/%s/%s" % (respelling, rhyme, nsyl) for respelling, rhyme, nsyl in rhyme_pronuns))
+          continue
+        rhyme_respelling, rhyme_pronun, rhyme_nsyl = rhyme_pronuns[0]
+        if rhyme == rhyme_pronun:
+          if nsyl is None:
+            pagemsg("Removing rhyme %s, same as pronunciation-based rhyme for respelling '%s': %s"
+                % (rhyme, rhyme_respelling, str(rhymet)))
+            extra_notes.append("remove {{%s}} same as auto-generated rhyme" % tname(rhymet))
+          elif nsyl == rhyme_nsyl:
+            pagemsg("Removing rhyme %s, same as pronunciation-based rhyme for respelling '%s' and syllable count %s matches: %s"
+                % (rhyme, rhyme_respelling, nsyl, str(rhymet)))
+            extra_notes.append("remove {{%s}} same as auto-generated rhyme and syllable count" % tname(rhymet))
+          elif pagetitle in allow_mismatching_nsyl:
+            pagemsg("Removing rhyme %s, same as pronunciation-based rhyme for respelling '%s'; syllable count %s mismatches pronunciation syllable count %s but is known to be incorrect so is ignored: %s"
+                % (rhyme, rhyme_respelling, nsyl, rhyme_nsyl, str(rhymet)))
+            extra_notes.append("ignore known-incorrect syllable count %s in {{%s}}" % (nsyl, tname(rhymet)))
+        else:
+          pagemsg("WARNING: For spelling '%s', rhyme %s%s not same as pronunciation-based rhyme %s: %s"
+              % (rhyme_respelling, rhyme, " with explicit syllable count %s" % nsyl if nsyl is not None else "",
+                rhyme_pronun, str(rhymet)))
+          continue
+
+      if audioarg:
+        if len(respelling_args) > 1:
+          pagemsg("WARNING: Saw audio arg %s and multiple respellings %s, don't know where to add audio arg" % (
+            audioarg, "|".join(respelling_args)))
+          continue
+        respelling_args[0] += audioarg
+
+      syll_arg = ""
       if hyph_lines:
+        if len(syllabifications_from_respelling) > 1:
+          pagemsg("WARNING: Saw multiple auto-generated syllabifications, can't handle: %s" % ",".join(
+            "%s/%s" % (respelling, syllab) for respelling, syllab in syllabifications_from_respelling))
+          continue
+        syllabification_from_pagetitle = pronuns["syllabification_from_pagename"]
+        if syllabifications_from_respelling:
+          _, syllabification_from_respelling = syllabifications_from_respelling[0]
+        else:
+          syllabification_from_respelling = None
+        syllab_respelling = "|".join(respelling_args)
         if len(hyph_lines) > 1:
-          pagemsg("WARNING: Multiple hyphenation lines, not removing: %s" % ", ".join(hyph_lines))
+          pagemsg("WARNING: Multiple syllabification lines, not removing: %s" % ", ".join(hyph_lines))
         else:
           assert hyph_lines[0].startswith("* ")
           hyph_line = hyph_lines[0][2:]
@@ -405,41 +296,53 @@ def process_text_on_page(index, pagetitle, text):
               for param in hypht.params:
                 pn = pname(param)
                 pv = str(param.value)
-                if not re.search("^[0-9]+$", pn):
+                if not re.search("^[0-9]+$", pn) and not (pn == "caption" and pv == "Syllabification"):
                   pagemsg("WARNING: Unrecognized param %s=%s in {{%s}}, not removing: %s" %
                       (pn, pv, tname(hypht), hyph_line))
                   break
+                if pn == "caption":
+                  continue
                 if not pv:
-                  pagemsg("WARNING: Multiple hyphenations in a single template, not removing: %s" % hyph_line)
+                  pagemsg("WARNING: Multiple syllabifications in a single template, not removing: %s" % hyph_line)
                   break
                 if int(pn) > 1:
                   syls.append(pv)
               else: # no break
-                specified_hyphenation = ".".join(syls)
-                if specified_hyphenation == hyphenation_from_respelling:
-                  pagemsg("Removed explicit hyphenation same as auto-hyphenation: %s" % hyph_line)
-                elif specified_hyphenation == hyphenation_from_pagetitle:
-                  if normalized_bare_arg == "+":
-                    pagemsg("WARNING: Something wrong, {{tl-IPA}} used with '+' or empty respelling but respelling auto-hyphenation %s different from pagetitle auto-hyphenation %s"
-                      % (hyphenation_from_respelling, hyphenation_from_pagetitle))
+                specified_syllabification = ".".join(syls)
+                if specified_syllabification == syllabification_from_respelling:
+                  pagemsg("Removing explicit syllabification same as auto-syllabification: %s" % hyph_line)
+                  extra_notes.append("remove {{%s}} same as respelling auto-syllabification" % tname(hypht))
+                elif specified_syllabification == syllabification_from_pagetitle:
+                  if respelling_args == ["+"]:
+                    pagemsg("WARNING: Something wrong, {{tl-IPA}} used with '+' or empty respelling but respelling auto-syllabification %s different from pagetitle auto-syllabification %s"
+                      % (syllabification_from_respelling or "(nil)", syllabification_from_pagetitle))
+                    continue
                   else:
-                    pagemsg("Non-default pronunciation %s, explicit hyphenation same as pagetitle auto-hyphenation, replacing with <hyph:+>: %s" %
-                        (bare_arg, hyph_line))
-                    arg += "<syll:+>"
+                    pagemsg("Non-default respelling %s, explicit syllabification %s not same as syllabification from respelling %s but same as pagetitle auto-syllabification, replacing with <syll:+>: %s" %
+                        (syllab_respelling, specified_syllabification, syllabification_from_respelling or "(nil)", hyph_line))
+                    syll_arg = "+"
+                    extra_notes.append("remove/incorporate {{%s}} same as pagetitle auto-syllabification into {{tl-pr}}" % tname(hypht))
+                elif specified_syllabification == pagetitle:
+                  pagemsg("Non-default respelling %s, explicit syllabification %s not same as syllabification from respelling %s or syllabification from pagetitle %s but same as pagetitle, replacing with <syll:#>: %s" %
+                      (syllab_respelling, specified_syllabification, syllabification_from_respelling or "(nil)",
+                       syllabification_from_pagetitle, hyph_line))
+                  syll_arg = "#"
+                  extra_notes.append("remove/incorporate {{%s}} same as pagetitle into {{tl-pr}}" % tname(hypht))
                 else:
                   hyph_text = (
-                    "respelling auto-hyphenation %s or pagetitle auto-hyphenation %s" % (
-                      hyphenation_from_respelling, hyphenation_from_pagetitle
-                    ) if hyphenation_from_respelling != hyphenation_from_pagetitle else
-                    "respelling/pagetitle auto-hyphenation %s" % hyphenation_from_respelling
+                    "respelling auto-syllabification %s or pagetitle auto-syllabification %s" % (
+                      syllabification_from_respelling or "(nil)", syllabification_from_pagetitle
+                    ) if syllabification_from_respelling != syllabification_from_pagetitle else
+                    "respelling/pagetitle auto-syllabification %s" % (syllabification_from_respelling or "(nil)")
                   )
-                  if normalized_bare_arg == "+":
-                    pagemsg("WARNING: {{tl-IPA}} used with '+' or empty respelling but specified hyphenation %s not equal to %s, adding explicitly: %s" %
-                        (specified_hyphenation, hyph_text, hyph_line))
+                  if respelling_args == ["+"]:
+                    pagemsg("WARNING: {{tl-IPA}} used with '+' or empty respelling but specified syllabification %s not equal to %s, adding explicitly: %s" %
+                        (specified_syllabification, hyph_text, hyph_line))
                   else:
-                    pagemsg("WARNING: Non-default pronunciation %s and specified hyphenation %s not equal to %s, adding explicitly: %s" %
-                        (bare_arg, specified_hyphenation, hyph_text, hyph_line))
-                  arg += "<syll:%s>" % specified_hyphenation
+                    pagemsg("WARNING: Non-default pronunciation %s and specified syllabification %s not equal to %s, adding explicitly: %s" %
+                        (syllab_respelling, specified_syllabification, hyph_text, hyph_line))
+                  syll_arg = specified_syllabification
+                  extra_notes.append("remove/incorporate {{%s}} into {{tl-pr}}" % tname(hypht))
                 hyph_lines = []
 
       if homophone_lines:
@@ -488,17 +391,23 @@ def process_text_on_page(index, pagetitle, text):
                     hmp_args[-1] += "<q:%s>" % homophone_qualifiers[pn]
                 if homophone_qualifier_text:
                   hmp_args[-1] += "<q:%s>" % homophone_qualifier_text
-                arg += "<hmp:%s>" % ",".join(hmp_args)
+                hmp_arg = "<hmp:%s>" % ",".join(hmp_args)
+                if len(respelling_args) > 1:
+                  pagemsg("WARNING: Saw homophone arg %s and multiple respellings %s, don't know where to add homophone arg" % (
+                    hmp_arg, "|".join(respelling_args)))
+                  continue
                 extra_notes.append("incorporate homophones into {{tl-pr}}")
                 homophone_lines = []
 
-      if arg == "+":
-        tl_pr = "{{tl-pr}}"
+      if syll_arg:
+        syll_arg = "|syll=%s" % syll_arg
+      if respelling_args == ["+"]:
+        tl_pr = "{{tl-pr%s}}" % syll_arg
       else:
-        tl_pr = "{{tl-pr|%s}}" % arg
+        tl_pr = "{{tl-pr|%s%s}}" % ("|".join(respelling_args), syll_arg)
       pagemsg("Replaced %s with %s" % (str(ipat), tl_pr))
 
-      all_lines = "\n".join([tl_pr] + hyph_lines + homophone_lines)
+      all_lines = "\n".join([tl_pr] + rfap_lines + hyph_lines + homophone_lines)
       newsubsec = "%s\n\n" % all_lines
       if subsections[k + 1] != newsubsec:
         this_notes = ["convert {{tl-IPA}} to {{tl-pr}}"] + extra_notes
