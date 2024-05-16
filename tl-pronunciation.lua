@@ -57,6 +57,7 @@ FIXME:
 28. Allow f against ph e.g. [[Sophia]] respelled 'Sofi.a' with syllabificaiton 'So.phi.a'. [NOT DONE; ONLY TWO CASES]
 29. Correctly handle [[gaan]] respelled 'ga7án', and other terms with doubled vowels in them against a glottal stop.
     [DONE]
+30. Implement substitution and single-substitution notation.
 ]==]
 
 local force_cat = false -- enable for testing
@@ -64,7 +65,7 @@ local force_cat = false -- enable for testing
 local m_IPA = require("Module:IPA")
 local m_str_utils = require("Module:string utilities")
 local m_table = require("Module:table")
-local put_module = "Module:parse utilities"
+local parse_utilities_module = "Module:parse utilities"
 local set_utilities_module = "Module:set utilities"
 local headword_data_module = "Module:headword/data"
 local accent_qualifier_module = "Module:accent qualifier"
@@ -198,7 +199,7 @@ end
 
 local function split_on_comma(term)
 	if term:find(",%s") then
-		return require(put_module).split_on_comma(term)
+		return require(parse_utilities_module).split_on_comma(term)
 	else
 		return rsplit(term, ",")
 	end
@@ -932,7 +933,7 @@ local function parse_pron_modifier(arg, parse_err, generate_obj, param_mods, no_
 		param_mods.qq = insert
 		param_mods.a = insert
 		param_mods.aa = insert
-		return require(put_module).parse_inline_modifiers(arg, {
+		return require(parse_utilities_module).parse_inline_modifiers(arg, {
 			param_mods = param_mods,
 			generate_obj = generate_obj,
 			parse_err = parse_err,
@@ -1242,20 +1243,142 @@ local function format_pronun_line(parsed)
 end
 
 
+-- Given a single substitution spec, `to`, figure out the corresponding value of `from` used in a complete
+-- substitution spec. `pagename` is the name of the page, either the actual one or taken from the `pagename` param.
+-- `whole_word`, if set, indicates that the match must be to a whole word (it was preceded by ~).
+local function convert_single_substitution_to_original(to, pagename, whole_word)
+	-- Replace specially-handled characters with a class matching the character and possible replacements.
+	local escaped_from = to
+	-- Handling of '(rr)', '(r)', '.' and '-' needs to be done before calling pattern_escape(); otherwise they will be
+	-- escaped.
+	escaped_from = escaped_from:gsub("%(rr%)", "r")
+	escaped_from = escaped_from:gsub("%(r%)", "r")
+	escaped_from = escaped_from:gsub("ks", "x"):gsub("Ks", "X"):gsub("gz", "x"):gsub("([bg])%1l", "%1l"):gsub("[._]", "")
+	escaped_from = require(strutil_module).pattern_escape(escaped_from)
+	escaped_from = escaped_from:gsub("rr", "rr?")
+	escaped_from = escaped_from:gsub("ss", "ss?")
+	escaped_from = escaped_from:gsub("ʃ", "[xX]")
+	-- This is tricky, because we already passed `escaped_from` through pattern_escape() causing a hyphen to get a
+	-- % sign before it, and have to double up the percent signs to match and replace a literal %.
+	escaped_from = escaped_from:gsub("%%%-", "%%-?")
+	-- Tie sign (‿) should match against space, hyphen or nothing in the original.
+	escaped_from = escaped_from:gsub("‿", "[ %%-]?")
+	escaped_from = rsub(escaped_from, "[" .. written_accented_vowel_l .. "]",
+		function(v) return "[" .. v .. written_accented_to_plain_vowel[v] .. "]" end)
+	escaped_from = escaped_from:gsub(DOTOVER, DOTOVER .. "?"):gsub(LINEUNDER, LINEUNDER .. "?")
+	escaped_from = "(" .. escaped_from .. ")"
+	if whole_word then
+		escaped_from = "%f[%a]" .. escaped_from .. "%f[%A]"
+	end
+	local match = rmatch(pagename, escaped_from)
+	if match then
+		if match == to then
+			error(("Single substitution spec '%s' found in pagename '%s', replacement would have no effect"):
+				format(to, pagename))
+		end
+		return match
+	end
+	error(("Single substitution spec '%s' couldn't be matched to pagename '%s'"):format(to, pagename))
+end
+
+
+local function apply_substitution_spec(respelling, pagename, pos, allow_mid_vowel_hints, parse_err)
+	local subs = split_on_comma(rmatch(respelling, "^%[(.*)%]$"))
+	respelling = pagename
+	local mid_vowel_hint
+	local regular_subs = {}
+	for _, sub in ipairs(subs) do
+		if rfind(sub, "^" .. export.mid_vowel_hint_c .. "$") then
+			if mid_vowel_hint then
+				parse_err(("Specified mid vowel hint twice, '%s' and '%s'"):format(
+					mid_vowel_hint, sub))
+			end
+			mid_vowel_hint = sub
+		else
+			table.insert(regular_subs, sub)
+		end
+	end
+	if mid_vowel_hint then
+		if not allow_mid_vowel_hints then
+			parse_err(("Mid vowel hint '%s' not allowed when apply one substitution spec to multiple words"):format(
+				mid_vowel_hint))
+		end
+		local suffix = ""
+		-- FIXME: This duplicates logic in to_IPA().
+		if not pos or pos == "adverb" then
+			local part_before_ment, ment = rmatch(respelling, "^(.*)(m[eé]nt)$")
+			if part_before_ment and (pos == "adverb" or not rfind(part_before_ment, "[iï]$") and
+				rfind(part_before_ment, V .. ".*" .. V)) then
+				suffix = ment
+				respelling = part_before_ment
+			end
+		end
+		local syllables = split_syllables(respelling, "stress prefixes", "may be uppercase")
+		local stressed_vowel = syllables[syllables.stress].vowel
+		if stressed_vowel == mid_vowel_hint then
+			-- do nothing
+		elseif rfind(mid_vowel_hint, "[èéêë]") and rfind(stressed_vowel, "[eEèÈ]") or
+			rfind(mid_vowel_hint, "[òóô]") and rfind(stressed_vowel, "[oO]") then
+				syllables[syllables.stress].vowel = mid_vowel_hint
+		else
+			parse_err(("Stressed vowel '%s' not compatible with mid vowel hint '%s'"):format(
+				stressed_vowel, mid_vowel_hint))
+		end
+		respelling = reconstitute_word_from_syllables(syllables) .. suffix
+	end
+
+	for _, sub in ipairs(regular_subs) do
+		local from, escaped_from, to, escaped_to, whole_word
+		if rfind(sub, "^~") then
+			-- whole-word match
+			sub = rmatch(sub, "^~(.*)$")
+			whole_word = true
+		end
+		if sub:find(":") then
+			from, to = rmatch(sub, "^(.-):(.*)$")
+		else
+			to = sub
+			from = convert_single_substitution_to_original(to, pagename, whole_word)
+		end
+		if from then
+			local strutil = require(strutil_module)
+			escaped_from = strutil.pattern_escape(from)
+			if whole_word then
+				escaped_from = "%f[%a]" .. escaped_from .. "%f[%A]"
+			end
+			escaped_to = strutil.replacement_escape(to)
+			local subbed_respelling, nsubs = rsubn(respelling, escaped_from, escaped_to)
+			if nsubs == 0 then
+				parse_err(("Substitution spec %s -> %s didn't match processed pagename '%s'"):format(
+					from, to, respelling))
+			elseif nsubs > 1 then
+				parse_err(("Substitution spec %s -> %s matched multiple substrings in processed pagename '%s', add " ..
+					"more context"):format(from, to, respelling))
+			else
+				respelling = subbed_respelling
+			end
+		end
+	end
+
+	return respelling
+end
+
+
 local function parse_respelling(respelling, pagename, parse_err)
-	local raw_respelling = respelling:match("^raw:(.*)$")
-	if raw_respelling then
-		local raw_phonemic, raw_phonetic = raw_respelling:match("^/(.*)/ %[(.*)%]$")
-		if not raw_phonemic then
-			raw_phonemic = raw_respelling:match("^/(.*)/$")
-		end
-		if not raw_phonemic then
-			raw_phonetic = raw_respelling:match("^%[(.*)%]$")
-		end
-		if not raw_phonemic and not raw_phonetic then
-			parse_err(("Unable to parse raw respelling '%s', should be one of /.../, [...] or /.../ [...]")
-				:format(raw_respelling))
-		end
+	local saw_raw
+	local remaining_respelling = respelling:match("^raw:(.*)$")
+	if remaining_respelling then
+		saw_raw = true
+		respelling = remaining_respelling
+	end
+	local raw_phonemic, raw_phonetic = respelling:match("^/(.*)/ %[(.*)%]$")
+	if not raw_phonemic then
+		raw_phonemic = respelling:match("^/(.*)/$")
+	end
+	if not raw_phonemic and saw_raw then
+		raw_phonetic = respelling:match("^%[(.*)%]$")
+	end
+	if raw_phonemic or raw_phonetic then
 		return {
 			raw = true,
 			raw_phonemic = raw_phonemic,
@@ -1266,6 +1389,66 @@ local function parse_respelling(respelling, pagename, parse_err)
 		respelling = pagename
 	end
 	return {term = respelling}
+end
+
+
+-- Parse a list of comma-split runs containing one or more respellings, i.e. after calling parse_balanced_segment_run()
+-- or the like followed by split_alternating_runs() or the like (see [[Module:parse utilities]]). `pagename` is the
+-- pagename, for use when a respelling is just '+', a mid-vowel hint like 'ê' or a substitution spec like '[ks]'.
+-- `original_input` is the raw input and `input_param` the name of the param containing the raw input; both are used
+-- only in error messages. Return an object specifying the respellings, currently with a single field 'terms' (this
+-- format is used in case other outer properties exist in the future), where 'terms' is a list of term objects. Each
+-- term object contains either a field `term` with the respelling and an optional part of speech `pos`, or fields
+-- `raw_phonemic` and/or `raw_phonetic` (if the user specified raw IPA using "/.../" or "/.../ [...]" or "raw:[...]"),
+-- `unknown` (if the user specified "?"), or `omitted` (if the user specified "-"). In addition, there may be fields
+-- `q`, `qq`, `a`, `aa`, and/or `ref` corresponding to inline modifiers. Each such field is a list; all are lists of
+-- strings except for `ref`, which is a list of objects as returned by parse_references() in [[Module:references]].
+function export.parse_comma_separated_groups(comma_separated_groups, pagename, original_input, input_param)
+	local function generate_obj(respelling, parse_err)
+		return parse_respelling(respelling, pagename == true and respelling or pagename, parse_err)
+	end
+	local put = require(parse_utilities_module)
+
+	local outer_container = {terms = {}}
+	for _, group in ipairs(comma_separated_groups) do
+		-- Rejoin runs that don't involve <...>.
+		local j = 2
+		while j <= #group do
+			if not group[j]:find("^<.*>$") then
+				group[j - 1] = group[j - 1] .. group[j] .. group[j + 1]
+				table.remove(group, j)
+				table.remove(group, j)
+			else
+				j = j + 2
+			end
+		end
+
+		local param_mods = {
+			-- pre = { overall = true },
+			-- post = { overall = true },
+			ref = { store = "insert", convert = function(arg, parse_err)
+				return require("Module:references").parse_references(arg)
+			end },
+			q = { store = "insert" },
+			qq = { store = "insert" },
+			a = { store = "insert" },
+			aa = { store = "insert" },
+		}
+
+		table.insert(outer_container.terms, put.parse_inline_modifiers_from_segments {
+			group = group,
+			arg = original_input,
+			props = {
+				paramname = input_param,
+				param_mods = param_mods,
+				generate_obj = generate_obj,
+				splitchar = ",",
+				outer_container = outer_container,
+			},
+		})
+	end
+
+	return outer_container
 end
 
 
@@ -1394,7 +1577,43 @@ function export.show_full(frame)
 	--   gloss = "GLOSS" or nil,
 	-- }
 	for i, respelling in ipairs(respellings) do
-		if respelling:find("<") then
+		if inputspec.input:find("[<%[]") then
+		else
+			local termobjs = {}
+			local function parse_err(msg)
+				error(msg .. ": " .. inputspec.param .. "=" .. inputspec.input)
+			end
+			for _, term in ipairs(split_on_comma(inputspec.input)) do
+				table.insert(termobjs, generate_obj(term, parse_err))
+			end
+			parsed_respellings[dialect] = {
+				terms = termobjs,
+			}
+		end
+		if respelling:find("[<%[]") then
+			local put = require(parse_utilities_module)
+			-- Parse balanced segment runs involving either [...] (substitution notation) or <...> (inline modifiers).
+			-- We do this because we don't want commas inside of square or angle brackets to count as respelling
+			-- delimiters. However, we need to rejoin square-bracketed segments with nearby ones after splitting
+			-- alternating runs on comma. For example, if we are given
+			-- "a[x]a<q:learned>,[vol:vôl,ks]<q:nonstandard>", after calling
+			-- parse_multi_delimiter_balanced_segment_run() we get the following output:
+			--
+			-- {"a", "[x]", "a", "<q:learned>", ",", "[vol:vôl,ks]", "", "<q:nonstandard>", ""}
+			--
+			-- After calling split_alternating_runs(), we get the following:
+			--
+			-- {{"a", "[x]", "a", "<q:learned>", ""}, {"", "[vol:vôl,ks]", "", "<q:nonstandard>", ""}}
+			--
+			-- We need to rejoin stuff on either side of the square-bracketed portions.
+			local segments = put.parse_multi_delimiter_balanced_segment_run(inputspec.input, {{"<", ">"}, {"[", "]"}})
+
+			local comma_separated_groups = put.split_alternating_runs_on_comma(segments)
+
+			-- Process each value.
+			local outer_container = export.parse_comma_separated_groups(comma_separated_groups, pagename,
+				inputspec.input, inputspec.param)
+			parsed_respellings[dialect] = outer_container
 			local param_mods = {
 				pre = { overall = true },
 				post = { overall = true },
@@ -1445,7 +1664,7 @@ function export.show_full(frame)
 				},
 			}
 
-			local parsed = require(put_module).parse_inline_modifiers(respelling, {
+			local parsed = require(parse_utilities_module).parse_inline_modifiers(respelling, {
 				paramname = i,
 				param_mods = param_mods,
 				generate_obj = function(term, parse_err)
