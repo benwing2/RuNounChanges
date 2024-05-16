@@ -10,7 +10,7 @@ FIXME:
 
 1. Review should_generate_rhyme_from_respelling(), e.g. the check for CFLEX.
 2. Update align_syllabification_to_spelling(). [DONE]
-3. Look into how syllabify_from_spelling() works; needs rewriting.
+3. Look into how syllabify_from_spelling() works; needs rewriting. [DONE BUT COULD USE MORE WORK]
 4. Delete old {{tl-pr}} code when new code ready. [DONE]
 5. Group by accent in adjacent lines, and display accent on a separate line if more than one line with that accent.
    [DONE]
@@ -18,8 +18,9 @@ FIXME:
    syllabification not matching pagename' (formerly 'Tagalog terms with hyphenation errors'). [DONE]
 7. Use "syllabification" everywhere internally in place of "hyphenation" and in abbrevs. [DONE]
 8. Change handling of forcing dot. Currently t.s forces /ts/ instead of /tʃ/ (and interferes with syllabification);
-   this should be t_s. Currently you have to write si..yasa with double dot to get /sijasa/ not /ʃasa/; this should be
-   single dot, and no dot should indicate the palatalized pronunciation.
+   this should be t_s. [DONE]
+8b. Currently you have to write si..yasa with double dot to get /sijasa/ not /ʃasa/; this should be single dot, and no
+    dot should indicate the palatalized pronunciation.
 9. If there are auto-generated pronunciations, they should go on a separate line. If there are other pronunciations
    on the line, indent the auto-generated ones on a separate line under the pronunciation line; otherwise, at the same
    bullet level. Good test cases: [[F]], [[General Mariano Alvarez]]. [DONE]
@@ -48,11 +49,11 @@ FIXME:
     syllabified 'Ha.nnah'. [DONE]
 23. Allow b against bb e.g. [[Abby]] respelled 'aby', syllabified 'A.bby'. [DONE]
 24. [[Buendia]] respelled 'Buendía' syllabifies wrong (as 'Bu.end.ia' when it should be 'Bu.en.di.a'). Likewise
-    [[María]] (as Mar.ia instead of Ma.ri.a).
+    [[María]] (as Mar.ia instead of Ma.ri.a). [DONE]
 25. [[Arguelles]] respelled 'Argu.elles' generates correct pronunciation with /gw/ but incorrect syllabification
-    'Ar.guel.les' instead of 'Ar.gu.el.les'.
+    'Ar.guel.les' instead of 'Ar.gu.el.les'. [DONE]
 26. [[Caguiat]] respelled 'Caguiát' generates correct pronunciation with /gj/ but incorrect syllabification 'Ca.gui.at'
-    instead of 'Ca.guiat' ("hyphenation") or maybe 'Cagu.iat'.
+    instead of 'Ca.guiat' ("hyphenation") or maybe 'Cagu.iat'. [DONE]
 27. Allow 7 against ' e.g. [[Jumu'ah]] respelled 'Jumu7á' with syllabificaiton 'Ju.mu.'ah'. [DONE]
 28. Allow f against ph e.g. [[Sophia]] respelled 'Sofi.a' with syllabificaiton 'So.phi.a'. [NOT DONE; ONLY TWO CASES]
 29. Correctly handle [[gaan]] respelled 'ga7án', and other terms with doubled vowels in them against a glottal stop.
@@ -102,7 +103,7 @@ local ipa_stress_c = "[" .. ipa_stress .. "]"
 local separator = accent .. ipa_stress .. "# ."
 local C = "[^" .. vowel .. separator .. "]" -- consonant
 
-local unstressed_words = m_table.listToSet({
+local unstressed_words = m_table.listToSet {
 	-- case markers; "nang" here is for written "ng", but can also work with nang as in the contraction na'ng and the
 	-- conjunction "nang"
 	"ang", "sa", "nang", "si", "ni", "kay",
@@ -117,14 +118,22 @@ local unstressed_words = m_table.listToSet({
 	"pag", "kung", -- subordinating conjunctions
 	"at", "o", -- coordinating conjunctions
 	"hay", -- interjections
-	"de", "del", "el", "la", "las", "los", "y", -- in some Spanish-derived terms and names
-	"-an", "-en", "-han", "hi-", "-hin", "hin-", "hing-", "-in", "mag-", "mang-", "pa-", "pag-", "pang-", -- affixes
+	-- in some Spanish-derived terms and names; also de- prefix in compound words
+	"de", "del", "el", "la", "las", "los", "y",
+}
+local unstressed_affixes = m_table.listToSet {
+	-- NOTE: prefixes and infixes here aren't currently used because they are all assumed unstressed in the absence
+	-- of an explicit accent marker.
+	"-an", "-en", "-han", "hi-", "-hin", "hin-", "hing-", "-in", "mag-", "mang-", "pa-", "pag-", "pang-",
 	"-ay", "-i", "-nin", "-ng", "-oy", "-s"
-})
+}
 
+local nang_macron = "na" .. MACRON .. "ng"
+local manga_acute = "manga" .. AC
 local special_words = {
-	["ng"] = "nang", ["ng̃"] = "nang", ["ñ̃g"] = "nang",
-	["mga"] = "manga" .. AC, ["mg̃a"] = "manga" .. AC
+	["ng"] = nang_macron, ["ng̃"] = nang_macron, ["ñ̃g"] = nang_macron,
+	["mga"] = manga_acute, ["mg̃a"] = manga_acute,
+	["y"] = "i" .. MACRON -- Spanish [[y]]
 }
 
 local function track(page)
@@ -228,27 +237,58 @@ function export.IPA(text, include_phonemic_syllable_boundaries)
 
 	text = canon_spaces(text)
 
-	-- Make prefixes unstressed unless they have an explicit stress marker; also make certain
-	-- monosyllabic words (e.g. [[ang]], [[ng]], [[si]], [[na]], etc.) without stress marks be
-	-- unstressed.
-	local words = rsplit(text, " ")
-	for i=1, #words do
-		words[i] = special_words[words[i]] or words[i]
-		if rfind(words[i], "%-$") and not rfind(words[i], accent_c) or unstressed_words[words[i]] then
-			-- add macron to the last vowel not the first one
-			-- adding the macron after the 'u'
-			words[i] = rsub(words[i], "^(.*" .. V .. ")", "%1" .. MACRON)
-		end
-		words[i] = rsub(words[i], "^%-(" .. V .. ")", "◌%1") -- suffix/infix if vowel, remove glottal stop at start
-		words[i] = rsub(words[i], "^%-([7ʔ])(" .. V .. ")", "-%1%2" .. MACRON)	-- affix that requires glottal stop
-		words[i] = rsub(words[i], "^de%-", "de" .. MACRON .. "-")	-- de-<word> fix
-		words[i] = rsub_repeatedly(words[i], "%-na%-", '-' .. "na" .. MACRON .. "-")	-- -na-<word> fix
-		words[i] = rsub_repeatedly(words[i], "%-mg" .. TILDE .. "?a%-", '-' .. special_words["mga"] .. "-")	-- -mga-/-mg̃a-<word> fix
-		words[i] = rsub_repeatedly(words[i], "%-ng" .. TILDE .. "?%-", "-na" .. MACRON .. "ng-")	-- -ng-/-ng̃-<word> fix
-		words[i] = rsub_repeatedly(words[i], "%-ñ̃g%-", "-na" .. MACRON .. "ng-")	-- -ñ̃g-<word> fix
-		words[i] = rsub(words[i], "^y$", "i" .. MACRON)	-- Spanish y fix
+	-- Make prefixes unstressed unless they have an explicit stress marker; also make certain monosyllabic words (e.g.
+	-- [[ang]], [[ng]], [[si]], [[na]], etc.) without stress marks be unstressed. We want to do this in most cases as
+	-- well with hyphenated compounds, e.g. [[bato-sa-rinyon]] and [[kalahatian-ng-buwan]]. To do this, we use a
+	-- capturing split on space or hyphen; in this situation, the actual words are at odd positions, and the separators
+	-- (always a single space or hyphen) are at even positions.
+	local words = rsplit(text, "([ %-])")
+	local function make_unstressed(word)
+		-- add macron to the last vowel not the first one, in case of affixes with qui/que/gui/gue (which don't
+		-- currently exist)
+		return rsub(word, "^(.*" .. V .. ")", "%1" .. MACRON)
 	end
-	text = table.concat(words, " ")
+	local function signal_no_initial_glottal_stop(word)
+		return rsub(word, "^(" .. V .. ")", "◌%1")
+	end
+
+	for i=1, #words do
+		if i % 2 == 1 then -- a word, not a hyphen or space
+			if words[i - 1] == "-" and (not words[i - 2] or words[i - 2] == "" and words[i - 3] ~= "-") and
+				words[i + 1] ~= "-" then
+				-- a suffix
+				if unstressed_affixes["-" .. words[i]] then
+					words[i] = make_unstressed(words[i])
+				end
+				words[i] = signal_no_initial_glottal_stop(words[i])
+			elseif words[i + 1] == "-" and (not words[i + 2] or words[i + 2] == "" and words[i + 3] ~= "-") and
+				words[i - 1] ~= "-" then
+				-- a prefix
+				if not rfind(words[i], accent_c) then
+					-- an unstressed prefix
+					words[i] = make_unstressed(words[i])
+				end
+			elseif words[i + 1] == "-" and (not words[i + 2] or words[i + 2] == "" and words[i + 3] ~= "-") and
+				words[i - 1] == "-" and (not words[i - 2] or words[i - 2] == "" and words[i - 3] ~= "-") then
+				-- an interfix or infix
+				if not rfind(words[i], accent_c) then
+					-- an unstressed interfix or infix
+					words[i] = make_unstressed(words[i])
+				end
+				words[i] = signal_no_initial_glottal_stop(words[i])
+			else
+				-- a space-delimited word or a word in a hyphen-delimited compound
+				words[i] = special_words[words[i]] or words[i]
+				if unstressed_words[words[i]] then
+					words[i] = make_unstressed(words[i])
+				end
+			end
+		end
+		-- old code that I didn't port because I don't understand why it's being done; the purpose is to make suffixes
+		-- and infixes with explicit initial glottal stop be unstressed, which seems a weird exception
+		-- words[i] = rsub(words[i], "^%-([7ʔ])(" .. V .. ")", "-%1%2" .. MACRON)	-- affix that requires glottal stop
+	end
+	text = table.concat(words, "")
 	-- Convert hyphens to spaces
 	text = rsub(text, "%-", " ")
 	-- canonicalize multiple spaces again, which may have been introduced by hyphens
