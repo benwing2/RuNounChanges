@@ -57,6 +57,7 @@ FIXME:
 28. Allow f against ph e.g. [[Sophia]] respelled 'Sofi.a' with syllabificaiton 'So.phi.a'. [NOT DONE; ONLY TWO CASES]
 29. Correctly handle [[gaan]] respelled 'ga7án', and other terms with doubled vowels in them against a glottal stop.
     [DONE]
+30. Allow syllabification when only some words have vowels, e.g. [[bawian ng buhay]]. [DONE]
 ]==]
 
 local force_cat = false -- enable for testing
@@ -240,10 +241,11 @@ function export.IPA(text, include_phonemic_syllable_boundaries)
 		end
 		words[i] = rsub(words[i], "^%-(" .. V .. ")", "◌%1") -- suffix/infix if vowel, remove glottal stop at start
 		words[i] = rsub(words[i], "^%-([7ʔ])(" .. V .. ")", "-%1%2" .. MACRON)	-- affix that requires glottal stop
-		words[i] = rsub(words[i], "^(de%-)", "de" .. MACRON .. '-')	-- de-<word> fix
-		words[i] = rsub(words[i], "%-(na)%-", '-' .. "na" .. MACRON .. '-')	-- -na-<word> fix
-		words[i] = rsub(words[i], "%-(mga)%-", '-' .. special_words["mga"] .. '-')	-- -mga-<word> fix
-		words[i] = rsub(words[i], "%-(mga)%-", '-' .. special_words["mga"] .. '-')	-- -mga-<word> fix
+		words[i] = rsub(words[i], "^de%-", "de" .. MACRON .. "-")	-- de-<word> fix
+		words[i] = rsub_repeatedly(words[i], "%-na%-", '-' .. "na" .. MACRON .. "-")	-- -na-<word> fix
+		words[i] = rsub_repeatedly(words[i], "%-mg" .. TILDE .. "?a%-", '-' .. special_words["mga"] .. "-")	-- -mga-/-mg̃a-<word> fix
+		words[i] = rsub_repeatedly(words[i], "%-ng" .. TILDE .. "?%-", "-na" .. MACRON .. "ng-")	-- -ng-/-ng̃-<word> fix
+		words[i] = rsub_repeatedly(words[i], "%-ñ̃g%-", "-na" .. MACRON .. "ng-")	-- -ñ̃g-<word> fix
 		words[i] = rsub(words[i], "^y$", "i" .. MACRON)	-- Spanish y fix
 	end
 	text = table.concat(words, " ")
@@ -326,10 +328,11 @@ function export.IPA(text, include_phonemic_syllable_boundaries)
 	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*)(" .. C .. V .. ")", "%1.%2")
 
 	-- "mb", "mp", "nd", "nk", "nt" combinations
-	text = rsub_repeatedly(text, "(m)([bp])([^hlɾr" .. vowel .. separator .."])(" .. V .. ")", "%1%2.%3%4")
-	text = rsub_repeatedly(text, "(n)([dkt])([^hlɾr" .. vowel .. separator .. "])(" .. V .. ")", "%1%2.%3%4")
-	text = rsub_repeatedly(text, "(ŋ)([k])([^hlɾr" .. vowel .. separator ..  "])(" .. V .. ")", "%1%2.%3%4")
-	text = rsub_repeatedly(text, "([ɾr])([bkdfɡklmnpsʃtvz])([^hlɾr" .. vowel .. separator ..  "])(" .. V .. ")", "%1%2.%3%4")
+	text = rsub_repeatedly(text, "(m)([bp])([^hlɾrɟw" .. vowel .. separator .."])(" .. V .. ")", "%1%2.%3%4")
+	text = rsub_repeatedly(text, "(n)([dkt])([^hlɾrɟw" .. vowel .. separator .. "])(" .. V .. ")", "%1%2.%3%4")
+	text = rsub_repeatedly(text, "(ŋ)([k])([^hlɾrɟw" .. vowel .. separator ..  "])(" .. V .. ")", "%1%2.%3%4")
+	text = rsub_repeatedly(text, "([ɾr])([bkdfɡklmnpsʃvz])([^hlɾrɟw" .. vowel .. separator ..  "])(" .. V .. ")", "%1%2.%3%4")
+	text = rsub_repeatedly(text, "([ɾr])([t])([^hlɾrɟwsʃ" .. vowel .. separator ..  "])(" .. V .. ")", "%1%2.%3%4")
 
 	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*" .. C .. "+)(" .. C .. C .. V .. ")", "%1.%2")
 	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*" .. C .. ")(" .. C .. V .. ")", "%1.%2")
@@ -546,7 +549,7 @@ function export.IPA(text, include_phonemic_syllable_boundaries)
 	        ["ĵ"] = "d͡ʒ" -- fake "j" to real "j"
 		}
 
-		text = rsub(text, "[ć]([ #])", "ts%1")
+		text = rsub(text, "[ć]([" .. separator .. "])", "ts%1")
 		text = rsub(text, "[ĉćɟĵ]", final_conversions)
 
 		-- Do not have multiple syllable break consecutively
@@ -820,15 +823,15 @@ local function word_has_vowels(word)
 end
 
 
-local function all_words_have_vowels(term)
+local function any_words_have_vowels(term)
 	local words = rsplit(decompose(term), "[ %-]")
 	for i, word in ipairs(words) do
 		-- Allow empty word; this occurs with prefixes and suffixes.
-		if word ~= "" and not word_has_vowels(word) then
-			return false
+		if word_has_vowels(word) then
+			return true
 		end
 	end
-	return true
+	return false
 end
 
 
@@ -1073,10 +1076,12 @@ local function syllabify_from_spelling(text, pagename)
 	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*)(" .. C .. V .. ")", "%1.%2")
 
 	-- "mb", "mp", "nd", "nk", "nt" combinations
-	text = rsub_repeatedly(text, "(m)([bp])([^lɾrɟ" .. vowel .. separator .."])(" .. V .. ")", "%1%2.%3%4")
-	text = rsub_repeatedly(text, "(n)([dkt])([^lɾrɟ" .. vowel .. separator .. "])(" .. V .. ")", "%1%2.%3%4")
-	text = rsub_repeatedly(text, "(ŋ)([k])([^lɾrɟ" .. vowel .. separator ..  "])(" .. V .. ")", "%1%2.%3%4")
-	text = rsub_repeatedly(text, "([ɾr])([bkdfɡklmnpsʃtvz])([^lɾrɟ" .. vowel .. separator ..  "])(" .. V .. ")", "%1%2.%3%4")
+	text = rsub_repeatedly(text, "(m)([bp])([^lɾrɟyw" .. vowel .. separator .."])(" .. V .. ")", "%1%2.%3%4")
+	text = rsub_repeatedly(text, "(n)([dk])([^lɾrɟyw" .. vowel .. separator .. "])(" .. V .. ")", "%1%2.%3%4")
+	text = rsub_repeatedly(text, "(n)([t])([^lɾrɟyws" .. vowel .. separator .. "])(" .. V .. ")", "%1%2.%3%4")
+	text = rsub_repeatedly(text, "(ŋ)([k])([^lɾrɟyw" .. vowel .. separator ..  "])(" .. V .. ")", "%1%2.%3%4")
+	text = rsub_repeatedly(text, "([ɾr])([bkdfɡklmnpsʃvz])([^lɾrɟyw" .. vowel .. separator ..  "])(" .. V .. ")", "%1%2.%3%4")
+	text = rsub_repeatedly(text, "([ɾr])([t])([^lɾrɟywsʃ" .. vowel .. separator ..  "])(" .. V .. ")", "%1%2.%3%4")
 
 	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*" .. C .. ")(" .. C .. V .. ")", "%1.%2")
 	text = rsub_repeatedly(text, "(" .. V .. accent_c .. "*" .. C .. "+)(" .. C .. C .. V .. ")", "%1.%2")
@@ -1619,7 +1624,7 @@ function export.show_full(frame)
 		end
 
 		if not parsed.syll then
-			if not overall_syll and all_words_have_vowels(pagename) then
+			if not overall_syll and any_words_have_vowels(pagename) then
 				for _, term in ipairs(parsed.terms) do
 					if not term.raw then
 						local syllabification = syllabify_from_spelling(term.term, pagename)
@@ -2040,24 +2045,30 @@ end
 -- Meant to be called from a bot.
 function export.pron_json(frame)
 	local iparams = {
-		[1] = {required = true},
+		[1] = {list = true, required = true},
 		["pagename"] = {required = true},
 	}
 	local iargs = require("Module:parameters").process(frame.args, iparams)
-	local pronun = export.IPA(iargs[1], "include phonemic syllable boundaries")
-	local syllabification = export.syllabify_and_align(iargs[1], iargs.pagename)
+	local data = {}
 	local syllabification_from_pagename = syllabify_from_spelling(iargs.pagename, iargs.pagename)
-	local num_syl = get_num_syl_from_ipa(pronun.phonemic)
-	local rhyme = convert_phonemic_to_rhyme(pronun.phonemic)
+	for _, respelling in ipairs(iargs[1]) do
+		local pronun = export.IPA(respelling, "include phonemic syllable boundaries")
+		local syllabification = export.syllabify_and_align(respelling, iargs.pagename)
+		local num_syl = get_num_syl_from_ipa(pronun.phonemic)
+		local rhyme = convert_phonemic_to_rhyme(pronun.phonemic)
+		table.insert(data, {
+			respelling = respelling,
+			phonemic = pronun.phonemic,
+			phonetic = pronun.phonetic,
+			syllabification = syllabification,
+			num_syl = num_syl,
+			rhyme = rhyme,
+		})
+	end
 	local retval = {
 		pagename = iargs.pagename,
-		respelling = iargs[1],
-		phonemic = pronun.phonemic,
-		phonetic = pronun.phonetic,
-		syllabification = syllabification,
 		syllabification_from_pagename = syllabification_from_pagename,
-		num_syl = num_syl,
-		rhyme = rhyme,
+		data = data,
 	}
 	return require("Module:JSON").toJSON(retval)
 end
