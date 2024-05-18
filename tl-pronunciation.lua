@@ -122,8 +122,8 @@ local unstressed_words = m_table.listToSet {
 	"de", "del", "el", "la", "las", "los", "y",
 }
 local unstressed_affixes = m_table.listToSet {
-	-- NOTE: prefixes and infixes here aren't currently used because they are all assumed unstressed in the absence
-	-- of an explicit accent marker.
+	-- NOTE: prefixes here aren't currently used with prefixes themselves because they are all assumed unstressed
+	-- in the absence of an explicit accent marker. But they are used in words like [[mag-post]].
 	"-an", "-en", "-han", "hi-", "-hin", "hin-", "hing-", "-in", "mag-", "mang-", "pa-", "pag-", "pang-",
 	"-ay", "-i", "-nin", "-ng", "-oy", "-s"
 }
@@ -280,6 +280,10 @@ function export.IPA(text, include_phonemic_syllable_boundaries)
 				-- a space-delimited word or a word in a hyphen-delimited compound
 				words[i] = special_words[words[i]] or words[i]
 				if unstressed_words[words[i]] then
+					words[i] = make_unstressed(words[i])
+				elseif words[i + 1] == "-" and (not words[i - 1] or words[i - 1] == " ") and
+					-- e.g. 'mag-' in [[mag-post]]
+					unstressed_affixes[words[i] .. "-"] then
 					words[i] = make_unstressed(words[i])
 				end
 			end
@@ -740,7 +744,7 @@ local function align_syllabification_to_spelling(syllab, spelling)
 		-- Return true if a syllabified respelling character (uci) matches the corresponding spelling char (ucj).
 		-- Both uci and ucj should be lowercase.
 		return uci == ucj or
-			uci == "h" and (ucj == "g" or ucj == "j") or 
+			uci == "h" and (ucj == "g" or ucj == "j" or ucj == "x") or 
 			uci == "j" and ucj == "g" or 
 			uci == "y" and ucj == "i" or
 			uci == "w" and ucj == "u"
@@ -1864,7 +1868,7 @@ function export.show_full(frame)
 		if not sylls then
 			return
 		end
-		for _, syll in ipairs(sylls) do
+		for _, syll in ipairs(sylls.terms) do
 			local syll_no_dot = syll.syllabification:gsub("%.", "")
 			if syll_no_dot ~= pagename then
 				mw.log(("For page '%s', saw syllabification '%s' not matching pagename"):format(
@@ -1875,7 +1879,7 @@ function export.show_full(frame)
 		end
 	end
 
-	get_syll_categories(overall_rhyme)
+	get_syll_categories(overall_syll)
 	for _, parsed in ipairs(parsed_respellings) do
 		get_syll_categories(parsed.syll)
 	end
