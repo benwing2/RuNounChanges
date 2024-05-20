@@ -507,7 +507,7 @@ function export.IPA(text, include_phonemic_syllable_boundaries)
 		    text = rsub(text,"u","ʊ")
 
 	        table.insert(debug, text)
-	
+
 	        text = rsub(text,"n([ˈˌ.])ɟ","%1ɲ") -- /n/ before /j/
 	        text = rsub(text,"n[ɟj]([ɐāeəɪɪ̯īoʊʊ̯ū])", "ɲ%1") -- /n/ before /j/
 
@@ -518,7 +518,7 @@ function export.IPA(text, include_phonemic_syllable_boundaries)
 			text = rsub_repeatedly(text, "([.]+)", ".")
 
 	       	table.insert(debug, text)
-	
+
 	       	-- foreign s consonant clusters
 		    text = rsub(text,"([ˈˌ.]?)([#]*)([.]?)([s])([ʔbćĉdfɡhĵklmnŋpɾrt])([ɟlnɾst]?)([ɐāeəɪɪ̯īoʊʊ̯ū])",
 		    	function(stress, boundary, syllable, s, cons1, cons2, vowel)
@@ -526,11 +526,11 @@ function export.IPA(text, include_phonemic_syllable_boundaries)
 		    		return boundary .. "ʔɪ" .. s .. stress .. cons1 .. cons2 .. vowel
 		    	end
 		    )
-		
+
 		    text = rsub(text,"([ˈˌ])([ʔbćĉdfɡhĵɟklmnŋpɾrstwvz]?)([ɟlnɾst]?)([ɐ])","%1%2%3ā")
 			text = rsub(text,"([ˈˌ])([ʔbćĉdfɡhĵɟklmnŋpɾrstwvz]?)([ɟlnɾst]?)([ɪ])","%1%2%3ī")
 			text = rsub(text,"([ˈˌ])([ʔbćĉdfɡhĵɟklmnŋpɾrstwvz]?)([ɟlnɾst]?)([ʊ])","%1%2%3ū")
-		
+
 		    table.insert(debug, text)
 
 	    	text = rsub(text,"([nŋ])([ˈˌ# .]*[bfpv])","m%2")
@@ -551,7 +551,7 @@ function export.IPA(text, include_phonemic_syllable_boundaries)
 	        text = rsub(text,"([ˈˌ.])t([ɟj])([ɐāeəɪīoʊū])","%1ĉ%3") -- /tj/ before any vowel following stress
 	        -- text = rsub(text,"([oʊ])([m])([.]?)([ˈ]?)([pb])","u%2%3%4%5") -- /o/ and /ʊ/ before /mb/ or /mp/
 	        text = rsub(text,"([ɐāeəɪīoʊū])(ɾ)([bćĉdfɡĵklmnŋpstvz])([s]?)([#.])","%1ɹ%3%4%5") -- /ɾ/ becoming /ɹ/ before consonants not part of another syllable
-	
+
 	        --final fix for phonetic diphthongs
 		    text = rsub(text,"([ɐ])ɪ̯","aɪ̯") --ay
 		    text = rsub(text,"([ɐ])ʊ̯","aʊ̯") --aw
@@ -887,7 +887,7 @@ local function should_generate_rhyme_from_respelling(term)
 	local words = rsplit(decompose(term), " +")
 	local last_word = words[#words]
 	local should_generate_cat = #words == 1
-	local should_generate_rhyme = 
+	local should_generate_rhyme =
 		not last_word:find("%-$") and -- no if word is a prefix
 		not (last_word:find("^%-") and last_word:find(MACRON)) and -- no if word is an unstressed suffix
 		word_has_vowels(last_word) -- no if word has no vowels (e.g. a single letter)
@@ -1569,7 +1569,7 @@ function export.show_full(frame)
 		end
 		return sylls
 	end
-		
+
 	if overall_syll then
 		overall_syll = canonicalize_syllabification(overall_syll, {})
 	end
