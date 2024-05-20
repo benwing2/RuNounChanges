@@ -237,11 +237,12 @@ def do_assert(cond, msg=None):
   return True
 
 # Return the name of the first parameter in template T.
-def find_first_param(t):
-  if len(t.params) > 0:
-    return pname(t.params[0])
-  else:
-    return None
+def find_first_named_param(t):
+  for param in t.params:
+    pn = pname(param)
+    if not re.search("^[0-9]+$", pn):
+      return pn
+  return None
 
 # Return the name of the parameter following PARAM in template T.
 def find_following_param(t, param):
@@ -384,7 +385,7 @@ def append_param_to_chain(t, val, firstparam, parampref=None, before=None):
     parampref = "" if is_number else firstparam
   paramno = int(firstparam) - 1 if is_number else 0
   if is_number:
-    insert_before_param = find_first_param(t)
+    insert_before_param = find_first_named_param(t)
   else:
     insert_before_param = None
   changed = False
@@ -421,7 +422,7 @@ def set_param_chain(t, values, firstparam, parampref=None, before=None, preserve
     parampref = "" if is_number else firstparam
   paramno = int(firstparam) - 1 if is_number else 0
   if is_number:
-    insert_before_param = find_first_param(t)
+    insert_before_param = find_first_named_param(t)
   else:
     insert_before_param = None
   first = True
