@@ -1,7 +1,7 @@
 local export = {}
 -- [[Module:IPA/data]]
 
-local force_output = false -- for testing
+local force_cat = false -- for testing
 
 local m_data = mw.loadData("Module:IPA/data") -- [[Module:IPA/data]]
 local m_str_utils = require("Module:string utilities")
@@ -22,10 +22,10 @@ local function track(page)
 	return true
 end
 
-local function process_maybe_split_categories(split_output, prontext, categories, lang, errtext)
+local function process_maybe_split_categories(split_output, categories, prontext, lang, errtext)
 	if split_output ~= "raw" then
 		if categories[1] then
-			categories = require(utilities_module).format_categories(categories, lang, nil, nil, force_output)
+			categories = require(utilities_module).format_categories(categories, lang, nil, nil, force_cat)
 		else
 			categories = ""
 		end
@@ -72,6 +72,10 @@ function export.format_IPA_full(lang, items, err, separator, sortKey, no_count, 
 	local IPA_key, key_link, err_text, prefix, IPAs, categories
 	local hasKey = m_data.langs_with_infopages
 	local namespace = mw.title.getCurrentTitle().nsText
+
+	if not lang then
+		track("format-full-nolang")
+	end
 
 	if err then
 		err_text = '<span class="error">' .. err .. '</span>'
@@ -194,6 +198,10 @@ function export.format_IPA_multiple(lang, items, separator, no_count, split_outp
 	local categories = {}
 	separator = separator or ', '
 
+	if not lang then
+		track("format-multiple-nolang")
+	end
+
 	-- Format
 	if not items[1] then
 		if mw.title.getCurrentTitle().nsText == "Template" then
@@ -222,7 +230,15 @@ function export.format_IPA_multiple(lang, items, separator, no_count, split_outp
 
 		if item.q and item.q[1] or item.qq and item.qq[1] or item.qualifiers and item.qualifiers[1]
 			or item.a and item.a[1] or item.aa and item.aa[1] then
-			bit = require("Module:pron qualifier").format_qualifiers(item, bit)
+			bit = require("Module:pron qualifier").format_qualifiers {
+				lang = lang,
+				text = bit,
+				q = item.q,
+				qq = item.qq,
+				qualifiers = item.qualifiers,
+				a = item.a,
+				aa = item.aa,
+			}
 		end
 
 		if item.refs or item.note then
@@ -315,6 +331,10 @@ function export.format_IPA(lang, pron, split_output)
 	local err = {}
 	local categories = {}
 
+	if not lang then
+		track("format-nolang")
+	end
+
 	-- Remove wikilinks, so that wikilink brackets are not misinterpreted as
 	-- indicating phonemic transcription
 	local str_gsub = string.gsub
@@ -404,7 +424,6 @@ function export.format_IPA(lang, pron, split_output)
 	end
 
 	if result ~= "" then
-		mw.log(pron, result)
 		local namespace = mw.title.getCurrentTitle().namespace
 		local suggestions = {}
 		for k, v in pairs(m_symbols.invalid) do
