@@ -8,6 +8,7 @@ local m_str_utils = require("Module:string utilities")
 local m_symbols = mw.loadData("Module:IPA/data/symbols") -- [[Module:IPA/data/symbols]]
 local syllables_module = "Module:syllables"
 local utilities_module = "Module:utilities"
+local pron_qualifier_module = "Module:pron qualifier"
 local m_syllables -- [[Module:syllables]]; loaded below if needed
 
 local find = m_str_utils.find
@@ -45,8 +46,8 @@ end
 Format a line of one or more IPA pronunciations as {{tl|IPA}} would do it, i.e. with a preceding {"IPA:"} followed by
 the word {"key"} linking to an Appendix page describing the language's phonology, and with an added category
 {{cd|<var>lang</var> terms with IPA pronunciation}}. Other than the extra preceding text and category, this is identical
-to {format_IPA_multiple()}, and the considerations described there in the documentation apply here as well. Parameters
-accepted are:
+to {format_IPA_multiple()}, and the considerations described there in the documentation apply here as well. The
+preferred calling convention is to pass in a single parameter `data`, an object with the following fields:
 * `lang` is an object representing the language of the pronunciations, which is used when adding cleanup categories for
    pronunciations with invalid phonemes; for determining how many syllables the pronunciations have in them, in order to
    add a category such as [[:Category:Italian 2-syllable words]] (for certain languages only); for adding a category
@@ -56,7 +57,7 @@ accepted are:
 * `err`, if not {nil}, is a string containing an error message to use in place of the link to the language's phonology.
 * `separator`: the overall separator to use when separating formatted items. Defaults to {", "}. Except in the simplest
   cases, you should consider setting this to an empty string and using the per-item `separator` field in `items`.
-* `sortKey`: explicit sort key used for categories.
+* `sort_key`: explicit sort key used for categories.
 * `no_count`: Suppress adding a {#-syllable words} category such as [[:Category:Italian 2-syllable words]]. Note that
   only certain languages add such categories to begin with, because it depends on knowing how to count syllables in a
   given language, which depends on the phonology of the language. Also, this does not suppress the addition of cleanup
@@ -67,8 +68,34 @@ accepted are:
   the value {"raw"}, the categories are returned in list form, where the list elements are a combination of category
   strings and category objects of the form suitable for passing to {format_categories()} in [[Module:utilities]]. If
   `split_output` is any other value besides {nil}, the categories are returned as a pre-formatted concatenated string.
+* `q`: {nil} or a list of left qualifiers (as in {{tl|q}}) to display at the beginning, before the formatted
+  pronunciation and preceding {"IPA:"}.
+* `qq`: {nil} or a list of right qualifiers to display after all formatted pronunciations.
+* `a`: {nil} or a list of left accent qualifiers (as in {{tl|a}}) to display at the beginning, before the formatted
+  pronunciation and preceding {"IPA:"}.
+* `aa`: {nil} or a list of right accent qualifiers to display all formatted pronunciations.
+
+You can currently pass in all but `q`, `qq`, `a` and `aa` as separate parameters, although this will be going away.
 ]==]
-function export.format_IPA_full(lang, items, err, separator, sortKey, no_count, split_output)
+function export.format_IPA_full(data_or_lang, items, err, separator, sort_key, no_count, split_output)
+	local lang, q, qq, a, aa
+	if type(data_or_lang) == "table" and not data_or_lang.getCode then
+		-- new-style
+		lang = data_or_lang.lang
+		items = data_or_lang.items
+		err = data_or_lang.err
+		separator = data_or_lang.separator
+		sort_key = data_or_lang.sort_key
+		no_count = data_or_lang.no_count
+		split_output = data_or_lang.split_output
+		q = data_or_lang.q
+		qq = data_or_lang.qq
+		a = data_or_lang.a
+		aa = data_or_lang.aa
+	else
+		lang = data_or_lang
+	end
+
 	local IPA_key, key_link, err_text, prefix, IPAs, categories
 	local hasKey = m_data.langs_with_infopages
 	local namespace = mw.title.getCurrentTitle().nsText
@@ -97,11 +124,22 @@ function export.format_IPA_full(lang, items, err, separator, sortKey, no_count, 
 	if lang and (namespace == "" or namespace == "Reconstruction") then
 		table.insert(categories, {
 			cat = lang:getCanonicalName() .. " terms with IPA pronunciation",
-			sort_key = sortKey
+			sort_key = sort_key
 		})
 	end
 
-	return process_maybe_split_categories(split_output, categories, prefix .. IPAs, lang)
+	local prontext = prefix .. IPAs
+	if q and q[1] or qq and qq[1] or a and a[1] or aa and aa[1] then
+		prontext = require(pron_qualifier_module).format_qualifiers {
+			lang = lang,
+			text = prontext,
+			q = q,
+			qq = qq,
+			a = a,
+			aa = aa,
+		}
+	end
+	return process_maybe_split_categories(split_output, categories, prontext, lang)
 end
 
 local function determine_repr(pron)
@@ -167,9 +205,9 @@ Parameters accepted are:
      qualifiers;
 ** `q` or `qualifiers`: {nil} or a list of left qualifiers (as in {{tl|q}}) to display before the formatted
      pronunciation; note that `qualifiers` is deprecated;
-** `qq`: {nil} or a list of right qualifiers to display before the formatted pronunciation;
+** `qq`: {nil} or a list of right qualifiers to display after the formatted pronunciation;
 ** `a`: {nil} or a list of left accent qualifiers (as in {{tl|a}}) to display before the formatted pronunciation;
-** `aa`: {nil} or a list of right accent qualifiers to display before the formatted pronunciation;
+** `aa`: {nil} or a list of right accent qualifiers to after before the formatted pronunciation;
 ** `refs`: {nil} or a list of references or reference specs to add after the pronunciation and any posttext and
      qualifiers; the value of a list item is either a string containing the reference text (typically a call to a
 	 citation template such as {{tl|cite-book}}, or a template wrapping such a call), or an object with fields `text`
