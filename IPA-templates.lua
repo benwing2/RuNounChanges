@@ -88,19 +88,16 @@ function export.IPA(frame)
 		end
 	end
 
-	local retval = m_IPA.format_IPA_full(lang, items, nil, nil, args.sort, args.nocount)
-	if args.q.default or args.qq.default or args.a.default or args.aa.default then
-		return require(pron_qualifier_module).format_qualifiers {
-			lang = lang,
-			text = retval,
-			q = args.q.default and {args.q.default} or nil,
-			qq = args.qq.default and {args.qq.default} or nil,
-			a = split_on_comma(args.a.default),
-			aa = split_on_comma(args.aa.default),
-		}
-	else
-		return retval
-	end
+	return m_IPA.format_IPA_full {
+		lang = lang,
+		items = items,
+		sort_key = args.sort,
+		no_count = args.nocount,
+		q = args.q.default and {args.q.default} or nil,
+		qq = args.qq.default and {args.qq.default} or nil,
+		a = split_on_comma(args.a.default),
+		aa = split_on_comma(args.aa.default),
+	}
 end
 
 -- Used for [[Template:IPAchar]].
