@@ -594,7 +594,9 @@ def do_edit(page, index, func=None, null=False, save=False, verbose=False, diff=
 
         new, comment, has_changed = handle_process_page_retval(retval, page.text, pagemsg, verbose, diff)
         if has_changed:
-          page.text = new
+          def assign_changed_page():
+            page.text = new
+          try_repeatedly(assign_changed_page, errandpagemsg, "assign changed page to 'page.text'")
           if save:
             pagemsg("Saving with comment = %s" % comment)
             safe_page_save(page, comment, errandpagemsg)
@@ -1628,7 +1630,7 @@ def try_repeatedly(fun, errandpagemsg, operation="save", bad_value_ret=None, max
     except pywikibot.exceptions.TitleblacklistError as e:
       log_exception("Title is blacklisted", e, skipping=True)
       return bad_value_ret
-    except (pywikibot.exceptions.LockedPageError, pywikibot.exceptions.NoUsernameError) as e:
+    except (pywikibot.exceptions.LockedPageError, pywikibot.exceptions.NoUsernameError, pywikibot.exceptions.UnsupportedPageError) as e:
       log_exception("Page is protected", e, skipping=True)
       return bad_value_ret
     except pywikibot.exceptions.AbuseFilterDisallowedError as e:
