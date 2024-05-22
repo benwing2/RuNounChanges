@@ -136,7 +136,7 @@ def process_text_on_page(index, pagetitle, text):
           pagemsg("WARNING: No params: %s" % str(t))
           continue
         param1 = numbered_params[0]
-        if (args.skip_already_done and (param1 in blib.languages_byCode or param1 in blib.etym_languages_byCode) and
+        if (args.skip_already_done and param1 in blib.languages_byCode and
             len(numbered_params) > 1):
           pagemsg("Skipping likely already-done template: %s" % str(t))
           continue
