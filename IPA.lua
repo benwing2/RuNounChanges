@@ -477,7 +477,12 @@ function export.format_IPA(lang, pron, split_output)
 			end
 		end
 		result = gsub(result, "⁽[".. m_symbols.superscripts .. "]+⁾", "")
-		result = gsub(result, "[" .. m_symbols.valid .. "]", "")
+		local per_lang_valid
+		if lang then
+			per_lang_valid = m_symbols.per_lang_valid[lang:getCode()]
+		end
+		per_lang_valid = per_lang_valid or ""
+		result = gsub(result, "[" .. m_symbols.valid .. per_lang_valid .. "]", "")
 		if result ~= "" then
 			local category = "IPA pronunciations with invalid IPA characters"
 			if namespace ~= 0 and namespace ~= 118 then
