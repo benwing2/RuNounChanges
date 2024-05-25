@@ -114,7 +114,7 @@ def process_text_on_page(index, pagename, text):
 
 parser = blib.create_argparser("Split regional label data module", include_pagefile=True, include_stdin=True)
 parser.add_argument("--regional-data-module", help="File containing 'Module:labels/data/regional'", required=True)
-parser.add_argument("--categories", help="File containing categories.", required=True)
+parser.add_argument("--categories", help="File containing categories.")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
@@ -125,16 +125,17 @@ if regional_label_data is None:
   errandmsg("WARNING: Error parsing regional label data module '%s', stopping" % args.regional_data_module)
 else:
   langs_by_category_prefix = defaultdict(list)
-  category_prefixes = defaultdict(list)
-  for index, cat in blib.iter_items_from_file(args.categories, start, end):
-    cat = re.sub("^Category:", "", cat)
-    words = cat.split(" ")
-    for i in range(len(words) - 1, 0, -1):
-      lang_suffix = " ".join(words[i:])
-      if lang_suffix in blib.languages_byCanonicalName:
-        prefix = " ".join(words[:i])
-        langs_by_category_prefix[prefix].append(lang_suffix)
-        category_prefixes[cat].append((prefix, lang_suffix))
+  if args.categories:
+    category_prefixes = defaultdict(list)
+    for index, cat in blib.iter_items_from_file(args.categories, start, end):
+      cat = re.sub("^Category:", "", cat)
+      words = cat.split(" ")
+      for i in range(len(words) - 1, 0, -1):
+        lang_suffix = " ".join(words[i:])
+        if lang_suffix in blib.languages_byCanonicalName:
+          prefix = " ".join(words[:i])
+          langs_by_category_prefix[prefix].append(lang_suffix)
+          category_prefixes[cat].append((prefix, lang_suffix))
 
   regional_labels_by_lang = defaultdict(dict)
   regional_labelobjs_by_lang = defaultdict(list)
@@ -145,29 +146,34 @@ else:
   num_removed_labels = 0
   for labelobj in regional_label_data.labels_seen:
     if isinstance(labelobj, LabelData):
-      def canon_cat(cat):
-        if cat == "true":
-          return clean_label_module.ucfirst(labelobj.label)
-        else:
-          return cat[1:-1]
-      langs_for_label = set()
-      for regcat in labelobj.regional_categories.cats:
-        regcat = canon_cat(regcat)
-        pagemsg("For regional label '%s', regional category '%s', languages: %s" % (
-            labelobj.label, regcat, regcat not in langs_by_category_prefix and "NONE" or ", ".join(
-              "%s (%s)" % (blib.languages_byCanonicalName[lang]["code"], lang) for lang in
-              langs_by_category_prefix[regcat])))
-        for lang in langs_by_category_prefix[regcat]:
-          langs_for_label.add(blib.languages_byCanonicalName[lang]["code"])
-      for plaincat in labelobj.plain_categories.cats:
-        plaincat = canon_cat(plaincat)
-        pagemsg("For regional label '%s', plain category '%s', languages: %s" % (
-            labelobj.label, plaincat, plaincat not in category_prefixes and "NONE" or ", ".join(
-              "%s (%s=%s)" % (prefix, blib.languages_byCanonicalName[lang]["code"], lang) for prefix, lang in
-              category_prefixes[plaincat])))
-        for prefix, lang in category_prefixes[plaincat]:
-          langs_for_label.add(blib.languages_byCanonicalName[lang]["code"])
-      langs_for_label = sorted(list(langs_for_label))
+      if args.categories:
+        langs_for_label = set()
+        def canon_cat(cat):
+          if cat == "true":
+            return clean_label_module.ucfirst(labelobj.label)
+          else:
+            return cat[1:-1]
+        for regcat in labelobj.regional_categories.cats:
+          regcat = canon_cat(regcat)
+          pagemsg("For regional label '%s', regional category '%s', languages: %s" % (
+              labelobj.label, regcat, regcat not in langs_by_category_prefix and "NONE" or ", ".join(
+                "%s (%s)" % (blib.languages_byCanonicalName[lang]["code"], lang) for lang in
+                langs_by_category_prefix[regcat])))
+          for lang in langs_by_category_prefix[regcat]:
+            langs_for_label.add(blib.languages_byCanonicalName[lang]["code"])
+        for plaincat in labelobj.plain_categories.cats:
+          plaincat = canon_cat(plaincat)
+          pagemsg("For regional label '%s', plain category '%s', languages: %s" % (
+              labelobj.label, plaincat, plaincat not in category_prefixes and "NONE" or ", ".join(
+                "%s (%s=%s)" % (prefix, blib.languages_byCanonicalName[lang]["code"], lang) for prefix, lang in
+                category_prefixes[plaincat])))
+          for prefix, lang in category_prefixes[plaincat]:
+            langs_for_label.add(blib.languages_byCanonicalName[lang]["code"])
+        langs_for_label = sorted(list(langs_for_label))
+      elif hasattr(labelobj.fields, "langs"):
+        langs_for_label = labelobj.fields.langs
+      else:
+        pagemsg("WARNING: No langs specified for regional label '%s'" % labelobj.label)
       keep = False
       if not langs_for_label:
         pagemsg("WARNING: No languages for regional label '%s'" % labelobj.label)
