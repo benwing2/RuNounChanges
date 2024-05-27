@@ -2914,13 +2914,6 @@ labels["unhamzated"] = {
 	display = "[[unhamzated]]",
 }
 
--- Regional alias 'Gulf' of label 'afb' duplicated in lang-specific data (existing label is canonical), adding commented-out
--- labels["afb"] = {
--- 	aliases = {"Gulf", "Gulfie", "Khaleeji"},
--- 	Wikipedia = "Gulf Arabic",
--- 	display = "Gulf Arabic",
--- }
-
 return require("Module:labels").finalize_data(labels)
 -------- end text --------
 Page 15 Module:labels/data/lang/arc: Skipped, no changes
@@ -3017,16 +3010,14 @@ Page 17 Module:labels/data/lang/arz: Would save with comment = move 1 label(s) (
 Page 17 Module:labels/data/lang/arz: -------- begin text --------
 local labels = {}
 
+labels["Cairene"] = {
+	Wikipedia = "Egyptian Arabic",
+}
+
 labels["Upper Egypt"] = {
 	aliases = {"Saidi", "Saʽidi", "Sa'idi", "Upper Egyptian"},
 	Wikipedia = "Saʽidi Arabic",
 	regional_categories = "Upper",
-}
-
-labels["ar-Cairene"] = {
-	aliases = {"Cairene"},
-	Wikipedia = "Egyptian Arabic",
-	display = "Cairene",
 }
 
 return require("Module:labels").finalize_data(labels)
@@ -3941,7 +3932,7 @@ labels["Kolkata"] = {
 
 labels["Vanga"] = {
 	aliases = {"Vaṅga", "Vangiya Bengali"},
-	Wikipedia = "East Bengali dialect",
+	Wikipedia = "Eastern Bengali",
 	regional_categories = "Vangiya",
 }
 
@@ -3980,26 +3971,6 @@ labels["Manbhum"] = {
 	regional_categories = "Manbhumi",
 }
 
--- Regional label 'Dhaka' duplicated in lang-specific data (existing label is canonical), adding commented-out
--- labels["Dhaka"] = {
--- 	Wikipedia = true,
--- }
-
--- Regional label 'Kolkata' duplicated in lang-specific data (existing label is canonical), adding commented-out
--- labels["Kolkata"] = {
--- 	Wikipedia = true,
--- }
-
--- Regional label 'Rarh' duplicated in lang-specific data (existing label is canonical), adding commented-out
--- labels["Rarh"] = {
--- 	Wikipedia = "West Bengali dialect",
--- }
-
--- Regional label 'Vanga' duplicated in lang-specific data (existing label is canonical), adding commented-out
--- labels["Vanga"] = {
--- 	Wikipedia = "Eastern Bengali",
--- }
-
 return require("Module:labels").finalize_data(labels)
 -------- end text --------
 Page 25 Module:labels/data/lang/br: WARNING: Regional label 'Gwenedeg' duplicated in lang-specific data (existing label is alias for 'Gwened'), adding commented-out
@@ -4028,13 +3999,6 @@ labels["Gwened"] = {
 	Wikipedia = "Gwenedeg",
 	regional_categories = "Gwenedeg",
 }
-
--- Regional label 'Gwenedeg' duplicated in lang-specific data (existing label is alias for 'Gwened'), adding commented-out; Regional alias 'Vannetais' of label 'Gwenedeg' duplicated in lang-specific data (existing label is alias for 'Gwened'), adding commented-out
--- labels["Gwenedeg"] = {
--- 	aliases = {"Vannetais"},
--- 	Wikipedia = true,
--- 	display = "Gwened",
--- }
 
 return require("Module:labels").finalize_data(labels)
 -------- end text --------
@@ -4184,26 +4148,6 @@ labels["pre-2016"] = {
 	display = "[[Catalan orthography|pre-2016 spelling]]",
 }
 
--- Regional alias 'Balearic' of label 'Balearic Catalan' duplicated in lang-specific data (existing label is canonical), adding commented-out
--- labels["Balearic Catalan"] = {
--- 	aliases = {"Balearic"},
--- 	Wikipedia = "Balearic dialect",
--- 	display = "Balearic",
--- }
-
--- Regional label 'Central Catalan' duplicated in lang-specific data (existing label is alias for 'Central'), adding commented-out
--- labels["Central Catalan"] = {
--- 	Wikipedia = true,
--- 	display = "Central",
--- }
-
--- Regional label 'Valencia' duplicated in lang-specific data (existing label is canonical), adding commented-out; Regional alias 'Valencian' of label 'Valencia' duplicated in lang-specific data (existing label is alias for 'Valencia'), adding commented-out
--- labels["Valencia"] = {
--- 	aliases = {"Valencian"},
--- 	Wikipedia = "Valencian",
--- 	display = "Valencian",
--- }
-
 return require("Module:labels").finalize_data(labels)
 -------- end text --------
 Page 28 Module:labels/data/lang/car: Skipped, no changes
@@ -4250,12 +4194,6 @@ Page 29 Module:labels/data/lang/ceb: Diff:
  	regional_categories = true,
  }
  
-+-- Regional label 'Bohol' duplicated in lang-specific data (existing label is canonical), adding commented-out; Regional alias 'Binol-anon' of label 'Bohol' duplicated in lang-specific data (existing label is alias for 'Bohol'), adding commented-out; Regional alias 'Boholano' of label 'Bohol' duplicated in lang-specific data (existing label is alias for 'Bohol'), adding commented-out
-+-- labels["Bohol"] = {
-+-- 	aliases = {"Binol-anon", "Bohol Island", "Bohol Province", "Boholano"},
-+-- 	Wikipedia = "Boholano dialect",
-+-- }
-+
 +-- Regional alias 'Sialo' of label 'General Cebuano' duplicated in lang-specific data (existing label is canonical), adding commented-out
 +-- labels["General Cebuano"] = {
 +-- 	aliases = {"Carcar-Dalaguete", "GCeb", "Sialo", "Standard Cebuano"},
@@ -4329,7 +4267,7 @@ labels["Negros"] = {
 
 labels["Sialo"] = {
 	aliases = {"Carcar", "Dalaguete"},
-	Wikipedia = true,
+ 	Wikipedia = "Carcar",
 	regional_categories = true,
 }
 
@@ -4339,35 +4277,16 @@ labels["Southern Leyte"] = {
 	regional_categories = true,
 }
 
+labels["Standard Cebuano"] = {
+	aliases = {"General Cebuano"},
+ 	Wikipedia = "Cebuano language#Dialects",
+}
+
 labels["Metro Cebu"] = {
-	aliases = {"Urban Cebu", "Urban Cebuano"},
+	aliases = {"Cebu City", "Urban Cebu", "Urban Cebuano"},
 	Wikipedia = true,
 	regional_categories = true,
 }
-
--- Regional label 'Bohol' duplicated in lang-specific data (existing label is canonical), adding commented-out; Regional alias 'Binol-anon' of label 'Bohol' duplicated in lang-specific data (existing label is alias for 'Bohol'), adding commented-out; Regional alias 'Boholano' of label 'Bohol' duplicated in lang-specific data (existing label is alias for 'Bohol'), adding commented-out
--- labels["Bohol"] = {
--- 	aliases = {"Binol-anon", "Bohol Island", "Bohol Province", "Boholano"},
--- 	Wikipedia = "Boholano dialect",
--- }
-
--- Regional alias 'Sialo' of label 'General Cebuano' duplicated in lang-specific data (existing label is canonical), adding commented-out
--- labels["General Cebuano"] = {
--- 	aliases = {"Carcar-Dalaguete", "GCeb", "Sialo", "Standard Cebuano"},
--- 	Wikipedia = "Cebuano language#Dialects",
--- }
-
--- Regional label 'Metro Cebu' duplicated in lang-specific data (existing label is canonical), adding commented-out; Regional alias 'Urban Cebuano' of label 'Metro Cebu' duplicated in lang-specific data (existing label is alias for 'Metro Cebu'), adding commented-out
--- labels["Metro Cebu"] = {
--- 	aliases = {"Cebu City", "Urban Cebuano"},
--- 	Wikipedia = true,
--- }
-
--- Regional label 'Southern Leyte' duplicated in lang-specific data (existing label is canonical), adding commented-out; Regional alias 'Kana Habagatan' of label 'Southern Leyte' duplicated in lang-specific data (existing label is alias for 'Southern Leyte'), adding commented-out
--- labels["Southern Leyte"] = {
--- 	aliases = {"Kana Habagatan"},
--- 	Wikipedia = true,
--- }
 
 return require("Module:labels").finalize_data(labels)
 -------- end text --------
@@ -4662,28 +4581,16 @@ Page 43 Module:labels/data/lang/cy: -------- begin text --------
 local labels = {}
 
 labels["North Wales"] = {
-	Wikipedia = true,
+	aliases = {"cy-N"},
+	Wikipedia = {"Welsh language#Dialects", true},
 	regional_categories = true,
 }
 
 labels["South Wales"] = {
-	Wikipedia = true,
+	aliases = {"cy-S"},
+	Wikipedia = {"Welsh language#Dialects", true},
 	regional_categories = true,
 }
-
--- Regional alias 'North Wales' of label 'cy-N' duplicated in lang-specific data (existing label is canonical), adding commented-out
--- labels["cy-N"] = {
--- 	aliases = {"North Wales", "cy-g"},
--- 	Wikipedia = "Welsh language#Dialects",
--- 	display = "North Wales",
--- }
-
--- Regional alias 'South Wales' of label 'cy-S' duplicated in lang-specific data (existing label is canonical), adding commented-out
--- labels["cy-S"] = {
--- 	aliases = {"South Wales", "cy-h"},
--- 	Wikipedia = "Welsh language#Dialects",
--- 	display = "South Wales",
--- }
 
 return require("Module:labels").finalize_data(labels)
 -------- end text --------
@@ -5232,27 +5139,6 @@ labels["West Prussia"] = {
 	regional_categories = "Prussian",
 }
 
--- Regional label 'central Germany' duplicated in lang-specific data (existing label is alias for 'Central Germany'), adding commented-out; Regional alias 'Central German' of label 'central Germany' duplicated in lang-specific data (existing label is alias for 'Central Germany'), adding commented-out; Regional alias 'Central Germany' of label 'central Germany' duplicated in lang-specific data (existing label is canonical), adding commented-out; Regional alias 'central German' of label 'central Germany' duplicated in lang-specific data (existing label is alias for 'Central Germany'), adding commented-out
--- labels["central Germany"] = {
--- 	aliases = {"Central German", "Central Germany", "central German"},
--- }
-
--- Regional label 'northern and central Germany' duplicated in lang-specific data (existing label is alias for 'Northern and Central Germany'), adding commented-out; Regional alias 'North and Central German' of label 'northern and central Germany' duplicated in lang-specific data (existing label is alias for 'Northern and Central Germany'), adding commented-out; Regional alias 'North and Central Germany' of label 'northern and central Germany' duplicated in lang-specific data (existing label is alias for 'Northern and Central Germany'), adding commented-out; Regional alias 'Northern and Central German' of label 'northern and central Germany' duplicated in lang-specific data (existing label is alias for 'Northern and Central Germany'), adding commented-out; Regional alias 'Northern and Central Germany' of label 'northern and central Germany' duplicated in lang-specific data (existing label is canonical), adding commented-out; Regional alias 'north and central German' of label 'northern and central Germany' duplicated in lang-specific data (existing label is alias for 'Northern and Central Germany'), adding commented-out; Regional alias 'north and central Germany' of label 'northern and central Germany' duplicated in lang-specific data (existing label is alias for 'Northern and Central Germany'), adding commented-out; Regional alias 'northern and central German' of label 'northern and central Germany' duplicated in lang-specific data (existing label is alias for 'Northern and Central Germany'), adding commented-out
--- labels["northern and central Germany"] = {
--- 	aliases = {"North and Central German", "North and Central Germany", "Northern and Central German", "Northern and Central Germany", "north and central German", "north and central Germany", "northern and central German"},
--- 	display = "northern Germany, central Germany",
--- }
-
--- Regional label 'northern Germany' duplicated in lang-specific data (existing label is alias for 'Northern Germany'), adding commented-out; Regional alias 'North German' of label 'northern Germany' duplicated in lang-specific data (existing label is alias for 'Northern Germany'), adding commented-out; Regional alias 'North Germany' of label 'northern Germany' duplicated in lang-specific data (existing label is alias for 'Northern Germany'), adding commented-out; Regional alias 'Northern German' of label 'northern Germany' duplicated in lang-specific data (existing label is alias for 'Northern Germany'), adding commented-out; Regional alias 'Northern Germany' of label 'northern Germany' duplicated in lang-specific data (existing label is canonical), adding commented-out; Regional alias 'north German' of label 'northern Germany' duplicated in lang-specific data (existing label is alias for 'Northern Germany'), adding commented-out; Regional alias 'north Germany' of label 'northern Germany' duplicated in lang-specific data (existing label is alias for 'Northern Germany'), adding commented-out; Regional alias 'northern German' of label 'northern Germany' duplicated in lang-specific data (existing label is alias for 'Northern Germany'), adding commented-out
--- labels["northern Germany"] = {
--- 	aliases = {"North German", "North Germany", "Northern German", "Northern Germany", "north German", "north Germany", "northern German"},
--- }
-
--- Regional label 'southern Germany' duplicated in lang-specific data (existing label is alias for 'Southern Germany'), adding commented-out; Regional alias 'South German' of label 'southern Germany' duplicated in lang-specific data (existing label is alias for 'Southern Germany'), adding commented-out; Regional alias 'South Germany' of label 'southern Germany' duplicated in lang-specific data (existing label is alias for 'Southern Germany'), adding commented-out; Regional alias 'Southern German' of label 'southern Germany' duplicated in lang-specific data (existing label is alias for 'Southern Germany'), adding commented-out; Regional alias 'Southern Germany' of label 'southern Germany' duplicated in lang-specific data (existing label is canonical), adding commented-out; Regional alias 'south German' of label 'southern Germany' duplicated in lang-specific data (existing label is alias for 'Southern Germany'), adding commented-out; Regional alias 'south Germany' of label 'southern Germany' duplicated in lang-specific data (existing label is alias for 'Southern Germany'), adding commented-out; Regional alias 'southern German' of label 'southern Germany' duplicated in lang-specific data (existing label is alias for 'Southern Germany'), adding commented-out
--- labels["southern Germany"] = {
--- 	aliases = {"South German", "South Germany", "Southern German", "Southern Germany", "south German", "south Germany", "southern German"},
--- }
-
 return require("Module:labels").finalize_data(labels)
 -------- end text --------
 Page 47 Module:labels/data/lang/dlm: Skipped, no changes
@@ -5403,12 +5289,14 @@ local labels = {}
 
 labels["Old Egyptian"] = {
 	Wikipedia = "Egyptian language#Old Egyptian",
+	accent_display = "reconstructed Old Egyptian",
 	plain_categories = true,
 }
 
 labels["Middle Egyptian"] = {
 	aliases = {"Classical Egyptian"},
 	Wikipedia = "Egyptian language#Middle Egyptian",
+	accent_display = "reconstructed Middle Egyptian",
 	plain_categories = true,
 }
 
@@ -5418,39 +5306,22 @@ labels["Neo-Middle Egyptian"] = {
 	plain_categories = true,
 }
 
+labels["Medio-Late Egyptian"] = {
+	-- FIXME, is this the same as Neo-Middle Egyptian?
+	Wikipedia = "Egyptian language#Late Egyptian",
+	accent_display = "reconstructed Medio-Late Egyptian",
+}
+
 labels["Late Egyptian"] = {
 	Wikipedia = "Egyptian language#Late Egyptian",
+	accent_display = "reconstructed Late Egyptian",
 	plain_categories = true,
 }
 
-labels["Egyptological"] = {
-	aliases = {"modern Egyptological"},
+labels["modern Egyptological"] = {
+	aliases = {"Egyptological"},
 	Wikipedia = "Egyptian language#Egyptological pronunciation",
-	display = "modern Egyptological",
 }
-
--- Regional label 'Late Egyptian' duplicated in lang-specific data (existing label is canonical), adding commented-out
--- labels["Late Egyptian"] = {
--- 	Wikipedia = "Late Egyptian language",
--- 	display = "reconstructed Late Egyptian",
--- }
-
-labels["Medio-Late Egyptian"] = {
-	Wikipedia = "Late Egyptian language",
-	display = "reconstructed Medio-Late Egyptian",
-}
-
--- Regional label 'Middle Egyptian' duplicated in lang-specific data (existing label is canonical), adding commented-out
--- labels["Middle Egyptian"] = {
--- 	Wikipedia = "Egyptian language#Middle Egyptian",
--- 	display = "reconstructed Middle Egyptian",
--- }
-
--- Regional label 'Old Egyptian' duplicated in lang-specific data (existing label is canonical), adding commented-out
--- labels["Old Egyptian"] = {
--- 	Wikipedia = "Egyptian language#Old Egyptian",
--- 	display = "reconstructed Old Egyptian",
--- }
 
 return require("Module:labels").finalize_data(labels)
 -------- end text --------
@@ -5921,7 +5792,8 @@ labels["North America"] = {
 ------------- Canada -------------
 
 labels["Canada"] = {
-	aliases = {"Canadian", "Canadian English"},
+	-- FIXME: Remove or convert uses of this label with French entries.
+	aliases = {"CA", "Canadian", "Canadian English"},
 	Wikipedia = "Canadian English",
 	regional_categories = "Canadian",
 	parent = "rawposcat:North American English,Commonwealth",
@@ -6063,7 +5935,7 @@ labels["US"] = {
 labels["African-American Vernacular"] = {
 	def = "the variety of [[English]] spoken, especially in urban communities, by most working-class and some middle-class [[African-American]]s",
 	addl = "It is a [[sociolect]] with significantly different grammatical characteristics from {{w|Standard English}}, especially in {{w|tense-aspect}} and [[negation]] constructions. Many African-American communities maintain [[diglossia]] between African-American Vernacular English (AAVE) and Standard English.",
-	aliases = {"AAVE", "African American Vernacular English", "African-American Vernacular English", "BVE"},
+	aliases = {"AAVE", "African American Vernacular", "African American Vernacular English", "African-American Vernacular English", "BVE"},
 	Wikipedia = "African-American Vernacular English",
 	regional_categories = true,
 	parent = "African-American",
@@ -6489,8 +6361,10 @@ labels["Australian Aboriginal"] = {
 }
 
 labels["Australia"] = {
-	aliases = {"Australian", "AU"},
+	aliases = {"Australian", "AU", "AuE", "Aus", "AusE", "General Australian"},
 	Wikipedia = "Australian English",
+ 	accent_Wikipedia = "Australian English phonology",
+ 	accent_display = "General Australian",
 	regional_categories = "Australian",
 	parent = "Oceania,Commonwealth",
 }
@@ -6512,6 +6386,7 @@ labels["New South Wales"] = {
 labels["New Zealand"] = {
 	aliases = {"NZ"},
 	Wikipedia = "New Zealand English",
+	accent_Wikipedia = "New Zealand English phonology",
 	regional_categories = true,
 	parent = "Oceania,Commonwealth",
 }
@@ -6575,7 +6450,7 @@ labels["Dublin"] = {
 }
 
 labels["Ireland"] = {
-	aliases = {"Irish"},
+	aliases = {"IE", "Irish"},
 	Wikipedia = "Hiberno-English",
 	regional_categories = "Irish",
 	parent = "Europe",
@@ -6874,7 +6749,7 @@ labels["Mid-Ulster"] = {
 
 labels["Midlands"] = {
 	region = "the [[Midlands]] of [[England]]",
-	aliases = {"South Midlands"},
+	aliases = {"English Midlands", "South Midlands"},
 	Wikipedia = "Midlands English",
 	regional_categories = true,
 	parent = "England",
@@ -7500,7 +7375,7 @@ labels["Rwanda"] = {
 }
 
 labels["Singapore"] = {
-	aliases = {"Singaporean"},
+	aliases = {"SG", "Singaporean"},
 	Wikipedia = "Singapore English",
 	regional_categories = true,
 	parent = "Southeast Asia,Commonwealth",
@@ -7523,6 +7398,8 @@ labels["Solomon Islands"] = {
 labels["South Africa"] = {
 	aliases = {"South African", "South African English", "ZA"},
 	Wikipedia = "South African English",
+	accent_Wikipedia = "South African English phonology",
+	accent_display = "General South African",
 	regional_categories = "South African",
 	parent = "Africa,Commonwealth",
 }
@@ -7775,36 +7652,12 @@ labels["attributively"] = {
 	display = "[[Appendix:English nouns#Attributive|attributively]]",
 }
 
--- Regional label 'AAVE' duplicated in lang-specific data (existing label is alias for 'African-American Vernacular'), adding commented-out; Regional alias 'African American Vernacular English' of label 'AAVE' duplicated in lang-specific data (existing label is alias for 'African-American Vernacular'), adding commented-out; Regional alias 'African-American Vernacular' of label 'AAVE' duplicated in lang-specific data (existing label is canonical), adding commented-out; Regional alias 'African-American Vernacular English' of label 'AAVE' duplicated in lang-specific data (existing label is alias for 'African-American Vernacular'), adding commented-out
--- labels["AAVE"] = {
--- 	aliases = {"African American Vernacular", "African American Vernacular English", "African-American Vernacular", "African-American Vernacular English"},
--- 	Wikipedia = "African American Vernacular English",
--- }
+------------------------------------ former accent qualifiers ------------------------------------
 
 labels["Anglicised"] = {
 	aliases = {"Anglicized"},
 	Wikipedia = "Anglicisation#Anglicisation of non-English-language vocabulary and names",
 }
-
--- Regional label 'Australia' duplicated in lang-specific data (existing label is canonical), adding commented-out; Regional alias 'AU' of label 'Australia' duplicated in lang-specific data (existing label is alias for 'Australia'), adding commented-out
--- labels["Australia"] = {
--- 	aliases = {"AU", "AuE", "Aus", "AusE", "GenAus", "General Australian"},
--- 	Wikipedia = "Australian English phonology",
--- 	display = "General Australian",
--- }
-
--- Regional label 'Boston' duplicated in lang-specific data (existing label is canonical), adding commented-out
--- labels["Boston"] = {
--- 	aliases = {"Bos"},
--- 	Wikipedia = "Boston English",
--- }
-
--- Regional label 'Canada' duplicated in lang-specific data (existing label is canonical), adding commented-out; Regional alias 'Canadian' of label 'Canada' duplicated in lang-specific data (existing label is alias for 'Canada'), adding commented-out
--- labels["Canada"] = {
--- 	-- FIXME: Remove or convert uses of this label with French entries.
--- 	aliases = {"CA", "Canadian"},
--- 	Wikipedia = "Canadian English",
--- }
 
 labels["Canadian Shift"] = {
 	aliases = {"Canadian Vowel Shift", "Canadian shift", "Canadian vowel shift"},
@@ -7836,13 +7689,6 @@ labels["DE"] = {
 	display = "Dublin English",
 }
 
--- Regional alias 'Pakistan' of label 'en-PK' duplicated in lang-specific data (existing label is canonical), adding commented-out
--- labels["en-PK"] = {
--- 	aliases = {"PK", "PakE", "Pakistan", "PkE", "pk"},
--- 	Wikipedia = "Pakistani English",
--- 	display = "Pakistani English",
--- }
-
 labels["Estuary English"] = {
 	Wikipedia = true,
 }
@@ -7857,17 +7703,6 @@ labels["GenAm"] = {
 	Wikipedia = "General American English",
 	display = "General American",
 }
-
--- Regional label 'Geordie' duplicated in lang-specific data (existing label is canonical), adding commented-out
--- labels["Geordie"] = {
--- 	Wikipedia = true,
--- }
-
--- Regional label 'Hong Kong' duplicated in lang-specific data (existing label is canonical), adding commented-out; Regional alias 'HK' of label 'Hong Kong' duplicated in lang-specific data (existing label is alias for 'Hong Kong'), adding commented-out
--- labels["Hong Kong"] = {
--- 	aliases = {"HK"},
--- 	Wikipedia = "Hong Kong English",
--- }
 
 labels["horse-hoarse"] = {
 	Wikipedia = "horse–hoarse merger",
@@ -7889,20 +7724,9 @@ labels["intrusive r"] = {
 	Wikipedia = "Intrusive r",
 }
 
--- Regional label 'Ireland' duplicated in lang-specific data (existing label is canonical), adding commented-out
--- labels["Ireland"] = {
--- 	aliases = {"HE", "IE"},
--- 	Wikipedia = "Hiberno-English",
--- }
-
 labels["Latinate"] = {
 	Wikipedia = "Latin#Phonology",
 }
-
--- Regional label 'Malaysia' duplicated in lang-specific data (existing label is canonical), adding commented-out
--- labels["Malaysia"] = {
--- 	Wikipedia = "Malaysian English",
--- }
 
 labels["Mary-marry-merry"] = {
 	aliases = {"Mmmm"},
@@ -7910,47 +7734,10 @@ labels["Mary-marry-merry"] = {
 	display = "''Mary''–''marry''–''merry'' merger",
 }
 
--- Regional label 'Midland US' duplicated in lang-specific data (existing label is canonical), adding commented-out
--- labels["Midland US"] = {
--- 	aliases = {"Midland American", "Midland American English", "Midland US English"},
--- 	Wikipedia = "Midland American English",
--- }
-
--- Regional label 'Midwestern US' duplicated in lang-specific data (existing label is canonical), adding commented-out; Regional alias 'Midwest US' of label 'Midwestern US' duplicated in lang-specific data (existing label is alias for 'Midwestern US'), adding commented-out
--- labels["Midwestern US"] = {
--- 	aliases = {"Midwest US", "Midwest US English", "Midwestern US English"},
--- 	Wikipedia = "Midwestern United States#Linguistic characteristics",
--- }
-
--- Regional label 'MLE' duplicated in lang-specific data (existing label is alias for 'Multicultural London English'), adding commented-out; Regional alias 'Multicultural London English' of label 'MLE' duplicated in lang-specific data (existing label is canonical), adding commented-out
--- labels["MLE"] = {
--- 	aliases = {"Multicultural London English"},
--- 	Wikipedia = "Multicultural London English",
--- }
-
--- Regional label 'MTE' duplicated in lang-specific data (existing label is alias for 'Multicultural Toronto English'), adding commented-out; Regional alias 'Multicultural Toronto English' of label 'MTE' duplicated in lang-specific data (existing label is canonical), adding commented-out
--- labels["MTE"] = {
--- 	aliases = {"GTE", "Greater Toronto English", "Multicultural Toronto English"},
--- 	Wikipedia = "Multicultural Toronto English",
--- }
-
 labels["near-square"] = {
 	Wikipedia = "near-square merger",
 	display = "''near''–''square'' merger",
 }
-
--- Regional label 'New York' duplicated in lang-specific data (existing label is canonical), adding commented-out; Regional alias 'NY' of label 'New York' duplicated in lang-specific data (existing label is alias for 'New York'), adding commented-out; Regional alias 'NYC' of label 'New York' duplicated in lang-specific data (existing label is alias for 'New York City'), adding commented-out; Regional alias 'New York City' of label 'New York' duplicated in lang-specific data (existing label is canonical), adding commented-out
--- labels["New York"] = {
--- 	aliases = {"NY", "NYC", "New York City"},
--- 	Wikipedia = "New York accent",
--- 	display = "NYC",
--- }
-
--- Regional label 'New Zealand' duplicated in lang-specific data (existing label is canonical), adding commented-out; Regional alias 'NZ' of label 'New Zealand' duplicated in lang-specific data (existing label is alias for 'New Zealand'), adding commented-out
--- labels["New Zealand"] = {
--- 	aliases = {"GNZ", "General New Zealand", "NZ"},
--- 	Wikipedia = "New Zealand English phonology",
--- }
 
 labels["non-cure-force"] = {
 	aliases = {"non-pour-poor"},
@@ -7974,18 +7761,6 @@ labels["non-weak vowel"] = {
 	display = "weak vowel distinction",
 }
 
--- Regional label 'Northern England' duplicated in lang-specific data (existing label is canonical), adding commented-out; Regional alias 'North England' of label 'Northern England' duplicated in lang-specific data (existing label is alias for 'Northern England'), adding commented-out
--- labels["Northern England"] = {
--- 	aliases = {"North England"},
--- 	Wikipedia = "English language in Northern England",
--- }
-
--- Regional label 'Philippine' duplicated in lang-specific data (existing label is alias for 'Philippines'), adding commented-out; Regional alias 'Philippines' of label 'Philippine' duplicated in lang-specific data (existing label is canonical), adding commented-out
--- labels["Philippine"] = {
--- 	aliases = {"Philippines"},
--- 	Wikipedia = "Philippine English",
--- }
-
 labels["pin-pen"] = {
 	aliases = {"pen-pin"},
 	Wikipedia = "pin–pen merger",
@@ -8001,48 +7776,11 @@ labels["rhotic"] = {
 	Wikipedia = "Rhotic and non-rhotic accents",
 }
 
-labels["Rioplatense"] = {
-	aliases = {"Argentina"},
-	Wikipedia = "Rioplatense Spanish",
-}
-
-labels["RP"] = {
+labels["Received Pronunciation"] = {
 	-- FIXME: Remove or convert uses of this label with Translingual entries.
-	aliases = {"RS", "Received Pronunciation", "Received Standard"},
-	Wikipedia = "Received Pronunciation",
-	display = "Received Pronunciation",
+	aliases = {"RP"},
+	Wikipedia = true,
 }
-
--- Regional label 'Scotland' duplicated in lang-specific data (existing label is canonical), adding commented-out
--- labels["Scotland"] = {
--- 	Wikipedia = "Scottish English",
--- }
-
--- Regional label 'Singapore' duplicated in lang-specific data (existing label is canonical), adding commented-out
--- labels["Singapore"] = {
--- 	aliases = {"SG"},
--- 	Wikipedia = "Singapore English",
--- }
-
--- Regional label 'South Africa' duplicated in lang-specific data (existing label is canonical), adding commented-out
--- labels["South Africa"] = {
--- 	aliases = {"GSAE", "GenSAE", "General South African", "SAE"},
--- 	Wikipedia = "South African English phonology",
--- 	display = "General South African",
--- }
-
--- Regional label 'Southern American English' duplicated in lang-specific data (existing label is alias for 'Southern US'), adding commented-out; Regional alias 'Southern US' of label 'Southern American English' duplicated in lang-specific data (existing label is canonical), adding commented-out; Regional alias 'US South' of label 'Southern American English' duplicated in lang-specific data (existing label is alias for 'Southern US'), adding commented-out
--- labels["Southern American English"] = {
--- 	aliases = {"Southern U.S. English", "Southern US", "Southern US English", "US South"},
--- 	Wikipedia = true,
--- }
-
--- Regional label 'St. Louis' duplicated in lang-specific data (existing label is canonical), adding commented-out
--- labels["St. Louis"] = {
--- 	aliases = {"STL"},
--- 	Wikipedia = "North American regional phonology#St. Louis and vicinity",
--- 	display = "St. Louis (Missouri)",
--- }
 
 labels["Standard Southern British English"] = {
 	aliases = {"SSB", "SSBE", "Standard Southern British"},
@@ -8059,12 +7797,6 @@ labels["t-glottalization"] = {
 labels["th-fronting"] = {
 	Wikipedia = true,
 }
-
--- Regional label 'Wales' duplicated in lang-specific data (existing label is canonical), adding commented-out; Regional alias 'Welsh' of label 'Wales' duplicated in lang-specific data (existing label is alias for 'Wales'), adding commented-out
--- labels["Wales"] = {
--- 	aliases = {"Welsh"},
--- 	Wikipedia = "Welsh English",
--- }
 
 labels["weak vowel"] = {
 	aliases = {"weak vowel merger"},
@@ -8685,22 +8417,12 @@ labels["pre-1815"] = {
 	Wikipedia = "Spanish orthography",
 }
 
--- Regional alias 'Spain' of label 'Castilian' duplicated in lang-specific data (existing label is canonical), adding commented-out
--- labels["Castilian"] = {
--- 	aliases = {"Spain"},
--- 	Wikipedia = "Castilian Spanish",
--- }
+------------------------------------ former accent qualifiers ------------------------------------
 
 labels["ceceo"] = {
 	Wikipedia = true,
 	display = "''ceceo'' merger",
 }
-
--- Regional label 'Chilean' duplicated in lang-specific data (existing label is alias for 'Chile'), adding commented-out; Regional alias 'Chile' of label 'Chilean' duplicated in lang-specific data (existing label is canonical), adding commented-out
--- labels["Chilean"] = {
--- 	aliases = {"Chile"},
--- 	Wikipedia = "Chilean Spanish",
--- }
 
 labels["distinción"] = {
 	aliases = {"distincion"},
@@ -8708,27 +8430,10 @@ labels["distinción"] = {
 	display = "''z''-''s'' distinction",
 }
 
--- Regional label 'Ecuadorian' duplicated in lang-specific data (existing label is alias for 'Ecuador'), adding commented-out; Regional alias 'Ecuador' of label 'Ecuadorian' duplicated in lang-specific data (existing label is canonical), adding commented-out
--- labels["Ecuadorian"] = {
--- 	aliases = {"Ecuador"},
--- 	Wikipedia = "Ecuadorian Spanish",
--- }
-
-labels["LAm"] = {
-	Wikipedia = "Spanish language in the Americas",
-	display = "Latin American",
-}
-
 labels["lleísmo"] = {
 	Wikipedia = "Yeísmo",
 	display = "''ll''-''y'' distinction",
 }
-
--- Regional label 'Peruvian' duplicated in lang-specific data (existing label is alias for 'Peru'), adding commented-out; Regional alias 'Peru' of label 'Peruvian' duplicated in lang-specific data (existing label is canonical), adding commented-out
--- labels["Peruvian"] = {
--- 	aliases = {"Peru"},
--- 	Wikipedia = "Peruvian Spanish",
--- }
 
 labels["seseo"] = {
 	Wikipedia = true,
@@ -8871,12 +8576,8 @@ labels["Southern"] = {
 }
 
 labels["Standard"] = {
+	aliases = {"Standard Basque"},
 	Wikipedia = "Standard Basque",
-}
-
-labels["Standard Basque"] = {
-	Wikipedia = true,
-	display = "standard",
 }
 
 return require("Module:labels").finalize_data(labels)
@@ -9054,7 +8755,7 @@ local labels = {}
 
 labels["Dari"] = {
 	aliases = {"prs"},
-	Wikipedia = "Dari language",
+	Wikipedia = "Dari",
 	plain_categories = true,
 }
 
@@ -9093,9 +8794,13 @@ labels["Dashtestan"] = {
 }
 
 labels["Iran"] = {
-	aliases = {"Iranian"},
-	Wikipedia = true,
+	aliases = {"IR", "Iranian", "Iranian Persian"},
+	Wikipedia = "Iranian Persian",
 	regional_categories = "Iranian",
+}
+
+labels["Tehrani"] = {
+	Wikipedia = "Tehrani accent",
 }
 
 labels["Malayeri"] = {
@@ -9114,51 +8819,18 @@ labels["South Asia"] = {
 	regional_categories = "South Asian",
 }
 
--- Regional label 'Classical Persian' duplicated in lang-specific data (existing label is canonical), adding commented-out
--- labels["Classical Persian"] = {
--- 	Wikipedia = "Persian_language#Classical_Persian",
--- }
-
--- Regional label 'Dari' duplicated in lang-specific data (existing label is canonical), adding commented-out
--- labels["Dari"] = {
--- 	aliases = {"Dari Persian"},
--- 	Wikipedia = "Dari Persian",
--- }
-
 labels["Givi"] = {
 	Wikipedia = "Giv, South Khorasan",
 }
 
--- Regional label 'haz' duplicated in lang-specific data (existing label is alias for 'Hazaragi'), adding commented-out; Regional alias 'Hazaragi' of label 'haz' duplicated in lang-specific data (existing label is canonical), adding commented-out
--- labels["haz"] = {
--- 	aliases = {"Hazara", "Hazaragi", "Hazaragi Persian", "fa-haz", "hazarajat"},
--- 	Wikipedia = "Hazaragi dialect",
--- 	display = "Hazaragi",
--- }
-
-labels["Iranian Persian"] = {
-	aliases = {"IR", "Western Persian"},
-	Wikipedia = "Western Persian",
-}
-
-labels["ps-Kabul"] = {
+labels["Kabuli"] = {
 	aliases = {"Kabul"},
-	Wikipedia = "Pashto dialects",
-	display = "Kabuli",
+	Wikipedia = "Dari#South-Eastern",
 }
-
--- Regional label 'Sistani' duplicated in lang-specific data (existing label is canonical), adding commented-out
--- labels["Sistani"] = {
--- 	Wikipedia = "Sistani dialect",
--- }
 
 labels["Tajik"] = {
 	aliases = {"Tajiki"},
 	Wikipedia = "Tajik language",
-}
-
-labels["Tehrani"] = {
-	Wikipedia = "Tehrani accent",
 }
 
 return require("Module:labels").finalize_data(labels)
@@ -9998,16 +9670,6 @@ labels["pre-1990"] = {
 	display = "[[Appendix:French spelling reforms of 1990|pre-1990 spelling]]",
 }
 
-labels["FS"] = {
-	Wikipedia = "Standard French",
-}
-
--- Regional label 'Quebec' duplicated in lang-specific data (existing label is canonical), adding commented-out; Regional alias 'Québec' of label 'Quebec' duplicated in lang-specific data (existing label is alias for 'Quebec'), adding commented-out
--- labels["Quebec"] = {
--- 	aliases = {"Québec"},
--- 	Wikipedia = "Quebec French phonology",
--- }
-
 return require("Module:labels").finalize_data(labels)
 -------- end text --------
 Page 66 Module:labels/data/lang/fro: Skipped, no changes
@@ -10180,16 +9842,6 @@ labels["Wood"] = {
 	plain_categories = "Wood Frisian",
 }
 
--- Regional label 'Clay' duplicated in lang-specific data (existing label is canonical), adding commented-out
--- labels["Clay"] = {
--- 	Wikipedia = "Clay Frisian",
--- }
-
--- Regional label 'Wood' duplicated in lang-specific data (existing label is canonical), adding commented-out
--- labels["Wood"] = {
--- 	Wikipedia = "Wood Frisian",
--- }
-
 return require("Module:labels").finalize_data(labels)
 -------- end text --------
 Page 70 Module:labels/data/lang/ga: WARNING: Regional label 'Aran' duplicated in lang-specific data (existing label is canonical), adding commented-out
@@ -10329,7 +9981,13 @@ labels["Galway"] = {
 	regional_categories = true,
 }
 
+labels["Glenties"] = {
+	Wikipedia = true,
+	display = "The Glenties",
+}
+
 labels["Kerry"] = {
+	aliases = {"West Kerry"},
 	Wikipedia = "Kerry Gaeltacht",
 	regional_categories = true,
 }
@@ -10340,6 +9998,7 @@ labels["Mayo"] = {
 }
 
 labels["Waterford"] = {
+	aliases = {"Ring"},
 	Wikipedia = "Gaeltacht na nDéise",
 	regional_categories = true,
 }
@@ -10347,6 +10006,11 @@ labels["Waterford"] = {
 labels["Munster"] = {
 	Wikipedia = "Munster Irish",
 	regional_categories = true,
+}
+
+labels["Rosmuc"] = {
+	aliases = {"Ros Muc"},
+	Wikipedia = true,
 }
 
 labels["Ulster"] = {
@@ -10358,77 +10022,6 @@ labels["Ulster"] = {
 labels["superseded"] = {
 	Wikipedia = "wikt:Appendix:Glossary#superseded",
 }
-
--- Regional label 'Aran' duplicated in lang-specific data (existing label is canonical), adding commented-out
--- labels["Aran"] = {
--- 	Wikipedia = "Aran Islands",
--- }
-
--- Regional label 'Cois Fharraige' duplicated in lang-specific data (existing label is canonical), adding commented-out; Regional alias 'CF' of label 'Cois Fharraige' duplicated in lang-specific data (existing label is alias for 'Cois Fharraige'), adding commented-out
--- labels["Cois Fharraige"] = {
--- 	aliases = {"CF"},
--- 	Wikipedia = "Gaeltacht Cois Fharraige",
--- }
-
--- Regional label 'Connacht' duplicated in lang-specific data (existing label is canonical), adding commented-out
--- labels["Connacht"] = {
--- 	Wikipedia = "Connacht Irish",
--- }
-
--- Regional label 'Connemara' duplicated in lang-specific data (existing label is canonical), adding commented-out; Regional alias 'Conamara' of label 'Connemara' duplicated in lang-specific data (existing label is alias for 'Connemara'), adding commented-out
--- labels["Connemara"] = {
--- 	aliases = {"Conamara"},
--- 	Wikipedia = true,
--- }
-
--- Regional label 'Cork' duplicated in lang-specific data (existing label is canonical), adding commented-out; Regional alias 'West Cork' of label 'Cork' duplicated in lang-specific data (existing label is alias for 'Cork'), adding commented-out; Regional alias 'West Muskerry' of label 'Cork' duplicated in lang-specific data (existing label is alias for 'Cork'), adding commented-out
--- labels["Cork"] = {
--- 	aliases = {"West Cork", "West Muskerry"},
--- 	Wikipedia = "Gaeltacht#Cork Gaeltacht",
--- }
-
--- Regional label 'Galway' duplicated in lang-specific data (existing label is canonical), adding commented-out
--- labels["Galway"] = {
--- 	Wikipedia = "Gaeltacht#Galway Gaeltacht",
--- }
-
-labels["Glenties"] = {
-	Wikipedia = true,
-	display = "The Glenties",
-}
-
--- Regional label 'Kerry' duplicated in lang-specific data (existing label is canonical), adding commented-out
--- labels["Kerry"] = {
--- 	aliases = {"West Kerry"},
--- 	Wikipedia = "Gaeltacht#Kerry Gaeltacht",
--- }
-
--- Regional label 'Mayo' duplicated in lang-specific data (existing label is canonical), adding commented-out
--- labels["Mayo"] = {
--- 	Wikipedia = "Gaeltacht Iorrais agus Acaill",
--- }
-
--- Regional label 'Munster' duplicated in lang-specific data (existing label is canonical), adding commented-out
--- labels["Munster"] = {
--- 	Wikipedia = "Munster Irish",
--- }
-
-labels["Rosmuc"] = {
-	aliases = {"Ros Muc"},
-	Wikipedia = true,
-}
-
--- Regional label 'Ulster' duplicated in lang-specific data (existing label is canonical), adding commented-out; Regional alias 'Donegal' of label 'Ulster' duplicated in lang-specific data (existing label is alias for 'Ulster'), adding commented-out
--- labels["Ulster"] = {
--- 	aliases = {"Donegal"},
--- 	Wikipedia = "Ulster Irish",
--- }
-
--- Regional label 'Waterford' duplicated in lang-specific data (existing label is canonical), adding commented-out
--- labels["Waterford"] = {
--- 	aliases = {"Ring"},
--- 	Wikipedia = "Gaeltacht na nDéise",
--- }
 
 return require("Module:labels").finalize_data(labels)
 -------- end text --------
@@ -11107,6 +10700,10 @@ labels["movable nu"] = {
 	display = "with [[w:Movable nu|movable nu]]",
 }
 
+------------------------------------ former accent qualifiers ------------------------------------
+
+-- The following labels are used as accent qualifiers by [[Module:grc-pronunciation]].
+
 labels["grc-byz1"] = {
 	Wikipedia = "Medieval Greek",
 	display = "10<sup>th</sup> <small class="ce-date2">CE</small> Byzantine",
@@ -11242,15 +10839,9 @@ labels["Uri"] = {
 
 labels["Zürich"] = {
 	aliases = {"Zurich"},
-	Wikipedia = true,
+	Wikipedia = "Zürich German",
 	regional_categories = true,
 }
-
--- Regional label 'Zurich' duplicated in lang-specific data (existing label is alias for 'Zürich'), adding commented-out; Regional alias 'Zürich' of label 'Zurich' duplicated in lang-specific data (existing label is canonical), adding commented-out
--- labels["Zurich"] = {
--- 	aliases = {"Zürich"},
--- 	Wikipedia = "Zürich German",
--- }
 
 return require("Module:labels").finalize_data(labels)
 -------- end text --------
@@ -11290,8 +10881,8 @@ labels["Kutchi"] = {
 }
 
 labels["Surati"] = {
-	aliases = {"Surat"},
-	Wikipedia = "Surat",
+	aliases = {"sur", "Surat"},
+	Wikipedia = {"Gujarati language#Dialects", "Surat"},
 	regional_categories = true,
 }
 
@@ -11325,14 +10916,9 @@ labels["Mehsani"] = {
 	regional_categories = true,
 }
 
-labels["gu"] = {
+labels["Standard Gujarati"] = {
+	aliases = {"gu"},
 	Wikipedia = "Gujarati phonology",
-	display = "Standard Gujarati",
-}
-
-labels["sur"] = {
-	Wikipedia = "Gujarati language#Dialects",
-	display = "Surati",
 }
 
 return require("Module:labels").finalize_data(labels)
@@ -11473,15 +11059,17 @@ Page 90 Module:labels/data/lang/he: Would save with comment = move 10 label(s) (
 Page 90 Module:labels/data/lang/he: -------- begin text --------
 local labels = {}
 
-labels["Ashkenazic Hebrew"] = {
-	aliases = {"Ashkenazi Hebrew", "Ashkenazic", "Ashkenazi"},
+labels["Ashkenazi Hebrew"] = {
+	aliases = {"Ashkenazic Hebrew", "Ashkenazi", "Ashkenazic"},
 	Wikipedia = true,
+	-- FIXME, rename category to 'Ashkenazi Hebrew'
 	plain_categories = true,
 }
 
 labels["Biblical Hebrew"] = {
 	aliases = {"hbo", "Classical Hebrew", "Ancient Hebrew", "Old Hebrew"},
 	Wikipedia = true,
+	accent_Wikipedia = "Biblical Hebrew#Phonology",
 	plain_categories = true,
 }
 
@@ -11515,23 +11103,9 @@ labels["Paleo-Hebrew spelling"] = {
 	display = "[[:Category:Paleo-Hebrew|Paleo-Hebrew]] spelling",
 }
 
--- Regional label 'Ashkenazi Hebrew' duplicated in lang-specific data (existing label is alias for 'Ashkenazic Hebrew'), adding commented-out; Regional alias 'Ashkenazi' of label 'Ashkenazi Hebrew' duplicated in lang-specific data (existing label is alias for 'Ashkenazic Hebrew'), adding commented-out
--- labels["Ashkenazi Hebrew"] = {
--- 	aliases = {"Ashkenazi"},
--- 	Wikipedia = true,
--- }
-
--- Regional label 'hbo' duplicated in lang-specific data (existing label is alias for 'Biblical Hebrew'), adding commented-out; Regional alias 'Biblical Hebrew' of label 'hbo' duplicated in lang-specific data (existing label is canonical), adding commented-out
--- labels["hbo"] = {
--- 	aliases = {"Biblical Hebrew"},
--- 	Wikipedia = "Biblical Hebrew#Phonology",
--- 	display = "Biblical Hebrew",
--- }
-
-labels["IL"] = {
-	aliases = {"Israeli Hebrew", "Modern Hebrew", "Modern Israeli", "Modern Israeli Hebrew", "Modern/Israeli Hebrew"},
+labels["Modern Israeli Hebrew"] = {
+	aliases = {"IL", "Israeli Hebrew", "Modern Hebrew", "Modern Israeli", "Modern/Israeli Hebrew"},
 	Wikipedia = "Modern Hebrew phonology",
-	display = "Modern Israeli Hebrew",
 }
 
 labels["Italian Hebrew"] = {
@@ -11612,12 +11186,12 @@ labels["Bihar"] = {
 }
 
 labels["Delhi"] = {
-	Wikipedia = true,
+	Wikipedia = "Delhi Hindi",
 	regional_categories = true,
 }
 
 labels["Hyderabad"] = {
-	Wikipedia = true,
+	Wikipedia = "Hyderabadi Hindi",
 	regional_categories = "Hyderabadi",
 }
 
@@ -11648,11 +11222,6 @@ labels["Uttar Pradesh"] = {
 	Wikipedia = true,
 	regional_categories = "Uttar Pradeshi",
 }
-
--- Regional label 'Delhi' duplicated in lang-specific data (existing label is canonical), adding commented-out
--- labels["Delhi"] = {
--- 	display = "Delhi Hindi",
--- }
 
 return require("Module:labels").finalize_data(labels)
 -------- end text --------
@@ -11961,7 +11530,7 @@ labels["Diyarbakır"] = {
 }
 
 labels["Eastern Armenian"] = {
-	aliases = {"Eastern"},
+	aliases = {"hy-E", "Eastern"},
 	Wikipedia = true,
 	plain_categories = true,
 }
@@ -12040,6 +11609,11 @@ labels["Havarik"] = {
 labels["Hungary"] = {
 	aliases = {"հունգ"},
 	Wikipedia = "Armenians in Hungary",
+}
+
+labels["Iran"] = {
+	Wikipedia = "Armenian Iranians#Culture and language",
+	regional_categories = "Iranian",
 }
 
 labels["Istanbul"] = {
@@ -12349,7 +11923,7 @@ labels["Vozm"] = {
 }
 
 labels["Western Armenian"] = {
-	aliases = {"Western"},
+	aliases = {"hy-W", "Western"},
 	Wikipedia = true,
 	plain_categories = true,
 }
@@ -12387,26 +11961,6 @@ labels["RO"] = {
 
 labels["DN"] = {
 	display = "dialectological notation",
-}
-
-labels["hy-E"] = {
-	Wikipedia = "Eastern Armenian",
-	display = "Eastern Armenian, standard",
-}
-
-labels["hy-IR"] = {
-	Wikipedia = "Armenian Iranians#Culture and language",
-	display = "Eastern Armenian, Iran",
-}
-
-labels["hy-W"] = {
-	Wikipedia = "Western Armenian",
-	display = "Western Armenian, standard",
-}
-
-labels["hy-Y"] = {
-	Wikipedia = "Yerevan dialect",
-	display = "Eastern Armenian, Yerevan",
 }
 
 return require("Module:labels").finalize_data(labels)
@@ -12499,7 +12053,6 @@ labels["Yogyakarta"] = {
 }
 
 labels["Standard Indonesian"] = {
-	aliases = {"bahasa Indonesia baku"},
 	Wikipedia = "Indonesian language#Phonology",
 }
 
@@ -12542,16 +12095,6 @@ labels["southern Ilocano"] = {
 	aliases = {"Abagatan", "Ilocos Sur"},
 	Wikipedia = "Ilocano language#Dialects",
 }
-
--- Regional label 'northern Ilocano' duplicated in lang-specific data (existing label is canonical), adding commented-out; Regional alias 'Amianan' of label 'northern Ilocano' duplicated in lang-specific data (existing label is alias for 'northern Ilocano'), adding commented-out; Regional alias 'Ilocos Norte' of label 'northern Ilocano' duplicated in lang-specific data (existing label is alias for 'northern Ilocano'), adding commented-out
--- labels["northern Ilocano"] = {
--- 	aliases = {"Amianan", "Ilocos Norte", "northern Ilocos"},
--- }
-
--- Regional label 'southern Ilocano' duplicated in lang-specific data (existing label is canonical), adding commented-out; Regional alias 'Abagatan' of label 'southern Ilocano' duplicated in lang-specific data (existing label is alias for 'southern Ilocano'), adding commented-out; Regional alias 'Ilocos Sur' of label 'southern Ilocano' duplicated in lang-specific data (existing label is alias for 'southern Ilocano'), adding commented-out
--- labels["southern Ilocano"] = {
--- 	aliases = {"Abagatan", "Ilocos Sur", "southern Ilocos"},
--- }
 
 return require("Module:labels").finalize_data(labels)
 -------- end text --------
@@ -12947,12 +12490,6 @@ labels["Venice"] = {
 	regional_categories = "Venetian",
 }
 
--- Regional label 'central Italy' duplicated in lang-specific data (existing label is canonical), adding commented-out; Regional alias 'Central Italian' of label 'central Italy' duplicated in lang-specific data (existing label is alias for 'central Italian'), adding commented-out; Regional alias 'Central Italy' of label 'central Italy' duplicated in lang-specific data (existing label is alias for 'central Italy'), adding commented-out; Regional alias 'central Italian' of label 'central Italy' duplicated in lang-specific data (existing label is canonical), adding commented-out
--- labels["central Italy"] = {
--- 	aliases = {"Central Italian", "Central Italy", "central Italian"},
--- 	Wikipedia = "Central Italian",
--- }
-
 return require("Module:labels").finalize_data(labels)
 -------- end text --------
 Page 104 Module:labels/data/lang/iu: Skipped, no changes
@@ -13151,6 +12688,10 @@ labels["Kesen"] = {
 	regional_categories = true,
 }
 
+labels["Kyoto"] = {
+	Wikipedia = "Kansai dialect",
+}
+
 labels["Kyūshū"] = {
 	aliases = {"Kyushu"},
 	Wikipedia = "Japanese dialects#Kyushu Japanese",
@@ -13191,6 +12732,10 @@ labels["Ōita"] = {
 labels["Okinawa"] = {
 	Wikipedia = "Okinawan Japanese",
 	regional_categories = true,
+}
+
+labels["Osaka"] = {
+	Wikipedia = "Kansai dialect",
 }
 
 labels["Saga"] = {
@@ -13271,19 +12816,6 @@ labels["Hawaii"] = {
 	Wikipedia = true,
 	regional_categories = "Hawaiian",
 }
-
-labels["Kyoto"] = {
-	Wikipedia = "Kansai dialect",
-}
-
-labels["Osaka"] = {
-	Wikipedia = "Kansai dialect",
-}
-
--- Regional label 'Tokyo' duplicated in lang-specific data (existing label is alias for 'Tōkyō'), adding commented-out
--- labels["Tokyo"] = {
--- 	Wikipedia = "Tokyo dialect",
--- }
 
 return require("Module:labels").finalize_data(labels)
 -------- end text --------
@@ -14219,6 +13751,8 @@ labels["Early Medieval Latin"] = {
 labels["Ecclesiastical Latin"] = {
 	aliases = {"Church Latin", "EL.", "ecclesiastical", "Ecclesiastical", "Ecclesiastic", "eccl"},
 	Wikipedia = true,
+	accent_Wikipedia = "Latin phonology and orthography#Ecclesiastical pronunciation",
+	accent_display = "modern Italianate Ecclesiastical",
 	plain_categories = true,
 }
 
@@ -14390,58 +13924,6 @@ labels["vet"] = {
 	display = "Vetus Latina",
 	Wikipedia = "Vetus Latina",
 }
-
--- Regional label 'Classical' duplicated in lang-specific data (existing label is alias for 'Classical Latin'), adding commented-out
--- labels["Classical"] = {
--- 	Wikipedia = "Classical Latin",
--- }
-
--- Regional label 'Ecclesiastical' duplicated in lang-specific data (existing label is alias for 'Ecclesiastical Latin'), adding commented-out
--- labels["Ecclesiastical"] = {
--- 	Wikipedia = "Latin phonology and orthography#Ecclesiastical pronunciation",
--- 	display = "modern Italianate Ecclesiastical",
--- }
-
--- Regional label 'New Latin' duplicated in lang-specific data (existing label is canonical), adding commented-out
--- labels["New Latin"] = {
--- 	Wikipedia = true,
--- }
-
--- Regional label 'Proto-Balkan-Romance' duplicated in lang-specific data (existing label is canonical), adding commented-out; Regional alias 'PBR' of label 'Proto-Balkan-Romance' duplicated in lang-specific data (existing label is alias for 'Proto-Balkan-Romance'), adding commented-out
--- labels["Proto-Balkan-Romance"] = {
--- 	aliases = {"PBR"},
--- 	Wikipedia = true,
--- }
-
--- Regional label 'Proto-Gallo-Romance' duplicated in lang-specific data (existing label is canonical), adding commented-out; Regional alias 'PGR' of label 'Proto-Gallo-Romance' duplicated in lang-specific data (existing label is alias for 'Proto-Gallo-Romance'), adding commented-out
--- labels["Proto-Gallo-Romance"] = {
--- 	aliases = {"PGR"},
--- 	Wikipedia = true,
--- }
-
--- Regional label 'Proto-Ibero-Romance' duplicated in lang-specific data (existing label is canonical), adding commented-out; Regional alias 'PIbR' of label 'Proto-Ibero-Romance' duplicated in lang-specific data (existing label is alias for 'Proto-Ibero-Romance'), adding commented-out
--- labels["Proto-Ibero-Romance"] = {
--- 	aliases = {"PIbR"},
--- 	Wikipedia = true,
--- }
-
--- Regional label 'Proto-Italo-Romance' duplicated in lang-specific data (existing label is canonical), adding commented-out; Regional alias 'PItR' of label 'Proto-Italo-Romance' duplicated in lang-specific data (existing label is alias for 'Proto-Italo-Romance'), adding commented-out
--- labels["Proto-Italo-Romance"] = {
--- 	aliases = {"PItR"},
--- 	Wikipedia = "Italo-Romance languages",
--- 	display = "Italo-Romance languages",
--- }
-
--- Regional label 'Proto-Italo-Western-Romance' duplicated in lang-specific data (existing label is canonical), adding commented-out; Regional alias 'PIWR' of label 'Proto-Italo-Western-Romance' duplicated in lang-specific data (existing label is alias for 'Proto-Italo-Western-Romance'), adding commented-out
--- labels["Proto-Italo-Western-Romance"] = {
--- 	aliases = {"PIWR"},
--- 	Wikipedia = true,
--- }
-
--- Regional label 'Vulgar' duplicated in lang-specific data (existing label is alias for 'Vulgar Latin'), adding commented-out
--- labels["Vulgar"] = {
--- 	Wikipedia = "Vulgar Latin",
--- }
 
 return require("Module:labels").finalize_data(labels)
 -------- end text --------
@@ -14715,14 +14197,12 @@ labels["Cremish"] = {
 	parent = true,
 }
 
-labels["lmo-E"] = {
+labels["Eastern"] = {
 	Wikipedia = "Eastern Lombard dialect",
-	display = "eastern",
 }
 
-labels["lmo-W"] = {
+labels["Western"] = {
 	Wikipedia = "Western Lombard dialect",
-	display = "western",
 }
 
 return require("Module:labels").finalize_data(labels)
@@ -14986,17 +14466,6 @@ labels["Ratak"] = {
 	regional_categories = true,
 }
 
--- Regional label 'Ratak' duplicated in lang-specific data (existing label is canonical), adding commented-out
--- labels["Ratak"] = {
--- 	Wikipedia = "Ratak Chain",
--- }
-
--- Regional label 'Rālik' duplicated in lang-specific data (existing label is canonical), adding commented-out; Regional alias 'Ralik' of label 'Rālik' duplicated in lang-specific data (existing label is alias for 'Rālik'), adding commented-out
--- labels["Rālik"] = {
--- 	aliases = {"Ralik"},
--- 	Wikipedia = "Rālik Chain",
--- }
-
 return require("Module:labels").finalize_data(labels)
 -------- end text --------
 Page 133 Module:labels/data/lang/mhd: Skipped, no changes
@@ -15164,7 +14633,7 @@ labels["Chakhar"] = {
 }
 
 labels["Khalkha"] = {
-	aliases = {"Xalxa", "Xalx", "Halha", "Halh", "Qalqa"},
+	aliases = {"khk", "Xalxa", "Xalx", "Halha", "Halh", "Qalqa"},
 	Wikipedia = "Khalkha Mongolian",
 	regional_categories = true,
 }
@@ -15180,14 +14649,9 @@ labels["Mongolia"] = {
 	regional_categories = "Mongolian",
 }
 
-labels["Hure"] = {
-	Wikipedia = "Hure Banner",
-	display = "Hure Banner",
-}
-
-labels["khk"] = {
-	Wikipedia = "Khalkha Mongolian",
-	display = "Khalkh, Mongolia",
+labels["Hure Banner"] = {
+	aliases = {"Hure"},
+	Wikipedia = true,
 }
 
 labels["Ulaanbaatar"] = {
@@ -15592,8 +15056,12 @@ labels["Netherlands"] = {
 	regional_categories = true,
 }
 
+------------------------------------ former accent qualifiers ------------------------------------
+
+-- FIXME, the following may partly be duplicative.
+
 labels["Bahasa Baku"] = {
-	aliases = {"Borneo Malay", "East Malaysia Malay", "Sabah Malay", "Sarawak Malay", "Singapore Malay", "Standard Brunei Malay", "ms-SG"},
+	aliases = {"Borneo Malay", "East Malaysia Malay", "Singapore Malay", "Standard Brunei Malay", "ms-SG"},
 	Wikipedia = "Malay phonology",
 }
 
@@ -15601,12 +15069,6 @@ labels["Johor-Selangor"] = {
 	aliases = {"Johor", "Kuala Lumpur", "Piawai", "Standard Malay", "Standard Malaysian"},
 	Wikipedia = "Malay phonology",
 }
-
--- Regional label 'Kelantan-Pattani' duplicated in lang-specific data (existing label is canonical), adding commented-out; Regional alias 'Kelantan' of label 'Kelantan-Pattani' duplicated in lang-specific data (existing label is alias for 'Kelantan-Pattani'), adding commented-out; Regional alias 'Kelantan Malay' of label 'Kelantan-Pattani' duplicated in lang-specific data (existing label is alias for 'Kelantan-Pattani'), adding commented-out; Regional alias 'Kelantanese' of label 'Kelantan-Pattani' duplicated in lang-specific data (existing label is alias for 'Kelantan-Pattani'), adding commented-out; Regional alias 'Kota Bharu' of label 'Kelantan-Pattani' duplicated in lang-specific data (existing label is alias for 'Kelantan-Pattani'), adding commented-out; Regional alias 'Pattani' of label 'Kelantan-Pattani' duplicated in lang-specific data (existing label is alias for 'Kelantan-Pattani'), adding commented-out; Regional alias 'Pattani Malay' of label 'Kelantan-Pattani' duplicated in lang-specific data (existing label is alias for 'Kelantan-Pattani'), adding commented-out
--- labels["Kelantan-Pattani"] = {
--- 	aliases = {"Kelantan", "Kelantan Malay", "Kelantanese", "Kota Bharu", "Pattani", "Pattani Malay"},
--- 	Wikipedia = "Kelantan-Pattani Malay",
--- }
 
 labels["Northern Peninsular Malay"] = {
 	aliases = {"Kedah", "Northern Peninsula", "Penang", "Perlis"},
@@ -15616,7 +15078,8 @@ labels["Northern Peninsular Malay"] = {
 labels["Riau-Lingga"] = {
 	Wikipedia = "Riau-Lingga Sultanate",
 }
-----Not icluded Palembang Malay, Bengkulu Malay, Jambi Malay, Bangka Malay, Berau Malay, Kutai Malay, Loloan Malay, Sabah Malay
+
+----Not included Palembang Malay, Bengkulu Malay, Jambi Malay, Bangka Malay, Berau Malay, Kutai Malay, Loloan Malay, Sabah Malay
 return require("Module:labels").finalize_data(labels)
 -------- end text --------
 Page 145 Module:labels/data/lang/mt: Skipped, no changes
@@ -16065,7 +15528,7 @@ labels["Antilles"] = {
 }
 
 labels["Belgium"] = {
-	aliases = {"Belgian"},
+	aliases = {"BE", "Belgian"},
 	Wikipedia = "Flemish dialects",
 	regional_categories = "Belgian",
 }
@@ -16082,6 +15545,10 @@ labels["East and West Flanders"] = {
 	regional_categories = "East and West Flemish",
 }
 
+labels["French Flanders"] = {
+	Wikipedia = "French Flemish",
+}
+
 labels["Holland"] = {
 	aliases = {"Hollandic"},
 	Wikipedia = true,
@@ -16089,7 +15556,8 @@ labels["Holland"] = {
 }
 
 labels["Netherlands"] = {
-	Wikipedia = true,
+	aliases = {"NL"},
+	Wikipedia = {"Dutch phonology", true},
 	regional_categories = true,
 }
 
@@ -16131,23 +15599,6 @@ labels["subjunctive"] = {
 	display = "dated or formal",
 	Wikipedia = "Subjunctive in Dutch",
 }
-
-labels["BE-nl"] = {
-	aliases = {"BE"},
-	Wikipedia = "Belgian Dutch",
-	display = "Belgium",
-}
-
-labels["FV"] = {
-	Wikipedia = "French Flemish",
-	display = "French Flanders",
-}
-
--- Regional label 'Netherlands' duplicated in lang-specific data (existing label is canonical), adding commented-out
--- labels["Netherlands"] = {
--- 	aliases = {"NL"},
--- 	Wikipedia = "Dutch phonology",
--- }
 
 return require("Module:labels").finalize_data(labels)
 -------- end text --------
@@ -16398,6 +15849,8 @@ labels["ød"] = {
 	display = "Østerdalsmål",
 	Wikipedia = "Norwegian dialects#Dialect branches",
 }
+
+------------------------------------ former accent qualifiers ------------------------------------
 
 labels["north of Dovre"] = {
 	aliases = {"nordanfjells"},
@@ -16793,9 +16246,23 @@ labels["Doabi"] = {
 	regional_categories = true,
 }
 
+labels["Faisalabad"] = {
+	Wikipedia = true,
+}
+
 labels["Jhangli"] = {
 	aliases = {"Jhangvi", "Rachnavi"},
 	Wikipedia = "Jhangvi dialect",
+	regional_categories = true,
+}
+
+labels["Lahore"] = {
+	Wikipedia = "Punjabi dialects and languages",
+}
+
+labels["Majhi"] = {
+	aliases = {"Central", "Majha", "Majha Punjab", "Majhi Punjabi"},
+	Wikipedia = {"Majhi dialect", "Majha"},
 	regional_categories = true,
 }
 
@@ -16818,69 +16285,21 @@ labels ["Shahpuri"] = {
 	regional_categories = {true, true},
 }
 
+labels["Standard Punjabi"] = {
+	aliases = {"pa"},
+	Wikipedia = "Punjabi dialects and languages#Standard Punjabi",
+}
+
 labels["Eastern Punjab"] = {
-	aliases = {"Charhda", "Chadhda", "India", "Indian", "Charda Punjab", "Eastern Punjabi", "East Punjab", "Eastern"},
-	Wikipedia = "Punjab, India",
+	aliases = {"pan", "Charhda", "Chadhda", "India", "Indian", "Charda Punjab", "Eastern Punjabi", "East Punjab", "Eastern"},
+	Wikipedia = {"Punjabi dialects and languages", "Punjab, India"},
 	regional_categories = "Indian",
 }
 
 labels["Western Punjab"] = {
-	aliases = {"Lehnda", "Lahnda", "Lahnda Punjab", "Pakistan", "Pakistani", "Lehnda Punjab", "Western Punjabi", "West Punjab", "Western"},
-	Wikipedia = "Punjab, Pakistan",
+	aliases = {"pnb", "Lehnda", "Lahnda", "Lahnda Punjab", "Pakistan", "Pakistani", "Lehnda Punjab", "Western Punjabi", "West Punjab", "Western"},
+	Wikipedia = {"Punjabi dialects and languages", "Punjab, Pakistan"},
 	regional_categories = "Pakistani",
-}
-
-labels["Majhi"] = {
-	aliases = {"Central", "Majha", "Majha Punjab", "Majhi Punjabi"},
-	Wikipedia = "Majha",
-	regional_categories = true,
-}
-
--- Regional label 'Doabi' duplicated in lang-specific data (existing label is canonical), adding commented-out
--- labels["Doabi"] = {
--- 	Wikipedia = "Doabi dialect",
--- }
-
-labels["Lahori"] = {
-	aliases = {"Lahori Punjabi"},
-	Wikipedia = "Punjabi dialects and languages",
-	display = "Lahori Punjabi",
-}
-
-labels["Lyallpuri"] = {
-	aliases = {"Faisalabad"},
-	Wikipedia = "Faisalabad",
-}
-
--- Regional label 'Majha' duplicated in lang-specific data (existing label is alias for 'Majhi'), adding commented-out; Regional alias 'Majhi' of label 'Majha' duplicated in lang-specific data (existing label is canonical), adding commented-out
--- labels["Majha"] = {
--- 	aliases = {"Majhi"},
--- 	Wikipedia = "Majhi dialect",
--- 	display = "Majhi",
--- }
-
--- Regional label 'Malwai' duplicated in lang-specific data (existing label is canonical), adding commented-out
--- labels["Malwai"] = {
--- 	Wikipedia = "Malwai dialect",
--- }
-
-labels["pa-IN"] = {
-	aliases = {"pan"},
-	Wikipedia = "Punjabi dialects and languages",
-	display = "India",
-}
-
--- Regional alias 'East Punjab' of label 'pa-PK' duplicated in lang-specific data (existing label is alias for 'Eastern Punjab'), adding commented-out; Regional alias 'Lahnda' of label 'pa-PK' duplicated in lang-specific data (existing label is alias for 'Western Punjab'), adding commented-out; Regional alias 'West Punjab' of label 'pa-PK' duplicated in lang-specific data (existing label is alias for 'Western Punjab'), adding commented-out
--- labels["pa-PK"] = {
--- 	aliases = {"East Punjab", "Lahnda", "West Punjab", "pnb"},
--- 	Wikipedia = "Punjabi dialects and languages",
--- 	display = "Pakistan",
--- }
-
-labels["Punjabi"] = {
-	aliases = {"pa"},
-	Wikipedia = "Punjabi dialects and languages#Standard_Punjabi",
-	display = "Standard Punjabi",
 }
 
 return require("Module:labels").finalize_data(labels)
@@ -17117,11 +16536,6 @@ labels["pl-pre-1936"] = {
 	Wikipedia = "History_of_Polish_orthography#1936_Reform",
 }
 
--- Regional label 'Middle Polish' duplicated in lang-specific data (existing label is canonical), adding commented-out
--- labels["Middle Polish"] = {
--- 	Wikipedia = true,
--- }
-
 return require("Module:labels").finalize_data(labels)
 -------- end text --------
 Page 175 Module:labels/data/lang/pnt: Skipped, no changes
@@ -17343,7 +16757,7 @@ labels["Beira"] = {
 }
 
 labels["Brazil"] = {
-	aliases = {"br", "Brazilian"},
+	aliases = {"BR", "br", "Brazilian"},
 	Wikipedia = "Brazilian Portuguese",
 	regional_categories = "Brazilian",
 	parent = true,
@@ -17460,6 +16874,13 @@ labels["Northeast Brazil"] = {
 	parent = "Brazil",
 }
 
+labels["Northern Portugal"] = {
+	aliases = {"Nortenho"},
+	Wikipedia = "Northern Portuguese",
+	regional_categories = true,
+	parent = "Portugal",
+}
+
 labels["Paraná"] = {
 	region = "[[Paraná]], a state of [[Brazil]]",
 	aliases = {"Paranaense"},
@@ -17485,7 +16906,7 @@ labels["Piauí"] = {
 }
 
 labels["Portugal"] = {
-	aliases = {"Portuguese", "pt", "European", "Europe"},
+	aliases = {"Portuguese", "PT", "pt", "European", "Europe"},
 	Wikipedia = "European Portuguese",
 	regional_categories = "European",
 	parent = true,
@@ -17510,7 +16931,7 @@ labels["Rio Grande do Sul"] = {
 labels["Rio de Janeiro"] = {
 	region = "[[Rio de Janeiro]], a city and surrounding state of [[Brazil]]",
 	aliases = {"Fluminense", "Carioca"},
-	Wikipedia = true,
+	Wikipedia = {"Carioca#Sociolect", true},
 	regional_categories = "Carioca",
 	parent = "Southeast Brazil",
 }
@@ -17526,7 +16947,7 @@ labels["Santa Catarina"] = {
 labels["São Paulo"] = {
 	region = "[[São Paulo]], a city and surrounding state of [[Brazil]]",
 	aliases = {"Sao Paulo", "Paulista"},
-	Wikipedia = "São Paulo (state)",
+	Wikipedia = {"Paulistano dialect", "São Paulo (state)"},
 	regional_categories = "Paulista",
 	parent = "Southeast Brazil",
 }
@@ -17578,6 +16999,12 @@ labels["Trás-os-Montes"] = {
 	Wikipedia = true,
 	regional_categories = "Transmontane",
 	parent = "Portugal",
+}
+
+labels["Uruguay"] = {
+	Wikipedia = "Uruguayan Portuguese",
+	regional_categories = "Uruguayan",
+	parent = true,
 }
 
 labels["US"] = {
@@ -17637,44 +17064,6 @@ labels["European Portuguese verb form"] = {
 	Wikipedia = "Portuguese orthography#Brazilian vs. European spelling",
 	plain_categories = "European Portuguese verb forms",
 }
-
--- Regional label 'Brazil' duplicated in lang-specific data (existing label is canonical), adding commented-out
--- labels["Brazil"] = {
--- 	aliases = {"BP", "BR", "Brazilian Portuguese"},
--- 	Wikipedia = "Brazilian Portuguese",
--- }
-
-labels["Northern Portugal"] = {
-	aliases = {"Nortenho"},
-	Wikipedia = "Northern Portuguese",
-}
-
--- Regional label 'Portugal' duplicated in lang-specific data (existing label is canonical), adding commented-out
--- labels["Portugal"] = {
--- 	aliases = {"EP", "PT"},
--- 	Wikipedia = "European Portuguese",
--- }
-
-labels["pt-Uruguay"] = {
-	Wikipedia = "Uruguayan Portuguese",
-	display = "Uruguay",
-}
-
--- Regional label 'Rio de Janeiro' duplicated in lang-specific data (existing label is canonical), adding commented-out; Regional alias 'Carioca' of label 'Rio de Janeiro' duplicated in lang-specific data (existing label is alias for 'Rio de Janeiro'), adding commented-out
--- labels["Rio de Janeiro"] = {
--- 	aliases = {"Carioca", "RJ"},
--- 	Wikipedia = "Carioca#Sociolect",
--- }
-
--- Regional label 'South Brazil' duplicated in lang-specific data (existing label is canonical), adding commented-out
--- labels["South Brazil"] = {
--- 	Wikipedia = "Brazilian Portuguese",
--- }
-
--- Regional label 'São Paulo' duplicated in lang-specific data (existing label is canonical), adding commented-out
--- labels["São Paulo"] = {
--- 	Wikipedia = "Brazilian Portuguese",
--- }
 
 return require("Module:labels").finalize_data(labels)
 -------- end text --------
@@ -18460,6 +17849,10 @@ labels["Buddhist Hybrid Sanskrit"] = {
 	plain_categories = true,
 }
 
+labels["Classical Sanskrit"] = {
+	Wikipedia = true,
+}
+
 labels["Epigraphic Sanskrit"] = {
 	Wikipedia = "Epigraphy",
 	plain_categories = true,
@@ -18490,30 +17883,11 @@ labels["Rigvedic"] = {
 }
 
 labels["Atharvavedic"] = {
-	Wikipedia = "wikt:Atharvavedic",
+	Wikipedia = "Atharvaveda",
 }
-
-labels["Classical Sanskrit"] = {
-	Wikipedia = "Sanskrit#Classical Sanskrit",
-	display = "Classical",
-}
-
--- Regional label 'Rigvedic Sanskrit' duplicated in lang-specific data (existing label is alias for 'Rigvedic'), adding commented-out; Regional alias 'Rigvedic' of label 'Rigvedic Sanskrit' duplicated in lang-specific data (existing label is canonical), adding commented-out
--- labels["Rigvedic Sanskrit"] = {
--- 	aliases = {"Rigvedic"},
--- 	Wikipedia = "wikt:Rigvedic",
--- 	display = "Rigvedic",
--- }
-
--- Regional label 'Vedic Sanskrit' duplicated in lang-specific data (existing label is alias for 'Vedic'), adding commented-out; Regional alias 'Vedic' of label 'Vedic Sanskrit' duplicated in lang-specific data (existing label is canonical), adding commented-out
--- labels["Vedic Sanskrit"] = {
--- 	aliases = {"Vedic"},
--- 	Wikipedia = true,
--- 	display = "Vedic",
--- }
 
 labels["Yajurvedic"] = {
-	Wikipedia = "wikt:Yajurvedic",
+	Wikipedia = "Yajurveda",
 }
 
 return require("Module:labels").finalize_data(labels)
@@ -18759,14 +18133,15 @@ labels["Caithness"] = {
 	regional_categories = true,
 }
 
-labels["Central"] = {
-	aliases = {"Central Scots"},
-	Wikipedia = "Central Scots",
-	regional_categories = true,
+labels["Central Scots"] = {
+	aliases = {"Central"},
+	Wikipedia = true,
+	plain_categories = true,
 }
 
 labels["Doric Scots"] = {
-	display = "[[w:Doric dialect (Scotland)|Doric]]",
+	aliases = {"Mid Northern Scots"},
+	Wikipedia = "Doric dialect (Scotland)",
 	plain_categories = true,
 }
 
@@ -18777,7 +18152,7 @@ labels["Dundee"] = {
 
 labels["East Central Scots"] = {
 	aliases = {"EC Scots"},
-	display = "East [[w:Central Scots|Central]]",
+	Wikipedia = "Central Scots",
 	plain_categories = true,
 }
 
@@ -18792,31 +18167,31 @@ labels["Middle Scots"] = {
 
 labels["North Northern Scots"] = {
 	aliases = {"NN Scots"},
-	display = "[[w:North Northern Scots|North Northern]]",
+	Wikipedia = true,
 	plain_categories = true,
 }
 
 labels["Northeast Central Scots"] = {
 	aliases = {"NEC Scots"},
-	display = "Northeast [[w:Central Scots|Central]]",
+	Wikipedia = "Central Scots",
 	plain_categories = true,
 }
 
 labels["Northern Isles"] = {
 	aliases = {"Insular Scots"},
-	display = "[[w:Orkney|Orkney]], [[w:Shetland|Shetland]]",
+	Wikipedia = {"Insular Scots", "Orcadian dialect", "Shetland dialect"},
 	regional_categories = {"Orkney", "Shetland"},
 }
 
 labels["Northern Scots"] = {
 	aliases = {"North Scots"},
-	display = "[[w:Northern Scots|Northern]]",
+	Wikipedia = true,
 	plain_categories = true,
 }
 
 labels["Orkney"] = {
 	aliases = {"Orcadian"},
-	Wikipedia = true,
+	Wikipedia = "Orcadian dialect",
 	regional_categories = true,
 }
 
@@ -18828,25 +18203,26 @@ labels["Shetland"] = {
 
 labels["South Northern Scots"] = {
 	aliases = {"SN Scots"},
-	display = "South [[w:Northern Scots|Northern]]",
+	Wikipedia = "Northern Scots",
 	plain_categories = true,
 }
 
-labels["South Scots"] = {
-	aliases = {"Southern Scots"},
-	Wikipedia = "Southern Scots",
+labels["Southern Scots"] = {
+	aliases = {"South Scots"},
+	Wikipedia = true,
+	-- FIXME, rename category from 'South Scots' to 'Southern Scots'
 	plain_categories = true,
 }
 
 labels["Southeast Central Scots"] = {
 	aliases = {"SEC Scots"},
-	display = "Southeast [[w:Central Scots|Central]]",
+	Wikipedia = "Central Scots",
 	plain_categories = true,
 }
 
 labels["Southwest Central Scots"] = {
 	aliases = {"SWC Scots"},
-	display = "Southwest [[w:Central Scots|Central]]",
+	Wikipedia = "Central Scots",
 	plain_categories = true,
 }
 
@@ -18858,42 +18234,9 @@ labels["Ulster"] = {
 
 labels["West Central Scots"] = {
 	aliases = {"WC Scots"},
-	display = "West [[w:Central Scots|Central]]",
+	Wikipedia = "Central Scots",
 	plain_categories = true,
 }
-
--- Regional label 'Central Scots' duplicated in lang-specific data (existing label is alias for 'Central'), adding commented-out
--- labels["Central Scots"] = {
--- 	Wikipedia = true,
--- }
-
--- Regional label 'Doric Scots' duplicated in lang-specific data (existing label is canonical), adding commented-out
--- labels["Doric Scots"] = {
--- 	aliases = {"Mid Northern Scots", "Northeast Scots"},
--- 	Wikipedia = "Doric dialect (Scotland)",
--- }
-
--- Regional label 'Insular Scots' duplicated in lang-specific data (existing label is alias for 'Northern Isles'), adding commented-out; Regional alias 'Shetlandic' of label 'Insular Scots' duplicated in lang-specific data (existing label is alias for 'Shetland'), adding commented-out
--- labels["Insular Scots"] = {
--- 	aliases = {"Orcadian Scots", "Shetlandic"},
--- 	Wikipedia = true,
--- }
-
--- Regional label 'Northern Scots' duplicated in lang-specific data (existing label is canonical), adding commented-out
--- labels["Northern Scots"] = {
--- 	Wikipedia = true,
--- }
-
--- Regional label 'Southern Scots' duplicated in lang-specific data (existing label is alias for 'South Scots'), adding commented-out
--- labels["Southern Scots"] = {
--- 	Wikipedia = true,
--- }
-
--- Regional label 'Ulster Scots' duplicated in lang-specific data (existing label is alias for 'Ulster'), adding commented-out; Regional alias 'Ullans' of label 'Ulster Scots' duplicated in lang-specific data (existing label is alias for 'Ulster'), adding commented-out
--- labels["Ulster Scots"] = {
--- 	aliases = {"Ullans", "Ulster-Scotch"},
--- 	Wikipedia = "Ulster Scots dialect",
--- }
 
 return require("Module:labels").finalize_data(labels)
 -------- end text --------
@@ -19081,13 +18424,13 @@ labels["Torlakian"] = {
 
 labels["Bosnia"] = {
 	aliases = {"Bosnian", "bs"},
-	Wikipedia = "Bosnian language",
+	Wikipedia = {"Bosnian language", "Comparison of standard Bosnian, Croatian, Montenegrin and Serbian"},
 	regional_categories = "Bosnian",
 }
 
 labels["Croatia"] = {
 	aliases = {"Croatian", "hr"},
-	Wikipedia = "Croatian language",
+	Wikipedia = {"Croatian language", "Comparison of standard Bosnian, Croatian, Montenegrin and Serbian"},
 	regional_categories = "Croatian",
 }
 
@@ -19099,13 +18442,13 @@ labels["Dalmatia"] = {
 
 labels["Montenegro"] = {
 	aliases = {"Montenegrin", "cnr"},
-	Wikipedia = "Montenegrin language",
+	Wikipedia = {"Montenegrin language", "Comparison of standard Bosnian, Croatian, Montenegrin and Serbian"},
 	regional_categories = "Montenegrin",
 }
 
 labels["Serbia"] = {
 	aliases = {"Serbian", "sr"},
-	Wikipedia = "Serbian language",
+	Wikipedia = {"Serbian language", "Comparison of standard Bosnian, Croatian, Montenegrin and Serbian"},
 	regional_categories = "Serbian",
 }
 
@@ -19123,30 +18466,6 @@ labels["Shtokavian"] = {
 	aliases = {"Štokavian"},
 	Wikipedia = true,
 }
-
--- Regional label 'Bosnia' duplicated in lang-specific data (existing label is canonical), adding commented-out; Regional alias 'Bosnian' of label 'Bosnia' duplicated in lang-specific data (existing label is alias for 'Bosnia'), adding commented-out
--- labels["Bosnia"] = {
--- 	aliases = {"Bosnian"},
--- 	Wikipedia = "Comparison of standard Bosnian, Croatian, Montenegrin and Serbian#Accentuation",
--- }
-
--- Regional label 'Croatia' duplicated in lang-specific data (existing label is canonical), adding commented-out; Regional alias 'Croatian' of label 'Croatia' duplicated in lang-specific data (existing label is alias for 'Croatia'), adding commented-out
--- labels["Croatia"] = {
--- 	aliases = {"Croatian"},
--- 	Wikipedia = "Comparison of standard Bosnian, Croatian, Montenegrin and Serbian#Accentuation",
--- }
-
--- Regional label 'Montenegro' duplicated in lang-specific data (existing label is canonical), adding commented-out; Regional alias 'Montenegrin' of label 'Montenegro' duplicated in lang-specific data (existing label is alias for 'Montenegro'), adding commented-out
--- labels["Montenegro"] = {
--- 	aliases = {"Montenegrin"},
--- 	Wikipedia = "Comparison of standard Bosnian, Croatian, Montenegrin and Serbian#Accentuation",
--- }
-
--- Regional label 'Serbia' duplicated in lang-specific data (existing label is canonical), adding commented-out; Regional alias 'Serbian' of label 'Serbia' duplicated in lang-specific data (existing label is alias for 'Serbia'), adding commented-out
--- labels["Serbia"] = {
--- 	aliases = {"Serbian"},
--- 	Wikipedia = "Comparison of standard Bosnian, Croatian, Montenegrin and Serbian#Accentuation",
--- }
 
 return require("Module:labels").finalize_data(labels)
 -------- end text --------
@@ -19789,21 +19108,6 @@ labels["Dogançe"] = {
 	regional_categories = true,
 }
 
--- Regional label 'Arvanite' duplicated in lang-specific data (existing label is alias for 'Arvanitika'), adding commented-out
--- labels["Arvanite"] = {
--- 	Wikipedia = "Arvanitika",
--- }
-
--- Regional label 'Gheg' duplicated in lang-specific data (existing label is canonical), adding commented-out
--- labels["Gheg"] = {
--- 	Wikipedia = "Gheg Albanian",
--- }
-
--- Regional label 'Tosk' duplicated in lang-specific data (existing label is canonical), adding commented-out
--- labels["Tosk"] = {
--- 	Wikipedia = "Tosk Albanian",
--- }
-
 return require("Module:labels").finalize_data(labels)
 -------- end text --------
 Page 210 Module:labels/data/lang/srn: Skipped, no changes
@@ -19978,7 +19282,7 @@ labels["Bohuslän"] = {
 
 labels["Finland"] = {
 	aliases = {"Finnish"},
-	Wikipedia = true,
+	Wikipedia = "Finland Swedish",
 	regional_categories = true,
 }
 
@@ -19996,29 +19300,31 @@ labels["Ostrobothnia"] = {
 
 labels["Sweden"] = {
 	aliases = {"Swedish"},
-	Wikipedia = true,
+	Wikipedia = "Swedish phonology",
 	regional_categories = true,
 }
 
-labels["jms"] = {
-	display = "Jamska",
-	Wikipedia = "Jamtlandic dialects",
+labels["Jämtland"] = {
+	aliases = {"jms", "Jamska", "Jamtland"},
+	Wikipedia = "Jämtland dialects",
 }
 
-labels["pit"] = {
-	display = "Pitemål",
+labels["Piteå"] = {
+	aliases = {"pit", "Pitemål"},
 	Wikipedia = "Pitemål",
 }
 
-labels["lul"] = {
-	display = "Lulemål",
+labels["Luleå"] = {
+	aliases = {"lul"},
 	Wikipedia = "Luleå dialects",
 }
 
-labels["kls"] = {
-	display = "Kalixmål",
+labels["Kalix"] = {
+	aliases = {"kls"},
 	Wikipedia = "Kalix dialect",
 }
+
+------------------------------------ former accent qualifiers ------------------------------------
 
 labels["Burträsk"] = {
 	Wikipedia = true,
@@ -20033,23 +19339,9 @@ labels["Central Sweden"] = {
 	Wikipedia = "Central Swedish",
 }
 
--- Regional label 'Finland' duplicated in lang-specific data (existing label is canonical), adding commented-out
--- labels["Finland"] = {
--- 	aliases = {"Fenno-Swedish", "Finland Swedish"},
--- 	Wikipedia = "Finland Swedish#Phonology",
--- }
-
 labels["Hössjö"] = {
 	Wikipedia = "sv:Hössjö",
 	display = "sv:Hössjö",
-}
-
-labels["Kalix"] = {
-	Wikipedia = "Kalix dialect",
-}
-
-labels["Luleå"] = {
-	Wikipedia = true,
 }
 
 labels["Lövånger"] = {
@@ -20068,12 +19360,6 @@ labels["Stockholm e"] = {
 	Wikipedia = "Swedish phonology",
 	display = "with Stockholm ''e''",
 }
-
--- Regional label 'Sweden' duplicated in lang-specific data (existing label is canonical), adding commented-out; Regional alias 'Swedish' of label 'Sweden' duplicated in lang-specific data (existing label is alias for 'Sweden'), adding commented-out
--- labels["Sweden"] = {
--- 	aliases = {"Swedish"},
--- 	Wikipedia = "Swedish phonology",
--- }
 
 labels["Umeå"] = {
 	Wikipedia = true,
@@ -20100,7 +19386,7 @@ labels["Tanzania"] = {
 return require("Module:labels").finalize_data(labels)
 -------- end text --------
 Page 215 Module:labels/data/lang/szl: WARNING: Lang-specific label 'Steuer' seen more than once as label or alias (existing label is canonical)
-Page 215 Module:labels/data/lang/szl: Skipped, no changes
+Page 225 Module:labels/data/lang/szl: Would save with comment = remove duplicate label
 Page 215 Module:labels/data/lang/szl: -------- begin text --------
 local labels = {}
 
@@ -20154,11 +19440,6 @@ labels["Gorol"] = {
 labels["reflexive-sie"] = {
 	display = "[[Appendix:Glossary#reflexive|reflexive]] with {{m|szl|sie}}",
 	pos_categories = "reflexive verbs",
-}
-
-labels["Steuer"] = {
-	display = "Steuers Silesian alphabet",
-	Wikipedia = "Silesian_language#Writing_system",
 }
 
 labels["Steuer"] = {
@@ -20460,19 +19741,19 @@ labels["Nueva Ecija"] = {
 
 labels["Rizal"] = {
 	aliases = {"Rizaleño", "Rizal Tagalog", "Morong", "Cardona", "Baras", "Teresa", "Teresa-Morong", "eastern Laguna", "Eastern Laguna", "Rizaleño", "Tanay-Paete"},
-	Wikipedia = {"Rizal (province)", "Tagalog language#Dialects"},
+	Wikipedia = {"Tagalog language#Dialects", "Rizal (province)"},
 	regional_categories = true,
 }
 
 labels["Quezon"] = {
 	aliases = {"Tayabas Tagalog", "Quezon Province", "Quezon Tagalog", "Tayabas", "Tayabasin", "Quezonin", "Quezeño"},
-	Wikipedia = true,
+	Wikipedia = {"Tagalog language#Dialects", true},
 	regional_categories = true,
 }
 
 labels["Southern Tagalog"] = {
 	aliases = {"Region IV", "Timog Katagalugan", "Calabarzon"},
-	Wikipedia = true,
+	Wikipedia = {"Tagalog language#Dialects", true},
 	--regional_categories = {"Batangas", "Cavite", "Marinduque", "Quezon"},
 	plain_categories = true,
 }
@@ -20503,46 +19784,9 @@ labels["Standard Tagalog"] = {
 	Wikipedia = "Filipino language",
 }
 
--- Regional label 'Batangas' duplicated in lang-specific data (existing label is canonical), adding commented-out; Regional alias 'Batangas Tagalog' of label 'Batangas' duplicated in lang-specific data (existing label is alias for 'Batangas'), adding commented-out; Regional alias 'Batangueño' of label 'Batangas' duplicated in lang-specific data (existing label is alias for 'Batangas'), adding commented-out
--- labels["Batangas"] = {
--- 	aliases = {"Batangas Tagalog", "Batangueño"},
--- 	Wikipedia = "Batangas Tagalog",
--- }
-
--- Regional label 'Marinduque' duplicated in lang-specific data (existing label is canonical), adding commented-out; Regional alias 'Marindukihin' of label 'Marinduque' duplicated in lang-specific data (existing label is alias for 'Marinduque'), adding commented-out; Regional alias 'Marinduque Tagalog' of label 'Marinduque' duplicated in lang-specific data (existing label is alias for 'Marinduque'), adding commented-out; Regional alias 'Marinduqueño' of label 'Marinduque' duplicated in lang-specific data (existing label is alias for 'Marinduque'), adding commented-out
--- labels["Marinduque"] = {
--- 	aliases = {"Marindukihin", "Marinduque Tagalog", "Marinduqueño"},
--- 	Wikipedia = "Marinduque Tagalog",
--- }
-
 labels["Old Tagalog"] = {
-	aliases = {"tl-old"},
 	Wikipedia = true,
 }
-
--- Regional label 'Southern Tagalog' duplicated in lang-specific data (existing label is canonical), adding commented-out
--- labels["Southern Tagalog"] = {
--- 	aliases = {"CALABARZON", "Timog"},
--- 	Wikipedia = "Tagalog language#Dialects",
--- }
-
--- Regional label 'Standard Tagalog' duplicated in lang-specific data (existing label is canonical), adding commented-out; Regional alias 'Filipino' of label 'Standard Tagalog' duplicated in lang-specific data (existing label is alias for 'Standard Tagalog'), adding commented-out; Regional alias 'Manila' of label 'Standard Tagalog' duplicated in lang-specific data (existing label is alias for 'Standard Tagalog'), adding commented-out; Regional alias 'Metro Manila' of label 'Standard Tagalog' duplicated in lang-specific data (existing label is alias for 'Standard Tagalog'), adding commented-out
--- labels["Standard Tagalog"] = {
--- 	aliases = {"Filipino", "Manila", "Metro Manila"},
--- 	Wikipedia = "Filipino language",
--- }
-
--- Regional label 'Tayabas' duplicated in lang-specific data (existing label is alias for 'Quezon'), adding commented-out; Regional alias 'Quezon' of label 'Tayabas' duplicated in lang-specific data (existing label is canonical), adding commented-out; Regional alias 'Tayabasin' of label 'Tayabas' duplicated in lang-specific data (existing label is alias for 'Quezon'), adding commented-out
--- labels["Tayabas"] = {
--- 	aliases = {"Quezon", "Tayabasin"},
--- 	Wikipedia = "Tagalog language#Dialects",
--- }
-
--- Regional label 'Teresa-Morong' duplicated in lang-specific data (existing label is alias for 'Rizal'), adding commented-out; Regional alias 'Rizal' of label 'Teresa-Morong' duplicated in lang-specific data (existing label is canonical), adding commented-out; Regional alias 'Rizaleño' of label 'Teresa-Morong' duplicated in lang-specific data (existing label is alias for 'Rizal'), adding commented-out; Regional alias 'Tanay-Paete' of label 'Teresa-Morong' duplicated in lang-specific data (existing label is alias for 'Rizal'), adding commented-out
--- labels["Teresa-Morong"] = {
--- 	aliases = {"Rizal", "Rizaleño", "Tanay-Paete"},
--- 	Wikipedia = "Tagalog language#Dialects",
--- }
 
 return require("Module:labels").finalize_data(labels)
 -------- end text --------
@@ -21148,21 +20392,26 @@ Page 227 Module:labels/data/lang/ur: Would save with comment = move 8 label(s) (
 Page 227 Module:labels/data/lang/ur: -------- begin text --------
 local labels = {}
 
-labels["Deccani Urdu"] = {
-	aliases = {"Deccan", "Deccani", "Dakni", "Dakini", "Dakhini", "Dakkani"},
+labels["British"] = {
+	aliases = {"British Urdu"},
+	Wikipedia = "Urdu in the UK",
+}
+
+labels["Deccani"] = {
+	aliases = {"Deccan", "Deccani Urdi", "Dakni", "Dakini", "Dakhini", "Dakkani"},
 	Wikipedia = "Deccani language",
-	plain_categories = true,
+	regional_categories = true,
 }
 
-labels["Delhiite Urdu"] = {
-	aliases = {"Delhi", "Dilli", "Dehlvi", "Delhiite"},
-	plain_categories = true,
+labels["Delhiite"] = {
+	aliases = {"Delhi", "Dilli", "Dehlvi", "Delhiite Urdu"},
+	regional_categories = true,
 }
 
-labels["Lucknawi"] = {
-	aliases = {"Lucknowi", "Lucknow", "Lucknow Urdu", "Lucknawi Urdu"},
-	Wikipedia = "Lucknow",
-	regional_categories = "Lucknow",
+labels["Lucknow"] = {
+	aliases = {"Lucknowi", "Lucknawi", "Lucknow Urdu", "Lucknawi Urdu"},
+	Wikipedia = true,
+	regional_categories = true,
 }
 
 labels["Hyderabad"] = {
@@ -21187,8 +20436,9 @@ labels["Pakistan"] = {
 }
 
 labels["Punjab"] = {
-	aliases = {"Punjabi"},
-	Wikipedia = true,
+	aliases = {"Punjabi", "ur-PB"},
+	display = "Punjabic Urdu",
+	Wikipedia = "Punjab, Pakistan",
 	regional_categories = "Punjabic",
 }
 
@@ -21198,48 +20448,25 @@ labels["South Asia"] = {
 	regional_categories = "South Asian",
 }
 
--- Regional label 'Deccan' duplicated in lang-specific data (existing label is alias for 'Deccani Urdu'), adding commented-out; Regional alias 'Dakhini' of label 'Deccan' duplicated in lang-specific data (existing label is alias for 'Deccani Urdu'), adding commented-out; Regional alias 'Deccani' of label 'Deccan' duplicated in lang-specific data (existing label is alias for 'Deccani Urdu'), adding commented-out
--- labels["Deccan"] = {
--- 	aliases = {"Dakhini", "Dakhni", "Deccani", "Hyderabadi", "Telangana"},
--- 	Wikipedia = "Deccani language",
--- 	display = "Deccani",
--- }
+------------------------------------ former accent qualifiers ------------------------------------
 
 labels["Dhakaiya"] = {
 	aliases = {"Khoshbas", "Sobbasi"},
 	Wikipedia = "Dhakaiya Urdu",
 }
 
--- Regional label 'Karachi' duplicated in lang-specific data (existing label is canonical), adding commented-out
--- labels["Karachi"] = {
--- 	display = "Karachi Urdu",
--- }
-
 labels["Lahore"] = {
-	aliases = {"Lahori Urdu"},
+	aliases = {"Lahori"},
 	Wikipedia = "Lahore#Languages",
-	display = "Lahori Urdu",
 }
 
-labels["ur"] = {
-	aliases = {"urd"},
+labels["Standard Urdu"] = {
+	aliases = {"ur"},
 	Wikipedia = "Urdu#Phonology",
-	display = "Standard Urdu",
 }
 
-labels["ur-KPK"] = {
-	Wikipedia = "Khyber Pakhtunkhwa",
-	display = "Khyber Pakhtunkhwa",
-}
-
-labels["ur-PB"] = {
-	Wikipedia = "Punjab, Pakistan",
-	display = "Punjabic Urdu",
-}
-
-labels["ur-UK"] = {
-	Wikipedia = "Urdu in the UK",
-	display = "British Urdu",
+labels["Khyber Pakhtunkhwa"] = {
+	Wikipedia = true,
 }
 
 return require("Module:labels").finalize_data(labels)
@@ -25831,26 +25058,6 @@ labels["Vietnam"] = {
 	parent = "Southeast Asia",
 }
 
--- Regional label 'Beijing' duplicated in lang-specific data (existing label is alias for 'Beijing Mandarin'), adding commented-out
--- labels["Beijing"] = {
--- 	Wikipedia = "Beijing dialect",
--- }
-
--- Regional label 'Quanzhou' duplicated in lang-specific data (existing label is alias for 'Quanzhou Hokkien'), adding commented-out
--- labels["Quanzhou"] = {
--- 	Wikipedia = true,
--- }
-
--- Regional label 'Xiamen' duplicated in lang-specific data (existing label is alias for 'Xiamen Hokkien'), adding commented-out
--- labels["Xiamen"] = {
--- 	Wikipedia = true,
--- }
-
--- Regional label 'Zhangzhou' duplicated in lang-specific data (existing label is alias for 'Zhangzhou Hokkien'), adding commented-out
--- labels["Zhangzhou"] = {
--- 	Wikipedia = true,
--- }
-
 return require("Module:labels").finalize_data(labels)
 -------- end text --------
 Page 248 Module:labels/data/lang/zh/functions: WARNING: Can't locate language zh/functions
@@ -26393,27 +25600,22 @@ Page 37 Module:labels/data/lang/ps: Would save with comment = move 6 label(s) fr
 Page 37 Module:labels/data/lang/ps: -------- begin text --------
 local labels = {}
 
+labels["Kabul"] = {
+	Wikipedia = "Pashto dialects",
+}
+
 labels["Kandahar"] = {
-	aliases = {"ps-Kandahar"},
 	Wikipedia = "Kandahari Pashto",
 }
 
-labels["ps-Kabul"] = {
-	aliases = {"Kabul"},
+labels["Peshawar"] = {
 	Wikipedia = "Pashto dialects",
-	display = "Kabuli",
 }
 
-labels["ps-Peshawar"] = {
-	aliases = {"Peshawar"},
-	Wikipedia = "Pashto dialects",
-	display = "Peshawar",
-}
-
-labels["Quetta"] = {
-	aliases = {"Balochistan", "Northern Balochistan", "ps-Quetta", "ps-SE"},
+labels["South Eastern"] = {
+	aliases = {"Quetta", "Balochistan", "Northern Balochistan"},
 	Wikipedia = "Pashto dialects#Standards",
-	display = "Southern Eastern",
+	display = "South Eastern",
 }
 
 labels["Wardak"] = {
