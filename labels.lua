@@ -177,18 +177,20 @@ end
 --[==[
 Return the displayed form of a label `label`, given (a) the label data structure `labdata` from one of the data
 modules; (b) the language object `lang` of the language being processed, or nil for no language; (c) `deprecated`
-(true if the label is deprecated, otherwise the deprecation information is taken from `labdata`). Returns two values:
-the displayed label form and a boolean indicating whether the label is deprecated.
+(true if the label is deprecated, otherwise the deprecation information is taken from `labdata`); (d) `override_display`
+(always use the label in `label` as the display value, instead of any value in `labdata.display` or
+`labdata.special_display`. Returns two values: the displayed label form and a boolean indicating whether the label is
+deprecated.
 
 '''NOTE: Under normal circumstances, do not use this.''' It is intended for internal use by
 [[Module:alternative forms]]. Instead, use `get_label_info`, which searches all the data modules for a given label
 and handles other complications.
 ]==]
-function export.get_displayed_label(label, labdata, lang, deprecated)
+function export.get_displayed_label(label, labdata, lang, deprecated, override_display)
 	local displayed_label
 	deprecated = deprecated or labdata.deprecated
 
-	if labdata.special_display then
+	if not override_display and labdata.special_display then
 		local function add_language_name(str)
 			if str == "canonical_name" then
 				if lang then
@@ -225,7 +227,7 @@ function export.get_displayed_label(label, labdata, lang, deprecated)
 			  falling back to the Wikimedia language(s) corresponding to `lang` and then (in certain cases) to the
 			  macrolanguage that `lang` is part of.
 		]=]
-		local display = labdata.display or label
+		local display = not override_display and labdata.display or label
 		if display:find("%[%[") then
 			displayed_label = display
 		elseif labdata.glossary then
@@ -389,7 +391,7 @@ function export.get_label_info(data)
 		ret.canonical = label
 	end
 
-	if labdata.track then
+	if true then -- labdata.track then -- track all labels now
 		-- Track label (after converting aliases to canonical form; but also track raw label (alias) if different
 		-- from canonical label). It is too expensive to track all labels.
 		-- [[Special:WhatLinksHere/Wiktionary:Tracking/labels/label/LABEL]]
@@ -402,7 +404,7 @@ function export.get_label_info(data)
 
 	local displayed_label
 	displayed_label, deprecated = export.get_displayed_label(display_raw_label and raw_label or label, labdata,
-		data.lang, deprecated)
+		data.lang, deprecated, display_raw_label)
 	ret.deprecated = deprecated
 	ret.display_raw_label = display_raw_label
 	if deprecated then
