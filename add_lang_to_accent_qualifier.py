@@ -7,6 +7,9 @@ import blib
 from blib import getparam, rmparam, msg, site, tname, pname
 
 accent_templates = ["a", "accent"]
+
+accent_templates_have_lang = True
+
 blib.getData()
 
 lang_for_special_pages = {
@@ -99,24 +102,70 @@ def process_text_on_page(index, pagetitle, text):
           raw_ipa_t, raw_accent_t = m.groups()
         accent_t = list(blib.parse_text(raw_accent_t).filter_templates())[0]
         ipa_t = list(blib.parse_text(raw_ipa_t).filter_templates())[0]
-        accents = blib.fetch_param_chain(accent_t, "1")
+        tname_ipa = tname(ipa_t)
+        if accent_templates_have_lang:
+          accents = blib.fetch_param_chain(accent_t, "2")
+          accent_lang = getparam(accent_t, "1")
+          ipa_lang = getparam(ipa_t, "1")
+          if accent_lang != ipa_lang:
+            pagemsg("WARNING: {{%s}} lang '%s' disagrees with {{%s}} lang '%s', not changing: %s" % (
+              tname(accent_t), accent_lang, tname_ipa, ipa_lang, line))
+            return m.group(0)
+        else:
+          accents = blib.fetch_param_chain(accent_t, "1")
         if accent_first:
           a_param_name = "a"
         else:
           a_param_name = "aa"
         if getparam(ipa_t, a_param_name):
-          pagemsg("WARNING: Already saw %s= in {{IPA}}, not changing: %s" % (a_param_name, line))
+          pagemsg("WARNING: Already saw %s= in {{%s}}, not changing: %s" % (a_param_name, tname_ipa, line))
           return m.group(0)
         a_param = ",".join(x.strip() for x in accents)
         ipa_t.add(a_param_name, a_param)
-        notes.append("incorporate %s=%s into {{IPA|%s}}" % (a_param_name, a_param, getparam(ipa_t, "1")))
+        notes.append("incorporate %s=%s into {{%s|%s}}" % (a_param_name, a_param, tname_ipa, getparam(ipa_t, "1")))
+        if tname_ipa == "IPA-lite":
+          blib.set_template_name(ipa_t, "IPA")
+          notes.append("convert {{IPA-lite}} back to {{IPA}}")
         return str(ipa_t)
       newline = re.sub(
-        r"(\{\{ *(?:a|accent) *\|(?:\{\{[^{}]*\}\}|[^{}=])+\}\}) *(\{\{ *IPA *\|(?:\{\{[^{}]*\}\}|[^{}])+\}\})",
+        r"(\{\{\s*(?:a|accent)\s*\|(?:\{\{[^{}]*\}\}|[^{}=])+\}\})[:,]*\s*(\{\{\s*(?:IPA|IPA-lite)\s*\|(?:\{\{[^{}]*\}\}|[^{}])+\}\})",
         lambda m: incorporate_a_into_IPA(m, accent_first=True), line)
       newline = re.sub(
-        r"(\{\{ *IPA *\|(?:\{\{[^{}]*\}\}|[^{}])+\}\}) *(\{\{ *(?:a|accent) *\|(?:\{\{[^{}]*\}\}|[^{}=])+\}\})",
+        r"(\{\{\s*(?:IPA|IPA-lite)\s*\|(?:\{\{[^{}]*\}\}|[^{}])+\}\})\s*(\{\{\s*(?:a|accent)\s*\|(?:\{\{[^{}]*\}\}|[^{}=])+\}\})",
         lambda m: incorporate_a_into_IPA(m, accent_first=False), newline)
+      def incorporate_a_into_enPR(m, accent_first):
+        if accent_first:
+          raw_accent_t, raw_enPR_t = m.groups()
+        else:
+          raw_enPR_t, raw_accent_t = m.groups()
+        accent_t = list(blib.parse_text(raw_accent_t).filter_templates())[0]
+        enPR_t = list(blib.parse_text(raw_enPR_t).filter_templates())[0]
+        if accent_templates_have_lang:
+          accents = blib.fetch_param_chain(accent_t, "2")
+          accent_lang = getparam(accent_t, "1")
+          if accent_lang != "en":
+            pagemsg("WARNING: {{%s}} lang '%s' not 'en', conflicting with {{enPR}}, not changing: %s" % (
+              tname(accent_t), accent_lang, line))
+            return m.group(0)
+        else:
+          accents = blib.fetch_param_chain(accent_t, "1")
+        if accent_first:
+          a_param_name = "a"
+        else:
+          a_param_name = "aa"
+        if getparam(enPR_t, a_param_name):
+          pagemsg("WARNING: Already saw %s= in {{enPR}}, not changing: %s" % (a_param_name, line))
+          return m.group(0)
+        a_param = ",".join(x.strip() for x in accents)
+        enPR_t.add(a_param_name, a_param)
+        notes.append("incorporate %s=%s into {{enPR}}" % (a_param_name, a_param))
+        return str(enPR_t)
+      newline = re.sub(
+        r"(\{\{\s*(?:a|accent)\s*\|(?:\{\{[^{}]*\}\}|[^{}=])+\}\})[:,]*\s*(\{\{\s*enPR\s*\|(?:\{\{[^{}]*\}\}|[^{}])+\}\})",
+        lambda m: incorporate_a_into_enPR(m, accent_first=True), newline)
+      newline = re.sub(
+        r"(\{\{\s*enPR\s*\|(?:\{\{[^{}]*\}\}|[^{}])+\}\})\s*(\{\{\s*(?:a|accent)\s*\|(?:\{\{[^{}]*\}\}|[^{}=])+\}\})",
+        lambda m: incorporate_a_into_enPR(m, accent_first=False), newline)
       if newline != line:
         pagemsg("Replace <%s> with <%s>" % (line, newline))
         lines[i] = newline
