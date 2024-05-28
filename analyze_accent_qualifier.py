@@ -18,6 +18,24 @@ accent_aliases_seen = defaultdict(int)
 labels_aliases = defaultdict(set)
 labels_langs = defaultdict(set)
 
+accent_templates_have_lang = False
+
+qualifiers_to_enumerate = {
+  ("RP", "Translingual"),# [DONE]
+  ("US", "Translingual"),# [DONE]
+  ("US", "Italian"),# [DONE]
+  ("US", "German"), # [DONE]
+  ("UK", "Italian"), # switch lang to en [DONE]
+  ("UK", "German"), # switch lang to en [DONE]
+  ("Canada", "French"), # should be OK now that we've switched to labels
+  ("New York", "English"), # rename to NYC [DONE]
+  ("ps-Kandahar", "Pashto"), # rename to Kandahar [DONE]
+  ("Baku", "Malay"), # rename to Bahasa Baku? [DONE]
+  ("horse-hoarse", "English"),
+  ("wine/whine", "English"),
+  ("wine-whine", "English"),
+}
+
 blib.getData()
 
 def process_text_on_page(index, pagename, text):
@@ -35,7 +53,7 @@ def process_text_on_page(index, pagename, text):
     if not too_many_pages_for_qualifiers_by_lang[qual][lang]:
       pageset = pages_for_qualifiers_by_lang[qual][lang]
       if pagename not in pageset:
-        if len(pageset) < 10:
+        if len(pageset) < 10 or (qual, lang) in qualifiers_to_enumerate:
           pageset.add(pagename)
         else:
           too_many_pages_for_qualifiers_by_lang[qual][lang] = True
@@ -47,7 +65,7 @@ def process_text_on_page(index, pagename, text):
     for t in parsed.filter_templates():
       tn = tname(t)
       if tn in ["a", "accent"]:
-        params = blib.fetch_param_chain(t, "1")
+        params = blib.fetch_param_chain(t, "2" if accent_templates_have_lang else "1")
         for paramind, param in enumerate(params):
           param = param.strip()
           if paramind == 0:
@@ -84,7 +102,8 @@ def read_aliases():
     errandmsg("Page 0: %s" % txt)
   def expand_text(tempcall):
     return blib.expand_text(tempcall, "foo", pagemsg, args.verbose)
-  accent_qualifier_data = json.loads(expand_text("{{#invoke:accent qualifier|output_data_module}}"))
+  #accent_qualifier_data = json.loads(expand_text("{{#invoke:accent qualifier|output_data_module}}"))
+  accent_qualifier_data = {"aliases": {}, "labels": {}}
 
 read_aliases()
 
