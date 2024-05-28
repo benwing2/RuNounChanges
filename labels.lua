@@ -25,6 +25,42 @@ local function ucfirst(txt)
 	return mw.getContentLanguage():ucfirst(txt)
 end
 
+local mode_to_outer_class = {
+	["label"] = "usage-label-sense",
+	["term-label"] = "usage-label-term",
+	["accent"] = "usage-label-accent",
+	["form-of"] = "usage-label-form-of",
+}
+
+local mode_to_property_prefix = {
+	["label"] = false,
+	["term-label"] = false, -- handled specially
+	["accent"] = "accent_",
+	["form-of"] = "form_",
+}
+
+local function validate_mode(mode, allow_unrecognized)
+	mode = mode or "label"
+	if not mode_to_outer_class[mode] then
+		-- FIXME! Remove this hack.
+		if allow_unrecognized then
+			return "term-label"
+		end
+		local allowed_values = {}
+		for key, _ in pairs(mode_to_outer_class) do
+			table.insert(allowed_values, "'" .. key .. "'")
+		end
+		table.sort(allowed_values)
+		error(("Invalid value '%s' for `mode`; should be one of %s"):format(mode, table.concat(allowed_values, ", ")))
+	end
+	return mode
+end
+
+local function getprop(labdata, mode, prop)
+	local mode_prefix = mode_to_property_prefix[mode]
+	return mode_prefix and labdata[mode_prefix .. prop] or labdata[prop]
+end
+
 -- HACK! For languages in any of the given families, check the specified-language Wikipedia for appropriate
 -- Wikipedia articles for the language in question (esp. useful for obscure etymology-only languages that may not
 -- have English articles for them, like many Chinese lects).
@@ -67,16 +103,20 @@ end
 
 --[==[
 Fetch the categories to add to a page, given that the label whose canonical form is `canon_label` with language `lang`
-has been seen. `labdata` is the label data structure for `label`, fetched from the appropriate submodule. If `term_mode`
-is specified, the label was invoked using {{tl|tlb}}; otherwise, {{tl|lb}}. The return value is a list of the actual
-categories, unless `for_doc` is specified, in which case the categories returned are marked up for display on a
-documentation page. If `for_doc` is given, `lang` may be nil to format the categories in a language-independent fashion;
-otherwise, it must be specified. If `category_types` is specified, it should be a set object (i.e. with category types
-as keys and {true} as values), and only categories of the specified types will be returned.
+has been seen. `labdata` is the label data structure for `label`, fetched from the appropriate submodule. `mode`
+specifies how the label was invoked; if {nil} or {"label"}, through {{tl|lb}}; if {"term-label"}, through {{tl|tlb}}; if
+{"accent"}, through {{tl|a}} (but this should never happen, as {{tl|a}} doesn't categorize); if {"form-of"}, through
+{{tl|alt form}}, {{tl|spelling of}} or similar. The return value is a list of the actual categories, unless `for_doc` is
+specified, in which case the categories returned are marked up for display on a documentation page. If `for_doc` is
+given, `lang` may be nil to format the categories in a language-independent fashion; otherwise, it must be specified. If
+`category_types` is specified, it should be a set object (i.e. with category types as keys and {true} as values), and
+only categories of the specified types will be returned.
 ]==]
-function export.fetch_categories(canon_label, labdata, lang, term_mode, for_doc, category_types)
+function export.fetch_categories(canon_label, labdata, lang, mode, for_doc, category_types)
 	local categories = {}
 
+	-- FIXME! Remove "allow unrecognized" when all callers converted.
+	mode = validate_mode(mode, "allow unrecognized")
 	local langcode, canonical_name
 	if lang then
 		langcode = lang:getFullCode()
@@ -88,12 +128,15 @@ function export.fetch_categories(canon_label, labdata, lang, term_mode, for_doc,
 		error("Internal error: Must specify `lang` unless `for_doc` is given")
 	end
 
+	local function labprop(prop)
+		return getprop(labdata, mode, prop)
+	end
 	local empty_list = {}
 	local function get_cats(cat_type)
 		if category_types and not category_types[cat_type] then
 			return empty_list
 		end
-		local cats = labdata[cat_type]
+		local cats = labprop(cat_type)
 		if not cats then
 			return empty_list
 		end
@@ -113,10 +156,10 @@ function export.fetch_categories(canon_label, labdata, lang, term_mode, for_doc,
 		if for_doc then
 			cat = "<code>" .. cat .. "</code>"
 			if sense_cat then
-				if term_mode then
+				if mode == "term-label" then
 					cat = cat .. " (using {{tl|tlb}})"
 				else
-					cat = cat .. " (using {{tl|lb}})"
+					cat = cat .. " (using {{tl|lb}} or form-of template)"
 				end
 				cat = mw.getCurrentFrame():preprocess(cat)
 			end
@@ -133,7 +176,7 @@ function export.fetch_categories(canon_label, labdata, lang, term_mode, for_doc,
 		if cat == true then
 			cat = canon_label
 		end
-		cat = (term_mode and cat .. " terms" ) or "terms with " .. cat .. " senses"
+		cat = mode == "term-label" and cat .. " terms" or "terms with " .. cat .. " senses"
 		insert_cat(canonical_name .. " " .. cat, true)
 	end
 
@@ -179,19 +222,22 @@ Return the displayed form of a label `label`, given (a) the label data structure
 modules; (b) the language object `lang` of the language being processed, or nil for no language; (c) `deprecated`
 (true if the label is deprecated, otherwise the deprecation information is taken from `labdata`); (d) `override_display`
 (always use the label in `label` as the display value, instead of any value in `labdata.display` or
-`labdata.special_display`; (e) `accent_mode` (if specified, use the `accent_*` versions of properties in preference to
-the bare properties, if they exist; used when handling {{tl|a}}). Returns two values: the displayed label form and a
-boolean indicating whether the label is deprecated.
+`labdata.special_display`; (e) `mode` (same as `data.mode` passed to {get_label_info()}). Returns two values: the
+displayed label form and a boolean indicating whether the label is deprecated.
 
 '''NOTE: Under normal circumstances, do not use this.''' It is intended for internal use by
-[[Module:alternative forms]]. Instead, use `get_label_info`, which searches all the data modules for a given label
+[[Module:alternative forms]]. Instead, use {get_label_info()}, which searches all the data modules for a given label
 and handles other complications.
 ]==]
-function export.get_displayed_label(label, labdata, lang, deprecated, override_display, accent_mode)
+function export.get_displayed_label(label, labdata, lang, deprecated, override_display, mode)
 	local displayed_label
-	deprecated = deprecated or labdata.deprecated
 
-	if not override_display and labdata.special_display then
+	mode = validate_mode(mode)
+	local function labprop(prop)
+		return getprop(labdata, mode, prop)
+	end
+	deprecated = deprecated or labprop("deprecated")
+	if not override_display and labprop("special_display") then
 		local function add_language_name(str)
 			if str == "canonical_name" then
 				if lang then
@@ -204,7 +250,7 @@ function export.get_displayed_label(label, labdata, lang, deprecated, override_d
 			end
 		end
 		
-		displayed_label = labdata.special_display:gsub("<(.-)>", add_language_name)
+		displayed_label = labprop("special_display"):gsub("<(.-)>", add_language_name)
 	else
 		--[=[
 			If labdata.glossary or labdata.Wikipedia are set to true, there is a glossary definition
@@ -228,20 +274,17 @@ function export.get_displayed_label(label, labdata, lang, deprecated, override_d
 			  falling back to the Wikimedia language(s) corresponding to `lang` and then (in certain cases) to the
 			  macrolanguage that `lang` is part of.
 
-			Note that if accent_mode is set, properties prefixed by "accent_" (e.g. "accent_display",
-			"accent_Wikipedia") are checked before the bare equivalent (e.g. "display", "Wikipedia").
+			Note that if `mode` is specified, prefixed properties (e.g. "accent_display" for `mode` == "accent",
+			"form_display" for `mode` == "form") are checked before the bare equivalent (e.g. "display").
 		]=]
-		local display = not override_display and (accent_mode and labdata.accent_display or labdata.display) or label
+		local display = not override_display and labprop("display") or label
 		if display:find("%[%[") then
 			displayed_label = display
 		else
-			local function labdata_prop(prop)
-				return accent_mode and labdata["accent_" .. prop] or labdata[prop]
-			end
-			local glossary = labdata_prop("glossary")
-			local Wiktionary = labdata_prop("Wiktionary")
-			local Wikipedia = labdata_prop("Wikipedia")
-			local Wikidata = labdata_prop("Wikidata")
+			local glossary = labprop("glossary")
+			local Wiktionary = labprop("Wiktionary")
+			local Wikipedia = labprop("Wikipedia")
+			local Wikidata = labprop("Wikidata")
 			if glossary then
 				local glossary_entry = type(glossary) == "string" and glossary or label
 				displayed_label = "[[Appendix:Glossary#" .. glossary_entry .. "|" .. display .. "]]"
@@ -297,7 +340,8 @@ end
 Return information on a label. On input `data` is an object with the following fields:
 * `label`: The label to return information on.
 * `lang`: The language of the label. Must be specified unless `for_doc` is given.
-* `term_mode`: If true, the label was invoked using {{tl|tlb}}; otherwise, {{tl|lb}}.
+* `mode`: How the label was invoked. If {nil} or {"label"}, through {{tl|lb}}; if {"term-label"}, through {{tl|tlb}}; if
+  {"accent"}, through {{tl|a}}; if {"form-of"}, through {{tl|alt form}}, {{tl|spelling of}} or similar.
 * `for_doc`: Data is being fetched for documentation purposes. This causes the raw categories returned in
   `categories` to be formatted for documentation display.
 * `nocat`: If true, don't add the label to any categories.
@@ -311,7 +355,7 @@ The return value is an object with the following fields:
 * `label`: The display form of the label.
 * `categories`: A list of the categories to add the label to; an empty list of `nocat` was specified.
 * `formatted_categories`: A string containing the formatted categories; an empty string if `nocat` or `for_doc` was
-  specified or if 
+  specified or if ... (FIXME)
 * `deprecated`: True if the label is deprecated.
 * `display_raw_label`: If true, the label was preceded by ! to indicate that the raw label should be displayed
   rather than the canonical form.
@@ -324,6 +368,8 @@ function export.get_label_info(data)
 		error("`data` must now be an object containing the params")
 	end
 
+	-- FIXME! Remove "allow unrecognized" when all callers converted.
+	local mode = validate_mode(data.mode, "allow unrecognized")
 	local ret = {categories = {}}
 	local label = data.label
 	local display_raw_label = false
@@ -359,13 +405,14 @@ function export.get_label_info(data)
 			-- Make sure either there's no lang restriction, or we're processing lang-independent, or our language
 			-- is among the listed languages. Otherwise, continue processing (which could conceivably pick up a
 			-- lang-appropriate version of the label in another label data module).
-			if not this_labdata.langs or not data_langcode then
+			local lablangs = getprop(this_labdata, mode, "langs")
+			if not lablangs or not data_langcode then
 				labdata = this_labdata
 				label = resolved_label or label
 				break
 			end
 			local lang_in_list = false
-			for _, langcode in ipairs(this_labdata.langs) do
+			for _, langcode in ipairs(lablangs) do
 				if langcode == data_langcode then
 					lang_in_list = true
 					break
@@ -396,7 +443,10 @@ function export.get_label_info(data)
 		ret.recognized = false
 	end
 
-	if labdata.deprecated then
+	local function labprop(prop)
+		return getprop(labdata, mode, prop)
+	end
+	if labprop("deprecated") then
 		deprecated = true
 	end
 	if label ~= raw_label then
@@ -404,7 +454,7 @@ function export.get_label_info(data)
 		ret.canonical = label
 	end
 
-	if true then -- labdata.track then -- track all labels now
+	if true then -- labprop("track") then -- track all labels now
 		-- Track label (after converting aliases to canonical form; but also track raw label (alias) if different
 		-- from canonical label). It is too expensive to track all labels.
 		-- [[Special:WhatLinksHere/Wiktionary:Tracking/labels/label/LABEL]]
@@ -417,7 +467,7 @@ function export.get_label_info(data)
 
 	local displayed_label
 	displayed_label, deprecated = export.get_displayed_label(display_raw_label and raw_label or label, labdata,
-		data.lang, deprecated, display_raw_label, data.accent_mode)
+		data.lang, deprecated, display_raw_label, mode)
 	ret.deprecated = deprecated
 	ret.display_raw_label = display_raw_label
 	if deprecated then
@@ -431,9 +481,9 @@ function export.get_label_info(data)
 	end
 
 	local label_for_already_seen =
-		(labdata.topical_categories or labdata.regional_categories
-		or labdata.plain_categories or labdata.pos_categories
-		or labdata.sense_categories) and displayed_label
+		(labprop("topical_categories") or labprop("regional_categories")
+		or labprop("plain_categories") or labprop("pos_categories")
+		or labprop("sense_categories")) and displayed_label
 		or nil
 	
 	-- Track label text. If label text was previously used, don't show it, but include the categories.
@@ -450,7 +500,7 @@ function export.get_label_info(data)
 	if data.nocat then
 		ret.formatted_categories = ""
 	else
-		local cats = export.fetch_categories(label, labdata, data.lang, data.term_mode, data.for_doc)
+		local cats = export.fetch_categories(label, labdata, data.lang, mode, data.for_doc)
 		for _, cat in ipairs(cats) do
 			table.insert(ret.categories, cat)
 		end
@@ -510,7 +560,8 @@ that support displaying labels along with some other information.
 On input `data` is an object with the following fields:
 * `labels`: List of the label objects to format, in the format returned by {get_label_info()}.
 * `lang`: The language of the labels.
-* `term_mode`: If true, the label was invoked using {{tl|tlb}}; otherwise, {{tl|lb}}. This only affects categorization.
+* `mode`: How the label was invoked. If {nil} or {"label"}, through {{tl|lb}}; if {"term-label"}, through {{tl|tlb}}; if
+  {"accent"}, through {{tl|a}}; if {"form-of"}, through {{tl|alt form}}, {{tl|spelling of}} or similar.
 * `sort`: Sort key for categorization.
 * `already_seen`: An object used to track labels already seen, so they aren't displayed twice, as documented in
   {get_label_info()}. To enable this, set this to an empty object. If `already_seen` is {nil}, this tracking doesn't
@@ -602,10 +653,10 @@ module. The return value is a string to be inserted into the generated page, inc
 input `data` is an object with the following fields:
 * `labels`: List of the labels to format.
 * `lang`: The language of the labels.
-* `term_mode`: If specified, the label was invoked using {{tl|tlb}}; otherwise, {{tl|lb}} or {{tl|a}}. This only
-  controls categorization. (FIXME: Consider renaming to 'categorization_mode' and making a string property.)
-* `accent_mode`: If specified, the label was invoked using {{tl|a}}; otherwise, {{tl|tlb}} or {{tl|lb}}. This only
-  controls display. (FIXME: Consider renaming to 'display_mode' and making a string property.)
+* `mode`: Indicates a special "mode" of operation, typically controlled by how the label was invoked. If {nil} or
+  {"label"}, the label was invoked using {{tl|lb}}; if {"term-label"}, the label was invoked using {{tl|tlb}}; if
+  {"accent"}, the label was invoked using {{tl|a}}; if {"form-of"}, the label was invoked using {{tl|alt form}},
+  {{tl|spelling of}} or other form-of template. This controls the display and/or categorization of a minority of labels.
 * `nocat`: If true, don't add the label to any categories.
 * `sort`: Sort key for categorization.
 * `no_track_already_seen`: Don't track already-seen labels. If not specified, already-seen labels are not displayed
@@ -619,8 +670,8 @@ Compared with {format_processed_labels()}, this function has the following diffe
 # The labels specified in `labels` are raw labels (i.e. strings) rather than formatted objects.
 # The open and close brackets default to parentheses ("round brackets") rather than not being displayed by default.
 # Tracking of already-seen labels is enabled unless explicitly turned off using `no_track_already_seen`.
-# The entire formatted result is wrapped in the {"usage-label-sense"} CSS class (or {"usage-label-term"} if `term_mode`
-  is specified).
+# The entire formatted result is wrapped in a {"usage-label-<var>type</var>"} CSS class (depending on the value of
+  `mode`).
 
 '''WARNING''': This destructively modifies the `data` structure.
 ]==]
@@ -651,7 +702,7 @@ function export.show_labels(data)
 	end
 	local formatted = export.format_processed_labels(data)
 	return
-		"<span class=\"" .. (data.term_mode and "usage-label-term" or "usage-label-sense") .. "\">" .. formatted ..
+		"<span class=\"" .. mode_to_outer_class[data.mode or "label"] .. "\">" .. formatted ..
 			"</span>"
 end
 
