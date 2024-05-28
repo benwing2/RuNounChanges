@@ -179,14 +179,15 @@ Return the displayed form of a label `label`, given (a) the label data structure
 modules; (b) the language object `lang` of the language being processed, or nil for no language; (c) `deprecated`
 (true if the label is deprecated, otherwise the deprecation information is taken from `labdata`); (d) `override_display`
 (always use the label in `label` as the display value, instead of any value in `labdata.display` or
-`labdata.special_display`. Returns two values: the displayed label form and a boolean indicating whether the label is
-deprecated.
+`labdata.special_display`; (e) `accent_mode` (if specified, use the `accent_*` versions of properties in preference to
+the bare properties, if they exist; used when handling {{tl|a}}). Returns two values: the displayed label form and a
+boolean indicating whether the label is deprecated.
 
 '''NOTE: Under normal circumstances, do not use this.''' It is intended for internal use by
 [[Module:alternative forms]]. Instead, use `get_label_info`, which searches all the data modules for a given label
 and handles other complications.
 ]==]
-function export.get_displayed_label(label, labdata, lang, deprecated, override_display)
+function export.get_displayed_label(label, labdata, lang, deprecated, override_display, accent_mode)
 	local displayed_label
 	deprecated = deprecated or labdata.deprecated
 
@@ -226,50 +227,62 @@ function export.get_displayed_label(label, labdata, lang, deprecated, override_d
 			  fetched if available. Otherwise, the English-language Wikipedia article is retrieved if available,
 			  falling back to the Wikimedia language(s) corresponding to `lang` and then (in certain cases) to the
 			  macrolanguage that `lang` is part of.
+
+			Note that if accent_mode is set, properties prefixed by "accent_" (e.g. "accent_display",
+			"accent_Wikipedia") are checked before the bare equivalent (e.g. "display", "Wikipedia").
 		]=]
-		local display = not override_display and labdata.display or label
+		local display = not override_display and (accent_mode and labdata.accent_display or labdata.display) or label
 		if display:find("%[%[") then
 			displayed_label = display
-		elseif labdata.glossary then
-			local glossary_entry = type(labdata.glossary) == "string" and labdata.glossary or label
-			displayed_label = "[[Appendix:Glossary#" .. glossary_entry .. "|" .. display .. "]]"
-		elseif labdata.Wiktionary then
-			displayed_label = "[[" .. labdata.Wiktionary .. "|" .. display .. "]]"
-		elseif labdata.Wikipedia then
-			local Wikipedia_entry = type(labdata.Wikipedia) == "string" and labdata.Wikipedia or label
-			displayed_label = "[[w:" .. Wikipedia_entry .. "|" .. display .. "]]"
-		elseif labdata.Wikidata then
-			if not mw.wikibase then
-				error(("Unable to retrieve data from Wikidata ID for label '%s'; `mw.wikibase` not defined"):format(label))
+		else
+			local function labdata_prop(prop)
+				return accent_mode and labdata["accent_" .. prop] or labdata[prop]
 			end
-			local function make_displayed_label(wmcode, id)
-				local article = mw.wikibase.sitelink(id, wmcode .. "wiki")
-				if article then
-					local link = wmcode == "en" and "w:" .. article or "w:" .. wmcode .. ":" .. article
-					return ("[[%s|%s]]"):format(link, display)
-				else
-					return nil
+			local glossary = labdata_prop("glossary")
+			local Wiktionary = labdata_prop("Wiktionary")
+			local Wikipedia = labdata_prop("Wikipedia")
+			local Wikidata = labdata_prop("Wikidata")
+			if glossary then
+				local glossary_entry = type(glossary) == "string" and glossary or label
+				displayed_label = "[[Appendix:Glossary#" .. glossary_entry .. "|" .. display .. "]]"
+			elseif Wiktionary then
+				displayed_label = "[[" .. Wiktionary .. "|" .. display .. "]]"
+			elseif Wikipedia then
+				local Wikipedia_entry = type(Wikipedia) == "string" and Wikipedia or label
+				displayed_label = "[[w:" .. Wikipedia_entry .. "|" .. display .. "]]"
+			elseif Wikidata then
+				if not mw.wikibase then
+					error(("Unable to retrieve data from Wikidata ID for label '%s'; `mw.wikibase` not defined"
+						):format(label))
 				end
-			end
-			local wikidata = labdata.Wikidata
-			if type(wikidata) == "table" then
-				wikidata = wikidata[1]
-			end
-			local wmcode, id = wikidata:match("^(.*):(.*)$")
-			if wmcode then
-				displayed_label = make_displayed_label(wmcode, id)
-			else
-				local langs_to_check = export.get_langs_to_extract_wikipedia_articles_from_wikidata(lang)
-				for _, wmcode in ipairs(langs_to_check) do
-					displayed_label = make_displayed_label(wmcode, wikidata)
-					if displayed_label then
-						break
+				local function make_displayed_label(wmcode, id)
+					local article = mw.wikibase.sitelink(id, wmcode .. "wiki")
+					if article then
+						local link = wmcode == "en" and "w:" .. article or "w:" .. wmcode .. ":" .. article
+						return ("[[%s|%s]]"):format(link, display)
+					else
+						return nil
 					end
 				end
+				if type(Wikidata) == "table" then
+					Wikidata = Wikidata[1]
+				end
+				local wmcode, id = Wikidata:match("^(.*):(.*)$")
+				if wmcode then
+					displayed_label = make_displayed_label(wmcode, id)
+				else
+					local langs_to_check = export.get_langs_to_extract_wikipedia_articles_from_wikidata(lang)
+					for _, wmcode in ipairs(langs_to_check) do
+						displayed_label = make_displayed_label(wmcode, Wikidata)
+						if displayed_label then
+							break
+						end
+					end
+				end
+				displayed_label = displayed_label or display
+			else
+				displayed_label = display
 			end
-			displayed_label = displayed_label or display
-		else
-			displayed_label = display
 		end
 	end
 
@@ -404,7 +417,7 @@ function export.get_label_info(data)
 
 	local displayed_label
 	displayed_label, deprecated = export.get_displayed_label(display_raw_label and raw_label or label, labdata,
-		data.lang, deprecated, display_raw_label)
+		data.lang, deprecated, display_raw_label, data.accent_mode)
 	ret.deprecated = deprecated
 	ret.display_raw_label = display_raw_label
 	if deprecated then
@@ -583,13 +596,16 @@ function export.format_processed_labels(data)
 end
 
 --[==[
-Format one or more labels for display and categorization. This provides the implementation of the {{tl|label}}/{{tl|lb}}
-and {{tl|term label}}/{{tl|tlb}} templates, and can also be called from a module. The return value is a string to be
-inserted into the generated page, including the display and categories. On input `data` is an object with the following
-fields:
+Format one or more labels for display and categorization. This provides the implementation of the
+{{tl|label}}/{{tl|lb}}, {{tl|term label}}/{{tl|tlb}} and {{tl|accent}}/{{tl|a}} templates, and can also be called from a
+module. The return value is a string to be inserted into the generated page, including the display and categories. On
+input `data` is an object with the following fields:
 * `labels`: List of the labels to format.
 * `lang`: The language of the labels.
-* `term_mode`: If true, the label was invoked using {{tl|tlb}}; otherwise, {{tl|lb}}.
+* `term_mode`: If specified, the label was invoked using {{tl|tlb}}; otherwise, {{tl|lb}} or {{tl|a}}. This only
+  controls categorization. (FIXME: Consider renaming to 'categorization_mode' and making a string property.)
+* `accent_mode`: If specified, the label was invoked using {{tl|a}}; otherwise, {{tl|tlb}} or {{tl|lb}}. This only
+  controls display. (FIXME: Consider renaming to 'display_mode' and making a string property.)
 * `nocat`: If true, don't add the label to any categories.
 * `sort`: Sort key for categorization.
 * `no_track_already_seen`: Don't track already-seen labels. If not specified, already-seen labels are not displayed
