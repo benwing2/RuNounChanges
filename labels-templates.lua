@@ -2,15 +2,6 @@ local export = {}
 
 local labels_module = "Module:labels"
 
---[=[
-	Modules used:
-	[[Module:labels]]
-	[[Module:parameters]]
-	[[Module:utilities]]
-	[[Module:languages]]
-	[[Module:template_link]]
-]=]
-
 -- Add tracking category for PAGE. The tracking category linked to is [[Wiktionary:Tracking/labels/PAGE]].
 local function track(page)
 	require("Module:debug/track")("labels/" .. page)
@@ -49,7 +40,28 @@ function export.show(frame)
 		labels = labels,
 		sort = args.sort,
 		nocat = args.nocat,
-		term_mode = term_mode
+		term_mode = term_mode,
+	}
+end
+
+--[==[
+External entry point that implements {{tl|accent}} and {{tl|a}}.
+]==]
+function export.show_accent(frame)
+	local parent_args = frame:getParent().args
+
+	local params = {
+		[1] = {type = "language", etym_lang = true, default = "und"},
+		[2] = {list = true, required = true, default = "{{{2}}}"},
+	}
+	local args = require("Module:parameters").process(parent_args, params)
+	local lang = args[1]
+	local labels = args[2]
+	return require(labels_module).show_labels {
+		lang = lang,
+		labels = labels,
+		nocat = true,
+		accent_mode = true,
 	}
 end
 
