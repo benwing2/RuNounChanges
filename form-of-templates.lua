@@ -1,5 +1,4 @@
-local export = {}
-
+local insert = table.insert
 local m_form_of = require("Module:form of")
 local m_params = require("Module:parameters")
 local put_module = "Module:parse utilities"
@@ -8,9 +7,11 @@ local rmatch = mw.ustring.match
 local rsplit = mw.text.split
 local rgsplit = mw.text.gsplit
 
+local export = {}
+
 -- Add tracking category for PAGE when called from TEMPLATE. The tracking category linked to is
--- [[Template:tracking/form-of/TEMPLATE/PAGE]]. If TEMPLATE is omitted, the tracking category is of the form
--- [[Template:tracking/form-of/PAGE]].
+-- [[Wiktionary:Tracking/form-of/TEMPLATE/PAGE]]. If TEMPLATE is omitted, the tracking category is of the form
+-- [[Wiktionary:Tracking/form-of/PAGE]].
 local function track(page, template)
 	require("Module:debug/track")("form-of/" .. (template and template .. "/" or "") .. page)
 end
@@ -19,13 +20,8 @@ end
 -- Equivalent to list.extend(new_items) in Python. Appends items in `new_items` (a list) to `list`.
 local function extend_list(list, new_items)
 	for _, item in ipairs(new_items) do
-		table.insert(list, item)
+		insert(list, item)
 	end
-end
-
-
-local function get_script(sc, param_for_error)
-	return sc and require("Module:scripts").getByCode(sc, param_for_error) or nil
 end
 
 
@@ -82,10 +78,10 @@ local function process_parent_args(template, parent_args, params, defaults, igno
 				local param = rmatch(ignore, "^(.*):list$")
 				if param then
 					if rfind(param, "^[0-9]+$") then
-						table.insert(numbered_list_params_to_ignore, tonumber(param))
+						insert(numbered_list_params_to_ignore, tonumber(param))
 					else
-						table.insert(named_list_params_to_ignore,
-							"^" .. require("Module:utilities").pattern_escape(param) .. "[0-9]*$")
+						insert(named_list_params_to_ignore,
+							"^" .. require("Module:string utilities").pattern_escape(param) .. "[0-9]*$")
 					end
 				else
 					if rfind(ignore, "^[0-9]+$") then
@@ -121,7 +117,7 @@ local function process_parent_args(template, parent_args, params, defaults, igno
 		end
 		parent_args = new_parent_args
 	end
-
+	
 	local args = m_params.process(parent_args, params, nil, "form of/templates", function_name)
 
 	-- Tracking for certain user-specified params. This is generally used for
@@ -148,7 +144,7 @@ local function split_inflection_tags(tagspecs, split_regex)
 	local inflection_tags = {}
 	for _, tagspec in ipairs(tagspecs) do
 		for tag in rgsplit(tagspec, split_regex) do
-			table.insert(inflection_tags, tag)
+			insert(inflection_tags, tag)
 		end
 	end
 	return inflection_tags
@@ -168,7 +164,7 @@ local term_param_mods = {
 		-- We need to store the <g:...> inline modifier into the "genders" key of the parsed part, because that is what
 		-- [[Module:links]] expects.
 		item_dest = "genders",
-		convert = function(arg, parse_err)
+		convert = function(arg)
 			return rsplit(arg, ",")
 		end,
 	},
@@ -179,8 +175,10 @@ local term_param_mods = {
 	lit = {},
 	pos = {},
 	sc = {
+		-- FIXME: [[Module:parse utilities]] should be integrated with [[Module:parameters]], to allow fully automatic error handling.
 		convert = function(arg, parse_err)
-			return get_script(arg, parse_err)
+			return require("Module:scripts").getByCode(arg) or
+				parse_err("Parameter \"sc\" should be a valid script code; the value " .. mw.dumpObject(arg) .. " is not valid. See [[WT:LOS]].")
 		end,
 	}
 }
@@ -209,7 +207,11 @@ local function parse_terms_with_inline_modifiers(paramname, val, lang)
 			-- this happens when there's an embedded {{,}} template, as in [[MMR]], [[TMA]], [[DEI]], where an initialism
 			-- expands to multiple terms; easiest not to try and parse the lemma spec as multiple lemmas
 			retval = {val}
-		elseif val:find(",%s") then
+		elseif val:find(",%s") or (val:find(",") and val:find("[\\%[<]")) then
+			-- Comma after whitespace not split; nor are backslash-escaped commas or commas inside of square or
+			-- angle brackets. If we see any of these, use the more sophisticated algorithm in
+			-- [[Module:parse utilities]]. Otherwise it's safe to just split on commas directly. This optimization avoids
+			-- loading [[Module:parse utilities]] unnecessarily.
 			retval = require(put_module).split_on_comma(val)
 		else
 			retval = rsplit(val, ",")
@@ -243,6 +245,7 @@ local function add_link_params(parent_args, params, term_param, no_numbered_glos
 			end
 		end
 	end
+	
 	-- If no params for the second or higher term exist, use a simpler param setup to save memory.
 	params[term_param + 1] = {alias_of = "alt"}
 	if not no_numbered_gloss then
@@ -254,10 +257,12 @@ local function add_link_params(parent_args, params, term_param, no_numbered_glos
 	-- Named params controlling link display
 	params["gloss"] = {alias_of = "t"}
 	params["g"] = {list = true}
-	for _, param in ipairs(link_params) do
-		if param ~= "gloss" and param ~= "g" and param ~= "term" then
-			params[param] = {}
-		end
+	params["sc"] = {type = "script"}
+	
+	-- Not "term".
+	for i = 2, #link_params do
+		local param = link_params[i]
+		params[param] = params[param] or {}
 	end
 end
 
@@ -320,8 +325,7 @@ where
 This is a subfunction of construct_form_of_text().
 ]=]
 local function get_lemmas_and_categories(iargs, args, term_param, compat, base_lemma_params)
-	local lang = args[compat and "lang" or 1] or iargs["lang"] or "und"
-	lang = require("Module:languages").getByCode(lang, compat and "lang" or 1)
+	local lang = args[compat and "lang" or 1]
 
 	-- Determine categories for the page, including tracking categories
 
@@ -329,11 +333,11 @@ local function get_lemmas_and_categories(iargs, args, term_param, compat, base_l
 
 	if not args["nocat"] then
 		for _, cat in ipairs(iargs["cat"]) do
-			table.insert(categories, lang:getCanonicalName() .. " " .. cat)
+			insert(categories, lang:getCanonicalName() .. " " .. cat)
 		end
 	end
 	for _, cat in ipairs(args["cat"]) do
-		table.insert(categories, lang:getCanonicalName() .. " " .. cat)
+		insert(categories, lang:getCanonicalName() .. " " .. cat)
 	end
 
 	-- Format the link, preceding text and categories
@@ -341,13 +345,13 @@ local function get_lemmas_and_categories(iargs, args, term_param, compat, base_l
 	local function add_term_tracking_categories(term)
 		-- add tracking category if term is same as page title
 		if term and mw.title.getCurrentTitle().text == (lang:makeEntryName(term)) then
-			table.insert(categories, "Forms linking to themselves")
+			insert(categories, "Forms linking to themselves")
 		end
 		-- maybe add tracking category if primary entry doesn't exist (this is an
 		-- expensive call so we don't do it by default)
 		if iargs["noprimaryentrycat"] and term and mw.title.getCurrentTitle().nsText == ""
 			and not mw.title.new(term).exists then
-			table.insert(categories, lang:getCanonicalName() .. " " .. iargs["noprimaryentrycat"])
+			insert(categories, lang:getCanonicalName() .. " " .. iargs["noprimaryentrycat"])
 		end
 	end
 
@@ -380,9 +384,9 @@ local function get_lemmas_and_categories(iargs, args, term_param, compat, base_l
 		-- sc= but not invocation arg sc= should override inline modifier sc=.
 		local sc
 		if args["sc"] then
-			lemmas[1].sc = get_script(args["sc"], "sc")
+			lemmas[1].sc = args["sc"]
 		elseif not lemmas[1].sc and iargs["sc"] then
-			lemmas[1].sc = get_script(iargs["sc"], "sc")
+			lemmas[1].sc = iargs["sc"]
 		end
 
 		if #args["g"] > 0 then
@@ -412,7 +416,7 @@ local function get_lemmas_and_categories(iargs, args, term_param, compat, base_l
 		for _, base_lemma_param_obj in ipairs(base_lemma_params) do
 			local param = base_lemma_param_obj.param
 			if args[param] then
-				table.insert(base_lemmas, {
+				insert(base_lemmas, {
 					paramobj = base_lemma_param_obj,
 					lemmas = parse_terms_with_inline_modifiers(param, args[param], lang),
 				})
@@ -471,8 +475,8 @@ end
 local function get_common_invocation_params()
 	return {
 		["term_param"] = {type = "number"},
-		["lang"] = {},
-		["sc"] = {},
+		["lang"] = {}, -- To be used as the default code in params.
+		["sc"] = {type = "script"},
 		["cat"] = {list = true},
 		["ignore"] = {list = true},
 		["def"] = {list = true},
@@ -542,49 +546,54 @@ lemma_is_sort_key=:
 function export.form_of_t(frame)
 	local iparams = get_common_invocation_params()
 	iparams[1] = {required = true}
-	local iargs = m_params.process(frame.args, iparams, nil, "form of/templates", "form_of_t")
+	local iargs = m_params.process(frame.args, iparams)
 	local parent_args = frame:getParent().args
-
+	
 	local term_param = iargs["term_param"]
-
+	
 	local compat = iargs["lang"] or parent_args["lang"]
 	term_param = term_param or compat and 1 or 2
-
+	
 	local params = get_common_template_params()
+	
 	-- Numbered params
-	params[compat and "lang" or 1] = {required = not iargs["lang"]}
-
+	params[compat and "lang" or 1] = {
+		required = not iargs["lang"],
+		type = "language",
+		default = iargs["lang"] or "und"
+	}
+	
 	local base_lemma_params
 	if not iargs["nolink"] and not iargs["linktext"] then
 		add_link_params(parent_args, params, term_param)
 		base_lemma_params = add_base_lemma_params(parent_args, iargs, params, compat)
 	end
-
+	
 	if next(iargs["cat"]) then
 		params["nocat"] = {type = "boolean"}
 	end
-
+	
 	local ignored_params = {}
-
+	
 	if iargs["withdot"] then
 		params["dot"] = {}
 	else
 		ignored_params["nodot"] = true
 	end
-
+	
 	if not iargs["withcap"] then
 		params["cap"] = {type = "boolean"}
 		ignored_params["nocap"] = true
 	end
-
+	
 	local args = process_parent_args("form-of-t", parent_args, params, iargs["def"],
 		iargs["ignore"], ignored_params, "form_of_t")
-
+	
 	local text = args["notext"] and "" or iargs[1]
 	if args["cap"] or iargs["withcap"] and not args["nocap"] then
 		text = require("Module:string utilities").ucfirst(text)
 	end
-
+	
 	return construct_form_of_text(iargs, args, term_param, compat, base_lemma_params,
 		function(lemma_data)
 			return m_form_of.format_form_of {text = text, lemmas = lemma_data.lemmas, enclitics = lemma_data.enclitics,
@@ -665,7 +674,7 @@ function export.tagged_form_of_t(frame)
 	iparams[1] = {list = true, required = true}
 	iparams["split_tags"] = {}
 
-	local iargs = m_params.process(frame.args, iparams, nil, "form of/templates", "tagged_form_of_t")
+	local iargs = m_params.process(frame.args, iparams)
 	local parent_args = frame:getParent().args
 
 	local term_param = iargs["term_param"]
@@ -675,7 +684,12 @@ function export.tagged_form_of_t(frame)
 
 	local params = get_common_template_params()
 	-- Numbered params
-	params[compat and "lang" or 1] = {required = not iargs["lang"]}
+	params[compat and "lang" or 1] = {
+		required = not iargs["lang"],
+		type = "language",
+		default = iargs["lang"] or "und"
+	}
+	
 	-- Always included because lang-specific categories may be added
 	params["nocat"] = {type = "boolean"}
 	params["p"] = {}
@@ -756,7 +770,7 @@ function export.inflection_of_t(frame)
 	iparams["postinfl"] = {list = true}
 	iparams["split_tags"] = {}
 
-	local iargs = m_params.process(frame.args, iparams, nil, "form of/templates", "inflection_of_t")
+	local iargs = m_params.process(frame.args, iparams)
 	local parent_args = frame:getParent().args
 
 	local term_param = iargs["term_param"]
@@ -767,7 +781,12 @@ function export.inflection_of_t(frame)
 
 	local params = get_common_template_params()
 	-- Numbered params
-	params[compat and "lang" or 1] = {required = not iargs["lang"]}
+	params[compat and "lang" or 1] = {
+		required = not iargs["lang"],
+		type = "language",
+		default = iargs["lang"] or "und"
+	}
+	
 	params[tagsind] = {list = true,
 		-- at least one inflection tag is required unless preinfl or postinfl tags are given
 		required = #iargs["preinfl"] == 0 and #iargs["postinfl"] == 0}
@@ -827,7 +846,7 @@ function export.inflection_of_t(frame)
 			local groups = m_form_of.split_tags_into_tag_sets(args[tagsind])
 			for _, group in ipairs(groups) do
 				if #infls > 0 then
-					table.insert(infls, ";")
+					insert(infls, ";")
 				end
 				extend_list(infls, split_preinfl)
 				extend_list(infls, group)
@@ -851,7 +870,7 @@ function export.normalize_pos(frame)
 		[1] = {},
 		["default"] = {},
 	}
-	local iargs = m_params.process(frame.args, iparams, nil, "form of/templates", "normalize_pos")
+	local iargs = m_params.process(frame.args, iparams)
 	if not iargs[1] and not iargs["default"] then
 		error("Either 1= or default= must be given in the invocation args")
 	end
