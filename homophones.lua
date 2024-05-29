@@ -7,41 +7,37 @@ local function track(page)
 	return true
 end
 
---[=[
+--[==[
 Meant to be called from a module. `data` is a table containing the following fields:
+* `lang`: language object for the homophones;
+* `homophones`: a list of homophones, each described by an object which can contain all the fields in the object
+  passed to {full_link()} in [[Module:links]] except for `lang` and `sc` (which are copied from the outer level), and in
+  addition can contain left and right regular and accent qualifier fields:
+  ** `term`: the homophone itself;
+  ** `alt`: display text for the homophone, as in {{tl|l}};
+  ** `gloss`: gloss for the homophone, as in {{tl|l}};
+  ** `tr`: transliteration for the homophone, as in {{tl|l}};
+  ** `ts`: transcription for the homophone, as in {{tl|l}};
+  ** `g`: list of genders for the homophone, as in {{tl|l}};
+  ** `pos`: part of speech of the homophone, as in {{tl|l}};
+  ** `lit`: literal meaning of the homophone, as in {{tl|l}};
+  ** `id`: sense ID for the homophone, as in {{tl|l}};
+  ** `q`: {nil} or a list of left regular qualifier strings, formatted using {format_qualifier()} in
+     [[Module:qualifier]];
+  ** `qq`: {nil} or a list of right regular qualifier strings;
+  ** `qualifiers`: {nil} or a list of qualifier strings; currently displayed on the right but that may change; for
+     compatibiliy purposes only, do not use in new code;
+  ** `a`: {nil} or a list of left accent qualifier strings, formatted using {format_qualifiers()} in
+     [[Module:accent qualifier]];
+  ** `aa`: {nil} or a list of right accent qualifier strings;
+* `sc`: {nil} or script object for the homophones;
+* `sort`: {nil} or sort key;
+* `caption`: {nil} or string specifying the caption to use, in place of {"Homophone"} (if there is a single homophone),
+  or {"Homophones"} (otherwise); a colon and space is automatically added after the caption;
+* `nocaption`: If true, suppress the caption display.
 
-{
-  lang = LANGUAGE_OBJECT,
-  homophones = {TERM_OBJECT, ...},
-     where TERM_OBJECT can contain all the fields in the object passed to full_link() in [[Module:links]] except for
-	 `lang` and `sc` (which are copied from the outer level), and in addition can contain the following fields:
-	    q = nil or {"LEFT_QUALIFIER", "LEFT_QUALIFIER", ...}
-	    qualifiers = nil or {"QUALIFIER", "QUALIFIER", ...}
-	    qq = nil or {"RIGHT_QUALIFIER", "RIGHT_QUALIFIER", ...}
-		a = nil or {"LEFT_ACCENT_QUALIFIER", "LEFT_ACCENT_QUALIFIER", ...},
-		aa = nil or {"RIGHT_ACCENT_QUALIFIER", "RIGHT_ACCENT_QUALIFIER", ...}
-  sc = nil or SCRIPT_OBJECT,
-  sort = nil or "SORTKEY",
-  caption = nil or "CAPTION",
-  nocaption = BOOLEAN,
-}
-
-Here:
-
-* `lang` is a language object.
-* `homophones` is the list of homophones to display. TERM_OBJECT describes the specific homophone; the homophone itself
-  goes in the `term` field, while `alt`, `gloss`, `tr`, `ts`, `g`, `pos` and `lit` are as in full_link() in
-  [[Module:links]]. LEFT_QUALIFIER is a qualifier string to display before the specific homophone in question, formatted
-  using format_qualifier() in [[Module:qualifier]]. RIGHT_QUALIFIER similarly displays after the homophone.
-  QUALIFIER for compatibility displays after the homophone, but you should not use this in new code.
-  LEFT_ACCENT_QUALIFIER is an accent qualifier (as in {{a}}) to display before the homophone, and RIGHT_ACCENT_QUALIFIER
-  similarly displays after the homophone.
-* `sc`, if specified, is a script object.
-* `sort`, if specified, is a sort key.
-* `caption`, if specified, overrides the default caption "Homophone"/"Homophones". A colon and space is automatically
-  added after the caption.
-* `nocaption`, if specified, suppresses the caption entirely.
-]=]
+'''WARNING''': Destructively modifies the objects inside the `homophones` field.
+]==]
 function export.format_homophones(data)
 	local hmptexts = {}
 	local hmpcats = {}
@@ -53,7 +49,16 @@ function export.format_homophones(data)
 		if hmp.q and hmp.q[1] or hmp.qq and hmp.qq[1] or hmp.qualifiers and hmp.qualifiers[1]
 			or hmp.a and hmp.a[1] or hmp.aa and hmp.aa[1] then
 			-- FIXME, change handling of `qualifiers`
-			text = require("Module:pron qualifier").format_qualifiers(hmp, text, "qualifiers right")
+			text = require("Module:pron qualifier").format_qualifiers {
+				lang = data.lang,
+				text = text,
+				q = hmp.q,
+				qq = hmp.qq,
+				qualifiers = hmp.qualifiers,
+				a = hmp.a,
+				aa = hmp.aa,
+				qualifiers_right = true,
+			}
 		end
 		table.insert(hmptexts, text)
 	end
@@ -69,7 +74,9 @@ function export.format_homophones(data)
 end
 
 
--- Entry point for {{homophones}} template (also written {{homophone}} and {{hmp}}).
+--[==[
+Entry point for {{tl|homophones}} template (also written {{tl|homophone}} and {{tl|hmp}}).
+]==]
 function export.show(frame)
 	local parent_args = frame:getParent().args
 	local compat = parent_args["lang"]
