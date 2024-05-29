@@ -10,14 +10,20 @@ local utilities_module = "Module:utilities"
 local force_cat = false
 
 -- Add tracking category for PAGE. The tracking category linked to is [[Wiktionary:Tracking/labels/PAGE]].
-local function track(page, langcode)
+-- We also add to [[Wiktionary:Tracking/labels/PAGE/LANGCODE]] and [[Wiktionary:Tracking/labels/PAGE/MODE]] if
+-- LANGCODE and/or MODE given.
+local function track(page, langcode, mode)
 	-- avoid including links in pages (may cause error)
 	page = page:gsub("%[", "("):gsub("%]", ")"):gsub("|", "!")
+	require("Module:debug/track")("labels/" .. page)
 	if langcode then
-		require("Module:debug/track") { "labels/" .. page, "labels/" .. page .. "/" .. langcode }
-	else
-		require("Module:debug/track")("labels/" .. page)
+		require("Module:debug/track")("labels/" .. page .. "/" .. langcode)
 	end
+	if mode then
+		require("Module:debug/track")("labels/" .. page .. "/" .. mode)
+	end
+	-- We don't currently add a tracking label for both langcode and mode to reduce the total number of labels, to
+	-- save some memory.
 	return true
 end
 
@@ -36,16 +42,12 @@ local mode_to_property_prefix = {
 	["label"] = false,
 	["term-label"] = false, -- handled specially
 	["accent"] = "accent_",
-	["form-of"] = "form_",
+	["form-of"] = "form_of_",
 }
 
-local function validate_mode(mode, allow_unrecognized)
+local function validate_mode(mode)
 	mode = mode or "label"
 	if not mode_to_outer_class[mode] then
-		-- FIXME! Remove this hack.
-		if allow_unrecognized then
-			return "term-label"
-		end
 		local allowed_values = {}
 		for key, _ in pairs(mode_to_outer_class) do
 			table.insert(allowed_values, "'" .. key .. "'")
@@ -106,17 +108,16 @@ Fetch the categories to add to a page, given that the label whose canonical form
 has been seen. `labdata` is the label data structure for `label`, fetched from the appropriate submodule. `mode`
 specifies how the label was invoked; if {nil} or {"label"}, through {{tl|lb}}; if {"term-label"}, through {{tl|tlb}}; if
 {"accent"}, through {{tl|a}} (but this should never happen, as {{tl|a}} doesn't categorize); if {"form-of"}, through
-{{tl|alt form}}, {{tl|spelling of}} or similar. The return value is a list of the actual categories, unless `for_doc` is
-specified, in which case the categories returned are marked up for display on a documentation page. If `for_doc` is
-given, `lang` may be nil to format the categories in a language-independent fashion; otherwise, it must be specified. If
-`category_types` is specified, it should be a set object (i.e. with category types as keys and {true} as values), and
-only categories of the specified types will be returned.
+{{tl|alt form}}, {{tl|standard spelling of}} or similar. The return value is a list of the actual categories, unless
+`for_doc` is specified, in which case the categories returned are marked up for display on a documentation page. If
+`for_doc` is given, `lang` may be nil to format the categories in a language-independent fashion; otherwise, it must be
+specified. If `category_types` is specified, it should be a set object (i.e. with category types as keys and {true} as
+values), and only categories of the specified types will be returned.
 ]==]
 function export.fetch_categories(canon_label, labdata, lang, mode, for_doc, category_types)
 	local categories = {}
 
-	-- FIXME! Remove "allow unrecognized" when all callers converted.
-	mode = validate_mode(mode, "allow unrecognized")
+	mode = validate_mode(mode)
 	local langcode, canonical_name
 	if lang then
 		langcode = lang:getFullCode()
@@ -278,6 +279,16 @@ function export.get_displayed_label(label, labdata, lang, deprecated, override_d
 			"form_display" for `mode` == "form") are checked before the bare equivalent (e.g. "display").
 		]=]
 		local display = not override_display and labprop("display") or label
+
+		-- There are several 'Foo spelling' labels specially designed for use in the |from= param in
+		-- {{alternative form of}}, {{standard spelling of}} and the like. Often the display includes the word
+		-- "spelling" at the end (e.g. if it's defaulted), which is useful when the label is used with {{tl|lb}} or
+		-- {{tl|tlb}}; but it causes redundancy when used with the form-of templates, which add the word "form",
+		-- "spelling", "standard spelling", etc. after the label.
+		if mode == "form-of" then
+			display = display:gsub(" spelling$", "")
+		end
+
 		if display:find("%[%[") then
 			displayed_label = display
 		else
@@ -341,7 +352,7 @@ Return information on a label. On input `data` is an object with the following f
 * `label`: The label to return information on.
 * `lang`: The language of the label. Must be specified unless `for_doc` is given.
 * `mode`: How the label was invoked. If {nil} or {"label"}, through {{tl|lb}}; if {"term-label"}, through {{tl|tlb}}; if
-  {"accent"}, through {{tl|a}}; if {"form-of"}, through {{tl|alt form}}, {{tl|spelling of}} or similar.
+  {"accent"}, through {{tl|a}}; if {"form-of"}, through {{tl|alt form}}, {{tl|standard spelling of}} or similar.
 * `for_doc`: Data is being fetched for documentation purposes. This causes the raw categories returned in
   `categories` to be formatted for documentation display.
 * `nocat`: If true, don't add the label to any categories.
@@ -368,8 +379,7 @@ function export.get_label_info(data)
 		error("`data` must now be an object containing the params")
 	end
 
-	-- FIXME! Remove "allow unrecognized" when all callers converted.
-	local mode = validate_mode(data.mode, "allow unrecognized")
+	local mode = validate_mode(data.mode)
 	local ret = {categories = {}}
 	local label = data.label
 	local display_raw_label = false
@@ -456,12 +466,13 @@ function export.get_label_info(data)
 
 	if true then -- labprop("track") then -- track all labels now
 		-- Track label (after converting aliases to canonical form; but also track raw label (alias) if different
-		-- from canonical label). It is too expensive to track all labels.
+		-- from canonical label).
 		-- [[Special:WhatLinksHere/Wiktionary:Tracking/labels/label/LABEL]]
 		-- [[Special:WhatLinksHere/Wiktionary:Tracking/labels/label/LABEL/LANGCODE]]
-		track("label/" .. label, data_langcode)
+		-- [[Special:WhatLinksHere/Wiktionary:Tracking/labels/label/LABEL/MODE]]
+		track("label/" .. label, data_langcode, mode)
 		if label ~= raw_label then
-			track("label/" .. raw_label, data_langcode)
+			track("label/" .. raw_label, data_langcode, mode)
 		end
 	end
 
@@ -510,7 +521,7 @@ function export.get_label_info(data)
 			ret.formatted_categories = ""
 		else
 			local ns = mw.title.getCurrentTitle().namespace
-			if ns ~= 0 and ns ~= 100 and ns ~= 118 then
+			if not force_cat and ns ~= 0 and ns ~= 100 and ns ~= 118 then
 				-- Only allow categories in the mainspace, appendix and reconstruction namespaces.
 				ret.formatted_categories = ""
 			else
@@ -561,7 +572,7 @@ On input `data` is an object with the following fields:
 * `labels`: List of the label objects to format, in the format returned by {get_label_info()}.
 * `lang`: The language of the labels.
 * `mode`: How the label was invoked. If {nil} or {"label"}, through {{tl|lb}}; if {"term-label"}, through {{tl|tlb}}; if
-  {"accent"}, through {{tl|a}}; if {"form-of"}, through {{tl|alt form}}, {{tl|spelling of}} or similar.
+  {"accent"}, through {{tl|a}}; if {"form-of"}, through {{tl|alt form}}, {{tl|standard spelling of}} or similar.
 * `sort`: Sort key for categorization.
 * `already_seen`: An object used to track labels already seen, so they aren't displayed twice, as documented in
   {get_label_info()}. To enable this, set this to an empty object. If `already_seen` is {nil}, this tracking doesn't
@@ -656,7 +667,8 @@ input `data` is an object with the following fields:
 * `mode`: Indicates a special "mode" of operation, typically controlled by how the label was invoked. If {nil} or
   {"label"}, the label was invoked using {{tl|lb}}; if {"term-label"}, the label was invoked using {{tl|tlb}}; if
   {"accent"}, the label was invoked using {{tl|a}}; if {"form-of"}, the label was invoked using {{tl|alt form}},
-  {{tl|spelling of}} or other form-of template. This controls the display and/or categorization of a minority of labels.
+  {{tl|standard spelling of}} or other form-of template. This controls the display and/or categorization of a minority of
+  labels.
 * `nocat`: If true, don't add the label to any categories.
 * `sort`: Sort key for categorization.
 * `no_track_already_seen`: Don't track already-seen labels. If not specified, already-seen labels are not displayed
@@ -684,6 +696,8 @@ function export.show_labels(data)
 		error("You must specify at least one label.")
 	end
 
+	local mode = validate_mode(data.mode)
+
 	if not data.no_track_already_seen then
 		data.already_seen = {}
 	end
@@ -701,9 +715,7 @@ function export.show_labels(data)
 		data.close = ")"
 	end
 	local formatted = export.format_processed_labels(data)
-	return
-		"<span class=\"" .. mode_to_outer_class[data.mode or "label"] .. "\">" .. formatted ..
-			"</span>"
+	return "<span class=\"" .. mode_to_outer_class[mode] .. "\">" .. formatted .. "</span>"
 end
 
 --[==[Helper function for the data modules.]==]
