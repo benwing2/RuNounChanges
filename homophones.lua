@@ -1,10 +1,31 @@
 local export = {}
 
 local m_links = require("Module:links")
+local string_utilities_module = "Module:string utilities"
+local parse_utilities_module = "Module:parse utilities"
+local pron_qualifier_module = "Module:pron qualifier"
+local references_module = "Module:references"
+
+local function rsplit(text, pattern)
+	return require(string_utilities_module).rsplit(text, pattern)
+end
 
 local function track(page)
 	require("Module:debug/track")("homophones/" .. page)
 	return true
+end
+
+local function split_on_comma(term)
+	if not term then
+		return nil
+	end
+	if term:find(",%s") then
+		return require(parse_utilities_module).split_on_comma(term)
+	elseif term:find(",") then
+		return rsplit(term, ",")
+	else
+		return {term}
+	end
 end
 
 --[==[
@@ -22,19 +43,38 @@ Meant to be called from a module. `data` is a table containing the following fie
   ** `pos`: part of speech of the homophone, as in {{tl|l}};
   ** `lit`: literal meaning of the homophone, as in {{tl|l}};
   ** `id`: sense ID for the homophone, as in {{tl|l}};
-  ** `q`: {nil} or a list of left regular qualifier strings, formatted using {format_qualifier()} in
-     [[Module:qualifier]];
-  ** `qq`: {nil} or a list of right regular qualifier strings;
+  ** `q`: {nil} or a list of left regular qualifier strings, formatted using {format_qualifier()} in [[Module:qualifier]]
+     and displayed directly before the homophone in question;
+  ** `qq`: {nil} or a list of right regular qualifier strings, displayed directly after the homophone in question;
   ** `qualifiers`: {nil} or a list of qualifier strings; currently displayed on the right but that may change; for
-     compatibiliy purposes only, do not use in new code;
+     compatibility purposes only, do not use in new code;
   ** `a`: {nil} or a list of left accent qualifier strings, formatted using {format_qualifiers()} in
-     [[Module:accent qualifier]];
-  ** `aa`: {nil} or a list of right accent qualifier strings;
+     [[Module:accent qualifier]] and displayed directly before the homophone in question;
+  ** `aa`: {nil} or a list of right accent qualifier strings, displayed directly after the homophone in question;
+  ** `refs`: {nil} or a list of references or reference specs to add after the pronunciation and any posttext and
+	 qualifiers; the value of a list item is either a string containing the reference text (typically a call to a
+	 citation template such as {{tl|cite-book}}, or a template wrapping such a call), or an object with fields `text`
+	 (the reference text), `name` (the name of the reference, as in {{cd|<nowiki><ref name="foo">...</ref></nowiki>}}
+	 or {{cd|<nowiki><ref name="foo" /></nowiki>}}) and/or `group` (the group of the reference, as in
+	 {{cd|<nowiki><ref name="foo" group="bar">...</ref></nowiki>}} or
+	 {{cd|<nowiki><ref name="foo" group="bar"/></nowiki>}}); this uses a parser function to format the reference
+	 appropriately and insert a footnote number that hyperlinks to the actual reference, located in the
+	 {{cd|<nowiki><references /></nowiki>}} section;
+* `q`: {nil} or a list of left regular qualifier strings, formatted using {format_qualifier()} in [[Module:qualifier]]
+  and displayed before the initial caption;
+* `qq`: {nil} or a list of right regular qualifier strings, displayed after all homophones;
+* `a`: {nil} or a list of left accent qualifier strings, formatted using {format_qualifiers()} in
+  [[Module:accent qualifier]] and dispalyed before the initial caption;
+* `aa`: {nil} or a list of right accent qualifier strings, displayed after all homophones;
 * `sc`: {nil} or script object for the homophones;
 * `sort`: {nil} or sort key;
 * `caption`: {nil} or string specifying the caption to use, in place of {"Homophone"} (if there is a single homophone),
   or {"Homophones"} (otherwise); a colon and space is automatically added after the caption;
 * `nocaption`: If true, suppress the caption display.
+* `nocat`: If true, suppress categorization.
+
+If both regular and accent qualifiers on the same side and at the same level are specified, the accent qualifiers precede
+the regular qualifiers on both left and right.
 
 '''WARNING''': Destructively modifies the objects inside the `homophones` field.
 ]==]
@@ -49,7 +89,7 @@ function export.format_homophones(data)
 		if hmp.q and hmp.q[1] or hmp.qq and hmp.qq[1] or hmp.qualifiers and hmp.qualifiers[1]
 			or hmp.a and hmp.a[1] or hmp.aa and hmp.aa[1] then
 			-- FIXME, change handling of `qualifiers`
-			text = require("Module:pron qualifier").format_qualifiers {
+			text = require(pron_qualifier_module).format_qualifiers {
 				lang = data.lang,
 				text = text,
 				q = hmp.q,
@@ -59,6 +99,9 @@ function export.format_homophones(data)
 				aa = hmp.aa,
 				qualifiers_right = true,
 			}
+			if hmp.refs and hmp.refs[1] then
+				text = text .. require(references_module).format_references(hmp.refs)
+			end
 		end
 		table.insert(hmptexts, text)
 	end
@@ -68,9 +111,23 @@ function export.format_homophones(data)
 	local caption = data.nocaption and "" or (
 		data.caption or "[[Appendix:Glossary#homophone|Homophone" .. (#data.homophones > 1 and "s" or "") .. "]]"
 	) .. ": "
-	text = "<span class=\"homophones\">" .. caption .. text .. "</span>"
-	local categories = require("Module:utilities").format_categories(hmpcats, data.lang, data.sort)
-	return text .. categories
+	text = caption .. text
+	if data.q and data.q[1] or data.qq and data.qq[1] or data.a and data.a[1] or data.aa and data.aa[1] then
+		text = require(pron_qualifier_module).format_qualifiers {
+			lang = data.lang,
+			text = text,
+			q = data.q,
+			qq = data.qq,
+			a = data.a,
+			aa = data.aa,
+		}
+	end
+	text = "<span class=\"homophones\">" .. text .. "</span>"
+	if not args.nocat then
+		local categories = require("Module:utilities").format_categories(hmpcats, data.lang, data.sort)
+		text = text .. categories
+	end
+	return text
 end
 
 
@@ -83,51 +140,89 @@ function export.show(frame)
 	local offset = compat and 0 or 1
 
 	local params = {
-		[compat and "lang" or 1] = {required = true, default = "en"},
+		[compat and "lang" or 1] = {required = true, type = "language", etym_lang = true, default = "en"},
 		[1 + offset] = {list = true, required = true, allow_holes = true, default = "term"},
 		["alt"] = {list = true, allow_holes = true},
-		["pos"] = {list = true, allow_holes = true},
 		["t"] = {list = true, allow_holes = true},
 		["tr"] = {list = true, allow_holes = true},
-		["q"] = {list = true, allow_holes = true},
-		["qq"] = {list = true, allow_holes = true},
+		["ts"] = {list = true, allow_holes = true},
+		["g"] = {list = true, allow_holes = true},
+		["pos"] = {list = true, allow_holes = true},
+		["lit"] = {list = true, allow_holes = true},
+		["id"] = {list = true, allow_holes = true},
+		["sc"] = {list = true, allow_holes = true, separate_no_index = true, type = "script"},
+		["q"] = {list = true, allow_holes = true, separate_no_index = true},
+		["qq"] = {list = true, allow_holes = true, separate_no_index = true},
+		["a"] = {list = true, allow_holes = true, separate_no_index = true},
+		["aa"] = {list = true, allow_holes = true, separate_no_index = true},
 		["caption"] = {},
 		["nocaption"] = {type = "boolean"},
-		["sc"] = {},
+		["nocat"] = {type = "boolean"},
 		["sort"] = {},
 	}
 
 	local args = require("Module:parameters").process(parent_args, params)
 
-	local lang = require("Module:languages").getByCode(args[compat and "lang" or 1], compat and "lang" or 1)
-	local sc = args["sc"] and require("Module:scripts").getByCode(args["sc"], "sc") or nil
+	-- FIXME: temporary.
+	if args.q.default then
+		error("Use of q= in {{homophones}} no longer permitted; use qq1=; in a month or two, q= will return as an overall left qualifier")
+	end
+	if args.q.maxindex then
+		error("Use of qN= in {{homophones}} no longer permitted; use qqN=; in a month or two, qN= will return as left qualifiers")
+	end
 
-	local maxindex = math.max(
-		args[1 + offset].maxindex,
-		args["alt"].maxindex,
-		args["pos"].maxindex,
-		args["t"].maxindex,
-		args["tr"].maxindex
-	)
+	local lang = args[compat and "lang" or 1]
+
+	local maxindex = 0
+	for arg, vals in pairs(args) do
+		if vals.maxindex then
+			maxindex = max(maxindex, vals.maxindex)
+		end
+	end
 
 	local data = {
 		lang = lang,
 		homophones = {},
 		caption = args.caption,
 		nocaption = args.nocaption,
-		sc = sc,
+		nocat = args.nocat,
+		sc = args.sc.default,
 		sort = args.sort,
+		q = args.q.default and {args.q.default} or nil,
+		qq = args.qq.default and {args.qq.default} or nil,
+		a = split_on_comma(args.a.default),
+		aa = split_on_comma(args.aa.default),
 	}
 
 	for i = 1, maxindex do
+		local refs = args["ref"][i]
+		if refs then
+			refs = require(references_module).parse_references(refs)
+		end
+		local g = args.g[i]
+		if g then
+			if g:find(",") then
+				g = rsplit(g, "%s*,%s*")
+			else
+				g = {g}
+			end
+		end
 		table.insert(data.homophones, {
 			term = args[1 + offset][i],
-			alt = args["alt"][i],
-			pos = args["pos"][i],
-			gloss = args["t"][i],
-			tr = args["tr"][i],
-			qualifiers = args["q"][i] and track("q") and {args["q"][i]} or nil,
-			qq = args["qq"][i] and {args["qq"][i]} or nil,
+			alt = args.alt[i],
+			gloss = args.t[i],
+			tr = args.tr[i],
+			ts = args.ts[i],
+			g = g,
+			pos = args.pos[i],
+			lit = args.lit[i],
+			id = args.id[i],
+			sc = args.sc[i],
+			refs = refs,
+			q = args.q[i] and {args.q[i]} or nil,
+			qq = args.qq[i] and {args.qq[i]} or nil,
+			a = split_on_comma(args.a[i]),
+			aa = split_on_comma(args.aa[i]),
 		})
 	end
 
