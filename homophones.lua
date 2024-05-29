@@ -99,9 +99,9 @@ function export.format_homophones(data)
 				aa = hmp.aa,
 				qualifiers_right = true,
 			}
-			if hmp.refs and hmp.refs[1] then
-				text = text .. require(references_module).format_references(hmp.refs)
-			end
+		end
+		if hmp.refs and hmp.refs[1] then
+			text = text .. require(references_module).format_references(hmp.refs)
 		end
 		table.insert(hmptexts, text)
 	end
@@ -123,7 +123,7 @@ function export.format_homophones(data)
 		}
 	end
 	text = "<span class=\"homophones\">" .. text .. "</span>"
-	if not args.nocat then
+	if not data.nocat then
 		local categories = require("Module:utilities").format_categories(hmpcats, data.lang, data.sort)
 		text = text .. categories
 	end
@@ -136,7 +136,7 @@ Entry point for {{tl|homophones}} template (also written {{tl|homophone}} and {{
 ]==]
 function export.show(frame)
 	local parent_args = frame:getParent().args
-	local compat = parent_args["lang"]
+	local compat = parent_args.lang
 	local offset = compat and 0 or 1
 
 	local params = {
@@ -155,6 +155,7 @@ function export.show(frame)
 		["qq"] = {list = true, allow_holes = true, separate_no_index = true},
 		["a"] = {list = true, allow_holes = true, separate_no_index = true},
 		["aa"] = {list = true, allow_holes = true, separate_no_index = true},
+		["ref"] = {list = true, allow_holes = true},
 		["caption"] = {},
 		["nocaption"] = {type = "boolean"},
 		["nocat"] = {type = "boolean"},
@@ -165,18 +166,18 @@ function export.show(frame)
 
 	-- FIXME: temporary.
 	if args.q.default then
-		error("Use of q= in {{homophones}} no longer permitted; use qq1=; in a month or two, q= will return as an overall left qualifier")
+		error("Use of q= in [[Template:homophones]] no longer permitted; use qq1=; in a month or two, q= will return as an overall left qualifier")
 	end
-	if args.q.maxindex then
-		error("Use of qN= in {{homophones}} no longer permitted; use qqN=; in a month or two, qN= will return as left qualifiers")
+	if args.q.maxindex > 0 then
+		error("Use of qN= in [[Template:homophones]] no longer permitted; use qqN=; in a month or two, qN= will return as left qualifiers")
 	end
 
 	local lang = args[compat and "lang" or 1]
 
 	local maxindex = 0
 	for arg, vals in pairs(args) do
-		if vals.maxindex then
-			maxindex = max(maxindex, vals.maxindex)
+		if type(vals) == "table" and vals.maxindex then
+			maxindex = math.max(maxindex, vals.maxindex)
 		end
 	end
 
@@ -195,7 +196,7 @@ function export.show(frame)
 	}
 
 	for i = 1, maxindex do
-		local refs = args["ref"][i]
+		local refs = args.ref[i]
 		if refs then
 			refs = require(references_module).parse_references(refs)
 		end
