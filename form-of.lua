@@ -28,6 +28,10 @@ export.APPENDIX = true
 export.WIKIPEDIA = false
 export.WIKTIONARY = 0
 
+--[==[
+Set listing the languages with lang-specific tags. If a language isn't listed here, the tags for that language won't be
+recognized.
+]==]
 export.langs_with_lang_specific_tags = {
 	["en"] = true,
 	["got"] = true,
@@ -39,11 +43,11 @@ export.langs_with_lang_specific_tags = {
 	["ttj"] = true,
 }
 
---[=[
+--[==[ intro:
 
-This module implements the underlying processing of {{form of}}, {{inflection of}} and specific variants such as
-{{past participle of}} and {{alternative spelling of}}. Most of the logic in this file is to handle tags in
-{{inflection of}}. Other related files:
+This module implements the underlying processing of {{tl|form of}}, {{tl|inflection of}} and specific variants such as
+{{tl|past participle of}} and {{tl|alternative spelling of}}. Most of the logic in this file is to handle tags in
+{{tl|inflection of}}. Other related files:
 
 * [[Module:form of/templates]] contains the majority of the logic that implements the templates themselves.
 * [[Module:form of/data]] is a data-only file containing information on the more common inflection tags, listing the
@@ -61,61 +65,60 @@ This module implements the underlying processing of {{form of}}, {{inflection of
 * [[Module:form of/functions]] contains functions for use with [[Module:form of/data]] and [[Module:form of/cats]].
   They are contained in this module because data-only modules can't contain code. The functions in this file are of two
   types:
+*# Display handlers allow for customization of the display of multipart tags (see below). Currently there is only
+   one such handler, for handling multipart person tags such as `1//2//3`.
+*# Cat functions allow for more complex categorization logic, and are referred to by name in [[Module:form of/cats]].
+   Currently no such functions exist.
 
-  (1) Display handlers allow for customization of the display of multipart tags (see below). Currently there is only
-      one such handler, for handling multipart person tags such as '1//2//3'.
-  (2) Cat functions allow for more complex categorization logic, and are referred to by name in [[Module:form of/cats]].
-	  Currently no such functions exist.
+The following terminology is used in conjunction with {{tl|inflection of}}:
 
-The following terminology is used in conjunction with {{inflection of}}:
-
-* A TAG is a single grammatical item, as specified in a single numbered parameter of {{inflection of}}. Examples are
-  'masculine', 'nominative', or 'first-person'. Tags may be abbreviated, e.g. 'm' for 'masculine', 'nom' for
-  'nominative', or '1' for 'first-person'. Such abbreviations are called ALIASES, and some tags have multiple
-  equivalent aliases (e.g. 'p' or 'pl' for 'plural'). The full, non-abbreviated form of a tag is called its CANONICAL
-  FORM.
-* The DISPLAY FORM of a tag is the way it's displayed to the user. Usually the displayed text of the tag is the same as
-  its canonical form, and it normally functions as a link to a glossary entry explaining the tag. Usually the link is
+* A ''tag'' is a single grammatical item, as specified in a single numbered parameter of {{tl|inflection of}}. Examples
+  are `masculine`, `nominative`, or `first-person`. Tags may be abbreviated, e.g. `m` for `masculine`, `nom` for
+  `nominative`, or `1` for `first-person`. Such abbreviations are called ''aliases'', and some tags have multiple
+  equivalent aliases (e.g. `p` or `pl` for `plural`). The full, non-abbreviated form of a tag is called its
+  ''canonical form''.
+* The ''display form'' of a tag is the way it's displayed to the user. Usually the displayed text of the tag is the same
+  as its canonical form, and it normally functions as a link to a glossary entry explaining the tag. Usually the link is
   to an entry in [[Appendix:Glossary]], but sometimes the tag is linked to an individual dictionary entry or to a
   Wikipedia entry. Occasionally, the display text differs from the canonical form of the tag. An example is the tag
-  'comparative case', which has the display text read as simply 'comparative'. Normally, tags referring to cases don't
-  have the word "case" in them, but in this case the tag 'comparative' was already used as an alias for the tag
-  'comparative degree', so the tag was named 'comparative case' to avoid clashing. A similar situation occurs with
-  'adverbial case' vs. the grammar tag 'adverbial' (as in 'adverbial participle').
-* A TAG SET is an ordered list of tags, which together express a single inflection, for example, '1|s|pres|ind', which
-  can be expanded to canonical-form tags as 'first-person|singular|present|indicative'.
-* A CONJOINED TAG SET is a tag set that consists of multiple individual tag sets separated by a semicolon, e.g.
-  '1|s|pres|ind|;|2|s|imp', which specifies two tag sets, '1|s|pres|ind' as above and '2|s|imp' (in canonical form,
-  'second-person|singular|imperative'). Multiple tag sets specified in a single call to {{inflection of}} are specified
-  in this fashion. Conjoined tag sets can also occur in list-tag shortcuts.
-* A MULTIPART TAG is a tag that embeds multiple tags within it, such as 'f//n' or 'nom//acc//voc'. These are used in
+  `comparative case`, which has the display text read as simply `comparative`. Normally, tags referring to cases don't
+  have the word "case" in them, but in this case the tag `comparative` was already used as an alias for the tag
+  `comparative degree`, so the tag was named `comparative case` to avoid clashing. A similar situation occurs with
+  `adverbial case` vs. the grammar tag `adverbial` (as in `adverbial participle`).
+* A ''tag set'' is an ordered list of tags, which together express a single inflection, for example, `1|s|pres|ind`,
+  which can be expanded to canonical-form tags as `first-person|singular|present|indicative`.
+* A ''conjoined tag set'' is a tag set that consists of multiple individual tag sets separated by a semicolon, e.g.
+  `1|s|pres|ind|;|2|s|imp`, which specifies two tag sets, `1|s|pres|ind` as above and `2|s|imp` (in canonical form,
+  `second-person|singular|imperative`). Multiple tag sets specified in a single call to {{tl|inflection of}} are
+  specified in this fashion. Conjoined tag sets can also occur in list-tag shortcuts.
+* A ''multipart tag'' is a tag that embeds multiple tags within it, such as `f//n` or `nom//acc//voc`. These are used in
   the case of [[syncretism]], when the same form applies to multiple inflections. Examples are the Spanish present
-  subjunctive, where the first-person and third-person singular have the same form (e.g. [[siga]] from [[seguir]] "to
-  follow"), or Latin third-declension adjectives, where the dative and ablative plural of all genders have the same
-  form (e.g. [[omnibus]] from [[omnis]] "all"). These would be expressed respectively as '1//3|s|pres|sub' and
-  'dat//abl|m//f//n|p', where the use of the multipart tag compactly encodes the syncretism and avoids the need to
-  individually list out all of the inflections. Multipart tags currently display as a list separated by a slash, e.g.
-  ''dative/ablative'' or ''masculine/feminine/neuter'' where each individual word is linked appropriately. As a special
-  case, multipart tags involving persons display specially; for example, the multipart tag ''1//2//3'' displays as
-  ''first-, second- and third-person'', with the word "person" occurring only once.
-* A TWO-LEVEL MULTIPART TAG is a special type of multipart tag that joins two or more tag sets instead of joining
-  individual tags. The tags within the tag set are joined by a colon, e.g. '1:s//3:p', which is displayed as
-  ''first-person singular and third-person plural'', e.g. for use with the form [[μέλλον]] of the verb [[μέλλω]]
-  "to intend", which uses the tag set '1:s//3:p|impf|actv|indc|unaugmented' to express the syncretism between the first
-  singular and third plural forms of the imperfect active indicative unaugmented conjugation. Two-level multipart tags
-  should be used sparingly; if in doubt, list out the inflections separately. [FIXME: Make two-level multipart tags
-  obsolete.]
-* A SHORTCUT is a tag that expands to any type of tag described above, or to any type of tag set described above.
+  subjunctive, where the first-person and third-person singular have the same form (e.g. {{m|es|siga}} from
+  {{m|es|seguir|t=to follow}}), or Latin third-declension adjectives, where the dative and ablative plural of all
+  genders have the same form (e.g. {{m|la|omnibus}} from {{m|la|omnis|t=all}}). These would be expressed respectively as
+  `1//3|s|pres|sub` and `dat//abl|m//f//n|p`, where the use of the multipart tag compactly encodes the syncretism and
+  avoids the need to individually list out all of the inflections. Multipart tags currently display as a list separated
+  by a slash, e.g.  ''dative/ablative'' or ''masculine/feminine/neuter'' where each individual word is linked
+  appropriately. As a special case, multipart tags involving persons display specially; for example, the multipart tag
+  `1//2//3` displays as ''first-, second- and third-person'', with the word "person" occurring only once.
+* A ''two-level multipart tag'' is a special type of multipart tag that joins two or more tag sets instead of joining
+  individual tags. The tags within the tag set are joined by a colon, e.g. `1:s//3:p`, which is displayed as
+  ''first-person singular and third-person plural'', e.g. for use with the form {{m|grc|μέλλον}} of the verb
+  {{m|grc|μέλλω|t=to intend}}, which uses the tag set `1:s//3:p|impf|actv|indc|unaugmented` to express the syncretism
+  between the first singular and third plural forms of the imperfect active indicative unaugmented conjugation.
+  Two-level multipart tags should be used sparingly; if in doubt, list out the inflections separately. [FIXME: Make
+  two-level multipart tags obsolete.]
+* A ''shortcut'' is a tag that expands to any type of tag described above, or to any type of tag set described above.
   Aliases are a particular type of shortcut whose expansion is a single non-multipart tag.
-* A MULTIPART SHORTCUT is a shortcut that expands into a multipart tag, for example '123', which expands to the
-  multipart tag '1//2//3'. Only the most common such combinations exist as shortcuts.
-* A LIST SHORTCUT is a special type of shortcut that expands to a list of tags instead of a single tag. For example,
-  the shortcut '1s' expands to '1|s' (first-person singular). Only the most common such combinations exist as shortcuts.
-* A CONJOINED SHORTCUT is a special type of list shortcut that consists of a conjoined tag set (multiple logical tag
-  sets). For example, the English language-specific shortcut 'ed-form' expands to 'spast|;|past|part', expressing the
-  common syncretism between simple past and past participle in English (and in this case, 'spast' is itself a list
-  shortcut that expands to 'simple|past').
-]=]
+* A ''multipart shortcut'' is a shortcut that expands into a multipart tag, for example `123`, which expands to the
+  multipart tag `1//2//3`. Only the most common such combinations exist as shortcuts.
+* A ''list shortcut'' is a special type of shortcut that expands to a list of tags instead of a single tag. For example,
+  the shortcut `1s` expands to `1|s` (first-person singular). Only the most common such combinations exist as shortcuts.
+* A ''conjoined shortcut'' is a special type of list shortcut that consists of a conjoined tag set (multiple logical tag
+  sets). For example, the English language-specific shortcut `ed-form` expands to `spast|;|past|part`, expressing the
+  common syncretism between simple past and past participle in English (and in this case, `spast` is itself a list
+  shortcut that expands to `simple|past`).
+]==]
 
 -- version of rsubn() that discards all but the first return value
 local function rsub(term, foo, bar)
@@ -182,34 +185,34 @@ local function wrap_in_span(text, classes)
 end
 
 
---[=[
-Lowest-level implementation of form-of templates, including the general {{form of}} as well as those that deal with
-inflection tags, such as the general {{inflection of}}, semi-specific variants such as {{participle of}}, and specific
-variants such as {{past participle of}}. `data` contains all the information controlling the display, with the
-following fields:
+--[==[
+Lowest-level implementation of form-of templates, including the general {{tl|form of}} as well as those that deal with
+inflection tags, such as the general {{tl|inflection of}}, semi-specific variants such as {{tl|participle of}}, and
+specific variants such as {{tl|past participle of}}. `data` contains all the information controlling the display, with
+the following fields:
 
-`.text`: Text to insert before the lemmas. Wrapped in the value of `.text_classes`, or its default; see below.
-`.lemmas`: List of objects describing the lemma(s) of which the term in question is a non-lemma form. These are passed
-		   directly to full_link() in [[Module:links]]. Each object should have at minimum a `.lang` field containing
-		   the language of the lemma and a `.term` field containing the lemma itself. Each object is formatted using
-		   full_link() and then if there are more than one, they are joined using serialCommaJoin() in [[Module:table]].
-		   Alternatively, `.lemmas` can be a string, which is displayed directly, or omitted, to show no lemma links and
-		   omit the connecting text.
-`.lemma_face`: "Face" to use when displaying the lemma objects. Usually should be set to "term".
-`.enclitics`: List of enclitics to display after the lemmas, in parens.
-`.base_lemmas`: List of base lemmas to display after the lemmas, in the case where the lemmas in `.lemmas` are
-				themselves forms of another lemma (the base lemma), e.g. a comparative, superlative or participle. Each
-				object is of the form { paramobj = PARAM_OBJ, lemmas = {LEMMA_OBJ, LEMMA_OBJ, ...} } where PARAM_OBJ
-				describes the properties of the base lemma parameter (i.e. the relationship between the intermediate
-				and base lemmas) and LEMMA_OBJ is an object suitable to be passed to full_link in [[Module:links]].
-				PARAM_OBJ is of the format { param = "PARAM", tags = {"TAG", "TAG", ...} } where PARAM is the name of
-				the parameter to {{inflection of}} etc. that holds the base lemma(s) of the specified relationship and
-				the tags describe the relationship, such as {"comd"} or {"past", "part"}.
-`.text_classes`: CSS classes used to wrap the tag text and lemma links. Default is "form-of-definition use-with-mention"
-				 for the tag text and lemma links, and additionally "form-of-definition-link" specifically for the
-				 lemma links. (FIXME: Should separate out the lemma links into their own field.)
-`.posttext`: Additional text to display after the lemma links.
-]=]
+* `.text`: Text to insert before the lemmas. Wrapped in the value of `.text_classes`, or its default; see below.
+* `.lemmas`: List of objects describing the lemma(s) of which the term in question is a non-lemma form. These are passed
+   directly to {full_link()} in [[Module:links]]. Each object should have at minimum a `.lang` field containing the
+   language of the lemma and a `.term` field containing the lemma itself. Each object is formatted using {full_link()}
+   and then if there are more than one, they are joined using {serialCommaJoin()} in [[Module:table]]. Alternatively,
+   `.lemmas` can be a string, which is displayed directly, or omitted, to show no lemma links and omit the connecting
+   text.
+* `.lemma_face`: "Face" to use when displaying the lemma objects. Usually should be set to {"term"}.
+* `.enclitics`: List of enclitics to display after the lemmas, in parens.
+* `.base_lemmas`: List of base lemmas to display after the lemmas, in the case where the lemmas in `.lemmas` are
+   themselves forms of another lemma (the base lemma), e.g. a comparative, superlative or participle. Each object is of
+   the form { { paramobj = PARAM_OBJ, lemmas = {LEMMA_OBJ, LEMMA_OBJ, ...} }} where PARAM_OBJ describes the properties
+   of the base lemma parameter (i.e. the relationship between the intermediate and base lemmas) and LEMMA_OBJ is an
+   object suitable to be passed to {full_link()} in [[Module:links]]. PARAM_OBJ is of the format
+   { { param = "PARAM", tags = {"TAG", "TAG", ...} } where PARAM is the name of the parameter to {{tl|inflection of}}
+   etc. that holds the base lemma(s) of the specified relationship and the tags describe the relationship, such as
+   { {"comd"}} or { {"past", "part"}}.
+* `.text_classes`: CSS classes used to wrap the tag text and lemma links. Default is {"form-of-definition use-with-mention"}
+   for the tag text and lemma links, and additionally {"form-of-definition-link"} specifically for the lemma links.
+   (FIXME: Should separate out the lemma links into their own field.)
+* `.posttext`: Additional text to display after the lemma links.
+]==]
 function export.format_form_of(data)
 	if type(data) ~= "table" then
 		error("Internal error: First argument must now be a table of arguments")
@@ -280,29 +283,34 @@ function export.format_form_of(data)
 end
 
 
+--[==[
+Return true if `tag` contains an internal link or HTML.
+]==]
 function export.is_link_or_html(tag)
 	return tag:find("[[", nil, true) or tag:find("|", nil, true) or tag:find("<", nil, true)
 end
 
 
--- Look up a tag (either a shortcut of any sort of a canonical long-form tag) and return its expansion. The expansion
--- will be a string unless the shortcut is a list-tag shortcut such as "1s"; in that case, the expansion will be a
--- list. The caller must handle both cases. Only one level of expansion happens; hence, "acc" expands to "accusative",
--- "1s" expands to {"1", "s"} (not to {"first", "singular"}) and "123" expands to "1//2//3". The expansion will be the
--- same as the passed-in tag in the following circumstances:
---
--- 1. The tag is ";" (this is special-cased, and no lookup is done).
--- 2. The tag is a multipart tag such as "nom//acc" (this is special-cased, and no lookup is done).
--- 3. The tag contains a raw link (this is special-cased, and no lookup is done).
--- 4. The tag contains HTML (this is special-cased, and no lookup is done).
--- 5. The tag is already a canonical long-form tag.
--- 6. The tag is unrecognized.
---
--- This function first looks up in the lang-specific data module [[Module:form of/lang-data/LANGCODE]], then in
--- [[Module:form of/data]] (which includes more common non-lang-specific tags) and finally (only if the tag is not
--- recognized as a shortcut or canonical tag, and is not of types 1-4 above) in [[Module:form of/data2]].
---
--- If the expansion is a string and is different from the tag, track it if DO_TRACK is true.
+--[==[
+Look up a tag (either a shortcut of any sort of a canonical long-form tag) and return its expansion. The expansion
+will be a string unless the shortcut is a list-tag shortcut such as `1s`; in that case, the expansion will be a
+list. The caller must handle both cases. Only one level of expansion happens; hence, `acc` expands to {"accusative"},
+`1s` expands to { {"1", "s"}} (not to { {"first", "singular"}}) and `123` expands to {"1//2//3"}. The expansion will be
+the same as the passed-in tag in the following circumstances:
+
+# The tag is `;` (this is special-cased, and no lookup is done).
+# The tag is a multipart tag such as `nom//acc` (this is special-cased, and no lookup is done).
+# The tag contains a raw link (this is special-cased, and no lookup is done).
+# The tag contains HTML (this is special-cased, and no lookup is done).
+# The tag is already a canonical long-form tag.
+# The tag is unrecognized.
+
+This function first looks up in the lang-specific data module [[Module:form of/lang-data/LANGCODE]], then in
+[[Module:form of/data]] (which includes more common non-lang-specific tags) and finally (only if the tag is not
+recognized as a shortcut or canonical tag, and is not of types 1-4 above) in [[Module:form of/data2]].
+
+If the expansion is a string and is different from the tag, track it if `do_track` is true.
+]==]
 function export.lookup_shortcut(tag, lang, do_track)
 	-- If there is HTML or a link in the tag, return it directly; don't try
 	-- to look it up, which will fail.
@@ -346,10 +354,12 @@ function export.lookup_shortcut(tag, lang, do_track)
 end
 
 
--- Look up a normalized/canonicalized tag and return the data object associated with it. If the tag isn't found, return
--- nil. This first looks up in the lang-specific data module [[Module:form of/lang-data/LANGCODE]], then in
--- [[Module:form of/data]] (which includes more common non-lang-specific tags) and then finally in
--- [[Module:form of/data2]].
+--[==[
+Look up a normalized/canonicalized tag and return the data object associated with it. If the tag isn't found, return
+nil. This first looks up in the lang-specific data module [[Module:form of/lang-data/LANGCODE]], then in
+[[Module:form of/data]] (which includes more common non-lang-specific tags) and then finally in
+[[Module:form of/data2]].
+]==]
 function export.lookup_tag(tag, lang)
 	local langcode = lang and lang:getCode()
 	if langcode and export.langs_with_lang_specific_tags[langcode] then
@@ -466,26 +476,26 @@ local function normalize_tag(tag, lang, do_track)
 end
 
 
---[=[
+--[==[
 Normalize a tag set (a list of tags) into its canonical-form tags. The return value is a list of normalized tag sets
 (a list because of there may be conjoined shortcuts among the input tags). A normalized tag set is a list of tag
 elements, where each element is either a string (the canonical form of a tag), a list of such strings (in the case of
 multipart tags) or a list of lists of such strings (in the case of two-level multipart tags). For example, the multipart
-tag "nom//acc//voc" will be represented in canonical form as {"nominative", "accusative", "vocative"}, and the
-two-level multipart tag "1:s//3:p" will be represented as {{"first-person", "singular"}, {"third-person", "plural"}}.
+tag `nom//acc//voc` will be represented in canonical form as { {"nominative", "accusative", "vocative"}}, and the
+two-level multipart tag `1:s//3:p` will be represented as { {{"first-person", "singular"}, {"third-person", "plural"}}}.
 
 Example 1:
 
-normalize_tag_set({"nom//acc//voc", "n", "p"}) = {{{"nominative", "accusative", "vocative"}, "masculine", "plural"}}
+{normalize_tag_set({"nom//acc//voc", "n", "p"})} = { {{{"nominative", "accusative", "vocative"}, "masculine", "plural"}}}
 
 Example 2:
 
-normalize_tag_set({"ed-form"}, ENGLISH) = {{"simple", "past"}, {"past", "participle"}}
+{normalize_tag_set({"ed-form"}, ENGLISH)} = { {{"simple", "past"}, {"past", "participle"}}}
 
 Example 3:
 
-normalize_tag_set({"archaic", "ed-form"}, ENGLISH) = {{"archaic", "simple", "past"}, {"archaic", "past", "participle"}}
-]=]
+{normalize_tag_set({"archaic", "ed-form"}, ENGLISH)} = { {{"archaic", "simple", "past"}, {"archaic", "past", "participle"}}}
+]==]
 function export.normalize_tag_set(tag_set, lang, do_track)
 	-- We track usage of shortcuts, normalized forms and (in the case of multipart tags or list tags) intermediate
 	-- forms. For example, if the tags 1s|mn|gen|indefinite are passed in, we track the following:
@@ -602,12 +612,14 @@ function export.normalize_tags(tags, lang, recombine_multitags, do_track)
 end
 
 
--- Split a tag set containing two-level multipart tags into one or more tag sets not containing such tags.
--- Single-level multipart tags are left alone. (If we need to, a slight modification of the following code
--- will also split single-level multipart tags.) This assumes that multipart tags are represented as lists
--- and two-level multipart tags are represented as lists of lists, as is output by normalize_tag_set().
--- NOTE: We have to be careful to properly handle imbalanced two-level multipart tags such as
--- <code>def:s//p</code> (or the reverse, <code>s//def:p</code>).
+--[==[
+Split a tag set containing two-level multipart tags into one or more tag sets not containing such tags.
+Single-level multipart tags are left alone. (If we need to, a slight modification of the following code
+will also split single-level multipart tags.) This assumes that multipart tags are represented as lists
+and two-level multipart tags are represented as lists of lists, as is output by {normalize_tag_set()}.
+NOTE: We have to be careful to properly handle imbalanced two-level multipart tags such as
+`def:s//p` (or the reverse, `s//def:p`).
+]==]
 function export.split_two_level_multipart_tag_set(tag_set)
 	for i, tag in ipairs(tag_set) do
 		if type(tag) == "table" then
@@ -650,7 +662,9 @@ function export.split_two_level_multipart_tag_set(tag_set)
 end
 
 
--- Split a tag set that may consist of multiple semicolon-separated tag sets into the component tag sets.
+--[==[
+Split a tag set that may consist of multiple semicolon-separated tag sets into the component tag sets.
+]==]
 function export.split_tag_set(tag_set)
 	local split_tag_sets = {}
 	local cur_tag_set = {}
@@ -673,10 +687,10 @@ end
 export.split_tags_into_tag_sets = export.split_tag_set
 
 
---[=[
--- Combine multiple tag sets in a tag set group into a simple tag set, with logical tag sets separated by semicolons.
--- This is the opposite of split_tag_set().
-]=]
+--[==[
+Combine multiple tag sets in a tag set group into a simple tag set, with logical tag sets separated by semicolons.
+This is the opposite of {split_tag_set()}.
+]==]
 function export.combine_tag_sets(tag_sets)
 	if #tag_sets == 1 then
 		return tag_sets[1]
@@ -702,9 +716,11 @@ local tag_set_param_mods = {
 }
 
 
--- Parse tag set properties from a tag set (list of tags). Currently no per-tag properties are recognized, and the only
--- per-tag-set property recognized is <lb:...> for specifing label(s) for the tag set. Per-tag-set properties must be
--- attached to the last tag.
+--[==[
+Parse tag set properties from a tag set (list of tags). Currently no per-tag properties are recognized, and the only
+per-tag-set property recognized is `<lb:...>` for specifing label(s) for the tag set. Per-tag-set properties must be
+attached to the last tag.
+]==]
 function export.parse_tag_set_properties(tag_set)
 	local function generate_tag_set_obj(last_tag)
 		tag_set[#tag_set] = last_tag
@@ -779,15 +795,15 @@ local function get_single_tag_display_form(normtag, lang)
 end
 
 
---[=[
+--[==[
 Turn a canonicalized tag spec (which describes a single, possibly multipart tag) into the displayed form. The tag spec
 may be a string (a canonical-form tag); a list of canonical-form tags (in the case of a simple multipart tag); or a
 list of mixed canonical-form tags and lists of such tags (in the case of a two-level multipart tag). `joiner` indicates
-how to join the parts of a multipart tag, and can be either "and" ("foo and bar", or "foo, bar and -- baz" for 3 or
-more), "slash" ("foo/bar"), "en-dash" ("foo–bar") or nil, which uses the global default found in
-multipart_join_strategy() in [[Module:form of/functions]]. (NOTE: The global default is "slash" and this seems unlikely
-to change.)
-]=]
+how to join the parts of a multipart tag, and can be either {"and"} ("foo and bar", or "foo, bar and baz" for 3 or
+more), {"slash"} ("foo/bar"), {"en-dash"} ("foo–bar") or {nil}, which uses the global default found in
+{multipart_join_strategy()} in [[Module:form of/functions]]. (NOTE: The global default is {"slash"} and this seems
+unlikely to change.)
+]==]
 function export.get_tag_display_form(tagspec, lang, joiner)
 	if type(tagspec) == "string" then
 		return get_single_tag_display_form(tagspec, lang)
@@ -818,11 +834,11 @@ function export.get_tag_display_form(tagspec, lang, joiner)
 end
 
 
---[=[
-Given a normalized tag set (i.e. as output by normalize_tag_set(); all tags are in canonical form, multipart tags are
+--[==[
+Given a normalized tag set (i.e. as output by {normalize_tag_set()}; all tags are in canonical form, multipart tags are
 represented as lists, and two-level multipart tags as lists of lists), convert to displayed form (a string). See
-get_tag_display_form() for the meaning of `joiner`.
-]=]
+{get_tag_display_form()} for the meaning of `joiner`.
+]==]
 function export.get_tag_set_display_form(normalized_tag_set, lang, joiner)
 	local parts = {}
 
@@ -858,12 +874,12 @@ function export.get_tag_set_display_form(normalized_tag_set, lang, joiner)
 end
 
 
---[=[
-Given a normalized tag set (i.e. as output by normalize_tag_set(); all tags are in canonical form, multipart tags are
+--[==[
+Given a normalized tag set (i.e. as output by {normalize_tag_set()}; all tags are in canonical form, multipart tags are
 represented as lists, and two-level multipart tags as lists of lists), fetch the associated categories and labels.
 Return two values, a list of categories and a list of labels. `lang` is the language of term represented by the tag set,
-and `POS` is the user-provided part of speech (which may be nil).
-]=]
+and `POS` is the user-provided part of speech (which may be {nil}).
+]==]
 function export.fetch_categories_and_labels(normalized_tag_set, lang, POS, pagename, lemmas)
 	local m_cats = mw.loadData(export.form_of_cats_module)
 	local categories = {}
@@ -1129,47 +1145,49 @@ function export.fetch_categories_and_labels(normalized_tag_set, lang, POS, pagen
 end
 
 
---[=[
-Implementation of templates that display inflection tags, such as the general {{inflection of}}, semi-specific variants
-such as {{participle of}}, and specific variants such as {{past participle of}}. `data` contains all the information
-controlling the display, with the following fields:
+--[==[
+Implementation of templates that display inflection tags, such as the general {{tl|inflection of}}, semi-specific
+variants such as {{tl|participle of}}, and specific variants such as {{tl|past participle of}}. `data` contains all the
+information controlling the display, with the following fields:
 
-`.lang`: (REQUIRED) Language to use when looking up language-specific inflection tags, categories and labels, and for
-		 displaying categories and labels.
-`.tags`: (REQUIRED UNLESS `.tag_sets` IS GIVEN) List of non-canonicalized inflection tags. Multiple tag sets can be
-		 indicated by a ";" as one of the tags, and tag-set properties may be attached to the last tag of a tag set.
-		 The tags themselves may come directly from the user (as in {{inflection of}}); come partly from the user (as
-		 in {{participle of}}, which adds the tag 'part' to user-specified inflection tags); or be entirely specified
-		 by the template (as in {{past participle of}}).
-`.tag_sets`: (REQUIRED UNLESS `.tags` IS GIVEN) List of non-canonicalized tag sets and associated per-tag-set
-			 properties. Each element of the list is an object of the form {tags = {"TAG", "TAG", ...}, labels =
-			 {"LABEL", "LABEL", ...}}. If `.tag_sets` is specified, `.tags` should not be given and vice-versa.
-			 Specifying `.tag_sets` in place of tags allowed per-tag set labels to be specified; otherwise, there is no
-			 advantage. [[Module:pt-gl-inflections]] uses this functionality to supply labels like "Brazil" and
-			 "Portugal" associated with specific tag sets.
-`.lemmas`: (RECOMMENDED) List of objects describing the lemma(s) of which the term in question is a non-lemma form.
-		   These are passed directly to full_link() in [[Module:links]]. Each object should have at minimum a `.lang`
-		   field containing the language of the lemma and a `.term` field containing the lemma itself. Each object is
-		   formatted using full_link() and then if there are more than one, they are joined using serialCommaJoin() in
-		   [[Module:table]]. Alternatively, `.lemmas` can be a string, which is displayed directly. If omitted entirely,
-		   no lemma links are shown and the connecting "of" is also omitted.
-`.lemma_face`: (RECOMMENDED) "Face" to use when displaying the lemma objects. Usually should be set to "term".
-`.POS`: (RECOMMENDED) Categorizing part-of-speech tag. Comes from the p= or POS= argument of {{inflection of}}.
-`.pagename`: Page name of "current" page or nil to use the actual page title; for testing purposes.
-`.enclitics`: List of enclitics to display after the lemmas, in parens.
-`.no_format_categories`: If true, don't format the categories derived from the inflection tags; just return them.
-`.sort`: Sort key for formatted categories. Ignored when .no_format_categories = true.
-`.nocat`: Suppress computation of categories (even if `.no_format_categories` is not given).
-`.notext`: Disable display of all tag text and "inflection of" text. (FIXME: Maybe not implemented correctly.)
-`.capfirst`: Capitalize the first word displayed.
-`.pretext`: Additional text to display before the inflection tags, but after any top-level labels.
-`.posttext`: Additional text to display after the lemma links.
-`.text_classes`: CSS classes used to wrap the tag text and lemma links. Default is "form-of-definition use-with-mention"
-				 for the tag text, "form-of-definition-link" for the lemma links. (FIXME: Should separate out the
-				 lemma links into their own field.)
+* `.lang`: ('''''required''''') Language to use when looking up language-specific inflection tags, categories and
+  labels, and for displaying categories and labels.
+* `.tags`: ('''''required''' unless `.tag_sets` is given'') List of non-canonicalized inflection tags. Multiple tag sets
+  can be indicated by a {";"} as one of the tags, and tag-set properties may be attached to the last tag of a tag set.
+  The tags themselves may come directly from the user (as in {{tl|inflection of}}); come partly from the user (as in
+  {{tl|participle of}}, which adds the tag `part` to user-specified inflection tags); or be entirely specified by the
+  template (as in {{tl|past participle of}}).
+* `.tag_sets`: ('''''required''' unless `.tags` is given'') List of non-canonicalized tag sets and associated
+  per-tag-set properties. Each element of the list is an object of the form
+  { {tags = {"TAG", "TAG", ...}, labels = {"LABEL", "LABEL", ...}}. If `.tag_sets` is specified, `.tags` should not be
+  given and vice-versa. Specifying `.tag_sets` in place of tags allowed per-tag set labels to be specified; otherwise,
+  there is no advantage. [[Module:pt-gl-inflections]] uses this functionality to supply labels like {"Brazil"} and
+  {"Portugal"} associated with specific tag sets.
+* `.lemmas`: ('''''recommended''''') List of objects describing the lemma(s) of which the term in question is a
+  non-lemma form. These are passed directly to {full_link()} in [[Module:links]]. Each object should have at minimum a
+  `.lang` field containing the language of the lemma and a `.term` field containing the lemma itself. Each object is
+  formatted using {full_link()} and then if there are more than one, they are joined using {serialCommaJoin()} in
+  [[Module:table]]. Alternatively, `.lemmas` can be a string, which is displayed directly. If omitted entirely, no lemma
+  links are shown and the connecting "of" is also omitted.
+* `.lemma_face`: ('''''recommended''''') "Face" to use when displaying the lemma objects. Usually should be set to
+  {"term"}.
+* `.POS`: ('''''recommended''''') Categorizing part-of-speech tag. Comes from the {{para|p}} or {{para|POS}} argument of
+  {{tl|inflection of}}.
+* `.pagename`: Page name of "current" page or nil to use the actual page title; for testing purposes.
+* `.enclitics`: List of enclitics to display after the lemmas, in parens.
+* `.no_format_categories`: If true, don't format the categories derived from the inflection tags; just return them.
+* `.sort`: Sort key for formatted categories. Ignored when `.no_format_categories` = {true}.
+* `.nocat`: Suppress computation of categories (even if `.no_format_categories` is not given).
+* `.notext`: Disable display of all tag text and `inflection of` text. (FIXME: Maybe not implemented correctly.)
+* `.capfirst`: Capitalize the first word displayed.
+* `.pretext`: Additional text to display before the inflection tags, but after any top-level labels.
+* `.posttext`: Additional text to display after the lemma links.
+* `.text_classes`: CSS classes used to wrap the tag text and lemma links. Default is
+  {"form-of-definition use-with-mention"} for the tag text, {"form-of-definition-link"} for the lemma links. (FIXME:
+  Should separate out the lemma links into their own field.)
 `.joiner`: Override the joiner (normally a slash) used to join multipart tags. You should normally not specify this.
 
-A typical call might look like this (for Spanish [[amo]]):
+A typical call might look like this (for {{m+|es|amo}}): {
 	local lang = require("Module:languages").getByCode("es")
 
 	local lemma_obj = {
@@ -1180,21 +1198,22 @@ A typical call might look like this (for Spanish [[amo]]):
 	return m_form_of.tagged_inflections({
 		lang = lang, tags = {"1", "s", "pres", "ind"}, lemmas = {lemma_obj}, lemma_face = "term", POS = "verb"
 	})
+}
 
 Normally, one value is returned, the formatted text, which has appended to it the formatted categories derived from the
 tag-set-related categories generated by the specs in [Module:form of/cats]]. To suppress this, set
-data.no_format_categories = true, in which case two values are returned, the formatted text without any formatted
+`data.no_format_categories` = {true}, in which case two values are returned, the formatted text without any formatted
 categories appended and a list of the categories to be formatted.
 
 NOTE: There are two sets of categories that may be generated: (1) categories derived directly from the tag sets, as
 specified in [[Module:form of/cats]]; (2) categories derived from tag-set labels, either (a) set explicitly by the
-caller in data.tag_sets, (b) specified by the user using <lb:...> attached to the last tag in a tag set, or
+caller in `data.tag_sets`, (b) specified by the user using `<lb:...>` attached to the last tag in a tag set, or
 (c) specified in [[Module:form of/cats]]. The second type (label-related categories) are currently not returned in
-the second return value of tagged_inflections(), and are currently inserted into the output text even if
-data.no_format_categories is set to true; but they can be suppressed by setting data.nocat = true (which also
-suppresses the first type of categories, those derived directly from tag sets, even if data.no_format_categories is set
-to true).
-]=]
+the second return value of {tagged_inflections()}, and are currently inserted into the output text even if
+`data.no_format_categories` is set to {true}; but they can be suppressed by setting `data.nocat` = {true} (which also
+suppresses the first type of categories, those derived directly from tag sets, even if `data.no_format_categories` is
+set to {true}).
+]==]
 function export.tagged_inflections(data)
 	if not data.tags and not data.tag_sets then
 		error("First argument must be a table of arguments, and `.tags` or `.tag_sets` must be specified")
@@ -1293,8 +1312,10 @@ function export.tagged_inflections(data)
 end
 
 
--- Given a tag set, return a flattened list all Wikidata ID's of all tags in the tag set.
--- FIXME: Only used in a debugging function in [[Module:se-verbs]]; move there.
+--[==[
+Given a tag set, return a flattened list all Wikidata ID's of all tags in the tag set. FIXME: Only used in a debugging
+function in [[Module:se-verbs]]; move there.
+]==]
 function export.to_Wikidata_IDs(tag_set, lang, skip_tags_without_ids)
 	local ret = {}
 
