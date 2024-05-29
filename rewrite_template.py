@@ -6,8 +6,10 @@ import pywikibot, re, sys, argparse
 import blib
 from blib import getparam, rmparam, msg, site, tname, pname
 
-def process_text_on_page(index, pagetitle, text, templates, new_names, params_to_add, params_to_prepend,
-    params_to_insert, params_to_remove, params_to_rename, filters, recognized_params, comment):
+def process_text_on_page(
+    index, pagetitle, text, templates, new_names, params_to_add, params_to_prepend, params_to_insert, params_to_remove,
+    params_to_rename, from_to_regex, filters, recognized_params, comment
+):
   if not any(template in text for template in templates):
     return
   if not re.search(r"\{\{\s*(%s)" % "|".join(templates), text):
@@ -104,15 +106,25 @@ def process_text_on_page(index, pagetitle, text, templates, new_names, params_to
       if must_continue:
         continue
 
-      for old_param, new_param in params_to_rename:
-        if t.has(old_param):
-          if t.has(new_param):
-            pagemsg("WARNING: When renaming %s=%s to %s=, already has %s=%s" % (
-              old_param, getp(old_param), new_param, new_param, getp(new_param)))
-          else:
-            t.add(new_param, getparam(t, old_param), before=old_param, preserve_spacing=False)
-            rmparam(t, old_param)
-            notes.append("rename %s= to %s= in {{%s}}" % (old_param, new_param, tn))
+      if from_to_regex:
+        for param in t.params:
+          pn = pname(param)
+          for old_param, new_param in params_to_rename:
+            newpn = re.sub("^" + old_param + "$", new_param, pn)
+            if newpn != pn:
+              param.name = newpn
+              notes.append("rename %s= to %s= in {{%s}}" % (pn, newpn, tn))
+              break
+      else:
+        for old_param, new_param in params_to_rename:
+          if t.has(old_param):
+            if t.has(new_param):
+              pagemsg("WARNING: When renaming %s=%s to %s=, already has %s=%s" % (
+                old_param, getp(old_param), new_param, new_param, getp(new_param)))
+            else:
+              t.add(new_param, getparam(t, old_param), before=old_param, preserve_spacing=False)
+              rmparam(t, old_param)
+              notes.append("rename %s= to %s= in {{%s}}" % (old_param, new_param, tn))
       for param in params_to_remove:
         if t.has(param):
           rmparam(t, param)
@@ -206,6 +218,7 @@ pa.add_argument("--from", help="Old name of param, can be specified multiple tim
     metavar="FROM", dest="from_", action="append")
 pa.add_argument("--to", help="New name of param, can be specified multiple times",
     action="append")
+pa.add_argument("--from-to-regex", help="Interpret values in --from and --to as regexes.", action="store_true")
 pa.add_argument("--prepend", help="PARAM=VALUE to add at the beginning, can be specified multiple times; VALUE can have {{PAGENAME}} in it to substitute the page title",
     action="append")
 pa.add_argument("--add", help="PARAM=VALUE to add at the end, can be specified multiple times; VALUE can have {{PAGENAME}} in it to substitute the page title",
@@ -283,7 +296,7 @@ params_to_rename = list(zip(from_, to))
 
 def do_process_text_on_page(index, pagetitle, text):
   return process_text_on_page(index, pagetitle, text, templates, new_names, params_to_add, params_to_prepend,
-    params_to_insert, params_to_remove, params_to_rename, filters, recognized_params, comment)
+    params_to_insert, params_to_remove, params_to_rename, args.from_to_regex, filters, recognized_params, comment)
 
 blib.do_pagefile_cats_refs(args, start, end, do_process_text_on_page, edit=True, stdin=True,
   default_refs=["Template:%s" % template for template in templates])
