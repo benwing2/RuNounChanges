@@ -3,6 +3,7 @@ local export = {}
 export.force_cat = false -- for testing; set to true to display categories even on non-mainspace pages
 
 local m_links = require("Module:links")
+local m_string_utils = require("Module:string utilities")
 local m_table = require("Module:table")
 local put_module = "Module:parse utilities"
 local labels_module = "Module:labels"
@@ -13,10 +14,10 @@ export.form_of_lang_data_module_prefix = "Module:form of/lang-data/"
 export.form_of_data_module = "Module:form of/data"
 export.form_of_data2_module = "Module:form of/data2"
 
-local ulen = mw.ustring.len
-local rsubn = mw.ustring.gsub
-local rmatch = mw.ustring.match
-local rsplit = mw.text.split
+local ulen = m_string_utils.len
+local rsubn = m_string_utils.gsub
+local rmatch = m_string_utils.match
+local rsplit = m_string_utils.split
 
 export.TAG_TYPE = 1
 export.GLOSSARY = 2
@@ -168,7 +169,7 @@ end
 
 -- Add tracking category for PAGE when called from {{inflection of}} or
 -- similar TEMPLATE. The tracking category linked to is
--- [[Template:tracking/inflection of/PAGE]].
+-- [[Wiktionary:Tracking/inflection of/PAGE]].
 local function track(page)
 	require("Module:debug/track")("inflection of/" ..
 		-- avoid including links in pages (may cause error)
@@ -231,7 +232,7 @@ function export.format_form_of(data)
 			local formatted_terms = {}
 			for _, lemma in ipairs(data.lemmas) do
 				table.insert(formatted_terms, wrap_in_span(
-					m_links.full_link(lemma, data.lemma_face, false), lemma_classes
+					m_links.full_link(lemma, data.lemma_face), lemma_classes
 				))
 			end
 			ins(m_table.serialCommaJoin(formatted_terms))
@@ -245,7 +246,7 @@ function export.format_form_of(data)
 		for _, enclitic in ipairs(data.enclitics) do
 			-- FIXME, should we have separate clitic face and/or classes?
 			table.insert(formatted_terms, wrap_in_span(
-				m_links.full_link(enclitic, data.lemma_face, false, "show qualifiers"), lemma_classes
+				m_links.full_link(enclitic, data.lemma_face, nil, "show qualifiers"), lemma_classes
 			))
 		end
 		ins(" (")
@@ -488,20 +489,20 @@ normalize_tag_set({"archaic", "ed-form"}, ENGLISH) = {{"archaic", "simple", "pas
 function export.normalize_tag_set(tag_set, lang, do_track)
 	-- We track usage of shortcuts, normalized forms and (in the case of multipart tags or list tags) intermediate
 	-- forms. For example, if the tags 1s|mn|gen|indefinite are passed in, we track the following:
-	-- [[Template:tracking/inflection of/tag/1s]]
-	-- [[Template:tracking/inflection of/tag/1]]
-	-- [[Template:tracking/inflection of/tag/s]]
-	-- [[Template:tracking/inflection of/tag/first-person]]
-	-- [[Template:tracking/inflection of/tag/singular]]
-	-- [[Template:tracking/inflection of/tag/mn]]
-	-- [[Template:tracking/inflection of/tag/m//n]]
-	-- [[Template:tracking/inflection of/tag/m]]
-	-- [[Template:tracking/inflection of/tag/n]]
-	-- [[Template:tracking/inflection of/tag/masculine]]
-	-- [[Template:tracking/inflection of/tag/neuter]]
-	-- [[Template:tracking/inflection of/tag/gen]]
-	-- [[Template:tracking/inflection of/tag/genitive]]
-	-- [[Template:tracking/inflection of/tag/indefinite]]
+	-- [[Wiktionary:Tracking/inflection of/tag/1s]]
+	-- [[Wiktionary:Tracking/inflection of/tag/1]]
+	-- [[Wiktionary:Tracking/inflection of/tag/s]]
+	-- [[Wiktionary:Tracking/inflection of/tag/first-person]]
+	-- [[Wiktionary:Tracking/inflection of/tag/singular]]
+	-- [[Wiktionary:Tracking/inflection of/tag/mn]]
+	-- [[Wiktionary:Tracking/inflection of/tag/m//n]]
+	-- [[Wiktionary:Tracking/inflection of/tag/m]]
+	-- [[Wiktionary:Tracking/inflection of/tag/n]]
+	-- [[Wiktionary:Tracking/inflection of/tag/masculine]]
+	-- [[Wiktionary:Tracking/inflection of/tag/neuter]]
+	-- [[Wiktionary:Tracking/inflection of/tag/gen]]
+	-- [[Wiktionary:Tracking/inflection of/tag/genitive]]
+	-- [[Wiktionary:Tracking/inflection of/tag/indefinite]]
 	local output_tag_set = {}
 	local saw_semicolon = false
 
@@ -695,7 +696,7 @@ local tag_set_param_mods = {
 	lb = {
 		item_dest = "labels",
 		convert = function(arg, parse_err)
-			return rsplit(arg, "//")
+			return rsplit(arg, "//", true)
 		end,
 	}
 }
