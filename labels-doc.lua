@@ -11,6 +11,8 @@ local m_labels = require(labels_module)
 local m_table = require("Module:table")
 local m_languages = require("Module:languages")
 
+local rfind = mw.ustring.find
+
 local function sort_by_label(labinfo1, labinfo2)
 	return labinfo1.raw_label < labinfo2.raw_label
 end
@@ -42,7 +44,8 @@ local function create_label_table(label_infos)
 			table.insert(notes, "'''deprecated'''")
 		end
 		if info.data.omit_preComma or info.data.omit_postComma or info.data.omit_preSpace or info.data.omit_postSpace then
-			local context_labinfos = m_labels.get_label_list_info({"foo", info.raw_label, "bar"}, nil, "nocat", nil, "notrack")
+			local context_labinfos = m_labels.get_label_list_info({"foo", info.raw_label, "bar"}, nil, "nocat", nil,
+				"notrack")
 			local formatted = m_labels.format_processed_labels { labels = context_labinfos }
 			table.insert(notes, "in context, displays as " .. formatted)
 		end
@@ -81,11 +84,17 @@ local function create_label_table(label_infos)
 end
 
 
-function export.show()
-	local submodules = m_labels.get_submodules(nil)
+function export.show(frame)
+	local iparams = {
+		-- Do lang-independent labels
+		["lang-indep"] = {type = "boolean"},
+		-- Do lang-dependent labels; value is a pattern that should match language names, and labels for those
+		-- languages will be shown
+		["lang-dep"] = {},
+	}
+	local iargs = require("Module:parameters").process(iparams, frame.args)
 
-	local label_infos = {}
-	local labels_seen = {}
+	local submodules = m_labels.get_submodules(nil)
 
 	local function process_module(module, lang, label_infos, labels_seen)
 		local module_data = mw.loadData(module)
@@ -106,41 +115,49 @@ function export.show()
 		end
 	end
 
-	for _, module in ipairs(submodules) do
-		process_module(module, nil, label_infos, labels_seen)
-	end
-
-	local unrecognized_langcodes = {}
-
-	local lang_specific_data_list_module = mw.loadData(m_labels.lang_specific_data_list_module)
-	local lang_specific_data_langs = {}
-	for langcode, _ in pairs(lang_specific_data_list_module.langs_with_lang_specific_modules) do
-		local lang = m_languages.getByCode(langcode)
-		if not lang then
-			table.insert(unrecognized_langcodes, langcode)
-		else
-			table.insert(lang_specific_data_langs,
-				{ lang = lang, langcode = langcode, langname = lang:getFullName() })
-		end
-	end
-	table.sort(lang_specific_data_langs, function(a, b) return a.langname < b.langname end)
-
 	local parts = {}
 	local function ins(text)
 		table.insert(parts, text)
 	end
 
-	ins("===Language-independent===")
-	ins(create_label_table(label_infos))
+	if iargs["lang-indep"] then
+		for _, module in ipairs(submodules) do
+			local label_infos = {}
+			local labels_seen = {}
+			process_module(module, nil, label_infos, labels_seen)
+		end
+		ins("===Language-independent===")
+		ins(create_label_table(label_infos))
+	end
 
-	for _, langobj in ipairs(lang_specific_data_langs) do
-		local per_language_label_infos = {}
-		local per_language_labels_seen = {}
-		process_module(m_labels.lang_specific_data_modules_prefix .. langobj.langcode, langobj.lang,
-			per_language_label_infos, per_language_labels_seen)
-		ins(("===%s==="):format(langobj.langname))
-		ins(create_label_table(per_language_label_infos))
-    end
+	local lang_dep_pattern = iargs["lang-dep"]
+	if lang_dep_pattern then
+		local unrecognized_langcodes = {}
+
+		local lang_specific_data_list_module = mw.loadData(m_labels.lang_specific_data_list_module)
+		local lang_specific_data_langs = {}
+		for langcode, _ in pairs(lang_specific_data_list_module.langs_with_lang_specific_modules) do
+			local lang = m_languages.getByCode(langcode, nil, "allow-etym")
+			if not lang then
+				table.insert(unrecognized_langcodes, langcode)
+			else
+				local langname = lang:getCanonicalName()
+				if rfind(langname, lang_dep_pattern) then
+					table.insert(lang_specific_data_langs, { lang = lang, langcode = langcode, langname = langname })
+				end
+			end
+		end
+		table.sort(lang_specific_data_langs, function(a, b) return a.langname < b.langname end)
+
+		for _, langobj in ipairs(lang_specific_data_langs) do
+			local per_language_label_infos = {}
+			local per_language_labels_seen = {}
+			process_module(m_labels.lang_specific_data_modules_prefix .. langobj.langcode, langobj.lang,
+				per_language_label_infos, per_language_labels_seen)
+			ins(("===%s==="):format(langobj.langname))
+			ins(create_label_table(per_language_label_infos))
+		end
+	end
 
 	return table.concat(parts, "\n")
 end
