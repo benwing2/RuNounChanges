@@ -9,6 +9,12 @@ local rgsplit = mw.text.gsplit
 
 local export = {}
 
+--[==[ intro:
+This module contains code that directly implements {{tl|form of}}, {{tl|inflection of}}, and the various other
+[[:Category:Form-of templates|form-of templates]]. It is meant to be called directly from templates. See also
+[[Module:form of]], which contains the underlying implementing code and is meant to be called from other modules.
+]==]
+
 -- Add tracking category for PAGE when called from TEMPLATE. The tracking category linked to is
 -- [[Wiktionary:Tracking/form-of/TEMPLATE/PAGE]]. If TEMPLATE is omitted, the tracking category is of the form
 -- [[Wiktionary:Tracking/form-of/PAGE]].
@@ -117,7 +123,7 @@ local function process_parent_args(template, parent_args, params, defaults, igno
 		end
 		parent_args = new_parent_args
 	end
-	
+
 	local args = m_params.process(parent_args, params, nil, "form of/templates", function_name)
 
 	-- Tracking for certain user-specified params. This is generally used for
@@ -245,7 +251,7 @@ local function add_link_params(parent_args, params, term_param, no_numbered_glos
 			end
 		end
 	end
-	
+
 	-- If no params for the second or higher term exist, use a simpler param setup to save memory.
 	params[term_param + 1] = {alias_of = "alt"}
 	if not no_numbered_gloss then
@@ -258,7 +264,7 @@ local function add_link_params(parent_args, params, term_param, no_numbered_glos
 	params["gloss"] = {alias_of = "t"}
 	params["g"] = {list = true}
 	params["sc"] = {type = "script"}
-	
+
 	-- Not "term".
 	for i = 2, #link_params do
 		local param = link_params[i]
@@ -491,109 +497,110 @@ local function get_common_invocation_params()
 end
 
 
---[=[
-Function that implements {{form of}} and the various more specific form-of
-templates (but not {{inflection of}} or templates that take tagged inflection
-parameters).
+--[==[
+Function that implements {{tl|form of}} and the various more specific form-of templates (but not {{tl|inflection of}}
+or templates that take tagged inflection parameters).
 
 Invocation params:
 
-1= (required):
-	Text to display before the link.
-term_param=:
-	Numbered param holding the term linked to. Other numbered params come after. Defaults to 1 if invocation or template
-	param lang= is present, otherwise 2.
-lang=:
-	Default language code for language-specific templates. If specified, no language code needs to be specified, and if
-	specified it needs to be set using lang=, not 1=.
-sc=:
-	Default script code for language-specific templates. The script code can still be overridden using template param
-	sc=.
-cat=, cat2=, ...:
-	Categories to place the page into. The language name will automatically be prepended. Note that there is also a
-	template param cat= to specify categories at the template level. Use of nocat= disables categorization of categories
-	specified using invocation param cat=, but not using template param cat=.
-ignore=, ignore2=, ...:
-	One or more template params to silently accept and ignore. Useful e.g. when the template takes additional parameters
-	such as from= or POS=. Each value is a comma-separated list of either bare parameter names or specifications of the
-	form "PARAM:list" to specify that the parameter is a list parameter.
-def=, def2=, ...:
-	One or more default values to supply for template args. For example, specifying '|def=tr=-' causes the default for
-	template param '|tr=' to be '-'. Actual template params override these defaults.
-withcap=:
-	Capitalize the first character of the text preceding the link, unless template param nocap= is given.
-withdot=:
-	Add a final period after the link, unless template param nodot= is given to suppress the period, or dot= is given to
-	specify an alternative punctuation character.
-nolink=:
-	Suppress the display of the link. If specified, none of the template params that control the link (TERM_PARAM,
-	TERM_PARAM + 1, TERM_PARAM + 2, t=, gloss=, sc=, tr=, ts=, pos=, g=, id=, lit=) will be available. If the calling
-	template uses any of these parameters, they must be ignored using ignore=.
-linktext=:
-	Override the display of the link with the specified text. This is useful if a custom template is available to format
-	the link (e.g. in Hebrew, Chinese and Japanese). If specified, none of the template params that control the link
-	(TERM_PARAM, TERM_PARAM + 1, TERM_PARAM + 2, t=, gloss=, sc=, tr=, ts=, pos=, g=, id=, lit=) will be available. If
-	the calling template uses any of these parameters, they must be ignored using ignore=.
-posttext=:
-	Additional text to display directly after the formatted link, before any terminating period/dot and inside of
-	"<span class='use-with-mention'>".
-noprimaryentrycat=:
-	Category to add the page to if the primary entry linked to doesn't exist. The language name will automatically be
-	prepended.
-lemma_is_sort_key=:
-	If the user didn't specify a sort key, use the lemma as the sort key (instead of the page itself).
-]=]--
+; {{para|1|req=1}}
+: Text to display before the link.
+; {{para|term_param}}
+: Numbered param holding the term linked to. Other numbered params come after. Defaults to 1 if invocation or template
+  param {{para|lang}} is present, otherwise 2.
+; {{para|lang}}
+: Default language code for language-specific templates. If specified, no language code needs to be specified, and if
+  specified it needs to be set using {{para|lang}}, not {{para|1}}.
+; {{para|sc}}
+: Default script code for language-specific templates. The script code can still be overridden using template param
+  {{para|sc}}.
+; {{para|cat}}, {{para|cat2}}, ...:
+: Categories to place the page into. The language name will automatically be prepended. Note that there is also a
+  template param {{para|cat}} to specify categories at the template level. Use of {{para|nocat}} disables categorization
+  of categories specified using invocation param {{para|cat}}, but not using template param {{para|cat}}.
+; {{para|ignore}}, {{para|ignore2}}, ...:
+: One or more template params to silently accept and ignore. Useful e.g. when the template takes additional parameters
+  such as {{para|from}} or {{para|POS}}. Each value is a comma-separated list of either bare parameter names or
+  specifications of the form `PARAM:list` to specify that the parameter is a list parameter.
+; {{para|def}}, {{para|def2}}, ...:
+: One or more default values to supply for template args. For example, specifying {{para|def|2=tr=-}} causes the default
+  for template param {{para|tr}} to be `-`. Actual template params override these defaults.
+; {{para|withcap}}
+: Capitalize the first character of the text preceding the link, unless template param {{para|nocap}} is given.
+; {{para|withdot}}
+: Add a final period after the link, unless template param {{para|nodot}} is given to suppress the period, or
+  {{para|dot}} is given to specify an alternative punctuation character.
+; {{para|nolink}}
+: Suppress the display of the link. If specified, none of the template params that control the link
+  ({{para|<var>term_param</var>}}, {{para|<var>term_param</var> + 1}}, {{para|<var>term_param</var> + 2}}, {{para|t}},
+  {{para|gloss}}, {{para|sc}}, {{para|tr}}, {{para|ts}}, {{para|pos}}, {{para|g}}, {{para|id}}, {{para|lit}}) will be
+  available. If the calling template uses any of these parameters, they must be ignored using {{para|ignore}}.
+ {{para|linktext}}
+: Override the display of the link with the specified text. This is useful if a custom template is available to format
+  the link (e.g. in Hebrew, Chinese and Japanese). If specified, none of the template params that control the link
+  ({{para|<var>term_param</var>}}, {{para|<var>term_param</var> + 1}}, {{para|<var>term_param</var> + 2}}, {{para|t}},
+  {{para|gloss}}, {{para|sc}}, {{para|tr}}, {{para|ts}}, {{para|pos}}, {{para|g}}, {{para|id}}, {{para|lit}}) will be
+  available. If the calling template uses any of these parameters, they must be ignored using {{para|ignore}}.
+; {{para|posttext}}
+: Additional text to display directly after the formatted link, before any terminating period/dot and inside of
+  `<span class='use-with-mention'>`.
+; {{para|noprimaryentrycat}}
+: Category to add the page to if the primary entry linked to doesn't exist. The language name will automatically be
+  prepended.
+; {{para|lemma_is_sort_key}}
+: If the user didn't specify a sort key, use the lemma as the sort key (instead of the page itself).
+]==]
 function export.form_of_t(frame)
 	local iparams = get_common_invocation_params()
 	iparams[1] = {required = true}
 	local iargs = m_params.process(frame.args, iparams)
 	local parent_args = frame:getParent().args
-	
+
 	local term_param = iargs["term_param"]
-	
+
 	local compat = iargs["lang"] or parent_args["lang"]
 	term_param = term_param or compat and 1 or 2
-	
+
 	local params = get_common_template_params()
-	
+
 	-- Numbered params
 	params[compat and "lang" or 1] = {
 		required = not iargs["lang"],
 		type = "language",
 		default = iargs["lang"] or "und"
 	}
-	
+
 	local base_lemma_params
 	if not iargs["nolink"] and not iargs["linktext"] then
 		add_link_params(parent_args, params, term_param)
 		base_lemma_params = add_base_lemma_params(parent_args, iargs, params, compat)
 	end
-	
+
 	if next(iargs["cat"]) then
 		params["nocat"] = {type = "boolean"}
 	end
-	
+
 	local ignored_params = {}
-	
+
 	if iargs["withdot"] then
 		params["dot"] = {}
 	else
 		ignored_params["nodot"] = true
 	end
-	
+
 	if not iargs["withcap"] then
 		params["cap"] = {type = "boolean"}
 		ignored_params["nocap"] = true
 	end
-	
+
 	local args = process_parent_args("form-of-t", parent_args, params, iargs["def"],
 		iargs["ignore"], ignored_params, "form_of_t")
-	
+
 	local text = args["notext"] and "" or iargs[1]
 	if args["cap"] or iargs["withcap"] and not args["nocap"] then
 		text = require("Module:string utilities").ucfirst(text)
 	end
-	
+
 	return construct_form_of_text(iargs, args, term_param, compat, base_lemma_params,
 		function(lemma_data)
 			return m_form_of.format_form_of {text = text, lemmas = lemma_data.lemmas, enclitics = lemma_data.enclitics,
@@ -638,37 +645,36 @@ local function construct_tagged_form_of_text(iargs, args, term_param, compat, ba
 end
 
 
---[=[
+--[==[
 Function that implements form-of templates that are defined by specific tagged inflections (typically a template
-referring to a non-lemma inflection, such as {{plural of}}). This works exactly like form_of_t() except that the
+referring to a non-lemma inflection, such as {{tl|plural of}}). This works exactly like {form_of_t()} except that the
 "form of" text displayed before the link is based off of a pre-specified set of inflection tags (which will be
 appropriately linked to the glossary) instead of arbitrary text. From the user's perspective, there is no difference
-between templates implemented using form_of_t() and tagged_form_of_t(); they accept exactly the same parameters and
-work the same. See also inflection_of_t() below, which is intended for templates with user-specified inflection tags.
+between templates implemented using {form_of_t()} and {tagged_form_of_t()}; they accept exactly the same parameters and
+work the same. See also {inflection_of_t()} below, which is intended for templates with user-specified inflection tags.
 
 Invocation params:
 
-1=, 2=, ... (required):
-	One or more inflection tags describing the inflection in question.
-split_tags=:
-	If specified, character to split specified inflection tags on. This allows
-	multiple tags to be included in a single argument, simplifying template
-	code.
-term_param=:
-lang=:
-sc=:
-cat=, cat2=, ...:
-ignore=, ignore2=, ...:
-def=, def2=, ...:
-withcap=:
-withdot=:
-nolink=:
-linktext=:
-posttext=:
-noprimaryentrycat=:
-lemma_is_sort_key=:
-	All of these are the same as in form_of_t().
-]=]--
+; {{para|1|req=1}}, {{para|2}}, ...
+: One or more inflection tags describing the inflection in question.
+; {{para|split_tags}}
+: If specified, character to split specified inflection tags on. This allows multiple tags to be included in a single
+  argument, simplifying template code.
+; {{para|term_param}}
+; {{para|lang}}
+; {{para|sc}}
+; {{para|cat}}, {{para|cat2}}, ...
+; {{para|ignore}}, {{para|ignore2}}, ...
+; {{para|def}}, {{para|def2}}, ...
+; {{para|withcap}}
+; {{para|withdot}}
+; {{para|nolink}}
+; {{para|linktext}}
+; {{para|posttext}}
+; {{para|noprimaryentrycat}}
+; {{para|lemma_is_sort_key}}
+: All of these are the same as in {form_of_t()}.
+]==]
 function export.tagged_form_of_t(frame)
 	local iparams = get_common_invocation_params()
 	iparams[1] = {list = true, required = true}
@@ -689,7 +695,7 @@ function export.tagged_form_of_t(frame)
 		type = "language",
 		default = iargs["lang"] or "und"
 	}
-	
+
 	-- Always included because lang-specific categories may be added
 	params["nocat"] = {type = "boolean"}
 	params["p"] = {}
@@ -722,47 +728,44 @@ function export.tagged_form_of_t(frame)
 end
 
 --[=[
-Function that implements {{inflection of}} and certain semi-specific variants,
-such as {{participle of}} and {{past participle form of}}. This function is
-intended for templates that allow the user to specify a set of inflection tags.
-It works similarly to form_of_t() and tagged_form_of_t() except that the
-calling convention for the calling template is
-	{{TEMPLATE|LANG|MAIN_ENTRY_LINK|MAIN_ENTRY_DISPLAY_TEXT|TAG|TAG|...}}
+Function that implements {{tl|inflection of}} and certain semi-specific variants, such as {{tl|participle of}} and
+{{tl|past participle form of}}. This function is intended for templates that allow the user to specify a set of
+inflection tags.
+
+It works similarly to {form_of_t()} and {tagged_form_of_t()} except that the calling convention for the calling
+template is
+: { {{TEMPLATE|LANG|MAIN_ENTRY_LINK|MAIN_ENTRY_DISPLAY_TEXT|TAG|TAG|...}}}
 instead of 
-	{{TEMPLATE|LANG|MAIN_ENTRY_LINK|MAIN_ENTRY_DISPLAY_TEXT|GLOSS}}
-Note that there isn't a numbered parameter for the gloss, but it can still
-be specified using t= or gloss=.
+: { {{TEMPLATE|LANG|MAIN_ENTRY_LINK|MAIN_ENTRY_DISPLAY_TEXT|GLOSS}}}
+Note that there isn't a numbered parameter for the gloss, but it can still be specified using {{para|t}} or
+{{para|gloss}}.
 
 Invocation params:
 
-preinfl=, preinfl2=, ...:
-	Extra inflection tags to automatically prepend to the tags specified by
-	the template.
-postinfl=, postinfl2=, ...:
-	Extra inflection tags to automatically append to the tags specified by the
-	template. Used for example by {{past participle form of}} to add the tags
-	'of the|past|p' onto the user-specified tags, which indicate which past
-	participle form the page refers to.
-split_tags=:
-	If specified, character to split specified inflection tags on. This allows
-	multiple tags to be included in a single argument, simplifying template
-	code. Note that this applies *ONLY* to inflection tags specified in the
-	invocation arguments using preinfl= or postinfl=, not to user-specified
-	inflection tags.
-term_param=:
-lang=:
-sc=:
-cat=, cat2=, ...:
-ignore=, ignore2=, ...:
-def=, def2=, ...:
-withcap=:
-withdot=:
-nolink=:
-linktext=:
-posttext=:
-noprimaryentrycat=:
-lemma_is_sort_key=:
-	All of these are the same as in form_of_t().
+; {{para|preinfl}}, {{para|preinfl2}}, ...
+: Extra inflection tags to automatically prepend to the tags specified by the template.
+; {{para|postinfl}}, {{para|postinfl2}}, ...
+: Extra inflection tags to automatically append to the tags specified by the template. Used for example by
+  {{tl|past participle form of}} to add the tags `of the|past|p` onto the user-specified tags, which indicate which
+  past participle form the page refers to.
+; {{para|split_tags}}
+: If specified, character to split specified inflection tags on. This allows multiple tags to be included in a single
+  argument, simplifying template code. Note that this applies *ONLY* to inflection tags specified in the invocation
+  arguments using {{para|preinfl}} or {{para|postinfl}}, not to user-specified inflection tags.
+; {{para|term_param}}
+; {{para|lang}}
+; {{para|sc}}
+; {{para|cat}}, {{para|cat2}}, ...
+; {{para|ignore}}, {{para|ignore2}}, ...
+; {{para|def}}, {{para|def2}}, ...
+; {{para|withcap}}
+; {{para|withdot}}
+; {{para|nolink}}
+; {{para|linktext}}
+; {{para|posttext}}
+; {{para|noprimaryentrycat}}
+; {{para|lemma_is_sort_key}}
+: All of these are the same as in {form_of_t()}.
 ]=]--
 function export.inflection_of_t(frame)
 	local iparams = get_common_invocation_params()
@@ -786,7 +789,7 @@ function export.inflection_of_t(frame)
 		type = "language",
 		default = iargs["lang"] or "und"
 	}
-	
+
 	params[tagsind] = {list = true,
 		-- at least one inflection tag is required unless preinfl or postinfl tags are given
 		required = #iargs["preinfl"] == 0 and #iargs["postinfl"] == 0}
@@ -859,12 +862,11 @@ function export.inflection_of_t(frame)
 		parent_args["joiner"])
 end
 
---[=[
-Normalize a part-of-speech tag given a possible abbreviation
-(passed in as 1= of the invocation args). If the abbreviation
-isn't recognized, the original POS tag is returned. If no POS
-tag is passed in, return the value of invocation arg default=.
-]=]--
+--[==[
+Normalize a part-of-speech tag given a possible abbreviation (passed in as {{para|1}} of the invocation args). If the
+abbreviation isn't recognized, the original POS tag is returned. If no POS tag is passed in, return the value of
+invocation arg {{para|default}}.
+]==]
 function export.normalize_pos(frame)
 	local iparams = {
 		[1] = {},
