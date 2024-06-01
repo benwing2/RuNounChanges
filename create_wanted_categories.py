@@ -34,11 +34,12 @@ def process_page(page, index):
   if blacklist(catname):
     pagemsg("Category is blacklisted, skipping")
     return
-  num_pages = len(list(blib.cat_articles(catname)))
-  num_subcats = len(list(blib.cat_subcats(catname)))
-  if num_pages == 0 and num_subcats == 0:
-    pagemsg("Skipping empty category")
-    return
+  if not args.allow_empty:
+    num_pages = len(list(blib.cat_articles(catname)))
+    num_subcats = len(list(blib.cat_subcats(catname)))
+    if num_pages == 0 and num_subcats == 0:
+      pagemsg("Skipping empty category")
+      return
   contents = "{{auto cat}}"
   result = expand_text(contents)
   if not result:
@@ -58,6 +59,7 @@ def process_page(page, index):
       pagemsg("Would create, comment = %s" % comment)
 
 params = blib.create_argparser("Create wanted categories with {{auto cat}}", include_pagefile=True)
+params.add_argument("--allow-empty", help="Proceed even when category is empty.", action="store_true")
 params.add_argument("--overwrite", help="Overwrite existing text.", action="store_true")
 args = params.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
