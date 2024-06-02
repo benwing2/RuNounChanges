@@ -1,9 +1,41 @@
-
 local export = {}
+
+local accent_qualifier_module = "Module:accent qualifier"
+local parse_utilities_module = "Module:parse utilities"
+local qualifier_module = "Module:qualifier"
+local references_module = "Module:references"
+local string_utilities_module = "Module:string utilities"
+
+local function rsplit(text, pattern)
+	return require(string_utilities_module).rsplit(text, pattern)
+end
 
 local function track(page)
 	require("Module:debug/track")("pron qualifier/" .. page)
 	return true
+end
+
+local function split_on_comma(term)
+	if not term then
+		return nil
+	end
+	if term:find(",%s") then
+		return require(parse_utilities_module).split_on_comma(term)
+	elseif term:find(",") then
+		return rsplit(term, ",")
+	else
+		return {term}
+	end
+end
+
+function export.parse_qualifiers(data)
+	local obj = data.store_obj
+	obj.refs = data.refs and require(references_module).parse_references(data.refs) or nil
+	obj.q = data.q and {data.q} or nil
+	obj.qq = data.qq and {data.qq} or nil
+	obj.qualifiers = data.qualifiers and {data.qualifiers} or nil
+	obj.a = split_on_comma(data.a)
+	obj.aa = split_on_comma(data.aa)
 end
 
 --[==[
@@ -36,12 +68,16 @@ function export.format_qualifiers(data)
 	end
 	local text = data.text
 	local function format_q(q)
-		return require("Module:qualifier").format_qualifier(q)
+		return require(qualifier_module).format_qualifier(q)
 	end
 	local function format_a(a)
-		return require("Module:accent qualifier").format_qualifiers(data.lang, a)
+		return require(accent_qualifier_module).format_qualifiers(data.lang, a)
 	end
-	-- This order puts the accent qualifiers before other qualifiers on both the left and the right.
+	if data.refs then
+		text = text .. require(references_module).format_references(data.refs)
+	end
+	-- This order puts the accent qualifiers before other qualifiers on both the left and the right. (FIXME: are we
+	-- sure about this?)
 	local leftq = data.q or not data.qualifiers_right and data.qualifiers
 	if leftq and leftq[1] then
 		text = format_q(leftq) .. " " .. text
