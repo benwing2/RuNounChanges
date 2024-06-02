@@ -86,6 +86,26 @@ def template_changes_to_dict(template_changes):
     retval[pagename].append((repl_curr_changes, comment))
   return retval
 
+def read_split_direcfile(direcfile, start, end):
+  comment = None
+  template_changes = []
+  for lineno, line in blib.iter_items_from_file(direcfile, start, end):
+    def linemsg(txt):
+      msg("Line %s: %s" % (lineno, txt))
+    m = re.match(r"^Page [^ ]+ (.*?): .*?<begin> (.*?) <end>.*$", line)
+    if not m:
+      linemsg("WARNING: Unable to parse line: [%s]" % line)
+      continue
+    pagename, from_to = m.groups()
+    template_changes.append((pagename, from_to))
+  return template_changes
+
+def split_template_changes_to_dict(template_changes):
+  retval = defaultdict(list)
+  for pagename, from_to in template_changes:
+    retval[pagename].append(from_to)
+  return retval
+
 def push_one_set_of_manual_changes(pagetitle, index, text, repl_curr_changes, comment):
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
@@ -133,10 +153,11 @@ def push_one_set_of_manual_changes(pagetitle, index, text, repl_curr_changes, co
       pagemsg("Change log = %s" % changelog)
       if args.include_what_changed:
         changelogs.append(changelog)
+    text = newtext
 
   if comment:
     changelogs = [comment]
-  return newtext, changelogs
+  return text, changelogs
 
 def undo_slash_newline(txt):
   if not args.undo_slash_newline:
@@ -173,18 +194,50 @@ def process_text_on_page_pushing_manual_changes(index, pagetitle, text):
 
   return text, combine_notes_with_comment(notes)
 
+def process_text_on_page_pushing_split_manual_changes(index, pagetitle, text):
+  global args
+  def pagemsg(txt):
+    msg("Page %s %s: %s" % (index, pagetitle, txt))
+
+  if pagetitle not in direcfile_changes_dict:
+    return
+  if pagetitle not in origfile_changes_dict:
+    pagemsg("WARNING: Can't find page in original file")
+    return
+  from_changes = origfile_changes_dict[pagetitle]
+  to_changes = direcfile_changes_dict[pagetitle]
+  if len(from_changes) != len(to_changes):
+    pagemsg("WARNING: Saw %s change%s in original but %s change%s in replacement, can't match" % (
+      len(from_changes), "" if len(from_changes) == 1 else "s", len(to_changes), "" if len(to_changes) == 1 else "s"))
+    return
+  if from_changes == to_changes:
+    pagemsg("from-changes identical to to-changes, skipping")
+    return
+  # FIXME: Support per-change comments in replacement file
+  text, notes = push_one_set_of_manual_changes(pagetitle, index, text, zip(to_changes, from_changes), None)
+
+  return text, combine_notes_with_comment(notes)
+
 params = blib.create_argparser("Push manual changes to Wiktionary",
   include_pagefile=True, include_stdin=True)
 params.add_argument("--direcfile", help="File containing templates to change, as output by various scripts with --from-to",
     required=True)
+params.add_argument("--origfile", help="File containing original templates, in the split-file format")
 params.add_argument("--undo-slash-newline", action="store_true", help=r"Undo replacement of newlines with \n")
 params.add_argument("--comment", help="Comment of change log message (included in addition to any comments embedded in the manual changes)")
 params.add_argument("--include-what-changed", action="store_true", help="If no comment embedded in manual changes, include what changed in the changelog")
 
 args = params.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
-direcfile_changes = read_direcfile(args.direcfile, start, end)
-
-direcfile_changes_dict = template_changes_to_dict(direcfile_changes)
-blib.do_pagefile_cats_refs(args, start, end, process_text_on_page_pushing_manual_changes, edit=True, stdin=True,
-                           default_pages=list(direcfile_changes_dict.keys()))
+if args.origfile:
+  direcfile_changes = read_split_direcfile(args.direcfile, start, end)
+  direcfile_changes_dict = split_template_changes_to_dict(direcfile_changes)
+  origfile_changes = read_split_direcfile(args.origfile, None, None)
+  origfile_changes_dict = split_template_changes_to_dict(origfile_changes)
+  blib.do_pagefile_cats_refs(args, None, None, process_text_on_page_pushing_split_manual_changes, edit=True, stdin=True,
+                             default_pages=list(direcfile_changes_dict.keys()))
+else:
+  direcfile_changes = read_direcfile(args.direcfile, start, end)
+  direcfile_changes_dict = template_changes_to_dict(direcfile_changes)
+  blib.do_pagefile_cats_refs(args, None, None, process_text_on_page_pushing_manual_changes, edit=True, stdin=True,
+                             default_pages=list(direcfile_changes_dict.keys()))
