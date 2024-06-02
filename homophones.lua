@@ -2,9 +2,7 @@ local export = {}
 
 local m_links = require("Module:links")
 local string_utilities_module = "Module:string utilities"
-local parse_utilities_module = "Module:parse utilities"
 local pron_qualifier_module = "Module:pron qualifier"
-local references_module = "Module:references"
 
 local function rsplit(text, pattern)
 	return require(string_utilities_module).rsplit(text, pattern)
@@ -13,19 +11,6 @@ end
 local function track(page)
 	require("Module:debug/track")("homophones/" .. page)
 	return true
-end
-
-local function split_on_comma(term)
-	if not term then
-		return nil
-	end
-	if term:find(",%s") then
-		return require(parse_utilities_module).split_on_comma(term)
-	elseif term:find(",") then
-		return rsplit(term, ",")
-	else
-		return {term}
-	end
 end
 
 --[==[
@@ -87,7 +72,7 @@ function export.format_homophones(data)
 		hmp.sc = data.sc
 		local text = m_links.full_link(hmp)
 		if hmp.q and hmp.q[1] or hmp.qq and hmp.qq[1] or hmp.qualifiers and hmp.qualifiers[1]
-			or hmp.a and hmp.a[1] or hmp.aa and hmp.aa[1] then
+			or hmp.a and hmp.a[1] or hmp.aa and hmp.aa[1] or hmp.refs and hmp.refs[1] then
 			-- FIXME, change handling of `qualifiers`
 			text = require(pron_qualifier_module).format_qualifiers {
 				lang = data.lang,
@@ -95,13 +80,11 @@ function export.format_homophones(data)
 				q = hmp.q,
 				qq = hmp.qq,
 				qualifiers = hmp.qualifiers,
+				qualifiers_right = true,
 				a = hmp.a,
 				aa = hmp.aa,
-				qualifiers_right = true,
+				refs = hmp.refs,
 			}
-		end
-		if hmp.refs and hmp.refs[1] then
-			text = text .. require(references_module).format_references(hmp.refs)
 		end
 		table.insert(hmptexts, text)
 	end
@@ -189,10 +172,13 @@ function export.show(frame)
 		nocat = args.nocat,
 		sc = args.sc.default,
 		sort = args.sort,
-		q = args.q.default and {args.q.default} or nil,
-		qq = args.qq.default and {args.qq.default} or nil,
-		a = split_on_comma(args.a.default),
-		aa = split_on_comma(args.aa.default),
+	}
+	require(pron_qualifier_module).parse_qualifiers {
+		store_obj = data,
+		q = args.q.default,
+		qq = args.qq.default,
+		a = args.a.default,
+		aa = args.aa.default,
 	}
 
 	for i = 1, maxindex do
@@ -208,7 +194,7 @@ function export.show(frame)
 				g = {g}
 			end
 		end
-		table.insert(data.homophones, {
+		local homophone_obj = {
 			term = args[1 + offset][i],
 			alt = args.alt[i],
 			gloss = args.t[i],
@@ -219,12 +205,16 @@ function export.show(frame)
 			lit = args.lit[i],
 			id = args.id[i],
 			sc = args.sc[i],
-			refs = refs,
-			q = args.q[i] and {args.q[i]} or nil,
-			qq = args.qq[i] and {args.qq[i]} or nil,
-			a = split_on_comma(args.a[i]),
-			aa = split_on_comma(args.aa[i]),
-		})
+		}
+		require(pron_qualifier_module).parse_qualifiers {
+			store_obj = homophone_obj,
+			refs = args.ref[i],
+			q = args.q[i],
+			qq = args.qq[i],
+			a = args.a[i],
+			aa = args.aa[i],
+		}
+		table.insert(data.homophones, homophone_obj)
 	end
 
 	return export.format_homophones(data)
