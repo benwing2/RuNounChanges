@@ -10,7 +10,8 @@ local m_IPA = require("Module:IPA")
 local m_str_utils = require("Module:string utilities")
 local m_table = require("Module:table")
 local audio_module = "Module:audio"
-local put_module = "Module:parse utilities"
+local parse_utilities_module = "Module:parse utilities"
+local references_module = "Module:references"
 
 local force_cat = false -- for testing
 
@@ -176,10 +177,15 @@ local function decompose(text)
 end
 
 local function split_on_comma(term)
+	if not term then
+		return nil
+	end
 	if term:find(",%s") then
-		return require(put_module).split_on_comma(term)
-	else
+		return require(parse_utilities_module).split_on_comma(term)
+	elseif term:find(",") then
 		return rsplit(term, ",")
+	else
+		return {term}
 	end
 end
 
@@ -966,24 +972,12 @@ local function dodialect_pronun(args, ret, dialect)
 			phonemic = phonemic.text
 			phonetic = phonetic.text
 		end
-		local refs
-		if not term.ref then
-			refs = nil
-		else
-			refs = {}
-			for _, refspec in ipairs(term.ref) do
-				local this_refs = require("Module:references").parse_references(refspec)
-				for _, this_ref in ipairs(this_refs) do
-					table.insert(refs, this_ref)
-				end
-			end
-		end
 
 		ret.pronun[dialect][i] = {
 			raw = term.raw,
 			phonemic = phonemic,
 			phonetic = phonetic,
-			refs = refs,
+			refs = term.refs,
 			q = term.q,
 			qq = term.qq,
 			a = term.a,
@@ -1074,10 +1068,11 @@ local function generate_pronun(args)
 				ins(require("Module:pron qualifier").format_qualifiers {
 					lang = lang,
 					text = "",
-					q = qs,
-					qq = pronun.qq,
-					a = pronun.a,
-					aa = pronun.aa,
+					-- need to copy as formatting accent qualifiers destructively modifies the lists
+					q = m_table.shallowcopy(qs),
+					qq = m_table.shallowcopy(pronun.qq),
+					a = m_table.shallowcopy(pronun.a),
+					aa = m_table.shallowcopy(pronun.aa),
 				})
 			end
 
@@ -1321,11 +1316,20 @@ local function dodialect_specified_rhymes(rhymes, hyphs, parsed_respellings, rhy
 end
 
 
+local q_qq_inline_modifier_spec = { store = "insert" }
+local a_aa_inline_modifier_spec = { store = "insert-flattened", convert = split_on_comma }
+local ref_inline_modifier_spec = {
+	store = "insert-flattened",
+	item_dest = "refs",
+	-- Only require [[Module:references]] when we have an argument to conver
+	convert = function(arg) return require(references_module).parse_references(arg) end,
+}
+
 -- Parse a pronunciation modifier in `arg`, the argument portion in an inline modifier (after the prefix), which
 -- specifies a pronunciation property such as rhyme, hyphenation/syllabification, homophones or audio. The argument
 -- can itself have inline modifiers, e.g. <audio:Foo.ogg<a:Colombia>>. The allowed inline modifiers are specified
 -- by `param_mods` (of the format expected by `parse_inline_modifiers()`); in addition to any modifiers specified
--- there, the modifiers <q:...>, <qq:...>, <a:...> and <aa:...> are always accepted (and can be repeated).
+-- there, the modifiers <q:...>, <qq:...>, <a:...>, <aa:...> and <ref:...> are always accepted (and can be repeated).
 -- `generate_obj` and `parse_err` are like in `parse_inline_modifiers()` and specify respectively a function to
 -- generate the object into which modifier properties are stored given the non-modifier part of the argument, and
 -- a function to generate an error message (given the message). Normally, a comma-separated list of pronunciation
@@ -1335,12 +1339,12 @@ end
 -- of property objects (when `no_split_on_comma` is given, the return value is a one-element list).
 local function parse_pron_modifier(arg, parse_err, generate_obj, param_mods, no_split_on_comma)
 	if arg:find("<") then
-		local insert = { store = "insert" }
-		param_mods.q = insert
-		param_mods.qq = insert
-		param_mods.a = insert
-		param_mods.aa = insert
-		local retval = require(put_module).parse_inline_modifiers(arg, {
+		param_mods.q = q_qq_inline_modifier_spec
+		param_mods.qq = q_qq_inline_modifier_spec
+		param_mods.a = a_aa_inline_modifier_spec
+		param_mods.aa = a_aa_inline_modifier_spec
+		param_mods.ref = ref_inline_modifier_spec
+		local retval = require(parse_utilities_module).parse_inline_modifiers(arg, {
 			param_mods = param_mods,
 			generate_obj = generate_obj,
 			parse_err = parse_err,
@@ -1405,6 +1409,7 @@ local function parse_homophone(arg, parse_err)
 			item_dest = "gloss",
 		},
 		gloss = {},
+		-- No tr=, ts=, or sc=; doesn't make sense for Spanish.
 		pos = {},
 		alt = {},
 		lit = {},
@@ -1424,24 +1429,48 @@ end
 
 
 local function generate_audio_obj(arg)
-	local file, gloss
-	if arg:find("#") then
-		file, gloss = arg:match("^(.-)%s*#%s*(.*)$")
-	else
-		file, gloss = arg:match("^(.-)%s*;%s*(.*)$")
-	end
+	local file, gloss = arg:match("^(.-)%s*#%s*(.*)$")
 	file = file or arg
 	return {file = file, gloss = gloss}
 end
 
 
 local function parse_audio(arg, parse_err)
-	-- None other than qualifiers
-	local param_mods = {}
+	local param_mods = {
+		IPA = {
+			convert = function(arg)
+				return rsplit(arg, ",")
+			end,
+		},
+		text = {},
+		t = {},
+		-- No tr=, ts=, or sc=; doesn't make sense for Spanish.
+		pos = {},
+		-- No alt=; text= already goes in alt=.
+		lit = {},
+		-- No id=; text= already goes in alt= and isn't normally linked.
+		g = {}, -- splitting happens in construct_audio_textobj() in [[Module:audio]]
+	}
 
 	-- Don't split on comma because some filenames have embedded commas not followed by a space
 	-- (typically followed by an underscore).
-	return parse_pron_modifier(arg, parse_err, generate_audio_obj, param_mods, "no split on comma")
+	local retvals = parse_pron_modifier(arg, parse_err, generate_audio_obj, param_mods, "no split on comma")
+	local retval = retvals[1]
+	local textobj_args = {
+		lang = lang,
+		text = retval.text,
+		t = retval.t,
+		pos = retval.pos,
+		lit = retval.lit,
+		g = retval.g,
+	}
+	local textobj = require(audio_module).construct_audio_textobj(textobj_args)
+	retval.text = textobj
+	retval.t = nil
+	retval.pos = nil
+	retval.lit = nil
+	retval.g = nil
+	return retvals
 end
 
 
@@ -1457,7 +1486,7 @@ function export.show_pr(frame)
 	}
 	local parargs = frame:getParent().args
 	local args = require("Module:parameters").process(parargs, params)
-	local pagename = args.pagename or mw.title.getCurrentTitle().subpageText
+	local pagename = args.pagename or mw.loadData("Module:headword/data").pagename
 
 	-- Parse the arguments.
 	local respellings = #args[1] > 0 and args[1] or {"+"}
@@ -1475,7 +1504,7 @@ function export.show_pr(frame)
 	if args.audio then
 		overall_audio = {}
 		for _, audio in ipairs(args.audio) do
-			local parsed_audio = parse_audio(audio, function(msg) overall_parse_err(msg, "audio", audio) end)
+			local parsed_audio = parse_audio(audio, function(msg) overall_parse_err(msg, "audio", audio) end, pagename)
 			if #parsed_audio > 1 then
 				error("Internal error: Saw more than one object returned from parse_audio")
 			end
@@ -1515,16 +1544,18 @@ function export.show_pr(frame)
 				audio = {
 					overall = true,
 					store = "insert-flattened",
-					convert = parse_audio,
+					convert = function(arg, parse_err)
+						return parse_audio(arg, parse_err, pagename)
+					end,
 				},
-				ref = { store = "insert" },
-				q = { store = "insert" },
-				qq = { store = "insert" },
-				a = { store = "insert" },
-				aa = { store = "insert" },
+				ref = ref_inline_modifier_spec,
+				q = q_qq_inline_modifier_spec,
+				qq = q_qq_inline_modifier_spec,
+				a = a_aa_inline_modifier_spec,
+				aa = a_aa_inline_modifier_spec,
 			}
 
-			local parsed = require(put_module).parse_inline_modifiers(respelling, {
+			local parsed = require(parse_utilities_module).parse_inline_modifiers(respelling, {
 				paramname = i,
 				param_mods = param_mods,
 				generate_obj = function(term, parse_err)
@@ -1822,6 +1853,9 @@ function export.show_pr(frame)
 				qq = audio.qq,
 				a = audio.a,
 				aa = audio.aa,
+				refs = audio.refs,
+				text = audio.text,
+				IPA = audio.IPA,
 			}
 			table.insert(ret, string.rep("*", num_bullets) .. " " .. text)
 		end
