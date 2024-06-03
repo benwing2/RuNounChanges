@@ -57,9 +57,9 @@ Display a box that can be used to play an audio file. `data` is a table containi
 * `text`: Text of the audio snippet; if specified, should be an object of the form passed to {full_link()} in
   [[Module:links]], including a `lang` field containing the language of the text (usually the same as `data.lang`);
   displayed before the audio box, after any regular and accent qualifiers;
-* `IPA`: IPA of the audio snipped; if specified, should be surrounded by slashes or brackets, and will be processed
-  using {format_IPA()} in [[Module:IPA]] and displayed before the audio box, after any regular and accent qualifiers and
-  after the text of the audio snippet, if given;
+* `IPA`: IPA of the audio snippet, or a list of IPA specs; if specified, should be surrounded by slashes or brackets,
+  and will be processed using {format_IPA_multiple()} in [[Module:IPA]] and displayed before the audio box, after any
+  regular and accent qualifiers and after the text of the audio snippet, if given;
 * `nocat`: If true, suppress categorization;
 * `sort`: Sort key for categorization.
 ]==]
@@ -110,12 +110,19 @@ function export.format_audio(data)
 		formatted_text = require(links_module).full_link(data.text, "term", true)
 	end
 	if data.IPA then
-		local ipa_cats, ipa_err
-		formatted_ipa, ipa_cats, ipa_err = require(IPA_module).format_IPA(data.lang, data.IPA, "raw")
+		local ipa_cats
+		local ipa = data.IPA
+		if type(ipa) == "string" then
+			ipa = {ipa}
+		end
+		local ipa_items = {}
+		for _, ipa_item in ipairs(ipa) do
+			table.insert(ipa_items, {pron = ipa_item})
+		end
+		formatted_ipa, ipa_cats = require(IPA_module).format_IPA_multiple(data.lang, ipa_items, nil, "no count", "raw")
 		if ipa_cats[1] then
 			require(table_module).extendList(cats, ipa_cats)
 		end
-		formatted_ipa = formatted_ipa .. ipa_err
 	end
 	local has_qual = formatted_accent_labels or formatted_qualifiers
 	if not data.nocaption then
@@ -276,6 +283,51 @@ function export.format_multiple_audios(data)
 	return stylesheet .. text .. categories
 end
 
+
+--[==[
+Construct the `text` object passed into {format_audio()}, from raw-ish arguments (essentially, the output of {process()}
+in [[Module:parameters]]). On entry, `args` contains the following fields:
+* `lang` ('''required'''): Language object.
+* `text`: Text. If this isn't defined and neither are any of `t`, `tr`, `ts`, `pos`, `lit` or `g`, the function returns
+  {nil}.
+* `t`: Gloss of text.
+* `tr`: Manual transliteration of text.
+* `ts`: Transcription of text.
+* `pos`: Part of speech of text.
+* `lit`: Literal meaning of text.
+* `g`: Gender/number spec(s) of text. Automatically split on commas.
+* `sc`: Optional script object of text (rarely needs to be set).
+* `pagename`: Pagename; used in place of `text` when `text` is unset but other text-related parameters are set.
+  If not specified, taken from the actual pagename.
+]==]
+function export.construct_audio_textobj(args)
+	local textobj
+	local g = args.g
+	if g then
+		if g:find(",") then
+			g = rsplit(g, "%s*,%s*")
+		else
+			g = {g}
+		end
+	end
+	if args.text or args.t or args.tr or args.ts or args.pos or args.lit or g then
+		local text = args.text or args.pagename or mw.loadData("Module:headword/data").pagename
+		textobj = {
+			lang = args.lang,
+			alt = wrap_qual_css("“", "quote") .. text .. wrap_qual_css("”", "quote"),
+			gloss = args.t,
+			tr = args.tr,
+			ts = args.ts,
+			pos = args.pos,
+			lit = args.lit,
+			genders = g,
+			sc = args.sc,
+		}
+	end
+	return textobj
+end
+
+
 --[==[
 Entry point for {{tl|audio}} template.
 ]==]
@@ -311,29 +363,9 @@ function export.show(frame)
 
 	local lang = args[compat and "lang" or 1]
 
-	local textobj
-	local g = args.g
-	if g then
-		if g:find(",") then
-			g = rsplit(g, "%s*,%s*")
-		else
-			g = {g}
-		end
-	end
-	if args.text or args.t or args.tr or args.ts or args.pos or args.lit or g then
-		local text = args.text or args.pagename or mw.loadData("Module:headword/data").pagename
-		textobj = {
-			lang = lang,
-			alt = wrap_qual_css("“", "quote") .. text .. wrap_qual_css("”", "quote"),
-			gloss = args.t,
-			tr = args.tr,
-			ts = args.ts,
-			pos = args.pos,
-			lit = args.lit,
-			genders = g,
-			sc = args.sc,
-		}
-	end
+	-- Needed in construct_audio_textobj().
+	args.lang = lang
+	local textobj export.construct_audio_textobj(args)
 
 	local caption = args[2 + offset]
 	local nocaption
@@ -351,7 +383,7 @@ function export.show(frame)
 		caption = caption,
 		nocaption = nocaption,
 		text = textobj,
-		IPA = args.IPA,
+		IPA = args.IPA and rsplit(args.IPA, ",") or nil,
 		nocat = args.nocat,
 		sort = args.sort,
 	}
