@@ -106,6 +106,25 @@ def split_template_changes_to_dict(template_changes):
     retval[pagename].append(from_to)
   return retval
 
+def filter_split_changes_removing_no_effect_lines(direcfile_changes_dict, origfile_changes_dict):
+  filtered_direcfile_changes_dict = {}
+  for index, (pagetitle, to_changes) in enumerate(direcfile_changes_dict.items()):
+    def pagemsg(txt):
+      msg("Page %s %s: %s" % (index, pagetitle, txt))
+    if pagetitle not in origfile_changes_dict:
+      pagemsg("WARNING: Can't find page in original file")
+    else:
+      from_changes = origfile_changes_dict[pagetitle]
+      if len(from_changes) != len(to_changes):
+        pagemsg("WARNING: Saw %s change%s in original but %s change%s in replacement, can't match" % (
+          len(from_changes), "" if len(from_changes) == 1 else "s", len(to_changes),
+          "" if len(to_changes) == 1 else "s"))
+      elif from_changes == to_changes:
+        pagemsg("from-changes identical to to-changes, skipping")
+      else:
+        filtered_direcfile_changes_dict[pagetitle] = to_changes
+  return filtered_direcfile_changes_dict
+
 def push_one_set_of_manual_changes(pagetitle, index, text, repl_curr_changes, comment):
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
@@ -122,8 +141,14 @@ def push_one_set_of_manual_changes(pagetitle, index, text, repl_curr_changes, co
   for repl_template, curr_template in repl_curr_changes:
     repl_template = undo_slash_newline(repl_template)
     curr_template = undo_slash_newline(curr_template)
+    if curr_template == repl_template:
+      pagemsg("Skipping current template equal to replacement template: %s" % curr_template)
+      continue
     found_repl_template = repl_template in text
-    newtext = text.replace(curr_template, repl_template)
+    if args.full_lines:
+      newtext = re.sub("^" + re.escape(curr_template) + "$", repl_template.replace("\\", r"\\"), text, 0, re.M)
+    else:
+      newtext = text.replace(curr_template, repl_template)
     if newtext == text:
       if not found_repl_template:
         pagemsg("WARNING: Unable to locate current template: %s (would replace with %s)" % (curr_template, repl_template))
@@ -181,7 +206,6 @@ def combine_notes_with_comment(notes):
     return args.comment or "push manual changes"
 
 def process_text_on_page_pushing_manual_changes(index, pagetitle, text):
-  global args
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -195,7 +219,6 @@ def process_text_on_page_pushing_manual_changes(index, pagetitle, text):
   return text, combine_notes_with_comment(notes)
 
 def process_text_on_page_pushing_split_manual_changes(index, pagetitle, text):
-  global args
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -226,6 +249,7 @@ params.add_argument("--origfile", help="File containing original templates, in t
 params.add_argument("--undo-slash-newline", action="store_true", help=r"Undo replacement of newlines with \n")
 params.add_argument("--comment", help="Comment of change log message (included in addition to any comments embedded in the manual changes)")
 params.add_argument("--include-what-changed", action="store_true", help="If no comment embedded in manual changes, include what changed in the changelog")
+params.add_argument("--full-lines", action="store_true", help="Changes are full lines and must match an entire line")
 
 args = params.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
@@ -234,6 +258,7 @@ if args.origfile:
   direcfile_changes_dict = split_template_changes_to_dict(direcfile_changes)
   origfile_changes = read_split_direcfile(args.origfile, None, None)
   origfile_changes_dict = split_template_changes_to_dict(origfile_changes)
+  direcfile_changes_dict = filter_split_changes_removing_no_effect_lines(direcfile_changes_dict, origfile_changes_dict)
   blib.do_pagefile_cats_refs(args, None, None, process_text_on_page_pushing_split_manual_changes, edit=True, stdin=True,
                              default_pages=list(direcfile_changes_dict.keys()))
 else:
