@@ -9,6 +9,7 @@ local export = {}
 local m_IPA = require("Module:IPA")
 local m_str_utils = require("Module:string utilities")
 local m_table = require("Module:table")
+local audio_module = "Module:audio"
 local put_module = "Module:parse utilities"
 
 local force_cat = false -- for testing
@@ -1067,16 +1068,17 @@ local function generate_pronun(args)
 			if pronun.aa then
 				pronunciations[last_pronun].aa = pronun.aa
 			end
-			if qs or pronun.a or pronun.qq or pronun.aa then
-				local data = {
-					q = qs,
-					a = pronun.a,
-					qq = pronun.qq,
-					aa = pronun.aa
-				}
+			if qs or pronun.qq or pronun.a or pronun.aa then
 				-- Note: This inserts the actual formatted qualifier text, including HTML and such, but the later call
 				-- to textual_len() removes all HTML and reduces links.
-				ins(require("Module:pron qualifier").format_qualifiers(data, ""))
+				ins(require("Module:pron qualifier").format_qualifiers {
+					lang = lang,
+					text = "",
+					q = qs,
+					qq = pronun.qq,
+					a = pronun.a,
+					aa = pronun.aa,
+				})
 			end
 
 			if pronun.refs then
@@ -1097,7 +1099,8 @@ local function generate_pronun(args)
 		-- the toggle box with the "more" button on the right.
 		local pre = is_first and args.pre and args.pre .. " " or ""
 		local post = is_first and args.post and " " .. args.post or ""
-		local formatted = bullet .. pre .. m_IPA.format_IPA_full(lang, pronunciations, nil, "") .. post
+		local formatted = bullet .. pre ..
+			m_IPA.format_IPA_full { lang = lang, items = pronunciations, separator = "" } .. post
 		local formatted_for_len = bullet .. pre .. "IPA(key): " .. table.concat(formatted_pronuns) .. post
 		return formatted, textual_len(formatted_for_len)
 	end
@@ -1318,30 +1321,44 @@ local function dodialect_specified_rhymes(rhymes, hyphs, parsed_respellings, rhy
 end
 
 
+-- Parse a pronunciation modifier in `arg`, the argument portion in an inline modifier (after the prefix), which
+-- specifies a pronunciation property such as rhyme, hyphenation/syllabification, homophones or audio. The argument
+-- can itself have inline modifiers, e.g. <audio:Foo.ogg<a:Colombia>>. The allowed inline modifiers are specified
+-- by `param_mods` (of the format expected by `parse_inline_modifiers()`); in addition to any modifiers specified
+-- there, the modifiers <q:...>, <qq:...>, <a:...> and <aa:...> are always accepted (and can be repeated).
+-- `generate_obj` and `parse_err` are like in `parse_inline_modifiers()` and specify respectively a function to
+-- generate the object into which modifier properties are stored given the non-modifier part of the argument, and
+-- a function to generate an error message (given the message). Normally, a comma-separated list of pronunciation
+-- properties is accepted and parsed, where each element in the list can have its own inline modifiers and where
+-- no spaces are allowed next to the commas in order for them to be recognized as separators. If `no_split_on_comma`
+-- is given, only a single pronunciation property is accepted. In all cases, however, the return value is a list
+-- of property objects (when `no_split_on_comma` is given, the return value is a one-element list).
 local function parse_pron_modifier(arg, parse_err, generate_obj, param_mods, no_split_on_comma)
-	local retval = {}
-
 	if arg:find("<") then
 		local insert = { store = "insert" }
 		param_mods.q = insert
 		param_mods.qq = insert
 		param_mods.a = insert
 		param_mods.aa = insert
-		return require(put_module).parse_inline_modifiers(arg, {
+		local retval = require(put_module).parse_inline_modifiers(arg, {
 			param_mods = param_mods,
 			generate_obj = generate_obj,
 			parse_err = parse_err,
 			splitchar = not no_split_on_comma and "," or nil,
 		})
+		if no_split_on_comma then
+			retval = {retval}
+		end
+		return retval
 	elseif no_split_on_comma then
-		table.insert(retval, generate_obj(arg))
+		return {generate_obj(arg)}
 	else
+		local retval = {}
 		for _, term in ipairs(split_on_comma(arg)) do
 			table.insert(retval, generate_obj(term))
 		end
+		return retval
 	end
-
-	return retval
 end
 
 
@@ -1413,10 +1430,7 @@ local function generate_audio_obj(arg)
 	else
 		file, gloss = arg:match("^(.-)%s*;%s*(.*)$")
 	end
-	if not file then
-		file = arg
-		gloss = "Audio"
-	end
+	file = file or arg
 	return {file = file, gloss = gloss}
 end
 
@@ -1800,18 +1814,15 @@ function export.show_pr(frame)
 	local function format_audio(audios, num_bullets)
 		local ret = {}
 		for i, audio in ipairs(audios) do
-			local text = require("Module:audio").format_audios (
-				{
-				  lang = lang,
-				  audios = {{file = audio.file, qualifiers = nil }, },
-				  caption = audio.gloss
-				}
-			)
-			
-			if audio.q and audio.q[1] or audio.qq and audio.qq[1]
-				or audio.a and audio.a[1] or audio.aa and audio.aa[1] then
-				text = require("Module:pron qualifier").format_qualifiers(audio, text)
-			end
+			local text = require(audio_module).format_audio {
+				lang = lang,
+				file = audio.file,
+				caption = audio.gloss,
+				q = audio.q,
+				qq = audio.qq,
+				a = audio.a,
+				aa = audio.aa,
+			}
 			table.insert(ret, string.rep("*", num_bullets) .. " " .. text)
 		end
 		return table.concat(ret, "\n")
