@@ -26,6 +26,9 @@ def truncate_bytes(text, truncate_len=max_truncate_len):
     return text
   return textbytes[0:truncate_len - 3].decode("utf-8", "ignore") + "..."
 
+def form_repl_curr(repl, curr):
+  return (undo_slash_newline(repl, repl=True), undo_slash_newline(curr))
+
 def read_direcfile(direcfile, start, end):
   comment = None
   template_changes = []
@@ -54,10 +57,10 @@ def read_direcfile(direcfile, start, end):
           template_changes.pop()
         if repl_on_right:
           pagename, curr, repl = m.groups()
-          template_changes.append((pagename, [(repl, curr)], None))
+          template_changes.append((pagename, [form_repl_curr(repl, curr)], None))
         else:
           pagename, repl, curr = m.groups()
-          template_changes.append((pagename, [(repl, curr)], None))
+          template_changes.append((pagename, [form_repl_curr(repl, curr)], None))
       else:
         linemsg("WARNING: Ignoring line with from=to: %s" % line)
     else:
@@ -73,7 +76,7 @@ def read_direcfile(direcfile, start, end):
       for m in re.finditer("<from> (.*?) <to> (.*?) <end>", directives):
         curr, repl = m.groups()
         if curr != repl:
-          this_template_changes.append((repl, curr))
+          this_template_changes.append(form_repl_curr(repl, curr))
         else:
           linemsg("WARNING: Ignoring line with from=to: %s" % line)
       if this_template_changes:
@@ -86,7 +89,7 @@ def template_changes_to_dict(template_changes):
     retval[pagename].append((repl_curr_changes, comment))
   return retval
 
-def read_split_direcfile(direcfile, start, end):
+def read_split_direcfile(direcfile, start, end, repl=False):
   comment = None
   template_changes = []
   for lineno, line in blib.iter_items_from_file(direcfile, start, end):
@@ -97,7 +100,7 @@ def read_split_direcfile(direcfile, start, end):
       linemsg("WARNING: Unable to parse line: [%s]" % line)
       continue
     pagename, from_to = m.groups()
-    template_changes.append((pagename, from_to))
+    template_changes.append((pagename, undo_slash_newline(from_to, repl=repl)))
   return template_changes
 
 def split_template_changes_to_dict(template_changes):
@@ -139,8 +142,6 @@ def push_one_set_of_manual_changes(pagetitle, index, text, repl_curr_changes, co
   text = str(text)
   changelogs = []
   for repl_template, curr_template in repl_curr_changes:
-    repl_template = undo_slash_newline(repl_template)
-    curr_template = undo_slash_newline(curr_template)
     if curr_template == repl_template:
       pagemsg("Skipping current template equal to replacement template: %s" % curr_template)
       continue
@@ -184,10 +185,10 @@ def push_one_set_of_manual_changes(pagetitle, index, text, repl_curr_changes, co
     changelogs = [comment]
   return text, changelogs
 
-def undo_slash_newline(txt):
-  if not args.undo_slash_newline:
-    return txt
-  return blib.undo_escape_newline(txt)
+def undo_slash_newline(txt, repl=False):
+  if args.undo_slash_newline or repl and args.undo_slash_newline_in_repl_only:
+    return blib.undo_escape_newline(txt)
+  return txt
 
 def combine_notes_with_comment(notes):
   if notes:
@@ -247,6 +248,7 @@ params.add_argument("--direcfile", help="File containing templates to change, as
     required=True)
 params.add_argument("--origfile", help="File containing original templates, in the split-file format")
 params.add_argument("--undo-slash-newline", action="store_true", help=r"Undo replacement of newlines with \n")
+params.add_argument("--undo-slash-newline-in-repl-only", action="store_true", help=r"Undo replacement of newlines with \n in replacement text only")
 params.add_argument("--comment", help="Comment of change log message (included in addition to any comments embedded in the manual changes)")
 params.add_argument("--include-what-changed", action="store_true", help="If no comment embedded in manual changes, include what changed in the changelog")
 params.add_argument("--full-lines", action="store_true", help="Changes are full lines and must match an entire line")
@@ -254,7 +256,7 @@ params.add_argument("--full-lines", action="store_true", help="Changes are full 
 args = params.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 if args.origfile:
-  direcfile_changes = read_split_direcfile(args.direcfile, start, end)
+  direcfile_changes = read_split_direcfile(args.direcfile, start, end, repl=True)
   direcfile_changes_dict = split_template_changes_to_dict(direcfile_changes)
   origfile_changes = read_split_direcfile(args.origfile, None, None)
   origfile_changes_dict = split_template_changes_to_dict(origfile_changes)
