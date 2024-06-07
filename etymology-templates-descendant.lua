@@ -5,6 +5,8 @@ local rsplit = mw.text.split
 
 local put_module = "Module:parse utilities"
 local labels_module = "Module:labels"
+local languages_module = "Module:languages"
+local scripts_module = "Module:scripts"
 
 local export = {}
 
@@ -108,7 +110,7 @@ local function get_arrow(args, index)
 		arrow = add_tooltip("→", "semi-learned borrowing")
 	elseif val("obor") then
 		arrow = add_tooltip("→", "orthographic borrowing")
-	elseif args["translit"] then
+	elseif args.translit then
 		arrow = add_tooltip("→", "transliteration")
 	elseif val("clq") then
 		arrow = add_tooltip("→", "calque")
@@ -217,7 +219,7 @@ local function desc_or_desc_tree(frame, desc_tree)
 	local boolean = {type = "boolean"}
 	if desc_tree then
 		params = {
-			[1] = {required = true, type = "language", etym_lang = true, default = "gem-pro"},
+			[1] = {required = true, type = "language", etym_lang = true, family = true, default = "gem-pro"},
 			[2] = {required = true, list = true, allow_holes = true, default = "*fuhsaz"},
 			["notext"] = boolean,
 			["noalts"] = boolean,
@@ -225,7 +227,7 @@ local function desc_or_desc_tree(frame, desc_tree)
 		}
 	else
 		params = {
-			[1] = {required = true, type = "language", etym_lang = true, default = "en"},
+			[1] = {required = true, type = "language", etym_lang = true, family = true, default = "en"},
 			[2] = {list = true, allow_holes = true},
 			["alts"] = boolean
 		}
@@ -256,9 +258,10 @@ local function desc_or_desc_tree(frame, desc_tree)
 	end
 
 	-- Add other single params.
-	params["sclb"] = boolean
-	params["nolb"] = boolean
-	params["sandbox"] = boolean
+	params.sclang = boolean
+	params.sclb = {type = "boolean", alias_of = "sclang"}
+	params.nolang = boolean
+	params.nolb = {type = "boolean", alias_of = "nolang"}
 
 	local namespace = mw.title.getCurrentTitle().nsText
 
@@ -292,15 +295,9 @@ local function desc_or_desc_tree(frame, desc_tree)
 
 	local args = require("Module:parameters").process(parent_args, params)
 
-	if args.sandbox then
-		if namespace == "" or namespace == "Reconstruction" then
-			error("The sandbox module, Module:descendants tree/sandbox, should not be used in entries.")
-		end
-	end
-	
 	local lang = args[1]
 	local terms = args[2]
-	local alts = args["alt"]
+	local alts = args.alt
 	
 	if (namespace == "" or namespace == "Reconstruction") and (lang:hasType("appendix-constructed") and not lang:hasType("regular")) then
 		error("Terms in appendix-only constructed languages may not be given as descendants.")
@@ -308,11 +305,7 @@ local function desc_or_desc_tree(frame, desc_tree)
 
 	local m_desctree
 	if desc_tree or alts then
-		if args.sandbox or require("Module:yesno")(frame.args.sandbox, false) then
-			m_desctree = require("Module:descendants tree/sandbox")
-		else
-			m_desctree = require("Module:descendants tree")
-		end
+		m_desctree = require("Module:descendants tree")
 	end
 	
 	if lang:getCode() ~= lang:getFullCode() then
@@ -321,19 +314,43 @@ local function desc_or_desc_tree(frame, desc_tree)
 		track("etymological/" .. lang:getCode())
 	end
 
-	local languageName = lang:getDisplayForm()
-	local label
+	local is_family = lang:hasType("family")
+	local proxy_lang
+	if is_family then
+		-- [[Special:WhatLinksHere/Wiktionary:Tracking/descendant/family]]
+		track("family")
+		track("family/" .. lang:getCode())
+		proxy_lang = require(languages_module).getByCode("und")
+	else
+		proxy_lang = lang
+	end
+
+	local languageName
+	if is_family then
+		-- The display form for families includes the word "languages", which we probably don't want to
+		-- display.
+		languageName = lang:getCanonicalName()
+	else
+		languageName = lang:getDisplayForm()
+	end
+	local langtag
 	
-	if args["sclb"] then
-		local sc = args["sc"][1]
+	if args.sclang then
+		local sc = args.sc[1]
 		if sc then
-			label = sc:getDisplayForm()
+			langtag = sc:getDisplayForm()
 		else
 			local term, alt = terms[1], alts[1]
-			label = lang:findBestScript(term or alt):getDisplayForm()
+			local best_sc
+			if is_family then
+				best_sc = require(scripts_module).findBestScriptWithoutLang(term or alt, "none is last resort")
+			else
+				best_sc = lang:findBestScript(term or alt)
+			end
+			langtag = best_sc:getDisplayForm()
 		end
 	else
-		label = languageName
+		langtag = languageName
 	end
 	
 	-- Find the maximum index among any of the list parameters.
@@ -356,19 +373,19 @@ local function desc_or_desc_tree(frame, desc_tree)
 		local term = terms[i]
 		if term ~= ";" then
 			ind = ind + 1
-			local alt = args["alt"][ind]
-			local id = args["id"][ind]
-			local sc = args["sc"][ind]
-			local tr = args["tr"][ind]
-			local ts = args["ts"][ind]
-			local gloss = args["t"][ind]
-			local pos = args["pos"][ind]
-			local lit = args["lit"][ind]
-			local g = args["g"][ind] and rsplit(args["g"][ind], "%s*,%s*") or {}
+			local alt = args.alt[ind]
+			local id = args.id[ind]
+			local sc = args.sc[ind]
+			local tr = args.tr[ind]
+			local ts = args.ts[ind]
+			local gloss = args.t[ind]
+			local pos = args.pos[ind]
+			local lit = args.lit[ind]
+			local g = args.g[ind] and rsplit(args.g[ind], "%s*,%s*") or {}
 			local link
 
 			local termobj =	{
-				lang = lang,
+				lang = proxy_lang,
 			}
 			-- Initialize `termobj` with indexed modifier params such as t1, t2, etc. and alt1, alt2, etc. Inline
 			-- modifiers specified using the <...> notation override these.
@@ -512,11 +529,14 @@ local function desc_or_desc_tree(frame, desc_tree)
 			end
 
 			local arrow = get_arrow(args, ind)
-			local preqs = get_pre_qualifiers(args, ind, lang)
-			local postqs = get_post_qualifiers(args, ind, lang)
+			local preqs = get_pre_qualifiers(args, ind, proxy_lang)
+			local postqs = get_post_qualifiers(args, ind, proxy_lang)
 			local alts
 
 			if desc_tree and term and term ~= "-" then
+				if is_family then
+					error("No support currently (and probably ever) for fetching a descendant tree when a family code instead of language code is given")
+				end
 				insert(seen_terms, term)
 				-- This is what I ([[User:Benwing2]]) had in Nov 2020 when I first implemented this.
 				-- Since then, [[User:Fytcha]] added `true` as the fourth param.
@@ -529,7 +549,10 @@ local function desc_or_desc_tree(frame, desc_tree)
 
 			descendants[ind] = descendants[ind] or ""
 
-			if term and (desc_tree and not args["noalts"] or not desc_tree and args["alts"]) then
+			if term and (desc_tree and not args.noalts or not desc_tree and args.alts) then
+				if is_family then
+					error("No support currently (and probably ever) for fetching alternative forms when a family code instead of language code is given")
+				end
 				-- [[Special:WhatLinksHere/Wiktionary:Tracking/descendant/alts]]
 				track("alts")
 				alts = m_desctree.getAlternativeForms(lang, sc, term, id)
@@ -538,7 +561,7 @@ local function desc_or_desc_tree(frame, desc_tree)
 			end
 
 			local linktext = concat{preqs, link, alts, postqs}
-			if not args["notext"] then
+			if not args.notext then
 				linktext = arrow .. linktext
 			end
 			if linktext ~= "" then
@@ -566,13 +589,13 @@ local function desc_or_desc_tree(frame, desc_tree)
 	end
 
 	descendants = concat(descendants)
-	if args["noparent"] then
+	if args.noparent then
 		return descendants
 	end
 
 	local initial_arrow = get_arrow(args, 0)
-	local initial_preqs = get_pre_qualifiers(args, 0, lang)
-	local final_postqs = get_post_qualifiers(args, 0, lang)
+	local initial_preqs = get_pre_qualifiers(args, 0, proxy_lang)
+	local final_postqs = get_post_qualifiers(args, 0, proxy_lang)
 
 	if use_semicolon then
 		for i = 2, #parts - 1, 2 do
@@ -582,12 +605,12 @@ local function desc_or_desc_tree(frame, desc_tree)
 
 	local all_linktext = initial_preqs .. concat(parts) .. final_postqs .. descendants
 
-	if args["notext"] then
+	if args.notext then
 		return all_linktext
-	elseif args["nolb"] then
+	elseif args.nolang then
 		return initial_arrow .. all_linktext
 	else
-		return concat{initial_arrow, label, ":", all_linktext ~= "" and " " or "", all_linktext}
+		return concat{initial_arrow, langtag, ":", all_linktext ~= "" and " " or "", all_linktext}
 	end
 end
 
@@ -612,11 +635,11 @@ function export.descendant_family(frame)
 	local family_name = family:getCanonicalName()
 
 	local qq = ""
-	if args["t"] then
-		qq = qq .. " " .. mention_gloss(args["t"])
+	if args.t then
+		qq = qq .. " " .. mention_gloss(args.t)
 	end
-	if args["qq"] then
-		qq = qq .. " " .. qualifier(args["qq"])
+	if args.qq then
+		qq = qq .. " " .. qualifier(args.qq)
 	end
 
 	return arrow .. family_name .. ":" .. qq .. require("Module:TemplateStyles")("Module:etymology/style.css")
