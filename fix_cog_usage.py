@@ -8,13 +8,11 @@ from blib import getparam, rmparam, msg, site
 
 blib.getData()
 
-# Compile a map from etym language code to its first non-etym-language ancestor.
+# Compile a map from etym language code to its corresponding full language.
 etym_language_to_parent = {}
-for code in blib.etym_languages_byCode:
-  parent = code
-  while parent in blib.etym_languages_byCode:
-    parent = blib.etym_languages_byCode[parent]["parent"]
-  etym_language_to_parent[code] = parent
+for code, spec in blib.etym_languages_byCode.items():
+  if "full" in spec: # etym-lang families don't have the key "full"
+    etym_language_to_parent[code] = spec["full"]
 
 # Compile a map from all language names (including for etym languages) to a tuple
 # (LANGCODES, ETYMCODE, ISETYMCANON) where LANGCODES is a list of zero or more
@@ -97,12 +95,20 @@ def add_name_with_code(name, code, iscanon, isetym):
 
 for code, desc in blib.languages_byCode.items():
   add_name_with_code(desc["canonicalName"], code, True, False)
-  for othername in desc["otherNames"]:
-    add_name_with_code(othername, code, False, False)
+  if "aliases" in desc:
+    for alias in desc["aliases"]:
+      add_name_with_code(alias, code, False, False)
+  if "otherNames" in desc:
+    for othername in desc["otherNames"]:
+      add_name_with_code(othername, code, False, False)
 for code, desc in blib.etym_languages_byCode.items():
   add_name_with_code(desc["canonicalName"], code, True, True)
-  for othername in desc["otherNames"]:
-    add_name_with_code(othername, code, False, True)
+  if "aliases" in desc:
+    for alias in desc["aliases"]:
+      add_name_with_code(alias, code, False, True)
+  if "otherNames" in desc:
+    for othername in desc["otherNames"]:
+      add_name_with_code(othername, code, False, True)
 
 def process_text_on_page(index, pagetitle, pagetext):
   global args
