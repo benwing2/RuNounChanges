@@ -302,6 +302,10 @@ local function desc_or_desc_tree(frame, desc_tree)
 	local terms = args[2]
 	local alts = args["alt"]
 	
+	if (namespace == "" or namespace == "Reconstruction") and (lang:hasType("appendix-constructed") and not lang:hasType("regular")) then
+		error("Terms in appendix-only constructed languages may not be given as descendants.")
+	end
+
 	local m_desctree
 	if desc_tree or alts then
 		if args.sandbox or require("Module:yesno")(frame.args.sandbox, false) then
