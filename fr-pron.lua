@@ -159,8 +159,9 @@ local front_vowel_c = "[" .. front_vowel .. "]"
 local word_begin = "'‿⁀%-" -- characters indicating the beginning of a word
 local word_begin_c = "[" .. word_begin .. "]"
 
--- Actual implementation of [[Template:fr-IPA]], compatible in spirit with
--- [[Template:IPA]].
+--[==[
+Actual implementation of {{tl|fr-IPA}}, compatible in spirit with {{tl|IPA}}.
+]==]
 function export.fr_IPA(frame)
 	local params = {
 		[1] = {list = true, allow_holes = true},
