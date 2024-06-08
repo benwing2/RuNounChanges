@@ -10,17 +10,19 @@ handling pronunciation of verbs).
 
 local export = {}
 
+local m_str_utils = require("Module:string utilities")
+
 local str_gsub = string.gsub
 
-local u = mw.ustring.char
-local rfind = mw.ustring.find
-local rsubn = mw.ustring.gsub
-local rmatch = mw.ustring.match
-local rsplit = mw.text.split
-local ulower = mw.ustring.lower
-local uupper = mw.ustring.upper
-local usub = mw.ustring.sub
-local ulen = mw.ustring.len
+local u = m_str_utils.char
+local rfind = m_str_utils.find
+local rsubn = m_str_utils.gsub
+local rmatch = m_str_utils.match
+local rsplit = m_str_utils.split
+local ulower = m_str_utils.lower
+local uupper = m_str_utils.upper
+local usub = m_str_utils.sub
+local ulen = m_str_utils.len
 
 local TILDE = u(0x0303) -- tilde =  ̃
 
@@ -44,7 +46,7 @@ explicit_substitution_regex = "[" .. table.concat(explicit_substitution_regex) .
 
 -- If enabled, compare this module with new version of module in
 -- [[Module:User:Benwing2/fr-pron]] to make sure all pronunciations are the same.
--- To check for differences, go to [[Template:tracking/fr-pron/different-pron]]
+-- To check for differences, go to [[Wiktionary:Tracking/fr-pron/different-pron]]
 -- and look at what links to the page.
 local test_new_fr_pron_module = false
 
@@ -165,10 +167,11 @@ function export.fr_IPA(frame)
 		["n"] = {list = true, allow_holes = true},
 		["qual"] = {list = true, allow_holes = true},
 		["noalternatives"] = {type = "boolean"},
-		["pos"] = {required = false},
+		["noalt"] = {alias_of = "noalternatives"},
+		["pos"] = {},
+		["pagename"] = {},
 	}
 
-	local err = nil
 	local args = require("Module:parameters").process(frame:getParent().args, params)
 
 	local items = {}
@@ -180,7 +183,7 @@ function export.fr_IPA(frame)
 		-- If there are references or qualifiers, don't remove duplicates; it gets harder to handle duplicates properly
 		-- in the presence of references or qualifiers, and it may in any case be wrong.
 		for i = 1, math.max(args[1].maxindex, args.n.maxindex, 1) do
-			local prons = export.show(args[1][i], args.pos, args.noalternatives)
+			local prons = export.show(args[1][i], args.pos, args.noalternatives, args.pagename)
 			for _, pron in ipairs(prons) do
 				local note = args.n[i]
 				local qual = args.qual[i]
@@ -189,7 +192,7 @@ function export.fr_IPA(frame)
 
 			-- Check whether explicitly given pronunciations are redundant.
 			if args[1][i] and args[1][i] ~= "+" then
-				default_prons = default_prons or export.show(nil, args.pos, args.noalternatives, "no test new module")
+				default_prons = default_prons or export.show(nil, args.pos, args.noalternatives, args.pagename, "no test new module")
 				for _, default_pron in ipairs(default_prons) do
 					if require("Module:table").contains(prons, default_pron) then
 						track("redundant-pron")
@@ -202,7 +205,7 @@ function export.fr_IPA(frame)
 	else
 		local all_prons
 		for i = 1, math.max(args[1].maxindex, 1) do
-			local prons = export.show(args[1][i], args.pos, args.noalternatives)
+			local prons = export.show(args[1][i], args.pos, args.noalternatives, args.pagename)
 			if not all_prons then
 				all_prons = prons
 			else
@@ -218,7 +221,7 @@ function export.fr_IPA(frame)
 		-- Check whether explicitly given pronunciations are redundant.
 		for i = 1, args[1].maxindex do
 			if args[1][i] and args[1][i] ~= "+" then
-				local default_prons = export.show(nil, args.pos, args.noalternatives, "no test new module")
+				local default_prons = export.show(nil, args.pos, args.noalternatives, args.pagename, "no test new module")
 				for _, default_pron in ipairs(default_prons) do
 					if require("Module:table").contains(all_prons, default_pron) then
 						track("redundant-pron")
@@ -231,7 +234,7 @@ function export.fr_IPA(frame)
 	end
 
 	local lang = require("Module:languages").getByCode("fr")
-	return require("Module:IPA").format_IPA_full(lang, items, err)
+	return require("Module:IPA").format_IPA_full { lang = lang, items = items }
 end
 
 
@@ -254,11 +257,21 @@ function export.canonicalize_pron(text, pagename)
 			end
 			local from, to = fromto[1], fromto[2]
 			if rfind(from, "^~") then
+				-- formerly, ~ was required to match within a word
 				from = rmatch(from, "^~(.*)$")
-				text = rsub(text, require("Module:utilities").pattern_escape(from), to)
-			else
-				text = rsub(text, "%f[%a]" .. require("Module:utilities").pattern_escape(from) .. "%f[%A]", to)
 			end
+			local newtext = text
+			if rfind(from, "^%^") then
+				-- whole-word match
+				from = rmatch(from, "^%^(.*)$")
+				newtext = rsub(text, "%f[%a]" .. require("Module:string utilities").pattern_escape(from) .. "%f[%A]", to)
+			else
+				newtext = rsub(text, require("Module:string utilities").pattern_escape(from), to)
+			end
+			if newtext == text then
+				error("Substitution spec " .. sub .. " didn't match respelling '" .. text .. "'")
+			end
+			text = newtext
 		end
 	end
 
@@ -267,18 +280,20 @@ function export.canonicalize_pron(text, pagename)
 end
 
 
-function export.show(text, pos, noalternatives, no_test_new_module)
+function export.show(text, pos, noalternatives, pagename, no_test_new_module)
 	-- check_new_module=1 can be passed from a bot to compare to the new
 	-- module. In that case, if there's a difference, the return value will
 	-- be a string "OLD_RESULT || NEW_RESULT".
 	--
 	-- no_test_new_module can be passed from module code to disable the
 	-- new-module check. This is used when checking for redundant pronunciation
-	-- to avoid excess triggering of the [[Template:tracking/fr-pron/different-pron]]
+	-- to avoid excess triggering of the [[Wiktionary:Tracking/fr-pron/different-pron]]
 	-- page.
 	local check_new_module
-	if type(text) == 'table' then
+	if type(text) == "table" then
 		pos = ine(text.args.pos)
+		noalternatives = ine(text.args.noalternatives)
+		pagename = ine(text.args.pagename)
 		check_new_module = ine(text.args.check_new_module)
 		text = ine(text.args[1])
 	end
@@ -287,10 +302,10 @@ function export.show(text, pos, noalternatives, no_test_new_module)
 	-- Test code to compare existing module to new one.
 	if (test_new_fr_pron_module or check_new_module) and not no_test_new_module then
 		local m_new_fr_pron = require("Module:User:Benwing2/fr-pron")
-		new_module_result = m_new_fr_pron.show(text, pos, noalternatives)
+		new_module_result = m_new_fr_pron.show(text, pos, noalternatives, pagename)
 	end
 
-	local pagename = mw.title.getCurrentTitle().text 
+	pagename = pagename or mw.title.getCurrentTitle().text 
 
 	text = export.canonicalize_pron(text, pagename)
 
@@ -326,13 +341,16 @@ function export.show(text, pos, noalternatives, no_test_new_module)
 	if pos == "v" then
 		-- special-case for verbs
 		text = rsub(text, 'ai⁀', 'é⁀')
+		-- portions, retiens as verbs should not have /s/
+		text = rsub(text, 'ti([oe])ns([⁀‿])', "t_i%1ns%2")
+		-- retienne, retiennent as verbs should not have /s/
+		text = rsub(text, 't(ienne[⁀‿])', "t_%1")
+		text = rsub(text, 't(iennent[⁀‿])', "t_%1")
 		-- final -ent is silent except in single-syllable words (ment, sent);
 		-- vient, tient, and compounds will have to be special-cased, no easy
 		-- way to distinguish e.g. initient (silent) from retient (not silent).
 		text = rsub(text, '(' .. vowel_c .. cons_no_liaison_c .. '*' .. ')ent⁀', '%1e⁀')
 		text = rsub(text, '(' .. vowel_c .. cons_no_liaison_c .. '*' .. ')ent‿', '%1ət‿')
-		-- portions, retiens as verbs should not have /s/
-		text = rsub(text, 'ti([oe])ns([⁀‿])', "t_i%1ns%2")
 	end
 
 	-- various early substitutions #2
@@ -342,8 +360,8 @@ function export.show(text, pos, noalternatives, no_test_new_module)
 	text = str_gsub(text, 'î', 'i')
 	text = str_gsub(text, '[Ee]û', 'ø')
 	text = str_gsub(text, 'û', 'u')
-	-- absolute, obstacle, subsumer, etc.; but not toubibs
-	text = str_gsub(text, 'bs([^⁀‿])', 'ps%1')
+	-- absolute, obstacle, subsumer, obtus, obtenir, etc.; but not toubibs
+	text = str_gsub(text, 'b([st][^⁀‿])', 'p%1')
 	text = str_gsub(text, 'ph', 'f')
 	text = str_gsub(text, 'gn', 'ɲ')
 	text = str_gsub(text, 'compt', 'cont')
@@ -515,6 +533,7 @@ function export.show(text, pos, noalternatives, no_test_new_module)
 	-- x -> ks so we handle exciter correctly
 	text = rsub(text, '(' .. word_begin_c .. ')e([mn])%2(' .. vowel_c .. ')', '%1en_%2%3') -- emmener, ennui
 	text = rsub(text, '(' .. word_begin_c .. ')(h?)[eæ](' .. cons_c .. ')%3', '%1%2é%3') -- effacer, essui, errer, henné
+	text = rsub(text, '(' .. word_begin_c .. ')dess', '%1déss') -- dessécher, dessein, etc.
 	text = rsub(text, '[eæ](' .. cons_c .. ')%1', 'è%1') -- mett(r)ons, etc.
 	text = rsub(text, '(' .. cons_c .. ')%1', '%1')
 
