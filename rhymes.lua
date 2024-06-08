@@ -1,10 +1,14 @@
+local export = {}
+
+local force_cat = false -- for testing
+
+local IPA_module = "Module:IPA"
+local utilities_module = "Module:utilities"
+
 local concat = table.concat
 local insert = table.insert
 local split = mw.text.split
 
-local export = {}
-
-local force_cat = false -- for testing
 
 local function tag_rhyme(rhyme, lang)
 	local formatted_rhyme, cats
@@ -13,7 +17,7 @@ local function tag_rhyme(rhyme, lang)
 		formatted_rhyme = require("Module:script utilities").tag_text(rhyme, lang)
 		cats = {}
 	else
-		formatted_rhyme, cats = require("Module:IPA").format_IPA(lang, rhyme, "raw")
+		formatted_rhyme, cats = require(IPA_module).format_IPA(lang, rhyme, "raw")
 	end
 	return formatted_rhyme, cats
 end
@@ -61,8 +65,9 @@ Meant to be called from a module. `data` is a table in the following format:
 	 qq = nil or {"RIGHT_QUALIFIER", "RIGHT_QUALIFIER", ...},
 	 a = nil or {"LEFT_ACCENT_QUALIFIER", "LEFT_ACCENT_QUALIFIER", ...},
 	 aa = nil or {"RIGHT_ACCENT_QUALIFIER", "RIGHT_ACCENT_QUALIFIER", ...},
-	 num_syl = nil or {#SYL, #SYL, ...}
-	 }, ...},
+	 num_syl = nil or {#SYL, #SYL, ...},
+	 nocat = BOOLEAN,
+	}, ...},
   qualifiers = nil or {"QUALIFIER", "QUALIFIER", ...},
   num_syl = nil or {#SYL, #SYL, ...},
   caption = nil or "CAPTION",
@@ -88,6 +93,7 @@ Here:
 * `caption`, if specified, overrides the default caption "Rhymes". A colon and space is automatically added after
   the caption.
 * `nocaption`, if specified, suppresses the caption entirely.
+* `nocat`, if specified, suppresses the categories, either for all rhymes or at a per-rhyme level.
 * `sort`, if specified, is the sort key for categories.
 * `force_cat`, if specified, forces categories even on non-mainspace pages (for testing).
 
@@ -118,15 +124,27 @@ do
 		for _, r in ipairs(data.rhymes) do
 			local rhyme = r.rhyme
 			local link, link_cats = make_rhyme_link(data.lang, rhyme, "-" .. rhyme)
-			for _, cat in ipairs(link_cats) do
-				insert(categories, cat)
+			if not r.nocat and not data.nocat then
+				for _, cat in ipairs(link_cats) do
+					insert(categories, cat)
+				end
 			end
 			if r.q and r.q[1] or r.qq and r.qq[1] or r.qualifiers and r.qualifiers[1]
 				or r.a and r.a[1] or r.aa and r.aa[1] then
-				link = require("Module:pron qualifier").format_qualifiers(r, link)
+				link = require("Module:pron qualifier").format_qualifiers {
+					lang = data.lang,
+					text = link,
+					q = r.q,
+					qq = r.qq,
+					qualifiers = r.qualifiers,
+					a = r.a,
+					aa = r.aa,
+				}
 			end
 			insert(links, link)
-			add_syllable_categories(categories, langname, rhyme, r.num_syl or data.num_syl)
+			if not r.nocat and not data.nocat then
+				add_syllable_categories(categories, langname, rhyme, r.num_syl or data.num_syl)
+			end
 		end
 
 		local parts = {}
@@ -143,8 +161,8 @@ do
 			ins(": ")
 		end
 		ins(concat(links, ", "))
-		if not data.nocat then
-			ins(require("Module:utilities").format_categories(categories, data.lang, data.sort, nil,
+		if categories[1] then
+			ins(require(utilities_module).format_categories(categories, data.lang, data.sort, nil,
 				force_cat or data.force_cat))
 		end
 		return concat(parts)
@@ -223,6 +241,7 @@ function export.show_nav(frame)
 		{
 			[1] = {required = true, type = "language", default = "und"},
 			[2] = {list = true, allow_holes = true},
+			["nocat"] = {type = "boolean"},
 		}
 	)
 
@@ -231,6 +250,8 @@ function export.show_nav(frame)
 	local parts = args[2]
 
 	-- Create steps
+	-- FIXME: We should probably use format_categories() in [[Module:utilities]] rather than constructing categories
+	-- manually.
 	local categories = {}
 	-- Here and below, we ignore any cleanup categories coming out of make_rhyme_link() by adding an extra set of parens
 	-- around the call to make_rhyme_link() to cause the second argument (the categories) to be ignored. {{rhymes nav}}
@@ -286,7 +307,8 @@ function export.show_nav(frame)
 		:addClass("ts-rhymesBreadcrumbs")
 		:node(ol)
 
-	return templateStyles .. tostring(div) .. concat(categories)
+	local formatted_cats = args.nocat and "" or concat(categories)
+	return templateStyles .. tostring(div) .. formatted_cats
 end
 
 return export
