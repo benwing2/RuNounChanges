@@ -2,19 +2,35 @@ local export = {}
 
 local force_cat = false -- for testing
 
+local rhymes_styles_css_module = "Module:rhymes/styles.css"
+
 local IPA_module = "Module:IPA"
+local parameters_module = "Module:parameters"
+local pron_qualifier_module = "Module:pron qualifier"
+local script_utilities_module = "Module:script utilities"
+local string_utilities_module = "Module:string utilities"
+local TemplateStyles_module = "Module:TemplateStyles"
 local utilities_module = "Module:utilities"
 
 local concat = table.concat
 local insert = table.insert
-local split = mw.text.split
+
+
+local function rsplit(text, pattern)
+	return require(string_utilities_module).split(text, pattern)
+end
+
+local function track(page)
+	require("Module:debug/track")("rhymes/" .. page)
+	return true
+end
 
 
 local function tag_rhyme(rhyme, lang)
 	local formatted_rhyme, cats
 	-- FIXME, should not be here. Telugu should use IPA as well.
 	if lang:getCode() == "te" then
-		formatted_rhyme = require("Module:script utilities").tag_text(rhyme, lang)
+		formatted_rhyme = require(script_utilities_module).tag_text(rhyme, lang)
 		cats = {}
 	else
 		formatted_rhyme, cats = require(IPA_module).format_IPA(lang, rhyme, "raw")
@@ -35,8 +51,11 @@ local function make_rhyme_link(lang, link_rhyme, display_rhyme)
 	return retval, cats
 end
 
+--[==[
+Implementation of {{tl|rhymes row}}.
+]==]
 function export.show_row(frame)
-	local args = require("Module:parameters").process(
+	local args = require(parameters_module).process(
 		frame.getParent and frame:getParent().args or frame,
 		{
 			[1] = {required = true, type = "language"},
@@ -53,53 +72,6 @@ function export.show_row(frame)
 	return (make_rhyme_link(args[1], args[2], "-" .. args[2])) .. (args[3] and (" (''" .. args[3] .. "'')") or "")
 end
 
---[=[
-
-Meant to be called from a module. `data` is a table in the following format:
-{
-  lang = LANGUAGE_OBJECT,
-  rhymes = {
-	{rhyme = "RHYME",
-	 q = nil or {"LEFT_QUALIFIER", "LEFT_QUALIFIER", ...},
-	 qualifiers = nil or {"LEFT_QUALIFIER", "LEFT_QUALIFIER", ...},
-	 qq = nil or {"RIGHT_QUALIFIER", "RIGHT_QUALIFIER", ...},
-	 a = nil or {"LEFT_ACCENT_QUALIFIER", "LEFT_ACCENT_QUALIFIER", ...},
-	 aa = nil or {"RIGHT_ACCENT_QUALIFIER", "RIGHT_ACCENT_QUALIFIER", ...},
-	 num_syl = nil or {#SYL, #SYL, ...},
-	 nocat = BOOLEAN,
-	}, ...},
-  qualifiers = nil or {"QUALIFIER", "QUALIFIER", ...},
-  num_syl = nil or {#SYL, #SYL, ...},
-  caption = nil or "CAPTION",
-  nocaption = BOOLEAN,
-  nocat = BOOLEAN,
-  sort = nil or "SORTKEY",
-  force_cat = BOOLEAN,
-}
-
-Here:
-
-* `lang` is a language object.
-* `rhymes` is the list of rhymes to display. RHYME is the IPA rhyme, without initial hyphen. LEFT_QUALIFIER is a
-  qualifier string to display before the specific rhyme in question, formatted using format_qualifier() in
-  [[Module:qualifier]]. RIGHT_QUALIFIER similarly displays after the rhyme. LEFT_ACCENT_QUALIFIER is an accent qualifier
-  (as in {{a}}) to display before the rhyme, and RIGHT_ACCENT_QUALIFIER similarly displays after the rhyme.
-  #SYL is the number of syllables of the word or words containing this rhyme, for categorization purposes (see below).
-* `qualifiers` (at top level), if non-nil, is a list of qualifier strings to display after the caption "Rhymes:" and
-  before the formatted rhymes, formatted using format_qualifier() in [[Module:qualifier]].
-* `num_syl` (at top level), if non-nil, a list of the number(s) of syllables of the word or words with each rhyme
-  specified in `rhymes`. This applies to all rhymes specified in `rhymes`, while the corresponding `num_syl` attached
-  to an individual rhyme applies only to that rhyme (and overrides the global `num_syl`, if both are given).
-* `caption`, if specified, overrides the default caption "Rhymes". A colon and space is automatically added after
-  the caption.
-* `nocaption`, if specified, suppresses the caption entirely.
-* `nocat`, if specified, suppresses the categories, either for all rhymes or at a per-rhyme level.
-* `sort`, if specified, is the sort key for categories.
-* `force_cat`, if specified, forces categories even on non-mainspace pages (for testing).
-
-Note that the number of syllables is currently used only for categorization; if present, an extra category will
-be added such as [[Category:Rhymes:Italian/ino/3 syllables]] in addition to [[Category:Rhymes:Italian/ino]].
-]=]
 do
 	local function add_syllable_categories(categories, lang, rhyme, num_syl)
 		local prefix = "Rhymes:" .. lang .. "/" .. rhyme
@@ -117,6 +89,56 @@ do
 		end
 	end
 
+--[==[
+Meant to be called from a module. `data` is a table containing the following fields:
+* `lang`: language object for the rhymes;
+* `rhymes`: a list of rhymes, each described by an object which specifies the rhyme, optional number of syllables, and
+  optional left and right regular and accent qualifier fields:
+** `rhyme`: the rhyme itself;
+** `num_syl`: {nil} or a list of numbers, specifying the number of syllables of the word with this rhyme; optional and
+   currently used only for categorization; if omitted, defaults to the top-level `num_syl`;
+** `q`: {nil} or a list of left regular qualifier strings, formatted using {format_qualifier()} in [[Module:qualifier]]
+   and displayed directly before the rhyme in question;
+** `qq`: {nil} or a list of right regular qualifier strings, displayed directly after the rhyme in question;
+** `qualifiers`: {nil} or a list of qualifier strings; also displayed on the left; for compatibility purposes only, do
+   not use in new code;
+** `a`: {nil} or a list of left accent qualifier strings, formatted using {format_qualifiers()} in
+   [[Module:accent qualifier]] and displayed directly before the rhyme in question;
+** `aa`: {nil} or a list of right accent qualifier strings, displayed directly after the rhyme in question;
+** `refs`: {nil} or a list of references or reference specs to add directly after the rhyme; the value of a list item is
+   either a string containing the reference text (typically a call to a citation template such as {{tl|cite-book}}, or a
+   template wrapping such a call), or an object with fields `text` (the reference text), `name` (the name of the
+   reference, as in {{cd|<nowiki><ref name="foo">...</ref></nowiki>}} or {{cd|<nowiki><ref name="foo" /></nowiki>}})
+   and/or `group` (the group of the reference, as in {{cd|<nowiki><ref name="foo" group="bar">...</ref></nowiki>}} or
+   {{cd|<nowiki><ref name="foo" group="bar"/></nowiki>}}); this uses a parser function to format the reference
+   appropriately and insert a footnote number that hyperlinks to the actual reference, located in the
+   {{cd|<nowiki><references /></nowiki>}} section;
+** `nocat`: if {true}, suppress categorization for this rhyme only;
+* `num_syl`: {nil} or a list of numbers, specifying the number of syllables for all rhymes; optional and currently used
+  only for categorization;
+* `q`: {nil} or a list of left regular qualifier strings, formatted using {format_qualifier()} in [[Module:qualifier]]
+  and displayed before the initial caption;
+* `qq`: {nil} or a list of right regular qualifier strings, displayed after all rhymes;
+* `qualifiers`: {nil} or a list of left regular qualifier strings; for compatibility purposes only, do not use in new
+  code;
+* `a`: {nil} or a list of left accent qualifier strings, formatted using {format_qualifiers()} in
+  [[Module:accent qualifier]] and dispalyed before the initial caption;
+* `aa`: {nil} or a list of right accent qualifier strings, displayed after all rhymes;
+* `sort`: {nil} or sort key;
+* `caption`: {nil} or string specifying the caption to use, in place of {"Rhymes"}; a colon and space is automatically
+  added after the caption;
+* `nocaption`: if {true}, suppress the caption display;
+* `nocat`: if {true}, suppress categorization;
+* `force_cat`: if {true}, force categorization even on non-mainspace pages.
+
+If both regular and accent qualifiers on the same side and at the same level are specified, the accent qualifiers
+precede the regular qualifiers on both left and right.
+
+'''WARNING''': Destructively modifies the objects inside the `rhymes` field.
+
+Note that the number of syllables is currently used only for categorization; if present, an extra category will
+be added such as [[Category:Rhymes:Italian/ino/3 syllables]] in addition to [[Category:Rhymes:Italian/ino]].
+]==]
 	function export.format_rhymes(data)
 		local langname = data.lang:getCanonicalName()
 		local links = {}
@@ -130,8 +152,8 @@ do
 				end
 			end
 			if r.q and r.q[1] or r.qq and r.qq[1] or r.qualifiers and r.qualifiers[1]
-				or r.a and r.a[1] or r.aa and r.aa[1] then
-				link = require("Module:pron qualifier").format_qualifiers {
+				or r.a and r.a[1] or r.aa and r.aa[1] or r.refs and r.refs[1] then
+				link = require(pron_qualifier_module).format_qualifiers {
 					lang = data.lang,
 					text = link,
 					q = r.q,
@@ -139,6 +161,7 @@ do
 					qualifiers = r.qualifiers,
 					a = r.a,
 					aa = r.aa,
+					refs = r.refs,
 				}
 			end
 			insert(links, link)
@@ -147,38 +170,43 @@ do
 			end
 		end
 
-		local parts = {}
-		local function ins(part)
-			insert(parts, part)
-		end
-
-		if data.qualifiers and data.qualifiers[1] then
-			ins(require("Module:qualifier").format_qualifier(data.qualifiers))
-			ins(" ")
-		end
+		local text = concat(links, ", ")
 		if not data.nocaption then
-			ins(data.caption or "Rhymes")
-			ins(": ")
+			text = (data.caption or "Rhymes") .. ": " .. text
 		end
-		ins(concat(links, ", "))
+		if data.q and data.q[1] or data.qq and data.qq[1] or data.a and data.a[1] or data.aa and data.aa[1] then
+			text = require(pron_qualifier_module).format_qualifiers {
+				lang = data.lang,
+				text = text,
+				q = data.q,
+				qq = data.qq,
+				a = data.a,
+				aa = data.aa,
+			}
+		end
 		if categories[1] then
-			ins(require(utilities_module).format_categories(categories, data.lang, data.sort, nil,
-				force_cat or data.force_cat))
+			local categories = require(utilities_module).format_categories(categories, data.lang, data.sort, nil,
+				force_cat or data.force_cat)
+			text = text .. categories
 		end
-		return concat(parts)
+		return text
 	end
 end
 
 do
 	local function get_args(frame)
 		local plain = {}
+		local split_list = {list = true, allow_holes = true, separate_no_index = true}
 		local params = {
-			[1] = {required = true, type = "language", default = "en"},
-			[2] = {required = true, list = true, default = "aɪmz"},
-			["s"] = plain,
-			["srhymes"] = {list = "s", allow_holes = true, require_index = true},
-			["q"] = plain,
-			["qrhymes"] = {list = "q", allow_holes = true, require_index = true},
+			[1] = {required = true, type = "language", etym_lang = true, default = "en"},
+			-- FIXME, should be `disallow_holes = true`
+			[2] = {required = true, list = true, allow_holes = true, default = "aɪmz"},
+			["s"] = split_list,
+			["q"] = split_list,
+			["qq"] = split_list,
+			["a"] = split_list,
+			["aa"] = split_list,
+			["ref"] = {list = true, allow_holes = true},
 			["caption"] = plain,
 			["nocaption"] = {type = "boolean"},
 			["nocat"] = {type = "boolean"},
@@ -191,11 +219,11 @@ do
 			params[1] = params[2]
 			params[2] = nil
 		end
-		return require("Module:parameters").process(frame:getParent().args, params), compat
+		return require(parameters_module).process(frame:getParent().args, params), compat
 	end
 
 	local function parse_num_syl(val)
-		val = split(val, "%s*,%s*")
+		val = rsplit(val, "%s*,%s*")
 		local ret = {}
 		for _, v in ipairs(val) do
 			local n = tonumber(v) or error("Unrecognized #syllables '" .. v .. "', should be a number")
@@ -204,39 +232,75 @@ do
 		return ret
 	end
 
+	--[==[
+	Implementation of {{tl|rhymes}}.
+	]==]
 	function export.show(frame)
 		local args, compat = get_args(frame)
-		local lang = compat and args.lang or args[1]
-		local raw_rhymes = compat and args[1] or args[2]
+		local lang = args[compat and "lang" or 1]
+		local raw_rhymes = args[compat and 1 or 2]
 
-		local rhymes = {}
-		for i, rhyme in ipairs(raw_rhymes) do
-			local rhymeobj = {rhyme = rhyme}
-			if args.srhymes[i] then
-				rhymeobj.num_syl = parse_num_syl(args.srhymes[i])
+		local maxindex = 0
+		for arg, vals in pairs(args) do
+			if type(vals) == "table" and vals.maxindex then
+				maxindex = math.max(maxindex, vals.maxindex)
 			end
-			if args.qrhymes[i] then
-				rhymeobj.qualifiers = {args.qrhymes[i]}
-			end
-			insert(rhymes, rhymeobj)
 		end
 
-		return export.format_rhymes {
+		local data = {
 			lang = lang,
-			rhymes = rhymes,
-			num_syl = args.s and parse_num_syl(args.s) or nil,
-			qualifiers = args.q and {args.q} or nil,
+			rhymes = {},
+			num_syl = args.s.default and parse_num_syl(args.s.default) or nil,
 			caption = args.caption,
 			nocaption = args.nocaption,
 			nocat = args.nocat,
 			sort = args.sort,
 		}
+		require(pron_qualifier_module).parse_qualifiers {
+			store_obj = data,
+			q = args.q.default,
+			qq = args.qq.default,
+			a = args.a.default,
+			aa = args.aa.default,
+		}
+
+		for i = 1, maxindex do
+			local num_syl
+			if args.s[i] then
+				num_syl = parse_num_syl(args.s[i])
+			end
+			if not raw_rhymes[i] then
+				if num_syl or args.ref[i] or args.q[i] or args.qq[i] or args.a[i] or args.aa[i] then
+					error(("Missing rhyme in param |%s="):format(compat and i or i + 1))
+				else
+					track("empty-rhyme")
+				end
+			else
+				local rhyme_obj = {
+					rhyme = raw_rhymes[i],
+					num_syl = num_syl,
+				}
+				require(pron_qualifier_module).parse_qualifiers {
+					store_obj = rhyme_obj,
+					refs = args.ref[i],
+					q = args.q[i],
+					qq = args.qq[i],
+					a = args.a[i],
+					aa = args.aa[i],
+				}
+				table.insert(data.rhymes, rhyme_obj)
+			end
+		end
+
+		return export.format_rhymes(data)
 	end
 end
 
--- {{rhymes nav}}
+--[==[
+Implementation of {{tl|rhymes nav}}.
+]==]
 function export.show_nav(frame)
-	local args = require("Module:parameters").process(
+	local args = require(parameters_module).process(
 		frame:getParent().args,
 		{
 			[1] = {required = true, type = "language", default = "und"},
@@ -295,7 +359,7 @@ function export.show_nav(frame)
 				end))
 	end
 
-	local templateStyles = require("Module:TemplateStyles")("Module:rhymes/styles.css")
+	local templateStyles = require(TemplateStyles_module)(rhymes_styles_css_module)
 
 	local ol = mw.html.create("ol")
 	for _, step in ipairs(steps) do
