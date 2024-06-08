@@ -5,7 +5,7 @@ local string_utilities_module = "Module:string utilities"
 local pron_qualifier_module = "Module:pron qualifier"
 
 local function rsplit(text, pattern)
-	return require(string_utilities_module).rsplit(text, pattern)
+	return require(string_utilities_module).split(text, pattern)
 end
 
 local function track(page)
@@ -24,7 +24,7 @@ Meant to be called from a module. `data` is a table containing the following fie
   ** `gloss`: gloss for the homophone, as in {{tl|l}};
   ** `tr`: transliteration for the homophone, as in {{tl|l}};
   ** `ts`: transcription for the homophone, as in {{tl|l}};
-  ** `g`: list of genders for the homophone, as in {{tl|l}};
+  ** `genders`: list of genders for the homophone, as in {{tl|l}};
   ** `pos`: part of speech of the homophone, as in {{tl|l}};
   ** `lit`: literal meaning of the homophone, as in {{tl|l}};
   ** `id`: sense ID for the homophone, as in {{tl|l}};
@@ -182,10 +182,6 @@ function export.show(frame)
 	}
 
 	for i = 1, maxindex do
-		local refs = args.ref[i]
-		if refs then
-			refs = require(references_module).parse_references(refs)
-		end
 		local g = args.g[i]
 		if g then
 			if g:find(",") then
@@ -200,21 +196,28 @@ function export.show(frame)
 			gloss = args.t[i],
 			tr = args.tr[i],
 			ts = args.ts[i],
-			g = g,
+			genders = g,
 			pos = args.pos[i],
 			lit = args.lit[i],
 			id = args.id[i],
 			sc = args.sc[i],
 		}
-		require(pron_qualifier_module).parse_qualifiers {
-			store_obj = homophone_obj,
-			refs = args.ref[i],
-			q = args.q[i],
-			qq = args.qq[i],
-			a = args.a[i],
-			aa = args.aa[i],
-		}
-		table.insert(data.homophones, homophone_obj)
+		if not next(homophone_obj) then
+			track("empty-homophone")
+		else
+			if not homophone_obj.term then
+				track("missing-homophone")
+			end
+			require(pron_qualifier_module).parse_qualifiers {
+				store_obj = homophone_obj,
+				refs = args.ref[i],
+				q = args.q[i],
+				qq = args.qq[i],
+				a = args.a[i],
+				aa = args.aa[i],
+			}
+			table.insert(data.homophones, homophone_obj)
+		end
 	end
 
 	return export.format_homophones(data)
