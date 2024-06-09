@@ -3,13 +3,16 @@ local export = {}
 local debug_track_module = "Module:debug/track"
 local links_module = "Module:links"
 local script_utilities_module = "Module:script utilities"
+local string_utilities_module = "Module:string utilities"
 local usex_data_module = "Module:usex/data"
 
-local rsubn = mw.ustring.gsub
-local rsplit = mw.text.split
-local rfind = mw.ustring.find
-local uupper = mw.ustring.upper
-local u = mw.ustring.char
+local m_str_utils = require(string_utilities_module)
+
+local rsubn = m_str_utils.gsub
+local rsplit = m_str_utils.split
+local rfind = m_str_utils.find
+local uupper = m_str_utils.upper
+local u = m_str_utils.char
 
 local translit_data = mw.loadData("Module:transliteration/data")
 local needs_translit = translit_data[1]
@@ -30,6 +33,7 @@ local css_classes = {
 --	transcription = 'e-transcription',
 	normalization = 'e-normalization',
 	literally = 'e-literally',
+	qualifier = 'e-qualifier',
 	source = 'e-source',
 	footer = 'e-footer'
 }
@@ -67,26 +71,28 @@ end
 local function span(class, text) return wrap('span', class, text) end
 local function div(class, text) return wrap('div', class, text) end
 
-[=[
-Apply the substitutions in `subst` (from the <code>|subst=</code> parameter or similar) to the example or quotation in
+--[==[
+Apply the substitutions in `subst` (from the {{para|subst}} parameter or similar) to the example or quotation in
 `usex` after removing links, returning the resulting text. `track`, if supplied, is a function of one argument that is
 used to insert tracking categories: one for any call to this function, another if a single / is used in the `subst`
 argument.
-]=]
+]==]
 function export.apply_subst(usex, subst, track)
 	local subbed_usex = require(links_module).remove_links(usex)
 	local function do_track(page)
-		track and track(page)
+		if track then
+			track(page)
+		end
 		return true
 	end
 
 	if subst then
-		-- [[Special:WhatLinksHere/Template:tracking/usex/subst]]
+		-- [[Special:WhatLinksHere/Wiktionary:Tracking/usex/subst]]
 		do_track("subst")
 		
 		subst = rsplit(subst, ",")
 		for _, subpair in ipairs(subst) do
-			-- [[Special:WhatLinksHere/Template:tracking/usex/subst-single-slash]]
+			-- [[Special:WhatLinksHere/Wiktionary:Tracking/usex/subst-single-slash]]
 			local subsplit = rsplit(subpair, rfind(subpair, "//") and "//" or do_track("subst-single-slash") and "/")
 			subbed_usex = rsub(subbed_usex, subsplit[1], subsplit[2])
 		end
@@ -103,8 +109,6 @@ the following fields are recognized in `data` (all are optional except as marked
 * `termlang`: The language object of the term being illustrated, which may be different from the language of the main
 			  quotation text and should always be based off of the main text, not the original text. Used for
 			  categories. May be an etymology language (REQUIRED).
-* `quotelang`: The language object of the main quotation, which should always be based off of the main quotation text,
-			   not the original text. Used for categories. May be an etymology language (REQUIRED).
 * `usex`: Text of usex/quotation.
 * `sc`: Script object of text.
 * `tr`: Manual transliteration.
@@ -134,7 +138,6 @@ On output, return an object with four fields:
 local function process_usex_text(data)
 	local lang = data.lang
 	local termlang = data.termlang
-	local quotelang = data.quotelang
 	local usex = data.usex
 	local sc = data.sc
 	local tr = data.tr
@@ -164,7 +167,7 @@ local function process_usex_text(data)
 		normsc = lang:findBestScript(norm)
 	end
 
-	local langcode = lang:getNonEtymologicalCode()
+	local langcode = lang:getFullCode()
 
 	-- tr=- means omit transliteration altogether
 	if tr == "-" then
@@ -173,7 +176,7 @@ local function process_usex_text(data)
 		-- Try to auto-transliterate.
 		if not tr then
 			-- First, try transliterating the normalization, if supplied.
-			if norm and normsc and not normsc:getCode():find("Latn") then -- Latn, Latnx or a lang-specific variant
+			if norm and normsc and not normsc:getCode():find("Lat") then -- Latn, Latf, Latg, pjt-Latn
 				local subbed_norm = export.apply_subst(norm, subst, track)
 				tr = (lang:transliterate(subbed_norm, normsc))
 			end
@@ -184,16 +187,22 @@ local function process_usex_text(data)
 				tr = (lang:transliterate(subbed_usex, sc))
 			end
 			
-			-- If the language doesn't have capitalization and is specified in [[Module:usex/data]], then capitalize
-			-- any sentences.
+			-- If the language doesn't have capitalization and is specified in [[Module:usex/data]], then capitalize any sentences.
+			-- Exclamation marks and question marks need to be unescaped then re-escaped.
 			if tr and mw.loadData(usex_data_module).capitalize_sentences[langcode] then
-				tr = rsub(tr, "%f[^%z%p%s](.)(.-[%.%?!‽])", function(m1, m2) return uupper(m1) .. m2 end)
+				tr = tr:gsub("&#x21;", "!")
+					:gsub("&#x3F;", "?")
+				tr = rsub(tr, "%f[^%z%p%s](.)(.-[%.%?!‽])", function(m1, m2)
+					return uupper(m1) .. m2
+				end)
+				tr = tr:gsub("!", "&#x21;")
+					:gsub("%?", "&#x3F;")
 			end
 		end
 
 		-- If there is still no transliteration, then add a cleanup category.
-		if not tr and needs_translit[langcode] then
-			table.insert(categories, ("Requests for transliteration of %s %ss"):format(quotelang:getCanonicalName(),
+		if not tr and needs_translit[langcode] and not sc:getCode():find("Lat") and sc:getCode() ~= "None" then
+			table.insert(categories, ("Requests for transliteration of %s %ss"):format(lang:getCanonicalName(),
 				example_type))
 		end
 	end
@@ -206,7 +215,7 @@ local function process_usex_text(data)
 	end
 
 	local function do_language_and_script_tagging(usex, lang, sc, css_class)
-		usex = require(links_module).embedded_language_links({term = usex, lang = lang, sc = sc}, false)
+		usex = require(links_module).embedded_language_links{term = usex, lang = lang, sc = sc}
 		
 		local face
 		if quote then
@@ -216,9 +225,6 @@ local function process_usex_text(data)
 		end
 		
 		usex = require(script_utilities_module).tag_text(usex, lang, sc, face, css_class)
-		if sc:getDirection() == "rtl" then
-			usex = "&rlm;" .. usex .. "&lrm;"
-		end
 
 		return usex
 	end
@@ -243,14 +249,14 @@ local function process_usex_text(data)
 				end
 			end
 			if ok_to_add_cat then
-				-- Categories beginning with the language name should use non-etymology-only languages as that's what the poscat
+				-- Categories beginning with the language name should use full languages as that's what the poscat
 				-- system requires, but 'Requests for' categories can use etymology-only languages.
-				table.insert(categories, ("%s terms with %ss"):format(termlang:getNonEtymologicalName(), example_type))
+				table.insert(categories, ("%s terms with %ss"):format(termlang:getFullName(), example_type))
 			end
 		end
 	else
 		if tr then
-			table.insert(categories, ("Requests for native script in %s %ss"):format(quotelang:getCanonicalName(),
+			table.insert(categories, ("Requests for native script in %s %ss"):format(lang:getCanonicalName(),
 				example_type))
 		end
 		
@@ -268,11 +274,11 @@ local function process_usex_text(data)
 	local result = {}
 
 	if leftq and #leftq > 0 then
-		table.insert(result, require("Module:qualifier").format_qualifier(leftq) .. " ")
+		table.insert(result, span(css_classes.qualifier, require("Module:qualifier").format_qualifier(leftq)) .. " ")
 	end
 	table.insert(result, usex)
 	if rightq and #rightq > 0 then
-		table.insert(result, " " .. require("Module:qualifier").format_qualifier(rightq))
+		table.insert(result, " " .. span(css_classes.qualifier, require("Module:qualifier").format_qualifier(rightq)))
 	end
 
 	if ref and ref ~= "" then
@@ -350,6 +356,7 @@ Takes a single object `data`, containining the following fields:
 * `footer`: Footer displaying miscellaneous information, shown after the quotation. (Typically this should be in a
             small font.)
 * `nocat`: Suppress categorization.
+* `noreq`: Suppress request for translation when no translation provided.
 * `sortkey`: Sort key for categories.
 * `brackets`: If specified, show a bracket at the end (used with brackets= in {{tl|quote-*}} templates, which show the
               bracket at the beginning, to indicate a mention rather than a use).
@@ -366,6 +373,7 @@ function export.format_usex(data)
 	local brackets = data.brackets
 	local footer = data.footer
 	local sortkey = data.sortkey
+	local noreq = data.noreq
 
 	local title
 	if data.pagename then -- for testing, doc pages, etc.
@@ -401,7 +409,6 @@ function export.format_usex(data)
 	local usex_obj = process_usex_text {
 		lang = lang,
 		termlang = termlang,
-		quotelang = lang,
 		usex = data.usex,
 		sc = data.sc,
 		tr = data.transliteration,
@@ -424,7 +431,6 @@ function export.format_usex(data)
 		-- Any categories derived from the original text should use the language of the main text or the term inside it,
 		-- not the language of the original text.
 		termlang = termlang,
-		quotelang = lang,
 		usex = data.orig,
 		sc = data.origsc,
 		tr = data.origtr,
@@ -444,13 +450,13 @@ function export.format_usex(data)
 
 	if translation == "-" then
 		translation = nil
-		table.insert(categories, ("%s %ss with omitted translation"):format(lang:getNonEtymologicalName(),
+		table.insert(categories, ("%s %ss with omitted translation"):format(lang:getFullName(),
 			example_type))
 	elseif translation then
 		translation = span(css_classes.translation, translation)
-	else
-		local langcode = lang:getNonEtymologicalCode()
-		local origlangcode = data.origlang and data.origlang:getNonEtymologicalCode()
+	elseif not noreq then
+		local langcode = lang:getFullCode()
+		local origlangcode = data.origlang and data.origlang:getFullCode()
 		if langcode ~= "en" and langcode ~= "mul" and langcode ~= "und" and origlangcode ~= "en" then
 			-- add trreq category if translation is unspecified and language is not english, translingual or
 			-- undetermined
