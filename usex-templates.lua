@@ -41,6 +41,7 @@ function export.usex_t(frame)
 		["normsc"] = {},
 		["subst"] = {},
 		["q"] = {list = true},
+		["qualifier"] = {alias_of = "q"},
 		["qq"] = {list = true},
 		["ref"] = {},
 
@@ -171,7 +172,7 @@ function export.usex_t(frame)
 		origqq = args.origqq,
 		origref = args.origref,
 	}
-
+	
 	return require(usex_module).format_usex(data)
 end
 
