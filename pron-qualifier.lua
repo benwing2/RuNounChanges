@@ -7,7 +7,7 @@ local references_module = "Module:references"
 local string_utilities_module = "Module:string utilities"
 
 local function rsplit(text, pattern)
-	return require(string_utilities_module).rsplit(text, pattern)
+	return require(string_utilities_module).split(text, pattern)
 end
 
 local function track(page)
@@ -28,6 +28,19 @@ local function split_on_comma(term)
 	end
 end
 
+--[==[
+Parse left and right regular and accent qualifiers and references, for pronunciation or related modules that want to
+provide support for these.
+
+`data` is a structure containing the following fields:
+* `obj`: The object to write the parsed qualifiers and references into.
+* `q`: Left regular qualifier.
+* `qq`: Right regular qualifiers.
+* `qualifiers`: Regular qualifiers (left or right), for compatibility.
+* `a`: List of comma-separated left accent qualifiers.
+* `aa`: List of right accent qualifiers, each a string.
+* `refs: Spec for one or more references; see the documentation of [[Module:IPA]].
+]==]
 function export.parse_qualifiers(data)
 	local obj = data.store_obj
 	obj.refs = data.refs and require(references_module).parse_references(data.refs) or nil
@@ -53,6 +66,14 @@ usage, the caller should check that any qualifiers exist before loading the modu
    `qualifiers_right`) are non-{nil}, `qualifiers` is ignored.
 * `a`: List of left accent qualifiers, each a string.
 * `aa`: List of right accent qualifiers, each a string.
+* `refs`: {nil} or a list of references or reference specs to add directly after the text; the value of a list item
+  is either a string containing the reference text (typically a call to a citation template such as {{tl|cite-book}}, or
+  a template wrapping such a call), or an object with fields `text` (the reference text), `name` (the name of the
+  reference, as in {{cd|<nowiki><ref name="foo">...</ref></nowiki>}} or {{cd|<nowiki><ref name="foo" /></nowiki>}})
+  and/or `group` (the group of the reference, as in {{cd|<nowiki><ref name="foo" group="bar">...</ref></nowiki>}} or
+  {{cd|<nowiki><ref name="foo" group="bar"/></nowiki>}}); this uses a parser function to format the reference
+  appropriately and insert a footnote number that hyperlinks to the actual reference, located in the
+  {{cd|<nowiki><references /></nowiki>}} section.
 * `lang`: Language object for accent qualifiers.
 * `text`: The text to wrap with qualifiers.
 * `qualifiers_right`: If specified, qualifiers in `qualifiers` are placed to the right, otherwise the left. See above.
