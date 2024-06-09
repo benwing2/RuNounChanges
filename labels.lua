@@ -561,6 +561,17 @@ NOTE: This function no longer does anything other than call {get_label_info()} i
 function export.get_label_list_info(raw_labels, lang, nocat, already_seen, notrack)
 	local label_infos = {}
 
+	local saw_double_angle_bracket = false
+	for _, label in ipairs(raw_labels) do
+		if label:find("<<") then
+			saw_double_angle_bracket = true
+			break
+		end
+	end
+
+	if saw_double_angle_bracket then
+	end
+
 	for _, label in ipairs(raw_labels) do
 		-- Pass in nocat to avoid extra work, since we won't use the categories.
 		local display = export.get_label_info {
