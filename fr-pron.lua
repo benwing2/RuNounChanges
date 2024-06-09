@@ -11,6 +11,8 @@ handling pronunciation of verbs).
 local export = {}
 
 local m_str_utils = require("Module:string utilities")
+local pron_qualifier_module = "Module:pron qualifier"
+local table_module = "Module:table"
 
 local str_gsub = string.gsub
 
@@ -165,71 +167,70 @@ Actual implementation of {{tl|fr-IPA}}, compatible in spirit with {{tl|IPA}}.
 function export.fr_IPA(frame)
 	local params = {
 		[1] = {list = true, allow_holes = true},
-		["n"] = {list = true, allow_holes = true},
-		["qual"] = {list = true, allow_holes = true},
-		["noalternatives"] = {type = "boolean"},
-		["noalt"] = {alias_of = "noalternatives"},
+		["q"] = {list = true, allow_holes = true, separate_no_index = true},
+		["qual"] = {list = true, allow_holes = true}, -- deprecated
+		["qq"] = {list = true, allow_holes = true, separate_no_index = true},
+		["a"] = {list = true, allow_holes = true, separate_no_index = true},
+		["aa"] = {list = true, allow_holes = true, separate_no_index = true},
+		["ref"] = {list = true, allow_holes = true},
+		["n"] = {list = true, allow_holes = true, alias_of = "ref"}, -- deprecated
 		["pos"] = {},
+		["noalternatives"] = {type = "boolean"},
+		["noalt"] = {type = "boolean", alias_of = "noalternatives"},
 		["pagename"] = {},
 	}
 
 	local args = require("Module:parameters").process(frame:getParent().args, params)
 
-	local items = {}
+	local items
 
-	local has_refs_or_quals = args.n.maxindex > 0 or args.qual.maxindex > 0
-
-	if has_refs_or_quals then
-		local default_prons
-		-- If there are references or qualifiers, don't remove duplicates; it gets harder to handle duplicates properly
-		-- in the presence of references or qualifiers, and it may in any case be wrong.
-		for i = 1, math.max(args[1].maxindex, args.n.maxindex, 1) do
-			local prons = export.show(args[1][i], args.pos, args.noalternatives, args.pagename)
-			for _, pron in ipairs(prons) do
-				local note = args.n[i]
-				local qual = args.qual[i]
-				table.insert(items, {pron = "/" .. pron .. "/", note = note, qualifiers = {qual}})
-			end
-
-			-- Check whether explicitly given pronunciations are redundant.
-			if args[1][i] and args[1][i] ~= "+" then
-				default_prons = default_prons or export.show(nil, args.pos, args.noalternatives, args.pagename, "no test new module")
-				for _, default_pron in ipairs(default_prons) do
-					if require("Module:table").contains(prons, default_pron) then
-						track("redundant-pron")
-					else
-						track("needed-pron")
-					end
-				end
-			end
+	local maxindex = 0
+	for arg, vals in pairs(args) do
+		if type(vals) == "table" and vals.maxindex then
+			maxindex = math.max(maxindex, vals.maxindex)
 		end
-	else
-		local all_prons
-		for i = 1, math.max(args[1].maxindex, 1) do
-			local prons = export.show(args[1][i], args.pos, args.noalternatives, args.pagename)
-			if not all_prons then
-				all_prons = prons
+	end
+
+	for i = 1, maxindex do
+		local prons = export.show(args[1][i], args.pos, args.noalternatives, args.pagename)
+		for _, pron in ipairs(prons) do
+			local pron_obj = {
+				pron = "/" .. pron .. "/",
+			}
+			require(pron_qualifier_module).parse_qualifiers {
+				store_obj = pron_obj,
+				refs = args.ref[i],
+				q = args.q[i] or args.qual[i],
+				qq = args.qq[i],
+				a = args.a[i],
+				aa = args.aa[i],
+			}
+			if not items then
+				items = {pron_obj}
 			else
-				for _, pron in ipairs(prons) do
-					require("Module:table").insertIfNot(all_prons, pron)
-				end
+				require(table_module).insertIfNot(items, pron_obj)
 			end
-		end
-		for _, pron in ipairs(all_prons) do
-			table.insert(items, {pron = "/" .. pron .. "/"})
 		end
 
 		-- Check whether explicitly given pronunciations are redundant.
-		for i = 1, args[1].maxindex do
-			if args[1][i] and args[1][i] ~= "+" then
-				local default_prons = export.show(nil, args.pos, args.noalternatives, args.pagename, "no test new module")
-				for _, default_pron in ipairs(default_prons) do
-					if require("Module:table").contains(all_prons, default_pron) then
-						track("redundant-pron")
-					else
-						track("needed-pron")
-					end
+		local default_prons
+		if args[1][i] and args[1][i] ~= "+" then
+			default_prons = default_prons or export.show(nil, args.pos, args.noalternatives, args.pagename, "no test new module")
+			local is_redundant, is_non_redundant
+			for _, pron in ipairs(prons) do
+				if #default_prons == 1 and default_prons[1] == pron or #default_prons > 1 and
+					require(table_module).contains(default_prons, pron) then
+					is_redundant = true
+				else
+					is_non_redundant = true
 				end
+			end
+			if is_redundant and not is_non_redundant then
+				track("redundant-pron")
+			elseif is_non_redundant and not is_redundant then
+				track("needed-pron")
+			elseif is_redundant and is_non_redundant then
+				track("partly-redundant-pron")
 			end
 		end
 	end
@@ -306,7 +307,7 @@ function export.show(text, pos, noalternatives, pagename, no_test_new_module)
 		new_module_result = m_new_fr_pron.show(text, pos, noalternatives, pagename)
 	end
 
-	pagename = pagename or mw.title.getCurrentTitle().text 
+	pagename = pagename or mw.loadData("Module:headword/data").pagename
 
 	text = export.canonicalize_pron(text, pagename)
 
