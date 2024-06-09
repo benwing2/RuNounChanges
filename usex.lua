@@ -2,6 +2,7 @@ local export = {}
 
 local debug_track_module = "Module:debug/track"
 local links_module = "Module:links"
+local scripts_module = "Module:scripts"
 local script_utilities_module = "Module:script utilities"
 local string_utilities_module = "Module:string utilities"
 local usex_data_module = "Module:usex/data"
@@ -12,6 +13,7 @@ local rsubn = m_str_utils.gsub
 local rsplit = m_str_utils.split
 local rfind = m_str_utils.find
 local uupper = m_str_utils.upper
+local ulen = m_str_utils.len
 local u = m_str_utils.char
 
 local translit_data = mw.loadData("Module:transliteration/data")
@@ -19,6 +21,10 @@ local needs_translit = translit_data[1]
 
 local BRACKET_SUB = u(0xFFF0)
 local original_text = "<small>''original:''</small> "
+
+local MAX_INLINE_WIDTH = 80 -- In characters. HACK! FIXME! Do this a better way.
+-- List of scripts whose characters are double-width/full-width.
+local double_width_scripts = {"Hani", "Hrkt", "Hang"}
 
 -- microformat2 classes, see https://phabricator.wikimedia.org/T138709
 local css_classes = {
@@ -70,6 +76,27 @@ end
 
 local function span(class, text) return wrap('span', class, text) end
 local function div(class, text) return wrap('div', class, text) end
+
+-- Remove any HTML from the formatted text and resolve links, since the extra characters don't contribute to the
+-- displayed length.
+local function convert_to_raw_text(text)
+	text = rsub(text, "<.->", "")
+	if text:find("%[%[") then
+		text = require(links_module).remove_links(text)
+	end
+	return text
+end
+
+local function get_character_width(text)
+	local charsets = {}
+	for _, script in ipairs(double_width_scripts) do
+		table.insert(charsets, require(scripts_module).getByCode(script):getCharacters())
+	end
+	local single_width_chars = ulen(rsub(text, "[" .. table.concat(charsets) .. "]", ""))
+	local total_chars = ulen(text)
+	local double_width_chars = total_chars - single_width_chars
+	return single_width_chars + 2 * double_width_chars
+end
 
 --[==[
 Apply the substitutions in `subst` (from the {{para|subst}} parameter or similar) to the example or quotation in
@@ -471,14 +498,14 @@ function export.format_usex(data)
 		end
 	end
 
-	local result = {}
-	local function ins(text)
-		table.insert(result, text)
-	end
+	local function generate_inline_usex()
+		local result = {}
+		local function ins(text)
+			table.insert(result, text)
+		end
 
-	ins(usex_obj.usex)
+		ins(usex_obj.usex)
 
-	if data.inline then
 		local function insert_annotations(obj)
 			if obj.norm then
 				ins(" " .. obj.norm)
@@ -523,8 +550,16 @@ function export.format_usex(data)
 			ins("]")
 		end
 
-		result = table.concat(result)
-	else
+		return table.concat(result)
+	end
+
+	local function generate_multiline_usex()
+		local result = {}
+		local function ins(text)
+			table.insert(result, text)
+		end
+
+		ins(usex_obj.usex)
 		local any_usex_annotations = usex_obj.tr or usex_obj.ts or usex_obj.norm or translation or lit
 		local any_orig_annotations = orig_obj and (orig_obj.tr or orig_obj.ts or orig_obj.norm)
 		if any_usex_annotations or orig_obj or source or footer then
@@ -581,11 +616,28 @@ function export.format_usex(data)
 		end
 	end
 
+	local is_inline
+	if data.inline == "auto" then
+		result = generate_inline_usex()
+		if get_character_width(convert_to_raw_text(result)) > MAX_INLINE_WIDTH then
+			result = generate_multiline_usex()
+			is_inline = false
+		else
+			is_inline = true
+		end
+	elseif data.inline then
+		result = generate_inline_usex()
+		is_inline = true
+	else
+		result = generate_multiline_usex()
+		is_inline = false
+	end
+
 	local class = quote and css_classes.container_quotation or css_classes.container_ux
 	if data.class then
 		class = class .. " " .. data.class
 	end
-	result = (data.inline and span or div)(class, result)
+	result = (is_inline and span or div)(class, result)
 	return result .. require("Module:utilities").format_categories(categories, lang, sortkey)
 end
 

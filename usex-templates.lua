@@ -3,6 +3,7 @@ local export = {}
 local m_languages = require("Module:languages")
 local table_module = "Module:table"
 local usex_module = "Module:usex"
+local yesno_module = "Module:yesno"
 
 local rsplit = mw.text.split
 local rfind = mw.ustring.find
@@ -17,13 +18,18 @@ function export.usex_t(frame)
 	local iparams = {
 		["quote"] = {},
 		["compat"] = {type = "boolean"},
-		["inline"] = {type = "boolean"},
+		["inline"] = {},
 		["nocat"] = {type = "boolean"},
 		["class"] = {},
 	}
 
 	local iargs = require("Module:parameters").process(frame.args, iparams)
 	local compat = iargs.compat
+
+	local parent_args = frame:getParent().args
+	if parent_args.qualifier then
+		track("qualifier")
+	end
 
 	-- Template (parent) arguments.
 	local params = {
@@ -69,7 +75,7 @@ function export.usex_t(frame)
 		["footer"] = {},
 
 		-- Formatting parameters
-		["inline"] = {type = "boolean"},
+		["inline"] = {},
 		["brackets"] = {type = "boolean"},
 
 		-- Categorization parameters
@@ -84,7 +90,7 @@ function export.usex_t(frame)
 		table.remove(params, 1)
 	end
 
-	local args = require("Module:parameters").process(frame:getParent().args, params)
+	local args = require("Module:parameters").process(parent_args, params)
 
 	local langparam = compat and "lang" or 1
 	local lang = m_languages.getByCode(args[langparam] or "und", langparam, "allow etym")
@@ -136,6 +142,11 @@ function export.usex_t(frame)
 		end
 	end
 
+	local inline = args.inline or iargs.inline
+	if inline ~= "auto" then
+		inline = require(yesno_module)(inline)
+	end
+
 	local data = {
 		lang = lang,
 		sc = sc,
@@ -145,7 +156,7 @@ function export.usex_t(frame)
 		transliteration = args.tr,
 		transcription = args.ts,
 		normalization = args.norm,
-		inline = args.inline or iargs.inline,
+		inline = inline,
 		ref = args.ref,
 		quote = iargs.quote,
 		lit = args.lit,
@@ -172,7 +183,7 @@ function export.usex_t(frame)
 		origqq = args.origqq,
 		origref = args.origref,
 	}
-	
+
 	return require(usex_module).format_usex(data)
 end
 
