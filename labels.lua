@@ -9,10 +9,20 @@ local utilities_module = "Module:utilities"
 -- for testing
 local force_cat = false
 
+local SUBPAGENAME = mw.title.getCurrentTitle().subpageText
+
+-- Disable tracking on heavy pages to save time.
+local pages_where_tracking_is_disabled = {
+	["a"] = true,
+}
+
 -- Add tracking category for PAGE. The tracking category linked to is [[Wiktionary:Tracking/labels/PAGE]].
 -- We also add to [[Wiktionary:Tracking/labels/PAGE/LANGCODE]] and [[Wiktionary:Tracking/labels/PAGE/MODE]] if
 -- LANGCODE and/or MODE given.
 local function track(page, langcode, mode)
+	if pages_where_tracking_is_disabled[SUBPAGENAME] then
+		return true
+	end
 	-- avoid including links in pages (may cause error)
 	page = page:gsub("%[", "("):gsub("%]", ")"):gsub("|", "!")
 	require("Module:debug/track")("labels/" .. page)
@@ -356,6 +366,7 @@ Return information on a label. On input `data` is an object with the following f
 * `for_doc`: Data is being fetched for documentation purposes. This causes the raw categories returned in
   `categories` to be formatted for documentation display.
 * `nocat`: If true, don't add the label to any categories.
+* `notrack`: Disable all tracking for this label.
 * `already_seen`: An object used to track labels already seen, so they aren't displayed twice. Tracking is according
   to the display form of the label, so if two labels have the same display form, the second one won't be displayed
   (but its categories will still be added). If `already_seen` is {nil}, this tracking doesn't happen.
@@ -432,7 +443,7 @@ function export.get_label_info(data)
 				labdata = this_labdata
 				label = resolved_label or label
 				break
-			else
+			elseif not data.notrack then
 				-- Track use of a label that fails the lang restriction.
 				-- [[Special:WhatLinksHere/Wiktionary:Tracking/labels/wrong-lang-label]]
 				-- [[Special:WhatLinksHere/Wiktionary:Tracking/labels/wrong-lang-label/LANGCODE]]
@@ -464,7 +475,7 @@ function export.get_label_info(data)
 		ret.canonical = label
 	end
 
-	if true then -- labprop("track") then -- track all labels now
+	if not data.notrack then -- labprop("track") then -- track all labels now
 		-- Track label (after converting aliases to canonical form; but also track raw label (alias) if different
 		-- from canonical label).
 		-- [[Special:WhatLinksHere/Wiktionary:Tracking/labels/label/LABEL]]
@@ -547,13 +558,13 @@ separate dialectal data modules have been removed.
 
 NOTE: This function no longer does anything other than call {get_label_info()} in [[Module:labels]].
 ]==]
-function export.get_label_list_info(raw_labels, lang, nocat, already_seen)
+function export.get_label_list_info(raw_labels, lang, nocat, already_seen, notrack)
 	local label_infos = {}
 
 	for _, label in ipairs(raw_labels) do
 		-- Pass in nocat to avoid extra work, since we won't use the categories.
 		local display = export.get_label_info {
-			label = label, lang = lang, nocat = nocat, already_seen = already_seen
+			label = label, lang = lang, nocat = nocat, notrack = notrack, already_seen = already_seen
 		}
 		table.insert(label_infos, display)
 	end
@@ -669,7 +680,8 @@ input `data` is an object with the following fields:
   {"accent"}, the label was invoked using {{tl|a}}; if {"form-of"}, the label was invoked using {{tl|alt form}},
   {{tl|standard spelling of}} or other form-of template. This controls the display and/or categorization of a minority of
   labels.
-* `nocat`: If true, don't add the label to any categories.
+* `nocat`: If true, don't add the labels to any categories.
+* `notrack`: Disable all tracking for these labels.
 * `sort`: Sort key for categorization.
 * `no_track_already_seen`: Don't track already-seen labels. If not specified, already-seen labels are not displayed
   again, but still categorize. See the documentation of {get_label_info()}.
