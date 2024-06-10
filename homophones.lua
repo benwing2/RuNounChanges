@@ -114,6 +114,49 @@ function export.format_homophones(data)
 end
 
 
+-- Per-param modifiers, which can be specified either as separate parameters (e.g. t2=, pos3=) or as inline modifiers
+-- <t:...>, <pos:...>, etc. The key is the name fo the parameter (e.g. "t", "pos") and the value is a table with
+-- elements as follows:
+-- * `extra_specs`: An optional table of extra key-value pairs to add to the spec used for parsing the parameter
+--                  when specified as a separate parameter (e.g. {type = "boolean"} for a Boolean parameter, or
+--                  {alias_of = "t"} for the "gloss" parameter, which is aliased to "t"), on top of the default, which
+--                  is {list = true, allow_holes = true}.
+-- * `convert`: An optional function to convert the raw argument into the form passed to [[Module:links]].
+--              This function takes two parameters: (1) `arg` (the raw argument); (2) `parse_err` (a function used to
+--              throw an error in case of a parse error).
+-- * `item_dest`: The name of the key used when storing the parameter's value into the processed `term` or `termobj`
+--                object. Normally the same as the parameter's name. Different in the case of "t", where we store the
+--                gloss in "gloss", and "g", where we store the genders in "genders".
+local param_mods = {
+	alt = {},
+	t = {
+		-- We need to store the t1=/t2= param and the <t:...> inline modifier into the "gloss" key of the parsed term,
+		-- because that is what [[Module:links]] expects.
+		item_dest = "gloss",
+	},
+	gloss = {
+		-- The `extra_specs` handles the fact that "gloss" is an alias of "t".
+		extra_specs = {alias_of = "t"},
+	},
+	tr = {},
+	ts = {},
+	g = {
+		-- We need to store the g1=/g2= param and the <g:...> inline modifier into the "genders" key of the parsed term,
+		-- because that is what [[Module:links]] expects.
+		item_dest = "genders",
+		convert = function(arg, parse_err)
+			return rsplit(arg, ",")
+		end,
+	},
+	pos = {},
+	lit = {},
+	id = {},
+	sc = {
+		separate_no_index = true,
+		extra_specs = {type = "script"},
+	},
+}
+
 --[==[
 Entry point for {{tl|homophones}} template (also written {{tl|homophone}} and {{tl|hmp}}).
 ]==]
@@ -125,25 +168,14 @@ function export.show(frame)
 	local params = {
 		[compat and "lang" or 1] = {required = true, type = "language", etym_lang = true, default = "en"},
 		[1 + offset] = {list = true, required = true, allow_holes = true, default = "term"},
-		["alt"] = {list = true, allow_holes = true},
-		["t"] = {list = true, allow_holes = true},
-		["tr"] = {list = true, allow_holes = true},
-		["ts"] = {list = true, allow_holes = true},
-		["g"] = {list = true, allow_holes = true},
-		["pos"] = {list = true, allow_holes = true},
-		["lit"] = {list = true, allow_holes = true},
-		["id"] = {list = true, allow_holes = true},
-		["sc"] = {list = true, allow_holes = true, separate_no_index = true, type = "script"},
-		["q"] = {list = true, allow_holes = true, separate_no_index = true},
-		["qq"] = {list = true, allow_holes = true, separate_no_index = true},
-		["a"] = {list = true, allow_holes = true, separate_no_index = true},
-		["aa"] = {list = true, allow_holes = true, separate_no_index = true},
-		["ref"] = {list = true, allow_holes = true},
 		["caption"] = {},
 		["nocaption"] = {type = "boolean"},
 		["nocat"] = {type = "boolean"},
 		["sort"] = {},
 	}
+
+	local m_param_utils = require(parameter_utilities_module)
+	m_param_utils.augment_params_with_modifiers(params, param_mods)
 
 	local args = require("Module:parameters").process(parent_args, params)
 
