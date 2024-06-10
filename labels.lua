@@ -3,6 +3,8 @@ local export = {}
 export.lang_specific_data_list_module = "Module:labels/data/lang"
 export.lang_specific_data_modules_prefix = "Module:labels/data/lang/"
 local m_lang_specific_data = mw.loadData(export.lang_specific_data_list_module)
+local parse_utilities_module = "Module:parse utilities"
+local string_utilities_module = "Module:string utilities"
 local table_module = "Module:table"
 local utilities_module = "Module:utilities"
 
@@ -116,13 +118,11 @@ end
 --[==[
 Fetch the categories to add to a page, given that the label whose canonical form is `canon_label` with language `lang`
 has been seen. `labdata` is the label data structure for `label`, fetched from the appropriate submodule. `mode`
-specifies how the label was invoked; if {nil} or {"label"}, through {{tl|lb}}; if {"term-label"}, through {{tl|tlb}}; if
-{"accent"}, through {{tl|a}} (but this should never happen, as {{tl|a}} doesn't categorize); if {"form-of"}, through
-{{tl|alt form}}, {{tl|standard spelling of}} or similar. The return value is a list of the actual categories, unless
-`for_doc` is specified, in which case the categories returned are marked up for display on a documentation page. If
-`for_doc` is given, `lang` may be nil to format the categories in a language-independent fashion; otherwise, it must be
-specified. If `category_types` is specified, it should be a set object (i.e. with category types as keys and {true} as
-values), and only categories of the specified types will be returned.
+specifies how the label was invoked (see {get_label_info()} for more information). The return value is a list of the
+actual categories, unless `for_doc` is specified, in which case the categories returned are marked up for display on a
+documentation page. If `for_doc` is given, `lang` may be nil to format the categories in a language-independent fashion;
+otherwise, it must be specified. If `category_types` is specified, it should be a set object (i.e. with category types
+as keys and {true} as values), and only categories of the specified types will be returned.
 ]==]
 function export.fetch_categories(canon_label, labdata, lang, mode, for_doc, category_types)
 	local categories = {}
@@ -182,7 +182,7 @@ function export.fetch_categories(canon_label, labdata, lang, mode, for_doc, cate
 	for _, cat in ipairs(topical_categories) do
 		insert_cat(langcode .. ":" .. (cat == true and ucfirst(canon_label) or cat))
 	end
-	
+
 	for _, cat in ipairs(sense_categories) do
 		if cat == true then
 			cat = canon_label
@@ -194,11 +194,11 @@ function export.fetch_categories(canon_label, labdata, lang, mode, for_doc, cate
 	for _, cat in ipairs(pos_categories) do
 		insert_cat(canonical_name .. " " .. (cat == true and canon_label or cat))
 	end
-	
+
 	for _, cat in ipairs(regional_categories) do
 		insert_cat((cat == true and ucfirst(canon_label) or cat) .. " " .. canonical_name)
 	end
-	
+
 	for _, cat in ipairs(plain_categories) do
 		insert_cat(cat == true and ucfirst(canon_label) or cat)
 	end
@@ -260,7 +260,7 @@ function export.get_displayed_label(label, labdata, lang, deprecated, override_d
 				return ""
 			end
 		end
-		
+
 		displayed_label = labprop("special_display"):gsub("<(.-)>", add_language_name)
 	else
 		--[=[
@@ -361,8 +361,14 @@ end
 Return information on a label. On input `data` is an object with the following fields:
 * `label`: The label to return information on.
 * `lang`: The language of the label. Must be specified unless `for_doc` is given.
-* `mode`: How the label was invoked. If {nil} or {"label"}, through {{tl|lb}}; if {"term-label"}, through {{tl|tlb}}; if
-  {"accent"}, through {{tl|a}}; if {"form-of"}, through {{tl|alt form}}, {{tl|standard spelling of}} or similar.
+* `mode`: How the label was invoked. One of the following:
+  ** {nil} or {"label"}: invoked through {{tl|lb}} or another template whose labels in the same fashion, e.g.
+     {{tl|alt}}, {{tl|quote}} or {{tl|syn}};
+  ** {"term-label"}: invoked through {{tl|tlb}};
+  ** {"accent"}: invoked through {{tl|a}} or the {{para|a}} or {{para|aa}} parameters of other pronunciation templates,
+     such as {{tl|IPA}}, {{tl|rhymes}} or {{tl|homophones}};
+  ** {"form-of"}: invoked through {{tl|alt form}}, {{tl|standard spelling of}} or other form-of template.
+  This changes the display and/or categorization of a minority of labels. (The majority work the same for all modes.)
 * `for_doc`: Data is being fetched for documentation purposes. This causes the raw categories returned in
   `categories` to be formatted for documentation display.
 * `nocat`: If true, don't add the label to any categories.
@@ -372,12 +378,22 @@ Return information on a label. On input `data` is an object with the following f
   (but its categories will still be added). If `already_seen` is {nil}, this tracking doesn't happen.
 
 The return value is an object with the following fields:
+* `raw_text`: If specified, the object does not describe a label but simply raw text surrounding labels. This occurs
+  when double angle bracket (<<...>>) notation is used. {get_label_info()} does not currently return objects with this
+  field set, but {process_raw_labels()} does. The value is {"begin"} (this is the first raw text portion derived from
+  a double angle bracket spec, provided there are at least two raw text portions); {"end"} (this is the last raw text
+  portion derived from a double angle bracket spec, provided there are at least two portions); {"middle"} (this is
+  neither the first nor the last raw text portion); or {"only"} (this is a raw text portion standing by itself). The
+  particular value determines the handling of commas and spaces on one or both sides of the raw text. If this field is
+  specified, only the `label` field (containing the actual raw text) and the `category` field (containing an empty list)
+  are set; all other fields are {nil}.
 * `raw_label`: The original label that was passed in (without any preceding exclamation point).
 * `canonical`: If the label is an alias, this contains the canonical name of the label; otherwise it will be {nil}.
 * `label`: The display form of the label.
 * `categories`: A list of the categories to add the label to; an empty list of `nocat` was specified.
-* `formatted_categories`: A string containing the formatted categories; an empty string if `nocat` or `for_doc` was
-  specified or if ... (FIXME)
+* `formatted_categories`: A string containing the formatted categories; {nil} if `nocat` or `for_doc` was specified,
+  or if `categories` is empty. Currently will be an empty string if there are categories to format but the namespace is
+  one that normally excludes categories (e.g. userspace and discussion pages), and `force_cat` isn't specified.
 * `deprecated`: True if the label is deprecated.
 * `display_raw_label`: If true, the label was preceded by ! to indicate that the raw label should be displayed
   rather than the canonical form.
@@ -507,7 +523,7 @@ function export.get_label_info(data)
 		or labprop("plain_categories") or labprop("pos_categories")
 		or labprop("sense_categories")) and displayed_label
 		or nil
-	
+
 	-- Track label text. If label text was previously used, don't show it, but include the categories.
 	-- For an example, see [[hypocretin]].
 	if data.already_seen and data.already_seen[label_for_already_seen] then
@@ -520,25 +536,19 @@ function export.get_label_info(data)
 	end
 
 	if data.nocat then
-		ret.formatted_categories = ""
+		-- do nothing
 	else
 		local cats = export.fetch_categories(label, labdata, data.lang, mode, data.for_doc)
 		for _, cat in ipairs(cats) do
 			table.insert(ret.categories, cat)
 		end
-		if #ret.categories == 0 or data.for_doc then
+		if not ret.categories[1] or data.for_doc then
 			-- Don't try to format categories if we're doing this for documentation ({{label/doc}}), because there
 			-- will be HTML in the categories.
-			ret.formatted_categories = ""
+			-- do nothing
 		else
-			local ns = mw.title.getCurrentTitle().namespace
-			if not force_cat and ns ~= 0 and ns ~= 100 and ns ~= 118 then
-				-- Only allow categories in the mainspace, appendix and reconstruction namespaces.
-				ret.formatted_categories = ""
-			else
-				ret.formatted_categories = require(utilities_module).format_categories(ret.categories, data.lang,
-					data.sort, nil, force_cat)
-			end
+			ret.formatted_categories = require(utilities_module).format_categories(ret.categories, data.lang,
+				data.sort, nil, force_cat)
 		end
 	end
 
@@ -552,40 +562,135 @@ function export.get_label_info(data)
 end
 
 --[==[
-Return a list of objects corresponding to the raw label tags in `raw_tags`, where "label tags" are the tags after two
-vertical bars in {{tl|alt}}. Each object is of the format returned by `get_label_info` in [[Module:labels]], as the
-separate dialectal data modules have been removed.
-
-NOTE: This function no longer does anything other than call {get_label_info()} in [[Module:labels]].
+Split a string containing comma-separated raw labels into the individual labels. This will not split on a comma
+followed by whitespace, and it will not split inside of matched <...> or [...]. The code is written to be efficient, so
+that it does not load modules (e.g. [[Module:parse utilities]]) unnecessarily.
 ]==]
-function export.get_label_list_info(raw_labels, lang, nocat, already_seen, notrack)
+function export.split_labels_on_comma(term)
+	if term:find("[%[<]") then
+		-- Do it the "hard way". We don't want to split anything inside of <...> or <<...>> even if there are commas
+		-- inside of the angle brackets. For good measure we do the same for [...] and [[...]]. We first parse balanced
+		-- segment runs involving either [...] or <...>. Then we split alternating runs on comma (but not on
+		-- comma+whitespace). Then we rejoin the split runs. For example, given the following:
+		-- "regional,older <<non-rhotic,and,non-hoarse-horse>> speakers", the first call to
+		-- parse_multi_delimiter_balanced_segment_run() produces
+		--
+		-- {"regional,older ", "<<non-rhotic,and,non-hoarse-horse>>", " speakers"}
+		--
+		-- After calling split_alternating_runs_on_comma(), we get the following:
+		--
+		-- {{"regional"}, {"older ", "<<non-rhotic,and,non-hoarse-horse>>", " speakers"}}
+		--
+		-- After rejoining each group, we get:
+		--
+		-- {"regional", "older <<non-rhotic,and,non-hoarse-horse>> speakers"}
+		--
+		-- which is the desired output. When processing the second "label" string, the code in process_raw_labels()
+		-- will do a similar process to this to pull out the labels inside of the <<...>> notation.
+		local put = require(parse_utilities_module)
+		local segments = put.parse_multi_delimiter_balanced_segment_run(term, {{"<", ">"}, {"[", "]"}})
+		-- This won't split on comma+whitespace.
+		local comma_separated_groups = put.split_alternating_runs_on_comma(segments)
+		for i, group in ipairs(comma_separated_groups) do
+			group[i] = table.concat(group[i])
+		end
+		return comma_separated_groups
+	elseif term:find(",%s") then
+		-- This won't split on comma+whitespace.
+		return require(parse_utilities_module).split_on_comma(term)
+	elseif term:find(",") then
+		return rsplit(term, ",")
+	else
+		return {term}
+	end
+end
+
+--[==[
+Return a list of objects corresponding to a set of raw labels. Each object returned is of the format returned by
+{get_label_info()}. This is similar to looping over the labels and calling {get_label_info()} on each one, but it also
+correctly handles embedded double angle bracket specs <<...>> found in the labels. (In such a case, there will be more
+objects returned than raw labels passed in.) On input, `data` is an object with the following fields:
+* `labels`: The list of labels to process.
+* `lang`: The language of the labels. Must be specified.
+* `mode`: How the label was invoked; see {get_label_info()} for more information.
+* `nocat`: If true, don't add the label to any categories.
+* `notrack`: Disable all tracking for this label.
+* `sort`: Sort key for categorization.
+* `already_seen`: An object used to track labels already seen, so they aren't displayed twice. Tracking is according
+  to the display form of the label, so if two labels have the same display form, the second one won't be displayed
+  (but its categories will still be added). If `already_seen` is {nil}, this tracking doesn't happen.
+
+'''WARNING''': This destructively modifies the `data` structure.
+]==]
+function export.process_raw_labels(data)
 	local label_infos = {}
 
-	local saw_double_angle_bracket = false
-	for _, label in ipairs(raw_labels) do
+	local function get_info_and_insert(label)
+		-- Reuse this structure to save memory.
+		data.label = label
+		table.insert(label_infos, export.get_label_info(data))
+	end
+
+	for _, label in ipairs(data.labels) do
 		if label:find("<<") then
-			saw_double_angle_bracket = true
-			break
+			local segments = require(string_utilities_module).split(label, "<<(.-)>>")
+			for i, segment in ipairs(segments) do
+				if i % 2 == 1 then
+					local raw_text_type = i == 1 and "begin" or i == #segments and "end" or "middle"
+					table.insert(label_infos, {raw_text = raw_text_type, label = segment, categories = {}})
+				else
+					local segment_labels = export.split_labels_on_comma(segment)
+					for _, segment_label in ipairs(segment_labels) do
+						get_info_and_insert(segment_label)
+					end
+				end
+			end
+		else
+			get_info_and_insert(label)
 		end
-	end
-
-	if saw_double_angle_bracket then
-	end
-
-	for _, label in ipairs(raw_labels) do
-		-- Pass in nocat to avoid extra work, since we won't use the categories.
-		local display = export.get_label_info {
-			label = label, lang = lang, nocat = nocat, notrack = notrack, already_seen = already_seen
-		}
-		table.insert(label_infos, display)
 	end
 
 	return label_infos
 end
 
 --[==[
+Older entry point, equivalent to {process_raw_labels()}. Do not use in new code. FIXME: Convert callers.
+]==]
+function export.get_label_list_info(raw_labels, lang, nocat, already_seen, notrack)
+	return export.process_raw_labels {
+		labels = raw_labels,
+		lang = lang,
+		nocat = nocat,
+		already_seen = already_seen,
+		notrack = notrack,
+	}
+end
+
+--[==[
+Split a comma-separated string of raw labels and process each label to get a list of objects suitable for passing to
+{format_processed_labels()}. Each object returned is of the format returned by {get_label_info()}. This is equivalent to
+calling {split_labels_on_comma()} followed by {process_raw_labels()}. On input, `data` is an object with the following
+fields:
+* `labels`: The string containing the raw comma-separated labels.
+* `lang`: The language of the labels. Must be specified.
+* `mode`: How the label was invoked; see {get_label_info()} for more information.
+* `nocat`: If true, don't add the label to any categories.
+* `notrack`: Disable all tracking for this label.
+* `sort`: Sort key for categorization.
+* `already_seen`: An object used to track labels already seen, so they aren't displayed twice. Tracking is according
+  to the display form of the label, so if two labels have the same display form, the second one won't be displayed
+  (but its categories will still be added). If `already_seen` is {nil}, this tracking doesn't happen.
+
+'''WARNING''': This destructively modifies the `data` structure.
+]==]
+function export.split_and_process_raw_labels(data)
+	data.labels = export.split_labels_on_comma(data.labels)
+	return export.process_raw_labels(data)
+end
+
+--[==[
 Format one or more already-processed labels for display and categorization. "Already-processed" means that
-{get_label_info()} or {get_label_list_info()} has been called on the raw labels to convert them into objects containing
+{get_label_info()} or {process_raw_labels()} has been called on the raw labels to convert them into objects containing
 information on how to display and categorize the labels. This is a lower-level alternative to {show_labels()} and is
 meant for modules such as [[Module:alternative forms]], [[Module:quote]] and [[Module:etymology/templates/descendant]]
 that support displaying labels along with some other information.
@@ -593,8 +698,7 @@ that support displaying labels along with some other information.
 On input `data` is an object with the following fields:
 * `labels`: List of the label objects to format, in the format returned by {get_label_info()}.
 * `lang`: The language of the labels.
-* `mode`: How the label was invoked. If {nil} or {"label"}, through {{tl|lb}}; if {"term-label"}, through {{tl|tlb}}; if
-  {"accent"}, through {{tl|a}}; if {"form-of"}, through {{tl|alt form}}, {{tl|standard spelling of}} or similar.
+* `mode`: How the label was invoked; see {get_label_info()} for more information.
 * `sort`: Sort key for categorization.
 * `already_seen`: An object used to track labels already seen, so they aren't displayed twice, as documented in
   {get_label_info()}. To enable this, set this to an empty object. If `already_seen` is {nil}, this tracking doesn't
@@ -608,7 +712,7 @@ On input `data` is an object with the following fields:
 
 Return value is a string containing the contenated labels, optionally surrounded by open/close brackets or parentheses.
 Normally, labels are separated by comma-space sequences, but this may be suppressed for certain labels. If `nocat`
-wasn't given to {get_label_info() or get_label_list_info()}, the label objects will contain formatted categories in
+wasn't given to {get_label_info() or process_raw_labels()}, the label objects will contain formatted categories in
 them, which will be inserted into the returned text. The concatenated text inside of the open/close brackets is normally
 wrapped in the {"ib-content"} CSS class, but this can be suppressed, as mentioned above.
 
@@ -622,23 +726,25 @@ function export.format_processed_labels(data)
 	if not labels[1] then
 		error("You must specify at least one label.")
 	end
-	
+
 	-- Show the labels
 	local omit_preComma = false
 	local omit_postComma = true
 	local omit_preSpace = false
 	local omit_postSpace = true
-	
+
 	for _, label in ipairs(labels) do
 		omit_preComma = omit_postComma
 		omit_postComma = false
 		omit_preSpace = omit_postSpace
 		omit_postSpace = false
 
-		label.omit_comma = omit_preComma or label.data.omit_preComma
-		omit_postComma = label.data.omit_postComma
-		label.omit_space = omit_preSpace or label.data.omit_preSpace
-		omit_postSpace = label.data.omit_postSpace
+		local raw_text_omit_before = label.raw_text == "middle" or label.raw_text == "end"
+		local raw_text_omit_after = label.raw_text == "middle" or label.raw_text == "begin"
+		label.omit_comma = omit_preComma or (label.data and label.data.omit_preComma) or raw_text_omit_before
+		omit_postComma = (label.data and label.data.omit_postComma) or raw_text_omit_after
+		label.omit_space = omit_preSpace or (label.data and label.data.omit_preSpace) or raw_text_omit_before
+		omit_postSpace = (label.data and label.data.omit_postSpace) or raw_text_omit_after
 	end
 
 	if data.lang then
@@ -660,7 +766,7 @@ function export.format_processed_labels(data)
 					(labelinfo.omit_space and "" or "&#32;") ..
 					labelinfo.label
 		end
-		labels[i] = label .. labelinfo.formatted_categories
+		labels[i] = label .. (labelinfo.formatted_categories or "")
 	end
 
 	local function wrap_open_close(val)
@@ -686,11 +792,7 @@ module. The return value is a string to be inserted into the generated page, inc
 input `data` is an object with the following fields:
 * `labels`: List of the labels to format.
 * `lang`: The language of the labels.
-* `mode`: Indicates a special "mode" of operation, typically controlled by how the label was invoked. If {nil} or
-  {"label"}, the label was invoked using {{tl|lb}}; if {"term-label"}, the label was invoked using {{tl|tlb}}; if
-  {"accent"}, the label was invoked using {{tl|a}}; if {"form-of"}, the label was invoked using {{tl|alt form}},
-  {{tl|standard spelling of}} or other form-of template. This controls the display and/or categorization of a minority of
-  labels.
+* `mode`: How the label was invoked; see {get_label_info()} for more information.
 * `nocat`: If true, don't add the labels to any categories.
 * `notrack`: Disable all tracking for these labels.
 * `sort`: Sort key for categorization.
@@ -724,13 +826,8 @@ function export.show_labels(data)
 	if not data.no_track_already_seen then
 		data.already_seen = {}
 	end
-	
-	for i, label in ipairs(labels) do
-		data.label = label
-		local ret = export.get_label_info(data)
-		labels[i] = ret
-	end
 
+	data.labels = export.process_raw_labels(data)
 	if data.open == nil then
 		data.open = "("
 	end
