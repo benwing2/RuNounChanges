@@ -1,7 +1,7 @@
 local export = {}
 
 local accent_qualifier_module = "Module:accent qualifier"
-local parse_utilities_module = "Module:parse utilities"
+local labels_module = "Module:labels"
 local qualifier_module = "Module:qualifier"
 local references_module = "Module:references"
 local string_utilities_module = "Module:string utilities"
@@ -15,17 +15,11 @@ local function track(page)
 	return true
 end
 
-local function split_on_comma(term)
+local function split_labels(term)
 	if not term then
 		return nil
 	end
-	if term:find(",%s") then
-		return require(parse_utilities_module).split_on_comma(term)
-	elseif term:find(",") then
-		return rsplit(term, ",")
-	else
-		return {term}
-	end
+	return require(labels_module).split_labels_on_comma(term)
 end
 
 --[==[
@@ -47,8 +41,8 @@ function export.parse_qualifiers(data)
 	obj.q = data.q and {data.q} or nil
 	obj.qq = data.qq and {data.qq} or nil
 	obj.qualifiers = data.qualifiers and {data.qualifiers} or nil
-	obj.a = split_on_comma(data.a)
-	obj.aa = split_on_comma(data.aa)
+	obj.a = split_labels(data.a)
+	obj.aa = split_labels(data.aa)
 end
 
 --[==[
