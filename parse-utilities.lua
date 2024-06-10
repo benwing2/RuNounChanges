@@ -14,42 +14,42 @@ local function rsub(term, foo, bar)
 end
 
 
---[=[
+--[==[ intro:
 In order to understand the following parsing code, you need to understand how inflected text specs work. They are
 intended to work with inflected text where individual words to be inflected may be followed by inflection specs in
 angle brackets. The format of the text inside of the angle brackets is up to the individual language and part-of-speech
-specific implementation. A real-world example is as follows: "[[медичний|меди́чна]]<+> [[сестра́]]<*,*#.pr>". This is the
-inflection of a multiword expression "меди́чна сестра́", which means "nurse" in Ukrainian (literally "medical sister"),
-consisting of two words: the adjective меди́чна ("medical" in the feminine singular) and the noun сестра́ ("sister"). The
-specs in angle brackets follow each word to be inflected; for example, <+> means that the preceding word should be
+specific implementation. A real-world example is as follows: `<nowiki>[[медичний|меди́чна]]<+> [[сестра́]]<*,*#.pr></nowiki>`.
+This is the inflection of the Ukrainian multiword expression {{m|uk|меди́чна сестра́||nurse|lit=medical sister}},
+consisting of two words: the adjective {{m|uk|меди́чна||medical|pos=feminine singular}} and the noun {{m|uk|сестра́||sister}}.
+The specs in angle brackets follow each word to be inflected; for example, `<+>` means that the preceding word should be
 declined as an adjective.
 
-The code below works in terms of balanced expressions, which are bounded by delimiters such as < > or [ ]. The
+The code below works in terms of balanced expressions, which are bounded by delimiters such as `< >` or `[ ]`. The
 intention is to allow separators such as spaces to be embedded inside of delimiters; such embedded separators will not
 be parsed as separators. For example, Ukrainian noun specs allow footnotes in brackets to be inserted inside of angle
-brackets; something like "меди́чна<+> сестра́<pr.[this is a footnote]>" is legal, as is
-"[[медичний|меди́чна]]<+> [[сестра́]]<pr.[this is an <i>italicized footnote</i>]>", and the parsing code should not be
-confused by the embedded brackets, spaces or angle brackets.
+brackets; something like `меди́чна<+> сестра́<pr.[this is a footnote]>` is legal, as is
+`<nowiki>[[медичний|меди́чна]]<+> [[сестра́]]<pr.[this is an <i>italicized footnote</i>]></nowiki>`, and the parsing code
+should not be confused by the embedded brackets, spaces or angle brackets.
 
-The parsing is done by two functions, which work in close concert: parse_balanced_segment_run() and
-split_alternating_runs(). To illustrate, consider the following:
+The parsing is done by two functions, which work in close concert: {parse_balanced_segment_run()} and
+{split_alternating_runs()}. To illustrate, consider the following:
 
-parse_balanced_segment_run("foo<M.proper noun> bar<F>", "<", ">") =
-  {"foo", "<M.proper noun>", " bar", "<F>", ""}
+{parse_balanced_segment_run("foo<M.proper noun> bar<F>", "<", ">")} =<br />
+  { {"foo", "<M.proper noun>", " bar", "<F>", ""}}
 
 then
 
-split_alternating_runs({"foo", "<M.proper noun>", " bar", "<F>", ""}, " ") =
-  {{"foo", "<M.proper noun>", ""}, {"bar", "<F>", ""}}
+{split_alternating_runs({"foo", "<M.proper noun>", " bar", "<F>", ""}, " ")} =<br />
+  { {{"foo", "<M.proper noun>", ""}, {"bar", "<F>", ""}}}
 
-Here, we start out with a typical inflected text spec "foo<M.proper noun> bar<F>", call parse_balanced_segment_run() on
-it, and call split_alternating_runs() on the result. The output of parse_balanced_segment_run() is a list where
+Here, we start out with a typical inflected text spec `foo<M.proper noun> bar<F>`, call {parse_balanced_segment_run()} on
+it, and call {split_alternating_runs()} on the result. The output of {parse_balanced_segment_run()} is a list where
 even-numbered segments are bounded by the bracket-like characters passed into the function, and odd-numbered segments
-consist of the surrounding text. split_alternating_runs() is called on this, and splits *only* the odd-numbered
+consist of the surrounding text. {split_alternating_runs()} is called on this, and splits '''only''' the odd-numbered
 segments, grouping all segments between the specified character. Note that the inner lists output by
-split_alternating_runs() are themselves in the same format as the output of parse_balanced_segment_run(), with
-bracket-bounded text in the even-numbered segments. Hence, such lists can be passed again to split_alternating_runs().
-]=]
+{split_alternating_runs()} are themselves in the same format as the output of {parse_balanced_segment_run()}, with
+bracket-bounded text in the even-numbered segments. Hence, such lists can be passed again to {split_alternating_runs()}.
+]==]
 
 
 --[==[
@@ -60,13 +60,13 @@ characters. For example,
 {parse_balanced_segment_run("foo(x(1)), bar(2)", "(", ")") = {"foo", "(x(1))", ", bar", "(2)", ""}}
 ]==]
 function export.parse_balanced_segment_run(segment_run, open, close)
-	return m_string_utilities.capturing_split(segment_run, "(%b" .. open .. close .. ")")
+	return m_string_utilities.split(segment_run, "(%b" .. open .. close .. ")")
 end
 
 -- The following is an equivalent, older implementation that does not use %b (written before I was aware of %b).
 --[=[
 function export.parse_balanced_segment_run(segment_run, open, close)
-	local break_on_open_close = m_string_utilities.capturing_split(segment_run, "([%" .. open .. "%" .. close .. "])")
+	local break_on_open_close = m_string_utilities.split(segment_run, "([%" .. open .. "%" .. close .. "])")
 	local text_and_specs = {}
 	local level = 0
 	local seg_group = {}
@@ -134,7 +134,7 @@ function export.parse_multi_delimiter_balanced_segment_run(segment_run, delimite
 	end
 	local open_close_pattern = "([" .. table.concat(open_close_items) .. "])"
 	local open_pattern = "([" .. table.concat(open_items) .. "])"
-	local break_on_open_close = m_string_utilities.capturing_split(segment_run, open_close_pattern)
+	local break_on_open_close = m_string_utilities.split(segment_run, open_close_pattern)
 	local text_and_specs = {}
 	local level = 0
 	local seg_group = {}
@@ -245,7 +245,7 @@ function export.split_alternating_runs(segment_runs, splitchar, preserve_splitch
 			table.insert(run, seg)
 		else
 			local parts =
-				preserve_splitchar and m_string_utilities.capturing_split(seg, "(" .. splitchar .. ")") or
+				preserve_splitchar and m_string_utilities.split(seg, "(" .. splitchar .. ")") or
 				rsplit(seg, splitchar)
 			table.insert(run, parts[1])
 			for j=2,#parts do
@@ -414,7 +414,7 @@ function export.split_escaping(text, splitchar, preserve_splitchar, escape_fun, 
 	text, need_unescape = escape_fun(text)
 
 	local parts =
-		preserve_splitchar and m_string_utilities.capturing_split(text, "(" .. splitchar .. ")") or
+		preserve_splitchar and m_string_utilities.split(text, "(" .. splitchar .. ")") or
 		rsplit(text, splitchar)
 	if need_unescape then
 		for i = 1, #parts, (preserve_splitchar and 2 or 1) do
@@ -693,6 +693,15 @@ Parse a term that may have inline modifiers attached (e.g. {rifiuti<q:plural-onl
 ** `escape_fun` and `unescape_fun` are as in split_escaping() and split_alternating_runs_escaping() above and
    control the protected sequences that won't be split. By default, `escape_comma_whitespace` and
    `unescape_comma_whitespace` are used, so that comma+whitespace sequences won't be split.
+** `pre_normalize_modifiers`, if specified, is a function of one argument, which can be used to "normalize" modifiers
+   prior to further parsing. This is used, for example, in [[Module:tl-pronunciation]] to convert modifiers of the
+   form {{cd|<noun^expectation; hope>}} to {{cd|<t:noun^expectation; hope>}}, so they can be processed as standard
+   modifiers. It could similarly be used, for example, to handle boolean modifiers like {{cd|<slb>}} in {{tl|desc}}
+   and convert them to a standard form {{cd|<slb:1>}}. It runs just before parsing out the modifier prefix and value,
+   and is passed an object containing fields `modtext` (the un-normalized modifier text, without surrounding angle
+   brackets) and `parse_err` (the passed-in or autogenerated function to signal an error during parsing; a function
+   of one argument, a message, which throws an error displaying that message). It should return a single value, the
+   normalized value of `modtext`.
 
 `param_mods` is a table describing allowed modifiers. The keys of the table are modifier prefixes and the values are
 tables describing how to parse and store the associated modifier values. Here is a typical example:
