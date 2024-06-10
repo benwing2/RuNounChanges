@@ -1,13 +1,13 @@
 Beginning at Sun Jun  9 03:25:51 2024
-Page 1 word: Found match for regex: <begin> * {{homophones|en|whirred}} {{qualifier|accents with the wine-whine merger}} <end>
-Page 2 book: Found match for regex: <begin> * {{homophones|en|buck|qq1=most accents without the foot–⁠strut split}} <end>
-Page 3 pond: Found match for regex: <begin> * {{homophones|en|pawned|qq1=in accents with the [[cot-caught merger|''cot–caught'' merger]]}} <end>
-Page 4 wares: Found match for regex: <begin> * {{homophones|en|wears|warez|where's}} {{q|in accents with the [[wine-whine merger]]}} <end>
-Page 5 abdicator: Found match for regex: <begin> * {{IPA|en|/ˈæb.dɪˌkeɪ.tɚ/|a=US}}, {{a|en|weak vowel}} {{IPAchar|/ˈæb.dəˌkeɪ.tɚ/}} <end>
+Page 1 word: Found match for regex: <begin> * {{homophones|en|whirred|aa=wine-whine}}
+Page 2 book: Found match for regex: <begin> * {{homophones|en|buck|aa=non-foot-strut split,most accents}} <end>
+Page 3 pond: Found match for regex: <begin> * {{homophones|en|pawned|aa=cot-caught}} <end>
+Page 4 wares: Found match for regex: <begin> * {{homophones|en|wears|warez|;|where's|a3=wine-whine}} <end>
+Page 5 abdicator: Found match for regex: <begin> * {{IPA|en|/ˈæb.dɪˌkeɪ.tɚ/|a=US|/ˈæb.dəˌkeɪ.tɚ/|a2=weak vowel}} <end>
 Page 6 abomination: Found match for regex: <begin> ** {{IPA|en|/əˌbɑ.məˈneɪ.ʃən/|a=weak vowel}} <end>
 Page 7 abroad: Found match for regex: <begin> * {{IPA|en|/əˈbɹɑd/|a=cot-caught}} <end>
 Page 8 on: Found match for regex: <begin> * {{enPR|än|a=Northern US,Canada,cot-caught}}, {{IPA|en|/ɑn/}} <end>
-Page 9 odd: Found match for regex: <begin> * {{homophones|en|awed}} {{qualifier|in accents with the [[cot-caught merger]]}} <end>
+Page 9 odd: Found match for regex: <begin> * {{homophones|en|awed|aa=cot-caught}} <end>
 Page 10 autumn: Found match for regex: <begin> *** {{audio|en|En-US constrastive autumn.ogg|a=US,non-cot-caught}} <end>
 Page 10 autumn: Found match for regex: <begin> ** {{IPA|en|/ˈɑtəm/|[ˈɑɾɪ̈m]|[ˈɑɾm̩]|a=US,CA,cot-caught}} <end>
 Page 10 autumn: Found match for regex: <begin> *** {{audio|en|en-us-autumn.ogg|a=US,cot-caught}} <end>
@@ -17,68 +17,68 @@ Page 13 four: Found match for regex: <begin> ** {{enPR|fōr|a=rhotic,non-horse-h
 Page 13 four: Found match for regex: <begin> ** {{IPA|en|/foə/|a=nonrhotic,non-horse-hoarse}} <end>
 Page 13 four: Found match for regex: <begin> ** {{audio|en|en-us-ne-four.ogg|a=New England,non-horse-hoarse}} <end>
 Page 13 four: Found match for regex: <begin> ** {{audio|en|en-us-four.ogg|a=US,non-horse-hoarse}} <end>
-Page 13 four: Found match for regex: <begin> * {{homophones|en|for}} {{qualifier|accents with the [[w:horse–hoarse merger|''horse''–''hoarse'' merger]]}} <end>
-Page 13 four: Found match for regex: <begin> * {{homophones|en|faugh}} {{qualifier|in [[non-rhotic]] dialects with the [[horse-hoarse merger]]}} <end>
-Page 14 medicine: Found match for regex: <begin> * {{IPA|en|/ˈmɛdəs(ə)n/|a=with the [[w:Phonological_history_of_English_close_front_vowels#Weak_vowel_merger|weak vowel merger]]}} <end>
-Page 14 medicine: Found match for regex: <begin> * {{rhymes|en|ɛdɪsɪn|ɛdəsən|q2=weak-vowel merger|s=3}} <end>
+Page 13 four: Found match for regex: <begin> * {{homophones|en|for|aa=horse-hoarse}} <end>
+Page 13 four: Found match for regex: <begin> * {{homophones|en|faugh|aa=non-rhotic,horse-hoarse}} <end>
+Page 14 medicine: Found match for regex: <begin> * {{IPA|en|/ˈmɛdəs(ə)n/|a=weak vowel}} <end>
+Page 14 medicine: Found match for regex: <begin> * {{rhymes|en|ɛdɪsɪn|ɛdəsən|a2=weak vowel|s=3}} <end>
 Page 15 Irish: Found match for regex: <begin> * {{IPA|en|/ˈaɪɹəʃ/|a=weak vowel}} <end>
 Page 16 beer: Found match for regex: <begin> * {{IPA|en|/bɛə/|a=near-square}} <end>
-Page 16 beer: Found match for regex: <begin> * {{homophones|en|bear}} {{a|en|New Zealand|near–square merger}} <end>
+Page 16 beer: Found match for regex: <begin> * {{homophones|en|bear|aa=New Zealand,near–square}} <end>
 Page 17 quality: Found match for regex: <begin> * {{IPA|en|/ˈkwɑləti/|[ˈkʰwɑ.lə.ɾi]|a=US,father-bother,weak vowel}} <end>
 Page 18 port: Found match for regex: <begin> * {{IPA|en|/po(ː)ɹt/|a=rhotic,non-horse-hoarse}} <end>
 Page 18 port: Found match for regex: <begin> * {{IPA|en|/poət/|a=nonrhotic,non-horse-hoarse}} <end>
-Page 19 cod: Found match for regex: <begin> * {{homophones|en|cawed}} {{qualifier|in accents with the [[cot-caught merger]]}} <end>
-Page 20 bot: Found match for regex: <begin> * {{homophones|en|bought}} {{qualifier|in accents with the [[cot-caught merger]]}} <end>
+Page 19 cod: Found match for regex: <begin> * {{homophones|en|cawed|aa=cot-caught}} <end>
+Page 20 bot: Found match for regex: <begin> * {{homophones|en|bought|aa=cot-caught}} <end>
 Page 21 ten: Found match for regex: <begin> * {{IPA|en|/tɪn/|aa=pin-pen}} <end>
-Page 21 ten: Found match for regex: <begin> * {{rhymes|en|ɛn|s=1}}, {{rhymes|en|ɪn}} {{a|en|pin-pen}} <end>
-Page 21 ten: Found match for regex: <begin> * {{homophones|en|tin}} {{qualifier|with [[pin-pen merger]]}} <end>
-Page 22 stock: Found match for regex: <begin> * {{homophones|en|stalk|qq1=[[cot-caught merger]]|stark|qq2=non-rhotic with father-bother merger}} <end>
+Page 21 ten: Found match for regex: <begin> * {{rhymes|en|ɛn|s=1|ɪn|a2=pin-pen}} <end>
+Page 21 ten: Found match for regex: <begin> * {{homophones|en|tin|aa=pin-pen}} <end>
+Page 22 stock: Found match for regex: <begin> * {{homophones|en|stalk|aa1=cot-caught|;|stark|aa2=non-rhotic,father-bother}} <end>
 Page 23 secret: Found match for regex: <begin> * {{IPA|en|/ˈsiːkɹət/|a=weak vowel}} <end>
 Page 24 United States of America: Found match for regex: <begin> * {{enPR|yo͞o-nīʹ-təd stātsʹ əv ə-mĕrʹ-ə-kə|a=GA,weak vowel}}, {{IPA|en|/juˌnaɪtəd ˌsteɪts əv əˈmɛɹəkə/}} <end>
 Page 25 Austria: Found match for regex: <begin> * {{IPA|en|/ˈɑs.tɹi.ə/|a=cot-caught,Canada}} <end>
 Page 26 wall: Found match for regex: <begin> * {{IPA|en|/wɑl/|a=cot-caught}} <end>
-Page 27 morning: Found match for regex: <begin> * {{homophones|en|mourning}} {{qualifier|in accents with the [[horse-hoarse merger]]}} <end>
+Page 27 morning: Found match for regex: <begin> * {{homophones|en|mourning|aa=horse-hoarse}} <end>
 Page 27 morning: Found match for regex: <begin> * {{a|en|non-horse-hoarse}} <end>
 Page 28 market: Found match for regex: <begin> * {{IPA|en|/ˈmɑɹkət/|a=weak vowel}}  <end>
-Page 29 world: Found match for regex: <begin> * {{homophones|en|whirled|whorled|qq2=both only in accents with the wine–whine merger and the fern–fir-fur merger}} <end>
+Page 29 world: Found match for regex: <begin> * {{homophones|en|whirled|aa1=with both the <<wine-whine>> and <<fern-fir-fur>>|;|whorled|aa2=with both mergers, <<RP>> only}} <end>
 Page 30 also: Found match for regex: <begin> * {{IPA|en|/ˈɑl.soʊ/|a=US,cot-caught}} <end>
 Page 31 Andorra: Found match for regex: <begin> * {{IPA|en|/ænˈdɔː.ɹə/|a=non-horse-hoarse}} <end>
 Page 32 false: Found match for regex: <begin> ** {{IPA|en|/fɑls/|a=cot-caught}} <end>
 Page 32 false: Found match for regex: <begin> *** {{audio|en|En-us-false.ogg|a=cot-caught}} <end>
-Page 33 Maldives: Found match for regex: <begin> * {{IPA|en|/ˈmɔl.daɪvz/|/ˈmæl.daɪvz/|/ˈmɑl.daɪvz/|q3=cot-caught merger also|/-divz/|a=US}} <end>
+Page 33 Maldives: Found match for regex: <begin> * {{IPA|en|/ˈmɔl.daɪvz/|/ˈmæl.daɪvz/|;|/ˈmɑl.daɪvz/|a3=cot-caught|/-divz/|a=US}} <end>
 Page 34 Nepal: Found match for regex: <begin> * {{IPA|en|/nəˈpɑl/|a=cot-caught}} <end>
-Page 34 Nepal: Found match for regex: <begin> * {{rhymes|en|ɔːl|ɑl|s=2|q2=cot-caught merger}} <end>
+Page 34 Nepal: Found match for regex: <begin> * {{rhymes|en|ɔːl|ɑl|s=2|a2=cot-caught}} <end>
 Page 35 Yemen: Found match for regex: <begin> * {{IPA|en|/ˈjɪ.mən/|a=pin-pen}} <end>
 Page 36 current: Found match for regex: <begin> ** {{audio|en|en-us-current.ogg|a=US,hurry-furry}} <end>
-Page 36 current: Found match for regex: <begin> * {{hmp|en|currant|courant|qq2=[[hurry-furry merger|hurry-furry]] and [[cure-nurse merger]]}} <end>
+Page 36 current: Found match for regex: <begin> * {{hmp|en|currant|;|courant<aa:with both the <<hurry-furry>> and <<cure-fir>>>}} <end>
 Page 37 automatic: Found match for regex: <begin> ** {{IPA|en|/ˌɑː.təˈmæt.ɪk/|[ˌɑː.ɾəˈmæɾ.ɪk]|a=cot-caught}} <end>
 Page 38 software: Found match for regex: <begin> * {{IPA|en|/ˈsɑftˌwɛɹ/|a=cot-caught,Canada}} <end>
 Page 39 offset: Found match for regex: <begin> ** {{IPA|en|/ˈɑf.sɛt/|a=cot-caught}} <end>
 Page 39 offset: Found match for regex: <begin> ** {{IPA|en|/ɑfˈsɛt/|/ˈɑf.sɛt/|a=cot-caught}} <end>
 Page 40 board: Found match for regex: <begin> * {{enPR|bōrd|a=rhotic,non-horse-hoarse}}, {{IPA|en|/bo(ː)ɹd/}} <end>
 Page 40 board: Found match for regex: <begin> * {{enPR|bōəd|a=nonrhotic,non-horse-hoarse}}, {{IPA|en|/boəd/}} <end>
-Page 40 board: Found match for regex: <begin> * {{homophones|en|bored}}; {{l|en|baud}}, {{l|en|bawd}} {{qualifier|nonrhotic accents with the horse–hoarse merger}} <end>
+Page 40 board: Found match for regex: <begin> * {{homophones|en|bored|;|baud|bawd|aa=nonrhotic,horse–hoarse}} <end>
 Page 41 accost: Found match for regex: <begin> * {{IPA|en|/ə.ˈkɑst/|a=cot-caught,Canada}} <end>
 Page 42 Australia: Found match for regex: <begin> * {{IPA|en|/ɑˈstɹɛ.li.ə/|/ɑˈstɹɛl.jə/|/-ɹeɪl-/|a=cot-caught,Canada}} <end>
-Page 43 Wales: Found match for regex: <begin> * {{homophones|en|whales|wails}} (''whales'' in accents with wine-whine merger) <end>
-Page 44 win: Found match for regex: <begin> * {{homophones|en|wynn|Nguyen|winne|when|}} {{qualifier|in accents with the whine-wine merger and the pin-pen merger}}. <end>
+Page 43 Wales: Found match for regex: <begin> * {{homophones|en|wails|;|whales<aa:wine-whine>}}
+Page 44 win: Found match for regex: <begin> * {{homophones|en|wynn|Nguyen|winne|;|when<aa:with both the <<whine-wine>> and <<pin-pen>>>}} <end>
 Page 45 Moldova: Found match for regex: <begin> ** {{IPA|en|/mɑlˈdoʊ.və/|a=caught-cot}} <end>
-Page 46 bomb: Found match for regex: <begin> * {{homophones|en|balm|qq1=for speakers with the {{w|father-bother merger}}|BOM}} <end>
+Page 46 bomb: Found match for regex: <begin> * {{homophones|en|balm<aa:father-bother>|;|BOM}} <end>
 Page 47 small: Found match for regex: <begin> ** {{IPA|en|/smɑl/|a=cot-caught,Canada}} <end>
 Page 48 smalls: Found match for regex: <begin> * {{IPA|en|/smɑlz/|a=cot-caught}} <end>
 Page 49 white: Found match for regex: <begin> * {{enPR|hwīt|a=non-wine-whine}}, {{IPA|en|/ʍaɪt/}} <end>
-Page 49 white: Found match for regex: <begin> * {{hmp|en|wight|Wight|wite}} {{q|accents with the [[wine-whine merger]]}} <end>
+Page 49 white: Found match for regex: <begin> * {{hmp|en|wight|Wight|wite|aa=wine-whine}} <end>
 Page 50 fourth: Found match for regex: <begin> * {{IPA|en|/fo(ː)ɹθ/|a=rhotic,non-horse-hoarse}} <end>
 Page 50 fourth: Found match for regex: <begin> * {{IPA|en|/foəθ/|a=nonrhotic,non-horse-hoarse}} <end>
 Page 51 tenth: Found match for regex: <begin> ** {{IPA|en|/tɪnθ/|aa=pin-pen}} <end>
-Page 51 tenth: Found match for regex: <begin> * {{rhymes|en|ɛnθ|ɪnθ|q2=pin-pen merger|s=1}} <end>
+Page 51 tenth: Found match for regex: <begin> * {{rhymes|en|ɛnθ|;|ɪnθ|a2=pin-pen|s=1}} <end>
 Page 52 football: Found match for regex: <begin> * {{IPA|en|/ˈfʊtbɑl/|[ˈfʷʊʔt̚bɑɫ]|a=Canada,cot-caught}} <end>
 Page 53 your: Found match for regex: <begin> * {{enPR|yōr|a=rhotic,non-horse-hoarse}}, {{IPA|en|/jo(ː)ɹ/}} <end>
 Page 53 your: Found match for regex: <begin> * {{IPA|en|/joə/|a=nonrhotic,non-horse-hoarse}} <end>
 Page 54 wrought: Found match for regex: <begin> * {{IPA|en|/ɹɑt/|a=cot-caught}} <end>
-Page 54 wrought: Found match for regex: <begin> * {{homophones|en|rot}} {{q|in accents with the [[cot-caught merger]]}} <end>
+Page 54 wrought: Found match for regex: <begin> * {{homophones|en|rot|aa=cot-caught}} <end>
 Page 55 wrong: Found match for regex: <begin> ** {{IPA|en|/ˈɹɑŋ/|a=cot-caught}} <end>
-Page 56 worthwhile: Found match for regex: <begin> * {{IPA|en|/wɜː(ɹ)θˈwaɪl/|a=UK,in accents with the [[wine-whine merger]]}} <end>
+Page 56 worthwhile: Found match for regex: <begin> * {{IPA|en|/wɜː(ɹ)θˈwaɪl/|a=UK,wine-whine}} <end>
 Page 57 sausage: Found match for regex: <begin> * {{IPA|en|/ˈsɑsɪd͡ʒ/|a=cot-caught,Canada}} <end>
 Page 58 penny: Found match for regex: <begin> * {{IPA|en|/ˈpɪni/|a=pin-pen}} <end>
 Page 59 parallel: Found match for regex: <begin> * {{enPR|pĕr′ə-lĕl'|a=Mary-marry-merry}}, {{IPA|en|/ˈpɛɹ.əˌlɛl/}} <end>
@@ -87,9 +87,9 @@ Page 59 parallel: Found match for regex: <begin> * {{audio|en|en-us-parallel.ogg
 Page 60 square: Found match for regex: <begin> * {{IPA|en|/skwɪə(ɹ)/|a=near-square}} <end>
 Page 61 quaff: Found match for regex: <begin> * {{audio|en|en-us-quaff.ogg|a=US,cot-caught}} <end>
 Page 62 currency: Found match for regex: <begin> * {{audio|en|en-us-currency.ogg|a=US,hurry-furry}} <end>
-Page 63 cock: Found match for regex: <begin> * {{homophones|en|caulk}} {{q|in accents with the [[cot-caught merger]]}} <end>
+Page 63 cock: Found match for regex: <begin> * {{homophones|en|caulk|aa=cot-caught}} <end>
 Page 64 animal: Found match for regex: <begin> * {{IPA|en|/ˈæn.ə.məl/|a=weak vowel}} <end>
-Page 65 for: Found match for regex: <begin> * {{homophones|en|fore|qq1=with [[horse-hoarse merger]]|four|qq2=with horse-hoarse merger}} <end>
+Page 65 for: Found match for regex: <begin> * {{homophones|en|fore|four|aa=horse-hoarse}} <end>
 Page 66 fall: Found match for regex: <begin> * {{enPR|fäl|a=cot-caught}}, {{IPA|en|/fɑl/}} <end>
 Page 67 example: Found match for regex: <begin> * {{IPA|en|/əɡˈzæm.pəl/|a=US,Australia,weak vowel}} <end>
 Page 68 his: Found match for regex: <begin> ** {{IPA|en|/əz/|a=weak vowel merger}} <end>
@@ -97,165 +97,163 @@ Page 69 comparative: Found match for regex: <begin> * {{audio|en|en-us-ne-compar
 Page 69 comparative: Found match for regex: <begin> * {{audio|en|En-us-comparative.ogg|a=US,Mary-marry-merry}} <end>
 Page 70 Aussie: Found match for regex: <begin> ** {{audio|en|En-US contrastive_Aussie.ogg|a=US,non-cot-caught}} <end>
 Page 70 Aussie: Found match for regex: <begin> * {{enPR|ŏ'-zi|ŏ'-si|a=US,Canada,cot-caught}}, {{IPA|en|/ˈɑzi/|/ˈɑsi/}} <end>
-Page 71 again: Found match for regex: <begin> * {{IPA|en|[əˈɡɪn]|a=regional US,pen-pin}}<ref>{{R:PEAS|131}}</ref> <end>
+Page 71 again: Found match for regex: <begin> * {{IPA|en|[əˈɡɪn]|a=regional,_,US,pen-pin|ref={{R:PEAS|131}}}} <end>
 Page 72 all: Found match for regex: <begin> ** {{IPA|en|/ɑl/|a=cot-caught,Northern Cities Vowel Shift}} <end>
 Page 73 any: Found match for regex: <begin> ** {{IPA|en|/ˈɪni/|a=pin-pen}} <end>
-Page 73 any: Found match for regex: <begin> * {{a|en|US}} {{homophones|en|innie}} {{qualifier|pin-pen}} <end>
+Page 73 any: Found match for regex: <begin> * {{homophones|en|innie|aa=US,pin-pen}} <end>
 Page 74 accident: Found match for regex: <begin> * {{IPA|en|/ˈæksədɪnt/|a=pin-pen}} <end>
 Page 75 adore: Found match for regex: <begin> * {{enPR|ədōrʹ|a=rhotic,non-horse-hoarse}}, {{IPA|en|/əˈdo(ː)ɹ/}} <end>
 Page 75 adore: Found match for regex: <begin> * {{IPA|en|/əˈdoə̯/|a=nonrhotic,non-horse-hoarse}} <end>
 Page 76 north: Found match for regex: <begin> * {{IPA|en|/nɔː(ɹ)θ/|a=non-horse-hoarse}} <end>
-Page 77 wax: Found match for regex: <begin> * {{homophones|en|whacks|qq1=in accents with the [[wine-whine merger]]|wacks}} <end>
+Page 77 wax: Found match for regex: <begin> * {{homophones|en|whacks|aa=wine-whine|;|wacks}} <end>
 Page 78 laundry: Found match for regex: <begin> * {{IPA|en|/ˈlɑn.dɹi/|a=Canada,cot-caught,Northern Cities Vowel Shift}} <end>
-Page 78 laundry: Found match for regex: <begin> * {{IPA|en|/ˈlɑːn.dɹi/|a=dialectal, obsolete}} {{q|distinct from the [[cot-caught merger]]}} <end>
-Page 79 what: Found match for regex: <begin> ** {{enPR|wŭt|a=with ''wine''–''whine'' merger}}, {{IPA|en|/wʌt/}}; {{IPA|en|/wɑt/|a=in,_,GA,_,sometimes also}} <end>
+Page 78 laundry: Found match for regex: <begin> * {{IPA|en|/ˈlɑːn.dɹi/|a=dialectal,obsolete,distinct from the <<cot-caught>>}} <end>
+Page 79 what: Found match for regex: <begin> ** {{enPR|wŭt|a=wine-whine}}, {{IPA|en|/wʌt/}}; {{IPA|en|/wɑt/|a=sometimes also in <<GA>>}} <end>
 Page 79 what: Found match for regex: <begin> *** {{audio|en|en-us-what.ogg|a=US,stressed,wine-whine}} <end>
 Page 79 what: Found match for regex: <begin> ** {{enPR|hwŭt|a=non-wine-whine}}, {{IPA|en|/ʍʌt/}} <end>
 Page 79 what: Found match for regex: <begin> *** {{audio|en|en-ne-what.ogg|a=US,stressed,non-wine-whine}} <end>
 Page 79 what: Found match for regex: <begin> *** {{audio|en|en-US what (flapped).ogg|a=US,unstressed,flapped,wine-whine}} <end>
 Page 79 what: Found match for regex: <begin> *** {{audio|en|en-US what (glottalized).ogg|a=US,unstressed,glottalized,wine-whine}} <end>
-Page 79 what: Found match for regex: <begin> ** {{enPR|wŏt|a=with ''wine''–''whine'' merger}}, {{IPA|en|/wɒt/|[wɒʔ(t)]|q2=[[w:glottalization|glottalized]]}} <end>
+Page 79 what: Found match for regex: <begin> ** {{enPR|wŏt|a=wine-whine}}, {{IPA|en|/wɒt/|[wɒʔ(t)]|a2=glottalized}} <end>
 Page 79 what: Found match for regex: <begin> *** {{audio|en|En-uk-what.ogg|a=UK,wine-whine}} <end>
 Page 79 what: Found match for regex: <begin> *** {{audio|en|En-NYC-what.ogg|a=NYC,glottalized,wine-whine}} <end>
 Page 79 what: Found match for regex: <begin> ** {{enPR|hwŏt|a=non-wine-whine}}, {{IPA|en|/ʍɒt/}} <end>
-Page 79 what: Found match for regex: <begin> * {{homophones|en|Watt|watt|wot}} {{qualifier|all only in British, Australian, NZ, NYC accents with the [[wine–whine merger]]}} <end>
+Page 79 what: Found match for regex: <begin> * {{homophones|en|Watt|watt|wot|aa=all only in <<!British>>, <<!Australian>>, <<NZ>>, <<NYC>> accents with the <<wine-whine>>}} <end>
 Page 80 daughter: Found match for regex: <begin> * {{enPR|dä'tər|a=GA,cot-caught,Canada}}, {{IPA|en|/ˈdɑ.tɚ/|[ˈdɑ.ɾɚ]}} <end>
-Page 80 daughter: Found match for regex: <begin> * {{homophones|en|dotter|qq1=in accents with the cot-caught merger}} <end>
-Page 81 cousin: Found match for regex: <begin> * {{IPA|en|[ˈkʰɐz.ɹ̩n]|a=US,weak vowel merger}} <end>
-Page 81 cousin: Found match for regex: <begin> * {{homophones|en|cozen|qq1=weak vowel merger}} <end>
+Page 80 daughter: Found match for regex: <begin> * {{homophones|en|dotter|aa=cot-caught}} <end>
 Page 82 brother-in-law: Found match for regex: <begin> * {{IPA|en|/ˈbɹʌðɚ ɪn ˌlɑ/|a=cot-caught,Canada}} <end>
-Page 83 hot: Found match for regex: <begin> * {{homophones|en|haught}} {{qualifier|in accents with the cot-caught merger}} <end>
-Page 84 not: Found match for regex: <begin> * {{homophones|en|naught}}, {{l|en|nought}} {{a|en|cot-caught}} <end>
+Page 83 hot: Found match for regex: <begin> * {{homophones|en|haught|aa=cot-caught}} <end>
+Page 84 not: Found match for regex: <begin> * {{homophones|en|naught|nought|aa=cot-caught}} <end>
 Page 85 men: Found match for regex: <begin> ** {{IPA|en|/mɪn/|a=pin-pen}} <end>
 Page 86 habit: Found match for regex: <begin> * {{IPA|en|/ˈhæbət/|a=weak vowel}} <end>
 Page 87 astronaut: Found match for regex: <begin> ** {{IPA|en|/ˈæstɹəˌnɑt/|a=cot-caught,Canada}} <end>
 Page 88 chocolate: Found match for regex: <begin> ** {{IPA|en|/ˈt͡ʃɑk(ə)lɪt/|a=cot-caught}} <end>
-Page 89 room: Found match for regex: <begin> * {{homophone|en|rum|qq1={{IPAchar|/ɹʊm/}}; without foot–strut split}} <end>
-Page 90 khaki: Found match for regex: <begin> * {{homophones|en|cocky|qq1=some accents with the father-bother merger}} <end>
+Page 89 room: Found match for regex: <begin> * {{homophone|en|rum|aa=non-foot-strut split}} <end>
+Page 90 khaki: Found match for regex: <begin> * {{homophones|en|cocky|aa=some accents with the <<father-bother>>}} <end>
 Page 91 pen: Found match for regex: <begin> * {{IPA|en|/pɪn/|a=pin-pen}} <end>
-Page 91 pen: Found match for regex: <begin> * {{homophones|en|pin}} {{q|[[pin-pen merger]]}} <end>
-Page 92 tin: Found match for regex: <begin> * {{homophones|en|thin|qq1=with [[th-stopping]]|ten|qq2=with [[pin-pen merger]]}} <end>
+Page 91 pen: Found match for regex: <begin> * {{homophones|en|pin|aa=pin-pen}} <end>
+Page 92 tin: Found match for regex: <begin> * {{homophones|en|thin|aa1=th-stopping|ten|aa2=pin-pen}} <end>
 Page 93 chainsaw: Found match for regex: <begin> * {{IPA|en|/ˈt͡ʃeɪn.ˌsɑ/|a=cot-caught}} <end>
-Page 94 caracal: Found match for regex: <begin> * {{IPA|en|/ˈkæɹ.əˌkæl/|a=GA}} {{q|accents without the [[w:English-language vowel changes before historic /r/#Mary–marry–merry merger|''Mary''–''marry''–''merry'' merger]]}} <end>
-Page 94 caracal: Found match for regex: <begin> * {{IPA|en|/ˈkeɚ.əˌkæl/|/ˈkɛɚ.əˌkæl/|a=GA}} {{q|accents with the [[w:English-language vowel changes before historic /r/#Mary–marry–merry merger|''Mary''–''marry''–''merry'' merger]]}} <end>
+Page 94 caracal: Found match for regex: <begin> * {{IPA|en|/ˈkæɹ.əˌkæl/|a=GA,nMmmm}} <end>
+Page 94 caracal: Found match for regex: <begin> * {{IPA|en|/ˈkeɚ.əˌkæl/|/ˈkɛɚ.əˌkæl/|a=GA,Mmmm}} <end>
 Page 95 boss: Found match for regex: <begin> * {{IPA|en|/bɑs/|a=cot-caught,Canada}} <end>
 Page 95 boss: Found match for regex: <begin> * {{audio|en|en-us-boss.ogg|a=US,cot-caught}} <end>
 Page 96 strawberry: Found match for regex: <begin> * {{IPA|en|/ˈstɹɑˌbɛɹi/|a=cot-caught}} <end>
 Page 97 lemon: Found match for regex: <begin> ** {{IPA|en|/ˈlɪm.ɪn/|a=pin-pen}} <end>
 Page 98 epilogue: Found match for regex: <begin> * {{IPA|en|/ˈɛpɪlɑɡ/|a=US,cot-caught,Canada}} <end>
-Page 99 auburn: Found match for regex: <begin> * {{q|[[cot-caught merger]]}} {{IPA|en|/ˈɑ.bɚn/}} <end>
+Page 99 auburn: Found match for regex: <begin> * {{IPA|en|/ˈɑ.bɚn/|a=cot-caught}} <end>
 Page 100 palace: Found match for regex: <begin> * {{IPA|en|/ˈpæləs/|a=AuE,or,weak vowel}} <end>
 Page 101 gnaw: Found match for regex: <begin> * {{enPR|nä|a=cot-caught}}, {{IPA|en|/nɑ/}} <end>
 Page 102 bucket: Found match for regex: <begin> * {{IPA|en|/ˈbʌkət/|a=weak vowel}} <end>
-Page 103 god: Found match for regex: <begin> * {{homophones|en|gaud|qq1=in accents with the [[cot-caught merger]]}} <end>
-Page 104 friend: Found match for regex: <begin> * {{IPA|en|/frɪnd/|a=dialectal,especially with,_,pin-pen}}<ref>{{R:Bingham IP|75}}</ref><!--not just pin-pen--> <end>
-Page 105 talk: Found match for regex: <begin> ** {{enPR|tŏk|a=[[w:cot–caught merger|cot–caught merger]], [[w:Northern Cities Vowel Shift|Northern Cities Vowel Shift]]}} {{IPA|en|/tɑk/|[tʰɑk]|[tʰäk]|[tʰak]}} <end>
+Page 103 god: Found match for regex: <begin> * {{homophones|en|gaud|aa=cot-caught}} <end>
+Page 104 friend: Found match for regex: <begin> * {{IPA|en|/frɪnd/|a=dialectal,especially with <<pin-pen>>|ref={{R:Bingham IP|75}}}}<!--not just pin-pen--> <end>
+Page 105 talk: Found match for regex: <begin> ** {{enPR|tŏk|a=cot-caught,Northern Cities Vowel Shift}} {{IPA|en|/tɑk/|[tʰɑk]|[tʰäk]|[tʰak]}} <end>
 Page 105 talk: Found match for regex: <begin> ** {{audio|en|en-us-talk.ogg|a=US,cot-caught}} <end>
-Page 105 talk: Found match for regex: <begin> * {{homophones|en|torc|torq|torque|aa3=non-rhotic|tock|aa4=cot-caught}} <end>
+Page 105 talk: Found match for regex: <begin> * {{homophones|en|torc|torq|torque|aa3=non-rhotic|;|tock|aa4=cot-caught}} <end>
 Page 106 song: Found match for regex: <begin> ** {{IPA|en|/sɑŋ/|a=cot-caught}} <end>
 Page 107 ben: Found match for regex: <begin> * {{IPA|en|/bɪn/|a=pin-pen}} <end>
-Page 107 ben: Found match for regex: <begin> * {{homophones|en|Ben|been}} {{q|some accents}}, {{l|en|bin}} {{q|pin-pen merger}} <end>
+Page 107 ben: Found match for regex: <begin> * {{homophones|en|Ben|been<qq:some accents>|bin<aa:pin-pen>}} <end>
 Page 108 oral: Found match for regex: <begin> * {{enPR|ōrʹəl|a=non-horse-hoarse}}, {{IPA|en|/ˈo(ː)ɹəl/}} <end>
 Page 109 draw: Found match for regex: <begin> * {{IPA|en|/dɹɑ/|a=cot-caught}} <end>
-Page 110 drawing: Found match for regex: <begin> * {{IPA|en|/ˈdɹɑ.ɪŋ/|a=US,[[w:Cot-caught merger|cot-caught merger]]}} <end>
-Page 111 we: Found match for regex: <begin> * {{homophones|en|oui|wee|whee|qq3=in accents with the [[wine-whine merger]]|Wii}} <end>
+Page 110 drawing: Found match for regex: <begin> * {{IPA|en|/ˈdɹɑ.ɪŋ/|a=US,cot-caught}} <end>
+Page 111 we: Found match for regex: <begin> * {{homophones|en|oui|wee|Wii|;|whee|aa3=wine-whine}} <end>
 Page 112 clause: Found match for regex: <begin> * {{IPA|en|/klɑz/|a=cot-caught}} <end>
 Page 113 which: Found match for regex: <begin> * {{enPR|hwĭch|a=non-wine-whine}}, {{IPA|en|/ʍɪt͡ʃ/}} <end>
 Page 113 which: Found match for regex: <begin> * {{audio|en|en-us-which.ogg|a=US,wine-whine}} <end>
 Page 113 which: Found match for regex: <begin> * {{audio|en|En-uk-which.ogg|a=UK,wine-whine}} <end>
-Page 113 which: Found match for regex: <begin> * {{homophones|en|witch|wich|wych}} {{qualifier|in accents with the [[wine-whine merger]]}} <end>
+Page 113 which: Found match for regex: <begin> * {{homophones|en|witch|wich|wych|aa=wine-whine}} <end>
 Page 114 sidewalk: Found match for regex: <begin> * {{IPA|en|/ˈsaɪdwɑk/|a=cot-caught}} <end>
 Page 115 Arabic: Found match for regex: <begin> ** {{IPA|en|/ˈɛɹ.ə.bɪk/|a=Mary-marry-merry}} <end>
-Page 116 weather: Found match for regex: <begin> * {{homophones|en|wether}}; {{l|en|whether}} {{q|in accents with the [[wine-whine merger]]}} <end>
-Page 117 whether: Found match for regex: <begin> * {{homophones|en|weather|wether}} {{qualifier|both in accents with the [[wine-whine merger]]}} <end>
-Page 118 although: Found match for regex: <begin> * {{IPA|en|/ɔlˈðoʊ/|/ɑlˈðoʊ/|q2=with the [[w:cot–caught merger|cot–caught merger]]|a=US}} <end>
+Page 116 weather: Found match for regex: <begin> * {{homophones|en|wether|;|whether<aa:wine-whine>}} <end>
+Page 117 whether: Found match for regex: <begin> * {{homophones|en|weather|wether|aa=wine-whine}} <end>
+Page 118 although: Found match for regex: <begin> * {{IPA|en|/ɔlˈðoʊ/|;|/ɑlˈðoʊ/<a:cot-caught>|a=US}} <end>
 Page 119 while: Found match for regex: <begin> * {{audio|en|en-ne-while.ogg|a=US,non-wine-whine}} <end>
 Page 119 while: Found match for regex: <begin> * {{audio|en|en-us-while.ogg|a=US,wine-whine}} <end>
 Page 120 force: Found match for regex: <begin> * {{enPR|fōrs|a=rhotic,non-horse-hoarse}}, {{IPA|en|/fo(ː)ɹs/}} <end>
 Page 120 force: Found match for regex: <begin> * {{IPA|en|/foəs/|a=nonrhotic,non-horse-hoarse}} <end>
 Page 121 law: Found match for regex: <begin> * {{enPR|lä|a=cot-caught}}, {{IPA|en|/lɑ/}} <end>
-Page 121 law: Found match for regex: <begin> * {{homophones|en|la}} {{qualifier|in accents with the cot-caught merger}} <end>
-Page 121 law: Found match for regex: <begin> * {{homophones|en|lore}} {{qualifier|in non-rhotic accents with the horse-hoarse merger}} <end>
+Page 121 law: Found match for regex: <begin> * {{homophones|en|la|a=cot-caught}} <end>
+Page 121 law: Found match for regex: <begin> * {{homophones|en|lore|a=non-rhotic,horse-hoarse}} <end>
 Page 122 distance: Found match for regex: <begin> * {{IPA|en|/ˈdɪs.təns/|a=weak vowel}} <end>
-Page 122 distance: Found match for regex: <begin> * {{rhymes|en|ɪstəns|s=2|q1=weak vowel merger}} <end>
+Page 122 distance: Found match for regex: <begin> * {{rhymes|en|ɪstəns|s=2|aa=weak vowel}} <end>
 Page 123 billabong: Found match for regex: <begin> ** {{IPA|en|/ˈbɪləˌbɑŋ/|a=cot-caught}} <end>
-Page 124 pin: Found match for regex: <begin> * {{homophones|en|pen}} {{qualifier|pin-pen merger}} <end>
+Page 124 pin: Found match for regex: <begin> * {{homophones|en|pen|aa=pin-pen}} <end>
 Page 125 Hong Kong: Found match for regex: <begin> ** {{IPA|en|/ˌhɑŋˈkɑŋ/|a=cot-caught}} <end>
 Page 126 nurse: Found match for regex: <begin> * Esperanto: {{t+|eo|kuraci}} {{q|cure}}, {{t+|eo|flegi}} {{q|nurse}} <end>
-Page 127 bear: Found match for regex: <begin> ** {{homophones|en|beer}} {{a|en|New Zealand|near–square merger}} <end>
-Page 128 were: Found match for regex: <begin> * {{homophones|en|whirr}} {{qualifier|in accents with the [[wine-whine merger]]}} <end>
+Page 127 bear: Found match for regex: <begin> ** {{homophones|en|beer|aa=NZ,near-square}} <end>
+Page 128 were: Found match for regex: <begin> * {{homophones|en|whirr|aa=wine-whine}} <end>
 Page 129 bore: Found match for regex: <begin> * {{IPA|en|/bo(ː)ɹ/|a=rhotic,non-horse-hoarse}} <end>
 Page 129 bore: Found match for regex: <begin> * {{IPA|en|/boə/|a=nonrhotic,non-horse-hoarse}} <end>
-Page 130 born: Found match for regex: <begin> * {{q|with the ''horse-hoarse'' merger}} <end>
-Page 130 born: Found match for regex: <begin> ** {{homophones|en|borne|bourn|bourne|Bourne|qq4=all with the [[horse-hoarse merger]]|bawn|qq5=in [[non-rhotic]] accents|barn|qq6=with the [[card-cord merger]]}} <end>
+Page 130 born: Found match for regex: <begin> * {{a|en|horse-hoarse}} <end>
+Page 130 born: Found match for regex: <begin> ** {{homophones|en|borne|bourn|bourne|Bourne<aa:all with the <<horse-hoarse>>>|;|bawn<aa:non-rhotic>|;|barn<aa:card-cord>}} <end>
 Page 130 born: Found match for regex: <begin> * {{a|en|non-horse-hoarse}} <end>
-Page 131 borne: Found match for regex: <begin> * {{q|with the ''horse-hoarse'' merger}} <end>
-Page 131 borne: Found match for regex: <begin> ** {{homophones|en|born|qq1=with the [[horse-hoarse merger]]|bourn|bourne|Bourne|bawn|qq5=in [[non-rhotic]] accents with the horse–hoarse merger}} <end>
+Page 131 borne: Found match for regex: <begin> * {{a|en|horse-hoarse}} <end>
+Page 131 borne: Found match for regex: <begin> ** {{homophones|en|born<aa:horse-hoarse>|;|bourn|bourne|Bourne|;|bawn<aa:non-rhotic,horse–hoarse>}} <end>
 Page 131 borne: Found match for regex: <begin> * {{a|en|non-horse-hoarse}} <end>
-Page 132 befall: Found match for regex: <begin> * {{IPA|en|/bɪˈfɔl/|a=US}}, {{IPA|en|/bɪˈfɑl/|q1=caught-cot merger}} <end>
+Page 132 befall: Found match for regex: <begin> * {{IPA|en|/bɪˈfɔl/|/bɪˈfɑl/<a:cot-caught>|a=US}} <end>
 Page 133 bend: Found match for regex: <begin> * {{IPA|en|/bɪnd/|a=pin-pen}} <end>
 Page 134 brought: Found match for regex: <begin> * {{IPA|en|/bɹɑt/|a=cot-caught}} <end>
 Page 134 brought: Found match for regex: <begin> * {{audio|en|en-us-brought.ogg|a=US,cot-caught}} <end>
 Page 135 broadcast: Found match for regex: <begin> * {{IPA|en|/ˈbɹɑdkæst/|a=Canada,cot-caught}} <end>
 Page 136 bought: Found match for regex: <begin> * {{IPA|en|/bɑt/|a=cot-caught,Northern Cities Vowel Shift}} <end>
-Page 136 bought: Found match for regex: <begin> * {{homophones|en|bot}} {{qualifier|in accents with the [[cot-caught merger]]}} <end>
+Page 136 bought: Found match for regex: <begin> * {{homophones|en|bot|aa=cot-caught}} <end>
 Page 137 caught: Found match for regex: <begin> *** {{audio|en|en-us-contrastive-caught.ogg|a=non-cot-caught}} <end>
 Page 137 caught: Found match for regex: <begin> *** {{audio|en|en-us-caught.ogg|a=US,cot-caught}} <end>
-Page 137 caught: Found match for regex: <begin> * {{homophones|en|cot|qq1=accents with cot-caught merger|court|qq2=non-rhotic accents with the [[horse-hoarse merger]]}} <end>
-Page 137 caught: Found match for regex: <begin> * {{l|en|cot-caught merger}} <end>
+Page 137 caught: Found match for regex: <begin> * {{homophones|en|cot<aa:cot-caught>|court<aa:non-rhotic,horse-hoarse>}} <end>
+Page 137 caught: Found match for regex: <begin> * {{a|en|cot-caught}} <end>
 Page 138 cost: Found match for regex: <begin> * {{IPA|en|/ˈkɑst/|a=cot-caught,Canada}} <end>
 Page 139 drawn: Found match for regex: <begin> ** {{IPA|en|/dɹɑn/|a=US,cot-caught}} <end>
 Page 140 fallen: Found match for regex: <begin> * {{IPA|en|/ˈfɑlən/|a=cot-caught}} <end>
-Page 140 fallen: Found match for regex: <begin> * {{rhymes|en|ɔːlən|ɑlən|s=2|q1=UK|q2=cot–caught merger}} <end>
+Page 140 fallen: Found match for regex: <begin> * {{rhymes|en|ɔːlən<aa:UK>|ɔlən<aa:GA>|ɑlən<aa:cot-caught>|s=2}} <end>
 Page 141 fought: Found match for regex: <begin> * {{IPA|en|/fɑt/|a=US,cot-caught,Canada}} <end>
-Page 141 fought: Found match for regex: <begin> * {{homophones|en|fort|qq1=non-rhotic accents with the [[horse-hoarse merger]]}} <end>
-Page 142 gone: Found match for regex: <begin> * {{enPR|gŏn|a=cot-caught,traditional New York City}}, {{IPA|en|/ɡɑn/}} <end>
+Page 141 fought: Found match for regex: <begin> * {{homophones|en|fort<aa:non-rhotic,horse-hoarse>}} <end>
+Page 142 gone: Found match for regex: <begin> * {{enPR|gŏn|a=cot-caught,traditional <<NYC>>}}, {{IPA|en|/ɡɑn/}} <end>
 Page 143 lend: Found match for regex: <begin> * {{IPA|en|/lɪnd/|a=pin-pen}} <end>
-Page 143 lend: Found match for regex: <begin> * {{homophones|en|lind}} {{qualifier|pin-pen merger}} <end>
+Page 143 lend: Found match for regex: <begin> * {{homophones|en|lind|aa=pin-pen}} <end>
 Page 144 lost: Found match for regex: <begin> * {{enPR|läst|a=US,cot-caught}}, {{IPA|en|/lɑst/}} <end>
 Page 145 meant: Found match for regex: <begin> * {{IPA|en|/mɪnt/|a=pin-pen}} <end>
-Page 145 meant: Found match for regex: <begin> * {{homophones|en|mint}} {{qualifier|pin-pen merger}} <end>
+Page 145 meant: Found match for regex: <begin> * {{homophones|en|mint|aa=pin-pen}} <end>
 Page 146 bog: Found match for regex: <begin> ** {{enPR|bäg|a=cot-caught}}, {{IPA|en|/bɑɡ/}} <end>
 Page 147 oar: Found match for regex: <begin> ** {{IPA|en|/oə/|a=nonrhotic,non-horse-hoarse}} <end>
-Page 147 oar: Found match for regex: <begin> ** {{homophones|en|aw|awe}} {{qualifier|in [[non-rhotic]] accents with the {{w|horse–hoarse merger}}}} <end>
+Page 147 oar: Found match for regex: <begin> ** {{homophones|en|aw|awe|aa=non-rhotic,horse–hoarse}} <end>
 Page 147 oar: Found match for regex: <begin> ** {{enPR|ōr|a=rhotic,non-horse-hoarse}}, {{IPA|en|/o(ː)ɹ/}} <end>
-Page 147 oar: Found match for regex: <begin> ** {{homophones|en|ore|o'er}}; {{l|en|or}} {{qualifier|in accents with the {{w|horse-hoarse merger}}}} <end>
-Page 148 wine: Found match for regex: <begin> * {{homophones|en|whine}} {{qualifier|in accents with the [[wine-whine merger]]}} <end>
+Page 147 oar: Found match for regex: <begin> ** {{homophones|en|ore|o'er|;|or<aa:horse-hoarse>}} <end>
+Page 148 wine: Found match for regex: <begin> * {{homophones|en|whine<aa:wine-whine>}} <end>
 Page 149 why: Found match for regex: <begin> * {{audio|en|en-ne-why.ogg|a=US,non-wine-whine}} <end>
 Page 149 why: Found match for regex: <begin> * {{audio|en|en-us-why.ogg|a=US,wine-whine}} <end>
 Page 149 why: Found match for regex: <begin> * {{audio|en|En-uk-why.ogg|a=UK,wine-whine}} <end>
-Page 149 why: Found match for regex: <begin> * {{homophones|en|wye|Y|y}} {{qualifier|all only in accents with the wine-whine merger}} <end>
+Page 149 why: Found match for regex: <begin> * {{homophones|en|wye|Y|y<aa:wine-whine>}} <end>
 Page 150 when: Found match for regex: <begin> ** {{IPA|en|/ʍɪn/|/wɪn/|a=pin-pen}} <end>
 Page 150 when: Found match for regex: <begin> * {{audio|en|en-ne-when.ogg|a=US,non-wine-whine}} <end>
 Page 150 when: Found match for regex: <begin> * {{audio|en|en-us-when.ogg|a=US,wine-whine}} <end>
 Page 150 when: Found match for regex: <begin> * {{audio|en|En-uk-when.ogg|a=UK,wine-whine}} <end>
-Page 150 when: Found match for regex: <begin> * {{homophones|en|wen}} {{qualifier|in accents with the ''wine''-''whine'' merger}}, {{l|en|win}} {{qualifier|in accents with the ''wine''–''whine'' merger and the ''pin''–''pen'' merger}} <end>
+Page 150 when: Found match for regex: <begin> * {{homophones|en|wen<aa:wine-whine>|;|win<aa:wine-whine,pin-pen>}} <end>
 Page 151 where: Found match for regex: <begin> * {{audio|en|En-uk-where.ogg|a=UK,wine-whine}} <end>
 Page 151 where: Found match for regex: <begin> * {{audio|en|en-ne-where.ogg|a=US,non-wine-whine}} <end>
 Page 151 where: Found match for regex: <begin> * {{audio|en|en-us-where.ogg|a=US,wine-whine}} <end>
-Page 151 where: Found match for regex: <begin> * {{homophones|en|ware|wear|we're}} {{qualifier|in accents with the [[w:Wine-whine merger|''wine''–''whine'' merger]]}} <end>
-Page 152 addition: Found match for regex: <begin> * {{homophones|en|edition}} {{a|en|weak vowel}} <end>
+Page 151 where: Found match for regex: <begin> * {{homophones|en|ware|wear|aa=wine-whine}} <end>
+Page 152 addition: Found match for regex: <begin> * {{homophones|en|edition|aa=weak vowel}} <end>
 Page 153 y'all: Found match for regex: <begin> * {{IPA|en|/jɑl/|a=cot-caught}} <end>
 Page 154 cough: Found match for regex: <begin> * {{enPR|kŏf|a=Canada,cot-caught}}, {{IPA|en|/kɑf/}} <end>
-Page 154 cough: Found match for regex: <begin> * {{homophones|en|qoph}} {{q|one pronunciation, cot-caught merger}} <end>
+Page 154 cough: Found match for regex: <begin> * {{homophones|en|qoph|aa=US,cot-caught}} <end>
 Page 155 business: Found match for regex: <begin> * {{IPA|en|/ˈbɪz.nəs/|/ˈbɪz.nəz/|a=weak vowel}} <end>
-Page 156 whistler: Found match for regex: <begin> * {{IPA|en|/ˈʍɪslə(ɹ)/|q2=wine–whine merger|/ˈwɪslə(ɹ)/}} <end>
-Page 157 body: Found match for regex: <begin> * {{homophones|en|bawdy}} {{qualifier|in accents with the [[cot-caught merger]]}} <end>
+Page 156 whistler: Found match for regex: <begin> * {{IPA|en|/ˈʍɪslə(ɹ)/|a2=wine–whine|/ˈwɪslə(ɹ)/}} <end>
+Page 157 body: Found match for regex: <begin> * {{homophones|en|bawdy|aa=cot-caught}} <end>
 Page 158 before: Found match for regex: <begin> * {{enPR|bĭfōrʹ|a=rhotic,non-horse-hoarse}}, {{IPA|en|/bɪˈfo(ː)ɹ/}} <end>
 Page 158 before: Found match for regex: <begin> * {{IPA|en|/bɪˈfoə/|a=nonrhotic,non-horse-hoarse}} <end>
-Page 159 chalk: Found match for regex: <begin> * {{IPA|en|/t͡ʃɑk/|a=cot-caught,northern cities vowel shift}} <end>
+Page 159 chalk: Found match for regex: <begin> * {{IPA|en|/t͡ʃɑk/|a=cot-caught,Inland Northern US}} <end>
 Page 160 basket: Found match for regex: <begin> ** {{IPA|en|/ˈbæskət/|a=weak vowel}} <end>
-Page 161 put: Found match for regex: <begin> * {{homophone|en|putt|qq1=accents without [[foot-strut split]]}} <end>
+Page 161 put: Found match for regex: <begin> * {{homophone|en|putt|aa=non-foot-strut split}} <end>
 Page 162 report: Found match for regex: <begin> * {{IPA|en|/ɹɪˈpo(ː)ɹt/|a=rhotic,non-horse-hoarse}} <end>
 Page 162 report: Found match for regex: <begin> * {{IPA|en|/ɹɪˈpoət/|a=nonrhotic,non-horse-hoarse}} <end>
 Page 163 rethought: Found match for regex: <begin> * {{IPA|en|/ɹiːˈθɑt/|a=cot-caught}} <end>
 Page 164 saw: Found match for regex: <begin> * {{enPR|sä|a=cot-caught}}, {{IPA|en|/ˈsɑ/}} <end>
 Page 165 sought: Found match for regex: <begin> * {{IPA|en|/sɑt/|a=cot-caught}} <end>
-Page 165 sought: Found match for regex: <begin> * {{homophones|en|sort}} {{qualifier|in [[non-rhotic]] accents}}, [[sot]] {{qualifier|with cot-caught merger}} <end>
+Page 165 sought: Found match for regex: <begin> * {{homophones|en|sort<aa:non-rhotic>|sot<aa:cot-caught>}} <end>
 Page 166 shear: Found match for regex: <begin> * {{IPA|en|/ʃɛə/|a=near-square}} <end>
 Page 167 shorn: Found match for regex: <begin> * {{IPA|en|/ʃo(ː)ɹn/|a=rhotic,non-horse-hoarse}} <end>
 Page 167 shorn: Found match for regex: <begin> * {{IPA|en|/ʃoən/|a=nonrhotic,non-horse-hoarse}} <end>
-Page 167 shorn: Found match for regex: <begin> * {{homophones|en|Sean|Shawn|Shaun}} {{qualifier|[[non-rhotic]] accents with the horse–hoarse merger}} <end>
+Page 167 shorn: Found match for regex: <begin> * {{homophones|en|Sean|Shawn|Shaun|aa=non-rhotic,horse-hoarse}} <end>
 Page 168 shone: Found match for regex: <begin> * {{IPA|en|/ʃɑn/|a=US,cot-caught,CA}} <end>
 Page 169 arid: Found match for regex: <begin> ** {{audio|en|En-us-ne-arid.ogg|a=New England,non-Mary-marry-merry}} <end>
 Page 169 arid: Found match for regex: <begin> ** {{audio|en|en-us-arid.ogg|a=US,Mary-marry-merry}} <end>
@@ -265,45 +263,45 @@ Page 171 swore: Found match for regex: <begin> * {{IPA|en|/swoə/|a=nonrhotic,no
 Page 172 sworn: Found match for regex: <begin> * {{IPA|en|/swo(ː)ɹn/|a=rhotic,non-horse-hoarse}} <end>
 Page 172 sworn: Found match for regex: <begin> * {{IPA|en|/swoən/|a=nonrhotic,non-horse-hoarse}} <end>
 Page 173 taught: Found match for regex: <begin> * {{enPR|tät|a=cot-caught}}, {{IPA|en|/tɑt/}} <end>
-Page 173 taught: Found match for regex: <begin> * {{hmp|en|taut|tort|qq2=non-rhotic accents|tot|qq3=with cot-caught merger|thought|qq4=Hiberno-English}} <end>
+Page 173 taught: Found match for regex: <begin> * {{hmp|en|taut|;|tort|aa2=non-rhotic|;|tot|aa3=cot-caught|;|thought|aa4=Hiberno-English}} <end>
 Page 174 tore: Found match for regex: <begin> * {{enPR|tōr|a=rhotic,non-horse-hoarse}}, {{IPA|en|/to(ː)ɹ/}} <end>
 Page 174 tore: Found match for regex: <begin> * {{IPA|en|/toə/|a=nonrhotic,non-horse-hoarse}} <end>
-Page 174 tore: Found match for regex: <begin> * {{homophones|en|tor|qq1=in accents with the horse-hoarse merger|taw|qq2=in non-rhotic accents with the horse-hoarse merger}} <end>
+Page 174 tore: Found match for regex: <begin> * {{homophones|en|tor<aa:horse-hoarse>|;|taw<aa:non-rhotic,horse-hoarse>}} <end>
 Page 175 torn: Found match for regex: <begin> * {{enPR|tōrn|a=rhotic,non-horse-hoarse}}, {{IPA|en|/to(ː)ɹn/}} <end>
 Page 175 torn: Found match for regex: <begin> * {{IPA|en|/toən/|a=nonrhotic,non-horse-hoarse}} <end>
-Page 175 torn: Found match for regex: <begin> ** {{homophones|en|tawn}} {{qualifier|nonrhotic accents with the {{w|horse–hoarse merger}}}} <end>
+Page 175 torn: Found match for regex: <begin> ** {{homophones|en|tawn|aa=non-rhotic,horse-hoarse}} <end>
 Page 176 thought: Found match for regex: <begin> ** {{IPA|en|/θɑt/|a=cot-caught}} <end>
-Page 176 thought: Found match for regex: <begin> * {{homophones|en|thot}} {{qualifier|in accents with the cot-caught merger}} <end>
-Page 177 wear: Found match for regex: <begin> * {{homophones|en|ware|qq1=general|where|qq2=with [[wine-whine merger]]|were|we're|qq4=some accents}} <end>
+Page 176 thought: Found match for regex: <begin> * {{homophones|en|thot|aa=cot-caught}} <end>
+Page 177 wear: Found match for regex: <begin> * {{homophones|en|ware|;|where<aa:wine-whine>|;|were|we're<aa:some accents>}} <end>
 Page 178 wore: Found match for regex: <begin> * {{enPR|wōr|a=rhotic,non-horse-hoarse}}, {{IPA|en|/wo(ː)ɹ/}} <end>
 Page 178 wore: Found match for regex: <begin> * {{IPA|en|/woə/|a=nonrhotic,non-horse-hoarse}} <end>
-Page 178 wore: Found match for regex: <begin> * {{homophones|en|war}} {{qualifier|accents with the {{w|horse–hoarse merger}}}}; {{l|en|Waugh}} {{qualifier|non-rhotic accents with the {{w|horse–hoarse merger}}}} <end>
+Page 178 wore: Found match for regex: <begin> * {{homophones|en|war<aa:horse-hoarse>|;|Waugh<aa:non-rhotic,horse-hoarse>}} <end>
 Page 179 worn: Found match for regex: <begin> * {{IPA|en|/wo(ː)ɹn/|a=rhotic,non-horse-hoarse}} <end>
 Page 179 worn: Found match for regex: <begin> * {{IPA|en|/woən/|a=nonrhotic,non-horse-hoarse}} <end>
-Page 179 worn: Found match for regex: <begin> * {{homophones|en|warn}} {{qualifier|accents with the horse-hoarse merger}} <end>
-Page 180 wet: Found match for regex: <begin> * {{homophones|en|whet}} {{qualifier|in accents with the [[wine-whine merger]]}} <end>
-Page 181 wind: Found match for regex: <begin> * {{hmp|en|wined|whined}} {{q|in accents with the [[wine-whine merger]]}} <end>
+Page 179 worn: Found match for regex: <begin> * {{homophones|en|warn|aa=horse-hoarse}} <end>
+Page 180 wet: Found match for regex: <begin> * {{homophones|en|whet|aa=wine-whine}} <end>
+Page 181 wind: Found match for regex: <begin> * {{hmp|en|wined|whined|aa=wine-whine}} <end>
 Page 182 withdraw: Found match for regex: <begin> * {{IPA|en|/wɪðˈdɹɑ/|/wɪθˈdɹɑ/|a=cot-caught}} <end>
 Page 183 withdrawn: Found match for regex: <begin> * {{IPA|en|/wɪðˈdɹɑn/|/wɪθˈdɹɑn/|a=cot-caught}} <end>
-Page 184 sot: Found match for regex: <begin> * {{homophone|en|sought}} {{qualifier|in accents with the [[cot-caught merger]]}} <end>
+Page 184 sot: Found match for regex: <begin> * {{homophone|en|sought|aa=cot-caught}} <end>
 Page 185 cause: Found match for regex: <begin> * {{IPA|en|/ˈkɑz/|a=Canada,cot-caught}} <end>
-Page 186 diphthong: Found match for regex: <begin> * {{IPA|en|/ˈdɪfˌθɑŋ/|a=CA,US,cot-caught}}; {{a|en|proscribed}} {{IPAchar|/ˈdɪpˌθɑŋ/}} <end>
-Page 187 cook: Found match for regex: <begin> * {{homophone|en|cuck|qq1=most accents without the foot-strut split}} <end>
+Page 186 diphthong: Found match for regex: <begin> * {{IPA|en|/ˈdɪfˌθɑŋ/|a=CA,US,cot-caught|;|/ˈdɪpˌθɑŋ/<a:proscribed>}} <end>
+Page 187 cook: Found match for regex: <begin> * {{homophone|en|cuck|aa=most accents <<non-foot-strut split>>}} <end>
 Page 188 cloth: Found match for regex: <begin> * {{enPR|klŏth|a=cot-caught,Canada}}, {{IPA|en|/klɑθ/}} <end>
-Page 189 lark: Found match for regex: <begin> * {{homophones|en|lakh|qq1=RP|lock|qq2=non-rhotic with father-bother merger}} <end>
+Page 189 lark: Found match for regex: <begin> * {{homophones|en|lakh|aa1=RP|lock|aa2=non-rhotic,father-bother}} <end>
 Page 190 ball: Found match for regex: <begin> * {{IPA|en|/bɑl/|a=Canada,cot-caught}} <end>
-Page 190 ball: Found match for regex: <begin> * {{homophones|en|bawl|qq1=general|Basle|qq2=cot-caught merger}} <end>
-Page 191 collar: Found match for regex: <begin> * {{homophones|en|caller}} {{qualifier|in accents with the [[cot-caught merger]]}} <end>
+Page 190 ball: Found match for regex: <begin> * {{homophones|en|bawl|;|Basle|aa2=cot-caught}} <end>
+Page 191 collar: Found match for regex: <begin> * {{homophones|en|caller|aa=cot-caught}} <end>
 Page 192 applaud: Found match for regex: <begin> * {{IPA|en|/əˈplɑd/|a=cot-caught}} <end>
 Page 193 drawl: Found match for regex: <begin> * {{IPA|en|/dɹɑl/|a=cot-caught}} <end>
 Page 194 effect: Found match for regex: <begin> * {{IPA|en|/əˈfɛkt/|a=GA,weak vowel}} <end>
-Page 194 effect: Found match for regex: <begin> * {{homophones|en|affect|qq1=weak vowel merger}} <end>
+Page 194 effect: Found match for regex: <begin> * {{homophones|en|affect|aa=weak vowel}} <end>
 Page 195 door: Found match for regex: <begin> * {{enPR|dōrʹ|a=rhotic,non-horse-hoarse}}, {{IPA|en|/do(ː)ɹ/}} <end>
 Page 195 door: Found match for regex: <begin> * {{IPA|en|/doə/|a=nonrhotic,non-horse-hoarse}} <end>
-Page 195 door: Found match for regex: <begin> * {{homophones|en|dour}} {{qualifier|{{w|cure-force merger}}; one pronunciation}} <end>
+Page 195 door: Found match for regex: <begin> * {{homophones|en|dour|aa=in one pronunciation, with the <<pour-poor>>}} <end>
 Page 196 drawer: Found match for regex: <begin> ** {{IPA|en|/ˈdɹɑ.ɚ/|a=cot-caught}} <end>
 Page 197 end: Found match for regex: <begin> * {{IPA|en|/ɪnd/|a=pin-pen}} <end>
-Page 197 end: Found match for regex: <begin> * {{homophone|en|Ind}} {{q|pin–pen merger}} <end>
+Page 197 end: Found match for regex: <begin> * {{homophone|en|Ind|a=pin-pen}} <end>
 Page 198 sparrow: Found match for regex: <begin> * {{audio|en|En-us-ne-sparrow.ogg|a=New England,non-Mary-marry-merry}} <end>
 Page 198 sparrow: Found match for regex: <begin> * {{audio|en|en-us-sparrow.ogg|a=US,Mary-marry-merry}} <end>
 Page 199 enforce: Found match for regex: <begin> * {{enPR|-fōrsʹ|a=rhotic,non-horse-hoarse}}, {{IPA|en|/-ˈfo(ː)ɹs/}} <end>
@@ -311,10 +309,10 @@ Page 199 enforce: Found match for regex: <begin> * {{IPA|en|/-ˈfoəs/|a=nonrhot
 Page 200 proportion: Found match for regex: <begin> * {{IPA|en|/pɹəˈpo(ː)ɹʃən/|a=rhotic,non-horse-hoarse}} <end>
 Page 200 proportion: Found match for regex: <begin> * {{IPA|en|/pɹəˈpoəʃən/|a=nonrhotic,non-horse-hoarse}} <end>
 Page 201 rabbit: Found match for regex: <begin> * {{enPR|răb'ət|a=Australia,weak vowel}}, {{IPA|en|/ˈɹæbət/}} <end>
-Page 202 ROM: Found match for regex: <begin> ** {{qualifier|dialects with the father-bother merger}} {{IPA|en|/ɹɑm/}} <end>
+Page 202 ROM: Found match for regex: <begin> ** {{IPA|en|/ɹɑm/|a=father-bother}} <end>
 Page 203 pawn: Found match for regex: <begin> * {{IPA|en|/pɑn/|a=cot-caught}} <end>
 Page 204 dialogue: Found match for regex: <begin> * {{IPA|en|/ˈdaɪəˌlɑɡ/|a=Canada,GA,cot-caught}} <end>
-Page 205 dark: Found match for regex: <begin> * {{homophones|en|doc|dock|qq2=non-rhotic with father-bother merger}} <end>
+Page 205 dark: Found match for regex: <begin> * {{homophones|en|doc|dock|aa=non-rhotic,father-bother}} <end>
 Page 206 long: Found match for regex: <begin> * {{enPR|läng|a=cot-caught,Canada}}, {{IPA|en|/lɑŋ/}} <end>
 Page 207 tall: Found match for regex: <begin> * {{IPA|en|/tɑl/|a=cot-caught}} <end>
 Page 207 tall: Found match for regex: <begin> * {{audio|en|En-us-tall.ogg|a=US,cot-caught}} <end>
@@ -332,7 +330,7 @@ Page 214 sword: Found match for regex: <begin> * {{homophones|en|soared|sawed|a2
 Page 215 near: Found match for regex: <begin> * {{IPA|en|/nɛə/|a=near-square}} <end>
 Page 216 ashes: Found match for regex: <begin> * {{IPA|en|/ˈæʃ.əz/|a=weak vowel}} <end>
 Page 217 many: Found match for regex: <begin> ** {{IPA|en|/ˈmɪni/|a=pin-pen}} <end>
-Page 217 many: Found match for regex: <begin> *** {{homophones|en|mini}} {{qualifier|pin-pen merger}} <end>
+Page 217 many: Found match for regex: <begin> *** {{homophones|en|mini|aa=pin-pen}} <end>
 Page 218 engine: Found match for regex: <begin> * {{IPA|en|/ˈɪnd͡ʒɪn/|a=pin-pen}} <end>
 Page 218 engine: Found match for regex: <begin> * {{IPA|en|/ˈɛnd͡ʒən/|a=weak vowel}} <end>
 Page 219 courage: Found match for regex: <begin> ** {{audio|en|en-us-ne-courage.ogg|a=New England,non-hurry-furry}} <end>
@@ -340,67 +338,65 @@ Page 219 courage: Found match for regex: <begin> ** {{audio|en|en-us-courage.ogg
 Page 220 analog: Found match for regex: <begin> * {{IPA|en|/ˈæ.nə.lɑɡ/|a=US,cot-caught,Canada}} <end>
 Page 221 election: Found match for regex: <begin> * {{IPA|en|/əˈlɛkʃ(ə)n/|a=weak vowel}} <end>
 Page 222 washer: Found match for regex: <begin> * {{IPA|en|/ˈwɑʃɚ/|a=Canada,NYC,cot-caught}} <end>
-Page 223 shock: Found match for regex: <begin> * {{homophones|en|shark|qq1=non-rhotic with father-bother merger}} <end>
+Page 223 shock: Found match for regex: <begin> * {{homophones|en|shark|aa=non-rhotic,father-bother}} <end>
 Page 224 exhaust: Found match for regex: <begin> * {{IPA|en|/ɪɡˈzɑst/|a=cot-caught}} <end>
-Page 225 beard: Found match for regex: <begin> * {{homophones|en|beared}} {{q|in accents with the [[w:near-square merger|near-square merger]]}} <end>
+Page 225 beard: Found match for regex: <begin> * {{homophones|en|beared|aa=near-square}} <end>
 Page 226 pour: Found match for regex: <begin> * {{enPR|pōr|a=rhotic,non-horse-hoarse}}, {{IPA|en|/po(ː)ɹ/}} <end>
 Page 226 pour: Found match for regex: <begin> * {{IPA|en|/poə/|a=nonrhotic,non-horse-hoarse}} <end>
-Page 226 pour: Found match for regex: <begin> * {{homophones|en|pore}}; {{l|en|poor}} {{qualifier|in accents with the {{w|pour–poor merger}}}}; {{l|en|paw}} {{qualifier|non-rhotic accents with the {{w|horse–hoarse merger}}}} <end>
+Page 226 pour: Found match for regex: <begin> * {{homophones|en|pore|;|poor<aa:pour-poor>|;|paw<aa:non-rhotic,horse-hoarse>}} <end>
 Page 227 withdrawal: Found match for regex: <begin> * {{IPA|en|/wɪðˈdɹɑ(ə)l/|/wɪθˈdɹɑ(ə)l/|a=cot-caught}} <end>
 Page 228 ore: Found match for regex: <begin> * {{enPR|ōr|a=rhotic,non-horse-hoarse}}, {{IPA|en|/o(ː)ɹ/}} <end>
 Page 228 ore: Found match for regex: <begin> * {{IPA|en|/oə/|a=nonrhotic,non-horse-hoarse}} <end>
-Page 228 ore: Found match for regex: <begin> * {{homophones|en|oar|o'er}}; {{l|en|or}} {{qualifier|in accents with the {{w|horse-hoarse merger}}}}; {{l|en|aw}}, {{l|en|awe}} {{qualifier|in [[non-rhotic]] accents with the {{w|horse–hoarse merger}}}} <end>
+Page 228 ore: Found match for regex: <begin> * {{homophones|en|oar|o'er|;|or<aa:horse-hoarse>|;|aw|awe<aa:non-rhotic,horse-hoarse>}} <end>
 Page 229 gem: Found match for regex: <begin> ** {{IPA|en|/d͡ʒɪm/|a=pin-pen}} <end>
-Page 230 yon: Found match for regex: <begin> * {{homophones|en|yawn}} {{qualifier|with [[cot-caught merger]]}} <end>
-Page 231 mock: Found match for regex: <begin> * {{homophones|en|mark|Mark|marque|qq3=non-rhotic with father-bother merger}} <end>
+Page 230 yon: Found match for regex: <begin> * {{homophones|en|yawn|aa=cot-caught}} <end>
+Page 231 mock: Found match for regex: <begin> * {{homophones|en|mark|Mark|marque|aa=non-rhotic,father-bother}} <end>
 Page 232 moron: Found match for regex: <begin> * {{IPA|en|/mo(ː)ɹɒn/|/-ɑn/|a=non-horse-hoarse}} <end>
 Page 233 squash: Found match for regex: <begin> * {{IPA|en|/skwɑʃ/|a=US,cot-caught}} <end>
 Page 234 floor: Found match for regex: <begin> * {{enPR|flōr|a=rhotic,non-horse-hoarse}}, {{IPA|en|/flo(ː)ɹ/}} <end>
 Page 234 floor: Found match for regex: <begin> * {{IPA|en|/floə/|a=nonrhotic,non-horse-hoarse}} <end>
-Page 235 mark: Found match for regex: <begin> * {{homophones|en|Mark|marque|qq2=general|mock|qq3=non-rhotic with father-bother merger}} <end>
+Page 235 mark: Found match for regex: <begin> * {{homophones|en|Mark|marque|;|mock<aa:non-rhotic,father-bother>}} <end>
 Page 236 penguin: Found match for regex: <begin> * {{IPA|en|/ˈpɪŋɡwɪn/|a=pin-pen,Canada}} <end>
 Page 237 coffee: Found match for regex: <begin> ** {{IPA|en|/ˈkɑ.fi/|a=cot-caught}} <end>
 Page 238 hem: Found match for regex: <begin> ** {{IPA|en|/hɪm/|a=pin-pen}} <end>
-Page 238 hem: Found match for regex: <begin> * {{homophones|en|him}} {{qualifier|pin-pen merger}} <end>
+Page 238 hem: Found match for regex: <begin> * {{homophones|en|him|aa=pin-pen}} <end>
 Page 238 hem: Found match for regex: <begin> ** {{IPA|en|/hɪm/|a=pin-pen}} <end>
-Page 238 hem: Found match for regex: <begin> * {{homophones|en|him}} {{qualifier|pin-pen merger}} <end>
+Page 238 hem: Found match for regex: <begin> * {{homophones|en|him|aa=pin-pen}} <end>
 Page 239 quiet: Found match for regex: <begin> * {{enPR|kwī'ət|a=weak vowel}}, {{IPA|en|/ˈkwaɪ.ət/}} <end>
-Page 240 Laura: Found match for regex: <begin> * {{homophones|en|Lara|qq1=with {{w|cot-caught merger|cot-caught}} and {{w|father-bother merger}}s}} <end>
-Page 241 wee: Found match for regex: <begin> * {{homophones|en|oui|we|whee|qq3=in accents with the [[wine-whine merger]]|Wii}} <end>
+Page 241 wee: Found match for regex: <begin> * {{homophones|en|oui|we|Wii|;|whee<aa:wine-whine>}} <end>
 Page 242 memory: Found match for regex: <begin> * {{IPA|en|/ˈmɪm(ə)ɹi/|a=pin-pen}} <end>
 Page 243 twenty-four: Found match for regex: <begin> * {{enPR|fōr|a=rhotic,non-horse-hoarse}}, {{IPA|en|/ˌtwɛntiˈfo(ː)ɹ/}} <end>
 Page 243 twenty-four: Found match for regex: <begin> * {{IPA|en|/ˌtwɛntiˈfoə/|a=nonrhotic,non-horse-hoarse}} <end>
-Page 244 Australian: Found match for regex: <begin> * {{IPA|en|/ɑˈstɹɛ.li.ən/|/ɑˈstɹɛl.jən/|/-ɹeɪ(l)-/|a=cot-caught,Canada}} <end>
 Page 245 Austrian: Found match for regex: <begin> * {{IPA|en|/ˈɑ.stɹi.ən/|a=cot-caught,Canada}} <end>
 Page 246 sense: Found match for regex: <begin> * {{IPA|en|/sɪn(t)s/|a=pin-pen}} <end>
-Page 246 sense: Found match for regex: <begin> * {{homophones|en|cents|scents|since}} {{q|pin-pen merger}} <end>
+Page 246 sense: Found match for regex: <begin> * {{homophones|en|cents|scents|;|since<aa:pin-pen>}} <end>
 Page 247 southpaw: Found match for regex: <begin> * {{IPA|en|/ˈsaʊθˌpɑ/|a=cot-caught}} <end>
 Page 248 call: Found match for regex: <begin> * {{IPA|en|/kɑl/|[kʰɑɫ]|a=cot-caught}} <end>
-Page 248 call: Found match for regex: <begin> * {{homophone|en|coll|qq1=with the [[cot-caught merger]]}} <end>
-Page 249 otto: Found match for regex: <begin> * {{homophones|en|Otto|auto}} {{q|with cot-caught merger}} <end>
-Page 250 rot: Found match for regex: <begin> * {{homophones|en|wrought|qq1=in accents with the [[cot-caught merger|''cot–caught'' merger]]}} <end>
-Page 251 cord: Found match for regex: <begin> * {{homophones|en|chord|cored|qq2=in accents with the [[horse-hoarse merger]]|cawed|qq3=in [[non-rhotic]] accents}} <end>
+Page 248 call: Found match for regex: <begin> * {{homophone|en|coll|aa=cot-caught}} <end>
+Page 249 otto: Found match for regex: <begin> * {{homophones|en|Otto|;|auto<aa:cot-caught>}} <end>
+Page 250 rot: Found match for regex: <begin> * {{homophones|en|wrought|aa=cot-caught}} <end>
+Page 251 cord: Found match for regex: <begin> * {{homophones|en|chord|;|cored<aa:horse-hoarse>|;|cawed<aa:non-rhotic>}} <end>
 Page 252 moth: Found match for regex: <begin> * {{IPA|en|/mɑθ/|a=cot-caught,Canada}}, {{enPR|mŏth}} <end>
-Page 253 cor: Found match for regex: <begin> * {{hmp|en|caw|corps|core|qq1=non-rhotic accents only|qq3=in accents with the [[horse-hoarse merger]]}} <end>
+Page 253 cor: Found match for regex: <begin> * {{hmp|en|corps|;|core<aa:horse-hoarse>|;|caw<aa:non-rhotic>}} <end>
 Page 254 dawn: Found match for regex: <begin> * {{IPA|en|/dɑn/|a=cot-caught}} <end>
-Page 254 dawn: Found match for regex: <begin> * {{homophones|en|don|Don}} {{q|accents with the cot-caught merger}} <end>
-Page 255 Paris: Found match for regex: <begin> * {{rhymes|en|æɹɪs|ɛɹɪs|s=2|q1=Received Pronunciation, NYC|q2=General American, Canada, Mary-marry-merry merger}} <end>
-Page 255 Paris: Found match for regex: <begin> * {{homophones|en|Perris}} {{q-lite|in accents with the ''Mary–marry–merry'' merger}} <end>
-Page 256 mint: Found match for regex: <begin> * {{homophones|en|meant}} {{qualifier|pin-pen merger}} <end>
-Page 257 rook: Found match for regex: <begin> * {{homophone|en|ruck|qq1=most accents without foot-strut split}} <end>
+Page 254 dawn: Found match for regex: <begin> * {{homophones|en|don|Don|aa=cot-caught}} <end>
+Page 255 Paris: Found match for regex: <begin> * {{rhymes|en|æɹɪs<aa:RP,NYC,nMmmm>|ɛɹɪs<aa:GA,Canada,Mmmm>|s=2}} <end>
+Page 255 Paris: Found match for regex: <begin> * {{homophones|en|Perris|aa=Mmmm}} <end>
+Page 256 mint: Found match for regex: <begin> * {{homophones|en|meant|aa=pin-pen}} <end>
+Page 257 rook: Found match for regex: <begin> * {{homophone|en|ruck|aa=most accents <<non-foot-strut split>>}} <end>
 Page 258 California: Found match for regex: <begin> * {{a|en|non-horse-hoarse}} <end>
-Page 259 wok: Found match for regex: <begin> * {{homophones|en|walk}} {{qualifier|in accents with the [[cot-caught merger]]}} <end>
+Page 259 wok: Found match for regex: <begin> * {{homophones|en|walk|aa=cot-caught}} <end>
 Page 260 cobalt: Found match for regex: <begin> ** {{IPA|en|/ˈkoʊ.bɑlt/|a=cot-caught,Canada}} <end>
 Page 261 auspicious: Found match for regex: <begin> ** {{IPA|en|/ɑˈspɪʃ.əs/|a=cot-caught,Canada}} <end>
 Page 262 almanac: Found match for regex: <begin> * {{IPA|en|[ˈɑl.mə.næk]|[ˈæl-]|a=cot-caught,Canada}} <end>
-Page 263 pa: Found match for regex: <begin> * {{homophones|en|pah|qq1=etymology 2|par|qq2=non-rhotic|paw|qq3=with {{w|cot-caught merger|cot-caught}} and {{w|father-bother merger}}s}} <end>
+Page 263 pa: Found match for regex: <begin> * {{homophones|en|pah<qq:Etymology 2>|;|par<aa:non-rhotic>|;|paw<aa:cot-caught,father-bother>}} <end>
 Page 264 jaunt: Found match for regex: <begin> ** {{IPA|en|/d͡ʒɑnt/|a=cot-caught,Canada}} <end>
 Page 265 online: Found match for regex: <begin> ** {{IPA|en|/ɑnlaɪn/|a=cot-caught}} <end>
 Page 265 online: Found match for regex: <begin> ** {{IPA|en|/ɑnˈlaɪn/|a=cot-caught}} <end>
 Page 266 alter: Found match for regex: <begin> * {{IPA|en|/ˈɑl.tɚ/|a=cot-caught,Canada}} <end>
 Page 267 fork: Found match for regex: <begin> * {{IPA|en|/fɔ(ː)ɹk/|a=non-horse-hoarse,rhotic}} <end>
 Page 268 paradigm: Found match for regex: <begin> *: {{audio|en|en-us-paradigm.ogg|a=US,Mary-marry-merry}} <end>
-Page 269 currant: Found match for regex: <begin> * {{IPA|en|/ˈkʌɹənt/|/ˈkɝənt/|q2=[[hurry-furry merger]]|a=RP,GA}} <end>
+Page 269 currant: Found match for regex: <begin> * {{IPA|en|/ˈkʌɹənt/|;|/ˈkɝənt/<a:hurry-furry>|a=RP,GA}} <end>
 Page 269 currant: Found match for regex: <begin> * {{homophone|en|current|courant|qq2=[[hurry-furry merger|hurry-furry]] and [[cure-nurse merger]]}} <end>
 Page 270 Neapolitan: Found match for regex: <begin> * {{IPA|en|/ˌniːəˈpɑlətən/|a=weak vowel}} <end>
 Page 271 launder: Found match for regex: <begin> * {{IPA|en|/ˈlɑndɚ/|a=cot-caught}} <end>
