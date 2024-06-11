@@ -3,10 +3,11 @@ local export = {}
 local html = mw.html.create
 local m_links = require("Module:links")
 local m_languages = require("Module:languages")
-local m_table = require("Module:table")
+local m_str_utils = require("Module:string utilities")
 local parse_utilities_module = "Module:parse utilities"
 
-local rsplit = mw.text.split
+local split = m_str_utils.split
+local u = m_str_utils.char
 
 local function format_list_items(list, args)
 	local function term_already_linked(term)
@@ -34,6 +35,15 @@ local function format_list_items(list, args)
 	return list
 end
 
+local function make_sortbase(item)
+	if item == false then
+		return "*" -- doesn't matter, will be omitted in format_list_items()
+	elseif type(item) == "table" then
+		return item.alt or item.term
+	end
+	return item
+end
+
 function export.create_list(args)
 	-- Fields in args that are used:
 	-- args.column_count, args.content, args.alphabetize, args.background_color,
@@ -55,15 +65,7 @@ function export.create_list(args)
 	end
 
 	if args.alphabetize then
-		local function keyfunc(item)
-			if item == false then
-				item = "*" -- doesn't matter, will be omitted in format_list_items()
-			elseif type(item) == "table" then
-				item = item.alt or item.term
-			end
-			return item
-		end
-		require("Module:collation").sort(args.content, args.lang, keyfunc)
+		require("Module:collation").sort(args.content, args.lang, make_sortbase)
 	end
 
 	local list = html("ul")
@@ -78,7 +80,7 @@ function export.create_list(args)
 		:node(list)
 
 	if args.collapse then
-		local nbsp = mw.ustring.char(0xA0)
+		local nbsp = u(0xA0)
 		output = html("div")
 			:node(output)
 			:addClass("list-switcher")
@@ -126,7 +128,7 @@ local param_mods = {
 		-- [[Module:links]] expects.
 		item_dest = "genders",
 		convert = function(arg, parse_err)
-			return rsplit(arg, ",")
+			return split(arg, ",", true)
 		end,
 	},
 	id = {},
