@@ -8,6 +8,34 @@ local string_utilities_module = "Module:string utilities"
 local table_module = "Module:table"
 local utilities_module = "Module:utilities"
 
+--[==[ intro:
+Labels go through several stages of processing to get from the original (raw) label specified in the Wikicode to the
+final (formatted) label displayed to the user. The following terminology will help keep things straight:
+
+* The "raw label" is the label specified in the Wikicode.
+* The "non-canonical label" is the label extracted from the raw label, used for looking up in the label modules in order
+  to fetch the associated label data structure and determine the canonical form of the label. Normally this is the same
+  as the raw label, but it will be different if the raw label is of the form `!<var>label</var>` (e.g. `!Australian`)
+  `<var>label</var>!<var>display</var>` (e.g. `Southern US!Southern`). The former syntax indicates that the label
+  should display as-is instead of in its canonical form (which in the example given is `Australia`), and the latter
+  syntax indicates that the label should display in the form specified after the exclamation point.
+* The "canonical label" is the result of applying alias resolution to the non-canonical label. Normally, the
+  canonical label rather than the non-canonical label is what is shown to the user.
+* The "display form of the label" is what is shown to the user, not considering links and HTML that may wrap the
+  display form to get the formatted form of the label. The display form comes from the `.display` field of the module
+  label data for the label; if no such field exists in the label data, it is normally the canonical label. However, if
+  the display override exists (see below), it takes precedence over the `.display` field or canonical label when
+  determining the display form of the label.
+* The "display override", if specified, overrides all other means of determining the display form of the label. It is
+  specified in two circumstances, i.e. in the `!<var>label</var>` and `<var>label</var>!<var>display</var>` raw label
+  formats (i.e. in the same cirumstances where the raw label and non-canonical label are different).
+* The "formatted form of the label" is the final form of the label shown directly to the user. It generally appears to
+  the user as the display form of the label, but in the Wikicode, the formatted form may wrap the display form with a
+  link to Wikipedia, the Wiktionary glossary or another Wiktionary entry, and that link in turn may be wrapped in an
+  HTML span with a "deprecated" CSS class attached, causing the label to display differently (to indicate that it is
+  deprecated).
+]==]
+
 -- for testing
 local force_cat = false
 
@@ -229,19 +257,19 @@ function export.get_submodules(lang)
 end
 
 --[==[
-Return the displayed form of a label `label`, given (a) the label data structure `labdata` from one of the data
-modules; (b) the language object `lang` of the language being processed, or nil for no language; (c) `deprecated`
-(true if the label is deprecated, otherwise the deprecation information is taken from `labdata`); (d) `override_display`
-(always use the label in `label` as the display value, instead of any value in `labdata.display` or
-`labdata.special_display`; (e) `mode` (same as `data.mode` passed to {get_label_info()}). Returns two values: the
-displayed label form and a boolean indicating whether the label is deprecated.
+Return the formatted form of a label `label` (which should be the canonical form of the label; see comment at top),
+given (a) the label data structure `labdata` from one of the data modules; (b) the language object `lang` of the
+language being processed, or nil for no language; (c) `deprecated` (true if the label is deprecated, otherwise the
+deprecation information is taken from `labdata`); (d) `override_display` (if specified, override the display form of the
+label with the specified string, instead of any value in `labdata.display` or `labdata.special_display` or the canonical
+label in `label` itself); (e) `mode` (same as `data.mode` passed to {get_label_info()}). Returns two values: the
+formatted label form and a boolean indicating whether the label is deprecated.
 
-'''NOTE: Under normal circumstances, do not use this.''' It is intended for internal use by
-[[Module:alternative forms]]. Instead, use {get_label_info()}, which searches all the data modules for a given label
-and handles other complications.
+'''NOTE: Under normal circumstances, do not use this.''' Instead, use {get_label_info()}, which searches all the data
+modules for a given label and handles other complications.
 ]==]
-function export.get_displayed_label(label, labdata, lang, deprecated, override_display, mode)
-	local displayed_label
+function export.format_label(label, labdata, lang, deprecated, override_display, mode)
+	local formatted_label
 
 	mode = validate_mode(mode)
 	local function labprop(prop)
@@ -261,7 +289,7 @@ function export.get_displayed_label(label, labdata, lang, deprecated, override_d
 			end
 		end
 
-		displayed_label = labprop("special_display"):gsub("<(.-)>", add_language_name)
+		formatted_label = labprop("special_display"):gsub("<(.-)>", add_language_name)
 	else
 		--[=[
 			If labdata.glossary or labdata.Wikipedia are set to true, there is a glossary definition
@@ -288,7 +316,7 @@ function export.get_displayed_label(label, labdata, lang, deprecated, override_d
 			Note that if `mode` is specified, prefixed properties (e.g. "accent_display" for `mode` == "accent",
 			"form_display" for `mode` == "form") are checked before the bare equivalent (e.g. "display").
 		]=]
-		local display = not override_display and labprop("display") or label
+		local display = override_display or labprop("display") or label
 
 		-- There are several 'Foo spelling' labels specially designed for use in the |from= param in
 		-- {{alternative form of}}, {{standard spelling of}} and the like. Often the display includes the word
@@ -300,7 +328,7 @@ function export.get_displayed_label(label, labdata, lang, deprecated, override_d
 		end
 
 		if display:find("%[%[") then
-			displayed_label = display
+			formatted_label = display
 		else
 			local glossary = labprop("glossary")
 			local Wiktionary = labprop("Wiktionary")
@@ -308,18 +336,18 @@ function export.get_displayed_label(label, labdata, lang, deprecated, override_d
 			local Wikidata = labprop("Wikidata")
 			if glossary then
 				local glossary_entry = type(glossary) == "string" and glossary or label
-				displayed_label = "[[Appendix:Glossary#" .. glossary_entry .. "|" .. display .. "]]"
+				formatted_label = "[[Appendix:Glossary#" .. glossary_entry .. "|" .. display .. "]]"
 			elseif Wiktionary then
-				displayed_label = "[[" .. Wiktionary .. "|" .. display .. "]]"
+				formatted_label = "[[" .. Wiktionary .. "|" .. display .. "]]"
 			elseif Wikipedia then
 				local Wikipedia_entry = type(Wikipedia) == "string" and Wikipedia or label
-				displayed_label = "[[w:" .. Wikipedia_entry .. "|" .. display .. "]]"
+				formatted_label = "[[w:" .. Wikipedia_entry .. "|" .. display .. "]]"
 			elseif Wikidata then
 				if not mw.wikibase then
 					error(("Unable to retrieve data from Wikidata ID for label '%s'; `mw.wikibase` not defined"
 						):format(label))
 				end
-				local function make_displayed_label(wmcode, id)
+				local function make_formatted_label(wmcode, id)
 					local article = mw.wikibase.sitelink(id, wmcode .. "wiki")
 					if article then
 						local link = wmcode == "en" and "w:" .. article or "w:" .. wmcode .. ":" .. article
@@ -333,33 +361,33 @@ function export.get_displayed_label(label, labdata, lang, deprecated, override_d
 				end
 				local wmcode, id = Wikidata:match("^(.*):(.*)$")
 				if wmcode then
-					displayed_label = make_displayed_label(wmcode, id)
+					formatted_label = make_formatted_label(wmcode, id)
 				else
 					local langs_to_check = export.get_langs_to_extract_wikipedia_articles_from_wikidata(lang)
 					for _, wmcode in ipairs(langs_to_check) do
-						displayed_label = make_displayed_label(wmcode, Wikidata)
-						if displayed_label then
+						formatted_label = make_formatted_label(wmcode, Wikidata)
+						if formatted_label then
 							break
 						end
 					end
 				end
-				displayed_label = displayed_label or display
+				formatted_label = formatted_label or display
 			else
-				displayed_label = display
+				formatted_label = display
 			end
 		end
 	end
 
 	if deprecated then
-		displayed_label = '<span class="deprecated-label">' .. displayed_label .. '</span>'
+		formatted_label = '<span class="deprecated-label">' .. formatted_label .. '</span>'
 	end
 
-	return displayed_label, deprecated
+	return formatted_label, deprecated
 end
 
 --[==[
 Return information on a label. On input `data` is an object with the following fields:
-* `label`: The label to return information on.
+* `label`: The raw label to return information on.
 * `lang`: The language of the label. Must be specified unless `for_doc` is given.
 * `mode`: How the label was invoked. One of the following:
   ** {nil} or {"label"}: invoked through {{tl|lb}} or another template whose labels in the same fashion, e.g.
@@ -387,16 +415,29 @@ The return value is an object with the following fields:
   particular value determines the handling of commas and spaces on one or both sides of the raw text. If this field is
   specified, only the `label` field (containing the actual raw text) and the `category` field (containing an empty list)
   are set; all other fields are {nil}.
-* `raw_label`: The original label that was passed in (without any preceding exclamation point).
-* `canonical`: If the label is an alias, this contains the canonical name of the label; otherwise it will be {nil}.
-* `label`: The display form of the label.
+* `raw_label`: The raw label that was passed in.
+* `non_canonical`: The label prior to canonicalization (i.e. alias resolution). Usually this is the same as `raw_label`,
+  but if the raw label was preceded by an exclamation point (meaning "display the raw label as-is"), this field will
+  contain the label stripped of the exclamation point, and if the raw label is of the form
+  `<var>label</var>!<var>display</var>` (meaning "display the label in the specified form"), this field will contain the
+  label before the exclamation point.
+* `canonical`: If the label in `non_canonical` is an alias, this contains the canonical name of the label; otherwise it
+  will be {nil}.
+* `override_display`: If specified, this contains a string that overrides the normal display form of the label. The
+  display form of a label is the `.display` field of the label data if present, and otherwise is normally the canonical
+  form of the label (i.e. after alias resolution). (This is not the same as the formatted form of the label, found in
+  `label`, which is the final form shown to the user and includes links to Wikipedia, the glossary, etc. as well as an
+  HTML wrapper if the label is deprecated.) If `override_display` is specified, however, this is used in place of the
+  normal display form of the label. This currently happens in two circumstances: (1) the label was preceded by ! to
+  indicate that the raw label should be displayed rather than the canonical form; (2) the label was given in the form
+  `<var>label</var>!<var>display</var>` (meaning "display the label in the specified `<var>display</var>` form").
+* `label`: The formatted form of the label. This is what is actually shown to the user. If the label is recognized
+  (found in some module), this will typically be in the form of a link.
 * `categories`: A list of the categories to add the label to; an empty list of `nocat` was specified.
 * `formatted_categories`: A string containing the formatted categories; {nil} if `nocat` or `for_doc` was specified,
   or if `categories` is empty. Currently will be an empty string if there are categories to format but the namespace is
   one that normally excludes categories (e.g. userspace and discussion pages), and `force_cat` isn't specified.
 * `deprecated`: True if the label is deprecated.
-* `display_raw_label`: If true, the label was preceded by ! to indicate that the raw label should be displayed
-  rather than the canonical form.
 * `recognized`: If true, the label was found in some module.
 * `data`: The data structure for the label, as fetched from the label modules. For unrecognized labels, this will
   be an empty object.
@@ -409,13 +450,20 @@ function export.get_label_info(data)
 	local mode = validate_mode(data.mode)
 	local ret = {categories = {}}
 	local label = data.label
-	local display_raw_label = false
-	if label:find("^!") then
-		display_raw_label = true
-		label = label:gsub("^!", "")
-	end
 	local raw_label = label
-	ret.raw_label = label
+	ret.raw_label = raw_label
+	local override_display
+	if label:find("^!") then
+		label = label:gsub("^!", "")
+		override_display = label
+	elseif label:find("![^%s]") then
+		label, override_display = label:match("^(.-)!([^%s].*)$")
+		if not label then
+			error(("Internal error: This Lua pattern should never fail to match for label '%s'"):format(raw_label))
+		end
+	end
+	local non_canonical = label
+	ret.non_canonical = non_canonical
 	local deprecated = false
 	local labdata
 	local submodule
@@ -486,7 +534,7 @@ function export.get_label_info(data)
 	if labprop("deprecated") then
 		deprecated = true
 	end
-	if label ~= raw_label then
+	if label ~= non_canonical then
 		-- Note that this is an alias and store the canonical version.
 		ret.canonical = label
 	end
@@ -498,16 +546,14 @@ function export.get_label_info(data)
 		-- [[Special:WhatLinksHere/Wiktionary:Tracking/labels/label/LABEL/LANGCODE]]
 		-- [[Special:WhatLinksHere/Wiktionary:Tracking/labels/label/LABEL/MODE]]
 		track("label/" .. label, data_langcode, mode)
-		if label ~= raw_label then
-			track("label/" .. raw_label, data_langcode, mode)
+		if label ~= non_canonical then
+			track("label/" .. non_canonical, data_langcode, mode)
 		end
 	end
 
-	local displayed_label
-	displayed_label, deprecated = export.get_displayed_label(display_raw_label and raw_label or label, labdata,
-		data.lang, deprecated, display_raw_label, mode)
+	local formatted_label
+	formatted_label, deprecated = export.format_label(label, labdata, data.lang, deprecated, override_display, mode)
 	ret.deprecated = deprecated
-	ret.display_raw_label = display_raw_label
 	if deprecated then
 		if not data.nocat then
 			local depcat = "Entries with deprecated labels"
@@ -521,7 +567,7 @@ function export.get_label_info(data)
 	local label_for_already_seen =
 		(labprop("topical_categories") or labprop("regional_categories")
 		or labprop("plain_categories") or labprop("pos_categories")
-		or labprop("sense_categories")) and displayed_label
+		or labprop("sense_categories")) and formatted_label
 		or nil
 
 	-- Track label text. If label text was previously used, don't show it, but include the categories.
@@ -529,10 +575,10 @@ function export.get_label_info(data)
 	if data.already_seen and data.already_seen[label_for_already_seen] then
 		ret.label = ""
 	else
-		if displayed_label:find("{") then
-			displayed_label = mw.getCurrentFrame():preprocess(displayed_label)
+		if formatted_label:find("{") then
+			formatted_label = mw.getCurrentFrame():preprocess(formatted_label)
 		end
-		ret.label = displayed_label
+		ret.label = formatted_label
 	end
 
 	if data.nocat then
