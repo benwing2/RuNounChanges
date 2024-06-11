@@ -3,7 +3,6 @@ local export = {}
 local m_IPA = require("Module:IPA")
 local m_str_utils = require("Module:string utilities")
 local parse_utilities_module = "Module:parse utilities"
-local pron_qualifier_module = "Module:pron qualifier"
 local references_module = "Module:references"
 
 local rsplit = m_str_utils.split
@@ -31,11 +30,12 @@ function export.IPA(frame)
 		-- FIXME: Convert such uses to q1= (or at least qual1=).
 		track("bare-qual")
 	end
+	local include_langname = frame.args.include_langname
 	local compat = parent_args["lang"]
 	local offset = compat and 0 or 1
 	local params = {
 		[compat and "lang" or 1] = {required = true, type = "language", default = "en"},
-		[1 + offset] = {list = true, allow_holes = true},
+		[1 + offset] = {list = true, disallow_holes = true},
 		["ref"] = {list = true, allow_holes = true},
 		-- Came before 'ref' but too obscure
 		["n"] = {list = true, allow_holes = true, alias_of = "ref"},
@@ -53,7 +53,7 @@ function export.IPA(frame)
 
 	local items = {}
 	
-	for i = 1, math.max(args[1 + offset].maxindex, args["ref"].maxindex, args["qual"].maxindex) do
+	for i = 1, #args[1 + offset] do
 		local pron = args[1 + offset][i]
 		local refs = args["ref"][i]
 		if refs then
@@ -65,27 +65,18 @@ function export.IPA(frame)
 			track("qual")
 		end
 
-		if not pron then
-			-- FIXME: Eliminate such uses, then make them an error through disallow_holes = true.
-			track("empty-pron")
-			if refs or qual then
-				local param = i == 1 and "" or "" .. i
-				error("Specified qual" .. param .. "= or ref" .. param .. "= without corresponding pronunciation")
-			end
-		else
-			require("Module:IPA/tracking").run_tracking(pron, lang)
+		require("Module:IPA/tracking").run_tracking(pron, lang)
 
-			table.insert(items, {
-				pron = pron,
-				refs = refs,
-				q = args.q[i] and {args.q[i]} or nil,
-				qq = args.qq[i] and {args.qq[i]} or nil,
-				a = split_on_comma(args.a[i]),
-				aa = split_on_comma(args.aa[i]),
-				-- FIXME, remove this
-				qualifiers = qual and {qual} or nil,
-			})
-		end
+		table.insert(items, {
+			pron = pron,
+			refs = refs,
+			q = args.q[i] and {args.q[i]} or nil,
+			qq = args.qq[i] and {args.qq[i]} or nil,
+			a = split_on_comma(args.a[i]),
+			aa = split_on_comma(args.aa[i]),
+			-- FIXME, remove this
+			qualifiers = qual and {qual} or nil,
+		})
 	end
 
 	return m_IPA.format_IPA_full {
@@ -97,6 +88,7 @@ function export.IPA(frame)
 		qq = args.qq.default and {args.qq.default} or nil,
 		a = split_on_comma(args.a.default),
 		aa = split_on_comma(args.aa.default),
+		include_langname = include_langname,
 	}
 end
 
@@ -107,6 +99,8 @@ function export.IPAchar(frame)
 		["ref"] = {list = true, allow_holes = true},
 		-- Came before 'ref' but too obscure
 		["n"] = {list = true, allow_holes = true, alias_of = "ref"},
+		["q"] = {list = true, allow_holes = true, require_index = true},
+		["qq"] = {list = true, allow_holes = true, require_index = true},
 		["qual"] = {list = true, allow_holes = true},
 		-- FIXME, remove this.
 		["lang"] = {}, -- This parameter is not used and does nothing, but is allowed for futureproofing.
@@ -127,10 +121,11 @@ function export.IPAchar(frame)
 		if refs then
 			refs = require("Module:references").parse_references(refs)
 		end
-		local qual = args["qual"][i]
+		local q = args.q[i] or args.qual[i]
+		local qq = args.qq[i]
 
 		if pron or refs or qual then
-			table.insert(items, {pron = pron, refs = refs, qualifiers = {qual}})
+			table.insert(items, {pron = pron, refs = refs, q = {q}, qq = {qq}})
 		end
 	end
 
@@ -159,30 +154,68 @@ function export.X2IPAtemplate(frame)
 		["ref"] = {list = true, allow_holes = true},
 		-- Came before 'ref' but too obscure
 		["n"] = {list = true, allow_holes = true, alias_of = "ref"},
-		["qual"] = { list = true, allow_holes = true },
+		["a"] = {list = true, allow_holes = true, separate_no_index = true},
+		["aa"] = {list = true, allow_holes = true, separate_no_index = true},
+		["q"] = {list = true, allow_holes = true, separate_no_index = true},
+		["qq"] = {list = true, allow_holes = true, separate_no_index = true},
+		["qual"] = {list = true, allow_holes = true},
+		["nocount"] = {type = "boolean"},
+		["sort"] = {},
 	}
 	
 	local args = require("Module:parameters").process(parent_args, params)
 	
 	local m_XSAMPA = require("Module:IPA/X-SAMPA")
 	
-	local pronunciations, refs, qualifiers, lang = args[1 + offset], args["ref"], args["qual"], args[compat and "lang" or 1]
+	local pronunciations, refs, a, aa, q, qq, qual, lang =
+		args[1 + offset], args.ref, args.a, args.aa, args.q, args.qq, args.qual, args[compat and "lang" or 1]
 	
 	local output = {}
 	table.insert(output, "{{IPA")
 	
 	table.insert(output, "|" .. lang)
 
-	for i = 1, math.max(pronunciations.maxindex, refs.maxindex, qualifiers.maxindex) do
+	if a.default then
+		table.insert(output, "|a=" .. a.default)
+	end
+	if q.default then
+		table.insert(output, "|q=" .. q.default)
+	end
+	for i = 1, math.max(pronunciations.maxindex, refs.maxindex, a.maxindex, aa.maxindex, q.maxindex, qq.maxindex,
+		qual.maxindex) do
 		if pronunciations[i] then
 			table.insert(output, "|" .. m_XSAMPA.XSAMPA_to_IPA(pronunciations[i]))
+		end
+		if a[i] then
+			table.insert(output, "|a" .. i .. "=" .. a[i])
+		end
+		if aa[i] then
+			table.insert(output, "|aa" .. i .. "=" .. aa[i])
+		end
+		if q[i] then
+			table.insert(output, "|q" .. i .. "=" .. q[i])
+		end
+		if qq[i] then
+			table.insert(output, "|qq" .. i .. "=" .. qq[i])
 		end
 		if refs[i] then
 			table.insert(output, "|ref" .. i .. "=" .. refs[i])
 		end
-		if qualifiers[i] then
-			table.insert(output, "|qual" .. i .. "=" .. qualifiers[i])
+		if qual[i] then
+			table.insert(output, "|qual" .. i .. "=" .. qual[i])
 		end
+	end
+	if aa.default then
+		table.insert(output, "|aa=" .. aa.default)
+	end
+	if qq.default then
+		table.insert(output, "|qq=" .. qq.default)
+	end
+	if args.nocount then
+		table.insert(output, "|nocount=1")
+	end
+	if args.sort then
+		table.insert(output, "|sort=" .. args.sort)
 	end
 	
 	table.insert(output, "}}")
@@ -197,6 +230,8 @@ function export.X2IPAchar(frame)
 		["ref"] = {list = true, allow_holes = true},
 		-- Came before 'ref' but too obscure
 		["n"] = {list = true, allow_holes = true, alias_of = "ref"},
+		["q"] = {list = true, allow_holes = true, require_index = true},
+		["qq"] = {list = true, allow_holes = true, require_index = true},
 		["qual"] = { list = true, allow_holes = true },
 		-- FIXME, remove this.
 		["lang"] = {},
@@ -211,20 +246,26 @@ function export.X2IPAchar(frame)
 
 	local m_XSAMPA = require("Module:IPA/X-SAMPA")
 	
-	local pronunciations, refs, qualifiers, lang = args[1], args["ref"], args["qual"], args["lang"]
+	local pronunciations, refs, q, qq, qual, lang = args[1], args.ref, args.q, args.qq, args.qual, args.lang
 	
 	local output = {}
 	table.insert(output, "{{IPAchar")
 	
-	for i = 1, math.max(pronunciations.maxindex, refs.maxindex, qualifiers.maxindex) do
+	for i = 1, math.max(pronunciations.maxindex, refs.maxindex, q.maxindex, qq.maxindex, qual.maxindex) do
 		if pronunciations[i] then
 			table.insert(output, "|" .. m_XSAMPA.XSAMPA_to_IPA(pronunciations[i]))
 		end
+		if q[i] then
+			table.insert(output, "|q" .. i .. "=" .. q[i])
+		end
+		if qq[i] then
+			table.insert(output, "|qq" .. i .. "=" .. qq[i])
+		end
+		if qual[i] then
+			table.insert(output, "|qual" .. i .. "=" .. qual[i])
+		end
 		if refs[i] then
 			table.insert(output, "|ref" .. i .. "=" .. refs[i])
-		end
-		if qualifiers[i] then
-			table.insert(output, "|qual" .. i .. "=" .. qualifiers[i])
 		end
 	end
 
@@ -268,6 +309,40 @@ function export.X2rhymes(frame)
 	table.insert(output, "}}")
 	
 	return table.concat(output)
+end
+
+-- Used for [[Template:enPR]].
+function export.enPR(frame)
+	local parent_args = frame:getParent().args
+	local params = {
+		[1] = {list = true, disallow_holes = true, required = true},
+		["a"] = {list = true, allow_holes = true, separate_no_index = true},
+		["aa"] = {list = true, allow_holes = true, separate_no_index = true},
+		["q"] = {list = true, allow_holes = true, separate_no_index = true},
+		["qq"] = {list = true, allow_holes = true, separate_no_index = true},
+	}
+	
+	local args = require("Module:parameters").process(parent_args, params)
+
+	local items = {}
+	
+	for i = 1, math.max(#args[1], args.a.maxindex, args.aa.maxindex, args.q.maxindex, args.qq.maxindex) do
+		table.insert(items, {
+			pron = args[1][i],
+			q = args.q[i] and {args.q[i]} or nil,
+			qq = args.qq[i] and {args.qq[i]} or nil,
+			a = split_on_comma(args.a[i]),
+			aa = split_on_comma(args.aa[i]),
+		})
+	end
+
+	return m_IPA.format_enPR_full {
+		items = items,
+		q = args.q.default and {args.q.default} or nil,
+		qq = args.qq.default and {args.qq.default} or nil,
+		a = split_on_comma(args.a.default),
+		aa = split_on_comma(args.aa.default),
+	}
 end
 
 return export
