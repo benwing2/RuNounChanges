@@ -106,7 +106,7 @@ function export.display_alternative_forms(parent_args, pagename, show_labels_aft
 	end
 
 	local args = require("Module:parameters").process(parent_args, params)
-	local lang = m_languages.getByCode(args[1], 1)
+	local lang = m_languages.getByCode(args[1], 1, "allow etym")
 	local sc = args["sc"] and require("Module:scripts").getByCode(args["sc"], "sc") or nil
 
 	local raw_labels = {}
