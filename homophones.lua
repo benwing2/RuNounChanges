@@ -1,8 +1,9 @@
 local export = {}
 
 local m_links = require("Module:links")
-local string_utilities_module = "Module:string utilities"
+local parameter_utilities_module = "Module:parameter utilities"
 local pron_qualifier_module = "Module:pron qualifier"
+local string_utilities_module = "Module:string utilities"
 
 local function rsplit(text, pattern)
 	return require(string_utilities_module).split(text, pattern)
@@ -67,15 +68,16 @@ function export.format_homophones(data)
 	local hmptexts = {}
 	local hmpcats = {}
 
-	for _, hmp in ipairs(data.homophones) do
-		hmp.lang = data.lang
-		hmp.sc = data.sc
+	local overall_sep = data.separator or ", "
+	for i, hmp in ipairs(data.homophones) do
+		hmp.lang = hmp.lang or data.lang
+		hmp.sc = hmp.sc or data.sc
 		local text = m_links.full_link(hmp)
 		if hmp.q and hmp.q[1] or hmp.qq and hmp.qq[1] or hmp.qualifiers and hmp.qualifiers[1]
 			or hmp.a and hmp.a[1] or hmp.aa and hmp.aa[1] or hmp.refs and hmp.refs[1] then
 			-- FIXME, change handling of `qualifiers`
 			text = require(pron_qualifier_module).format_qualifiers {
-				lang = data.lang,
+				lang = hmp.lang,
 				text = text,
 				q = hmp.q,
 				qq = hmp.qq,
@@ -86,11 +88,12 @@ function export.format_homophones(data)
 				refs = hmp.refs,
 			}
 		end
+		table.insert(hmptexts, hmp.separator or i > 1 and overall_sep or "")
 		table.insert(hmptexts, text)
 	end
 
 	table.insert(hmpcats, data.lang:getCanonicalName() .. " terms with homophones")
-	local text = table.concat(hmptexts, ", ")
+	local text = table.concat(hmptexts)
 	local caption = data.nocaption and "" or (
 		data.caption or "[[Appendix:Glossary#homophone|Homophone" .. (#data.homophones > 1 and "s" or "") .. "]]"
 	) .. ": "
@@ -114,49 +117,6 @@ function export.format_homophones(data)
 end
 
 
--- Per-param modifiers, which can be specified either as separate parameters (e.g. t2=, pos3=) or as inline modifiers
--- <t:...>, <pos:...>, etc. The key is the name fo the parameter (e.g. "t", "pos") and the value is a table with
--- elements as follows:
--- * `extra_specs`: An optional table of extra key-value pairs to add to the spec used for parsing the parameter
---                  when specified as a separate parameter (e.g. {type = "boolean"} for a Boolean parameter, or
---                  {alias_of = "t"} for the "gloss" parameter, which is aliased to "t"), on top of the default, which
---                  is {list = true, allow_holes = true}.
--- * `convert`: An optional function to convert the raw argument into the form passed to [[Module:links]].
---              This function takes two parameters: (1) `arg` (the raw argument); (2) `parse_err` (a function used to
---              throw an error in case of a parse error).
--- * `item_dest`: The name of the key used when storing the parameter's value into the processed `term` or `termobj`
---                object. Normally the same as the parameter's name. Different in the case of "t", where we store the
---                gloss in "gloss", and "g", where we store the genders in "genders".
-local param_mods = {
-	alt = {},
-	t = {
-		-- We need to store the t1=/t2= param and the <t:...> inline modifier into the "gloss" key of the parsed term,
-		-- because that is what [[Module:links]] expects.
-		item_dest = "gloss",
-	},
-	gloss = {
-		-- The `extra_specs` handles the fact that "gloss" is an alias of "t".
-		extra_specs = {alias_of = "t"},
-	},
-	tr = {},
-	ts = {},
-	g = {
-		-- We need to store the g1=/g2= param and the <g:...> inline modifier into the "genders" key of the parsed term,
-		-- because that is what [[Module:links]] expects.
-		item_dest = "genders",
-		convert = function(arg, parse_err)
-			return rsplit(arg, ",")
-		end,
-	},
-	pos = {},
-	lit = {},
-	id = {},
-	sc = {
-		separate_no_index = true,
-		extra_specs = {type = "script"},
-	},
-}
-
 --[==[
 Entry point for {{tl|homophones}} template (also written {{tl|homophone}} and {{tl|hmp}}).
 ]==]
@@ -174,7 +134,39 @@ function export.show(frame)
 		["sort"] = {},
 	}
 
+	local param_mods = {
+		alt = {},
+		t = {
+			-- We need to store the t1=/t2= param and the <t:...> inline modifier into the "gloss" key of the parsed term,
+			-- because that is what [[Module:links]] expects.
+			item_dest = "gloss",
+		},
+		gloss = {
+			-- The `extra_specs` handles the fact that "gloss" is an alias of "t".
+			extra_specs = {alias_of = "t"},
+		},
+		tr = {},
+		ts = {},
+		g = {
+			-- We need to store the g1=/g2= param and the <g:...> inline modifier into the "genders" key of the parsed term,
+			-- because that is what [[Module:links]] expects.
+			item_dest = "genders",
+			convert = function(arg, parse_err)
+				return rsplit(arg, ",")
+			end,
+		},
+		pos = {},
+		lit = {},
+		id = {},
+		sc = {
+			separate_no_index = true,
+			extra_specs = {type = "script"},
+		},
+	}
+
 	local m_param_utils = require(parameter_utilities_module)
+
+	m_param_utils.augment_param_mods_with_pron_qualifiers(param_mods)
 	m_param_utils.augment_params_with_modifiers(params, param_mods)
 
 	local args = require("Module:parameters").process(parent_args, params)
@@ -189,16 +181,19 @@ function export.show(frame)
 
 	local lang = args[compat and "lang" or 1]
 
-	local maxindex = 0
-	for arg, vals in pairs(args) do
-		if type(vals) == "table" and vals.maxindex then
-			maxindex = math.max(maxindex, vals.maxindex)
-		end
-	end
+	local homophones = m_param_utils.process_list_arguments {
+		args = args,
+		param_mods = param_mods,
+		termarg = 1 + offset,
+		parse_lang_prefix = true,
+		track_module = "homophones",
+		lang = lang,
+		sc = args.sc.default,
+	}
 
 	local data = {
 		lang = lang,
-		homophones = {},
+		homophones = homophones,
 		caption = args.caption,
 		nocaption = args.nocaption,
 		nocat = args.nocat,
@@ -212,45 +207,6 @@ function export.show(frame)
 		a = args.a.default,
 		aa = args.aa.default,
 	}
-
-	for i = 1, maxindex do
-		local g = args.g[i]
-		if g then
-			if g:find(",") then
-				g = rsplit(g, "%s*,%s*")
-			else
-				g = {g}
-			end
-		end
-		local homophone_obj = {
-			term = args[1 + offset][i],
-			alt = args.alt[i],
-			gloss = args.t[i],
-			tr = args.tr[i],
-			ts = args.ts[i],
-			genders = g,
-			pos = args.pos[i],
-			lit = args.lit[i],
-			id = args.id[i],
-			sc = args.sc[i],
-		}
-		if not next(homophone_obj) then
-			track("empty-homophone")
-		else
-			if not homophone_obj.term then
-				track("missing-homophone")
-			end
-			require(pron_qualifier_module).parse_qualifiers {
-				store_obj = homophone_obj,
-				refs = args.ref[i],
-				q = args.q[i],
-				qq = args.qq[i],
-				a = args.a[i],
-				aa = args.aa[i],
-			}
-			table.insert(data.homophones, homophone_obj)
-		end
-	end
 
 	return export.format_homophones(data)
 end
