@@ -6,6 +6,7 @@ local rhymes_styles_css_module = "Module:rhymes/styles.css"
 
 local IPA_module = "Module:IPA"
 local parameters_module = "Module:parameters"
+local parameter_utilities_module = "Module:parameter utilities"
 local pron_qualifier_module = "Module:pron qualifier"
 local script_utilities_module = "Module:script utilities"
 local string_utilities_module = "Module:string utilities"
@@ -97,6 +98,8 @@ Meant to be called from a module. `data` is a table containing the following fie
 ** `rhyme`: the rhyme itself;
 ** `num_syl`: {nil} or a list of numbers, specifying the number of syllables of the word with this rhyme; optional and
    currently used only for categorization; if omitted, defaults to the top-level `num_syl`;
+** `separator`: {nil} or the string used to separate this rhyme from the preceding one when displayed; defaults to the
+   top-level `separator`;
 ** `q`: {nil} or a list of left regular qualifier strings, formatted using {format_qualifier()} in [[Module:qualifier]]
    and displayed directly before the rhyme in question;
 ** `qq`: {nil} or a list of right regular qualifier strings, displayed directly after the rhyme in question;
@@ -115,7 +118,9 @@ Meant to be called from a module. `data` is a table containing the following fie
    {{cd|<nowiki><references /></nowiki>}} section;
 ** `nocat`: if {true}, suppress categorization for this rhyme only;
 * `num_syl`: {nil} or a list of numbers, specifying the number of syllables for all rhymes; optional and currently used
-  only for categorization;
+  only for categorization; overridable at the individual rhyme level;
+* `separator`: {nil} or a string, specifying the separator displayed before all rhymes but the first; by default,
+  {", "}; overridable at the individual rhyme level;
 * `q`: {nil} or a list of left regular qualifier strings, formatted using {format_qualifier()} in [[Module:qualifier]]
   and displayed before the initial caption;
 * `qq`: {nil} or a list of right regular qualifier strings, displayed after all rhymes;
@@ -141,9 +146,10 @@ be added such as [[Category:Rhymes:Italian/ino/3 syllables]] in addition to [[Ca
 ]==]
 	function export.format_rhymes(data)
 		local langname = data.lang:getCanonicalName()
-		local links = {}
+		local parts = {}
 		local categories = {}
-		for _, r in ipairs(data.rhymes) do
+		local overall_sep = data.separator or ", "
+		for i, r in ipairs(data.rhymes) do
 			local rhyme = r.rhyme
 			local link, link_cats = make_rhyme_link(data.lang, rhyme, "-" .. rhyme)
 			if not r.nocat and not data.nocat then
@@ -164,13 +170,14 @@ be added such as [[Category:Rhymes:Italian/ino/3 syllables]] in addition to [[Ca
 					refs = r.refs,
 				}
 			end
-			insert(links, link)
+			insert(parts, r.separator or i > 1 and overall_sep or "")
+			insert(parts, link)
 			if not r.nocat and not data.nocat then
 				add_syllable_categories(categories, langname, rhyme, r.num_syl or data.num_syl)
 			end
 		end
 
-		local text = concat(links, ", ")
+		local text = concat(parts)
 		if not data.nocaption then
 			text = (data.caption or "Rhymes") .. ": " .. text
 		end
@@ -194,39 +201,11 @@ be added such as [[Category:Rhymes:Italian/ino/3 syllables]] in addition to [[Ca
 end
 
 do
-	local function get_args(frame)
-		local plain = {}
-		local split_list = {list = true, allow_holes = true, separate_no_index = true}
-		local params = {
-			[1] = {required = true, type = "language", etym_lang = true, default = "en"},
-			-- FIXME, should be `disallow_holes = true`
-			[2] = {required = true, list = true, allow_holes = true, default = "aɪmz"},
-			["s"] = split_list,
-			["q"] = split_list,
-			["qq"] = split_list,
-			["a"] = split_list,
-			["aa"] = split_list,
-			["ref"] = {list = true, allow_holes = true},
-			["caption"] = plain,
-			["nocaption"] = {type = "boolean"},
-			["nocat"] = {type = "boolean"},
-			["sort"] = plain,
-		}
-		local args = frame.getParent and frame:getParent().args or frame
-		local compat = args.lang
-		if compat then
-			params["lang"] = params[1]
-			params[1] = params[2]
-			params[2] = nil
-		end
-		return require(parameters_module).process(frame:getParent().args, params), compat
-	end
-
-	local function parse_num_syl(val)
-		val = rsplit(val, "%s*,%s*")
+	local function parse_num_syl(arg, parse_err)
+		arg = rsplit(arg, "%s*,%s*")
 		local ret = {}
-		for _, v in ipairs(val) do
-			local n = tonumber(v) or error("Unrecognized #syllables '" .. v .. "', should be a number")
+		for _, v in ipairs(arg) do
+			local n = tonumber(v) or parse_err("Unrecognized #syllables '" .. v .. "', should be a number")
 			insert(ret, n)
 		end
 		return ret
@@ -236,20 +215,49 @@ do
 	Implementation of {{tl|rhymes}}.
 	]==]
 	function export.show(frame)
-		local args, compat = get_args(frame)
-		local lang = args[compat and "lang" or 1]
-		local raw_rhymes = args[compat and 1 or 2]
+		local parent_args = frame:getParent().args
+		local compat = parent_args.lang
+		local offset = compat and 0 or 1
 
-		local maxindex = 0
-		for arg, vals in pairs(args) do
-			if type(vals) == "table" and vals.maxindex then
-				maxindex = math.max(maxindex, vals.maxindex)
-			end
-		end
+		local plain = {}
+		local boolean = {type = "boolean"}
+		local params = {
+			[compat and "lang" or 1] = {required = true, type = "language", etym_lang = true, default = "en"},
+			[1 + offset] = {list = true, required = true, disallow_holes = true, default = "aɪmz"},
+			["caption"] = plain,
+			["nocaption"] = boolean,
+			["nocat"] = boolean,
+			["sort"] = plain,
+		}
+
+		local param_mods = {
+			s = {
+				item_dest = "num_syl",
+				separate_no_index = true,
+				convert = parse_num_syl,
+			},
+		}
+
+		local m_param_utils = require(parameter_utilities_module)
+
+		m_param_utils.augment_param_mods_with_pron_qualifiers(param_mods)
+		m_param_utils.augment_params_with_modifiers(params, param_mods)
+
+		local args = require("Module:parameters").process(parent_args, params)
+
+		local lang = args[compat and "lang" or 1]
+
+		local rhymes = m_param_utils.process_list_arguments {
+			args = args,
+			param_mods = param_mods,
+			termarg = 1 + offset,
+			term_dest = "rhyme",
+			track_module = "rhymes",
+		}
 
 		local data = {
 			lang = lang,
-			rhymes = {},
+			rhymes = rhymes,
 			num_syl = args.s.default and parse_num_syl(args.s.default) or nil,
 			caption = args.caption,
 			nocaption = args.nocaption,
@@ -263,34 +271,6 @@ do
 			a = args.a.default,
 			aa = args.aa.default,
 		}
-
-		for i = 1, maxindex do
-			local num_syl
-			if args.s[i] then
-				num_syl = parse_num_syl(args.s[i])
-			end
-			if not raw_rhymes[i] then
-				if num_syl or args.ref[i] or args.q[i] or args.qq[i] or args.a[i] or args.aa[i] then
-					error(("Missing rhyme in param |%s="):format(compat and i or i + 1))
-				else
-					track("empty-rhyme")
-				end
-			else
-				local rhyme_obj = {
-					rhyme = raw_rhymes[i],
-					num_syl = num_syl,
-				}
-				require(pron_qualifier_module).parse_qualifiers {
-					store_obj = rhyme_obj,
-					refs = args.ref[i],
-					q = args.q[i],
-					qq = args.qq[i],
-					a = args.a[i],
-					aa = args.aa[i],
-				}
-				table.insert(data.rhymes, rhyme_obj)
-			end
-		end
 
 		return export.format_rhymes(data)
 	end
