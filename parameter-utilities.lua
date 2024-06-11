@@ -77,12 +77,14 @@ function export.augment_params_with_modifiers(params, param_mods)
 	-- Add parameters for each term modifier.
 	for param_mod, param_mod_spec in pairs(param_mods) do
 		local param_key = param_mod_spec.param_key or param_mod
-		if not param_mod_spec.extra_specs then
+		if not param_mod_spec.extra_specs and not param_mod_spec.require_index and not param_mod_spec.separate_no_index then
 			params[param_key] = list_with_holes
 		else
 			local param_spec = mw.clone(list_with_holes)
-			for k, v in pairs(param_mod_spec.extra_specs) do
-				param_spec[k] = v
+			if param_mod_spec.extra_specs then
+				for k, v in pairs(param_mod_spec.extra_specs) do
+					param_spec[k] = v
+				end
 			end
 			if param_mod_spec.require_index then
 				param_spec.require_index = true
@@ -171,6 +173,7 @@ function export.process_list_arguments(data)
 				end
 
 				local function generate_obj(term, parse_err)
+					local term_dest = data.term_dest or "term"
 					if data.parse_lang_prefix and term:find(":") then
 						local actual_term, termlangs = require(parse_utilities_module).parse_term_with_lang {
 							term = term,
@@ -180,7 +183,7 @@ function export.process_list_arguments(data)
 							allow_multiple = data.allow_multiple_lang_prefixes,
 							lang_cache = lang_cache,
 						}
-						termobj.term = actual_term ~= "" and actual_term or nil
+						termobj[term_dest] = actual_term ~= "" and actual_term or nil
 						if data.allow_multiple_lang_prefixes then
 							termobj.termlangs = termlangs
 							termobj.lang = termlangs and termlangs[1] or nil
@@ -189,7 +192,7 @@ function export.process_list_arguments(data)
 							termobj.lang = termlangs
 						end
 					else
-						termobj.term = term ~= "" and term or nil
+						termobj[term_dest] = term ~= "" and term or nil
 					end
 					return termobj
 				end
