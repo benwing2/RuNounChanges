@@ -158,29 +158,33 @@ local function parse_term_with_modifiers(paramname, val, lang, sc, lang_cache)
 			}
 			obj.term = actual_term
 			obj.termlangs = termlangs
-			obj.lang = termlangs and termlangs[1] or lang
+			obj.lang = termlangs and termlangs[1] or nil
 		else
 			obj.term = term
-			obj.lang = lang
 		end
-		obj.sc = sc
 		return obj
 	end
 
+	local termobj
 	-- Check for inline modifier, e.g. מרים<tr:Miryem>. But exclude HTML entry with <span ...>, <i ...>, <br/> or
 	-- similar in it, caused by wrapping an argument in {{l|...}}, {{m|...}} or similar. Basically, all tags of
 	-- the sort we parse here should consist of a less-than sign, plus letters, plus a colon, e.g. <tr:...>, so if
 	-- we see a tag on the outer level that isn't in this format, we don't try to parse it. The restriction to the
 	-- outer level is to allow generated HTML inside of e.g. qualifier tags, such as foo<q:similar to {{m|fr|bar}}>.
 	if val:find("<") and not val:find("^[^<]*<[a-z]*[^a-z:]") then
-		return require(parse_utilities_module).parse_inline_modifiers(val, {
+		termobj = require(parse_utilities_module).parse_inline_modifiers(val, {
 			paramname = paramname,
 			param_mods = param_mods,
 			generate_obj = generate_obj,
 		})
 	else
-		return generate_obj(val)
+		termobj = generate_obj(val)
 	end
+	-- Set these after parsing inline modifiers, not in generate_obj(), otherwise we'll get an error in
+	-- parse_inline_modifiers() if we try to use <lang:...> or <sc:...> as inline modifiers.
+	termobj.lang = termobj.lang or lang
+	termobj.sc = termobj.sc or sc
+	return termobj
 end
 
 function export.display_from(frame_args, parent_args, frame)
