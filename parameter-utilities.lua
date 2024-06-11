@@ -61,6 +61,7 @@ local pron_qualifier_param_mods = {
 		convert = export.parse_accent_qualifier,
 	},
 	ref = {
+		item_dest = "refs",
 		convert = export.parse_references,
 	},
 }
@@ -96,7 +97,10 @@ end
 
 function export.process_list_arguments(data)
 	-- Find the maximum index among any of the list parameters.
-	local maxmaxindex = 0
+	local term_args = data.args[data.termarg]
+	-- As a special case, the term args might not have a `maxindex` field because they might have
+	-- been declared with `disallow_holes = true`, so fall back to the actual length of the list.
+	local maxmaxindex = term_args.maxindex or #term_args
 	for k, v in pairs(data.args) do
 		if type(v) == "table" and v.maxindex and v.maxindex > maxmaxindex then
 			maxmaxindex = v.maxindex
@@ -113,7 +117,7 @@ function export.process_list_arguments(data)
 
 	local termno = 0
 	for i = 1, maxmaxindex do
-		local term = data.args[data.termarg][i]
+		local term = term_args[i]
 		if term ~= ";" then
 			termno = termno + 1
 
@@ -142,7 +146,7 @@ function export.process_list_arguments(data)
 				end
 				-- Initialize the `termobj` object passed to full_link() in [[Module:links]].
 				local termobj = {
-					separator = i > 1 and (data.args[data.termarg][i - 1] == ";" and "; " or ", ") or "",
+					separator = i > 1 and (term_args[i - 1] == ";" and "; " or ", ") or "",
 					term = term,
 				}
 
