@@ -592,14 +592,14 @@ function export.split_labels_on_comma(term)
 		-- This won't split on comma+whitespace.
 		local comma_separated_groups = put.split_alternating_runs_on_comma(segments)
 		for i, group in ipairs(comma_separated_groups) do
-			group[i] = table.concat(group[i])
+			comma_separated_groups[i] = table.concat(group)
 		end
 		return comma_separated_groups
 	elseif term:find(",%s") then
 		-- This won't split on comma+whitespace.
 		return require(parse_utilities_module).split_on_comma(term)
 	elseif term:find(",") then
-		return rsplit(term, ",")
+		return require(string_utilities_module).split(term, ",")
 	else
 		return {term}
 	end
