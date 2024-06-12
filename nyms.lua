@@ -24,22 +24,13 @@ local function wrap_span(text, lang, sc)
 end
 
 
-local function split_on_comma(term)
-	if term:find(",%s") then
-		return require(put_module).split_on_comma(term)
-	else
-		return rsplit(term, ",")
-	end
-end
-
-
 -- Convert a raw lb= param (or nil) to a list of label info objects of the format described in get_label_info() in
 -- [[Module:labels]]). Unrecognized labels will end up with an unchanged display form. Return nil if nil passed in.
-local function get_label_list_info(raw_lb, lang)
+local function split_and_process_raw_labels(raw_lb, lang)
 	if not raw_lb then
 		return nil
 	end
-	return require(labels_module).get_label_list_info(split_on_comma(raw_lb), lang, "nocat")
+	return require(labels_module).split_and_process_raw_labels { labels = raw_lb, lang = lang, nocat = true }
 end
 
 local function get_thesaurus_text(lang, args, maxindex)
@@ -234,7 +225,7 @@ function export.nyms(frame)
 	for i, item in ipairs(items) do
 		local label_text = ""
 		if item.lb then
-			local labels = get_label_list_info(item.lb, lang)
+			local labels = split_and_process_raw_labels(item.lb, lang)
 			if labels then
 				label_text = " " .. require(labels_module).format_processed_labels {
 					labels = labels, lang = lang, open = "[", close = "]"
@@ -245,7 +236,7 @@ function export.nyms(frame)
 			.. (item.qq and " " .. require("Module:qualifier").format_qualifier(item.qq) or "") .. label_text
 	end
 
-	local labels = get_label_list_info(args.lb, lang)
+	local labels = split_and_process_raw_labels(args.lb, lang)
 	local label_postq = labels and " &mdash; " .. require(labels_module).format_processed_labels {
 		labels = labels, lang = lang 
 	} or ""
