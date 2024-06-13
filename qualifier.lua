@@ -2,12 +2,21 @@ local export = {}
 
 local concat = table.concat
 
-function export.format_qualifier(list, open, close, opencontent, closecontent)
+function export.wrap_css(text, classes)
+	return ("<span class=\"%s\">%s</span>"):format(classes, text)
+end
+
+function export.wrap_qualifier_css(text, suffix)
+	local css_classes = ("ib-%s qualifier-%s"):format(suffix, suffix)
+	return wrap_css(text, css_classes)
+end
+
+function export.format_qualifiers(list, open, close, opencontent, closecontent, no_ib_content)
 	if type(list) ~= "table" then
 		list = {list}
 	end
 
-	if #list == 0 then
+	if not list[1] then
 		return ""
 	end
 
@@ -17,38 +26,45 @@ function export.format_qualifier(list, open, close, opencontent, closecontent)
 	end
 
 	if open ~= false then
-		ins("<span class=\"ib-brac qualifier-brac\">")
-		ins(open or "(")
-		ins("</span>")
+		ins(export.wrap_qualifier_css(open or "(", "brac"))
 	end
-	ins(opencontent or "")
-	ins("<span class=\"ib-content qualifier-content\">")
-	ins(concat(list, "<span class=\"ib-comma qualifier-comma\">,</span> "))
-	ins("</span>")
-	ins(closecontent or "")
+	if opencontent then
+		ins(opencontent)
+	end
+	local content = concat(list, export.wrap_qualifier_css(",", "comma") .. " ")
+	if not no_ib_content then
+		content = export.wrap_qualifier_css(content, "content")
+	end
+	ins(content)
+	if closecontent then
+		ins(closecontent)
+	end
 	if close ~= false then
-		ins("<span class=\"ib-brac qualifier-brac\">")
-		ins(close or ")")
-		ins("</span>")
+		ins(export.wrap_qualifier_css(close or ")", "brac"))
 	end
 	return concat(parts)
 end
 
-local function format_qualifier_with_clarification(list, clarification, open, close)
-	local opencontent = "<span class=\"qualifier-clarification\">" .. clarification .. "</span>" .. 
-		"<span class=\"qualifier-clarification qualifier-quote\">" .. (open or "“") .. "</span>"
+function export.format_qualifier(list, open, close, opencontent, closecontent)
+	return export.format_qualifiers(list, open, close, opencontent, closecontent)
+end
 
-	local closecontent = "<span class=\"qualifier-clarification qualifier-quote\">" .. (close or "”") .. "</span>"
+local function format_qualifiers_with_clarification(list, clarification, open, close)
+	local opencontent = export.wrap_css(clarification, "qualifier-clarification") ..
+		export.wrap_css(open or "“", "qualifier-clarification qualifier-quote")
 
-	return export.format_qualifier(list, "(", ")", opencontent, closecontent)
+	local closecontent = export.wrap_css(close or "”", "qualifier-clarification qualifier-quote")
+
+	return export.format_qualifiers(list, "(", ")", opencontent, closecontent)
 end
 
 function export.sense(list)
-	return export.format_qualifier(list) .. "<span class=\"ib-colon sense-qualifier-colon\">:</span>"
+	return export.format_qualifiers(list) .. export.wrap_css(":", "ib-colon sense-qualifier-colon")
 end
 
 function export.antsense(list)
-	return format_qualifier_with_clarification(list, "antonym(s) of ") .. "<span class=\"ib-colon sense-qualifier-colon\">:</span>"
+	return format_qualifiers_with_clarification(list, "antonym(s) of ") ..
+		export.wrap_css(":", "ib-colon sense-qualifier-colon")
 end
 
 return export
