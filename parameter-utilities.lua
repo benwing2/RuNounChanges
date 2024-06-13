@@ -116,6 +116,7 @@ function export.process_list_arguments(data)
 		lang_cache[data.lang:getCode()] = data.lang
 	end
 	local use_semicolon = false
+	local term_dest = data.term_dest or "term"
 
 	local termno = 0
 	for i = 1, maxmaxindex do
@@ -149,7 +150,6 @@ function export.process_list_arguments(data)
 				-- Initialize the `termobj` object passed to full_link() in [[Module:links]].
 				local termobj = {
 					separator = i > 1 and (term_args[i - 1] == ";" and "; " or ", ") or "",
-					term = term,
 				}
 
 				-- Parse all the term-specific parameters and store in `termobj`.
@@ -173,7 +173,6 @@ function export.process_list_arguments(data)
 				end
 
 				local function generate_obj(term, parse_err)
-					local term_dest = data.term_dest or "term"
 					if data.parse_lang_prefix and term:find(":") then
 						local actual_term, termlangs = require(parse_utilities_module).parse_term_with_lang {
 							term = term,
@@ -214,8 +213,8 @@ function export.process_list_arguments(data)
 				termobj.lang = termobj.lang or data.lang
 				termobj.sc = termobj.sc or data.sc
 
-				-- If the displayed term (from .term or .alt) has an embedded comma, use a semicolon to join the terms.
-				local term_text = termobj.term or termobj.alt
+				-- If the displayed term (from .term/etc. or .alt) has an embedded comma, use a semicolon to join the terms.
+				local term_text = termobj[term_dest] or termobj.alt
 				if not use_semicolon and term_text then
 					if term_text:find(",", 1, true) then
 						use_semicolon = true
@@ -223,11 +222,11 @@ function export.process_list_arguments(data)
 				end
 
 				-- If the to-be-linked term is the same as the pagename, maybe display it unlinked.
-				if data.disallow_self_link and data.lang and data.pagename and termobj.term and
-					(data.lang:makeEntryName(termobj.term)) == data.pagename then
+				if data.disallow_self_link and data.lang and data.pagename and termobj[term_dest] and
+					(data.lang:makeEntryName(termobj[term_dest])) == data.pagename then
 					track("term-is-pagename", data.track_module)
-					termobj.alt = termobj.alt or termobj.term
-					termobj.term = nil
+					termobj.alt = termobj.alt or termobj[term_dest]
+					termobj[term_dest] = nil
 				end
 
 				table.insert(items, termobj)
