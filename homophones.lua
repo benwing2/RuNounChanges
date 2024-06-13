@@ -21,6 +21,8 @@ Meant to be called from a module. `data` is a table containing the following fie
   passed to {full_link()} in [[Module:links]] except for `lang` and `sc` (which are copied from the outer level), and in
   addition can contain left and right regular and accent qualifier fields:
   ** `term`: the homophone itself;
+  ** `separator`: {nil} or the string used to separate this homophone from the preceding one when displayed; defaults to
+     the top-level `separator`;
   ** `alt`: display text for the homophone, as in {{tl|l}};
   ** `gloss`: gloss for the homophone, as in {{tl|l}};
   ** `tr`: transliteration for the homophone, as in {{tl|l}};
@@ -29,6 +31,8 @@ Meant to be called from a module. `data` is a table containing the following fie
   ** `pos`: part of speech of the homophone, as in {{tl|l}};
   ** `lit`: literal meaning of the homophone, as in {{tl|l}};
   ** `id`: sense ID for the homophone, as in {{tl|l}};
+  ** `lang`: optional lang code, overriding the lang code in the top-level `lang` field;
+  ** `sc`: optional script code, overriding the script code in the top-level `sc` field;
   ** `q`: {nil} or a list of left regular qualifier strings, formatted using {format_qualifier()} in [[Module:qualifier]]
      and displayed directly before the homophone in question;
   ** `qq`: {nil} or a list of right regular qualifier strings, displayed directly after the homophone in question;
@@ -46,6 +50,8 @@ Meant to be called from a module. `data` is a table containing the following fie
 	 {{cd|<nowiki><ref name="foo" group="bar"/></nowiki>}}); this uses a parser function to format the reference
 	 appropriately and insert a footnote number that hyperlinks to the actual reference, located in the
 	 {{cd|<nowiki><references /></nowiki>}} section;
+* `separator`: {nil} or a string, specifying the separator displayed before all homophones but the first; by default,
+  {", "}; overridable at the individual homophone level;
 * `q`: {nil} or a list of left regular qualifier strings, formatted using {format_qualifier()} in [[Module:qualifier]]
   and displayed before the initial caption;
 * `qq`: {nil} or a list of right regular qualifier strings, displayed after all homophones;
