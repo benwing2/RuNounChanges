@@ -104,14 +104,14 @@ function export.format_IPA_full(data)
 	local a = data.a
 	local aa = data.aa
 	local include_langname = data.include_langname
-	
+
 	local hasKey = m_data.langs_with_infopages
 
 	if not lang or not lang.getCode then
 		error("Must specify language to format_IPA_full()")
 	end
 	local langname = lang:getCanonicalName()
-	
+
 	local prefix_text
 	if err then
 		prefix_text = '<span class="error">' .. err .. '</span>'
@@ -125,7 +125,7 @@ function export.format_IPA_full(data)
 	end
 
 	local prefix = "[[Wiktionary:International Phonetic Alphabet|IPA]]<sup>(" .. prefix_text .. ")</sup>:&#32;"
-	
+
 	local IPAs, categories = export.format_IPA_multiple(lang, items, separator, no_count, "raw")
 
 	if is_content_page then
@@ -150,6 +150,15 @@ function export.format_IPA_full(data)
 		prontext = langname .. ": " .. prontext
 	end
 	return process_maybe_split_categories(split_output, categories, prontext, lang)
+end
+
+local function split_phonemic_phonetic(pron)
+	local reconstructed, phonemic, phonetic = match(pron, "^(%*?)(/.-/)%s+(%[.-%])$")
+	if reconstructed then
+		return reconstructed .. phonemic, reconstructed .. phonetic
+	else
+		return pron, nil
+	end
 end
 
 local function determine_repr(pron)
@@ -322,7 +331,9 @@ function export.format_IPA_multiple(lang, items, separator, no_count, split_outp
 
 		--[=[	[[Special:WhatLinksHere/Wiktionary:Tracking/IPA/syntax-error]]
 				The length or gemination symbol should not appear after a syllable break or stress symbol.	]=]
-		
+
+		-- The nature of the following pattern match is such that we don't have to split a combined '/.../ [...]' spec
+		-- into its parts in order to process.
 		if match(item.pron, "[.\203][\136\140]?\203[\144\145]") then -- [.ˈˌ][ːˑ]
 			track("syntax-error")
 		end
@@ -334,16 +345,23 @@ function export.format_IPA_multiple(lang, items, separator, no_count, split_outp
 				m_syllables = m_syllables or require(syllables_module)
 				local langcode = lang:getCode()
 				if m_data.langs_to_generate_syllable_count_categories[langcode] then
-					local repr = determine_repr(item.pron)
+					local phonemic, phonetic = split_phonemic_phonetic(item.pron)
 					local use_it
-					if m_data.langs_to_use_phonetic_notation[langcode] then
-						use_it = repr == "phonetic"
-					else
-						use_it = repr == "phonemic"
+					if not phonetic then -- not a '/.../ [...]' combined pronunciation
+						local repr = determine_repr(phonemic)
+						if m_data.langs_to_use_phonetic_notation[langcode] then
+							use_it = repr == "phonetic" and phonemic or nil
+						else
+							use_it = repr == "phonemic" or phonemic or nil
+						end
+					elseif repr == "phonetic" then
+						use_it = phonetic
+					elseif repr == "phonemic" then
+						use_it = phonemic
 					end
 					-- Note: two uses of find with plain patterns is much faster than umatch with [ ‿].
-					if use_it and not (find(item.pron, " ") or find(item.pron, "‿")) then
-						local syllable_count = m_syllables.getVowels(item.pron, lang)
+					if use_it and not (find(use_it, " ") or find(use_it, "‿")) then
+						local syllable_count = m_syllables.getVowels(use_it, lang)
 						if syllable_count then
 							insert(categories, lang:getCanonicalName() .. " " .. syllable_count ..
 								"-syllable words")
@@ -352,6 +370,8 @@ function export.format_IPA_multiple(lang, items, separator, no_count, split_outp
 				end
 			end
 
+			-- The nature of hasInvalidSeparators() is such that we don't have to split a combined '/.../ [...]' spec into
+			-- its parts in order to process.
 			if lang:getCode() == "en" and hasInvalidSeparators(item.pron) then
 				insert(categories, "IPA for English using .ˈ or .ˌ")
 			end
@@ -361,35 +381,15 @@ function export.format_IPA_multiple(lang, items, separator, no_count, split_outp
 	return process_maybe_split_categories(split_output, categories, concat(bits, separator), lang)
 end
 
---[==[
-Format an IPA pronunciation. This wraps the pronunciation in appropriate CSS classes and adds cleanup categories and
-error messages as needed. The pronunciation `pron` should be either phonemic (surrounded by {/.../}), phonetic
-(surrounded by {[...]}), orthographic (surrounded by {⟨...⟩}) or a rhyme (beginning with a hyphen). `lang` indicates the
-language of the pronunciation and can be {nil}. If not {nil}, and the specified language has data in [[Module:IPA/data]]
-indicating the allowed phonemes, then the page will be added to a cleanup category and an error message displayed next
-to the outputted pronunciation. Note that {lang} also determines sort key processing in the added cleanup categories.
-If `split_output` is not given, the return value is a concatenation of the formatted pronunciation, error messages and
-formatted cleanup categories. Otherwise, three values are returned: the formatted pronunciation, the cleanup categories
-and the concatenated error messages. If `split_output` is the value {"raw"}, the cleanup categories are returned in list
-form, where the list elements are a combination of category strings and category objects of the form suitable for
-passing to {format_categories()} in [[Module:utilities]]. If `split_output` is any other value besides {nil}, the
-cleanup categories are returned as a pre-formatted concatenated string.
-]==]
-function export.format_IPA(lang, pron, split_output)
-	-- `pron` shouldn't contain ref tags.
-	if match(pron, "\127'\"`UNIQ%-%-ref%-[%dA-F]+%-QINU`\"'\127") then
-		error("<ref> tags found inside pronunciation parameter.")
-	end
-	
-	local err = {}
-	local categories = {}
-
-	if not lang then
-		track("format-nolang")
-	end
-
-	-- Remove wikilinks, so that wikilink brackets are not misinterpreted as
-	-- indicating phonemic transcription
+--[=[
+Format a single IPA pronunciation, which cannot be a combined spec (such as {/.../ [...]}). This has been extracted from
+{format_IPA()} to allow the latter to handle such combined specs. This works like {format_IPA()} but requires that
+pre-created {err} (for error messages) and {categories} lists be passed in, and adds any generated error messages and
+categories to those lists. A single value is returned, the pronunciation, which is usually the same as passed in, but
+may have HTML added surrounding invalid characters so they appear in red.
+]=]
+local function format_one_IPA(lang, pron, err, categories)
+	-- Remove wikilinks, so that wikilink brackets are not misinterpreted as indicating phonetic transcription
 	local without_links = gsub(pron, "%[%[[^|%]]+|([^%]]+)%]%]", "%1")
 	without_links = gsub(without_links, "%[%[[^%]]+%]%]", "%1")
 
@@ -519,7 +519,7 @@ function export.format_IPA(lang, pron, split_output)
 
 			while #rest > 0 do
 				local longestmatch, longestmatch_len = "", 0
-				
+
 				local rest_init = sub(rest, 1, 1)
 				if rest_init == "(" or rest_init == ")" then
 					longestmatch = rest_init
@@ -564,6 +564,44 @@ function export.format_IPA(lang, pron, split_output)
 		pron = "*" .. pron
 	end
 
+	return pron
+end
+
+--[==[
+Format an IPA pronunciation. This wraps the pronunciation in appropriate CSS classes and adds cleanup categories and
+error messages as needed. The pronunciation `pron` should be either phonemic (surrounded by {/.../}), phonetic
+(surrounded by {[...]}), orthographic (surrounded by {⟨...⟩}), a rhyme (beginning with a hyphen) or a combined
+phonemic/phonetic spec (of the form {/.../ [...]}). `lang` indicates the language of the pronunciation and can be {nil}.
+If not {nil}, and the specified language has data in [[Module:IPA/data]] indicating the allowed phonemes, then the page
+will be added to a cleanup category and an error message displayed next to the outputted pronunciation. Note that {lang}
+also determines sort key processing in the added cleanup categories. If `split_output` is not given, the return value is a
+concatenation of the formatted pronunciation, error messages and formatted cleanup categories. Otherwise, three values are
+returned: the formatted pronunciation, the cleanup categories and the concatenated error messages. If `split_output` is
+the value {"raw"}, the cleanup categories are returned in list form, where the list elements are a combination of category
+strings and category objects of the form suitable for passing to {format_categories()} in [[Module:utilities]]. If
+`split_output` is any other value besides {nil}, the cleanup categories are returned as a pre-formatted concatenated
+string.
+]==]
+function export.format_IPA(lang, pron, split_output)
+	local err = {}
+	local categories = {}
+
+	-- `pron` shouldn't contain ref tags.
+	if match(pron, "\127'\"`UNIQ%-%-ref%-[%dA-F]+%-QINU`\"'\127") then
+		error("<ref> tags found inside pronunciation parameter.")
+	end
+
+	if not lang then
+		track("format-nolang")
+	end
+
+	local phonemic, phonetic = split_phonemic_phonetic(pron)
+	pron = format_one_IPA(lang, phonemic, err, categories)
+	if phonetic then
+		phonetic = format_one_IPA(lang, phonetic, err, categories)
+		pron = pron .. " " .. phonetic
+	end
+
 	if err[1] then
 		err = '<span class="previewonly error" style="font-size: small;>&#32;' .. concat(err, ", ") .. "</span>"
 	else
@@ -594,7 +632,7 @@ function export.format_enPR_full(data)
 		end
 		insert(parts, part)
 	end
-	
+
 	local prontext = prefix .. concat(parts, ", ")
 	if data.q and data.q[1] or data.qq and data.qq[1] or data.a and data.a[1] or data.aa and data.aa[1] then
 		prontext = require(pron_qualifier_module).format_qualifiers {
@@ -606,7 +644,7 @@ function export.format_enPR_full(data)
 			aa = data.aa,
 		}
 	end
-	
+
 	return prontext
 end
 
