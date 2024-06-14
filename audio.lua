@@ -195,7 +195,7 @@ function export.format_audio(data)
 		end
 		ins(wrap_qual_css(")", "brac"))
 	end
-	
+
 	if data.bad then
 		track("bad-audio")
 		track("bad-audio/" .. data.lang:getCode())
@@ -266,7 +266,7 @@ function export.format_multiple_audios(data)
 		table.insert(rows, text)
 		caption = nil
 	end
-	
+
 	local function repl(key)
 		if key == "rows" then
 			return table.concat(rows, "\n")
@@ -354,6 +354,7 @@ function export.show(frame)
 		["IPA"] = {},
 		["text"] = {},
 		["t"] = {},
+		["gloss"] = {alias_of = "t"},
 		["tr"] = {},
 		["ts"] = {},
 		["pos"] = {},
