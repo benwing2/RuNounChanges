@@ -194,14 +194,16 @@ end
 
 --[==[
 Check whether a term contains top-level HTML. We want to distinguish inline modifiers from HTML. We assume an inline
-modifier is either a boolean modifier like <bor> or a prefix modifier like <tr:Miryem>. All other things inside of
-angle brackets, e.g. <span class="foo">, </span>, <br/>, etc., should be flagged as HTML (typically caused by wrapping
-an argument in {{m|...}}, {{af|...}} or similar, but sometimes specified directly, e.g. <sup>6</sup>). By default, we
-assume the tag in an inline modifier contains either letters, numbers, hyphens or underscore (but not spaces), and must
-either stand alone or be followed by a colon, leading to a default HTML-checking pattern of {"<[%w_%-]*[^%w_%-:>]"}.
-But this can be modified; e.g. [[Module:tl-pronunciation]] allows modifiers of the form <POS^DEFN> or
-<POS,POS,POS^DEFN>, and would need to use its own HTML pattern. It's important we restrict the check for HTML to
-top-level to allow for generated HTML inside of e.g. qualifier tags, such as foo<q:similar to {{m|fr|bar}}>.
+modifier is either a boolean modifier like `<bor>` or a prefix modifier like `<tr:Miryem>`. All other things inside of
+angle brackets, e.g. `<nowiki><span class="foo"></nowiki>`, `<nowiki></span></nowiki>`, `<nowiki><br/></nowiki>`, etc.,
+should be flagged as HTML (typically caused by wrapping an argument in {{tl|m|...}}, {{tl|af|...}} or similar, but
+sometimes specified directly, e.g. `<nowiki><sup>6</sup></nowiki>`). By default, we assume the tag in an inline modifier
+contains either letters, numbers, hyphens or underscore (but not spaces), and must either stand alone or be followed by
+a colon, leading to a default HTML-checking pattern of {"<[%w_%-]*[^%w_%-:>]"}. But this can be modified; e.g.
+[[Module:tl-pronunciation]] allows modifiers of the form `<<var>pos</var>^<var>defn</var>>` or
+`<<var>pos</var>,<var>pos</var>,<var>pos</var>^<var>defn</var>>`, and would need to use its own HTML pattern. It's
+important we restrict the check for HTML to top-level to allow for generated HTML inside of e.g. qualifier tags, such as
+`<nowiki>foo<q:similar to {{m|fr|bar}}></nowiki>`.
 ]==]
 function export.term_contains_top_level_html(term, html_pattern)
 	html_pattern = html_pattern or "<[%w_%-]*[^%w_%-:>]"
