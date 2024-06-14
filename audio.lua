@@ -23,13 +23,8 @@ local function rsplit(text, pattern)
 	return require(string_utilities_module).split(text, pattern)
 end
 
-local function wrap_css(text, classes)
-	return ("<span class=\"%s\">%s</span>"):format(classes, text)
-end
-
-local function wrap_qual_css(text, suffix)
-	local css_classes = ("ib-%s qualifier-%s"):format(suffix, suffix)
-	return wrap_css(text, css_classes)
+local function wrap_qualifier_css(text, suffix)
+	return require(qualifier_module).wrap_qualifier_css(text, suffix)
 end
 
 
@@ -133,13 +128,13 @@ function export.format_audio(data)
 		end
 		ins(data.caption or "Audio")
 		if has_qual then
-			ins(" " .. wrap_qual_css("(", "brac"))
+			ins(" " .. wrap_qualifier_css("(", "brac"))
 		end
 	end
 	if formatted_accent_labels then
 		ins(formatted_accent_labels)
 		if formatted_qualifiers then
-			ins(wrap_qual_css(",", "comma") .. " ")
+			ins(wrap_qualifier_css(",", "comma") .. " ")
 		end
 	end
 	if formatted_qualifiers then
@@ -147,11 +142,11 @@ function export.format_audio(data)
 	end
 	if has_qual then
 		if not data.nocaption then
-			ins(wrap_qual_css(")", "brac"))
+			ins(wrap_qualifier_css(")", "brac"))
 		end
 	end
 	if (formatted_text or formatted_ipa) and (has_qual or not data.nocaption) then
-		ins(wrap_qual_css(";", "semicolon") .. " ")
+		ins(wrap_qualifier_css(";", "semicolon") .. " ")
 	end
 	if formatted_text then
 		ins(formatted_text)
@@ -161,7 +156,7 @@ function export.format_audio(data)
 	end
 	ins(formatted_ipa)
 	if not data.nocaption then
-		ins(wrap_qual_css(":", "colon"))
+		ins(wrap_qualifier_css(":", "colon"))
 	end
 
 	local pretext = make_td_if(table.concat(pretext_parts))
@@ -183,23 +178,23 @@ function export.format_audio(data)
 		if formatted_references then
 			ins(" ")
 		end
-		ins(wrap_qual_css("(", "brac"))
+		ins(wrap_qualifier_css("(", "brac"))
 		if formatted_post_accent_labels then
 			ins(formatted_post_accent_labels)
 			if formatted_post_qualifiers then
-				ins(wrap_qual_css(",", "comma") .. " ")
+				ins(wrap_qualifier_css(",", "comma") .. " ")
 			end
 		end
 		if formatted_post_qualifiers then
 			ins(formatted_post_qualifiers)
 		end
-		ins(wrap_qual_css(")", "brac"))
+		ins(wrap_qualifier_css(")", "brac"))
 	end
 
 	if data.bad then
 		track("bad-audio")
 		track("bad-audio/" .. data.lang:getCode())
-		ins(" " .. wrap_css("[bad recording: " .. data.bad .. "]", "bad-audio-note"))
+		ins(" " .. require(qualifier_module).wrap_css("[bad recording: " .. data.bad .. "]", "bad-audio-note"))
 	end
 
 	local posttext = make_td_if(table.concat(posttext_parts))
@@ -320,7 +315,7 @@ function export.construct_audio_textobj(args)
 		local text = args.text or args.pagename or mw.loadData("Module:headword/data").pagename
 		textobj = {
 			lang = args.lang,
-			alt = wrap_qual_css("“", "quote") .. text .. wrap_qual_css("”", "quote"),
+			alt = wrap_qualifier_css("“", "quote") .. text .. wrap_qualifier_css("”", "quote"),
 			gloss = args.t,
 			tr = args.tr,
 			ts = args.ts,
