@@ -1,12 +1,12 @@
 local export = {}
 
+local dump = mw.dumpObject
 local labels_module = "Module:labels"
 local languages_module = "Module:languages"
-local parameters_module = "Module:parameters"
+local parameters_module = "Module:User:Benwing2/parameters"
 local parse_utilities_module = "Module:parse utilities"
 local references_module = "Module:references"
 local scripts_module = "Module:scripts"
-local string_utilities_module = "Module:string utilities"
 
 local function track(page, track_module)
 	return require("Module:debug/track")((track_module or "parameter utilities") .. "/" .. page)
@@ -24,28 +24,6 @@ end
 function export.parse_references(arg, parse_err)
 	return require(references_module).parse_references(arg, parse_err)
 end
-
-function export.parse_script(arg, parse_err)
-	return require(scripts_module).getByCode(arg, parse_err)
-end
-
-function export.parse_lang(arg, parse_err, allow_etym, allow_family)
-	return require(languages_module).getByCode(arg, parse_err, allow_etym, allow_family)
-end
-
-local function rsplit(text, pattern)
-	return require(string_utilities_module).split(text, pattern)
-end
-
-function export.split_on_comma_allow_whitespace(arg, parse_err)
-	if arg:find(",") then
-		return rsplit(arg, "%s*,%s*")
-	else
-		return {arg}
-	end
-end
-
-function export.parse_genders = export.split_on_comma_allow_whitespace
 
 --[==[ intro:
 The `param_mods` structure holds per-param modifiers, which can be specified either as separate parameters (e.g.
@@ -74,7 +52,7 @@ function export.augment_param_mods_with_pron_qualifiers(param_mods, qtypes)
 	qtypes = qtypes or {"q", "a", "ref"}
 	for _, qtype in ipairs(qtypes) do
 		if type(qtype) == "string" then
-			qtype = {qtype}
+			qtype = {param = qtype}
 		end
 		local param = qtype.param
 		local function get_separate_no_index(default)
@@ -91,28 +69,28 @@ function export.augment_param_mods_with_pron_qualifiers(param_mods, qtypes)
 				separate_no_index = get_separate_no_index(true),
 				convert = export.parse_qualifier,
 			}
-			pron_qualifier_param_mods.q = qspec
-			pron_qualifier_param_mods.qq = qspec
+			param_mods.q = qspec
+			param_mods.qq = qspec
 		elseif param == "a" or param == "l" then
 			local laspec = {
 				separate_no_index = get_separate_no_index(true),
 				convert = export.parse_labels,
 			}
-			if qtype == "a" then
-				pron_qualifier_param_mods.a = laspec
-				pron_qualifier_param_mods.aa = laspec
+			if param == "a" then
+				param_mods.a = laspec
+				param_mods.aa = laspec
 			else
-				pron_qualifier_param_mods.l = laspec
-				pron_qualifier_param_mods.ll = laspec
+				param_mods.l = laspec
+				param_mods.ll = laspec
 			end
 		elseif param == "ref" then
-			pron_qualifier_param_mods.ref = {
+			param_mods.ref = {
 				item_dest = "refs",
 				separate_no_index = get_separate_no_index(false),
 				convert = export.parse_references,
 			}
 		else
-			error(("Internal error: Unrecognized qualifier type '%s'"):format(qtype))
+			error(("Internal error: Unrecognized qualifier type %s"):format(dump(param)))
 		end
 	end
 end
