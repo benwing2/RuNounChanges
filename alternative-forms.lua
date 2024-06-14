@@ -10,20 +10,8 @@ local function track(page)
 	require("Module:debug/track")("alter/" .. page)
 end
 
--- Per-param modifiers, which can be specified either as separate parameters (e.g. t2=, pos3=) or as inline modifiers
--- <t:...>, <pos:...>, etc. The key is the name fo the parameter (e.g. "t", "pos") and the value is a table with
--- elements as follows:
--- * `extra_specs`: An optional table of extra key-value pairs to add to the spec used for parsing the parameter
---                  when specified as a separate parameter (e.g. {type = "boolean"} for a Boolean parameter, or
---                  {alias_of = "t"} for the "gloss" parameter, which is aliased to "t"), on top of the default, which
---                  is {list = true, allow_holes = true}.
--- * `convert`: An optional function to convert the raw argument into the form passed to [[Module:links]].
---              This function takes two parameters: (1) `arg` (the raw argument); (2) `parse_err` (a function used to
---              throw an error in case of a parse error).
--- * `item_dest`: The name of the key used when storing the parameter's value into the processed `term` or `termobj`
---                object. Normally the same as the parameter's name. Different in the case of "t", where we store the
---                gloss in "gloss", and "g", where we store the genders in "genders".
 local param_mods = {
+	alt = {},
 	t = {
 		-- We need to store the t1=/t2= param and the <t:...> inline modifier into the "gloss" key of the parsed term,
 		-- because that is what [[Module:links]] expects.
@@ -43,35 +31,14 @@ local param_mods = {
 			return rsplit(arg, ",")
 		end,
 	},
-	id = {},
-	alt = {},
-	q = {},
-	qq = {},
-	lit = {},
 	pos = {},
+	lit = {},
+	id = {},
 	sc = {
-		-- sc1=, sc2=, ... are different from sc=; the former apply to individual arguments while the latter applies to
-		-- all arguments. To handle this in separate parameters, we need to set the key in the `params` object passed to
-		-- [[Module:parameters]] to something else (in this case "partsc") and set `list = "sc"` and
-		-- `require_index = true` in the value of the `params` object. This causes [[Module:parameters]] to fetch
-		-- parameters named sc1=, sc2= etc. but store them into "partsc", while sc= is stored into "sc".
-		param_key = "partsc",
-		require_index = true,
-		extra_specs = {list = "sc"},
-		convert = function(arg, parse_err)
-			return require("Module:scripts").getByCode(arg, parse_err)
-		end,
+		separate_no_index = true,
+		extra_specs = {type = "script"},
 	},
 }
-
-local function get_valid_prefixes()
-	local valid_prefixes = {}
-	for param_mod, _ in pairs(param_mods) do
-		table.insert(valid_prefixes, param_mod)
-	end
-	table.sort(valid_prefixes)
-	return valid_prefixes
-end
 
 --[==[
 Main function for displaying alternative forms. Extracted out from the template-callable function so this can be
@@ -81,33 +48,17 @@ em-dash. `allow_self_link` causes terms the same as the pagename to be shown nor
 unlinked.
 ]==]
 function export.display_alternative_forms(parent_args, pagename, show_labels_after_terms, allow_self_link)
-	local list_with_holes = { list = true, allow_holes = true }
 	local params = {
-		[1] = { required = true, default = "und" },
-		[2] = list_with_holes,
-		["sc"] = {},
+		[1] = {required = true, type = "language", etym_lang = true, default = "en"},
+		[2] = {list = true, allow_holes = true},
+		["sc"] = {type = "script"},
 	}
 
-	-- Add parameters for each term modifier.
-	for param_mod, param_mod_spec in pairs(param_mods) do
-		local param_key = param_mod_spec.param_key or param_mod
-		if not param_mod_spec.extra_specs then
-			params[param_key] = list_with_holes
-		else
-			local param_spec = mw.clone(list_with_holes)
-			for k, v in pairs(param_mod_spec.extra_specs) do
-				param_spec[k] = v
-			end
-			if param_mod_spec.require_index then
-				param_spec.require_index = true
-			end
-			params[param_key] = param_spec
-		end
-	end
+	local m_param_utils = require(parameter_utilities_module)
+	m_param_utils.augment_param_mods_with_pron_qualifiers(param_mods)
+	m_param_utils.augment_params_with_modifiers(params, param_mods)
 
 	local args = require("Module:parameters").process(parent_args, params)
-	local lang = m_languages.getByCode(args[1], 1, "allow etym")
-	local sc = args["sc"] and require("Module:scripts").getByCode(args["sc"], "sc") or nil
 
 	local raw_labels = {}
 	local items = {}
