@@ -45,6 +45,26 @@ local function concat_list(list, conjunction, dump_vals)
 	return list_to_text(list, nil, conjunction)
 end
 
+local function convert_val_error(val, name, typ, seetext)
+	local function format_choice_list(typ)
+		return (#typ > 1 and "either " or "") .. concat_list(typ, " or ")
+	end
+	if type(name) == "function" then
+		if type(typ) == "table" then
+			typ = "choice, must be " .. format_choice_list(typ)
+		end
+		name(("Invalid %s; the value %s is not valid%s"):format(typ, val, seetext and "; see " .. seetext or ""))
+	else
+		if type(typ) == "table" then
+			typ = "must be " .. format_choice_list(typ)
+		else
+			typ = "should be a valid " .. typ
+		end
+		error(("Parameter %s %s; the value %s is not valid.%s"):format(name, typ, val,
+			seetext and " See " .. seetext .. "." or ""))
+	end
+end
+
 local function check_set(val, name, param)
 	if not param.set[val] then
 		local list = {}
@@ -56,11 +76,11 @@ local function check_set(val, name, param)
 		if not param.required then
 			insert(list, "empty")
 		end
-		error("Parameter " .. dump(name) .. " must be " .. (#param.set > 1 and "either " or "") .. concat_list(list, " or ") .. "; the value " .. dump(val) .. " is not valid.")
+		convert_val_error(val, name, list)
 	end
 end
 
-local get_val = setmetatable({
+local convert_val = setmetatable({
 	["boolean"] = function(val)
 		-- Set makes no sense with booleans, so don't bother checking for it.
 		return yesno(val, true)
@@ -71,7 +91,7 @@ local get_val = setmetatable({
 			check_set(val, name, param)
 		end
 		return require("Module:families")[param.method == "name" and "getByCanonicalName" or "getByCode"](val) or
-			error("Parameter " .. dump(name) .. " should be a valid family " .. (param.method == "name" and "name" or "code") .. "; the value " .. dump(val) .. " is not valid. See [[WT:LOF]].")
+			convert_val_error(val, name, "family " .. (param.method == "name" and "name" or "code"), "[[WT:LOF]]")
 	end,
 	
 	["language"] = function(val, name, param)
@@ -92,7 +112,8 @@ local get_val = setmetatable({
 			insert(list, "family")
 			insert(links, "[[WT:LOF]]")
 		end
-		error("Parameter " .. dump(name) .. " should be a valid " .. concat_list(list, " or ") .. " " .. (param.method == "name" and "name" or "code") .. "; the value " .. dump(val) .. " is not valid. See " .. concat_list(links, " and ") .. ".")
+		convert_val_error(val, name, concat_list(list, " or ") .. " " .. (param.method == "name" and "name" or "code"),
+			concat_list(links, " and "))
 	end,
 	
 	["number"] = function(val, name, param)
@@ -101,7 +122,7 @@ local get_val = setmetatable({
 		end
 		-- Avoid converting inputs like "nan" or "inf".
 		val = tonumber(val:match("^[+%-]?%d+%.?%d*")) or
-			error("Parameter " .. dump(name) .. " should be a valid number; the value " .. dump(val) .. " is not valid.")
+			convert_val_error(val, name, "number")
 		if param.set then
 			check_set(val, name, param)
 		end
@@ -113,7 +134,7 @@ local get_val = setmetatable({
 			check_set(val, name, param)
 		end
 		return require("Module:scripts")[param.method == "name" and "getByCanonicalName" or "getByCode"](val) or
-			error("Parameter " .. dump(name) .. " should be a valid script " .. (param.method == "name" and "name" or "code") .. "; the value " .. dump(val) .. " is not valid. See [[WT:LOS]].")
+			convert_val_error(val, name, "script " .. (param.method == "name" and "name" or "code"), "[[WT:LOS]]")
 	end,
 	
 	["string"] = function(val, name, param)
@@ -128,7 +149,7 @@ local get_val = setmetatable({
 			check_set(val, name, param)
 		end
 		return require("Module:wikimedia languages").getByCode(val) or
-			error("Parameter " .. dump(name) .. " should be a valid wikimedia language code; the value " .. dump(val) .. " is not valid.")
+			convert_val_error(val, name, "wikimedia language code")
 	end,
 }, {
 	__call = function(self, val, name, param)
@@ -146,6 +167,25 @@ local get_val = setmetatable({
 		end
 	end
 })
+export.convert_val = convert_val -- used by [[Module:parameter utilities]]
+
+local function process_error(fmt, ...)
+	local args = {...}
+	for i, val in ipairs(args) do
+		args[i] = dump(val)
+	end
+	if type(fmt) == "table" then
+		-- hacky signal that we're called from internal_process_error(), and not to omit stack frames
+		return error(fmt[1]:format(args))
+	else
+		return error(fmt:format(args), 3)
+	end
+end
+
+local function internal_process_error(fmt, ...)
+	fmt = "Internal error in `params` table: " .. fmt
+	process_error({fmt}, ...)
+end
 
 function export.process(args, params, return_unknown)
 	-- Process parameters for specific properties
@@ -160,7 +200,9 @@ function export.process(args, params, return_unknown)
 		-- Populate required table, and make sure aliases aren't set to required.
 		if param.required then
 			if param.alias_of then
-				error("`params` table error: parameter " .. dump(name) .. " is an alias of " .. dump(param.alias_of) .. ", but is also set as a required parameter. Only " .. dump(name) .. " should be set as required.")
+				internal_process_error(
+					"Parameter %s is an alias of %s, but is also set as a required parameter. Only %s should be set as required.",
+					name, param.alias_of, name)
 			end
 			required[name] = true
 		end
@@ -177,24 +219,32 @@ function export.process(args, params, return_unknown)
 		if alias then
 			-- Check that the alias_of is set to a valid parameter.
 			if not params[alias] then
-				error("`params` table error: parameter " .. dump(name) .. " is an alias of an invalid parameter.")
+				internal_process_error("Parameter %s is an alias of an invalid parameter.", name)
 			end
 			-- Check that all the parameters in params are in the form Scribunto normalizes input argument keys into (e.g. 1 not "1", "foo" not " foo "). Otherwise, this function won't be able to normalize the input arguments in the expected way.
 			local normalized = scribunto_param_key(alias)
 			if alias ~= normalized then
-				error("`params` table error: parameter " .. dump(alias) .. " (a " .. type(alias) .. ") given in the alias_of field of parameter " .. dump(name) .. " is not a normalized Scribunto parameter. Should be " .. dump(normalized) .. " (a " .. type(normalized) .. ").")
+				internal_process_error(
+					"Parameter %s (a " .. type(alias) .. ") given in the alias_of field of parameter %s is not a normalized Scribunto parameter. Should be %s (a " .. type(normalized) .. ").",
+					alias, name, normalized)
 			-- Aliases can't be lists unless the canonical parameter is also a list.
 			elseif param.list and not params[alias].list then
-				error("`params` table error: the list parameter " .. dump(name) .. " is set as an alias of " .. dump(alias) .. ", which is not a list parameter.")
+				internal_process_error(
+					"The list parameter %s is set as an alias of %s, which is not a list parameter.", name, alias)
 			-- Aliases can't be aliases of other aliases.
 			elseif params[alias].alias_of then
-				error("`params` table error: alias_of cannot be set to another alias: parameter " .. dump(name) .. " is set as an alias of " .. dump(alias) .. ", which is in turn an alias of " .. dump(params[alias].alias_of) .. ". Set alias_of for " .. dump(name) .. " to " .. dump(params[alias].alias_of) .. ".")
+				internal_process_error(
+					"Alias_of cannot be set to another alias: parameter %s is set as an alias of %s, which is in turn an alias of %s. Set alias_of for %s to %s.",
+					name, alias, params[alias].alias_of, name, params[alias].alias_of)
 			end
 		end
 		
 		local normalized = scribunto_param_key(name)
 		if name ~= normalized then
-			error("`params` table error: parameter " .. dump(name) .. " (a " .. type(name) .. ") is not a normalized Scribunto parameter. Should be " .. dump(normalized) .. " (a " .. type(normalized) .. ").")
+			internal_process_error(
+				"Parameter %s (a " .. type(name) .. ") is not a normalized Scribunto parameter. Should be %s (a " ..
+				type(normalized) .. ").",
+				name, normalized)
 		end
 		
 		if param.list then
@@ -215,7 +265,8 @@ function export.process(args, params, return_unknown)
 				save_pattern(name, param.list, patterns)
 			elseif type(name) == "number" then
 				if list_from_index then
-					error("`params` table error: only one numeric parameter can be a list, unless the list property is a string.")
+					internal_process_error(
+						"Only one numeric parameter can be a list, unless the list property is a string.")
 				end
 				-- If the name is a number, then all indexed parameters from
 				-- this number onwards go in the list.
@@ -268,7 +319,7 @@ function export.process(args, params, return_unknown)
 		if param and param.require_index then
 			-- Disallow require_index for numeric parameter names, as this doesn't make sense.
 			if raw_type == "number" then
-				error("`params` table error: cannot set require_index for numeric parameter " .. dump(name) .. ".")
+				internal_process_error("Cannot set require_index for numeric parameter %s.", name)
 			-- If a parameter without the trailing index was found, and
 			-- require_index is set on the param, set the param to nil to treat it
 			-- as if it isn't recognized.
@@ -283,15 +334,17 @@ function export.process(args, params, return_unknown)
 			if return_unknown then
 				args_unknown[name] = val
 			else
-				error("Parameter " .. dump(name) .. " is not used by this template.", 2)
+				process_error("Parameter %s is not used by this template.", name)
 			end
 		else
 			-- Check that separate_no_index is not being used with a numeric parameter.
 			if param.separate_no_index then
 				if raw_type == "number" then
-					error("`params` table error: cannot set separate_no_index for numeric parameter " .. dump(name) .. ".")
+					internal_process_error("Cannot set separate_no_index for numeric parameter %s.", name)
 				elseif type(param.alias_of) == "number" then
-					error("`params` table error: cannot set separate_no_index for parameter " .. dump(name) .. ", as it is an alias of numeric parameter " .. dump(param.alias_of) .. ".")
+					internal_process_error(
+						"Cannot set separate_no_index for parameter %s, as it is an alias of numeric parameter %s.",
+						name, param.alias_of)
 				end
 			end
 			
@@ -363,7 +416,7 @@ function export.process(args, params, return_unknown)
 			-- Can't use "if val" alone, because val may be a boolean false.
 			if val ~= nil then
 				-- Convert to proper type if necessary.
-				val = get_val(val, orig_name, params[raw_name] or param)
+				val = convert_val(val, orig_name, params[raw_name] or param)
 				
 				-- Mark it as no longer required, as it is present.
 				required[name] = nil
@@ -372,7 +425,9 @@ function export.process(args, params, return_unknown)
 				if index then
 					-- If the parameter is duplicated, throw an error.
 					if args_new[name][index] ~= nil then
-						error("Parameter " .. dump(normalized) .. " has been entered more than once. This is probably because a list parameter has been entered without an index and with index 1 at the same time, or because a parameter alias has been used.")
+						process_error(
+							"Parameter %s has been entered more than once. This is probably because a list parameter has been entered without an index and with index 1 at the same time, or because a parameter alias has been used.",
+							normalized)
 					end
 					args_new[name][index] = val
 					
@@ -400,7 +455,9 @@ function export.process(args, params, return_unknown)
 				else
 					-- If the parameter is duplicated, throw an error.
 					if args_new[name] ~= nil then
-						error("Parameter " .. dump(normalized) .. " has been entered more than once. This is probably because a parameter alias has been used.")
+						process_error(
+							"Parameter %s has been entered more than once. This is probably because a parameter alias has been used.",
+							normalized)
 					end
 					
 					if not param.alias_of then
@@ -442,7 +499,9 @@ function export.process(args, params, return_unknown)
 							else
 								listname = dump(name)
 							end
-							error(("Item %s in the list of %s parameters cannot be empty, because the list must be contiguous."):format(dump(i), listname))
+							process_error(
+								"Item %s in the list of " .. listname .. " parameters cannot be empty, because the list must be contiguous.",
+								i)
 						end
 					end
 					-- Some code depends on only numeric params being present
@@ -463,14 +522,14 @@ function export.process(args, params, return_unknown)
 			local arg_new = args_new[name]
 			if type(arg_new) == "table" and arg_new._list then
 				if arg_new[1] == nil then
-					arg_new[1] = get_val(param.default, name, param)
+					arg_new[1] = convert_val(param.default, name, param)
 				end
 				if arg_new.maxindex == 0 then
 					arg_new.maxindex = 1
 				end
 				arg_new._list = nil
 			elseif arg_new == nil then
-				args_new[name] = get_val(param.default, name, param)
+				args_new[name] = convert_val(param.default, name, param)
 			end
 		end
 	end
@@ -484,10 +543,10 @@ function export.process(args, params, return_unknown)
 		end
 		local n = #list
 		if n > 0 then
-			error("Parameter" .. (
+			process_error("Parameter" .. (
 				n == 1 and (" " .. list[1] .. " is") or
 				("s " .. concat_list(list, " and ", true) .. " are")
-			) .. " required.", 2)
+			) .. " required.")
 		end
 	end
 	
