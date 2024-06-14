@@ -934,6 +934,15 @@ function export.parse_inline_modifiers_from_segments(data)
 			local converted
 			if convert then
 				converted = convert(val, prefix_parse_err)
+			elseif data.default_convert then
+				converted = data.default_convert {
+					val = val,
+					parse_err = prefix_parse_err,
+					prefix = prefix,
+					param_mod_spec = mod_props,
+					dest = dest,
+					key = key,
+				}
 			else
 				converted = val
 			end
