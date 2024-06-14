@@ -1,8 +1,12 @@
 local export = {}
 
 local labels_module = "Module:labels"
+local languages_module = "Module:languages"
+local parameters_module = "Module:parameters"
 local parse_utilities_module = "Module:parse utilities"
 local references_module = "Module:references"
+local scripts_module = "Module:scripts"
+local string_utilities_module = "Module:string utilities"
 
 local function track(page, track_module)
 	return require("Module:debug/track")((track_module or "parameter utilities") .. "/" .. page)
@@ -12,7 +16,7 @@ function export.parse_qualifier(arg, parse_err)
 	return {arg}
 end
 
-function export.parse_accent_qualifier(arg, parse_err)
+function export.parse_labels(arg, parse_err)
 	-- FIXME: Pass `parse_err` to split_labels_on_comma().
 	return require(labels_module).split_labels_on_comma(arg)
 end
@@ -20,6 +24,28 @@ end
 function export.parse_references(arg, parse_err)
 	return require(references_module).parse_references(arg, parse_err)
 end
+
+function export.parse_script(arg, parse_err)
+	return require(scripts_module).getByCode(arg, parse_err)
+end
+
+function export.parse_lang(arg, parse_err, allow_etym, allow_family)
+	return require(languages_module).getByCode(arg, parse_err, allow_etym, allow_family)
+end
+
+local function rsplit(text, pattern)
+	return require(string_utilities_module).split(text, pattern)
+end
+
+function export.split_on_comma_allow_whitespace(arg, parse_err)
+	if arg:find(",") then
+		return rsplit(arg, "%s*,%s*")
+	else
+		return {arg}
+	end
+end
+
+function export.parse_genders = export.split_on_comma_allow_whitespace
 
 --[==[ intro:
 The `param_mods` structure holds per-param modifiers, which can be specified either as separate parameters (e.g.
@@ -41,34 +67,53 @@ The `param_mods` structure holds per-param modifiers, which can be specified eit
   etc.; but prefer using `separate_no_index = true` in place of this.
 * `require_index`: Same as the `require_index` property in [[Module:parameters]].
 * `separate_no_index`: Same as the `separate_no_index` property in [[Module:parameters]].
+* `type`: Like the `type` property in [[Module:parameters]].
 ]==]
 
-local pron_qualifier_param_mods = {
-	q = {
-		separate_no_index = true,
-		convert = export.parse_qualifier,
-	},
-	qq = {
-		separate_no_index = true,
-		convert = export.parse_qualifier,
-	},
-	a = {
-		separate_no_index = true,
-		convert = export.parse_accent_qualifier,
-	},
-	aa = {
-		separate_no_index = true,
-		convert = export.parse_accent_qualifier,
-	},
-	ref = {
-		item_dest = "refs",
-		convert = export.parse_references,
-	},
-}
+function export.augment_param_mods_with_pron_qualifiers(param_mods, qtypes)
+	qtypes = qtypes or {"q", "a", "ref"}
+	for _, qtype in ipairs(qtypes) do
+		if type(qtype) == "string" then
+			qtype = {qtype}
+		end
+		local param = qtype.param
+		local function get_separate_no_index(default)
+			local retval = qtype.separate_no_index
+			if retval == nil then
+				return default
+			else
+				return retval
+			end
+		end
 
-function export.augment_param_mods_with_pron_qualifiers(param_mods)
-	for k, v in pairs(pron_qualifier_param_mods) do
-		param_mods[k] = v
+		if param == "q" then
+			local qspec = {
+				separate_no_index = get_separate_no_index(true),
+				convert = export.parse_qualifier,
+			}
+			pron_qualifier_param_mods.q = qspec
+			pron_qualifier_param_mods.qq = qspec
+		elseif param == "a" or param == "l" then
+			local laspec = {
+				separate_no_index = get_separate_no_index(true),
+				convert = export.parse_labels,
+			}
+			if qtype == "a" then
+				pron_qualifier_param_mods.a = laspec
+				pron_qualifier_param_mods.aa = laspec
+			else
+				pron_qualifier_param_mods.l = laspec
+				pron_qualifier_param_mods.ll = laspec
+			end
+		elseif param == "ref" then
+			pron_qualifier_param_mods.ref = {
+				item_dest = "refs",
+				separate_no_index = get_separate_no_index(false),
+				convert = export.parse_references,
+			}
+		else
+			error(("Internal error: Unrecognized qualifier type '%s'"):format(qtype))
+		end
 	end
 end
 
@@ -77,20 +122,21 @@ function export.augment_params_with_modifiers(params, param_mods)
 	-- Add parameters for each term modifier.
 	for param_mod, param_mod_spec in pairs(param_mods) do
 		local param_key = param_mod_spec.param_key or param_mod
-		if not param_mod_spec.extra_specs and not param_mod_spec.require_index and not param_mod_spec.separate_no_index then
+		local has_extra_specs = false
+		for k, _ in pairs(param_mod_spec) do
+			if k ~= "param_key" and k ~= "item_dest" and k ~= "convert" then
+				has_extra_specs = true
+				break
+			end
+		end
+		if not has_extra_specs then
 			params[param_key] = list_with_holes
 		else
 			local param_spec = mw.clone(list_with_holes)
-			if param_mod_spec.extra_specs then
-				for k, v in pairs(param_mod_spec.extra_specs) do
+			for k, v in pairs(param_mod_spec) do
+				if k ~= "param_key" and k ~= "item_dest" and k ~= "convert" then
 					param_spec[k] = v
 				end
-			end
-			if param_mod_spec.require_index then
-				param_spec.require_index = true
-			end
-			if param_mod_spec.separate_no_index then
-				param_spec.separate_no_index = true
 			end
 			params[param_key] = param_spec
 		end
@@ -150,6 +196,7 @@ function export.process_list_arguments(data)
 				-- Initialize the `termobj` object passed to full_link() in [[Module:links]].
 				local termobj = {
 					separator = i > 1 and (term_args[i - 1] == ";" and "; " or ", ") or "",
+					termno = termno,
 				}
 
 				-- Parse all the term-specific parameters and store in `termobj`.
@@ -158,7 +205,12 @@ function export.process_list_arguments(data)
 					local param_key = param_mod_spec.param_key or param_mod
 					local arg = data.args[param_key] and data.args[param_key][termno]
 					if arg then
-						if param_mod_spec.convert then
+						if param_mod_spec.convert or param_mod_spec.type or param_mod_spec.set or
+							param_mod_spec.sublist then
+							-- WARNING: Here we embed some knowledge of convert_val() in [[Module:parameters]],
+							-- specifically that if none of `type`, `set` and `sublist` are set, the conversion is an
+							-- identity operation and can be skipped. If this becomes problematic, remove the
+							-- optimization.
 							local function parse_err(msg, stack_frames_to_ignore)
 								error(("%s: %s%s=%s"):format(
 									msg, param_mod, (termno > 1 or param_mod_spec.require_index or
@@ -166,7 +218,11 @@ function export.process_list_arguments(data)
 								), stack_frames_to_ignore
 								)
 							end
-							arg = param_mod_spec.convert(arg, parse_err)
+							if param_mod_spec.convert then
+								arg = param_mod_spec.convert(arg, parse_err)
+							else
+								arg = require(parameters_module).convert_val(arg, parse_err, param_mod_spec)
+							end
 						end
 						termobj[dest] = arg
 					end
