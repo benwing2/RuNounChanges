@@ -6,10 +6,11 @@ local force_cat = false -- for testing
 local m_data = mw.loadData("Module:IPA/data")
 local m_str_utils = require("Module:string utilities")
 local m_symbols = mw.loadData("Module:IPA/data/symbols")
+local pron_qualifier_module = "Module:pron qualifier"
+local qualifier_module = "Module:qualifier"
 local references_module = "Module:references"
 local syllables_module = "Module:syllables"
 local utilities_module = "Module:utilities"
-local pron_qualifier_module = "Module:pron qualifier"
 local m_syllables -- [[Module:syllables]]; loaded below if needed
 
 local concat = table.concat
@@ -295,12 +296,29 @@ function export.format_IPA_multiple(lang, items, separator, no_count, split_outp
 			bit = bit .. item.posttext
 		end
 
-		if item.q and item.q[1] or item.qq and item.qq[1] or item.qualifiers and item.qualifiers[1]
-			or item.a and item.a[1] or item.aa and item.aa[1] then
+		local has_qualifiers = item.q and item.q[1] or item.qq and item.qq[1] or item.qualifiers and item.qualifiers[1]
+			or item.a and item.a[1] or item.aa and item.aa[1]
+		local has_gloss_or_pos = item.gloss or item.pos
+		if has_qualifiers or has_gloss_or_pos then
+			-- FIXME: Currently we tack the gloss and POS (in that order) onto the end of the regular left qualifiers.
+			-- Should we do something different?
+			local q = item.q
+			if has_gloss_or_pos then
+				q = mw.clone(item.q) or {}
+				if item.gloss then
+					local m_qualifier = require(qualifier_module)
+					insert(q, m_qualifier.wrap_qualifier_css("“", "quote") .. item.gloss ..
+						m_qualifier.wrap_qualifier_css("”", "quote"))
+				end
+				if item.pos then
+					insert(q, item.pos)
+				end
+			end
+
 			bit = require("Module:pron qualifier").format_qualifiers {
 				lang = lang,
 				text = bit,
-				q = item.q,
+				q = q,
 				qq = item.qq,
 				qualifiers = item.qualifiers,
 				a = item.a,
