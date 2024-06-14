@@ -140,6 +140,8 @@ function export.show(frame)
 		["sort"] = {},
 	}
 
+	local m_param_utils = require(parameter_utilities_module)
+
 	local param_mods = {
 		alt = {},
 		t = {
@@ -148,8 +150,7 @@ function export.show(frame)
 			item_dest = "gloss",
 		},
 		gloss = {
-			-- The `extra_specs` handles the fact that "gloss" is an alias of "t".
-			extra_specs = {alias_of = "t"},
+			alias_of = "t",
 		},
 		tr = {},
 		ts = {},
@@ -157,20 +158,16 @@ function export.show(frame)
 			-- We need to store the g1=/g2= param and the <g:...> inline modifier into the "genders" key of the parsed term,
 			-- because that is what [[Module:links]] expects.
 			item_dest = "genders",
-			convert = function(arg, parse_err)
-				return rsplit(arg, ",")
-			end,
+			sublist = true,
 		},
 		pos = {},
 		lit = {},
 		id = {},
 		sc = {
 			separate_no_index = true,
-			extra_specs = {type = "script"},
+			type = "script",
 		},
 	}
-
-	local m_param_utils = require(parameter_utilities_module)
 
 	m_param_utils.augment_param_mods_with_pron_qualifiers(param_mods)
 	m_param_utils.augment_params_with_modifiers(params, param_mods)
