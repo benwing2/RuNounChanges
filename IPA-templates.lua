@@ -40,7 +40,17 @@ function export.IPA(frame)
 		["sort"] = {},
 	}
 
-	local param_mods = {}
+	local param_mods = {
+		t = {
+			-- We need to store the t1=/t2= param and the <t:...> inline modifier into the "gloss" key of the parsed term,
+			-- because that is what [[Module:links]] expects.
+			item_dest = "gloss",
+		},
+		gloss = {
+			alias_of = "t",
+		},
+		pos = {},
+	}
 
 	local m_param_utils = require(parameter_utilities_module)
 
