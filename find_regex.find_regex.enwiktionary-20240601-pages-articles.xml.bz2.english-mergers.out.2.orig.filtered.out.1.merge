@@ -1,158 +1,147 @@
 Beginning at Tue Jun 11 23:25:21 2024
-Page 1 free: Found match for regex: <begin> * {{homophones|en|three|qq1=with [[th-fronting]]}} <end>
-Page 2 debt: Found match for regex: <begin> * {{homophones|en|death}} {{qualifier|with [[th-stopping]]}} <end>
-Page 3 seven: Found match for regex: <begin> * {{homophones|en|Severn}} {{q|non-rhotic accents}} <end>
-Page 4 can: Found match for regex: <begin> * {{IPA|en|[ˈkeən]|a=ae-tensing}} <end>
+Page 1 free: Found match for regex: <begin> * {{homophones|en|three|aa=th-fronting}} <end>
+Page 2 debt: Found match for regex: <begin> * {{homophones|en|death|aa=th-stopping}} <end>
+Page 3 seven: Found match for regex: <begin> * {{homophones|en|Severn|aa=non-rhotic}} <end>
+Page 4 can: Found match for regex: <begin> * {{IPA|en|[ˈkeən]|a=æ-tensing}} <end>
 Page 5 three: Found match for regex: <begin> * {{enPR|frē|a=UK,th-fronting}} {{IPA|en|/fɹiː/}} <end>
-Page 5 three: Found match for regex: <begin> * {{homophones|en|tree|qq1=with [[th-stopping]]|free|qq2=with [[th-fronting]]}} <end>
-Page 6 four: Found match for regex: <begin> * {{IPA|mul|[ˈfoa]}}, like ''lower'' (nonrhotic)<ref>{{cite-book|url=https://www.icao.int/Meetings/anconf12/Document%20Archive/AN10_V2_cons%5B1%5D.pdf|title=Annex 10 to the Convention on International Civil Aviation: Aeronautical Telecommunications; Volume II Communication Procedures including those with PANS status|page=§5.2.1.4.3.1|publisher=International Civil Aviation Organization|edition=6th|date=October 2001|accessdate=23 January 2019|archiveurl=https://web.archive.org/web/20190331002913/https://www.icao.int/Meetings/anconf12/Document%20Archive/AN10_V2_cons%5B1%5D.pdf|archivedate=31 March 2019}}</ref> <end>
+Page 5 three: Found match for regex: <begin> * {{homophones|en|tree<aa:th-stopping>|;|free<aa:th-fronting>}} <end>
+Page 6 four: Found match for regex: <begin> * {{IPA|mul|[ˈfoa]}}, like ''lower'' (non-rhotic)<ref>{{cite-book|url=https://www.icao.int/Meetings/anconf12/Document%20Archive/AN10_V2_cons%5B1%5D.pdf|title=Annex 10 to the Convention on International Civil Aviation: Aeronautical Telecommunications; Volume II Communication Procedures including those with PANS status|page=§5.2.1.4.3.1|publisher=International Civil Aviation Organization|edition=6th|date=October 2001|accessdate=23 January 2019|archiveurl=https://web.archive.org/web/20190331002913/https://www.icao.int/Meetings/anconf12/Document%20Archive/AN10_V2_cons%5B1%5D.pdf|archivedate=31 March 2019}}</ref> <end>
 Page 6 four: Found match for regex: <begin> ** {{enPR|fōr|a=rhotic,non-horse-hoarse}}, {{IPA|en|/fo(ː)ɹ/}} <end>
 Page 6 four: Found match for regex: <begin> ** {{IPA|en|/foə/|a=non-rhotic,non-horse-hoarse}} <end>
-Page 6 four: Found match for regex: <begin> * {{IPA|en|/foʊ/|a=nonrhotic,{{w|dough-door merger}},AAVE}} <end>
+Page 6 four: Found match for regex: <begin> * {{IPA|en|/foʊ/|a=non-rhotic,dough-door,AAVE}} <end>
 Page 6 four: Found match for regex: <begin> * {{homophones|en|faugh|aa=non-rhotic,horse-hoarse}} <end>
-Page 6 four: Found match for regex: <begin> * {{homophones|en|foe|faux}} {{qualifier|in [[non-rhotic]] dialects with the [[w:dough-door merger|dough-door merger]]}} <end>
+Page 6 four: Found match for regex: <begin> * {{homophones|en|foe|faux|aa=non-rhotic,dough-door}} <end>
 Page 7 man: Found match for regex: <begin> ** {{IPA|en|[mɛən]|[meən]|[mẽə̃n]|a=US,Canada,æ-tensing}} <end>
 Page 8 port: Found match for regex: <begin> * {{IPA|en|/po(ː)ɹt/|a=rhotic,non-horse-hoarse}} <end>
 Page 8 port: Found match for regex: <begin> * {{IPA|en|/poət/|a=non-rhotic,non-horse-hoarse}} <end>
 Page 9 stock: Found match for regex: <begin> * {{homophones|en|stalk|aa1=cot-caught|;|stark|aa2=non-rhotic,father-bother}} <end>
 Page 10 and: Found match for regex: <begin> ** {{audio|en|en-us-and.ogg|a=US,æ-tensing}} <end>
 Page 11 morning: Found match for regex: <begin> ** {{IPA|en|/mɔːɹnɪŋ/|a=rhotic}} <end>
-Page 11 morning: Found match for regex: <begin> ** {{IPA|en|/mɔːnɪŋ/|a=nonrhotic}} <end>
+Page 11 morning: Found match for regex: <begin> ** {{IPA|en|/mɔːnɪŋ/|a=non-rhotic}} <end>
 Page 12 world: Found match for regex: <begin> * {{homophones|en|whirled|aa1=with both the <<wine-whine>> and <<fern-fir-fur>>|;|whorled|aa2=with both mergers, <<RP>> only}} <end>
-Page 13 Malta: Found match for regex: <begin> * {{homophones|en|malter}}  {{qualifier|in [[non-rhotic]] accents}} <end>
+Page 13 Malta: Found match for regex: <begin> * {{homophones|en|malter|aa=non-rhotic}} <end>
 Page 15 board: Found match for regex: <begin> * {{enPR|bōrd|a=rhotic,non-horse-hoarse}}, {{IPA|en|/bo(ː)ɹd/}} <end>
 Page 15 board: Found match for regex: <begin> * {{enPR|bōəd|a=non-rhotic,non-horse-hoarse}}, {{IPA|en|/boəd/}} <end>
 Page 15 board: Found match for regex: <begin> * {{homophones|en|bored|;|baud|bawd|aa=non-rhotic,horse-hoarse}} <end>
-Page 16 stand: Found match for regex: <begin> * {{IPA|en|[steənd]|a={{IPAchar|/æ/}} tensing}} <end>
-Page 17 it: Found match for regex: <begin> * {{alt|jam|hit||dialects without {{w|H-dropping}}}} <end>
-Page 18 thin: Found match for regex: <begin> * {{IPA|en|/fɪn/|a=[[th-fronting]]}} <end>
-Page 18 thin: Found match for regex: <begin> * {{homophone|en|fin}} {{a|en|with th-fronting}} <end>
-Page 19 after: Found match for regex: <begin> * {{IPA|en|/ˈaf.tə(ɹ)/|a=Northern England,other non-rhotic without the [[w:trap-bath split|''trap''-''bath'' split]]}} <end>
-Page 20 plant: Found match for regex: <begin> * {{IPA|en|[pʰl̥eənt]|a=ae-tensing}} <end>
-Page 21 tiger: Found match for regex: <begin> * {{homophones|en|taiga|qq1=nonrhotic}} <end>
+Page 16 stand: Found match for regex: <begin> * {{IPA|en|[steənd]|a=æ-tensing}} <end>
+Page 18 thin: Found match for regex: <begin> * {{IPA|en|/fɪn/|a=th-fronting}} <end>
+Page 18 thin: Found match for regex: <begin> * {{homophone|en|fin|aa=th-fronting}} <end>
+Page 19 after: Found match for regex: <begin> * {{IPA|en|/ˈaf.tə(ɹ)/|a=Northern England,other <<non-rhotic>> <<non-trap-bath split>>}} <end>
+Page 20 plant: Found match for regex: <begin> * {{IPA|en|[pʰl̥eənt]|a=æ-tensing}} <end>
+Page 21 tiger: Found match for regex: <begin> * {{homophones|en|taiga|aa=non-rhotic}} <end>
 Page 22 fourth: Found match for regex: <begin> * {{IPA|en|/fo(ː)ɹθ/|a=rhotic,non-horse-hoarse}} <end>
 Page 22 fourth: Found match for regex: <begin> * {{IPA|en|/foəθ/|a=non-rhotic,non-horse-hoarse}} <end>
-Page 23 duel: Found match for regex: <begin> * {{homophone|en|dual|jewel|qq2=with [[yod coalescence]]}} <end>
-Page 24 yours: Found match for regex: <begin> * {{homophones|en|yaws}} {{qualifier|in some [[non-rhotic]] accents}} <end>
+Page 23 duel: Found match for regex: <begin> * {{homophone|en|dual|jewel|aa=yod-coalescence}} <end>
+Page 24 yours: Found match for regex: <begin> * {{homophones|en|yaws|aa=in some <<non-rhotic>> accents}} <end>
 Page 25 your: Found match for regex: <begin> * {{enPR|yōr|a=rhotic,non-horse-hoarse}}, {{IPA|en|/jo(ː)ɹ/}} <end>
 Page 25 your: Found match for regex: <begin> * {{IPA|en|/joə/|a=non-rhotic,non-horse-hoarse}} <end>
-Page 25 your: Found match for regex: <begin> * {{IPA|en|/joʊ/|a=nonrhotic,{{w|show-sure merger}},AAVE}} <end>
-Page 25 your: Found match for regex: <begin> * {{homophones|en|yore}} {{qualifier|accents with the {{w|pour–poor merger}}, also some without it}} <end>
-Page 25 your: Found match for regex: <begin> * {{homophones|en|yaw}} {{qualifier|non-rhotic accents with the {{w|paw-poor merger}}, also some without it}} <end>
-Page 25 your: Found match for regex: <begin> * {{homophones|en|yo}} {{qualifier|non-rhotic accents with the {{w|show-sure merger}}}} <end>
-Page 26 you: Found match for regex: <begin> * {{homophones|en|ewe|u|yew|yu|hew|a5=h-dropping|hue|a6=h-dropping}} <end>
-Page 27 writer: Found match for regex: <begin> * {{homophones|en|rider}} {{qualifier|accents with [[flapping]] but without {{w|Canadian raising}}}} <end>
-Page 28 cast: Found match for regex: <begin> * {{homophones|en|caste|karst|qq2=in some non-rhotic accents}} <end>
-Page 29 dual: Found match for regex: <begin> * {{homophones|en|duel|jewel|qq2=with [[yod coalescence]]}} <end>
-Page 30 or: Found match for regex: <begin> ** {{homophones|en|oar|ore|o'er|awe}} {{qualifier|[[non-rhotic]] accents|rounded [[lot]] besides St. Louis [Missouri] English}} <end>
-Page 31 twelfth: Found match for regex: <begin> * {{IPA|en|/twɛlfθ/|[tʰw̥ɛɫfθ]|a=UK,US}}; {{IPAchar|/twɛlθ/|[tʰw̥ɛɤθ]}};<ref>{{R:OED}} (modern OED website has /twɛl(f)θ/ for both British and US English)</ref>  {{IPA|en|/twɛlf/|[tʰw̥ɛɫʷf]|a=especially when,_,th-fronting}};  {{IPAchar|/twɛlftθ/}}<ref>{{R:MWO}} (/twɛlf(t)θ/)</ref> <end>
+Page 25 your: Found match for regex: <begin> * {{IPA|en|/joʊ/|a=non-rhotic,show-sure,AAVE}} <end>
+Page 25 your: Found match for regex: <begin> * {{homophones|en|yore|aa=pour-poor,or,dialectal}} <end>
+Page 25 your: Found match for regex: <begin> * {{homophones|en|yaw|aa=non-rhotic,paw-poor,or,dialectal}} <end>
+Page 25 your: Found match for regex: <begin> * {{homophones|en|yo|aa=non-rhotic,show-sure}} <end>
+Page 26 you: Found match for regex: <begin> * {{homophones|en|ewe|u|yew|yu|;|hew|hue|Hugh<aa:h-dropping>}} <end>
+Page 27 writer: Found match for regex: <begin> * {{homophones|en|rider|aa=<<flapping>> but <<non-Canadian raising>>}} <end>
+Page 28 cast: Found match for regex: <begin> * {{homophones|en|caste|;|karst<a:in some <<non-rhotic>> accents>}} <end>
+Page 29 dual: Found match for regex: <begin> * {{homophones|en|duel|;|jewel<aa:yod-coalescence>}} <end>
+Page 30 or: Found match for regex: <begin> ** {{homophones|en|oar|ore|o'er<aa:horse-hoarse>|;|awe<aa:non-rhotic,horse-hoarse>}} <end>
+Page 31 twelfth: Found match for regex: <begin> * {{IPA|en|a=UK,US|/twɛlfθ/ [tʰw̥ɛɫfθ]|;|/twɛlθ/ [tʰw̥ɛɤθ]<a:fast speech><ref:{{R:OED}} (modern OED website has /twɛl(f)θ/ for both British and US English)>|;|/twɛlf/ [tʰw̥ɛɫʷf]<a:th-fronting>|;|/twɛlftθ/<a:some speakers><ref:{{R:MWO}} (/twɛlf(t)θ/)>}} <end>
 Page 32 hand: Found match for regex: <begin> * {{IPA|en|[hɛənd]|[heənd]|[hɛːnd]|a=æ-tensing}} <end>
 Page 33 an: Found match for regex: <begin> ** {{audio|en|en-us-an.ogg|a=US,æ-tensing}} <end>
-Page 34 ostrich: Found match for regex: <begin> * {{anagrams|en|a=chiorst|Christo-|chorist|rhotics}} <end>
-Page 35 tree: Found match for regex: <begin> * {{homophones|en|three|qq1=with [[th-stopping]]}} <end>
-Page 36 her: Found match for regex: <begin> * {{homophones|en|a}} {{q|non-rhotic, unstressed}} <end>
-Page 37 answer: Found match for regex: <begin> ** {{IPA|en|[ˈeən.sɚ]|a=ae-tensing,rhotic}} <end>
-Page 37 answer: Found match for regex: <begin> ** {{IPA|en|[ˈeən.sə]|a=ae-tensing,non-rhotic}} <end>
-Page 37 answer: Found match for regex: <begin> ** {{IPA|en|[ˈeːnsə ~ ˈɛːnsə]|a=ae-tensing}} <end>
-Page 38 ant: Found match for regex: <begin> * {{IPA|en|[ɛənt]|[eənt]|[ɛːnt]|a=ae-tensing}} <end>
+Page 35 tree: Found match for regex: <begin> * {{homophones|en|three|aa=th-stopping}} <end>
+Page 36 her: Found match for regex: <begin> * {{homophones|en|a|aa=non-rhotic,unstressed}} <end>
+Page 37 answer: Found match for regex: <begin> ** {{IPA|en|[ˈeən.sɚ]|a=æ-tensing,rhotic}} <end>
+Page 37 answer: Found match for regex: <begin> ** {{IPA|en|[ˈeən.sə]|a=æ-tensing,non-rhotic}} <end>
+Page 37 answer: Found match for regex: <begin> ** {{IPA|en|[ˈeːnsə ~ ˈɛːnsə]|a=æ-tensing}} <end>
+Page 38 ant: Found match for regex: <begin> * {{IPA|en|[ɛənt]|[eənt]|[ɛːnt]|a=æ-tensing}} <end>
 Page 39 art: Found match for regex: <begin> * {{IPA|en|[ɒət]|[ɒɹt]|a2=rhotic|a=NYC}} <end>
 Page 40 adore: Found match for regex: <begin> * {{enPR|ədōrʹ|a=rhotic,non-horse-hoarse}}, {{IPA|en|/əˈdo(ː)ɹ/}} <end>
 Page 40 adore: Found match for regex: <begin> * {{IPA|en|/əˈdoə̯/|a=non-rhotic,non-horse-hoarse}} <end>
-Page 41 Korea: Found match for regex: <begin> * {{homophones|en|career}} {{a|en|non-rhotic}} <end>
-Page 42 what: Found match for regex: <begin> ** {{enPR|wŏt|a=wine-whine}}, {{IPA|en|/wɒt/|[wɒʔ(t)]|a2=glottalized}} <end>
-Page 43 father: Found match for regex: <begin> * {{homophones|en|farther|qq1=most [[non-rhotic]] accents}} <end>
+Page 41 Korea: Found match for regex: <begin> * {{homophones|en|career|aa=non-rhotic}} <end>
+Page 42 what: Found match for regex: <begin> ** {{enPR|wŏt|a=wine-whine}}, {{IPA|en|/wɒt/ [wɒʔ(t)]<a:glottalized>}} <end>
+Page 43 father: Found match for regex: <begin> * {{homophones|en|farther|aa=most <<non-rhotic>> accents}} <end>
 Page 44 brother: Found match for regex: <begin> * {{IPA|en|/ˈbɹʌvə(ɹ)/|a=th-fronting}} <end>
-Page 45 aunt: Found match for regex: <begin> *: {{homophones|en|aren't}} {{qualifier|in some [[non-rhotic]] accents}} <end>
-Page 46 tin: Found match for regex: <begin> * {{homophones|en|thin|aa1=th-stopping|ten|aa2=pin-pen}} <end>
-Page 47 gnaw: Found match for regex: <begin> * {{homophones|en|nor}} {{qualifier|in non-rhotic accents}} <end>
-Page 48 bad: Found match for regex: <begin> * {{IPA|en|/bɛəd/|a=ae-tensing,NYC,New Orleans,Philadelphia,Baltimore}} <end>
-Page 49 familia: Found match for regex: <begin> * {{homophone|en|familiar|qq1=some non-rhotic accents}} <end>
-Page 50 ban: Found match for regex: <begin> * {{IPA|en|[bɛən]|[beən]|a=ae-tensing}} <end>
-Page 51 think: Found match for regex: <begin> ** {{IPA|en|[fɪŋk]|a=[[th-fronting]]}} <end>
+Page 45 aunt: Found match for regex: <begin> *: {{homophones|en|aren't|aa=some <<non-rhotic>> accents}} <end>
+Page 46 tin: Found match for regex: <begin> * {{homophones|en|thin|aa1=th-stopping|;|ten|aa2=pin-pen}} <end>
+Page 47 gnaw: Found match for regex: <begin> * {{homophones|en|nor|aa=non-rhotic}} <end>
+Page 48 bad: Found match for regex: <begin> * {{IPA|en|/bɛəd/|a=æ-tensing,NYC,New Orleans,Philadelphia,Baltimore}} <end>
+Page 49 familia: Found match for regex: <begin> * {{homophone|en|familiar|aa=some <<non-rhotic>> accents}} <end>
+Page 50 ban: Found match for regex: <begin> * {{IPA|en|[bɛən]|[beən]|a=æ-tensing}} <end>
+Page 51 think: Found match for regex: <begin> ** {{IPA|en|[fɪŋk]|a=th-fronting}} <end>
 Page 52 talk: Found match for regex: <begin> * {{homophones|en|torc|torq|torque|aa3=non-rhotic|;|tock|aa4=cot-caught}} <end>
-Page 53 slang: Found match for regex: <begin> ** {{IPA|en|[sleɪŋ]|a=US,pre-/ŋ/ [[w:/æ/ raising|/æ/ tensing]]}} <end>
-Page 54 they: Found match for regex: <begin> * {{qualifier|rare|dialect or eye dialect:}} [[dey]] {{qualifier|[[w:Th-stopping|th-stopping]] dialects}}, [[thay]], [[theye]] {{qualifier|archaic}}, [[thaay]] {{qualifier|Gloucestershire|Berkshire|possibly archaic}} <end>
-Page 55 hair: Found match for regex: <begin> * {{a|en|NZ}} {{homophones|en|here|qq1=cheer–chair merger|air|heir}} {{q|cheer–chair merger and H-dropping}} <end>
-Page 56 torte: Found match for regex: <begin> * {{homophones|en|tort}}; {{l|en|taught}}, {{l|en|taut}} {{qualifier|in non-rhotic accents}} <end>
-Page 57 do: Found match for regex: <begin> * {{hmp|en|dew|due}} {{q|in accents with yod-dropping}} <end>
-Page 58 thank you: Found match for regex: <begin> * {{IPA|en|[ˈθeɪ̯ŋk ˌju]|[ˈt̪eɪ̯ŋk ˌju]|[ˈðeɪ̯ŋk ˌju]|q3=sometimes|a=æ-tensing,NYC}} <end>
+Page 53 slang: Found match for regex: <begin> ** {{IPA|en|[sleɪŋ]|a=US,pre-{{IPAchar|/ŋ/}} <<æ-tensing>>}} <end>
+Page 56 torte: Found match for regex: <begin> * {{homophones|en|tort|;|taught|taut<aa:non-rhotic>}} <end>
+Page 57 do: Found match for regex: <begin> * {{hmp|en|dew|due|aa=yod-dropping}} <end>
+Page 58 thank you: Found match for regex: <begin> * {{IPA|en|[ˈθeɪ̯ŋk ˌju]|[ˈt̪eɪ̯ŋk ˌju]|[ˈðeɪ̯ŋk ˌju]|a3=sometimes|a=æ-tensing,NYC}} <end>
 Page 59 force: Found match for regex: <begin> * {{enPR|fōrs|a=rhotic,non-horse-hoarse}}, {{IPA|en|/fo(ː)ɹs/}} <end>
 Page 59 force: Found match for regex: <begin> * {{IPA|en|/foəs/|a=non-rhotic,non-horse-hoarse}} <end>
 Page 60 law: Found match for regex: <begin> * {{homophones|en|lore|aa=non-rhotic,horse-hoarse}} <end>
-Page 60 law: Found match for regex: <begin> * {{homophones|en|lure}} {{qualifier|in non-rhotic accents with the CURE-FORCE merger}} <end>
-Page 61 larva: Found match for regex: <begin> * {{homophones|en|lava}} {{qualifier|in non-rhotic accents}} <end>
+Page 60 law: Found match for regex: <begin> * {{homophones|en|lure|aa=non-rhotic,pour-poor}} <end>
+Page 61 larva: Found match for regex: <begin> * {{homophones|en|lava|aa=non-rhotic}} <end>
 Page 62 environment: Found match for regex: <begin> * {{IPA|en|/ɪnˈvaɪɹə(n)mənt/|/ənˈ-/|/-mɪnt/|a=non-rhotic}} <end>
 Page 62 environment: Found match for regex: <begin> * {{IPA|en|/ɪnˈvaɪɚ(n)mənt/|a=rhotic}} <end>
-Page 63 er: Found match for regex: <begin> * Used in [[non-rhotic]] dialects. Compare [[uh]]. <end>
+Page 63 er: Found match for regex: <begin> * Used in [[non-rhotic]] dialects. Compare {{m|en|uh}}. <end>
 Page 64 bore: Found match for regex: <begin> * {{IPA|en|/bo(ː)ɹ/|a=rhotic,non-horse-hoarse}} <end>
 Page 64 bore: Found match for regex: <begin> * {{IPA|en|/boə/|a=non-rhotic,non-horse-hoarse}} <end>
-Page 64 bore: Found match for regex: <begin> * {{homophones|en|boar|Bohr|boor}} {{qualifier|accents with the {{w|pour–poor merger}}}} <end>
-Page 65 born: Found match for regex: <begin> ** {{homophones|en|borne|bourn|bourne|Bourne<aa:all with the <<horse-hoarse>>>|;|bawn<aa:non-rhotic>|;|barn<aa:card-cord>}} <end>
+Page 64 bore: Found match for regex: <begin> * {{homophones|en|boar|Bohr|;|boor<aa:pour-poor>}} <end>
+Page 65 born: Found match for regex: <begin> ** {{homophones|en|borne|bourn|bourne|Bourne<aa:horse-hoarse>|;|bawn<aa:non-rhotic>|;|barn<aa:card-cord>}} <end>
 Page 65 born: Found match for regex: <begin> ** {{IPA|en|/bɔːɹn/|a=rhotic}} <end>
-Page 65 born: Found match for regex: <begin> ** {{IPA|en|/bɔːn/|a=nonrhotic}} <end>
+Page 65 born: Found match for regex: <begin> ** {{IPA|en|/bɔːn/|a=non-rhotic}} <end>
 Page 66 borne: Found match for regex: <begin> ** {{homophones|en|born<aa:horse-hoarse>|;|bourn|bourne|Bourne|;|bawn<aa:non-rhotic,horse-hoarse>}} <end>
 Page 66 borne: Found match for regex: <begin> ** {{IPA|en|/boːɹn/|a=rhotic}} <end>
-Page 66 borne: Found match for regex: <begin> ** {{IPA|en|/boən/|a=nonrhotic}} <end>
+Page 66 borne: Found match for regex: <begin> ** {{IPA|en|/boən/|a=non-rhotic}} <end>
 Page 67 caught: Found match for regex: <begin> * {{homophones|en|cot<aa:cot-caught>|court<aa:non-rhotic,horse-hoarse>}} <end>
 Page 68 fought: Found match for regex: <begin> * {{homophones|en|fort<aa:non-rhotic,horse-hoarse>}} <end>
-Page 69 pula: Found match for regex: <begin> * {{homophones|en|puller}} (''for UK pronunciation, in [[non-rhotic]] accents'') <end>
-Page 70 oar: Found match for regex: <begin> * In [[British]] & some other [[non-rhotic]] accents: <end>
-Page 70 oar: Found match for regex: <begin> ** {{IPA|en|/oə/|a=non-rhotic,non-horse-hoarse}} <end>
-Page 70 oar: Found match for regex: <begin> ** {{homophones|en|aw|awe|aa=non-rhotic,horse-hoarse}} <end>
-Page 70 oar: Found match for regex: <begin> * In [[US]] & some other [[rhotic]] accents: <end>
-Page 70 oar: Found match for regex: <begin> ** {{enPR|ōr|a=rhotic,non-horse-hoarse}}, {{IPA|en|/o(ː)ɹ/}} <end>
-Page 71 leet: Found match for regex: <begin> * {{homophone|en|Leith|qq1=with [[th-stopping]]}} <end>
+Page 69 pula: Found match for regex: <begin> * {{homophones|en|puller|aa=UK,non-rhotic}} <end>
+Page 71 leet: Found match for regex: <begin> * {{homophone|en|Leith|aa=th-stopping}} <end>
 Page 72 before: Found match for regex: <begin> * {{enPR|bĭfōrʹ|a=rhotic,non-horse-hoarse}}, {{IPA|en|/bɪˈfo(ː)ɹ/}} <end>
 Page 72 before: Found match for regex: <begin> * {{IPA|en|/bɪˈfoə/|a=non-rhotic,non-horse-hoarse}} <end>
 Page 73 report: Found match for regex: <begin> * {{IPA|en|/ɹɪˈpo(ː)ɹt/|a=rhotic,non-horse-hoarse}} <end>
 Page 73 report: Found match for regex: <begin> * {{IPA|en|/ɹɪˈpoət/|a=non-rhotic,non-horse-hoarse}} <end>
-Page 74 saw: Found match for regex: <begin> *: '''Homophones''': (''in some [[non-rhotic]] accents''): [[soar]], [[sore]] <end>
 Page 75 sought: Found match for regex: <begin> * {{homophones|en|sort<aa:non-rhotic>|sot<aa:cot-caught>}} <end>
 Page 76 shorn: Found match for regex: <begin> * {{IPA|en|/ʃo(ː)ɹn/|a=rhotic,non-horse-hoarse}} <end>
 Page 76 shorn: Found match for regex: <begin> * {{IPA|en|/ʃoən/|a=non-rhotic,non-horse-hoarse}} <end>
 Page 76 shorn: Found match for regex: <begin> * {{homophones|en|Sean|Shawn|Shaun|aa=non-rhotic,horse-hoarse}} <end>
 Page 77 candor: Found match for regex: <begin> ** {{audio|en|en-au-candor.ogg|a=AU,æ-tensing}} <end>
-Page 78 dupe: Found match for regex: <begin> * {{IPA|en|/djuːp/|a=UK}}, {{q|with [[yod coalescence]]}} {{IPA|en|/dʒuːp/}} <end>
+Page 78 dupe: Found match for regex: <begin> * {{IPA|en|a=UK|/djuːp/|/dʒuːp/<a:yod-coalescence>}} <end>
 Page 79 swore: Found match for regex: <begin> * {{enPR|swōr|a=rhotic,non-horse-hoarse}}, {{IPA|en|/swo(ː)ɹ/}} <end>
 Page 79 swore: Found match for regex: <begin> * {{IPA|en|/swoə/|a=non-rhotic,non-horse-hoarse}} <end>
 Page 80 sworn: Found match for regex: <begin> * {{IPA|en|/swo(ː)ɹn/|a=rhotic,non-horse-hoarse}} <end>
 Page 80 sworn: Found match for regex: <begin> * {{IPA|en|/swoən/|a=non-rhotic,non-horse-hoarse}} <end>
-Page 81 taught: Found match for regex: <begin> * {{hmp|en|taut|;|tort|aa2=non-rhotic|;|tot|aa3=cot-caught|;|thought|aa4=Hiberno-English}} <end>
+Page 81 taught: Found match for regex: <begin> * {{hmp|en|taut|;|tort|aa2=non-rhotic|;|tot|aa3=cot-caught|;|thought|aa4=Hiberno-English,th-stopping}} <end>
 Page 82 tore: Found match for regex: <begin> * {{enPR|tōr|a=rhotic,non-horse-hoarse}}, {{IPA|en|/to(ː)ɹ/}} <end>
 Page 82 tore: Found match for regex: <begin> * {{IPA|en|/toə/|a=non-rhotic,non-horse-hoarse}} <end>
 Page 82 tore: Found match for regex: <begin> * {{homophones|en|tor<aa:horse-hoarse>|;|taw<aa:non-rhotic,horse-hoarse>}} <end>
 Page 83 torn: Found match for regex: <begin> * {{enPR|tōrn|a=rhotic,non-horse-hoarse}}, {{IPA|en|/to(ː)ɹn/}} <end>
 Page 83 torn: Found match for regex: <begin> * {{IPA|en|/toən/|a=non-rhotic,non-horse-hoarse}} <end>
 Page 83 torn: Found match for regex: <begin> ** {{homophones|en|tawn|aa=non-rhotic,horse-hoarse}} <end>
-Page 84 understand: Found match for regex: <begin> ** {{IPA|en|/ˌʌndɚˈsteə̯nd/|a=ae-tensing}} <end>
-Page 85 undo: Found match for regex: <begin> * {{homophones|en|undue}} {{qualifier|in [[Wikipedia:Yod-dropping|yod dropping]] dialects}} <end>
+Page 84 understand: Found match for regex: <begin> ** {{IPA|en|/ˌʌndɚˈsteə̯nd/|a=æ-tensing}} <end>
+Page 85 undo: Found match for regex: <begin> * {{homophones|en|undue|aa=yod-dropping}} <end>
 Page 86 wore: Found match for regex: <begin> * {{enPR|wōr|a=rhotic,non-horse-hoarse}}, {{IPA|en|/wo(ː)ɹ/}} <end>
 Page 86 wore: Found match for regex: <begin> * {{IPA|en|/woə/|a=non-rhotic,non-horse-hoarse}} <end>
 Page 86 wore: Found match for regex: <begin> * {{homophones|en|war<aa:horse-hoarse>|;|Waugh<aa:non-rhotic,horse-hoarse>}} <end>
 Page 87 worn: Found match for regex: <begin> * {{IPA|en|/wo(ː)ɹn/|a=rhotic,non-horse-hoarse}} <end>
 Page 87 worn: Found match for regex: <begin> * {{IPA|en|/woən/|a=non-rhotic,non-horse-hoarse}} <end>
-Page 88 era: Found match for regex: <begin> ** {{homophones|en|error}} {{qualifier|in [[non-rhotic]] accents}} <end>
-Page 89 cause: Found match for regex: <begin> * {{homophones|en|caws|'cause}}; [[cores]] {{qualifier|non-rhotic dialects}} <end>
+Page 88 era: Found match for regex: <begin> ** {{homophones|en|error|aa=non-rhotic}} <end>
+Page 89 cause: Found match for regex: <begin> * {{homophones|en|caws|'cause|;|cores<aa:non-rhotic>}} <end>
 Page 90 lark: Found match for regex: <begin> * {{homophones|en|lakh|aa1=RP|lock|aa2=non-rhotic,father-bother}} <end>
-Page 91 stork: Found match for regex: <begin> * {{homophones|en|stalk}} {{qualifier|non-rhotic accents}} <end>
+Page 91 stork: Found match for regex: <begin> * {{homophones|en|stalk|aa=non-rhotic}} <end>
 Page 92 door: Found match for regex: <begin> * {{enPR|dōrʹ|a=rhotic,non-horse-hoarse}}, {{IPA|en|/do(ː)ɹ/}} <end>
 Page 92 door: Found match for regex: <begin> * {{IPA|en|/doə/|a=non-rhotic,non-horse-hoarse}} <end>
-Page 92 door: Found match for regex: <begin> * {{IPA|en|/doʊ/|a=nonrhotic,{{w|dough-door merger}},AAVE}} <end>
-Page 92 door: Found match for regex: <begin> * {{homophones|en|daw}} {{qualifier|[[non-rhotic]] with {{w|caught-court merger}} (most of England, Wales, Australia, New Zealand; non-rhotic New York)}} <end>
+Page 92 door: Found match for regex: <begin> * {{IPA|en|/doʊ/|a=non-rhotic,dough-door,AAVE}} <end>
+Page 92 door: Found match for regex: <begin> * {{homophones|en|daw|aa=non-rhotic}} <end>
 Page 92 door: Found match for regex: <begin> * {{homophones|en|dour|aa=in one pronunciation, with the <<pour-poor>>}} <end>
-Page 92 door: Found match for regex: <begin> * {{homophones|en|dough}} {{qualifier|[[non-rhotic]] with {{w|dough-door merger}} (AAVE, non-rhotic Southern US)}} <end>
-Page 93 drawer: Found match for regex: <begin> ** {{homophones|en|draw}} (non-rhotic) <end>
-Page 94 儿: Found match for regex: <begin> * May be used to specially write ''[[erhua]]'' (or the rhotic sound) in traditional Chinese, in contrast with {{zh-l|兒|[[child]]}}. <end>
+Page 92 door: Found match for regex: <begin> * {{homophones|en|dough|aa=dough-door}} <end>
+Page 93 drawer: Found match for regex: <begin> ** {{homophones|en|draw|aa=non-rhotic}} <end>
 Page 95 enforce: Found match for regex: <begin> * {{enPR|-fōrsʹ|a=rhotic,non-horse-hoarse}}, {{IPA|en|/-ˈfo(ː)ɹs/}} <end>
 Page 95 enforce: Found match for regex: <begin> * {{IPA|en|/-ˈfoəs/|a=non-rhotic,non-horse-hoarse}} <end>
 Page 96 proportion: Found match for regex: <begin> * {{IPA|en|/pɹəˈpo(ː)ɹʃən/|a=rhotic,non-horse-hoarse}} <end>
 Page 96 proportion: Found match for regex: <begin> * {{IPA|en|/pɹəˈpoəʃən/|a=non-rhotic,non-horse-hoarse}} <end>
-Page 97 pawn: Found match for regex: <begin> * {{homophones|en|porn}} {{qualifier|non-rhotic accents}} <end>
+Page 97 pawn: Found match for regex: <begin> * {{homophones|en|porn|aa=non-rhotic}} <end>
 Page 98 dark: Found match for regex: <begin> * {{homophones|en|doc|dock|aa=non-rhotic,father-bother}} <end>
-Page 99 death: Found match for regex: <begin> * {{hmp|en|debt|qq1=with [[th-stopping]]|deaf|qq2=with [[th-fronting]]}} <end>
-Page 100 jewel: Found match for regex: <begin> * {{homophones|en|joule|duel|dual|qq3=both with [[yod coalescence]]}} <end>
-Page 101 short: Found match for regex: <begin> * {{IPA|en|/ʃɔːɹt/|a=rhotic,e.g., US}} <end>
-Page 101 short: Found match for regex: <begin> * {{IPA|en|/ʃɔːt/|a=nonrhotic,e.g., UK}} <end>
+Page 99 death: Found match for regex: <begin> * {{hmp|en|debt<aa:th-stopping>|;|deaf<aa:th-fronting>}} <end>
+Page 100 jewel: Found match for regex: <begin> * {{homophones|en|joule|;|duel|dual<aa:yod-coalescence>}} <end>
+Page 101 short: Found match for regex: <begin> * {{IPA|en|/ʃɔɹt/|a=rhotic}} <end>
+Page 101 short: Found match for regex: <begin> * {{IPA|en|/ʃɔːt/|a=non-rhotic}} <end>
 Page 102 important: Found match for regex: <begin> * {{IPA|en|/ɪm.ˈpo(ː)ɹ.tənt/|a=rhotic,non-horse-hoarse}} <end>
 Page 102 important: Found match for regex: <begin> * {{IPA|en|/ɪm.ˈpoə.tənt/|a=non-rhotic,non-horse-hoarse}} <end>
 Page 103 sword: Found match for regex: <begin> * {{IPA|en|/so(ː)ɹd/|a=rhotic,non-horse-hoarse}} <end>
@@ -160,16 +149,15 @@ Page 103 sword: Found match for regex: <begin> * {{IPA|en|/soəd/|a=non-rhotic,n
 Page 103 sword: Found match for regex: <begin> * {{homophones|en|soared|sawed|a2=non-rhotic,horse-hoarse}} <end>
 Page 104 ether: Found match for regex: <begin> * {{IPA|en|/ˈɛðɚ/|a=rhotic}} <end>
 Page 104 ether: Found match for regex: <begin> * {{IPA|en|/ˈɛðə/|a=non-rhotic}} <end>
-Page 105 Jew: Found match for regex: <begin> * {{homophones|en|dew}} {{qualifier|with [[yod coalescence]]}} <end>
-Page 106 duke: Found match for regex: <begin> * {{homophones|en|juke}} {{qualifier|with [[yod coalescence]]}} <end>
+Page 105 Jew: Found match for regex: <begin> * {{homophones|en|dew|a=yod-coalescence}} <end>
+Page 106 duke: Found match for regex: <begin> * {{homophones|en|juke|a=yod-coalescence}} <end>
 Page 107 r: Found match for regex: <begin> * {{sense|phoneme}} {{IPA|en|/ɹ/|a=non-rhotic}} or a lengthening of the previous vowel, {{IPA|en|/ɹ/|a=rhotic}} <end>
-Page 108 u: Found match for regex: <begin> * {{homophones|en|ewe|yew|you|hew}} {{q|in h-dropping dialects}}, [[hue]] {{q|in h-dropping dialects}} <end>
-Page 109 torque: Found match for regex: <begin> * {{homophones|en|torq|torc|talk}} {{qualifier|'talk' in non-rhotic accents only}} <end>
+Page 108 u: Found match for regex: <begin> * {{homophones|en|ewe|yew|you|;|hew|hue|Hugh<aa:h-dropping>}} <end>
+Page 109 torque: Found match for regex: <begin> * {{homophones|en|torq|torc|;|talk<aa:non-rhotic>}} <end>
 Page 110 shock: Found match for regex: <begin> * {{homophones|en|shark|aa=non-rhotic,father-bother}} <end>
 Page 111 artichoke: Found match for regex: <begin> * {{IPA|en|/ˈɑɹ.tɪˌtʃoʊk/|a=rhotic}} <end>
 Page 111 artichoke: Found match for regex: <begin> * {{IPA|en|/ˈɑː.tɪˌtʃəʊk/|a=non-rhotic}} <end>
-Page 112 dew: Found match for regex: <begin> * {{homophones|en|do|doo|qq2=with yod-dropping|Jew|qq3=with yod-coalescence|due}} <end>
-Page 113 ewe: Found match for regex: <begin> * {{homophones|en|hew|hue|Hugh}} {{qualifier|in h-dropping dialects}} <end>
+Page 112 dew: Found match for regex: <begin> * {{homophones|en|due|;|do|doo<aa:yod-dropping>|;|Jew<aa:yod-coalescence>}} <end>
 Page 114 pour: Found match for regex: <begin> * {{enPR|pōr|a=rhotic,non-horse-hoarse}}, {{IPA|en|/po(ː)ɹ/}} <end>
 Page 114 pour: Found match for regex: <begin> * {{IPA|en|/poə/|a=non-rhotic,non-horse-hoarse}} <end>
 Page 114 pour: Found match for regex: <begin> * {{homophones|en|pore|;|poor<aa:pour-poor>|;|paw<aa:non-rhotic,horse-hoarse>}} <end>
@@ -177,107 +165,85 @@ Page 115 price: Found match for regex: <begin> * {{IPA|en|/pɹʌɪs/|a=Canadian 
 Page 116 ore: Found match for regex: <begin> * {{enPR|ōr|a=rhotic,non-horse-hoarse}}, {{IPA|en|/o(ː)ɹ/}} <end>
 Page 116 ore: Found match for regex: <begin> * {{IPA|en|/oə/|a=non-rhotic,non-horse-hoarse}} <end>
 Page 116 ore: Found match for regex: <begin> * {{homophones|en|oar|o'er|;|or<aa:horse-hoarse>|;|aw|awe<aa:non-rhotic,horse-hoarse>}} <end>
-Page 117 band: Found match for regex: <begin> * {{IPA|en|[beənd]|a=ae-tensing}} <end>
+Page 117 band: Found match for regex: <begin> * {{IPA|en|[beənd]|a=æ-tensing}} <end>
 Page 118 mock: Found match for regex: <begin> * {{homophones|en|mark|Mark|marque|aa=non-rhotic,father-bother}} <end>
 Page 119 governor: Found match for regex: <begin> * {{IPA|en|/ˈɡʌv(ə)nə(ɹ)/|a=UK,non-rhotic}} <end>
 Page 119 governor: Found match for regex: <begin> * {{IPA|en|/ˈɡʌvɚnɚ/|a=US,rhotic}} <end>
 Page 119 governor: Found match for regex: <begin> * {{IPA|en|/ˈɡʌvənə(ɹ)/|a=US,non-rhotic}} <end>
 Page 119 governor: Found match for regex: <begin> * {{IPA|en|/ˈɡʌvənɚ/|a=US,rhotic,r-dissimilation}} <end>
-Page 120 poor: Found match for regex: <begin> * See the Wikipedia article on the {{w|English-language vowel changes before historic /r/#Cure–north_merger|pour-poor merger}} in many kinds of English <end>
-Page 120 poor: Found match for regex: <begin> * {{IPA|en|/poʊ/|a=nonrhotic,{{w|show-sure merger}},AAVE}} <end>
-Page 120 poor: Found match for regex: <begin> * {{homophones|en|pour|pore}} {{qualifier|with the {{w|pour-poor merger}}}} <end>
-Page 120 poor: Found match for regex: <begin> * {{homophones|en|paw}} {{qualifier|non-rhotic accents with the {{w|paw-poor merger}}}} <end>
-Page 120 poor: Found match for regex: <begin> * {{homophones|en|Poe}} {{qualifier|non-rhotic accents with the {{w|show-sure merger}}}} <end>
-Page 121 suit: Found match for regex: <begin> * {{homophones|en|soot}} {{a|en|accents with the FOOT-GOOSE merger and yod-dropping}} <end>
-Page 122 floor: Found match for regex: <begin> * {{enPR|flōr|a=rhotic,non-horse-hoarse}}, {{IPA|en|/flo(ː)ɹ/}} <end>
-Page 122 floor: Found match for regex: <begin> * {{IPA|en|/floə/|a=non-rhotic,non-horse-hoarse}} <end>
-Page 122 floor: Found match for regex: <begin> * {{IPA|en|/floʊ/|a=nonrhotic,{{w|dough-door merger}},AAVE}} <end>
-Page 122 floor: Found match for regex: <begin> * {{homophones|en|flaw}} {{qualifier|in [[non-rhotic]] accents}} <end>
-Page 122 floor: Found match for regex: <begin> * {{homophones|en|flow|floe}} {{qualifier|[[non-rhotic]] with {{w|dough-door merger}} (AAVE, non-rhotic Southern US)}} <end>
+Page 121 suit: Found match for regex: <begin> * {{homophones|en|soot|aa=foot-goose,yod-dropping}} <end>
 Page 123 mark: Found match for regex: <begin> * {{homophones|en|Mark|marque|;|mock<aa:non-rhotic,father-bother>}} <end>
-Page 124 mayonnaise: Found match for regex: <begin> * {{a|en|GenAm|æ-tensing}} ''also'' {{IPA|en|/ˈmæn.eɪz/|[ˈmɛən-]}} <end>
 Page 125 dank: Found match for regex: <begin> * {{IPA|en|/deɪŋk/|a=æ-tensing}} <end>
-Page 126 兒: Found match for regex: <begin> * {{zh-l|儿|tr=-}} may be used to specially write ''[[erhua]]'' (or the rhotic sound) in traditional Chinese, in contrast with {{zh-l|兒|[[child]]}}. <end>
 Page 127 twenty-four: Found match for regex: <begin> * {{enPR|fōr|a=rhotic,non-horse-hoarse}}, {{IPA|en|/ˌtwɛntiˈfo(ː)ɹ/}} <end>
 Page 127 twenty-four: Found match for regex: <begin> * {{IPA|en|/ˌtwɛntiˈfoə/|a=non-rhotic,non-horse-hoarse}} <end>
-Page 128 hanger: Found match for regex: <begin> ** {{IPA|en|[ˈheɪŋ.ɚ]|a=[[wiki:/æ/ raising|pre-/ŋ/ tensing]]}} <end>
-Page 129 bath: Found match for regex: <begin> * {{homophones|en|barf|qq1=Non-rhotic accents with trap-bath split and th-fronting}} <end>
-Page 130 due: Found match for regex: <begin> ** (yod-dropping): {{l|en|do}}, {{l|en|doo}}, {{l|en|doux}}, {{l|en|Doubs}} <end>
-Page 130 due: Found match for regex: <begin> ** (yod-coalescence): {{l|en|Jew}}, {{l|en|jew}} <end>
-Page 131 FEMA: Found match for regex: <begin> * {{homophones|en|femur|qq1=non-rhotic accents}} <end>
-Page 132 tank: Found match for regex: <begin> ** {{IPA|en|[ˈtʰeɪŋk]|a=ae-tensing}} <end>
+Page 128 hanger: Found match for regex: <begin> ** {{IPA|en|[ˈheɪŋ.ɚ]|a=æ-tensing}} <end>
+Page 129 bath: Found match for regex: <begin> * {{homophones|en|barf|aa=non-rhotic,trap-bath split,th-fronting}} <end>
+Page 131 FEMA: Found match for regex: <begin> * {{homophones|en|femur|aa=non-rhotic}} <end>
+Page 132 tank: Found match for regex: <begin> ** {{IPA|en|[ˈtʰeɪŋk]|a=æ-tensing}} <end>
 Page 133 cord: Found match for regex: <begin> * {{homophones|en|chord|;|cored<aa:horse-hoarse>|;|cawed<aa:non-rhotic>}} <end>
 Page 134 better: Found match for regex: <begin> * {{IPA|en|/ˈbɛtə/|a=non-rhotic}} <end>
 Page 134 better: Found match for regex: <begin> * {{IPA|en|/ˈbɛtəɹ/|a=rhotic}} <end>
 Page 135 cor: Found match for regex: <begin> * {{hmp|en|corps|;|core<aa:horse-hoarse>|;|caw<aa:non-rhotic>}} <end>
-Page 136 beta: Found match for regex: <begin> * {{a|en|UK}} {{homophones|en|beater}} {{qualifier|non-rhotic accents}} <end>
-Page 136 beta: Found match for regex: <begin> * {{a|en|US}} {{homophones|en|baiter}} {{qualifier|non-rhotic accents}} <end>
-Page 137 tort: Found match for regex: <begin> * {{hmp|en|torte}}; {{l|en|taught}}, {{l|en|taut}} {{qualifier|in non-rhotic accents}} <end>
+Page 137 tort: Found match for regex: <begin> * {{hmp|en|torte|;|taught|taut<aa:non-rhotic>}} <end>
 Page 138 California: Found match for regex: <begin> ** {{IPA|en|/ˌkæl.ɪˈfɔɹ.njə/|a=rhotic}} <end>
-Page 138 California: Found match for regex: <begin> ** {{IPA|en|/ˌkæl.ɪˈfɔː.njə/|a=nonrhotic}} <end>
-Page 139 error: Found match for regex: <begin> * {{homophones|en|era}} {{qualifier|in [[non-rhotic]] accents}} <end>
+Page 138 California: Found match for regex: <begin> ** {{IPA|en|/ˌkæl.ɪˈfɔː.njə/|a=non-rhotic}} <end>
+Page 139 error: Found match for regex: <begin> * {{homophones|en|era|aa=non-rhotic}} <end>
 Page 140 pa: Found match for regex: <begin> * {{homophones|en|pah<aa:Etymology 2>|;|par<aa:non-rhotic>|;|paw<aa:cot-caught,father-bother>}} <end>
-Page 141 am: Found match for regex: <begin> ** {{IPA|en|[ẽə̯̃m]|[ɛ̃ə̯̃m]|a=ae-tensing}} <end>
+Page 141 am: Found match for regex: <begin> ** {{IPA|en|[ẽə̯̃m]|[ɛ̃ə̯̃m]|a=æ-tensing}} <end>
 Page 142 rho: Found match for regex: <begin> * {{l|en|rhotic}} <end>
-Page 143 thank: Found match for regex: <begin> * {{IPA|en|[θeɪ̯ŋk]|[t̪eɪ̯ŋk]|a=æ-tensing,NYC|[ðeɪ̯ŋk]|q3=sometimes}} <end>
-Page 144 assume: Found match for regex: <begin> * {{a|en|US|Canada}} {{IPA|en|/əˈsum/|a=[[yod dropping]]}} <end>
-Page 144 assume: Found match for regex: <begin> * {{IPA|en|/əˈʃuːm/|a=[[yod coalescence]]}} <end>
-Page 145 deduce: Found match for regex: <begin> * {{homophones|en|dejuice||qq1=yod-coalescence}} <end>
+Page 143 thank: Found match for regex: <begin> * {{IPA|en|[θeɪ̯ŋk]|[t̪eɪ̯ŋk]|a=æ-tensing,NYC|[ðeɪ̯ŋk]|a3=sometimes}} <end>
+Page 145 deduce: Found match for regex: <begin> * {{homophones|en|dejuice|aa=yod-coalescence}} <end>
 Page 146 fork: Found match for regex: <begin> * {{IPA|en|/fɔ(ː)ɹk/|a=non-horse-hoarse,rhotic}} <end>
-Page 148 lava: Found match for regex: <begin> * {{homophones|en|larva}} {{qualifier|in non-rhotic accents}} <end>
+Page 148 lava: Found match for regex: <begin> * {{homophones|en|larva|aa=non-rhotic}} <end>
 Page 149 ignore: Found match for regex: <begin> * {{enPR|ĭgnōrʹ|a=rhotic,non-horse-hoarse}}, {{IPA|en|/ɪɡˈno(ː)ɹ/}} <end>
 Page 149 ignore: Found match for regex: <begin> * {{IPA|en|/ɪɡˈnoə/|a=non-rhotic,non-horse-hoarse}} <end>
 Page 150 pure: Found match for regex: <begin> * {{IPA|en|/ˈpjɝ/|a=cure-fir,rhotic}} <end>
 Page 150 pure: Found match for regex: <begin> * {{IPA|en|/ˈpjɜː/|a=cure-fir,non-rhotic}} <end>
 Page 151 standoff: Found match for regex: <begin> * {{IPA|en|[ˈsteən.dɑf]|a=cot-caught,æ-tensing}} <end>
-Page 152 Bali: Found match for regex: <begin> * Homophones: [[barley]] {{qualifier|non-rhotic accents}} <end>
+Page 152 Bali: Found match for regex: <begin> * {{hmp|en|barley|aa=non-rhotic}} <end>
 Page 153 import: Found match for regex: <begin> * {{enPR|ĭmʹpōrt|a=rhotic,non-horse-hoarse}}, {{IPA|en|/ˈɪm.po(ː)ɹt/}} <end>
 Page 153 import: Found match for regex: <begin> * {{IPA|en|/ˈɪm.poət/|a=non-rhotic,non-horse-hoarse}} <end>
 Page 153 import: Found match for regex: <begin> * {{enPR|ĭmpōrtʹ|a=rhotic,non-horse-hoarse}}, {{IPA|en|/ɪmˈpo(ː)ɹt/}} <end>
 Page 153 import: Found match for regex: <begin> * {{IPA|en|/ɪmˈpoət/|a=non-rhotic,non-horse-hoarse}} <end>
-Page 154 feta: Found match for regex: <begin> * Homophones: [[fetter]] (''in [[non-rhotic]] accents'') <end>
+Page 154 feta: Found match for regex: <begin> * {{hmp|en|fetter|aa=non-rhotic}} <end>
 Page 155 ford: Found match for regex: <begin> * {{IPA|en|/fo(ː)ɹd/|a=rhotic,non-horse-hoarse}} <end>
 Page 155 ford: Found match for regex: <begin> * {{IPA|en|/foəd/|a=non-rhotic,non-horse-hoarse}} <end>
-Page 156 lemur: Found match for regex: <begin> * {{homophones|en|Lima}} (''in [[non-rhotic]] accents'') <end>
+Page 156 lemur: Found match for regex: <begin> * {{homophones|en|Lima|aa=non-rhotic}} <end>
 Page 157 fan: Found match for regex: <begin> * {{IPA|en|[fɛən]|[feən]|[fɛːn]|a=æ-tensing}} <end>
-Page 158 Nicolas: Found match for regex: <begin> * {{hmp|en|knickerless}} {{q|non-rhotic accents}} <end>
-Page 159 Nicholas: Found match for regex: <begin> * {{hmp|en|knickerless}} {{q|non-rhotic accents}} <end>
+Page 158 Nicolas: Found match for regex: <begin> * {{hmp|en|knickerless|aa=non-rhotic}} <end>
+Page 159 Nicholas: Found match for regex: <begin> * {{hmp|en|knickerless|aa=non-rhotic}} <end>
 Page 160 score: Found match for regex: <begin> * {{enPR|skōrʹ|a=rhotic,non-horse-hoarse}}, {{IPA|en|/sko(ː)ɹ/}} <end>
 Page 160 score: Found match for regex: <begin> * {{IPA|en|/skoə/|a=non-rhotic,non-horse-hoarse}} <end>
-Page 161 spam: Found match for regex: <begin> * also {{IPA|en|[ˈspeəm]|a=ae-tensing}} <end>
-Page 162 moniker: Found match for regex: <begin> * {{homophones|en|Monica}} {{qualifier|in [[non-rhotic]] accents}} <end>
-Page 163 Alexander: Found match for regex: <begin> ** {{IPA|en|[ˌælɪɡˈzeəndɚ]|a=ae-tensing,rhotic}} <end>
-Page 163 Alexander: Found match for regex: <begin> ** {{IPA|en|[ˌælɪɡˈzeəndə]|a=ae-tensing,non-rhotic}} <end>
+Page 161 spam: Found match for regex: <begin> * also {{IPA|en|[ˈspeəm]|a=æ-tensing}} <end>
+Page 162 moniker: Found match for regex: <begin> * {{homophones|en|Monica|aa=non-rhotic}} <end>
+Page 163 Alexander: Found match for regex: <begin> ** {{IPA|en|[ˌælɪɡˈzeəndɚ]|a=æ-tensing,rhotic}} <end>
+Page 163 Alexander: Found match for regex: <begin> ** {{IPA|en|[ˌælɪɡˈzeəndə]|a=æ-tensing,non-rhotic}} <end>
 Page 164 lock: Found match for regex: <begin> * {{hmp|en|Locke|;|lark<aa:non-rhotic,father-bother>}} <end>
 Page 165 tuna: Found match for regex: <begin> * {{IPA|en|/ˈtʃuː.nə/|a=yod-coalescence}} <end>
-Page 166 panda: Found match for regex: <begin> * {{homophones|en|pander|qq1=non-rhotic accents}} <end>
-Page 167 cheetah: Found match for regex: <begin> * {{homophones|en|Chita|cheater}} {{qualifier|in [[non-rhotic]] accents}} <end>
-Page 168 sort: Found match for regex: <begin> * {{homophones|en|sought}} {{qualifier|in [[non-rhotic]] accents}} <end>
-Page 169 can't: Found match for regex: <begin> **{{IPA|en|[kʰẽə̃nʔ ~ kʰɪ̃ə̃nʔ]|a=ae-tensing}} <end>
-Page 170 aren't: Found match for regex: <begin> * {{homophones|en|aunt}} {{qualifier|some [[non-rhotic]] dialects}} <end>
-Page 171 miner: Found match for regex: <begin> * {{homophones|en|minor|myna}} {{a|en|in non-rhotic accents}} <end>
-Page 172 minor: Found match for regex: <begin> * {{homophones|en|miner|mynah|qq2=non-rhotic accents}} <end>
+Page 166 panda: Found match for regex: <begin> * {{homophones|en|pander|aa=non-rhotic}} <end>
+Page 167 cheetah: Found match for regex: <begin> * {{homophones|en|Chita|;|cheater<aa:non-rhotic>}} <end>
+Page 168 sort: Found match for regex: <begin> * {{homophones|en|sought|aa=non-rhotic}} <end>
+Page 169 can't: Found match for regex: <begin> **{{IPA|en|[kʰẽə̃nʔ ~ kʰɪ̃ə̃nʔ]|a=æ-tensing}} <end>
+Page 170 aren't: Found match for regex: <begin> * {{homophones|en|aunt|aa=some <<non-rhotic>> dialects}} <end>
+Page 171 miner: Found match for regex: <begin> * {{homophones|en|minor|;|myna<aa:non-rhotic>}} <end>
+Page 172 minor: Found match for regex: <begin> * {{homophones|en|miner|;|mynah<aa:non-rhotic>}} <end>
 Page 173 transport: Found match for regex: <begin> * {{IPA|en|/tɹænsˈpo(ː)ɹt/|a=rhotic,non-horse-hoarse}} <end>
 Page 173 transport: Found match for regex: <begin> * {{IPA|en|/tɹænsˈpoət/|a=non-rhotic,non-horse-hoarse}} <end>
 Page 173 transport: Found match for regex: <begin> * {{IPA|en|/ˈtɹæns.po(ː)ɹt/|a=rhotic,non-horse-hoarse}} <end>
 Page 173 transport: Found match for regex: <begin> * {{IPA|en|/ˈtɹæns.poət/|a=non-rhotic,non-horse-hoarse}} <end>
 Page 174 form: Found match for regex: <begin> * {{IPA|en|/fo(ː)ɹm/|a=non-horse-hoarse,rhotic}} <end>
 Page 175 papa: Found match for regex: <begin> * {{homophones|en|poppa<aa:father-bother>|;|popper<aa:non-rhotic,father-bother>}} <end>
-Page 176 awe: Found match for regex: <begin> ** {{qualifier|in [[non-rhotic]] accents}}: {{l|en|oar}}, {{l|en|or}}, {{l|en|ore}}, {{l|en|o'er}} <end>
 Page 177 hoarse: Found match for regex: <begin> ** {{enPR|hōrs|a=rhotic}}, {{IPA|en|/hoː(ə)ɹs/}} <end>
-Page 177 hoarse: Found match for regex: <begin> ** {{IPA|en|/hoəs/|a=nonrhotic}} <end>
+Page 177 hoarse: Found match for regex: <begin> ** {{IPA|en|/hoəs/|a=non-rhotic}} <end>
 Page 178 coarse: Found match for regex: <begin> * {{enPR|kōrs|a=rhotic,non-horse-hoarse}}, {{IPA|en|/ko(ː)ɹs/}} <end>
 Page 178 coarse: Found match for regex: <begin> * {{IPA|en|/koəs/|a=non-rhotic,non-horse-hoarse}} <end>
 Page 179 course: Found match for regex: <begin> ** {{enPR|kōrs|a=rhotic}}, {{IPA|en|/koːɹs/}} <end>
-Page 179 course: Found match for regex: <begin> ** {{IPA|en|/koəs/|a=nonrhotic}} <end>
+Page 179 course: Found match for regex: <begin> ** {{IPA|en|/koəs/|a=non-rhotic}} <end>
 Page 180 yore: Found match for regex: <begin> * {{enPR|yōr|a=rhotic,non-horse-hoarse}}, {{IPA|en|/jo(ː)ɹ/}} <end>
 Page 180 yore: Found match for regex: <begin> * {{IPA|en|/joə/|a=non-rhotic,non-horse-hoarse}} <end>
 Page 180 yore: Found match for regex: <begin> * {{homophones|en|your|you're<aa:pour-poor>|;|yaw<aa:non-rhotic,horse-hoarse>}} <end>
-Page 181 yaw: Found match for regex: <begin> * {{homophones|en|yore|your|you're}} {{q|some non-rhotic accents}}, {{m|en|y'all}} {{q|with l-vocalization}} <end>
-Page 182 paw: Found match for regex: <begin> * {{homophones|en|poor<aa:non-rhotic,pour-poor>|;|pore|pour<aa:non-rhotic,horse-hoarse>|;|par<aa:non-rhotic,cot-caught,father-bother>|;|pa<aa:cot-caught,father-bother>}} <end>
-Page 182 paw: Found match for regex: <begin> * Homophones: [[poor]] (''in non-rhotic accents''), [[pore]] (''in non-rhotic accents''), [[pour]] (''in non-rhotic accents'') <end>
-Page 183 pause: Found match for regex: <begin> * {{homophones|en|paws|pores|pours|qq2=in non-rhotic accents|qq3=in non-rhotic accents}} <end>
-Page 184 gauze: Found match for regex: <begin> * Homophones: [[gores]] (non-rhotic accents) <end>
+Page 183 pause: Found match for regex: <begin> * {{homophones|en|paws|;|pores|pours<aa:non-rhotic>}} <end>
+Page 184 gauze: Found match for regex: <begin> * {{hmp|en|gores|aa=non-rhotic}} <end>
 Page 185 stalk: Found match for regex: <begin> * {{homophones|en|stork<aa:non-rhotic>|;|stock<aa:cot-caught>}} <end>
 Page 186 explore: Found match for regex: <begin> * {{enPR|ĭksplōrʹ|a=rhotic,non-horse-hoarse}}, {{IPA|en|/ɪkˈsplo(ː)ɹ/}} <end>
 Page 186 explore: Found match for regex: <begin> * {{IPA|en|/ɪkˈsploə/|a=non-rhotic,non-horse-hoarse}} <end>
@@ -289,44 +255,29 @@ Page 189 mourn: Found match for regex: <begin> * {{enPR|mōrn|a=rhotic,non-horse
 Page 189 mourn: Found match for regex: <begin> * {{IPA|en|/moən/|a=non-rhotic,non-horse-hoarse}} <end>
 Page 189 mourn: Found match for regex: <begin> * {{enPR|mo͝orn|a=rare,rhotic,with or without the <<horse-hoarse>>}}, {{IPA|en|/mʊɹn/}} <end>
 Page 189 mourn: Found match for regex: <begin> * {{enPR|mo͝orn|a=rare,non-rhotic,with or without the <<horse-hoarse>>}}, {{IPA|en|/mʊən/}} <end>
-Page 190 more: Found match for regex: <begin> * {{enPR|mōr|a=rhotic,non-horse-hoarse}}; {{IPA|en|/mo(ː)ɹ/}} <end>
-Page 190 more: Found match for regex: <begin> * {{IPA|en|/moə/|a=non-rhotic,non-horse-hoarse}} <end>
-Page 190 more: Found match for regex: <begin> * {{IPA|en|/moʊ/|a=nonrhotic,dough-door merger,AAVE}} <end>
-Page 190 more: Found match for regex: <begin> * {{homophones|en|moor|Moor|Moore}} {{qualifier|all three only in accents with the {{w|pour–poor merger}}}} <end>
-Page 190 more: Found match for regex: <begin> * {{homophones|en|maw<aa:<<non-rhotic,horse-hoarse>> (most of <<England>>, <<Australia>>, <<New Zealand>>, <<New York>>)>}} <end>
-Page 190 more: Found match for regex: <begin> * {{homophones|en|mow}} {{qualifier|non-rhotic accents with the {{w|dough-door merger}} (AAVE, non-rhotic Southern US)}} <end>
 Page 191 chore: Found match for regex: <begin> * {{enPR|chōr|a=rhotic,non-horse-hoarse}}, {{IPA|en|/t͡ʃo(ː)ɹ/}} <end>
 Page 191 chore: Found match for regex: <begin> * {{IPA|en|/t͡ʃoə/|a=non-rhotic,non-horse-hoarse}} <end>
 Page 191 chore: Found match for regex: <begin> * {{enPR|chōr|a=rhotic,non-horse-hoarse}}, {{IPA|en|/t͡ʃo(ː)ɹ/}} <end>
 Page 191 chore: Found match for regex: <begin> * {{IPA|en|/t͡ʃoə/|a=non-rhotic,non-horse-hoarse}} <end>
-Page 192 whore: Found match for regex: <begin> * {{enPR|hōr|a=rhotic,non-horse-hoarse}}, {{IPA|en|/ho(ː)ɹ/}} <end>
-Page 192 whore: Found match for regex: <begin> * {{IPA|en|/hoə/|a=non-rhotic,non-horse-hoarse}} <end>
-Page 192 whore: Found match for regex: <begin> * {{IPA|en|/hoʊ/|a=nonrhotic,{{w|dough-door merger}},AAVE}} <end>
-Page 192 whore: Found match for regex: <begin> * {{homophones|en|hoe}} {{qualifier|[[non-rhotic]] with {{w|dough-door merger}} (AAVE, non-rhotic Southern US)}} <end>
-Page 193 leaf: Found match for regex: <begin> * {{homophones|en|Leith|qq1=with [[th-fronting]]|lief}} <end>
-Page 194 ska: Found match for regex: <begin> * {{homophones|en|scar}} {{a|en|non-rhotic accents}} <end>
-Page 195 mango: Found match for regex: <begin> ** {{IPA|en|[ˈmeɪŋɡoʊ]|a=ae-tensing}} <end>
-Page 196 pelta: Found match for regex: <begin> * {{hmp|en|pelter}} {{q|non-rhotic accents}} <end>
-Page 197 pattern: Found match for regex: <begin> * {{homophone|en|paten|patten|Patton|qq3=some non-rhotic accents}} <end>
+Page 193 leaf: Found match for regex: <begin> * {{homophones|en|lief|;|Leith<aa:th-fronting>}} <end>
+Page 194 ska: Found match for regex: <begin> * {{homophones|en|scar|aa=non-rhotic}} <end>
+Page 195 mango: Found match for regex: <begin> ** {{IPA|en|[ˈmeɪŋɡoʊ]|a=æ-tensing}} <end>
+Page 196 pelta: Found match for regex: <begin> * {{hmp|en|pelter|aa=non-rhotic}} <end>
+Page 197 pattern: Found match for regex: <begin> * {{homophone|en|paten|patten|Patton|aa=non-rhotic}} <end>
 Page 198 tram: Found match for regex: <begin> * {{IPA|en|[tɹɛəm]|[tɹeəm]|[tɹɛːm]|a=æ-tensing}} <end>
 Page 199 thorn: Found match for regex: <begin> ** {{IPA|en|/θɔːɹn/|a=rhotic}} <end>
-Page 199 thorn: Found match for regex: <begin> ** {{IPA|en|/θɔːn/|a=nonrhotic}} <end>
+Page 199 thorn: Found match for regex: <begin> ** {{IPA|en|/θɔːn/|a=non-rhotic}} <end>
 Page 200 corporeal: Found match for regex: <begin> * {{IPA|en|/kɔːɹˈpɔːɹiəl/|a=rhotic}} <end>
 Page 200 corporeal: Found match for regex: <begin> * {{IPA|en|/kɔːˈpɔːɹiəl/|a=non-rhotic}} <end>
 Page 201 corps: Found match for regex: <begin> ** {{homophones|en|core|cor|;|caw<aa:non-rhotic,horse-hoarse>}} <end>
 Page 201 corps: Found match for regex: <begin> ** {{enPR|kōr|a=rhotic}}, {{IPA|en|/ko(ː)ɹ/}} <end>
-Page 201 corps: Found match for regex: <begin> ** {{IPA|en|/koə/|a=nonrhotic}} <end>
+Page 201 corps: Found match for regex: <begin> ** {{IPA|en|/koə/|a=non-rhotic}} <end>
 Page 201 corps: Found match for regex: <begin> ** {{homophones|en|cores|;|cause|caws<aa:non-rhotic,horse-hoarse>}} <end>
 Page 201 corps: Found match for regex: <begin> ** {{enPR|kōrz|a=rhotic}}, {{IPA|en|/ko(ː)ɹz/}} <end>
-Page 201 corps: Found match for regex: <begin> ** {{IPA|en|/koəz/|a=nonrhotic}} <end>
-Page 202 tube: Found match for regex: <begin> * {{enPR|chōōb|a=[[yod coalescence]]}}, {{IPA|en|/tʃuːb/}} <end>
-Page 202 tube: Found match for regex: <begin> * {{enPR|tōōb|a=[[yod dropping]]}}, {{IPA|en|/tuːb/}} <end>
-Page 203 eau: Found match for regex: <begin> * {{homophones|en|hew|hue|Hugh}} {{qualifier|in h-dropping dialects}} <end>
-Page 204 lamb: Found match for regex: <begin> ** {{IPA|en|[lɛəm]|a=ae-tensing}} <end>
-Page 205 glottal stop: Found match for regex: <begin> * German: {{t+|de|Knacklaut}}, {{t|de|glottaler Plosiv|m}}, {{t+|de|Stimmritzenverschlusslaut|m}}, {{t|de|Glottisschlag|m}} <end>
-Page 205 glottal stop: Found match for regex: <begin> * Swedish: {{t|sv|glottisstöt|c}}, {{t|sv|glottal klusil|c}} <end>
-Page 206 glottal: Found match for regex: <begin> * French: {{t+|fr|glottique}}, {{t+|fr|glottal}} <end>
-Page 206 glottal: Found match for regex: <begin> * German: {{t+|de|glottal}} <end>
+Page 201 corps: Found match for regex: <begin> ** {{IPA|en|/koəz/|a=non-rhotic}} <end>
+Page 202 tube: Found match for regex: <begin> * {{enPR|chōōb|a=yod-coalescence}}, {{IPA|en|/tʃuːb/}} <end>
+Page 202 tube: Found match for regex: <begin> * {{enPR|tōōb|a=yod-dropping}}, {{IPA|en|/tuːb/}} <end>
+Page 204 lamb: Found match for regex: <begin> ** {{IPA|en|[lɛəm]|a=æ-tensing}} <end>
 Page 207 snore: Found match for regex: <begin> * {{IPA|en|/sno(ː)ɹ/|a=rhotic,non-horse-hoarse}} <end>
 Page 207 snore: Found match for regex: <begin> * {{IPA|en|/snoə/|a=non-rhotic,non-horse-hoarse}} <end>
 Page 208 portent: Found match for regex: <begin> * {{IPA|en|/ˈpo(ː)ɹtɛnt/|a=rhotic,non-horse-hoarse}} <end>
@@ -335,151 +286,120 @@ Page 209 source: Found match for regex: <begin> * {{IPA|en|/so(ː)ɹs/|a=rhotic,
 Page 209 source: Found match for regex: <begin> * {{IPA|en|/soəs/|a=non-rhotic,non-horse-hoarse}} <end>
 Page 209 source: Found match for regex: <begin> * {{homophones|en|sauce|aa=non-rhotic,horse-hoarse}} <end>
 Page 210 sauce: Found match for regex: <begin> * {{hmp|en|source|aa=non-rhotic,horse-hoarse}} <end>
-Page 211 rhotic: Found match for regex: <begin> * {{l|en|non-rhotic}} <end>
-Page 211 rhotic: Found match for regex: <begin> * {{l|en|prerhotic}} <end>
-Page 211 rhotic: Found match for regex: <begin> * {{l|en|rhoticity}} <end>
-Page 211 rhotic: Found match for regex: <begin> * {{sense|rhotic phoneme}} {{l|en|R-coloured vowel}} <end>
-Page 211 rhotic: Found match for regex: <begin> * {{pedia|Rhotic and non-rhotic accents}} <end>
-Page 212 non-rhotic: Found match for regex: <begin> * {{l|en|nonrhotic}} <end>
-Page 212 non-rhotic: Found match for regex: <begin> * {{audio|en|LL-Q1860 (eng)-Persent101-non-rhotic.wav|a=US}} <end>
-Page 212 non-rhotic: Found match for regex: <begin> * {{l|en|rhotic}} <end>
-Page 212 non-rhotic: Found match for regex: <begin> * {{pedia|Rhotic and non-rhotic accents}} <end>
 Page 213 moor: Found match for regex: <begin> ** {{IPA|en|/mɔː/|a=pour-poor}} <end>
 Page 213 moor: Found match for regex: <begin> ** {{IPA|en|/mʊə/|a=non-pour-poor}}} <end>
 Page 213 moor: Found match for regex: <begin> ** {{IPA|en|/mɔɹ/|a=pour-poor}} <end>
 Page 213 moor: Found match for regex: <begin> ** {{IPA|en|/mʊ(ə)ɹ/|a=non-pour-poor}} <end>
 Page 213 moor: Found match for regex: <begin> * {{homophones|en|Moore|;|more<aa:pour-poor>|;|maw<aa:most <<non-rhotic>> accents with the <<pour-poor>>>|;|mooer<aa:some accents>}} <end>
-Page 214 luna: Found match for regex: <begin> * {{homophones|en|lunar|looner}} {{qualifier|in non-rhotic accents}} <end>
+Page 214 luna: Found match for regex: <begin> * {{homophones|en|lunar|looner|aa=non-rhotic}} <end>
 Page 215 tor: Found match for regex: <begin> * {{homophones|en|torr|;|tore<aa:horse-hoarse>|;|tour<aa:UK,pour-poor>|;|taw<aa:non-rhotic>}} <end>
-Page 216 vendor: Found match for regex: <begin> * {{homophones|en|Venda}} (''in [[non-rhotic]] accents'') <end>
-Page 217 assumed: Found match for regex: <begin> * {{a|en|US|Canada}} {{IPA|en|/əˈsuːmd/|a=[[yod dropping]]}} <end>
-Page 217 assumed: Found match for regex: <begin> * {{IPA|en|/əˈʃuːm/|a=[[yod coalescence]]}} <end>
+Page 216 vendor: Found match for regex: <begin> * {{homophones|en|Venda|aa=non-rhotic}} <end>
 Page 218 afford: Found match for regex: <begin> ** {{IPA|en|/əˈfo(ː)ɹd/|a=rhotic}} <end>
-Page 218 afford: Found match for regex: <begin> ** {{IPA|en|/əˈfoəd/|a=nonrhotic}} <end>
+Page 218 afford: Found match for regex: <begin> ** {{IPA|en|/əˈfoəd/|a=non-rhotic}} <end>
 Page 219 afore: Found match for regex: <begin> * {{IPA|en|/əˈfo(ː)ɹ/|a=rhotic,non-horse-hoarse}} <end>
 Page 219 afore: Found match for regex: <begin> * {{IPA|en|/əˈfoə/|a=non-rhotic,non-horse-hoarse}} <end>
-Page 220 -er: Found match for regex: <begin> * {{homophones|en|-or|qq2=in non-rhotic accents|-a}} <end>
+Page 220 -er: Found match for regex: <begin> * {{homophones|en|-or|;|-a<aa:non-rhotic>}} <end>
 Page 221 roar: Found match for regex: <begin> * {{enPR|rōr|a=rhotic,non-horse-hoarse}}, {{IPA|en|/ɹo(ː)ɹ/}} <end>
 Page 221 roar: Found match for regex: <begin> * {{IPA|en|/ɹoə/|a=non-rhotic,non-horse-hoarse}} <end>
 Page 221 roar: Found match for regex: <begin> * {{homophones|en|raw|aa=non-rhotic,horse-hoarse}} <end>
 Page 222 shark: Found match for regex: <begin> * {{homophones|en|shock|aa=non-rhotic,father-bother}} <end>
 Page 223 analytical: Found match for regex: <begin> * {{IPA|en|[ˌɛn.əˈlɪɾ.ə.kɫ̩]|a=US,æ-tensing}} <end>
 Page 224 corpse: Found match for regex: <begin> ** {{IPA|en|/kɔːɹps/|a=rhotic}} <end>
-Page 224 corpse: Found match for regex: <begin> ** {{IPA|en|/kɔːps/|a=nonrhotic}} <end>
-Page 225 doo: Found match for regex: <begin> * {{homophones|en|do|qq1=general|dew|due|qq3=yod-dropping}} <end>
+Page 224 corpse: Found match for regex: <begin> ** {{IPA|en|/kɔːps/|a=non-rhotic}} <end>
+Page 225 doo: Found match for regex: <begin> * {{homophones|en|do|;|dew|due<aa:yod-dropping>}} <end>
 Page 226 boar: Found match for regex: <begin> * {{enPR|bōr|a=rhotic,non-horse-hoarse}}, {{IPA|en|/bo(ː)ɹ/}} <end>
 Page 226 boar: Found match for regex: <begin> * {{IPA|en|/boə/|a=non-rhotic,non-horse-hoarse}} <end>
-Page 226 boar: Found match for regex: <begin> * {{hmp|en|bore|Bohr|boor}} {{qualifier|accents with the {{w|pour–poor merger}}}} <end>
-Page 227 enthusiasm: Found match for regex: <begin> * {{IPA|en|/-θuː-/|a=yod dropping}} <end>
+Page 226 boar: Found match for regex: <begin> * {{hmp|en|bore|Bohr|;|boor<aa:pour-poor>}} <end>
+Page 227 enthusiasm: Found match for regex: <begin> * {{IPA|en|/-θuː-/|a=yod-dropping}} <end>
 Page 228 caviar: Found match for regex: <begin> * {{IPA|en|/ˈkæv.iˌɑɹ/|a=rhotic}} <end>
 Page 228 caviar: Found match for regex: <begin> * {{IPA|en|/ˈkæv.iˌɑː/|a=non-rhotic}} <end>
-Page 229 coma: Found match for regex: <begin> * {{homophones|en|comber}} (''in [[non-rhotic]] accents'') <end>
-Page 230 coda: Found match for regex: <begin> * {{homophones|en|coder}} {{qualifier|in non-rhotic dialects}} <end>
-Page 231 nor: Found match for regex: <begin> * {{homophones|en|gnaw}} {{qualifier|in [[non-rhotic]] accents}} <end>
-Page 232 lord: Found match for regex: <begin> * {{homophones|en|laud}} {{q|in non-rhotic accents}} <end>
-Page 234 porn: Found match for regex: <begin> * {{homophones|en|pawn}} (in non-rhotic accents) <end>
+Page 229 coma: Found match for regex: <begin> * {{homophones|en|comber|aa=non-rhotic}} <end>
+Page 230 coda: Found match for regex: <begin> * {{homophones|en|coder|aa=non-rhotic}} <end>
+Page 231 nor: Found match for regex: <begin> * {{homophones|en|gnaw|aa=non-rhotic}} <end>
+Page 232 lord: Found match for regex: <begin> * {{homophones|en|laud|aa=non-rhotic}} <end>
+Page 234 porn: Found match for regex: <begin> * {{homophones|en|pawn|aa=non-rhotic}} <end>
 Page 235 fore-: Found match for regex: <begin> * {{IPA|en|/fo(ː)ɹ/|a=rhotic,non-horse-hoarse}} <end>
 Page 235 fore-: Found match for regex: <begin> * {{IPA|en|/foə/|a=non-rhotic,non-horse-hoarse}} <end>
 Page 236 wanna: Found match for regex: <begin> *** In accents where prevocalic schwa would usually trigger linking-R (most non-rhotic accents), this does not happen. <end>
-Page 237 gonna: Found match for regex: <begin> * The final schwa does not trigger linking-R in accents where it usually would (most non-rhotic accents). Instead there is hiatus, a glottal stop, or the final vowel is pronounced /-uː/. <end>
-Page 237 gonna: Found match for regex: <begin> * {{homophones|en|gunner|goner|qq1=non-rhotic accents|qq2=non-rhotic accents}} <end>
-Page 238 outta: Found match for regex: <begin> * {{homophones|en|outer}} {{a|en|non-rhotic}} <end>
-Page 239 tong: Found match for regex: <begin> * {{m|nan-hbl|當|tr=tong|t=to bear; to take responsibility; to match equally}} as recorded in Barclay (1923) in Douglas (1873), where ''"the person who supplies a private gambling party with room, cards, and food,'' (customarily) ''receives a percentage of the winnings"'' as per Barclay (1923). <end>
-Page 240 draco: Found match for regex: <begin> * {{anagrams|it|a=acdor|cadrò|cardo|cardò|corda|croda}} <end>
-Page 241 fin: Found match for regex: <begin> * {{homophones|en|thin|qq1=with [[th-fronting]]|Finn}} <end>
+Page 238 outta: Found match for regex: <begin> * {{homophones|en|outer|aa=non-rhotic}} <end>
+Page 241 fin: Found match for regex: <begin> * {{homophones|en|Finn|;|thin<aa:th-fronting>}} <end>
 Page 242 damn: Found match for regex: <begin> * {{IPA|en|[dɛəm]|[deəm]|[dɛːm]|a=æ-tensing}} <end>
-Page 243 calve: Found match for regex: <begin> * {{hmp|en|carve|qq1=some nonrhotic accents, e.g. RP}} <end>
-Page 244 stella: Found match for regex: <begin> * {{homophones|en|Stella|stellar|qq2=in [[non-rhotic]] accents|steller|qq3=in [[non-rhotic]] accents|Steller|qq4=in [[non-rhotic]] accents}} <end>
-Page 245 barf: Found match for regex: <begin> * {{hmp|en|Barff|bath|qq2=Non-rhotic accents with trap-bath split and th-fronting|}} <end>
-Page 246 arsed: Found match for regex: <begin> * {{hmp|en|asked}} {{q|in some non-rhotic accents}} <end>
-Page 247 data: Found match for regex: <begin> ** {{homophones|en|dater}} {{q|in non-rhotic dialects}} <end>
-Page 247 data: Found match for regex: <begin> ** {{homophones|en|darter|qq1=in non-rhotic dialects}} <end>
-Page 248 terra: Found match for regex: <begin> * {{homophones|en|terror}} {{qualifier|non-rhotic accents}} <end>
-Page 249 chart: Found match for regex: <begin> * {{homophone|en|chaat}} {{q|[[non-rhotic]]}} <end>
-Page 250 -or: Found match for regex: <begin> * {{homophones|en|-er|qq2=in non-rhotic accents|-a}} <end>
+Page 243 calve: Found match for regex: <begin> * {{hmp|en|carve|aa=some <<non-rhotic>> accents, e.g. <<RP>>}} <end>
+Page 244 stella: Found match for regex: <begin> * {{homophones|en|Stella|;|stellar|steller|Steller<aa:non-rhotic>}} <end>
+Page 245 barf: Found match for regex: <begin> * {{hmp|en|Barff|;|bath<aa:non-rhotic,trap-bath split,th-fronting>}} <end>
+Page 246 arsed: Found match for regex: <begin> * {{hmp|en|asked|aa=some <<non-rhotic>> accents}} <end>
+Page 248 terra: Found match for regex: <begin> * {{homophones|en|terror|aa=non-rhotic}} <end>
+Page 249 chart: Found match for regex: <begin> * {{homophone|en|chaat|aa=non-rhotic}} <end>
+Page 250 -or: Found match for regex: <begin> * {{homophones|en|-er|;|-a<aa:non-rhotic>}} <end>
 Page 251 campfire: Found match for regex: <begin> * {{IPA|en|[ˈkʰɛə̯mpˌfaɪ̯ɚ]|a=æ-tensing}} <end>
-Page 252 tour: Found match for regex: <begin> * {{homophones|en|tore}} {{qualifier|pour-poor merger}} <end>
-Page 253 doux: Found match for regex: <begin> * {{homophones|en|dew|due}} {{q|in accents with yod-dropping}} <end>
-Page 254 par: Found match for regex: <begin> * {{homophones|en|pa<aa:non-rhotic>|;|pah<aa:non-rhotic,Etymology 2>|paw<aa:non-rhotic,cot-caught,father-bother>}} <end>
-Page 255 parse: Found match for regex: <begin> * {{homophone|en|pass}} {{a|en|non-rhotic}} <end>
-Page 256 æ: Found match for regex: <begin> * {{l|en|æ-tensing}} <end>
-Page 257 glacier: Found match for regex: <begin> * {{homophone|en|glassier|qq1=[[non-rhotic]] accents without [[trap-bath split]]}} <end>
+Page 252 tour: Found match for regex: <begin> * {{homophones|en|tore|aa=pour-poor}} <end>
+Page 253 doux: Found match for regex: <begin> * {{homophones|en|dew|due|aa=yod-dropping}} <end>
+Page 254 par: Found match for regex: <begin> * {{homophones|en|pa<aa:non-rhotic>|;|pah<aa:non-rhotic><t:Maori fort>|paw<aa:non-rhotic,cot-caught,father-bother>}} <end>
+Page 255 parse: Found match for regex: <begin> * {{homophone|en|pass|aa=non-rhotic,trap-bath split}} <end>
 Page 258 North Carolina: Found match for regex: <begin> * {{IPA|en|/ˌnɔɹθ kæɹəˈlaːnə/|a=Southern US,rhotic}} <end>
 Page 258 North Carolina: Found match for regex: <begin> * {{IPA|en|/ˌnɔːθ kæɹəˈlaːnə/|/ˌnɔːθ kæəˈlaːnə/|a=Southern US,non-rhotic}} <end>
-Page 259 -a: Found match for regex: <begin> * {{homophones|en|-er|-or}} {{q|in non-rhotic accents}} <end>
-Page 259 -a: Found match for regex: <begin> * {{l|en|-er}} {{q|which, in various non-rhotic dialects, reduces to ''-a'', e.g. ''fatha'', ''burna''}}, compare {{l|en|-z}} <end>
-Page 260 fur: Found match for regex: <begin> * {{homophones|en|fir|fair|qq2=with [[w:English-language_vowel_changes_before_historic_/r/#Square–nurse_merger|Square-nurse merger]]|fare|qq3=with [[w:English-language_vowel_changes_before_historic_/r/#Square–nurse_merger|Square-nurse merger]]}} <end>
+Page 259 -a: Found match for regex: <begin> * {{homophones|en|-er|-or|aa=non-rhotic}} <end>
+Page 260 fur: Found match for regex: <begin> * {{homophones|en|fir|;|fair|fare<aa:fair-fir>}} <end>
 Page 261 bairn: Found match for regex: <begin> * {{IPA|en|/ˈbɛəʁn/|a=Northumberland,North Durham,rhotic}} <end>
 Page 261 bairn: Found match for regex: <begin> * {{IPA|en|/ˈbɛəɹn/|a=UK,rhotic}} <end>
 Page 261 bairn: Found match for regex: <begin> * {{IPA|en|/ˈbɛən/|/ˈbɛːn/|a=UK,non-rhotic}} <end>
-Page 262 yew: Found match for regex: <begin> * {{homophones|en|ewe|u|you}}, {{q|in h-dropping dialects}} {{l|en|hew}}, {{l|en|hue}} <end>
-Page 263 deaf: Found match for regex: <begin> * {{homophones|en|death|qq1=with [[th-fronting]]|Deaf|def}} <end>
+Page 262 yew: Found match for regex: <begin> * {{homophones|en|ewe|u|you|eau|;|hew|hue|Hugh<aa:h-dropping>}} <end>
+Page 263 deaf: Found match for regex: <begin> * {{homophones|en|Deaf|def|;|death<aa:th-fronting>}} <end>
 Page 264 pork: Found match for regex: <begin> * {{IPA|en|/po(ː)ɹk/|a=rhotic,non-horse-hoarse|ref={{R:Dictionary.com}}}} <end>
 Page 264 pork: Found match for regex: <begin> * {{IPA|en|/poək/|a=non-rhotic,non-horse-hoarse}} <end>
 Page 265 dock: Found match for regex: <begin> * {{homophones|en|doc|Doc|;|dark<aa:non-rhotic,father-bother>}} <end>
-Page 266 aitch: Found match for regex: <begin> * Often used in reference of [[w:H-dropping|H-dropping]]. <end>
 Page 267 foreskin: Found match for regex: <begin> * {{IPA|en|/ˈfo(ː)ɹskɪn/|a=rhotic,non-horse-hoarse}} <end>
 Page 267 foreskin: Found match for regex: <begin> * {{IPA|en|/ˈfoəskɪn/|a=non-rhotic,non-horse-hoarse}} <end>
 Page 268 support: Found match for regex: <begin> * {{IPA|en|/səˈpo(ː)ɹt/|a=rhotic,non-horse-hoarse}} <end>
 Page 268 support: Found match for regex: <begin> * {{IPA|en|/səˈpoət/|a=non-rhotic,non-horse-hoarse}} <end>
 Page 269 store: Found match for regex: <begin> * {{enPR|stōr|a=rhotic,non-horse-hoarse}}, {{IPA|en|/sto(ː)ɹ/}} <end>
 Page 269 store: Found match for regex: <begin> * {{IPA|en|/stoə/|a=non-rhotic,non-horse-hoarse}} <end>
-Page 270 yarmulke: Found match for regex: <begin> * {{alter|en|yarmalka|yarmalke|yarmelka|yarmelke|yarmulka|yamacha|yermulke||rhotic variants}} <end>
-Page 270 yarmulke: Found match for regex: <begin> * {{alter|en|yamaka|yamalka|yamalke|yamelka|yamelke|yamilke|yamuka|yamulka|yamulke||nonrhotic variants}} <end>
-Page 271 barley: Found match for regex: <begin> * Homophones: [[Bali]] {{qualifier|non-rhotic accents}} <end>
-Page 272 terror: Found match for regex: <begin> * {{homophones|en|terra|Terra}} {{qualifier|non-rhotic accents}} <end>
+Page 270 yarmulke: Found match for regex: <begin> * {{alter|en|yarmalka|yarmalke|yarmelka|yarmelke|yarmulka|yamacha|yermulke||<<rhotic>> variants}} <end>
+Page 270 yarmulke: Found match for regex: <begin> * {{alter|en|yamaka|yamalka|yamalke|yamelka|yamelke|yamilke|yamuka|yamulka|yamulke||<<non-rhotic>> variants}} <end>
+Page 271 barley: Found match for regex: <begin> * {{hmp|en|Bali|aa=non-rhotic}} <end>
+Page 272 terror: Found match for regex: <begin> * {{homophones|en|terra|Terra|aa=non-rhotic}} <end>
 Page 273 porter: Found match for regex: <begin> * {{IPA|en|/ˈpo(ː)ɹtɚ/|a=rhotic,non-horse-hoarse}} <end>
 Page 273 porter: Found match for regex: <begin> * {{IPA|en|/ˈpoətə/|a=non-rhotic,non-horse-hoarse}} <end>
-Page 274 petrichor: Found match for regex: <begin> * {{anagrams|en|a=cehioprrt|chiropter|pre-rhotic|prerhotic}} <end>
-Page 275 orphan: Found match for regex: <begin> * {{homophones|en|often}} {{q|[[non-rhotic]] accents with the lot–cloth split}} <end>
-Page 276 Alexandra: Found match for regex: <begin> * {{IPA|en|[ˌæ.lɪɡˈzeən.dɹə]|a=ae-tensing,rhotic}} <end>
-Page 276 Alexandra: Found match for regex: <begin> * {{IPA|en|[ˌæ.lɪɡˈzeən.dɹə]|a=ae-tensing,non-rhotic}} <end>
-Page 277 caste: Found match for regex: <begin> * {{homophones|en|cast|karst|qq2=in some non-rhotic accents}} <end>
-Page 278 lute: Found match for regex: <begin> * {{homophones|en|loot}} {{q|in accents with yod-dropping}} <end>
-Page 279 loot: Found match for regex: <begin> * {{homophones|en|lute}} {{q|in accents with yod-dropping}} <end>
-Page 280 parka: Found match for regex: <begin> * {{homophones|en|Parker}} (in [[non-rhotic]] accents) <end>
+Page 275 orphan: Found match for regex: <begin> * {{homophones|en|often|aa=non-rhotic,lot-cloth split}} <end>
+Page 276 Alexandra: Found match for regex: <begin> * {{IPA|en|[ˌæ.lɪɡˈzeən.dɹə]|a=æ-tensing,rhotic}} <end>
+Page 276 Alexandra: Found match for regex: <begin> * {{IPA|en|[ˌæ.lɪɡˈzeən.dɹə]|a=æ-tensing,non-rhotic}} <end>
+Page 277 caste: Found match for regex: <begin> * {{homophones|en|cast|;|karst|aa=non-rhotic,trap-bath split}} <end>
+Page 278 lute: Found match for regex: <begin> * {{homophones|en|loot|aa=yod-dropping}} <end>
+Page 279 loot: Found match for regex: <begin> * {{homophones|en|lute|aa=yod-dropping}} <end>
+Page 280 parka: Found match for regex: <begin> * {{homophones|en|Parker|aa=non-rhotic}} <end>
 Page 281 resort: Found match for regex: <begin> * {{IPA|en|/ɹɪˈzɔːt/|a=non-rhotic}} <end>
 Page 281 resort: Found match for regex: <begin> * {{IPA|en|/ɹɪˈzɔɹt/|a=rhotic}} <end>
-Page 282 t': Found match for regex: <begin> ** In ''He can't make up his mind if he wants one or t’other'' (= He can't make up his mind if he wants one or the other) ''t’other'' is pronounced {{IPAchar|[ˈtʊðə]}} as if spelled ''tother''. Sometimes, especially after a consonant, it is pronounced as a glottal stop as below. <end>
-Page 282 t': Found match for regex: <begin> * Before a consonant, ''t’'' is pronounced as a glottal stop following the preceding word. <end>
-Page 282 t': Found match for regex: <begin> ** In ''I’m going down t’ road to see me mam'' ( = I’m going down the road to see my mother), ''down t’'' is pronounced {{IPAchar|[daʊnʔ]}} as ''down'' followed by a glottal stop. <end>
-Page 282 t': Found match for regex: <begin> * ''t’'' is sometimes not pronounced at all, having no glottal stop, resulting in a slight pause or lengthening of the preceding sound. <end>
 Page 283 blackout: Found match for regex: <begin> * {{IPA|en|/ˈblæk.ʌʊt/|a=Canadian raising}} <end>
-Page 284 serf: Found match for regex: <begin> * {{homophones|en|surf}} {{qualifier|in accents with the [[w:English-language vowel changes before historic r#Fern-fir-fur_merger|fern-fir-fur merger]]}} <end>
-Page 285 often: Found match for regex: <begin> * {{homophones|en|orphan|qq1=[[non-rhotic]] accents with the lot–cloth split}} <end>
+Page 284 serf: Found match for regex: <begin> * {{homophones|en|surf|aa=fern-fir-fur}} <end>
+Page 285 often: Found match for regex: <begin> * {{homophones|en|orphan|aa=non-rhotic,lot-cloth split}} <end>
 Page 286 divorce: Found match for regex: <begin> * {{IPA|en|/dɪˈvo(ː)ɹs/|a=rhotic,non-horse-hoarse}} <end>
 Page 286 divorce: Found match for regex: <begin> * {{IPA|en|/dɪˈvoəs/|a=non-rhotic,non-horse-hoarse}} <end>
 Page 287 export: Found match for regex: <begin> * {{enPR|ĕksʹpōrt|a=rhotic,non-horse-hoarse}}, {{IPA|en|/ˈɛks.po(ː)ɹt/}} <end>
 Page 287 export: Found match for regex: <begin> * {{IPA|en|/ˈɛks.poət/|a=non-rhotic,non-horse-hoarse}} <end>
 Page 287 export: Found match for regex: <begin> * {{enPR|ĭkspōrtʹ|a=rhotic,non-horse-hoarse}}, {{IPA|en|/ɪksˈpo(ː)ɹt/}} <end>
 Page 287 export: Found match for regex: <begin> * {{IPA|en|/ɪksˈpoət/|a=non-rhotic,non-horse-hoarse}} <end>
-Page 288 sure: Found match for regex: <begin> * {{IPA|en|/ʃoʊ/|a=nonrhotic,{{w|show-sure merger}},AAVE}} <end>
-Page 288 sure: Found match for regex: <begin> * {{homophones|en|shore|aa=UK,pour-poor}} <end>
-Page 288 sure: Found match for regex: <begin> * {{homophones|en|shaw|Shaw}} {{qualifier|in [[non-rhotic]] dialects with the [[w:paw-poor merger|paw-poor merger]]}} <end>
-Page 288 sure: Found match for regex: <begin> * {{homophones|en|show}} {{qualifier|in [[non-rhotic]] dialects with the [[w:show-sure merger|show-sure merger]]}} <end>
-Page 289 dance: Found match for regex: <begin> ** {{IPA|en|[dɛən(t)s]|[deən(t)s]|a=ae-tensing}} <end>
+Page 289 dance: Found match for regex: <begin> ** {{IPA|en|[dɛən(t)s]|[deən(t)s]|a=æ-tensing}} <end>
 Page 290 sport: Found match for regex: <begin> * {{IPA|en|/spo(ː)ɹt/|a=rhotic,non-horse-hoarse}} <end>
 Page 290 sport: Found match for regex: <begin> * {{IPA|en|/spoət/|a=non-rhotic,non-horse-hoarse}} <end>
-Page 291 rider: Found match for regex: <begin> * {{homophones|en|writer|qq1=accents with [[flapping]] but without {{w|Canadian raising}}}} <end>
-Page 292 cheater: Found match for regex: <begin> * {{homophones|en|cheetah}} {{q|in [[non-rhotic]] accents}} <end>
-Page 293 nicker: Found match for regex: <begin> * {{homophones|en|knicker}}; [[nikka]] {{a|en|in [[non-rhotic]] accents}} <end>
-Page 294 nikka: Found match for regex: <begin> * {{homophones|en|knicker|nicker}} {{a|en|in non-rhotic accents}} <end>
-Page 295 dancing: Found match for regex: <begin> ** {{IPA|en|[dɛənsɪŋ]|[deənsɪŋ]|a=ae-tensing}} <end>
-Page 296 auk: Found match for regex: <begin> * {{homophones|en|awk|orc|qq2=in [[non-rhotic]] accents}} <end>
-Page 297 bawd: Found match for regex: <begin> * {{homophones|en|board|bored|qq2=non-rhotic}} <end>
-Page 298 chaw: Found match for regex: <begin> * {{homophones|en|chore}} {{q|non-rhotic accents}} <end>
-Page 299 juke: Found match for regex: <begin> * {{homophones|en|jook|qq1=some senses|duke|qq2=with [[yod coalescence]]}} <end>
+Page 291 rider: Found match for regex: <begin> * {{homophones|en|writer|aa=with <<flapping>> but <<non-Canadian raising>>}} <end>
+Page 292 cheater: Found match for regex: <begin> * {{homophones|en|cheetah<aa:non-rhotic>}} <end>
+Page 293 nicker: Found match for regex: <begin> * {{homophones|en|knicker|;nikka<aa:non-rhotic>}} <end>
+Page 294 nikka: Found match for regex: <begin> * {{homophones|en|knicker|nicker|aa=non-rhotic}} <end>
+Page 295 dancing: Found match for regex: <begin> ** {{IPA|en|[dɛənsɪŋ]|[deənsɪŋ]|a=æ-tensing}} <end>
+Page 296 auk: Found match for regex: <begin> * {{homophones|en|awk|;|orc<aa:non-rhotic>}} <end>
+Page 298 chaw: Found match for regex: <begin> * {{homophones|en|chore|aa=non-rhotic}} <end>
+Page 299 juke: Found match for regex: <begin> * {{homophones|en|jook<pos:some senses>|;|duke<aa:yod-coalescence>}} <end>
 Page 300 junta: Found match for regex: <begin> * {{homophones|en|hunter|aa=non-rhotic,foot-strut split}} <end>
-Page 301 khan: Found match for regex: <begin> * {{homophones|en|carn}} {{a|en|non-rhotic}} <end>
-Page 302 maw: Found match for regex: <begin> * Homophones: [[MAW]], [[more]] (''non-rhotic accents'') <end>
+Page 301 khan: Found match for regex: <begin> * {{homophones|en|carn|aa=non-rhotic}} <end>
+Page 302 maw: Found match for regex: <begin> * {{hmp|en|MAW|;|more<aa:non-rhotic>|;|moor|Moor|Moore<aa:paw-poor>}}
 Page 303 rotor: Found match for regex: <begin> * {{IPA|en|/ˈɹoʊ.ɾə/|a=US,non-rhotic}} <end>
 Page 303 rotor: Found match for regex: <begin> * {{homophones|en|rota|Rota|qq2=non-rhotic accents|Rhoda|qq3=non-rhotic accents with {{w|flapping}}}} <end>
 Page 304 spar: Found match for regex: <begin> * {{homophones|en|spa}} {{qualifier|in non-rhotic accents}} <end>
 Page 305 sulfa: Found match for regex: <begin> * {{hmp|en|sulfur}} {{q|non-rhotic accents}} <end>
-Page 306 tooter: Found match for regex: <begin> * {{hmp|en|tutor}} {{q|accents with yod dropping}} <end>
+Page 306 tooter: Found match for regex: <begin> * {{hmp|en|tutor|aa=yod-dropping}} <end>
 Page 307 yaws: Found match for regex: <begin> * {{homophone|en|yours}} {{q|some non-rhotic accents}} <end>
 Page 308 toward: Found match for regex: <begin> * {{IPA|en|/to(ː)ɹd/|/ˈtwo(ː)ɹd/|/təˈwɔɹd/|a=rhotic,non-horse-hoarse}}<!--Kenyon & Knott imply the disyllabic pronunciation has /ɔɹ/ even in accents without the horse-hoarse merger--> <end>
-Page 308 toward: Found match for regex: <begin> * {{IPA|en|/toəd/|/ˈtwoəd/|/təˈwɔd/|a=nonrhotic,non-horse-hoarse}}<!--Kenyon & Knott imply the disyllabic pronunciation has /ɔ/ even in accents without the horse-hoarse merger--> <end>
+Page 308 toward: Found match for regex: <begin> * {{IPA|en|/toəd/|/ˈtwoəd/|/təˈwɔd/|a=non-rhotic,non-horse-hoarse}}<!--Kenyon & Knott imply the disyllabic pronunciation has /ɔ/ even in accents without the horse-hoarse merger--> <end>
 Page 309 surrender: Found match for regex: <begin> * {{IPA|en|/səˈɹɛndə(ɹ)/|a=non-rhotic}} <end>
 Page 309 surrender: Found match for regex: <begin> * {{IPA|en|/səˈɹɛndɚ/|a=rhotic}} <end>
 Page 310 crore: Found match for regex: <begin> * {{IPA|en|/kɹo(ː)ɹ/|a=rhotic,non-horse-hoarse}} <end>
@@ -502,7 +422,7 @@ Page 318 stark: Found match for regex: <begin> * {{homophones|en|stock|aa=non-rh
 Page 319 sober: Found match for regex: <begin> * {{homophones|en|soba}} {{q|in [[non-rhotic]] accents}} <end>
 Page 320 whaler: Found match for regex: <begin> * {{enPR|hwāʹlər|a=non-wine-whine,rhotic}}, {{IPA|en|/ˈhweɪlɚ/}} <end>
 Page 320 whaler: Found match for regex: <begin> * {{enPR|hwāʹlə|a=non-wine-whine,non-rhotic}}, {{IPA|en|/ˈhweɪlə/}} <end>
-Page 321 clam: Found match for regex: <begin> * {{IPA|en|[kleəm]|a=ae-tensing}} <end>
+Page 321 clam: Found match for regex: <begin> * {{IPA|en|[kleəm]|a=æ-tensing}} <end>
 Page 322 deplore: Found match for regex: <begin> * {{IPA|en|/dɪˈplo(ː)ɹ/|a=rhotic,non-horse-hoarse}} <end>
 Page 322 deplore: Found match for regex: <begin> * {{IPA|en|/dɪˈploə/|a=non-rhotic,non-horse-hoarse}} <end>
 Page 323 fir: Found match for regex: <begin> * {{homophones|en|fur<aa:fern-fir-fur>|;|fair|fare<aa:fair-fur>}} <end>
@@ -512,17 +432,17 @@ Page 324 bored: Found match for regex: <begin> * {{homophones|en|board|;|baud|ba
 Page 325 boring: Found match for regex: <begin> * {{IPA|en|/ˈboː.ɹɪŋ/|/ˈboɹ.ɪŋ/|a=rhotic,non-horse-hoarse}} <end>
 Page 325 boring: Found match for regex: <begin> * {{IPA|en|/ˈboə.ɹɪŋ/|a=non-rhotic,non-horse-hoarse}} <end>
 Page 326 alms: Found match for regex: <begin> * {{hmp|en|arms}} {{q|most non-rhotic accents}} <end>
-Page 327 Anne: Found match for regex: <begin> * {{IPA|en|/eən/|a=ae-tensing}} <end>
+Page 327 Anne: Found match for regex: <begin> * {{IPA|en|/eən/|a=æ-tensing}} <end>
 Page 328 aw: Found match for regex: <begin> ** {{qualifier|in [[non-rhotic]] accents}}: {{l|en|oar}}, {{l|en|or}}, {{l|en|ore}}, {{l|en|o'er}} <end>
 Page 329 mourning: Found match for regex: <begin> * {{IPA|en|/ˈmo(ː)ɹnɪŋ/|/ˈmʊɹnɪŋ/<a:rare>|a=non-horse-hoarse,rhotic}} <end>
 Page 329 mourning: Found match for regex: <begin> * {{IPA|en|/ˈmoənɪŋ/|/ˈmʊənɪŋ/<a:rare>|a=non-horse-hoarse,non-rhotic}} <end>
 Page 329 mourning: Found match for regex: <begin> * {{homophones|en|morning<aa:horse-hoarse>|;|moaning<aa:dough-door>}} <end>
 Page 330 surf: Found match for regex: <begin> * {{homophones|en|serf}} {{qualifier|in accents with the [[w:English-language vowel changes before historic r#Fern-fir-fur merger|fern-fir-fur merger]]}} <end>
 Page 331 Shaun: Found match for regex: <begin> * {{hmp|en|shorn}} {{q|non-rhotic accents}} <end>
-Page 332 ruler: Found match for regex: <begin> * {{IPA|en|/ˈɹuː.lə/|[ˈɹʉwlə]|q1=measuring device|/ˈɹuːl.ə/|[ˈɹʊwɫə]|q3=one who rules|a=UK,{{w|goose split|''goose'' split}}}} <end>
+Page 332 ruler: Found match for regex: <begin> * {{IPA|en|/ˈɹuː.lə/ [ˈɹʉwlə]<t:measuring device>|/ˈɹuːl.ə/ [ˈɹʊwɫə]<t:one who rules>|a=UK,goose split}} <end>
 Page 332 ruler: Found match for regex: <begin> ** {{audio|en|En-uk-ruler-device.ogg|a=UK,goose split|t=device}} <end>
 Page 332 ruler: Found match for regex: <begin> ** {{audio|en|En-uk-ruler-person.ogg|a=UK,goose split|t=one who rules}} <end>
-Page 333 thereafter: Found match for regex: <begin> * {{IPA|en|/ˌðɛəɹˈæf.tə(ɹ)/|a=Northern England,other non-rhotic without the [[w:trap-bath split|''trap''-''bath'' split]]}} <end>
+Page 333 thereafter: Found match for regex: <begin> * {{IPA|en|/ˌðɛəɹˈæf.tə(ɹ)/|a=Northern England,other <<non-rhotic>> <<non-trap-bath split>>}} <end>
 Page 334 fore: Found match for regex: <begin> * {{IPA|en|/fo(ː)ɹ/|a=rhotic,non-horse-hoarse}} <end>
 Page 334 fore: Found match for regex: <begin> * {{IPA|en|/foə/|a=non-rhotic,non-horse-hoarse}} <end>
 Page 335 latter: Found match for regex: <begin> * {{enPR|lăt'ə(r)|a=non-rhotic}}, {{IPA|en|/ˈlæt.ə(ɹ)/}} <end>
@@ -542,7 +462,7 @@ Page 342 particular: Found match for regex: <begin> * {{IPA|en|/pəˈtɪk.jə.l�
 Page 343 horror: Found match for regex: <begin> * {{homophones|en|whore|hoar<aa:some <<rhotic>> <<US!American>> accents with the <<horse-hoarse>>>}} <end>
 Page 344 rort: Found match for regex: <begin> * {{homophones|en|wrought}} {{a|en|in [[non-rhotic]] accents}} <end>
 Page 345 border: Found match for regex: <begin> ** {{IPA|en|/ˈbɔːɹdɚ/|a=rhotic}} <end>
-Page 345 border: Found match for regex: <begin> ** {{IPA|en|/ˈbɔːdə/|a=nonrhotic}} <end>
+Page 345 border: Found match for regex: <begin> ** {{IPA|en|/ˈbɔːdə/|a=non-rhotic}} <end>
 Page 346 particularly: Found match for regex: <begin> * {{IPA|en|/pɚˈtɪkjəlɚli/|a=rhotic}} <end>
 Page 346 particularly: Found match for regex: <begin> * {{IPA|en|/pəˈtɪkjələli/|a=non-rhotic}} <end>
 Page 346 particularly: Found match for regex: <begin> * {{IPA|en|/pəˈtɪkjəlɚli/|a=US,rhotic,r-dissimilation}} <end>
@@ -550,7 +470,7 @@ Page 347 galore: Found match for regex: <begin> * {{IPA|en|/ɡəˈlo(ː)ɹ/|a=rh
 Page 347 galore: Found match for regex: <begin> * {{IPA|en|/ɡəˈloə/|a=non-rhotic,non-horse-hoarse}} <end>
 Page 348 forth: Found match for regex: <begin> * {{IPA|en|/fo(ː)ɹθ/|a=rhotic,non-horse-hoarse}} <end>
 Page 348 forth: Found match for regex: <begin> * {{IPA|en|/foəθ/|a=non-rhotic,non-horse-hoarse}} <end>
-Page 349 tune: Found match for regex: <begin> * {{homophones|en|chewn}} {{qualifier|among those with {{w|yod-coalescence}} in stressed syllables}} <end>
+Page 349 tune: Found match for regex: <begin> * {{homophones|en|chewn|aa=yod-coalescence}} <end>
 Page 350 tuner: Found match for regex: <begin> * {{homophones|en|tuna}} {{q|in non-rhotic accents}} <end>
 Page 351 gula: Found match for regex: <begin> * {{homophones|en|gular|qq1=in [[non-rhotic]] accents}} <end>
 Page 352 comprador: Found match for regex: <begin> *{{IPA|en|/kɒm.pɹəˈdɔɹ/|a=rhotic}} <end>
@@ -563,9 +483,8 @@ Page 355 verge: Found match for regex: <begin> * {{IPA|nb|[ˈʋæ̂ʁ.ɡə]|a=uv
 Page 356 stellar: Found match for regex: <begin> * {{homophones|en|steller|Steller|Stella|qq3=in [[non-rhotic]] accents|stella|qq4=in [[non-rhotic]] accents}} <end>
 Page 357 career: Found match for regex: <begin> * Homophone (non-rhotic accents only): [[Korea]] <end>
 Page 358 lamp: Found match for regex: <begin> * {{IPA|en|[lɛəmp]|[leəmp]|[lɛːmp]|a=æ-tensing}} <end>
-Page 359 kibosh: Found match for regex: <begin> * According to Gerald Leonard Cohen, Stephen Goranson, and Matthew Little, at present the most likely derivation is as a non-rhotic variant of {{m|en|kurbash|t=heavy whip, lash}},<ref>{{cite-book|author=Gerald Cohen|author2=Stephen Goranson|author3=Matthew Little|title=Origin of Kibosh|series=Routledge Studies in Etymology|location=Abingdon, Oxfordshire; New York, N.Y.|publisher={{w|Routledge}}|year=2018|isbn=978-1-138-62895-3}}; cited in {{cite-journal|en|author=Ben Zimmer|authorlink=Ben Zimmer|title=Putting the kibosh on an old riddle: The source of the phrase|newspaper={{w|The Wall Street Journal}}|url=https://www.wsj.com/articles/putting-the-kibosh-on-an-old-riddle-the-source-of-the-phrase-1514564107|archiveurl=https://web.archive.org/web/20221206180549/https://www.wsj.com/articles/putting-the-kibosh-on-an-old-riddle-the-source-of-the-phrase-1514564107|archivedate=6 December 2022|location=New York, N.Y.|publisher={{w|Dow Jones & Company}}|date=29 December 2017|issn=0099-9660|oclc=36098632}}.</ref><ref>{{cite-journal|author=Gerald Leonard Cohen|author2=Stephen Goranson|author3=Matthew Little|title=''Kibosh'' Update #4 (Compilation)|journal=Comments on Etymology|url=https://scholarsmine.mst.edu/artlan_phil_facwork/146/|location=Rolla, Mo.|publisher={{w|Missouri University of Science and Technology}}|month=May|year=2019|volume=48|issue=8|pages=1–50|issn=0740-0330|oclc=3299655}}.</ref> from {{der|en|ar|كُرْبَاج|t=lash, whip}}, or from its {{glossary|etymon}} {{cog|ota|قرباچ|tr=kırbaç|t=lash, whip}} (whence {{cog|tr|kırbaç|t=whip}}).<ref name="OED">{{R:OED Online|pos=n|id=103257|date=December 2022}}</ref><ref>{{R:OED Online|entry=kurbash|pos=n|id=104408|date=December 2022|nodot=1}}; {{R:Lexico|entry=kurbash|pos=n}}</ref> <end>
 Page 360 karma: Found match for regex: <begin> * {{homophones|en|cama|calmer}} {{qualifier|in [[non-rhotic]] accents}} <end>
-Page 361 mugger: Found match for regex: <begin> * {{hmp|en|mugga|qq1=in nonrhotic accents}} <end>
+Page 361 mugger: Found match for regex: <begin> * {{hmp|en|mugga|qq1=in non-rhotic accents}} <end>
 Page 362 Inca: Found match for regex: <begin> * {{homophones|en|inker}} {{qualifier|in non-rhotic accents}} <end>
 Page 363 wicker: Found match for regex: <begin> * {{homophones|en|Wicca}} {{qualifier|in [[non-rhotic]] accents}} <end>
 Page 364 shore: Found match for regex: <begin> * {{enPR|shōrʹ|a=rhotic,non-horse-hoarse}}, {{IPA|en|/ʃo(ː)ɹ/}} <end>
@@ -575,13 +494,12 @@ Page 365 pita: Found match for regex: <begin> * {{homophones|en|Peter}} {{qualif
 Page 366 forces: Found match for regex: <begin> * {{IPA|en|/ˈfo(ː)ɹ.sɪz/|a=rhotic,non-horse-hoarse}} <end>
 Page 366 forces: Found match for regex: <begin> * {{IPA|en|/ˈfoə.sɪz/|a=non-rhotic,non-horse-hoarse}} <end>
 Page 366 forces: Found match for regex: <begin> * {{rhymes|en|ɔː(ɹ)sɪz|oːɹsɪz<a:rhotic,non-horse-hoarse>|oəsɪz<a:non-rhotic,non-horse-hoarse>|s=2}} <end>
-Page 367 plants: Found match for regex: <begin> * {{IPA|en|/pleənts/|a=ae-tensing}} <end>
+Page 367 plants: Found match for regex: <begin> * {{IPA|en|/pleənts/|a=æ-tensing}} <end>
 Page 368 ashore: Found match for regex: <begin> * {{IPA|en|/əˈʃo(ː)ɹ/|a=rhotic,non-horse-hoarse}} <end>
 Page 368 ashore: Found match for regex: <begin> * {{IPA|en|/əˈʃoə/|a=non-rhotic,non-horse-hoarse}} <end>
-Page 368 ashore: Found match for regex: <begin> * {{homophones|en|assure}} {{q|accents with the {{w|pour–poor merger}}}} <end>
+Page 368 ashore: Found match for regex: <begin> * {{homophones|en|assure}} {{q|accents with the {{w|pour-poor merger}}}} <end>
 Page 369 supported: Found match for regex: <begin> * {{IPA|en|/səˈpo(ː)ɹtɪd/|a=rhotic,non-horse-hoarse}} <end>
 Page 369 supported: Found match for regex: <begin> * {{IPA|en|/səˈpoətɪd/|a=non-rhotic,non-horse-hoarse}} <end>
-Page 370 rebus: Found match for regex: <begin> * According to the French scholar {{w|Gilles Ménage}} (1613–1692) in ''Les origines de la langue françoise'' (''The Origins of the French Language'', 1650),<ref>{{cite-book|author=Gilles Ménage|authorlink=Gilles Ménage|title=Les origines de la langue françoise|trans-title=The Origins of the French Language|location=Paris|publisher=Chez Augustin Courbé|year=1650|oclc=723687311}}.</ref> it is taken from the phrase ''[[de]] [[rebus#Latin|rebus]] [[quae]] [[geruntur]]'' (“concerning the things that are taking place”) which was used in 16th-century [[Picardy]] as the name for satirical writings on contemporary subjects containing picture-riddles that were composed for an annual carnival. However, the term ''rebus de Picardie'' is first attested later than the word ''rébus'', and so could simply refer to rebuses popular in Picardy at the time. <end>
 Page 371 bargee: Found match for regex: <begin> * {{homophones|en|bargy|bhaji}} {{q|non-rhotic}} <end>
 Page 372 mournful: Found match for regex: <begin> * {{IPA|en|/ˈmo(ː)ɹnfəl/|a=rhotic,non-horse-hoarse}} <end>
 Page 372 mournful: Found match for regex: <begin> * {{IPA|en|/ˈmoənfəl/|a=non-rhotic,non-horse-hoarse}} <end>
@@ -590,8 +508,8 @@ Page 373 mourner: Found match for regex: <begin> * {{IPA|en|/ˈmoənə/|a=non-rh
 Page 373 mourner: Found match for regex: <begin> * {{enPR|mo͝ornʹər|a=rare,rhotic,with or without the <<horse-hoarse>>}}, {{IPA|en|/ˈmʊɹnɚ/}} <end>
 Page 373 mourner: Found match for regex: <begin> * {{enPR|mo͝ornʹə|a=rare,non-rhotic,with or without the <<horse-hoarse>>}}, {{IPA|en|/ˈmʊənə/}} <end>
 Page 374 taut: Found match for regex: <begin> * {{homophones|en|taught|;|tort<aa:non-rhotic>|;|tot<aa:cot-caught>}} <end>
-Page 375 pantry: Found match for regex: <begin> ** {{qual|without {{IPAchar|/æ/}}-tensing}} {{IPAchar|[ˈpænt(ʰ)ɹ̥i]}} <end>
-Page 375 pantry: Found match for regex: <begin> ** {{qual|with {{IPAchar|/æ/}}-tensing}} {{IPAchar|[ˈpeənt(ʰ)ɹ̥i]}} <end>
+Page 375 pantry: Found match for regex: <begin> ** {{IPA|en|[ˈpænt(ʰ)ɹ̥i]|a=non-æ-tensing}} <end>
+Page 375 pantry: Found match for regex: <begin> ** {{IPA|en|[ˈpeənt(ʰ)ɹ̥i]|a=æ-tensing}} <end>
 Page 376 suborn: Found match for regex: <begin> * {{IPA|en|/səˈbɔːn/|a=RP,non-rhotic}} <end>
 Page 376 suborn: Found match for regex: <begin> * {{IPA|en|/səˈboɹn/|a=GA,rhotic}} <end>
 Page 377 fawce: Found match for regex: <begin> * {{homophones|en|force}} {{q|in non-rhotic accents}} <end>
@@ -611,7 +529,7 @@ Page 387 parr: Found match for regex: <begin> * {{homophones|en|par|Parr|pa}} {{
 Page 388 whirl: Found match for regex: <begin> * {{IPA|en|/ʍɜːl/|a=non-wine-whine,non-rhotic}} <end>
 Page 389 whirling: Found match for regex: <begin> * {{IPA|en|/ˈhwɝlɪŋ/|a=rhotic,non-wine-whine}} <end>
 Page 389 whirling: Found match for regex: <begin> * {{IPA|en|/ˈhwɜːlɪŋ/|a=non-rhotic,non-wine-whine}} <end>
-Page 390 formerly: Found match for regex: <begin> * {{homophones|en|formally}} {{qualifier|nonrhotic accents}} <end>
+Page 390 formerly: Found match for regex: <begin> * {{homophones|en|formally}} {{qualifier|non-rhotic accents}} <end>
 Page 391 lure: Found match for regex: <begin> * {{homophones|en|lore|qq1=some accents|law|qq2=some non-rhotic accents}} <end>
 Page 392 parley: Found match for regex: <begin> * {{IPA|en|/ˈpɑːlɪ/|a=some non-rhotic accents}} <end>
 Page 393 boarder: Found match for regex: <begin> * {{IPA|en|/ˈbo(ː)ɹdɚ/|a=rhotic,non-horse-hoarse}} <end>
@@ -628,18 +546,18 @@ Page 398 unimportant: Found match for regex: <begin> * {{IPA|en|/ˌʌnɪmˈpoə.
 Page 399 manor: Found match for regex: <begin> * {{homophones|en|manner|manna|qq2=in non-rhotic accents}} <end>
 Page 400 resource: Found match for regex: <begin> * {{IPA|en|/ˈɹi(ː)so(ː)ɹs/|/ɹɪˈzo(ː)ɹs/|/ɹɪˈso(ː)ɹs/|a=rhotic,non-horse-hoarse}} <end>
 Page 400 resource: Found match for regex: <begin> * {{IPA|en|/ɹɪˈsoəs/|/ɹɪˈzoəs/|/ˈɹiːsoəs/|a=non-rhotic,non-horse-hoarse}} <end>
-Page 401 mandatory: Found match for regex: <begin> ** {{IPA|en|/ˈmɛən.dəˌtɔɹ.i/|a=ae-tensing}} <end>
+Page 401 mandatory: Found match for regex: <begin> ** {{IPA|en|/ˈmɛən.dəˌtɔɹ.i/|a=æ-tensing}} <end>
 Page 402 doughty: Found match for regex: <begin> * {{IPA|en|[ˈdʌʊ̯ɾi]|a=CA}} {{q|Canadian raising}} <end>
 Page 403 portrait: Found match for regex: <begin> * {{IPA|en|/ˈpoʊɹtɹət/|;|/ˈpoʊɹtɹeɪt/<a:rare>|a=rhotic,non-horse-hoarse}} <end>
 Page 403 portrait: Found match for regex: <begin> * {{IPA|en|/ˈpoətɹɪt/|;|/ˈpoətɹeɪt/<a:rare>|a=non-rhotic,non-horse-hoarse}} <end>
-Page 404 Amanda: Found match for regex: <begin> ** {{IPA|en|[əˈmɛəndə]|a=GA,ae-tensing}} <end>
+Page 404 Amanda: Found match for regex: <begin> ** {{IPA|en|[əˈmɛəndə]|a=GA,æ-tensing}} <end>
 Page 405 discourse: Found match for regex: <begin> * {{IPA|en|/ˈdɪsko(ː)ɹs/|/dɪsˈko(ː)ɹs/|a=rhotic,non-horse-hoarse}} <end>
 Page 405 discourse: Found match for regex: <begin> * {{IPA|en|/ˈdɪskoəs/|/dɪsˈkoəs/|a=non-rhotic,non-horse-hoarse}} <end>
 Page 406 standoffish: Found match for regex: <begin> ** {{IPA|en|[steənˈdɑ.fɪʃ]|a={{IPAchar|/æ/}} tensing}} <end>
 Page 407 s'more: Found match for regex: <begin> * {{enPR|smōr|a=rhotic,non-horse-hoarse}}, {{IPA|en|/ˈsmo(ː)ɹ/}} <end>
 Page 407 s'more: Found match for regex: <begin> * {{IPA|en|/ˈsmoə/|a=non-rhotic,non-horse-hoarse}} <end>
 Page 408 shirk: Found match for regex: <begin> * {{IPA|en|/ʃɪɾk/|a=non-rhotic}} <end>
-Page 409 Ann: Found match for regex: <begin> * {{IPA|en|/eən/|a=ae-tensing}} <end>
+Page 409 Ann: Found match for regex: <begin> * {{IPA|en|/eən/|a=æ-tensing}} <end>
 Page 410 ports: Found match for regex: <begin> * {{IPA|en|/po(ː)ɹts/|a=rhotic,non-horse-hoarse}} <end>
 Page 410 ports: Found match for regex: <begin> * {{IPA|en|/poəts/|a=non-rhotic,non-horse-hoarse}} <end>
 Page 411 hoar: Found match for regex: <begin> * {{enPR|hōr|a=rhotic,non-horse-hoarse}}, {{IPA|en|/ho(ː)ɹ/}} <end>
@@ -648,15 +566,14 @@ Page 412 soar: Found match for regex: <begin> * {{enPR|sōr|a=rhotic,non-horse-h
 Page 412 soar: Found match for regex: <begin> * {{IPA|en|/soə/|a=non-rhotic,non-horse-hoarse}} <end>
 Page 412 soar: Found match for regex: <begin> * {{homophones|en|sore|;|saw<aa:non-rhotic,horse-hoarse>|;|sower<aa:<<rare>> pronunciation>}} <end>
 Page 413 a: Found match for regex: <begin> * {{homophones|en|her|aa1=non-rhotic,unstressed}} <end>
-Page 414 Anna: Found match for regex: <begin> * {{IPA|en|[ˈeənə]|a=ae-tensing}} <end>
-Page 415 Draco: Found match for regex: <begin> * {{anagrams|en|a=acdor|Acord|C-Road|cardo}} <end>
+Page 414 Anna: Found match for regex: <begin> * {{IPA|en|[ˈeənə]|a=æ-tensing}} <end>
 Page 416 Lima: Found match for regex: <begin> * {{homophones|en|lemur}} {{q|in [[non-rhotic]] accents}} <end>
 Page 417 More: Found match for regex: <begin> * {{enPR|mōr|a=rhotic,non-horse-hoarse}}, {{IPA|en|/ˈmo(ː)ɹ/}} <end>
 Page 417 More: Found match for regex: <begin> * {{IPA|en|/ˈmoə/|a=non-rhotic,non-horse-hoarse}} <end>
 Page 417 More: Found match for regex: <begin> * {{homophones|en|moor|Moor|Moore<aa:pour-poor>|;|maw<aa:non-rhotic,horse-hoarse>|;|mow<aa:dough-door>}} <end>
-Page 418 Nancy: Found match for regex: <begin> ** {{IPA|en|[ˈnɛənsi]|a=ae-tensing}} <end>
+Page 418 Nancy: Found match for regex: <begin> ** {{IPA|en|[ˈnɛənsi]|a=æ-tensing}} <end>
 Page 419 Sean: Found match for regex: <begin> * {{homophones|en|shorn<aa:non-rhotic,horse-hoarse>|;|Sian<aa:cot-caught,female given name>}} <end>
-Page 420 Southern: Found match for regex: <begin> * {{IPA|en|/ˈsʌð.ən/|a=RP,{{w|nonrhotic}} {{w|Southern American English}}}} <end>
+Page 420 Southern: Found match for regex: <begin> * {{IPA|en|/ˈsʌð.ən/|a=RP,{{w|non-rhotic}} {{w|Southern American English}}}} <end>
 Page 420 Southern: Found match for regex: <begin> * {{IPA|en|/ˈsʌð.ɚn/|a=GA,{{w|rhotic}} {{w|Southern American English}}}} <end>
 Page 421 Stella: Found match for regex: <begin> * {{homophones|en|stella|stellar|qq2=in [[non-rhotic]] accents|steller|qq3=in [[non-rhotic]] accents|Steller|qq4=in [[non-rhotic]] accents}} <end>
 Page 422 Wicca: Found match for regex: <begin> * {{homophones|en|wicker}} {{qualifier|in non-[[rhotic]] dialects}} <end>
@@ -669,14 +586,14 @@ Page 427 pore: Found match for regex: <begin> * {{enPR|pōr|a=rhotic,non-horse-h
 Page 427 pore: Found match for regex: <begin> * {{IPA|en|/poə/|a=non-rhotic,non-horse-hoarse}} <end>
 Page 427 pore: Found match for regex: <begin> * {{homophones|en|pour|;|poor<aa:pour-poor>|;|paw<aa:non-rhotic,horse-hoarse>}} <end>
 Page 428 tamper: Found match for regex: <begin> * {{homophones|en|Tampa}} (''in [[non-rhotic]] accents'') <end>
-Page 429 PETA: Found match for regex: <begin> * {{homophones|en|pita|Peter}} {{qualifier|in nonrhotic accents}} <end>
-Page 430 alexander: Found match for regex: <begin> * {{IPA|en|[ˌælɪɡˈzeəndɚ]|a=ae-tensing,rhotic}} <end>
-Page 430 alexander: Found match for regex: <begin> * {{IPA|en|[ˌælɪɡˈzeəndə]|a=ae-tensing,non-rhotic}} <end>
-Page 431 Samantha: Found match for regex: <begin> ** {{IPA|en|[səˈmɛənθə]|a=ae-tensing}} <end>
+Page 429 PETA: Found match for regex: <begin> * {{homophones|en|pita|Peter}} {{qualifier|in non-rhotic accents}} <end>
+Page 430 alexander: Found match for regex: <begin> * {{IPA|en|[ˌælɪɡˈzeəndɚ]|a=æ-tensing,rhotic}} <end>
+Page 430 alexander: Found match for regex: <begin> * {{IPA|en|[ˌælɪɡˈzeəndə]|a=æ-tensing,non-rhotic}} <end>
+Page 431 Samantha: Found match for regex: <begin> ** {{IPA|en|[səˈmɛənθə]|a=æ-tensing}} <end>
 Page 432 morn: Found match for regex: <begin> ** {{IPA|en|/mɔːɹn/|a=rhotic}} <end>
-Page 432 morn: Found match for regex: <begin> ** {{IPA|en|/mɔːn/|a=nonrhotic}} <end>
-Page 433 Moore: Found match for regex: <begin> * {{IPA|en|/mɔː/|a=UK}} {{qualifier|non-rhotic, with the {{w|pour–poor merger}}}} <end>
-Page 433 Moore: Found match for regex: <begin> * {{IPA|en|/mʊə(ɹ)/|a=UK}} {{qualifier|non-rhotic, without the {{w|pour–poor merger}}}} <end>
+Page 432 morn: Found match for regex: <begin> ** {{IPA|en|/mɔːn/|a=non-rhotic}} <end>
+Page 433 Moore: Found match for regex: <begin> * {{IPA|en|/mɔː/|a=UK}} {{qualifier|non-rhotic, with the {{w|pour-poor merger}}}} <end>
+Page 433 Moore: Found match for regex: <begin> * {{IPA|en|/mʊə(ɹ)/|a=UK}} {{qualifier|non-rhotic, without the {{w|pour-poor merger}}}} <end>
 Page 434 DAW: Found match for regex: <begin> * {{homophones|en|d'aw|daw|door|qq3=in [[non-rhotic]] accents}} <end>
 Page 435 DRC: Found match for regex: <begin> * {{IPA|en|/diːɑːˈsiː/|a=rhotic}} <end>
 Page 435 DRC: Found match for regex: <begin> * {{IPA|en|/diːɑɹˈsiː/|a=non-rhotic}} <end>
@@ -700,7 +617,7 @@ Page 447 pinna: Found match for regex: <begin> * {{homophones|en|Pinner}} {{qual
 Page 448 poured: Found match for regex: <begin> * {{IPA|en|/po(ː)ɹd/|a=rhotic,non-horse-hoarse}} <end>
 Page 448 poured: Found match for regex: <begin> * {{IPA|en|/poəd/|a=non-rhotic,non-horse-hoarse}} <end>
 Page 448 poured: Found match for regex: <begin> * {{homophones|en|pored|;|pawed<aa:non-rhotic,horse-hoarse>}} <end>
-Page 449 planted: Found match for regex: <begin> * {{IPA|en|/ˈpleəntɪd/|a=ae-tensing}} <end>
+Page 449 planted: Found match for regex: <begin> * {{IPA|en|/ˈpleəntɪd/|a=æ-tensing}} <end>
 Page 450 hoard: Found match for regex: <begin> * {{IPA|en|/ho(ː)ɹd/|a=rhotic,non-horse-hoarse}} <end>
 Page 450 hoard: Found match for regex: <begin> * {{IPA|en|/hoəd/|a=non-rhotic,non-horse-hoarse}} <end>
 Page 451 karst: Found match for regex: <begin> *: Homophones: [[cast]], [[caste]] (in some non-rhotic accents) <end>
@@ -708,12 +625,12 @@ Page 452 anymore: Found match for regex: <begin> * {{IPA|en|/ˌɛn.iˈmo(ː)ɹ/|
 Page 452 anymore: Found match for regex: <begin> * {{IPA|en|/ˌɛn.iˈmoə/|a=non-rhotic,non-horse-hoarse}} <end>
 Page 453 spore: Found match for regex: <begin> * {{enPR|spōr|a=rhotic,non-horse-hoarse}}, {{IPA|en|/spo(ː)ɹ/}} <end>
 Page 453 spore: Found match for regex: <begin> * {{IPA|en|/spoə/|a=non-rhotic,non-horse-hoarse}} <end>
-Page 453 spore: Found match for regex: <begin> * {{homophones|en|spoor}} {{qualifier|accents with the {{w|pour–poor merger}}}} <end>
+Page 453 spore: Found match for regex: <begin> * {{homophones|en|spoor}} {{qualifier|accents with the {{w|pour-poor merger}}}} <end>
 Page 453 spore: Found match for regex: <begin> * {{alter|enm|spor|spure|spwre|spuyre|spurre|spur|spoure|spourre|spowrre|spoor|sporre}} <end>
 Page 454 striker: Found match for regex: <begin> * {{IPA|en|/ˈstɹaɪkɚ/|a=rhotic}} <end>
 Page 454 striker: Found match for regex: <begin> * {{IPA|en|/ˈstɹaɪkə/|a=non-rhotic}} <end>
 Page 455 Norse: Found match for regex: <begin> ** {{IPA|en|/nɔːɹs/|a=rhotic}} <end>
-Page 455 Norse: Found match for regex: <begin> ** {{IPA|en|/nɔːs/|a=nonrhotic}} <end>
+Page 455 Norse: Found match for regex: <begin> ** {{IPA|en|/nɔːs/|a=non-rhotic}} <end>
 Page 456 seashore: Found match for regex: <begin> * {{enPR|sēʹshōr|a=rhotic,non-horse-hoarse}}, {{IPA|en|/ˈsiːʃo(ː)ɹ/}} <end>
 Page 456 seashore: Found match for regex: <begin> * {{IPA|en|/ˈsiːʃoə/|a=non-rhotic,non-horse-hoarse}} <end>
 Page 457 garner: Found match for regex: <begin> * Homophone (non-rhotic accents only): [[Ghana]] <end>
@@ -731,8 +648,8 @@ Page 464 sorely: Found match for regex: <begin> * {{enPR|sōrʹlē|a=rhotic,non-
 Page 464 sorely: Found match for regex: <begin> * {{IPA|en|/ˈsoəli/|a=non-rhotic,non-horse-hoarse}} <end>
 Page 465 Venda: Found match for regex: <begin> * {{homophones|en|vendor}} (''in [[non-rhotic]] accents'') <end>
 Page 466 Severn: Found match for regex: <begin> * {{homophone|en|seven}} {{q|non-rhotic accents}} <end>
-Page 467 destitute: Found match for regex: <begin> * {{IPA|en|/ˈdɛstɪtʃuːt/|a=yod coalescence}} <end>
-Page 468 Bart: Found match for regex: <begin> * {{homophone|en|baht}} {{q|in nonrhotic accents}} <end>
+Page 467 destitute: Found match for regex: <begin> * {{IPA|en|/ˈdɛstɪtʃuːt/|a=yod-coalescence}} <end>
+Page 468 Bart: Found match for regex: <begin> * {{homophone|en|baht}} {{q|in non-rhotic accents}} <end>
 Page 469 goggle: Found match for regex: <begin> * {{homophones|en|gargle|aa=non-rhotic,father-bother}} <end>
 Page 470 courtier: Found match for regex: <begin> * {{IPA|en|/ˈko(ː)ɹtiɚ/|a=rhotic,non-horse-hoarse}} <end>
 Page 470 courtier: Found match for regex: <begin> * {{IPA|en|/ˈkoətɪə/|a=non-rhotic,non-horse-hoarse}} <end>
@@ -759,7 +676,7 @@ Page 480 pouring: Found match for regex: <begin> * {{hmp|en|poring|;|pawing<aa:n
 Page 481 varve: Found match for regex: <begin> * {{IPA|en|/vɑɹv/|a=US,rhotic}} <end>
 Page 482 daw: Found match for regex: <begin> * {{homophones|en|DAW|d'aw|door|qq3=in [[non-rhotic]] accents}} <end>
 Page 483 foresight: Found match for regex: <begin> * {{IPA|en|/ˈfo(ː)ɹsaɪt/|a=rhotic,non-horse-hoarse}} <end>
-Page 483 foresight: Found match for regex: <begin> * {{IPA|en|/ˈfoəsaɪt/|a=nonrhotic,non-horse-hoarse}} <end>
+Page 483 foresight: Found match for regex: <begin> * {{IPA|en|/ˈfoəsaɪt/|a=non-rhotic,non-horse-hoarse}} <end>
 Page 484 adored: Found match for regex: <begin> * {{enPR|ədōrdʹ|a=rhotic,non-horse-hoarse}}, {{IPA|en|/əˈdo(ː)ɹd/}} <end>
 Page 484 adored: Found match for regex: <begin> * {{IPA|en|/əˈdoə̯d/|a=non-rhotic,non-horse-hoarse}} <end>
 Page 485 cama: Found match for regex: <begin> * {{homophones|en|comma<aa:father-bother>|;|karma<aa:non-rhotic>}} <end>
@@ -769,12 +686,11 @@ Page 487 farrier: Found match for regex: <begin> * {{IPA|en|/ˈfæɹi.ɚ/|a=rhot
 Page 488 skua: Found match for regex: <begin> * {{homophones|en|skewer}} {{qualifier|in non-rhotic accents}} <end>
 Page 489 evermore: Found match for regex: <begin> * {{enPR|mōr|a=rhotic,non-horse-hoarse}}, {{IPA|en|/ˌɛvɚˈmo(ː)ɹ/}} <end>
 Page 489 evermore: Found match for regex: <begin> * {{IPA|en|/ˌɛvəˈmoə/|a=non-rhotic,non-horse-hoarse}} <end>
-Page 490 quisque: Found match for regex: <begin> * The dative or ablative plural {{m|la|quīsque}} does appear in Titus Lucrētius Carus' ''Dē rērum nātūrā'' book IV: "praestō sint simulacra, locīs in '''quīsque''', parātā"<ref>Friedrich Neue, ''Formenlehre der Lateinischen Sprache'', 2nd part, 2nd edition, Berlin, 1875, p. 245: "Dat. und Ablat. Plur. [...] neben quibusque auch quisque Lucr. 4, 798".</ref><ref>''Lukrez: Von der Natur. Lateinisch-deutsch. Herausgegeben und übersetzt von Hermann Diels.'' 3rd edition, 2013, p. 354, line 798</ref> Some old editions of the 18th and 19th century however have "Praestō sint simulacra, locōs in '''quōsque''', parātā"<ref>''T. Lucretii Cari de rerum natura libros sex''. Edited by Ricardus Bentleius and Gilbertus Wakefield, vol. II., London, 1797, p. 328, line 799, with the note: "Ver. 799. sint: Vind. V. ed. B. L. Δ. Π. Σ. ''in''; M. ''sin:'' sed nullum esse dubitandi locum de vulgatâ voce censeo.—''locos:'' O. Σ. ''locis'', ut editiones communes; vetustis exemplis universis contra stantibus, non auscultandae.—''quosque:'' sic P. Δ. Π. reliqui omnes, ''quisque''; quae vox quo pacto cum ''locos'' in unâ sede morari queat, non invenio. Quod edidi, prius ex conjecturâ scripseram, quam libros ullos noverim concordantes. ''In locos'' autem exquisitissime dictum est pro vulgari ''in locis:'' me videas ad i. 889. Hyginus, fab. xli. "Quem pater cum mitteret, praedixit ei, ut, si victor reverteretur, vela candida ''in novem'' haberet." Qui locus incontinentes correctorum manus expertus est, Munckero tamen merito defensus. Idem, fab. cxxxix. "Juno autem Jovem ''in Cretensi insulâ'' detulit."</ref><ref>''Titi Lucretii Cari de rerum natura libri sex''. Edited by P. Aug. Lemaire, vol. I., Paris, 1838, p. 526, line 800, with the note: "800. ''Locos in quosque''. Vulgo ''locis in queisque'', vetustis exemplis universis contra stantibus. ''In locos'' autem exquisitissime dictum pro vulgari ''in locis'', vide ad I, 889. ''Wak.''"</ref> <end>
 Page 491 asked: Found match for regex: <begin> * {{hmp|en|arsed}} {{q|in some non-rhotic accents}} <end>
-Page 492 answered: Found match for regex: <begin> * {{IPA|en|[ˈeən.sɚd]|a=ae-tensing,rhotic}} <end>
-Page 492 answered: Found match for regex: <begin> * {{IPA|en|[ˈeən.səd]|a=ae-tensing,non-rhotic}} <end>
-Page 493 answers: Found match for regex: <begin> * {{IPA|en|[ˈeən.sɚz]|a=ae-tensing,rhotic}} <end>
-Page 493 answers: Found match for regex: <begin> * {{IPA|en|[ˈeən.səz]|a=ae-tensing,non-rhotic}} <end>
+Page 492 answered: Found match for regex: <begin> * {{IPA|en|[ˈeən.sɚd]|a=æ-tensing,rhotic}} <end>
+Page 492 answered: Found match for regex: <begin> * {{IPA|en|[ˈeən.səd]|a=æ-tensing,non-rhotic}} <end>
+Page 493 answers: Found match for regex: <begin> * {{IPA|en|[ˈeən.sɚz]|a=æ-tensing,rhotic}} <end>
+Page 493 answers: Found match for regex: <begin> * {{IPA|en|[ˈeən.səz]|a=æ-tensing,non-rhotic}} <end>
 Page 494 horses: Found match for regex: <begin> ** {{IPA|en|/hɔːɹsɪz/|/hɔːɹsəz/<a:weak vowel>|a=rhotic}} <end>
 Page 494 horses: Found match for regex: <begin> ** {{IPA|en|/hɔːsɪz/|/hɔːsəz/<a:weak vowel>|a=non-rhotic}} <end>
 Page 495 beatbox: Found match for regex: <begin> * (t-glottalization) {{IPA|en|/ˈbiːʔ.bɑks/}} <end>
@@ -783,11 +699,11 @@ Page 496 sports: Found match for regex: <begin> * {{IPA|en|/spoəts/|a=non-rhoti
 Page 497 forced: Found match for regex: <begin> * {{IPA|en|/fo(ː)ɹst/|a=rhotic,non-horse-hoarse}} <end>
 Page 497 forced: Found match for regex: <begin> * {{IPA|en|/foəst/|a=non-rhotic,non-horse-hoarse}} <end>
 Page 498 gorm: Found match for regex: <begin> * {{hmp|en|gaum}} {{q|non-rhotic accents}} <end>
-Page 499 undue: Found match for regex: <begin> * {{homophones|en|undo}} {{qualifier|with [[yod dropping]]}} <end>
+Page 499 undue: Found match for regex: <begin> * {{homophones|en|undo|aa=yod-dropping}} <end>
 Page 500 carbonic: Found match for regex: <begin> * {{enPR|kärbŏn'ĭk|a=rhotic}}, {{IPA|en|/kɑɹˈbɒnɪk/}} <end>
-Page 500 carbonic: Found match for regex: <begin> * {{enPR|käbŏn'ĭk|a=nonrhotic}}, {{IPA|en|/kɑːˈbɒnɪk/}} <end>
-Page 501 Eustachian tube: Found match for regex: <begin> * {{IPA|en|/ju.ˈsteɪʃən ˈtuːb/|a=[[yod dropping]]}} <end>
-Page 502 formally: Found match for regex: <begin> * {{homophones|en|formerly}} {{qualifier|nonrhotic accents}} <end>
+Page 500 carbonic: Found match for regex: <begin> * {{enPR|käbŏn'ĭk|a=non-rhotic}}, {{IPA|en|/kɑːˈbɒnɪk/}} <end>
+Page 501 Eustachian tube: Found match for regex: <begin> * {{IPA|en|/ju.ˈsteɪʃən ˈtuːb/|a=yod-dropping}} <end>
+Page 502 formally: Found match for regex: <begin> * {{homophones|en|formerly}} {{qualifier|non-rhotic accents}} <end>
 Page 503 supporting: Found match for regex: <begin> * {{IPA|en|/səˈpo(ː)ɹtɪŋ/|a=rhotic,non-horse-hoarse}} <end>
 Page 503 supporting: Found match for regex: <begin> * {{IPA|en|/səˈpoətɪŋ/|a=non-rhotic,non-horse-hoarse}} <end>
 Page 504 lasting: Found match for regex: <begin> * {{IPA|en|/ˈleəstɪŋ/|a=æ-tensing}} <end>
@@ -801,7 +717,7 @@ Page 507 sources: Found match for regex: <begin> * {{rhymes|en|ɔː(ɹ)sɪz|oː�
 Page 508 reported: Found match for regex: <begin> * {{IPA|en|/ɹɪˈpo(ː)ɹtɪd/|a=rhotic,non-horse-hoarse}} <end>
 Page 508 reported: Found match for regex: <begin> * {{IPA|en|/ɹɪˈpoətɪd/|a=non-rhotic,non-horse-hoarse}} <end>
 Page 509 casuist: Found match for regex: <begin> * {{IPA|en|/ˈkæʒuːɪst/|a=yod-coalescence}} <end>
-Page 510 Cassandra: Found match for regex: <begin> ** {{IPA|en|/kəˈsɛən.dɹə/|a=GA,ae-tensing}} <end>
+Page 510 Cassandra: Found match for regex: <begin> ** {{IPA|en|/kəˈsɛən.dɹə/|a=GA,æ-tensing}} <end>
 Page 511 restored: Found match for regex: <begin> * {{enPR|rĭstōrdʹ|a=rhotic,non-horse-hoarse}}, {{IPA|en|/ɹɪˈsto(ː)ɹd/}} <end>
 Page 511 restored: Found match for regex: <begin> * {{IPA|en|/ɹɪˈstoəd/|a=non-rhotic,non-horse-hoarse}} <end>
 Page 512 reports: Found match for regex: <begin> * {{IPA|en|/ɹɪˈpo(ː)ɹts/|a=rhotic,non-horse-hoarse}} <end>
@@ -811,7 +727,7 @@ Page 513 cores: Found match for regex: <begin> * {{IPA|en|/koəz/|a=non-rhotic,n
 Page 514 villages: Found match for regex: <begin> * {{homophone|en|villagers|aa=non-rhotic,weak vowel}} <end>
 Page 515 ort: Found match for regex: <begin> * {{homophones|en|aught|ought}} {{qualifier|in [[non-rhotic]] accents}} <end>
 Page 515 ort: Found match for regex: <begin> ** {{IPA|en|/ɔːɹt/|a=rhotic}} <end>
-Page 515 ort: Found match for regex: <begin> ** {{IPA|en|/ɔːt/|a=nonrhotic}} <end>
+Page 515 ort: Found match for regex: <begin> ** {{IPA|en|/ɔːt/|a=non-rhotic}} <end>
 Page 516 forceps: Found match for regex: <begin> * {{IPA|en|/ˈfɔ(ː)ɹsɛps/|a=non-horse-hoarse,rhotic}} <end>
 Page 517 stores: Found match for regex: <begin> * {{enPR|stōrz|a=rhotic,non-horse-hoarse}}, {{IPA|en|/sto(ː)ɹz/}} <end>
 Page 517 stores: Found match for regex: <begin> * {{IPA|en|/stoəz/|a=non-rhotic,non-horse-hoarse}} <end>
@@ -828,7 +744,6 @@ Page 522 afforded: Found match for regex: <begin> * {{IPA|en|/əˈfoədɪd/|a=no
 Page 523 affords: Found match for regex: <begin> * {{IPA|en|/əˈfo(ː)ɹdz/|a=rhotic,non-horse-hoarse}} <end>
 Page 523 affords: Found match for regex: <begin> * {{IPA|en|/əˈfoədz/|a=non-rhotic,non-horse-hoarse}} <end>
 Page 524 oot: Found match for regex: <begin> * This spelling has been used to represent a variety of regional pronunciations, including certain Scottish pronunciations (standard in Scots and frequent in Scottish English), and certain Canadian pronunciations resulting from [[w:Canadian raising|Canadian raising]]. <end>
-Page 525 thoric: Found match for regex: <begin> * {{anagrams|en|a=chiort|Ch'orti'|Chorti|hortic|orthic|rhotic|tricho-|trochi}} <end>
 Page 526 peckerwood: Found match for regex: <begin> * {{alter|en|peckawood||non-rhotic pronunciation spelling}} <end>
 Page 527 gargle: Found match for regex: <begin> * {{homophones|en|goggle|aa=non-rhotic,father-bother}} <end>
 Page 528 rhotacism: Found match for regex: <begin> * {{l|en|nonrhotic}} <end>
@@ -841,8 +756,7 @@ Page 531 háček: Found match for regex: <begin> * {{sense|diacritics used in La
 Page 532 shiva: Found match for regex: <begin> * {{homophones|en|shiver|qq1=non-rhotic}} <end>
 Page 533 kippah: Found match for regex: <begin> * {{hmp|en|keeper|qq1=1st pronunciation, non-rhotic|kipper|qq2=2nd pronunciation, non-rhotic}} <end>
 Page 534 -chore: Found match for regex: <begin> * {{homophone|en|core|corps|;|caw<aa:non-rhotic,horse-hoarse>}} <end>
-Page 535 intubate: Found match for regex: <begin> * {{IPA|en|/ˈɪntjʊbeɪt/|/ˈɪntəbeɪt/|/ˈɪntʃəbeɪt/|q3=yod-coalescence}} <end>
-Page 536 Dinah: Found match for regex: <begin> * {{hmp|en|diner}} {{q|in nonrhotic accents}} <end>
+Page 536 Dinah: Found match for regex: <begin> * {{hmp|en|diner}} {{q|in non-rhotic accents}} <end>
 Page 537 forenoon: Found match for regex: <begin> * {{IPA|en|/ˈfo(ː)ɹnuːn/|a=rhotic,non-horse-hoarse}} <end>
 Page 537 forenoon: Found match for regex: <begin> * {{IPA|en|/ˈfoənuːn/|a=non-rhotic,non-horse-hoarse}} <end>
 Page 538 courtiers: Found match for regex: <begin> * {{IPA|en|/ˈko(ː)ɹtiɚz/|a=rhotic,non-horse-hoarse}} <end>
@@ -852,7 +766,7 @@ Page 539 Verfremdungseffekt: Found match for regex: <begin> * {{a|en|rhotic}} {{
 Page 540 forefront: Found match for regex: <begin> * {{IPA|en|/fo(ː)ɹfɹʌnt/|a=rhotic,non-horse-hoarse}} <end>
 Page 540 forefront: Found match for regex: <begin> * {{IPA|en|/foəfɹʌnt/|a=non-rhotic,non-horse-hoarse}} <end>
 Page 541 bourne: Found match for regex: <begin> ** {{IPA|en|/boːɹn/|a=rhotic}} <end>
-Page 541 bourne: Found match for regex: <begin> ** {{IPA|en|/boən/|a=nonrhotic}} <end>
+Page 541 bourne: Found match for regex: <begin> ** {{IPA|en|/boən/|a=non-rhotic}} <end>
 Page 542 roared: Found match for regex: <begin> * {{enPR|rōrd|a=rhotic,non-horse-hoarse}}, {{IPA|en|/ɹo(ː)ɹd/}} <end>
 Page 542 roared: Found match for regex: <begin> * {{IPA|en|/ɹoəd/|a=non-rhotic,non-horse-hoarse}} <end>
 Page 543 canteen: Found match for regex: <begin> * {{IPA|en|[kʰɛə̯nˈtin]|a=æ-tensing}} <end>
@@ -866,7 +780,7 @@ Page 548 soba: Found match for regex: <begin> * {{homophones|en|sober}} (''in [[
 Page 549 conga: Found match for regex: <begin> * {{homophones|en|conger}} {{q|non-rhotic accents}} <end>
 Page 550 aptly: Found match for regex: <begin> * {{homophones|en|happily}} {{q|in some [[h-dropping]] accents}} <end>
 Page 551 laver: Found match for regex: <begin> * Homophones: {{l|en|lava}}, {{l|en|larva}} (in [[w:Rhoticity|non-rhotic]] accents) <end>
-Page 552 duteous: Found match for regex: <begin> * {{IPA|en|/ˈdjuː.ti.əs/|q2=yod-coalescence|/ˈdʒuː.ti.əs/|q3=dated|/ˈdjuː.tʃəs/|a=UK}} <end>
+Page 552 duteous: Found match for regex: <begin> * {{IPA|en|/ˈdjuː.ti.əs/|a2=yod-coalescence|/ˈdʒuː.ti.əs/|a3=dated|/ˈdjuː.tʃəs/|a=UK}} <end>
 Page 553 oga: Found match for regex: <begin> * {{homophones|en|ogre|qq1=non-rhotic accents}} <end>
 Page 554 winda: Found match for regex: <begin> * {{rhymes|en|ɪndəɹ}} (non-rhotic accents) <end>
 Page 555 courtesan: Found match for regex: <begin> * {{IPA|en|/kɔːtɪˈzæn/|/ˈkɔːtɪzæn/|/ˈkɔːtɪzən/|a=UK,non-rhotic}} <end>
@@ -883,13 +797,12 @@ Page 563 Harvard: Found match for regex: <begin> * {{IPA|en|/ˈhɑɹvəɹd/|a=rh
 Page 563 Harvard: Found match for regex: <begin> * {{IPA|en|/ˈhɑːvəd/|a=non-rhotic}} <end>
 Page 564 sawed: Found match for regex: <begin> * {{homophones|en|sod<aa:cot-caught>|;|sword<aa:non-rhotic,horse-hoarse>}} <end>
 Page 565 nigga: Found match for regex: <begin> * This word cannot be distinguished from {{m|en|nigger}} in non-rhotic varieties, such as most British English accents. <end>
-Page 566 Ricardo: Found match for regex: <begin> * According to the 2010 United States Census, ''Ricardo'' is the 9433<sup>th</sup> most common surname in the United States, belonging to 3448 individuals. ''Ricardo'' is most common among Hispanic/Latino (60.07%) and White (24.80%) individuals. <end>
 Page 567 nargery: Found match for regex: <begin> * {{IPA|en|/ˈnɑɹɡəɹi/|/ˈnɑɹdʒəɹi/|a=rhotic}} <end>
 Page 567 nargery: Found match for regex: <begin> * {{IPA|en|/nɑːɡəɹi/|/ˈnɑːdʒəɹi/|a=non-rhotic}} <end>
 Page 568 whorled: Found match for regex: <begin> * {{IPA|en|/ʍɜːld/|a=non-wine-whine,non-rhotic}} <end>
 Page 569 whirled: Found match for regex: <begin> * {{IPA|en|/ʍɜːld/|a=non-wine-whine,non-rhotic}} <end>
 Page 570 morne: Found match for regex: <begin> * {{IPA|en|/mɔːɹn/|a=rhotic,non-horse-hoarse}} <end>
-Page 570 morne: Found match for regex: <begin> * {{IPA|en|/mɔːn/|a=nonrhotic,non-horse-hoarse}} <end>
+Page 570 morne: Found match for regex: <begin> * {{IPA|en|/mɔːn/|a=non-rhotic,non-horse-hoarse}} <end>
 Page 571 paws: Found match for regex: <begin> * {{homophones|en|pores|pours}} {{qualifier|in non-rhotic accents}} <end>
 Page 572 dere: Found match for regex: <begin> * {{IPA|en|/d̪iəɹ/|a=rural areas of Scotland, rare}}<!--The pronunciations [ðe:r], [ðiər] don't show th-stopping and so aren't reflected by this spelling--> <end>
 Page 573 박: Found match for regex: <begin> * The surname is customarily romanized in English as [[Park]], regardless of local rhoticity. <end>
@@ -899,20 +812,18 @@ Page 575 workforce: Found match for regex: <begin> * {{IPA|en|/ˈwɜːk.foəs/|a
 Page 576 conger: Found match for regex: <begin> * {{homophone|en|conga}} {{q|non-rhotic accents}} <end>
 Page 577 corncob: Found match for regex: <begin> * {{IPA|en|/ˈkɔːn.kɒb/|a=non-rhotic}} <end>
 Page 577 corncob: Found match for regex: <begin> * {{IPA|en|/ˈkɔɹn.kɒb/|a=rhotic}} <end>
-Page 578 arborvitae: Found match for regex: <begin> ** {{IPA|en|/ˌɑɹbɚˈvaɪti/|[ˌɑɹbɚˈvaɪɾi]|q3=Canadian raising|[ˌɑɹbɚˈvəɪɾi]}} <end>
+Page 578 arborvitae: Found match for regex: <begin> ** {{IPA|en|/ˌɑɹbɚˈvaɪti/|;|[ˌɑɹbɚˈvaɪɾi]|a3=Canadian raising|[ˌɑɹbɚˈvəɪɾi]}} <end>
 Page 579 mooring: Found match for regex: <begin> * {{rhymes|en|ʊəɹɪŋ}} (without the poor-pour merger) <end>
-Page 580 taiga: Found match for regex: <begin> * {{homophone|en|tiger|qq1=nonrhotic with initial stress}} <end>
+Page 580 taiga: Found match for regex: <begin> * {{homophone|en|tiger|qq1=non-rhotic with initial stress}} <end>
 Page 581 horse: Found match for regex: <begin> ** {{IPA|en|/hɔːɹs/|a=rhotic}} <end>
-Page 581 horse: Found match for regex: <begin> ** {{IPA|en|/hɔːs/|a=nonrhotic}} <end>
-Page 582 cardoni: Found match for regex: <begin> * {{anagrams|it|a=acdinor|candirò|candori|cardino|condirà|incorda|nordica|rancido}} <end>
-Page 583 trichroic: Found match for regex: <begin> * {{anagrams|en|a=cchiiorrt|cirrhotic}} <end>
+Page 581 horse: Found match for regex: <begin> ** {{IPA|en|/hɔːs/|a=non-rhotic}} <end>
 Page 584 sisterly: Found match for regex: <begin> * {{homophones|en|systole}} {{qualifier|in non-rhotic accents}} <end>
 Page 585 supportive: Found match for regex: <begin> * {{IPA|en|/səˈpo(ː)ɹtɪv/|a=rhotic,non-horse-hoarse}} <end>
 Page 585 supportive: Found match for regex: <begin> * {{IPA|en|/səˈpoətɪv/|a=non-rhotic,non-horse-hoarse}} <end>
 Page 586 Tampa: Found match for regex: <begin> * {{homophones|en|tamper}} (''in [[non-rhotic]] accents'') <end>
 Page 587 miff: Found match for regex: <begin> * {{homophones|en|myth|qq1=accents with [[th-fronting]]}} <end>
-Page 588 tute: Found match for regex: <begin> * {{homophones|en|toot}} {{qual|in dialects with {{w|yod-dropping}}}} <end>
-Page 588 tute: Found match for regex: <begin> * {{homophones|en|toot}} {{qual|in dialects with {{w|yod-dropping}}}} <end>
+Page 588 tute: Found match for regex: <begin> * {{homophones|en|toot|aa=yod-dropping}} <end>
+Page 588 tute: Found match for regex: <begin> * {{homophones|en|toot|aa=yod-dropping}} <end>
 Page 589 soared: Found match for regex: <begin> * {{IPA|en|/so(ː)ɹd/|a=rhotic,non-horse-hoarse}} <end>
 Page 589 soared: Found match for regex: <begin> * {{IPA|en|/soəd/|a=non-rhotic,non-horse-hoarse}} <end>
 Page 589 soared: Found match for regex: <begin> * {{homophones|en|sword|;|sawed<aa:non-rhotic,horse-hoarse>}} <end>
@@ -923,20 +834,12 @@ Page 593 pah: Found match for regex: <begin> * {{homophones|en|pa|;|par<aa:non-r
 Page 594 ㄸ: Found match for regex: <begin> * {{IPA|ko|/t͈/}} {{q|alveolar plosive with tense phonation; similar to English {{IPAchar|/t/}}, but with a stiff glottal opening}} <end>
 Page 595 ㅉ: Found match for regex: <begin> * ㅉ is pronounced as an [[alveolo-palatal]] [[affricate]] with [[tense]] [[phonation]] ([[w:International Phonetic Alphabet for English|IPA]]: [t͈ɕ] or [d̬ʑ]), i.e. similar to the English ''ch'', but with a stiff tongue and glottal opening. <end>
 Page 596 bordure: Found match for regex: <begin> ** {{IPA|en|/ˈbɔːɹd͡ʒɚ/|/ˈbɔːɹdjʊɹ/|a=rhotic}} <end>
-Page 596 bordure: Found match for regex: <begin> ** {{IPA|en|/ˈbɔːd͡ʒə/|/ˈbɔːdjʊə/|a=nonrhotic}} <end>
-Page 597 Christo-: Found match for regex: <begin> * {{anagrams|en|a=chiorst|chorist|ostrich|rhotics}} <end>
-Page 598 condirà: Found match for regex: <begin> * {{anagrams|it|a=acdinor|candirò|candori|cardino|cardoni|incorda|nordica|rancido}} <end>
-Page 599 tumulate: Found match for regex: <begin> * {{IPA|en|/ˈtjuːmjʊleɪt/|q2=yod-coalescence|/ˈtʃuːmjʊleɪt/|a=UK}} <end>
-Page 600 arcadico: Found match for regex: <begin> * {{anagrams|it|a=aaccdior|accordai|cardiaco}} <end>
+Page 596 bordure: Found match for regex: <begin> ** {{IPA|en|/ˈbɔːd͡ʒə/|/ˈbɔːdjʊə/|a=non-rhotic}} <end>
+Page 599 tumulate: Found match for regex: <begin> * {{IPA|en|/ˈtjuːmjʊleɪt/|a2=yod-coalescence|/ˈtʃuːmjʊleɪt/|a=UK}} <end>
 Page 601 roars: Found match for regex: <begin> * {{IPA|en|/ɹo(ː)ɹz/|a=rhotic,non-horse-hoarse}} <end>
 Page 601 roars: Found match for regex: <begin> * {{IPA|en|/ɹoəz/|a=non-rhotic,non-horse-hoarse}} <end>
 Page 601 roars: Found match for regex: <begin> * {{homophones|en|raws|aa=non-rhotic,horse-hoarse}} <end>
 Page 602 Rhoda: Found match for regex: <begin> * {{homophones|en|rota|Rota|rotor|qq2=with {{w|flapping}}|qq3=non-rhotic accents with {{w|flapping}}}} <end>
-Page 603 cadrò: Found match for regex: <begin> * {{anagrams|it|a=acdor|cardo|cardò|corda|croda|draco}} <end>
-Page 604 ricado: Found match for regex: <begin> * {{anagrams|it|a=acdior|-cardio|Coardi|Ocrida|Orcadi|cardio-|cordai|dacrio-|darico|dorica|radico|radicò|rodica}} <end>
-Page 605 scadrò: Found match for regex: <begin> * {{anagrams|it|a=acdors|scardo|scardò|scorda}} <end>
-Page 606 postvocalic: Found match for regex: <begin> * {{pedia|Rhotic and non-rhotic accents}} <end>
-Page 607 detorca: Found match for regex: <begin> * {{anagrams|it|a=acdeort|cardeto|cedrato|cordate}} <end>
 Page 608 gored: Found match for regex: <begin> * {{enPR|gōrd|a=rhotic,non-horse-hoarse}}, {{IPA|en|/ɡo(ː)ɹd/}} <end>
 Page 608 gored: Found match for regex: <begin> * {{IPA|en|/ɡoəd/|a=non-rhotic,non-horse-hoarse}} <end>
 Page 608 gored: Found match for regex: <begin> * {{homophones|en|gourd|;|gaud<aa:non-rhotic,horse-hoarse>|;|god<aa:non-rhotic,horse-hoarse,cot-caught>}} <end>
@@ -950,113 +853,63 @@ Page 613 torq: Found match for regex: <begin> * {{homophones|en|torc|torque|talk
 Page 614 caudate: Found match for regex: <begin> * {{homophones|en|chordate|cordate}} {{a|en|non-rhotic accents}} <end>
 Page 615 planktivore: Found match for regex: <begin> * {{enPR|plăngkʹtĭvōr'|a=rhotic,non-horse-hoarse}}, {{IPA|en|/ˈplæŋktɪˌvo(ː)ɹ/}} <end>
 Page 615 planktivore: Found match for regex: <begin> * {{IPA|en|/ˈplæŋktɪˌvoə/|a=non-rhotic,non-horse-hoarse}} <end>
-Page 616 scordare: Found match for regex: <begin> * {{anagrams|it|a=acdeorrs|scarderò|scorderà}} <end>
-Page 617 scorderà: Found match for regex: <begin> * {{anagrams|it|a=acdeorrs|scarderò|scordare}} <end>
 Page 618 frocio: Found match for regex: <begin> * Others believe to be same as above, with a semantical shift. Alternatively from {{bor|it|vec|fenocio|t={{q|slang}} gay}} with rhoticisation of the {{ic|/-n-/}} by influence of the above term. <end>
-Page 619 epiglottal: Found match for regex: <begin> * French: {{t+|fr|épiglottal}} <end>
-Page 619 epiglottal: Found match for regex: <begin> * Italian: {{t|it|epiglottale}}, {{t|it|epiglottidale}} <end>
-Page 619 epiglottal: Found match for regex: <begin> * French: {{t+|fr|épiglottal}} <end>
-Page 619 epiglottal: Found match for regex: <begin> * Italian: {{t|it|epiglottale}}, {{t|it|epiglottidale}} <end>
 Page 620 gunner: Found match for regex: <begin> * Homophones: [[gonna]] {{qualifier|non-rhotic accents}} <end>
 Page 621 tartare: Found match for regex: <begin> * {{IPA|en|/tɑːɹˈtɑːɹ/|a=rhotic}} <end>
 Page 621 tartare: Found match for regex: <begin> * {{IPA|en|/tɑːˈtɑː/|a=non-rhotic}} <end>
-Page 622 cavaleiro: Found match for regex: <begin> * {{rhyme|pt|ejɾu|ɐjɾu|eɾu|q1=Brazil|q2=Portugal|q3=[[yod dropping]]|s=4}} <end>
 Page 623 Finnair: Found match for regex: <begin> * {{homophones|en|thin air}} {{qualifier|in accents with th-fronting}} <end>
-Page 624 candori: Found match for regex: <begin> * {{anagrams|it|a=acdinor|candirò|cardino|cardoni|condirà|incorda|nordica|rancido}} <end>
 Page 625 aboot: Found match for regex: <begin> * This spelling has been used to represent a variety of regional pronunciations, including Tyneside, certain Scottish pronunciations (standard in Scots and frequent in Scottish English), and certain Canadian pronunciations resulting from [[w:Canadian raising|Canadian raising]]. <end>
 Page 626 moin: Found match for regex: <begin> * Further, many sources say that the word comes from the Berlin area, representing the local pronunciation of {{cog|de|Morgen||morning}}: [mɔɐ̯jɘn].<ref>Br. v. Braunthal, ''Berliner Conversation. In den Akademiesälen'', in: ''Berliner Conversations-Blatt für Poesie, Literatur und Kritik. Zweiter Jahrgang'', 1828, p. 799ff.</ref><ref>Willy Lademann: Wörterbuch der Teltower Volkssprache (Telschet Wöderbuek), Akademie-Verlag, Berlin 1956</ref> The pronunciation would come either from local Low German (where the word was pronounced [mɔrʝɘn]) and then have undergone r-vocalisation, or from early modern Upper Saxonian (/mɔˤjən/ or something similar), which is the German dialect that initially replaced Low German in Berlin. The word was understood as 'moin' by the rhotic dialects surrounding the city and spread north from them. <end>
-Page 627 Königsberg: Found match for regex: <begin> * {{enPR|kœ′nĭᴋʜs-bĕrk′|a=like German}}, {{IPA|en|/ˈkøːnɪçsˌbɛɹk/|/ˈkøːnɪçsˌbɜːk/|q1=rhotic|q2=nonrhotic}} <end>
-Page 628 dewfall: Found match for regex: <begin> * {{IPA|en|/ˈdjuˌfɔl/|/ˈduːˌfɔl/}} {{qualifier|among those with {{w|yod-dropping}}}} <end>
-Page 628 dewfall: Found match for regex: <begin> * {{IPA|en|/ˈdjuˌfɑl/|/ˈduːˌfɑl/<a:yod-dropping>|a=cot-caught}} <end>
-Page 629 Ch'orti': Found match for regex: <begin> * {{anagrams|en|a=chiort|hortic|orthic|rhotic|thoric|tricho-|trochi}} <end>
-Page 630 radico: Found match for regex: <begin> * {{anagrams|it|a=acdior|-cardio|Coardi|Ocrida|Orcadi|cardio-|cordai|dacrio-|darico|dorica|ricado|rodica}} <end>
-Page 631 radicò: Found match for regex: <begin> * {{anagrams|it|a=acdior|-cardio|Coardi|Ocrida|Orcadi|cardio-|cordai|dacrio-|darico|dorica|ricado|rodica}} <end>
+Page 627 Königsberg: Found match for regex: <begin> * {{enPR|kœ′nĭᴋʜs-bĕrk′|a=like German}}, {{IPA|en|/ˈkøːnɪçsˌbɛɹk/|/ˈkøːnɪçsˌbɜːk/|q1=rhotic|q2=non-rhotic}} <end>
 Page 632 terne: Found match for regex: <begin> * {{homophones|en|tern|qq2=with [[w:fern-fir-fur merger|fern-fir-fur merger]]|turn}} <end>
-Page 633 rancido: Found match for regex: <begin> * {{anagrams|it|a=acdinor|candirò|candori|cardino|cardoni|condirà|incorda|nordica}} <end>
-Page 634 memor: Found match for regex: <begin> * Some refer it to {{inh|la|itc-pro|*memnos}}, {{inh|la|ine-pro||*me-mn-os-}}, a reduplicated form of {{m|ine-pro|*men-|t=to think|id=think}}, although the declension was changed from a sibilant stem to a rhotic stem.<ref>{{R:itc:EDL|head=meminī|pages=371-372}}</ref> <end>
 Page 635 knickerless: Found match for regex: <begin> * {{hmp|en|Nicholas}} {{q|non-rhotic accents}} <end>
-Page 636 nordica: Found match for regex: <begin> * {{anagrams|it|a=acdinor|candirò|candori|cardino|cardoni|condirà|incorda|rancido}} <end>
 Page 637 paten: Found match for regex: <begin> * {{homophone|en|patten|pattern|Patton|qq2=some non-rhotic dialects}} <end>
-Page 638 cardino: Found match for regex: <begin> * {{anagrams|it|a=acdinor|candirò|candori|cardoni|condirà|incorda|nordica|rancido}} <end>
 Page 639 camwhore: Found match for regex: <begin> * {{enPR|kămʹhōr|a=rhotic,non-horse-hoarse}}, {{IPA|en|/ˈkæmho(ː)ɹ/}} <end>
 Page 639 camwhore: Found match for regex: <begin> * {{IPA|en|/ˈkæmhoə/|a=non-rhotic,non-horse-hoarse}} <end>
-Page 640 ჩრდილოეთი: Found match for regex: <begin> * {{IPA|ka|/t͡ʃrdiloetʰi/|[tʂtʰiloɛtʰi]}}<ref>{{cite-journal|last=Shosted|first=Ryan|last2=Chikovani|first2=Vakhtang|title=Standard Georgian|journal=Journal of the International Phonetic Association: Illustrations of the IPA|year=2006|pages=255-264|titleurl=https://web.archive.org/web/20210503001428/https://escholarship.org/content/qt6f88p78m/qt6f88p78m.pdf|text=The phonetic transcription gives some indication of a few processes: deletion and/or vocalization of nasals, e.g. /ʃɛtanxmdnɛn/ ‘they agreed’ -> [ʃɛtʰaũɣmdɛn], and deletion of rhotics, e.g. /tʃɾdilɔɛtis/ ‘north.GEN’ -> [tʂtʰiloɛtʰis].}} <end>
+Page 640 ჩრდილოეთი: Found match for regex: <begin> * {{IPA|ka|/t͡ʃrdiloetʰi/ [tʂtʰiloɛtʰi]}}<ref>{{cite-journal|last=Shosted|first=Ryan|last2=Chikovani|first2=Vakhtang|title=Standard Georgian|journal=Journal of the International Phonetic Association: Illustrations of the IPA|year=2006|pages=255-264|titleurl=https://web.archive.org/web/20210503001428/https://escholarship.org/content/qt6f88p78m/qt6f88p78m.pdf|text=The phonetic transcription gives some indication of a few processes: deletion and/or vocalization of nasals, e.g. /ʃɛtanxmdnɛn/ ‘they agreed’ -> [ʃɛtʰaũɣmdɛn], and deletion of rhotics, e.g. /tʃɾdilɔɛtis/ ‘north.GEN’ -> [tʂtʰiloɛtʰis].}} <end>
 Page 641 glassier: Found match for regex: <begin> * {{homophone|en|glacier|qq1=[[non-rhotic]] accents without [[trap-bath split]]}} <end>
-Page 642 caridoids: Found match for regex: <begin> * {{anagrams|en|a=acddiiors|Discordia|cardioids|cidaroids}} <end>
-Page 643 Chorti: Found match for regex: <begin> * {{anagrams|en|a=chiort|hortic|orthic|rhotic|thoric|tricho-|trochi}} <end>
 Page 644 rhotacize: Found match for regex: <begin> * {{alt|en|rhotacise|rhoticize}} <end>
 Page 645 striper: Found match for regex: <begin> * {{IPA|en|/ˈstɹaɪpɚ/|a=rhotic}} <end>
 Page 645 striper: Found match for regex: <begin> * {{IPA|en|/ˈstɹaɪpə/|a=non-rhotic}} <end>
-Page 646 alexanders: Found match for regex: <begin> * {{IPA|en|[ˌælɪɡˈzeəndɚz]|a=ae-tensing,rhotic}} <end>
-Page 646 alexanders: Found match for regex: <begin> * {{IPA|en|[ˌælɪɡˈzeəndəz]|a=ae-tensing,non-rhotic}} <end>
-Page 647 croda: Found match for regex: <begin> * {{anagrams|it|a=acdor|cadrò|cardo|cardò|corda|draco}} <end>
+Page 646 alexanders: Found match for regex: <begin> * {{IPA|en|[ˌælɪɡˈzeəndɚz]|a=æ-tensing,rhotic}} <end>
+Page 646 alexanders: Found match for regex: <begin> * {{IPA|en|[ˌælɪɡˈzeəndəz]|a=æ-tensing,non-rhotic}} <end>
 Page 648 inker: Found match for regex: <begin> * {{homophones|en|Inca}} {{qualifier|in non-rhotic accents}} <end>
-Page 649 candirò: Found match for regex: <begin> * {{anagrams|it|a=acdinor|candori|cardino|cardoni|condirà|incorda|nordica|rancido}} <end>
-Page 650 Picard: Found match for regex: <begin> * According to the 2010 United States Census, ''Picard'' is the 4,491<sup>st</sup> most common surname in the United States, belonging to 7,898 individuals. ''Picard'' is most common among White (87.52%) individuals. <end>
 Page 651 swordfight: Found match for regex: <begin> * {{IPA|en|/ˈso(ː)ɹdfaɪt/|a=rhotic,non-horse-hoarse}} <end>
 Page 651 swordfight: Found match for regex: <begin> * {{IPA|en|/ˈsoədfaɪt/|a=non-rhotic,non-horse-hoarse}} <end>
-Page 652 dorica: Found match for regex: <begin> * {{anagrams|it|a=acdior|-cardio|Coardi|Ocrida|Orcadi|cardio-|cordai|dacrio-|darico|radico|radicò|ricado|rodica}} <end>
 Page 653 brumously: Found match for regex: <begin> * {{a|en|rhotic}} <end>
 Page 654 derhotacization: Found match for regex: <begin> * {{l|en|rhotic}} <end>
-Page 655 glottalize: Found match for regex: <begin> * German: {{t|de|glottalisieren}} <end>
-Page 656 glottalization: Found match for regex: <begin> * {{l|en|t-glottalization}} <end>
 Page 657 dicer: Found match for regex: <begin> * {{homophones|en|dghaisa|qq1=non-rhotic}} <end>
 Page 658 crìdiri: Found match for regex: <begin> * {{alt|scn|crìriri||rhoticized}} <end>
-Page 659 declinarlo: Found match for regex: <begin> * {{anagrams|it|a=acdeillnor|cardellino|cordellina}} <end>
-Page 660 mute h: Found match for regex: <begin> * {{l|en|h-dropping}} <end>
-Page 661 rhoticity: Found match for regex: <begin> * {{l|en|nonrhoticity}} <end>
-Page 661 rhoticity: Found match for regex: <begin> * {{l|en|non-rhoticity}} <end>
-Page 661 rhoticity: Found match for regex: <begin> * French: {{t+|fr|rhoticité|f}} <end>
-Page 662 dacrio-: Found match for regex: <begin> * {{anagrams|it|a=acdior|-cardio|Coardi|Ocrida|Orcadi|cardio-|cordai|darico|dorica|radico|radicò|ricado|rodica}} <end>
 Page 663 deca: Found match for regex: <begin> * {{homophones|en|decker}} {{a|en|non-rhotic}} <end>
-Page 664 cedrato: Found match for regex: <begin> * {{anagrams|it|a=acdeort|cardeto|cordate|detorca}} <end>
 Page 665 tawn: Found match for regex: <begin> * {{homophones|en|torn|aa=non-rhotic,horse-hoarse}} <end>
 Page 666 yod: Found match for regex: <begin> * {{l|en|yod coalescence}} <end>
-Page 666 yod: Found match for regex: <begin> * {{l|en|yod-dropping}}, {{l|en| yod dropping}} <end>
-Page 667 arrozal: Found match for regex: <begin> * {{l|lad|arozal}} (''Aki Yerushalayim, French and Turkish orthography spellings for non-rhotic dialects'') <end>
-Page 667 arrozal: Found match for regex: <begin> * {{IPA|lad|/a.ˈɾozal/}} (''non-rhotic dialects'') <end>
-Page 668 darico: Found match for regex: <begin> * {{anagrams|it|a=acdior|-cardio|Coardi|Ocrida|Orcadi|cardio-|cordai|dacrio-|dorica|radico|radicò|ricado|rodica}} <end>
+Page 666 yod: Found match for regex: <begin> * {{l|en|yod-dropping}}, {{l|en|yod dropping}} <end>
 Page 669 any more: Found match for regex: <begin> * {{IPA|en|/ˌɛ.niˈmo(ː)ɹ/|nocount=1|a=rhotic,non-horse-hoarse}} <end>
 Page 669 any more: Found match for regex: <begin> * {{IPA|en|/ˌɛ.niˈmoə/|nocount=1|a=non-rhotic,non-horse-hoarse}} <end>
 Page 670 rore: Found match for regex: <begin> * {{enPR|rōr|a=rhotic,non-horse-hoarse}}, {{IPA|en|/ɹo(ː)ɹ/}} <end>
 Page 670 rore: Found match for regex: <begin> * {{IPA|en|/ɹoə/|a=non-rhotic,non-horse-hoarse}} <end>
 Page 670 rore: Found match for regex: <begin> * {{homophones|en|raw|aa=non-rhotic,horse-hoarse}} <end>
-Page 671 trochi: Found match for regex: <begin> * {{anagrams|en|a=chiort|Ch'orti'|Chorti|hortic|orthic|rhotic|thoric|tricho-}} <end>
 Page 672 fanless: Found match for regex: <begin> * {{IPA|en|/ˈfɛən.ləs/|a=æ-tensing}} <end>
-Page 673 Doubs: Found match for regex: <begin> * {{homophones|en|do|doo}}; {{qualifier|yod-dropping accents}} {{homophones|en|dew|due}} <end>
-Page 674 tricho-: Found match for regex: <begin> * {{anagrams|en|a=chiort|Ch'orti'|Chorti|hortic|orthic|rhotic|thoric|trochi}} <end>
+Page 673 Doubs: Found match for regex: <begin> * {{homophones|en|do|doo|;|dew|due<aa:yod-dropping>}}
 Page 675 bulldagger: Found match for regex: <begin> * {{IPA|en|[ˈbʊɫ.ˌdæ.ɡə]|a=AAVE,non-rhotic}} <end>
-Page 676 glottale: Found match for regex: <begin> * {{l|it|occlusiva glottale|t=glottal stop}} <end>
 Page 677 Leia: Found match for regex: <begin> * {{homophone|en|layer}} {{q|non-rhotic accents}} <end>
 Page 678 Pauly: Found match for regex: <begin> * {{homophones|en|poorly|aa=non-rhotic,pour-poor}} <end>
-Page 679 Orcadi: Found match for regex: <begin> * {{anagrams|it|a=acdior|-cardio|Coardi|Ocrida|cardio-|cordai|dacrio-|darico|dorica|radico|radicò|ricado|rodica}} <end>
-Page 680 antigenes: Found match for regex: <begin> * {{anagrams|en|a=aeeginnst|æ-tensing}} <end>
-Page 681 rodica: Found match for regex: <begin> * {{anagrams|it|a=acdior|-cardio|Coardi|Ocrida|Orcadi|cardio-|cordai|dacrio-|darico|dorica|radico|radicò|ricado}} <end>
 Page 682 balmily: Found match for regex: <begin> * {{homophone|en|barmily}} {{q|non-rhotic accents}} <end>
 Page 683 whewer: Found match for regex: <begin> * {{IPA|en|/hwjuːə/|/ʍjuːə/<a:non-wine-whine>|a=non-rhotic}} <end>
 Page 683 whewer: Found match for regex: <begin> * {{IPA|en|/hwjuːɚ/|/ʍjuːɚ/<a:non-wine-whine>|a=rhotic}} <end>
-Page 684 chorist: Found match for regex: <begin> * {{anagrams|en|a=chiorst|Christo-|ostrich|rhotics}} <end>
 Page 685 morkin: Found match for regex: <begin> ** {{IPA|en|/mɔːɹkɪn/|a=rhotic}} <end>
-Page 685 morkin: Found match for regex: <begin> ** {{IPA|en|/mɔːkɪn/|a=nonrhotic}} <end>
+Page 685 morkin: Found match for regex: <begin> ** {{IPA|en|/mɔːkɪn/|a=non-rhotic}} <end>
 Page 686 enaunter: Found match for regex: <begin> * {{IPA|en|/ɪnˈɔːntə/|a=non-rhotic}} <end>
 Page 686 enaunter: Found match for regex: <begin> * {{IPA|en|/ɪnˈɔːntɚ/|a=rhotic}} <end>
 Page 687 edder: Found match for regex: <begin> * {{IPA|en|/ˈɛdɚ/|/ˈɛðɚ/|a=rhotic}} <end>
 Page 687 edder: Found match for regex: <begin> * {{IPA|en|/ˈɛdə/|/ˈɛðə/|a=non-rhotic}} <end>
-Page 688 chiropter: Found match for regex: <begin> * {{anagrams|en|a=cehioprrt|petrichor|pre-rhotic|prerhotic}} <end>
-Page 689 Codonopsis: Found match for regex: <begin> * {{sense|genus}} {{taxlink|Codonopsis viridis|species}}&nbsp;- type species; {{taxlink|Codonopsis affinis|species}}, {{taxlink|Codonopsis alpina|species}}, {{taxlink|Codonopsis argentea|species}}, {{taxlink|Codonopsis benthamii|species}}, {{taxlink|Codonopsis bhutanica|species}}, {{taxlink|Codonopsis bragaensis|species}}, {{taxlink|Codonopsis bulleyana|species}}, {{taxlink|Codonopsis canescens|species}}, {{taxlink|Codonopsis cardiophylla|species}}, {{taxlink|Codonopsis chimiliensis|species}}, {{taxlink|Codonopsis chlorocodon|species}}, {{taxlink|Codonopsis clematidea|species}}, {{taxlink|Codonopsis convolvulacea|species}}, {{taxlink|Codonopsis cordifolioidea|species}}, {{taxlink|Codonopsis deltoidea|species}}, {{taxlink|Codonopsis dicentrifolia|species}}, {{taxlink|Codonopsis efilamentosa|species}}, {{taxlink|Codonopsis farreri|species}}, {{taxlink|Codonopsis foetens|species}}, {{taxlink|Codonopsis forrestii|species}}, {{taxlink|Codonopsis gombalana|species}}, {{taxlink|Codonopsis gracilis|species}}, {{taxlink|Codonopsis henryi|species}}, {{taxlink|Codonopsis hirsuta|species}}, {{taxlink|Codonopsis hongii|species}}, {{taxlink|Codonopsis inflata|species}}, {{taxlink|Codonopsis javanica|species}}, {{taxlink|Codonopsis kawakamii|species}}, {{taxlink|Codonopsis lanceolata|species}}, {{taxlink|Codonopsis levicalyx|species}}, {{taxlink|Codonopsis limprichtii|species}}, {{taxlink|Codonopsis macrophylla|species}}, {{taxlink|Codonopsis mairei|species}}, {{taxlink|Codonopsis meleagris|species}}, {{taxlink|Codonopsis micrantha|species}}, {{taxlink|Codonopsis minima|species}}, {{taxlink|Codonopsis nepalensis|species}}, {{taxlink|Codonopsis ovata|species}}, {{taxlink|Codonopsis pianmaensis|species}}, {{taxfmt|Codonopsis pilosula|species}}, {{taxlink|Codonopsis purpurea|species}}, {{taxlink|Codonopsis rosulata|species}}, {{taxlink|Codonopsis rotundifolia|species}}, {{taxlink|Codonopsis subglobosa|species}}, {{taxlink|Codonopsis subscaposa|species}}, {{taxlink|Codonopsis subsimplex|species}}, {{taxlink|Codonopsis thalictrifolia|species}}, {{taxlink|Codonopsis tsinlingensis|species}}, {{taxlink|Codonopsis tubulosa|species}}, {{taxlink|Codonopsis ussuriensis|species}}, {{taxlink|Codonopsis vinciflora|species}}, {{taxlink|Codonopsis viridiflora|species}}&nbsp;- other species <end>
-Page 690 yod coalescence: Found match for regex: <begin> * {{alter|en|yod-coalescence|Yod coalescence|Yod Coalescence}} <end>
-Page 690 yod coalescence: Found match for regex: <begin> * {{l|en|yod dropping}} <end>
 Page 691 Patton: Found match for regex: <begin> * {{homophones|en|pattern|qq1=non-rhotic accents}} <end>
 Page 692 steller: Found match for regex: <begin> * {{homophones|en|stellar|Steller|Stella|qq3=in [[non-rhotic]] accents|stella|qq4=in [[non-rhotic]] accents}} <end>
 Page 693 unoared: Found match for regex: <begin> * {{hmp|en|unawed}} {{q|non-rhotic accents}} <end>
 Page 694 goetta: Found match for regex: <begin> * {{homophone|en|getter|qq1=non-rhotic accents}} <end>
-Page 695 hortic: Found match for regex: <begin> * {{anagrams|en|a=chiort|Ch'orti'|Chorti|orthic|rhotic|thoric|tricho-|trochi}} <end>
-Page 696 Stachys: Found match for regex: <begin> * {{sense|genus}} {{taxlink|Stachys sylvatica|species}}&nbsp;- type species; {{taxlink|Stachys abchasica|species}}, {{taxlink|Stachys acerosa|species}}, {{taxlink|Stachys aculeolata|species}}, {{taxlink|Stachys adulterina|species}}, {{taxlink|Stachys aegyptiaca|species}}, {{taxlink|Stachys aethiopica|species}}, {{taxlink|Stachys affinis|species}}, {{taxlink|Stachys agraria|species}}, {{taxlink|Stachys ajugoides|species}}, {{taxlink|Stachys albanica|species}}, {{taxlink|Stachys albens|species}}, {{taxlink|Stachys albicaulis|species}}, {{taxlink|Stachys albiflora|species}}, {{taxlink|Stachys albotomentosa|species}}, {{taxlink|Stachys aleurites|species}}, {{taxlink|Stachys alopecuros|species}}, {{taxlink|Stachys alpigena|species}}, {{taxlink|Stachys alpina|species}}, {{taxlink|Stachys amanica|species}}, {{taxlink|Stachys anamurensis|species}}, {{taxlink|Stachys andongensis|species}}, {{taxlink|Stachys angustifolia|species}}, {{taxlink|Stachys anisochila|species}}, {{taxlink|Stachys annua|species}}, {{taxlink|Stachys antalyensis|species}}, {{taxlink|Stachys aperta|species}}, {{taxlink|Stachys arabica|species}}, {{taxlink|Stachys arachnoidea|species}}, {{taxlink|Stachys araucana|species}}, {{taxlink|Stachys araxina|species}}, {{taxlink|Stachys arenaria|species}}, {{taxlink|Stachys arenariiformis|species}}, {{taxlink|Stachys argillicola|species}}, {{taxlink|Stachys aristata|species}}, {{taxlink|Stachys arrecta|species}}, {{taxlink|Stachys arriagana|species}}, {{taxlink|Stachys arvensis|species}}, {{taxlink|Stachys aspera|species}}, {{taxlink|Stachys asperata|species}}, {{taxlink|Stachys asterocalyx|species}}, {{taxlink|Stachys atherocalyx|species}}, {{taxlink|Stachys aucheri|species}}, {{taxlink|Stachys aurea|species}}, {{taxlink|Stachys babunensis|species}}, {{taxlink|Stachys bakeri|species}}, {{taxlink|Stachys balansae|species}}, {{taxlink|Stachys balensis|species}}, {{taxlink|Stachys ballotiformis|species}}, {{taxlink|Stachys bayburtensis|species}}, {{taxlink|Stachys baytopiorum|species}}, {{taxlink|Stachys beckeana|species}}, {{taxlink|Stachys benthamiana|species}}, {{taxlink|Stachys bergii|species}}, {{taxlink|Stachys betoniciflora|species}}, {{taxlink|Stachys biflora|species}}, {{taxlink|Stachys bigelovii|species}}, {{taxlink|Stachys bizensis|species}}, {{taxlink|Stachys bogotensis|species}}, {{taxlink|Stachys bolusii|species}}, {{taxlink|Stachys bombycina|species}}, {{taxlink|Stachys boraginoides|species}}, {{taxlink|Stachys brachiata|species}}, {{taxlink|Stachys brachyclada|species}}, {{taxlink|Stachys brantii|species}}, {{taxlink|Stachys bridgesii|species}}, {{taxlink|Stachys bullata|species}}, {{taxlink|Stachys burchelliana|species}}, {{taxlink|Stachys burgsdorffioides|species}}, {{taxlink|Stachys buttleri|species}}, {{taxlink|Stachys byzantina|species}}, {{taxlink|Stachys caffra|species}}, {{taxlink|Stachys calcicola|species}}, {{taxlink|Stachys candida|species}}, {{taxlink|Stachys canescens|species}}, {{taxlink|Stachys carduchorum|species}}, {{taxlink|Stachys cataonica|species}}, {{taxlink|Stachys chamissonis|species}}, {{taxlink|Stachys chasmosericea|species}}, {{taxlink|Stachys chinensis|species}}, {{taxlink|Stachys choruhensis|species}}, {{taxlink|Stachys chrysantha|species}}, {{taxlink|Stachys circinata|species}}, {{taxlink|Stachys citrina|species}}, {{taxlink|Stachys clingmanii|species}}, {{taxlink|Stachys coccinea|species}}, {{taxlink|Stachys collina|species}}, {{taxlink|Stachys comosa|species}}, {{taxlink|Stachys cordata|species}}, {{taxlink|Stachys cordifolia|species}}, {{taxlink|Stachys corsica|species}}, {{taxlink|Stachys crenata|species}}, {{taxlink|Stachys cretica|species}}, {{taxlink|Stachys cuneata|species}}, {{taxlink|Stachys cydni|species}}, {{taxlink|Stachys cymbalaria|species}}, {{taxlink|Stachys darcyana|species}}, {{taxlink|Stachys debilis|species}}, {{taxlink|Stachys didymantha|species}}, {{taxlink|Stachys dinteri|species}}, {{taxlink|Stachys discolor|species}}, {{taxlink|Stachys distans|species}}, {{taxlink|Stachys diversifolia|species}}, {{taxlink|Stachys dregeana|species}}, {{taxlink|Stachys drummondii|species}}, {{taxlink|Stachys durandiana|species}}, {{taxlink|Stachys duriaei|species}}, {{taxlink|Stachys ehrenbergii|species}}, {{taxlink|Stachys elliptica|species}}, {{taxlink|Stachys emodi|species}}, {{taxlink|Stachys eplingii|species}}, {{taxlink|Stachys erectiuscula|species}}, {{taxlink|Stachys eremicola|species}}, {{taxlink|Stachys euadenia|species}}, {{taxlink|Stachys euboica|species}}, {{taxlink|Stachys fendleri|species}}, {{taxlink|Stachys flavescens|species}}, {{taxlink|Stachys flexuosa|species}}, {{taxlink|Stachys floccosa|species}}, {{taxlink|Stachys floridana|species}}, {{taxlink|Stachys folifolia|species}}, {{taxlink|Stachys fominii|species}}, {{taxlink|Stachys fontqueri|species}}, {{taxlink|Stachys forsythii|species}}, {{taxlink|Stachys fragillima|species}}, {{taxlink|Stachys fruticulosa|species}}, {{taxlink|Stachys geobombycis|species}}, {{taxlink|Stachys germanica|species}}, {{taxlink|Stachys gilliesii|species}}, {{taxlink|Stachys glandulibracteata|species}}, {{taxlink|Stachys glandulifera|species}}, {{taxlink|Stachys glandulosa|species}}, {{taxlink|Stachys globosa|species}}, {{taxlink|Stachys glutinosa|species}}, {{taxlink|Stachys gossweileri|species}}, {{taxlink|Stachys graciliflora|species}}, {{taxlink|Stachys graeca|species}}, {{taxlink|Stachys grandidentata|species}}, {{taxlink|Stachys grandifolia|species}}, {{taxlink|Stachys graveolens|species}}, {{taxlink|Stachys guyoniana|species}}, {{taxlink|Stachys hamata|species}}, {{taxlink|Stachys harleyana|species}}, {{taxlink|Stachys hebens|species}}, {{taxlink|Stachys heraclea|species}}, {{taxlink|Stachys herrerae|species}}, {{taxlink|Stachys herrerana|species}}, {{taxlink|Stachys heterodonta|species}}, {{taxlink|Stachys hians|species}}, {{taxlink|Stachys hildebrandtii|species}}, {{taxlink|Stachys hintoniorum|species}}, {{taxlink|Stachys hispida|species}}, {{taxlink|Stachys hissarica|species}}, {{taxlink|Stachys huber-morathii|species}}, {{taxlink|Stachys huetii|species}}, {{taxlink|Stachys huillensis|species}}, {{taxlink|Stachys humbertii|species}}, {{taxlink|Stachys humifusa|species}}, {{taxlink|Stachys hydrophila|species}}, {{taxlink|Stachys hyssopifolia|species}}, {{taxlink|Stachys hyssopoides|species}}, {{taxlink|Stachys iberica|species}}, {{taxlink|Stachys inanis|species}}, {{taxlink|Stachys inclusa|species}}, {{taxlink|Stachys inflata|species}}, {{taxlink|Stachys intermedia|species}}, {{taxlink|Stachys ionica|species}}, {{taxlink|Stachys iraqensis|species}}, {{taxlink|Stachys iva|species}}, {{taxlink|Stachys ixodes|species}}, {{taxlink|Stachys jaimehintonii|species}}, {{taxlink|Stachys jijigaensis|species}}, {{taxlink|Stachys keerlii|species}}, {{taxlink|Stachys kermanshahensis|species}}, {{taxlink|Stachys ketenoglui|species}}, {{taxlink|Stachys koelzii|species}}, {{taxlink|Stachys komarovii|species}}, {{taxlink|Stachys kotschyi|species}}, {{taxlink|Stachys kouyangensis|species}}, {{taxlink|Stachys kulalensis|species}}, {{taxlink|Stachys kuntzei|species}}, {{taxlink|Stachys kurdica|species}}, {{taxlink|Stachys lamarckii|species}}, {{taxlink|Stachys lamioides|species}}, {{taxlink|Stachys langmaniae|species}}, {{taxlink|Stachys lanigera|species}}, {{taxlink|Stachys latidens|species}}, {{taxlink|Stachys lavandulifolia|species}}, {{taxlink|Stachys laxa|species}}, {{taxlink|Stachys leucoglossa|species}}, {{taxlink|Stachys libanotica|species}}, {{taxlink|Stachys lindenii|species}}, {{taxlink|Stachys linearis|species}}, {{taxlink|Stachys longiflora|species}}, {{taxlink|Stachys longispicata|species}}, {{taxlink|Stachys lyallii|species}}, {{taxlink|Stachys macraei|species}}, {{taxlink|Stachys macrantha|species}}, {{taxlink|Stachys macrostachys|species}}, {{taxlink|Stachys macrotricha|species}}, {{taxlink|Stachys manantlanensis|species}}, {{taxlink|Stachys mandoniana|species}}, {{taxlink|Stachys marashica|species}}, {{taxlink|Stachys mardinensis|species}}, {{taxlink|Stachys maritima|species}}, {{taxlink|Stachys marrubiifolia|species}}, {{taxlink|Stachys mayorii|species}}, {{taxlink|Stachys megalodonta|species}}, {{taxlink|Stachys melampyroides|species}}, {{taxlink|Stachys melissifolia|species}}, {{taxlink|Stachys menthifolia|species}}, {{taxlink|Stachys menthoides|species}}, {{taxlink|Stachys mexicana|species}}, {{taxlink|Stachys mialhesii|species}}, {{taxlink|Stachys milanii|species}}, {{taxlink|Stachys mohinora|species}}, {{taxlink|Stachys mollissima|species}}, {{taxlink|Stachys moorei|species}}, {{taxlink|Stachys mouretii|species}}, {{taxlink|Stachys mucronata|species}}, {{taxlink|Stachys multicaulis|species}}, {{taxlink|Stachys munzurdagensis|species}}, {{taxlink|Stachys musili|species}}, {{taxlink|Stachys namazdaghensis|species}}, {{taxlink|Stachys natalensis|species}}, {{taxlink|Stachys nemorivaga|species}}, {{taxlink|Stachys nepetifolia|species}}, {{taxlink|Stachys nephrophylla|species}}, {{taxlink|Stachys neurocalycina|species}}, {{taxlink|Stachys nigricans|species}}, {{taxlink|Stachys nivea|species}}, {{taxlink|Stachys nubilorum|species}}, {{taxlink|Stachys obliqua|species}}, {{taxlink|Stachys oblongifolia|species}}, {{taxlink|Stachys obscura|species}}, {{taxlink|Stachys obtusicrena|species}}, {{taxlink|Stachys obtusifolia|species}}, {{taxlink|Stachys ochroleuca|species}}, {{taxlink|Stachys ocymastrum|species}}, {{taxfmt|Stachys officinalis|species}}, {{taxlink|Stachys oligantha|species}}, {{taxlink|Stachys oreophila|species}}, {{taxlink|Stachys ossetica|species}}, {{taxlink|Stachys pacifica|species}}, {{taxlink|Stachys palaestina|species}}, {{taxlink|Stachys palustris|species}}, {{taxlink|Stachys paneiana|species}}, {{taxlink|Stachys pannosa|species}}, {{taxlink|Stachys parolinii|species}}, {{taxlink|Stachys parviflora|species}}, {{taxlink|Stachys pauli|species}}, {{taxlink|Stachys penanevada|species}}, {{taxlink|Stachys persepolitana|species}}, {{taxlink|Stachys persica|species}}, {{taxlink|Stachys peruviana|species}}, {{taxlink|Stachys petrokosmos|species}}, {{taxlink|Stachys philippiana|species}}, {{taxlink|Stachys pilifera|species}}, {{taxlink|Stachys pilosa|species}}, {{taxlink|Stachys pilosissima|species}}, {{taxlink|Stachys pinardii|species}}, {{taxlink|Stachys pinetorum|species}}, {{taxlink|Stachys pittieri|species}}, {{taxlink|Stachys plumosa|species}}, {{taxlink|Stachys pradica|species}}, {{taxlink|Stachys pringlei|species}}, {{taxlink|Stachys pseudobombycina|species}}, {{taxlink|Stachys pseudofloccosa|species}}, {{taxlink|Stachys pseudohumifusa|species}}, {{taxlink|Stachys pseudonigricans|species}}, {{taxlink|Stachys pseudophlomis|species}}, {{taxlink|Stachys pseudopinardii|species}}, {{taxlink|Stachys pubescens|species}}, {{taxlink|Stachys pumila|species}}, {{taxlink|Stachys pusilla|species}}, {{taxlink|Stachys pycnantha|species}}, {{taxlink|Stachys pyramidalis|species}}, {{taxlink|Stachys radicans|species}}, {{taxlink|Stachys ramosissima|species}}, {{taxlink|Stachys recta|species}}, {{taxlink|Stachys rehmannii|species}}, {{taxlink|Stachys reptans|species}}, {{taxlink|Stachys reticulata|species}}, {{taxlink|Stachys riederi|species}}, {{taxlink|Stachys rigida|species}}, {{taxlink|Stachys riparia|species}}, {{taxlink|Stachys rivularis|species}}, {{taxlink|Stachys rizeensis|species}}, {{taxlink|Stachys rosea|species}}, {{taxlink|Stachys rothrockii|species}}, {{taxlink|Stachys rotundifolia|species}}, {{taxlink|Stachys rubella|species}}, {{taxlink|Stachys rudatisii|species}}, {{taxlink|Stachys rugosa|species}}, {{taxlink|Stachys rupestris|species}}, {{taxlink|Stachys salisii|species}}, {{taxlink|Stachys sanchezii|species}}, {{taxlink|Stachys sandersii|species}}, {{taxlink|Stachys saturejoides|species}}, {{taxlink|Stachys saxicola|species}}, {{taxlink|Stachys scaberula|species}}, {{taxlink|Stachys scabrida|species}}, {{taxlink|Stachys scardica|species}}, {{taxlink|Stachys schimperi|species}}, {{taxlink|Stachys schtschegleevii|species}}, {{taxlink|Stachys serbica|species}}, {{taxlink|Stachys sericantha|species}}, {{taxlink|Stachys sericea|species}}, {{taxlink|Stachys sericophylla|species}}, {{taxlink|Stachys sessilifolia|species}}, {{taxlink|Stachys sessilis|species}}, {{taxlink|Stachys setifera|species}}, {{taxlink|Stachys siamensis|species}}, {{taxlink|Stachys simplex|species}}, {{taxlink|Stachys sivasica|species}}, {{taxlink|Stachys sosnowskyi|species}}, {{taxlink|Stachys sparsipilosa|species}}, {{taxlink|Stachys spathulata|species}}, {{taxlink|Stachys spectabiliformis|species}}, {{taxlink|Stachys spectabilis|species}}, {{taxlink|Stachys speluncarum|species}}, {{taxlink|Stachys sphaerodonta|species}}, {{taxlink|Stachys spinosa|species}}, {{taxlink|Stachys spinulosa|species}}, {{taxlink|Stachys spreitzenhoferi|species}}, {{taxlink|Stachys sprucei|species}}, {{taxlink|Stachys spruneri|species}}, {{taxlink|Stachys stebbinsii|species}}, {{taxlink|Stachys stricta|species}}, {{taxlink|Stachys strictiflora|species}}, {{taxlink|Stachys subaphylla|species}}, {{taxlink|Stachys sublobata|species}}, {{taxlink|Stachys subnuda|species}}, {{taxlink|Stachys swainsonii|species}}, {{taxlink|Stachys taliensis|species}}, {{taxlink|Stachys talyschensis|species}}, {{taxlink|Stachys tenerrima|species}}, {{taxlink|Stachys tenuifolia|species}}, {{taxlink|Stachys terekensis|species}}, {{taxlink|Stachys tetragona|species}}, {{taxlink|Stachys thirkei|species}}, {{taxlink|Stachys thunbergii|species}}, {{taxlink|Stachys tibetica|species}}, {{taxlink|Stachys tmolea|species}}, {{taxlink|Stachys torresii|species}}, {{taxlink|Stachys tournefortii|species}}, {{taxlink|Stachys trichophylla|species}}, {{taxlink|Stachys trinervis|species}}, {{taxlink|Stachys truncata|species}}, {{taxlink|Stachys tschatkalensis|species}}, {{taxlink|Stachys tubulosa|species}}, {{taxlink|Stachys tundjeliensis|species}}, {{taxlink|Stachys turcomanica|species}}, {{taxlink|Stachys turkestanica|species}}, {{taxlink|Stachys turneri|species}}, {{taxlink|Stachys tymphaea|species}}, {{taxlink|Stachys tysonii|species}}, {{taxlink|Stachys uniflora|species}}, {{taxlink|Stachys urticoides|species}}, {{taxlink|Stachys venezuelana|species}}, {{taxlink|Stachys venulosa|species}}, {{taxlink|Stachys veroniciformis|species}}, {{taxlink|Stachys virgata|species}}, {{taxlink|Stachys viscosa|species}}, {{taxlink|Stachys viticina|species}}, {{taxlink|Stachys vulnerabilis|species}}, {{taxlink|Stachys willemsei|species}}, {{taxlink|Stachys woronowii|species}}, {{taxlink|Stachys xanthantha|species}}, {{taxlink|Stachys yemenensis|species}}, {{taxlink|Stachys yildirimlii|species}}, {{taxlink|Stachys zeyheri|species}}, {{taxlink|Stachys zoharyana|species}} {{qualifier|other species}} <end>
 Page 697 char siu: Found match for regex: <begin> * {{IPA|en|/t͡ʃɑ siu̯/|a=HK}}<!--more traditional transcription /t͡ʃɑ sjuː/, but this would imply yod-coalescence which did not occur here--> <end>
-Page 698 kartefour: Found match for regex: <begin> * {{IPA|mul|[ˈkaˈteˈfoa]}}<ref>That is, with each syllable stressed. Analogy with other code words, which are all [[non-rhotic]], suggests the ''R'' marks vowel quality. Final element like NATO/ICAO {{m|mul|four}}. International Maritime Organisation (2005). ''International Code of Signals'', p. 22–23. Fourth edition, London.</ref> <end>
-Page 699 Ixora: Found match for regex: <begin> * {{sense|genus}} {{taxlink|Ixora coccinea|species}}&nbsp;- type species; for other species see {{specieslite|i=1}}<!--{{taxlink|Ixora accedens|species}}, {{taxlink|Ixora aciculiflora|species}}, {{taxlink|Ixora acuminata|species}}, {{taxlink|Ixora acuminatissima|species}}, {{taxlink|Ixora acuticauda|species}}, {{taxlink|Ixora aegialodes|species}}, {{taxlink|Ixora agasthyamalayana|species}}, {{taxlink|Ixora aggregata|species}}, {{taxlink|Ixora agostiniana|species}}, {{taxlink|Ixora akkeringae|species}}, {{taxlink|Ixora alba|species}}, {{taxlink|Ixora albersii|species}}, {{taxlink|Ixora aluminicola|species}}, {{taxlink|Ixora amapaensis|species}}, {{taxlink|Ixora amherstiensis|species}}, {{taxlink|Ixora amoena|species}}, {{taxlink|Ixora amplexicaulis|species}}, {{taxlink|Ixora amplexifolia|species}}, {{taxlink|Ixora amplifolia|species}}, {{taxlink|Ixora andamanensis|species}}, {{taxlink|Ixora aneimenodesma|species}}, {{taxlink|Ixora aneityensis|species}}, {{taxlink|Ixora angustilimba|species}}, {{taxlink|Ixora aphylla|species}}, {{taxlink|Ixora archboldii|species}}, {{taxlink|Ixora arestantha|species}}, {{taxlink|Ixora asme|species}}, {{taxlink|Ixora athroantha|species}}, {{taxlink|Ixora auricularis|species}}, {{taxlink|Ixora auriculata|species}}, {{taxlink|Ixora aurorea|species}}, {{taxlink|Ixora backeri|species}}, {{taxlink|Ixora bahiensis|species}}, {{taxlink|Ixora baileyana|species}}, {{taxlink|Ixora balakrishnii|species}}, {{taxlink|Ixora balansae|species}}, {{taxlink|Ixora baldwinii|species}}, {{taxlink|Ixora balinensis|species}}, {{taxlink|Ixora bancana|species}}, {{taxlink|Ixora banjoana|species}}, {{taxlink|Ixora barbata|species}}, {{taxlink|Ixora barberae|species}}, {{taxlink|Ixora bartlingii|species}}, {{taxlink|Ixora batesii|species}}, {{taxlink|Ixora batuensis|species}}, {{taxlink|Ixora bauchiensis|species}}, {{taxlink|Ixora beckleri|species}}, {{taxlink|Ixora beddomei|species}}, {{taxlink|Ixora bemangidiensis|species}}, {{taxlink|Ixora bernieriana|species}}, {{taxlink|Ixora betongensis|species}}, {{taxlink|Ixora bibracteata|species}}, {{taxlink|Ixora biflora|species}}, {{taxlink|Ixora birmahica|species}}, {{taxlink|Ixora blumei|species}}, {{taxlink|Ixora borneensis|species}}, {{taxlink|Ixora bougainvilliae|species}}, {{taxlink|Ixora brachiata|species}}, {{taxlink|Ixora brachyantha|species}}, {{taxlink|Ixora brachyanthera|species}}, {{taxlink|Ixora brachycotyla|species}}, {{taxlink|Ixora brachypoda|species}}, {{taxlink|Ixora brachypogon|species}}, {{taxlink|Ixora brachyura|species}}, {{taxlink|Ixora bracteata|species}}, {{taxlink|Ixora bracteolaris|species}}, {{taxlink|Ixora bracteolata|species}}, {{taxlink|Ixora brandisiana|species}}, {{taxlink|Ixora brassii|species}}, {{taxlink|Ixora brevicaudata|species}}, {{taxlink|Ixora brevifolia|species}}, {{taxlink|Ixora breviloba|species}}, {{taxlink|Ixora brevipedunculata|species}}, {{taxlink|Ixora brunnescens|species}}, {{taxlink|Ixora brunonis|species}}, {{taxlink|Ixora bullata|species}}, {{taxlink|Ixora burundiensis|species}}, {{taxlink|Ixora butterwickii|species}}, {{taxlink|Ixora buxina|species}}, {{taxlink|Ixora calcicola|species}}, {{taxlink|Ixora calliantha|species}}, {{taxlink|Ixora callithyrsa|species}}, {{taxlink|Ixora calycina|species}}, {{taxlink|Ixora cambodiana|species}}, {{taxlink|Ixora capillaris|species}}, {{taxlink|Ixora capitulifera|species}}, {{taxlink|Ixora capituliflora|species}}, {{taxlink|Ixora carewii|species}}, {{taxlink|Ixora casei|species}}, {{taxlink|Ixora caudata|species}}, {{taxlink|Ixora cauliflora|species}}, {{taxlink|Ixora celebica|species}}, {{taxlink|Ixora cephalophora|species}}, {{taxlink|Ixora ceramensis|species}}, {{taxlink|Ixora chartacea|species}}, {{taxlink|Ixora chinensis|species}}, {{taxlink|Ixora cibdela|species}}, {{taxlink|Ixora cincta|species}}, {{taxlink|Ixora clementium|species}}, {{taxlink|Ixora clerodendron|species}}, {{taxlink|Ixora coffeoides|species}}, {{taxlink|Ixora collina|species}}, {{taxlink|Ixora collinsae|species}}, {{taxlink|Ixora comptonii|species}}, {{taxlink|Ixora concinna|species}}, {{taxlink|Ixora conferta|species}}, {{taxlink|Ixora confertiflora|species}}, {{taxlink|Ixora confertior|species}}, {{taxlink|Ixora congesta|species}}, {{taxlink|Ixora coralloraphis|species}}, {{taxlink|Ixora cordata|species}}, {{taxlink|Ixora cordifolia|species}}, {{taxlink|Ixora coriifolia|species}}, {{taxlink|Ixora coronata|species}}, {{taxlink|Ixora cowanii|species}}, {{taxlink|Ixora crassifolia|species}}, {{taxlink|Ixora cremixora|species}}, {{taxlink|Ixora cumingiana|species}}, {{taxlink|Ixora cuneata|species}}, {{taxlink|Ixora cuneifolia|species}}, {{taxlink|Ixora curtisii|species}}, {{taxlink|Ixora cuspidata|species}}, {{taxlink|Ixora daemonia|species}}, {{taxlink|Ixora davisii|species}}, {{taxlink|Ixora deciduiflora|species}}, {{taxlink|Ixora decora|species}}, {{taxlink|Ixora decus-silvae|species}}, {{taxlink|Ixora delicatula|species}}, {{taxlink|Ixora deliensis|species}}, {{taxlink|Ixora delpyana|species}}, {{taxlink|Ixora densiflora|species}}, {{taxlink|Ixora diversifolia|species}}, {{taxlink|Ixora djambica|species}}, {{taxlink|Ixora dolichophylla|species}}, {{taxlink|Ixora dolichothyrsa|species}}, {{taxlink|Ixora dongnaiensis|species}}, {{taxlink|Ixora doreensis|species}}, {{taxlink|Ixora dorgelonis|species}}, {{taxlink|Ixora duckei|species}}, {{taxlink|Ixora dzumacensis|species}}, {{taxlink|Ixora ebarbata|species}}, {{taxlink|Ixora ebracteolata|species}}, {{taxlink|Ixora effusa|species}}, {{taxlink|Ixora elegans|species}}, {{taxlink|Ixora elongata|species}}, {{taxlink|Ixora eludens|species}}, {{taxlink|Ixora emirnensis|species}}, {{taxlink|Ixora endertii|species}}, {{taxlink|Ixora engganensis|species}}, {{taxlink|Ixora ensifolia|species}}, {{taxlink|Ixora eriantha|species}}, {{taxlink|Ixora erythrocarpa|species}}, {{taxlink|Ixora eugenioides|species}}, {{taxlink|Ixora euosmia|species}}, {{taxlink|Ixora fallax|species}}, {{taxlink|Ixora farinosa|species}}, {{taxlink|Ixora faroensis|species}}, {{taxlink|Ixora fastigiata|species}}, {{taxlink|Ixora ferrea|species}}, {{taxlink|Ixora filiflora|species}}, {{taxlink|Ixora filipendula|species}}, {{taxlink|Ixora filipes|species}}, {{taxlink|Ixora filmeri|species}}, {{taxlink|Ixora finlaysoniana|species}}, {{taxlink|Ixora flagrans|species}}, {{taxlink|Ixora flavescens|species}}, {{taxlink|Ixora floribunda|species}}, {{taxlink|Ixora florida|species}}, {{taxlink|Ixora foliicalyx|species}}, {{taxlink|Ixora foliosa|species}}, {{taxlink|Ixora foonchewii|species}}, {{taxlink|Ixora forbesii|species}}, {{taxlink|Ixora fragrans|species}}, {{taxlink|Ixora francavillana|species}}, {{taxlink|Ixora francii|species}}, {{taxlink|Ixora fucosa|species}}, {{taxlink|Ixora fugiens|species}}, {{taxlink|Ixora fulgens|species}}, {{taxlink|Ixora fulgida|species}}, {{taxlink|Ixora fulviflora|species}}, {{taxlink|Ixora funckii|species}}, {{taxlink|Ixora fusca|species}}, {{taxlink|Ixora fuscescens|species}}, {{taxlink|Ixora gamblei|species}}, {{taxlink|Ixora gardneriana|species}}, {{taxlink|Ixora gibbsiae|species}}, {{taxlink|Ixora gigantea|species}}, {{taxlink|Ixora gigantifolia|species}}, {{taxlink|Ixora glaucina|species}}, {{taxlink|Ixora glomeruliflora|species}}, {{taxlink|Ixora goalparensis|species}}, {{taxlink|Ixora graciliflora|species}}, {{taxlink|Ixora grandifolia|species}}, {{taxlink|Ixora granulata|species}}, {{taxlink|Ixora greenwoodiana|species}}, {{taxlink|Ixora guillotii|species}}, {{taxlink|Ixora guineensis|species}}, {{taxlink|Ixora guluensis|species}}, {{taxlink|Ixora gyropogon|species}}, {{taxlink|Ixora hainanensis|species}}, {{taxlink|Ixora hajupensis|species}}, {{taxlink|Ixora hallieri|species}}, {{taxlink|Ixora hartiana|species}}, {{taxlink|Ixora harveyi|species}}, {{taxlink|Ixora havilandii|species}}, {{taxlink|Ixora helwigii|species}}, {{taxlink|Ixora henryi|species}}, {{taxlink|Ixora heterodoxa|species}}, {{taxlink|Ixora hiernii|species}}, {{taxlink|Ixora himantophylla|species}}, {{taxlink|Ixora hippoperifera|species}}, {{taxlink|Ixora homolleae|species}}, {{taxlink|Ixora hookeri|species}}, {{taxlink|Ixora humblotii|species}}, {{taxlink|Ixora hymenophylla|species}}, {{taxlink|Ixora ilocana|species}}, {{taxlink|Ixora imitans|species}}, {{taxlink|Ixora inaequifolia|species}}, {{taxlink|Ixora inexpecta|species}}, {{taxlink|Ixora inodora|species}}, {{taxlink|Ixora insignis|species}}, {{taxlink|Ixora insularum|species}}, {{taxlink|Ixora intensa|species}}, {{taxlink|Ixora intermedia|species}}, {{taxlink|Ixora intropilosa|species}}, {{taxlink|Ixora inundata|species}}, {{taxlink|Ixora irosinensis|species}}, {{taxlink|Ixora iteaphylla|species}}, {{taxlink|Ixora iteoidea|species}}, {{taxlink|Ixora jacobsonii|species}}, {{taxlink|Ixora jaherii|species}}, {{taxlink|Ixora javanica|species}}, {{taxlink|Ixora johnsonii|species}}, {{taxlink|Ixora jucunda|species}}, {{taxlink|Ixora junghuhnii|species}}, {{taxlink|Ixora kachinensis|species}}, {{taxlink|Ixora kaniensis|species}}, {{taxlink|Ixora karimatica|species}}, {{taxlink|Ixora katchalensis|species}}, {{taxlink|Ixora kavalliana|species}}, {{taxlink|Ixora keenanii|species}}, {{taxlink|Ixora keithii|species}}, {{taxlink|Ixora kerrii|species}}, {{taxlink|Ixora kerstingii|species}}, {{taxlink|Ixora keyensis|species}}, {{taxlink|Ixora killipii|species}}, {{taxlink|Ixora kinabaluensis|species}}, {{taxlink|Ixora kingdon-wardii|species}}, {{taxlink|Ixora kingstoni|species}}, {{taxlink|Ixora kjellbergii|species}}, {{taxlink|Ixora knappiae|species}}, {{taxlink|Ixora kochii|species}}, {{taxlink|Ixora koordersii|species}}, {{taxlink|Ixora korthalsiana|species}}, {{taxlink|Ixora krewanhensis|species}}, {{taxlink|Ixora kuakuensis|species}}, {{taxlink|Ixora kurziana|species}}, {{taxlink|Ixora labuanensis|species}}, {{taxlink|Ixora lacei|species}}, {{taxlink|Ixora lacuum|species}}, {{taxlink|Ixora lakshnakarae|species}}, {{taxlink|Ixora lanceolaria|species}}, {{taxlink|Ixora lanceolata|species}}, {{taxlink|Ixora lancifolia|species}}, {{taxlink|Ixora lancisepala|species}}, {{taxlink|Ixora laotica|species}}, {{taxlink|Ixora laurentii|species}}, {{taxlink|Ixora lawsonii|species}}, {{taxlink|Ixora laxiflora|species}}, {{taxlink|Ixora le-testui|species}}, {{taxlink|Ixora lebangharae|species}}, {{taxlink|Ixora lecardii|species}}, {{taxlink|Ixora ledermannii|species}}, {{taxlink|Ixora leptopus|species}}, {{taxlink|Ixora leucocarpa|species}}, {{taxlink|Ixora leytensis|species}}, {{taxlink|Ixora liberiensis|species}}, {{taxlink|Ixora linggensis|species}}, {{taxlink|Ixora littoralis|species}}, {{taxlink|Ixora lobbii|species}}, {{taxlink|Ixora loerzingii|species}}, {{taxlink|Ixora longibracteata|species}}, {{taxlink|Ixora longiloba|species}}, {{taxlink|Ixora longipedunculata|species}}, {{taxlink|Ixora longipes|species}}, {{taxlink|Ixora longissima|species}}, {{taxlink|Ixora longistipula|species}}, {{taxlink|Ixora lucida|species}}, {{taxlink|Ixora lunutica|species}}, {{taxlink|Ixora luzoniensis|species}}, {{taxlink|Ixora macgregorii|species}}, {{taxlink|Ixora macilenta|species}}, {{taxlink|Ixora macrantha|species}}, {{taxlink|Ixora macrocotyla|species}}, {{taxlink|Ixora macrophylla|species}}, {{taxlink|Ixora macrosiphon|species}}, {{taxlink|Ixora macrothyrsa|species}}, {{taxlink|Ixora magnifica|species}}, {{taxlink|Ixora makassarica|species}}, {{taxlink|Ixora malabarica|species}}, {{taxlink|Ixora malacophylla|species}}, {{taxlink|Ixora malaica|species}}, {{taxlink|Ixora malayana|species}}, {{taxlink|Ixora mandalayensis|species}}, {{taxlink|Ixora mangabensis|species}}, {{taxlink|Ixora mangoliensis|species}}, {{taxlink|Ixora marquesensis|species}}, {{taxlink|Ixora marsdenii|species}}, {{taxlink|Ixora martinsii|species}}, {{taxlink|Ixora maxima|species}}, {{taxlink|Ixora maymyensis|species}}, {{taxlink|Ixora mearnsii|species}}, {{taxlink|Ixora meeboldii|species}}, {{taxlink|Ixora megalothyrsa|species}}, {{taxlink|Ixora mekongensis|species}}, {{taxlink|Ixora membranifolia|species}}, {{taxlink|Ixora mentangis|species}}, {{taxlink|Ixora mercaraica|species}}, {{taxlink|Ixora merguensis|species}}, {{taxlink|Ixora microphylla|species}}, {{taxlink|Ixora mildbraedii|species}}, {{taxlink|Ixora miliensis|species}}, {{taxlink|Ixora minahassae|species}}, {{taxlink|Ixora mindanaensis|species}}, {{taxlink|Ixora minutiflora|species}}, {{taxlink|Ixora miquelii|species}}, {{taxlink|Ixora mirabilis|species}}, {{taxlink|Ixora mjoebergii|species}}, {{taxlink|Ixora mocquerysii|species}}, {{taxlink|Ixora mollirama|species}}, {{taxlink|Ixora moluccana|species}}, {{taxlink|Ixora mooreensis|species}}, {{taxlink|Ixora moszkowskii|species}}, {{taxlink|Ixora motleyi|species}}, {{taxlink|Ixora mucronata|species}}, {{taxlink|Ixora muelleri|species}}, {{taxlink|Ixora multibracteata|species}}, {{taxlink|Ixora myitkyinensis|species}}, {{taxlink|Ixora myriantha|species}}, {{taxlink|Ixora myrsinoides|species}}, {{taxlink|Ixora myrtifolia|species}}, {{taxlink|Ixora namatanaica|species}}, {{taxlink|Ixora nana|species}}, {{taxlink|Ixora nandarivatensis|species}}, {{taxlink|Ixora narcissodora|species}}, {{taxlink|Ixora natunensis|species}}, {{taxlink|Ixora nematopoda|species}}, {{taxlink|Ixora neocaledonica|species}}, {{taxlink|Ixora neriifolia|species}}, {{taxlink|Ixora nicaraguensis|species}}, {{taxlink|Ixora nicobarica|species}}, {{taxlink|Ixora nienkui|species}}, {{taxlink|Ixora nigerica|species}}, {{taxlink|Ixora nigricans|species}}, {{taxlink|Ixora nimbana|species}}, {{taxlink|Ixora nitidula|species}}, {{taxlink|Ixora nonantha|species}}, {{taxlink|Ixora notoniana|species}}, {{taxlink|Ixora novemnervia|species}}, {{taxlink|Ixora oblongifolia|species}}, {{taxlink|Ixora obtusiloba|species}}, {{taxlink|Ixora odoratiflora|species}}, {{taxlink|Ixora oligantha|species}}, {{taxlink|Ixora ooumuensis|species}}, {{taxlink|Ixora opaca|species}}, {{taxlink|Ixora oresitropha|species}}, {{taxlink|Ixora orohenensis|species}}, {{taxlink|Ixora orophila|species}}, {{taxlink|Ixora orovilleae|species}}, {{taxlink|Ixora otophora|species}}, {{taxlink|Ixora ovalifolia|species}}, {{taxlink|Ixora pachyphylla|species}}, {{taxlink|Ixora palawaensis|species}}, {{taxlink|Ixora palembangensis|species}}, {{taxlink|Ixora paludosa|species}}, {{taxlink|Ixora panurensis|species}}, {{taxlink|Ixora paradoxalis|species}}, {{taxlink|Ixora paraopaca|species}}, {{taxlink|Ixora paraopara|species}}, {{taxlink|Ixora parkeri|species}}, {{taxlink|Ixora parkinsoniana|species}}, {{taxlink|Ixora patens|species}}, {{taxlink|Ixora patula|species}}, {{taxlink|Ixora pauciflora|species}}, {{taxlink|Ixora pauper|species}}, {{taxlink|Ixora pavetta|species}}, {{taxlink|Ixora pedionoma|species}}, {{taxlink|Ixora pelagica|species}}, {{taxlink|Ixora pendula|species}}, {{taxlink|Ixora peruviana|species}}, {{taxlink|Ixora phellopus|species}}, {{taxlink|Ixora philippinensis|species}}, {{taxlink|Ixora pierrei|species}}, {{taxlink|Ixora pilosa|species}}, {{taxlink|Ixora piresii|species}}, {{taxlink|Ixora platythyrsa|species}}, {{taxlink|Ixora polita|species}}, {{taxlink|Ixora polyantha|species}}, {{taxlink|Ixora polycephala|species}}, {{taxlink|Ixora potaroensis|species}}, {{taxlink|Ixora praestans|species}}, {{taxlink|Ixora praetermissa|species}}, {{taxlink|Ixora prolixa|species}}, {{taxlink|Ixora pseudoacuminata|species}}, {{taxlink|Ixora pseudoamboinica|species}}, {{taxlink|Ixora pseudojavanica|species}}, {{taxlink|Ixora pubescens|species}}, {{taxlink|Ixora pubiflora|species}}, {{taxlink|Ixora pubifolia|species}}, {{taxlink|Ixora pubigera|species}}, {{taxlink|Ixora pubirama|species}}, {{taxlink|Ixora pudica|species}}, {{taxlink|Ixora pulcherrima|species}}, {{taxlink|Ixora pyrantha|species}}, {{taxlink|Ixora pyrrhostaura|species}}, {{taxlink|Ixora raiateensis|species}}, {{taxlink|Ixora raivavaensis|species}}, {{taxlink|Ixora rangonensis|species}}, {{taxlink|Ixora recurva|species}}, {{taxlink|Ixora reducta|species}}, {{taxlink|Ixora reticulata|species}}, {{taxlink|Ixora rhododactyla|species}}, {{taxlink|Ixora richardiana|species}}, {{taxlink|Ixora riparum|species}}, {{taxlink|Ixora rivalis|species}}, {{taxlink|Ixora robinsonii|species}}, {{taxlink|Ixora roemeri|species}}, {{taxlink|Ixora romburghii|species}}, {{taxlink|Ixora rosacea|species}}, {{taxlink|Ixora rosea|species}}, {{taxlink|Ixora roseituba|species}}, {{taxlink|Ixora rubrinervis|species}}, {{taxlink|Ixora rufa|species}}, {{taxlink|Ixora rugosirama|species}}, {{taxlink|Ixora rugulosa|species}}, {{taxlink|Ixora ruttenii|species}}, {{taxlink|Ixora sabangensis|species}}, {{taxlink|Ixora salicifolia|species}}, {{taxlink|Ixora salwenensis|species}}, {{taxlink|Ixora samarensis|species}}, {{taxlink|Ixora sambiranensis|species}}, {{taxlink|Ixora samoensis|species}}, {{taxlink|Ixora sandwithiana|species}}, {{taxlink|Ixora saulierei|species}}, {{taxlink|Ixora scandens|species}}, {{taxlink|Ixora scheffleri|species}}, {{taxlink|Ixora schlechteri|species}}, {{taxlink|Ixora schomburgkiana|species}}, {{taxlink|Ixora scortechinii|species}}, {{taxlink|Ixora seretii|species}}, {{taxlink|Ixora sessililimba|species}}, {{taxlink|Ixora setchellii|species}}, {{taxlink|Ixora siamensis|species}}, {{taxlink|Ixora siantanensis|species}}, {{taxlink|Ixora simalurensis|species}}, {{taxlink|Ixora siphonantha|species}}, {{taxlink|Ixora sivarajiana|species}}, {{taxlink|Ixora smeruensis|species}}, {{taxlink|Ixora solomonensium|species}}, {{taxlink|Ixora somosomaensis|species}}, {{taxlink|Ixora sparsiflora|species}}, {{taxlink|Ixora sparsifolia|species}}, {{taxlink|Ixora spathoidea|species}}, {{taxlink|Ixora spectabilis|species}}, {{taxlink|Ixora spirei|species}}, {{taxlink|Ixora spruceana|species}}, {{taxlink|Ixora st.-johnii|species}}, {{taxlink|Ixora steenisii|species}}, {{taxlink|Ixora stenophylla|species}}, {{taxlink|Ixora stenothyrsa|species}}, {{taxlink|Ixora stenura|species}}, {{taxlink|Ixora stipulata|species}}, {{taxlink|Ixora stokesii|species}}, {{taxlink|Ixora storckii|species}}, {{taxlink|Ixora straminea|species}}, {{taxlink|Ixora subauriculata|species}}, {{taxlink|Ixora subsessilis|species}}, {{taxlink|Ixora sulaensis|species}}, {{taxlink|Ixora sumbawensis|species}}, {{taxlink|Ixora symphorantha|species}}, {{taxlink|Ixora synactica|species}}, {{taxlink|Ixora syringiflora|species}}, {{taxlink|Ixora talaudensis|species}}, {{taxlink|Ixora tanzaniensis|species}}, {{taxlink|Ixora tavoyana|species}}, {{taxlink|Ixora temehaniensis|species}}, {{taxlink|Ixora temptans|species}}, {{taxlink|Ixora tenelliflora|species}}, {{taxlink|Ixora tengerensis|species}}, {{taxlink|Ixora tenuiflora|species}}, {{taxlink|Ixora tenuifolia|species}}, {{taxlink|Ixora tenuipedunculata|species}}, {{taxlink|Ixora tenuis|species}}, {{taxlink|Ixora thwaitesii|species}}, {{taxlink|Ixora tibetana|species}}, {{taxlink|Ixora tidorensis|species}}, {{taxlink|Ixora tigriomustax|species}}, {{taxlink|Ixora timorensis|species}}, {{taxlink|Ixora treubii|species}}, {{taxlink|Ixora triantha|species}}, {{taxlink|Ixora trichandra|species}}, {{taxlink|Ixora trichobotrys|species}}, {{taxlink|Ixora trichocalyx|species}}, {{taxlink|Ixora trimera|species}}, {{taxlink|Ixora tsangii|species}}, {{taxlink|Ixora tubiflora|species}}, {{taxlink|Ixora tunicata|species}}, {{taxlink|Ixora umbellata|species}}, {{taxlink|Ixora umbricola|species}}, {{taxlink|Ixora undulata|species}}, {{taxlink|Ixora upolensis|species}}, {{taxlink|Ixora urophylla|species}}, {{taxlink|Ixora venezuelica|species}}, {{taxlink|Ixora venulosa|species}}, {{taxlink|Ixora venusta|species}}, {{taxlink|Ixora versteegii|species}}, {{taxlink|Ixora verticillata|species}}, {{taxlink|Ixora vieillardii|species}}, {{taxlink|Ixora violacea|species}}, {{taxlink|Ixora vitiensis|species}}, {{taxlink|Ixora whitei|species}}, {{taxlink|Ixora williamsii|species}}, {{taxlink|Ixora winkleri|species}}, {{taxlink|Ixora woodii|species}}, {{taxlink|Ixora yaouhensis|species}}, {{taxlink|Ixora yavitensis|species}}, {{taxlink|Ixora ysabellae|species}}, {{taxlink|Ixora yunckeri|species}}, {{taxlink|Ixora yunnanensis|species}}, {{taxlink|Ixora zollingeriana|species}} <end>
 Page 700 prerhotic: Found match for regex: <begin> * {{l|en|pre-rhotic}} <end>
-Page 701 t'ye: Found match for regex: <begin> * {{IPA|en|/tjə/|/t͡ʃə/|q2=yod coalescence}} <end>
+Page 701 t'ye: Found match for regex: <begin> * {{IPA|en|/tjə/|/t͡ʃə/|a2=yod-coalescence}} <end>
 Page 702 jardineira: Found match for regex: <begin> * {{rhyme|pt|ejɾɐ|ɐjɾɐ|eɾɐ|q2=Portugal|q3=Brazil, Southern Portugal, yod dropping|s1=4}} <end>
 Page 703 Steller: Found match for regex: <begin> * {{homophones|en|steller|stellar|Stella|qq3=non-rhotic|stella|qq4=non-rhotic}} <end>
 Page 704 dghaisa: Found match for regex: <begin> * {{homophones|en|dicer|qq1=non-rhotic}} <end>
@@ -1068,48 +921,25 @@ Page 707 arrozico: Found match for regex: <begin> * {{IPA|lad|/a.ˈɾoziko/}} ('
 Page 708 Leith: Found match for regex: <begin> * {{homophone|en|leaf|leet|qq1=with [[th-fronting]]|qq2=with [[th-stopping]]}} <end>
 Page 709 kordio: Found match for regex: <begin> * {{l|io|kordiala||cardiac, hearty, cordial}} <end>
 Page 710 purgen: Found match for regex: <begin> * {{alter|enm|poorgyn|porge|porgyn|pourge|purge|purgyn}} <end>
-Page 711 Alexanders: Found match for regex: <begin> ** {{IPA|en|[ˌælɪɡˈzeəndɚz]|a=ae-tensing,rhotic}} <end>
-Page 711 Alexanders: Found match for regex: <begin> ** {{IPA|en|[ˌælɪɡˈzeəndəz]|a=ae-tensing,non-rhotic}} <end>
+Page 711 Alexanders: Found match for regex: <begin> ** {{IPA|en|[ˌælɪɡˈzeəndɚz]|a=æ-tensing,rhotic}} <end>
+Page 711 Alexanders: Found match for regex: <begin> ** {{IPA|en|[ˌælɪɡˈzeəndəz]|a=æ-tensing,non-rhotic}} <end>
 Page 712 ܚܕ: Found match for regex: <begin> * According to the Standard Koine a masculine cardinal number should be used when referring to an abstract number, e.g. in phone numbers, and also in every place where the word {{l|aii|ܡܸܢܝܵܢܵܐ|t=number}} can be used before the number, e.g. {{l|aii|[[ܐܘܿܛܘܿܒܘܼܣ]] ([[ܡܸܢܝܵܢܵܐ]]) [[ܚܲܕ݇]]|t=bus (number) one}}. <end>
 Page 713 khet: Found match for regex: <begin> * {{IPA|czt|/ˤet/}} (''h-dropping dialects'') <end>
 Page 714 d'aw: Found match for regex: <begin> * {{homophones|en|DAW|daw|door|qq3=in [[non-rhotic]] accents}} <end>
-Page 715 Ocrida: Found match for regex: <begin> * {{anagrams|it|a=acdior|-cardio|Coardi|Orcadi|cardio-|cordai|dacrio-|darico|dorica|radico|radicò|ricado|rodica}} <end>
-Page 716 non-prevocalic: Found match for regex: <begin> * {{pedia|Rhotic and non-rhotic accents}} <end>
 Page 717 Bourne: Found match for regex: <begin> ** {{IPA|en|/boːɹn/|a=rhotic}} <end>
-Page 717 Bourne: Found match for regex: <begin> ** {{IPA|en|/boən/|a=nonrhotic}} --> <end>
-Page 718 Riccardi: Found match for regex: <begin> * According to the 2010 United States Census, ''Riccardi'' is the 9839<sup>th</sup> most common surname in the United States, belonging to 3289 individuals. ''Riccardi'' is most common among White (93.13%) individuals. <end>
-Page 719 Sicard: Found match for regex: <begin> * According to the 2010 United States Census, ''Sicard'' is the 15147<sup>th</sup> most common surname in the United States, belonging to 1947 individuals. ''Sicard'' is most common among White (78.43%) individuals. <end>
-Page 720 Accardi: Found match for regex: <begin> * According to the 2010 United States Census, ''Accardi'' is the 17691<sup>st</sup> most common surname in the United States, belonging to 1586 individuals. ''Accardi'' is most common among White (96.72%) individuals. <end>
-Page 721 Scardino: Found match for regex: <begin> * According to the 2010 United States Census, ''Scardino'' is the 21495<sup>th</sup> most common surname in the United States, belonging to 1215 individuals. ''Scardino'' is most common among White (94.32%) individuals. <end>
-Page 722 Scardina: Found match for regex: <begin> * According to the 2010 United States Census, ''Scardina'' is the 24685<sup>th</sup> most common surname in the United States, belonging to 1011 individuals. ''Scardina'' is most common among White (93.77%) individuals. <end>
-Page 723 Picardi: Found match for regex: <begin> * According to the 2010 United States Census, ''Picardi'' is the 30889<sup>th</sup> most common surname in the United States, belonging to 753 individuals. ''Picardi'' is most common among White (91.5%) individuals. <end>
-Page 724 Biscardi: Found match for regex: <begin> * According to the 2010 United States Census, ''Biscardi'' is the 31824<sup>th</sup> most common surname in the United States, belonging to 725 individuals. ''Biscardi'' is most common among White (93.1%) individuals. <end>
-Page 725 mugga: Found match for regex: <begin> * {{hmp|en|mugger|qq1=in nonrhotic accents}} <end>
-Page 726 CLAM: Found match for regex: <begin> * {{IPA|en|[kleəm]|a=ae-tensing}} <end>
+Page 717 Bourne: Found match for regex: <begin> ** {{IPA|en|/boən/|a=non-rhotic}} --> <end>
+Page 725 mugga: Found match for regex: <begin> * {{hmp|en|mugger|qq1=in non-rhotic accents}} <end>
+Page 726 CLAM: Found match for regex: <begin> * {{IPA|en|[kleəm]|a=æ-tensing}} <end>
 Page 727 smur: Found match for regex: <begin> * {{IPA|en|/smɜːɹ/|a=UK,rhotic}} <end>
 Page 728 Nemetobriga: Found match for regex: <begin> * Hispania Epigraphica n. [http://eda-bea.es/pub/record_card_2.php?rec=16608 16608] <end>
 Page 729 Berisamum: Found match for regex: <begin> * Hispania Epigraphica n. [https://web.archive.org/web/20201217224426/http://eda-bea.es/pub/record_card_2.php?rec=18642 18642] <end>
 Page 730 Olca: Found match for regex: <begin> * Hispania Epigraphica n. [http://eda-bea.es/pub/record_card_2.php?rec=13989 13989] <end>
 Page 731 Serante: Found match for regex: <begin> * Hispania Epigraphica n. [http://eda-bea.es/pub/record_card_2.php?rec=20028 20028] <end>
-Page 732 sanduicheira: Found match for regex: <begin> * {{rhymes|pt|ejɾɐ|ɐjɾɐ|eɾɐ|q2=Portugal|q3=Brazil, with yod-dropping, Southern Portugal|s1=5}} <end>
-Page 733 Coardi: Found match for regex: <begin> * {{anagrams|it|a=acdior|-cardio|Ocrida|Orcadi|cardio-|cordai|dacrio-|darico|dorica|radico|radicò|ricado|rodica}} <end>
-Page 734 cidaroids: Found match for regex: <begin> * {{anagrams|en|a=acddiiors|Discordia|cardioids|caridoids}} <end>
-Page 735 meines Erachtens: Found match for regex: <begin> * {{IPA|de|/ˈmaɪ̯nəs ɛrˈaxtəns/|[ˈmaɪ̯.nəs ʔɛɐ̯ˈʔaχ.tn̩t͡s]|[ˈmaɪ̯.nə.s‿ɛɐ̯-]|[-tn̩s]|[-tən(t)s]}} <!-- elision of glottal stop in unstressed syllable de-facto standard --> <end>
-Page 736 haffi: Found match for regex: <begin> * {{IPA|jam|/ˈafi/}} {{lb|jam|[[h-dropping]] dialects}} <end>
 Page 737 aboat: Found match for regex: <begin> * This spelling has been used to represent [[w:Canadian raising|Canadian raising]]. <end>
 Page 738 把拉: Found match for regex: <begin> * {{cog|tl|pala|t=[[recompense]]; [[consequence]]; [[payment]] taken from someone}}, attested in the ''Vocabulario de la lengua tagala'' (1860),<ref>{{R:Vocabulario de la lengua tagala 1860|227}}</ref> although the [[glottal stop]] at the end IPA: {{IPAchar|/pɐˈlaʔ/}} denotes it as less likely. <end>
 Page 739 vanillar: Found match for regex: <begin> * {{hmp|en|vanilla}} {{q|non-rhotic}} <end>
-Page 740 C-Road: Found match for regex: <begin> * {{anagrams|en|a=acdor|Acord|Draco|cardo}} <end>
-Page 741 Template:U:hu:allomorphs-of-j: Found match for regex: <begin> *: '''[[-s#Hungarian|-s]]''' used in verbs ending in {{m|hu||-t}} and  {{m|hu||-s}}, compare {{w|yod coalescence}} <end>
-Page 742 Reconstruction:Proto-West Germanic/fra-: Found match for regex: <begin> * {{alt|gmw-pro|*far-|*fur-|*fir-}} <end>
-Page 743 Template:fa-IPA/documentation: Found match for regex: <begin> * FOR HAZARAGI AND KABULI fix h-dropping  <end>
-Page 744 vergemål: Found match for regex: <begin> * {{IPA|nb|[²ʋæɾ.ɡə.ˌmoːl]|a=flapped rhotic}} <end>
-Page 744 vergemål: Found match for regex: <begin> * {{IPA|nb|[²ʋæʁ.ɡə.ˌmoːl]|a=uvular rhotic}} <end>
-Page 745 orthic: Found match for regex: <begin> * {{anagrams|en|a=chiort|Ch'orti'|Chorti|hortic|rhotic|thoric|tricho-|trochi}} <end>
-Page 746 fyr-brand: Found match for regex: <begin> * {{alter|enm|ferbrond|firbrond|fuyrbrond|fyrbrond|fyrebrand|fir brond|fire brand|fire bronde|fur brond|fyr brond|feer-brond|fire-brand}} <end>
 Page 747 yawk: Found match for regex: <begin> * {{homophones|en|york}} {{q|in [[non-rhotic]] accents}} <end>
 Page 748 Laugher: Found match for regex: <begin> * {{hmp|en|lore|law}} {{q|non-rhotic}} <end>
-Page 749 Icard: Found match for regex: <begin> * According to the 2010 United States Census, ''Icard'' is the 36695<sup>th</sup> most common surname in the United States, belonging to 609 individuals. ''Icard'' is most common among White (92.61%) individuals. <end>
 Page 750 unaspirated h: Found match for regex: <begin> * {{l|en|h-dropping}} <end>
 Page 751 periworkout: Found match for regex: <begin> * {{IPA|en|/ˈpɛɹiˌwɜɹk.aʊ̯t/|a=rhotic}} <end>
 Page 752 Piccard: Found match for regex: <begin> * According to data collected by Forebears in 2014, ''Piccard'' is the 92374<sup>th</sup> most common surname in the United States, belonging to 274 individuals. <end>
