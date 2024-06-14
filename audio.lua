@@ -195,6 +195,12 @@ function export.format_audio(data)
 		end
 		ins(wrap_qual_css(")", "brac"))
 	end
+	
+	if data.bad then
+		track("bad-audio")
+		track("bad-audio/" .. data.lang:getCode())
+		ins(" " .. wrap_css("[bad recording: " .. data.bad .. "]", "bad-audio-note"))
+	end
 
 	local posttext = make_td_if(table.concat(posttext_parts))
 
@@ -202,7 +208,7 @@ function export.format_audio(data)
 <tr>%s<td class="audiofile">[[File:%s|noicon|175px]]</td><td class="audiometa" style="font-size: 80%%;">([[:File:%s|file]])</td>%s</tr>]=]
 	local text = template:format(pretext, data.file, data.file, posttext)
 
-	text = '<table class="audiotable" style="vertical-align: middle; display: inline-block; list-style: none; line-height: 1em; border-collapse: collapse;">' .. text .. "</table>"
+	text = '<table class="audiotable" style="vertical-align: middle; display: inline-block; list-style: none; line-height: 1em; border-collapse: collapse; margin: 0;">' .. text .. "</table>"
 
 	local stylesheet = require(template_styles_module)(audio_styles_css)
 	local categories =
@@ -354,6 +360,7 @@ function export.show(frame)
 		["lit"] = {},
 		["g"] = {},
 		["sc"] = {type = "script"},
+		["bad"] = {},
 		["nocat"] = {type = "boolean"},
 		["sort"] = {},
 		["pagename"] = {},
@@ -365,7 +372,7 @@ function export.show(frame)
 
 	-- Needed in construct_audio_textobj().
 	args.lang = lang
-	local textobj export.construct_audio_textobj(args)
+	local textobj = export.construct_audio_textobj(args)
 
 	local caption = args[2 + offset]
 	local nocaption
@@ -384,6 +391,7 @@ function export.show(frame)
 		nocaption = nocaption,
 		text = textobj,
 		IPA = args.IPA and rsplit(args.IPA, ",") or nil,
+		bad = args.bad,
 		nocat = args.nocat,
 		sort = args.sort,
 	}
