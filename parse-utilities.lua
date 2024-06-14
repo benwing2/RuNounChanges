@@ -192,6 +192,32 @@ function export.parse_multi_delimiter_balanced_segment_run(segment_run, delimite
 	return text_and_specs
 end
 
+--[==[
+Check whether a term contains top-level HTML. We want to distinguish inline modifiers from HTML. We assume an inline
+modifier is either a boolean modifier like <bor> or a prefix modifier like <tr:Miryem>. All other things inside of
+angle brackets, e.g. <span class="foo">, </span>, <br/>, etc., should be flagged as HTML (typically caused by wrapping
+an argument in {{m|...}}, {{af|...}} or similar, but sometimes specified directly, e.g. <sup>6</sup>). By default, we
+assume the tag in an inline modifier contains either letters, numbers, hyphens or underscore (but not spaces), and must
+either stand alone or be followed by a colon, leading to a default HTML-checking pattern of {"<[%w_%-]*[^%w_%-:>]"}.
+But this can be modified; e.g. [[Module:tl-pronunciation]] allows modifiers of the form <POS^DEFN> or
+<POS,POS,POS^DEFN>, and would need to use its own HTML pattern. It's important we restrict the check for HTML to
+top-level to allow for generated HTML inside of e.g. qualifier tags, such as foo<q:similar to {{m|fr|bar}}>.
+]==]
+function export.term_contains_top_level_html(term, html_pattern)
+	html_pattern = html_pattern or "<[%w_%-]*[^%w_%-:>]"
+	-- If no HTML anywhere, the answer is no.
+	if not term:find(html_pattern) then
+		return false
+	end
+	-- Otherwise, we have to call parse_balanced_segment_run() and check alternate runs at top level.
+	local runs = export.parse_balanced_segment_run(term, "<", ">")
+	for i = 2, #runs, 2 do
+		if runs[i]:find("^" .. html_pattern) then
+			return true
+		end
+	end
+	return false
+end
 
 --[==[
 Split a list of alternating textual runs of the format returned by `parse_balanced_segment_run` on `splitchar`. This
