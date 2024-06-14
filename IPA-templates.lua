@@ -1,95 +1,85 @@
 local export = {}
 
 local m_IPA = require("Module:IPA")
-local m_str_utils = require("Module:string utilities")
+local parameter_utilities_module = "Module:parameter utilities"
 local parse_utilities_module = "Module:parse utilities"
+local pron_qualifier_module = "Module:pron qualifier"
 local references_module = "Module:references"
 
-local rsplit = m_str_utils.split
-
 local function track(page)
-	require("Module:debug").track("IPA/" .. page)
+	require("Module:debug/track")("IPA/" .. page)
 	return true
-end
-
-local function split_on_comma(term)
-	if not term then
-		return nil
-	end
-	if term:find(",%s") then
-		return require(parse_utilities_module).split_on_comma(term)
-	else
-		return rsplit(term, ",")
-	end
 end
 
 -- Used for [[Template:IPA]].
 function export.IPA(frame)
 	local parent_args = frame:getParent().args
-	if parent_args.qual then
-		-- FIXME: Convert such uses to q1= (or at least qual1=).
-		track("bare-qual")
+	-- Track uses of n so they can be converted to ref.
+	-- Track uses of qual so they can be converted to q.
+	for k, v in pairs(parent_args) do
+		if type(k) == "string" and k:find("^n[0-9]*$") then
+			track("n")
+		end
+		if type(k) == "string" and k:find("^qual[0-9]*$") then
+			track("q")
+		end
 	end
 	local include_langname = frame.args.include_langname
-	local compat = parent_args["lang"]
+	local compat = parent_args.lang
 	local offset = compat and 0 or 1
+
 	local params = {
-		[compat and "lang" or 1] = {required = true, type = "language", default = "en"},
+		[compat and "lang" or 1] = {required = true, type = "language", etym_lang = true, default = "en"},
 		[1 + offset] = {list = true, disallow_holes = true},
-		["ref"] = {list = true, allow_holes = true},
-		-- Came before 'ref' but too obscure
+		-- Deprecated; don't use in new code. Came before 'ref' but too obscure.
 		["n"] = {list = true, allow_holes = true, alias_of = "ref"},
-		["a"] = {list = true, allow_holes = true, separate_no_index = true},
-		["aa"] = {list = true, allow_holes = true, separate_no_index = true},
-		["q"] = {list = true, allow_holes = true, separate_no_index = true},
-		["qq"] = {list = true, allow_holes = true, separate_no_index = true},
-		["qual"] = {list = true, allow_holes = true},
+		-- Deprecated; don't use in new code.
+		["qual"] = {list = true, allow_holes = true, separate_no_index = true, alias_of = "q"},
 		["nocount"] = {type = "boolean"},
+		["nocat"] = {type = "boolean"},
 		["sort"] = {},
 	}
-	
+
+	local param_mods = {}
+
+	local m_param_utils = require(parameter_utilities_module)
+
+	m_param_utils.augment_param_mods_with_pron_qualifiers(param_mods)
+	m_param_utils.augment_params_with_modifiers(params, param_mods)
+
 	local args = require("Module:parameters").process(parent_args, params)
+
 	local lang = args[compat and "lang" or 1]
 
-	local items = {}
-	
-	for i = 1, #args[1 + offset] do
-		local pron = args[1 + offset][i]
-		local refs = args["ref"][i]
-		if refs then
-			refs = require(references_module).parse_references(refs)
-		end
-		local qual = args["qual"][i]
-		if qual then
-			-- FIXME: Convert such uses to qN=.
-			track("qual")
-		end
-
-		require("Module:IPA/tracking").run_tracking(pron, lang)
-
-		table.insert(items, {
-			pron = pron,
-			refs = refs,
-			q = args.q[i] and {args.q[i]} or nil,
-			qq = args.qq[i] and {args.qq[i]} or nil,
-			a = split_on_comma(args.a[i]),
-			aa = split_on_comma(args.aa[i]),
-			-- FIXME, remove this
-			qualifiers = qual and {qual} or nil,
-		})
+	local items = m_param_utils.process_list_arguments {
+		args = args,
+		param_mods = param_mods,
+		termarg = 1 + offset,
+		term_dest = "pron",
+		track_module = "IPA",
+	}
+	for _, item in ipairs(items) do
+		require("Module:IPA/tracking").run_tracking(item.pron, lang)
 	end
 
-	return m_IPA.format_IPA_full {
+	local data = {
 		lang = lang,
 		items = items,
-		sort_key = args.sort,
 		no_count = args.nocount,
-		q = args.q.default and {args.q.default} or nil,
-		qq = args.qq.default and {args.qq.default} or nil,
-		a = split_on_comma(args.a.default),
-		aa = split_on_comma(args.aa.default),
+		nocat = args.nocat,
+		sort_key = args.sort,
 		include_langname = include_langname,
+		separator = "",
 	}
+	require(pron_qualifier_module).parse_qualifiers {
+		store_obj = data,
+		q = args.q.default,
+		qq = args.qq.default,
+		a = args.a.default,
+		aa = args.aa.default,
+	}
+
+	return m_IPA.format_IPA_full(data)
 end
 
 -- Used for [[Template:IPAchar]].
@@ -110,12 +100,12 @@ function export.IPAchar(frame)
 	
 	-- [[Special:WhatLinksHere/Wiktionary:Tracking/IPAchar/lang]]
 	if args.lang then
-		require("Module:debug").track("IPAchar/lang")
+		require("Module:debug/track")("IPAchar/lang")
 	end
 
 	local items = {}
 	
-	for i = 1, math.max(args[1].maxindex, args["ref"].maxindex, args["qual"].maxindex) do
+	for i = 1, math.max(args[1].maxindex, args.ref.maxindex, args.q.maxindex, args.qq.maxindex, args.qual.maxindex) do
 		local pron = args[1][i]
 		local refs = args["ref"][i]
 		if refs then
@@ -241,7 +231,7 @@ function export.X2IPAchar(frame)
 	
 	-- [[Special:WhatLinksHere/Wiktionary:Tracking/X2IPAchar/lang]]
 	if args.lang then
-		require("Module:debug").track("X2IPAchar/lang")
+		require("Module:debug/track")("X2IPAchar/lang")
 	end
 
 	local m_XSAMPA = require("Module:IPA/X-SAMPA")
@@ -314,35 +304,40 @@ end
 -- Used for [[Template:enPR]].
 function export.enPR(frame)
 	local parent_args = frame:getParent().args
+
 	local params = {
-		[1] = {list = true, disallow_holes = true, required = true},
-		["a"] = {list = true, allow_holes = true, separate_no_index = true},
-		["aa"] = {list = true, allow_holes = true, separate_no_index = true},
-		["q"] = {list = true, allow_holes = true, separate_no_index = true},
-		["qq"] = {list = true, allow_holes = true, separate_no_index = true},
+		[1] = {list = true, disallow_holes = true},
 	}
-	
+
+	local param_mods = {}
+
+	local m_param_utils = require(parameter_utilities_module)
+
+	m_param_utils.augment_param_mods_with_pron_qualifiers(param_mods)
+	m_param_utils.augment_params_with_modifiers(params, param_mods)
+
 	local args = require("Module:parameters").process(parent_args, params)
 
-	local items = {}
-	
-	for i = 1, math.max(#args[1], args.a.maxindex, args.aa.maxindex, args.q.maxindex, args.qq.maxindex) do
-		table.insert(items, {
-			pron = args[1][i],
-			q = args.q[i] and {args.q[i]} or nil,
-			qq = args.qq[i] and {args.qq[i]} or nil,
-			a = split_on_comma(args.a[i]),
-			aa = split_on_comma(args.aa[i]),
-		})
-	end
-
-	return m_IPA.format_enPR_full {
-		items = items,
-		q = args.q.default and {args.q.default} or nil,
-		qq = args.qq.default and {args.qq.default} or nil,
-		a = split_on_comma(args.a.default),
-		aa = split_on_comma(args.aa.default),
+	local items = m_param_utils.process_list_arguments {
+		args = args,
+		param_mods = param_mods,
+		termarg = 1,
+		term_dest = "pron",
+		track_module = "IPA",
 	}
+
+	local data = {
+		items = items,
+	}
+	require(pron_qualifier_module).parse_qualifiers {
+		store_obj = data,
+		q = args.q.default,
+		qq = args.qq.default,
+		a = args.a.default,
+		aa = args.aa.default,
+	}
+
+	return m_IPA.format_enPR_full(data)
 end
 
 return export
