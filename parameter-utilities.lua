@@ -121,6 +121,16 @@ function export.augment_params_with_modifiers(params, param_mods)
 	end
 end
 
+local function make_parse_err(data)
+	return function(msg, stack_frames_to_ignore)
+		error(("%s: %s%s=%s"):format(
+			msg, data.param_mod, (data.termno > 1 or data.param_mod_spec.require_index or
+				data.param_mod_spec.separate_no_index) and data.termno or "", data.arg
+		), stack_frames_to_ignore
+		)
+	end
+end
+
 function export.process_list_arguments(data)
 	-- Find the maximum index among any of the list parameters.
 	local term_args = data.args[data.termarg]
@@ -189,17 +199,17 @@ function export.process_list_arguments(data)
 							-- specifically that if none of `type`, `set` and `sublist` are set, the conversion is an
 							-- identity operation and can be skipped. If this becomes problematic, remove the
 							-- optimization.
-							local function parse_err(msg, stack_frames_to_ignore)
-								error(("%s: %s%s=%s"):format(
-									msg, param_mod, (termno > 1 or param_mod_spec.require_index or
-										param_mod_spec.separate_no_index) and termno or "", arg
-								), stack_frames_to_ignore
-								)
-							end
+							local parse_err = make_parse_err {
+								param_mod = param_mod,
+								param_mod_spec = param_mod_spec,
+								termno = termno,
+								arg = arg,
+							}
 							if param_mod_spec.convert then
-								arg = param_mod_spec.convert(arg, parse_err)
-							else
-								arg = require(parameters_module).convert_val(arg, parse_err, param_mod_spec)
+								-- Beware, this operates *ON TOP OF* the conversion performed by [[Module:parameters]].
+								-- Generally, you should not use `convert` if [[Module:parameters]] does any sort of
+								-- conversion.
+								arg = param_mod_spec.convert(arg, parse_err, "separate arg")
 							end
 						end
 						termobj[dest] = arg
@@ -238,6 +248,24 @@ function export.process_list_arguments(data)
 						paramname = data.termarg + i - 1,
 						param_mods = data.param_mods,
 						generate_obj = generate_obj,
+						default_convert = function(data)
+							local param_mod_spec = data.param_mod_spec
+							local arg = data.val
+							if param_mod_spec.type or param_mod_spec.set or param_mod_spec.sublist then
+								-- WARNING: Here we embed some knowledge of convert_val() in [[Module:parameters]],
+								-- specifically that if none of `type`, `set` and `sublist` are set, the conversion is an
+								-- identity operation and can be skipped. If this becomes problematic, remove the
+								-- optimization.
+								local parse_err = make_parse_err {
+									param_mod = data.prefix,
+									param_mod_spec = param_mod_spec,
+									termno = termno,
+									arg = arg,
+								}
+								arg = require(parameters_module).convert_val(arg, parse_err, param_mod_spec)
+							end
+							return arg
+						end
 					})
 				elseif term then
 					generate_obj(term)
