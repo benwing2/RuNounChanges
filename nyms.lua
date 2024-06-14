@@ -1,22 +1,7 @@
 local export = {}
 
-local m_languages = require("Module:languages")
-local m_links = require("Module:links")
-local put_module = "Module:parse utilities"
 local labels_module = "Module:labels"
-local rsplit = mw.text.split
-
-local param_mods = {"t", "alt", "tr", "ts", "pos", "lit", "id", "sc", "g", "q", "qq"}
--- Do m_table.listToSet(param_mods) inline, maybe saving memory?
-local param_mod_set = {}
-for _, param_mod in ipairs(param_mods) do
-	param_mod_set[param_mod] = true
-end
-
-
-local function track(page)
-	return require("Module:debug/track")("nyms/" .. page)
-end
+local links_module = "Module:links"
 
 
 local function wrap_span(text, lang, sc)
@@ -24,225 +9,186 @@ local function wrap_span(text, lang, sc)
 end
 
 
--- Convert a raw lb= param (or nil) to a list of label info objects of the format described in get_label_info() in
--- [[Module:labels]]). Unrecognized labels will end up with an unchanged display form. Return nil if nil passed in.
-local function split_and_process_raw_labels(raw_lb, lang)
-	if not raw_lb then
-		return nil
-	end
-	return require(labels_module).split_and_process_raw_labels { labels = raw_lb, lang = lang, nocat = true }
-end
-
-local function get_thesaurus_text(lang, args, maxindex)
-	local thesaurus
-	local thesaurus_links = {}
-	
-	while args[2][maxindex] and args[2][maxindex]:find("^Thesaurus:") do
-		for _, param_mod in ipairs(param_mods) do
-			if args[param_mod][maxindex] then
-				error("You cannot use named parameters with Thesaurus links, but saw " .. param_mod .. maxindex .. "=")
-			end
-		end
-		local link
-		local term = args[2][maxindex]:sub(11) -- remove Thesaurus: from beginning
-		local sc = lang:findBestScript(term):getCode()
-		local fragment = term:find("#")
-		if fragment then
-			link = "[[" .. args[2][maxindex] .. "#" .. lang:getCanonicalName() .. "|Thesaurus:" .. wrap_span(term:sub(1, fragment-1), lang:getCode(), sc) .. "]]"
-		else
-			link = "[[" .. args[2][maxindex] .. "#" .. lang:getCanonicalName() .. "|Thesaurus:" .. wrap_span(term, lang:getCode(), sc) .. "]]"
-		end
-		
-		table.insert(thesaurus_links, 1, link)
-		
-		maxindex = maxindex - 1
-	end
-	
-	if #thesaurus_links > 0 then
-		thesaurus = (maxindex == 0 and "''see'' " or "; ''see also'' ")
-			.. table.concat(thesaurus_links, ", ")
-	end
-	
-	return thesaurus or "", maxindex
-end
-
 function export.nyms(frame)
-	local list_with_holes = {list = true, allow_holes = true}
-	local params = {
-		[1] = {required = true, default = "und"},
-		[2] = {list = true, allow_holes = true, required = true},
-	}
-	for _, param_mod in ipairs(param_mods) do
-		params[param_mod] = list_with_holes
-	end
-	params.lb = {}
-	params.partlb = {list = "lb", allow_holes = true, require_index = true}
-
 	local parent_args = frame:getParent().args
 
 	-- FIXME: Temporary error message.
 	for arg, _ in pairs(parent_args) do
 		if type(arg) == "string" and arg:find("^tag[0-9]*$") then
-			local lbarg = arg:gsub("^tag", "lb")
-			error(("Use %s= instead of %s="):format(lbarg, arg))
+			local larg = arg:gsub("^tag", "l")
+			local llarg = arg:gsub("^tag", "ll")
+			error(("Use %s= (on the left) or %s= (on the right) instead of %s="):format(larg, llarg, arg))
 		end
 	end
 
-	local args = require("Module:parameters").process(parent_args, params, nil, "nyms", "nyms")
-	
+	local params = {
+		[1] = {required = true, type = "language", etym_lang = true, default = "und"},
+		[2] = {list = true, allow_holes = true, required = true},
+	}
+
+	local param_mods = {
+		alt = {},
+		t = {
+			-- We need to store the t1=/t2= param and the <t:...> inline modifier into the "gloss" key of the parsed term,
+			-- because that is what [[Module:links]] expects.
+			item_dest = "gloss",
+		},
+		gloss = {
+			alias_of = "t",
+		},
+		tr = {},
+		ts = {},
+		g = {
+			-- We need to store the g1=/g2= param and the <g:...> inline modifier into the "genders" key of the parsed term,
+			-- because that is what [[Module:links]] expects.
+			item_dest = "genders",
+			sublist = true,
+		},
+		pos = {},
+		lit = {},
+		id = {},
+		sc = {
+			separate_no_index = true,
+			type = "script",
+		},
+		lb = {
+			item_dest = "ll",
+			separate_no_index = true,
+			alias_of = "ll",
+		},
+	}
+
+	m_param_utils.augment_param_mods_with_pron_qualifiers(param_mods, {
+		-- For compatibility, we don't distinguish q= from q1= and qq= from q1=. FIXME: Maybe we should change this.
+		{param = "q", separate_no_index = false},
+		{param = "l", separate_no_index = true},
+		"ref",
+	})
+	m_param_utils.augment_params_with_modifiers(params, param_mods)
+
+	local args = require("Module:parameters").process(parent_args, params)
+
 	local nym_type = frame.args[1]
 	local nym_type_class = string.gsub(nym_type, "%s", "-")
-	local langcode = args[1]
-	local lang = m_languages.getByCode(langcode, 1)
-	
-	local maxindex = math.max(args[2].maxindex, args["alt"].maxindex, args["tr"].maxindex)
-	local thesaurus, link_maxindex = get_thesaurus_text(lang, args, maxindex)
-	
-	local items = {}
-	local put
-	local use_semicolon = false
+	local lang = args[1]
+	local langcode = lang:getCode()
 
-	local syn = 0
-	for i = 1, link_maxindex do
-		local item = args[2][i]
-		if item and item:find("^Thesaurus:") then
-			error("A link to Thesaurus must be the last in the list")
+	local items = m_param_utils.process_list_arguments {
+		args = args,
+		param_mods = param_mods,
+		termarg = 2,
+		parse_lang_prefix = true,
+		track_module = "nyms",
+		lang = lang,
+	}
+
+	local data = {
+		lang = lang,
+		items = nyms,
+		sc = args.sc.default,
+	}
+	require(pron_qualifier_module).parse_qualifiers {
+		store_obj = data,
+		l = args.l.default,
+		ll = args.ll.default,
+		a = args.a.default,
+		aa = args.aa.default,
+	}
+
+	local parts = {}
+	local overall_sep = data.separator or ", "
+	local thesaurus_parts = {}
+	for i, item in ipairs(data.items) do
+		local explicit_item_lang = item.lang
+		item.lang = item.lang or data.lang
+		item.sc = item.sc or data.sc
+		local text
+		local is_thesaurus
+		if item.term and item.term:find("^Thesaurus:") then
+			is_thesaurus = true
+			for k, _ in pairs(item) do
+				if k ~= "term" and k ~= "lang" and k ~= "sc" and k ~= "q" and k ~= "qq" and k ~= "l" and k ~= "ll" and
+					k ~= "refs" and k ~= "separator" and k ~= "termno" then
+					error(("You cannot use most named parameters and inline modifiers with Thesaurus links, but saw %s%s= or its equivalent inline modifier <%s:...>"):format(
+						k, item.termno, k))
+				end
+			end
+			local term = item.term:match("^Thesaurus:(.*)$")
+			-- Chop off fragment
+			term = term:match("^(.-)#.*$") or term
+			local lang = item.lang
+			local sccode = (item.sc or lang:findBestScript(term)):getCode()
+			-- FIXME: I assume it's better to include full-language codes in the CSS rather than etym-language codes,
+			-- which are generally specific to Wiktionary. However, we should probably instead be using the functions
+			-- from [[Module:script utilities]] in preference to rolling our own.
+			text = "[[" .. item.term .. "#" .. lang:getFullName() .. "|Thesaurus:" .. wrap_span(term, lang:getFullCode(), sccode) .. "]]"
+		else
+			if thesaurus_parts[1] then
+				error("Links to the Thesaurus must follow all non-Thesaurus links")
+			end
+			text = require(links_module).full_link(item)
 		end
-		if item ~= ";" then
-			syn = syn + 1
-			-- Parse off an initial language code (e.g. 'la:minūtia' or 'grc:[[σκῶρ|σκατός]]'). Don't parse if there's a space
-			-- after the colon (happens e.g. if the user uses {{desc|...}} inside of {{col}}; not clear it applies to nyms).
-			local termlangcode, actual_term
-			if item then
-				termlangcode, actual_term = item:match("^([A-Za-z._-]+):([^ ].*)$")
+		local qq = item.qq
+		-- If a separate language code was given for the term, display the language name as a right qualifier.
+		-- Otherwise it may not be obvious that the term is in a separate language (e.g. if the main language is 'zh'
+		-- and the term language is a Chinese lect such as Min Nan). But don't do this for Translingual terms, which
+		-- are often added to the list of English and other-language terms.
+		if explicit_item_lang then
+			local explicit_code = explicit_item_lang:getCode()
+			if explicit_code ~= langcode and explicit_code ~= "mul" then
+				qq = mw.clone(qq) or qq
+				table.insert(qq, 1, explicit_item_lang:getCanonicalName())
 			end
-			local termlang
-			-- Make sure that only real language codes are handled as language links, so as to not catch interwiki
-			-- or namespaces links.
-			if termlangcode and (
-				mw.loadData("Module:languages/code to canonical name")[termlangcode] or
-				mw.loadData("Module:etymology languages/code to canonical name")[termlangcode]
-			) then
-				-- -1 since i is one-based
-				termlang = m_languages.getByCode(termlangcode, 2 + i - 1, "allow etym")
-				item = actual_term
-			else
-				termlang = lang
-				termlangcode = nil
-			end
-			local termobj = {
-				joiner = i > 1 and (args[2][i - 1] == ";" and "; " or ", ") or "",
-				q = args["q"][syn],
-				qq = args["qq"][syn],
-				lb = args["partlb"][syn],
-				term = {
-					lang = termlang, term = item, id = args["id"][syn],
-					sc = args["sc"][syn] and require("Module:scripts").getByCode(args["sc"][syn], "sc" .. syn) or nil,
-					alt = args["alt"][syn], tr = args["tr"][syn], ts = args["ts"][syn],
-					gloss = args["t"][syn], lit = args["lit"][syn], pos = args["pos"][syn],
-					genders = args["g"][syn] and rsplit(args["g"][syn], ",") or nil,
-				},
+		end
+		if item.q and item.q[1] or qq and qq[1] or item.l and item.l[1] or item.ll and item.ll[1] or
+			item.refs and item.refs[1] then
+			text = require(pron_qualifier_module).format_qualifiers {
+				lang = item.lang,
+				text = text,
+				q = item.q,
+				qq = item.qq,
+				l = item.l,
+				ll = item.ll,
+				refs = item.refs,
 			}
-		
-			-- Check for new-style argument, e.g. מרים<tr:Miryem>. But exclude HTML entry with <span ...>,
-			-- <i ...>, <br/> or similar in it, caused by wrapping an argument in {{l|...}}, {{af|...}} or similar.
-			-- Basically, all tags of the sort we parse here should consist of a less-than sign, plus letters,
-			-- plus a colon, e.g. <tr:...>, so if we see a tag on the outer level that isn't in this format,
-			-- we don't try to parse it. The restriction to the outer level is to allow generated HTML inside
-			-- of e.g. qualifier tags, such as foo<q:similar to {{m|fr|bar}}>.
-			if item and item:find("<") and not item:find("^[^<]*<[a-z]*[^a-z:]") then
-				if not put then
-					put = require(put_module)
-				end
-				local run = put.parse_balanced_segment_run(item, "<", ">")
-				local function parse_err(msg)
-					error(msg .. ": " .. (i + 1) .. "=" .. table.concat(run))
-				end
-				termobj.term.term = run[1]
-
-				for j = 2, #run - 1, 2 do
-					if run[j + 1] ~= "" then
-						parse_err("Extraneous text '" .. run[j + 1] .. "' after modifier")
-					end
-					local modtext = run[j]:match("^<(.*)>$")
-					if not modtext then
-						parse_err("Internal error: Modifier '" .. modtext .. "' isn't surrounded by angle brackets")
-					end
-					local prefix, arg = modtext:match("^([a-z]+):(.*)$")
-					if not prefix then
-						parse_err("Modifier " .. run[j] .. " lacks a prefix, should begin with one of '" ..
-							table.concat(param_mods, ":', '") .. ":'")
-					end
-					if param_mod_set[prefix] or prefix == "lb" then
-						local obj_to_set
-						if prefix == "q" or prefix == "qq" or prefix == "lb" then
-							obj_to_set = termobj
-						else
-							obj_to_set = termobj.term
-						end
-						if prefix == "t" then
-							prefix = "gloss"
-						elseif prefix == "g" then
-							prefix = "genders"
-							arg = rsplit(arg, ",")
-						elseif prefix == "sc" then
-							arg = require("Module:scripts").getByCode(arg, "" .. (i + 1) .. ":sc")
-						end
-						if obj_to_set[prefix] then
-							parse_err("Modifier '" .. prefix .. "' occurs twice, second occurrence " .. run[j])
-						end
-						obj_to_set[prefix] = arg
-					elseif prefix == "tag" then
-						-- FIXME: Remove support for <tag:...> in favor of <lb:...>
-						error("Use <lb:...> instead of <tag:...>")
-					else
-						parse_err("Unrecognized prefix '" .. prefix .. "' in modifier " .. run[j])
-					end
-				end
-			elseif item and item:find(",", 1, true) then
-				-- FIXME: Why is this here and when is it used?
-				use_semicolon = true
-			end
-			-- If a separate language code was given for the term, display the language name as a right qualifier.
-			-- Otherwise it may not be obvious that the term is in a separate language (e.g. if the main language is 'zh'
-			-- and the term language is a Chinese lect such as Min Nan). But don't do this for Translingual terms, which
-			-- are often added to the list of English and other-language terms.
-			if termlangcode and termlangcode ~= langcode and termlangcode ~= "mul" then
-				termobj.qq = {termlang:getCanonicalName(), termobj.qq}
-			end
-		table.insert(items, termobj)
 		end
+		local insert_place = is_thesaurus and thesaurus_parts or parts
+		-- Don't include the separator if this is the first item we're inserting.
+		table.insert(insert_place, insert_place[1] and overall_sep or "")
+		table.insert(insert_place, text)
 	end
 
-	if use_semicolon then
-		for i, item in ipairs(items) do
-			if i > 1 then
-				item.joiner = "; "
-			end
-		end
-	end
+	local text = table.concat(parts)
+	local thesaurus_text = table.concat(thesaurus_parts)
 
-	for i, item in ipairs(items) do
-		local label_text = ""
-		if item.lb then
-			local labels = split_and_process_raw_labels(item.lb, lang)
-			if labels then
-				label_text = " " .. require(labels_module).format_processed_labels {
-					labels = labels, lang = lang, open = "[", close = "]"
-				}
-			end
-		end
-		items[i] = item.joiner .. (item.q and require("Module:qualifier").format_qualifier(item.q) .. " " or "") .. m_links.full_link(item.term)
-			.. (item.qq and " " .. require("Module:qualifier").format_qualifier(item.qq) or "") .. label_text
+	local caption = "<span class=\"defdate\">" .. mw.getContentLanguage():ucfirst(nym_type) ..
+		((#items > 1 or thesaurus_text ~= "") and "s" or "") .. ":</span> "
+	text = caption .. text
+	if data.q and data.q[1] or data.qq and data.qq[1] or data.l and data.l[1] then
+		text = require(pron_qualifier_module).format_qualifiers {
+			lang = data.lang,
+			text = text,
+			q = data.q,
+			qq = data.qq,
+			l = data.l,
+			-- ll handled specially for compatibility's sake
+		}
 	end
-
-	local labels = split_and_process_raw_labels(args.lb, lang)
-	local label_postq = labels and " &mdash; " .. require(labels_module).format_processed_labels {
-		labels = labels, lang = lang 
-	} or ""
-	return "<span class=\"nyms " .. nym_type_class .. "\"><span class=\"defdate\">" .. 
-		mw.getContentLanguage():ucfirst(nym_type) .. ((#items > 1 or thesaurus ~= "") and "s" or "") ..
-		":</span> " .. table.concat(items) .. label_postq .. thesaurus .. "</span>"
+	if data.ll and data.ll[1] then
+		text = text .. " &mdash; " .. require(labels_module).show_labels {
+			lang = data.lang,
+			labels = data.ll,
+			nocat = true,
+			open = false,
+			close = false,
+			no_track_already_seen = true,
+		}
+	end
+	if thesaurus_text ~= "" then
+		local thesaurus_intro = parts[1] and "; ''see also'' " or "''see'' "
+		text = text .. thesaurus_intro .. thesaurus_text
+	end
+	return "<span class=\"nyms " .. nym_type_class .. "\">" .. text .. "</span>"
 end
 
 
