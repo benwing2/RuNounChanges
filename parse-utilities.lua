@@ -1,6 +1,7 @@
 local export = {}
 
 local m_string_utilities = require("Module:string utilities")
+local parameters_module = "Module:parameters"
 
 local rfind = mw.ustring.find
 local rsplit = mw.text.split
@@ -732,32 +733,61 @@ Parse a term that may have inline modifiers attached (e.g. {rifiuti<q:plural-onl
    normalized value of `modtext`.
 
 `param_mods` is a table describing allowed modifiers. The keys of the table are modifier prefixes and the values are
-tables describing how to parse and store the associated modifier values. Here is a typical example:
+tables describing how to parse and store the associated modifier values. Here is a typical example, for an item that
+takes the standard modifiers associated with `full_link()` in [[Module:links]], as well as left and right qualifiers
+and labels:
 
-<pre>
+{
+local function parse_labels(arg)
+	-- We make sure to not load [[Module:labels]] unless a label is given, to save memory.
+	return require("Module:labels").split_labels_on_comma(arg)
+end
+
 local param_mods = {
+	alt = {},
 	t = {
+		-- [[Module:links]] expects the gloss in "gloss".
 		item_dest = "gloss",
 	},
 	gloss = {},
+	tr = {},
+	ts = {},
+	g = {
+		-- [[Module:links]] expects the genders in "g". `sublist = true` automatically splits on comma (optionally
+		-- with surrounding whitespace).
+		item_dest = "genders",
+		sublist = true,
+	},
 	pos = {},
-	alt = {},
 	lit = {},
 	id = {},
-	g = {
-		item_dest = "genders",
-		convert = function(arg)
-			return rsplit(arg, ",")
-		end,
+	sc = {
+		-- Automatically parse as a script code and convert to a script object.
+		type = "script",
+	},
+	-- Qualifiers and labels
+	q = {},
+	qq = {},
+	l = {
+		convert = parse_labels,
+	},
+	ll = {
+		convert = parse_labels,
 	},
 }
-</pre>
+}
 
 In the table values:
 * `item_dest` specifies the destination key to store the object into (if not the same as the modifier key itself).
+* `type`, `set` and `sublist` have the same meaning as in [[Module:parameters]] and are used for converting the object
+  from the string form given by the user into the form needed for further processing. Note that `type` makes use of
+  additional properties that may be specified. Specifically, if {type = "language"}, the properties `etym_lang`,
+  `family` and `method` are also examined, and if {type = "family"} or {type = "script"}, the property `method` is
+  examined.
 * `convert` is a function of one or two arguments (the modifier value and optionally the {parse_err} function as passed
-  in or generated), and should parse and convert the value into the appropriate object. If omitted, the string value is
-  stored unchanged.
+  in or generated), and should parse and convert the value into the appropriate object. If `convert` is given along with
+  any of `type`, `set` or `sublist`, the conversion done by the latter happens first, and the function in `convert` is
+  called on the result. If none of `convert`, `type`, `set` or `sublist` is given, the string value is stored unchanged.
 * `store` describes how to store the converted modifier value into the parsed object. If omitted, the converted value
   is simply written into the parsed object under the appropriate key; but an error is generated if the key already has
   a value. (This means that multiple occurrences of a given modifier are allowed if `store` is given, but not
@@ -931,11 +961,18 @@ function export.parse_inline_modifiers_from_segments(data)
 				dest = term_obj
 			end
 
-			local converted
+			local converted = val
+			if mod_props.type or mod_props.set or mod_props.sublist then
+				-- WARNING: Here as an optimization we embed some knowledge of convert_val() in [[Module:parameters]],
+				-- specifically that if none of `type`, `set` and `sublist` are set, the conversion is an identity
+				-- operation and can be skipped. (convert_val() also makes use of the fields `method`, `etym_lang` and
+				-- `family`, but only if `type` is set to certain values such as "language", "family" or "script", and
+				-- makes use of the field `required`, but only if `set` is set.) If this becomes problematic, consider
+				-- removing the optimization.
+				converted = require(parameters_module).convert_val(converted, prefix_parse_err, mod_props)
+			end
 			if convert then
 				converted = convert(val, prefix_parse_err)
-			else
-				converted = val
 			end
 			local store = props.param_mods[prefix].store
 			if not store then
