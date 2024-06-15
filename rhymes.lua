@@ -4,10 +4,10 @@ local force_cat = false -- for testing
 
 local rhymes_styles_css_module = "Module:rhymes/styles.css"
 
-local IPA_module = "Module:IPA"
-local parameters_module = "Module:parameters"
-local parameter_utilities_module = "Module:parameter utilities"
-local pron_qualifier_module = "Module:pron qualifier"
+local IPA_module = "Module:User:Benwing2/IPA"
+local parameters_module = "Module:User:Benwing2/parameters"
+local parameter_utilities_module = "Module:User:Benwing2/parameter utilities"
+local pron_qualifier_module = "Module:User:Benwing2/pron qualifier"
 local script_utilities_module = "Module:script utilities"
 local string_utilities_module = "Module:string utilities"
 local TemplateStyles_module = "Module:TemplateStyles"
@@ -200,80 +200,69 @@ be added such as [[Category:Rhymes:Italian/ino/3 syllables]] in addition to [[Ca
 	end
 end
 
-do
-	local function parse_num_syl(arg, parse_err)
-		arg = rsplit(arg, "%s*,%s*")
-		local ret = {}
-		for _, v in ipairs(arg) do
-			local n = tonumber(v) or parse_err("Unrecognized #syllables '" .. v .. "', should be a number")
-			insert(ret, n)
-		end
-		return ret
-	end
+--[==[
+Implementation of {{tl|rhymes}}.
+]==]
+function export.show(frame)
+	local parent_args = frame:getParent().args
+	local compat = parent_args.lang
+	local offset = compat and 0 or 1
 
-	--[==[
-	Implementation of {{tl|rhymes}}.
-	]==]
-	function export.show(frame)
-		local parent_args = frame:getParent().args
-		local compat = parent_args.lang
-		local offset = compat and 0 or 1
+	local plain = {}
+	local boolean = {type = "boolean"}
+	local params = {
+		[compat and "lang" or 1] = {required = true, type = "language", etym_lang = true, default = "en"},
+		[1 + offset] = {list = true, required = true, disallow_holes = true, default = "aɪmz"},
+		["caption"] = plain,
+		["nocaption"] = boolean,
+		["nocat"] = boolean,
+		["sort"] = plain,
+	}
 
-		local plain = {}
-		local boolean = {type = "boolean"}
-		local params = {
-			[compat and "lang" or 1] = {required = true, type = "language", etym_lang = true, default = "en"},
-			[1 + offset] = {list = true, required = true, disallow_holes = true, default = "aɪmz"},
-			["caption"] = plain,
-			["nocaption"] = boolean,
-			["nocat"] = boolean,
-			["sort"] = plain,
-		}
+	local param_mods = {
+		s = {
+			item_dest = "num_syl",
+			separate_no_index = true,
+			type = "number",
+			sublist = true,
+		},
+	}
 
-		local param_mods = {
-			s = {
-				item_dest = "num_syl",
-				separate_no_index = true,
-				convert = parse_num_syl,
-			},
-		}
+	local m_param_utils = require(parameter_utilities_module)
 
-		local m_param_utils = require(parameter_utilities_module)
+	m_param_utils.augment_param_mods_with_pron_qualifiers(param_mods)
+	m_param_utils.augment_params_with_modifiers(params, param_mods)
 
-		m_param_utils.augment_param_mods_with_pron_qualifiers(param_mods)
-		m_param_utils.augment_params_with_modifiers(params, param_mods)
+	local args = require("Module:parameters").process(parent_args, params)
 
-		local args = require("Module:parameters").process(parent_args, params)
+	local lang = args[compat and "lang" or 1]
 
-		local lang = args[compat and "lang" or 1]
+	local rhymes = m_param_utils.process_list_arguments {
+		args = args,
+		param_mods = param_mods,
+		termarg = 1 + offset,
+		term_dest = "rhyme",
+		track_module = "rhymes",
+	}
 
-		local rhymes = m_param_utils.process_list_arguments {
-			args = args,
-			param_mods = param_mods,
-			termarg = 1 + offset,
-			term_dest = "rhyme",
-			track_module = "rhymes",
-		}
+	local data = {
+		lang = lang,
+		rhymes = rhymes,
+		num_syl = args.s.default,
+		caption = args.caption,
+		nocaption = args.nocaption,
+		nocat = args.nocat,
+		sort = args.sort,
+	}
+	require(pron_qualifier_module).parse_qualifiers {
+		store_obj = data,
+		q = args.q.default,
+		qq = args.qq.default,
+		a = args.a.default,
+		aa = args.aa.default,
+	}
 
-		local data = {
-			lang = lang,
-			rhymes = rhymes,
-			num_syl = args.s.default and parse_num_syl(args.s.default) or nil,
-			caption = args.caption,
-			nocaption = args.nocaption,
-			nocat = args.nocat,
-			sort = args.sort,
-		}
-		require(pron_qualifier_module).parse_qualifiers {
-			store_obj = data,
-			q = args.q.default,
-			qq = args.qq.default,
-			a = args.a.default,
-			aa = args.aa.default,
-		}
-
-		return export.format_rhymes(data)
-	end
+	return export.format_rhymes(data)
 end
 
 --[==[
