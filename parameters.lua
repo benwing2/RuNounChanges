@@ -155,9 +155,12 @@ local convert_val = setmetatable({
 	__call = function(self, val, name, param)
 		local func, sublist = self[param.type or "string"], param.sublist
 		if not func then
-			error(dump(param.type) .. " is not a recognized parameter type.")
+			error("Internal error: " .. dump(param.type) .. " is not a recognized parameter type.")
 		elseif sublist then
 			local ret_val = {}
+			if type(val) ~= "string" then
+				error("Internal error: " .. dump(val) .. " is not a string.")
+			end
 			for v in gsplit(val, sublist == true and "%s*,%s*" or sublist) do
 				insert(ret_val, func(v, name, param))
 			end
@@ -176,9 +179,9 @@ local function process_error(fmt, ...)
 	end
 	if type(fmt) == "table" then
 		-- hacky signal that we're called from internal_process_error(), and not to omit stack frames
-		return error(fmt[1]:format(args))
+		return error(fmt[1]:format(unpack(args)))
 	else
-		return error(fmt:format(args), 3)
+		return error(fmt:format(unpack(args)), 3)
 	end
 end
 
