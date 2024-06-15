@@ -1,18 +1,9 @@
 local export = {}
 
-local m_links = require("Module:links")
-local parameter_utilities_module = "Module:parameter utilities"
+local links_module = "Module:links"
+local parameter_utilities_module = "Module:User:Benwing2/parameter utilities"
+local parameters_module = "Module:User:Benwing2/parameters"
 local pron_qualifier_module = "Module:pron qualifier"
-local string_utilities_module = "Module:string utilities"
-
-local function rsplit(text, pattern)
-	return require(string_utilities_module).split(text, pattern)
-end
-
-local function track(page)
-	require("Module:debug/track")("homophones/" .. page)
-	return true
-end
 
 --[==[
 Meant to be called from a module. `data` is a table containing the following fields:
@@ -74,6 +65,7 @@ function export.format_homophones(data)
 	local hmptexts = {}
 	local hmpcats = {}
 
+	local m_links = require(links_module)
 	local overall_sep = data.separator or ", "
 	for i, hmp in ipairs(data.homophones) do
 		hmp.lang = hmp.lang or data.lang
@@ -172,7 +164,7 @@ function export.show(frame)
 	m_param_utils.augment_param_mods_with_pron_qualifiers(param_mods)
 	m_param_utils.augment_params_with_modifiers(params, param_mods)
 
-	local args = require("Module:parameters").process(parent_args, params)
+	local args = require(parameters_module).process(parent_args, params)
 
 	-- FIXME: temporary.
 	if args.q.default then
