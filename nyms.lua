@@ -2,9 +2,9 @@ local export = {}
 
 local labels_module = "Module:labels"
 local links_module = "Module:links"
-local parameter_utilities_module = "Module:User:Benwing2/parameter utilities"
-local parameters_module = "Module:User:Benwing2/parameters"
-local pron_qualifier_module = "Module:User:Benwing2/pron qualifier"
+local parameter_utilities_module = "Module:parameter utilities"
+local parameters_module = "Module:parameters"
+local pron_qualifier_module = "Module:pron qualifier"
 
 
 local function wrap_span(text, lang, sc)
