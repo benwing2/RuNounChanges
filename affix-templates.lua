@@ -2,6 +2,7 @@ local export = {}
 
 local m_affix = require("Module:affix")
 local m_languages = require("Module:languages")
+local pseudo_loan_module = "Module:affix/pseudo-loan"
 local put -- initialized once, when needed, to require("Module:parse utilities")
 
 local rsplit = mw.text.split
@@ -137,6 +138,7 @@ local function parse_args(args, extra_params, has_source, ilangcode)
 		["sc"] = {},
 		["pos"] = {},
 		["sort"] = {},
+		["nocap"] = {type = "boolean"}, -- always allow this even if not used, for use with {{surf}}, which adds it
 	}
 
 	if not ilangcode then
@@ -170,9 +172,9 @@ local function parse_args(args, extra_params, has_source, ilangcode)
 	args = require("Module:parameters").process(args, params)
 	local lang
 	if ilangcode then
-		lang = m_languages.getByCode(ilangcode, true)
+		lang = m_languages.getByCode(ilangcode, true, "allow etym")
 	else
-		lang = m_languages.getByCode(args[1], 1)
+		lang = m_languages.getByCode(args[1], 1, "allow etym")
 	end
 	local source
 	if has_source then
@@ -194,14 +196,19 @@ local function get_parsed_part(template, args, term_index, i)
 
 	if not (term or args["alt"][i] or args["tr"][i] or args["ts"][i]) then
 		require("Module:debug/track")(template .. "/no term or alt or tr")
-		return nil
+		local partlang = args["partlang"][i]
+		if partlang then
+			return { lang = m_languages.getByCode(partlang, term_index + i - 1, "allow etym") }
+		else
+			return nil
+		end
 	end
 
 	-- Parse all the term-specific parameters and store in `part`.
 	for param_mod, param_mod_spec in pairs(param_mods) do
 		local dest = param_mod_spec.item_dest or param_mod
 		local param_key = param_mod_spec.param_key or param_mod
-		local arg = args[param_key][i]
+		local arg = args[param_key] and args[param_key][i]
 		if arg then
 			if param_mod_spec.convert then
 				arg = param_mod_spec.convert(arg, false, term_index, i)
@@ -316,7 +323,6 @@ end
 function export.affix(frame)
 	local function extra_params(params)
 		params["type"] = {}
-		params["nocap"] = {type = "boolean"}
 		params["notext"] = {type = "boolean"}
 		params["nocat"] = {type = "boolean"}
 		params["force_cat"] = {type = "boolean"}
@@ -340,7 +346,7 @@ function export.affix(frame)
 		end
 	end
 
-	return m_affix.show_affixes {
+	return m_affix.show_affix {
 		lang = lang, sc = sc, parts = parts, pos = args["pos"], sort_key = args["sort"], type = args["type"],
 		nocap = args["nocap"], notext = args["notext"], nocat = args["nocat"], lit = args["lit"],
 		force_cat = args["force_cat"]
@@ -350,7 +356,6 @@ end
 function export.compound(frame)
 	local function extra_params(params)
 		params["type"] = {}
-		params["nocap"] = {type = "boolean"}
 		params["notext"] = {type = "boolean"}
 		params["nocat"] = {type = "boolean"}
 		params["force_cat"] = {type = "boolean"}
@@ -375,7 +380,7 @@ function export.compound(frame)
 	end
 
 	return m_affix.show_compound {
-		lang = lang, sc = sc, parts, pos = args["pos"], sort_key = args["sort"], type = args["type"],
+		lang = lang, sc = sc, parts = parts, pos = args["pos"], sort_key = args["sort"], type = args["type"],
 		nocap = args["nocap"], notext = args["notext"], nocat = args["nocat"], lit = args["lit"],
 		force_cat = args["force_cat"]
 	}
@@ -396,7 +401,6 @@ function export.compound_like(frame)
 
 	local function extra_params(params)
 		params["pos"] = nil
-		params["nocap"] = {type = "boolean"}
 		params["notext"] = {type = "boolean"}
 		params["nocat"] = {type = "boolean"}
 		params["force_cat"] = {type = "boolean"}
@@ -469,7 +473,6 @@ function export.surface_analysis(frame)
 
 	local function extra_params(params)
 		params["type"] = {}
-		params["nocap"] = {type = "boolean"}
 		params["notext"] = {type = "boolean"}
 		params["nocat"] = {type = "boolean"}
 		params["force_cat"] = {type = "boolean"}
@@ -565,7 +568,6 @@ end
 function export.pseudo_loan(frame)
 	local function extra_params(params)
 		params["pos"] = nil
-		params["nocap"] = {type = "boolean"}
 		params["notext"] = {type = "boolean"}
 		params["nocat"] = {type = "boolean"}
 		params["force_cat"] = {type = "boolean"}
@@ -575,7 +577,7 @@ function export.pseudo_loan(frame)
 
 	local parts = get_parsed_parts("pseudo-loan", args, term_index)
 
-	return require("Module:affix/pseudo-loan").show_pseudo_loan {
+	return require(pseudo_loan_module).show_pseudo_loan {
 		lang = lang, source = source, sc = sc, parts = parts, sort_key = args["sort"], nocap = args["nocap"],
 		notext = args["notext"], nocat = args["nocat"], lit = args["lit"], force_cat = args["force_cat"]
 	}
@@ -637,7 +639,7 @@ function export.prefix(frame)
 		end
 	end
 
-	return m_affix.show_prefixes {
+	return m_affix.show_prefix {
 		lang = lang, sc = sc, prefixes = prefixes, base = base, pos = args["pos"], sort_key = args["sort"],
 		nocat = args["nocat"], lit = args["lit"], force_cat = args["force_cat"]
 	}
@@ -665,7 +667,7 @@ function export.suffix(frame)
 		end
 	end
 
-	return m_affix.show_suffixes {
+	return m_affix.show_suffix {
 		lang = lang, sc = sc, base = base, suffixes = suffixes, pos = args["pos"], sort_key = args["sort"],
 		nocat = args["nocat"], lit = args["lit"], force_cat = args["force_cat"]
 	}
@@ -700,14 +702,14 @@ function export.derivsee(frame)
 	local term
 
 	if derivtype == "PIE root" then
-		lang = m_languages.getByCode("ine-pro")
+		lang = m_languages.getByCode("ine-pro", true)
 		term = args[1] or args["head"]
 
 		if term then
 			term = "*" .. term .. "-"
 		end
 	else
-		lang = m_languages.getByCode(args[1], 1)
+		lang = m_languages.getByCode(args[1], 1, "allow etym")
 		term = args[2] or args["head"]
 	end
 
@@ -739,9 +741,11 @@ function export.derivsee(frame)
 	end
 
 	local category = nil
-	local langname = lang:getCanonicalName()
+	local langname = lang:getFullName()
 	if (derivtype == "compound" and pos == nil) then
 		category = langname .. " compounds with " .. term
+	elseif derivtype == "compound" and pos == "verbs" then
+		category = langname .. " compound " .. pos .. " formed with " .. term
 	elseif derivtype == "compound" then
 		category = langname .. " compound " .. pos .. " with " .. term
 	else
