@@ -8,7 +8,7 @@ end
 
 function export.wrap_qualifier_css(text, suffix)
 	local css_classes = ("ib-%s qualifier-%s"):format(suffix, suffix)
-	return wrap_css(text, css_classes)
+	return export.wrap_css(text, css_classes)
 end
 
 function export.format_qualifiers(list, open, close, opencontent, closecontent, no_ib_content)

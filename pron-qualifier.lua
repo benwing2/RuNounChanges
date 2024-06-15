@@ -1,7 +1,7 @@
 local export = {}
 
 local labels_module = "Module:labels"
-local qualifier_module = "Module:qualifier"
+local qualifier_module = "Module:User:Benwing2/qualifier"
 local references_module = "Module:references"
 local string_utilities_module = "Module:string utilities"
 
@@ -123,7 +123,7 @@ function export.format_qualifiers(data)
 		end
 		local qualifier_inside
 		if qualifier_like_parts[2] then
-			qualifier_inside = table.concat(qualifier_like_parts, m_qualifier.wrap_qualifier_css(",", comma) .. " ")
+			qualifier_inside = table.concat(qualifier_like_parts, m_qualifier.wrap_qualifier_css(",", "comma") .. " ")
 		else
 			qualifier_inside = qualifier_like_parts[1]
 		end

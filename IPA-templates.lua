@@ -1,9 +1,9 @@
 local export = {}
 
-local m_IPA = require("Module:IPA")
-local parameter_utilities_module = "Module:parameter utilities"
+local m_IPA = require("Module:User:Benwing2/IPA")
+local parameter_utilities_module = "Module:User:Benwing2/parameter utilities"
 local parse_utilities_module = "Module:parse utilities"
-local pron_qualifier_module = "Module:pron qualifier"
+local pron_qualifier_module = "Module:User:Benwing2/pron qualifier"
 local references_module = "Module:references"
 
 local function track(page)
