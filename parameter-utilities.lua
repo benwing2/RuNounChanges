@@ -3,8 +3,8 @@ local export = {}
 local dump = mw.dumpObject
 local labels_module = "Module:labels"
 local languages_module = "Module:languages"
-local parameters_module = "Module:User:Benwing2/parameters"
-local parse_utilities_module = "Module:User:Benwing2/parse utilities"
+local parameters_module = "Module:parameters"
+local parse_utilities_module = "Module:parse utilities"
 local references_module = "Module:references"
 local scripts_module = "Module:scripts"
 
@@ -29,11 +29,12 @@ end
 The purpose of this module is to facilitate implementation of a template that takes a list of items with associated
 properties, which can be specified either through separate parameters (e.g. {{para|t2}}, {{para|pos3}}) or inline
 modifiers (`<t:...>`, `<pos:...>`, etc.). Some examples of templates that work this way are {{tl|alter}}/{{tl|alt}};
-{{tl|synonyms}}/{{tl|syn}}, {{tl|antonyms}}}/{{tl|ant}}, and other "nyms" templates; {{tl|col}}, {{tl|col2}},
-{{tl|col3}}, {{tl|col4}} and other columns templates; {{tl|descendants}}/{{tl|desc}}; {{tl|affixusex}}/{{tl|afex}};
-{{tl|IPA}}; {{tl|homophones}}; {{tl|rhymes}}; and several others. Not all of them currently use this module, but they
-should all eventually be converted to do so. This module can be thought of as a combination of [[Module:parameters]]
-(which parses template parameters, and in particular handles the separate parameter versions of the properties) and
+{{tl|synonyms}}/{{tl|syn}}, {{tl|antonyms}}/{{tl|ant}}, and other "nyms" templates; {{tl|col}}, {{tl|col2}},
+{{tl|col3}}, {{tl|col4}} and other columns templates; {{tl|descendant}}/{{tl|desc}}; {{tl|affix}}/{{tl|af}},
+{{tl|prefix}}/{{tl|pre}} and related *fix templates; {{tl|affixusex}}/{{tl|afex}} and related templates; {{tl|IPA}};
+{{tl|homophones}}; {{tl|rhymes}}; and several others. Not all of them currently use this module, but they should all
+eventually be converted to do so. This module can be thought of as a combination of [[Module:parameters]] (which parses
+template parameters, and in particular handles the separate parameter versions of the properties) and
 `parse_inline_modifiers()` in [[Module:parse utilities]] (which parses inline modifiers).
 
 The main entry point is `process_list_arguments()`, which takes an object specifying various properties and returns a
@@ -112,7 +113,7 @@ function export.show(frame)
 
 	local lang = args[1]
 
-	-- This parses inline modifiers and creates corresponding objects, containing the property values specified either
+	-- This parses inline modifiers and creates corresponding objects containing the property values specified either
 	-- through inline modifiers or separate parameters.
 	local items = m_param_utils.process_list_arguments {
 		args = args,
@@ -175,9 +176,24 @@ parameter (e.g.  {"t"}, {"pos"}) and the value is a table with optional elements
 --[==[
 Add "pronunciation qualifiers" to `param_mods`. By default, this consists of {"q"}, {"qq"}, {"a"}, {"aa"} and {"ref"},
 along with `convert` functions to appropriately parse and convert the values. By default, all but {"ref"} have
-`separate_no_index = true` set, but this can be overridden. The particular properties to add can also be overridden,
-and are some subset of "q" (left regular qualifier), "qq" (right regular qualifier), "a" (left
-accent qualifier), "aa" (right accent qualifier), "l" (left label), "ll" (right label) and "ref" (references).
+`separate_no_index = true` set. The `qtypes` parameter can be used to override the set of properties added and
+optionally whether `separate_no_index` is set. Its value is a list of specs, each of which is either a string (a
+parameter set to add) or an object containing properties `param` (the parameter set to add) and `separate_no_index` (if
+set to {true} or {false}, override the value of `separate_no_index` for the parameters specified by `param`). The
+possible values of `param`, the respective parameters controlled and their default values for `separate_no_index` are
+specified in the following table:
+
+{|class="wikitable"
+! value of `param` !! parameters controlled !! meaning !! destination field !! default for `separate_no_index`
+|-
+| {"q"} || {"q"}, {"qq"} || left and right regular qualifier || `q`, `qq` || {true}
+|-
+| {"a"} || {"a"}, {"aa"} || left and right comma-separated list of accent qualifiers || `a`, `aa` || {true}
+|-
+| {"l"} || {"l"}, {"ll"} || left and right comma-separated list of labels || `l`, `ll` || {true}
+|-
+| {"ref"} || {"ref"} || references of the format used by [[Module:references]] || `refs` || {false}
+|}
 ]==]
 function export.augment_param_mods_with_pron_qualifiers(param_mods, qtypes)
 	qtypes = qtypes or {"q", "a", "ref"}
@@ -232,6 +248,10 @@ local function param_mod_spec_key_is_builtin(k)
 	return k == "param_key" or k == "item_dest" or k == "convert" or k == "overall" or k == "store"
 end
 
+--[==[
+Convert the properties in `param_mods` into the appropriate structures for use by `process()` in [[Module:parameters]]
+and store them in `params`.
+]==]
 function export.augment_params_with_modifiers(params, param_mods)
 	local list_with_holes = { list = true, allow_holes = true }
 	-- Add parameters for each term modifier.
@@ -268,6 +288,45 @@ local function make_parse_err(data)
 	end
 end
 
+--[==[
+Parse inline modifiers and create corresponding objects containing the property values specified either through inline
+modifiers or separate parameters. `data` is an object containing the following properties:
+* `args` ('''required'''): The object of parsed arguments returned by `process()` in [[Module:parameters]].
+* `param_mods` ('''required'''): A structure describing the possible inline modifiers and their properties. See the
+  introductory comment above.
+* `termarg` ('''required'''): The argument containing the items with attached inline modifiers to be parsed. Usually a
+  numeric value such as {1} or {2}.
+* `track_module` ('''recommended'''): The name of the calling module, for use in adding tracking pages that are used
+  internally to track pages containing template invocations with certain properties. Example properties tracked are
+  missing items with corresponding properties as well as missing items without corresponding properties (which are
+  skipped entirely). To find out the exact properties tracked and the name of the tracking pages, read the code.
+* `term_dest`: The field to store the value of the item itself into, after inline modifiers and (if allowed) language
+  prefixes are stripped off. Defaults to {"term"}.
+* `parse_lang_prefix`: If true, allow and parse off a language code prefix attached to items followed by a colon, such
+  as {la:minūtia} or {grc:[[σκῶρ|σκατός]]}. Etymology-only languages are allowed. Inline modifiers can be attached to
+  such items. The exact syntax allowed is as specified in the `parse_term_with_lang()` function in
+  [[Module:parse utilities]]. If `allow_multiple_lang_prefixes` is given, a comma-separated list of language prefixes
+  can be attached to an item. The resulting language object is stored into the `termlang` field, and also into the
+  `lang` field (or in the case of `allow_multiple_lang_prefixes`, the list of language objects is stored into the
+  `termlangs` field, and the first specified object is stored in the `lang` field).
+* `allow_multiple_lang_prefixes`: If given in conjunction with `parse_lang_prefix`, multiple comma-separated language
+  code prefixes can be given. See `parse_lang_prefix` above.
+* `allow_bad_lang_prefixes`: If given in conjunction with `parse_lang_prefix`, unrecognized language prefixes do not
+  trigger an error, but are simply ignored (and not stripped off the item). Note that, regardless of whether this is
+  given, prefixes before a colon do not trigger an error if they do not have the form of a language prefix or if a space
+  follows the colon. It is not recommended that this be given because typos in language prefixes will not trigger an
+  error and will tend to remain unfixed.
+* `lang`: The language code for the language of the items. In general it is not necessary to specify this as this
+  function only parses inline modifiers and doesn't actually format the resulting items. However, if specified, it is
+  used for certain purposes:
+  *# It specifies the default for the `lang` property of returned objects if not otherwise set (e.g. by a language
+     prefix).
+  *# It is used to initialize an internal cache for speeding up language-code parsing (primarily useful if the same
+     language code may appear in several items, such as with {{tl|col}} and related templates).
+* `sc`: The script code for the items. In general, as with `lang`,  it is not necessary to specify this. However, if
+  specified, it is used to supply the default for the `sc` property of returned objects if not otherwise set (e.g. by
+  the {{para|sc<var>N</var>}} parameter or `<sc:...>` inline modifier).
+]==]
 function export.process_list_arguments(data)
 	-- Find the maximum index among any of the list parameters.
 	local term_args = data.args[data.termarg]
@@ -384,14 +443,6 @@ function export.process_list_arguments(data)
 					if term_text:find(",", 1, true) then
 						use_semicolon = true
 					end
-				end
-
-				-- If the to-be-linked term is the same as the pagename, maybe display it unlinked.
-				if data.disallow_self_link and data.lang and data.pagename and termobj[term_dest] and
-					(data.lang:makeEntryName(termobj[term_dest])) == data.pagename then
-					track("term-is-pagename", data.track_module)
-					termobj.alt = termobj.alt or termobj[term_dest]
-					termobj[term_dest] = nil
 				end
 
 				table.insert(items, termobj)
