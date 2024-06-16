@@ -112,10 +112,10 @@ function export.nyms(frame)
 		if item.term and item.term:find("^Thesaurus:") then
 			is_thesaurus = true
 			for k, _ in pairs(item) do
-				if k ~= "term" and k ~= "termlang" and k ~= "lang" and k ~= "sc" and k ~= "q" and k ~= "qq" and k ~= "l" and
-					k ~= "ll" and k ~= "refs" and k ~= "separator" and k ~= "termno" then
+				if m_param_utils.item_key_is_property(k) and k ~= "lang" and k ~= "sc" and k ~= "q" and k ~= "qq" and
+					k ~= "l" and k ~= "ll" and k ~= "refs" then
 					error(("You cannot use most named parameters and inline modifiers with Thesaurus links, but saw %s%s= or its equivalent inline modifier <%s:...>"):format(
-						k, item.termno, k))
+						k, item.itemno, k))
 				end
 			end
 			local term = item.term:match("^Thesaurus:(.*)$")
