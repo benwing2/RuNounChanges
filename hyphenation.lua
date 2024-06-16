@@ -1,47 +1,31 @@
 local export = {}
 
-local categorise_syllables = {
-	["es"] = true,
-	["fr"] = true,
-	["pt"] = true,
-}
+local function track(page)
+	require("Module:debug/track")("hyphenation/" .. page)
+	return true
+end
 
-
---[=[
+--[==[
 Meant to be called from a module. `data` is a table containing the following fields:
-
-{
-  lang = LANGUAGE_OBJECT,
-  hyphs = {
-    {hyph = {"SYL", "SYL", ...},
-	 q = nil or {"LEFT_QUALIFIER", "LEFT_QUALIFIER", ...},
-	 qualifiers = nil or {"LEFT_QUALIFIER", "LEFT_QUALIFIER", ...},
-	 qq = nil or {"RIGHT_QUALIFIER", "RIGHT_QUALIFIER", ...},
-	 a = nil or {"LEFT_ACCENT_QUALIFIER", "LEFT_ACCENT_QUALIFIER", ...},
-	 aa = nil or {"RIGHT_ACCENT_QUALIFIER", "RIGHT_ACCENT_QUALIFIER", ...},
-	 }, ...},
-  sc = nil or SCRIPT_OBJECT,
-  caption = nil or "CAPTION",
-  nocaption = BOOLEAN,
-}
-
-Here:
-
-* `lang` is a language object.
-* `hyphs` is the list of hyphenations to display. SYL is a syllable. LEFT_QUALIFIER is a qualifier string to display
-  before the specific rhyme in question, formatted using format_qualifier() in [[Module:qualifier]]. RIGHT_QUALIFIER
-  similarly displays after the rhyme. LEFT_ACCENT_QUALIFIER is an accent qualifier (as in {{a}}) to display before the
-  rhyme, and RIGHT_ACCENT_QUALIFIER similarly displays after the rhyme.
-* `hyphs` is the list of hyphenations to display. SYL is a syllable. QUALIFIER is a qualifier string to display before
-  the specific hyphenation in question, formatted using format_qualifier() in [[Module:qualifier]].
-* `sc`, if specified, is a script object.
-* `caption`, if specified, overrides the default caption "Hyphenation". A colon and space is automatically added after
-  the caption.
-* `nocaption`, if specified, suppresses the caption entirely.
-]=]
+* `lang`: language object for the hyphenations or syllabifications;
+* `hyphs`: a list of hyphenations/syllabifications, each described by an object which can contain the following fields:
+  ** `hyph`: list of syllables comprising the hyphenation or syllabification, each a string;
+  ** `q`: {nil} or a list of left regular qualifier strings, formatted using {format_qualifier()} in
+     [[Module:qualifier]];
+  ** `qq`: {nil} or a list of right regular qualifier strings;
+  ** `qualifiers`: {nil} or a list of left regular qualifier strings; for compatibiliy purposes only, do not use in new
+     code;
+  ** `a`: {nil} or a list of left accent qualifier strings, formatted using {format_qualifiers()} in
+     [[Module:accent qualifier]];
+  ** `aa`: {nil} or a list of right accent qualifier strings;
+* `sc`: {nil} or script object for the hyphenations/syllabifications;
+* `caption`, {nil} or a string specifying the caption to use, in place of {"Hyphenation"}; e.g. use {"Syllabification"}
+  if what is passed in is actually a syllabification, as is common; a colon and space is automatically added after the
+  caption;
+* `nocaption`: if true, suppress the caption display.
+]==]
 function export.format_hyphenations(data)
 	local hyphtexts = {}
-	local hyphcats = {}
 
 	for _, hyph in ipairs(data.hyphs) do
 		if #hyph.hyph == 0 then
@@ -51,23 +35,33 @@ function export.format_hyphenations(data)
 			lang = data.lang, sc = data.sc, alt = table.concat(hyph.hyph, "‧"), tr = "-" }
 		if hyph.q and hyph.q[1] or hyph.qq and hyph.qq[1] or hyph.qualifiers and hyph.qualifiers[1]
 			or hyph.a and hyph.a[1] or hyph.aa and hyph.aa[1] then
-			text = require("Module:pron qualifier").format_qualifiers(hyph, text)
+			text = require("Module:pron qualifier").format_qualifiers {
+				lang = data.lang,
+				text = text,
+				q = hyph.q,
+				qq = hyph.qq,
+				qualifiers = hyph.qualifiers,
+				a = hyph.a,
+				aa = hyph.aa,
+			}
 		end
 		table.insert(hyphtexts, text)
-		if categorise_syllables[data.lang:getCode()] then
-			table.insert(hyphcats, data.lang:getCanonicalName() .. " " .. tostring(#hyph.hyph) .. "-syllable words")
-		end
 	end
-
+	
+	local prefix = (data.nocaption and "") or ((data.caption or "Hyphenation") .. ": ")
 	local text = table.concat(hyphtexts, ", ")
-	local categories = #hyphcats > 0 and require("Module:utilities").format_categories(hyphcats, data.lang) or ""
-	return (data.nocaption and "" or (data.caption or "Hyphenation") .. ": ") .. text .. categories
+	return prefix .. text
 end
 
 
--- The implementation of the {{hyphenation}} template. Broken out so that it can function as an (older) entry point
--- for modules. FIXME: Convert modules that use this to use format_hyphenations() directly.
-function export.hyphenate(parent_args)
+--[==[
+The implementation of the {{tl|hyphenation}} template. Broken out so that it can function as an (older) entry point
+for modules. '''FIXME''': Convert modules that use this to use {format_hyphenations()} directly.
+]==]
+function export.hyphenate(parent_args, notrack)
+	if not notrack then
+		track("hyphenate-entry-point")
+	end
 	local compat = parent_args["lang"]
 	local offset = compat and 0 or 1
 	local params = {
@@ -114,7 +108,9 @@ function export.hyphenate(parent_args)
 end
 
 
--- Entry point for {{hyphenation}} template.
+--[==[
+Entry point for {{tl|hyphenation}} template (also written {{tl|hyph}}).
+]==]
 function export.hyphenation(frame)
 	local parent_args = frame:getParent().args
 	return export.hyphenate(parent_args)
