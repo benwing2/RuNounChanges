@@ -78,8 +78,8 @@ function export.show(frame)
 		tr = {},
 		ts = {},
 		g = {
-			-- [[Module:links]] expects the genders in "g". `sublist = true` automatically splits on comma (optionally
-			-- with surrounding whitespace).
+			-- [[Module:links]] expects the genders in "genders". `sublist = true` automatically splits on comma
+			-- (optionally with surrounding whitespace).
 			item_dest = "genders",
 			sublist = true,
 		},
@@ -176,12 +176,13 @@ parameter (e.g.  {"t"}, {"pos"}) and the value is a table with optional elements
 --[==[
 Add "pronunciation qualifiers" to `param_mods`. By default, this consists of {"q"}, {"qq"}, {"a"}, {"aa"} and {"ref"},
 along with `convert` functions to appropriately parse and convert the values. By default, all but {"ref"} have
-`separate_no_index = true` set. The `qtypes` parameter can be used to override the set of properties added and
-optionally whether `separate_no_index` is set. Its value is a list of specs, each of which is either a string (a
-parameter set to add) or an object containing properties `param` (the parameter set to add) and `separate_no_index` (if
-set to {true} or {false}, override the value of `separate_no_index` for the parameters specified by `param`). The
-possible values of `param`, the respective parameters controlled and their default values for `separate_no_index` are
-specified in the following table:
+`separate_no_index = true` set. The `qspecs` parameter can be used to override the set of properties added and
+optionally the specs for these properties. Its value is a list of specs, each of which is either a string (a parameter
+set to add) or an object containing properties `param` (the parameter set to add) and any additional properties to set
+in the parameter specs. Any specified properties override default values (see below). For example, if
+`separate_no_index` is specified and set to {true} or {false}, it overrides the default value of `separate_no_index`
+associated with the parameters specified by `param`. The possible values of `param`, the respective parameters
+controlled and their default values are specified in the following table:
 
 {|class="wikitable"
 ! value of `param` !! parameters controlled !! meaning !! destination field !! default for `separate_no_index`
@@ -195,34 +196,38 @@ specified in the following table:
 | {"ref"} || {"ref"} || references of the format used by [[Module:references]] || `refs` || {false}
 |}
 ]==]
-function export.augment_param_mods_with_pron_qualifiers(param_mods, qtypes)
-	qtypes = qtypes or {"q", "a", "ref"}
-	for _, qtype in ipairs(qtypes) do
-		if type(qtype) == "string" then
-			qtype = {param = qtype}
+function export.augment_param_mods_with_pron_qualifiers(param_mods, qspecs)
+	qspecs = qspecs or {"q", "a", "ref"}
+	for _, qspec in ipairs(qspecs) do
+		if type(qspec) == "string" then
+			qspec = {param = qspec}
 		end
-		local param = qtype.param
-		local function get_separate_no_index(default)
-			local retval = qtype.separate_no_index
-			if retval == nil then
-				return default
-			else
-				return retval
+		local param = qspec.param
+
+		local function make_spec(convert, default_separate_no_index, item_dest)
+			local separate_no_index = qspec.separate_no_index
+			if separate_no_index == nil then
+				separate_no_index = default_separate_no_index
 			end
+			local spec = {
+				separate_no_index = separate_no_index,
+				convert = qspec.convert or convert,
+				item_dest = qspec.item_dest or item_dest,
+			}
+			for k, v in pairs(qspec) do
+				if k ~= "param" and k ~= "separate_no_index" and k ~= "convert" and k ~= "item_dest" then
+					spec[k] = v
+				end
+			end
+			return spec
 		end
 
 		if param == "q" then
-			local qspec = {
-				separate_no_index = get_separate_no_index(true),
-				convert = export.parse_qualifier,
-			}
+			local qspec = make_spec(export.parse_qualifier, true)
 			param_mods.q = qspec
 			param_mods.qq = qspec
 		elseif param == "a" or param == "l" then
-			local laspec = {
-				separate_no_index = get_separate_no_index(true),
-				convert = export.parse_labels,
-			}
+			local laspec = make_spec(export.parse_labels, true)
 			if param == "a" then
 				param_mods.a = laspec
 				param_mods.aa = laspec
@@ -231,11 +236,8 @@ function export.augment_param_mods_with_pron_qualifiers(param_mods, qtypes)
 				param_mods.ll = laspec
 			end
 		elseif param == "ref" then
-			param_mods.ref = {
-				item_dest = "refs",
-				separate_no_index = get_separate_no_index(false),
-				convert = export.parse_references,
-			}
+			local refspec = make_spec(export.parse_references, false, "refs")
+			param_mods.ref = refspec
 		else
 			error(("Internal error: Unrecognized qualifier type %s"):format(dump(param)))
 		end
@@ -278,14 +280,15 @@ function export.augment_params_with_modifiers(params, param_mods)
 	end
 end
 
-local function make_parse_err(data)
-	return function(msg, stack_frames_to_ignore)
-		error(("%s: %s%s=%s"):format(
-			msg, data.param_mod, (data.termno > 1 or data.param_mod_spec.require_index or
-				data.param_mod_spec.separate_no_index) and data.termno or "", data.arg
-		), stack_frames_to_ignore
-		)
-	end
+--[==[
+Return true if `k`, a key in an item, refers to a property of the item (is not one of the specially stored values).
+Note that `lang` and `sc` are considered properties of the item, although `lang` is set when there's a language
+prefix and both `lang` and `sc` may be set from default values specified in the `data` structure passed into
+`process_list_arguments()`. If you don't want these treated as property keys, you need to check for them yourself.
+]==]
+function export.item_key_is_property(k)
+	return k ~= "term" and k ~= "termlang" and k ~= "termlangs" and k ~= "itemno" and k ~= "orig_index" and
+		k ~= "separator"
 end
 
 --[==[
@@ -326,6 +329,53 @@ modifiers or separate parameters. `data` is an object containing the following p
 * `sc`: The script code for the items. In general, as with `lang`,  it is not necessary to specify this. However, if
   specified, it is used to supply the default for the `sc` property of returned objects if not otherwise set (e.g. by
   the {{para|sc<var>N</var>}} parameter or `<sc:...>` inline modifier).
+* `disallow_custom_separators`: If specified, disallow specifying a bare semicolon as an item value to indicate that the
+  item's previous separator should be a semicolon. By default, the previous separator of each item is considered to be
+  an empty string (for the first item) and otherwise a comma + space, unless either the preceding item is a bare
+  semicolon (which causes the following item's previous separator to be a semicolon + space) or an item has an embedded
+  comma in it (which causes ''all'' items other than the first to have their previous separator be a semicolon + space).
+  The previous separator of each item is set on the item's `separator` property. Bare semicolons do not count when
+  indexing items using separate parameters. For example, the following is correct:
+  ** {{tl|template|lang|item 1|q1=qualifier 1|;|item 2|q2=qualifier 2}}
+  If `disallow_custom_separators` is specified, however, the `separator` property is not set and bare semicolons do not
+  get any special treatment.
+* `dont_skip_items`: Normally, items that are completely unspecified (have no term and no properties) are skipped and
+  not inserted into the returned list of items. (Such items cannot occur if `disallow_holes = true` is set on the term
+  specification in the `params` structure passed to `process()` in [[Module:parameters]]. It is generally recommended
+  to do so unless a specific meaning is associated the term value being missing.) If `dont_skip_items` is set, however,
+  items are never skipped, and completely unspecified items will be returned along with others. (They will not have
+  the term or any properties set, but will have the normal non-property fields set; see below.)
+* `stop_when`: If specified, a function to determine when to prematurely stop processing items. It is passed a single
+  argument, an object containing the following fields:
+  ** `term`: The raw term, prior to parsing off language prefixes and inline modifiers (since the processing of
+     `stop_when` happens before parsing the term).
+  ** `any_param_at_index`: True if any separate property parameters exist for this item.
+  ** `orig_index`: Same as `orig_index` below.
+  ** `itemno`: Same as `itemno` below.
+  ** `stored_itemno`: The index where this item will be stored into the returned items table. This may differ from
+     `itemno` due to skipped items (it will never be different if `dont_skip_items` is set).
+  The function should return true to stop processing items and return the ones processed so far (not including the item
+  currently being processed). This is used, for example, in [[Module:alternative forms]], where an unspecified item
+  signal the end of items and the start of labels.
+
+The return value is a list of items. There will be one field set for each specified property (either through inline
+modifiers or separate parameters). In addition, the following fields may be set:
+* `term`: The term portion of the item (minus inline modifiers and language prefixes). {nil} if no term was given.
+* `orig_index`: The original index into the item in the items table returned by `process()` in [[Module:parameters]].
+  This may differ from `itemno` if there are raw semiclons and `disallow_custom_separators` is not given.
+* `itemno`: The logical index of the item. The index of separate parameters corresponds to this index. This may be
+  different from `orig_index` in the presence of raw semicolons; see above.
+* `separator`: The separator to display before the term. Always set unless `disallow_custom_separators` is given, in
+  which case it is not set.
+* `termlang`: If there is a language prefix, the corresponding language object is stored here (only if
+  `parse_lang_prefix` is set and `allow_multiple_lang_prefixes` is not set).
+* `termlangs`: If there is are language prefixes and both `parse_lang_prefix` and `allow_multiple_lang_prefixes` are
+   set, the list of corresponding language objects is stored here.
+* `lang`: The language object of the item. This is set when either (a) there is a language prefix parsed off (if
+  multiple prefixes are allowed, this corresponds to the first one); (b) the `lang` property is allowed and specified;
+  (c) neither (a) nor (b) apply and the `lang` field of the overall `data` object is set, providing a default value.
+* `sc`: The script object of the item. This is set when either (a) the `sc` property is allowed and specified; (b)
+  `sc` isn't otherwise set and the `sc` field of the overall `data` object is set, providing a default value.
 ]==]
 function export.process_list_arguments(data)
 	-- Find the maximum index among any of the list parameters.
@@ -348,11 +398,11 @@ function export.process_list_arguments(data)
 	local use_semicolon = false
 	local term_dest = data.term_dest or "term"
 
-	local termno = 0
+	local itemno = 0
 	for i = 1, maxmaxindex do
 		local term = term_args[i]
-		if term ~= ";" then
-			termno = termno + 1
+		if data.disallow_custom_separators or term ~= ";" then
+			itemno = itemno + 1
 
 			-- Compute whether any of the separate indexed params exist for this index.
 			local any_param_at_index = term ~= nil
@@ -362,31 +412,44 @@ function export.process_list_arguments(data)
 					-- (1) key is a string (excludes the term param, which is a number);
 					-- (2) value is a table, i.e. a list;
 					-- (3) v.maxindex is set (i.e. allow_holes was used);
-					-- (4) the value has an entry at index `termno` (the current logical index).
-					if type(k) == "string" and type(v) == "table" and v.maxindex and v[termno] then
+					-- (4) the value has an entry at index `itemno` (the current logical index).
+					if type(k) == "string" and type(v) == "table" and v.maxindex and v[itemno] then
 						any_param_at_index = true
 						break
 					end
 				end
 			end
 
+			if data.stop_when and data.stop_when {
+				term = term,
+				any_param_at_index = any_param_at_index,
+				orig_index = i,
+				itemno = itemno,
+				stored_itemno = #items + 1,
+			} then
+				break
+			end
+
 			-- If any of the params used for formatting this term is present, create a term and add it to the list.
-			if not any_param_at_index then
+			if not data.dont_skip_items and not any_param_at_index then
 				track("skipped-term", data.track_module)
 			else
 				if not term then
 					track("missing-term", data.track_module)
 				end
 				local termobj = {
-					separator = i > 1 and (term_args[i - 1] == ";" and "; " or ", ") or "",
-					termno = termno,
+					itemno = itemno,
+					orig_index = i,
 				}
+				if not data.disallow_custom_separators then
+					termobj.separator = i > 1 and (term_args[i - 1] == ";" and "; " or ", ") or ""
+				end
 
 				-- Parse all the term-specific parameters and store in `termobj`.
 				for param_mod, param_mod_spec in pairs(data.param_mods) do
 					local dest = param_mod_spec.item_dest or param_mod
 					local param_key = param_mod_spec.param_key or param_mod
-					local arg = data.args[param_key] and data.args[param_key][termno]
+					local arg = data.args[param_key] and data.args[param_key][itemno]
 					if arg then
 						if param_mod_spec.convert then
 							-- Beware, this operates *ON TOP OF* the conversion performed by [[Module:parameters]].
@@ -407,12 +470,16 @@ function export.process_list_arguments(data)
 							lang_cache = lang_cache,
 						}
 						termobj[term_dest] = actual_term ~= "" and actual_term or nil
-						if data.allow_multiple_lang_prefixes then
-							termobj.termlangs = termlangs
-							termobj.lang = termlangs and termlangs[1] or nil
-						else
-							termobj.termlang = termlangs
-							termobj.lang = termlangs
+						if termlangs then
+							-- If we couldn't parse a language code, don't overwrite an existing setting in `lang`
+							-- that may have originated from a separate |langN= param.
+							if data.allow_multiple_lang_prefixes then
+								termobj.termlangs = termlangs
+								termobj.lang = termlangs and termlangs[1] or nil
+							else
+								termobj.termlang = termlangs
+								termobj.lang = termlangs
+							end
 						end
 					else
 						termobj[term_dest] = term ~= "" and term or nil
@@ -437,11 +504,14 @@ function export.process_list_arguments(data)
 				termobj.lang = termobj.lang or data.lang
 				termobj.sc = termobj.sc or data.sc
 
-				-- If the displayed term (from .term/etc. or .alt) has an embedded comma, use a semicolon to join the terms.
-				local term_text = termobj[term_dest] or termobj.alt
-				if not use_semicolon and term_text then
-					if term_text:find(",", 1, true) then
-						use_semicolon = true
+				if not data.disallow_custom_separators then
+					-- If the displayed term (from .term/etc. or .alt) has an embedded comma, use a semicolon to join
+					-- the terms.
+					local term_text = termobj[term_dest] or termobj.alt
+					if not use_semicolon and term_text then
+						if term_text:find(",", 1, true) then
+							use_semicolon = true
+						end
 					end
 				end
 
@@ -450,7 +520,7 @@ function export.process_list_arguments(data)
 		end
 	end
 
-	if use_semicolon then
+	if use_semicolon then -- never set when `data.disallow_custom_separators` is set
 		for i, item in ipairs(items) do
 			if i > 1 then
 				item.separator = "; "
