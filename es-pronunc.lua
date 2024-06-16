@@ -10,8 +10,17 @@ local m_IPA = require("Module:IPA")
 local m_str_utils = require("Module:string utilities")
 local m_table = require("Module:table")
 local audio_module = "Module:audio"
+local headword_data_module = "Module:headword/data"
+local homophones_module = "Module:homophones"
+local hyphenation_module = "Module:hyphenation"
+local labels_module = "Module:labels"
+local links_module = "Module:links"
+local parameter_utilities_module = "Module:parameter utilities"
+local parameters_module = "Module:parameters"
 local parse_utilities_module = "Module:parse utilities"
+local pron_qualifier_module = "Module:pron qualifier"
 local references_module = "Module:references"
+local rhymes_module = "Module:rhymes"
 
 local force_cat = false -- for testing
 
@@ -194,7 +203,7 @@ end
 local function convert_to_raw_text(text)
 	text = rsub(text, "<.->", "")
 	if text:find("%[%[") then
-		text = require("Module:links").remove_links(text)
+		text = require(links_module).remove_links(text)
 	end
 	return text
 end
@@ -673,7 +682,7 @@ function export.IPA_string(frame)
 		["style"] = {required = true},
 		["phonetic"] = {type = "boolean"},
 	}
-	local iargs = require("Module:parameters").process(frame.args, iparams)
+	local iargs = require(parameters_module).process(frame.args, iparams)
 	local retval = export.IPA(iargs[1], iargs.style, iargs.phonetic)
 	return retval.text
 end
@@ -1065,7 +1074,7 @@ local function generate_pronun(args)
 			if qs or pronun.qq or pronun.a or pronun.aa then
 				-- Note: This inserts the actual formatted qualifier text, including HTML and such, but the later call
 				-- to textual_len() removes all HTML and reduces links.
-				ins(require("Module:pron qualifier").format_qualifiers {
+				ins(require(pron_qualifier_module).format_qualifiers {
 					lang = lang,
 					text = "",
 					-- need to copy as formatting accent qualifiers destructively modifies the lists
@@ -1144,7 +1153,7 @@ function export.show(frame)
 		["bullets"] = {type = "number", default = 1},
 	}
 	local parargs = frame:getParent().args
-	local args = require("Module:parameters").process(parargs, params)
+	local args = require(parameters_module).process(parargs, params)
 	local text = args[1] or mw.title.getCurrentTitle().text
 	args.terms = {{term = text}}
 	local ret = generate_pronun(args)
@@ -1316,8 +1325,13 @@ local function dodialect_specified_rhymes(rhymes, hyphs, parsed_respellings, rhy
 end
 
 
-local q_qq_inline_modifier_spec = { store = "insert" }
-local a_aa_inline_modifier_spec = { store = "insert-flattened", convert = split_on_comma }
+local q_qq_inline_modifier_spec = {
+	store = "insert",
+}
+local a_aa_inline_modifier_spec = {
+	store = "insert-flattened",
+	convert = function(arg, parse_err) return require(labels_module).split_labels_on_comma(arg) end,
+}
 local ref_inline_modifier_spec = {
 	store = "insert-flattened",
 	item_dest = "refs",
@@ -1373,16 +1387,8 @@ local function parse_rhyme(arg, parse_err)
 	local param_mods = {
 		s = {
 			item_dest = "num_syl",
-			convert = function(arg, parse_err)
-				local nsyls = rsplit(arg, ",")
-				for i, nsyl in ipairs(nsyls) do
-					if not nsyl:find("^[0-9]+$") then
-						parse_err("Number of syllables '" .. nsyl .. "' should be numeric")
-					end
-					nsyls[i] = tonumber(nsyl)
-				end
-				return nsyls
-			end,
+			type = "number",
+			sublist = true,
 		},
 	}
 
@@ -1404,8 +1410,7 @@ local function parse_homophone(arg, parse_err)
 	end
 	local param_mods = {
 		t = {
-			-- We need to store the <t:...> inline modifier into the "gloss" key of the parsed term,
-			-- because that is what [[Module:links]] (called from [[Module:homophones]]) expects.
+			-- [[Module:links]] expects the gloss in "gloss".
 			item_dest = "gloss",
 		},
 		gloss = {},
@@ -1415,12 +1420,9 @@ local function parse_homophone(arg, parse_err)
 		lit = {},
 		id = {},
 		g = {
-			-- We need to store the <g:...> inline modifier into the "genders" key of the parsed term,
-			-- because that is what [[Module:links]] (called from [[Module:homophones]]) expects.
+			-- [[Module:links]] expects the genders in "genders".
 			item_dest = "genders",
-			convert = function(arg)
-				return rsplit(arg, ",")
-			end,
+			sublist = true,
 		},
 	}
 
@@ -1438,9 +1440,7 @@ end
 local function parse_audio(arg, parse_err)
 	local param_mods = {
 		IPA = {
-			convert = function(arg)
-				return rsplit(arg, ",")
-			end,
+			sublist = true,
 		},
 		text = {},
 		t = {},
@@ -1485,8 +1485,8 @@ function export.show_pr(frame)
 		["pagename"] = {},
 	}
 	local parargs = frame:getParent().args
-	local args = require("Module:parameters").process(parargs, params)
-	local pagename = args.pagename or mw.loadData("Module:headword/data").pagename
+	local args = require(parameters_module).process(parargs, params)
+	local pagename = args.pagename or mw.loadData(headword_data_module).pagename
 
 	-- Parse the arguments.
 	local respellings = #args[1] > 0 and args[1] or {"+"}
@@ -1519,12 +1519,7 @@ function export.show_pr(frame)
 				style = { overall = true },
 				bullets = {
 					overall = true,
-					convert = function(arg, parse_err)
-						if not arg:find("^[0-9]+$") then
-							parse_err("Modifier 'bullets' should have a number as argument, but saw '" .. arg .. "'")
-						end
-						return tonumber(arg)
-					end,
+					type = "number",
 				},
 				rhyme = {
 					overall = true,
@@ -1788,7 +1783,7 @@ function export.show_pr(frame)
 				force_cat = force_cat,
 			}
 			local bullet = string.rep("*", num_bullets) .. " "
-			local formatted = bullet .. require("Module:rhymes").format_rhymes(data)
+			local formatted = bullet .. require(rhymes_module).format_rhymes(data)
 			local formatted_for_len_parts = {}
 			table.insert(formatted_for_len_parts, bullet .. "Rhymes: " .. (tag and "(" .. tag .. ") " or ""))
 			for j, pronun in ipairs(expressed_style.pronun) do
@@ -1820,7 +1815,7 @@ function export.show_pr(frame)
 	end
 
 	local function format_hyphenations(hyphs, num_bullets)
-		local hyphtext = require("Module:hyphenation").format_hyphenations { lang = lang, hyphs = hyphs, caption = "Syllabification" }
+		local hyphtext = require(hyphenation_module).format_hyphenations { lang = lang, hyphs = hyphs, caption = "Syllabification" }
 		return string.rep("*", num_bullets) .. " " .. hyphtext
 	end
 
@@ -1838,7 +1833,7 @@ function export.show_pr(frame)
 	end
 
 	local function format_homophones(hmps, num_bullets)
-		local hmptext = require("Module:homophones").format_homophones { lang = lang, homophones = hmps }
+		local hmptext = require(homophones_module).format_homophones { lang = lang, homophones = hmps }
 		return string.rep("*", num_bullets) .. " " .. hmptext
 	end
 
