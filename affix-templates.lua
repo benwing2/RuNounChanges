@@ -1,30 +1,13 @@
 local export = {}
 
 local m_affix = require("Module:affix")
-local m_languages = require("Module:languages")
+local languages_module = "Module:languages"
+local parameter_utilities_module = "Module:parameter utilities"
+local parameters_module = "Module:parameters"
+local pron_qualifier_module = "Module:pron qualifier"
 local pseudo_loan_module = "Module:affix/pseudo-loan"
-local put -- initialized once, when needed, to require("Module:parse utilities")
-
-local rsplit = mw.text.split
 
 
--- Per-param modifiers, which can be specified either as separate parameters (e.g. t2=, pos3=) or as inline modifiers
--- <t:...>, <pos:...>, etc. The key is the name fo the parameter (e.g. "t", "pos") and the value is a table with
--- elements as follows:
--- * `extra_specs`: An optional table of extra key-value pairs to add to the spec used for parsing the parameter
---                  when specified as a separate parameter (e.g. {type = "boolean"} for a Boolean parameter, or
---                  {alias_of = "t"} for the "gloss" parameter, which is aliased to "t"), on top of the default, which
---                  is {list = true, allow_holes = true, require_index = true}.
--- * `convert`: An optional function to convert the raw argument into the form passed to [[Module:affix]].
---              This function takes four parameters: (1) `arg` (the raw argument); (2) `inline` (true if we're
---              processing an inline modifier, false otherwise); (3) `term_index` (the actual index of the first term);
---              (4) `i` (the logical index of the term being processed, starting from 1).
--- * `item_dest`: The name of the key used when storing the parameter's value into the processed `parts` list.
---                Normally the same as the parameter's name. Different in the case of "t", where we store the gloss in
---                "gloss", and "g", where we store the genders in "genders".
--- * `param_key`: The name of the key used in the `params` spec passed to [[Module:parameters]]. Normally the same as
---                the parameter's name. Different in the case of "lit", "sc", etc. where e.g. we distinguish per-term
---                parameters "lit1", "lit2", etc. from the overall parameter "lit".
 local param_mods = {
 	t = {
 		-- We need to store the t1=/t2= param and the <t:...> inline modifier into the "gloss" key of the parsed part,
@@ -32,8 +15,7 @@ local param_mods = {
 		item_dest = "gloss",
 	},
 	gloss = {
-		-- The `extra_specs` handles the fact that "gloss" is an alias of "t".
-		extra_specs = {alias_of = "t"},
+		alias_of = "t",
 	},
 	tr = {},
 	ts = {},
@@ -41,304 +23,166 @@ local param_mods = {
 		-- We need to store the g1=/g2= param and the <g:...> inline modifier into the "genders" key of the parsed part,
 		-- because that is what [[Module:affix]] expects.
 		item_dest = "genders",
-		convert = function(arg, inline, term_index, i)
-			return rsplit(arg, ",")
-		end,
+		sublist = true,
 	},
 	id = {},
 	alt = {},
-	q = {},
-	qq = {},
 	lit = {
-		-- lit1=, lit2=, ... are different from lit=; the former describe the literal meaning of an individual argument
-		-- while the latter applies to the expression as a whole and appears after them at the end. To handle this in
-		-- separate parameters, we need to set the key in the `params` object passed to [[Module:parameters]] to
-		-- something else (in this case "partlit") and set `list = "lit"` in the value of the `params` object. This
-		-- causes [[Module:parameters]] to fetch parameters named lit1=, lit2= etc. but store them into "partlit", while
-		-- lit= is stored into "lit".
-		param_key = "partlit",
-		extra_specs = {list = "lit"},
+		separate_no_index = true,
 	},
 	pos = {
-		-- pos1=, pos2=, ... are different from pos=; the former indicate the part of speech of an individual argument
-		-- and appear in parens after the term (similar to the pos= argument to {{l}}), while the latter applies to the
-		-- expression as a whole and controls the names of various categories. We handle the distinction identically to
-		-- lit1= etc. vs. lit=; see above.
-		param_key = "partpos",
-		extra_specs = {list = "pos"},
+		separate_no_index = true,
 	},
 	lang = {
-		-- lang1=, lang2=, ... are different from 1=; the former set the language of individual arguments that are
-		-- different from the overall language specified in 1=. Note that the preferred way of specifying a different
-		-- language for a given individual argument is using a language-code prefix, e.g. 'la:minūtia' or
-		-- 'grc:[[σκῶρ|σκατός]]', instead of using langN=. Since for compatibility purposes we may support lang= as
-		-- a synonym of 1=, we can't store langN= in "lang". Instead we do the same as for lit1= etc. vs. lit= above.
-		-- In addition, we need a conversion function to convert from language codes to language objects, which needs
-		-- to conditionalize the `param` parameter of `getByCode` of [[Module:languages]] on whether the param is
-		-- inline. (This only affects the error message.)
-		param_key = "partlang",
-		extra_specs = {list = "lang"},
-		convert = function(arg, inline, term_index, i)
-			-- term_index + i - 1 because we want to reference the actual term param name, which offsets from
-			-- `term_index` (the index of the first term); subtract 1 since i is one-based.
-			return m_languages.getByCode(arg, inline and "" .. (term_index + i - 1) .. ":lang" or "lang" .. i, "allow etym")
-		end,
+		require_index = true,
+		type = "language",
+		etym_lang = true,
 	},
 	sc = {
-		-- sc1=, sc2=, ... are different from sc=; the former apply to individual arguments when lang1=, lang2=, ...
-		-- is specified, while the latter applies to all arguments where langN=... isn't specified. We handle the
-		-- distinction identically to lit1= etc. vs. lit=; see above. In addition, we need a conversion function to
-		-- convert from script codes to script objects, which needs to conditionalize the `param` parameter of
-		-- `getByCode` of [[Module:scripts]] on whether the param is inline. (This only affects the error message.)
-		param_key = "partsc",
-		extra_specs = {list = "sc"},
-		convert = function(arg, inline, term_index, i)
-			-- term_index + i - 1 same as above for "lang".
-			return require("Module:scripts").getByCode(arg, inline and "" .. (term_index + i - 1) .. ":sc" or "sc" .. i)
-		end,
+		separate_no_index = true,
+		type = "script",
 	},
 }
 
-
-local function get_valid_prefixes()
-	local valid_prefixes = {}
-	for param_mod, _ in pairs(param_mods) do
-		table.insert(valid_prefixes, param_mod)
+for k, v in pairs(param_mods) do
+	if not v.separate_no_index then
+		v.require_index = true
 	end
-	table.sort(valid_prefixes)
-	return valid_prefixes
 end
 
 
-local function fetch_script(sc, param)
-	return sc and require("Module:scripts").getByCode(sc, param) or nil
+local function is_property_key(k)
+	return require(parameter_utilities_module).item_key_is_property(k)
 end
 
 
 -- Parse raw arguments in `args`. If `extra_params` is specified, it should be a one-argument function that is called
 -- on the `params` structure before parsing; its purpose is to specify additional allowed parameters or possibly disable
 -- parameters. If `has_source` is given, there is a source-language parameter following 1= (which becomes the
--- "destination" language parameter) and preceding the terms. This is currently used for {{pseudo-loan}}. The
--- source-language parameter is allowed to be an etymology-only language while the language in 1= is currently not so
--- allowed (FIXME: should we change this?). Returns five values ARGS, TERM_INDEX, LANG_OBJ, SCRIPT_OBJ, SOURCE_LANG_OBJ
--- where ARGS is a table of the parsed arguments; TERM_INDEX is the argument containing all the terms; LANG_OBJ is the
--- language object corresponding to the language code specified in 1=; SCRIPT_OBJ is the script object corresponding to
--- sc= (if given, otherwise nil); and SOURCE_LANG_OBJ is the language object corresponding to the source-language code
--- specified in 2= if `has_source` is specified (otherwise nil).
-local function parse_args(args, extra_params, has_source, ilangcode)
-	if args.lang then
+-- "destination" language parameter) and preceding the terms. This is currently used for {{pseudo-loan}}. All language
+-- parameters are allowed to be etymology-only language. Returns five values ARGS, TERM_INDEX, LANG_OBJ, SCRIPT_OBJ,
+-- SOURCE_LANG_OBJ where ARGS is a table of the parsed arguments; TERM_INDEX is the argument containing all the terms;
+-- LANG_OBJ is the language object corresponding to the language code specified in 1=; SCRIPT_OBJ is the script object
+-- corresponding to sc= (if given, otherwise nil); and SOURCE_LANG_OBJ is the language object corresponding to the
+-- source-language code specified in 2= if `has_source` is specified (otherwise nil).
+local function parse_args(parent_args, extra_params, has_source, ilangcode)
+	if parent_args.lang then
 		error("The |lang= parameter is not used by this template. Place the language code in parameter 1 instead.")
 	end
 
 	local term_index = (ilangcode and 1 or 2) + (has_source and 1 or 0)
 	local params = {
 		[term_index] = {list = true, allow_holes = true},
-
-		["lit"] = {},
-		["sc"] = {},
-		["pos"] = {},
 		["sort"] = {},
 		["nocap"] = {type = "boolean"}, -- always allow this even if not used, for use with {{surf}}, which adds it
 	}
 
 	if not ilangcode then
-		params[1] = {required = true, default = "und"}
+		params[1] = {required = true, type = "language", etym_lang = true, default = "und"}
 	end
 
 	local source_index
 	if has_source then
 		source_index = term_index - 1
-		params[source_index] = {required = true, default = "und"}
+		params[source_index] = {required = true, type = "language", etym_lang = true, default = "und"}
 	end
 
-	local default_param_spec = {list = true, allow_holes = true, require_index = true}
-	for param_mod, param_mod_spec in pairs(param_mods) do
-		local param_key = param_mod_spec.param_key or param_mod
-		if not param_mod_spec.extra_specs then
-			params[param_key] = default_param_spec
-		else
-			local param_spec = mw.clone(default_param_spec)
-			for k, v in pairs(param_mod_spec.extra_specs) do
-				param_spec[k] = v
-			end
-			params[param_key] = param_spec
-		end
-	end
+    local m_param_utils = require(parameter_utilities_module)
+	m_param_utils.augment_param_mods_with_pron_qualifiers(param_mods, {"q", "l", "ref"})
+	m_param_utils.augment_params_with_modifiers(params, param_mods)
 
 	if extra_params then
 		extra_params(params)
 	end
 
-	args = require("Module:parameters").process(args, params)
+	local args = require(parameters_module).process(parent_args, params)
+
 	local lang
 	if ilangcode then
-		lang = m_languages.getByCode(ilangcode, true, "allow etym")
+		lang = require(languages_module).getByCode(ilangcode, true, "allow etym")
 	else
-		lang = m_languages.getByCode(args[1], 1, "allow etym")
+		lang = args[1]
 	end
 	local source
 	if has_source then
-		source = m_languages.getByCode(args[source_index], source_index, "allow etym")
-	end
-	return args, term_index, lang, fetch_script(args["sc"], "sc"), source
-end
-
-
--- Return an object containing all the properties of the `i`th term. `template` is the name of the calling template
--- (used only in the debug-tracking mechanism). `args` is the arguments as returned by parse_args(). `term_index` is
--- the argument containing all the terms. This handles all the complexities of fetching all the properties associated
--- with a term either out of separate parameters (e.g. pos3=, g2=) or from inline modifiers (e.g.
--- 'term<pos:noun><g:m-p>'). It also handles parsing off a separate language code attached to the beginning of a term or
--- specified using langN= or <lang:CODE>.
-local function get_parsed_part(template, args, term_index, i)
-	local part = {}
-	local term = args[term_index][i]
-
-	if not (term or args["alt"][i] or args["tr"][i] or args["ts"][i]) then
-		require("Module:debug/track")(template .. "/no term or alt or tr")
-		local partlang = args["partlang"][i]
-		if partlang then
-			return { lang = m_languages.getByCode(partlang, term_index + i - 1, "allow etym") }
-		else
-			return nil
-		end
+		source = args[source_index]
 	end
 
-	-- Parse all the term-specific parameters and store in `part`.
-	for param_mod, param_mod_spec in pairs(param_mods) do
-		local dest = param_mod_spec.item_dest or param_mod
-		local param_key = param_mod_spec.param_key or param_mod
-		local arg = args[param_key] and args[param_key][i]
-		if arg then
-			if param_mod_spec.convert then
-				arg = param_mod_spec.convert(arg, false, term_index, i)
-			end
-			part[dest] = arg
-		end
-	end
+	local items = m_param_utils.process_list_arguments {
+		args = args,
+		param_mods = param_mods,
+		termarg = term_index,
+		parse_lang_prefix = true,
+		track_module = "homophones",
+		disallow_custom_separators = true,
+		-- For compatibility, we need to not skip completely unspecified items. It is common, for example, to do
+		-- {{suffix|lang||foo}} to generate "+ -foo".
+		dont_skip_items = true,
+		-- Don't pass in `lang` or `sc`, as they will be used as defaults to initialize the items, which we don't want
+		-- (particularly for `lang`), as the code in [[Module:affix]] uses the presence of `lang` as an indicator that
+		-- a part-specific language was explicitly given.
+	}
 
-	-- Remove and remember an initial exclamation point from the term, and parse off an initial language code (e.g.
-	-- 'la:minūtia' or 'grc:[[σκῶρ|σκατός]]').
-	if term then
-		local termlang, actual_term = term:match("^([A-Za-z0-9._-]+):(.*)$")
-		if termlang and termlang ~= "w" then -- special handling for w:... links to Wikipedia
-			-- -1 since i is one-based
-			termlang = m_languages.getByCode(termlang, term_index + i - 1, "allow etym")
-			term = actual_term
-		else
-			termlang = nil
-		end
-		if part.lang and termlang then
-			error(("Both lang%s= and a language in %s= given; specify one or the other"):format(i, i + 1))
-		end
-		part.lang = part.lang or termlang
-		part.term = term
-	end
-
-	-- Check for inline modifier, e.g. מרים<tr:Miryem>. But exclude HTML entry with <span ...>, <i ...>, <br/> or
-	-- similar in it, caused by wrapping an argument in {{l|...}}, {{af|...}} or similar. Basically, all tags of
-	-- the sort we parse here should consist of a less-than sign, plus letters, plus a colon, e.g. <tr:...>, so if
-	-- we see a tag on the outer level that isn't in this format, we don't try to parse it. The restriction to the
-	-- outer level is to allow generated HTML inside of e.g. qualifier tags, such as foo<q:similar to {{m|fr|bar}}>.
-	if term and term:find("<") and not term:find("^[^<]*<[a-z]*[^a-z:]") then
-		if not put then
-			put = require("Module:parse utilities")
-		end
-		local run = put.parse_balanced_segment_run(term, "<", ">")
-		local function parse_err(msg)
-			error(msg .. ": " .. (i + 1) .. "=" .. table.concat(run))
-		end
-		part.term = run[1]
-
-		for j = 2, #run - 1, 2 do
-			if run[j + 1] ~= "" then
-				parse_err("Extraneous text '" .. run[j + 1] .. "' after modifier")
-			end
-			local modtext = run[j]:match("^<(.*)>$")
-			if not modtext then
-				parse_err("Internal error: Modifier '" .. modtext .. "' isn't surrounded by angle brackets")
-			end
-			local prefix, arg = modtext:match("^([a-z]+):(.*)$")
-			if not prefix then
-				parse_err(("Modifier %s lacks a prefix, should begin with one of %s followed by a colon"):format(
-					run[j], table.concat(get_valid_prefixes(), ",")))
-			end
-			if not param_mods[prefix] then
-				parse_err(("Unrecognized prefix '%s' in modifier %s, should be one of %s"):format(
-					prefix, run[j], table.concat(get_valid_prefixes(), ",")))
-			end
-			local dest = param_mods[prefix].item_dest or prefix
-			if part[dest] then
-				parse_err("Modifier '" .. prefix .. "' occurs twice, second occurrence " .. run[j])
-			end
-			if param_mods[prefix].convert then
-				arg = param_mods[prefix].convert(arg, true, term_index, i)
-			end
-			part[dest] = arg
-		end
-	end
-
-	return part
-end
-
-
--- Return an array of objects describing all the terms specified by the user. The meat of the work is done by
--- get_parsed_part(). `template`, `args` and `term_index` are as in get_parsed_part() and are required. Optional
--- `max_terms_allowed` restricts the number of terms that can be specified, and optional `start_index` specifies the
--- first index in the user-specified terms under the `term_index` argument to pull terms out of, defaulting to 1.
--- Currently only suffix() specifies a value for `start_index`, because the first term is handled differently by
--- suffix() compared with all the remaining terms.
-local function get_parsed_parts(template, args, term_index, max_terms_allowed, start_index)
-	local parts = {}
-	start_index = start_index or 1
-
-	-- Find the maximum index among any of the list parameters.
-	local maxmaxindex = 0
-	for k, v in pairs(args) do
-		if type(v) == "table" and v.maxindex and v.maxindex > maxmaxindex then
-			if max_terms_allowed and v.maxindex > max_terms_allowed then
-				-- Try to determine the original parameter name associated with v.maxindex.
-				if type(k) == "number" then
-					-- Subtract one because e.g. if terms start at 2, the 4th term is in 5=.
-					arg = k + v.maxindex - 1
-				else
-					arg = k .. v.maxindex
+	-- For compatibility with the prior code, we need to convert items without term or properties to nil.
+	for i = 1, #items do
+		local item = items[i]
+		local saw_item_property = item.term
+		if not saw_item_property then
+			for k, v in pairs(item) do
+				if is_property_key(k) then
+					saw_item_property = true
+					break
 				end
-				error(("In [[Template:%s|%s]], at most %s terms can be specified but argument %s specified, corresponding to term #%s")
-					:format(template, template, max_terms_allowed, arg, v.maxindex))
 			end
-			maxmaxindex = v.maxindex
+		end
+		if not saw_item_property then
+			items[i] = nil
 		end
 	end
 
-	for index = start_index, maxmaxindex do
-		local part = get_parsed_part(template, args, term_index, index)
-		parts[index - start_index + 1] = part
-	end
+	return args, items, lang, args.sc.default, source
+end
 
-	return parts
+
+local function augment_affix_data(data, args, lang, sc)
+	data.lang = lang
+	data.sc = sc
+	data.pos = args.pos and args.pos.default
+	data.lit = args.lit and args.lit.default
+	data.sort = args.sort
+	data.type = args.type
+	data.nocap = args.nocap
+	data.notext = args.notext
+	data.nocat = args.nocat
+	data.force_cat = args.force_cat
+	require(pron_qualifier_module).parse_qualifiers {
+		store_obj = data,
+		l = args.l.default,
+		ll = args.ll.default,
+		q = args.q.default,
+		qq = args.qq.default,
+	}
+	return data
 end
 
 
 function export.affix(frame)
 	local function extra_params(params)
-		params["type"] = {}
-		params["notext"] = {type = "boolean"}
-		params["nocat"] = {type = "boolean"}
-		params["force_cat"] = {type = "boolean"}
+		params.type = {}
+		params.notext = {type = "boolean"}
+		params.nocat = {type = "boolean"}
+		params.force_cat = {type = "boolean"}
 	end
 
-	local args, term_index, lang, sc = parse_args(frame:getParent().args, extra_params)
+	local args, parts, lang, sc = parse_args(frame:getParent().args, extra_params)
 
-	if args["type"] and not m_affix.compound_types[args["type"]] then
-		error("Unrecognized compound type: '" .. args["type"] .. "'")
+	if args.type and not m_affix.compound_types[args.type] then
+		error("Unrecognized compound type: '" .. args.type .. "'")
 	end
-
-	local parts = get_parsed_parts("affix", args, term_index)
 
 	-- There must be at least one part to display. If there are gaps, a term
 	-- request will be shown.
-	if not next(parts) and not args["type"] then
+	if not next(parts) and not args.type then
 		if mw.title.getCurrentTitle().nsText == "Template" then
 			parts = { {term = "prefix-"}, {term = "base"}, {term = "-suffix"} }
 		else
@@ -346,32 +190,26 @@ function export.affix(frame)
 		end
 	end
 
-	return m_affix.show_affix {
-		lang = lang, sc = sc, parts = parts, pos = args["pos"], sort_key = args["sort"], type = args["type"],
-		nocap = args["nocap"], notext = args["notext"], nocat = args["nocat"], lit = args["lit"],
-		force_cat = args["force_cat"]
-	}
+	return m_affix.show_affix(augment_affix_data({ parts = parts }, args, lang, sc))
 end
 
 function export.compound(frame)
 	local function extra_params(params)
-		params["type"] = {}
-		params["notext"] = {type = "boolean"}
-		params["nocat"] = {type = "boolean"}
-		params["force_cat"] = {type = "boolean"}
+		params.type = {}
+		params.notext = {type = "boolean"}
+		params.nocat = {type = "boolean"}
+		params.force_cat = {type = "boolean"}
 	end
 
-	local args, term_index, lang, sc = parse_args(frame:getParent().args, extra_params)
+	local args, parts, lang, sc = parse_args(frame:getParent().args, extra_params)
 
-	if args["type"] and not m_affix.compound_types[args["type"]] then
-		error("Unrecognized compound type: '" .. args["type"] .. "'")
+	if args.type and not m_affix.compound_types[args.type] then
+		error("Unrecognized compound type: '" .. args.type .. "'")
 	end
-
-	local parts = get_parsed_parts("compound", args, term_index)
 
 	-- There must be at least one part to display. If there are gaps, a term
 	-- request will be shown.
-	if not next(parts) and not args["type"] then
+	if not next(parts) and not args.type then
 		if mw.title.getCurrentTitle().nsText == "Template" then
 			parts = { {term = "first"}, {term = "second"} }
 		else
@@ -379,11 +217,7 @@ function export.compound(frame)
 		end
 	end
 
-	return m_affix.show_compound {
-		lang = lang, sc = sc, parts = parts, pos = args["pos"], sort_key = args["sort"], type = args["type"],
-		nocap = args["nocap"], notext = args["notext"], nocat = args["nocat"], lit = args["lit"],
-		force_cat = args["force_cat"]
-	}
+	return m_affix.show_compound(augment_affix_data({ parts = parts }, args, lang, sc))
 end
 
 
@@ -396,26 +230,28 @@ function export.compound_like(frame)
 		["cat"] = {},
 	}
 
-	local iargs = require("Module:parameters").process(frame.args, iparams, nil, "affix/templates", "compound_like")
+	local iargs = require("Module:parameters").process(frame.args, iparams)
 	local parent_args = frame:getParent().args
 
 	local function extra_params(params)
-		params["pos"] = nil
-		params["notext"] = {type = "boolean"}
-		params["nocat"] = {type = "boolean"}
-		params["force_cat"] = {type = "boolean"}
+		-- FIXME, why are we doing this? Formerly we had 'params.pos = nil' whose intention was to
+		-- disable the overall pos= while preserving posN=, which is equivalent to the following using
+		-- the new syntax. But why is this necessary?
+		params.pos.require_index = true
+		params.pos.separate_no_index = false
+		params.notext = {type = "boolean"}
+		params.nocat = {type = "boolean"}
+		params.force_cat = {type = "boolean"}
 	end
 
-	local args, term_index, lang, sc = parse_args(parent_args, extra_params, nil, iargs.lang)
+	local args, parts, lang, sc = parse_args(parent_args, extra_params, nil, iargs.lang)
 
-	local template = iargs["template"]
-	local nocat = args["nocat"]
-	local notext = args["notext"]
-	local text = not notext and iargs["text"]
-	local oftext = not notext and (iargs["oftext"] or text and "of")
-	local cat = not nocat and iargs["cat"]
-
-	local parts = get_parsed_parts(template, args, term_index)
+	local template = iargs.template
+	local nocat = args.nocat
+	local notext = args.notext
+	local text = not notext and iargs.text
+	local oftext = not notext and (iargs.oftext or text and "of")
+	local cat = not nocat and iargs.cat
 
 	if not next(parts) then
 		if mw.title.getCurrentTitle().nsText == "Template" then
@@ -423,17 +259,15 @@ function export.compound_like(frame)
 		end
 	end
 
-	return m_affix.show_compound_like {
-		lang = lang, sc = sc, parts = parts, sort_key = args["sort"], text = text, oftext = oftext, cat = cat,
-		nocat = args["nocat"], lit = args["lit"], force_cat = args["force_cat"]
-	}
+	return m_affix.show_compound_like(augment_affix_data({ parts = parts, text = text, oftext = oftext, cat = cat },
+		args, lang, sc))
 end
 
 
 function export.surface_analysis(frame)
 	local function ine(arg)
-		-- Since we're operating before calling [[Module:parameters]], we need to imitate how that module processes arguments,
-		-- including trimming since numbered arguments don't have automatic whitespace trimming.
+		-- Since we're operating before calling [[Module:parameters]], we need to imitate how that module processes
+		-- arguments, including trimming since numbered arguments don't have automatic whitespace trimming.
 		if not arg then
 			return arg
 		end
@@ -468,23 +302,22 @@ function export.surface_analysis(frame)
 	end
 
 	if etymtext then
-		return (ine(parent_args.nocap) and "b" or "B") .. "y [[Appendix:Glossary#surface analysis|surface analysis]]" .. etymtext
+		return (ine(parent_args.nocap) and "b" or "B") .. "y [[Appendix:Glossary#surface analysis|surface analysis]]" ..
+			etymtext
 	end
 
 	local function extra_params(params)
-		params["type"] = {}
-		params["notext"] = {type = "boolean"}
-		params["nocat"] = {type = "boolean"}
-		params["force_cat"] = {type = "boolean"}
+		params.type = {}
+		params.notext = {type = "boolean"}
+		params.nocat = {type = "boolean"}
+		params.force_cat = {type = "boolean"}
 	end
 
-	local args, term_index, lang, sc = parse_args(parent_args, extra_params)
+	local args, parts, lang, sc = parse_args(parent_args, extra_params)
 
-	if args["type"] and not m_affix.compound_types[args["type"]] then
-		error("Unrecognized compound type: '" .. args["type"] .. "'")
+	if args.type and not m_affix.compound_types[args.type] then
+		error("Unrecognized compound type: '" .. args.type .. "'")
 	end
-
-	local parts = get_parsed_parts("surface analysis", args, term_index)
 
 	-- There must be at least one part to display. If there are gaps, a term
 	-- request will be shown.
@@ -496,23 +329,38 @@ function export.surface_analysis(frame)
 		end
 	end
 
-	return m_affix.show_surface_analysis {
-		lang = lang, sc = sc, parts = parts, pos = args["pos"], sort_key = args["sort"], type = args["type"],
-		nocap = args["nocap"], notext = args["notext"], nocat = args["nocat"], lit = args["lit"],
-		force_cat = args["force_cat"]
-	}
+	return m_affix.show_surface_analysis(augment_affix_data({ parts = parts }, args, lang, sc))
+end
+
+local function check_max_items(items, max_allowed)
+	if #items > max_allowed then
+		local bad_item = items[max_allowed + 1]
+		if bad_item.term then
+			error(("At most %s terms can be specified but saw a term specified for term #%s")
+				:format(max_allowed, max_allowed + 1))
+		else
+			for k, v in pairs(bad_item) do
+				if is_property_key(k) then
+					error(("At most %s terms can be specified but saw a value for property '%s' of term #%s")
+						:format(max_allowed, k, max_allowed + 1))
+				end
+			end
+		end
+		error(("Internal error: Something wrong, %s items generated when there should be at most %s, but item #%s doesn't have a term or any properties")
+			:format(#items, max_allowed, max_allowed + 1))
+	end
 end
 
 
 function export.circumfix(frame)
 	local function extra_params(params)
-		params["nocat"] = {type = "boolean"}
-		params["force_cat"] = {type = "boolean"}
+		params.nocat = {type = "boolean"}
+		params.force_cat = {type = "boolean"}
 	end
 
-	local args, term_index, lang, sc = parse_args(frame:getParent().args, extra_params)
+	local args, parts, lang, sc = parse_args(frame:getParent().args, extra_params)
+	check_max_items(parts, 3)
 
-	local parts = get_parsed_parts("circumfix", args, term_index, 3)
 	local prefix = parts[1]
 	local base = parts[2]
 	local suffix = parts[3]
@@ -528,25 +376,22 @@ function export.circumfix(frame)
 		end
 	end
 
-	return m_affix.show_circumfix {
-		lang = lang, sc = sc, prefix = prefix, base = base, suffix = suffix, pos = args["pos"], sort_key = args["sort"],
-		nocat = args["nocat"], lit = args["lit"], force_cat = args["force_cat"]
-	}
+	return m_affix.show_circumfix(augment_affix_data({ prefix = prefix, base = base, suffix = suffix }, args, lang, sc))
 end
 
 
 function export.confix(frame)
 	local function extra_params(params)
-		params["nocat"] = {type = "boolean"}
-		params["force_cat"] = {type = "boolean"}
+		params.nocat = {type = "boolean"}
+		params.force_cat = {type = "boolean"}
 	end
 
-	local args, term_index, lang, sc = parse_args(frame:getParent().args, extra_params)
+	local args, parts, lang, sc = parse_args(frame:getParent().args, extra_params)
+	check_max_items(parts, 3)
 
-	local parts = get_parsed_parts("confix", args, term_index, 3)
 	local prefix = parts[1]
-	local base = #parts >= 3 and parts[2] or nil
-	local suffix = #parts >= 3 and parts[3] or parts[2]
+	local base = parts[3] and parts[2] or nil
+	local suffix = parts[3] or parts[2]
 
 	-- Just to make sure someone didn't use the template in a silly way
 	if not (prefix and suffix) then
@@ -558,41 +403,38 @@ function export.confix(frame)
 		end
 	end
 
-	return m_affix.show_confix {
-		lang = lang, sc = sc, prefix = prefix, base = base, suffix = suffix, pos = args["pos"], sort_key = args["sort"],
-		nocat = args["nocat"], lit = args["lit"], force_cat = args["force_cat"]
-	}
+	return m_affix.show_confix(augment_affix_data({ prefix = prefix, base = base, suffix = suffix }, args, lang, sc))
 end
 
 
 function export.pseudo_loan(frame)
 	local function extra_params(params)
-		params["pos"] = nil
-		params["notext"] = {type = "boolean"}
-		params["nocat"] = {type = "boolean"}
-		params["force_cat"] = {type = "boolean"}
+		-- FIXME, why are we doing this? Formerly we had 'params.pos = nil' whose intention was to
+		-- disable the overall pos= while preserving posN=, which is equivalent to the following using
+		-- the new syntax. But why is this necessary?
+		params.pos.require_index = true
+		params.pos.separate_no_index = false
+		params.notext = {type = "boolean"}
+		params.nocat = {type = "boolean"}
+		params.force_cat = {type = "boolean"}
 	end
 
-	local args, term_index, lang, sc, source = parse_args(frame:getParent().args, extra_params, "has source")
+	local args, parts, lang, sc, source = parse_args(frame:getParent().args, extra_params, "has source")
 
-	local parts = get_parsed_parts("pseudo-loan", args, term_index)
-
-	return require(pseudo_loan_module).show_pseudo_loan {
-		lang = lang, source = source, sc = sc, parts = parts, sort_key = args["sort"], nocap = args["nocap"],
-		notext = args["notext"], nocat = args["nocat"], lit = args["lit"], force_cat = args["force_cat"]
-	}
+	return require(pseudo_loan_module).show_pseudo_loan(
+		augment_affix_data({ source = source, parts = parts }, args, lang, sc))
 end
 
 
 function export.infix(frame)
 	local function extra_params(params)
-		params["nocat"] = {type = "boolean"}
-		params["force_cat"] = {type = "boolean"}
+		params.nocat = {type = "boolean"}
+		params.force_cat = {type = "boolean"}
 	end
 
-	local args, term_index, lang, sc = parse_args(frame:getParent().args, extra_params)
+	local args, parts, lang, sc = parse_args(frame:getParent().args, extra_params)
+	check_max_items(parts, 3)
 
-	local parts = get_parsed_parts("infix", args, term_index, 2)
 	local base = parts[1]
 	local infix = parts[2]
 
@@ -606,31 +448,31 @@ function export.infix(frame)
 		end
 	end
 
-	return m_affix.show_infix {
-		lang = lang, sc = sc, base = base, infix = infix, pos = args["pos"], sort_key = args["sort"],
-		nocat = args["nocat"], lit = args["lit"], force_cat = args["force_cat"]
-	}
+	return m_affix.show_infix(augment_affix_data({ base = base, infix = infix }, args, lang, sc))
 end
 
 
 function export.prefix(frame)
 	local function extra_params(params)
-		params["nocat"] = {type = "boolean"}
-		params["force_cat"] = {type = "boolean"}
+		params.nocat = {type = "boolean"}
+		params.force_cat = {type = "boolean"}
 	end
 
-	local args, term_index, lang, sc = parse_args(frame:getParent().args, extra_params)
-
-	local prefixes = get_parsed_parts("prefix", args, term_index)
+	local args, parts, lang, sc = parse_args(frame:getParent().args, extra_params)
+	local prefixes = parts
 	local base = nil
 
-	if #prefixes >= 2 then
-		base = prefixes[#prefixes]
-		prefixes[#prefixes] = nil
+	local max_prefix = 0
+	for k, v in pairs(prefixes) do
+		max_prefix = math.max(k, max_prefix)
+	end
+	if max_prefix >= 2 then
+		base = prefixes[max_prefix]
+		prefixes[max_prefix] = nil
 	end
 
 	-- Just to make sure someone didn't use the template in a silly way
-	if #prefixes == 0 then
+	if not next(prefixes) then
 		if mw.title.getCurrentTitle().nsText == "Template" then
 			base = {term = "base"}
 			prefixes = { {term = "prefix"} }
@@ -639,26 +481,26 @@ function export.prefix(frame)
 		end
 	end
 
-	return m_affix.show_prefix {
-		lang = lang, sc = sc, prefixes = prefixes, base = base, pos = args["pos"], sort_key = args["sort"],
-		nocat = args["nocat"], lit = args["lit"], force_cat = args["force_cat"]
-	}
+	return m_affix.show_prefix(augment_affix_data({ prefixes = prefixes, base = base }, args, lang, sc))
 end
 
 
 function export.suffix(frame)
 	local function extra_params(params)
-		params["nocat"] = {type = "boolean"}
-		params["force_cat"] = {type = "boolean"}
+		params.nocat = {type = "boolean"}
+		params.force_cat = {type = "boolean"}
 	end
 
-	local args, term_index, lang, sc = parse_args(frame:getParent().args, extra_params)
+	local args, parts, lang, sc = parse_args(frame:getParent().args, extra_params)
 
-	local base = get_parsed_part("suffix", args, term_index, 1)
-	local suffixes = get_parsed_parts("suffix", args, term_index, nil, 2)
+	local base = parts[1]
+	local suffixes = {}
+	for k, v in pairs(parts) do
+		suffixes[k - 1] = v
+	end
 
 	-- Just to make sure someone didn't use the template in a silly way
-	if #suffixes == 0 then
+	if not next(suffixes) then
 		if mw.title.getCurrentTitle().nsText == "Template" then
 			base = {term = "base"}
 			suffixes = { {term = "suffix"} }
@@ -667,10 +509,7 @@ function export.suffix(frame)
 		end
 	end
 
-	return m_affix.show_suffix {
-		lang = lang, sc = sc, base = base, suffixes = suffixes, pos = args["pos"], sort_key = args["sort"],
-		nocat = args["nocat"], lit = args["lit"], force_cat = args["force_cat"]
-	}
+	return m_affix.show_suffix(augment_affix_data({ base = base, suffixes = suffixes }, args, lang, sc))
 end
 
 
@@ -685,14 +524,14 @@ function export.derivsee(frame)
 	local params = {
 		["head"] = {},
 		["id"] = {},
-		["sc"] = {},
+		["sc"] = {type = "script"},
 		["pos"] = {},
 	}
 	local derivtype = iargs.derivtype
 	if derivtype == "PIE root" then
 		params[1] = {}
 	else
-		params[1] = {required = "true", default = "und"}
+		params[1] = {required = "true", type = "language", etym_lang = true, default = "und"}
 		params[2] = {}
 	end
 
@@ -703,18 +542,18 @@ function export.derivsee(frame)
 
 	if derivtype == "PIE root" then
 		lang = m_languages.getByCode("ine-pro", true)
-		term = args[1] or args["head"]
+		term = args[1] or args.head
 
 		if term then
 			term = "*" .. term .. "-"
 		end
 	else
-		lang = m_languages.getByCode(args[1], 1, "allow etym")
-		term = args[2] or args["head"]
+		lang = args[1]
+		term = args[2] or args.head
 	end
 
 	local id = args.id
-	local sc = fetch_script(args.sc, "sc")
+	local sc = args.sc
 	local pos = require("Module:string utilities").pluralize(args.pos or "term")
 
 	if not term then
