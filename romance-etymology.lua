@@ -2,7 +2,7 @@ local export = {}
 
 local m_links = require("Module:links")
 local put_module = "Module:parse utilities"
-local compound_module = "Module:compound"
+local affix_module = "Module:affix"
 
 local rfind = mw.ustring.find
 local rsplit = mw.text.split
@@ -94,7 +94,7 @@ local function parse_args(args, hack_params)
 end
 
 
-local function parse_term_with_modifiers(paramname, val, pre_initialized_obj, include_pl_and_type)
+function export.parse_term_with_modifiers(paramname, val, pre_initialized_obj, include_pl_and_type)
 	local function generate_obj(term, parse_err)
 		local obj = pre_initialized_obj or {}
 		if term:find(":") then
@@ -130,7 +130,11 @@ end
 
 local function parse_and_format_parts(data, parts, get_part_type)
 	for i, term in ipairs(parts) do
-		local parsed = parse_term_with_modifiers(i, term, nil, "include pl and type")
+		local parsed = export.parse_term_with_modifiers(i, term, nil, "include pl and type")
+		local function parse_err(txt)
+			-- FIXME: Consider passing in parse_err() from the outer caller.
+			error(("%s: term '%s'"):format(txt, parsed.term))
+		end
 		if not parsed.term:find("%[") then
 			local parttype = parsed.type
 			if not parttype then
@@ -149,12 +153,12 @@ local function parse_and_format_parts(data, parts, get_part_type)
 				parsed.imp = parsed.imp or "+"
 				if rfind(parsed.imp, "^%+") then
 					if parsed.lang then
-						parse_err(("Can't form default imperative of term '%s' given with explicit language code prefix '%s'"):
-							format(parsed.term, parsed.lang:getCode()))
+						parse_err(("Can't form default imperative given with explicit language code prefix '%s'"):
+							format(parsed.lang:getCode()))
 					end
 					imp = data.make_imperative(parsed.imp, parsed.term, parse_err)
 					if not imp then
-						parse_err(("Default imperative algorithm was unable to form the imperative of term '%s'"):format(parsed.term))
+						parse_err("Default imperative algorithm was unable to form the imperative")
 					end
 				elseif parsed.imp then
 					imp = parsed.imp
@@ -164,7 +168,7 @@ local function parse_and_format_parts(data, parts, get_part_type)
 				end
 			elseif parttype == "object" then
 				local pl
-				if parsed.pl == "1" or rfind(parsed.pl, "^%+") then
+				if parsed.pl == "1" or parsed.pl and rfind(parsed.pl, "^%+") then
 					if parsed.lang then
 						parse_err(("Can't form default plural of term '%s' given with explicit language code prefix '%s'"):
 							format(parsed.term, parsed.lang:getCode()))
@@ -203,7 +207,7 @@ function export.verb_obj(data, frame)
 		end
 	end
 
-	parse_and_format_parts(args[1], function(i, term)
+	parse_and_format_parts(data, args[1], function(i, term)
 		local parttype
 		if i == 1 then
 			parttype = "verb"
@@ -231,7 +235,7 @@ function export.verb_obj(data, frame)
 		ins(" compound, composed of ")
 	end
 
-	ins(require(compound_module).concat_parts(data.lang, args[1], {"verb-object compounds"}, args.nocat, args.sort, args.lit,
+	ins(require(affix_module).concat_parts(data.lang, args[1], {"verb-object compounds"}, args.nocat, args.sort, args.lit,
 		force_cat))
 	return table.concat(result)
 end
@@ -251,7 +255,7 @@ function export.verb_verb(data, frame)
 		end
 	end
 
-	parse_and_format_parts(args[1], function(i, term)
+	parse_and_format_parts(data, args[1], function(i, term)
 		local parttype
 		if i == 1 or i == #args[1] then
 			parttype = "verb"
@@ -277,7 +281,7 @@ function export.verb_verb(data, frame)
 		ins(" compound, composed of ")
 	end
 
-	ins(require(compound_module).concat_parts(data.lang, args[1], {"verb-verb compounds"}, args.nocat, args.sort, args.lit,
+	ins(require(affix_module).concat_parts(data.lang, args[1], {"verb-verb compounds"}, args.nocat, args.sort, args.lit,
 		force_cat))
 	return table.concat(result)
 end
