@@ -1,7 +1,7 @@
 local export = {}
 
 local labels_module = "Module:labels"
-local qualifier_module = "Module:User:Benwing2/qualifier"
+local qualifier_module = "Module:qualifier"
 local references_module = "Module:references"
 local string_utilities_module = "Module:string utilities"
 
