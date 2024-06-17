@@ -78,11 +78,11 @@ end
 
 -- Convert a raw lb= param (or nil) to a list of label info objects of the format described in get_label_info() in
 -- [[Module:labels]]). Unrecognized labels will end up with an unchanged display form. Return nil if nil passed in.
-local function get_label_list_info(raw_lb, lang)
+local function split_and_process_raw_labels(raw_lb, lang)
 	if not raw_lb then
 		return nil
 	end
-	return require(labels_module).get_label_list_info(split_on_comma(raw_lb), lang, "nocat")
+	return require(labels_module).split_and_process_raw_labels { labels = raw_lb, lang = lang, nocat = true }
 end
 
 -- Return a function of one argument `arg` (a param name), which fetches args[`arg`] if index == 0, else
@@ -146,7 +146,7 @@ local function get_pre_qualifiers(args, index, lang)
 	local quals
 
 	if index > 0 then
-		local labels = get_label_list_info(val("lb"), lang)
+		local labels = split_and_process_raw_labels(val("lb"), lang)
 		if labels then
 			labels = require(labels_module).format_processed_labels {
 				labels = labels, lang = lang, no_ib_content = true
@@ -197,7 +197,7 @@ local function get_post_qualifiers(args, index, lang)
 		insert(postqs, require("Module:qualifier").format_qualifier(val("qq")))
 	end
 	if index == 0 then
-		local labels = get_label_list_info(val("lb"), lang)
+		local labels = split_and_process_raw_labels(val("lb"), lang)
 		if labels then
 			labels = require(labels_module).format_processed_labels {
 				labels = labels, lang = lang
@@ -436,7 +436,16 @@ local function desc_or_desc_tree(frame, desc_tree)
 			-- so if we see a tag on the outer level that isn't in this format, we don't try to parse it. The
 			-- restriction to the outer level is to allow generated HTML inside of e.g. qualifier tags, such as
 			-- foo<q:similar to {{m|fr|bar}}>.
-			if term and term:find("<") and not term:find("<%l*[^%l:>]") then
+			--
+			-- FIXME! The last clause in the if-statement below checks for a situation like
+			-- {{desc|bbl|ბე<sup>ნ</sup>|bor=1}}. The top-level check in the preceding clause is simplistic and works
+			-- only up through the <sup>, which "passes" the restriction and thus we go ahead and parse for inline
+			-- modifiers, which fails due to the </sup>. So we include the last clause, which allows a single balanced
+			-- <...> expression preceding the non-modifier-tag-looking HTML. This is a hack and won't catch all
+			-- top-level uses of HTML. We could write a single regular expression to do this if it were not for Lua's
+			-- crippled patterns. As-is, we need (and should write) a function in [[Module:parse utilities]] to check
+			-- this properly.
+			if term and term:find("<") and not term:find("^[^<]*<%l*[^%l:>]") and not term:find("^[^<>]*%b<>[^<>]*<%l*[^%l:>]") then
 				if not put then
 					put = require(put_module)
 				end
@@ -620,29 +629,6 @@ end
 
 function export.descendants_tree(frame)
 	return desc_or_desc_tree(frame, true)
-end
-
-local function mention_gloss(gloss)
-	return '<span class="mention-gloss-paren annotation-paren">(</span><span class="mention-gloss-double-quote">“</span><span class="mention-gloss">' .. gloss .. '</span><span class="mention-gloss-double-quote">”</span><span class="mention-gloss-paren annotation-paren">)</span>'
-end
-
-function export.descendant_family(frame)
-	local args = frame:getParent().args
-	local family_code = args[1] or error("Parameter 1 is required.")
-
-	local arrow = get_arrow(args, 0)
-	local family = require("Module:families").getByCode(family_code) or error("No family found by code '" .. family_code .. "'.")
-	local family_name = family:getCanonicalName()
-
-	local qq = ""
-	if args.t then
-		qq = qq .. " " .. mention_gloss(args.t)
-	end
-	if args.qq then
-		qq = qq .. " " .. qualifier(args.qq)
-	end
-
-	return arrow .. family_name .. ":" .. qq .. require("Module:TemplateStyles")("Module:etymology/style.css")
 end
 
 return export
