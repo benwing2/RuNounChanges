@@ -4,10 +4,10 @@ local force_cat = false -- for testing
 
 local rhymes_styles_css_module = "Module:rhymes/styles.css"
 
-local IPA_module = "Module:User:Benwing2/IPA"
-local parameters_module = "Module:User:Benwing2/parameters"
-local parameter_utilities_module = "Module:User:Benwing2/parameter utilities"
-local pron_qualifier_module = "Module:User:Benwing2/pron qualifier"
+local IPA_module = "Module:IPA"
+local parameters_module = "Module:parameters"
+local parameter_utilities_module = "Module:parameter utilities"
+local pron_qualifier_module = "Module:pron qualifier"
 local script_utilities_module = "Module:script utilities"
 local string_utilities_module = "Module:string utilities"
 local TemplateStyles_module = "Module:TemplateStyles"
