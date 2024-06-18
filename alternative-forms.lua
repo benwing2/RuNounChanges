@@ -138,7 +138,8 @@ function export.display_alternative_forms(parent_args, pagename, show_labels_aft
 	for _, item in ipairs(items) do
 		ins(item.separator)
 		local text = require(links_module).full_link(item, nil, allow_self_link)
-		if item.q and item.q[1] or item.qq and item.qq[1] or item.l and item.l[1] or item.ll and item.ll[1] then
+		if item.q and item.q[1] or item.qq and item.qq[1] or item.l and item.l[1] or item.ll and item.ll[1]
+			or item.refs and item.refs[1] then
 			text = require(pron_qualifier_module).format_qualifiers {
 				lang = item.lang,
 				text = text,
@@ -146,6 +147,7 @@ function export.display_alternative_forms(parent_args, pagename, show_labels_aft
 				qq = item.qq,
 				l = item.l,
 				ll = item.ll,
+				refs = item.refs,
 			}
 		end
 		ins(text)
