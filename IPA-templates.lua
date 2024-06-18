@@ -1,9 +1,9 @@
 local export = {}
 
-local m_IPA = require("Module:User:Benwing2/IPA")
-local parameter_utilities_module = "Module:User:Benwing2/parameter utilities"
+local m_IPA = require("Module:IPA")
+local parameter_utilities_module = "Module:parameter utilities"
 local parse_utilities_module = "Module:parse utilities"
-local pron_qualifier_module = "Module:User:Benwing2/pron qualifier"
+local pron_qualifier_module = "Module:pron qualifier"
 local references_module = "Module:references"
 
 local function track(page)
@@ -17,9 +17,6 @@ function export.IPA(frame)
 	-- Track uses of n so they can be converted to ref.
 	-- Track uses of qual so they can be converted to q.
 	for k, v in pairs(parent_args) do
-		if type(k) == "string" and k:find("^n[0-9]*$") then
-			track("n")
-		end
 		if type(k) == "string" and k:find("^qual[0-9]*$") then
 			track("q")
 		end
@@ -31,8 +28,6 @@ function export.IPA(frame)
 	local params = {
 		[compat and "lang" or 1] = {required = true, type = "language", etym_lang = true, default = "en"},
 		[1 + offset] = {list = true, disallow_holes = true},
-		-- Deprecated; don't use in new code. Came before 'ref' but too obscure.
-		["n"] = {list = true, allow_holes = true, alias_of = "ref"},
 		-- Deprecated; don't use in new code.
 		["qual"] = {list = true, allow_holes = true, separate_no_index = true, alias_of = "q"},
 		["nocount"] = {type = "boolean"},
@@ -42,8 +37,7 @@ function export.IPA(frame)
 
 	local param_mods = {
 		t = {
-			-- We need to store the t1=/t2= param and the <t:...> inline modifier into the "gloss" key of the parsed term,
-			-- because that is what [[Module:links]] expects.
+			-- [[Module:IPA]] expects the gloss in "gloss".
 			item_dest = "gloss",
 		},
 		gloss = {
@@ -94,6 +88,17 @@ end
 
 -- Used for [[Template:IPAchar]].
 function export.IPAchar(frame)
+	local parent_args = frame.getParent and frame:getParent().args or frame
+	-- Track uses of n so they can be converted to ref.
+	-- Track uses of qual so they can be converted to q.
+	for k, v in pairs(parent_args) do
+		if type(k) == "string" and k:find("^n[0-9]*$") then
+			track("n")
+		end
+		if type(k) == "string" and k:find("^qual[0-9]*$") then
+			track("q")
+		end
+	end
 	local params = {
 		[1] = {list = true, allow_holes = true},
 		["ref"] = {list = true, allow_holes = true},
@@ -106,7 +111,7 @@ function export.IPAchar(frame)
 		["lang"] = {}, -- This parameter is not used and does nothing, but is allowed for futureproofing.
 	}
 
-	local args = require("Module:parameters").process(frame.getParent and frame:getParent().args or frame, params)
+	local args = require("Module:parameters").process(parent_args, params)
 	
 	-- [[Special:WhatLinksHere/Wiktionary:Tracking/IPAchar/lang]]
 	if args.lang then
@@ -152,8 +157,6 @@ function export.X2IPAtemplate(frame)
 		[compat and "lang" or 1] = {required = true, default = "und"},
 		[1 + offset] = {list = true, allow_holes = true},
 		["ref"] = {list = true, allow_holes = true},
-		-- Came before 'ref' but too obscure
-		["n"] = {list = true, allow_holes = true, alias_of = "ref"},
 		["a"] = {list = true, allow_holes = true, separate_no_index = true},
 		["aa"] = {list = true, allow_holes = true, separate_no_index = true},
 		["q"] = {list = true, allow_holes = true, separate_no_index = true},
@@ -228,8 +231,6 @@ function export.X2IPAchar(frame)
 	local params = {
 		[1] = { list = true, allow_holes = true },
 		["ref"] = {list = true, allow_holes = true},
-		-- Came before 'ref' but too obscure
-		["n"] = {list = true, allow_holes = true, alias_of = "ref"},
 		["q"] = {list = true, allow_holes = true, require_index = true},
 		["qq"] = {list = true, allow_holes = true, require_index = true},
 		["qual"] = { list = true, allow_holes = true },
