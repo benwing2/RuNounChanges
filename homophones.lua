@@ -1,8 +1,8 @@
 local export = {}
 
 local links_module = "Module:links"
-local parameter_utilities_module = "Module:User:Benwing2/parameter utilities"
-local parameters_module = "Module:User:Benwing2/parameters"
+local parameter_utilities_module = "Module:parameter utilities"
+local parameters_module = "Module:parameters"
 local pron_qualifier_module = "Module:pron qualifier"
 
 --[==[
