@@ -3,7 +3,8 @@ local export = {}
 local m_links = require("Module:links")
 local put_module = "Module:parse utilities"
 local com_module = "Module:it-common"
-local compound_module = "Module:compound"
+local affix_module = "Module:affix"
+local romance_etymology_module = "Module:romance etymology"
 local lang = require("Module:languages").getByCode("it")
 
 local rfind = mw.ustring.find
@@ -11,6 +12,12 @@ local rsplit = mw.text.split
 local u = mw.ustring.char
 
 local force_cat = false -- set to true for testing
+
+
+local function glossary_link(entry, text)
+	text = text or entry
+	return "[[Appendix:Glossary#" .. entry .. "|" .. text .. "]]"
+end
 
 
 local function looks_like_infinitive(term)
@@ -53,7 +60,7 @@ function export.it_verb_obj(frame)
 		make_plural = form_plural,
 		make_imperative = form_imperative,
 	}
-	return require("Module:romance etymology").verb_obj(data, frame)
+	return require(romance_etymology_module).verb_obj(data, frame)
 end
 
 
@@ -65,7 +72,7 @@ function export.it_verb_verb(frame)
 		make_plural = form_plural,
 		make_imperative = form_imperative,
 	}
-	return require("Module:romance etymology").verb_verb(data, frame)
+	return require(romance_etymology_module).verb_verb(data, frame)
 end
 
 
@@ -117,7 +124,7 @@ function export.it_deverbal(frame)
 	}, "term")
 
 	for i, term in ipairs(args[1]) do
-		local parsed = parse_term_with_modifiers(i, term, {
+		local parsed = require(romance_etymology_module).parse_term_with_modifiers(i, term, {
 			alt = args.alt[i],
 			gloss = args.t[i],
 			genders = args.g[i] and rsplit(args.g[i], ",") or nil,
@@ -128,8 +135,8 @@ function export.it_deverbal(frame)
 			qq = args.qq[i],
 		}, false)
 		parsed.lang = parsed.lang or lang
-		local formatted_part = link_with_qualifiers(parsed)
-		args[1][i] = require(compound_module).concat_parts(lang, {formatted_part, suffix_obj},
+		local formatted_part = m_links.full_link(parsed, "term", "allow self link", "respect qualifiers")
+		args[1][i] = require(affix_module).concat_parts(lang, {formatted_part, suffix_obj},
 			{"deverbals", "terms suffixed with -" .. suffix .. " (deverbal)"},
 			args.nocat, args.sort, nil, force_cat) -- FIXME: should we support lit= here?
 	end
