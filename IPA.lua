@@ -1,13 +1,12 @@
 local export = {}
--- [[Module:IPA/data]]
 
 local force_cat = false -- for testing
 
 local m_data = mw.loadData("Module:IPA/data")
 local m_str_utils = require("Module:string utilities")
 local m_symbols = mw.loadData("Module:IPA/data/symbols")
-local pron_qualifier_module = "Module:User:Benwing2/pron qualifier"
-local qualifier_module = "Module:User:Benwing2/qualifier"
+local pron_qualifier_module = "Module:pron qualifier"
+local qualifier_module = "Module:qualifier"
 local references_module = "Module:references"
 local syllables_module = "Module:syllables"
 local utilities_module = "Module:utilities"
@@ -237,7 +236,8 @@ Parameters accepted are:
 	 {{cd|<nowiki><ref name="foo" group="bar"/></nowiki>}}); this uses a parser function to format the reference
 	 appropriately and insert a footnote number that hyperlinks to the actual reference, located in the
 	 {{cd|<nowiki><references /></nowiki>}} section;
-** `note`: {nil} or a single reference string or object of the same format as in `refs`; this is deprecated;
+** `gloss`: {nil} or a gloss (definition) for this item, if different definitions have different pronunciations;
+** `pos`: {nil} or a part of speech for this item, if different parts of speech have different pronunciations;
 ** `separator`: the separator text to insert directly before the formatted pronunciation and all qualifiers, accent
    qualifiers and pre-text; if used, you should explicitly set the outer `separator` parameter to an empty string.
 * `separator`: the overall separator to use when separating formatted items. Defaults to {", "}. Except in the simplest
@@ -311,6 +311,7 @@ function export.format_IPA_multiple(lang, items, separator, no_count, split_outp
 						m_qualifier.wrap_qualifier_css("”", "quote"))
 				end
 				if item.pos then
+					-- FIXME: Consider expanding aliases as found in [[Module:headword/data]] or similar.
 					insert(q, item.pos)
 				end
 			end
@@ -326,16 +327,12 @@ function export.format_IPA_multiple(lang, items, separator, no_count, split_outp
 			}
 		end
 
-		if item.refs or item.note then
-			local refspecs
-			if item.note then
-				-- FIXME: eliminate item.note in favor of item.refs. Use tracking to find places
-				-- that use item.note.
-				refspecs = {item.note}
-				track("note")
-			else
-				refspecs = item.refs
-			end
+		if item.note then
+			-- Support removed on 2024-06-15.
+			error("Support for `.note` has been removed; switch to `.refs` (which must be a list)")
+		end
+		if item.refs then
+			local refspecs = item.refs
 			if #refspecs > 0 then
 				bit = bit .. require(references_module).format_references(refspecs)
 			end
@@ -370,7 +367,7 @@ function export.format_IPA_multiple(lang, items, separator, no_count, split_outp
 						if m_data.langs_to_use_phonetic_notation[langcode] then
 							use_it = repr == "phonetic" and phonemic or nil
 						else
-							use_it = repr == "phonemic" or phonemic or nil
+							use_it = repr == "phonemic" and phonemic or nil
 						end
 					elseif repr == "phonetic" then
 						use_it = phonetic
