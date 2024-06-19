@@ -12,23 +12,27 @@ local export = {}
 		[[Module:gender and number]]
 		[[Module:debug/track]]
 ]=]
+local m_str_utils = require("Module:string utilities")
 
--- These are prefixed with u to avoid confusion with the default string methods
--- of the same name.
+local anchorEncode = mw.uri.anchorEncode
 local concat = table.concat
-local encode = mw.text.encode
-local find = mw.ustring.find
-local get_entities = require("Module:utilities").get_entities
-local gsub = mw.ustring.gsub
+local decode_entities = m_str_utils.decode_entities
+local decode_uri = m_str_utils.decode_uri
+local find = string.find
+local encode_entities = require("Module:string/encode entities") -- Can't yet replace, as the [[Module:string utilities]] version no longer has automatic double-encoding prevention, which requires changes here to account for.
 local insert = table.insert
-local lower = mw.ustring.lower
+local match = string.match
+local new_title = mw.title.new
 local remove = table.remove
 local shallowcopy = require("Module:table").shallowcopy
-local split = mw.text.split
+local split = m_str_utils.split
+local sub = string.sub
 local toNFC = mw.ustring.toNFC
-local trim = mw.text.trim
+local trim -- defined below
+local ulower = m_str_utils.lower
+local umatch = m_str_utils.match
 local unstrip = mw.text.unstrip
-local u = mw.ustring.char
+local u = m_str_utils.char
 local TEMP_UNDERSCORE = u(0xFFF0)
 
 local function track(page, code)
@@ -39,6 +43,35 @@ local function track(page, code)
 		require("Module:debug/track")(tracking_page)
 	end
 	return true
+end
+
+do
+	local _trim = m_str_utils.trim
+	
+	-- Unconditionally trimmed charset.
+	local always_trim =
+		"\194\128-\194\159" ..			-- U+0080-009F (C1 control characters)
+		"\194\173" ..					-- U+00AD (soft hyphen)
+		"\226\128\170-\226\128\174" ..	-- U+202A-202E (directionality formatting characters)
+		"\226\129\166-\226\129\169"		-- U+2066-2069 (directionality formatting characters)
+	
+	-- Standard trimmed charset.
+	local standard_trim = "%s" ..		-- (default whitespace charset)
+		"\226\128\139-\226\128\141" ..	-- U+200B-200D (zero-width spaces)
+		always_trim
+	
+	-- If there are non-whitespace characters, trim all characters in `standard_trim`.
+	-- Otherwise, only trim the characters in `always_trim`.
+	trim = function(text)
+		if text == "" then
+			return text
+		end
+		local trimmed = _trim(text, standard_trim)
+		if trimmed ~= "" then
+			return trimmed
+		end
+		return _trim(text, always_trim)
+	end
 end
 
 local function escape(text, str)
@@ -55,10 +88,19 @@ local function unescape(text, str)
 		:gsub("\6", str))
 end
 
+-- Remove bold, italics, soft hyphens, strip markers and HTML tags.
+local function remove_formatting(str)
+	str = str
+		:gsub("('*)'''(.-'*)'''", "%1%2")
+		:gsub("('*)''(.-'*)''", "%1%2")
+		:gsub("­", "")
+	return (unstrip(str)
+		:gsub("<[^<>]+>", ""))
+end
+
 --[==[Takes an input and splits on a double slash (taking account of escaping backslashes).]==]
 function export.split_on_slashes(text)
-	text = escape(text, "//")
-	text = split(text, "//") or {}
+	text = split(escape(text, "//"), "//", true) or {}
 	for i, v in ipairs(text) do
 		text[i] = unescape(v, "//")
 		if v == "" then
@@ -68,26 +110,13 @@ function export.split_on_slashes(text)
 	return text
 end
 
--- Trim only if there are non-whitespace characters.
-local function cond_trim(text)
-	-- Include all conventional whitespace + zero-width space.
-	if find(text, "[^%s​]") then
-		text = trim(text, "%s​")
-	end
-	return text
-end
-
---[==[Takes a link target and outputs the actual target and the fragment (if any).]==]
-function export.get_fragment(text)
-	-- If there's an embedded link, just return the input.
-	if text:find("%[%[.-%]%]") then
-		return text
-	end
+-- Does the work of export.get_fragment, but can be called directly to avoid unnecessary checks for embedded links.
+local function get_fragment(text)
 	text = escape(text, "#")
 	-- Replace numeric character references with the corresponding character (&#29; → '),
 	-- as they contain #, which causes the numeric character reference to be
 	-- misparsed (wa'a → wa&#29;a → pagename wa&, fragment 29;a).
-	text = get_entities(text)
+	text = decode_entities(text)
 	local target, fragment = text:match("^(..-)#(.+)$")
 	target = target or text
 	target = unescape(target, "#")
@@ -95,25 +124,36 @@ function export.get_fragment(text)
 	return target, fragment
 end
 
-local ignore_cap
+--[==[Takes a link target and outputs the actual target and the fragment (if any).]==]
+function export.get_fragment(text)
+	-- If there are no embedded links, process input.
+	local open = find(text, "[[", 1, true)
+	if not open then
+		return get_fragment(text)
+	end
+	local close = find(text, "]]", open + 2, true)
+	if not close then
+		return get_fragment(text)
+	-- If there is one, but it's redundant (i.e. encloses everything with no pipe), remove and process.
+	elseif open == 1 and close == #text - 1 and not find(text, "|", 3, true) then
+		return get_fragment(sub(text, 3, -3))
+	end
+	-- Otherwise, return the input.
+	return text
+end
+
 local pos_tags
 function export.get_link_page(target, lang, sc, plain)
 	if not target then
 		return nil
 	end
-
-	-- Remove bold, italics, soft hyphens, strip markers and HTML tags.
-	target = target
-		:gsub("('*)'''(.-'*)'''", "%1%2")
-		:gsub("('*)''(.-'*)''", "%1%2")
-		:gsub("­", "")
-	target = unstrip(target)
-		:gsub("<[^<>]+>", "")
+	
+	target = remove_formatting(target)
 
 	-- Check if the target is an interwiki link.
 	if target:match(":") and target ~= ":" then
 		-- If this is an a link to another namespace or an interwiki link, ensure there's an initial colon and then return what we have (so that it works as a conventional link, and doesn't do anything weird like add the term to a category.)
-		local prefix = target:gsub("^:*(.-):.*", lower)
+		local prefix = target:gsub("^:*(.-):.*", ulower)
 		if (
 			mw.loadData("Module:data/namespaces")[prefix] or
 			mw.loadData("Module:data/interwikis")[prefix]
@@ -158,15 +198,15 @@ function export.get_link_page(target, lang, sc, plain)
 
 	-- Link to appendix for reconstructed terms and terms in appendix-only languages. Plain links interpret * literally, however.
 	elseif reconstructed == 1 then
-		if lang:getNonEtymologicalCode() == "und" then
+		if lang:getFullCode() == "und" then
 			return nil
 		else
-			target = "Reconstruction:" .. lang:getNonEtymologicalName() .. "/" .. target
+			target = "Reconstruction:" .. lang:getFullName() .. "/" .. target
 		end
 	-- Reconstructed languages and substrates require an initial *.
 	elseif lang:hasType("reconstructed") or lang:getFamilyCode() == "qfa-sub" then
 		local check = target:match("^:*([^:]*):")
-		check = check and lower(check)
+		check = check and ulower(check)
 		if (
 			mw.loadData("Module:data/namespaces")[check] or
 			mw.loadData("Module:data/interwikis")[check]
@@ -178,89 +218,117 @@ function export.get_link_page(target, lang, sc, plain)
 		end
 
 	elseif lang:hasType("appendix-constructed") then
-		target = "Appendix:" .. lang:getNonEtymologicalName() .. "/" .. target
+		target = "Appendix:" .. lang:getFullName() .. "/" .. target
 	end
 
 	return target, escaped > 0
 end
 
-function export.getLinkPage(target, lang, sc, plain)
-	track("getLinkPage")
-	return export.get_link_page(target, lang, sc, plain)
-end
-
-
 -- Make a link from a given link's parts
-local function make_link(link, lang, sc, id, allow_self_link, isolated, plain)
+local function make_link(link, lang, sc, id, isolated, plain, cats, no_alt_ast)
 	-- Convert percent encoding to plaintext.
-	link.target = mw.uri.decode(link.target, "PATH")
-	link.fragment = link.fragment and mw.uri.decode(link.fragment, "PATH")
-
+	link.target = decode_uri(link.target, "PATH")
+	link.fragment = link.fragment and decode_uri(link.fragment, "PATH")
+	
 	-- Find fragments (if one isn't already set).
 	-- Prevents {{l|en|word#Etymology 2|word}} from linking to [[word#Etymology 2#English]].
 	-- # can be escaped as \#.
 	if link.target and link.fragment == nil then
-		link.target, link.fragment = export.get_fragment(link.target)
+		link.target, link.fragment = get_fragment(link.target)
 	end
 
-	-- If there is no display form, then create a default one.
-	if not link.display then
-		link.display = link.target
-	end
-
-	local display_is_target = link.display == link.target
-
+	-- Create a default display form.
+	local auto_display = link.target
+	
 	-- Process the target
 	local escaped
 	link.target, escaped = export.get_link_page(link.target, lang, sc, plain)
 
 	-- If the display is the target and the reconstruction * has been escaped, remove the escaping backslash.
-	if display_is_target and escaped then
-		link.display = link.display:gsub("\\([^\\]*%*)", "%1", 1)
+	if escaped then
+		auto_display = auto_display:gsub("\\([^\\]*%*)", "%1", 1)
 	end
-
+	
 	-- Process the display form.
-	link.display = lang:makeDisplayText(link.display, sc, not display_is_target)
-
+	if link.display then
+		local orig_display = link.display
+		link.display = lang:makeDisplayText(link.display, sc, true)
+		if cats then
+			auto_display = lang:makeDisplayText(auto_display, sc)
+			-- If the alt text is the same as what would have been automatically generated, then the alt parameter is redundant (e.g. {{l|en|foo|foo}}, {{l|en|w:foo|foo}}, but not {{l|en|w:foo|w:foo}}).
+			-- If they're different, but the alt text could have been entered as the term parameter without it affecting the target page, then the target parameter is redundant (e.g. {{l|ru|фу|фу́}}).
+			-- If `no_alt_ast` is true, use pcall to catch the error which will be thrown if this is a reconstructed lang and the alt text doesn't have *.
+			if link.display == auto_display then
+				insert(cats, lang:getFullName() .. " links with redundant alt parameters")
+			else
+				local ok, check
+				if no_alt_ast then
+					ok, check = pcall(export.get_link_page, orig_display, lang, sc, plain)
+				else
+					ok = true
+					check = export.get_link_page(orig_display, lang, sc, plain)
+				end
+				if ok and link.target == check then
+					insert(cats, lang:getFullName() .. " links with redundant target parameters")
+				end
+			end
+		end
+	else
+		link.display = lang:makeDisplayText(auto_display, sc)
+	end
+	
 	if not link.target then
 		return link.display
 	end
-
-	-- If the target is the same as the current page and there is no sense id
-	-- and linking to the same page hasn't been turned on, then return a "self-link"
-	-- like the software does.
-	if (not (allow_self_link or id)) and link.target == mw.title.getCurrentTitle().prefixedText then
+	
+	-- If the target is the same as the current page, there is no sense id
+	-- and either the language code is "und" or the current L2 is the current
+	-- language then return a "self-link" like the software does.
+	if not id and link.target == mw.title.getCurrentTitle().prefixedText and (
+		lang:getFullCode() == "und" or
+		require("Module:utilities").get_current_L2() == lang:getCanonicalName()
+	) then
 		return tostring(mw.html.create("strong")
 			:addClass("selflink")
 			:wikitext(link.display))
 	end
 
-	-- Add fragment. Do not add a section link to "Undetermined", as such sections do not exist and are invalid. TabbedLanguages handles links without a section by linking to the "last visited" section, but adding "Undetermined" would break that feature. For localized prefixes that make syntax error, please use the format: ["xyz"] = true.
+	-- Add fragment. Do not add a section link to "Undetermined", as such sections do not exist and are invalid.
+	-- TabbedLanguages handles links without a section by linking to the "last visited" section, but adding
+	-- "Undetermined" would break that feature. For localized prefixes that make syntax error, please use the
+	-- format: ["xyz"] = true.
 	local prefix = link.target:match("^:*([^:]+):")
-	if not (prefix and mw.loadData("Module:data/interwikis")[lower(prefix)]) then
+	prefix = prefix and ulower(prefix)
+
+	if prefix ~= "category" and not (prefix and mw.loadData("Module:data/interwikis")[prefix]) then
 		if (link.fragment or link.target:find("#$")) and not plain then
-			track("fragment", lang:getNonEtymologicalCode())
+			track("fragment", lang:getFullCode())
+			if cats then
+				insert(cats, lang:getFullName() .. " links with manual fragments")
+			end
 		end
 
-		if (not link.fragment) and lang:getNonEtymologicalCode() ~= "und" then
+		if (not link.fragment) and lang:getFullCode() ~= "und" then
 			if id then
 				link.fragment = require("Module:senseid").anchor(lang, id)
 			elseif not (link.target:find("^Appendix:") or link.target:find("^Reconstruction:") or plain) then
-				link.fragment = lang:getNonEtymologicalName()
+				link.fragment = lang:getFullName()
 			end
 		elseif plain and id then
 			link.fragment = id
 		end
 	end
-
-	if isolated then
-		link.display = mw.loadData("Module:links/data").display_change[link.display] or link.display
+	
+	-- Put inward-facing square brackets around a link to isolated spacing character(s).
+	if isolated and #link.display > 0 and not umatch(decode_entities(link.display), "%S") then
+		link.display = "&#x5D;" .. link.display .. "&#x5B;"
 	end
 
 	link.target = link.target:gsub("^(:?)(.*)", function(m1, m2)
-		return m1 .. encode(m2, "#%%&+/:<=>@[\\%]_{|}")
+		return m1 .. encode_entities(m2, "#%&+/:<=>@[\\]_{|}")
 	end)
-	link.fragment = link.fragment and encode(link.fragment, "#%%&+/:<=>@[\\%]_{|}")
+	
+	link.fragment = link.fragment and encode_entities(remove_formatting(link.fragment), "#%&+/:<=>@[\\]_{|}")
 
 	return "[[" .. link.target .. (link.fragment and "#" .. link.fragment or "") .. "|" .. link.display .. "]]"
 end
@@ -283,8 +351,8 @@ local function parse_link(linktext)
 		if target_lower:match("^" .. false_positive .. ":") then return nil end
 	end
 
-	link.display = get_entities(link.display)
-	link.target, link.fragment = export.get_fragment(link.target)
+	link.display = decode_entities(link.display)
+	link.target, link.fragment = get_fragment(link.target)
 
 	-- So that make_link does not look for a fragment again.
 	if not link.fragment then
@@ -295,14 +363,15 @@ local function parse_link(linktext)
 end
 
 -- Find embedded links and ensure they link to the correct section.
-local function process_embedded_links(text, data, allow_self_link, plain)
+local function process_embedded_links(text, data, plain)
 	-- Process the non-linked text.
 	text = data.lang:makeDisplayText(text, data.sc[1], true)
 
 	-- If the text begins with * and another character, then act as if each link begins with *. However, don't do this if the * is contained within a link at the start. E.g. `|*[[foo]]` would set all_reconstructed to true, while `|[[*foo]]` would not.
 	local all_reconstructed = false
 	if not plain then
-		if require("Module:utilities").get_plaintext(text:gsub("%[%[.-%]%]", ".")):match("^*.") then
+		-- anchorEncode removes links etc.
+		if anchorEncode(text):sub(1, 1) == "*" then
 			all_reconstructed = true
 		end
 		-- Otherwise, handle any escapes.
@@ -312,13 +381,19 @@ local function process_embedded_links(text, data, allow_self_link, plain)
 	if data.alt then
 		track("alt-ignored")
 		mw.log("(from Module:links)", "text with embedded wikilinks:", text,
-			"ignored alt:", data.alt, "lang:", data.lang:getNonEtymologicalCode())
+			"ignored alt:", data.alt, "lang:", data.lang:getFullCode())
+		if data.cats then
+			insert(data.cats, data.lang:getFullName() .. " links with ignored alt parameters")
+		end
 	end
-
+	
 	if data.id then
 		track("id-ignored")
 		mw.log("(from Module:links)", "text with embedded wikilinks:", text,
-			"ignored id:", data.id, "lang:", data.lang:getNonEtymologicalCode())
+			"ignored id:", data.id, "lang:", data.lang:getFullCode())
+		if data.cats then
+			insert(data.cats, data.lang:getFullName() .. " links with ignored id parameters")
+		end
 	end
 
 	local function process_link(space1, linktext, space2)
@@ -333,7 +408,7 @@ local function process_embedded_links(text, data, allow_self_link, plain)
 			link.target = "*" .. link.target
 		end
 
-		linktext = make_link(link, data.lang, data.sc, data.id, allow_self_link, false, plain)
+		linktext = make_link(link, data.lang, data.sc, data.id, false, plain)
 			:gsub("^%[%[", "\3")
 			:gsub("%]%]$", "\4")
 
@@ -362,45 +437,32 @@ local function process_embedded_links(text, data, allow_self_link, plain)
 		:gsub("[\2\4]", "]]"))
 end
 
-local function handle_redundant_wikilink(text, alt)
-	local temp = text:match("^%[%[(.-)%]%]$")
-	if not temp then
-		return text, alt
+local function handle_redundant_wikilink(data)
+	local text = data.term
+	if ( -- Filters out anything but "[[...]]" with no intermediate "[[" or "]]".
+		not match(text, "^()%[%[") or -- Faster than sub(text, 1, 2) ~= "[[".
+		find(text, "[[", 3, true) or
+		find(text, "]]", 3, true) ~= #text - 1
+	) then
+		return
 	end
-	local temp_lower = temp:lower()
-	for _, false_positive in ipairs({"category", "cat", "file", "image"}) do
-		if temp_lower:match("^" .. false_positive .. ":") then
-			return text, alt
+	text = sub(text, 3, -3)
+	-- A pipe at the start of an embedded link is treated as part of the target (e.g. [[|foo]]: "|foo").
+	-- FIXME: This should be handled via a proper escape sequence.
+	local pipe = find(text, "|", 2, true)
+	local term = pipe and sub(text, 1, pipe - 1) or text
+	local title = new_title(term)
+	if title then
+		local namespace = title.namespace
+		-- Categories and files are false-positives.
+		if namespace == 6 or namespace == 14 then
+			return
 		end
 	end
-	-- Note: it's possible for "[[" or "]]" to be uninvolved in links, so we need to check for both individually (e.g. "[[aaa]] bb]]" would not have a redundant wikilink).
-	if temp and not (temp:find("%[%[") or temp:find("%]%]")) then
-		text, alt = temp:match("^([^|]+)|?(.-)$")
-		track("redundant wikilink")
-		if alt == "" then
-			alt = nil
-		end
+	data.term, data.alt = term, pipe and pipe ~= #text and sub(text, pipe + 1) or nil
+	if data.cats then
+		insert(data.cats, data.lang:getFullName() .. " links with redundant wikilinks")
 	end
-	return text, alt
-end
-
-local function process_embedded_make_link()
-	-- Do we have a redundant wikilink? If so, remove it.
-	if text then
-		text, data.alt = handle_redundant_wikilink(text, data.alt)
-	end
-
-	-- Do we have embedded wikilinks?
-	if text and text:find("%[%[.-%]%]") then
-		text = process_embedded_links(text, data, allow_self_link)
-	-- If not, make a link using the parameters.
-	else
-		text = text and cond_trim(text)
-		data.alt = data.alt and cond_trim(data.alt)
-		text = make_link({target = text, display = data.alt, fragment = data.fragment}, data.lang, data.sc, data.id, allow_self_link, true)
-	end
-
-	return text
 end
 
 --[==[Creates a basic link to the given term. It links to the language section (such as <code>==English==</code>), but it does not add language and script wrappers, so any code that uses this function should call the <code class="n">[[Module:script utilities#tag_text|tag_text]]</code> from [[Module:script utilities]] to add such wrappers itself at some point.
@@ -428,97 +490,98 @@ The following special options are processed for each link (both simple text and 
 * If the text starts with <code class="n">:</code>, then the link is treated as "raw" and the above steps are skipped. This can be used in rare cases where the page name begins with <code class="n">*</code> or if diacritics should not be stripped. For example:
 ** {{temp|l|en|*nix}} links to the nonexistent page [[Reconstruction:English/nix]] (<code class="n">*</code> is interpreted as a reconstruction), but {{temp|l|en|:*nix}} links to [[*nix]].
 ** {{temp|l|sl|Franche-Comté}} links to the nonexistent page [[Franche-Comte]] (<code>é</code> is converted to <code>e</code> by <code class="n">makeEntryName</code>), but {{temp|l|sl|:Franche-Comté}} links to [[Franche-Comté]].]==]
-function export.language_link(data, allow_self_link)
+function export.language_link(data)
 	if type(data) ~= "table" then
 		error("The first argument to the function language_link must be a table. See Module:links/documentation for more information.")
+	-- Do we have a redundant wikilink? If so, remove it.
+	elseif data.term then
+		handle_redundant_wikilink(data)
 	-- Nothing to process, return nil.
-	elseif not (data.term or data.alt) then
+	elseif not data.alt then
 		return nil
 	end
-
+	
 	local text = data.term
-
-	data.sc = data.sc or data.lang:findBestScript(text)
-
-	ignore_cap = ignore_cap or mw.loadData("Module:links/data").ignore_cap
-	if (ignore_cap[data.lang:getCode()] or ignore_cap[data.lang:getNonEtymologicalCode()]) and text then
-		text = text:gsub("%^", "")
+	
+	-- If we don't have a script, get one.
+	if not data.sc then
+		data.sc = data.lang:findBestScript(data.alt or text)
 	end
-
-	-- Do we have a redundant wikilink? If so, remove it.
+	
+	-- Do we have embedded wikilinks? If so, they need to be processed individually.
 	if text then
-		text, data.alt = handle_redundant_wikilink(text, data.alt)
+		local open = find(text, "[[", 1, true)
+		if open and find(text, "]]", open + 2, true) then
+			return process_embedded_links(text, data)
+		end
 	end
-
-	-- Do we have embedded wikilinks?
-	if text and text:find("%[%[.-%]%]") then
-		text = process_embedded_links(text, data, allow_self_link)
+	
 	-- If not, make a link using the parameters.
-	else
-		text = text and cond_trim(text)
-		data.alt = data.alt and cond_trim(data.alt)
-		text = make_link({target = text, display = data.alt, fragment = data.fragment}, data.lang, data.sc, data.id, allow_self_link, true)
-	end
-
-	return text
+	text = text and trim(text)
+	data.alt = data.alt and trim(data.alt)
+	return make_link({target = text, display = data.alt, fragment = data.fragment}, data.lang, data.sc, data.id, true, nil, data.cats, data.no_alt_ast)
 end
 
-function export.plain_link(data, allow_self_link)
+function export.plain_link(data)
 	if type(data) ~= "table" then
 		error("The first argument to the function language_link must be a table. See Module:links/documentation for more information.")
-	-- Nothing to process, return nil.
-	elseif not (data.term or data.alt) then
-		return nil
-	-- Only have alt, just return it.
-	elseif not data.term then
+	-- Do we have a redundant wikilink? If so, remove it.
+	elseif data.term then
+		handle_redundant_wikilink(data)
+	-- Only have alt (or nothing), just return it.
+	else
 		return data.alt
 	end
-
-	local text = data.term
-	if (not data.lang) or data.lang:getNonEtymologicalCode() ~= "und" then
+	
+	-- Make sure the language is "und".
+	local lang = data.lang
+	if not lang or lang:getCode() ~= "und" then
 		data.lang = require("Module:languages").getByCode("und")
 	end
-	data.sc = data.sc or require("Module:scripts").findBestScriptWithoutLang(text)
-
-	-- Do we have a redundant wikilink? If so, remove it.
-	if text then
-		text, data.alt = handle_redundant_wikilink(text, data.alt)
+	
+	local text = data.term
+	
+	-- If we don't have a script, get one.
+	if not data.sc then
+		data.sc = require("Module:scripts").findBestScriptWithoutLang(data.alt or text)
 	end
-
-	-- Do we have embedded wikilinks?
-	if text:find("%[%[.-%]%]") then
-		text = process_embedded_links(text, data, allow_self_link, true)
+	
+	-- Do we have embedded wikilinks? If so, they need to be processed individually.
+	local open = find(text, "[[", 1, true)
+	if open and find(text, "]]", open + 2, true) then
+		return process_embedded_links(text, data)
+	end
+	
 	-- If not, make a link using the parameters.
-	else
-		text = cond_trim(text)
-		data.alt = data.alt and cond_trim(data.alt)
-		text = make_link({target = text, display = data.alt, fragment = data.fragment}, data.lang, data.sc, data.id, allow_self_link, true, true)
-	end
-
-	return text
+	text = trim(text)
+	data.alt = data.alt and trim(data.alt)
+	return make_link({target = text, display = data.alt, fragment = data.fragment}, data.lang, data.sc, data.id, true, true)
 end
 
 --[==[Replace any links with links to the correct section, but don't link the whole text if no embedded links are found. Returns the display text form.]==]
-function export.embedded_language_links(data, allow_self_link)
+function export.embedded_language_links(data)
 	if type(data) ~= "table" then
 		error("The first argument to the function language_link must be a table. See Module:links/documentation for more information.")
 	end
 
 	local text = data.term
-	data.sc = data.sc or data.lang:findBestScript(text)
-
-	-- Do we have embedded wikilinks?
-	if text:find("%[%[.-%]%]") then
-		text = process_embedded_links(text, data, allow_self_link)
-	else
-		-- If there are no embedded wikilinks, return the display text.
-		text = cond_trim(text)
-		-- FIXME: Double-escape any percent-signs, because we don't want to treat non-linked text as having percent-encoded characters.
-		text = text:gsub("%%", "%%25")
-		text = (data.lang:makeDisplayText(text, data.sc, true))
+	
+	-- If we don't have a script, get one.
+	if not data.sc then
+		data.sc = data.lang:findBestScript(text)
 	end
-
-	return text
+	
+	-- Do we have embedded wikilinks? If so, they need to be processed individually.
+	local open = find(text, "[[", 1, true)
+	if open and find(text, "]]", open + 2, true) then
+		return process_embedded_links(text, data)
+	end
+	
+	-- If not, return the display text.
+	text = trim(text)
+	-- FIXME: Double-escape any percent-signs, because we don't want to treat non-linked text as having percent-encoded characters. This is a hack: percent-decoding should come out of [[Module:languages]] and only dealt with in this module, as it's specific to links.
+	text = text:gsub("%%", "%%25")
+	return (data.lang:makeDisplayText(text, data.sc, true))
 end
 
 function export.mark(text, item_type, face, lang)
@@ -529,10 +592,10 @@ function export.mark(text, item_type, face, lang)
 			'</span><span class="mention-gloss-double-quote">”</span>' }
 	elseif item_type == "tr" then
 		if face == "term" then
-			tag = { '<span lang="' .. lang:getNonEtymologicalCode() .. '" class="tr mention-tr Latn">',
+			tag = { '<span lang="' .. lang:getFullCode() .. '" class="tr mention-tr Latn">',
 				'</span>' }
 		else
-			tag = { '<span lang="' .. lang:getNonEtymologicalCode() .. '" class="tr Latn">', '</span>' }
+			tag = { '<span lang="' .. lang:getFullCode() .. '" class="tr Latn">', '</span>' }
 		end
 	elseif item_type == "ts" then
 		-- \226\129\160 = word joiner (zero-width non-breaking space) U+2060
@@ -690,6 +753,7 @@ The first argument, <code class="n">data</code>, must be a table. It contains th
 	alt = link_text_or_displayed_text,
 	lang = language_object,
 	sc = script_object,
+	track_sc = boolean,
 	fragment = link_fragment
 	id = sense_id,
 	genders = { "gender1", "gender2", ... },
@@ -698,6 +762,7 @@ The first argument, <code class="n">data</code>, must be a table. It contains th
 	gloss = gloss,
 	pos = part_of_speech_tag,
 	lit = literal_translation,
+	no_alt_ast = boolean,
 	accel = {accelerated_creation_tags},
 	interwiki = interwiki,
 	q = { "left_qualifier1", "left_qualifier2", ...} or "left_qualifier",
@@ -707,11 +772,12 @@ The first argument, <code class="n">data</code>, must be a table. It contains th
 Any one of the items in the <code class="n">data</code> table may be {{code|lua|nil}}, but an error will be shown if neither <code class="n">term</code> nor <code class="n">alt</code> nor <code class="n">tr</code> is present.
 Thus, calling {{code|lua|2=full_link{ term = term, lang = lang, sc = sc } }}, where <code class="n">term</code> is an entry name, <code class="n">lang</code>  is a [[Module:languages#Language objects|language object]] from [[Module:languages]], and <code class="n">sc</code> is a [[Module:scripts#Script objects|script object]] from [[Module:scripts]], will give a plain link similar to the one produced by the template {{temp|l}}, and calling {{code|lua|2=full_link( { term = term, lang = lang, sc = sc }, "term" )}} will give a link similar to the one produced by the template {{temp|m}}.
 The function will:
-* Try to determine the script, based on the characters found in the term or alt argument, if the script was not given.
+* Try to determine the script, based on the characters found in the term or alt argument, if the script was not given. If a script is given and <code class="n">track_sc</code> is {{code|lua|true}}, it will check whether the input script is the same as the one which would have been automatically generated and add the category [[:Category:Terms with redundant script codes]] if yes, or [[:Category:Terms with non-redundant manual script codes]] if no. This should be used when the input script object is directly determined by a template's <code class="n">sc=</code> parameter.
 * Call <code class="n">[[#language_link|language_link]]</code> on the term or alt forms, to remove diacritics in the page name, process any embedded wikilinks and create links to Reconstruction or Appendix pages when necessary.
 * Call <code class="n">[[Module:script utilities#tag_text]]</code> to add the appropriate language and script tags to the term, and to italicize terms written in the Latin script if necessary. Accelerated creation tags, as used by [[WT:ACCEL]], are included.
 * Generate a transliteration, based on the alt or term arguments, if the script is not Latin and no transliteration was provided.
 * Add the annotations (transliteration, gender, gloss etc.) after the link.
+* If <code class="n">no_alt_ast</code> is specified, then the alt text does not need to contain an asterisk if the language is reconstructed. This should only be used by modules which really need to allow links to reconstructions that don't display asterisks (e.g. number boxes).
 * If <code class="n">show_qualifiers</code> is specified, left and right qualifiers and references will be displayed. (This is for compatibility reasons, since a fair amount of code stores qualifiers and/or references in these fields and displays them itself, expecting {{code|lua|full_link()}} to ignore them.]==]
 function export.full_link(data, face, allow_self_link, show_qualifiers)
 	-- Prevent data from being destructively modified.
@@ -744,10 +810,10 @@ function export.full_link(data, face, allow_self_link, show_qualifiers)
 			terms[i] = true
 		end
 	end
-
+	
 	-- Create the link
 	local output = {}
-	local categories = {}
+	data.cats = {}
 	local link = ""
 	local annotations
 
@@ -755,24 +821,29 @@ function export.full_link(data, face, allow_self_link, show_qualifiers)
 		-- Is there any text to show?
 		if (data.term[i] or data.alt[i]) then
 			-- Try to detect the script if it was not provided
-			local best = data.lang:findBestScript(data.alt[i] or data.term[i])
+			local display_term = data.alt[i] or data.term[i]
+			local best = data.lang:findBestScript(display_term)
+			if (
+				best:getCode() == "None" and
+				require("Module:scripts").findBestScriptWithoutLang(display_term):getCode() ~= "None"
+			) then
+				insert(data.cats, data.lang:getFullName() .. " terms in nonstandard scripts")
+			end
 			if not data.sc[i] then
 				data.sc[i] = best
-			else
-				-- Track uses of sc parameter
-				track("sc")
-
+			-- Track uses of sc parameter.
+			elseif data.track_sc then
 				if data.sc[i]:getCode() == best:getCode() then
-					track("sc/redundant", data.sc[i]:getCode())
+					insert(data.cats, data.lang:getFullName() .. " terms with redundant script codes")
 				else
-					track("sc/needed", data.sc[i]:getCode())
+					insert(data.cats, data.lang:getFullName() .. " terms with non-redundant manual script codes")
 				end
 			end
 
 			-- If using a discouraged character sequence, add to maintenance category
 			if data.sc[i]:hasNormalizationFixes() == true then
 				if (data.term[i] and data.sc[i]:fixDiscouragedSequences(toNFC(data.term[i])) ~= toNFC(data.term[i])) or (data.alt[i] and data.sc[i]:fixDiscouragedSequences(toNFC(data.alt[i])) ~= toNFC(data.alt[i])) then
-					insert(categories, "Pages using discouraged character sequences")
+					insert(data.cats, "Pages using discouraged character sequences")
 				end
 			end
 
@@ -841,7 +912,7 @@ function export.full_link(data, face, allow_self_link, show_qualifiers)
 					lemma_translit .. " " ..
 					no_store .. " "
 
-				class = "form-of lang-" .. data.lang:getNonEtymologicalCode() .. " " .. accel
+				class = "form-of lang-" .. data.lang:getFullCode() .. " " .. accel
 			end
 
 			-- Only make a link if the term has been given, otherwise just show the alt text without a link
@@ -859,10 +930,12 @@ function export.full_link(data, face, allow_self_link, show_qualifiers)
 				pos = data.pos,
 				lit = data.lit,
 				accel = data.accel,
-				interwiki = data.interwiki
+				interwiki = data.interwiki,
+				cats = data.cats,
+				no_alt_ast = data.no_alt_ast
 			}
 			link = require("Module:script utilities").tag_text(
-				data.term[i] and export.language_link(term_data, allow_self_link)
+				data.term[i] and export.language_link(term_data)
 				or data.alt[i], data.lang, data.sc[i], face, class)
 		else
 			--[[	No term to show.
@@ -875,7 +948,7 @@ function export.full_link(data, face, allow_self_link, show_qualifiers)
 					remove(output)
 					break
 				elseif mw.title.getCurrentTitle().nsText ~= "Template" then
-					insert(categories, data.lang:getNonEtymologicalName() .. " term requests")
+					insert(data.cats, data.lang:getFullName() .. " term requests")
 				end
 				link = "<small>[Term?]</small>"
 			end
@@ -890,7 +963,7 @@ function export.full_link(data, face, allow_self_link, show_qualifiers)
 
 	else
 		local phonetic_extraction = mw.loadData("Module:links/data").phonetic_extraction
-		phonetic_extraction = phonetic_extraction[data.lang:getCode()] or phonetic_extraction[data.lang:getNonEtymologicalCode()]
+		phonetic_extraction = phonetic_extraction[data.lang:getCode()] or phonetic_extraction[data.lang:getFullCode()]
 
 		if phonetic_extraction then
 			data.tr[1] = data.tr[1] or require(phonetic_extraction).getTranslit(export.remove_links(data.alt[1] or data.term[1]))
@@ -900,7 +973,7 @@ function export.full_link(data, face, allow_self_link, show_qualifiers)
 			-- aren't sufficient because they only work with reference to automatic translit and won't operate at all in
 			-- languages without any automatic translit, like Persian and Hebrew.
 			if data.tr[1] then
-				track("manual-tr", data.lang:getNonEtymologicalCode())
+				track("manual-tr", data.lang:getFullCode())
 			end
 
 			-- Try to generate a transliteration, unless transliteration has been supplied and data.no_check_redundant_translit is
@@ -909,7 +982,7 @@ function export.full_link(data, face, allow_self_link, show_qualifiers)
 			-- {{multitrans|...|no-check-redundant-translit=1}}.)
 			if not (data.tr[1] and data.no_check_redundant_translit) then
 				local text = data.alt[1] or data.term[1]
-				if not data.lang:link_tr() then
+				if not data.lang:link_tr(data.sc[1]) then
 					text = export.remove_links(text, true)
 				end
 
@@ -921,21 +994,19 @@ function export.full_link(data, face, allow_self_link, show_qualifiers)
 
 					if manual_tr then
 						if (export.remove_links(manual_tr) == export.remove_links(automated_tr)) and (not data.tr_fail) then
-							insert(categories, "Terms with redundant transliterations")
-							insert(categories, "Terms with redundant transliterations/" .. data.lang:getNonEtymologicalCode())
+							insert(data.cats, data.lang:getFullName() .. " terms with redundant transliterations")
 						elseif not data.tr_fail then
 							-- Prevents Arabic root categories from flooding the tracking categories.
 							if mw.title.getCurrentTitle().nsText ~= "Category" then
-								insert(categories, "Terms with manual transliterations different from the automated ones")
-								insert(categories, "Terms with manual transliterations different from the automated ones/" .. data.lang:getNonEtymologicalCode())
+								insert(data.cats, data.lang:getFullName() .. " terms with non-redundant manual transliterations")
 							end
 						end
 					end
-
-					if (not manual_tr) or data.lang:overrideManualTranslit() then
+					
+					if (not manual_tr) or data.lang:overrideManualTranslit(data.sc[1]) then
 						data.tr[1] = automated_tr
 						for _, category in ipairs(tr_categories) do
-							insert(categories, category)
+							insert(data.cats, category)
 						end
 					end
 				end
@@ -944,21 +1015,21 @@ function export.full_link(data, face, allow_self_link, show_qualifiers)
 	end
 
 	-- Link to the transliteration entry for languages that require this
-	if data.tr[1] and data.lang:link_tr() and not (data.tr[1]:match("%[%[(.-)%]%]") or data.tr_fail) then
+	if data.tr[1] and data.lang:link_tr(data.sc[1]) and not (data.tr[1]:match("%[%[(.-)%]%]") or data.tr_fail) then
 		data.tr[1] = export.language_link{
 			lang = data.lang,
 			term = data.tr[1],
 			sc = require("Module:scripts").getByCode("Latn")
 		}
-	elseif data.tr[1] and not (data.lang:link_tr() or data.tr_fail) then
+	elseif data.tr[1] and not (data.lang:link_tr(data.sc[1]) or data.tr_fail) then
 		-- Remove the pseudo-HTML tags added by remove_links.
 		data.tr[1] = data.tr[1]:gsub("</?link>", "")
 	end
-	if data.tr[1] and gsub(data.tr[1], "[%s%p]", ""):len() == 0 then data.tr[1] = nil end
+	if data.tr[1] and not umatch(data.tr[1], "[^%s%p]") then data.tr[1] = nil end
 
 	insert(output, export.format_link_annotations(data, face))
 
-	categories = #categories > 0 and require("Module:utilities").format_categories(categories, data.lang, "-", nil, nil, data.sc) or ""
+	local categories = #data.cats > 0 and require("Module:utilities").format_categories(data.cats, data.lang, "-", nil, nil, data.sc) or ""
 
 	output = concat(output)
 	if show_qualifiers then
@@ -1028,53 +1099,23 @@ See [[mw:Manual:$wgFragmentMode]] and the code that does the encoding at
 https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/core/+/7bf779524ab1fd8e1d74f79ea4840564d48eea4d/includes/parser/Sanitizer.php#893
 ]=]
 
--- The character class %x should not be used, as it includes the characters a-f,
--- which do not occur in these anchor encodings.
-local capital_hex = "[0-9A-F]"
-
-local function decode_anchor(anchor)
-	return (anchor:gsub("%.(" .. capital_hex .. capital_hex .. ")",
-		function(hex_byte)
-			return string.char(tonumber(hex_byte, 16))
-		end))
-end
-
 function export.section_link(link)
 	if type(link) ~= "string" then
 		error("The first argument to section_link was a " .. type(link) .. ", but it should be a string.")
 	end
-
+	
 	link = link:gsub("_", " ")
-
-	local number_signs = select(2, link:gsub("#", ""))
-
-	if number_signs > 1 then
-		error("The section link should only contain one number sign (#).")
-	end
-
-	link = mw.uri.decode(link, "WIKI")
-	local page, section = link:match("^([^#]*)#(.+)$")
-	if page == "" then
-		page = nil
-	end
-
-	if section then
-		section = decode_anchor(section)
-
-		-- URI-encode (percent-encode) section to allow square brackets and
-		-- other dodgy characters in section name.
-		-- If not percent-encoded, they prevent the parser from creating a link.
-		-- Decode percent-encoding in the displayed text
-		if page then
-			return "[[" .. page .. "#" .. mw.uri.encode(section, "WIKI")
-				.. "|" .. page .. " §&nbsp;" .. section .. "]]"
-		else
-			return "[[#" .. mw.uri.encode(section, "WIKI")
-				.. "|§&nbsp;" .. section .. "]]"
-		end
-	else
+	local target, section = link:match("(.-)#(.*)")
+	
+	if not target then
 		error("The function “section_link” could not find a number sign marking a section name.")
 	end
+	
+	return export.plain_link{
+		term = target,
+		fragment = section,
+		alt = link:gsub("#", " §&nbsp;", 1)
+	}
 end
 
 return export
