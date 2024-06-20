@@ -21,26 +21,24 @@ local function format_list_items(list, args)
 		else
 			local text
 			if type(item) == "table" then
-				text = term_already_linked(item.term) and item.term or
-					require(links_module).full_link(item)
+				text = item.term and term_already_linked(item.term) and item.term or require(links_module).full_link(item)
+				-- We could use the "show qualifiers" flag to full_link() but not when term_already_linked().
+				if item.q and item.q[1] or item.qq and item.qq[1] or item.l and item.l[1] or item.ll and item.ll[1] or
+					item.refs and item.refs[1] then
+					text = require(pron_qualifier_module).format_qualifiers {
+						lang = item.lang or args.lang,
+						text = text,
+						q = item.q,
+						qq = item.qq,
+						l = item.l,
+						ll = item.ll,
+						refs = item.refs,
+					}
+				end
 			elseif args.lang and not term_already_linked(item) then
 				text = require(links_module).full_link {lang = args.lang, term = item, sc = args.sc} 
 			else
 				text = item
-			end
-			if type(item) == "table" and (
-				item.q and item.q[1] or item.qq and item.qq[1] or item.l and item.l[1] or item.ll and item.ll[1] or
-				item.refs and item.refs[1]
-			) then
-				 text = require(pron_qualifier_module).format_qualifiers {
-					lang = item.lang or args.lang,
-					text = text,
-					q = item.q,
-					qq = item.qq,
-					l = item.l,
-					ll = item.ll,
-					refs = item.refs,
-				}
 			end
 
 			list = list:node(html("li")
@@ -191,30 +189,12 @@ function export.display_from(frame_args, parent_args, frame)
 
 	local m_param_utils = require(parameter_utilities_module)
 
-	local param_mods = {
-		t = {
-			-- [[Module:links]] expects the gloss in the "gloss" key.
-			item_dest = "gloss",
-		},
-		gloss = {},
-		tr = {},
-		ts = {},
-		g = {
-			-- [[Module:links]] expects genders in the "genders" key.
-			item_dest = "genders",
-			sublist = true,
-		},
-		id = {},
-		alt = {},
-		lit = {},
-		pos = {},
-		sc = {
-			type = "script",
-			separate_no_index = true,
-		}
+	local param_mods = m_param_utils.construct_param_mods {
+		{default = true, require_index = true},
+		{set = "link"}, -- sc has separate_no_index = true; that's the only one
+		-- It makes no sense to have overall l=, ll=, q= or qq= params for columnar display.
+		{set = {"ref", "l", "q"}, require_index = true},
 	}
-
-	m_param_utils.augment_param_mods_with_pron_qualifiers(param_mods, {"q", "l", "ref"})
 	m_param_utils.augment_params_with_modifiers(params, param_mods)
 
 	local args = require(parameters_module).process(parent_args, params)
