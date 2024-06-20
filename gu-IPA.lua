@@ -2,7 +2,8 @@ local export = {}
 
 local lang = require("Module:languages").getByCode("gu")
 local sc = require("Module:scripts").getByCode("Gujr")
-local m_IPA = require("Module:IPA")
+local IPA_module = "Module:IPA"
+local parameter_utilities_module = "Module:parameter utilities"
 
 local u = require("Module:string/char")
 local ufind = mw.ustring.find
@@ -95,7 +96,8 @@ function export.toIPA(text)
 	end
 	
 	result = table.concat(result)
-	local result = ugsub(result, "ː̃", "̃ː")
+	local TILDE = u(0x0303) -- tilde =  ̃
+	local result = ugsub(result, "ː" .. TILDE, TILDE .. "ː")
 
 	result = ugsub(result, "%.‿", "‿")
     
@@ -103,24 +105,49 @@ function export.toIPA(text)
 end
 
 function export.make(frame)
+	local parent_args = frame:getParent().args
+
+	local params = {
+		[1] = {list = true, allow_holes = true, default = "+"},
+		["pagename"] = {},
+	}
+
+	local m_param_utils = require(parameter_utilities_module)
+
+	local param_mods = m_param_utils.construct_param_mods {
+		{set = {"q", "a", "ref"}},
+	}
+	m_param_utils.augment_params_with_modifiers(params, param_mods)
+
+	local args = require(parameters_module).process(parent_args, params)
+
+	local items = m_param_utils.process_list_arguments {
+		args = args,
+		param_mods = param_mods,
+		termarg = 1,
+		term_dest = "pron",
+		track_module = "gu-IPA",
+	}
+
 	local args = frame:getParent().args
-	local pagetitle = mw.title.getCurrentTitle().text
-	
-	local p, results = {}, {}
-	
-	if args[1] then
-		for index, item in ipairs(args) do
-			table.insert(p, (item ~= "") and item or nil)
+	local pagename = pagename or mw.loadData("Module:headword/data").pagename
+
+	for _, item in ipairs(items) do
+		local respelling = item.pron or "+"
+		if respelling == "+" then
+			respelling = pagename
 		end
-	else
-		p = { pagetitle }
+		item.pron = "/" .. export.toIPA(respelling)
 	end
 	
-	for _, Gujarati in ipairs(p) do
-		table.insert(results, export.toIPA(Gujarati))
-	end
-	
-	return m_IPA.format_IPA_full { lang = lang, items = {{ pron = "/" .. table.concat(results, "/, /") .. "/" }} }
+	return require(IPA_module).format_IPA_full {
+		lang = lang,
+		items = items,
+		a = args.a.default,
+		aa = args.aa.default,
+		q = args.q.default,
+		qq = args.qq.default,
+	}
 end
 
 return export
