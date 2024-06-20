@@ -10,8 +10,8 @@ local put_module = "Module:parse utilities"
 
 local rmatch = mw.ustring.match
 local rfind = mw.ustring.find
-local rsplit = mw.text.split
 local ulen = mw.ustring.len
+local split = m_strutils.split
 
 local cat_data = data.cat_data
 
@@ -192,14 +192,16 @@ local function link(text, langcode, id)
 		return text
 	end
 
-	return m_links.full_link({term = text, lang = require(languages_module).getByCode(langcode, true, "allow etym"),
-		id = id}, nil, true)
+	return m_links.full_link(
+		{term = text, lang = require(languages_module).getByCode(langcode, true, "allow etym"), id = id},
+		nil, "allow self link"
+	)
 end
 
 
 -- Return the category link for a category, given the language code and the name of the category.
 local function catlink(lang, text, sort_key)
-	return require("Module:utilities").format_categories({lang:getNonEtymologicalCode() .. ":" ..
+	return require("Module:utilities").format_categories({lang:getFullCode() .. ":" ..
 		data.remove_links_and_html(text)}, lang, sort_key, nil, force_cat or data.force_cat)
 end
 
@@ -210,7 +212,7 @@ end
 
 
 -- Add the page to a tracking "category". To see the pages in the "category",
--- go to [[Template:tracking/place/PAGE]] and click on "What links here".
+-- go to [[Wiktionary:Tracking/place/PAGE]] and click on "What links here".
 local function track(page)
 	require(debug_track_module)("place/" .. page)
 	return true
@@ -219,7 +221,7 @@ end
 
 local function ucfirst_all(text)
 	if text:find(" ") then
-		local parts = rsplit(text, " ", true)
+		local parts = split(text, " ", true)
 		for i, part in ipairs(parts) do
 			parts[i] = m_strutils.ucfirst(part)
 		end
@@ -245,10 +247,8 @@ local function get_placetype_article(placetype, ucfirst)
 	local pt_data = data.get_equiv_placetype_prop(placetype, function(pt) return cat_data[pt] end)
 	if pt_data and pt_data.article then
 		art = pt_data.article
-	elseif placetype:find("^[aeiou]") then
-		art = "an"
 	else
-		art = "a"
+		art = m_strutils.get_indefinite_article(placetype)
 	end
 
 	if ucfirst then
@@ -287,7 +287,7 @@ local function split_on_comma(val)
 	if val:find(",%s") then
 		return require(put_module).split_on_comma(val)
 	else
-		return rsplit(val, ",")
+		return split(val, ",", true)
 	end
 end
 
@@ -305,7 +305,7 @@ local function split_on_slash(arg)
 		end
 		return slash_separated_groups
 	else
-		return rsplit(arg, "/", true)
+		return split(arg, "/", true)
 	end
 end
 
@@ -345,7 +345,7 @@ local function handle_implications(place_descriptions, implication_data, should_
 						if #split_holonym ~= 2 then
 							error("Invalid holonym in implications: " .. holonym_to_add)
 						end
-						local holonym_placetype, holonym_placename = unpack(split_holonym)
+						local holonym_placetype, holonym_placename = unpack(split_holonym, 1, 2)
 						local new_holonym = {placetype = holonym_placetype, placename = holonym_placename}
 						table.insert(desc.holonyms, new_holonym)
 						data.key_holonym_into_place_desc(desc, new_holonym)
@@ -390,7 +390,7 @@ end
 -- "Poland,Belarus,Ukraine" but keep "Tucson, Arizona" together.
 local function split_holonym_placename(placename)
 	if placename:find(", ") then
-		local placenames = rsplit(placename, ",", true)
+		local placenames = split(placename, ",", true)
 		local retval = {}
 		for i, placename in ipairs(placenames) do
 			if i > 1 and placename:find("^ ") then
@@ -401,7 +401,7 @@ local function split_holonym_placename(placename)
 		end
 		return retval
 	else
-		return rsplit(placename, ",", true)
+		return split(placename, ",", true)
 	end
 end
 
@@ -432,7 +432,7 @@ local function split_holonym(raw)
 	local placename = table.concat(holonym_parts, "/", 2)
 
 	-- Check for modifiers after the holonym placetype.
-	local split_holonym_placetype = rsplit(placetype, ":", true)
+	local split_holonym_placetype = split(placetype, ":", true)
 	placetype = split_holonym_placetype[1]
 	local affix_type
 	if #split_holonym_placetype > 2 then
@@ -521,7 +521,7 @@ end
 -- Return value is an object as documented at the top of the file.
 local function parse_new_style_place_desc(text)
 	local placetypes = {}
-	local segments = m_strutils.capturing_split(text, "<<(.-)>>")
+	local segments = split(text, "<<(.-)>>")
 	local retval = {holonyms = {}, order = {}}
 	for i, segment in ipairs(segments) do
 		if i % 2 == 1 then
@@ -552,7 +552,7 @@ local function parse_new_style_place_desc(text)
 		else
 			-- see if the placetype segment is just qualifiers
 			local only_qualifiers = true
-			local split_segments = rsplit(segment, " ", true)
+			local split_segments = split(segment, " ", true)
 			for _, split_segment in ipairs(split_segments) do
 				if not data.placetype_qualifiers[split_segment] then
 					only_qualifiers = false
@@ -667,26 +667,26 @@ local function parse_place_descriptions(numargs)
 	handle_implications(descs, data.general_implications, false)
 
 	-- Tracking code. This does nothing but add tracking for seen placetypes and qualifiers. The place will be linked to
-	-- [[Template:tracking/place/entry-placetype/PLACETYPE]] for all entry placetypes seen; in addition, if PLACETYPE
+	-- [[Wiktionary:Tracking/place/entry-placetype/PLACETYPE]] for all entry placetypes seen; in addition, if PLACETYPE
 	-- has qualifiers (e.g. 'small city'), there will be links for the bare placetype minus qualifiers and separately
 	-- for the qualifiers themselves:
-	--   [[Special:WhatLinksHere/Template:tracking/place/entry-placetype/BARE_PLACETYPE]]
-	--   [[Special:WhatLinksHere/Template:tracking/place/entry-qualifier/QUALIFIER]]
+	--   [[Special:WhatLinksHere/Wiktionary:Tracking/place/entry-placetype/BARE_PLACETYPE]]
+	--   [[Special:WhatLinksHere/Wiktionary:Tracking/place/entry-qualifier/QUALIFIER]]
 	-- Note that if there are multiple qualifiers, there will be links for each possible split. For example, for
 	-- 'small maritime city'), there will be the following links:
-	--   [[Special:WhatLinksHere/Template:tracking/place/entry-placetype/small maritime city]]
-	--   [[Special:WhatLinksHere/Template:tracking/place/entry-placetype/maritime city]]
-	--   [[Special:WhatLinksHere/Template:tracking/place/entry-placetype/city]]
-	--   [[Special:WhatLinksHere/Template:tracking/place/entry-qualifier/small]]
-	--   [[Special:WhatLinksHere/Template:tracking/place/entry-qualifier/maritime]]
+	--   [[Special:WhatLinksHere/Wiktionary:Tracking/place/entry-placetype/small maritime city]]
+	--   [[Special:WhatLinksHere/Wiktionary:Tracking/place/entry-placetype/maritime city]]
+	--   [[Special:WhatLinksHere/Wiktionary:Tracking/place/entry-placetype/city]]
+	--   [[Special:WhatLinksHere/Wiktionary:Tracking/place/entry-qualifier/small]]
+	--   [[Special:WhatLinksHere/Wiktionary:Tracking/place/entry-qualifier/maritime]]
 	-- Finally, there are also links for holonym placetypes, e.g. if the holonym 'c/Italy' occurs, there will be the
 	-- following link:
-	--   [[Special:WhatLinksHere/Template:tracking/place/holonym-placetype/country]]
+	--   [[Special:WhatLinksHere/Wiktionary:Tracking/place/holonym-placetype/country]]
 	for _, desc in ipairs(descs) do
 		for _, entry_placetype in ipairs(desc.placetypes) do
 			local splits = data.split_qualifiers_from_placetype(entry_placetype, "no canon qualifiers")
 			for _, split in ipairs(splits) do
-				local prev_qualifier, this_qualifier, bare_placetype = unpack(split)
+				local prev_qualifier, this_qualifier, bare_placetype = unpack(split, 1, 3)
 				track("entry-placetype/" .. bare_placetype)
 				if this_qualifier then
 					track("entry-qualifier/" .. this_qualifier)
@@ -944,7 +944,7 @@ local function get_placetype_description(placetype)
 	local splits = data.split_qualifiers_from_placetype(placetype)
 	local prefix = ""
 	for _, split in ipairs(splits) do
-		local prev_qualifier, this_qualifier, bare_placetype = unpack(split)
+		local prev_qualifier, this_qualifier, bare_placetype = unpack(split, 1, 3)
 		if this_qualifier then
 			prefix = (prev_qualifier and prev_qualifier .. " " .. this_qualifier or this_qualifier) .. " "
 		else
@@ -964,7 +964,7 @@ end
 local function get_qualifier_description(qualifier)
 	local splits = data.split_qualifiers_from_placetype(qualifier .. " foo")
 	local split = splits[#splits]
-	local prev_qualifier, this_qualifier, bare_placetype = unpack(split)
+	local prev_qualifier, this_qualifier, bare_placetype = unpack(split, 1, 3)
 	return prev_qualifier and prev_qualifier .. " " .. this_qualifier or this_qualifier
 end
 	
@@ -977,7 +977,7 @@ local term_param_mods = {
 		-- [[Module:links]] expects.
 		item_dest = "genders",
 		convert = function(arg, parse_err)
-			return rsplit(arg, ",")
+			return split(arg, ",", true)
 		end,
 	},
 	id = {},
@@ -1057,7 +1057,7 @@ local function get_extra_info(args, paramname, tag, ucfirst, auto_plural, with_c
 		end
 
 		for _, term in ipairs(terms) do
-			table.insert(linked_values, m_links.full_link(term, nil, true, "show qualifiers"))
+			table.insert(linked_values, m_links.full_link(term, nil, "allow self link", "show qualifiers"))
 		end
 	end
 
