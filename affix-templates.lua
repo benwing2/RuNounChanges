@@ -4,7 +4,6 @@ local m_affix = require("Module:affix")
 local languages_module = "Module:languages"
 local parameter_utilities_module = "Module:parameter utilities"
 local parameters_module = "Module:parameters"
-local pron_qualifier_module = "Module:pron qualifier"
 local pseudo_loan_module = "Module:affix/pseudo-loan"
 
 

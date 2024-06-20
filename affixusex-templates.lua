@@ -5,7 +5,6 @@ local require = require
 local affixusex_module = "Module:affixusex"
 local parameter_utilities_module = "Module:parameter utilities"
 local parameters_module = "Module:parameters"
-local pron_qualifier_module = "Module:pron qualifier"
 
 local concat = table.concat
 local find = string.find
@@ -77,9 +76,6 @@ function export.affixusex_t(frame)
 		items = items,
 		lang = lang,
 		sc = sc,
-	}
-	require(pron_qualifier_module).parse_qualifiers {
-		store_obj = data,
 		l = args.l.default,
 		ll = args.ll.default,
 		q = args.q.default,

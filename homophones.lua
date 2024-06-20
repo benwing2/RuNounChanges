@@ -169,9 +169,6 @@ function export.show(frame)
 		nocat = args.nocat,
 		sc = args.sc.default,
 		sort = args.sort,
-	}
-	require(pron_qualifier_module).parse_qualifiers {
-		store_obj = data,
 		q = args.q.default,
 		qq = args.qq.default,
 		a = args.a.default,

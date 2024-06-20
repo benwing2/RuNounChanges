@@ -59,9 +59,6 @@ function export.nyms(frame)
 		lang = lang,
 		items = items,
 		sc = args.sc.default,
-	}
-	require(pron_qualifier_module).parse_qualifiers {
-		store_obj = data,
 		l = args.l.default,
 		ll = args.ll.default,
 		q = args.q.default,
