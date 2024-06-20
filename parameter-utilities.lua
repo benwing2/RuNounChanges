@@ -13,19 +13,6 @@ local function track(page, track_module)
 	return require("Module:debug/track")((track_module or "parameter utilities") .. "/" .. page)
 end
 
-function export.parse_qualifier(arg, parse_err)
-	return {arg}
-end
-
-function export.parse_labels(arg, parse_err)
-	-- FIXME: Pass `parse_err` to split_labels_on_comma().
-	return require(labels_module).split_labels_on_comma(arg)
-end
-
-function export.parse_references(arg, parse_err)
-	return require(references_module).parse_references(arg, parse_err)
-end
-
 -- Table listing the recognized special separator arguments and how they display.
 local special_separators = {
 	[";"] = "; ",
@@ -376,7 +363,7 @@ function export.construct_param_mods(specs)
 end
 
 --[==[
-'''NOTE''': This will be deleted as soon as all callers are converted to use `construct_param_mods()`.
+'''FIXME''': This will be deleted as soon as all new code is pushed, as nothing will rely on this.
 
 Add "pronunciation qualifiers" to `param_mods`. By default, this consists of {"q"}, {"qq"}, {"a"}, {"aa"} and {"ref"},
 along with `type` values to appropriately parse and convert the values. By default, all but {"ref"} have
