@@ -1,3 +1,5 @@
+local export = {}
+
 local m_str_utils = require("Module:string utilities")
 
 local require_when_needed = require("Module:utilities/require when needed")
@@ -15,13 +17,21 @@ local max = math.max
 local pairs = pairs
 local pattern_escape = m_str_utils.pattern_escape
 local remove_holes = require_when_needed("Module:parameters/remove holes")
+local rsplit = m_str_utils.split
 local scribunto_param_key = m_str_utils.scribunto_param_key
 local sort = table.sort
 local trim = mw.text.trim
 local type = type
 local yesno = require_when_needed("Module:yesno")
 
-local export = {}
+local debug_track_module = "Module:debug/track"
+local families_module = "Module:families"
+local labels_module = "Module:labels"
+local languages_module = "Module:languages"
+local parse_utilities_module = "Module:parse utilities"
+local references_module = "Module:references"
+local scripts_module = "Module:scripts"
+local wikimedia_languages_module = "Module:wikimedia languages"
 
 --[==[ intro:
 This module is used to standardize template argument processing and checking. A typical workflow is as follows (based
@@ -57,8 +67,11 @@ treatment. Possible parameter tags are listed below:
 : When used on list parameters, this specifies a default value for the first item in the list only. Note that it is not possible to generate a default that depends on the value of other parameters.
 : If used together with {required = true}, the default applies only to the template's page itself. This can be used to show an example text.
 ; {alias_of =}
-: Treat the parameter as an alias of another. When arguments are specified for this parameter, they will automatically be renamed and stored under the alias name. This allows for parameters with multiple alternative names, while still treating them as if they had only one name.
-: Aliases cannot be required, as this prevents the other name or names of the parameter from being used. Parameters that are aliases and required at the same time cause an error to be thrown.
+: Treat the parameter as an alias of another. When arguments are specified for this parameter, they will automatically
+be renamed and stored under the alias name. This allows for parameters with multiple alternative names, while still
+treating them as if they had only one name.
+: Aliases cannot be required, as this prevents the other name or names of the parameter from being used. Parameters
+that are aliases and required at the same time cause an error to be thrown.
 ; {allow_empty = true}
 : If the argument is an empty string value, it is not converted to {nil}, but kept as-is.
 ; {allow_whitespace = true}
@@ -67,23 +80,37 @@ treatment. Possible parameter tags are listed below:
 ; {type =}
 : Specifies what value type to convert the argument into. The default is to leave it as a text string. Alternatives are:
 :; {type = "boolean"}
-:: The value is treated as a boolean value, either true or false. No value, the empty string, and the strings {"0"}, {"no"}, {"n"} and {"false"} are treated as {false}, all other values are considered {true}.
+:: The value is treated as a boolean value, either true or false. No value, the empty string, and the strings {"0"},
+{"no"}, {"n"} and {"false"} are treated as {false}, all other values are considered {true}.
 :; {type = "number"}
 :: The value is converted into a number, or {nil} if the value is not parsable as a number.
 :; {type = "language"}
-:: The value is interpreted as a code (or language name, if {method = "name"}) and converted into a language object. If 
-the code is invalid, then an error is thrown. The additional settings {etym_lang = true} and/or {family = true} can be
-given to allow (respectively) [[Wiktionary:Languages#Etymology-only languages|Etymology-only language codes]] and/or
-[[Wiktionary:Language families|language family codes]] to be considered valid and the
-corresponding object returned.
+:: The value is interpreted as a language code (or name, if {method = "name"}) and converted into the corresponding
+object (see [[Module:languages]]). If the code or name is invalid, then an error is thrown. The additional settings
+{etym_lang = true} and/or {family = true} can be given to allow (respectively)
+[[Wiktionary:Languages#Etymology-only languages|Etymology-only language codes]] and/or
+[[Wiktionary:Language families|language family codes]] to be considered valid and the corresponding object returned.
 :; {type = "wikimedia language"}
 :: The value is interpreted as a code and converted into a wikimedia language object. If the code is invalid, then an error is thrown.
 :; {type = "family"}
-:: The value is interpreted as a code (or language name, if {method = "name"}) and converted into a language family
-object. If the code is invalid, then an error is thrown.
+:: The value is interpreted as a language family code (or name, if {method = "name"}) and converted into the
+corresponding object (see [[Module:families]]). If the code or name is invalid, then an error is thrown.
 :; {type = "script"}
-:: The value is interpreted as a code (or language name, if {method = "name"}) and converted into a script object. If
-the code is invalid, then an error is thrown.
+:: The value is interpreted as a script code (or name, if {method = "name"}) and converted into the corresponding object
+(see [[Module:scripts]]). If the code or name is invalid, then an error is thrown.
+:; {type = "qualifier"}
+:: The value is interpreted as a qualifier and converted into the correct format for passing into `format_qualifiers()`
+in [[Module:qualifiers]] (which currently just means converting it to a one-item list).
+:; {type = "labels"}
+:: The value is interpreted as a comma-separated list of labels and converted into the correct format for passing into
+`show_labels()` in [[Module:labels]] (which is currently a list of strings). Splitting is done on commas not followed by
+whitespace, except that commas inside of double angle brackets do not count even if not followed by whitespace. This
+type should be used by for normal labels (typically specified using {{para|l}} or {{para|ll}}) and accent qualifiers
+(typically specified using {{para|a}} and {{para|aa}}).
+:; {type = "references"}
+:: The value is interpreted as one or more references, in the format prescribed by `parse_references()` in
+[[Module:references]], and converted into a list of objects of the form accepted by `format_references()` in the same
+module. If a syntax error is found in the reference format, an error is thrown.
 ; {list =}
 : Treat the parameter as a list of values, each having its own parameter name, rather than a single value. The parameters will have a number at the end, except optionally for the first (but see also {require_index = true}). For example, {list = true} on a parameter named "head" will include the parameters {{para|head}} (or {{para|head1}}), {{para|head2}}, {{para|head3}} and so on. If the parameter name is a number, another number doesn't get appended, but the counting simply continues, e.g. for parameter {3} the sequence is {{para|3}}, {{para|4}}, {{para|5}} etc. List parameters are returned as numbered lists, so for a template that is given the parameters `|head=a|head2=b|head3=c`, the processed value of the parameter {"head"} will be { { "a", "b", "c" }}}.
 : The value for {list =} can also be a string. This tells the module that parameters other than the first should have a different name, which is useful when the first parameter in a list is a number, but the remainder is named. An example would be for genders: {list = "g"} on a parameter named {1} would have parameters {{para|1}}, {{para|g2}}, {{para|g3}} etc.
@@ -91,11 +118,23 @@ the code is invalid, then an error is thrown.
 ; {set =}
 : Require that the value of the parameter be one of the specified list of values (or omitted, if {required = true} isn't
 given). The values in the specified list should be strings corresponding to the raw parameter values except when
-{type = "number"}, in which case they should be numbers. The use of `set` is ignored if {type = "boolean"}, as it
-doesn't make sense in this case.
-; {sublist = true}
-: The value of the parameter is a comma-separated list of individual values (possibly with whitespace on one or both
-sides of the comma, which is ignored). The resulting field in `args` will be a list of the converted values.
+{type = "number"}, in which case they should be numbers. The use of `set` is disallowed if {type = "boolean"} and causes
+an error to be thrown.
+; {sublist =}
+: The value of the parameter is a delimiter-separated list of individual raw values. The resulting field in `args` will
+be a Lua list (i.e. a table with numeric indices) of the converted values. If {sublist = true} is given, the values will
+be split on comma (possibly with whitespace on one or both sides of the comma, which is ignored). Otherwise, the value
+of `sublist` should be either a Lua pattern specifying the delimiter(s) to split on or a function to do the splitting,
+which is passed two values (the value to split and a function to signal an error) and should return a list of the split
+values.
+; {convert =}
+: If given, this specifies a function to convert the raw parameter value into the Lua object used during further
+processing. The function is passed two arguments, the raw parameter value itself and a function used to signal an error
+during parsing or conversion, and should return one value, the converted parameter. The error-signaling function
+contains the name and raw value of the parameter embedded into the message it generates, so these do not need to
+specified in the message passed into it. If `type` is specified in conjunction with `convert`, the processing by `type`
+happens first. If `sublist` is given in conjunction with `convert`, the raw parameter value will be split appropriately
+and `convert` called on each resulting item.
 ; {etym_lang = true}
 : When used in conjunction with {type = "language"}, allows [[Wiktionary:Languages#Etymology-only languages|etymology-only language codes]]
 to be returned. The returned objects are of the same type as those for full languages and for almost all purposes they
@@ -119,9 +158,28 @@ language, family or script name instead of a code.
 ]==]
 
 local function track(page)
-	require("Module:debug/track")("parameters/" .. page)
+	require(debug_track_module)("parameters/" .. page)
 end
 
+-------------------------------------- Some splitting functions -----------------------------
+
+-- Split an argument on comma, but not comma followed by whitespace.
+function export.split_on_comma_without_whitespace(val)
+	if val:find(",%s") then
+		return require(parse_utilities_module).split_on_comma(val)
+	else
+		return rsplit(val, ",")
+	end
+end
+
+-------------------------------------- Value conversion -----------------------------
+
+-- For a list parameter `name` and corresponding value `list_name` of the `list` field (which should have the same value
+-- as `name` if `list = true` was given), generate a pattern to match parameters of the list and store the pattern as a
+-- key in `patterns`, with corresponding value set to `name`. For example, if `list_name` is "tr", the pattern will
+-- match "tr" as well as "tr1", "tr2", ..., "tr10", "tr11", etc. If the `list_name` contains a \1 in it, the numeric
+-- portion goes in place of the \1. For example, if `list_name` is "f\1accel", the pattern will match "faccel",
+-- "f1accel", "f2accel", etc. Any \1 in `name` is removed before storing into `patterns`.
 local function save_pattern(name, list_name, patterns)
 	name = type(name) == "string" and gsub(name, "\1", "") or name
 	if match(list_name, "\1") then
@@ -131,6 +189,10 @@ local function save_pattern(name, list_name, patterns)
 	end
 end
 
+-- Convert a list in `list` to a string, separating the final element from the preceding one(s) by `conjunction`. If
+-- `dump_vals` is given, pass all values in `list` through mw.dumpObject() (WARNING: this destructively modifies
+-- `list`). This is similar to serialCommaJoin() in [[Module:table]] when used with the `dontTag = true` option, but
+-- internally uses mw.text.listToText().
 local function concat_list(list, conjunction, dump_vals)
 	if dump_vals then
 		for i = 1, #list do
@@ -140,10 +202,16 @@ local function concat_list(list, conjunction, dump_vals)
 	return list_to_text(list, nil, conjunction)
 end
 
+-- Helper function for use with convert_val_error(). Format a list of possible choices using `concat_list` and
+-- conjunction "or", displaying "either " before the choices if there's more than one.
 local function format_choice_list(typ)
 	return (#typ > 1 and "either " or "") .. concat_list(typ, " or ")
 end
 
+-- Signal an error for a value `val` that is not of the right typ `typ` (which is either a string specifying a type or
+-- a list of possible values, in the case where `set` was used). `name` is the name of the parameter and can be a
+-- function to signal an error (which is assumed to automatically display the parameter's name and value). `seetext` is
+-- an optional additional explanatory link to display (e.g. [[WT:LOL]], the list of possible languages and codes).
 local function convert_val_error(val, name, typ, seetext)
 	if type(name) == "function" then
 		if type(typ) == "table" then
@@ -161,7 +229,81 @@ local function convert_val_error(val, name, typ, seetext)
 	end
 end
 
-local function check_set(val, name, param)
+-- Convert a value that is not a string or number to a string using mw.dumpObject(), for debugging purposes.
+local function dump_if_unusual(val)
+	return (type(val) == "string" or type(val) == "number") and val or dump(val)
+end
+
+-- A helper function for use with generating error-signaling functions in the presence of raw value conversion. Format a
+-- message `msg`, including the processed value `processed` if it is different from the raw value `rawval`; otherwise,
+-- just return `msg`.
+local function msg_with_processed(msg, rawval, processed)
+	if rawval == processed then
+		return msg
+	else
+		return ("%s (processed value %s)"):format(msg, dump_if_unusual(processed))
+	end
+end
+
+-- Generate the appropriate error-signaling function given parameter value `val` and name `name`. If `name` is already
+-- a function, it is just returned; otherwise a function is generated and returned that displays the passed-in messaeg
+-- along with the parameter's name and value.
+local function make_parse_err(val, name)
+	if type(name) == "function" then
+		return name
+	else
+		return function(msg)
+			error(("%s: parameter %s=%s"):format(name, val))
+		end
+	end
+end
+
+-- A reimplementation of ipairs() for use in a single-variable for-loop (like with gsplit()) instead of a two-variable
+-- for-loop (like with ipairs()). If we changed the return statement below to `return index, list[index]`, we'd get
+-- ipairs() directly.
+local function iterate_over_list(list)
+   local index, len = 0, #list
+   return function()
+      index = index + 1
+      if index <= len then
+         return list[index]
+      end
+   end
+end
+
+-- A helper function for use with `sublist`. It is an iterator function for use in a for-loop that returns split
+-- elements of `val` using `sublist` (a Lua split pattern; boolean `true` to split on commas optionally surrounded by
+-- whitespace; or a function to do the splitting, which is passed two values, the value to split and a function to
+-- signal an error, and should return a list of the split elements). `name` is the parameter name or error-signaling
+-- function passed into convert_val().
+local function split_sublist(val, name, sublist)
+	sublist = sublist == true and "%s*,%s*" or sublist
+	if type(sublist) == "string" then
+		return gsplit(val, sublist)
+	elseif type(sublist) == "function" then
+		local retval = sublist(val, make_parse_err(val, name))
+		return iterate_over_list(retval)
+	else
+		error(('Internal error: Expected `sublist` to be of type "string" or "function" or boolean `true`, but saw %s'):
+		format(dump(sublist)))
+	end
+end
+
+-- For parameter named `name` with value `val` and param spec `param`, if the `set` field is specified, verify that the
+-- value is one of the one specified in `set`, and throw an error otherwise. `name` is taken directly from the
+-- corresponding parameter passed into convert_val() and may be a function to signal an error. Optional `typ` is a
+-- string specifying the conversion type of `val` and is used for special-casing: If `typ` is "boolean", an internal
+-- error is thrown (since `set` cannot be used in conjunction with booleans) and if `typ` is "number", no checking
+-- happens because in this case `set` contains numbers and is checked inside the number conversion function itself,
+-- after converting `val` to a number.
+local function check_set(val, name, param, typ)
+	if typ == "boolean" then
+		error(('Internal error: Cannot use `set` with `type = "%s"`'):format(typ))
+	end
+	if typ == "number" then
+		-- Needs to be special cased because the check happens after conversion to numbers.
+		return
+	end
 	if not param.set[val] then
 		local list = {}
 		for k in pairs(param.set) do
@@ -176,25 +318,39 @@ local function check_set(val, name, param)
 	end
 end
 
+--[==[ func: convert_val(val, name, param)
+Convert a parameter value according to the associated specs listed in the `params` table passed to
+[[Module:parameters]]. `val` is the value to convert for a parameter whose name is `name` (used only in error messages).
+`param` is the spec (the value part of the `params` table for the parameter). In place of passing in the parameter name,
+`name` can be a function that throws an error, displaying the specified message along with the parameter name and value.
+This function processes all the conversion-related fields in `param`, including `type`, `set`, `sublist`, `convert`,
+etc. It returns the converted value.
+]==]
 local convert_val = setmetatable({
 	["boolean"] = function(val)
-		-- Set makes no sense with booleans, so don't bother checking for it.
 		return yesno(val, true)
 	end,
 	
 	["family"] = function(val, name, param)
-		if param.set then
-			check_set(val, name, param)
-		end
-		return require("Module:families")[param.method == "name" and "getByCanonicalName" or "getByCode"](val) or
+		return require(families_module)[param.method == "name" and "getByCanonicalName" or "getByCode"](val) or
 			convert_val_error(val, name, "family " .. (param.method == "name" and "name" or "code"), "[[WT:LOF]]")
 	end,
 	
+	["labels"] = function(val, name, param)
+		-- FIXME: Should be able to pass in a parse_err function.
+		return require(labels_module).split_labels_on_comma(val)
+	end,
+
+	["references"] = function(val, name, param)
+		return require(references_module).parse_references(val, make_parse_err(val, name))
+	end,
+
+	["qualifier"] = function(val, name, param)
+		return {val}
+	end,
+
 	["language"] = function(val, name, param)
-		if param.set then
-			check_set(val, name, param)
-		end
-		local lang = require("Module:languages")[param.method == "name" and "getByCanonicalName" or "getByCode"](val, nil, param.etym_lang, param.family)
+		local lang = require(languages_module)[param.method == "name" and "getByCanonicalName" or "getByCode"](val, nil, param.etym_lang, param.family)
 		if lang then
 			return lang
 		end
@@ -217,52 +373,98 @@ local convert_val = setmetatable({
 			return val
 		end
 		-- Avoid converting inputs like "nan" or "inf".
-		val = tonumber(val:match("^[+%-]?%d+%.?%d*")) or
-			convert_val_error(val, name, "number")
+		val = tonumber(val:match("^[+%-]?%d+%.?%d*")) or convert_val_error(val, name, "number")
 		if param.set then
+			-- Don't pass in "number" here; otherwise no checking will happen.
 			check_set(val, name, param)
 		end
 		return val
 	end,
 	
 	["script"] = function(val, name, param)
-		if param.set then
-			check_set(val, name, param)
-		end
-		return require("Module:scripts")[param.method == "name" and "getByCanonicalName" or "getByCode"](val) or
+		return require(scripts_module)[param.method == "name" and "getByCanonicalName" or "getByCode"](val) or
 			convert_val_error(val, name, "script " .. (param.method == "name" and "name" or "code"), "[[WT:LOS]]")
 	end,
 	
 	["string"] = function(val, name, param)
-		if param.set then
-			check_set(val, name, param)
-		end
 		return val
 	end,
 	
 	["wikimedia language"] = function(val, name, param)
-		if param.set then
-			check_set(val, name, param)
-		end
-		return require("Module:wikimedia languages").getByCode(val) or
+		return require(wikimedia_languages_module).getByCode(val) or
 			convert_val_error(val, name, "wikimedia language code")
 	end,
 }, {
 	__call = function(self, val, name, param)
-		local func, sublist = self[param.type or "string"], param.sublist
+		local typ = param.type or "string"
+		local func, sublist = self[typ], param.sublist
 		if not func then
-			error("Internal error: " .. dump(param.type) .. " is not a recognized parameter type.")
+			error("Internal error: " .. dump(typ) .. " is not a recognized parameter type.")
 		elseif sublist then
-			local ret_val = {}
+			local retlist = {}
 			if type(val) ~= "string" then
 				error("Internal error: " .. dump(val) .. " is not a string.")
 			end
-			for v in gsplit(val, sublist == true and "%s*,%s*" or sublist) do
-				insert(ret_val, func(v, name, param))
+			if param.convert then
+				local thisval, insval
+				local thisindex = 0
+				local parse_err
+				if type(name) == "function" then
+					-- We assume the passed-in error function in `name` already shows the parameter name and raw value.
+					parse_err = function(msg)
+						name(("%s: item #%s=%s"):format(msg_with_processed(msg, thisval, insval), thisindex,
+							thisval))
+					end
+				else
+					parse_err = function(msg)
+						error(("%s: item #%s=%s of parameter %s=%s"):format(msg_with_processed(msg, thisval, insval),
+							thisindex, thisval, name, val))
+					end
+				end
+				for v in split_sublist(val, name, sublist) do
+					thisval = v
+					thisindex = thisindex + 1
+					if param.set then
+						check_set(v, name, param, typ)
+					end
+					insval = func(v, name, param)
+					insert(retval, param.convert(insval, parse_err))
+				end
+			else
+				for v in split_sublist(val, name, sublist) do
+					if param.set then
+						check_set(v, name, param, typ)
+					end
+					insert(retlist, func(v, name, param))
+				end
 			end
-			return ret_val
+			return retlist
 		else
-			return func(val, name, param)
+			if param.set then
+				check_set(val, name, param, typ)
+			end
+			local retval = func(val, name, param)
+			if param.convert then
+				local parse_err
+				if type(name) == "function" then
+					-- We assume the passed-in error function in `name` already shows the parameter name and raw value.
+					if retval == val then
+						-- This is an optimization to avoid creating a closure. The second arm works correctly even
+						-- when retval == val.
+						parse_err = name
+					else
+						parse_err = function(msg)
+							name(msg_with_processed(msg, val, retval))
+						end
+					end
+				else
+					parse_err = function(msg)
+						error(("%s: parameter %s=%s"):format(msg_with_processed(msg, val, retval), name, val))
+					end
+				end
+				retval = param.convert(retval, parse_err)
+			end
+			return retval
 		end
 	end
 })
