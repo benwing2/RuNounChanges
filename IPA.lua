@@ -60,16 +60,17 @@ the word {"key"} linking to an Appendix page describing the language's phonology
 {{cd|<var>lang</var> terms with IPA pronunciation}}. Other than the extra preceding text and category, this is identical
 to {format_IPA_multiple()}, and the considerations described there in the documentation apply here as well. There is a
 single parameter `data`, an object with the following fields:
-* `lang` is an object representing the language of the pronunciations, which is used when adding cleanup categories for
+* `lang`: Object representing the language of the pronunciations, which is used when adding cleanup categories for
    pronunciations with invalid phonemes; for determining how many syllables the pronunciations have in them, in order to
    add a category such as [[:Category:Italian 2-syllable words]] (for certain languages only); for adding a category
    {{cd|<var>lang</var> terms with IPA pronunciation}}; and for determining the proper sort keys for categories. Unlike
    for {format_IPA_multiple()}, `lang` may not be {nil}.
-* `items` is a list of pronunciations, in exactly the same format as for {format_IPA_multiple()}.
-* `err`, if not {nil}, is a string containing an error message to use in place of the link to the language's phonology.
-* `separator`: the overall separator to use when separating formatted items. Defaults to {", "}. Except in the simplest
-  cases, you should consider setting this to an empty string and using the per-item `separator` field in `items`.
-* `sort_key`: explicit sort key used for categories.
+* `items`: List of pronunciations, in exactly the same format as for {format_IPA_multiple()}.
+* `err`: If not {nil}, a string containing an error message to use in place of the link to the language's phonology.
+* `separator`: The default separator to use when separating formatted items. Defaults to {", "}. Does not apply to the
+  first item, where the default separator is always the empty string. Overridden by the per-item `separator` field in
+  `items`.
+* `sort_key`: Explicit sort key used for categories.
 * `no_count`: Suppress adding a {#-syllable words} category such as [[:Category:Italian 2-syllable words]]. Note that
   only certain languages add such categories to begin with, because it depends on knowing how to count syllables in a
   given language, which depends on the phonology of the language. Also, this does not suppress the addition of cleanup
@@ -82,11 +83,11 @@ single parameter `data`, an object with the following fields:
   `split_output` is any other value besides {nil}, the categories are returned as a pre-formatted concatenated string.
 * `include_langname`: If specified, prefix the result with the language name, followed by a colon.
 * `q`: {nil} or a list of left qualifiers (as in {{tl|q}}) to display at the beginning, before the formatted
-  pronunciation and preceding {"IPA:"}.
+  pronunciations and preceding {"IPA:"}.
 * `qq`: {nil} or a list of right qualifiers to display after all formatted pronunciations.
 * `a`: {nil} or a list of left accent qualifiers (as in {{tl|a}}) to display at the beginning, before the formatted
-  pronunciation and preceding {"IPA:"}.
-* `aa`: {nil} or a list of right accent qualifiers to display all formatted pronunciations.
+  pronunciations and preceding {"IPA:"}.
+* `aa`: {nil} or a list of right accent qualifiers to display after all formatted pronunciations.
 ]==]
 function export.format_IPA_full(data)
 	if type(data) ~= "table" or data.getCode then
@@ -239,9 +240,10 @@ Parameters accepted are:
 ** `gloss`: {nil} or a gloss (definition) for this item, if different definitions have different pronunciations;
 ** `pos`: {nil} or a part of speech for this item, if different parts of speech have different pronunciations;
 ** `separator`: the separator text to insert directly before the formatted pronunciation and all qualifiers, accent
-   qualifiers and pre-text; if used, you should explicitly set the outer `separator` parameter to an empty string.
-* `separator`: the overall separator to use when separating formatted items. Defaults to {", "}. Except in the simplest
-  cases, you should consider setting this to an empty string and using the per-item `separator` field documented above.
+   qualifiers and pre-text; defaults to the outer `separator` parameter.
+* `separator`: The default separator to use when separating formatted items. Defaults to {", "}. Does not apply to the
+  first item, where the default separator is always the empty string. Overridden by the per-item `separator` field in
+  `items`.
 * `no_count`: Suppress adding a {#-syllable words} category such as [[:Category:Italian 2-syllable words]]. Note that
   only certain languages add such categories to begin with, because it depends on knowing how to count syllables in a
   given language, which depends on the phonology of the language. Also, this does not suppress the addition of cleanup
@@ -254,7 +256,7 @@ Parameters accepted are:
 ]==]
 function export.format_IPA_multiple(lang, items, separator, no_count, split_output)
 	local categories = {}
-	separator = separator or ', '
+	separator = separator or ", "
 
 	if not lang then
 		track("format-multiple-nolang")
@@ -271,7 +273,7 @@ function export.format_IPA_multiple(lang, items, separator, no_count, split_outp
 
 	local bits = {}
 
-	for _, item in ipairs(items) do
+	for i, item in ipairs(items) do
 		local bit
 
 		-- If the pronunciation is entirely empty, allow this and don't do anything, so that e.g. the pretext and/or
@@ -338,9 +340,7 @@ function export.format_IPA_multiple(lang, items, separator, no_count, split_outp
 			end
 		end
 
-		if item.separator then
-			bit = item.separator .. bit
-		end
+		bit = (item.separator or (i == 1 and "" or separator)) .. bit
 
 		insert(bits, bit)
 
@@ -385,15 +385,15 @@ function export.format_IPA_multiple(lang, items, separator, no_count, split_outp
 				end
 			end
 
-			-- The nature of hasInvalidSeparators() is such that we don't have to split a combined '/.../ [...]' spec into
-			-- its parts in order to process.
+			-- The nature of hasInvalidSeparators() is such that we don't have to split a combined '/.../ [...]' spec
+			-- into its parts in order to process.
 			if lang:getCode() == "en" and hasInvalidSeparators(item.pron) then
 				insert(categories, "IPA for English using .ˈ or .ˌ")
 			end
 		end
 	end
 
-	return process_maybe_split_categories(split_output, categories, concat(bits, separator), lang)
+	return process_maybe_split_categories(split_output, categories, concat(bits), lang)
 end
 
 --[=[
@@ -589,12 +589,12 @@ error messages as needed. The pronunciation `pron` should be either phonemic (su
 phonemic/phonetic spec (of the form {/.../ [...]}). `lang` indicates the language of the pronunciation and can be {nil}.
 If not {nil}, and the specified language has data in [[Module:IPA/data]] indicating the allowed phonemes, then the page
 will be added to a cleanup category and an error message displayed next to the outputted pronunciation. Note that {lang}
-also determines sort key processing in the added cleanup categories. If `split_output` is not given, the return value is a
-concatenation of the formatted pronunciation, error messages and formatted cleanup categories. Otherwise, three values are
-returned: the formatted pronunciation, the cleanup categories and the concatenated error messages. If `split_output` is
-the value {"raw"}, the cleanup categories are returned in list form, where the list elements are a combination of category
-strings and category objects of the form suitable for passing to {format_categories()} in [[Module:utilities]]. If
-`split_output` is any other value besides {nil}, the cleanup categories are returned as a pre-formatted concatenated
+also determines sort key processing in the added cleanup categories. If `split_output` is not given, the return value is
+a concatenation of the formatted pronunciation, error messages and formatted cleanup categories. Otherwise, three values
+are returned: the formatted pronunciation, the cleanup categories and the concatenated error messages. If `split_output`
+is the value {"raw"}, the cleanup categories are returned in list form, where the list elements are a combination of
+category strings and category objects of the form suitable for passing to {format_categories()} in [[Module:utilities]].
+If `split_output` is any other value besides {nil}, the cleanup categories are returned as a pre-formatted concatenated
 string.
 ]==]
 function export.format_IPA(lang, pron, split_output)
@@ -627,6 +627,25 @@ function export.format_IPA(lang, pron, split_output)
 		err)
 end
 
+--[==[
+Format a line of one or more enPR pronunciations as {{tl|enPR}} would do it, i.e. with a preceding {"enPR:"} (linked to
+[[Appendix:English pronunciation]]) followed by one or more formatted, comma-separated enPR pronunciations. The
+pronunciations are formatted by wrapping them in the {{cd|AHD}} and {{cd|enPR}} CSS classes and adding any left and
+right regular and accent qualifiers. In addition, the overall result is wrapped in any overall left and right regular
+and accent qualifiers. There is a single parameter `data`, an object with the following fields:
+* `items` is a list of enPR pronunciations, each of which is an object with the following properties:
+** `pron`: the enPR pronunciation;
+** `q`: {nil} or a list of left qualifiers (as in {{tl|q}}) to display before the formatted pronunciation;
+** `qq`: {nil} or a list of right qualifiers to display after the formatted pronunciation;
+** `a`: {nil} or a list of left accent qualifiers (as in {{tl|a}}) to display before the formatted pronunciation;
+** `aa`: {nil} or a list of right accent qualifiers to after before the formatted pronunciation.
+* `q`: {nil} or a list of left qualifiers (as in {{tl|q}}) to display at the beginning, before the formatted
+  pronunciations and preceding {"enPR:"}.
+* `qq`: {nil} or a list of right qualifiers to display after all formatted pronunciations.
+* `a`: {nil} or a list of left accent qualifiers (as in {{tl|a}}) to display at the beginning, before the formatted
+  pronunciations and preceding {"enPR:"}.
+* `aa`: {nil} or a list of right accent qualifiers to display after all formatted pronunciations.
+]==]
 function export.format_enPR_full(data)
 	local prefix = "[[Appendix:English pronunciation|enPR]]: "
 	local lang = require("Module:languages").getByCode("en")
