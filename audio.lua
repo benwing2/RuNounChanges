@@ -5,7 +5,6 @@ local IPA_module = "Module:IPA"
 local labels_module = "Module:labels"
 local links_module = "Module:links"
 local parameters_module = "Module:parameters"
-local pron_qualifier_module = "Module:pron qualifier"
 local qualifier_module = "Module:qualifier"
 local references_module = "Module:references"
 local string_utilities_module = "Module:string utilities"
@@ -17,10 +16,6 @@ local audio_styles_css = "audio/styles.css"
 local function track(page)
 	require("Module:debug/track")("audio/" .. page)
 	return true
-end
-
-local function rsplit(text, pattern)
-	return require(string_utilities_module).split(text, pattern)
 end
 
 local function wrap_qualifier_css(text, suffix)
@@ -289,39 +284,31 @@ end
 Construct the `text` object passed into {format_audio()}, from raw-ish arguments (essentially, the output of {process()}
 in [[Module:parameters]]). On entry, `args` contains the following fields:
 * `lang` ('''required'''): Language object.
-* `text`: Text. If this isn't defined and neither are any of `t`, `tr`, `ts`, `pos`, `lit` or `g`, the function returns
-  {nil}.
-* `t`: Gloss of text.
+* `text`: Text. If this isn't defined and neither are any of `gloss`, `tr`, `ts`, `pos`, `lit` or `genders`, the
+  function returns {nil}.
+* `gloss`: Gloss of text.
 * `tr`: Manual transliteration of text.
 * `ts`: Transcription of text.
 * `pos`: Part of speech of text.
 * `lit`: Literal meaning of text.
-* `g`: Gender/number spec(s) of text. Automatically split on commas.
+* `genders`: List of gender/number spec(s) of text.
 * `sc`: Optional script object of text (rarely needs to be set).
 * `pagename`: Pagename; used in place of `text` when `text` is unset but other text-related parameters are set.
   If not specified, taken from the actual pagename.
 ]==]
 function export.construct_audio_textobj(args)
 	local textobj
-	local g = args.g
-	if g then
-		if g:find(",") then
-			g = rsplit(g, "%s*,%s*")
-		else
-			g = {g}
-		end
-	end
-	if args.text or args.t or args.tr or args.ts or args.pos or args.lit or g then
+	if args.text or args.gloss or args.tr or args.ts or args.pos or args.lit or args.genders and args.genders[1] then
 		local text = args.text or args.pagename or mw.loadData("Module:headword/data").pagename
 		textobj = {
 			lang = args.lang,
 			alt = wrap_qualifier_css("“", "quote") .. text .. wrap_qualifier_css("”", "quote"),
-			gloss = args.t,
+			gloss = args.gloss,
 			tr = args.tr,
 			ts = args.ts,
 			pos = args.pos,
 			lit = args.lit,
-			genders = g,
+			genders = args.genders,
 			sc = args.sc,
 		}
 	end
@@ -341,12 +328,12 @@ function export.show(frame)
 		[compat and "lang" or 1] = {required = true, type = "language", etym_lang = true, default = "en"},
 		[1 + offset] = {required = true, default = "Example.ogg"},
 		[2 + offset] = {},
-		["q"] = {},
-		["qq"] = {},
-		["a"] = {},
-		["aa"] = {},
-		["ref"] = {},
-		["IPA"] = {},
+		["q"] = {type = "qualifier"},
+		["qq"] = {type = "qualifier"},
+		["a"] = {type = "labels"},
+		["aa"] = {type = "labels"},
+		["ref"] = {type = "references"},
+		["IPA"] = {sublist = true},
 		["text"] = {},
 		["t"] = {},
 		["gloss"] = {alias_of = "t"},
@@ -354,7 +341,7 @@ function export.show(frame)
 		["ts"] = {},
 		["pos"] = {},
 		["lit"] = {},
-		["g"] = {},
+		["g"] = {sublist = true},
 		["sc"] = {type = "script"},
 		["bad"] = {},
 		["nocat"] = {type = "boolean"},
@@ -385,19 +372,16 @@ function export.show(frame)
 		file = args[1 + offset],
 		caption = caption,
 		nocaption = nocaption,
-		text = textobj,
-		IPA = args.IPA and rsplit(args.IPA, ",") or nil,
-		bad = args.bad,
-		nocat = args.nocat,
-		sort = args.sort,
-	}
-	require(pron_qualifier_module).parse_qualifiers {
-		store_obj = data,
 		q = args.q,
 		qq = args.qq,
 		a = args.a,
 		aa = args.aa,
 		refs = args.ref,
+		text = textobj,
+		IPA = args.IPA,
+		bad = args.bad,
+		nocat = args.nocat,
+		sort = args.sort,
 	}
 
 	return export.format_audio(data)
