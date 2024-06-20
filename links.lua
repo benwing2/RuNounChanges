@@ -34,6 +34,7 @@ local umatch = m_str_utils.match
 local unstrip = mw.text.unstrip
 local u = m_str_utils.char
 local TEMP_UNDERSCORE = u(0xFFF0)
+local pron_qualifier_module = "Module:pron qualifier"
 
 local function track(page, code)
 	local tracking_page = "links/" .. page
@@ -697,49 +698,42 @@ function export.format_link_annotations(data, face)
 	return concat(output)
 end
 
--- Add any left or right qualifiers or references to a formatted term. `data` is the object specifying the term, which
--- should optionally contain:
--- * left qualifiers in `q` (an array of strings or a single string); an empty array or blank string will be ignored;
--- * right qualifiers in `qq` (an array of strings or a single string); an empty array or blank string will be ignored;
+-- Add any left or right regular or accent qualifiers, labels or references to a formatted term. `data` is the object
+-- specifying the term, which should optionally contain:
+-- * a language object in `lang`; required if any accent qualifiers or labels are given;
+-- * left regular qualifiers in `q` (an array of strings or a single string); an empty array or blank string will be
+--   ignored;
+-- * right regular qualifiers in `qq` (an array of strings or a single string); an empty array or blank string will be
+--   ignored;
+-- * left accent qualifiers in `a` (an array of strings); an empty array will be ignored;
+-- * right accent qualifiers in `aa` (an array of strings); an empty array will be ignored;
+-- * left labels in `l` (an array of strings); an empty array will be ignored;
+-- * right labels in `ll` (an array of strings); an empty array will be ignored;
 -- * references in `refs`, an array either of strings (formatted reference text) or objects containing fields `text`
 --   (formatted reference text) and optionally `name` and/or `group`.
 -- `formatted` is the formatted version of the term itself.
-function export.add_qualifiers_and_refs_to_term(data, formatted)
-	local left_qualifiers, right_qualifiers
-	local reftext
-
-	left_qualifiers = data.q and #data.q > 0 and data.q
-	if left_qualifiers then
-		left_qualifiers = require("Module:qualifier").format_qualifier(left_qualifiers) .. " "
+local function add_qualifiers_and_refs_to_term(data, formatted)
+	local q = data.q
+	if type(q) == "string" then
+		q = {q}
 	end
-
-	right_qualifiers = data.qq and #data.qq > 0 and data.qq
-	if right_qualifiers then
-		right_qualifiers = " " .. require("Module:qualifier").format_qualifier(right_qualifiers)
+	local qq = data.qq
+	if type(qq) == "string" then
+		qq = {qq}
 	end
-	if data.refs and #data.refs > 0 then
-		local refs = {}
-		for _, ref in ipairs(data.refs) do
-			if type(ref) ~= "table" then
-				ref = {text = ref}
-			end
-			local refargs
-			if ref.name or ref.group then
-				refargs = {name = ref.name, group = ref.group}
-			end
-			insert(refs, mw.getCurrentFrame():extensionTag("ref", ref.text, refargs))
-		end
-		reftext = concat(refs)
-	end
-
-	if left_qualifiers then
-		formatted = left_qualifiers .. formatted
-	end
-	if reftext then
-		formatted = formatted .. reftext
-	end
-	if right_qualifiers then
-		formatted = formatted .. right_qualifiers
+	if q and q[1] or qq and qq[1] or data.a and data.a[1] or data.aa and data.aa[1] or data.l and data.l[1] or
+		data.ll and data.ll[1] or data.refs and data.refs[1] then
+		formatted = require(pron_qualifier_module).format_qualifiers {
+			lang = data.lang,
+			text = formatted,
+			q = q,
+			qq = qq,
+			a = data.a,
+			aa = data.aa,
+			l = data.l,
+			ll = data.ll,
+			refs = data.refs,
+		}
 	end
 
 	return formatted
@@ -1033,7 +1027,7 @@ function export.full_link(data, face, allow_self_link, show_qualifiers)
 
 	output = concat(output)
 	if show_qualifiers then
-		output = export.add_qualifiers_and_refs_to_term(data, output)
+		output = add_qualifiers_and_refs_to_term(data, output)
 	end
 	return output .. categories
 end
