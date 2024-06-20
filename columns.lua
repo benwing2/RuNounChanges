@@ -1,12 +1,12 @@
 local export = {}
 
 local html = mw.html.create
-local m_links = require("Module:links")
-local m_languages = require("Module:languages")
 local m_str_utils = require("Module:string utilities")
-local parse_utilities_module = "Module:parse utilities"
+local links_module = "Module:links"
+local parameter_utilities_module = "Module:parameter utilities"
+local parameters_module = "Module:parameters"
+local pron_qualifier_module = "Module:pron qualifier"
 
-local split = m_str_utils.split
 local u = m_str_utils.char
 
 local function format_list_items(list, args)
@@ -19,15 +19,32 @@ local function format_list_items(list, args)
 		if item == false then
 			-- omitted item; do nothing
 		else
+			local text
 			if type(item) == "table" then
-				item = term_already_linked(item.term) and item.term or
-					m_links.full_link(item, nil, nil, "show qualifiers")
+				text = term_already_linked(item.term) and item.term or
+					require(links_module).full_link(item)
 			elseif args.lang and not term_already_linked(item) then
-				item = m_links.full_link {lang = args.lang, term = item, sc = args.sc} 
+				text = require(links_module).full_link {lang = args.lang, term = item, sc = args.sc} 
+			else
+				text = item
 			end
-	
+			if type(item) == "table" and (
+				item.q and item.q[1] or item.qq and item.qq[1] or item.l and item.l[1] or item.ll and item.ll[1] or
+				item.refs and item.refs[1]
+			) then
+				 text = require(pron_qualifier_module).format_qualifiers {
+					lang = item.lang or args.lang,
+					text = text,
+					q = item.q,
+					qq = item.qq,
+					l = item.l,
+					ll = item.ll,
+					refs = item.refs,
+				}
+			end
+
 			list = list:node(html("li")
-				:wikitext(item)
+				:wikitext(text)
 			)
 		end
 	end
@@ -114,79 +131,6 @@ function export.create_table(...)
 end
 
 
-local param_mods = {
-	t = {
-		-- We need to store the <t:...> inline modifier into the "gloss" key of the parsed part, because that is what
-		-- [[Module:links]] expects.
-		item_dest = "gloss",
-	},
-	gloss = {},
-	tr = {},
-	ts = {},
-	g = {
-		-- We need to store the <g:...> inline modifier into the "genders" key of the parsed part, because that is what
-		-- [[Module:links]] expects.
-		item_dest = "genders",
-		convert = function(arg, parse_err)
-			return split(arg, ",", true)
-		end,
-	},
-	id = {},
-	alt = {},
-	q = {},
-	qq = {},
-	lit = {},
-	pos = {},
-	sc = {
-		convert = function(arg, parse_err)
-			return require("Module:scripts").getByCode(arg, parse_err)
-		end,
-	}
-}
-
-local function parse_term_with_modifiers(paramname, val, lang, sc, lang_cache)
-	local function generate_obj(term, parse_err)
-		local obj = {}
-		if term:find(":") then
-			local actual_term, termlangs = require(parse_utilities_module).parse_term_with_lang {
-				term = term,
-				parse_err = parse_err,
-				paramname = paramname,
-				allow_multiple = true,
-				allow_bad = true,
-				lang_cache = lang_cache,
-			}
-			obj.term = actual_term
-			obj.termlangs = termlangs
-			obj.lang = termlangs and termlangs[1] or nil
-		else
-			obj.term = term
-		end
-		return obj
-	end
-
-	local termobj
-	-- Check for inline modifier, e.g. מרים<tr:Miryem>. But exclude HTML entry with <span ...>, <i ...>, <br/> or
-	-- similar in it, caused by wrapping an argument in {{l|...}}, {{m|...}} or similar. Basically, all tags of
-	-- the sort we parse here should consist of a less-than sign, plus letters, plus a colon, e.g. <tr:...>, so if
-	-- we see a tag on the outer level that isn't in this format, we don't try to parse it. The restriction to the
-	-- outer level is to allow generated HTML inside of e.g. qualifier tags, such as foo<q:similar to {{m|fr|bar}}>.
-	if val:find("<") and not val:find("^[^<]*<[a-z]*[^a-z:]") then
-		termobj = require(parse_utilities_module).parse_inline_modifiers(val, {
-			paramname = paramname,
-			param_mods = param_mods,
-			generate_obj = generate_obj,
-		})
-	else
-		termobj = generate_obj(val)
-	end
-	-- Set these after parsing inline modifiers, not in generate_obj(), otherwise we'll get an error in
-	-- parse_inline_modifiers() if we try to use <lang:...> or <sc:...> as inline modifiers.
-	termobj.lang = termobj.lang or lang
-	termobj.sc = termobj.sc or sc
-	return termobj
-end
-
 function export.display_from(frame_args, parent_args, frame)
 	local iparams = {
 		["class"] = {},
@@ -200,7 +144,7 @@ function export.display_from(frame_args, parent_args, frame)
 		-- If specified, this specifies the language code, and no language-code
 		-- parameter is available on the template. Otherwise, the language-code
 		-- parameter can be specified as either |lang= or |1=.
-		["lang"] = {},
+		["lang"] = {type = "language", etym_lang = true},
 		-- Default for auto-sort. Overridable by template |sort= param.
 		["sort"] = {type = "boolean"},
 		-- The following is accepted but currently ignored, per an extended discussion in
@@ -209,33 +153,35 @@ function export.display_from(frame_args, parent_args, frame)
 		["toggle_category"] = {},
 	}
 
-	local iargs = require("Module:parameters").process(frame_args, iparams, nil, "columns", "display_from")
+	local iargs = require(parameters_module).process(frame_args, iparams)
 
-	local compat = iargs["lang"] or parent_args["lang"]
+	local compat = iargs.lang or parent_args.lang
 	local lang_param = compat and "lang" or 1
+	local offset = compat and 0 or 1
 	local columns_param, first_content_param
 
 	-- New-style #columns specification is through parameter n= so we can transition to the situation where
 	-- omitting it results in auto-determination. Old-style #columns specification is through the first numbered
 	-- parameter after the lang parameter.
-	if parent_args["n"] then
+	if parent_args.n then
 		columns_param = "n"
 		first_content_param = compat and 1 or 2
 	else
 		columns_param = compat and 1 or 2
-		first_content_param = columns_param + (iargs["columns"] and 0 or 1)
+		first_content_param = columns_param + (iargs.columns and 0 or 1)
 	end
 	local deprecated
 
 	local params = {
-		[lang_param] = not iargs["lang"] and {required = true, default = "und"} or nil,
-		[columns_param] = not iargs["columns"] and {required = true, default = 2} or nil,
-		[first_content_param] = {list = true},
+		[lang_param] =
+			not iargs.lang and {required = true, type = "language", etym_lang = true, default = "und"} or nil,
+		[columns_param] = not iargs.columns and {required = true, default = 2} or nil,
+		[first_content_param] = {list = true, allow_holes = true},
 
 		["title"] = {},
 		["collapse"] = {type = "boolean"},
 		["sort"] = {type = "boolean"},
-		["sc"] = {},
+		["sc"] = {type = "script"},
 		["omit"] = {list = true}, -- used when calling from [[Module:saurus]] so the page displaying the synonyms/antonyms doesn't occur in the list
 	}
 
@@ -243,65 +189,106 @@ function export.display_from(frame_args, parent_args, frame)
 		deprecated = true
 	end
 
-	local args = require("Module:parameters").process(parent_args, params, nil, "columns", "display_from")
+	local m_param_utils = require(parameter_utilities_module)
 
-	local langcode = iargs["lang"] or args[lang_param]
-	local lang = m_languages.getByCode(langcode, lang_param)
+	local param_mods = {
+		t = {
+			-- [[Module:links]] expects the gloss in the "gloss" key.
+			item_dest = "gloss",
+		},
+		gloss = {},
+		tr = {},
+		ts = {},
+		g = {
+			-- [[Module:links]] expects genders in the "genders" key.
+			item_dest = "genders",
+			sublist = true,
+		},
+		id = {},
+		alt = {},
+		lit = {},
+		pos = {},
+		sc = {
+			type = "script",
+			separate_no_index = true,
+		}
+	}
 
-	local sc = args["sc"] and require("Module:scripts").getByCode(sc, "sc") or nil
+	m_param_utils.augment_param_mods_with_pron_qualifiers(param_mods, {"q", "l", "ref"})
+	m_param_utils.augment_params_with_modifiers(params, param_mods)
 
-	local sort = iargs["sort"]
-	if args["sort"] ~= nil then
-		sort = args["sort"]
+	local args = require(parameters_module).process(parent_args, params)
+
+	local lang = iargs.lang or args[lang_param]
+	local langcode = lang:getCode()
+	local sc = args.sc.default
+
+	local sort = iargs.sort
+	if args.sort ~= nil then
+		sort = args.sort
 	end
-	local collapse = iargs["collapse"]
-	if args["collapse"] ~= nil then
-		collapse = args["collapse"]
+	local collapse = iargs.collapse
+	if args.collapse ~= nil then
+		collapse = args.collapse
 	end
 	
-	local lang_cache = {
-		[langcode] = lang
+	local items = m_param_utils.process_list_arguments {
+		args = args,
+		param_mods = param_mods,
+		termarg = first_content_param,
+		parse_lang_prefix = true,
+		allow_multiple_lang_prefixes = true,
+		disallow_custom_separators = true,
+		track_module = "columns",
+		lang = lang,
+		sc = sc,
 	}
-	for i, item in ipairs(args[first_content_param]) do
-		local termobj = parse_term_with_modifiers(first_content_param + i - 1, item, lang, sc, lang_cache)
+
+	for i, item in ipairs(items) do
 		-- If a separate language code was given for the term, display the language name as a right qualifier.
 		-- Otherwise it may not be obvious that the term is in a separate language (e.g. if the main language is 'zh'
 		-- and the term language is a Chinese lect such as Min Nan). But don't do this for Translingual terms, which
 		-- are often added to the list of English and other-language terms.
-		if termobj.termlangs then
+		if item.termlangs then
 			local qqs = {}
-			for _, termlang in ipairs(termobj.termlangs) do
+			for _, termlang in ipairs(item.termlangs) do
 				local termlangcode = termlang:getCode()
 				if termlanglangcode ~= langcode and termlangcode ~= "mul" then
 					table.insert(qqs, termlang:getCanonicalName())
 				end
-				table.insert(qqs, termobj.qq)
+				if item.qq then
+					for _, qq in ipairs(item.qq) do
+						table.insert(qqs, qq)
+					end
+				end
 			end
-			termobj.qq = qqs
+			item.qq = qqs
 		end
-
 		local omitted = false
 		for _, omitted_item in ipairs(args.omit) do
-			if omitted_item == termobj.term then
+			if omitted_item == item.term then
 				omitted = true
 				break
 			end
 		end
 		if omitted then
 			-- signal create_list() to omit this item
-			args[first_content_param][i] = false
-		else
-			args[first_content_param][i] = termobj
+			items[i] = false
 		end
 	end
 
-	local ret = export.create_list { column_count = iargs["columns"] or args[columns_param],
-		content = args[first_content_param],
+	local ret = export.create_list { column_count = iargs.columns or args[columns_param],
+		content = items,
 		alphabetize = sort,
-		header = args["title"], background_color = "#F8F8FF",
+		header = args.title,
+		background_color = "#F8F8FF",
 		collapse = collapse,
-		toggle_category = iargs["toggle_category"],
-		class = iargs["class"], lang = lang, sc = sc, format_header = true }
+		toggle_category = iargs.toggle_category,
+		class = iargs.class,
+		lang = lang,
+		sc = sc,
+		format_header = true
+	}
 
 	return deprecated and frame:expandTemplate{title = "check deprecated lang param usage", args = {ret, lang = args[lang_param]}} or ret
 end
