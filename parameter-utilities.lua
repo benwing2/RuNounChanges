@@ -7,6 +7,7 @@ local parameters_module = "Module:parameters"
 local parse_utilities_module = "Module:parse utilities"
 local references_module = "Module:references"
 local scripts_module = "Module:scripts"
+local table_module = "Module:table"
 
 local function track(page, track_module)
 	return require("Module:debug/track")((track_module or "parameter utilities") .. "/" .. page)
@@ -24,6 +25,13 @@ end
 function export.parse_references(arg, parse_err)
 	return require(references_module).parse_references(arg, parse_err)
 end
+
+-- Table listing the recognized special separator arguments and how they display.
+local special_separators = {
+	[";"] = "; ",
+	["_"] = " ",
+	["~"] = " ~ ",
+}
 
 --[==[ intro:
 The purpose of this module is to facilitate implementation of a template that takes a list of items with associated
@@ -134,7 +142,7 @@ function export.show(frame)
 The `param_mods` structure controls the properties that can be specified by the user for a given item, and is
 conceptually very similar to the `param_mods` structure used by `parse_inline_modifiers()`. The key is the name of the
 parameter (e.g.  {"t"}, {"pos"}) and the value is a table with optional elements as follows:
-* `item_dest`, `convert`, `store`: Same as the corresponding fields in the `param_mods` structure passed to
+* `item_dest`, `store`: Same as the corresponding fields in the `param_mods` structure passed to
   `parse_inline_modifiers()`.
 * `param_key`: The name of the key used when storing the parameter's value into the `args` object returned by
   [[Module:parameters]]. It is rare that you need to specify this, as it defaults to the parameter's name (the key) and
@@ -144,9 +152,10 @@ parameter (e.g.  {"t"}, {"pos"}) and the value is a table with optional elements
   using `separate_no_index = true` in place of this.
 * All other fields are the same as the corresponding fields in the `params` structure passed to the `process()` function
   in [[Module:parameters]]. Some of the more useful field values:
-  ** `type`, `set`, `sublist` and associated fields such as `etym_lang`, `family` and `method`: These control parsing
-     and conversion of the raw values specified by the user and have the same meaning as in [[Module:parameters]] and
-	 also in `parse_inline_modifiers()` (which delegates the actual conversion to [[Module:parameters]]).
+  ** `type`, `set`, `sublist`, `convert` and associated fields such as `etym_lang`, `family` and `method`: These control
+     parsing and conversion of the raw values specified by the user and have the same meaning as in
+	 [[Module:parameters]] and also in `parse_inline_modifiers()` (which delegates the actual conversion to
+	 [[Module:parameters]]).
   ** `alias_of`: This parameter is an alias of some other parameter. If you have two properties, where one is an alias
      of the other, you will often have to use `item_dest` in concert with `alias_of` so that the aliasing happens both
 	 for the inline modifier and separate-parameter versions of the property. As an example, the {"lb"} property in
@@ -173,9 +182,189 @@ parameter (e.g.  {"t"}, {"pos"}) and the value is a table with optional elements
   ** `list`, `allow_holes`: These should '''not''' be given as they are set by default.
 ]==]
 
+
+local qualifier_spec = {
+	type = "qualifier",
+	separate_no_index = true,
+}
+
+local label_spec = {
+	type = "labels",
+	separate_no_index = true,
+}
+
+local recognized_param_mod_sets = {
+	link = {
+		alt = {},
+		t = {
+			-- [[Module:links]] expects the gloss in "gloss".
+			item_dest = "gloss",
+		},
+		gloss = {
+			alias_of = "t",
+		},
+		tr = {},
+		ts = {},
+		g = {
+			-- [[Module:links]] expects the genders in "genders".
+			item_dest = "genders",
+			sublist = true,
+		},
+		pos = {},
+		lit = {},
+		id = {},
+		sc = {
+			separate_no_index = true,
+			type = "script",
+		},
+	},
+	lang = {
+		lang = {
+			require_index = true,
+			type = "language",
+			etym_lang = true,
+		},
+	},
+	q = {
+		q = qualifier_spec,
+		qq = qualifier_spec,
+	},
+	a = {
+		a = label_spec,
+		aa = label_spec,
+	},
+	l = {
+		l = label_spec,
+		ll = label_spec,
+	},
+	ref = {
+		ref = {
+			item_dest = "refs",
+			type = "references",
+		},
+	},
+}
+
+
+local function merge_param_mod_settings(orig, additions)
+	local shallowcopy = require(table_module).shallowcopy
+	local merged = shallowcopy(orig)
+	for k, v in pairs(additions) do
+		merged[k] = v
+		if k == "require_index" then
+			merged.separate_no_index = nil
+		elseif k == "separate_no_index" then
+			merged.require_index = nil
+		end
+	end
+	merged.default = nil
+	merged.set = nil
+	merged.param = nil
+	return merged
+end
+
+
+local function construct_param_mods_error(msg, spec)
+	error(("Internal error: %s: %s"):format(msg, dump(spec)))
+end
+
 --[==[
+Construct the `param_mods` structure used in parsing arguments and inline modifiers from a list of specifications.
+A sample invocation looks like this:
+{
+	local param_mods = require("Module:parameter utilities").construct_param_mods {
+		-- We want to require an index for all params (or use separate_no_index, which also requires an index for the
+		-- param corresponding to the first item).
+		{default = true, require_index = true},
+		{set = {"link", "ref", "lang", "q", "l"}},
+		-- Override these two to have separate_no_index.
+		{param = {"lit", "pos"}, separate_no_index = true},
+	}
+}
+
+Each specification ...
+]==]
+function export.construct_param_mods(specs)
+	local shallowcopy = require(table_module).shallowcopy
+	local param_mods = {}
+	local initial_default_specs = {list = true, allow_holes = true}
+	local default_specs = initial_default_specs
+	for _, spec in ipairs(specs) do
+		if spec.default then
+			if spec.set or spec.param then
+				construct_param_mods_error("Saw `set` and/or `param` key in `default` setting", spec)
+			end
+			default_specs = merge_param_mod_settings(initial_default_specs, spec.default)
+		elseif not spec.set and not spec.param then
+			construct_param_mods_error("Spec passed to construct_param_mods() must have either the `default`, `set` or `param` keys set",
+				spec)
+		else
+			if spec.set then
+				local sets = spec.set
+				if type(sets) ~= "table" then
+					sets = {sets}
+				end
+				local exclude_set
+				if spec.exclude then
+					exclude = require(table_module).listToSet(spec.exclude)
+				end
+				for _, set in ipairs(set) do
+					local set_specs = recognized_param_mod_sets[set]
+					if not set_specs then
+						construct_param_mods_error(("Unrecognized built-in param mod set '%s'"):format(set), spec)
+					end
+					for set_param, set_param_settings in pairs(set_specs) do
+						if not exclude_set or not exclude_set[set_param] then
+							local merged_settings = merge_param_mod_settings(merge_param_mod_settings(
+								param_mods[set_param] or default_specs, set_param_settings), spec)
+							param_mods[set_param] = merged_settings
+						end
+					end
+				end
+			end
+			if spec.param then
+				local params = spec.param
+				if type(params) ~= "table" then
+					params = {params}
+				end
+				for _, param in ipairs(params) do
+					local settings = merge_param_mod_settings(param_mods[param] or default_specs, spec)
+					-- If this parameter is an alias of another parameter, we need to copy the specs from the other
+					-- parameter, since parse_inline_modifiers() doesn't know about `alias_of` and having the specs
+					-- duplicated won't cause problems for [[Module:parameters]]. We also need to set `item_dest` to
+					-- point to the `item_dest` of the aliasee (defaulting to the aliasee's value itself), so that
+					-- both modifiers write to the same location. Note that this works correctly in the common case of
+					-- <t:...> with `item_dest = "gloss"` and <gloss:...> with `alias_of = "t"`, because both will end
+					-- up with `item_dest = "gloss"`.
+					local aliasee = settings.alias_of
+					if aliasee then
+						local aliasee_settings = param_mods[aliasee]
+						if not aliasee_settings then
+							construct_param_mods_error(("Undefined aliasee '%s'"):format(aliasee), spec)
+						end
+						for k, v in pairs(aliasee_settings) do
+							if k ~= "list" and k ~= "allow_holes" and settings[k] == nil then
+								settings[k] = v
+							end
+						end
+						if settings.item_dest == nil then
+							settings.item_dest = aliasee
+						end
+					end
+					param_mods[param] = settings
+				end
+			end
+		end
+	end
+
+	return param_mods
+end
+
+--[==[
+'''NOTE''': This will be deleted as soon as all callers are converted to use `construct_param_mods()`.
+
 Add "pronunciation qualifiers" to `param_mods`. By default, this consists of {"q"}, {"qq"}, {"a"}, {"aa"} and {"ref"},
-along with `convert` functions to appropriately parse and convert the values. By default, all but {"ref"} have
+along with `type` values to appropriately parse and convert the values. By default, all but {"ref"} have
 `separate_no_index = true` set. The `qspecs` parameter can be used to override the set of properties added and
 optionally the specs for these properties. Its value is a list of specs, each of which is either a string (a parameter
 set to add) or an object containing properties `param` (the parameter set to add) and any additional properties to set
@@ -204,18 +393,18 @@ function export.augment_param_mods_with_pron_qualifiers(param_mods, qspecs)
 		end
 		local param = qspec.param
 
-		local function make_spec(convert, default_separate_no_index, item_dest)
+		local function make_spec(typ, default_separate_no_index, item_dest)
 			local separate_no_index = qspec.separate_no_index
 			if separate_no_index == nil then
 				separate_no_index = default_separate_no_index
 			end
 			local spec = {
 				separate_no_index = separate_no_index,
-				convert = qspec.convert or convert,
+				type = qspec.type or typ,
 				item_dest = qspec.item_dest or item_dest,
 			}
 			for k, v in pairs(qspec) do
-				if k ~= "param" and k ~= "separate_no_index" and k ~= "convert" and k ~= "item_dest" then
+				if k ~= "param" and k ~= "separate_no_index" and k ~= "type" and k ~= "item_dest" then
 					spec[k] = v
 				end
 			end
@@ -223,11 +412,11 @@ function export.augment_param_mods_with_pron_qualifiers(param_mods, qspecs)
 		end
 
 		if param == "q" then
-			local qspec = make_spec(export.parse_qualifier, true)
+			local qspec = make_spec("qualifier", true)
 			param_mods.q = qspec
 			param_mods.qq = qspec
 		elseif param == "a" or param == "l" then
-			local laspec = make_spec(export.parse_labels, true)
+			local laspec = make_spec("labels", true)
 			if param == "a" then
 				param_mods.a = laspec
 				param_mods.aa = laspec
@@ -236,7 +425,7 @@ function export.augment_param_mods_with_pron_qualifiers(param_mods, qspecs)
 				param_mods.ll = laspec
 			end
 		elseif param == "ref" then
-			local refspec = make_spec(export.parse_references, false, "refs")
+			local refspec = make_spec("references", false, "refs")
 			param_mods.ref = refspec
 		else
 			error(("Internal error: Unrecognized qualifier type %s"):format(dump(param)))
@@ -247,35 +436,51 @@ end
 -- Return true if `k` is a "built-in" (specially recognized) key in a `param_mod` specification. All other keys
 -- are forwarded to the structure passed to [[Module:parameters]].
 local function param_mod_spec_key_is_builtin(k)
-	return k == "param_key" or k == "item_dest" or k == "convert" or k == "overall" or k == "store"
+	return k == "param_key" or k == "item_dest" or k == "overall" or k == "store"
 end
 
 --[==[
 Convert the properties in `param_mods` into the appropriate structures for use by `process()` in [[Module:parameters]]
-and store them in `params`.
+and store them in `params`. If `overall_only` is given, only store the properties in `param_mods` that correspond to
+overall (non-item-specific) parameters. Currently this only happens when `separate_no_index` is specified.
 ]==]
-function export.augment_params_with_modifiers(params, param_mods)
-	local list_with_holes = { list = true, allow_holes = true }
-	-- Add parameters for each term modifier.
-	for param_mod, param_mod_spec in pairs(param_mods) do
-		local param_key = param_mod_spec.param_key or param_mod
-		local has_extra_specs = false
-		for k, _ in pairs(param_mod_spec) do
-			if not param_mod_spec_key_is_builtin(k) then
-				has_extra_specs = true
-				break
+function export.augment_params_with_modifiers(params, param_mods, overall_only)
+	if overall_only then
+		for param_mod, param_mod_spec in pairs(param_mods) do
+			local param_key = param_mod_spec.param_key or param_mod
+			if param_mod_spec.separate_no_index then
+				local param_spec = {}
+				for k, v in pairs(param_mod_spec) do
+					if k ~= "separate_no_index" and not param_mod_spec_key_is_builtin(k) then
+						param_spec[k] = v
+					end
+				end
+				params[param_key] = param_spec
 			end
 		end
-		if not has_extra_specs then
-			params[param_key] = list_with_holes
-		else
-			local param_spec = mw.clone(list_with_holes)
-			for k, v in pairs(param_mod_spec) do
+	else
+		local list_with_holes = { list = true, allow_holes = true }
+		-- Add parameters for each term modifier.
+		for param_mod, param_mod_spec in pairs(param_mods) do
+			local param_key = param_mod_spec.param_key or param_mod
+			local has_extra_specs = false
+			for k, _ in pairs(param_mod_spec) do
 				if not param_mod_spec_key_is_builtin(k) then
-					param_spec[k] = v
+					has_extra_specs = true
+					break
 				end
 			end
-			params[param_key] = param_spec
+			if not has_extra_specs then
+				params[param_key] = list_with_holes
+			else
+				local param_spec = mw.clone(list_with_holes)
+				for k, v in pairs(param_mod_spec) do
+					if not param_mod_spec_key_is_builtin(k) then
+						param_spec[k] = v
+					end
+				end
+				params[param_key] = param_spec
+			end
 		end
 	end
 end
@@ -401,7 +606,7 @@ function export.process_list_arguments(data)
 	local itemno = 0
 	for i = 1, maxmaxindex do
 		local term = term_args[i]
-		if data.disallow_custom_separators or term ~= ";" then
+		if data.disallow_custom_separators or not special_separators[term] then
 			itemno = itemno + 1
 
 			-- Compute whether any of the separate indexed params exist for this index.
@@ -442,7 +647,7 @@ function export.process_list_arguments(data)
 					orig_index = i,
 				}
 				if not data.disallow_custom_separators then
-					termobj.separator = i > 1 and (term_args[i - 1] == ";" and "; " or ", ") or ""
+					termobj.separator = i == 1 and "" or special_separators[term_args[i - 1]]
 				end
 
 				-- Parse all the term-specific parameters and store in `termobj`.
@@ -451,10 +656,6 @@ function export.process_list_arguments(data)
 					local param_key = param_mod_spec.param_key or param_mod
 					local arg = data.args[param_key] and data.args[param_key][itemno]
 					if arg then
-						if param_mod_spec.convert then
-							-- Beware, this operates *ON TOP OF* the conversion performed by [[Module:parameters]].
-							arg = param_mod_spec.convert(arg, parse_err, "separate arg")
-						end
 						termobj[dest] = arg
 					end
 				end
@@ -520,10 +721,12 @@ function export.process_list_arguments(data)
 		end
 	end
 
-	if use_semicolon then -- never set when `data.disallow_custom_separators` is set
+	if not data.disallow_custom_separators then
+		-- Set the default separator of all those items for which a separator wasn't explicitly given to comma
+		-- (or semicolon if any items have embedded commas).
 		for i, item in ipairs(items) do
-			if i > 1 then
-				item.separator = "; "
+			if not item.separator then
+				item.separator = use_semicolon and "; " or ", "
 			end
 		end
 	end
