@@ -6,7 +6,7 @@ import argparse
 parser = argparse.ArgumentParser(description="Generate script to run a bot script in parallel.")
 parser.add_argument('--num-parts', help="Number of parallel parts.", type=int, default=10)
 parser.add_argument('--command', help="Command to run.", required=True)
-parser.add_argument('--output-prefix', help="Prefix for output files.")
+parser.add_argument('--output-prefix', help="Prefix for output files.", required=True)
 parser.add_argument('--num-terms', help="Approximate number of terms that will be run on.", type=int, required=True)
 parser.add_argument('--overlap-offset', help="Value to add (or subtract if negative) to the beginning of the next run to get the last term that this run will run on. Set to -1 for no overlap.", type=int, default=5)
 parser.add_argument('--no-sleep', help="Don't sleep at beginning of runs (normally done so offsets will remain true; not necessary if offsets won't change as files are saved).", action="store_true")
