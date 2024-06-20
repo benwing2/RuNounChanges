@@ -15,44 +15,6 @@ local match = string.match
 local sort = table.sort
 local sub = string.sub
 
-local param_mods = {
-	t = {
-		item_dest = "gloss",
-	},
-	gloss = {
-		alias_of = "t",
-	},
-	tr = {},
-	ts = {},
-	g = {
-		item_dest = "genders",
-		sublist = true,
-	},
-	id = {},
-	alt = {},
-	lit = {},
-	pos = {},
-	lang = {
-		type = "language",
-		etym_lang = true,
-	},
-	sc = {
-		type = "script",
-		separate_no_index = true,
-	},
-	arrow = {
-		type = "boolean",
-	},
-	joiner = {},
-	fulljoiner = {},
-}
-
-for k, v in pairs(param_mods) do
-	if not v.separate_no_index then
-		v.require_index = true
-	end
-end
-
 function export.affixusex_t(frame)
 	local parent_args = frame:getParent().args
 
@@ -77,7 +39,14 @@ function export.affixusex_t(frame)
 	end
 
     local m_param_utils = require(parameter_utilities_module)
-	m_param_utils.augment_param_mods_with_pron_qualifiers(param_mods, {"q", "l", "ref"})
+	local param_mods = m_param_utils.construct_param_mods {
+		-- We want to require an index for all params. Some of the params generated below have separate_no_index, which
+		-- overrides require_index (and also requires an index for the param corresponding to the first item).
+		{default = true, require_index = true},
+		{set = {"link", "ref", "lang", "q", "l"}},
+		{param = "arrow", type = "boolean"},
+		{param = {"joiner", "fulljoiner"}},
+	}
 	m_param_utils.augment_params_with_modifiers(params, param_mods)
 
 	local args = require(parameters_module).process(parent_args, params)

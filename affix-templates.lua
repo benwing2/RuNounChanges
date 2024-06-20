@@ -8,49 +8,6 @@ local pron_qualifier_module = "Module:pron qualifier"
 local pseudo_loan_module = "Module:affix/pseudo-loan"
 
 
-local param_mods = {
-	t = {
-		-- We need to store the t1=/t2= param and the <t:...> inline modifier into the "gloss" key of the parsed part,
-		-- because that is what [[Module:affix]] expects.
-		item_dest = "gloss",
-	},
-	gloss = {
-		alias_of = "t",
-	},
-	tr = {},
-	ts = {},
-	g = {
-		-- We need to store the g1=/g2= param and the <g:...> inline modifier into the "genders" key of the parsed part,
-		-- because that is what [[Module:affix]] expects.
-		item_dest = "genders",
-		sublist = true,
-	},
-	id = {},
-	alt = {},
-	lit = {
-		separate_no_index = true,
-	},
-	pos = {
-		separate_no_index = true,
-	},
-	lang = {
-		require_index = true,
-		type = "language",
-		etym_lang = true,
-	},
-	sc = {
-		separate_no_index = true,
-		type = "script",
-	},
-}
-
-for k, v in pairs(param_mods) do
-	if not v.separate_no_index then
-		v.require_index = true
-	end
-end
-
-
 local function is_property_key(k)
 	return require(parameter_utilities_module).item_key_is_property(k)
 end
@@ -88,7 +45,14 @@ local function parse_args(parent_args, extra_params, has_source, ilangcode)
 	end
 
     local m_param_utils = require(parameter_utilities_module)
-	m_param_utils.augment_param_mods_with_pron_qualifiers(param_mods, {"q", "l", "ref"})
+	local param_mods = m_param_utils.construct_param_mods {
+		-- We want to require an index for all params (or use separate_no_index, which also requires an index for the
+		-- param corresponding to the first item).
+		{default = true, require_index = true},
+		{set = {"link", "ref", "lang", "q", "l"}},
+		-- Override these two to have separate_no_index.
+		{param = {"lit", "pos"}, separate_no_index = true},
+	}
 	m_param_utils.augment_params_with_modifiers(params, param_mods)
 
 	if extra_params then
@@ -155,13 +119,10 @@ local function augment_affix_data(data, args, lang, sc)
 	data.notext = args.notext
 	data.nocat = args.nocat
 	data.force_cat = args.force_cat
-	require(pron_qualifier_module).parse_qualifiers {
-		store_obj = data,
-		l = args.l.default,
-		ll = args.ll.default,
-		q = args.q.default,
-		qq = args.qq.default,
-	}
+	data.l = args.l.default
+	data.ll = args.ll.default
+	data.q = args.q.default
+	data.qq = args.qq.default
 	return data
 end
 

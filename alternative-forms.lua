@@ -11,31 +11,6 @@ local function track(page)
 	require("Module:debug/track")("alter/" .. page)
 end
 
-local param_mods = {
-	alt = {},
-	t = {
-		-- [[Module:links]] expects the gloss in "gloss".
-		item_dest = "gloss",
-	},
-	gloss = {
-		alias_of = "t",
-	},
-	tr = {},
-	ts = {},
-	g = {
-		-- [[Module:links]] expects the genders in "genders".
-		item_dest = "genders",
-		sublist = true,
-	},
-	pos = {},
-	lit = {},
-	id = {},
-	sc = {
-		separate_no_index = true,
-		type = "script",
-	},
-}
-
 --[==[
 Main function for displaying alternative forms. Extracted out from the template-callable function so this can be
 called by other modules (in particular, [[Module:descendants tree]]). `show_labels_after_terms` no longer has any
@@ -48,12 +23,14 @@ function export.display_alternative_forms(parent_args, pagename, show_labels_aft
 		[2] = {list = true, allow_holes = true},
 	}
 
-	local m_param_utils = require(parameter_utilities_module)
-	m_param_utils.augment_param_mods_with_pron_qualifiers(param_mods, {
-		{param = "q", separate_no_index = false},
-		{param = "l", separate_no_index = false, require_index = true},
-		"ref",
-	})
+    local m_param_utils = require(parameter_utilities_module)
+	local param_mods = m_param_utils.construct_param_mods {
+		{set = {"link", "ref"}},
+		-- For compatibility, we need to turn off separate_no_index for q= and qq=.
+		{set = "q", separate_no_index = false},
+		-- We currently don't support unindexed l= and ll=.
+		{set = "l", require_index = true},
+	}
 	m_param_utils.augment_params_with_modifiers(params, param_mods)
 
 	local args = require("Module:parameters").process(parent_args, params)
