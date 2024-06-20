@@ -18,6 +18,8 @@ local function split_labels(term)
 end
 
 --[==[
+'''FIXME:''' Delete this once we've pushed all the new code, as nothing will rely on it.
+
 Parse left and right regular and accent qualifiers, labels and references, for pronunciation or related modules that
 want to provide support for these.
 
