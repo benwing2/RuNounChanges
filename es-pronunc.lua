@@ -1326,17 +1326,17 @@ end
 
 
 local q_qq_inline_modifier_spec = {
-	store = "insert",
+	store = "insert-flattened",
+	type = "qualifier",
 }
 local a_aa_inline_modifier_spec = {
 	store = "insert-flattened",
-	convert = function(arg, parse_err) return require(labels_module).split_labels_on_comma(arg) end,
+	type = "labels",
 }
 local ref_inline_modifier_spec = {
 	store = "insert-flattened",
 	item_dest = "refs",
-	-- Only require [[Module:references]] when we have an argument to conver
-	convert = function(arg) return require(references_module).parse_references(arg) end,
+	type = "references",
 }
 
 -- Parse a pronunciation modifier in `arg`, the argument portion in an inline modifier (after the prefix), which
@@ -1431,9 +1431,9 @@ end
 
 
 local function generate_audio_obj(arg)
-	local file, gloss = arg:match("^(.-)%s*#%s*(.*)$")
+	local file, caption = arg:match("^(.-)%s*#%s*(.*)$")
 	file = file or arg
-	return {file = file, gloss = gloss}
+	return {file = file, caption = caption}
 end
 
 
@@ -1443,34 +1443,34 @@ local function parse_audio(arg, parse_err)
 			sublist = true,
 		},
 		text = {},
-		t = {},
+		t = {
+			item_dest = "gloss",
+		},
 		-- No tr=, ts=, or sc=; doesn't make sense for Spanish.
+		gloss = {},
 		pos = {},
 		-- No alt=; text= already goes in alt=.
 		lit = {},
 		-- No id=; text= already goes in alt= and isn't normally linked.
-		g = {}, -- splitting happens in construct_audio_textobj() in [[Module:audio]]
+		g = {
+			item_dest = "genders",
+			sublist = true,
+		},
+		bad = {},
 	}
 
 	-- Don't split on comma because some filenames have embedded commas not followed by a space
 	-- (typically followed by an underscore).
 	local retvals = parse_pron_modifier(arg, parse_err, generate_audio_obj, param_mods, "no split on comma")
 	local retval = retvals[1]
-	local textobj_args = {
-		lang = lang,
-		text = retval.text,
-		t = retval.t,
-		pos = retval.pos,
-		lit = retval.lit,
-		g = retval.g,
-	}
+	retval.lang = lang
 	local textobj = require(audio_module).construct_audio_textobj(textobj_args)
 	retval.text = textobj
-	retval.t = nil
+	retval.gloss = nil
 	retval.pos = nil
 	retval.lit = nil
-	retval.g = nil
-	return retvals
+	retval.genders = nil
+	return retval
 end
 
 
@@ -1478,9 +1478,9 @@ end
 function export.show_pr(frame)
 	local params = {
 		[1] = {list = true},
-		["rhyme"] = {},
-		["hyph"] = {},
-		["hmp"] = {},
+		["rhyme"] = {convert = parse_rhyme},
+		["hyph"] = {convert = parse_hyph},
+		["hmp"] = {convert = parse_homophone},
 		["audio"] = {list = true},
 		["pagename"] = {},
 	}
@@ -1491,24 +1491,20 @@ function export.show_pr(frame)
 	-- Parse the arguments.
 	local respellings = #args[1] > 0 and args[1] or {"+"}
 	local parsed_respellings = {}
-	local function overall_parse_err(msg, arg, val)
-		error(msg .. ": " .. arg .. "=" .. val)
-	end
-	local overall_rhyme = args.rhyme and
-		parse_rhyme(args.rhyme, function(msg) overall_parse_err(msg, "rhyme", args.rhyme) end) or nil
-	local overall_hyph = args.hyph and
-		parse_hyph(args.hyph, function(msg) overall_parse_err(msg, "hyph", args.hyph) end) or nil
-	local overall_hmp = args.hmp and
-		parse_homophone(args.hmp, function(msg) overall_parse_err(msg, "hmp", args.hmp) end) or nil
+	local overall_rhyme = args.rhyme
+	local overall_hyph = args.hyph
+	local overall_hmp = args.hmp
 	local overall_audio
 	if args.audio then
+		-- We can't specify parse_audio() as a `convert` function because it needs access to `pagename` (i.e. another
+		-- parameter).
 		overall_audio = {}
-		for _, audio in ipairs(args.audio) do
-			local parsed_audio = parse_audio(audio, function(msg) overall_parse_err(msg, "audio", audio) end, pagename)
-			if #parsed_audio > 1 then
-				error("Internal error: Saw more than one object returned from parse_audio")
+		for i, audio in ipairs(args.audio) do
+			local function parse_err(msg)
+				error(("%s: parameter audio%s=%s"):format(msg, i == and "" or i, audio))
 			end
-			table.insert(overall_audio, parsed_audio[1])
+			local parsed_audio = parse_audio(audio, parse_err, pagename)
+			table.insert(overall_audio, parsed_audio)
 		end
 	end
 	for i, respelling in ipairs(respellings) do
@@ -1538,7 +1534,7 @@ function export.show_pr(frame)
 				},
 				audio = {
 					overall = true,
-					store = "insert-flattened",
+					store = "insert",
 					convert = function(arg, parse_err)
 						return parse_audio(arg, parse_err, pagename)
 					end,
@@ -1840,18 +1836,7 @@ function export.show_pr(frame)
 	local function format_audio(audios, num_bullets)
 		local ret = {}
 		for i, audio in ipairs(audios) do
-			local text = require(audio_module).format_audio {
-				lang = lang,
-				file = audio.file,
-				caption = audio.gloss,
-				q = audio.q,
-				qq = audio.qq,
-				a = audio.a,
-				aa = audio.aa,
-				refs = audio.refs,
-				text = audio.text,
-				IPA = audio.IPA,
-			}
+			local text = require(audio_module).format_audio(audio)
 			table.insert(ret, string.rep("*", num_bullets) .. " " .. text)
 		end
 		return table.concat(ret, "\n")
