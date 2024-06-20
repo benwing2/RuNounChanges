@@ -69,7 +69,6 @@ function export.nyms(frame)
 	}
 
 	local parts = {}
-	local overall_sep = data.separator or ", "
 	local thesaurus_parts = {}
 	for i, item in ipairs(data.items) do
 		local explicit_item_lang = item.lang
@@ -126,8 +125,8 @@ function export.nyms(frame)
 			}
 		end
 		local insert_place = is_thesaurus and thesaurus_parts or parts
-		-- Don't include the separator if this is the first item we're inserting.
-		table.insert(insert_place, insert_place[1] and overall_sep or "")
+		-- Don't include the separator if this is the first item of this class that we're inserting.
+		table.insert(insert_place, insert_place[1] and item.separator or "")
 		table.insert(insert_place, text)
 	end
 
