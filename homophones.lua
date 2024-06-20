@@ -134,34 +134,9 @@ function export.show(frame)
 
 	local m_param_utils = require(parameter_utilities_module)
 
-	local param_mods = {
-		alt = {},
-		t = {
-			-- We need to store the t1=/t2= param and the <t:...> inline modifier into the "gloss" key of the parsed term,
-			-- because that is what [[Module:links]] expects.
-			item_dest = "gloss",
-		},
-		gloss = {
-			alias_of = "t",
-		},
-		tr = {},
-		ts = {},
-		g = {
-			-- We need to store the g1=/g2= param and the <g:...> inline modifier into the "genders" key of the parsed term,
-			-- because that is what [[Module:links]] expects.
-			item_dest = "genders",
-			sublist = true,
-		},
-		pos = {},
-		lit = {},
-		id = {},
-		sc = {
-			separate_no_index = true,
-			type = "script",
-		},
+	local param_mods = m_param_utils.construct_param_mods {
+		{set = {"link", "ref", "a", "q"}},
 	}
-
-	m_param_utils.augment_param_mods_with_pron_qualifiers(param_mods)
 	m_param_utils.augment_params_with_modifiers(params, param_mods)
 
 	local args = require(parameters_module).process(parent_args, params)

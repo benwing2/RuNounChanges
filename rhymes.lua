@@ -219,18 +219,17 @@ function export.show(frame)
 		["sort"] = plain,
 	}
 
-	local param_mods = {
-		s = {
+	local m_param_utils = require(parameter_utilities_module)
+	local param_mods = m_param_utils.construct_param_mods {
+		{
+			param = "s",
 			item_dest = "num_syl",
 			separate_no_index = true,
 			type = "number",
 			sublist = true,
 		},
+		{set = {"q", "a", "ref"}},
 	}
-
-	local m_param_utils = require(parameter_utilities_module)
-
-	m_param_utils.augment_param_mods_with_pron_qualifiers(param_mods)
 	m_param_utils.augment_params_with_modifiers(params, param_mods)
 
 	local args = require("Module:parameters").process(parent_args, params)
@@ -253,9 +252,6 @@ function export.show(frame)
 		nocaption = args.nocaption,
 		nocat = args.nocat,
 		sort = args.sort,
-	}
-	require(pron_qualifier_module).parse_qualifiers {
-		store_obj = data,
 		q = args.q.default,
 		qq = args.qq.default,
 		a = args.a.default,
