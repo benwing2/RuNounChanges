@@ -2,12 +2,10 @@ local export = {}
 
 local m_IPA = require("Module:IPA")
 local parameter_utilities_module = "Module:parameter utilities"
-local parse_utilities_module = "Module:parse utilities"
-local pron_qualifier_module = "Module:pron qualifier"
 local references_module = "Module:references"
 
-local function track(page)
-	require("Module:debug/track")("IPA/" .. page)
+local function track(template, page)
+	require("Module:debug/track")(template .. "/" .. page)
 	return true
 end
 
@@ -18,7 +16,7 @@ function export.IPA(frame)
 	-- Track uses of qual so they can be converted to q.
 	for k, v in pairs(parent_args) do
 		if type(k) == "string" and k:find("^qual[0-9]*$") then
-			track("q")
+			track("IPA", "q")
 		end
 	end
 	local include_langname = frame.args.include_langname
@@ -35,20 +33,13 @@ function export.IPA(frame)
 		["sort"] = {},
 	}
 
-	local param_mods = {
-		t = {
-			-- [[Module:IPA]] expects the gloss in "gloss".
-			item_dest = "gloss",
-		},
-		gloss = {
-			alias_of = "t",
-		},
-		pos = {},
-	}
-
 	local m_param_utils = require(parameter_utilities_module)
 
-	m_param_utils.augment_param_mods_with_pron_qualifiers(param_mods)
+	local param_mods = m_param_utils.construct_param_mods {
+		{set = {"ref", "a", "q"}},
+		{set = "link", include = {"t", "gloss", "pos"}},
+	}
+
 	m_param_utils.augment_params_with_modifiers(params, param_mods)
 
 	local args = require("Module:parameters").process(parent_args, params)
@@ -73,10 +64,6 @@ function export.IPA(frame)
 		nocat = args.nocat,
 		sort_key = args.sort,
 		include_langname = include_langname,
-		separator = "",
-	}
-	require(pron_qualifier_module).parse_qualifiers {
-		store_obj = data,
 		q = args.q.default,
 		qq = args.qq.default,
 		a = args.a.default,
@@ -93,46 +80,47 @@ function export.IPAchar(frame)
 	-- Track uses of qual so they can be converted to q.
 	for k, v in pairs(parent_args) do
 		if type(k) == "string" and k:find("^n[0-9]*$") then
-			track("n")
+			track("IPAchar", "n")
 		end
 		if type(k) == "string" and k:find("^qual[0-9]*$") then
-			track("q")
+			track("IPAchar", "q")
 		end
 	end
+
 	local params = {
-		[1] = {list = true, allow_holes = true},
-		["ref"] = {list = true, allow_holes = true},
-		-- Came before 'ref' but too obscure
-		["n"] = {list = true, allow_holes = true, alias_of = "ref"},
-		["q"] = {list = true, allow_holes = true, require_index = true},
-		["qq"] = {list = true, allow_holes = true, require_index = true},
-		["qual"] = {list = true, allow_holes = true},
+		[1] = {list = true, disallow_holes = true},
 		-- FIXME, remove this.
 		["lang"] = {}, -- This parameter is not used and does nothing, but is allowed for futureproofing.
 	}
+
+	local m_param_utils = require(parameter_utilities_module)
+
+	local param_mods = m_param_utils.construct_param_mods {
+		-- It doesn't really make sense to have separate overall a=/aa=/q=/qq= for {{IPAchar}}, which doesn't format a
+		-- whole line but just individual pronunciations. Instead they are associated with the first item.
+		{set = {"ref", "a", "q"}, separate_no_index = false},
+		-- Deprecated; don't use in new code.
+		{param = "n", alias_of = "ref"},
+		-- Deprecated; don't use in new code.
+		{param = "qual", alias_of = "q"},
+	}
+
+	m_param_utils.augment_params_with_modifiers(params, param_mods)
 
 	local args = require("Module:parameters").process(parent_args, params)
 	
 	-- [[Special:WhatLinksHere/Wiktionary:Tracking/IPAchar/lang]]
 	if args.lang then
-		require("Module:debug/track")("IPAchar/lang")
+		track("IPAchar", "lang")
 	end
 
-	local items = {}
-	
-	for i = 1, math.max(args[1].maxindex, args.ref.maxindex, args.q.maxindex, args.qq.maxindex, args.qual.maxindex) do
-		local pron = args[1][i]
-		local refs = args["ref"][i]
-		if refs then
-			refs = require("Module:references").parse_references(refs)
-		end
-		local q = args.q[i] or args.qual[i]
-		local qq = args.qq[i]
-
-		if pron or refs or qual then
-			table.insert(items, {pron = pron, refs = refs, q = {q}, qq = {qq}})
-		end
-	end
+	local items = m_param_utils.process_list_arguments {
+		args = args,
+		param_mods = param_mods,
+		termarg = 1,
+		term_dest = "pron",
+		track_module = "IPAchar",
+	}
 
 	-- Format
 	return m_IPA.format_IPA_multiple(nil, items)
@@ -242,7 +230,7 @@ function export.X2IPAchar(frame)
 	
 	-- [[Special:WhatLinksHere/Wiktionary:Tracking/X2IPAchar/lang]]
 	if args.lang then
-		require("Module:debug/track")("X2IPAchar/lang")
+		track("X2IPAchar", "lang")
 	end
 
 	local m_XSAMPA = require("Module:IPA/X-SAMPA")
@@ -320,11 +308,12 @@ function export.enPR(frame)
 		[1] = {list = true, disallow_holes = true},
 	}
 
-	local param_mods = {}
-
 	local m_param_utils = require(parameter_utilities_module)
 
-	m_param_utils.augment_param_mods_with_pron_qualifiers(param_mods)
+	local param_mods = m_param_utils.construct_param_mods {
+		{set = {"q", "a", "ref"}},
+	}
+
 	m_param_utils.augment_params_with_modifiers(params, param_mods)
 
 	local args = require("Module:parameters").process(parent_args, params)
@@ -334,14 +323,11 @@ function export.enPR(frame)
 		param_mods = param_mods,
 		termarg = 1,
 		term_dest = "pron",
-		track_module = "IPA",
+		track_module = "enPR",
 	}
 
 	local data = {
 		items = items,
-	}
-	require(pron_qualifier_module).parse_qualifiers {
-		store_obj = data,
 		q = args.q.default,
 		qq = args.qq.default,
 		a = args.a.default,
