@@ -1,10 +1,12 @@
 local export = {}
 
 local m_links = require("Module:links")
-local put_module = "Module:parse utilities"
-local com_module = "Module:it-common"
 local affix_module = "Module:affix"
+local com_module = "Module:it-common"
+local parameter_utilities_module = "Module:parameter utilities"
 local romance_etymology_module = "Module:romance etymology"
+local table_module = "Module:table"
+
 local lang = require("Module:languages").getByCode("it")
 
 local rfind = mw.ustring.find
@@ -77,21 +79,10 @@ end
 
 
 function export.it_deverbal(frame)
-	local list_with_holes = { list = true, allow_holes = true }
-	local params = {
-		[1] = {required = true, list = true},
-		
-		["alt"] = list_with_holes,
-		["t"] = list_with_holes,
-		["gloss"] = {alias_of = "t", list = true, allow_holes = true},
-		["g"] = list_with_holes,
-		["id"] = list_with_holes,
-		["lit"] = list_with_holes,
-		["pos"] = list_with_holes,
-		["q"] = list_with_holes,
-		["qq"] = list_with_holes,
-		-- no tr, ts or sc; not relevant for Italian
+	local parent_args = frame:getParent().args
 
+	local params = {
+		[1] = {required = true, list = true, disallow_holes = true},
 		["nocap"] = {type = "boolean"},
 		["notext"] = {type = "boolean"},
 		["nocat"] = {type = "boolean"},
@@ -99,9 +90,17 @@ function export.it_deverbal(frame)
 		["pagename"] = {}, -- for testing
 	}
 
-	local args = require("Module:parameters").process(frame:getParent().args, params)
+    local m_param_utils = require(parameter_utilities_module)
+	local param_mods = m_param_utils.construct_param_mods {
+		{set = "link", exclude = {"tr", "ts", "sc"}}, -- tr, ts, sc not relevant for Italian
+		-- for compatibility (at least for q/qq); FIXME: consider changing?
+		{set = {"q", "l", "ref"}, separate_no_index = false},
+	}
+	m_param_utils.augment_params_with_modifiers(params, param_mods)
 
-	if #args[1] == 0 then
+	local args = require(parameters_module).process(parent_args, params)
+
+	if not args[1][1] then
 		local NAMESPACE = mw.title.getCurrentTitle().nsText
 		if NAMESPACE == "Template" then
 			table.insert(args[1], "cozzare<t:to collide, to crash>")
@@ -111,7 +110,16 @@ function export.it_deverbal(frame)
 		end
 	end
 
-	local pagename = args.pagename or mw.title.getCurrentTitle().subpageText
+	local items = m_param_utils.process_list_arguments {
+		args = args,
+		param_mods = param_mods,
+		termarg = 1,
+		parse_lang_prefix = true,
+		track_module = "it-etymology",
+		lang = lang,
+	}
+
+	local pagename = args.pagename or mw.loadData("Module:headword/data").pagename
 	local suffix = pagename:match("([aeo])$")
 	if not suffix then
 		error(("Pagename '%s' does not end in a recognizable deverbal suffix -a, -e or -o"):format(pagename))
@@ -123,25 +131,22 @@ function export.it_deverbal(frame)
 		id = "deverbal",
 	}, "term")
 
-	for i, term in ipairs(args[1]) do
-		local parsed = require(romance_etymology_module).parse_term_with_modifiers(i, term, {
-			alt = args.alt[i],
-			gloss = args.t[i],
-			genders = args.g[i] and rsplit(args.g[i], ",") or nil,
-			id = args.id[i],
-			pos = args.pos[i],
-			lit = args.lit[i],
-			q = args.q[i],
-			qq = args.qq[i],
-		}, false)
-		parsed.lang = parsed.lang or lang
+	for i, item in ipairs(items) do
 		local formatted_part = m_links.full_link(parsed, "term", "allow self link", "respect qualifiers")
-		args[1][i] = require(affix_module).concat_parts(lang, {formatted_part, suffix_obj},
-			{"deverbals", "terms suffixed with -" .. suffix .. " (deverbal)"},
-			args.nocat, args.sort, nil, force_cat) -- FIXME: should we support lit= here?
+		items[i] = require(affix_module).join_formatted_parts {
+			data = {
+				lang = lang,
+				nocat = args.nocat,
+				sort_key = args.sort,
+				-- FIXME: should we support lit= here?
+				force_cat = force_cat,
+			},
+			parts_formatted = {formatted_part, suffix_obj},
+			categories = {"deverbals", "terms suffixed with -" .. suffix .. " (deverbal)"},
+		}
 	end
 
-	result = {}
+	local result = {}
 	local function ins(text)
 		table.insert(result, text)
 	end
@@ -155,10 +160,10 @@ function export.it_deverbal(frame)
 		ins(" from ")
 	end
 
-	if #args[1] == 1 then
-		ins(args[1][1])
+	if #items == 1 then
+		ins(items[1])
 	else
-		ins(require("Module:table").serialCommaJoin(args[1], {conj = "or"}))
+		ins(require(table_module).serialCommaJoin(items, {conj = "or"}))
 	end
 
 	return table.concat(result)
