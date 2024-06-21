@@ -3,9 +3,6 @@ local export = {}
 local labels_module = "Module:labels"
 local links_module = "Module:links"
 local parameter_utilities_module = "Module:parameter utilities"
-local parameters_module = "Module:parameters"
-local parse_utilities_module = "Module:parse utilities"
-local pron_qualifier_module = "Module:pron qualifier"
 
 local function track(page)
 	require("Module:debug/track")("alter/" .. page)
@@ -24,27 +21,24 @@ function export.display_alternative_forms(parent_args, pagename, show_labels_aft
 	}
 
     local m_param_utils = require(parameter_utilities_module)
+
 	local param_mods = m_param_utils.construct_param_mods {
-		{set = {"link", "ref"}},
+		{group = {"link", "ref"}},
 		-- For compatibility, we need to turn off separate_no_index for q= and qq=.
-		{set = "q", separate_no_index = false},
+		{group = "q", separate_no_index = false},
 		-- We currently don't support unindexed l= and ll=.
-		{set = "l", require_index = true},
+		{group = "l", require_index = true},
 	}
-	m_param_utils.augment_params_with_modifiers(params, param_mods)
 
-	local args = require("Module:parameters").process(parent_args, params)
-
-	local lang = args[1]
-
-	local items = m_param_utils.process_list_arguments {
-		args = args,
+	local items, args = m_param_utils.process_list_arguments {
+		params = params,
 		param_mods = param_mods,
+		raw_args = parent_args,
 		termarg = 2,
 		parse_lang_prefix = true,
 		track_module = "alter",
-		lang = lang,
-		sc = args.sc.default,
+		lang = 1,
+		sc = "sc.default",
 		stop_when = function(data)
 			return not data.any_param_at_index
 		end,
@@ -54,6 +48,7 @@ function export.display_alternative_forms(parent_args, pagename, show_labels_aft
 		error("No items found!")
 	end
 
+	local lang = args[1]
 	local raw_labels = {}
 
 	-- Extract the labels and make sure none are blank or omitted.
@@ -114,19 +109,7 @@ function export.display_alternative_forms(parent_args, pagename, show_labels_aft
 	-- First the items, including separators, left and right regular qualifiers and left and right per-item labels.
 	for _, item in ipairs(items) do
 		ins(item.separator)
-		local text = require(links_module).full_link(item, nil, allow_self_link)
-		if item.q and item.q[1] or item.qq and item.qq[1] or item.l and item.l[1] or item.ll and item.ll[1]
-			or item.refs and item.refs[1] then
-			text = require(pron_qualifier_module).format_qualifiers {
-				lang = item.lang,
-				text = text,
-				q = item.q,
-				qq = item.qq,
-				l = item.l,
-				ll = item.ll,
-				refs = item.refs,
-			}
-		end
+		local text = require(links_module).full_link(item, nil, allow_self_link, "show qualifiers")
 		ins(text)
 	end
 
