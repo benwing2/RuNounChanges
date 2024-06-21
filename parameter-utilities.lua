@@ -831,8 +831,8 @@ function export.process_list_arguments(data)
 		args = data.processed_args or data.args
 	end
 
-	if data.preprocess_args then
-		data.preprocess_args(args)
+	if data.process_args_before_parsing then
+		data.process_args_before_parsing(args)
 	end
 
 	-- Find the maximum index among any of the list parameters.

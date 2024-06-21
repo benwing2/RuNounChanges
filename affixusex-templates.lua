@@ -52,7 +52,7 @@ function export.affixusex_t(frame)
 		params = params,
 		param_mods = param_mods,
 		raw_args = raw_args,
-		preprocess_args = function(args)
+		process_args_before_parsing = function(args)
 			-- Remember and remove an exclamation point from the beginning of a term. We need to do this *before*
 			-- parsing inline modifiers because the exclamation point goes before a language prefix, which is split off
 			-- as part of parsing inline modifiers.

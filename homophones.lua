@@ -142,7 +142,7 @@ function export.show(frame)
 		params = params,
 		param_mods = param_mods,
 		raw_args = parent_args,
-		preprocess_args = function(args)
+		process_args_before_parsing = function(args)
 			-- FIXME: temporary.
 			if args.q.default then
 				error("Use of q= in [[Template:homophones]] no longer permitted; use qq1=; in a month or two, q= will return as an overall left qualifier")
