@@ -165,7 +165,7 @@ end
 
 -- Split an argument on comma, but not comma followed by whitespace.
 function export.split_on_comma_without_whitespace(val)
-	if val:find(",%s") then
+	if val:find(",%s") or val:find("\\") then
 		return require(parse_utilities_module).split_on_comma(val)
 	else
 		return rsplit(val, ",")
