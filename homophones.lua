@@ -122,9 +122,10 @@ function export.show(frame)
 	local parent_args = frame:getParent().args
 	local compat = parent_args.lang
 	local offset = compat and 0 or 1
+	local lang_arg = compat and "lang" or 1
 
 	local params = {
-		[compat and "lang" or 1] = {required = true, type = "language", etym_lang = true, default = "en"},
+		[lang_arg] = {required = true, type = "language", etym_lang = true, default = "en"},
 		[1 + offset] = {list = true, required = true, allow_holes = true, default = "term"},
 		["caption"] = {},
 		["nocaption"] = {type = "boolean"},
@@ -135,30 +136,26 @@ function export.show(frame)
 	local m_param_utils = require(parameter_utilities_module)
 
 	local param_mods = m_param_utils.construct_param_mods {
-		{set = {"link", "ref", "a", "q"}},
+		{group = {"link", "ref", "a", "q"}},
 	}
-	m_param_utils.augment_params_with_modifiers(params, param_mods)
-
-	local args = require(parameters_module).process(parent_args, params)
-
-	-- FIXME: temporary.
-	if args.q.default then
-		error("Use of q= in [[Template:homophones]] no longer permitted; use qq1=; in a month or two, q= will return as an overall left qualifier")
-	end
-	if args.q.maxindex > 0 then
-		error("Use of qN= in [[Template:homophones]] no longer permitted; use qqN=; in a month or two, qN= will return as left qualifiers")
-	end
-
-	local lang = args[compat and "lang" or 1]
-
-	local homophones = m_param_utils.process_list_arguments {
-		args = args,
+	local homophones, args = m_param_utils.process_list_arguments {
+		params = params,
 		param_mods = param_mods,
+		raw_args = parent_args,
+		preprocess_args = function(args)
+			-- FIXME: temporary.
+			if args.q.default then
+				error("Use of q= in [[Template:homophones]] no longer permitted; use qq1=; in a month or two, q= will return as an overall left qualifier")
+			end
+			if args.q.maxindex > 0 then
+				error("Use of qN= in [[Template:homophones]] no longer permitted; use qqN=; in a month or two, qN= will return as left qualifiers")
+			end
+		end,
 		termarg = 1 + offset,
 		parse_lang_prefix = true,
 		track_module = "homophones",
-		lang = lang,
-		sc = args.sc.default,
+		lang = lang_arg,
+		sc = "sc.default",
 	}
 
 	local data = {
