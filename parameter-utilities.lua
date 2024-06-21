@@ -27,10 +27,9 @@ modifiers (`<t:...>`, `<pos:...>`, etc.). Some examples of templates that work t
 {{tl|synonyms}}/{{tl|syn}}, {{tl|antonyms}}/{{tl|ant}}, and other "nyms" templates; {{tl|col}}, {{tl|col2}},
 {{tl|col3}}, {{tl|col4}} and other columns templates; {{tl|descendant}}/{{tl|desc}}; {{tl|affix}}/{{tl|af}},
 {{tl|prefix}}/{{tl|pre}} and related *fix templates; {{tl|affixusex}}/{{tl|afex}} and related templates; {{tl|IPA}};
-{{tl|homophones}}; {{tl|rhymes}}; and several others. Not all of them currently use this module, but they should all
-eventually be converted to do so. This module can be thought of as a combination of [[Module:parameters]] (which parses
-template parameters, and in particular handles the separate parameter versions of the properties) and
-`parse_inline_modifiers()` in [[Module:parse utilities]] (which parses inline modifiers).
+{{tl|homophones}}; {{tl|rhymes}}; and several others. This module can be thought of as a combination of
+[[Module:parameters]] (which parses template parameters, and in particular handles the separate parameter versions of
+the properties) and `parse_inline_modifiers()` in [[Module:parse utilities]] (which parses inline modifiers).
 
 The main entry point is `process_list_arguments()`, which takes an object specifying various properties and returns a
 list of objects, one per item specified by the user, where the individual objects are much like the objects returned by
@@ -38,12 +37,11 @@ list of objects, one per item specified by the user, where the individual object
 structured that is passed to `process_list_arguments()`.
 
 The typical workflow for using this module looks as follows (a slightly simplified version of the code in
-[[Module:homophones]]):
+[[Module:nyms]]):
 {
 local export = {}
 
 local parameter_utilities_module = "Module:parameter utilities"
-local parameters_module = "Module:parameters"
 
 ...
 
@@ -51,74 +49,50 @@ local parameters_module = "Module:parameters"
 function export.show(frame)
 	local parent_args = frame:getParent().args
 
-	-- Parameters that don't have corresponding inline modifiers. Note in particular that the items themselves must
-	-- be specified this way.
+	-- Parameters that don't have corresponding inline modifiers. Note in particular that the parameter corresponding to
+	-- the items themselves must be specified this way, and must specify either `allow_holes = true` (if the user can
+	-- omit terms, typically by specifying the term using |altN= or <alt:...> so that they remain unlinked) or
+	-- `disallow_holes = true` (if omitting terms is not allowed). (If neither `allow_holes` nor `disallow_holes` is
+	-- specified, an error is thrown in process_list_arguments().)
 	local params = {
-		[1] = {required = true, type = "language", etym_lang = true, default = "en"},
-		[2] = {list = true, required = true, allow_holes = true, default = "term"},
-		["nocat"] = {type = "boolean"},
-		["sort"] = {},
+		[1] = {required = true, type = "language", etym_lang = true, default = "und"},
+		[2] = {list = true, allow_holes = true, required = true, default = "term"},
 	}
 
-	-- Item properties, available either through separate parameters or inline modifiers.
-	local param_mods = {
-		alt = {},
-		t = {
-			-- [[Module:links]] expects the gloss in "gloss".
-			item_dest = "gloss",
-		},
-		gloss = {
-			alias_of = "t",
-		},
-		tr = {},
-		ts = {},
-		g = {
-			-- [[Module:links]] expects the genders in "genders". `sublist = true` automatically splits on comma
-			-- (optionally with surrounding whitespace).
-			item_dest = "genders",
-			sublist = true,
-		},
-		pos = {},
-		lit = {},
-		id = {},
-		sc = {
-			-- sc= is distinct from sc1=/sc2= and <sc:...>.
-			separate_no_index = true,
-			-- Automatically parse as a script code and convert to a script object.
-			type = "script",
-		},
+    local m_param_utils = require(parameter_utilities_module)
+
+	-- This constructs the `param_mods` structure by adding well-known groups of parameters (such as all the parameters
+	-- associated with based on full_link() in [[Module:links]], with default properties that can be overridden. This is
+	-- easier and less error-prone than manually specifying the `param_mods` structure (see below for how this would
+	-- look). Here, we specify the group "link" (consisting of all the link parameters for use with full_link()), group
+	-- "ref" (which adds the "ref" parameter for specifying references), group "l" (which adds the "l" and "ll"
+	-- parameters for specifying labels) and group "q" (which adds the "q" and "qq" parameters for specifying regular
+	-- qualifiers). By default, labels and qualifiers have `separate_no_index` set so that e.g. |q1= is distinct from
+	-- |q=, the former specifying the left qualifier for the first item and the latter specifying the overall left
+	-- qualifier. For compatibility, we override the `separate_no_index` setting for the group "q", which causes |q= and
+	-- |q1= to be the same, and likewise for |qq= and |qq1=. Finally, also for compatibility, we add an "lb" parameter
+	-- that is an alias of "ll" (in all respects; |lb= is the same as |ll=, |lb1= is the same as |ll1=, <lb:...> is the
+	-- same as <ll:...>, etc.).
+	local param_mods = m_param_utils.construct_param_mods {
+		{group = {"link", "ref", "l"}},
+		{group = "q", separate_no_index = false},
+		{param = "lb", alias_of = "ll"},
 	}
 
-	local m_param_utils = require(parameter_utilities_module)
-
-	-- This adds "pronunciation qualifiers" to `param_mods`. By default, this consists of "q", "qq", "a", "aa" and
-	-- "ref", along with `convert` functions to appropriately parse and convert the values. By default, all but "ref"
-	-- have `separate_no_index = true` set, but this can be overridden. The particular properties to add can also be
-	-- overridden, and are some subset of "q" (left regular qualifier), "qq" (right regular qualifier), "a" (left
-	-- accent qualifier), "aa" (right accent qualifier), "l" (left label), "ll" (right label) and "ref" (references).
-	m_param_utils.augment_param_mods_with_pron_qualifiers(param_mods)
-
-	-- This converts the properties in `param_mods` into the appropriate structures for use by `process()` in
-	-- [[Module:parameters]] and stores them in `params`.
-	m_param_utils.augment_params_with_modifiers(params, param_mods)
-
-	-- This parses the template parameters, including the separate-parameter version of item properties, and stores them
-	-- into `args`.
-	local args = require(parameters_module).process(parent_args, params)
+	-- This processes the raw arguments in `parent_args`, parses inline modifiers and creates corresponding objects
+	-- containing the property values specified either through inline modifiers or separate parameters.
+	local items, args = m_param_utils.process_list_arguments {
+		params = params,
+		param_mods = param_mods,
+		raw_args = parent_args,
+		termarg = 2,
+		parse_lang_prefix = true,
+		track_module = "nyms",
+		lang = 1,
+		sc = "sc.default",
+	}
 
 	local lang = args[1]
-
-	-- This parses inline modifiers and creates corresponding objects containing the property values specified either
-	-- through inline modifiers or separate parameters.
-	local items = m_param_utils.process_list_arguments {
-		args = args,
-		param_mods = param_mods,
-		termarg = 1 + offset,
-		track_module = "homophones",
-		parse_lang_prefix = true,
-		lang = lang,
-		sc = args.sc.default,
-	}
 
 	-- Now do the actual implementation of the template. Generally this should be split into a separate function, often
 	-- in a separate module (if the implementation goes in [[Module:foo]], the template interface code goes in
@@ -128,45 +102,104 @@ function export.show(frame)
 
 The `param_mods` structure controls the properties that can be specified by the user for a given item, and is
 conceptually very similar to the `param_mods` structure used by `parse_inline_modifiers()`. The key is the name of the
-parameter (e.g.  {"t"}, {"pos"}) and the value is a table with optional elements as follows:
+parameter (e.g. {"t"}, {"pos"}) and the value is a table with optional elements as follows:
 * `item_dest`, `store`: Same as the corresponding fields in the `param_mods` structure passed to
   `parse_inline_modifiers()`.
-* `param_key`: The name of the key used when storing the parameter's value into the `args` object returned by
-  [[Module:parameters]]. It is rare that you need to specify this, as it defaults to the parameter's name (the key) and
-  this is almost always correct. May be different e.g. in a superseded method for handling the separate no-index pattern
-  (where e.g. {{para|sc}} is distinct from {{para|sc1}}), where e.g. the key {"sc"} would be used to hold the value of
-  {{para|sc}} and a key like {"listsc"} would be used to hold the value of {{para|sc1}}, {{para|sc2}}, etc.; but prefer
-  using `separate_no_index = true` in place of this.
-* All other fields are the same as the corresponding fields in the `params` structure passed to the `process()` function
-  in [[Module:parameters]]. Some of the more useful field values:
-  ** `type`, `set`, `sublist`, `convert` and associated fields such as `etym_lang`, `family` and `method`: These control
-     parsing and conversion of the raw values specified by the user and have the same meaning as in
-	 [[Module:parameters]] and also in `parse_inline_modifiers()` (which delegates the actual conversion to
-	 [[Module:parameters]]).
-  ** `alias_of`: This parameter is an alias of some other parameter. If you have two properties, where one is an alias
-     of the other, you will often have to use `item_dest` in concert with `alias_of` so that the aliasing happens both
-	 for the inline modifier and separate-parameter versions of the property. As an example, the {"lb"} property in
-	 [[Module:nyms]] (which handles {{tl|syn}}, {{tl|ant}}, etc.) is an alias of the {"ll"} property, so the definition
-	 of the {"lb"} property needs to specify both {item_dest = "ll"} and {alias_of = "ll"}. As an example where they
-	 may not go in concert, many templates support a {"t"} property with alias {"gloss"} for specifying the gloss
-	 (definition) of an item, where {"t"} is considered the canonical version but is stored into the {"gloss"} key in
-	 the objects returned by `process_list_arguments()` for compatibility with `full_link()` in [[Module:links]]. In
-	 this case, the definition of {"t"} specifies {item_dest = "gloss"} and the definition of {"gloss"} specifies
-	 {alias_of = "t"}. As another example, many templates support a {"g"} property for specifying a comma-separated list
-	 of genders, which is stored into the {"genders"} key in the returned objects, again for compatibility with
-	 `full_link()`. The spec for this property specifies {item_dest = "genders"}, but since there is no user-visible
-	 {"genders"} alias provided, there is no need for `alias_of` anywhere.
-  ** `separate_no_index`: This means that e.g. the {{para|sc}} parameter is distinct from the {{para|sc1}} parameter
-     (and thus from the `<sc:...>` inline modifier on the first item). This is typically used to distinguish an overall
-	 version of a property from the corresponding item-specific property on the first item. (In this case, for example,
-	 {{para|sc}} overrides the script code for all items, while {{para|sc1}} overrides the script code only for the
-	 first item.) If not given, and if `require_index` is not given, {{para|sc}} and {{para|sc1}} would have the same
-	 meaning and refer to the item-specific property on the first item. When this is given, the overall value can be
-	 accessed using the `.default` field of the property value in `args`, e.g. in this case `args.sc.default`.
-  ** `require_index`: This means that the non-indexed parameter version of the property is not recognized. E.g. in the
-     case of the {"sc"} property, use of the {{para|sc}} parameter would result in an error, while {{para|sc1}} is
-	 recognized and specifies the {"sc"} property for the first item.
-  ** `list`, `allow_holes`: These should '''not''' be given as they are set by default.
+* `type`, `set`, `sublist`, `convert` and associated fields such as `etym_lang`, `family` and `method`: These control
+  parsing and conversion of the raw values specified by the user and have the same meaning as in [[Module:parameters]]
+  and also in `parse_inline_modifiers()` (which delegates the actual conversion to [[Module:parameters]]). These fields
+  — and for that matter, all fields other than `item_dest`, `store` and `overall` — are forwarded to the `process()`
+  function in [[Module:parameters]].
+* `alias_of`: This parameter is an alias of some other parameter. This spec is recognized only by `process()` in
+  [[Module:parameters]], and not by `parse_inline_modifiers()`; to set up an alias in `parse_inline_modifiers()`, you
+  need to make sure (using `item_dest`) that both the alias and aliasee modifiers store their values in the same
+  location, and you need to copy the remaining properties from the aliasee's spec to the aliasing modifier's spec. All
+  of this happens automatically if you generate the `param_mods` structure using `construct_param_mods()`.
+* `require_index`: This means that the non-indexed parameter version of the property is not recognized. E.g. in the
+  case of the {"sc"} property, use of the {{para|sc}} parameter would result in an error, while {{para|sc1}} is
+  recognized and specifies the {"sc"} property for the first item. The default, if neither `require_index` nor
+  `separate_no_index` is given, is for {{para|sc}} and {{para|sc1}} to mean the same thing (both would specify the
+  {"sc"} property of the first item). Note that `require_index` and `separate_no_index` are mutually exclusive, and if
+  either one is specified during processing by `construct_param_mods()`, the other one is automaticallly turned off.
+* `separate_no_index`: This means that e.g. the {{para|sc}} parameter is distinct from the {{para|sc1}} parameter
+  (and thus from the `<sc:...>` inline modifier on the first item). This is typically used to distinguish an overall
+  version of a property from the corresponding item-specific property on the first item. (In this case, for example,
+  {{para|sc}} overrides the script code for all items, while {{para|sc1}} overrides the script code only for the
+  first item.) If not given, and if `require_index` is not given, {{para|sc}} and {{para|sc1}} would have the same
+  meaning and refer to the item-specific property on the first item. When this is given, the overall value can be
+  accessed using the `.default` field of the property value in `args`, e.g. in this case `args.sc.default`. Note that
+  (as mentioned above) `require_index` and `separate_no_index` are mutually exclusive, and if either one is specified
+  during processing by `construct_param_mods()`, the other one is automaticallly turned off.
+* `list`, `allow_holes`, `disallow_holes`: These should '''not''' be given. `list` and `allow_holes` are automatically
+  set for all parameter specs added to the `params` structure used by `process()` in [[Module:parameters]], and
+  `disallow_holes` clashes with `allow_holes`.
+
+For the above workflow example, the call to `construct_param_mods()` generates the following `param_mods` structure:
+
+{
+local param_mods = {
+	-- the parameters generated by group "link"
+	alt = {},
+	t = {
+		-- [[Module:links]] expects the gloss in "gloss".
+		item_dest = "gloss",
+	},
+	gloss = {
+		alias_of = "t",
+	},
+	tr = {},
+	ts = {},
+	g = {
+		-- [[Module:links]] expects the genders in "genders".
+		item_dest = "genders",
+		sublist = true,
+	},
+	pos = {},
+	lit = {},
+	id = {},
+	sc = {
+		separate_no_index = true,
+		type = "script",
+	},
+
+	-- the parameters generated by group "ref"
+	ref = {
+		item_dest = "refs",
+		type = "references",
+	},
+
+	-- the parameters generated by group "l"
+	l = {
+		type = "labels",
+		separate_no_index = true,
+	},
+	ll = {
+		type = "labels",
+		separate_no_index = true,
+	},
+
+	-- the parameters generated by group "q"; note that `separate_no_index = true` would be set, but is overridden
+	-- (specifying `separate_no_index = false` in the `param_mods` structure is equivalent to not specifying it at all)
+	q = {
+		type = "qualifier",
+		separate_no_index = false,
+	},
+	qq = {
+		type = "qualifier",
+		separate_no_index = false,
+	},
+
+	-- the parameter generated by the individual "lb" parameter spec; note that only `alias_of` was explicitly given,
+	-- while `item_dest` is automatically set so that inline modifier <lb:...> stores into the same place as <ll:...>,
+	-- and the other specs are copied from the `ll` spec so `lb` works like `ll` in all regards
+	lb = {
+		alias_of = "ll",
+		item_dest = "ll",
+		type = "labels",
+		separate_no_index = true,
+	},
+}
+}
 ]==]
 
 
@@ -180,7 +213,7 @@ local label_spec = {
 	separate_no_index = true,
 }
 
-local recognized_param_mod_sets = {
+local recognized_param_mod_groups = {
 	link = {
 		alt = {},
 		t = {
@@ -245,51 +278,174 @@ local function merge_param_mod_settings(orig, additions)
 		end
 	end
 	merged.default = nil
-	merged.set = nil
+	merged.group = nil
 	merged.param = nil
+	merged.exclude = nil
+	merged.include = nil
 	return merged
 end
 
 
-local function construct_param_mods_error(msg, spec)
-	error(("Internal error: %s: %s"):format(msg, dump(spec)))
+local function verify_type(spec, param, typ1, typ2)
+	if not spec[param] then
+		return
+	end
+	local val = spec[param]
+	if type(val) ~= typ1 and (not typ2 or type(val) ~= typ2) then
+		internal_error(("Parameter `%s` must be a %s%s but saw a %s"):format(param, typ1, typ2 and " or " .. typ2 or "",
+			type(val)), spec)
+	end
 end
+
+local function verify_well_constructed_spec(spec)
+	local num_control = (spec.default and 1 or 0) + (spec.group and 1 or 0) + (spec.param and 1 or 0)
+	if num_control == 0 then
+		internal_error(
+			"Spec passed to construct_param_mods() must have either the `default`, `group` or `param` keys set", spec)
+	if num_control > 1 then
+		internal_error(
+			"Exactly one of `default`, `group` or `param` must be set in construct_param_mods() spec", spec)
+	end
+	if spec.list or spec.allow_holes then
+		-- FIXME: We need to support list = "foo" for list parameters that are stored in e.g. 2=, foo2=, foo3=, etc.
+		internal_error("`list` and `allow_holes` may not be set; they are automatically set when constructing the " ..
+			"corresponding spec in the `params` object passed to [[Module:parameters]]", spec)
+	end
+	if spec.disallow_holes then
+		internal_error("`disallow_holes` may not be set; it conflicts with `allow_holes`, which is automatically " ..
+			"set when constructing the corresponding spec in the `params` object passed to [[Module:parameters]]", spec)
+	end
+	if spec.include and spec.exclude then
+		internal_error("Saw both `include` and `exclude` in the same spec", spec)
+	end
+	if (spec.include or spec.exclude) and not spec.group then
+		internal_error(
+			"`include` and `exclude` can only be specified along with `group`, not with `default` or `param`", spec)
+	end
+	verify_type(spec, "group", "string", "table")
+	verify_type(spec, "param", "string", "table")
+	verify_type(spec, "include", "table")
+	verify_type(spec, "exclude", "table")
+end
+
 
 --[==[
 Construct the `param_mods` structure used in parsing arguments and inline modifiers from a list of specifications.
-A sample invocation looks like this:
+A sample invocation (a slightly simplified version of the actual invocation associated with {{tl|affix}} and related
+templates) looks like this:
 {
 	local param_mods = require("Module:parameter utilities").construct_param_mods {
 		-- We want to require an index for all params (or use separate_no_index, which also requires an index for the
 		-- param corresponding to the first item).
 		{default = true, require_index = true},
-		{set = {"link", "ref", "lang", "q", "l"}},
+		{group = {"link", "ref", "lang", "q", "l"}},
 		-- Override these two to have separate_no_index.
 		{param = {"lit", "pos"}, separate_no_index = true},
 	}
 }
 
-Each specification ...
+Each specification either sets the default value for further parameter specs or adds one or more parameters. Parameters
+can be added directly using `param`, or groups of predefined parameters can be added using `group`. Specifications are
+one of three types:
+# Those that set the default properties for future-added parameters. These contain {default = true} as one of the
+  properties of the spec. Specs are processed in order and you can change the defaults mid-way through.
+# Those that add the parameters associated with one or more pre-defined groups. These contain {group = "group"} or
+  {group = {"group1", "group2", ...}}. The pre-defined parameter groups and their associated properties are listed
+  below. The pre-defined properties of parameters in a group override properties associated with a {default = true}
+  spec, and are in turn overridden by any properties given directly in the spec itself. Note as well that setting the
+  `separate_no_index` property will automatically cause the `require_index` property to be unset and vice-versa, as the
+  two are mutually exclusive. (This happens in the example above, where the {separate_no_index = true} setting
+  associated with the params {"lit"} and {"pos"} cancels out the {require_index = true} default setting, as well as less
+  obviously with the pre-defined {"sc"} property of the {"link"} group, the {"q"} and {"qq"} properties of the {"q"}
+  group, and the {"l"} and {"ll"} properties of the {"l"} group, all of which have an associated pre-defined property
+  {separate_no_index = true}, which overrides and cancels out the {require_index = true} default setting. Finally, when
+  adding the parameters of a group, you can request the only a subset of the parameters be added using either the
+  `include` or `exclude` properties, each of whose values is a list of parameters that specify (respectively) the
+  parameters to include (all other parameters of the group are excluded) or to exclude (all other parameters of the
+  group are included). This is used, for example, in [[Module:romance etymology]] and [[Module:it-etymology]], which
+  specify {group = "link", exclude = {"tr", "ts", "sc"}} to exclude link parameters that aren't relevant to Latin-script
+  languages such as the Romance languages, and conversely in [[Module:IPA/templates]], which specifies
+  {group = "link", include = {"t", "gloss", "pos"}} to include only the specified parameters for use with {{tl|IPA}}.
+# Those that add individual parameters. These contain {param = "param"} or {param = {"param1", "param2", ...}}, the
+  latter syntax used to control a set of parameters together. The resulting spec is formed by initializing the
+  parameter's settings with any previously-specified default properties (using a spec containing {default = true}) if
+  the parameter hasn't already been initialized, and then overriding the resulting settings with any settings given
+  directly in the specification. In the above example, the {"lit"} and {"pos"} parameters were previously initialized
+  through the {"link"} group (specified in the second of the three specifications) but ended up with
+  {require_index = true} due to the {default = true} spec (the first of the three specifications). We override these
+  two parameters to have {separate_no_index = true} (which, as mentioned above, cancels out {require_index = true}).
+  This is done so that {{tl|affix}} and related templates have {{para|pos}} and {{para|lit}} parameters distinct from
+  {{para|pos1}} and {{para|lit1}}, which are used to specify an overall part of speech (which applies to all parts of
+  the affix, as opposed to applying to just one element of the expression) or a literal definition for the entire
+  expression (instead of just for one element of the expression).
+
+The built-in parameter groups are as follows:
+
+{|class="wikitable"
+! Group !! Group meaning !! Parameter !! Parameter meaning !! Default properties
+|-
+| rowspan=10| `link`
+| link parameters; same as those available on {{tl|l}}, {{tl|m}} and other linking templates
+| `alt` || display text, overriding the term's display form || —
+|-
+| `t` || gloss (translation) of a non-English term || {item_dest = "gloss"}
+|-
+| `gloss` || gloss (translation); same as `t` || {alias_of = "t"}
+|-
+| `tr` || transliteration of a non-Latin-script term; only needed if the automatic transliteration is incorrect or unavailable (e.g. in Hebrew, which doesn't have automatic transliteration) || —
+|-
+| `ts` || transcription of a non-Latin-script term, if the transliteration is markedly different from the actual pronunciation; should not be used for IPA pronunciations || —
+|-
+| `g` || comma-separated list of genders; whitespace may surround the comma and will be ignored || {item_dest = "genders", sublist = true}
+|-
+| `pos` || part of speech for the term || —
+|-
+| `lit` || literal meaning (translation) of the term || —
+|-
+| `id` || a sense ID for the term, which links to anchors on the page set by the {{tl|senseid}} template || —
+|-
+| `sc` || the script code (see [[Wiktionary:Scripts]]) for the script that the term is written in; rarely necessary, as the script is autodetected (in most cases, correctly) || {separate_no_index = true, type = "script"}
+|-
+| rowspan=2| `q`
+| left and right normal qualifiers (as displayed using {{tl|q}})
+| `q` || left normal qualifier || {separate_no_index = true, type = "qualifier"}
+|-
+| `qq` || right normal qualifier || {separate_no_index = true, type = "qualifier"}
+|-
+| rowspan=2| `a`
+| left and right accent qualifiers (as displayed using {{tl|a}})
+| `a` || comma-separated list of left accent qualifiers; whitespace must not surround the comma || {separate_no_index = true, type = "labels"}
+|-
+| `aa` || comma-separated list of right accent qualifiers; whitespace must not surround the comma || {separate_no_index = true, type = "labels"}
+|-
+| rowspan=2| `l`
+| left and right labels (as displayed using {{tl|lb}}, but without categorizing)
+| `l` || comma-separated list of left labels; whitespace must not surround the comma || {separate_no_index = true, type = "labels"}
+|-
+| `ll` || comma-separated list of right labels; whitespace must not surround the comma || {separate_no_index = true, type = "labels"}
+|-
+| `ref`
+| reference(s) (in the format accepted by [[Module:references]]; see also the documentation for the {{para|ref}} parameter to {{tl|IPA}})
+| `ref` || one or more references, in the format accepted by [[Module:references]] || {item_dest = "refs", type = "references"}
+|-
+| `lang`
+| language for an individual term (provided for compatibility; it is preferred to specify languages for individual terms using language prefixes instead)
+| `lang` || language code (see [[Wiktionary:Languages]]) for the term || {require_index = true, type = "language", etym_lang = true}
+|}
 ]==]
 function export.construct_param_mods(specs)
 	local shallowcopy = require(table_module).shallowcopy
 	local param_mods = {}
-	local initial_default_specs = {list = true, allow_holes = true}
-	local default_specs = initial_default_specs
+	local default_specs = {}
 	for _, spec in ipairs(specs) do
+		verify_well_constructed_spec(spec)
 		if spec.default then
-			if spec.set or spec.param then
-				construct_param_mods_error("Saw `set` and/or `param` key in `default` setting", spec)
-			end
-			default_specs = merge_param_mod_settings(initial_default_specs, spec.default)
-		elseif not spec.set and not spec.param then
-			construct_param_mods_error("Spec passed to construct_param_mods() must have either the `default`, `set` or `param` keys set",
-				spec)
+			default_specs = spec.default
 		else
-			if spec.set then
-				local sets = spec.set
-				if type(sets) ~= "table" then
-					sets = {sets}
+			if spec.group then
+				local groups = spec.group
+				if type(groups) ~= "table" then
+					groups = {groups}
 				end
 				local include_set
 				if spec.include then
@@ -299,27 +455,24 @@ function export.construct_param_mods(specs)
 				if spec.exclude then
 					exclude_set = require(table_module).listToSet(spec.exclude)
 				end
-				if include_set and exclude_set then
-					construct_param_mods_error("Saw both `include` and `exclude` in the same spec", spec)
-				end
-				for _, set in ipairs(set) do
-					local set_specs = recognized_param_mod_sets[set]
-					if not set_specs then
-						construct_param_mods_error(("Unrecognized built-in param mod set '%s'"):format(set), spec)
+				for _, group in ipairs(groups) do
+					local group_specs = recognized_param_mod_groups[group]
+					if not group_specs then
+						internal_error(("Unrecognized built-in param mod group '%s'"):format(group), spec)
 					end
-					for set_param, set_param_settings in pairs(set_specs) do
+					for group_param, group_param_settings in pairs(group_specs) do
 						local include_param
 						if include_set then
-							include_param = include_set[set_param]
+							include_param = include_set[group_param]
 						elseif exclude_set then
-							include_param = not exclude_set[set_param]
+							include_param = not exclude_set[group_param]
 						else
 							include_param = true
 						end
 						if include_param then
 							local merged_settings = merge_param_mod_settings(merge_param_mod_settings(
-								param_mods[set_param] or default_specs, set_param_settings), spec)
-							param_mods[set_param] = merged_settings
+								param_mods[group_param] or default_specs, group_param_settings), spec)
+							param_mods[group_param] = merged_settings
 						end
 					end
 				end
@@ -342,10 +495,10 @@ function export.construct_param_mods(specs)
 					if aliasee then
 						local aliasee_settings = param_mods[aliasee]
 						if not aliasee_settings then
-							construct_param_mods_error(("Undefined aliasee '%s'"):format(aliasee), spec)
+							internal_error(("Undefined aliasee '%s'"):format(aliasee), spec)
 						end
 						for k, v in pairs(aliasee_settings) do
-							if k ~= "list" and k ~= "allow_holes" and settings[k] == nil then
+							if settings[k] == nil then
 								settings[k] = v
 							end
 						end
@@ -438,7 +591,7 @@ end
 -- Return true if `k` is a "built-in" (specially recognized) key in a `param_mod` specification. All other keys
 -- are forwarded to the structure passed to [[Module:parameters]].
 local function param_mod_spec_key_is_builtin(k)
-	return k == "param_key" or k == "item_dest" or k == "overall" or k == "store"
+	return k == "item_dest" or k == "overall" or k == "store"
 end
 
 --[==[
@@ -449,7 +602,6 @@ overall (non-item-specific) parameters. Currently this only happens when `separa
 function export.augment_params_with_modifiers(params, param_mods, overall_only)
 	if overall_only then
 		for param_mod, param_mod_spec in pairs(param_mods) do
-			local param_key = param_mod_spec.param_key or param_mod
 			if param_mod_spec.separate_no_index then
 				local param_spec = {}
 				for k, v in pairs(param_mod_spec) do
@@ -457,14 +609,13 @@ function export.augment_params_with_modifiers(params, param_mods, overall_only)
 						param_spec[k] = v
 					end
 				end
-				params[param_key] = param_spec
+				params[param_mod] = param_spec
 			end
 		end
 	else
 		local list_with_holes = { list = true, allow_holes = true }
 		-- Add parameters for each term modifier.
 		for param_mod, param_mod_spec in pairs(param_mods) do
-			local param_key = param_mod_spec.param_key or param_mod
 			local has_extra_specs = false
 			for k, _ in pairs(param_mod_spec) do
 				if not param_mod_spec_key_is_builtin(k) then
@@ -473,7 +624,7 @@ function export.augment_params_with_modifiers(params, param_mods, overall_only)
 				end
 			end
 			if not has_extra_specs then
-				params[param_key] = list_with_holes
+				params[param_mod] = list_with_holes
 			else
 				local param_spec = mw.clone(list_with_holes)
 				for k, v in pairs(param_mod_spec) do
@@ -481,7 +632,7 @@ function export.augment_params_with_modifiers(params, param_mods, overall_only)
 						param_spec[k] = v
 					end
 				end
-				params[param_key] = param_spec
+				params[param_mod] = param_spec
 			end
 		end
 	end
@@ -498,18 +649,68 @@ function export.item_key_is_property(k)
 		k ~= "separator"
 end
 
+-- Throw an error prefixed with the words "Internal error" (and suffixed with a dumped version of `spec`, if provided).
+-- This is for logic errors in the code itself rather than template user errors.
+local function internal_error(msg, spec)
+	if spec then
+		msg = ("%s: %s"):format(msg, dump(spec))
+	end
+	error(("Internal error: %s"):format(msg))
+end
+
+-- Fetch the argument in `args` corresponding to `index_or_value`, which may be a string of the form "foo.default"
+-- (requesting the value of `args["foo"].default`); a string or number (requesting the value at that key); a function of
+-- one argument (`args`), which returns the argument value; or the value itself.
+local function fetch_argument(args, index_or_value)
+	if type(index_or_value) == "string" then
+		local index_without_default = index_or_value:match("^(.*)%.default$")
+		if index_without_default then
+			local arg_obj = fetch_argument(args, index_without_default)
+			if type(arg_obj) ~= "table" then
+				internal_error(("Requested that the '.default' key of argument `%s` be fetched, but argument value is undefined or not a table"):
+					format(index_without_default), arg_obj)
+			end
+			return arg_obj.default
+		end
+		if index_or_value:find("^[0-9]+$") then
+			index_or_value = tonumber(index_or_value)
+		end
+		return args[index_or_value]
+	elseif type(index_or_value) == "number" then
+		return args[index_or_value]
+	elseif type(index_or_value) == "function" then
+		return index_or_value(args)
+	else
+		return index_or_value
+	end
+end
+
 --[==[
-Parse inline modifiers and create corresponding objects containing the property values specified either through inline
-modifiers or separate parameters. `data` is an object containing the following properties:
-* `args` ('''required'''): The object of parsed arguments returned by `process()` in [[Module:parameters]].
+Parse inline modifiers and create corresponding item objects containing the property values specified either through
+inline modifiers or separate parameters. `data` is an object containing the following properties:
+* `raw_args` ('''required''' unless `processed_args` is specified): The raw arguments, normally fetched from
+  {frame:getParent().args}. They are parsed using `process()` in [[Module:parameters]].
+* `processed_args`: The object of parsed arguments returned by `process()` in [[Module:parameters]]. One (but not both)
+  of `raw_args` and `processed_args` must be set.
 * `param_mods` ('''required'''): A structure describing the possible inline modifiers and their properties. See the
-  introductory comment above.
-* `termarg` ('''required'''): The argument containing the items with attached inline modifiers to be parsed. Usually a
-  numeric value such as {1} or {2}.
+  introductory comment above. Most often, this is generated using `construct_param_mods()` rather than specified
+  manually.
+* `params` ('''required''' unless `processed_args` is specified): A structure describing the possible parameters,
+  '''other than''' the ones that are separate-parameter equivalents of inline modifiers. This is automatically
+  "augmented" with the separate-parameter equivalents of the inline modifiers described in `param_mods` prior to parsing
+  the raw arguments with [[Module:parameters]]. '''WARNING:''' This structure is destructively modified, both by the
+  "augmentation" process of adding separate-parameter equivalents of inline modifiers, and by the processing done by
+  [[Module:parameters]] itself. (Nonetheless, substructures can safely be shared in this structure, and will be
+  correctly handled.)
+* `termarg` ('''required'''): The argument containing the first item with attached inline modifiers to be parsed.
+  Usually a numeric value such as {1} or {2}.
 * `track_module` ('''recommended'''): The name of the calling module, for use in adding tracking pages that are used
   internally to track pages containing template invocations with certain properties. Example properties tracked are
   missing items with corresponding properties as well as missing items without corresponding properties (which are
   skipped entirely). To find out the exact properties tracked and the name of the tracking pages, read the code.
+* `process_args_before_parsing`: An optional function to apply further processing to the processed `args` structure
+  returned by [[Module:parameters]], before parsing inline modifiers. This is passed one argument, the processed
+  arguments. It should make modifications in-place.
 * `term_dest`: The field to store the value of the item itself into, after inline modifiers and (if allowed) language
   prefixes are stripped off. Defaults to {"term"}.
 * `parse_lang_prefix`: If true, allow and parse off a language code prefix attached to items followed by a colon, such
@@ -526,15 +727,25 @@ modifiers or separate parameters. `data` is an object containing the following p
   given, prefixes before a colon do not trigger an error if they do not have the form of a language prefix or if a space
   follows the colon. It is not recommended that this be given because typos in language prefixes will not trigger an
   error and will tend to remain unfixed.
-* `lang`: The language code for the language of the items. In general it is not necessary to specify this as this
-  function only parses inline modifiers and doesn't actually format the resulting items. However, if specified, it is
-  used for certain purposes:
+* `lang`: The language object for the language of the items, or the name of the argument to fetch the object from. In
+  general it is not necessary to specify this as `process_list_arguments()` only initializes items based on inline
+  modifiers and separate arguments and doesn't actually format the resulting items. However, if specified, it is used
+  for certain purposes:
   *# It specifies the default for the `lang` property of returned objects if not otherwise set (e.g. by a language
      prefix).
   *# It is used to initialize an internal cache for speeding up language-code parsing (primarily useful if the same
      language code may appear in several items, such as with {{tl|col}} and related templates).
-* `sc`: The script code for the items. In general, as with `lang`,  it is not necessary to specify this. However, if
-  specified, it is used to supply the default for the `sc` property of returned objects if not otherwise set (e.g. by
+  The value of `lang` can be any of the following:
+  * If a string of the form "foo.default", it is assumed to be requesting the value of `args["foo"].default`.
+  * Otherwise, if a string or number, it is assumed to be requesting the value of `args` at that key. Note that if the
+    string is in the form of a number (e.g. "3"), it is normalized to a number prior to fetching (this also happens with
+	a spec like "2.default").
+  * Otherwise, if a function, it is assumed to be a function to return the argument value given `args`, which is passed
+    to the function as its only argument.
+  * Otherwise, it is used directly.
+* `sc`: The script object for the items, or the name of the argument to fetch the object from. The possible values and
+  their handling are the same as with `lang`. In general, as with `lang`,  it is not necessary to specify this. However,
+  if specified, it is used to supply the default for the `sc` property of returned items if not otherwise set (e.g. by
   the {{para|sc<var>N</var>}} parameter or `<sc:...>` inline modifier).
 * `disallow_custom_separators`: If specified, disallow specifying a bare semicolon as an item value to indicate that the
   item's previous separator should be a semicolon. By default, the previous separator of each item is considered to be
@@ -565,8 +776,9 @@ modifiers or separate parameters. `data` is an object containing the following p
   currently being processed). This is used, for example, in [[Module:alternative forms]], where an unspecified item
   signal the end of items and the start of labels.
 
-The return value is a list of items. There will be one field set for each specified property (either through inline
-modifiers or separate parameters). In addition, the following fields may be set:
+Two values are returned, the list of items and the processed `args` structure. In each returned item, there will be one
+field set for each specified property (either through inline modifiers or separate parameters). In addition, the
+following fields may be set:
 * `term`: The term portion of the item (minus inline modifiers and language prefixes). {nil} if no term was given.
 * `orig_index`: The original index into the item in the items table returned by `process()` in [[Module:parameters]].
   This may differ from `itemno` if there are raw semiclons and `disallow_custom_separators` is not given.
@@ -585,22 +797,63 @@ modifiers or separate parameters). In addition, the following fields may be set:
   `sc` isn't otherwise set and the `sc` field of the overall `data` object is set, providing a default value.
 ]==]
 function export.process_list_arguments(data)
+	local args
+	if not data.termarg then
+		internal_error("Required value `data.termarg` not specified")
+	end
+	if not data.param_mods then
+		internal_error("Required value `data.param_mods` not specified")
+	end
+	if data.raw_args then
+		-- FIXME, remove support for `data.args` in favor of `data.processed_args`
+		if data.processed_args or data.args then
+			internal_error("Only one of `data.raw_args` and `data.processed_args` can be specified")
+		end
+		if not data.params then
+			internal_error("When `data.raw_args` is specified, so must `data.params`, so that the raw arguments can be parsed")
+		end
+		local termarg_spec = data.params[data.termarg]
+		if not termarg_spec then
+			internal_error("There must be a spec in `data.params` corresponding to `data.termarg`")
+		end
+		if not termarg_spec.list then
+			internal_error("Term spec in `data.params` must have `list` set", termarg_spec)
+		end
+		if not termarg_spec.allow_holes and not termarg_spec.disallow_holes then
+			internal_error("Term spec in `data.params` must have either `allow_holes` or `disallow_holes` set", termarg_spec)
+		end
+		export.augment_params_with_modifiers(data.params, data.param_mods)
+		args = require(parameters_module).process(data.raw_args, data.params)
+	else
+		if data.params then
+			internal_error("When `data.processed_args` is specified, `data.params` should not be specified")
+		end
+		args = data.processed_args or data.args
+	end
+
+	if data.preprocess_args then
+		data.preprocess_args(args)
+	end
+
 	-- Find the maximum index among any of the list parameters.
-	local term_args = data.args[data.termarg]
+	local term_args = args[data.termarg]
 	-- As a special case, the term args might not have a `maxindex` field because they might have
 	-- been declared with `disallow_holes = true`, so fall back to the actual length of the list.
 	local maxmaxindex = term_args.maxindex or #term_args
-	for k, v in pairs(data.args) do
+	for k, v in pairs(args) do
 		if type(v) == "table" and v.maxindex and v.maxindex > maxmaxindex then
 			maxmaxindex = v.maxindex
 		end
 	end
 
+
 	local items = {}
 	local ind = 0
+	local lang = fetch_argument(args, data.lang)
+	local sc = fetch_argument(args, data.sc)
 	local lang_cache = {}
-	if data.lang then
-		lang_cache[data.lang:getCode()] = data.lang
+	if lang then
+		lang_cache[lang:getCode()] = lang
 	end
 	local use_semicolon = false
 	local term_dest = data.term_dest or "term"
@@ -614,7 +867,7 @@ function export.process_list_arguments(data)
 			-- Compute whether any of the separate indexed params exist for this index.
 			local any_param_at_index = term ~= nil
 			if not any_param_at_index then
-				for k, v in pairs(data.args) do
+				for k, v in pairs(args) do
 					-- Look for named list parameters. We check:
 					-- (1) key is a string (excludes the term param, which is a number);
 					-- (2) value is a table, i.e. a list;
@@ -655,8 +908,7 @@ function export.process_list_arguments(data)
 				-- Parse all the term-specific parameters and store in `termobj`.
 				for param_mod, param_mod_spec in pairs(data.param_mods) do
 					local dest = param_mod_spec.item_dest or param_mod
-					local param_key = param_mod_spec.param_key or param_mod
-					local arg = data.args[param_key] and data.args[param_key][itemno]
+					local arg = args[param_mod] and args[param_mod][itemno]
 					if arg then
 						termobj[dest] = arg
 					end
@@ -704,8 +956,8 @@ function export.process_list_arguments(data)
 				end
 				-- Set these after parsing inline modifiers, not in generate_obj(), otherwise we'll get an error in
 				-- parse_inline_modifiers() if we try to use <lang:...> or <sc:...> as inline modifiers.
-				termobj.lang = termobj.lang or data.lang
-				termobj.sc = termobj.sc or data.sc
+				termobj.lang = termobj.lang or lang
+				termobj.sc = termobj.sc or sc
 
 				if not data.disallow_custom_separators then
 					-- If the displayed term (from .term/etc. or .alt) has an embedded comma, use a semicolon to join
