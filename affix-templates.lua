@@ -1,9 +1,7 @@
 local export = {}
 
 local m_affix = require("Module:affix")
-local languages_module = "Module:languages"
 local parameter_utilities_module = "Module:parameter utilities"
-local parameters_module = "Module:parameters"
 local pseudo_loan_module = "Module:affix/pseudo-loan"
 
 
@@ -12,28 +10,42 @@ local function is_property_key(k)
 end
 
 
--- Parse raw arguments in `args`. If `extra_params` is specified, it should be a one-argument function that is called
--- on the `params` structure before parsing; its purpose is to specify additional allowed parameters or possibly disable
--- parameters. If `has_source` is given, there is a source-language parameter following 1= (which becomes the
--- "destination" language parameter) and preceding the terms. This is currently used for {{pseudo-loan}}. All language
--- parameters are allowed to be etymology-only language. Returns five values ARGS, TERM_INDEX, LANG_OBJ, SCRIPT_OBJ,
--- SOURCE_LANG_OBJ where ARGS is a table of the parsed arguments; TERM_INDEX is the argument containing all the terms;
--- LANG_OBJ is the language object corresponding to the language code specified in 1=; SCRIPT_OBJ is the script object
--- corresponding to sc= (if given, otherwise nil); and SOURCE_LANG_OBJ is the language object corresponding to the
--- source-language code specified in 2= if `has_source` is specified (otherwise nil).
-local function parse_args(parent_args, extra_params, has_source, ilangcode)
-	if parent_args.lang then
+-- Parse raw arguments. A single parameter `data` is passed in, with the following fields:
+-- * `raw_args`: The raw arguments to parse, normally taken from `frame:getParent().args`.
+-- * `extra_params`: An optional function of one argument that is called on the `params` structure before parsing; its
+--   purpose is to specify additional allowed parameters or possibly disable parameters.
+-- * `has_source`: There is a source-language parameter following 1= (which becomes the "destination" language
+--   parameter) and preceding the terms. This is currently used for {{pseudo-loan}}.
+-- * `ilang`: If given, it is a language object that serves as the default for the language. If specified, there is no
+--   language code specified in 1=; instead the term parameters start directly at 1= (or at 2= if `has_source` is
+--   given).
+-- * `require_index_for_pos`: There is no separate |pos= parameter distinct from |pos1=, |pos2=, etc. Instead,
+--   specifying |pos= results in an error.
+--
+-- Note that all language parameters are allowed to be etymology-only languages.
+--
+-- Return five values ARGS, ITEMS, LANG_OBJ, SCRIPT_OBJ, SOURCE_LANG_OBJ where ARGS is a table of the parsed arguments;
+-- ITEMS is the list of parsed items; LANG_OBJ is the language object corresponding to the language code specified in 1=
+-- (or taken from `ilang` if given); SCRIPT_OBJ is the script object corresponding to sc= (if given, otherwise nil); and
+-- SOURCE_LANG_OBJ is the language object corresponding to the source-language code specified in 2= (or 1= if `ilang` is
+-- given) if `has_source` is specified (otherwise nil).
+local function parse_args(data)
+	local raw_args = data.raw_args
+	local has_source = data.has_source
+	local ilang = data.ilang
+
+	if raw_args.lang then
 		error("The |lang= parameter is not used by this template. Place the language code in parameter 1 instead.")
 	end
 
-	local term_index = (ilangcode and 1 or 2) + (has_source and 1 or 0)
+	local term_index = (ilang and 1 or 2) + (has_source and 1 or 0)
 	local params = {
 		[term_index] = {list = true, allow_holes = true},
 		["sort"] = {},
 		["nocap"] = {type = "boolean"}, -- always allow this even if not used, for use with {{surf}}, which adds it
 	}
 
-	if not ilangcode then
+	if not ilang then
 		params[1] = {required = true, type = "language", etym_lang = true, default = "und"}
 	end
 
@@ -48,32 +60,19 @@ local function parse_args(parent_args, extra_params, has_source, ilangcode)
 		-- We want to require an index for all params (or use separate_no_index, which also requires an index for the
 		-- param corresponding to the first item).
 		{default = true, require_index = true},
-		{set = {"link", "ref", "lang", "q", "l"}},
-		-- Override these two to have separate_no_index.
-		{param = {"lit", "pos"}, separate_no_index = true},
+		{group = {"link", "ref", "lang", "q", "l"}},
+		-- Override these two to have separate_no_index, unless `data.require_index_for_pos` is specified.
+		{param = "lit", separate_no_index = true},
+		{param = "pos", separate_no_index = not data.require_index_for_pos, require_index = data.require_index_for_pos},
 	}
-	m_param_utils.augment_params_with_modifiers(params, param_mods)
-
-	if extra_params then
-		extra_params(params)
+	if data.extra_params then
+		data.extra_params(params)
 	end
 
-	local args = require(parameters_module).process(parent_args, params)
-
-	local lang
-	if ilangcode then
-		lang = require(languages_module).getByCode(ilangcode, true, "allow etym")
-	else
-		lang = args[1]
-	end
-	local source
-	if has_source then
-		source = args[source_index]
-	end
-
-	local items = m_param_utils.process_list_arguments {
-		args = args,
+	local items, args = m_param_utils.process_list_arguments {
+		params = params,
 		param_mods = param_mods,
+		raw_args = raw_args,
 		termarg = term_index,
 		parse_lang_prefix = true,
 		track_module = "homophones",
@@ -85,6 +84,12 @@ local function parse_args(parent_args, extra_params, has_source, ilangcode)
 		-- (particularly for `lang`), as the code in [[Module:affix]] uses the presence of `lang` as an indicator that
 		-- a part-specific language was explicitly given.
 	}
+
+	local lang = ilang or args[1]
+	local source
+	if has_source then
+		source = args[source_index]
+	end
 
 	-- For compatibility with the prior code, we need to convert items without term or properties to nil.
 	for i = 1, #items do
@@ -134,7 +139,10 @@ function export.affix(frame)
 		params.force_cat = {type = "boolean"}
 	end
 
-	local args, parts, lang, sc = parse_args(frame:getParent().args, extra_params)
+	local args, parts, lang, sc = parse_args {
+		raw_args = frame:getParent().args,
+		extra_params = extra_params,
+	}
 
 	if args.type and not m_affix.compound_types[args.type] then
 		error("Unrecognized compound type: '" .. args.type .. "'")
@@ -161,7 +169,10 @@ function export.compound(frame)
 		params.force_cat = {type = "boolean"}
 	end
 
-	local args, parts, lang, sc = parse_args(frame:getParent().args, extra_params)
+	local args, parts, lang, sc = parse_args {
+		raw_args = frame:getParent().args,
+		extra_params = extra_params,
+	}
 
 	if args.type and not m_affix.compound_types[args.type] then
 		error("Unrecognized compound type: '" .. args.type .. "'")
@@ -183,7 +194,7 @@ end
 
 function export.compound_like(frame)
 	local iparams = {
-		["lang"] = {},
+		["lang"] = {type = "language", etym_lang = true},
 		["template"] = {},
 		["text"] = {},
 		["oftext"] = {},
@@ -191,20 +202,22 @@ function export.compound_like(frame)
 	}
 
 	local iargs = require("Module:parameters").process(frame.args, iparams)
-	local parent_args = frame:getParent().args
 
 	local function extra_params(params)
-		-- FIXME, why are we doing this? Formerly we had 'params.pos = nil' whose intention was to
-		-- disable the overall pos= while preserving posN=, which is equivalent to the following using
-		-- the new syntax. But why is this necessary?
-		params.pos.require_index = true
-		params.pos.separate_no_index = false
 		params.notext = {type = "boolean"}
 		params.nocat = {type = "boolean"}
 		params.force_cat = {type = "boolean"}
 	end
 
-	local args, parts, lang, sc = parse_args(parent_args, extra_params, nil, iargs.lang)
+	local args, parts, lang, sc = parse_args {
+		raw_args = frame:getParent().args,
+		extra_params = extra_params,
+		ilang = iargs.lang,
+		-- FIXME, why are we doing this? Formerly we had 'params.pos = nil' whose intention was to disable the overall
+		-- pos= while preserving posN=, which is equivalent to the following using the new syntax. But why is this
+		-- necessary?
+		require_index_for_pos = true,
+	}
 
 	local template = iargs.template
 	local nocat = args.nocat
@@ -273,7 +286,10 @@ function export.surface_analysis(frame)
 		params.force_cat = {type = "boolean"}
 	end
 
-	local args, parts, lang, sc = parse_args(parent_args, extra_params)
+	local args, parts, lang, sc = parse_args {
+		raw_args = parent_args,
+		extra_params = extra_params,
+	}
 
 	if args.type and not m_affix.compound_types[args.type] then
 		error("Unrecognized compound type: '" .. args.type .. "'")
@@ -318,7 +334,10 @@ function export.circumfix(frame)
 		params.force_cat = {type = "boolean"}
 	end
 
-	local args, parts, lang, sc = parse_args(frame:getParent().args, extra_params)
+	local args, parts, lang, sc = parse_args {
+		raw_args = frame:getParent().args,
+		extra_params = extra_params,
+	}
 	check_max_items(parts, 3)
 
 	local prefix = parts[1]
@@ -346,7 +365,10 @@ function export.confix(frame)
 		params.force_cat = {type = "boolean"}
 	end
 
-	local args, parts, lang, sc = parse_args(frame:getParent().args, extra_params)
+	local args, parts, lang, sc = parse_args {
+		raw_args = frame:getParent().args,
+		extra_params = extra_params,
+	}
 	check_max_items(parts, 3)
 
 	local prefix = parts[1]
@@ -369,17 +391,20 @@ end
 
 function export.pseudo_loan(frame)
 	local function extra_params(params)
-		-- FIXME, why are we doing this? Formerly we had 'params.pos = nil' whose intention was to
-		-- disable the overall pos= while preserving posN=, which is equivalent to the following using
-		-- the new syntax. But why is this necessary?
-		params.pos.require_index = true
-		params.pos.separate_no_index = false
 		params.notext = {type = "boolean"}
 		params.nocat = {type = "boolean"}
 		params.force_cat = {type = "boolean"}
 	end
 
-	local args, parts, lang, sc, source = parse_args(frame:getParent().args, extra_params, "has source")
+	local args, parts, lang, sc = parse_args {
+		raw_args = frame:getParent().args,
+		extra_params = extra_params,
+		has_source = true,
+		-- FIXME, why are we doing this? Formerly we had 'params.pos = nil' whose intention was to disable the overall
+		-- pos= while preserving posN=, which is equivalent to the following using the new syntax. But why is this
+		-- necessary?
+		require_index_for_pos = true,
+	}
 
 	return require(pseudo_loan_module).show_pseudo_loan(
 		augment_affix_data({ source = source, parts = parts }, args, lang, sc))
@@ -392,7 +417,10 @@ function export.infix(frame)
 		params.force_cat = {type = "boolean"}
 	end
 
-	local args, parts, lang, sc = parse_args(frame:getParent().args, extra_params)
+	local args, parts, lang, sc = parse_args {
+		raw_args = frame:getParent().args,
+		extra_params = extra_params,
+	}
 	check_max_items(parts, 3)
 
 	local base = parts[1]
@@ -418,7 +446,10 @@ function export.prefix(frame)
 		params.force_cat = {type = "boolean"}
 	end
 
-	local args, parts, lang, sc = parse_args(frame:getParent().args, extra_params)
+	local args, parts, lang, sc = parse_args {
+		raw_args = frame:getParent().args,
+		extra_params = extra_params,
+	}
 	local prefixes = parts
 	local base = nil
 
@@ -451,7 +482,10 @@ function export.suffix(frame)
 		params.force_cat = {type = "boolean"}
 	end
 
-	local args, parts, lang, sc = parse_args(frame:getParent().args, extra_params)
+	local args, parts, lang, sc = parse_args {
+		raw_args = frame:getParent().args,
+		extra_params = extra_params,
+	}
 
 	local base = parts[1]
 	local suffixes = {}
