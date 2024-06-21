@@ -26,7 +26,7 @@ function export.affixusex_t(frame)
 		["pagename"] = {},
 	}
 
-	local aftype = frame.args["type"]
+	local aftype = frame.args.type
 	if aftype == "" or not aftype then
 		aftype = "affix"
 	end
@@ -42,40 +42,38 @@ function export.affixusex_t(frame)
 		-- We want to require an index for all params. Some of the params generated below have separate_no_index, which
 		-- overrides require_index (and also requires an index for the param corresponding to the first item).
 		{default = true, require_index = true},
-		{set = {"link", "ref", "lang", "q", "l"}},
+		{group = {"link", "ref", "lang", "q", "l"}},
 		{param = "arrow", type = "boolean"},
 		{param = {"joiner", "fulljoiner"}},
 	}
-	m_param_utils.augment_params_with_modifiers(params, param_mods)
 
-	local args = require(parameters_module).process(parent_args, params)
-
-	local lang = args[1]
-	local sc = args.sc.default
-
-	-- Remember and remove an exclamation point from the beginning of a term. We need to do this *before* parsing
-	-- inline modifiers because the exclamation point goes before a language prefix, which is split off as part of
-	-- parsing inline modifiers.
 	local has_exclamation_point = {}
-	for i, term in ipairs(args[2]) do
-		if sub(term, 1, 1) == "!" then
-			has_exclamation_point[i] = true
-			args[2][i] = gsub(term, "^!", "")
-		end
-	end
-
-	local items = m_param_utils.process_list_arguments {
-		args = args,
+	local items, args = m_param_utils.process_list_arguments {
+		params = params,
 		param_mods = param_mods,
+		raw_args = raw_args,
+		preprocess_args = function(args)
+			-- Remember and remove an exclamation point from the beginning of a term. We need to do this *before*
+			-- parsing inline modifiers because the exclamation point goes before a language prefix, which is split off
+			-- as part of parsing inline modifiers.
+			for i, term in ipairs(args[2]) do
+				if sub(term, 1, 1) == "!" then
+					has_exclamation_point[i] = true
+					args[2][i] = gsub(term, "^!", "")
+				end
+			end
+		end,
 		termarg = 2,
 		parse_lang_prefix = true,
 		track_module = "affixusex",
 	}
 
+	local lang = args[1]
+
 	local data = {
 		items = items,
 		lang = lang,
-		sc = sc,
+		sc = args.sc.default,
 		l = args.l.default,
 		ll = args.ll.default,
 		q = args.q.default,
