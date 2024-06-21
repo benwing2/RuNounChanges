@@ -32,28 +32,27 @@ function export.nyms(frame)
     local m_param_utils = require(parameter_utilities_module)
 
 	local param_mods = m_param_utils.construct_param_mods {
-		{set = {"link", "ref", "l"}},
+		{group = {"link", "ref", "l"}},
 		-- For compatibility, we don't distinguish q= from q1= and qq= from q1=. FIXME: Maybe we should change this.
-		{set = "q", separate_no_index = false},
+		{group = "q", separate_no_index = false},
 		{param = "lb", alias_of = "ll"},
 	}
-	m_param_utils.augment_params_with_modifiers(params, param_mods)
 
-	local args = require(parameters_module).process(parent_args, params)
+	local items, args = m_param_utils.process_list_arguments {
+		params = params,
+		param_mods = param_mods,
+		raw_args = parent_args,
+		termarg = 2,
+		parse_lang_prefix = true,
+		track_module = "nyms",
+		lang = 1,
+		sc = "sc.default",
+	}
 
 	local nym_type = frame.args[1]
 	local nym_type_class = string.gsub(nym_type, "%s", "-")
 	local lang = args[1]
 	local langcode = lang:getCode()
-
-	local items = m_param_utils.process_list_arguments {
-		args = args,
-		param_mods = param_mods,
-		termarg = 2,
-		parse_lang_prefix = true,
-		track_module = "nyms",
-		lang = lang,
-	}
 
 	local data = {
 		lang = lang,

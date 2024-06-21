@@ -178,17 +178,15 @@ function export.fr_IPA(frame)
 	local m_param_utils = require(parameter_utilities_module)
 
 	local param_mods = m_param_utils.construct_param_mods {
-		{set = {"q", "a", "ref"}},
+		{group = {"q", "a", "ref"}},
 		{param = "qual", type = "qualifier"}, -- deprecated
 		{param = "n", alias_of = "ref"}, -- deprecated
 	}
-	m_param_utils.augment_params_with_modifiers(params, param_mods)
 
-	local args = require(parameters_module).process(parent_args, params)
-
-	local items = m_param_utils.process_list_arguments {
-		args = args,
+	local items, args = m_param_utils.process_list_arguments {
+		params = params,
 		param_mods = param_mods,
+		raw_args = parent_args,
 		termarg = 1,
 		track_module = "fr-pron",
 	}

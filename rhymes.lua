@@ -207,11 +207,12 @@ function export.show(frame)
 	local parent_args = frame:getParent().args
 	local compat = parent_args.lang
 	local offset = compat and 0 or 1
+	local lang_param = compat and "lang" or 1
 
 	local plain = {}
 	local boolean = {type = "boolean"}
 	local params = {
-		[compat and "lang" or 1] = {required = true, type = "language", etym_lang = true, default = "en"},
+		[lang_param] = {required = true, type = "language", etym_lang = true, default = "en"},
 		[1 + offset] = {list = true, required = true, disallow_holes = true, default = "aɪmz"},
 		["caption"] = plain,
 		["nocaption"] = boolean,
@@ -220,6 +221,7 @@ function export.show(frame)
 	}
 
 	local m_param_utils = require(parameter_utilities_module)
+
 	local param_mods = m_param_utils.construct_param_mods {
 		{
 			param = "s",
@@ -228,21 +230,19 @@ function export.show(frame)
 			type = "number",
 			sublist = true,
 		},
-		{set = {"q", "a", "ref"}},
+		{group = {"q", "a", "ref"}},
 	}
-	m_param_utils.augment_params_with_modifiers(params, param_mods)
 
-	local args = require("Module:parameters").process(parent_args, params)
-
-	local lang = args[compat and "lang" or 1]
-
-	local rhymes = m_param_utils.process_list_arguments {
-		args = args,
+	local rhymes, args = m_param_utils.process_list_arguments {
+		params = params,
 		param_mods = param_mods,
+		raw_args = parent_args,
 		termarg = 1 + offset,
 		term_dest = "rhyme",
 		track_module = "rhymes",
 	}
+
+	local lang = args[lang_param]
 
 	local data = {
 		lang = lang,

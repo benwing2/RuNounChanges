@@ -4,7 +4,6 @@ local html = mw.html.create
 local m_str_utils = require("Module:string utilities")
 local links_module = "Module:links"
 local parameter_utilities_module = "Module:parameter utilities"
-local parameters_module = "Module:parameters"
 local pron_qualifier_module = "Module:pron qualifier"
 
 local u = m_str_utils.char
@@ -21,7 +20,8 @@ local function format_list_items(list, args)
 		else
 			local text
 			if type(item) == "table" then
-				text = item.term and term_already_linked(item.term) and item.term or require(links_module).full_link(item)
+				text = item.term and term_already_linked(item.term) and item.term or
+					require(links_module).full_link(item)
 				-- We could use the "show qualifiers" flag to full_link() but not when term_already_linked().
 				if item.q and item.q[1] or item.qq and item.qq[1] or item.l and item.l[1] or item.ll and item.ll[1] or
 					item.refs and item.refs[1] then
@@ -191,13 +191,23 @@ function export.display_from(frame_args, parent_args, frame)
 
 	local param_mods = m_param_utils.construct_param_mods {
 		{default = true, require_index = true},
-		{set = "link"}, -- sc has separate_no_index = true; that's the only one
+		{group = "link"}, -- sc has separate_no_index = true; that's the only one
 		-- It makes no sense to have overall l=, ll=, q= or qq= params for columnar display.
-		{set = {"ref", "l", "q"}, require_index = true},
+		{group = {"ref", "l", "q"}, require_index = true},
 	}
-	m_param_utils.augment_params_with_modifiers(params, param_mods)
 
-	local args = require(parameters_module).process(parent_args, params)
+	local items, args = m_param_utils.process_list_arguments {
+		params = params,
+		param_mods = param_mods,
+		raw_args = parent_args,
+		termarg = first_content_param,
+		parse_lang_prefix = true,
+		allow_multiple_lang_prefixes = true,
+		disallow_custom_separators = true,
+		track_module = "columns",
+		lang = iargs.lang or lang_param,
+		sc = "sc.default",
+	}
 
 	local lang = iargs.lang or args[lang_param]
 	local langcode = lang:getCode()
@@ -212,18 +222,6 @@ function export.display_from(frame_args, parent_args, frame)
 		collapse = args.collapse
 	end
 	
-	local items = m_param_utils.process_list_arguments {
-		args = args,
-		param_mods = param_mods,
-		termarg = first_content_param,
-		parse_lang_prefix = true,
-		allow_multiple_lang_prefixes = true,
-		disallow_custom_separators = true,
-		track_module = "columns",
-		lang = lang,
-		sc = sc,
-	}
-
 	for i, item in ipairs(items) do
 		-- If a separate language code was given for the term, display the language name as a right qualifier.
 		-- Otherwise it may not be obvious that the term is in a separate language (e.g. if the main language is 'zh'
@@ -257,7 +255,8 @@ function export.display_from(frame_args, parent_args, frame)
 		end
 	end
 
-	local ret = export.create_list { column_count = iargs.columns or args[columns_param],
+	local ret = export.create_list {
+		column_count = iargs.columns or args[columns_param],
 		content = items,
 		alphabetize = sort,
 		header = args.title,

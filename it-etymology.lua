@@ -91,28 +91,28 @@ function export.it_deverbal(frame)
 	}
 
     local m_param_utils = require(parameter_utilities_module)
+
 	local param_mods = m_param_utils.construct_param_mods {
-		{set = "link", exclude = {"tr", "ts", "sc"}}, -- tr, ts, sc not relevant for Italian
-		-- for compatibility (at least for q/qq); FIXME: consider changing?
-		{set = {"q", "l", "ref"}, separate_no_index = false},
+		{group = "link", exclude = {"tr", "ts", "sc"}}, -- tr, ts, sc not relevant for Italian
+		-- separate_no_index for compatibility (at least for q/qq); FIXME: consider changing?
+		{group = {"q", "l", "ref"}, separate_no_index = false},
 	}
-	m_param_utils.augment_params_with_modifiers(params, param_mods)
 
-	local args = require(parameters_module).process(parent_args, params)
-
-	if not args[1][1] then
-		local NAMESPACE = mw.title.getCurrentTitle().nsText
-		if NAMESPACE == "Template" then
-			table.insert(args[1], "cozzare<t:to collide, to crash>")
-			args.pagename = "cozzo"
-		else
-			error("Internal error: Something went wrong with [[Module:parameters]]; it should not allow zero numbered arguments")
-		end
-	end
-
-	local items = m_param_utils.process_list_arguments {
-		args = args,
+	local items, args = m_param_utils.process_list_arguments {
+		params = params,
 		param_mods = param_mods,
+		raw_args = parent_args,
+		process_args_before_parsing = function(args)
+			if not args[1][1] then
+				local NAMESPACE = mw.title.getCurrentTitle().nsText
+				if NAMESPACE == "Template" then
+					table.insert(args[1], "cozzare<t:to collide, to crash>")
+					args.pagename = "cozzo"
+				else
+					error("Internal error: Something went wrong with [[Module:parameters]]; it should not allow zero numbered arguments")
+				end
+			end
+		end,
 		termarg = 1,
 		parse_lang_prefix = true,
 		track_module = "it-etymology",
@@ -132,7 +132,7 @@ function export.it_deverbal(frame)
 	}, "term")
 
 	for i, item in ipairs(items) do
-		local formatted_part = m_links.full_link(parsed, "term", "allow self link", "respect qualifiers")
+		local formatted_part = m_links.full_link(item, "term", "allow self link", "respect qualifiers")
 		items[i] = require(affix_module).join_formatted_parts {
 			data = {
 				lang = lang,
