@@ -1,14 +1,10 @@
 local export = {}
 
 local m_links = require("Module:links")
-local put_module = "Module:parse utilities"
 local affix_module = "Module:affix"
-
-local rfind = mw.ustring.find
-local rsplit = mw.text.split
-local u = mw.ustring.char
--- Assigned to `require("Module:parse utilities")` as necessary.
-local put
+local parameter_utilities_module = "Module:parameter utilities"
+local parameters_module = "Module:parameters"
+local pron_qualifier_module = "Module:pron qualifier"
 
 local force_cat = false -- set to true for testing
 
@@ -35,50 +31,9 @@ local function link_with_qualifiers(part, pretext)
 end
 
 
-local function get_param_mods(include_pl_and_type)
-	local param_mods = {
-		t = {
-			-- We need to store the <t:...> inline modifier into the "gloss" key of the parsed part, because that is what
-			-- [[Module:links]] expects.
-			item_dest = "gloss",
-		},
-		gloss = {},
-		-- no 'tr' or 'ts', doesn't make sense for Romance langs
-		g = {
-			-- We need to store the <g:...> inline modifier into the "genders" key of the parsed part, because that is what
-			-- [[Module:links]] expects.
-			item_dest = "genders",
-			convert = function(arg, parse_err)
-				return rsplit(arg, ",")
-			end,
-		},
-		id = {},
-		alt = {},
-		q = {},
-		qq = {},
-		lit = {},
-		pos = {},
-		-- no 'sc', doesn't make sense for Romance langs
-	}
-	if include_pl_and_type then
-		param_mods.pl = {}
-		param_mods.imp = {}
-		param_mods.type = {
-			convert = function(arg, parse_err)
-				if arg ~= "verb" and arg ~= "object" and arg ~= "connector" then
-					parse_err(("Argument '%s' should be either 'verb', 'object' or 'connector'"):format(arg))
-				end
-				return arg
-			end,
-		}
-	end
-	return param_mods
-end
-
-
-local function parse_args(args, hack_params)
+local function parse_and_format_parts(data, parent_args, get_part_type)
 	local params = {
-		[1] = {list = true, required = true},
+		[1] = {list = true, required = true, disallow_holes = true},
 		["lit"] = {},
 		["sort"] = {},
 		["nocat"] = {type = "boolean"},
@@ -86,59 +41,37 @@ local function parse_args(args, hack_params)
 		["notext"] = {type = "boolean"},
 	}
 
-	if hack_params then
-		hack_params(params)
-	end
+	local m_param_utils = require(parameter_utilities_module)
 
-	return require("Module:parameters").process(args, params)
-end
+	local param_mods = m_param_utils.construct_param_mods {
+		{group = "link", exclude = {"tr", "ts", "sc"}},
+		{group = {"q", "l", "ref"}},
+		{param = {"pl", "imp"}},
+		{param = "type", set = {"verb", "object", "connector"}},
+	}
 
+	m_param_utils.augment_params_with_modifiers(params, param_mods)
 
-function export.parse_term_with_modifiers(paramname, val, pre_initialized_obj, include_pl_and_type)
-	local function generate_obj(term, parse_err)
-		local obj = pre_initialized_obj or {}
-		if term:find(":") then
-			if not put then
-				put = require(put_module)
-			end
-			local actual_term, termlang = put.parse_term_with_lang(term, parse_err)
-			obj.term = actual_term
-			obj.lang = termlang
-		else
-			obj.term = term
-		end
-		return obj
-	end
+	local args = require(parameters_module).process(parent_args, params)
 
-	-- Check for inline modifier, e.g. מרים<tr:Miryem>.
-	if val:find("<") then
-		if not put then
-			put = require(put_module)
-		end
-		return put.parse_inline_modifiers(val, {
-			paramname = paramname,
-			param_mods = get_param_mods(include_pl_and_type),
-			generate_obj = generate_obj,
-		})
-	else
-		return generate_obj(val)
-	end
+	local items = m_param_utils.process_list_arguments {
+		args = args,
+		param_mods = param_mods,
+		termarg = 1,
+		track_module = "romance-etymology",
+		parse_lang_prefix = true,
+		lang = data.lang,
+	}
 
-	return part
-end
-
-
-local function parse_and_format_parts(data, parts, get_part_type)
-	for i, term in ipairs(parts) do
-		local parsed = export.parse_term_with_modifiers(i, term, nil, "include pl and type")
-		local function parse_err(txt)
-			-- FIXME: Consider passing in parse_err() from the outer caller.
-			error(("%s: term '%s'"):format(txt, parsed.term))
-		end
-		if not parsed.term:find("%[") then
+	for i, item in ipairs(items) do
+		if not item.term:find("%[") then
 			local parttype = parsed.type
 			if not parttype then
-				parttype = get_part_type(i, parsed.term)
+				parttype = get_part_type {
+					items = items,
+					item = item,
+					item_index = i,
+				}
 			end
 			if parttype ~= "object" and parsed.pl then
 				parse_err(("Can't specify <pl:...> with an argument that is not an object (argument type is '%s')"):
@@ -151,7 +84,7 @@ local function parse_and_format_parts(data, parts, get_part_type)
 			if parttype == "verb" then
 				local imp
 				parsed.imp = parsed.imp or "+"
-				if rfind(parsed.imp, "^%+") then
+				if parsed.imp:find("^%+") then
 					if parsed.lang then
 						parse_err(("Can't form default imperative given with explicit language code prefix '%s'"):
 							format(parsed.lang:getCode()))
@@ -168,7 +101,7 @@ local function parse_and_format_parts(data, parts, get_part_type)
 				end
 			elseif parttype == "object" then
 				local pl
-				if parsed.pl == "1" or parsed.pl and rfind(parsed.pl, "^%+") then
+				if parsed.pl == "1" or parsed.pl and parsed.pl:find("^%+") then
 					if parsed.lang then
 						parse_err(("Can't form default plural of term '%s' given with explicit language code prefix '%s'"):
 							format(parsed.term, parsed.lang:getCode()))
@@ -194,7 +127,24 @@ end
 
 
 function export.verb_obj(data, frame)
-	local args = parse_args(frame:getParent().args)
+	local parent_args = frame:getParent().args
+	local items = parse_and_format_parts(data, parent_args, function(itemdata)
+		local parttype
+		if itemdata.item_index == 1 then
+			parttype = "verb"
+		elseif itemdata.item_index == #itemdata.items then
+			parttype = "object"
+		else
+			local term = itemdata.item.term or itemdata.item.alt
+			if term and data.looks_like_infinitive(term) then
+				parttype = "verb"
+			else
+				parttype = "connector"
+			end
+		end
+		return parttype
+	end)
+
 
 	if #args[1] < 2 then
 	    local NAMESPACE = mw.title.getCurrentTitle().nsText
@@ -206,20 +156,6 @@ function export.verb_obj(data, frame)
 			error(("Need at least two numbered arguments to [[Template:%s-verb-obj]]"):format(data.lang:getCode()))
 		end
 	end
-
-	parse_and_format_parts(data, args[1], function(i, term)
-		local parttype
-		if i == 1 then
-			parttype = "verb"
-		elseif i == #args[1] then
-			parttype = "object"
-		elseif data.looks_like_infinitive(term) then
-			parttype = "verb"
-		else
-			parttype = "connector"
-		end
-		return parttype
-	end)
 
 	result = {}
 	local function ins(text)
