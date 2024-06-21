@@ -2,7 +2,6 @@ local export = {}
 
 local m_IPA = require("Module:IPA")
 local parameter_utilities_module = "Module:parameter utilities"
-local references_module = "Module:references"
 
 local function track(template, page)
 	require("Module:debug/track")(template .. "/" .. page)
@@ -22,9 +21,10 @@ function export.IPA(frame)
 	local include_langname = frame.args.include_langname
 	local compat = parent_args.lang
 	local offset = compat and 0 or 1
+	local lang_arg = compat and "lang" or 1
 
 	local params = {
-		[compat and "lang" or 1] = {required = true, type = "language", etym_lang = true, default = "en"},
+		[lang_arg] = {required = true, type = "language", etym_lang = true, default = "en"},
 		[1 + offset] = {list = true, disallow_holes = true},
 		-- Deprecated; don't use in new code.
 		["qual"] = {list = true, allow_holes = true, separate_no_index = true, alias_of = "q"},
@@ -36,23 +36,21 @@ function export.IPA(frame)
 	local m_param_utils = require(parameter_utilities_module)
 
 	local param_mods = m_param_utils.construct_param_mods {
-		{set = {"ref", "a", "q"}},
-		{set = "link", include = {"t", "gloss", "pos"}},
+		{group = {"ref", "a", "q"}},
+		{group = "link", include = {"t", "gloss", "pos"}},
 	}
 
-	m_param_utils.augment_params_with_modifiers(params, param_mods)
-
-	local args = require("Module:parameters").process(parent_args, params)
-
-	local lang = args[compat and "lang" or 1]
-
-	local items = m_param_utils.process_list_arguments {
-		args = args,
+	local items, args = m_param_utils.process_list_arguments {
+		params = params,
 		param_mods = param_mods,
+		raw_args = parent_args,
 		termarg = 1 + offset,
 		term_dest = "pron",
 		track_module = "IPA",
 	}
+
+	local lang = args[lang_arg]
+
 	for _, item in ipairs(items) do
 		require("Module:IPA/tracking").run_tracking(item.pron, lang)
 	end
@@ -105,22 +103,19 @@ function export.IPAchar(frame)
 		{param = "qual", alias_of = "q"},
 	}
 
-	m_param_utils.augment_params_with_modifiers(params, param_mods)
-
-	local args = require("Module:parameters").process(parent_args, params)
-	
-	-- [[Special:WhatLinksHere/Wiktionary:Tracking/IPAchar/lang]]
-	if args.lang then
-		track("IPAchar", "lang")
-	end
-
-	local items = m_param_utils.process_list_arguments {
-		args = args,
+	local items, args = m_param_utils.process_list_arguments {
+		params = params,
 		param_mods = param_mods,
+		raw_args = parent_args,
 		termarg = 1,
 		term_dest = "pron",
 		track_module = "IPAchar",
 	}
+
+	-- [[Special:WhatLinksHere/Wiktionary:Tracking/IPAchar/lang]]
+	if args.lang then
+		track("IPAchar", "lang")
+	end
 
 	-- Format
 	return m_IPA.format_IPA_multiple(nil, items)
@@ -314,13 +309,10 @@ function export.enPR(frame)
 		{set = {"q", "a", "ref"}},
 	}
 
-	m_param_utils.augment_params_with_modifiers(params, param_mods)
-
-	local args = require("Module:parameters").process(parent_args, params)
-
-	local items = m_param_utils.process_list_arguments {
-		args = args,
+	local items, args = m_param_utils.process_list_arguments {
+		params = params,
 		param_mods = param_mods,
+		raw_args = parent_args,
 		termarg = 1,
 		term_dest = "pron",
 		track_module = "enPR",
