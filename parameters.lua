@@ -163,7 +163,10 @@ end
 
 -------------------------------------- Some splitting functions -----------------------------
 
--- Split an argument on comma, but not comma followed by whitespace.
+--[==[
+Split an argument on comma, but not comma followed by whitespace. Can be used e.g. as the value of the `sublist` field
+in the `params` structure.
+]==]
 function export.split_on_comma_without_whitespace(val)
 	if val:find(",%s") or val:find("\\") then
 		return require(parse_utilities_module).split_on_comma(val)
@@ -253,7 +256,7 @@ local function make_parse_err(val, name)
 		return name
 	else
 		return function(msg)
-			error(("%s: parameter %s=%s"):format(name, val))
+			error(("%s: parameter %s=%s"):format(msg, name, val))
 		end
 	end
 end
@@ -318,7 +321,7 @@ local function check_set(val, name, param, typ)
 	end
 end
 
---[==[ func: convert_val(val, name, param)
+--[==[ func: export.convert_val(val, name, param)
 Convert a parameter value according to the associated specs listed in the `params` table passed to
 [[Module:parameters]]. `val` is the value to convert for a parameter whose name is `name` (used only in error messages).
 `param` is the spec (the value part of the `params` table for the parameter). In place of passing in the parameter name,
@@ -428,7 +431,7 @@ local convert_val = setmetatable({
 						check_set(v, name, param, typ)
 					end
 					insval = func(v, name, param)
-					insert(retval, param.convert(insval, parse_err))
+					insert(retlist, param.convert(insval, parse_err))
 				end
 			else
 				for v in split_sublist(val, name, sublist) do
