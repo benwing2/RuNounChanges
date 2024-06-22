@@ -294,21 +294,36 @@ function export.show(frame)
 		[1] = {},
 		["pre"] = {},
 		["bullets"] = {type = "number", default = 1},
+		["a"] = {type = "labels"},
+		["aa"] = {type = "labels"},
+		["q"] = {type = "qualifier"},
+		["qq"] = {type = "qualifier"},
+		["ref"] = {type = "references"},
+		["pagename"] = {},
 	}
 
-	local parargs = frame:getParent().args
-	local args = require("Module:parameters").process(parargs, params)
+	local parent_args = frame:getParent().args
+	local args = require("Module:parameters").process(parent_args, params)
 
 	local results = {}
 
-	local text = args[1] or mw.title.getCurrentTitle().text
+	local text = args[1] or pagename or mw.loadData("Module:headword/data").pagename
 
-	table.insert(results, { pron = "/" .. export.IPA(text, false) .. "/" })
-	table.insert(results, { pron = "[" .. export.IPA(text, true) .. "]" })
+	table.insert(results, {
+		pron = "/" .. export.IPA(text, false) .. "/ [" .. export.IPA(text, true) .. "]",
+		refs = args.ref,
+	})
 	
 	local pre = args.pre and args.pre .. " " or ""
 	
-	return "* " .. pre .. m_IPA.format_IPA_full { lang = lang, items = results }
+	return "* " .. pre .. m_IPA.format_IPA_full {
+		lang = lang,
+		items = results,
+		a = args.a,
+		aa = args.aa,
+		q = args.q,
+		qq = args.qq,
+	}
 end
 
 return export
