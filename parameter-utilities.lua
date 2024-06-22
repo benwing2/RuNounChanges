@@ -304,9 +304,16 @@ function export.construct_param_mods(specs)
 				if type(sets) ~= "table" then
 					sets = {sets}
 				end
+				local include_set
+				if spec.include then
+					include_set = require(table_module).listToSet(spec.include)
+				end
 				local exclude_set
 				if spec.exclude then
-					exclude = require(table_module).listToSet(spec.exclude)
+					exclude_set = require(table_module).listToSet(spec.exclude)
+				end
+				if include_set and exclude_set then
+					construct_param_mods_error("Saw both `include` and `exclude` in the same spec", spec)
 				end
 				for _, set in ipairs(set) do
 					local set_specs = recognized_param_mod_sets[set]
@@ -314,7 +321,15 @@ function export.construct_param_mods(specs)
 						construct_param_mods_error(("Unrecognized built-in param mod set '%s'"):format(set), spec)
 					end
 					for set_param, set_param_settings in pairs(set_specs) do
-						if not exclude_set or not exclude_set[set_param] then
+						local include_param
+						if include_set then
+							include_param = include_set[set_param]
+						elseif exclude_set then
+							include_param = not exclude_set[set_param]
+						else
+							include_param = true
+						end
+						if include_param then
 							local merged_settings = merge_param_mod_settings(merge_param_mod_settings(
 								param_mods[set_param] or default_specs, set_param_settings), spec)
 							param_mods[set_param] = merged_settings
