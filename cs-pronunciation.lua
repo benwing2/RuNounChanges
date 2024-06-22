@@ -2,10 +2,8 @@ local export = {}
 
 local m_params = require("Module:parameters")
 local m_IPA = require("Module:IPA")
+local m_str_utils = require("Module:string utilities")
 local m_syllables = require("Module:syllables")
-local m_template_link = require("Module:template link")
-local patut
-local patut_module = "Module:pattern utilities"
 
 local lang = require("Module:languages").getByCode("cs")
 local sc = require("Module:scripts").getByCode("Latn")
@@ -20,14 +18,15 @@ function export.link(term, face)
 		)
 end
 
-local U = mw.ustring.char
-local usub = mw.ustring.sub
-local rmatch = mw.ustring.match
-local rgmatch = mw.ustring.gmatch
-local rfind = mw.ustring.find
-local rsubn = mw.ustring.gsub
-local rsplit = mw.text.split
-
+local lower = m_str_utils.lower
+local pattern_escape = m_str_utils.pattern_escape
+local replacement_escape = m_str_utils.replacement_escape
+local rmatch = m_str_utils.match
+local rfind = m_str_utils.find
+local rsubn = m_str_utils.gsub
+local rsplit = m_str_utils.split
+local toNFC = mw.ustring.toNFC
+local U = m_str_utils.char
 
 local long = "ː"
 local nonsyllabic = U(0x32F)	-- inverted breve below
@@ -150,7 +149,7 @@ local function rsub_repeatedly(term, foo, bar)
 end
 
 local function compose(text)
-	return mw.ustring.toNFC(text)
+	return toNFC(text)
 end
 
 -- Canonicalize multiple spaces and remove leading and trailing spaces.
@@ -338,7 +337,7 @@ end
 function export.toIPA(text)
 	local orig_respelling = text
 	
-	text = mw.ustring.lower(text)
+	text = lower(text)
 
 	-- convert commas and en/en dashes to IPA foot boundaries
 	text = rsub_repeatedly(text, "%s*[,–—]%s*", " | ")
@@ -387,12 +386,9 @@ function export.toIPA(text)
 end
 
 local function convert_respelling_to_original(to, pagename, whole_word)
-	if not patut then
-		patut = require(patut_module)
-	end
 	local from = rsub(to, "[yý]", "i"):gsub("z", "s"):gsub("%?", "")
 	from = rsub(from, written_acute_vowel, written_acute_to_plain_vowel)
-	local escaped_from = patut.pattern_escape(from)
+	local escaped_from = pattern_escape(from)
 	if whole_word then
 		escaped_from = "%f[%a]" .. escaped_from .. "%f[%A]"
 	end
@@ -400,7 +396,7 @@ local function convert_respelling_to_original(to, pagename, whole_word)
 		return from
 	end
 	-- Check for partial replacement.
-	escaped_from = patut.pattern_escape(to)
+	escaped_from = pattern_escape(to)
 	-- Replace specially-handled characters with a class matching the character and possible replacements. Order of the
 	-- following substitutions is important to avoid a later substitution interfering with an earlier one.
 	escaped_from = rsub(escaped_from, "[áéíóú]", function(v) return "[" .. v .. written_acute_to_plain_vowel[v] .. "]" end)
@@ -443,14 +439,11 @@ local function canonicalize(text, pagename)
 				to = sub
 				from = convert_respelling_to_original(to, pagename, whole_word)
 			end
-			if not patut then
-				patut = require(patut_module)
-			end
-			escaped_from = patut.pattern_escape(from)
+			escaped_from = pattern_escape(from)
 			if whole_word then
 				escaped_from = "%f[%a]" .. escaped_from .. "%f[%A]"
 			end
-			escaped_to = patut.replacement_escape(to)
+			escaped_to = replacement_escape(to)
 			local subbed_text, nsubs = rsubn(text, escaped_from, escaped_to)
 			if nsubs == 0 then
 				err(("Substitution spec %s -> %s didn't match processed pagename"):format(from, to))
@@ -483,7 +476,7 @@ function export.show(frame)
 		respelling = canonicalize(respelling, pagename)
 		local IPA = export.toIPA(respelling)
 		IPA = "[" .. IPA .. "]"
-		IPA = m_IPA.format_IPA_full(lang, { { pron = IPA } } )
+		IPA = m_IPA.format_IPA_full { lang = lang, items = {{ pron = IPA }} }
 		table.insert(prons, IPA)
 	end
 
