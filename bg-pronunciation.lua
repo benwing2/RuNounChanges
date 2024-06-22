@@ -125,31 +125,31 @@ function export.remove_pron_notations(text, remove_grave)
 	text = rsub(text, "[." .. DOTUNDER .. "]", "")
 	text = rsub(text, "ў", "у")
 	text = rsub(text, "Ў", "У")
-	
+
 	-- Remove grave accents from annotations but maybe not from phonetic respelling
 	if remove_grave then
 		text = mw.ustring.toNFC(rsub(mw.ustring.toNFD(text), GRAVE, ""))
 	end
 	return text
 end
-	
+
 function export.toIPA(term, endschwa)
 	if type(term) == "table" then -- called from a template or a bot
 		endschwa = term.args.endschwa
 		term = term.args[1]
 	end
-		
+
 	local origterm = term
 
 	term = mw.ustring.toNFD(mw.ustring.lower(term))
 	term = rsub(term, "у" .. BREVE, "ў") -- recompose ў
 	term = rsub(term, "и" .. BREVE, "й") -- recompose й
-	
+
 	if term:find(GRAVE) and not term:find(ACUTE) then
 		error("Use acute accent, not grave accent, for primary stress: " .. origterm)
 	end
 
-	-- allow DOTUNDER to signal same as endschwa=1	
+	-- allow DOTUNDER to signal same as endschwa=1
 	term = rsub(term, "а(" .. accents_c .. "?)" .. DOTUNDER, "ъ%1")
 	term = rsub(term, "я(" .. accents_c .. "?)" .. DOTUNDER, "ʲɤ%1")
 	term = rsub(term, ".", phonetic_chars_map)
@@ -238,7 +238,7 @@ function export.toIPA(term, endschwa)
 		return rsub(a, ".", voicing) .. b end)
 	term = rsub(term, "n(" .. accents_c .. "?[ɡk]+)", "ŋ%1")
 	term = rsub(term, "m(" .. accents_c .. "?[fv]+)", "ɱ%1")
-	
+
 	-- -- Correct for clitic pronunciation of с and в
 	-- term = rsub(term, "#s# #(.)", "#s" .. TIE .. "%1")
 	-- term = rsub(term, "#f# #(.)", "#f" .. TIE .. "%1")
@@ -254,7 +254,7 @@ function export.toIPA(term, endschwa)
 
 	-- Strip hashes
 	term = rsub(term, "#", "")
-	
+
 	return term
 end
 
@@ -264,11 +264,11 @@ end
 
 local function set_of(t)
 	local out = {}
-	
+
 	for _, v in pairs(t) do
-		out[v] = true	
+		out[v] = true
 	end
-	
+
 	return out
 end
 
@@ -287,7 +287,7 @@ local function is_vowel(ch)
     return in_set(vowels_syllab, ch)
 end
 
-local function is_consonant(ch) 
+local function is_consonant(ch)
     return ch == 'щ' or is_sonorant(ch) or is_stop(ch) or is_fricative(ch) or is_affricate(ch)
 end
 
@@ -304,7 +304,7 @@ local function is_obstruent(ch)
         return is_stop(ch) or is_fricative(ch) or is_affricate(ch)
 end
 
-local function is_stop(ch) 
+local function is_stop(ch)
 	return in_set(stops, ch)
 end
 
@@ -364,7 +364,7 @@ end
 -- Please see above for description of sonority objects' layout.
 local function get_sonority_model(word, start_idx, end_idx)
     local sonorities = {}
-	
+
 	word = mw.ustring.lower(word)
 
 	local i = start_idx
@@ -446,7 +446,7 @@ local prefixes = {
 
     -- ending in stops
     "пред"
-}	
+}
 
 --[==[
     Finds the (zero-based) separation point between a
@@ -464,7 +464,7 @@ local prefixes = {
 local function followed_by_higher_sonority_cons(prefix, word)
 	prefix = mw.ustring.lower(prefix)
 	word = mw.ustring.lower(word)
-	
+
     local prefix_last_char = char_at(prefix, mw.ustring.len(prefix))
     local first_char_after_prefix = char_at(word, mw.ustring.len(prefix) + 1)
 
@@ -484,9 +484,9 @@ local function find_separation_points(word)
 			table.insert(matching_prefixes, mw.ustring.len(prefix) + 1)
 		end
 	end
-	
+
 	return matching_prefixes
-	
+
 end
 
 ---- Main syllabification code
@@ -518,7 +518,7 @@ local sonority_exception_break = {
     ["зм"] = 1, ["цм"] = 1, ["чм"] = 1,
     ["дн"] = 1, ["вн"] = 1, ["тн"] = 1, ["чн"] = 1,
     ["кн"] = 1, ["гн"] = 1, ["цн"] = 1,
-    ["зд"] = 1, ["зч"] = 1, ["зц"] = 1, 
+    ["зд"] = 1, ["зч"] = 1, ["зц"] = 1,
     ["вк"] = 1, ["вг"] = 1, ["дл"] = 1, ["жд"] = 1,
     ["згн"] = 1, ["здн"] = 2, ["вдж"] = 1
 }
@@ -567,7 +567,7 @@ local function matches(str, substr, start_idx, end_idx)
 	local i = start_idx
 	local j = 1
 	while i < end_idx do
-		if char_at(str, i) ~= char_at(substr, j) then return false end 
+		if char_at(str, i) ~= char_at(substr, j) then return false end
 		i = i + 1
 		j = j + 1
 	end
@@ -626,7 +626,7 @@ local function fixup_syllable_onset(ctx, left_vowel, sonority_break, right_vowel
     		break
     	end
     end
-    
+
     if separation_match ~= nil then return separation_match else return sonority_break end
 end
 
@@ -664,7 +664,7 @@ local function syllabify_poly(word)
 
     local prev_vowel = -1
     local prev_onset = 1;
-    
+
     for i = 1, mw.ustring.len(word) do
 	    if is_vowel(mw.ustring.lower(char_at(word, i))) then
 	        -- A vowel, yay!
@@ -685,7 +685,7 @@ local function syllabify_poly(word)
 		        prev_onset = next_onset
 			end
 	    end
-    	
+
     end
 
     -- Add the last syllable
@@ -704,7 +704,7 @@ function export.syllabify_word(word)
 
 	local out = {}
 	for k, v in pairs(syllables) do
-		out[k] = normalize_syllable(v)	
+		out[k] = normalize_syllable(v)
 	end
 
     return table.concat(out, HYPH)
@@ -783,13 +783,13 @@ local function format_hyphenation(hyphenation, label)
 	local syllables = rsplit(hyphenation, HYPH)
 	label = label or HYPHENATION_LABEL
 
-	return require("Module:hyphenation").format_hyphenations( { 
+	return require("Module:hyphenation").format_hyphenations {
 		lang = lang,
 		hyphs = { { hyph = syllables } },
 		sc = script,
 		caption = label,
-		} )
-	
+	}
+
 end
 
 -- Entry point to {{bg-hyph}}
@@ -806,17 +806,17 @@ function export.show_hyphenation(frame)
 	local syllabification = export.syllabify(term)
 	syllabification = rsub(syllabification, "[" .. ACUTE .. GRAVE .. "]", "")
 	local hyphenation = export.hyphenate(syllabification)
-	
+
 	local out
 	-- Users must put a * before the template usage
 	if syllabification == hyphenation then
-		out = format_hyphenation(syllabification)	
+		out = format_hyphenation(syllabification)
 	else
 		local syllabification_text = format_hyphenation(syllabification, SYLLABIFICATION_LABEL)
 		local hyphenation_text = format_hyphenation(hyphenation)
 		out = syllabification_text .. "\n* " .. hyphenation_text
 	end
-	
+
 	return out
 end
 
@@ -825,10 +825,10 @@ function export.show(frame)
 		[1] = {},
 		["endschwa"] = { type = "boolean" },
 		["ann"] = {},
-		["q"] = {},
-		["qq"] = {},
-		["a"] = {},
-		["aa"] = {},
+		["q"] = { type = "qualifier" },
+		["qq"] = { type = "qualifier" },
+		["a"] = { type = "labels" },
+		["aa"] = { type = "labels" },
 		["pagename"] = {},
 	}
 
@@ -838,16 +838,14 @@ function export.show(frame)
 
 	local ipa = export.toIPA(term, args.endschwa)
 	ipa = "[" .. ipa .. "]"
-	local ipa_data = { lang = lang, items = {{ pron = ipa }} }
-	if args.q or args.qq or args.a or args.aa then
-		require("Module:pron qualifier").parse_qualifiers {
-			store_obj = ipa_data,
-			q = args.q,
-			qq = args.qq,
-			a = args.a,
-			aa = args.aa,
-		}
-	end
+	local ipa_data = {
+		lang = lang,
+		items = {{ pron = ipa }},
+		q = args.q,
+		qq = args.qq,
+		a = args.a,
+		aa = args.aa,
+	}
 
 	local ipa_text = require("Module:IPA").format_IPA_full(ipa_data)
 	local anntext = get_anntext(term, args.ann)
