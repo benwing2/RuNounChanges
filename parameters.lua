@@ -1,6 +1,14 @@
 local export = {}
 
 local m_str_utils = require("Module:string utilities")
+local debug_track_module = "Module:debug/track"
+local families_module = "Module:families"
+local labels_module = "Module:labels"
+local languages_module = "Module:languages"
+local parse_utilities_module = "Module:parse utilities"
+local references_module = "Module:references"
+local scripts_module = "Module:scripts"
+local wikimedia_languages_module = "Module:wikimedia languages"
 
 local require_when_needed = require("Module:utilities/require when needed")
 
@@ -23,15 +31,6 @@ local sort = table.sort
 local trim = mw.text.trim
 local type = type
 local yesno = require_when_needed("Module:yesno")
-
-local debug_track_module = "Module:debug/track"
-local families_module = "Module:families"
-local labels_module = "Module:labels"
-local languages_module = "Module:languages"
-local parse_utilities_module = "Module:parse utilities"
-local references_module = "Module:references"
-local scripts_module = "Module:scripts"
-local wikimedia_languages_module = "Module:wikimedia languages"
 
 --[==[ intro:
 This module is used to standardize template argument processing and checking. A typical workflow is as follows (based
@@ -91,7 +90,7 @@ object (see [[Module:languages]]). If the code or name is invalid, then an error
 [[Wiktionary:Languages#Etymology-only languages|Etymology-only language codes]] and/or
 [[Wiktionary:Language families|language family codes]] to be considered valid and the corresponding object returned.
 :; {type = "wikimedia language"}
-:: The value is interpreted as a code and converted into a wikimedia language object. If the code is invalid, then an error is thrown.
+:: The value is interpreted as a code and converted into a wikimedia language object. If the code is invalid, then an error is thrown. If {method = "fallback"} is specified, conventional language codes which are different from their Wikimedia equivalent will also be accepted as a fallback.
 :; {type = "family"}
 :: The value is interpreted as a language family code (or name, if {method = "name"}) and converted into the
 corresponding object (see [[Module:families]]). If the code or name is invalid, then an error is thrown.
@@ -227,7 +226,7 @@ local function convert_val_error(val, name, typ, seetext)
 		else
 			typ = "should be a valid " .. typ
 		end
-		error(("Parameter %s %s; the value %s is not valid.%s"):format(name, typ, val,
+		error(("Parameter %s %s; the value %s is not valid.%s"):format(dump(name), typ, dump(val),
 			seetext and " See " .. seetext .. "." or ""))
 	end
 end
@@ -394,8 +393,16 @@ local convert_val = setmetatable({
 	end,
 	
 	["wikimedia language"] = function(val, name, param)
-		return require(wikimedia_languages_module).getByCode(val) or
-			convert_val_error(val, name, "wikimedia language code")
+		local fallback = param.method == "fallback"
+		local lang = require(wikimedia_languages_module)[fallback and "getByCodeWithFallback" or "getByCode"](val)
+		if lang then
+			return lang
+		end
+		local list = {"wikimedia language"}
+		if fallback then
+			insert(list, "language")
+		end
+		convert_val_error(val, name, concat_list(list, " or ") .. " code")
 	end,
 }, {
 	__call = function(self, val, name, param)
