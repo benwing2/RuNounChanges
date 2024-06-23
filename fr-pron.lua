@@ -11,6 +11,7 @@ handling pronunciation of verbs).
 local export = {}
 
 local m_str_utils = require("Module:string utilities")
+local IPA_module = "Module:IPA"
 local parameter_utilities_module = "Module:parameter utilities"
 local table_module = "Module:table"
 
@@ -25,6 +26,10 @@ local ulower = m_str_utils.lower
 local uupper = m_str_utils.upper
 local usub = m_str_utils.sub
 local ulen = m_str_utils.len
+
+local pages_where_redundancy_checking_is_disabled = {
+	["Appendix:Protologisms/Long words/Titin/French"] = true,
+}
 
 local TILDE = u(0x0303) -- tilde =  ̃
 
@@ -209,7 +214,7 @@ function export.fr_IPA(frame)
 				obj.qq = item.qq
 				obj.aa = item.aa
 			end
-			if not items then
+			if not pron_items then
 				pron_items = {obj}
 			else
 				table.insert(pron_items, obj)
@@ -217,30 +222,32 @@ function export.fr_IPA(frame)
 		end
 
 		-- Check whether explicitly given pronunciations are redundant.
-		local default_prons
 		if item.term and item.term ~= "+" then
-			default_prons = default_prons or export.show(nil, args.pos, args.noalternatives, args.pagename, "no test new module")
-			local is_redundant, is_non_redundant
-			for _, pron in ipairs(prons) do
-				if #default_prons == 1 and default_prons[1] == pron or #default_prons > 1 and
-					require(table_module).contains(default_prons, pron) then
-					is_redundant = true
-				else
-					is_non_redundant = true
+			local full_pagename = mw.title.getCurrentTitle().fullText
+			if not pages_where_redundancy_checking_is_disabled[full_pagename] then
+				local default_prons = export.show(nil, args.pos, args.noalternatives, args.pagename, "no test new module")
+				local is_redundant, is_non_redundant
+				for _, pron in ipairs(prons) do
+					if #default_prons == 1 and default_prons[1] == pron or #default_prons > 1 and
+						require(table_module).contains(default_prons, pron) then
+						is_redundant = true
+					else
+						is_non_redundant = true
+					end
 				end
-			end
-			if is_redundant and not is_non_redundant then
-				track("redundant-pron")
-			elseif is_non_redundant and not is_redundant then
-				track("needed-pron")
-			elseif is_redundant and is_non_redundant then
-				track("partly-redundant-pron")
+				if is_redundant and not is_non_redundant then
+					track("redundant-pron")
+				elseif is_non_redundant and not is_redundant then
+					track("needed-pron")
+				elseif is_redundant and is_non_redundant then
+					track("partly-redundant-pron")
+				end
 			end
 		end
 	end
 
 	local lang = require("Module:languages").getByCode("fr")
-	return require("Module:IPA").format_IPA_full {
+	return require(IPA_module).format_IPA_full {
 		lang = lang,
 		items = pron_items,
 		a = args.a.default,
