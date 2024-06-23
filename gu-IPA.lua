@@ -127,7 +127,7 @@ function export.make(frame)
 		track_module = "gu-IPA",
 	}
 
-	local pagename = pagename or mw.loadData("Module:headword/data").pagename
+	local pagename = args.pagename or mw.loadData("Module:headword/data").pagename
 
 	for _, item in ipairs(items) do
 		local respelling = item.pron or "+"
