@@ -192,19 +192,19 @@ FIXME:
 
 local com = require("Module:ru-common")
 local m_ru_translit = require("Module:ru-translit")
-local strutils = require("Module:string utilities")
+local m_str_utils = require("Module:string utilities")
 local listToSet = require("Module:table/listToSet")
 
 local export = {}
-local u = mw.ustring.char
-local rfind = mw.ustring.find
-local rsubn = mw.ustring.gsub
-local rmatch = mw.ustring.match
-local rsplit = mw.text.split
-local ulower = mw.ustring.lower
-local uupper = mw.ustring.upper
-local usub = mw.ustring.sub
-local ulen = mw.ustring.len
+local u = m_str_utils.char
+local rfind = m_str_utils.find
+local rsubn = m_str_utils.gsub
+local rmatch = m_str_utils.match
+local ulower = m_str_utils.lower
+local uupper = m_str_utils.upper
+local usub = m_str_utils.sub
+local ulen = m_str_utils.len
+local split = m_str_utils.split
 
 local remove_grave_accents_from_phonetic_respelling = true -- Anatoli's desired value
 
@@ -238,7 +238,7 @@ end
 
 -- If enabled, compare this module with new version of module in
 -- Module:User:Benwing2/ru-pron to make sure all pronunciations are the same.
--- To check for differences, go to Template:tracking/ru-pron/different-pron
+-- To check for differences, go to Wiktionary:Tracking/ru-pron/different-pron
 -- and look at what links to the page.
 local test_new_ru_pron_module = false
 -- If enabled, do new code for final -е; else, the old way
@@ -502,6 +502,7 @@ local phonetic_subs = {
 	{'lnc', 'nc'},
 	{'[sz]t(li' .. accents .. '?v)', 's%1'},
 	{'[sz]tn', 'sn'},
+	{'lvstv', 'lstv'},
 
 	-- initial unstressed э -> и; should precede backing of /i/ in close juncture	
 	{'⁀ɛ([^' .. acc .. '])', '⁀i%1'},
@@ -669,7 +670,7 @@ function export.ru_IPA(frame)
 			pronunciations[i] = { pron = pronunciation }
 		end
 		
-		maintext = require("Module:IPA").format_IPA_full(lang, pronunciations)
+		maintext = require("Module:IPA").format_IPA_full { lang = lang, items = pronunciations }
 		
 		local respelling
 		
@@ -728,7 +729,7 @@ function export.ipa(text, adj, gem, bracket, pos, zhpal, is_transformed)
 	gem = gem or ""
 	-- If a multipart gemination spec, split into components.
 	if rfind(gem, "/") then
-		gem = rsplit(gem, "/")
+		gem = split(gem, "/", true)
 		for i=1,#gem do
 			gem[i] = usub(gem[i], 1, 1)
 		end
@@ -751,7 +752,7 @@ function export.ipa(text, adj, gem, bracket, pos, zhpal, is_transformed)
 	-- If a multipart part of speech, split into components, and convert
 	-- each blank component to the default.
 	if rfind(pos, "/") then
-		pos = rsplit(pos, "/")
+		pos = split(pos, "/", true)
 		for i=1,#pos do
 			if pos[i] == "" then
 				pos[i] = "def"
@@ -816,9 +817,10 @@ function export.ipa(text, adj, gem, bracket, pos, zhpal, is_transformed)
 	-- undocumented).
 	text = com.decompose(m_ru_translit.tr_after_fixes(text))
 
-	-- handle old ě (e.g. сѣдло́), and ě̈ from сѣ̈дла
-	text = rsub(text, 'ě̈', 'jo' .. AC)
-	text = rsub(text, 'ě', 'e')
+	-- handle old ě (e.g. сѣдло́), ǒ (e.g. сѣ̈дла) and ǫ (e.g. ея̈)
+	text = text:gsub("ě", "e")
+		:gsub("ǒ", "o")
+		:gsub("ǫ", "o")
 	-- handle sequences of accents (esp from ё with secondary/tertiary stress)
 	text = rsub(text, accents .. '+(' .. accents .. ')', '%1')
 
@@ -843,7 +845,7 @@ function export.ipa(text, adj, gem, bracket, pos, zhpal, is_transformed)
 	-- spelled letters о and а, which should not be reduced); and (3) we
 	-- recognize hyphens for the purpose of marking unstressed prefixes and
 	-- suffixes.
-	local word = strutils.capturing_split(text, "([ %-]+)")
+	local word = split(text, "([ %-]+)")
 	for i = 1, #word do
 		-- check for single-syllable words that need a stress; they must meet
 		-- the following conditions:
@@ -914,7 +916,7 @@ function export.ipa(text, adj, gem, bracket, pos, zhpal, is_transformed)
 		if i < #word - 1 and (accentless['pre'][word[i]] or accentless['prespace'][word[i]] and word[i+1] == " ") and
 			-- don't add ‿ onto the end of a prefix; a prefix is a word followed by a hyphen that is in turn
 			-- followed by a space or end of terms; note that ends of terms after a hyphen are marked by a blank
-			-- string due to the way capturing_split() works
+			-- string due to the way split() works
 			not (word[i+1] == "-" and (word[i+2] == " " or word[i+2] == "" and i == #word - 2)) then
 			word[i+1] = '‿'
 			if type(gem) == "table" then
@@ -1056,9 +1058,16 @@ end
 ru_ipa_main = function(text, adj, gem, bracket, pos)
 	-- save original word spelling before respellings, (de)voicing changes,
 	-- geminate changes, etc. for implementation of geminate_pref
-	local orig_word = rsplit(text, " ", true)
+	local orig_word = split(text, " ", true)
 	local word
-
+	
+	-- remove any apostrophes, since any still present at this stage
+	-- are purely cosmetic (e.g. in foreign names)
+	-- any apostrophes in the input that are standing in for hard signs
+	-- should have already been dealt with by the transliteration
+	-- module
+	text = rsub(text, '[\'’]', '')
+	
 	-- insert or remove /j/ before [aou] so that palatal versions of these
 	-- vowels are always preceded by /j/ and non-palatal versions never are
 	-- (do this before the change below adding tertiary stress to final
@@ -1120,7 +1129,7 @@ ru_ipa_main = function(text, adj, gem, bracket, pos)
 	end
 	if type(pos) == "table" then
 		--split by word and process each word
-		word = rsplit(text, " ", true)
+		word = split(text, " ", true)
 		for i = 1, #word do
 			word[i] = final_tsja_processing(word[i], i)
 		end
@@ -1167,7 +1176,7 @@ ru_ipa_main = function(text, adj, gem, bracket, pos)
 	text = rsub(text, '([^' .. vow .. acc .. 'ʹʺ‿⁀ ]/?)j([äạëöü])', '%1%2')
 
 	--split by word and process each word
-	word = rsplit(text, " ", true)
+	word = split(text, " ", true)
 
 	for i = 1, #word do
 		local pron = word[i]
@@ -1374,7 +1383,7 @@ ru_ipa_main = function(text, adj, gem, bracket, pos)
 		pron = rsub(pron, '^⁀[ao]([^' .. acc .. '])', '⁀ɐ%1')
 
 		--split by syllable
-		local syllable = rsplit(pron, '@', true)
+		local syllable = split(pron, '@', true)
 
 		--create set of 1-based syllable indexes of stressed syllables
 		--(acute, grave, circumflex)
