@@ -71,8 +71,11 @@ function export.insert_source_cat_get_display(categories, lang, source, raw, noc
 			categories = {}
 		end
 
-		local langname = lang:getCanonicalName()
-		if lang:getCode() == source:getCode() then
+		local langname = lang:getFullName()
+		-- If `lang` is an etym-only language, we need to check both it and its parent full language against `source`.
+		-- Otherwise if e.g. `lang` is Medieval Latin and `source` is Latin, we'll end up wrongly constructing a
+		-- category 'Latin terms derived from Latin'.
+		if lang:getCode() == source:getCode() or lang:getFullCode() == source:getCode() then
 			table.insert(categories, langname .. " terms borrowed back into " .. langname)
 		else
 			table.insert(categories, langname .. " terms derived from " .. cat_name)
@@ -128,12 +131,15 @@ do
 	
 	-- Check that `lang` has `otherlang` (which may be an etymology-only language) as an ancestor. Throw an error if not.
 	function export.check_ancestor(lang, otherlang)
+		-- FIXME: I don't know if this function works correctly with etym-only languages in `lang`. I have fixed up
+		-- the module link code appropriately (June 2024) but the remaining logic is untouched.
 		if lang:hasAncestor(otherlang) or mw.title.getCurrentTitle().nsText == "Template" then
 			return
 		end
 		local ancestors, postscript = lang:getAncestors()
+		local etymModuleLink = lang:hasType("etymology-only") and "[[Module:etymology languages/data]] or " or ""
 		local moduleLink = "[[Module:"
-			.. require("Module:languages").getDataModuleName(lang:getCode())
+			.. require("Module:languages").getDataModuleName(lang:getFullCode())
 			.. "]]"
 		if not ancestors[1] then
 			postscript = showLanguage(lang) .. " has no ancestors."
@@ -147,8 +153,8 @@ do
 				ancestors[2] and "s" or "", lang:getCanonicalName(),
 				ancestors[2] and "are" or "is", ancestorList)
 		end
-		error(("%s is not set as an ancestor of %s in %s. %s")
-			:format(showLanguage(otherlang), showLanguage(lang), moduleLink, postscript))
+		error(("%s is not set as an ancestor of %s in %s%s. %s")
+			:format(showLanguage(otherlang), showLanguage(lang), etymModuleLink, moduleLink, postscript))
 	end
 end
 
@@ -159,7 +165,7 @@ function export.format_inherited(lang, terminfo, sort_key, nocat)
 	
 	local categories = {}
 	if not nocat then
-		table.insert(categories, lang:getCanonicalName() .. " terms inherited from " .. source:getCanonicalName())
+		table.insert(categories, lang:getFullName() .. " terms inherited from " .. source:getCanonicalName())
 	end
 
 	local link = export.process_and_create_link(terminfo, "inherited")
@@ -172,13 +178,14 @@ end
 
 function export.insert_borrowed_cat(categories, lang, source)
 	local category
-	if lang:getCode() ~= source:getCode() then
+	-- Do the same check as in insert_source_cat_get_display() (inverted).
+	if not (lang:getCode() == source:getCode() or lang:getFullCode() == source:getCode()) then
 		-- If both are the same, we want e.g. [[:Category:English terms borrowed back into English]] not
 		-- [[:Category:English terms borrowed from English]]; the former is inserted automatically by format_etyl().
 		category = " terms borrowed from " .. source:getDisplayForm()
 	end
 	if category then
-		table.insert(categories, lang:getCanonicalName() .. category)
+		table.insert(categories, lang:getFullName() .. category)
 	end
 end
 
