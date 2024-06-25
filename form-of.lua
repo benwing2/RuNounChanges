@@ -5,8 +5,9 @@ export.force_cat = false -- for testing; set to true to display categories even 
 local m_links = require("Module:links")
 local m_string_utils = require("Module:string utilities")
 local m_table = require("Module:table")
-local put_module = "Module:parse utilities"
+local parse_utilities_module = "Module:parse utilities"
 local labels_module = "Module:labels"
+local utilities_module = "Module:utilities"
 export.form_of_pos_module = "Module:form of/pos"
 export.form_of_functions_module = "Module:form of/functions"
 export.form_of_cats_module = "Module:form of/cats"
@@ -328,6 +329,19 @@ function export.lookup_shortcut(tag, lang, do_track)
 		end
 		expansion = langdata.shortcuts[tag]
 	end
+	if not expansion and lang then
+		-- If the lang we're dealing with is an etym-only lang, try again with the corresponding full language.
+		local full_langcode = lang:getFullCode()
+		if full_langcode ~= langcode and export.langs_with_lang_specific_tags[full_langcode] then
+			local langdata = mw.loadData(export.form_of_lang_data_module_prefix .. full_langcode)
+			-- If this is a canonical long-form tag, just return it, and don't check for shortcuts. This is an
+			-- optimization; see below.
+			if langdata.tags[tag] then
+				return tag
+			end
+			expansion = langdata.shortcuts[tag]
+		end
+	end
 	if not expansion then
 		local m_data = mw.loadData(export.form_of_data_module)
 		-- If this is a canonical long-form tag, just return it, and don't check for shortcuts (which will cause
@@ -364,6 +378,14 @@ function export.lookup_tag(tag, lang)
 	local langcode = lang and lang:getCode()
 	if langcode and export.langs_with_lang_specific_tags[langcode] then
 		local langdata = mw.loadData(export.form_of_lang_data_module_prefix .. langcode)
+		if langdata.tags[tag] then
+			return langdata.tags[tag]
+		end
+	end
+	local full_langcode = lang and lang:getFullCode()
+	if full_langcode and full_langcode ~= langcode and export.langs_with_lang_specific_tags[full_langcode] then
+		-- If the lang we're dealing with is an etym-only lang, try again with the corresponding full language.
+		local langdata = mw.loadData(export.form_of_lang_data_module_prefix .. full_langcode)
 		if langdata.tags[tag] then
 			return langdata.tags[tag]
 		end
@@ -733,7 +755,7 @@ function export.parse_tag_set_properties(tag_set)
 	-- we see a tag on the outer level that isn't in this format, we don't try to parse it. The restriction to the
 	-- outer level is to allow generated HTML inside of e.g. qualifier tags, such as foo<q:similar to {{m|fr|bar}}>.
 	if last_tag:find("<") and not last_tag:find("^[^<]*<[a-z]*[^a-z:]") then
-		return require(put_module).parse_inline_modifiers(last_tag, {
+		return require(parse_utilities_module).parse_inline_modifiers(last_tag, {
 			param_mods = tag_set_param_mods,
 			generate_obj = generate_tag_set_obj,
 		})
@@ -888,8 +910,8 @@ function export.fetch_categories_and_labels(normalized_tag_set, lang, POS, pagen
 	POS = export.normalize_pos(POS)
 	-- First split any two-level multipart tags into multiple sets, to make our life easier.
 	for _, tag_set in ipairs(export.split_two_level_multipart_tag_set(normalized_tag_set)) do
-		-- Call a named function, either from the lang-specific data in [[Module:form of/lang-specific/LANGCODE]] or
-		-- in [[Module:form of/cats]].
+		-- Call a named function, either from the lang-specific data in
+		-- [[Module:form of/lang-specific/LANGCODE/functions]] or in [[Module:form of/functions]].
 		local function call_named_function(name, funtype)
 			local data = {
 				pagename = pagename or mw.title.getCurrentTitle().subpageText,
@@ -898,31 +920,50 @@ function export.fetch_categories_and_labels(normalized_tag_set, lang, POS, pagen
 				lang = lang,
 				POS = POS
 			}
-			-- First try lang-specific.
-			local langcode = lang and lang:getCode()
-			local lang_specific_module
-			if langcode and export.langs_with_lang_specific_tags[langcode] then
-				lang_specific_module = export.form_of_lang_data_module_prefix .. langcode .. "/functions"
-				local langdata = require(lang_specific_module)
-				if langdata.cat_functions then
-					local fn = langdata.cat_functions[name]
-					if fn then
-						return fn(data)
+			local modules_tried = {}
+			local function try_lang_specific_module(langcode)
+				if export.langs_with_lang_specific_tags[langcode] then
+					local lang_specific_module = export.form_of_lang_data_module_prefix .. langcode .. "/functions"
+					local langdata = require(utilities_module).safe_require(lang_specific_module)
+					if langdata then
+						table.insert(modules_tried, lang_specific_module)
+						if langdata.cat_functions then
+							local fn = langdata.cat_functions[name]
+							if fn then
+								return fn(data), true
+							end
+						end
 					end
 				end
+				return nil, false
 			end
+			-- First try lang-specific.
+			local langcode = lang and lang:getCode()
+			if langcode then
+				local retval, found_it = try_lang_specific_module(langcode)
+				if found_it then
+					return retval
+				end
+			end
+			-- If the lang we're dealing with is an etym-only lang, try again with the corresponding full language.
+			local full_langcode = lang and lang:getFullCode()
+			if full_langcode and full_langcode ~= langcode then
+				local retval, found_it = try_lang_specific_module(full_langcode)
+				if found_it then
+					return retval
+				end
+			end
+			-- Try lang-independent.
+			table.insert(modules_tried, export.form_of_functions_module)
 			local fn = require(export.form_of_functions_module).cat_functions[name]
 			if fn then
 				return fn(data)
 			end
-			local lang_specific_part
-			if lang_specific_module then
-				lang_specific_part = ("[[%s]] or "):format(lang_specific_module)
-			else
-				lang_specific_part = ""
+			for i, modname in ipairs(modules_tried) do
+				modules_tried[i] = "[[" .. modname .. "]]"
 			end
-			error(("No %s function named '%s' in %s[[%s]]"):format(funtype, name, lang_specific_part,
-				export.form_of_functions_module))
+			error(("No %s function named '%s' in %s"):format(funtype, name, lang_specific_part,
+				m_table.serialCommaJoin(modules_tried, {conj = "or", dontTag = true})))
 		end
 
 		-- Given a tag from the current tag set (which may be a list in case of a multipart tag),
@@ -1082,7 +1123,7 @@ function export.fetch_categories_and_labels(normalized_tag_set, lang, POS, pagen
 				spec = rsub(spec, "<<p=(.-)>>", function(default)
 					return POS or export.normalize_pos(default)
 				end)
-				table.insert(categories, lang:getCanonicalName() .. " " .. spec)
+				table.insert(categories, lang:getFullName() .. " " .. spec)
 				return true
 			elseif type(spec) == "table" and spec.labels then
 				-- A label spec.
@@ -1125,13 +1166,23 @@ function export.fetch_categories_and_labels(normalized_tag_set, lang, POS, pagen
 			end
 		end
 
-		local langspecs = m_cats[lang:getCode()]
+		local langcode = lang:getCode()
+		local langspecs = m_cats[langcode]
 		if langspecs then
 			for _, spec in ipairs(langspecs) do
 				process_spec(spec)
 			end
 		end
-		if lang:getCode() ~= "und" then
+		local full_code = lang:getFullCode()
+		if full_code ~= langcode then
+			local langspecs = m_cats[full_code]
+			if langspecs then
+				for _, spec in ipairs(langspecs) do
+					process_spec(spec)
+				end
+			end
+		end
+		if full_code ~= "und" then
 			local langspecs = m_cats["und"]
 			if langspecs then
 				for _, spec in ipairs(langspecs) do
