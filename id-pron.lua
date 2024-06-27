@@ -1,6 +1,6 @@
 local export = {}
 
-local m_IPA = require("Module:IPA")
+local pron_utilities_module = "Module:pron utilities"
 
 local lang = require("Module:languages").getByCode("id")
 
@@ -280,25 +280,18 @@ function export.IPA(text, phonetic)
 	return mw.ustring.toNFC(text)
 end
 
+local function respelling_to_IPA(data)
+	return ("/%s/ [%s]"):format(export.IPA(data.respelling, false), export.IPA(data.respelling, true))
+end
+
 function export.show(frame)
-	local params = {
-		[1] = {},
-		["pre"] = {},
+	local parent_args = frame:getParent().args
+	return require(pron_utilities_module).format_prons {
+		lang = lang,
+		respelling_to_IPA = respelling_to_IPA,
+		raw_args = parent_args,
+		track_module = "id-pron",
 	}
-
-	local parargs = frame:getParent().args
-	local args = require("Module:parameters").process(parargs, params)
-
-	local results = {}
-
-	local text = args[1] or mw.title.getCurrentTitle().text
-
-	table.insert(results, { pron = "/" .. export.IPA(text, false) .. "/" })
-	table.insert(results, { pron = "[" .. export.IPA(text, true) .. "]" })
-
-	local pre = args.pre and args.pre .. " " or ""
-
-	return "* " .. pre .. m_IPA.format_IPA_full { lang = lang, items = results }
 end
 
 return export
