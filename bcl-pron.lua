@@ -385,7 +385,6 @@ function export.show(frame)
 		respelling_to_IPA = respelling_to_IPA,
 		raw_args = parent_args,
 		track_module = "bcl-pron",
-		include_bullet = true, -- FIXME: temporary
 	}
 end
 
