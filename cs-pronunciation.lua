@@ -1,9 +1,8 @@
 local export = {}
 
-local m_params = require("Module:parameters")
-local m_IPA = require("Module:IPA")
 local m_str_utils = require("Module:string utilities")
 local m_syllables = require("Module:syllables")
+local pron_utilities_module = "Module:pron utilities"
 
 local lang = require("Module:languages").getByCode("cs")
 local sc = require("Module:scripts").getByCode("Latn")
@@ -458,29 +457,21 @@ local function canonicalize(text, pagename)
 	return text
 end
 
+local function respelling_to_IPA(data)
+	local respelling = canonicalize(data.respelling, data.pagename)
+	local IPA = export.toIPA(respelling)
+	return "[" .. IPA .. "]"
+end
+
 function export.show(frame)
-	local params = {
-		[1] = {list = true},
-		["pagename"] = {}, -- for testing
+	local parent_args = frame:getParent().args
+	return require(pron_utilities_module).format_prons {
+		lang = lang,
+		respelling_to_IPA = respelling_to_IPA,
+		raw_args = parent_args,
+		track_module = "cs-pronunciation",
+		template_default = "příklad",
 	}
-
-	local parargs = frame:getParent().args
-	local args = m_params.process(parargs, params)
-	local title = mw.title.getCurrentTitle()
-	local pagename = args.pagename or title.subpageText
-
-	-- Parse the arguments.
-	local respellings = #args[1] > 0 and args[1] or title.namespace == "Template" and pagename == "cs-IPA" and "příklad" or {"+"}
-	local prons = {}
-	for i, respelling in ipairs(respellings) do
-		respelling = canonicalize(respelling, pagename)
-		local IPA = export.toIPA(respelling)
-		IPA = "[" .. IPA .. "]"
-		IPA = m_IPA.format_IPA_full { lang = lang, items = {{ pron = IPA }} }
-		table.insert(prons, IPA)
-	end
-
-	return table.concat(prons, "\n* ")
 end
 
 return export
