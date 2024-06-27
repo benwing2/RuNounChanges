@@ -3,7 +3,7 @@
 
 local export = {}
 
-local m_IPA = require("Module:IPA")
+local pron_utilities_module = "Module:pron utilities"
 
 local lang = require("Module:languages").getByCode("hil")
 
@@ -73,7 +73,7 @@ end
 function export.IPA(text, phonetic)
 	local debug = {}
 
-	text = ulower(text or mw.title.getCurrentTitle().text)
+	text = ulower(text)
 	-- decompose everything but ñ and ü
 	text = mw.ustring.toNFD(text)
 	text = rsub(text, "." .. "[" .. TILDE .. DIA .. GR .."]", {
@@ -358,27 +358,18 @@ table.insert(debug,text)
 	return mw.ustring.toNFC(text)
 end
 
+local function respelling_to_IPA(data)
+	return ("/%s/ [%s]"):format(export.IPA(data.respelling, false), export.IPA(data.respelling, true))
+end
+
 function export.show(frame)
-	local params = {
-		[1] = {},
-		["pre"] = {},
-		["bullets"] = {type = "number", default = 1},
+	local parent_args = frame:getParent().args
+	return require(pron_utilities_module).format_prons {
+		lang = lang,
+		respelling_to_IPA = respelling_to_IPA,
+		raw_args = parent_args,
+		track_module = "hil-pron",
 	}
-
-	local parargs = frame:getParent().args
-	local args = require("Module:parameters").process(parargs, params)
-
-	local results = {}
-
-	local text = args[1] or mw.title.getCurrentTitle().text
-
-	table.insert(results, { pron = "/" .. export.IPA(text, false) .. "/" })
-	table.insert(results, { pron = "[" .. export.IPA(text, true) .. "]" })
-	
-	local pre = args.pre and args.pre .. " " or ""
-	local bullet = (args.bullets ~= 0) and "* " or ""
-	
-	return bullet .. pre .. m_IPA.format_IPA_full { lang = lang, items = results }
 end
 
 return export
