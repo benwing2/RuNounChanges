@@ -1,9 +1,9 @@
 local export = {}
 
+local pron_utilities_module = "Module:pron utilities"
+
 local lang = require("Module:languages").getByCode("gu")
 local sc = require("Module:scripts").getByCode("Gujr")
-local IPA_module = "Module:IPA"
-local parameter_utilities_module = "Module:parameter utilities"
 
 local u = require("Module:string/char")
 local ufind = mw.ustring.find
@@ -104,46 +104,17 @@ function export.toIPA(text)
 	return "ˈ" .. result
 end
 
+local function respelling_to_IPA(data)
+	return "/" .. export.toIPA(data.respelling) .. "/"
+end
+
 function export.make(frame)
 	local parent_args = frame:getParent().args
-
-	local params = {
-		[1] = {list = true, allow_holes = true, default = "+"},
-		["pagename"] = {},
-	}
-
-	local m_param_utils = require(parameter_utilities_module)
-
-	local param_mods = m_param_utils.construct_param_mods {
-		{group = {"q", "a", "ref"}},
-	}
-
-	local items, args = m_param_utils.process_list_arguments {
-		params = params,
-		param_mods = param_mods,
-		raw_args = parent_args,
-		termarg = 1,
-		term_dest = "pron",
-		track_module = "gu-IPA",
-	}
-
-	local pagename = args.pagename or mw.loadData("Module:headword/data").pagename
-
-	for _, item in ipairs(items) do
-		local respelling = item.pron or "+"
-		if respelling == "+" then
-			respelling = pagename
-		end
-		item.pron = "/" .. export.toIPA(respelling) .. "/"
-	end
-	
-	return require(IPA_module).format_IPA_full {
+	return require(pron_utilities_module).format_prons {
 		lang = lang,
-		items = items,
-		a = args.a.default,
-		aa = args.aa.default,
-		q = args.q.default,
-		qq = args.qq.default,
+		respelling_to_IPA = respelling_to_IPA,
+		raw_args = parent_args,
+		track_module = "gu-IPA",
 	}
 end
 
