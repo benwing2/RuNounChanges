@@ -2,7 +2,7 @@
 
 local export = {}
 
-local m_IPA = require("Module:IPA")
+local pron_utilities_module = "Module:pron utilities"
 
 local lang = require("Module:languages").getByCode("ms")
 
@@ -289,40 +289,18 @@ table.insert(debug,text)
 	return mw.ustring.toNFC(text)
 end
 
+local function respelling_to_IPA(data)
+	return ("/%s/ [%s]"):format(export.IPA(data.respelling, false), export.IPA(data.respelling, true))
+end
+
 function export.show(frame)
-	local params = {
-		[1] = {},
-		["pre"] = {},
-		["bullets"] = {type = "number", default = 1},
-		["a"] = {type = "labels"},
-		["aa"] = {type = "labels"},
-		["q"] = {type = "qualifier"},
-		["qq"] = {type = "qualifier"},
-		["ref"] = {type = "references"},
-		["pagename"] = {},
-	}
-
 	local parent_args = frame:getParent().args
-	local args = require("Module:parameters").process(parent_args, params)
-
-	local results = {}
-
-	local text = args[1] or pagename or mw.loadData("Module:headword/data").pagename
-
-	table.insert(results, {
-		pron = "/" .. export.IPA(text, false) .. "/ [" .. export.IPA(text, true) .. "]",
-		refs = args.ref,
-	})
-	
-	local pre = args.pre and args.pre .. " " or ""
-	
-	return "* " .. pre .. m_IPA.format_IPA_full {
+	return require(pron_utilities_module).format_prons {
 		lang = lang,
-		items = results,
-		a = args.a,
-		aa = args.aa,
-		q = args.q,
-		qq = args.qq,
+		respelling_to_IPA = respelling_to_IPA,
+		raw_args = parent_args,
+		track_module = "ms-pron",
+		include_bullet = true, -- FIXME: temporary
 	}
 end
 
