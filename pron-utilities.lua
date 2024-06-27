@@ -65,7 +65,7 @@ containing the following fields:<ul>
 ]==]
 function export.format_prons(data)
 	local params = {
-		[1] = {list = true, allow_holes = true, default = "+"},
+		[1] = {list = true, allow_holes = true, default = "+", template_default = data.template_default},
 		["pagename"] = {},
 		["notext"] = {},
 	}
