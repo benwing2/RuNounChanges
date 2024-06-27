@@ -225,17 +225,6 @@ local function rsub_repeatedly(term, foo, bar)
 	end
 end
 
--- Clone parent's args while also assigning nil to empty strings.
-local function clone_args(frame)
-	local args = {}
-	for pname, param in pairs(frame:getParent().args) do
-		if param == "" then args[pname] = nil
-		else args[pname] = param
-		end
-	end
-	return args
-end
-
 -- If enabled, compare this module with new version of module in
 -- Module:User:Benwing2/ru-pron to make sure all pronunciations are the same.
 -- To check for differences, go to Wiktionary:Tracking/ru-pron/different-pron
@@ -629,10 +618,6 @@ local pos_properties = {
 	schwa='low'
 }
 
-local function ine(x)
-	return x ~= "" and x or nil
-end
-
 local function track(page)
 	local m_debug = require("Module:debug")
 	m_debug.track("ru-pron/" .. page)
@@ -651,12 +636,30 @@ end
 
 -- Direct implementation of {{ru-IPA}}.
 function export.ru_IPA(frame)
-	local args = clone_args(frame)
-	local text = args[1] or args.phon or mw.title.getCurrentTitle().text
-	local origtext, transformed_text = m_ru_translit.apply_tr_fixes(text,
-		args.noadj, args.noshto)
-	local pronunciations = export.ipa(transformed_text, args.adj, args.gem,
-		args.bracket or "y", args.pos, args.zhpal, "transformed")
+	local parent_args = frame:getParent().args
+	local params = {
+		[1] = {},
+		phon = {},
+		pos = {},
+		gem = {},
+		ann = {},
+		noadj = {type = "boolean"},
+		noshto = {type = "boolean"},
+		raw = {type = "boolean"},
+		zhpal = {type = "boolean"}, -- treated as 3-way: true, false, nil
+		bracket = {type = "boolean", default = "true"},
+		a = {type = "labels"},
+		aa = {type = "labels"},
+		q = {type = "qualifier"},
+		qq = {type = "qualifier"},
+	}
+
+	local args = require("Module:parameters").process(parent_args, params)
+
+	local text = args[1] or args.phon or mw.loadData("Module:headword/data").pagename
+	local origtext, transformed_text = m_ru_translit.apply_tr_fixes(text, args.noadj, args.noshto)
+	local pronunciations = export.ipa(transformed_text, args.adj, args.gem, args.bracket, args.pos, args.zhpal,
+		"transformed")
 	local maintext
 	if args.raw then
 		return table.concat(pronunciations, ", ")
@@ -670,7 +673,15 @@ function export.ru_IPA(frame)
 			pronunciations[i] = { pron = pronunciation }
 		end
 		
-		maintext = require("Module:IPA").format_IPA_full { lang = lang, items = pronunciations }
+		maintext = require("Module:IPA").format_IPA_full {
+			lang = lang,
+			items = pronunciations,
+			a = args.a,
+			aa = args.aa,
+			q = args.q,
+			qq = args.qq,
+			separator = " ~ ",
+		}
 		
 		local respelling
 		
@@ -704,20 +715,24 @@ function export.ipa(text, adj, gem, bracket, pos, zhpal, is_transformed)
 	-- Test code to compare existing module to new one.
 	if test_new_ru_pron_module then
 		local m_new_ru_pron = require("Module:User:Benwing2/ru-pron")
-		new_module_result = m_new_ru_pron.ipa(text, adj, gem, bracket, pos,
-			zhpal, is_transformed)
+		new_module_result = m_new_ru_pron.ipa(text, adj, gem, bracket, pos, zhpal, is_transformed)
 	end
 
-	if type(text) == 'table' then
+	if type(text) == "table" then
+		local params = {
+			[1] = {},
+			phon = {},
+			adj = {type = "boolean"},
+			gem = {},
+			bracket = {type = "boolean", default = "true"},
+			pos = {},
+			zhpal = {type = "boolean"},
+		}
+		local args = require("Module:parameters").process(text, params)
 		text, adj, gem, bracket, pos, zhpal =
-			(ine(text.args.phon) or ine(text.args[1])),
-			ine(text.args.adj),
-			ine(text.args.gem),
-			ine(text.args.bracket),
-			ine(text.args.pos),
-			ine(text.args.zhpal)
+			(args.phon or args[1]), args.adj, args.gem, args.bracket, args.pos, args.zhpal
 		if not text then
-			text = mw.title.getCurrentTitle().text
+			text = mw.loadData("Module:headword/data").pagename
 		end
 	end
 
@@ -741,11 +756,6 @@ function export.ipa(text, adj, gem, bracket, pos, zhpal, is_transformed)
 		if g ~= "" and g ~= "y" and g ~= "o" and g ~= "n" then
 			error("Unrecognized gemination spec '" .. g .. ": Should be y, yes, o, opt, n, no, or empty")
 		end
-	end
-
-	bracket = ine(usub(bracket or '', 1, 1))
-	if bracket == 'n' then
-		bracket = nil
 	end
 
 	pos = pos or "def"
@@ -977,7 +987,7 @@ function export.ipa(text, adj, gem, bracket, pos, zhpal, is_transformed)
 	-- the first with non-palatal [ʐː] and the second with [ʑː] (potentially
 	-- with nearby vowels affected appropriately for the palatalization
 	-- difference). But don't do this if zhpal=n.
-	if zhpal == 'n' or not rfind(text, 'ž') then
+	if zhpal == false or not rfind(text, 'ž') then
 		-- speed up the majority of cases where ž doesn't occur
 		alltext = {text}
 	else
@@ -985,7 +995,7 @@ function export.ipa(text, adj, gem, bracket, pos, zhpal, is_transformed)
 		-- follows the prefix by inserting a ˑ between prefix and ž. This
 		-- prevents us from generating the [ʑː] variant (notated internally as
 		-- ӂӂ). Don't do this if zhpal=y, which defeats this check.
-		if zhpal ~= 'y' then
+		if zhpal ~= true then
 			for _, gempref in ipairs(geminate_pref) do
 				local origspell = gempref[2]
 				local is_zh = gempref[3]
