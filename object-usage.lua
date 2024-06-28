@@ -1,6 +1,12 @@
 local export = {}
 
+local dump = mw.dumpObject
 local m_links = require("Module:links")
+local form_of_module = "Module:form of"
+local labels_module = "Module:labels"
+local parse_utilities_module = "Module:parse utilities"
+local pron_qualifier_module = "Module:pron qualifier"
+local references_module = "Module:references"
 
 local rsubn = mw.ustring.gsub
 local rfind = mw.ustring.find
@@ -24,6 +30,11 @@ local function ine(val)
 		return nil
 	end
 	return val
+end
+
+-- Convert a value that is not a string or number to a string using mw.dumpObject(), for debugging purposes.
+local function dump_if_unusual(val)
+	return (type(val) == "string" or type(val) == "number") and val or dump(val)
 end
 
 local function parse_form(args, i, default)
@@ -107,14 +118,21 @@ function export.show_obj(frame)
 	local pargs = frame:getParent().args
 
 	local params = {
-		[1] = {required = true, default = "und"},
+		[1] = {required = true, type = "language", default = "und"},
 		[2] = {list = true},
 	}
 
 	local args = require("Module:parameters").process(frame:getParent().args, params)
-	local lang = require("Module:languages").getByCode(args[1], 1)
+	local lang = args[1]
 
-	local iut = require("Module:User:Benwing2/inflection utilities")
+	local m_parse_utilities = require(parse_utilities_module)
+
+	local qualifier_label_mod = {"q", "qq", "l", "ll"}
+	local qualifier_label_mod_with_starred_set = {}
+	for _, mod in ipairs(qualifier_label_mod) do
+		qualifier_label_mod_with_starred_set[mod] = true
+		qualifier_label_mod_with_starred_set["*" .. mod] = true
+	end
 
 	local function parse_one_form(run)
 		local function parse_err(msg)
@@ -146,13 +164,24 @@ function export.show_obj(frame)
 				if not modtext then
 					parse_err("Internal error: Modifier '" .. modtext .. "' isn't surrounded by angle brackets")
 				end
-				local prefix, arg = modtext:match("^([a-z]+):(.*)$")
+				local prefix, arg = modtext:match("^(%*?[a-z]+):(.*)$")
 				if prefix then
-					if prefix == "q" or prefix == "t" or prefix == "id" or prefix == "tr" or prefix == "alt" then
-						if not retval.is_term and prefix ~= "q" and prefix ~= "t" then
+					if qualifier_label_mod_with_starred_set[prefix] or prefix == "t" or prefix == "id" or
+						prefix == "tr" or prefix == "ts" or prefix == "alt" or prefix == "ref" then
+						if not retval.is_term and not qualifier_label_mod_with_starred_set[prefix] and
+							prefix ~= "ref" and prefix ~= "t" then
 							parse_err("Can't attach prefix '" .. prefix .. "' to non-term")
 						end
-						retval[prefix] = arg
+						local item_dest = prefix == "ref" and "refs" or prefix
+						if retval[item_dest] then
+							parse_err("Can't set two values for prefix '" .. prefix .. "'")
+						end
+						if prefix == "l" or prefix == "ll" or prefix == "*l" or prefix == "*ll" then
+							arg = require(labels_module).split_labels_on_comma(arg)
+						elseif prefix == "ref" then
+							arg = require(references_module).parse_references(arg, parse_err)
+						end
+						retval[item_dest] = arg
 					else
 						parse_err("Unrecognized prefix '" .. prefix .. "' in modifier " .. run[i])
 					end
@@ -165,9 +194,10 @@ function export.show_obj(frame)
 	end
 
 	local parsed_objects = {}
-	for _, object in ipairs(args[2]) do
+	for argno, object in ipairs(args[2]) do
 		local parsed_object = {arguments = {}}
-		local orig_segments = iut.parse_multi_delimiter_balanced_segment_run(object, {{"[", "]"}, {"(", ")"}, {"<", ">"}})
+		local orig_segments =
+			m_parse_utilities.parse_multi_delimiter_balanced_segment_run(object, {{"[", "]"}, {"(", ")"}, {"<", ">"}})
 		-- rejoin bracketed segments with nearby ones; we only parse them to ensure that we leave alone parens and 
 		-- angle brackets inside of square brackets.
 		local joined_segments = {}
@@ -183,7 +213,8 @@ function export.show_obj(frame)
 			end
 		end
 
-		local split_runs = iut.split_alternating_runs(joined_segments, "%s*[+/&]%s*", "preserve splitchar")
+		local split_runs =
+			m_parse_utilities.split_alternating_runs(joined_segments, "%s*[+/&]%s*", "preserve splitchar")
 
 		-- Now parse the forms.
 		i = 1
@@ -204,6 +235,43 @@ function export.show_obj(frame)
 				end
 			end
 			i = i + 2
+		end
+
+		-- Now move qualifiers up as necessary.
+		local function parse_err(msg)
+			-- argno + 1 because object arguments begin at 2=
+			error(("%s: %s=%s"):format(msg, argno + 1, object))
+		end
+		for _, argument in ipairs(parsed_object.arguments) do
+			for i, alternant in ipairs(argument.alternants) do
+				if #argument.alternants == 1 then
+					-- If there's only one alternant, convert regular qualifiers to starred versions if there's not
+					-- already a starred version.
+					for _, mod in ipairs(qualifier_label_mod) do
+						if alternant[mod] and not alternant["*" .. mod] then
+							alternant["*" .. mod] = alternant[mod]
+							alternant[mod] = nil
+						end
+					end
+				end
+				if i < #argument.alternants then
+					-- Starred versions cannot be attached to non-final alternants.
+					for _, mod in ipairs(qualifier_label_mod) do
+						if alternant["*" .. mod] then
+							parse_err(("Starred version '%s' of label or qualifier must be attached to last alternant"):
+								format("*" .. mod))
+						end
+					end
+				else
+					-- Starred versions attached to final alternants should be moved up to argument level.
+					for _, mod in ipairs(qualifier_label_mod) do
+						if alternant["*" .. mod] then
+							argument[mod] = alternant["*" .. mod]
+							alternant["*" .. mod] = nil
+						end
+					end
+				end
+			end
 		end
 
 		table.insert(parsed_objects, parsed_object)
@@ -233,15 +301,16 @@ function export.show_obj(frame)
 					if term == "" then
 						term = nil
 					end
-					form = m_links.full_link({lang = lang, term = term, alt = alternant.alt, id = alternant.id, tr = alternant.tr}, "bold")
+					form = m_links.full_link({lang = lang, term = term, alt = alternant.alt, id = alternant.id,
+						tr = alternant.tr, ts = alternant.ts}, "bold")
 				else
-					form = require("Module:User:Benwing2/form of").tagged_inflections {
+					form = require(form_of_module).tagged_inflections {
 						lang = lang, tags = {alternant.form}, text_classes = text_classes
 					}
 				end
 
 				if alternant.case then
-					local case_text = "+ " .. require("Module:User:Benwing2/form of").tagged_inflections {
+					local case_text = "+ " .. require(form_of_module).tagged_inflections {
 						lang = lang, tags = {alternant.case}, text_classes = text_classes
 					}
 					if alternant.is_postposition then
@@ -260,16 +329,48 @@ function export.show_obj(frame)
 				if alternant.t then
 					meaning_text = " <small>‘" .. alternant.t .. "’</small>"
 				end
-				form = form
-				table.insert(alternant_parts, qualifier_text .. form .. meaning_text)
+				local part = form .. meaning_text
+				if alternant.q or alternant.qq or alternant.l or alternant.ll or alternant.refs then
+					part = require(pron_qualifier_module).format_qualifiers {
+						text = part,
+						lang = lang,
+						q = alternant.q and {alternant.q} or nil,
+						qq = alternant.qq and {alternant.qq} or nil,
+						l = alternant.l,
+						ll = alternant.ll,
+						refs = alternant.refs,
+					}
+				end
+				table.insert(alternant_parts, part)
 			end
-			local prefix
+			local prefix, separator
 			if not argument.suppress_plus then
-				prefix = i > 1 and (multiple_alternants and ", ''along with'' " or " ''and'' ") or "''with'' "
+				if i == 1 then
+					separator = ""
+					prefix = "''with'' "
+				elseif multiple_alternants then
+					separator = ", "
+					prefix = "''along with'' "
+				else
+					separator = " "
+					prefix = "''and'' "
+				end
 			else
-				prefix = i > 1 and " " or ""
+				separator = i > 1 and " " or ""
+				prefix = ""
 			end
-			table.insert(argument_parts, prefix .. table.concat(alternant_parts, " ''or'' "))
+			local part = prefix .. table.concat(alternant_parts, " ''or'' ")
+			if argument.q or argument.qq or argument.l or argument.ll then
+				part = require(pron_qualifier_module).format_qualifiers {
+					text = part,
+					lang = lang,
+					q = argument.q and {argument.q} or nil,
+					qq = argument.qq and {argument.qq} or nil,
+					l = argument.l,
+					ll = argument.ll,
+				}
+			end
+			table.insert(argument_parts, separator .. part)
 		end
 		table.insert(object_parts, table.concat(argument_parts))
 	end
