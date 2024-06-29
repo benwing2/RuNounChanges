@@ -62,7 +62,7 @@ def process_text_on_page(index, pagetitle, text):
           readings = re.split(r"\s*,\s*", readings)
           readings = [re.sub("[<-].*", "", r) for r in readings]
           if reading in readings:
-            reading_type = canonicalize_reading_types.get(reading_type, reading_type)
+            #reading_type = canonicalize_reading_types.get(reading_type, reading_type)
             pagemsg_with_spelling("Appending reading type %s based on %s" % (reading_type, str(t)))
             if reading_type not in reading_types:
               reading_types.append(reading_type)
@@ -196,7 +196,7 @@ def process_text_on_page(index, pagetitle, text):
                 pagemsg_with_contents("WARNING: Disallowed reading type %s: %s" % (reading_type, str(t)))
                 must_continue = True
                 break
-              reading_type = canonicalize_reading_types.get(reading_type, reading_type)
+              #reading_type = canonicalize_reading_types.get(reading_type, reading_type)
               pagemsg_with_contents("Appending reading type %s based on %s" % (reading_type, str(t)))
               if reading_type not in reading_types:
                 reading_types.append(reading_type)
