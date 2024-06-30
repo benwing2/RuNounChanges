@@ -298,7 +298,7 @@ function export.show_obj(frame)
 		end
 	end
 
-	local function format_parsed_object(parsed_object, suppress_initial_with)
+	local function format_parsed_object(parsed_object, recursive_suppress_with)
 		local argument_parts = {}
 
 		local multiple_alternants = false
@@ -312,7 +312,25 @@ function export.show_obj(frame)
 		local used_with_in_prefix = false
 		for i, argument in ipairs(parsed_object.arguments) do
 			local alternant_parts = {}
-			for _, alternant in ipairs(argument.alternants) do
+			local prefix, separator
+			local suppress_with = argument.suppress_with or i == 1 and recursive_suppress_with
+			if not suppress_with then
+				if not used_with_in_prefix then
+					separator = i > 1 and " " or ""
+					prefix = "''with'' "
+					used_with_in_prefix = true
+				elseif multiple_alternants then
+					separator = ", "
+					prefix = "''along with'' "
+				else
+					separator = " "
+					prefix = "''and'' "
+				end
+			else
+				separator = i > 1 and " " or ""
+				prefix = ""
+			end
+			for j, alternant in ipairs(argument.alternants) do
 				local case_text
 				if alternant.case then
 					if type(alternant.case) == "string" then
@@ -361,6 +379,13 @@ function export.show_obj(frame)
 					meaning_text = " <small>‘" .. alternant.t .. "’</small>"
 				end
 				local part = form .. meaning_text
+				if j > 1 and not used_with_in_prefix and not recursive_suppress_with then
+					-- If we used e.g. {{+obj|ca|&transitve/:en}} to suppress the initial ''with'', we want it
+					-- to appear after the ''or'' so we get ''transitive or with [[en]]'' rather than just
+					-- ''transitive or [[en]]''.
+					part = "''with'' " .. part
+					used_with_in_prefix = true
+				end
 				if alternant.q or alternant.qq or alternant.l or alternant.ll or alternant.refs then
 					part = require(pron_qualifier_module).format_qualifiers {
 						text = part,
@@ -373,24 +398,6 @@ function export.show_obj(frame)
 					}
 				end
 				table.insert(alternant_parts, part)
-			end
-			local prefix, separator
-			local suppress_with = argument.suppress_with or i == 1 and suppress_initial_with
-			if not suppress_with then
-				if not used_with_in_prefix then
-					separator = i > 1 and " " or ""
-					prefix = "''with'' "
-					used_with_in_prefix = true
-				elseif multiple_alternants then
-					separator = ", "
-					prefix = "''along with'' "
-				else
-					separator = " "
-					prefix = "''and'' "
-				end
-			else
-				separator = i > 1 and " " or ""
-				prefix = ""
 			end
 			local part = prefix .. table.concat(alternant_parts, " ''or'' ")
 			if argument.q or argument.qq or argument.l or argument.ll then
