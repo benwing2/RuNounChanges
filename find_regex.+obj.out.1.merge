@@ -116,20 +116,20 @@ Page 49 v: Found match for regex: <begin> # {{lb|sh|Kajkavian}} [[to]], [[into]]
 Page 49 v: Found match for regex: <begin> # {{lb|sh|Kajkavian}} [[on]], [[in]], [[at]], [[during]] {{qualifier|in expressions concerning time}} {{+obj|sh|accusative}} <end>
 Page 49 v: Found match for regex: <begin> # {{lb|sh|Kajkavian}} [[in]], [[during]] {{qualifier|in expressions concerning time}} {{+obj|sh|locative}} <end>
 Page 50 w: Found match for regex: <begin> # {{ng|denotes [[inessive]] position}}; [[in]], [[at]], [[on]] {{+obj|zlw-mas|loc}} <end>
-Page 50 w: Found match for regex: <begin> # {{ng|denotes position in time or age}}; [[in]], [[on]] {{+obj|zlw-mas|loc}} or sometimes {{+obj|pl|acc}} <end>
+Page 50 w: Found match for regex: <begin> # {{ng|denotes position in time or age}}; [[in]], [[on]] {{+obj|zlw-mas|loc/acc<q:sometimes>}} <end>
 Page 50 w: Found match for regex: <begin> # {{ng|denotes [[illative]] movement}}; [[into]], [[in]], [[to]] {{+obj|zlw-mas|acc}} <end>
 Page 50 w: Found match for regex: <begin> # {{ng|denotes [[illative]] movement}}; [[into]] {{+obj|zlw-opl|acc}} <end>
 Page 50 w: Found match for regex: <begin> ## {{ng|denotes contact because of movement, i.e. to bump into something}} {{+obj|zlw-opl|acc}} <end>
 Page 50 w: Found match for regex: <begin> # {{ng|denotes [[allative]] movement}}; [[to]], [[towards]] {{+obj|zlw-opl|acc}} <end>
 Page 50 w: Found match for regex: <begin> # {{ng|used in temporal constructions to create adverbs from nouns}} {{+obj|zlw-opl|acc}} <end>
-Page 50 w: Found match for regex: <begin> # {{ng|denotes a goal or aim}}; [[for]] {{+obj|zlw-opl|acc}} or {{+obj|zlw-opl|loc}} <end>
-Page 50 w: Found match for regex: <begin> # {{ng|denotes function; in the role of}}; [[as]] {{+obj|zlw-opl|acc}} or {{+obj|zlw-opl|loc}} <end>
-Page 50 w: Found match for regex: <begin> # {{ng|denotes a manner}}; [[in]] {{+obj|zlw-opl|acc}} or {{+obj|zlw-opl|loc}} <end>
-Page 50 w: Found match for regex: <begin> # {{ng|denotes [[instrumental]] usage}} {{+obj|zlw-opl|acc}} or {{+obj|zlw-opl|loc}} <end>
-Page 50 w: Found match for regex: <begin> # {{ng|used with some nouns to denote physical or temporal measure}} {{+obj|zlw-opl|acc}} or {{+obj|zlw-opl|loc}} <end>
+Page 50 w: Found match for regex: <begin> # {{ng|denotes a goal or aim}}; [[for]] {{+obj|zlw-opl|acc/loc}} <end>
+Page 50 w: Found match for regex: <begin> # {{ng|denotes function; in the role of}}; [[as]] {{+obj|zlw-opl|acc/loc}} <end>
+Page 50 w: Found match for regex: <begin> # {{ng|denotes a manner}}; [[in]] {{+obj|zlw-opl|acc/loc}} <end>
+Page 50 w: Found match for regex: <begin> # {{ng|denotes [[instrumental]] usage}} {{+obj|zlw-opl|acc/loc}} <end>
+Page 50 w: Found match for regex: <begin> # {{ng|used with some nouns to denote physical or temporal measure}} {{+obj|zlw-opl|acc/loc}} <end>
 Page 50 w: Found match for regex: <begin> # {{ng|denotes the amount of participants}} {{+obj|zlw-opl|acc}} <end>
 Page 50 w: Found match for regex: <begin> # {{ng|denotes a change of state}}; [[into]] {{+obj|zlw-opl|acc}} <end>
-Page 50 w: Found match for regex: <begin> # {{ng|denotes the intended addressee of a statement}}; [[at]] {{+obj|zlw-opl|acc}} or {{+obj|zlw-opl|loc}} <end>
+Page 50 w: Found match for regex: <begin> # {{ng|denotes the intended addressee of a statement}}; [[at]] {{+obj|zlw-opl|acc/loc}} <end>
 Page 50 w: Found match for regex: <begin> # {{ng|used in some syntactical constructions with verbs}} {{+obj|zlw-opl|acc}} <end>
 Page 50 w: Found match for regex: <begin> # {{ng|denotes [[inessive]] position}}; [[in]] {{+obj|zlw-opl|loc}} <end>
 Page 50 w: Found match for regex: <begin> # {{ng|denotes position in time}}; [[in]] {{+obj|zlw-opl|loc}} <end>
@@ -137,7 +137,7 @@ Page 50 w: Found match for regex: <begin> # {{ng|denotes cause}}; [[because of]]
 Page 50 w: Found match for regex: <begin> # {{ng|used in some noun constructions to denote "in the pattern of"}} {{+obj|zlw-opl|loc}} <end>
 Page 50 w: Found match for regex: <begin> # {{ng|denotes state}}; [[in]] {{+obj|zlw-opl|loc}} <end>
 Page 50 w: Found match for regex: <begin> # {{ng|denotes [[inessive]] position}}; [[in]], [[at]], [[on]] {{+obj|pl|loc}} <end>
-Page 50 w: Found match for regex: <begin> # {{ng|denotes position in time}}; [[in]], [[on]] {{+obj|pl|loc}} or sometimes {{+obj|pl|acc}} <end>
+Page 50 w: Found match for regex: <begin> # {{ng|denotes position in time}}; [[in]], [[on]] {{+obj|pl|loc/acc<q:sometimes>}} <end>
 Page 50 w: Found match for regex: <begin> # {{ng|denotes state}}; [[in]] {{+obj|pl|loc}} <end>
 Page 50 w: Found match for regex: <begin> # {{ng|denotes approximate position}}; [[at]] {{+obj|pl|loc}} <end>
 Page 50 w: Found match for regex: <begin> # {{ng|denotes [[illative]] movement}}; [[into]], [[in]], [[to]] {{+obj|pl|acc}} <end>
@@ -198,25 +198,25 @@ Page 55 у: Found match for regex: <begin> # [[at]], [[by]], [[near]], in the [[
 Page 56 atom: Found match for regex: <begin> # {{lb|pl|physics}} {{l|en|atom}} {{+obj|pl|genitive<of what>}} <end>
 Page 57 na: Found match for regex: <begin> # {{ng|denotes [[superessive]] position}}; [[on]] {{+obj|csb|loc}} <end>
 Page 57 na: Found match for regex: <begin> # {{ng|denotes [[sublative]] movement}}; [[onto]] {{+obj|csb|acc}} <end>
-Page 57 na: Found match for regex: <begin> # {{n-g|Denotes [[superessive]] position}}; [[on]] {{+obj|zlw-mas|loc}} <end>
-Page 57 na: Found match for regex: <begin> # {{n-g|Denotes [[sublative]] movement}}; [[onto]] {{+obj|zlw-mas|acc}} <end>
-Page 57 na: Found match for regex: <begin> # {{n-g|Denotes location with events}}; [[at]] {{+obj|zlw-mas|loc}} <end>
-Page 57 na: Found match for regex: <begin> # {{n-g|Denotes the length of time for which an action will be done}}; [[for]], [[by]] {{+obj|zlw-mas|acc}} <end>
-Page 57 na: Found match for regex: <begin> # {{n-g|Denotes manner}} {{+obj|zlw-mas|acc}} or {{+obj|zlw-mas|adverb}} <end>
-Page 57 na: Found match for regex: <begin> # {{n-g|Denotes an instrument or tool}} {{+obj|zlw-mas|loc}} or {{+obj|zlw-mas|acc}} <end>
-Page 57 na: Found match for regex: <begin> # {{n-g|Denotes measure}}; [[by]] {{+obj|zlw-mas|acc}} <end>
-Page 57 na: Found match for regex: <begin> # {{n-g|Denotes result of actions}} {{+obj|zlw-mas|acc}} <end>
-Page 57 na: Found match for regex: <begin> # {{n-g|Denotes cause of action}} {{+obj|zlw-mas|acc}} <end>
-Page 57 na: Found match for regex: <begin> # {{n-g|Denotes aim of action}} {{+obj|zlw-mas|acc}} <end>
-Page 57 na: Found match for regex: <begin> # {{n-g|Denotes aim of action}} {{+obj|zlw-mas|acc}} <end>
-Page 57 na: Found match for regex: <begin> # {{n-g|Indicating the object of action, influence, state}} {{+obj|zlw-mas|acc}} <end>
-Page 57 na: Found match for regex: <begin> # {{n-g|Indicating a criterion for comparison or comparison and a point of reference by which something is distinguished}} {{+obj|zlw-mas|acc}} <end>
-Page 57 na: Found match for regex: <begin> # {{n-g|Denotes a color to which something is painted}} {{+obj|zlw-mas|acc}} or {{+obj|zlw-mas|adverb}} <end>
+Page 57 na: Found match for regex: <begin> # {{n-g|denotes [[superessive]] position}}; [[on]] {{+obj|zlw-mas|loc}} <end>
+Page 57 na: Found match for regex: <begin> # {{n-g|denotes [[sublative]] movement}}; [[onto]] {{+obj|zlw-mas|acc}} <end>
+Page 57 na: Found match for regex: <begin> # {{n-g|denotes location with events}}; [[at]] {{+obj|zlw-mas|loc}} <end>
+Page 57 na: Found match for regex: <begin> # {{n-g|denotes the length of time for which an action will be done}}; [[for]], [[by]] {{+obj|zlw-mas|acc}} <end>
+Page 57 na: Found match for regex: <begin> # {{n-g|denotes manner}} {{+obj|zlw-mas|acc/adverb}} <end>
+Page 57 na: Found match for regex: <begin> # {{n-g|denotes an instrument or tool}} {{+obj|zlw-mas|loc/acc}} <end>
+Page 57 na: Found match for regex: <begin> # {{n-g|denotes measure}}; [[by]] {{+obj|zlw-mas|acc}} <end>
+Page 57 na: Found match for regex: <begin> # {{n-g|denotes result of actions}} {{+obj|zlw-mas|acc}} <end>
+Page 57 na: Found match for regex: <begin> # {{n-g|denotes cause of action}} {{+obj|zlw-mas|acc}} <end>
+Page 57 na: Found match for regex: <begin> # {{n-g|denotes aim of action}} {{+obj|zlw-mas|acc}} <end>
+Page 57 na: Found match for regex: <begin> # {{n-g|denotes aim of action}} {{+obj|zlw-mas|acc}} <end>
+Page 57 na: Found match for regex: <begin> # {{n-g|indicating the object of action, influence, state}} {{+obj|zlw-mas|acc}} <end>
+Page 57 na: Found match for regex: <begin> # {{n-g|indicating a criterion for comparison or comparison and a point of reference by which something is distinguished}} {{+obj|zlw-mas|acc}} <end>
+Page 57 na: Found match for regex: <begin> # {{n-g|denotes a color to which something is painted}} {{+obj|zlw-mas|acc/adverb}} <end>
 Page 57 na: Found match for regex: <begin> # {{ng|denotes [[sublative]] movement}}; [[onto]] {{+obj|zlw-opl|acc}} <end>
 Page 57 na: Found match for regex: <begin> # {{ng|denotes movement towards some nouns}}; [[to]], [[toward]] {{+obj|zlw-opl|acc}} <end>
 Page 57 na: Found match for regex: <begin> # {{ng|denotes the length of time for which an action will be done}}; [[for]] {{+obj|zlw-opl|acc}} <end>
 Page 57 na: Found match for regex: <begin> # {{ng|denotes a goal or purpose}}; [[for]] {{+obj|zlw-opl|acc}} <end>
-Page 57 na: Found match for regex: <begin> # {{ng|used in some temporal and physical measurements}}; [[by]] {{+obj|zlw-opl|acc}} or {{+obj|zlw-opl|loc}} <end>
+Page 57 na: Found match for regex: <begin> # {{ng|used in some temporal and physical measurements}}; [[by]] {{+obj|zlw-opl|acc/loc}} <end>
 Page 57 na: Found match for regex: <begin> # {{ng|denotes [[superessive]] position}}; [[on]] {{+obj|zlw-opl|loc}} <end>
 Page 57 na: Found match for regex: <begin> # {{ng|denotes a period of time}}; [[during]] {{+obj|zlw-opl|locc}} <end>
 Page 57 na: Found match for regex: <begin> # {{ng|denotes frequency}}; [[per]] {{+obj|zlw-opl|case}} <end>
@@ -228,7 +228,7 @@ Page 57 na: Found match for regex: <begin> # {{ng|denotes [[sublative]] movement
 Page 57 na: Found match for regex: <begin> # {{ng|denotes the length of time for which an action will be done}}; [[for]], [[by]] {{+obj|pl|acc}} <end>
 Page 57 na: Found match for regex: <begin> # {{ng|denotes a goal or purpose}}; [[for]], to [[deal with]] {{+obj|pl|acc}} <end>
 Page 57 na: Found match for regex: <begin> # {{ng|denotes frequency}}; [[per]] {{+obj|pl|case}} <end>
-Page 57 na: Found match for regex: <begin> # {{ng|denotes manner}} {{+obj|pl|acc}} or {{+obj|pl|adverb}} <end>
+Page 57 na: Found match for regex: <begin> # {{ng|denotes manner}} {{+obj|pl|acc/adverb}} <end>
 Page 57 na: Found match for regex: <begin> # {{lb|pl|mathematics}} {{ng|surjective usage}}; [[onto]] {{+obj|pl|acc}} <end>
 Page 57 na: Found match for regex: <begin> # {{n-g|denotes [[superessive]] position}}; [[on]] {{+obj|szl|loc}} <end>
 Page 57 na: Found match for regex: <begin> # {{ng|denotes [[inessive]] position of some countries and regions}}; [[in]], {{+obj|szl|loc}} <end>
@@ -267,16 +267,16 @@ Page 58 po: Found match for regex: <begin> # {{ng|denotes dominating conditions}
 Page 58 po: Found match for regex: <begin> # {{ng|denotes basis of analysis}}; [[based on]] {{+obj|zlw-mas|loc}} <end>
 Page 58 po: Found match for regex: <begin> # {{ng|denotes source of emotions}}; [[from]] {{+obj|zlw-mas|loc}} <end>
 Page 58 po: Found match for regex: <begin> # [[done for]] {{+obj|zlw-mas|loc}} <end>
-Page 58 po: Found match for regex: <begin> # [[for]] {{gl|for the purpose of}} {{+obj|zlw-ocs|acc}} or {{+obj|zlw-ocs|loc}} <end>
+Page 58 po: Found match for regex: <begin> # [[for]] {{gl|for the purpose of}} {{+obj|zlw-ocs|acc/loc}} <end>
 Page 58 po: Found match for regex: <begin> # [[until]]; [[after]] {{+obj|zlw-ocs|acc}} <end>
 Page 58 po: Found match for regex: <begin> # [[for]] the [[entire]], [[all]] {{+obj|zlw-ocs|acc}} <end>
-Page 58 po: Found match for regex: <begin> # [[during]], [[in]] the period of {{+obj|zlw-ocs|acc}}, {{+obj|zlw-ocs|gen}}, or {{+obj|zlw-ocs|loc}} <end>
+Page 58 po: Found match for regex: <begin> # [[during]], [[in]] the period of {{+obj|zlw-ocs|acc/gen/loc}} <end>
 Page 58 po: Found match for regex: <begin> # [[for]] the Xth time {{+obj|zlw-ocs|acc}} <end>
-Page 58 po: Found match for regex: <begin> # [[per]], [[a]] piece {{+obj|zlw-ocs|acc}} or  {{+obj|zlw-ocs|loc}} <end>
-Page 58 po: Found match for regex: <begin> # [[after]]; [[because of]] {{+obj|zlw-ocs|dat}} or {{+obj|zlw-ocs|loc}} <end>
+Page 58 po: Found match for regex: <begin> # [[per]], [[a]] piece {{+obj|zlw-ocs|acc/loc}} <end>
+Page 58 po: Found match for regex: <begin> # [[after]]; [[because of]] {{+obj|zlw-ocs|dat/loc}} <end>
 Page 58 po: Found match for regex: <begin> # [[up to]]; [[towards]] {{+obj|zlw-ocs|dat}} <end>
 Page 58 po: Found match for regex: <begin> # [[to]] [[behind]] {{+obj|zlw-ocs|dat}} <end>
-Page 58 po: Found match for regex: <begin> # [[according to]] {{+obj|zlw-ocs|dat}} or  {{+obj|zlw-ocs|loc}} <end>
+Page 58 po: Found match for regex: <begin> # [[according to]] {{+obj|zlw-ocs|dat/loc}} <end>
 Page 58 po: Found match for regex: <begin> # in the [[manner]] of {{+obj|zlw-ocs|dat}} <end>
 Page 58 po: Found match for regex: <begin> # [[for]] {{gl|to what end}} {{+obj|zlw-ocs|dat}} {{q|of a success or failure}} <end>
 Page 58 po: Found match for regex: <begin> # {{ng|Creates adverbs in conjunction with an adjective.}} {{+obj|zlw-ocs|dat}} <end>
@@ -295,7 +295,7 @@ Page 58 po: Found match for regex: <begin> # {{ng|Denotes price of something.}} 
 Page 58 po: Found match for regex: <begin> # [[more]] [[than]] {{+obj|zlw-ocs|loc}} <end>
 Page 58 po: Found match for regex: <begin> # [[for]], for the [[benefit]] of {{+obj|zlw-ocs|loc}} <end>
 Page 58 po: Found match for regex: <begin> # {{ng|denotes sequence in time}}; [[after]] {{+obj|zlw-opl|loc}} <end>
-Page 58 po: Found match for regex: <begin> # {{ng|denotes general location}}; [[at]], [[in]], [[on]] {{+obj|zlw-opl|loc}} or {{+obj|zlw-opl|dat}} <end>
+Page 58 po: Found match for regex: <begin> # {{ng|denotes general location}}; [[at]], [[in]], [[on]] {{+obj|zlw-opl|loc/dat}} <end>
 Page 58 po: Found match for regex: <begin> # {{lb|zlw-opl|more specifically}} [[along]] {{+obj|zlw-opl|loc}} <end>
 Page 58 po: Found match for regex: <begin> # {{ng|denotes previous related person}}; [[after]] {{+obj|zlw-opl|loc}} <end>
 Page 58 po: Found match for regex: <begin> # {{ng|denotes next in a sequence of people}}; [[after]] {{+obj|zlw-opl|loc}} <end>
@@ -304,15 +304,15 @@ Page 58 po: Found match for regex: <begin> # [[according to]], [[in accordance w
 Page 58 po: Found match for regex: <begin> # {{ng|denotes an instrument to an acction}}; [[with]], [[by means of]] {{+obj|zlw-opl|loc}} <end>
 Page 58 po: Found match for regex: <begin> # [[according to]], [[based on]] {{+obj|zlw-opl|loc}} <end>
 Page 58 po: Found match for regex: <begin> # {{ng|denotes manner of the object}}; [[like]], [[as]] {{+obj|zlw-opl|loc}} <end>
-Page 58 po: Found match for regex: <begin> # {{ng|denotes distribution}}; [[per]] {{+obj|zlw-opl|loc}} or {{+obj|zlw-opl|dat}} <end>
-Page 58 po: Found match for regex: <begin> # {{ng|used in grammatical [[government]]}}. {{+obj|zlw-opl|loc}} <end>
+Page 58 po: Found match for regex: <begin> # {{ng|denotes distribution}}; [[per]] {{+obj|zlw-opl|loc/dat}} <end>
+Page 58 po: Found match for regex: <begin> # {{ng|used in grammatical [[government]]}}; {{+obj|zlw-opl|loc}} <end>
 Page 58 po: Found match for regex: <begin> # {{ng|it indicates a spatial limit}}; [[up to]] {{+obj|zlw-opl|acc}} <end>
-Page 58 po: Found match for regex: <begin> # {{ng|denotes a time when something takes place}}; [[during]] {{+obj|zlw-opl|acc}} or {{+obj|zlw-opl|dat}} <end>
+Page 58 po: Found match for regex: <begin> # {{ng|denotes a time when something takes place}}; [[during]] {{+obj|zlw-opl|acc/dat}} <end>
 Page 58 po: Found match for regex: <begin> # {{ng|denotes the aim or purpose of an action}}; [[for]] {{+obj|zlw-opl|acc}} <end>
-Page 58 po: Found match for regex: <begin> # {{ng|creates an adverb from the next noun}}. {{+obj|zlw-opl|acc}} <end>
+Page 58 po: Found match for regex: <begin> # {{ng|creates an adverb from the next noun}}; {{+obj|zlw-opl|acc}} <end>
 Page 58 po: Found match for regex: <begin> # {{ng|with an [[ordinal number]]; denotes which time in a sequence}}; [[for]] the _ time {{+obj|zlw-opl|acc}} <end>
-Page 58 po: Found match for regex: <begin> # {{ng|denotes the source or agent of an action}}. {{+obj|zlw-opl|dat}} <end>
-Page 58 po: Found match for regex: <begin> # {{ng|denotes the distribution of the counted items}}. {{+obj|zlw-opl|dat}} or {{+obj|zlw-opl|acc}} or {{+obj|zlw-opl|loc}} <end>
+Page 58 po: Found match for regex: <begin> # {{ng|denotes the source or agent of an action}}; {{+obj|zlw-opl|dat}} <end>
+Page 58 po: Found match for regex: <begin> # {{ng|denotes the distribution of the counted items}}; {{+obj|zlw-opl|dat/acc/loc}} <end>
 Page 58 po: Found match for regex: <begin> # [[after]] {{gl|later in time or sequence}} {{+obj|pl|loc}} <end>
 Page 58 po: Found match for regex: <begin> # [[after]] {{gl|in pursuit of}} {{+obj|pl|acc}} <end>
 Page 58 po: Found match for regex: <begin> # [[around]], [[about]] {{+obj|pl|loc}} <end>
@@ -338,7 +338,7 @@ Page 58 po: Found match for regex: <begin> # {{ng|denotes general location}} [[a
 Page 58 po: Found match for regex: <begin> # [[after]] {{+obj|szl|loc}} <end>
 Page 58 po: Found match for regex: <begin> # {{ng|denotes point in space}} [[on]] {{+obj|szl|loc}} <end>
 Page 58 po: Found match for regex: <begin> # {{ng|dith certain verbs of speaking; denotes recipient of a message.}} {{+obj|szl|loc}} <end>
-Page 58 po: Found match for regex: <begin> # {{ng|denotes maximum amount}}; [[up to]] {{+obj|szl|acc}} or {{+obj|szl|loc}} <end>
+Page 58 po: Found match for regex: <begin> # {{ng|denotes maximum amount}}; [[up to]] {{+obj|szl|acc/loc}} <end>
 Page 58 po: Found match for regex: <begin> # {{ng|dreates an adverb from an adjective.}} {{+obj|szl|dat}} {{q|archaic dative ending in -u}} <end>
 Page 58 po: Found match for regex: <begin> # {{ng|denotes aim of an action}}; [[for]] {{+obj|szl|loc}} <end>
 Page 58 po: Found match for regex: <begin> # [[for]] {{ng|indicates that a container was previously used for something}} {{+obj|szl|loc}} <end>
@@ -397,10 +397,10 @@ Page 76 pod: Found match for regex: <begin> # {{ng|denotes movement towards}}; [
 Page 76 pod: Found match for regex: <begin> # {{ng|denotes object of actions}} {{+obj|zlw-mas|acc}} <end>
 Page 76 pod: Found match for regex: <begin> # {{ng|denotes tools, particularly of agricultural use}} {{+obj|zlw-mas|acc}} <end>
 Page 76 pod: Found match for regex: <begin> # {{ng|denotes manner of agricultural activity}} {{+obj|zlw-mas|acc}} <end>
-Page 76 pod: Found match for regex: <begin> # {{ng|denotes position in a hierarchy}}; [[under]] {{+obj|zlw-mas|acc}} or {{+obj|zlw-mas|ins}} <end>
+Page 76 pod: Found match for regex: <begin> # {{ng|denotes position in a hierarchy}}; [[under]] {{+obj|zlw-mas|acc/ins}} <end>
 Page 76 pod: Found match for regex: <begin> # {{ng|denotes a term containing an explanation}}; [[under]] {{+obj|zlw-mas|ins}} <end>
 Page 76 pod: Found match for regex: <begin> # {{ng|denotes boundary or edge}}; [[at]] {{+obj|zlw-mas|acc}} <end>
-Page 76 pod: Found match for regex: <begin> # {{ng|denotes intended object for some action or other object}}; [[for]] {{+obj|zlw-mas|acc}} or {{+obj|zlw-mas|ins}} <end>
+Page 76 pod: Found match for regex: <begin> # {{ng|denotes intended object for some action or other object}}; [[for]] {{+obj|zlw-mas|acc/ins}} <end>
 Page 76 pod: Found match for regex: <begin> # {{ng|denotes material of construction, typically of a roof}}; [[of]] {{+obj|zlw-mas|acc}} <end>
 Page 76 pod: Found match for regex: <begin> # {{ng|denotes temporal proximity}}; [[around]] {{+obj|zlw-mas|ins}} <end>
 Page 76 pod: Found match for regex: <begin> # {{ng|denotes an approcimate value}}; [[almost]], [[nearly]], just [[under]] {{+obj|zlw-mas|acc}} <end>
@@ -410,7 +410,7 @@ Page 76 pod: Found match for regex: <begin> # {{ng|denotes object against which 
 Page 76 pod: Found match for regex: <begin> # {{ng|denotes categorizers, i.e. a last name under which someone may find information}}; [[under]] {{+obj|zlw-mas|ins}} <end>
 Page 76 pod: Found match for regex: <begin> # {{ng|denotes coexisting factor}}; [[under]] {{+obj|zlw-mas|ins}} <end>
 Page 76 pod: Found match for regex: <begin> # {{ng|denotes actions}} {{+obj|zlw-mas|ins}} <end>
-Page 76 pod: Found match for regex: <begin> # {{ng|denotes degree of someone's needs that are met}} {{+obj|zlw-mas|acc}} or {{+obj|zlw-mas|ins}} <end>
+Page 76 pod: Found match for regex: <begin> # {{ng|denotes degree of someone's needs that are met}} {{+obj|zlw-mas|acc/ins}} <end>
 Page 76 pod: Found match for regex: <begin> # {{ng|denotes reference points}} {{+obj|zlw-mas|acc}} <end>
 Page 76 pod: Found match for regex: <begin> # {{ng|Denotes movement}}; [[to]] [[under]], to [[underneath]] {{+obj|zlw-ocs|acc}} <end>
 Page 76 pod: Found match for regex: <begin> # {{ng|Denotes movement}} [[up]], [[upward]] {{+obj|zlw-ocs|acc}} <end>
@@ -448,8 +448,8 @@ Page 76 pod: Found match for regex: <begin> # [[despite]], [[against]] {{+obj|zl
 Page 76 pod: Found match for regex: <begin> # {{ng|denotes form or shape}} [[under]]; in the [[form]] of {{+obj|zlw-opl|ins}} <end>
 Page 76 pod: Found match for regex: <begin> # {{ng|denotes subordination}} [[under]] {{+obj|zlw-opl|ins}} <end>
 Page 76 pod: Found match for regex: <begin> # {{ng|denotes period of someone's rule}} [[during]] {{+obj|zlw-opl|ins}} <end>
-Page 76 pod: Found match for regex: <begin> # {{ng|denotes protection, guidance, or watching}} [[under]] {{+obj|zlw-opl|ins}} or {{+obj|zlw-opl|acc}} <end>
-Page 76 pod: Found match for regex: <begin> # {{ng|denotes consequences of unfulfilled obligation}} [[under]], [[on pain of]] {{+obj|zlw-opl|ins}} or {{+obj|zlw-opl|acc}} <end>
+Page 76 pod: Found match for regex: <begin> # {{ng|denotes protection, guidance, or watching}} [[under]] {{+obj|zlw-opl|ins/acc}} <end>
+Page 76 pod: Found match for regex: <begin> # {{ng|denotes consequences of unfulfilled obligation}} [[under]], [[on pain of]] {{+obj|zlw-opl|ins/acc}} <end>
 Page 76 pod: Found match for regex: <begin> # {{ng|denotes movement}}; [[to]] [[under]], to [[underneath]] {{+obj|zlw-opl|acc}} <end>
 Page 76 pod: Found match for regex: <begin> # {{ng|denotes movement}}; [[to]]; [[toward]] {{+obj|zlw-opl|acc}} <end>
 Page 76 pod: Found match for regex: <begin> # {{ng|denotes preceding time}} [[just]] [[before]] {{+obj|zlw-opl|acc}} <end>
@@ -505,19 +505,19 @@ Page 77 za: Found match for regex: <begin> # {{ng|denotes general location}} [[b
 Page 77 za: Found match for regex: <begin> # {{ng|denotes distance}} [[behind]] {{+obj|zlw-opl|acc}} <end>
 Page 77 za: Found match for regex: <begin> # {{lb|zlw-opl|attested in|Greater Poland}} {{ng|denotes location of grabbing or contact}} [[by]] {{+obj|zlw-opl|acc}} <end>
 Page 77 za: Found match for regex: <begin> # {{lb|zlw-opl|attested in|Lesser Poland}} {{ng|denotes how long an action occurs}} [[for]] {{+obj|zlw-opl|acc}} <end>
-Page 77 za: Found match for regex: <begin> # {{lb|zlw-opl|attested in|Greater Poland}} {{ng|denotes length after which an action will begin}} [[in]] {{+obj|zlw-opl|acc}} or {{+obj|zlw-opl|ins}} <end>
+Page 77 za: Found match for regex: <begin> # {{lb|zlw-opl|attested in|Greater Poland}} {{ng|denotes length after which an action will begin}} [[in]] {{+obj|zlw-opl|acc/ins}} <end>
 Page 77 za: Found match for regex: <begin> # {{lb|zlw-opl|attested in|Masovia}} {{ng|denotes frequency of payment}} [[for]]; [[per]] {{+obj|zlw-opl|acc}} <end>
 Page 77 za: Found match for regex: <begin> # {{lb|zlw-opl|attested in|Lesser Poland}} {{ng|with an [[ordinal number]]; denotes which time in a sequence}}; [[for]] the _ time {{+obj|zlw-opl|acc}} <end>
-Page 77 za: Found match for regex: <begin> # {{ng|used in verb [[government]]}} {{+obj|zlw-opl|acc}} or {{+obj|zlw-opl|ins}} <end>
-Page 77 za: Found match for regex: <begin> # {{lb|zlw-opl|attested in|Masovia|Silesia}} {{ng|denotes [[benefactive]] action}} [[for]] {{+obj|zlw-opl|acc}} or {{+obj|zlw-opl|ins}} <end>
+Page 77 za: Found match for regex: <begin> # {{ng|used in verb [[government]]}} {{+obj|zlw-opl|acc/ins}} <end>
+Page 77 za: Found match for regex: <begin> # {{lb|zlw-opl|attested in|Masovia|Silesia}} {{ng|denotes [[benefactive]] action}} [[for]] {{+obj|zlw-opl|acc/ins}} <end>
 Page 77 za: Found match for regex: <begin> # {{lb|zlw-opl|attested in|Greater Poland}} {{ng|denotes cost}} [[for]] {{+obj|zlw-opl|acc}} <end>
 Page 77 za: Found match for regex: <begin> # {{lb|zlw-opl|attested in|Lesser Poland}} {{ng|denotes replacement}} [[with]], [[for]] {{+obj|zlw-opl|acc}} <end>
-Page 77 za: Found match for regex: <begin> # {{lb|zlw-opl|attested in|Lesser Poland}} {{ng|denotes cause}} [[because of]] {{+obj|zlw-opl|acc}} or {{+obj|zlw-opl|ins}} <end>
-Page 77 za: Found match for regex: <begin> # {{lb|zlw-opl|attested in|Masovia}} {{ng|denotes manner}} {{+obj|zlw-opl|acc}} or {{+obj|zlw-opl|ins}} <end>
+Page 77 za: Found match for regex: <begin> # {{lb|zlw-opl|attested in|Lesser Poland}} {{ng|denotes cause}} [[because of]] {{+obj|zlw-opl|acc/ins}} <end>
+Page 77 za: Found match for regex: <begin> # {{lb|zlw-opl|attested in|Masovia}} {{ng|denotes manner}} {{+obj|zlw-opl|acc/ins}} <end>
 Page 77 za: Found match for regex: <begin> # {{lb|zlw-opl|attested in|Lesser Poland}} {{ng|denotes aim or goal}} [[for]] {{+obj|zlw-opl|acc}} <end>
 Page 77 za: Found match for regex: <begin> # {{lb|zlw-opl|attested in|Greater Poland}} {{ng|denotes position behind something}} [[behind]] {{+obj|zlw-opl|ins}} <end>
 Page 77 za: Found match for regex: <begin> # {{lb|zlw-opl|attested in|Lesser Poland}} {{ng|denotes connection with someone}} [[with]] {{+obj|zlw-opl|ins}} <end>
-Page 77 za: Found match for regex: <begin> # {{lb|zlw-opl|attested in|Greater Poland}} {{ng|denotes when something occurs}} [[at]], [[during]] {{+obj|zlw-opl|ins}} or {{+obj|zlw-opl|gen}} <end>
+Page 77 za: Found match for regex: <begin> # {{lb|zlw-opl|attested in|Greater Poland}} {{ng|denotes when something occurs}} [[at]], [[during]] {{+obj|zlw-opl|ins/gen}} <end>
 Page 77 za: Found match for regex: <begin> # {{lb|zlw-opl|attested in|Greater Poland}} [[based on]] {{+obj|zlw-opl|ins}} <end>
 Page 77 za: Found match for regex: <begin> # {{lb|zlw-opl|attested in|Greater Poland}} {{ng|denotes actions occurring alongside other actions}} {{+obj|zlw-opl|ins}} <end>
 Page 77 za: Found match for regex: <begin> # {{lb|zlw-opl|attested in|Lesser Poland}} {{ng|denotes object of payment for work}} {{+obj|zlw-opl|ins}} <end>
@@ -582,8 +582,8 @@ Page 82 वच्: Found match for regex: <begin> # to [[revile]] {{+obj|sa|acc}
 Page 83 å: Found match for regex: <begin> # [[on]]; {{ngd|For stationary objects, e.g. It is '''on''' the table.}} {{+obj|cim|dative}} <end>
 Page 83 å: Found match for regex: <begin> # on, [[onto]]; {{ngd|For moving objects. e.g. I put it '''on''' the table.}} {{+obj|cim|accusative}} <end>
 Page 84 wymagać: Found match for regex: <begin> # {{lb|pl|transitive}} to [[require]] {{gl|naturally to demand (something) as indispensable; to need, to call for as necessary}} {{+obj|pl|gen}} <end>
-Page 84 wymagać: Found match for regex: <begin> # {{lb|pl|transitive}} to [[require]], to [[demand]] {{gl|to deem as necessary and ask for strongly}} {{+obj|pl|gen}}, {{+obj|pl|:od(gen)<from whom>}}, {{+obj|pl|:żeby(inf/past-cl)<to do what>}} <end>
-Page 84 wymagać: Found match for regex: <begin> # {{lb|pl|transitive}} to [[require]], to [[demand]] {{gl|i.e. of a situation, to force}} {{+obj|pl|gen}}, {{+obj|pl|:od(gen)<from whom>}}, {{+obj|pl|:żeby(inf/past-cl)<to do what>}} <end>
+Page 84 wymagać: Found match for regex: <begin> # {{lb|pl|transitive}} to [[require]], to [[demand]] {{gl|to deem as necessary and ask for strongly}} {{+obj|pl|gen<something> + :od(gen)<from whom> + :żeby(inf/past-cl)<to do what>}} <end>
+Page 84 wymagać: Found match for regex: <begin> # {{lb|pl|transitive}} to [[require]], to [[demand]] {{gl|i.e. of a situation, to force}} {{+obj|pl|gen<something> + :od(gen)<from whom> + :żeby(inf/past-cl)<to do what>}} <end>
 Page 85 anagram: Found match for regex: <begin> # {{lb|pl|linguistics}} {{l|en|anagram}} {{+obj|pl|gen/:od(gen)<of what>}} <end>
 Page 86 pica: Found match for regex: <begin> # {{lb|ro|intransitive|informal|of things}} to [[fall into one's hands|fall into one’s hands]], [[fall into one's lap|fall into one’s lap]] {{+obj|ro|dat}} <end>
 Page 87 temere: Found match for regex: <begin> # {{lb|it|transitive}} to [[fear]] {{+obj|it|&transitive<something>|:di(inf)<something happening>|:che(sub-cl)<that something may happen>}} <end>
@@ -626,8 +626,8 @@ Page 96 nad: Found match for regex: <begin> # {{ng|Denotes movement}}; to [[over
 Page 96 nad: Found match for regex: <begin> # {{ng|Denotes movement}}; to [[under]], to [[below]] {{+obj|zlw-ocs|acc}} <end>
 Page 96 nad: Found match for regex: <begin> # {{ng|Denotes subject of an attack etc..}} {{+obj|zlw-ocs|acc}} <end>
 Page 96 nad: Found match for regex: <begin> # {{ng|Denotes a higher position in comparisons}}; [[above]] {{+obj|zlw-ocs|acc}} <end>
-Page 96 nad: Found match for regex: <begin> # {{ng|Denotes larger amount}}; [[above]], [[more than]] {{+obj|zlw-ocs|acc}} or {{+obj|zlw-ocs|ins}} <end>
-Page 96 nad: Found match for regex: <begin> # {{ng|Denotes first degree of comparisons}}; [[more than]] {{+obj|zlw-ocs|acc}} or  {{+obj|zlw-ocs|ins}} <end>
+Page 96 nad: Found match for regex: <begin> # {{ng|Denotes larger amount}}; [[above]], [[more than]] {{+obj|zlw-ocs|acc/ins}} <end>
+Page 96 nad: Found match for regex: <begin> # {{ng|Denotes first degree of comparisons}}; [[more than]] {{+obj|zlw-ocs|acc/ins}} <end>
 Page 96 nad: Found match for regex: <begin> # {{ng|With a reduplicated noun, expresses superlative nature}}; [[of]] {{+obj|zlw-ocs|acc}} <end>
 Page 96 nad: Found match for regex: <begin> # {{ng|Denotes additionality or excess}}; [[in addition to]] {{+obj|zlw-ocs|acc}} <end>
 Page 96 nad: Found match for regex: <begin> # {{ng|Denotes a manner contrary to something else.}} {{+obj|zlw-ocs|acc}} <end>
@@ -642,7 +642,7 @@ Page 96 nad: Found match for regex: <begin> # {{ng|denotes location}}; [[above]]
 Page 96 nad: Found match for regex: <begin> # {{ng|denotes location}}; [[near]], [[close to]] {{+obj|zlw-opl|ins}} <end>
 Page 96 nad: Found match for regex: <begin> # {{ng|denotes time}}; [[just]] [[before]] {{+obj|zlw-opl|ins}} <end>
 Page 96 nad: Found match for regex: <begin> # {{ng|denotes cause}}; [[because of]] {{+obj|zlw-opl|ins}} <end>
-Page 96 nad: Found match for regex: <begin> # {{ng|denotes position in comparison}}; [[over]], [[more than]] {{+obj|zlw-opl|ins}} or  {{+obj|zlw-opl|acc}} <end>
+Page 96 nad: Found match for regex: <begin> # {{ng|denotes position in comparison}}; [[over]], [[more than]] {{+obj|zlw-opl|ins/acc}} <end>
 Page 96 nad: Found match for regex: <begin> # {{ng|with a reduplicated noun, expresses superlative nature}}; [[of]] {{+obj|zlw-opl|ins}} <end>
 Page 96 nad: Found match for regex: <begin> # {{ng|denotes subject of power}}; [[above]] {{+obj|zlw-opl|ins}} <end>
 Page 96 nad: Found match for regex: <begin> # {{ng|denotes subject of someones thoughts or actions}} [[in relation to]], [[vis-a-vis]] {{+obj|zlw-opl|ins}} <end>
@@ -654,7 +654,7 @@ Page 96 nad: Found match for regex: <begin> # {{ng|denotes movement, particularl
 Page 96 nad: Found match for regex: <begin> # {{lb|pl|literary}} {{ng|denotes position in comparison}}; [[than]]; [[over]] {{+obj|pl|acc}} <end>
 Page 96 nad: Found match for regex: <begin> # [[over]] {{q|indicates relative status, authority or power}} {{+obj|pl|instrumental}} <end>
 Page 96 nad: Found match for regex: <begin> # {{ng|denotes subject of activities}}; [[on]] {{+obj|pl|ins}} <end>
-Page 96 nad: Found match for regex: <begin> # {{ng|with a reduplicated noun, expresses superlative nature}}; [[great|the greatest of all]], [[of]] {{+obj|pl|ins}} or {{q|stylized}} {{+obj|pl|acc}} <end>
+Page 96 nad: Found match for regex: <begin> # {{ng|with a reduplicated noun, expresses superlative nature}}; [[great|the greatest of all]], [[of]] {{+obj|pl|ins/acc<q:stylized>}} <end>
 Page 96 nad: Found match for regex: <begin> # [[over]], [[above]] {{qualifier|with no change of position, answering the question {{m|sh|gdjȅ}}/{{m|sh|gdȅ}}}} {{+obj|sh|instrumental}} <end>
 Page 96 nad: Found match for regex: <begin> # [[over]], [[above]] {{qualifier|usually with change of position, answering the question {{m|sh|kùda}}}} {{+obj|sh|accusative}} <end>
 Page 96 nad: Found match for regex: <begin> # {{ng|denotes location}}; [[above]], [[over]] {{+obj|szl|ins}} <end>
@@ -716,7 +716,7 @@ Page 116 dát: Found match for regex: <begin> # to [[give]] {{+obj|cs|accusative
 Page 117 vzít: Found match for regex: <begin> # {{lb|cs|transitive}} to [[take]] {{+obj|cs|accusative<something> + dative<from someone>}} <end>
 Page 118 krom: Found match for regex: <begin> # {{lb|pl|archaic}} [[except]], [[apart from]], [[but]] {{+obj|pl|genitive}} <end>
 Page 118 krom: Found match for regex: <begin> # {{lb|pl|archaic}} [[besides]], [[beyond]], [[other than]] {{+obj|pl|genitive}} <end>
-Page 119 produco: Found match for regex: <begin> # to [[place]] one thing {{+obj|la|accusative}} before another {{+obj|la|dative}} <end>
+Page 119 produco: Found match for regex: <begin> # to [[place]] {{+obj|la|acc<something> + dat<before another>}} <end>
 Page 120 folgen: Found match for regex: <begin> # to [[follow]] {{+obj|goh|dat}} <end>
 Page 121 þurfan: Found match for regex: <begin> # to [[need]] {{+obj|ang|gen}} <end>
 Page 122 á: Found match for regex: <begin> # [[on]], [[onto]], [[to]], [[near]], [[beside]] {{+obj|fo|accusative}} <end>
@@ -869,8 +869,8 @@ Page 193 mimo: Found match for regex: <begin> {{head|zlw-ocs|preposition}} {{+ob
 Page 193 mimo: Found match for regex: <begin> # [[outside]]; [[next to]], [[beside]], [[alongside]] {{+obj|zlw-ocs|gen}} <end>
 Page 193 mimo: Found match for regex: <begin> # {{q|with verbs of motion}} [[around]] {{+obj|zlw-ocs|gen}} <end>
 Page 193 mimo: Found match for regex: <begin> # {{ng|Denotes time}}; [[for]], [[over]] {{+obj|zlw-ocs|acc}} <end>
-Page 193 mimo: Found match for regex: <begin> {{head|zlw-opl|preposition}} {{+obj|zlw-opl|acc}}, once {{+obj|zlw-opl|gen}} <end>
-Page 193 mimo: Found match for regex: <begin> # [[despite]], [[in spite of]] {{+obj|pl|acc}} or less commonly {{+obj|pl|gen}} <end>
+Page 193 mimo: Found match for regex: <begin> {{head|zlw-opl|preposition}} {{+obj|zlw-opl|acc/gen<q:once>}} <end>
+Page 193 mimo: Found match for regex: <begin> # [[despite]], [[in spite of]] {{+obj|pl|acc/gen<q:less commonly>}} <end>
 Page 193 mimo: Found match for regex: <begin> # [[despite]], [[in spite of]] {{+obj|szl|gen}} <end>
 Page 193 mimo: Found match for regex: <begin> # [[around]] {{gl|circumventing}} {{+obj|szl|gen}} <end>
 Page 193 mimo: Found match for regex: <begin> {{sk-prep}} {{+obj|sk|gen}} <end>
@@ -909,7 +909,7 @@ Page 207 przy: Found match for regex: <begin> {{head|zlw-opl|preposition}} {{+ob
 Page 207 przy: Found match for regex: <begin> {{head|pl|preposition}} {{+obj|pl|loc}} <end>
 Page 208 dzwonić: Found match for regex: <begin> # {{lb|pl|intransitive}} to [[ring]], to [[jangle]], to [[clink]] {{+obj|pl|instrumental<something>}} {{gl|to produce (a sound) by ringing}} <end>
 Page 209 okazja: Found match for regex: <begin> # [[chance]], [[occasion]], [[opportunity]] {{gl|chance for advancement, progress or profit}} {{+obj|pl|inf/:żeby(inf/past-cl)<to do what>|:do(gen)<for what>}} <end>
-Page 210 rozumieć: Found match for regex: <begin> # {{lb|zlw-opl|attested in|Greater Poland|Lesser Poland|Masovia}} to [[understand]] {{gl|to grasp a concept fully in one's mind}} {{+obj|zlw-opl|dat}}, {{+obj|zlw-opl|:na(acc)}}, {{+obj|zlw-opl|:w(loc)}} <end>
+Page 210 rozumieć: Found match for regex: <begin> # {{lb|zlw-opl|attested in|Greater Poland|Lesser Poland|Masovia}} to [[understand]] {{gl|to grasp a concept fully in one's mind}} {{+obj|zlw-opl|dat|:na(acc)|:w(loc)}} <end>
 Page 211 przez: Found match for regex: <begin> {{head|csb|preposition}} {{+obj|csb|acc}} <end>
 Page 211 przez: Found match for regex: <begin> {{head|zlw-opl|preposition}} {{+obj|zlw-opl|acc}} <end>
 Page 211 przez: Found match for regex: <begin> {{head|zlw-opl|preposition}} {{+obj|zlw-opl|gen}} <end>
@@ -938,8 +938,8 @@ Page 221 помогать: Found match for regex: <begin> # {{lb|ru|colloquial}}
 Page 222 помочь: Found match for regex: <begin> # to [[help]] {{+obj|ru|dat<whom>}} <end>
 Page 222 помочь: Found match for regex: <begin> # {{lb|ru|colloquial}} to [[aid]], to [[assist]] [[materially]] {{+obj|ru|dat<whom> + ins<with/using what>}} <end>
 Page 223 δοκέω: Found match for regex: <begin> # to [[seem]], to be thought {{+obj|grc|dat<to/by someone> + inf<that ...>}} <end>
-Page 223 δοκέω: Found match for regex: <begin> ## {{lb|grc|impersonal|{{m|grc|δοκεῖ}}}} it [[seem]]s {{+obj|grc|dat<to someone>}}; {{+obj|grc|dat<''subject''>}} to [[think]] <end>
-Page 223 δοκέω: Found match for regex: <begin> ## {{lb|grc|impersonal|{{m|grc|δοκεῖ}}}} it [[seems]] good {{+obj|grc|dat<to someone>}}; {{+obj|grc|dat<''subject''>}} to [[resolve]] <end>
+Page 223 δοκέω: Found match for regex: <begin> ## {{lb|grc|impersonal|{{m|grc|δοκεῖ}}}} it [[seem]]s {{+obj|grc|dat<to someone>}} {{q|idiomatically translated by {{m+|en|think}} with the dative becoming the subject}} <end>
+Page 223 δοκέω: Found match for regex: <begin> ## {{lb|grc|impersonal|{{m|grc|δοκεῖ}}}} it [[seems]] good, it is [[decide]]d {{+obj|grc|dat<to someone>}} {{q|idiomatically translated by {{m+|en|decide}} or {{m|en|resolve}} with the dative becoming the subject}} <end>
 Page 223 δοκέω: Found match for regex: <begin> # to be reputed {{+obj|grc|inf<that ...>}} <end>
 Page 224 wù: Found match for regex: <begin> {{h|zlw-slv|prep}} {{+obj|zlw-slv|gen}} <end>
 Page 225 ò: Found match for regex: <begin> {{head|csb|preposition}} {{+obj|csb|loc}} <end>
@@ -962,7 +962,7 @@ Page 237 ô: Found match for regex: <begin> # {{ng|denotes object of discussion 
 Page 237 ô: Found match for regex: <begin> # {{ng|telling the time}}; [[at]] {{+obj|zlw-mas|loc}} <end>
 Page 237 ô: Found match for regex: <begin> # {{ng|denotes object of a request, question, or actions}}; [[about]], [[for]] {{+obj|zlw-mas|acc}} <end>
 Page 237 ô: Found match for regex: <begin> # {{ng|denotes object of care}}; [[about]], [[for]] {{+obj|zlw-mas|acc}} <end>
-Page 237 ô: Found match for regex: <begin> # {{ng|denotes object of physical reaction or action}}; [[on]], [[against]] {{+obj|zlw-mas|acc}} or {{+obj|zlw-mas|loc}} <end>
+Page 237 ô: Found match for regex: <begin> # {{ng|denotes object of physical reaction or action}}; [[on]], [[against]] {{+obj|zlw-mas|acc/loc}} <end>
 Page 237 ô: Found match for regex: <begin> # {{ng|denotes a possessed trait}}; [[of]] {{+obj|zlw-mas|loc}} <end>
 Page 237 ô: Found match for regex: <begin> # {{ng|denotes object of dispute, claim, bet}}; [[for]]; [[about]] {{+obj|zlw-mas|acc}} <end>
 Page 237 ô: Found match for regex: <begin> # {{ng|denotes object that is the cause of accusation or some action}}; [[for]] {{+obj|zlw-mas|acc}} <end>
@@ -994,9 +994,9 @@ Page 250 osoba: Found match for regex: <begin> # → {{lb|pl|narratology}} [[cha
 Page 251 czytać: Found match for regex: <begin> # {{lb|pl|transitive}} to [[read]] {{gl|to look at and interpret letters and symbols that are written}} {{+obj|pl|dat<to whom> + :o(loc)<about whom/what>}} <end>
 Page 252 bescheiden: Found match for regex: <begin> # {{lb|de|reflexive}} to [[accept]] so as to become [[content]] with {{+obj|de|gen}} <end>
 Page 253 solere: Found match for regex: <begin> # {{lb|it|intransitive|also|impersonal}} to be [[used to]] {{+obj|it|infinitive}} <end>
-Page 254 ribadire: Found match for regex: <begin> # to [[reaffirm]] {{+obj|it|transitive}} ''or'' {{+obj|it|:di(infinitive)}} ''or'' {{+obj|it|:che(indicative)}} <end>
+Page 254 ribadire: Found match for regex: <begin> # to [[reaffirm]] {{+obj|it|&transitive/:di(inf)/:che(ind)}} <end>
 Page 255 proti: Found match for regex: <begin> {{head|cs|preposition}} {{+obj|cs|dative}} <end>
-Page 258 ardire: Found match for regex: <begin> # {{lb|it|intransitive}} to [[dare]] {{+obj|it|infinitive}} ''or'' {{+obj|it|:di(infinitive)}} <end>
+Page 258 ardire: Found match for regex: <begin> # {{lb|it|intransitive}} to [[dare]] {{+obj|it|inf/:di(inf)}} <end>
 Page 259 близкий: Found match for regex: <begin> # [[dear]], [[intimate]] {{+obj|ru|dative}} <end>
 Page 259 близкий: Found match for regex: <begin> # [[directly]] [[concerning]] {{+obj|ru|dative}} <end>
 Page 260 unterwerfen: Found match for regex: <begin> # {{lb|de|ditransitive}} to [[subdue]], to [[subordinate]] {{+obj|de|acc}} + {{+obj|de|dat}} <end>
@@ -1353,7 +1353,7 @@ Page 389 leżeć: Found match for regex: <begin> # {{lb|pl|intransitive|colloqui
 Page 390 kończyć: Found match for regex: <begin> # {{lb|pl|reflexive-się}} to [[end]], to [[finish]] {{+obj|pl|intrumental<in/as what>}} <end>
 Page 391 podczas: Found match for regex: <begin> # [[during]] {{gl|at the same time of}} {{+obj|pl|gen}} <end>
 Page 392 ὄζω: Found match for regex: <begin> # to [[smell]] (i.e. exude a scent) {{+obj|grc|gen}} <end>
-Page 393 mimò: Found match for regex: <begin> {{head|csb|preposition}} {{+obj|csb|gen}} or {{+obj|csb|acc}} <end>
+Page 393 mimò: Found match for regex: <begin> {{head|csb|preposition}} {{+obj|csb|gen/acc}} <end>
 Page 394 przyjść: Found match for regex: <begin> ## {{lb|pl|intransitive}} to [[come]] {{gl|to arrive at a place to do the typical things one would do at that place, either once or for a while}} {{+obj|pl|inf<to do what>}} <end>
 Page 394 przyjść: Found match for regex: <begin> # {{lb|pl|intransitive|of a desire or other phenomena}} to [[take]] {{gl|to start to be felt by a person}} {{+obj|pl|dat<whom>}} <end>
 Page 394 przyjść: Found match for regex: <begin> # {{lb|pl|intransitive}} to [[come]] {{gl|to be able to be achieved}} {{+obj|pl|dat<to whom>}} {{+obj|pl|:z(gen)<at what>}} <end>
@@ -1413,7 +1413,7 @@ Page 421 तिरस्: Found match for regex: <begin> # so as to pass by, apa
 Page 421 तिरस्: Found match for regex: <begin> # apart or secretly from {{+obj|sa|abl}} <end>
 Page 422 kosztować: Found match for regex: <begin> # {{lb|pl|transitive}} to [[taste]], to [[try]], to [[sample]] {{+obj|pl|genitive}} <end>
 Page 422 kosztować: Found match for regex: <begin> # {{lb|pl|transitive|literary}} to [[feel]], to [[experience]], to [[know]] {{+obj|pl|genitive}} <end>
-Page 423 płacić: Found match for regex: <begin> # {{lb|pl|transitive}} to [[pay]] {{gl|to give money in exchange for goods or services}} {{+obj|pl|dative<whom>}} {{+obj|pl|:za(accusative)<for something>}} <end>
+Page 423 płacić: Found match for regex: <begin> # {{lb|pl|transitive}} to [[pay]] {{gl|to give money in exchange for goods or services}} {{+obj|pl|dative<whom> + :za(accusative)<for something>}} <end>
 Page 424 około: Found match for regex: <begin> {{head|zlw-opl|preposition}} {{+obj|zlw-opl|gen}} <end>
 Page 424 około: Found match for regex: <begin> # {{ng|denotes inexactitude of location}}; [[near]], [[about]], [[around]] {{+obj|pl|genitive}} <end>
 Page 424 około: Found match for regex: <begin> # {{ng|denotes inexactitude of time}}; [[near]], [[about]], [[around]], [[circa]] {{+obj|pl|genitive}} <end>
@@ -1423,7 +1423,7 @@ Page 425 pozwalać: Found match for regex: <begin> # {{lb|pl|intransitive}} to [
 Page 425 pozwalać: Found match for regex: <begin> # {{lb|pl|intransitive}} to [[allow]], to [[permit]] {{gl|to cause something to be possible}} {{+obj|pl|:na(acc)<what>}}, {{+obj|pl|inf<to do what>}} <end>
 Page 425 pozwalać: Found match for regex: <begin> # {{lb|pl|reflexive-sobie}} to [[allow]] oneself, to [[let]] oneself {{gl|to give permission to oneself to do something that might otherwise be considered inappropriate}} {{+obj|pl|inf<to do what>}} {{+obj|pl|:na(acc)<what>}} <end>
 Page 425 pozwalać: Found match for regex: <begin> # {{lb|pl|reflexive-sobie}} to [[allow]] oneself, to [[let]] oneself {{gl|to do something that one considers they ought to do}} {{+obj|pl|inf<to do what>}} <end>
-Page 425 pozwalać: Found match for regex: <begin> # {{lb|pl|transitive|obsolete}} to [[grant]], to [[accord]], to [[give]] {{+obj|pl|acc}} or {{+obj|pl|gen}} <end>
+Page 425 pozwalać: Found match for regex: <begin> # {{lb|pl|transitive|obsolete}} to [[grant]], to [[accord]], to [[give]] {{+obj|pl|acc/gen}} <end>
 Page 426 właściwy: Found match for regex: <begin> # [[proper]] {{gl|characteristic of something}} {{+obj|pl|dat<for whom/what>}} <end>
 Page 427 nienawidzić: Found match for regex: <begin> # {{lb|pl|transitive}} to [[hate]] {{gl|a person or a thing}} {{+obj|pl|genitive<something>}} {{+obj|pl|infinitive<doing something>}} <end>
 Page 427 nienawidzić: Found match for regex: <begin> # {{lb|pl|transitive}} to [[abominate]], to [[detest]], to [[loathe]] {{+obj|pl|genitive<something>}} {{+obj|pl|infinitive<doing something>}} <end>
@@ -1551,7 +1551,7 @@ Page 504 oproti: Found match for regex: <begin> {{head|cs|preposition}} {{+obj|c
 Page 505 na rozdíl od: Found match for regex: <begin> {{head|cs|preposition}} {{+obj|cs|genitive}} <end>
 Page 506 bez ohledu na: Found match for regex: <begin> {{head|cs|preposition}} {{+obj|cs|accusative}} <end>
 Page 507 mitteilen: Found match for regex: <begin> {{de-verb|mit.teilen}} {{+obj|de|dat}} <end>
-Page 508 منذ: Found match for regex: <begin> {{ar-prep|مُنْذُ}} {{+obj|ar|gen}} or {{+obj|ar|nom}} <end>
+Page 508 منذ: Found match for regex: <begin> {{ar-prep|مُنْذُ}} {{+obj|ar|gen/nom}} <end>
 Page 509 uprostřed: Found match for regex: <begin> {{head|cs|preposition}} {{+obj|cs|genitive}} <end>
 Page 510 laukti: Found match for regex: <begin> # to [[wait]]; to [[expect]], to [[anticipate]] {{+obj|lt|genitive}} <end>
 Page 510 laukti: Found match for regex: <begin> # to [[hope]] {{+obj|lt|genitive}} <end>
@@ -1644,7 +1644,7 @@ Page 557 pójść: Found match for regex: <begin> # {{lb|pl|impersonal}} to [[me
 Page 558 dzięki: Found match for regex: <begin> # {{senseid|pl|preposition}} [[thanks to]] {{+obj|pl|dat}} <end>
 Page 559 radzić: Found match for regex: <begin> # {{lb|pl|intransitive}} to [[advise]], to [[counsel]], to [[suggest]] {{+obj|pl|dat<whom>}} <end>
 Page 559 radzić: Found match for regex: <begin> # {{lb|pl|reflexive-się}} to [[consult]] {{gl|to ask advice of; to seek the opinion of}} {{+obj|pl|gen<whom>}} <end>
-Page 560 zrozumieć: Found match for regex: <begin> # {{lb|zlw-opl|attested in|Lesser Poland|Sieradz}} to [[understand]] {{gl|to grasp a concept fully in one's mind}} {{+obj|zlw-opl|dat}} or {{+obj|zlw-opl|acc}} <end>
+Page 560 zrozumieć: Found match for regex: <begin> # {{lb|zlw-opl|attested in|Lesser Poland|Sieradz}} to [[understand]] {{gl|to grasp a concept fully in one's mind}} {{+obj|zlw-opl|dat/acc}} <end>
 Page 561 keçmək: Found match for regex: <begin> # {{lb|az|intransitive}} to [[pass]] [[through]] something {{+obj|az|ablative}} <end>
 Page 562 yppa: Found match for regex: <begin> # to [[announce]] {{+obj|non|dative}} <end>
 Page 563 uvařit: Found match for regex: <begin> # to [[cook]] {{+obj|cs|accusative<something>}} {{+obj|cs|dative<for someone>}} <end>
@@ -1801,7 +1801,7 @@ Page 657 pomóc: Found match for regex: <begin> # {{lb|zlw-opl|attested in|Lesse
 Page 657 pomóc: Found match for regex: <begin> # {{lb|pl|intransitive}} to [[help]] {{gl|to provide assistance to}} {{+obj|pl|dat<whom>}}, {{+obj|pl|:w(loc)/:przy(loc)<with what>}}, {{+obj|pl|inf<to do what>}}, {{+obj|pl|ins<with (by means of) what>}} <end>
 Page 657 pomóc: Found match for regex: <begin> # {{lb|pl|intransitive}} to [[help]] {{gl|to be effective}} {{+obj|pl|dat<whom>}}, {{+obj|pl|:w(loc)<with what>}}, {{+obj|pl|:na(acc)<for what>}}, {{+obj|pl|inf<to do what>}} <end>
 Page 658 poza: Found match for regex: <begin> # {{ng|denotes an area not within}}; [[beyond]], [[out of]], [[outside of]] {{+obj|zlw-mas|ins}} <end>
-Page 658 poza: Found match for regex: <begin> # {{ng|denotes movement to an area not within}}; [[to]] [[beyond]], to [[out of]], to [[outside of]] {{+obj|zlw-mas|acc}} or {{+obj|zlw-mas|ins}} <end>
+Page 658 poza: Found match for regex: <begin> # {{ng|denotes movement to an area not within}}; [[to]] [[beyond]], to [[out of]], to [[outside of]] {{+obj|zlw-mas|acc/ins}} <end>
 Page 658 poza: Found match for regex: <begin> # {{ng|denotes position in time}}; [[after]] {{+obj|zlw-mas|ins}} <end>
 Page 658 poza: Found match for regex: <begin> # {{ng|denotes exclusion}}; [[besides]], [[outside of]]; [[except]] {{+obj|zlw-mas|ins}} <end>
 Page 658 poza: Found match for regex: <begin> # {{ng|denotes an area not within}}; [[beyond]], [[out of]], [[outside of]] {{+obj|pl|ins}} <end>
@@ -1862,14 +1862,14 @@ Page 682 spróbować: Found match for regex: <begin> # {{lb|pl|intransitive}} to
 Page 682 spróbować: Found match for regex: <begin> # {{lb|pl|transitive}} to [[try]], to [[taste]] {{gl|to sample the flavor of something}} {{+obj|pl|gen<what>}} <end>
 Page 682 spróbować: Found match for regex: <begin> # {{lb|pl|transitive}} to [[try]] {{gl|to do something for the first time to experience it}} {{+obj|pl|gen<what>}} <end>
 Page 683 rzucać: Found match for regex: <begin> # {{lb|pl|transitive}} to [[throw]]; to [[pitch]], to [[toss]], to [[cast]] {{gl|to release (an object) with some force from one's hands, an apparatus, etc. so that it moves rapidly through the air}} {{+obj|pl|acc}} or {{+obj|pl|ins<whom/what>}} {{+obj|pl|:w(acc)<at whom>}} {{+obj|pl|:o(acc)<against what>}} <end>
-Page 683 rzucać: Found match for regex: <begin> # {{lb|pl|transitive}} to [[speak]] {{gl|to utter something}} {{+obj|pl|acc}} or {{+obj|pl|ins}} <end>
-Page 683 rzucać: Found match for regex: <begin> # {{lb|pl|transitive}} to [[throw]] {{gl|to move something suddenly or violently}} {{+obj|pl|acc}} or {{+obj|pl|ins}} <end>
-Page 683 rzucać: Found match for regex: <begin> # {{lb|pl|transitive}} to [[shake]], to [[jolt]] {{gl|to cause a sudden and unintentional movement of something}} {{+obj|pl|acc}} or {{+obj|pl|ins}} <end>
+Page 683 rzucać: Found match for regex: <begin> # {{lb|pl|transitive}} to [[speak]] {{gl|to utter something}} {{+obj|pl|acc/ins}} <end>
+Page 683 rzucać: Found match for regex: <begin> # {{lb|pl|transitive}} to [[throw]] {{gl|to move something suddenly or violently}} {{+obj|pl|acc/ins}} <end>
+Page 683 rzucać: Found match for regex: <begin> # {{lb|pl|transitive}} to [[shake]], to [[jolt]] {{gl|to cause a sudden and unintentional movement of something}} {{+obj|pl|acc/ins}} <end>
 Page 684 rzucić: Found match for regex: <begin> ## to [[destroy]]; to [[ruin]]; to [[thwart]] {{+obj|zlw-opl|ins}} <end>
 Page 684 rzucić: Found match for regex: <begin> # {{lb|pl|transitive}} to [[throw]]; to [[pitch]], to [[toss]], to [[cast]] {{gl|to release (an object) with some force from one's hands, an apparatus, etc. so that it moves rapidly through the air}} {{+obj|pl|acc}} or {{+obj|pl|ins<whom/what>}} {{+obj|pl|:w(acc)<at whom>}} {{+obj|pl|:o(acc)<against what>}} <end>
-Page 684 rzucić: Found match for regex: <begin> # {{lb|pl|transitive}} to [[speak]] {{gl|to utter something}} {{+obj|pl|acc}} or {{+obj|pl|ins}} <end>
-Page 684 rzucić: Found match for regex: <begin> # {{lb|pl|transitive}} to [[throw]] {{gl|to move something suddenly or violently}} {{+obj|pl|acc}} or {{+obj|pl|ins}} <end>
-Page 684 rzucić: Found match for regex: <begin> # {{lb|pl|transitive}} to [[shake]], to [[jolt]] {{gl|to cause a sudden and unintentional movement of something}} {{+obj|pl|acc}} or {{+obj|pl|ins}} <end>
+Page 684 rzucić: Found match for regex: <begin> # {{lb|pl|transitive}} to [[speak]] {{gl|to utter something}} {{+obj|pl|acc/ins}} <end>
+Page 684 rzucić: Found match for regex: <begin> # {{lb|pl|transitive}} to [[throw]] {{gl|to move something suddenly or violently}} {{+obj|pl|acc/ins}} <end>
+Page 684 rzucić: Found match for regex: <begin> # {{lb|pl|transitive}} to [[shake]], to [[jolt]] {{gl|to cause a sudden and unintentional movement of something}} {{+obj|pl|acc/ins}} <end>
 Page 685 arruffianarsi: Found match for regex: <begin> # {{lb|it|transitive|or|intransitive|colloquial}} to [[toady]], to [[brownnose]], to [[curry favor]] through [[flattery]] {{+obj|it|&transitive/:con<someone>}} <end>
 Page 686 costumare: Found match for regex: <begin> # {{lb|it|transitive}} to be in the [[habit]] of, to be [[accustom]]ed to {{+obj|it|inf}} <end>
 Page 687 entgegenschlagen: Found match for regex: <begin> # {{lb|de|intransitive|often|figurative}} to [[assail]] {{+obj|de|dative<someone>}} <end>
@@ -1976,7 +1976,7 @@ Page 746 pô: Found match for regex: <begin> # {{ng|Denotes destination of movem
 Page 746 pô: Found match for regex: <begin> # {{ng|Denotes [[distributive]] meaning with a numeral}}; [[each]]; [[per]] {{+obj|zlw-slv|acc}} <end>
 Page 746 pô: Found match for regex: <begin> # {{ng|Denotes conformity according to which something happens}}; [[along]], [[according to]] {{+obj|zlw-slv|dat}} <end>
 Page 746 pô: Found match for regex: <begin> # {{ng|Denotes [[distributive]] meaning with {{m|zlw-slv|stô}} and {{m|zlw-slv|tësinc}}}}; [[each]] {{+obj|zlw-slv|dat}} <end>
-Page 746 pô: Found match for regex: <begin> # {{ng|With an [[ordinal numeral]], denotes position in a sequence or enumeration}}; [[of all]] {{+obj|zlw-slv|dat}} or {{+obj|zlw-slv|loc}} <end>
+Page 746 pô: Found match for regex: <begin> # {{ng|With an [[ordinal numeral]], denotes position in a sequence or enumeration}}; [[of all]] {{+obj|zlw-slv|dat/loc}} <end>
 Page 746 pô: Found match for regex: <begin> # {{lb|zlw-slv|rare}} {{ng|Denotes movement along a surface}}; [[along]], [[around]] {{+obj|zlw-slv|dat}} <end>
 Page 746 pô: Found match for regex: <begin> # {{ng|Denotes movement along a surface}}; [[along]], [[around]] {{+obj|zlw-slv|loc}} or rarely {{+obj|zlw-slv|dat}} <end>
 Page 746 pô: Found match for regex: <begin> # {{ng|Denotes time}}; [[after]] {{+obj|zlw-slv|loc}} <end>
@@ -2311,8 +2311,8 @@ Page 977 miedzy: Found match for regex: <begin> # {{lb|zlw-opl|attested in|Lesse
 Page 977 miedzy: Found match for regex: <begin> # {{ng|denotes a unit from a group}}; [[among]]; [[from]] {{+obj|zlw-opl|ins}} or rarely {{+obj|zlw-opl|acc}} <end>
 Page 977 miedzy: Found match for regex: <begin> # {{lb|zlw-opl|attested in|Greater Poland}} {{ng|denotes relations of components of a whole}}; [[between]] {{+obj|zlw-opl|ins}} <end>
 Page 977 miedzy: Found match for regex: <begin> # {{lb|zlw-opl|with {{m|zlw-opl|siebie|sobą}} or {{m|zlw-opl|siebie}}|attested in|Masovia}} {{ng|denotes mutual conversation}}; [[between]], [[amongst]] {{+obj|zlw-opl|ins}} or rarely {{+obj|zlw-opl|acc}} <end>
-Page 977 miedzy: Found match for regex: <begin> # {{lb|zlw-opl|attested in|Greater Poland|Masovia}} {{ng|denotes separation}}; [[between]] {{+obj|zlw-opl|ins}} or {{+obj|zlw-opl|acc}} <end>
-Page 977 miedzy: Found match for regex: <begin> # {{lb|zlw-opl|attested in|Greater Poland|Masovia}} {{ng|denotes simultaneous action}}; [[during]] {{+obj|zlw-opl|ins}} or {{+obj|zlw-opl|acc}} <end>
+Page 977 miedzy: Found match for regex: <begin> # {{lb|zlw-opl|attested in|Greater Poland|Masovia}} {{ng|denotes separation}}; [[between]] {{+obj|zlw-opl|ins/acc}} <end>
+Page 977 miedzy: Found match for regex: <begin> # {{lb|zlw-opl|attested in|Greater Poland|Masovia}} {{ng|denotes simultaneous action}}; [[during]] {{+obj|zlw-opl|ins/acc}} <end>
 Page 978 uvěřit: Found match for regex: <begin> # to [[believe]] {{+obj|cs|dative}} <end>
 Page 979 dociekać: Found match for regex: <begin> # {{lb|pl|transitive}} to [[find out]] or [[learn]] by difficult [[investigation]], to [[investigate]] and [[learn]] about {{+obj|pl|genitive}} ''or sometimes'' {{+obj|pl|:do(gen)<something>}} <end>
 Page 980 inxa: Found match for regex: <begin> # [[when]], [[if]] {{+obj|zu|participial}} <end>
@@ -2377,7 +2377,7 @@ Page 1018 chybić: Found match for regex: <begin> # {{lb|pl|ambitransitive}} to 
 Page 1019 ἀπληστία: Found match for regex: <begin> # [[insatiate]] desire, [[greediness]] (of something: {{+obj|grc|genitive}}) <end>
 Page 1020 unbeschadet: Found match for regex: <begin> # {{lb|de|chiefly|law}} [[irrespective]], [[notwithstanding]]  {{+obj|de|gen}} <end>
 Page 1022 tərəf: Found match for regex: <begin> # [[towards]] {{+obj|az|dative}} <end>
-Page 1023 عدا: Found match for regex: <begin> {{ar-prep|عَدَا}} – {{+obj|ar|acc}} or {{+obj|ar|gen}} <end>
+Page 1023 عدا: Found match for regex: <begin> {{ar-prep|عَدَا}} – {{+obj|ar|acc/gen}} <end>
 Page 1024 lubo: Found match for regex: <begin> # {{lb|zlw-opl|attested in|Lesser Poland}} [[nicely]], [[pleasantly]] {{+obj|zlw-opl|dat<for whom>}} <end>
 Page 1024 lubo: Found match for regex: <begin> # {{lb|zlw-opl|used impersonally|attested in|Lesser Poland|Masovia}} [[wantedly]], someone [[would like]] something {{+obj|zlw-opl|dat<whom>}} <end>
 Page 1025 جادل: Found match for regex: <begin> # to [[argue]] {{+obj|ar|acc<with someone>}} <end>
@@ -2569,7 +2569,7 @@ Page 1167 πειράω: Found match for regex: <begin> # {{lb|grc|middle voice}}
 Page 1167 πειράω: Found match for regex: <begin> # {{lb|grc|middle voice}} to test one's own [[skill]], [[abilities]], or [[fortune]] {{+obj|grc|gen<in something>}} <end>
 Page 1168 ἐπέρχομαι: Found match for regex: <begin> # to [[approach]] {{+obj|grc|dat}} <end>
 Page 1168 ἐπέρχομαι: Found match for regex: <begin> # to [[go against]], [[attack]], [[invade]] {{+obj|grc|dat}} or rarely {{+obj|grc|acc}} <end>
-Page 1168 ἐπέρχομαι: Found match for regex: <begin> # to [[suddenly]] come upon, [[befall]], [[happen]] to {{+obj|grc|dat}} or {{+obj|grc|acc}} <end>
+Page 1168 ἐπέρχομαι: Found match for regex: <begin> # to [[suddenly]] come upon, [[befall]], [[happen]] to {{+obj|grc|dat/acc}} <end>
 Page 1168 ἐπέρχομαι: Found match for regex: <begin> # to [[come]] into one's [[head]], [[occur]] to {{+obj|grc|dat}} <end>
 Page 1168 ἐπέρχομαι: Found match for regex: <begin> # to go [[over]], [[traverse]], [[cross]] {{+obj|grc|acc}} <end>
 Page 1168 ἐπέρχομαι: Found match for regex: <begin> # to go [[through]], [[discuss]], [[recount]] {{+obj|grc|acc}} <end>
@@ -2634,7 +2634,7 @@ Page 1214 radykalizować: Found match for regex: <begin> # {{lb|pl|transitive}} 
 Page 1215 zradykalizować: Found match for regex: <begin> # {{lb|pl|transitive}} to [[radicalize]] {{gl|make radical}} {{+obj|pl|accusative<whom>}} <end>
 Page 1216 دمل: Found match for regex: <begin> # to [[heal]], to [[cicatrize]] {{+obj|ar|acc<wound>}} <end>
 Page 1217 pozbyć: Found match for regex: <begin> # {{lb|pl|reflexive-się}} to [[get rid of]] {{+obj|pl|genitive<of what>}} <end>
-Page 1218 حاشا: Found match for regex: <begin> {{ar-prep|حَاشَا}} – {{+obj|ar|acc}} or {{+obj|ar|gen}} <end>
+Page 1218 حاشا: Found match for regex: <begin> {{ar-prep|حَاشَا}} – {{+obj|ar|acc/gen}} <end>
 Page 1219 die Stiefel lecken: Found match for regex: <begin> # {{lb|de|idiom}} {{+obj|de|dative}} to [[bootlick]] <end>
 Page 1220 mħabba: Found match for regex: <begin> # {{senseid|mt|because of}} [[because of]], [[due to]] {{+obj|mt|object/:f'(object)}} <end>
 Page 1221 yola getmək: Found match for regex: <begin> # {{lb|az|intransitive}} to [[get along]], [[get on]] {{+obj|az|abl<with>}} <end>
@@ -2991,7 +2991,7 @@ Page 1447 skłaniać: Found match for regex: <begin> # {{lb|pl|reflexive-się}} 
 Page 1448 vůkol: Found match for regex: <begin> {{head|cs|preposition}} {{+obj|cs|genitive}} <end>
 Page 1449 podobać: Found match for regex: <begin> # {{lb|pl|reflexive-się}} to [[appeal]], to be [[likeable]] {{+obj|pl|dat}} <end>
 Page 1450 spodobać: Found match for regex: <begin> # {{lb|pl|reflexive-się}} to [[appeal]], to be [[likeable]] {{+obj|pl|dat}} <end>
-Page 1451 ambicja: Found match for regex: <begin> # [[ambition]], [[aspiration]] {{gl|hope or ambition}} {{+obj|pl|genitive}} or {{+obj|pl|infinitive}} or {{+obj|pl|:żeby(infinitive)<to do something>}} <end>
+Page 1451 ambicja: Found match for regex: <begin> # [[ambition]], [[aspiration]] {{gl|hope or ambition}} {{+obj|pl|gen/inf/:żeby(infinitive)<to do something>}} <end>
 Page 1452 dotrzymać: Found match for regex: <begin> # {{lb|pl|transitive}} to [[keep]] {{gl|e.g. a promise, one's word}}, to [[make good on]] {{+obj|pl|genitive}} <end>
 Page 1453 dotrzymywać: Found match for regex: <begin> # {{lb|pl|transitive}} to [[keep]] {{gl|e.g. a promise, one's word}}, to [[make good on]] {{+obj|pl|genitive}} <end>
 Page 1454 яҙыу: Found match for regex: <begin> # to [[lose]], get deprived of {{+obj|ba|ablative}} <end>
@@ -3247,7 +3247,7 @@ Page 1633 obłożyć: Found match for regex: <begin> # {{lb|pl|transitive|litera
 Page 1633 obłożyć: Found match for regex: <begin> # {{lb|pl|transitive}} to [[overload]] {{gl|to give too many tasks or responsibilities}} {{+obj|pl|ins<with what>}} <end>
 Page 1633 obłożyć: Found match for regex: <begin> # {{lb|pl|transitive}} to [[incur]] {{gl|to render somebody liable or subject to}} {{+obj|pl|ins<with what>}} <end>
 Page 1633 obłożyć: Found match for regex: <begin> # {{lb|pl|reflexive-się}} to [[bind]] oneself, to [[wrap]] oneself, to [[put]] around oneself {{+obj|pl|ins<with what>}} <end>
-Page 1634 hesabına: Found match for regex: <begin> {{head|az|postposition}} {{+obj|az|gen}} or {{+obj|az|nom}} <end>
+Page 1634 hesabına: Found match for regex: <begin> {{head|az|postposition}} {{+obj|az|gen/nom}} <end>
 Page 1635 obchodzić: Found match for regex: <begin> # {{lb|pl|transitive|usually negative}} to be [[care|cared]] about, to [[matter]] to {{+obj|pl|acc}} <end>
 Page 1636 zapobiec: Found match for regex: <begin> # {{lb|pl|intransitive}} to [[prevent]], to [[avert]], to [[ward off]] {{+obj|pl|dative}} <end>
 Page 1637 обрюхатить: Found match for regex: <begin> # {{lb|ru|low|_|colloquial}} {{topics|ru|Pregnancy}} to [[knock up]] {{+obj|ru|accusative<someone>}} {{gloss|to make pregnant}} <end>
@@ -3787,7 +3787,7 @@ Page 2074 wejść w paradę: Found match for regex: <begin> # {{lb|pl|intransiti
 Page 2075 stanąć na czele: Found match for regex: <begin> # {{lb|pl|transitive|idiomatic}} to [[be]] at the [[forefront]], to [[spearhead]] {{+obj|pl|genitive}} <end>
 Page 2076 stać na straży: Found match for regex: <begin> # {{lb|pl|intransitive|idiomatic}} to [[keep guard]], to [[keep watch]], to [[stand guard]], to [[stand watch]] {{+obj|pl|genitive}} <end>
 Page 2077 stanąć na straży: Found match for regex: <begin> # {{lb|pl|intransitive|idiomatic}} to [[keep guard]], to [[keep watch]], to [[stand guard]], to [[stand watch]] {{+obj|pl|genitive}} <end>
-Page 2078 bachnąć: Found match for regex: <begin> # {{lb|pl|transitive|colloquial}} to [[swing]], to [[wave]] {{gl|to throw with force or recklessly}} {{+obj|pl|instrumental}} or {{+obj|pl|accusative}} <end>
+Page 2078 bachnąć: Found match for regex: <begin> # {{lb|pl|transitive|colloquial}} to [[swing]], to [[wave]] {{gl|to throw with force or recklessly}} {{+obj|pl|instrumental/accusative}} <end>
 Page 2079 zagracać: Found match for regex: <begin> # {{lb|pl|transitive|colloquial}} to [[clutter up]], to [[lumber]] {{+obj|pl|instrumental<with something>}} <end>
 Page 2079 zagracać: Found match for regex: <begin> # {{lb|pl|reflexive-się|colloquial}} to get [[clutter up|cluttered up]] {{+obj|pl|instrumental<with something>}} <end>
 Page 2080 zagracić: Found match for regex: <begin> # {{lb|pl|transitive|colloquial}} to [[clutter up]], to [[lumber]] {{+obj|pl|instrumental<with something>}} <end>
@@ -4034,7 +4034,7 @@ Page 2274 fajtać: Found match for regex: <begin> # {{lb|pl|transitive|colloquia
 Page 2275 fajtnąć: Found match for regex: <begin> # {{lb|pl|transitive|colloquial}} to [[sway]], to [[swing]] around, to [[wag]] {{+obj|pl|ins<what>}} <end>
 Page 2276 barnean: Found match for regex: <begin> # {{+obj|eu|genitive}} [[inside]] <end>
 Page 2277 σχολάζω: Found match for regex: <begin> # to have [[opportunity]] for {{+obj|grc|dat}} <end>
-Page 2278 śladować: Found match for regex: <begin> # {{lb|pl|transitive|obsolete}} to [[follow]] {{gl|to move behind in the same path or direction}} {{+obj|pl|accusative}} or {{+obj|pl|genitive}} <end>
+Page 2278 śladować: Found match for regex: <begin> # {{lb|pl|transitive|obsolete}} to [[follow]] {{gl|to move behind in the same path or direction}} {{+obj|pl|accusative/genitive}} <end>
 Page 2279 sknerzyć: Found match for regex: <begin> # {{lb|pl|intransitive|rare}} to [[skimp]], to [[stint]] {{+obj|pl|ins<what>}} <end>
 Page 2280 strychować: Found match for regex: <begin> # {{lb|pl|transitive|obsolete}} to [[even]], to [[level]] using a strickle {{+obj|pl|acc<what>}} <end>
 Page 2280 strychować: Found match for regex: <begin> # {{lb|pl|transitive|military|obsolete}} to [[shell]], to [[strafe]] {{+obj|pl|ins<with what>}} {{+obj|pl|:z(gen)<with what>}} <end>
@@ -4109,17 +4109,17 @@ Page 2331 zamaskowywać: Found match for regex: <begin> # {{lb|pl|transitive}} t
 Page 2331 zamaskowywać: Found match for regex: <begin> # {{lb|pl|reflexive-się}} to mask oneself {{gl|to hide}} {{+obj|pl|:przed(ins)<from what or whom>}} <end>
 Page 2332 podrygiwać: Found match for regex: <begin> # {{lb|pl|intransitive}} to [[prace]], to [[hop about]] {{+obj|pl|ins<with what part of the body>}} <end>
 Page 2333 pod koniec: Found match for regex: <begin> # in the [[latter]] part, [[towards]] the [[end]], [[by]] the end {{+obj|pl|gen<of something>}} <end>
-Page 2334 dosypać: Found match for regex: <begin> # {{lb|pl|transitive}} to [[add]] by [[sprinkle|sprinkling]] {{+obj|pl|acc}} or {{+obj|pl|gen}}, {{+obj|pl|:do(gen)<to what>}} <end>
-Page 2334 dosypać: Found match for regex: <begin> # {{lb|pl|transitive}} to [[sprinkle]] to the [[top]] or [[entirely]] {{+obj|pl|acc}} or {{+obj|pl|gen}} <end>
-Page 2334 dosypać: Found match for regex: <begin> # {{lb|pl|transitive}} to [[generously]] [[give]] [[extra]] [[money]] {{rfeq|pl}} {{+obj|pl|acc}} or {{+obj|pl|gen}} <end>
+Page 2334 dosypać: Found match for regex: <begin> # {{lb|pl|transitive}} to [[add]] by [[sprinkle|sprinkling]] {{+obj|pl|acc/gen + :do(gen)<to what>}} <end>
+Page 2334 dosypać: Found match for regex: <begin> # {{lb|pl|transitive}} to [[sprinkle]] to the [[top]] or [[entirely]] {{+obj|pl|acc/gen}} <end>
+Page 2334 dosypać: Found match for regex: <begin> # {{lb|pl|transitive}} to [[generously]] [[give]] [[extra]] [[money]] {{rfeq|pl}} {{+obj|pl|acc/gen}} <end>
 Page 2335 zmówić: Found match for regex: <begin> # {{lb|zlw-opl|sometimes|reflexive-się|attested in|Greater Poland|Łęczyca}} to [[agree]], to [[make]] a [[deal]] {{+obj|zlw-opl|acc}}, {{+obj|zlw-opl|:na(acc)}}, {{+obj|zlw-opl|infinitive}} <end>
 Page 2336 skłuć: Found match for regex: <begin> # {{lb|pl|transitive}} to [[wound]] by [[pierce|piercing]] in many places {{+obj|pl|ins<with what>}} <end>
 Page 2336 skłuć: Found match for regex: <begin> # {{lb|pl|transitive}} to [[kill]] by [[pierce|piercing]] {{+obj|pl|ins<with what>}} <end>
-Page 2337 dosypywać: Found match for regex: <begin> # {{lb|pl|transitive}} to [[add]] by [[sprinkle|sprinkling]] {{+obj|pl|acc}} or {{+obj|pl|gen}}, {{+obj|pl|:do(gen)<to what>}} <end>
-Page 2337 dosypywać: Found match for regex: <begin> # {{lb|pl|transitive}} to [[sprinkle]] to the [[top]] or [[entirely]] {{+obj|pl|acc}} or {{+obj|pl|gen}} <end>
-Page 2337 dosypywać: Found match for regex: <begin> # {{lb|pl|transitive}} to [[generously]] [[give]] [[extra]] [[money]] {{rfeq|pl}} {{+obj|pl|acc}} or {{+obj|pl|gen}} <end>
-Page 2338 nadsypać: Found match for regex: <begin> # {{lb|pl|transitive}} to [[oversprinkle]] {{gl|to sprinkle over something}} {{+obj|pl|acc}} or {{+obj|pl|gen}} <end>
-Page 2339 nadsypywać: Found match for regex: <begin> # {{lb|pl|transitive}} to [[oversprinkle]] {{gl|to sprinkle over something}} {{+obj|pl|acc}} or {{+obj|pl|gen}} <end>
+Page 2337 dosypywać: Found match for regex: <begin> # {{lb|pl|transitive}} to [[add]] by [[sprinkle|sprinkling]] {{+obj|pl|acc/gen + :do(gen)<to what>}} <end>
+Page 2337 dosypywać: Found match for regex: <begin> # {{lb|pl|transitive}} to [[sprinkle]] to the [[top]] or [[entirely]] {{+obj|pl|acc/gen}} <end>
+Page 2337 dosypywać: Found match for regex: <begin> # {{lb|pl|transitive}} to [[generously]] [[give]] [[extra]] [[money]] {{rfeq|pl}} {{+obj|pl|acc/gen}} <end>
+Page 2338 nadsypać: Found match for regex: <begin> # {{lb|pl|transitive}} to [[oversprinkle]] {{gl|to sprinkle over something}} {{+obj|pl|acc/gen}} <end>
+Page 2339 nadsypywać: Found match for regex: <begin> # {{lb|pl|transitive}} to [[oversprinkle]] {{gl|to sprinkle over something}} {{+obj|pl|acc/gen}} <end>
 Page 2340 aurka: Found match for regex: <begin> # {{+obj|eu|gen}} [[against]], [[opposite]] <end>
 Page 2341 bermatu: Found match for regex: <begin> # {{lb|eu|da}} {{+obj|eu|inessive}} to [[count on]] <end>
 Page 2342 hurbil: Found match for regex: <begin> # {{+obj|eu|abl}} [[nearby]] <end>
@@ -4139,11 +4139,11 @@ Page 2356 przerżnąć: Found match for regex: <begin> # {{lb|pl|transitive}} to
 Page 2357 przerzynać: Found match for regex: <begin> # {{lb|pl|transitive}} to [[split]]; to [[saw]] an [[oblong]] [[hole]] in something or to saw [[in half]] {{+obj|pl|ins<with what>}} <end>
 Page 2358 wykręcać: Found match for regex: <begin> # {{lb|pl|transitive}} to [[twist]] [[out]]; to [[unscrew]] {{gl|to remove from the inside of by twisting}} {{+obj|pl|ins<with what>}} {{+obj|pl|:z(gen)<out of what>}} <end>
 Page 2358 wykręcać: Found match for regex: <begin> # {{lb|pl|transitive}} to [[twist]] {{gl|to injure (a body part) by bending it in the wrong direction}} {{+obj|pl|dat<whose body>}} <end>
-Page 2358 wykręcać: Found match for regex: <begin> # {{lb|pl|transitive|colloquial}} to [[turn around]] {{gl|to change direction}} {{+obj|pl|acc}} or {{+obj|pl|ins}} <end>
+Page 2358 wykręcać: Found match for regex: <begin> # {{lb|pl|transitive|colloquial}} to [[turn around]] {{gl|to change direction}} {{+obj|pl|acc/ins}} <end>
 Page 2358 wykręcać: Found match for regex: <begin> # {{lb|pl|reflexive-się}} to [[wriggle out of]], to [[dodge]], to [[weasel]] {{+obj|pl|ins<with what>}} {{+obj|pl|:od(gen)<from what>}} <end>
 Page 2359 wykręcić: Found match for regex: <begin> # {{lb|pl|transitive}} to [[twist]] [[out]]; to [[unscrew]] {{gl|to remove from the inside of by twisting}} {{+obj|pl|ins<with what>}} {{+obj|pl|:z(gen)<out of what>}} <end>
 Page 2359 wykręcić: Found match for regex: <begin> # {{lb|pl|transitive}} to [[twist]] {{gl|to injure (a body part) by bending it in the wrong direction}} {{+obj|pl|dat<whose body>}} <end>
-Page 2359 wykręcić: Found match for regex: <begin> # {{lb|pl|transitive|colloquial}} to [[turn around]] {{gl|to change direction}} {{+obj|pl|acc}} or {{+obj|pl|ins}} <end>
+Page 2359 wykręcić: Found match for regex: <begin> # {{lb|pl|transitive|colloquial}} to [[turn around]] {{gl|to change direction}} {{+obj|pl|acc/ins}} <end>
 Page 2359 wykręcić: Found match for regex: <begin> # {{lb|pl|reflexive-się}} to [[wriggle out of]], to [[dodge]], to [[weasel]] {{+obj|pl|ins<with what>}} {{+obj|pl|:od(gen)<from what>}} <end>
 Page 2360 postrzyc: Found match for regex: <begin> # {{lb|pl|transitive}} to [[shear]] {{gl|e.g. wool}}, to [[cut]] {{gl|e.g. hair}}, to [[clip]], to [[trim]] {{+obj|pl|acc<whom>}} or {{+obj|pl|acc<what>}} and {{+obj|pl|dat<whom>}} <end>
 Page 2361 odmówić posłuszeństwa: Found match for regex: <begin> # {{lb|pl|intransitive|idiom}} to [[act up]], to [[rebel]], to [[shut down]] {{gl|to stop working properly}} {{+obj|pl|dat<on whom>}} <end>
@@ -4213,13 +4213,13 @@ Page 2416 dojąć: Found match for regex: <begin> # {{lb|pl|transitive|literary|
 Page 2416 dojąć: Found match for regex: <begin> # {{lb|pl|transitive|literary|of people}} to [[gripe]], to [[vex]] {{+obj|pl|acc<who>}} {{+obj|pl|dat<who>}} <end>
 Page 2417 popalić: Found match for regex: <begin> # {{lb|pl|transitive}} to [[burn]] [[hole]]s into something {{gl|to destroy in many places with heat or fire}} {{+obj|pl|dat<whose object>}} {{+obj|pl|ins<with what>}} <end>
 Page 2418 nadkładać: Found match for regex: <begin> # {{lb|pl|transitive}} to [[cross]] more distance than what is needed {{+obj|pl|gen}} <end>
-Page 2419 nadłożyć: Found match for regex: <begin> # {{lb|pl|transitive}} to [[cross]] more distance than what is needed {{+obj|pl|gen}} or {{+obj|pl|acc}} <end>
+Page 2419 nadłożyć: Found match for regex: <begin> # {{lb|pl|transitive}} to [[cross]] more distance than what is needed {{+obj|pl|gen/acc}} <end>
 Page 2419 nadłożyć: Found match for regex: <begin> # {{lb|pl|transitive}} to [[cover]] [[over]], to [[pour]] over {{+obj|pl|gen<what>}}, {{+obj|pl|ins<with what>}} <end>
 Page 2420 zważywszy na: Found match for regex: <begin> # {{lb|pl|idiom|literary}} [[because of]], [[considering]], [[due to]], [[given]], [[in view of]], [[owing to]] {{+obj|pl|acc}} <end>
 Page 2421 nakładać kaganiec: Found match for regex: <begin> # {{lb|pl|intransitive|idiom|literary}} to [[muzzle]] {{gl|to restrain; to gag; to silence; to censor}} {{+obj|pl|dat<whom>}} {{+obj|pl|:na(acc)<whom>}} <end>
 Page 2422 nałożyć kaganiec: Found match for regex: <begin> # {{lb|pl|intransitive|idiom|literary}} to [[muzzle]] {{gl|to restrain; to gag; to silence; to censor}} {{+obj|pl|dat<whom>}} {{+obj|pl|:na(acc)<whom>}} <end>
-Page 2423 zakręcić: Found match for regex: <begin> # {{lb|pl|transitive}} to start [[spin]]ning, to start [[twist]]ing {{gl|to cause something to begin to rotate}} {{+obj|pl|acc}} or {{+obj|pl|ins}} <end>
-Page 2424 zakręcać: Found match for regex: <begin> # {{lb|pl|transitive}} to start [[spin]]ning, to start [[twist]]ing {{gl|to cause something to begin to rotate}} {{+obj|pl|acc}} or {{+obj|pl|ins}} <end>
+Page 2423 zakręcić: Found match for regex: <begin> # {{lb|pl|transitive}} to start [[spin]]ning, to start [[twist]]ing {{gl|to cause something to begin to rotate}} {{+obj|pl|acc/ins}} <end>
+Page 2424 zakręcać: Found match for regex: <begin> # {{lb|pl|transitive}} to start [[spin]]ning, to start [[twist]]ing {{gl|to cause something to begin to rotate}} {{+obj|pl|acc/ins}} <end>
 Page 2425 ἀντιπαρατάσσομαι: Found match for regex: <begin> # to [[stand]] in [[hostile]] [[array]] {{+obj|grc|dat<against>}} <end>
 Page 2426 składać na karb: Found match for regex: <begin> # {{lb|pl|transitive|idiom}} to [[attribute]], to [[chalk up to]], to [[put down to]], to [[pin on]] {{+obj|pl|gen<to what>}} <end>
 Page 2427 złożyć na karb: Found match for regex: <begin> # {{lb|pl|transitive|idiom}} to [[attribute]], to [[chalk up to]], to [[put down to]], to [[pin on]] {{+obj|pl|gen<to what>}} <end>
@@ -4484,7 +4484,7 @@ Page 2595 піддати: Found match for regex: <begin> # {{lb|uk|transitive|or
 Page 2596 czapkować: Found match for regex: <begin> # {{lb|pl|intransitive|colloquial}} to [[cap]] {{gl|to salute by uncovering the head respectfully}} {{+obj|pl|dat<whom>}} <end>
 Page 2597 przynęcić: Found match for regex: <begin> # {{lb|pl|transitive}} to [[lure]] {{gl|to place bait to lure animals to be caught}} {{+obj|pl|ins<with what>}} <end>
 Page 2597 przynęcić: Found match for regex: <begin> # {{lb|pl|transitive}} to [[lure]] {{gl|to entice someone to something}} {{+obj|pl|ins<with what>}} <end>
-Page 2598 użyczyć: Found match for regex: <begin> # to [[give]], to [[grant]] {{+obj|zlw-opl|gen}} or {{+obj|zlw-opl|acc}} <end>
+Page 2598 użyczyć: Found match for regex: <begin> # to [[give]], to [[grant]] {{+obj|zlw-opl|gen/acc}} <end>
 Page 2598 użyczyć: Found match for regex: <begin> # {{lb|pl|transitive}} to [[lend]] {{gl|to give something to someone for free temporarily}} {{+obj|pl|gen}} or {{q|proscribed}} {{+obj|pl|acc<what>}}, {{+obj|pl|dat<to whom>}}, {{+obj|pl|:na(acc)}} or {{+obj|pl|:pod(acc)<for what>}} <end>
 Page 2598 użyczyć: Found match for regex: <begin> # {{lb|pl|transitive}} to [[give]]; to [[accord]]; to [[extend]]; to [[grant]]; to [[oblige]] {{gl|to let someone visit, stay, to give protection or support}} {{+obj|pl|gen}} or {{q|proscribed}} {{+obj|pl|acc<what>}}, {{+obj|pl|dat<to whom>}} <end>
 Page 2598 użyczyć: Found match for regex: <begin> # {{lb|pl|transitive|literary}} to [[allow]] to [[serve]] {{gl|to let something fill a role in a sentence}}  {{+obj|pl|gen}} or {{q|proscribed}} {{+obj|pl|acc<what>}}, {{+obj|pl|dat<to whom>}}, {{+obj|pl|:do(gen)<for what>}} <end>
@@ -4509,11 +4509,11 @@ Page 2609 podyskutować: Found match for regex: <begin> # {{lb|pl|intransitive}}
 Page 2610 prżed: Found match for regex: <begin> # {{ng|denotes time}}; [[before]] {{+obj|zlw-mas|ins}} <end>
 Page 2610 prżed: Found match for regex: <begin> # {{ng|denotes user of an object}} {{+obj|zlw-mas|acc}} <end>
 Page 2610 prżed: Found match for regex: <begin> # {{ng|denotes recipient of speech or actions}}; [[to]] {{+obj|zlw-mas|acc}} <end>
-Page 2610 prżed: Found match for regex: <begin> # {{ng|denotes source of an opinion, information, or presents someone's point of view}} [[according to]] {{+obj|zlw-mas|acc}} or {{+obj|zlw-mas|ins}} <end>
+Page 2610 prżed: Found match for regex: <begin> # {{ng|denotes source of an opinion, information, or presents someone's point of view}} [[according to]] {{+obj|zlw-mas|acc/ins}} <end>
 Page 2610 prżed: Found match for regex: <begin> # {{ng|denotes purpose of object}}; [[for]] {{+obj|zlw-mas|acc}} <end>
 Page 2610 prżed: Found match for regex: <begin> # {{ng|denotes location}}; [[before]], [[in front of]]; [[ahead of]] {{+obj|zlw-mas|ins}} <end>
 Page 2610 prżed: Found match for regex: <begin> # {{ng|denotes movement}}; [[in front of]]  {{+obj|zlw-mas|acc}} <end>
-Page 2610 prżed: Found match for regex: <begin> # {{ng|denotes proximal location}}; [[close to]]; [[around]] {{+obj|zlw-mas|acc}} or {{+obj|zlw-mas|ins}} <end>
+Page 2610 prżed: Found match for regex: <begin> # {{ng|denotes proximal location}}; [[close to]]; [[around]] {{+obj|zlw-mas|acc/ins}} <end>
 Page 2610 prżed: Found match for regex: <begin> # {{ng|denotes position in hierarchy or respect}}; [[below]] {{+obj|zlw-mas|ins}} <end>
 Page 2610 prżed: Found match for regex: <begin> # {{ng|denotes someone's presence}}; [[in front of]] {{+obj|zlw-mas|ins}} <end>
 Page 2610 prżed: Found match for regex: <begin> # {{ng|denotes object or person to be avoided or someone or something that is potentially dangerous}}; [[from]] {{+obj|zlw-mas|ins}} <end>
@@ -4693,7 +4693,7 @@ Page 2728 przylizać: Found match for regex: <begin> # {{lb|pl|transitive|colloq
 Page 2728 przylizać: Found match for regex: <begin> # {{lb|pl|reflexive-się|colloquial|derogatory}} to [[bootlick]] {{gl|to seek favor from by fawning, servile behavior}} {{+obj|pl|dat}} <end>
 Page 2729 przylizywać: Found match for regex: <begin> # {{lb|pl|transitive|colloquial}} to [[stick]] someone's [[hair]] to their [[skin]] {{+obj|pl|ins<with what>}} <end>
 Page 2729 przylizywać: Found match for regex: <begin> # {{lb|pl|reflexive-się|colloquial|derogatory}} to [[bootlick]] {{gl|to seek favor from by fawning, servile behavior}} {{+obj|pl|dat}} <end>
-Page 2730 rozpamiętać: Found match for regex: <begin> # {{lb|zlw-opl|ambitransitive|or|reflexive-się|attested in|Pomerania|Greater Poland|Lesser Poland}} to [[dwell on]]; to [[consider]] in [[thought]]; to [[mention]] {{+obj|zlw-opl|acc}} or {{+obj|zlw-opl|gen}} or {{+obj|zlw-opl|:na(acc)}} <end>
+Page 2730 rozpamiętać: Found match for regex: <begin> # {{lb|zlw-opl|ambitransitive|or|reflexive-się|attested in|Pomerania|Greater Poland|Lesser Poland}} to [[dwell on]]; to [[consider]] in [[thought]]; to [[mention]] {{+obj|zlw-opl|acc/gen/:na(acc)}} <end>
 Page 2731 roztworzyć: Found match for regex: <begin> # {{lb|pl|transitive|dated}} to [[open]] {{gl|to make the inside of something accessible or allow for passage by moving from a shut position}} {{+obj|pl|ins<with what>}} <end>
 Page 2732 roztwierać: Found match for regex: <begin> # {{lb|pl|transitive|dated}} to [[open]] {{gl|to make the inside of something accessible or allow for passage by moving from a shut position}} {{+obj|pl|ins<with what>}} <end>
 Page 2733 wyświadczyć: Found match for regex: <begin> # {{lb|pl|transitive|literary}} to [[oblige]]; to [[render]] {{gl|to do something good for someone}} {{+obj|pl|dat<whom>}} {{+obj|pl|acc<what>}} <end>
