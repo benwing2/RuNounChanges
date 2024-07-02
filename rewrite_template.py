@@ -12,7 +12,7 @@ def process_text_on_page(
 ):
   if not any(template in text for template in templates):
     return
-  if not re.search(r"\{\{\s*(%s)" % "|".join(templates), text):
+  if not re.search(r"\{\{\s*(%s)" % "|".join(re.escape(t) for t in templates), text):
     return
 
   def pagemsg(txt):
