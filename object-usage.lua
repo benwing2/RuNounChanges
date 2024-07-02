@@ -131,7 +131,7 @@ function export.show_obj(frame)
 	local qualifier_label_mod_with_starred_set = {}
 	for _, mod in ipairs(qualifier_label_mod) do
 		qualifier_label_mod_with_starred_set[mod] = true
-		qualifier_label_mod_with_starred_set["*" .. mod] = true
+		qualifier_label_mod_with_starred_set[mod .. "*"] = true
 	end
 
 	local function parse_object(object, paramno)
@@ -170,7 +170,7 @@ function export.show_obj(frame)
 					if not modtext then
 						parse_err("Internal error: Modifier '" .. modtext .. "' isn't surrounded by angle brackets")
 					end
-					local prefix, arg = modtext:match("^(%*?[a-z]+):(.*)$")
+					local prefix, arg = modtext:match("^([a-z]+%*?):(.*)$")
 					if prefix then
 						if qualifier_label_mod_with_starred_set[prefix] or prefix == "t" or prefix == "id" or
 							prefix == "tr" or prefix == "ts" or prefix == "alt" or prefix == "ref" then
@@ -182,7 +182,7 @@ function export.show_obj(frame)
 							if retval[item_dest] then
 								parse_err("Can't set two values for prefix '" .. prefix .. "'")
 							end
-							if prefix == "l" or prefix == "ll" or prefix == "*l" or prefix == "*ll" then
+							if prefix == "l" or prefix == "ll" or prefix == "l*" or prefix == "ll*" then
 								arg = require(labels_module).split_labels_on_comma(arg)
 							elseif prefix == "ref" then
 								arg = require(references_module).parse_references(arg, parse_err)
@@ -251,8 +251,8 @@ function export.show_obj(frame)
 					-- If there's only one alternant, convert regular qualifiers to starred versions if there's not
 					-- already a starred version.
 					for _, mod in ipairs(qualifier_label_mod) do
-						if alternant[mod] and not alternant["*" .. mod] then
-							alternant["*" .. mod] = alternant[mod]
+						if alternant[mod] and not alternant[mod .. "*"] then
+							alternant[mod .. "*"] = alternant[mod]
 							alternant[mod] = nil
 						end
 					end
@@ -260,17 +260,17 @@ function export.show_obj(frame)
 				if i < #argument.alternants then
 					-- Starred versions cannot be attached to non-final alternants.
 					for _, mod in ipairs(qualifier_label_mod) do
-						if alternant["*" .. mod] then
+						if alternant[mod .. "*"] then
 							parse_err(("Starred version '%s' of label or qualifier must be attached to last alternant"):
-								format("*" .. mod))
+								format(mod .. "*"))
 						end
 					end
 				else
 					-- Starred versions attached to final alternants should be moved up to argument level.
 					for _, mod in ipairs(qualifier_label_mod) do
-						if alternant["*" .. mod] then
-							argument[mod] = alternant["*" .. mod]
-							alternant["*" .. mod] = nil
+						if alternant[mod .. "*"] then
+							argument[mod] = alternant[mod .. "*"]
+							alternant[mod .. "*"] = nil
 						end
 					end
 				end
