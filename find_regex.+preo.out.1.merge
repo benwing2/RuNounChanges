@@ -14,7 +14,7 @@ Page 41 chłopiec: Found match for regex: <begin> # {{lb|pl|dated}} [[boy]] {{gl
 Page 42 sehen: Found match for regex: <begin> # {{lb|de|intransitive}} to [[check on]]; to [[look after]]; to [[see to]] {{+obj|de|:nach(dat)}} <end>
 Page 43 wolny: Found match for regex: <begin> # [[free]] {{gl|without}} {{+obj|pl|:od(gen)<from something>}} <end>
 Page 44 bi: Found match for regex: <begin> {{uxa|mt|[[għamel]] erbgħa '''b’'''erbgħa|multiply four '''by''' four}} <end>
-Page 45 krok: Found match for regex: <begin> # [[step]] {{gl|small space or distance}} {{+obj|pl|:od(gen)<from something>}}, {{+obj|pl|:do(gen)<to something>}} <end>
+Page 45 krok: Found match for regex: <begin> # [[step]] {{gl|small space or distance}} {{+obj|pl|:od(gen)<from something> + :do(gen)<to something>}} <end>
 Page 46 empire: Found match for regex: <begin> # {{lb|it|uncommon|literally}} to [[fill]] {{+obj|it|:di<with>}} <end>
 Page 46 empire: Found match for regex: <begin> # {{lb|it|figuratively}} to [[fill]], to [[stuff]] {{+obj|it|:di<with>}} <end>
 Page 47 у: Found match for regex: <begin> {{head|ru|preposition}} {{+obj|ru|gen}} <end>
@@ -23,7 +23,7 @@ Page 49 hold a grudge: Found match for regex: <begin> {{en-verb|hold<,,held> a g
 Page 50 ta: Found match for regex: <begin> # to become [[addicted]] {{+obj|mt|:-ha<dummy pronominal suffix> + :għal}} <end>
 Page 51 acostumar: Found match for regex: <begin> # {{lb|ca|pronominal}} to become [[accustomed]], to [[get]] [[used to|used]] {{+obj|ca|:a<to>}} <end>
 Page 52 pole: Found match for regex: <begin> # {{lb|pl|uncountable}} [[field]] {{gl|freedom of action or choice}} {{+obj|pl|:do(gen)<for what>}} <end>
-Page 53 hype: Found match for regex: <begin> # {{lb|pl|slang|marketing}} {{l|en|hype}} {{+obj|pl|:na(acc)<for what>}} {{+obj|pl|:wokół(gen)<around/surrounding what>}} <end>
+Page 53 hype: Found match for regex: <begin> # {{lb|pl|slang|marketing}} {{l|en|hype}} {{+obj|pl|:na(acc)<for what>|:wokół(gen)<around/surrounding what>}} <end>
 Page 54 fare: Found match for regex: <begin> ## to [[behave]] or [[act]] {{+obj|it|:da<as>}} <end>
 Page 54 fare: Found match for regex: <begin> ## to [[sell]] {{+obj|it|:a<for (a price)>}} <end>
 Page 54 fare: Found match for regex: <begin> ## to be [[plan]]ned or [[schedule]]d (at a certain time) {{+obj|it|:a/:in}} {{q|of a movie, show, etc.|chiefly in the form {{m|it|fanno}}}} <end>
@@ -35,7 +35,7 @@ Page 57 wag: Found match for regex: <begin> # {{lb|af|intransitive}} to [[wait]]
 Page 58 moment: Found match for regex: <begin> # {{l|en|moment}} {{gl|short period of development or continuance of something}} {{+obj|pl|:w(loc)<in what>}} <end>
 Page 59 jam: Found match for regex: <begin> ## to be from, [[come from]] {{+obj|sq|:nga}} <end>
 Page 59 jam: Found match for regex: <begin> ## to [[support]], [[agree]] with {{+obj|sq|:me}} <end>
-Page 60 grunt: Found match for regex: <begin> # {{lb|pl|uncountable|literary}} [[base]]; [[primer]] {{gl|previously prepared basis for certain actions; essential element of something}} {{+obj|pl|:dla(gen)}} {{+obj|pl|:pod(acc)<for what>}} <end>
+Page 60 grunt: Found match for regex: <begin> # {{lb|pl|uncountable|literary}} [[base]]; [[primer]] {{gl|previously prepared basis for certain actions; essential element of something}} {{+obj|pl|:dla(gen)/:pod(acc)<for what>}} <end>
 Page 61 belus: Found match for regex: <begin> # [[eager]], [[desiring]], [[craving]] {{+obj|af|:op<for, to>}} <end>
 Page 62 reduce: Found match for regex: <begin> {{it-adj}} {{+obj|it|:da}} <end>
 Page 63 sapere: Found match for regex: <begin> # {{lb|it|intransitive}} to [[taste]] or [[smell]] {{+obj|it|:di<like>}} {{+aux|it|avere}} <end>
@@ -65,7 +65,7 @@ Page 73 bogen: Found match for regex: <begin> # {{lb|nl|intransitive}} to claim 
 Page 74 droga: Found match for regex: <begin> # [[way]]; [[road]] {{gl|series of events and actions that give a certain effect}} {{+obj|pl|:do(gen)<to what>}} <end>
 Page 75 dire: Found match for regex: <begin> # {{lb|fr|informal}} to be of [[interest]] to, to [[interest]] {{+obj|fr|:à<someone>}} <end>
 Page 75 dire: Found match for regex: <begin> # {{lb|fr|informal}} to sound [[familiar]] {{+obj|fr|:à<someone>}} <end>
-Page 76 andare: Found match for regex: <begin> # {{lb|it|intransitive|impersonal|third person only}} to [[be]] [[agreeable]] (to), to [[be]] [[pleasing]] (to) {{q|idiomatically, to [[feel like]], to [[want]]/[[like]]}} {{+obj|it|:a<person with feeling>}} {{+obj|it|:di<thing desired>}} {{+aux|it|essere}} <end>
+Page 76 andare: Found match for regex: <begin> # {{lb|it|intransitive|impersonal|third person only}} to [[be]] [[agreeable]] (to), to [[be]] [[pleasing]] (to) {{q|idiomatically, to [[feel like]], to [[want]]/[[like]]}} {{+obj|it|:a<person with feeling> + :di<thing desired>}} {{+aux|it|essere}} <end>
 Page 76 andare: Found match for regex: <begin> # to [[enter]], to [[take on]], to [[experience]] {{+obj|it|:in<a condition, emotion, etc.>}} {{+aux|it|essere}} <end>
 Page 77 prendere: Found match for regex: <begin> # {{lb|it|transitive}} to hit or strike {{+obj|it|:a<with/using>}} <end>
 Page 78 parar: Found match for regex: <begin> # to [[stop]] doing {{+obj|ca|:de(inf)}} <end>
@@ -77,7 +77,7 @@ Page 80 gehen: Found match for regex: <begin> # {{lb|de|regional|or|dated|impers
 Page 81 спасибо: Found match for regex: <begin> # [[thank you]], [[thanks]] {{+obj|ru|:за(acc)<for>}} <end>
 Page 82 gorge: Found match for regex: <begin> # {{lb|en|intransitive|reflexive}} To [[stuff]] the [[#English|gorge]] or [[gullet]] with [[food]]; to [[eat]] [[greedily]] and in [[large]] [[quantity|quantities]]. {{+obj|en|:on}} <end>
 Page 83 Gefühl: Found match for regex: <begin> # [[sense]] of something, instinct {{+obj|de|:für}} <end>
-Page 84 druid: Found match for regex: <begin> # [[move]] relative to something {{+obj|ga|:le<close to, near>}}, {{+obj|ga|:ar<upon>}}, {{+obj|ga|:ó<away from>}} <end>
+Page 84 druid: Found match for regex: <begin> # [[move]] relative to something {{+obj|ga|:le<close to, near>|:ar<upon>|:ó<away from>}} <end>
 Page 85 dunk: Found match for regex: <begin> # {{lb|en|intransitive|internet slang}} To [[put down]] on [[social media]] {{+obj|en|:on}}. <end>
 Page 86 dubitare: Found match for regex: <begin> # to [[not]] [[trust]], to [[be]] [[wary]] {{+obj|it|:di<of>}} <end>
 Page 87 partire: Found match for regex: <begin> # to [[originate]] or be [[derive]]d {{+obj|it|:da<from>}} <end>
@@ -94,11 +94,11 @@ Page 92 mancare: Found match for regex: <begin> # {{lb|it|intransitive}} to [[no
 Page 93 restare: Found match for regex: <begin> # {{lb|it|literary}} to [[stop]] (doing something) {{+obj|it|:di(inf)/:da(inf)}} <end>
 Page 94 rientrare: Found match for regex: <begin> # {{lb|it|informal|intransitive}} to [[get back]], to [[recover]] {{+obj|it|:di<money, goods, etc.>}} <end>
 Page 95 tornare: Found match for regex: <begin> # {{lb|it|intransitive}} to [[start]] (doing something again) {{+obj|it|:a(inf)}} <end>
-Page 96 scoppiare: Found match for regex: <begin> # {{lb|it|figurative}} to [[be]] [[overflowing]], to [[be]] [[burst]]ing {{+obj|it|:di<with>}} ''or'' {{+obj|it|:per<with>}} <end>
+Page 96 scoppiare: Found match for regex: <begin> # {{lb|it|figurative}} to [[be]] [[overflowing]], to [[be]] [[burst]]ing {{+obj|it|:di/:per<with>}} <end>
 Page 97 dolere: Found match for regex: <begin> {{it-verb|e:a[uncommon]/@}} {{tlb|it|intransitive}} {{+obj|it|:a}} {{+aux|it|essere|avere|q2=uncommon}} <end>
 Page 98 zuppo: Found match for regex: <begin> {{it-adj}} {{+obj|it|:di}} <end>
 Page 99 abdicare: Found match for regex: <begin> # to [[renounce]] {{+obj|it|:a}} <end>
-Page 100 abitare: Found match for regex: <begin> # {{lb|it|intransitive}} to [[reside]] {{+obj|it|:in}}, {{+obj|it|:a}} {{+aux|it|avere}} <end>
+Page 100 abitare: Found match for regex: <begin> # {{lb|it|intransitive}} to [[reside]] {{+obj|it|:in/:a}} {{+aux|it|avere}} <end>
 Page 101 abusare: Found match for regex: <begin> # to [[abuse]], to [[misuse]], to take [[advantage]] of {{+obj|it|:di}} <end>
 Page 101 abusare: Found match for regex: <begin> # to [[rape]] {{+obj|it|:di}} <end>
 Page 102 acclamare: Found match for regex: <begin> # {{lb|it|intransitive}} to [[applaud]], to [[cheer]], to [[approve]] in a [[loud]] [[voice]] {{+obj|it|:a}} {{+aux|it|avere}} <end>
@@ -127,11 +127,11 @@ Page 119 muovere: Found match for regex: <begin> # {{lb|it|intransitive}} to [[s
 Page 119 muovere: Found match for regex: <begin> # {{lb|it|intransitive|figurative}} to [[derive]], to [[originate]] {{+obj|it|:da<from>}} {{+aux|it|essere|avere}} <end>
 Page 120 scottare: Found match for regex: <begin> # {{lb|it|intransitive|figurative}} to [[hurt]], to [[pain]], to [[provoke]] [[displeasure]] {{+obj|it|:a}} {{+aux|it|essere}} <end>
 Page 121 trovare: Found match for regex: <begin> # to [[think]]; to [[believe]]; ''also'' {{+obj|it|:che(sub-cl)}} <end>
-Page 122 percuotere: Found match for regex: <begin> # {{lb|it|intransitive|uncommon}} to [[bump]] {{+obj|it|:in<into>}}, {{+obj|it|:contro<against>}} {{+aux|it|avere}} <end>
-Page 123 godere: Found match for regex: <begin> # {{lb|it|intransitive}} to [[enjoy]] {{+obj|it|:di<something>}} ''or'' {{+obj|it|:a(inf)<doing something>}} {{+aux|it|avere}} <end>
+Page 122 percuotere: Found match for regex: <begin> # {{lb|it|intransitive|uncommon}} to [[bump]] {{+obj|it|:in<into>||:contro<against>}} {{+aux|it|avere}} <end>
+Page 123 godere: Found match for regex: <begin> # {{lb|it|intransitive}} to [[enjoy]] {{+obj|it|:di<something>|:a(inf)<doing something>}} {{+aux|it|avere}} <end>
 Page 123 godere: Found match for regex: <begin> # {{lb|it|intransitive}} to [[feel]] [[pleasure]], to [[take]] [[pleasure]] {{+obj|it|:in<in something>}} {{+aux|it|avere}} <end>
 Page 123 godere: Found match for regex: <begin> # {{lb|it|intransitive|figurative}} to [[enjoy]], to [[benefit]] from (wealth, good reputation, etc.) {{+obj|it|:di<something>}} {{+aux|it|avere}} <end>
-Page 124 parere: Found match for regex: <begin> # to [[seem]] {{q|of an opinion}} {{+obj|it|:a<to someone>}} {{+obj|it|:che(sub-cl)<that>}} <end>
+Page 124 parere: Found match for regex: <begin> # to [[seem]] {{q|of an opinion}} {{+obj|it|:a<to someone> + :che(sub-cl)<that>}} <end>
 Page 125 volgere: Found match for regex: <begin> # {{lb|it|transitive}} to [[turn]], to [[change]] (something) {{+obj|it|:in<into something else>}} <end>
 Page 125 volgere: Found match for regex: <begin> # {{lb|it|intransitive}} to [[turn]] {{+obj|it|:a<to/towards a location or goal>}} {{+aux|it|avere|essere|q2=rarely}} <end>
 Page 125 volgere: Found match for regex: <begin> # {{lb|it|intransitive}} to [[approach]], to [[draw]] {{+obj|it|:a<to a conclusion>}} {{+aux|it|avere|essere|q2=rarely}} <end>
@@ -162,7 +162,7 @@ Page 135 sortir: Found match for regex: <begin> # {{lb|pt|impersonal}} to [[happ
 Page 135 sortir: Found match for regex: <begin> # {{lb|pt|reflexive}} to [[stock up]], to [[provide]] [[oneself]] {{+obj|pt|:com<with>}} <end>
 Page 136 jouir: Found match for regex: <begin> # to [[enjoy]] {{+obj|fr|:de}} <end>
 Page 137 fumare: Found match for regex: <begin> # {{lb|it|intransitive}} to [[give in]] {{+obj|it|:di/:da<to (anger, rage, etc.)>}} <end>
-Page 138 corrispondere: Found match for regex: <begin> # {{lb|it|intransitive}} to [[correspond]] {{gl|to match up, to be in conformity, to coincide, etc.}} {{+obj|it|:a<to>}} ''or'' {{+obj|it|:con<with>}} {{+aux|it|avere}} <end>
+Page 138 corrispondere: Found match for regex: <begin> # {{lb|it|intransitive}} to [[correspond]] {{gl|to match up, to be in conformity, to coincide, etc.}} {{+obj|it|:a<to>|:con<with>}} {{+aux|it|avere}} <end>
 Page 138 corrispondere: Found match for regex: <begin> # {{lb|it|intransitive|figurative}} to [[repay]] {{+obj|it|:a<love, affection, benevolence, etc.>}} {{+aux|it|avere}} <end>
 Page 138 corrispondere: Found match for regex: <begin> # {{lb|it|intransitive|uncommon}} to [[correspond]] {{gl|to be in communication}} {{+obj|it|:con<with someone>}} {{+aux|it|avere}} <end>
 Page 139 rispondere: Found match for regex: <begin> # {{lb|it|intransitive}} to [[answer]], to [[reply]], to [[respond]] {{+obj|it|:a<to>}} {{+aux|it|avere}} <end>
@@ -252,14 +252,14 @@ Page 195 discutir: Found match for regex: <begin> # {{lb|ca|intransitive}} to [[
 Page 196 preguntar: Found match for regex: <begin> # to [[ask]] {{+obj|ca|:sobre<about>}} <end>
 Page 196 preguntar: Found match for regex: <begin> # to [[ask]] {{+obj|ca|:per<for>}} <end>
 Page 196 preguntar: Found match for regex: <begin> # {{lb|ca|pronominal}} to [[ask]] [[oneself]], to [[wonder]] {{+obj|ca|:sobre<about>}} <end>
-Page 197 appuyer: Found match for regex: <begin> # {{lb|fr|reflexive}} to [[lean]] {{+obj|fr|:sur<on>}} ''or'' {{+obj|fr|:contre<against>}} <end>
+Page 197 appuyer: Found match for regex: <begin> # {{lb|fr|reflexive}} to [[lean]] {{+obj|fr|:sur<on>|:contre<against>}} <end>
 Page 197 appuyer: Found match for regex: <begin> # {{lb|fr|reflexive}} to [[depend]], to [[rely]] {{+obj|fr|:sur<on>}} <end>
 Page 198 jouer: Found match for regex: <begin> # to [[play]] {{gloss|engage in games or play}} {{+obj|fr|:à}} <end>
 Page 198 jouer: Found match for regex: <begin> # to [[play]] {{gloss|produce music from a musical instrument}} {{+obj|fr|:de}} <end>
 Page 199 beneficiar: Found match for regex: <begin> # {{lb|ca|pronominal}} to [[benefit]] {{+obj|ca|:de<from>}} <end>
-Page 200 czekać: Found match for regex: <begin> # {{lb|pl|intransitive}} to [[wait]] {{gl|to delay movement or action until the arrival or occurrence of}} {{+obj|pl|:na(acc)<for/on what/whom>}}, {{+obj|pl|:aż(fut-cl)<until what happens>}}, {{+obj|pl|:żeby(past-cl)<for someone to do something>}} <end>
-Page 200 czekać: Found match for regex: <begin> # {{lb|pl|intransitive}} to [[wait]] {{gl|to delay or put off action}} {{+obj|pl|:na(acc)<on what>}}, {{+obj|pl|:z(ins)<with what>}} <end>
-Page 200 czekać: Found match for regex: <begin> # {{lb|pl|intransitive|of objects}} to [[wait]] {{gl|to need a particular action to occur}} {{+obj|pl|:na(acc)<for/on what/whom>}}, {{+obj|pl|:żeby(past-cl)<for someone to do something>}} <end>
+Page 200 czekać: Found match for regex: <begin> # {{lb|pl|intransitive}} to [[wait]] {{gl|to delay movement or action until the arrival or occurrence of}} {{+obj|pl|:na(acc)<for/on what/whom>|:aż(fut-cl)<until what happens>|:żeby(past-cl)<for someone to do something>}} <end>
+Page 200 czekać: Found match for regex: <begin> # {{lb|pl|intransitive}} to [[wait]] {{gl|to delay or put off action}} {{+obj|pl|:na(acc)<on what>|:z(ins)<with what>}} <end>
+Page 200 czekać: Found match for regex: <begin> # {{lb|pl|intransitive|of objects}} to [[wait]] {{gl|to need a particular action to occur}} {{+obj|pl|:na(acc)<for/on what/whom>|:żeby(past-cl)<for someone to do something>}} <end>
 Page 200 czekać: Found match for regex: <begin> # {{lb|pl|intransitive|of things or places}} to [[wait]] {{gl|to be ready to be used or occupies}} {{+obj|pl|:na(acc)<on whom>}} <end>
 Page 201 zoeken: Found match for regex: <begin> # {{lb|nl|intransitive}} to [[search]] {{+obj|nl|:naar<for>}} <end>
 Page 202 Gelegenheit: Found match for regex: <begin> # [[opportunity]], [[chance]], [[instance]], [[occasion]] {{+obj|de|:zu(dat)<for/to>}} <end>
@@ -297,7 +297,7 @@ Page 221 halten: Found match for regex: <begin> # {{lb|de|transitive}} {{ngd|exp
 Page 222 letten: Found match for regex: <begin> # {{lb|nl|transitive}} to [[pay attention]], to [[mind]] {{+obj|nl|:op<to>}} <end>
 Page 223 take kindly: Found match for regex: <begin> {{en-verb|take<,,took,taken> kindly}} {{+obj|en|:to}} <end>
 Page 224 azen: Found match for regex: <begin> # {{lb|nl|intransitive}} to [[predate]] {{+obj|nl|:op}} <end>
-Page 224 azen: Found match for regex: <begin> # {{lb|nl|intransitive}} to [[long]] {{+obj|nl|:op<after>}}, to [[desire]] {{+obj|nl|:op}} <end>
+Page 224 azen: Found match for regex: <begin> # {{lb|nl|intransitive}} to [[long]], to [[desire]] {{+obj|nl|:op<for>}} <end>
 Page 225 meten: Found match for regex: <begin> # {{lb|nl|reflexive}} to [[measure up]] {{+obj|nl|:met<to>}} <end>
 Page 226 gratias: Found match for regex: <begin> # [[thanks]] {{+obj|ia|:a<to>}} <end>
 Page 227 helpen: Found match for regex: <begin> # {{lb|nl|transitive}} to [[provide]], to [[supply]] {{+obj|nl|:aan<with>}} <end>
@@ -329,15 +329,15 @@ Page 243 schlafen: Found match for regex: <begin> # to [[sleep with]]; to [[have
 Page 244 zice: Found match for regex: <begin> # {{lb|ro|regional}} to [[sing]] {{+obj|ro|:din<instrument>}} <end>
 Page 245 wenden: Found match for regex: <begin> # {{lb|de|reflexive}} to [[turn to]]; to [[consult]] {{+obj|de|:an(acc)}} <end>
 Page 246 rechnen: Found match for regex: <begin> # to [[expect]] {{+obj|de|:mit}} <end>
-Page 247 rekenen: Found match for regex: <begin> # {{lb|nl|transitive}} to [[count]] {{+obj|nl|:tot<as (belonging to)>}} {{+obj|nl|:als<as>}}, to consider (something) an example {{+obj|nl|:tot<of>}} <end>
-Page 247 rekenen: Found match for regex: <begin> # {{lb|nl|intransitive}} to [[rely]] {{+obj|nl|:op<on>}}, to [[count on]] {{+obj|nl|:op<on>}} <end>
+Page 247 rekenen: Found match for regex: <begin> # {{lb|nl|transitive}} to [[count]] {{+obj|nl|:tot<as (belonging to)>|:als<as>}}, to consider (something) an example {{+obj|nl|:tot<of>}} <end>
+Page 247 rekenen: Found match for regex: <begin> # {{lb|nl|intransitive}} to [[rely]], to [[count on|count]] {{+obj|nl|:op<on>}} <end>
 Page 248 sodare: Found match for regex: <begin> # {{lb|it|intransitive|archaic}} to [[give]] a [[guarantee]] {{+obj|it|:di(inf)<to (do something)>}} {{+aux|it|avere}} <end>
 Page 249 sumir: Found match for regex: <begin> # to [[hide]] {{+obj|pt|:com}} <end>
 Page 250 Frage: Found match for regex: <begin> # [[question]] {{gloss|interrogative sentence or phrase}} {{+obj|de|:an(acc)<for someone>}} <end>
 Page 251 granica: Found match for regex: <begin> # [[border]] {{gl|line separating two regions}} {{+obj|pl|:między(ins)<between what>}} <end>
 Page 251 granica: Found match for regex: <begin> # [[edge]], [[limit]] {{gl|bound beyond which one may not go}} {{+obj|pl|:między(ins)<between what>}} <end>
 Page 252 hetzen: Found match for regex: <begin> # {{senseid|de|agitate}} {{lb|de|intransitive}} to [[agitate]] {{+obj|de|:gegen}} <end>
-Page 253 Glaube: Found match for regex: <begin> # [[belief]] {{+obj|de|:an(acc)<in>}}, [[faith]] {{+obj|de|:an(acc)<in>}} <end>
+Page 253 Glaube: Found match for regex: <begin> # [[belief]], [[faith]] {{+obj|de|:an(acc)<in>}} <end>
 Page 254 dokument: Found match for regex: <begin> # {{lb|pl|colloquial|film}} [[documentary]] {{gl|documentary film}} {{+obj|pl|:o(loc)<about whom/what>}} <end>
 Page 255 werben: Found match for regex: <begin> # {{lb|de|intransitive}} to [[promote]], [[advertise]] {{+obj|de|:für}} <end>
 Page 256 ripieno: Found match for regex: <begin> {{it-adj}} {{+obj|it|:di}} <end>
@@ -348,8 +348,8 @@ Page 258 freuen: Found match for regex: <begin> # {{lb|de|reflexive}} to be [[ha
 Page 259 schwören: Found match for regex: <begin> # {{lb|de|intransitive}} to [[swear by]]; to be [[convinced]] of; to [[like]] {{+obj|de|:auf(acc)}} <end>
 Page 260 stinken: Found match for regex: <begin> # {{lb|de|intransitive}} to [[stink]] {{+obj|de|:nach(dat)<of>}} <end>
 Page 261 أذن: Found match for regex: <begin> # to [[hurt]] (someone's) [[ear]] {{+obj|ar|:لِ/:إِلَى}} <end>
-Page 262 beiden: Found match for regex: <begin> # {{lb|nl|intransitive|archaic}} to [[wait]] {{+obj|nl|:op<for>}} {{+obj|nl|:naar<for>}} <end>
-Page 263 pisać: Found match for regex: <begin> # {{lb|zlw-opl|attested in|Lesser Poland|Greater Poland}} to [[write]] {{+obj|zlw-opl|:ku(dat)/:do(gen)<to whom>}}, {{+obj|zlw-opl|:o(acc)/:po(acc)<about/for what>}}, {{+obj|zlw-opl|:o(loc)<about what>}} <end>
+Page 262 beiden: Found match for regex: <begin> # {{lb|nl|intransitive|archaic}} to [[wait]] {{+obj|nl|:op/:naar<for>}} <end>
+Page 263 pisać: Found match for regex: <begin> # {{lb|zlw-opl|attested in|Lesser Poland|Greater Poland}} to [[write]] {{+obj|zlw-opl|:ku(dat)/:do(gen)<to whom>|;|:o(acc)/:po(acc)<about/for what>|:o(loc)<about what>}} <end>
 Page 263 pisać: Found match for regex: <begin> # {{lb|pl|transitive}} to [[write]] {{gl|to show (information, etc) in written form}} {{+obj|pl|:o(loc)<about what>}} <end>
 Page 263 pisać: Found match for regex: <begin> # {{lb|pl|intransitive|colloquial|of the press}} to [[write]] {{gl|to inform about in a written publication}} {{+obj|pl|:o(loc)<about what>}} <end>
 Page 263 pisać: Found match for regex: <begin> # {{lb|pl|reflexive-się}} to [[sign up for]], to be [[up for]], to be [[down to]], to be [[ready]] {{+obj|pl|:na(acc)<something>}} <end>
@@ -382,11 +382,11 @@ Page 281 inclinar: Found match for regex: <begin> # {{lb|ca|transitive|figurativ
 Page 282 apoderar: Found match for regex: <begin> # {{lb|ca|pronominal}} to [[seize]] {{+obj|ca|:de}} <end>
 Page 283 apresurar: Found match for regex: <begin> # {{lb|es|reflexive}} to [[rush]], to [[hasten]] {{+obj|es|:a(inf)<to do something>}} <end>
 Page 284 arremeter: Found match for regex: <begin> # {{lb|pt|intransitive}} to [[attack]], to [[assault]] {{+obj|pt|:sobre}} <end>
-Page 284 arremeter: Found match for regex: <begin> # {{lb|pt|intransitive}} to [[rush]] {{+obj|pt|:em<into>}} ''or'' {{+obj|pt|:contra<against>}}, to [[lunge]], to [[charge]], to [[dash]] <end>
+Page 284 arremeter: Found match for regex: <begin> # {{lb|pt|intransitive}} to [[rush]] {{+obj|pt|:em<into>|:contra<against>}}, to [[lunge]], to [[charge]], to [[dash]] <end>
 Page 284 arremeter: Found match for regex: <begin> # {{lb|pt|intransitive}} to [[confront]], to [[lash out]] {{+obj|pt|:com<at>}} <end>
 Page 285 casar: Found match for regex: <begin> # {{lb|es|reflexive}} to [[wed]], [[marry]], [[get married]] {{+obj|es|:con}} <end>
 Page 286 contactar: Found match for regex: <begin> # to [[contact]] {{+obj|ca|:amb}} <end>
-Page 287 contagiar: Found match for regex: <begin> # {{lb|ca|pronominal}} to become [[infected]] {{+obj|ca|:de<by>}} ''or'' {{+obj|ca|:per<by>}} <end>
+Page 287 contagiar: Found match for regex: <begin> # {{lb|ca|pronominal}} to become [[infected]] {{+obj|ca|:de/:per<by>}} <end>
 Page 288 cursar: Found match for regex: <begin> # {{lb|ca|intransitive|medicine}} to [[present]] {{+obj|ca|:amb<with>}} <end>
 Page 289 adorno: Found match for regex: <begin> {{it-adj}} {{+obj|it|:di}} <end>
 Page 290 aspirare: Found match for regex: <begin> # {{lb|it|intransitive}} to [[aspire]] {{+obj|it|:a<to>}} <end>
@@ -422,7 +422,7 @@ Page 314 talen: Found match for regex: <begin> # {{lb|nl|intransitive}} to [[lon
 Page 315 versare: Found match for regex: <begin> # {{lb|it|intransitive}} to [[find]] oneself, to [[be]] {{+obj|it|:in<in (a bad situation, etc.)>}} <end>
 Page 315 versare: Found match for regex: <begin> # {{lb|it|intransitive|archaic|or|literary}} to [[be]] [[located]], to [[live]] {{+obj|it|:in<in (a specified location)>}} <end>
 Page 316 virare: Found match for regex: <begin> # {{lb|it|intransitive|chemistry}} to [[turn]] (a particular color) {{+obj|it|:a}} {{+aux|it|avere}} <end>
-Page 317 votare: Found match for regex: <begin> # {{lb|it|intransitive}} to [[vote]] {{+obj|it|:per<for>}}, {{+obj|it|:a favore di<in favor of>}}, {{+obj|it|:contro<against>}} {{+aux|it|avere}} <end>
+Page 317 votare: Found match for regex: <begin> # {{lb|it|intransitive}} to [[vote]] {{+obj|it|:per<for>|:a favore di<in favor of>|:contro<against>}} {{+aux|it|avere}} <end>
 Page 318 au-dessous: Found match for regex: <begin> # [[beneath]], [[below]] {{+obj|fr|:de}} <end>
 Page 319 przepraszać: Found match for regex: <begin> # {{lb|pl|transitive}} to [[apologize]] to, to [[be]] [[sorry]] {{gl|to make an apology; to express regret}} {{+obj|pl|:za(acc)<for what>}} <end>
 Page 319 przepraszać: Found match for regex: <begin> # {{lb|pl|reflexive-się}} to [[apologize]] to [[each other]] {{+obj|pl|:z(ins)}} <end>
@@ -431,7 +431,7 @@ Page 320 prosić: Found match for regex: <begin> # {{lb|pl|reflexive-się}} to [
 Page 320 prosić: Found match for regex: <begin> # {{lb|pl|reflexive-się}} to [[cry out for]] {{+obj|pl|:o(acc)<something>}} <end>
 Page 320 prosić: Found match for regex: <begin> # {{lb|pl|reflexive-się}} to [[ask for]], to [[invite]] {{gl|to increase the likelihood of something by persisting in some action}} {{+obj|pl|:o(acc)<something>}} <end>
 Page 321 słuchać: Found match for regex: <begin> # {{lb|zlw-opl|attested in|Greater Poland}} to [[belong]] {{gl|to be within someone's ownership}} {{+obj|zlw-opl|:ku(dat)/:na(acc)<to whom/what>}} <end>
-Page 321 słuchać: Found match for regex: <begin> # {{lb|zlw-opl|attested in|Lesser Poland|Masovia}} to be [[subject]] {{q|i.e. to court}} {{+obj|zlw-opl|:ku(dat)<to whom/what>}}, {{+obj|zlw-opl|:w(acc)<to what>}} <end>
+Page 321 słuchać: Found match for regex: <begin> # {{lb|zlw-opl|attested in|Lesser Poland|Masovia}} to be [[subject]] {{q|i.e. to court}} {{+obj|zlw-opl|:ku(dat)<to whom/what>|:w(acc)<to what>}} <end>
 Page 322 uważać: Found match for regex: <begin> # {{lb|pl|intransitive}} to [[watch out]], to [[take care]], to [[look out]] {{gl|to be careful of}} {{+obj|pl|:na(acc)<for what>}} <end>
 Page 322 uważać: Found match for regex: <begin> # {{lb|pl|intransitive}} to [[watch out]], to [[take care]] {{gl|to ensure nothing bad happens to someone or something}} {{+obj|pl|:na(acc)<for whom/what>}} <end>
 Page 322 uważać: Found match for regex: <begin> # {{lb|pl|intransitive}} to [[pay attention]] {{gl|to focus on}} {{+obj|pl|:na(acc)<to what>}} <end>
@@ -440,29 +440,29 @@ Page 322 uważać: Found match for regex: <begin> # {{lb|pl|reflexive-się}} to 
 Page 323 mówić: Found match for regex: <begin> ## {{lb|zlw-opl|attested in|Lesser Poland}} to [[speak against]], to [[deny]], to [[negate]] {{+obj|zlw-opl|:naprzeciw(dat)<what>}} <end>
 Page 323 mówić: Found match for regex: <begin> ## to [[insult]], to [[maledict]] {{+obj|zlw-opl|:przeciw(dat)<whom>}} <end>
 Page 323 mówić: Found match for regex: <begin> ## to [[speak for]], to speak in someone's [[name]] {{+obj|zlw-opl|:za(acc)<for whom>}} <end>
-Page 323 mówić: Found match for regex: <begin> ## to [[speak]] with, to [[converse]] with {{+obj|zlw-opl|:z(ins)<with whom>}} {{+obj|zlw-opl|:miedzy(ins)<amongst whom>}} <end>
+Page 323 mówić: Found match for regex: <begin> ## to [[speak]] with, to [[converse]] with {{+obj|zlw-opl|:z(ins)<with whom>|:miedzy(ins)<amongst whom>}} <end>
 Page 323 mówić: Found match for regex: <begin> ## to [[speak]] {{gl|to be able to use a particular language}} {{+obj|zlw-opl|:po(dat)<in what language>}} <end>
 Page 323 mówić: Found match for regex: <begin> ## to [[repeat]] {{+obj|zlw-opl|:za(ins)<after whom>}} <end>
 Page 323 mówić: Found match for regex: <begin> ## {{lb|zlw-opl|law}} to [[accuse]] {{+obj|zlw-opl|:na(acc)/:przeciwo(dat)<whom>}} <end>
 Page 323 mówić: Found match for regex: <begin> ## to [[protest]] {{+obj|zlw-opl|:przeciwo(dat)<against what>}} <end>
-Page 323 mówić: Found match for regex: <begin> ## {{lb|zlw-opl|attested in|Lesser Poland|Greater Poland}} to [[dispute]] {{+obj|zlw-opl|:ku(dat)}} {{+obj|zlw-opl|:o(acc)}} <end>
-Page 323 mówić: Found match for regex: <begin> ## {{lb|zlw-opl|attested in|Silesia}} to [[explain]] {{+obj|zlw-opl|:k(dat)}} {{+obj|zlw-opl|:na(acc)}} <end>
+Page 323 mówić: Found match for regex: <begin> ## {{lb|zlw-opl|attested in|Lesser Poland|Greater Poland}} to [[dispute]] {{+obj|zlw-opl|:ku(dat) + :o(acc)}} <end>
+Page 323 mówić: Found match for regex: <begin> ## {{lb|zlw-opl|attested in|Silesia}} to [[explain]] {{+obj|zlw-opl|:k(dat) + :na(acc)}} <end>
 Page 323 mówić: Found match for regex: <begin> # {{lb|pl|intransitive}} to [[speak]] {{gl|to be able to talk in a given lect or language}} {{+obj|pl|:w(loc)/:po(old&dative)<in what language>}} <end>
 Page 323 mówić: Found match for regex: <begin> # {{lb|pl|intransitive}} to [[say]], to [[tell]] {{gl|to appear in someone's behavior}} {{+obj|pl|:przez(acc)<through whom/what>}} <end>
 Page 324 poznać: Found match for regex: <begin> # to [[testify]] about someone {{+obj|zlw-opl|:przed(ins)<in front of/before whom>}} <end>
-Page 324 poznać: Found match for regex: <begin> # {{lb|pl|transitive}} to [[recognize]], to [[tell]] {{gl|to be able to surmise or guess based on some observations}} {{+obj|pl|:po(loc)<based on what>}} {{+obj|pl|:z(gen)<from what>}} <end>
+Page 324 poznać: Found match for regex: <begin> # {{lb|pl|transitive}} to [[recognize]], to [[tell]] {{gl|to be able to surmise or guess based on some observations}} {{+obj|pl|:po(loc)<based on what>|:z(gen)<from what>}} <end>
 Page 324 poznać: Found match for regex: <begin> # {{lb|pl|transitive}} to [[introduce]] {{gl|to cause someone to begin relations with someone}} {{+obj|pl|:z(ins)<with whom>}} <end>
 Page 324 poznać: Found match for regex: <begin> # {{lb|pl|transitive}} to [[recognize]] {{gl|to be able to discern someone amongst others from particular traits}} {{+obj|pl|:po(loc)<by/from what>}} <end>
 Page 324 poznać: Found match for regex: <begin> # {{lb|pl|reflexive-się}} to [[meet]], to [[get to know]] {{gl|to acquaint with for the first time}} {{+obj|pl|:z(ins)<with whom>}} <end>
 Page 324 poznać: Found match for regex: <begin> # {{lb|pl|reflexive-się}} to [[recognize]] {{gl|to judge someone or something according to reality}} {{+obj|pl|:na(loc)<what/whom>}} <end>
-Page 324 poznać: Found match for regex: <begin> # {{lb|pl|reflexive-się}} to [[recognize]] oneself {{gl|to be able to discern oneself amongst others from particular traits}} {{+obj|pl|:na(loc)}} {{+obj|pl|:w(loc)}} <end>
+Page 324 poznać: Found match for regex: <begin> # {{lb|pl|reflexive-się}} to [[recognize]] oneself {{gl|to be able to discern oneself amongst others from particular traits}} {{+obj|pl|:na/:w(loc)}} <end>
 Page 324 poznać: Found match for regex: <begin> # {{lb|pl|reflexive-się}} to [[recognize]] each other {{gl|to be able to discern one another amongst others from particular traits}} {{+obj|pl|:po(loc)<by/from what>}} <end>
 Page 325 chcieć: Found match for regex: <begin> # {{lb|pl|transitive}} {{ng|used in polite commands}}; to [[want]] {{+obj|pl|:żeby/:aby/:by(past-cl)<to do what>}} <end>
-Page 326 słowo: Found match for regex: <begin> # [[word]] {{gl|short oral or written statement}} {{+obj|pl|:od(gen)<from whom/what>}}, {{+obj|pl|:o(loc)<about whom/what>}} <end>
+Page 326 słowo: Found match for regex: <begin> # [[word]] {{gl|short oral or written statement}} {{+obj|pl|:od(gen)<from whom/what> + :o(loc)<about whom/what>}} <end>
 Page 326 słowo: Found match for regex: <begin> # [[text]]; [[lyric]] {{gl|words of a scientific, literary, or musical work}} {{+obj|pl|:do(gen)<for what>}} <end>
-Page 327 łączyć: Found match for regex: <begin> # {{lb|pl|transitive}} to [[join]], to [[merge]], to [[link]] {{gl|objects into one mass}} {{+obj|pl|:w(acc)<with what>}} or {{+obj|pl|:z(ins)<with what>}} <end>
+Page 327 łączyć: Found match for regex: <begin> # {{lb|pl|transitive}} to [[join]], to [[merge]], to [[link]] {{gl|objects into one mass}} {{+obj|pl|:w(acc)/:z(ins)<with what>}} <end>
 Page 327 łączyć: Found match for regex: <begin> # {{lb|pl|transitive}} to [[connect]], to [[link]] {{gl|two places}} {{+obj|pl|:z(ins)<with what>}} <end>
-Page 327 łączyć: Found match for regex: <begin> # {{lb|pl|reflexive-się}} to be [[connect]]ed {{gl|objects into one mass}} {{+obj|pl|:w(acc)<with what>}} or {{+obj|pl|:z(ins)<with what>}} <end>
+Page 327 łączyć: Found match for regex: <begin> # {{lb|pl|reflexive-się}} to be [[connect]]ed {{gl|objects into one mass}} {{+obj|pl|:w(acc)/:z(ins)<with what>}} <end>
 Page 327 łączyć: Found match for regex: <begin> # {{lb|pl|reflexive-się}} to be [[connect]]ed, to be [[link]]ed {{gl|two places}} {{+obj|pl|:z(ins)<with what>}} <end>
 Page 328 nadzieja: Found match for regex: <begin> # [[hope]] {{gl|feeling of trust, confidence, belief or expectation that something wished for can or will happen}} {{+obj|pl|:na(acc)<for what>}} <end>
 Page 329 dzwonić: Found match for regex: <begin> # {{lb|pl|intransitive|colloquial}} to [[ring]], to [[call]] {{gl|to contact by telephone}} {{+obj|pl|:do(gen)<someone>}} <end>
@@ -484,7 +484,7 @@ Page 335 robić: Found match for regex: <begin> # {{lb|pl|reflexive-się}} to [[
 Page 335 robić: Found match for regex: <begin> # {{lb|pl|reflexive-się|colloquial}} to [[dress to kill]] {{+obj|pl|:na(acc)}} <end>
 Page 335 robić: Found match for regex: <begin> # {{lb|pl|transitive|colloquial}} to [[act]], to [[substitute]] {{+obj|pl|:za(acc)<as what>}} <end>
 Page 336 słyszeć: Found match for regex: <begin> # {{lb|zlw-opl|attested in|Lesser Poland}} to [[hear]] {{gl|to find out by hearing}} {{+obj|zlw-opl|:o(loc)<about whom/what>}} <end>
-Page 336 słyszeć: Found match for regex: <begin> # {{lb|pl|transitive}} to [[hear]] {{gl|to find out about by hearing}} {{+obj|pl|:od(gen)<from whom>}}, {{+obj|pl|:o(loc)<about what>}} <end>
+Page 336 słyszeć: Found match for regex: <begin> # {{lb|pl|transitive}} to [[hear]] {{gl|to find out about by hearing}} {{+obj|pl|:od(gen)<from whom> + :o(loc)<about what>}} <end>
 Page 337 aparat: Found match for regex: <begin> # [[apparatus]] {{gl|device with some function}} {{+obj|pl|:do(gen)<for what>}} <end>
 Page 337 aparat: Found match for regex: <begin> # [[apparatus]] {{gl|device with some function}} {{+obj|szl|:do(gen)<for what>}} <end>
 Page 338 crepare: Found match for regex: <begin> # to no longer be able to [[contain]] or [[tolerate]]; to [[burst]] {{+obj|it|:di/:da<from (an emotion, sensation, etc.)>}} {{+aux|it|essere}} <end>
@@ -499,11 +499,11 @@ Page 343 intra: Found match for regex: <begin> # {{lb|ro|obsolete}} to [[associa
 Page 345 attendere: Found match for regex: <begin> # {{lb|it|intransitive}} to [[attend]] {{+obj|it|:a<to>}}, to [[take care of]] <end>
 Page 346 consistere: Found match for regex: <begin> # to [[consist]] {{+obj|it|:di<of>}} <end>
 Page 346 consistere: Found match for regex: <begin> # {{lb|it|archaic}} to [[persist]] {{+obj|it|:in<in>}} <end>
-Page 347 trocar: Found match for regex: <begin> # {{lb|pt|transitive}} to [[trade]] with; to [[exchange]] {{gloss|to give {{+obj|pt|:com<somebody>}} something in exchange for {{+obj|pt|:por<something else>}}}} <end>
+Page 347 trocar: Found match for regex: <begin> # {{lb|pt|transitive}} to [[trade]] with; to [[exchange]] (something) {{+obj|pt|:com<with someone> + :por<for something else>}}}} <end>
 Page 348 rispondente: Found match for regex: <begin> {{it-adj}} {{+obj|it|:a}} <end>
 Page 349 volto: Found match for regex: <begin> {{it-adj}} {{+obj|it|:a}} <end>
 Page 350 belasten: Found match for regex: <begin> # {{lb|nl|transitive}} to [[charge]], to order, to invest {{+obj|nl|:met<with>}} <end>
-Page 351 analogia: Found match for regex: <begin> # {{lb|pl|literary}} [[analogy]] {{gl|relationship of resemblance or equivalence between two situations, people, or objects}} {{+obj|pl|:do(gen)<to what>}} or {{+obj|pl|:między/:pomiędzy(ins)<between what>}} <end>
+Page 351 analogia: Found match for regex: <begin> # {{lb|pl|literary}} [[analogy]] {{gl|relationship of resemblance or equivalence between two situations, people, or objects}} {{+obj|pl|:do(gen)<to what>|:między/:pomiędzy(ins)<between what>}} <end>
 Page 352 waarde: Found match for regex: <begin> # {{lb|li|intransitive}} to [[wait]] (for) {{+obj|li|:opp(acc)}} <end>
 Page 353 пора: Found match for regex: <begin> # {{lb|bg|by extension}} [[age]] {{+obj|bg|:на<on>}} <end>
 Page 354 عرب: Found match for regex: <begin> # {{lb|ar|obsolete}} to [[upbraid]], to [[disapprove]] of, to [[declare]] [[foul]] {{+obj|ar|:عَلَى}} <end>
@@ -550,7 +550,7 @@ Page 385 disporre: Found match for regex: <begin> # {{lb|it|intransitive}} to [[
 Page 385 disporre: Found match for regex: <begin> # {{lb|it|intransitive}} to make [[available]] {{+obj|it|:di}} {{+aux|it|avere}} <end>
 Page 385 disporre: Found match for regex: <begin> # {{lb|it|intransitive}} to have [[employ]]ed {{+obj|it|:di}} {{+aux|it|avere}} <end>
 Page 385 disporre: Found match for regex: <begin> # {{lb|it|intransitive|banking}} to [[oblige]] by [[draft]], [[check]], etc. {{+obj|it|:su/:[[a]] [[carico]] [[di]]}} {{+aux|it|avere}} <end>
-Page 386 esercitare: Found match for regex: <begin> # to [[train]] (students, soldiers, etc.) {{+obj|it|:a<in a subject>}} ''or'' {{+obj|it|:a(inf)<to (do something)>}} <end>
+Page 386 esercitare: Found match for regex: <begin> # to [[train]] (students, soldiers, etc.) {{+obj|it|:a<in a subject>|:a(inf)<to (do something)>}} <end>
 Page 386 esercitare: Found match for regex: <begin> # to [[accustom]] {{+obj|it|:a<to something>}} <end>
 Page 387 interessare: Found match for regex: <begin> # {{lb|it|intransitive}} to be of interest to {{+obj|it|:a}} {{+aux|it|essere}} <end>
 Page 387 interessare: Found match for regex: <begin> # {{lb|it|intransitive}} to be in the interest of, to be the concern of, to [[matter]] to {{+obj|it|:a}} {{+aux|it|essere}} <end>
@@ -633,7 +633,7 @@ Page 441 prosciogliere: Found match for regex: <begin> {{it-verb|a\@}} {{+obj|it
 Page 442 decorrere: Found match for regex: <begin> # to begin to be [[recognize]]d or [[calculate]]d; to [[take effect]] {{+obj|it|:da}} <end>
 Page 443 حرم: Found match for regex: <begin> # to be [[forbidden]], to be [[prohibited]], to be [[interdicted]], to be [[unlawful]] {{+obj|ar|:عَلَى}} <end>
 Page 444 جا: Found match for regex: <begin> # to [[suit]] {{gloss|to be suitable or apt for one's image}} {{+obj|ary|:مع}} <end>
-Page 445 proces: Found match for regex: <begin> # {{lb|pl|law}} [[trial]] {{gl|appearance at judicial court}} {{+obj|pl|:o(acc)<for what>}}, {{+obj|pl|:przeciw(dat)<against whom>}} <end>
+Page 445 proces: Found match for regex: <begin> # {{lb|pl|law}} [[trial]] {{gl|appearance at judicial court}} {{+obj|pl|:o(acc)<for what> + :przeciw(dat)<against whom>}} <end>
 Page 446 titolare: Found match for regex: <begin> # {{lb|it|intransitive|journalism}} to [[have]] a [[headline]] {{+obj|it|:su<on>}} <end>
 Page 447 شن: Found match for regex: <begin> # {{lb|ar|obsolete}} to [[pour]], to let [[flow]], to [[toss]] {{+obj|ar|:عَلَى<over>}} <end>
 Page 448 schwärmen: Found match for regex: <begin> # to [[adore]]; [[fancy]] {{gloss|to be romantically attracted by someone, often without making advances}} {{+obj|de|:für}} <end>
@@ -670,7 +670,7 @@ Page 471 mieć: Found match for regex: <begin> # {{lb|pl|reflexive-się|obsolete
 Page 471 mieć: Found match for regex: <begin> # {{lb|pl|reflexive-się}} to be in [[relation]] to something {{+obj|pl|:do(gen)<to what>}} <end>
 Page 471 mieć: Found match for regex: <begin> # {{lb|szl|transitive}} to [[consider]] someone as something {{+obj|szl|:za(acc)}} <end>
 Page 472 trapassare: Found match for regex: <begin> # {{lb|it|intransitive|literary}} to [[pass]], to [[cross]] {{+obj|it|:per<through>}} {{+aux|it|essere}} <end>
-Page 472 trapassare: Found match for regex: <begin> # {{lb|it|intransitive|rare}} to be [[inherit]]ed, to [[pass on]] {{+obj|it|:da<from>}} {{+obj|it|:a<to>}} {{+aux|it|essere}} <end>
+Page 472 trapassare: Found match for regex: <begin> # {{lb|it|intransitive|rare}} to be [[inherit]]ed, to [[pass on]] {{+obj|it|:da<from> + :a<to>}} {{+aux|it|essere}} <end>
 Page 473 trapelare: Found match for regex: <begin> # {{lb|it|intransitive}} to [[filter]] {{q|of light}} {{+obj|it|:da<through>}} {{+aux|it|essere}} <end>
 Page 473 trapelare: Found match for regex: <begin> # {{lb|it|intransitive}} to [[leak]] {{+obj|it|:da<from/through>}} {{+aux|it|essere}} <end>
 Page 474 addivenire: Found match for regex: <begin> # to [[reach]] {{+obj|it|:a<a conclusion, accommodation, etc.>}} <end>
@@ -682,7 +682,7 @@ Page 478 riveniente: Found match for regex: <begin> {{it-adj}} {{+obj|it|:da}} <
 Page 479 risovvenire: Found match for regex: <begin> # {{lb|it|impersonal}} to [[come to mind]] [[again]] {{+obj|it|:di<object recalled>}} {{+aux|it|essere}} <end>
 Page 480 staccare: Found match for regex: <begin> {{it-verb|a/à}} {{+obj|it|:da}} <end>
 Page 481 addirsi: Found match for regex: <begin> # to [[suit]], to be [[becoming]], to be [[suitable]] {{+obj|it|:a<for>}} <end>
-Page 482 bedienen: Found match for regex: <begin> # {{lb|nl|reflexive|with prepositional object}} to [[make use of|make use]] {{+obj|nl|:van<of>}}, to [[utilise]] {{+obj|nl|:van}} <end>
+Page 482 bedienen: Found match for regex: <begin> # {{lb|nl|reflexive|with prepositional object}} to [[utilise]], to [[make use of|make use]] {{+obj|nl|:van<of>}} <end>
 Page 483 estromettere: Found match for regex: <begin> {{it-verb|a\@}} {{tlb|it|transitive}} {{+obj|it|:da}} <end>
 Page 484 intromettere: Found match for regex: <begin> # {{lb|it|transitive|uncommon}} to [[put]] (something) {{+obj|it|:in<inside or in (something else)>}}; to [[introduce]] <end>
 Page 484 intromettere: Found match for regex: <begin> # {{lb|it|transitive|uncommon}} to [[admit]] (someone) {{+obj|it|:in<to the presence of (someone else)>}} <end>
@@ -711,7 +711,7 @@ Page 499 malignare: Found match for regex: <begin> # to [[malign]] {{+obj|it|:su
 Page 500 supposto: Found match for regex: <begin> {{head|it|conjunction}} {{+obj|it|:che}} <end>
 Page 501 trovarsi: Found match for regex: <begin> # {{lb|it|intransitive}} to [[agree]] or [[get along]] {{+obj|it|:con<with>}} <end>
 Page 501 trovarsi: Found match for regex: <begin> # {{lb|it|intransitive}} to [[meet]] {{+obj|it|:con<someone>}} <end>
-Page 502 losmaken: Found match for regex: <begin> # {{lb|nl|reflexive}} to [[extricate]] oneself {{+obj|nl|:uit<from>}}, to [[cut ties]] {{+obj|nl|:uit<from>}} <end>
+Page 502 losmaken: Found match for regex: <begin> # {{lb|nl|reflexive}} to [[cut ties]] (with), [[extricate]] oneself {{+obj|nl|:uit<from>}} <end>
 Page 503 stikken: Found match for regex: <begin> # {{lb|nl|impersonal}} to [[teem]] {{gl|to have an abundance of}} {{+obj|nl|:van<with>}} <end>
 Page 504 discorrere: Found match for regex: <begin> # {{lb|it|intransitive}} to [[discuss]] {{+obj|it|:di<about>}} {{+aux|it|avere}} <end>
 Page 505 incorrere: Found match for regex: <begin> {{it-verb|e\@}} {{+obj|it|:in}} <end>
@@ -723,7 +723,7 @@ Page 509 ironizzare: Found match for regex: <begin> # {{lb|it|intransitive}} to 
 Page 510 indagare: Found match for regex: <begin> # {{lb|it|intransitive}} to [[investigate]], to [[inquire]], to [[carry out]] an [[investigation]] {{+obj|it|:su<about/on>}} {{+aux|it|avere}} <end>
 Page 511 espellere: Found match for regex: <begin> {{it-verb|a\@}} {{+obj|it|:da}} {{tlb|it|transitive}} <end>
 Page 512 repellere: Found match for regex: <begin> # {{tlb|it|intransitive}} to [[disgust]], to [[be]] [[repugnant]] {{+obj|it|:a<to someone>}} {{+aux|it|avere}} <end>
-Page 513 czytać: Found match for regex: <begin> # {{lb|pl|transitive}} to [[read]] {{gl|to interpret, or infer a meaning, significance, thought, intention, etc., from}} {{+obj|pl|:z(gen)<from what>}} {{+obj|pl|:w(loc)<in what>}} {{+obj|pl|:na(loc)<on what>}} <end>
+Page 513 czytać: Found match for regex: <begin> # {{lb|pl|transitive}} to [[read]] {{gl|to interpret, or infer a meaning, significance, thought, intention, etc.}} {{+obj|pl|:z(gen)<from what>|:w(loc)<in what>|:na(loc)<on what>}} <end>
 Page 514 deflettere: Found match for regex: <begin> # {{tlb|it|usually|figurative}} to [[deflect]], to [[deviate]] from the [[way]], to [[change]] [[course]] {{+obj|it|:da<from>}} <end>
 Page 515 vermögen: Found match for regex: <begin> # {{lb|de|transitive}} to [[be able to]]; [[may]] {{+obj|de|:zu(inf)}} <end>
 Page 516 circonfuso: Found match for regex: <begin> {{it-adj}} {{+obj|it|:di}} <end>
@@ -786,7 +786,7 @@ Page 564 contraddire: Found match for regex: <begin> # {{lb|it|intransitive|date
 Page 565 ridica: Found match for regex: <begin> # {{lb|ro|reflexive|formal|of|amounts}} to [[amount]], [[add up]] to {{+obj|ro|:la}} <end>
 Page 566 contraffare: Found match for regex: <begin> # {{lb|it|intransitive|archaic|or|literary}} to [[contravene]] {{+obj|it|:a}} {{+aux|it|avere}} <end>
 Page 567 spiovere: Found match for regex: <begin> # to [[droop]]; to [[hang]] down {{+obj|it|:su}} {{+aux|it|essere}} <end>
-Page 568 guarnire: Found match for regex: <begin> {{it-verb|a/+isc}} {{+obj|it|:di<with>}} ''or'' {{+obj|it|:con<with>}} <end>
+Page 568 guarnire: Found match for regex: <begin> {{it-verb|a/+isc}} {{+obj|it|:di/:con<with>}} <end>
 Page 569 impreziosire: Found match for regex: <begin> {{it-verb|a/+isc}} {{+obj|it|:di}} <end>
 Page 570 infarcire: Found match for regex: <begin> {{it-verb|a/+isc}} {{+obj|it|:con/:di}} <end>
 Page 571 ingentilire: Found match for regex: <begin> # {{lb|it|transitive|literary}} to [[adorn]] {{+obj|it|:di<with>}} <end>
@@ -811,7 +811,7 @@ Page 582 risalire: Found match for regex: <begin> # {{lb|it|intransitive}} to [[
 Page 583 aderire: Found match for regex: <begin> {{it-verb|a/+isc}} {{tlb|it|intransitive}} {{+obj|it|:a}} {{+aux|it|avere}} <end>
 Page 584 adempiere: Found match for regex: <begin> # {{lb|it|intransitive|sometimes|proscribed}} to [[carry out]], to [[accomplish]], to [[implement]], to [[perform]] {{+obj|it|:a}} {{+aux|it|avere}} <end>
 Page 585 risarcimento: Found match for regex: <begin> {{it-noun|m}} {{+obj|it|:di}} <end>
-Page 586 cospirare: Found match for regex: <begin> # {{lb|it|intransitive}} to [[unite]] {{+obj|it|:con<with other people>}} {{+obj|it|:a<for a common goal>}} {{+aux|it|avere}} <end>
+Page 586 cospirare: Found match for regex: <begin> # {{lb|it|intransitive}} to [[unite]] {{+obj|it|:con<with other people> + :a<for a common goal>}} {{+aux|it|avere}} <end>
 Page 586 cospirare: Found match for regex: <begin> # {{lb|it|intransitive}} to [[conspire]], to [[work]] [[together]] {{+obj|it|:[[contro]] [[di]]<against someone>|:a(inf)<to do something)|:a(object)<for a result>}} {{+aux|it|avere}} <end>
 Page 587 alloggiare: Found match for regex: <begin> # {{lb|it|intransitive}} to [[stay]], to [[lodge]] {{+obj|it|:a<at>}} {{+aux|it|avere}} <end>
 Page 588 inquisire: Found match for regex: <begin> # {{lb|it|intransitive|or|rarely|transitive}} to [[investigate]] {{q|in a hostile manner}} {{+obj|it|:su<a person>}} {{+aux|it|avere}} <end>
@@ -822,7 +822,7 @@ Page 591 imparentarsi: Found match for regex: <begin> {{it-verb|è}} {{+obj|it|:
 Page 592 scarseggiare: Found match for regex: <begin> # {{lb|it|intransitive}} to be [[lacking]] or [[scarce]] {{+obj|it|:di<in/of>}} {{+aux|it|avere}} <end>
 Page 593 ovviare: Found match for regex: <begin> {{it-verb|a/ò:#ì}} {{tlb|it|intransitive}} {{+obj|it|:a}} <end>
 Page 594 rifarsi: Found match for regex: <begin> # to [[refer]] {{+obj|it|:a<to>}} <end>
-Page 594 rifarsi: Found match for regex: <begin> # to [[get even]], to [[retaliate]], to [[take revenge]] {{+obj|it|:con<with/on someone>}} ''or'' {{+obj|it|:su<with/on someone>}} <end>
+Page 594 rifarsi: Found match for regex: <begin> # to [[get even]], to [[retaliate]], to [[take revenge]] {{+obj|it|:con/:su<with/on someone>}} <end>
 Page 594 rifarsi: Found match for regex: <begin> # to [[make amends]] {{+obj|it|:con<with someone>}} <end>
 Page 594 rifarsi: Found match for regex: <begin> # {{lb|it|rare}} to [[begin]] again; to [[go back]] (to) {{+obj|it|:da/:a(inf)}} <end>
 Page 595 accudire: Found match for regex: <begin> # {{lb|it|intransitive}} to [[attend]] to, to [[heed]] {{qualifier|especially of matters of the [[domicile]]}} {{+obj|it|:a}} {{+aux|it|avere}} <end>
@@ -844,7 +844,7 @@ Page 607 rialzo: Found match for regex: <begin> {{it-noun|m}} {{+obj|it|:di}} <e
 Page 608 sorvolare: Found match for regex: <begin> # {{lb|it|intransitive}} to not [[dwell]] on a [[topic]] considered [[secondary]] or [[uncomfortable]]; to [[gloss over]] {{+obj|it|:su}} {{+aux|it|avere}} <end>
 Page 609 bourrer le crâne: Found match for regex: <begin> # {{lb|fr|informal|figuratively}} to fill someone's head with [[nonsense]]; to [[brainwash]], [[indoctrinate]] {{+obj|fr|:à<someone>}} <end>
 Page 610 taksa: Found match for regex: <begin> # {{lb|pl|administration}} [[fee]] {{gl|fixed official fee charged for certain services}} {{+obj|pl|:od(gen)/:za(acc)<for what>}} <end>
-Page 611 slittare: Found match for regex: <begin> # to be [[postponed]] or [[put off]] {{+obj|it|:di<by (some time)>}} ''or'' {{+obj|it|:a<by>}} {{+aux|it|essere|avere}} <end>
+Page 611 slittare: Found match for regex: <begin> # to be [[postponed]] or [[put off]] {{+obj|it|:di/:a<by (some time)>}} {{+aux|it|essere|avere}} <end>
 Page 612 toevertrouwen: Found match for regex: <begin> # {{lb|nl|transitive|with indirect object}} to [[entrust]] {{+obj|nl|:aan<to>}} <end>
 Page 613 begeistert: Found match for regex: <begin> # [[enthusiastic]], [[thrilled]] {{+obj|de|:über<about>}} <end>
 Page 613 begeistert: Found match for regex: <begin> # [[delighted]] {{+obj|de|:von<with>}} <end>
@@ -889,7 +889,7 @@ Page 647 sloužit: Found match for regex: <begin> # to [[serve]] as, to be [[use
 Page 648 pertinente: Found match for regex: <begin> {{it-adj}} {{+obj|it|:a}} <end>
 Page 649 gongolare: Found match for regex: <begin> {{it-verb|a/ó-}} {{+obj|it|:per}} <end>
 Page 650 questionare: Found match for regex: <begin> # {{lb|it|intransitive|literary}} to [[discuss]] {{+obj|it|:di<about a topic>}} {{+aux|it|avere}} <end>
-Page 650 questionare: Found match for regex: <begin> # {{lb|it|intransitive}} to [[dispute]], to [[argue]], to [[quarrel]] {{+aux|it|avere}} {{+obj|it|:di<about a topic>}} ''or'' {{+obj|it|:su<about a topic>}}; {{+obj|it|:con<with someone>}} {{+aux|it|avere}} <end>
+Page 650 questionare: Found match for regex: <begin> # {{lb|it|intransitive}} to [[dispute]], to [[argue]], to [[quarrel]] {{+obj|it|:di/:su<about a topic> + :con<with someone>}} {{+aux|it|avere}} <end>
 Page 651 incatenare: Found match for regex: <begin> {{it-verb|a/é}} {{+obj|it|:a}} <end>
 Page 652 incatenato: Found match for regex: <begin> {{it-adj}} {{+obj|it|:a}} <end>
 Page 653 inciampare: Found match for regex: <begin> {{it-verb|e:a/à}} {{tlb|it|intransitive}} {{+obj|it|:in}} {{+aux|it|essere|avere}} <end>
@@ -909,7 +909,7 @@ Page 664 quadrare: Found match for regex: <begin> # {{lb|it|intransitive|rare}} 
 Page 665 riflettersi: Found match for regex: <begin> # to have [[repercussion]]s (on) {{+obj|it|:in/:su}} <end>
 Page 666 rimbalzare: Found match for regex: <begin> {{it-verb|e/à}} {{tlb|it|intransitive}} {{+obj|it|:su}} <end>
 Page 667 riparlare: Found match for regex: <begin> # {{lb|it|intransitive}} to [[talk]] [[again]] {{+obj|it|:di<about>}} <end>
-Page 668 ripartire: Found match for regex: <begin> # to [[divide up]] {{+obj|it|:in<in>}} ''or'' {{+obj|it|:su<in>}} <end>
+Page 668 ripartire: Found match for regex: <begin> # to [[divide up]] {{+obj|it|:in/:su<in>}} <end>
 Page 668 ripartire: Found match for regex: <begin> # to [[share out]], to [[distribute]] {{+obj|it|:tra<among>}} <end>
 Page 669 ripensare: Found match for regex: <begin> {{it-verb|a/è}} {{+obj|it|:a}} <end>
 Page 670 riprovare: Found match for regex: <begin> # {{lb|it|intransitive}} to [[try]], to [[attempt]] {{+obj|it|:a<to (do something)>}} <end>
@@ -929,7 +929,7 @@ Page 681 wskazać: Found match for regex: <begin> # {{lb|pl|transitive}} to [[po
 Page 682 unterhalten: Found match for regex: <begin> # {{lb|de|reflexive}} to [[converse]] {{+obj|de|:über(acc)}} <end>
 Page 683 umieć: Found match for regex: <begin> # {{lb|zlw-opl|attested in|Lesser Poland}} to [[know]] {{gl|to speak a language}} {{+obj|zlw-opl|:po(loc)<what language>}} <end>
 Page 684 secondare: Found match for regex: <begin> # {{lb|it|intransitive|archaic}} to [[yield]], to [[consent]], to [[give in]] {{+obj|it|:a<to>}} <end>
-Page 685 zakład: Found match for regex: <begin> # [[bet]], [[wager]] {{gl|agreement between two parties that a stake will be paid by the loser to the winner}} {{+obj|pl|:o(acc)<for what>}}, {{+obj|pl|:z(ins)<with whom>}} <end>
+Page 685 zakład: Found match for regex: <begin> # [[bet]], [[wager]] {{gl|agreement between two parties that a stake will be paid by the loser to the winner}} {{+obj|pl|:o(acc)<for what> + :z(ins)<with whom>}} <end>
 Page 686 widzieć: Found match for regex: <begin> # {{lb|pl|transitive}} to [[see]] {{gl|to foresee, predict, or prophesy}} {{+obj|pl|:w(loc)<in what>}} <end>
 Page 686 widzieć: Found match for regex: <begin> # {{lb|pl|transitive}} to [[see]] {{gl|to perceive some character traits within someone}} {{+obj|pl|:w(loc)<in what/whom>}} <end>
 Page 686 widzieć: Found match for regex: <begin> # {{lb|pl|transitive}} to [[see]] {{gl|to be of the opinion that someone would fill a role well}} {{+obj|pl|:w(loc)<in what role>}} <end>
@@ -963,13 +963,13 @@ Page 697 pokazywać: Found match for regex: <begin> # {{lb|pl|transitive}} to [[
 Page 697 pokazywać: Found match for regex: <begin> # {{lb|pl|reflexive-się}} to [[show]] oneself in a certain [[light]] {{gl|to give a particular impression}} {{+obj|pl|:jako(nom)<as whom>}} <end>
 Page 698 wychodzić: Found match for regex: <begin> # {{lb|zlw-opl|attested in|Lesser Poland|Greater Poland|Masovia}} to [[walk out]], to [[go out]], to [[leave]] {{+obj|zlw-opl|:z(gen)<what place>}} <end>
 Page 698 wychodzić: Found match for regex: <begin> # {{lb|zlw-opl|figuratively|attested in|Lesser Poland}} to [[avoid]] {{+obj|zlw-opl|:od(gen)<what>}} <end>
-Page 698 wychodzić: Found match for regex: <begin> # {{lb|zlw-opl|attested in|Masovia}} to [[head out]] {{gl|walking, to go to meet or greet someone}} {{+obj|zlw-opl|:do(gen)}}, {{+obj|zlw-opl|:ku(dat)<whom>}}, or {{+obj|zlw-opl|:przeciw(dat)<whom>}} <end>
+Page 698 wychodzić: Found match for regex: <begin> # {{lb|zlw-opl|attested in|Masovia}} to [[head out]] {{gl|walking, to go to meet or greet someone}} {{+obj|zlw-opl|:do(gen)/:ku(dat)/:przeciw(dat)<whom>}} <end>
 Page 698 wychodzić: Found match for regex: <begin> # {{lb|pl|intransitive}} to [[leave]]; to [[quit]]; to [[fall out]] {{gl|to stop having a particular state}} {{+obj|pl|:z(gen)<from what>}} <end>
 Page 698 wychodzić: Found match for regex: <begin> # {{lb|pl|intransitive|of problems or negative situations}} to [[come to light]], to [[become]] [[clear]] {{+obj|pl|:z(gen)<from what/whom>}} <end>
 Page 698 wychodzić: Found match for regex: <begin> # {{lb|pl|intransitive}} to [[come out]] {{gl|to find oneself in a higher ranking upon defeating others}} {{+obj|pl|:na(acc)<in what position/place>}} <end>
 Page 698 wychodzić: Found match for regex: <begin> # {{lb|pl|intransitive}} to [[come out]] {{gl|to propose something}} {{+obj|pl|:z(ins)<with what>}} <end>
 Page 698 wychodzić: Found match for regex: <begin> # {{lb|pl|intransitive}} to [[exceed]], to [[surpass]] {{gl|to pass some border, real or otherwise}} {{+obj|pl|:poza(acc)<what>}} <end>
-Page 698 wychodzić: Found match for regex: <begin> # {{lb|pl|intransitive}} to be [[accept]]ed as a [[base]] of [[understanding]] {{+obj|pl|:z(gen)}}, {{+obj|pl|:od(gen)}} <end>
+Page 698 wychodzić: Found match for regex: <begin> # {{lb|pl|intransitive}} to be [[accept]]ed as a [[base]] of [[understanding]] {{+obj|pl|:z/:od(gen)}} <end>
 Page 698 wychodzić: Found match for regex: <begin> # {{lb|pl|intransitive}} to [[come out]] {{gl|to be the result of some work or calculation}} {{+obj|pl|:z(gen)<of what>}} <end>
 Page 698 wychodzić: Found match for regex: <begin> # {{lb|pl|intransitive}} to [[come out]] {{gl|to be represented somehow in a picture or painting}} {{+obj|pl|:na(loc)<in what>}} <end>
 Page 698 wychodzić: Found match for regex: <begin> # {{lb|pl|intransitive}} to [[come across]] {{gl|to show some character trait, especially a negative one}} {{+obj|pl|:na(acc)<as what>}} <end>
@@ -991,7 +991,7 @@ Page 709 avvera: Found match for regex: <begin> # {{lb|mt|reflexive}} to [[come 
 Page 710 azzardarsi: Found match for regex: <begin> # {{lb|it|chiefly in the negative|or|imperative}} to [[dare]] {{+obj|it|:a(inf)}} <end>
 Page 711 adresser: Found match for regex: <begin> # {{lb|fr|reflexive}} to [[address]] {{+obj|fr|:à}} <end>
 Page 712 azzuffarsi: Found match for regex: <begin> # to [[fight]], to [[scuffle]] {{+obj|it|:con<with someone>}} <end>
-Page 713 bojovat: Found match for regex: <begin> # to [[fight]] {{gloss|to strive for}} {{+obj|cs|:za(acc)<for>}} ''or'' {{+obj|cs|:o(acc)<for>}} <end>
+Page 713 bojovat: Found match for regex: <begin> # to [[fight]] {{gloss|to strive for}} {{+obj|cs|:za(acc)/:o(acc)<for>}} <end>
 Page 714 basarsi: Found match for regex: <begin> {{it-verb|à}} {{+obj|it|:su}} <end>
 Page 715 bisognoso: Found match for regex: <begin> {{it-adj}} {{+obj|it|:di}} <end>
 Page 716 inondare: Found match for regex: <begin> {{it-verb|a/ó}} {{+obj|it|:di}} <end>
@@ -1024,7 +1024,7 @@ Page 736 otwierać: Found match for regex: <begin> # {{lb|pl|transitive}} to [[o
 Page 736 otwierać: Found match for regex: <begin> # {{lb|pl|transitive}} to [[open]] {{gl|to make something achievable or understandable}} {{+obj|pl|:przed(ins)<for whom>}} <end>
 Page 736 otwierać: Found match for regex: <begin> # {{lb|pl|transitive}} to [[open]] {{gl|to cause someone to become interested or aware of something}} {{+obj|pl|:na(acc)<to what>}} <end>
 Page 736 otwierać: Found match for regex: <begin> # {{lb|pl|reflexive-się}} to [[open]] {{gl|to become accessible to customers or clients}} {{+obj|pl|:przed(ins)<for whom>}} <end>
-Page 736 otwierać: Found match for regex: <begin> # {{lb|pl|reflexive-się}} to [[open]] {{gl|to be fully seen or visible}} {{+obj|pl|:przed(ins)<for/in front of/before whom>}}, {{+obj|pl|:na(acc)<to what>}} <end>
+Page 736 otwierać: Found match for regex: <begin> # {{lb|pl|reflexive-się}} to [[open]] {{gl|to be fully seen or visible}} {{+obj|pl|:przed(ins)<for/in front of/before whom>|:na(acc)<to what>}} <end>
 Page 736 otwierać: Found match for regex: <begin> # {{lb|pl|reflexive-się}} to [[open]] {{gl|to become achievable or understandable}} {{+obj|pl|:przed(ins)<for whom>}} <end>
 Page 736 otwierać: Found match for regex: <begin> # {{lb|pl|reflexive-się}} to [[open]] {{gl|to become interested or aware of something}} {{+obj|pl|:na(acc)<to what>}} <end>
 Page 737 dzieło: Found match for regex: <begin> # {{lb|pl|countable}} [[work]] {{gl|product of human labor of a scientific or artistic nature}} {{+obj|pl|:o(loc)<about whom/what>}} <end>
@@ -1039,37 +1039,37 @@ Page 738 pracować: Found match for regex: <begin> # {{lb|pl|intransitive}} to [
 Page 738 pracować: Found match for regex: <begin> ## {{lb|pl|intransitive}} to [[work]] with {{gl|to have a job alongside someone else at the same company}} {{+obj|pl|:z(ins)<with whom>}} <end>
 Page 739 prospettare: Found match for regex: <begin> # {{lb|it|intransitive}} to [[face]], to [[overlook]] {{+obj|it|:su}} {{+aux|it|essere}} <end>
 Page 740 srać: Found match for regex: <begin> # {{lb|pl|intransitive|vulgar}} to not [[care]] {{+obj|pl|:na(acc)<about something>}} <end>
-Page 741 akcja: Found match for regex: <begin> # {{lb|pl|obsolete}} [[action]], [[litigation]], [[legal]] [[case]] {{+obj|pl|:o(acc)<over what>}} {{+obj|pl|:przeciw(dat)<against whom>}} {{defdate|16th–20th c.}}<ref name=R:pl:SXVI></ref><ref name=R:pl:SJPD> </ref> <end>
+Page 741 akcja: Found match for regex: <begin> # {{lb|pl|obsolete}} [[action]], [[litigation]], [[legal]] [[case]] {{+obj|pl|:o(acc)<over what> + :przeciw(dat)<against whom>}} {{defdate|16th–20th c.}}<ref name=R:pl:SXVI></ref><ref name=R:pl:SJPD> </ref> <end>
 Page 742 мина: Found match for regex: <begin> # to [[pass by]], to [[go]] [[past]] {{+obj|bg|:покра́й/:през/:по<location>}} <end>
 Page 742 мина: Found match for regex: <begin> # to be [[consider]]ed {{+obj|bg|:за<as>}} <end>
-Page 743 myśleć: Found match for regex: <begin> # {{lb|pl|intransitive}} to [[think]] {{gl|to ponder in one's head}} {{+obj|pl|:o(loc)}}, {{+obj|pl|:nad(ins)<of/about something>}} <end>
+Page 743 myśleć: Found match for regex: <begin> # {{lb|pl|intransitive}} to [[think]] {{gl|to ponder in one's head}} {{+obj|pl|:o(loc)/:nad(ins)<of/about something>}} <end>
 Page 743 myśleć: Found match for regex: <begin> # {{lb|pl|intransitive}} to [[think]] about {{gl|to take care of, to tend to; to keep in mind}} {{+obj|pl|:o(loc)<about what/whom>}} <end>
 Page 743 myśleć: Found match for regex: <begin> # {{lb|szl|intransitive}} to [[think]] {{gl|to consider in one's head}} {{+obj|szl|:ô(loc)<about what>}} <end>
 Page 744 kolej: Found match for regex: <begin> # {{lb|pl|uncountable}} [[turn]] {{gl|appropriate time for a person to take an action i.e. in a game}} {{+obj|pl|:na(acc)<for whom/what>}} <end>
 Page 745 spać: Found match for regex: <begin> # {{lb|pl|euphemistic|intransitive}} to [[sleep]] {{gl|to have sexual intercourse}} {{+obj|pl|:z(ins)<with someone>}} <end>
 Page 746 бягам: Found match for regex: <begin> # to [[escape]] {{+obj|bg|:от<from something>}} <end>
 Page 747 myśl: Found match for regex: <begin> # [[thought]] {{gl|representation created in the mind}} {{+obj|pl|:o(loc)<about what>}} <end>
-Page 748 grać: Found match for regex: <begin> # {{lb|pl|ambitransitive}} to [[play]] {{gl|to participate in a game}} {{+obj|pl|:w(acc)<what game>}}, {{+obj|pl|:z(ins)<with/against whom>}}, {{+obj|pl|:przeciw(dat)<against whom>}}, {{+obj|pl|:o(acc)<for what>}} <end>
+Page 748 grać: Found match for regex: <begin> # {{lb|pl|ambitransitive}} to [[play]] {{gl|to participate in a game}} {{+obj|pl|:w(acc)<what game> + :z(ins)/:przeciw(dat)<with/against whom> + :o(acc)<for what>}} <end>
 Page 748 grać: Found match for regex: <begin> # {{lb|pl|ambitransitive}} to [[play]] {{gl|to produce music using a musical instrument}} {{+obj|pl|:na(loc)<(on) what instrument>}} <end>
 Page 748 grać: Found match for regex: <begin> # {{lb|pl|transitive}} to [[play]] {{gl|to produce music from a device}} {{+obj|pl|:z(gen)<from what device>}} <end>
-Page 748 grać: Found match for regex: <begin> # {{lb|pl|intransitive}} to [[play]] {{gl|to attempt to achieve or gain}} {{+obj|pl|:o(acc)<for what>}}, {{+obj|pl|:na(loc)<(on) what>}} <end>
+Page 748 grać: Found match for regex: <begin> # {{lb|pl|intransitive}} to [[play]] {{gl|to attempt to achieve or gain}} {{+obj|pl|:o(acc)<for what>|:na(loc)<(on) what>}} <end>
 Page 748 grać: Found match for regex: <begin> # {{lb|pl|intransitive}} to [[show]] {{gl|of emotions, to externalize or be seen}} {{+obj|pl|:w(loc)<in whom>}} <end>
 Page 748 grać: Found match for regex: <begin> # {{lb|pl|intransitive|colloquial}} to [[play]] well with {{gl|to suit or match something}} {{+obj|pl|:z(ins)<with what>}} <end>
 Page 748 grać: Found match for regex: <begin> # {{lb|pl|transitive|obsolete|hunting}} to [[sic]] {{gl|to send an animal after one's hunted animal}} {{+obj|pl|:na(acc)<after what game>}} <end>
 Page 748 grać: Found match for regex: <begin> # {{lb|szl|reflexive-sie}} to [[play]] {{gl|to pretend to be; to take on an imagined role}} {{+obj|szl|:za(acc)<whom/what role>}} <end>
 Page 749 aufhören: Found match for regex: <begin> # {{lb|de|informal}} to stop talking about something {{+obj|de|:von}} <end>
-Page 750 wiedzieć: Found match for regex: <begin> # {{lb|pl|intransitive}} to [[know]] {{gl|to perceive the truth or factuality of; to be certain of or that}} {{+obj|pl|:o(loc)<about something>}} {{+obj|pl|:po(loc)<from what>}} <end>
+Page 750 wiedzieć: Found match for regex: <begin> # {{lb|pl|intransitive}} to [[know]] {{gl|to perceive the truth or factuality of; to be certain of or that}} {{+obj|pl|:o(loc)<about something> + :po(loc)<from what>}} <end>
 Page 750 wiedzieć: Found match for regex: <begin> # {{lb|pl|intransitive}} to [[know]] {{gl|to be aware of; to be cognizant of}} {{+obj|pl|:o(loc)<about something>}} <end>
 Page 750 wiedzieć: Found match for regex: <begin> # {{lb|szl|intransitive}} to [[know]] {{gl|to possess knowledge}} {{+obj|szl|:ô(loc)<about something>}} <end>
 Page 751 znać: Found match for regex: <begin> # {{lb|pl|reflexive-się}} to [[know]] [[each other]], to know [[one another]] {{gl|to have knowledge of one another}} {{+obj|pl|:z(ins)<whom>}} <end>
 Page 751 znać: Found match for regex: <begin> # {{lb|pl|reflexive-się}} to [[know one's way around]] something {{gl|to know something very well}} {{+obj|pl|:na(loc)<around what>}} <end>
 Page 751 znać: Found match for regex: <begin> # {{lb|pl|reflexive-się}} to [[know one's way around]] someone {{gl|to be able to intuit someone's thoughts and intentions well}} {{+obj|pl|:na(loc)<around whom>}} <end>
-Page 751 znać: Found match for regex: <begin> # {{lb|pl|reflexive-się|obsolete}} to [[consider]] as [[one's own]] {{+obj|pl|:do(gen)}}, {{+obj|pl|:ku(dat)}}, or {{+obj|pl|:w(loc)<what/whom>}} <end>
-Page 751 znać: Found match for regex: <begin> # {{lb|pl|impersonal}} to be [[see]]n, to be [[visible]] {{+obj|pl|:na(loc)}}, {{+obj|pl|:w(loc)}}, {{+obj|pl|:po(loc)<what part of the body>}} <end>
-Page 752 odpowiadać: Found match for regex: <begin> # {{lb|zlw-opl|attested in|Lesser Poland}} to [[answer]], to [[reply]] {{gl|to give a verbal response}} {{+obj|zlw-opl|:k(dat)<to whom>}} {{+obj|zlw-opl|:na(acc)<to what>}} {{+obj|zlw-opl|:przeciw(dat)<against what>}} <end>
+Page 751 znać: Found match for regex: <begin> # {{lb|pl|reflexive-się|obsolete}} to [[consider]] as [[one's own]] {{+obj|pl|:do(gen)/:ku(dat)/:w(loc)<what/whom>}} <end>
+Page 751 znać: Found match for regex: <begin> # {{lb|pl|impersonal}} to be [[see]]n, to be [[visible]] {{+obj|pl|:na(loc)/:w(loc)/:po(loc)<what part of the body>}} <end>
+Page 752 odpowiadać: Found match for regex: <begin> # {{lb|zlw-opl|attested in|Lesser Poland}} to [[answer]], to [[reply]] {{gl|to give a verbal response}} {{+obj|zlw-opl|:k(dat)<to whom>|:na(acc)<to what>|:przeciw(dat)<against what>}} <end>
 Page 752 odpowiadać: Found match for regex: <begin> # {{lb|pl|intransitive}} to [[respond]] {{gl|to react to an action}} {{+obj|pl|:na(acc)<to what>}} <end>
 Page 752 odpowiadać: Found match for regex: <begin> # {{lb|pl|intransitive}} to [[answer]]; to [[reply]]; to [[respond]] {{gl|to give an answer in class to a teacher}} {{+obj|pl|:z(gen)<what question/subject>}} <end>
-Page 752 odpowiadać: Found match for regex: <begin> # {{lb|pl|intransitive}} to [[answer for]]; to [[answer to]] {{gl|to be responsible for something; to face the negative consequences of something; to be accountable before someone}} {{+obj|pl|:przed(ins)<to whom>}}, {{+obj|pl|:za(acc)<for what>}} <end>
+Page 752 odpowiadać: Found match for regex: <begin> # {{lb|pl|intransitive}} to [[answer for]]; to [[answer to]] {{gl|to be responsible for something; to face the negative consequences of something; to be accountable before someone}} {{+obj|pl|:przed(ins)<to whom> + :za(acc)<for what>}} <end>
 Page 752 odpowiadać: Found match for regex: <begin> # {{lb|pl|intransitive}} to [[cause]], to [[explain]], to be the [[reason]] for {{+obj|pl|:za(acc)<for what>}} <end>
 Page 753 nosić: Found match for regex: <begin> # {{lb|pl|transitive|colloquial|of a situation, set of circumstances, etc.}} to [[knock]] [[around]]; to [[carry]] {{gl|to cause someone to change places often or be restless}} {{+obj|pl|:po(loc)<around what>}} <end>
 Page 753 nosić: Found match for regex: <begin> # {{lb|pl|transitive|obsolete}} to [[accustom]] {{gl|to cause someone to become used to something}} {{+obj|pl|:do(gen)<to what>}} <end>
@@ -1092,7 +1092,7 @@ Page 761 готовый: Found match for regex: <begin> # [[ready]], [[inclined]
 Page 762 aussprechen: Found match for regex: <begin> # {{lb|de|reflexive}} to [[declare]] oneself [[in favour of]]; to [[declare]] oneself for; to [[recommend]] {{+obj|de|:für}} <end>
 Page 762 aussprechen: Found match for regex: <begin> # {{lb|de|reflexive}} to [[pour one's heart out]]; to [[disbosom]] oneself {{+obj|de|:bei}} <end>
 Page 762 aussprechen: Found match for regex: <begin> # {{lb|de|reflexive}} to [[talk out|talk]] things [[talk out|out]] {{gloss|resolve a problem by talking}} {{+obj|de|:mit}} <end>
-Page 763 zapominać: Found match for regex: <begin> # {{lb|pl|transitive}} to [[forget]] {{gl|to unintentionally not do}} {{+obj|pl|:o(loc)<about what>}}, {{+obj|pl|:żeby(inf)<how to do what>}} <end>
+Page 763 zapominać: Found match for regex: <begin> # {{lb|pl|transitive}} to [[forget]] {{gl|to unintentionally not do}} {{+obj|pl|:o(loc)<about what> + :żeby(inf)<how to do what>}} <end>
 Page 763 zapominać: Found match for regex: <begin> # {{lb|pl|transitive}} to [[forget]] {{gl|to stop being interested in someone or something}} {{+obj|pl|:o(loc)<about whom/what>}} <end>
 Page 763 zapominać: Found match for regex: <begin> # {{lb|pl|reflexive-się}} to [[forget oneself]] {{gl|to lose one's dignity, temper, or self-control}} {{+obj|pl|:w(loc)<in what>}} <end>
 Page 764 wiadomość: Found match for regex: <begin> # {{lb|pl|now only|_|in the plural}} [[knowledge]] {{gl|awareness of something or a body of knowledge in some field}} {{+obj|pl|:z(gen)<in what>}} <end>
@@ -1153,9 +1153,9 @@ Page 797 chodzić: Found match for regex: <begin> # {{lb|pl|intransitive|colloqu
 Page 797 chodzić: Found match for regex: <begin> # {{lb|pl|intransitive|obsolete}} to participate in an [[excursion]] [[against]] someone, to [[war]] with {{+obj|pl|:na(acc)<against whom>}} <end>
 Page 798 comprensivo: Found match for regex: <begin> {{it-adj}} {{+obj|it|:di}} <end>
 Page 799 contrappesare: Found match for regex: <begin> # {{lb|it|intransitive|literary|figurative}} to be [[equal]] in [[value]] {{+obj|it|:a}} {{+aux|it|essere|avere}} <end>
-Page 800 żyć: Found match for regex: <begin> # {{lb|pl|intransitive}} to [[live]] {{gl|to pass life in a specified manner}} {{+obj|pl|:bez(gen)<without what>}}, {{+obj|pl|:w(loc)<in what state>}} <end>
-Page 800 żyć: Found match for regex: <begin> # {{lb|pl|intransitive}} to [[live]] {{gl|to make a living doing something; to maintain or support one's existence; to provide for oneself; to subsist}} {{+obj|pl|:z(gen)<from/off of what>}}, {{+obj|pl|:o(loc)<on what>}} <end>
-Page 800 żyć: Found match for regex: <begin> # {{lb|pl|intransitive}} to [[live]] with {{gl|to be with someone in some conditions}} {{+obj|pl|:z(ins)<with whom>}}, {{+obj|pl|:w(loc)<in what condition>}} <end>
+Page 800 żyć: Found match for regex: <begin> # {{lb|pl|intransitive}} to [[live]] {{gl|to pass life in a specified manner}} {{+obj|pl|:bez(gen)<without what>|:w(loc)<in what state>}} <end>
+Page 800 żyć: Found match for regex: <begin> # {{lb|pl|intransitive}} to [[live]] {{gl|to make a living doing something; to maintain or support one's existence; to provide for oneself; to subsist}} {{+obj|pl|:z(gen)<from/off of what>|:o(loc)<on what>}} <end>
+Page 800 żyć: Found match for regex: <begin> # {{lb|pl|intransitive}} to [[live]] with {{gl|to be with someone in some conditions}} {{+obj|pl|:z(ins)<with whom> + :w(loc)<in what condition>}} <end>
 Page 800 żyć: Found match for regex: <begin> # {{lb|pl|intransitive}} to [[have]] regular [[sexual relation]]s with someone {{+obj|pl|:z(ins)<with whom>}} <end>
 Page 801 mieszkać: Found match for regex: <begin> # {{lb|zlw-opl|attested in|Lesser Poland}} to [[live]] under {{gl|to be subordinate to}} {{+obj|zlw-opl|:pod(ins)<under whom>}} <end>
 Page 802 reszta: Found match for regex: <begin> # {{tcl|pl|change|id=balance of money}} {{+obj|pl|:z(gen)<from what>}} <end>
