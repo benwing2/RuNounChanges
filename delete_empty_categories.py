@@ -28,6 +28,9 @@ def process_page(page, index, args, comment):
     errmsg("Page %s %s: %s" % (index, pagetitle, txt))
   if args.verbose:
     pagemsg("Processing")
+  if not pagetitle.startswith("Category:"):
+    errandpagemsg("WARNING: Attempt to delete non-category, skipping")
+    return
   catname = re.sub("^Category:", "", pagetitle)
   num_pages = len(list(blib.cat_articles(catname)))
   num_subcats = len(list(blib.cat_subcats(catname)))
