@@ -31,6 +31,7 @@ def process_text_on_page(index, pagetitle, text):
 
   notes = []
 
+  reading_types = []
   lang, spelling, reading = m.groups()
   langcode = lang == "Japanese" and "ja" or "ryu"
   spelling_page = pywikibot.Page(site, spelling)
@@ -41,44 +42,44 @@ def process_text_on_page(index, pagetitle, text):
     errmsg("Page %s %s: %s: %s" % (index, pagetitle, spelling, txt))
   if not blib.safe_page_exists(spelling_page, pagemsg_with_spelling):
     pagemsg_with_spelling("Spelling page doesn't exist, skipping")
-    return
-  spelling_page_text = blib.safe_page_text(spelling_page, pagemsg_with_spelling)
-  retval = blib.find_modifiable_lang_section(spelling_page_text, lang, pagemsg_with_spelling)
-  if retval is None:
-    pagemsg_with_spelling("WARNING: Couldn't find %s section" % lang)
-    return
-  sections, j, secbody, sectail, has_non_lang = retval
-
-  parsed = blib.parse_text(secbody)
-  saw_readings_template = False
-  reading_types = []
-  for t in parsed.filter_templates():
-    tn = tname(t)
-    if tn == "%s-readings" % langcode:
-      saw_readings_template = True
-      for reading_type in allowed_reading_types:
-        readings = getparam(t, reading_type).strip()
-        if readings:
-          readings = re.split(r"\s*,\s*", readings)
-          readings = [re.sub("[<-].*", "", r) for r in readings]
-          if reading in readings:
-            #reading_type = canonicalize_reading_types.get(reading_type, reading_type)
-            pagemsg_with_spelling("Appending reading type %s based on %s" % (reading_type, str(t)))
-            if reading_type not in reading_types:
-              reading_types.append(reading_type)
-              notes.append("add %s reading based on {{%s-readings}} on page [[%s]]" % (reading_type, langcode, spelling))
-      if not reading_types:
-        pagemsg_with_spelling("WARNING: Can't find reading %s among readings listed in %s" %
-          (reading, str(t).replace("\n", r"\n")))
-
-  if not saw_readings_template:
-    pagemsg_with_spelling("WARNING: Couldn't find reading template {{%s-readings}}" % langcode)
-
-  if reading_types:
-    contents = "{{auto cat|%s}}" % "|".join(reading_types)
-    return contents, notes
   else:
-    pagemsg_with_spelling("WARNING: Can't find reading %s on page" % reading)
+    spelling_page_text = blib.safe_page_text(spelling_page, pagemsg_with_spelling)
+    retval = blib.find_modifiable_lang_section(spelling_page_text, lang, pagemsg_with_spelling)
+    if retval is None:
+      pagemsg_with_spelling("WARNING: Couldn't find %s section" % lang)
+    else:
+      sections, j, secbody, sectail, has_non_lang = retval
+
+      parsed = blib.parse_text(secbody)
+      saw_readings_template = False
+      for t in parsed.filter_templates():
+        tn = tname(t)
+        if tn == "%s-readings" % langcode:
+          saw_readings_template = True
+          for reading_type in allowed_reading_types:
+            readings = getparam(t, reading_type).strip()
+            if readings:
+              readings = re.split(r"\s*,\s*", readings)
+              readings = [re.sub("[<-].*", "", r) for r in readings]
+              if reading in readings:
+                #reading_type = canonicalize_reading_types.get(reading_type, reading_type)
+                pagemsg_with_spelling("Appending reading type %s based on %s" % (reading_type, str(t)))
+                if reading_type not in reading_types:
+                  reading_types.append(reading_type)
+                  notes.append("add %s reading based on {{%s-readings}} on page [[%s]]" % (
+                    reading_type, langcode, spelling))
+          if not reading_types:
+            pagemsg_with_spelling("WARNING: Can't find reading %s among readings listed in %s" %
+              (reading, str(t).replace("\n", r"\n")))
+
+      if not saw_readings_template:
+        pagemsg_with_spelling("WARNING: Couldn't find reading template {{%s-readings}}" % langcode)
+
+      if reading_types:
+        contents = "{{auto cat|%s}}" % "|".join(reading_types)
+        return contents, notes
+      else:
+        pagemsg_with_spelling("WARNING: Can't find reading %s on page" % reading)
 
   for i, contents_page in blib.cat_articles(re.sub("^Category:", "", pagetitle)):
     contents_title = str(contents_page.title())
@@ -91,7 +92,7 @@ def process_text_on_page(index, pagetitle, text):
     retval = blib.find_modifiable_lang_section(contents_page_text, lang, pagemsg_with_contents)
     if retval is None:
       pagemsg_with_contents("WARNING: Couldn't find %s section" % lang)
-      return
+      continue
     sections, j, secbody, sectail, has_non_lang = retval
 
     saw_kanjitab = False
