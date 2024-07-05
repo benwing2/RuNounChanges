@@ -24,7 +24,7 @@ def process_text_on_page(index, pagetitle, text):
 
   pagemsg("Processing")
 
-  m = re.search("^Category:(Japanese|Okinawan) terms spelled with (.*) read as (.*)$", pagetitle)
+  m = re.search("^Category:(Japanese|Okinawan|Miyako) terms spelled with (.*) read as (.*)$", pagetitle)
   if not m:
     pagemsg("Skipped")
     return
@@ -33,7 +33,7 @@ def process_text_on_page(index, pagetitle, text):
 
   reading_types = []
   lang, spelling, reading = m.groups()
-  langcode = lang == "Japanese" and "ja" or "ryu"
+  langcode = lang == "Japanese" and "ja" or lang == "Okinawan" and "ryu" or "mvi"
   spelling_page = pywikibot.Page(site, spelling)
   def pagemsg_with_spelling(txt):
     pagemsg("%s: %s" % (spelling, txt))
