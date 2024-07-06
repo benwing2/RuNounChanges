@@ -23411,7 +23411,7 @@ Compare {{cog|gl|xogar}}, {{cog|ast|xugar}}, {{cog|es|jugar}}.
 # {{senseid|pt|to bet}} {{lb|pt|intransitive}} to [[bet]] {{gl|to place a bet}} {{+obj|pt|:em<on someone/something>}}
 #: {{syn|pt|apostar}}
 #: {{uxi|pt|Ela '''jogou''' no cavalo errado e perdeu todo seu dinheiro.|She '''bet''' on the wrong horse and lost all of her money.}}
-# {{senseid|pt|to place hopes or efforts on}} {{indtr|pt|em|.by extension}} to [[bet]] on {{gl|to place one’s hopes or efforts on}}
+# {{senseid|pt|to place hopes or efforts on}} {{lb|pt|intransitive|by extension}} to [[bet]] on {{gl|to place one’s hopes or efforts on}} {{+obj|pt|:em<someone/something>}}
 #: {{uxi|pt|'''Joguei''' no amor e acabei levando uma facada nas costas.|'''I placed a bet''' on love and ended up being stabbed in the back.}}
 # {{senseid|pt|to agitate}} {{lb|pt|intransitive}} to [[agitate]] or [[oscillate]]
 #: {{uxi|pt|A água '''jogava'''.|The water '''was agitated'''.}}
@@ -26305,7 +26305,7 @@ Page 167 aproximar: -------- begin text --------
 ===Verb===
 {{pt-verb}}
 
-# {{senseid|pt|to get closer to}} {{indtr|pt|de|.pronominal}} to [[approach]] {{gl|to get closer to}}
+# {{senseid|pt|to get closer to}} {{lb|pt|pronominal}} to [[approach]] {{gl|to get closer to}} {{+obj|pt|:de<someone, something or a location>}}
 #: {{ux|pt|Não se '''aproxime''' daquela região, está contaminada.|Don’t '''approach''' that region, it’s contaminated.}}
 # {{senseid|pt|to come nearer}} {{lb|pt|pronominal}} to [[approach]] {{gl|to come nearer}}
 #: {{ux|pt|Podem se '''aproximar''', não estou armado.|You can '''approach''', I’m not armed.}}
@@ -28486,7 +28486,7 @@ From {{inh|oc|pro|passar}}, from {{inh|oc|VL.|*passo|*passāre}}, derived from {
 # {{senseid|pt|to put in circulation}} {{lb|pt|transitive}} to [[pass]]; to [[spread]] {{gl|to put in circulation}}
 #: {{syn|pt|circular|espalhar|dispersar}}
 #: {{ux|pt|Começaram a '''passar''' rumores.|They started '''spreading''' rumours.}}
-# {{senseid|pt|to impersonate}} {{indtr|pt|por|.pronominal}} to [[impersonate]] {{gl|to pretend to be something in order to deceive}}
+# {{senseid|pt|to impersonate}} {{lb|pt|pronominal}} to [[impersonate]] {{gl|to pretend to be something in order to deceive}} {{+obj|pt|:por<someone>}}
 #: {{ux|pt|O bandido está se '''passando''' por vítima para fugir daqui.|The criminal is '''pretending''' to be a victim to get out of here.}}
 # {{senseid|pt|to decline to play one’s turn}} {{lb|pt|games|intransitive|transitive}} to [[pass]] {{gl|to decline to play on one’s turn}}
 #: {{syn|pt|pular<q:Brazil>}}
@@ -30979,7 +30979,7 @@ Page 226 certificar: -------- begin text --------
 #: {{ux|pt|O perito '''certificou''' a assinatura.|The specialist '''certified''' the signature.}}
 # {{senseid|pt|to give a certificate}} {{lb|pt|transitive}} to [[certify]] {{gl|to give an official certificate to}}
 #: {{ux|pt|O ministério não quis '''certificar''' a nossa ONG.|The ministry didn’t want to '''certify''' our NGO.}}
-# {{senseid|pt|to check whether something is true}} {{indtr|pt|de|.pronominal}} to [[make sure]] {{gl|to check whether something is true or proper}}
+# {{senseid|pt|to check whether something is true}} {{lb|pt|pronominal}} to [[make sure]] {{gl|to check whether something is true or proper}} {{+obj|pt|:de<of something>/:[[de]] [[que]](ind-cl)<that ...>}}
 #: {{syn|pt|garantir}}
 #: {{ux|pt|'''Certifiquem'''-se de que a válvula está fechada.| '''Make sure''' the valve is closed.}}
 # {{senseid|pt|to remember to}} {{indtr|pt|de|aux=impersonal infinitive|.pronominal}} to [[make sure]] {{gl|to remember to}}
@@ -32641,11 +32641,11 @@ From {{der|oc|la|levō}}.
 # {{senseid|pt|to have in immediate possession}} {{lb|pt|transitive}} to [[carry]] {{gl|to have in one’s immediate possession}}
 #: {{ux|pt|Os refugiados '''levavam''' apenas as roupas que vestiam.|The refugees '''were carrying''' only the clothes they wore.}}
 #: {{syn|pt|ter|carregar}}
-# {{senseid|pt|to have as its destination}} {{indtr|pt|a|.of a path}} to [[lead]] to {{gl|to have as its destination}}
+# {{senseid|pt|to have as its destination}} {{lb|pt|intransitive|of a path}} to [[lead]] to {{gl|to have as its destination}} {{+obj|pt|:a<a destination>}}
 #: {{ux|pt|Todas estradas '''levam''' a Roma.|Every road '''leads''' to Rome.}}
-# {{senseid|pt|to produce a result}} {{indtr|pt|a|ditr=1}} to [[lead]] to {{gl|to produce or tend to produce a given result}}
+# {{senseid|pt|to produce a result}} {{lb|pt|transitive|figurative}} to [[lead]] (someone) {{gl|to produce or tend to produce a given result}} {{+obj|pt|direct&object<someone> + :a<to a result>}}
 #: {{ux|pt|A fome os havia '''levado''' ao desespero.|Hunger had '''led''' them to despair.}}
-# {{senseid|pt|to be overwhelmed by}} {{indtr|pt|por|.pronominal}} to let oneself be overwhelmed by an emotion or force
+# {{senseid|pt|to be overwhelmed by}} {{lb|pt|pronominal}} to [[let]] oneself be [[overwhelmed]] {{+obj|pt|:por<by an emotion or force>}}
 #: {{ux|pt|'''Levou'''-se pelo ódio e acabou matando várias pessoas.|'''She was taken over''' by hatred and ended up killing many people.}}
 
 ====Conjugation====
@@ -32796,7 +32796,7 @@ From {{af|ca|com-|portar}}.
 
 # {{lb|pt|pronominal}} to [[behave]] {{gl|to act in a polite or proper way}}
 #: {{uxi|pt|Expulsaram seu filho da escola porque nunca se '''comporta'''.|They expelled their son from school because he never '''behaves'''.}}
-# {{indtr|pt|como|-intransitive with an adverb|.pronominal}} to [[behave]] (as) {{gl|to act in the specified manner}}
+# {{lb|pt|pronominal}} to [[behave]] {{gl|to act in the specified manner}} {{+obj|pt|:como<as someone/something>/adverb<in some way>}}
 #: {{uxi|pt|De fato, ele se '''comportava''' muito mal.|Indeed, he '''was behaving''' very badly.}}
 #: {{uxi|pt|Se queres vencer, deves te '''comportar''' como campeão.|If you want to win, you must '''behave''' as a champion.}}
 # {{lb|pt|transitive}} to [[take]] up to; to [[bear]]; to [[admit]] {{gl|to have as its capacity}}
@@ -32884,14 +32884,15 @@ From older {{m|pt|conhocer}}, from {{inh|pt|roa-opt|connocer}}, from {{inh|pt|la
 #: {{uxi|pt|Não '''conheço''' esse livro.|I don’t '''know''' this book.}}
 # {{senseid|pt|to get to know}} {{lb|pt|transitive}} to [[meet]]; to [[get to know]] {{gl|to become acquainted with}}
 #: {{uxi|pt|Venha cá, quero que você '''conheça''' meu primo.|Come here, I want you to '''meet''' my cousin.}}
-# {{senseid|pt|to know as}} {{indtr|pt|como|por|ditr=1}} to [[know]] as {{gl|to ascribe to something the title or quality of}}
+# {{senseid|pt|to know as}} {{lb|pt|transitive}} to [[know]] (someone/something) {{gl|to ascribe to something the title or quality of}} {{+obj|pt|direct&object<someone/something> + :como/:por<as someone/something else>}}
 #: {{uxi|pt|Essa espécie é '''conhecida''' como ''Tringa totanus''.|This species is '''known''' as ''Tringa totanus''.}}
-# to [[visit]] a place for the first time
+# {{lb|pt|transitive}} to [[visit]] a place for the first time
 #: {{uxi|pt|Seu sonho era '''conhecer''' Paris.|His dream was to '''visit''' Paris.}}
 #: {{uxi|pt|'''Conheces''' Londres?|'''Have you been''' to London?}}
 # {{senseid|pt|to have sex with}} {{lb|pt|archaic|transitive}} to [[know]] {{gl|have sexual relations with}}
 #: {{syn|pt|[[fazer]] [[sexo]] [[com]]|[[transar]] [[com]]|[[dormir]] [[com]]|q3=euphemistic|foder|q4=vulgar|comer|q5=slang}}
-# {{senseid|pt|to acknowledge an appeal}} {{indtr|pt|de|.legal}} to [[concede]] {{gl|to acknowledge an appeal}}
+# {{senseid|pt|to acknowledge an appeal}} {{lb|pt|intransitive|legal}} to [[hear]] {{gl|to consider on its merits}} {{+obj|pt|:de<an appeal or request>}}
+#: {{ux|pt|O juiz decidiu conhecer do pedido.|The judge decided to '''hear''' the request.}}
 
 ====Conjugation====
 {{pt-conj}}
@@ -33565,9 +33566,9 @@ Page 271 répercuter: -------- begin text --------
 # {{n-g|figurative senses}}
 #: {{lb|fr|transitive}} to [[transmit]]
 #:: {{syn|fr|transmettre}}
-#: {{indtr|fr|sur|.economics}} to [[carry over]], to [[transfer]]
+#: {{lb|fr|transitive|economics}} to [[carry over]], to [[transfer]] {{+obj|fr|direct&object<a burden, price increase, etc.> + :sur<onto consumers/producers/a cost/etc.>}}
 #:: {{syn|fr|reporter}}
-#: {{lb|fr|reflexive|with [[sur]]|;|figuratively}} to [[affect]]
+#: {{lb|fr|reflexive|figuratively}} to [[affect]] {{+obj|fr|:sur<someone/something>}}
 #:: {{syn|fr|[[agir]] sur}}
 
 ====Conjugation====
@@ -42545,11 +42546,12 @@ Page 535 prendre garde: -------- begin text --------
 * {{audio|fr|LL-Q150 (fra)-Lyokoï-prendre garde.wav}}
 
 ===Verb===
-{{fr-verb}} de/à quelque chose/quelqu'un
+{{fr-verb}}
 
-# {{indtr|fr|de|à}} to [[look out]], to [[watch out]], to [[mind]]
-#: {{ux|fr|Tu ferais mieux de '''prendre garde''' à ne pas arriver en retard cette fois.}}
-#: {{ux|fr|'''Prends garde''' à toi mon vieux, si tu crois que tu vas t'en tirer comme ça tu te mets le doigt dans l'œil !}}
+# {{lb|fr|intransitive}} to [[be]] [[careful]], to [[take care]] {{+obj|fr|:de(inf)/:à(inf)<to do something>|:[[à]] [[ce que]](sub-cl)<that something be ...>}}
+#: {{ux|fr|Tu ferais mieux de '''prendre garde''' à ne pas arriver en retard cette fois.|You would do better to '''take care''' to not arrive late this time.}}
+# {{lb|fr|intransitive}} to [[be]] [[careful]] of, to [[look out]] for, to [[watch out]] for, to [[pay attention]] to {{+obj|fr|:de/:à<someone/something>}}
+#: {{ux|fr|'''Prends garde''' à toi mon vieux, si tu crois que tu vas t'en tirer comme ça tu te mets le doigt dans l'œil !|'''Be careful''', old man, if you think that you can get away with this, you're putting your finger in your eye!}}
 
 ====Conjugation====
 * see {{m|fr|prendre}}
@@ -46338,7 +46340,7 @@ staniel, stannel
 (ˈstænjəl, ˈstænəl)
 
 OE. stáneᴁella, stánᴁella, lit. ‘stone-yeller’ f. stán stone n. + *ᴁella agent-n. f. ᴁellan to yell (in OE. poetry used of the cry of the hawk). 
- 
+
 The corrupt form stallion (quot. 1601 in 1 α) may have had dialectal currency; cf. the converse mispronunciation staniel for stallion, which is common in rustic speech. The spurious forms standgale, -gall, given in some recent dictionaries, are evolved from the etymologizing conjecture ‘stand-in-gale’ (Swainson, Prov. Names of Birds). The alleged Ger. synonym steingall, commonly cited by etymologists as cognate, is of doubtful genuineness. The 19th c. lexicographers seem to have obtained it, directly or indirectly, from the Vocabula of Peucer and Eber (1549). But although in this glossary the word is treated as German, its source appears to be William Turner's Avium Historia (Cologne 1544), where steingall is said to be the English word for tinnunculus. Turner's steingall prob. represents *steinᴁall; Gesner (1555) says that it is northern English. The English ornithologists of the 17th c., following Gesner, give steingall as an English name of the bird; Willughby's stone-gall is an etymologizing alteration of this.] [[Special:Contributions/81.141.8.102|81.141.8.102]] 13:43, 16 December 2020 (UTC)
 
 == [[block]] ==
@@ -47186,6 +47188,9 @@ Page 746 make a play: -------- begin text --------
 Page 747 envoyer des fleurs: -------- begin text --------
 ==French==
 
+===Etymology===
+{{lit|to throw flowers}}.
+
 ===Pronunciation===
 * {{fr-IPA}}
 * {{audio|fr|LL-Q150 (fra)-LoquaxFR-envoyer des fleurs.wav}}
@@ -47193,10 +47198,9 @@ Page 747 envoyer des fleurs: -------- begin text --------
 ===Verb===
 {{fr-verb}}
 
-# {{lb|fr|rare}} {{lb|fr|figuratively}} {{indtr|fr|à}} to say [[nice]] things to someone, to [[compliment]] someone
+# {{lb|fr|rare|figuratively}} to say [[nice]] things to, to [[compliment]] {{+obj|fr|:à<someone>}}
 #: {{syn|fr|jeter des fleurs|lancer des fleurs}}
 ## {{lb|fr|reflexively}} to [[toot one's own horn]], to [[blow one's own horn]], to [[blow one's own trumpet]], to [[pat on the back|pat oneself on the back]]
-##: {{uxi|fr|s'envoyer des fleurs|to toot one's own horn}}
 -------- end text --------
 Page 749 Wiktionary:Foreign Word of the Day/2020/March 1: -------- begin text --------
 {{FWOTD|pt|emprestar|||{{senseid|pt|to lend}} {{indtr|pt|a|para|-an indirect objective pronoun|ditr=1|.transitive|.or}} to [[lend]]; to [[loan]] {{gl|to give temporarily}}
@@ -47403,7 +47407,7 @@ Page 762 as one: -------- begin text --------
 
 # {{lb|en|formal}} [[simultaneously]], [[at the same time]], all [[together]]
 # {{lb|en|chiefly|UK|formal}} [[in agreement]]
-#: {{indtr|en|with}} in agreement with someone
+#: in agreement {{+obj|en|:with<someone>}}
 #: {{syn|en|at one|of one mind}}
 # [[the same]]
 #* {{quote-journal|en|date=6 Apr 85|journal=Gay Community News|page=14|author=John R. Wagner|title=Personal advertisement|text=I'm in need of meeting someono who can help me find a place to stay when I get out [of prison]. Color doesn't matter, because I feel we are all '''as one'''.}}
@@ -47699,7 +47703,7 @@ Page 778 poser problème: -------- begin text --------
 ===Verb===
 {{fr-verb}}
 
-# {{lb|fr|informal}} {{indtr|fr|à}} to [[pose]] a [[problem]] to someone, to [[bother]] someone
+# {{lb|fr|informal}} to [[pose]] a [[problem]] to, to [[bother]] {{+obj|fr|:à<someone>}}
 #: {{uxi|fr|Ça te pose problème ?|You got a problem with that?}}
 -------- end text --------
 Page 779 dare fuoco: -------- begin text --------
@@ -48518,7 +48522,7 @@ Page 834 botar o ollo: -------- begin text --------
 ==Galician==
 
 ===Etymology===
-From {{l|gl|botar||to throw}} + {{l|gl|o||the}} + {{l|gl|ollo||eye}}.
+{{lit|throw the eye}}.
 
 ===Pronunciation===
 * {{IPA|gl|[bɔˈtar ʊˈoʎʊ]}}
@@ -48526,8 +48530,8 @@ From {{l|gl|botar||to throw}} + {{l|gl|o||the}} + {{l|gl|ollo||eye}}.
 ===Verb===
 {{gl-verb}}
 
-# {{lb|gl|idiomatic}} {{indtr|gl|a}} to [[keep an eye out]]
-# {{lb|gl|idiomatic}} {{indtr|gl|a}} to [[choose]]
+# {{lb|gl|idiomatic}} to [[keep an eye out]] {{+obj|gl|:a<for someone/something>}}
+# {{lb|gl|idiomatic}} to [[choose]] {{+obj|gl|:a<someone/something>}}
 
 ====Related terms====
 * {{l|gl|botar un ollo|t=to keep an eye on}}
@@ -48844,7 +48848,7 @@ Page 856 secouer les puces: -------- begin text --------
 ===Verb===
 {{fr-verb}}
 
-# {{lb|fr|informal}} {{indtr|fr|à}} to give someone a [[kick up the backside]] {{gl|to treat someone a bit roughly in order to motivate them}}
+# {{lb|fr|informal}} to give (someone) a [[kick up the backside]] {{gl|to treat (someone) a bit roughly in order to motivate them}} {{+obj|fr|:à<someone>}}
 #: {{syn|fr|botter les fesses}}
 -------- end text --------
 Page 857 prendre sa revanche: -------- begin text --------
@@ -49234,7 +49238,7 @@ Page 880 User:Φρύδια/sandbox: -------- begin text --------
 ##: {{uxi|pt|'''Sabes''' falar russo?|t='''Can''' you speak Russian?}}
 # {{senseid|pt|to have heard of}} {{indtr|pt|de|sobre}} to know about; to have heard about
 #: {{uxi|pt|'''Soube''' da explosão que houve no centro?|'''Have you heard''' about the downtown explosion?}}
-# {{lb|pt|Portugal}} {{indtr|pt|a}} to [[taste]] of {{gl|to have the same taste as}}
+# {{lb|pt|Portugal}} to [[taste]] of/like {{gl|to have the same taste as}} {{+obj|pt|:a<something>}}
 #: {{uxi|pt|Um bom vinho '''sabe''' a carvalho.|A good wine '''tastes''' like oak.}}
 # {{lb|pt|Portugal}} to have a pleasant [[taste]]
 #: {{uxi|pt|Como '''sabe''' esse vinho!|How good does this wine '''taste'''!}}
@@ -49242,7 +49246,7 @@ Page 880 User:Φρύδια/sandbox: -------- begin text --------
 Page 881 Wiktionary:Word of the day/2021/April 17: -------- begin text --------
 {{WOTD|hell-bent|adj|{{indtr|en|on|.originally|.US|.informal}} [[recklessly|Recklessly]] [[determined#Adjective|determined]] to do or [[achieve]] (something).
 
-'''[[hell-bent]]''' ''adv''
+{{en-adv|head=[[hell-bent]]}}
 
 # {{lb|en|originally|US|informal}} In a [[recklessly]] [[determined#Adjective|determined]] [[manner]]; [[determinedly]], [[wholeheartedly]].|audio=LL-Q1860 (eng)-I learned some phrases-hell-bent.wav|April|17}}
 -------- end text --------
@@ -49262,7 +49266,7 @@ Page 883 en avoir plus qu'assez: -------- begin text --------
 ==French==
 
 ===Etymology===
-Superlative derived from [[en avoir assez]].
+Superlative derived from {{m|fr|en avoir assez}}. {{lit|to have more than enough (of something)}}.
 
 ===Pronunciation===
 * {{fr-IPA|en‿avoir pluss qu'assez}}
@@ -49270,15 +49274,12 @@ Superlative derived from [[en avoir assez]].
 ===Verb===
 {{fr-verb}}
 
-# {{lb|fr|informal}} {{indtr|fr|de}} to be [[fed up to the back teeth]] (with)
-#: {{syn|fr|en avoir marre|en avoir ras le bol}}
+# {{lb|fr|informal}} to be [[sick and tired]] (of), to be [[fed up to the back teeth]] (with) {{+obj|fr|:de<someone/something>}}
+#: {{syn|fr|en avoir marre|en avoir ras le bol|Thesaurus:en avoir assez}}
 #: {{ux|fr|J’'''en ai plus qu'assez ''' de t'entendre te plaindre.|I've '''had just about enough''' of listening to you complain.}}
 
 ====Usage notes====
 * Note that the pronoun {{m|fr|en}} is part of the expression, and is used regardless of the separate {{m|fr|de}}-phrase.
-
-====Synonyms====
-* see [[Thesaurus:fr:en avoir assez]]
 
 {{cln|fr|verbs with placeholder en}}
 -------- end text --------
@@ -49367,7 +49368,7 @@ Page 889 faire un sort: -------- begin text --------
 ===Verb===
 {{fr-verb}}
 
-# {{lb|fr|informal|of [[food]]}} {{indtr|fr|à}} to [[make short work of]], to [[eat]] [[voraciously]]
+# {{lb|fr|informal}} to [[make short work of]], to [[eat]] [[voraciously]] {{+obj|fr|:à<food>}}
 #: {{syn|fr|[[ne faire qu'une bouchée]] [[de]]}}
 -------- end text --------
 Page 890 ملاقات کردن: -------- begin text --------
@@ -49407,7 +49408,7 @@ Page 893 lavar as mãos: -------- begin text --------
 {{pt-verb|lavar<> [[as]] [[mão]]s}}
 
 # {{&lit|pt|lavar|as|mãos}}
-# {{lb|pt|idiomatic}} {{indtr|pt|de}} to [[wash one's hands of]]
+# {{lb|pt|idiomatic}} to [[wash one's hands of]] {{+obj|pt|:de<someone/something>}}
 
 ====Conjugation====
 {{pt-conj|lavar<> [[as]] [[mão]]s}}
@@ -49881,7 +49882,7 @@ Page 921 dar like: -------- begin text --------
 ===Verb===
 {{pt-verb}}
 
-# {{lb|pt|Internet|informal}} {{indtr|pt|em}} to [[like]] {{gl|to show approval of something posted on the Internet by marking it with a vote}}
+# {{lb|pt|Internet|informal}} to [[like]] {{gl|to show approval of something posted on the Internet by marking it with a vote}} {{+obj|pt|:em<someone/something>}}
 #: {{syn|pt|curtir}}
 #: {{ux|pt|Você já '''deu like''' no vídeo?|Have you already '''liked''' the video?}}
 
@@ -50913,10 +50914,10 @@ Page 986 dar jabón: -------- begin text --------
 ===Verb===
 {{es-verb}}
 
-# {{lb|es|idiomatic}} {{indtr|es|a}} to [[flatter]], [[butter up]], [[soft-soap]]
+# {{lb|es|idiomatic}} to [[flatter]], to [[butter up]], to [[soft-soap]] {{+obj|es|:a<someone>}}
 
 ====Usage notes====
-* Not to be confused with {{m|es|dar un jabón}}
+* Not to be confused with {{m|es|dar un jabón}}.
 
 ===Further reading===
 * {{R:es:DRAE|dar jabón a alguien}}
@@ -50930,10 +50931,10 @@ Page 987 dar un jabón: -------- begin text --------
 ===Verb===
 {{es-verb}}
 
-# {{lb|es|idiomatic}} {{indtr|es|a}} to [[castigate]]; to [[criticize]] harshly
+# {{lb|es|idiomatic}} to [[castigate]]; to [[criticize]] harshly {{+obj|es|:a<someone>}}
 
 ====Usage notes====
-* Not to be confused with {{m|es|dar jabón}}
+* Not to be confused with {{m|es|dar jabón}}.
 
 ===Further reading===
 * {{R:es:DRAE|dar a alguien un jabón}}
@@ -52769,7 +52770,7 @@ Page 1062 botar a mão no fogo: -------- begin text --------
 ===Verb===
 {{pt-verb}}
 
-# {{lb|pt|Brazil|idiomatic}} {{indtr|pt|por}} to [[vouch for]]; to [[trust]] someone with one's life
+# {{lb|pt|Brazil|idiomatic}} to [[vouch for]]; to [[trust]] (someone) with one's [[life]] {{+obj|pt|:por<someone>}}
 #: {{syn|pt|pôr a mão no fogo}}
 #* {{quote-book|pt|title=Giovannina|passage=Por aquella '''boto a minha mão no fogo''', doutor. Vejam que desaffectada simplicidade de maneiras, que modestia no seu triumpho! Outra qualquer estaria doida de orgulho...|year=1896|author=Affonso Celso|page=212|authorlink=Afonso Celso, Viscount of Ouro Preto|editor=Domingos de Magalhães|pageurl=https://www.google.com.br/books/edition/Giovannina/LEEPAAAAIAAJ?hl=pt-BR&gbpv=1&dq=boto+a+m%C3%A3o+no+fogo&pg=RA1-PA211&printsec=frontcover|chapter=Quadro Oitavo|publisher=Livraria Moderna|location=Rio de Janeiro}}
 #* {{quote-song|pt|time=0:06|title=Mão No Fogo|text=Por ela eu '''boto a mão no fogo''' / (Pode botar) / (Sem ter medo de queimar!)|year=1977|author=Dicró|album=Barra Pesada|publisher=Continental|location=São Paulo}}
@@ -52848,7 +52849,7 @@ Page 1067 faire tête: -------- begin text --------
 ===Verb===
 {{fr-verb}}
 
-# {{lb|fr|archaic}} {{indtr|fr|à}} to [[stand up to]], to express [[objection]]
+# {{lb|fr|archaic}} {{lb|fr|intransitive}} to [[stand up to]], to [[express]] [[objection]] to {{+obj|fr|:à<someone>}}
 #: {{syn|fr|tenir tête}}
 
 ====Conjugation====
