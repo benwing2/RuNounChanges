@@ -1,4 +1,4 @@
-Beginning at Fri Jul  5 03:18:25 2024
+Beginning at Sun Jul  7 03:19:56 2024
 Page 13 Template:indtr/documentation: -------- begin text --------
 {{documentation subpage}}
 {{uses lua|Module:indtr}}
@@ -1559,7 +1559,7 @@ From {{inh|pt|roa-opt|estar}}, from {{inh|pt|la|sto|stāre|t=stand}}, from {{inh
 * See {{m|es|ser}}. Contrast also with {{m|es|quedar}}.
 
 ====Conjugation====
-Despite having a vowel in the root, estar's conjugation matches {{m|la|dar}} in the present indicative and present subjunctive tenses, with none of the forms in those tenses being stressed on the root.
+Despite having a vowel in the root, estar's conjugation matches {{m|es|dar}} in the present indicative and present subjunctive tenses, with none of the forms in those tenses being stressed on the root.
 {{es-conj}}
 {{es-conj|estarse|nocomb=1}}
 
@@ -1689,6 +1689,7 @@ Compare dialectal {{cog|no|bugge|t=great man}}, {{cog|nds|Bögge}}, {{m|nds|Bogg
 |Big Bear City
 |Big Bear Lake
 |Big Bear Valley
+|big beast
 |big beat
 |Big Ben
 |Big Bertha
@@ -3027,12 +3028,12 @@ From {{inh|pt|roa-opt|dar}}, from {{inh|pt|la|do|alt=dare|t=to give}}, from {{in
 #: {{syn|pt|bastar}}
 # {{lb|pt|transitive}} to [[make]] {{gl|to tend or be able to become}}
 #: {{ux|pt|Ela '''daria''' uma boa professora.|t=She would '''make''' a good teacher.}}
-# {{lb|pt|transitive}} to [[consider]] {{gl|assign some quality}} {{+obj|direct&object<someone/something> + :por/:como<as something>}}
+# {{lb|pt|transitive}} to [[consider]] {{gl|assign some quality}} {{+obj|pt|direct&object<someone/something> + :por/:como<as something>}}
 #: {{ux|pt|Depois de semanas procurando, '''deram'''-nos como desaparecidos.|t=After weeks of searching, '''they considered''' us to be missing.}}
 #: {{syn|pt|considerar}}
 # {{lb|pt|<<transitive>> (<<Portugal>>) or <<intransitive>> (<<Brazil>>)|colloquial}} to [[defeat]] by a given score {{+obj|pt|direct&object<ll:Portugal>/:de<ll:Brazil><a score> + :a<ll:Portugal>/:em<ll:Brazil><someone or someone's team>}}
-#: {{ux|pt|A minha equipa vai dar dois a zero à tua.|My team will beat yours 2-nil.|l=Portugal}}
-#: {{ux|pt|Meu time vai '''dar''' de dois a zero no seu.|My team will beat yours 2-nil.|l=Brazil}}
+#: {{ux|pt|A minha equipa vai dar dois a zero à tua.|My team will beat yours 2-nil.|q=Portugal}}
+#: {{ux|pt|Meu time vai '''dar''' de dois a zero no seu.|My team will beat yours 2-nil.|q=Brazil}}
 # {{lb|pt|intransitive}} to [[come across]], to [[bump into]] {{gl|to find someone or something accidentally or in an unexpected condition}} {{+obj|pt|:com<someone/something>}}
 #: {{ux|pt|'''Dei''' de cara com a Sandra hoje de manhã.|I '''bumped into''' Sandra this morning.}}
 # {{lb|pt|Brazil|vulgar|slang}} to [[put out]], to allow to be sexually [[penetrate|penetrated]] {{+obj|pt|:para<someone>}}
@@ -10312,7 +10313,7 @@ From {{inh|lad|osp|fazer}}, from {{inh|lad|la|facio|facere}}. Compare {{cog|es|h
 # to [[create]]; to [[produce]]
 
 ====Derived terms====
-{{der4|pt|desfazer|fazer amor}}
+{{der4|roa-opt|desfazer|fazer amor}}
 
 ====Descendants====
 * {{desc|fax|fel|ficel}}
@@ -27574,7 +27575,7 @@ From {{bor|pt|la|aequiparō|aequiparāre}}, an alternative form of {{m|la|aequip
 ===Verb===
 {{es-verb}}
 
-# {{lb|es|transitive}} to [[equate]], to [[consider]] [[equivalent]] (something) {{+obj|pt|:a/:con><to/with something else>}}
+# {{lb|es|transitive}} to [[equate]], to [[consider]] [[equivalent]] (something) {{+obj|es|:a/:con<to/with something else>}}
 #* {{quote-web
 |es
 |title=Trump equipara la covid con la gripe y Twitter y Facebook le advierten por dar “información engañosa”
@@ -33876,6 +33877,7 @@ Page 278 turn a deaf ear: -------- begin text --------
 {{en-verb|*}}
 
 # {{indtr|en|to|.figuratively}} To [[refuse]] to [[listen]] to something.
+#* {{quote-journal|en|date=14 Dec 86|volume=14|number=22|journal=Gay Community News|page=2|author=Jeffrey Ruda|title=Sacramento Holds On To Lesbian/Gay Rights|quotee=Ron Gray|text=This really confirms that Sacramentans '''turn a deaf ear''' to efforts to legislate bigotry and homophobia. Sacramento ought to take a lot of pride in looking at their community as one that tolerates diversity.}}
 #: {{uxi|en|They '''turned a deaf ear''' to her entreaties.}}
 
 ====Translations====
@@ -45243,7 +45245,7 @@ Page 696 pendre au nez: -------- begin text --------
 {{fr-verb}}
 
 # {{indtr|fr|à|.informal|.of a thing}} to [[loom]] [[over]] someone, to be [[around the corner]] waiting for someone {{gl|to be likely to happen to someone}}
-#: {{uxi|fr|Ça te '''pend au nez'''.|You got it coming.}}
+#: {{uxi|fr|Ça te '''pend au nez'''.|You've got it coming.}}
 
 ====See also====
 * {{l|fr|attendre au tournant}}
@@ -47146,7 +47148,7 @@ Page 745 set an example: -------- begin text --------
 ===Verb===
 {{en-verb|set<,,set> an example}}
 
-# To behave in a way that other people should. {{+obj|en|:for<someone>.}}
+# To behave in a way that other people should. {{+obj|en|:for<someone>}}
 
 ====Translations====
 {{trans-top}}
@@ -50073,7 +50075,7 @@ From {{af|ga|taobh|-igh}}; compare {{cog|gd|taobhaich}}.
 * {{IPA|ga|/ˈt̪ˠiːwi/|/ˈt̪ˠɯːwi/|q2=older|a=Ulster}}
 
 ===Verb===
-{{ga-verb|pres=taobhaíonn|fut=taobhóidh|vn=taobhú|pp=taobhaithe}} {{indtr|ga|le}}
+{{ga-verb|pres=taobhaíonn|fut=taobhóidh|vn=taobhú|pp=taobhaithe}} {{+obj|ga|:le}}
 
 # [[side with]], be [[partial]] to
 # [[espouse]] {{gl|accept, take as one’s own}}, [[support]] {{gl|back mentally or concretely}}
@@ -53180,7 +53182,7 @@ Page 1078 faire le plaisir: -------- begin text --------
 ===Verb===
 {{fr-verb}}
 
-# to do (someone) the [[courtesy]] {{+obj|fr|:à<someone> + de(inf)<of doing something>}}
+# to do (someone) the [[courtesy]] {{+obj|fr|:à<someone> + :de(inf)<of doing something>}}
 #: {{coi|fr|Tu me '''feras le plaisir''' de ranger ta chambre.|I'd appreciate it if you could clean your room.|lit=You will '''do''' me '''the courtesy''' of cleaning your room.}}
 
 ====Usage notes====
@@ -53303,5 +53305,5 @@ Page 1089 garen spinnen: -------- begin text --------
 ====Conjugation====
 {{nl-conj-see|spinnen}}
 -------- end text --------
-Elapsed time: 3 mins 8.00 secs
-Ending at Fri Jul  5 03:21:33 2024
+Elapsed time: 2 mins 32.77 secs
+Ending at Sun Jul  7 03:22:28 2024
