@@ -23530,7 +23530,7 @@ From {{af|fr|qualité|-ifier}}.
 #: {{syn|fr|traiter|taxer}}
 # {{lb|fr|reflexive}} to [[call]] oneself {{q|usually undeservedly}} {{+obj|fr|:de(copulative&noun)/direct&copulative&noun<q:archaic><by a title>}}
 # {{lb|fr|transitive}} to [[characterize]] {{gl|to be characteristic of}}
-#: {{quote-book|fr|author=Joris-Karl Huysmans|title=À rebours|year=1884|page=150|text=... toutes les fleurs sont exactement représentées par des alliances d'alcoolats et d'esprits, dérobant au modèle sa personnalité même et y ajoutant ce rien, ce ton en plus, ce fumet capiteux, cette touche rare qui qualifie une œuvre d'art.|t=... all the flowers are exactly represented by alliances of alcoholates and spirits, stealing from the model its very personality and adding this nothingness, this extra tone, this heady aroma, this rare touch which '''characterizes''' a work of art.}}
+#* {{quote-book|fr|author=Joris-Karl Huysmans|title=À rebours|year=1884|page=150|text=... toutes les fleurs sont exactement représentées par des alliances d'alcoolats et d'esprits, dérobant au modèle sa personnalité même et y ajoutant ce rien, ce ton en plus, ce fumet capiteux, cette touche rare qui qualifie une œuvre d'art.|t=... all the flowers are exactly represented by alliances of alcoholates and spirits, stealing from the model its very personality and adding this nothingness, this extra tone, this heady aroma, this rare touch which '''characterizes''' a work of art.}}
 
 ====Conjugation====
 {{fr-conj-auto}}
@@ -34433,9 +34433,9 @@ Page 290 farcela: -------- begin text --------
 ===Verb===
 {{it-verb|a/fàccio,fécii,fàttacela.imperf:facévo.sub:fàccia.imp:fà}} {{tlb|it|informal}}
 
-# {{lb|it|intransitive}} to [[be able to]] [[keep going]] {{n-g|or}} [[go on]]
+# {{lb|it|intransitive}} to [[be able to]] [[keep going]] or [[go on]]
 #: {{ux|it|Se non '''ce la fai''', va' pure a casa a riposare.|If you '''can'''’t '''go on''', you can go home and rest.}}
-# {{indtr|it|a|qual1=+ a verb in the infinitive}} to [[be able to]], to [[manage]] to
+# {{lb|it|intransitive}} to [[be able to]], to [[manage]] to {{+obj|pt|:a(inf)<do something>}}
 #: {{ux|it|Non '''ce la faceva''' proprio a sopportarlo.|She really '''could'''n't stand him.}}
 #: {{ux|it|Sai mica se '''ce l'hanno fatta''' a vincere?|By any chance, do you know if they '''managed''' to win?}}
 #* {{quote-book
@@ -34946,7 +34946,7 @@ Page 297 contenter: -------- begin text --------
 {{fr-verb}}
 
 # {{lb|fr|transitive}} to [[content#Verb|content]], to [[satisfy]]
-# {{indtr|fr|.reflexive|de}} to [[content#Verb|content]] oneself, to be [[content#Adjective|content]] with
+# {{lb|fr|reflexive}} to [[content#Verb|content]] oneself, to be [[content#Adjective|content]] {{+obj|pt|:de<with something>}}
 #: {{ux|fr|Je me '''contente''' de très peu d'argent.|I am '''content''' with very little money.}}
 #: {{ux|fr|Il s'est '''contenté''' de manger les restes.|He '''contented''' himself with eating the leftovers.}}
 
@@ -35180,7 +35180,7 @@ From {{inh|pt|roa-opt|escusar}}, from {{inh|pt|la|excūsō|excūsāre}}.
 
 # {{lb|pt|transitive}} to [[forgive]]; to [[pardon]]; to [[excuse]]
 #: {{syn|pt|desculpar|perdoar}}
-# {{indtr|pt|de|por|.pronominal}} to [[apologize]] [for]
+# {{lb|pt|pronominal}} to [[apologize]] {{+obj|pt|:de/:por<for something>}}
 #: {{syn|pt|[[pedir]] [[desculpas]] ([[por]])|[[desculpar]]-[[se]]}}
 # {{lb|pt|transitive}} to [[excuse]] {{gl|to allow to leave}}
 #: {{syn|pt|dispensar|liberar}}
@@ -35271,13 +35271,12 @@ From {{af|it|a-|bello|t2=beautiful|-are}}.
 {{it-pr}}
 
 ===Verb===
-{{it-verb|a/è}} {{tlb|it|literary}}
+{{it-verb|a/è}} {{tlb|it|archaic|or|literary}}
 
 # {{lb|it|transitive}} {{syn of|it|abbellire}}
-# {{indtr|it|a|direct=1|qualdirect=preceded by an indirect object}} to be [[pleasing]] to ({{n-g|usually translated into English as'' '''like''' ''with exchange of the subject and object}})
+# {{lb|it|intransitive}} to be [[pleasing]] {{+obj|pt|:a/indirobj<to someone><q*:with the indirect object usually preceding the verb and the subject following>}} {{q|idiomatically translated as {{m+|en|like}} with subject and object reversed}} {{+aux|it|essere}}
 #: {{syn|it|piacere}}
 #* {{RQ:it:Commedia|pd|XXVI|130–132|Opera naturale è ch’uom favella; ¶ ma così o così, natura lascia ¶ poi fare a voi secondo che v’'''abbella'''.|A natural action is it that man speaks; but whether thus or thus, nature leaves to your own art, as you '''like''' it.}}
-# {{n-g|see also {{m|it|abbellarsi}}}}
 
 ====Conjugation====
 {{it-conj|a/è}}
@@ -35487,7 +35486,8 @@ Page 308 saldarsi: -------- begin text --------
 # {{lb|it|intransitive}} to [[heal]] {{q|of a [[wound]], [[laceration]], etc.}}
 #: {{syn|it|cicatrizzarsi|richiudersi|rimarginare}}
 # {{lb|it|intransitive}} to [[knit]] {{q|of broken bones}}
-# {{indtr|it|a|con|in}} to [[connect]], [[merge]], or [[bond]] (with); to [[join]]
+# {{lb|it|intransitive}} to [[connect]], [[merge]], or [[bond]] {{+obj|it|:a<to>/:con<with>/:in<into>}}
+# {{lb|it|intransitive}} to [[join]] {{+obj|it|:a/:con/:in<a group>}}
 #: {{ux|it|anche i giovani '''si saldano''' alla rivolta|even the young people are '''joining''' the revolt}}
 
 ====Conjugation====
@@ -35539,7 +35539,7 @@ Page 311 trébucher: -------- begin text --------
 ==French==
 
 ===Etymology===
-From {{uder|fr|frm|trebucher}}, from {{uder|fr|fro|trebuchier||to overthrow, topple}}, from {{m|fro|tres-}} + {{m|fro|*buchier}}, from {{uder|fr|fro|buc||trunk of the body}}, from Old {{der|fr|frk|*buk|*būk|belly, trunk, torso}}, from {{uder|fr|gem-pro|*būkaz||belly, abdomen, trunk}}, from {{uder|fr|ine-pro|*bʰōw-||to blow, swell}}. Cognate with {{cog|goh|būh||belly}}, {{cog|ang|būc||belly, trunk}}. More at {{m|en|bouk}}.
+{{inh+|fr|frm|trebucher}}, from {{inh|fr|fro|trebuchier||to overthrow, topple}}, from {{m|fro|tres-}} + {{m|fro|*buchier}}, from {{der|fr|fro|buc||trunk of the body}}, from Old {{der|fr|frk|*buk|*būk|belly, trunk, torso}}, from {{der|fr|gem-pro|*būkaz||belly, abdomen, trunk}}, from {{der|fr|ine-pro|*bʰōw-||to blow, swell}}. Cognate with {{cog|goh|būh||belly}}, {{cog|ang|būc||belly, trunk}}. More at {{m|en|bouk}}.
 
 ===Pronunciation===
 * {{fr-IPA}}
@@ -35548,7 +35548,7 @@ From {{uder|fr|frm|trebucher}}, from {{uder|fr|fro|trebuchier||to overthrow, top
 ===Verb===
 {{fr-verb}}
 
-# {{indtr|fr|sur|direct=1|qual1=on}} to [[trip]], to [[stumble]]
+# {{lb|fr|intransitive}} to [[trip]], to [[stumble]] {{+obj|fr|:sur<on something>}}
 #: {{uxi|fr|perdre l'équilibre et '''trébucher'''|to lose balance and '''trip'''
 }}
 
@@ -35781,9 +35781,9 @@ From {{uder|fr|frm|-}}, from {{uder|fr|fro|nantir||to seize (the guarantors)}}, 
 ===Verb===
 {{fr-verb}}
 
-# {{indtr|fr|de|direct=1|qual1=with}} to [[provide]] someone
+# {{lb|fr|transitive}} to [[provide]] {{+obj|fr|dirobj<someone> + :de<with something>}}
 #: {{ux|fr|Cet homme ne prête point si on ne le '''nantit''' auparavant.|That man will not give anyone a loan without collateral.}}
-# {{indtr|fr|de|.pronominal|direct=1|qual1=with}} to [[provide]], to [[get]]
+# {{lb|fr|reflexive}} to [[obtain]], to [[get]] {{+obj|fr|:de<something>}}
 #: {{ux|fr|Je '''me''' suis '''nanti''' d’un bon manteau contre la pluie.|I've '''got myself''' a good raincoat.}}
 
 ====Conjugation====
@@ -37847,11 +37847,29 @@ Page 370 vulé: -------- begin text --------
 * {{IPA|sdc|/vuˈle/}}
 
 ===Verb===
-{{head|sdc|verb|first-person singular present|vógliu|past participle|vuluddu|auxiliary|abé}}
+{{head|sdc|verb|first-person singular present|vógliu|past participle|vuluddu|auxiliary|abé}} {{+obj|sdc|dirobj<something/someone>/:chi(sub-cl)<for something to happen>}}
 
 # {{tlb|sdc|archaic|except|dialectal}} {{altform|sdc|vuré}}
-## {{indtr|sdc|chi|qual1=+ verb in the subjunctive|direct=1}} to [[want]], to [[wish]] for, to [[desire]]
-### {{lb|sdc|in the [[conditional]]}} [[would like]]
+## {{lb|sdc|transitive}} to [[want]], to [[wish]] for, to [[desire]] {{+obj|sdc|dirobj<something/someone>/:chi(sub-cl)<for something to happen>}}
+##* {{quote-book
+|sdc
+|year=c. 19<sup>th</sup> century
+|title=Canti popolari in dialetto sassarese
+|url=https://books.google.it/books?id=YWlcAAAAcAAJ&printsec=frontcover&hl=it&source=gbs_ge_summary_r&cad=0#v=onepage&q&f=false
+|volume=1
+|editor=w:Giovanni Spano
+|location=Cagliari
+|worklang=it,sdc
+|year_published=1873
+|page=59
+|pageurl=https://books.google.it/books?id=YWlcAAAAcAAJ&hl=it&pg=PA59#v=onepage&q&f=false
+|author=Sebastiano di Branca
+|chapter=[untitled song]
+|section=song 1
+|text=S’ edda matessi '''ha vuluddu'''</br>Ch’ eju vibissi patendi,</br>Com’ iltà abà priguntendi</br>Di lu me’ poggu saluddu?
+|t=If she herself '''has wanted''' me to live in suffering, how come she is now asking about my poor health?
+}}
+## {{lb|sdc|in the [[conditional]]}} [[would like]]
 ###* {{quote-book
 |sdc
 |year=c. 19<sup>th</sup> century
@@ -37871,26 +37889,6 @@ Page 370 vulé: -------- begin text --------
 |text=Solu sì '''vularia'''</br>Chi ti multresi digna di Luzia.
 |t=Yes, I '''would''' only '''like''' you to show yourself worthy of Lucia.
 }}
-## {{lb|sdc|modal}} to [[want]]
-##* {{quote-book
-|sdc
-|year=c. 19<sup>th</sup> century
-|title=Canti popolari in dialetto sassarese
-|url=https://books.google.it/books?id=YWlcAAAAcAAJ&printsec=frontcover&hl=it&source=gbs_ge_summary_r&cad=0#v=onepage&q&f=false
-|volume=1
-|editor=w:Giovanni Spano
-|location=Cagliari
-|worklang=it,sdc
-|year_published=1873
-|page=59
-|pageurl=https://books.google.it/books?id=YWlcAAAAcAAJ&hl=it&pg=PA59#v=onepage&q&f=false
-|author=Sebastiano di Branca
-|chapter=[untitled song]
-|section=song 1
-|text=S’ edda matessi '''ha vuluddu'''</br>Ch’ eju vibissi patendi,</br>Com’ iltà abà priguntendi</br>Di lu me’ poggu saluddu?
-|t=If she herself '''has wanted''' me to live in suffering, how come she is now asking about my poor health?
-}}
-### {{lb|sdc|in the [[conditional]]}} [[would like]]
 -------- end text --------
 Page 371 part company: -------- begin text --------
 ==English==
@@ -39444,7 +39442,7 @@ From {{af|es|en-|alt1=em-|plaza|-ar}}. Cognate to {{cog|en|emplace}}, {{cog|fr|e
 
 # {{lb|es|transitive}} to [[put]] (in its place)
 # {{lb|es|transitive}} to [[set]] a [[deadline]]
-# {{indtr|es|a|qual1=+ a verb in the infinitive}} to [[call on]] (someone), to [[request]]
+# {{lb|es|transitive|catenative}} to [[call on]], to [[request]] {{+obj|es|dirobj<someone> + :a(inf)<to do something>}}
 #* {{quote-web|es|url=https://elpais.com/espana/catalunya/2023-08-08/erc-y-junts-se-emplazan-a-aparcar-sus-diferencias-ante-la-oportunidad-historica-de-decantar-la-investidura.html|title=ERC y Junts se emplazan a aparcar sus diferencias ante la “oportunidad histórica” de decantar la investidura|work=El País|date=2023-08-08|author=Marc Rovira|passage= La secretaria general adjunta y portavoz de ERC, Marta Vilalta, ha '''emplazado''' a JxCat a “aparcar los reproches” entre independentistas y buscar “puntos de acuerdo”.|t=ERC's deputy general secretary and spokesperson Marta Vilalta has '''called on''' JxCat “to set aside the reproaches” among independentists and look for “points of agreement”.}}
 # {{lb|es|transitive|legal}} to [[summon]]
 #: {{ux|es|'''emplazar''' a un testigo|'''summon''' a witness}}
@@ -39471,7 +39469,7 @@ Derived from {{af|it|a-|t1=to, towards|pulcher|lang2=la-cla|t2=fair, beautiful|-
 ===Verb===
 {{it-verb|a/ù}} {{tlb|it|obsolete|literary|very rare|now|jocular}}
 
-# {{indtr|it|a|qual1=+ object being embellished}} to [[embellish]] with (something); to put (something; e.g. words) on (something else) for [[embellishment]]
+# {{lb|it|transitive}} to [[put]] (something) for the [[purpose]] of [[embellishment]] {{+obj|it|dirobj<something e.g. words> + :a<onto something else>}} {{q|idiomatically translated as {{m+|en|embellish}} with direct and indirect object reversed}}
 #: {{syn|it|[[abbellire]] con|[[ornare]] con}}
 #* {{RQ:it:Commedia|if|7|58–60|Mal dare e mal tener lo mondo pulcro</br>ha tolto loro, e posti a questa zuffa:</br>qual ella sia, parole non ci '''appulcro'''.|Wrong giving and wrong keeping has taken the fair world away from them, and placed them in this scuffle: whatever it be, I do not '''embellish''' it '''with''' words.}}
 
@@ -39544,7 +39542,7 @@ From {{der|oc|la|assistere}}, present active infinitive of {{m|la|assistō}}.
 # {{lb|pt|transitive}} to [[assist]] {{gl|to help, especially in a secondary role}}
 #: {{uxi|pt|Enfermeiras devem '''assistir''' o médico.|Nurses must '''assist''' the doctor.}}
 #: {{syn|pt|ajudar}}
-# {{indtr|pt|a|direct=1|qualdirect=proscribed}} to [[watch]]; to [[witness]]; to [[attend]] {{gl|to observe a broadcast, performance or event}}
+# {{lb|pt|intransitive|or|transitive}} to [[watch]]; to [[witness]]; to [[attend]] {{+obj|pt|:a/dirobj<q:proscribed><a broadcast, performance, event, etc.}}
 #: {{uxi|pt|'''Assistimos''' o filme até o final.|'''We watched''' the film until the end.}}
 #: {{uxi|pt|Nem gosto mais de '''assistir''' TV.|I don’t even like to '''watch''' TV anymore.}}
 #: {{uxi|pt|Os alunos '''assistiram''' às aulas de português.|The students '''attended''' the Portuguese classes.}}
@@ -40881,7 +40879,7 @@ Page 471 dar-se ao trabalho: -------- begin text --------
 ===Verb===
 {{pt-verb}}
 
-# {{indtr|pt|de|aux=impersonal infinitive|.reflexive}} to [[bother]] {{gl|to do something which is of negligible inconvenience}}
+# {{lb|pt|reflexive}} to [[bother]] {{gl|to (do something) which is of negligible inconvenience}} {{+obj|pt|:de(inf)<to do something>}}
 #: {{ux|pt|Eles não '''se deram ao trabalho''' de avisar que viriam.|They did not '''bother''' to notify of their arrival.}}
 
 ====Conjugation====
@@ -40997,9 +40995,9 @@ From {{affix|pt|com-|penetrar}}.
 
 # {{lb|pt|transitive}} to [[drive in]]
 #: {{syn|pt|fincar}}
-# {{lb|pt|transitive|figuratively}} to [[convince]]
+# {{lb|pt|transitive|figuratively}} to [[convince]], to [[make]] [[aware]] {{+obj|pt|dirobj<someone> + :de<of something>}}
 #: {{syn|pt|convencer}}
-# {{indtr|pt|.pronominal|de}} to [[convince]] oneself
+# {{lb|pt|reflexive}} to [[convince]] oneself {{+obj|pt|:de<of something>}}
 
 ====Conjugation====
 {{pt-conj}}
@@ -41281,12 +41279,13 @@ From {{affix|pt|sobejo|-ar|gloss1=overabundant}}.
 ===Verb===
 {{pt-verb}}
 
-# {{indtr|pt|de|direct=1|qualdirect=informal|.impersonal}} to have too many of; to have more than enough of
+# {{lb|pt|intransitive|or|transitive|impersonal}} to [[have]] too [[much]]/[[many]] of; to have [[more]] than [[enough]] of {{+obj|pt|:de/dirobj<q:informal><something>}}
 #: {{syn|pt|sobrar}}
 #: {{ux|pt|'''Sobejou''' de comida.|'''There was more than enough''' food.}}
-# {{lb|pt|intransitive}} to [[overabound]]; to be more than enough
+# {{lb|pt|intransitive|or|pronominal}} to be [[overabundant]]; to be [[more]] than [[enough]]
 #: {{syn|pt|sobrar}}
 #: {{ux|pt|A comida '''sobejou'''.|Food '''was overabundant'''.}}
+# {{lb|pt|intransitive|or|pronominal}} to [[remain]], to [[be]] [[left over]]
 
 ====Conjugation====
 {{pt-conj}}
@@ -41427,7 +41426,7 @@ From {{affix|pt|des-|aprender|gloss2=to learn}}.
 ===Verb===
 {{pt-verb}}
 
-# {{indtr|pt|.transitive|.or|aux=impersonal infinitive|a}} to [[forget]] or discard one’s knowledge of; to [[unlearn]] or forget
+# {{lb|pt|transitive|or|catenative}} to [[forget]] or discard one’s knowledge of; to [[unlearn]] or [[forget]] {{+obj|pt|dirobj<something>/:a(inf)<how to do something>}}
 #: {{ux|pt|Eu '''desaprendi''' a andar de bicicleta.|I '''forgot''' how to ride a bicycle.}}
 #: {{ux|pt|Precisamos '''desaprender''' todos estes conhecimentos errôneos.|We must '''unlearn''' all of this erroneous knowledge.}}
 
@@ -41587,7 +41586,7 @@ Page 498 jogar luz: -------- begin text --------
 {{pt-verb}}
 
 # {{&lit|pt|jogar|luz}}
-# {{senseid|pt|the shed light on}} {{indtr|pt|sobre|em|.idiomatic}} to [[shed light on]] {{gl|to cause to become clearer or better-known}}
+# {{senseid|pt|the shed light on}} {{lb|pt|idiomatic}} to [[shed light on|shed light]] {{gl|to cause to become clearer or better-known}} {{+obj|pt|:sobre/:em<on something>}}
 
 ====Synonyms====
 * {{l|pt|lançar luz}}
@@ -41604,7 +41603,8 @@ Page 499 bater à porta: -------- begin text --------
 ===Verb===
 {{pt-verb}}
 
-# {{senseid|pt|to present itself}} {{indtr|pt|de|-a possessive pronoun before ''porta''|.idiomatic}} to [[knock on someone's door]] {{gl|of a bad situation: to present itself to someone}}
+# {{senseid|pt|to present itself}} {{lb|pt|intransitive|idiomatic}} to [[come knocking]] {{gl|of a bad situation: to present itself to someone}} {{+obj|pt|:de(object)/a possessive pronoun<q:preceding {{m|pt|porta}}><for someone>}}
+#: {{uxi|pt|a tentação bateu à minha porta|temptation '''came knocking'''|lit=temptation '''knocked on''' my '''door'''}}
 # {{&lit|pt|bater|à|porta}}
 -------- end text --------
 Page 500 termar: -------- begin text --------
@@ -42736,7 +42736,7 @@ From {{inh|lij|la|admīrārī}}, present active infinitive of {{m|la|admīror||I
 {{head|lij|verb}}
 
 # {{lb|lij|transitive}} to [[look at]], to [[watch]], to [[glance]] {{n-g|or}} [[gaze]] at
-# {{indtr|lij|de|qual1=+ action being tried}} to [[try]]
+# {{lb|lij|catenative}} to [[try]] {{+obj|lij|:de(inf)<to do something>}}
 #: {{ux|lij|'''Amîa''' de tornâ fîto|inline=1|'''Try''' to be back soon}}
 
 ====Conjugation====
@@ -44276,9 +44276,9 @@ Page 632 désagréer: -------- begin text --------
 ===Etymology 1===
 
 ====Verb====
-{{fr-verb}}
+{{fr-verb}} {{tlb|fr|rare|literary}}
 
-# {{indtr|fr|à}}<ref>{{R:fr:TLFi}}</ref> to [[displease]]<ref>[https://books.google.fr/books?id=LXkCAAAAQAAJ&pg=PA164].</ref>
+# {{lb|fr|intransitive}} to [[displease]] {{+obj|fr|:à<someone>}}
 
 =====Conjugation=====
 {{fr-conj-auto}}
@@ -44286,18 +44286,18 @@ Page 632 désagréer: -------- begin text --------
 ===Etymology 2===
 
 ====Verb====
-{{fr-verb}}
+{{fr-verb}} {{tlb|fr|obsolete|nautical}}
 
-# {{lb|fr|transitive}} to [[unrig]]<ref>[https://books.google.fr/books?id=LXkCAAAAQAAJ&pg=PA164].</ref>
+# {{lb|fr|transitive}} to [[unrig]]
+#: {{syn|fr|dégréer}}
+#* {{quote-book|author=Jules Michelet|title=Histoire romaine|year=1831|page=309|vol=2|text=Les vaisseaux d'Octave, grands et lourds étaient toujours atteints par ceux de l'ennemi (...), '''désagréés''', brisés, coulés|t=Octave's ships, large and heavy, were always hit by those of the enemy (...), '''unrigged''', broken, sunk}}
 
 =====Conjugation=====
 {{fr-conj-auto}}
 
-===References===
-<references/>
-
 ===Further reading===
 * {{R:fr:TLFi}}
+* {{cite-book|fr|author=de Lolme, J L|title=French and English Dictionary|year=|page=164|entry=désagréer|url=https://books.google.fr/books?id=LXkCAAAAQAAJ&pg=PA164}}
 -------- end text --------
 Page 633 cedere il passo: -------- begin text --------
 ==Italian==
@@ -45302,7 +45302,7 @@ Page 698 avéighe: -------- begin text --------
 ===Verb===
 {{head|lij|verb}}
 
-# {{indtr|lij|da|aux=infinitive}} to [[have to]], [[must]]
+# {{lb|lij|auxiliary}} to [[have to]], [[must]] {{+obj|lij|da(inf)<do something>}}
 #: {{syn|lij|dovéi|q1=Italianism}}
 #: {{ux|lij|'''gh'ò''' da anâ a câ|inline=1|'''I have to''' go home}}
 # {{lb|lij|transitive}} to [[have]], [[possess]]
@@ -49175,7 +49175,8 @@ From {{inh|pt|la|advoco|advocāre}}. {{doublet|pt|advogar|avocar}}.
 ===Verb===
 {{pt-verb}}
 
-# {{indtr|pt|por|direct=1|.obsolete}} to [[advocate]] {{gl|to express or encourage support for}}
+# {{lb|pt|transitive|or|intransitive|obsolete}} to [[advocate]] {{gl|to express or encourage support for}} {{+obj|pt|dirobj/:por<for someone/something>}}
+#: {{syn|pt|advogar}}
 
 ====Conjugation====
 {{pt-conj}}
@@ -49985,7 +49986,7 @@ Page 925 blauw betalen: -------- begin text --------
 ===Verb===
 {{nl-verb}}
 
-# {{indtr|nl|.reflexive|aan}} to [[pay through the nose]] for
+# {{lb|nl|reflexive}} to [[pay through the nose]] {{+obj|nl|:aan<for something>}}
 
 ====Inflection====
 {{nl-conj-see|betalen}}
@@ -50418,7 +50419,7 @@ Page 951 couper les ailes: -------- begin text --------
 ===Verb===
 {{fr-verb}}
 
-# {{indtr|fr|à|de|.figuratively}} to [[clip the wings of]]
+# {{lb|fr|figuratively}} to [[clip the wings of|clip the wings]] {{+obj|fr|:à/:de<of someone>}}
 -------- end text --------
 Page 952 ne pas faire de cadeaux: -------- begin text --------
 ==French==
@@ -50778,7 +50779,7 @@ Page 973 scier les nerfs: -------- begin text --------
 ===Verb===
 {{fr-verb}}
 
-# {{indtr|fr|à|.informal}}
+# {{lb|fr|informal}} to [[get on someone's nerves|get on (someone's) nerves]] {{+obj|fr|à<someone>}}
 #: {{syn|fr|scier les côtes|casser les pieds|pomper l'air}}
 -------- end text --------
 Page 975 donner la main: -------- begin text --------
@@ -51726,7 +51727,7 @@ A jousting metaphor.
 ===Verb===
 {{fr-verb}}
 
-# {{indtr|fr|à|avec|.figuratively}} to [[attack]], to [[lash out]] at, to [[take to task]]; to [[challenge]]
+# {{lb|fr|intransitive|figuratively}} to [[attack]], to [[lash out]] at, to [[take to task]]; to [[challenge]] {{+obj|fr|:à/:avec<someone>}}
 
 ====See also====
 * {{l|fr|rompre une lance}}
@@ -52637,7 +52638,7 @@ Page 1053 far sapere: -------- begin text --------
 ===Verb===
 {{it-verb}}
 
-# {{indtr|it|a|indtr=1}} to [[let someone know]]; to [[relay]]
+# {{lb|it|transitive}} to [[let someone know]]; to [[relay]] {{+obj|:a(to someone) + dirobj<something>/:chi(ind-cl)<that something is the case>}}
 #: {{syn|it|informare|riferire}}
 # to make [[famous]] or [[known]]
 #: {{syn|it|[[rendere]] [[noto]]|far conoscere}}
