@@ -1661,7 +1661,7 @@ Compare dialectal {{cog|no|bugge|t=great man}}, {{cog|nds|Bögge}}, {{m|nds|Bogg
 #: {{syn|en|all the rage|in demand|well liked}}
 #: {{ux|en|That style is very '''big''' right now in Europe, especially among teenagers.}}
 #* {{quote-song|en|artist=Alphaville|title=Big in Japan|album=Forever Young|year=1984|passage='''Big''' in Japan, alright, pay then I'll sleep by your side / Things are easy when you're '''big''' in Japan}}
-# {{lb|en|of a city}} {{l|en|populous|Populous}}.
+# {{lb|en|of a city}} [[populous|Populous]].
 # {{lb|en|informal}} {{n-g|Used as an intensifier, especially of negative-valence nouns}}
 #: {{ux|en|You are a '''big''' liar.&emsp; Why are you in such a '''big''' hurry?}}
 #* {{quote-book|en|format=comic|author=Tom Armstrong|title=Marvin|date=Aug 8 2007|passage=Why is it whenever I'm in a '''big''' hurry he's always in a '''big''' slow?}}
@@ -2193,7 +2193,7 @@ Compare dialectal {{cog|no|bugge|t=great man}}, {{cog|nds|Bögge}}, {{m|nds|Bogg
 #* {{quote-book|en|title=Through an Opaque Window|passage=He was there the night of Cristoph's party. All the littles were assigned to their '''bigs'''. Ian and Christoph had rushed the same fraternity. When they became upperclassmen, they both ended up on the board.|year=2018|author=Kelly Ann Gonzales}}
 #* {{quote-web|en|url=https://yaledailynews.com/blog/2019/04/01/sororities-pair-new-members-with-bigs/|work=Yale Daily News|passage=She added that the relationship between '''bigs''' and littles is "what each pair makes of it," and that a lot of the pairs often get dinner together and become close friends.|title=Sororities pair new members with "bigs"|date=2019-04-01|author=Audrey Steinkamp}}
 #* {{quote-web|en|url=https://iowastatedaily.com/265676/news/gamma-rho-lambda-provides-lgbtqia-community-in-greek-life/|work=Iowa State Daily|passage=Some traditions of the chapter include lineages with '''bigs''' and littles, receiving of paddles from a '''big''', and a national stroll, Wolsch-Gallia said.|title=Gamma Rho Lambda provides LGBTQIA+ community in greek life|date=2022-09-27|author=Shreya Varrier}}
-# {{lb|en|BDSM|ABDL}} {{l|en|The participant in [[ageplay]] who acts out the [[older]] [[role]].}}
+# {{lb|en|BDSM|ABDL}} The participant in [[ageplay]] who acts out the [[older]] [[role]].
 #: {{ant|en|little}}
 
 ===Etymology 2===
@@ -3362,7 +3362,7 @@ From {{inh|es|la|do|alt=dō}}, from {{inh|es|itc-pro|*didō}}, from {{inh|es|ine
 #: {{ux|inline=1|es|El maíz '''se da''' en esta tierra.|Corn '''grows''' on this land.}}
 # {{lb|es|reflexive}} to [[hit]]
 #: {{ux|es|El coche se '''dio''' con/contra un árbol.|The car '''hit''' a tree.}}
-# {{lb|es|reflexive|_|+ {{m|es|por}}}} to [[assume]]
+# {{lb|es|reflexive}} to [[assume]] {{+obj|es|:por(past&part)<to be in some state>}}
 #: {{ux|inline=1|es|'''darse''' por vencido|to '''assume''' to be defeated}}
 #: {{ux|inline=1|es|'''darse''' por muerto|to '''assume''' to be dead}}
 # {{lb|es|reflexive|informal}} to [[pretend]] to be, to [[present]] oneself [[as though]] one were
@@ -3860,6 +3860,8 @@ From {{inh|en|enm|listenen}}, {{m|enm|listnen}}, alteration (due to {{cog|enm|li
 {{en-verb}}
 
 # {{lb|en|intransitive|_|except in archaic usage}} To [[use]] one's sense of [[hearing]] in an [[intentional]] way; to make deliberate use of one's [[ear]]s; to [[pay attention]] to or [[wait for]] a specific sound.
+#: {{syn|en|heed|mind|note|pay attention|attend}}
+#: {{ant|en|ignore}}
 #: {{ux|en|Please '''listen''' carefully as I explain.}}
 #* {{RQ:Weyman Chippinge Borough|I|01|passage=It was April 22, 1831, and a young man was walking down Whitehall in the direction of Parliament Street.{{nb...}}. He halted opposite the Privy Gardens, and, with his face turned skywards, '''listened''' until the sound of the Tower guns smote again on the ear and dispelled his doubts.}}
 #* {{RQ:Grey Riders|4|passage=He reined Wrangle to a walk, halted now and then to '''listen''', and then proceeded cautiously with shifting and alert gaze.}}
@@ -3875,6 +3877,8 @@ From {{inh|en|enm|listenen}}, {{m|enm|listnen}}, alteration (due to {{cog|enm|li
 #*: {{+obj|en|:for}}
 #*:: {{uxi|en|You should '''listen''' for the starting gun.}}
 # {{lb|en|intransitive}} To [[accept]] [[advice]] or [[obey]] instruction; to [[agree]] or [[assent]].
+#: {{syn|en|mind}}
+#: {{ant|en|disregard}}
 #: {{uxi|en|'''Listen''', the only reason I yelled at you was because I was upset, OK?}}
 #: {{uxi|en|Good children '''listen''' to their parents.}}
 #* {{RQ:Orwell Animal Farm|1|passage=Never '''listen''' when they tell you that Man and the animals have a common interest{{nb...}}.}}
@@ -3890,15 +3894,7 @@ From {{inh|en|enm|listenen}}, {{m|enm|listnen}}, alteration (due to {{cog|enm|li
 * {{seeCites|en}}
 
 ====Synonyms====
-* {{sense|to pay attention}} {{l|en|attend}}, {{l|en|behear}}, {{l|en|give ear}}, {{l|en|hark}}, {{l|en|hear}}, {{l|en|heed}}, {{l|en|list}}, {{l|en|mind}}, {{l|en|note}}, {{l|en|pay attention}}
-* {{sense|to expect or wait for a sound}} {{l|en|await}}, {{l|en|anticipate}}, {{l|en|expect}}, {{l|en|wait for}}
-* {{sense|to accept advice or instruction}} {{l|en|agree}}, {{l|en|assent}}, {{l|en|hearken}}, {{l|en|mind}}, {{l|en|obey}}
-* {{sense|to hear}} {{l|en|hear}}, {{l|en|mind}}, {{l|en|heed}}
 * See also [[Thesaurus:listen]]
-
-====Antonyms====
-* {{antsense|to pay attention}} {{l|en|ignore}}
-* {{antsense|to accept advice or instruction}} {{l|en|disobey}}, {{l|en|disregard}}
 
 ====Coordinate terms====
 * {{l|en|speak}}
@@ -4509,7 +4505,7 @@ From {{inh|af|nl|ver}}, from {{inh|af|dum|verre}}.
 ====Adjective====
 {{af-adj|verre|verder}}
 
-# {{l|en|far}}, [[distant]]
+# [[far]], [[distant]]
 
 =====Alternative forms=====
 * {{l|af|fêr}} {{q|obsolete}}
@@ -6043,55 +6039,54 @@ Usually used in the preterite and with the pronoun preceding the verb:
 
 # {{lb|es|intransitive}} to [[go]] (away from speaker and listener)
 #: {{uxi|es|Nos gusta '''ir''' al cine.| We like to '''go''' to the movies.}}
-# {{lb|es|intransitive}} to no suit or not suit something or someone. 
-# {{lb|es|said of things or people|intransitive}} To be suitable or [[apt]] for its purpose, to [[match]] or [[suit]] well (of clothing).
-#: {{uxi|es|Una blusa negra no le '''va''' a esa falda.| A black blouse doesn't '''suit''' that skirt..}}
-# {{lb|es|intransitive}} To head towards or [[lead]] to a place away from the speaker.
+# {{lb|es|said of things or people|intransitive}} to be [[suitable]] or [[apt]] for its purpose, to [[match]] or [[suit]] well {{q|of clothing}}
+#: {{uxi|es|Una blusa negra no le '''va''' a esa falda.|A black blouse doesn't '''suit''' that skirt.}}
+# {{lb|es|intransitive}} to head towards or [[lead]] to a place away from the speaker
 #: {{uxi|es|Este camino '''va''' a la aldea.| This road '''leads''' to the village}}
-# {{lb|es|said of a thing|intransitive}} To extend in time or space, from one point to another.
+# {{lb|es|said of a thing|intransitive}} to extend in time or space, from one point to another
 #: {{ux|es|Esta red '''va''' de un lado del campo al otro.| this net [[extends]] from one side of the field to the other}}
 #: {{ux|es|El evento '''va''' de las 9 de la mañana hasta las 5 de la tarde.| The event '''extends''' from 9 a.m. to 5 p.m.}}
-# {{lb|es|intransitive}} In card games, to [[play]].
+# {{lb|es|intransitive|card games}} to [[play]]
 #: {{ux|es|Juan estaba seguro de su mano, así que decidió '''ir''' con todo.| Juan was confident in his hand, so he decided to '''go''' all in.}}
 #: {{ux|es|Si no estás seguro de tu baraja, es mejor no '''ir''' en esta ronda.| If you're not confident about your deck, it's better not to '''play''' this round}}
-# {{lb|es|intransitive}} To approach or consider something from a specific angle, or to direct attention towards a particular goal.
+# {{lb|es|intransitive}} to [[approach]] or [[consider]] (something) from a [[specific]] [[angle]], or to direct attention towards a particular goal
 #: {{ux|es|Si por honestidad '''va''', ¿qué cosa más honesta que la virtud? Ahora '''va''' de veras.| If '''it's about''' honesty, what could be more honest than virtue? Now I '''am''' serious.}}
 #: {{co|es|'''ir''' en serio — '''ir''' de veras — '''ir''' de verdad|'''be''' serious about something, make a real attempt at something}}
-# {{senseid|en|progressive action}} {{lb|es|preceding the gerund of a verb|intransitive}} Denotes an ongoing action with a sense of progression or movement through space or time. To [[go on]], to [[carry on]].
+# {{senseid|en|progressive action}} {{lb|es|preceding the gerund of a verb|intransitive}} {{n-g|denotes an ongoing action with a sense of progression or movement through space or time}}; to [[go on]], to [[carry on]]
 #: {{ux|es|'''Voy''' caminando.| I '''go on''' walking}}
-# {{lb|es|preceding the gerund of a verb|intransitive}} An action or process is beginning to occur or unfold. To [[grow]] (''dark''), [[get]] (''cloudy'').
+# {{lb|es|preceding the gerund of a verb|intransitive}} {{n-g|an action or process is beginning to occur or unfold}}; to [[grow]] (''dark''), [[get]] (''cloudy'')
 #: {{uxi|es|'''Va''' anocheziendo.| '''It starts to get''' dark}}
-# {{lb|es|colloquial|commonly paired with {{m|es|pues}}|intransitive}} Used [[ironically]] with certain adjectives or passive participles.
-#: {{ux|es|Pues ya '''vas''' tu preparado para el exámen!.| Well, you're ready for the exam! (implying that you are not prepared at all for the exam)}}
-# {{lb|es|auxillary}}
-## {{senseid|en|auxillary transitive}} Used with the past participle of transitive verbs to indicate undergoing the action of the verb.
+# {{lb|es|colloquial|commonly paired with {{m|es|pues}}|intransitive}} {{n-g|used [[ironically]] with certain adjectives or passive participles}}
+#: {{ux|es|Pues ya '''vas''' tu preparado para el exámen!.|Well, you're ready for the exam! (implying that you are not prepared at all for the exam)}}
+# {{lb|es|auxiliary}}
+## {{senseid|en|auxiliary transitive}} {{n-g|used with the past participle of transitive verbs to indicate undergoing the action of the verb}}
 ##: {{ux|es|Ella '''va''' atormentada.| She '''goes''' tormented (the fact of her being in a state of torment which isn't self imposed, she '''undergoes''' externally imposed torment)}}
-## {{senseid|en|auxillary reflexive}} Used with the past participle of reflexive verbs to indicate being in a state caused by the verb.
+## {{senseid|en|auxiliary reflexive}} {{n-g|used with the past participle of reflexive verbs to indicate being in a state caused by the verb}}
 ##: {{uxi|es|'''Ir''' arrepentido.| '''Being''' remorseful}}
 ##: {{uxi|es|'''Ir''' apresurado.| '''Being''' in a hurry}}
 ##: {{uxi|es|Él '''va''' enojado.| He '''is''' angry}}
-## {{gl|+ '''''a''''' + ''infinitive''}} to be [[going to]] (near future), to [[go]]
+## {{lb|es|auxiliary}} to be [[going to]]; {{n-g|used to convey the near future tense}} {{+obj|es|:a(inf)<do something>}}
 ##: {{uxi|es|'''Voy''' a decirle la verdad.|I '''am going to''' tell her the truth.}}
-# {{lb|es|intransitive|said of a thing, especially a sum of money}} to be [[staked]] or [[bet]] in a dispute or competition. Only used in the third-person singular present indicative form '''van''' to entice someone to engage in a [[bet]].
+# {{lb|es|intransitive|said of a thing, especially a sum of money}} to be [[staked]] or [[bet]] in a dispute or competition {{q|only used in the third-person singular present indicative form '''van''' to entice someone to engage in a [[bet]]}}
 #: {{uxi|es|'''Van''' cinco euros a que gana el Madrid| I '''bet''' five euros that Madrid will win the match}}
-# {{lb|es|intransitive}} Used with a [[hortative]] value to encourage or urge action. [[let's]].
+# {{lb|es|intransitive}} {{n-g|used with a [[hortative]] value to encourage or urge action}}; [[let's]]
 #: {{uxi|es|'''Vamos''' a trabajar|. '''Let's get''' working}}
-# {{lb|es|intransitive}} to habitually happen on a specific day or occasion. To habitually [[go]]. ''Only used with [[imperfective]] tenses''.
+# {{lb|es|intransitive|imperfective only}} to [[habitually]] [[happen]] on a specific day or occasion; to habitually [[go]]
 #: {{uxi|es|En verano, '''vamos''' a la playa.| In summer, we '''go''' to the beach.}}
-# {{lb|es|intransitive}} {{gl|+ '''''con''''' + ''adjective''}} Used to describe the manner in which someone behaves or acts under specific conditions. 
-#: {{uxi|es|"'''Ir''' con cuidado.|'''Being''' careful |lit='''go''' with carefulness.}} 
-# {{lb|es|intransitive}} Indicates an inclination towards a particular profession or career path, especially one that is perceived in other people based on their current skills or personality.
+# {{lb|es|intransitive}} {{n-g|used to describe the manner in which someone behaves or acts under specific conditions}} {{+obj|es|:con(abstract noun)}}
+#: {{uxi|es|'''ir''' con cuidado|'''to be''' careful|lit='''to go''' with carefulness}} 
+# {{lb|es|intransitive}} {{n-g|indicates an inclination towards a particular profession or career path, especially one that is perceived in other people based on their current skills or personality}}
 #: {{uxi|es|Este niño '''va''' para médico.| This child '''will become''' a doctor (perceived by the speaker).}}
-# {{lb|es|intransitive}} {{gl|+ '''''por'''''}} Indicates the pursuit of a particular career or vocation.
+# {{lb|es|intransitive}} {{n-g|indicates the pursuit of a particular career or vocation}} {{+obj|es|:por<career or vocation>}}
 #: {{uxi|es|Ella '''va''' por la música.| She '''is pursuing a career''' in music}}
-# {{lb|es|intransitive}} {{gl|+ '''''a''''' + '''''por'''''}} or {{gl|+ '''''por'''''}} To go [[fetch]] something.
+# {{lb|es|intransitive}} to [[go]] [[fetch]] {{+obj|es|:por<something> + :a<somewhere>}}
 #: {{uxi|es|'''Voy''' por leche al supermercado.| I'm going to the supermarket to '''get''' milk.}}
-# {{lb|es|intransitive|of an element of a language}} indicates adherence to a specific linguistic pattern or rules, like conjugation.
+# {{lb|es|intransitive|of an element of a language}} {{n-g|indicates adherence to a specific linguistic pattern or rules, like conjugation}}
 #: {{uxi|es|Esa palabra solo '''va''' en plural.| That word '''is''' only used in the plural.}}
-# {{lb|es|intransitive}} to [[come]] (towards or with the listener)
+# {{lb|es|intransitive}} to [[come]] {{q|towards or with the listener}}
 #: {{ux|es|Quiero '''ir''' contigo.| I want to '''come''' with you.}}
 #: {{ux|es|'''Iré''' a tu casa.| I'll '''come''' to your house.}}
-# {{lb|es|reflexive}} to [[go away]], to [[leave]], to [[depart]], to [[go]] (when the destination is not essential; when something or someone is going somewhere else)
+# {{lb|es|reflexive}} to [[go away]], to [[leave]], to [[depart]], to [[go]] {{q|when the destination is not essential; when something or someone is going somewhere else}}
 #: {{syn|es|andar<alt:andarse>|marchar<alt:marcharse>}}
 #: {{ux|es|Lo siento. Tengo que '''irme'''.|I'm sorry. I have to '''leave'''.}}
 #: {{ux|es|Él '''se va''' a salvar al mundo otra vez.|He''''s off''' to save the world again.}}
@@ -7248,7 +7243,7 @@ From {{der|mfe|fr|cher}}.
 ===Noun===
 {{head|dum|noun}}
 
-# {{lb|dum|title and pronoun}} {{l|en|sir}}, {{l|en|lord}}
+# {{lb|dum|title and pronoun}} [[sir]], [[lord]]
 #* 1301-1350, ''Van den VII vroeden van binnen Rome. Een dichtwerk der XIVde eeuw'' ([http://gtb.inl.nl/iWDB/search?wdb=MNWBRONNEN&actie=article&id=s1180 INL])
 #*: {{quote|dum|Garijn, '''ser''' Diederecs sone|Garijn, '''sir''' Diederec's son}}
 #* 1414, ''Hennen van Merchtenen's Cornicke van Brabant'' ([http://gtb.inl.nl/iWDB/search?wdb=MNWBRONNEN&actie=article&id=s0256 INL])
@@ -8073,8 +8068,8 @@ The 1SG reflects an original */ˈsajo/, in common with other Romance languages, 
 ===Verb===
 {{es-verb}}
 
-# to [[know]] (a fact), to [[wit]]
-#: {{uxi|es|'''Sé''' que volverá.|I '''know''' that it'll come back.}}
+# to [[know]] (a fact)
+#: {{uxi|es|'''Sé''' que volverá.|I '''know''' it'll come back.}}
 #: {{uxi|es|Lo siguiente que '''sé'''...|Next thing I '''know'''...}}
 #: {{uxi|es|que yo '''sepa'''|as far as I '''know'''}}
 #: {{uxi|es|Si tu '''supieras'''...|If you '''knew'''...}}
@@ -8083,19 +8078,19 @@ The 1SG reflects an original */ˈsajo/, in common with other Romance languages, 
 # {{lb|es|in the preterite tense}} to [[find out]], to [[learn]]
 # to [[taste]]
 #: {{uxi|es|'''Sabe''' a pollo.|It '''tastes''' like chicken.}}
-# to [[realize]], to [[know]] {{gl|e.g. recognize}}
+# to [[realize]], to [[know]] {{gl|i.e. recognize}}
 #: {{ux|es|El hombre no '''sabe''' lo talentoso que su hijo es.|The man doesn't '''realize''' how talented his son is.}}
 # to [[tell]], to [[know]] {{gl|i.e. to discern or distinguish if something is the case}}
 #: {{ux|es|Siempre es difícil '''saber''' si me mientes.|It's always hard to '''tell''' if you're lying to me.}}
 # {{lb|es|informal}} to [[figure out]]
 #: {{ux|es|Todavía estamos tratando de '''saber''' qué acaba de pasar.|We're still trying to '''figure out''' what just happened.}}
-# to [[hear from]] {{gl|+ {{l|es|de}}}}
+# to [[hear from]] {{+obj|es|:de<someone>}}
 #: {{ux|es|No he '''sabido''' nada de ella en meses.|I haven't '''heard''' from her in months.}}
-# to [[hear of]], to [[hear]] about, {{gl|+ {{l|es|de}}}}
-# to [[learn]] of, to [[learn]] about, to [[find out]] about, to [[know]] about {{gl|+ {{l|es|de}}}}
+# to [[hear of]], to [[hear]] about {{+obj|es|:de<something>}}
+# to [[learn]], to [[find out]], to [[know]] {{+obj|es|:de<about something>}}
 # {{lb|es|reflexive}} to be [[known]]
 #: {{ux|es|Ya '''se sabe''' que uno de los factores que aceleran esta enfermedad es el estrés.|It '''is known''' that one of the factors that speeds up this disease is stress.}}
-# {{lb|es|reflexive}} to [[know]] {{gl|extremely well}}
+# {{lb|es|reflexive}} to [[know]] {{q|extremely well}}
 #: {{ux|es|He oído que '''te sabes''' todas las líneas de la película de memoria.|I heard that you '''know''' all the lines of the movie by heart.}}
 
 ====Conjugation====
@@ -8414,7 +8409,7 @@ Page 48 souvenir: -------- begin text --------
 ===Noun===
 {{sv-noun|c}}
 
-# a {{l|en|souvenir}}
+# {{l|en|souvenir}}
 
 ====Declension====
 {{sv-infl-noun-c-er}}
@@ -9240,7 +9235,7 @@ From {{inh|gl|roa-opt|falar}}, from {{inh|gl|la|fabulor|fābulārī|chat, conver
 ===Verb===
 {{io-head}}
 
-# {{lb|io|intransitive}} to {{l|en|fall}} {{gl|{{l|en|fall down|down}}}}, {{l|en|tumble}}
+# {{lb|io|intransitive}} to [[fall]], to [[fall down]]
 
 ====Conjugation====
 {{io-conj|intr=yes}}
@@ -9788,14 +9783,14 @@ From {{inh|ast|la|currere}}, present active infinitive of {{m|la|currō|t=I run}
 ===Verb===
 {{ast-verb}}
 
-# {{lb|ast|intransitive}} to {{l|en|run}} {{gl|to move quickly on two feet}}
-# to {{l|en|escape}}, {{l|en|run away}}
+# {{lb|ast|intransitive}} to [[run]] {{gl|to move quickly on two feet}}
+# to [[escape]], [[run away]]
 #: {{syn|ast|afuxir|escapar|esmanchar|esmantelar}}
 #: {{ux|ast|Él taba '''corriendo''' d'ella|He was running away from her}}
-# {{lb|ast|transitive}} to {{l|en|chase away}}, make {{l|en|flee}}
+# {{lb|ast|transitive}} to [[chase away]], make [[flee]]
 #: {{syn|ast|escorrer|escorrentar|estordigar}}
 #: {{ux|ast|'''Corrióronlos''' de la casa en pescanciando lo que facíen|They made them flee the moment they noticed what they were doing}}
-# to be {{l|en|rumored}} 
+# to be [[rumor]]ed
 #: {{ux|ast|'''Cuerre''' per ehí que nun vos vais quedar equí|It is rumored that you are not staying here}}
 
 ====Conjugation====
@@ -11424,7 +11419,7 @@ From {{bor|id|nl|teer|t=tar}}, from {{der|id|gem-pro|*terwą}}, from {{der|id|in
 ====Noun====
 {{id-noun|head=tèr}}
 
-# {{l|en|tar}}, the black, oily, sticky, viscous substance, consisting mainly of hydrocarbons derived from organic materials such as wood, peat, or coal.
+# [[tar]], the black, oily, sticky, viscous substance, consisting mainly of hydrocarbons derived from organic materials such as wood, peat, or coal.
 
 =====Alternative forms=====
 * {{l|id|tar}}
@@ -11931,20 +11926,20 @@ From {{inh|gl|roa-opt|andar}}, from {{inh|gl|la-eme|andāre}}, of uncertain orig
 ===Verb===
 {{gl-verb}}
 
-# to [[walk]]
+# {{lb|gl|intransitive}} to [[walk]]
 #: {{syn|gl|camiñar}}
-# to [[wander]], to [[travel]]
-# to [[go]], to [[proceed]]
+# {{lb|gl|intransitive}} to [[wander]], to [[travel]]
+# {{lb|gl|intransitive}} to [[go]], to [[proceed]]
 #: {{syn|gl|ir}}
-# (with {{l|gl|a}} and a verb in infinitive, auxiliary) to [[be]] doing or [[keep]] doing
+# {{lb|gl|catenative}} to [[be]] or [[keep]] (doing) {{+obj|gl|:a(inf)<doing something>}}
 #: {{syn|gl|estar}}
 #: {{uxi|gl|-'''A''' que '''andas''', ho? -'''Ando a''' correr!|"Hey! What '''are''' you do'''ing'''?" "I''''m''' runn'''ing'''!"}}
 #: {{uxi|gl|'''Andas a''' saltar e caiches.|You '''are''' jump'''ing''' around and now you have fallen.}}
 #: {{uxi|gl|A policia colleu a uns que '''andaban a''' roubar casas.|The police captured some who '''were''' burgl'''ing''' homes.}}
-# (with {{l|gl|a}} and a noun) to [[search]], [[catch]] or [[gather]]
+# {{lb|gl|intransitive}} to [[search]], [[catch]] or [[gather]] {{+obj|gl|:a<something>}}
 #* {{quote-book|gl|year=1927|author=X. Lesta Meis|title=Estebo|location=A Coruña|publisher=Lar|page=106|passage=''O Carpulla '''andaba á''' bosta. Cun cesto de aro colgado debaixo do brazo, iba e viña por camiños e carreiros recollendo canta alcontraba para facer esterco''|t=Carpulla ("Hunger") '''used to search for''' platters. With a hoop basked under the arm, he came and went on the roads and ways, gathering each one he could find to make manure}}
-# {{lb|gl|transitive}} to [[move]]
-# (with {{l|gl|por}} and a verb in infinitive) to be [[about to]]
+# {{lb|gl|intransitive}} to [[move]]
+# {{lb|gl|catenative}} to be [[about to]] {{+obj|gl|:por(inf)<do something>}}
 
 ====Conjugation====
 {{gl-conj}}
@@ -12023,7 +12018,7 @@ From {{inh|roa-opt|la-eme|andāre}}, of uncertain origin.
 ===Verb===
 {{head|roa-opt|verb}}
 
-# to {{l|en|walk}}
+# to [[walk]]
 
 ====Conjugation====
 {{roa-opt-conj-ar|and}}
@@ -12050,8 +12045,8 @@ From {{inh|goh|gmw-pro|*anþar}}, see also {{cog|ang|ōþer}}, {{cog|non|annarr}
 ===Adjective===
 {{goh-adj}}
 
-# {{l|en|second}}
-# {{l|en|other}}
+# [[second]]
+# [[other]]
 
 ====Descendants====
 * {{desc|gmh|ander}}
@@ -12374,8 +12369,8 @@ From {{inh|pt|roa-opt|levantar}}, itself from a {{inh|pt|VL.|*levantō|*levantā
 * {{antsense|to revolt}} {{l|pt|pacificar}}
 
 ====Related terms====
-* {{l|en|levantamento}}
-* {{l|en|levante}}
+* {{l|pt|levantamento}}
+* {{l|pt|levante}}
 
 ====Descendants====
 * {{desc|mzs|levantâ}}
@@ -13205,7 +13200,7 @@ From {{inh|rm|la|habēre}}, present active infinitive of {{m|la|habeō||have, ho
 ===Verb===
 {{rm-verb}}
 
-# {{lb|rm|Sursilvan}} to {{l|en|have}}
+# {{lb|rm|Sursilvan}} to [[have]]
 
 ====Conjugation====
 {{rm-conj/sursilvan|hav|er|pastp=giu|pres1s=hai|pres1s2=vai|pres2s=has|pres3s=ha|pres1p2=vein|pres2p2=veis|pres3p=han|imperf1s2=vevel|imperf2s2=vevas|imperf3s2=veva|imperf1p2=vevan|imperf2p2=vevas|imperf3p2=vevan|cond2=ve|sub1s=hagi|sub2s=hagies|sub3s=hagi|sub3p=hagien|impsub1s2=vevi|impsub2s2=vevies|impsub3s2=vevi|impsub1p2=vevien|impsub2p2=vevies|impsub3p2=vevien|imp2s=hagies|imp2p=haveies|imp2p2=veies}}
@@ -13301,12 +13296,12 @@ From {{inh|ast|la|parāre}}, present active infinitive of {{m|la|parō}}.
 #: {{lb|ca|idiomatic}} {{uxi|ca|'''parar''' la mà|to '''accept''' money as a reward|lit=to extend the hand}}
 # {{lb|ca|transitive}} to [[prepare]] or [[set up]] something to make it available to function or to serve a purpose.
 #: {{uxi|ca|'''parar''' una trampa|to '''prepare''' a [[trap]] so that it is ready to operate and catch something or someone}}
-#: {{lb|ca|idiomatic}} {{uxi|ca|'''parar''' taula|to '''set''' the {{l|en|table}}, to arrange the utensils necessary for eating|lit=to '''set up''' the table}}
+#: {{lb|ca|idiomatic}} {{uxi|ca|'''parar''' taula|to '''set''' the table, to arrange the utensils necessary for eating|lit=to '''set up''' the table}}
 #: {{lb|ca|idiomatic}} {{uxi|ca|'''parar''' l'orella|to listen carefully|lit=to '''set up''' one's ear}}
 #: {{lb|ca|idiomatic}} {{uxi|ca|'''parar''' compte|to pay attention (to something)|lit=to '''set up''' account}}
 # {{lb|ca|transitive}} to [[endure]] something adverse
 #: {{uxi|ca|vam haver de '''parar''' el sol|we had to '''endure''' the sun}}
-# to have the "it" role in chasing games like {{l|en|tag}} or the like
+# to have the "it" role in chasing games like [[tag]] or the like
 #: {{uxi|ca|tu '''pares'''!|'''tag''', you're "It"!.}}
 # to [[end up]] in a place, in a state
 #: {{syn|ca|acabar}}, {{syn|ca|estar}}, {{syn|ca|quedar}}, {{syn|ca|restar}}
@@ -13709,7 +13704,7 @@ From {{inh|en|enm|circuler}}, {{m|enm|circuleer}}, {{m|enm|circulere}}, from {{d
 ==Asturian==
 
 ===Etymology===
-Borrowed from {{bor|ast|LL.|circularis}}, from {{der|ast|la|circulus}}.
+Borrowed from {{bor|ast|LL.|circulāris}}, from {{der|ast|la|circulus}}.
 
 ===Adjective===
 {{ast-adj-mf|pl=circulares}}
@@ -14065,7 +14060,7 @@ From {{inh|en|enm|baille}}, from the {{der|en|fro|-}} verb {{m|fro|bailler||to d
 #* {{RQ:Spenser Faerie Queene|book=IV|canto=IX|stanza=7|passage=Ne none there was to reskue her, ne none to '''baile'''.}}
 
 =====Derived terms=====
-{{col-auto|en|unbailed|bailment|bailor|bailee|{{l|en|bail out}}, {{l|en|bailout}}|rebail|bailable|bailer}}
+{{col-auto|en|unbailed|bailment|bailor|bailee|[[bail out]], [[bailout]]|rebail|bailable|bailer}}
 
 =====Related terms=====
 * {{l|en|bailiff}}
@@ -14308,7 +14303,7 @@ From {{inh|ga|sga|bal|t=state (of affairs), condition, situation; prosperity, go
 ==Latvian==
 
 ===Etymology===
-Originally a reduced form of {{m|lv|*bailu}}, an ''u''-stem parallel form to the archaic singular form {{m|lv|baile}} of {{m|lv|bailes}} “fear” ([[cf.]] {{cog|lt|bailùs}} “afraid”).<ref>{{R:lv:LEV|bailes}}</ref>
+Originally a reduced form of {{m|lv|*bailu}}, a ''u''-stem parallel form to the archaic singular form {{m|lv|baile}} of {{m|lv|bailes}} “fear” ([[cf.]] {{cog|lt|bailùs||afraid}}).<ref>{{R:lv:LEV|bailes}}</ref>
 
 ===Pronunciation===
 * {{lv-IPA|bâjl|falling}}
@@ -15009,7 +15004,7 @@ Borrowed from {{bor|pt|la|termino|termināre|t=to limit; to finish}}.
 # {{senseid|pt|to be over}} {{lb|pt|intransitive}} to [[finish]]; to [[end]] {{gl|to be over}}
 #: {{syn|pt|acabar|[[concluir]]-[[se]]}}
 #: {{uxi|pt|O filme já '''terminou'''.|The film has '''ended'''.}}
-# {{senseid|pt|to finish doing something}} {{indtr|pt|de|aux=impersonal infinitive}} to [[finish]] doing something
+# {{senseid|pt|to finish doing something}} {{lb|pt|catenative}} to [[finish]] {{+obj|pt|:de(inf)<doing something>}}
 #: {{syn|pt|[[acabar]] [[de]]}}
 #: {{uxi|pt|O bolo já '''terminou''' de assar?|Has the cake '''finished''' baking?}}
 # {{senseid|pt|to break up}} {lb|pt|intransitive}} to [[break up]] {{gl|to end a romantic relationship}} {{+obj|pt|:com<someone>}}
@@ -15019,7 +15014,7 @@ Borrowed from {{bor|pt|la|termino|termināre|t=to limit; to finish}}.
 #: {{syn|pt|concluir}}
 #: {{uxi|pt|Uma barreira '''terminava''' o caminho.|A barrier '''was at the end''' of the path.}}
 #: {{uxi|pt|A morte das personagens principais '''terminou''' a história.|The death of the main characters '''concluded''' the story.}}
-# {{senseid|pt|to have as its end}} {{indtr|pt|em|com|por}} to [[end]] in {{gl|to have as its end or conclusion}}
+# {{senseid|pt|to have as its end}} {{lb|pt|intransitive}} to [[end]] {{gl|to have as its end or conclusion}} {{+obj|pt|:em/:com/:por<in/with something>}}
 #: {{uxi|pt|Muitas palavras '''terminam''' no sufixo -ação.|Many words '''end''' with the suffix -ation.}}
 # {{senseid|pt|to have as its consequence}} {{lb|pt|intransitive}} to [[end]] {{gl|to have as its consequence}} {{+obj|pt|:em<in a result>}}
 #: {{syn|pt|[[resultar]] [[em]]|[[acabar]] [[em]]}}
@@ -15027,7 +15022,7 @@ Borrowed from {{bor|pt|la|termino|termināre|t=to limit; to finish}}.
 # {{senseid|pt|to destroy}} {{lb|pt|intransitive}} to [[end]] with; to [[destroy]]; to bring to an end {{+obj|pt|:com<something>}}
 #: {{syn|pt|[[acabar]] [[com]]|destruir|arruinar}}
 #: {{uxi|pt|O fim da relação '''terminou''' com a minha felicidade.|The break-up '''destroyed''' my happiness.}}
-# {{senseid|pt|to end up}} {{indtr|pt|por|aux=impersonal infinitive}} to [[end up]] {{gl|to eventually do something}}
+# {{senseid|pt|to end up}} {{lb|pt|catenative}} to [[end up]] {{gl|to eventually (do something)}} {{+obj|pt|:por(inf)<doing something>}}
 #: {{syn|pt|acabar}}
 #: {{uxi|pt|Os soldados '''terminaram''' por invadir a cidade.|The soldiers '''ended up''' invading the city.}}
 # {{senseid|pt|to limit}} {{lb|pt|transitive}} to [[limit]]; to [[bound]] {{gl|to form the boundaries of}}
@@ -15070,14 +15065,15 @@ Borrowed from {{bor|pt|la|termino|termināre|t=to limit; to finish}}.
 ===Verb===
 {{es-verb}}
 
-# to [[finish]], to [[end]], to [[terminate]], to be [[over]], to [[wrap up]], to [[finish up]], to [[finish off]], to finish out, to [[complete]], to [[conclude]]
+# {{lb|es|transitive}} to (cause to) [[finish]], to (cause to) [[end]], to (cause to) [[terminate]], to (cause to) [[conclude]]
 #: {{syn|es|acabar|cesar|finalizar}}
+# {{lb|es|intransitive|or|pronominal}} to [[finish]], to [[end]], to [[terminate]], to be [[over]], to [[conclude]] {{q|of a thing}}
 # to [[end up]], to [[wind up]], to [[turn out]]
-# to [[break up]], to be [[done]], to be [[through]], to be [[over]] {{gl|a relationship - doesn't have to be romantic}}
+# to [[break up]], to be [[done]], to be [[through]], to be [[over]] {{gl|a relationship - doesn't have to be romantic}} {{+obj|es|:con<someone>}}
 #: {{syn|es|romper}}
 #: {{ux|es|Si haces eso, ¡hemos '''terminados'''! ¡No volvería a hablar contigo nunca más!|If you do that, we '''are through'''! I would never speak to you again!}}
-# to [[end up]] with {{qual|+ '''con'''}}
-# to [[put an end to]], to be done with {{qual|+ '''con'''}} {{q|in the perfect tense}}
+# to [[end up]] with {{+obj|es|:con<something>}}
+# to [[put an end to]], to be done with, to [[destroy]], to [[annihilate]] {{+obj|es|:con<someone/something>}}
 #: {{syn|es|poner fin a|acabar con}}
 
 ====Conjugation====
@@ -16712,7 +16708,7 @@ From {{inh|pt|la|affecto|affectāre}}. {{doublet|pt|afetar|afectar|enfeitar}}.
 ====Verb====
 {{pt-verb}}
 
-# {{indtr|pt|.archaic|.pronominal|a}} to become [[fond]] of
+# {{lb|pt|archaic|pronominal}} to become [[fond]] {{+obj|pt|:a<of someone>}}
 # {{lb|pt|archaic|transitive}} to make [[presentable]]
 
 =====Conjugation=====
@@ -18013,7 +18009,7 @@ From {{inh|gl|roa-opt|tomar}}, of {{unk|gl|title=unknown}} origin; perhaps from 
 # {{lb|pt|transitive|applicable to some nouns}} to put into practice
 #: {{ux|pt|'''tomar''' uma decisão|to make a decision}}
 #: {{ux|pt|'''tomar''' medidas|to take measures}}
-# {{indtr|pt|por|ditr=1}} to [[take for]]; to [[consider]]; to [[regard]] {{gl|to have a certain opinion about someone or something}}
+# {{lb|pt|transitive}} to [[take for]]; to [[consider]]; to [[regard]] {{gl|to have a certain opinion about someone or something}} {{+obj|pt|dirobj<someone/something> + :por<for someone/something>}}
 #: {{ux|pt|Eu '''tomei''' a Maria por corrupta.|I '''took''' Mary for a corrupt woman.}}
 # {{lb|pt|transitive}} to take into the body
 ## {{lb|pt|transitive}} to [[drink]] {{gl|to ingest a liquid}}
@@ -18327,7 +18323,7 @@ From {{inh|de|gmh|pfīfen}}, from {{inh|de|goh|pfīfōn}}, from {{inh|de|gmw-pro
 #: {{syn|de|flöten|q1=regional}}
 #: {{uxi|de|Der Schiedsrichter '''pfeift''' sehr gut.|The referee is doing a great job.}}
 #: {{uxi|de|Wer '''pfeift''' das Spiel?|Who's '''refereeing''' the game?}}
-# {{indtr|de|.colloquial|auf}} to be [[uninterested]] (in something or someone); to [[ignore]]; not to [[give a damn]]
+# {{lb|de|colloquial}} to be [[uninterested]] in; to [[ignore]]; not to [[give a damn]] about {{+obj|de|:auf(acc)<someone/something>}}
 #: {{syn|de|foutieren|q1=Switzerland}}
 #: {{uxi|de|Darauf '''pfeif''' ich!|I don't care one bit about that!}}
 
@@ -19089,9 +19085,10 @@ From {{inh|gl|roa-opt|sonhar}}, from {{inh|gl|la|somnio|somniāre}}.
 ===Verb===
 {{es-verb|<ue>}}
 
-# {{indtr|es|con|en|intr=1|qual1=of|qual2=about}} to [[dream]]
+# {{lb|pt|intransitive|or|transitive}} to [[dream]] {{+obj|es|:con<about someone/something>/:con(inf)<about doing something>/:en(inf)<about doing something>/transitive<about something>/transitive<l:Latin America><about someone>/:que(ind-cl)<that ...>}}
 #: {{ux|es|'''Soñé''' contigo anoche.|I '''dreamt''' about you last night.}}
 #: {{ux|es|'''Sueño''' con trabajar en esta empresa.|I '''dream''' of working in this company.}}
+#: {{ux|es|'''Soñe''' que encontré una olla de oro.|I '''dreamed''' I found a pot of gold.}}
 
 ====Conjugation====
 {{es-conj|<ue>}}
@@ -19555,9 +19552,9 @@ From {{inh|pt|roa-opt|prestar}}, from {{inh|pt|la|praestō|praestāre}}.
 #: {{uxi|pt|Este dicionário não '''presta''' para nada.|This dictionary '''isn't useful''' for anything.}}
 # {{lb|pt|transitive}} to [[render]], to [[provide]], to [[offer]] {{gl|a service, help etc.}}
 #: {{uxi|pt|Ninguém me '''prestou''' ajuda.|Nobody '''offered''' me help.}}
-# {{lb|pt|transitive}} to [[pay]] {{gl|attention, respect etc.}}
+# {{lb|pt|transitive}} to [[pay]] (attention, respect etc.)
 #: {{uxi|pt|Acorda e '''presta''' mais atenção!|Wake up and '''pay''' more attention!}}
-# {{indtr|pt|.pronominal|a}} to be [[suitable]]
+# {{lb|pt|pronominal}} to be [[suitable]] {{+obj|pt|:a<for something>}}
 #: {{uxi|pt|A sala '''presta-se''' perfeitamente a este fim.|The room '''is''' perfectly '''suitable''' for this purpose.}}
 
 ====Conjugation====
@@ -19667,7 +19664,7 @@ Page 105 sperare: -------- begin text --------
 ====Verb====
 {{it-verb|a/è}}
 
-# {{indtr|it|di|qual1=+ infinitive|che|qual2=+ subjunctive}} to [[hope]]
+# {{lb|it|catenative}} to [[hope]] {{+obj|it|:di(inf)<for something to happen>/:che(sub-cl)<that something happens>}}
 #: {{coi|it|'''Speriamo''' bene!|Let's '''hope''' for the best!|lit=Let's '''hope''' well!}}
 #: {{uxi|it|'''Spero''' che ti piaccia.|I '''hope''' you like it.}}
 #: {{uxi|it|'''Spero''' di sì.|I '''hope''' so.}}
@@ -19961,27 +19958,32 @@ Semi-learned form modified from older {{m|pt|tractar}}, borrowed from {{bor|pt|l
 ===Verb===
 {{pt-verb}}
 
-# {{senseid|pt|to deal with}} {{indtr|pt|de|direct=1|qualdirect=more common}} to [[treat]] {{gl|to handle, deal with or behave towards in a specific way}}
+# {{senseid|pt|to treat in a particular way}} to [[treat]] {{gl|to handle, deal with or behave towards in a specific way}} {{+obj|pt|dirobj<qq:more common>/:de<someone> + :bem/:mal/other&adverb<a particular way>}}
 #: {{ux|pt|Vi um senhor '''tratando''' seus filhos muito mal.|I saw a gentleman '''treating''' his children very badly.}}
-# {{senseid|pt|to apply medical care to}} {{indtr|pt|de|direct=1|qualdirect=more common}} to [[treat]] {{gl|to apply medical care to a person}}
+# {{senseid|pt|to deal with}} to [[deal with]], to [[handle]], to [[take care of]] {+obj|pt|:com<something/something>}}
+# {{senseid|pt|to apply medical care to}} to [[treat]] {{gl|to apply medical care to a person}} {{+obj|pt|dirobj<qq:more common>/:de<someone>}}
 #: {{ux|pt|A enfermeira '''tratou''' as vítimas da explosão.|The nurse '''treated''' the victims of the explosion.}}
-# {{senseid|pt|to treat a medical condition}} {{indtr|pt|de|direct=1|qualdirect=more common}} to [[treat]] {{gl|to apply medical care in order to eliminate a condition}}
+# {{senseid|pt|to treat a medical condition}} to [[treat]] {{gl|to apply medical care in order to eliminate a condition}} {{+obj|pt|dirobj<qq:more common>/:de<a medical condition>}}
 #: {{ux|pt|O oncologista quis que eu usasse químio para '''tratar''' o câncer.|The oncologist wanted me to use chemo to '''treat''' the cancer.}}
 # {{senseid|pt|to subject to chemical action}} {{lb|pt|transitive}} to [[treat]] {{gl|to subject to a chemical or other action}}
 #: {{ux|pt|'''Tratei''' o meu cabelo com um xampu importado.|'''I treated''' my hair with an imported shampoo.}}
-# {{senseid|pt|to negotiate with}} {{indtr|pt|com|-a reciprocal pronoun}} to [[treat]]; to [[negotiate]] with
-#: {{ux|pt|Nós nos '''tratamos''' pela Internet.|We '''negotiated''' with one another via the Internet.}}
-# {{senseid|pt|to address}} {{indtr|pt|por|como|de|ditr=1}} to [[address]] someone with a specific [[form of address]]
+# {{senseid|pt|to negotiate with}} {{lb|pt|intransitive}} to [[negotiate]], to [[deal]], to have [[dealings]] {{+obj|pt|:com<with someone>}}
+# {{senseid|pt|to negotiate with one another}} {{lb|pt|reflexive|reciprocal}} to [[negotiate]] {{q|with one another}}
+#: {{ux|pt|Nós nos '''tratamos''' pela Internet.|We '''negotiated''' (with one another) via the Internet.}}
+# {{senseid|pt|to address}} {{lb|pt|transitive}} to [[address]] {{+obj|pt|dirobj<someone> + :por/:como/:de<with a specific [[form of address]]>}}
 #: {{ux|pt|Reis devem ser '''tratados''' como “Vossa Majestade”.|Kings must be '''addressed''' as “Your Majesty”.}}
 # {{senseid|pt|to behave}} {{lb|pt|pronominal}} to [[behave]] {{gl|to conduct oneself in a given way}}
 #: {{ux|pt|Seus filhos se '''trataram''' bem no funeral.|Your children '''behaved''' well in the funeral.}}
-# {{senseid|pt|to care for}} {{indtr|pt|de|direct=1|qualdirect=more common}} to [[take care]] of; to [[care for]] {{gl|to attend to the needs of}}
+# {{senseid|pt|to care for}} {{lb|pt|transitive|or|intransitive}} to [[take care]] of; to [[care for]] {{gl|to attend to the needs of}} {{+obj|pt|dirobj<qq:more common>/:de<something>}}
 #: {{ux|pt|Depois que ficou velho, mandou o filho '''tratar''' do negócio da família.|After he got old, he told his son to '''care for''' the family business.}}
-# {{senseid|pt|to be about}} {{lb|pt|pronominal}} to be about; to have as its subject {{+obj|pt|:de<someone/something>}}
+# {{senseid|pt|to cover a subject}} {{lb|pt|transitive|or|intransitive}} to [[cover]], to [[deal with]], to [[concern]], to [[be]] [[about]] {{gl|to have as its subject}} {{+obj|pt|:de/dirobj<a subject>}}
+#: {{ux|pt|Este livro '''trata''' de vários temas.|This book '''covers''' various subjects.}}
+#: {{ux|pt|Este livro '''trata''' o tema da matemática.|This book '''covers''' the subject of mathematics.}}
+# {{senseid|pt|to be about}} {{lb|pt|pronominal}} to [[cover]], to [[deal with]], to [[concern]], to [[be]] [[about]] {{gl|to have as its subject}} {{+obj|pt|:de<a subject>}}
 #: {{ux|pt|Este artigo se '''trata''' da guerra.|This article '''is about''' the war.}}
 # {{senseid|pt|to talk about}} {{lb|pt|intransitive}} to talk about; to [[discuss]] {{+obj|pt|:de<something>}}
 #: {{ux|pt|O professor '''tratou''' de matrizes.|The professor '''discussed''' matrices.}}
-# {{senseid|pt|to do promptly}} {{indtr|pt|de|aux=impersonal infinitive}} to do something promptly; ''usually used to emphasise orders''
+# {{senseid|pt|to do promptly}} (to do something) [[promptly]]; {{n-g|usually used to emphasise orders}} {{+obj|pt|:de(inf)<to do something>}}
 #: {{ux|pt|'''Trate''' de terminar suas tarefas.|Finish your chores '''once and for all'''.}}
 # {{senseid|pt|to feed}} {{lb|pt|Brazil|transitive}} to [[feed]] {{gl|to give someone, especially an animal, food to eat}}
 #: {{ux|pt|O gato miava alto para que eu o '''tratasse'''.|The cat was meowing loudly so that I would '''feed''' him.}}
@@ -20103,16 +20105,17 @@ From {{uder|pt|la|resolvō|resolvere|t=to release}}, from {{m|la|re-||again}} + 
 # {{lb|pt|transitive}} to [[solve]] {{gl|to find an answer or solution}}
 #: {{syn|pt|decifrar|solucionar|solver}}
 #: {{ux|pt|Você conseguiu '''resolver''' o problema?|Could you '''solve''' the problem?}}
-# {{indtr|pt|a|.optionally|._|.pronominal|aux=impersonal infinitive}} to [[decide]] to [[do]] something
+# {{lb|pt|catenative}} to [[decide]] {{+obj|pt|inf<to do something>}}
 #: {{syn|pt|decidir|deliberar|determinar|escolher}}
-#: {{uxi|pt|'''Resolvi-me''' a ir embora.|I '''decided''' to leave.}}
 #: {{uxi|pt|'''Resolvi''' ir embora.|I '''decided''' to leave.}}
+# {{lb|pt|catenative|pronominal}} to [[decide]] {{+obj|pt|:a(inf)<to do something>}}
+#: {{uxi|pt|'''Resolvi-me''' a ir embora.|I '''decided''' to leave.}}
 # {{lb|pt|transitive}} to [[dissolve]]; to [[dissipate]]
 #: {{syn|pt|desfazer|dissipar|dissolver|solver}}
 # {{lb|pt|transitive}} to [[annul]] {{gl|to formally revoke the validity of}}
 #: {{syn|pt|abolir|anular|desfazer|invalidar}}
 # {{lb|pt|pronominal}} to [[fade]] away
-# {{indtr|pt|em|.pronominal|lang=pt}} to [[consist]]
+# {{lb|pt|pronominal}} to [[consist]] {{+obj|pt|:em<in something>}}
 
 ====Conjugation====
 {{pt-conj}}
@@ -20285,7 +20288,7 @@ From {{inh|pt|roa-opt|contar}}, from {{inh|pt|la|computō|computāre}}. {{double
 #: {{uxi|pt|O seu primeiro filho '''conta''' já dezoito anos.|His firstborn '''is''' already eighteen years '''old'''.}}
 # {{lb|pt|intransitive}} to [[rely on|rely]], to [[count on|count]] {{+obj|pt|:com<on>}}
 #: {{uxi|pt|'''Contamos''' contigo para trazer a munição.|'''We are counting''' on you to bring the ammunition.}}
-# {{indtr|pt|com|direct=1|qualdirect=uncommon}} to have at one’s [[disposal]]; to have available
+# {{lb|pt|intransitive|or|transitive}} to have at one’s [[disposal]]; to have [[available]] {{+obj|pt|:com/dirobj<q:uncommon><something>}}
 #: {{uxi|pt|Nosso país '''conta''' com um exército medíocre.|Our country '''has''' a mediocre army.}}
 # {{lb|pt|intransitive}} to [[count]]; to [[matter]] {{gl|be of significance}}
 #: {{uxi|pt|Aquele ponto não '''contou''', porque o jogador fez falta.|That point didn’t '''count''', because the player made a foul.}}
@@ -21013,13 +21016,12 @@ Borrowed from {{bor|io|en|import}}, {{der|io|fr|importer}}, {{der|io|it|importar
 # {{lb|pt|transitive}} to [[import]]
 # {{lb|pt|intransitive}} to [[matter]] {{gl|be important}}
 #: {{uxi|pt|Não '''importa'''.|It does not '''matter'''.}}
-# {{lb|pt|intransitive|pronominal}} to [[mind]]
-#: {{uxi|pt|Se não se '''importa'''.|If you don't '''mind'''.}}
-# {{indtr|pt|de|que|.pronominal|lang=pt}} to [[mind]] {{gl|to do something}}
-#: {{ux|pt|'''Importa'''-se de abrir a janela?|Would you '''mind''' opening the window?}}
-# {{indtr|pt|com|.pronominal|lang=pt}} to [[care]] {{gl|about something}}
-# {{lb|pt|reflexive}} to [[care]] {{gl|to be concerned about}}
+# {{lb|pt|intransitive|pronominal}} to [[mind]], to [[care]] {{+obj|pt|:com<about something>|:que(sub-cl)<whether something is the case>}}
 #: {{syn|pt|preocupar-se}}
+#: {{uxi|pt|Se não se '''importa'''.|If you don't '''mind'''.}}
+#: {{uxi|pt|Não me '''importo''' que você venha.|I don't '''care''' whether you come.}}
+# {{lb|pt|catenative|pronominal}} to [[mind]] {{+obj|pt|:de(inf)<to do something>}}
+#: {{ux|pt|'''Importa'''-se de abrir a janela?|Would you '''mind''' opening the window?}}
 
 ====Conjugation====
 {{pt-conj}}
@@ -21027,7 +21029,7 @@ Borrowed from {{bor|io|en|import}}, {{der|io|fr|importer}}, {{der|io|it|importar
 ==Spanish==
 
 ===Etymology===
-From {{der|es|la|importō|importāre}}.
+{{bor+|es|la|importō|importāre}}.
 
 ===Pronunciation===
 {{es-pr}}
@@ -21035,7 +21037,7 @@ From {{der|es|la|importō|importāre}}.
 ===Verb===
 {{es-verb}}
 
-# to [[matter]], to be [[important]], to [[mind]], to [[care]]
+# to [[matter]], to be [[important]] {{+obj|es|:a<someone>}} {{q|often translated idiomatically with {{m+|en|care}} or {{m|en|mind}}, with subject and object reversed}}
 #: {{ux|es|No me '''importa'''.|I don't '''care'''. / I don't '''mind'''. / It doesn't '''matter''' (to me). / '''It’s''' not '''important''' (to me).}}
 #: {{ux|es|No '''importa'''.|Never '''mind'''. / No '''matter'''.}}
 #: {{ux|es|No me '''importa''' el dinero.|I don’t '''care''' about money.}}
@@ -21138,13 +21140,13 @@ Page 117 aplicar: -------- begin text --------
 ===Verb===
 {{pt-verb}}
 
-# {{indtr|pt|em|-another positional preposition|ditr=1|.transitive|.or}} to [[apply]] {{gl|to put on}}
-#: {{ux|pt|'''Aplique''' xampu no seu cabelo até que ele fique macio.|'''Apply''' shampoo on your hair until it gets soft.}}
-# {{indtr|pt|a|ditr=1|.transitive|.or}} to [[apply]] {{gl|to put to use for a purpose}}
-#: {{ux|pt|O carrasco '''aplicou''' a pena de morte ao psicopata.|The executioner '''applied''' the death sentence to the psychopath.}}
-# {{indtr|pt|a|.pronominal|.intransitive|.or}} to [[apply]] (to) {{gl|to be relevant to}}
+# {{lb|pt|transitive}} to [[apply]] {{gl|to put on}} {{+obj|pt|dirobj<something> + :em/other positional preposition<onto someone/something>}}
+#: {{ux|pt|'''Aplique''' xampu no seu cabelo até que ele fique macio.|'''Apply''' shampoo onto your hair until it gets soft.}}
+# {{lb|pt|transitive}} to [[apply]] {{gl|to put to use for a purpose}} {{+obj|pt|dirobj<something> + :a<to someone/something>}}
+#: {{ux|pt|O juiz '''aplicou''' a pena de morte ao psicopata.|The judge '''applied''' the death sentence to the psychopath.}}
+# {{lb|pt|pronominal}} to [[apply]] {{gl|to be relevant to}} {{+obj|pt|:a<to someone/something>}}
 #: {{ux|pt|Lógica matemática nem sempre se '''aplica''' à vida real.|Mathematical logic doesn’t always '''apply''' to real life.}}
-# {{indtr|pt|a|.pronominal|.intransitive|.or}} to [[commit]] (to); to [[dedicate]] oneself to {{gl|to pursue a course of action with great effort}}
+# {{lb|pt|reflexive}} to [[commit]]; to [[dedicate]] oneself {{gl|to pursue a course of action with great effort}} {{+obj|pt|:a<to something>}}
 #: {{ux|pt|Estes pirralhos não se querem '''aplicar''' aos estudos.|These brats don’t want to '''commit''' to their studies.}}
 
 ====Conjugation====
@@ -22234,7 +22236,7 @@ Page 125 começar: -------- begin text --------
 #: {{ant|pt|[[acabar]] [[com]]|terminar|finalizar|fechar}}
 #: {{uxi|pt|Aperte play para '''começar''' o vídeo.|Press play to '''start''' the video.}}
 #: {{uxi|pt|O acontecimento '''começou''' um debate sobre o crime.|The occurrence '''started''' a debate about crime.}}
-# {{senseid|pt|to begin auxiliary}} {{indtr|pt|a|por|qual2=less common|aux=impersonal infinitive}} to [[begin]] [to]
+# {{senseid|pt|to begin auxiliary}} {{lb|pt|catenative}} to [[begin]] {{+obj|pt|:a(inf)/:por(inf)<q:less common><to do something>}}
 #: {{syn|pt|principiar}}
 #: {{ant|pt|[[terminar]] [[de]]|[[parar]] [[de]]}}
 #: {{uxi|pt|Um pirralho '''começou''' a gritar.|A brat '''began''' to scream / '''began''' screaming.}}
@@ -22616,9 +22618,9 @@ From {{inh|it|LL.||pendĕre}} (conjugation confused with or altered by {{m|la|pe
 # to [[droop]] {{+obj|it|:da<from>}}
 # to [[hang over one's head|hang]] {{+obj|it|:su<over one's head>}}
 #: {{ux|it|una minaccia '''pende''' su di noi|a threat '''hangs over our heads'''}}
-# {{indtr|it|da|verso|a}} to [[lean]], [[incline]], [[slope]], or [[tilt]] (from/towards/to)
+# to [[lean]], to [[incline]], to [[slope]], to [[tilt]] {{+obj|it|:[[da]] [[una]] [[parte]]<to one side>/:a<to>/:verso<towards>}}
 #: {{ux|it|il terreno '''pende''' leggermente a sinistra|the ground '''slopes''' slightly to the left}}
-# {{lb|it|figurative|by extension}} {{indtr|it|da|verso|a}} to [[lean]] {{gl|incline in opinion or desire}} (from/towards/to)
+# {{lb|it|figurative|by extension}} to [[lean]] {{gl|incline in opinion or desire}} {{+obj|it|:[[dalla]] [[parte]] [[di]]<in favor of>/:a<to>/:verso<towards>}}
 #: {{uxi|it|'''pendo''' verso il no|I'm '''leaning''' towards no}}
 #: {{uxi|it|'''pendere''' dalla parte di John|to '''lean''' in favor of John}}
 # to [[approach]] or [[tend]] {{+obj|it|:a<towards a quality>}}
@@ -22844,7 +22846,7 @@ Borrowed from {{bor|ast|la|collocāre}}, present active infinitive of {{m|la|col
 #: {{syn|pt|empregar<q:more common>|contratar}}
 # {{lb|pt|transitive}} to [[invest]] {{gl|to commit capital in the hope of financial return}}
 #: {{syn|pt|investir<q:more common>|aplicar}}
-# {{indtr|pt|em|entre|qual2=with a plural object|.usually|.pronominal}} to [[place]] {{gl|to earn a given spot in a competition’s result}}
+# {{lb|pt|usually|pronominal}} to [[place]] {{gl|to earn a given spot in a competition’s result}} {{+obj|pt|:em<in a position>/:entre(pl&noun)<among a set of positions>}}
 #: {{syn|pt|ganhar}}
 #: {{uxi|pt|Ele se '''colocou''' em último lugar na maratona.|He '''got''' last place in the marathon.}}
 #: {{uxi|pt|É praticamente impossível se '''colocar''' entre os três primeiros.|It’s nearly impossible to '''place''' in the top three positions.}}
@@ -23268,11 +23270,11 @@ From {{bor|pt|la|concordo|concordāre}}, probably a semi-learned borrowing.
 #: {{ux|pt|Eu '''concordo''' com a Julia.|I '''agree''' with Julia.}}
 # {{lb|pt|intransitive}} to [[agree]] {{gl|to be in favour of a given practice}} {{+obj|pt|:com<with>}}
 #: {{ux|pt|Eu não '''concordo''' com a queima dos livros.|I don’t '''agree''' with the burning of the books.}}
-# {{indtr|pt|com|.grammar|intr=1}} to [[agree]] with {{gl|to have the same number, gender, tense or another category as another word}}
+# {{lb|pr|intransitive|grammar}} to [[agree]] {{gl|to have the same number, gender, tense or another category as another word}} {{+obj|pt|:com<with another word>}}
 #: {{ux|pt|Na oração “os mulheres”, o artigo '''concorda''' com o substantivo em número mas não em género.|In the clause “os mulheres”, the article '''agrees''' with the noun in number but not in gender.}}
 # {{lb|pt|intransitive}} to [[agree]] with one another {{gl|to all have the same opinion}}
 #: {{ux|pt|Os médicos '''concordam''': fumar é perigoso.|Doctors '''agree''': smoking is dangerous.}}
-# {{indtr|pt|com|a|ditr=1|.transitive|.or}} to make something be in [[agreement]] or [[accordance]] with another
+# {{lb|pt|transitive}} to make (something) be in [[agreement]] or [[accordance]] {{+obj|pt|:com/:a<with something else>}}
 #: {{ux|pt|A igreja precisa '''concordar''' seus dogmas com a realidade moderna.|The church needs to '''accord''' its dogmas with modern reality.}}
 
 ====Conjugation====
@@ -23404,9 +23406,9 @@ Compare {{cog|gl|xogar}}, {{cog|ast|xugar}}, {{cog|es|jugar}}.
 # {{senseid|pt|to play}} {{lb|pt|transitive|or|intransitive}} to [[play]] {{gl|to participate in a sport or game}}
 #: {{uxi|pt|Quando que o meu time '''joga'''?|When is my team '''playing'''?}}
 #: {{uxi|pt|'''Jogamos''' RPG todos os dias.|'''We play''' RPGs every day.}}
-# {{senseid|pt|to throw}} {{indtr|pt|em|ditr=1|.transitive|.or}} to [[throw]]; to [[hurl]] {{gl|to shove an object away}}
+# {{senseid|pt|to throw}} {{lb|pt|transitive}} to [[throw]]; to [[hurl]] {{gl|to shove an object away}} {{+obj|pt|dirobj<something> + :a<at>/:em<at/into>/:para<to>/:através de<through>/etc.}}
 #: {{uxi|pt|'''Joguei''' uma pedra à janela.|'''I threw''' a rock at the window.}}
-# {{senseid|pt|to hand by throwing}} {{indtr|pt|a|para|-an indirect objective pronoun|ditr=1}} to hand something over by [[throw]]ing it
+# {{senseid|pt|to hand by throwing}} {{lb|pt|transitive}} to hand (something) over by [[throw]]ing {{+obj|pt|dirobj<something> + :a/:para/indirobj&pronoun<to someone>}}
 #: {{syn|pt|arremessar|arrojar|atirar|lançar}}
 #: {{uxi|pt|Me '''jogue''' as chaves.|'''Throw''' me the keys.}}
 #: {{uxi|pt|Tentaram '''jogar''' comida aos prisioneiros.|They tried to '''throw''' the prisoners food.}}
@@ -23423,7 +23425,7 @@ Compare {{cog|gl|xogar}}, {{cog|ast|xugar}}, {{cog|es|jugar}}.
 # {{senseid|pt|to match}} {{lb|pt|intransitive}} to [[match]]; to [[go]] with {{gl|to form a good combination with}} {{+obj|pt|:com<someone/something>}}
 #: {{syn|pt|condizer|ir}}
 #: {{uxi|pt|Esse comentário não '''joga''' bem com a sua reputação de imparcial.|This comment doesn’t '''go''' well with your reputation of impartiality.}}
-# {{senseid|pt|to immerse}} {{indtr|pt|em|dentro de|.pronominal}} to [[immerse]] oneself in {{gl|to become completely involved with}}
+# {{senseid|pt|to immerse}} {{lb|pt|pronominal|figurative}} to [[immerse]] oneself {{gl|to become completely involved}} {{+obj|pt|:em/:dentro de<in something>}}
 
 ====Conjugation====
 {{pt-conj}}
@@ -23521,11 +23523,14 @@ From {{af|fr|qualité|-ifier}}.
 ===Verb===
 {{fr-verb}}
 
-# to [[qualify]] {{gl|of a sports team, etc.}}
-# {{lb|fr|reflexive}} {{gl|to compete successfully in some stage of a competition and become eligible for the next stage}}
+# {{lb|fr|intransitive|or|reflexive|sports}} to [[qualify]] {{q|of a sports team, etc.}} {{gl|to compete successfully in some stage of a competition and become eligible for the next stage}}
 #: {{uxi|fr|Notre équipe '''s'est qualifiée''' pour les quarts de finale.|Our team '''qualified''' for the quarter-finals.}}
-# {{indtr|fr|de|ditr=1}} to [[call]] someone something, to [[label]] someone
+# {{lb|fr|transitive}} to [[characterize]], to [[consider]] {{+obj|fr|dirobj<someone/something> + :de(object/adjective)<as something>}}
+# {{lb|fr|transitive|pejorative}} to [[call]], to [[label]] {{+obj|fr|dirobj<someone> + :de(object/adjective)<as something>}}
 #: {{syn|fr|traiter|taxer}}
+# {{lb|fr|reflexive}} to [[call]] oneself {{q|usually undeservedly}} {{+obj|fr|:de(copulative&noun)/direct&copulative&noun<q:archaic><by a title>}}
+# {{lb|fr|transitive}} to [[characterize]] {{gl|to be characteristic of}}
+#: {{quote-book|fr|author=Joris-Karl Huysmans|title=À rebours|year=1884|page=150|text=... toutes les fleurs sont exactement représentées par des alliances d'alcoolats et d'esprits, dérobant au modèle sa personnalité même et y ajoutant ce rien, ce ton en plus, ce fumet capiteux, cette touche rare qui qualifie une œuvre d'art.|t=... all the flowers are exactly represented by alliances of alcoholates and spirits, stealing from the model its very personality and adding this nothingness, this extra tone, this heady aroma, this rare touch which '''characterizes''' a work of art.}}
 
 ====Conjugation====
 {{fr-conj-auto}}
@@ -23685,7 +23690,7 @@ From {{inh|gl|roa-opt|vestir}}, from {{inh|gl|la|vestiō}}.
 #: {{syn|gl|revestir}}
 # {{lb|gl|pronominal}} to [[get dressed]]
 #: {{syn|gl|poñer|por}}
-# {{indtr|gl|de|ditr=1}} to [[dress]] someone or get dressed with a given type of fabric or material
+# {{lb|gl|transitive}} to [[dress]] {{+obj|gl|dirobj<someone> + :de<in some type of fabric or material>}}
 
 ====Conjugation====
 {{gl-conj|<i>}}
@@ -23789,7 +23794,7 @@ From {{inh|pt|roa-opt|vestir}}, from {{inh|pt|la|vestiō}}.
 #: {{ux|pt|'''Vista-se''' logo senão nos atrasaremos.|'''Get dressed''' fast otherwise we’ll be late.}}
 # {{lb|pt|transitive}} to [[dress]]; to [[clothe]] {{gl|to put clothes on someone}}
 #: {{ux|pt|Ela '''vestiu''' o filho para que ele não passasse frio.|She '''dressed''' her son so he wouldn’t be cold.}}
-# {{indtr|pt|de|ditr=1}} to [[dress]] someone with a given type of fabric or material
+# {{lb|pt|transitive}} to [[dress]] {{+obj|pt|dirobj<someone> + :de<in some type of fabric or material>}}
 #: {{ux|pt|A empresária precisa estar '''vestida''' de seda.|The businesswoman needs to be '''dressed''' in silk.}}
 
 ====Conjugation====
@@ -23905,10 +23910,10 @@ From {{der|pt|la|trādūcō}}.
 ===Verb===
 {{pt-verb}}
 
-# {{indtr|pt|ditr=1|de|para|.transitive|.or}} to [[translate]] {{gl|to convert from a language to another}}
+# {{lb|pt|transitive}} to [[translate]] {{gl|to convert from a language to another}} {{+obj|pt|dirobj<something> + :de<from a language> + :para<into another>}}
 #: {{uxi|pt|'''traduzir''' de|to '''translate''' from}}
 #: {{uxi|pt|'''traduzir''' para|to '''translate''' into}}
-# {{lb|pt|figurative}} to [[express]], to [[show]] {{gl|communicate an idea}}
+# {{lb|pt|transitive|figurative}} to [[express]], to [[show]] {{gl|communicate an idea}}
 #: {{syn|pt|exprimir|refletir}}
 
 ====Conjugation====
@@ -24252,7 +24257,7 @@ Borrowed from {{bor|pt|la|consto|cōnstāre|to stand together; to consist of}}. 
 #: {{ux|pt|Nossa equipe '''consta''' de vinte membros.|Our team '''consists''' of twenty members.}}
 # {{lb|pt|intransitive}} to be [[present]] {{+obj|pt|:em<in>}}
 #: {{ux|pt|“Onde está a caneta?” “Não '''consta'''.”|“Where is the pen.” “It is not here.”}}
-# {{indtr|pt|a|-an indirect objective pronoun|intr=1|.dated}} to be [[certain]], [[clear]] or [[evident]]
+# {{lb|pt|intransitive|dated}} to be [[certain]], [[clear]] or [[evident]] {{+obj|pt|:a/indirobj&pronoun<to someone>}}
 #: {{ux|pt|Isso realmente não me '''consta'''.|This really doesn’t '''seem obvious''' to me.}}
 # to [[appear]], to [[figure]]
 
@@ -24860,7 +24865,7 @@ From {{af|it|andare|-se|-ne}}. Compare {{cog|fr|s'en aller}}.
 
 # {{lb|it|intransitive}} to [[go away]], [[leave]]
 #: {{syn|it|andare via}}
-# {{indtr|it|da|di|qual2=uncommon}} to [[leave]], to [[get out of]], to [[get away]] from
+# {{lb|it|intransitive}} to [[leave]], to [[get out of]], to [[get away]] from {{+obj|it|:da/:di<q:uncommon><somewhere>}}
 #: {{syn|it|[[andare via]] [[da]]}}
 # {{lb|it|intransitive|euphemism}} to [[pass away]] {{gl|die}}
 
@@ -25690,9 +25695,9 @@ Borrowed from {{bor|pt|la|aspīrō|aspīrāre}}.
 {{pt-verb}}
 
 # {{lb|pt|transitive}} to [[vacuum]] {{gl|to clean with a vacuum cleaner}}
-# {{lb|pt|intransitive}} to [[inspire]] {{gl|to draw air into the lungs}}
+# {{lb|pt|transitive|or|intransitive}} to [[inhale]], to [[breathe]] [[in]] {{gl|to draw air into the lungs}}
 #: {{syn|pt|inalar|inspirar}}
-# {{indtr|pt|.transitive|.or|aux=impersonal infinitive|a}} to [[aspire]] {{gl|to dream of becoming something}}
+# {{lb|pt|intransitive|or|catenative}} to [[aspire]] {{gl|to dream of becoming something}} {{+obj|pt|:a<something>/:a(inf)<to do something>}}
 # {{lb|pt|phonetics|transitive}} to [[aspirate]] {{gl|to produce a puff of breath with a consonant}}
 
 ====Conjugation====
@@ -26259,8 +26264,8 @@ From {{af|es|a-|poder|-ar|t2=power}}.
 {{es-verb}}
 
 # to [[empower]]
-# {{lb|es|reflexive}} to [[seize]], to [[gain]], to [[get hold of]], to get one's hands on {{gl|+ '''''de'''''}}
-# {{lb|es|reflexive}} to [[take control]] of, to take [[possession]] of {{gl|+ '''''de'''''}}
+# {{lb|es|reflexive}} to [[seize]], to [[gain]], to [[get hold of]], to get one's [[hands]] on {{+obj|es|:de<something>}}
+# {{lb|es|reflexive}} to [[take control]], to [[take]] [[possession]] {{+obj|es|:de<of something>}}
 
 ====Conjugation====
 {{es-conj}}
@@ -26541,7 +26546,7 @@ From {{der|pt|pro|brotar}}, from {{der|pt|got|*𐌱𐍂𐌿𐍄𐍉𐌽}}.
 {{pt-verb}}
 
 # to [[bud]], [[sprout]]
-# {{indtr|pt|.Brazil|.informal}} to [[appear]] at a specific place
+# {{lb|pt|Brazil|informal}} to [[appear]] at a specific place
 
 ====Conjugation====
 {{pt-conj}}
@@ -27014,7 +27019,7 @@ From {{af|pt|perfil|-ar|t1=profile}}.
 #: {{syn|pt|endireitar|aprumar}}
 # {{lb|pt|intransitive|usually|pronominal}} to [[report]] {{gl|to show up for an appointment or recruitment}} {{+obj|pt|:para<for an appointment, a task, etc.>}}
 #: {{syn|pt|[[apresentar]]-[[se]]}}
-# {{indtr|pt|com|ditr=1}} to [[compare]] {{gl|to assess the similarities and differences between things}}
+# {{lb|pt|transitive}} to [[compare]] {{gl|to assess the similarities and differences between things}} {{+obj|pt|dirobj<someone/something> + :com<with someone/something else>}}
 #: {{syn|pt|comparar|cotejar}}
 
 ====Conjugation====
@@ -27098,7 +27103,7 @@ Borrowed from {{bor|pt|la|praeoccupo|praeoccupāre|to preoccupy}}.
 
 # {{lb|pt|intransitive}} to [[worry]]; to [[concern]] {{gl|to cause someone, or people in general, to feel worried}}
 #: {{ux|pt|As taxas de homicídio daqui '''preocupam'''.|The homicide rates in this place '''are concerning'''.}}
-# {{indtr|pt|.pronominal|com|intr=1}} to [[worry]] (about)
+# {{lb|pt|pronominal}} to [[worry]] {{+obj|pt|:com<about something>}}
 #: {{ux|pt|Não se '''preocupe''' com o que seus inimigos dizem.|Don’t '''worry''' about what your enemies say.}}
 # {{lb|pt|reflexive}} to [[worry]] {{gl|to be concerned or troubled}}
 
@@ -27126,7 +27131,7 @@ Borrowed from {{bor|pt|la|praeoccupo|praeoccupāre|to preoccupy}}.
 #: {{ux|es|Me '''preocupa''' que esos muchachos estén afuera.|It '''worries''' me that those guys are outside.}}
 #: {{ux|es|Su silencio '''me preocupa''', Doctor.|Your silence '''troubles''' me, Doctor.}}
 #: {{ux|es|A la novia de Juan no la '''preocupaba''' el chihuahua hasta que empezó a morderle los pies.|The chihuahua '''didn't worry''' Juan's girlfriend until it started biting her feet.}}
-# {{lb|es|reflexive}} to [[fret]], to worry about/over, to be [[worried]] about/over, to be [[concerned]] about/over, to be [[troubled]] about/over, to [[care]] about {{gl|+ {{m|es|por}} usually, + {{m|es|de}} occasionally}}
+# {{lb|es|reflexive}} to [[care]], to [[worry]], to be [[concerned]], to be [[troubled]] {{+obj|es|:por/:de<q:occasionally><about someone/something>}}
 #: {{ux|es|Sabes, también '''me preocupo''' por ella.|'''I care''' about her too, you know.}}
 #: {{ux|es|No '''te preocupes''' por los detalles.|Don't '''worry''' about the details.}}
 #: {{ux|es|'''Me preocupo''' de que esos muchachos están afuera.|'''I'm concerned''' about those guys being outside.}}
@@ -27190,7 +27195,7 @@ From {{der|pt|la|praescindō||to separate}}, formed from Latin {{af|la|prae-|t1=
 ===Verb===
 {{pt-verb}}
 
-# {{indtr|pt|de|direct=1|.pronominal}} to [[do without]]; to [[dispense]]
+# {{lb|pt|intransitive|transitive|or|reflexive}} to [[do without]]; to [[dispense]] with {{+obj|pt|:de<something>/:de(inf)<doing something><q*:without or with a reflexive pronoun>|dirobj<something><q*:without a reflexive pronoun>}}
 #* {{quote-book
 |pt
 |year=1990
@@ -27238,18 +27243,18 @@ Page 177 pegar: -------- begin text --------
 ===Verb===
 {{ca-verb|root=cen:è; bal:é; val:é}}
 
-# to [[hit]] someone {{q|in order to harm}}
+# {{lb|ca|intransitive}} to [[hit]] {{q|in order to harm}} {{+obj|ca|:a<someone>}}
 #: {{uxi|ca|Per què li '''pegueu''' a aquest noi?|Why are you '''hitting''' this boy?}}
-# {{lb|ca|dialectal}} to [[hit]] one body with another
+# {{lb|ca|intransitive|dialectal}} to [[hit]] {{+obj|ca|:de<something> + :a<against something else>}}
 #: {{syn|ca|topar|xocar}}
 #: {{uxi|ca|Vaig '''pegar''' de cap a la paret|I '''hit''' my head against the wall}}
-# {{lb|ca|dialectal|used with {{l|ca|cop|t=knock}}, {{l|ca|empenta|t=shove}}, etc.}} to [[knock]], [[shove]] someone
-#: {{syn|ca|donar|q1=with ''cop'', ''empenta''|empènyer}}
+# {{lb|ca|transitive|dialectal}} to [[give]] (someone) {{+obj|ca|:cop<knock>/:empenta<shove>/etc.}}
+#: {{syn|ca|[[donar]] [[un]] [[cop]]|[[donar]] [[una]] [[empenta]]|empènyer}}
 #: {{uxi|ca|Li va '''pegar''' una empenta|He '''shoved''' her}}
-# {{lb|ca|dialectal|used with {{l|ca|bot|t=jump}}, {{l|ca|salt|t=jump}} etc.}} to [[jump]]
-#: {{syn|ca|donar|q1=with ''bot'', ''salt''|fer|q2=with ''bot'', ''salt''|saltar}}
+# {{lb|ca|transitive|dialectal}} to [[make]] {{+obj|ca|:bot<jump>/:salt<jump>/etc.}}
+#: {{syn|ca|[[donar]] [[un]] [[bot]]/[[salt]]|[[fer]] [[un]] [[bot]]/[[salt]]|saltar}}
 #: {{uxi|ca|Va '''pegar''' un bot|He '''jumped'''}}
-# {{lb|ca|dialectal}} to [[throw]], show sudden emotion
+# {{lb|ca|transitive|dialectal}} to [[throw]] {{+obj|ca|:rabinadura<tantrum>/etc.}}; to [[show]] (sudden emotion)
 #: {{syn|ca|agafar}}
 #: {{uxi|ca|Li va '''pegar''' una rabinadura al mig de la plaça|He '''threw''' a tantrum in the middle of the square}}
 # {{lb|ca|dialectal}} to [[glue]]
@@ -27941,7 +27946,7 @@ From {{inh|gl|la|tornō|tornāre|t=to turn}}, from {{der|gl|grc|τόρνος|t=c
 ===Verb===
 {{gl-verb}}
 
-# {{indtr|gl|a|aux=impersonal infinitive}} (to do something) [[again]]; to [[return]] to
+# {{lb|gl|catenative}} (to do something) [[again]]; to [[return]] to {{+obj|gl|:a(inf)<doing something>}}
 #* {{quote-text|gl|year=1862|author=Ramón Barros Sibelo|title=Desdichas do meu amor
 |passage=''Acaba se por fin a noit'escura<br>''E o día '''torna a''' vir''
 |translation=The dark night finally ends<br>And the day comes '''again'''}}
@@ -27952,8 +27957,8 @@ From {{inh|gl|la|tornō|tornāre|t=to turn}}, from {{der|gl|grc|τόρνος|t=c
 #* {{quote-text|gl|year=1812|author=Ramón González Serna|title=Carta Recomendada
 |passage=''é ó mesmo que '''tornar''' os paxaros de un tarreo para que non coman ó grao, é deixar ó mesmo tempo portelos abertos para que ó coman os porcos''
 |translation=it is the same as '''driving away''' the birds from a terrain so that they don't eat the grain, and then leaving the gates open for the pigs to do it}}
-# {{lb|gl|intransitive}} to [[repugn]]
-#: {{uxi|gl|Ese caldo '''torna'''! Está podre!|That broths '''repugns'''! It's spoiled!}}
+# {{lb|gl|intransitive}} to be [[repugnant]], to be [[disgusting]]
+#: {{uxi|gl|Ese caldo '''torna'''! Está podre!|That broth '''is disgusting'''! It's spoiled!}}
 # {{lb|gl|intransitive}} to [[return]]
 #: {{syn|gl|volver}}
 # {{lb|gl|intransitive}} to [[change]]; to [[transform]]; to [[become]]
@@ -28109,7 +28114,7 @@ From {{inh|pt|roa-opt|tornar}}, from {{inh|pt|la|tornō|tornāre}}.
 #* {{RQ:Galdós Gloria|passage=Como además vieron al doctor Sedeño abstraído en la lectura de los periódicos políticos, '''tornaron''' al jardín.}}
 # {{lb|es|transitive}} to [[put back]]
 # {{lb|es|transitive}} to [[change]]
-# {{lb|es|intransitive}} to [[do]] [[again]] {{gl|+ '''''a''''' + ''infinitive''}}
+# {{lb|es|catenative}} to (do) [[again]] {{+obj|es|:a(inf)<do something>}}
 # {{lb|es|intransitive}} to [[revive]] {{gl|to recover from a state of unconsciousness}}
 # {{lb|es|reflexive}} to [[become]] {{gl|e.g. change in a characteristic, nature of something or status}}
 
@@ -28575,10 +28580,14 @@ Page 188 réfléchir: -------- begin text --------
 ===Verb===
 {{fr-verb}}
 
-# {{indtr|fr|à|sur|que|intr=1}} to [[ponder]], to [[reflect]]
+# {{lb|fr|transitive}} to [[reflect]]
+# {{lb|fr|transitive|figurative}} to [[reflect]], to [[manifest]], to [[show]]
+# {{lb|fr|intransitive}} to [[ponder]], to [[reflect]] {{+obj|fr|:à/:sur<on/about something>}}
 #: {{ux|fr|Tu dois '''réfléchir''' à ta conduite.|You must '''reflect''' on your behaviour.}}
 #: {{ux|fr|Elle '''réfléchit''' sur son avenir.|She '''ponders''' about her future.}}
-# {{lb|fr|reflexive}} to be reflected
+# {{lb|fr|transitive}} to [[realize]] {{+obj|fr|:que(ind-cl)<that something is the case>}}
+# {{lb|fr|transitive}} to [[judge]], to [[deem]] {{+obj|fr|:que(ind-cl)<that something is the case>}}
+# {{lb|fr|reflexive}} to be [[reflected]] {{+obj|fr|:dans<in something>/:sur<on something>}}
 #: {{ux|fr|Nos visages '''se réfléchissent''' dans l'étang.|Our faces '''are reflected''' in the pond.}}
 
 ====Conjugation====
@@ -28995,15 +29004,15 @@ From {{der|pt|roa-opt|trocar}}, from {{der|pt|fr|troquer}}, from {{der|pt|frk|*t
 ===Verb===
 {{pt-verb}}
 
-# {{indtr|pt|por|ditr=1|.transitive|.or}} to [[substitute]]; to [[replace]] {{gl|to remove something and put a new one in its place}}
+# {{lb|pt|transitive}} to [[replace]], to [[substitute]] {{gl|to remove something and put a new one in its place}} {{+obj|pt|dirobj<someone/something> + :por<with someone/something else>}}
 #: {{syn|pt|substituir}}
 #: {{ux|pt|Quero '''trocar''' meu carro por um novo.|I want to '''replace''' my car with a new one.}}
 #: {{ux|pt|Precisamos '''trocar''' as lâmpadas queimadas.|We have to '''replace''' the burnt-out lightbulbs.}}
-# {{lb|pt|intransitive}} to [[change]] {{gl|to dispose of something one owns or is using and get a new one}} {{+obj|pt|:de}}
+# {{lb|pt|intransitive}} to [[change]] {{gl|to dispose of something one owns or is using and get a new one}} {{+obj|pt|:de<something no longer wanted or needed>}}
 #: {{syn|pt|[[mudar]] [[de]]}}
 #: {{ux|pt|'''Troque''' de roupa.|'''Change''' your clothes.}}
 #: {{ux|pt|Quero '''trocar''' de carro.|I want to '''change''' cars.}}
-# {{lb|pt|transitive}} to [[trade]] with; to [[exchange]] (something) {{+obj|pt|:com<with someone> + :por<for something else>}}}}
+# {{lb|pt|transitive}} to [[trade]]; to [[exchange]] {{+obj|pt|dirobj<something> + :com<with someone> + :por<for something else>}}}}
 #: {{syn|pt|cambiar}}
 #: {{ux|pt|Eu e o meu primo '''trocamos''' livros.|My cousin and I '''traded''' books.}}
 #: {{ux|pt|O explorador '''trocou''' presentes com os nativos.|The explorer '''exchanged''' gifts with the natives.}}
@@ -29011,7 +29020,7 @@ From {{der|pt|roa-opt|trocar}}, from {{der|pt|fr|troquer}}, from {{der|pt|frk|*t
 # {{lb|pt|transitive}} to [[swap]] {{gl|to switch the position of two things}}
 #: {{syn|pt|intercambiar}}
 #: {{ux|pt|'''Trocamos''' os dois cabos e o motor funcionou.|'''We swapped''' the two cables and the motor started working.}}
-# {{indtr|pt|com|ditr=1}} to [[exchange]] {{gl|to give and receive continuously}}
+# {{lb|pt|transitive}} to [[exchange]] {{gl|to give and receive simultaneously}} {{+obj|pt|dirobj<something> + :com<with someone>}}
 #: {{ux|pt|Todo dia eu '''trocava''' umas ideias com o vizinho.|Every day I chatted with the neighbour.|lit=Every day I '''exchanged''' some ideas ...}}
 #: {{ux|pt|Os boxeadores estão '''trocando''' socos na cabeça.|The boxers are '''exchanging''' blows to their heads.}}
 # {{lb|pt|reflexive}} to [[change]] {{gl|to replace the clothing one is wearing}}
@@ -29151,21 +29160,21 @@ From {{inh|pt|roa-opt|entregar}}, probably a semi-learned term taken from {{der|
 ===Verb===
 {{pt-verb|<short_pp:entregue>}}
 
-# {{senseid|pt|to deliver}} {{lb|pt|transitive}} to [[deliver]] {{gl|to transport something to a destination}}
+# {{senseid|pt|to deliver}} {{lb|pt|transitive}} to [[deliver]] {{gl|to transport something to a destination}} {{+obj|pt|dirobj<something> + :a<to someone>}}
 #: {{ux|pt|O carteiro '''entregou'''-me uma carta de minha mãe.|The mailman '''delivered''' a letter from my mother to me.}}
-# {{senseid|pt|to hand over}} {{lb|pt|transitive}} to [[deliver]]; to [[hand over]]; to [[surrender]] {{gl|to relinquish control or possession of}}
+# {{senseid|pt|to hand over}} {{lb|pt|transitive}} to [[deliver]]; to [[hand over]]; to [[surrender]] {{gl|to relinquish control or possession of}} {{+obj|pt|dirobj<something> + :a<to someone>}}
 #: {{syn|pt|dar}}
 #: {{ux|pt|O general teve que '''entregar''' a cidade após meses de cerco.|The general had to '''hand''' the city '''over''' after months of siege.}}
-# {{senseid|pt|to reveal}} {{lb|pt|informal|transitive}} to [[reveal]] {{gl|to show non-obvious information}}
+# {{senseid|pt|to reveal}} {{lb|pt|informal|transitive}} to [[reveal]] {{gl|to show non-obvious information}} {{+obj|pt|dirobj<something> + :a<to someone>}}
 #: {{ux|pt|A vermelhidão do rosto '''entregava''' seu constrangimento.|The redness on her face '''revealed''' her embarrassment.}}
-# {{senseid|pt|to snitch}} {{lb|pt|slang|transitive}} to [[snitch]]; to [[grass]]; to [[inform]] on; to [[betray]] to {{gl|to report a criminal to the authorities}}
+# {{senseid|pt|to snitch}} {{lb|pt|slang|transitive}} to [[snitch]] (to); to [[grass]]; to [[inform]] on; to [[betray]] to {{gl|to report a criminal to the authorities}} {{+obj|pt|dirobj<someone> + :a<to someone, particularly in a position of power>}}
 #: {{syn|pt|delatar|dedurar}}
 #: {{ux|pt|Judas '''entregou''' Jesus aos romanos.|Judas '''betrayed''' Jesus to the Romans.}}
-# {{senseid|pt|to surrender oneself}} {{indtr|pt|a|.pronominal|intr=1}} to [[surrender]] (to) {{gl|to give oneself up to the authorities}}
+# {{senseid|pt|to surrender oneself}} {{lb|pt|pronominal}} to [[surrender]] {{gl|to give oneself up to the authorities}} {{+obj|pt|:a<to someone, particularly in a position of power>}}
 #: {{ux|pt|Um psicopata veio à delegacia para se '''entregar'''.|A psychopath came to the police station to '''surrender'''.}}
-# {{senseid|pt|to reveal negative information about oneself}} {{lb|pt|pronominal}} to reveal negative information about oneself, especially accidentally
+# {{senseid|pt|to reveal negative information about oneself}} {{lb|pt|pronominal}} to [[incriminate]] onself {{gl|to reveal negative information about oneself, especially accidentally}}
 #: {{ux|pt|O suspeito negava as acusações, mas os interrogadores fizeram-no se '''entregar'''.|The suspect denied the accusations, but the interrogators made him '''incriminate himself'''.}}
-# {{lb|pt|reflexive}} to [[surrender]]; to [[submit]] {{gl|to give oneself up into the power of another}}
+# {{lb|pt|reflexive}} to [[surrender]]; to [[submit]] {{gl|to give oneself up into the power of another}} {{+obj|pt|:a<to someone>}}
 #: {{syn|pt|render-se|capitular|ceder}}
 # {{lb|pt|reflexive}} to [[give away]] {{gl|to unintentionally reveal a secret}}
 #: {{syn|pt|denunciar}}
@@ -29189,7 +29198,7 @@ From {{inh|pt|roa-opt|entregar}}, probably a semi-learned term taken from {{der|
 ==Spanish==
 
 ===Etymology===
-From {{der|es|la|integrāre}} with {{glossary|metathesis}}, present active infinitive of {{m|la|integrō}}, with a semi-learned influence (cf. medieval Spanish {{m|osp|entrego}}). Compare the doublets {{doublet|es|integrar|t1=to make up, compose|enterar|t2=to inform, ascertain|notext=1}}. Cognate with {{cog|en|integrate}}.
+{{slbor|es|la|integro|integrāre}} with {{glossary|metathesis}} (cf. medieval Spanish {{m|osp|entrego}}). Compare the doublets {{doublet|es|integrar|t1=to make up, compose|enterar|t2=to inform, ascertain|notext=1}}. Cognate with {{cog|en|integrate}}.
 
 ===Pronunciation===
 {{es-pr}}
@@ -29251,7 +29260,7 @@ From {{inh|pt|roa-opt|põer||to put}}, from {{inh|pt|la|pōnō|pōnere}}, from {
 #: {{ux|pt|Não me lembro onde '''pus''' as chaves.|I don’t remember where '''I put''' the keys.}}
 # {{senseid|pt|to position oneself}} {{lb|pt|pronominal|copulative}} to [[get]] {{gl|to position oneself into a given state}}
 #: {{ux|pt|'''Põe'''-te de pé antes que o general te veja.|'''Get''' up before the general sees you.}}
-# {{senseid|pt|to go to}} {{indtr|pt|.pronominal|em|a|-another positional preposition}} to [[go]] to a given location
+# {{senseid|pt|to go to}} {{lb|pt|pronominal}} to [[go]] {{+obj|pt|:em/:a/another positional preposition<to a given location>}}
 #: {{ux|pt|Ela '''pôs'''-se ao lado da lareira.|She '''went''' [and stood] next to the fireplace.}}
 # {{senseid|pt|to lay an egg}} {{lb|pt|transitive|intransitive}} to [[lay]] {{gl|to produce and deposit an egg}}
 #: {{ux|pt|Comprei uma galinha mas ela não '''põe''' mais.|I bought a chicken but it doesn’t '''lay eggs''' anymore.}}
@@ -29259,7 +29268,7 @@ From {{inh|pt|roa-opt|põer||to put}}, from {{inh|pt|la|pōnō|pōnere}}, from {
 #: {{ux|pt|O sol está a '''pôr'''-se/se '''pondo'''.|The sun is '''setting'''.}}
 # {{senseid|pt|to wear}} {{lb|pt|transitive}} to [[put on]]; to [[wear]] {{gl|to start to use an item of clothing}}
 #: {{ux|pt|'''Pusemos''' blusas para não passarmos/passármos frio.|'''We put on''' blouses so we wouldn’t be cold.}}
-# {{senseid|pt|to cause to be}} {{lb|pt|ditransitive|copulative|_|for the second object}} to [[make]]; to [[get]] {{gl|to cause to be in a given state}}
+# {{senseid|pt|to cause to be}} {{lb|pt|ditransitive}} to [[make]]; to [[get]] {{gl|to cause to be in a given state}} {{+obj|pt|dirobj<someone> + copulative&object/adjective<in some state>}}
 #: {{ux|pt|Os insultos a '''puseram'''/-na nervosa.|The insults '''made''' her nervous.}}
 
 ====Usage notes====
@@ -29530,10 +29539,10 @@ Page 200 abreuver: -------- begin text --------
 ===Verb===
 {{fr-verb}}
 
-# {{lb|fr|literary}} to [[water]] (cattle, fields etc.), give [[water]] to (a person)
+# {{lb|fr|transitive|literary}} to [[water]] (cattle, fields etc.), give [[water]] to (a person)
 #: {{syn|fr|arroser}}
-# {{lb|fr|literary|pronominal}} to [[drink]]
-# {{indtr|fr|de|.figuratively|ditr=1}} to [[shower]] (someone) in
+# {{lb|fr|pronominal|literary}} to [[drink]]
+# {{lb|fr|transitive|figuratively}} to [[shower]] (someone) {{+obj|fr|dirobj<someone> + :de<in/with something>}}
 #: {{uxi|fr|Elle l'a '''abreuvé''' d'injures.|She insulted him copiously. / She showered him with insults.}}
 
 ====Conjugation====
@@ -29560,17 +29569,17 @@ From {{inh|it|la|probō|probāre}}.
 ===Verb===
 {{it-verb|a/ò}}
 
-# {{lb|it|transitive}} to [[try]], [[try out]], [[test]]
+# {{lb|it|transitive}} to [[try]], to [[try out]], to [[test]]
 #: {{syn|it|testare}}
-# {{indtr|it|a|qual1=+ infinitive}} to try, [[attempt]], [[take on]]
+# {{lb|it|catenative}} to [[try]], to [[attempt]] {{+obj|it|:a(inf)<to do something>}}
 #: {{syn|it|tentare}}
 #: {{uxi|it|'''provare''' a dormire|to '''try''' to sleep}}
-# {{lb|it|transitive}} to [[feel]], [[experience]]
+# {{lb|it|transitive}} to [[feel]], to [[experience]]
 #: {{syn|it|sentire}}
 #: {{uxi|it|'''provare''' dolore|t=to feel pain}}
-# {{lb|it|transitive}} to [[prove]], [[demonstrate]], [[show]]
+# {{lb|it|transitive}} to [[prove]], to [[demonstrate]], to [[show]]
 #: {{syn|it|dimostrare}}
-# {{lb|it|transitive}} to [[try on]] {{q|of clothes}}
+# {{lb|it|transitive}} to [[try on]] (clothing)
 #: {{syn|it|misurare}}
 # {{lb|it|transitive|theater}} to [[rehearse]]
 
@@ -29687,7 +29696,7 @@ Of {{onomatopoeic|pt|title=imitative}} origin
 ===Verb===
 {{pt-verb}}
 
-# {{indtr|pt|.colloquial|de|direct=1}} to [[mock]] {{gl|to make an object of laughter or ridicule}}
+# {{lb|pt|colloquial|transitive|or|intransitive}} to [[mock]], to [[make fun of]] {{gl|to make an object of laughter or ridicule}} {{+obj|pt|dirobj/:de<q:less commonly><someone>}}
 #: {{syn|pt|tirar sarro|caçoar|escarnecer|zombar}}
 # {{lb|pt|intransitive|colloquial}} to [[kid]]; to [[joke]] {{gl|to say or do something without being serious}}
 #: {{syn|pt|brincar}}
@@ -29796,36 +29805,37 @@ From {{prefix|it|ri|uscire}}. Compare {{cog|fr|réussir}}, borrowed via {{m|it|r
 ===Verb===
 {{it-verb|e/@}} {{tlb|it|intransitive}}
 
-# {{indtr|it|a|di|in|intr=1}} to [[manage]]; (''object turned into subject in Italian'') to [[be able]] to [[accomplish]]
-#: {{syn|it|[[essere]] [[capace]]|[[essere]] [[in grado di]]|[[essere]] [[a|all]]’[[altezza]]|[[potere]]}}
+# to [[manage]]; to [[be able]] {{+obj|it|:a/:di(inf)<to do something>}}
+#: {{syn|it|[[essere]] [[capace]]|[[essere]] [[in grado di]]|[[essere]] [[all']][[altezza]]|[[potere]]}}
 #: {{ant|it|fallire}}
 #: {{uxi|it|Non '''riesco''' di contattarlo.|I am not '''able''' to reach him.}}
 #: {{ux|it|Ho buttato tutti i soldi per vincere, ma non sono '''riuscito'''.|I threw (away) all my money to win, but I '''was''' not '''able to'''.}}
+# to [[be able]] to [[be]] [[accomplish]]ed {{+obj|it|:a<by someone> + :a/:di(inf)<to do something>}}} {{q|idiomatically translated as {{m+|en|be able}} with subject and object reversed}}
 #: {{ux|it|Mi sono sempre '''riuscite''' imprese grandi.|I have always '''been able to''' accomplish big things.}}
-# to [[end up]] or [[turn out]]
-#: {{ux|it|La prova è '''riuscita''' bene.|The test '''turned out''' good.}}
+# to [[end up]] or [[turn out]] {{+obj|it|:bene<well>/:male<badly>/etc.}}
+#: {{ux|it|La prova è '''riuscita''' bene.|The test '''turned out''' well.}}
 # to [[reach]] (a position, qualification, etc.); to [[become]]
 #: {{ux|it|È '''riuscito''' un buon dottore.|He '''became''' a good doctor.}}
-# to [[achieve]] a certain [[position]] in [[standings]]
+# to [[achieve]] (a certain [[position]] in [[standings]])
 #: {{uxi|it|È '''riuscito''' primo in graduatoria.|He '''was''' first in the rankings.}}
-# to [[succeed]]; to do well
+# to [[succeed]]; to do well {{+obj|it|:in<in something>}}
 #: {{syn|it|[[avere]] [[successo]]|ottenere|conseguire|farcela|spuntarla|vincere|arrivare}}
 #: {{uxi|it|'''riuscire''' nel lavoro|to '''do well''' at work}}
 #: {{ux|it|Il segreto per '''riuscire''' è impegnarsi.|The secret to '''succeeding''' is working hard.}}
-# {{lb|it|with {{m|it|a}} + [[predicative]] [[adjective]]}} to [[appear]]
+# {{lb|it|copulative}} to [[appear]] {{+obj|it|:a(pred&adjective)<in some state>}}
 #: {{syn|it|dimostrarsi|sembrare|apparire|rivelarsi}}
 #: {{uxi|it|Mi '''riesce''' difficile.|It '''looks''' hard.}}
-# to [[exit]] or [[go out]] again
+# to [[exit]] or [[go out]] [[again]]
 #: {{syn|it|[[uscire]] [[di nuovo]]|andarsene}}
 #: {{ant|it|rientrare|rincasare}}
-# {{lb|it|with {{m|it|da}}}} to [[exit]] from a different place than the entrance
-#: {{ux|it|Il proiettile, trafitto il petto, '''riuscì''' il polmone.|The bullet, having pierced his chest, '''exited''' from the lung.}}
-# {{lb|it|typically with {{m|it|su}}}} {{q|of a pathway, road, etc.}} to [[continue]] after a [[break]] or [[obstacle]]
+# to [[exit]] {{+obj|it|:da<from a different place than the entrance>}}
+#: {{ux|it|Il proiettile, trafitto il petto, '''riuscì''' dal polmone.|The bullet, having pierced his chest, '''exited''' from the lung.}}
+# to [[continue]] after a [[break]] or [[obstacle]] {{q|of a pathway, road, etc.}} {{+obj|it|:su<on/in some location>}}
 #: {{syn|it|sboccare|giungere|[[andare]] [[a]] [[finire]]|pervenire}}
 #: {{ux|it|Il percorso '''riesce''' sul prato.|The path '''continues''' on the lawn.}}
 
 ====Usage notes====
-* {{sense|be able to}} Typically phrased using the {{glossary|active voice}}, but (as illustrated in the third example) the {{glossary|passive voice}} can also be used with a {{glossary|direct object}} (with {{m|it|a}} or [{{m|it|di}} + [[infinitive|inf.]]]).
+* {{sense|be able to}} Typically phrased using the {{glossary|active voice}}, but (as illustrated in the third example) the {{glossary|passive voice}}, with the agent followed by {{m|it|a}} or represented using an indirect object pronoun.
 * {{sense|turn out}} When not followed by a [[complement]], implies that the given item, action, etc. turned out well.
 
 ====Conjugation====
@@ -30163,15 +30173,15 @@ From {{der|gl|la|dēdicō}}.
 ===Verb===
 {{pt-verb}}
 
-# {{indtr|pt|a|ditr=1}} to [[dedicate]] {{gl|to set apart for a deity or for religious purposes}}
+# {{lb|pt|transitive}} to [[dedicate]] {{gl|to set apart for a deity or for religious purposes}} {{+obj|pt|dirobj<something> + :a<to someone, e.g. a deity>}}
 #: {{syn|pt|consagrar}}
 #: {{uxi|pt|Este templo foi '''decicado''' a Júpiter.|This temple was '''dedicated''' to Jupiter.}}
-# {{indtr|pt|a|ditr=1}} to [[dedicate]]; to [[earmark]] {{gl|to set apart for a special use}}
-#: {{uxi|pt|O governo pretende '''decicar''' alguns milhões de reais à construção da ponte.|The government intends to '''earmark''' a few million reais for the bridge’s construction.}}
-# {{indtr|pt|a|-without a second object|.pronominal}} to [[dedicate]] {{gl|to commit (oneself) to a particular course of thought or action}}
-#: {{uxi|pt|Eu me '''dediquei''' muito para conseguir este emprego.|I really '''dedicated''' myself to getting this job.}}
+# {{lb|pt|transitive}} to [[dedicate]]; to [[earmark]] {{gl|to set apart for a special use}} {{+obj|pt|dirobj<something> + :a<for some purpose>}}
+#: {{uxi|pt|O governo pretende '''dedicar''' alguns milhões de reais à construção da ponte.|The government intends to '''earmark''' a few million reais for the bridge’s construction.}}
+# {{lb|pt|reflexive}} to [[dedicate]] oneself {{gl|to commit (oneself) to a particular course of thought or action}} {{+obj|pt|:a<to a task, cause, etc.>}}
+#: {{uxi|pt|Eu me '''dediquei''' muito para conseguir este emprego.|I really '''dedicated''' myself (in order) to get this job.}}
 #: {{uxi|pt|Ela se '''dedicou''' aos estudos.|She '''dedicated''' herself to her studies.}}
-# {{indtr|pt|a|para|qual2=uncommon|ditr=1}} to [[dedicate]] {{gl|to address or inscribe (a literary work, for example) to another as a mark of respect or affection}}
+# {{lb|pt|transitive}} to [[dedicate]] {{gl|to address or inscribe (a literary work, for example) to another as a mark of respect or affection}} {{+obj|pt|dirobj<a literary work> + :a/:para<q:uncommon><to someone>}}
 #: {{uxi|pt|'''Dedico''' esta dissertação aos meus pais e professores.|'''I dedicate''' this thesis to my parents and my professors.}}
 
 ====Conjugation====
@@ -30294,10 +30304,10 @@ From {{m|ro|la mulți ani}}.
 ===Verb===
 {{ro-verb|mulțumește|mulțumit|conj=4}}
 
-# {{lb|ro|transitive}} to [[satisfy]], make [[content]], [[gratify]]
-# {{lb|ro|intransitive|with dative}} to [[thank]]
+# {{lb|ro|transitive}} to [[satisfy]], to make [[content]], to [[gratify]]
+# {{lb|ro|intransitive}} to [[thank]] {{+obj|ro|dat}}
 #: {{uxi|ro|'''mulțumesc''' mult!|'''Thanks''' a lot!}}
-# {{indtr|ro|cu|refl=y}} to be content with
+# {{lb|ro|reflexive}} to be content {{+obj|ro|:cu<with someone/something>}}
 
 ====Conjugation====
 {{ro-conj-i-esc|mulțum}}
@@ -30594,7 +30604,7 @@ Page 221 lipsi: -------- begin text --------
 
 # {{lb|ro|transitive}} to [[deprive]] (someone of)
 # {{lb|ro|intransitive}} to be [[absent]], to be [[missing]], to [[lack]]
-# {{indtr|ro|de|intr=1|refl=1}} to [[give up|give (something) up]], to go [[without]]
+# {{lb|ro|reflexive}} to [[give up|give (something) up]], to go [[without]] {{+obj|ro|:de<something>}}
 #: {{ux|ro|Doar '''mă lipsesc''' de el.|I'll just '''go without''' it.}}
 
 ====Conjugation====
@@ -30828,9 +30838,9 @@ From {{suffix|pt|choque|ar}}.
 
 # {{lb|es|ambitransitive}} to [[crash]]
 #: {{syn|es|estrellar}}
-# {{lb|es|intransitive}} to [[bump]] into, to [[collide]] with {{gl|+ {{l|es|con}}}}
+# {{lb|es|intransitive}} to [[bump]] (into), to [[collide]] (with) {{+obj|es|:con<something>}}
 # {{lb|es|intransitive}} to [[shock]], [[scandalize]]
-# {{lb|es|intransitive}} to [[crash]] into, to [[hit]], to [[slam]] into, to [[collide]] with {{gl|+ {{l|es|contra}}}}
+# {{lb|es|intransitive}} to [[crash]] into, to [[hit]], to [[slam]] into, to [[collide]] with {{+obj|es|:con<something>}}
 # {{lb|es|intransitive}} to [[annoy]], to [[bother]], to [[upset]]
 
 ====Usage notes====
@@ -30887,9 +30897,9 @@ Page 225 taxer: -------- begin text --------
 {{fr-verb}}
 
 # to [[tax]], to impose a tax on
-# {{indtr|fr|de|ditr=1}} to [[accuse]] someone of something
+# {{lb|fr|transitive}} to [[accuse]] {{+obj|fr|dirobj<someone> + :de<of something>}}
 #: {{uxi|fr|'''taxer''' quelqu'un de malhonnêteté|to accuse someone of dishonesty}}
-# {{indtr|fr|de|ditr=1|.proscribed}} to [[call]] someone something
+# {{lb|fr|transitive|pejorative|proscribed}} to [[call]], to [[label]] {{+obj|fr|dirobj<someone> + :de(object/adjective)<as something>}}
 #: {{syn|fr|traiter|qualifier}}
 #: {{uxi|fr|On m'a '''taxé''' de menteur.|I was called a liar.}}
 
@@ -30989,7 +30999,7 @@ Page 226 certificar: -------- begin text --------
 # {{senseid|pt|to check whether something is true}} {{lb|pt|pronominal}} to [[make sure]] {{gl|to check whether something is true or proper}} {{+obj|pt|:de<of something>/:[[de]] [[que]](ind-cl)<that ...>}}
 #: {{syn|pt|garantir}}
 #: {{ux|pt|'''Certifiquem'''-se de que a válvula está fechada.| '''Make sure''' the valve is closed.}}
-# {{senseid|pt|to remember to}} {{indtr|pt|de|aux=impersonal infinitive|.pronominal}} to [[make sure]] {{gl|to remember to}}
+# {{senseid|pt|to remember to}} {{lb|pt|pronominal}} to [[make sure]] {{gl|to remember to}} {{+obj|pt|:de(inf)<to do something>}}
 #: {{ux|pt|Espero que alguém se '''certifique''' de trazer a comida.|I hope someone '''makes sure''' they bring the food.}}
 
 ====Conjugation====
@@ -31121,19 +31131,17 @@ Page 231 urtare: -------- begin text --------
 
 # {{lb|it|transitive}} to [[hit]] or [[strike]]
 #: {{syn|it|colpire|sbattere|Thesaurus:battere}}
-# {{lb|it|ambitransitive}} to [[bump]] (into) or [[knock]] (against)
+# {{lb|it|transitive|or|intransitive}} to [[bump]] (into) or [[knock]] (against) {{+obj|it|dirobj<something><qq:optional> + :contro/:con/:in<against/into something>}}
 #: {{uxi|it|'''urtare''' la testa|to '''bump''' one's head}}
 #: {{ux|it|mi sono '''urtato''' la testa contro uno spigolo|I '''bumped''' my head against a corner}}
+#: {{ux|it|Non '''urti''' contro di me!|Don't '''bump''' into me!}}
 # {{lb|it|transitive}} to [[annoy]] or [[irritate]]
 #: {{syn|it|irritare|indispettire|Thesaurus:infastidire}}
-# {{lb|it|transitive}} (with {{m|it|in}}) to [[encounter]] (a difficulty)
-# {{indtr|it|in|con|contro|direct=1}} to [[stand]] (against); to [[contrast]]
+# {{lb|it|intransitive}} to [[encounter]] {{+obj|it|:in<a difficulty>}}
+# {{lb|it|intransitive|or|transitive}} to [[stand]] (against); to [[contrast]] (with) {{+obj|it|:contro/:con/:in/transitive<something>}}
 #: {{syn|it|contrastare|ostacolare|contestare}}
 #: {{ux|it|la sua onestà '''urta''' contro la corrente politica di opportunismo|his honesty '''stands''' against the political current of opportunism}}
 # {{lb|it|transitive|archaic}} to cause to bump or knock against
-
-====Usage notes====
-* When used intransitively in the sense "to bump into", must be followed by {{m|it|contro}}, {{m|it|in}}, or {{m|it|con}}.
 
 ====Conjugation====
 {{it-conj|a/ù}}
@@ -31198,7 +31206,7 @@ From {{af|pt|aventura|-ar}}.
 #: {{uxi|pt|O vendedor '''aventurou''' um preço alto demais.|The salesman '''ventured''' an excessively high price.}}
 # {{lb|pt|pronominal}} to go on an [[adventure]]
 #: {{uxi|pt|Chega de televisão, vou me '''aventurar''' no mato!|Enough television, I’m '''going on an adventure''' in the woods!}}
-# {{indtr|pt|a|aux=impersonal infinitive|.pronominal}} to [[risk]] {{gl|to make the risky attempt of}}
+# {{lb|pt|pronominal}} to [[risk]] {{gl|to make the risky attempt of}} {{+obj|pt|:a(inf)<doing something>}}
 #: {{uxi|pt|O fugitivo '''aventurou'''-se a pular do precipício.|The fugitive '''risked''' jumping from the precipice.}}
 
 ====Conjugation====
@@ -31589,11 +31597,11 @@ Page 239 insediarsi: -------- begin text --------
 {{it-verb|è}}
 
 # {{reflexive of|it|insediare}}
-# {{indtr|it|in|a|su}} to [[take up]] or [[assume]] {{q|a [[position]], [[job]], [[office]], etc.}}
+# {{lb|it|intransitive}} to [[take up]] or [[assume]] {{+obj|it|:in/:a/:su<q:sometimes><a position, job, office, etc.>}}
 #: {{syn|it|occupare}}
 #: {{ant|it|dimettersi|licenziarsi}}
 #: {{ux|it|'''insediare''' in una cattedra|to '''take up''' the teacher's chair}}
-# {{indtr|it|in|a|su|intr=1}} to [[settle]] {{q|new land}}
+# {{lb|it|intransitive}} to [[settle]] {{+obj|it|:in/:a<in a new location>|:su<on (a hill, a planet, terrain, etc.)>}}
 #: {{syn|it|stabilirsi|stanziarsi|installarsi|fermarsi}}
 #: {{ant|it|partire|trasferirsi|andarsene|emigrare}}
 #: {{ux|it|Virginia fu lo Stato dove '''si insediarono''' i primi coloni inglesi|Virginia was the state in which the first English colonists '''settled'''}}
@@ -31675,8 +31683,9 @@ From {{inh|it|la|suspīrō|suspīrāre}}.
 # {{lb|it|intransitive}} to [[sigh]]
 #: {{syn|it|gemere}}
 # {{lb|it|intransitive}} to [[pine]] {{+obj|it|:per<for>}}
-# {{indtr|it|a|direct=yes}} to [[yearn]] for, to [[long]] for
+# {{lb|it|intransitive|or|transitive}} to [[yearn]], to [[long]] {{+obj|it|:a/dirobj<for something>}}
 #: {{syn|it|[[anelare]] ([[a]])|desiderare|[[tendere]] ([[a]])}}
+#: {{uxi|it|'''sospirare''' la pace|to '''yearn for''' peace}}
 # {{lb|it|intransitive|literary}} to [[breeze]], to [[blow]] [[gently]]
 #: {{syn|it|soffiare|spirare}}
 # {{lb|it|transitive|by extension}} to [[anxiously]] [[await]]
@@ -32095,9 +32104,12 @@ Borrowed from {{bor|en|hi|चमार|}}
 # {{lb|pt|transitive}} to [[call]]; to [[summon]] {{gl|to ask someone to come}}
 #: {{syn|pt|clamar|invocar|convocar}}
 #: {{ux|pt|Há uma partida amanhã, '''chamem''' os seus/vossos amigos.|There is a match tomorrow, '''call''' your friends.}}
-# {{indtr|pt|a|ditr=1}} to [[call]] {{gl|to use as the name of}}
+# {{lb|pt|transitive}} to [[call]], to [[name]] {{gl|to use as the name of}} {{+obj|pt|:a<someone/something> + dirobj/:de<(as) something>|dirobj<someone/something> + :de(object/adjective)<(as) something>}}
 #: {{ux|pt|Os botânicos '''chamam''' àquele tipo de árvore (de) gimnosperma.|Botanists '''call''' that type of tree a gymnosperm.}}
-# {{indtr|pt|ditr=1|cop=1}} to [[call]] {{gl|to verbally ascribe someone a quality}}
+#: {{quote|pt|Deus chamou à luz dia, e às trevas chamou noite.|God '''called''' the light day, and the darkness He '''called''' night.}}
+#: {{uxi|pt|chamar alguém de verdadeiro amigo|to '''call''' someone a true friend}}
+# {{lb|pt|transitive|pejorative}} to [[call]], to [[label]] {{+obj|pt|:a<someone/something> + dirobj/:de<(as) something negative>|dirobj<someone/something> + :de(object/adjective)<(as) something negative>}}
+#: {{ux|pt|Eles o chamaram de idiota, de mentiroso.|They '''called''' him an idiot, a liar.}}
 #: {{ux|pt| '''Chamaram'''-me feio na escola.|'''They called''' me ugly at school.}}
 # {{lb|pt|pronominal|transitive}} to [[be called]] {{gl|to have a specific name}}
 #: {{syn|pt|nomear|denominar|designar}}
@@ -32133,7 +32145,7 @@ Page 249 acrescentar: -------- begin text --------
 
 # {{lb|pt|transitive}} to [[increase]]
 #: {{syn|pt|aumentar}}
-# {{indtr|pt|a|em|qual2=informal|ditr=1}} to [[add]] to
+# {{lb|pt|transitive}} to [[add]] {{+obj|pt|dirobj<something> + :a/:em<q:informal><to something>}}
 #: {{syn|pt|adicionar}}
 #: {{uxi|pt|Eu '''acrescentei''' o teu nome à lista.|I '''added''' your name to the list.}}
 # {{lb|pt|transitive}} to [[add]] {{q|to a conversation}}
@@ -32355,7 +32367,7 @@ Page 252 défaire: -------- begin text --------
 # {{lb|fr|transitive}} to [[break]], [[break up]], [[unmake]]
 # {{lb|fr|transitive|literary}} to [[defeat]], [[conquer]]
 # {{lb|fr|reflexive}} to [[come undone]], [[fall apart]], [[disintegrate]]
-# {{indtr|fr|.pronominal|de}} to [[part with]]
+# {{lb|fr|pronominal}} to [[part with]] {{+obj|fr|:de<something>}}
 #: {{uxi|fr|se '''défaire''' d'une propriété|t=to part with ones property}}
 
 ====Conjugation====
@@ -32419,9 +32431,9 @@ Page 254 impicciarsi: -------- begin text --------
 {{it-verb|ì-}}
 
 # {{reflexive of|it|impicciare}}
-# {{indtr|it|di|in|qual2=rare}} to [[meddle]] (with)
+# {{lb|it|intransitive}} to [[meddle]] {{+obj|it|:di/:in<q:rare><in something>}}
 #: {{syn|it|impacciarsi|intromettersi|Thesaurus:impicciarsi}}
-#: {{uxi|it|'''impicciarsi''' degli affari altrui|to '''meddle''' with other people's matters}}
+#: {{uxi|it|'''impicciarsi''' degli affari altrui|to '''meddle''' in other people's matters}}
 
 ====Conjugation====
 {{it-conj|ì-}}
@@ -33422,7 +33434,7 @@ Cognate with {{cog|fr|soigner}}.
 ===Verb===
 {{pt-verb}}
 
-# {{indtr|pt|com|intr=1|qual1=about}} to [[dream]] {{gl|see imaginary events while sleeping}}
+# {{lb|pt|intransitive}} to [[dream]] {{gl|see imaginary events while sleeping}} {{+obj|pt|:com<about someone/something>}}
 #: {{uxi|pt|'''Sonhei''' com ele.|I '''had a dream''' about him.}}
 #: {{uxi|pt|Será que os Androides '''Sonham''' com Ovelhas Elétricas?|Do Androids '''Dream''' of Electric Sheep?}}
 # to [[dream]] {{gl|wish}}
@@ -34745,9 +34757,9 @@ Page 295 varrer: -------- begin text --------
 # {{lb|pt|ambitransitive}} to [[sweep]] {{gl|to clean [a place] using a broom}}
 #: {{syn|pt|varrenhar|q1=Douro|varriscar|q2=Douro|vasculhar|vassourar}}
 #: {{uxi|pt|A empregada '''varrera''' a sala antes da visita chegar.|The maid '''had swept''' the living room before the guests arrived.}}
-# {{indtr|pt|para|.transitive|.or|ditr=1}} to [[sweep]] {{gl|to move something using a broom}}
+# {{lb|pt|transitive}} to [[sweep]] {{gl|to move something using a broom}} {{+obj|pt|dirobj<something> + :para<somewhere>}}
 #: {{uxi|pt|Queríamos '''varrer''' a poeira para debaixo do tapete.|We wanted to '''sweep''' the dust under the rug.}}
-# {{indtr|pt|de|.figurative|.transitive|.or|ditr=1}} to [[devastate]] or [[expel]] something completely and quickly
+# {{lb|pt|transitive|figurative}} to [[sweep]], to [[expel]] [[completely]] and [[quickly]] {{+obj|pt|dirobj<someone/something> + :de<from somewhere>}}
 #: {{syn|pt|destruir|devastar|eliminar|expulsar}}
 #: {{uxi|pt|A legião romana '''varreu''' os hunos da Gália.|The Roman legion '''swept''' the Huns from Gaul.}}
 # {{lb|pt|figurative|transitive}} to [[sweep]]; to [[go through]] {{gl|to search a place methodically}}
@@ -35830,14 +35842,13 @@ From {{inh|pt|roa-opt|nembrar}}, from {{inh|pt|la|memorō|memorāre}}. {{doublet
 ===Verb===
 {{pt-verb}}
 
-# {{indtr|pt|de|.optionally|._|.pronominal}} to [[remember]]
+# {{lb|pt|intransitive|or|pronominal}} to [[remember]] {{+obj|pt|:de<someone/something>/:de(pers&inf)<to do something>}}
 #: {{uxi|pt|Eu '''lembro-me''' do que ele disse.|I '''remember''' what he said.}}
 #: {{uxi|pt|'''Lembra-se''' de mim?|Do you '''remember''' me?}}
-# {{indtr|pt|de|aux=personal infinitive|.optionally|._|.pronominal}} to [[remember]] to
 #: {{uxi|pt|'''Lembre''' de comprar verduras.|'''Remember''' to buy vegetables.}}
-# {{indtr|pt|de|ditr=1|aux=impersonal infinitive}} to [[remind]] someone to
+# {{lb|pt|transitive}} to [[remind]] {{+obj|pt|dirobj<someone> + :de(inf)<to do something>}}
 #: {{uxi|pt|'''Lembra'''-me de comprar frutas.|'''Remind''' me to buy fruits.}}
-# {{lb|pt|transitive}} to [[resemble]]; to [[remind]] someone of {{gl|to look similar}}
+# {{lb|pt|transitive}} to [[resemble]]; to [[remind]] one of {{gl|to look similar}}
 #: {{uxi|pt|Ela '''lembra''' sua mãe.|She '''resembles''' her mother.}}
 # {{lb|pt|reflexive}} to [[remember]] {{gl|to recall from one’s memory}}
 #: {{syn|pt|recordar-se}}
@@ -36114,7 +36125,7 @@ Aphetically from {{m|pt|enamorar}}.
 {{pt-verb}}
 
 # {{lb|pt|transitive}} to [[endeavor]] to gain (someone's) [[affection]]; to [[woo]]; to [[court]]
-# {{indtr|pt|com|intr=1|direct=1}} to be in a romantic [[relationship]]; to be [[date|dating]] someone
+# {{lb|pt|transitive|or|intransitive}} to be in a romantic [[relationship]] (with); to be [[date|dating]] {{+obj|pt|&transitive/:com<someone>}}
 #: {{ux|pt|Eu '''namoro''' com um ator.|I'm '''dating''' an actor.}}
 #: {{ux|pt|Eles '''namoram''' há três meses.|They have been going out together for three months.}}
 # {{lb|pt|transitive}} to [[treat]] (someone) as expected between [[lover]]s: to [[kiss]] him or her, to [[hug]] him or her, and so on
@@ -36184,11 +36195,8 @@ Compare {{cog|rm|saver grau}}.
 ===Verb===
 {{fr-verb}}
 
-# {{indtr|fr|à|;|de|.formal}} to be [[grateful]] (to someone for something)
+# {{lb|fr|formal}} to be [[grateful]] {{+obj|fr|:à<someone> + :de<for something>}}
 #: {{uxi|fr|Je vous '''saurais gré''' de bien vouloir me suivre.|Please follow me.}}
-
-====Usage notes====
-* This verb takes two [[prepositional]] [[object]]s: {{m|fr|[[à]] [[quelqu'un]]||to someone}}, {{m|fr|[[de]] [[quelque chose]]||for something}}.
 
 ===Anagrams===
 * {{l|fr|revigoras}}
@@ -38228,7 +38236,7 @@ From {{affix|pt|verga|-ar|gloss1=rod, twig}}.
 #: {{ux|pt|'''Verga''' a vara.|translation='''Bend''' the rod.}}
 # {{lb|pt|intransitive}} to [[bow]] {{gl|to become bent or curved}}
 #: {{ux|pt|A árvore '''vergou''' com o vento.|translation=The tree '''bent''' with the wind.}}
-# {{indtr|pt|a|.figurative|.pronominal|lang=pt}} to [[defer]] {{gl|to submit oneself to something}}
+# {{lb|pt|figurative|pronominal}} to [[defer]] {{gl|to submit oneself}} {{+obj|pt|:a<to someone/something>}}
 #: {{ux|pt|O país '''vergou'''-se à força dos ventos.|The country '''deferred''' to the force of the wind.}}
 
 ====Conjugation====
@@ -38551,10 +38559,16 @@ Borrowed from {{bor|pt|ca|vogar}},<ref>https://www.infopedia.pt/dicionarios/ling
 ===Verb===
 {{pt-verb}}
 
-# {{lb|pt|intransitive}} to be in [[vogue]]
-# {{indtr|pt|em|direct=1|intr=1|.nautical}} to [[navigate]]; to [[sail]] {{gl|of a watercraft: to move over a body of water}}
+# {{lb|pt|intransitive|or|transitive|nautical}} to [[sail]], to [[row]] {{gl|of a person or people: to move over a body of water by means of sails or oars}} {{+obj|&intransitive/dirobj/:em<a boat or other vessel>}}
+# {{lb|pt|intransitive|nautical}} to [[sail]] {{gl|of a watercraft: to move over a body of water}}
 #: {{syn|pt|navegar|singrar}}
+# {{lb|pt|intransitive|or|transitive|nautical}} to [[navigate]], to [[sail]] {{gl|of a person: to travel somewhere by means of sailing}} {{+obj|&intransitive/dirobj<a distance or a body of water>}}
+#: {{syn|pt|navegar}}
 # {{lb|pt|intransitive}} to [[drift]]; to [[float]] {{gl|to move slowly}}
+# {{lb|pt|intransitive|figurative}} to [[spread]], to [[become]] [[widely]] [[know]]n {{q|of information}}
+# {{lb|pt|intransitive|figurative}} to be in [[vogue]]
+# {{lb|pt|intransitive}} to [[have]] [[validity]], to [[prevail]]
+# {{lb|pt|intransitive|figurative}} to [[be]] in [[control]], to [[have]] [[influence]]
 
 ====Conjugation====
 {{pt-conj}}
@@ -38920,12 +38934,9 @@ From {{m|fr|au courant}}.
 ===Verb===
 {{fr-verb|head=[[tenir]] [[au courant]]}}
 
-# {{indtr|fr|de|ditr=1}} to [[keep]] [[informed]], to keep [[in the loop]], to keep [[posted]]
+# {{lb|fr|transitive}} to [[keep]] [[informed]], to keep [[in the loop]], to keep [[posted]] {{+obj|fr|dirobj<someone> + :de<about something>}}
 #: {{syn|fr|tenir au jus|dire quoi}}
 #: {{ux|fr|Je te '''tiendrai au courant''' de l'avancement du projet.|I'll '''keep''' you '''posted''' on the progress of the project.}}
-
-====Usage notes====
-This verb takes two [[object]]s: a [[direct object]] for the person, and a prepositional object introduced by {{m|fr|de}}.
 
 ====Conjugation====
 * see {{m|fr|tenir}}
@@ -39016,9 +39027,10 @@ Page 403 deitar: -------- begin text --------
 # {{senseid|pt|to go to sleep}} {{lb|pt|by extension|intransitive}} to [[go to sleep]]
 #: {{syn|pt|[[ir]] [[dormir]]}}
 # {{senseid|pt|to lay}} {{lb|pt|transitive}} to [[lay]] {{gl|to place in a horizontal position}}
-# {{senseid|pt|to throw}} {{indtr|pt|a|em|sobre|ditr=1}} to [[throw]] {{gl|to cause to fall off onto}}
+# {{senseid|pt|to throw}} {{lb|pt|transitive}} to [[throw]] {{+obj|pt|dirobj<something> + :a/:em<to someone>}}
 #: {{syn|pt|arremessar|jogar|lançar|tacar}}
 #: {{uxi|pt|'''deitar''' fora|to '''throw''' away}}
+# {{senseid|pt|to pour}} {{lb|pt|transitive}} to [[pour]] {{+obj|pt|dirobj<something> + :sobre<onto something>}}
 # {{senseid|pt|to emit}} {{lb|pt|transitive}} to [[emit]]; to [[give off]]; to [[give out]]
 #: {{syn|pt|emitir}}
 # {{lb|pt|reflexive}} to [[drop]] {{gl|to lower oneself quickly to the ground}}
@@ -39197,7 +39209,7 @@ Page 411 faire gaffe: -------- begin text --------
 ===Verb===
 {{fr-verb}}
 
-# {{indtr|fr|à|.informal|intr=1}} to [[pay attention]], to [[watch out]], to [[mind]]
+# {{lb|fr|informal}} to [[pay attention]] to, to [[watch out]] for, to [[be]] [[careful]] of, [[mind]] {{+obj|fr|à<someone/something>}}
 #: {{syn|fr|faire attention}}
 #* {{quote-book|fr|year=2011|author=Alexis Salatko|title=Céline's band|publisher=Robert Laffont|isbn=9782221126707
 |passage=Mais '''fais gaffe''' tout de même. — '''Faire gaffe''' à quoi ? — À pas attraper la mort ! Il n'avait que sa vieille robe de chambre.|t="But '''be careful''' all the same." "'''Be careful''' of what?" "That you don't catch your death!" All he had on was his old dressing gown.}}
@@ -40065,7 +40077,7 @@ From {{af|pt|en-|alt1=em-|prestar}}.
 ===Verb===
 {{pt-verb}}
 
-# {{senseid|pt|to lend}} {{indtr|pt|a|para|-an indirect objective pronoun|ditr=1|.transitive|.or}} to [[lend]]; to [[loan]] {{gl|to give temporarily}}
+# {{senseid|pt|to lend}} {{lb|pt|transitive}} to [[lend]]; to [[loan]] {{gl|to give temporarily}} {{+obj|pt|dirobj<something> +:a/:para/indirobj&pronoun<to someone>}}
 #* {{quote-book|pt|year=1981|author=Janusz Korczak|title=Quando eu voltar a ser criança|publisher=Editorial Summus|pageurl=https://books.google.com/books?id=uRah-_AcitkC&pg=PA93&dq=%22emprestei%22#v=onepage|page=93
 |passage='''Emprestei''' para uma porção de gente, mas ninguém me devolve.|t='''I have loaned''' to a bunch of people, but nobody pays me back.}}
 #* {{quote-book|pt|year=2013|author=Taís Holetz|title=Páginas de tempestade|publisher=FAEST Editora|pageurl=https://books.google.com/books?id=ph9RBQAAQBAJ&pg=PA46&dq=%22empreste%22#v=onepage|page=46
@@ -40211,7 +40223,7 @@ Compare {{cog|gl|arrepender}}, {{cog|es|arrepentirse}}.
 
 # {{lb|pt|pronominal}} to [[repent]] {{gl|to feel bad about one’s past misdeeds}}
 #: {{ux|pt|Nunca me '''arrependerei'''.|'''I shall''' never '''repent'''.}}
-# {{indtr|pt|de|.pronominal|.transitive|.or|aux=personal or impersonal infinitive}} to [[regret]] {{gl|to feel about about having done something}}
+# {{lb|pt|pronominal}} to [[regret]] {{gl|to feel bad about about having done something}} {{+obj|pt|:de<something>/:de(inf/pers&inf)<doing someting>}}
 #: {{ux|pt|Os terroristas se '''arrependeram''' do ataque.|The terrorists '''regretted''' the attack.}}
 #: {{ux|pt|Farei vocês se '''arrependerem''' de ter nascido.|I will make you '''regret''' having been born.}}
 
@@ -40275,9 +40287,9 @@ From {{inh|pt|roa-opt|agẽollar}}, corresponding to {{af|pt|a-|joelho|-ar}}. Co
 ===Verb===
 {{pt-verb}}
 
-# {{lb|pt|pronominal|or|intransitive|_|(rare)}} to [[kneel]] {{gl|to stoop down and rest on one’s knees}}
+# {{lb|pt|pronominal|or|intransitive|rare}} to [[kneel]] {{gl|to stoop down and rest on one’s knees}}
 #: {{ux|pt|Os súditos '''se ajoelharam''' diante do rei.|The subjects '''knelt''' before the king.}}
-# {{indtr|pt|a|diante de|intr=1|.figurative|.pronominal}} to [[kneel]] to {{gl|to accept defeat; to accept someone’s superiority}}
+# {{lb|pt|figurative|pronominal}} to [[kneel]] {{gl|to accept defeat; to accept someone’s superiority}} {{+obj|pt|:a/:diante de<before someone>}}
 #: {{syn|pt|genuflectir}}
 #: {{ux|pt|Conseguimos fazer nosso inimigo '''se ajoelhar'''.|We were able to make our enemy '''kneel'''.}}
 #: {{ux|pt|Ela '''ajoelhou-se''' ao professor.|She '''knelt''' before her teacher.}}
@@ -40433,8 +40445,12 @@ Page 445 atear: -------- begin text --------
 ===Verb===
 {{pt-verb}}
 
-# {{indtr|pt|a|ditr=1}} to [[set fire|set]] {{q|fire to something}}; to [[light]] {{q|a fire}}
+# {{lb|pt|transitive}} to [[set fire|set (a fire)]] {{+obj|pt|:fogo<fire> + :a<to something>}}
 #: {{ux|pt|A Polícia Judiciária deteve um homem suspeito de ter '''ateado''' fogo a casa da mãe.|The Judiciary Police arrested a man suspected of having '''set''' fire to his mother's house.}}
+# {{lb|pt|transitive}} to [[kindle]], to [[make]] more [[intense]] (a fire, flame, etc.)
+# {{lb|pt|reflexive}} to [[blaze]], to [[become]] more [[intense]] {{q|of a fire, flame, etc.}}
+# {{lb|pt|transitive|figurative}} to [[kindle]], to [[ignite]], to [[inflame]] {{+obj|pt|dirobj<one's soul, etc.>|dirobj<an emotion> + :em<in someone>}}
+# {{lb|pt|reflexive|figurative}} to [[blaze]], to [[intensify]] {{q|of an emotion}} {{+obj|pt|:em<in someone>}}
 
 ====Conjugation====
 {{pt-conj}}
@@ -40816,7 +40832,7 @@ Page 469 adequar: -------- begin text --------
 # {{lb|pt|transitive}} to [[adequate]]; to [[adapt]]; to [[conform]]
 #: {{syn|pt|adaptar|conformar}}
 #: {{ux|pt|'''Adequaremos''' nossa fábrica às novas leis de segurança.|'''We shall adapt''' our factory to the new safety laws.}}
-# {{indtr|pt|a|.pronominal|intr=1}} to [[suit]]; to [[adapt]] to; to [[fit in]] {{gl|to be adequate or fitted to}}
+# {{lb|pt|pronominal}} to [[suit]]; to [[adapt]] to; to [[fit in]] to {{gl|to be adequate or fitted to}} {{+obj|pt|a<something>}}
 #: {{ux|pt|O rapaz não conseguiu se '''adequar''' à nova escola.|The boy couldn’t '''adapt''' to the new school.}}
 
 ====Conjugation====
@@ -41175,7 +41191,7 @@ From {{af|pt|en-|alt1=em-|base|t2=base; basis|-ar}}.
 {{pt-verb}}
 
 # {{lb|pt|transitive|architecture}} to build (a building’s) [[foundation]]
-# {{indtr|pt|em|ditr=1}} to [[base on]] {{gl|to use something as a basis for (an opinion, idea or procedure)}}
+# {{lb|pt|transitive}} to [[base]] {{+obj|pt|dirobj<an opinion, idea, procedure, etc.> + :em<on someone/something>}}
 #: {{uxi|pt|Ele '''embasou''' a teoria nas suas observações.|He '''based''' the theory on his observations.}}
 
 ====Conjugation====
@@ -41635,7 +41651,8 @@ Page 501 desembaraçar: -------- begin text --------
 {{pt-verb}}
 
 # {{lb|pt|transitive}} to [[disentangle]] {{gl|to free from entanglement}}
-# {{indtr|pt|de|ditr=1}} to [[get rid of]] {{gl|to remove or get away from something unpleasant}}
+# {{lb|pt|transitive}} to [[rid]] {{gl|to remove something unpleasant}} {{+obj|pt|dirobj<someone> + :de<of something unwanted or unpleasant>}}
+# {{lb|pt|reflexive}} to [[get rid of|get rid]], to [[rid]] oneself {{+obj|pt|:de<of something unwanted or unpleasant>}}
 #: {{syn|pt|[[livrar]]-[[se]] [[de]]}}
 # {{lb|pt|transitive}} to [[disembarrass]] {{gl|to free from embarrassment}}
 #: {{syn|pt|desavergonhar|desinibir}}
@@ -41683,7 +41700,7 @@ Ultimately from {{der|gl|gem-pro|*wrankijaną|t=to twist}}. Compare {{cog|en|wre
 ===Verb===
 {{pt-verb}}
 
-# {{indtr|pt|em|ditr=1|.transitive|.or}} to [[rank]] {{gl|to put someone into a rank}}
+# {{lb|pt|transitive}} [[rank]] {{gl|to put someone into a rank}} {{+obj|pt|dirobj<someone> + :em<in a position>}}
 #: {{ux|pt|Essa vitória '''ranqueará''' o meu time em segundo lugar.|This victory '''will rank''' my team in second place.}}
 
 ====Conjugation====
@@ -41790,8 +41807,8 @@ From {{af|es|tema|-ar}}.
 ===Verb===
 {{es-verb}}
 
-# {{indtr|es|con|.Argentina|.Bolivia|intr=1}} to have an obsession
-#: {{ux|es|Sigue dele '''temando''' con la moneda.|She's still '''obsessed''' with the coin.}}
+# {{lb|es|Argentina|Bolivia}} to have an obsession {{+obj|es|:con<someone/something>}}
+#: {{ux|es|Sigue '''temando''' con la moneda.|She's still '''obsessed''' with the coin.}}
 
 ====Conjugation====
 {{es-conj}}
@@ -42257,12 +42274,9 @@ Page 524 tenir rigueur: -------- begin text --------
 ===Verb===
 {{fr-verb}}
 
-# {{indtr|fr|à|;|de|.formal}} to [[blame]] someone for something, to [[hold against|hold something against someone]], to hold a [[grudge]] against someone
+# {{lb|fr|formal}} to [[blame]], to [[hold against|hold (something) against (someone)]], to [[hold]] a [[grudge]] against {{+obj|fr|:à<someone> + :de<for something>}}
 #: {{syn|fr|garder rancune}}
 #: {{uxi|fr|Sa remarque m'a blessée sur le moment, mais je ne lui en ai pas '''tenu rigueur'''.}}
-
-====Usage notes====
-* This verb takes two [[prepositional]] [[object]]s: {{m|fr|[[à]] [[quelqu'un]]|to someone}}, {{m|fr|[[de]] [[quelque chose]]|for something}}.
 
 ====See also====
 * {{l|fr|en vouloir}}
@@ -42523,7 +42537,7 @@ Page 533 faire part: -------- begin text --------
 ===Verb===
 {{fr-verb}}
 
-# {{indtr|fr|à|;|de}} to [[inform]] someone of something, to [[tell]] someone about something
+# to [[inform]], to [[tell]] {{+obj|fr|:à<someone> + :de<about something>}}
 #: {{ux|fr|Je lui '''ai fait part''' de l'avancement de mon projet.|I '''told''' him how my project was coming along.}}
 
 ====Conjugation====
@@ -43834,7 +43848,7 @@ Page 606 toucher un mot: -------- begin text --------
 ===Verb===
 {{fr-verb}}
 
-# {{lb|fr|informal}} {{indtr|fr|à|;|de|qual1=+ person being informed|qual3=+ information}} to [[have a word]] with someone about something
+# {{lb|fr|informal}} to [[have a word]] {{+obj|fr|:à<with someone> + :de<about something>}}
 #: {{syn|fr|toucher deux mots}}
 #: {{uxi|fr|J'aimerais t'en '''toucher un mot'''.|I'd like a word with you.|lit=I would like to touch you one word.}}
 -------- end text --------
@@ -45377,10 +45391,10 @@ Page 704 go easy: -------- begin text --------
 ===Verb===
 {{en-verb|go<goes,,went,gone> easy}}
 
-# {{indtr|en|on|with|intr=1|.informal}} To treat gently and with understanding.
+# {{lb|en|informal}} To treat gently and with understanding. {{+obj|en|:on/:with<someone>}}
 #: {{ux|en|'''Go easy'''! I'm sensitive!}}
 #: {{uxi|en|Hey! '''Go easy''' on him!}}
-# {{indtr|en|on|with|intr=1|.informal}} To use sparingly or carefully.
+# {{lb|en|informal}} To use sparingly or carefully. {{+obj|en|:on/:with<something>}}
 #: {{uxi|en|'''Go easy''' on the sunscreen.}}
 #: {{uxi|en|'''Go easy''' with that chainsaw!}}
 
@@ -47030,11 +47044,8 @@ Page 738 faire grâce: -------- begin text --------
 ===Verb===
 {{fr-verb}}
 
-# {{indtr|fr|à|;|de}} to [[spare]] someone something, to [[let off|let someone off]] something
+# to [[spare]] (someone something), to [[let off|let (someone) off]] {{+obj|fr|:à<someone> + :de<(for) something>}}
 #: {{syn|fr|tenir quitte}}
-
-====Usage notes====
-This verb takes two [[prepositional]] [[object]]s: {{m|fr|[[à]] [[quelqu'un]]||to someone}}, {{m|fr|[[de]] [[quelque chose]]||for something}}.
 
 ====See also====
 * {{l|fr|laisser tomber}}
@@ -47129,7 +47140,7 @@ Page 743 donner en pâture: -------- begin text --------
 ===Verb===
 {{fr-verb}}
 
-# {{indtr|fr|à|ditr=1}} to [[serve up|serve (something/someone) up]] to (someone), to [[throw to the lions|throw (something/someone) to the lions]]
+# {{lb|fr|transitive}} to [[serve up|serve (something/someone) up]] to (someone), to [[throw to the lions|throw (something/someone) (to the lions)]] {{+obj|fr|dirobj<someone/something> + :à<to someone>}}
 #: {{syn|fr|livrer en pâture|jeter en pâture|offrir en pâture}}
 #: {{nearsyn|fr|[[livrer]] [[à]] [[la]] [[vindicte]] [[de]]}}
 #: {{coi|fr|'''donner''' quelque chose '''en pâture''' à quelqu'un}}
@@ -47214,7 +47225,7 @@ Page 747 envoyer des fleurs: -------- begin text --------
 ## {{lb|fr|reflexively}} to [[toot one's own horn]], to [[blow one's own horn]], to [[blow one's own trumpet]], to [[pat on the back|pat oneself on the back]]
 -------- end text --------
 Page 749 Wiktionary:Foreign Word of the Day/2020/March 1: -------- begin text --------
-{{FWOTD|pt|emprestar|||{{senseid|pt|to lend}} {{indtr|pt|a|para|-an indirect objective pronoun|ditr=1|.transitive|.or}} to [[lend]]; to [[loan]] {{gl|to give temporarily}}
+{{FWOTD|pt|emprestar|||{{senseid|pt|to lend}} {{lb|pt|transitive}} to [[lend]]; to [[loan]] {{gl|to give temporarily}} {{+obj|pt|dirobj<something> +:a/:para/indirobj&pronoun<to someone>}}
 # {{senseid|pt|to borrow}} {{lb|pt|Brazil|transitive}} to {{l|en|borrow}} {{gl|to obtain temporarily}}
 |pos=verb|focus=Focus week: [[contranym]]s}}
 -------- end text --------
@@ -48013,7 +48024,7 @@ Page 796 muovere guerra: -------- begin text --------
 ===Verb===
 {{it-verb|a\@}}
 
-# {{indtr|it|a|contro|intr=1|.idiom}} to [[wage war]] (against)
+# {{lb|it|idiom}} to [[wage war]] {{+obj|it|:a/:contro<against someone/something>}}
 #: {{syn|it|guerreggiare}}
 -------- end text --------
 Page 797 farsi prendere la mano: -------- begin text --------
@@ -48218,7 +48229,7 @@ Page 812 fare eco: -------- begin text --------
 ===Verb===
 {{it-verb|a/@}}
 
-# {{indtr|it|a|.also|.figurative|intr=1}} to [[echo]]
+# {{lb|it|also|figurative}} to [[echo]] {{+obj|it|:a<someone>}}
 #* {{quote-journal|it|title=Usa, corsa a votare Biden: già in 25 milioni alle urne in anticipo|trans-title=US, race to vote Biden: already 25 million at the early ballot boxes|url=https://rep.repubblica.it/pwa/generale/2020/10/17/news/usa_corsa_a_votare_biden_gia_in_25_milioni_alle_urne_in_anticipo-270940869|author=Anna Lombardi|magazine=w:la Repubblica|date=17 October 2020|passage=Da Detroit, Michigan, le '''fa eco''' Mary Ann Fontana, pensionata di 68 anni: «Anche io ho preferito votare prima. L'ho fatto via posta, ma per evitare ritardi ho depositato la busta in certe apposite "drop box", cassette piazzate in luoghi sicuri....|t=From Detroit, Michigan, Mary Ann Fontana, a 68-year-old retiree, '''echoes''' her: "I also preferred voting early. I did it by mail, but to avoid delays I deposited the envelope in certain special "drop boxes", boxes placed in safe places....}}
 -------- end text --------
 Page 813 faire écho: -------- begin text --------
@@ -48234,7 +48245,7 @@ Page 813 faire écho: -------- begin text --------
 ===Verb===
 {{fr-verb}}
 
-# {{indtr|fr|à|.also|.figurative|intr=1}} to [[echo]]
+# {{lb|fr|also|figurative}} to [[echo]] {{+obj|it|:à<someone>}}
 -------- end text --------
 Page 814 dare i natali: -------- begin text --------
 ==Italian==
@@ -48336,7 +48347,7 @@ Page 819 open the door: -------- begin text --------
 {{en-verb|*}}
 
 # {{&lit|en|open|door}}
-# {{indtr|en|to|for|intr=1|.idiom}} to allow [[access]] or [[facilitate]]
+# {{lb|en|idiom}} To allow [[access]] or [[facilitate]]. {{+obj|en|:to/:for<someone/something>}}
 #: {{ux|en|the court's decision today '''opens the door''' to future partisan manipulations}}
 #: {{ux|en|his vacancy '''opened the door''' for young people who wanted a position}}
 
@@ -49357,7 +49368,7 @@ Page 888 faire cadeau: -------- begin text --------
 ===Verb===
 {{fr-verb}}
 
-# {{indtr|fr|à|;|de}} to [[give]] something to someone [[for free]], as a [[gift]]
+# to [[give]] [[for free]], to [[gift]] {{+obj|fr|:à<to someone> + :de<something>}}
 #: {{syn|fr|offrir}}
 
 ====See also====
@@ -49448,10 +49459,7 @@ Page 895 donner accès: -------- begin text --------
 ===Verb===
 {{fr-verb}}
 
-# {{indtr|fr|à|;|à}} to give someone [[access]] to something; to [[grant]] someone access to something; to [[open the door|open someone the door]] to something
-
-====Usage notes====
-This verb sometimes takes two [[prepositional]] [[object]]s: {{m|fr|[[à]] [[quelqu'un]]||to someone}}, {{m|fr|[[à]] [[quelque chose]]||to something}}.
+# to give (someone) [[access]]; to [[grant]] (someone) access; to [[open the door]] (for someone) {{+obj|fr|:à<someone> + :à<to something>}}
 
 ====See also====
 * {{l|fr|avoir accès}}
@@ -49846,7 +49854,7 @@ Page 918 faire présent: -------- begin text --------
 ===Verb===
 {{fr-verb}}
 
-# {{indtr|fr|à|;|de}} to [[make]] a [[present]] of something to someone, to present someone with something
+# to [[give]] [[for free]], to [[gift]], to [[present]] {{+obj|fr|:à<to someone> + :de<something>}}
 #: {{syn|fr|offrir}}
 
 ====See also====
@@ -50378,7 +50386,7 @@ Page 948 rendre grâce: -------- begin text --------
 ===Verb===
 {{fr-verb}}
 
-# {{indtr|fr|à|;|de|.literary}} to [[give]] [[thanks]] to someone, to express one's [[gratitude]] to someone for something
+# {{lb|fr|literary}} to [[give]] [[thanks]], to express one's [[gratitude]] {{+obj|fr|:à<to someone> + :de<for something>}}
 #: {{uxi|fr|'''rendre grâce''' à Dieu|to '''give thanks''' to God}}
 -------- end text --------
 Page 949 faire la lumière: -------- begin text --------
@@ -50474,7 +50482,7 @@ Page 955 faire justice: -------- begin text --------
 
 # to [[do justice]] {{+obj|fr|:à<to someone/something>}}
 # {{rfdef|fr}} {{+obj|fr|:de}}
-# {{lb|fr|reflexive}} [[take the law into one's own hands]] {{q|with {{m|fr|moi-même}}, {{m|fr|soi-même}}, etc.}}
+# {{lb|fr|reflexive}} [[take the law into one's own hands]] {{+obj|fr|:moi-même/:soi-même/etc.}}
 #: {{uxi|fr|se '''faire justice''' (à) soi-même|to [[take the law into one's own hands]]}}
 
 ====See also====
@@ -50633,11 +50641,8 @@ Page 965 garder rancune: -------- begin text --------
 ===Verb===
 {{fr-verb}}
 
-# {{indtr|fr|à|;|de|.formal}} to hold a [[grudge]] against someone, to [[bear]] someone a grudge
+# {{lb|fr|formal}} to [[hold]] a [[grudge]], to [[bear]] a [[grudge]] {{+obj|fr|:à<against someone> + :de<for something>}}
 #: {{syn|fr|tenir rigueur}}
-
-====Usage notes====
-* This verb takes two [[prepositional]] [[object]]s: {{m|fr|[[à]] [[quelqu'un]]|to someone}}, {{m|fr|[[de]] [[quelque chose]]|for something}}.
 -------- end text --------
 Page 966 juei: -------- begin text --------
 ==Mbyá Guaraní==
@@ -51606,7 +51611,7 @@ Page 1016 פֿוּאירי: -------- begin text --------
 ===Verb===
 {{head|itk|verb|head=פֿוּאִירֵי|tr=fuire|third-person singular imperfective|פֿוּאִיוַה|f1tr=fuiva}}
 
-# {{indtr|itk|אה|qual1=+ destination|intr=1}} to [[flee]] (to), to [[escape]] (to)
+# {{lb|itk|intransitive}} to [[flee]], to [[escape]] {{+obj|itk|:אה<to a destination>}}
 #* {{quote-book
 |itk
 |year=16<sup>th</sup> century
@@ -51828,7 +51833,7 @@ Page 1028 jeter en pâture: -------- begin text --------
 ===Verb===
 {{fr-verb}}
 
-# {{indtr|fr|à|ditr=1}} to [[serve up|serve (something/someone) up]] to (someone), to [[throw to the lions|throw (something/someone) to the lions]]
+# {{lb|fr|transitive}} to [[serve up|serve (something/someone) up]] to (someone), to [[throw to the lions|throw (something/someone) (to the lions)]] {{+obj|fr|dirobj<someone/something> + :à<to someone>}}
 #: {{syn|fr|livrer en pâture|donner en pâture|offrir en pâture}}
 #: {{nearsyn|fr|[[livrer]] [[à]] [[la]] [[vindicte]] [[de]]}}
 #: {{coi|fr|'''jeter''' quelque chose '''en pâture''' à quelqu'un}}
@@ -52650,8 +52655,8 @@ Compare {{cog|it|fare conoscere}}.
 ===Verb===
 {{fr-verb}}
 
-# {{indtr|fr|a|ditr=1}} to [[introduce]] someone to something
-# {{lb|fr|reflexive}} to [[announce]] oneself, to [[declare]] oneself, to [[identify]] oneself, to [[reveal]] one's [[identity]]
+# {{lb|fr|transitive}} to [[introduce]] {{+obj|fr|dirobj<something> + :à<to someone>}}
+# {{lb|fr|reflexive}} to [[announce]] oneself, to [[declare]] oneself, to [[identify]] oneself, to [[reveal]] one's [[identity]] {{+obj|fr|:à<to someone>}}
 # {{lb|fr|reflexive}} to [[make a name for oneself]]
 #: {{syn|fr|se faire un nom}}
 #: {{coi|fr|'''se faire connaître''' par ses écrits}}
@@ -52721,7 +52726,7 @@ Page 1058 livrer en pâture: -------- begin text --------
 ===Verb===
 {{fr-verb}}
 
-# {{indtr|fr|à|ditr=1}} to [[serve up|serve (something/someone) up]] to (someone), to [[throw to the lions|throw (something/someone) to the lions]]
+# {{lb|fr|transitive}} to [[serve up|serve (something/someone) up]] to (someone), to [[throw to the lions|throw (something/someone) (to the lions)]] {{+obj|fr|dirobj<someone/something> + :à<to someone>}}
 #: {{syn|fr|jeter en pâture|donner en pâture|offrir en pâture}}
 #* {{quote-journal|fr|date=2024-04-20|work={{w|L'Indépendant (Pyrénées-Orientales)|L'Indépendant}}|section=France—International|issn=0220-0058|title=Grande-Synthe : le scénario du guet-apens mortel se confirme|passage=C'est aussi sur ce site qu'un septuagénaire du Vaucluse avait recruté plusieurs dizaines de violeurs, en leur '''livrant en pâture''' sa femme droguée.}}
 -------- end text --------
