@@ -14371,24 +14371,25 @@ From {{prefix|it|ri|entrare|t2=to enter}}.
 {{it-pr|ri.entràre}}
 
 ===Verb===
-{{it-verb|e/é}}
+{{it-verb|e/é}} {{tlb|it|intransitive}}
 
-# {{lb|it|intransitive}} to [[reenter]]; to [[go back]] (in) {{+obj|it|:in/:a<a location>}}
+# to [[reenter]]; to [[go back]] (in) {{+obj|it|:in/:a<a location>}}
 #: {{syn|it|tornare|ritornare}}
-# {{lb|it|intransitive|by extension}} to get back home
-# {{lb|it|informal|intransitive}} to [[get back]], to [[recover]] {{+obj|it|:di<money, goods, etc.>}}
+# {{lb|it|by extension}} to get back home
+# {{lb|it|informal}} to [[get back]], to [[recover]] {{+obj|it|:di<money, goods, etc.>}}
 #: {{syn|it|recuperare}}
 #: {{ux|it|sono '''rientrato''' di tutte le spese|I '''got back''' all of the money from my expenses}}
-# {{indtr|it|in|a|tra}} to be [[include]]d; to [[get back]] (into); to be [[part]] (of) (a group, list, etc.)
+# to be [[include]]d (in); to be [[part]] (of) {{+obj|it|:in/:a/:tra<something>}}
 #: {{syn|it|[[essere]] [[compreso]]|[[essere]] [[incluso]]}}
-#: {{ux|it|il giocatore è '''rientrato''' in squadra|the player '''got back''' into the team}}
 #: {{ux|it|il viaggio non '''rientra''' nei miei progetti|travel '''is''' not '''part''' of my plans}}
-# {{lb|it|intransitive|typography}} to [[indent]]
-# {{lb|it|intransitive}} to be [[cancel]]led {{q|of a future plan, project, etc.}}
+# to [[get back]] {{+obj|it|:in/:a/:tra<into/among a group, list, etc.>}}
+#: {{ux|it|il giocatore è '''rientrato''' in squadra|the player '''got back''' into the team}}
+# {{lb|it|typography}} to [[indent]]
+# to be [[cancel]]led {{q|of a future plan, project, etc.}}
 #: {{ux|it|la gita è '''rientrato''' per mancanza di fondi|the outing '''is cancelled''' due to a lack of funds}}
-# {{lb|it|intransitive}} to [[end]]; to [[stop]] {{q|of a situation of alertness or danger}}
+# to [[end]]; to [[stop]] {{q|of a situation of alertness or danger}}
 #: {{ux|it|l'allarme è '''rientrato'''|the alarm '''stopped'''}}
-# {{lb|it|intransitive|rare}} to [[shrink]] while [[dry]]ing {{q|of clothing, fabric, etc.}}
+# {{lb|it|rare}} to [[shrink]] while [[dry]]ing {{q|of clothing, fabric, etc.}}
 #: {{ux|it|la gonna è '''rientrata''' dopo il lavaggio|the skirt '''shrunk''' after it was washed}}
 
 ====Conjugation====
@@ -14618,7 +14619,7 @@ Page 70 prendre: -------- begin text --------
 # {{lb|fr|reflexive}} to get (something) caught (in), to [[jam]]
 #: {{uxi|fr|je me suis '''pris''' la main dans la porte|t=I caught my hand in the door}}
 #: {{uxi|fr|je me suis '''pris''' la porte dans la figure|t=the door hit me in the face}}
-# {{indtr|fr|à}}
+# {{lb|fr|intransitive}} to [[get into]], to [[come over]] {{gl|to cause to behave uncharacteristically, to affect in a surprising manner, to possess}} {{+obj|fr|à<someone>}}
 #: {{uxi|fr|Qu'est-ce qui t'a '''pris''' ? Qu'est-ce qui t'est passé par la tête ? |What were you thinking? What got into you? What came over you?}}
 #: {{uxi|fr|Qu'est-ce qui lui a '''pris''' ? Quelle mouche l'a piqué ?|What was he thinking? What got into him?}}
 #: {{uxi|fr|[[bien lui en prit]]|t=good for him; it was a good choice|lit=he took it well}}
@@ -31043,7 +31044,7 @@ Page 227 trovarsi: -------- begin text --------
 {{it-verb|ò}}
 
 # {{reflexive of|it|trovare}}
-# {{indtr|it|in|con|a|su}} to [[be]]; to be [[situated]]; to [[lie]]
+# {{lb|it|intransitive}} to [[be]]; to be [[situated]]; to [[lie]] {{+obj|it|:in<in>/:con<with/among>/:a<at/in>/:su<on>}}
 #: {{syn|it|essere|[[essere]] [[situato]]}}
 #: {{ux|it|'''trovarsi''' a Torino|to '''be''' in Turin}}
 # [[find]] oneself {{q|in a certain [[condition]]}}; to feel
@@ -31572,9 +31573,9 @@ From {{af|it|sor-|volare|t2=to fly}}. {{etydate|14th century}} Compare {{cog|fr|
 # {{lb|it|transitive}} to [[fly]] over; to [[overfly]]
 #: {{uxi|it|'''sorvolare''' le case|to '''fly over''' the houses}}
 # {{lb|it|transitive|rare}} to [[neglect]]; to [[pass]] over
-# {{lb|it|intransitive}} to not [[dwell]] on a [[topic]] considered [[secondary]] or [[uncomfortable]]; to [[gloss over]] {{+obj|it|:su}} {{+aux|it|avere}}
+# {{lb|it|intransitive}} to not [[dwell]] on, to [[gloss over]] {{+obj|it|:su<a topic considered secondary or uncomfortable>}} {{+aux|it|avere}}
 # {{lb|it|intransitive|informal}} to [[let go]]; to [[leave alone]] {{+aux|it|avere}}
-# {{lb|it|rare}} {{indtr|it|su|sopra}} to [[fly]] over
+# {{lb|it|intransitive|rare}} to [[fly]] [[over]] {{+obj|it|:su/:sopra<over something>}}
 
 ====Conjugation====
 {{it-conj|a/ó+}}
@@ -31634,7 +31635,7 @@ Page 240 slittare: -------- begin text --------
 # to be [[postponed]] or [[put off]] {{+obj|it|:di/:a<by (some time)>}} {{+aux|it|essere|avere}}
 #: {{syn|it|tardare|[[essere]] [[rimandato]]|Thesaurus:rinviare}}
 #: {{ux|it|la riunione è '''slittata''' di tre giorni|the meeting has been '''postponed''' for three days}}
-# {{indtr|it|a|verso|su|.politics}} to [[stray]] from the [[party]] [[line]]; to [[deviate]] from political [[orthodoxy]]; to [[deviate]]; to [[diverge]] {{+aux|it|essere|avere}}
+# {{lb|it|intransitive|politics}} to [[stray]] from the [[party]] [[line]]; to [[deviate]] from political [[orthodoxy]]; to [[deviate]]; to [[diverge]] {{+obj|it|:a/:verso/:su<towards a particular political position>}} {{+aux|it|essere|avere}}
 #: {{syn|it|allontanarsi|deviare|sviare}}
 #: {{ux|it|'''slittare''' verso posizioni reazionarie|to '''deviate''' towards reactionary positions}}
 
@@ -31929,11 +31930,11 @@ From {{inh|pt|roa-opt|ficar}} (also {{m|roa-opt|fincar}}), from {{inh|pt|VL.|*fi
 #: {{uxi|pt|Eu vou '''ficar''' rico.|I’ll '''get''' rich.}}
 #: {{uxi|pt|'''Ficamos''' com nojo daquela comida.|'''We were''' disgusted by that food.}}
 #: {{uxi|pt|Eu '''fiquei''' sem dinheiro.|I '''ended up''' without any money.}}
-# {{senseid|pt|to be somewhere}} {{indtr|pt|em|-another locational preposition}} to [[be]] [in a fixed location]
+# {{senseid|pt|to be somewhere}} {{lb|pt|intransitive}} to [[be]], to [[be]] [[locate]]d {{+obj|pt|:em/another locational preposition<in a fixed location>}}
 #: {{syn|pt|localizar|ser}}
 #: {{uxi|pt|A casa dela '''fica''' na esquina desse quarteirão.|Her house '''is''' on the corner of this block.}}
 #: {{uxi|pt|Londres '''fica''' no sul da Inglaterra.|London '''is''' in the south of England.}}
-# {{senseid|pt|to stay at}} {{lb|pt|intransitive}} to [[stay]] (at); to [[remain]] {{+obj|pt|:em<a location>}}
+# {{senseid|pt|to stay at}} {{lb|pt|intransitive}} to [[stay]] (at); to [[remain]] (in) {{+obj|pt|:em<a location>}}
 #: {{uxi|pt|Ela não quis vir, '''ficou''' em casa.|She didn’t want to come, she '''stayed''' home.}}
 #* {{quote-book|pt|year=2000|author=w:J. K. Rowling; w:Lia Wyler|title=Harry Potter e o Cálice de Fogo|publisher=Rocco|page=514
 |passage=E quantos serão bastante tolos para '''ficar''' longe de mim?|t=And how many will be foolish enough to '''stay''' away from me?}}
@@ -31945,7 +31946,7 @@ From {{inh|pt|roa-opt|ficar}} (also {{m|roa-opt|fincar}}), from {{inh|pt|VL.|*fi
 # {{senseid|pt|not to go further}} {{lb|pt|figurative|intransitive}} not to [[go]] any [[further]]
 #: {{syn|pt|parar}}
 #: {{uxi|pt|A discussão '''fica''' por aqui.|The discussion '''stops''' here.}}
-# {{senseid|pt|forms the habitual}} {{lb|pt|auxiliary|followed by a verb in the gerund}} {{n-g|forms the [[habitual]] aspect}}
+# {{senseid|pt|forms the habitual}} {{lb|pt|auxiliary}} {{n-g|forms the [[habitual]] aspect}} {{+obj|pt|ger}}
 #: {{uxi|pt|João '''fica''' lendo o dia inteiro.|John '''keeps''' reading the whole day.}}
 #: {{uxi|pt|Eu '''ficava''' falando besteira.|I '''kept''' saying nonsense.}}
 # {{senseid|pt|to have a short romantic relationship}} {{lb|pt|intransitive|Brazil|slang}} to have a [[one-night stand]] {{q|sexually}} {{+obj|pt|:com<with someone>}}
@@ -32171,10 +32172,11 @@ From {{af|it|vendicare|t1=to avenge|-si|t2=oneself}}.
 {{it-verb|é:è[ref:{{R:it:DiPI|vendico}}]}}
 
 # {{reflexive of|it|vendicare}}
-# {{lb|it|intransitive}} to [[take revenge]]
-#: {{syn|it|farsi giustizia}}
-#* {{RQ:it:Decameron|8|7|se io '''vendicarmi''' volessi, {{...}} la tua vita non mi basterebbe togliendolati, né cento altre alla tua simiglianti|If I wanted to ''' take revenge''', taking your life wouldn't be enough for me, nor would a hundred more [lives] like yours}}
-#* {{quote-book|it
+# {{lb|it|intransitive}} to [[take revenge]] {{+obj|it|:su(noun)/:[[su]] [[di]](pronoun)<on someone> + :di<for something>}}
+## {{q|absolute usage}}
+##: {{syn|it|farsi giustizia}}
+##* {{RQ:it:Decameron|8|7|se io '''vendicarmi''' volessi, {{...}} la tua vita non mi basterebbe togliendolati, né cento altre alla tua simiglianti|If I wanted to ''' take revenge''', taking your life wouldn't be enough for me, nor would a hundred more [lives] like yours}}
+##* {{quote-book|it
 |year=1478
 |author=w:Luigi Pulci
 |title={{w|Morgante|Morgante Maggiore}}
@@ -32188,7 +32190,7 @@ From {{af|it|vendicare|t1=to avenge|-si|t2=oneself}}.
 |passage=E scrisse un brieve, e dopo lunga esordia,</br>Gli ricordò l’oltraggio e violenzia</br>Del buon Rinaldo, e che non debba starsi,</br>Però ch’egli era il tempo a '''vendicarsi'''.
 |translation=He wrote a brief. After a long introduction, he reminded him of Rinaldo's outrage and violence, and that he shouldn't have just been staying there, for it was time to '''take revenge'''.
 }}
-#* {{quote-book|it
+##* {{quote-book|it
 |year=c. 1555
 |author=Francesco D'Ambra
 |title=La cofanaria
@@ -32204,7 +32206,7 @@ From {{af|it|vendicare|t1=to avenge|-si|t2=oneself}}.
 |norm=ma s’io non '''mi vendico'''''</br>''a sette doppî, che mi venga il canchero
 |t=But may I get cancer, if I don't '''take revenge''' sevenfold
 }}
-#* {{quote-book|it
+##* {{quote-book|it
 |year=1619
 |author=w:Michelangelo Buonarroti the Younger
 |title=La fiera
@@ -32216,7 +32218,7 @@ From {{af|it|vendicare|t1=to avenge|-si|t2=oneself}}.
 |norm=Lascia pria ch'io favelli: e se vendetta</br>ti si dee, tu '''ti vendica''''' {{...}}
 |t=Let me talk first, then, if you're owed revenge, you '''take revenge'''
 }}
-#* {{quote-book|it
+##* {{quote-book|it
 |year=1763
 |author=w:Giuseppe Parini
 |title=Opere dell'abate Giuseppe Parini - Volume primo
@@ -32231,8 +32233,8 @@ From {{af|it|vendicare|t1=to avenge|-si|t2=oneself}}.
 |trans-chapter=The Morning
 |passage={{...}} Amor sorride;</br>E luogo, e tempo a '''vendicarsi''' aspetta
 |translation=Love smiles, and waits for the place and time to '''take revenge'''}}
-#* {{RQ:it:I promessi sposi|9|Due sentimenti di ben diverso genere contribuivan pure a intervalli a scemare quella sua antica avversione: talvolta il rimorso del fallo, {{...}} talvolta l’orgoglio amareggiato e irritato dalle maniere della carceriera, la quale {{...}} '''si vendicava'''|Two quite different feelings also occasionally contributed to the diminishing of that old aversion of hers: sometimes [it was] the regret of guilt, {{...}} other times [it was] her pride, embittered and vexed by the manners of her jailer, who {{...}} '''took revenge'''}}
-#* {{quote-book|it
+##* {{RQ:it:I promessi sposi|9|Due sentimenti di ben diverso genere contribuivan pure a intervalli a scemare quella sua antica avversione: talvolta il rimorso del fallo, {{...}} talvolta l’orgoglio amareggiato e irritato dalle maniere della carceriera, la quale {{...}} '''si vendicava'''|Two quite different feelings also occasionally contributed to the diminishing of that old aversion of hers: sometimes [it was] the regret of guilt, {{...}} other times [it was] her pride, embittered and vexed by the manners of her jailer, who {{...}} '''took revenge'''}}
+##* {{quote-book|it
 |year=1904
 |author=w:Luigi Pirandello
 |title=Il fu Mattia Pascal
@@ -32244,9 +32246,9 @@ From {{af|it|vendicare|t1=to avenge|-si|t2=oneself}}.
 |pageurl=https://it.wikisource.org/wiki/Pagina:Il_fu_Mattia_Pascal.djvu/311
 |passage=Oh, insomma, — sbuffai, — volevo '''vendicarmi''' e non '''mi vendico'''; ti lascio la moglie, ti lascio in pace, e non ti contenti
 |translation="Oh, come on!", I said, "I wanted to '''take revenge''', and '''I'm''' not '''taking revenge'''; I leave you your wife, I leave you in peace, and you're still not satisfied!"}}
-# {{indtr|it|di|qual1=+ act of injury|;|qual2=optionally|su|qual3=+ third party|su di|qual4=+ third party that is a [[personal pronoun]]}} to [[avenge]], to [[take revenge]] for
-#: {{syn|it|vendicare}}
-#* {{quote-book|it
+## {{q|for an injury or injustice}}
+##: {{syn|it|vendicare}}
+##* {{quote-book|it
 |year=1750s
 |author=w:Carlo Goldoni
 |title=La dama prudente
@@ -32260,9 +32262,9 @@ From {{af|it|vendicare|t1=to avenge|-si|t2=oneself}}.
 |pageurl=https://books.google.it/books?id=lhktAAAAMAAJ&hl=it&pg=PA127#v=onepage&q&f=false
 |passage=Non la conoscono, non la comprendono. Ma '''mi vendicherò de'''lla loro ingiustizia. La farò stampare, ed il pubblico la giudicherà.
 |translation=They don't know it, they don't get it. But I'll '''take revenge for''' their injustice: I'll have it printed, and the public will be the judge.}}
-# {{indtr|it|su|qual1=+ third party|su di|qual2=+ third party that is a [[personal pronoun]]|;|qual3=optionally|di|qual4=+ act of injury}} to [[take revenge]] on or against
-#: {{syn|it|[[farla]] [[pagare]] ([[a]])}}
-#* {{quote-book
+## {{q|against someone}}
+##: {{syn|it|[[farla]] [[pagare]] ([[a]])}}
+##* {{quote-book
 |it
 |year=1877
 |author=[[w:Anna Radius Zuccari|Neera]]
@@ -33001,10 +33003,11 @@ From {{inh|pt|roa-opt|apresentar}}, {{m|roa-opt|presentar}}, from {{inh|pt|la|pr
 
 # {{senseid|pt|to introduce to one another}} {{lb|pt|transitive}} to [[introduce]] {{gl|to make multiple people become acquainted with one another}}
 #: {{ux|pt|Fui eu que '''apresentei''' os noivos.|I’m the one who '''introduced''' the fiancés.}}
-# {{senseid|pt|to introduce to}} {{indtr|pt|a|ditr=1|.pronominal|.or}} to [[introduce]]; to [[present]] {{gl|to make (someone or someone) become acquainted to}}
-#: {{ux|pt|Ela chegou e logo se '''apresentou'''.|She arrived and soon afterwards '''introduced''' herself.}}
+# {{senseid|pt|to introduce to}} {{lb|pt|transitive}} to [[introduce]]; to [[present]] {{gl|to make (someone) become acquainted to}} {{+obj|pt|dirobj<someone/something> + :a<to someone>}}
 #: {{ux|pt|Alguém deve '''apresentar''' o enviado ao rei.|Someone should '''present''' the envoy to the king.}}
-# {{senseid|pt|to put forward to be seen}} {{lb|pt|transitive}} to [[present]] {{gl|to put (something) forward to be seen}}
+# {{senseid|pt|to introduce oneself}} {{lb|pt|reflexive}} to [[introduce]] oneself {{+obj|pt|:a<to someone>}}
+#: {{ux|pt|Ela chegou e logo se '''apresentou'''.|She arrived and soon afterwards '''introduced''' herself.}}
+# {{senseid|pt|to put forward to be seen}} {{lb|pt|transitive}} to [[present]] {{gl|to put (something) forward to be seen}} {{+obj|pt|dirobj<something> + :a<to someone>}}
 #: {{ux|pt|'''Apresentamos''' o novo produto ao mercado.|'''We presented''' the new product to the market.}}
 #: {{ux|pt|A acusação '''apresentou''' as evidências.|The accusers '''presented''' their evidence.}}
 # {{senseid|pt|to give a presentation}} {{lb|pt|transitive}} to [[present]] {{gl|to give a presentation}}
@@ -33215,7 +33218,7 @@ From {{af|pt|zero|-ar|gloss1=zero|pos=verb}}.
 ## {{lb|pt|computing}} to change a memory location to values of zero
 ##: {{ux|pt|'''Zere''' o contador depois de terminar as iterações.|'''Zero''' the counter after the iterations are over.}}
 ##: {{syn|pt|limpar}}
-# {{indtr|pt|em|direct=1|.Brazil|.education}} to receive or give someone a grade of [[zero]] in a test
+# {{lb|pt|transitive|or|intransitive|Brazil|education}} to [[receive]] or [[give]] (someone) a [[grade]] of [[zero]] {{+obj|pt|:em<in a test>}}
 #: {{ux|pt|Droga! '''Zerei''' em português de novo.|Damn it! '''I got zero''' in Portuguese again.}}
 #: {{ux|pt|Três alunos '''zeraram''' na última prova.|Three students '''got zero''' in the last test.}}
 #: {{ux|pt|Meus alunos são preguiçosos demais. Quero '''zerá'''-los todos.|My students are too lazy. I want to '''give''' them all a '''zero'''.}}
@@ -34290,7 +34293,7 @@ From {{compound|en|hell|t1=in a manner that uses all of the strength, speed, or 
 ===Adjective===
 {{en-adj}}
 
-# {{indtr|en|on|.originally|.US|.informal}} [[recklessly|Recklessly]] [[determined#Adjective|determined]] to do or [[achieve]] (something).
+# {{lb|en|originally|US|informal}} [[recklessly|Recklessly]] [[determined#Adjective|determined]] to do or [[achieve]] (something). {{+obj|en|:on<something>}}
 #: {{synonyms|en|dead set#Adjective}}
 #: {{ux|en|He was '''hell-bent''' on coming first, no matter what.}}
 #* {{RQ:Hornby High Fidelity|page=16|passage=If somebody had asked me why I was so '''hell-bent''' on grabbing a piece of Penny Hardwick's chest, I wouldn't have known what to say. And if somebody were to ask Penny why she was so '''hell-bent''' on stopping me, I'll bet she'd be stumped for an answer too.}}
@@ -34341,21 +34344,21 @@ Page 287 cimentarsi: -------- begin text --------
 {{it-pr}}
 
 ===Verb===
-{{it-verb|é}}
+{{it-verb|é}} {{tlb|it|intransitive}}
 
 # {{reflexive of|it|cimentare}}
-# {{lb|it|intransitive}} to [[expose]] oneself to [[risk]]; to risk; to [[venture]] {{+obj|it|:in}}
+# to [[expose]] oneself to [[risk]]; to [[risk]]; to [[venture]] (into) {{+obj|it|:in<something>}}
 #: {{syn|it|avventurarsi|arrischiarsi}}
 #: {{ux|it|'''si è cimentata''' in una prova molto impegnativa|she '''ventured''' into a very demanding test}}
-# {{lb|it|intransitive}} to [[challenge]] oneself; to put oneself [[put to the test|to the test]] {{+obj|it|:in<in>/:con<with>}}
+# to [[challenge]] oneself; to put oneself [[put to the test|to the test]] {{+obj|it|:in<in>/:con<with something>}}
 #: {{syn|it|[[mettersi]] [[alla]] [[prova]]}}
 #: {{ux|it|'''cimentarsi''' con la riuscita del programma|to '''challenge oneself''' to make the program a success}}
-# {{lb|it|intransitive}} to [[face]] (someone) in a [[battle]], [[showdown]], etc.; to [[square off]] {{+obj|it|:con<against>}}
+# to [[face]] (someone) in a [[battle]], [[showdown]], etc.; to [[square off]] {{+obj|it|:con<against someone>}}
 #: {{syn|it|confrontarsi|affrontare}}
 #: {{ux|it|lui '''si cimentò''' con l'avversario in una lotta corpo a corpo|he '''squared off''' against the opponent in a hand-to-hand struggle}}
-# {{lb|it|intransitive}} to [[grapple]] {{+obj|it|:con<with>}}
+# to [[grapple]] {{+obj|it|:con<with someone/something>}}
 #: {{ux|it|ci sono alcuni che non vogliono '''cimentarsi''' con le cause che stanno dietro agli effetti|there are some who do not want to '''grapple''' with the causes behind the effects}}
-# {{lb|it|figurative}} {{indtr|it|in|con}} to [[take a run at]]; to [[dabble]]
+# {{lb|it|figurative}} to [[take a run at]]; to [[dabble]] in {{+obj|it|:in/:con<something>}}
 #: {{syn|it|impegnarsi|applicarsi}}
 #: {{ux|it|è un noto avvocato, ma ha anche provato a '''cimentarsi''' con il teatro|he is a well-known lawyer, but tried to '''dabble''' in theater too}}
 
@@ -36006,8 +36009,8 @@ Page 323 fregarne: -------- begin text --------
 ====Verb====
 {{it-verb|e/é.impers}}
 
-# {{indtr|it|a|;|di|qual1=+ party (not) taking an interest|qual2=usually|qual3=+ object of (dis)interest|.colloquial|.chiefly in the negative}} to be of [[importance]] (to), {{n-g|translated using expressions such as}} to [[give a damn]], to be [[concerned]] about, to have an [[interest]] in, to [[care]] (about)
-#: {{ux|it|Di lui non me '''ne fregava''' niente prima, e non me '''ne frega''' niente adesso.|inline=1|I '''did'''n't '''care''' about him before, and I '''do'''n't '''care''' about him now.|lit=Of him '''was'''n't '''important''' to me before, and '''is'''n't '''important''' to me now.}}
+# {{lb|it|colloquial|chiefly in the negative}} to be [[important]] {{+obj|it|:a<to someone> + :di<about someone/something>}} {{q|idiomatically translated as {{m+|en|care}} or {{m+|en|give a damn}} with the object of {{m|it|a}} as the subject}}
+#: {{ux|it|Di lui non me '''ne fregava''' niente prima, e non me '''ne frega''' niente adesso.|inline=1|I '''did'''n't '''care''' about him before, and I '''do'''n't '''care''' about him now.|lit=Of him it '''was'''n't '''important''' to me before, and '''is'''n't '''important''' to me now.}}
 #* {{quote-book
 |it
 |year=1831
@@ -36027,7 +36030,7 @@ Page 323 fregarne: -------- begin text --------
 |t=You're so good at staying there taking pains, because the world wants to go to hell! Why do you '''care'''? Let it go. What are you even hoping? To lift it back up?
 |lit=How you are good to stay there to take, because the world wants to run downwards! What to you '''is of importance''' to you? let it go; After all what do you hope? to pull it back up?
 }}
-# {{indtr|it|a|;|di|qual1=+ party not taking an interest|qual2=usually|qual3=+ object of disinterest|.archaic}} to not be of [[importance]] (to), {{n-g|translated using expressions such as}} to not [[give a damn]], to not be [[concerned]] about, to not have an [[interest]] in, to not [[care]] (about)
+# {{lb|it|archaic}} to not be [[important]] {{+obj|it|:a<to someone> + :di<about someone/something>}} {{q|idiomatically translated as {{m+|en|[[not]] [[care]]}} or {{m+|en|[[not]] [[give a damn]]}} with the object of {{m|it|a}} as the subject}}
 
 =====Usage notes=====
 * Usually reinforced by adding {{m|it|niente}}, {{m|it|nulla}}, or a synonym:
@@ -36174,7 +36177,7 @@ From {{prefix|it|auto|id1=self|convincersi|t2=to convince oneself}}.
 ===Verb===
 {{it-verb|\@}}
 
-# {{indtr|it|di|che|a}} to [[convince]] oneself of something, especially something erroneous
+# {{lb|it|intransitive}} to [[convince]] oneself (of), to [[talk into|talk oneself (into)]] {{+obj|:di<something, especially something erroneous>|:di(inf)/:a(inf)<do(ing) something>|:che(ind-cl)<that something is the case>|:che(sub-cl)<do(ing) something>}}
 
 ====Conjugation====
 {{it-conj|\@}}
@@ -36777,7 +36780,7 @@ Page 346 read up: -------- begin text --------
 # To learn (about something) by [[reading]].
 ## {{lb|en|transitive}}
 ##* {{RQ:Doyle Land of Mist|passage="Pestilential nonsense!" "Have you '''read''' it '''up''' at all, Father?" asked Enid. "'''Read''' it '''up'''! I, with all my interests and no time for one-half of them! Enid, you are too absurd." "Sorry, Father."}}
-## {{indtr|en|on|about}}
+## {{lb|en|intransitive}} {{+obj|en|:on/:about}}
 ##* '''28 November 2009''', Indian Express - ''Nayagan was actor R Madhavan's introduction to Kamal Hassan''
 ##*: ''After watching the film, I '''read up''' about it in the newspapers. When I came to know that Hassan was a 30-year-old actor then, I was completely awe-struck''
 
@@ -36808,7 +36811,7 @@ Page 347 postuler: -------- begin text --------
 {{fr-verb}}
 
 # {{lb|fr|transitive|obsolete}} to [[claim]], to [[request]], to [[ask for]]
-# {{indtr|fr|à|pour|qual2=colloquial|direct=1}} to [[apply]] (for a job, a position, a title)
+# {{lb|fr|transitive|or|intransitive}} to [[apply]] for {{+obj|fr|dirobj/:à/:pour<q:colloquial><a job, position, title, etc.>}}
 
 ===Etymology 2===
 {{back-formation|fr|postulat}}.
@@ -37017,9 +37020,9 @@ Related to {{m|fr|chair}} and {{m|fr|carne}}.
 ===Verb===
 {{fr-verb}}
 
-# {{indtr|fr|après|contre|sur}} to [[incite]]; to [[sic]]
+# {{lb|fr|transitive}} to [[incite]]; to [[sic]] {{+obj|fr|dirobj<someone or something, e.g. a dog> + :après/:contre/:sur<on someone/something>}}
 #: {{ux|fr|On avait '''acharné''' les chiens contre le taureau.|We '''sicced''' the dogs on the bull.}}
-# {{indtr|fr|après|contre|sur|.pronominal}} to [[hound]], to fiercely [[attack]]
+# {{lb|fr|pronominal}} to [[hound]], to fiercely [[attack]] {{+obj|fr|:après/:contre/:sur<someone/something>}}
 #* {{quote-book
 |fr
 |year=1883
@@ -37029,7 +37032,7 @@ Related to {{m|fr|chair}} and {{m|fr|carne}}.
 |page=[[s:fr:Page:Banville - La Lanterne magique, 1883.djvu/132|116]]
 |passage=Avec l’intrépidité du désespoir, Florigny lutte contre une tête de lapin qui rira bien, parce qu’elle rira la dernière, et tandis qu’il '''s’acharne''' sur elle, un grand chien funèbre et jaune, vautré sous la table, '''s’acharne''' sur ses mollets à lui, et les dévore.
 }}
-# {{indtr|fr|après|contre|sur|.pronominal|.figuratively}} to [[slave away]], [[persevere]]
+# {{lb|fr|pronominal|figuratively}} to [[slave away]], to [[persevere]] {{+obj|fr|:après/:contre/:sur<at something>}}
 # {{lb|fr|intransitive|pronominal|figuratively}} to [[attach]] oneself excessively {{+obj|fr|:à<to someone/something>}}
 #* {{quote-book
 |fr
@@ -37439,7 +37442,7 @@ Page 361 work wonders: -------- begin text --------
 {{en-verb|*|past2_qual=archaic|past2=wrought wonders}}
 
 # {{lb|en|archaic|intransitive}} To [[perform]] [[miracle]]s or [[magic]].
-# {{lb|en|idiomatic}} {{indtr|en|for|on}} To be highly [[successful]] as a [[solution]].
+# {{lb|en|idiomatic}} To be highly [[successful]] as a [[solution]]. {{+obj|en|:for/:on<someone, a problem, etc.>}}
 
 ====Synonyms====
 * {{l|en|work miracles}}
@@ -39381,7 +39384,7 @@ Page 417 se casser le cul: -------- begin text --------
 ===Verb===
 {{fr-verb}}
 
-# {{indtr|fr|à|pour|.vulgar}} to [[bust one's ass|bust one's arse]]; to work extremely hard; to push oneself to the limit
+# {{lb|fr|vulgar}} to [[bust one's ass|bust one's arse]]; to [[work]] [[extremely]] [[hard]]; to [[push]] oneself to the [[limit]] {{+obj|fr|:à/:pour(inf)<doing something>}}
 #: {{syn|fr|décarcasser|alt1=se décarcasser|se faire chier}}
 #* {{quote-text|fr|year=1995|title=w:La Haine
 |passage=<span style="font-variant:small-caps">Hubert:</span> De toute façon, je savais qu’elle allait partir en fumée un beau jour.<br><span style="font-variant:small-caps">Saïd:</span> Alors pourquoi tu '''t’es cassé le cul''' pour l’obtenir ?|t=<span style="font-variant:small-caps">Hubert:</span> Anyway, I knew it would go up in smoke one day.<br><span style="font-variant:small-caps">Saïd:</span> So why'd you '''bust your arse''' trying to get it?}}
@@ -40489,7 +40492,7 @@ Page 448 rigettarsi: -------- begin text --------
 {{it-verb|è}}
 
 # {{reflexive of|it|rigettare}}
-# {{indtr|it|in|su|a|per|.also|.figurative}} to [[throw]] oneself [[again]]
+# {{lb|it|intransitive|also|figurative}} to [[throw]] oneself [[again]] {{+obj|it|:in<into something>/:su<onto something>/:a<at/into something>}}
 
 ====Conjugation====
 {{it-conj|è}}
@@ -40507,14 +40510,13 @@ From {{inh|pt|la|condico|condīcere|to talk something over together; to agree}}.
 {{pt-IPA|condizêr}}
 
 ===Verb===
-{{pt-verb}}
+{{pt-verb}} {{tlb|pt|intransitive}}
 
-# {{lb|pt|intransitive}} to [[agree]], to [[conform]] {{gl|to be in accordance with expectations}} {{+obj|pt|:com<with something else>}}
+# to [[agree]], to [[conform]] {{gl|to be in accordance with expectations}} {{+obj|pt|:com<with something else>}}
 #: {{ux|pt|O testemunho do réu não '''condiz''' com o da testemunha.|The defendant’s testimony does not '''agree''' with the witness’s.}}
 #: {{ux|pt|Essa teoria não '''condiz''' com a realidade.|This theory does not '''agree''' with reality.}}
-# {{indtr|pt|em|a|.with plural or multiple subjects}} to [[agree]] or [[conform]] with (in a given aspect)
+# {{lb|pt|with plural or multiple subjects}} to [[agree]] or [[conform]] with one another {{+obj|pt|:em/:a<in a given aspect>}}
 #: {{ux|pt|Eu e ele não '''condizemos''' em opinião.|He and I do not '''agree''' in opinion.}}
-# {{lb|pt|with plural or multiple subjects|intransitive}} to [[agree]] or [[conform]] with one another
 #: {{ux|pt|Essas teorias não '''condizem'''.|These theories '''are''' not '''in agreement'''.}}
 
 ====Conjugation====
@@ -40767,7 +40769,7 @@ Page 465 rodersi: -------- begin text --------
 # {{lb|it|transitive}} to [[gnaw]] or [[bite]] at
 #: {{syn|it|rosicchiarsi}}
 #: {{uxi|it|'''rodersi''' le unghie|to '''gnaw at''' one's fingernails}}
-# {{indtr|it|di|da|per}} to be [[consume]]d, [[torment]]ed, or [[afflict]]ed (by)
+# {{lb|it|intransitive}} to be [[consume]]d, [[torment]]ed, or [[afflict]]ed {{+obj|it|:di/:da/:per<by something>}}
 #: {{syn|it|struggersi|fremere|Thesaurus:rodersi}}
 #: {{ux|it|'''rodersi''' per una passione non corrisposta|to '''be afflicted''' by an unrequited passion}}
 # {{lb|it|reciprocal|literary}} to [[fight]] or [[despise]] each other
@@ -40785,7 +40787,7 @@ Page 466 lançar luz: -------- begin text --------
 {{pt-verb}}
 
 # {{&lit|pt|lançar|luz}}
-# {{indtr|pt|sobre|em|.idiomatic}} to [[shed light on]] {{gl|to cause to become clearer or better-known}}
+# {{lb|pt|idiomatic}} to [[shed light on|shed light]] {{gl|to cause to become clearer or better-known}} {{+obj|pt|:sobre/:em<on someone/something>}}
 
 ====Synonyms====
 * {{l|pt|jogar luz}}
@@ -42380,7 +42382,7 @@ Page 528 stp-zꜣ: -------- begin text --------
 ===Verb===
 {{egy-verb|compound|head=<hiero>s-t*p:stp-V16</hiero>}}
 
-# {{indtr|egy|r|ḥr|ḥꜣ}} to [[protect]] (a person, or, more rarely, a temple) {{defdate|since the Pyramid Texts}}
+# {{lb|egy|intransitive}} to [[protect]] {{+obj|egy|:r/:ḥr/:ḥꜣ<a person, or, more rarely, a temple>}} {{defdate|since the Pyramid Texts}}
 
 ====Usage notes====
 Originally, the subject intervened between {{m|egy|stp}} and {{m|egy|zꜣ}}, but in later times it often appeared twice, once after {{m|egy|stp}} and once after {{m|egy|zꜣ}}. By the Greco-Roman Period, it had shifted to appearing only after {{m|egy|zꜣ}}.
@@ -42598,10 +42600,8 @@ Page 536 rendre compte: -------- begin text --------
 #: {{ux|fr|Cette théorie n'a pas pu '''rendre compte''' de tous les phénomènes observés ; elle doit donc être abandonnée.|This theory hasn't been able to '''account for''' all the observed phenomena; it should therefore be abandoned.}}
 #* {{quote-text|fr|year=2009|author=Christian Lallier|title=Pour une anthropologie filmée des interactions sociales|page=36
 |passage=De même, si l'observateur-filmant représente sans aucun doute un acteur social de la situation observée – assujetti en cela aux mêmes règles de civilité que les autres individus – il n'est pas un acteur social comme les autres interactants, mais interagit en tant qu'observateur : cette qualification (socialement reconnue par les autres membres du groupe) lui attribue une distinction par laquelle il peut '''rendre compte''' de ce qui se passe, sans y être pour autant associeé.|t=Likewise, though the observer-filmer undoubtedly constitutes a social actor in the situation observed, thus being subject to the same rules of civility as the others are, he is not a social actor entirely like the others who are interacting, but interacts as an observer. This qualification (socially recognized by the other members of the group) endows him with a distinction by which he can '''provide an account of''' what happens without being associated with what happens.}}
-# {{senseid|fr|to realize}}{{indtr|fr|de|que|.reflexive}} to [[realize]] something, to [[notice]] something, to [[become]] [[aware]] of something
+# {{senseid|fr|to realize}} {{lb|fr|reflexive}} to [[realize]], to [[notice]], to [[become]] [[aware]] (of) {{+obj|fr|:de<something>/:que(ind-cl)<that ...>}}
 #: {{syn|fr|prendre conscience|réaliser|q2=proscribed}}
-#: {{coi|fr|se '''rendre compte''' de quelque chose|to '''realize''' something}}
-#: {{coi|fr|se '''rendre compte''' que …|to '''realize''' that …}}
 
 ====Conjugation====
 * see {{m|fr|rendre}}
@@ -44665,7 +44665,7 @@ Compare {{cog|en|cut a figure}}.
 ===Verb===
 {{fr-verb}}
 
-# {{indtr|fr|devant|en face de|face à}} {{lb|fr|figuratively}} to [[pale in comparison]], to [[pale into insignificance]], not to [[hold a candle]] to
+# {{lb|fr|figuratively}} to [[pale in comparison]] (with), not to [[hold a candle]] (to) {{+obj|fr|:devant/:en face de/:face à<someone/something>}}
 
 ====See also====
 * {{l|fr|arriver à la cheville}}
@@ -45096,7 +45096,7 @@ Page 685 spezzare una lancia: -------- begin text --------
 ===Verb===
 {{it-verb|a/è}}
 
-# {{indtr|it|su|per|a favore di|in favore di}} to [[plead]] (someone's) cause; to come to (someone's) [[defense]]
+# to [[plead]] (someone's) cause; to come to (someone's) [[defense]] {{+obj|it|:su/:per/:a favore di/:in favore di<someone>}}
 #: {{syn|it|sostenere|patrocinare|Thesaurus:appoggiare}}
 #* {{quote-av|it|year=2024|role={{w|Bruno Barbieri}}|title=Masterchef Italia|season=13|number=19|text=Voglio '''spezzare una lancia''' anche sugli altri tre. Cioè, nel senso che, loro hanno fatto tre piatti eccelsi...|t=I also want to '''make the case''' for the other three. I mean, in the sense that, they made three exceptional dishes...}}
 
@@ -45113,19 +45113,16 @@ Page 686 faire le poids: -------- begin text --------
 ===Verb===
 {{fr-verb}}
 
-# {{lb|fr|informal|figuratively}} {{indtr|fr|face à|devant}} to [[hold a candle]] to, to [[measure up]] to, to [[cut the mustard]]
+# {{lb|fr|informal|figuratively|chiefly in the negative}} to [[hold a candle]] (to), to [[measure up]] (to), to [[cut the mustard]] (with respect to) {{+obj|fr|:face à/:devant<someone/something>}}
 #: {{syn|fr|rivaliser}}
 
 ====Usage notes====
-* Chiefly used in negative sentences: ''ne pas faire le poids face à quelque chose'', "to be no [[match]] for something".
 * Not to be confused with {{m|fr|faire son poids}}.
 
 ====See also====
 * {{l|fr|arriver à la cheville}}
 * {{l|fr|faire pâle figure}}
 * {{l|fr|faire jeu égal}}
-
-{{cln|fr|negative polarity items}}
 -------- end text --------
 Page 687 faire les poches: -------- begin text --------
 ==French==
@@ -45195,7 +45192,7 @@ Page 691 dare atto: -------- begin text --------
 ===Verb===
 {{it-verb|a/@}}
 
-# {{indtr|it|a|di|che}} to [[recognize]]; to [[acknowledge]]
+# to [[recognize]], to [[acknowledge]], to [[give credit]] (to) {{+obj|it|:a/:di<someone/something>|:che(ind-cl)<that ...>}}
 #: {{syn|it|riconoscere|ammettere}}
 #: {{ux|it|devo '''darti atto''' del tuo coraggio|I have to '''acknowledge''' your courage}}
 
@@ -45600,7 +45597,7 @@ Page 716 trouver grâce: -------- begin text --------
 ===Verb===
 {{fr-verb}}
 
-# {{indtr|fr|aux yeux de|auprès de|devant}} to [[find favour]] with (someone)
+# to [[find favour]] {{+obj|fr|:aux yeux de/:auprès de/:devant<with someone>}}
 -------- end text --------
 Page 717 find favour: -------- begin text --------
 ==English==
@@ -48141,7 +48138,7 @@ Page 805 chiedere conto: -------- begin text --------
 ===Verb===
 {{it-verb|a\@}}
 
-# {{indtr|it|a|di|.idiom}} to ask (someone) to [[explain]] their [[action]]s, [[behavior]], etc.; to [[hold to account]]
+# to ask (someone) to [[explain]] their [[action]]s, [[behavior]], etc.; to [[hold to account]] {{+obj|it|:a<someone> + :di<for something>}}
 #* {{quote-journal|it|title=Pd, Zingaretti: "Non si governa con 4 idee possibili di Paese. Per Roma, chiedo alla classe dirigente di farsi avanti"|trans-title=PD, Zingaretti: "You can't govern with 4 possible ideas of the country. For Rome, I ask the ruling class to come forward"|magazine=w:la Repubblica|date=1 October 2020|author=Giovanna Casadio|url=https://www.repubblica.it/politica/2020/10/01/news/nicola_zingaretti_pd_governo_roma_raggi-269138104|passage=Nella tre giorni del Festival delle città, che ha come titolo "Rinasce l'Italia", molti sindaci, ministri e esponenti dell'opposizione a cui '''chiedere conto''' di progetti e risorse, a cominciare dal Recovery Fund.|t=In the three days of the Festival of the City, that is titled "Reborn Italy", many mayors, ministers and exponents of the opposition to whom to '''call to account''' for projects and resources, beginning from the Recovery Fund.}}
 
 ===Anagrams===
@@ -48898,7 +48895,7 @@ Page 858 au clair: -------- begin text --------
 ===Prepositional phrase===
 {{fr-prep phrase}}
 
-# {{lb|fr|of a [[person]]}} {{indtr|fr|sur|avec}} [[clear]] {{gl|free of doubt, who has understood the situation clearly}}
+# {{lb|fr|of a person}} [[clear]] {{gl|free of doubt, who has understood the situation clearly}} {{+obj|fr|:sur/:avec<about something>}}
 #: {{uxi|fr|être au clair sur quelque chose|to have a clear understanding of something}}
 #: {{uxi|fr|avoir les idées claires, être au clair avec soi-même|to be clear in one's [[mind]], to know what one wants}}
 
@@ -48970,7 +48967,7 @@ Page 865 put one's stamp: -------- begin text --------
 ===Verb===
 {{en-verb|put<,,put> one's stamp}}
 
-# {{lb|en|idiomatic}} {{indtr|en|on|over}} To [[change]] or [[influence]] (something) in a way that [[demonstrate]]s one's [[style]] or [[ability|abilities]]; to make a [[lasting]] [[impression]] on.
+# {{lb|en|idiomatic}} To [[change]] or [[influence]] (something) in a way that [[demonstrate]]s one's [[style]] or [[ability|abilities]]; to make a [[lasting]] [[impression]] on. {{+obj|en|:on/:over<something>}}
 #: {{syn|en|leave one's stamp|make one's mark}}
 #* {{quote-journal|en|date=2018-10-20|author=Ed Odeven|title=Northern Happinets earn dramatic victory over Rizing Zephyr|journal=w:The Japan Times|url=https://www.japantimes.co.jp/sports/2018/10/20/basketball/b-league/northern-happinets-earn-dramatic-victory-rizing-zephyr/|passage=The Rizing Zephyr took a 71-70 lead on a Shota Tsuyama free throw (he missed the first attempt) with 1:42 to play, which was followed by a cold spell by both offenses before Coleby got in position to '''put his stamp''' on the final outcome.}}
 #* {{quote-journal|en|date=2021-01-01|author=Christopher Flavelle|title=How Trump Tried, but Largely Failed, to Derail America’s Top Climate Report|journal=w:The New York Times|url=https://www.nytimes.com/2021/01/01/climate/trump-national-climate-assessment.html|passage=The administration should have moved sooner to '''put its stamp''' on the climate assessment, said Judith Curry, a former chairwoman of the School of Earth and Atmospheric Sciences at the Georgia Institute of Technology who said she has been in contact with Dr. Maue and other officials.}}
@@ -49265,7 +49262,7 @@ Page 880 User:Φρύδια/sandbox: -------- begin text --------
 #: {{uxi|pt|Como '''sabe''' esse vinho!|How good does this wine '''taste'''!}}
 -------- end text --------
 Page 881 Wiktionary:Word of the day/2021/April 17: -------- begin text --------
-{{WOTD|hell-bent|adj|{{indtr|en|on|.originally|.US|.informal}} [[recklessly|Recklessly]] [[determined#Adjective|determined]] to do or [[achieve]] (something).
+{{WOTD|hell-bent|adj|{{lb|en|originally|US|informal}} [[recklessly|Recklessly]] [[determined#Adjective|determined]] to do or [[achieve]] (something). {{+obj|en|:on<something>}}
 
 {{en-adv|head=[[hell-bent]]}}
 
@@ -50220,12 +50217,12 @@ Page 938 faire le lien: -------- begin text --------
 * {{audio|fr|LL-Q150 (fra)-Lyokoï-faire le lien.wav}}
 
 ===Verb===
-{{fr-verb}}
+{{fr-verb}} {{+obj|fr|:avec<with someone/something>/:entre<between or among two or more people or things>}}
 
-# {{lb|fr|intransitive}} {{indtr|fr|avec|entre}} to [[put two and two together]], to [[connect the dots]], to make the [[connection]]
+# {{lb|fr|intransitive}} to [[put two and two together]], to [[connect the dots]], to make the [[connection]]
 #: {{syn|fr|faire le rapprochement}}
 #: {{uxi|fr|Je n'avais pas '''fait le lien'''.}}
-# {{lb|fr|intransitive}} {{indtr|fr|avec|entre}} to [[liaise]]
+# {{lb|fr|intransitive}} to [[liaise]]
 -------- end text --------
 Page 939 n'en plus pouvoir: -------- begin text --------
 ==French==
@@ -51051,7 +51048,7 @@ Page 993 volere male: -------- begin text --------
 |t=It's regrettable that the minister has perhaps misheard, or deliberately misinterpreted some of my statements.
 |lit=I'm sorry that the lord minister has maybe erroneously heard, or has '''wanted''' to '''erroneously''' interpret some my statements.
 }}
-# {{indtr|it|a|;|di|qual1=+ person disliked|qual2=optionally|qual3=+ reason for aversion}} to [[strongly]] [[dislike]], to feel [[aversion]] of [[antipathy]], to [[wish]] [[ill]]
+# {{lb|it|intransitive}} to [[strongly]] [[dislike]], to feel [[aversion]] or [[antipathy]] for, to [[wish]] [[ill]] {{+obj|it|:a<someone> + :di<for some reason>}}
 #: {{ant|it|volere bene}}
 #* {{RQ:it:Decameron|9|7|Chi '''mal''' ti '''vuol''', mal ti sogna; tu ti fai molto di me pietoso, ma tu sogni di me quello che tu vorresti vedere|Those Who '''wish''' you '''ill''', dream your ills. You act really concerned towards me, but you dream about me what you would like to see}}
 #* {{quote-book
@@ -52019,7 +52016,7 @@ From earlier {{m|sdc|vulé}}, from {{inh|sdc|la-vul|voleō|voleō, volēre}}, 2<
 ===Verb===
 {{head|sdc|verb|first-person singular present|vógliu|past participle|vuruddu|auxiliary|abé}}
 
-# {{indtr|sdc|chi|qual1=+ verb in the subjunctive|direct=1}} to [[want]], to [[wish]] for, to [[desire]]
+# {{lb|sdc|transitive}} to [[want]], to [[wish]] for, to [[desire]] {{+obj|sdc|dirobj<something>/:chi(sub-cl)<for something to happen>}}
 #* {{quote-book
 |sdc
 |year=1989
@@ -52035,8 +52032,8 @@ From earlier {{m|sdc|vulé}}, from {{inh|sdc|la-vul|voleō|voleō, volēre}}, 2<
 |text=Pogga genti l’ischampa, ma calchunu</br>ribulthureggia l’órdhini e ridesci</br>a passà l’àidu, e ca '''vuria''' dibenta.
 |t=Few people escape it, but some uproot the order, and manage to cross the threshold, and become what they '''wanted'''.
 }}
-## {{lb|sdc|in the [[conditional]]}} [[would like]]
-# {{lb|sdc|modal}} to [[want]]
+## {{lb|sdc|in the [[conditional]]}} [[would like]] {{+obj|sdc|dirobj<something>/:chi(sub-cl)<for something to happen>}}
+# {{lb|sdc|catenative}} to [[want]] {{+obj|sdc|inf<to do something>}}
 #* {{quote-book
 |sdc
 |year=1989
@@ -52063,7 +52060,7 @@ From earlier {{m|sdc|vulé}}, from {{inh|sdc|la-vul|voleō|voleō, volēre}}, 2<
 |text=lu parracu chi no m’'''abìa vuruddu''' battisgià e chi si dizi ancór’abà fùssia un imbriaggòni
 |t=the priest who '''didn't want''' to baptize me, and who is—to this day—still rumored to have been a drunkard
 }}
-## {{lb|sdc|in the [[conditional]]}} [[would like]]
+## {{lb|sdc|catenative|in the [[conditional]]}} [[would like]] {{+obj|sdc|inf<to do something>}}
 ##* {{quote-book
 |sdc
 |year=1989
@@ -52299,7 +52296,7 @@ Page 1046 ammintassi: -------- begin text --------
 {{head|sdc|verb|first-person singular present|[[m']][[ammentu]]|past participle|ammintaddu|auxiliary|assé}}
 
 # {{reflexive of|sdc|ammintà}}
-# {{indtr|sdc|di|qual1=+ object|chi|qual2=+ verb in the infinitive|direct=1}} to [[remember]]
+# to [[remember]] {{+obj|sdc|dirobj/:di<someone/something>|:chi(ind-cl)<that ...>}}
 #: {{syn|sdc|ammintà}}
 #: {{ant|sdc|immintigà|ischurdhà}}
 #* {{quote-book
@@ -52755,7 +52752,7 @@ Page 1060 fare rapporto: -------- begin text --------
 ===Verb===
 {{it-verb}}
 
-# {{indtr|it|a|su|contro}} to [[report]] {{gl|to make a statement of complaint}} (about someone, to someone)
+# {{lb|intransitive}} to [[report]] {{gl|to make a statement of complaint}} {{+obj|it|:a<to someone, especially an authority figure> + :contro(noun)/:su(noun)/:[[contro]] [[di]](pronoun)/:[[su]] [[di]](pronoun)<about someone> + :su<concerning a topic>}}
 #: {{syn|it|segnalare|denunciare}}
 #: {{ux|it|Volendosi rivalere, lei ha '''fatto rapporto''' contro di me alla direttrice.|Wanting to get back at me, she '''reported''' me to the director.}}
 
