@@ -1232,7 +1232,7 @@ def create_inflection_entry(program_args, save, index, inflections, lemma,
                         "prepositional phrase", "pronoun"]):
                 found_lemma.append(getparam(t, "2") if tnam == "head" else
                     tnam)
-            if found_lemma:
+            if found_lemma and not program_args.overwrite_even_if_lemma:
               warn("Page appears to have a lemma on it, not overwriting, skipping form: lemmas = %s"
               % ",".join(found_lemma), err=True)
               return
@@ -3533,6 +3533,9 @@ given. WARNING: Be careful!""")
 pa.add_argument("--overwrite-etymologies", action="store_true",
     help="""If specified and --overwrite-page, overwrite the entire existing
 page of inflections even if "Etymology N". WARNING: Be careful!""")
+pa.add_argument("--overwrite-even-if-lemma", action="store_true",
+    help="""If specified and --overwrite-page is given, overwrite the entire existing page of inflections
+even if a lemma is found. WARNING: Be very careful!""")
 pa.add_argument("--numeral", action="store_true",
     help="""If specified, create numeral forms instead of noun/adj forms.""")
 pa.add_argument("--pronoun", action="store_true",

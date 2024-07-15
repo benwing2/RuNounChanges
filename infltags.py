@@ -114,17 +114,33 @@ def construct_abbreviated_template(tn, lang, lemma):
 #     to compare tags but not to convert all tags to their canonical form.
 # These tables should be passed to combine_adjacent_tags_into_multipart().
 def fetch_tag_tables(preferred_tag_variants=set()):
-  jsonstr = site.expand_text("{{#invoke:User:Benwing2/form of|dump_form_of_data}}")
+  jsonstr = site.expand_text("{{#invoke:form of|dump_form_of_data}}")
   jsondata = json.loads(jsonstr)
   tag_to_dimension_table = {}
   tag_to_canonical_form_table = {}
   def process_data(data):
     for tag, tagdata in data["tags"].items():
-      if "tag_type" in tagdata:
-        tag_to_dimension_table[tag] = tagdata["tag_type"]
-      if "shortcuts" in tagdata and len(tagdata["shortcuts"]) > 0:
-        canon_variant = tagdata["shortcuts"][0]
-        all_variants = set(tagdata["shortcuts"] + [tag])
+      print("tag: %s, tagdata: %s" % (tag, tagdata))
+      if type(tagdata) is dict:
+        tag_type = tagdata["1"]
+        if "3" in tagdata:
+          shortcuts = tagdata["3"]
+        else:
+          shortcuts = []
+      else:
+        tag_type = tagdata[0]
+        if len(tagdata) >= 3:
+          shortcuts = tagdata[2]
+        else:
+          shortcuts = []
+      if shortcuts is None:
+        shortcuts = []
+      if type(shortcuts) is str:
+        shortcuts = [shortcuts]
+      tag_to_dimension_table[tag] = tag_type
+      if len(shortcuts) > 0:
+        canon_variant = shortcuts[0]
+        all_variants = set(shortcuts + [tag])
         for variant in all_variants:
           if variant in preferred_tag_variants:
             canon_variant = variant
@@ -136,7 +152,13 @@ def fetch_tag_tables(preferred_tag_variants=set()):
     for shortcut, tag in data["shortcuts"].items():
       # shortcuts contain entries like "mfn" -> "m//f//n" and "2p" -> ["2", "p"]
       if isinstance(tag, str) and tag in data["tags"]:
-        tag_to_dimension_table[shortcut] = data["tags"][tag]["tag_type"]
+        print("shortcut: %s, tag: %s, tagdata: %s" % (shortcut, tag, data["tags"][tag]))
+        tagdata = data["tags"][tag]
+        if type(tagdata) is dict:
+          shortcut_type = tagdata["1"]
+        else:
+          shortcut_type = tagdata[0]
+        tag_to_dimension_table[shortcut] = shortcut_type
 
   process_data(jsondata["data"])
   process_data(jsondata["data2"])
