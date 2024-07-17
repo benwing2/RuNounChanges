@@ -1,6 +1,9 @@
 local labels = {}
 local handlers = {}
 
+local rfind = mw.ustring.find
+local rmatch = mw.ustring.match
+
 
 --------------------------------- Adjectives --------------------------------
 
@@ -8,16 +11,19 @@ local adj_like_poses = {"adjective", "pronoun", "determiner", "numeral", "suffix
 for _, pos in ipairs(adj_like_poses) do
 	local plpos = require("Module:string utilities").pluralize(pos)
 	labels["hard " .. plpos] = {
-		description = "Czech hard-stem " .. plpos .. ".",
+		description = "{{{langname}}} hard-stem " .. plpos .. ".",
+		breadcrumb = "hard",
 		parents = {{name = plpos .. " by inflection type", sort = "hard-stem"}},
 	}
 	labels["soft " .. plpos] = {
-		description = "Czech soft-stem " .. plpos .. ".",
+		description = "{{{langname}}} soft-stem " .. plpos .. ".",
+		breadcrumb = "soft",
 		parents = {{name = plpos .. " by inflection type", sort = "soft-stem"}},
 	}
-	labels[plpos .. " with short form"] = {
-		description = "Czech " .. plpos .. " with short-form inflections.",
-		parents = {{name = plpos .. " by inflection type", sort = "short form"}},
+	labels[plpos .. " with short forms"] = {
+		description = "{{{langname}}} " .. plpos .. " with short-form inflections.",
+		breadcrumb = "with short forms",
+		parents = {{name = plpos .. " by inflection type", sort = "short forms"}},
 	}
 end
 
@@ -51,9 +57,35 @@ for _, pos in ipairs({"nouns", "pronouns", "numerals"}) do
 		labels[full_label] = props
 	end
 
+	make_label("adjectival POS",
+		"with adjectival endings.",
+		{parents = {pos}}
+	)
+
 	make_label("by stem type and gender",
 		"categorized by stem type and gender.",
 		{parents = {name = pos .. " by inflection type", sort = "stem type and gender"}}
+	)
+
+	make_label("that change gender in the plural",
+		"with a different gender in the singular vs. the plural, as determined by adjective concord.",
+		{
+			breadcrumb = "changing gender in the plural",
+			parents = {
+				{name = pos .. " by stem type and gender", sort = "changing gender in the plural"},
+				{name = "irregular " .. pos, sort = "changing gender in the plural"},
+			},
+		}
+	)
+
+	make_label("adjectival POS by stem type and gender",
+		"adjectival POS categorized by stem type and gender.",
+		{
+			parents = {
+				{name = pos .. " by inflection type", sort = "stem type and gender"},
+				{name = "adjectival " .. pos, sort = "stem type and gender"},
+			}
+		}
 	)
 
 	for _, gender in ipairs(possible_genders) do
@@ -64,13 +96,36 @@ for _, pos in ipairs({"nouns", "pronouns", "numerals"}) do
 				parents = {pos .. " by stem type and gender"},
 			}
 		)
+		make_label(gender .. " adjectival POS by stem type",
+			("%s adjectival POS categorized by stem type."):format(gender),
+			{
+				breadcrumb = gender,
+				parents = {"adjectival " .. pos .. " by stem type and gender"},
+			}
+		)
+		make_label("indeclinable " .. gender .. " POS",
+			("indeclinable %s POS. Currently only POS with multiple declensions including at least one that is "
+				.. "declinable are included."):format(gender),
+			{
+				breadcrumb = gender,
+				parents = {"indeclinable " .. pos},
+			}
+		)
+		make_label("mostly indeclinable " .. gender .. " POS",
+			("mostly indeclinable %s POS, i.e. indeclinable in all but a few case/number combinations."
+				):format(gender),
+			{
+				breadcrumb = "mostly indeclinable",
+				parents = {"indeclinable " .. gender .. " " .. pos},
+			}
+		)
 	end
 
 	make_label("with quantitative vowel alternation",
 		"with stem alternation between a long vowel (''á'', ''é'', ''í'', ''ou'' or ''ů'') and the corresponding " ..
 		"short vowel (''a'', ''e'', ''i'', ''o'' or ''u''), depending on the form.",
 		{
-			additional = "See also [[:Category:Czech %s with í-ě alternation]].",
+			additional = ("See also [[:Category:Czech %s with í-ě alternation]]."):format(pos),
 			parents = {name = pos, sort = "quantitative vowel alternation"},
 		}
 	)
@@ -78,7 +133,7 @@ for _, pos in ipairs({"nouns", "pronouns", "numerals"}) do
 	make_label("with í-ě alternation",
 		"with stem alternation between ''í'' and ''ě'', depending on the form.",
 		{
-			additional = "See also [[:Category:Czech %s with quantitative vowel alternation]].",
+			additional = ("See also [[:Category:Czech %s with quantitative vowel alternation]]."):format(pos),
 			parents = {name = pos, sort = "í-ě alternation"},
 		}
 	)
@@ -94,9 +149,26 @@ for _, pos in ipairs({"nouns", "pronouns", "numerals"}) do
 		{parents = {name = pos .. " by inflection type", sort = "multiple stems"}}
 	)
 
-	make_label("adjectival POS",
-		"with adjectival endings.",
-		{parents = {pos}}
+	make_label("masculine animate POS",
+		"masculine animate POS, i.e. POS referring (mostly) to male beings or animals.",
+		{
+			breadcrumb = "animate",
+			parents = {{name = "masculine " .. pos, sort = "animate"}},
+		}
+	)
+
+	make_label("masculine inanimate POS",
+		"masculine inanimate POS, i.e. POS referring to inanimate objects that have masculine agreement patterns.",
+		{
+			breadcrumb = "inanimate",
+			parents = {{name = "masculine " .. pos, sort = "inanimate"}},
+		}
+	)
+
+	make_label("with regular foreign declension",
+		"with a foreign ending such as ''-us'', ''-os'', ''-es'', ''-um'', ''-on'' or silent ''-e'', which is dropped in " ..
+		"all cases except the nominative singular and maybe the accusative singular and vocative singular.",
+		{parents = {name = pos .. " by inflection type", sort = "regular foreign declension"}}
 	)
 
 	make_label("with irregular stem",
@@ -115,7 +187,10 @@ local noun_stem_gender_endings = {
 		["mixed"]             = {"''-l'', ''-n'' or ''-t''", "''-a'' or ''-e''/''-ě''", "''-i'' or ''-ové''"},
 		["-a"]                = {"''-a''", "''-y'' (''-i'' after a soft consonant)", "''-é'' or ''-ové''"},
 		["-e"]                = {"''-e''", "''-e''", "''-i'' or ''-ové''"},
+		["-ee"]               = {"''-ee''", "''-eeho''", "''-eeové''"},
 		["-i/-y"]             = {"''-i''/''-y''", "''-iho''/''-yho''", "''-iové''/''-yové'' or ''-i''/''-y''"},
+		["-í/-ý"]             = {"''-i''/''-y''", "''-ího''/''-ýho''", "''-íové''/''-ýové'' or ''-í''/''-ý''"},
+		["-ie"]               = {"''-ie''", "''-ieho''", "''-iové'' or ''-ies''"},
 		["-o"]                = {"''-o''", "''-a''", "''-ové''"},
 		["-u"]                = {"''-u''", "''-ua''", "''-uové''"},
 		["t-stem"]            = {"''-e''/''-ě''", "''-ete''/''-ěte''", "''-ata''"},
@@ -126,6 +201,7 @@ local noun_stem_gender_endings = {
 		["semisoft"]          = {"''-ius''", "''-a''", "''-e''"},
 		["soft"]              = {"a paired soft or unpaired consonant", "''-e''", "''-e''"},
 		["mixed"]             = {"''-l'', ''-n'' or ''-t''", "''-u'' or ''-e''", "''-e'' or ''-y''"},
+		["-e"]                = {"''-e''", "''-e''", "''-e''"},
 		["-o"]                = {"''-o''", "''-a''", "''-ové''"},
 	},
     feminine = {
@@ -137,53 +213,100 @@ local noun_stem_gender_endings = {
 		["mixed i-stem"]      = {"a paired soft or unpaired consonant", "''-i'' or sometimes ''-e''/''-ě''", "''-i'' or sometimes ''-e''/''-ě''"},
 		["-ea"]               = {"''-ea''", "''-ey'' or (if non-technical) ''-eje''",  "''-ey'' or (if non-technical) ''-eje''"},
 		["technical-ea"]      = {"''-ea''", "''-ey''",  "''-ey''"},
-		["-oa/-ua"]           = {"''-oa''/''-ua''", "''-oy''/''-uy''",  "''-oy''/''-uy''"},
+		["-i"]                = {"''-i''", "''-i'' or ''eře'' (archaic)", "nonexistent"},
 		["-ia"]               = {"''-ia''", "''-ie''",  "''-ie''"},
+		["-oa/-ua"]           = {"''-oa''/''-ua''", "''-oy''/''-uy''",  "''-oy''/''-uy''"},
 	},
     neuter = {
 		["hard"]              = {"''-o''", "''-a''", "''-a''"},
 		["velar-stem"]        = {"a velar + ''-o''", "''-a''", "''-a''"},
 		["semisoft"]          = {"''-io''/''-ium'', ''-eo''/''-eum'' or ''-ion''", "''-ia'' or ''-ea''",  "''-ia'' or ''-ea''"},
 		["soft"]              = {"''-e''/''-ě''", "''-e''/''-ě''", "''-e''/''-ě''"},
-		["-í"]                = {"''-í''", "''-í''", "''-í''"},
+		["-í/-ý"]             = {"''-í''/''-ý''", "''-í''/''-ý''", "''-í''/''-ý''"},
 		["n-stem"]            = {"''-eno'' or ''-ě''", "''-ena'' or ''-ene''", "''-ena''"},
 		["t-stem"]            = {"''-e''/''-ě''", "''-ete''/''-ěte''", "''-ata''"},
 		["ma-stem"]           = {"''-ma''", "''-matu''", "''-mata''"},
 	},
 }
 
-table.insert(handlers, function(data)
-	--[=[
-	Implement me!
+local adj_noun_stem_gender_endings = {
+    ["masculine animate"] = {
+		["hard"]              = {"''-ý''", "''-ého''", "''-í''"},
+		["soft"]              = {"''-í''", "''-ího''", "''-í''"},
+		["possessive-ův"]     = {"''-ův''", "''-ova''", "''-ovi''"},
+		["possessive-in"]     = {"''-in''", "''-ina''", "''-ini''"},
+	},
+    ["masculine inanimate"] = {
+		["hard"]              = {"''-ý''", "''-ého''", "''-é''"},
+		["soft"]              = {"''-í''", "''-ího''", "''-í''"},
+		["possessive-ův"]     = {"''-ův''", "''-ova''", "''-ovy''"},
+		["possessive-in"]     = {"''-in''", "''-ina''", "''-iny''"},
+	},
+    feminine = {
+		["hard"]              = {"''-á''", "''-é''", "''-é''"},
+		["soft"]              = {"''-í''", "''-í''", "''-í''"},
+		["possessive-ova"]    = {"''-ova''", "''-ovy''", "''-ovy''"},
+		["possessive-ina"]    = {"''-ina''", "''-iny''", "''-iny''"},
+	},
+    neuter = {
+		["hard"]              = {"''-é''", "''-ého''", "''-á''"},
+		["soft"]              = {"''-í''", "''-ího''", "''-í''"},
+		["possessive-ovo"]    = {"''-ovo''", "''-ova''", "''-ova''"},
+		["possessive-ino"]    = {"''-ino''", "''-ina''", "''-ina''"},
+	},
+}
 
-	stem, gender, pos = rmatch(data.label, "^(.*) (.-) adjectival (.*)s$")
-	if stem and noun_stem_expl[stem] then
-		local stemspec = stem
-		local endings = adj_decl_endings[stemspec]
-		if endings then
-			local stemtext = " The stem ends in " .. noun_stem_expl[stem] .. "."
-			local m, f, n, pl = unpack(endings)
-			local sg =
-				gender == "masculine" and m or
-				gender == "feminine" and f or
-				gender == "neuter" and n or
-				nil
-			return {
-				description = "Czech " .. stem .. " " .. gender .. " " .. pos ..
-				"s, with adjectival endings, ending in " .. (sg and sg .. " in the nominative singular and " or "") ..
-				pl .. " in the nominative plural." .. stemtext,
-				breadcrumb = stem .. " " .. gender,
-				parents = {
-					{name = "adjectival " .. pos .. "s", sort = stem .. " " .. gender},
-					pos .. "s by stem type and gender",
-				}
-			}
+table.insert(handlers, function(data)
+	for _, gender in ipairs(possible_genders) do
+		local in_ending = "in (%-[aeiouyůvn]+)"
+		local breadcrumb
+		-- check for e.g. 'Czech possessive feminine adjectival nouns in -ova'
+		local stemtype, pos, ending = rmatch(data.label, "^(.-) " .. gender .. " adjectival (.*)s " .. in_ending .. "$")
+		if stemtype then
+			stemtype = stemtype .. ending
+			breadcrumb = stemtype .. " in " .. ending
+		end
+		if not stemtype then
+			-- check for e.g. 'Czech hard masculine animate adjectival nouns'
+			stemtype, pos = rmatch(data.label, "^(.-) " .. gender .. " adjectival (.*)s$")
+			breadcrumb = stemtype
+		end
+		if stemtype then
+			if adj_noun_stem_gender_endings[gender] then
+				local endings = adj_noun_stem_gender_endings[gender][stemtype]
+				if endings then
+					local nom_s, gen_s, nom_p = unpack(endings)
+					local additional =
+						("This type declines like an adjective. It normally ends in %s in the nominative singular; %s in the genitive singular; and %s in the nominative plural."):
+						format(nom_s, gen_s, nom_p)
+					return {
+						description = "Czech " .. data.label .. ".",
+						additional = additional,
+						breadcrumb = breadcrumb,
+						parents = {
+							{name = gender .. " adjectival " .. pos .. "s by stem type", sort = stemtype:gsub("%-", "")}
+						},
+					}
+				end
+			end
 		end
 	end
-	]=]
 
+	local pos, mixed_istem_type = rmatch(data.label, "^mixed i%-stem feminine (.*)s %(type '(.*)'%)$")
+	if mixed_istem_type then
+		return {
+			description = "Czech mixed i-stem feminine " .. pos .. "s, declined like {{m|cs|" .. mixed_istem_type .. "}}.",
+			additional = "These nouns have a mixture of soft-stem and i-stem endings in the genitive singular, " ..
+				"nominative/accusative/vocative plural, dative plural, instrumental plural and locative plural. The particular endings used depend on the subtype.",
+			breadcrumb = mixed_istem_type,
+			parents = {
+				{name = "mixed i-stem feminine " .. pos .. "s", sort = mixed_istem_type}
+			},
+		}
+	end
+		
 	for _, gender in ipairs(possible_genders) do
-		local in_ending = "in (%-[aeiouí/%-]+)"
+		local in_ending = "in (%-[aeiouyíý/%-]+)"
 		local breadcrumb
 		-- check for e.g. 'Czech technical feminine nouns in -ea'
 		local stemtype, pos, ending = rmatch(data.label, "^(.-) " .. gender .. " (.*)s " .. in_ending .. "$")
@@ -196,8 +319,8 @@ table.insert(handlers, function(data)
 			pos, ending = rmatch(data.label, "^" .. gender .. " (.*)s " .. in_ending .. "$")
 			if pos then
 				stemtype = ending
+				breadcrumb = " in " .. ending
 			end
-			breadcrumb = " in " .. ending
 		end
 		if not stemtype then
 			-- check for e.g. 'Czech soft masculine animate nouns' or 'Czech soft zero-ending feminine nouns'
@@ -212,19 +335,18 @@ table.insert(handlers, function(data)
 					local additional =
 						("This type normally ends in %s in the nominative singular; %s in the genitive singular; and %s in the nominative plural."):
 						format(nom_s, gen_s, nom_p)
-						return {
-							description = "Czech " .. data.label .. ".",
-							additional = additional,
-							breadcrumb = ending and stem .. " " .. gender or stem .. " " .. gender .. "-form",
-							parents = {
-								{name = gender .. " " .. pos .. "s by stem type", sort = stemtype:gsub("%-", "")}
-							},
-						}
-					end
+					return {
+						description = "Czech " .. data.label .. ".",
+						additional = additional,
+						breadcrumb = breadcrumb,
+						parents = {
+							{name = gender .. " " .. pos .. "s by stem type", sort = stemtype:gsub("%-", "")}
+						},
+					}
 				end
 			end
 		end
 	end
-)
+end)
 
 return {LABELS = labels, HANDLERS = handlers}
