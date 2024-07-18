@@ -28,7 +28,13 @@ def add_params_to_template(t, params, seen_from_params, pagemsg):
       if value in seen_from_params:
         value = seen_from_params[value]
       else:
-        pagemsg("WARNING: Unmatched placeholder %s in replacement params" % value)
+        pagemsg("WARNING: Unmatched placeholder %s in replacement params: %s" % (value, str(t)))
+        return False
+    else:
+      existing = getparam(t, param)
+      if existing:
+        if existing != value:
+          pagemsg("WARNING: Template already has value for parameter %s (=%s): %s" % (param, existing, str(t)))
         return False
     t.add(param, value, before=pn)
   return True
