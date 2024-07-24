@@ -6,6 +6,8 @@ import json, re
 import blib
 from blib import site, getparam, tname
 
+dump_form_of_data = False
+
 inflection_of_templates = [
   "inflection of",
   "infl of",
@@ -120,7 +122,8 @@ def fetch_tag_tables(preferred_tag_variants=set()):
   tag_to_canonical_form_table = {}
   def process_data(data):
     for tag, tagdata in data["tags"].items():
-      print("tag: %s, tagdata: %s" % (tag, tagdata))
+      if dump_form_of_data:
+        print("tag: %s, tagdata: %s" % (tag, tagdata))
       if type(tagdata) is dict:
         tag_type = tagdata["1"]
         if "3" in tagdata:
@@ -152,7 +155,8 @@ def fetch_tag_tables(preferred_tag_variants=set()):
     for shortcut, tag in data["shortcuts"].items():
       # shortcuts contain entries like "mfn" -> "m//f//n" and "2p" -> ["2", "p"]
       if isinstance(tag, str) and tag in data["tags"]:
-        print("shortcut: %s, tag: %s, tagdata: %s" % (shortcut, tag, data["tags"][tag]))
+        if dump_form_of_data:
+          print("shortcut: %s, tag: %s, tagdata: %s" % (shortcut, tag, data["tags"][tag]))
         tagdata = data["tags"][tag]
         if type(tagdata) is dict:
           shortcut_type = tagdata["1"]
