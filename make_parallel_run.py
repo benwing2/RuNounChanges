@@ -10,6 +10,7 @@ parser.add_argument('--output-prefix', help="Prefix for output files.", required
 parser.add_argument('--num-terms', help="Approximate number of terms that will be run on.", type=int, required=True)
 parser.add_argument('--overlap-offset', help="Value to add (or subtract if negative) to the beginning of the next run to get the last term that this run will run on. Set to -1 for no overlap.", type=int, default=5)
 parser.add_argument('--no-sleep', help="Don't sleep at beginning of runs (normally done so offsets will remain true; not necessary if offsets won't change as files are saved).", action="store_true")
+parser.add_argument('--no-save', help="Don't add --save to the commands.", action="store_true")
 args = parser.parse_args()
 
 print("#!/bin/sh")
@@ -31,8 +32,9 @@ for run in range(args.num_parts):
     last_term_index = args.num_terms
   else:
     last_term_index = (run + 1) * num_terms_per_run + args.overlap_offset
-  print("%s%s --save %s %s > %s.out.%s.%s-%s &"
-    % (sleep_prefix, args.command, first_term_index, last_term_index, args.output_prefix,
+  save = " --save" if not args.no_save else ""
+  print("%s%s%s %s %s > %s.out.%s.%s-%s &"
+    % (sleep_prefix, args.command, save, first_term_index, last_term_index, args.output_prefix,
        run + 1, first_term_index, last_term_index))
 
 print()
