@@ -23,11 +23,11 @@ templates_to_convert = (prefix_templates + suffix_templates + confix_templates +
 
 
 def process_text_on_page(index, pagetitle, text):
-  global args
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
-  user_specified_templates_to_do = templates_to_convert if not args.templates_to_do else args.templates_to_do.split(",")
+  user_specified_templates_to_do = set(templates_to_convert) if not args.templates_to_do else set(args.templates_to_do.split(","))
+  langcodes_to_do = None if not args.langcodes_to_do else set(args.langcodes_to_do.split(","))
   notes = []
 
   parsed = blib.parse_text(text)
@@ -42,54 +42,109 @@ def process_text_on_page(index, pagetitle, text):
     lang = getp("1")
     sc = getp("sc")
 
-    def get_display_hyphen(param):
-      val = getp(param)
+    def get_display_hyphen(val, param):
       if re.search("[%s]" % arabic_charset, val):
-        pagemsg("WARNING: Saw Arabic chars in %s=%s, assuming tatweel is correct hyphen: %s" % (param, val, str(t)))
+        pagemsg("Saw Arabic chars in %s=%s, assuming tatweel is correct hyphen: %s" % (param, val, str(t)))
         return tatweel
       if re.search("[%s]" % hebrew_charset, val):
-        pagemsg("WARNING: Saw Hebrew chars in %s=%s, assuming maqqef is correct hyphen: %s" % (param, val, str(t)))
+        pagemsg("Saw Hebrew chars in %s=%s, assuming maqqef is correct hyphen: %s" % (param, val, str(t)))
         return maqqef
       return "-"
 
-    def get_template_hyphens(param):
-      val = getp(param)
+    def get_template_hyphens(val, param, nowarn=False):
       if re.search("[%s]" % arabic_charset, val):
-        pagemsg("WARNING: Saw Arabic chars in %s=%s, assuming tatweel is correct hyphen: %s" % (param, val, str(t)))
+        if not nowarn:
+          pagemsg("Saw Arabic chars in %s=%s, assuming tatweel is correct hyphen: %s" % (param, val, str(t)))
         return "[" + tatweel + zwnj + "-]"
       if re.search("[%s]" % hebrew_charset, val):
-        pagemsg("WARNING: Saw Hebrew chars in %s=%s, assuming maqqef is correct hyphen: %s" % (param, val, str(t)))
+        if not nowarn:
+          pagemsg("Saw Hebrew chars in %s=%s, assuming maqqef is correct hyphen: %s" % (param, val, str(t)))
         return "[" + maqqef + "]"
       return "[-]"
 
-    def make_suffix(paramno):
-      def make_suffix_1(param, hyph=None):
-        dhyph = hyph or get_display_hyphen(param)
-        thyph_re = hyph and "[%s]" % hyph or get_template_hyphens(param)
-        val = getp(param)
-        if val and not re.search(r"^\*?" + thyph_re, val):
-          if val.startswith("*"):
-            val = "*" + dhyph + val[1:]
+    def make_affix(paramno, is_prefix):
+      def make_affix_2(val, param, hyph=None):
+        link = None
+        display = None
+        m = re.search(r"^\[\[([^\[\]|]*)\|([^\[\]|]*)\]\]$", val)
+        if m:
+          link, display = m.groups()
+        else:
+          m = re.search(r"^\[\[([^\[\]|]*)\]\]$", val)
+          if m:
+            link = m.group(1)
+            display = m.group(1)
+        if link:
+          if link == display:
+            return make_affix_2(link, param + ".link", hyph)
           else:
-            val = dhyph + val
+            link = make_affix_2(link, param + ".link", hyph)
+            display = make_affix_2(display, param + ".display", hyph)
+            if link == display:
+              return link
+            else:
+              return "[[%s|%s]]" % (link, display)
+        if "[[" in val:
+          pagemsg("WARNING: Embedded link in %s=%s, can't convert to %s: %s" % (
+            param, val, "prefix" if is_prefix else "suffix", str(t)))
+          return val
+        dhyph = hyph or get_display_hyphen(val, param)
+        thyph_re = hyph and "[%s]" % hyph or get_template_hyphens(val, param)
+        if val:
+          if is_prefix:
+            if not re.search(thyph_re + "$", val):
+              val = val + dhyph
+          else:
+            if not re.search(r"^\*?" + thyph_re, val):
+              if val.startswith("*"):
+                val = "*" + dhyph + val[1:]
+              else:
+                val = dhyph + val
+        return val
+      def make_affix_1(param, hyph=None):
+        origval = getp(param)
+        val = make_affix_2(origval, param, hyph)
+        if val and origval != val:
           t.add(param, val)
-      make_suffix_1(str(paramno))
-      make_suffix_1("alt%s" % (paramno - 1))
-      make_suffix_1("tr%s" % (paramno - 1), "-")
-      make_suffix_1("ts%s" % (paramno - 1), "-")
+      param = str(paramno)
+      val = getp(param)
+      if "<" in val:
+        changed = False
+        try:
+          inline_mod = blib.parse_inline_modifier(val)
+          if not inline_mod.mainval:
+            pagemsg("WARNING: No main value associated with inline modifier: %s=%s: %s" % (param, val, str(t)))
+          else:
+            newval = make_affix_2(inline_mod.mainval, param + ".main")
+            if newval != inline_mod.mainval:
+              inline_mod.mainval = newval
+              changed = True
+            def frob_inline_modifier(mod, hyph=None):
+              nonlocal changed
+              modval = inline_mod.get_modifier(mod)
+              if modval:
+                new_modval = make_affix_2(modval, param + "." + mod, hyph)
+                if new_modval != modval:
+                  inline_mod.set_modifier(mod, new_modval)
+                  changed = True
+            frob_inline_modifier("alt")
+            frob_inline_modifier("tr", "-")
+            frob_inline_modifier("ts", "-")
+            if changed:
+              t.add(param, inline_mod.reconstruct_param())
+        except blib.ParseException as e:
+          pagemsg("WARNING: Parse exception processing %s=%s: %s: %s" % (param, val, str(e), str(t)))
+      else:
+        make_affix_1(param)
+        make_affix_1("alt%s" % (paramno - 1))
+        make_affix_1("tr%s" % (paramno - 1), "-")
+        make_affix_1("ts%s" % (paramno - 1), "-")
+
+    def make_suffix(paramno):
+      make_affix(paramno, is_prefix=False)
 
     def make_prefix(paramno):
-      def make_prefix_1(param, hyph=None):
-        dhyph = hyph or get_display_hyphen(param)
-        thyph_re = hyph and "[%s]" % hyph or get_template_hyphens(param)
-        val = getp(param)
-        if val and not re.search(thyph_re + "$", val):
-          val = val + dhyph
-          t.add(param, val)
-      make_prefix_1(str(paramno))
-      make_prefix_1("alt%s" % (paramno - 1))
-      make_prefix_1("tr%s" % (paramno - 1), "-")
-      make_prefix_1("ts%s" % (paramno - 1), "-")
+      make_affix(paramno, is_prefix=True)
 
     # For the specified numbered parameter, make sure it's interpreted as a non-affix in {{af}}. This means prepending
     # a circumflex if it looks like an affix. But if it's empty, do this only if circumflex_if_empty is True (not set
@@ -97,8 +152,8 @@ def process_text_on_page(index, pagetitle, text):
     # circumflex_if_infix is True (not set in conjunction with {{compound}}, which interprets infixes as such rather
     # than as non-affixes).
     def make_non_affix(paramno, circumflex_if_empty=True, circumflex_if_infix=True):
-      thyph_re = get_template_hyphens(str(paramno))
       val = getp(str(paramno))
+      thyph_re = get_template_hyphens(val, str(paramno), nowarn=True)
       if circumflex_if_empty and not val:
         val = "^" + val
       elif (re.search(r"^\*?" + thyph_re, val) or re.search(thyph_re + "$", val)) and (
@@ -109,6 +164,9 @@ def process_text_on_page(index, pagetitle, text):
         t.add(str(paramno), val)
 
     if tn in user_specified_templates_to_do:
+      if langcodes_to_do and lang.strip() not in langcodes_to_do:
+        pagemsg("Skipping template because lang code '%s' not among --langcodes-to-do: %s" % (lang.strip(), str(t)))
+        continue
       if tn in compound_templates:
         for i in range(2, 31):
           make_non_affix(i, circumflex_if_empty=False, circumflex_if_infix=False)
@@ -248,6 +306,7 @@ def process_text_on_page(index, pagetitle, text):
 parser = blib.create_argparser("Convert *fix templates to {{af}}",
     include_pagefile=True, include_stdin=True)
 parser.add_argument("--templates-to-do", help="Comma-separated list of templates to do; if unspecified, do all")
+parser.add_argument("--langcodes-to-do", help="Comma-separated list of langcodes to do; if unspecified, do all")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
