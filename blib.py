@@ -1120,6 +1120,8 @@ def create_argparser(desc, include_pagefile=False, include_stdin=False,
     parser.add_argument("--ref-namespaces", help="List of namespace(s) to restrict --refs to.")
     parser.add_argument("--filter-pages", help="Regex to use to filter page names.")
     parser.add_argument("--filter-pages-not", help="Regex to use to filter page names; only includes pages not matching this regex.")
+    parser.add_argument("--skip-pages", help="List of pages to skip, comma-separated.")
+    parser.add_argument("--skip-page-file", help="File containing pages to skip.")
     parser.add_argument("--find-regex-output", help="Output as by find_regex.py.", action="store_true")
     parser.add_argument("--no-output", help="In conjunction with --find-regex, don't output processed text.", action="store_true")
     parser.add_argument("--skip-ignorable-pages", help="Skip 'ignorable' pages (talk pages, user pages, etc.).", action="store_true")
@@ -1255,10 +1257,16 @@ def do_pagefile_cats_refs(args, start, end, process, default_pages=[], default_c
   args_ref_namespaces = args.ref_namespaces and args.ref_namespaces.split(",")
   args_filter_pages = args.filter_pages
   args_filter_pages_not = args.filter_pages_not
+  # FIXME: Is it correct to use canonicalize_pagename here?
+  pages_to_skip = set(split_arg(args.skip_pages, canonicalize=canonicalize_pagename)) if args.skip_pages else set()
+  if args.skip_page_file:
+    pages_to_skip |= set(yield_items_from_file(args.skip_page_file, canonicalize=canonicalize_pagename))
 
   seen = set() if args.track_seen else None
 
   def page_should_be_filtered_out(pagetitle, errandpagemsg):
+    if pagetitle in pages_to_skip:
+      return True
     if filter_pages or args_filter_pages or args_filter_pages_not:
       if filter_pages and not filter_pages(pagetitle):
         return True
