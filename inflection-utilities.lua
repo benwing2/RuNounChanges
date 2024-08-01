@@ -1,14 +1,15 @@
 local export = {}
 
 local m_links = require("Module:links")
-local m_string_utilities = require("Module:string utilities")
+local m_str_utils = require("Module:string utilities")
 local m_table = require("Module:table")
 local put = require("Module:parse utilities")
 
-local rsplit = mw.text.split
+local split = m_str_utils.split
 local rfind = mw.ustring.find
 local rmatch = mw.ustring.match
 local rsubn = mw.ustring.gsub
+local ucfirst = m_str_utils.ucfirst
 
 -- version of rsubn() that discards all but the first return value
 local function rsub(term, foo, bar)
@@ -360,7 +361,7 @@ function export.expand_footnote_or_references(note, return_raw, no_parse_refs)
 	if footnote_abbrevs[notetext] then
 		notetext = footnote_abbrevs[notetext]
 	else
-		local split_notes = m_string_utilities.capturing_split(notetext, "<(.-)>")
+		local split_notes = split(notetext, "<(.-)>")
 		for i, split_note in ipairs(split_notes) do
 			if i % 2 == 0 then
 				split_notes[i] = footnote_abbrevs[split_note]
@@ -375,7 +376,7 @@ function export.expand_footnote_or_references(note, return_raw, no_parse_refs)
 		end
 		notetext = table.concat(split_notes)
 	end
-	return return_raw and notetext or m_string_utilities.ucfirst(notetext) .. "."
+	return return_raw and notetext or ucfirst(notetext) .. "."
 end
 
 
@@ -635,7 +636,7 @@ local function parse_before_or_post_text(props, text, segments, lemma_is_last)
 				error("Manual translit not allowed for this language; if this is incorrect, 'props.lang' must be set internally")
 			end
 			saw_manual_translit = true
-			local split = rsplit(component, "//")
+			local split = split(component, "//", "plain")
 			if #split ~= 2 then
 				error("Term with translit or respelling should have only one // in it: " .. component)
 			end
@@ -869,7 +870,7 @@ function export.parse_inflected_text(text, props)
 		error("If 'angle_brackets_omittable' is specified, so should 'allow_blank_lemma'")
 	end
 	local alternant_multiword_spec = {alternant_or_word_specs = {}}
-	local alternant_segments = m_string_utilities.capturing_split(text, "(%(%(.-%)%))")
+	local alternant_segments = split(text, "(%(%(.-%)%))")
 	local last_post_text, last_post_text_no_links, last_post_text_translit
 	for i = 1, #alternant_segments do
 		if i % 2 == 1 then
