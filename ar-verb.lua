@@ -1,6 +1,7 @@
 local export = {}
 
 local m_links = require("Module:links")
+local m_str_utils = require("Module:string utilities")
 local m_table = require("Module:table")
 local ar_utilities = require("Module:ar-utilities")
 local ar_nominals = require("Module:ar-nominals")
@@ -75,13 +76,13 @@ Irregular verbs already implemented:
 
 local curtitle = mw.title.getCurrentTitle().fullText
 
-local rfind = mw.ustring.find
-local rsubn = mw.ustring.gsub
-local rmatch = mw.ustring.match
-local rsplit = mw.text.split
-local usub = mw.ustring.sub
-local ulen = mw.ustring.len
-local u = mw.ustring.char
+local rfind = m_str_utils.find
+local rsubn = m_str_utils.gsub
+local rmatch = m_str_utils.match
+local rsplit = m_str_utils.split
+local usub = m_str_utils.sub
+local ulen = m_str_utils.len
+local u = m_str_utils.char
 
 -- don't display i3rab in nominal forms (verbal nouns, participles)
 local no_nominal_i3rab = true
@@ -685,18 +686,18 @@ local function insert_verbal_noun(data, args, vn)
 	-- Examples of what you can find by looking at what links to the given
 	-- pages:
 	--
-	-- Template:tracking/ar-verb/vn/i3rab/un (pages with verbal nouns with -un
+	-- Wiktionary:Tracking/ar-verb/vn/i3rab/un (pages with verbal nouns with -un
 	--   i3rab, whether explicitly specified, i.e. using vn=, or auto-generated,
 	--   as is normal for augmented forms)
-	-- Template:tracking/ar-verb/explicit-vn/i3rab/u (pages with explicitly
+	-- Wiktionary:Tracking/ar-verb/explicit-vn/i3rab/u (pages with explicitly
 	--   specified verbal nouns with -u i3rab)
-	-- Template:tracking/ar-verb/explicit-vn/i3rab/an-tall (pages with
+	-- Wiktionary:Tracking/ar-verb/explicit-vn/i3rab/an-tall (pages with
 	--   explicitly specified verbal nouns with tall-alif -an i3rab)
-	-- Template:tracking/ar-verb/auto-vn/i3rab (pages with auto-generated verbal
+	-- Wiktionary:Tracking/ar-verb/auto-vn/i3rab (pages with auto-generated verbal
 	--   nouns with any sort of i3rab)
-	-- Template:tracking/ar-verb/vn/no-i3rab (pages with verbal nouns without
+	-- Wiktionary:Tracking/ar-verb/vn/no-i3rab (pages with verbal nouns without
 	--   i3rab)
-	-- Template:tracking/ar-verb/vn/would-be-decl/di (pages with verbal nouns
+	-- Wiktionary:Tracking/ar-verb/vn/would-be-decl/di (pages with verbal nouns
 	--   that would be detected as diptote without explicit i3rab)
 	function vntrack(pagesuff)
 		track("vn/" .. pagesuff)
