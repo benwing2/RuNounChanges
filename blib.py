@@ -15,7 +15,9 @@ from json.decoder import JSONDecodeError
 site = pywikibot.Site()
 
 appendix_only_langnames = [
+  "Adûni",
   "Afrihili",
+  "Belter Creole",
   "Black Speech",
   "Bolak",
   "Communicationssprache",
@@ -23,7 +25,9 @@ appendix_only_langnames = [
   "Eloi",
   "Glosa",
   "Goa'uld",
+  "High Valyrian",
   "Interlingue",
+  "Interslavic",
   "Klingon",
   "Kotava",
   "Láadan",
