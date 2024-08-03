@@ -500,14 +500,28 @@ local function is_table_of_strings(forms)
 end
 
 
+local function lang_or_func_transliterate(func, lang, text)
+	local retval
+	if func then
+		retval = func(text)
+	else
+		retval = (lang:transliterate(text))
+	end
+	if not retval then
+		error(("Unable to transliterate text '%s'"):format(text))
+	end
+	return retval
+end
+
+
 -- Combine `stems` and `endings` and store into slot `slot` of form table `forms`. Either of `stems` and `endings` can
 -- be nil, a single string, a list of strings, a form object or a list of form objects. The combination of a given stem
 -- and ending happens using `combine_stem_ending`, which takes two parameters (stem and ending, each a string) and
--- returns one value (a string). If manual transliteration is present in either `stems` or `endings`, `lang` (a
--- language object) along with `combine_stem_ending_tr` (a function like `combine_stem_ending` for combining manual
--- transliteration) must be given. `footnotes`, if specified, is a list of additional footnotes to attach to the
--- resulting inflections (stem+ending combinations). The resulting inflections are inserted into the form table using
--- export.insert_form(), in case of duplication.
+-- returns one value (a string). If manual transliteration is present in either `stems` or `endings`, `lang` (a language
+-- object or a function of one argument to transliterate a string) along with `combine_stem_ending_tr` (a function like
+-- `combine_stem_ending` for combining manual transliteration) must be given. `footnotes`, if specified, is a list of
+-- additional footnotes to attach to the resulting inflections (stem+ending combinations). The resulting inflections are
+-- inserted into the form table using export.insert_form(), in case of duplication.
 function export.add_forms(forms, slot, stems, endings, combine_stem_ending, lang, combine_stem_ending_tr, footnotes)
 	if stems == nil or endings == nil then
 		return
@@ -517,6 +531,9 @@ function export.add_forms(forms, slot, stems, endings, combine_stem_ending, lang
 			return "?"
 		end
 		return combine_stem_ending(stem, ending)
+	end
+	local function transliterate(text)
+		return lang_or_func_transliterate(type(lang) == "function" and lang or nil, lang, text)
 	end
 	if type(stems) == "string" and type(endings) == "string" then
 		export.insert_form(forms, slot, {form = combine(stems, endings), footnotes = footnotes})
@@ -546,8 +563,8 @@ function export.add_forms(forms, slot, stems, endings, combine_stem_ending, lang
 					if not lang or not combine_stem_ending_tr then
 						error("Internal error: With manual translit, 'lang' and 'combine_stem_ending_tr' must be passed to 'add_forms'")
 					end
-					local stem_tr = stem.translit or (lang:transliterate(m_links.remove_links(stem.form)))
-					local ending_tr = ending.translit or (lang:transliterate(m_links.remove_links(ending.form)))
+					local stem_tr = stem.translit or transliterate(m_links.remove_links(stem.form))
+					local ending_tr = ending.translit or transliterate(m_links.remove_links(ending.form))
 					new_translit = combine_stem_ending_tr(stem_tr, ending_tr)
 				end
 				export.insert_form(forms, slot, {form = new_form, translit = new_translit, footnotes = footnotes})
@@ -606,6 +623,11 @@ function export.default_split_bracketed_runs_into_words(bracketed_runs)
 end
 
 
+local function props_transliterate(props, text)
+	return lang_or_func_transliterate(props.transliterate, lang, text)
+end
+
+
 local function parse_before_or_post_text(props, text, segments, lemma_is_last)
 	-- Call parse_balanced_segment_run() to keep multiword links together.
 	local bracketed_runs = put.parse_balanced_segment_run(text, "[", "]")
@@ -656,8 +678,7 @@ local function parse_before_or_post_text(props, text, segments, lemma_is_last)
 	if saw_manual_translit then
 		for j, parsed_component in ipairs(parsed_components) do
 			if not parsed_components_translit[j] then
-				parsed_components_translit[j] =
-					(props.lang:transliterate(m_links.remove_links(parsed_component)))
+				parsed_components_translit[j] = props_transliterate(props, m_links.remove_links(parsed_component))
 			end
 		end
 	end
@@ -961,16 +982,17 @@ local function append_forms(props, formtable, slot, forms, before_text, before_t
 							error("Internal error: If manual translit is given, 'props.lang' must be set")
 						end
 						if not before_text_translit then
-							before_text_translit = (props.lang:transliterate(before_text_no_links)) or ""
+							before_text_translit = props_transliterate(props, before_text_no_links) or ""
 						end
-						local old_translit = old_form.translit or (props.lang:transliterate(m_links.remove_links(old_form.form))) or ""
-						local translit = form.translit or (props.lang:transliterate(m_links.remove_links(form.form))) or ""
+						local old_translit =
+							old_form.translit or props_transliterate(props, m_links.remove_links(old_form.form)) or ""
+						local translit =
+							form.translit or props_transliterate(props, m_links.remove_links(form.form)) or ""
 						new_translit = old_translit .. before_text_translit .. translit
 					end
 				end
 				local new_footnotes = export.combine_footnotes(old_form.footnotes, form.footnotes)
-				table.insert(ret_forms, {form=new_form, translit=new_translit,
-					footnotes=new_footnotes})
+				table.insert(ret_forms, {form=new_form, translit=new_translit, footnotes=new_footnotes})
 			end
 		end
 	end
@@ -1464,7 +1486,7 @@ function export.show_forms(forms, props)
 					end
 					link = link or m_links.full_link{lang = props.lang, term = origentry, tr = "-", accel = accel_obj}
 				end
-				local tr = props.include_translit and (form.translit or (props.lang:transliterate(m_links.remove_links(orig_text)))) or nil
+				local tr = props.include_translit and (form.translit or props_transliterate(props, m_links.remove_links(orig_text))) or nil
 				local trentry
 				if props.allow_footnote_symbols and tr then
 					trentry, trnotes = m_table_tools.get_notes(tr)
