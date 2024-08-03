@@ -554,8 +554,6 @@ end
 -- themselves, but otherwise strip extraneous spaces. Spaces in the middle of an element are also left alone.
 local function split_alternating_runs_and_strip_spaces(segment_runs, splitchar, preserve_splitchar)
 	local split_runs = iut.split_alternating_runs(segment_runs, splitchar, preserve_splitchar)
-	local function strip_run(run)
-	end
 	for i, run in ipairs(split_runs) do
 		if not preserve_splitchar or i % 2 == 1 then
 			for j, element in ipairs(run) do
