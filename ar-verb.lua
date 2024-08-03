@@ -376,6 +376,14 @@ local function req(rad, val)
 	return rget(rad) == val
 end
 
+local function get_radicals_3(vowel_spec)
+	return vowel_spec.rad1, vowel_spec.rad2, vowel_spec.rad3, vowel_spec.past, vowel_spec.nonpast
+end
+
+local function get_radicals_4(vowel_spec)
+	return vowel_spec.rad1, vowel_spec.rad2, vowel_spec.rad3, vowel_spec.rad4
+end
+
 -- FIXME
 local function link_term(term, display, face)
 	return m_links.full_link({ lang = lang, term = term, alt = display }, face)
@@ -840,6 +848,9 @@ end
 
 local function insert_form(base, slot, form)
 	if not skip_slot(base, slot) then
+		if type(form) == "string" then
+			form = {form = form}
+		end
 		iut.insert_form(base.forms, slot, form)
 	end
 end
@@ -974,8 +985,7 @@ local function insert_verbal_noun(base, args, vn)
 	end
 
 	for _, entry in ipairs(vns) do
-		-- Need to do this else we will have problems with VN's whose stem ends
-		-- in shadda.
+		-- Need to do this else we will have problems with VN's whose stem ends in shadda.
 		entry = reorder_shadda(entry)
 		track_i3rab(entry, UN, "un")
 		track_i3rab(entry, U, "u")
@@ -1198,10 +1208,10 @@ end
 -- PS_PAST_STEM_BASE = passive past stem minus last syllable (= -il or -ī)
 -- FORM -- form of verb (II to XV, Iq - IVq)
 -- VN = verbal noun
-local function make_augmented_sound_final_weak_verb(base, args, rad3,
-		past_stem_base, nonpast_stem_base, ps_past_stem_base, vn, form)
+local function make_augmented_sound_final_weak_verb(base, rad3, past_stem_base, nonpast_stem_base, ps_past_stem_base,
+	vn, form)
 
-	insert_verbal_noun(base, args, vn)
+	insert_verbal_noun(base, vn)
 
 	local final_weak = rad3 == nil
 	local prefix_vowel = prefix_vowel_from_form(form)
@@ -1276,8 +1286,7 @@ end
 -- PS_PAST_STEM_BASE = invariable part of passive past stem
 -- VN = verbal noun
 -- FORM = the verb form ("IV", "VII", "VIII", "X")
-local function make_augmented_hollow_verb(base, args, rad3,
-	past_stem_base, nonpast_stem_base, ps_past_stem_base, vn, form)
+local function make_augmented_hollow_verb(base, rad3, past_stem_base, nonpast_stem_base, ps_past_stem_base, vn, form)
 	insert_verbal_noun(base, args, vn)
 
 	local form410 = form == "IV" or form == "X"
@@ -1330,8 +1339,7 @@ end
 -- PS_PAST_STEM_BASE = invariable part of passive past stem
 -- VN = verbal noun
 -- FORM = the verb form ("III", "IV", "VI", "VII", "VIII", "IX", "X", "IVq")
-local function make_augmented_geminate_verb(base, args, rad3,
-	past_stem_base, nonpast_stem_base, ps_past_stem_base, vn, form)
+local function make_augmented_geminate_verb(base, rad3, past_stem_base, nonpast_stem_base, ps_past_stem_base, vn, form)
 	insert_verbal_noun(base, args, vn)
 
 	local prefix_vowel = prefix_vowel_from_form(form)
@@ -1407,10 +1415,9 @@ end
 
 -- Implement form-I sound or assimilated verb. ASSIMILATED is true for assimilated verbs.
 local function make_form_i_sound_assimilated_verb(base, vowel_spec, assimilated)
-	local rad1, rad2, rad3, past, nonpast = get_radicals_3(vowel_spec)
+	local rad1, rad2, rad3, past_vowel, nonpast_vowel = get_radicals_3(vowel_spec)
 
 	-- Verbal nouns (maṣādir) for form I are unpredictable and have to be supplied
-	insert_verbal_noun(base, args, {})
 
 	-- past and non-past stems, active and passive
 	local past_stem = q(rad1, A, rad2, dia[past_vowel], rad3)
@@ -1585,8 +1592,7 @@ local function make_form_i_final_weak_verb(base, args, rad1, rad2, rad3,
 	insert_form(base, "pass_part", q(MA, rad1, SK, rad2, req(rad3, Y) and q(I, Y) or q(U, W), SH, UNS))
 end
 
-conjugations["I-final-weak"] = function(base, args, rad1, rad2, rad3,
-		past_vowel, nonpast_vowel)
+conjugations["I-final-weak"] = function(base, vowel_spec)
 	make_form_i_final_weak_verb(base, args, rad1, rad2, rad3,
 		past_vowel, nonpast_vowel, false)
 end
@@ -1980,8 +1986,7 @@ local function form_viii_verbal_noun(rad1, rad2, rad3)
 	end
 end
 
--- Make form VIII sound or final-weak verb. Final-weak verbs are identified
--- by RAD3 = nil.
+-- Make form VIII sound or final-weak verb. Final-weak verbs are identified by RAD3 = nil.
 local function make_form_viii_sound_final_weak_verb(base, args, rad1, rad2, rad3)
 	-- check for irregular verb اِتَّخَذَ
 	if axadh_radicals(rad1, rad2, rad3) then
@@ -1991,8 +1996,7 @@ local function make_form_viii_sound_final_weak_verb(base, args, rad1, rad2, rad3
 	make_high_form_sound_final_weak_verb(base, args, join_ta(rad1), rad2, rad3,
 		"VIII")
 
-	-- Add alternative parts if verb is first-hamza. Any duplicates are
-	-- removed in get_spans().
+	-- Add alternative parts if verb is first-hamza. Any duplicates are removed during addition.
 	if req(rad1, HAMZA) then
 		local vn = form_viii_verbal_noun(rad1, rad2, rad3)
 		local past_stem_base2 = q("اِيتَ", rad2)
@@ -2484,7 +2488,6 @@ local function conjugate_verb(base)
 	add_present_subj(base)
 	add_finite_non_present(base)
 	add_non_finite_forms(base)
-	fix_double_umlauts(base)
 	-- do non-reflexive non-imperative slot overrides
 	process_slot_overrides(base, function(slot)
 		return not slot:find("^imp_") and not slot:find("^neg_imp_")
