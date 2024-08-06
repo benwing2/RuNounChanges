@@ -779,9 +779,8 @@ In the table values:
 * `item_dest` specifies the destination key to store the object into (if not the same as the modifier key itself).
 * `type`, `set`, `sublist` and `convert` have the same meaning as in [[Module:parameters]] and are used for converting
   the object from the string form given by the user into the form needed for further processing. Note that `type` makes
-  use of additional properties that may be specified. Specifically, if {type = "language"}, the properties `etym_lang`,
-  `family` and `method` are also examined, and if {type = "family"} or {type = "script"}, the property `method` is
-  examined.
+  use of additional properties that may be specified. Specifically, if {type = "language"}, the properties `family` and
+  `method` are also examined, and if {type = "family"} or {type = "script"}, the property `method` is examined.
 * `store` describes how to store the converted modifier value into the parsed object. If omitted, the converted value
   is simply written into the parsed object under the appropriate key; but an error is generated if the key already has
   a value. (This means that multiple occurrences of a given modifier are allowed if `store` is given, but not
@@ -958,10 +957,10 @@ function export.parse_inline_modifiers_from_segments(data)
 			if mod_props.type or mod_props.set or mod_props.sublist or mod_props.convert then
 				-- WARNING: Here as an optimization we embed some knowledge of convert_val() in [[Module:parameters]],
 				-- specifically that if none of `type`, `set`, `sublist` and `convert` are set, the conversion is an
-				-- identity operation and can be skipped. (convert_val() also makes use of the fields `method`,
-				-- `etym_lang` and `family`, but only if `type` is set to certain values such as "language", "family"
-				-- or "script", and makes use of the field `required`, but only if `set` is set.) If this becomes
-				-- problematic, consider removing the optimization.
+				-- identity operation and can be skipped. (convert_val() also makes use of the fields `method` and
+				-- `family`, but only if `type` is set to certain values such as "language", "family" or "script", and
+				-- makes use of the field `required`, but only if `set` is set.) If this becomes problematic, consider
+				-- removing the optimization.
 				converted = require(parameters_module).convert_val(converted, prefix_parse_err, mod_props)
 			end
 			local store = props.param_mods[prefix].store
