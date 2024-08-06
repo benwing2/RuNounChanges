@@ -484,14 +484,15 @@ end
 
 
 --[==[
-Ensure that Wikicode (bracketed links, HTML, bold/italics, etc.) displays literally in error messages by inserting
-a Unicode word-joiner symbol after all characters that may trigger Wikicode interpr. Replacing with equivalent
-HTML escapes doesn't work because they are displayed literally. I could not get this to work using
-<nowiki>...</nowiki> (those tags display literally) and using using {{#tag:nowiki|...}} (same thing).
-FIXME: This is a massive hack; there must be a better way.
+Ensure that Wikicode (template calls, bracketed links, HTML, bold/italics, etc.) displays literally in error messages
+by inserting a Unicode word-joiner symbol after all characters that may trigger Wikicode interpretation. Replacing
+with equivalent HTML escapes doesn't work because they are displayed literally. I could not get this to work using
+<nowiki>...</nowiki> (those tags display literally), using using {{#tag:nowiki|...}} (same thing) or using
+mw.getCurrentFrame():extensionTag("nowiki", ...) (everything gets converted to a strip marker
+`UNIQ--nowiki-00000000-QINU` or similar). FIXME: This is a massive hack; there must be a better way.
 ]==]
 function export.escape_wikicode(term)
-	term = term:gsub("([%[<'])", "%1" .. u(0x2060))
+	term = term:gsub("([%[<'{])", "%1" .. u(0x2060))
 	return term
 end
 
@@ -763,9 +764,10 @@ local param_mods = {
 	-- Qualifiers and labels
 	q = {
 		type = "qualifier",
+	},
 	qq = {
 		type = "qualifier",
-	}
+	},
 	l = {
 		type = "labels",
 	},
@@ -878,12 +880,17 @@ which is an object with the following fields:
 * `separated_groups`: The list of groups (each of which is of the form of `group`) describing all the terms in the
   argument parsed by {parse_inline_modifiers()}, or {nil} if this isn't applicable (i.e. multiple terms aren't allowed
   in the argument).
-* `group_index`: The index into `separated_groups` where `group` can be found, or {nil} if not applicable.
-* `arg`: The original user-specified argument being parsed; used only for error messages.
+* `group_index`: The index into `separated_groups` where `group` can be found, or {nil} if not applicable (see below).
+* `arg`: The original user-specified argument being parsed; used only for error messages and only when `props.parse_err`
+  is not specified.
 * `props`: The `props` argument to {parse_inline_modifiers()}.
 
 The return value is the object created by `generate_obj`, with properties filled in describing the modifiers of the
-term in question.
+term in question. Note that `props.outer_container` and the `overall` setting of the `props.param_mods` structure are
+respected, but `props.splitchar` is ignored because the splitting happens in the caller. Specifically, if there are any
+modifiers with the `overall` setting, `props.separated_groups` and `props.group_index` must be given so that the
+function is able to determine if the modifier is indeed attached to the last term, and `props.outer_container` must be
+given because that is where such modifiers are stored. Otherwise, none of these settings need be given.
 ]==]
 function export.parse_inline_modifiers_from_segments(data)
 	local props = data.props
@@ -911,16 +918,17 @@ function export.parse_inline_modifiers_from_segments(data)
 		if group[k + 1] ~= "" then
 			parse_err("Extraneous text '" .. group[k + 1] .. "' after modifier")
 		end
-		local modtext = group[k]:match("^<(.*)>$")
-		if not modtext then
-			parse_err("Internal error: Modifier '" .. group[k] .. "' isn't surrounded by angle brackets")
-		end
+		local group_k = group[k]
 		if props.pre_normalize_modifiers then
 			-- FIXME: For some use cases, we might have to pass more information.
-			modtext = props.pre_normalize_modifiers {
-				modtext = modtext,
+			group_k = props.pre_normalize_modifiers {
+				modtext = group_k,
 				parse_err = parse_err
 			}
+		end
+		local modtext = group_k:match("^<(.*)>$")
+		if not modtext then
+			parse_err("Internal error: Modifier '" .. group_k .. "' isn't surrounded by angle brackets")
 		end
 		local prefix, val = modtext:match("^([a-zA-Z0-9+_-]+):(.*)$")
 		if not prefix then
@@ -928,11 +936,20 @@ function export.parse_inline_modifiers_from_segments(data)
 			for i, valid_prefix in ipairs(valid_prefixes) do
 				valid_prefixes[i] = "'" .. valid_prefix .. ":'"
 			end
-			parse_err("Modifier " .. group[k] .. " lacks a prefix, should begin with one of " ..
-				require("Module:table").serialCommaJoin(valid_prefixes, {dontTag = true}))
+			parse_err(("Modifier %s%s lacks a prefix, should begin with one of %s"):format(
+				group_k, group_k ~= group[k] and (" (normalized from %s)"):format(group[k]) or "",
+				require("Module:table").serialCommaJoin(valid_prefixes, {dontTag = true})))
 		end
-		local prefix_parse_err =
-			export.make_parse_err(("modifier prefix '%s' in %s in %s"):format(prefix, group[k], get_arg_gloss()))
+		local prefix_parse_err
+		if props.parse_err then
+			prefix_parse_err = function(msg, stack_frames_to_ignore)
+				props.parse_err(("%s: modifier prefix '%s' in %s"):format(msg, prefix, group[k]),
+					stack_frames_to_ignore)
+			end
+		else
+			prefix_parse_err = export.make_parse_err(("modifier prefix '%s' in %s in %s"):format(
+				prefix, group[k], get_arg_gloss()))
+		end
 		if props.param_mods[prefix] then
 			local mod_props = props.param_mods[prefix]
 			local key = mod_props.item_dest or prefix
