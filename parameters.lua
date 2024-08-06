@@ -309,7 +309,7 @@ local function msg_with_processed(msg, rawval, processed)
 end
 
 -- Generate the appropriate error-signaling function given parameter value `val` and name `name`. If `name` is already
--- a function, it is just returned; otherwise a function is generated and returned that displays the passed-in messaeg
+-- a function, it is just returned; otherwise a function is generated and returned that displays the passed-in message
 -- along with the parameter's name and value.
 local function make_parse_err(val, name)
 	if type(name) == "function" then
