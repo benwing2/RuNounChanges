@@ -1497,7 +1497,7 @@ function export.parse_comma_separated_groups(comma_separated_groups, pagename, o
 	local put = require(parse_utilities_module)
 
 	local outer_container = {terms = {}}
-	for _, group in ipairs(comma_separated_groups) do
+	for i, group in ipairs(comma_separated_groups) do
 		-- Rejoin runs that don't involve <...>.
 		local j = 2
 		while j <= #group do
@@ -1529,8 +1529,11 @@ function export.parse_comma_separated_groups(comma_separated_groups, pagename, o
 				paramname = input_param,
 				param_mods = param_mods,
 				generate_obj = generate_obj,
-				splitchar = ",",
-				outer_container = outer_container,
+				-- It's not necessary to specify these because we don't have any modifiers with `overall = true`
+				-- (they are commented out). If we uncomment them, we need to uncomment the following lines as well.
+				-- outer_container = outer_container,
+				-- separated_groups = comma_separated_groups,
+				-- group_index = i,
 			},
 		})
 	end
