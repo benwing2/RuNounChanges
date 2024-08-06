@@ -3,7 +3,6 @@ local export = {}
 local lang = require("Module:languages").getByCode("ca")
 
 local m_IPA = require("Module:IPA")
-local m_a = require("Module:accent qualifier")
 local m_table = require("Module:table")
 
 local parse_utilities_module = "Module:parse utilities"
@@ -1731,7 +1730,11 @@ function export.format_grouped_pronunciations(grouped_pronuns)
 			end
 		end
 
-		grouped_pronun_spec.formatted = m_IPA.format_IPA_full(lang, pronunciations, nil, "")
+		grouped_pronun_spec.formatted = m_IPA.format_IPA_full {
+			lang = lang,
+			items = pronunciations,
+			separator = "",
+		}
 	end
 end
 
