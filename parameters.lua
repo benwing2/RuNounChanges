@@ -41,12 +41,15 @@ on [[Module:translations]]):
 	local parent_args = frame:getParent().args
 
 	local params = {
-		[1] = {required = true, default = "und"},
+		[1] = {required = true, type = "language", default = "und"},
 		[2] = {},
 		[3] = {list = true},
 		["alt"] = {},
-		["sc"] = {},
+		["id"] = {},
+		["sc"] = {type = "script"},
 		["tr"] = {},
+		["ts"] = {},
+		["lit"] = {},
 	}
 
 	local args = require("Module:parameters").process(parent_args, params)
@@ -60,100 +63,158 @@ value. An empty table as the value merely states that the parameter exists, but 
 treatment. Possible parameter tags are listed below:
 
 ; {required = true}
-: The parameter is required; an error is shown if it is not present. The template's page itself is an exception; no error is shown there.
+: The parameter is required; an error is shown if it is not present. The template's page itself is an exception; no
+  error is shown there.
 ; {default =}
-: Specifies a default input value for the parameter, if it is absent or empty. This will be processed as though it were the input instead, so (for example) {default = "und"} with the type {"language"} will return a language object for [[:Category:Undetermined language|Undetermined language]] if no language code is provided.
-: When used on list parameters, this specifies a default value for the first item in the list only. Note that it is not possible to generate a default that depends on the value of other parameters.
-: If used together with {required = true}, the default applies only to the template's page itself. This can be used to show an example text.
+: Specifies a default input value for the parameter, if it is absent or empty. This will be processed as though it were
+  the input instead, so (for example) {default = "und"} with the type {"language"} will return a language object for
+  [[:Category:Undetermined language|Undetermined language]] if no language code is provided. When used on list
+  parameters, this specifies a default value for the first item in the list only. Note that it is not possible to
+  generate a default that depends on the value of other parameters. If used together with {required = true}, the default
+  applies only to template pages (see the following entry), as a side effect of the fact that "required" parameters
+  aren't actually required on template pages. This can be used to show an example of the template in action when the
+  template page is visited; however, it is preferred to use `template_default` for this purpose, for clarity.
+; {template_default =}
+: Specifies a default input value for absent or empty parameters only on template pages. Template pages are any page in
+  the template space (beginning with `Template:`) except for documentation pages (those ending in `.../documentation`).
+  This can be used to provide an example value for a non-required parameter when the template page is visited, without
+  interfering with other uses of the template. Both `template_default` and `default` can be specified for the same
+  parameter. If this is done, `template_default` applies on template pages, and `default` on other pages. As an example,
+  {{tl|cs-IPA}} uses the equivalent of {[1] = {default = "+", template_default = "příklad"}} to supply a default of
+  {"+"} for mainspace and documentation pages (which tells the module to use the value of the {{para|pagename}}
+  parameter, falling back to the actual pagename), but {"příklad"} (which means "example"), on [[Template:cs-IPA]].
 ; {alias_of =}
 : Treat the parameter as an alias of another. When arguments are specified for this parameter, they will automatically
-be renamed and stored under the alias name. This allows for parameters with multiple alternative names, while still
-treating them as if they had only one name.
-: Aliases cannot be required, as this prevents the other name or names of the parameter from being used. Parameters
-that are aliases and required at the same time cause an error to be thrown.
+  be renamed and stored under the alias name. This allows for parameters with multiple alternative names, while still
+  treating them as if they had only one name. The conversion-related properties of an aliased parameter (e.g. `type`,
+  `set`, `convert`, `sublist`) are taken from the aliasee, and the corrresponding properties set on the alias itself
+  are ignored; but other properties on the alias are taken from the alias's spec and not from the aliasee's spec. This
+  means, for example, that if you create an alias of a list parameter, the alias must also specify the `list` property
+  or it is not a list. (In such a case, a value specified for the alias goes into the first item of the aliasee's list.
+  You cannot make a list alias of a non-list parameter; this causes an error to be thrown.) Similarly, if you specify
+  `separate_no_index` on an aliasee but not on the alias, uses of the unindexed aliasee parameter are stored into the
+  `.default` key, but uses of the unindexed alias are stored into the first numbered key of the aliasee's list.
+  Aliases cannot be required, as this prevents the other name or names of the parameter from being used. Parameters
+  that are aliases and required at the same time cause an error to be thrown.
 ; {allow_empty = true}
 : If the argument is an empty string value, it is not converted to {nil}, but kept as-is.
 ; {allow_whitespace = true}
 : Spacing characters such as spaces and newlines at the beginning and end of a positional parameter are not removed.
-(MediaWiki itself automatically trims spaces and newlines at the edge of named parameters.)
+  (MediaWiki itself automatically trims spaces and newlines at the edge of named parameters.)
 ; {type =}
 : Specifies what value type to convert the argument into. The default is to leave it as a text string. Alternatives are:
 :; {type = "boolean"}
 :: The value is treated as a boolean value, either true or false. No value, the empty string, and the strings {"0"},
-{"no"}, {"n"} and {"false"} are treated as {false}, all other values are considered {true}.
+   {"no"}, {"n"} and {"false"} are treated as {false}, all other values are considered {true}.
 :; {type = "number"}
 :: The value is converted into a number, or {nil} if the value is not parsable as a number.
 :; {type = "language"}
-:: The value is interpreted as a language code (or name, if {method = "name"}) and converted into the corresponding
-object (see [[Module:languages]]). If the code or name is invalid, then an error is thrown. The additional settings
-{etym_lang = true} and/or {family = true} can be given to allow (respectively)
-[[Wiktionary:Languages#Etymology-only languages|Etymology-only language codes]] and/or
-[[Wiktionary:Language families|language family codes]] to be considered valid and the corresponding object returned.
+:: The value is interpreted as a full or [[Wiktionary:Languages#Etymology-only languages|etymology-only language]] code
+   language code (or name, if {method = "name"}) and converted into the corresponding object (see [[Module:languages]]).
+   If the code or name is invalid, then an error is thrown. The additional setting {family = true} can be given to allow
+   [[Wiktionary:Language families|language family codes]] to be considered valid and the corresponding object returned.
+   Note that to distinguish an etymology-only language object from a full language object, use
+   {object:hasType("language", "etymology-only")}.
+:; {type = "full language"}
+:: The value is interpreted as a full language code (or name, if {method = "name"}) and converted into the corresponding
+   object (see [[Module:languages]]). If the code or name is invalid, then an error is thrown. Etymology-only languages
+   are not allowed. The additional setting {family = true} can be given to allow
+   [[Wiktionary:Language families|language family codes]] to be considered valid and the corresponding object returned.
 :; {type = "wikimedia language"}
-:: The value is interpreted as a code and converted into a wikimedia language object. If the code is invalid, then an error is thrown. If {method = "fallback"} is specified, conventional language codes which are different from their Wikimedia equivalent will also be accepted as a fallback.
+:: The value is interpreted as a code and converted into a wikimedia language object. If the code is invalid, then an
+   error is thrown. If {method = "fallback"} is specified, conventional language codes which are different from their
+   Wikimedia equivalent will also be accepted as a fallback.
 :; {type = "family"}
 :: The value is interpreted as a language family code (or name, if {method = "name"}) and converted into the
-corresponding object (see [[Module:families]]). If the code or name is invalid, then an error is thrown.
+   corresponding object (see [[Module:families]]). If the code or name is invalid, then an error is thrown.
 :; {type = "script"}
 :: The value is interpreted as a script code (or name, if {method = "name"}) and converted into the corresponding object
-(see [[Module:scripts]]). If the code or name is invalid, then an error is thrown.
+   (see [[Module:scripts]]). If the code or name is invalid, then an error is thrown.
 :; {type = "qualifier"}
 :: The value is interpreted as a qualifier and converted into the correct format for passing into `format_qualifiers()`
-in [[Module:qualifiers]] (which currently just means converting it to a one-item list).
+   in [[Module:qualifiers]] (which currently just means converting it to a one-item list).
 :; {type = "labels"}
 :: The value is interpreted as a comma-separated list of labels and converted into the correct format for passing into
-`show_labels()` in [[Module:labels]] (which is currently a list of strings). Splitting is done on commas not followed by
-whitespace, except that commas inside of double angle brackets do not count even if not followed by whitespace. This
-type should be used by for normal labels (typically specified using {{para|l}} or {{para|ll}}) and accent qualifiers
-(typically specified using {{para|a}} and {{para|aa}}).
+   `show_labels()` in [[Module:labels]] (which is currently a list of strings). Splitting is done on commas not followed
+   by whitespace, except that commas inside of double angle brackets do not count even if not followed by whitespace.
+   This type should be used by for normal labels (typically specified using {{para|l}} or {{para|ll}}) and accent
+   qualifiers (typically specified using {{para|a}} and {{para|aa}}).
 :; {type = "references"}
 :: The value is interpreted as one or more references, in the format prescribed by `parse_references()` in
-[[Module:references]], and converted into a list of objects of the form accepted by `format_references()` in the same
-module. If a syntax error is found in the reference format, an error is thrown.
+   [[Module:references]], and converted into a list of objects of the form accepted by `format_references()` in the same
+   module. If a syntax error is found in the reference format, an error is thrown.
 ; {list =}
-: Treat the parameter as a list of values, each having its own parameter name, rather than a single value. The parameters will have a number at the end, except optionally for the first (but see also {require_index = true}). For example, {list = true} on a parameter named "head" will include the parameters {{para|head}} (or {{para|head1}}), {{para|head2}}, {{para|head3}} and so on. If the parameter name is a number, another number doesn't get appended, but the counting simply continues, e.g. for parameter {3} the sequence is {{para|3}}, {{para|4}}, {{para|5}} etc. List parameters are returned as numbered lists, so for a template that is given the parameters `|head=a|head2=b|head3=c`, the processed value of the parameter {"head"} will be { { "a", "b", "c" }}}.
-: The value for {list =} can also be a string. This tells the module that parameters other than the first should have a different name, which is useful when the first parameter in a list is a number, but the remainder is named. An example would be for genders: {list = "g"} on a parameter named {1} would have parameters {{para|1}}, {{para|g2}}, {{para|g3}} etc.
-: If the number is not located at the end, it can be specified by putting {"\1"} at the number position. For example, parameters {{para|f1accel}}, {{para|f2accel}}, ... can be captured by using the parameter name {"f\1accel"}, as is done in [[Module:headword/templates]].
+: Treat the parameter as a list of values, each having its own parameter name, rather than a single value. The
+  parameters will have a number at the end, except optionally for the first (but see also {require_index = true}). For
+  example, {list = true} on a parameter named "head" will include the parameters {{para|head}} (or {{para|head1}}),
+  {{para|head2}}, {{para|head3}} and so on. If the parameter name is a number, another number doesn't get appended, but
+  the counting simply continues, e.g. for parameter {3} the sequence is {{para|3}}, {{para|4}}, {{para|5}} etc. List
+  parameters are returned as numbered lists, so for a template that is given the parameters `|head=a|head2=b|head3=c`,
+  the processed value of the parameter {"head"} will be { { "a", "b", "c" }}}.
+: The value for {list =} can also be a string. This tells the module that parameters other than the first should have a
+  different name, which is useful when the first parameter in a list is a number, but the remainder is named. An example
+  would be for genders: {list = "g"} on a parameter named {1} would have parameters {{para|1}}, {{para|g2}}, {{para|g3}}
+  etc.
+: If the number is not located at the end, it can be specified by putting {"\1"} at the number position. For example,
+  parameters {{para|f1accel}}, {{para|f2accel}}, ... can be captured by using the parameter name {"f\1accel"}, as is
+  done in [[Module:headword/templates]].
 ; {set =}
 : Require that the value of the parameter be one of the specified list of values (or omitted, if {required = true} isn't
-given). The values in the specified list should be strings corresponding to the raw parameter values except when
-{type = "number"}, in which case they should be numbers. The use of `set` is disallowed if {type = "boolean"} and causes
-an error to be thrown.
+  given). The values in the specified list should be strings corresponding to the raw parameter values except when
+  {type = "number"}, in which case they should be numbers. The use of `set` is disallowed if {type = "boolean"} and
+  causes an error to be thrown.
 ; {sublist =}
 : The value of the parameter is a delimiter-separated list of individual raw values. The resulting field in `args` will
-be a Lua list (i.e. a table with numeric indices) of the converted values. If {sublist = true} is given, the values will
-be split on comma (possibly with whitespace on one or both sides of the comma, which is ignored). Otherwise, the value
-of `sublist` should be either a Lua pattern specifying the delimiter(s) to split on or a function to do the splitting,
-which is passed two values (the value to split and a function to signal an error) and should return a list of the split
-values.
+  be a Lua list (i.e. a table with numeric indices) of the converted values. If {sublist = true} is given, the values
+  will be split on comma (possibly with whitespace on one or both sides of the comma, which is ignored). Otherwise, the
+  value of `sublist` should be either a Lua pattern specifying the delimiter(s) to split on or a function to do the
+  splitting, which is passed two values (the value to split and a function to signal an error) and should return a list
+  of the split values. A function `split_on_comma_without_whitespace()` is provided in [[Module:parameters]] to split on
+  commas not followed by whitespace, while considering commas followed by whitespace part of the argument.
 ; {convert =}
 : If given, this specifies a function to convert the raw parameter value into the Lua object used during further
-processing. The function is passed two arguments, the raw parameter value itself and a function used to signal an error
-during parsing or conversion, and should return one value, the converted parameter. The error-signaling function
-contains the name and raw value of the parameter embedded into the message it generates, so these do not need to
-specified in the message passed into it. If `type` is specified in conjunction with `convert`, the processing by `type`
-happens first. If `sublist` is given in conjunction with `convert`, the raw parameter value will be split appropriately
-and `convert` called on each resulting item.
-; {etym_lang = true}
-: When used in conjunction with {type = "language"}, allows [[Wiktionary:Languages#Etymology-only languages|etymology-only language codes]]
-to be returned. The returned objects are of the same type as those for full languages and for almost all purposes they
-can be used interchangeably. To check if a given object refers to an etymology-only language, use
-{object:hasType("language", "etymology-only")}.
+  processing. The function is passed two arguments, the raw parameter value itself and a function used to signal an
+  error during parsing or conversion, and should return one value, the converted parameter. The error-signaling function
+  contains the name and raw value of the parameter embedded into the message it generates, so these do not need to
+  specified in the message passed into it. If `type` is specified in conjunction with `convert`, the processing by
+  `type` happens first. If `sublist` is given in conjunction with `convert`, the raw parameter value will be split
+  appropriately and `convert` called on each resulting item.
 ; {family = true}
-: When used in conjunction with {type = "language"}, allows [[Wiktionary:Language families|language family codes]]
-to be returned. To check if a given object refers to a language family, use {object:hasType("family")}.
+: When used in conjunction with {type = "language"}, allows [[Wiktionary:Language families|language family codes]] to be
+  returned. To check if a given object refers to a language family, use {object:hasType("family")}.
 ; {method = "name"}
 : When used in conjunction with {type = "language"}, {type = "family"} or {type = "script"}, checks for and parses a
-language, family or script name instead of a code.
+  language, family or script name instead of a code.
 ; {allow_holes = true}
-: This is used in conjunction with list-type parameters. By default, the values are tightly packed in the resulting list. This means that if, for example, an entry specified `head=a|head3=c` but not {{para|head2}}, the returned list will be { {"a", "c"}}}, with the values stored at the indices {1} and {2}, not {1} and {3}. If it is desirable to keep the numbering intact, for example if the numbers of several list parameters correlate with each other (like those of {{tl|compound}}), then this tag should be specified.
-: If {allow_holes = true} is given, there may be {nil} values in between two real values, which makes many of Lua's table processing functions no longer work, like {#} or {ipairs()}. To remedy this, the resulting table will contain an additional named value, `maxindex`, which tells you the highest numeric index that is present in the table. In the example above, the resulting table will now be { { "a", nil, "c", maxindex = 3}}}. That way, you can iterate over the values from {1} to `maxindex`, while skipping {nil} values in between.
+: This is used in conjunction with list-type parameters. By default, the values are tightly packed in the resulting
+  list. This means that if, for example, an entry specified `head=a|head3=c` but not {{para|head2}}, the returned list
+  will be { {"a", "c"}}}, with the values stored at the indices {1} and {2}, not {1} and {3}. If it is desirable to keep
+  the numbering intact, for example if the numbers of several list parameters correlate with each other (like those of
+  {{tl|affix}}), then this tag should be specified.
+: If {allow_holes = true} is given, there may be {nil} values in between two real values, which makes many of Lua's
+  table processing functions no longer work, like {#} or {ipairs()}. To remedy this, the resulting table will contain an
+  additional named value, `maxindex`, which tells you the highest numeric index that is present in the table. In the
+  example above, the resulting table will now be { { "a", nil, "c", maxindex = 3}}}. That way, you can iterate over the
+  values from {1} to `maxindex`, while skipping {nil} values in between.
 ; {disallow_holes = true}
-: This is used in conjunction with list-type parameters. As mentioned above, normally if there is a hole in the source arguments, e.g. `head=a|head3=c` but not {{para|head2}}, it will be removed in the returned list. If {disallow_holes = true} is specified, however, an error is thrown in such a case. This should be used whenever there are multiple list-type parameters that need to line up (e.g. both {{para|head}} and {{para|tr}} are available and {{para|head3}} lines up with {{para|tr3}}), unless {allow_holes = true} is given and you are prepared to handle the holes in the returned lists.
+: This is used in conjunction with list-type parameters. As mentioned above, normally if there is a hole in the source
+  arguments, e.g. `head=a|head3=c` but not {{para|head2}}, it will be removed in the returned list. If
+  {disallow_holes = true} is specified, however, an error is thrown in such a case. This should be used whenever there
+  are multiple list-type parameters that need to line up (e.g. both {{para|head}} and {{para|tr}} are available and
+  {{para|head3}} lines up with {{para|tr3}}), unless {allow_holes = true} is given and you are prepared to handle the
+  holes in the returned lists.
 ; {require_index = true}
-: This is used in conjunction with list-type parameters. By default, the first parameter can have its index omitted. For example, a list parameter named `head` can have its first parameter specified as either {{para|head}} or {{para|head1}}. If {require_index = true} is specified, however, only {{para|head1}} is recognized, and {{para|head}} will be treated as an unknown parameter. {{tl|affixusex}} (and variants {{tl|suffixusex}}, {{tl|prefixusex}}) use this, for example, on all list parameters.
+: This is used in conjunction with list-type parameters. By default, the first parameter can have its index omitted.
+  For example, a list parameter named `head` can have its first parameter specified as either {{para|head}} or
+  {{para|head1}}. If {require_index = true} is specified, however, only {{para|head1}} is recognized, and {{para|head}}
+  will be treated as an unknown parameter. {{tl|affixusex}} (and variants {{tl|suffixusex}}, {{tl|prefixusex}}) use
+  this, for example, on all list parameters.
 ; {separate_no_index = true}
-: This is used to distinguish between {{para|head}} and {{para|head1}} as different parameters. For example, in {{tl|affixusex}}, to distinguish between {{para|sc}} (a script code for all elements in the usex's language) and {{para|sc1}} (the script code of the first element, used when {{para|lang1}} is also specified to indicate that the first element is in a different language). When this is used, the resulting table will contain an additional named value, `default`, which contains the value for the indexless argument.
+: This is used to distinguish between {{para|head}} and {{para|head1}} as different parameters. For example, in
+  {{tl|affixusex}}, to distinguish between {{para|sc}} (a script code for all elements in the usex's language) and
+  {{para|sc1}} (the script code of the first element, used when the first element is prefixed with a language code to
+  indicate that it is in a different language). When this is used, the resulting table will contain an additional named
+  value, `default`, which contains the value for the indexless argument.
 ]==]
 
 local function track(page)
@@ -320,6 +381,25 @@ local function check_set(val, name, param, typ)
 	end
 end
 
+local function convert_language(val, name, param, allow_etym)
+	local lang = require(languages_module)[param.method == "name" and "getByCanonicalName" or "getByCode"](val, nil, allow_etym, param.family)
+	if lang then
+		return lang
+	end
+	local list = {"language"}
+	local links = {"[[WT:LOL]]"}
+	if allow_etym then
+		insert(list, "etymology language")
+		insert(links, "[[WT:LOL/E]]")
+	end
+	if param.family then
+		insert(list, "family")
+		insert(links, "[[WT:LOF]]")
+	end
+	convert_val_error(val, name, concat_list(list, " or ") .. " " .. (param.method == "name" and "name" or "code"),
+		concat_list(links, " and "))
+end
+	
 --[==[ func: export.convert_val(val, name, param)
 Convert a parameter value according to the associated specs listed in the `params` table passed to
 [[Module:parameters]]. `val` is the value to convert for a parameter whose name is `name` (used only in error messages).
@@ -352,22 +432,11 @@ local convert_val = setmetatable({
 	end,
 
 	["language"] = function(val, name, param)
-		local lang = require(languages_module)[param.method == "name" and "getByCanonicalName" or "getByCode"](val, nil, param.etym_lang, param.family)
-		if lang then
-			return lang
-		end
-		local list = {"language"}
-		local links = {"[[WT:LOL]]"}
-		if param.etym_lang then
-			insert(list, "etymology language")
-			insert(links, "[[WT:LOL/E]]")
-		end
-		if param.family then
-			insert(list, "family")
-			insert(links, "[[WT:LOF]]")
-		end
-		convert_val_error(val, name, concat_list(list, " or ") .. " " .. (param.method == "name" and "name" or "code"),
-			concat_list(links, " and "))
+		return convert_language(val, name, param, true)
+	end,
+	
+	["full language"] = function(val, name, param)
+		return convert_language(val, name, param, false)
 	end,
 	
 	["number"] = function(val, name, param)
@@ -845,28 +914,43 @@ function export.process(args, params, return_unknown)
 			end
 		end
 	end
-	
+
+	-- Determine whether this is a template page. For these pages, normally required params aren't required, and the
+	-- `template_default` key supplies the default value only for these pages. Template documentation pages don't count
+	-- because we want template invocations on those pages to behave like mainspace template invocations.
+	local title_obj = mw.title.getCurrentTitle()
+	local is_template_page = title_obj.namespace == 10 and not title_obj.text:find("/documentation$")
+
 	-- Handle defaults.
 	for name, param in pairs(params) do
-		if param.default ~= nil then
+		local default_val
+		-- If both `template_default` and `default` are given, `template_default` takes precedence, but only on
+		-- template pages. This lets you specify a different default as the template page example.
+		if is_template_page then
+			default_val = param.template_default
+		end
+		if default_val == nil then
+			default_val = param.default
+		end
+		if default_val ~= nil then
 			local arg_new = args_new[name]
 			if type(arg_new) == "table" and arg_new._list then
 				if arg_new[1] == nil then
-					arg_new[1] = convert_val(param.default, name, param)
+					arg_new[1] = convert_val(default_val, name, param)
 				end
 				if arg_new.maxindex == 0 then
 					arg_new.maxindex = 1
 				end
 				arg_new._list = nil
 			elseif arg_new == nil then
-				args_new[name] = convert_val(param.default, name, param)
+				args_new[name] = convert_val(default_val, name, param)
 			end
 		end
 	end
 	
 	-- The required table should now be empty.
-	-- If any entry remains, trigger an error, unless we're in the template namespace.
-	if mw.title.getCurrentTitle().namespace ~= 10 then
+	-- If any entry remains, trigger an error, unless we're on a template page.
+	if not is_template_page then
 		local list = {}
 		for name in pairs(required) do
 			insert(list, dump(name))
