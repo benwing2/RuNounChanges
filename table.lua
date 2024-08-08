@@ -14,15 +14,31 @@
 	"t[#t + 1] = x". See the talk page.
 ]]
 
-local libraryUtil = require('libraryUtil')
-
 local export = {}
 
--- Define often-used variables and functions.
-local floor = math.floor
-local infinity = math.huge
+local libraryUtil = require("libraryUtil")
+local table = table
+
 local checkType = libraryUtil.checkType
 local checkTypeMulti = libraryUtil.checkTypeMulti
+local concat = table.concat
+local format = string.format
+local getmetatable = getmetatable
+local insert = table.insert
+local ipairs = ipairs
+local is_callable = require("Module:fun").is_callable
+local is_positive_integer -- defined as export.isPositiveInteger below
+local keys_to_list -- defined as export.keysToList below
+local next = next
+local pairs = pairs
+local rawequal = rawequal
+local rawget = rawget
+local setmetatable = setmetatable
+local sort = table.sort
+local string_sort = require("Module:collation").string_sort
+local type = type
+
+local infinity = math.huge
 
 local function _check(funcName, expectType)
 	if type(expectType) == "string" then
@@ -43,109 +59,88 @@ local function _check(funcName, expectType)
 	end
 end
 
-local function rawpairs(t)
-	return next, t
-end
-
 --[==[
 Return true if the given value is a positive integer, and false if not. Although it doesn't operate on tables, it is
 included here as it is useful for determining whether a given table key is in the array part or the hash part of a
 table.
 ]==]
 function export.isPositiveInteger(v)
-	return type(v) == 'number' and v >= 1 and floor(v) == v and v < infinity
+	return type(v) == "number" and v >= 1 and v % 1 == 0 and v < infinity
 end
+is_positive_integer = export.isPositiveInteger
 
 --[==[
-Return true if the given number is a {NaN} value, and false if not. Although it doesn't operate on tables, it is
-included here as it is useful for determining whether a value can be a valid table key. Lua will generate an error if a
-{NaN} is used as a table key.
-]==]
-function export.isNan(v)
-	if type(v) == 'number' and tostring(v) == '-nan' then
-		return true
-	else
-		return false
-	end
-end
-
---[==[
-Return a clone of an object. If the object is a table, the value returned is a new table, but all subtables and
-functions are shared. Metamethods are respected, but the returned table will have no metatable of its own.
+Return a clone of an object. If the object is a table, the value returned is a new table, but all subtables and functions are shared. Metamethods are respected, but the returned table will have no metatable of its own.
 ]==]
 function export.shallowcopy(orig)
-	local orig_type = type(orig)
-	local copy
-	if orig_type == 'table' then
-		copy = {}
-		for orig_key, orig_value in pairs(orig) do
-			copy[orig_key] = orig_value
-		end
-	else -- number, string, boolean, etc
-		copy = orig
-	end
-	return copy
-end
-
---[==[An alias for shallowcopy(); prefer shallowcopy().]==]
-function export.shallowClone(t)
-	return export.shallowcopy(t)
-end
-
-local function dc(orig, already_seen, includeMetatable, keepLoadedData)
 	if type(orig) ~= "table" then
-		return orig
-	elseif already_seen[orig] then
-		return already_seen[orig]
-	end
-	local mt = getmetatable(orig)
-	if keepLoadedData and mt and mt.mw_loadData then
-		already_seen[orig] = orig
 		return orig
 	end
 	local copy = {}
-	already_seen[orig] = copy
-	for key, value in (mt and not mt.mw_loadData and rawpairs or pairs)(orig) do
-		copy[dc(key, already_seen, includeMetatable, keepLoadedData)] =
-			dc(value, already_seen, includeMetatable, keepLoadedData)
-	end
-	if includeMetatable and mt and not mt.mw_loadData then
-		setmetatable(copy, dc(mt, already_seen, includeMetatable, keepLoadedData))
+	for k, v in pairs(orig) do
+		copy[k] = v
 	end
 	return copy
 end
 
---[==[
-Recursive deep copy function. Preserves copied identities of subtables.
-A more powerful version of {mw.clone}, as it is able to clone recursive tables without getting into an infinite loop.
-* Notes:
-*# Protected metatables will not be copied (i.e. those hidden behind a __metatable metamethod), as they are not
-   accessible by Lua's design. Instead, the output of the __metatable method will be used instead.
-*# When iterating over the table, the __pairs metamethod is ignored, since this can prevent the table from being
-   properly cloned. An exception is made for data loaded via mw.loadData, since otherwise the cloned table would be
-   empty.
-*# Data loaded via mw.loadData is a special case in two ways: the metatable is stripped, because it is a protected
-   metatable, and the substitute metatable causes generally unwated behaviour; in addition, the __pairs metamethod is
-   used, since otherwise the cloned table would be empty.
-* If `noMetatable` is true, then metatables will not be present in the copy at all.
-* If `keepLoadedData` is true, then any data loaded via {mw.loadData} will not be copied, and the original will be used
-  instead. This is useful in iterative contexts where it is necessary to copy data being destructively modified, because
-  objects loaded via mw.loadData are immutable.
-]==]
-function export.deepcopy(orig, noMetatable, keepLoadedData)
-	return dc(orig, {}, not noMetatable, keepLoadedData)
+do
+	local function rawpairs(t)
+		return next, t
+	end
+	
+	local function make_copy(orig, memo, mt_flag, keep_loaded_data)
+		if type(orig) ~= "table" then
+			return orig
+		end
+		local memoized = memo[orig]
+		if memoized ~= nil then
+			return memoized
+		end
+		local mt = getmetatable(orig)
+		local loaded_data = mt and mt.mw_loadData
+		if loaded_data and keep_loaded_data then
+			memo[orig] = orig
+			return orig
+		end
+		local copy = {}
+		memo[orig] = copy
+		for k, v in (loaded_data and pairs or rawpairs)(orig) do
+			copy[make_copy(k, memo, mt_flag, keep_loaded_data)] = make_copy(v, memo, mt_flag, keep_loaded_data)
+		end
+		if loaded_data then
+			return copy
+		elseif mt_flag == "keep" then
+			setmetatable(copy, mt)
+		elseif mt_flag ~= "none" then
+			setmetatable(copy, make_copy(mt, memo, mt_flag, keep_loaded_data))
+		end
+		return copy
+	end
+	
+	--[==[
+	Recursive deep copy function. Preserves copied identities of subtables.
+	A more powerful version of {mw.clone}, with customizable options.
+	* By default, metatables are copied, except for data loaded via mw.loadData (see below). If `metatableFlag` is set to "none", the copy will not have any metatables at all. Conversely, if `metatableFlag` is set to "keep", then the cloned table (and all its members) will have the exact same metatable as their original version.
+	* If `keepLoadedData` is true, then any data loaded via {mw.loadData} will not be copied, and the original will be used instead. This is useful in iterative contexts where it is necessary to copy data being destructively modified, because objects loaded via mw.loadData are immutable.
+	* Notes:
+	*# Protected metatables will not be copied (i.e. those hidden behind a __metatable metamethod), as they are not
+	   accessible by Lua's design. Instead, the output of the __metatable method will be used instead.
+	*# When iterating over the table, the __pairs metamethod is ignored, since this can prevent the table from being properly cloned.
+	*# Data loaded via mw.loadData is a special case in two ways: the metatable is stripped, because otherwise the cloned table throws errors when accessed; in addition, the __pairs metamethod is used, since otherwise the cloned table would be empty.]==]
+	function export.deepcopy(orig, metatableFlag, keepLoadedData)
+		return make_copy(orig, {}, metatableFlag, keepLoadedData)
+	end
 end
 
 --[==[
 Append any number of tables together and returns the result. Compare the Lisp expression {(append list1 list2 ...)}.
 ]==]
 function export.append(...)
-	local ret = {}
-	for i=1,select('#', ...) do
-		local argt = select(i, ...)
-		checkType('append', i, argt, 'table')
-		for _, v in ipairs(argt) do
-			table.insert(ret, v)
+	local ret, n = {}, 0
+	for i = 1, arg.n do
+		for _, v in ipairs(arg[i]) do
+			n = n + 1
+			ret[n] = v
 		end
 	end
 	return ret
@@ -171,31 +166,38 @@ function export.extendList(list, new_items, options)
 		if options and options.insertIfNot then
 			export.insertIfNot(list, item, options)
 		else
-			table.insert(list, item)
+			insert(list, item)
 		end
 	end
 end
 
 --[==[
-Remove duplicate values from an array. Non-positive-integer keys are ignored. The earliest value is kept, and all
-subsequent duplicate values are removed, but otherwise the array order is unchanged.
+Remove duplicate values from an array. Non-positive-integer keys are ignored. The earliest value is kept, and all subsequent duplicate values are removed, but otherwise the array order is unchanged.
+-- -0, NaN and -NaN have special handling, as they can't be used as table keys.
 ]==]
 function export.removeDuplicates(t)
-	checkType('removeDuplicates', 1, t, 'table')
-	local isNan = export.isNan
-	local ret, exists = {}, {}
-	local index = 1
+	checkType("removeDuplicates", 1, t, "table")
+	local ret, n, seen, _neg_0, _pos_nan, _neg_nan = {}, 0, {}
 	for _, v in ipairs(t) do
-		if isNan(v) then
-			-- NaNs can't be table keys, and they are also unique, so we don't need to check existence.
-			ret[index] = v
-			index = index + 1
-		else
-			if not exists[v] then
-				ret[index] = v
-				index = index + 1
-				exists[v] = true
+		local v_key = v
+		-- -0
+		if v == 0 and 1 / v < 0 then
+			_neg_0 = _neg_0 or {}
+			v_key = _neg_0
+		-- NaN and -NaN.
+		elseif v ~= v then
+			if format("%f", v) == "nan" then
+				_pos_nan = _pos_nan or {}
+				v_key = _pos_nan
+			else
+				_neg_nan = _neg_nan or {}
+				v_key = _neg_nan
 			end
+		end
+		if not seen[v_key] then
+			n = n + 1
+			ret[n] = v
+			seen[v_key] = true
 		end
 	end
 	return ret
@@ -207,18 +209,17 @@ numerical order.
 ]==]
 function export.numKeys(t, checked)
 	if not checked then
-		checkType('numKeys', 1, t, 'table')
+		checkType("numKeys", 1, t, "table")
 	end
-	local isPositiveInteger = export.isPositiveInteger
 	local nums = {}
 	local index = 1
-	for k, _ in pairs(t) do
-		if isPositiveInteger(k) then
+	for k in pairs(t) do
+		if is_positive_integer(k) then
 			nums[index] = k
 			index = index + 1
 		end
 	end
-	table.sort(nums)
+	sort(nums)
 	return nums
 end
 
@@ -227,89 +228,13 @@ Return the maximum index of a table or array that possibly has holes in it, or 0
 table.
 ]==]
 function export.maxIndex(t)
-	checkType('maxIndex', 1, t, 'table')
-	local positiveIntegerKeys = export.numKeys(t)
-	if positiveIntegerKeys[1] then
-		return math.max(unpack(positiveIntegerKeys))
-	else
-		return 0 -- ???
-	end
-end
-
---[==[
-This takes a table and returns an array containing the numbers of keys with the specified prefix and suffix.
-For example, {affixNums({a1 = 'foo', a3 = 'bar', a6 = 'baz'}, "a")} returns { {1, 3, 6}}.
-]==]
-function export.affixNums(t, prefix, suffix)
-	local check = _check('affixNums')
-	check(1, t, 'table')
-	check(2, prefix, 'string', true)
-	check(3, suffix, 'string', true)
-	
-	local function cleanPattern(s)
-		-- Cleans a pattern so that the magic characters ()%.[]*+-?^$ are interpreted literally.
-		s = s:gsub('([%(%)%%%.%[%]%*%+%-%?%^%$])', '%%%1')
-		return s
-	end
-	
-	prefix = prefix or ''
-	suffix = suffix or ''
-	prefix = cleanPattern(prefix)
-	suffix = cleanPattern(suffix)
-	local pattern = '^' .. prefix .. '([1-9]%d*)' .. suffix .. '$'
-	
-	local nums = {}
-	local index = 1
-	for k, _ in pairs(t) do
-		if type(k) == 'string' then
-			local num = mw.ustring.match(k, pattern)
-			if num then
-				nums[index] = tonumber(num)
-				index = index + 1
-			end
+	local max = 0
+	for k in pairs(t) do
+		if is_positive_integer(k) and k > max then
+			max = k
 		end
 	end
-	table.sort(nums)
-	return nums
-end
-
---[==[
-Given a table with keys like {("foo1", "bar1", "foo2", "baz2")}, return a table of subtables in the format
-
-{ { [1] = {foo = 'text', bar = 'text'}, [2] = {foo = 'text', baz = 'text'} }}
-
-Keys that don't end with an integer are stored in a subtable named {other}. The `compress` option compresses the table
-so that it can be iterated over with ipairs.
-]==]
-function export.numData(t, compress)
-	local check = _check('numData')
-	check(1, t, 'table')
-	check(2, compress, 'boolean', true)
-	
-	local ret = {}
-	for k, v in pairs(t) do
-		local prefix, num = tostring(k):match('^([^0-9]*)([1-9][0-9]*)$')
-		if num then
-			num = tonumber(num)
-			local subtable = ret[num] or {}
-			if prefix == '' then
-				-- Positional parameters match the blank string; put them at the start of the subtable instead.
-				prefix = 1
-			end
-			subtable[prefix] = v
-			ret[num] = subtable
-		else
-			local subtable = ret.other or {}
-			subtable[k] = v
-			ret.other = subtable
-		end
-	end
-	if compress then
-		local other = ret.other
-		ret = export.compressSparseArray(ret)
-		ret.other = other
-	end
-	return ret
+	return max
 end
 
 --[==[
@@ -318,7 +243,7 @@ while preserving the order, so that the array can be safely traversed with
 ipairs.
 ]==]
 function export.compressSparseArray(t)
-	checkType('compressSparseArray', 1, t, 'table')
+	checkType("compressSparseArray", 1, t, "table")
 	local ret = {}
 	local index = 1
 	local nums = export.numKeys(t)
@@ -333,7 +258,7 @@ end
 This is an iterator for sparse arrays. It can be used like ipairs, but can handle nil values.
 ]==]
 function export.sparseIpairs(t)
-	checkType('sparseIpairs', 1, t, 'table')
+	checkType("sparseIpairs", 1, t, "table")
 	local nums = export.numKeys(t)
 	local i = 0
 	return function()
@@ -352,7 +277,7 @@ This returns the size of a key/value pair table. It will also work on arrays, bu
 use the # operator.
 ]==]
 function export.size(t)
-	checkType('size', 1, t, 'table')
+	checkType("size", 1, t, "table")
 	local i = 0
 	for _ in pairs(t) do
 		i = i + 1
@@ -361,9 +286,7 @@ function export.size(t)
 end
 
 --[==[
-This returns the length of a table, or the first integer key n counting from 1 such that t[n + 1] is nil. It is similar
-to the operator #, but may return a different value when there are gaps in the array portion of the table. Intended to
-be used on data loaded with mw.loadData. For other tables, use #.
+This returns the length of a table, or the first integer key n counting from 1 such that t[n + 1] is nil. It is similar to the operator #, but may return a different value when metamethods are involved. Intended to be used on data loaded with mw.loadData. For other tables, use #.
 ]==]
 function export.length(t)
 	local i = 0
@@ -374,62 +297,154 @@ function export.length(t)
 end
 
 
-local function de(a, b, already_seen, sizes, includeMetatables, rawCompare)
-	if type(a) ~= "table" or type(b) ~= "table" then
-		return a == b
-	end
-	already_seen[a] = already_seen[a] or {}
-	already_seen[b] = already_seen[b] or {}
-	if (
-		already_seen[a] and already_seen[a][b] or
-		already_seen[b] and already_seen[b][a]
-	) then
-		return true
-	end
-	already_seen[a][b] = true
-	local mt_a, i = getmetatable(a), 0
-	for k, v in (mt_a and not mt_a.mw_loadData and rawpairs or pairs)(a) do
-		if not de(v, b[k], already_seen, sizes, includeMetatables, rawCompare) then
+do
+	local function is_equivalent(a, b, memo, include_mt)
+		-- Raw equality check.
+		if rawequal(a, b) then
+			return true
+		-- If not equal, a and b can only be equivalent if they're both tables.
+		elseif not (type(a) == "table" and type(b) == "table") then
 			return false
 		end
-		i = i + 1
-	end
-	sizes[a] = i
-	local mt_b = getmetatable(b)
-	if not sizes[b] then
-		i = 0
-		for _ in (mt_b and not mt_b.mw_loadData and rawpairs or pairs)(b) do
-			i = i + 1
+		-- If a and b have been compared before, they must be equivalent.
+		local memo_a = memo[a]
+		if not memo_a then
+			memo[a] = {[b] = true}
+		elseif memo_a[b] then
+			return true
+		else
+			memo_a[b] = true
 		end
-		sizes[b] = i
-	end
-	if sizes[a] ~= sizes[b] then
-		return false
-	end
-	if includeMetatables then
-		if not rawCompare then
-			if mt_a and mt_a.mw_loadData then
-				mt_a = nil
+		local memo_b = memo[b]
+		if not memo_b then
+			memo[b] = {[a] = true}
+		else -- We know memo_b won't have a, since memo_a didn't have b.
+			memo_b[a] = true
+		end
+		-- If include_mt is set, check the metatables are equivalent.
+		if (
+			include_mt and
+			not is_equivalent(getmetatable(a), getmetatable(b), memo, true)
+		) then
+			return false
+		end
+		-- Fast check: loop over keys in a, checking if an equivalent value exists at the same key in b. Any tables-as-keys are set aside for the laborious check instead.
+		local tablekeys_a, tablekeys_b, kb
+		for ka, va in next, a do
+			if type(ka) == "table" then
+				if not tablekeys_a then
+					tablekeys_a = {[ka] = va}
+				else
+					tablekeys_a[ka] = va
+				end
+			else
+				local vb = rawget(b, ka)
+				-- Faster to avoid recursion if possible, as we know va is not nil.
+				if vb == nil or not is_equivalent(va, vb, memo, include_mt) then
+					return false
+				end
 			end
-			if mt_b and mt_b.mw_loadData then
-				mt_b = nil
+			-- Iterate over b simultaneously (to check it's the same size and to grab any tables-as-keys for the laborious check), but also separately (since it might iterate in a different order, as this is unpredictable in Lua).
+			local vb
+			kb, vb = next(b, kb)
+			-- Fail if b runs out of key/value pairs too early.
+			if kb == nil then
+				return false
+			elseif type(kb) == "table" then
+				if not tablekeys_b then
+					tablekeys_b = {[kb] = vb}
+				else
+					tablekeys_b[kb] = vb
+				end
 			end
 		end
-		return de(mt_a, mt_b, already_seen, sizes, includeMetatables, rawCompare)
+		-- Fail if there are too many key/value pairs in b.
+		if next(b, kb) ~= nil then
+			return false
+		-- If tablekeys_a == tablekeys_b they must be both nil, meaning there are no tables-as-keys to check, so success.
+		elseif tablekeys_a == tablekeys_b then
+			return true
+		-- If only one them exists, then the tables can't be equivalent.
+		elseif not (tablekeys_a and tablekeys_b) then
+			return false
+		end
+		-- Laborious check: for each table-as-key in tablekeys_a, loop over tablekeys_b looking for an equivalent key/value pair.
+		for ka, va in next, tablekeys_a do
+			local kb
+			while true do
+				local vb
+				kb, vb = next(tablekeys_b, kb)
+				-- Fail if no equivalent is found.
+				if kb == nil then
+					return false
+				elseif (
+					is_equivalent(ka, kb, memo, include_mt) and
+					is_equivalent(va, vb, memo, include_mt)
+				) then
+					-- Remove match to prevent double-matching (and for speed).
+					tablekeys_b[kb] = nil
+					break
+				end
+			end
+		end
+		-- Success if tablekeys_b is now empty.
+		return next(tablekeys_b) == nil
 	end
-	return true
+	
+	--[==[
+	Recursively compare two values that may be tables, and returns true if all key-value pairs are structurally equivalent. Note that this handles arbitrary nesting of subtables (including recursive nesting) to any depth, for keys as well as values.
+
+	If `include_mt` is true, then metatables are also compared.]==]
+	function export.deepEquals(a, b, include_mt)
+		return is_equivalent(a, b, {}, include_mt)
+	end
 end
 
---[==[
-Recursively compare two values that may be tables, including tables with nested tables as values. Return true if both
-values are structurally equal. Note that this handles arbitary levels of nesting.
+do
+	local function get_nested(a, b, ...)
+		if a == nil then
+			return nil
+		elseif ... ~= nil then
+			return get_nested(a[b], ...)
+		end
+		return a[b]
+	end
+	
+	--[==[
+	Given a table and an arbitrary number of keys, will successively access subtables using each key in turn, returning the value at the final key. For example, if {t} is { {[1] = {[2] = {[3] = "foo"}}}}, {export.getNested(t, 1, 2, 3)} will return {"foo"}.
+	
+	If no subtable exists for a given key value, returns nil, but will throw an error if a non-table is found at an intermediary key.
+	]==]
+	function export.getNested(a, ...)
+		if a == nil or ... == nil then
+			error("Must provide a table and at least one key.")
+		end
+		return get_nested(a, ...)
+	end
+end
 
-If `includeMetatables` is true, then metatables will also be compared. However, by default, metatables from
-{mw.loadData} will not be included in this comparison. This is because the metatable changes each time {mw.loadData} is
-used, even if it is used on the same data. This can be overridden by setting `rawCompare` to true.
-]==]
-function export.deepEquals(a, b, includeMetatables, rawCompare)
-	return de(a, b, {}, {}, includeMetatables, rawCompare)
+do
+	local function set_nested(a, b, c, ...)
+		if ... ~= nil then
+			a[c] = a[c] or {}
+			return set_nested(a[c], b, ...)
+		end
+		a[c] = b
+	end
+	
+	--[==[
+	Given a table, value and an arbitrary number of keys, will successively access subtables using each key in turn, and sets the value at the final key. For example, if {t} is { {}}, {export.setNested(t, "foo", 1, 2, 3)} will modify {t} to { {[1] = {[2] = {[3] = "foo"}}}}.
+	
+	If no subtable exists for a given key value, one will be created, but will throw an error if a non-table value is found at an intermediary key.
+	
+	Note: the parameter order (table, value, keys) differs from functions like rawset, because the number of keys can be arbitrary. This is to avoid situations where an additional argument must be appended to arbitrary lists of variables, which can be awkward and error-prone: for example, when handling variable arguments ({{lua|...}}) or function return values.
+	]==]
+	function export.setNested(a, b, ...)
+		if a == nil or b == nil or ... == nil then
+			error("Must provide a table, value and at least one key.")
+		end
+		return set_nested(a, b, ...)
+	end
 end
 
 --[==[
@@ -459,11 +474,11 @@ either the array or hashmap portion of the table. Comparison is by value, using
 `deepEquals`.
 
 NOTE: This used to do shallow comparison by default and accepted a third
-'deepCompare' param to do deep comparison. This param is still accepted but now
+"deepCompare" param to do deep comparison. This param is still accepted but now
 ignored.
 ]==]
 function export.tableContains(tbl, x)
-	checkType('tableContains', 1, tbl, 'table')
+	checkType("tableContains", 1, tbl, "table")
 	for _, v in pairs(tbl) do
 		if export.deepEquals(v, x) then return true end
 	end
@@ -499,9 +514,9 @@ function export.insertIfNot(list, item, options)
 	end
 	if not export.contains(list, item, options) then
 		if options and options.pos then
-			table.insert(list, options.pos, item)
+			insert(list, options.pos, item)
 		else
-			table.insert(list, item)
+			insert(list, item)
 		end
 	end
 end
@@ -517,9 +532,9 @@ Only reliable if there is just one key with the specified value. Otherwise, the 
 and the output is unpredictable.
 ]==]
 function export.keyFor(t, valueToFind)
-	local check = _check('keyFor')
-	check(1, t, 'table')
-	check(2, valueToFind, { 'string', 'number' })
+	local check = _check("keyFor")
+	check(1, t, "table")
+	check(2, valueToFind, {"string", "number"})
 	
 	for key, value in pairs(t) do
 		if value == valueToFind then
@@ -530,43 +545,41 @@ function export.keyFor(t, valueToFind)
 	return nil
 end
 
--- The default sorting function used in export.keysToList if no keySort is defined.
-local function defaultKeySort(key1, key2)
-	-- "number" < "string", so numbers will be sorted before strings.
-	local type1, type2 = type(key1), type(key2)
-	if type1 ~= type2 then
-		return type1 < type2
-	else
-		return key1 < key2
-	end
-end
-
---[==[
-Return a list of the keys in a table, sorted using either the default table.sort function or a custom keySort function.
-If there are only numerical keys, numKeys is probably more efficient.
-]==]
-function export.keysToList(t, keySort, checked)
-	if not checked then
-		local check = _check('keysToList')
-		check(1, t, 'table')
-		check(2, keySort, 'function', true)
+do
+	-- The default sorting function used in export.keysToList if no keySort is defined.
+	local function defaultKeySort(key1, key2)
+		-- "number" < "string", so numbers will be sorted before strings.
+		local type1, type2 = type(key1), type(key2)
+		if type1 ~= type2 then
+			return type1 < type2
+		end
+		-- string_sort fixes a bug in < whereby all codepoints above U+FFFF are treated as equal.
+		return string_sort(key1, key2)
 	end
 	
-	local list = {}
-	local index = 1
-	for key, _ in pairs(t) do
-		list[index] = key
-		index = index + 1
+	--[==[
+	Return a list of the keys in a table, sorted using either the default table.sort function or a custom keySort function.
+	If there are only numerical keys, numKeys is probably more efficient.
+	]==]
+	function export.keysToList(t, keySort, checked)
+		if not checked then
+			local check = _check("keysToList")
+			check(1, t, "table")
+			check(2, keySort, "function", true)
+		end
+		
+		local list, i = {}, 0
+		for key in pairs(t) do
+			i = i + 1
+			list[i] = key
+		end
+		
+		-- Use specified sort function, or otherwise defaultKeySort.
+		sort(list, keySort or defaultKeySort)
+		
+		return list
 	end
-	
-	-- Place numbers before strings, otherwise sort using <.
-	if not keySort then
-		keySort = defaultKeySort
-	end
-	
-	table.sort(list, keySort)
-	
-	return list
+	keys_to_list = export.keysToList
 end
 
 --[==[
@@ -574,35 +587,37 @@ Iterates through a table, with the keys sorted using the keysToList function. If
 sparseIpairs is probably more efficient.
 ]==]
 function export.sortedPairs(t, keySort)
-	local check = _check('keysToList')
-	check(1, t, 'table')
-	check(2, keySort, 'function', true)
+	local check = _check("keysToList")
+	check(1, t, "table")
+	check(2, keySort, "function", true)
 	
-	local list = export.keysToList(t, keySort, true)
+	local list, i = keys_to_list(t, keySort, true), 0
 	
-	local i = 0
 	return function()
 		i = i + 1
 		local key = list[i]
 		if key ~= nil then
 			return key, t[key]
-		else
-			return nil, nil
 		end
 	end
 end
 
-function export.reverseIpairs(list)
-	checkType('reverse_ipairs', 1, list, 'table')
-	
-	local i = #list + 1
-	return function()
+do
+	local function iter(t, i)
 		i = i - 1
-		if list[i] ~= nil then
-			return i, list[i]
-		else
-			return nil, nil
+		if i > 0 then
+			return i, t[i]
 		end
+	end
+	
+	function export.reverseIpairs(t)
+		checkType("reverseIpairs", 1, t, "table")
+		-- Not safe to use #t, as it can be unpredictable if there is a hash part.
+		local i = 0
+		repeat
+			i = i + 1
+		until t[i] == nil
+		return iter, t, i
 	end
 end
 
@@ -772,9 +787,9 @@ function export.serialCommaJoin(seq, options)
 	elseif length == 2 then
 		return seq[1] .. " " .. conj .. " " .. seq[2]
 	else
-		local comma = options.dontTag and "," or '<span class="serial-comma">,</span>'
-		conj = options.dontTag and ' ' .. conj .. " " or '<span class="serial-and"> ' .. conj .. '</span> '
-		return table.concat(seq, ", ", 1, length - 1) ..
+		local comma = options.dontTag and "," or "<span class=\"serial-comma\">,</span>"
+		conj = options.dontTag and " " .. conj .. " " or "<span class=\"serial-and\"> " .. conj .. "</span> "
+		return concat(seq, ", ", 1, length - 1) ..
 				comma .. conj .. seq[length]
 	end
 end
@@ -793,26 +808,27 @@ function export.sparseConcat(t, sep, i, j)
 		list[list_i] = v
 	end
 	
-	return table.concat(list, sep, i, j)
+	return concat(list, sep, i, j)
 end
 
 --[==[
-Values of numberic keys in array portion of table are reversed: { { "a", "b", "c" }} -> { { "c", "b", "a" }}
+Values of numeric keys in array portion of table are reversed: { { "a", "b", "c" }} -> { { "c", "b", "a" }}
 ]==]
 function export.reverse(t)
 	checkType("reverse", 1, t, "table")
-	
-	local new_t = {}
-	local t_len = #t
-	local base = t_len + 1
-	for i = t_len, 1, -1 do
-		new_t[base-i] = t[i]
+	-- Not safe to use #t, as it can be unpredictable if there is a hash part.
+	local ret, base = {}, 0
+	repeat
+		base = base + 1
+	until t[base] == nil
+	for i = base - 1, 1, -1 do
+		ret[base - i] = t[i]
 	end
-	return new_t
+	return ret
 end
 
 function export.reverseConcat(t, sep, i, j)
-	return table.concat(export.reverse(t), sep, i, j)
+	return concat(export.reverse(t), sep, i, j)
 end
 
 --[==[
@@ -830,16 +846,38 @@ function export.invert(array)
 end
 
 --[==[
-Convert a list into a set. For example, {listToSet({ "a", "b", "c" })} -> { { ["a"] = true, ["b"] = true, ["c"] = true }}
+Convert `list` (a table with a list of values) into a set (a table where those values are keys instead). This is a useful
+way to create a fast lookup table, since looking up a table key is much, much faster than iterating over the whole list
+to see if it contains a given value.
+
+By default, each item is given the value true. If the optional parameter `value` is a function or functor, then the value
+for each item is determined by calling it with the item key as the first parameter, plus any additional arguments passed
+to {listToSet}; if value is anything else, then it is used as the fixed value for every item.
 ]==]
-function export.listToSet(t)
-	checkType("listToSet", 1, t, "table")
-	
-	local set = {}
-	for _, item in ipairs(t) do
-		set[item] = true
+function export.listToSet(list, value, ...)
+	checkType("listToSet", 1, list, "table")
+	local set, i = {}, 0
+	if value == nil then
+		value = true
+	elseif is_callable(value) then
+		-- Separate loop avoids an "is callable" lookup each iteration.
+		while true do
+			i = i + 1
+			local item = list[i]
+			if item == nil then
+				return set
+			end
+			set[item] = value(item, ...)
+		end
 	end
-	return set
+	while true do
+		i = i + 1
+		local item = list[i]
+		if item == nil then
+			return set
+		end
+		set[item] = value
+	end
 end
 
 --[==[
