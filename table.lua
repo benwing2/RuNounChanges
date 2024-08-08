@@ -87,7 +87,7 @@ do
 	local function rawpairs(t)
 		return next, t
 	end
-	
+
 	local function make_copy(orig, memo, mt_flag, keep_loaded_data)
 		if type(orig) ~= "table" then
 			return orig
@@ -116,7 +116,7 @@ do
 		end
 		return copy
 	end
-	
+
 	--[==[
 	Recursive deep copy function. Preserves copied identities of subtables.
 	A more powerful version of {mw.clone}, with customizable options.
@@ -390,7 +390,7 @@ do
 		-- Success if tablekeys_b is now empty.
 		return next(tablekeys_b) == nil
 	end
-	
+
 	--[==[
 	Recursively compare two values that may be tables, and returns true if all key-value pairs are structurally equivalent. Note that this handles arbitrary nesting of subtables (including recursive nesting) to any depth, for keys as well as values.
 
@@ -409,10 +409,10 @@ do
 		end
 		return a[b]
 	end
-	
+
 	--[==[
 	Given a table and an arbitrary number of keys, will successively access subtables using each key in turn, returning the value at the final key. For example, if {t} is { {[1] = {[2] = {[3] = "foo"}}}}, {export.getNested(t, 1, 2, 3)} will return {"foo"}.
-	
+
 	If no subtable exists for a given key value, returns nil, but will throw an error if a non-table is found at an intermediary key.
 	]==]
 	function export.getNested(a, ...)
@@ -431,12 +431,12 @@ do
 		end
 		a[c] = b
 	end
-	
+
 	--[==[
 	Given a table, value and an arbitrary number of keys, will successively access subtables using each key in turn, and sets the value at the final key. For example, if {t} is { {}}, {export.setNested(t, "foo", 1, 2, 3)} will modify {t} to { {[1] = {[2] = {[3] = "foo"}}}}.
-	
+
 	If no subtable exists for a given key value, one will be created, but will throw an error if a non-table value is found at an intermediary key.
-	
+
 	Note: the parameter order (table, value, keys) differs from functions like rawset, because the number of keys can be arbitrary. This is to avoid situations where an additional argument must be appended to arbitrary lists of variables, which can be awkward and error-prone: for example, when handling variable arguments ({{lua|...}}) or function return values.
 	]==]
 	function export.setNested(a, b, ...)
@@ -486,15 +486,20 @@ function export.tableContains(tbl, x)
 end
 
 --[==[
-Given a `list` and an `item` to be inserted, append the value to the end of the list if not already present
+Given a `list` and a `new_item` to be inserted, append the value to the end of the list if not already present
 (or insert at an arbitrary position, if `options.pos` is given; see below). Comparison is by value, using {deepEquals}.
 
 `options` is an optional table of additional options to control the behavior of the operation. The following options are
 recognized:
 * `pos`: Position at which insertion happens (i.e. before the existing item at position `pos`).
 * `key`: Function of one argument to return a comparison key, as with {deepEquals}. The key function is applied to both
-         `item` and the existing item in `list` to compare against, and the comparison is done against the results.
-         This is useful when inserting a complex structure into an existing list while avoiding duplicates.
+		 `item` and the existing item in `list` to compare against, and the comparison is done against the results.
+		 This is useful when inserting a complex structure into an existing list while avoiding duplicates.
+* `combine`: Function of three arguments (the position, the existing item and the new item, respectively) to combine an
+			 existing item with `new_item`, when `new_item` is found in `list`. If unspecified, the existing item is
+			 left alone.
+
+Return {false} if entry already found, {true} if inserted.
 
 For compatibility, `pos` can be specified directly as the third argument in place of `options`, but this is not
 recommended for new code.
@@ -504,7 +509,7 @@ items, you will get O(M*(M+N)) behavior, effectively O((M+N)^2). Thus it is not 
 sure the total number of items will be small. (An alternative for large lists is to insert all the items without
 checking for duplicates, and use {removeDuplicates()} at the end.)
 ]==]
-function export.insertIfNot(list, item, options)
+function export.insertIfNot(list, new_item, options)
 	local check = _check("insertIfNot")
 	check(1, list, "table")
 	check(3, options, {"table", "number"}, true)
@@ -512,12 +517,33 @@ function export.insertIfNot(list, item, options)
 	if type(options) == "number" then
 		options = {pos = options}
 	end
-	if not export.contains(list, item, options) then
-		if options and options.pos then
-			insert(list, options.pos, item)
+	if options and options.combine then
+		local new_item_key
+		-- Don't use options.key and options.key(new_item) or new_item in case the key is legitimately false or nil.
+		if options.key then
+			new_item_key = options.key(new_item)
 		else
-			insert(list, item)
+			new_item_key = new_item
 		end
+		for i, item in ipairs(list) do
+			local item_key
+			if options.key then
+				item_key = options.key(item)
+			else
+				item_key = item
+			end
+			if export.deepEquals(item_key, new_item_key) then
+				list[i] = options.combine(i, item, new_item)
+				return false
+			end
+		end
+	elseif export.contains(list, item, options) then
+		return false
+	end
+	if options and options.pos then
+		insert(list, options.pos, item)
+	else
+		insert(list, item)
 	end
 end
 
@@ -535,13 +561,13 @@ function export.keyFor(t, valueToFind)
 	local check = _check("keyFor")
 	check(1, t, "table")
 	check(2, valueToFind, {"string", "number"})
-	
+
 	for key, value in pairs(t) do
 		if value == valueToFind then
 			return key
 		end
 	end
-	
+
 	return nil
 end
 
@@ -556,7 +582,7 @@ do
 		-- string_sort fixes a bug in < whereby all codepoints above U+FFFF are treated as equal.
 		return string_sort(key1, key2)
 	end
-	
+
 	--[==[
 	Return a list of the keys in a table, sorted using either the default table.sort function or a custom keySort function.
 	If there are only numerical keys, numKeys is probably more efficient.
@@ -567,16 +593,16 @@ do
 			check(1, t, "table")
 			check(2, keySort, "function", true)
 		end
-		
+
 		local list, i = {}, 0
 		for key in pairs(t) do
 			i = i + 1
 			list[i] = key
 		end
-		
+
 		-- Use specified sort function, or otherwise defaultKeySort.
 		sort(list, keySort or defaultKeySort)
-		
+
 		return list
 	end
 	keys_to_list = export.keysToList
@@ -590,9 +616,9 @@ function export.sortedPairs(t, keySort)
 	local check = _check("keysToList")
 	check(1, t, "table")
 	check(2, keySort, "function", true)
-	
+
 	local list, i = keys_to_list(t, keySort, true), 0
-	
+
 	return function()
 		i = i + 1
 		local key = list[i]
@@ -609,7 +635,7 @@ do
 			return i, t[i]
 		end
 	end
-	
+
 	function export.reverseIpairs(t)
 		checkType("reverseIpairs", 1, t, "table")
 		-- Not safe to use #t, as it can be unpredictable if there is a hash part.
@@ -765,13 +791,13 @@ function export.serialCommaJoin(seq, options)
 	local check = _check("serialCommaJoin", "table")
 	check(1, seq)
 	check(2, options, true)
-	
+
 	local length = #seq
-	
+
 	if not options then
 		options = {}
 	end
-	
+
 	local conj
 	if length > 1 then
 		conj = options.conj or "and"
@@ -779,7 +805,7 @@ function export.serialCommaJoin(seq, options)
 			conj = "''" .. conj .. "''"
 		end
 	end
-	
+
 	if length == 0 then
 		return ""
 	elseif length == 1 then
@@ -801,13 +827,13 @@ Concatenate all values in the table that are indexed by a number, in order.
 ]==]
 function export.sparseConcat(t, sep, i, j)
 	local list = {}
-	
+
 	local list_i = 0
 	for _, v in export.sparseIpairs(t) do
 		list_i = list_i + 1
 		list[list_i] = v
 	end
-	
+
 	return concat(list, sep, i, j)
 end
 
@@ -836,12 +862,12 @@ Invert an array. For example, {invert({ "a", "b", "c" })} -> { { a = 1, b = 2, c
 ]==]
 function export.invert(array)
 	checkType("invert", 1, array, "table")
-	
+
 	local map = {}
 	for i, v in ipairs(array) do
 		map[v] = i
 	end
-	
+
 	return map
 end
 
@@ -885,7 +911,7 @@ Return true if all keys in the table are consecutive integers starting at 1.
 ]==]
 function export.isArray(t)
 	checkType("isArray", 1, t, "table")
-	
+
 	local i = 0
 	for _ in pairs(t) do
 		i = i + 1
