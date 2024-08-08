@@ -12,6 +12,7 @@ local rfind = mw.ustring.find
 local rmatch = mw.ustring.match
 local rsubn = mw.ustring.gsub
 local ucfirst = m_str_utils.ucfirst
+local dump = mw.dumpObject
 
 -- version of rsubn() that discards all but the first return value
 local function rsub(term, foo, bar)
@@ -1167,13 +1168,18 @@ function export.create_footnote_obj()
 end
 
 
-function export.get_footnote_text(form, footnote_obj)
-	if not form.footnotes then
+function export.get_footnote_text(footnotes, footnote_obj)
+	if not footnotes then
 		return ""
+	end
+	-- FIXME: Compatibility code for old callers that passed in a form object instead of the footnotes directly.
+	-- Convert callers and remove this code.
+	if footnotes.footnotes then
+		footnotes = footnotes.footnotes
 	end
 	local link_indices = {}
 	local all_refs = {}
-	for _, footnote in ipairs(form.footnotes) do
+	for _, footnote in ipairs(footnotes) do
 		local refs
 		footnote, refs = export.expand_footnote_or_references(footnote)
 		if footnote then
@@ -1338,10 +1344,10 @@ return nil for no change. The most common purpose of this function is to remove 
 documentation for inflect_multiword_or_alternant_multiword_spec() for a description of variant codes and their purpose.
 
 `generate_link` is an optional function to generate the link text for a given form. It is passed four arguments (slot,
-for, origentry, accel_obj) where `slot` is the slot being processed, `form` is the specific form object to generate a
-link for, `origentry` is the actual text to convert into a link, and `accel_obj` is the accelerator object to include
+for, formval_for_link, accel_obj) where `slot` is the slot being processed, `form` is the specific form object to generate a
+link for, `formval_for_link` is the actual text to convert into a link, and `accel_obj` is the accelerator object to include
 in the link. If nil is returned, the default algorithm will apply, which is to call
-`full_link{lang = lang, term = origentry, tr = "-", accel = accel_obj}` from [[Module:links]]. This can be used e.g. to
+`full_link{lang = lang, term = formval_for_link, tr = "-", accel = accel_obj}` from [[Module:links]]. This can be used e.g. to
 customize the appearance of the link. Note that the link should not include any transliteration because it is handled
 specially (all transliterations are grouped together).
 
@@ -1396,17 +1402,18 @@ function export.show_forms(forms, props)
 	local function do_slot(slot, accel_form)
 		local formvals = forms[slot]
 		if formvals then
-			local orig_spans = {}
-			local tr_spans = {}
-			local orignotes, trnotes = "", ""
 			if type(formvals) ~= "table" then
-				error("Internal error: For slot '" .. slot .. "', expected table but saw " .. mw.dumpObject(formvals))
+				error("Internal error: For slot '" .. slot .. "', expected table but saw " .. dump(formvals))
 			end
+
+			-- Maybe canonicalize the form values (e.g. remove variant codes and monosyllabic accents).
 			if props.canonicalize then
 				for _, form in ipairs(formvals) do
 					form.form = props.canonicalize(form.form) or form.form
 				end
 			end
+
+			-- Preprocess the forms as a whole if called for.
 			if props.preprocess_forms then
 				formvals = props.preprocess_forms {
 					slot = slot,
@@ -1415,7 +1422,10 @@ function export.show_forms(forms, props)
 					footnote_obj = footnote_obj,
 				} or formvals
 			end
-			if props.deduplicate_forms then
+
+			-- Maybe deduplicate form values (happens e.g. in Russian with two terms with the same Russian form but
+			-- different translits).
+			if not props.no_deduplicate_forms then
 				local deduped_formvals = {}
 				for i, form in ipairs(formvals) do
 					local function combine_formvals(pos, form, newform)
@@ -1467,27 +1477,29 @@ function export.show_forms(forms, props)
 				formvals = deduped_formvals
 			end
 
+			-- Add acceleration info to form objects.
 			for i, form in ipairs(formvals) do
-				local orig_text = form.form
-				local link
-				if not form_value_transliterable(orig_text) then
-					link = orig_text
-				else
-					local origentry
+				local formval = form.form
+				if form_value_transliterable(formval) then
+					local formval_for_link, formval_footnote_symbol
 					if props.allow_footnote_symbols then
-						origentry, orignotes = require(table_tools_module).get_notes(orig_text)
+						formval_for_link, formval_footnote_symbol = require(table_tools_module).get_notes(formval)
 					else
-						origentry = orig_text
+						formval_for_link = formval
+						formval_footnote_symbol = ""
 					end
 					-- remove redundant link surrounding entire form
-					origentry = export.remove_redundant_links(origentry)
+					formval_for_link = export.remove_redundant_links(formval_for_link)
+					form.formval_for_link = formval_for_link
+					form.formval_footnote_symbol = formval_footnote_symbol
 
 					-------------------- Compute the accelerator object. -----------------
 
 					local accel_obj
 					-- Check if form still has links; if so, don't add accelerators because the resulting entries will
 					-- be wrong.
-					if props.lemmas[1] and not form.no_accel and accel_form ~= "-" and not rfind(origentry, "%[%[") then
+					if props.lemmas[1] and not form.no_accel and accel_form ~= "-" and
+						not rfind(formval_for_link, "%[%[") then
 						-- If there is more than one form or more than one lemma, things get tricky. Often, there are
 						-- the same number of forms as lemmas, e.g. for Ukrainian [[зимовий]] "wintry; winter (rel.)",
 						-- which can be stressed зимо́вий or зимови́й with corresponding masculine/neuter genitive
@@ -1519,13 +1531,15 @@ function export.show_forms(forms, props)
 						end
 						local accel_lemma, accel_lemma_translit
 						if first_lemma == last_lemma then
-							accel_lemma, accel_lemma_translit = fetch_form_and_translit(props.lemmas[first_lemma], "remove links")
+							accel_lemma, accel_lemma_translit =
+								fetch_form_and_translit(props.lemmas[first_lemma], "remove links")
 						else
 							accel_lemma = {}
 							accel_lemma_translit = {}
 							for j=first_lemma, last_lemma do
 								local this_lemma = props.lemmas[j]
-								local this_accel_lemma, this_accel_lemma_translit = fetch_form_and_translit(props.lemmas[j], "remove links")
+								local this_accel_lemma, this_accel_lemma_translit =
+									fetch_form_and_translit(props.lemmas[j], "remove links")
 								-- Do not use table.insert() especially for the translit because it may be nil and in
 								-- that case we want gaps in the array.
 								accel_lemma[j - first_lemma + 1] = this_accel_lemma
@@ -1533,9 +1547,21 @@ function export.show_forms(forms, props)
 							end
 						end
 
+						local accel_translit
+						if props.include_translit and form.translit then
+							if type(form.translit) == "table" then
+								accel_translit = table.concat(form.translit, ", ")
+							elseif type(form.translit) == "string" then
+								accel_translit = form.translit
+							else
+								error(("Internal error: For slot '%s', form translit is not a table or string: %s"):
+									format(slot, dump(accel_translit)))
+							end
+						end
+
 						accel_obj = {
 							form = accel_form,
-							translit = props.include_translit and form.translit or nil,
+							translit = accel_translit,
 							lemma = accel_lemma,
 							lemma_translit = props.include_translit and accel_lemma_translit or nil,
 						}
@@ -1544,72 +1570,123 @@ function export.show_forms(forms, props)
 					if props.transform_accel_obj then
 						accel_obj = props.transform_accel_obj(slot, form, accel_obj)
 					end
+					form.accel_obj = accel_obj
+				end
+			end
 
-					-------------------- Generate link to form. -----------------
-
-					if props.generate_link then
-						link = props.generate_link(slot, form, origentry, accel_obj)
-					end
-					link = link or m_links.full_link{lang = props.lang, term = origentry, tr = "-", accel = accel_obj}
-				end
-				local tr = props.include_translit and (form.translit or props_transliterate(props, m_links.remove_links(orig_text))) or nil
-				local trentry
-				if props.allow_footnote_symbols and tr then
-					trentry, trnotes = require(table_tools_module).get_notes(tr)
-				else
-					trentry = tr
-				end
-				if props.transform_link then
-					local newlink, newtr = props.transform_link(slot, link, tr)
-					if newlink then
-						link, tr = newlink, newtr
-					end
-				end
-				link = link .. orignotes
-				tr = tr and require(script_utilities_module).tag_translit(trentry, props.lang, "default",
-					" style=\"color: #888;\"") .. trnotes or nil
-				local footnote_text
-				local link_without_footnote = link
-				local tr_without_footnote = tr
-				if form.footnotes then
-					footnote_text = export.get_footnote_text(form, footnote_obj)
-					link = link .. footnote_text
-					tr = tr and tr .. footnote_text or nil
-				end
-				table.insert(formatted_terms, {
-					formobj = form,
-					origentry = origentry,
-					orignotes = orignotes,
-					trentry = trentry,
-					trnotes = trnotes,
-					link = link,
-					link_without_footnote = link_without_footnote,
-					tr = tr,
-					tr_without_footnote = tr_without_footnote,
-					footnote_text = footnote_text,
+			-- Format the forms into a string for insertion into the table.
+			local formatted_forms
+			if props.format_forms then
+				formatted_forms = props.format_forms {
+					slot = slot,
+					formvals = formvals,
+					footnote_obj = footnote_obj,
 				}
-				table.insert(orig_spans, link)
-				if tr then
-					table.insert(tr_spans, tr)
+			end
+			if not formatted_forms then
+				-- Default algorithm: Separate form values and translits and concatenate on separate lines.
+				local formval_spans = {}
+				local tr_spans = {}
+				for _, form in ipairs(formvals) do
+					local link
+					if props.generate_link then
+						-- FIXME: Modernize calling convention to a single object.
+						link = props.generate_link(slot, form, form.formval_for_link, form.accel_obj)
+					end
+					link = link or m_links.full_link {
+						lang = props.lang, term = form.formval_for_link, tr = "-", accel = form.accel_obj
+					}
+					table.insert(formval_spans, {
+						link = link,
+						footnote_symbol = form.formval_footnote_symbol,
+						footnotes = form.footnotes,
+					})
+					if props.include_translit then
+						-- Note that if there is an attached footnote symbol, we transliterate it.
+						local translits = form.translit or props_transliterate(props, m_links.remove_links(form.form))
+						if type(translits) == "string" then
+							translits = {translits}
+						end
+						for _, tr in ipairs(translits) do
+							local tr_for_tag, tr_footnote_symbol
+							if props.allow_footnote_symbols then
+								tr_for_tag, tr_footnote_symbol = require(table_tools_module).get_notes(tr)
+							else
+								tr_for_tag = tr
+								tr_footnote_symbol = ""
+							end
+							m_table.insertIfNot(tr_spans, {
+								tr_for_tag = tr_for_tag,
+								footnote_symbol = footnote_symbol,
+								footnotes = form.footnotes,
+							}, props = {
+								key = function(trobj) return trobj.tr_for_tag end,
+								combine = function(pos, tr, newtr)
+									-- Combine footnotes.
+									tr.footnotes = export.combine_footnotes(tr.footnotes, newtr.footnotes)
+									tr.footnote_symbol = tr.footnote_symbol .. newtr.footnote_symbol
+								end,
+							})
+						end
+					end
+				end
+
+				for i, formval_span in ipairs(formval_spans) do
+					local formatted_formval
+					if props.format_formval then
+						formatted_formval = props.format_formval {
+							slot = slot,
+							pos = i,
+							link = formval_span.link,
+							footnote_symbol = formval_span.footnote_symbol,
+							footnotes = formval_span.footnotes,
+							footnote_obj = footnote_obj,
+						}
+					end
+					if not formatted_formval then
+						formatted_formval = formval_span.link .. formval_span.footnote_symbol ..
+							export.get_footnote_text(formval_span.footnotes, footnote_obj)
+					end
+					formval_spans[i] = formatted_formval
+				end
+
+				for i, tr_span in ipairs(tr_spans) do
+					local formatted_tr
+					if props.format_tr then
+						formatted_tr = props.format_tr {
+							slot = slot,
+							pos = i,
+							tr_for_tag = tr_span.tr_for_tag,
+							footnote_symbol = tr_span.footnote_symbol,
+							footnotes = tr_span.footnotes,
+							footnote_obj = footnote_obj,
+						}
+					end
+					if not formatted_tr then
+						formatted_tr = require(script_utilities_module).tag_translit(tr_span.tr_for_tag, props.lang,
+							"default", " style=\"color: #888;\"") .. tr_span.footnote_symbol ..
+							export.get_footnote_text(tr_span.footnotes, footnote_obj)
+					end
+					tr_spans[i] = formatted_tr
+				end
+
+				if props.join_spans then
+					formatted_forms = props.join_spans(slot, formval_spans, tr_spans)
+				end
+				if not formatted_forms then
+					local formval_span = table.concat(formval_spans, ", ")
+					local tr_span
+					if #tr_spans > 0 then
+						tr_span = table.concat(tr_spans, ", ")
+					end
+					if tr_span then
+						formatted_forms = formval_span .. "<br />" .. tr_span
+					else
+						formatted_forms = formval_span
+					end
 				end
 			end
-			local joined_spans
-			if props.join_spans then
-				joined_spans = props.join_spans(slot, orig_spans, tr_spans)
-			end
-			if not joined_spans then
-				local orig_span = table.concat(orig_spans, ", ")
-				local tr_span
-				if #tr_spans > 0 then
-					tr_span = table.concat(tr_spans, ", ")
-				end
-				if tr_span then
-					joined_spans = orig_span .. "<br />" .. tr_span
-				else
-					joined_spans = orig_span
-				end
-			end
-			forms[slot] = joined_spans
+			forms[slot] = formatted_forms
 		else
 			forms[slot] = "—"
 		end
