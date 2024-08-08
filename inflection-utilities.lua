@@ -4,6 +4,8 @@ local m_links = require("Module:links")
 local m_str_utils = require("Module:string utilities")
 local m_table = require("Module:table")
 local put = require("Module:parse utilities")
+local script_utilities_module = "Module:script utilities"
+local table_tools_module = "Module:table tools"
 
 local split = m_str_utils.split
 local rfind = mw.ustring.find
@@ -221,6 +223,10 @@ function export.identity(form, translit)
 	return form, translit
 end
 
+
+local function form_value_transliterable(val)
+	return val ~= "?" and val ~= "—"
+end
 
 local function call_map_function_str(str, fun)
 	if str == "?" then
@@ -1387,11 +1393,6 @@ function export.show_forms(forms, props)
 	end
 	forms.lemma = #lemma_forms > 0 and table.concat(lemma_forms, ", ") or mw.title.getCurrentTitle().text
 
-	local function get_accelerator_for_form(slot, formobj, i, origentry, accel_form)
-	end
-
-	local m_table_tools = require("Module:table tools")
-	local m_script_utilities = require("Module:script utilities")
 	local function do_slot(slot, accel_form)
 		local formvals = forms[slot]
 		if formvals then
@@ -1401,15 +1402,66 @@ function export.show_forms(forms, props)
 			if type(formvals) ~= "table" then
 				error("Internal error: For slot '" .. slot .. "', expected table but saw " .. mw.dumpObject(formvals))
 			end
+			if props.canonicalize then
+				for _, form in ipairs(formvals) do
+					form.form = props.canonicalize(form.form) or form.form
+				end
+			end
+			if props.preprocess_forms then
+				formvals = props.preprocess_forms {
+					slot = slot,
+					formvals = formvals,
+					accel_form = accel_form,
+					footnote_obj = footnote_obj,
+				} or formvals
+			end
+			if props.deduplicate_forms then
+				local deduped_formvals = {}
+				local function combine_formvals(pos, form, newform)
+					assert(form.form == newform.form)
+					-- Combine footnotes.
+					form.footnotes = export.combine_footnotes(form.footnotes, newform.footnotes)
+					-- If translit is being generated, and there's manual translit associated with either form, we need
+					-- to generate any missing translits and combine them, taking into account the fact that a translit
+					-- value may actually be a list of translits (particularly with the existing form if we already
+					-- combined an item with manual translit into it).
+					if props.include_translit and form_value_transliterable(form.form) and (
+							form.translit or newform.translit) then
+						local combined_translit
+						if not form.translit then
+							combined_translit = {props_transliterate(props, m_links.remove_links(form.form))}
+						elseif type(form.translit) == "string" then
+							combined_translit = {form.translit}
+						else
+							combined_translit = form.translit
+						end
+						local newform_translit = newform.translit
+						if not newform_translit then
+							-- newform.form is the same as form.form (see assert above), but this is defensive
+							-- programming in case that changes
+							newform_translit = {props_transliterate(props, m_links.remove_links(newform.form))}
+						elseif type(newform_translit) == "string" then
+							newform_translit = {newform_translit}
+						end
+						for _, translit in in ipairs(newform_translit) do
+							m_table.insertIfNot(combined_translit, translit)
+						end
+						form.translit = combined_translit
+					end
+					...
+				end
+				...
+			end
+
 			for i, form in ipairs(formvals) do
 				local orig_text = props.canonicalize and props.canonicalize(form.form) or form.form
 				local link
-				if form.form == "—" or form.form == "?" then
+				if not form_value_transliterable(form.form) then
 					link = orig_text
 				else
 					local origentry
 					if props.allow_footnote_symbols then
-						origentry, orignotes = m_table_tools.get_notes(orig_text)
+						origentry, orignotes = require(table_tools_module).get_notes(orig_text)
 					else
 						origentry = orig_text
 					end
@@ -1489,7 +1541,7 @@ function export.show_forms(forms, props)
 				local tr = props.include_translit and (form.translit or props_transliterate(props, m_links.remove_links(orig_text))) or nil
 				local trentry
 				if props.allow_footnote_symbols and tr then
-					trentry, trnotes = m_table_tools.get_notes(tr)
+					trentry, trnotes = require(table_tools_module).get_notes(tr)
 				else
 					trentry = tr
 				end
@@ -1500,12 +1552,28 @@ function export.show_forms(forms, props)
 					end
 				end
 				link = link .. orignotes
-				tr = tr and m_script_utilities.tag_translit(trentry, props.lang, "default", " style=\"color: #888;\"") .. trnotes or nil
+				tr = tr and require(script_utilities_module).tag_translit(trentry, props.lang, "default",
+					" style=\"color: #888;\"") .. trnotes or nil
+				local footnote_text
+				local link_without_footnote = link
+				local tr_without_footnote = tr
 				if form.footnotes then
-					local footnote_text = export.get_footnote_text(form, footnote_obj)
+					footnote_text = export.get_footnote_text(form, footnote_obj)
 					link = link .. footnote_text
 					tr = tr and tr .. footnote_text or nil
 				end
+				table.insert(formatted_terms, {
+					formobj = form,
+					origentry = origentry,
+					orignotes = orignotes,
+					trentry = trentry,
+					trnotes = trnotes,
+					link = link,
+					link_without_footnote = link_without_footnote,
+					tr = tr,
+					tr_without_footnote = tr_without_footnote,
+					footnote_text = footnote_text,
+				}
 				table.insert(orig_spans, link)
 				if tr then
 					table.insert(tr_spans, tr)
@@ -1538,7 +1606,7 @@ function export.show_forms(forms, props)
 	local all_notes = footnote_obj.notes
 	if props.footnotes then
 		for _, note in ipairs(props.footnotes) do
-			local symbol, entry = m_table_tools.get_initial_notes(note)
+			local symbol, entry = require(table_tools_module).get_initial_notes(note)
 			table.insert(all_notes, symbol .. entry)
 		end
 	end
