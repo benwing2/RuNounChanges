@@ -1,7 +1,8 @@
 local export = {}
 
-local lang = require("Module:languages").getByCode("uk")
-local com = require("Module:uk-common")
+local lang, langcode, langname
+local com
+local iut = require("Module:inflection utilities")
 local m_links = require("Module:links")
 local m_string_utilities = require("Module:string utilities")
 local m_table = require("Module:table")
@@ -13,7 +14,7 @@ local pos_functions = {}
 
 
 local function track(page)
-	require("Module:debug").track("uk-headword/" .. page)
+	require("Module:debug").track(langcode .. "-headword/" .. page)
 	return true
 end
 
@@ -22,11 +23,11 @@ local function check_if_accents_needed(list, data)
 	for _, val in ipairs(list) do
 		val = m_links.remove_links(val)
 		if com.needs_accents(val) then
-			if not data.unknown_stress then
+			if langcode == "uk" and not data.unknown_stress then
 				error("Stress must be supplied using an acute accent: '" .. val .. "' (use unknown_stress=1 if stress is truly unknown)")
 			end
 			local pos = m_string_utilities.singularize(data.pos_category)
-			table.insert(data.categories, "Requests for accents in Ukrainian " .. pos .. " entries")
+			table.insert(data.categories, "Requests for accents in " .. langname .. " " .. pos .. " entries")
 		end
 		if com.is_multi_stressed(val) then
 			error("Multi-stressed form '" .. val .. "' not allowed")
@@ -39,9 +40,22 @@ end
 -- This is the only function that can be invoked from a template.
 function export.show(frame)
 	local args = frame:getParent().args
-	local PAGENAME = mw.title.getCurrentTitle().text
+	local PAGENAME = mw.loadData("Module:headword/data").pagename
 
-	local poscat = frame.args[1] or error("Part of speech has not been specified. Please pass parameter 1 to the module invocation.")
+	local iparams = {
+		[1] = {required = true},
+		["lang"] = {required = true},
+	}
+
+	local iargs = require("Module:parameters").process(frame.args, iparams)
+	local poscat = iargs[1]
+	langcode = iargs.lang
+	if langcode ~= "uk" and langcode ~= "be" then
+		error("This module currently only works for lang=uk and lang=be")
+	end
+	lang = require("Module:languages").getByCode(langcode)
+	langname = langcode == "uk" and "Ukrainian" or "Belarusian"
+	com = langcode == "uk" and require("Module:uk-common") or require("Module:be-common")
 
 	local data = {lang = lang, pos_category = poscat, categories = {}, genders = {}, inflections = {}}
 
@@ -82,23 +96,6 @@ function export.show(frame)
 		pos_functions[poscat].func(args, data)
 	end
 
-	for _, head in ipairs(data.heads) do
-		if rfind(head, "'") then
-			table.insert(data.categories, "Ukrainian terms spelled with '")
-			break
-		end
-	end
-
-	if not rfind(poscat, " forms?$") then
-		for _, head in ipairs(data.heads) do
-			-- Don't trigger on prefixes or suffixes.
-			if (rfind(head, " ") or rfind(head, ".%-.")) then
-				table.insert(data.categories, "Ukrainian multiword terms")
-				break
-			end
-		end
-	end
-
 	return require("Module:headword").full_headword(data) .. (data.extra_text or "")
 end
 
@@ -113,14 +110,20 @@ end
 local function get_noun_pos(is_proper)
 	return {
 		params = {
-			[2] = {list = "g", default = "m-pr"},
+			[2] = {alias_of = "g"},
 			[3] = {list = "gen"},
 			[4] = {list = "pl"},
 			[5] = {list = "genpl"},
-			["f"] = {list = true},
+			["lemma"] = {list = true},
+			["g"] = {list = true},
 			["m"] = {list = true},
-			["dim"] = {list = true},
+			["f"] = {list = true},
 			["adj"] = {list = true},
+			["dim"] = {list = true},
+			["aug"] = {list = true},
+			["pej"] = {list = true},
+			["dem"] = {list = true},
+			["fdem"] = {list = true},
 			["unknown_gender"] = {type = "boolean"},
 			["unknown_animacy"] = {type = "boolean"},
 			["id"] = {},
@@ -132,7 +135,7 @@ local function get_noun_pos(is_proper)
 			local genitives, plurals, genitive_plurals
 			if rfind(data.heads[1], "<") then
 				local parargs = data.frame:getParent().args
-				local alternant_spec = require("Module:uk-noun").do_generate_forms(parargs, nil, true)
+				local alternant_spec = require("Module:" .. langcode .. "-noun").do_generate_forms(parargs, nil, true)
 				args = alternant_spec.args
 				local footnote_obj
 
@@ -140,12 +143,14 @@ local function get_noun_pos(is_proper)
 					local raw_forms = {}
 					if forms then
 						for _, form in ipairs(forms) do
-							local text = com.remove_monosyllabic_stress(form.form)
+							local text =
+								langcode == "uk" and com.remove_monosyllabic_stress(form.form) or
+								com.remove_monosyllabic_accents(form.form)
 							if form.footnotes then
 								if not footnote_obj then
-									footnote_obj = com.create_footnote_obj()
+									footnote_obj = iut.create_footnote_obj()
 								end
-								local footnote_text = com.get_footnote_text(form, footnote_obj)
+								local footnote_text = iut.get_footnote_text(form, footnote_obj)
 								if rfind(text, "%[%[") then
 									text = text .. footnote_text
 								else
@@ -162,12 +167,12 @@ local function get_noun_pos(is_proper)
 				end
 
 				if alternant_spec.number == "pl" then
-					data.heads = get_raw_forms(alternant_spec.forms.nom_p_linked)
+					data.heads = #args.lemma > 0 and args.lemma or get_raw_forms(alternant_spec.forms.nom_p_linked)
 					genitives = get_raw_forms(alternant_spec.forms.gen_p)
 					plurals = {"-"}
 					genitive_plurals = {"-"}
 				else
-					data.heads = get_raw_forms(alternant_spec.forms.nom_s_linked)
+					data.heads = #args.lemma > 0 and args.lemma or get_raw_forms(alternant_spec.forms.nom_s_linked)
 					genitives = get_raw_forms(alternant_spec.forms.gen_s)
 					if alternant_spec.number == "sg" then
 						plurals = {"-"}
@@ -192,12 +197,12 @@ local function get_noun_pos(is_proper)
 				data.extra_text = table.concat(notes_segments, "")
 			else
 				check_if_accents_needed(data.heads, data)
-				data.genders = args[2]
+				data.genders = args.g
 				if #data.genders == 0 then
 					if mw.title.getCurrentTitle().nsText ~= "Template" then
 						error("Gender must be specified")
 					else
-						table.insert(data.genders, "?")
+						table.insert(data.genders, "m-in")
 					end
 				end
 
@@ -207,7 +212,7 @@ local function get_noun_pos(is_proper)
 
 				if genitives[1] ~= "-" then
 					-- don't track for indeclinables, which legitimately use the old-style syntax
-					track("uk-noun-old-style")
+					track(langcode .. "-noun-old-style")
 				end
 			end
 
@@ -215,12 +220,12 @@ local function get_noun_pos(is_proper)
 			local singular_genders = {}
 			local plural_genders = {}
 
-			local allowed_genders = {"m", "f", "n"}
-			if args.unknown_gender then
+			local allowed_genders = {"m", "f", "n", "mf", "mfbysense"}
+			if langcode == "be" or args.unknown_gender then
 				table.insert(allowed_genders, "?")
 			end
 			local allowed_animacies = {"pr", "anml", "in"}
-			if args.unknown_animacy then
+			if langcode == "be" or args.unknown_animacy then
 				table.insert(allowed_animacies, "?")
 			end
 			
@@ -229,6 +234,11 @@ local function get_noun_pos(is_proper)
 					singular_genders[gender .. "-" .. animacy] = true
 					plural_genders[gender .. "-" .. animacy .. "-p"] = true
 				end
+			end
+			
+			if langcode == "be" then
+				singular_genders["?"] = true
+				plural_genders["?-p"] = true
 			end
 
 			local seen_gender = nil
@@ -243,47 +253,12 @@ local function get_noun_pos(is_proper)
 				end
 
 				data.genders[i] = g
-
-				-- Categorize by gender
-				local actual_gender = g:sub(1, 1)
-				if actual_gender == "m" then
-					table.insert(data.categories, "Ukrainian masculine nouns")
-				elseif actual_gender == "f" then
-					table.insert(data.categories, "Ukrainian feminine nouns")
-				elseif actual_gender == "n" then
-					table.insert(data.categories, "Ukrainian neuter nouns")
-				end
-				if not seen_gender then
-					seen_gender = actual_gender
-				elseif seen_gender ~= actual_gender then
-					table.insert(data.categories, "Ukrainian nouns with multiple genders")
-				end
-
-				-- Categorize by animacy
-				local animacy = g:match("^.-%-([a-z]*).*")
-				if animacy == "pr" then
-					table.insert(data.categories, "Ukrainian personal nouns")
-				elseif animacy == "anml" then
-					table.insert(data.categories, "Ukrainian animal nouns")
-				elseif animacy == "in" then
-					table.insert(data.categories, "Ukrainian inanimate nouns")
-				end
-				if not seen_animacy then
-					seen_animacy = animacy
-				elseif seen_animacy ~= animacy then
-					table.insert(data.categories, "Ukrainian nouns with multiple animacies")
-				end
-
-				-- Categorize by number
-				if plural_genders[g] then
-					table.insert(data.categories, "Ukrainian pluralia tantum")
-				end
 			end
 
 			-- Add the genitive forms
 			if genitives[1] == "-" then
 				table.insert(data.inflections, {label = "[[Appendix:Glossary#indeclinable|indeclinable]]"})
-				table.insert(data.categories, "Ukrainian indeclinable nouns")
+				table.insert(data.categories, langname .. " indeclinable nouns")
 			else
 				genitives.label = "genitive"
 				genitives.request = true
@@ -299,7 +274,7 @@ local function get_noun_pos(is_proper)
 				table.insert(data.inflections, {label = "[[Appendix:Glossary#plural only|plural only]]"})
 			elseif plurals[1] == "-" then
 				table.insert(data.inflections, {label = "[[Appendix:Glossary#uncountable|uncountable]]"})
-				table.insert(data.categories, "Ukrainian uncountable nouns")
+				table.insert(data.categories, langname .. " uncountable nouns")
 			else
 				plurals.label = "nominative plural"
 				plurals.request = true
@@ -319,37 +294,23 @@ local function get_noun_pos(is_proper)
 				end
 			end
 
-			-- Add the feminine forms
-			local feminines = args["f"]
-			if #feminines > 0 then
-				feminines.label = "feminine"
-				check_if_accents_needed(feminines, data)
-				table.insert(data.inflections, feminines)
+			local function handle_infl(arg, label)
+				local vals = args[arg]
+				if #vals > 0 then
+					vals.label = label
+					check_if_accents_needed(vals, data)
+					table.insert(data.inflections, vals)
+				end
 			end
 
-			-- Add the masculine forms
-			local masculines = args["m"]
-			if #masculines > 0 then
-				masculines.label = "masculine"
-				check_if_accents_needed(masculines, data)
-				table.insert(data.inflections, masculines)
-			end
-
-			-- Add the related adjectives
-			local adj = args.adj
-			if #adj > 0 then
-				adj.label = "related adjective"
-				check_if_accents_needed(adj, data)
-				table.insert(data.inflections, adj)
-			end
-
-			-- Add the diminutives
-			local dim = args.dim
-			if #dim > 0 then
-				dim.label = "diminutive"
-				check_if_accents_needed(dim, data)
-				table.insert(data.inflections, dim)
-			end
+			handle_infl("m", "masculine")
+			handle_infl("f", "feminine")
+			handle_infl("adj", "relational adjective")
+			handle_infl("dim", "diminutive")
+			handle_infl("aug", "augmentative")
+			handle_infl("pej", "pejorative")
+			handle_infl("dem", "demonym")
+			handle_infl("fdem", "female demonym")
 
 			data.id = args.id
 		end
@@ -363,7 +324,7 @@ pos_functions["nouns"] = get_noun_pos(false)
 
 pos_functions["verbs"] = {
 	params = {
-		[2] = {},
+		[2] = {default = "?"},
 		["pf"] = {list = true},
 		["impf"] = {list = true},
 	},
@@ -371,22 +332,12 @@ pos_functions["verbs"] = {
 		-- Aspect
 		local aspect = args[2]
 
-		if aspect == "impf" then
-			table.insert(data.genders, "impf")
-			table.insert(data.categories, "Ukrainian imperfective verbs")
-		elseif aspect == "pf" then
-			table.insert(data.genders, "pf")
-			table.insert(data.categories, "Ukrainian perfective verbs")
-		elseif aspect == "both" then
-			table.insert(data.genders, "impf")
-			table.insert(data.genders, "pf")
-			table.insert(data.categories, "Ukrainian imperfective verbs")
-			table.insert(data.categories, "Ukrainian perfective verbs")
-			table.insert(data.categories, "Ukrainian biaspectual verbs")
-		else
-			table.insert(data.genders, "?")
-			table.insert(data.categories, "Requests for aspect in Ukrainian entries")
+		if aspect == "both" then
+			aspect = "biasp"
+		elseif aspect ~= "pf" and aspect ~= "impf" and aspect ~= "biasp" and aspect ~= "?" then
+			error("Unrecognized aspect: '" .. aspect .. "'")
 		end
+		table.insert(data.genders, aspect)
 
 		-- Get the imperfective parameters
 		local imperfectives = args["impf"]
@@ -434,7 +385,7 @@ pos_functions["adjectives"] = {
 
 		if args.indecl then	
 			table.insert(data.inflections, {label = "indeclinable"})
-			table.insert(data.categories, "Ukrainian indeclinable adjectives")
+			table.insert(data.categories, langname .. " indeclinable adjectives")
 		end
 		
 		if #comps > 0 then
