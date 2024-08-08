@@ -1417,46 +1417,60 @@ function export.show_forms(forms, props)
 			end
 			if props.deduplicate_forms then
 				local deduped_formvals = {}
-				local function combine_formvals(pos, form, newform)
-					assert(form.form == newform.form)
-					-- Combine footnotes.
-					form.footnotes = export.combine_footnotes(form.footnotes, newform.footnotes)
-					-- If translit is being generated, and there's manual translit associated with either form, we need
-					-- to generate any missing translits and combine them, taking into account the fact that a translit
-					-- value may actually be a list of translits (particularly with the existing form if we already
-					-- combined an item with manual translit into it).
-					if props.include_translit and form_value_transliterable(form.form) and (
-							form.translit or newform.translit) then
-						local combined_translit
-						if not form.translit then
-							combined_translit = {props_transliterate(props, m_links.remove_links(form.form))}
-						elseif type(form.translit) == "string" then
-							combined_translit = {form.translit}
-						else
-							combined_translit = form.translit
+				for i, form in ipairs(formvals) do
+					local function combine_formvals(pos, form, newform)
+						assert(form.form == newform.form)
+						-- Combine footnotes.
+						form.footnotes = export.combine_footnotes(form.footnotes, newform.footnotes)
+						-- If translit is being generated, and there's manual translit associated with either form, we
+						-- need to generate any missing translits and combine them, taking into account the fact that a
+						-- translit value may actually be a list of translits (particularly with the existing form if we
+						-- already combined an item with manual translit into it).
+						if props.include_translit and form_value_transliterable(form.form) and (
+								form.translit or newform.translit) then
+							local combined_translit
+							if not form.translit then
+								combined_translit = {props_transliterate(props, m_links.remove_links(form.form))}
+							elseif type(form.translit) == "string" then
+								combined_translit = {form.translit}
+							else
+								combined_translit = form.translit
+							end
+							local newform_translit = newform.translit
+							if not newform_translit then
+								-- newform.form is the same as form.form (see assert above), but this is defensive
+								-- programming in case that changes
+								newform_translit = {props_transliterate(props, m_links.remove_links(newform.form))}
+							elseif type(newform_translit) == "string" then
+								newform_translit = {newform_translit}
+							end
+							for _, translit in in ipairs(newform_translit) do
+								m_table.insertIfNot(combined_translit, translit)
+							end
+							form.translit = combined_translit
 						end
-						local newform_translit = newform.translit
-						if not newform_translit then
-							-- newform.form is the same as form.form (see assert above), but this is defensive
-							-- programming in case that changes
-							newform_translit = {props_transliterate(props, m_links.remove_links(newform.form))}
-						elseif type(newform_translit) == "string" then
-							newform_translit = {newform_translit}
+						if props.combine_formvals then
+							props.combine_formvals {
+								slot = slot,
+								form = form,
+								formpos = pos,
+								newform = newform,
+								newformpos = i,
+							}
 						end
-						for _, translit in in ipairs(newform_translit) do
-							m_table.insertIfNot(combined_translit, translit)
-						end
-						form.translit = combined_translit
 					end
-					...
+					m_table.insertIfNot(deduped_formvals, form, {
+						key = function(form) return form.form end,
+						combine = combine_formvals,
+					})
 				end
-				...
+				formvals = deduped_formvals
 			end
 
 			for i, form in ipairs(formvals) do
-				local orig_text = props.canonicalize and props.canonicalize(form.form) or form.form
+				local orig_text = form.form
 				local link
-				if not form_value_transliterable(form.form) then
+				if not form_value_transliterable(orig_text) then
 					link = orig_text
 				else
 					local origentry
