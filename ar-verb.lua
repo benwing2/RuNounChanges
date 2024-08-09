@@ -392,11 +392,14 @@ local slot_override_param_mods = {
 }
 
 local function generate_obj(formval, parse_err)
-	local ar, translit = formval:match("^(.*)//(.*)$")
+	local val, uncertain = formval:match("^(.*)(%?)$")
+	val = val or formval
+	uncertain = not not uncertain
+	local ar, translit = val:match("^(.*)//(.*)$")
 	if not ar then
 		ar = formval
 	end
-	return {form = ar, translit = translit}
+	return {form = ar, translit = translit, uncertain = uncertain}
 end
 
 local function parse_inline_modifiers(comma_separated_group, parse_err)
@@ -416,6 +419,7 @@ local function parse_inline_modifiers(comma_separated_group, parse_err)
 			end,
 		},
 	}
+end
 
 local function allow_multiple_values_for_override(comma_separated_groups, data, is_slot_override)
 	local retvals = {}
@@ -635,6 +639,27 @@ end
 -- True if the active non-past takes a-vocalization rather than i-vocalization in its last syllable.
 local function vform_nonpast_a_vowel(vform)
 	return vform == "V" or vform == "VI" or vform == "XV" or vform == "IIq"
+end
+
+-------------------------------------------------------------------------------
+--                        Properties of specific sounds                      --
+-------------------------------------------------------------------------------
+
+-- Is radical wāw (و) or yāʾ (ي)?
+local function is_waw_ya(rad)
+	return req(rad, W) or req(rad, Y)
+end
+
+-- Check that radical is wāw (و) or yāʾ (ي), error if not
+local function check_waw_ya(rad)
+	if not is_waw_ya(rad) then
+		error("Expecting weak radical: '" .. rget(rad) .. "' should be " .. W .. " or " .. Y)
+	end
+end
+
+-- Is radical guttural? This favors a non-past vowel of "a"
+local function is_guttural(rad)
+	return req(rad, HAMZA) or req(rad, "ه") or req(rad, "ع") or req(rad, "ح")
 end
 
 -------------------------------------------------------------------------------
@@ -891,27 +916,6 @@ local imp_endings_ii = imperative_endings_from_jussive(juss_endings_ii)
 local imp_endings_uu = imperative_endings_from_jussive(juss_endings_uu)
 
 -------------------------------------------------------------------------------
---                        Properties of specific sounds                      --
--------------------------------------------------------------------------------
-
--- Is radical wāw (و) or yāʾ (ي)?
-local function is_waw_ya(rad)
-	return req(rad, W) or req(rad, Y)
-end
-
--- Check that radical is wāw (و) or yāʾ (ي), error if not
-local function check_waw_ya(rad)
-	if not is_waw_ya(rad) then
-		error("Expecting weak radical: '" .. rget(rad) .. "' should be " .. W .. " or " .. Y)
-	end
-end
-
--- Is radical guttural? This favors a non-past vowel of "a"
-local function is_guttural(rad)
-	return req(rad, HAMZA) or req(rad, "ه") or req(rad, "ع") or req(rad, "ح")
-end
-
--------------------------------------------------------------------------------
 --                        Basic functions to inflect tenses                  --
 -------------------------------------------------------------------------------
 
@@ -1094,94 +1098,8 @@ local function inflect_tense_imp(base, stems, endings, footnotes)
 	inflect_tense_1(base, "imp", "", stems, endings, imp_person_number_list, footnotes)
 end
 
--- Insert verbal noun VN into BASE.forms["vn"], but allow it to be overridden by ARGS["vn"].
 local function insert_verbal_noun(base, vn)
-	local vns = args["vn"] and rsplit(args["vn"], "[,،]") or vn
-	if type(vns) ~= "table" then
-		vns = {vns}
-	end
-	
-	vns.ids = {}
-	
-	for i = 1, #vns do
-		local id = args["vn-id" .. i]
-		
-		if id then
-			vns.ids[i] = id
-		end
-	end
-
-	-------------------- Begin verbal-noun i3rab tracking code ---------------
-	-- Examples of what you can find by looking at what links to the given
-	-- pages:
-	--
-	-- Wiktionary:Tracking/ar-verb/vn/i3rab/un (pages with verbal nouns with -un
-	--   i3rab, whether explicitly specified, i.e. using vn=, or auto-generated,
-	--   as is normal for augmented forms)
-	-- Wiktionary:Tracking/ar-verb/explicit-vn/i3rab/u (pages with explicitly
-	--   specified verbal nouns with -u i3rab)
-	-- Wiktionary:Tracking/ar-verb/explicit-vn/i3rab/an-tall (pages with
-	--   explicitly specified verbal nouns with tall-alif -an i3rab)
-	-- Wiktionary:Tracking/ar-verb/auto-vn/i3rab (pages with auto-generated verbal
-	--   nouns with any sort of i3rab)
-	-- Wiktionary:Tracking/ar-verb/vn/no-i3rab (pages with verbal nouns without
-	--   i3rab)
-	-- Wiktionary:Tracking/ar-verb/vn/would-be-decl/di (pages with verbal nouns
-	--   that would be detected as diptote without explicit i3rab)
-	function vntrack(pagesuff)
-		track("vn/" .. pagesuff)
-		if args["vn"] then
-			track("explicit-vn/" .. pagesuff)
-		else
-			track("auto-vn/" .. pagesuff)
-		end
-	end
-
-	function track_i3rab(entry, arabic, tr)
-		if rfind(entry, arabic .. "$") then
-			vntrack("i3rab")
-			vntrack("i3rab/" .. tr)
-		end
-	end
-
-	for _, entry in ipairs(vns) do
-		-- Need to do this else we will have problems with VN's whose stem ends in shadda.
-		entry = reorder_shadda(entry)
-		track_i3rab(entry, UN, "un")
-		track_i3rab(entry, U, "u")
-		track_i3rab(entry, IN, "in")
-		track_i3rab(entry, I, "i")
-		track_i3rab(entry, AN .. "[" .. ALIF .. AMAQ .. "]", "an")
-		track_i3rab(entry, AN .. ALIF, "an-tall")
-		track_i3rab(entry, A, "a")
-		track_i3rab(entry, SK, "sk")
-		if not rfind(entry, "[" .. A .. I .. U .. AN .. IN .. UN .. DAGGER_ALIF .. "]$") and
-				not rfind(entry, AN .. "[" .. ALIF .. AMAQ .. "]") then
-			vntrack("no-i3rab")
-		end
-		entry = rsub(entry, UNU .. "?$", "")
-		-- Figure out what the decltype would be without any explicit -un
-		-- or -u added, to see whether there are any nouns that would be
-		-- detected as diptotes, e.g. of the فَعْلَان pattern.
-		local decltype = ar_nominals.detect_type(entry, false, "sg", "noun")
-		vntrack("would-be-decl/" .. decltype)
-	end
-	-------------------- End verbal-noun i3rab tracking code ---------------
-
-	if no_nominal_i3rab then
-		vns_no_i3rab = {}
-		for _, entry in ipairs(vns) do
-			entry = reorder_shadda(entry)
-			entry = rsub(entry, UNU .. "?$", "")
-			table.insert(vns_no_i3rab, entry)
-		end
-		if vns.ids then
-			vns_no_i3rab.ids = vns.ids
-		end
-		insert_form(base, "vn", vns_no_i3rab)
-	else
-		insert_form(base, "vn", vns)
-	end
+	insert_form(base, "vn", vn)
 end
 
 -------------------------------------------------------------------------------
@@ -2720,69 +2638,6 @@ local function conjugate_verb(base)
 end
 
 
-local function conjugate(args, argind)
-	-- check to see if an argument ends in a ?. If so, strip the ? and return
-	-- true. Otherwise, return false.
-	local function check_for_uncertainty(arg)
-		if args[arg] and rfind(args[arg], "%?$") then
-			args[arg] = rsub(args[arg], "%?$", "")
-			if args[arg] == "" then
-				args[arg] = nil
-			end
-			return true
-		else
-			return false
-		end
-	end
-
-	-- allow a ? at the end of vn= and passive=; if so, putting the page into
-	-- special categories indicating the need to check the property in
-	-- question, and remove the ?. Also put into category for vn= if empty
-	-- and form is I.
-	if check_for_uncertainty("vn") or form == "I" and not args["vn"] then
-		table.insert(base.categories, "Arabic verbs needing verbal noun checked")
-		base.vn_uncertain = true
-	end
-	if check_for_uncertainty("passive") then
-		table.insert(base.categories, "Arabic verbs needing passive checked")
-		base.passive_uncertain = true
-	end
-
-	-- parse value of passive.
-	--
-	-- if the value is "impers", the verb has only impersonal passive;
-	-- if the value is "only", the verb has only a passive, no active;
-	-- if the value is "only-impers", the verb has only an impersonal passive;
-	-- if the value is "yes" or variants, verb has a passive;
-	-- if the value is "no" or variants, the verb has no passive.
-	-- If not specified, default is yes, but no for forms VII, IX,
-	-- XI - XV and IIq - IVq, and "impers" for form VI.
-	local passive = args["passive"]
-	if passive == "impers" or passive == "only" or passive == "only-impers" then
-	elseif not passive then
-		passive = vform_probably_impersonal_passive(form) and "impers" or
-			not vform_probably_no_passive(form, weakness, past_vowel,
-				nonpast_vowel) and true or false
-	else
-		passive = yesno(passive, "unknown")
-		if passive == "unknown" then
-			error("Unrecognized value '" .. args["passive"] ..
-				"' to argument passive=; use 'impers', 'only', 'only-impers', " ..
-				"'yes'/'y'/'true'/'1' or 'no'/'n'/'false'/'0'")
-		end
-	end
-	base.passive = passive
-
-	base.noimp = yesno(args["noimp"], false)
-	if base.noimp then
-		table.insert(base.categories, "Arabic verbs lacking imperative forms")
-	end
-
-	-- Initialize categories related to form and weakness.
-	initialize_categories(base,	vform, weakness, rad1, rad2, rad3, rad4)
-
-end
-
 local function parse_indicator_spec(angle_bracket_spec)
 	-- Store the original angle bracket spec so we can reconstruct the overall conj spec with the lemma(s) in them.
 	local base = {
@@ -3077,6 +2932,7 @@ local function detect_indicator_spec(base)
 			nonpast = {form = "-"},
 		}
 	else
+		base.unexpanded_conj_vowels = m_table.deepcopy(base.conj_vowels)
 		-- If multiple vowels specified for a given vowel type (e.g. a,u~u), expand so that each spec in
 		-- base.conj_vowels has just one past and one non-past vowel.
 		local needs_expansion = false
@@ -3112,6 +2968,9 @@ local function detect_indicator_spec(base)
 	-- Infer radicals as necessary. We infer a separate set of radicals for each past~non-past vowel combination because
 	-- they may be different (particularly with form-I hollow verbs).
 	for _, vowel_spec in ipairs(base.conj_vowels) do
+		-- NOTE: rad1, rad2, etc. refer to user-specified radicals, which are formobj tables that optionally specify an
+		-- explicit manual translit, whereas ir1, ir2, etc. refer to inferred radicals, which are strings (and may
+		-- contain Latin letters to indicate ambiguousr radicals; see below).
 		local rads = base.root_consonants
 		local rad1, rad2, rad3, rad4 = rads[1], rads[2], rads[3], rads[4]
 
@@ -3119,13 +2978,14 @@ local function detect_indicator_spec(base)
 		-- Latin letters in them (w, t, y) to indicate ambiguous radicals that should be converted to the corresponding
 		-- Arabic letters. Note that 't' means a radical that could be any of ت/و/ي while 'w' and 'y' mean a radical
 		-- that could be either و or ي.
-		local weakness, r1, r2, r3, r4 = export.infer_radicals(base.lemma, vform, vowel_spec.past, vowel_spec.nonpast)
+		local weakness, ir1, ir2, ir3, ir4 =
+			export.infer_radicals(base.lemma, vform, vowel_spec.past, vowel_spec.nonpast)
 
 		-- For most ambiguous radicals, the choice of radical doesn't matter because it doesn't affect the conjugation
 		-- one way or another.  For form I hollow verbs, however, it definitely does. In fact, the choice of radical is
 		-- critical even beyond the past and non-past vowels because it affects the form of the passive participle.  So,
 		-- check for this and signal an error if the radical could not be inferred and is not given explicitly.
-		if vform == "I" and (r2 == "w" or r2 == "y") and not rad2 then
+		if vform == "I" and (ir2 == "w" or ir2 == "y") and not rad2 then
 			error("Unable to guess middle radical of hollow form I verb; need to specify radical explicitly")
 		end
 
@@ -3142,9 +3002,14 @@ local function detect_indicator_spec(base)
 			end
 		end
 
-		local function default_radical(user_radical, inferred_radical, index)
+		-- Return the appropriate radical at index `index` (1 through 4), based either on the user-specified radical
+		-- `user_radical` or (if unspecified) `inferred_radical`, inferred from the unvocalized lemma. Two values are
+		-- returned, the "regularized" version of the radical (where ambiguous inferred radicals are converted to their
+		-- most likely actual radical) and the non-regularized version. The returned values are form objects rather than
+		-- strings.
+		local function fetch_radical(user_radical, inferred_radical, index)
 			if not user_radical then
-				return {regularize_inferred_radical(inferred_radical)}, {inferred_radical}
+				return {form = regularize_inferred_radical(inferred_radical)}, {form = inferred_radical}
 			else
 				local allowed_radicals
 				if inferred_radical == "t" then
@@ -3154,24 +3019,24 @@ local function detect_indicator_spec(base)
 				end
 				if allowed_radicals then
 					local allowed_radical_set = m_table.listToSet(allowed_radicals)
-					if not allowed_radical_set[user_radical[1]] then
+					if not allowed_radical_set[user_radical.form] then
 						error(("For lemma %s, radical %s ambiguously inferred as %s but user radical incompatibly given as %s"):
 						format(base.lemma, index,
-						m_table.serialCommaJoin(allowed_radicals, {conj = "or", dontTag = true}), user_radical[1]))
+						m_table.serialCommaJoin(allowed_radicals, {conj = "or", dontTag = true}), user_radical.form))
 					end
-				elseif user_radical[1] ~= inferred_radical then
+				elseif user_radical.form ~= inferred_radical then
 					error(("For lemma %s, radical %s inferred as %s but user radical incompatibly given as %s"):
-					format(base.lemma, index, inferred_radical, user_radical[1]))
+					format(base.lemma, index, inferred_radical, user_radical.form))
 				end
 				return user_radical, user_radical
 			end
 		end
 
-		vowel_spec.rad1, vowel_spec.unreg_rad1 = default_radical(rad1, r1, 1)
-		vowel_spec.rad2, vowel_spec.unreg_rad2 = default_radical(rad2, r2, 2)
-		vowel_spec.rad3, vowel_spec.unreg_rad3 = default_radical(rad3, r3, 3)
+		vowel_spec.rad1, vowel_spec.unreg_rad1 = fetch_radical(rad1, ir1, 1)
+		vowel_spec.rad2, vowel_spec.unreg_rad2 = fetch_radical(rad2, ir2, 2)
+		vowel_spec.rad3, vowel_spec.unreg_rad3 = fetch_radical(rad3, ir3, 3)
 		if quadlit then
-			vowel_spec.rad4, vowel_spec.unreg_rad4 = default_radical(rad4, r4, 4)
+			vowel_spec.rad4, vowel_spec.unreg_rad4 = fetch_radical(rad4, ir4, 4)
 		end
 
 		-- If explicit weakness given using 'I-sound' or 'I-assimilated', we may need to adjust the inferred weakness.
@@ -3208,7 +3073,7 @@ local function detect_indicator_spec(base)
 		-- Error if radicals are wrong given the weakness. More likely to happen if the weakness is explicitly given
 		-- rather than inferred. Will also happen if certain incorrect letters are included as radicals e.g. hamza on
 		-- top of various letters, alif maqṣūra, tā' marbūṭa. FIXME: May not be necessary?
-		check_radicals(vform, weakness, rad1, rad2, rad3, rad4)
+		check_radicals(vform, weakness, rad1.form, rad2.form, rad3.form, rad4.form)
 	end
 
 	-- Set value of passive. If not specified, default is yes, but no for forms VII, IX,
@@ -3292,6 +3157,38 @@ local function detect_all_indicator_specs(alternant_multiword_spec)
 end
 
 
+-- Determine certain properties of the verb from the overall forms, such as whether the verb is active-only or
+-- passive-only, is impersonal, lacks an imperative, etc.
+local function determine_verb_properties_from_forms(alternant_multiword_spec)
+	alternant_multiword_spec.has_active = false
+	alternant_multiword_spec.has_passive = false
+	alternant_multiword_spec.has_imp = false
+	alternant_multiword_spec.has_non_impers = false
+	alternant_multiword_spec.has_past = false
+	alternant_multiword_spec.has_nonpast = false
+	for slot, _ in pairs(alternant_multiword_spec.forms) do
+		if slot == "ap" or slot:find("[123]") and not slot:find("_pass") then
+			alternant_multiword_spec.has_active = true
+		end
+		if slot == "pp" or slot:find("[123]") and slot:find("_pass") then
+			alternant_multiword_spec.has_passive = true
+		end
+		if slot:find("^imp_") then
+			alternant_multiword_spec.has_imp = true
+		end
+		if slot:find("[123]") and not slot:find("3ms") then
+			alternant_multiword_spec.has_non_impers = true
+		end
+		if slot:find("^past_") then
+			alternant_multiword_spec.has_past = true
+		end
+		if slot:find("^ind_") or slot:find("^sub_") or slot:find("^juss_") then
+			alternant_multiword_spec.has_nonpast = true
+		end
+	end
+end
+
+
 local function add_categories_and_annotation(alternant_multiword_spec, base, multiword_lemma)
 	local function insert_ann(anntype, value)
 		m_table.insertIfNot(alternant_multiword_spec.annotation[anntype], value)
@@ -3306,7 +3203,7 @@ local function add_categories_and_annotation(alternant_multiword_spec, base, mul
 	end
 
 	if check_for_red_links and alternant_multiword_spec.source_template == "ar-conj" and multiword_lemma then
-		for _, slot_and_accel in ipairs(alternant_multiword_spec.all_verb_slots) do
+		for _, slot_and_accel in ipairs(alternant_multiword_spec.verb_slots) do
 			local slot = slot_and_accel[1]
 			local forms = base.forms[slot]
 			local must_break = false
@@ -3329,38 +3226,45 @@ local function add_categories_and_annotation(alternant_multiword_spec, base, mul
 	end
 
 	local vform = base.verb_form
+	insert_ann("form", vform)
+	insert_cat("form-" .. vform .. " verbs")
+	if vform_is_quadriliteral(vform) then
+		insert_cat("verbs with quadriliteral roots")
+	end
+
 	for _, vowel_spec in ipairs(base.conj_vowels) do
 		local rad1, rad2, rad3, past_vowel, nonpast_vowel = get_radicals_3(vowel_spec)
 		local rad4 = vowel_spec.rad4
 		local final_weak = is_final_weak(base, vowel_spec)
 		local weakness = vowel_spec.weakness
 
-		-- We have to distinguish weakness by form and weakness by conjugation.  Weakness by form merely indicates the
+		-- We have to distinguish weakness by form and weakness by conjugation. Weakness by form merely indicates the
 		-- presence of weak letters in certain positions in the radicals. Weakness by conjugation is related to how the
 		-- verbs are conjugated. For example, form-II verbs that are "hollow by form" (middle radical is wāw or yāʾ) are
 		-- conjugated as sound verbs. Another example: form-I verbs with initial wāw are "assimilated by form" and most
 		-- are assimilated by conjugation as well, but a few are sound by conjugation, e.g. wajuha yawjuhu "to be
 		-- distinguished" (rather than wajuha yajuhu); similarly for some hollow-by-form verbs in various forms, e.g.
-		-- form VIII izdawaja yazdawiju "to be in pairs" (rather than izdāja yazdāju). When most references say just
-		-- plain "hollow" or "assimilated" or whatever verbs, they mean by form, so we name the categories
-		-- appropriately, where e.g. "Arabic hollow verbs" means by form, "Arabic hollow verbs by conjugation" means by
-		-- conjugation.
-		insert_ann("form", vform)
+		-- form VIII izdawaja yazdawiju "to be in pairs" (rather than izdāja yazdāju). Categories referring to weakness
+		-- always refer to weakness by conjugation; weakness by form is distinguished only by categories such as
+		-- [[:Category:Arabic form-III verbs with و as second radical]].
 		insert_ann("weakness", weakness)
-		insert_cat("form-" .. vform .. " verbs")
 		insert_cat(("%s form-%s verbs"):format(weakness, vform))
-		if vform_is_quadriliteral(vform) then
-			insert_cat("verbs with quadriliteral roots")
-		end
-		if vform == "I" then
-			insert_ann("vowels", 
-			insert_cat(("form-I verbs with past vowel %s and non-past vowel %s"):format(past_vowel, nonpast_vowel))
+	end
+
+	if vform == "I" and base.unexpanded_conj_vowels then
+		for _, vowel_spec in ipairs(base.unexpanded_conj_vowels) do
+			insert_ann("vowels",
+				("%s ~ %s"):format(table.concat(vowel_spec.past, ","), table.concat(vowel_spec,nonpast, ",")))
+			for _, past in ipairs(vowel_spec.past) do
+				for _, nonpast in ipairs(vowel_spec.nonpast) do
+					insert_cat(("form-I verbs with past vowel %s and non-past vowel %s"):format(past, nonpast))
+				end
+			end
 		end
 	end
 
-
 	local function radical_is_ambiguous(rad)
-		return rad == "t" or rad == "w" or rad == "y"
+		return req(rad, "t") or req(rad, "w") or req(rad, "y")
 	end
 	local function radical_is_weak(rad)
 		return is_waw_ya(rad) or req(rad, HAMZA)
@@ -3387,26 +3291,39 @@ local function add_categories_and_annotation(alternant_multiword_spec, base, mul
 		insert_cat("form-" .. vform ..  " verbs with " .. ur4 .. " as fourth radical")
 	end
 
-	if base.passive == "only" then
-		table.insert(base.categories, "Arabic passive verbs")
-		table.insert(base.categories, "Arabic verbs with full passive")
-	elseif base.passive == "only-impers" then
-		table.insert(base.categories, "Arabic passive verbs")
-		table.insert(base.categories, "Arabic verbs with impersonal passive")
-	elseif base.passive == "impers" then
-		table.insert(base.categories, "Arabic verbs with impersonal passive")
-	elseif base.passive then
-		table.insert(base.categories, "Arabic verbs with full passive")
-	else
-		table.insert(base.categories, "Arabic verbs lacking passive forms")
+	if base.noimp then
+		insert_cat("verbs lacking imperative forms")
 	end
-end
-
-	if base.input_stems.g_infix then
-		insert_ann("g_infix", "with velar infix")
-			insert_cat("verbs with velar infix")
+	"withpass", -- verb has both active and passive
+	"nopass", -- verb is active-only
+	"onlypass", -- verb is passive-only
+	"imperspass", -- verb is active with impersonal passive
+	"impers", -- verb itself is impersonal, meaning passive-only with impersonal passive
+	if base.passive == "onlypass" then
+		insert_cat("passive verbs")
+		insert_cat("verbs with full passive")
+	elseif base.passive == "only-impers" then
+		insert_cat("passive verbs")
+		insert_cat("verbs with impersonal passive")
+	elseif base.passive == "impers" then
+		insert_cat("verbs with impersonal passive")
+	elseif base.passive then
+		insert_cat("verbs with full passive")
 	else
-		insert_ann("g_infix", "no infix")
+		insert_cat("verbs lacking passive forms")
+	end
+
+	-- allow a ? at the end of vn= and passive=; if so, putting the page into
+	-- special categories indicating the need to check the property in
+	-- question, and remove the ?. Also put into category for vn= if empty
+	-- and form is I.
+	if check_for_uncertainty("vn") or form == "I" and not args["vn"] then
+		insert_cat("verbs needing verbal noun checked")
+		base.vn_uncertain = true
+	end
+	if check_for_uncertainty("passive") then
+		insert_cat("verbs needing passive checked")
+		base.passive_uncertain = true
 	end
 
 	if base.output_stems.irreg then
@@ -3431,46 +3348,11 @@ end
 	else
 		insert_ann("defective", "regular")
 	end
-
-	--if base.clitic then
-	--	insert_cat("verbs with lexical clitics")
-	--end
-
-	if base.refl then
-		insert_cat("reflexive verbs")
-	end
-
-	local stem_base, conj_vowel = split_conj_vowel(base.stem)
-	local cons_alt
-	if conj_vowel == "i" and base.output_stems.eix_infix == "+" then
-		-- no alternations in verbs like [[afligir]] because all endings are front
-	elseif stem_base:find("ç$") then
-		cons_alt = "ç-c"
-	elseif stem_base:find("c$") then
-		cons_alt = "c-qu"
-	elseif stem_base:find("g$") then
-		cons_alt = "g-gu"
-	elseif stem_base:find("gu$") then
-		cons_alt = "gu-gü"
-	elseif stem_base:find("j$") then
-		cons_alt = "j-g"
-	elseif stem_base:find("qu$") then
-		cons_alt = "qu-qü"
-	end
-
-	if cons_alt then
-		local desc = cons_alt .. " alternation"
-		insert_ann("cons_alt", desc)
-		insert_cat("verbs with " .. desc)
-	else
-		insert_ann("cons_alt", "non-alternating")
-	end
 end
 
 
--- Compute the categories to add the verb to, as well as the annotation to display in the
--- conjugation title bar. We combine the code to do these functions as both categories and
--- title bar contain similar information.
+-- Compute the categories to add the verb to, as well as the annotation to display in the conjugation title bar. We
+-- combine the code to do these functions as both categories and title bar contain similar information.
 local function compute_categories_and_annotation(alternant_multiword_spec)
 	alternant_multiword_spec.categories = {}
 	local ann = {}
@@ -3478,6 +3360,7 @@ local function compute_categories_and_annotation(alternant_multiword_spec)
 	ann.form = {}
 	ann.weakness = {}
 	ann.vowels = {}
+	ann.passive = {}
 	ann.irreg = {}
 	ann.defective = {}
 
@@ -3497,25 +3380,13 @@ local function compute_categories_and_annotation(alternant_multiword_spec)
 	if conj ~= "" then
 		table.insert(ann_parts, conj)
 	end
-	local eix_infix = table.concat(ann.eix_infix, " or ")
-	if eix_infix ~= "" and eix_infix ~= "no infix" then
-		table.insert(ann_parts, eix_infix)
-	end
 	local irreg = table.concat(ann.irreg, " or ")
 	if irreg ~= "" and irreg ~= "regular" then
 		table.insert(ann_parts, irreg)
 	end
-	local g_infix = table.concat(ann.g_infix, " or ")
-	if g_infix ~= "" and g_infix ~= "no infix" then
-		table.insert(ann_parts, g_infix)
-	end
 	local defective = table.concat(ann.defective, " or ")
 	if defective ~= "" and defective ~= "regular" then
 		table.insert(ann_parts, defective)
-	end
-	local cons_alt = table.concat(ann.cons_alt, " or ")
-	if cons_alt ~= "" and cons_alt ~= "non-alternating" then
-		table.insert(ann_parts, cons_alt)
 	end
 	alternant_multiword_spec.annotation = table.concat(ann_parts, ", ")
 end
@@ -3534,50 +3405,32 @@ local function show_forms(alternant_multiword_spec)
 		return accel_obj
 	end
 
+	local function generate_link(data)
+		link = link or m_links.full_link {
+			lang = props.lang, term = form.formval_for_link, tr = "-", accel = form.accel_obj
+		}
+						link = props.generate_link {
+							slot = slot,
+							form = form,
+							footnote_obj = footnote_obj,
+						}
+	end
+
 	local props = {
 		lang = lang,
 		lemmas = lemmas,
 		transform_accel_obj = transform_accel_obj,
-		slot_list = alternant_multiword_spec.verb_slots_basic,
+		generate_link = generate_link,
+		slot_list = alternant_multiword_spec.verb_slots,
 	}
 	iut.show_forms(alternant_multiword_spec.forms, props)
-	alternant_multiword_spec.footnote_basic = alternant_multiword_spec.forms.footnote
+	alternant_multiword_spec.footnote = alternant_multiword_spec.forms.footnote
 end
 
 
 -------------------------------------------------------------------------------
 --                    Functions to create inflection tables                  --
 -------------------------------------------------------------------------------
-
--- For each paradigm part, postprocess the entries, remove duplicates and
--- return the set of Arabic and transliterated Latin entries as two return
--- values.
-local function get_spans(part)
-	if type(part) == "string" then
-		part = {part}
-	end
-	local part_nondup = {}
-	-- for each entry, postprocess it, which may potentially return
-	-- multiple entries; insert each into an array, checking and
-	-- omitting duplicates
-	for _, entry in ipairs(part) do
-		for _, e in ipairs(postprocess_term(entry)) do
-			m_table.insertIfNot(part_nondup, e)
-		end
-	end
-	-- convert each individual entry into Arabic and Latin span
-	local arabic_spans = {}
-	local latin_spans = {}
-	for _, entry in ipairs(part_nondup) do
-		table.insert(arabic_spans, entry)
-		if entry ~= "—" and entry ~= "?" then
-			-- multiple Arabic entries may map to the same Latin entry
-			-- (happens particularly with variant ways of spelling hamza)
-			m_table.insertIfNot(latin_spans, transliterate(entry))
-		end
-	end
-	return arabic_spans, latin_spans
-end
 
 local function make_table(alternant_multiword_spec)
 	local forms = alternant_multiword_spec.forms
@@ -3663,28 +3516,6 @@ local function make_table(base, title, form, intrans)
 			forms[key] = "?"
 		else
 			forms[key] = "—"
-		end
-	end
-
-	local function slot_is_active(slot)
-		return slot == "ap" or slot:find("[123]") and not slot:find("_pass")
-	end
-	local function slot_is_passive(slot)
-		return slot == "pp" or slot:find("[123]") and slot:find("_pass")
-	end
-
-	local has_active = false
-	local has_passive = false
-	for slot, slotval in pairs(alternant_multiword_spec.forms) do
-		if slot_is_active(slot) and slotval ~= "—" then
-			has_active = true
-			break
-		end
-	end
-	for slot, slotval in pairs(alternant_multiword_spec.forms) do
-		if slot_is_passive(slot) and slotval ~= "—" then
-			has_passive = true
-			break
 		end
 	end
 
@@ -3953,6 +3784,34 @@ end
 --                              External entry points                        --
 -------------------------------------------------------------------------------
 
+-- Append two lists `l1` and `l2`, removing duplicates. If either is {nil}, just return the other.
+local function combine_lists(l1, l2)
+	-- combine_footnotes() does exactly what we want.
+	return iut.combine_footnotes(l1, l2)
+end
+
+local function combine_ancillary_properties(data)
+	local src1 = data.formobj1
+	local src2 = data.formobj2
+	local dest = data.dest_formobj
+	dest.uncertain = src1.uncertain or src2.uncertain
+	if src1.genders and src2.genders and not m_table.deepEquals(src1.genders, src2.genders) then
+		-- do nothing
+	else
+		dest.genders = src1.genders or src2.genders
+	end
+	if src1.pos and src2.pos and src1.pos ~= src2.pos then
+		-- do nothing
+	else
+		dest.pos = src1.pos or src2.pos
+	end
+	-- Don't copy .alt, .gloss, .lit, .id, which describe a single term and don't extend to multiword terms.
+	dest.q = combine_lists(src1.q, src2.q)
+	dest.qq = combine_lists(src1.qq, src2.qq)
+	dest.l = combine_lists(src1.l, src2.l)
+	dest.ll = combine_lists(src1.ll, src2.ll)
+end
+
 -- Externally callable function to parse and conjugate a verb given user-specified arguments.
 -- Return value is WORD_SPEC, an object where the conjugated forms are in `WORD_SPEC.forms`
 -- for each slot. If there are no values for a slot, the slot key will be missing. The value
@@ -4023,14 +3882,8 @@ function export.do_generate_forms(args, source_template, headword_head)
 		end
 	end
 
-	local function split_bracketed_runs_into_words(bracketed_runs)
-		return iut.split_alternating_runs(bracketed_runs, " ", "preserve splitchar")
-	end
-
 	local parse_props = {
 		parse_indicator_spec = parse_indicator_spec,
-		-- Split words only on spaces, not on hyphens, because that messes up reflexive verb parsing.
-		split_bracketed_runs_into_words = split_bracketed_runs_into_words,
 		allow_default_indicator = true,
 		allow_blank_lemma = true,
 	}
@@ -4044,8 +3897,9 @@ function export.do_generate_forms(args, source_template, headword_head)
 	normalize_all_lemmas(alternant_multiword_spec, head)
 	detect_all_indicator_specs(alternant_multiword_spec)
 	local inflect_props = {
-		slot_list = alternant_multiword_spec.all_verb_slots,
+		slot_list = alternant_multiword_spec.verb_slots,
 		inflect_word_spec = conjugate_verb,
+		combine_ancillary_properties = combine_ancillary_properties,
 		-- We add links around the generated verbal forms rather than allow the entire multiword
 		-- expression to be a link, so ensure that user-specified links get included as well.
 		include_user_specified_links = true,
@@ -4059,8 +3913,9 @@ function export.do_generate_forms(args, source_template, headword_head)
 		end
 	end
 
+	determine_verb_properties_from_forms(alternant_multiword_spec)
 	compute_categories_and_annotation(alternant_multiword_spec)
-	if args.json and source_template == "ca-conj" then
+	if args.json and source_template == "ar-conj" then
 		return require("Module:JSON").toJSON(alternant_multiword_spec.forms)
 	end
 	return alternant_multiword_spec
@@ -4137,9 +3992,9 @@ function export.show(frame)
 		end
 	end
 	if intrans then
-		table.insert(base.categories, "Arabic intransitive verbs")
+		insert_cat("intransitive verbs")
 	else
-		table.insert(base.categories, "Arabic transitive verbs")
+		insert_cat("transitive verbs")
 	end
 
 	-- initialize title, with weakness indicated by conjugation
@@ -4151,7 +4006,7 @@ function export.show(frame)
 	end
 
 	if base.irregular then
-		table.insert(base.categories, "Arabic irregular verbs")
+		insert_cat("irregular verbs")
 		title = title .. " irregular"
 	end
 
