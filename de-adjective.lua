@@ -648,12 +648,11 @@ local function make_table(alternant_multiword_spec)
 |-
 ! rowspan="2" style="background:#C0C0C0" | number & gender
 ! colspan="3" style="background:#C0C0C0" | singular
-! style="background:#C0C0C0" | plural
+! rowspan="2" style="background:#C0C0C0" | plural
 |-
 ! style="background:#C0C0C0" | masculine
 ! style="background:#C0C0C0" | feminine
 ! style="background:#C0C0C0" | neuter
-! style="background:#C0C0C0" | all genders
 |-
 ]=] ..
 rsub(rsub(single_state_table_spec, "COLOR", "efefff"), "STATE", alternant_multiword_spec.state) .. [=[
@@ -670,12 +669,11 @@ or not alternant_multiword_spec.args.truncate and
 |-
 ! colspan="2" rowspan="2" style="background:#C0C0C0" | number & gender
 ! colspan="3" style="background:#C0C0C0" | singular
-! style="background:#C0C0C0" | plural
+! rowspan="2" style="background:#C0C0C0" | plural
 |-
 ! style="background:#C0C0C0" | masculine
 ! style="background:#C0C0C0" | feminine
 ! style="background:#C0C0C0" | neuter
-! style="background:#C0C0C0" | all genders
 |-
 ! colspan="2" style="background:#EEEEB0" | predicative
 | {COMPSUPpred_m}
@@ -705,12 +703,11 @@ or
 |-
 ! colspan="2" rowspan="2" style="background:#C0C0C0" | number & gender
 ! colspan="3" style="background:#C0C0C0" | singular
-! style="background:#C0C0C0" | plural
+! rowspan="2" style="background:#C0C0C0" | plural
 |-
 ! style="background:#C0C0C0" | masculine
 ! style="background:#C0C0C0" | feminine
 ! style="background:#C0C0C0" | neuter
-! style="background:#C0C0C0" | all genders
 |-
 ! colspan="2" style="background:#EEEEB0" | predicative
 | {COMPSUPpred_m}
