@@ -542,7 +542,12 @@ end
 local function show_forms(alternant_multiword_spec)
 	local lemmas = alternant_multiword_spec.forms.the_lemma or {}
 
-	local function add_pronouns_and_articles(slot, link)
+	local function format_formval(data)
+		local slot = data.slot
+		local link = data.link
+		local footnote_text = iut.get_footnote_text(data.footnotes, data.footnote_obj)
+		link = link .. footnote_text
+
 		if rfind(slot, "pred_m$") then
 			return link_term("[[er]] [[ist]]") .. " " .. link
 		elseif rfind(slot, "pred_f$") then
@@ -562,8 +567,8 @@ local function show_forms(alternant_multiword_spec)
 		end
 	end
 
-	local function join_spans(slot, spans)
-		return table.concat(spans, "<br />")
+	local function join_spans(data)
+		return table.concat(data.formval_spans, "<br />")
 	end
 
 	local function copy_predicate_forms(compsup)
@@ -578,7 +583,7 @@ local function show_forms(alternant_multiword_spec)
 	local props = {
 		lang = lang,
 		lemmas = lemmas,
-		transform_link = add_pronouns_and_articles,
+		format_formval = format_formval,
 		join_spans = join_spans,
 	}
 	props.slot_list = adjective_slot_list_positive

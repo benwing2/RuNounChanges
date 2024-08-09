@@ -1579,32 +1579,37 @@ local function show_forms(alternant_multiword_spec)
 		end
 	end
 	dass = link_term("dass") .. " "
-	local function add_pronouns(slot, link)
-		local persnum = slot:match("^imp_(2[sp])$")
+
+	local function format_formval(data)
+		local link = data.link
+		local footnote_text = iut.get_footnote_text(data.footnotes, data.footnote_obj)
+		local persnum = data.slot:match("^imp_(2[sp])$")
 		if persnum then
 			link = link .. " (" .. linked_pronouns[persnum_to_index[persnum]] .. ")"
 		else
-			persnum = slot:match("^.*_([123][sp])$")
+			persnum = data.slot:match("^.*_([123][sp])$")
 			if persnum then
 				link = linked_pronouns[persnum_to_index[persnum]] .. " " .. link
 			end
-			if slot:find("^subc_") then
+			if data.slot:find("^subc_") then
 				link = dass .. link
 			end
 		end
-		return link
+		return link .. footnote_text
 	end
-	local function join_spans(slot, spans)
-		if slot == "aux" then
-			return table.concat(spans, " or ")
+
+	local function join_spans(data)
+		if data.slot == "aux" then
+			return table.concat(data.formval_spans, " or ")
 		else
-			return table.concat(spans, "<br />")
+			return table.concat(data.formval_spans, "<br />")
 		end
 	end
+
 	local props = {
 		lang = lang,
 		lemmas = lemmas,
-		transform_link = add_pronouns,
+		format_formval = format_formval,
 		join_spans = join_spans,
 	}
 	props.slot_list = verb_slots_basic

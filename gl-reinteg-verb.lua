@@ -2449,10 +2449,12 @@ local function show_forms(alternant_multiword_spec)
 	end
 
 	-- Italicize less-recommended forms.
-	local function generate_link(slot, form, origentry, accel_obj)
-		if origentry:find(ALTVAR) then
-			origentry = rsub(origentry, ALTVAR, "")
-			return m_links.full_link({lang = lang, term = origentry, tr = "-", accel = accel_obj}, "term")
+	local function generate_link(data)
+		local formval_for_link = data.form.formval_for_link
+		if formval_for_link:find(ALTVAR) then
+			formval_for_link = formval_for_link:gsub(ALTVAR, "")
+			return m_links.full_link({lang = lang, term = formval_for_link, tr = "-", accel = data.form.accel_obj},
+				"term")
 		end
 	end
 

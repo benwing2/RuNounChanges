@@ -150,7 +150,7 @@ local function get_noun_pos(is_proper)
 								if not footnote_obj then
 									footnote_obj = iut.create_footnote_obj()
 								end
-								local footnote_text = iut.get_footnote_text(form, footnote_obj)
+								local footnote_text = iut.get_footnote_text(form.footnotes, footnote_obj)
 								if rfind(text, "%[%[") then
 									text = text .. footnote_text
 								else
