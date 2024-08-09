@@ -3169,6 +3169,9 @@ local function detect_all_indicator_specs(alternant_multiword_spec)
 				alternant_multiword_spec[prop] = true
 			end
 		end
+		if base.passive_uncertain then
+			alternant_multiword_spec.passive_uncertain = true
+		end
 		-- Propagate explicitly-missing indicators up.
 		for slot, val in pairs(base.slot_explicitly_missing) do
 			alternant_multiword_spec.slot_explicitly_missing[slot] =
@@ -3319,7 +3322,7 @@ local function compute_categories_and_annotation(alternant_multiword_spec)
 	ann.form = {}
 	ann.weakness = {}
 	ann.vowels = {}
-	ann.passive = {}
+	ann.passive = nil
 	ann.irreg = {}
 	ann.defective = {}
 
@@ -3360,10 +3363,33 @@ local function compute_categories_and_annotation(alternant_multiword_spec)
 		insert_cat("verbs needing verbal noun checked")
 	end
 
-	if alternant_multiword_spec.has_nonpast
-	if check_for_uncertainty("passive") then
+	if alternant_multiword_spec.has_active then
+		if alternant_multiword_spec.has_passive and alternant_multiword_spec.has_non_impers_passive then
+			insert_cat("verbs with full passive")
+			ann.passive = "full passive"
+		elseif alternant_multiword_spec.has_passive then
+			insert_cat("verbs with impersonal passive")
+			ann.passive = "impersonal passive"
+		else
+			insert_cat("verbs lacking passive forms")
+			ann.passive = "no passive"
+		end
+	else
+		if alternant_multiword_spec.has_non_impers_passive then
+			insert_cat("passive verbs")
+			insert_cat("verbs with full passive")
+			ann.passive = "passive-only"
+		else
+			insert_cat("passive verbs")
+			insert_cat("impersonal verbs")
+			insert_cat("verbs with impersonal passive")
+			ann.passive = "impersonal (passive-only)"
+		end
+	end
+
+	if alternant_multiword_spec.passive_uncertain then
 		insert_cat("verbs needing passive checked")
-		base.passive_uncertain = true
+		ann.passive = ann.passive .. ' <abbr title="passive status uncertain">(?)</abbr>'
 	end
 
 	if base.output_stems.irreg then
@@ -3388,26 +3414,6 @@ local function compute_categories_and_annotation(alternant_multiword_spec)
 	else
 		insert_ann("defective", "regular")
 	end
-	if alternant_multiword_spec.has_active and alternant_multiword_spec.has_passive then
-	"withpass", -- verb has both active and passive
-	"nopass", -- verb is active-only
-	"onlypass", -- verb is passive-only
-	"imperspass", -- verb is active with impersonal passive
-	"impers", -- verb itself is impersonal, meaning passive-only with impersonal passive
-	if base.passive == "onlypass" then
-		insert_cat("passive verbs")
-		insert_cat("verbs with full passive")
-	elseif base.passive == "only-impers" then
-		insert_cat("passive verbs")
-		insert_cat("verbs with impersonal passive")
-	elseif base.passive == "impers" then
-		insert_cat("verbs with impersonal passive")
-	elseif base.passive then
-		insert_cat("verbs with full passive")
-	else
-		insert_cat("verbs lacking passive forms")
-	end
-
 	local ann_parts = {}
 	local conj = table.concat(ann.conj, " or ")
 	if conj ~= "" then
