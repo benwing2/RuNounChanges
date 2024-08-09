@@ -433,6 +433,21 @@ local function allow_multiple_values_for_override(comma_separated_groups, data, 
 		end
 		table.insert(retvals, retval)
 	end
+	for _, form in ipairs(retvals) do
+		if form.form == "-" then
+			data.base.slot_explicitly_missing[data.prefix] = true
+			break
+		end
+	end
+	if data.base.slot_explicitly_missing[data.prefix] then
+		for _, form in ipairs(retvals) do
+			if form.form ~= "-" then
+				data.parse_err(("For slot or stem '%s', saw both - and a value other than -, which isn't allowed"):
+					format(data.prefix))
+			end
+		end
+		return nil
+	end
 	return retvals
 end
 
@@ -920,6 +935,9 @@ local imp_endings_uu = imperative_endings_from_jussive(juss_endings_uu)
 -------------------------------------------------------------------------------
 
 local function skip_slot(base, slot, allow_overrides)
+	if base.slot_explicitly_missing[slot] then
+		return true
+	end
 	if not allow_overrides and base.slot_overrides[slot] then
 		-- Skip any slots for which there are overrides.
 		return true
@@ -2646,6 +2664,7 @@ local function parse_indicator_spec(angle_bracket_spec)
 		root_consonants = {},
 		user_stem_overrides = {},
 		user_slot_overrides = {},
+		slot_explicitly_missing = {},
 		addnote_specs = {},
 	}
 	local function parse_err(msg)
@@ -3133,25 +3152,27 @@ local function detect_indicator_spec(base)
 			end
 		end
 	end
-
-	-- Propagate built-in-verb indicator flags to `base` and combine with user-specified flags.
-	for indicator_flag, _ in pairs(indicator_flags) do
-		base[indicator_flag] = base[indicator_flag] or base.input_stems[indicator_flag]
-	end
 end
 
 
 local function detect_all_indicator_specs(alternant_multiword_spec)
 	add_slots(alternant_multiword_spec)
+	alternant_multiword_spec.slot_explicitly_missing = {}
 
 	iut.map_word_specs(alternant_multiword_spec, function(base)
 		detect_indicator_spec(base)
 		-- User-specified indicator flags. Do these after calling detect_indicator_spec() because the latter may set
-		-- these indicators for built-in verbs.
+		-- these indicators for built-in verbs (at least that is the case in [[Module:ca-verb]], on which this module
+		-- was based).
 		for prop, _ in pairs(indicator_flags) do
 			if base[prop] then
 				alternant_multiword_spec[prop] = true
 			end
+		end
+		-- Propagate explicitly-missing indicators up.
+		for slot, val in pairs(base.slot_explicitly_missing) do
+			alternant_multiword_spec.slot_explicitly_missing[slot] =
+				alternant_multiword_spec.slot_explicitly_missing[slot] or val
 		end
 	end)
 end
@@ -3162,8 +3183,9 @@ end
 local function determine_verb_properties_from_forms(alternant_multiword_spec)
 	alternant_multiword_spec.has_active = false
 	alternant_multiword_spec.has_passive = false
+	alternant_multiword_spec.has_non_impers_active = false
+	alternant_multiword_spec.has_non_impers_passive = false
 	alternant_multiword_spec.has_imp = false
-	alternant_multiword_spec.has_non_impers = false
 	alternant_multiword_spec.has_past = false
 	alternant_multiword_spec.has_nonpast = false
 	for slot, _ in pairs(alternant_multiword_spec.forms) do
@@ -3173,11 +3195,14 @@ local function determine_verb_properties_from_forms(alternant_multiword_spec)
 		if slot == "pp" or slot:find("[123]") and slot:find("_pass") then
 			alternant_multiword_spec.has_passive = true
 		end
+		if slot:find("[123]") and not slot:find("pass_[123]") and not slot:find("3ms") then
+			alternant_multiword_spec.has_non_impers_active = true
+		end
+		if slot:find("pass_[123]") and not slot:find("3ms") then
+			alternant_multiword_spec.has_non_impers_passive = true
+		end
 		if slot:find("^imp_") then
 			alternant_multiword_spec.has_imp = true
-		end
-		if slot:find("[123]") and not slot:find("3ms") then
-			alternant_multiword_spec.has_non_impers = true
 		end
 		if slot:find("^past_") then
 			alternant_multiword_spec.has_past = true
@@ -3189,17 +3214,9 @@ local function determine_verb_properties_from_forms(alternant_multiword_spec)
 end
 
 
-local function add_categories_and_annotation(alternant_multiword_spec, base, multiword_lemma)
+local function add_categories_and_annotation(alternant_multiword_spec, base, multiword_lemma, insert_cat)
 	local function insert_ann(anntype, value)
 		m_table.insertIfNot(alternant_multiword_spec.annotation[anntype], value)
-	end
-
-	local function insert_cat(cat, also_when_multiword)
-		-- Don't place multiword terms in categories like 'Arabic form-II verbs' to avoid spamming the categories with
-		-- such terms.
-		if also_when_multiword or not multiword_lemma then
-			m_table.insertIfNot(alternant_multiword_spec.categories, "Arabic " .. cat)
-		end
 	end
 
 	if check_for_red_links and alternant_multiword_spec.source_template == "ar-conj" and multiword_lemma then
@@ -3279,48 +3296,71 @@ local function add_categories_and_annotation(alternant_multiword_spec, base, mul
 		insert_cat("verbs with ambiguous radicals")
 	end
 	if radical_is_weak(ur1) then
-		insert_cat("form-" .. vform ..  " verbs with " .. ur1 .. " as first radical")
+		insert_cat("form-" .. vform ..  " verbs with " .. ur1.form .. " as first radical")
 	end
 	if radical_is_weak(ur2) then
-		insert_cat("form-" .. vform ..  " verbs with " .. ur2 .. " as second radical")
+		insert_cat("form-" .. vform ..  " verbs with " .. ur2.form .. " as second radical")
 	end
 	if radical_is_weak(ur3) then
-		insert_cat("form-" .. vform ..  " verbs with " .. ur3 .. " as third radical")
+		insert_cat("form-" .. vform ..  " verbs with " .. ur3.form .. " as third radical")
 	end
 	if radical_is_weak(ur4) then
-		insert_cat("form-" .. vform ..  " verbs with " .. ur4 .. " as fourth radical")
+		insert_cat("form-" .. vform ..  " verbs with " .. ur4.form .. " as fourth radical")
 	end
+end
+
+
+-- Compute the categories to add the verb to, as well as the annotation to display in the conjugation title bar. We
+-- combine the code to do these functions as both categories and title bar contain similar information.
+local function compute_categories_and_annotation(alternant_multiword_spec)
+	alternant_multiword_spec.categories = {}
+	local ann = {}
+	alternant_multiword_spec.annotation = ann
+	ann.form = {}
+	ann.weakness = {}
+	ann.vowels = {}
+	ann.passive = {}
+	ann.irreg = {}
+	ann.defective = {}
+
+	local multiword_lemma = false
+	for _, form in ipairs(alternant_multiword_spec.forms.infinitive) do
+		if form.form:find(" ") then
+			multiword_lemma = true
+			break
+		end
+	end
+
+	local function insert_cat(cat, also_when_multiword)
+		-- Don't place multiword terms in categories like 'Arabic form-II verbs' to avoid spamming the categories with
+		-- such terms.
+		if also_when_multiword or not multiword_lemma then
+			m_table.insertIfNot(alternant_multiword_spec.categories, "Arabic " .. cat)
+		end
+	end
+
+	iut.map_word_specs(alternant_multiword_spec, function(base)
+		add_categories_and_annotation(alternant_multiword_spec, base, multiword_lemma, insert_cat)
+	end)
 
 	if base.noimp then
 		insert_cat("verbs lacking imperative forms")
 	end
-	"withpass", -- verb has both active and passive
-	"nopass", -- verb is active-only
-	"onlypass", -- verb is passive-only
-	"imperspass", -- verb is active with impersonal passive
-	"impers", -- verb itself is impersonal, meaning passive-only with impersonal passive
-	if base.passive == "onlypass" then
-		insert_cat("passive verbs")
-		insert_cat("verbs with full passive")
-	elseif base.passive == "only-impers" then
-		insert_cat("passive verbs")
-		insert_cat("verbs with impersonal passive")
-	elseif base.passive == "impers" then
-		insert_cat("verbs with impersonal passive")
-	elseif base.passive then
-		insert_cat("verbs with full passive")
-	else
-		insert_cat("verbs lacking passive forms")
+
+	if alternant_multiword_spec.forms.vn then
+		for _, form in ipairs(alternant_multiword_spec.forms.vn) do
+			if form.uncertain then
+				insert_cat("verbs needing verbal noun checked")
+				break
+			end
+		end
+	elseif not alternant_multiword_spec.slot_explicitly_missing.vn then
+		-- Assume an unspecified and non-defaulted verbal noun (form I, form III) is omitted rather than explicitly
+		-- missing. Use <vn:-> to explicitly indicate the lack of verbal noun.
+		insert_cat("verbs needing verbal noun checked")
 	end
 
-	-- allow a ? at the end of vn= and passive=; if so, putting the page into
-	-- special categories indicating the need to check the property in
-	-- question, and remove the ?. Also put into category for vn= if empty
-	-- and form is I.
-	if check_for_uncertainty("vn") or form == "I" and not args["vn"] then
-		insert_cat("verbs needing verbal noun checked")
-		base.vn_uncertain = true
-	end
+	if alternant_multiword_spec.has_nonpast
 	if check_for_uncertainty("passive") then
 		insert_cat("verbs needing passive checked")
 		base.passive_uncertain = true
@@ -3348,33 +3388,26 @@ local function add_categories_and_annotation(alternant_multiword_spec, base, mul
 	else
 		insert_ann("defective", "regular")
 	end
-end
-
-
--- Compute the categories to add the verb to, as well as the annotation to display in the conjugation title bar. We
--- combine the code to do these functions as both categories and title bar contain similar information.
-local function compute_categories_and_annotation(alternant_multiword_spec)
-	alternant_multiword_spec.categories = {}
-	local ann = {}
-	alternant_multiword_spec.annotation = ann
-	ann.form = {}
-	ann.weakness = {}
-	ann.vowels = {}
-	ann.passive = {}
-	ann.irreg = {}
-	ann.defective = {}
-
-	local multiword_lemma = false
-	for _, form in ipairs(alternant_multiword_spec.forms.infinitive) do
-		if form.form:find(" ") then
-			multiword_lemma = true
-			break
-		end
+	if alternant_multiword_spec.has_active and alternant_multiword_spec.has_passive then
+	"withpass", -- verb has both active and passive
+	"nopass", -- verb is active-only
+	"onlypass", -- verb is passive-only
+	"imperspass", -- verb is active with impersonal passive
+	"impers", -- verb itself is impersonal, meaning passive-only with impersonal passive
+	if base.passive == "onlypass" then
+		insert_cat("passive verbs")
+		insert_cat("verbs with full passive")
+	elseif base.passive == "only-impers" then
+		insert_cat("passive verbs")
+		insert_cat("verbs with impersonal passive")
+	elseif base.passive == "impers" then
+		insert_cat("verbs with impersonal passive")
+	elseif base.passive then
+		insert_cat("verbs with full passive")
+	else
+		insert_cat("verbs lacking passive forms")
 	end
 
-	iut.map_word_specs(alternant_multiword_spec, function(base)
-		add_categories_and_annotation(alternant_multiword_spec, base, multiword_lemma)
-	end)
 	local ann_parts = {}
 	local conj = table.concat(ann.conj, " or ")
 	if conj ~= "" then
