@@ -69,7 +69,8 @@ local past_subjunctive_single_word_preferred = m_table.listToSet {
 local past_subjunctive_single_word_preferred_footnote = "[preferred; avoid the alternative in " .. wuerde .. "]"
 
 local past_subjunctive_single_word_often_used = m_table.listToSet {
-	"brauchen", "finden", "geben", "gehen", "halten", "heißen", "heissen", "kommen", "lassen", "stehen", "tun", "thun", "wissen"
+	"bleiben", "brauchen", "bringen", "fallen", "finden", "geben", "gehen", "halten", "heißen", "heissen",
+	"kommen", "laufen", "lassen", "liegen", "nehmen", "sehen", "stehen", "tun", "thun", "wissen"
 }
 local past_subjunctive_single_word_often_used_footnote = "[this form and alternative in " .. wuerde .. " both found]"
 
@@ -1649,10 +1650,15 @@ local basic_table = [=[
 ! colspan="2" style="background:#d0d0d0" | <span title="Hilfsverb">auxiliary</span>
 | colspan="4" | {aux}
 |-
-| style="background:#a0ade3" |
+| rowspan="2" style="background:#a0ade3" |
 ! colspan="2" style="background:#a0ade3" | <span title="Indikativ">indicative</span>
-| style="background:#a0ade3" |
+| rowspan="2" style="background:#a0ade3" |
 ! colspan="2" style="background:#a0ade3" | <span title="Konjunktiv">subjunctive</span>
+|-
+! style="background:#a0ade3" | singular
+! style="background:#a0ade3" | plural
+! style="background:#a0ade3" | singular
+! style="background:#a0ade3" | plural
 |-
 ! rowspan="3" style="background:#c0cfe4; width:7em" | <span title="Präsens">present</span>
 | {pres_1s}
@@ -1755,6 +1761,13 @@ local composed_table = [=[
 {\op}| border="1px solid #000000" style="border-collapse:collapse; background:#fafafa; text-align:center; width:100%" class="inflection-table"
 |-
 ! colspan="6" style="background:#99cc99" | <span title="Perfekt">perfect</span>
+|-
+! style="background:#99cc99" |
+! style="background:#99cc99" | singular
+! style="background:#99cc99" | plural
+! style="background:#99cc99" |
+! style="background:#99cc99" | singular
+! style="background:#99cc99" | plural
 |-
 ! rowspan="3" style="background:#cfedcc; width:7em" | <span title="Indikativ">indicative</span>
 | {perf_ind_1s}
