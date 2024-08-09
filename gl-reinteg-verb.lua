@@ -675,7 +675,18 @@ local built_in_conjugations = {
 		forms = {short_pp = "morto"}
 	},
 	{
-		-- doer, moer/remoer, roer/corroer, soer
+		-- moer, but not remoer
+		match = "^moer",
+		forms = {
+			pres_2s = "móis", pres_3s = "mói",
+			-- impf -ía etc., pret_1s -oí and pp -oído handled automatically in combine_stem_ending()
+			pres1_and_sub = {"mo", GL_ALTVAR .. "moi"},
+			short_pp = "mudo",
+			irreg = true,
+		}
+	},
+	{
+		-- doer, remoer, roer/corroer, soer
 		match = "oer",
 		forms = {
 			pres_2s = "óis", pres_3s = "ói",
@@ -814,6 +825,13 @@ local built_in_conjugations = {
 		}
 	},
 	{
+		match = "traguer",
+		forms = {
+			pret_conj = "irreg", pret = "trouxé", pt_pret_1s = "trouxe", pt_pret_3s = "trouxe",
+			irreg = true,
+		}
+	},
+	{
 		-- valer, desvaler, equivaler
 		match = "valer",
 		forms = {
@@ -846,8 +864,8 @@ local built_in_conjugations = {
 		}
 	},
 	{
-		-- Only envolver, revolver. Not volver, desenvolver, devolver, evolver, etc.
-		match = match_against_verbs("volver", {"^en", "^re"}),
+		-- volver, devolver, envolver, revolver, etc.
+		match = "volver",
 		forms = {short_pp = "volto"},
 	},
 
@@ -949,9 +967,9 @@ local built_in_conjugations = {
 			pres_sub_1s = {GL_TYPE .. "vaia", PT_TYPE .. "vá"},
 			pres_sub_2s = {GL_TYPE .. "vaias", PT_TYPE .. "vás"},
 			pres_sub_3s = {GL_TYPE .. "vaia", PT_TYPE .. "vá"},
-			pres_sub_1s = {GL_TYPE .. "vaiamos", PT_TYPE .. "vamos"},
-			pres_sub_2s = {GL_TYPE .. "vaiades", PT_TYPE .. "vades"},
-			pres_sub_3s = {GL_TYPE .. "vaiam", PT_TYPE .. "vão"},
+			pres_sub_1p = {GL_TYPE .. "vaiamos", PT_TYPE .. "vamos"},
+			pres_sub_2p = {GL_TYPE .. "vaiades", PT_TYPE .. "vades"},
+			pres_sub_3p = {GL_TYPE .. "vaiam", PT_TYPE .. "vão"},
 			pret_conj = "irreg", pret = "fô", pret_1s = {GL_TYPE .. "fum", PT_TYPE .. "fui"}, pret_3s = "foi",
 			irreg = true,
 		}
@@ -1282,7 +1300,7 @@ local function combine_stem_ending(base, slot, prefix, stem, ending, dont_includ
 	-- pre-back-vowel variant, as indicated by `frontback`. We want these front-back spelling changes to happen
 	-- between stem and ending, not between prefix and stem; the prefix may not have the same "front/backness"
 	-- as the stem.
-	local is_front = rfind(ending, "^[eiéí]")
+	local is_front = rfind(ending, "^[eiéíê]")
 	if base.frontback == "front" and not is_front then
 		stem = stem:gsub("c$", "ç") -- conhecer -> conheço, vencer -> venço, descer -> desço
 		stem = stem:gsub("g$", "j") -- proteger -> protejo, fugir -> fujo
@@ -2304,7 +2322,7 @@ local function add_categories_and_annotation(alternant_multiword_spec, base, mul
 	end
 
 	if base.e_ei_cat then
-		insert_ann("vowel_alt", "''e'' becomes ''ei'' when stressed")
+		insert_ann("vowel_alt", "''e'' may become ''ei'' when stressed")
 		insert_cat("verbs with e becoming ei when stressed")
 	elseif not base.vowel_alt then
 		insert_ann("vowel_alt", "non-alternating")
@@ -2419,7 +2437,13 @@ local function show_forms(alternant_multiword_spec)
 			return nil
 		end
 		if accel_obj then
-			accel_obj.form = "reinteg-verb-form-" .. reconstructed_verb_spec
+			if slot:find("^pp_") then
+				accel_obj.form = slot
+			elseif slot == "gerund" then
+				accel_obj.form = "reinteg-gerund-" .. reconstructed_verb_spec
+			else
+				accel_obj.form = "reinteg-verb-form-" .. reconstructed_verb_spec
+			end
 		end
 		return accel_obj
 	end
@@ -2658,7 +2682,7 @@ function export.do_generate_forms(args, source_template, headword_head)
 
 	if not arg1 then
 		if (pagename == "gl-reinteg-conj" or pagename == "gl-reinteg-verb") and in_template_space() then
-			arg1 = "fazer"
+			arg1 = "traguer"
 		elseif pagename == "gl-reinteg-verb form of" and in_template_space() then
 			arg1 = "amar"
 		else
