@@ -998,8 +998,22 @@ local function append_forms(props, formtable, slot, forms, before_text, before_t
 						new_translit = old_translit .. before_text_translit .. translit
 					end
 				end
-				local new_footnotes = export.combine_footnotes(old_form.footnotes, form.footnotes)
-				table.insert(ret_forms, {form=new_form, translit=new_translit, footnotes=new_footnotes})
+				local new_formobj
+				if new_form == form.form and new_translit == form.translit and not old_form.footnotes then
+					new_formobj = m_table.shallowcopy(form)
+				else
+					local new_footnotes = export.combine_footnotes(old_form.footnotes, form.footnotes)
+					new_formobj = {form=new_form, translit=new_translit, footnotes=new_footnotes}
+					if props.combine_ancillary_properties then
+						props.combine_ancillary_properties {
+							slot = slot,
+							dest_formobj = new_formobj,
+							formobj1 = old_form,
+							formobj2 = form,
+						}
+					end
+				end
+				table.insert(ret_forms, new_formobj)
 			end
 		end
 	end
@@ -1590,14 +1604,19 @@ function export.show_forms(forms, props)
 				for _, form in ipairs(formvals) do
 					local link
 					if props.generate_link then
-						-- FIXME: Modernize calling convention to a single object.
-						link = props.generate_link(slot, form, form.formval_for_link, form.accel_obj)
+						link = props.generate_link {
+							slot = slot,
+							form = form,
+							footnote_obj = footnote_obj,
+						}
 					end
 					link = link or m_links.full_link {
 						lang = props.lang, term = form.formval_for_link, tr = "-", accel = form.accel_obj
 					}
 					table.insert(formval_spans, {
 						link = link,
+						form = form,
+
 						footnote_symbol = form.formval_footnote_symbol,
 						footnotes = form.footnotes,
 					})
@@ -1671,7 +1690,11 @@ function export.show_forms(forms, props)
 				end
 
 				if props.join_spans then
-					formatted_forms = props.join_spans(slot, formval_spans, tr_spans)
+					formatted_forms = props.join_spans {
+						slot = slot,
+						formval_spans = formval_spans,
+						tr_spans = tr_spans,
+					}
 				end
 				if not formatted_forms then
 					local formval_span = table.concat(formval_spans, ", ")

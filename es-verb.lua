@@ -2530,7 +2530,7 @@ local function show_forms(alternant_multiword_spec)
 	-- voseo usage. In the latter case, we only do it if there is a distinct pres subjunctive voseo form.
 	local function create_footnote_obj()
 		local obj = iut.create_footnote_obj()
-		iut.get_footnote_text({footnotes = {fut_sub_note}}, obj)
+		iut.get_footnote_text({fut_sub_note}, obj)
 		-- Compute whether the tú and voseo variants are different, for each voseo variant.
 		-- We use this later in make_table().
 		for _, slot in ipairs({"pres_2s", "pres_sub_2s", "imp_2s"}) do
@@ -2542,7 +2542,7 @@ local function show_forms(alternant_multiword_spec)
 			end)
 		end
 		if alternant_multiword_spec.separate_pres_sub_2sv then
-			iut.get_footnote_text({footnotes = {pres_sub_voseo_note}}, obj)
+			iut.get_footnote_text({pres_sub_voseo_note}, obj)
 		end
 		return obj
 	end

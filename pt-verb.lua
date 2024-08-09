@@ -2478,10 +2478,12 @@ local function show_forms(alternant_multiword_spec)
 	end
 
 	-- Italicize superseded forms.
-	local function generate_link(slot, form, origentry, accel_obj)
-		if origentry:find(VAR_SUPERSEDED) then
-			origentry = rsub(origentry, VAR_SUPERSEDED, "")
-			return m_links.full_link({lang = lang, term = origentry, tr = "-", accel = accel_obj}, "term")
+	local function generate_link(data)
+		local formval_for_link = data.form.formval_for_link
+		if formval_for_link:find(VAR_SUPERSEDED) then
+			formval_for_link = formval_for_link:gsub(VAR_SUPERSEDED, "")
+			return m_links.full_link({lang = lang, term = formval_for_link, tr = "-", accel = data.form.accel_obj},
+				"term")
 		end
 	end
 
