@@ -1,6 +1,5 @@
 local export = {}
 
-
 --[=[
 
 Authorship: Ben Wing <benwing2>
@@ -25,23 +24,29 @@ TERMINOLOGY:
 
 FIXME:
 
+--"i-e" alternation doesn't work properly when the stem comes with a hiatus in it.
+
 --]=]
 
+local force_cat = false -- set to true for debugging
+local check_for_red_links = false -- set to false for debugging
+
 local lang = require("Module:languages").getByCode("pt")
-local m_string_utilities = require("Module:string utilities")
+local m_str_utils = require("Module:string utilities")
 local m_links = require("Module:links")
 local m_table = require("Module:table")
 local iut = require("Module:inflection utilities")
 local com = require("Module:pt-common")
 
-local force_cat = false -- set to true for debugging
-local check_for_red_links = false -- set to false for debugging
-
-local rfind = mw.ustring.find
-local rmatch = mw.ustring.match
-local rsplit = mw.text.split
+local add_links = com.add_links
+local format = m_str_utils.format
+local remove_final_accent = com.remove_final_accent
+local rfind = m_str_utils.find
+local rmatch = m_str_utils.match
+local rsplit = m_str_utils.split
 local rsub = com.rsub
-local u = mw.ustring.char
+local strip_redundant_links = com.strip_redundant_links
+local u = m_str_utils.char
 
 local function link_term(term)
 	return m_links.full_link({ lang = lang, term = term }, "term")
@@ -537,15 +542,15 @@ local built_in_conjugations = {
 		match = "guar",
 		forms = {
 			-- combine_stem_ending() will move the acute accent backwards so it sits after the last vowel in [[minguar]]
-			pres_stressed = {{form = AC .. "gu", footnotes = {"[Brazil]"}}, {form = "gu", footnotes = {"[Portugal]"}}},
+			pres_stressed = {{form = AC .. "gu", footnotes = {"[Brazilian Portuguese]"}}, {form = "gu", footnotes = {"[European Portuguese]"}}},
 			pres_sub_stressed = {
-				{form = AC .. "gu", footnotes = {"[Brazil]"}},
-				{form = "gu", footnotes = {"[Portugal]"}},
-				{form = AC .. VAR_SUPERSEDED .. "gü", footnotes = {"[Brazil]"}},
-				{form = VAR_SUPERSEDED .. "gú", footnotes = {"[Portugal]"}},
+				{form = AC .. "gu", footnotes = {"[Brazilian Portuguese]"}},
+				{form = "gu", footnotes = {"[European Portuguese]"}},
+				{form = AC .. VAR_SUPERSEDED .. "gü", footnotes = {"[Brazilian Portuguese]"}},
+				{form = VAR_SUPERSEDED .. "gú", footnotes = {"[European Portuguese]"}},
 			},
-			pres_sub_unstressed = {"gu", {form = VAR_SUPERSEDED .. "gü", footnotes = {"[Brazil]"}}},
-			pret_1s = {"guei", {form = VAR_SUPERSEDED .. "güei", footnotes = {"[Brazil]"}}},
+			pres_sub_unstressed = {"gu", {form = VAR_SUPERSEDED .. "gü", footnotes = {"[Brazilian Portuguese]"}}},
+			pret_1s = {"guei", {form = VAR_SUPERSEDED .. "güei", footnotes = {"[Brazilian Portuguese]"}}},
 		}
 	},
 	{
@@ -553,15 +558,15 @@ local built_in_conjugations = {
 		match = "quar",
 		forms = {
 			-- combine_stem_ending() will move the acute accent backwards so it sits after the last vowel in [[apropinquar]]
-			pres_stressed = {{form = AC .. "qu", footnotes = {"[Brazil]"}}, {form = "qu", footnotes = {"[Portugal]"}}},
+			pres_stressed = {{form = AC .. "qu", footnotes = {"[Brazilian Portuguese]"}}, {form = "qu", footnotes = {"[European Portuguese]"}}},
 			pres_sub_stressed = {
-				{form = AC .. "qu", footnotes = {"[Brazil]"}},
-				{form = "qu", footnotes = {"[Portugal]"}},
-				{form = AC .. VAR_SUPERSEDED .. "qü", footnotes = {"[Brazil]"}},
-				{form = VAR_SUPERSEDED .. "qú", footnotes = {"[Portugal]"}},
+				{form = AC .. "qu", footnotes = {"[Brazilian Portuguese]"}},
+				{form = "qu", footnotes = {"[European Portuguese]"}},
+				{form = AC .. VAR_SUPERSEDED .. "qü", footnotes = {"[Brazilian Portuguese]"}},
+				{form = VAR_SUPERSEDED .. "qú", footnotes = {"[European Portuguese]"}},
 			},
-			pres_sub_unstressed = {"qu", {form = VAR_SUPERSEDED .. "qü", footnotes = {"[Brazil]"}}},
-			pret_1s = {"quei", {form = VAR_SUPERSEDED .. "qüei", footnotes = {"[Brazil]"}}},
+			pres_sub_unstressed = {"qu", {form = VAR_SUPERSEDED .. "qü", footnotes = {"[Brazilian Portuguese]"}}},
+			pret_1s = {"quei", {form = VAR_SUPERSEDED .. "qüei", footnotes = {"[Brazilian Portuguese]"}}},
 		}
 	},
 	{
@@ -575,7 +580,7 @@ local built_in_conjugations = {
 		-- -oiar (apoiar, boiar)
 		match = "oiar",
 		forms = {
-			pres_stressed = {"oi", {form = VAR_SUPERSEDED .. "ói", footnotes = {"[Brazil]"}}},
+			pres_stressed = {"oi", {form = VAR_SUPERSEDED .. "ói", footnotes = {"[Brazilian Portuguese]"}}},
 		}
 	},
 	{
@@ -846,6 +851,16 @@ local built_in_conjugations = {
 		}
 	},
 	{
+		-- coerir, incoerir
+		--FIXME: This should be a part of the <i-e> section. It's an "i-e", but with accents to prevent a diphthong when it gets stressed.
+		match = "coerir",
+		forms = {
+			vowel_alt = "i-e",
+			pres1_and_sub = "coír",
+			pres_sub_unstressed = "coir",
+		}
+	},
+	{
 		-- We want to match antever etc. but not absolver, atrever etc. No way to avoid listing each verb.
 		match = match_against_verbs("ver", {"ante", "entre", "pre", "^re", "^"}),
 		forms = {
@@ -965,7 +980,7 @@ local built_in_conjugations = {
 	{
 		-- inserir
 		match = "inserir",
-		forms = {vowel_alt = "i-e", short_pp = {form = "inserto", footnotes = {"[Portugal only]"}}},
+		forms = {vowel_alt = "i-e", short_pp = {form = "inserto", footnotes = {"[European Portuguese only]"}}},
 	},
 	{
 		-- ir
@@ -1023,31 +1038,31 @@ local built_in_conjugations = {
 		match = match_against_verbs("uir", {"delinq", "arg"}),
 		forms = {
 			-- use 'ü' because we're in a front environment; if we use 'u', we'll get '#delinco', '#argo'
-			pres1_and_sub = {{form = AC .. "ü", footnotes = {"[Brazil]"}}, {form = "ü", footnotes = {"[Portugal]"}}},
+			pres1_and_sub = {{form = AC .. "ü", footnotes = {"[Brazilian Portuguese]"}}, {form = "ü", footnotes = {"[European Portuguese]"}}},
 			-- FIXME: verify. This is by partial parallelism with the present subjunctive of verbs in -quar (also a
 			-- front environment). Infopédia has 'delinquis ou delínques' and Priberam has 'delinqúis'.
 			pres_2s = {
-				{form = AC .. "ues", footnotes = {"[Brazil]"}},
-				{form = "uis", footnotes = {"[Portugal]"}},
+				{form = AC .. "ues", footnotes = {"[Brazilian Portuguese]"}},
+				{form = "uis", footnotes = {"[European Portuguese]"}},
 				-- This form should occur only with an infinitive 'delinqüir' etc.
-				-- {form = AC .. VAR_SUPERSEDED .. "ües", footnotes = {"[Brazil]"}},
-				{form = VAR_SUPERSEDED .. "úis", footnotes = {"[Portugal]"}},
+				-- {form = AC .. VAR_SUPERSEDED .. "ües", footnotes = {"[Brazilian Portuguese]"}},
+				{form = VAR_SUPERSEDED .. "úis", footnotes = {"[European Portuguese]"}},
 			},
 			-- Same as previous.
 			pres_3s = {
-				{form = AC .. "ue", footnotes = {"[Brazil]"}},
-				{form = "ui", footnotes = {"[Portugal]"}},
+				{form = AC .. "ue", footnotes = {"[Brazilian Portuguese]"}},
+				{form = "ui", footnotes = {"[European Portuguese]"}},
 				-- This form should occur only with an infinitive 'delinqüir' etc.
-				-- {form = AC .. VAR_SUPERSEDED .. "üe", footnotes = {"[Brazil]"}},
-				{form = VAR_SUPERSEDED .. "úi", footnotes = {"[Portugal]"}},
+				-- {form = AC .. VAR_SUPERSEDED .. "üe", footnotes = {"[Brazilian Portuguese]"}},
+				{form = VAR_SUPERSEDED .. "úi", footnotes = {"[European Portuguese]"}},
 			},
 			-- Infopédia has 'delinquem ou delínquem' and Priberam has 'delinqúem'.
 			pres_3p = {
-				{form = AC .. "uem", footnotes = {"[Brazil]"}},
-				{form = "uem", footnotes = {"[Portugal]"}},
+				{form = AC .. "uem", footnotes = {"[Brazilian Portuguese]"}},
+				{form = "uem", footnotes = {"[European Portuguese]"}},
 				-- This form should occur only with an infinitive 'delinqüir' etc.
-				-- {form = AC .. VAR_SUPERSEDED .. "üem", footnotes = {"[Brazil]"}},
-				{form = VAR_SUPERSEDED .. "úem", footnotes = {"[Portugal]"}},
+				-- {form = AC .. VAR_SUPERSEDED .. "üem", footnotes = {"[Brazilian Portuguese]"}},
+				{form = VAR_SUPERSEDED .. "úem", footnotes = {"[European Portuguese]"}},
 			},
 			-- FIXME: The old module also had several other alternative forms (given as [123]_alt, not identified as
 			-- obsolete):
@@ -1326,7 +1341,7 @@ local function combine_stem_ending(base, slot, prefix, stem, ending, dont_includ
 	if ending:find("^%*%*") then
 		ending = rsub(ending, "^%*%*", "")
 		if rfind(full_stem, "[gq]uí$") or not rfind(full_stem, V .. "[íú]$") then
-			stem = com.remove_final_accent(stem)
+			stem = remove_final_accent(stem)
 		end
 	end
 
@@ -1334,7 +1349,7 @@ local function combine_stem_ending(base, slot, prefix, stem, ending, dont_includ
 	-- E.g. fizé -> fizermos. Unlike for **, this removal is unconditional, so we get e.g. 'sairmos' not #'saírmos'.
 	if ending:find("^%*") then
 		ending = rsub(ending, "^%*", "")
-		stem = com.remove_final_accent(stem)
+		stem = remove_final_accent(stem)
 	end
 
 	-- If ending begins with i, it must get an accent after an unstressed vowel (in some but not all cases) to prevent
@@ -1361,7 +1376,7 @@ local function combine_stem_ending(base, slot, prefix, stem, ending, dont_includ
 	-- pre-back-vowel variant, as indicated by `frontback`. We want these front-back spelling changes to happen
 	-- between stem and ending, not between prefix and stem; the prefix may not have the same "front/backness"
 	-- as the stem.
-	local is_front = rfind(ending, "^[eiéí]")
+	local is_front = rfind(ending, "^[eiéíê]")
 	if base.frontback == "front" and not is_front then
 		stem = stem:gsub("c$", "ç") -- conhecer -> conheço, vencer -> venço, descer -> desço
 		stem = stem:gsub("g$", "j") -- proteger -> protejo, fugir -> fujo
@@ -1543,7 +1558,7 @@ local function add_finite_non_present(base)
 		add_tense("pret", stems.pret, {}, "*ste", {}, "*mos", "*stes", "*ram")
 	elseif stems.pret_conj == "ar" then
 		add_tense("pret", stems.pret_base, "ei", "aste", "ou",
-			{{form = VAR_BR .. "amos", footnotes = {"[Brazil]"}}, {form = VAR_PT .. "ámos", footnotes = {"[Portugal]"}}}, "astes", "aram")
+			{{form = VAR_BR .. "amos", footnotes = {"[Brazilian Portuguese]"}}, {form = VAR_PT .. "ámos", footnotes = {"[European Portuguese]"}}}, "astes", "aram")
 	elseif stems.pret_conj == "er" then
 		add_tense("pret", stems.pret_base, "i", "este", "eu", "emos", "estes", "eram")
 	else
@@ -2081,20 +2096,20 @@ local function normalize_all_lemmas(alternant_multiword_spec, head)
 	if not alternant_multiword_spec.args.noautolinktext then
 		for _, alternant_or_word_spec in ipairs(alternant_multiword_spec.alternant_or_word_specs) do
 			alternant_or_word_spec.user_specified_before_text = alternant_or_word_spec.before_text
-			alternant_or_word_spec.before_text = com.add_links(alternant_or_word_spec.before_text)
+			alternant_or_word_spec.before_text = add_links(alternant_or_word_spec.before_text)
 			if alternant_or_word_spec.alternants then
 				for _, multiword_spec in ipairs(alternant_or_word_spec.alternants) do
 					for _, word_spec in ipairs(multiword_spec.word_specs) do
 						word_spec.user_specified_before_text = word_spec.before_text
-						word_spec.before_text = com.add_links(word_spec.before_text)
+						word_spec.before_text = add_links(word_spec.before_text)
 					end
 					multiword_spec.user_specified_post_text = multiword_spec.post_text
-					multiword_spec.post_text = com.add_links(multiword_spec.post_text)
+					multiword_spec.post_text = add_links(multiword_spec.post_text)
 				end
 			end
 		end
 		alternant_multiword_spec.user_specified_post_text = alternant_multiword_spec.post_text
-		alternant_multiword_spec.post_text = com.add_links(alternant_multiword_spec.post_text)
+		alternant_multiword_spec.post_text = add_links(alternant_multiword_spec.post_text)
 	end
 
 	-- (2) Remove any links from the lemma, but remember the original form
@@ -2128,7 +2143,7 @@ local function normalize_all_lemmas(alternant_multiword_spec, head)
 			-- Add links to the lemma so the user doesn't specifically need to, since we preserve
 			-- links in multiword lemmas and include links in non-lemma forms rather than allowing
 			-- the entire form to be a link.
-			linked_lemma = com.add_links(base.user_specified_lemma)
+			linked_lemma = add_links(base.user_specified_lemma)
 		end
 		base.linked_lemma = linked_lemma
 	end)
@@ -2451,7 +2466,13 @@ local function show_forms(alternant_multiword_spec)
 			return nil
 		end
 		if accel_obj then
-			accel_obj.form = "verb-form-" .. reconstructed_verb_spec
+			if slot:find("^pp_") then
+				accel_obj.form = slot
+			elseif slot == "gerund" then
+				accel_obj.form = "gerund-" .. reconstructed_verb_spec
+			else
+				accel_obj.form = "verb-form-" .. reconstructed_verb_spec
+			end
 		end
 		return accel_obj
 	end
@@ -2661,12 +2682,12 @@ local function make_table(alternant_multiword_spec)
 
 	-- Format the table.
 	forms.footnote = alternant_multiword_spec.footnote_basic
-	forms.notes_clause = forms.footnote ~= "" and m_string_utilities.format(notes_template, forms) or ""
+	forms.notes_clause = forms.footnote ~= "" and format(notes_template, forms) or ""
 	-- has_short_pp is computed in show_forms().
 	local pp_template = alternant_multiword_spec.has_short_pp and double_pp_template or single_pp_template
-	forms.pp_clause = m_string_utilities.format(pp_template, forms)
+	forms.pp_clause = format(pp_template, forms)
 	local table_with_pronouns = rsub(basic_table, "<<(.-)>>", link_term)
-	return m_string_utilities.format(table_with_pronouns, forms)
+	return format(table_with_pronouns, forms)
 end
 
 
@@ -2775,7 +2796,7 @@ function export.do_generate_forms(args, source_template, headword_head)
 	-- Remove redundant brackets around entire forms.
 	for slot, forms in pairs(alternant_multiword_spec.forms) do
 		for _, form in ipairs(forms) do
-			form.form = com.strip_redundant_links(form.form)
+			form.form = strip_redundant_links(form.form)
 		end
 	end
 
