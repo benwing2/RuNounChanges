@@ -1,5 +1,7 @@
 local export = {}
 
+local romut_module = "Module:romance utilities"
+
 local unaccented_vowel = "aeiouïü"
 local accented_vowel = "àèéíòóú"
 local vowel = unaccented_vowel .. accented_vowel
@@ -89,7 +91,7 @@ function export.remove_accents(word, final_syllable_only)
 			if vowel == "í" then
 				if preceding:find("^[gq]u$") then
 					return preceding .. "i"
-				elseif preceding:find("[aeiou]$") then
+				elseif rfind(preceding, "[aeiouü]$") then
 					return preceding .. "ï"
 				end
 			end
@@ -253,6 +255,33 @@ function export.make_plural(base, gender, special)
 	end
 
 	return {base .. "s"}
+end
+
+-- FIXME: Next two copied from [[Module:es-common]]. Move to a utilities module.
+
+-- Add links around words. If multiword_only, do it only in multiword forms.
+function export.add_links(form, multiword_only)
+	if form == "" or form == " " then
+		return form
+	end
+	if not form:find("%[%[") then
+		if rfind(form, "[%s%p]") then --optimization to avoid loading [[Module:headword]] on single-word forms
+			local m_headword = require("Module:headword")
+			if m_headword.head_is_multiword(form) then
+				form = m_headword.add_multiword_links(form)
+			end
+		end
+		if not multiword_only and not form:find("%[%[") then
+			form = "[[" .. form .. "]]"
+		end
+	end
+	return form
+end
+
+
+function export.strip_redundant_links(form)
+	-- Strip redundant brackets surrounding entire form.
+	return rmatch(form, "^%[%[([^%[%]]*)%]%]$") or form
 end
 
 return export
