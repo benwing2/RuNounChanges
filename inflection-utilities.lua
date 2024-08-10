@@ -2,7 +2,7 @@ local export = {}
 
 local m_links = require("Module:links")
 local m_str_utils = require("Module:string utilities")
-local m_table = require("Module:table")
+local m_table = require("Module:User:Benwing2/table")
 local put = require("Module:parse utilities")
 local script_utilities_module = "Module:script utilities"
 local table_tools_module = "Module:table tools"
@@ -631,7 +631,7 @@ end
 
 
 local function props_transliterate(props, text)
-	return lang_or_func_transliterate(props.transliterate, lang, text)
+	return lang_or_func_transliterate(props.transliterate, props.lang, text)
 end
 
 
@@ -1268,7 +1268,7 @@ end
 
 
 -- Add links around words in a term. If multiword_only, do it only in multiword terms.
-function export.add_links(term, multiword_only)
+function export.add_links(form, multiword_only)
 	if form == "" or form == " " then
 		return form
 	end
@@ -1516,7 +1516,7 @@ function export.show_forms(forms, props)
 							elseif type(newform_translit) == "string" then
 								newform_translit = {newform_translit}
 							end
-							for _, translit in in ipairs(newform_translit) do
+							for _, translit in ipairs(newform_translit) do
 								m_table.insertIfNot(combined_translit, translit)
 							end
 							form.translit = combined_translit
@@ -1684,9 +1684,9 @@ function export.show_forms(forms, props)
 							end
 							m_table.insertIfNot(tr_spans, {
 								tr_for_tag = tr_for_tag,
-								footnote_symbol = footnote_symbol,
+								footnote_symbol = tr_footnote_symbol,
 								footnotes = form.footnotes,
-							}, props = {
+							}, {
 								key = function(trobj) return trobj.tr_for_tag end,
 								combine = function(pos, tr, newtr)
 									-- Combine footnotes.

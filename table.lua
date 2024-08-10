@@ -542,13 +542,13 @@ function export.insertIfNot(list, new_item, options)
 				return false
 			end
 		end
-	elseif export.contains(list, item, options) then
+	elseif export.contains(list, new_item, options) then
 		return false
 	end
 	if options and options.pos then
-		insert(list, options.pos, item)
+		insert(list, options.pos, new_item)
 	else
-		insert(list, item)
+		insert(list, new_item)
 	end
 end
 
