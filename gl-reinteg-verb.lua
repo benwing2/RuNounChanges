@@ -2454,7 +2454,7 @@ local function show_forms(alternant_multiword_spec)
 		if formval_for_link:find(ALTVAR) then
 			formval_for_link = formval_for_link:gsub(ALTVAR, "")
 			return m_links.full_link({lang = lang, term = formval_for_link, tr = "-", accel = data.form.accel_obj},
-				"term")
+				"term") .. iut.get_footnote_text(data.form.footnotes, data.footnote_obj)
 		end
 	end
 

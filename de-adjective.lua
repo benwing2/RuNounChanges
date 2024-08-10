@@ -542,10 +542,12 @@ end
 local function show_forms(alternant_multiword_spec)
 	local lemmas = alternant_multiword_spec.forms.the_lemma or {}
 
-	local function format_formval(data)
+	local function generate_link(data)
 		local slot = data.slot
-		local link = data.link
-		local footnote_text = iut.get_footnote_text(data.footnotes, data.footnote_obj)
+		local link = m_links.full_link {
+			lang = lang, term = data.form.formval_for_link, tr = "-", accel = data.form.accel_obj
+		}
+		local footnote_text = iut.get_footnote_text(data.form.footnotes, data.footnote_obj)
 		link = link .. footnote_text
 
 		if rfind(slot, "pred_m$") then
@@ -583,7 +585,7 @@ local function show_forms(alternant_multiword_spec)
 	local props = {
 		lang = lang,
 		lemmas = lemmas,
-		format_formval = format_formval,
+		generate_link = generate_link,
 		join_spans = join_spans,
 	}
 	props.slot_list = adjective_slot_list_positive

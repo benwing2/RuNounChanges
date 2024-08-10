@@ -1580,9 +1580,11 @@ local function show_forms(alternant_multiword_spec)
 	end
 	dass = link_term("dass") .. " "
 
-	local function format_formval(data)
-		local link = data.link
-		local footnote_text = iut.get_footnote_text(data.footnotes, data.footnote_obj)
+	local function generate_link(data)
+		local link = m_links.full_link {
+			lang = lang, term = data.form.formval_for_link, tr = "-", accel = data.form.accel_obj
+		}
+		local footnote_text = iut.get_footnote_text(data.form.footnotes, data.footnote_obj)
 		local persnum = data.slot:match("^imp_(2[sp])$")
 		if persnum then
 			link = link .. " (" .. linked_pronouns[persnum_to_index[persnum]] .. ")"
@@ -1609,7 +1611,7 @@ local function show_forms(alternant_multiword_spec)
 	local props = {
 		lang = lang,
 		lemmas = lemmas,
-		format_formval = format_formval,
+		generate_link = generate_link,
 		join_spans = join_spans,
 	}
 	props.slot_list = verb_slots_basic
