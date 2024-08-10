@@ -2896,9 +2896,6 @@ local function parse_indicator_spec(angle_bracket_spec)
 			end
 			base.var = first_element:match("^var:(.*)$")
 		elseif first_element:find("^I+V?:") then
-			if #dot_separated_group > 1 then
-				parse_err(("Can't attach footnotes to root consonant spec '%s'"):format(first_element))
-			end
 			local root_cons, root_cons_value = first_element:match("^(I+V?):(.*)$")
 			local root_index
 			if root_cons == "I" then
@@ -2918,7 +2915,12 @@ local function parse_indicator_spec(angle_bracket_spec)
 			if not cons then
 				cons = root_cons_value
 			end
-			base.root_consonants[root_index] = {form = cons, translit = translit}
+			local root_footnotes = fetch_footnotes(dot_separated_group)
+			if not translit and not root_footnotes then
+				base.root_consonants[root_index] = cons
+			else
+				base.root_consonants[root_index] = {form = cons, translit = translit, footnotes = root_footnotes}
+			end
 		elseif first_element:find("^[a-z][a-z0-9_]*:") then
 			local slot_or_stem, remainder = first_element:match("^(.-):(.*)$")
 			dot_separated_group[1] = remainder
@@ -3094,7 +3096,7 @@ local function detect_indicator_spec(base)
 		-- strings.
 		local function fetch_radical(user_radical, inferred_radical, index)
 			if not user_radical then
-				return {form = regularize_inferred_radical(inferred_radical)}, {form = inferred_radical}
+				return regularize_inferred_radical(inferred_radical), inferred_radical
 			else
 				local allowed_radicals
 				if inferred_radical == "t" then
@@ -3102,16 +3104,17 @@ local function detect_indicator_spec(base)
 				elseif inferred_radical == "w" or inferred_radical == "y" then
 					allowed_radicals = {W, Y}
 				end
+				local rad_formval = rget(user_radical)
 				if allowed_radicals then
 					local allowed_radical_set = m_table.listToSet(allowed_radicals)
-					if not allowed_radical_set[user_radical.form] then
+					if not allowed_radical_set[rad_formval] then
 						error(("For lemma %s, radical %s ambiguously inferred as %s but user radical incompatibly given as %s"):
 						format(base.lemma, index,
-						m_table.serialCommaJoin(allowed_radicals, {conj = "or", dontTag = true}), user_radical.form))
+						m_table.serialCommaJoin(allowed_radicals, {conj = "or", dontTag = true}), rad_formval))
 					end
-				elseif user_radical.form ~= inferred_radical then
+				elseif rad_formval ~= inferred_radical then
 					error(("For lemma %s, radical %s inferred as %s but user radical incompatibly given as %s"):
-					format(base.lemma, index, inferred_radical, user_radical.form))
+					format(base.lemma, index, inferred_radical, rad_formval))
 				end
 				return user_radical, user_radical
 			end
@@ -3158,8 +3161,8 @@ local function detect_indicator_spec(base)
 		-- Error if radicals are wrong given the weakness. More likely to happen if the weakness is explicitly given
 		-- rather than inferred. Will also happen if certain incorrect letters are included as radicals e.g. hamza on
 		-- top of various letters, alif maqṣūra, tā' marbūṭa. FIXME: May not be necessary?
-		check_radicals(vform, weakness, vowel_spec.rad1.form, vowel_spec.rad2.form, vowel_spec.rad3.form,
-			quadlit and vowel_spec.rad4.form or nil)
+		check_radicals(vform, weakness, rget(vowel_spec.rad1), rget(vowel_spec.rad2), rget(vowel_spec.rad3),
+			quadlit and rget(vowel_spec.rad4) or nil)
 	end
 
 	-- Set value of passive. If not specified, default is yes, but no for forms VII, IX,
@@ -3351,7 +3354,8 @@ local function add_categories_and_annotation(alternant_multiword_spec, base, mul
 			return is_waw_ya(rad) or req(rad, HAMZA)
 		end
 	
-		local ur1, ur2, ur3, ur4 = vowel_spec.unreg_rad1, vowel_spec.unreg_rad2, vowel_spec.unreg_rad3, vowel_spec.unreg_rad4
+		local ur1, ur2, ur3, ur4 =
+			vowel_spec.unreg_rad1, vowel_spec.unreg_rad2, vowel_spec.unreg_rad3, vowel_spec.unreg_rad4
 		-- Create headword categories based on the radicals. Do the following before
 		-- converting the Latin radicals into Arabic ones so we distinguish
 		-- between ambiguous and non-ambiguous radicals.
@@ -3360,16 +3364,16 @@ local function add_categories_and_annotation(alternant_multiword_spec, base, mul
 			insert_cat("verbs with ambiguous radicals")
 		end
 		if radical_is_weak(ur1) then
-			insert_cat("form-" .. vform ..  " verbs with " .. ur1.form .. " as first radical")
+			insert_cat("form-" .. vform ..  " verbs with " .. rget(ur1) .. " as first radical")
 		end
 		if radical_is_weak(ur2) then
-			insert_cat("form-" .. vform ..  " verbs with " .. ur2.form .. " as second radical")
+			insert_cat("form-" .. vform ..  " verbs with " .. rget(ur2) .. " as second radical")
 		end
 		if radical_is_weak(ur3) then
-			insert_cat("form-" .. vform ..  " verbs with " .. ur3.form .. " as third radical")
+			insert_cat("form-" .. vform ..  " verbs with " .. rget(ur3) .. " as third radical")
 		end
 		if ur4 and radical_is_weak(ur4) then
-			insert_cat("form-" .. vform ..  " verbs with " .. ur4.form .. " as fourth radical")
+			insert_cat("form-" .. vform ..  " verbs with " .. rget(ur4) .. " as fourth radical")
 		end
 	end
 
