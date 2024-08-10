@@ -541,8 +541,9 @@ local built_in_conjugations = {
 		}
 	},
 	{
-		-- [[anar]]; highly irregular
+		-- [[anar]] (full verb); highly irregular
 		match = "^anar",
+		var = "full",
 		forms = {
 			fut = "anir",
 			pres_1s = "vaj", -- will be converted to 'vaig'; 'vaig' gets converted to 'vaic'
@@ -551,6 +552,29 @@ local built_in_conjugations = {
 			pres_3p = "van",
 			pres_sub_stressed = "vagi",
 			imp_2s = "ves",
+			irreg = true,
+		}
+	},
+	{
+		-- [[anar]] (auxiliary); highly irregular
+		match = "^anar",
+		var = "aux",
+		forms = {
+			pres_1s = "vaj", -- will be converted to 'vaig'; 'vaig' gets converted to 'vaic'
+			pres_2s = {"vas", "vares"},
+			pres_3s = "va",
+			pres_1p = {"vam", "vàrem"},
+			pres_2p = {"vau", "vàreu"},
+			pres_3p = {"van", "varen"},
+			pres_sub_stressed = "vagi",
+			pres_sub_unstressed = "vàgi",
+			impf1 = {},
+			impf2 = {},
+			fut = {},
+			pret = {},
+			pp = {},
+			gerund = {},
+			noimp = true,
 			irreg = true,
 		}
 	},
@@ -636,17 +660,8 @@ local built_in_conjugations = {
 		like = "valer",
 	},
 	{
-		-- [[coldre]], [[moldre]], [[absoldre]], [[dissoldre]], [[resoldre]], [[toldre]]
-		match = "oldre", -- this must follow [[doldre]]/[[oldre]] rule above
-		forms = {
-			-- see above for g_infix effects
-			g_infix = "+",
-			pp = "olt",
-		}
-	},
-	{
 		-- [[soler]]
-		match = "^soler",
+		match = "^soler", -- this must precede -oldre rule below for alt form [[soldre]]
 		forms = {
 			-- see above for g_infix effects
 			fut = {},
@@ -655,6 +670,20 @@ local built_in_conjugations = {
 			g_infix = "+",
 			pp = {},
 			noimp = true,
+		}
+	},
+	{
+		-- [[soldre]]
+		match = "^soldre", -- this must precede -oldre rule below
+		like = "soler",
+	},
+	{
+		-- [[coldre]], [[moldre]], [[absoldre]], [[dissoldre]], [[resoldre]], [[toldre]]
+		match = "oldre", -- this must follow [[doldre]]/[[oldre]] rule above
+		forms = {
+			-- see above for g_infix effects
+			g_infix = "+",
+			pp = "olt",
 		}
 	},
 	{
@@ -3121,8 +3150,16 @@ local function make_table(alternant_multiword_spec)
 	local forms = alternant_multiword_spec.forms
 
 	forms.title = link_term(alternant_multiword_spec.lemmas[1].form, nil, "term")
+	local ann_parts = {}
 	if alternant_multiword_spec.annotation ~= "" then
-		forms.title = forms.title .. " (" .. alternant_multiword_spec.annotation .. ")"
+		table.insert(ann_parts, alternant_multiword_spec.annotation)
+	end
+	if alternant_multiword_spec.args.titlenote then
+		table.insert(ann_parts, alternant_multiword_spec.args.titlenote)
+	end
+	local annotation = table.concat(ann_parts, ", ")
+	if annotation ~= "" then
+		forms.title = forms.title .. " (" .. annotation .. ")"
 	end
 	forms.description = ""
 
@@ -3168,7 +3205,7 @@ function export.do_generate_forms(args, source_template, headword_head)
 		verb_form_of_form = args.pagename
 		if not verb_form_of_form then
 			if PAGENAME == "ca-verb form of" and in_template_space() then
-				verb_form_of_form = "ame"
+				verb_form_of_form = "ami"
 			else
 				verb_form_of_form = PAGENAME
 			end
@@ -3255,6 +3292,7 @@ function export.show(frame)
 	local parent_args = frame:getParent().args
 	local params = {
 		[1] = {},
+		["titlenote"] = {},
 		["noautolinktext"] = {type = "boolean"},
 		["noautolinkverb"] = {type = "boolean"},
 		["pagename"] = {}, -- for testing/documentation pages
