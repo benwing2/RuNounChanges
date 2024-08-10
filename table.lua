@@ -425,17 +425,22 @@ end
 
 do
 	local function set_nested(a, b, c, ...)
-		if ... ~= nil then
-			a[c] = a[c] or {}
-			return set_nested(a[c], b, ...)
+		if ... == nil then
+			a[c] = b
+			return
 		end
-		a[c] = b
+		local t = a[c]
+		if t == nil then
+			t = {}
+			a[c] = t
+		end
+		return set_nested(t, b, ...)
 	end
 
 	--[==[
-	Given a table, value and an arbitrary number of keys, will successively access subtables using each key in turn, and sets the value at the final key. For example, if {t} is { {}}, {export.setNested(t, "foo", 1, 2, 3)} will modify {t} to { {[1] = {[2] = {[3] = "foo"}}}}.
+	Given a table, value and an arbitrary number of keys, will successively access subtables using each key in turn, and sets the value at the final key. For example, if {t} is { {} }, {export.setNested(t, "foo", 1, 2, 3)} will modify {t} to { {[1] = {[2] = {[3] = "foo"} } } }.
 
-	If no subtable exists for a given key value, one will be created, but will throw an error if a non-table value is found at an intermediary key.
+	If no subtable exists for a given key value, one will be created, but the function will throw an error if a non-table value is found at an intermediary key.
 
 	Note: the parameter order (table, value, keys) differs from functions like rawset, because the number of keys can be arbitrary. This is to avoid situations where an additional argument must be appended to arbitrary lists of variables, which can be awkward and error-prone: for example, when handling variable arguments ({{lua|...}}) or function return values.
 	]==]
