@@ -135,6 +135,11 @@ def ur_remove_accents(text):
   text = re.sub("[\u064B-\u0652]", "", text)
   return text
 
+def ie_remove_accents(text):
+  return unicodedata.normalize("NFC", unicodedata.normalize("NFD", text).
+    replace(ACUTE, "").replace(GRAVE, "").replace(CIRC, "")
+  )
+
 latin_charset = "\\- '’.,0-9A-Za-z¡-\u036FḀ-ỿ"
 cyrillic_charset = "Ѐ-џҊ-ԧꚀ-ꚗ"
 # Doesn't work due to surrogate chars.
@@ -199,6 +204,7 @@ language_codes_to_properties = {
     'hy':["Armenian", hy_remove_accents, "Ա-֏ﬓ-ﬗ", True],
     'ia':["Interlingua", lambda x:x, latin_charset, "latin"],
     'id':["Indonesian", lambda x:x, latin_charset, "latin"],
+    'ie':["Interlingue", ie_remove_accents, latin_charset, "latin"],
     'ilo':["Ilocano", phi_diaer_remove_accents, latin_charset, "latin"],
     'io':["Ido", lambda x:x, latin_charset, "latin"],
     'is':["Icelandic", lambda x:x, latin_charset, "latin"],
