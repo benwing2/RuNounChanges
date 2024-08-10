@@ -93,6 +93,7 @@ local ar_utilities = require("Module:ar-utilities")
 local ar_nominals = require("Module:ar-nominals")
 local iut = require("Module:inflection utilities")
 local parse_utilities_module = "Module:parse utilities"
+local pron_qualifier_module = "Module:pron qualifier"
 
 local rfind = m_string_utilities.find
 local rsubn = m_string_utilities.gsub
@@ -529,16 +530,52 @@ local function rsubb(term, foo, bar)
 	return retval, nsubs > 0
 end
 
+-- Concatenate one or more strings or form objects.
 local function q(...)
 	local not_all_strings = false
+	local has_manual_translit = false
 	for i = 1, select("#", ...) do
 		local argt = select(i, ...)
 		if type(argt) ~= "string" then
 			not_all_strings = true
-			break
+			if argt.translit then
+				has_manual_translit = true
+				break
+			end
 		end
 	end
-	...
+
+	if not not_all_strings then
+		-- just strings, concatenate directly
+		return table.concat({...})
+	end
+
+	local formvals = {}
+	local translit = has_manual_translit and {} or nil
+	local footnotes
+
+	for i = 1, select("#", ...) do
+		local argt = select(i, ...)
+		if type(argt) == "string" then
+			formvals[i] = argt
+			if has_manual_translit then
+				translit[i] = transliterate(argt)
+			end
+		else
+			formvals[i] = argt.form
+			if has_manual_translit then
+				translit[i] = argt.translit or transliterate(argt.form)
+			end
+			footnotes = iut.combine_footnotes(footnotes, argt.footnotes)
+		end
+	end
+
+	-- FIXME: Do we want to support other properties?
+	return {
+		form = table.concat(formvals),
+		translit = has_manual_translit and table.concat(translit) or nil,
+		footnotes = footnotes,
+	}
 end
 
 local function rget(rad)
@@ -566,17 +603,8 @@ local function is_final_weak(base, vowel_spec)
 	return vowel_spec.weakness == "final-weak" or base.form == "XV"
 end
 
--- FIXME
-local function link_term(term, display, face)
-	return m_links.full_link({ lang = lang, term = term, alt = display }, face)
-end
-
-local function links(text, face, id)
-	if text == "" or text == "?" or text == "&mdash;" or text == "—" then --mdash
-		return text
-	else
-		return m_links.full_link({lang = lang, term = text, tr = "-", id = id}, face)
-	end
+local function link_term(text, face, id)
+	return m_links.full_link({lang = lang, term = text, tr = "-", id = id}, face)
 end
 
 local function tag_text(text, tag, class)
@@ -3333,12 +3361,17 @@ local function compute_categories_and_annotation(alternant_multiword_spec)
 	ann.defective = {}
 
 	local multiword_lemma = false
-	for _, form in ipairs(alternant_multiword_spec.forms.infinitive) do
-		if form.form:find(" ") then
-			multiword_lemma = true
-			break
-		end
-	end
+    for _, slot in ipairs(potential_lemma_slots) do
+        if alternant_multiword_spec.forms[slot] then
+            for _, formobj in ipairs(alternant_multiword_spec.forms[slot]) do
+				if formobj.form:find(" ") then
+					multiword_lemma = true
+					break
+				end
+            end 
+            break
+        end
+    end 
 
 	local function insert_ann(anntype, value)
 		m_table.insertIfNot(alternant_multiword_spec.annotation[anntype], value)
@@ -3443,6 +3476,7 @@ local function show_forms(alternant_multiword_spec)
     end 
 
 	alternant_multiword_spec.lemmas = lemmas -- save for later use in make_table()
+	alternant_multiword_spec.vn = alternant_multiword_spec.forms.vn -- save for later use in make_table()
 
 	local reconstructed_verb_spec = export.reconstruct_verb_spec(alternant_multiword_spec)
 
@@ -3454,14 +3488,22 @@ local function show_forms(alternant_multiword_spec)
 	end
 
 	local function generate_link(data)
-		link = link or m_links.full_link {
-			lang = props.lang, term = form.formval_for_link, tr = "-", accel = form.accel_obj
-		}
-						link = props.generate_link {
-							slot = slot,
-							form = form,
-							footnote_obj = footnote_obj,
-						}
+		local form = data.form
+		local link = m_links.full_link {
+			lang = lang, term = form.formval_for_link, tr = "-", accel = form.accel_obj,
+			alt = form.alt, gloss = form.gloss, genders = form.genders, pos = form.pos, lit = form.lit, id = form.id,
+		} .. iut.get_footnote_text(form.footnotes, data.footnote_obj)
+		if form.q and form.q[1] or form.qq and form.qq[1] or form.l and form.l[1] or form.ll and form.ll[1] then
+			link = require(pron_qualifier_module).format_qualifiers {
+				lang = lang,
+				text = link,
+				q = form.q,
+				qq = form.qq,
+				l = form.l,
+				ll = form.ll,
+			}
+		end
+		return link
 	end
 
 	local props = {
@@ -3481,75 +3523,7 @@ end
 -------------------------------------------------------------------------------
 
 -- Make the conjugation table. Called from export.show().
-local function make_table(base, title, form, intrans)
-	local forms = base.forms
-	local arabic_spans_3sm_perf, _
-	if base.passive == "only" or base.passive == "only-impers" then
-		arabic_spans_3sm_perf, _ = get_spans(forms["past_pass_3ms"])
-	else
-		arabic_spans_3sm_perf, _ = get_spans(forms["past_3ms"])
-	end
-	-- convert Arabic terms to spans
-	for i, entry in ipairs(arabic_spans_3sm_perf) do
-		arabic_spans_3sm_perf[i] = "<b lang=\"ar\" class=\"Arab\">" .. entry .. "</b>"
-	end
-	-- concatenate spans
-	local part_3sm_perf = '<div style="display: inline-block">' ..
-		table.concat(arabic_spans_3sm_perf, " <small style=\"color: #888\">or</small> ") .. "</div>"
-
-	-- compute # of verbal nouns before we collapse them
-	local num_vns = type(forms["vn"]) == "table" and #forms["vn"] or 1
-
-	-- also extract list of verbal nouns and preceding text "verbal noun" or
-	-- "verbal nouns", for the conjugation table title
-	local vn_spans, _ = get_spans(forms["vn"])
-	-- convert verbal nouns to spans
-	for i, entry in ipairs(vn_spans) do
-		vn_spans[i] = '<span lang="ar" class="Arab" style="font-weight: normal">' .. entry .. '</span>'
-	end
-	local vn_list = #vn_spans == 0 and "?" or
-		table.concat(vn_spans, " <small style=\"color: #888\">or</small> ")
-	local vn_prefix = #vn_spans > 1 and "verbal nouns" or "verbal noun"
-	local vn_text = vn_prefix .. " " .. vn_list
-
-	-- construct conjugation table title
-	local title = 'Conjugation of ' .. part_3sm_perf
-		.. (form == "I" and " (" .. title .. ", " .. vn_text .. ")" or " (" .. title .. ")")
-
-	-- Format and add transliterations to all parts
-	for key, part in pairs(forms) do
-		-- check for empty array, size-one array holding a dash or ?
-		if #part > 0 then
-			local arabic_spans, latin_spans = get_spans(part)
-			-- convert Arabic terms to links
-			for i, entry in ipairs(arabic_spans) do
-				local id
-				if part.ids then
-					id = part.ids[i]
-				end
-				
-				arabic_spans[i] = links(entry, nil, id)
-			end
-			
-			for i, translit in ipairs(latin_spans) do
-				latin_spans[i] = require("Module:script utilities").tag_translit(translit, lang, "default")
-			end
-			
-			-- concatenate spans
-			forms[key] = '<div style="display: inline-block">' .. table.concat(arabic_spans, " <small style=\"color: #888\">or</small> ") .. "</div>" .. "<br/>" ..
-				"<span style=\"color: #888\">" .. table.concat(latin_spans, " <small>or</small> ") .. "</span>"
-		-- if no verbal nouns, it's normally because they're unknown or
-		-- unspecified rather than non-existent. For an actually non-existent
-		-- verbal noun, put a hyphen or mdash explicitly as the value of the
-		-- paradigm part, and it will be handled appropriately (no attempt to
-		-- transliterate).
-		elseif key == "vn" then
-			forms[key] = "?"
-		else
-			forms[key] = "—"
-		end
-	end
-
+local function make_table(alternant_multiword_spec)
 	local notes_template = [=[
 <div style="width:100%;text-align:left;background:#d9ebff">
 <div style="display:inline-block;text-align:left;padding-left:1em;padding-right:1em">
@@ -3559,7 +3533,7 @@ local function make_table(base, title, form, intrans)
 
 	local text = [=[
 <div class="NavFrame ar-conj">
-<div class="NavHead" style="height:2.5em">]=] .. title  .. [=[</div>
+<div class="NavHead" style="height:2.5em">&nbsp; &nbsp; Conjugation of {title}</div>
 <div class="NavContent">
 
 {\op}| class="inflection-table"
@@ -3796,11 +3770,32 @@ local function make_table(base, title, form, intrans)
 
 	local forms = alternant_multiword_spec.forms
 
-	forms.title = link_term(alternant_multiword_spec.lemmas[1].form, nil, "term")
-	if alternant_multiword_spec.annotation ~= "" then
-		forms.title = forms.title .. " (" .. alternant_multiword_spec.annotation .. ")"
+	if not alternant_multiword_spec.lemmas then
+		forms.title = "—"
+	else
+		local linked_lemmas = {}
+		for _, form in ipairs(alternant_multiword_spec.lemmas) do
+			table.insert(linked_lemmas, link_term(form.form, "term"))
+		end
+		forms.title = table.concat(linked_lemmas, ", ")
 	end
-	forms.description = ""
+
+	local ann_parts = {}
+	if alternant_multiword_spec.annotation ~= "" then
+		table.insert(ann_parts, alternant_multiword_spec.annotation)
+	end
+	if alternant_multiword_spec.vn then
+		local linked_vns = {}
+		for _, form in ipairs(alternant_multiword_spec.vn) do
+			table.insert(linked_vns, link_term(form.form, "term"))
+		end
+		table.insert(ann_parts, (#linked_vns > 1 and "verbal nouns" or "verbal noun") .. " " ..
+			table.concat(linked_vns, ", "))
+	end
+	local annotation = table.concat(ann_parts, ", ")
+	if annotation ~= "" then
+		forms.title = forms.title .. " (" .. annotation .. ")"
+	end
 
 	-- Format the table.
 	forms.footnote = alternant_multiword_spec.footnote_basic
@@ -4125,7 +4120,7 @@ function export.headword(frame)
 
 	-- convert Arabic terms to bolded links
 	for i, entry in ipairs(impf_arabic) do
-		impf_arabic[i] = links(entry, "bold")
+		impf_arabic[i] = link_term(entry, "bold")
 	end
 	-- create non-past text by concatenating Arabic spans and adding
 	-- transliteration, but only if we can do it non-ambiguously (either we're
