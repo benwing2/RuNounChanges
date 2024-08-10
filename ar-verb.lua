@@ -3,7 +3,7 @@
 This module implements {{ar-conj}} and provides the underlying conjugation functions for {{ar-verb}}
 (whose actual formatting is done in [[Module:ar-headword]]).
 
-Author: User:Benwing, from early version by User:Atitarev, User:ZxxZxxZ
+Author: User:Benwing, from an early version (2013-2014) by User:Atitarev, User:ZxxZxxZ.
 
 ]=]
 
@@ -14,13 +14,13 @@ local export = {}
 TERMINOLOGY:
 
 -- "slot" = A particular combination of tense/mood/person/number/etc.
-	 Example slot names for verbs are "pres_1s" (present indicative first-person singular), "pres_sub_2s" (present
-	 subjunctive second-person singular) "impf_sub_3p" (imperfect subjunctive third-person plural).
-	 Each slot is filled with zero or more forms.
+	 Example slot names for verbs are "past_1s" (past tense first-person singular), "juss_pass_3fp" (non-past jussive
+	 passive third-person feminine plural) "ap" (active participle). Each slot is filled with zero or more forms.
 
 -- "form" = The conjugated Arabic form representing the value of a given slot.
 
--- "lemma" = The dictionary form of a given Arabic term. For Arabic, the third person masculine singular past.
+-- "lemma" = The dictionary form of a given Arabic term. For Arabic, normally the third person masculine singular past,
+	 although other forms may be used if this form is missing (e.g. in passive-only verbs or verbs lacking the past).
 ]=]
 
 --[=[
@@ -53,6 +53,7 @@ FIXME:
       Wehr).
 3. Implement individual override parameters for each paradigm part. See Module:fro-verb for an example of how to do this
    generally. Note that {{temp|ar-conj-I}} and other of the older templates already had such individual override params.
+   [DONE]
 
 Irregular verbs already implemented:
 
@@ -311,14 +312,25 @@ local indicator_flags = m_table.listToSet {
 	"noimp", "no_nonpast",
 }
 
+local potential_lemma_slots = {"past_3ms", "past_pass_3ms", "ind_3ms", "ind_pass_3ms", "imp_2ms"}
+
+local unsettable_slots = {}
+for _, potential_lemma_slot in ipairs(potential_lemma_slots) do
+	table.insert(unsettable_slots, potential_lemma_slot .. "_linked")
+end
+table.insert(unsettable_slots, "vn2") -- secondary default for form III verbal nouns
+local unsettable_slots_set = m_table.listToSet(unsettable_slots)
+
 -- Initialize all the slots for which we generate forms.
 local function add_slots(alternant_multiword_spec)
 	alternant_multiword_spec.verb_slots = {
-		{"past_3ms_linked", "3|m|s|past"},
 		{"ap", "act|part"},
 		{"pp", "pass|part"},
 		{"vn", "vnoun"},
 	}
+	for _, unsettable_slot in ipairs(unsettable_slots) do
+		table.insert(alternant_multiword_spec.verb_slots, {unsettable_slot, "-"})
+	end
 
 	-- Add entries for a slot with person/number variants.
 	-- `slot_prefix` is the prefix of the slot, typically specifying the tense/aspect.
@@ -432,6 +444,14 @@ local function allow_multiple_values_for_override(comma_separated_groups, data, 
 			retval.footnotes = data.fetch_footnotes(comma_separated_group)
 		end
 		table.insert(retvals, retval)
+	end
+	for _, form in ipairs(retvals) do
+		if form.form == "+" or form.form == "++" then
+			if not is_slot_override then
+				error(("Stem override '%s' cannot use + or ++ to request a default"):format(data.prefix))
+			end
+			data.base.slot_uses_default[data.prefix] = true
+		end
 	end
 	for _, form in ipairs(retvals) do
 		if form.form == "-" then
@@ -804,7 +824,7 @@ local ind_endings = make_nonpast_endings(
 )
 
 -- Make the endings for non-past subjunctive/jussive, given the vowel diacritic used in "null" endings
--- (1s/2sm/3sm/3sf/1p).
+-- (1s/2ms/3ms/3fs/1p).
 local function make_sub_juss_endings(dia_null)
 	return make_nonpast_endings(
 	dia_null,
@@ -938,8 +958,8 @@ local function skip_slot(base, slot, allow_overrides)
 	if base.slot_explicitly_missing[slot] then
 		return true
 	end
-	if not allow_overrides and base.slot_overrides[slot] then
-		-- Skip any slots for which there are overrides.
+	if not allow_overrides and base.slot_overrides[slot] and not base.slot_uses_default[slot] then
+		-- Skip any slots for which there are overrides, except those that request the default value using + or ++.
 		return true
 	end
 
@@ -993,8 +1013,8 @@ local function add3(base, slot, prefixes, stems, endings, footnotes, allow_overr
 	end
 end
 
-local function insert_form(base, slot, form)
-	if not skip_slot(base, slot) then
+local function insert_form(base, slot, form, allow_overrides)
+	if not skip_slot(base, slot, allow_overrides) then
 		if type(form) == "string" then
 			form = {form = form}
 		end
@@ -1002,8 +1022,8 @@ local function insert_form(base, slot, form)
 	end
 end
 
-local function insert_forms(base, slot, forms)
-	if not skip_slot(base, slot) then
+local function insert_forms(base, slot, forms, allow_overrides)
+	if not skip_slot(base, slot, allow_overrides) then
 		iut.insert_forms(base.forms, slot, forms)
 	end
 end
@@ -1114,10 +1134,6 @@ end
 -- Like inflect_tense() but for the imperative, which has only five parts instead of 13 and no prefixes.
 local function inflect_tense_imp(base, stems, endings, footnotes)
 	inflect_tense_1(base, "imp", "", stems, endings, imp_person_number_list, footnotes)
-end
-
-local function insert_verbal_noun(base, vn)
-	insert_form(base, "vn", vn)
 end
 
 -------------------------------------------------------------------------------
@@ -1348,7 +1364,7 @@ end
 -- * `vn` (verbal noun).
 local function make_augmented_sound_final_weak_verb(base, vowel_spec, past_stem_base, nonpast_stem_base,
 	past_pass_stem_base, vn)
-	insert_verbal_noun(base, vn)
+	insert_form(base, "vn", vn)
 
 	local rad3 = vowel_spec.rad3
 	local final_weak = is_final_weak(base, vowel_spec)
@@ -1421,7 +1437,7 @@ end
 -- * `past_pass_stem_base` (invariable part of passive past stem);
 -- * `vn` (verbal noun).
 local function make_augmented_hollow_verb(base, vowel_spec, past_stem_base, nonpast_stem_base, past_pass_stem_base, vn)
-	insert_verbal_noun(base, vn)
+	insert_form(base, "vn", vn)
 
 	local rad3 = vowel_spec.rad3
 	local form410 = base.verb_form == "IV" or base.verb_form == "X"
@@ -1472,7 +1488,7 @@ end
 -- * `vn` (verbal noun).
 local function make_augmented_geminate_verb(base, vowel_spec, past_stem_base, nonpast_stem_base, past_pass_stem_base,
 		vn)
-	insert_verbal_noun(base, vn)
+	insert_form(base, "vn", vn)
 
 	local vform = base.verb_form
 	local rad3 = vowel_spec.rad3
@@ -1842,8 +1858,7 @@ local function make_form_iii_vi_sound_final_weak_verb(base, vowel_spec)
 	local vform = base.verb_form
 	local vn = vform == "VI" and
 		q(TA, rad1, AA, rad2, final_weak and IN or q(U, rad3, UNS)) or
-		{q(MU, rad1, AA, rad2, final_weak and AAH or q(A, rad3, AH), UNS),
-			q(rad1, I, rad2, AA, final_weak and HAMZA or rad3, UNS)}
+		q(MU, rad1, AA, rad2, final_weak and AAH or q(A, rad3, AH), UNS)
 	local ta_pref = vform == "VI" and TA or ""
 	local tu_pref = vform == "VI" and TU or ""
 
@@ -1854,6 +1869,12 @@ local function make_form_iii_vi_sound_final_weak_verb(base, vowel_spec)
 
 	-- make parts
 	make_augmented_sound_final_weak_verb(base, vowel_spec, past_stem_base, nonpast_stem_base, past_pass_stem_base, vn)
+	if vform == "III" then
+		-- Insert alternative verbal noun فِعَال. Since not all verbs have this, we require that verbs that do have it
+		-- specify it explicitly; a shortcut ++ is provided to make this easier (e.g. <vn:+,++> to indicate that both
+		-- the normal verbal noun مُفَاعَلَة and secondary verbal noun فِعَال are available).
+		insert_form(base, "vn2", q(rad1, I, rad2, AA, final_weak and HAMZA or rad3, UNS))
+	end
 end
 
 conjugations["III-sound"] = function(base, vowel_spec)
@@ -1864,23 +1885,23 @@ conjugations["III-final-weak"] = function(base, vowel_spec)
 	make_form_iii_vi_sound_final_weak_verb(base, vowel_spec)
 end
 
--- Make form III or VI geminate verb. FORM distinguishes III from VI.
+-- Make form III or VI geminate verb.
 local function make_form_iii_vi_geminate_verb(base, vowel_spec)
 	local rad1, rad2, rad3 = get_radicals_3(vowel_spec)
 	local vform = base.verb_form
-	-- alternative verbal noun فِعَالٌ will be inserted when we add sound parts below
+	-- Alternative verbal noun فِعَال will be inserted when we add sound parts below.
 	local vn = vform == "VI" and
 		{q(TA, rad1, AA, rad2, SH, UNS)} or
 		{q(MU, rad1, AA, rad2, SH, AH, UNS)}
 	local ta_pref = vform == "VI" and TA or ""
 	local tu_pref = vform == "VI" and TU or ""
 
-	-- various stem bases
+	-- Various stem bases.
 	local past_stem_base = q(ta_pref, rad1, AA)
 	local nonpast_stem_base = past_stem_base
 	local past_pass_stem_base = q(tu_pref, rad1, UU)
 
-	-- make parts
+	-- Make parts.
 	make_augmented_geminate_verb(base, vowel_spec, past_stem_base, nonpast_stem_base, past_pass_stem_base, vn)
 
 	-- Also add alternative sound (non-compressed) parts. This will lead to some duplicate entries, but they are removed
@@ -1892,8 +1913,7 @@ conjugations["III-geminate"] = function(base, vowel_spec)
 	make_form_iii_vi_geminate_verb(base, vowel_spec)
 end
 
--- Make form IV sound or final-weak verb. Final-weak verbs are identified
--- by RAD3 = nil.
+-- Make form IV sound or final-weak verb.
 local function make_form_iv_sound_final_weak_verb(base, vowel_spec)
 	local rad1, rad2, rad3 = get_radicals_3(vowel_spec)
 	local final_weak = is_final_weak(base, vowel_spec)
@@ -2574,17 +2594,44 @@ local function postprocess_forms(base)
 end
 
 local function process_slot_overrides(base)
-	for slot, forms in pairs(base.overrides) do
-		add3(base, slot, forms, "", nil, "allow overrides")
+	for slot, forms in pairs(base.slot_overrides) do
+		local existing_values = base.forms[slot]
+		base.forms[slot] = nil
+		for _, form in ipairs(forms) do
+			if form.form == "+" then
+				if not existing_values then
+					error(("Slot '%s' requested the default value but no such value available"):format(slot))
+				end
+				-- We maintain an invariant that no two slots share a form object (although they may share the footnote
+				-- lists inside the form objects). However, there is no need to copy the form objects here because there
+				-- is a one-to-one correspondence between slots and slot overrides, i.e. you can't have a default value
+				-- go into two slots.
+				insert_forms(base, slot, existing_values, "allow overrides")
+			elseif form.form == "++" then
+				if slot ~= "vn" then
+					error(("Secondary default value request '++' only applicable to verbal nouns, but found in slot '%s'"):
+					format(slot))
+				end
+				local existing_values = base.forms.vn2
+				if not existing_values then
+					error(("Slot '%s' requested the secondary default value but no such value available"):format(slot))
+				end
+				-- See comment above about the lack of need to copy the form objects.
+				insert_forms(base, slot, existing_values, "allow overrides")
+				-- To make sure there aren't shared form objects.
+				base.forms.vn2 = nil
+			else
+				insert_form(base, slot, form, "allow overrides")
+			end
+		end
 	end
 end
 
 
 local function handle_lemma_linked(base)
-	-- Compute linked versions of potential lemma slots, for use in {{ca-verb}}.
-	-- We substitute the original lemma (before removing links) for forms that
-	-- are the same as the lemma, if the original lemma has links.
-	for _, slot in ipairs({"infinitive"}) do
+	-- Compute linked versions of potential lemma slots, for use in {{ar-verb}}. We substitute the original lemma
+	-- (before removing links) for forms that are the same as the lemma, if the original lemma has links.
+	for _, slot in ipairs(potential_lemma_slots) do
 		insert_forms(base, slot .. "_linked", iut.map_forms(base.forms[slot], function(form)
 			if form == base.lemma and rfind(base.linked_lemma, "%[%[") then
 				return base.linked_lemma
@@ -2646,8 +2693,8 @@ local function conjugate_verb(base)
 	end
 	postprocess_forms(base)
 	process_slot_overrides(base)
-	-- This should happen before add_missing_links_to_forms() so that the comparison `form == base.lemma`
-	-- in handle_infinitive_linked() works correctly and compares unlinked forms to unlinked forms.
+	-- This should happen before add_missing_links_to_forms() so that the comparison `form == base.lemma` in
+	-- handle_lemma_linked() works correctly and compares unlinked forms to unlinked forms.
 	handle_lemma_linked(base)
 	process_addnote_specs(base)
 	if not base.alternant_multiword_spec.args.noautolinkverb then
@@ -2665,6 +2712,7 @@ local function parse_indicator_spec(angle_bracket_spec)
 		user_stem_overrides = {},
 		user_slot_overrides = {},
 		slot_explicitly_missing = {},
+		slot_uses_default = {},
 		addnote_specs = {},
 	}
 	local function parse_err(msg)
@@ -2847,71 +2895,16 @@ local function parse_indicator_spec(angle_bracket_spec)
 end
 
 
--- Reconstruct the overall verb spec from the output of iut.parse_inflected_text(), so we can use it in
--- [[Module:accel/ca]].
-function export.reconstruct_verb_spec(alternant_multiword_spec)
-	local parts = {}
-
-	for _, alternant_or_word_spec in ipairs(alternant_multiword_spec.alternant_or_word_specs) do
-		table.insert(parts, alternant_or_word_spec.user_specified_before_text)
-		if alternant_or_word_spec.alternants then
-			table.insert(parts, "((")
-			for i, multiword_spec in ipairs(alternant_or_word_spec.alternants) do
-				if i > 1 then
-					table.insert(parts, ",")
-				end
-				for _, word_spec in ipairs(multiword_spec.word_specs) do
-					table.insert(parts, word_spec.user_specified_before_text)
-					table.insert(parts, word_spec.user_specified_lemma)
-					table.insert(parts, word_spec.angle_bracket_spec)
-				end
-				table.insert(parts, multiword_spec.user_specified_post_text)
-			end
-			table.insert(parts, "))")
-		else
-			table.insert(parts, alternant_or_word_spec.user_specified_lemma)
-			table.insert(parts, alternant_or_word_spec.angle_bracket_spec)
-		end
-	end
-	table.insert(parts, alternant_multiword_spec.user_specified_post_text)
-
-	-- As a special case, if we see e.g. "amar<>", remove the <>. Don't do this if there are spaces or alternants.
-	local retval = table.concat(parts)
-	if not retval:find(" ") and not retval:find("%(%(") then
-		local retval_no_angle_brackets = retval:match("^(.*)<>$")
-		if retval_no_angle_brackets then
-			return retval_no_angle_brackets
-		end
-	end
-	return retval
-end
-
-
 -- Normalize all lemmas, substituting the pagename for blank lemmas and adding links to multiword lemmas.
 local function normalize_all_lemmas(alternant_multiword_spec, head)
 
 	-- (1) Add links to all before and after text. Remember the original text so we can reconstruct the verb spec later.
 	if not alternant_multiword_spec.args.noautolinktext then
-		for _, alternant_or_word_spec in ipairs(alternant_multiword_spec.alternant_or_word_specs) do
-			alternant_or_word_spec.user_specified_before_text = alternant_or_word_spec.before_text
-			alternant_or_word_spec.before_text = com.add_links(alternant_or_word_spec.before_text)
-			if alternant_or_word_spec.alternants then
-				for _, multiword_spec in ipairs(alternant_or_word_spec.alternants) do
-					for _, word_spec in ipairs(multiword_spec.word_specs) do
-						word_spec.user_specified_before_text = word_spec.before_text
-						word_spec.before_text = com.add_links(word_spec.before_text)
-					end
-					multiword_spec.user_specified_post_text = multiword_spec.post_text
-					multiword_spec.post_text = com.add_links(multiword_spec.post_text)
-				end
-			end
-		end
-		alternant_multiword_spec.user_specified_post_text = alternant_multiword_spec.post_text
-		alternant_multiword_spec.post_text = com.add_links(alternant_multiword_spec.post_text)
+		iut.add_links_to_before_and_after_text(alternant_multiword_spec, "remember original")
 	end
 
-	-- (2) Remove any links from the lemma, but remember the original form
-	--     so we can use it below in the 'lemma_linked' form.
+	-- (2) Remove any links from the lemma, but remember the original form so we can use it below in the 'lemma_linked'
+	--     form.
 	iut.map_word_specs(alternant_multiword_spec, function(base)
 		if base.lemma == "" then
 			base.lemma = head
@@ -2930,7 +2923,7 @@ local function normalize_all_lemmas(alternant_multiword_spec, head)
 			-- Add links to the lemma so the user doesn't specifically need to, since we preserve
 			-- links in multiword lemmas and include links in non-lemma forms rather than allowing
 			-- the entire form to be a link.
-			linked_lemma = com.add_links(base.user_specified_lemma)
+			linked_lemma = iut.add_links(base.user_specified_lemma)
 		end
 		base.linked_lemma = linked_lemma
 	end)
@@ -3130,6 +3123,9 @@ local function detect_indicator_spec(base)
 		if not base.alternant_multiword_spec.verb_slots_map[slot] then
 			error("Unrecognized override slot '" .. slot .. "': " .. base.angle_bracket_spec)
 		end
+		if unsettable_slots_set[slot] then
+			error("Slot '" .. slot .. "' cannot be set using an override: " .. base.angle_bracket_spec)
+		end
 		if skip_slot(base, slot, "allow overrides") then
 			error("Override slot '" .. slot ..
 				"' would be skipped based on the passive, 'noimp' and/or 'no_nonpast' settings: " ..
@@ -3180,6 +3176,13 @@ local function detect_all_indicator_specs(alternant_multiword_spec)
 	end)
 end
 
+-- Copy default slots (active participle, passive participle, verbal noun) when overrides not provided or when an
+-- override is given with the value of + or ++.
+local function copy_default_slots(alternant_multiword_spec)
+	if not alternant_multiword_spec.forms.ap and not alternant_multiword_spec.slot_explicitly_missing.ap then
+	end
+end
+
 
 -- Determine certain properties of the verb from the overall forms, such as whether the verb is active-only or
 -- passive-only, is impersonal, lacks an imperative, etc.
@@ -3217,11 +3220,7 @@ local function determine_verb_properties_from_forms(alternant_multiword_spec)
 end
 
 
-local function add_categories_and_annotation(alternant_multiword_spec, base, multiword_lemma, insert_cat)
-	local function insert_ann(anntype, value)
-		m_table.insertIfNot(alternant_multiword_spec.annotation[anntype], value)
-	end
-
+local function add_categories_and_annotation(alternant_multiword_spec, base, multiword_lemma, insert_ann, insert_cat)
 	if check_for_red_links and alternant_multiword_spec.source_template == "ar-conj" and multiword_lemma then
 		for _, slot_and_accel in ipairs(alternant_multiword_spec.verb_slots) do
 			local slot = slot_and_accel[1]
@@ -3310,6 +3309,13 @@ local function add_categories_and_annotation(alternant_multiword_spec, base, mul
 	if radical_is_weak(ur4) then
 		insert_cat("form-" .. vform ..  " verbs with " .. ur4.form .. " as fourth radical")
 	end
+
+	if base.irregular then
+		insert_ann("irreg", "irregular")
+		insert_cat("irregular verbs")
+	else
+		insert_ann("irreg", "regular")
+	end
 end
 
 
@@ -3334,6 +3340,10 @@ local function compute_categories_and_annotation(alternant_multiword_spec)
 		end
 	end
 
+	local function insert_ann(anntype, value)
+		m_table.insertIfNot(alternant_multiword_spec.annotation[anntype], value)
+	end
+
 	local function insert_cat(cat, also_when_multiword)
 		-- Don't place multiword terms in categories like 'Arabic form-II verbs' to avoid spamming the categories with
 		-- such terms.
@@ -3343,12 +3353,8 @@ local function compute_categories_and_annotation(alternant_multiword_spec)
 	end
 
 	iut.map_word_specs(alternant_multiword_spec, function(base)
-		add_categories_and_annotation(alternant_multiword_spec, base, multiword_lemma, insert_cat)
+		add_categories_and_annotation(alternant_multiword_spec, base, multiword_lemma, insert_ann, insert_cat)
 	end)
-
-	if base.noimp then
-		insert_cat("verbs lacking imperative forms")
-	end
 
 	if alternant_multiword_spec.forms.vn then
 		for _, form in ipairs(alternant_multiword_spec.forms.vn) do
@@ -3392,47 +3398,50 @@ local function compute_categories_and_annotation(alternant_multiword_spec)
 		ann.passive = ann.passive .. ' <abbr title="passive status uncertain">(?)</abbr>'
 	end
 
-	if base.output_stems.irreg then
-		insert_ann("irreg", "irregular")
-		insert_cat("irregular verbs")
-	else
-		insert_ann("irreg", "regular")
+	if alternant_multiword_spec.has_active and not alternant_multiword_spec.has_imp then
+		insert_ann("defective", "no imperative")
+		insert_cat("verbs lacking imperative forms")
+	end
+	if not alternant_multiword_spec.has_past then
+		insert_ann("defective", "no past")
+		insert_cat("verbs lacking past forms")
+	end
+	if not alternant_multiword_spec.has_nonpast then
+		insert_ann("defective", "no non-past")
+		insert_cat("verbs lacking non-past forms")
 	end
 
-	if base.only3s then
-		insert_ann("defective", "impersonal")
-		insert_cat("impersonal verbs")
-	elseif base.only3sp then
-		insert_ann("defective", "third-person only")
-		insert_cat("third-person-only verbs")
-	elseif base.only3p then
-		insert_ann("defective", "third-person plural only")
-		insert_cat("third-person-plural-only verbs")
-	elseif base.no_pres_stressed then
-		insert_ann("defective", "defective")
-		insert_cat("defective verbs")
-	else
-		insert_ann("defective", "regular")
-	end
 	local ann_parts = {}
-	local conj = table.concat(ann.conj, " or ")
-	if conj ~= "" then
-		table.insert(ann_parts, conj)
+	local function insert_ann_part(part)
+		local val = table.concat(ann[part], " or ")
+		if val ~= "" then
+			table.insert(ann_parts, val)
+		end
 	end
-	local irreg = table.concat(ann.irreg, " or ")
-	if irreg ~= "" and irreg ~= "regular" then
-		table.insert(ann_parts, irreg)
+
+	insert_ann_part("form")
+	insert_ann_part("weakness")
+	insert_ann_part("vowels")
+	if ann.passive then
+		table.insert(ann_parts, ann.passive)
 	end
-	local defective = table.concat(ann.defective, " or ")
-	if defective ~= "" and defective ~= "regular" then
-		table.insert(ann_parts, defective)
-	end
+	insert_ann_part("irreg")
+	insert_ann_part("defective")
 	alternant_multiword_spec.annotation = table.concat(ann_parts, ", ")
 end
 
 
 local function show_forms(alternant_multiword_spec)
-	local lemmas = alternant_multiword_spec.forms.infinitive
+    local lemmas = {}
+    for _, slot in ipairs(potential_lemma_slots) do
+        if alternant_multiword_spec.forms[slot] then
+            for _, formobj in ipairs(alternant_multiword_spec.forms[slot]) do
+                table.insert(lemmas, formobj)
+            end 
+            break
+        end
+    end 
+
 	alternant_multiword_spec.lemmas = lemmas -- save for later use in make_table()
 
 	local reconstructed_verb_spec = export.reconstruct_verb_spec(alternant_multiword_spec)
@@ -3470,23 +3479,6 @@ end
 -------------------------------------------------------------------------------
 --                    Functions to create inflection tables                  --
 -------------------------------------------------------------------------------
-
-local function make_table(alternant_multiword_spec)
-	local forms = alternant_multiword_spec.forms
-
-	forms.title = link_term(alternant_multiword_spec.lemmas[1].form, nil, "term")
-	if alternant_multiword_spec.annotation ~= "" then
-		forms.title = forms.title .. " (" .. alternant_multiword_spec.annotation .. ")"
-	end
-	forms.description = ""
-
-	-- Format the table.
-	forms.footnote = alternant_multiword_spec.footnote_basic
-	forms.notes_clause = forms.footnote ~= "" and m_string_utilities.format(notes_template, forms) or ""
-	local table_with_pronouns = rsub(basic_table, "<<([^<>|]-)|([^<>|]-)>>", link_term)
-	local table_with_pronouns = rsub(table_with_pronouns, "<<(.-)>>", link_term)
-	return m_string_utilities.format(table_with_pronouns, forms)
-end
 
 -- Make the conjugation table. Called from export.show().
 local function make_table(base, title, form, intrans)
@@ -3861,10 +3853,10 @@ function export.do_generate_forms(args, source_template, headword_head)
 		return mw.title.getCurrentTitle().nsText == "Template"
 	end
 
-	-- Determine the verb spec we're being asked to generate the conjugation of. This may be taken from the
-	-- current page title or the value of |pagename=; but not when called from {{ar-verb form of}}, where the
-	-- page title is a non-lemma form. Note that the verb spec may omit the infinitive; e.g. it may be "<II>".
-	-- For this reason, we use the value of `pagename` computed here down below, when calling normalize_all_lemmas().
+	-- Determine the verb spec we're being asked to generate the conjugation of. This may be taken from the current page
+	-- title or the value of |pagename=; but not when called from {{ar-verb form of}}, where the page title is a
+	-- non-lemma form. Note that the verb spec may omit the lemma; e.g. it may be "<II>". For this reason, we use the
+	-- value of `pagename` computed here down below, when calling normalize_all_lemmas().
 	local pagename = source_template ~= "ar-verb form of" and args.pagename or PAGENAME
 	local head = headword_head or pagename
 	local arg1 = args[1]
@@ -3898,18 +3890,18 @@ function export.do_generate_forms(args, source_template, headword_head)
 			-- Try to preserve the brackets in the part after the verb, but don't do it
 			-- if there aren't the same number of left and right brackets in the verb
 			-- (which means the verb was linked as part of a larger expression).
-			local refl_clitic_verb, post = rmatch(head, "^(.-)( .*)$")
-			local left_brackets = rsub(refl_clitic_verb, "[^%[]", "")
-			local right_brackets = rsub(refl_clitic_verb, "[^%]]", "")
+			local first_word, post = rmatch(head, "^(.-)( .*)$")
+			local left_brackets = rsub(first_word, "[^%[]", "")
+			local right_brackets = rsub(first_word, "[^%]]", "")
 			if #left_brackets == #right_brackets then
-				arg1 = iut.remove_redundant_links(refl_clitic_verb) .. arg1 .. post
+				arg1 = iut.remove_redundant_links(first_word) .. arg1 .. post
 				incorporated_headword_head_into_lemma = true
 			else
 				-- Try again using the form without links.
 				local linkless_head = m_links.remove_links(head)
 				if linkless_head:find(" ") then
-					refl_clitic_verb, post = rmatch(linkless_head, "^(.-)( .*)$")
-					arg1 = refl_clitic_verb .. arg1 .. post
+					first_word, post = rmatch(linkless_head, "^(.-)( .*)$")
+					arg1 = first_word .. arg1 .. post
 				else
 					error("Unable to incorporate <...> spec into explicit head due to a multiword linked verb or " ..
 						"unbalanced brackets; please include <> explicitly: " .. arg1)
@@ -3944,11 +3936,12 @@ function export.do_generate_forms(args, source_template, headword_head)
 		include_user_specified_links = true,
 	}
 	iut.inflect_multiword_or_alternant_multiword_spec(alternant_multiword_spec, inflect_props)
+	copy_default_slots(alternant_multiword_spec)
 
 	-- Remove redundant brackets around entire forms.
 	for slot, forms in pairs(alternant_multiword_spec.forms) do
 		for _, form in ipairs(forms) do
-			form.form = com.strip_redundant_links(form.form)
+			form.form = iut.remove_redundant_links(form.form)
 		end
 	end
 
@@ -4015,34 +4008,6 @@ function export.show(frame)
 	local args = require("Module:parameters").process(parargs, params)
 
 	local base, form, weakness, past_vowel, nonpast_vowel = conjugate(args, 1)
-
-	-- if the value is "yes" or variants, the verb is intransitive;
-	-- if the value is "no" or variants, the verb is transitive.
-	-- If not specified, default is intransitive if passive == false or
-	-- passive == "impers", else transitive.
-	local intrans = args["intrans"]
-	if not intrans then
-		intrans = base.passive == false or base.passive == "impers" or base.passive == "only-impers"
-	else
-		intrans = yesno(intrans, "unknown")
-		if intrans == "unknown" then
-			error("Unrecognized value '" .. args["intrans"] ..
-				"' to argument intrans=; use 'yes'/'y'/'true'/'1' or 'no'/'n'/'false'/'0'")
-		end
-	end
-	if intrans then
-		insert_cat("intransitive verbs")
-	else
-		insert_cat("transitive verbs")
-	end
-
-	-- initialize title, with weakness indicated by conjugation
-	-- (FIXME should it be by form?)
-	local title = "form-" .. form .. " " .. weakness
-
-	if base.passive == "only" or base.passive == "only-impers" then
-		title = title .. " passive"
-	end
 
 	if base.irregular then
 		insert_cat("irregular verbs")
@@ -4185,113 +4150,6 @@ function export.headword2(parargs, args)
 	return export.headword(debug_frame(parargs, args))
 end
 
--- Implementation of export.past3sm() and export.past3sm_all().
-local function past3sm(parargs, doall)
-	local params = {}
-	add_conjugation_args(params, 1)
-
-	local args = require("Module:parameters").process(parargs, params)
-
-	local base, form, weakness, past_vowel, nonpast_vowel =	conjugate(args, 1)
-
-	local arabic_3sm_perf, latin_3sm_perf
-	if base.passive == "only" or base.passive == "only-impers" then
-		arabic_3sm_perf, latin_3sm_perf = get_spans(base.forms["3sm-ps-perf"])
-	else
-		arabic_3sm_perf, latin_3sm_perf = get_spans(base.forms["3sm-perf"])
-	end
-
-	if doall then
-		return table.concat(arabic_3sm_perf, ",")
-	else
-		return arabic_3sm_perf[1]
-	end
-end
-
--- Implement {{ar-past3sm}}.
---
--- Generate the 3rd singular masculine past tense (the dictionary form), given
--- the form, radicals and (for form I) past/non-past vowels (the non-past
--- vowel is ignored, but specified for compatibility with export.headword()
--- and export.show()). Form, radicals, past/non-past vowel arguments are the
--- same as for export.show(). Note that the form returned may be active or
--- passive depending on the passive= param (some values specify that the
--- verb is a passive-only verb). If there are multiple alternatives,
--- return only the first one.
-function export.past3sm(frame)
-	return past3sm(frame:getParent().args, false)
-end
-
--- Version of past3sm entry point meant for calling from the debug console.
--- See export.show2().
-function export.past3sm2(parargs, args)
-	return export.past3sm(debug_frame(parargs, args))
-end
-
--- Implement {{ar-past3sm-all}}.
---
--- Same as export.past3sm() but return all possible values, separated by
--- a comma. Multiple values largely come from alternative hamza seats.
-function export.past3sm_all(frame)
-	return past3sm(frame:getParent().args, true)
-end
-
--- Version of past3sm_all entry point meant for calling from the debug console.
--- See export.show2().
-function export.past3sm_all2(parargs, args)
-	return export.past3sm_all(debug_frame(parargs, args))
-end
-
--- Implementation of export.verb_part() and export.verb_part_all().
-local function verb_part(parargs, doall)
-	local params = {
-		[1] = {},
-	}
-	add_conjugation_args(params, 2)
-
-	local args = require("Module:parameters").process(parargs, params)
-
-	local part = args[1]
-	local base, form, weakness, past_vowel, nonpast_vowel =	conjugate(args, 2)
-	local arabic, latin = get_spans(base.forms[part])
-
-	if doall then
-		return table.concat(arabic, ",")
-	else
-		return arabic[1]
-	end
-end
-
--- Implement {{ar-verb-part}}.
---
--- TODO: Move this into [[Module:ar-headword]]
--- Generate an arbitrary part of the verbal paradigm. If there are multiple
--- possible alternatives, return only the first one.
-function export.verb_part(frame)
-	return verb_part(frame:getParent().args, false)
-end
-
--- Version of verb_part entry point meant for calling from the debug console.
--- See export.show2().
-function export.verb_part2(parargs, args)
-	return export.verb_part(debug_frame(parargs, args))
-end
-
--- Implement {{ar-verb-part-all}}.
---
--- TODO: Move this into [[Module:ar-headword]]
--- Generate an arbitrary part of the verbal paradigm. If there are multiple
--- possible alternatives, return all, separated by commas.
-function export.verb_part_all(frame)
-	return verb_part(frame:getParent().args, true)
-end
-
--- Version of verb_part_all entry point meant for calling from the debug
--- console. See export.show2().
-function export.verb_part_all2(parargs, args)
-	return export.verb_part_all(debug_frame(parargs, args))
-end
-
 -- Return a property of the conjugation other than a verb part.
 local function verb_prop(parargs)
 	local params = {
@@ -4353,12 +4211,6 @@ end
 -- Return a property of the conjugation other than a verb part.
 function export.verb_prop(frame)
 	return verb_prop(frame:getParent().args)
-end
-
--- Version of verb_prop entry point meant for calling from the debug console.
--- See export.show2().
-function export.verb_prop2(parargs, args)
-	return export.verb_prop(debug_frame(parargs, args))
 end
 
 function export.verb_forms(frame)
