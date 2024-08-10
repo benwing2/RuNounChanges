@@ -873,7 +873,7 @@ specified.
 `allow_blank_lemma` should be true of if a blank lemma is allowed; in such a case, the calling function should
 substitute a default lemma, typically taken from the pagename.
 
-The return value is a table of the form
+The return value is a table referred to as an ''alternant multiword spec'', and is of the form
 {
   alternant_or_word_specs = {ALTERNANT_OR_WORD_SPEC, ALTERNANT_OR_WORD_SPEC, ...}
   post_text = "TEXT-AT-END",
@@ -924,6 +924,11 @@ function export.parse_inflected_text(text, props)
 	alternant_multiword_spec.post_text = last_post_text
 	alternant_multiword_spec.post_text_no_links = last_post_text_no_links
 	alternant_multiword_spec.post_text_translit = last_post_text_translit
+	-- Save boolean properties from `props`. We need at least `allow_default_indicator` when implementing
+	-- `reconstruct_original_spec()`.
+	alternant_multiword_spec.allow_default_indicator = props.allow_default_indicator
+	alternant_multiword_spec.angle_brackets_omittable = props.angle_brackets_omittable
+	alternant_multiword_spec.allow_blank_lemma = props.allow_blank_lemma
 	return alternant_multiword_spec
 end
 
@@ -1316,6 +1321,49 @@ function export.add_links_to_before_and_after_text(alternant_multiword_spec, rem
 end
 
 
+-- Reconstruct the original overall spec from the output of parse_inflected_text(), so we can use it in the
+-- language-specific acceleration module in the implementation of {{pt-verb form of}} and the like.
+function export.reconstruct_original_spec(alternant_multiword_spec)
+	local parts = {}
+
+	for _, alternant_or_word_spec in ipairs(alternant_multiword_spec.alternant_or_word_specs) do
+		table.insert(parts, alternant_or_word_spec.user_specified_before_text)
+		if alternant_or_word_spec.alternants then
+			table.insert(parts, "((")
+			for i, multiword_spec in ipairs(alternant_or_word_spec.alternants) do
+				if i > 1 then
+					table.insert(parts, ",")
+				end
+				for _, word_spec in ipairs(multiword_spec.word_specs) do
+					table.insert(parts, word_spec.user_specified_before_text)
+					table.insert(parts, word_spec.user_specified_lemma)
+					table.insert(parts, word_spec.angle_bracket_spec)
+				end
+				table.insert(parts, multiword_spec.user_specified_post_text)
+			end
+			table.insert(parts, "))")
+		else
+			table.insert(parts, alternant_or_word_spec.user_specified_lemma)
+			table.insert(parts, alternant_or_word_spec.angle_bracket_spec)
+		end
+	end
+	table.insert(parts, alternant_multiword_spec.user_specified_post_text)
+
+	local retval = table.concat(parts)
+
+	if alternant_multiword_spec.allow_default_indicator then
+		-- As a special case, if we see e.g. "amar<>", remove the <>. Don't do this if there are spaces or alternants.
+		if not retval:find(" ") and not retval:find("%(%(") then
+			local retval_no_angle_brackets = retval:match("^(.*)<>$")
+			if retval_no_angle_brackets then
+				return retval_no_angle_brackets
+			end
+		end
+	end
+	return retval
+end
+
+
 --[=[
 Convert the forms in `forms` (a list of form objects, each of which is a table of the form
 { form = FORM, translit = MANUAL_TRANSLIT_OR_NIL, footnotes = FOOTNOTE_LIST_OR_NIL, no_accel = TRUE_TO_SUPPRESS_ACCELERATORS })
@@ -1599,27 +1647,27 @@ function export.show_forms(forms, props)
 			end
 			if not formatted_forms then
 				-- Default algorithm: Separate form values and translits and concatenate on separate lines.
+				-- Form values have already been deduplicated but we may need to deduplicate translits (this happens
+				-- e.g. in Arabic where there may be multiple ways of spelling a hamza in the Arabic script but only
+				-- one way in transliteration).
 				local formval_spans = {}
 				local tr_spans = {}
-				for _, form in ipairs(formvals) do
+				for i, form in ipairs(formvals) do
 					local link
 					if props.generate_link then
 						link = props.generate_link {
 							slot = slot,
+							pos = i,
 							form = form,
 							footnote_obj = footnote_obj,
 						}
 					end
-					link = link or m_links.full_link {
-						lang = props.lang, term = form.formval_for_link, tr = "-", accel = form.accel_obj
-					}
-					table.insert(formval_spans, {
-						link = link,
-						form = form,
-
-						footnote_symbol = form.formval_footnote_symbol,
-						footnotes = form.footnotes,
-					})
+					if not link then
+						link = m_links.full_link {
+							lang = props.lang, term = form.formval_for_link, tr = "-", accel = form.accel_obj
+						} .. form.footnote_symbol .. export.get_footnote_text(form.footnotes, footnote_obj)
+					end
+					formval_spans[i] = link
 					if props.include_translit then
 						-- Note that if there is an attached footnote symbol, we transliterate it.
 						local translits = form.translit or props_transliterate(props, m_links.remove_links(form.form))
@@ -1648,25 +1696,6 @@ function export.show_forms(forms, props)
 							})
 						end
 					end
-				end
-
-				for i, formval_span in ipairs(formval_spans) do
-					local formatted_formval
-					if props.format_formval then
-						formatted_formval = props.format_formval {
-							slot = slot,
-							pos = i,
-							link = formval_span.link,
-							footnote_symbol = formval_span.footnote_symbol,
-							footnotes = formval_span.footnotes,
-							footnote_obj = footnote_obj,
-						}
-					end
-					if not formatted_formval then
-						formatted_formval = formval_span.link .. formval_span.footnote_symbol ..
-							export.get_footnote_text(formval_span.footnotes, footnote_obj)
-					end
-					formval_spans[i] = formatted_formval
 				end
 
 				for i, tr_span in ipairs(tr_spans) do
