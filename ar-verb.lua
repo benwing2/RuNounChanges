@@ -8,7 +8,6 @@ Author: User:Benwing, from an early version (2013-2014) by User:Atitarev, User:Z
 ]=]
 
 local export = {}
-local int = {}
 
 --[=[
 
@@ -82,7 +81,7 @@ Irregular verbs already implemented:
 
 local export = {}
 
-local force_cat = false -- set to true for debugging
+local force_cat = true -- set to true for debugging
 local check_for_red_links = false -- set to false for debugging
 
 local lang = require("Module:languages").getByCode("ar")
@@ -93,7 +92,7 @@ local m_table = require("Module:User:Benwing2/table")
 local ar_utilities = require("Module:ar-utilities")
 local ar_nominals = require("Module:ar-nominals")
 local iut = require("Module:User:Benwing2/inflection utilities")
-local parse_utilities_module = "Module:parse utilities"
+local parse_utilities_module = "Module:User:Benwing2/parse utilities"
 local pron_qualifier_module = "Module:pron qualifier"
 
 local rfind = m_string_utilities.find
@@ -315,14 +314,14 @@ local indicator_flags = m_table.listToSet {
 	"noimp", "no_nonpast",
 }
 
-local potential_lemma_slots = {"past_3ms", "past_pass_3ms", "ind_3ms", "ind_pass_3ms", "imp_2ms"}
+export.potential_lemma_slots = {"past_3ms", "past_pass_3ms", "ind_3ms", "ind_pass_3ms", "imp_2ms"}
 
-local unsettable_slots = {}
-for _, potential_lemma_slot in ipairs(potential_lemma_slots) do
-	table.insert(unsettable_slots, potential_lemma_slot .. "_linked")
+export.unsettable_slots = {}
+for _, potential_lemma_slot in ipairs(export.potential_lemma_slots) do
+	table.insert(export.unsettable_slots, potential_lemma_slot .. "_linked")
 end
-table.insert(unsettable_slots, "vn2") -- secondary default for form III verbal nouns
-local unsettable_slots_set = m_table.listToSet(unsettable_slots)
+table.insert(export.unsettable_slots, "vn2") -- secondary default for form III verbal nouns
+export.unsettable_slots_set = m_table.listToSet(export.unsettable_slots)
 
 -- Initialize all the slots for which we generate forms.
 local function add_slots(alternant_multiword_spec)
@@ -331,7 +330,7 @@ local function add_slots(alternant_multiword_spec)
 		{"pp", "pass|part"},
 		{"vn", "vnoun"},
 	}
-	for _, unsettable_slot in ipairs(unsettable_slots) do
+	for _, unsettable_slot in ipairs(export.unsettable_slots) do
 		table.insert(alternant_multiword_spec.verb_slots, {unsettable_slot, "-"})
 	end
 
@@ -1610,8 +1609,8 @@ local function create_conjugations()
 
 		-- Careful, ALIF on its own can't be transliterated properly.
 		if req(rad1, HAMZA) then
-			return map(imp_vowel, function(vow)
-				return ALIF .. imp_vowel == I and II or UU
+			return map_vowel(imp_vowel, function(vow)
+				return ALIF .. (imp_vowel == I and II or UU)
 			end)
 		else
 			local vowel_on_alif = map_vowel(imp_vowel, function(vow)
@@ -1773,10 +1772,10 @@ local function create_conjugations()
 		local past_ending_vowel =
 			req(rad3, Y) and req(past_vowel, A) and "ay" or
 			req(rad3, W) and req(past_vowel, A) and "aw" or
-			past_vowel == "i" and "ī" or "ū"
+			req(past_vowel, I) and "ī" or "ū"
 		-- Try to preserve footnotes attached to the third radical and/or past and/or non-past vowels.
 		local past_footnotes = iut.combine_footnotes(rget_footnotes(rad3), rget_footnotes(past_vowel))
-		local nonpast_ending_vowel = nonpast_vowel == "a" and "ā" or nonpast_vowel == "i" and "ī" or "ū"
+		local nonpast_ending_vowel = req(nonpast_vowel, A) and "ā" or req(nonpast_vowel, I) and "ī" or "ū"
 		local nonpast_footnotes = iut.combine_footnotes(rget_footnotes(rad3), rget_footnotes(nonpast_vowel))
 		make_final_weak_verb(base,
 			iut.combine_form_and_footnotes(past_stem, past_footnotes),
@@ -2175,7 +2174,7 @@ local function create_conjugations()
 
 		-- Add alternative parts if verb is first-hamza. Any duplicates are removed during addition.
 		if req(rad1, HAMZA) then
-			local vn = form_viii_verbal_noun(vowel_spec, rad1, rad2, rad3)
+			local vn = form_viii_verbal_noun(base, vowel_spec, rad1, rad2, rad3)
 			local past_stem_base2 = q("اِيتَ", rad2)
 			local nonpast_stem_base2 = q(join_ta(rad1), A, rad2)
 			local past_pass_stem_base2 = q("اُوتُ", rad2)
@@ -2194,7 +2193,7 @@ local function create_conjugations()
 
 	conjugations["VIII-hollow"] = function(base, vowel_spec)
 		local rad1, rad2, rad3 = get_radicals_3(vowel_spec)
-		local vn = form_viii_verbal_noun(vowel_spec, rad1, Y, rad3)
+		local vn = form_viii_verbal_noun(base, vowel_spec, rad1, Y, rad3)
 
 		-- various stem bases
 		local nonpast_stem_base = join_ta(rad1)
@@ -2215,7 +2214,7 @@ local function create_conjugations()
 
 	conjugations["VIII-geminate"] = function(base, vowel_spec)
 		local rad1, rad2, rad3 = get_radicals_3(vowel_spec)
-		local vn = form_viii_verbal_noun(vowel_spec, rad1, rad2, rad2)
+		local vn = form_viii_verbal_noun(base, vowel_spec, rad1, rad2, rad2)
 
 		-- various stem bases
 		local nonpast_stem_base = q(join_ta(rad1), A)
@@ -2716,7 +2715,7 @@ end
 local function handle_lemma_linked(base)
 	-- Compute linked versions of potential lemma slots, for use in {{ar-verb}}. We substitute the original lemma
 	-- (before removing links) for forms that are the same as the lemma, if the original lemma has links.
-	for _, slot in ipairs(potential_lemma_slots) do
+	for _, slot in ipairs(export.potential_lemma_slots) do
 		insert_forms(base, slot .. "_linked", iut.map_forms(base.forms[slot], function(form)
 			if form == base.lemma and rfind(base.linked_lemma, "%[%[") then
 				return base.linked_lemma
@@ -3225,7 +3224,7 @@ local function detect_indicator_spec(base)
 		if not base.alternant_multiword_spec.verb_slots_map[slot] then
 			error("Unrecognized override slot '" .. slot .. "': " .. base.angle_bracket_spec)
 		end
-		if unsettable_slots_set[slot] then
+		if export.unsettable_slots_set[slot] then
 			error("Slot '" .. slot .. "' cannot be set using an override: " .. base.angle_bracket_spec)
 		end
 		if skip_slot(base, slot, "allow overrides") then
@@ -3256,11 +3255,13 @@ end
 local function detect_all_indicator_specs(alternant_multiword_spec)
 	add_slots(alternant_multiword_spec)
 	alternant_multiword_spec.slot_explicitly_missing = {}
+	alternant_multiword_spec.verb_forms = {}
 
 	iut.map_word_specs(alternant_multiword_spec, function(base)
 		-- So arguments, etc. can be accessed. WARNING: Creates circular reference.
 		base.alternant_multiword_spec = alternant_multiword_spec
 		detect_indicator_spec(base)
+		m_table.insertIfNot(alternant_multiword_spec.verb_forms, base.verb_form)
 		-- User-specified indicator flags. Do these after calling detect_indicator_spec() because the latter may set
 		-- these indicators for built-in verbs (at least that is the case in [[Module:ca-verb]], on which this module
 		-- was based).
@@ -3415,7 +3416,7 @@ local function add_categories_and_annotation(alternant_multiword_spec, base, mul
 				table.insert(nonpast_vowels, undia[rget(nonpast)])
 			end
 			insert_ann("vowels",
-				("%s ~ %s"):format(table.concat(past_vowels, ","), table.concat(nonpast_vowels, ",")))
+				("%s ~ %s"):format(table.concat(past_vowels, "/"), table.concat(nonpast_vowels, "/")))
 			for _, past in ipairs(vowel_spec.past) do
 				for _, nonpast in ipairs(vowel_spec.nonpast) do
 					insert_cat(("form-I verbs with past vowel %s and non-past vowel %s"):format(
@@ -3448,7 +3449,7 @@ local function compute_categories_and_annotation(alternant_multiword_spec)
 	ann.defective = {}
 
 	local multiword_lemma = false
-    for _, slot in ipairs(potential_lemma_slots) do
+    for _, slot in ipairs(export.potential_lemma_slots) do
         if alternant_multiword_spec.forms[slot] then
             for _, formobj in ipairs(alternant_multiword_spec.forms[slot]) do
 				if formobj.form:find(" ") then
@@ -3553,7 +3554,7 @@ end
 
 local function show_forms(alternant_multiword_spec)
     local lemmas = {}
-    for _, slot in ipairs(potential_lemma_slots) do
+    for _, slot in ipairs(export.potential_lemma_slots) do
         if alternant_multiword_spec.forms[slot] then
             for _, formobj in ipairs(alternant_multiword_spec.forms[slot]) do
                 table.insert(lemmas, formobj)
