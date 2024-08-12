@@ -82,7 +82,6 @@ local export = {}
 local force_cat = true -- set to true for debugging
 -- if true, always maintain manual translit during processing, and compare against full translit at the end
 local debug_translit = false
-local check_for_red_links = false -- set to false for debugging
 
 local lang = require("Module:languages").getByCode("ar")
 
@@ -311,7 +310,7 @@ local passive_types = m_table.listToSet {
 }
 
 local indicator_flags = m_table.listToSet {
-	"nopast", "no_nonpast", "noimp",
+	"nopast", "no_nonpast", "noimp", "nocat",
 }
 
 export.potential_lemma_slots = {"past_3ms", "past_pass_3ms", "ind_3ms", "ind_pass_3ms", "imp_2ms"}
@@ -3309,29 +3308,17 @@ end
 
 local function detect_all_indicator_specs(alternant_multiword_spec)
 	add_slots(alternant_multiword_spec)
-	alternant_multiword_spec.slot_explicitly_missing = {}
 	alternant_multiword_spec.verb_forms = {}
 
 	iut.map_word_specs(alternant_multiword_spec, function(base)
 		-- So arguments, etc. can be accessed. WARNING: Creates circular reference.
 		base.alternant_multiword_spec = alternant_multiword_spec
 		detect_indicator_spec(base)
-		m_table.insertIfNot(alternant_multiword_spec.verb_forms, base.verb_form)
-		-- User-specified indicator flags. Do these after calling detect_indicator_spec() because the latter may set
-		-- these indicators for built-in verbs (at least that is the case in [[Module:ca-verb]], on which this module
-		-- was based).
-		for prop, _ in pairs(indicator_flags) do
-			if base[prop] then
-				alternant_multiword_spec[prop] = true
-			end
+		if not base.nocat then
+			m_table.insertIfNot(alternant_multiword_spec.verb_forms, base.verb_form)
 		end
 		if base.passive_uncertain then
 			alternant_multiword_spec.passive_uncertain = true
-		end
-		-- Propagate explicitly-missing indicators up.
-		for slot, val in pairs(base.slot_explicitly_missing) do
-			alternant_multiword_spec.slot_explicitly_missing[slot] =
-				alternant_multiword_spec.slot_explicitly_missing[slot] or val
 		end
 	end)
 end
@@ -3373,27 +3360,10 @@ end
 
 
 local function add_categories_and_annotation(alternant_multiword_spec, base, multiword_lemma, insert_ann, insert_cat)
-	if check_for_red_links and alternant_multiword_spec.source_template == "ar-conj" and multiword_lemma then
-		for _, slot_and_accel in ipairs(alternant_multiword_spec.verb_slots) do
-			local slot = slot_and_accel[1]
-			local forms = base.forms[slot]
-			local must_break = false
-			if forms then
-				for _, form in ipairs(forms) do
-					if not form.form:find("%[%[") then
-						local title = mw.title.new(form.form)
-						if title and not title.exists then
-							insert_cat("verbs with red links in their inflection tables")
-							must_break = true
-						break
-						end
-					end
-				end
-			end
-			if must_break then
-				break
-			end
-		end
+	-- Useful e.g. in constructing suppletive verbs out of parts. For a verb like جاء or أتى whose imperative comes
+	-- from the unrelated verb تعالى, we don't want the latter verb showing up in categories or annotations.
+	if base.nocat then
+		return
 	end
 
 	local vform = base.verb_form
@@ -3477,6 +3447,12 @@ local function add_categories_and_annotation(alternant_multiword_spec, base, mul
 		end
 	end
 
+	if not base.forms.vn and not base.slot_explicitly_missing.vn then
+		-- Assume an unspecified and non-defaulted verbal noun (form I) is omitted rather than explicitly missing.
+		-- Use <vn:-> to explicitly indicate the lack of verbal noun.
+		insert_cat("verbs needing verbal noun checked")
+	end
+
 	if base.irregular then
 		insert_ann("irreg", "irregular")
 		insert_cat("irregular verbs")
@@ -3535,10 +3511,6 @@ local function compute_categories_and_annotation(alternant_multiword_spec)
 				break
 			end
 		end
-	elseif not alternant_multiword_spec.slot_explicitly_missing.vn then
-		-- Assume an unspecified and non-defaulted verbal noun (form I, form III) is omitted rather than explicitly
-		-- missing. Use <vn:-> to explicitly indicate the lack of verbal noun.
-		insert_cat("verbs needing verbal noun checked")
 	end
 
 	if alternant_multiword_spec.has_active then
