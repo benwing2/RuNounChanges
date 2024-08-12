@@ -311,7 +311,7 @@ local passive_types = m_table.listToSet {
 }
 
 local indicator_flags = m_table.listToSet {
-	"noimp", "no_nonpast",
+	"nopast", "no_nonpast", "noimp",
 }
 
 export.potential_lemma_slots = {"past_3ms", "past_pass_3ms", "ind_3ms", "ind_pass_3ms", "imp_2ms"}
@@ -680,7 +680,10 @@ local function skip_slot(base, slot, allow_overrides)
 		return true
 	end
 
-	if (base.noimp or base.no_nonpast) and slot:find("^imp_") then
+	if base.nopast and slot:find("^past_") then
+		return true
+	end
+	if base.noimp and slot:find("^imp_") then
 		return true
 	end
 	if base.no_nonpast and (slot:find("^ind_") or slot:find("^sub_") or slot:find("^juss")) then
@@ -698,10 +701,10 @@ local function basic_combine_stem_ending_tr(stem, ending)
 	return stem .. ending
 end
 
--- Concatenate `prefixes`, `stems` and `endings` (any of which may be strings, form objects or lists of strings or form
--- objects), add any `footnotes` to the resulting form object(s), and store into `slot`. If a user-supplied override
--- exists for the slot, nothing will happen unless `allow_overrides` is provided.
-local function add3(base, slot, prefixes, stems, endings, footnotes, allow_overrides)
+-- Concatenate `prefixes`, `stems` and `endings` (any of which may be an abbreviate form list, i.e. strings, form
+-- objects or lists of strings or form objects) and store into `slot`. If a user-supplied override exists for the slot,
+-- nothing will happen unless `allow_overrides` is provided.
+local function add3(base, slot, prefixes, stems, endings, allow_overrides)
 	if skip_slot(base, slot, allow_overrides) then
 		return
 	end
@@ -715,25 +718,25 @@ local function add3(base, slot, prefixes, stems, endings, footnotes, allow_overr
 			return transliterate(prefixes) .. stem .. ending
 		end
 		iut.add_forms(base.forms, slot, stems, endings, do_combine_stem_ending, transliterate,
-			do_combine_stem_ending_tr, footnotes)
+			do_combine_stem_ending_tr, base.form_footnotes)
 	else
 		iut.add_multiple_forms(base.forms, slot, {prefixes, stems, endings}, basic_combine_stem_ending, transliterate,
-			basic_combine_stem_ending_tr, footnotes)
+			basic_combine_stem_ending_tr, base.form_footnotes)
 	end
 end
 
--- Insert one or more forms in `form_or_forms` into `slot`. `form_or_forms` is an abbreviable form object list (see
--- comment at top of [[Module:inflection utilities]]). If a user-supplied override exists for the slot, nothing will
--- happen unless `allow_overrides` is provided. BEWARE: One form object should never occur in two different slots, or
--- twice in a given slot; if taking a form object from an existing slot, make sure to shallowcopy() it.
+-- Insert one or more forms in `form_or_forms` into `slot`. `form_or_forms` is an abbreviated form list (see comment at
+-- top of [[Module:inflection utilities]]). If a user-supplied override exists for the slot, nothing will happen unless
+-- `allow_overrides` is provided. BEWARE: One form object should never occur in two different slots, or twice in a given
+-- slot; if taking a form object from an existing slot, make sure to shallowcopy() it.
 local function insert_form_or_forms(base, slot, form_or_forms, allow_overrides)
 	if not skip_slot(base, slot, allow_overrides) then
 		-- Some optimizations of the most common case of inserting a single string.
-		if type(form_or_forms) == "string" then
+		if type(form_or_forms) == "string" and not base.form_footnotes then
 			form_or_forms = {form = form_or_forms}
 			iut.insert_form(base.forms, slot, form_or_forms)
 		else
-			iut.insert_forms(base.forms, slot, iut.convert_to_general_list_form(form_or_forms))
+			iut.insert_forms(base.forms, slot, iut.convert_to_general_list_form(form_or_forms, base.form_footnotes))
 		end
 	end
 end
@@ -842,8 +845,8 @@ local allowed_vforms_with_weakness = m_table.shallowcopy(allowed_vforms)
 -- be or become moth-eaten or worm-eaten" (vs. sāsa~yasūsu "to govern, to rule" from the same radicals), ʕawira~yaʕwaru
 -- "to be one-eyed", istajwaba~yastajwibu "to interrogate", etc. But in these cases there is no need for explicit user
 -- specification as the lemma itself specifies the unexpected soundness.
-for _, form_with_weakness in ipairs { "I-sound", "I-assimilated", "irreg-sound", "irreg-hollow", "irreg-geminate",
-	"irreg-final-weak" } do
+for _, form_with_weakness in ipairs { "I-sound", "I-assimilated", "none-sound", "none-hollow", "none-geminate",
+	"none-final-weak" } do
 	table.insert(allowed_vforms_with_weakness, form_with_weakness)
 end
 local allowed_vforms_with_weakness_set = m_table.listToSet(allowed_vforms_with_weakness)
@@ -1162,16 +1165,17 @@ local function create_conjugations()
 	--                        Basic functions to inflect tenses                  --
 	-------------------------------------------------------------------------------
 
-	-- Add to `base` the inflections for the tense indicated by `tense` (the prefix in the slot names, e.g. 'past_act' or
-	-- 'juss_pass'), formed by combining the `prefixes`, `stems` and `endings`. Each of `prefixes`, `stems` and `endings` is
-	-- either a sequence of 5 (for the imperative) or 13 (for other tenses) form values, where a form value is either a
-	-- string, a form object (which is a table of the form {form="FORM", translit="MANUAL_TRANSLIT", footnotes={"FOOTNOTE",
-	-- "FOOTNOTE", ...}}), or a list of strings and/or form objects. Alternatively, any of `prefixes`, `stems` or `endings`
-	-- can be a single-element list containing a form value, with an additional key `all_same` set to true, or (as a special
-	-- case) a single string; in the latter cases, the same value is used for all 5 or 13 slots. If existing inflections
-	-- already exist, they will be added to, not overridden. `pnums` is the list of person/number slot name suffixes, which
-	-- must match up with the elements in `prefixes`, `stems` and `endings` (i.e. 5 for imperative, 13 otherwise).
-	local function inflect_tense_1(base, tense, prefixes, stems, endings, pnums, footnotes)
+	-- Add to `base` the inflections for the tense indicated by `tense` (the prefix in the slot names, e.g. 'past_act'
+	-- or 'juss_pass'), formed by combining the `prefixes`, `stems` and `endings`. Each of `prefixes`, `stems` and
+	-- `endings` is either a sequence of 5 (for the imperative) or 13 (for other tenses) abbreviated form lists (each of
+	-- which is either a string, a form object, or a list of strings and/or form objects; see
+	-- [[Module:inflection utilities]] for more info). Alternatively, any of `prefixes`, `stems` or `endings` can be a
+	-- single-element list containing an abbreviated form list, with an additional key `all_same` set to true, or (as a
+	-- special case) a single string; in the latter cases, the same value is used for all 5 or 13 slots. If existing
+	-- inflections already exist, they will be added to, not overridden. `pnums` is the list of person/number slot name
+	-- suffixes, which must match up with the elements in `prefixes`, `stems` and `endings` (i.e. 5 for imperative, 13
+	-- otherwise).
+	local function inflect_tense_1(base, tense, prefixes, stems, endings, pnums)
 		if not prefixes or not stems or not endings then
 			return
 		end
@@ -1213,7 +1217,7 @@ local function create_conjugations()
 			local stem = get_affix(stems, i)
 			local ending = get_affix(endings, i)
 			local slot = tense .. "_" .. pnum
-			add3(base, slot, prefix, stem, ending, footnotes)
+			add3(base, slot, prefix, stem, ending)
 		end
 	end
 
@@ -1221,13 +1225,13 @@ local function create_conjugations()
 	-- 'juss_pass'), formed by combining the `prefixes`, `stems` and `endings`. This is a simple wrapper around
 	-- inflect_tense_1() that applies to all tenses other than the imperative; see inflect_tense_1() for more information
 	-- about the parameters.
-	local function inflect_tense(base, tense, prefixes, stems, endings, footnotes)
-		inflect_tense_1(base, tense, prefixes, stems, endings, all_person_number_list, footnotes)
+	local function inflect_tense(base, tense, prefixes, stems, endings)
+		inflect_tense_1(base, tense, prefixes, stems, endings, all_person_number_list)
 	end
 
 	-- Like inflect_tense() but for the imperative, which has only five parts instead of 13 and no prefixes.
-	local function inflect_tense_imp(base, stems, endings, footnotes)
-		inflect_tense_1(base, "imp", "", stems, endings, imp_person_number_list, footnotes)
+	local function inflect_tense_imp(base, stems, endings)
+		inflect_tense_1(base, "imp", "", stems, endings, imp_person_number_list)
 	end
 
 	-------------------------------------------------------------------------------
@@ -1275,7 +1279,7 @@ local function create_conjugations()
 		v_stem = override_stem_if_needed(base, "nonpast" .. passive .. "_v",
 			v_stem and q(dia[prefix_vowel], v_stem) or nil)
 		c_stem = override_stem_if_needed(base, "nonpast" .. passive .. "_c",
-			v_stem and q(dia[prefix_vowel], c_stem) or nil)
+			c_stem and q(dia[prefix_vowel], c_stem) or nil)
 		if endings == nil then
 			if tense:find("^ind") then
 				endings = ind_endings
@@ -1422,8 +1426,7 @@ local function create_conjugations()
 			past_ending_vowel, nonpast_ending_vowel, prefix_vowel)
 		past_stem = override_stem_if_needed(base, "past", past_stem)
 		past_pass_stem = override_stem_if_needed(base, "past_pass", past_pass_stem)
-		nonpast_stem = override_stem_if_needed(base, "nonpast", nonpast_stem)
-		nonpast_pass_stem = override_stem_if_needed(base, "nonpast_pass", nonpast_pass_stem)
+		-- Don't call override_stem_if_needed() here for non-past stems; it's called in nonpast_2stem_conj().
 		imp_stem = override_stem_if_needed(base, "imp", imp_stem)
 		-- + not supported for ending vowel overrides
 		past_ending_vowel = base.stem_overrides.past_final_weak_vowel or past_ending_vowel
@@ -1437,15 +1440,15 @@ local function create_conjugations()
 		local ind_pass_endings, sub_pass_endings, juss_pass_endings =
 			nonpast_final_weak_endings_from_vowel(nonpast_pass_ending_vowel)
 
-		inflect_tense(base, "past", "", past_stem, past_endings)
-		inflect_tense(base, "past_pass", "", past_pass_stem, past_pass_endings)
+		inflect_tense(base, "past", "", {past_stem, all_same = 1}, past_endings)
+		inflect_tense(base, "past_pass", "", {past_pass_stem, all_same = 1}, past_pass_endings)
 		nonpast_1stem_conj(base, "ind", prefix_vowel, nonpast_stem, ind_endings)
 		nonpast_1stem_conj(base, "sub", prefix_vowel, nonpast_stem, sub_endings)
 		nonpast_1stem_conj(base, "juss", prefix_vowel, nonpast_stem, juss_endings)
 		nonpast_1stem_conj(base, "ind_pass", "u", nonpast_pass_stem, ind_pass_endings)
 		nonpast_1stem_conj(base, "sub_pass", "u", nonpast_pass_stem, sub_pass_endings)
 		nonpast_1stem_conj(base, "juss_pass", "u", nonpast_pass_stem, juss_pass_endings)
-		inflect_tense_imp(base, imp_stem, imp_endings)
+		inflect_tense_imp(base, {imp_stem, all_same = 1}, imp_endings)
 	end
 
 	-- Generate finite parts of an augmented (form II+) final-weak verb from five stems (past and non-past, active and
@@ -1713,22 +1716,22 @@ local function create_conjugations()
 		make_form_i_sound_assimilated_verb(base, vowel_spec, false)
 	end
 
-	conjugations["irreg-sound"] = function(base, vowel_spec)
+	conjugations["none-sound"] = function(base, vowel_spec)
 		-- All default stems are nil.
 		make_sound_verb(base)
 	end
 
-	conjugations["irreg-hollow"] = function(base, vowel_spec)
+	conjugations["none-hollow"] = function(base, vowel_spec)
 		-- All default stems are nil.
 		make_hollow_geminate_verb(base, false)
 	end
 
-	conjugations["irreg-geminate"] = function(base, vowel_spec)
+	conjugations["none-geminate"] = function(base, vowel_spec)
 		-- All default stems are nil.
 		make_hollow_geminate_verb(base, "geminate")
 	end
 
-	conjugations["irreg-final-weak"] = function(base, vowel_spec)
+	conjugations["none-final-weak"] = function(base, vowel_spec)
 		-- All default stems are nil.
 		make_final_weak_verb(base)
 	end
@@ -1768,7 +1771,7 @@ local function create_conjugations()
 				 past_endings[12]},
 				{"3ms", "3fs", "3md", "3fd", "3mp"})
 		end
-		if variant == "long" or variant == "both" then
+		if base.variant == "long" or base.variant == "both" then
 			inflect_long_variant("past", past_v_stem_long, past_v_stem_short)
 			inflect_long_variant("past_pass", past_pass_v_stem_long, past_pass_v_stem_short)
 		end
@@ -1779,7 +1782,7 @@ local function create_conjugations()
 		nonpast_1stem_conj(base, "ind_pass", "u", nonpast_pass_stem, ind_endings_aa)
 		nonpast_1stem_conj(base, "sub_pass", "u", nonpast_pass_stem, sub_endings_aa)
 		nonpast_1stem_conj(base, "juss_pass", "u", nonpast_pass_stem, juss_endings_aa)
-		inflect_tense_imp(base, imp_stem, imp_endings_aa)
+		inflect_tense_imp(base, {imp_stem, all_same = 1}, imp_endings_aa)
 
 		-- active and passive participles apparently do not exist for this verb
 	end
@@ -2767,13 +2770,15 @@ local function handle_lemma_linked(base)
 	-- Compute linked versions of potential lemma slots, for use in {{ar-verb}}. We substitute the original lemma
 	-- (before removing links) for forms that are the same as the lemma, if the original lemma has links.
 	for _, slot in ipairs(export.potential_lemma_slots) do
-		insert_form_or_forms(base, slot .. "_linked", iut.map_forms(base.forms[slot], function(form)
-			if form == base.lemma and rfind(base.linked_lemma, "%[%[") then
-				return base.linked_lemma
-			else
-				return form
-			end
-		end))
+		if base.forms[slot] then
+			insert_form_or_forms(base, slot .. "_linked", iut.map_forms(base.forms[slot], function(form)
+				if form == base.lemma and rfind(base.linked_lemma, "%[%[") then
+					return base.linked_lemma
+				else
+					return form
+				end
+			end))
+		end
 	end
 end
 
@@ -2955,7 +2960,7 @@ local function parse_indicator_spec(angle_bracket_spec)
 			if #dot_separated_group > 1 then
 				parse_err(("Can't attach footnotes to 'var:' spec '%s'"):format(first_element))
 			end
-			base.var = first_element:match("^var:(.*)$")
+			base.variant = first_element:match("^var:(.*)$")
 		elseif first_element:find("^I+V?:") then
 			local root_cons, root_cons_value = first_element:match("^(I+V?):(.*)$")
 			local root_index
@@ -3112,7 +3117,6 @@ local function detect_indicator_spec(base)
 
 	-- check for quadriliteral form (Iq, IIq, IIIq, IVq)
 	base.quadlit = not not vform:find("q$")
-	base.irreg_vform = not not vform:find("^irreg")
 
 	-- Infer radicals as necessary. We infer a separate set of radicals for each past~non-past vowel combination because
 	-- they may be different (particularly with form-I hollow verbs).
@@ -3128,7 +3132,7 @@ local function detect_indicator_spec(base)
 		-- Arabic letters. Note that 't' means a radical that could be any of ت/و/ي while 'w' and 'y' mean a radical
 		-- that could be either و or ي.
 		local weakness, ir1, ir2, ir3, ir4
-		if not base.irreg_vform then
+		if vform ~= "none" then
 			weakness, ir1, ir2, ir3, ir4 = export.infer_radicals(base.lemma, vform, vowel_spec.past, vowel_spec.nonpast)
 		end
 
@@ -3184,7 +3188,7 @@ local function detect_indicator_spec(base)
 			end
 		end
 
-		if not base.irreg_vform then
+		if vform ~= "none" then
 			vowel_spec.rad1, vowel_spec.unreg_rad1 = fetch_radical(rad1, ir1, 1)
 			vowel_spec.rad2, vowel_spec.unreg_rad2 = fetch_radical(rad2, ir2, 2)
 			vowel_spec.rad3, vowel_spec.unreg_rad3 = fetch_radical(rad3, ir3, 3)
@@ -3222,16 +3226,16 @@ local function detect_indicator_spec(base)
 			elseif base.explicit_weakness then
 				error(("Internal error: Unrecognized value '%s' for base.explicit_weakness"):format(base.explicit_weakness))
 			end
-		elseif base.irreg_vform then
+		elseif vform == "none" then
 			weakness = base.explicit_weakness
 		elseif base.explicit_weakness then
-			error(("Internal error: Explicit weakness should not be specifiable except with forms I and irreg, but saw explicit weakness '%s' with verb form '%s'"):
-				format(base.explicit_weakness, base.vform))
+			error(("Internal error: Explicit weakness should not be specifiable except with forms I and none, but saw explicit weakness '%s' with verb form '%s'"):
+				format(base.explicit_weakness, vform))
 		end
 
 		vowel_spec.weakness = weakness
 
-		if not base.irreg_vform then
+		if vform ~= "none" then
 			-- Error if radicals are wrong given the weakness. More likely to happen if the weakness is explicitly given
 			-- rather than inferred. Will also happen if certain incorrect letters are included as radicals e.g. hamza on
 			-- top of various letters, alif maqṣūra, tā' marbūṭa. FIXME: May not be necessary?
@@ -3286,16 +3290,16 @@ local function detect_indicator_spec(base)
 		base.slot_overrides[slot] = values
 	end
 
-	if base.verb_form == "irreg-final-weak" then
+	if base.verb_form == "none-final-weak" then
 		for _, stem_type in ipairs { "past", "past_pass", "nonpast", "nonpast_pass" } do
 			if base.stem_overrides[stem_type .. "_c"] or base.stem_overrides[stem_type .. "_v"] then
-				error(("Specify past stem for verb type 'irreg-final-weak' using '%s:...' not '%s_c:...' or '%s_v:...'"):
+				error(("Specify past stem for verb type 'none-final-weak' using '%s:...' not '%s_c:...' or '%s_v:...'"):
 					format(stem_type, stem_type, stem_type))
 			end
 		end
 		for _, stem_type in ipairs { "past", "nonpast" } do
 			if base.stem_overrides[stem_type] or not base.stem_overrides[stem_type .. "_final_weak_vowel"] then
-				error(("For verb type 'irreg-final-weak', if '%s:...' specified, so must '%s_final_weak_vowel:...'"):
+				error(("For verb type 'none-final-weak', if '%s:...' specified, so must '%s_final_weak_vowel:...'"):
 					format(stem_type, stem_type))
 			end
 		end
@@ -3393,8 +3397,10 @@ local function add_categories_and_annotation(alternant_multiword_spec, base, mul
 	end
 
 	local vform = base.verb_form
-	insert_ann("form", vform)
-	insert_cat("form-" .. vform .. " verbs")
+	if vform ~= "none" then
+		insert_ann("form", vform)
+		insert_cat("form-" .. vform .. " verbs")
+	end
 	if base.quadlit then
 		insert_cat("verbs with quadriliteral roots")
 	end
@@ -3414,7 +3420,9 @@ local function add_categories_and_annotation(alternant_multiword_spec, base, mul
 		-- always refer to weakness by conjugation; weakness by form is distinguished only by categories such as
 		-- [[:Category:Arabic form-III verbs with و as second radical]].
 		insert_ann("weakness", weakness)
-		insert_cat(("%s form-%s verbs"):format(weakness, vform))
+		if vform ~= "none" then
+			insert_cat(("%s form-%s verbs"):format(weakness, vform))
+		end
 
 		local function radical_is_ambiguous(rad)
 			return req(rad, "t") or req(rad, "w") or req(rad, "y")
@@ -3423,7 +3431,7 @@ local function add_categories_and_annotation(alternant_multiword_spec, base, mul
 			return is_waw_ya(rad) or req(rad, HAMZA)
 		end
 
-		if not base.irreg_vform then
+		if vform ~= "none" then
 			local ur1, ur2, ur3, ur4 =
 				vowel_spec.unreg_rad1, vowel_spec.unreg_rad2, vowel_spec.unreg_rad3, vowel_spec.unreg_rad4
 			-- Create headword categories based on the radicals. Do the following before
@@ -3590,7 +3598,7 @@ local function compute_categories_and_annotation(alternant_multiword_spec)
 		table.insert(ann_parts, ann.passive)
 	end
 	insert_ann_part("irreg")
-	insert_ann_part("defective", " and ")
+	insert_ann_part("defective", ", ")
 	alternant_multiword_spec.annotation = table.concat(ann_parts, ", ")
 end
 
@@ -4635,7 +4643,7 @@ function export.infer_radicals(headword, vform, past_vowel, nonpast_vowel)
 		end
 		weakness = "sound"
 	else
-		error("Don't recognize verb form " .. vform)
+		error("Internal error: Unrecognized verb form " .. vform)
 	end
 
 	-- Process the last two radicals. RADSTART is the index of the first of the two. If it's nil then all radicals have
