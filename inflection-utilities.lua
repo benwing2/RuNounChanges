@@ -3,7 +3,7 @@ local export = {}
 local m_links = require("Module:links")
 local m_str_utils = require("Module:string utilities")
 local m_table = require("Module:User:Benwing2/table")
-local put = require("Module:parse utilities")
+local put = require("Module:User:Benwing2/parse utilities")
 local script_utilities_module = "Module:script utilities"
 local table_tools_module = "Module:table tools"
 
