@@ -7,8 +7,6 @@ Author: User:Benwing, from an early version (2013-2014) by User:Atitarev, User:Z
 
 ]=]
 
-local export = {}
-
 --[=[
 
 TERMINOLOGY:
@@ -82,6 +80,8 @@ Irregular verbs already implemented:
 local export = {}
 
 local force_cat = true -- set to true for debugging
+-- if true, always maintain manual translit during processing, and compare against full translit at the end
+local debug_translit = false
 local check_for_red_links = false -- set to false for debugging
 
 local lang = require("Module:languages").getByCode("ar")
@@ -145,8 +145,8 @@ local DIACRITIC = SH .. "?" .. DIACRITIC_ANY_BUT_SH
 local UNS = no_nominal_i3rab and "" or UN
 
 -- translit_patterns
-local V = "aeiouāēīōū"
-local NV = "[^" .. V .. "]"
+local vowels = "aeiouāēīōū"
+local NV = "[^" .. vowels .. "]"
 
 local dia = {a = A, i = I, u = U}
 local undia = {[A] = "a", [I] = "i", [U] = "u"}
@@ -420,16 +420,16 @@ local function parse_inline_modifiers(comma_separated_group, parse_err)
 	return require(parse_utilities_module).parse_inline_modifiers_from_segments {
 		group = comma_separated_group,
 		props = {
-			param_mods = param_mods,
+			param_mods = slot_override_param_mods,
 			parse_err = parse_err,
 			generate_obj = generate_obj,
 			pre_normalize_modifiers = function(data)
 				local modtext = data.modtext
-				modtext = modtext:match("^%[(.*)%]$")
+				modtext = modtext:match("^(%[.*%])$")
 				if modtext then
 					return ("<footnote:%s>"):format(modtext)
 				end
-				return modtext
+				return data.modtext
 			end,
 		},
 	}
@@ -449,8 +449,8 @@ local function allow_multiple_values_for_override(comma_separated_groups, data, 
 	end
 	for _, form in ipairs(retvals) do
 		if form.form == "+" or form.form == "++" then
-			if not is_slot_override then
-				error(("Stem override '%s' cannot use + or ++ to request a default"):format(data.prefix))
+			if form.form == "++" and not is_slot_override then
+				error(("Stem override '%s' cannot use ++ to request a secondary default"):format(data.prefix))
 			end
 			data.base.slot_uses_default[data.prefix] = true
 		end
@@ -533,8 +533,8 @@ end
 
 -- Concatenate one or more strings or form objects.
 local function q(...)
-	local not_all_strings = false
-	local has_manual_translit = false
+	local not_all_strings = debug_translit
+	local has_manual_translit = debug_translit
 	for i = 1, select("#", ...) do
 		local argt = select(i, ...)
 		if not argt then
@@ -675,7 +675,7 @@ local function skip_slot(base, slot, allow_overrides)
 		return true
 	elseif base.passive == "imperspass" and slot:find("_pass") and not slot:find("3ms") then
 		return true
-	elseif base.passive == "impers" and (slot == "ap" or not slot:find("_pass") or
+	elseif base.passive == "impers" and slot ~= "pp" and slot ~= "vn" and (not slot:find("_pass") or
 		slot:find("_pass") and not slot:find("3ms")) then
 		return true
 	end
@@ -698,6 +698,9 @@ local function basic_combine_stem_ending_tr(stem, ending)
 	return stem .. ending
 end
 
+-- Concatenate `prefixes`, `stems` and `endings` (any of which may be strings, form objects or lists of strings or form
+-- objects), add any `footnotes` to the resulting form object(s), and store into `slot`. If a user-supplied override
+-- exists for the slot, nothing will happen unless `allow_overrides` is provided.
 local function add3(base, slot, prefixes, stems, endings, footnotes, allow_overrides)
 	if skip_slot(base, slot, allow_overrides) then
 		return
@@ -719,29 +722,38 @@ local function add3(base, slot, prefixes, stems, endings, footnotes, allow_overr
 	end
 end
 
-local function insert_form(base, slot, form, allow_overrides)
+-- Insert one or more forms in `form_or_forms` into `slot`. `form_or_forms` is an abbreviable form object list (see
+-- comment at top of [[Module:inflection utilities]]). If a user-supplied override exists for the slot, nothing will
+-- happen unless `allow_overrides` is provided. BEWARE: One form object should never occur in two different slots, or
+-- twice in a given slot; if taking a form object from an existing slot, make sure to shallowcopy() it.
+local function insert_form_or_forms(base, slot, form_or_forms, allow_overrides)
 	if not skip_slot(base, slot, allow_overrides) then
-		if type(form) == "string" then
-			form = {form = form}
+		-- Some optimizations of the most common case of inserting a single string.
+		if type(form_or_forms) == "string" then
+			form_or_forms = {form = form_or_forms}
+			iut.insert_form(base.forms, slot, form_or_forms)
+		else
+			iut.insert_forms(base.forms, slot, iut.convert_to_general_list_form(form_or_forms))
 		end
-		iut.insert_form(base.forms, slot, form)
 	end
 end
 
-local function insert_forms(base, slot, forms, allow_overrides)
-	if not skip_slot(base, slot, allow_overrides) then
-		iut.insert_forms(base.forms, slot, forms)
-	end
-end
-
+-- Convert `stemforms` (a string, a form object, or a list of strings and/or form objects) into "general form" (a list
+-- of form objects) and map `fn` over the list of objects. `fn` is passed two arguments (form value and translit) and
+-- should likewise return the new form value and translit. Footnotes will be preserved. FIXME: Preserve other metadata.
 local function map_general(stemforms, fn)
 	return iut.map_forms(iut.convert_to_general_list_form(stemforms), fn)
 end
 
+-- Similar to map_general() except that `fn` should return a single value (one or more strings or form objects), instead
+-- of two values (form value and translit), and the resulting value(s) from all calls to `fn` will be flattened to
+-- construct the overall return value. Footnotes will be preserved. FIXME: Preserve other metadata.
 local function flatmap_general(stemforms, fn)
 	return iut.flatmap_forms(iut.convert_to_general_list_form(stemforms), fn)
 end
 
+-- Given user-supplied stem overrides in `base`, construct any derived stem overrides (e.g. vowel-specific or
+-- consonant-specific variants), and truncate initial y-/ي- in any non-past overrides.
 local function construct_stems(base)
 	local stems = base.stem_overrides
 	stems.past_v = stems.past_v or stems.past
@@ -755,6 +767,9 @@ local function construct_stems(base)
 	stems.imp_v = stems.imp_v or stems.imp
 	stems.imp_c = stems.imp_c or stems.imp
 	local function truncate_nonpast_initial_cons(stem_type, form, translit)
+		if form == "+" then
+			return form, translit
+		end
 		if not form:find("^" .. Y) then
 			error(("Form value %s for stem type '%s' should begin with ي"):format(form, stem_type))
 		end
@@ -775,6 +790,33 @@ local function construct_stems(base)
 		end
 	end
 end
+
+-- Given user-specified overrides for stem `stemname`, return overrides with occurrences of + replaced by
+-- `default_stem`. If no overrides, return `default_stem`, or {} if no default.
+local function override_stem_if_needed(base, stemname, default_stem)
+	local overrides = base.stem_overrides[stemname]
+	if not overrides then
+		return default_stem or {}
+	end
+	return map_general(overrides, function(form, translit)
+		if form == "++" then
+			error(("Stem overrides cannot use ++ but saw ++ in stem override '%s'"):format(stemname))
+		end
+		if form == "+" then
+			if translit then
+				error(("Cannot supply manual translit along with + for stem override '%s'"):format(stemname))
+			end
+			if not default_stem then
+				error(("Cannot use + for stem override '%s' because no default is available"):format(stemname))
+			end
+			if type(default_stem) ~= "string" then
+				error(("Internal error: Default stem for '%s' is not a string: %s"):format(stemname, dump(default_stem)))
+			end
+			return default_stem
+		end
+		return form, translit
+	end)
+end		
 
 -------------------------------------------------------------------------------
 --                      Properties of different verbal forms                 --
@@ -1197,8 +1239,8 @@ local function create_conjugations()
 	local function past_2stem_conj(base, tense, v_stem, c_stem)
 		local passive = tense:find("_pass") and "_pass" or ""
 		-- Override stems with user-specified stems if available.
-		v_stem = base.stem_overrides["past" .. passive .. "_v"] or v_stem or {}
-		c_stem = base.stem_overrides["past" .. passive .. "_c"] or c_stem or {}
+		v_stem = override_stem_if_needed(base, "past" .. passive .. "_v", v_stem)
+		c_stem = override_stem_if_needed(base, "past" .. passive .. "_c", c_stem)
 		inflect_tense(base, tense, "", {
 			-- singular
 			c_stem, c_stem, c_stem, v_stem, v_stem,
@@ -1230,8 +1272,10 @@ local function create_conjugations()
 	local function nonpast_2stem_conj(base, tense, prefix_vowel, v_stem, c_stem, endings, jussive)
 		local passive = tense:find("_pass") and "_pass" or ""
 		-- Override stems with user-specified stems if available.
-		v_stem = base.stem_overrides["nonpast" .. passive .. "_v"] or v_stem and q(dia[prefix_vowel], v_stem) or {}
-		c_stem = base.stem_overrides["nonpast" .. passive .. "_c"] or c_stem and q(dia[prefix_vowel], c_stem) or {}
+		v_stem = override_stem_if_needed(base, "nonpast" .. passive .. "_v",
+			v_stem and q(dia[prefix_vowel], v_stem) or nil)
+		c_stem = override_stem_if_needed(base, "nonpast" .. passive .. "_c",
+			v_stem and q(dia[prefix_vowel], c_stem) or nil)
 		if endings == nil then
 			if tense:find("^ind") then
 				endings = ind_endings
@@ -1301,8 +1345,8 @@ local function create_conjugations()
 	local function make_2stem_imperative(base, v_stem, c_stem, endings, alt_gem)
 		endings = endings or imp_endings
 		-- Override stems with user-specified stems if available.
-		v_stem = base.stem_overrides.imp_v or v_stem or {}
-		c_stem = base.stem_overrides.imp_c or c_stem or {}
+		v_stem = override_stem_if_needed(base, "imp_v", v_stem)
+		c_stem = override_stem_if_needed(base, "imp_c", c_stem)
 		if alt_gem then
 			inflect_tense_imp(base, {v_stem, v_stem, v_stem, v_stem, c_stem}, endings)
 		else
@@ -1376,8 +1420,12 @@ local function create_conjugations()
 	-- the active non-past (a or u).
 	local function make_final_weak_verb(base, past_stem, past_pass_stem, nonpast_stem, nonpast_pass_stem, imp_stem,
 			past_ending_vowel, nonpast_ending_vowel, prefix_vowel)
-		past_stem = base.stem_overrides.past or past_stem
-		past_pass_stem = base.stem_overrides.past_pass or past_pass_stem
+		past_stem = override_stem_if_needed(base, "past", past_stem)
+		past_pass_stem = override_stem_if_needed(base, "past_pass", past_pass_stem)
+		nonpast_stem = override_stem_if_needed(base, "nonpast", nonpast_stem)
+		nonpast_pass_stem = override_stem_if_needed(base, "nonpast_pass", nonpast_pass_stem)
+		imp_stem = override_stem_if_needed(base, "imp", imp_stem)
+		-- + not supported for ending vowel overrides
 		past_ending_vowel = base.stem_overrides.past_final_weak_vowel or past_ending_vowel
 		local past_pass_ending_vowel = base.stem_overrides.past_pass_final_weak_vowel or "ī"
 		nonpast_ending_vowel = base.stem_overrides.nonpast_final_weak_vowel or nonpast_ending_vowel
@@ -1418,7 +1466,7 @@ local function create_conjugations()
 	-- * `vn` (verbal noun).
 	local function make_augmented_sound_final_weak_verb(base, vowel_spec, past_stem_base, nonpast_stem_base,
 		past_pass_stem_base, vn)
-		insert_form(base, "vn", vn)
+		insert_form_or_forms(base, "vn", vn)
 
 		local lastrad = base.quadlit and vowel_spec.rad4 or vowel_spec.rad3
 		local final_weak = is_final_weak(base, vowel_spec)
@@ -1453,11 +1501,11 @@ local function create_conjugations()
 
 		-- active and passive participle
 		if final_weak then
-			insert_form(base, "ap", q(MU, ap_stem, IN))
-			insert_form(base, "pp", q(MU, nonpast_pass_stem, AN, AMAQ))
+			insert_form_or_forms(base, "ap", q(MU, ap_stem, IN))
+			insert_form_or_forms(base, "pp", q(MU, nonpast_pass_stem, AN, AMAQ))
 		else
-			insert_form(base, "ap", q(MU, ap_stem, UNS))
-			insert_form(base, "pp", q(MU, nonpast_pass_stem, UNS))
+			insert_form_or_forms(base, "ap", q(MU, ap_stem, UNS))
+			insert_form_or_forms(base, "pp", q(MU, nonpast_pass_stem, UNS))
 		end
 	end
 
@@ -1491,7 +1539,7 @@ local function create_conjugations()
 	-- * `past_pass_stem_base` (invariable part of passive past stem);
 	-- * `vn` (verbal noun).
 	local function make_augmented_hollow_verb(base, vowel_spec, past_stem_base, nonpast_stem_base, past_pass_stem_base, vn)
-		insert_form(base, "vn", vn)
+		insert_form_or_forms(base, "vn", vn)
 
 		local lastrad = base.quadlit and vowel_spec.rad4 or vowel_spec.rad3
 		local form410 = base.verb_form == "IV" or base.verb_form == "X"
@@ -1527,9 +1575,9 @@ local function create_conjugations()
 			nonpast_pass_c_stem, imp_v_stem, imp_c_stem, prefix_vowel)
 
 		-- active participle
-		insert_form(base, "ap", q(MU, nonpast_v_stem, UNS))
+		insert_form_or_forms(base, "ap", q(MU, nonpast_v_stem, UNS))
 		-- passive participle
-		insert_form(base, "pp", q(MU, nonpast_pass_v_stem, UNS))
+		insert_form_or_forms(base, "pp", q(MU, nonpast_pass_v_stem, UNS))
 	end
 
 	-- Generate finite parts of an augmented (form II+) geminate verb, given:
@@ -1542,7 +1590,7 @@ local function create_conjugations()
 	-- * `vn` (verbal noun).
 	local function make_augmented_geminate_verb(base, vowel_spec, past_stem_base, nonpast_stem_base, past_pass_stem_base,
 			vn)
-		insert_form(base, "vn", vn)
+		insert_form_or_forms(base, "vn", vn)
 
 		local vform = base.verb_form
 		local lastrad = base.quadlit and vowel_spec.rad4 or vowel_spec.rad3
@@ -1586,9 +1634,9 @@ local function create_conjugations()
 			nonpast_pass_c_stem, imp_v_stem, imp_c_stem, prefix_vowel)
 
 		-- active participle
-		insert_form(base, "ap", q(MU, nonpast_v_stem, UNS))
+		insert_form_or_forms(base, "ap", q(MU, nonpast_v_stem, UNS))
 		-- passive participle
-		insert_form(base, "pp", q(MU, nonpast_pass_v_stem, UNS))
+		insert_form_or_forms(base, "pp", q(MU, nonpast_pass_v_stem, UNS))
 	end
 
 	-------------------------------------------------------------------------------
@@ -1610,7 +1658,7 @@ local function create_conjugations()
 		-- Careful, ALIF on its own can't be transliterated properly.
 		if req(rad1, HAMZA) then
 			return map_vowel(imp_vowel, function(vow)
-				return ALIF .. (imp_vowel == I and II or UU)
+				return ALIF .. (vow == I and II or UU)
 			end)
 		else
 			local vowel_on_alif = map_vowel(imp_vowel, function(vow)
@@ -1656,9 +1704,9 @@ local function create_conjugations()
 		end
 
 		-- active participle
-		insert_form(base, "ap", q(rad1, AA, rad2, I, rad3, UNS))
+		insert_form_or_forms(base, "ap", q(rad1, AA, rad2, I, rad3, UNS))
 		-- passive participle
-		insert_form(base, "pp", q(MA, rad1, SK, rad2, UU, rad3, UNS))
+		insert_form_or_forms(base, "pp", q(MA, rad1, SK, rad2, UU, rad3, UNS))
 	end
 
 	conjugations["I-sound"] = function(base, vowel_spec)
@@ -1786,8 +1834,8 @@ local function create_conjugations()
 			past_ending_vowel, nonpast_ending_vowel, "a")
 
 		-- active participle
-		insert_form(base, "ap", q(rad1, AA, rad2, IN))
-		insert_form(base, "pp", q(MA, rad1, SK, rad2, req(rad3, Y) and II or UU, SH, UNS))
+		insert_form_or_forms(base, "ap", q(rad1, AA, rad2, IN))
+		insert_form_or_forms(base, "pp", q(MA, rad1, SK, rad2, req(rad3, Y) and II or UU, SH, UNS))
 	end
 
 	conjugations["I-final-weak"] = function(base, vowel_spec)
@@ -1804,7 +1852,8 @@ local function create_conjugations()
 		-- "a" as meaning to use the non-past vowel in forms requiring a short vowel. If the non-past vowel is "a" then the
 		-- past vowel can only be "i" (e.g. in nāma yanāmu with first singular past of nimtu).
 		if req(past_vowel, A) then
-			-- error("For form I hollow, past vowel cannot be 'a'")
+			-- Enable this when we've fixed the upstream code
+			-- error("Internal error: For form I hollow, past vowel 'a' should have been converted to 'i' or 'u' already")
 			past_vowel = map_vowel(past_vowel, function(vow)
 				return req(nonpast_vowel, A) and I or rget(nonpast_vowel)
 			end)
@@ -1844,10 +1893,10 @@ local function create_conjugations()
 			nonpast_pass_c_stem, imp_v_stem, imp_c_stem, "a")
 
 		-- active participle
-		insert_form(base, "ap", req(rad3, HAMZA) and q(rad1, AA, HAMZA, IN) or
+		insert_form_or_forms(base, "ap", req(rad3, HAMZA) and q(rad1, AA, HAMZA, IN) or
 			q(rad1, AA, HAMZA, I, rad3, UNS))
 		-- passive participle
-		insert_form(base, "pp", q(MA, rad1, req(rad2, Y) and II or UU, rad3, UNS))
+		insert_form_or_forms(base, "pp", q(MA, rad1, req(rad2, Y) and II or UU, rad3, UNS))
 	end
 
 	conjugations["I-geminate"] = function(base, vowel_spec)
@@ -1884,9 +1933,9 @@ local function create_conjugations()
 			nonpast_pass_c_stem, imp_v_stem, imp_c_stem, "a")
 
 		-- active participle
-		insert_form(base, "ap", q(rad1, AA, rad2, SH, UNS))
+		insert_form_or_forms(base, "ap", q(rad1, AA, rad2, SH, UNS))
 		-- passive participle
-		insert_form(base, "pp", q(MA, rad1, SK, rad2, UU, rad2, UNS))
+		insert_form_or_forms(base, "pp", q(MA, rad1, SK, rad2, UU, rad2, UNS))
 	end
 
 	-- Make form II or V sound or final-weak verb.
@@ -1939,7 +1988,7 @@ local function create_conjugations()
 			-- Insert alternative verbal noun فِعَال. Since not all verbs have this, we require that verbs that do have it
 			-- specify it explicitly; a shortcut ++ is provided to make this easier (e.g. <vn:+,++> to indicate that both
 			-- the normal verbal noun مُفَاعَلَة and secondary verbal noun فِعَال are available).
-			insert_form(base, "vn2", q(rad1, I, rad2, AA, final_weak and HAMZA or rad3, UNS))
+			insert_form_or_forms(base, "vn2", q(rad1, I, rad2, AA, final_weak and HAMZA or rad3, UNS))
 		end
 	end
 
@@ -2156,7 +2205,7 @@ local function create_conjugations()
 		rad3 = final_weak and HAMZA or rad3
 		local vn = high_form_verbal_noun(join_ta(rad1), rad2, rad3)
 		if req(rad1, HAMZA) then
-			return {vn, high_form_verbal_noun(Y .. T, rad2, rad3)}
+			return {vn, high_form_verbal_noun(Y .. SK .. T, rad2, rad3)}
 		else
 			return {vn}
 		end
@@ -2581,15 +2630,17 @@ local postprocess_subs = {
 }
 
 local postprocess_tr_subs = {
-	{"ī([" .. V .. "y*])", "iy%1"},
-	{"ū([" .. V .. "w*])", "uw%1"},
+	{"ī([" .. vowels .. "y*])", "iy%1"},
+	{"ū([" .. vowels .. "w*])", "uw%1"},
 	{"(.)%*", "%1%1"}, -- implement shadda
 
 	---------------------------- assimilated verbs ----------------------------
-	-- iw -> ī (assimilated verbs)
-	{"iw(" .. NV .. ")", "ī%1"},
-	-- uy -> ū (assimilated verbs)
-	{"uy(" .. NV .. ")", "ū%1"},
+	-- iw, iy -> ī (assimilated verbs)
+	{"iw([^" .. vowels .. "w])", "ī%1"},
+	{"iy([^" .. vowels .. "y])", "ī%1"},
+	-- uw, uy -> ū (assimilated verbs)
+	{"uw([^" .. vowels .. "w])", "ū%1"},
+	{"uy([^" .. vowels .. "y])", "ū%1"},
 
 	----------------------- handle hamza assimilation -------------------------
 	-- initial hamza + short-vowel + hamza + sukūn -> hamza + long vowel
@@ -2690,7 +2741,7 @@ local function process_slot_overrides(base)
 				-- lists inside the form objects). However, there is no need to copy the form objects here because there
 				-- is a one-to-one correspondence between slots and slot overrides, i.e. you can't have a default value
 				-- go into two slots.
-				insert_forms(base, slot, existing_values, "allow overrides")
+				insert_form_or_forms(base, slot, existing_values, "allow overrides")
 			elseif form.form == "++" then
 				if slot ~= "vn" then
 					error(("Secondary default value request '++' only applicable to verbal nouns, but found in slot '%s'"):
@@ -2701,11 +2752,11 @@ local function process_slot_overrides(base)
 					error(("Slot '%s' requested the secondary default value but no such value available"):format(slot))
 				end
 				-- See comment above about the lack of need to copy the form objects.
-				insert_forms(base, slot, existing_values, "allow overrides")
+				insert_form_or_forms(base, slot, existing_values, "allow overrides")
 				-- To make sure there aren't shared form objects.
 				base.forms.vn2 = nil
 			else
-				insert_form(base, slot, form, "allow overrides")
+				insert_form_or_forms(base, slot, form, "allow overrides")
 			end
 		end
 	end
@@ -2716,7 +2767,7 @@ local function handle_lemma_linked(base)
 	-- Compute linked versions of potential lemma slots, for use in {{ar-verb}}. We substitute the original lemma
 	-- (before removing links) for forms that are the same as the lemma, if the original lemma has links.
 	for _, slot in ipairs(export.potential_lemma_slots) do
-		insert_forms(base, slot .. "_linked", iut.map_forms(base.forms[slot], function(form)
+		insert_form_or_forms(base, slot .. "_linked", iut.map_forms(base.forms[slot], function(form)
 			if form == base.lemma and rfind(base.linked_lemma, "%[%[") then
 				return base.linked_lemma
 			else
@@ -3280,14 +3331,6 @@ local function detect_all_indicator_specs(alternant_multiword_spec)
 		end
 	end)
 end
-
--- Copy default slots (active participle, passive participle, verbal noun) when overrides not provided or when an
--- override is given with the value of + or ++.
-local function copy_default_slots(alternant_multiword_spec)
-	if not alternant_multiword_spec.forms.ap and not alternant_multiword_spec.slot_explicitly_missing.ap then
-	end
-end
-
 
 -- Determine certain properties of the verb from the overall forms, such as whether the verb is active-only or
 -- passive-only, is impersonal, lacks an imperative, etc.
@@ -4019,7 +4062,20 @@ function export.do_generate_forms(args, source_template, headword_head)
 		include_user_specified_links = true,
 	}
 	iut.inflect_multiword_or_alternant_multiword_spec(alternant_multiword_spec, inflect_props)
-	copy_default_slots(alternant_multiword_spec)
+	if debug_translit then
+		for slot, forms in pairs(alternant_multiword_spec.forms) do
+			for _, form in ipairs(forms) do
+				if form.translit then
+					local full_form_translit = (lang:transliterate(m_links.remove_links(form.form)))
+					if full_form_translit ~= form.translit then
+						error(("Internal error: For slot '%s', form '%s' incremental translit '%s' not same as full translit '%s'"):
+							format(slot, form.form, form.translit, full_form_translit))
+					end
+				end
+				form.form = iut.remove_redundant_links(form.form)
+			end
+		end
+	end
 
 	-- Remove redundant brackets around entire forms.
 	for slot, forms in pairs(alternant_multiword_spec.forms) do
@@ -4651,9 +4707,9 @@ function export.infer_radicals(headword, vform, past_vowel, nonpast_vowel)
 			elseif rad2 == ALIF then
 				if vform_supports_hollow(vform) then
 					weakness = "hollow"
-					if vform == "I" and nonpast_vowel == "u" then
+					if vform == "I" and req(nonpast_vowel, U) then
 						rad2 = W
-					elseif vform == "I" and nonpast_vowel == "i" then
+					elseif vform == "I" and req(nonpast_vowel, I) then
 						rad2 = Y
 					else
 						-- Ambiguous radical; could be wāw or yāʾ; if verb form I, it's critical to get this right, and
