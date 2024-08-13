@@ -110,7 +110,7 @@ function export.show(frame)
 
 	local args = require("Module:parameters").process(parargs, params)
 
-	local subpage = args.pagename or mw.title.getCurrentTitle().subpageText
+	local subpage = args.pagename or mw.loadData("Module:headword/data").pagename
 
 	local user_specified_heads = args.head
 	local heads = user_specified_heads
