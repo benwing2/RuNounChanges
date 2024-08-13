@@ -1,3 +1,5 @@
+local m_str_utils = require("Module:string utilities")
+
 local labels = {}
 local raw_categories = {}
 local handlers = {}
@@ -111,6 +113,11 @@ labels["ghost words"] = {
 	parents = {"terms by etymology"},
 }
 
+labels["gramograms"] = {
+	description = "{{{langname}}} [[gramogram]]s &ndash; terms that are partially or completely spelled with [[homophone|homophonous]] letters.",
+	parents = {"rebuses"},
+}
+
 labels["haplological words"] = {
 	description = "{{{langname}}} words that underwent [[haplology]]: thus, their origin involved a loss or omission of a repeated sequence of sounds.",
 	parents = {"terms by etymology"},
@@ -167,8 +174,18 @@ labels["nonce terms"] = {
 	parents = {"terms by etymology"},
 }
 
+labels["number homophones"] = {
+	description = "{{{langname}}} terms that are partially or completely spelled with [[homophone|homophonous]] numbers.",
+	parents = {"rebuses", "terms spelled with numbers"},
+}
+
+labels["numerical contractions"] = {
+	description = "{{{langname}}} numerical contractions. In these, the number either denotes omitted characters ({{m+|en|globalization}} → {{m|en|g11n}}) or duplication ({{m+|kne|Kankanaey}} → {{m|kne|Kan2aey}}).",
+	parents = {"contractions", "rebuses", "terms spelled with numbers"},
+}
+
 labels["numeronyms"] = {
-	description = "{{{langname}}} terms that serve as number-based names.",
+	description = "{{{langname}}} terms that contain numerals.",
 	parents = {"terms by etymology"},
 }
 
@@ -203,6 +220,11 @@ end
 labels["rebracketings"] = {
 	description = "{{{langname}}} terms that have interacted with another word in such a way that the boundary between the words has been modified.",
 	parents = {"terms by etymology"}
+}
+
+labels["rebuses"] = {
+	description = "{{{langname}}} [[rebus]]es &ndash; terms that are partially or completely represented by images, symbols or numbers, often as a form of wordplay.",
+	parents = {"terms by etymology"},
 }
 
 labels["reconstructed terms"] = {
@@ -290,6 +312,11 @@ labels["terms attributed to a specific source"] = {
 	parents = {"terms by etymology"},
 }
 
+labels["terms coined ex nihilo"] = {
+	description = "{{{langname}}} terms fabricated ''[[ex nihilo]]'', i.e. made up entirely rather than being derived from an existing source.",
+	parents = {"terms by etymology"},
+}
+
 labels["terms containing fossilized case endings"] = {
 	description = "{{{langname}}} terms which preserve case morphology which is no longer analyzable within the contemporary grammatical system or which has been entirely lost from the language.",
 	parents = {"terms by etymology"},
@@ -313,7 +340,7 @@ labels["terms by root"] = {
 labels["terms derived from fiction"] = {
 	description = "{{{langname}}} terms that originate from works of [[fiction]].",
 	breadcrumb = "fiction",
-	parents = {"terms attributed to a specific source"},
+	parents = {{name = "terms attributed to a specific source", sort = "fiction"}},
 }
 
 for _, data in ipairs {
@@ -323,10 +350,14 @@ for _, data in ipairs {
 	{source="Dragon Ball", desc="[[w:Akira Toriyama|Akira Toriyama]]'s ''[[w:Dragon Ball|Dragon Ball]]''", displaytitle="''Dragon Ball''"},
 	{source="Duckburg and Mouseton", desc="[[w:The Walt Disney Company|Disney]]'s [[w:Duck universe|Duckburg]] and [[w:Mickey Mouse universe|Mouseton]] universe",
 		topic_parent="Disney"},
+	{source="Futurama", desc="the animated television series ''{{w|Futurama}}''", displaytitle = "''Futurama''"},
 	{source="Harry Potter", desc="the ''[[w:Harry Potter|Harry Potter]]'' series", displaytitle="''Harry Potter''",
 		topic_parent="Harry Potter"},
+	{source="Looney Tunes and Merrie Melodies", desc="''{{w|Looney Tunes}}'' and/or ''{{w|Merrie Melodies}}'', by {{w|Warner Bros. Animation}}", displaytitle = "''Looney Tunes'' and ''Merrie Melodies''"},
 	{source="Nineteen Eighty-Four", desc="[[w:George Orwell|George Orwell]]'s ''[[w:Nineteen Eighty-Four|Nineteen Eighty-Four]]''",
 		displaytitle="''Nineteen Eighty-Four''"},
+	{source="Seinfeld", desc="the American television sitcom ''{{w|Seinfeld}}'' (1989–1998)", displaytitle="''Seinfeld''"},
+	{source="South Park", desc="the animated television series ''[[w:South Park|South Park]]''", displaytitle="''South Park''"},
 	{source="Star Trek", desc="''[[w:Star Trek|Star Trek]]''", displaytitle="''Star Trek''", topic_parent="Star Trek"},
 	{source="Star Wars", desc="''[[w:Star Wars|Star Wars]]''", displaytitle="''Star Wars''", topic_parent="Star Wars"},
 	{source="The Simpsons", desc="''[[w:The Simpsons|The Simpsons]]''", displaytitle="''The Simpsons''", topic_parent="The Simpsons", sort="Simpsons"},
@@ -354,7 +385,7 @@ end
 labels["terms derived from Greek mythology"] = {
 	description = "{{{langname}}} terms derived from Greek mythology which have acquired an idiomatic meaning.",
 	breadcrumb = "Greek mythology",
-	parents = {"terms attributed to a specific source"},
+	parents = {{name = "terms attributed to a specific source", sort = "Greek mythology"}},
 }
 
 labels["terms derived from occupations"] = {
@@ -370,17 +401,22 @@ labels["terms derived from other languages"] = {
 labels["terms derived from the Bible"] = {
 	description = "{{{langname}}} terms that originate from the [[Bible]].",
 	breadcrumb = {name = "the Bible", nocap = true},
-	parents = {"terms attributed to a specific source"},
+	parents = {{name = "terms attributed to a specific source", sort = "Bible"}},
 }
 
 labels["terms derived from Aesop's Fables"] = {
 	description = "{{{langname}}} terms that originate from [[Aesop]]'s Fables.",
 	breadcrumb = "Aesop's Fables",
-	parents = {"terms attributed to a specific source"},
+	parents = {{name = "terms attributed to a specific source", sort = "Aesop's Fables"}},
 }
 
 labels["terms derived from toponyms"] = {
 	description = "{{{langname}}} terms derived from names of real or fictitious places.",
+	parents = {"terms by etymology"},
+}
+
+labels["terms derived through romanized wordplay"] = {
+	description = "{{{langname}}} terms derived through romanized wordplay.",
 	parents = {"terms by etymology"},
 }
 
@@ -389,16 +425,16 @@ labels["terms making reference to character shapes"] = {
 	parents = {"terms by etymology"},
 }
 
-labels["terms derived from sport"] = {
-	description = "{{{langname}}} terms that originate from sport.",
-	breadcrumb = "sport",
-	parents = {"terms attributed to a specific source"},
+labels["terms derived from sports"] = {
+	description = "{{{langname}}} terms that originate from sports.",
+	breadcrumb = "sports",
+	parents = {{name = "terms attributed to a specific source", sort = "sports"}},
 }
 
 labels["terms derived from baseball"] = {
 	description = "{{{langname}}} terms that originate from baseball.",
 	breadcrumb = "baseball",
-	parents = {"terms derived from sport"},
+	parents = {{name = "terms derived from sports", sort = "baseball"}},
 }
 
 labels["terms with Indo-Aryan extensions"] = {
@@ -442,6 +478,31 @@ labels["univerbations"] = {
 labels["words derived through metathesis"] = {
 	description = "{{{langname}}} words that were created through [[metathesis]] from another word.",
 	parents = {{name = "terms by etymology", sort = "metathesis"}},
+}
+
+labels["words that have undergone semantic shift"] = {
+	description = "{{{langname}}} words that show senses explained by [[semantic shift]].",
+	parents = {{name = "terms by etymology", sort = "semantic shift"}},
+}
+
+labels["words that have undergone semantic broadening"] = {
+	description = "{{{langname}}} words that show senses explained by [[semantic]] [[broadening]].",
+	parents = {{name = "words that have undergone semantic shift", sort = "semantic broadening"}},
+}
+
+labels["words that have undergone semantic narrowing"] = {
+	description = "{{{langname}}} words that show senses explained by [[semantic]] [[narrowing]].",
+	parents = {{name = "words that have undergone semantic shift", sort = "semantic narrowing"}},
+}
+
+labels["words that have undergone amelioration"] = {
+	description = "{{{langname}}} words that have gained a positive [[connotation]] over time.",
+	parents = {{name = "words that have undergone semantic shift", sort = "amelioration"}},
+}
+
+labels["words that have undergone pejoration"] = {
+	description = "{{{langname}}} words that have gained a negative [[connotation]] over time.",
+	parents = {{name = "words that have undergone semantic shift", sort = "pejoration"}},
 }
 
 -- Add 'umbrella_parents' key if not already present.
@@ -508,15 +569,6 @@ raw_categories["Multiple etymology subcategories by language"] = {
 	},
 }
 
--- We need to add a raw category for this umbrella category because of the initial capital letter.
-raw_categories["Sanskritic formations by language"] = {
-	description = "Categories with terms coined from [[tatsama]] [[word]]s and/or [[affix]]es.",
-	additional = "{{{umbrella_msg}}}",
-	parents = {
-		"Terms by etymology subcategories by language",
-	},
-}
-
 raw_categories["Terms borrowed back into the same language"] = {
 	description = "Categories with terms in specific languages that were borrowed from a second language that previously borrowed the term from the first language.",
 	additional = "A well-known example is {{m+|en|salaryman}}, a term borrowed from Japanese which in turn was borrowed from the English words [[salary]] and [[man]].\n\n{{{umbrella_msg}}}",
@@ -577,7 +629,7 @@ table.insert(handlers, function(data)
 		end
 		-- Italicize the word/word in the title.
 		local function displaytitle(title, lang)
-			return require("Module:string").plain_gsub(title, term, require("Module:script utilities").tag_text(term, source, nil, "term"))
+			return m_str_utils.plain_gsub(title, term, require("Module:script utilities").tag_text(term, source, nil, "term"))
 		end
 		local breadcrumb = require("Module:script utilities").tag_text(term, source, nil, "term") .. (id and " (" .. id .. ")" or "")
 		return {
@@ -598,7 +650,7 @@ end)
 
 
 table.insert(handlers, function(data)
-	local word_and_id = data.label:match("^terms belonging to the word (.+)$")
+	local labelpref, word_and_id = data.label:match("^(terms belonging to the word )(.+)$")
 	if word_and_id then
 		local word, id = word_and_id:match("^(.+) %((.-)%)$")
 		word = word or word_and_id
@@ -621,7 +673,11 @@ table.insert(handlers, function(data)
 			fam = fam:getFamily()
 		end
 		local word_desc = is_semitic and "[[w:Semitic word|word]]" or "word"
-		local parents = {{name = "terms by word", sort = word_and_id}}
+		local parents = {}
+		if id then
+			table.insert(parents, {name = labelpref .. word, sort = id})
+		end
+		table.insert(parents, {name = "terms by word", sort = word_and_id})
 		local separators = "־ %-"
 		local separator_c = "[" .. separators .. "]"
 		local not_separator_c = "[^" .. separators .. "]"
@@ -635,7 +691,7 @@ table.insert(handlers, function(data)
 		end
 		-- Italicize the word/word in the title.
 		local function displaytitle(title, lang)
-			return require("Module:string").plain_gsub(title, word, require("Module:script utilities").tag_text(word, lang, nil, "term"))
+			return m_str_utils.plain_gsub(title, word, require("Module:script utilities").tag_text(word, lang, nil, "term"))
 		end
 		local breadcrumb = require("Module:script utilities").tag_text(word, data.lang, nil, "term") .. (id and " (" .. id .. ")" or "")
 		return {
@@ -649,11 +705,14 @@ table.insert(handlers, function(data)
 end)
 
 table.insert(handlers, function(data)
-	local num_letters = data.label:match("^([0-9]+)-letter words$")
+	local num_letters = data.label:match("^([1-9]%d*)-letter words$")
 	if num_letters then
 		return {
 			description = "{{{langname}}} words with " .. num_letters .. " letters in them.",
-			parents = {{name = "words", sort = "#" .. num_letters}},
+			parents = {{
+				name = "words",
+				sort = ("#%03d"):format(num_letters),
+			}},
 			umbrella_parents = "Terms by etymology subcategories by language",
 		}
 	end
@@ -747,7 +806,7 @@ table.insert(handlers, function(data)
 		end
 		-- Italicize the root/word in the title.
 		local function displaytitle(title, lang)
-			return require("Module:string").plain_gsub(title, term, require("Module:script utilities").tag_text(term, source, nil, "term"))
+			return m_str_utils.plain_gsub(title, term, require("Module:script utilities").tag_text(term, source, nil, "term"))
 		end
 		local breadcrumb = require("Module:script utilities").tag_text(term, source, nil, "term") .. (id and " (" .. id .. ")" or "")
 		return {
@@ -768,7 +827,7 @@ end)
 
 
 table.insert(handlers, function(data)
-	local root_and_id = data.label:match("^terms belonging to the root (.+)$")
+	local labelpref, root_and_id = data.label:match("^(terms belonging to the root )(.+)$")
 	if root_and_id then
 		local root, id = root_and_id:match("^(.+) %((.-)%)$")
 		root = root or root_and_id
@@ -791,7 +850,11 @@ table.insert(handlers, function(data)
 			fam = fam:getFamily()
 		end
 		local root_desc = is_semitic and "[[w:Semitic root|root]]" or "root"
-		local parents = {{name = "terms by root", sort = root_and_id}}
+		local parents = {}
+		if id then
+			table.insert(parents, {name = labelpref .. root, sort = id})
+		end
+		table.insert(parents, {name = "terms by root", sort = root_and_id})
 		local separators = "־ %-"
 		local separator_c = "[" .. separators .. "]"
 		local not_separator_c = "[^" .. separators .. "]"
@@ -805,7 +868,7 @@ table.insert(handlers, function(data)
 		end
 		-- Italicize the root/word in the title.
 		local function displaytitle(title, lang)
-			return require("Module:string").plain_gsub(title, root, require("Module:script utilities").tag_text(root, lang, nil, "term"))
+			return m_str_utils.plain_gsub(title, root, require("Module:script utilities").tag_text(root, lang, nil, "term"))
 		end
 		local breadcrumb = require("Module:script utilities").tag_text(root, data.lang, nil, "term") .. (id and " (" .. id .. ")" or "")
 		return {
@@ -819,11 +882,14 @@ table.insert(handlers, function(data)
 end)
 
 table.insert(handlers, function(data)
-	local num_letters = data.label:match("^([0-9]+)-letter roots$")
+	local num_letters = data.label:match("^([1-9]%d*)-letter roots$")
 	if num_letters then
 		return {
 			description = "{{{langname}}} roots with " .. num_letters .. " letters in them.",
-			parents = {{name = "roots", sort = "#" .. num_letters}},
+			parents = {{
+				name = "roots",
+				sort = ("#%03d"):format(num_letters),
+			}},
 			umbrella_parents = "Terms by etymology subcategories by language",
 		}
 	end
@@ -934,10 +1000,18 @@ table.insert(handlers, function(data)
 		end
 
 		-- Compute umbrella parents.
+		local cat_name = source:getCategoryName()
+		-- If the source is etymology-only, its category will be handled by the dialect handler in
+		-- [[Module:category tree/poscatboiler/data/language varieties]]. If it has a nonstandard name like 'Kölsch'
+		-- (i.e. not a name like 'American English' that has a language name in it), the dialect handler won't handle
+		-- it unless we tell it to do so through the following call; this is an optimization to avoid expensive
+		-- processing work on all manner of randomly named categories.
+		if source:hasType("etymology-only") then
+			require("Module:category tree/poscatboiler/data/language varieties").export.register_likely_dialect_parent_cat(cat_name)
+		end
 		local umbrella_parents = {
-			source:hasType("family") and {name = source:getCategoryName(), raw = true, sort = " "} or
-			source:hasType("etymology-only") and {name = "Category:" .. source:getCategoryName(), sort = "terms derived from"} or
-			{name = source:getCategoryName(), raw = true, sort = "terms derived from"}
+			source:hasType("family") and {name = cat_name, raw = true, sort = " "} or
+			{name = cat_name, raw = true, sort = "terms derived from"}
 		}
 
 		return {
@@ -1141,7 +1215,7 @@ for bortype, spec in pairs(borrowing_specs) do
 		-- If the label pattern isn't specifically given, generate it from the `bortype`; but make sure to
 		-- escape hyphens in the pattern.
 		local label_pattern =
-			spec.label_pattern or "^" .. require("Module:pattern utilities").pattern_escape(bortype) .. " from (.+)$"
+			spec.label_pattern or "^" .. m_str_utils.pattern_escape(bortype) .. " from (.+)$"
 		table.insert(handlers, function(data)
 			local source_name = data.label:match(label_pattern)
 			if source_name then
