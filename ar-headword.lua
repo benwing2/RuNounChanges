@@ -1,6 +1,12 @@
 -- Author: Benwing2; based on an early version by Rua
 
 local ar_translit = require("Module:ar-translit")
+local m_str_utils = require("Module:string utilities")
+
+local list_to_set = require("Module:table").listToSet
+local rfind = m_str_utils.find
+local rsubn = m_str_utils.gsub
+local u = m_str_utils.char
 
 local lang = require("Module:languages").getByCode("ar")
 
@@ -8,7 +14,6 @@ local export = {}
 local pos_functions = {}
 
 -- diacritics
-local u = mw.ustring.char
 local A = u(0x064E) -- fatḥa
 local AN = u(0x064B) -- fatḥatān (fatḥa tanwīn)
 local U = u(0x064F) -- ḍamma
@@ -42,21 +47,11 @@ local function ine(arg)
 	end
 end
 
-local function list_to_set(list)
-	local set = {}
-	for _, item in ipairs(list) do
-		set[item] = true
-	end
-	return set
-end
-
 -- version of mw.ustring.gsub() that discards all but the first return value
 local function rsub(term, foo, bar)
-	local retval = mw.ustring.gsub(term, foo, bar)
+	local retval = rsubn(term, foo, bar)
 	return retval
 end
-
-local rfind = mw.ustring.find
 
 local function remove_links(text)
 	text = rsub(text, "%[%[[^|%]]*|", "")
@@ -88,53 +83,53 @@ end
 Examples of what you can find by looking at what links to the given
 pages:
 
-[[Special:WhatLinksHere/Template:tracking/ar-headword/unvocalized]]
+[[Special:WhatLinksHere/Wiktionary:Tracking/ar-headword/unvocalized]]
 	all unvocalized pages
-[[Special:WhatLinksHere/Template:tracking/ar-headword/unvocalized/pl]]
+[[Special:WhatLinksHere/Wiktionary:Tracking/ar-headword/unvocalized/pl]]
 	all unvocalized pages where the plural is unvocalized,
 	  whether specified using pl=, pl2=, etc.
-[[Special:WhatLinksHere/Template:tracking/ar-headword/unvocalized/head]]
+[[Special:WhatLinksHere/Wiktionary:Tracking/ar-headword/unvocalized/head]]
 	all unvocalized pages where the head is unvocalized
-[[Special:WhatLinksHere/Template:tracking/ar-headword/unvocalized/head/nouns]]
+[[Special:WhatLinksHere/Wiktionary:Tracking/ar-headword/unvocalized/head/nouns]]
 	all nouns excluding proper nouns, collective nouns,
 	 singulative nouns where the head is unvocalized
-[[Special:WhatLinksHere/Template:tracking/ar-headword/unvocalized/head/proper]]
+[[Special:WhatLinksHere/Wiktionary:Tracking/ar-headword/unvocalized/head/proper]]
 	nouns all proper nouns where the head is unvocalized
-[[Special:WhatLinksHere/Template:tracking/ar-headword/unvocalized/head/not]]
+[[Special:WhatLinksHere/Wiktionary:Tracking/ar-headword/unvocalized/head/not]]
 	proper nouns all words that are not proper nouns
 	  where the head is unvocalized
-[[Special:WhatLinksHere/Template:tracking/ar-headword/unvocalized/adjectives]]
+[[Special:WhatLinksHere/Wiktionary:Tracking/ar-headword/unvocalized/adjectives]]
 	all adjectives where any parameter is unvocalized;
 	  currently only works for heads,
 	  so equivalent to .../unvocalized/head/adjectives
-[[Special:WhatLinksHere/Template:tracking/ar-headword/unvocalized-empty-head]]
+[[Special:WhatLinksHere/Wiktionary:Tracking/ar-headword/unvocalized-empty-head]]
 	all pages with an empty head
-[[Special:WhatLinksHere/Template:tracking/ar-headword/unvocalized-manual-translit]]
+[[Special:WhatLinksHere/Wiktionary:Tracking/ar-headword/unvocalized-manual-translit]]
 	all unvocalized pages with manual translit
-[[Special:WhatLinksHere/Template:tracking/ar-headword/unvocalized-manual-translit/head/nouns]]
+[[Special:WhatLinksHere/Wiktionary:Tracking/ar-headword/unvocalized-manual-translit/head/nouns]]
 	all nouns where the head is unvocalized but has manual translit
-[[Special:WhatLinksHere/Template:tracking/ar-headword/unvocalized-no-translit]]
+[[Special:WhatLinksHere/Wiktionary:Tracking/ar-headword/unvocalized-no-translit]]
 	all unvocalized pages without manual translit
-[[Special:WhatLinksHere/Template:tracking/ar-headword/i3rab]]
+[[Special:WhatLinksHere/Wiktionary:Tracking/ar-headword/i3rab]]
 	all pages with any parameter containing i3rab
 	  of either -un, -u, -a or -i
-[[Special:WhatLinksHere/Template:tracking/ar-headword/i3rab-un]]
+[[Special:WhatLinksHere/Wiktionary:Tracking/ar-headword/i3rab-un]]
 	all pages with any parameter containing an -un i3rab ending
-[[Special:WhatLinksHere/Template:tracking/ar-headword/i3rab-un/pl]]
+[[Special:WhatLinksHere/Wiktionary:Tracking/ar-headword/i3rab-un/pl]]
 	all pages where a form specified using pl=, pl2=, etc.
 	  contains an -un i3rab ending
-[[Special:WhatLinksHere/Template:tracking/ar-headword/i3rab-u/head]]
+[[Special:WhatLinksHere/Wiktionary:Tracking/ar-headword/i3rab-u/head]]
 	all pages with a head containing an -u i3rab ending
-[[Special:WhatLinksHere/Template:tracking/ar-headword/i3rab/head/proper]]
+[[Special:WhatLinksHere/Wiktionary:Tracking/ar-headword/i3rab/head/proper]]
 	nouns (all proper nouns with a head containing i3rab
 	  of either -un, -u, -a or -i)
 
 In general, the format is one of the following:
 
-Template:tracking/ar-headword/FIRSTLEVEL
-Template:tracking/ar-headword/FIRSTLEVEL/ARGNAME
-Template:tracking/ar-headword/FIRSTLEVEL/POS
-Template:tracking/ar-headword/FIRSTLEVEL/ARGNAME/POS
+Wiktionary:Tracking/ar-headword/FIRSTLEVEL
+Wiktionary:Tracking/ar-headword/FIRSTLEVEL/ARGNAME
+Wiktionary:Tracking/ar-headword/FIRSTLEVEL/POS
+Wiktionary:Tracking/ar-headword/FIRSTLEVEL/ARGNAME/POS
 
 FIRSTLEVEL can be one of "unvocalized", "unvocalized-empty-head" or its
 opposite "unvocalized-specified", "unvocalized-manual-translit" or its
@@ -212,7 +207,7 @@ function export.show(frame)
 
 	local args = require("Module:parameters").process(parargs, params)
 
-	local pagename = args.pagename or mw.title.getCurrentTitle().subpageText
+	local pagename = args.pagename or mw.loadData("Module:headword/data").pagename
 
 	local data = {
 		lang = lang,
@@ -269,9 +264,9 @@ end
 
 local function add_infl_params(params, argpref, defgender)
 	params[argpref] = {list = true, disallow_holes = true}
-	params[argpref .. "=tr"] = {list = true, allow_holes = true}
-	params[argpref .. "=g"] = {list = true, default = defgender}
-	params[argpref .. "=g2"] = {list = true}
+	params[argpref .. "\1tr"] = {list = true, allow_holes = true}
+	params[argpref .. "\1g"] = {list = true, default = defgender}
+	params[argpref .. "\1g2"] = {list = true}
 end
 
 -- Get a list of inflections from the arguments in ARGS based on argument
@@ -357,17 +352,28 @@ local function handle_noun_plural(args, data)
 	end
 end
 
-local valid_genders = list_to_set(
-		{ "m", "m-s", "m-pr", "m-s-pr", "m-np", "m-s-np",
-		  "f", "f-s", "f-pr", "f-s-pr", "f-np", "f-s-np",
-		  "m-d", "m-d-pr", "m-d-np",
-		  "f-d", "f-d-pr", "f-d-np",
-		  "m-p", "m-p-pr", "m-p-np",
-		  "f-p", "f-p-pr", "f-p-np",
-		  "d", "d-pr", "d-np",
-		  "p", "p-pr", "p-np",
-		  "pr", "np", "?"
-		})
+local valid_bare_genders = {false, "m", "f", "mfbysense", "mfequiv"}
+local valid_bare_numbers = {false, "d", "p"}
+local valid_bare_animacies = {false, "pr", "np"}
+
+local valid_genders = {}
+for _, gender in ipairs(valid_bare_genders) do
+	for _, number in ipairs(valid_bare_numbers) do
+		for _, animacy in ipairs(valid_bare_animacies) do
+			local parts = {}
+			local function ins_part(part)
+				if part then
+					table.insert(parts, part)
+				end
+			end
+			ins_part(gender)
+			ins_part(number)
+			ins_part(animacy)
+			local full_gender = table.concat(parts, "-")
+			valid_genders[full_gender == "" and "?" or full_gender] = true
+		end
+	end
+end
 
 local function is_masc_sg(g)
 	return g == "m" or g == "m-pr" or g == "m-np"
@@ -624,7 +630,7 @@ pos_functions["noun plural forms"] = {
 pos_functions["adjective feminine forms"] = {
 	params = get_gender_only_params("f"),
 	func = function(args, data)
-		data.pos_category = "adjective forms"
+		data.pos_category = "adjective feminine forms"
 		handle_gender(args, data, "nonlemma")
 	end
 }
