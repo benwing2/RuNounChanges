@@ -27,6 +27,7 @@ export.langs_with_lang_specific_data = {
 	["fi"] = true,
 	["izh"] = true,
 	["la"] = true,
+	["sah"] = true,
 	["tr"] = true,
 }
 
