@@ -219,7 +219,7 @@ local function desc_or_desc_tree(frame, desc_tree)
 	local boolean = {type = "boolean"}
 	if desc_tree then
 		params = {
-			[1] = {required = true, type = "language", etym_lang = true, family = true, default = "gem-pro"},
+			[1] = {required = true, type = "language", family = true, default = "gem-pro"},
 			[2] = {required = true, list = true, allow_holes = true, default = "*fuhsaz"},
 			["notext"] = boolean,
 			["noalts"] = boolean,
@@ -227,7 +227,7 @@ local function desc_or_desc_tree(frame, desc_tree)
 		}
 	else
 		params = {
-			[1] = {required = true, type = "language", etym_lang = true, family = true, default = "en"},
+			[1] = {required = true, type = "language", family = true, default = "en"},
 			[2] = {list = true, allow_holes = true},
 			["alts"] = boolean
 		}
