@@ -2,16 +2,21 @@
 
 local ar_translit = require("Module:ar-translit")
 local m_str_utils = require("Module:string utilities")
+local ar_verb_module = "Module:ar-verb"
+local parse_utilities_module = "Module:parse utilities"
 
 local list_to_set = require("Module:table").listToSet
 local rfind = m_str_utils.find
 local rsubn = m_str_utils.gsub
 local u = m_str_utils.char
+local rsplit = m_str_utils.split
 
 local lang = require("Module:languages").getByCode("ar")
 
 local export = {}
 local pos_functions = {}
+
+local force_cat = false -- for testing; if true, categories appear in non-mainspace pages
 
 -- diacritics
 local A = u(0x064E) -- fatḥa
@@ -34,6 +39,9 @@ local TAM = u(0x0629) -- tāʾ marbūṭa = ة
 -- common combinations
 local UNU = "[" .. UN .. U .. "]"
 
+local TEMPCOMMA = u(0xFFF0)
+local TEMPARCOMMA = u(0xFFF1)
+
 -----------------------
 -- Utility functions --
 -----------------------
@@ -52,6 +60,44 @@ local function rsub(term, foo, bar)
 	local retval = rsubn(term, foo, bar)
 	return retval
 end
+
+-- Replace comma with a temporary char in comma + whitespace.
+local function escape_comma_whitespace(run)
+	local escaped = false
+
+	if run:find("\\,") then
+		run = run:gsub("\\,", "\\" .. TEMPCOMMA)
+		escaped = true
+	end
+	if run:find("\\،") then
+		run = run:gsub("\\،", "\\" .. TEMPARCOMMA)
+		escaped = true
+	end
+	if run:find(",%s") then
+		run = run:gsub(",(%s)", TEMPCOMMA .. "%1")
+		escaped = true
+	end
+	if run:find("،%s") then
+		run = run:gsub("،(%s)", TEMPARCOMMA .. "%1")
+		escaped = true
+	end
+	return run, escaped
+end
+
+-- Undo replacement of comma with a temporary char in comma + whitespace.
+local function unescape_comma_whitespace(run)
+	return (run:gsub(TEMPCOMMA, ","):gsub(TEMPARCOMMA, "،"))
+end
+
+-- Split an argument on comma or Arabic comma, but not either type of comma followed by whitespace.
+local function split_on_comma(val)
+	if rfind(val, "[,،]%s") or val:find("\\") then
+		return export.split_escaping(val, "[,،]", false, escape_comma_whitespace, unescape_comma_whitespace)
+	else
+		return rsplit(val, "[,،]")
+	end
+end
+
 
 local function remove_links(text)
 	text = rsub(text, "%[%[[^|%]]*|", "")
@@ -191,13 +237,18 @@ function export.show(frame)
 	local parargs = frame:getParent().args
 
 	local params = {
-		[1] = {list = "head", disallow_holes = true},
 		["tr"] = {list = true, allow_holes = true},
 		["id"] = {},
 		["nolinkhead"] = {type = "boolean"},
 		["json"] = {type = "boolean"},
 		["pagename"] = {}, -- for testing
 	}
+	local head_is_head = pos_functions[poscat] and pos_functions[poscat].head_is_not_1
+	if head_is_head then
+		params.head = {list = true, disallow_holes = true}
+	else
+		params[1] = {list = "head", disallow_holes = true}
+	end
 
 	if pos_functions[poscat] then
 		for key, val in pairs(pos_functions[poscat].params) do
@@ -213,8 +264,7 @@ function export.show(frame)
 		lang = lang,
 		pos_category = poscat,
 		categories = {},
-		heads = args[1],
-		translits = args.tr,
+		heads = {},
 		genders = {},
 		inflections = {enable_auto_translit = true},
 		pagename = pagename,
@@ -223,9 +273,22 @@ function export.show(frame)
 		force_cat_output = force_cat,
 	}
 
+	local heads = head_is_head and args.head or args[1]
+	for i = 1, #heads do
+		table.insert(data.heads, {
+			term = heads[i],
+			tr = args.tr[i],
+		})
+	end
+
+	if pos_functions[poscat] then
+		pos_functions[poscat].func(args, data)
+	end
+
+	-- Do this after calling pos_functions[poscat].func() as it may modify data.heads (as verbs do).
 	local irreg_translit = false
-	for i = 1, #args[1] do
-		if ar_translit.irregular_translit(args[1][i], args.tr[i]) then
+	for _, head in ipairs(data.heads) do
+		if ar_translit.irregular_translit(head.term, head.tr) then
 			irreg_translit = true
 			break
 		end
@@ -233,10 +296,6 @@ function export.show(frame)
 
 	if irreg_translit then
 		table.insert(data.categories, lang:getCanonicalName() .. " terms with irregular pronunciations")
-	end
-
-	if pos_functions[poscat] then
-		pos_functions[poscat].func(args, data)
 	end
 
 	if args.json then
@@ -713,6 +772,256 @@ pos_functions["passive participles"] = {
 		table.insert(data.categories, lang:getCanonicalName() .. " passive participles")
 		handle_conj_form(args, data)
 		handle_infl_list_args(args, data, adj_inflections)
+	end
+}
+
+-----------------------------------------------------------------------------------------
+--                                         Verbs                                       --
+-----------------------------------------------------------------------------------------
+
+pos_functions["verbs"] = {
+	head_is_not_1 = true,
+	params = {
+		[1] = {},
+		-- Comma-separated lists with possible inline modifiers
+		["nonpast"] = {},
+		["vn"] = {},
+		["noautolinktext"] = {type = "boolean"},
+		["noautolinkverb"] = {type = "boolean"},
+	},
+	func = function(args, data)
+		local ar_verb = require(ar_verb_module)
+		local alternant_multiword_spec = ar_verb.do_generate_forms(args, "ar-verb",
+			data.heads[1] and data.heads[1].term or nil)
+
+		local function do_slot(slot, override, label)
+			if override then
+				local override_param_mods = {
+					alt = {},
+					t = {
+						-- [[Module:headword]] expects the gloss in "gloss".
+						item_dest = "gloss",
+					},
+					gloss = {},
+					g = {
+						-- [[Module:headword]] expects the genders in "genders". `sublist = true` automatically splits
+						-- on comma (optionally with surrounding whitespace).
+						item_dest = "genders",
+						sublist = true,
+					},
+					pos = {},
+					lit = {},
+					id = {},
+					-- Qualifiers and labels
+					q = {
+						type = "qualifier",
+					},
+					qq = {
+						type = "qualifier",
+					},
+					l = {
+						type = "labels",
+					},
+					ll = {
+						type = "labels",
+					},
+					ref = {
+						-- [[Module:headword]] expects the references in "refs".
+						item_dest = "refs",
+						type = "references",
+					},
+				}
+
+				local function generate_obj(formval, parse_err)
+					local val, uncertain = formval:match("^(.*)(%?)$")
+					val = val or formval
+					uncertain = not not uncertain
+					local ar, translit = val:match("^(.*)//(.*)$")
+					if not ar then
+						ar = formval
+					end
+					return {term = ar, translit = translit, uncertain = uncertain}
+				end
+
+				local terms
+				-- Allow Arabic comma and convert to regular comma before splitting.
+				if override:find("<") then
+					terms = require(parse_utilities_module).parse_inline_modifiers(override, {
+						paramname = paramname,
+						param_mods = override_param_mods,
+						generate_obj = generate_obj,
+						splitchar = "[,،]",
+						escape_fun = escape_comma_whitespace,
+						unescape_fun = unescape_comma_whitespace,
+					})
+				else
+					terms = split_on_comma(val)
+					for i, split in ipairs(terms) do
+						terms[i] = generate_obj(split)
+					end
+				end
+				terms.label = label
+				return term
+			else
+				return {
+					slot = slot_tense .. "_3p",
+					label = ("third-person plural %s"):format(label_tense),
+				}, false
+			end
+		end
+
+		local did_pres_1s
+		preses, did_pres_1s = do_finite("pres", "present")
+		preses_3s = {
+			slot = "pres_3s",
+			label = "third-person singular present",
+		}
+		prets = do_finite("pret", "preterite")
+		parts = {
+			slot = "pp_ms",
+			label = "past participle",
+		}
+		short_parts = {
+			slot = "short_pp_ms",
+			label = "short past participle",
+		}
+
+		if #args.pres > 0 or #args.pres3s > 0 or #args.pret > 0 or #args.part > 0 or #args.short_part > 0 then
+			track("verb-old-multiarg")
+		end
+
+		local function strip_brackets(qualifiers)
+			if not qualifiers then
+				return nil
+			end
+			local stripped_qualifiers = {}
+			for _, qualifier in ipairs(qualifiers) do
+				local stripped_qualifier = qualifier:match("^%[(.*)%]$")
+				if not stripped_qualifier then
+					error("Internal error: Qualifier should be surrounded by brackets at this stage: " .. qualifier)
+				end
+				table.insert(stripped_qualifiers, stripped_qualifier)
+			end
+			return stripped_qualifiers
+		end
+
+		local function do_verb_form(args, qualifiers, slot_desc, skip_if_empty)
+			local forms
+			local to_insert
+
+			if #args == 0 then
+				forms = specforms[slot_desc.slot]
+				if not forms or #forms == 0 then
+					if skip_if_empty then
+						return
+					end
+					forms = {{form = "-"}}
+				end
+			elseif #args == 1 and args[1] == "-" then
+				forms = {{form = "-"}}
+			else
+				forms = {}
+				for i, arg in ipairs(args) do
+					local qual = qualifiers[i]
+					if qual then
+						-- FIXME: It's annoying we have to add brackets and strip them out later. The inflection
+						-- code adds all footnotes with brackets around them; we should change this.
+						qual = {"[" .. qual .. "]"}
+					end
+					local form = arg
+					if not args.noautolinkverb then
+						form = com.add_links(form)
+					end
+					table.insert(forms, {form = form, footnotes = qual})
+				end
+			end
+
+			if forms[1].form == "-" then
+				to_insert = {label = "no " .. slot_desc.label}
+			else
+				local into_table = {label = slot_desc.label}
+				for _, form in ipairs(forms) do
+					local qualifiers = strip_brackets(form.footnotes)
+					-- Strip redundant brackets surrounding entire form. These may get generated e.g.
+					-- if we use the angle bracket notation with a single word.
+					local stripped_form = rmatch(form.form, "^%[%[([^%[%]]*)%]%]$") or form.form
+					stripped_form = pt_verb.remove_variant_codes(stripped_form)
+					-- Don't include accelerators if brackets remain in form, as the result will be wrong.
+					-- FIXME: For now, don't include accelerators. We should use the new {{pt-verb form of}} once implemented.
+					-- local this_accel = not stripped_form:find("%[%[") and accel or nil
+					local this_accel = nil
+					table.insert(into_table, {term = stripped_form, q = qualifiers, accel = this_accel})
+				end
+				to_insert = into_table
+			end
+
+			table.insert(data.inflections, to_insert)
+		end
+
+		local skip_pres_if_empty
+		if alternant_multiword_spec.no_pres1_and_sub then
+			table.insert(data.inflections, {label = "no first-person singular present"})
+			table.insert(data.inflections, {label = "no present subjunctive"})
+		end
+		if alternant_multiword_spec.no_pres_stressed then
+			table.insert(data.inflections, {label = "no stressed present indicative or subjunctive"})
+			skip_pres_if_empty = true
+		end
+		if alternant_multiword_spec.only3s then
+			table.insert(data.inflections, {label = glossary_link("impersonal")})
+		elseif alternant_multiword_spec.only3sp then
+			table.insert(data.inflections, {label = "third-person only"})
+		elseif alternant_multiword_spec.only3p then
+			table.insert(data.inflections, {label = "third-person plural only"})
+		end
+		local has_vowel_alt
+		if alternant_multiword_spec.vowel_alt then
+			for _, vowel_alt in ipairs(alternant_multiword_spec.vowel_alt) do
+				if vowel_alt ~= "+" and vowel_alt ~= "í" and vowel_alt ~= "ú" then
+					has_vowel_alt = true
+					break
+				end
+			end
+		end
+
+		local function expand_footnotes_and_references(footnotes)
+			if not footnotes then
+				return nil
+			end
+			return require("Module:inflection utilities").fetch_headword_qualifiers_and_references(footnotes)
+		end
+
+		do_verb_form(args.pres, args.pres_qual, preses, skip_pres_if_empty)
+		-- We want to include both the pres_1s and pres_3s if there is a vowel alternation in the present singular. But we
+		-- don't want to redundantly include the pres_3s if we already included it.
+		if did_pres_1s and has_vowel_alt then
+			do_verb_form(args.pres3s, args.pres3s_qual, preses_3s, skip_pres_if_empty)
+		end
+		do_verb_form(args.pret, args.pret_qual, prets)
+		do_verb_form(args.part, args.part_qual, parts)
+		do_verb_form(args.short_part, args.short_part_qual, short_parts, "skip if empty")
+
+		-- Add categories.
+		for _, cat in ipairs(alternant_multiword_spec.categories) do
+			table.insert(data.categories, cat)
+		end
+
+		-- If the user didn't explicitly specify head=, or specified exactly one head (not 2+) and we were able to
+		-- incorporate any links in that head into the 1= specification, use the infinitive generated by
+		-- [[Module:pt-verb]] in place of the user-specified or auto-generated head. This was copied from
+		-- [[Module:it-headword]], where doing this gets accents marked on the verb(s). We don't have accents marked on
+		-- the verb but by doing this we do get any footnotes on the infinitive propagated here. Don't do this if the
+		-- user gave multiple heads or gave a head with a multiword-linked verbal expression such as Italian
+		-- '[[dare esca]] [[al]] [[fuoco]]' (FIXME: give Portuguese equivalent).
+		if #data.user_specified_heads == 0 or (
+			#data.user_specified_heads == 1 and alternant_multiword_spec.incorporated_headword_head_into_lemma
+		) then
+			data.heads = {}
+			for _, lemma_obj in ipairs(alternant_multiword_spec.forms.infinitive_linked) do
+				local quals, refs = expand_footnotes_and_references(lemma_obj.footnotes)
+				table.insert(data.heads, {term = lemma_obj.form, q = quals, refs = refs})
+			end
+		end
 	end
 }
 
