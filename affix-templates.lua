@@ -46,13 +46,13 @@ local function parse_args(data)
 	}
 
 	if not ilang then
-		params[1] = {required = true, type = "language", etym_lang = true, default = "und"}
+		params[1] = {required = true, type = "language", default = "und"}
 	end
 
 	local source_index
 	if has_source then
 		source_index = term_index - 1
-		params[source_index] = {required = true, type = "language", etym_lang = true, default = "und"}
+		params[source_index] = {required = true, type = "language", default = "und"}
 	end
 
     local m_param_utils = require(parameter_utilities_module)
@@ -117,7 +117,7 @@ local function augment_affix_data(data, args, lang, sc)
 	data.sc = sc
 	data.pos = args.pos and args.pos.default
 	data.lit = args.lit and args.lit.default
-	data.sort = args.sort
+	data.sort_key = args.sort
 	data.type = args.type
 	data.nocap = args.nocap
 	data.notext = args.notext
@@ -194,7 +194,7 @@ end
 
 function export.compound_like(frame)
 	local iparams = {
-		["lang"] = {type = "language", etym_lang = true},
+		["lang"] = {type = "language"},
 		["template"] = {},
 		["text"] = {},
 		["oftext"] = {},
@@ -396,7 +396,7 @@ function export.pseudo_loan(frame)
 		params.force_cat = {type = "boolean"}
 	end
 
-	local args, parts, lang, sc = parse_args {
+	local args, parts, lang, sc, source = parse_args {
 		raw_args = frame:getParent().args,
 		extra_params = extra_params,
 		has_source = true,
@@ -525,7 +525,7 @@ function export.derivsee(frame)
 	if derivtype == "PIE root" then
 		params[1] = {}
 	else
-		params[1] = {required = "true", type = "language", etym_lang = true, default = "und"}
+		params[1] = {required = "true", type = "language", default = "und"}
 		params[2] = {}
 	end
 
