@@ -74,28 +74,49 @@ terminology is helpful to understand:
 * A `term` is a word or multiword expression that can be inflected. A multiword term may in turn consist of several
   single-word inflected terms with surrounding fixed text. A term belongs to a particular `part of speech` (e.g. noun,
   verb, adjective, etc.).
-* A `slot` is a particular combination of inflection dimensions. An example might be "accusative plural" for a noun,
-  or "first-person singular present indicative" for a verb. Slots are named in a language-specific fashion. For
-  example, the slot "accusative plural" might have a name "accpl", while "first-person singular present indicative"
-  might be variously named "pres1s", "pres_ind_1_sg", etc. Each slot is filled with zero or more `forms`.
-* A `form` is a particular inflection of a slot for a particular term. Forms are described using `form objects`, which
-  are Lua objects taking the form {form="FORM", translit="MANUAL_TRANSLIT", footnotes={"FOOTNOTE", "FOOTNOTE", ...}}.
-  FORM is a `form string` specifying the value of the form itself. MANUAL_TRANSLIT specifies optional manual
-  transliteration for the form, in case (a) the form string is in a different script; and (b) either the form's
-  automatic transliteration is incorrect and needs to be overridden, or the language of the term has no automatic
-  transliteration (e.g. in the case of Persian and Hebrew). FOOTNOTE is a footnote to be attached to the form in
-  question, and should be e.g. "[archaic]" or "[only in the meaning 'to succeed (an officeholder)']", i.e. the string
-  must be surrounded by brackets and should begin with a lowercase letter and not end in a period/full stop. When such
-  footnotes are converted to actual footnotes in a table of inflected forms, the brackets will be removed, the first
-  letter will be capitalized and a period/full stop will be added to the end. (However, when such footnotes are used
-  as qualifiers in headword lines, only the brackets will be removed, with no capitalization or final period.) Note
-  that only FORM is mandatory. 
 * The `lemma` is the particular form of a term under which the term is entered into a dictionary. For example, for
   verbs, it is most commonly the infinitive, but this differs for some languages: e.g. Latin, Greek and Bulgarian use
   the first-person singular present indicative (active voice in the case of Latin and Greek); Sanskrit and Macedonian
   use the third-person singular present indicative (active voice in the case of Sanskrit); Hebrew and Arabic use the
   third-person singular masculine past (aka "perfect"); etc. For nouns, the lemma form is most commonly the nominative
   singular, but e.g. for Old French it is the objective singular and for Sanskrit it is the root.
+* A `slot` is a particular combination of inflection dimensions. An example might be "accusative plural" for a noun,
+  or "first-person singular present indicative" for a verb. Slots are named in a language-specific fashion. For
+  example, the slot "accusative plural" might have a name "accpl", while "first-person singular present indicative"
+  might be variously named "pres1s", "pres_ind_1_sg", etc. Each slot is filled with zero or more `forms`.
+* A `form` is a particular inflection of a slot for a particular term. Note that a given slot may (and often does) have
+  more than one associated form; these different forms are termed `variants`. The form variants for a given slot are
+  ordered, and generally should have the more common and/or preferred variants first, along with rare, archaic or
+  obsolete variants last (if they are included at all).
+* Forms are described using `form objects`, which are Lua objects taking the form {form="FORM",
+  translit="MANUAL_TRANSLIT", footnotes={"FOOTNOTE", "FOOTNOTE", ...}}. (Additional metadata may be present in a form
+  object, although the support for preserving such metadata when transformations are applied to form objects isn't yet
+  complete.) FORM is a `form value` specifying the value of the form itself. MANUAL_TRANSLIT specifies optional manual
+  transliteration for the form, in case (a) the form value is in a different script; and (b) either the form's automatic
+  transliteration is incorrect and needs to be overridden, or the language of the term has no automatic transliteration
+  (e.g. in the case of Persian and Hebrew). FOOTNOTE is a footnote to be attached to the form in question, and should be
+  e.g. "[archaic]" or "[only in the meaning 'to succeed (an officeholder)']", i.e. the string must be surrounded by
+  brackets and should begin with a lowercase letter and not end in a period/full stop. When such footnotes are converted
+  to actual footnotes in a table of inflected forms, the brackets will be removed, the first letter will be capitalized
+  and a period/full stop will be added to the end.  (However, when such footnotes are used as qualifiers in headword
+  lines, only the brackets will be removed, with no capitalization or final period.) Note that only FORM is mandatory. 
+* A collection of zero or more form objects is termed a `form object list`, or usually just a `form list`. Such lists go
+  into form tables (see below).
+* A `form table` is a Lua table (i.e. a dictionary) describing all the possible inflections of a given term. The keys
+  in such a table are slots (strings) and the values are form lists. '''NOTE:''' All inflection code assumes and
+  maintains the invariant that no two slots, and no two forms in a single slot, share the same form object (by
+  reference, i.e. the Lua object describing a form object should never be shared in two places). This allows for safely
+  side-effecting form objects in certain sorts of operations. This same invariant necessarily applies to the Lua list
+  objects containing the form objects, but does '''NOT''' apply to metadata inside of form objects. In particular, a
+  list of footnotes may well be shared among different form objects. This means it is '''NOT''' safe to side-effect
+  such lists, and in fact no code in this module that manipulates footnote lists will ever side-effect such lists; they
+  are treated as immutable.
+* Some functions, to save memory, accept and work with abbreviated forms of form objects and/or form lists.
+  Specifically, an `abbreviated form object` is either a form object or a string, the latter corresponding to a form
+  object whose form value is the string and all other properties are nil. Similarly, an `abbreviated form list` is
+  either a single abbreviated form object or a list of such objects, i.e. any of a string, form object or list of
+  strings and/or form objects. Functions that do not accept such abbreviated structures may be said to insist on being
+  passed form objects in `general form`, or form lists in `general list form`.
 ]=]
 
 
@@ -422,13 +443,13 @@ function export.fetch_headword_qualifiers_and_references(footnotes)
 end
 
 
--- Combine a form (either a string or a table) with additional footnotes, possibly replacing the form string and/or
+-- Combine a form (either a string or a table) with additional footnotes, possibly replacing the form value and/or
 -- translit in the process. Normally called in one of two ways:
 -- (1) combine_form_and_footnotes(FORM_OBJ, ADDL_FOOTNOTES, NEW_FORM, NEW_TRANSLIT) where FORM_OBJ is an existing
 --     form object (a table of the form {form = FORM, translit = TRANSLIT, footnotes = FOOTNOTES, ...}); ADDL_FOOTNOTES
 --     is either nil, a single string (a footnote) or a list of footnotes; NEW_FORM is either nil or the new form
 --     string to substitute; and NEW_TRANSLIT is either nil or the new translit string to substitute.
--- (2) combine_form_and_footnotes(FORM_STRING, FOOTNOTES), where FORM_STRING is a string and FOOTNOTES is either nil,
+-- (2) combine_form_and_footnotes(FORM_VALUE, FOOTNOTES), where FORM_VALUE is a string and FOOTNOTES is either nil,
 --     a single string (a footnote) or a list of footnotes.
 --
 -- In either case, a form object (a table of the form {form = FORM, translit = TRANSLIT, footnotes = FOOTNOTES, ...})
