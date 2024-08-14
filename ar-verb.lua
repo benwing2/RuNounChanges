@@ -375,7 +375,7 @@ local slot_override_param_mods = {
 	},
 	gloss = {},
 	g = {
-		-- [[Module:links]] expects the genders in "g". `sublist = true` automatically splits on comma (optionally
+		-- [[Module:links]] expects the genders in "genders". `sublist = true` automatically splits on comma (optionally
 		-- with surrounding whitespace).
 		item_dest = "genders",
 		sublist = true,
