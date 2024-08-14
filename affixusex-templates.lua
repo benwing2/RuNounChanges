@@ -4,7 +4,6 @@ local require = require
 
 local affixusex_module = "Module:affixusex"
 local parameter_utilities_module = "Module:parameter utilities"
-local parameters_module = "Module:parameters"
 
 local concat = table.concat
 local find = string.find
@@ -18,7 +17,7 @@ function export.affixusex_t(frame)
 	local parent_args = frame:getParent().args
 
 	local params = {
-		[1] = {required = true, type = "language", etym_lang = true, default = "und"},
+		[1] = {required = true, type = "language", default = "und"},
 		[2] = {list = true, allow_holes = true},
 
 		["altaff"] = {},
@@ -43,6 +42,7 @@ function export.affixusex_t(frame)
 		-- overrides require_index (and also requires an index for the param corresponding to the first item).
 		{default = true, require_index = true},
 		{group = {"link", "ref", "lang", "q", "l"}},
+		{param = "lit", separate_no_index = true},
 		{param = "arrow", type = "boolean"},
 		{param = {"joiner", "fulljoiner"}},
 	}
@@ -51,7 +51,7 @@ function export.affixusex_t(frame)
 	local items, args = m_param_utils.process_list_arguments {
 		params = params,
 		param_mods = param_mods,
-		raw_args = raw_args,
+		raw_args = parent_args,
 		process_args_before_parsing = function(args)
 			-- Remember and remove an exclamation point from the beginning of a term. We need to do this *before*
 			-- parsing inline modifiers because the exclamation point goes before a language prefix, which is split off
@@ -78,6 +78,7 @@ function export.affixusex_t(frame)
 		ll = args.ll.default,
 		q = args.q.default,
 		qq = args.qq.default,
+		lit = args.lit.default,
 	}
 
 	local pagename = args.pagename or mw.loadData("Module:headword/data").pagename
@@ -138,7 +139,7 @@ function export.affixusex_t(frame)
 		end
 	end
 
-	return require(affixusex_module).format_affixusex(data)
+	return "<span class=\"affixusex\">" .. require(affixusex_module).format_affixusex(data) .. "</span>"
 end
 
 return export
