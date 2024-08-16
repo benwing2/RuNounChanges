@@ -500,7 +500,7 @@ recognized:
 * `key`: Function of one argument to return a comparison key, as with {deepEquals}. The key function is applied to both
 		 `item` and the existing item in `list` to compare against, and the comparison is done against the results.
 		 This is useful when inserting a complex structure into an existing list while avoiding duplicates.
-* `combine`: Function of three arguments (the position, the existing item and the new item, respectively) to combine an
+* `combine`: Function of three arguments (the existing item, the new item and the position, respectively) to combine an
 			 existing item with `new_item`, when `new_item` is found in `list`. If unspecified, the existing item is
 			 left alone.
 
@@ -538,7 +538,7 @@ function export.insertIfNot(list, new_item, options)
 				item_key = item
 			end
 			if export.deepEquals(item_key, new_item_key) then
-				list[i] = options.combine(i, item, new_item)
+				list[i] = options.combine(item, new_item, i)
 				return false
 			end
 		end
