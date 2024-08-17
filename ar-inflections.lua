@@ -18,6 +18,8 @@ local m_string_utilities = require("Module:string utilities")
 local accel_module = "Module:accel"
 local headword_module = "Module:headword"
 local ar_verb_module = "Module:User:Benwing2/ar-verb"
+local ar_IPA_module = "Module:ar-IPA"
+local IPA_module = "Module:IPA"
 local lang = require("Module:languages").getByCode("ar")
 
 local rsplit = m_string_utilities.split
@@ -27,48 +29,160 @@ local function track(page)
 	return true
 end
 
-local function generate_inflection_of(alternant_multiword_spec, forms_and_tags, lemmas, args)
-	for _, form_and_tags in ipairs(forms_and_tags) do
-		for i, tag_set in ipairs(form_and_tags.tag_sets) do
-			form_and_tags.tag_sets[i] = {tags = rsplit(tag_set, "|")}
-		end
+local function get_pronun(form, tr)
+	local pronun = require(ar_IPA_module).toIPA({ Arabic = form, tr = tr}, "noerror")
+	if pronun == "" then
+		return nil
+	else
+		return require(IPA_module).format_IPA(lang, "/" .. pronun .. "/")
 	end
+end
 
-	local lemma_objs = {}
-	for i, lemma in ipairs(lemmas) do
-		local lemma_obj = {
-			lang = lang,
-			term = lemma.form,
-			tr = lemma.translit,
-		}
-		if i == #lemmas then
-			lemma_obj.gloss = args.t
-			lemma_obj.pos = args.pos
-			lemma_obj.lit = args.lit
-			lemma_obj.id = args.id
+local function generate_inflection_of(forms_and_tags, vforms, pagename)
+	-- There are two approaches for combining tag sets and lemmas: Either we combine the lemmas first or the tag sets
+	-- first. Combining the lemmas first means we look for all instances of a given tag set and combine all the lemmas
+	-- with that tag set, and then, for each given set of lemmas, find all tag sets with that set of lemmas and run
+	-- the multipart combination algorithm on them. Combining the tag sets first means that first, for each given
+	-- lemma, we find all tag sets for that lemma and run the multipart combination algorithm on them, then for each
+	-- resulting multipart tag set, we group all instances, and then finally group by set of lemmas. It's not clear
+	-- which one results in fewer overall lines, so we do it both ways and see which one results in fewer lines.
+
+	for _, form_and_tags in ipairs(forms_and_tags) do
+		local by_lemma_sets_by_stage = {}
+		local stages = { "lemmas-first", "tag-sets-first" }
+		for _, stage in ipairs(stages) do
+			if stage == "lemmas-first" then
+				-- Within a given form, we have a collection of lemma+tag-set objects. Group first by tag set.
+				local group_by_tag_set = {}
+				for _, lemma_tag_set in ipairs(form_and_tags.lemmas_tag_sets) do
+					m_table.insertIfNot(group_by_tag_set, {
+						tag_set = lemma_tag_set.tag_set,
+						lemmas = {lemma_tag_set.lemma},
+					}, {
+						key = function(obj) return obj.tag_set end,
+						combine = function(obj1, obj2)
+							for _, lemma in ipairs(obj2.lemmas) do
+								m_table.insertIfNot(obj1.lemmas, lemma)
+							end
+						end,
+					})
+				end
+				-- Then group further by lemma set.
+				local group_by_lemma_set = {}
+				for _, by_tag_set in ipairs(group_by_tag_set) do
+					m_table.insertIfNot(group_by_lemma_set, {
+						tag_sets = {by_tag_set.tag_set},
+						lemmas = by_tag_set.lemmas,
+					}, {
+						key = function(obj) return obj.lemmas end,
+						combine = function(obj1, obj2)
+							for _, tag_set in ipairs(obj2.tag_sets) do
+								m_table.insertIfNot(obj1.tag_sets, tag_set)
+							end
+						end,
+					})
+				end
+				-- Finally, run the multipart combination algorithm.
+				for _, by_lemma_set in ipairs(group_by_lemma_set) do
+					for i, tag_set in ipairs(by_lemma_set.tag_sets) do
+						by_lemma_set.tag_sets[i] = {tags = rsplit(tag_set, "|", true)}
+					end
+					if by_lemma_set.tag_sets[2] then -- more than one
+						by_lemma_set.tag_sets = require(accel_module).combine_tag_sets_into_multipart(
+							by_lemma_set.tag_sets, lang, "verb")
+					end
+				end
+				by_lemma_sets_by_stage[stage] = group_by_lemma_set
+			else
+				-- First group by lemma.
+				local group_by_lemma = {}
+				for _, lemma_tag_set in ipairs(form_and_tags.lemmas_tag_sets) do
+					m_table.insertIfNot(group_by_lemma, {
+						lemma = lemma_tag_set.lemma,
+						tag_sets = {lemma_tag_set.tag_set},
+					}, {
+						key = function(obj) return obj.lemma end,
+						combine = function(obj1, obj2)
+							for _, tag_set in ipairs(obj2.tag_sets) do
+								m_table.insertIfNot(obj1.tag_sets, tag_set)
+							end
+						end,
+					})
+				end
+				-- Then run the multipart combination algorithm.
+				for _, by_lemma in ipairs(group_by_lemma) do
+					for i, tag_set in ipairs(by_lemma.tag_sets) do
+						by_lemma.tag_sets[i] = {tags = rsplit(tag_set, "|", true)}
+					end
+					if by_lemma.tag_sets[2] then -- more than one
+						by_lemma.tag_sets = require(accel_module).combine_tag_sets_into_multipart(
+							by_lemma.tag_sets, lang, "verb")
+					end
+				end
+				-- Finally group further by tag-set set.
+				local group_by_tag_set_set = {}
+				for _, by_lemma in ipairs(group_by_lemma) do
+					m_table.insertIfNot(group_by_tag_set_set, {
+						tag_sets = by_lemma.tag_sets,
+						lemmas = {by_lemma.lemma},
+					}, {
+						key = function(obj) return obj.tag_sets end,
+						combine = function(obj1, obj2)
+							for _, lemma in ipairs(obj2.lemmas) do
+								m_table.insertIfNot(obj1.lemmas, lemma)
+							end
+						end,
+					})
+				end
+				by_lemma_sets_by_stage[stage] = group_by_tag_set_set
+			end
 		end
-		table.insert(lemma_objs, lemma_obj)
+
+		local lines_by_stage = {}
+		for _, stage in ipairs(stages) do
+			local by_lemma_sets = by_lemma_sets_by_stage[stage]
+			local num_lines = 0
+			for _, by_lemma_set in ipairs(by_lemma_sets) do
+				num_lines = num_lines + #by_lemma_set.tag_sets
+			end
+			lines_by_stage[stage] = num_lines
+		end
+
+		local by_lemma_sets
+		if lines_by_stage["lemmas-first"] <= lines_by_stage["tag-sets-first"] then
+			by_lemma_sets = by_lemma_sets_by_stage["lemmas-first"]
+		else
+			by_lemma_sets = by_lemma_sets_by_stage["tag-sets-first"]
+		end
+		form_and_tags.by_lemma_sets = by_lemma_sets
 	end
 
 	local function get_verb_forms_as_inflections()
-		local vforms = {}
-		for _, vform in ipairs(alternant_multiword_spec.verb_forms) do
-			table.insert(vforms, { label = "[[Appendix:Arabic verbs#Form " .. vform .. "|form " .. vform .. "]]" })
+		local formatted_vforms = {}
+		for _, vform in ipairs(vforms) do
+			table.insert(formatted_vforms,
+				{ label = "[[Appendix:Arabic verbs#Form " .. vform .. "|form " .. vform .. "]]" })
 		end
-		return vforms
+		return formatted_vforms
 	end
 
 	local parts = {}
 	local function ins(part)
 		table.insert(parts, part)
 	end
+	local function add_lang_to_lemmas(lemmas)
+		-- add lang; if the lang is already assigned, this isn't a big deal due to idempotency
+		for _, lemma in ipairs(lemmas) do
+			lemma.lang = lang
+		end
+	end
 
-	if forms_and_tags[2] then
+	if forms_and_tags[2] then -- more than one
 		ins(require(headword_module).full_headword {
 			lang = lang,
 			pos_category = "verb forms",
 			inflections = get_verb_forms_as_inflections(),
-			pagename = args.pagename,
+			pagename = pagename,
 			translits = {"-"},
 			force_cat_output = force_cat,
 		})
@@ -80,14 +194,30 @@ local function generate_inflection_of(alternant_multiword_spec, forms_and_tags, 
 				term = form_and_tags.form,
 				tr = form_and_tags.translit,
 			})
-			ins(": ")
-			local tag_sets = form_and_tags.tag_sets
-			if tag_sets[2] then
-				tag_sets = require(accel_module).combine_tag_sets_into_multipart(tag_sets, lang, "verb")
+			local pronun = get_pronun(form_and_tags.form, form_and_tags.translit)
+			if pronun then
+				ins(" " .. pronun)
 			end
-			ins(m_form_of.tagged_inflections {
-				lang = lang, tag_sets = tag_sets, lemmas = lemma_objs, lemma_face = "term", POS = "verb",
-			})
+			ins(":")
+			local by_lemma_sets = form_and_tags.by_lemma_sets
+			if by_lemma_sets[2] then -- more than one
+				for _, by_lemma_set in ipairs(by_lemma_sets) do
+					add_lang_to_lemmas(by_lemma_set.lemmas)
+					ins("\n## ")
+					ins(m_form_of.tagged_inflections {
+						lang = lang, tag_sets = by_lemma_set.tag_sets, lemmas = by_lemma_set.lemmas,
+						lemma_face = "term", POS = "verb", indent = "###",
+					})
+				end
+			else
+				local by_lemma_set = by_lemma_sets[1]
+				add_lang_to_lemmas(by_lemma_set.lemmas)
+				ins(" ")
+				ins(m_form_of.tagged_inflections {
+					lang = lang, tag_sets = by_lemma_set.tag_sets, lemmas = by_lemma_set.lemmas,
+					lemma_face = "term", POS = "verb",
+				})
+			end
 		end
 	else
 		local form_and_tags = forms_and_tags[1]
@@ -97,19 +227,25 @@ local function generate_inflection_of(alternant_multiword_spec, forms_and_tags, 
 			heads = {form_and_tags.form},
 			translits = {form_and_tags.translit},
 			inflections = get_verb_forms_as_inflections(),
-			pagename = args.pagename,
+			pagename = pagename,
 			force_cat_output = force_cat,
 		})
-		ins("\n\n# ")
-		local tag_sets = form_and_tags.tag_sets
-		if tag_sets[2] then
-			tag_sets = require(accel_module).combine_tag_sets_into_multipart(tag_sets, lang, "verb")
+		local pronun = get_pronun(form_and_tags.form, form_and_tags.translit)
+		if pronun then
+			ins(" " .. pronun)
 		end
-		ins(m_form_of.tagged_inflections {
-			lang = lang, tag_sets = tag_sets, lemmas = lemma_objs, lemma_face = "term", POS = "verb",
-		})
+		ins("\n")
+		local by_lemma_sets = form_and_tags.by_lemma_sets
+		for _, by_lemma_set in ipairs(by_lemma_sets) do
+			add_lang_to_lemmas(by_lemma_set.lemmas)
+			ins("\n# ")
+			ins(m_form_of.tagged_inflections {
+				lang = lang, tag_sets = by_lemma_set.tag_sets, lemmas = by_lemma_set.lemmas,
+				lemma_face = "term", POS = "verb",
+			})
+		end
 	end
-	
+
 	return table.concat(parts)
 end
 
@@ -131,114 +267,148 @@ function export.verb_form(frame)
 	}
 	local m_verb_module = require(ar_verb_module)
 	local args = require("Module:parameters").process(parargs, params)
-	local alternant_multiword_spec = m_verb_module.do_generate_forms(args, "ar-verb form of")
-
-	local non_lemma_form = alternant_multiword_spec.verb_form_of_form
-
-    local lemmas = {}
-    for _, slot in ipairs(m_verb_module.potential_lemma_slots) do
-        if alternant_multiword_spec.forms[slot] then
-            for _, formobj in ipairs(alternant_multiword_spec.forms[slot]) do
-                table.insert(lemmas, formobj)
-            end 
-            break
-        end
-    end 
-
-	if not lemmas[1] then
-		error(("Can't identify any lemmas when invoking {{ar-conj|%s}}"):format(args[1]))
-	end
-
-	local slot_restrictions = args.slots and m_table.listToSet(rsplit(args.slots, ",")) or nil
-	local negated_slot_restrictions = args.noslots and m_table.listToSet(rsplit(args.noslots, ",")) or nil
+	local argspecs = args[1]
 	local forms_and_tags = {}
-	local slots_seen = {}
+	local vforms = {}
+	for i, argspec in ipairs(argspecs) do
+		args[1] = argspecs[i]
+		local alternant_multiword_spec = m_verb_module.do_generate_forms(args, "ar-verb form of")
 
-	for _, slot_accel in ipairs(alternant_multiword_spec.verb_slots) do
-		local slot, accel = unpack(slot_accel)
-		-- Skip "unsettable" (ancillary/internal) slots.
-		if not m_verb_module.unsettable_slots_set[slot] then
-			local forms = alternant_multiword_spec.forms[slot]
-			if forms then
-				for _, formobj in ipairs(forms) do
-					local form = m_links.remove_links(mw.ustring.toNFC(formobj.form))
-					if non_lemma_form == lang:makeEntryName(form) then
-						if (not slot_restrictions or slot_restrictions[slot]) and (
-							not negated_slot_restrictions or not negated_slot_restrictions[slot]
-						) then
-							local translit = formobj.translit
-							-- In case there is redundant manual translit, remove it so the comparisons are
-							-- guaranteed to work out correctly below in insertIfNot(). Otherwise it's possible
-							-- we are comparing an object without manual translit to an object with redundant
-							-- manual translit, in which case we will wrongly not find them equivalent.
-							if translit and translit == lang:transliterate(form) then
-								translit = nil
+		local non_lemma_form = alternant_multiword_spec.verb_form_of_form
+
+		for _, vform in ipairs(alternant_multiword_spec.verb_forms) do
+			m_table.insertIfNot(vforms, vform)
+		end
+
+		local lemmas = {}
+		for _, slot in ipairs(m_verb_module.potential_lemma_slots) do
+			if alternant_multiword_spec.forms[slot] then
+				for _, formobj in ipairs(alternant_multiword_spec.forms[slot]) do
+					local lemmaval = m_links.remove_links(mw.ustring.toNFC(formobj.form))
+					local lemma_translit = formobj.translit
+					-- In case there is redundant manual translit, remove it so the comparisons are guaranteed to work
+					-- out correctly in insertIfNot() comparisons. Otherwise it's possible we are comparing an object
+					-- without manual translit to an object with redundant manual translit, in which case we will
+					-- wrongly not find them equivalent.
+					if lemma_translit and lemma_translit == lang:transliterate(lemmaval) then
+						lemma_translit = nil
+					end
+					-- Ignore any footnotes. FIXME: We could convert them to qualifiers instead.
+					table.insert(lemmas, {
+						-- use term and tr for compatibility with tagged_inflections()
+						term = lemmaval,
+						tr = lemma_translit,
+						gloss = args.t[i] or args.t.default,
+						lit = args.lit[i] or args.lit.default,
+						pos = args.pos[i] or args.pos.default,
+						id = args.id[i] or args.id.default,
+					})
+				end 
+				break
+			end
+		end 
+
+		if not lemmas[1] then
+			error(("Can't identify any lemmas when invoking {{ar-conj|%s}}"):format(args[1]))
+		end
+
+		local slot_restrictions = args.slots and m_table.listToSet(rsplit(args.slots, ",")) or nil
+		local negated_slot_restrictions = args.noslots and m_table.listToSet(rsplit(args.noslots, ",")) or nil
+		local slots_seen = {}
+
+		local matched = false
+		for _, slot_accel in ipairs(alternant_multiword_spec.verb_slots) do
+			local slot, accel = unpack(slot_accel)
+			-- Skip "unsettable" (ancillary/internal) slots.
+			if not m_verb_module.unsettable_slots_set[slot] then
+				local forms = alternant_multiword_spec.forms[slot]
+				if forms then
+					for _, formobj in ipairs(forms) do
+						local form = m_links.remove_links(mw.ustring.toNFC(formobj.form))
+						if non_lemma_form == lang:makeEntryName(form) then
+							if (not slot_restrictions or slot_restrictions[slot]) and (
+								not negated_slot_restrictions or not negated_slot_restrictions[slot]
+							) then
+								local translit = formobj.translit
+								-- In case there is redundant manual translit, remove it; see above with lemmas for why
+								-- we do this.
+								if translit and translit == lang:transliterate(form) then
+									translit = nil
+								end
+								for _, lemma in ipairs(lemmas) do
+									local form_and_tags = {
+										form = form,
+										translit = translit,
+										lemmas_tag_sets = {{
+											lemma = lemma,
+											tag_set = accel,
+										}},
+									}
+									m_table.insertIfNot(forms_and_tags, form_and_tags, {
+										key = function(formobj)
+											return {
+												form = formobj.form,
+												translit = formobj.translit,
+											}
+										end,
+										combine = function(obj, newobj)
+											for _, lemma_tag_set in ipairs(newobj.lemmas_tag_sets) do
+												m_table.insertIfNot(obj.lemmas_tag_sets, lemma_tag_set)
+											end
+										end,
+									})
+								end
+								matched = true
 							end
-							local form_and_tags = {
-								form = form,
-								translit = translit,
-								tag_sets = {accel},
-							}
-							m_table.insertIfNot(forms_and_tags, form_and_tags, {
-								key = function(formobj)
-									return formobj.translit and {form = formobj.form, translit = formobj.translit}
-										or formobj.form
-								end,
-								combine = function(pos, obj, newobj)
-									for _, tag_set in ipairs(newobj.tag_sets) do
-										m_table.insertIfNot(obj.tag_sets, tag_set)
-									end
-								end,
-							})
-						end
-						if slot_restrictions or negated_slot_restrictions then
-							slots_seen[slot] = true
+							if slot_restrictions or negated_slot_restrictions then
+								slots_seen[slot] = true
+							end
 						end
 					end
 				end
 			end
 		end
-	end
 
-	local function concat_lemmas()
-		local formvals = {}
-		for _, lemma in ipairs(lemmas) do
-			table.insert(formvals, lemma.form)
-		end
-		return table.concat(formvals, "/")
-	end
-
-	if next(slots_seen) then
-		local function get_slots_seen()
-			local slots_seen_list = {}
-			for slot, _ in pairs(slots_seen) do
-				table.insert(slots_seen_list, slot)
+		local function concat_lemmas()
+			local formvals = {}
+			for _, lemma in ipairs(lemmas) do
+				table.insert(formvals, lemma.form)
 			end
-			table.sort(slots_seen_list)
-			return slots_seen_list
+			return table.concat(formvals, "/")
 		end
 
-		local function check_against_slots_seen(restrictions, prefix)			
-			for slot, _ in pairs(restrictions) do
-				if not slots_seen[slot] then
-					error(("%sslot restriction for slot '%s' had no effect (typo?) because it is not any of the slots matching form '%s' for verb '%s': possible values %s"):format(
-						prefix, slot, non_lemma_form, concat_lemmas(), table.concat(get_slots_seen(), ",")))
+		if next(slots_seen) then
+			local function get_slots_seen()
+				local slots_seen_list = {}
+				for slot, _ in pairs(slots_seen) do
+					table.insert(slots_seen_list, slot)
+				end
+				table.sort(slots_seen_list)
+				return slots_seen_list
+			end
+
+			local function check_against_slots_seen(restrictions, prefix)			
+				for slot, _ in pairs(restrictions) do
+					if not slots_seen[slot] then
+						error(("%sslot restriction for slot '%s' had no effect (typo?) because it is not any of the slots matching form '%s' for verb '%s': possible values %s"):format(
+							prefix, slot, non_lemma_form, concat_lemmas(), table.concat(get_slots_seen(), ",")))
+					end
 				end
 			end
-		end
 
-		if slot_restrictions then
-			check_against_slots_seen(slot_restrictions, "")
+			if slot_restrictions then
+				check_against_slots_seen(slot_restrictions, "")
+			end
+			if negated_slot_restrictions then
+				check_against_slots_seen(negated_slot_restrictions, "negated ")
+			end
 		end
-		if negated_slot_restrictions then
-			check_against_slots_seen(negated_slot_restrictions, "negated ")
+		if not matched then
+			error(("'%s' is not any of the forms of the verb '%s'"):format(non_lemma_form, concat_lemmas()))
 		end
 	end
-	if forms_and_tags[1] then
-		return generate_inflection_of(alternant_multiword_spec, forms_and_tags, lemmas, args)
-	end
 
-	error(("'%s' is not any of the forms of the verb '%s'"):format(non_lemma_form, concat_lemmas()))
+	return generate_inflection_of(forms_and_tags, vforms, args.pagename)
 end
 
 return export
