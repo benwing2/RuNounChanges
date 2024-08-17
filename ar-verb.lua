@@ -450,7 +450,7 @@ local function allow_multiple_values_for_override(comma_separated_groups, data, 
 			if form.form == "++" and not is_slot_override then
 				error(("Stem override '%s' cannot use ++ to request a secondary default"):format(data.prefix))
 			end
-			data.base.slot_uses_default[data.prefix] = true
+			data.base.slot_override_uses_default[data.prefix] = true
 		end
 	end
 	for _, form in ipairs(retvals) do
@@ -662,7 +662,7 @@ local function skip_slot(base, slot, allow_overrides)
 	if base.slot_explicitly_missing[slot] then
 		return true
 	end
-	if not allow_overrides and base.slot_overrides[slot] and not base.slot_uses_default[slot] then
+	if not allow_overrides and base.slot_overrides[slot] and not base.slot_override_uses_default[slot] then
 		-- Skip any slots for which there are overrides, except those that request the default value using + or ++.
 		return true
 	end
@@ -2898,7 +2898,8 @@ local function parse_indicator_spec(angle_bracket_spec)
 		user_stem_overrides = {},
 		user_slot_overrides = {},
 		slot_explicitly_missing = {},
-		slot_uses_default = {},
+		slot_uncertain = {},
+		slot_override_uses_default = {},
 		addnote_specs = {},
 	}
 	local function parse_err(msg)
@@ -3381,6 +3382,16 @@ end
 local function detect_all_indicator_specs(alternant_multiword_spec)
 	add_slots(alternant_multiword_spec)
 	alternant_multiword_spec.verb_forms = {}
+	-- This means at least one individual base had the slot marked as explicitly missing. Another base (e.g. when
+	-- there are multiple alternants) might have a value for the slot. In practice, we only respect this when there are
+	-- no overall values in the slot and `slot_uncertain` isn't set; in this case, we display "no ..." for the slot
+	-- instead of simply not displaying anything for the slot.
+	alternant_multiword_spec.slot_explicitly_missing = {}
+	-- This means at least one individual base had no values for the slot and the slot marked as explicitly uncertain.
+	-- Note that this is different from a value being present but marked as uncertain (e.g. if an override was given
+	-- with a ? after it); this causes the form object for the value to have `uncertain = true` set. If there are no
+	-- overall values in the slot and `slot_uncertain` is set, we display this in the headword.
+	alternant_multiword_spec.slot_uncertain = {}
 
 	iut.map_word_specs(alternant_multiword_spec, function(base)
 		-- So arguments, etc. can be accessed. WARNING: Creates circular reference.
@@ -3391,6 +3402,25 @@ local function detect_all_indicator_specs(alternant_multiword_spec)
 		end
 		if base.passive_uncertain then
 			alternant_multiword_spec.passive_uncertain = true
+		end
+		for slot, _ in pairs(base.slot_explicitly_missing) do
+			alternant_multiword_spec.slot_explicitly_missing[slot] = true
+		end
+	end)
+end
+
+local function determine_slot_uncertainty_from_forms(alternant_multiword_spec)
+	iut.map_word_specs(alternant_multiword_spec, function(base)
+		-- If no verbal noun and verb form is not 'none' (manually-specified stems) — which currently only happens for
+		-- form I — and the verbal noun wasn't explicitly indicated as missing using <vn:->, we assume it's just
+		-- unknown/unspecified rather than missing.
+		if not base.forms.vn and vform ~= "none" and not base.slot_explicitly_missing.vn then
+			base.slot_uncertain.vn = true
+		end
+		-- Propagate slot uncertainty up. Currently only the verbal noun can have this set but we write the code
+		-- generally.
+		for slot, _ in pairs(base.slot_uncertain) do
+			alternant_multiword_spec.slot_uncertain[slot] = true
 		end
 	end)
 end
@@ -3519,8 +3549,8 @@ local function add_categories_and_annotation(alternant_multiword_spec, base, mul
 		end
 	end
 
-	if not base.forms.vn and not base.slot_explicitly_missing.vn then
-		-- Assume an unspecified and non-defaulted verbal noun (form I) is omitted rather than explicitly missing.
+	if base.slot_uncertain.vn then
+		-- An unspecified and non-defaulted verbal noun (form I) is considered uncertain rather than explicitly missing.
 		-- Use <vn:-> to explicitly indicate the lack of verbal noun.
 		insert_cat("verbs needing verbal noun checked")
 	end
@@ -4025,7 +4055,7 @@ end
 -- for each slot. If there are no values for a slot, the slot key will be missing. The value
 -- for a given slot is a list of objects {form=FORM, footnotes=FOOTNOTES}.
 function export.do_generate_forms(args, source_template, headword_head)
-	local PAGENAME = mw.title.getCurrentTitle().subpageText
+	local PAGENAME = mw.loadData("Module:headword/data").pagename
 	local function in_template_space()
 		return mw.title.getCurrentTitle().nsText == "Template"
 	end
@@ -4136,6 +4166,7 @@ function export.do_generate_forms(args, source_template, headword_head)
 		end
 	end
 
+	determine_slot_uncertainty_from_forms(alternant_multiword_spec)
 	determine_verb_properties_from_forms(alternant_multiword_spec)
 	compute_categories_and_annotation(alternant_multiword_spec)
 	if args.json and source_template == "ar-conj" then
