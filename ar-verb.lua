@@ -27,7 +27,8 @@ FIXME:
 
 1. Finish unimplemented conjugation types. Only IX-final-weak left (extremely rare, possibly only one verb اِعْمَايَ
    (according to Haywood and Nahmad p. 244, who are very specific about the irregular occurrence of alif + yā instead
-   of expected اِعْمَيَّ with doubled yā). Not in Hans Wehr.
+   of expected اِعْمَيَّ with doubled yā). Not in Hans Wehr. NOTE: Not true about this, cf. form IX اِرْعَوَى "to desist,
+   to repent, to see the light". Also note form XII اِخْضَوْضَرَ = form IX اِخْضَرَّ "to be or become green".
 
 2. Implement irregular verbs as special cases and recognize them, e.g.
    -- laysa "to not be"; only exists in the past tense, no non-past, no imperative, no participles, no passive, no
@@ -143,7 +144,7 @@ local vowels = "aeiouāēīōū"
 local NV = "[^" .. vowels .. "]"
 
 local dia = {a = A, i = I, u = U}
-local undia = {[A] = "a", [I] = "i", [U] = "u"}
+local undia = {[A] = "a", [I] = "i", [U] = "u", ["-"] = "-"}
 
 -- various letters and signs
 local ALIF   = u(0x0627) -- ʾalif = ا
@@ -885,6 +886,11 @@ end
 -- True if the active non-past takes a-vocalization rather than i-vocalization in its last syllable.
 local function vform_nonpast_a_vowel(vform)
 	return vform == "V" or vform == "VI" or vform == "XV" or vform == "IIq"
+end
+
+-- True if the `passive` spec indicates a passive-only verb.
+local function is_passive_only(passive)
+	return passive == "onlypass" or passive == "impers"
 end
 
 -------------------------------------------------------------------------------
@@ -2246,30 +2252,11 @@ local function create_conjugations()
 		make_augmented_geminate_verb(base, vowel_spec, past_stem_base, nonpast_stem_base, past_pass_stem_base, vn)
 	end
 
-	-- Join the infixed tā' (ت) to the first radical in form VIII verbs. This may cause assimilation of the tā' to the
-	-- radical or in some cases the radical to the tā'.
-	local function join_ta(rad)
-		local function eq(val)
-			return req(rad, val)
-		end
-		if eq(W) or eq(Y) or eq("ت") then return "تّ"
-		elseif eq("د") then return "دّ"
-		elseif eq("ث") then return "ثّ"
-		elseif eq("ذ") then return "ذّ"
-		elseif eq("ز") then return "زْد"
-		elseif eq("ص") then return "صْط"
-		elseif eq("ض") then return "ضْط"
-		elseif eq("ط") then return "طّ"
-		elseif eq("ظ") then return "ظّ"
-		else return q(rad, SK, "ت")
-		end
-	end
-
 	-- Return Form VIII verbal noun. If RAD1 is hamza, there are two alternatives.
 	local function form_viii_verbal_noun(base, vowel_spec, rad1, rad2, rad3)
 		local final_weak = is_final_weak(base, vowel_spec)
 		rad3 = final_weak and HAMZA or rad3
-		local vn = high_form_verbal_noun(join_ta(rad1), rad2, rad3)
+		local vn = high_form_verbal_noun(vowel_spec.form_viii_assim, rad2, rad3)
 		if req(rad1, HAMZA) then
 			return {vn, high_form_verbal_noun(Y .. SK .. T, rad2, rad3)}
 		else
@@ -2285,17 +2272,7 @@ local function create_conjugations()
 			base.irregular = true
 			rad1 = T
 		end
-		make_high_form_sound_final_weak_verb(base, vowel_spec, join_ta(rad1), rad2, rad3)
-
-		-- Add alternative parts if verb is first-hamza. Any duplicates are removed during addition.
-		if req(rad1, HAMZA) then
-			local vn = form_viii_verbal_noun(base, vowel_spec, rad1, rad2, rad3)
-			local past_stem_base2 = q("اِيتَ", rad2)
-			local nonpast_stem_base2 = q(join_ta(rad1), A, rad2)
-			local past_pass_stem_base2 = q("اُوتُ", rad2)
-			make_augmented_sound_final_weak_verb(base, vowel_spec, past_stem_base2, nonpast_stem_base2,
-				past_pass_stem_base2, vn)
-		end
+		make_high_form_sound_final_weak_verb(base, vowel_spec, vowel_spec.form_viii_assim, rad2, rad3)
 	end
 
 	conjugations["VIII-sound"] = function(base, vowel_spec)
@@ -2311,7 +2288,7 @@ local function create_conjugations()
 		local vn = form_viii_verbal_noun(base, vowel_spec, rad1, Y, rad3)
 
 		-- various stem bases
-		local nonpast_stem_base = join_ta(rad1)
+		local nonpast_stem_base = vowel_spec.form_viii_assim
 		local past_stem_base = q(_I, nonpast_stem_base)
 		local past_pass_stem_base = q(_U, nonpast_stem_base)
 
@@ -2332,9 +2309,9 @@ local function create_conjugations()
 		local vn = form_viii_verbal_noun(base, vowel_spec, rad1, rad2, rad2)
 
 		-- various stem bases
-		local nonpast_stem_base = q(join_ta(rad1), A)
+		local nonpast_stem_base = q(vowel_spec.form_viii_assim, A)
 		local past_stem_base = q(_I, nonpast_stem_base)
-		local past_pass_stem_base = q(_U, join_ta(rad1), U)
+		local past_pass_stem_base = q(_U, vowel_spec.form_viii_assim, U)
 
 		-- make parts
 		make_augmented_geminate_verb(base, vowel_spec, past_stem_base, nonpast_stem_base, past_pass_stem_base, vn)
@@ -2351,12 +2328,11 @@ local function create_conjugations()
 
 	conjugations["IX-sound"] = function(base, vowel_spec)
 		local rad1, rad2, rad3 = get_radicals_3(vowel_spec)
-		local ipref = _I
-		local vn = q(ipref, rad1, SK, rad2, I, rad3, AA, rad3)
+		local vn = q(_I, rad1, SK, rad2, I, rad3, AA, rad3)
 
 		-- various stem bases
 		local nonpast_stem_base = q(rad1, SK, rad2, A)
-		local past_stem_base = q(ipref, nonpast_stem_base)
+		local past_stem_base = q(_I, nonpast_stem_base)
 		local past_pass_stem_base = q(_U, rad1, SK, rad2, U)
 
 		-- make parts
@@ -2364,7 +2340,8 @@ local function create_conjugations()
 	end
 
 	conjugations["IX-final-weak"] = function(base, vowel_spec)
-		error("FIXME: Not yet implemented")
+		local rad1, rad2, rad3 = get_radicals_3(vowel_spec)
+		make_high_form_sound_final_weak_verb(base, vowel_spec, q(rad1, SK, rad2), rad3, rad3)
 	end
 
 	-- Populate a sound or final-weak verb for any of the various high-numbered
@@ -2421,7 +2398,8 @@ local function create_conjugations()
 
 		-- make parts
 		if base.altgem then
-			inflect_tense(base, "past", "", {q(past_stem_base, A, rad2, SH), all_same = 1}, past_endings_ay_12_person_only)
+			inflect_tense(base, "past", "", {q(past_stem_base, A, rad2, SH), all_same = 1},
+				past_endings_ay_12_person_only)
 		end
 		make_augmented_geminate_verb(base, vowel_spec, past_stem_base, nonpast_stem_base, past_pass_stem_base, vn,
 			base.altgem and "[uncommon]" or nil)
@@ -2429,12 +2407,11 @@ local function create_conjugations()
 
 	conjugations["XI-sound"] = function(base, vowel_spec)
 		local rad1, rad2, rad3 = get_radicals_3(vowel_spec)
-		local ipref = _I
-		local vn = q(ipref, rad1, SK, rad2, II, rad3, AA, rad3)
+		local vn = q(_I, rad1, SK, rad2, II, rad3, AA, rad3)
 
 		-- various stem bases
 		local nonpast_stem_base = q(rad1, SK, rad2, AA)
-		local past_stem_base = q(ipref, nonpast_stem_base)
+		local past_stem_base = q(_I, nonpast_stem_base)
 		local past_pass_stem_base = q(_U, rad1, SK, rad2, UU)
 
 		-- make parts
@@ -2547,11 +2524,10 @@ local function create_conjugations()
 
 	conjugations["IVq-sound"] = function(base, vowel_spec)
 		local rad1, rad2, rad3, rad4 = get_radicals_4(vowel_spec)
-		local ipref = _I
-		local vn = q(ipref, rad1, SK, rad2, I, rad3, SK, rad4, AA, rad4)
+		local vn = q(_I, rad1, SK, rad2, I, rad3, SK, rad4, AA, rad4)
 
 		-- various stem bases
-		local past_stem_base = q(ipref, rad1, SK, rad2, A, rad3)
+		local past_stem_base = q(_I, rad1, SK, rad2, A, rad3)
 		local nonpast_stem_base = q(rad1, SK, rad2, A, rad3)
 		local past_pass_stem_base = q(_U, rad1, SK, rad2, U, rad3)
 
@@ -3147,40 +3123,22 @@ local function detect_indicator_spec(base)
 	base.slot_overrides = {}
 
 	if not base.conj_vowels[1] then
-		if base.verb_form == "I" and base.passive ~= "onlypass" and base.passive ~= "impers" then
-			error("Form I verb that isn't passive-only must have past~non-past vowels specified")
-		end
+		-- These may be converted to inferred vowels. If not, we throw an error if form I and not passive-only.
 		base.conj_vowels = {{
 			past = "-",
 			nonpast = "-",
 		}}
 	else
-		base.unexpanded_conj_vowels = m_table.deepcopy(base.conj_vowels)
 		-- If multiple vowels specified for a given vowel type (e.g. a,u~u), expand so that each spec in
-		-- base.conj_vowels has just one past and one non-past vowel.
-		local needs_expansion = false
+		local expansion = {}
 		for _, spec in ipairs(base.conj_vowels) do
-			if #spec.past > 1 or #spec.nonpast > 1 then
-				needs_expansion = true
-				break
-			end
-		end
-		if needs_expansion then
-			local expansion = {}
-			for _, spec in ipairs(base.conj_vowels) do
-				for _, past in ipairs(spec.past) do
-					for _, nonpast in ipairs(spec.nonpast) do
-						table.insert(expansion, {past = past, nonpast = nonpast})
-					end
+			for _, past in ipairs(spec.past) do
+				for _, nonpast in ipairs(spec.nonpast) do
+					table.insert(expansion, {past = past, nonpast = nonpast})
 				end
 			end
-			base.conj_vowels = expansion
-		else
-			for _, spec in ipairs(base.conj_vowels) do
-				spec.past = spec.past[1]
-				spec.nonpast = spec.nonpast[1]
-			end
 		end
+		base.conj_vowels = expansion
 	end
 
 	local vform = base.verb_form
@@ -3192,8 +3150,8 @@ local function detect_indicator_spec(base)
 	-- they may be different (particularly with form-I hollow verbs).
 	for _, vowel_spec in ipairs(base.conj_vowels) do
 		-- NOTE: rad1, rad2, etc. refer to user-specified radicals, which are formobj tables that optionally specify an
-		-- explicit manual translit, whereas ir1, ir2, etc. refer to inferred radicals, which are strings (and may
-		-- contain Latin letters to indicate ambiguous radicals; see below).
+		-- explicit manual translit, whereas ir1, ir2, etc. refer to inferred radicals, which are either strings or
+		-- lists of possible radicals.
 		local rads = base.root_consonants
 		local rad1, rad2, rad3, rad4 = rads[1], rads[2], rads[3], rads[4]
 
@@ -3211,24 +3169,33 @@ local function detect_indicator_spec(base)
 				nonpast_vowel = vowel_spec.nonpast,
 				is_reduced = base.reduced,
 			}
-			weakness, ir1, ir2, ir3, ir4 = ret.weakness, ret.ir1, ret.ir2, ret.ir3, ret.ir4
+			weakness, ir1, ir2, ir3, ir4 = ret.weakness, ret.rad1, ret.rad2, ret.rad3, ret.rad4
 			vowel_spec.form_viii_assim = ret.form_viii_assim
-			vowel_spec.past_vowel = ret.inferred_past_vowel
-			vowel_spec.nonpast_vowel = ret.inferred_nonpast_vowel
+			vowel_spec.past = ret.past_vowel
+			vowel_spec.nonpast = ret.nonpast_vowel
 		end
 
 		-- For most ambiguous radicals, the choice of radical doesn't matter because it doesn't affect the conjugation
 		-- one way or another.  For form I hollow verbs, however, it definitely does. In fact, the choice of radical is
 		-- critical even beyond the past and non-past vowels because it affects the form of the passive participle.  So,
 		-- check for this and signal an error if the radical could not be inferred and is not given explicitly.
-		if vform == "I" and type(ir2) == "table" and ir2.ambig and not rad2 then
+		if vform == "I" and type(ir2) == "table" and ir2.need_radical and not rad2 then
 			error("Unable to guess middle radical of hollow form I verb; need to specify radical explicitly")
 		end
 
-		-- Convert the Latin radicals indicating ambiguity into the corresponding Arabic radicals.
+		if vform == "I" and not is_passive_only(base.passive) and (
+			rget(vowel_spec.past) == "-" or rget(vowel_spec.nonpast) == "-") then
+			error("Form I verb that isn't passive-only or final-weak must have past~non-past vowels specified")
+		end
+
+		-- Convert ambiguous radicals.
 		local function regularize_inferred_radical(rad)
 			if type(rad) == "table" then
-				return rad[1]
+				if rad.ambig then
+					return {form = rad[1], ambig = true}
+				else
+					return rad[1]
+				end
 			else
 				return rad
 			end
@@ -3243,19 +3210,13 @@ local function detect_indicator_spec(base)
 			if not user_radical then
 				return regularize_inferred_radical(inferred_radical), inferred_radical
 			else
-				local allowed_radicals
-				if inferred_radical == "t" then
-					allowed_radicals = {T, W, Y}
-				elseif inferred_radical == "w" or inferred_radical == "y" then
-					allowed_radicals = {W, Y}
-				end
 				local rad_formval = rget(user_radical)
-				if allowed_radicals then
-					local allowed_radical_set = m_table.listToSet(allowed_radicals)
+				if type(inferred_radical) == "table" then
+					local allowed_radical_set = m_table.listToSet(inferred_radical)
 					if not allowed_radical_set[rad_formval] then
 						error(("For lemma %s, radical %s ambiguously inferred as %s but user radical incompatibly given as %s"):
 						format(base.lemma, index,
-						m_table.serialCommaJoin(allowed_radicals, {conj = "or", dontTag = true}), rad_formval))
+						m_table.serialCommaJoin(inferred_radical, {conj = "or", dontTag = true}), rad_formval))
 					end
 				elseif rad_formval ~= inferred_radical then
 					error(("For lemma %s, radical %s inferred as %s but user radical incompatibly given as %s"):
@@ -3319,6 +3280,39 @@ local function detect_indicator_spec(base)
 			check_radicals(vform, weakness, rget(vowel_spec.rad1), rget(vowel_spec.rad2), rget(vowel_spec.rad3),
 				base.quadlit and rget(vowel_spec.rad4) or nil)
 		end
+	end
+
+	-- If form I, regroup expanded vowels for display purposes.
+	if vform == "I" then
+		local group_by_past = {}
+		for _, vowel_spec in ipairs(base.conj_vowels) do
+			m_table.insertIfNot(group_by_past, {
+				past = undia[rget(vowel_spec.past)],
+				nonpasts = {undia[rget(vowel_spec.nonpast)]},
+			}, {
+				key = function(obj) return obj.past end,
+				combine = function(obj1, obj2)
+					for _, nonpast in ipairs(obj2.nonpasts) do
+						m_table.insertIfNot(obj1.nonpasts, nonpast)
+					end
+				end,
+			})
+		end
+		local group_by_nonpast = {}
+		for _, vowel_spec in ipairs(group_by_past) do
+			m_table.insertIfNot(group_by_nonpast, {
+				pasts = {vowel_spec.past},
+				nonpasts = vowel_spec.nonpasts,
+			}, {
+				key = function(obj) return obj.nonpasts end,
+				combine = function(obj1, obj2)
+					for _, past in ipairs(obj2.pasts) do
+						m_table.insertIfNot(obj1.pasts, past)
+					end
+				end,
+			})
+		end
+		base.grouped_conj_vowels = group_by_nonpast
 	end
 
 	-- Set value of passive. If not specified, default is yes, but no for forms VII, IX,
@@ -3479,10 +3473,10 @@ local function add_categories_and_annotation(alternant_multiword_spec, base, mul
 		end
 
 		local function radical_is_ambiguous(rad)
-			return req(rad, "t") or req(rad, "w") or req(rad, "y")
+			return type(rad) == "table" and rad.ambig
 		end
-		local function radical_is_weak(rad)
-			return is_waw_ya(rad) or req(rad, HAMZA)
+		local function radical_is_unambiguous_weak(rad)
+			return not radical_is_ambiguous(rad) and (is_waw_ya(rad) or req(rad, HAMZA))
 		end
 
 		if vform ~= "none" then
@@ -3495,37 +3489,31 @@ local function add_categories_and_annotation(alternant_multiword_spec, base, mul
 				ur4 and radical_is_ambiguous(ur4) then
 				insert_cat("verbs with ambiguous radicals")
 			end
-			if radical_is_weak(ur1) then
+			if radical_is_unambiguous_weak(ur1) then
 				insert_cat("form-" .. vform ..  " verbs with " .. rget(ur1) .. " as first radical")
 			end
-			if radical_is_weak(ur2) then
+			if radical_is_unambiguous_weak(ur2) then
 				insert_cat("form-" .. vform ..  " verbs with " .. rget(ur2) .. " as second radical")
 			end
-			if radical_is_weak(ur3) then
+			if radical_is_unambiguous_weak(ur3) then
 				insert_cat("form-" .. vform ..  " verbs with " .. rget(ur3) .. " as third radical")
 			end
-			if ur4 and radical_is_weak(ur4) then
+			if ur4 and radical_is_unambiguous_weak(ur4) then
 				insert_cat("form-" .. vform ..  " verbs with " .. rget(ur4) .. " as fourth radical")
 			end
 		end
 	end
 
-	if vform == "I" and base.unexpanded_conj_vowels then
-		for _, vowel_spec in ipairs(base.unexpanded_conj_vowels) do
-			local past_vowels = {}
-			for _, past in ipairs(vowel_spec.past) do
-				table.insert(past_vowels, undia[rget(past)])
-			end
-			local nonpast_vowels = {}
-			for _, nonpast in ipairs(vowel_spec.nonpast) do
-				table.insert(nonpast_vowels, undia[rget(nonpast)])
-			end
+	if vform == "I" and not is_passive_only(base.passive) then
+		for _, vowel_spec in ipairs(base.grouped_conj_vowels) do
 			insert_ann("vowels",
-				("%s ~ %s"):format(table.concat(past_vowels, "/"), table.concat(nonpast_vowels, "/")))
-			for _, past in ipairs(vowel_spec.past) do
-				for _, nonpast in ipairs(vowel_spec.nonpast) do
-					insert_cat(("form-I verbs with past vowel %s and non-past vowel %s"):format(
-						undia[rget(past)], undia[rget(nonpast)]))
+				("%s ~ %s"):format(table.concat(vowel_spec.pasts, "/"), table.concat(vowel_spec.nonpasts, "/")))
+			for _, past in ipairs(vowel_spec.pasts) do
+				for _, nonpast in ipairs(vowel_spec.nonpasts) do
+					if past == "-" or nonpast == "-" then
+						error("Internal error: Saw form I past vowel %s and non-past vowel %s but - in place of vowel should have triggered an error earlier")
+					end
+					insert_cat(("form-I verbs with past vowel %s and non-past vowel %s"):format(past, nonpast))
 				end
 			end
 		end
@@ -4501,16 +4489,18 @@ function export.verb_forms(frame)
 end
 
 -- Infer radicals from lemma headword (i.e. 3rd masculine singular past) and verb form (I, II, etc.). Throw an error if
--- headword is malformed. A given returned radical may be a list in the case of ambiguous radicals; the first element of
--- the list should be used if the user didn't explicitly give the radical. contain Latin letters "t", "w" or "y" indicating ambiguous radicals
--- guessed to be tāʾ, wāw or yāʾ respectively. `is_reduced` indicates that the user specified `.reduced` to indicate
--- that the verb form is reduced by assimilation and/or haplology (typically archaic Koranic forms such as اِدَّارَأَ
--- instead of تَدَارَأَ, اِسْطَاعَ instead of اِسْتِطَاعَ, etc.
+-- headword is malformed. A given returned radical may be actually be a list of possible radicals, where the first one
+-- should be used if the user didn't explicitly give the radical. If the list contains a field `ambig = true`, the
+-- radical is considered ambiguous and should not be categorized. `is_reduced` indicates that the user specified
+-- `.reduced` to indicate that the verb form is reduced by assimilation and/or haplology (typically archaic Koranic
+-- forms such as اِدَّارَأَ instead of تَدَارَأَ; or اِسْطَاعَ instead of اِسْتِطَاعَ; etc.
 function export.infer_radicals(data)
 	local headword, vform, passive, past_vowel, nonpast_vowel, is_reduced =
 		data.headword, data.vform, data.passive, data.past_vowel, data.nonpast_vowel, data.is_reduced
+	past_vowel = past_vowel or "-"
+	nonpast_vowel = nonpast_vowel or "-"
 	local ch = {}
-	local inferred_past_vowel, inferred_nonpast_vowel, form_viii_assim
+	local form_viii_assim
 	-- sub out alif-madda for easier processing
 	headword = rsub(headword, AMAD, HAMZA .. ALIF)
 
@@ -4537,7 +4527,7 @@ function export.infer_radicals(data)
 		if anns ~= "" then
 			anns = ": " .. anns
 		end
-		return msg .. anns
+		error(msg .. anns)
 	end
 	local len = ulen(headword)
 
@@ -4577,6 +4567,26 @@ function export.infer_radicals(data)
 	-- loses it (i.e. it is "assimilated").
 	local function form_I_w_non_assimilated()
 		return req(past_vowel, I) and req(nonpast_vowel, A) or req(past_vowel, U) and req(nonpast_vowel, U)
+	end
+
+	-- Convert radicals to canonical form (handle various hamza varieties and check for misplaced alif or alif maqṣūra;
+	-- legitimate cases of these letters are handled above).
+	local function convert(rad, index)
+		if type(rad) == "table" then
+			for i, r in ipairs(rad) do
+				rad[i] = convert(r, index)
+			end
+			return rad
+		elseif rad == HAMZA_ON_ALIF or rad == HAMZA_UNDER_ALIF or
+			rad == HAMZA_ON_W or rad == HAMZA_ON_Y then
+			return HAMZA
+		elseif rad == AMAQ then
+			infer_err("Radical " .. index .. " must not be alif maqṣūra")
+		elseif rad == ALIF then
+			infer_err("Radical " .. index .. " must not be alif")
+		else
+			return rad
+		end
 	end
 
 	local quadlit = rmatch(vform, "q$")
@@ -4632,21 +4642,31 @@ function export.infer_radicals(data)
 		if rad1 == "د" then
 			rad1 = {"د", "ذ"} -- not considered ambiguous since it's usually د
 			radstart = 3
-		if rad1 == T or rad1 == "د" or rad1 == "ث" or rad1 == "ذ" or rad1 == "ط" or rad1 == "ظ" then
+			form_viii_assim = "دّ"
+		elseif rad1 == "ظ" and ch[3] == "ط" and len >= 5 then
+			-- [[اظطلم]], variant of [[اظلم]]
+			radstart = 4
+			form_viii_assim = "ظْط"
+		elseif rad1 == "ذ" and ch[3] == "د" and len >= 5 then
+			-- [[اذدكر]], variant of [[اذكر]]
+			radstart = 4
+			form_viii_assim = "ذْد"
+		elseif rad1 == T or rad1 == "ث" or rad1 == "ذ" or rad1 == "ط" or rad1 == "ظ" then
 			radstart = 3
+			form_viii_assim = rad1 .. SH
 		elseif rad1 == "ز" then
 			check(3, "د")
 			radstart = 4
+			form_viii_assim = "زْد"
 		elseif rad1 == "ص" or rad1 == "ض"  then
 			check(3, "ط")
 			radstart = 4
+			form_viii_assim = rad1 .. SK .. "ط"
 		else
 			check(3, T)
-			if rad1 == "ي" then
-				-- Alternative form of اِئْتَمَر.
-				rad1 = HAMZA
-			end
 			radstart = 4
+			rad1 = convert(rad1, 1)
+			form_viii_assim = rad1 .. SK .. "ت"
 		end
 		if rad1 == T then
 			-- Radical is ambiguous, might be ت or و or ي but doesn't affect conjugation. Note that there are no
@@ -4757,22 +4777,39 @@ function export.infer_radicals(data)
 	-- Process the last two radicals. RADSTART is the index of the first of the two. If it's nil then all radicals have
 	-- already been processed above, and we don't do anything.
 	if radstart then
-		-- There must be one or two letters left.
-		check_len(radstart, radstart + 1)
-		if len == radstart and ch[len] ~= AMAQ and ch[len] ~= Y then
-			-- If one letter left, then it's a geminate verb.
-			if vform_supports_geminate(vform) then
-				weakness = "geminate"
-				rad2 = ch[len]
-				rad3 = ch[len]
+		-- There must (normally) be one or two letters left.
+		if len == radstart then
+			if vform == "I" and ch[len] == Y then
+				-- short form حَيَّ
+				weakness = "final-weak"
+				rad2 = Y
+				rad3 = Y
+			elseif vform == "IV" and rad1 == "ر" and ch[len] == AMAQ then
+				-- irregular verb أَرَى
+				weakness = "final-weak"
+				rad2 = HAMZA
+				rad3 = Y
+			elseif vform == "X" and rad1 == "ح" and ch[len] == AMAQ then
+				-- irregular verb اِسْتَحَى
+				weakness = "final-weak"
+				rad2 = Y
+				rad3 = Y
 			else
-				-- Oops, geminate verbs not allowed in this verb form; signal an error.
-				check_len(radstart + 1, radstart + 1)
+				-- If one letter left, then it's a geminate verb. If the letter is alif or alif maqṣūra, it will trigger
+				-- an error down the line.
+				if vform_supports_geminate(vform) then
+					weakness = "geminate"
+					rad2 = ch[len]
+					rad3 = ch[len]
+				else
+					infer_err("Apparent geminate verb, but geminate verbs not allowed for this verb form")
+				end
 			end
 		elseif quadlit then
 			-- Process last two radicals of a quadriliteral verb form.
 			rad3 = ch[radstart]
 			rad4 = ch[radstart + 1]
+			expected_length = radstart + 1
 			if rad4 == AMAQ or rad4 == ALIF and rad3 == Y or rad4 == Y then
 				-- rad4 can be Y in passive-only verbs.
 				if vform_supports_final_weak(vform) then
@@ -4791,11 +4828,9 @@ function export.infer_radicals(data)
 			-- Process last two radicals of a triliteral verb form.
 			rad2 = ch[radstart]
 			rad3 = ch[radstart + 1]
-			if vform == "I" and rad2 == Y and not rad3 then
-				-- short form حَيَّ
-				weakness = "final-weak"
-				rad3 = Y
-			elseif vform == "I" and (is_waw_ya(rad3) or rad3 == ALIF or rad3 == AMAQ) then
+			expected_length = radstart + 1
+			if vform == "I" and (is_waw_ya(rad3) or rad3 == ALIF or rad3 == AMAQ) then
+				local inferred_past_vowel, inferred_nonpast_vowel
 				-- Check for final-weak form I verb. It can end in tall alif (rad3 = wāw) or alif maqṣūra (rad3 = yāʾ)
 				-- or a wāw or yāʾ (with a past vowel of i or u, e.g. nasiya/yansā "forget" or with a passive-only
 				-- verb).
@@ -4808,20 +4843,20 @@ function export.infer_radicals(data)
 					rad3 = W
 					inferred_past_vowel = A
 					inferred_nonpast_vowel = U
-					if passive then
-						infer_err("Final-weak form-I passive verbs should end in yaaʔ (ي), not tall alif (ا)",
+					if is_passive_only(passive) then
+						infer_err("Final-weak form-I passive verbs should end in yāʔ (ي), not tall alif (ا)",
 							"novform")
 					end
 				elseif rad3 == AMAQ then
 					rad3 = Y
 					inferred_past_vowel = A
 					inferred_nonpast_vowel = I
-					if passive then
-						infer_err("Final-weak form-I passive verbs should end in yaaʔ (ي), not alif maqṣūra (ى)",
+					if is_passive_only(passive) then
+						infer_err("Final-weak form-I passive verbs should end in yāʔ (ي), not alif maqṣūra (ى)",
 							"novform")
 					end
 				else
-					if not passive then
+					if not is_passive_only(passive) then
 						-- does a non-passive final-weak verb in -uwa ever happen?
 						inferred_past_vowel = rad3 == Y and I or U
 						inferred_nonpast_vowel = A
@@ -4831,37 +4866,41 @@ function export.infer_radicals(data)
 					rad3 = (rad1 == W or rad2 == W) and {Y, W, ambig = true} or {W, Y, ambig = true} -- ambiguous
 				end
 				if inferred_past_vowel then
-					local raw_past_vowel = past_vowel and rget(past_vowel) or "-"
-					local raw_nonpast_vowel = nonpast_vowel and rget(nonpast_vowel) or "-"
+					local raw_past_vowel = rget(past_vowel)
+					local raw_nonpast_vowel = rget(nonpast_vowel)
 					if raw_past_vowel ~= "-" then
 						if raw_past_vowel ~= inferred_past_vowel then
 							infer_err(("Final-weak form-I verb inferred past vowel %s, which disagrees with " ..
-								"explicitly specified %s"):format(inferred_past_vowel, raw_past_vowel), "novform")
+								"explicitly specified %s"):format(undia[inferred_past_vowel], undia[raw_past_vowel]), "novform")
 						else
 							-- in case of footnote
 							inferred_past_vowel = past_vowel
 						end
 					end
-					if raw_nonpast_vowel ~= "-" then
+					if raw_nonpast_vowel ~= "-" and inferred_nonpast_vowel == U then
+						-- if inferred as I or A, the reality can be the reverse; form-I final-weak verbs with a~a and i~i
+						-- exist, e.g. سَعَى/يَسْعَى, وَلِيَ/يَلِي.
 						if raw_nonpast_vowel ~= inferred_nonpast_vowel then
 							infer_err(("Final-weak form-I verb inferred non-past vowel %s, which disagrees with " ..
-								"explicitly specified %s"):format(inferred_nonpast_vowel, raw_nonpast_vowel), "novform")
+								"explicitly specified %s"):format(undia[inferred_nonpast_vowel], undia[raw_nonpast_vowel]), "novform")
 						else
 							-- in case of footnote
 							inferred_nonpast_vowel = nonpast_vowel
 						end
 					end
 				end
-			elseif vform == "IV" and rad1 == "ر" and rad2 == AMAQ and not rad3 then
-				-- irregular verb أَرَى
+				if not is_passive_only(passive) then
+					if rget(past_vowel) == "-" then
+						past_vowel = inferred_past_vowel
+					end
+					if rget(nonpast_vowel) == "-" then
+						nonpast_vowel = inferred_nonpast_vowel
+					end
+				end
+			elseif vform == "IX" and is_waw_ya(rad3) and len == radstart + 2 and ch[len] == AMAQ then
+				-- Final-weak form IX verbs like اِرْعَوَى "to desist, to repent, to see the light".
 				weakness = "final-weak"
-				rad2 = HAMZA
-				rad3 = Y
-			elseif vform == "X" and rad1 == "ح" and rad2 == AMAQ and not rad3 then
-				-- irregular verb اِسْتَحَى
-				weakness = "final-weak"
-				rad2 = Y
-				rad3 = Y
+				expected_length = radstart + 2
 			elseif rad3 == AMAQ or rad2 == Y and rad3 == ALIF or rad3 == Y then
 				-- rad3 == Y happens in passive-only verbs.
 				if vform_supports_final_weak(vform) then
@@ -4875,15 +4914,26 @@ function export.infer_radicals(data)
 			elseif rad2 == ALIF then
 				if vform_supports_hollow(vform) then
 					weakness = "hollow"
+					local function set_past_to_nonpast()
+						if req(past_vowel, "-") or req(past_vowel, A) then
+							past_vowel = nonpast_vowel -- in case of footnote
+						end
+					end
 					if vform == "I" and req(nonpast_vowel, U) then
 						rad2 = W
+						set_past_to_nonpast()
 					elseif vform == "I" and req(nonpast_vowel, I) then
 						rad2 = Y
+						set_past_to_nonpast()
 					else
+						if req(nonpast_vowel, A) and not req(past_vowel, I) then
+							infer_err(("Form I hollow verb with nonpast vowel set to 'a' must have past vowel set to 'i', not %s"):
+								format(rget(past_vowel)), "novform")
+						end
 						-- Ambiguous radical; could be wāw or yāʾ; if verb form I, it's critical to get this right, and
 						-- the caller checks for this situation and throws an error if non-past vowel is "a" and second
 						-- radical isn't explicitly given.
-						rad2 = {W, Y, ambig = true}
+						rad2 = {W, Y, ambig = true, need_radical = true}
 					end
 				else
 					infer_err("Second radical is alif but verb form doesn't support hollow verbs")
@@ -4896,27 +4946,11 @@ function export.infer_radicals(data)
 				weakness = "sound"
 			end
 		end
-	end
-
-	-- Convert radicals to canonical form (handle various hamza varieties and check for misplaced alif or alif maqṣūra;
-	-- legitimate cases of these letters are handled above).
-	local function convert(rad, index)
-		if type(rad) == "table" then
-			for i, r in ipairs(rad) do
-				rad[i] = convert(r, index)
-			end
-			return rad
-		elseif rad == HAMZA_ON_ALIF or rad == HAMZA_UNDER_ALIF or
-			rad == HAMZA_ON_W or rad == HAMZA_ON_Y then
-			return HAMZA
-		elseif rad == AMAQ then
-			infer_err("Radical " .. index .. " must not be alif maqṣūra")
-		elseif rad == ALIF then
-			infer_err("Radical " .. index .. " must not be alif")
-		else
-			return rad
+		if expected_length then
+			check_len(expected_length, expected_length)
 		end
 	end
+
 	rad1 = convert(rad1, 1)
 	rad2 = convert(rad2, 2)
 	rad3 = convert(rad3, 3)
@@ -4931,8 +4965,8 @@ function export.infer_radicals(data)
 		rad2 = rad2,
 		rad3 = rad3,
 		rad4 = rad4,
-		inferred_past_vowel = inferred_past_vowel or past_vowel or "-",
-		inferred_nonpast_vowel = inferred_nonpast_vowel or nonpast_vowel or "-",
+		past_vowel = past_vowel,
+		nonpast_vowel = nonpast_vowel,
 		form_viii_assim = form_viii_assim,
 	}
 end
