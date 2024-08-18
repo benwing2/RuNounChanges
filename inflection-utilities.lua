@@ -44,14 +44,36 @@ local footnote_abbrevs = {
 
 -- FIXME: Callers of this code should call [[Module:parse-utilities]] directly.
 
-export.parse_balanced_segment_run = put.parse_balanced_segment_run
-export.parse_multi_delimiter_balanced_segment_run = put.parse_multi_delimiter_balanced_segment_run
-export.split_alternating_runs = put.split_alternating_runs
+--[==[
+FIXME: Older entry point. Call `parse_balanced_segment_run()` in [[Module:parse utilities]] directly.
+]==]
+function export.parse_balanced_segment_run(segment_run, open, close)
+	track("parse-balanced-segment-run")
+	return put.parse_balanced_segment_run(segment_run, open, close)
+end
 
--- FIXME: Older entry point. Call split_alternating_runs_and_frob_raw_text() directly.
--- Like split_alternating_runs() but strips spaces from both ends of the odd-numbered elements (only in
--- odd-numbered runs if preserve_splitchar is given). Effectively we leave alone the footnotes and splitchars
--- themselves, but otherwise strip extraneous spaces. Spaces in the middle of an element are also left alone.
+--[==[
+FIXME: Older entry point. Call `parse_multi_delimiter_balanced_segment_run()` in [[Module:parse utilities]] directly.
+]==]
+function export.parse_multi_delimiter_balanced_segment_run(segment_run, delimiter_pairs, no_error_on_unmatched)
+	track("parse-multi-delimiter-balanced-segment-run")
+	return put.parse_multi_delimiter_balanced_segment_run(segment_run, delimiter_pairs, no_error_on_unmatched)
+end
+
+--[==[
+FIXME: Older entry point. Call `split_alternating_runs()` in [[Module:parse utilities]] directly.
+]==]
+function export.split_alternating_runs(segment_runs, splitchar, preserve_splitchar)
+	track("parse-multi-delimiter-balanced-segment-run")
+	return put.split_alternating_runs(segment_runs, splitchar, preserve_splitchar)
+end
+
+--[==[
+FIXME: Older entry point. Call `split_alternating_runs_and_frob_raw_text()` in [[Module:parse utilities]] directly.
+Like `split_alternating_runs()` but strips spaces from both ends of the odd-numbered elements (only in odd-numbered runs
+if `preserve_splitchar` is given). Effectively we leave alone the footnotes and splitchars themselves, but otherwise
+strip extraneous spaces. Spaces in the middle of an element are also left alone.
+]==]
 function export.split_alternating_runs_and_strip_spaces(segment_runs, splitchar, preserve_splitchar)
 	track("split-alternating-runs-and-strip-spaces")
 	return put.split_alternating_runs_and_frob_raw_text(segment_runs, splitchar, put.strip_spaces, preserve_splitchar)
@@ -62,48 +84,49 @@ end
 --                                             INFLECTION CODE                                            --
 ------------------------------------------------------------------------------------------------------------
 
---[=[
+--[==[ intro:
 The following code is used in building up the inflection of terms in inflected languages, where a term can potentially
 consist of several inflected words, each surrounded by fixed text, and a given slot (e.g. accusative singular) of a
 given word can potentially consist of multiple possible inflected forms. In addition, each form may be associated with
 a manual transliteration and/or a list of footnotes (or qualifiers, in the case of headword lines). The following
 terminology is helpful to understand:
 
-* An `inflection dimension` is a particular dimension over which a term may be inflected, such as case, number, gender,
-  person, tense, mood, voice, aspect, etc.
-* A `term` is a word or multiword expression that can be inflected. A multiword term may in turn consist of several
-  single-word inflected terms with surrounding fixed text. A term belongs to a particular `part of speech` (e.g. noun,
+* An '''inflection dimension''' is a particular dimension over which a term may be inflected, such as case, number,
+  gender, person, tense, mood, voice, aspect, etc.
+* A '''term''' is a word or multiword expression that can be inflected. A multiword term may in turn consist of several
+  single-word inflected terms with surrounding fixed text. A term belongs to a particular ''part of speech'' (e.g. noun,
   verb, adjective, etc.).
-* The `lemma` is the particular form of a term under which the term is entered into a dictionary. For example, for
+* The '''lemma''' is the particular form of a term under which the term is entered into a dictionary. For example, for
   verbs, it is most commonly the infinitive, but this differs for some languages: e.g. Latin, Greek and Bulgarian use
   the first-person singular present indicative (active voice in the case of Latin and Greek); Sanskrit and Macedonian
   use the third-person singular present indicative (active voice in the case of Sanskrit); Hebrew and Arabic use the
   third-person singular masculine past (aka "perfect"); etc. For nouns, the lemma form is most commonly the nominative
   singular, but e.g. for Old French it is the objective singular and for Sanskrit it is the root.
-* A `slot` is a particular combination of inflection dimensions. An example might be "accusative plural" for a noun,
+* A '''slot''' is a particular combination of inflection dimensions. An example might be "accusative plural" for a noun,
   or "first-person singular present indicative" for a verb. Slots are named in a language-specific fashion. For
-  example, the slot "accusative plural" might have a name "accpl", while "first-person singular present indicative"
-  might be variously named "pres1s", "pres_ind_1_sg", etc. Each slot is filled with zero or more `forms`.
-* A `form` is a particular inflection of a slot for a particular term. Note that a given slot may (and often does) have
-  more than one associated form; these different forms are termed `variants`. The form variants for a given slot are
-  ordered, and generally should have the more common and/or preferred variants first, along with rare, archaic or
-  obsolete variants last (if they are included at all).
-* Forms are described using `form objects`, which are Lua objects taking the form {form="FORM",
+  example, the slot "accusative plural" might have a name `accpl`, while "first-person singular present indicative"
+  might be variously named `pres1s`, `pres_ind_1_sg`, etc. Each slot is filled with zero or more '''forms'''.
+* A '''form''' is a particular inflection of a slot for a particular term. Note that a given slot may (and often does)
+  have more than one associated form; these different forms are termed '''variants'''. The form variants for a given
+  slot are ordered, and generally should have the more common and/or preferred variants first, along with rare, archaic
+  or obsolete variants last (if they are included at all).
+* Forms are described using '''form objects''', which are Lua objects taking the form { {form="FORM",
   translit="MANUAL_TRANSLIT", footnotes={"FOOTNOTE", "FOOTNOTE", ...}}. (Additional metadata may be present in a form
   object, although the support for preserving such metadata when transformations are applied to form objects isn't yet
-  complete.) FORM is a `form value` specifying the value of the form itself. MANUAL_TRANSLIT specifies optional manual
-  transliteration for the form, in case (a) the form value is in a different script; and (b) either the form's automatic
-  transliteration is incorrect and needs to be overridden, or the language of the term has no automatic transliteration
-  (e.g. in the case of Persian and Hebrew). FOOTNOTE is a footnote to be attached to the form in question, and should be
-  e.g. "[archaic]" or "[only in the meaning 'to succeed (an officeholder)']", i.e. the string must be surrounded by
-  brackets and should begin with a lowercase letter and not end in a period/full stop. When such footnotes are converted
-  to actual footnotes in a table of inflected forms, the brackets will be removed, the first letter will be capitalized
-  and a period/full stop will be added to the end.  (However, when such footnotes are used as qualifiers in headword
-  lines, only the brackets will be removed, with no capitalization or final period.) Note that only FORM is mandatory. 
-* A collection of zero or more form objects is termed a `form object list`, or usually just a `form list`. Such lists go
-  into form tables (see below).
-* A `form table` is a Lua table (i.e. a dictionary) describing all the possible inflections of a given term. The keys
-  in such a table are slots (strings) and the values are form lists. '''NOTE:''' All inflection code assumes and
+  complete.) FORM is a '''form value''' specifying the value of the form itself. MANUAL_TRANSLIT specifies optional
+  manual transliteration for the form, in case (a) the form value is in a different script; and (b) either the form's
+  automatic transliteration is incorrect and needs to be overridden, or the language of the term has no automatic
+  transliteration (e.g. in the case of Persian and Hebrew). FOOTNOTE is a footnote to be attached to the form in
+  question, and should be e.g. {"[archaic]"} or {"[only in the meaning 'to succeed (an officeholder)']"}, i.e. the
+  string must be surrounded by brackets and should begin with a lowercase letter and not end in a period/full stop. When
+  such footnotes are converted to actual footnotes in a table of inflected forms, the brackets will be removed, the
+  first letter will be capitalized and a period/full stop will be added to the end.  (However, when such footnotes are
+  used as qualifiers in headword lines, only the brackets will be removed, with no capitalization or final period.) Note
+  that only FORM is mandatory.
+* A collection of zero or more form objects is termed a '''form object list''', or usually just a '''form list'''. Such
+  lists go into form tables (see below).
+* A '''form table''' is a Lua table (i.e. a dictionary) describing all the possible inflections of a given term. The
+  keys in such a table are slots (strings) and the values are form lists. '''NOTE:''' All inflection code assumes and
   maintains the invariant that no two slots, and no two forms in a single slot, share the same form object (by
   reference, i.e. the Lua object describing a form object should never be shared in two places). This allows for safely
   side-effecting form objects in certain sorts of operations. This same invariant necessarily applies to the Lua list
@@ -112,12 +135,12 @@ terminology is helpful to understand:
   such lists, and in fact no code in this module that manipulates footnote lists will ever side-effect such lists; they
   are treated as immutable.
 * Some functions, to save memory, accept and work with abbreviated forms of form objects and/or form lists.
-  Specifically, an `abbreviated form object` is either a form object or a string, the latter corresponding to a form
-  object whose form value is the string and all other properties are nil. Similarly, an `abbreviated form list` is
+  Specifically, an '''abbreviated form object''' is either a form object or a string, the latter corresponding to a form
+  object whose form value is the string and all other properties are nil. Similarly, an '''abbreviated form list''' is
   either a single abbreviated form object or a list of such objects, i.e. any of a string, form object or list of
   strings and/or form objects. Functions that do not accept such abbreviated structures may be said to insist on being
-  passed form objects in `general form`, or form lists in `general list form`.
-]=]
+  passed form objects in '''general form''', or form lists in '''general list form'''.
+]==]
 
 
 local function extract_footnote_modifiers(footnote)
@@ -129,9 +152,11 @@ local function extract_footnote_modifiers(footnote)
 end
 
 
--- Insert a form (an object of the form {form=FORM, translit=MANUAL_TRANSLIT, footnotes=FOOTNOTES}) into a list of such
--- forms. If the form is already present, the footnotes of the existing and new form might be combined (specifically,
--- footnotes in the new form beginning with ! will be combined).
+--[==[
+Insert a form (an object of the form {form=FORM, translit=MANUAL_TRANSLIT, footnotes=FOOTNOTES}) into a list of such
+forms. If the form is already present, the footnotes of the existing and new form might be combined (specifically,
+footnotes in the new form beginning with `!` will be combined).
+]==]
 function export.insert_form_into_list(list, form)
 	-- Don't do anything if the form object or the form inside it is nil. This simplifies
 	-- form insertion in the presence of inflection generating functions that may return nil,
@@ -212,8 +237,10 @@ function export.insert_form_into_list(list, form)
 	table.insert(list, form)
 end
 
--- Insert a form (an object of the form {form=FORM, translit=MANUAL_TRANSLIT, footnotes=FOOTNOTES})
--- into the given slot in the given form table.
+--[==[
+Insert a form (an object of the form { {form=FORM, translit=MANUAL_TRANSLIT, footnotes=FOOTNOTES}})
+into the given slot in the given form table.
+]==]
 function export.insert_form(formtable, slot, form)
 	-- Don't do anything if the form object or the form inside it is nil. This simplifies
 	-- form insertion in the presence of inflection generating functions that may return nil,
@@ -228,9 +255,11 @@ function export.insert_form(formtable, slot, form)
 end
 
 
--- Insert a list of forms (each of which is an object of the form
--- {form=FORM, translit=MANUAL_TRANSLIT, footnotes=FOOTNOTES}) into the given slot in the given
--- form table. FORMS can be nil.
+--[==[
+Insert a list of forms (each of which is an object of the form
+{ {form=FORM, translit=MANUAL_TRANSLIT, footnotes=FOOTNOTES}}) into the given slot in the given form table. FORMS can
+be {nil}.
+]==]
 function export.insert_forms(formtable, slot, forms)
 	if not forms then
 		return
@@ -241,6 +270,9 @@ function export.insert_forms(formtable, slot, forms)
 end
 
 
+--[==[
+Identity mapping function.
+]==]
 function export.identity(form, translit)
 	return form, translit
 end
@@ -272,13 +304,15 @@ local function call_map_function_obj(form, fun)
 end
 
 
--- Map a function over the form values in FORMS (a list of form objects in "general list form", i.e. of the form
--- {form=FORM, translit=MANUAL_TRANSLIT, footnotes=FOOTNOTES}). If the input form is "?", it is preserved on output and
--- the function is not called. Otherwise, the function is called with two arguments, the original form and manual
--- translit; if manual translit isn't relevant, it's fine to declare the function with only one argument. The return
--- value is either a single value (the new form) or two values (the new form and new manual translit). The footnotes
--- (if any) from the input form objects are preserved on output. Uses insert_form_into_list() to insert the resulting
--- form objects into the returned list in case two different forms map to the same thing.
+--[==[
+Map a function over the form values in FORMS (a list of form objects in "general list form", i.e. of the form
+{ {form=FORM, translit=MANUAL_TRANSLIT, footnotes=FOOTNOTES}}). If the input form is {"?"}, it is preserved on output
+and the function is not called. Otherwise, the function is called with two arguments, the original form and manual
+translit; if manual translit isn't relevant, it's fine to declare the function with only one argument. The return
+value is either a single value (the new form) or two values (the new form and new manual translit). The footnotes
+(if any) from the input form objects are preserved on output. Uses `insert_form_into_list()` to insert the resulting
+form objects into the returned list in case two different forms map to the same thing.
+]==]
 function export.map_forms(forms, fun)
 	if not forms then
 		return nil
@@ -291,14 +325,16 @@ function export.map_forms(forms, fun)
 end
 
 
--- Map a list-returning function over the form values in FORMS (a list of form objects in "general list form", i.e. of
--- the form {form=FORM, translit=MANUAL_TRANSLIT, footnotes=FOOTNOTES}). If the input form is "?", it is preserved on
--- output and the function is not called. Otherwise, the function is called with two arguments, the original form and
--- manual translit; if manual translit isn't relevant, it's fine to declare the function with only one argument. The
--- return value of the function can be nil or anything that is convertible into a general list form, i.e. a single
--- form, a list of forms, a form object or a list of form objects. For each form object in the return value, the
--- footnotes of that form object (if any) are combined with any footnotes from the input form object, and the result
--- inserted into the returned list using insert_form_into_list() in case two different forms map to the same thing.
+--[==[
+Map a list-returning function over the form values in FORMS (a list of form objects in "general list form", i.e. of
+the form { {form=FORM, translit=MANUAL_TRANSLIT, footnotes=FOOTNOTES}}). If the input form is {"?"}, it is preserved on
+output and the function is not called. Otherwise, the function is called with two arguments, the original form and
+manual translit; if manual translit isn't relevant, it's fine to declare the function with only one argument. The
+return value of the function can be nil or anything that is convertible into a general list form, i.e. a single
+form, a list of forms, a form object or a list of form objects. For each form object in the return value, the
+footnotes of that form object (if any) are combined with any footnotes from the input form object, and the result
+inserted into the returned list using `insert_form_into_list()` in case two different forms map to the same thing.
+]==]
 function export.flatmap_forms(forms, fun)
 	if not forms then
 		return nil
@@ -318,16 +354,18 @@ function export.flatmap_forms(forms, fun)
 end
 
 
--- Map a function over the form values in FORMS (a single string, a form object of the form {form=FORM,
--- translit=MANUAL_TRANSLIT, footnotes=FOOTNOTES}, or a list of either of the previous two types). If the input form is
--- "?", it is preserved on output and the function is not called. If FIRST_ONLY is given and FORMS is a list, only map
--- over the first element. Return value is of the same form as FORMS, unless FORMS is a string and the function return
--- both form and manual translit (in which case the return value is a form object). The function is called with two
--- arguments, the original form and manual translit; if manual translit isn't relevant, it's fine to declare the
--- function with only one argument. The return value is either a single value (the new form) or two values (the new
--- form and new manual translit). The footnotes (if any) from the input form objects are preserved on output.
---
--- FIXME: This function is used only in [[Module:bg-verb]] and should be moved into that module.
+--[==[
+Map a function over the form values in FORMS (a single string, a form object of the form { {form=FORM,
+translit=MANUAL_TRANSLIT, footnotes=FOOTNOTES}}, or a list of either of the previous two types). If the input form is
+{"?"}, it is preserved on output and the function is not called. If FIRST_ONLY is given and FORMS is a list, only map
+over the first element. Return value is of the same form as FORMS, unless FORMS is a string and the function return
+both form and manual translit (in which case the return value is a form object). The function is called with two
+arguments, the original form and manual translit; if manual translit isn't relevant, it's fine to declare the
+function with only one argument. The return value is either a single value (the new form) or two values (the new
+form and new manual translit). The footnotes (if any) from the input form objects are preserved on output.
+
+FIXME: This function is used only in [[Module:bg-verb]] and should be moved into that module.
+]==]
 function export.map_form_or_forms(forms, fun, first_only)
 	if not forms then
 		return nil
@@ -348,7 +386,9 @@ function export.map_form_or_forms(forms, fun, first_only)
 end
 
 
--- Combine two sets of footnotes. If either is nil, just return the other, and if both are nil, return nil.
+--[==[
+Combine two sets of footnotes. If either is {nil}, just return the other, and if both are {nil}, return {nil}.
+]==]
 function export.combine_footnotes(notes1, notes2)
 	if not notes1 and not notes2 then
 		return nil
@@ -367,12 +407,14 @@ function export.combine_footnotes(notes1, notes2)
 end
 
 
--- Expand a given footnote (as specified by the user, including the surrounding brackets) into the form to be inserted
--- into the final generated table. If `no_parse_refs` is not given and the footnote is a reference (of the form
--- '[ref:...]'), parse and return the specified reference(s). Two values are returned, `footnote_string` (the expanded
--- footnote, or nil if the second value is present) and `references` (a list of objects of the form
--- {text = TEXT, name = NAME, group = GROUP} if the footnote is a reference and `no_parse_refs` is not given, otherwise
--- nil). Unless `return_raw` is given, the returned footnote string is capitalized and has a final period added.
+--[==[
+Expand a given footnote (as specified by the user, including the surrounding brackets) into the form to be inserted
+into the final generated table. If `no_parse_refs` is not given and the footnote is a reference (of the form
+{"[ref:...]"}), parse and return the specified reference(s). Two values are returned, `footnote_string` (the expanded
+footnote, or nil if the second value is present) and `references` (a list of objects of the form
+{ {text = TEXT, name = NAME, group = GROUP}} if the footnote is a reference and `no_parse_refs` is not given, otherwise
+{nil}). Unless `return_raw` is given, the returned footnote string is capitalized and has a final period added.
+]==]
 function export.expand_footnote_or_references(note, return_raw, no_parse_refs)
 	local _, notetext = extract_footnote_modifiers(note)
 	if not no_parse_refs and notetext:find("^ref:") then
@@ -388,17 +430,22 @@ function export.expand_footnote_or_references(note, return_raw, no_parse_refs)
 	end
 	if footnote_abbrevs[notetext] then
 		notetext = footnote_abbrevs[notetext]
+		track("footnote-whole-abbrev")
 	else
 		local split_notes = split(notetext, "<(.-)>")
 		for i, split_note in ipairs(split_notes) do
 			if i % 2 == 0 then
 				split_notes[i] = footnote_abbrevs[split_note]
+				track("footnote-angle-bracket-abbrev")
 				if not split_notes[i] then
 					-- Don't error for now, because HTML might be in the footnote.
 					-- Instead we should switch the syntax here to e.g. <<a>> to avoid
 					-- conflicting with HTML.
 					split_notes[i] = "<" .. split_note .. ">"
+					track("footnote-unrecognized-angle-bracket-abbrev")
 					--error("Unrecognized footnote abbrev: <" .. split_note .. ">")
+				else
+					track("footnote-recognized-angle-bracket-abbrev")
 				end
 			end
 		end
@@ -408,15 +455,22 @@ function export.expand_footnote_or_references(note, return_raw, no_parse_refs)
 end
 
 
--- Older entry point. Equivalent to expand_footnote_or_references(note, true).
--- FIXME: Convert all uses to use expand_footnote_or_references() instead.
+--[==[
+Older entry point. Equivalent to `expand_footnote_or_references(note, true)`. FIXME: Convert all uses to use
+`expand_footnote_or_references()` instead.
+]==]
 function export.expand_footnote(note)
 	track("expand-footnote")
 	return export.expand_footnote_or_references(note, false, "no parse refs")
 end
 
 
-function export.fetch_headword_qualifiers_and_references(footnotes)
+--[==[
+Convert a list of foonotes to qualifiers and references for use in [[Module:headword]] or similar. Returns two values,
+a list of qualifiers (possibly {nil}) and a list of reference structures (possibly {nil}), following the structure
+defined in [[Module:references]]).
+]==]
+function export.convert_footnotes_to_qualifiers_and_references(footnotes)
 	if not footnotes then
 		return nil
 	end
@@ -440,6 +494,15 @@ function export.fetch_headword_qualifiers_and_references(footnotes)
 		end
 	end
 	return quals, refs
+end
+
+
+--[==[
+Older entry point. FIXME: Convert to `export.convert_footnotes_to_qualifiers_and_references`.
+]==]
+function export.fetch_headword_qualifiers_and_references(footnotes)
+	track("fetch-headword-qualifiers-and-references")
+	return export.convert_footnotes_to_qualifiers_and_references(footnotes)
 end
 
 
@@ -1060,7 +1123,7 @@ of the Portuguese verb [[ouvir]]); MANUAL_TRANSLIT_OR_NIL is the corresponding m
 if the form is in a non-Latin script and the automatic transliteration is incorrect or unavailable), otherwise nil;
 and FOOTNOTE_LIST_OR_NIL is a list of footnotes to be attached to the form, or nil for no footnotes. Note that
 currently footnotes must be surrounded by brackets, e.g "[archaic]", and should not begin with a capital letter or end
-with a period. (Conversion from "[archaic]" to "Archaic." happens automatically.) 
+with a period. (Conversion from "[archaic]" to "Archaic." happens automatically.)
 
 This function has no return value, but modifies `multiword_spec` in-place, adding the `forms` table as described above.
 After calling this function, call show_forms() on the `forms` table to convert the forms and footnotes given in this
@@ -1511,7 +1574,7 @@ function export.show_forms(forms, props)
 			if not props.no_deduplicate_forms then
 				local deduped_formvals = {}
 				for i, form in ipairs(formvals) do
-					local function combine_formvals(pos, form, newform)
+					local function combine_formvals(form, newform, pos)
 						assert(form.form == newform.form)
 						-- Combine footnotes.
 						form.footnotes = export.combine_footnotes(form.footnotes, newform.footnotes)
@@ -1709,7 +1772,7 @@ function export.show_forms(forms, props)
 								footnotes = form.footnotes,
 							}, {
 								key = function(trobj) return trobj.tr_for_tag end,
-								combine = function(pos, tr, newtr)
+								combine = function(tr, newtr)
 									-- Combine footnotes.
 									tr.footnotes = export.combine_footnotes(tr.footnotes, newtr.footnotes)
 									tr.footnote_symbol = tr.footnote_symbol .. newtr.footnote_symbol
