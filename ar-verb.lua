@@ -2620,35 +2620,6 @@ local function check_radicals(form, weakness, rad1, rad2, rad3, rad4)
 	end
 end
 
--- Determine weakness from radicals. FIXME: This may not be necessary any more.
-local function weakness_from_radicals(form, rad1, rad2, rad3, rad4)
-	local weakness = nil
-	local quadlit = rmatch(form, "q$")
-	-- If weakness unspecified, derive from radicals.
-	if not quadlit then
-		if is_waw_ya(rad3) and rad1 == W and form == "I" then
-			weakness = "assimilated+final-weak"
-		elseif is_waw_ya(rad3) and vform_supports_final_weak(form) then
-			weakness = "final-weak"
-		elseif rad2 == rad3 and vform_supports_geminate(form) then
-			weakness = "geminate"
-		elseif is_waw_ya(rad2) and vform_supports_hollow(form) then
-			weakness = "hollow"
-		elseif rad1 == W and form == "I" then
-			weakness = "assimilated"
-		else
-			weakness = "sound"
-		end
-	else
-		if is_waw_ya(rad4) then
-			weakness = "final-weak"
-		else
-			weakness = "sound"
-		end
-	end
-	return weakness
-end
-
 -- array of substitutions; each element is a 2-entry array FROM, TO; do it
 -- this way so the concatenations only get evaluated once
 local postprocess_subs = {
@@ -2902,6 +2873,7 @@ local function parse_indicator_spec(angle_bracket_spec)
 		slot_override_uses_default = {},
 		addnote_specs = {},
 	}
+	local base = create_empty_base(angle_bracket_spec)
 	local function parse_err(msg)
 		error(msg .. ": " .. angle_bracket_spec)
 	end
@@ -3118,6 +3090,53 @@ local function normalize_all_lemmas(alternant_multiword_spec, head)
 end
 
 
+-- Determine weakness from radicals. Used when root given in place of lemma (e.g. for {{ar-verb forms}}).
+local function weakness_from_radicals(form, rad1, rad2, rad3, rad4)
+	local weakness = nil
+	local quadlit = rmatch(form, "q$")
+	-- If weakness unspecified, derive from radicals.
+	if not quadlit then
+		if is_waw_ya(rad3) and rad1 == W and form == "I" then
+			weakness = "assimilated+final-weak"
+		elseif is_waw_ya(rad3) and vform_supports_final_weak(form) then
+			weakness = "final-weak"
+		elseif rad2 == rad3 and vform_supports_geminate(form) then
+			weakness = "geminate"
+		elseif is_waw_ya(rad2) and vform_supports_hollow(form) then
+			weakness = "hollow"
+		elseif rad1 == W and form == "I" then
+			weakness = "assimilated"
+		else
+			weakness = "sound"
+		end
+	else
+		if is_waw_ya(rad4) then
+			weakness = "final-weak"
+		else
+			weakness = "sound"
+		end
+	end
+	return weakness
+end
+
+-- Join the infixed tāʔ (ت) to the first radical in form VIII verbs. This may cause assimilation of the tāʔ to the
+-- radical or in some cases the radical to the tāʔ. Used when a root is supplied instead of a lemma (which already has
+-- the appropriate assimilation in it).
+local function form_viii_join_ta(rad)
+	if rad == W or rad == Y or rad == "ت" then return "تّ"
+	elseif rad == "د" then return "دّ"
+	elseif rad == "ث" then return "ثّ"
+	elseif rad == "ذ" then return "ذّ"
+	elseif rad == "ز" then return "زْد"
+	elseif rad == "ص" then return "صْط"
+	elseif rad == "ض" then return "ضْط"
+	elseif rad == "ط" then return "طّ"
+	elseif rad == "ظ" then return "ظّ"
+	else return rad .. SK .. "ت"
+	end
+end
+
+
 local function detect_indicator_spec(base)
 	base.forms = {}
 	base.stem_overrides = {}
@@ -3162,18 +3181,30 @@ local function detect_indicator_spec(base)
 		-- categories won't be created for weak radicals.
 		local weakness, ir1, ir2, ir3, ir4
 		if vform ~= "none" then
-			local ret = export.infer_radicals {
-				headword = base.lemma,
-				vform = vform,
-				passive = base.passive,
-				past_vowel = vowel_spec.past,
-				nonpast_vowel = vowel_spec.nonpast,
-				is_reduced = base.reduced,
-			}
-			weakness, ir1, ir2, ir3, ir4 = ret.weakness, ret.rad1, ret.rad2, ret.rad3, ret.rad4
-			vowel_spec.form_viii_assim = ret.form_viii_assim
-			vowel_spec.past = ret.past_vowel
-			vowel_spec.nonpast = ret.nonpast_vowel
+			ir1, ir2, ir3 = rmatch(base.lemma, "^([^ ]) ([^ ]) ([^ ])$")
+			if not ir1 then
+				ir1, ir2, ir3, ir4 = rmatch(base.lemma, "^([^ ]) ([^ ]) ([^ ]) ([^ ])$")
+			end
+			if ir1 then
+				-- root given instead of lemma
+				weakness = weakness_from_radicals(vform, ir1, ir2, ir3, ir4)
+				if vform == "VIII" then
+					vowel_spec.form_viii_assim = form_viii_join_ta(ir1)
+				end
+			else
+				local ret = export.infer_radicals {
+					headword = base.lemma,
+					vform = vform,
+					passive = base.passive,
+					past_vowel = vowel_spec.past,
+					nonpast_vowel = vowel_spec.nonpast,
+					is_reduced = base.reduced,
+				}
+				weakness, ir1, ir2, ir3, ir4 = ret.weakness, ret.rad1, ret.rad2, ret.rad3, ret.rad4
+				vowel_spec.form_viii_assim = ret.form_viii_assim
+				vowel_spec.past = ret.past_vowel
+				vowel_spec.nonpast = ret.nonpast_vowel
+			end
 		end
 
 		-- For most ambiguous radicals, the choice of radical doesn't matter because it doesn't affect the conjugation
@@ -4203,132 +4234,6 @@ function export.show(frame)
 end
 
 
-local function add_conjugation_args(params, firstarg)
-	params[firstarg] = {}
-	params[firstarg + 1] = {}
-	params[firstarg + 2] = {}
-	params[firstarg + 3] = {}
-	params[firstarg + 4] = {}
-	params[firstarg + 5] = {}
-	params["I"] = {}
-	params["II"] = {}
-	params["III"] = {}
-	params["IV"] = {}
-	params["vn"] = {}
-	params["vn-id"] = {list = true, allow_holes = true, require_index = true}
-	params["passive"] = {}
-	params["variant"] = {}
-	params["noimp"] = {type = "boolean"}
-end
-
-
--- Implement {{ar-verb}}.
--- FIXME: Move this into [[Module:ar-headword]]. Standardize parameter handling with [[Module:parameters]]. Use standard
--- functionality in [[Module:head]].
-function export.headword(frame)
-	local parargs = frame:getParent().args
-
-	local params = {
-		["head"] = {list = true, disallow_holes = true},
-		["tr"] = {list = true, allow_holes = true},
-		["useparam"] = {},
-		["noimpf"] = {type = "boolean"},
-		["impf"] = {},
-		["impfhead"] = {},
-		["impftr"] = {},
-		["id"] = {},
-		["sort"] = {},
-	}
-	add_conjugation_args(params, 1)
-
-	local args = require("Module:parameters").process(parargs, params)
-
-	local base, form, weakness, past_vowel, nonpast_vowel = conjugate(args, 1)
-	local use_params = form == "I" or args["useparam"]
-
-	local arabic_3sm_perf, latin_3sm_perf
-	local arabic_3sm_imperf, latin_3sm_imperf
-	if base.passive == "only" or base.passive == "only-impers" then
-		arabic_3sm_perf, latin_3sm_perf = get_spans(base.forms["3sm-ps-perf"])
-		arabic_3sm_imperf, latin_3sm_imperf = get_spans(base.forms["3sm-ps-impf"])
-	else
-		arabic_3sm_perf, latin_3sm_perf = get_spans(base.forms["3sm-perf"])
-		arabic_3sm_imperf, latin_3sm_imperf = get_spans(base.forms["3sm-impf"])
-	end
-	
-	title = mw.title.getCurrentTitle()
-	NAMESPACE = title.nsText
-	PAGENAME = ( NAMESPACE == "Appendix" and title.subpageText ) or title.text
-	
-	-- set to PAGENAME if left empty
-	local heads, trs
-	if use_params and form ~= "I" then
-		table.insert(base.headword_categories, "Arabic augmented verbs with parameter override")
-	end
-	if use_params and (#args["head"] > 0 or args["tr"].maxindex > 0) then
-		heads = args["head"]
-		trs = args["tr"]
-		if form == "I" then
-			table.insert(base.headword_categories, "Arabic form-I verbs with headword perfect determined through param, not past vowel")
-		end
-	elseif form == "I" and #past_vowel == 0 then
-		heads = {}
-		table.insert(base.headword_categories, "Arabic form-I verbs with missing past vowel in headword")
-	else
-		-- Massive hack to get the order correct. It gets reversed for some
-		-- reason, possibly due to being surrounded by lang=ar or
-		-- class=Arabic headword, so reverse the order before concatenating.
-		headrev = {}
-		for _, ar in ipairs(arabic_3sm_perf) do
-			table.insert(headrev, 1, ar)
-		end
-		heads = {table.concat(headrev, " <small style=\"color: #888\">or</small> ")}
-		trs = {table.concat(latin_3sm_perf, " <small style=\"color: #888\">or</small> ")}
-	end
-
-	local form_text = ' <span class="gender">[[Appendix:Arabic verbs#Form ' .. form .. '|<abbr title="Verb form ' ..
-	  form .. '">' .. form .. '</abbr>]]</span>'
-
-	local noimpf = args["noimpf"]
-	local impf_arabic, impf_tr
-	if use_params and noimpf then
-		impf_arabic = {}
-	elseif use_params and args["impf"] then
-		impf_arabic = args["impfhead"] or args["impf"]
-		impf_tr = args["impftr"] or transliterate(impf_arabic)
-		impf_arabic = {impf_arabic}
-		if form == "I" then
-			table.insert(base.headword_categories, "Arabic form-I verbs with headword imperfect determined through param, not non-past vowel")
-		end
-	elseif form == "I" and #nonpast_vowel == 0 then
-		impf_arabic = {}
-		table.insert(base.headword_categories, "Arabic form-I verbs with missing non-past vowel in headword")
-	else
-		impf_arabic = arabic_3sm_imperf
-		impf_tr = table.concat(latin_3sm_imperf, " <small style=\"color: #888\">or</small> ")
-	end
-
-	-- convert Arabic terms to bolded links
-	for i, entry in ipairs(impf_arabic) do
-		impf_arabic[i] = link_term(entry, "bold")
-	end
-	-- create non-past text by concatenating Arabic spans and adding
-	-- transliteration, but only if we can do it non-ambiguously (either we're
-	-- not form I or the non-past vowel was specified)
-	local impf_text = ""
-	if #impf_arabic > 0 then
-		impf_text = ', <i>non-past</i> ' .. table.concat(impf_arabic, " <small style=\"color: #888\">or</small> ")
-		if impf_tr then
-			impf_text = impf_text .. LRM .. " (" .. impf_tr .. ")"
-		end
-	end
-
-	return
-		require("Module:headword").full_headword({lang = lang, pos_category = "verbs", categories = base.headword_categories,
-			heads = heads, translits = trs, sort_key = args["sort"], id = args["id"]}) ..
-		form_text .. impf_text
-end
-
 function export.verb_forms(frame)
 	local parargs = frame:getParent().args
 	local params = {
@@ -4379,9 +4284,6 @@ function export.verb_forms(frame)
 	if past_vowel and not rfind(past_vowel, past_vowel_re) then
 		error("Unrecognized past vowel, should be 'a', 'i', 'u', 'a,u', etc. or empty: " .. past_vowel)
 	end
-	if not past_vowel then
-		past_vowel = ""
-	end
 
 	local split_root = rsplit(combined_root, " ")
 	-- Map from verb forms (I, II, etc.) to a table of verb properties,
@@ -4398,10 +4300,10 @@ function export.verb_forms(frame)
 			local formprops = {}
 			local prefix = index == 1 and form or form .. index
 			if prefix == "I" then
-				formprops["pv"] = past_vowel
+				formprops.pv = past_vowel
 			end
 			if args[prefix .. "-pv"] then
-				formprops["pv"] = args[prefix .. "-pv"]
+				formprops.pv = args[prefix .. "-pv"]
 			end
 			for _, deriv in ipairs(derivs) do
 				local prop = deriv[1]
@@ -4427,22 +4329,25 @@ function export.verb_forms(frame)
 					formprops[prop .. "-gloss"] = args[prefix .. extn .. "-gloss"]
 				end
 			end
-			if formprops["verb"] then
+			if formprops.verb then
 				-- If a verb form specified, also turn on vn (unless form I, with
 				-- unpredictable vn) and ap, and maybe pp, according to form,
 				-- weakness and past vowel. But don't turn these on if there's
 				-- an explicit on/off specification for them (e.g. I-pp=-).
-				if form ~= "I" and formprops["vn"] == nil then
-					formprops["vn"] = true
+				if form ~= "I" and formprops.vn == nil then
+					formprops.vn = true
 				end
-				if formprops["ap"] == nil then
-					formprops["ap"] = true
+				if formprops.ap == nil then
+					formprops.ap = true
 				end
-				local weakness = weakness_from_radicals(form, split_root[1],
-					split_root[2], split_root[3], split_root[4])
-				if formprops["pp"] == nil and not vform_probably_no_passive(form,
-						weakness, rsplit(formprops["pv"] or "", ","), {}) then
-					formprops["pp"] = true
+				local weakness = weakness_from_radicals(form, split_root[1], split_root[2], split_root[3],
+					split_root[4])
+				if formprops.pp == nil and not vform_probably_no_passive(form,
+						weakness, rsplit(formprops.pv or "", ","), {}) then
+					formprops.pp = true
+				end
+				if formprops.verb == true or formprops.vn == true or formprops.ap == true or formprops.pp == true then
+					formprops.need_autogen = true
 				end
 				table.insert(formpropslist, formprops)
 				index = index + 1
@@ -4453,30 +4358,90 @@ function export.verb_forms(frame)
 		table.insert(verb_properties, {form, formpropslist})
 	end
 
-	-- Go through and create the verb form derivations as necessary, when
-	-- they haven't been explicitly given
+	-- Go through and create the verb form derivations as necessary, when they haven't been explicitly given.
 	for _, vplist in ipairs(verb_properties) do
-		local form = vplist[1]
+		local vform = vplist[1]
 		for _, props in ipairs(vplist[2]) do
-			local args = {}
-			function append_form_and_root()
-				table.insert(args, form)
-				if form == "I" then
-					table.insert(args, props["pv"]) -- past vowel
-					table.insert(args, "")
+			if props.need_autogen then
+				local form_with_vowels
+				if vform == "I" then
+					local pv = props.pv
+					if not pv then
+						-- Make up likely past vowels based on weakness and actual radical.
+						if split_root[3] == W then -- final-weak
+							form_with_vowels = "I/a~u"
+						elseif split_root[3] == Y then
+							form_with_vowels = "I/a~i"
+						elseif split_root[2] == W then --hollow
+							form_with_vowels = "I/u~u"
+						elseif split_root[2] == Y then
+							form_with_vowels = "I/i~i"
+						else
+							-- most common; doesn't matter so much since we're not displaying the non-past
+							form_with_vowels = "I/a~u"
+						end
+					else
+						local pvs = rsplit(pv, ",")
+						local vowel_sufs = {}
+						for _, pv in ipairs(pvs) do
+							local vowel_spec
+							if pv == "a" then
+								-- Make up likely past vowels based on weakness and actual radical.
+								if split_root[3] == W then -- final-weak
+									vowel_spec = "a~u"
+								elseif split_root[3] == Y then
+									vowel_spec = "a~i"
+								elseif split_root[2] == W then --hollow
+									vowel_spec = "a~u"
+								elseif split_root[2] == Y then
+									vowel_spec = "a~i"
+								else
+									-- most common; doesn't matter so much since we're not displaying the non-past
+									vowel_spec = "a~u"
+								end
+							elseif pv == "i" then
+								-- most common; doesn't matter so much since we're not displaying the non-past
+								vowel_spec = "i~a"
+							elseif pv == "u" then
+								-- most common; doesn't matter so much since we're not displaying the non-past
+								vowel_spec = "u~u"
+							else
+								error(("Internal error: Bad past vowel '%s' in {{ar-verb forms}}"):format(pv))
+							end
+							table.insert(vowel_sufs, vowel_spec)
+						end
+						form_with_vowels = "I/" .. table.concat(vowel_sufs, "/")
+					end
+				else
+					form_with_vowels = vform
 				end
-				m_table.extendList(args, split_root)
-			end
-			if props["verb"] == true then
-				args = {}
-				append_form_and_root()
-				props["verb"] = past3sm(args, true)
-			end
-			for _, deriv in ipairs({"vn", "ap", "pp"}) do
-				if props[deriv] == true then
-					args = {deriv}
-					append_form_and_root()
-					props[deriv] = verb_part(args, true)
+
+				local angle_bracket_spec = ("%s<%s.pass>"):format(combined_root, form_with_vowels)
+
+				local alternant_multiword_spec = export.do_generate_forms({angle_bracket_spec}, "ar-verb forms")
+
+				local function format_forms(forms)
+					if not forms then
+						return "-" -- FIXME: Throw an error?
+					end
+					local formatted = {}
+					for _, form in ipairs(forms) do
+						if form.translit then
+							table.insert(formatted, ("%s//%s"):format(form.form, form.translit))
+						else
+							table.insert(formatted, form.form)
+						end
+					end
+					return table.concat(formatted, ",")
+				end
+
+				if props.verb == true then
+					props.verb = format_forms(alternant_multiword_spec.forms.past_3ms)
+				end
+				for _, deriv in ipairs({"vn", "ap", "pp"}) do
+					if props[deriv] == true then
+						props[deriv] = format_forms(alternant_multiword_spec.forms[deriv])
+					end
 				end
 			end
 		end
@@ -4488,10 +4453,10 @@ function export.verb_forms(frame)
 		local form = vplist[1]
 		for _, props in ipairs(vplist[2]) do
 			local textarr = {}
-			if props["verb"] then
+			if props.verb then
 				local text = "* '''[[Appendix:Arabic verbs#Form " .. form .. "|Form " .. form .. "]]''': "
 				local linktext = {}
-				local splitheads = rsplit(props["verb"], "[,،]")
+				local splitheads = rsplit(props.verb, "[,،]")
 				for _, head in ipairs(splitheads) do
 					table.insert(linktext, m_links.full_link({lang = lang, term = head, gloss = props["verb-gloss"]}))
 				end
@@ -4505,7 +4470,12 @@ function export.verb_forms(frame)
 						local linktext = {}
 						local splitheads = rsplit(props[deriv], "[,،]")
 						for _, head in ipairs(splitheads) do
-							table.insert(linktext, m_links.full_link({lang = lang, term = head, gloss = props[deriv .. "-gloss"]}))
+							local ar, translit = head:match("^(.*)//(.-)$")
+							if not ar then
+								ar = head
+							end
+							table.insert(linktext, m_links.full_link {lang = lang, term = ar, tr = translit,
+								gloss = props[deriv .. "-gloss"]} )
 						end
 						text = text .. table.concat(linktext, ", ")
 						table.insert(textarr, text)
@@ -4518,6 +4488,7 @@ function export.verb_forms(frame)
 
 	return table.concat(formtextarr, "\n")
 end
+
 
 -- Infer radicals from lemma headword (i.e. 3rd masculine singular past) and verb form (I, II, etc.). Throw an error if
 -- headword is malformed. A given returned radical may be actually be a list of possible radicals, where the first one
