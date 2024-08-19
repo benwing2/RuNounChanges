@@ -570,11 +570,11 @@ function export.IPA(text, include_phonemic_syllable_boundaries)
 		    text = rsub_repeatedly(text,"[ˈˌ]([ʔbćĉdfɡɣhĵɟkxlmnɲŋpɾrɹsʃtwvzʒ]?[ɟlnɾstw]?[āeəīoū])([^# ˈˌ]*)" ..
 		    	"([.][ʔbćĉdfɡɣhĵɟkxlmnɲŋpɾrɹsʃtwvzʒ]?[ɟlnɾstw]?[āeīoūaəiu])([^# ˈˌ]*)" ..
 		    	"[.]([ʔbćĉdfɡɣhĵɟkxlmnɲŋpɾrɹsʃtwvzʒ]?[ɟlnɾstw]?[āeīoūaəiu])([^# ˈˌ.]*)([# ])","ˌ%1%2%3%4ˈ%5%6%7")
-		
+
 		    text = rsub(text,"([ˈˌ])([ʔbćĉdfɡɣhĵɟkxlmnɲŋpɾrɹsʃtwvzʒ]?)([ɟlnɾstw]?)([a])","%1%2%3ā")
 			text = rsub(text,"([ˈˌ])([ʔbćĉdfɡɣhĵɟkxlmnɲŋpɾrɹsʃtwvzʒ]?)([ɟlnɾstw]?)([i])","%1%2%3ī")
 			text = rsub(text,"([ˈˌ])([ʔbćĉdfɡɣhĵɟkxlmnɲŋpɾrɹsʃtwvzʒ]?)([ɟlnɾstw]?)([u])","%1%2%3ū")
-		
+
 		    --If final syllable is stressed but so is penultimate, mark penultimate only
 		    text = rsub_repeatedly(text,"[ˌ]([ʔbćĉdfɡɣhĵɟkxlmnɲŋpɾrɹsʃtwvzʒ]?[ɟlnɾstw]?[āeəīoū])([^# .ˈˌ]*)" ..
 		    	"([.]?[ˈˌ])([ʔbćĉdfɡɣhĵɟkxlmnɲŋpɾrɹsʃtwvzʒ]?[ɟlnɾstw]?)([ā])([^# ˈˌ.]*)([# ])","ˈ%1%2.%4a%6%7")
@@ -584,30 +584,30 @@ function export.IPA(text, include_phonemic_syllable_boundaries)
 		    	"([.]?[ˈˌ])([ʔbćĉdfɡɣhĵɟkxlmnɲŋpɾrɹsʃtwvzʒ]?[ɟlnɾstw]?)([ī])([^# ˈˌ.]*)([# ])","ˈ%1%2.%4i%6%7")
 		    text = rsub_repeatedly(text,"[ˌ]([ʔbćĉdfɡɣhĵɟkxlmnɲŋpɾrɹsʃtwvzʒ]?[ɟlnɾstw]?[āeəīoū])([^# .ˈˌ]*)" ..
 		    	"([.]?[ˈˌ])([ʔbćĉdfɡɣhĵɟkxlmnɲŋpɾrɹsʃtwvzʒ]?[ɟlnɾstw]?)([ū])([^# ˈˌ.]*)([# ])","ˈ%1%2.%4u%6%7")
-		
+
 		    text = rsub_repeatedly(text, "ˈ(.+)ˈ", "ˌ%1ˈ") -- Reset primary to secondary stresses if not on last word
-		
+
 		    -- Add vowel length to stressed open vowels
 		    text = rsub_repeatedly(text,"([ˈˌ])([ʔbćĉdfɡɣhĵɟkxlmnɲŋpɾrɹsʃtwvzʒ]?)([ɟlnɾstw]?)([āeəīoū])([ˈˌ.])","%1%2%3%4ː%5")
-		
+
 		    --change a, i, u to unstressed equivalents (certain forms to restore)
 		    text = rsub(text,"a","ɐ")
 		    text = rsub(text,"i","ɪ")
 		    text = rsub(text,"u","ʊ")
-		
+
 		    --Change /e/ closer to native pronunciation.
 		    text = rsub(text, "e", "ɛ")
-		
+
 		    --Restore /e/ on diphthongs
 		    text = rsub(text, "ɛ([ː]?)([ɹ])","ə%1%2")
 
 			--Restore /e/ on diphthongs
 		    text = rsub(text, "ɛ([ː]?)([ɪ̯ʊ̯])","e%1%2")
-		
+
 		    -- Some alveolars are actually dental in Tagalog
 		    text = rsub(text, "([td])([# ˈˌ.]*)([l])", "%1%2%3̪")
 		    text = rsub(text, "([tdn])", "%1̪")
-		
+
 		    -- Phrase-Final stops are unreleased
 		    text = rsub(text, "([ɐāeɛəɪīoʊū])([pbtdkɡ])([̪]?)([#]+)$", "%1%2%3%4̚")
 		else
