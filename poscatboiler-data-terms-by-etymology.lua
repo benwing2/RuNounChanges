@@ -1079,36 +1079,51 @@ table.insert(handlers, inherited_borrowed_handler("inherited"))
 ------------------------ Borrowing subtype handlers -------------------------
 -----------------------------------------------------------------------------
 
-local function borrowing_subtype_handler(dest, source_name, parent_cat, desc, categorizing_templates, no_by_language)
+-- General handler for specific borrowing subtypes, such as learned borrowings, calques and phono-semantic matchings.
+local function borrowing_subtype_handler(dest, source_name, parent_cat, spec, no_by_language)
 	local source, source_desc = get_source_and_source_desc(source_name)
-	local extra_templates = {}
-	local extra_template_text
-	for i, template in ipairs(categorizing_templates) do
-		if i > 1 then
-			table.insert(extra_templates, ("{{tl|%s|...}}"):format(template))
-		end
-	end
-	if #extra_templates > 0 then
-		extra_template_text = (" (or %s, using the same syntax)"):format(
-			require("Module:table").serialCommaJoin(extra_templates, {conj = "or"}))
-	else
-		extra_template_text = ""
-	end
+	-- normally uses of UNKNOWN should not show up to the end user
+	local dest_name = dest and dest:getCanonicalName() or "UNKNOWN"
 	local additional, umbrella_additional
-	if dest then
-		additional = ("To categorize a term into this category, use {{tl|%s|%s|%s|<var>source_term</var>}}%s, " ..
-			"where <code><var>source_term</var></code> is the source-language term that the term in question was " ..
-			"borrowed from."):format(categorizing_templates[1], dest:getCode(), source:getCode(), extra_template_text)
+	if spec.additional then
+		if dest then
+			additional = spec.additional(source, dest)
+		else
+			umbrella_additional = spec.umbrella_additional(source)
+		end
 	else
-		umbrella_additional = ("To categorize a term into a language-specific subcategory, use " ..
-			"{{tl|%s|<var>destcode</var>|%s|<var>source_term</var>}}%s, where <code><var>destcode</var></code> is " ..
-			"the language code of the language in question (see [[Wiktionary:List of languages]]), and " ..
-			"<code><var>source_term</var></code> is the source-language term that the term in question was " ..
-			"borrowed from."):format(categorizing_templates[1], source:getCode(), extra_template_text)
+		if not spec.categorizing_templates then
+			error("Internal error: Must specify either `categorizing_templates` or the combination of `additional` and `umbrella_additional` in each borrowing subtype spec")
+		end
+		local extra_templates = {}
+		local extra_template_text
+		for i, template in ipairs(spec.categorizing_templates) do
+			if i > 1 then
+				table.insert(extra_templates, ("{{tl|%s|...}}"):format(template))
+			end
+		end
+		if #extra_templates > 0 then
+			extra_template_text = (" (or %s, using the same syntax)"):format(
+				require("Module:table").serialCommaJoin(extra_templates, {conj = "or"}))
+		else
+			extra_template_text = ""
+		end
+		if dest then
+			additional = ("To categorize a term into this category, use {{tl|%s|%s|%s|<var>source_term</var>}}%s, " ..
+				"where <code><var>source_term</var></code> is the %s term that the term in question " ..
+				"was borrowed from."):format(
+					spec.categorizing_templates[1], dest:getCode(), source:getCode(), extra_template_text, source_name)
+		else
+			umbrella_additional = ("To categorize a term into a language-specific subcategory, use " ..
+				"{{tl|%s|<var>destcode</var>|%s|<var>source_term</var>}}%s, where <code><var>destcode</var></code> " ..
+				"is the language code of the language in question (see [[Wiktionary:List of languages]]), and " ..
+				"<code><var>source_term</var></code> is the %s term that the term in question was " ..
+				"borrowed from."):format(spec.categorizing_templates[1], source:getCode(), extra_template_text, source_name)
+		end
 	end
 
 	return {
-		description = "{{{langname}}} " .. desc:gsub("SOURCE", source_desc),
+		description = "{{{langname}}} " .. spec.from_source_desc:gsub("SOURCE", source_desc):gsub("DEST", dest_name),
 		additional = additional,
 		breadcrumb = source_name,
 		parents = {
@@ -1143,7 +1158,22 @@ end
 -- `no_by_language`, if true, means that the umbrella category grouping borrowings of the appropriate type from a
 --    specific source language is named "BORTYPE from SOURCE" in place of "BORTYPE from SOURCE by language"
 --    (e.g. "Semantic loans from English" in place of "Semantic loans from English by language").
---
+-- `categorizing_templates`, if given, is the list of templates that categorize into this category. They are assumed to
+--    follow the syntax of {{bor}}. The first template in the list should be the preferred alias. The specified
+--    templates are used to form the `additional` text displayed on the language-specific category page and
+--    corresponding umbrella category page describing how to categorize into the category in question. In more complex
+--    cases, you can omit this field and instead supply the `additional` and `umbrella_additional` fields (as is done
+--    with adapted borrowings). You must either specify `categorizing_templates` or the combination of `additional` and
+--    `umbrella_additional`.
+--  `additional`, if given, is a function of two arguments (source and destination language objects) that will generate
+--    the `additional` text displayed on the language-specific category page that describes how to categorize into the
+--    category in question. This is an alternative to specifying `categorizing_templates`, used in more complex cases
+--    (currently, with adapted borrowings).
+--  `umbrella_additional`, if given, is a function of one argument (source language object) that will generate the
+--    `additional` text displayed on the umbrella category page that describes how to categorize into the category in
+--    question. This is an alternative to specifying `categorizing_templates`, used in more complex cases (currently,
+--    with adapted borrowings).
+
 local borrowing_specs = {
 	["learned borrowings"] = {
 		from_source_desc = "terms that are learned [[loanword]]s from SOURCE, that is, terms that were directly incorporated from SOURCE instead of through normal language contact.",
@@ -1152,7 +1182,7 @@ local borrowing_specs = {
 		categorizing_templates = {"lbor", "learned borrowing"},
 	},
 	["semi-learned borrowings"] = {
-		from_source_desc = "terms that are [[semi-learned borrowing|semi-learned]] [[loanword]]s from SOURCE, that is, terms borrowed from SOURCE (a [[classical language]]) into the target language (a modern language) and partly reshaped based on later [[sound change]]s or by analogy with [[inherit]]ed terms in the language.",
+		from_source_desc = "terms that are [[semi-learned borrowing|semi-learned]] [[loanword]]s from SOURCE, that is, terms borrowed from SOURCE (a [[classical language]]) into DEST (a modern language) and partly reshaped based on later [[sound change]]s or by analogy with [[inherit]]ed terms in the language.",
 		umbrella_desc = "terms that are [[semi-learned borrowing|semi-learned]] [[loanword]]s, that is, terms borrowed from a [[classical language]] into a modern language and partly reshaped based on later [[sound change]]s or by analogy with [[inherit]]ed terms in the language.",
 		uses_subtype_handler = true,
 		categorizing_templates = {"slbor", "semi-learned borrowing"},
@@ -1164,10 +1194,36 @@ local borrowing_specs = {
 		categorizing_templates = {"obor", "orthographic borrowing"},
 	},
 	["unadapted borrowings"] = {
-		from_source_desc = "[[loanword]]s from SOURCE that have not been conformed to the morpho-syntactic, phonological and/or phonotactical rules of the target language.",
+		from_source_desc = "[[loanword]]s from SOURCE that have not been conformed to the morpho-syntactic, phonological and/or phonotactical rules of DEST.",
 		umbrella_desc = "[[loanword]]s that have not been conformed to the morpho-syntactic, phonological and/or phonotactical rules of the target language.",
 		uses_subtype_handler = true,
 		categorizing_templates = {"ubor", "unadapted borrowing"},
+	},
+	["adapted borrowings"] = {
+		from_source_desc = "[[loanwords]] from SOURCE formed with the addition of an affix to conform the term to the normal morphology of DEST.",
+		umbrella_desc = "[[loanword]]s formed with the addition of an affix to conform the term to the normal morphology of the target language.",
+		uses_subtype_handler = true,
+		additional = function(source, dest)
+			return ("To categorize a term into this category, use {{tl|af|%s|3=type=adap|4=%s:<var>source_term</var>|5=-<var>affix</var>}} " ..
+			"(or {{tl|af|%s|3=type=abor|4=...}}, using the same syntax), where <code><var>source_term</var></code> is " ..
+			"the %s term that the term in question was borrowed from and <code><var>affix</var></code> " ..
+			"is the %s affix used to adapt the %s term. An example is " ..
+			"{{m+|pl|adresować||to address}}, which would use {{tl|af|pl|3=type=adap|4=fr:adresser|5=-ować}} to indicate " ..
+			"that is was formed from {{m+|fr|adresser}} with the addition of the Polish verb-forming affix " ..
+			"{{m|pl|-ować}}."):format(dest:getCode(), source:getCode(), dest:getCode(), source:getCanonicalName(), dest:getCanonicalName(),
+				source:getCanonicalName())
+		end,
+		umbrella_additional = function(source)
+			return ("To categorize a term into a language-specific subcategory, use {{tl|af|<var>destcode</var>|3=type=adap|4=%s:<var>source_term</var>|5=-<var>affix</var>}} " ..
+			"(or {{tl|af|<var>destcode</var>|3=type=abor|4=...}}, using the same syntax), where " ..
+			"<code><var>destcode</var></code> is the language code of the target language in question (see " ..
+			"[[Wiktionary:List of languages]]); <code><var>source_term</var></code> is the %s term " ..
+			"that the term in question was borrowed from; and <code><var>affix</var></code> is the target-language " ..
+			"affix used to adapt the %s term. An example is {{m+|pl|adresować||to address}}, which " ..
+			"would use {{tl|af|pl|3=type=adap|4=fr:adresser|5=-ować}} to indicate that is was formed from " ..
+			"{{m+|fr|adresser}} with the addition of the Polish verb-forming affix {{m|pl|-ować}}."):format(
+				source:getCode(), source:getCanonicalName(), source:getCanonicalName())
+		end,
 	},
 	["semantic loans"] = {
 		from_source_desc = "[[Appendix:Glossary#semantic loan|semantic loans]] from SOURCE, i.e. terms one or more of whose definitions was borrowed from a term in SOURCE.",
@@ -1219,8 +1275,7 @@ for bortype, spec in pairs(borrowing_specs) do
 		table.insert(handlers, function(data)
 			local source_name = data.label:match(label_pattern)
 			if source_name then
-				return borrowing_subtype_handler(data.lang, source_name, bortype, spec.from_source_desc,
-					spec.categorizing_templates, spec.no_by_language)
+				return borrowing_subtype_handler(data.lang, source_name, bortype, spec, spec.no_by_language)
 			end
 		end)
 	end
@@ -1230,8 +1285,7 @@ table.insert(handlers, function(data)
 	local borrowing_type, source_name = data.label:match("^(.+ borrowings) from (.+)$")
 	if borrowing_type then
 		local spec = borrowing_specs[borrowing_type]
-		return borrowing_subtype_handler(data.lang, source_name, borrowing_type, spec.from_source_desc,
-			spec.categorizing_templates, false)
+		return borrowing_subtype_handler(data.lang, source_name, borrowing_type, spec, false)
 	end
 end)
 

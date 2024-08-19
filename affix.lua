@@ -284,7 +284,18 @@ local function make_raw_compound_type(typ, alttext)
 end
 
 
-export.compound_types = {
+local function make_borrowing_type(typ, alttext)
+	return {
+		text = glossary_link(typ, alttext),
+		borrowing_type = pluralize(typ),
+	}
+end
+
+
+export.etymology_types = {
+	["adapted borrowing"] = make_borrowing_type("adapted borrowing"),
+	["adap"] = "adapted borrowing",
+	["abor"] = "adapted borrowing",
 	["alliterative"] = make_non_glossary_compound_type("alliterative"),
 	["allit"] = "alliterative",
 	["antonymous"] = make_non_glossary_compound_type("antonymous"),
@@ -327,14 +338,15 @@ export.compound_types = {
 }
 
 
-local function process_compound_type(typ, nocap, notext, has_parts)
+local function process_etymology_type(typ, nocap, notext, has_parts)
 	local text_sections = {}
 	local categories = {}
+	local borrowing_type
 
 	if typ then
-		local typdata = export.compound_types[typ]
+		local typdata = export.etymology_types[typ]
 		if type(typdata) == "string" then
-			typdata = export.compound_types[typdata]
+			typdata = export.etymology_types[typdata]
 		end
 		if not typdata then
 			error("Internal error: Unrecognized type '" .. typ .. "'")
@@ -344,6 +356,7 @@ local function process_compound_type(typ, nocap, notext, has_parts)
 			text = ucfirst(text)
 		end
 		local cat = typdata.cat
+		borrowing_type = typdata.borrowing_type
 		local oftext = typdata.oftext or " of"
 
 		if not notext then
@@ -353,10 +366,12 @@ local function process_compound_type(typ, nocap, notext, has_parts)
 				table.insert(text_sections, " ")
 			end
 		end
-		table.insert(categories, cat)
+		if cat then
+			table.insert(categories, cat)
+		end
 	end
 
-	return text_sections, categories
+	return text_sections, categories, borrowing_type
 end
 
 
@@ -503,8 +518,14 @@ function export.link_term(part, data)
 	local result
 
 	if part.part_lang then
-		result = require(etymology_module).format_derived(data.lang, part, data.sort_key, data.nocat,
-			data.force_cat or debug_force_cat)
+		result = require(etymology_module).format_derived {
+			lang = data.lang,
+			terminfo = part,
+			sort_key = data.sort_key,
+			nocat = data.nocat,
+			borrowing_type = data.borrowing_type,
+			force_cat = data.force_cat or debug_force_cat,
+		}
 	else
 		-- language (e.g. in a pseudo-loan).
 		result = m_links.full_link(part, "term")
@@ -729,10 +750,10 @@ lang-specific affix mappings, as described in the comment at the top of the file
 will always be the same. (They will be the same in any case if the template term has a bracketed link in it or is not
 an affix.) If `return_lookup_affix` is given, the fourth return value contains the term with appropriate lookup hyphens
 in the appropriate places; otherwise, it is the same as the display term. (This functionality is used in
-[[Module:category tree/poscatboiler/data/terms by etymology]] to convert link affixes into lookup affixes so that they
-can be looked up in the affix mapping tables.)
+[[Module:category tree/poscatboiler/data/affixes and compounds]] to convert link affixes into lookup affixes so that
+they can be looked up in the affix mapping tables.)
 ]==]
-function export.parse_term_for_affixes(term, lang, sc, affix_type, do_affix_mapping, return_lookup_affix, affix_id)
+local function parse_term_for_affixes(term, lang, sc, affix_type, do_affix_mapping, return_lookup_affix, affix_id)
 	if not term then
 		return nil, nil, nil, nil
 	end
@@ -803,15 +824,14 @@ function export.parse_term_for_affixes(term, lang, sc, affix_type, do_affix_mapp
 	return affix_type, link_term, display_term, lookup_term
 end
 
-export.get_affix_type = export.parse_term_for_affixes
-
-
 
 --[==[
 Add a hyphen to a term in the appropriate place, based on the specified affix type, stripping off any existing hyphens
 in that place. For example, if `affix_type` == {"prefix"}, we'll add a hyphen onto the end if it's not already there (or
 is of the wrong type). Three values are returned: the link term, display term and lookup term. This function is a thin
-wrapper around `parse_term_for_affixes`; see the comments above that function for more information.
+wrapper around `parse_term_for_affixes`; see the comments above that function for more information. Note that this
+function is exposed externally because it is called by [[Module:category tree/poscatboiler/data/affixes and compounds]];
+see the comment in `parse_term_for_affixes` for more information.
 ]==]
 function export.make_affix(term, lang, sc, affix_type, do_affix_mapping, return_lookup_affix, affix_id)
 	if not (affix_type == "prefix" or affix_type == "suffix" or affix_type == "circumfix" or affix_type == "infix" or
@@ -819,7 +839,7 @@ function export.make_affix(term, lang, sc, affix_type, do_affix_mapping, return_
 		error("Internal error: Invalid affix type " .. (affix_type or "(nil)"))
 	end
 
-	local _, link_term, display_term, lookup_term = export.parse_term_for_affixes(term, lang, sc, affix_type,
+	local _, link_term, display_term, lookup_term = parse_term_for_affixes(term, lang, sc, affix_type,
 		do_affix_mapping, return_lookup_affix, affix_id)
 	return link_term, display_term, lookup_term
 end
@@ -858,8 +878,9 @@ function export.show_affix(data)
 	data.pos = data.pos or default_pos
 	data.pos = pluralize(data.pos)
 
-	local text_sections, categories = process_compound_type(data.type, data.surface_analysis or data.nocap, data.notext,
-		#data.parts > 0)
+	local text_sections, categories, borrowing_type =
+		process_etymology_type(data.type, data.surface_analysis or data.nocap, data.notext, #data.parts > 0)
+	data.borrowing_type = borrowing_type
 
 	-- Process each part
 	local parts_formatted = {}
@@ -876,7 +897,7 @@ function export.show_affix(data)
 		-- Determine affix type and get link and display terms (see text at top of file). Store them in the part
 		-- (in fields that won't clash with fields used by full_link() in [[Module:links]] or link_term()), so they
 		-- can be used in the loop below when categorizing.
-		part.affix_type, part.affix_link_term, part.affix_display_term = export.parse_term_for_affixes(part.term,
+		part.affix_type, part.affix_link_term, part.affix_display_term = parse_term_for_affixes(part.term,
 			part.lang, part.sc, nil, not part.alt, nil, part.id)
 
 		-- If link_term is an empty string, either a bare ^ was specified or an empty term was used along with inline
@@ -976,7 +997,9 @@ function export.show_compound(data)
 	data.pos = data.pos or default_pos
 	data.pos = pluralize(data.pos)
 
-	local text_sections, categories = process_compound_type(data.type, data.nocap, data.notext, #data.parts > 0)
+	local text_sections, categories, borrowing_type =
+		process_etymology_type(data.type, data.nocap, data.notext, #data.parts > 0)
+	data.borrowing_type = borrowing_type
 
 	local parts_formatted = {}
 	table.insert(categories, "compound " .. data.pos)
@@ -986,7 +1009,7 @@ function export.show_compound(data)
 	for i, part in ipairs(data.parts) do
 		canonicalize_part(part, data.lang, data.sc)
 		-- Determine affix type and get link and display terms (see text at top of file).
-		local affix_type, link_term, display_term = export.parse_term_for_affixes(part.term, part.lang, part.sc,
+		local affix_type, link_term, display_term = parse_term_for_affixes(part.term, part.lang, part.sc,
 			nil, not part.alt, nil, part.id)
 
 		-- If the term is an infix, recognize it as such (which means e.g. that we will display the term without
@@ -1101,7 +1124,7 @@ end
 
 local function track_wrong_affix_type(template, part, expected_affix_type)
 	if part then
-		local affix_type = export.parse_term_for_affixes(part.term, part.lang, part.sc)
+		local affix_type = parse_term_for_affixes(part.term, part.lang, part.sc)
 		if affix_type ~= expected_affix_type then
 			local part_name = expected_affix_type or "base"
 			local langcode = part.lang:getCode()

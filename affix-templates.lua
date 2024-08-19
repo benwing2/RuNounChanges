@@ -144,8 +144,8 @@ function export.affix(frame)
 		extra_params = extra_params,
 	}
 
-	if args.type and not m_affix.compound_types[args.type] then
-		error("Unrecognized compound type: '" .. args.type .. "'")
+	if args.type and not m_affix.etymology_types[args.type] then
+		error("Unrecognized etymology type: '" .. args.type .. "'")
 	end
 
 	-- There must be at least one part to display. If there are gaps, a term
@@ -174,8 +174,8 @@ function export.compound(frame)
 		extra_params = extra_params,
 	}
 
-	if args.type and not m_affix.compound_types[args.type] then
-		error("Unrecognized compound type: '" .. args.type .. "'")
+	if args.type and not m_affix.etymology_types[args.type] then
+		error("Unrecognized etymology type: '" .. args.type .. "'")
 	end
 
 	-- There must be at least one part to display. If there are gaps, a term
@@ -291,8 +291,8 @@ function export.surface_analysis(frame)
 		extra_params = extra_params,
 	}
 
-	if args.type and not m_affix.compound_types[args.type] then
-		error("Unrecognized compound type: '" .. args.type .. "'")
+	if args.type and not m_affix.etymology_types[args.type] then
+		error("Unrecognized etymology type: '" .. args.type .. "'")
 	end
 
 	-- There must be at least one part to display. If there are gaps, a term

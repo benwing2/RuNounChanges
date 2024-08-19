@@ -62,10 +62,11 @@ function export.get_display_and_cat_name(source, raw)
 end
 
 
-function export.insert_source_cat_get_display(categories, lang, source, raw, nocat)
-	local display, cat_name = export.get_display_and_cat_name(source, raw)
+function export.insert_source_cat_get_display(data)
+	local categories, lang, source = data.categories, data.lang, data.source
+	local display, cat_name = export.get_display_and_cat_name(source, data.raw)
 
-	if lang and not nocat then
+	if lang and not data.nocat then
 		-- Add the category, but only if there is a current language
 		if not categories then
 			categories = {}
@@ -78,7 +79,8 @@ function export.insert_source_cat_get_display(categories, lang, source, raw, noc
 		if lang:getCode() == source:getCode() or lang:getFullCode() == source:getCode() then
 			table.insert(categories, langname .. " terms borrowed back into " .. langname)
 		else
-			table.insert(categories, langname .. " terms derived from " .. cat_name)
+			table.insert(categories, langname .. " " .. (data.borrowing_type or "terms derived") .. " from " ..
+				cat_name)
 		end
 	end
 
@@ -86,18 +88,18 @@ function export.insert_source_cat_get_display(categories, lang, source, raw, noc
 end
 
 
--- FIXME: rename to format_source()
-function export.format_etyl(lang, source, sort_key, categories, nocat)
+function export.format_source(data)
+	local lang, sort_key = data.lang, data.sort_key
 	-- [[Special:WhatLinksHere/Wiktionary:Tracking/etymology/sortkey]]
 	if sort_key then
 		require("Module:debug/track")("etymology/sortkey")
 	end
 
-	local display
-	display, categories = export.insert_source_cat_get_display(categories, lang, source, false, nocat)
-	if lang and not nocat then
+	local display, categories = export.insert_source_cat_get_display(data)
+	if lang and not data.nocat then
 		-- Format categories, but only if there is a current language; {{cog}} currently gets no categories
-		categories = require("Module:utilities").format_categories(categories, lang, sort_key, nil, force_cat)
+		categories = require("Module:utilities").format_categories(categories, lang, sort_key, nil,
+			data.force_cat or force_cat)
 	else
 		categories = ""
 	end
@@ -107,15 +109,27 @@ end
 
 
 -- Internal implementation of {{cognate|...}} template
-function export.format_cognate(terminfo, sort_key)
-	return export.format_derived(nil, terminfo, sort_key, nil, "cognate")
+function export.format_cognate(data)
+	return export.format_derived {
+		terminfo = data.terminfo,
+		sort_key = data.sort_key,
+		template_name = "cognate",
+	}
 end
 
 
 -- Internal implementation of {{derived|...}} template
-function export.format_derived(lang, terminfo, sort_key, nocat, template_name)
-	local source = terminfo.lang
-	return export.format_etyl(lang, source, sort_key, nil, nocat) .. export.process_and_create_link(terminfo, template_name)
+function export.format_derived(data)
+	local lang, terminfo, sort_key, nocat, template_name =
+		data.lang, data.terminfo, data.sort_key, data.nocat, data.template_name
+	return export.format_source {
+		lang = lang,
+		source = terminfo.lang,
+		sort_key = sort_key,
+		nocat = nocat,
+		borrowing_type = data.borrowing_type,
+		force_cat = data.force_cat,
+	} .. export.process_and_create_link(terminfo, template_name)
 end
 
 do
@@ -160,7 +174,8 @@ end
 
 
 -- Internal implementation of {{inherited|...}} template
-function export.format_inherited(lang, terminfo, sort_key, nocat)
+function export.format_inherited(data)
+	local lang, terminfo, sort_key, nocat = data.lang, data.terminfo, data.sort_key, data.nocat
 	local source = terminfo.lang
 	
 	local categories = {}
@@ -172,7 +187,14 @@ function export.format_inherited(lang, terminfo, sort_key, nocat)
 	
 	export.check_ancestor(lang, source)
 
-	return export.format_etyl(lang, source, sort_key, categories, nocat) .. link
+	return export.format_source {
+		lang = lang,
+		source = source,
+		sort_key = sort_key,
+		categories = categories,
+		nocat = nocat,
+		force_cat = data.force_cat,
+	} .. link
 end
 
 
@@ -181,7 +203,7 @@ function export.insert_borrowed_cat(categories, lang, source)
 	-- Do the same check as in insert_source_cat_get_display() (inverted).
 	if not (lang:getCode() == source:getCode() or lang:getFullCode() == source:getCode()) then
 		-- If both are the same, we want e.g. [[:Category:English terms borrowed back into English]] not
-		-- [[:Category:English terms borrowed from English]]; the former is inserted automatically by format_etyl().
+		-- [[:Category:English terms borrowed from English]]; the former is inserted automatically by format_source().
 		category = " terms borrowed from " .. source:getDisplayForm()
 	end
 	if category then
@@ -191,7 +213,8 @@ end
 
 
 -- Internal implementation of {{borrowed|...}} template.
-function export.format_borrowed(lang, terminfo, sort_key, nocat)
+function export.format_borrowed(data)
+	local lang, terminfo, sort_key, nocat = data.lang, data.terminfo, data.sort_key, data.nocat
 	local source = terminfo.lang
 	
 	local categories = {}
@@ -199,8 +222,14 @@ function export.format_borrowed(lang, terminfo, sort_key, nocat)
 		export.insert_borrowed_cat(categories, lang, source)
 	end
 
-	return export.format_etyl(lang, source, sort_key, categories, nocat) ..
-		export.process_and_create_link(terminfo, "borrowed")
+	return export.format_source {
+		lang = lang,
+		source = source,
+		sort_key = sort_key,
+		categories = categories,
+		nocat = nocat,
+		force_cat = data.force_cat,
+	} .. export.process_and_create_link(terminfo, "borrowed")
 end
 
 return export

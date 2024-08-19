@@ -1,16 +1,20 @@
+local export = {}
+
 local m_str_utils = require("Module:string utilities")
+local etymology_module = "Module:etymology"
+local etymology_multi_module = "Module:etymology/multi"
 
 local gsub = m_str_utils.gsub
 local insert = table.insert
 local pluralize = m_str_utils.pluralize
 local upper = m_str_utils.upper
 
-local export = {}
-
 -- This function handles all the messiness of different types of specialized borrowings. It should insert any
 -- borrowing-type-specific categories into `categories` unless `nocat` is given, and return the text to display
 -- before the source + term (or "" for no text).
-function export.get_specialized_borrowing_text_insert_cats(bortype, categories, lang, term, source, nocap, nocat, senseid)
+local function get_specialized_borrowing_text_insert_cats(data)
+	local bortype, categories, lang, term, source, nocap, nocat, senseid =
+		data.bortype, data.categories, data.lang, data.term, data.source, data.nocap, data.nocat, data.senseid
 
 	local function inscat(cat)
 		if not nocat then
@@ -112,29 +116,66 @@ function export.get_specialized_borrowing_text_insert_cats(bortype, categories, 
 end
 
 
-function export.specialized_borrowing(bortype, lang, terminfo, sort_key, nocap, notext, nocat, senseid, template_name)
-	local m_etymology = require("Module:etymology")
+function export.specialized_borrowing(data)
+	local bortype, lang, terminfo, sort_key, nocap, notext, nocat, senseid, template_name =
+		data.bortype, data.lang, data.terminfo, data.sort_key, data.nocap, data.notext, data.nocat, data.senseid,
+		data.template_name
+	local m_etymology = require(etymology_module)
 	local categories, source = {}, terminfo.lang
 	
-	local text = export.get_specialized_borrowing_text_insert_cats(bortype, categories, lang, terminfo.term, source, nocap, nocat, senseid)
+	local text = get_specialized_borrowing_text_insert_cats {
+		bortype = bortype,
+		categories = categories,
+		lang = lang,
+		term = terminfo.term,
+		source = source,
+		nocap = nocap,
+		nocat = nocat,
+		senseid = senseid,
+	}
 	
 	text = notext and "" or text
-	return text .. m_etymology.format_etyl(lang, source, sort_key, categories, nocat) ..
-		m_etymology.process_and_create_link(terminfo, template_name)
+	return text .. m_etymology.format_source {
+		lang = lang,
+		source = source,
+		sort_key = sort_key,
+		categories = categories,
+		nocat = nocat
+	} .. m_etymology.process_and_create_link(terminfo, template_name)
 end
 
 
-function export.specialized_multi_borrowing(bortype, lang, sc, sources, terminfo, sort_key, nocap, notext, nocat, conj, senseid, template_name)
+function export.specialized_multi_borrowing(data)
+	local bortype, lang, sc, sources, terminfo, sort_key, nocap, notext, nocat, conj, senseid, template_name =
+		data.bortype, data.lang, data.sc, data.sources, data.terminfo, data.sort_key, data.nocap, data.notext,
+		data.nocat, data.conj, data.senseid, data.template_name
 	local categories, term = {}, terminfo.term
 	local text
 
 	for _, source in ipairs(sources) do
-		text = export.get_specialized_borrowing_text_insert_cats(bortype, categories, lang, term, source, nocap, nocat, senseid)
+		text = get_specialized_borrowing_text_insert_cats {
+			bortype = bortype,
+			categories = categories,
+			lang = lang,
+			term = term,
+			source = source,
+			nocap = nocap,
+			nocat = nocat,
+			senseid = senseid,
+		}
 	end
 	
 	text = notext and "" or text
-	return text .. require("Module:etymology/multi").format_sources(lang, sc, sources, terminfo, sort_key, categories, nocat, conj) ..
-		require("Module:etymology").process_and_create_link(terminfo, template_name)
+	return text .. require(etymology_multi_module).format_sources {
+		lang = lang,
+		sc = sc,
+		sources = sources,
+		terminfo = terminfo,
+		sort_key = sort_key,
+		categories = categories,
+		nocat = nocat,
+		conj = conj,
+	} .. require(etymology_module).process_and_create_link(terminfo, template_name)
 end
 
 

@@ -29,6 +29,7 @@ object contains the following fields:
 ** `l`: Left labels for the term.
 ** `ll`: Right labels for the term.
 ** `refs`: References for the term, in the structure expected by [[Module:references]].
+* `lit`: Overall literal meaning.
 * `q`: Overall left regular qualifier(s).
 * `qq`: Overall right regular qualifier(s).
 * `l`: Overall left labels.
@@ -61,7 +62,10 @@ function export.format_affixusex(data)
 		item.lang = item.lang or data.lang
 		item.sc = item.sc or data.sc
 		if item_lang_specific then
-			text = require(etymology_module).format_derived(nil, item, nil, "affixusex")
+			text = require(etymology_module).format_derived {
+				terminfo = item,
+				template_name = "affixusex",
+			}
 		else
 			text = require(links_module).full_link(item, "term")
 		end
@@ -81,7 +85,8 @@ function export.format_affixusex(data)
 		table.insert(result, text)
 	end
 
-	result = table.concat(result)
+	result = table.concat(result) .. (data.lit and ", literally " ..
+		require(links_module).mark(data.lit, "gloss") or "")
 
 	if data.q and data.q[1] or data.qq and data.qq[1] or data.l and data.l[1] or data.ll and data.ll[1] then
 		result = require(pron_qualifier_module).format_qualifiers {

@@ -2,6 +2,7 @@ local export = {}
 
 local m_languages = require("Module:languages")
 local m_links = require("Module:links")
+local etymology_module = "Module:etymology"
 
 local rsplit = mw.text.split
 
@@ -158,7 +159,11 @@ function export.see(frame)
 		end
 		part.sc = part.sc or sc
 		if part.lang then
-			result = result .. require("Module:etymology").format_derived(nil, part, nil, true, "see")
+			result = result .. require(etymology_module).format_derived {
+				terminfo = part,
+				nocat = true,
+				template_name = "see",
+			}
 		else
 			part.lang = lang
 			result = result .. m_links.full_link(part, nil, false)

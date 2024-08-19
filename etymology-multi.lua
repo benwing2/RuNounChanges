@@ -5,7 +5,9 @@ local m_etymology = require("Module:etymology")
 -- For testing
 local force_cat = false
 
-function export.format_sources(lang, sc, sources, terminfo, sort_key, categories, nocat, conj)
+function export.format_sources(data)
+	local lang, sc, sources, terminfo, sort_key, categories, nocat, conj =
+		data.lang, data.sc, data.sources, data.terminfo, data.sort_key, data.categories, data.nocat, data.conj
 	local m_utilities
 	if lang and not nocat then
 		m_utilities = require("Module:utilities")
@@ -24,8 +26,14 @@ function export.format_sources(lang, sc, sources, terminfo, sort_key, categories
 			display_term = exists or different
 		end
 		if display_term then
-			local display, this_cats = m_etymology.insert_source_cat_get_display(categories, lang, source, true, nocat)
-			seg = m_links.language_link{
+			local display, this_cats = m_etymology.insert_source_cat_get_display {
+				categories = categories,
+				lang = lang,
+				source = source,
+				raw = true,
+				nocat = nocat,
+			}
+			seg = m_links.language_link {
 				lang = source, term = terminfo.term, alt = display, tr = "-"
 			}
 			if lang and not nocat then
@@ -36,7 +44,13 @@ function export.format_sources(lang, sc, sources, terminfo, sort_key, categories
 			end
 			seg = "<span class=\"etyl\">" .. seg .. this_cats .. "</span>"
 		else
-			seg = m_etymology.format_etyl(lang, source, sort_key, categories, nocat)
+			seg = m_etymology.format_source {
+				lang = lang,
+				source = source,
+				sort_key = sort_key,
+				categories = categories,
+				nocat = nocat,
+			}
 		end
 		table.insert(source_segs, seg)
 	end
@@ -45,20 +59,28 @@ end
 
 
 -- Internal implementation of {{cognate|...}} template with multiple source languages
-function export.format_multi_cognate(sources, terminfo, sort_key, conj)
-	local sc = require("Module:scripts").findBestScriptWithoutLang(terminfo.term)
-	return export.format_multi_derived(nil, sc, sources, terminfo, sort_key, nil, conj, "cognate")
+function export.format_multi_cognate(data)
+	local sc = require("Module:scripts").findBestScriptWithoutLang(data.terminfo.term)
+	return export.format_multi_derived {
+		sc = sc,
+		sources = data.sources,
+		terminfo = data.terminfo,
+		sort_key = data.sort_key,
+		conj = data.conj,
+		template_name = "cognate",
+	}
 end
 
 
 -- Internal implementation of {{derived|...}} template with multiple source languages
-function export.format_multi_derived(lang, sc, sources, terminfo, sort_key, nocat, conj, template_name)
-	return export.format_sources(lang, sc, sources, terminfo, sort_key, nil, nocat, conj) ..
-		m_etymology.process_and_create_link(terminfo, template_name)
+function export.format_multi_derived(data)
+	return export.format_sources(data) .. m_etymology.process_and_create_link(data.terminfo, data.template_name)
 end
 
 
-function export.format_multi_borrowed(lang, sc, sources, terminfo, sort_key, nocat, conj)
+function export.format_multi_borrowed(data)
+	local lang, sc, sources, terminfo, sort_key, nocat, conj =
+		data.lang, data.sc, data.sources, data.terminfo, data.sort_key, data.nocat, data.conj
 	local categories = {}
 
 	if not nocat then
@@ -67,8 +89,16 @@ function export.format_multi_borrowed(lang, sc, sources, terminfo, sort_key, noc
 		end
 	end
 
-	return export.format_sources(lang, sc, sources, terminfo, sort_key, categories, nocat, conj) ..
-		m_etymology.process_and_create_link(terminfo, "borrowed")
+	return export.format_sources {
+		lang = lang,
+		sc = sc,
+		sources = sources,
+		terminfo = terminfo,
+		sort_key = sort_key,
+		categories = categories,
+		nocat = nocat,
+		conj = conj
+	} .. m_etymology.process_and_create_link(terminfo, "borrowed")
 end
 
 

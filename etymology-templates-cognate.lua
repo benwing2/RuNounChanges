@@ -1,6 +1,9 @@
-local process_params = require("Module:parameters").process
-
 local export = {}
+
+local etymology_module = "Module:etymology"
+local etymology_multi_module = "Module:etymology/multi"
+
+local process_params = require("Module:parameters").process
 
 do
 	local function get_args(parent_args)
@@ -57,9 +60,17 @@ do
 		}
 	
 		if #sources > 1 then
-			return require("Module:etymology/multi").format_multi_cognate(sources, terminfo, args.sort, args.conj)
+			return require(etymology_multi_module).format_multi_cognate {
+				sources = sources,
+				terminfo = terminfo,
+				sort_key = args.sort,
+				conj = args.conj,
+			}
 		end
-		return require("Module:etymology").format_cognate(terminfo, args.sort)
+		return require(etymology_module).format_cognate {
+			terminfo = terminfo,
+			sort_key = args.sort,
+		}
 	end
 end
 

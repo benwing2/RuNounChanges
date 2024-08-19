@@ -1,3 +1,5 @@
+local export = {}
+
 local require_when_needed = require("Module:utilities/require when needed")
 
 local concat = table.concat
@@ -7,8 +9,8 @@ local process_params = require_when_needed("Module:parameters", "process")
 local trim = mw.text.trim
 local lower = mw.ustring.lower
 
-local export = {}
-
+local etymology_module = "Module:etymology"
+local etymology_specialized_module = "Module:etymology/specialized"
 local m_internal = require("Module:etymology/templates/internal")
 
 -- For testing
@@ -31,7 +33,11 @@ function export.etyl(frame)
 	else
 		args = process_params(args, params)
 	end
-	return require("Module:etymology").format_etyl(args[2], args[1], args["sort"])
+	return require(etymology_module).format_source {
+		lang = args[2],
+		source = args[1],
+		sort_key = args["sort"]
+	}
 end
 
 
@@ -62,13 +68,32 @@ function export.specialized_borrowing(frame)
 	
 	local lang, term, sources
 	args, lang, term, sources = m_internal.parse_2_lang_args(frame, "has text")
-	local m_etymology_specialized = require("Module:etymology/specialized")
+	local m_etymology_specialized = require(etymology_specialized_module)
 	if sources then
-		return m_etymology_specialized.specialized_multi_borrowing(bortype, lang, term.sc, sources, term,
-			args.sort, args.nocap, args.notext, args.nocat, args.conj, args.senseid)
+		return m_etymology_specialized.specialized_multi_borrowing {
+			bortype = bortype,
+			lang = lang,
+			sc = term.sc,
+			sources = sources,
+			terminfo = term,
+			sort_key = args.sort,
+			nocap = args.nocap,
+			notext = args.notext,
+			nocat = args.nocat,
+			conj = args.conj,
+			senseid = args.senseid,
+		}
 	else
-		return m_etymology_specialized.specialized_borrowing(bortype, lang, term, args.sort,
-			args.nocap, args.notext, args.nocat, args.senseid)
+		return m_etymology_specialized.specialized_borrowing {
+			bortype = bortype,
+			lang = lang,
+			terminfo = term,
+			sort_key = args.sort,
+			nocap = args.nocap,
+			notext = args.notext,
+			nocat = args.nocat,
+			senseid = args.senseid,
+		}
 	end
 end
 
