@@ -128,8 +128,8 @@ local unstressed_words = m_table.listToSet {
 local unstressed_affixes = m_table.listToSet {
 	-- NOTE: prefixes here aren't currently used with prefixes themselves because they are all assumed unstressed
 	-- in the absence of an explicit accent marker.
-	"mang-", "nang-", "man-", "nan-", "-om-", "-inom-", "-inm-", "-ën", "-en", "-in-", 
-	"-an", "in-", "ma-", "na-", "-in", "ini-", "mai-", "nai-" 
+	"mang-", "nang-", "man-", "nan-", "-om-", "-inom-", "-inm-", "-ën", "-en", "-in-",
+	"-an", "in-", "ma-", "na-", "-in", "ini-", "mai-", "nai-"
 }
 
 -- local nang_macron = "na" .. MACRON .. "ng"
@@ -347,14 +347,14 @@ function export.IPA(text, include_phonemic_syllable_boundaries)
 	text = rsub(text, "ts", "ĉ") --not the real sound
 
 	table.insert(debug, text)
-	
+
 	text = rsub_repeatedly(text, "(" .. NV .. ")([u])([" .. AC .. MACRON .. "]?)([aeio])("  .. accent_c .. "?)","%1%2%3.w%4%5")
 	text = rsub_repeatedly(text, "(" .. V ..  ")([u])([aeio])("  .. accent_c .. "?)","%1.w%3%4")
 	text = rsub_repeatedly(text, "(" .. V ..  ")([o])([aei])("  .. accent_c .. "?)","%1.w%3%4")
 	text = rsub(text, "([i])([" .. AC .. MACRON .. "])([aeou])("  .. accent_c .. "?)","%1%2.y%3%4")
 	text = rsub(text, "([i])([aeou])(" .. accent_c .. "?)","y%2%3")
 	text = rsub(text, "a([".. AC .."]*)o([#.ʔ])","a%1w%2")
-	
+
 	-- eu rules
 	text = rsub_repeatedly(text, "([#])([e])([u])("  .. accent_c .. "?)","%1y%3%4")
 	text = rsub_repeatedly(text, "(" .. NV .. ")([e])([" .. AC .. MACRON .. "]?)([u])("  .. accent_c .. "?)","%1%2%3.%4%5")
@@ -463,7 +463,7 @@ function export.IPA(text, include_phonemic_syllable_boundaries)
 
     table.insert(debug,text)
 
-    --add temporary macron for /a/, /i/ and /u/ 
+    --add temporary macron for /a/, /i/ and /u/
 
 	text = rsub(text,"([ˈˌ])([#]*)([ʔbćĉdfɡhĵɟklmnŋpɾrstvwz]?)([ɟlnɾstw]?)([a])([.# ˈˌ])","%1%2%3%4ā%6") -- /a/ on open stressed syllables
 	text = rsub(text,"([ʔbćĉdfɡhĵɟklmnŋpɾrstvwz]?)([ɟlnɾstw]?)[i]([ʔbdfɡklmnŋpɾstu#])([bdɡklmnpɾst]?)","%1%2ī%3%4") -- /i/ on closed syllables regardless of stress
@@ -489,7 +489,7 @@ function export.IPA(text, include_phonemic_syllable_boundaries)
     text = rsub(text,"([^#bdfɡĵjɟnŋɾrvzaāeəoiīuū])([ˈˌ.#])z","%1%2s") -- /z/ turn to /s/ after some unvoiced sounds
     text = rsub(text,"([bćĉdfɡhĵjɟklmnŋptvwz])([ˈˌ.]?)([ɟlɾst])([aāeəoōiīuū])([.]?)([z])","%1%2%3%4%5s") -- consonant cluster before /z/ turn to /s/
     text = rsub_repeatedly(text, "([^z]*)z([^z]*)([^#bdfɡĵjɟnŋɾrvzˈˌ.#][ˈˌ.#]?)z", "%1z%2%3s") -- /z/ turn to /s/ if /z/ already said earlier
-    
+
     text = rsub_repeatedly(text, "^([#]*)([ˈˌ])([#]*)", "%1%3%2") -- Move stress inside word boundary fix at start
     text = rsub_repeatedly(text, "([ ])([#]*)([ˈˌ])([#]*)", "%1%2%4%3") -- Move stress inside word boundary fix at start
 
@@ -510,7 +510,7 @@ function export.IPA(text, include_phonemic_syllable_boundaries)
 			text = rsub(text,"([bćĉdfɡhĵɟklmnŋpɾrstvwz])([ɟlnɾstw]?)([ou])([j])[#]","%1%2ʊ%4#")
 			text = rsub(text,"([uū])([kʔ])","o%2")
 			text = rsub(text,"([uū])([bćĉdfɡhĵɟklmnŋpɾrstvwz])#","o%2#")
-			
+
 			--Turn phonemic diphthongs to phonetic diphthongs
 			text = rsub(text, "([aāeəiī])j", "%1i̯")
 			text = rsub(text, "([ōoʊuū])j", "%1y̯")
@@ -566,49 +566,49 @@ function export.IPA(text, include_phonemic_syllable_boundaries)
 		    text = rsub(text,"([a])ʊ̯","āʊ̯") --aw
 		    text = rsub(text,"([i])ʊ̯","īʊ̯") --iw
 
-			-- Kankanaey /i/ lowers before nasal 
+			-- Kankanaey /i/ lowers before nasal
 			text = rsub(text,"([i])([# .ˈˌ]*[ŋ])","ī%2")
 
 	       	table.insert(debug, text)
 
 		    --Change stresses before penultimate to have final syllable stress
-		    text = rsub_repeatedly(text,"[ˈˌ]([ʔbćĉdfɡɣhĵɟkxlmnɲŋpɾrsʃtwvzʒ]?[ɟlnɾstw]?[āeəīoū])([^# ˈˌ]*)" .. 
+		    text = rsub_repeatedly(text,"[ˈˌ]([ʔbćĉdfɡɣhĵɟkxlmnɲŋpɾrsʃtwvzʒ]?[ɟlnɾstw]?[āeəīoū])([^# ˈˌ]*)" ..
 		    	"([.][ʔbćĉdfɡɣhĵɟkxlmnɲŋpɾrsʃtwvzʒ]?[ɟlnɾstw]?[āeīoūaəiʊ])([^# ˈˌ]*)" ..
 		    	"[.]([ʔbćĉdfɡɣhĵɟkxlmnɲŋpɾrsʃtwvzʒ]?[ɟlnɾstw]?[āeīoūaəiʊ])([^# ˈˌ.]*)([# ])","ˌ%1%2%3%4ˈ%5%6%7")
-		    
+
 			-- text = rsub(text,"([ˈˌ])([ʔbćĉdfɡhĵɟklmnŋpɾrstwvz]?)([ɟlnɾstw]?)([a])","%1%2%3ā")
 			-- text = rsub(text,"([ˈˌ])([ʔbćĉdfɡhĵɟklmnŋpɾrstwvz]?)([ɟlnɾstw]?)([i])","%1%2%3ī")
 			-- text = rsub(text,"([ˈˌ])([ʔbćĉdfɡhĵɟklmnŋpɾrstwvz]?)([ɟlnɾstw]?)([ʊ])","%1%2%3ū")
-		    
+
 		    --If final syllable is stressed but so is penultimate, mark penultimate only
-		    -- text = rsub_repeatedly(text,"[ˌ]([ʔbćĉdfɡɣhĵɟkxlmnɲŋpɾrsʃtwvzʒ]?[ɟlnɾstw]?[āeəīoū])([^# .ˈˌ]*)" .. 
+		    -- text = rsub_repeatedly(text,"[ˌ]([ʔbćĉdfɡɣhĵɟkxlmnɲŋpɾrsʃtwvzʒ]?[ɟlnɾstw]?[āeəīoū])([^# .ˈˌ]*)" ..
 		    -- 	"([.]?[ˈˌ])([ʔbćĉdfɡɣhĵɟkxlmnɲŋpɾrsʃtwvzʒ]?[ɟlnɾstw]?)([āaeoəīōū])([^# ˈˌ.]*)([# ])","ˈ%1%2.%4%5%6%7")
-		    
+
 		    text = rsub_repeatedly(text, "ˈ(.+)ˈ", "ˌ%1ˈ") -- Reset primary to secondary stresses if not on last word
-		    
+
 		    -- Add vowel length to open stressed vowels
 		    text = rsub_repeatedly(text,"([ˈˌ])([ʔbćĉdfɡɣhĵɟkxlmnɲŋpɾrsʃtwvzʒ]?)([ɟlnɾstw]?)([aāeəīioōūʊ])([ˈˌ.])","%1%2%3%4ː%5")
 
 			-- Stops are unreleased on syllable-final position
 		    text = rsub(text,"([pbtdkɡ])([.# ˈˌ])","%1̚%2")
-		    
+
 		    -- /k/ is farther back except with high front vowel /i/
 		    text = rsub(text,"k","k̠")
 		    text = rsub(text,"(k̠)([īi])","k%2")
 		    text = rsub(text,"([īi])(k̠)","%1k")
-		    
+
 		    --Change /e/ closer to native pronunciation.
 		    --text = rsub(text, "e", "ɛ")
-		    
+
 		     --Change /ə/ closer to native pronunciation.
 		    text = rsub(text, "ə", "ɨ")
-		    
+
 		     --change a, u to unstressed equivalents (certain forms to restore)
 		    text = rsub(text,"a","ʌ")
 		    --text = rsub(text,"[ou]","ʊ")
-		    
+
 		    text = rsub(text,"ī","i̞")
-		    
+
 		else
 			text = rsub(text,"([n])([ˈˌ#.]?[ɡk])","ŋ%2") -- /n/ before /k/ and /g/ (some proper nouns and loanwords)
 			if not include_phonemic_syllable_boundaries then
@@ -813,7 +813,7 @@ local function align_syllabification_to_spelling(syllab, spelling)
 			["w"] = {"u", "o"},
 			["y"] = {"i"}
 		}
-		
+
 		return uci == ucj or (matching_chars[uci] and m_table.contains(matching_chars[uci], ucj))
 	end
 	local function silent_spelling_letter(ucj)
@@ -1579,10 +1579,15 @@ function export.show_full(frame)
 				end,
 				pre_normalize_modifiers = function(data)
 					local modtext = data.modtext
+					modtext = modtext:match("^<(.*)>$")
+					if not modtext then
+						error(("Internal error: Passed-in modifier isn't surrounded by angle brackets: %s"):format(
+							data.modtext))
+					end
 					if modtext:find("%^") and not modtext:find("^t:") then
 						modtext = "t:" .. modtext
 					end
-					return modtext
+					return "<" .. modtext .. ">"
 				end,
 				splitchar = ",",
 				outer_container = {},
@@ -1898,7 +1903,7 @@ function export.show_full(frame)
 			return
 		end
 		for _, rhyme in ipairs(rhymes) do
-			
+
 			-- local num_vowels_in_rhyme = #rsub(rhyme.rhyme, NV, "")
 			-- local penult = num_vowels_in_rhyme == 2
 			-- local glottal = rhyme.rhyme:find("ʔ$")
@@ -1927,7 +1932,7 @@ function export.show_full(frame)
 			return
 		end
 		for _, syll in ipairs(sylls.terms) do
-			local syll_no_dot = "#" .. syll.syllabification .. "#" 
+			local syll_no_dot = "#" .. syll.syllabification .. "#"
 			syll_no_dot = syll.syllabification:gsub("%.([^ #])", "%1"):gsub("#", "")
 			if syll_no_dot ~= pagename then
 				mw.log(("For page '%s', saw syllabification '%s' not matching pagename"):format(
