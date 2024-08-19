@@ -2,8 +2,9 @@
 
 local ar_translit = require("Module:ar-translit")
 local m_str_utils = require("Module:string utilities")
-local ar_verb_module = "Module:ar-verb"
-local parse_utilities_module = "Module:parse utilities"
+local ar_verb_module = "Module:User:Benwing2/ar-verb"
+local inflection_utilities_module = "Module:User:Benwing2/inflection utilities"
+local parse_utilities_module = "Module:User:Benwing2/parse utilities"
 
 local list_to_set = require("Module:table").listToSet
 local rfind = m_str_utils.find
@@ -45,6 +46,8 @@ local TEMPARCOMMA = u(0xFFF1)
 -----------------------
 -- Utility functions --
 -----------------------
+
+local dump = mw.dumpObject
 
 -- If Not Empty
 local function ine(arg)
@@ -729,6 +732,7 @@ local valid_forms = list_to_set(
 		{ "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII",
 		  "XIII", "XIV", "XV", "Iq", "IIq", "IIIq", "IVq" })
 
+-- FIXME: Partly duplicated in [[Module:ar-inflections]].
 local function handle_conj_form(args, data)
 	local form = args[2]
 	if form then
@@ -736,7 +740,7 @@ local function handle_conj_form(args, data)
 			error("Invalid verb conjugation form " .. form)
 		end
 
-		table.insert(data.inflections, { label = '[[Appendix:Arabic verbs#Form ' .. form .. '|form ' .. form .. ']]' })
+		table.insert(data.inflections, { label = "[[Appendix:Arabic verbs#Form " .. form .. "|form " .. form .. "]]" })
 	end
 end
 
@@ -784,6 +788,7 @@ pos_functions["verbs"] = {
 	params = {
 		[1] = {},
 		-- Comma-separated lists with possible inline modifiers
+		["past"] = {},
 		["nonpast"] = {},
 		["vn"] = {},
 		["noautolinktext"] = {type = "boolean"},
@@ -791,10 +796,22 @@ pos_functions["verbs"] = {
 	},
 	func = function(args, data)
 		local ar_verb = require(ar_verb_module)
-		local alternant_multiword_spec = ar_verb.do_generate_forms(args, "ar-verb",
-			data.heads[1] and data.heads[1].term or nil)
+		local alternant_multiword_spec =
+			args[1] ~= "-" and ar_verb.do_generate_forms(args, "ar-verb", data.pagename) or nil
 
-		local function do_slot(slot, override, label)
+		local function do_slot(slots_to_check, override, label, slot_is_headword)
+			-- Do this even with an override so we can return the correct filled slot.
+			local slot, slotval
+			if alternant_multiword_spec then
+				for _, potential_slot in ipairs(slots_to_check) do
+					slotval = alternant_multiword_spec.forms[potential_slot]
+					if slotval then
+						slot = potential_slot
+						break
+					end
+				end
+			end
+
 			if override then
 				local override_param_mods = {
 					alt = {},
@@ -840,11 +857,12 @@ pos_functions["verbs"] = {
 					if not ar then
 						ar = formval
 					end
-					return {term = ar, translit = translit, uncertain = uncertain}
+					local retval = {term = ar, uncertain = uncertain}
+					-- Yuck, harmonize these.
+					retval[slot_is_headword and "tr" or "translit"] = translit
 				end
 
 				local terms
-				-- Allow Arabic comma and convert to regular comma before splitting.
 				if override:find("<") then
 					terms = require(parse_utilities_module).parse_inline_modifiers(override, {
 						paramname = paramname,
@@ -860,152 +878,98 @@ pos_functions["verbs"] = {
 						terms[i] = generate_obj(split)
 					end
 				end
-				terms.label = label
-				return term
+				if not slot_is_headword then
+					terms.label = label
+				end
+				return terms, slot
+			elseif not alternant_multiword_spec then
+				return nil, slot
 			else
-				return {
-					slot = slot_tense .. "_3p",
-					label = ("third-person plural %s"):format(label_tense),
-				}, false
-			end
-		end
-
-		local did_pres_1s
-		preses, did_pres_1s = do_finite("pres", "present")
-		preses_3s = {
-			slot = "pres_3s",
-			label = "third-person singular present",
-		}
-		prets = do_finite("pret", "preterite")
-		parts = {
-			slot = "pp_ms",
-			label = "past participle",
-		}
-		short_parts = {
-			slot = "short_pp_ms",
-			label = "short past participle",
-		}
-
-		if #args.pres > 0 or #args.pres3s > 0 or #args.pret > 0 or #args.part > 0 or #args.short_part > 0 then
-			track("verb-old-multiarg")
-		end
-
-		local function strip_brackets(qualifiers)
-			if not qualifiers then
-				return nil
-			end
-			local stripped_qualifiers = {}
-			for _, qualifier in ipairs(qualifiers) do
-				local stripped_qualifier = qualifier:match("^%[(.*)%]$")
-				if not stripped_qualifier then
-					error("Internal error: Qualifier should be surrounded by brackets at this stage: " .. qualifier)
-				end
-				table.insert(stripped_qualifiers, stripped_qualifier)
-			end
-			return stripped_qualifiers
-		end
-
-		local function do_verb_form(args, qualifiers, slot_desc, skip_if_empty)
-			local forms
-			local to_insert
-
-			if #args == 0 then
-				forms = specforms[slot_desc.slot]
-				if not forms or #forms == 0 then
-					if skip_if_empty then
-						return
+				if not slotval then
+					if slot_is_headword then
+						-- FIXME, put "uncertain" as qualifier? Does this ever happen?
+						return nil, slot
+					elseif alternant_multiword_spec.slot_uncertain[slot] then
+						return {label = label .. " uncertain"}, slot
+					elseif alternant_multiword_spec.slot_explicitly_missing[slot] then
+						return {label = "no " .. label}, slot
+					else
+						-- just say nothing about this slot
+						return nil, slot
 					end
-					forms = {{form = "-"}}
 				end
-			elseif #args == 1 and args[1] == "-" then
-				forms = {{form = "-"}}
-			else
-				forms = {}
-				for i, arg in ipairs(args) do
-					local qual = qualifiers[i]
-					if qual then
-						-- FIXME: It's annoying we have to add brackets and strip them out later. The inflection
-						-- code adds all footnotes with brackets around them; we should change this.
-						qual = {"[" .. qual .. "]"}
+				local terms = slot_is_headword and {} or {label = label}
+				for _, form in ipairs(slotval) do
+					local term = {
+						term = form.form,
+						id = form.id,
+						genders = form.genders,
+						pos = form.pos,
+						lit = form.lit,
+					}
+					-- Yuck, harmonize these.
+					term[slot_is_headword and "tr" or "translit"] = form.translit
+					if form.footnotes then
+						local quals, refs = require(inflection_utilities_module).
+							convert_footnotes_to_qualifiers_and_references(form.footnotes)
+						term.q = quals
+						term.refs = refs
 					end
-					local form = arg
-					if not args.noautolinkverb then
-						form = com.add_links(form)
-					end
-					table.insert(forms, {form = form, footnotes = qual})
+					table.insert(terms, term)
 				end
-			end
-
-			if forms[1].form == "-" then
-				to_insert = {label = "no " .. slot_desc.label}
-			else
-				local into_table = {label = slot_desc.label}
-				for _, form in ipairs(forms) do
-					local qualifiers = strip_brackets(form.footnotes)
-					-- Strip redundant brackets surrounding entire form. These may get generated e.g.
-					-- if we use the angle bracket notation with a single word.
-					local stripped_form = rmatch(form.form, "^%[%[([^%[%]]*)%]%]$") or form.form
-					stripped_form = pt_verb.remove_variant_codes(stripped_form)
-					-- Don't include accelerators if brackets remain in form, as the result will be wrong.
-					-- FIXME: For now, don't include accelerators. We should use the new {{pt-verb form of}} once implemented.
-					-- local this_accel = not stripped_form:find("%[%[") and accel or nil
-					local this_accel = nil
-					table.insert(into_table, {term = stripped_form, q = qualifiers, accel = this_accel})
-				end
-				to_insert = into_table
-			end
-
-			table.insert(data.inflections, to_insert)
-		end
-
-		local skip_pres_if_empty
-		if alternant_multiword_spec.no_pres1_and_sub then
-			table.insert(data.inflections, {label = "no first-person singular present"})
-			table.insert(data.inflections, {label = "no present subjunctive"})
-		end
-		if alternant_multiword_spec.no_pres_stressed then
-			table.insert(data.inflections, {label = "no stressed present indicative or subjunctive"})
-			skip_pres_if_empty = true
-		end
-		if alternant_multiword_spec.only3s then
-			table.insert(data.inflections, {label = glossary_link("impersonal")})
-		elseif alternant_multiword_spec.only3sp then
-			table.insert(data.inflections, {label = "third-person only"})
-		elseif alternant_multiword_spec.only3p then
-			table.insert(data.inflections, {label = "third-person plural only"})
-		end
-		local has_vowel_alt
-		if alternant_multiword_spec.vowel_alt then
-			for _, vowel_alt in ipairs(alternant_multiword_spec.vowel_alt) do
-				if vowel_alt ~= "+" and vowel_alt ~= "í" and vowel_alt ~= "ú" then
-					has_vowel_alt = true
-					break
-				end
+				return terms, slot
 			end
 		end
 
-		local function expand_footnotes_and_references(footnotes)
-			if not footnotes then
-				return nil
+		local gloss_parts = {}
+		for _, vform in ipairs(alternant_multiword_spec.verb_forms) do
+			table.insert(gloss_parts, "[[Appendix:Arabic verbs#Form " .. vform .. "|" .. vform .. "]]")
+		end
+		if gloss_parts[1] then
+			data.gloss = table.concat(gloss_parts, ", ")
+		end
+
+		if data.heads[1] and args.past then
+			error("Can't specify both head= and past= to {{ar-verb}}; prefer past=")
+		end
+		
+		if not alternant_multiword_spec.has_active then
+			table.insert(data.inflections, {label = "passive-only"})
+		end
+
+		-- Do this always so `past_slot` is correctly filled.
+		local past, past_slot = do_slot(ar_verb.potential_lemma_slots, args.past, "-", "slot is headword")
+		if data.heads[1] then
+			-- user specified head=; don't override with past= or slot 'past_3sm' etc.
+		else
+			if past then
+				data.heads = past
 			end
-			return require("Module:inflection utilities").fetch_headword_qualifiers_and_references(footnotes)
 		end
 
-		do_verb_form(args.pres, args.pres_qual, preses, skip_pres_if_empty)
-		-- We want to include both the pres_1s and pres_3s if there is a vowel alternation in the present singular. But we
-		-- don't want to redundantly include the pres_3s if we already included it.
-		if did_pres_1s and has_vowel_alt then
-			do_verb_form(args.pres3s, args.pres3s_qual, preses_3s, skip_pres_if_empty)
+		local nonpast_slots
+		if not past_slot or past_slot:find("^past_") then
+			nonpast_slots = {"ind_3ms", "ind_pass_3ms", "imp_2ms"}
+		else
+			nonpast_slots = {}
 		end
-		do_verb_form(args.pret, args.pret_qual, prets)
-		do_verb_form(args.part, args.part_qual, parts)
-		do_verb_form(args.short_part, args.short_part_qual, short_parts, "skip if empty")
-
-		-- Add categories.
-		for _, cat in ipairs(alternant_multiword_spec.categories) do
-			table.insert(data.categories, cat)
+		local nonpast, _ = do_slot(nonpast_slots, args.nonpast, "non-past")
+		if nonpast then
+			table.insert(data.inflections, nonpast)
 		end
 
+		local vn, _ = do_slot({"vn"}, args.vn, "verbal noun")
+		if vn then
+			table.insert(data.inflections, vn)
+		end
+
+		-- FIXME: Should we insert categories? Conjugation also does it and is more likely to be accurate.
+		--for _, cat in ipairs(alternant_multiword_spec.categories) do
+		--	table.insert(data.categories, cat)
+		--end
+
+		--[=[
+		-- FIXME: Review this to see if we need to port it.
 		-- If the user didn't explicitly specify head=, or specified exactly one head (not 2+) and we were able to
 		-- incorporate any links in that head into the 1= specification, use the infinitive generated by
 		-- [[Module:pt-verb]] in place of the user-specified or auto-generated head. This was copied from
@@ -1022,6 +986,7 @@ pos_functions["verbs"] = {
 				table.insert(data.heads, {term = lemma_obj.form, q = quals, refs = refs})
 			end
 		end
+		]=]
 	end
 }
 
