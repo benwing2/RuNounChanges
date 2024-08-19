@@ -29,10 +29,11 @@ FIXME:
    (according to Haywood and Nahmad p. 244, who are very specific about the irregular occurrence of alif + yā instead
    of expected اِعْمَيَّ with doubled yā). Not in Hans Wehr. NOTE: Not true about this, cf. form IX اِرْعَوَى "to desist,
    to repent, to see the light". Also note form XII اِخْضَوْضَرَ = form IX اِخْضَرَّ "to be or become green".
+   [DONE except for اِعْمَايَ]
 
 2. Implement irregular verbs as special cases and recognize them, e.g.
    -- laysa "to not be"; only exists in the past tense, no non-past, no imperative, no participles, no passive, no
-      verbal noun. Irregular alternation las-/lays-.
+      verbal noun. Irregular alternation las-/lays-. [IMPLEMENTABLE USING OVERRIDES]
    -- istaḥā yastaḥī "be ashamed of" -- this is complex according to Hans Wehr because there are two verbs, regular
       istaḥyā yastaḥyī "to spare (someone)'s life" and irregular istaḥyā yastaḥyī "to be ashamed to face (someone)",
 	  which is irregular because it has the alternate irregular form istaḥā yastaḥī which only applies to this meaning.
@@ -47,9 +48,9 @@ FIXME:
       to imm- as an alternative. inmalasa "to become smooth; to glide; to slip away; to escape" also has immalasa as an
 	  alternative. The only other form VII verbs in Hans Wehr beginning with -m- are inmalaḵa "to be pulled out, torn
 	  out, wrenched" and inmāʿa "to be melted, to melt, to dissolve", which are not listed with imm- alternatives, but
-	  might have them; if so, we should handle this generally.
+	  might have them; if so, we should handle this generally. [DONE]
    -- يَرَعَ yaraʕa yariʕu "to be a coward, to be chickenhearted" as an alternative form of يَرِعَ yariʕa yayraʕu (as given in
-      Wehr).
+      Wehr). [IMPLEMENTABLE USING OVERRIDES]
 3. Implement individual override parameters for each paradigm part. See Module:fro-verb for an example of how to do this
    generally. Note that {{temp|ar-conj-I}} and other of the older templates already had such individual override params.
    [DONE]
@@ -298,10 +299,10 @@ end
 
 local passive_types = m_table.listToSet {
 	"pass", -- verb has both active and passive
+	"ipass", -- verb is active with impersonal passive
 	"nopass", -- verb is active-only
 	"onlypass", -- verb is passive-only
-	"imperspass", -- verb is active with impersonal passive
-	"impers", -- verb itself is impersonal, meaning passive-only with impersonal passive
+	"onlypass-impers", -- verb itself is impersonal, meaning passive-only with impersonal passive
 }
 
 local indicator_flags = m_table.listToSet {
@@ -671,9 +672,9 @@ local function skip_slot(base, slot, allow_overrides)
 		return true
 	elseif base.passive == "onlypass" and slot ~= "pp" and slot ~= "vn" and not slot:find("_pass") then
 		return true
-	elseif base.passive == "imperspass" and slot:find("_pass") and not slot:find("3ms") then
+	elseif base.passive == "ipass" and slot:find("_pass") and not slot:find("3ms") then
 		return true
-	elseif base.passive == "impers" and slot ~= "pp" and slot ~= "vn" and (not slot:find("_pass") or
+	elseif base.passive == "onlypass-impers" and slot ~= "pp" and slot ~= "vn" and (not slot:find("_pass") or
 		slot:find("_pass") and not slot:find("3ms")) then
 		return true
 	end
@@ -890,7 +891,7 @@ end
 
 -- True if the `passive` spec indicates a passive-only verb.
 local function is_passive_only(passive)
-	return passive == "onlypass" or passive == "impers"
+	return passive == "onlypass" or passive == "onlypass-impers"
 end
 
 -------------------------------------------------------------------------------
@@ -2873,7 +2874,6 @@ local function parse_indicator_spec(angle_bracket_spec)
 		slot_override_uses_default = {},
 		addnote_specs = {},
 	}
-	local base = create_empty_base(angle_bracket_spec)
 	local function parse_err(msg)
 		error(msg .. ": " .. angle_bracket_spec)
 	end
@@ -3093,7 +3093,7 @@ end
 -- Determine weakness from radicals. Used when root given in place of lemma (e.g. for {{ar-verb forms}}).
 local function weakness_from_radicals(form, rad1, rad2, rad3, rad4)
 	local weakness = nil
-	local quadlit = rmatch(form, "q$")
+	local quadlit = form:find("q$")
 	-- If weakness unspecified, derive from radicals.
 	if not quadlit then
 		if is_waw_ya(rad3) and rad1 == W and form == "I" then
@@ -3181,9 +3181,9 @@ local function detect_indicator_spec(base)
 		-- categories won't be created for weak radicals.
 		local weakness, ir1, ir2, ir3, ir4
 		if vform ~= "none" then
-			ir1, ir2, ir3 = rmatch(base.lemma, "^([^ ]) ([^ ]) ([^ ])$")
+			ir1, ir2, ir3 = rmatch(base.lemma, "^([^_])_([^_])_([^_])$")
 			if not ir1 then
-				ir1, ir2, ir3, ir4 = rmatch(base.lemma, "^([^ ]) ([^ ]) ([^ ]) ([^ ])$")
+				ir1, ir2, ir3, ir4 = rmatch(base.lemma, "^([^_])_([^_])_([^_])_([^_])$")
 			end
 			if ir1 then
 				-- root given instead of lemma
@@ -3348,11 +3348,11 @@ local function detect_indicator_spec(base)
 	end
 
 	-- Set value of passive. If not specified, default is yes, but no for forms VII, IX,
-	-- XI - XV and IIq - IVq, and "impers" for form VI.
+	-- XI - XV and IIq - IVq, and impersonal for form VI.
 	local passive = base.passive
 	if not passive then
 		if vform_probably_impersonal_passive(vform) then
-			base.passive = "imperspass"
+			base.passive = "ipass"
 		else
 			local has_passive = false
 			for _, vowel_spec in ipairs(base.conj_vowels) do
@@ -4242,6 +4242,7 @@ function export.verb_forms(frame)
 		[3] = {},
 		[4] = {},
 		[5] = {},
+		pagename = {},
 	}
 	for _, form in ipairs(allowed_vforms) do
 		-- FIXME: We go up to 5 here. The code supports unlimited variants but it's unlikely we will ever see more than
@@ -4264,9 +4265,10 @@ function export.verb_forms(frame)
 	local past_vowel_re = "^[aui,]*$"
 	local combined_root = nil
 	if not args[i] or rfind(args[i], past_vowel_re) then
-		combined_root = mw.title.getCurrentTitle().text
-		if not rfind(combined_root, " ") then
-			error("When inferring roots from page title, need spaces in page title: " .. combined_root)
+		combined_root = args.pagename or mw.loadData("Module:headword/data").pagename
+		if not rfind(combined_root, "^([^ ]) ([^ ]) ([^ ])$") and not
+			rfind(combined_root, "^([^ ]) ([^ ]) ([^ ]) ([^ ])$") then
+				error("When inferring roots from page title, need three or four space-separated radicals: " .. combined_root)
 		end
 	elseif rfind(args[i], " ") then
 		combined_root = args[i]
@@ -4285,7 +4287,9 @@ function export.verb_forms(frame)
 		error("Unrecognized past vowel, should be 'a', 'i', 'u', 'a,u', etc. or empty: " .. past_vowel)
 	end
 
-	local split_root = rsplit(combined_root, " ")
+	-- Spaces interfere with parsing as a unit in [[Module:inflection utilities]], so replace with underscore.
+	combined_root = combined_root:gsub(" ", "_")
+	local split_root = rsplit(combined_root, "_")
 	-- Map from verb forms (I, II, etc.) to a table of verb properties,
 	-- which has entries e.g. for "verb" (either true to autogenerate the verb
 	-- head, or an explicitly specified verb head using e.g. argument "I-head"),
@@ -4499,8 +4503,18 @@ end
 function export.infer_radicals(data)
 	local headword, vform, passive, past_vowel, nonpast_vowel, is_reduced =
 		data.headword, data.vform, data.passive, data.past_vowel, data.nonpast_vowel, data.is_reduced
+
 	past_vowel = past_vowel or "-"
 	nonpast_vowel = nonpast_vowel or "-"
+	local function verify_vowel(vowel, param)
+		if vowel ~= A and vowel ~= I and vowel ~= U and vowel ~= "-" then
+			error(("Internal error: Bad value for %s: %s (should be Arabic diacritic vowel or '-')"):format(
+				param, vowel))
+		end
+	end
+	verify_vowel(past_vowel, "past_vowel")
+	verify_vowel(nonpast_vowel, "nonpast_vowel")
+
 	local ch = {}
 	local form_viii_assim
 	-- sub out alif-madda for easier processing
@@ -4558,9 +4572,10 @@ function export.infer_radicals(data)
 
 	-- Check that length of headword is within [min, max]
 	local function check_len(min, max)
-		if len < min then
+		if min and len < min then
 			infer_err(("Not enough letters for verb form %s, expected at least %s"):format(vform, min), "novform")
-		elseif len > max then
+		end
+		if max and len > max then
 			infer_err(("Too many letters for verb form %s, expected at most %s"):format(vform, max), "novform")
 		end
 	end
@@ -4591,7 +4606,7 @@ function export.infer_radicals(data)
 		end
 	end
 
-	local quadlit = rmatch(vform, "q$")
+	local quadlit = vform:find("q$")
 
 	-- find first radical, start of second/third radicals, check for
 	-- required letters
@@ -4812,6 +4827,7 @@ function export.infer_radicals(data)
 			rad3 = ch[radstart]
 			rad4 = ch[radstart + 1]
 			expected_length = radstart + 1
+			check_len(expected_length)
 			if rad4 == AMAQ or rad4 == ALIF and rad3 == Y or rad4 == Y then
 				-- rad4 can be Y in passive-only verbs.
 				if vform_supports_final_weak(vform) then
@@ -4831,6 +4847,7 @@ function export.infer_radicals(data)
 			rad2 = ch[radstart]
 			rad3 = ch[radstart + 1]
 			expected_length = radstart + 1
+			check_len(expected_length)
 			if vform == "I" and (is_waw_ya(rad3) or rad3 == ALIF or rad3 == AMAQ) then
 				local inferred_past_vowel, inferred_nonpast_vowel
 				-- Check for final-weak form I verb. It can end in tall alif (rad3 = wāw) or alif maqṣūra (rad3 = yāʾ)
@@ -4972,6 +4989,22 @@ function export.infer_radicals(data)
 		form_viii_assim = form_viii_assim,
 	}
 end
+
+
+-- bot interface to infer_radicals()
+function export.infer_radicals_json(frame)
+	local iparams = {
+		headword = {},
+		vform = {},
+		passive = {},
+		past_vowel = {},
+		nonpast_vowel = {},
+		is_reduced = {type = "boolean"},
+	}
+	local iargs = require("Module:parameters").process(frame.args, iparams)
+	return require("Module:JSON").toJSON(export.infer_radicals(iargs))
+end
+
 
 -- Infer vocalization from participle headword (active or passive), verb form (I, II, etc.) and whether the headword is
 -- active or passive. Throw an error if headword is malformed. Returned radicals may contain Latin letters "t", "w" or "y"
