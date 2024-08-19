@@ -110,19 +110,19 @@ terminology is helpful to understand:
   have more than one associated form; these different forms are termed '''variants'''. The form variants for a given
   slot are ordered, and generally should have the more common and/or preferred variants first, along with rare, archaic
   or obsolete variants last (if they are included at all).
-* Forms are described using '''form objects''', which are Lua objects taking the form { {form="FORM",
-  translit="MANUAL_TRANSLIT", footnotes={"FOOTNOTE", "FOOTNOTE", ...}}. (Additional metadata may be present in a form
-  object, although the support for preserving such metadata when transformations are applied to form objects isn't yet
-  complete.) FORM is a '''form value''' specifying the value of the form itself. MANUAL_TRANSLIT specifies optional
-  manual transliteration for the form, in case (a) the form value is in a different script; and (b) either the form's
-  automatic transliteration is incorrect and needs to be overridden, or the language of the term has no automatic
-  transliteration (e.g. in the case of Persian and Hebrew). FOOTNOTE is a footnote to be attached to the form in
-  question, and should be e.g. {"[archaic]"} or {"[only in the meaning 'to succeed (an officeholder)']"}, i.e. the
-  string must be surrounded by brackets and should begin with a lowercase letter and not end in a period/full stop. When
-  such footnotes are converted to actual footnotes in a table of inflected forms, the brackets will be removed, the
-  first letter will be capitalized and a period/full stop will be added to the end.  (However, when such footnotes are
-  used as qualifiers in headword lines, only the brackets will be removed, with no capitalization or final period.) Note
-  that only FORM is mandatory.
+* Forms are described using '''form objects''', which are Lua objects taking the form
+  `{form="``form``", translit="``manual_translit``", footnotes={"``footnote``", "``footnote``", ...}}`. (Additional
+  metadata may be present in a form object, although the support for preserving such metadata when transformations are
+  applied to form objects isn't yet complete.) ```form``` is a '''form value''' specifying the value of the form itself.
+  ```manual_translit``` specifies optional manual transliteration for the form, in case (a) the form value is in a
+  different script; and (b) either the form's automatic transliteration is incorrect and needs to be overridden, or the
+  language of the term has no automatic transliteration (e.g. in the case of Persian and Hebrew). ```footnote``` is a
+  footnote to be attached to the form in question, and should be e.g. {"[archaic]"} or
+  {"[only in the meaning 'to succeed (an officeholder)']"}, i.e. the string must be surrounded by brackets and should
+  begin with a lowercase letter and not end in a period/full stop. When such footnotes are converted to actual footnotes
+  in a table of inflected forms, the brackets will be removed, the first letter will be capitalized and a period/full
+  stop will be added to the end. (However, when such footnotes are used as qualifiers in headword lines, only the
+  brackets will be removed, with no capitalization or final period.) Note that only ```form``` is mandatory.
 * A collection of zero or more form objects is termed a '''form object list''', or usually just a '''form list'''. Such
   lists go into form tables (see below).
 * A '''form table''' is a Lua table (i.e. a dictionary) describing all the possible inflections of a given term. The
@@ -153,8 +153,8 @@ end
 
 
 --[==[
-Insert a form (an object of the form {form=FORM, translit=MANUAL_TRANSLIT, footnotes=FOOTNOTES}) into a list of such
-forms. If the form is already present, the footnotes of the existing and new form might be combined (specifically,
+Insert a form object (see above) into a list of such objects. If the form is already present (i.e. both the form
+value and translit, if any, match), the footnotes of the existing and new form might be combined (specifically,
 footnotes in the new form beginning with `!` will be combined).
 ]==]
 function export.insert_form_into_list(list, form)
@@ -506,19 +506,21 @@ function export.fetch_headword_qualifiers_and_references(footnotes)
 end
 
 
--- Combine a form (either a string or a table) with additional footnotes, possibly replacing the form value and/or
--- translit in the process. Normally called in one of two ways:
--- (1) combine_form_and_footnotes(FORM_OBJ, ADDL_FOOTNOTES, NEW_FORM, NEW_TRANSLIT) where FORM_OBJ is an existing
---     form object (a table of the form {form = FORM, translit = TRANSLIT, footnotes = FOOTNOTES, ...}); ADDL_FOOTNOTES
---     is either nil, a single string (a footnote) or a list of footnotes; NEW_FORM is either nil or the new form
---     string to substitute; and NEW_TRANSLIT is either nil or the new translit string to substitute.
--- (2) combine_form_and_footnotes(FORM_VALUE, FOOTNOTES), where FORM_VALUE is a string and FOOTNOTES is either nil,
---     a single string (a footnote) or a list of footnotes.
---
--- In either case, a form object (a table of the form {form = FORM, translit = TRANSLIT, footnotes = FOOTNOTES, ...})
--- is returned, preserving as many properties as possible from any existing form object in FORM_OR_FORM_OBJ. Do the
--- minimal amount of work; e.g. if FORM_OR_FORM_OBJ is a form object and ADDL_FOOTNOTES, NEW_FORM and NEW_TRANSLIT are
--- all nil, the same object as passed in is returned. Under no circumstances is the existing form object side-effected.
+--[==[
+Combine an abbreviated form object (either a string or a table) with additional footnotes, possibly replacing the form
+value and/or translit in the process. Normally called in one of two ways:
+(1) `combine_form_and_footnotes(``form_obj``, ``addl_footnotes``, ``new_form``, ``new_translit``)` where ```form_obj```
+	is an existing abbreviated form object; ```addl_footnotes``` is either {nil}, a single string (a footnote) or a list
+	of footnotes; ```new_form``` is either {nil} or the new form string to substitute; and ```new_translit``` is either
+	{nil} or the new translit string to substitute.
+(2) `combine_form_and_footnotes(``form_value``, ``footnotes``)`, where ```form_value``` is a string and ```footnotes```
+	is either {nil}, a single string (a footnote) or a list of footnotes.
+
+In either case, a form object (a table of the form {form = FORM, translit = TRANSLIT, footnotes = FOOTNOTES, ...})
+is returned, preserving as many properties as possible from any existing form object in FORM_OR_FORM_OBJ. Do the
+minimal amount of work; e.g. if FORM_OR_FORM_OBJ is a form object and ADDL_FOOTNOTES, NEW_FORM and NEW_TRANSLIT are
+all nil, the same object as passed in is returned. Under no circumstances is the existing form object side-effected.
+]==]
 function export.combine_form_and_footnotes(form_or_form_obj, addl_footnotes, new_form, new_translit)
 	if type(addl_footnotes) == "string" then
 		addl_footnotes = {addl_footnotes}
@@ -901,82 +903,88 @@ local function parse_alternant(alternant, props)
 end
 
 
---[=[
-Top-level parsing function. Parse text describing one or more inflected words.
-`text` is the inflected text to parse, which generally has <...> specs following words to
-be inflected, and may have alternants indicated using double parens. Examples:
+--[==[
+Top-level parsing function. Parse text describing one or more inflected words. `text` is the inflected text to parse,
+which generally has `<...>` specs following words to be inflected, and may have alternants indicated using double
+parens. Examples:
 
-"[[медичний|меди́чна]]<+> [[сестра́]]<*,*#.pr>" (Ukrainian, for [[медична сестра]] "nurse (lit. medical sister)")
-"((ру́син<pr>,руси́н<b.pr>))" (Ukrainian, for [[русин]] "Rusyn")
-"पंचायती//पंचाय*ती राज<M>" (Hindi, for [[पंचायती राज]] "village council", with phonetic respelling in the before-text component)
-"((<M>,<M.plstem:फ़तूह.dirpl:फ़तूह>))" (Hindi, for [[फ़तह]] "win, victory", on that page, where the lemma is omitted and taken from the pagename)
-"" (for any number of Hindi adjectives, where the lemma is omitted and taken from the pagename, and the angle bracket spec <> is assumed)
-"काला<+>धन<M>" (Hindi, for [[कालाधन]] "black money")
+* {"[[медичний|меди́чна]]<+> [[сестра́]]<*,*#.pr>"} (Ukrainian, for {{m|uk|меди́чна сестра́||nurse|lit=medical sister}});
+* {"((ру́син<pr>,руси́н<b.pr>))"} (Ukrainian, for {{m|uk|русин||Rusyn}}, with two possible stress patterns);
+* {"पंचायती//पंचाय*ती राज<M>"} (Hindi, for {{m|hi|पंचायती राज||village council}}, with phonetic respelling in the
+  before-text component);
+* {"((<M>,<M.plstem:फ़तूह.dirpl:फ़तूह>))"} (Hindi, for {{m|hi|फ़तह||win, victory}} when used on that page, where the lemma
+  is omitted and taken from the pagename);
+* {""} (for any number of Hindi adjectives, where the lemma is omitted and taken from the pagename, and the angle
+  bracket spec <> is assumed);
+* {"काला<+>धन<M>"} (Hindi, for {{m|hi|कालाधन||black money}}, showing that closed compounds where each part is declined
+  can be correctly handled).
 
 `props` is an object specifying properties used during parsing, as follows:
-{
-  parse_indicator_spec = FUNCTION_TO_PARSE_AN_INDICATOR_SPEC (required),
-  lang = LANG_OBJECT,
-  transliterate_respelling = FUNCTION_TO_TRANSLITERATE_RESPELLING,
-  split_bracketed_runs_into_words = nil or FUNCTION_TO_SPLIT_BRACKETED_RUNS_INTO_WORDS,
-  allow_default_indicator = BOOLEAN_OR_NIL,
-  angle_brackets_omittable = BOOLEAN_OR_NIL,
-  allow_blank_lemma = BOOLEAN_OR_NIL,
-}
-						
+
+````{
+  parse_indicator_spec = __function__(``angle_bracket_spec``, ``lemma``) `''(required)''`,
+  lang = __lang object__,
+  transliterate_respelling = __function__(``respelling_or_translit``) `''(optional)''`,
+  split_bracketed_runs_into_words = __function__(``bracket_split_runs``) `''(optional)''`,
+  allow_default_indicator = __boolean__,
+  angle_brackets_omittable = __boolean__,
+  allow_blank_lemma = __boolean__,
+}````
+
 `parse_indicator_spec` is a required function that takes two arguments, a string surrounded by angle brackets and the
-lemma, and should return a word_spec object containing properties describing the indicators inside of the angle
-brackets).
+lemma, and should return an arbitrary object containing properties describing the indicators inside of the angle
+brackets). This object is often called a '''base''' and given the argument name `base` in inflection code.
 
 `lang` is the language object for the language in question; only needed if manual translit or respelling may be present
-using //.
+using `//`.
 
 `transliterate_respelling` is a function that is only needed if respelling is allowed in place of manual translit after
-//. It takes one argument, the respelling or translit, and should return the transliteration of any respelling but
+`//`. It takes one argument, the respelling or translit, and should return the transliteration of any respelling but
 return any translit unchanged.
 
 `split_bracketed_runs_into_words` is an optional function to split the passed-in text into words. It is used, for
 example, to determine what text constitutes a word when followed by an angle-bracket spec, i.e. what the lemma to be
 inflected is vs. surrounding fixed text. It takes one argument, the result of splitting the original text on brackets,
 and should return alternating runs of words and split characters, or nil to apply the default algorithm. Specifically,
-the value passed in is the result of calling `parse_balanced_segment_run(text, "[", "]")` from
+the value passed in is the result of calling `parse_balanced_segment_run(``text``, "[", "]")` from
 [[Module:parse utilities]] on the original text, and the default version of this function calls
-`split_alternating_runs(bracketed_runs, pattern, "preserve splitchar")`, where `bracketed_runs` is the value passed in
-and `pattern` splits on either spaces or hyphens (unless the text begins with a hyphen, in which case splitting is only
-on spaces, so that suffixes can be inflected).
+`split_alternating_runs(``bracketed_runs``, ``pattern``, "preserve splitchar")`, where ``bracketed_runs`` is the value
+passed in and ``pattern`` splits on either spaces or hyphens (unless the text begins with a hyphen, in which case
+splitting is only on spaces, so that suffixes can be inflected).
 
-`allow_default_indicator` should be true if an empty indicator in angle brackets <> can be omitted and should be
+`allow_default_indicator` should be {true} if an empty indicator in angle brackets `<>` can be omitted and should be
 automatically added at the end of the multiword text (if no alternants) or at the end of each alternant (if alternants
 present).
 
-`angle_brackets_omittable` should be true if angle brackets can be omitted around a non-empty indicator in the presence
-of a blank lemma. In this case, if the combined indicator spec has no angle brackets, they will be added around the
-indicator (or around all indicators, if alternants are present). This only makes sense when `allow_blank_lemma` is
+`angle_brackets_omittable` should be {true} if angle brackets can be omitted around a non-empty indicator in the
+presence of a blank lemma. In this case, if the combined indicator spec has no angle brackets, they will be added around
+the indicator (or around all indicators, if alternants are present). This only makes sense when `allow_blank_lemma` is
 specified.
 
-`allow_blank_lemma` should be true of if a blank lemma is allowed; in such a case, the calling function should
+`allow_blank_lemma` should be {true} of if a blank lemma is allowed; in such a case, the calling function should
 substitute a default lemma, typically taken from the pagename.
 
-The return value is a table referred to as an ''alternant multiword spec'', and is of the form
-{
-  alternant_or_word_specs = {ALTERNANT_OR_WORD_SPEC, ALTERNANT_OR_WORD_SPEC, ...}
-  post_text = "TEXT-AT-END",
-  post_text_no_links = "TEXT-AT-END-NO-LINKS",
-  post_text_translit = "TRANSLIT-OF-TEXT-AT-END" (or nil),
-}
+The return value is a table referred to as an '''alternant multiword spec''', and is of the form
 
-where ALTERNANT_OR_WORD_SPEC is either an alternant spec as returned by parse_alternant()
-or a multiword spec as described in the comment above parse_multiword_spec(). An alternant spec
-looks as follows:
-{
-  alternants = {MULTIWORD_SPEC, MULTIWORD_SPEC, ...},
-  before_text = "TEXT-BEFORE-ALTERNANT",
-  before_text_no_links = "TEXT-BEFORE-ALTERNANT",
-  before_text_translit = "TRANSLIT-OF-TEXT-BEFORE-ALTERNANT" (or nil),
-}
-i.e. it is like what is returned by parse_alternant() but has extra `before_text`
-and `before_text_no_links` fields.
-]=]
+````{
+  alternant_or_word_specs = {``alternant_or_word_spec``, ``alternant_or_word_spec``, ...},
+  post_text = "``text_at_end``",
+  post_text_no_links = "``text_at_end_no_links``",
+  post_text_translit = "``translit_of_text_at_end``" `(or nil)`,
+}````
+
+where `alternant_or_word_spec` is either an '''alternant spec''' as returned by `parse_alternant()` or a
+'''multiword spec''' as described in the comment above `parse_multiword_spec()`. An alternant spec looks as follows:
+
+````{
+  alternants = {``multiword_spec``, ``multiword_spec``, ...},
+  before_text = "``text_before_alternant``",
+  before_text_no_links = "``text_before_alternant``",
+  before_text_translit = "``translit_of_text_before_alternant``" `(or nil)`,
+}````
+
+i.e. it is like what is returned by `parse_alternant()` but has extra `before_text` and `before_text_no_links` fields.
+]==]
 function export.parse_inflected_text(text, props)
 	if props.angle_brackets_omittable and not props.allow_blank_lemma then
 		error("If 'angle_brackets_omittable' is specified, so should 'allow_blank_lemma'")
@@ -1110,7 +1118,7 @@ local function append_forms(props, formtable, slot, forms, before_text, before_t
 end
 
 
---[=[
+--[==[
 Top-level inflection function. Create the inflections of a noun, verb, adjective or similar. `multiword_spec` is as
 returned by `parse_inflected_text` and describes the properties of the term to be inflected, including all the
 user-provided inflection specifications (e.g. the number, gender, conjugation/declension/etc. of each word) and the
@@ -1209,7 +1217,7 @@ add_variant_codes(), get_variants() and remove_variant_codes().)
 `include_user_specified_links`, if given, ensures that user-specified links in the raw text surrounding a given word
 are preserved in the output. If omitted or set to false, such links will be removed and the whole multiword expression
 will be linked.
-]=]
+]==]
 function export.inflect_multiword_or_alternant_multiword_spec(multiword_spec, props)
 	multiword_spec.forms = {}
 
