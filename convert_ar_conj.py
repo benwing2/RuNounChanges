@@ -342,6 +342,7 @@ def process_text_on_page(index, pagetitle, text):
             vowel_spec = ""
           else:
             vowel_spec = "/%s~%s" % (",".join(past_vowels), ",".join(nonpast_vowels))
+          vform_spec = "%s-%s" % (vform, explicit_weakness) if explicit_weakness else vform
           indicators = []
           if rad1:
             indicators.append("I:%s" % rad1)
@@ -358,16 +359,48 @@ def process_text_on_page(index, pagetitle, text):
           if conjt_props.noimp:
             indicators.append("noimp")
           if conjt_props.vns:
-            vnspecs = []
-            for vn, vnid in zip(conjt_props.vns, conjt_props.vn_ids):
-              if vnid:
-                vnspecs.append("%s<id:%s>" % (vn, vnid))
-              else:
-                vnspecs.append(vn)
-            indicators.append("vn:%s" % ",".join(vnspecs))
             if vform != "I":
-              pagemsg("WARNING: Explicit verbal noun for non-form-I, might need removing: %s" % tempspec)
-          vform_spec = "%s-%s" % (vform, explicit_weakness) if explicit_weakness else vform
+              pagemsg("Explicit verbal noun for non-form-I, might need removing: %s" % tempspec)
+              allspec = "%s%s%s%s" % (vform_spec, vowel_spec, "." if indicators else "", ".".join(indicators))
+              formscall = "{{User:Benwing2/ar-conj|%s|json=1|pagename=%s}}" % (allspec, pagetitle)
+              ret = expand_text(formscall)
+              if not ret:
+                continue
+              ret = json.loads(ret)
+              auto_vns = [x["form"] for x in ret["forms"]["vn"]]
+              if set(auto_vns) == set(conjt_props.vns):
+                if vform == "III":
+                  pagemsg("Using <vn:+> for explicit but redundant form-III verbal nouns to signal that alternative verbal noun not present")
+                  indicators.append("vn:+")
+                else:
+                  pagemsg("Removing redundant non-form-I verbal noun(s) %s: %s" % (",".join(conjt_props.vns), tempspec))
+              else:
+                vnspecs = []
+                if "vn2" in ret["forms"]:
+                  vn2 = [x["form"] for x in ret["forms"]["vn2"]]
+                else:
+                  vn2 = []
+                for vn, vnid in zip(conjt_props.vns, conjt_props.vn_ids):
+                  if [vn] == auto_vns:
+                    vn = "+"
+                  elif [vn] == vn2:
+                    vn = "++"
+                  if vnid:
+                    vnspecs.append("%s<id:%s>" % (vn, vnid))
+                  else:
+                    vnspecs.append(vn)
+                vn_indicator = "vn:%s" % ",".join(vnspecs)
+                indicators.append(vn_indicator)
+                pagemsg("WARNING: Explicit non-redundant verbal noun(s) for non-form-I not same as auto-generated %s, needs checking, would use VN indicator <%s>: %s"
+                        % (",".join(auto_vns), vn_indicator, tempspec))
+            else:
+              vnspecs = []
+              for vn, vnid in zip(conjt_props.vns, conjt_props.vn_ids):
+                if vnid:
+                  vnspecs.append("%s<id:%s>" % (vn, vnid))
+                else:
+                  vnspecs.append(vn)
+              indicators.append("vn:%s" % ",".join(vnspecs))
           allspec = "%s%s%s%s" % (vform_spec, vowel_spec, "." if indicators else "", ".".join(indicators))
           origheadt = str(headt)
           origconjt = str(conjt)
