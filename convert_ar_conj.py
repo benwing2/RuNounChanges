@@ -1,12 +1,18 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import pywikibot, re, sys
+import pywikibot, re, sys, json
 from dataclasses import dataclass, field
 
 import blib
 from blib import getparam, rmparam, getrmparam, tname, pname, msg, errandmsg, site
 
+vowel_to_diacritic = {
+  "a": "\u064E",
+  "i": "\u0650",
+  "u": "\u064F",
+  "-": "-",
+}
 
 @dataclass
 class ArConjProperties:
@@ -61,6 +67,13 @@ def extract_ar_verb_conj_properties(t, pagemsg):
   props.variant = getp("variant") or None
   props.noimp = not not getp("noimp")
   props.intrans = not not getp("intrans")
+  for param in t.params:
+    pn = pname(param)
+    if not re.search("^vn-id[0-9]+$", pn) and pn not in [
+      "1", "2", "3", "4", "5", "6", "vn", "passive", "variant", "noimp", "intrans", "I", "II", "III", "IV"
+    ]:
+      pagemsg("WARNING: Unrecognized parameter %s=%s: %s" % (pn, str(param.value), str(t)))
+      return None
   return props
 
 def process_text_on_page(index, pagetitle, text):
@@ -154,6 +167,7 @@ def process_text_on_page(index, pagetitle, text):
               str(headt), str(conjt), propval, headval, conjval))
             break
         else: # no break
+          vform = conjt_props.vform
           rad1 = conjt_props.rad1
           rad2 = conjt_props.rad2
           rad3 = conjt_props.rad3
@@ -162,6 +176,14 @@ def process_text_on_page(index, pagetitle, text):
           passive_uncertain = False
           past_vowels = (conjt_props.past_vowel or "-").split(",")
           nonpast_vowels = (conjt_props.nonpast_vowel or "-").split(",")
+          explicit_weakness = conjt_props.weakness
+
+          tempspec = "headt=%s, conjt=%s" % (str(headt), str(conjt))
+          # Warn on intrans
+          if conjt_props.intrans:
+            pagemsg("WARNING: Saw intrans=1, not carrying over: %s" % tempspec)
+
+          # Parse passive value
           if conjt_props.passive:
             passive = conjt_props.passive
             if passive.endswith("?"):
@@ -178,16 +200,71 @@ def process_text_on_page(index, pagetitle, text):
             elif passive.lower() in ["n", "no", "f", "false", "0", "off"]:
               passive = "nopass"
             else:
-              pagemsg("WARNING: Unparsable value for passive '%s': %s" % (conjt_props.passive, str(conjt)))
+              pagemsg("WARNING: Unparsable value for passive '%s': %s" % (conjt_props.passive, tempspec))
               continue
-          ir1 = set()
-          ir2 = set()
-          ir3 = set()
-          ir4 = set()
-          if rad1 or rad2 or rad3 or rad4:
+
+          # Check whether past/non-past vowels are redundant.
+          if vform != "I":
+            if past_vowels != ["-"] or nonpast_vowels != ["-"]:
+              pagemsg("WARNING: Past/non-vowel vowels specified for non-form I? Template: %s" % tempspec)
+              continue
+          elif passive in ["onlypass", "onlypass-impers"]:
+            if past_vowels != ["-"] or nonpast_vowels != ["-"]:
+              pagemsg("Past/non-vowel vowels specified but verb is passive-only, removing: %s" % tempspec)
+              past_vowels = ["-"]
+              nonpast_vowels = ["-"]
+          elif re.search("[اىي]$", pagetitle):
+            if pagetitle.endswith("ا"):
+              expected_past = ["a"]
+              expected_nonpast = ["u"]
+            elif pagetitle.endswith("ى"):
+              expected_past = ["a"]
+              expected_nonpast = ["i"]
+            else:
+              expected_past = ["i"]
+              expected_nonpast = ["a"]
+            if past_vowels == expected_past and nonpast_vowels == expected_nonpast:
+              pagemsg("Past/non-vowel vowels specified but same as default for form-I final-weak verb, removing: %s"
+                      % tempspec)
+              past_vowels = ["-"]
+              nonpast_vowels = ["-"]
+
+          # Sort out different defaults for assimilated vs. sound in form I
+          if vform == "I" and pagetitle.startswith("و"):
+            if len(past_vowels) > 1 or len(nonpast_vowels) > 1:
+              pagemsg("WARNING: Multiple past or non-past vowels in form-I verb starting with و, need to sort out manually: %s"
+                      % tempspec)
+              continue
+            if past_vowels == ["i"] and nonpast_vowels == ["a"] or past_vowels == ["u"] and nonpast_vowels == ["u"]:
+              final_weak = re.search("[اىي]$", pagetitle)
+              if final_weak and explicit_weakness == "final-weak" or not final_weak and explicit_weakness == "sound":
+                pagemsg("Saw form-I و-initial verb with past~non-past vowels of i~a or u~u, removing explicit weakness '%s': %s"
+                        % (explicit_weakness, tempspec))
+                explicit_weakness = None
+              else:
+                pagemsg("WARNING: Saw form-I و-initial verb with past~non-past vowels of i~a or u~u and without explicit weakness 'sound', need to check manually: %s"
+                        % tempspec)
+                continue
+
+          # Verify explicitly specified radicals are OK and remove ones that are redundant.
+          if rad1 or rad2 or rad3 or rad4 or explicit_weakness:
+            rad1_required = False
+            rad2_required = False
+            rad3_required = False
+            rad4_required = False
             must_continue = False
             for past_vowel in past_vowels:
               for nonpast_vowel in nonpast_vowels:
+                if past_vowel not in vowel_to_diacritic:
+                  pagemsg("WARNING: Bad past vowel '%s': %s" % (past_vowel, tempspec))
+                  must_continue = True
+                  break
+                past_vowel = vowel_to_diacritic[past_vowel]
+                if nonpast_vowel not in vowel_to_diacritic:
+                  pagemsg("WARNING: Bad non-past vowel '%s': %s" % (nonpast_vowel, tempspec))
+                  must_continue = True
+                  break
+                nonpast_vowel = vowel_to_diacritic[nonpast_vowel]
                 tempcall = "{{#invoke:User:Benwing2/ar-verb|infer_radicals_json|headword=%s|vform=%s|passive=%s|past_vowel=%s|nonpast_vowel=%s|is_reduced=%s}}" % (
                   pagetitle, conjt_props.vform, passive or "", past_vowel, nonpast_vowel, "")
                 ret = expand_text(tempcall)
@@ -195,14 +272,112 @@ def process_text_on_page(index, pagetitle, text):
                   must_continue = True
                   break
                 ret = json.loads(ret)
-                ...
+                def convert_radical(rad):
+                  if type(rad) is str:
+                    return [rad]
+                  elif type(rad) is list:
+                    return rad
+                  else:
+                    assert type(rad) is dict
+                    retval = []
+                    for i in range(1, 10):
+                      if str(i) in rad:
+                        retval.append(rad[str(i)])
+                      else:
+                        break
+                    return retval
+                def check_rad_redundant(rad, radprop, rad_required):
+                  if not rad:
+                    return rad_required
+                  if radprop not in ret:
+                    pagemsg("WARNING: Something wrong, radical property '%s' not in returned %s for template call %s for template %s" % (
+                      radprop, ret, tempcall, tempspec))
+                    return None
+                  radlist = convert_radical(ret[radprop])
+                  if rad not in radlist:
+                    pagemsg("WARNING: Radical %s is %s but inferred as one of %s: %s" % (radprop, rad, radlist, tempspec))
+                    return None
+                  if len(radlist) > 1:
+                    return True
+                  return rad_required
+                rad1_required = check_rad_redundant(rad1, "rad1", rad1_required)
+                rad2_required = check_rad_redundant(rad2, "rad2", rad2_required)
+                rad3_required = check_rad_redundant(rad3, "rad3", rad3_required)
+                rad4_required = check_rad_redundant(rad4, "rad4", rad4_required)
+                if rad1_required is None or rad2_required is None or rad3_required is None or rad4_required is None:
+                  must_continue = True
+                  break
               if must_continue:
                 break
             if must_continue:
               continue
+            if not rad1_required:
+              rad1 = None
+            if not rad2_required:
+              rad2 = None
+            if not rad3_required:
+              rad3 = None
+            if not rad4_required:
+              rad4 = None
 
-          pagemsg("Would convert headword template %s and conjugation template %s to new format" % (
-            str(headt), str(conjt)))
+            # Make sure explicit weakness is OK
+            inferred_weakness = ret["weakness"]
+            if explicit_weakness:
+              if inferred_weakness == explicit_weakness:
+                pagemsg("Removing redundant explicit weakness %s: %s" % (explicit_weakness, tempspec))
+                explicit_weakness = None
+              elif vform == "I" and (
+                explicit_weakness == "sound" and inferred_weakness == "assimilated" or
+                explicit_weakness == "assimilated" and inferred_weakness == "sound" or
+                explicit_weakness == "final-weak" and inferred_weakness == "assimilated+final-weak" or
+                explicit_weakness == "assimilated+final-weak" and inferred_weakness == "final-weak"
+              ):
+                pass
+              else:
+                pagemsg("WARNING: Explicit weakness %s incompatible with inferred weakness %s: %s" % (
+                  explicit_weakness, inferred_weakness, tempspec))
+                continue
+
+          if past_vowels == ["-"] and nonpast_vowels == ["-"]:
+            vowel_spec = ""
+          else:
+            vowel_spec = "/%s~%s" % (",".join(past_vowels), ",".join(nonpast_vowels))
+          indicators = []
+          if rad1:
+            indicators.append("I:%s" % rad1)
+          if rad2:
+            indicators.append("II:%s" % rad2)
+          if rad3:
+            indicators.append("III:%s" % rad3)
+          if rad4:
+            indicators.append("IV:%s" % rad4)
+          if passive:
+            indicators.append("%s%s" % (passive, "?" if passive_uncertain else ""))
+          if conjt_props.variant:
+            indicators.append("var:%s" % conjt_props.variant)
+          if conjt_props.noimp:
+            indicators.append("noimp")
+          if conjt_props.vns:
+            vnspecs = []
+            for vn, vnid in zip(conjt_props.vns, conjt_props.vn_ids):
+              if vnid:
+                vnspecs.append("%s<id:%s>" % (vn, vnid))
+              else:
+                vnspecs.append(vn)
+            indicators.append("vn:%s" % ",".join(vnspecs))
+          vform_spec = "%s-%s" % (vform, explicit_weakness) if explicit_weakness else vform
+          allspec = "%s%s%s%s" % (vform_spec, vowel_spec, "." if indicators else "", ".".join(indicators))
+          origheadt = str(headt)
+          origconjt = str(conjt)
+          del headt.params[:]
+          del conjt.params[:]
+          blib.set_template_name(headt, "ar-verb")
+          headt.add("1", allspec)
+          blib.set_template_name(conjt, "ar-conj")
+          conjt.add("1", allspec)
+          pagemsg("Convert headword template %s to %s and conjugation template %s to %s" % (
+            origheadt, str(headt), origconjt, str(conjt)))
+          notes.append("convert {{ar-verb}} and {{ar-conj}} for form %s to new format" % vform)
       headts = None
 
   secbody_parts = []
