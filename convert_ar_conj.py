@@ -365,6 +365,8 @@ def process_text_on_page(index, pagetitle, text):
               else:
                 vnspecs.append(vn)
             indicators.append("vn:%s" % ",".join(vnspecs))
+            if vform != "I":
+              pagemsg("WARNING: Explicit verbal noun for non-form-I, might need removing: %s" % tempspec)
           vform_spec = "%s-%s" % (vform, explicit_weakness) if explicit_weakness else vform
           allspec = "%s%s%s%s" % (vform_spec, vowel_spec, "." if indicators else "", ".".join(indicators))
           origheadt = str(headt)
