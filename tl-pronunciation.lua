@@ -75,6 +75,8 @@ local labels_module = "Module:labels"
 local parse_utilities_module = "Module:parse utilities"
 local rhymes_module = "Module:rhymes"
 local set_utilities_module = "Module:set utilities"
+local baybayin_decode_module = "Module:tl-translit"
+local baybayin_encode_module = "Module:tl-bay_sc"
 
 local lang = require("Module:languages").getByCode("tl")
 
@@ -104,7 +106,7 @@ local accent = AC .. GR .. CFLEX .. MACRON
 local accent_c = "[" .. accent .. "]"
 local ipa_stress = "ˈˌ"
 local ipa_stress_c = "[" .. ipa_stress .. "]"
-local separator = accent .. ipa_stress .. "# ."
+local separator = accent .. ipa_stress .. "# .-"
 local C = "[^" .. vowel .. separator .. "]" -- consonant
 
 local unstressed_words = m_table.listToSet {
@@ -218,12 +220,25 @@ local function split_on_comma(term)
 	end
 end
 
+--Cleanup Baybayin inputs--
+local function decode_baybayin(text)
+	local text = rsub(text, "[ᜀ-ᜟ᜵᜶]+", function(baybayin)
+		result = require(baybayin_decode_module).tr(baybayin, lang, "Tglg")
+		result = rsub(result, "([aeiou])([aeiou])", "%1-%2")
+		result = rsub(result, "%-", "7")
+		result = rsub(result, "([aeiou])", "%1" .. MACRON) -- No way to know stress in Baybayin. Disable for now.
+		return result
+	end)
+	return text
+end
+
 -- ĵ, ɟ and ĉ are used internally to represent [d͡ʒ], [j] and [t͡ʃ]
 --
 
 function export.IPA(text, include_phonemic_syllable_boundaries)
 	local debug = {}
-
+	
+	text = decode_baybayin(text)
 	text = ulower(text)
 	text = decompose(text, "recompose e-dia")
 	-- convert commas and en/en dashes to IPA foot boundaries
@@ -347,14 +362,14 @@ function export.IPA(text, include_phonemic_syllable_boundaries)
 	text = rsub(text, "ts", "ĉ") --not the real sound
 
 	table.insert(debug, text)
-
+	
 	text = rsub_repeatedly(text, "(" .. NV .. ")([u])([" .. AC .. MACRON .. "]?)([aeio])("  .. accent_c .. "?)","%1%2%3.w%4%5")
 	text = rsub_repeatedly(text, "(" .. V ..  ")([u])([aeio])("  .. accent_c .. "?)","%1.w%3%4")
 	text = rsub_repeatedly(text, "(" .. V ..  ")([o])([aei])("  .. accent_c .. "?)","%1.w%3%4")
 	text = rsub(text, "([i])([" .. AC .. MACRON .. "])([aeou])("  .. accent_c .. "?)","%1%2.y%3%4")
 	text = rsub(text, "([i])([aeou])(" .. accent_c .. "?)","y%2%3")
 	text = rsub(text, "a([".. AC .."]*)o([#.ʔ])","a%1w%2")
-
+	
 	-- eu rules
 	text = rsub_repeatedly(text, "([#])([e])([u])("  .. accent_c .. "?)","%1y%3%4")
 	text = rsub_repeatedly(text, "(" .. NV .. ")([e])([" .. AC .. MACRON .. "]?)([u])("  .. accent_c .. "?)","%1%2%3.%4%5")
@@ -366,7 +381,7 @@ function export.IPA(text, include_phonemic_syllable_boundaries)
 	text = rsub(text,"(" .. V ..  ")y([ˈˌ.]*)([bćĉdfɡhjĵklmnɲŋpɾrsʃtvwɟzʔ#" .. vowel .. "])","%1j%2%3")
 	text = rsub(text, "w(" .. V .. ")","w%1")
 	text = rsub(text,"(" .. NV ..  ")w([ˈˌ]?)([bćĉdfɡjĵklmnɲŋpɾrsʃtvwɟzʔ#])","%1u%2%3")
-
+	
 	-- Convert CV(wy)C pattern into diphthong
 	text = rsub(text, "(" .. V .. ")(" .. accent_c .. "?)w(" .. NV ..  ")([^lɾr" .. vowel .. separator .."])" ,"%1%2u%3%4")
 	text = rsub(text, "(" .. V .. ")(" .. accent_c .. "?)w([ĉdjĵlmnɲŋɾrstvwɟzʔ])([l" .. vowel .. separator .."])" ,"%1%2u%3%4")
@@ -492,13 +507,14 @@ function export.IPA(text, include_phonemic_syllable_boundaries)
     text = rsub(text,"([^#bdfɡĵjɟnŋɾrvzaāeəoiīuū])([ˈˌ.#])z","%1%2s") -- /z/ turn to /s/ after some unvoiced sounds
     text = rsub(text,"([bćĉdfɡhĵjɟklmnŋptvwz])([ˈˌ.]?)([ɟlɾst])([aāeəoiīuū])([.]?)([z])","%1%2%3%4%5s") -- consonant cluster before /z/ turn to /s/
     text = rsub_repeatedly(text, "([^z]*)z([^z]*)([^#bdfɡĵjɟnŋɾrvzˈˌ.#][ˈˌ.#]?)z", "%1z%2%3s") -- /z/ turn to /s/ if /z/ already said earlier
-
+    
     text = rsub_repeatedly(text, "^([#]*)([ˈˌ])([#]*)", "%1%3%2") -- Move stress inside word boundary fix at start
     text = rsub_repeatedly(text, "([ ])([#]*)([ˈˌ])([#]*)", "%1%2%4%3") -- Move stress inside word boundary fix at start
 
     local tl_IPA_table = {
     	["phonetic"] = text,
-    	["phonemic"] = text
+    	["phonemic"] = text,
+    	["raw"] = text
     }
 
 	for key, value in pairs(tl_IPA_table) do
@@ -567,50 +583,50 @@ function export.IPA(text, include_phonemic_syllable_boundaries)
 	       	table.insert(debug, text)
 
 		    --Change stresses before penultimate to have final syllable stress
-		    text = rsub_repeatedly(text,"[ˈˌ]([ʔbćĉdfɡɣhĵɟkxlmnɲŋpɾrɹsʃtwvzʒ]?[ɟlnɾstw]?[āeəīoū])([^# ˈˌ]*)" ..
+		    text = rsub_repeatedly(text,"[ˈˌ]([ʔbćĉdfɡɣhĵɟkxlmnɲŋpɾrɹsʃtwvzʒ]?[ɟlnɾstw]?[āeəīoū])([^# ˈˌ]*)" .. 
 		    	"([.][ʔbćĉdfɡɣhĵɟkxlmnɲŋpɾrɹsʃtwvzʒ]?[ɟlnɾstw]?[āeīoūaəiu])([^# ˈˌ]*)" ..
 		    	"[.]([ʔbćĉdfɡɣhĵɟkxlmnɲŋpɾrɹsʃtwvzʒ]?[ɟlnɾstw]?[āeīoūaəiu])([^# ˈˌ.]*)([# ])","ˌ%1%2%3%4ˈ%5%6%7")
-
+		    
 		    text = rsub(text,"([ˈˌ])([ʔbćĉdfɡɣhĵɟkxlmnɲŋpɾrɹsʃtwvzʒ]?)([ɟlnɾstw]?)([a])","%1%2%3ā")
 			text = rsub(text,"([ˈˌ])([ʔbćĉdfɡɣhĵɟkxlmnɲŋpɾrɹsʃtwvzʒ]?)([ɟlnɾstw]?)([i])","%1%2%3ī")
 			text = rsub(text,"([ˈˌ])([ʔbćĉdfɡɣhĵɟkxlmnɲŋpɾrɹsʃtwvzʒ]?)([ɟlnɾstw]?)([u])","%1%2%3ū")
-
+		    
 		    --If final syllable is stressed but so is penultimate, mark penultimate only
-		    text = rsub_repeatedly(text,"[ˌ]([ʔbćĉdfɡɣhĵɟkxlmnɲŋpɾrɹsʃtwvzʒ]?[ɟlnɾstw]?[āeəīoū])([^# .ˈˌ]*)" ..
+		    text = rsub_repeatedly(text,"[ˌ]([ʔbćĉdfɡɣhĵɟkxlmnɲŋpɾrɹsʃtwvzʒ]?[ɟlnɾstw]?[āeəīoū])([^# .ˈˌ]*)" .. 
 		    	"([.]?[ˈˌ])([ʔbćĉdfɡɣhĵɟkxlmnɲŋpɾrɹsʃtwvzʒ]?[ɟlnɾstw]?)([ā])([^# ˈˌ.]*)([# ])","ˈ%1%2.%4a%6%7")
-		    text = rsub_repeatedly(text,"[ˌ]([ʔbćĉdfɡɣhĵɟkxlmnɲŋpɾrɹsʃtwvzʒ]?[ɟlnɾstw]?[āeəīoū])([^# .ˈˌ]*)" ..
+		    text = rsub_repeatedly(text,"[ˌ]([ʔbćĉdfɡɣhĵɟkxlmnɲŋpɾrɹsʃtwvzʒ]?[ɟlnɾstw]?[āeəīoū])([^# .ˈˌ]*)" .. 
 		    	"([.]?[ˈˌ])([ʔbćĉdfɡɣhĵɟkxlmnɲŋpɾrɹsʃtwvzʒ]?[ɟlnɾstw]?)([eoə])([^# ˈˌ.]*)([# ])","ˈ%1%2.%4%5%6%7")
-		    text = rsub_repeatedly(text,"[ˌ]([ʔbćĉdfɡɣhĵɟkxlmnɲŋpɾrɹsʃtwvzʒ]?[ɟlnɾstw]?[āeəīoū])([^# .ˈˌ]*)" ..
+		    text = rsub_repeatedly(text,"[ˌ]([ʔbćĉdfɡɣhĵɟkxlmnɲŋpɾrɹsʃtwvzʒ]?[ɟlnɾstw]?[āeəīoū])([^# .ˈˌ]*)" .. 
 		    	"([.]?[ˈˌ])([ʔbćĉdfɡɣhĵɟkxlmnɲŋpɾrɹsʃtwvzʒ]?[ɟlnɾstw]?)([ī])([^# ˈˌ.]*)([# ])","ˈ%1%2.%4i%6%7")
-		    text = rsub_repeatedly(text,"[ˌ]([ʔbćĉdfɡɣhĵɟkxlmnɲŋpɾrɹsʃtwvzʒ]?[ɟlnɾstw]?[āeəīoū])([^# .ˈˌ]*)" ..
+		    text = rsub_repeatedly(text,"[ˌ]([ʔbćĉdfɡɣhĵɟkxlmnɲŋpɾrɹsʃtwvzʒ]?[ɟlnɾstw]?[āeəīoū])([^# .ˈˌ]*)" .. 
 		    	"([.]?[ˈˌ])([ʔbćĉdfɡɣhĵɟkxlmnɲŋpɾrɹsʃtwvzʒ]?[ɟlnɾstw]?)([ū])([^# ˈˌ.]*)([# ])","ˈ%1%2.%4u%6%7")
-
+		    
 		    text = rsub_repeatedly(text, "ˈ(.+)ˈ", "ˌ%1ˈ") -- Reset primary to secondary stresses if not on last word
-
+		    
 		    -- Add vowel length to stressed open vowels
 		    text = rsub_repeatedly(text,"([ˈˌ])([ʔbćĉdfɡɣhĵɟkxlmnɲŋpɾrɹsʃtwvzʒ]?)([ɟlnɾstw]?)([āeəīoū])([ˈˌ.])","%1%2%3%4ː%5")
-
+		    
 		    --change a, i, u to unstressed equivalents (certain forms to restore)
 		    text = rsub(text,"a","ɐ")
 		    text = rsub(text,"i","ɪ")
 		    text = rsub(text,"u","ʊ")
-
+		    
 		    --Change /e/ closer to native pronunciation.
 		    text = rsub(text, "e", "ɛ")
-
+		    
 		    --Restore /e/ on diphthongs
 		    text = rsub(text, "ɛ([ː]?)([ɹ])","ə%1%2")
 
 			--Restore /e/ on diphthongs
 		    text = rsub(text, "ɛ([ː]?)([ɪ̯ʊ̯])","e%1%2")
-
+		    
 		    -- Some alveolars are actually dental in Tagalog
 		    text = rsub(text, "([td])([# ˈˌ.]*)([l])", "%1%2%3̪")
 		    text = rsub(text, "([tdn])", "%1̪")
-
+		    
 		    -- Phrase-Final stops are unreleased
 		    text = rsub(text, "([ɐāeɛəɪīoʊū])([pbtdkɡ])([̪]?)([#]+)$", "%1%2%3%4̚")
-		else
+		elseif key == "phonemic" then
 			text = rsub(text,"([n])([ˈˌ#.]?[ɡk])","ŋ%2") -- /n/ before /k/ and /g/ (some proper nouns and loanwords)
 			if not include_phonemic_syllable_boundaries then
 				text = rsub(text,"%.","")
@@ -661,7 +677,7 @@ function export.IPA(text, include_phonemic_syllable_boundaries)
 		text = rsub(text, "%.(" .. ipa_stress_c .. ")", "%1")
 		text = rsub_repeatedly(text, "([.]?)(" .. ipa_stress_c .. ")([.]?)", "%2")
 
-    	tl_IPA_table[key] = toNFC(text)
+    	tl_IPA_table[key] = canon_spaces(toNFC(text))
 	end
 
 	return tl_IPA_table
@@ -770,7 +786,7 @@ end
 -- original spelling. As an example, given syllabified respelling 'a.ma.7ín' and original spelling 'amain', we would
 -- like to produce 'a.ma.in'.
 --
--- If we encounter an extra syllable marker (.), we allow and keep it. If we encounter an extra accent marker in the
+-- If we encounter an extra syllable marker (.), we allow and keep it. If we encounter an extra accent marker in thes
 -- syllabification, we drop it. We allow for mismatches in capitalization and for certain other mismatches, e.g. extra
 -- glottal stops (written 7), h in respelling vs. g or j in the original, etc. If we can't match, we return nil
 -- indicating the alignment failed.
@@ -806,7 +822,7 @@ local function align_syllabification_to_spelling(syllab, spelling)
 			["w"] = {"u", "o"},
 			["y"] = {"i"}
 		}
-
+		
 		return uci == ucj or (matching_chars[uci] and m_table.contains(matching_chars[uci], ucj))
 	end
 	local function silent_spelling_letter(ucj)
@@ -826,7 +842,7 @@ local function align_syllabification_to_spelling(syllab, spelling)
 		local uci = syll_at(i)
 		local cj = spell_at(j)
 		local ucj = uspell_at(j)
-
+		
 		if uci == "g" and syll_at(i - 1) == "n" and syll_at(i + 1) == "." and matches(syll_at(i + 2), ucj) and
 			not matches(syll_at(i + 2), uspell_at(j + 1)) then
 			-- As a special case, before checking whether the corresponding characters match, we have to skip an extra
@@ -837,7 +853,7 @@ local function align_syllabification_to_spelling(syllab, spelling)
 			-- syll='E.vang.he.lis.ta' and spelling='Evangelista'. But we need an extra condition to not do this hack
 			-- when syll='ba.rang.gay' matches spelling='baranggay'.
 			i = i + 1
-		elseif uci == "g" and ucj == "g" and uspell_at(j + 1) == TILDE  then
+		elseif uci == "g" and ucj == "g" and uspell_at(j + 1) == "̃"  then
 			table.insert(result, cj)
 			table.insert(result, uspell_at(j + 1))
 			i = i + 1
@@ -943,6 +959,10 @@ local function any_words_have_vowels(term)
 		end
 	end
 	return false
+end
+
+local function has_baybayin(text)
+	return text:match("[ᜀ-ᜟ]")
 end
 
 
@@ -1154,8 +1174,12 @@ local function syllabify_from_spelling(text, pagename)
 	local vowel = vowel .. "ẃý" -- vowel
 	local V = "[" .. vowel .. "]"
 	local NV = "[^" .. vowel .. "]"
-	local C = "[^" .. vowel .. separator .. "]" -- consonant
+	local C = "[^" .. vowel .. separator .."]" -- consonant
 
+	text = rsub(text, "[ᜀ-ᜟ]+", function(baybayin)
+		return "<᜶" .. decode_baybayin(baybayin) .. "᜶>"
+	end)
+	
 	text = decompose(text, "recompose e-dia")
 
 	local origtext = remove_accents(text)
@@ -1196,7 +1220,7 @@ local function syllabify_from_spelling(text, pagename)
 	text = rsub(text, "ý(" .. V .. ")", "y%1")
 	text = rsub(text, "w([ˈˌ]?)([bćĉdfgǵjĵkḱlmnɲŋpɾrsʃtvwɟzʔ#" .. vowel .. "])","ẃ%1%2")
 	text = rsub(text, "ẃ(" .. V .. ")","w%1")
-
+	
 	text = rsub(text, "(" .. V .. ")(" .. accent_c .. "?)ẃ([bdfgǵkḱpt])([ɾr" .. vowel .. separator .."])" ,"%1%2w%3%4")
 	text = rsub(text, "(" .. V .. ")(" .. accent_c .. "?)ẃ([bfgǵkḱp])([l" .. vowel .. separator .."])" ,"%1%2w%3%4")
 	text = rsub(text, "(" .. V .. ")(" .. accent_c .. "?)ý([bdfgǵkḱpt])([ɾr" .. vowel .. separator .."])" ,"%1%2y%3%4")
@@ -1273,6 +1297,14 @@ local function syllabify_from_spelling(text, pagename)
 			end
 		end
 	end
+	
+	-- Reencode Baybayin
+	text = rsub(text, "[<][᜶]([^᜶]+)[᜶][>]", function(baybayin)
+		baybayin = baybayin:gsub("|", "/"):gsub("7", "")
+		local result = require(baybayin_encode_module).transcribe(baybayin:gsub("|", "/"), false, false, false) 
+		result = rsub(result, " ᜵ ", "|")
+		return result
+	end)
 
 	-- FIXME! Hack -- up above we changed periods to vertical bars. The rest of the code expects periods so change
 	-- them back. We should clean up the code above to leave the periods alone.
@@ -1579,15 +1611,10 @@ function export.show_full(frame)
 				end,
 				pre_normalize_modifiers = function(data)
 					local modtext = data.modtext
-					modtext = modtext:match("^<(.*)>$")
-					if not modtext then
-						error(("Internal error: Passed-in modifier isn't surrounded by angle brackets: %s"):format(
-							data.modtext))
-					end
 					if modtext:find("%^") and not modtext:find("^t:") then
 						modtext = "t:" .. modtext
 					end
-					return "<" .. modtext .. ">"
+					return modtext
 				end,
 				splitchar = ",",
 				outer_container = {},
@@ -1729,9 +1756,15 @@ function export.show_full(frame)
 					rhyme_with_cat = pronobj.rhyme_with_cat,
 					move_to_next_line = true,
 				}
-
+				
+				-- "bv"/ "pf", "sz" correction
+		    	-- fvz_pronobj.phonetic = fvz_pronobj.phonetic:gsub("[b]([.ˈˌ]*)[b]", "%1b")
+		    	-- fvz_pronobj.phonetic = fvz_pronobj.phonetic:gsub("[p]([.ˈˌ]*)[p]", "%1p")
+		    	-- fvz_pronobj.phonetic = fvz_pronobj.phonetic:gsub("[s]([.ˈˌ]*)[s]", "%1s")
+				
 				-- Phrase-Final unreleased stops correction
 		    	fvz_pronobj.phonetic = fvz_pronobj.phonetic:gsub("([pbtdkɡ])$", "%1̚")
+		    
 				table.insert(parsed.pronuns, fvz_pronobj)
 			end
 
@@ -1752,7 +1785,7 @@ function export.show_full(frame)
 					no_rhyme = true,
 					move_to_next_line = true,
 				}
-
+				
 				-- Vowel corrections on phonetic
 				glottal_stop_pronobj.phonetic = glottal_stop_pronobj.phonetic:gsub("ɐː", "aː"):gsub("ɪː", "iː"):gsub("ʊː", "uː")
 				table.insert(parsed.pronuns, glottal_stop_pronobj)
@@ -1760,7 +1793,7 @@ function export.show_full(frame)
 		end
 
 		if not parsed.syll then
-			if not overall_syll and any_words_have_vowels(pagename) then
+			if not overall_syll and (any_words_have_vowels(pagename) or has_baybayin(pagename)) then
 				for _, term in ipairs(parsed.terms) do
 					if not term.raw then
 						local syllabification = syllabify_from_spelling(term.term, pagename)
@@ -1957,7 +1990,7 @@ function export.show_full(frame)
 			return
 		end
 		for _, syll in ipairs(sylls.terms) do
-			local syll_no_dot = "#" .. syll.syllabification .. "#"
+			local syll_no_dot = "#" .. syll.syllabification .. "#" 
 			syll_no_dot = syll.syllabification:gsub("%.([^ #])", "%1"):gsub("#", "")
 			if syll_no_dot ~= pagename then
 				mw.log(("For page '%s', saw syllabification '%s' not matching pagename"):format(
