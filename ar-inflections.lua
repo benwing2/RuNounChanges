@@ -159,6 +159,7 @@ local function generate_inflection_of(forms_and_tags, vforms, pagename)
 
 	local function get_verb_forms_as_inflections()
 		local formatted_vforms = {}
+		-- FIXME: Duplicated in [[Module:ar-headword]]
 		for _, vform in ipairs(vforms) do
 			table.insert(formatted_vforms,
 				{ label = "[[Appendix:Arabic verbs#Form " .. vform .. "|form " .. vform .. "]]" })
