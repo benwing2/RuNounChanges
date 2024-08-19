@@ -538,7 +538,10 @@ function export.insertIfNot(list, new_item, options)
 				item_key = item
 			end
 			if export.deepEquals(item_key, new_item_key) then
-				list[i] = options.combine(item, new_item, i)
+				local retval = options.combine(item, new_item, i)
+				if retval ~= nil then
+					list[i] = retval
+				end
 				return false
 			end
 		end
