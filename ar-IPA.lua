@@ -141,6 +141,7 @@ function export.show(frame)
 		["tr"] = { list = true, allow_holes = true },
 		["qual"] = { list = true, allow_holes = true },
 		["nl"] = {type = "boolean"},
+		["ann"] = {},
 	}
 
 	local args = require("Module:parameters").process(frame:getParent().args, params)
@@ -181,10 +182,33 @@ function export.show(frame)
 		table.insert(pronunciations, { pron = "/" .. pron .. "/", qualifiers = { qual } })
 	end
 
-	if nl then
-		return require("Module:IPA").format_IPA_multiple(lang, pronunciations)
+	local anntext
+	if args.ann then
+		anntext = args.ann
+		if args.ann:find("%+") then
+			local anndefs = {}
+			for i = 1, math.max(Arabic_words.maxindex, transliterations.maxindex) do
+				local Arabic = Arabic_words[i]
+				if Arabic then
+					table.insert(anndefs, "'''" .. Arabic .. "'''")
+				end
+			end
+			if not anndefs[1] then
+				error(("No Arabic-script respellings available for substitution into + in annotation '%s'"):format(
+					args.ann))
+			end
+			anndefs = table.concat(anndefs, ", ")
+			anntext = anntext:gsub("%+", require("Module:string utilities").replacement_escape(anndefs))
+		end
+		anntext = require("Module:qualifier").format_qualifier(anntext, "", "") .. ":&#32;"
 	else
-		return require("Module:IPA").format_IPA_full { lang = lang, items = pronunciations }
+		anntext = ""
+	end
+
+	if nl then
+		return anntext .. require("Module:IPA").format_IPA_multiple(lang, pronunciations)
+	else
+		return anntext .. require("Module:IPA").format_IPA_full { lang = lang, items = pronunciations }
 	end
 end
 
