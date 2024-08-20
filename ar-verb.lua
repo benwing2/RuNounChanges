@@ -4092,28 +4092,28 @@ function export.do_generate_forms(args, source_template, headword_head)
 	end
 
 	-- Determine the verb spec we're being asked to generate the conjugation of. This may be taken from the current page
-	-- title or the value of |pagename=; but not when called from {{ar-verb form of}}, where the page title is a
+	-- title or the value of |pagename=; but not when called from {{ar-verb form}}, where the page title is a
 	-- non-lemma form. Note that the verb spec may omit the lemma; e.g. it may be "<II>". For this reason, we use the
 	-- value of `pagename` computed here down below, when calling normalize_all_lemmas().
-	local pagename = source_template ~= "ar-verb form of" and args.pagename or PAGENAME
+	local pagename = source_template ~= "ar-verb form" and args.pagename or PAGENAME
 	local head = headword_head or pagename
 	local arg1 = args[1]
 
 	if not arg1 then
-		if (pagename == "ar-conj" or pagename == "ar-verb" or pagename == "ar-verb form of") and in_template_space() then
-			arg1 = "كتب<I>"
+		if (pagename == "ar-conj" or pagename == "ar-verb" or pagename == "ar-verb form") and in_template_space() then
+			arg1 = "كتب<I/a~u.pass>"
 		else
 			arg1 = "<>"
 		end
 	end
 
-	-- When called from {{ar-verb form of}}, determine the non-lemma form whose inflections we're being asked to
+	-- When called from {{ar-verb form}}, determine the non-lemma form whose inflections we're being asked to
 	-- determine. This normally comes from the page title or the value of |pagename=.
 	local verb_form_of_form
-	if source_template == "ar-verb form of" then
+	if source_template == "ar-verb form" then
 		verb_form_of_form = args.pagename
 		if not verb_form_of_form then
-			if PAGENAME == "ar-verb form of" and in_template_space() then
+			if PAGENAME == "ar-verb form" and in_template_space() then
 				verb_form_of_form = "كتبت"
 			else
 				verb_form_of_form = PAGENAME
@@ -4153,7 +4153,7 @@ function export.do_generate_forms(args, source_template, headword_head)
 
 	local parse_props = {
 		parse_indicator_spec = parse_indicator_spec,
-		allow_default_indicator = true,
+		angle_brackets_omittable = true,
 		allow_blank_lemma = true,
 	}
 	local alternant_multiword_spec = iut.parse_inflected_text(arg1, parse_props)
@@ -4205,7 +4205,7 @@ function export.do_generate_forms(args, source_template, headword_head)
         iut.map_word_specs(alternant_multiword_spec, function(base)
             base.alternant_multiword_spec = nil
         end)
-		return require("Module:JSON").toJSON(alternant_multiword_spec.forms)
+		return require("Module:JSON").toJSON(alternant_multiword_spec)
 	end
 	return alternant_multiword_spec
 end
