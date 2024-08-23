@@ -4,6 +4,7 @@ local m_links = require("Module:links")
 local m_str_utils = require("Module:string utilities")
 local m_table = require("Module:User:Benwing2/table")
 local put = require("Module:User:Benwing2/parse utilities")
+local headword_data_module = "Module:headword/data"
 local script_utilities_module = "Module:script utilities"
 local table_tools_module = "Module:table tools"
 
@@ -91,11 +92,11 @@ given word can potentially consist of multiple possible inflected forms. In addi
 a manual transliteration and/or a list of footnotes (or qualifiers, in the case of headword lines). The following
 terminology is helpful to understand:
 
+* A '''term''' is a word or multiword expression that can be inflected. A multiword term may in turn consist of several
+  single-word inflected terms with surrounding fixed text. A term belongs to a particular '''part of speech''' (e.g.
+  noun, verb, adjective, etc.).
 * An '''inflection dimension''' is a particular dimension over which a term may be inflected, such as case, number,
   gender, person, tense, mood, voice, aspect, etc.
-* A '''term''' is a word or multiword expression that can be inflected. A multiword term may in turn consist of several
-  single-word inflected terms with surrounding fixed text. A term belongs to a particular ''part of speech'' (e.g. noun,
-  verb, adjective, etc.).
 * The '''lemma''' is the particular form of a term under which the term is entered into a dictionary. For example, for
   verbs, it is most commonly the infinitive, but this differs for some languages: e.g. Latin, Greek and Bulgarian use
   the first-person singular present indicative (active voice in the case of Latin and Greek); Sanskrit and Macedonian
@@ -107,9 +108,11 @@ terminology is helpful to understand:
   example, the slot "accusative plural" might have a name `accpl`, while "first-person singular present indicative"
   might be variously named `pres1s`, `pres_ind_1_sg`, etc. Each slot is filled with zero or more '''forms'''.
 * A '''form''' is a particular inflection of a slot for a particular term. Note that a given slot may (and often does)
-  have more than one associated form; these different forms are termed '''variants'''. The form variants for a given
-  slot are ordered, and generally should have the more common and/or preferred variants first, along with rare, archaic
-  or obsolete variants last (if they are included at all).
+  have more than one associated form; these different forms are termed '''variants'''. An example is
+  {{m+|de|Bug||bow (of a ship)}}, which has two genitive singular forms ''Buges'' and ''Bugs''; two plural forms in all
+  cases, e.g. nominative plural ''Buge'' and ''Büge''; and two dative singular forms ''Bug'' and rare/archaic ''Buge''.
+  The form variants for a given slot are ordered, and generally should have the more common and/or preferred variants
+  first, along with rare, archaic or obsolete variants last (if they are included at all).
 * Forms are described using '''form objects''', which are Lua objects taking the form
   `{form="``form_value``", translit="``manual_translit``", footnotes={"``footnote``", "``footnote``", ...}}`.
   (Additional '''metadata''' may be present in a form object, although the support for preserving such metadata when
@@ -141,7 +144,79 @@ terminology is helpful to understand:
   either a single abbreviated form object or a list of such objects, i.e. any of a string, form object or list of
   strings and/or form objects. Functions that do not accept such abbreviated structures may be said to insist on being
   passed form objects in '''general form''', or form lists in '''general list form'''.
-* Because there are many distinct object types that could potentially be called ''form'' or ''forms'', the following
+* Each slot is associated with an '''accelerator tag set''', which is a list of inflection tags that are used when
+  generating an accelerator entry for the forms in the slot (see [[WT:ACCEL]]). For example, the first singular present
+  indicative of a verb might have slot name `pres_1sg` and corresponding accelerator tag set `1|s|pres|ind`. As shown,
+  the accelerator tag set is a string consisting of inflection tags (as used in {{tl|inflection of}}) separated by `|`.
+  Despite the terminology ''tag set'', the tags in a tag set are ordered, although the same tag should never occur
+  twice.
+* Some inflected terms are '''multiword''', i.e. they consist of multiple '''words''', where each word is generally
+  separated by spaces or sometimes hyphens. In such a term, some of the words inflect, while others remain fixed. Words
+  that inflect are termed '''inflecting words''' (or more correctly '''inflecting parts''', since in some circumstances,
+  parts of a word can inflect). The '''fixed text''' is all the parts of a multiword term that do not inflect.
+* The descriptor that describes how a given term inflects is called an '''inflection spec''', and consists of the lemma
+  form of the term itself, annotated with an '''angle bracket spec''' after each inflecting word. As the name implies,
+  an angle bracket spec is surrounded by angle brackets (`<...>`). A simple example is {{m+|de|Feder||feather}}, whose
+  inflection spec looks like `Feder<f>`, where `f` specifies the feminine gender. In this case, although there are
+  several properties that could be specified between angle brackets, all except the gender are optional and have been
+  left out, indicating that defaults should be used. Another example is {{m+|de|Baske|Basque person}}, whose inflection
+  spec looks like `Baske<m.weak>`, where `m` specifies the masculine gender and `weak` specifies the weak inflection.
+  Note that individual components of an angle bracket spec like `m` and `weak` are termed '''indicators''' and are
+  separated by periods/full stops. A slightly more complex example is {{m+|de|Zeitgeist||zeitgeist}}, whose inflection
+  spec looks like `Zeitgeist<m,es:s,er>` and which specifies three things in a single '''compound indicator''': `m` (the
+  masculine gender); `es:s` (the genitive singular, which can end in either ''-es'' or ''-s''); and `er` (the
+  nomininative plural, which ends in ''-er'').
+* If there are several inflecting words in a term, each one will be followed by its own angle bracket spec. An example
+  is {{m+|de|schwarzes Loch||black hole}}, whose inflection spec looks like `schwarzes<+> Loch<n,es:s,^er>`. Here,
+  the adjective ''schwarzes'' (the nominative neuter singular of {{m|de|schwarz||black}}) is followed by the angle
+  bracket spec `<+>` specifying that it inflects as an adjective, and the noun ''Loch'' has the angle bracket spec
+  `<n,es:s,^er>`, indicating (similarly to the above example) that it is neuter, has a genitive singular in either
+  ''-es'' or ''-s'', and has a nominative plural in ''-er'' with umlaut, hence ''Löcher'' (the `^` specifies that the
+  form requires umlaut).
+* Sometimes a given term has multiple ways of inflecting that differ in ways that can't be specified using a single
+  angle bracket spec. This is supported using '''alternants''', which are specified using double parentheses. (This is
+  so that terms that themselves contain parentheses can be specified without interference.) An example is
+  {{m+|uk|русин||Rusyn}}, which can be stressed either as ''ру́син'' (stress on the first syllable and following accent
+  paradigm ''a'', hence genitive singular ''ру́сина'') or ''руси́н'' (stress on the second syllable and following accent
+  paradigm ''b'', hence genitive singular ''русина́''; note how the stress moves onto the ending, in accordance with the
+  accent paradigm). This is specified using `((ру́син<pr>,руси́н<b.pr>))`, i.e. each separate the alternants with a comma
+  and surround them with double parentheses. (Here, `pr` means that the terms belong to the personal animacy class, and
+  `b` specifies the accent paradigm; paradigm ''a'' is the default and hence is omitted.)
+* Note that occasionally, parts of a single space-delimited word can inflect separately. An example is
+  {{m+|la|rōsmarīnus||rosemary}}, which is a compound of {{m+|la|rōs||dew}} and {{m|la|marīnus||marine, of the sea}}.
+  In this compound, both parts of the compound can inflect separately; hence genitive singular ''rōrismarīnī'',
+  accusative singular ''rōremmarīnum'', etc. Alternatively, only the second part inflects; hence genitive singular
+  ''rōsmarīnī'', accusative singular ''rōsmarīnum'', etc. This is specified as
+  `((rōs/rōr<3.M>marīnus<2>,rōsmarīnus<2>))`. Here, the term {{m|la|rōs}} by itself would have inflection spec
+  `rōs/rōr<3.M>` (indicating that it is third declension masculine with a non-nominative-singular stem ''rōr-'') and
+  the term {{m|la|marīnus}} would have inflection spec `<2>` (indicating that it is second declension; the masculine
+  gender is inferred from the ''-us'' ending). When combined in a single inflection spec, the doubly-inflecting
+  alternant is written `rōs/rōr<3.M>marīnus<2>`, with each inflecting part followed by its corresponding angle bracket
+  spec, and the singly-inflecting alternant is written `rōsmarīnus<2>`. As this example shows, the two alternants
+  need not correspond in how many inflecting parts there are. It should also be noted that fixed text can surround
+  an alternant and it is even possible to supply multiple alternants in a single inflection spec (e.g. if the term
+  has two words in it and each word requires an alternant to inflect).
+* The result of parsing a single angle bracket spec is stored into a '''word spec'''. The structure of a word spec is
+  fairly arbitrary and is determined by the user-written `parse_indicator_spec` function, but always contains a form
+  table under the `forms` key that is populated during inflection (see below). A parameter or local variable that holds
+  a word spec is conventionally named `base` for historical reasons. Word specs are grouped together into a structure
+  termed a '''multiword spec''', which describes one or more word specs along with the fixed text in between and around
+  the inflected words. Multiword specs are in turn grouped into structures termed '''alternant specs''', indicating
+  the distinct alternants and the words in each alternant. Finally, multiword specs and alternant specs are grouped into
+  an '''alternant multiword spec''', which is the top-level object describing an inflection spec. Each of these
+  different specs has a form table in it stored in the `forms` key that is populated during the inflection process and
+  contains the form objects that specify the inflections of this part of the full multiword term. (It should be noted
+  that the term '''spec''' is overloaded to mean two different things: the user-specified descriptor that specifies the
+  lemma form of the term and associated inflection, and the associated internal Lua object that encapsulates all
+  information derived from the descriptor, along with later-generated information on how to inflect the term(s) being
+  described.)
+* Among these various "spec" structures, the two most important are the top-level alternant multiword spec and the
+  bottom-level word spec or "base". You will rarely find it necessary to manipulate the intermediate structures or
+  concern yourself with the details of their formation.
+* The term ''form'' is unfortunatately overloaded in various modules to mean several things. In particular, for
+  historical reasons, the form value inside of a form object is stored using the key `form`; the form table inside of an
+  alternant multiword spec, a word spec (or "base") and the intermediate structures is stored using the key `forms`; and
+  the accelerator tag set is internally referred to in [[WT:ACCEL]] as a "form". To avoid confusion, the following
   conventions are followed in code in this module, and should be followed for code in invoking modules as well:
 *# Functions that accept form objects often name the relevant parameter `form` (if a single form object is required) or
   `forms` (if a list of form objects, aka form list, is required).
@@ -153,6 +228,60 @@ terminology is helpful to understand:
 *# Similarly, functions that accept a form table should '''not''' call such a parameter `forms` (although for historical
    reasons the form table in an alternant multiword spec is stored in the field `forms`). Instead, use `formtable` or
    `formtab`, or similar name that makes clear that the value is a form table (i.e. a map from slot to form list).
+
+====Footnote handling====
+Each form can have one or more attached footnotes. The form of a footnote as specified by the user and stored in form
+values is e.g. {"[archaic]"} or {"[only in the meaning 'to succeed (an officeholder)']"}, i.e. the string must be
+surrounded by brackets and should begin with a lowercase letter and not end in a period/full stop. When such footnotes
+are converted to actual footnotes in a table of inflected forms, the brackets will be removed, the first letter will be
+capitalized and a period/full stop will be added to the end. (However, when such footnotes are used as qualifiers in
+headword lines, only the brackets will be removed, with no capitalization or final period.)
+
+When merging two forms into one, such as when concatenating the form objects of two inflected words in a multiword term
+or deduplicating form objects sharing the same form value during `show_forms()`, the footnotes are generally combined as
+well. This means that if one form object has footnotes and the other doesn't, the resulting form object inherits the
+footnotes of the object that has them, and if both form objects have footnotes, the resulting form object gets all
+footnotes from both source form objects, with duplicates removed. However, when inserting a form into a form table slot
+that already has a form whose form value and translit are identical to the new form, the behavior is different. In
+under normal circumstances the footnotes of the new form are ''not'' incorporated into those of the existing form (if
+any), but are simply dropped. To understand why this makes sense, consider a term that has two possible forms of its
+lemma (e.g. two forms differing in stress or in vowel length), where the second form is archaic, rare, colloquial or the
+like, and has an attached footnote indicating this. An example of this is {{m+|ru|кожух||sheepskin coat; bullet shell}},
+where the form ''кожу́х'' with accent pattern ''b'' is more common overall but the form ''ко́жух'' with accent pattern
+''c(1)'' is more common among professionals. On first glance, this could be indicated using
+`((кожу́х<b>,ко́жух<c(1).[professional usage only]>))`. But some forms of these two declensions are the same (in
+particular, the genitive, dative, instrumental and prepositional plural). If for these slots, the footnotes of the
+duplicate forms were combined (i.e. the footnotes of the second declension pattern were added to the already-existing
+form taken from the first declension pattern), these forms would wrongly be labeled as ''professional usage only''.
+For this reason, it makes more sense to drop the footnotes of the second form when deduplicating.
+
+The same sort of behavior makes sense when a single lemma can have two different declensions, the second of which
+requires a footnote and where some forms in the two declensions are shared. An example of this is
+{{m+|uk|окови́та||strong, high-quality liquor}}, which can be inflected adjectivally or (rarely) nominally. This would be
+indicated as `((окови́та<sg.+>,окови́та<sg.[rare]>))` where the `+` indicates adjectival declension and the `sg` indicates
+that this term only exists in the singular. Here, the two declensions differ in the genitive, dative/locative and
+vocative (respectively, adjectival ''окови́тої'', ''окови́тій'', ''окови́та'' vs. nominal ''окови́ти'', ''окови́ті'',
+''окови́то'') but are the same in the accusative (''окови́ту'') and instrumental (''окови́тою''). Again, dropping the
+footnotes of the second form when deduplicating is correct and including them would be wrong.
+
+This behavior can be changed by attaching a '''footnote modifier''' to the footnote associated the second form. A
+footnote modifier is a symbol attached to the beginning of a footnote, directly following the opening bracket. The
+following modifiers are currently recognized:
+* `!` or `+`: If placed on a footnote of the second form, combine that footnote with those of the first form (if any)
+              rather than dropping it.
+* `*`: If placed on a footnote of the first form, drop that footnote when merging a second form with any footnotes.
+An example where the `*` modifier makes sense is a modification of the above example with {{m+|ru|кожух}}. If we
+notated it as `((кожу́х<b.[more common among laymen]>,ко́жух<c(1).[more common among professionals]>))`, the shared forms
+would wrongly have the footnote ''more common among laymen'' when in fact they are the only possible forms. If instead
+we used `((кожу́х<b.[*more common among laymen]>,ко́жух<c(1).[more common among professionals]>))`, the shared forms
+would correctly have no footnote.
+
+Finally, be aware of '''old-style footnote symbols'''. For compatibility reasons, some inflection implementations
+support a system whereby footnote symbols (consisting of numbers; certain ASCII symbols such as `*`, `~`, `@`, `#`,
+`+`, etc.; and a large number of Unicode symbols) are directly attached to form values and the footnotes themselves
+specified manually using the `footnotes` property passed to `show_forms()`. This is allowed only when
+`allow_footnote_symbols` is set and is highly deprecated. All uses of such symbols should be converted to standard
+footnotes and the support for such symbols removed.
 ]==]
 
 
@@ -734,13 +863,13 @@ end
 
 local function iterate_slot_list_or_table(props, do_slot)
 	if props.slot_list then
-		for _, slot_and_accel_form in ipairs(props.slot_list) do
-			local slot, accel_form = unpack(slot_and_accel_form)
-			do_slot(slot, accel_form)
+		for _, slot_and_accel_tag_set in ipairs(props.slot_list) do
+			local slot, accel_tag_set = unpack(slot_and_accel_tag_set)
+			do_slot(slot, accel_tag_set)
 		end
 	else
-		for slot, accel_form in pairs(props.slot_table) do
-			do_slot(slot, accel_form)
+		for slot, accel_tag_set in pairs(props.slot_table) do
+			do_slot(slot, accel_tag_set)
 		end
 	end
 end
@@ -1083,7 +1212,7 @@ end
 
 
 --[=[
-Subfunction of export.inflect_multiword_or_alternant_multiword_spec(). This is used in building up the inflections of
+Subfunction of `inflect_multiword_or_alternant_multiword_spec()`. This is used in building up the inflections of
 multiword expressions. The basic purpose of this function is to append a set of forms representing the inflections of
 a given inflected term in a given slot onto the existing forms for that slot. Given a multiword expression potentially
 consisting of several inflected terms along with fixed text in between, we work iteratively from left to right, adding
@@ -1094,9 +1223,9 @@ rejected using the variant mechanism (see the description of get_variants below)
 Specifically, `formtable` is a table of per-slot forms, where the key is a slot and the value is a list of form objects
 (objects of the form {form=``form``, translit=``manual_translit``, footnotes=``footnotes``}). `slot` is the slot in question.
 `forms` specifies the forms to be appended onto the existing forms, and is likewise a list of form objects. `props`
-is the same as in export.inflect_multiword_or_alternant_multiword_spec(). `before_text` is the fixed text that goes
-before the forms to be added. `before_text_no_links` is the same as `before_text` but with any links (i.e. hyperlinks
-of the form [[``term``]] or [[``term``|``display``]]) converted into raw terms using remove_links() in [[Module:links]], and
+is the same as in `inflect_multiword_or_alternant_multiword_spec()`. `before_text` is the fixed text that goes before
+the forms to be added. `before_text_no_links` is the same as `before_text` but with any links (i.e. hyperlinks of the
+form [[``term``]] or [[``term``|``display``]]) converted into raw terms using remove_links() in [[Module:links]], and
 `before_text_translit` is optional manual translit of `before_text_no_links`.
 
 Note that the value "?" in a form is "infectious" in that if either the existing or new form has the value "?", the
@@ -1197,14 +1326,14 @@ table to strings suitable for display.
   include_user_specified_links = __boolean__,
 }```
 
-`slot_list` is a list of two-element lists of slots and associated accelerator inflections. ``slot`` is arbitrary but
-should correspond with slot names as generated by `inflect_word_spec`. ``accel`` is the corresponding accelerator form;
-e.g. if ``slot`` is "pres_1sg", ``accel`` might be "1|s|pres|ind". ``accel`` is actually unused during inflection, but
-is used during `show_forms()`, which takes the same `slot_list` as a property upon input.
+`slot_list` is a list of two-element lists of slots and associated accelerator tags. ``slot`` is arbitrary but should
+correspond with slot names as generated by `inflect_word_spec`. ``accel`` is the corresponding accelerator tags; e.g. if
+``slot`` is "pres_1sg", ``accel`` might be "1|s|pres|ind". ``accel`` is actually unused during inflection, but is used
+during `show_forms()`, which takes the same `slot_list` as a property upon input.
 
-`slot_table` is a table mapping slots to associated accelerator inflections and serves the same function as
-`slot_list`. Only one of `slot_list` or `slot_table` must be given. For new code it is preferable to use `slot_list`
-because this allows you to control the order of processing slots, which may occasionally be important.
+`slot_table` is a table mapping slots to associated accelerator tags and serves the same function as `slot_list`. Only
+one of `slot_list` or `slot_table` must be given. For new code it is preferable to use `slot_list` because this allows
+you to control the order of processing slots, which may occasionally be important.
 
 `skip_slot` is a function of one argument, a slot name, and should return a boolean indicating whether to skip the
 given slot during inflection. It can be used, for example, to skip singular slots if the overall term being inflected
@@ -1565,8 +1694,9 @@ follows:
   canonicalize = nil or __function__(formval),
   preprocess_forms = nil `or` __function__(data),
   no_deduplicate_forms = __boolean__,
-  transform_link = nil or __function__(),
-  transform_accel_obj = nil or ``function_to_transform_each_accel_obj``,
+  transform_accel_obj = nil `or` __function__(slot, form, accel_obj),
+  format_forms = nil `or` __function__(data),
+  generate_link = nil `or` __function__(data),
   join_spans = nil or ``function_to_join_spans``,
   allow_footnote_symbols = __boolean__,
   footnotes = nil or {"``extra_footnote``", "``extra_footnote``", ...},
@@ -1574,20 +1704,85 @@ follows:
 
 `lemmas` is the list of lemmas, used in the accelerators.
 
-`slot_list` is a list of two-element lists of slots and associated accelerator inflections. ``slot`` should correspond to
-slots generated during inflect_multiword_or_alternant_multiword_spec(). ``accel`` is the corresponding accelerator form;
-e.g. if ``slot`` is "pres_1sg", ``accel`` might be "1|s|pres|ind". ``accel`` is used in generating entries for accelerator support
-(see [[WT:ACCEL]]).
+`slot_list` is a list of two-element lists of slots and associated accelerator tag sets. ``slot`` should correspond
+to slots generated during `inflect_multiword_or_alternant_multiword_spec()`. ``accel`` is the corresponding accelerator
+tag set; e.g. if ``slot`` is "pres_1sg", ``accel`` might be "1|s|pres|ind". ``accel`` is used in generating entries for
+accelerator support (see [[WT:ACCEL]]).
 
-`slot_table` is a table mapping slots to associated accelerator inflections and serves the same function as
-`slot_list`. Only one of `slot_list` or `slot_table` must be given. For new code it is preferable to use `slot_list`
-because this allows you to control the order of processing slots, which may occasionally be important.
+`slot_table` is a table mapping slots to associated accelerator tag sets and serves the same function as `slot_list`.
+Only one of `slot_list` or `slot_table` must be given. For new code it is preferable to use `slot_list` because this
+allows you to control the order of processing slots, which may occasionally be important.
 
 `include_translit`, if given, causes transliteration to be included in the generated strings.
 
+The function works as follows:
+# Create an object to hold footnotes (customizable using `create_footnote_obj`).
+# Generate the comma-separated lemma form values and store in `.lemma` in the form table.
+# Loop over the slots specified using `slot_list` or `slot_table`. For each slot:
+## Canonicalize the form values (customizable using `canonicalize`; by default does nothing).
+## Preprocess the forms (customizable using `preprocess_forms`; by default does nothing).
+## Unless `no_deduplicate_forms` is set, deduplicate forms in a slot sharing the same form value but possibly different
+   transliteration. (This happens e.g. in Russian, where it is relatively common for a given form to have two possible
+   transliterations, one reflecting a more nativized pronunciation where Cyrillic е triggers palatalization of the
+   preceding consonant, and one reflecting a more "foreign" pronunciation where this palatalization does not happen. In
+   such a case, the automatic transliteration would normally suffice for the more nativized pronunciation but the more
+   "foreign" pronunciation will need manual transliteration.) As part of deduplication, footnotes will be combined using
+   `combine_footnotes`; distinct manual transliterations will be combined into a list (meaning the `translit` field of
+   form objects in some subsequent `props` functions may hold a list; this will be noted when possible); and any
+   remaining metadata will be combined using the `combine_metadata_during_dedup` method, if provided.
+## Add acceleration to all forms. The acceleration tag set associated with a given form comes from `slot_list` or
+   `slot_table`, i.e. all forms in a given slot have the same tag set. However, different forms will have different
+   associated transliterations stored into the accelerator object associated with the form, as well as possibly
+   different lemmas. In particular, when there are multiple lemma forms, this is often due to alternative ways to
+   pronounce the lemma (e.g. alternative stress positions or vowel lengths), and there are often associated non-lemma
+   forms that match each lemma. An example given in the introduction is {{m+|uk|русин||Rusyn}}, stressed in the lemma
+   as ''ру́син'' or ''руси́н'' with associated genitive singulars ''ру́сина'' and ''русина́''. We would like the
+   auto-generated accelerator entry for {{m|uk|русина}} to show the variant ''ру́сина'' as having lemma ''ру́син'' and
+   the variant ''русина́'' as having the lemma ''руси́н'', rather than showing both variants as having both lemmas,
+   which is less accurate. As a result, the code that generates acceleration objects for forms matches up forms and
+   lemmas one-to-one if possible. If this is not possible, the matching is usually one lemma to many forms, as in
+   {{m+|uk|міст||bridge}} with genitive singular ''мо́сту'' or ''моста́'' (in which case all forms get the same lemma), or
+   many lemmas to one form, as in {{m+|uk|черга||turn, queue}} stressed either ''че́рга'' or ''черга́'' with nominative
+   singular only ''че́рги'' (in which case the single form gets assicated all lemmas). If there are multiple lemmas and
+   multiple forms, the algorithm attempts to align them as evenly as possible (e.g. two lemma variants to four forms
+   means the first two forms get assigned the first lemma variant and the last two forms get assigned the second lemma
+   variant); this is often going to be incorrect, but (a) there's unlikely to be a single algorithm that works in all
+   such circumstances, and (b) these cases are very rare. Finally, note the following:
+##* No acceleration is assigned to a form if any of the following apply: (a) there are no lemmas given in
+    `props.lemmas`; (b) the `no_accel` key in the form object has a non-falsy value; (c) the form value of the form is
+	{"?"} or an em-dash ({"—"}); (d) the accelerator tag set is given as a hyphen {"-"}); or (e) the form value contains
+	an internal link.
+##* The accelerator code sets the `formval_for_link` key in each form object to the version of the form value that
+    should be passed to `full_link()` in [[Module:links]]. This is usually the same as the passed-in form value, but
+	differs when `props.allow_footnote_symbols` is specified and a footnote symbol is attached to the form (the removed
+	footnote symbol is stored in the `formval_footnote_symbol` key), and also differs when the entire form value is
+	surrounded with a redundant internal link (which is removed).
+##* The resulting accelerator object can be modified (or replaced entirely) by the `transform_accel_obj` function. This
+    is used, for example, in [[Module:es-verb]], [[Module:pt-verb]] and other Romance-language verb conjugation modules
+	to replace the tag set with the original verb spec used to generate the verb, so that the accelerator code can
+	generate the appropriate call to {{tl|es-verb form of}}, {{tl|pt-verb form of}} or the like, which computes the
+	inflections, instead of directly listing the inflections.
+## Format the forms into strings. The entire default process can be replaced using `format_forms`; otherwise the default
+   algorithm works as follows:
+### Generate the '''form value spans''', with one entry (a linked HTML-ized version of the form value) per form. This
+    can be customized using `generate_link`. (Various modules do this. For example, the Arabic verb module includes
+	qualifiers, labels, ID's and the like that can be specified by the user; the Portuguese and reintegrated Galician
+	verb modules italicize certain superseded or otherwise less-desirable forms instead of linking them normally; the
+	German verb module adds {{m|de|dass}} to subjunctive forms and optional pronouns to imperative forms; and the German
+	adjective module adds articles to adjective forms normally accompanied by articles and the equivalent of "he/she is"
+	etc. to predicate forms.) The default uses `full_link()` in [[Module:links]] concatenated with the appropriate
+	footnote symbol(s) (if any).
+### Generate the '''transliteration spans''', with one entry per distinct translit, auto-generated if manual translit
+    isn't available. Note that, due to the earlier form value deduplication step, there may be multiple translits per
+	form object. These translits are themselves deduplicated to get the list of spans. (Such duplication can happen, for
+	example, in Arabic with terms containing a glottal stop in them; there may be multiple ways of spelling the glottal
+	stop or ''hamza'' in Arabic, but only one way of transliterating it.) Each span consists of an object specifying
+	the translit minus any attached old-style footnote symbols (which are only allowed if
+	`props.allow_footnote_symbols` is set); the attached old-style footnote symbol, which is always an empty string when
+	`props.allow_footnote_symbols` is not set; and the list of (new-style) footnotes.
+
 `create_footnote_obj` is an optional function of no arguments to create the footnote object used to track footnotes;
-see export.create_footnote_obj(). Customizing it is useful to prepopulate the footnote table using
-export.get_footnote_text().
+see `create_footnote_obj()`. Customizing it is useful to prepopulate the footnote table using `get_footnote_text()`.
 
 `canonicalize` is an optional function of one argument (a form value) to canonicalize each form before processing; it
 can return nil for no change. The most common purpose of this function is to remove variant codes from the form value.
@@ -1599,7 +1794,7 @@ a whole. It runs after `canonicalize` (meaning that the form values passed in ar
 deduplication and the addition of acceleration info. The property table passed in has the following properties:
 * `slot`: The slot being considered.
 * `forms`: The list of form objects for this slot.
-* `accel_form`: The accelerator form string for this slot, taken from `slot_list` or `slot_table.
+* `accel_tag_set`: The accelerator tag set for this slot, taken from `slot_list` or `slot_table`.
 * `footnote_obj`: The footnote object returned by the `create_footnote_obj` property or the default
   `create_footnote_obj()` function.
 `preprocess_forms` should return a list of preprocessed form objects, or {nil} to use the passed-in `forms`. If this
@@ -1616,8 +1811,23 @@ be combined into a list (meaning the `translit` field of form objects in some su
 list; this will be noted when possible); and any remaining metadata will be combined using the `combine_forms` method,
 if provided.
 
-`combine_forms` is an optional function of one argument (a table of properties) to combine form objects during 
-
+`combine_metadata_during_dedup` is an optional function of one argument (a table of properties) to combine the metadata
+of deduplicated form objects. The property table passed in has the following properties:
+* `slot`: The slot being considered.
+* `existing_form`: The existing form object into which a duplicated form is being combined.
+* `dup_form`: The duplicated form being combined into `existing_form`.
+* `existing_form_pos`: The one-based position of the existing form in the deduplicated form list (not necessarily its
+  original position).
+* `dup_form_pos`: The one-based position of the duplicated form in its original list.
+The following should be noted about the form objects passed in:
+# The form values in `.form` have been canonicalized using `.canonicalize`, if provided.
+# The form values in `existing_form` and `dup_form` are always the same.
+# The footnotes in `existing_form` have already been combined with those in `dup_form`.
+# If there was manual translit either in `existing_form` (prior to deduplication) or in `dup_form`, there will be
+  manual translit in `existing_form.translit` that is a list and combines any previous accumulated translits in
+  `existing_form` as well as the translit in `dup_form` (even if one of them was specified as {nil} indicating an
+  automatic translit). This means that the translit in `existing_form.translit` is always either {nil} or a list of
+  strings (and the same applies to `dup_form.translit`).
 
 `generate_link` is an optional function to generate the link text for a given form. It is passed four arguments (slot,
 for, formval_for_link, accel_obj) where `slot` is the slot being processed, `form` is the specific form object to generate a
@@ -1655,27 +1865,28 @@ mechanism specified using the `footnotes` property attached to each form object.
 ]==]
 function export.show_forms(formtable, props)
 	local footnote_obj = props.create_footnote_obj and props.create_footnote_obj() or export.create_footnote_obj()
-	local function fetch_form_and_translit(entry, remove_links)
-		local form, translit
+	local function fetch_formval_and_translit(entry, remove_links)
+		local formval, translit
 		if type(entry) == "table" then
-			form, translit = entry.form, entry.translit
+			formval, translit = entry.form, entry.translit
 		else
-			form = entry
+			formval = entry
 		end
 		if remove_links then
-			form = m_links.remove_links(form)
+			formval = m_links.remove_links(form)
 		end
-		return form, translit
+		return formval, translit
 	end
 
-	local lemma_forms = {}
+	local lemma_formvals = {}
 	for _, lemma in ipairs(props.lemmas) do
-		local lemma_form, _ = fetch_form_and_translit(lemma)
-		m_table.insertIfNot(lemma_forms, lemma_form)
+		local lemma_formval, _ = fetch_formval_and_translit(lemma)
+		m_table.insertIfNot(lemma_formvals, lemma_formval)
 	end
-	formtable.lemma = #lemma_forms > 0 and table.concat(lemma_forms, ", ") or mw.title.getCurrentTitle().text
+	formtable.lemma = #lemma_formvals > 0 and table.concat(lemma_formvals, ", ") or
+		mw.loadData(headword_data_module).pagename
 
-	local function do_slot(slot, accel_form)
+	local function do_slot(slot, accel_tag_set)
 		local formobjs = formtable[slot]
 		if formobjs then
 			if type(formobjs) ~= "table" then
@@ -1694,7 +1905,7 @@ function export.show_forms(formtable, props)
 				formobjs = props.preprocess_forms {
 					slot = slot,
 					forms = formobjs,
-					accel_form = accel_form,
+					accel_tag_set = accel_tag_set,
 					footnote_obj = footnote_obj,
 				} or formobjs
 			end
@@ -1704,44 +1915,46 @@ function export.show_forms(formtable, props)
 			if not props.no_deduplicate_forms then
 				local deduped_formobjs = {}
 				for i, form in ipairs(formobjs) do
-					local function combine_forms(form, newform, pos)
-						assert(form.form == newform.form)
+					local function combine_forms(existing_form, dup_form, pos)
+						assert(existing_form.form == dup_form.form)
 						-- Combine footnotes.
-						form.footnotes = export.combine_footnotes(form.footnotes, newform.footnotes)
+						existing_form.footnotes = export.combine_footnotes(existing_form.footnotes, dup_form.footnotes)
 						-- If translit is being generated, and there's manual translit associated with either form, we
 						-- need to generate any missing translits and combine them, taking into account the fact that a
 						-- translit value may actually be a list of translits (particularly with the existing form if we
 						-- already combined an item with manual translit into it).
-						if props.include_translit and form_value_transliterable(form.form) and (
-								form.translit or newform.translit) then
+						if props.include_translit and form_value_transliterable(existing_form.form) and (
+								existing_form.translit or dup_form.translit) then
 							local combined_translit
-							if not form.translit then
-								combined_translit = {props_transliterate(props, m_links.remove_links(form.form))}
-							elseif type(form.translit) == "string" then
-								combined_translit = {form.translit}
+							if not existing_form.translit then
+								combined_translit = {
+									props_transliterate(props, m_links.remove_links(existing_form.form))
+								}
+							elseif type(existing_form.translit) == "string" then
+								combined_translit = {existing_form.translit}
 							else
-								combined_translit = form.translit
+								combined_translit = existing_form.translit
 							end
-							local newform_translit = newform.translit
-							if not newform_translit then
-								-- newform.form is the same as form.form (see assert above), but this is defensive
-								-- programming in case that changes
-								newform_translit = {props_transliterate(props, m_links.remove_links(newform.form))}
-							elseif type(newform_translit) == "string" then
-								newform_translit = {newform_translit}
+							local dup_form_translit = dup_form.translit
+							if not dup_form_translit then
+								-- dup_form.form is the same as existing_form.form (see assert above), but this is
+								-- defensive programming in case that changes
+								dup_form_translit = {props_transliterate(props, m_links.remove_links(dup_form.form))}
+							elseif type(dup_form_translit) == "string" then
+								dup_form_translit = {dup_form_translit}
 							end
-							for _, translit in ipairs(newform_translit) do
+							for _, translit in ipairs(dup_form_translit) do
 								m_table.insertIfNot(combined_translit, translit)
 							end
-							form.translit = combined_translit
+							existing_form.translit = combined_translit
 						end
-						if props.combine_forms then
-							props.combine_forms {
+						if props.combine_metadata_during_dedup then
+							props.combine_metadata_during_dedup {
 								slot = slot,
-								form = form,
-								formpos = pos,
-								newform = newform,
-								newformpos = i,
+								existing_form = existing_form,
+								existing_form_pos = pos,
+								dup_form = dup_form,
+								dup_form_pos = i,
 							}
 						end
 					end
@@ -1760,6 +1973,9 @@ function export.show_forms(formtable, props)
 					local formval_for_link, formval_footnote_symbol
 					if props.allow_footnote_symbols then
 						formval_for_link, formval_footnote_symbol = require(table_tools_module).get_notes(formval)
+						if formval_footnote_symbol ~= "" then
+							track("old-style-footnote-symbol")
+						end
 					else
 						formval_for_link = formval
 						formval_footnote_symbol = ""
@@ -1774,7 +1990,7 @@ function export.show_forms(formtable, props)
 					local accel_obj
 					-- Check if form still has links; if so, don't add accelerators because the resulting entries will
 					-- be wrong.
-					if props.lemmas[1] and not form.no_accel and accel_form ~= "-" and
+					if props.lemmas[1] and not form.no_accel and accel_tag_set ~= "-" and
 						not rfind(formval_for_link, "%[%[") then
 						-- If there is more than one form or more than one lemma, things get tricky. Often, there are
 						-- the same number of forms as lemmas, e.g. for Ukrainian [[зимовий]] "wintry; winter (rel.)",
@@ -1808,14 +2024,14 @@ function export.show_forms(formtable, props)
 						local accel_lemma, accel_lemma_translit
 						if first_lemma == last_lemma then
 							accel_lemma, accel_lemma_translit =
-								fetch_form_and_translit(props.lemmas[first_lemma], "remove links")
+								fetch_formval_and_translit(props.lemmas[first_lemma], "remove links")
 						else
 							accel_lemma = {}
 							accel_lemma_translit = {}
 							for j=first_lemma, last_lemma do
 								local this_lemma = props.lemmas[j]
 								local this_accel_lemma, this_accel_lemma_translit =
-									fetch_form_and_translit(props.lemmas[j], "remove links")
+									fetch_formval_and_translit(props.lemmas[j], "remove links")
 								-- Do not use table.insert() especially for the translit because it may be nil and in
 								-- that case we want gaps in the array.
 								accel_lemma[j - first_lemma + 1] = this_accel_lemma
@@ -1836,7 +2052,7 @@ function export.show_forms(formtable, props)
 						end
 
 						accel_obj = {
-							form = accel_form,
+							form = accel_tag_set,
 							translit = accel_translit,
 							lemma = accel_lemma,
 							lemma_translit = props.include_translit and accel_lemma_translit or nil,
@@ -1851,22 +2067,22 @@ function export.show_forms(formtable, props)
 			end
 
 			-- Format the form objects into a string for insertion into the table.
-			local formatted_formobjs
-			if props.format_formobjs then
-				formatted_formobjs = props.format_formobjs {
+			local formatted_forms
+			if props.format_forms then
+				formatted_forms = props.format_forms {
 					slot = slot,
-					formobjs = formobjs,
+					forms = forms,
 					footnote_obj = footnote_obj,
 				}
 			end
-			if not formatted_formobjs then
+			if not formatted_forms then
 				-- Default algorithm: Separate form values and translits and concatenate on separate lines.
 				-- Form values have already been deduplicated but we may need to deduplicate translits (this happens
 				-- e.g. in Arabic where there may be multiple ways of spelling a hamza in the Arabic script but only
 				-- one way in transliteration).
 				local formval_spans = {}
 				local tr_spans = {}
-				for i, form in ipairs(formobjs) do
+				for i, form in ipairs(forms) do
 					local link
 					if props.generate_link then
 						link = props.generate_link {
@@ -1892,6 +2108,9 @@ function export.show_forms(formtable, props)
 							local tr_for_tag, tr_footnote_symbol
 							if props.allow_footnote_symbols then
 								tr_for_tag, tr_footnote_symbol = require(table_tools_module).get_notes(tr)
+								if tr_footnote_symbol ~= "" then
+									track("old-style-footnote-symbol")
+								end
 							else
 								tr_for_tag = tr
 								tr_footnote_symbol = ""
@@ -1933,26 +2152,26 @@ function export.show_forms(formtable, props)
 				end
 
 				if props.join_spans then
-					formatted_formobjs = props.join_spans {
+					formatted_forms = props.join_spans {
 						slot = slot,
 						formval_spans = formval_spans,
 						tr_spans = tr_spans,
 					}
 				end
-				if not formatted_formobjs then
+				if not formatted_forms then
 					local formval_span = table.concat(formval_spans, ", ")
 					local tr_span
 					if #tr_spans > 0 then
 						tr_span = table.concat(tr_spans, ", ")
 					end
 					if tr_span then
-						formatted_formobjs = formval_span .. "<br />" .. tr_span
+						formatted_forms = formval_span .. "<br />" .. tr_span
 					else
-						formatted_formobjs = formval_span
+						formatted_forms = formval_span
 					end
 				end
 			end
-			formtable[slot] = formatted_formobjs
+			formtable[slot] = formatted_forms
 		else
 			formtable[slot] = "—"
 		end
@@ -1963,6 +2182,7 @@ function export.show_forms(formtable, props)
 	local all_notes = footnote_obj.notes
 	if props.footnotes then
 		for _, note in ipairs(props.footnotes) do
+			track("old-style-footnote-symbol")
 			local symbol, entry = require(table_tools_module).get_initial_notes(note)
 			table.insert(all_notes, symbol .. entry)
 		end
