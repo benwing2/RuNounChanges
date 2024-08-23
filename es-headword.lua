@@ -15,8 +15,6 @@ local es_verb_module = "Module:es-verb"
 local lang = require("Module:languages").getByCode("es")
 local langname = lang:getCanonicalName()
 
-local PAGENAME = mw.loadData("Module:headword/data").pagename
-
 local rsub = com.rsub
 local usub = mw.ustring.sub
 
@@ -50,7 +48,7 @@ function export.show(frame)
 
 	local args = require("Module:parameters").process(parargs, params)
 
-	local pagename = args.pagename or PAGENAME
+	local pagename = args.pagename or mw.loadData("Module:headword/data").pagename
 
 	local user_specified_heads = args.head
 	local heads = user_specified_heads

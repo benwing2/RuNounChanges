@@ -2,7 +2,7 @@ local export = {}
 
 local romut_module = "Module:romance utilities"
 
-local u = mw.ustring.char
+local u = require("Module:string/char")
 local rsplit = mw.text.split
 local rfind = mw.ustring.find
 local rmatch = mw.ustring.match
@@ -281,10 +281,15 @@ function export.strip_redundant_links(form)
 end
 
 
-function export.make_plural(form, special)
-	local retval = require(romut_module).handle_multiword(form, special, export.make_plural, prepositions)
+function export.make_plural(form, gender, special)
+	local retval = require(romut_module).handle_multiword(form, special,
+		function(term) return export.make_plural(term, gender) end, prepositions)
 	if retval then
 		return retval
+	end
+
+	if gender == "gneut" and rfind(form, "[x@]$") then
+		return {form .. "s"}
 	end
 
 	-- ends in unstressed vowel or á, é, ó
