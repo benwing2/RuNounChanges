@@ -35,7 +35,7 @@ local lang = require("Module:languages").getByCode("pt")
 local m_str_utils = require("Module:string utilities")
 local m_links = require("Module:links")
 local m_table = require("Module:table")
-local iut = require("Module:inflection utilities")
+local iut = require("Module:User:Benwing2/inflection utilities")
 local com = require("Module:pt-common")
 
 local add_links = com.add_links

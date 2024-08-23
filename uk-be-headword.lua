@@ -2,7 +2,7 @@ local export = {}
 
 local lang, langcode, langname
 local com
-local iut = require("Module:inflection utilities")
+local iut = require("Module:User:Benwing2/inflection utilities")
 local m_links = require("Module:links")
 local m_string_utilities = require("Module:string utilities")
 local m_table = require("Module:table")

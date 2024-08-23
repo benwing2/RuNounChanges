@@ -25,7 +25,7 @@ local lang = require("Module:languages").getByCode("de")
 local m_links = require("Module:links")
 local m_table = require("Module:table")
 local m_string_utilities = require("Module:string utilities")
-local iut = require("Module:inflection utilities")
+local iut = require("Module:User:Benwing2/inflection utilities")
 local com = require("Module:de-common")
 
 local u = mw.ustring.char
