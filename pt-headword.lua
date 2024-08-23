@@ -19,6 +19,7 @@ local force_cat = false -- for testing; if true, categories appear in non-mainsp
 local m_links = require("Module:links")
 local m_table = require("Module:table")
 local com = require("Module:pt-common")
+local inflection_utilities_module = "Module:User:Benwing2/inflection utilities"
 local romut_module = "Module:romance utilities"
 local pt_verb_module = "Module:pt-verb"
 local lang = require("Module:languages").getByCode("pt")
@@ -1246,7 +1247,8 @@ pos_functions["verbs"] = {
 					end
 					local form = arg
 					if not args.noautolinkverb then
-						form = com.add_links(form)
+						-- [[Module:inflection utilities]] already loaded by [[Module:pt-verb]]
+						form = require(inflection_utilities_module).add_links(form)
 					end
 					table.insert(forms, {form = form, footnotes = qual})
 				end

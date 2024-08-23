@@ -255,32 +255,6 @@ function export.accent_needed(syllables, sylno)
 end
 
 
--- Add links around words. If multiword_only, do it only in multiword forms.
-function export.add_links(form, multiword_only)
-	if form == "" or form == " " then
-		return form
-	end
-	if not form:find("%[%[") then
-		if rfind(form, "[%s%p]") then --optimization to avoid loading [[Module:headword]] on single-word forms
-			local m_headword = require("Module:headword")
-			if m_headword.head_is_multiword(form) then
-				form = m_headword.add_multiword_links(form)
-			end
-		end
-		if not multiword_only and not form:find("%[%[") then
-			form = "[[" .. form .. "]]"
-		end
-	end
-	return form
-end
-
-
-function export.strip_redundant_links(form)
-	-- Strip redundant brackets surrounding entire form.
-	return rmatch(form, "^%[%[([^%[%]]*)%]%]$") or form
-end
-
-
 function export.make_plural(form, gender, special)
 	local retval = require(romut_module).handle_multiword(form, special,
 		function(term) return export.make_plural(term, gender) end, prepositions)

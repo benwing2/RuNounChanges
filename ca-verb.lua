@@ -3218,7 +3218,7 @@ function export.do_generate_forms(args, source_template, headword_head)
 	-- Remove redundant brackets around entire forms.
 	for slot, forms in pairs(alternant_multiword_spec.forms) do
 		for _, form in ipairs(forms) do
-			form.form = com.strip_redundant_links(form.form)
+			form.form = iut.remove_redundant_links(form.form)
 		end
 	end
 

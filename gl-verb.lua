@@ -1913,67 +1913,12 @@ local function parse_indicator_spec(angle_bracket_spec)
 end
 
 
--- Reconstruct the overall verb spec from the output of iut.parse_inflected_text(), so we can use it in
--- [[Module:accel/pt]].
-function export.reconstruct_verb_spec(alternant_multiword_spec)
-	local parts = {}
-
-	for _, alternant_or_word_spec in ipairs(alternant_multiword_spec.alternant_or_word_specs) do
-		table.insert(parts, alternant_or_word_spec.user_specified_before_text)
-		if alternant_or_word_spec.alternants then
-			table.insert(parts, "((")
-			for i, multiword_spec in ipairs(alternant_or_word_spec.alternants) do
-				if i > 1 then
-					table.insert(parts, ",")
-				end
-				for _, word_spec in ipairs(multiword_spec.word_specs) do
-					table.insert(parts, word_spec.user_specified_before_text)
-					table.insert(parts, word_spec.user_specified_lemma)
-					table.insert(parts, word_spec.angle_bracket_spec)
-				end
-				table.insert(parts, multiword_spec.user_specified_post_text)
-			end
-			table.insert(parts, "))")
-		else
-			table.insert(parts, alternant_or_word_spec.user_specified_lemma)
-			table.insert(parts, alternant_or_word_spec.angle_bracket_spec)
-		end
-	end
-	table.insert(parts, alternant_multiword_spec.user_specified_post_text)
-
-	-- As a special case, if we see e.g. "amar<>", remove the <>. Don't do this if there are spaces or alternants.
-	local retval = table.concat(parts)
-	if not retval:find(" ") and not retval:find("%(%(") then
-		local retval_no_angle_brackets = retval:match("^(.*)<>$")
-		if retval_no_angle_brackets then
-			return retval_no_angle_brackets
-		end
-	end
-	return retval
-end
-
-
 -- Normalize all lemmas, substituting the pagename for blank lemmas and adding links to multiword lemmas.
 local function normalize_all_lemmas(alternant_multiword_spec, head)
 
 	-- (1) Add links to all before and after text. Remember the original text so we can reconstruct the verb spec later.
 	if not alternant_multiword_spec.args.noautolinktext then
-		for _, alternant_or_word_spec in ipairs(alternant_multiword_spec.alternant_or_word_specs) do
-			alternant_or_word_spec.user_specified_before_text = alternant_or_word_spec.before_text
-			alternant_or_word_spec.before_text = com.add_links(alternant_or_word_spec.before_text)
-			if alternant_or_word_spec.alternants then
-				for _, multiword_spec in ipairs(alternant_or_word_spec.alternants) do
-					for _, word_spec in ipairs(multiword_spec.word_specs) do
-						word_spec.user_specified_before_text = word_spec.before_text
-						word_spec.before_text = com.add_links(word_spec.before_text)
-					end
-					multiword_spec.user_specified_post_text = multiword_spec.post_text
-					multiword_spec.post_text = com.add_links(multiword_spec.post_text)
-				end
-			end
-		end
-		alternant_multiword_spec.user_specified_post_text = alternant_multiword_spec.post_text
-		alternant_multiword_spec.post_text = com.add_links(alternant_multiword_spec.post_text)
+		iut.add_links_to_before_and_after_text(alternant_multiword_spec, "remember original")
 	end
 
 	-- (2) Remove any links from the lemma, but remember the original form
@@ -2007,7 +1952,7 @@ local function normalize_all_lemmas(alternant_multiword_spec, head)
 			-- Add links to the lemma so the user doesn't specifically need to, since we preserve
 			-- links in multiword lemmas and include links in non-lemma forms rather than allowing
 			-- the entire form to be a link.
-			linked_lemma = com.add_links(base.user_specified_lemma)
+			linked_lemma = iut.add_links(base.user_specified_lemma)
 		end
 		base.linked_lemma = linked_lemma
 	end)
@@ -2324,7 +2269,7 @@ local function show_forms(alternant_multiword_spec)
 	if alternant_multiword_spec.forms.short_pp_ms then
 		alternant_multiword_spec.has_short_pp = true
 	end
-	local reconstructed_verb_spec = export.reconstruct_verb_spec(alternant_multiword_spec)
+	local reconstructed_verb_spec = iut.reconstruct_original_spec(alternant_multiword_spec)
 
 	local function transform_accel_obj(slot, formobj, accel_obj)
 		-- No accelerators for negative imperatives, which are always multiword and derived directly from the
@@ -2653,7 +2598,7 @@ function export.do_generate_forms(args, source_template, headword_head)
 	-- Remove redundant brackets around entire forms.
 	for slot, forms in pairs(alternant_multiword_spec.forms) do
 		for _, form in ipairs(forms) do
-			form.form = com.strip_redundant_links(form.form)
+			form.form = iut.remove_redundant_links(form.form)
 		end
 	end
 

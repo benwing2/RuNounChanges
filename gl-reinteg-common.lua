@@ -204,31 +204,4 @@ function export.make_masculine(term, special)
 		term
 end
 
--- FIXME: Next two copied from [[Module:es-common]]. Move to a utilities module.
-
--- Add links around words. If multiword_only, do it only in multiword terms.
-function export.add_links(term, multiword_only)
-	if term == "" or term == " " then
-		return term
-	end
-	if not term:find("%[%[") then
-		if rfind(term, "[%s%p]") then --optimization to avoid loading [[Module:headword]] on single-word terms
-			local m_headword = require("Module:headword")
-			if m_headword.head_is_multiword(term) then
-				term = m_headword.add_multiword_links(term)
-			end
-		end
-		if not multiword_only and not term:find("%[%[") then
-			term = "[[" .. term .. "]]"
-		end
-	end
-	return term
-end
-
-
-function export.strip_redundant_links(term)
-	-- Strip redundant brackets surrounding entire term.
-	return rmatch(term, "^%[%[([^%[%]]*)%]%]$") or term
-end
-
 return export

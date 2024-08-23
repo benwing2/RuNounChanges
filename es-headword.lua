@@ -8,6 +8,7 @@ local rmatch = mw.ustring.match
 
 local m_table = require("Module:table")
 local com = require("Module:es-common")
+local inflection_utilities_module = "Module:User:Benwing2/inflection utilities"
 local headword_module = "Module:headword"
 local romut_module = "Module:romance utilities"
 local es_verb_module = "Module:es-verb"
@@ -108,25 +109,6 @@ end
 -----------------------------------------------------------------------------------------
 --                                     Utility functions                               --
 -----------------------------------------------------------------------------------------
-
--- Add links around words. If multiword_only, do it only in multiword forms.
-local function add_links(form, multiword_only)
-	if form == "" or form == " " then
-		return form
-	end
-	if not form:find("%[%[") then
-		if rfind(form, "[%s%p]") then --optimization to avoid loading [[Module:headword]] on single-word forms
-			local m_headword = require(headword_module)
-			if m_headword.head_is_multiword(form) then
-				form = m_headword.add_multiword_links(form)
-			end
-		end
-		if not multiword_only and not form:find("%[%[") then
-			form = "[[" .. form .. "]]"
-		end
-	end
-	return form
-end
 
 local function glossary_link(entry, text)
 	text = text or entry
@@ -955,7 +937,8 @@ pos_functions["verbs"] = {
 					end
 					local form = arg
 					if not args.noautolinkverb then
-						form = add_links(form)
+						-- [[Module:inflection utilities]] already loaded by [[Module:es-verb]]
+						form = require(inflection_utilities_module).add_links(form)
 					end
 					table.insert(forms, {form = form, footnotes = qual})
 				end
