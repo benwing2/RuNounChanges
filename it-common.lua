@@ -1,14 +1,17 @@
 local ex = {} -- normally called `export` but there are so many references to exported functions in this module
 
-local put_module = "Module:User:Benwing2/parse utilities"
+local put_module = "Module:parse utilities"
 local romut_module = "Module:romance utilities"
 local strutil_module = "Module:string utilities"
 
-local u = mw.ustring.char
-local rfind = mw.ustring.find
-local rsubn = mw.ustring.gsub
-local rsplit = mw.text.split
+local m_str_utils = require(strutil_module)
 
+local u = m_str_utils.char
+local rfind = m_str_utils.find
+local rsubn = m_str_utils.gsub
+local rsplit = m_str_utils.split
+local toNFC = mw.ustring.toNFC
+local toNFD = mw.ustring.toNFD
 
 local prepositions = {
 	-- a, da + optional article
@@ -88,7 +91,7 @@ ex.accent_c = "[" .. ex.accent .. "]"
 -- vowels, and put ex.LINEUNDER/ex.DOTUNDER/ex.DOTOVER after acute/grave (canonical decomposition puts ex.LINEUNDER and ex.DOTUNDER
 -- first).
 function ex.decompose(text)
-	text = mw.ustring.toNFD(text)
+	text = toNFD(text)
 	text = ex.rsub(text, "." .. ex.DIA, {
 		["o" .. ex.DIA] = "ö",
 		["O" .. ex.DIA] = "Ö",
@@ -101,7 +104,7 @@ end
 
 -- Apply canonical Unicode composition to text, e.g. e + ◌̀ → è.
 function ex.compose(text)
-	return mw.ustring.toNFC(text)
+	return toNFC(text)
 end
 
 -- Split into words. Hyphens separate words but not when used to denote affixes, i.e. hyphens between non-spaces
@@ -115,7 +118,7 @@ function ex.split_but_rejoin_affixes(text)
 	-- get split. After splitting, replace the special character with a hyphen again.
 	local TEMP_HYPH = u(0xFFF0)
 	text = ex.rsub_repeatedly(text, "([^%s])%-([^%s])", "%1" .. TEMP_HYPH .. "%2")
-	local words = require(strutil_module).capturing_split(text, "([%s" .. TEMP_HYPH .. "]+)")
+	local words = rsplit(text, "([%s" .. TEMP_HYPH .. "]+)")
 	for i, word in ipairs(words) do
 		if word == TEMP_HYPH then
 			words[i] = "-"

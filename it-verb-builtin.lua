@@ -273,7 +273,7 @@ export.builtin_verbs = {
 	{"sumere", "ù,sùnsi,sùnto", "verbs in ''-sumere'' (<<assumere>>, <<consumere>>, <<presumere>>, <<resumere>>, etc.)"},
 	{"rimanere", "rimàngo^à,rimàsi,rimàsto.fut:rimarrò", "<<rimanere>>"},
 	{"permanere", "permàngo^à,permàsi,-.fut:permarrò", "<<permanere>>"},
-	{"tenere", "tèngo^tiène,ténni.fut:terrò", "<<tenere>> and derivatives"},
+	{"tenere", "tèngo^tiène:tiéne,ténni:tènni.fut:terrò", "<<tenere>> and derivatives"},
 	{"spegnere", "é:#è\\spéngo:#spèngo,spénsi:#spènsi,spénto:#spènto", "<<spegnere>> and derivatives"},
 	-- accignere, scignere, pignere and derivatives, strignere and derivatives, ugnere: all obsolete, unclear conjugation
 	-- Past participle cernìto; lacking in derivatives or rare -crèto. Both cerné and cernétte/cernètte
@@ -302,7 +302,7 @@ export.builtin_verbs = {
 	-- furere: archaic rare, unclear conjugation
 	{{term = "essere", prefixes = {"^", "ri"}}, [=[
 		è\-,-,stàto.
-		presrow:sóno,sèi,è,siàmo,siète,sóno.
+		presrow:sóno,sèi,è!,siàmo,siéte:#siète,sóno.
 		imperfrow:èro,èri,èra,eravàmo,eravàte,èrano.
 		phisrow:fùi,fósti,fù*,fùmmo,fóste,fùrono.
 		fut:sarò.
@@ -345,7 +345,7 @@ export.builtin_verbs = {
 	{"stinguere", "ì,stìnsi,stìnto", "verbs in ''-stinguere'' (<<estinguere>>, <<distinguere>> and derivatives)"},
 	-- delinquere, relinquere: defective, rare or poetic
 	{"riavere", [=[
-		-,rièbbi.
+		-,rièbbi:riébbi.
 		presrow:riò,riài,rià,riabbiàmo,riavéte,riànno.
 		fut:riavrò.
 		sub:riàbbia.
@@ -411,15 +411,16 @@ export.builtin_verbs = {
 	{"sbollire", "+isc:ó", "<<sbollire>>"},
 	{"bollire", "ó", "<<bollire>> and derivatives, except <<sbollire>>"},
 	{"dormire", "ò.presp:+:dormiènte", "<<dormire>> and derivatives"},
-	{"venire", "vèngo^viène,vénni,venùto.fut:verrò.presp:veniènte", "<<venire>> and derivatives"},
+	{"venire", "vèngo^viène:viéne,vénni:vènni,venùto.fut:verrò.presp:veniènte", "<<venire>> and derivatives"},
 	{{term = "mpire", prefixes = {"ade", "co"}}, "+isc.ger:mpièndo.presp:mpiènte", "<<adempire>> and <<compire>>"},
 	{"empire", "émpio,+:empiéi[less common],+:empiùto[less common].ger:empièndo.presp:empiènte",
 		"<<empire>> and <<riempire>>; not <<adempire>>, which has a more regular conjugation"},
 	{{term = "parire", prefixes = {"ap", "com"}}, "pàio:+isc^à:+isc,pàrvi:parìi[less common]:pàrsi[less common],pàrso", "<<apparire>>, <<comparire>> and derivatives; but note that <<comparire>> and <<scomparire>> need special treatment as different variant forms are associated with distinct meanings"},
 	{"^sparire", "+isc,spàrvi:sparìi[less common]:spàrsi[less common],spàrso", "<<sparire>>"},
 	{"disparire", "dispàio^à,+:dispàrvi", "<<disparire>>"},
-	{"trasparire", "traspàio:+isc^à:+isc", "<<trasparire>>"},
+	{"trasparire", "traspàio:+isc^à+:+isc", "<<trasparire>>"},
 	{"inferire", "+isc,infèrsi,infèrto", "<<inferire>> in the meaning \"to inflict, to strike\" (a blow); use 'a/+isc' for other meanings"},
+	{"profferire", "+isc,+:proffèrsi,proffèrto", "<<profferire>>"},
 	-- perire: regular except in archaic/poetic usage pèro, etc.
 	{"offrire", "ò,+:offèrsi[less common],offèrto.presp:offerènte", "<<offrire>>, <<soffrire>> and derivatives"},
 	{"morire", "muòio^muòre,+,mòrto.fut:+:morrò.presp:+", "<<morire>> and derivatives (<<smorire>> has no past participle and needs an override)"},
@@ -480,7 +481,7 @@ export.builtin_verbs = {
 ]=], "<<fare>> and derivatives; but not <<disfare>> or <<soddisfare>>"},
 	{"trarre", "tràggo,tràssi,tràtto.stem:tràe"},
 	-- archaic variant of trarre, with some different present tense (hence subjunctive/imperative) forms
-	{"traggere", "tràggo^tràgge,tràssi,tràtto.pres1p:traggiàmo.fut:trarrò.stem:tràe"},
+	{"traggere", "à\\tràggo^tràgge,tràssi,tràtto.pres1p:traggiàmo.fut:trarrò.stem:tràe"},
 	{{term = "bere", prefixes = {"^", "ri", "tra"}}, "bévo,bévvi:bevétti.fut:berrò.stem:béve",
 		"<<bere>>, <<strabere>>, <<trabere>>, <<ribere>>; but not verbs in ''-combere'', archaic <<ebere||to weaken>>, archaic <<iubere||to command, to order>> or obsolete <<assorbere>>"},
 	{"bevere", "é,bévvi:bevétti.fut:berrò", "<<bevere>> and derivatives (archaic variant of <<bere>>)"},

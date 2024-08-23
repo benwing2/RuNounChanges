@@ -25,22 +25,23 @@ local headword_module = "Module:headword"
 local romut_module = "Module:romance utilities"
 local it_verb_module = "Module:it-verb"
 local put_module = "Module:parse utilities"
-local strut_module = "Module:string utilities"
+local string_utilities_module = "Module:string utilities"
 local com = require("Module:it-common")
 local lang = require("Module:languages").getByCode("it")
 local langname = lang:getCanonicalName()
 -- Assigned to `require("Module:parse utilities")` as necessary.
 local put
+local m_str_utils = require(string_utilities_module)
 
-local u = mw.ustring.char
-local rfind = mw.ustring.find
-local rsubn = mw.ustring.gsub
-local rmatch = mw.ustring.match
-local rsplit = mw.text.split
-local ulower = mw.ustring.lower
-local uupper = mw.ustring.upper
-local usub = mw.ustring.sub
-local ulen = mw.ustring.len
+local rfind = m_str_utils.find
+local rsubn = m_str_utils.gsub
+local rmatch = m_str_utils.match
+local rsplit = m_str_utils.split
+local u = m_str_utils.char
+local ulower = m_str_utils.lower
+local uupper = m_str_utils.upper
+local usub = m_str_utils.sub
+local ulen = m_str_utils.len
 local unfd = mw.ustring.toNFD
 local unfc = mw.ustring.toNFC
 
@@ -112,7 +113,7 @@ function export.show(frame)
 
 	local args = require("Module:parameters").process(parargs, params)
 
-	local pagename = args.pagename or mw.title.getCurrentTitle().text
+	local pagename = args.pagename or mw.loadData("Module:headword/data").pagename
 
 	local user_specified_heads = args.head
 	local heads = user_specified_heads
@@ -308,7 +309,7 @@ local function parse_term_with_modifiers(paramname, val)
             split = put.split_escaping(val, splitchars, true, put.escape_comma_whitespace,
 				put.unescape_comma_whitespace)
         else
-            split = require(strut_module).capturing_split(val, "(" .. splitchars .. ")")
+            split = rsplit(val, "(" .. splitchars .. ")")
         end
 		retval = {}
         for j = 1, #split, 2 do
@@ -731,17 +732,17 @@ local function get_noun_params(nountype)
 	local params = {
 		[1] = {list = "g", required = nountype ~= "proper", default = "?"},
 		[2] = {list = "pl"},
-		["g_qual"] = {list = "g=_qual", allow_holes = true},
-		["pl_qual"] = {list = "pl=_qual", allow_holes = true},
-		["pl_g"] = {list = "pl=_g", allow_holes = true},
+		["g_qual"] = {list = "g\1_qual", allow_holes = true},
+		["pl_qual"] = {list = "pl\1_qual", allow_holes = true},
+		["pl_g"] = {list = "pl\1_g", allow_holes = true},
 		["m"] = {list = true},
-		["m_qual"] = {list = "m=_qual", allow_holes = true},
+		["m_qual"] = {list = "m\1_qual", allow_holes = true},
 		["f"] = {list = true},
-		["f_qual"] = {list = "f=_qual", allow_holes = true},
+		["f_qual"] = {list = "f\1_qual", allow_holes = true},
 		["mpl"] = {list = true},
-		["mpl_qual"] = {list = "mpl=_qual", allow_holes = true},
+		["mpl_qual"] = {list = "mpl\1_qual", allow_holes = true},
 		["fpl"] = {list = true},
-		["fpl_qual"] = {list = "fpl=_qual", allow_holes = true},
+		["fpl_qual"] = {list = "fpl\1_qual", allow_holes = true},
 	}
 	insert_deriv_params(params)
 	return params
@@ -971,19 +972,19 @@ local function get_adjective_params(adjtype)
 		["noforms"] = {type = "boolean"}, --too complicated to list forms except in a table
 		["sp"] = {}, -- special indicator: "first", "first-last", etc.
 		["f"] = {list = true}, --feminine form(s)
-		["f_qual"] = {list = "f=_qual", allow_holes = true},
+		["f_qual"] = {list = "f\1_qual", allow_holes = true},
 		["pl"] = {list = true}, --plural override(s)
-		["pl_qual"] = {list = "pl=_qual", allow_holes = true},
+		["pl_qual"] = {list = "pl\1_qual", allow_holes = true},
 		["fpl"] = {list = true}, --feminine plural override(s)
-		["fpl_qual"] = {list = "fpl=_qual", allow_holes = true},
+		["fpl_qual"] = {list = "fpl\1_qual", allow_holes = true},
 		["mpl"] = {list = true}, --masculine plural override(s)
-		["mpl_qual"] = {list = "mpl=_qual", allow_holes = true},
+		["mpl_qual"] = {list = "mpl\1_qual", allow_holes = true},
 	}
 	if adjtype == "base" or adjtype == "part" or adjtype == "det" then
 		params["comp"] = {list = true} --comparative(s)
-		params["comp_qual"] = {list = "comp=_qual", allow_holes = true}
+		params["comp_qual"] = {list = "comp\1_qual", allow_holes = true}
 		params["sup"] = {list = true} --superlative(s)
-		params["sup_qual"] = {list = "sup=_qual", allow_holes = true}
+		params["sup_qual"] = {list = "sup\1_qual", allow_holes = true}
 		params["fonly"] = {type = "boolean"} -- feminine only
 	end
 	if adjtype == "sup" then
@@ -1103,9 +1104,9 @@ local function get_adverb_params(advtype)
 	local params = {}
 	if advtype == "base" then
 		params["comp"] = {list = true} --comparative(s)
-		params["comp_qual"] = {list = "comp=_qual", allow_holes = true}
+		params["comp_qual"] = {list = "comp\1_qual", allow_holes = true}
 		params["sup"] = {list = true} --superlative(s)
-		params["sup_qual"] = {list = "sup=_qual", allow_holes = true}
+		params["sup_qual"] = {list = "sup\1_qual", allow_holes = true}
 	end
 	return params
 end
@@ -1309,7 +1310,7 @@ pos_functions["suffix forms"] = {
 	params = {
 		[1] = {required = true, list = true},
 		["g"] = {list = true},
-		["g_qual"] = {list = "g=_qual", allow_holes = true},
+		["g_qual"] = {list = "g\1_qual", allow_holes = true},
 	},
 	func = function(args, data, tracking_categories, frame)
 		data.genders = {}
@@ -1331,7 +1332,7 @@ pos_functions["arbitrary part of speech"] = {
 	params = {
 		[1] = {required = true},
 		["g"] = {list = true},
-		["g_qual"] = {list = "g=_qual", allow_holes = true},
+		["g_qual"] = {list = "g\1_qual", allow_holes = true},
 	},
 	func = function(args, data, tracking_categories, frame, is_suffix)
 		if is_suffix then
