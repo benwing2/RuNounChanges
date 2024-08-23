@@ -14,6 +14,9 @@ vowel_to_diacritic = {
   "-": "-",
 }
 
+ar_verb_template = "ar-verb/old"
+ar_conj_template = "ar-conj/old"
+
 @dataclass
 class ArConjProperties:
   vform: str
@@ -116,28 +119,29 @@ def process_text_on_page(index, pagetitle, text):
       origt = str(t)
       def getp(param):
         return getparam(t, param)
-      if tn == "ar-verb":
+      if tn == ar_verb_template:
         this_headts.append(t)
-      elif tn == "ar-conj":
+      elif tn == ar_conj_template:
         this_conjts.append(t)
     if this_headts and this_conjts:
-      pagemsg("WARNING: Saw both {{ar-verb}} and {{ar-conj}} templates in the same subsection %s" %
-              format_subsection_header_and_num(k))
+      pagemsg("WARNING: Saw both {{%s}} and {{%s}} templates in the same subsection %s" % (
+              ar_verb_template, ar_conj_template, format_subsection_header_and_num(k)))
       continue
     if this_headts:
       if headts:
-        pagemsg("WARNING: Saw successive {{ar-verb}} templates without corresponding {{ar-conj}} template(s) in subsection %s and %s" % (
-          headts_formatted_subsection_header, format_subsection_header_and_num(k)))
+        pagemsg("WARNING: Saw successive {{%s}} templates without corresponding {{%s}} template(s) in subsection %s and %s" % (
+          ar_verb_template, ar_conj_template, headts_formatted_subsection_header, format_subsection_header_and_num(k)))
       headts = this_headts
       headts_formatted_subsection_header = format_subsection_header_and_num(k)
     elif this_conjts:
       if not headts:
-        pagemsg("WARNING: Saw {{ar-conj}} template(s) without corresponding {{ar-verb}} template(s) in subsection %s" % (
-          format_subsection_header_and_num(k)))
+        pagemsg("WARNING: Saw {{%s}} template(s) without corresponding {{%s}} template(s) in subsection %s" % (
+          ar_conj_template, ar_verb_template, format_subsection_header_and_num(k)))
         continue
       if len(headts) != len(this_conjts):
-        pagemsg("WARNING: Saw %s {{ar-verb}} template(s) in subsection %s but %s corresponding {{ar-conj}} template(s) in subsection %s, can't handle" % (
-          len(headts), headts_formatted_subsection_header, len(this_conjts), format_subsection_header_and_num(k)))
+        pagemsg("WARNING: Saw %s {{%s}} template(s) in subsection %s but %s corresponding {{%s}} template(s) in subsection %s, can't handle" % (
+          len(headts), ar_verb_template, headts_formatted_subsection_header, len(this_conjts), ar_conj_template,
+          format_subsection_header_and_num(k)))
         heads = None
         continue
       for headt, conjt in zip(headts, this_conjts):
@@ -412,7 +416,8 @@ def process_text_on_page(index, pagetitle, text):
           conjt.add("1", allspec)
           pagemsg("Convert headword template %s to %s and conjugation template %s to %s" % (
             origheadt, str(headt), origconjt, str(conjt)))
-          notes.append("convert {{ar-verb}} and {{ar-conj}} for form %s to new format" % vform)
+          notes.append("convert {{%s}} and {{%s}} for form %s to new-format {{ar-verb}}/{{ar-conj}}" % (
+            ar_verb_template, ar_conj_template, vform))
       headts = None
 
   secbody_parts = []
