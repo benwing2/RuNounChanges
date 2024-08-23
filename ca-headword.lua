@@ -5,10 +5,11 @@ local force_cat = false -- for testing; if true, categories appear in non-mainsp
 
 local com = require("Module:ca-common")
 local m_table = require("Module:table")
+local inflection_utilities_module = "Module:User:Benwing2/inflection utilities"
 local parse_utilities_module = "Module:parse utilities"
 local romut_module = "Module:romance utilities"
 local ca_verb_module = "Module:ca-verb"
-local ca_IPA_module = "Module:User:Benwing2/ca-IPA"
+local ca_IPA_module = "Module:ca-IPA"
 
 local lang = require("Module:languages").getByCode("ca")
 local langname = lang:getCanonicalName()
@@ -49,7 +50,7 @@ function export.show(frame)
 	end
 	
 	local args = require("Module:parameters").process(frame:getParent().args, params)
-	local pagename = args.pagename or mw.title.getCurrentTitle().subpageText
+	local pagename = args.pagename or mw.loadData("Module:headword/data").pagename
 
 	local user_specified_heads = args.head
 	local heads = user_specified_heads
@@ -416,23 +417,23 @@ local function get_adjective_params(adjtype)
 		["sp"] = {}, -- special indicator: "first", "first-last", etc.
 		["f"] = {list = true}, --feminine form(s)
 		[1] = {alias_of = "f"},
-		["f_qual"] = {list = "f=_qual", allow_holes = true},
+		["f_qual"] = {list = "f\1_qual", allow_holes = true},
 		["pl"] = {list = true}, --plural override(s)
-		["pl_qual"] = {list = "pl=_qual", allow_holes = true},
+		["pl_qual"] = {list = "pl\1_qual", allow_holes = true},
 		["mpl"] = {list = true}, --masculine plural override(s)
-		["mpl_qual"] = {list = "mpl=_qual", allow_holes = true},
+		["mpl_qual"] = {list = "mpl\1_qual", allow_holes = true},
 		["fpl"] = {list = true}, --feminine plural override(s)
-		["fpl_qual"] = {list = "fpl=_qual", allow_holes = true},
+		["fpl_qual"] = {list = "fpl\1_qual", allow_holes = true},
 	}
 	if adjtype == "base" then
 		params["comp"] = {list = true} --comparative(s)
-		params["comp_qual"] = {list = "comp=_qual", allow_holes = true}
+		params["comp_qual"] = {list = "comp\1_qual", allow_holes = true}
 		params["sup"] = {list = true} --superlative(s)
-		params["sup_qual"] = {list = "sup=_qual", allow_holes = true}
+		params["sup_qual"] = {list = "sup\1_qual", allow_holes = true}
 		params["dim"] = {list = true} --diminutive(s)
-		params["dim_qual"] = {list = "dim=_qual", allow_holes = true}
+		params["dim_qual"] = {list = "dim\1_qual", allow_holes = true}
 		params["aug"] = {list = true} --augmentative(s)
-		params["aug_qual"] = {list = "aug=_qual", allow_holes = true}
+		params["aug_qual"] = {list = "aug\1_qual", allow_holes = true}
 		params["fonly"] = {type = "boolean"} -- feminine only
 		params["hascomp"] = {} -- has comparative
 	end
@@ -712,16 +713,16 @@ local function get_noun_params()
 	return {
 		[1] = {list = "g", required = true, default = "?"},
 		[2] = {list = "pl"},
-		["g_qual"] = {list = "g=_qual", allow_holes = true},
-		["pl_qual"] = {list = "pl=_qual", allow_holes = true},
+		["g_qual"] = {list = "g\1_qual", allow_holes = true},
+		["pl_qual"] = {list = "pl\1_qual", allow_holes = true},
 		["m"] = {list = true},
-		["m_qual"] = {list = "m=_qual", allow_holes = true},
+		["m_qual"] = {list = "m\1_qual", allow_holes = true},
 		["f"] = {list = true},
-		["f_qual"] = {list = "f=_qual", allow_holes = true},
+		["f_qual"] = {list = "f\1_qual", allow_holes = true},
 		["mpl"] = {list = true},
-		["mpl_qual"] = {list = "mpl=_qual", allow_holes = true},
+		["mpl_qual"] = {list = "mpl\1_qual", allow_holes = true},
 		["fpl"] = {list = true},
-		["fpl_qual"] = {list = "fpl=_qual", allow_holes = true},
+		["fpl_qual"] = {list = "fpl\1_qual", allow_holes = true},
 	}
 end
 
@@ -747,15 +748,15 @@ pos_functions["verbs"] = {
 	params = {
 		[1] = {},
 		["pres"] = {list = true}, --present
-		["pres_qual"] = {list = "pres=_qual", allow_holes = true},
+		["pres_qual"] = {list = "pres\1_qual", allow_holes = true},
 		["pres3s"] = {list = true}, --third-singular present
-		["pres3s_qual"] = {list = "pres3s=_qual", allow_holes = true},
+		["pres3s_qual"] = {list = "pres3s\1_qual", allow_holes = true},
 		["pret"] = {list = true}, --preterite
-		["pret_qual"] = {list = "pret=_qual", allow_holes = true},
+		["pret_qual"] = {list = "pret\1_qual", allow_holes = true},
 		["part"] = {list = true}, --participle
-		["part_qual"] = {list = "part=_qual", allow_holes = true},
+		["part_qual"] = {list = "part\1_qual", allow_holes = true},
 		["short_part"] = {list = true}, --short participle
-		["short_part_qual"] = {list = "short_part=_qual", allow_holes = true},
+		["short_part_qual"] = {list = "short_part\1_qual", allow_holes = true},
 		["noautolinktext"] = {type = "boolean"},
 		["noautolinkverb"] = {type = "boolean"},
 		["attn"] = {type = "boolean"},
@@ -863,7 +864,7 @@ pos_functions["verbs"] = {
 					end
 					local form = arg
 					if not args.noautolinkverb then
-						form = com.add_links(form)
+						form = require(inflection_utilities_module).add_links(form)
 					end
 					table.insert(forms, {form = form, footnotes = qual})
 				end
@@ -962,9 +963,9 @@ pos_functions["verbs"] = {
 			local function set_parsed_respelling(dialect, parsed)
 				-- Validate the individual root vowel specs.
 				for _, termobj in ipairs(parsed.terms) do
-					if not rfind(termobj.term, "^" .. m_ca_IPA.mid_vowel_hint_c .. "$") then
+					if not rfind(termobj.words[1].term, "^" .. m_ca_IPA.mid_vowel_hint_c .. "$") then
 						error(("Root vowel spec '%s' should be one of the vowels %s"):format(
-							termobj.term, m_ca_IPA.mid_vowel_hints))
+							termobj.words[1].term, m_ca_IPA.mid_vowel_hints))
 					end
 				end
 
@@ -1044,8 +1045,8 @@ pos_functions["verbs"] = {
 						dialect_spec = rest
 					end
 					local termobjs = {}
-					for _, term in ipairs(rsplit(dialect_spec, ",")) do
-						table.insert(termobjs, {term = term})
+					for _, word in ipairs(rsplit(dialect_spec, ",")) do
+						table.insert(termobjs, {words = {{term = word}}})
 					end
 					set_parsed_respelling(dialect, {
 						terms = termobjs,
@@ -1067,7 +1068,7 @@ pos_functions["verbs"] = {
 					table.insert(pronunciations, text)
 				end
 
-				-- Loop through each pronunciation. For each one, format the phonemic version "raw".
+				-- Loop through each pronunciation. For each one, format the phonetic version "raw".
 				for j, pronun in ipairs(grouped_pronun_spec.pronuns) do
 					-- Add dialect tags to left accent qualifiers if first one
 					local as = pronun.a
@@ -1084,15 +1085,16 @@ pos_functions["verbs"] = {
 						ins(", ")
 					end
 
-					local slash_pron = "/" .. pronun.phonemic:gsub("ˈ", "") .. "/"
+					local slash_pron = "/" .. pronun.phonetic:gsub("ˈ", "") .. "/"
 					if as or pronun.q or pronun.qq or pronun.aa then
-						local data = {
+						ins(require("Module:pron qualifier").format_qualifiers {
+							lang = lang,
+							text = slash_pron,
 							q = pronun.q,
 							a = as,
 							qq = pronun.qq,
 							aa = pronun.aa
-						}
-						ins(require("Module:pron qualifier").format_qualifiers(data, slash_pron))
+						})
 					else
 						ins(slash_pron)
 					end
@@ -1163,11 +1165,11 @@ pos_functions["numerals"] = {
 pos_functions["phrases"] = {
 	params = {
 		["g"] = {list = true},
-		["g_qual"] = {list = "g=_qual", allow_holes = true},
+		["g_qual"] = {list = "g\1_qual", allow_holes = true},
 		["m"] = {list = true},
-		["m_qual"] = {list = "m=_qual", allow_holes = true},
+		["m_qual"] = {list = "m\1_qual", allow_holes = true},
 		["f"] = {list = true},
-		["f_qual"] = {list = "f=_qual", allow_holes = true},
+		["f_qual"] = {list = "f\1_qual", allow_holes = true},
 	},
 	func = function(args, data, is_suffix)
 		data.genders = {}
@@ -1185,7 +1187,7 @@ pos_functions["suffix forms"] = {
 	params = {
 		[1] = {required = true, list = true},
 		["g"] = {list = true},
-		["g_qual"] = {list = "g=_qual", allow_holes = true},
+		["g_qual"] = {list = "g\1_qual", allow_holes = true},
 	},
 	func = function(args, data, is_suffix)
 		data.genders = {}
