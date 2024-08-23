@@ -1,10 +1,14 @@
 local export = {}
 
 local romut_module = "Module:romance utilities"
+local strutils_module = "Module:string utilities"
 
-local rsubn = mw.ustring.gsub
-local rfind = mw.ustring.find
-local rmatch = mw.ustring.match
+local m_str_utils = require(strutils_module)
+
+local concat = table.concat
+local rsubn = m_str_utils.gsub
+local rfind = m_str_utils.find
+local rmatch = m_str_utils.match
 
 local unaccented_vowel = "aeiouàAEIOUÀ"
 local accented_vowel = "áéíóúýâêôÁÉÍÓÚÝÂÊÔ"
@@ -88,7 +92,7 @@ local function call_handle_multiword(form, special, make_fun, fun_name)
 	local retval = require(romut_module).handle_multiword(form, special, make_fun, prepositions)
 	if retval then
 		if #retval ~= 1 then
-			error("Internal error: Should have one return value for " .. fun_name .. ": " .. table.concat(retval, ","))
+			error("Internal error: Should have one return value for " .. fun_name .. ": " .. concat(retval, ","))
 		end
 		return retval[1]
 	end
