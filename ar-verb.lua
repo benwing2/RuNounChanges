@@ -4059,10 +4059,10 @@ local function combine_lists(l1, l2)
 	return iut.combine_footnotes(l1, l2)
 end
 
-local function combine_ancillary_properties(data)
-	local src1 = data.formobj1
-	local src2 = data.formobj2
-	local dest = data.dest_formobj
+local function combine_metadata(data)
+	local src1 = data.form1
+	local src2 = data.form2
+	local dest = data.dest_form
 	dest.uncertain = src1.uncertain or src2.uncertain
 	if src1.genders and src2.genders and not m_table.deepEquals(src1.genders, src2.genders) then
 		-- do nothing
@@ -4169,7 +4169,7 @@ function export.do_generate_forms(args, source_template, headword_head)
 		lang = lang,
 		slot_list = alternant_multiword_spec.verb_slots,
 		inflect_word_spec = conjugate_verb,
-		combine_ancillary_properties = combine_ancillary_properties,
+		combine_metadata = combine_metadata,
 		-- We add links around the generated verbal forms rather than allow the entire multiword
 		-- expression to be a link, so ensure that user-specified links get included as well.
 		include_user_specified_links = true,
