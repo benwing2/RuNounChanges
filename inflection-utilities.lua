@@ -1694,10 +1694,12 @@ follows:
   canonicalize = nil or __function__(formval),
   preprocess_forms = nil `or` __function__(data),
   no_deduplicate_forms = __boolean__,
+  combine_metadata_during_dedup = nil `or` __function__(data),
   transform_accel_obj = nil `or` __function__(slot, form, accel_obj),
   format_forms = nil `or` __function__(data),
   generate_link = nil `or` __function__(data),
-  join_spans = nil or ``function_to_join_spans``,
+  format_tr = nil `or` __function__(data),
+  join_spans = nil `or` __function__(data),
   allow_footnote_symbols = __boolean__,
   footnotes = nil or {"``extra_footnote``", "``extra_footnote``", ...},
 }```
@@ -1754,14 +1756,14 @@ The function works as follows:
 	an internal link.
 ##* The accelerator code sets the `formval_for_link` key in each form object to the version of the form value that
     should be passed to `full_link()` in [[Module:links]]. This is usually the same as the passed-in form value, but
-	differs when `props.allow_footnote_symbols` is specified and a footnote symbol is attached to the form (the removed
-	footnote symbol is stored in the `formval_footnote_symbol` key), and also differs when the entire form value is
-	surrounded with a redundant internal link (which is removed).
+	differs when `props.allow_footnote_symbols` is specified and an old-style footnote symbol is attached to the form
+	(the removed footnote symbol is stored in the `formval_old_style_footnote_symbol` key), and also differs when the
+	entire form value is surrounded with a redundant internal link (which is removed).
 ##* The resulting accelerator object can be modified (or replaced entirely) by the `transform_accel_obj` function. This
     is used, for example, in [[Module:es-verb]], [[Module:pt-verb]] and other Romance-language verb conjugation modules
-	to replace the tag set with the original verb spec used to generate the verb, so that the accelerator code can
-	generate the appropriate call to {{tl|es-verb form of}}, {{tl|pt-verb form of}} or the like, which computes the
-	inflections, instead of directly listing the inflections.
+	(likewise [[Module:ar-verb]]) to replace the tag set with the original verb spec used to generate the verb, so that
+	the accelerator code can generate the appropriate call to {{tl|es-verb form of}}, {{tl|pt-verb form of}} or the
+	like, which computes the inflections, instead of directly listing the inflections.
 ## Format the forms into strings. The entire default process can be replaced using `format_forms`; otherwise the default
    algorithm works as follows:
 ### Generate the '''form value spans''', with one entry (a linked HTML-ized version of the form value) per form. This
@@ -1770,8 +1772,8 @@ The function works as follows:
 	verb modules italicize certain superseded or otherwise less-desirable forms instead of linking them normally; the
 	German verb module adds {{m|de|dass}} to subjunctive forms and optional pronouns to imperative forms; and the German
 	adjective module adds articles to adjective forms normally accompanied by articles and the equivalent of "he/she is"
-	etc. to predicate forms.) The default uses `full_link()` in [[Module:links]] concatenated with the appropriate
-	footnote symbol(s) (if any).
+	etc. to predicate forms.) The default uses `full_link()` in [[Module:links]] (with transliteration generation
+	disabled) concatenated with the appropriate footnote symbol(s) (if any).
 ### Generate the '''transliteration spans''', with one entry per distinct translit, auto-generated if manual translit
     isn't available. Note that, due to the earlier form value deduplication step, there may be multiple translits per
 	form object. These translits are themselves deduplicated to get the list of spans. (Such duplication can happen, for
@@ -1779,7 +1781,12 @@ The function works as follows:
 	stop or ''hamza'' in Arabic, but only one way of transliterating it.) Each span consists of an object specifying
 	the translit minus any attached old-style footnote symbols (which are only allowed if
 	`props.allow_footnote_symbols` is set); the attached old-style footnote symbol, which is always an empty string when
-	`props.allow_footnote_symbols` is not set; and the list of (new-style) footnotes.
+	`props.allow_footnote_symbols` is not set; and the list of (new-style) footnotes. These objects are then converted
+	to formatted strings, either using `format_tr` if supplied or else calling `tag_translit()` in
+	[[Module:script utilities]] and concatenating the appropriate footnote symbol(s) (if any).
+### Combine the form value and transliteration spans. If `join_spans` is supplied, use it; otherwise, concatenate the
+    form value spans (comma-separated) and (if available) transliteration spans (comma-separated), and (if appropriate)
+	combine them using {<br />}.
 
 `create_footnote_obj` is an optional function of no arguments to create the footnote object used to track footnotes;
 see `create_footnote_obj()`. Customizing it is useful to prepopulate the footnote table using `get_footnote_text()`.
@@ -1792,7 +1799,7 @@ purpose.
 `preprocess_forms` is an optional function of one argument (a table of properties) to preprocess the form objects as
 a whole. It runs after `canonicalize` (meaning that the form values passed in are canonicalized) and before
 deduplication and the addition of acceleration info. The property table passed in has the following properties:
-* `slot`: The slot being considered.
+* `slot`: The slot being processed.
 * `forms`: The list of form objects for this slot.
 * `accel_tag_set`: The accelerator tag set for this slot, taken from `slot_list` or `slot_table`.
 * `footnote_obj`: The footnote object returned by the `create_footnote_obj` property or the default
@@ -1800,20 +1807,11 @@ deduplication and the addition of acceleration info. The property table passed i
 `preprocess_forms` should return a list of preprocessed form objects, or {nil} to use the passed-in `forms`. If this
 function does deduplication, you should set `no_deduplicate_forms` to disable the default deduplication process.
 
-`no_deduplicate_forms`, if set, disables the deduplication step, which looks for two form objects that share the same
-form value and combines them. (This happens especially in the presence of transliteration, e.g. in Russian, where it
-is relatively common for a given form to have two possible transliterations, one reflecting a more nativized
-pronunciation where Cyrillic е triggers palatalization of the preceding consonant, and one reflecting a more "foreign"
-pronunciation where this palatalization does not happen. In such a case, the automatic transliteration would normally
-suffice for the more nativized pronunciation but the more "foreign" pronunciation will need manual transliteration.)
-As part of deduplication, footnotes will be combined using `combine_footnotes`; distinct manual transliterations will
-be combined into a list (meaning the `translit` field of form objects in some subsequent `props` functions may hold a
-list; this will be noted when possible); and any remaining metadata will be combined using the `combine_forms` method,
-if provided.
+`no_deduplicate_forms`, if set, disables the deduplication step (see above).
 
 `combine_metadata_during_dedup` is an optional function of one argument (a table of properties) to combine the metadata
 of deduplicated form objects. The property table passed in has the following properties:
-* `slot`: The slot being considered.
+* `slot`: The slot being processed.
 * `existing_form`: The existing form object into which a duplicated form is being combined.
 * `dup_form`: The duplicated form being combined into `existing_form`.
 * `existing_form_pos`: The one-based position of the existing form in the deduplicated form list (not necessarily its
@@ -1829,35 +1827,79 @@ The following should be noted about the form objects passed in:
   automatic translit). This means that the translit in `existing_form.translit` is always either {nil} or a list of
   strings (and the same applies to `dup_form.translit`).
 
-`generate_link` is an optional function to generate the link text for a given form. It is passed four arguments (slot,
-for, formval_for_link, accel_obj) where `slot` is the slot being processed, `form` is the specific form object to generate a
-link for, `formval_for_link` is the actual text to convert into a link, and `accel_obj` is the accelerator object to include
-in the link. If nil is returned, the default algorithm will apply, which is to call
-`full_link{lang = lang, term = formval_for_link, tr = "-", accel = accel_obj}` from [[Module:links]]. This can be used e.g. to
-customize the appearance of the link. Note that the link should not include any transliteration because it is handled
-specially (all transliterations are grouped together).
+`transform_accel_obj` is an optional function of three arguments (``slot``, ``formobj``, ``accel_obj``) to transform the
+default constructed accelerator object in ``accel_obj`` into an object that should be passed to `full_link()` in
+[[Module:links]].  It should return the new accelerator object, or {nil} for no acceleration. (If {nil} is returned,
+the corresponding form has no acceleration; this is unlike most customization functions, where returning {nil} causes
+the default algorithm to be invoked.) The function can destructively modify the accelerator object passed in.
+'''NOTE''': This is called even when the passed-in ``accel_obj`` is {nil} (see the (a) through (e) reasons above why no
+acceleration may be assigned to a form). Thus, your code needs to do something sensible in this case. The description
+above of how `show_forms()` works inclues various examples of modules that supply a `transform_accel_obj` function and
+the reasons for doing so.
 
-`transform_link` is an optional function to transform a linked form prior to further processing. It is passed three
-arguments (slot, link, link_tr) and should return the transformed link (or if translit is active, it should return two
-values, the transformed link and corresponding translit). It can return nil for no change. `transform_link` is used,
-for example, in [[Module:de-verb]], where it adds the appropriate pronoun ([[ich]], [[du]], etc.) to finite verb forms,
-and adds [[dass]] before special subordinate-clause variants of finite verb forms.
+`format_forms`, if supplied, is a function that entirely replaces the formatting portion of `show_forms()`. An example
+of why you might want to do this is to get a different layout than the default, e.g. one where translit is displayed
+next to each form value instead of the form values and translits grouped and displayed on separate lines. Under normal
+circumstances, you should not do this, but instead customize the functions that replace specific parts of the default
+formatting algorithm (see below). This function is passed one argument (a table of properties) and should return a
+string (the formatted forms, ready to store into the slot in the form table) or {nil} to proceed with the default
+algorithm (see above). The property table passed in has the following properties:
+* `slot`: The slot being processed.
+* `forms`: The list of form objects, deduplicated and with accelerator info added.
+* `footnote_obj`: The footnote object returned by the `create_footnote_obj` property or the default
+  `create_footnote_obj()` function.
+The following should be noted about the form objects in `forms`:
+# There are extra fields `formval_for_link`, `formval_old_style_footnote_symbol` and `accel_obj`. The first two are as
+described above under the paragraph beginning "Add acceleration to all forms" under "The function works as follows".
+The third one is the accelerator object in the format expected by [[Module:links]].
+# The `translit` field, if non-{nil}, is a list of transliterations rather than a single transliteration; this is due to
+the form value deduplication step.
 
-`transform_accel_obj` is an optional function of three arguments (slot, formobj, accel_obj) to transform the default
-constructed accelerator object in `accel_obj` into an object that should be passed to full_link() in [[Module:links]].
-It should return the new accelerator object, or nil for no acceleration. It can destructively modify the accelerator
-object passed in. NOTE: This is called even when the passed-in `accel_obj` is nil (either because the accelerator in
-`slot_table` or `slot_list` is "-", or because the form contains links, or because for some reason there is no lemma
-available). If is used e.g. in [[Module:es-verb]] and [[Module:pt-verb]] to replace the form with the original verb
-spec used to generate the verb, so that the accelerator code can generate the appropriate call to {{es-verb form of}}
-or {{pt-verb form of}}, which computes the inflections, instead of directly listing the inflections.
+`generate_link` is an optional function to generate the link text for a given form value. It is passed a single argument
+(a table of properties) and should return a string, the formatted link. If it returns {nil}, the default algorithm (see
+above) is invoked. The property table passed in has the following properties:
+* `slot`: The slot being processed.
+* `form`: The form to be converted to a formatted link. As with the `format_forms` function described above, the form
+  objects passed in contain extra fields `formval_for_link`, `formval_old_style_footnote_symbol` and `accel_obj` (all
+  of which will normally be used), and the `translit` field, if non-{nil}, is a list.
+* `pos`: The one-based position of the form being processed, in the list of form value spans. Rarely used.
+* `footnote_obj`: The footnote object returned by the `create_footnote_obj` property or the default
+  `create_footnote_obj()` function. Normally used in order to get the (new-style) footnote symbol associated with any
+  footnotes in `footnotes`.
+The description above of how `show_forms()` works inclues various examples of modules that supply a `generate_link`
+function and the reasons for doing so.
 
-`join_spans` is an optional function of three arguments (slot, orig_spans, tr_spans) where the spans in question are
-after linking and footnote processing. It should return a string (the joined spans) or nil for the default algorithm,
-which separately joins the orig_spans and tr_spans with commas and puts a newline between them.
+`format_tr` is an optional function to generate the formatted text for a given transliteration. It is passed a single
+argument (a table of properties) and should return a string, the formatted transliteration text. If it returns {nil},
+the default algorithm (see above) is invoked. The property table passed in has the following properties:
+* `slot`: The slot being processed.
+* `tr_for_tag`: The transliteration to process, where old-style footnote symbols have been removed.
+* `old_style_footnote_symbol`: The removed old-style footnote symbol, or a blank string if no symbol was removed.
+* `pos`: The one-based position of the transliteration being processed, in the list of transliteration spans. Rarely
+  used.
+* `footnotes`: The list of footnotes associated with all form objects with this transliteration. (If there were multiple
+  form objects with the same transliteration, the list of footnotes will have been generated using
+  `combine_footnotes()`.)
+* `footnote_obj`: The footnote object returned by the `create_footnote_obj` property or the default
+  `create_footnote_obj()` function. Normally used in order to get the (new-style) footnote symbol associated with any
+  footnotes in `footnotes`.
 
-`allow_footnote_symbols`, if given, causes any footnote symbols attached to forms (e.g. numbers, asterisk) to be
-separated off, placed outside the links, and superscripted. In this case, `footnotes` should be a list of footnotes
+`join_spans` is an optional function to join the processed form value and transliteration spans into a formatted string.
+It is passed a single argument (a table of properties) and should return the final string to store into the form table
+slot. If it returns {nil}, the default algorithm (see above) is invoked. The property table passed in has the following
+properties:
+* `slot`: The slot being processed.
+* `formval_spans`: A list of strings, the formatted form value spans.
+* `tr_spans`: A list of strings, the formatted transliteration spans. If there is no transliteration, this will be an
+  empty list.
+A custom `join_spans` is provided by [[Module:de-verb]], which concatenates the form value spans vertically (using
+{"<br />"}) instead of horizontally using a comma, as is normal; this is because there is no translit and the form
+values are often long, containing extra words attached during `generate_link()`. The only exception is the `aux` slot
+holding the auxiliaries, which is concatenated horizontally using {" or "}. [[Module:de-adjective]] similarly provides
+a custom `join_spans` function that concatenates the form value spans vertically.
+
+`allow_footnote_symbols`, if given, causes any old-style footnote symbols attached to forms (e.g. numbers, asterisk) to
+be separated off, placed outside the links, and superscripted. In this case, `footnotes` should be a list of footnotes
 (preceded by footnote symbols, which are superscripted). These footnotes are combined with any footnotes found in the
 forms and placed into `forms.footnotes`. This mechanism of specifying footnotes is provided for backward compatibility
 with certain existing inflection modules and should not be used for new modules. Instead, use the regular footnote
@@ -1970,20 +2012,21 @@ function export.show_forms(formtable, props)
 			for i, form in ipairs(formobjs) do
 				local formval = form.form
 				if form_value_transliterable(formval) then
-					local formval_for_link, formval_footnote_symbol
+					local formval_for_link, formval_old_style_footnote_symbol
 					if props.allow_footnote_symbols then
-						formval_for_link, formval_footnote_symbol = require(table_tools_module).get_notes(formval)
-						if formval_footnote_symbol ~= "" then
+						formval_for_link, formval_old_style_footnote_symbol =
+							require(table_tools_module).get_notes(formval)
+						if formval_old_style_footnote_symbol ~= "" then
 							track("old-style-footnote-symbol")
 						end
 					else
 						formval_for_link = formval
-						formval_footnote_symbol = ""
+						formval_old_style_footnote_symbol = ""
 					end
 					-- remove redundant link surrounding entire form
 					formval_for_link = export.remove_redundant_links(formval_for_link)
 					form.formval_for_link = formval_for_link
-					form.formval_footnote_symbol = formval_footnote_symbol
+					form.formval_old_style_footnote_symbol = formval_old_style_footnote_symbol
 
 					-------------------- Compute the accelerator object. -----------------
 
@@ -2095,36 +2138,38 @@ function export.show_forms(formtable, props)
 					if not link then
 						link = m_links.full_link {
 							lang = props.lang, term = form.formval_for_link, tr = "-", accel = form.accel_obj
-						} .. form.footnote_symbol .. export.get_footnote_text(form.footnotes, footnote_obj)
+						} .. form.formval_old_style_footnote_symbol ..
+						export.get_footnote_text(form.footnotes, footnote_obj)
 					end
 					formval_spans[i] = link
 					if props.include_translit then
-						-- Note that if there is an attached footnote symbol, we transliterate it.
+						-- Note that if there is an attached old-style footnote symbol, we transliterate it.
 						local translits = form.translit or props_transliterate(props, m_links.remove_links(form.form))
 						if type(translits) == "string" then
 							translits = {translits}
 						end
 						for _, tr in ipairs(translits) do
-							local tr_for_tag, tr_footnote_symbol
+							local tr_for_tag, tr_old_style_footnote_symbol
 							if props.allow_footnote_symbols then
-								tr_for_tag, tr_footnote_symbol = require(table_tools_module).get_notes(tr)
-								if tr_footnote_symbol ~= "" then
+								tr_for_tag, tr_old_style_footnote_symbol = require(table_tools_module).get_notes(tr)
+								if tr_old_style_footnote_symbol ~= "" then
 									track("old-style-footnote-symbol")
 								end
 							else
 								tr_for_tag = tr
-								tr_footnote_symbol = ""
+								tr_old_style_footnote_symbol = ""
 							end
 							m_table.insertIfNot(tr_spans, {
 								tr_for_tag = tr_for_tag,
-								footnote_symbol = tr_footnote_symbol,
+								old_style_footnote_symbol = tr_old_style_footnote_symbol,
 								footnotes = form.footnotes,
 							}, {
 								key = function(trobj) return trobj.tr_for_tag end,
 								combine = function(tr, newtr)
 									-- Combine footnotes.
 									tr.footnotes = export.combine_footnotes(tr.footnotes, newtr.footnotes)
-									tr.footnote_symbol = tr.footnote_symbol .. newtr.footnote_symbol
+									tr.old_style_footnote_symbol = tr.old_style_footnote_symbol ..
+										newtr.old_style_footnote_symbol
 								end,
 							})
 						end
@@ -2138,14 +2183,14 @@ function export.show_forms(formtable, props)
 							slot = slot,
 							pos = i,
 							tr_for_tag = tr_span.tr_for_tag,
-							footnote_symbol = tr_span.footnote_symbol,
+							old_style_footnote_symbol = tr_span.old_style_footnote_symbol,
 							footnotes = tr_span.footnotes,
 							footnote_obj = footnote_obj,
 						}
 					end
 					if not formatted_tr then
 						formatted_tr = require(script_utilities_module).tag_translit(tr_span.tr_for_tag, props.lang,
-							"default", " style=\"color: #888;\"") .. tr_span.footnote_symbol ..
+							"default", " style=\"color: #888;\"") .. tr_span.old_style_footnote_symbol ..
 							export.get_footnote_text(tr_span.footnotes, footnote_obj)
 					end
 					tr_spans[i] = formatted_tr
