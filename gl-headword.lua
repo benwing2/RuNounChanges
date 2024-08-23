@@ -105,7 +105,7 @@ local function do_headword(parargs, poscat, is_reinteg)
 
 	local args = require("Module:parameters").process(parargs, params)
 
-	local pagename = args.pagename or mw.title.getCurrentTitle().text
+	local pagename = args.pagename or mw.loadData("Module:headword/data").pagename
 
 	local user_specified_heads = args.head
 	local heads = user_specified_heads
@@ -565,16 +565,16 @@ local function get_noun_params()
 	return {
 		[1] = {list = "g", required = true, default = "?"},
 		[2] = {list = "pl"},
-		["g_qual"] = {list = "g=_qual", allow_holes = true},
-		["pl_qual"] = {list = "pl=_qual", allow_holes = true},
+		["g_qual"] = {list = "g\1_qual", allow_holes = true},
+		["pl_qual"] = {list = "pl\1_qual", allow_holes = true},
 		["m"] = {list = true},
-		["m_qual"] = {list = "m=_qual", allow_holes = true},
+		["m_qual"] = {list = "m\1_qual", allow_holes = true},
 		["f"] = {list = true},
-		["f_qual"] = {list = "f=_qual", allow_holes = true},
+		["f_qual"] = {list = "f\1_qual", allow_holes = true},
 		["mpl"] = {list = true},
-		["mpl_qual"] = {list = "mpl=_qual", allow_holes = true},
+		["mpl_qual"] = {list = "mpl\1_qual", allow_holes = true},
 		["fpl"] = {list = true},
-		["fpl_qual"] = {list = "fpl=_qual", allow_holes = true},
+		["fpl_qual"] = {list = "fpl\1_qual", allow_holes = true},
 	}
 end
 
@@ -642,21 +642,21 @@ end
 local function get_pronoun_params()
 	local params = {
 		[1] = {list = "g"}, --gender(s)
-		["g_qual"] = {list = "g=_qual", allow_holes = true},
+		["g_qual"] = {list = "g\1_qual", allow_holes = true},
 		["m"] = {list = true}, --masculine form(s)
-		["m_qual"] = {list = "m=_qual", allow_holes = true},
+		["m_qual"] = {list = "m\1_qual", allow_holes = true},
 		["f"] = {list = true}, --feminine form(s)
-		["f_qual"] = {list = "f=_qual", allow_holes = true},
+		["f_qual"] = {list = "f\1_qual", allow_holes = true},
 		["sg"] = {list = true}, --singular form(s)
-		["sg_qual"] = {list = "sg=_qual", allow_holes = true},
+		["sg_qual"] = {list = "sg\1_qual", allow_holes = true},
 		["pl"] = {list = true}, --plural form(s)
-		["pl_qual"] = {list = "pl=_qual", allow_holes = true},
+		["pl_qual"] = {list = "pl\1_qual", allow_holes = true},
 		["mpl"] = {list = true}, --masculine plural form(s)
-		["mpl_qual"] = {list = "mpl=_qual", allow_holes = true},
+		["mpl_qual"] = {list = "mpl\1_qual", allow_holes = true},
 		["fpl"] = {list = true}, --feminine plural form(s)
-		["fpl_qual"] = {list = "fpl=_qual", allow_holes = true},
+		["fpl_qual"] = {list = "fpl\1_qual", allow_holes = true},
 		["n"] = {list = true}, --neuter form(s)
-		["n_qual"] = {list = "n=_qual", allow_holes = true},
+		["n_qual"] = {list = "n\1_qual", allow_holes = true},
 	}
 	return params
 end
@@ -989,23 +989,23 @@ local function get_adjective_params(adjtype)
 		["inv"] = {type = "boolean"}, --invariable
 		["sp"] = {}, -- special indicator: "first", "first-last", etc.
 		["f"] = {list = true}, --feminine form(s)
-		["f_qual"] = {list = "f=_qual", allow_holes = true},
+		["f_qual"] = {list = "f\1_qual", allow_holes = true},
 		["pl"] = {list = true}, --plural override(s)
-		["pl_qual"] = {list = "pl=_qual", allow_holes = true},
+		["pl_qual"] = {list = "pl\1_qual", allow_holes = true},
 		["mpl"] = {list = true}, --masculine plural override(s)
-		["mpl_qual"] = {list = "mpl=_qual", allow_holes = true},
+		["mpl_qual"] = {list = "mpl\1_qual", allow_holes = true},
 		["fpl"] = {list = true}, --feminine plural override(s)
-		["fpl_qual"] = {list = "fpl=_qual", allow_holes = true},
+		["fpl_qual"] = {list = "fpl\1_qual", allow_holes = true},
 	}
 	if adjtype == "base" then
 		params["comp"] = {list = true} --comparative(s)
-		params["comp_qual"] = {list = "comp=_qual", allow_holes = true}
+		params["comp_qual"] = {list = "comp\1_qual", allow_holes = true}
 		params["sup"] = {list = true} --superlative(s)
-		params["sup_qual"] = {list = "sup=_qual", allow_holes = true}
+		params["sup_qual"] = {list = "sup\1_qual", allow_holes = true}
 		params["dim"] = {list = true} --diminutive(s)
-		params["dim_qual"] = {list = "dim=_qual", allow_holes = true}
+		params["dim_qual"] = {list = "dim\1_qual", allow_holes = true}
 		params["aug"] = {list = true} --augmentative(s)
-		params["aug_qual"] = {list = "aug=_qual", allow_holes = true}
+		params["aug_qual"] = {list = "aug\1_qual", allow_holes = true}
 		params["fonly"] = {type = "boolean"} -- feminine only
 		params["hascomp"] = {} -- has comparative
 	end
@@ -1017,7 +1017,7 @@ local function get_adjective_params(adjtype)
 	end
 	if adjtype == "pron" or adjtype == "contr" then
 		params["n"] = {list = true} --neuter form(s)
-		params["n_qual"] = {list = "n=_qual", allow_holes = true}
+		params["n_qual"] = {list = "n\1_qual", allow_holes = true}
 	end
 	return params
 end
@@ -1094,9 +1094,9 @@ local function get_adverb_params(advtype)
 	local params = {}
 	if advtype == "base" then
 		params["comp"] = {list = true} --comparative(s)
-		params["comp_qual"] = {list = "comp=_qual", allow_holes = true}
+		params["comp_qual"] = {list = "comp\1_qual", allow_holes = true}
 		params["sup"] = {list = true} --superlative(s)
-		params["sup_qual"] = {list = "sup=_qual", allow_holes = true}
+		params["sup_qual"] = {list = "sup\1_qual", allow_holes = true}
 		params["hascomp"] = {} -- has comparative
 	end
 	return params
@@ -1132,15 +1132,15 @@ pos_functions["verbs"] = {
 	params = {
 		[1] = {},
 		["pres"] = {list = true}, --present
-		["pres_qual"] = {list = "pres=_qual", allow_holes = true},
+		["pres_qual"] = {list = "pres\1_qual", allow_holes = true},
 		["pres3s"] = {list = true}, --third-singular present
-		["pres3s_qual"] = {list = "pres3s=_qual", allow_holes = true},
+		["pres3s_qual"] = {list = "pres3s\1_qual", allow_holes = true},
 		["pret"] = {list = true}, --preterite
-		["pret_qual"] = {list = "pret=_qual", allow_holes = true},
+		["pret_qual"] = {list = "pret\1_qual", allow_holes = true},
 		["part"] = {list = true}, --participle
-		["part_qual"] = {list = "part=_qual", allow_holes = true},
+		["part_qual"] = {list = "part\1_qual", allow_holes = true},
 		["short_part"] = {list = true}, --short participle
-		["short_part_qual"] = {list = "short_part=_qual", allow_holes = true},
+		["short_part_qual"] = {list = "short_part\1_qual", allow_holes = true},
 		["noautolinktext"] = {type = "boolean"},
 		["noautolinkverb"] = {type = "boolean"},
 		["attn"] = {type = "boolean"},
@@ -1353,7 +1353,7 @@ pos_functions["suffix forms"] = {
 	params = {
 		[1] = {required = true, list = true},
 		["g"] = {list = true},
-		["g_qual"] = {list = "g=_qual", allow_holes = true},
+		["g_qual"] = {list = "g\1_qual", allow_holes = true},
 	},
 	func = function(args, data, is_suffix)
 		data.genders = {}

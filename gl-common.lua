@@ -1,5 +1,7 @@
 local export = {}
 
+local romut_module = "Module:romance utilities"
+
 local u = mw.ustring.char
 local rsplit = mw.text.split
 local rsubn = mw.ustring.gsub
@@ -281,8 +283,9 @@ function export.stressed_syllable(syllables)
 		return 1
 	end
 	local i = #syllables
-	-- Unaccented words ending in a vowel or a vowel + n/s/ns are stressed on the preceding syllable.
-	if rfind(syllables[i], V .. "n?s?$") then
+	-- Unaccented words ending in a non-diphthong vowel optionally followed by n/s/ns are stressed on the preceding
+	-- syllable.
+	if rfind(syllables[i], V .. "n?s?$") and not rfind(syllables[i], V .. "[iu]n?s?$") then
 		return i - 1
 	end
 	-- Remaining words are stressed on the last syllable.
