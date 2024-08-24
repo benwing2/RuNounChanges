@@ -2,9 +2,9 @@
 
 local ar_translit = require("Module:ar-translit")
 local m_str_utils = require("Module:string utilities")
-local ar_verb_module = "Module:User:Benwing2/ar-verb"
-local inflection_utilities_module = "Module:User:Benwing2/inflection utilities"
-local parse_utilities_module = "Module:User:Benwing2/parse utilities"
+local ar_verb_module = "Module:ar-verb"
+local inflection_utilities_module = "Module:inflection utilities"
+local parse_utilities_module = "Module:parse utilities"
 
 local list_to_set = require("Module:table").listToSet
 local rfind = m_str_utils.find
@@ -537,12 +537,12 @@ local function make_nisba_default(ending, endingtr)
 	return function(args, data)
 		local heads = data.heads
 		if #heads == 0 then
-			heads = {data.pagename}
+			heads = {{term = data.pagename}}
 		end
 		local forms = {}
 		for i = 1, #heads do
-			local tr = data.translits[i]
-			table.insert(forms, {term = heads[i] .. ending, translit = tr and tr .. endingtr or nil})
+			local tr = data.heads[i].tr
+			table.insert(forms, {term = heads[i].term .. ending, translit = tr and tr .. endingtr or nil})
 		end
 		return forms
 	end
@@ -982,7 +982,8 @@ pos_functions["verbs"] = {
 		) then
 			data.heads = {}
 			for _, lemma_obj in ipairs(alternant_multiword_spec.forms.infinitive_linked) do
-				local quals, refs = expand_footnotes_and_references(lemma_obj.footnotes)
+				local quals, refs = require(inflection_utilities_module).
+					convert_footnotes_to_qualifiers_and_references(lemma_obj.footnotes)
 				table.insert(data.heads, {term = lemma_obj.form, q = quals, refs = refs})
 			end
 		end
