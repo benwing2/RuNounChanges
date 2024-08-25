@@ -1,3 +1,5 @@
+local export = {}
+
 --[=[
 
 This module implements {{ar-conj}} and provides the underlying conjugation functions for {{ar-verb}}
@@ -79,9 +81,7 @@ Irregular verbs already implemented:
 
 --]=]
 
-local export = {}
-
-local force_cat = true -- set to true for debugging
+local force_cat = false -- set to true for debugging
 -- if true, always maintain manual translit during processing, and compare against full translit at the end
 local debug_translit = false
 
@@ -89,11 +89,11 @@ local lang = require("Module:languages").getByCode("ar")
 
 local m_links = require("Module:links")
 local m_string_utilities = require("Module:string utilities")
-local m_table = require("Module:User:Benwing2/table")
+local m_table = require("Module:table")
 local ar_utilities = require("Module:ar-utilities")
 local ar_nominals = require("Module:ar-nominals")
-local iut = require("Module:User:Benwing2/inflection utilities")
-local parse_utilities_module = "Module:User:Benwing2/parse utilities"
+local iut = require("Module:inflection utilities")
+local parse_utilities_module = "Module:parse utilities"
 local pron_qualifier_module = "Module:pron qualifier"
 
 local rfind = m_string_utilities.find
@@ -943,6 +943,12 @@ local function create_conjugations()
 	-- Form-I verb حيّ or حيي and form-X verb استحيا or استحى
 	local function hayy_radicals(rad1, rad2, rad3)
 		return req(rad1, "ح") and req(rad2, Y) and is_waw_ya(rad3)
+	end
+
+	local function check_hayy_variant(base)
+		if not base.variant or base.variant ~= "long" and base.variant ~= "short" and base.variant ~= "both" then
+			error("For verb with ح-ي-ي radicals and form I or form X, must specify 'var:long', 'var:short' or 'var:both'")
+		end
 	end
 
 	-------------------------------------------------------------------------------
@@ -1831,6 +1837,7 @@ local function create_conjugations()
 
 		-- حَيَّ or حَيِيَ is weird enough that we handle it as a separate function
 		if hayy_radicals(rad1, rad2, rad3) then
+			check_hayy_variant(base)
 			make_form_i_hayy_verb(base)
 			return
 		end
@@ -2358,9 +2365,15 @@ local function create_conjugations()
 	-- Make form X sound or final-weak verb.
 	local function make_form_x_sound_final_weak_verb(base, vowel_spec)
 		local rad1, rad2, rad3 = get_radicals_3(vowel_spec)
-		make_high5_form_sound_final_weak_verb(base, vowel_spec, S, T, rad1, rad2, rad3)
 		-- check for irregular verb اِسْتَحْيَا (also اِسْتَحَى)
-		if hayy_radicals(rad1, rad2, rad3) then
+		local is_hayy = hayy_radicals(rad1, rad2, rad3)
+		if is_hayy then
+			check_hayy_variant(base)
+		end
+		if not is_hayy or base.variant == "long" or base.variant == "both" then
+			make_high5_form_sound_final_weak_verb(base, vowel_spec, S, T, rad1, rad2, rad3)
+		end
+		if is_hayy and (base.variant == "short" or base.variant == "both") then
 			base.irregular = true
 			-- Add alternative entries to the verbal paradigms. Any duplicates are removed during addition.
 			make_high_form_sound_final_weak_verb(base, vowel_spec, S .. SK .. T, rad1, rad3)
@@ -3722,10 +3735,17 @@ local function show_forms(alternant_multiword_spec)
 	alternant_multiword_spec.lemmas = lemmas -- save for later use in make_table()
 	alternant_multiword_spec.vn = alternant_multiword_spec.forms.vn -- save for later use in make_table()
 
+	-- Compute this once; `transform_accel_obj` is called repeatedly on each form.
 	local reconstructed_verb_spec = iut.reconstruct_original_spec(alternant_multiword_spec)
 
 	local function transform_accel_obj(slot, formobj, accel_obj)
-		if accel_obj then
+		if not accel_obj then
+			return accel_obj
+		end
+		if slot == "ap" or slot == "pp" or slot == "vn" then
+			-- FIXME: [[Module:accel]] can't correctly handle more than one verb form for participles and verbal nouns
+			accel_obj.form = slot .. "-" .. table.concat(alternant_multiword_spec.verb_forms, ",")
+		else
 			accel_obj.form = "verb-form-" .. reconstructed_verb_spec
 		end
 		return accel_obj
@@ -4896,9 +4916,10 @@ function export.infer_radicals(data)
 							inferred_past_vowel = past_vowel
 						end
 					end
-					if raw_nonpast_vowel ~= "-" and inferred_nonpast_vowel == U then
+					if raw_nonpast_vowel ~= "-" and raw_nonpast_vowel ~= A and inferred_nonpast_vowel == U then
 						-- if inferred as I or A, the reality can be the reverse; form-I final-weak verbs with a~a and i~i
-						-- exist, e.g. سَعَى/يَسْعَى, وَلِيَ/يَلِي.
+						-- exist, e.g. سَعَى/يَسْعَى, وَلِيَ/يَلِي. Weird verb [[صها]] (also written [[صهى]]) has non-past يصهى so we can't
+						-- throw an error in this situation.
 						if raw_nonpast_vowel ~= inferred_nonpast_vowel then
 							infer_err(("Final-weak form-I verb inferred non-past vowel %s, which disagrees with " ..
 								"explicitly specified %s"):format(undia[inferred_nonpast_vowel], undia[raw_nonpast_vowel]), "novform")
