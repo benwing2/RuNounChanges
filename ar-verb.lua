@@ -945,12 +945,6 @@ local function create_conjugations()
 		return req(rad1, "ح") and req(rad2, Y) and is_waw_ya(rad3)
 	end
 
-	local function check_hayy_variant(base)
-		if not base.variant or base.variant ~= "long" and base.variant ~= "short" and base.variant ~= "both" then
-			error("For verb with ح-ي-ي radicals and form I or form X, must specify 'var:long', 'var:short' or 'var:both'")
-		end
-	end
-
 	-------------------------------------------------------------------------------
 	--                               Sets of past endings                        --
 	-------------------------------------------------------------------------------
@@ -1784,7 +1778,7 @@ local function create_conjugations()
 		make_form_i_sound_assimilated_verb(base, vowel_spec, "assimilated")
 	end
 
-	local function make_form_i_hayy_verb(base)
+	local function make_form_i_hayy_verb(base, vowel_spec)
 		-- Verbal nouns (maṣādir) for form I are unpredictable and have to be supplied
 		base.irregular = true
 
@@ -1804,7 +1798,7 @@ local function create_conjugations()
 
 		past_2stem_conj(base, "past", {}, past_c_stem)
 		past_2stem_conj(base, "past_pass", {}, past_pass_c_stem)
-		if base.variant == "short" or base.variant == "both" then
+		if vowel_spec.variant == "short" or vowel_spec.variant == "both" then
 			past_2stem_conj(base, "past", past_v_stem_short, {})
 			past_2stem_conj(base, "past_pass", past_pass_v_stem_short, {})
 		end
@@ -1815,7 +1809,7 @@ local function create_conjugations()
 				 past_endings[12]},
 				{"3ms", "3fs", "3md", "3fd", "3mp"})
 		end
-		if base.variant == "long" or base.variant == "both" then
+		if vowel_spec.variant == "long" or vowel_spec.variant == "both" then
 			inflect_long_variant("past", past_v_stem_long, past_v_stem_short)
 			inflect_long_variant("past_pass", past_pass_v_stem_long, past_pass_v_stem_short)
 		end
@@ -1835,10 +1829,9 @@ local function create_conjugations()
 	local function make_form_i_final_weak_verb(base, vowel_spec, assimilated)
 		local rad1, rad2, rad3, past_vowel, nonpast_vowel = get_radicals_3(vowel_spec)
 
-		-- حَيَّ or حَيِيَ is weird enough that we handle it as a separate function
+		-- حَيَّ or حَيِيَ is weird enough that we handle it as a separate function.
 		if hayy_radicals(rad1, rad2, rad3) then
-			check_hayy_variant(base)
-			make_form_i_hayy_verb(base)
+			make_form_i_hayy_verb(base, vowel_spec)
 			return
 		end
 
@@ -2080,11 +2073,15 @@ local function create_conjugations()
 		local past_pass_stem_base = q(tu_past_prefix, rad1, UU)
 
 		-- Make parts.
-		make_augmented_geminate_verb(base, vowel_spec, past_stem_base, nonpast_stem_base, past_pass_stem_base, vn)
+		if vowel_spec.variant == "short" or vowel_spec.variant == "both" then
+			make_augmented_geminate_verb(base, vowel_spec, past_stem_base, nonpast_stem_base, past_pass_stem_base, vn)
+		end
 
 		-- Also add alternative sound (non-compressed) parts. This will lead to some duplicate entries, but they are
 		-- removed during addition.
-		make_form_iii_vi_sound_final_weak_verb(base, vowel_spec)
+		if vowel_spec.variant == "long" or vowel_spec.variant == "both" then
+			make_form_iii_vi_sound_final_weak_verb(base, vowel_spec)
+		end
 	end
 
 	conjugations["III-geminate"] = function(base, vowel_spec)
@@ -2367,13 +2364,10 @@ local function create_conjugations()
 		local rad1, rad2, rad3 = get_radicals_3(vowel_spec)
 		-- check for irregular verb اِسْتَحْيَا (also اِسْتَحَى)
 		local is_hayy = hayy_radicals(rad1, rad2, rad3)
-		if is_hayy then
-			check_hayy_variant(base)
-		end
-		if not is_hayy or base.variant == "long" or base.variant == "both" then
+		if not is_hayy or vowel_spec.variant == "long" or vowel_spec.variant == "both" then
 			make_high5_form_sound_final_weak_verb(base, vowel_spec, S, T, rad1, rad2, rad3)
 		end
-		if is_hayy and (base.variant == "short" or base.variant == "both") then
+		if is_hayy and (vowel_spec.variant == "short" or vowel_spec.variant == "both") then
 			base.irregular = true
 			-- Add alternative entries to the verbal paradigms. Any duplicates are removed during addition.
 			make_high_form_sound_final_weak_verb(base, vowel_spec, S .. SK .. T, rad1, rad3)
@@ -3217,6 +3211,7 @@ local function detect_indicator_spec(base)
 				vowel_spec.form_viii_assim = ret.form_viii_assim
 				vowel_spec.past = ret.past_vowel
 				vowel_spec.nonpast = ret.nonpast_vowel
+				vowel_spec.variant = base.variant or ret.variant
 			end
 		end
 
@@ -3324,6 +3319,18 @@ local function detect_indicator_spec(base)
 			-- top of various letters, alif maqṣūra, tā' marbūṭa.
 			check_radicals(vform, weakness, rget(vowel_spec.rad1), rget(vowel_spec.rad2), rget(vowel_spec.rad3),
 				base.quadlit and rget(vowel_spec.rad4) or nil)
+		end
+
+		-- Check the variant value.
+		if (vform == "III" or vform == "VI") and rget(vowel_spec.rad2) == rget(vowel_spec.rad3) or
+			hayy_radicals(vowel_spec.rad1, vowel_spec.rad2, vowel_spec.rad3) and (vform == "I" or vform == "X") then
+			if not vowel_spec.variant or vowel_spec.variant ~= "long" and vowel_spec.variant ~= "short" and
+				vowel_spec.variant ~= "both" then
+				error(("For form-III/VI geminate verb or form-I/X verb with ح-ي-ي radicals, must specify 'var:long', 'var:short' or 'var:both' but %s"):format(
+					not vowel_spec.variant and "was unspecified" or "saw 'var:" .. vowel_spec.variant .. "'"))
+			end
+		elseif vowel_spec.variant then
+			error(("Variant value 'var:%s' not allowed in this context"):format(vowel_spec.variant))
 		end
 	end
 
@@ -4536,7 +4543,7 @@ function export.infer_radicals(data)
 	verify_vowel(nonpast_vowel, "nonpast_vowel")
 
 	local ch = {}
-	local form_viii_assim
+	local form_viii_assim, variant
 	-- sub out alif-madda for easier processing
 	headword = rsub(headword, AMAD, HAMZA .. ALIF)
 
@@ -4821,6 +4828,7 @@ function export.infer_radicals(data)
 				weakness = "final-weak"
 				rad2 = Y
 				rad3 = Y
+				variant = "short"
 			elseif vform == "IV" and rad1 == "ر" and ch[len] == AMAQ then
 				-- irregular verb أَرَى
 				weakness = "final-weak"
@@ -4831,6 +4839,7 @@ function export.infer_radicals(data)
 				weakness = "final-weak"
 				rad2 = Y
 				rad3 = Y
+				variant = "short"
 			else
 				-- If one letter left, then it's a geminate verb. If the letter is alif or alif maqṣūra, it will trigger
 				-- an error down the line.
@@ -4838,6 +4847,9 @@ function export.infer_radicals(data)
 					weakness = "geminate"
 					rad2 = ch[len]
 					rad3 = ch[len]
+					if vform == "III" or vform == "VI" then
+						variant = "short"
+					end
 				else
 					infer_err("Apparent geminate verb, but geminate verbs not allowed for this verb form")
 				end
@@ -4883,8 +4895,7 @@ function export.infer_radicals(data)
 					inferred_past_vowel = A
 					inferred_nonpast_vowel = U
 					if is_passive_only(passive) then
-						infer_err("Final-weak form-I passive verbs should end in yāʔ (ي), not tall alif (ا)",
-							"novform")
+						infer_err("Final-weak form-I passive verbs should end in yāʔ (ي), not tall alif (ا)", "novform")
 					end
 				elseif rad3 == AMAQ then
 					rad3 = Y
@@ -4894,6 +4905,11 @@ function export.infer_radicals(data)
 						infer_err("Final-weak form-I passive verbs should end in yāʔ (ي), not alif maqṣūra (ى)",
 							"novform")
 					end
+				elseif rad1 == "ح" and rad2 == Y and rad3 == Y then
+					-- Long variant حَيِيَ.
+					inferred_past_vowel = I
+					inferred_nonpast_vowel = A
+					variant = "long"
 				else
 					if not is_passive_only(passive) then
 						-- does a non-passive final-weak verb in -uwa ever happen?
@@ -4912,19 +4928,19 @@ function export.infer_radicals(data)
 							infer_err(("Final-weak form-I verb inferred past vowel %s, which disagrees with " ..
 								"explicitly specified %s"):format(undia[inferred_past_vowel], undia[raw_past_vowel]), "novform")
 						else
-							-- in case of footnote
+							-- in case of footnote in past_vowel
 							inferred_past_vowel = past_vowel
 						end
 					end
 					if raw_nonpast_vowel ~= "-" and raw_nonpast_vowel ~= A and inferred_nonpast_vowel == U then
-						-- if inferred as I or A, the reality can be the reverse; form-I final-weak verbs with a~a and i~i
-						-- exist, e.g. سَعَى/يَسْعَى, وَلِيَ/يَلِي. Weird verb [[صها]] (also written [[صهى]]) has non-past يصهى so we can't
-						-- throw an error in this situation.
+						-- if inferred as I or A, the reality can be the reverse; form-I final-weak verbs with a~a and
+						-- i~i exist, e.g. سَعَى/يَسْعَى, وَلِيَ/يَلِي. Weird verb [[صها]] (also written [[صهى]]) has non-past
+						-- يصهى so we can't throw an error in this situation.
 						if raw_nonpast_vowel ~= inferred_nonpast_vowel then
 							infer_err(("Final-weak form-I verb inferred non-past vowel %s, which disagrees with " ..
 								"explicitly specified %s"):format(undia[inferred_nonpast_vowel], undia[raw_nonpast_vowel]), "novform")
 						else
-							-- in case of footnote
+							-- in case of footnote in nonpast_vowel
 							inferred_nonpast_vowel = nonpast_vowel
 						end
 					end
@@ -4941,6 +4957,11 @@ function export.infer_radicals(data)
 				-- Final-weak form IX verbs like اِرْعَوَى "to desist, to repent, to see the light".
 				weakness = "final-weak"
 				expected_length = radstart + 2
+			elseif vform == "X" and rad1 == "ح" and rad2 == Y and rad3 == ALIF then
+				-- Long variant اِسْتَحْيَا.
+				weakness = "final-weak"
+				rad3 = Y
+				variant = "long"
 			elseif rad3 == AMAQ or rad2 == Y and rad3 == ALIF or rad3 == Y then
 				-- rad3 == Y happens in passive-only verbs.
 				if vform_supports_final_weak(vform) then
@@ -4982,6 +5003,7 @@ function export.infer_radicals(data)
 				weakness = "assimilated"
 			elseif rad2 == rad3 and (vform == "III" or vform == "VI") then
 				weakness = "geminate"
+				variant = "long"
 			else
 				weakness = "sound"
 			end
@@ -5008,6 +5030,7 @@ function export.infer_radicals(data)
 		past_vowel = past_vowel,
 		nonpast_vowel = nonpast_vowel,
 		form_viii_assim = form_viii_assim,
+		variant = variant,
 	}
 end
 
