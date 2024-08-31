@@ -1638,33 +1638,47 @@ end
 
 --[==[
 Reconstruct the original overall spec from the output of parse_inflected_text(), so we can use it in the
-language-specific acceleration module in the implementation of {{tl|pt-verb form of}} and the like.
+language-specific acceleration module in the implementation of {{tl|pt-verb form of}} and the like. `props` is an
+optional table of properties. Currently only `preprocess_angle_bracket_spec` is recognized, and is an optional function
+of one argument that is called to process an angle-bracket spec before inserting into the reconstructed spec.
 ]==]
-function export.reconstruct_original_spec(alternant_multiword_spec)
+function export.reconstruct_original_spec(alternant_multiword_spec, props)
 	local parts = {}
+	props = props or {}
+
+	local function ins(txt)
+		table.insert(parts, txt)
+	end
+
+	local function insert_angle_bracket_spec(spec)
+		if props.preprocess_angle_bracket_spec then
+			spec = props.preprocess_angle_bracket_spec(spec)
+		end
+		ins(spec)
+	end
 
 	for _, alternant_or_word_spec in ipairs(alternant_multiword_spec.alternant_or_word_specs) do
-		table.insert(parts, alternant_or_word_spec.user_specified_before_text)
+		ins(alternant_or_word_spec.user_specified_before_text)
 		if alternant_or_word_spec.alternants then
-			table.insert(parts, "((")
+			ins("((")
 			for i, multiword_spec in ipairs(alternant_or_word_spec.alternants) do
 				if i > 1 then
-					table.insert(parts, ",")
+					ins(",")
 				end
 				for _, word_spec in ipairs(multiword_spec.word_specs) do
-					table.insert(parts, word_spec.user_specified_before_text)
-					table.insert(parts, word_spec.user_specified_lemma)
-					table.insert(parts, word_spec.angle_bracket_spec)
+					ins(word_spec.user_specified_before_text)
+					ins(word_spec.user_specified_lemma)
+					insert_angle_bracket_spec(word_spec.angle_bracket_spec)
 				end
-				table.insert(parts, multiword_spec.user_specified_post_text)
+				ins(multiword_spec.user_specified_post_text)
 			end
-			table.insert(parts, "))")
+			ins("))")
 		else
-			table.insert(parts, alternant_or_word_spec.user_specified_lemma)
-			table.insert(parts, alternant_or_word_spec.angle_bracket_spec)
+			ins(alternant_or_word_spec.user_specified_lemma)
+			insert_angle_bracket_spec(alternant_or_word_spec.angle_bracket_spec)
 		end
 	end
-	table.insert(parts, alternant_multiword_spec.user_specified_post_text)
+	ins(alternant_multiword_spec.user_specified_post_text)
 
 	local retval = table.concat(parts)
 
