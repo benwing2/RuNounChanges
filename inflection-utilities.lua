@@ -2,8 +2,8 @@ local export = {}
 
 local m_links = require("Module:links")
 local m_str_utils = require("Module:string utilities")
-local m_table = require("Module:User:Benwing2/table")
-local put = require("Module:User:Benwing2/parse utilities")
+local m_table = require("Module:table")
+local put = require("Module:parse utilities")
 local headword_data_module = "Module:headword/data"
 local script_utilities_module = "Module:script utilities"
 local table_tools_module = "Module:table tools"
@@ -757,7 +757,7 @@ local function lang_or_func_transliterate(func, lang, text)
 		retval = (lang:transliterate(text))
 	end
 	-- FIXME! Hack to work around bug in ...:transliterate(). Remove me as soon as this bug is fixed.
-	if not retval and (text == " " or text == "-") then
+	if not retval and (text == " " or text == "-" or text == "?") then
 		retval = text
 	end
 	if not retval then
@@ -1502,6 +1502,7 @@ function export.get_footnote_text(footnotes, footnote_obj)
 	-- FIXME: Compatibility code for old callers that passed in a form object instead of the footnotes directly.
 	-- Convert callers and remove this code.
 	if footnotes.footnotes then
+		track("get-footnote-text-old-calling-convention")
 		footnotes = footnotes.footnotes
 	end
 	local link_indices = {}
@@ -1637,7 +1638,7 @@ end
 
 --[==[
 Reconstruct the original overall spec from the output of parse_inflected_text(), so we can use it in the
-language-specific acceleration module in the implementation of {{pt-verb form of}} and the like.
+language-specific acceleration module in the implementation of {{tl|pt-verb form of}} and the like.
 ]==]
 function export.reconstruct_original_spec(alternant_multiword_spec)
 	local parts = {}
@@ -1920,7 +1921,7 @@ function export.show_forms(formtable, props)
 			formval = entry
 		end
 		if remove_links then
-			formval = m_links.remove_links(form)
+			formval = m_links.remove_links(formval)
 		end
 		return formval, translit
 	end
@@ -2021,7 +2022,10 @@ function export.show_forms(formtable, props)
 			-- Add acceleration info to form objects.
 			for i, form in ipairs(formobjs) do
 				local formval = form.form
-				if form_value_transliterable(formval) then
+				if not form_value_transliterable(formval) then
+					form.formval_for_link = formval
+					form.formval_old_style_footnote_symbol = ""
+				else
 					local formval_for_link, formval_old_style_footnote_symbol
 					if props.allow_footnote_symbols then
 						formval_for_link, formval_old_style_footnote_symbol =
@@ -2043,9 +2047,6 @@ function export.show_forms(formtable, props)
 					local accel_obj
 					-- Check if form still has links; if so, don't add accelerators because the resulting entries will
 					-- be wrong.
-					if props_lemmas[1].form == "fènyer" then
-						error(dump(form))
-					end
 					if props_lemmas[1] and not form.no_accel and accel_tag_set ~= "-" and
 						not rfind(formval_for_link, "%[%[") then
 						-- If there is more than one form or more than one lemma, things get tricky. Often, there are
