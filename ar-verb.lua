@@ -3738,8 +3738,28 @@ local function show_forms(alternant_multiword_spec)
 	alternant_multiword_spec.lemmas = lemmas -- save for later use in make_table()
 	alternant_multiword_spec.vn = alternant_multiword_spec.forms.vn -- save for later use in make_table()
 
-	-- Compute this once; `transform_accel_obj` is called repeatedly on each form.
-	local reconstructed_verb_spec = iut.reconstruct_original_spec(alternant_multiword_spec)
+	-- Reconstruct the original verb spec without overrides for verbal nouns and participles, since those specific slots
+	-- are ignored by {{ar-verb form}}. Compute this once beforehand; `transform_accel_obj` is called repeatedly on each
+	-- form and we don't want to compute this repeatedly.
+	local reconstructed_verb_spec = iut.reconstruct_original_spec(alternant_multiword_spec, {
+		preprocess_angle_bracket_spec = function(spec)
+			spec = spec:match("^<(.*)>$")
+			assert(spec)
+			local segments = iut.parse_multi_delimiter_balanced_segment_run(spec, {{"[", "]"}, {"<", ">"}})
+			local dot_separated_groups = iut.split_alternating_runs_and_strip_spaces(segments, "%.")
+			-- Rejoin each dot-separated group into a single string, since we aren't actually going to do any parsing
+			-- of bracket-bounded textual runs; then filter out overrides for verbal nouns and participles.
+			local filtered_indicators = {}
+			for _, dot_separated_group in ipairs(dot_separated_groups) do
+				local indicator = table.concat(dot_separated_group)
+				-- FIXME: Do we want to filter out any other indicators?
+				if not (indicator:find("^vn:") or indicator:find("^[ap]p:")) then
+					table.insert(filtered_indicators, indicator)
+				end
+			end
+			return ("<%s>"):format(table.concat(filtered_indicators, "."))
+		end,
+	})
 
 	local function transform_accel_obj(slot, formobj, accel_obj)
 		if not accel_obj then
