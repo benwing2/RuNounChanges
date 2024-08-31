@@ -784,7 +784,7 @@ local function construct_stems(base)
 		end
 		return form, translit
 	end
-	for nonpast_stem_type in ipairs { "nonpast_v", "nonpast_c", "nonpast_pass_v", "nonpast_pass_c" } do
+	for _, nonpast_stem_type in ipairs { "nonpast_v", "nonpast_c", "nonpast_pass_v", "nonpast_pass_c" } do
 		if stems[nonpast_stem_type] then
 			stems[nonpast_stem_type] = map_general(stems[nonpast_stem_type], function(form, translit)
 				return truncate_nonpast_initial_cons(nonpast_stem_type, form, translit)
@@ -910,6 +910,11 @@ local function check_waw_ya(rad)
 	end
 end
 
+-- Form-I verb حيّ or حيي and form-X verb استحيا or استحى
+local function hayy_radicals(rad1, rad2, rad3)
+	return req(rad1, "ح") and req(rad2, Y) and is_waw_ya(rad3)
+end
+
 -- FUCK ME HARD. "Lua error at line 1514: main function has more than 200 local variables".
 local function create_conjugations()
 	-------------------------------------------------------------------------------
@@ -938,11 +943,6 @@ local function create_conjugations()
 	-- Form-I verb سأل
 	local function saal_radicals(rad1, rad2, rad3)
 		return req(rad1, "س") and req(rad2, HAMZA) and req(rad3, "ل")
-	end
-
-	-- Form-I verb حيّ or حيي and form-X verb استحيا or استحى
-	local function hayy_radicals(rad1, rad2, rad3)
-		return req(rad1, "ح") and req(rad2, Y) and is_waw_ya(rad3)
 	end
 
 	-------------------------------------------------------------------------------
@@ -1648,9 +1648,14 @@ local function create_conjugations()
 		local past_c_stem = q(past_stem_base, a_base_suffix_c)
 		local nonpast_v_stem = q(nonpast_stem_base, vform_nonpast_a_vowel(vform) and a_base_suffix_v or i_base_suffix_v)
 		local nonpast_c_stem = q(nonpast_stem_base, vform_nonpast_a_vowel(vform) and a_base_suffix_c or i_base_suffix_c)
-		-- vform III and VI passive past do not have contracted parts, only
-		-- uncontracted parts, which are added separately by those functions
-		local past_pass_v_stem = (vform == "III" or vform == "VI") and {} or q(past_pass_stem_base, i_base_suffix_v)
+		-- NOTE: Formerly had a comment that "vform III and VI passive past do not have contracted parts, only
+		-- uncontracted parts, which are added separately by those functions". This is based on Mace
+		-- "Arabic Verbs and Essential Grammar" (1999) entry 63 (continued), which shows passive ḥūjija but no ḥūjja;
+		-- but that is apparently a mistake, as (1) verb tables in other books do show contracted passive parts for
+		-- these forms; (2) there is no mention of such an exception on p. 99, which explains how geminate ("doubled")
+		-- verbs work (on the contrary, it says "The contracted and uncontracted pairs (see above) are found all
+		-- over Forms III and VI of the doubled verbs").
+		local past_pass_v_stem = q(past_pass_stem_base, i_base_suffix_v)
 		local past_pass_c_stem = q(past_pass_stem_base, i_base_suffix_c)
 		local nonpast_pass_v_stem = q(nonpast_stem_base, a_base_suffix_v)
 		local nonpast_pass_c_stem = q(nonpast_stem_base, a_base_suffix_c)
@@ -1798,7 +1803,8 @@ local function create_conjugations()
 
 		past_2stem_conj(base, "past", {}, past_c_stem)
 		past_2stem_conj(base, "past_pass", {}, past_pass_c_stem)
-		if vowel_spec.variant == "short" or vowel_spec.variant == "both" then
+		local variant = vowel_spec.variant or "both"
+		if variant == "short" or variant == "both" then
 			past_2stem_conj(base, "past", past_v_stem_short, {})
 			past_2stem_conj(base, "past_pass", past_pass_v_stem_short, {})
 		end
@@ -1809,7 +1815,7 @@ local function create_conjugations()
 				 past_endings[12]},
 				{"3ms", "3fs", "3md", "3fd", "3mp"})
 		end
-		if vowel_spec.variant == "long" or vowel_spec.variant == "both" then
+		if variant == "long" or variant == "both" then
 			inflect_long_variant("past", past_v_stem_long, past_v_stem_short)
 			inflect_long_variant("past_pass", past_pass_v_stem_long, past_pass_v_stem_short)
 		end
@@ -2025,6 +2031,15 @@ local function create_conjugations()
 		make_form_ii_v_sound_final_weak_verb(base, vowel_spec)
 	end
 
+	local function make_form_iii_alt_vn(base, vowel_spec)
+		local rad1, rad2, rad3 = get_radicals_3(vowel_spec)
+		local final_weak = is_final_weak(base, vowel_spec)
+		-- Insert alternative verbal noun فِعَال. Since not all verbs have this, we require that verbs that do have it
+		-- specify it explicitly; a shortcut ++ is provided to make this easier (e.g. <vn:+,++> to indicate that
+		-- both the normal verbal noun مُفَاعَلَة and secondary verbal noun فِعَال are available).
+		insert_form_or_forms(base, "vn2", q(rad1, I, rad2, AA, final_weak and HAMZA or rad3))
+	end
+
 	-- Make form III or VI sound or final-weak verb.
 	local function make_form_iii_vi_sound_final_weak_verb(base, vowel_spec)
 		local rad1, rad2, rad3 = get_radicals_3(vowel_spec)
@@ -2044,10 +2059,7 @@ local function create_conjugations()
 		make_augmented_sound_final_weak_verb(base, vowel_spec, past_stem_base, nonpast_stem_base, past_pass_stem_base,
 			vn)
 		if vform == "III" then
-			-- Insert alternative verbal noun فِعَال. Since not all verbs have this, we require that verbs that do have it
-			-- specify it explicitly; a shortcut ++ is provided to make this easier (e.g. <vn:+,++> to indicate that
-			-- both the normal verbal noun مُفَاعَلَة and secondary verbal noun فِعَال are available).
-			insert_form_or_forms(base, "vn2", q(rad1, I, rad2, AA, final_weak and HAMZA or rad3))
+			make_form_iii_alt_vn(base, vowel_spec)
 		end
 	end
 
@@ -2073,14 +2085,18 @@ local function create_conjugations()
 		local past_pass_stem_base = q(tu_past_prefix, rad1, UU)
 
 		-- Make parts.
-		if vowel_spec.variant == "short" or vowel_spec.variant == "both" then
+		local variant = vowel_spec.variant or "short"
+		if variant == "short" or variant == "both" then
 			make_augmented_geminate_verb(base, vowel_spec, past_stem_base, nonpast_stem_base, past_pass_stem_base, vn)
 		end
 
 		-- Also add alternative sound (non-compressed) parts. This will lead to some duplicate entries, but they are
 		-- removed during addition.
-		if vowel_spec.variant == "long" or vowel_spec.variant == "both" then
+		if variant == "long" or variant == "both" then
 			make_form_iii_vi_sound_final_weak_verb(base, vowel_spec)
+		elseif vform == "III" then
+			-- Still need to add the alternative form-III verbal noun.
+			make_form_iii_alt_vn(base, vowel_spec)
 		end
 	end
 
@@ -2257,16 +2273,11 @@ local function create_conjugations()
 		make_augmented_geminate_verb(base, vowel_spec, past_stem_base, nonpast_stem_base, past_pass_stem_base, vn)
 	end
 
-	-- Return Form VIII verbal noun. If RAD1 is hamza, there are two alternatives.
+	-- Return Form VIII verbal noun.
 	local function form_viii_verbal_noun(base, vowel_spec, rad1, rad2, rad3)
 		local final_weak = is_final_weak(base, vowel_spec)
 		rad3 = final_weak and HAMZA or rad3
-		local vn = high_form_verbal_noun(vowel_spec.form_viii_assim, rad2, rad3)
-		if req(rad1, HAMZA) then
-			return {vn, high_form_verbal_noun(Y .. SK .. T, rad2, rad3)}
-		else
-			return {vn}
-		end
+		return {high_form_verbal_noun(vowel_spec.form_viii_assim, rad2, rad3)}
 	end
 
 	-- Make form VIII sound or final-weak verb.
@@ -2299,14 +2310,6 @@ local function create_conjugations()
 
 		-- make parts
 		make_augmented_hollow_verb(base, vowel_spec, past_stem_base, nonpast_stem_base, past_pass_stem_base, vn)
-
-		-- Add alternative parts if verb is first-hamza. Any duplicates are removed during addition.
-		if req(rad1, HAMZA) then
-			local past_stem_base2 = "اِيت"
-			local nonpast_stem_base2 = nonpast_stem_base
-			local past_pass_stem_base2 = "اُوت"
-			make_augmented_hollow_verb(base, vowel_spec, past_stem_base2, nonpast_stem_base2, past_pass_stem_base2, vn)
-		end
 	end
 
 	conjugations["VIII-geminate"] = function(base, vowel_spec)
@@ -2320,15 +2323,6 @@ local function create_conjugations()
 
 		-- make parts
 		make_augmented_geminate_verb(base, vowel_spec, past_stem_base, nonpast_stem_base, past_pass_stem_base, vn)
-
-		-- Add alternative parts if verb is first-hamza. Any duplicates are removed during addition.
-		if req(rad1, HAMZA) then
-			local past_stem_base2 = "اِيتَ"
-			local nonpast_stem_base2 = nonpast_stem_base
-			local past_pass_stem_base2 = "اُوتُ"
-			make_augmented_geminate_verb(base, vowel_spec, past_stem_base2, nonpast_stem_base2, past_pass_stem_base2,
-				vn)
-		end
 	end
 
 	conjugations["IX-sound"] = function(base, vowel_spec)
@@ -2364,10 +2358,11 @@ local function create_conjugations()
 		local rad1, rad2, rad3 = get_radicals_3(vowel_spec)
 		-- check for irregular verb اِسْتَحْيَا (also اِسْتَحَى)
 		local is_hayy = hayy_radicals(rad1, rad2, rad3)
-		if not is_hayy or vowel_spec.variant == "long" or vowel_spec.variant == "both" then
+		local variant = vowel_spec.variant or "both"
+		if not is_hayy or variant == "long" or variant == "both" then
 			make_high5_form_sound_final_weak_verb(base, vowel_spec, S, T, rad1, rad2, rad3)
 		end
-		if is_hayy and (vowel_spec.variant == "short" or vowel_spec.variant == "both") then
+		if is_hayy and (variant == "short" or variant == "both") then
 			base.irregular = true
 			-- Add alternative entries to the verbal paradigms. Any duplicates are removed during addition.
 			make_high_form_sound_final_weak_verb(base, vowel_spec, S .. SK .. T, rad1, rad3)
@@ -3322,12 +3317,13 @@ local function detect_indicator_spec(base)
 		end
 
 		-- Check the variant value.
-		if (vform == "III" or vform == "VI") and rget(vowel_spec.rad2) == rget(vowel_spec.rad3) or
-			hayy_radicals(vowel_spec.rad1, vowel_spec.rad2, vowel_spec.rad3) and (vform == "I" or vform == "X") then
-			if not vowel_spec.variant or vowel_spec.variant ~= "long" and vowel_spec.variant ~= "short" and
-				vowel_spec.variant ~= "both" then
-				error(("For form-III/VI geminate verb or form-I/X verb with ح-ي-ي radicals, must specify 'var:long', 'var:short' or 'var:both' but %s"):format(
-					not vowel_spec.variant and "was unspecified" or "saw 'var:" .. vowel_spec.variant .. "'"))
+		local form_iii_vi_geminate = (vform == "III" or vform == "VI") and rget(vowel_spec.rad2) == rget(vowel_spec.rad3) and
+			not req(vowel_spec.rad2, Y)
+		local hayy_i_x = hayy_radicals(vowel_spec.rad1, vowel_spec.rad2, vowel_spec.rad3) and (vform == "I" or vform == "X")
+		if form_iii_vi_geminate or hayy_i_x then
+			if vowel_spec.variant and vowel_spec.variant ~= "long" and vowel_spec.variant ~= "short" and vowel_spec.variant ~= "both" then
+				error(("For form-III/VI geminate verb or form-I/X verb with ح-ي-ي radicals, saw unrecognized 'var:%s' value; should be 'var:long', 'var:short' or 'var:both'"):format(
+					vowel_spec.variant))
 			end
 		elseif vowel_spec.variant then
 			error(("Variant value 'var:%s' not allowed in this context"):format(vowel_spec.variant))
@@ -4573,6 +4569,7 @@ function export.infer_radicals(data)
 		error(msg .. anns)
 	end
 	local len = ulen(headword)
+	local expected_length
 
 	-- extract the headword letters into an array
 	for i = 1, len do
@@ -4721,6 +4718,10 @@ function export.infer_radicals(data)
 			-- These alternative forms seem very rare and probably not worth worrying about, but if we want to handle
 			-- them, we can do it when the time comes.
 			rad1 = {T, W, Y, ambig = true}
+			-- اِتَّخَذَ irregularly has hamza as the radical but assimilates like و
+			if ch[3] == "خ" and ch[4] == "ذ" then
+				rad1[4] = HAMZA
+			end
 		end
 	elseif vform == "IX" then
 		check(1, ALIF)
