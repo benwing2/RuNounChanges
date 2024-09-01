@@ -414,7 +414,7 @@ local function handle_noun_plural(args, data)
 	end
 end
 
-local valid_bare_genders = {false, "m", "f", "mfbysense", "mfequiv"}
+local valid_bare_genders = {false, "m", "f", "mf", "mfbysense", "mfequiv"}
 local valid_bare_numbers = {false, "d", "p"}
 local valid_bare_animacies = {false, "pr", "np"}
 
@@ -541,7 +541,7 @@ local function make_nisba_default(ending, endingtr)
 		end
 		local forms = {}
 		for i = 1, #heads do
-			local tr = data.heads[i].tr
+			local tr = heads[i].tr
 			table.insert(forms, {term = heads[i].term .. ending, translit = tr and tr .. endingtr or nil})
 		end
 		return forms
@@ -873,7 +873,7 @@ pos_functions["verbs"] = {
 						unescape_fun = unescape_comma_whitespace,
 					})
 				else
-					terms = split_on_comma(val)
+					terms = split_on_comma(override)
 					for i, split in ipairs(terms) do
 						terms[i] = generate_obj(split)
 					end
