@@ -318,10 +318,20 @@ export.unsettable_slots = {}
 for _, potential_lemma_slot in ipairs(export.potential_lemma_slots) do
 	table.insert(export.unsettable_slots, potential_lemma_slot .. "_linked")
 end
-table.insert(export.unsettable_slots, "ap2") -- secondary default فَعِيل for form I active participles
+table.insert(export.unsettable_slots, "ap2") -- secondary default فَعِيل for form I active participles (stative I)
+table.insert(export.unsettable_slots, "ap3") -- secondary default فَعِل for form I active participles (stative II)
+table.insert(export.unsettable_slots, "apcd") -- secondary default أَفْعَل for form I active participles (color/defect)
+table.insert(export.unsettable_slots, "apan") -- secondary default فَعْلَان for form I active participles (in -ān)
 table.insert(export.unsettable_slots, "vn2") -- secondary default فِعَال for form III verbal nouns
 export.unsettable_slots_set = m_table.listToSet(export.unsettable_slots)
 
+local default_indicator_to_active_participle_slot = {
+	["++"] = "ap2",
+	["+++"] = "ap3",
+	["+cd"] = "apcd",
+	["+an"] = "apan",
+}
+	
 -- Initialize all the slots for which we generate forms.
 local function add_slots(alternant_multiword_spec)
 	alternant_multiword_spec.verb_slots = {
@@ -447,9 +457,10 @@ local function allow_multiple_values_for_override(comma_separated_groups, data, 
 		table.insert(retvals, retval)
 	end
 	for _, form in ipairs(retvals) do
-		if form.form == "+" or form.form == "++" then
-			if form.form == "++" and not is_slot_override then
-				error(("Stem override '%s' cannot use ++ to request a secondary default"):format(data.prefix))
+		if form.form == "+" or default_indicator_to_active_participle_slot[form.form] then
+			if default_indicator_to_active_participle_slot[form.form] and not is_slot_override then
+				error(("Stem override '%s' cannot use %s to request a secondary default"):format(
+					data.prefix, form.form))
 			end
 			data.base.slot_override_uses_default[data.prefix] = true
 		end
@@ -591,6 +602,7 @@ local function rget(rad)
 		error(("Internal error: Unexpected type for radical or past/non-past vowel: %s"):format(dump(rad)))
 	end
 end
+export.rget = rget -- for use in [[Module:ar-headword]]
 
 -- Return the footnotes associated with `rad` (a radical or past/non-past vowel, either a string or form object).
 local function rget_footnotes(rad)
@@ -664,7 +676,7 @@ local function skip_slot(base, slot, allow_overrides)
 		return true
 	end
 	if not allow_overrides and base.slot_overrides[slot] and not base.slot_override_uses_default[slot] then
-		-- Skip any slots for which there are overrides, except those that request the default value using + or ++.
+		-- Skip any slots for which there are overrides, except those that request the default value using +, ++, etc.
 		return true
 	end
 
@@ -801,8 +813,9 @@ local function override_stem_if_needed(base, stemname, default_stem)
 		return default_stem or {}
 	end
 	return map_general(overrides, function(form, translit)
-		if form == "++" then
-			error(("Stem overrides cannot use ++ but saw ++ in stem override '%s'"):format(stemname))
+		if default_indicator_to_active_participle_slot[form] then
+			error(("Stem overrides cannot use secondary default indicators but saw %s in stem override '%s'"):format(
+				form, stemname))
 		end
 		if form == "+" then
 			if translit then
@@ -893,6 +906,7 @@ end
 local function is_passive_only(passive)
 	return passive == "onlypass" or passive == "onlypass-impers"
 end
+export.is_passive_only = is_passive_only -- for use in [[Module:ar-headword]]
 
 -------------------------------------------------------------------------------
 --                        Properties of specific sounds                      --
@@ -1744,14 +1758,20 @@ local function create_conjugations()
 			make_1stem_imperative(base, "سَل")
 		end
 
-		-- active participle
+		-- Active participle.
 		insert_form_or_forms(base, "ap", q(rad1, AA, rad2, I, rad3))
-		-- Insert alternative active participle فَعِيل. Since not all verbs have this, we require that verbs that do
-		-- have it specify it explicitly; a shortcut ++ is provided to make this easier (e.g. <ap:++> to indicate that
-		-- the alternative form should be used for the active participle, <ap:+,++> to indicate that both forms can
-		-- be used, and <ap:-> to indicate that there is no active participle).
+		-- Insert alternative active participle (stative type I) فَعِيل. Since not all verbs have this, we require that
+		-- verbs that do have it specify it explicitly; a shortcut ++ is provided to make this easier (e.g. <ap:++> to
+		-- indicate that the alternative form should be used for the active participle, <ap:+,++> to indicate that both
+		-- forms can be used, and <ap:-> to indicate that there is no active participle).
 		insert_form_or_forms(base, "ap2", q(rad1, A, rad2, II, rad3))
-		-- passive participle
+		-- Active participle, stative type II فَعِل (+++).
+		insert_form_or_forms(base, "ap3", q(rad1, A, rad2, I, rad3))
+		-- Active participle, color/defect أَفْعَل (+cd).
+		insert_form_or_forms(base, "apcd", q(HAMZA, A, rad1, SK, rad2, A, rad3))
+		-- Active participle, -ān فَعْلَان (+an).
+		insert_form_or_forms(base, "apan", q(rad1, A, rad2, SK, rad3, AAN))
+		-- Passive participle.
 		insert_form_or_forms(base, "pp", q(MA, rad1, SK, rad2, UU, rad3))
 	end
 
@@ -1880,8 +1900,18 @@ local function create_conjugations()
 			iut.combine_form_and_footnotes(imp_stem, nonpast_footnotes),
 			past_ending_vowel, nonpast_ending_vowel, "a")
 
-		-- active participle
+		-- Active participle.
 		insert_form_or_forms(base, "ap", q(rad1, AA, rad2, IN))
+		-- Active participle, stative type I فَعِيّ (++). FIXME: Is this correct when rad3 is W?
+		insert_form_or_forms(base, "ap2", q(rad1, A, rad2, II, SH))
+		-- Active participle, stative type II فَعٍ (+++). FIXME: Any examples of this to verify it's correct?
+		insert_form_or_forms(base, "ap3", q(rad1, A, rad2, IN))
+		-- Active participle, color/defect أَفْعَى (+cd).
+		insert_form_or_forms(base, "apcd", q(HAMZA, A, rad1, SK, rad2, AAMAQ))
+		-- Active participle, -ān فَعْيَان or فَعْوَان (+an). 
+		-- FIXME: Any examples of this for both rad3 = W and y to verify it's correct?
+		insert_form_or_forms(base, "apan", q(rad1, A, rad2, SK, rad3, AAN))
+		-- Passive participle.
 		insert_form_or_forms(base, "pp", q(MA, rad1, SK, rad2, req(rad3, Y) and II or UU, SH))
 	end
 
@@ -1939,10 +1969,18 @@ local function create_conjugations()
 			past_pass_c_stem, nonpast_v_stem, nonpast_c_stem, nonpast_pass_v_stem,
 			nonpast_pass_c_stem, imp_v_stem, imp_c_stem, "a")
 
-		-- active participle
+		-- Active participle.
 		insert_form_or_forms(base, "ap", req(rad3, HAMZA) and q(rad1, AA, HAMZA, IN) or
 			q(rad1, AA, HAMZA, I, rad3))
-		-- passive participle
+		-- Active participle, stative type I فَيِّد (++). FIXME: Any examples of this to verify it's correct?
+		insert_form_or_forms(base, "ap2", q(rad1, A, Y, SH, I, rad3))
+		-- Active participle, stative type II فَيِد (+++). FIXME: Any examples of this to verify it's correct?
+		insert_form_or_forms(base, "ap3", q(rad1, A, Y, I, rad3))
+		-- Active participle, color/defect أَفّيَد or أَفّوَد (+cd). FIXME: Any examples of this to verify it's correct?
+		insert_form_or_forms(base, "apcd", q(HAMZA, A, rad1, SK, rad2, A, rad3))
+		-- Active participle, -ān فَيْدَان  or فَوْدَان (+an). Example: جَاعَ "to be hungry", act part جَوْعَان
+		insert_form_or_forms(base, "apan", q(rad1, A, rad2, SK, rad3, AAN))
+		-- Passive participle.
 		insert_form_or_forms(base, "pp", q(MA, rad1, req(rad2, Y) and II or UU, rad3))
 	end
 
@@ -1979,9 +2017,18 @@ local function create_conjugations()
 			past_pass_c_stem, nonpast_v_stem, nonpast_c_stem, nonpast_pass_v_stem,
 			nonpast_pass_c_stem, imp_v_stem, imp_c_stem, "a")
 
-		-- active participle
+		-- Active participle.
 		insert_form_or_forms(base, "ap", q(rad1, AA, rad2, SH))
-		-- passive participle
+		-- Active participle, stative type I فَعِيع (++). FIXME: Any examples of this to verify it's correct?
+		insert_form_or_forms(base, "ap2", q(rad1, A, rad2, II, rad2))
+		-- Active participle, stative type II فَعّ (+++). Example: بَرَّ "to be pious", active participle بَرّ
+		insert_form_or_forms(base, "ap3", q(rad1, A, rad2, SH))
+		-- Active participle, color/defect أَفَعّ (+cd).
+		-- Example: لَصَّ "to be thievish, to steal repeatedly", active participle أَلَصّ.
+		insert_form_or_forms(base, "apcd", q(HAMZA, A, rad1, A, rad2, SH))
+		-- Active participle, -ān فَعَّان (+an). FIXME: Any examples of this to verify it's correct?
+		insert_form_or_forms(base, "apan", q(rad1, A, rad2, SH, AAN))
+		-- Passive participle.
 		insert_form_or_forms(base, "pp", q(MA, rad1, SK, rad2, UU, rad2))
 	end
 
@@ -2764,15 +2811,24 @@ local function process_slot_overrides(base)
 				-- is a one-to-one correspondence between slots and slot overrides, i.e. you can't have a default value
 				-- go into two slots.
 				insert_form_or_forms(base, slot, existing_values, "allow overrides")
-			elseif form.form == "++" then
-				if slot ~= "vn" and slot ~= "ap" then
-					error(("Secondary default value request '++' only applicable to verbal nouns and active pariciples, but found in slot '%s'"):
-					format(slot))
+			elseif default_indicator_to_active_participle_slot[form.form] then
+				if form.form == "++" then
+					if slot ~= "vn" and slot ~= "ap" then
+						error(("Secondary default value request '++' only applicable to verbal nouns and active pariciples, but found in slot '%s'"):
+						format(slot))
+					end
+				else
+					if slot ~= "ap" then
+						error(("Secondary default value request '%s' only applicable to active pariciples, but found in slot '%s'"):
+						format(form.form, slot))
+					end
 				end
-				local secondary_default_slot = slot == "vn" and "vn2" or "ap2"
+				local secondary_default_slot =
+					slot == "vn" and "vn2" or default_indicator_to_active_participle_slot[form.form]
 				local existing_values = base.forms[secondary_default_slot]
 				if not existing_values then
-					error(("Slot '%s' requested the secondary default value but no such value available"):format(slot))
+					error(("Slot '%s' requested a secondary default value using '%s' but no such value available"):
+						format(slot, form.form))
 				end
 				-- See comment above about the lack of need to copy the form objects.
 				insert_form_or_forms(base, slot, existing_values, "allow overrides")
@@ -5500,7 +5556,7 @@ function export.infer_participle_vocalization(headword, vform, weakness, is_acti
 	return vocalized
 end
 
-function export.test_infer_participle_vocalization(frame)
+function export.infer_participle_vocalization_json(frame)
 	local iparams = {
 		[1] = {required = true},
 		[2] = {required = true},
