@@ -2,6 +2,9 @@ local export = {}
 
 local m_table = require("Module:table")
 
+local rmatch = mw.ustring.match
+local u = mw.ustring.char
+
 --[=[
 This module handles language-specific categories for all Arabic varieties. The individual variety-specific modules
 should do nothing but invoke this module; see [[Module:category tree/poscatboiler/data/lang-specific/ar]] for an
@@ -258,8 +261,8 @@ local function add_verb_handlers(labels, handlers, lang)
 	local HAMZA = "{{lang|{{{langcode}}}|ء}}"
 
 	local weakness_desc = {
-		["geminate"] = "the second and third radicals are identical, which sometimes causes an intervening short vowel to drop",
-		["assimilated"] = "the first radical is " .. W .. " or " .. Y .. ", which disappears in some forms",
+		["geminate"] = "the second and third radicals are identical, which causes an intervening short vowel to drop in some forms",
+		["assimilated"] = "the first radical is " .. W .. ", which disappears in the non-past",
 		["hollow"] = "the second radical is " .. W .. " or " .. Y .. ", which is replaced with a long or short vowel in some forms",
 		["third-weak"] = "the third of four radicals is " .. W .. " or " .. Y .. " (normally not leading to significant irregularities)",
 		["final-weak"] = "the last radical is " .. W .. " or " .. Y .. ", normally leading to irregular endings",
@@ -424,7 +427,7 @@ local function add_verb_handlers(labels, handlers, lang)
 
 	-- Handler for e.g. [[:Category:Arabic form-IV verbs with و as second radical]].
 	table.insert(handlers, function(data)
-		local form, breadcrumb, radical, ordinal = mw.ustring.match(data.label, "^form%-([IVX]+q?) verbs with ((.) as ([a-z]+) radical)$")
+		local form, breadcrumb, radical, ordinal = rmatch(data.label, "^form%-([IVX]+q?) verbs with ((.) as ([a-z]+) radical)$")
 		if not form then
 			return nil
 		end
@@ -448,6 +451,53 @@ local function add_verb_handlers(labels, handlers, lang)
 				{name = weakness .. " verbs", sort = form_sort_key .. radical},
 			},
 			breadcrumb = breadcrumb,
+		}
+	end)
+
+	local vowels_to_desc = {
+		["a-u"] = "This is the most common pattern and is used mostly for non-stative verbs.",
+		["a-i"] = "This is a very common pattern and is used mostly for non-stative verbs.",
+		["a-a"] = "This is a common pattern and is a variant of the ''a~u'' and ''a~i'' patterns, used especially when the second or third radical is a guttural ({{lang|{{{langcode}}}|ع}}, {{lang|{{{langcode}}}|ح}}, {{lang|{{{langcode}}}|ه}}, {{lang|{{{langcode}}}|ء}} or sometimes {{lang|{{{langcode}}}|غ}} or {{lang|{{{langcode}}}|خ}}), and used mostly for non-stative verbs.",
+		["i-a"] = "This is a common pattern for stative verbs but sometimes is also used for non-stative verbs.",
+		["i-i"] = "This is a rare pattern, a variant of the ''i~a'' pattern often found especially when " .. W .. " is the first radical.",
+		["u-u"] = "This is a relatively common pattern, used almost exclusively for intransitive stative verbs.",
+	}
+	local A  = u(0x064E) -- fatḥa
+	local U  = u(0x064F) -- ḍamma
+	local I  = u(0x0650) -- kasra
+	local vowel_to_diacritic = {
+		a = A,
+		i = I,
+		u = U,
+	}
+
+	labels["form-I verbs by vowel"] = {
+		description = "{{{langname}}} " .. form_link("I") .. " verbs categorized by the particular vowel (''a'', ''i'' or " ..
+			"''u'') occurring as the last vowel of the past and non-past verb stems.",
+		parents = {{name = "form-I verbs", sort = " "}},
+		breadcrumb = "by vowel",
+	}
+
+	-- Handler for e.g. [[:Category:Arabic form-I verbs with past vowel a and non-past vowel u]]
+	table.insert(handlers, function(data)
+		local past_vowel, nonpast_vowel = data.label:match("^form%-I verbs with past vowel ([aiu]) and non%-past vowel ([aiu])$")
+		if not past_vowel then
+			return nil
+		end
+		local sort_key = ("%s-%s"):format(past_vowel, nonpast_vowel)
+		local desc = vowels_to_desc[sort_key]
+		if not desc then
+			return nil
+		end
+		return {
+			description = ("{{{langname}}} %s verbs with their past vowel ''%s'' ({{m|{{{langcode}}}||فَع%sلَ}}) and their " ..
+				"non-past vowel ''%s'' ({{m|{{{langcode}}}||يَفْع%sلُ}}). In both cases, the vowel in question is the last " ..
+				"vowel in the stem, which varies from verb to verb. " .. desc):format(form_link("I"), past_vowel,
+				vowel_to_diacritic[past_vowel], nonpast_vowel, vowel_to_diacritic[nonpast_vowel]),
+			parents = {{name = "form-I verbs by vowel", sort = sort_key}},
+			displaytitle = ("{{{langname}}} form-I verbs with past vowel ''%s'' and non-past vowel ''%s''"):format(
+				past_vowel, nonpast_vowel),
+			breadcrumb = ("past ''%s'', non-past ''%s''"):format(past_vowel, nonpast_vowel),
 		}
 	end)
 end
