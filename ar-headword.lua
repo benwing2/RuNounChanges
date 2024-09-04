@@ -789,6 +789,7 @@ pos_functions["verbs"] = {
 		[1] = {},
 		-- Comma-separated lists with possible inline modifiers
 		["past"] = {},
+		["past1s"] = {},
 		["nonpast"] = {},
 		["vn"] = {},
 		["noautolinktext"] = {type = "boolean"},
@@ -810,6 +811,30 @@ pos_functions["verbs"] = {
 						break
 					end
 				end
+			end
+
+			local function get_slot_values()
+				local terms = {}
+				for _, form in ipairs(slotval) do
+					local term = {
+						term = form.form,
+						id = form.id,
+						genders = form.genders,
+						pos = form.pos,
+						lit = form.lit,
+					}
+					-- Yuck, harmonize these.
+					term[slot_is_headword and "tr" or "translit"] = form.translit
+					if form.footnotes then
+						local quals, refs = require(inflection_utilities_module).
+							convert_footnotes_to_qualifiers_and_references(form.footnotes)
+						term.q = quals
+						term.refs = refs
+					end
+					table.insert(terms, term)
+				end
+
+				return terms
 			end
 
 			if override then
@@ -850,6 +875,9 @@ pos_functions["verbs"] = {
 				}
 
 				local function generate_obj(formval, parse_err)
+					if formval == "+" then
+						return {term = "+", underlying_terms = get_slot_values()}
+					end
 					local val, uncertain = formval:match("^(.*)(%?)$")
 					val = val or formval
 					uncertain = not not uncertain
@@ -878,6 +906,41 @@ pos_functions["verbs"] = {
 						terms[i] = generate_obj(split)
 					end
 				end
+				-- See if + was supplied and we have to potentially flatten multiple default terms and harmonize
+				-- default properties with override properties.
+				local saw_underlying_terms = false
+				for _, term in ipairs(terms) do
+					if term.underlying_terms then
+						saw_underlying_terms = true
+						break
+					end
+				end
+				if saw_underlying_terms then
+					-- Flatten any default terms, copying the corresponding override properties over the default
+					-- properties. Non-default terms get inserted directly.
+					local flattened = {}
+					for _, term in ipairs(terms) do
+						if term.underlying_terms then
+							for _, underlying in ipairs(term.underlying_terms) do
+								for k, v in pairs(term) do
+									if k ~= "term" and k ~= "underlying_terms" then
+										if k == "uncertain" then
+											underlying.uncertain = underlying.uncertain or v
+										elseif type(v) ~= "table" or v[1] then
+											-- Don't copy empty lists (which are the default) over possibly non-empty
+											-- lists.
+											underlying[k] = v
+										end
+									end
+								end
+								table.insert(flattened, underlying)
+							end
+						else
+							table.insert(flattened, term)
+						end
+					end
+					terms = flattened
+				end
 				if not slot_is_headword then
 					terms.label = label
 				end
@@ -898,24 +961,9 @@ pos_functions["verbs"] = {
 						return nil, slot
 					end
 				end
-				local terms = slot_is_headword and {} or {label = label}
-				for _, form in ipairs(slotval) do
-					local term = {
-						term = form.form,
-						id = form.id,
-						genders = form.genders,
-						pos = form.pos,
-						lit = form.lit,
-					}
-					-- Yuck, harmonize these.
-					term[slot_is_headword and "tr" or "translit"] = form.translit
-					if form.footnotes then
-						local quals, refs = require(inflection_utilities_module).
-							convert_footnotes_to_qualifiers_and_references(form.footnotes)
-						term.q = quals
-						term.refs = refs
-					end
-					table.insert(terms, term)
+				local terms = get_slot_values()
+				if not slot_is_headword then
+					terms.label = label
 				end
 				return terms, slot
 			end
@@ -944,6 +992,45 @@ pos_functions["verbs"] = {
 		else
 			if past then
 				data.heads = past
+			end
+		end
+
+		local should_do_past1s = not not args.past1s
+		if not should_do_past1s then
+			local is_form_I = false
+			for _, vform in ipairs(alternant_multiword_spec.verb_forms) do
+				if vform == "I" then
+					is_form_I = true
+					break
+				end
+			end
+
+			if is_form_I then
+				require(inflection_utilities_module).map_word_specs(alternant_multiword_spec, function(base)
+					if base.verb_form == "I" then
+						for _, vowel_spec in ipairs(base.conj_vowels) do
+							-- For form-I geminate verbs, the final vowel of the past is elided in the citation form.
+							-- We want to display it for all cases other than active a~u and a~i (the most common
+							-- cases).
+							if vowel_spec.weakness == "geminate" and (
+								ar_verb.is_passive_only(base.passive) or not (
+								vowel_spec.past == "a" and (vowel_spec.nonpast == "u" or vowel_spec.nonpast == "i")
+							)) then
+								should_do_past1s = true
+								break
+							end
+						end
+						-- FIXME, provide way of breaking early from map_word_specs().
+					end
+				end)
+			end
+		end
+
+		local past1s
+		if should_do_past1s then
+			past1s, _ = do_slot({"past_1s"}, args.past1s, "first-person singular past")
+			if past1s then
+				table.insert(data.inflections, past1s)
 			end
 		end
 
