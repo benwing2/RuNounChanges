@@ -290,6 +290,41 @@ function export.split_alternating_runs(segment_runs, splitchar, preserve_splitch
 end
 
 
+--[==[
+After calling `parse_multi_delimiter_balanced_segment_run()`, rejoin delimiter-bounded textual runs (i.e. textual runs
+surrounded by certain matched delimiters) with the runs on either side. This can be used when some of the matched
+delimiters are specified only in order to ensure that delimiters inside of other delimiters aren't parsed. As an
+example, [[Module:object usage]] calls
+{m_parse_utilities.parse_multi_delimiter_balanced_segment_run(object, {{"[", "]"}, {"(", ")"}, {"<", ">"}})} but the
+actual syntax of {{tl|+obj}} only uses parens and angle brackets as delimiters. Square brackets are included so that
+internal links are treated as units (i.e. parens and angle brackets occurring inside of them aren't parsed), but beyond
+that we don't treat square brackets as delimiters, so we want to rejoin square-bracket-delimited textual runs with
+adjacent runs before further parsing.
+
+`data` is an object of properties. Currently there are two: `runs` (the output of calling
+`parse_multi_delimiter_balanced_segment_run()`, i.e. a list of textual runs, where even-numbered elements begin and end
+with a matched delimiter and odd-numbered elements are surrounding text) and `delimiter_pattern` (a Lua pattern matching
+delimited textual runs that we want to rejoin with the surrounding text). `delimiter_pattern` should normally be
+anchored at the beginning; e.g. {"^%["} would be the corret pattern to use when rejoining square-bracket-delimited
+textual runs, as described above.
+]==]
+function export.rejoin_delimited_runs(data)
+	local joined_runs = {}
+	local i = 1
+	while i <= #data.runs do
+		local run = data.runs[i]
+		if i % 2 == 0 and run:find(data.delimiter_pattern) then
+			joined_runs[#joined_runs] = joined_runs[#joined_runs] .. run .. data.runs[i + 1]
+			i = i + 2
+		else
+			table.insert(joined_runs, run)
+			i = i + 1
+		end
+	end
+	return joined_runs
+end
+
+
 function export.strip_spaces(text)
 	return rsub(text, "^%s*(.-)%s*$", "%1")
 end
