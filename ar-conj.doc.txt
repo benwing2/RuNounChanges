@@ -1,0 +1,262 @@
+{{documentation subpage}}
+
+==Usage==
+This template creates a conjugation table for all Arabic [[verb]]s.
+
+This template should be placed in a conjugation section, headed by a ====Conjugation==== section header. The template automatically categorizes the entry into the appropriate Arabic verb subcategory (e.g. [[:Category:Arabic form IV verbs]]). Form-I verbs are also categorized according to the last vowel in the past and non-past, since these vowels vary from verb to verb (e.g. [[:Category:Arabic form-I verbs with past vowel a and non-past vowel u]]). Verbs that are conjugate geminate, such as form-X {{m|ar|اِسْتَرَدَّ}}, are categorized accordingly, in this case in [[:Category:Arabic geminate form-X verbs]]. If the verb is irregular, it will be categorized into [[:Category:Arabic irregular verbs]].
+
+==Basic usage==
+This template has a single required parameter, which is used to specify the verb form (I, II, III, ..., XV, as well as Iq ... IVq). For non-form-I verbs, often that is all that needs to be specified, although typically you should also specify whether there is a passive voice and if so, what type of passive (e.g. full passive, impersonal passive, passive-only, etc.). An example of a form-II verb ِis {{m|ar|رَدَّدَ||to repeat}}, which can be declared as {{tl|ar-conj|<II.pass>}}, where {{cd|<II.pass>}} is an '''angle-bracket spec''' and the parts of the angle-bracket spec between periods/full stops are called '''indicators'''. In this spec there are two indicators, {{cd|II}} (the verb form) and {{cd|pass}} (indicating that a full passive occurs). In practice, this is written just as {{tl|ar-conj|II.pass}}, since angle brackets can be omitted when the spec contains angle brackets at the beginning and end, and nowhere else. (Beware that if you embed a template like {{tl|m}} or {{tl|q}} in a footnote — see below for footnotes — you will need to use the form with explicit angle brackets, because {{tl|m}}, {{tl|q}} and several other templates generate HTML under the hood, which contains angle brackets that confuse the parser if the outer angle brackets have been omitted.)
+
+Form-I verbs need extra information specified, including the past and non-past vowels as well as the verbal nouns (which are unpredictable) and in some cases the active participle(s), when they are unpredictable and do not follow the normal {{m|ar|فَاعِل}} pattern. A typical example is {{m|ar|كَتَبَ||to write}}, which might use the following spec: {{tl|ar-conj|I/a~u.pass.vn:كِتَابَة,كَتْب,كِتَاب}}. This contains three indicators, the first of which ({{cd|I/a~u}}) is a '''compound indicator''' that embeds several pieces of information, in this case the form ({{cd|I}}), the past vowel {{cd|a}} (i.e. ''kat<u>a</u>ba'', not #''katiba'' or ''katuba'') and the non-past vowel {{cd|u}} (i.e. ''yakt<u>u</u>bu'', not #''yaktibu'' or ''yaktaba''). The third indicator is also compound and is an '''override''', explicitly specifying the forms in a slot (in this case the verbal noun slot, whose abbreviation is {{cd|vn}}). This is needed for form-I verbs because there is no default verbal noun for these verbs.
+
+You can also specify the verb explicitly, e.g. {{temp|ar-conj|ردد<II.pass>}}. This is useful on pages where the pagename is not the verb lemma, e.g. test and documentation pages as well as multiword expressions, which are described in more detail below. It is also used in {{tl|ar-verb form}}, which is used on pages describing non-lemma verb forms but takes the same syntax as {{tl|ar-conj}}.
+
+==Non-form-I examples==
+For the form-II verb {{m|ar|رَدَّدَ||to repeat}}, use {{tl|ar-conj|II.pass}} (as described above), which produces:
+{{ar-conj|II.pass|pagename=ردد}}
+
+For the form-VIII geminate verb {{m|ar|اِضْطَرَّ||to compel, to force}}, use {{tl|ar-conj|VIII.pass}}, which produces:
+{{ar-conj|VIII.pass|pagename=اضطر}}
+
+Note that the module correctly knows how to conjugate all verb forms and weaknesses. In the above form-VIII verb, there are multiple possible jussive and imperative forms, all of which are generated and shown in the table.
+
+For the form-X hollow hamzated verb {{m|ar|استضاء||to be lit; to seek enlightenment}}, use {{tl|ar-conj|X.II:و.ipass}}, which produces:
+{{ar-conj|X.II:و.ipass|pagename=استضاء}}
+Here, {{cd|ipass}} indicates that the verb has only an impersonal passive (i.e. only third-person masculine singular forms exist) rather than a full passive, and {{cd|II:و}} specifies that the second radical is a {{lang|ar|و}} (wāw), which cannot be inferred from the lemma. Note that for non-form-I verbs, it's not strictly necessary to specify the non-inferrable second radical of hollow verbs or third radical of final-weak verbs, because it doesn't affect the conjugation. Doing so, however, allows the verbs to be correctly categorized by weak radical. For example, the above verb will be categorized into [[:Category:Arabic form-X verbs with و as second radical]].
+
+Note also that the module knows the rules for determining the correct seat of hamzas, which follows complex rules and for which there are sometimes alternatives, as in the third-person masculine plural non-past indicative of the above verb, which is either {{m|ar||يَسْتَضِيئُونَ}} (with the hamza over a {{lang|ar|ي}}) or {{m|ar|يَسْتَضِيؤُونَ}} (with the hamza over a {{lang|ar|و}}).
+
+==Form-I examples==
+For form-I {{m|ar|كَتَبَ||to write}}, use {{tl|ar-conj|I/a~u.pass.vn:كِتَابَة,كَتْب,كِتَاب}} (as described above), which produces:
+{{ar-conj|I/a~u.pass.vn:كِتَابَة,كَتْب,كِتَاب|pagename=كتب}}
+
+For form-I {{m|ar|تَرَّ||to be cut off, to be severed}}, which has non-past vowel either ''u'' or ''i'', use {{tl|ar-conj|I/a~u,i.nopass.vn:تَرّ,تُرُور}}, which produces:
+{{ar-conj|I/a~u,i.nopass.vn:تَرّ,تُرُور|pagename=تر}}
+Here, commas separate the different possible non-past vowels, and {{cd|nopass}} means there is no passive.
+
+Form-I stative verbs (generally those whose past vowel is ''i'' or ''u'') typically have unpredictable active participles as well as verbal nouns, and both must be specified. An example is {{m|ar|تَلِفَ||to perish, to be spoiled}}, which uses {{tl|ar-conj|I/i~a.ipass.vn:تَلَف.ap:+,+++,+an}}, producing:
+{{ar-conj|I/i~a.ipass.vn:تَلَف.ap:+,+++,+an|pagename=تلف}}
+Here, there is both a verbal noun override specifying the verbal noun {{m|ar|تَلَف}} and an active participle override specifying three possible active participles. Because certain active participle patterns are very common, shortcuts are provided for them. Here, {{cd|+}} indicates the default {{m|ar||فَاعِل}} participle shape; {{cd|+++}} indicates the {{m|ar||فَعِل}} participle shape; and {{cd|+an}} indicates the {{m|ar||فَعْلَان}} participle shape. This is documented in more detail below.
+
+If there is more than one possible combination of past/non-past vowels, but the combinations differ in both the past and non-past vowels, it is recommended to use multiple conjugation tables. An example is {{m|ar|رَفَقَ||to be kind; to be a friend}} with non-past vowel ''u'', which also occurs as {{m|ar|رَفِقَ}} with non-past vowel ''a'' and {{m|ar|رَفُقَ}} with non-past vowel ''u''. This would be written as follows:
+<pre>
+{{ar-conj|I/a~u.ipass.vn:رِفْق,مَرْفِق,مِرْفَق,مَرْفَق.ap:+,++}}
+{{ar-conj|I/i~a.ipass.vn:رَفَق.ap:+,++}}
+{{ar-conj|I/u~u.ipass.vn:رَفَاقَة,رِفْق.ap:++}}
+</pre>
+which produces
+{{ar-conj|I/a~u.ipass.vn:رِفْق,مَرْفِق,مِرْفَق,مَرْفَق.ap:+,++|pagename=رفق}}
+{{ar-conj|I/i~a.ipass.vn:رَفَق.ap:+,++|pagename=رفق}}
+{{ar-conj|I/u~u.ipass.vn:رَفَاقَة,رِفْق.ap:++|pagename=رفق}}
+Note that in this case, the different vowel patterns are also associated with different verbal nouns and (to some extent) different active participles.
+
+In general, you '''must''' specify the past and non-past vowels for a form-I verb, or an error is thrown. There are only two exceptions: (1) passive-only verbs, and (2) final-weak verbs. An example of the latter is {{m|بَكَى||to cry; to weep over}}, which would be written {{tl|ar-conj|I.pass.vn:بُكَاء,بُكًى}}, which produces:
+{{ar-conj|I.pass.vn:بُكَاء,بُكًى|pagename=بكى}}
+Here, the vowels are inferred as ''a~i'', consistent with the last letter of the unvocalized form. (Vowel pattern ''a~u'' ends in {{lang|ar|ا}} and vowel pattern ''i~a'' ends in {{lang|ar|ي}}.)
+
+For form-I weak verbs, it is important to know the identity of all radicals, as it determines the form of the passive participles. This applies in particular to hollow and final-weak verbs. Most of the time, radical can be safely inferred from the non-past vowel, but this is not the case when the non-past vowel is ''a''. In this situation, the radical must be given or an error occurs. An example is {{m|ar|نَامَ||to sleep; to forget about}}, which has vowel pattern ''i~a'' and an impersonal passive, hence a passive participle ({{m|ar|مَنُوم}} since the second radical is {{lang|ar|و}}). For this verb, the second radical must be given explicitly or an error occurs. Thus it should be written {{tl|ar-conj|I/i~a.II:و.ipass.vn:نَوْم,مَنَام.ap:+}}, which produces:
+{{ar-conj|I/i~a.II:و.ipass.vn:نَوْم,مَنَام.ap:+|pagename=نام}}
+
+A similar situation occurs with form-I final-weak verbs with vowel pattern ''i~a''. An example is {{m|ar|رَضِيَ||to please}}, which should be written {{tl|ar-conj|I.III:و.pass.vn:رِضًا,رِضًى,رِضْوَان,رُضْوَان,مَرْضَاة.pp:+,مَرْضِيّ}}, which produces:
+{{ar-conj|I.III:و.pass.vn:رِضًا,رِضًى,رِضْوَان,رُضْوَان,مَرْضَاة.pp:+,مَرْضِيّ|pagename=رضي}}
+Here, the last radical is {{lang|ar|و}}, leading to an expected passive participle {{m|ar|مَرْضُوّ}}. This does occur, but so does an analogical passive participle {{m|ar|مَرْضِيّ}}, so we list both using an override.
+
+==Indicators==
+This section gives full information on the indicators that can occur in {{para|1}}.
+
+The first indicator is required and specifies the verb form: {{cd|I}}, {{cd|II}}, ... {{cd|XV}} or {{cd|Iq}} ... {{cd|IVq}}. See [[Appendix:Arabic verbs]] for more information. Non-form-I verbs just specify the indicator directly, but form-I verbs normally need to specify a ''compound indicator'' with additional information given:
+# Rarely, the weakness needs to be explicitly given following a hyphen, i.e. either {{cd|I-assimilated}} or {{cd|I-sound}}. This occurs only with form-I verbs whose first radical is {{lang|ar|و}}, and even then fairly rarely. Specifically, form-I verbs whose first radical is {{lang|ar|و}} are assumed to be '''assimilated''' (i.e. they lose the {{lang|ar|و}} in the non-past) ''unless'' the vowel pattern is ''i~a'' or ''u~u'', in which case the verb is assumed to be '''sound''' (regular); in other words, the verb is assumed to be assimilated if the vowel pattern is ''a~u'', ''a~i'', ''a~a'' or ''i~i'' (or some weird pattern like ''i~u'' that is almost never seen and probably an error). This works correctly with almost all verbs, hence {{m|ar|وَهَرَ||to frighten}}, non-past {{m|ar|يَهِرُ||he frightens}} vs. {{m|ar|وَهِلَ||to be frightened}}, non-past {{m|ar|يَوْهَلُ||he is frightened}}. But a small number of verbs don't follow this pattern, and need the weakness explicitly given, such as {{m|ar|وَسِعَ||to be wide; to house, to accommodate}}, non-past {{m|ar|يَسَعُ||he is wide; he houses, he accommodates}} rather than expected but non-existent #{{m|ar||يَوْسَعُ}}. This verb would be specified as {{tl|ar-conj|I-assimilated/i~a.pass.vn:سَعَة.ap:+}}.
+# In most cases, the past and non-past vowel need to be given following a slash, in the format e.g. {{cd|a~u}} for past vowel ''a'', non-past vowel ''u''. Multiple comma-separated vowels can be given for either type of vowel, e.g. {{cd|a~u,i}} meaning past vowel ''a'' and non-past vowel either ''u'' or ''i''; or {{cd|a,u~u}} meaning past vowel either ''a'' or ''u'' and non-past vowel ''u''. As mentioned above, more complex patterns (e.g. either ''a~u'' or ''i~a'') should be specified using multiple conjugation templates. (It would be possible to extend the syntax to accomodate this but it would have to be displayed using multiple tables in any case, since the result of mixing all forms into a single table would be the equivalent of ''a,i~u,a'', which would be extremely misleading.) It is possible to attach a footnote to 
+
+
+
+==Additional parameters==
+Most of the information is encoded in {{para|1}}. The other parameters are:
+
+
+Arguments are as follows (only the first numbered argument is mandatory):
+* {{para|1}}: Mandatory. Conjugation type, usually just e.g. <code>I</code> or <code>IV</code>; see below.
+* {{para|2}} through {{para|6}}: Radicals and (for form I) past and non-past vowels; see below. Radicals are normally omitted, and will be inferred from the headword. Past and non-past vowels are used only in form I.
+* {{para|I}}, {{para|II}}, {{para|III}}, {{para|IV}}: Alternative way of specifying radicals using named rather than numbered arguments. Radicals normally do not need to be given, and will be inferred from the headword.
+* {{para|vn}}: Specify the verbal noun(s). Separate multiple verbal nouns by commas or by the Arabic comma ({{m|ar|،}}). Verbal nouns are required for form I, but need not be specified for other forms except in the rare cases where such a verb has an irregular verbal noun.
+* {{para|passive}}: If <code>impers</code>, verb has impersonal passive (only 3rd singular masculine parts); if <code>only</code>, verb has only passive parts, no active; if <code>only-impers</code>, verb has only impersonal passive parts (only 3rd singular masculine passive parts, no others and no active parts); otherwise, if should be <code>yes</code>, <code>y</code>, <code>true</code> or <code>1</code> (verb has a passive) or <code>no</code>, <code>n</code>, <code>false</code> or <code>0</code> (verb has no possive). If omitted, default is normally yes, but default is no for forms VII, IX, XI - XV, IIq - IVq, and form I with past vowel ''u'' (except for hollow verbs), and default is impersonal passive for form VI.
+* {{para|intrans}}: Rarely needs to be specified. Should be <code>yes</code>, <code>y</code>, <code>true</code> or <code>1</code> (verb is intransitive) or <code>no</code>, <code>n</code>, <code>false</code> or <code>0</code> (verb is transitive). If omitted, default comes from the value of {{para|passive}}: If {{para|passive|no}}, {{para|passive|impers}} or {{para|passive|only-impers}} then intransitive, otherwise transitive.
+* {{para|variant}}: Only used with the verb {{m|ar|حَيَّ}} or {{m|ar|حَيِيَ}} "to live". Value is <code>short</code> (produces {{m|ar|حَيَّ}}), <code>long</code> (produces {{m|ar|حَيِيَ}}), <code>both</code> (produces both forms).
+* {{para|noimp}}: Suppresses imperatives with <code>1</code>.
+
+The meaning of arguments {{para|2}} through {{para|6}} depends on the form.
+
+===Form I===
+* {{para|2}}: past (aka perfect) vowel (<code>a</code>, <code>i</code> or <code>u</code>).
+* {{para|3}}: non-past (aka imperfect) vowel (<code>a</code>, <code>i</code> or <code>u</code>).
+* {{para|4}} or {{para|I}}: First radical.
+* {{para|5}} or {{para|II}}: Second radical.
+* {{para|6}} or {{para|III}}: Third radical.
+
+Past and non-past vowels should normally be included, although they have sensible defaults that work in many cases, especially with final-weak verbs (see below). Radicals are usually omitted and will be inferred from the headword and (in some cases) the past/non-past vowels. In a very few cases, radicals must be included (in particular, with form I hollow verbs with a non-past vowel of ''a''), and an error will be thrown if they are omitted.
+
+Multiple past and/or non-past vowels can be given, separated by commas. This is useful when a verb has alternative conjugations involving different vowels. See the example below of {{m|ar|فَرَدَ}} or {{m|ar|فَرُدَ}} "to be single". (Not all alternative conjugations can be specified this way; an example would be a verb that takes either the past/non-past vowels ''a/u'' or ''i/a''. There would in any case be no clear way of indicating such an alternation in a single conjugation table. The solution is to include more than one conjugation table.)
+
+===Other triliteral augmented forms (form II through XV)===
+* {{para|2}} or {{para|I}}: First radical.
+* {{para|3}} or {{para|II}}: Second radical.
+* {{para|4}} or {{para|III}}: Third radical.
+
+Radicals can be omitted in all cases. In some cases there is an ambiguity in choice of radical (e.g. in hollow and final-weak verbs, and some form VIII sound verbs), but in these cases all choices produce identical conjugations.
+
+===Quadriliteral forms (form Iq, IIq, IIIq or IVq)===
+* {{para|2}} or {{para|I}}: First radical.
+* {{para|3}} or {{para|II}}: Second radical.
+* {{para|4}} or {{para|III}}: Third radical.
+* {{para|5}} or {{para|IV}}: Fourth radical.
+
+Radicals can be omitted in all cases, as above.
+
+==Further comments==
+The conjugation type is normally just the form (e.g. ''I'', ''II'', ''III'', ''IV'', etc.), and the weakness (''sound'', ''assimilated'', ''hollow'', ''final-weak'', ''geminated'', ''assimilated+final-weak'') is automatically determined from the radicals. However, the weakness can be explicitly specified in the conjugation type, e.g. ''I-sound'' or ''IV-hollow''. The main use of this is to force
+a verb to be sound that would normally be interpreted otherwise in cases where a weak radical unexpectedly appears in a non-weak conjugation, e.g. Form I ''wajuha yawjuhu'' "to be distinguished". Only verbs like this (apparently form-I assimilated, but actually sound) are problematic; would-be hollow verbs that are actually sound are handled correctly by default (e.g. Form I ''ʻawiza yaʻwazu'' "to be poor", Form I ''layisa yalyasu'' "to be courageous", Form IV ''’aḥwaja yuḥwiju'' "to need", Form VIII ''izdawaja yazdawiju'' "to be in pairs", Form X ''istajwaba yastajwibu'' "to interrogate").
+
+Normally, all radicals are omitted, and the radicals are inferred automatically from the headword. More specifically: If some or all of the radicals are omitted, the missing ones will be automatically inferred from the headword and conjugation form, and the past/non-past vowels if given (it is an error in such a case if the headword is malformed given the conjugation form). This works properly in almost all cases, but will run into problems in one particular situation: In form I hollow verbs where the non-past vowel is omitted or is ''a'', the radical cannot be determined but is necessary to conjugate the passive participle. For example, {{m|ar|[[خاف|خَافَ يَخَافُ]]}} "to fear" with middle radical {{m|ar|و}} has passive participle {{m|ar|مَخُوفٌ}} whereas {{m|ar|[[شاء|شَاءَ يَشَاءُ]]}} with middle radical {{m|ar|ي}} has passive participle {{m|ar|مَشِيءٌ}} despite both having the same past and non-past vowels. In this particular situation, an error will be thrown if the middle radical is not given.
+
+In the following situations, the radical is ambiguous, but the exact choice of radical doesn't matter because all choices produce the same conjugation:
+*In augmented (non-form-I) hollow verbs, where the middle radical is assumed to be {{m|ar|و}} but might be {{m|ar|ي}}.
+*In augmented (non-form-I) final-weak verbs, where the last radical is assumed to be {{m|ar|و}} but might be {{m|ar|ي}}.
+*In form VIII verbs beginning with {{m|ar||اتّـ}}, where the first radical is assumed to be {{m|ar|ت}} but might be {{m|ar|و}} or {{m|ar|ي}} (or {{m|ar|ء}} in the specific case of the verb {{m|ar|اِتَّخَذَ}}).
+
+For form I sound, assimilated and geminate verbs, if the past-tense vowel is omitted, it defaults to ''a''. If the non-past vowel is omitted, it is computed from the past vowel: A past vowel of ''a'' maps to ''a'' if the second or third radical is guttural, else ''u''; a past vowel of ''i'' maps to ''a''; a past vowel of ''u'' maps to ''u''. For final-weak verbs, and for hollow verbs if the radicals are specified, the past and/or non-past vowels rarely need to be given, as they will be derived automatically from the nature of the weak vowel. (Specifically, for hollow verbs both past and non-past vowel default to the short vowel version of the middle radical, whereas for final-weak verbs, the past vowel defaults to ''a'' and the default non-past vowel is computed from the past vowel as follows: ''a''  maps to either ''i'' or ''u'' depending on the nature of the third radical, ''i'' maps to ''a'', ''u'' maps to ''u''.)
+
+==How to derive the past and non-past vowels==
+To derive the past vowel, look at the (usually) short vowel appearing before the last radical of the verb in the first-person (''not'' third-person) singular past (aka perfect). For hollow verbs, this is usually ''i'' or ''u''. For other verbs, this is usually ''a'', sometimes ''i'' and rarely ''u''. For final-weak verbs, you may see a long ''ī'' (or very occasionally ''ū'') replacing the third radical; the corresponding past vowel is ''i'' (or ''u'' if appropriate). Meanwhile, the non-past vowel is the short vowel with the same quality as the vowel (which may be long or short) appearing before the last radical of the verb in the first-person (or third-person masculine) singular non-past (aka imperfect) indicative. This is most commonly ''i'' or ''u'', but ''a'' is reasonably common, especially when the past vowel is "i" or the second or third radical is a guttural consonant: {{m|ar|ه}}, {{m|ar|ح}}, {{m|ar|ع}}, or {{m|ar|ء}}. For final-weak verbs the last radical merges into the vowel to produce a long vowel; the corresponding short vowel is the non-past vowel.
+
+==Examples==
+
+===Form I example===
+If the headword is {{m|ar|كتب|t=to write|pos=form I sound}}, {{temp|ar-conj/old|I|a|u|vn{{=}}كِتَابَة}} produces
+
+{{ar-conj/old|I|a|u|ك|ت|ب|vn=كِتَابَة}}
+
+===Form I final-weak example with inferred past/non-past vowels and multiple verbal nouns===
+Past and non-past vowels can be omitted, and will be guessed. For form I final weak verbs, the guess is based on the last letter of the headword (either {{m|ar|ى}} or {{m|ar|ا}}), and is usually correct. More than one verbal noun can be specified to the {{para|vn}} arg, separated by commas or by Arabic commas.
+
+If the headword is {{m|ar|رمى|t=to throw|pos=form I final-weak}}, {{temp|ar-conj/old|I|vn=رَمْي،رِمَايَة}} produces
+
+{{ar-conj/old|I|||ر|م|ي|vn=رَمْي،رِمَايَة}}
+
+===Form I example with multiple past vowels and uncertain passive status===
+More than one past or non-past vowel can be given when multiple possibilities exist in the conjugation, and a ? can be added to the {{para|passive}} or {{para|vn}} args to indicate uncertainty, which places the headword in, respectively, [[:Category:Arabic verbs needing passive checked]] and [[:Category:Arabic verbs needing verbal noun checked]]). Note that the value of {{para|passive}} has reasonable defaults; in this case, it would default to {{para|passive|n}} anyway due to one of the past vowels being ''u'', but it is a good idea to specify it explicitly to indicate that this has been verified with a dictionary or native speaker.
+
+If the headword is {{m|ar|فرد|t=to be single|pos=form I sound}}, {{temp|ar-conj/old|I|a,u|u|passive=n?|vn=فُرُود}} produces
+
+{{ar-conj/old|I|a,u|u|ف|ر|د|passive=n?|vn=فُرُود}}
+
+===Form IV hollow example===
+
+If the headword is {{m|ar|أراد|t=to want|pos=form IV hollow}}, {{temp|ar-conj/old|IV}} produces
+
+{{ar-conj/old|IV|ر|و|د}}
+
+<includeonly>
+[[Category:Arabic verb inflection-table templates]]
+</includeonly>
+
+
+
+
+
+
+
+
+
+
+
+
+
+==Examples==
+
+===Regular verbs, including those with consonant alternations===
+
+1. The verb {{m|ca|cantar||to sing}} is fully regular. Use as follows:
+:{{temp|ca-conj}}
+which produces
+
+{{ca-conj|cantar}}
+
+2. The verb {{m|ca|pagar||to pay}} is regular other than having a predictable spelling change to ''gu'' in various forms. This is handled automatically, so no parameters are needed. Use as follows:
+:{{temp|ca-conj}}
+which produces
+
+{{ca-conj|pagar}}
+
+3. The verb {{m|ca|distribuir||to distribute}} is regular other than having a predictable addition of a diaeresis over the i (i.e. ''ï'') in certain forms, such as the first-person plural present indicative ''distribuïm''. This is handled automatically, so no parameters are needed. Use as follows:
+:{{temp|ca-conj}}
+which produces
+
+{{ca-conj|distribuir}}
+
+===Irregular verbs===
+
+The module knows how to conjugate all irregular verbs, including compounds such as {{m|ca|mantenir}} and {{m|ca|endur-se}}, and no parameters are needed for them.
+
+1. For example, the verb {{m|ca|dir||to say}} has various irregularities: present tense {{m|ca|dic}}, preterite {{m|ca|diguí}}, past participle {{m|ca|dit}}, imperative {{m|ca|digues}}, etc. Specify simply as follows:
+:{{temp|ca-conj}}
+which produces
+
+{{ca-conj|dir}}
+
+2. The verb {{m|ca|acudir||to attend; to come to mind}} has two conjugations in the present indicative and subjunctive, e.g. third person singular ''acudeix'' or ''acut''. These tend to be used differently according to the meaning, with ''acudeix'' usually used in the sense "to attend" and ''acut'' in the sense "to come to mind". The module knows about this, so specify simply as follows:
+:{{temp|ca-conj}}
+which produces
+
+{{ca-conj|acudir}}
+
+Here, a footnote is automatically added to indicate the different usages.
+
+===Defective verbs===
+
+Certain verbs are ''defective'', i.e. are missing some forms. Indicators are available to specify this. For example, the verb {{m|ca|caldre||to be necessary}} is an impersonal verb, with only 3rd-person singular verbs and no imperative. Specify as follows:
+:{{temp|ca-conj|<only3s>}}
+which produces
+
+{{ca-conj|caldre<only3s>}}
+Here, <code><only3s></code> means "only third-person singular".
+
+===Variant conjugations===
+A few verbs can be conjugated in more than one fashion depending on the meaning. Specify as follows:
+
+# {{m|ca|coure}} means either "to cook" (past participle ''cuit'') or "to sting" (past participle ''cogut''). Specify this using a ''variant indicator'', specifically {{tl|ca-conj|<var:cook>}} or {{tl|ca-conj|<var:sting>}}.
+# {{m|ca|haver}} is either an auxiliary verb used to form perfect tenses, or a full verb with the meaning "to possess". These uses are conjugated differently; in both cases the conjugations are highly irregular. Specify this using a ''variant indicator'' as above, specifically {{tl|ca-conj|<var:aux>}} or {{tl|ca-conj|<var:full>}}.
+# {{m|ca|lluir}} is conjugated either a regular inchoative ''-ir'' verb meaning "to display; to be popular/successful {{q|of a person}}", or an irregular "pure ''-ir''" verb meaning "to shine". Specify the latter with no parameters, i.e. {{tl|ca-conj}}, and the former using {{tl|ca-conj|<no_built_in>}}. Here, the {{lua|no_built_in}} indicator specifies that the special handling as an irregular ("built-in") verb should be disregarded, and the verb conjugated regularly.
+
+==Parameters==
+The allowed parameters are as follows:
+
+; {{para|1}}
+: Optional specification of the verb and/or indicators controlling unpredictable parts of the conjugation. See above.
+
+==Multiword expressions==
+For multiword expressions, place angle brackets after the verb(s) needing conjugation, with any indicators inside angle brackets as needed. This is not actually necessary if there is only a single verb that is the first word of the expression, as is common.
+
+1. For example, for the idiom {{m|ca|fer caput||to kill, to off}}, both of the following work and are equivalent:
+:{{temp|ca-conj}}
+:{{temp|ca-conj|fer<> caput}}
+which produce
+
+{{ca-conj|fer<> caput}}
+
+2. The expression {{m|ca|retallar i enganxar||to [[cut and paste]]}} has more than one conjugated verb. Place angle brackets after each:
+:{{temp|ca-conj|retallar<> i enganxar<>}}
+which produces
+
+{{ca-conj|retallar<> i enganxar<>}}
+
+3. Normally, each word (including the verb) is autolinked separately. You can override the linking behavior by explicitly specifying links, as in {{m|ca|donar voltes||to [[go round in circles]]}}, which can be written as follows:
+:<code><nowiki>{{ca-conj|donar<> [[volta|voltes]]}}</nowiki></code>
+which produces
+
+{{ca-conj|donar<> [[volta|voltes]]}}
+In this case, the singular of {{m|ca|voltes}} is explicitly linked. The verb does not explicitly need a link, however, because verbs and uninflected portions of the expression are autolinked separately.
+<includeonly>
+[[Category:Catalan verb inflection-table templates]]
+</includeonly>
+
