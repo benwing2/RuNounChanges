@@ -12,12 +12,12 @@ verb form given the form and the conjugation spec for the verb (which is usually
 local force_cat = false -- set to true for debugging
 
 local m_links = require("Module:links")
-local m_table = require("Module:User:Benwing2/table")
+local m_table = require("Module:table")
 local m_form_of = require("Module:form of")
 local m_string_utilities = require("Module:string utilities")
 local accel_module = "Module:accel"
 local headword_module = "Module:headword"
-local ar_verb_module = "Module:User:Benwing2/ar-verb"
+local ar_verb_module = "Module:ar-verb"
 local ar_IPA_module = "Module:ar-IPA"
 local IPA_module = "Module:IPA"
 local lang = require("Module:languages").getByCode("ar")
@@ -38,7 +38,7 @@ local function get_pronun(form, tr)
 	end
 end
 
-local function generate_inflection_of(forms_and_tags, vforms, pagename)
+local function generate_inflection_of(forms_and_tags, vforms, pagename, is_template_example)
 	-- There are two approaches for combining tag sets and lemmas: Either we combine the lemmas first or the tag sets
 	-- first. Combining the lemmas first means we look for all instances of a given tag set and combine all the lemmas
 	-- with that tag set, and then, for each given set of lemmas, find all tag sets with that set of lemmas and run
@@ -182,6 +182,7 @@ local function generate_inflection_of(forms_and_tags, vforms, pagename)
 		ins(require(headword_module).full_headword {
 			lang = lang,
 			pos_category = "verb forms",
+			heads = is_template_example and {"كتبت"} or nil,
 			inflections = get_verb_forms_as_inflections(),
 			pagename = pagename,
 			translits = {"-"},
@@ -271,9 +272,14 @@ function export.verb_form(frame)
 	local argspecs = args[1]
 	local forms_and_tags = {}
 	local vforms = {}
+	local is_template_example = mw.title.getCurrentTitle().nsText == "Template" and
+		mw.title.getCurrentTitle().subpageText == "ar-verb form"
+	if not argspecs[1] and is_template_example then -- template invocation
+		argspecs = {"كتب<I/a~u.pass>"}
+	end
 	for i, argspec in ipairs(argspecs) do
 		args[1] = argspecs[i]
-		local alternant_multiword_spec = m_verb_module.do_generate_forms(args, "ar-verb form of")
+		local alternant_multiword_spec = m_verb_module.do_generate_forms(args, "ar-verb form")
 
 		local non_lemma_form = alternant_multiword_spec.verb_form_of_form
 
@@ -282,8 +288,10 @@ function export.verb_form(frame)
 		end
 
 		local lemmas = {}
+		local lemma_slot = nil
 		for _, slot in ipairs(m_verb_module.potential_lemma_slots) do
 			if alternant_multiword_spec.forms[slot] then
+				lemma_slot = slot
 				for _, formobj in ipairs(alternant_multiword_spec.forms[slot]) do
 					local lemmaval = m_links.remove_links(mw.ustring.toNFC(formobj.form))
 					local lemma_translit = formobj.translit
@@ -315,13 +323,29 @@ function export.verb_form(frame)
 
 		local slot_restrictions = args.slots and m_table.listToSet(rsplit(args.slots, ",")) or nil
 		local negated_slot_restrictions = args.noslots and m_table.listToSet(rsplit(args.noslots, ",")) or nil
+		if slot_restrictions and slot_restrictions.lemma then
+			slot_restrictions.lemma = nil
+			slot_restrictions[lemma_slot] = true
+		end
+		if negated_slot_restrictions and negated_slot_restrictions.lemma then
+			negated_slot_restrictions.lemma = nil
+			negated_slot_restrictions[lemma_slot] = true
+		end
 		local slots_seen = {}
+
+		local normally_skipped_slots = m_table.listToSet { "ap", "vp", "vn" }
+		normally_skipped_slots[lemma_slot] = true
+		if slot_restrictions then
+			for slot, _ in pairs(slot_restrictions) do
+				normally_skipped_slots[slot] = nil
+			end
+		end
 
 		local matched = false
 		for _, slot_accel in ipairs(alternant_multiword_spec.verb_slots) do
 			local slot, accel = unpack(slot_accel)
 			-- Skip "unsettable" (ancillary/internal) slots.
-			if not m_verb_module.unsettable_slots_set[slot] then
+			if not m_verb_module.unsettable_slots_set[slot] and not normally_skipped_slots[slot] then
 				local forms = alternant_multiword_spec.forms[slot]
 				if forms then
 					for _, formobj in ipairs(forms) do
@@ -373,7 +397,7 @@ function export.verb_form(frame)
 		local function concat_lemmas()
 			local formvals = {}
 			for _, lemma in ipairs(lemmas) do
-				table.insert(formvals, lemma.form)
+				table.insert(formvals, lemma.term)
 			end
 			return table.concat(formvals, "/")
 		end
@@ -409,7 +433,7 @@ function export.verb_form(frame)
 		end
 	end
 
-	return generate_inflection_of(forms_and_tags, vforms, args.pagename)
+	return generate_inflection_of(forms_and_tags, vforms, args.pagename, is_template_example)
 end
 
 return export
