@@ -20,6 +20,8 @@ local headword_module = "Module:headword"
 local ar_verb_module = "Module:ar-verb"
 local ar_IPA_module = "Module:ar-IPA"
 local IPA_module = "Module:IPA"
+local template_parser_module = "Module:template parser"
+local utilities_module = "Module:utilities"
 local lang = require("Module:languages").getByCode("ar")
 
 local rsplit = m_string_utilities.split
@@ -37,6 +39,67 @@ local function get_pronun(form, tr)
 		return require(IPA_module).format_IPA(lang, "/" .. pronun .. "/")
 	end
 end
+
+local function find_conjugations(lemma, verb_form)
+	local title = mw.title.new(lemma)
+	if title then
+		local content = title:getContent()
+		if content then
+			local arabic = require(utilities_module).get_section(content, "Arabic")
+			if arabic then
+				local conjs = {}
+				local other_verb_forms = {}
+				local saw_multiword_conj = 0
+				for tempname, args, template_invoc, _ in require(template_parser_module).findTemplates(arabic) do
+					if tempname == "ar-conj" then
+						local arg1 = args[1]
+						if arg1 then
+							arg1 = arg1:match("^<(.*)>$") or arg1
+							if arg1:find("<") or arg1:find("%(%(") then
+								mw.log(('find_conjugations("%s", "%s"): Skipping multiword conjugation: %s'):format(
+									lemma, verb_form, template_invoc))
+								saw_multiword_conj = saw_multiword_conj + 1
+							else
+								local arg1_verb_form = arg1:gsub("[/.].*$", "")
+								if arg1_verb_form == verb_form then
+									table.insert(conjs, {
+										conj = ("%s<%s>"):format(lemma, arg1),
+										gloss = args.t,
+									})
+								else
+									m_table.insertIfNot(other_verb_forms, arg1)
+								end
+							end
+						end
+					end
+				end
+				if conjs[1] then
+					return conjs
+				elseif other_verb_forms[1] then
+					error(("For Arabic lemma '%s', found Arabic section but couldn't find conjugation for form %s (found conjugation(s) for form(s) %s%s"):format(
+						lemma, verb_form, table.concat(other_verb_forms, ","), saw_multiword_conj > 0 and
+						("; also skipped %s multiword conjugation(s)"):format(saw_multiword_conj) or ""))
+				elseif saw_multiword_conj > 0 then
+					error(("For Arabic lemma '%s', found Arabic section but couldn't find any verb conjugations when looking for form %s (but skipped %s multiword conjugation(s))"):format(
+						lemma, verb_form, saw_multiword_conj))
+				else
+					error(("For Arabic lemma '%s', found Arabic section but couldn't find any verb conjugations when looking for form %s%s"):format(
+						lemma, verb_form, saw_multiword_conj > 0 and (" (but skipped %s multiword conjugation(s))"):format(
+							saw_multiword_conj)))
+				end
+			else
+				error(("For Arabic lemma '%s', page exists but has no Arabic section when looking for form %s"):format(
+					lemma, verb_form))
+			end
+		else
+			error(("For Arabic lemma '%s', couldn't fetch contents for page when looking for form %s; page may not exist"):format(
+			lemma, verb_form))
+		end
+	else
+		error(("Bad Arabic lemma '%s' when looking for form %s; couldn't create title object"):format(lemma, verb_form))
+	end
+end
+
 
 local function generate_inflection_of(forms_and_tags, vforms, pagename, is_template_example)
 	-- There are two approaches for combining tag sets and lemmas: Either we combine the lemmas first or the tag sets
@@ -277,8 +340,9 @@ function export.verb_form(frame)
 	if not argspecs[1] and is_template_example then -- template invocation
 		argspecs = {"كتب<I/a~u.pass>"}
 	end
-	for i, argspec in ipairs(argspecs) do
-		args[1] = argspecs[i]
+
+	local function process_argspec(argspec, gloss)
+		args[1] = argspec
 		local alternant_multiword_spec = m_verb_module.do_generate_forms(args, "ar-verb form")
 
 		local non_lemma_form = alternant_multiword_spec.verb_form_of_form
@@ -307,7 +371,7 @@ function export.verb_form(frame)
 						-- use term and tr for compatibility with tagged_inflections()
 						term = lemmaval,
 						tr = lemma_translit,
-						gloss = args.t[i] or args.t.default,
+						gloss = gloss or args.t[i] or args.t.default,
 						lit = args.lit[i] or args.lit.default,
 						pos = args.pos[i] or args.pos.default,
 						id = args.id[i] or args.id.default,
@@ -430,6 +494,18 @@ function export.verb_form(frame)
 		end
 		if not matched then
 			error(("'%s' is not any of the forms of the verb '%s'"):format(non_lemma_form, concat_lemmas()))
+		end
+	end
+
+	for i, argspec in ipairs(argspecs) do
+		if argspec:find("^%+") then
+			local lemma, verb_form = argspec:match("^%+(.+)<(.-)>$")
+			local conjs = find_conjugations(lemma, verb_form)
+			for _, conj in ipairs(conjs) do
+				process_argspec(conj.conj, conj.gloss)
+			end
+		else
+			process_argspec(argspec)
 		end
 	end
 
