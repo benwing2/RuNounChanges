@@ -20,6 +20,7 @@ local headword_module = "Module:headword"
 local ar_verb_module = "Module:ar-verb"
 local ar_IPA_module = "Module:ar-IPA"
 local IPA_module = "Module:IPA"
+local parse_utilities_module = "Module:parse utilities"
 local template_parser_module = "Module:template parser"
 local utilities_module = "Module:utilities"
 local lang = require("Module:languages").getByCode("ar")
@@ -31,6 +32,17 @@ local function track(page)
 	return true
 end
 
+local function split_on_comma(term)
+	if not term then
+		return nil
+	end
+	if term:find(",%s") then
+		return require(parse_utilities_module).split_on_comma(term)
+	else
+		return rsplit(term, ",")
+	end
+end
+
 local function get_pronun(form, tr)
 	local pronun = require(ar_IPA_module).toIPA({ Arabic = form, tr = tr}, "noerror")
 	if pronun == "" then
@@ -40,7 +52,7 @@ local function get_pronun(form, tr)
 	end
 end
 
-local function find_conjugations(lemma, verb_form)
+local function find_conjugations(lemma, verb_form, conjid, noconjid)
 	local title = mw.title.new(lemma)
 	if title then
 		local content = title:getContent()
@@ -49,7 +61,16 @@ local function find_conjugations(lemma, verb_form)
 			if arabic then
 				local conjs = {}
 				local other_verb_forms = {}
+				local ignored_ids = {}
 				local saw_multiword_conj = 0
+				local conjid_restrictions = split_on_comma(conjid)
+				if conjid_restrictions then
+					conjid_restrictions = m_table.listToSet(conjid_restrictions)
+				end
+				local noconjid_restrictions = split_on_comma(noconjid)
+				if noconjid_restrictions then
+					noconjid_restrictions = m_table.listToSet(noconjid_restrictions)
+				end
 				for tempname, args, template_invoc, _ in require(template_parser_module).findTemplates(arabic) do
 					if tempname == "ar-conj" then
 						local arg1 = args[1]
@@ -60,14 +81,32 @@ local function find_conjugations(lemma, verb_form)
 									lemma, verb_form, template_invoc))
 								saw_multiword_conj = saw_multiword_conj + 1
 							else
-								local arg1_verb_form = arg1:gsub("[/.].*$", "")
+								local arg1_verb_form = arg1:gsub("[/.-].*$", "")
 								if arg1_verb_form == verb_form then
-									table.insert(conjs, {
-										conj = ("%s<%s>"):format(lemma, arg1),
-										gloss = args.t,
-									})
+									local this_conjid = args.id
+									local passes_id_restriction = true
+									if this_conjid then
+										if conjid_restrictions then
+											passes_id_restriction = passes_id_restriction and
+												conjid_restrictions[this_conjid]
+										end
+										if noconjid_restrictions then
+											passes_id_restriction = passes_id_restriction and
+												not noconjid_restrictions[this_conjid]
+										end
+									else
+										passes_id_restriction = not conjid_restrictions
+									end
+									if passes_id_restriction then
+										table.insert(conjs, {
+											conj = ("%s<%s>"):format(lemma, arg1),
+											gloss = args.t,
+										})
+									else
+										m_table.insertIfNot(ignored_ids, this_conjid or "''no_ID''")
+									end
 								else
-									m_table.insertIfNot(other_verb_forms, arg1)
+									m_table.insertIfNot(other_verb_forms, arg1_verb_form)
 								end
 							end
 						end
@@ -75,28 +114,45 @@ local function find_conjugations(lemma, verb_form)
 				end
 				if conjs[1] then
 					return conjs
-				elseif other_verb_forms[1] then
-					error(("For Arabic lemma '%s', found Arabic section but couldn't find conjugation for form %s (found conjugation(s) for form(s) %s%s"):format(
-						lemma, verb_form, table.concat(other_verb_forms, ","), saw_multiword_conj > 0 and
-						("; also skipped %s multiword conjugation(s)"):format(saw_multiword_conj) or ""))
-				elseif saw_multiword_conj > 0 then
-					error(("For Arabic lemma '%s', found Arabic section but couldn't find any verb conjugations when looking for form %s (but skipped %s multiword conjugation(s))"):format(
-						lemma, verb_form, saw_multiword_conj))
 				else
-					error(("For Arabic lemma '%s', found Arabic section but couldn't find any verb conjugations when looking for form %s%s"):format(
-						lemma, verb_form, saw_multiword_conj > 0 and (" (but skipped %s multiword conjugation(s))"):format(
-							saw_multiword_conj)))
+					local skipped_restrictions = {}
+					if other_verb_forms[1] then
+						table.insert(skipped_restrictions, ("found conjugation(s) for form%s %s"):format(
+							#other_verb_forms > 1 and "s" or "", table.concat(other_verb_forms, ",")))
+					end
+					if saw_multiword_conj > 0 then
+						table.insert(skipped_restrictions, ("skipped %s multiword conjugation%s"):format(
+							saw_multiword_conj, saw_multiword_conj > 1 and "s" or ""))
+					end
+					if ignored_ids[1] then
+						local id_restrictions = {}
+						if conjid then
+							table.insert(id_restrictions, ("conjid=%s"):format(conjid))
+						end
+						if noconjid then
+							table.insert(id_restrictions, ("noconjid=%s"):format(noconjid))
+						end
+						table.insert(skipped_restrictions, ("ignored ID%s '%s' not passing ID restriction%s %s"):format(
+							#ignored_ids > 1 and "'s" or "", table.concat(ignored_ids, ","),
+							#id_restrictions > 1 and "s" or "",	table.concat(id_restrictions, " and ")))
+					end
+					skipped_restrictions = m_table.serialCommaJoin(skipped_restrictions, {punc = ";"})
+					if #skipped_restrictions > 0 then
+						skipped_restrictions = (" (but %s)"):format(skipped_restrictions)
+					end
+					return ("For Arabic lemma '%s', found Arabic section but couldn't find any verb conjugations when looking for form %s%s"):format(
+						lemma, verb_form, skipped_restrictions)
 				end
 			else
-				error(("For Arabic lemma '%s', page exists but has no Arabic section when looking for form %s"):format(
-					lemma, verb_form))
+				return ("For Arabic lemma '%s', page exists but has no Arabic section when looking for form %s"):format(
+					lemma, verb_form)
 			end
 		else
-			error(("For Arabic lemma '%s', couldn't fetch contents for page when looking for form %s; page may not exist"):format(
-			lemma, verb_form))
+			return ("For Arabic lemma '%s', couldn't fetch contents for page when looking for form %s; page may not exist"):format(
+			lemma, verb_form)
 		end
 	else
-		error(("Bad Arabic lemma '%s' when looking for form %s; couldn't create title object"):format(lemma, verb_form))
+		return ("Bad Arabic lemma '%s' when looking for form %s; couldn't create title object"):format(lemma, verb_form)
 	end
 end
 
@@ -329,19 +385,23 @@ function export.verb_form(frame)
 		["lit"] = {list = true, separate_no_index = true},
 		["pos"] = {list = true, separate_no_index = true},
 		["id"] = {list = true, separate_no_index = true},
+		["conjid"] = {list = true},
+		["noconjid"] = {list = true},
 	}
 	local m_verb_module = require(ar_verb_module)
 	local args = require("Module:parameters").process(parargs, params)
 	local argspecs = args[1]
 	local forms_and_tags = {}
 	local vforms = {}
+	local categories = {}
+	local err_msgs = {}
 	local is_template_example = mw.title.getCurrentTitle().nsText == "Template" and
 		mw.title.getCurrentTitle().subpageText == "ar-verb form"
 	if not argspecs[1] and is_template_example then -- template invocation
 		argspecs = {"كتب<I/a~u.pass>"}
 	end
 
-	local function process_argspec(argspec, gloss)
+	local function process_argspec(argspec, gloss, i)
 		args[1] = argspec
 		local alternant_multiword_spec = m_verb_module.do_generate_forms(args, "ar-verb form")
 
@@ -500,16 +560,34 @@ function export.verb_form(frame)
 	for i, argspec in ipairs(argspecs) do
 		if argspec:find("^%+") then
 			local lemma, verb_form = argspec:match("^%+(.+)<(.-)>$")
-			local conjs = find_conjugations(lemma, verb_form)
-			for _, conj in ipairs(conjs) do
-				process_argspec(conj.conj, conj.gloss)
+			local conjs = find_conjugations(lemma, verb_form, args.conjid[i], args.noconjid[i])
+			if type(conjs) == "string" then
+				m_table.insertIfNot(err_msgs, conjs)
+				m_table.insertIfNot(categories, "Arabic bad invocations of Template:ar-verb form")
+			else
+				for _, conj in ipairs(conjs) do
+					process_argspec(conj.conj, conj.gloss, i)
+				end
 			end
 		else
-			process_argspec(argspec)
+			process_argspec(argspec, nil, i)
 		end
 	end
 
-	return generate_inflection_of(forms_and_tags, vforms, args.pagename, is_template_example)
+	local parts = {}
+	for _, msg in ipairs(err_msgs) do
+		table.insert(parts, '<span style="font-weight: bold; color: #CC2200;">' .. msg .. "</span><br />")
+	end
+	if forms_and_tags[1] then
+		table.insert(parts, generate_inflection_of(forms_and_tags, vforms, args.pagename, is_template_example))
+	end
+	local cat_text
+	if categories[1] then
+		cat_text = require(utilities_module).format_categories(categories, lang, nil, nil, force_cat)
+	else
+		cat_text = ""
+	end
+	return table.concat(parts) .. cat_text
 end
 
 return export
