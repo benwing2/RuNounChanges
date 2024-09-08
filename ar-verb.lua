@@ -421,7 +421,7 @@ local function generate_obj(formval, parse_err)
 	uncertain = not not uncertain
 	local ar, translit = val:match("^(.*)//(.*)$")
 	if not ar then
-		ar = formval
+		ar = val
 	end
 	return {form = ar, translit = translit, uncertain = uncertain}
 end
@@ -741,14 +741,20 @@ end
 -- top of [[Module:inflection utilities]]). If a user-supplied override exists for the slot, nothing will happen unless
 -- `allow_overrides` is provided. BEWARE: One form object should never occur in two different slots, or twice in a given
 -- slot; if taking a form object from an existing slot, make sure to shallowcopy() it.
-local function insert_form_or_forms(base, slot, form_or_forms, allow_overrides)
+local function insert_form_or_forms(base, slot, form_or_forms, allow_overrides, uncertain)
 	if not skip_slot(base, slot, allow_overrides) then
 		-- Some optimizations of the most common case of inserting a single string.
 		if type(form_or_forms) == "string" and not base.form_footnotes then
-			form_or_forms = {form = form_or_forms}
+			form_or_forms = {form = form_or_forms, uncertain = uncertain}
 			iut.insert_form(base.forms, slot, form_or_forms)
 		else
-			iut.insert_forms(base.forms, slot, iut.convert_to_general_list_form(form_or_forms, base.form_footnotes))
+			local list = iut.convert_to_general_list_form(form_or_forms, base.form_footnotes)
+			if uncertain then
+				for _, formobj in ipairs(list) do
+					formobj.uncertain = true
+				end
+			end
+			iut.insert_forms(base.forms, slot, list)
 		end
 	end
 end
@@ -968,6 +974,11 @@ local function create_conjugations()
 	-- Form-I verb سأل
 	local function saal_radicals(rad1, rad2, rad3)
 		return req(rad1, "س") and req(rad2, HAMZA) and req(rad3, "ل")
+	end
+
+	-- Form-I verb كان
+	local function kaan_radicals(rad1, rad2, rad3)
+		return req(rad1, "ك") and req(rad2, W) and req(rad3, N)
 	end
 
 	-------------------------------------------------------------------------------
@@ -1210,7 +1221,7 @@ local function create_conjugations()
 	--                        Basic functions to inflect tenses                  --
 	-------------------------------------------------------------------------------
 
-	-- Add to `base` the inflections for the tense indicated by `tense` (the prefix in the slot names, e.g. 'past_act'
+	-- Add to `base` the inflections for the tense indicated by `tense` (the prefix in the slot names, e.g. 'past'
 	-- or 'juss_pass'), formed by combining the `prefixes`, `stems` and `endings`. Each of `prefixes`, `stems` and
 	-- `endings` is either a sequence of 5 (for the imperative) or 13 (for other tenses) abbreviated form lists (each of
 	-- which is either a string, a form object, or a list of strings and/or form objects; see
@@ -1266,7 +1277,7 @@ local function create_conjugations()
 		end
 	end
 
-	-- Add to `base` the inflections for the tense indicated by `tense` (the prefix in the slot names, e.g. 'past_act'
+	-- Add to `base` the inflections for the tense indicated by `tense` (the prefix in the slot names, e.g. 'past'
 	-- or 'juss_pass'), formed by combining the `prefixes`, `stems` and `endings`. This is a simple wrapper around
 	-- inflect_tense_1() that applies to all tenses other than the imperative; see inflect_tense_1() for more
 	-- information about the parameters.
@@ -1980,6 +1991,11 @@ local function create_conjugations()
 		make_hollow_geminate_verb(base, false, past_v_stem, past_c_stem, past_pass_v_stem,
 			past_pass_c_stem, nonpast_v_stem, nonpast_c_stem, nonpast_pass_v_stem,
 			nonpast_pass_c_stem, imp_v_stem, imp_c_stem, "a")
+
+		if kaan_radicals(rad1, rad2, rad3) then
+			local endings = make_nonpast_endings(U, {}, {}, {}, {})
+			inflect_tense(base, "juss", nonpast_prefix_consonants, q(A, rad1), endings)
+		end
 
 		-- Active participle.
 		insert_form_or_forms(base, "ap", req(rad3, HAMZA) and q(rad1, AA, HAMZA, IN) or
@@ -2822,7 +2838,7 @@ local function process_slot_overrides(base)
 				-- lists inside the form objects). However, there is no need to copy the form objects here because there
 				-- is a one-to-one correspondence between slots and slot overrides, i.e. you can't have a default value
 				-- go into two slots.
-				insert_form_or_forms(base, slot, existing_values, "allow overrides")
+				insert_form_or_forms(base, slot, existing_values, "allow overrides", form.uncertain)
 			elseif default_indicator_to_active_participle_slot[form.form] then
 				if form.form == "++" then
 					if slot ~= "vn" and slot ~= "ap" and slot ~= "pp" then
@@ -2844,11 +2860,11 @@ local function process_slot_overrides(base)
 						format(slot, form.form))
 				end
 				-- See comment above about the lack of need to copy the form objects.
-				insert_form_or_forms(base, slot, existing_values, "allow overrides")
+				insert_form_or_forms(base, slot, existing_values, "allow overrides", form.uncertain)
 				-- To make sure there aren't shared form objects.
 				base.forms[secondary_default_slot] = nil
 			else
-				insert_form_or_forms(base, slot, form, "allow overrides")
+				insert_form_or_forms(base, slot, form, "allow overrides", form.uncertain)
 			end
 		end
 	end
@@ -3671,6 +3687,11 @@ local function add_categories_and_annotation(alternant_multiword_spec, base, mul
 		insert_cat("verbs needing verbal noun checked")
 	end
 
+	if base.slot_uncertain.ap then
+		-- FIXME: We should make form I stative verbs have uncertain active participles.
+		insert_cat("verbs needing active participle checked")
+	end
+
 	if base.irregular then
 		insert_ann("irreg", "irregular")
 		insert_cat("irregular verbs")
@@ -3721,11 +3742,17 @@ local function compute_categories_and_annotation(alternant_multiword_spec)
 		add_categories_and_annotation(alternant_multiword_spec, base, multiword_lemma, insert_ann, insert_cat)
 	end)
 
-	if alternant_multiword_spec.forms.vn then
-		for _, form in ipairs(alternant_multiword_spec.forms.vn) do
-			if form.uncertain then
-				insert_cat("verbs needing verbal noun checked")
-				break
+	for _, slot_with_name in ipairs {
+		{"vn", "verbal noun"},
+		{"ap", "active participle"},
+	} do
+		local slot, name = unpack(slot_with_name)
+		if alternant_multiword_spec.forms[slot] then
+			for _, form in ipairs(alternant_multiword_spec.forms[slot]) do
+				if form.uncertain then
+					insert_cat(("verbs needing %s checked"):format(name))
+					break
+				end
 			end
 		end
 	end
@@ -3829,6 +3856,13 @@ local function show_forms(alternant_multiword_spec)
 			return ("<%s>"):format(table.concat(filtered_indicators, "."))
 		end,
 	})
+
+	-- If we're dealing with a single word, no alternants and a single verb form, use the auto-conjugation-fetching
+	-- variant.
+	local reconstructed_lemma, inside = reconstructed_verb_spec:match("^([^ <>()]+)(%b<>)$")
+	if inside and alternant_multiword_spec.verb_forms[1] and not alternant_multiword_spec.verb_forms[2] then
+		reconstructed_verb_spec = ("+%s<%s>"):format(reconstructed_lemma, alternant_multiword_spec.verb_forms[1])
+	end
 
 	local function transform_accel_obj(slot, formobj, accel_obj)
 		if not accel_obj then
@@ -4331,6 +4365,8 @@ function export.show(frame)
 		[1] = {},
 		["noautolinktext"] = {type = "boolean"},
 		["noautolinkverb"] = {type = "boolean"},
+		["t"] = {}, -- for use by {{ar-verb form}}; otherwise ignored
+		["id"] = {}, -- for use by {{ar-verb form}}; otherwise ignored
 		["pagename"] = {}, -- for testing/documentation pages
 		["json"] = {type = "boolean"}, -- for bot use
 	}
