@@ -160,19 +160,19 @@ def msg(text):
   print(text)
 
 def msgn(text):
-  print(text, end='')
+  print(text, end='', flush=True)
 
 def errmsg(text):
   print(text, file=sys.stderr)
 
 def errmsgn(text):
-  print(text, end='', file=sys.stderr)
+  print(text, end='', file=sys.stderr, flush=True)
 
 def errandmsg(text):
   msg(text)
   errmsg(text)
 
-def errmsgn(text):
+def errandmsgn(text):
   msgn(text)
   errmsgn(text)
 
@@ -1097,6 +1097,7 @@ def create_argparser(desc, include_pagefile=False, include_stdin=False,
     parser.add_argument("--pages-from-previous-output", help="Read pages to process (and their indices) from previous output of the form 'Page ### PAGENAME: '.")
     parser.add_argument("--category-file", help="File listing categories to process.")
     parser.add_argument("--cats", help="List of categories to process, comma-separated.")
+    parser.add_argument("--skip-cats", help="List of categories whose pages will not be processed, comma-separated.")
     parser.add_argument("--do-subcats", action="store_true",
       help="When processing categories, do subcategories instead of pages belong to the category.")
     parser.add_argument("--do-cat-and-subcats", action="store_true",
@@ -1265,11 +1266,17 @@ def do_pagefile_cats_refs(args, start, end, process, default_pages=[], default_c
   pages_to_skip = set(split_arg(args.skip_pages, canonicalize=canonicalize_pagename)) if args.skip_pages else set()
   if args.skip_page_file:
     pages_to_skip |= set(yield_items_from_file(args.skip_page_file, canonicalize=canonicalize_pagename))
-
+  cat_pages_to_skip = set()
+  if args.skip_cats:
+    skip_cats = split_arg(args.skip_cats)
+    for cat in skip_cats:
+      errmsgn("Fetching pages in category '%s'..." % cat)
+      cat_pages_to_skip |= set(str(page.title()) for page in raw_cat_articles(cat, seen=None))
+      errmsg(" done.")
   seen = set() if args.track_seen else None
 
   def page_should_be_filtered_out(pagetitle, errandpagemsg):
-    if pagetitle in pages_to_skip:
+    if pagetitle in pages_to_skip or pagetitle in cat_pages_to_skip:
       return True
     if filter_pages or args_filter_pages or args_filter_pages_not:
       if filter_pages and not filter_pages(pagetitle):
@@ -1847,6 +1854,40 @@ def split_alternating_runs(segment_runs, splitchar, preserve_splitchar=False):
   if run:
     grouped_runs.append(run)
   return grouped_runs
+
+
+#Apply an arbitrary function `frob` to the "raw-text" segments in a split run set (the output of
+#split_alternating_runs()). We leave alone stuff within balanced delimiters (footnotes, inflection specs and the
+#like), as well as splitchars themselves if present. `preserve_splitchar` indicates whether splitchars are present
+#in the split run set. `frob` is a function of one argument (the string to frob) and should return one argument (the
+#frobbed string). We operate by only frobbing even-numbered segments, and only in even-numbered runs if
+#preserve_splitchar is given.
+def frob_raw_text_alternating_runs(split_run_set, frob, preserve_splitchar=False):
+  for i, run in enumerate(split_run_set):
+    if not preserve_splitchar or i % 2 == 0:
+      for j, segment in enumerate(run):
+        if j % 2 == 0:
+          run[j] = frob(segment)
+
+
+#Like split_alternating_runs() but applies an arbitrary function `frob` to "raw-text" segments in the result (i.e.
+#not stuff within balanced delimiters such as footnotes and inflection specs, and not splitchars if present). `frob`
+#is a function of one argument (the string to frob) and should return one argument (the frobbed string).
+def split_alternating_runs_and_frob_raw_text(run, splitchar, frob, preserve_splitchar=False):
+  split_runs = split_alternating_runs(run, splitchar, preserve_splitchar)
+  frob_raw_text_alternating_runs(split_runs, frob, preserve_splitchar)
+  return split_runs
+
+
+def strip_spaces(text):
+  return re.sub(r"^\s*(.*?)\s*$", r"\1", text)
+
+
+#Like `split_alternating_runs()` but strips spaces from both ends of the even-numbered elements (only in even-numbered
+#runs if `preserve_splitchar` is given). Effectively we leave alone the footnotes and splitchars themselves, but
+#otherwise strip extraneous spaces. Spaces in the middle of an element are also left alone.
+def split_alternating_runs_and_strip_spaces(segment_runs, splitchar, preserve_splitchar=False):
+  return split_alternating_runs_and_frob_raw_text(segment_runs, splitchar, strip_spaces, preserve_splitchar)
 
 
 class ProcessLinks(object):
