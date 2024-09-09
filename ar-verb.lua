@@ -318,6 +318,10 @@ export.unsettable_slots = {}
 for _, potential_lemma_slot in ipairs(export.potential_lemma_slots) do
 	table.insert(export.unsettable_slots, potential_lemma_slot .. "_linked")
 end
+-- We don't set the active participle directly for form I because we don't want stative verbs (with past vowel i or u)
+-- to default to فَاعِل. Instead we set the special slot 'ap1' and later copy it to 'ap' for non-stative verbs. The user
+-- meanwhile can explicitly request the فَاعِل form for active participles for stative verbs using `ap:+`.
+table.insert(export.unsettable_slots, "ap1") -- primary default فَاعِل for form I active participles
 table.insert(export.unsettable_slots, "ap2") -- secondary default فَعِيل for form I active participles (stative I)
 table.insert(export.unsettable_slots, "ap3") -- secondary default فَعِل for form I active participles (stative II)
 table.insert(export.unsettable_slots, "apcd") -- secondary default أَفْعَل for form I active participles (color/defect)
@@ -327,12 +331,18 @@ table.insert(export.unsettable_slots, "vn2") -- secondary default فِعَال f
 export.unsettable_slots_set = m_table.listToSet(export.unsettable_slots)
 
 local default_indicator_to_active_participle_slot = {
+	["+"] = "ap1",
 	["++"] = "ap2",
 	["+++"] = "ap3",
 	["+cd"] = "apcd",
 	["+an"] = "apan",
 }
-	
+
+local slots_that_may_be_uncertain = {
+	vn = "verbal noun",
+	ap = "active participle",
+}
+
 -- Initialize all the slots for which we generate forms.
 local function add_slots(alternant_multiword_spec)
 	alternant_multiword_spec.verb_slots = {
@@ -415,7 +425,7 @@ local slot_override_param_mods = {
 	},
 }
 
-local function generate_obj(formval, parse_err)
+local function generate_obj(formval, parse_err, prefix, is_slot_override)
 	local val, uncertain = formval:match("^(.*)(%?)$")
 	val = val or formval
 	uncertain = not not uncertain
@@ -423,16 +433,27 @@ local function generate_obj(formval, parse_err)
 	if not ar then
 		ar = val
 	end
+	if ar == "" then
+		if uncertain then
+			ar = "?"
+		else
+			error(("Can't specify blank value for override for %s override '%s'"):format(
+				is_slot_override and "slot" or "stem", prefix))
+		end
+	end
 	return {form = ar, translit = translit, uncertain = uncertain}
 end
 
-local function parse_inline_modifiers(comma_separated_group, parse_err)
+local function parse_inline_modifiers(comma_separated_group, parse_err, prefix, is_slot_override)
+	local function this_generate_obj(formval, parse_err)
+		return generate_obj(formval, parse_err, prefix, is_slot_override)
+	end
 	return require(parse_utilities_module).parse_inline_modifiers_from_segments {
 		group = comma_separated_group,
 		props = {
 			param_mods = slot_override_param_mods,
 			parse_err = parse_err,
-			generate_obj = generate_obj,
+			generate_obj = this_generate_obj,
 			pre_normalize_modifiers = function(data)
 				local modtext = data.modtext
 				modtext = modtext:match("^(%[.*%])$")
@@ -452,14 +473,14 @@ local function allow_multiple_values_for_override(comma_separated_groups, data, 
 		if is_slot_override then
 			retval = parse_inline_modifiers(comma_separated_group, data.parse_err)
 		else
-			retval = generate_obj(comma_separated_group[1], data.parse_err)
+			retval = generate_obj(comma_separated_group[1], data.parse_err, data.prefix, is_slot_override)
 			retval.footnotes = data.fetch_footnotes(comma_separated_group)
 		end
 		table.insert(retvals, retval)
 	end
 	for _, form in ipairs(retvals) do
 		if form.form == "+" or default_indicator_to_active_participle_slot[form.form] then
-			if default_indicator_to_active_participle_slot[form.form] and not is_slot_override then
+			if form.form ~= "+" and default_indicator_to_active_participle_slot[form.form] and not is_slot_override then
 				error(("Stem override '%s' cannot use %s to request a secondary default"):format(
 					data.prefix, form.form))
 			end
@@ -830,7 +851,7 @@ local function override_stem_if_needed(base, stemname, default_stem)
 		return default_stem or {}
 	end
 	return map_general(overrides, function(form, translit)
-		if default_indicator_to_active_participle_slot[form] then
+		if form ~= "+" and default_indicator_to_active_participle_slot[form] then
 			error(("Stem overrides cannot use secondary default indicators but saw %s in stem override '%s'"):format(
 				form, stemname))
 		end
@@ -1781,7 +1802,7 @@ local function create_conjugations()
 		end
 
 		-- Active participle.
-		insert_form_or_forms(base, "ap", q(rad1, AA, rad2, I, rad3))
+		insert_form_or_forms(base, "ap1", q(rad1, AA, rad2, I, rad3))
 		-- Insert alternative active participle (stative type I) فَعِيل. Since not all verbs have this, we require that
 		-- verbs that do have it specify it explicitly; a shortcut ++ is provided to make this easier (e.g. <ap:++> to
 		-- indicate that the alternative form should be used for the active participle, <ap:+,++> to indicate that both
@@ -1924,7 +1945,7 @@ local function create_conjugations()
 			past_ending_vowel, nonpast_ending_vowel, "a")
 
 		-- Active participle.
-		insert_form_or_forms(base, "ap", q(rad1, AA, rad2, IN))
+		insert_form_or_forms(base, "ap1", q(rad1, AA, rad2, IN))
 		-- Active participle, stative type I فَعِيّ (++). FIXME: Is this correct when rad3 is W?
 		insert_ap2_pp2(base, q(rad1, A, rad2, II, SH))
 		-- Active participle, stative type II فَعٍ (+++). FIXME: Any examples of this to verify it's correct?
@@ -1948,12 +1969,10 @@ local function create_conjugations()
 
 	conjugations["I-hollow"] = function(base, vowel_spec)
 		local rad1, rad2, rad3, past_vowel, nonpast_vowel = get_radicals_3(vowel_spec)
-		-- Formerly we signaled an error when past_vowel is "a" but that seems too harsh. We can interpret a past vowel
-		-- of "a" as meaning to use the non-past vowel in forms requiring a short vowel. If the non-past vowel is "a"
-		-- then the past vowel can only be "i" (e.g. in nāma yanāmu with first singular past of nimtu).
+		-- In some sense, hollow vowels i~i and u~u are more "correct" than a~i and a~u, but the latter follow the
+		-- pattern of other form-I verbs, so we map i~i to a~i and u~u to a~u in infer_radicals(). Now however we have
+		-- to undo this to get the actual past vowel based on the non-past vowel.
 		if req(past_vowel, A) then
-			-- Enable this when we've fixed the upstream code
-			-- error("Internal error: For form I hollow, past vowel 'a' should have been converted to 'i' or 'u' already")
 			past_vowel = map_vowel(past_vowel, function(vow)
 				return req(nonpast_vowel, A) and I or rget(nonpast_vowel)
 			end)
@@ -1995,10 +2014,11 @@ local function create_conjugations()
 		if kaan_radicals(rad1, rad2, rad3) then
 			local endings = make_nonpast_endings(U, {}, {}, {}, {})
 			inflect_tense(base, "juss", nonpast_prefix_consonants, q(A, rad1), endings)
+			base.irregular = true
 		end
 
 		-- Active participle.
-		insert_form_or_forms(base, "ap", req(rad3, HAMZA) and q(rad1, AA, HAMZA, IN) or
+		insert_form_or_forms(base, "ap1", req(rad3, HAMZA) and q(rad1, AA, HAMZA, IN) or
 			q(rad1, AA, HAMZA, I, rad3))
 		-- Active participle, stative type I فَيِّد (++). FIXME: Any examples of this to verify it's correct?
 		insert_ap2_pp2(base, q(rad1, A, Y, SH, I, rad3))
@@ -2046,7 +2066,7 @@ local function create_conjugations()
 			nonpast_pass_c_stem, imp_v_stem, imp_c_stem, "a")
 
 		-- Active participle.
-		insert_form_or_forms(base, "ap", q(rad1, AA, rad2, SH))
+		insert_form_or_forms(base, "ap1", q(rad1, AA, rad2, SH))
 		-- Active participle, stative type I فَعِيع (++). FIXME: Any examples of this to verify it's correct?
 		insert_ap2_pp2(base, q(rad1, A, rad2, II, rad2))
 		-- Active participle, stative type II فَعّ (+++). Example: بَرَّ "to be pious", active participle بَرّ
@@ -2830,7 +2850,8 @@ local function process_slot_overrides(base)
 		local existing_values = base.forms[slot]
 		base.forms[slot] = nil
 		for _, form in ipairs(forms) do
-			if form.form == "+" then
+			-- + in active participle for form I requests slot ap1
+			if form.form == "+" and (base.verb_form ~= "I" or slot ~= "ap") then
 				if not existing_values then
 					error(("Slot '%s' requested the default value but no such value available"):format(slot))
 				end
@@ -2866,6 +2887,23 @@ local function process_slot_overrides(base)
 			else
 				insert_form_or_forms(base, slot, form, "allow overrides", form.uncertain)
 			end
+		end
+	end
+
+	-- Now, for non-stative form-I verbs, fill the active participle slot from ap1 unless it should be missing (e.g.
+	-- passive-only or user specified 'ap:-').
+	if base.verb_form == "I" and not base.forms.ap and base.forms.ap1 and not skip_slot(base, "ap") then
+		local saw_non_stative = false
+		for _, vowel_spec in ipairs(base.conj_vowels) do
+			if req(vowel_spec.past, A) then
+				saw_non_stative = true
+				break
+			end
+		end
+		if saw_non_stative then
+			base.forms.ap = base.forms.ap1
+			-- To make sure there aren't shared form objects.
+			base.forms.ap1 = nil
 		end
 	end
 end
@@ -3545,9 +3583,11 @@ local function determine_slot_uncertainty_from_forms(alternant_multiword_spec)
 	iut.map_word_specs(alternant_multiword_spec, function(base)
 		-- If no verbal noun and verb form is not 'none' (manually-specified stems) — which currently only happens for
 		-- form I — and the verbal noun wasn't explicitly indicated as missing using <vn:->, we assume it's just
-		-- unknown/unspecified rather than missing.
-		if not base.forms.vn and vform ~= "none" and not base.slot_explicitly_missing.vn then
-			base.slot_uncertain.vn = true
+		-- unknown/unspecified rather than missing. Same with active participles.
+		for uncertain_slot, _ in pairs(slots_that_may_be_uncertain) do
+			if not base.forms[uncertain_slot] and vform ~= "none" and not skip_slot(base, uncertain_slot) then
+				base.slot_uncertain[uncertain_slot] = true
+			end
 		end
 		-- Propagate slot uncertainty up. Currently only the verbal noun can have this set but we write the code
 		-- generally.
@@ -3555,6 +3595,13 @@ local function determine_slot_uncertainty_from_forms(alternant_multiword_spec)
 			alternant_multiword_spec.slot_uncertain[slot] = true
 		end
 	end)
+	-- If slot is uncertain and has no value, explicitly set its value to "?".
+	for uncertain_slot, _ in pairs(slots_that_may_be_uncertain) do
+		if not alternant_multiword_spec.forms[uncertain_slot] and
+			alternant_multiword_spec.slot_uncertain[uncertain_slot] then
+			alternant_multiword_spec.forms[uncertain_slot] = {{form = "?"}}
+		end
+	end
 end
 
 -- Determine certain properties of the verb from the overall forms, such as whether the verb is active-only or
@@ -3681,15 +3728,13 @@ local function add_categories_and_annotation(alternant_multiword_spec, base, mul
 		end
 	end
 
-	if base.slot_uncertain.vn then
-		-- An unspecified and non-defaulted verbal noun (form I) is considered uncertain rather than explicitly missing.
-		-- Use <vn:-> to explicitly indicate the lack of verbal noun.
-		insert_cat("verbs needing verbal noun checked")
-	end
-
-	if base.slot_uncertain.ap then
-		-- FIXME: We should make form I stative verbs have uncertain active participles.
-		insert_cat("verbs needing active participle checked")
+	for slot, name in pairs(slots_that_may_be_uncertain) do
+		if base.slot_uncertain[slot] then
+			-- An unspecified and non-defaulted verbal noun (form I) is considered uncertain rather than explicitly
+			-- missing. Use <vn:-> to explicitly indicate the lack of verbal noun. Same for form-I stative active
+			-- participles.
+			insert_cat(("verbs with unknown or uncertain %ss"):format(name))
+		end
 	end
 
 	if base.irregular then
@@ -3742,15 +3787,15 @@ local function compute_categories_and_annotation(alternant_multiword_spec)
 		add_categories_and_annotation(alternant_multiword_spec, base, multiword_lemma, insert_ann, insert_cat)
 	end)
 
-	for _, slot_with_name in ipairs {
-		{"vn", "verbal noun"},
-		{"ap", "active participle"},
-	} do
-		local slot, name = unpack(slot_with_name)
+	for slot, name in pairs(slots_that_may_be_uncertain) do
 		if alternant_multiword_spec.forms[slot] then
 			for _, form in ipairs(alternant_multiword_spec.forms[slot]) do
 				if form.uncertain then
-					insert_cat(("verbs needing %s checked"):format(name))
+					if form.form == "?" then
+						insert_cat(("verbs with explicitly unknown %ss"):format(name))
+					else
+						insert_cat(("verbs needing %s checked"):format(name))
+					end
 					break
 				end
 			end
@@ -3879,9 +3924,15 @@ local function show_forms(alternant_multiword_spec)
 
 	local function generate_link(data)
 		local form = data.form
+		local term = form.formval_for_link
+		local alt = form.alt
+		if term == "?" then
+			term = nil
+			alt = "?"
+		end
 		local link = m_links.full_link {
-			lang = lang, term = form.formval_for_link, tr = "-", accel = form.accel_obj,
-			alt = form.alt, gloss = form.gloss, genders = form.genders, pos = form.pos, lit = form.lit, id = form.id,
+			lang = lang, term = term, tr = "-", accel = form.accel_obj,
+			alt = alt, gloss = form.gloss, genders = form.genders, pos = form.pos, lit = form.lit, id = form.id,
 		} .. iut.get_footnote_text(form.footnotes, data.footnote_obj)
 		if form.q and form.q[1] or form.qq and form.qq[1] or form.l and form.l[1] or form.ll and form.ll[1] then
 			link = require(pron_qualifier_module).format_qualifiers {
@@ -5038,7 +5089,7 @@ function export.infer_radicals(data)
 					variant = "long"
 				else
 					if not is_passive_only(passive) then
-						-- does a non-passive final-weak verb in -uwa ever happen?
+						-- does a non-passive final-weak verb in -uwa ever happen? (YES: e.g. [[رجو]] "to be slack")
 						inferred_past_vowel = rad3 == Y and I or U
 						inferred_nonpast_vowel = A
 					end
@@ -5101,21 +5152,26 @@ function export.infer_radicals(data)
 			elseif rad2 == ALIF then
 				if vform_supports_hollow(vform) then
 					weakness = "hollow"
-					local function set_past_to_nonpast()
-						if req(past_vowel, "-") or req(past_vowel, A) then
-							past_vowel = nonpast_vowel -- in case of footnote
+					local function set_past_to_a()
+						if req(past_vowel, A) then
+							-- already set
+						elseif req(past_vowel, "-") or req(past_vowel, rget(nonpast_vowel)) then
+							past_vowel = A
+						else
+							infer_err(("Form I hollow verb with nonpast vowel set to '%s' must have past vowel set to 'a' or the same value, not %s"):
+								format(undia[rget(nonpast_vowel)], undia[rget(past_vowel)]), "novform")
 						end
 					end
 					if vform == "I" and req(nonpast_vowel, U) then
 						rad2 = W
-						set_past_to_nonpast()
+						set_past_to_a()
 					elseif vform == "I" and req(nonpast_vowel, I) then
 						rad2 = Y
-						set_past_to_nonpast()
+						set_past_to_a()
 					else
 						if req(nonpast_vowel, A) and not req(past_vowel, I) then
 							infer_err(("Form I hollow verb with nonpast vowel set to 'a' must have past vowel set to 'i', not %s"):
-								format(rget(past_vowel)), "novform")
+								format(undia[rget(past_vowel)]), "novform")
 						end
 						-- Ambiguous radical; could be wāw or yāʾ; if verb form I, it's critical to get this right, and
 						-- the caller checks for this situation and throws an error if non-past vowel is "a" and second
