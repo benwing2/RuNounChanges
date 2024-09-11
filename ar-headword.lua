@@ -1012,12 +1012,17 @@ pos_functions["verbs"] = {
 							-- For form-I geminate verbs, the final vowel of the past is elided in the citation form.
 							-- We want to display it for all cases other than active a~u and a~i (the most common
 							-- cases).
-							if vowel_spec.weakness == "geminate" and (
-								ar_verb.is_passive_only(base.passive) or not (
-								vowel_spec.past == "a" and (vowel_spec.nonpast == "u" or vowel_spec.nonpast == "i")
-							)) then
-								should_do_past1s = true
-								break
+							if vowel_spec.weakness == "geminate" then
+								if ar_verb.is_passive_only(base.passive) then
+									should_do_past1s = true
+									break
+								end
+								local past_vowel = ar_verb.rget(vowel_spec.past)
+								local nonpast_vowel = ar_verb.rget(vowel_spec.nonpast)
+								if not (past_vowel == A and (nonpast_vowel == U or nonpast_vowel == I)) then
+									should_do_past1s = true
+									break
+								end
 							end
 						end
 						-- FIXME, provide way of breaking early from map_word_specs().
@@ -1028,7 +1033,7 @@ pos_functions["verbs"] = {
 
 		local past1s
 		if should_do_past1s then
-			past1s, _ = do_slot({"past_1s"}, args.past1s, "first-person singular past")
+			past1s, _ = do_slot({"past_1s", "past_pass_1s"}, args.past1s, "first-person singular past")
 			if past1s then
 				table.insert(data.inflections, past1s)
 			end
