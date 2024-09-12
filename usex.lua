@@ -22,7 +22,11 @@ local needs_translit = translit_data[1]
 local BRACKET_SUB = u(0xFFF0)
 local original_text = "<small>''original:''</small> "
 
-local MAX_INLINE_WIDTH = 80 -- In characters. HACK! FIXME! Do this a better way.
+-- 100 more or less corresponds to the setting of 30 for the example text alone as formerly used in
+-- {{hi-x}} and {{ur-x}}, taking into account transliteration, gloss and formatting characters.
+-- FIXME: We should have different widths for desktop vs. mobile and generate the appropriate CSS so
+-- both are handled correctly.
+local MAX_INLINE_WIDTH = 100 -- In characters. HACK! FIXME! Do this a better way.
 -- List of scripts whose characters are double-width/full-width.
 local double_width_scripts = {"Hani", "Hrkt", "Hang"}
 
@@ -322,6 +326,15 @@ local function process_usex_text(data)
 end
 
 
+local function format_audio(audio)
+	if audio then
+		return " [[File:" .. audio .. "|25px]]"
+	else
+		return ""
+	end
+end
+
+
 --[==[
 Format a usex or quotation. Implementation of {{tl|ux}}, {{tl|quote}} and {{tl|quote-*}} templates (e.g.
 {{tl|quote-book}}, {{tl|quote-journal}}, {{tl|quote-web}}, etc.). FIXME: Should also be used by {{tl|Q}} and
@@ -358,6 +371,7 @@ Takes a single object `data`, containining the following fields:
                 purposes.
 * `ref`: Reference text to display directly after the right qualifiers. (FIXME: Instead, this should be actual
          references.)
+* `audio`: Name of the audio file containing the usex in spoken form.
 * `orig`: Original text, if the primary text of the usex or quotation is a translation.
 * `origlang`: The language object of the original text. Mandatory if original text given. May be an etymology language.
 * `origsc`: The script object of the original text. Autodetected if not given.
@@ -396,6 +410,7 @@ function export.format_usex(data)
 	local translation = data.translation
 	local quote = data.quote
 	local lit = data.lit
+	local audio = data.audio
 	local source = data.source
 	local brackets = data.brackets
 	local footer = data.footer
@@ -505,6 +520,8 @@ function export.format_usex(data)
 		end
 
 		ins(usex_obj.usex)
+		
+		ins(format_audio(audio))
 
 		local function insert_annotations(obj)
 			if obj.norm then
@@ -560,6 +577,9 @@ function export.format_usex(data)
 		end
 
 		ins(usex_obj.usex)
+		
+		ins(format_audio(audio))
+		
 		local any_usex_annotations = usex_obj.tr or usex_obj.ts or usex_obj.norm or translation or lit
 		local any_orig_annotations = orig_obj and (orig_obj.tr or orig_obj.ts or orig_obj.norm)
 		if any_usex_annotations or orig_obj or source or footer then
@@ -614,6 +634,8 @@ function export.format_usex(data)
 		if data.brackets then
 			result = result:gsub("^(.*)" .. BRACKET_SUB, "%1]"):gsub(BRACKET_SUB, "")
 		end
+
+		return result
 	end
 
 	local is_inline
