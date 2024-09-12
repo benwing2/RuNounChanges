@@ -10,7 +10,7 @@ local m_links = require("Module:links")
 local ar_utilities = require("Module:ar-utilities")
 
 local lang = require("Module:languages").getByCode("ar")
-local u = mw.ustring.char
+local u = require("Module:string/char")
 local rfind = mw.ustring.find
 local rsubn = mw.ustring.gsub
 local rmatch = mw.ustring.match
@@ -179,7 +179,7 @@ end
 
 function make_link(arabic)
 	--return m_links.full_link(nil, arabic, lang, nil, "term", nil, {tr = "-"}, false)
-	return m_links.full_link(nil, arabic, lang, nil, "term", nil, {}, false)
+	return m_links.full_link({lang = lang, alt = arabic}, "term")
 end
 
 function track(page)
@@ -1183,11 +1183,13 @@ end
 -- Inflection functions
 
 function do_translit(term)
-	return lang:transliterate(term) or track("cant-translit") and BOGUS_CHAR
+	return (lang:transliterate(term)) or track("cant-translit") and BOGUS_CHAR
 end
 
 function split_arabic_tr(term)
-	if not rfind(term, "/") then
+	if term == "" then
+		return "", ""
+	elseif not rfind(term, "/") then
 		return term, do_translit(term)
 	else
 		splitvals = rsplit(term, "/")
@@ -1292,8 +1294,9 @@ function add_inflections(stem, tr, data, mod, numgen, endings)
 		defstem = stem
 		deftr = tr
 	else
-		defstem = "ال" .. stem
-		-- apply sun-letter assimilation
+		-- apply sun-letter assimilation and hamzat al-wasl elision
+		defstem = rsub("الْ" .. stem, "^الْ([سشصتثطدذضزژظنرل])", "ال%1ّ")
+		defstem = rsub(defstem, "^الْ([اٱ])([ًٌٍَُِ])", "ال%2%1")
 		deftr = rsub("al-" .. tr, "^al%-([sšṣtṯṭdḏḍzžẓnrḷ])", "a%1-%1")
 	end
 	
@@ -1382,6 +1385,9 @@ function insert_cat(data, mod, numgen, catvalue, engvalue)
 			data.forms[key] = {}
 		end
 		insert_if_not(data.forms[key], engvalue)
+	end
+	if contains(data.states, "def") and not contains(data.states, "ind") then
+		insert_if_not(data.categories, "Arabic definite " .. data.pos .. "s")
 	end
 end
 
@@ -2023,15 +2029,15 @@ function export.stem_and_type(word, sg, sgtype, isfem, num, pos)
 	if word == "elf" then
 		local ret = (
 			sub(ELCD_START .. SK .. "[" .. Y .. W .. "]" .. A .. CONSPAR .. UOPT .. "$",
-				"%1" .. UU .. "%2" .. AMAQ, "ʾa(.)[yw]a(.)u?", "%1ū%2ā") or -- ʾajyad
+				"%1" .. UU .. "%2" .. AMAQ, "ʔa(.)[yw]a(.)u?", "%1ū%2ā") or -- ʾajyad
 			sub(ELCD_START .. SK .. CONSPAR .. A .. CONSPAR .. UOPT .. "$",
-				"%1" .. U .. "%2" .. SK .. "%3" .. AMAQ, "ʾa(.)(.)a(.)u?", "%1u%2%3ā") or -- ʾakbar
+				"%1" .. U .. "%2" .. SK .. "%3" .. AMAQ, "ʔa(.)(.)a(.)u?", "%1u%2%3ā") or -- ʾakbar
 			sub(ELCD_START .. A .. CONSPAR .. SH .. UOPT .. "$",
-				"%1" .. U .. "%2" .. SH .. AMAQ, "ʾa(.)a(.)%2u?", "%1u%2%2ā") or -- ʾaqall
+				"%1" .. U .. "%2" .. SH .. AMAQ, "ʔa(.)a(.)%2u?", "%1u%2%2ā") or -- ʾaqall
 			sub(ELCD_START .. SK .. CONSPAR .. AAMAQ .. "$",
-				"%1" .. U .. "%2" .. SK .. Y .. ALIF, "ʾa(.)(.)ā", "%1u%2yā") or -- ʾadnā
+				"%1" .. U .. "%2" .. SK .. Y .. ALIF, "ʔa(.)(.)ā", "%1u%2yā") or -- ʾadnā
 			sub("^" .. AMAD .. CONSPAR .. A .. CONSPAR .. UOPT .. "$",
-				HAMZA_ON_ALIF .. U .. "%1" .. SK .. "%2" .. AMAQ, "ʾā(.)a(.)u?", "ʾu%1%2ā") -- ʾālam "more painful", ʾāḵar "other"
+				HAMZA_ON_ALIF .. U .. "%1" .. SK .. "%2" .. AMAQ, "ʔā(.)a(.)u?", "ʔu%1%2ā") -- ʾālam "more painful", ʾāḵar "other"
 		)
 		if not ret then
 			error("Singular stem not an elative adjective: " .. sgar)
@@ -2042,11 +2048,11 @@ function export.stem_and_type(word, sg, sgtype, isfem, num, pos)
 	if word == "cdf" then
 		local ret = (
 			sub(ELCD_START .. SK .. CONSPAR .. A .. CONSPAR .. UOPT .. "$",
-				"%1" .. A .. "%2" .. SK .. "%3" .. AA .. HAMZA, "ʾa(.)(.)a(.)u?", "%1a%2%3āʾ") or -- ʾaḥmar
+				"%1" .. A .. "%2" .. SK .. "%3" .. AA .. HAMZA, "ʔa(.)(.)a(.)u?", "%1a%2%3āʔ") or -- ʾaḥmar
 			sub(ELCD_START .. A .. CONSPAR .. SH .. UOPT .. "$",
-				"%1" .. A .. "%2" .. SH .. AA .. HAMZA, "ʾa(.)a(.)%2u?", "%1a%2%2āʾ") or -- ʾalaff
+				"%1" .. A .. "%2" .. SH .. AA .. HAMZA, "ʔa(.)a(.)%2u?", "%1a%2%2āʔ") or -- ʾalaff
 			sub(ELCD_START .. SK .. CONSPAR .. AAMAQ .. "$",
-				"%1" .. A .. "%2" .. SK .. Y .. AA .. HAMZA, "ʾa(.)(.)ā", "%1a%2yāʾ") -- ʾaʿmā
+				"%1" .. A .. "%2" .. SK .. Y .. AA .. HAMZA, "ʔa(.)(.)ā", "%1a%2yāʔ") -- ʾaʿmā
 		)
 		if not ret then
 			error("Singular stem not a color/defect adjective: " .. sgar)
@@ -2245,19 +2251,19 @@ function export.stem_and_type(word, sg, sgtype, isfem, num, pos)
 	if word == "cdp" then
 		local ret = (
 			sub(ELCD_START .. SK .. W .. A .. CONSPAR .. UOPT .. "$",
-				"%1" .. UU .. "%2", "ʾa(.)wa(.)u?", "%1ū%2") or -- ʾaswad
+				"%1" .. UU .. "%2", "ʔa(.)wa(.)u?", "%1ū%2") or -- ʾaswad
 			sub(ELCD_START .. SK .. Y .. A .. CONSPAR .. UOPT .. "$",
-				"%1" .. II .. "%2", "ʾa(.)ya(.)u?", "%1ī%2") or -- ʾabyaḍ
+				"%1" .. II .. "%2", "ʔa(.)ya(.)u?", "%1ī%2") or -- ʾabyaḍ
 			sub(ELCD_START .. SK .. CONSPAR .. A .. CONSPAR .. UOPT .. "$",
-				"%1" .. U .. "%2" .. SK .. "%3", "ʾa(.)(.)a(.)u?", "%1u%2%3") or -- ʾaḥmar
+				"%1" .. U .. "%2" .. SK .. "%3", "ʔa(.)(.)a(.)u?", "%1u%2%3") or -- ʾaḥmar
 			sub(ELCD_START .. A .. CONSPAR .. SH .. UOPT .. "$",
-				"%1" .. U .. "%2" .. SH, "ʾa(.)a(.)%2u?", "%1u%2%2") or -- ʾalaff
+				"%1" .. U .. "%2" .. SH, "ʔa(.)a(.)%2u?", "%1u%2%2") or -- ʾalaff
 			sub(ELCD_START .. SK .. CONSPAR .. AAMAQ .. "$",
-				"%1" .. U .. "%2" .. Y, "ʾa(.)(.)ā", "%1u%2y") or -- ʾaʿmā
-			sub("^" .. CONSPAR .. A .. W .. SKOPT .. CONSPAR .. AA .. HAMZA .. UOPT .. "$", "%1" .. UU .. "%2", "(.)aw(.)āʾu?", "%1ū%2") or -- sawdāʾ
-			sub("^" .. CONSPAR .. A .. Y .. SKOPT .. CONSPAR .. AA .. HAMZA .. UOPT .. "$", "%1" .. II .. "%2", "(.)ay(.)āʾu?", "%1ī%2") or -- bayḍāʾ
-			sub("^" .. CONSPAR .. A .. CONSPAR .. SK .. CONSPAR .. AA .. HAMZA .. UOPT .. "$", "%1" .. U .. "%2" .. SK .. "%3", "(.)a(.)(.)āʾu?", "%1u%2%3") or -- ʾḥamrāʾ/ʿamyāʾ
-			sub("^" .. CONSPAR .. A .. CONSPAR .. SH .. AA .. HAMZA .. UOPT .. "$", "%1" .. U .. "%2" .. SH, "(.)a(.)%2āʾu?", "%1u%2%2") -- laffāʾ
+				"%1" .. U .. "%2" .. Y, "ʔa(.)(.)ā", "%1u%2y") or -- ʾaʿmā
+			sub("^" .. CONSPAR .. A .. W .. SKOPT .. CONSPAR .. AA .. HAMZA .. UOPT .. "$", "%1" .. UU .. "%2", "(.)aw(.)āʔu?", "%1ū%2") or -- sawdāʾ
+			sub("^" .. CONSPAR .. A .. Y .. SKOPT .. CONSPAR .. AA .. HAMZA .. UOPT .. "$", "%1" .. II .. "%2", "(.)ay(.)āʔu?", "%1ī%2") or -- bayḍāʾ
+			sub("^" .. CONSPAR .. A .. CONSPAR .. SK .. CONSPAR .. AA .. HAMZA .. UOPT .. "$", "%1" .. U .. "%2" .. SK .. "%3", "(.)a(.)(.)āʔu?", "%1u%2%3") or -- ʾḥamrāʾ/ʿamyāʾ
+			sub("^" .. CONSPAR .. A .. CONSPAR .. SH .. AA .. HAMZA .. UOPT .. "$", "%1" .. U .. "%2" .. SH, "(.)a(.)%2āʔu?", "%1u%2%2") -- laffāʾ
 		)
 		if not ret then
 			error("For 'cdp', singular must be masculine or feminine color/defect adjective: " .. sgar)
@@ -2328,16 +2334,12 @@ function show_form_1(form, list_of_mods, trailing_artrmods, use_parens)
 						tr_subspan = "&mdash;"
 					else
 						tr_subspan = (rfind(translit, BOGUS_CHAR) or rfind(trmod, BOGUS_CHAR)) and "?" or
-							"<span style=\"color: #888\">" .. translit .. trmod .. "</span>"
+							require("Module:script utilities").tag_translit(translit .. trmod, lang, "default", 'style="color: #888;"')
 						-- implement elision of al- after vowel
 						tr_subspan = rsub(tr_subspan, "([aeiouāēīōū][ %-])a([sšṣtṯṭdḏḍzžẓnrḷl]%-)", "%1%2")
 						tr_subspan = rsub(tr_subspan, "([aeiouāēīōū][ %-])a(llāh)", "%1%2")
 
-						if arabic:find("{{{") then
-							ar_subspan = m_links.full_link(nil, arabic .. armod, lang, nil, nil, nil, {tr = "-"}, false)
-						else
-							ar_subspan = m_links.full_link(arabic .. armod, nil, lang, nil, nil, nil, {tr = "-"}, false)
-						end
+						ar_subspan = m_links.full_link({lang = lang, term = arabic .. armod, tr = "-"})
 					end
 
 					insert_if_not(ar_subspans, ar_subspan)
