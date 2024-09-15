@@ -6,7 +6,7 @@ import pywikibot, re, sys, argparse
 import blib
 from blib import getparam, rmparam, tname, pname, msg, site
 
-def process_text_on_page(index, pagetitle, text, lang, langname, topicstemp):
+def process_text_on_page(index, pagetitle, text, langcode, langname, topicstemp):
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -14,66 +14,72 @@ def process_text_on_page(index, pagetitle, text, lang, langname, topicstemp):
 
   pagemsg("Processing")
 
-  newtext = re.sub(r"\[\[[Cc][Aa][Tt]:(%s:.*?)\]\]" % re.escape(lang), r"[[Category:\1]]", text)
+  escaped_langcode = re.escape(langcode)
+  escaped_langname = re.escape(langname).replace(r"\ ", "[ _]")
+  newtext = re.sub(r"\[\[\s*[Cc][Aa][Tt]\s*:\s*(%s)\s*:\s*(.*?)\s*\]\]" % escaped_langcode, r"[[Category:\1:\2]]", text)
   if newtext != text:
-    notes.append("standardize [[CAT:%s:...]] to [[Category:%s:...]]" % (lang, lang))
+    notes.append("standardize [[CAT:%s:...]] to [[Category:%s:...]]" % (langcode, langcode))
     text = newtext
-  newtext = re.sub(r"\[\[[Cc][Aa][Tt]:(%s[ _].*?)\]\]" % re.escape(langname), r"[[Category:\1]]", text)
+  newtext = re.sub(r"\[\[\s*[Cc][Aa][Tt]\s*:\s*(%s[ _].*?)\s*\]\]" % escaped_langname, r"[[Category:\1]]", text)
   if newtext != text:
     notes.append("standardize [[CAT:%s ...]] to [[Category:%s ...]]" % (langname, langname))
     text = newtext
-  newtext = re.sub(r"\[\[[Cc][Aa][Tt][Ee][Gg][Oo][Rr][Yy]:(%s:.*?)\]\]" % re.escape(lang), r"[[Category:\1]]", text)
+  newtext = re.sub(r"\[\[\s*[Cc][Aa][Tt][Ee][Gg][Oo][Rr][Yy]\s*:\s*(%s)\s*:\s*(.*?)\s*\]\]" % escaped_langcode, r"[[Category:\1:\2]]", text)
   if newtext != text:
-    notes.append("standardize [[category:%s:...]] to [[Category:%s:...]]" % (lang, lang))
+    notes.append("standardize [[category:%s:...]] to [[Category:%s:...]]" % (langcode, langcode))
     text = newtext
-  newtext = re.sub(r"\[\[[Cc][Aa][Tt][Ee][Gg][Oo][Rr][Yy]:(%s[ _].*?)\]\]" % re.escape(langname), r"[[Category:\1]]", text)
+  newtext = re.sub(r"\[\[\s*[Cc][Aa][Tt][Ee][Gg][Oo][Rr][Yy]\s*:\s*(%s[ _].*?)\s*\]\]" % escaped_langname, r"[[Category:\1]]", text)
   if newtext != text:
     notes.append("standardize [[category:%s ...]] to [[Category:%s ...]]" % (langname, langname))
     text = newtext
   def replace_undercores(m):
     return m.group(0).replace("_", " ")
-  newtext = re.sub(r"\[\[Category:%s_.*?\]\]" % re.escape(langname), replace_undercores, text)
+  newtext = re.sub(r"\[\[Category:%s:.*?\]\]" % escaped_langcode, replace_undercores, text)
+  if newtext != text:
+    notes.append("replace underscores with spaces in [[Category:%s:...]]" % langcode)
+    text = newtext
+  newtext = re.sub(r"\[\[Category:%s_.*?\]\]" % escaped_langname, replace_undercores, text)
   if newtext != text:
     notes.append("replace underscores with spaces in [[Category:%s_...]]" % langname)
     text = newtext
 
-  newtext = re.sub(r"\[\[Category:%s:([^|\[\]{}]*)\|([^|\[\]{}]*)\]\]" % re.escape(lang), r"{{%s|%s|\1|sort=\2}}" % (topicstemp, lang), text)
+  newtext = re.sub(r"\[\[Category:%s:\s*([^|\[\]{}]*?)\s*\|\s*([^|\[\]{}]*?)\s*\]\]" % escaped_langcode, r"{{%s|%s|\1|sort=\2}}" % (topicstemp, langcode), text)
   if newtext != text:
-    notes.append("templatize topical categories with sort key for lang=%s using {{%s}}" % (lang, topicstemp))
+    notes.append("templatize topical categories with sort key for langcode=%s using {{%s}}" % (langcode, topicstemp))
     text = newtext
-  newtext = re.sub(r"\[\[Category:%s:([^|\[\]{}]*)\]\]" % re.escape(lang), r"{{%s|%s|\1}}" % (topicstemp, lang), text)
+  newtext = re.sub(r"\[\[Category:%s:\s*([^|\[\]{}]*?)\s*\]\]" % escaped_langcode, r"{{%s|%s|\1}}" % (topicstemp, langcode), text)
   if newtext != text:
-    notes.append("templatize topical categories for lang=%s using {{%s}}" % (lang, topicstemp))
+    notes.append("templatize topical categories for langcode=%s using {{%s}}" % (langcode, topicstemp))
     text = newtext
-  newtext = re.sub(r"\{\{(?:c|C|top|topic|topics|catlangcode)\|%s\|(.*?)\}\}" % re.escape(lang), r"{{%s|%s|\1}}" % (topicstemp, lang), text)
+  newtext = re.sub(r"\{\{\s*(?:c|C|top|topic|topics|catlangcode)\s*\|\s*%s\s*\|\s*(.*?)\s*\}\}" % escaped_langcode, r"{{%s|%s|\1}}" % (topicstemp, langcode), text)
   if newtext != text:
-    notes.append("standardize templatized topical categories for lang=%s using {{%s}}" % (lang, topicstemp))
+    notes.append("standardize templatized topical categories for langcode=%s using {{%s}}" % (langcode, topicstemp))
     text = newtext
   while True:
-    newtext = re.sub(r"\{\{%s\|%s\|([^=\[\]{}]*)\}\}\n\{\{C\|%s\|([^=\[\]{}]*)\}\}" % (re.escape(topicstemp), re.escape(lang), re.escape(lang)),
-        r"{{%s|%s|\1|\2}}" % (topicstemp, lang), text)
+    newtext = re.sub(r"\{\{%s\|%s\|([^=\[\]{}]*)\}\}\n\{\{%s\|%s\|([^=\[\]{}]*)\}\}" % (re.escape(topicstemp), escaped_langcode, re.escape(topicstemp), escaped_langcode),
+        r"{{%s|%s|\1|\2}}" % (topicstemp, langcode), text)
     if newtext != text:
-      notes.append("combine templatized topical categories for lang=%s using {{%s}}" % (lang, topicstemp))
+      notes.append("combine templatized topical categories for langcode=%s using {{%s}}" % (langcode, topicstemp))
       text = newtext
     else:
       break
 
-  newtext = re.sub(r"\[\[Category:%s ([^|\[\]{}]*)\|([^|\[\]{}]*)\]\]" % re.escape(langname), r"{{cln|%s|\1|sort=\2}}" % lang, text)
+  newtext = re.sub(r"\[\[Category:%s ([^|\[\]{}]*?)\s*\|\s*([^|\[\]{}]*?)\s*\]\]" % escaped_langname, r"{{cln|%s|\1|sort=\2}}" % langcode, text)
   if newtext != text:
-    notes.append("templatize langname categories with sort key for lang=%s using {{cln}}" % lang)
+    notes.append("templatize langname categories with sort key for langcode=%s using {{cln}}" % langcode)
     text = newtext
-  newtext = re.sub(r"\[\[Category:%s ([^|\[\]{}]*)\]\]" % re.escape(langname), r"{{cln|%s|\1}}" % lang, text)
+  newtext = re.sub(r"\[\[Category:%s ([^|\[\]{}]*?)\s*\]\]" % escaped_langname, r"{{cln|%s|\1}}" % langcode, text)
   if newtext != text:
-    notes.append("templatize langname categories for lang=%s using {{cln}}" % lang)
+    notes.append("templatize langname categories for langcode=%s using {{cln}}" % langcode)
     text = newtext
-  newtext = re.sub(r"\{\{catlangname\|%s\|(.*?)\}\}" % re.escape(lang), r"{{cln|%s|\1}}" % lang, text)
+  newtext = re.sub(r"\{\{\s*(?:catlangname|cln)\s*\|\s*%s\s*\|\s*(.*?)\s*\}\}" % escaped_langcode, r"{{cln|%s|\1}}" % langcode, text)
   if newtext != text:
-    notes.append("standardize templatized langname categories for lang=%s using {{cln}}" % lang)
+    notes.append("standardize templatized langname categories for langcode=%s using {{cln}}" % langcode)
     text = newtext
   while True:
-    newtext = re.sub(r"\{\{cln\|%s\|([^=\[\]{}]*)\}\}\n\{\{cln\|%s\|([^=\[\]{}]*)\}\}" % (re.escape(lang), re.escape(lang)), r"{{cln|%s|\1|\2}}" % lang, text)
+    newtext = re.sub(r"\{\{cln\|%s\|([^=\[\]{}]*)\}\}\n\{\{cln\|%s\|([^=\[\]{}]*)\}\}" % (escaped_langcode, escaped_langcode), r"{{cln|%s|\1|\2}}" % langcode, text)
     if newtext != text:
-      notes.append("combine templatized langname categories for lang=%s using {{cln}}" % lang)
+      notes.append("combine templatized langname categories for langcode=%s using {{cln}}" % langcode)
       text = newtext
     else:
       break
