@@ -31,11 +31,11 @@ local HAMZA_ANY = "[" .. HAMZA .. HAMZA_ON_ALIF .. HAMZA_UNDER_ALIF .. HAMZA_ON_
 local HAMZA_PH = u(0xFFF0) -- hamza placeholder
 
 -- various letters
-local ALIF   = u(0x0627) -- ʾalif = ا
-local AMAQ   = u(0x0649) -- ʾalif maqṣūra = ى
-local AMAD   = u(0x0622) -- ʾalif madda = آ
-local TAM    = u(0x0629) -- tāʾ marbūṭa = ة
-local T      = u(0x062A) -- tāʾ = ت
+local ALIF   = u(0x0627) -- ʔalif = ا
+local AMAQ   = u(0x0649) -- ʔalif maqṣūra = ى
+local AMAD   = u(0x0622) -- ʔalif madda = آ
+local TAM    = u(0x0629) -- tāʔ marbūṭa = ة
+local T      = u(0x062A) -- tāʔ = ت
 local HYPHEN = u(0x0640)
 local N      = u(0x0646) -- nūn = ن
 local W      = u(0x0648) -- wāw = و
@@ -51,7 +51,11 @@ local IN = u(0x064D) -- kasratān (kasra tanwīn)
 local SK = u(0x0652) -- sukūn = no vowel
 local SH = u(0x0651) -- šadda = gemination of consonants
 local DAGGER_ALIF = u(0x0670)
-local DIACRITIC_ANY_BUT_SH = "[" .. A .. I .. U .. AN .. IN .. UN .. SK .. DAGGER_ALIF .. "]"
+local DIACRITIC_ANY_BUT_SH_insides = A .. I .. U .. AN .. IN .. UN .. SK .. DAGGER_ALIF
+local DIACRITIC_ANY_BUT_SH = "[" .. DIACRITIC_ANY_BUT_SH_insides .. "]"
+local DIACRITIC_ANY_insides = DIACRITIC_ANY_BUT_SH .. SH
+local DIACRITIC_ANY = "[" .. DIACRITIC_ANY_insides .. "]"
+local TATWEEL = u(0x0640)
 
 -- common combinations
 local NA    = N .. A
@@ -87,13 +91,14 @@ local UNU = "[" .. UN .. U .. "]"
 local AOPT = A .. "?"
 local AOPTA = A .. "?" .. ALIF
 local IOPT = I .. "?"
+local INOPT = IN .. "?"
 local UOPT = U .. "?"
 local UNOPT = UN .. "?"
 local UNUOPT = UNU .. "?"
 local SKOPT = SK .. "?"
 
 -- lists of consonants
--- exclude tāʾ marbūṭa because we don't want it treated as a consonant
+-- exclude tāʔ marbūṭa because we don't want it treated as a consonant
 -- in patterns like أَفْعَل
 local consonants_needing_vowels_no_tam = "بتثجحخدذرزسشصضطظعغفقكلمنهپچڤگڨڧأإؤئء"
 -- consonants on the right side; includes alif madda
@@ -114,7 +119,7 @@ local export = {}
 -- Utility functions
 --------------------
 
-function ine(x) -- If Not Empty
+local function ine(x) -- If Not Empty
 	if x == nil then
 		return nil
 	elseif rfind(x, '^".*"$') then
@@ -132,7 +137,7 @@ end
 
 -- Compare two items, recursively comparing arrays.
 -- FIXME, doesn't work for tables that aren't arrays.
-function equals(x, y)
+local function equals(x, y)
 	if type(x) == "table" and type(y) == "table" then
 		if #x ~= #y then
 			return false
@@ -148,7 +153,7 @@ function equals(x, y)
 end
 
 -- true if array contains item
-function contains(tab, item)
+local function contains(tab, item)
 	for _, value in pairs(tab) do
 		if equals(value, item) then
 			return true
@@ -158,33 +163,73 @@ function contains(tab, item)
 end
 
 -- append to array if element not already present
-function insert_if_not(tab, item)
+local function insert_if_not(tab, item)
 	if not contains(tab, item) then
 		table.insert(tab, item)
 	end
 end
 
 -- version of rsubn() that discards all but the first return value
-function rsub(term, foo, bar)
+local function rsub(term, foo, bar)
 	local retval = rsubn(term, foo, bar)
 	return retval
 end
 
 -- version of rsub() that asserts that a match occurred
-function assert_rsub(term, foo, bar)
+local function assert_rsub(term, foo, bar)
 	local retval, numsub = rsubn(term, foo, bar)
 	assert(numsub > 0)
 	return retval
 end
 
-function make_link(arabic)
+local function make_link(arabic)
 	--return m_links.full_link(nil, arabic, lang, nil, "term", nil, {tr = "-"}, false)
 	return m_links.full_link({lang = lang, alt = arabic}, "term")
 end
 
-function track(page)
+local function track(page)
 	require("Module:debug").track("ar-nominals/" .. page)
 	return true
+end
+
+local function prefix_with_tatweel_if(ending)
+	if rfind(ending, "^" .. DIACRITIC_ANY) then
+		return TATWEEL .. ending
+	else
+		return ending
+	end
+end
+
+local function strip_ar_ending(ar, ending, interr)
+	local strippedar = rsub(ar, ending .. "$", "")
+	if strippedar == ar then
+		error(("%sArabic-script argument %s doesn't end with expected ending %s"):format(
+			interr and "Internal error: " or "", ar, prefix_with_tatweel_if(ending)))
+	end
+	return strippedar
+end
+
+local function strip_tr_ending(tr, ending, interr)
+	if not tr then return nil end
+	local strippedtr = rsub(tr, ending .. "$", "")
+	if strippedtr == tr then
+		error(("%sTranslit %s doesn't end with expected ending %s"):format(
+			interr and "Internal error: " or "", tr, ending))
+	end
+	return strippedtr
+end
+
+local function strip_ar_tr_ending(ar, tr, ending, interr)
+	ar = strip_ar_ending(ar, ending, interr)
+	tr = strip_tr_ending(tr, transliterate(ending), interr)
+	return ar, tr
+end
+
+local function strip_ending(stem, ending, interr)
+	local ar, tr = stem.form, stem.translit
+	ar, tr = strip_ar_tr_ending(ar, tr, ending, interr)
+	stem.form = ar
+	stem.translit = tr
 end
 
 -------------------------------------
@@ -204,7 +249,7 @@ end
 -- generated declensional forms, as well as other ancillary information
 -- such as the possible numbers, genders and cases the the actual numbers
 -- and states to store (in 'data.numbers' and 'data.states' respectively).
-function init_data()
+local function init_data()
 	-- FORMS contains a table of forms for each inflectional category,
 	-- e.g. "nom_sg_ind" for nouns or "nom_m_sg_ind" for adjectives. The value
 	-- of an entry is an array of alternatives (e.g. different plurals), where
@@ -243,7 +288,7 @@ end
 -- arguments by converting empty-string arguments to nil and appending
 -- translit arguments to their base arguments with a separating slash.
 -- ORIGARGS is the original table of arguments.
-function init(origargs)
+local function init(origargs)
 	-- Massage arguments by converting empty arguments to nil, and
 	--  "" or '' arguments to empty.
 	local args = {}
@@ -301,7 +346,7 @@ end
 -- specify state= in the presence of proper nouns or definite-only
 -- adjectival expressions. NOTE: At the time this function is called,
 -- data.numbers has not yet been initialized.
-function parse_state_etc_spec(data, args)
+local function parse_state_etc_spec(data, args)
 	local function check(arg, dataval, allvalues)
 		if args[arg] then
 			if not contains(allvalues, args[arg]) then
@@ -373,24 +418,24 @@ function parse_state_etc_spec(data, args)
 	-- (1) Check that if idafaN= is given, then modN= is also given.
 	-- (2) Check that adjectival modifiers aren't followed by idafa modifiers.
 	-- (3) Check that adjectival modifiers are modifying the base or an
-	--     ʾidāfa modifier, not another adjectival modifier.
+	--     ʔidāfa modifier, not another adjectival modifier.
 	-- (4) Support idafa values "adj-base", "adj-mod", "adj-mod2", "adj"
 	--     (="adj-base") etc. and check that we're referring to an earlier
 	--     word.
-	-- (5) For ʾidāfa modifiers, set basestate=con, set modN_case=gen,
+	-- (5) For ʔidāfa modifiers, set basestate=con, set modN_case=gen,
 	--     set modN_idafa=true, and set modN_number to the number specified
 	--     in the parameter value (e.g. 'sg' or 'def-pl'); and if the
 	--     parameter value specifies a state (e.g. 'def' or 'ind-du'),
-	--     set modN_state= to this value, and if this is the last ʾidāfa
+	--     set modN_state= to this value, and if this is the last ʔidāfa
 	--     modifier, also set state= to this value; if this is not the last
-	--     ʾidāfa modifier, set modN_state=con and disallow a state to be
+	--     ʔidāfa modifier, set modN_state=con and disallow a state to be
 	--     specified in the parameter value.
 	-- (6) For adjectival modifiers of the base, do nothing.
-	-- (7) For adjectival modifiers of ʾidāfa modifiers, set modN_case=gen;
+	-- (7) For adjectival modifiers of ʔidāfa modifiers, set modN_case=gen;
 	--     set modN_idafa=false; and set modN_number=, modN_numgen= and
 	--     modN_state= to match the values of the idafa modifier.
 
-	-- error checking and find last ʾidāfa modifier
+	-- error checking and find last ʔidāfa modifier
 	local last_is_idafa = true
 	local last_idafa_mod = "base"
 	for _, idafa_mod in ipairs(idafa_mod_list) do
@@ -405,9 +450,9 @@ function parse_state_etc_spec(data, args)
 					.. mod .. "' parameter")
 			end
 			if not valid_adjectival_idafaval(idafaval) then
-				-- We're a construct (ʾidāfa) modifier
+				-- We're a construct (ʔidāfa) modifier
 				if not last_is_idafa then
-					error("ʾidāfa modifier " .. paramval .. " follows adjectival modifier")
+					error("ʔidāfa modifier " .. paramval .. " follows adjectival modifier")
 				end
 				last_idafa_mod = mod
 			else
@@ -490,7 +535,7 @@ function parse_state_etc_spec(data, args)
 								data.states = {state}
 							end
 						else
-							error(paramval .. " cannot specify a state because it is not the last ʾidāfa modifier")
+							error(paramval .. " cannot specify a state because it is not the last ʔidāfa modifier")
 						end
 						data.basestate = "con"
 						data[mod .. "_case"] = "gen"
@@ -550,7 +595,7 @@ end
 
 -- Parse the user-specified number spec. The user can manually specify which
 -- numbers are to appear. Return true if |number= was specified.
-function parse_number_spec(data, args)
+local function parse_number_spec(data, args)
 	if args["number"] then
 		data.numbers = rsplit(args["number"], ",")
 		for _, num in ipairs(data.numbers) do
@@ -568,7 +613,7 @@ end
 
 -- Determine which numbers will appear using the logic for nouns.
 -- See comment just below.
-function determine_noun_numbers(data, args, pls)
+local function determine_noun_numbers(data, args, pls)
 	-- Can manually specify which numbers are to appear, and exactly those
 	-- numbers will appear. Otherwise, if any plurals given, duals and plurals
 	-- appear; else, only singular (on the assumption that the word is a proper
@@ -603,7 +648,7 @@ end
 -- returned by stem_and_type(); ISFEM is true if this is feminine gender;
 -- NUM is "sg", "du" or "pl". POS is the part of speech, generally "noun" or
 -- "adjective".
-function insert_stems(stem, results, sgs, isfem, num, pos)
+local function insert_stems(stem, results, sgs, isfem, num, pos)
 	if stem == "-" then
 		return
 	end
@@ -621,7 +666,7 @@ end
 --
 -- Also determine lemma and allow it to be overridden.
 -- Also allow POS (part of speech) to be overridden.
-function handle_lemma_and_overrides(data, args)
+local function handle_lemma_and_overrides(data, args)
 	local function handle_override(arg)
 		if args[arg] then
 			local ovval = {}
@@ -681,8 +726,8 @@ end
 -- data.pos and MOD (either "", "mod_", "mod2_", etc., same as in
 -- do_gender_number_1()). If we're a modifier, don't use data.pos but
 -- instead choose based on whether modifier is adjectival or nominal
--- (ʾiḍāfa).
-function get_pos(data, mod)
+-- (ʔiḍāfa).
+local function get_pos(data, mod)
 	local ismod = mod ~= ""
 	if not ismod then
 		return data.pos
@@ -704,7 +749,7 @@ end
 -- MOD is either "", "mod_", "mod2_", etc. depending if we're working on a
 -- base or modifier argument (in the latter case, basically if the argument
 -- begins with "mod").
-function do_gender_number_1(data, args, argprefs, sgs, default, isfem, num, mod)
+local function do_gender_number_1(data, args, argprefs, sgs, default, isfem, num, mod)
 	local results = {}
 	local function handle_stem(stem)
 		insert_stems(stem, results, sgs, isfem, num, get_pos(data, mod))
@@ -779,7 +824,7 @@ end
 -- the head noun يَوْم is the base and the noun الاِثْنَيْن is the modifier.
 -- In a noun phrase like البَحْر الأَبْيَض المُتَوَسِّط, there are two modifiers.
 -- Note that modifiers come in two varieties, adjectival modifiers and
--- construct (ʾidāfa) modifiers. The first above noun phrase is an example
+-- construct (ʔidāfa) modifiers. The first above noun phrase is an example
 -- of a noun phrase with a construct modifier, where the base is fixed in
 -- the construct state and the modifier is fixed in number and case
 -- (which is always genitive) and possibly in state. The second above noun
@@ -796,7 +841,7 @@ end
 -- modN_state, modN_case or modN_number, since e.g. a third modifier could
 -- have all of them specified and be either kind. Thus we have modN_idafa,
 -- which is true for a construct modifier, false otherwise.)
-function do_gender_number(data, args, argprefs, sgs, default, isfem, num)
+local function do_gender_number(data, args, argprefs, sgs, default, isfem, num)
 	local results = do_gender_number_1(data, args, argprefs, sgs["base"],
 		default, isfem, num, "")
 	basemodtable = {base=results}
@@ -816,7 +861,7 @@ end
 -- (either "" if we're working on the base or "mod_", "mod2_", etc. if we're
 -- working on a modifier) and NUMGEN (number or number-gender combination,
 -- of the sort that forms part of the keys in DATA.FORMS).
-function call_inflection(combined_stem, ty, data, mod, numgen)
+local function call_inflection(combined_stem, ty, data, mod, numgen)
 	if ty == "-" then
 		return
 	end
@@ -836,7 +881,7 @@ end
 -- whether we're working on the base or a modifier. NUMGEN is the number or
 -- number-gender combination we're working on, of the sort that forms part
 -- of the keys in DATA.FORMS, e.g. "sg" or "m_sg".
-function call_inflections(stemtypes, data, mod, numgen)
+local function call_inflections(stemtypes, data, mod, numgen)
 	local mod_with_modnumgen = mod ~= "" and data[mod .. "numgen"]
 	-- If modN_numgen= is given, do nothing if NUMGEN isn't the same
 	if mod_with_modnumgen and data[mod .. "numgen"] ~= numgen then
@@ -860,7 +905,7 @@ end
 -- see do_gender_number()) and a NUMGEN string, i.e. a string identifying
 -- the number or number/gender in question (e.g. "sg", "du", "pl",
 -- "m_sg", "f_pl", etc.).
-function do_inflections_and_overrides(data, args, inflections)
+local function do_inflections_and_overrides(data, args, inflections)
 	-- do this before generating inflections so POS change is reflected in
 	-- categories
 	if args["pos"] then
@@ -889,7 +934,7 @@ end
 -- working on a base or modifier argument. The returned value is an
 -- array of stems, where each element is a size-two array of
 -- {COMBINED_STEM, STEM_TYPE}. See do_gender_number().
-function get_heads_1(data, args, arg1, argn, mod)
+local function get_heads_1(data, args, arg1, argn, mod)
 	if not args[arg1] then
 		return {}
 	end
@@ -924,7 +969,7 @@ end
 -- substitute sample ones). The reason for this boolean is to indicate
 -- whether sample arguments need to be substituted for other numbers
 -- as well.
-function get_heads(data, args, headtype)
+local function get_heads(data, args, headtype)
 	if not args[1] and mw.title.getCurrentTitle().nsText == "Template" then
 		return {base={{"{{{1}}}", "tri"}}}, true
 	end
@@ -969,7 +1014,7 @@ function export.show_noun(frame)
 	return make_noun_table(data)
 end
 
-function any_feminine(data, stem_spec)
+local function any_feminine(data, stem_spec)
 	for basemod, stemtypelist in pairs(stem_spec) do
 		-- Only check modifiers if modN_numgen= not given. If not given, the
 		-- modifier needs to be declined for all numgens; else only for the
@@ -985,7 +1030,7 @@ function any_feminine(data, stem_spec)
 	return false
 end
 
-function all_feminine(data, stem_spec)
+local function all_feminine(data, stem_spec)
 	for basemod, stemtypelist in pairs(stem_spec) do
 		-- Only check modifiers if modN_numgen= not given. If not given, the
 		-- modifier needs to be declined for all numgens; else only for the
@@ -1113,7 +1158,7 @@ end
 
 -- The implementation of the main entry point for adjective and
 -- gendered noun tables.
-function show_gendered(frame, isadj, pos)
+local function show_gendered(frame, isadj, pos)
 	local args, origargs, data = init(frame:getParent().args)
 	data.pos = pos
 	data.numgens = function()
@@ -1182,11 +1227,11 @@ end
 
 -- Inflection functions
 
-function do_translit(term)
+local function do_translit(term)
 	return (lang:transliterate(term)) or track("cant-translit") and BOGUS_CHAR
 end
 
-function split_arabic_tr(term)
+local function split_arabic_tr(term)
 	if term == "" then
 		return "", ""
 	elseif not rfind(term, "/") then
@@ -1200,7 +1245,7 @@ function split_arabic_tr(term)
 	end
 end
 
-function reorder_shadda(word)
+local function reorder_shadda(word)
 	-- shadda+short-vowel (including tanwīn vowels, i.e. -an -in -un) gets
 	-- replaced with short-vowel+shadda during NFC normalisation, which
 	-- MediaWiki does for all Unicode strings; however, it makes the
@@ -1217,7 +1262,7 @@ end
 -- list of ARABIC/TRANSLIT strings because hamza resolution is applied to
 -- ARABIC, which may produce multiple outcomes (all of which will have the
 -- same TRANSLIT).
-function combine_with_ending(prefix, ar, tr, ending)
+local function combine_with_ending(prefix, ar, tr, ending)
 	local prefixar, prefixtr = split_arabic_tr(prefix)
 	local endingar, endingtr = split_arabic_tr(ending)
 	-- When calling hamza_seat(), leave out prefixes, which we expect to be
@@ -1241,6 +1286,38 @@ function combine_with_ending(prefix, ar, tr, ending)
 	return allartr
 end
 
+local function basic_combine_stem_ending(stem, ending)
+	return stem .. ending
+end
+
+local function basic_combine_stem_ending_tr(stem, ending)
+	return stem .. ending
+end
+
+-- Concatenate `prefixes`, `stems` and `endings` (any of which may be an abbreviate form list, i.e. strings, form
+-- objects or lists of strings or form objects) and store into `slot`. If a user-supplied override exists for the slot,
+-- nothing will happen unless `allow_overrides` is provided.
+local function add3(base, slot, prefixes, stems, endings, allow_overrides)
+	if skip_slot(base, slot, allow_overrides) then
+		return
+	end
+
+	-- Optimization since the prefixes are almost always single strings.
+	if type(prefixes) == "string" then
+		local function do_combine_stem_ending(stem, ending)
+			return prefixes .. stem .. ending
+		end
+		local function do_combine_stem_ending_tr(stem, ending)
+			return transliterate(prefixes) .. stem .. ending
+		end
+		iut.add_forms(base.forms, slot, stems, endings, do_combine_stem_ending, transliterate,
+			do_combine_stem_ending_tr, base.form_footnotes)
+	else
+		iut.add_multiple_forms(base.forms, slot, {prefixes, stems, endings}, basic_combine_stem_ending, transliterate,
+			basic_combine_stem_ending_tr, base.form_footnotes)
+	end
+end
+
 -- Combine PREFIX, STEM/TR and ENDING in that order and insert into the
 -- list of items in DATA[KEY], initializing it if empty and making sure
 -- not to insert duplicates. ENDING can be a list of endings, will be
@@ -1250,7 +1327,7 @@ end
 -- list of ARABIC/TRANSLIT strings; if more than one is present in the list,
 -- they represent hamza variants, i.e. different ways of writing a hamza
 -- sound, such as مُبْتَدَؤُون vs. مُبْتَدَأُون (see init_data()).
-function add_inflection(data, key, prefix, stem, tr, ending)
+local function add_inflection(data, key, prefix, stem, tr, ending)
 	if data.forms[key] == nil then
 		data.forms[key] = {}
 	end
@@ -1276,7 +1353,7 @@ end
 -- particular states, it comes from one of those states, in the order
 -- indefinite, definite, construct.) See also add_inflection() for more info
 -- on exactly what is inserted into DATA.
-function add_inflections(stem, tr, data, mod, numgen, endings)
+local function add_inflections(stem, tr, data, mod, numgen, endings)
 	stem = canon_hamza(stem)
 	assert(#endings == 15)
 	local ismod = mod ~= ""
@@ -1288,7 +1365,7 @@ function add_inflections(stem, tr, data, mod, numgen, endings)
 	end
 	-- Return a list of combined of ar/tr forms, with the ending tacked on.
 	-- There may be more than one form because of alternative hamza seats that
-	-- may be supplied, e.g. مُبْتَدَؤُون or مُبْتَدَأُون (mubtadaʾūn "(grammatical) subjects").
+	-- may be supplied, e.g. مُبْتَدَؤُون or مُبْتَدَأُون (mubtadaʔūn "(grammatical) subjects").
 	local defstem, deftr
 	if stem == "?" or data[mod .. "omitarticle"] then
 		defstem = stem
@@ -1358,7 +1435,7 @@ end
 -- (e.g. "singular", "dual" or "plural") while BROKSING is the same but uses
 -- "broken plural" in place of "plural" and "broken paucal" in place of
 -- "paucal".
-function insert_cat(data, mod, numgen, catvalue, engvalue)
+local function insert_cat(data, mod, numgen, catvalue, engvalue)
 	local singpl = data.engnumbers[rsub(numgen, "^.*_", "")]
 	assert(singpl ~= nil)
 	local broksingpl = rsub(singpl, "plural", "broken plural")
@@ -1393,22 +1470,22 @@ end
 
 -- Return true if we're handling modifier inflections and the modifier's
 -- case is limited to an oblique case (gen or acc; typically genitive,
--- in an ʾidāfa construction). This is used when returning lemma
+-- in an ʔidāfa construction). This is used when returning lemma
 -- inflections -- the modifier part of the lemma should agree in case
 -- with modifier's case if it's restricted in case.
-function mod_oblique(mod, data)
+local function mod_oblique(mod, data)
 	return mod ~= "" and data[mod .. "case"] and (
 		data[mod .. "case"] == "acc" or data[mod .. "case"] == "gen")
 end
 
 -- Similar to mod_oblique but specifically when the modifier case is
 -- limited to the accusative (which is rare or nonexistent in practice).
-function mod_acc(mod, data)
+local function mod_acc(mod, data)
 	return mod ~= "" and data[mod .. "case"] and data[mod .. "case"] == "acc"
 end
 
 -- Handle triptote and diptote inflections
-function triptote_diptote(stem, tr, data, mod, numgen, is_dip, lc)
+local function triptote_diptote(base, slot, stem, data, mod, numgen, is_dip, lc)
 	-- Remove any case ending
 	if rfind(stem, "[" .. UN .. U .. "]$") then
 		stem = rsub(stem, "[" .. UN .. U .. "]$", "")
@@ -1523,7 +1600,7 @@ end
 
 -- Elative and color/defect adjective: usually same as diptote,
 -- might be invariable
-function elative_color_defect(stem, tr, data, mod, numgen)
+local function elative_color_defect(stem, tr, data, mod, numgen)
 	if rfind(stem, "[" .. ALIF .. AMAQ .. "]$") then
 		invariable(stem, tr, data, mod, numgen)
 	else
@@ -1546,58 +1623,47 @@ inflections["lc"] = function(stem, tr, data, mod, numgen)
 	triptote_diptote(stem, tr, data, mod, numgen, false, true)
 end
 
-function in_defective(stem, tr, data, mod, numgen, tri)
-	if not rfind(stem, IN .. "$") then
-		error("'in' declension stem should end in -in: '" .. stem .. "'")
-	end
-
-	stem = rsub(stem, IN .. "$", "")
-	tr = rsub(tr, "in$", "")
+local function in_final_weak(base, slot, stem, tri)
+	strip_ending(stem, IN)
 
 	local acc_ind_ending = tri and IY .. AN .. ALIF or IY .. A
-	add_inflections(stem, tr, data, mod, numgen,
+	add_inflections(base, slot, stem,
 		{IN, acc_ind_ending, IN,
 		 II, IY .. A, II,
 		 II, IY .. A, II,
 		 II, II, II,
-		 -- FIXME: What should happen with the lemma when modifier case
-		 -- is limited to the accusative and modifier state is e.g. definite?
-		 -- Should the lemma end in -iya or -ī? In practice this will rarely
-		 -- if ever happen.
-		 mod_acc(mod, data) and acc_ind_ending or IN, II, II,
+		 -- FIXME: This used to check for mod_acc() and set the first value below to acc_ind_ending if so.
+		 -- Why was this done? There was a common that this may not be correct but the situation rarely if ever occurs.
+		 IN, II, II,
 		})
-	local tote = tri and "triptote" or "diptote"
+end
 
+inflprops[
+
+
+	local tote = tri and "triptote" or "diptote"
 	insert_cat(data, mod, numgen, "Arabic NOUNs with " .. tote .. " BROKSING in -in",
 		"BROKSING " .. tote .. " in " .. make_link(HYPHEN .. IN))
 end
 
-function detect_in_type(stem, ispl)
-	if ispl and rfind(stem, "^" .. CONS .. AOPT .. CONS .. AOPTA .. CONS .. IN .. "$") then -- layālin
-		return "diin"
-	else -- other -in words
-		return "triin"
-	end
-end
-
--- Defective in -in
+-- Final-weak in -in
 inflections["in"] = function(stem, tr, data, mod, numgen)
-	in_defective(stem, tr, data, mod, numgen,
+	in_final_weak(stem, tr, data, mod, numgen,
 		detect_in_type(stem, rfind(numgen, "pl")) == "triin")
 end
 
--- Defective in -in, force "triptote" variant
+-- Final-weak in -in, force "triptote" variant
 inflections["triin"] = function(stem, tr, data, mod, numgen)
-	in_defective(stem, tr, data, mod, numgen, true)
+	in_final_weak(stem, tr, data, mod, numgen, true)
 end
 
--- Defective in -in, force "diptote" variant
+-- Final-weak in -in, force "diptote" variant
 inflections["diin"] = function(stem, tr, data, mod, numgen)
-	in_defective(stem, tr, data, mod, numgen, false)
+	in_final_weak(stem, tr, data, mod, numgen, false)
 end
 
--- Defective in -an (comes in two variants, depending on spelling with tall alif or alif maqṣūra)
-inflections["an"] = function(stem, tr, data, mod, numgen)
+-- Final-weak in -an (comes in two variants, depending on spelling with tall alif or alif maqṣūra)
+inflections["an"] = function(base, slot, stem)
 	local tall_alif
 	if rfind(stem, AN .. ALIF .. "$") then
 		tall_alif = true
@@ -1633,7 +1699,7 @@ inflections["an"] = function(stem, tr, data, mod, numgen)
 		"BROKSING in " .. make_link(HYPHEN .. AN .. (tall_alif and ALIF or AMAQ)))
 end
 
-function invariable(stem, tr, data, mod, numgen)
+local function invariable(stem, tr, data, mod, numgen)
 	add_inflections(stem, tr, data, mod, numgen,
 		{"", "", "",
 		 "", "", "",
@@ -1657,46 +1723,55 @@ inflections["lwinv"] = function(stem, tr, data, mod, numgen)
 end
 
 -- Duals
-inflections["d"] = function(stem, tr, data, mod, numgen)
-	if rfind(stem, ALIF .. NI .. "?$") then
-		stem = rsub(stem, AOPTA .. NI .. "?$", "")
-	elseif rfind(stem, AMAD .. NI .. "?$") then
-		stem = rsub(stem, AMAD .. NI .. "?$", HAMZA_PH)
+inflections["d"] = function(base, slot, stem, lemma_props)
+	check_num(lemma_props, "du")
+	local ar, tr = stem.form, stem.translit
+	if rfind(stem.form, ALIF .. N .. "$") then
+		stem.form = rsub(stem.form, AOPTA .. N .. "$", "")
+	elseif rfind(stem.form, AMAD .. N .. "$") then
+		stem.form = rsub(stem.form, AMAD .. N .. "$", HAMZA_PH)
 	else
-		error("Dual stem should end in -ān(i): '" .. stem .. "'")
+		error("Internal error: Dual stem should end in -ān: '" .. stem .. "'")
 	end
-	tr = rsub(tr, "āni?$", "")
-	local mo = mod_oblique(mod, data)
-	add_inflections(stem, tr, data, mod, numgen,
+
+	stem.tr = strip_tr_ending(stem.tr, "ān", "internal")
+	local obl = lemma_props.case ~= "nom"
+	add_inflections(base, slot, stem,
 		{AANI, AYNI, AYNI,
 		 AANI, AYNI, AYNI,
 		 AA, AYSK, AYSK,
 		 AYN, AYN, AYSK,
-		 mo and AYN or AAN, mo and AYN or AAN, mo and AYSK or AA,
+		 obl and AYN or AAN, obl and AYN or AAN, obl and AYSK or AA,
 		})
-	insert_cat(data, mod, numgen, "", "dual in " .. make_link(HYPHEN .. AANI))
 end
 
+declprops["d"] = {
+	cats = {},
+	ann = "dual in " .. make_link(HYPHEN .. AANI),
+}
+
 -- Sound masculine plural
-inflections["smp"] = function(stem, tr, data, mod, numgen)
-	if not rfind(stem, UUNA .. "?$") then
-		error("Sound masculine plural stem should end in -ūn(a): '" .. stem .. "'")
-	end
-	stem = rsub(stem, UUNA .. "?$", "")
-	tr = rsub(tr, "ūna?$", "")
-	local mo = mod_oblique(mod, data)
-	add_inflections(stem, tr, data, mod, numgen,
+inflections["smp"] = function(base, slot, stem, lemma_props)
+	check_num(lemma_props, {"pl", "pauc"})
+	strip_ending(stem, UUN)
+	local obl = lemma_props.case ~= "nom"
+	add_inflections(base, slot, stem,
 		{UUNA, IINA, IINA,
 		 UUNA, IINA, IINA,
 		 UU,   II,   II,
 		 IIN,  IIN,  II,
-		 mo and IIN or UUN, mo and IIN or UUN, mo and II or UU,
+		 obl and IIN or UUN, obl and IIN or UUN, obl and II or UU,
 		})
-	-- use SINGULAR because conceivably this might be used with the paucal
-	-- instead of plural
 	insert_cat(data, mod, numgen, "Arabic NOUNs with sound masculine SINGULAR",
 		"sound masculine SINGULAR")
 end
+
+declprops["smp"] = {
+	-- use SINGULAR because conceivably this might be used with the paucal
+	-- instead of plural
+	cats = {"NOUNs with sound masculine SINGULAR"},
+	ann = "sound masculine SINGULAR",
+}
 
 -- Sound feminine plural
 inflections["sfp"] = function(stem, tr, data, mod, numgen)
@@ -1718,7 +1793,7 @@ inflections["sfp"] = function(stem, tr, data, mod, numgen)
 		"sound feminine SINGULAR")
 end
 
--- Plural of defective in -an
+-- Plural of final-weak in -an
 inflections["awnp"] = function(stem, tr, data, mod, numgen)
 	if not rfind(stem, AWNA .. "?$") then
 		error("'awnp' plural stem should end in -awn(a): '" .. stem .. "'")
@@ -1753,10 +1828,43 @@ inflections["?"] = function(stem, tr, data, mod, numgen)
 		"SINGULAR unknown")
 end
 
--- Detect declension of noun or adjective stem or lemma. We allow triptotes,
--- diptotes and sound plurals to either come with ʾiʿrāb or not. We detect
--- some cases where vowels are missing, when it seems fairly unambiguous to
--- do so. ISFEM is true if we are dealing with a feminine stem (not
+--[==[
+Detect declension of noun or adjective lemma or non-lemma forms. On input, the following should be specified in `data`:
+* `form`: The form value itself (a string). Required. It may or may not have ʔiʕrāb except for final-weak indefinite
+          forms ending in -in -or -an, where it is required. When the ʔiʕrāb is not required, it should preferably be
+		  omitted, but in some cases will be taken into account (e.g. to distinguish triptotes from diptotes).
+* `case`: The case ("nom", "acc" or "gen"). Required.
+* `iscon`: Whether this is in the construct state (true or false, never {nil}). Required. If `iscons` is {false}, the
+           code will determine whether the state is definite or indefinite, unless `nodef` is set.
+* `nodef`: If true, the user specified `-def` to force a term with initial ال to not be interpreted as definite.
+           Normally this shouldn't be necessary; initial ال should appear unpointed while all following consonants
+		   should have diacritics on them.
+* `num`: The number ("sg", "du", "pl", "coll" = collective, "sgl" = singulative, "pauc" = paucal). Required.
+* `decl`: The declension, if specified by the user. This can be a "partially specified" declension such as "in" (which
+          will be converted to a fully specified declension "triin" or "diin").
+* `gender`: The gender, if specified by the user ("m" or "f"). If the user specified that the term can be either
+            masculine or feminine, leave this as {nil}.
+* `pos`: The part of speech, if known.
+
+The return value is a structure with the following fields:
+* `normalized_form`: The normalized form (indefinite nominative, no ʔiʕrāb except for final-weak forms in -in or -an).
+* `inferred_case`: Same as `case` on input.
+* `inferred_state`: The inferred state ("ind", "def" or "con").
+* `inferred_num`: Same as `num` on input.
+* `inferred_decl`: The inferred declension. Will always be a fully specified declension.
+* `inferred_gender`: The inferred gender ("m" or "f", based on the passed-in gender or inferred from the ending and/or
+                     declension). In some cases, this will be nil (the gender was not passed in and could not be
+					 inferred, e.g. terms ending in -āʔ). The caller may throw an error in this circumstance.
+* `inferred_pos`: Same as `pos` on input.
+                     
+The form should be in the indefinite nominative
+unless there is a state or case restriction. We allow triptotes, diptotes and sound duals and plurals to either come
+with ʔiʕrāb or not (preferably not). We detect some cases where vowels are missing, when it seems fairly unambiguous
+to do so. On input, `data` is an object containing the form and known information about the form (e.g. a specified
+declension, which might need to be refined into something more specific; a gender or number; etc.).
+--
+--
+-- ISFEM is true if we are dealing with a feminine stem (not
 -- currently used and needs to be rethought). NUM is "sg", "du", or "pl",
 -- depending on the number of the stem.
 --
@@ -1770,113 +1878,255 @@ end
 --
 -- Some unexpectedly diptote nouns/adjectives:
 --
--- jiʿrān in ʾabū jiʿrān "dung beetle"
--- distributive numbers: ṯunāʾ "two at a time", ṯulāṯ/maṯlaṯ "three at a time",
---   rubāʿ "four at a time" (not a regular diptote pattern, cf. triptote
+-- jiʕrān in ʔabū jiʕrān "dung beetle"
+-- distributive numbers: ṯunāʔ "two at a time", ṯulāṯ/maṯlaṯ "three at a time",
+--   rubāʕ "four at a time" (not a regular diptote pattern, cf. triptote
 --   junāḥ "misdemeanor, sin", nujār "origin, root", nuḥām "flamingo")
 -- jahannam (f.) "hell"
 -- many names: jilliq/jillaq "Damascus", judda/jidda "Jedda", jibrīl (and
 --   variants) "Gabriel", makka "Mecca", etc.
--- jibriyāʾ "pride"
--- kibriyāʾ "glory, pride"
--- babbaḡāʾ "parrot"
--- ʿayāyāʾ "incapable, tired"
--- suwaidāʾ "black bile, melancholy"
--- Note also: ʾajhar "day-blind" (color-defect) and ʾajhar "louder" (elative)
-function export.detect_type(stem, isfem, num, pos)
+-- jibriyāʔ "pride"
+-- kibriyāʔ "glory, pride"
+-- babbaḡāʔ "parrot"
+-- ʕayāyāʔ "incapable, tired"
+-- suwaidāʔ "black bile, melancholy"
+-- Note also: ʔajhar "day-blind" (color-defect) and ʔajhar "louder" (elative)
+]==]
+function export.detect_declension(data)
+	local form, decl, num, gender, case, state, pos =
+		data.form, data.decl, data.num, data.gender, data.case, data.state, data.pos
 	local function dotrack(word)
 		track(word)
 		track(word .. "/" .. pos)
 		return true
 	end
-	-- Not strictly necessary because the caller (stem_and_type) already
-	-- reorders, but won't hurt, and may be necessary if this function is
-	-- called from an external caller.
-	stem = reorder_shadda(stem)
-	local origstem = stem
-	-- So that we don't get tripped up by alif madda, we replace alif madda
-	-- with the sequence hamza + fatḥa + alif before the regexps below.
-	stem = rsub(stem, AMAD, HAMZA .. AA)
-	if num == "du" then
-		if rfind(stem, ALIF .. NI .. "?$") then
-			return "d"
-		else
-			error("Malformed stem for dual, should end in the nominative dual ending -ān(i): '" .. origstem .. "'")
+	local origform = form
+	-- Not strictly necessary because the caller (form_and_type) already reorders, but won't hurt, and may be necessary
+	-- if this function is called from an external caller.
+	form = reorder_shadda(form)
+	-- So that we don't get tripped up by alif madda, we replace alif madda with the sequence hamza + fatḥa + alif
+	-- before the regexps below. We undo this later; this is necessary because we may replace a form with a different
+	-- case form, which may produce an alif madda that didn't previously exist (e.g. when the dual oblique -ayn(i) is
+	-- replaced with nominative -ān).
+	form = rsub(form, AMAD, HAMZA .. AA)
+	local retform, retdecl, retcase, retnum, retstate, retgender
+
+	if not data.nodef then
+		local bareform = form:match("^ال(.*)$")
+		if bareform then
+			if case and case ~= "def" then
+				error(("Stem '%s' is definite but case incompatibly specified as '%s'; if form is not actually definite, use indicator '-def'"
+				):format(origform, case))
+			end
+			case = "def"
+			form = bareform
 		end
 	end
-	if rfind(stem, IN .. "$") then -- -in words
-		return detect_in_type(stem, num == "pl")
-	elseif rfind(stem, AN .. "[" .. ALIF .. AMAQ .. "]$") then
-		return "an"
-	elseif rfind(stem, AN .. "$") then
-		error("Malformed stem, fatḥatan should be over second-to-last letter: " .. origstem)
-	elseif num == "pl" and rfind(stem, AW .. SKOPT .. N .. AOPT .. "$") then
-		return "awnp"
-	elseif num == "pl" and rfind(stem, ALIF .. T .. UNOPT .. "$") and
-		-- Avoid getting tripped up by plurals like ʾawqāt "times",
-		-- ʾaḥwāt "fishes", ʾabyāt "verses", ʾazyāt "oils", ʾaṣwāt "voices",
-		-- ʾamwāt "dead (pl.)".
-		not rfind(stem, HAMZA_ON_ALIF .. A .. CONS .. SK .. CONS .. AAT .. UNOPT .. "$") then
-		return "sfp"
-	elseif num == "pl" and rfind(stem, W .. N .. AOPT .. "$") and
-		-- Avoid getting tripped up by plurals like ʿuyūn "eyes",
-		-- qurūn "horns" (note we check for U between first two consonants
-		-- so we correctly ignore cases like sinūn "hours" (from sana),
-		-- riʾūn "lungs" (from riʾa) and banūn "sons" (from ibn).
-		not rfind(stem, "^" .. CONS .. U .. CONS .. UUN .. AOPT .. "$") then
-		return "smp"
-	elseif rfind(stem, UN .. "$") then -- explicitly specified triptotes (we catch sound feminine plurals above)
-		return "tri"
-	elseif rfind(stem, U .. "$") then -- explicitly specified diptotes
-		return "di"
-	elseif -- num == "pl" and
-		( -- various diptote plural patterns; these are diptote even in the singular (e.g. yanāyir "January", falāfil "falafel", tuʾabāʾ "yawn, fatigue"
-		  -- currently we sometimes end up with such plural patterns in the "singular" in a singular
-		  -- ʾidāfa construction with plural modifier. (FIXME: These should be fixed to the correct number.)
-		rfind(stem, "^" .. CONS .. AOPT .. CONS .. AOPTA .. CONS .. IOPT .. Y .. "?" .. CONS .. "$") and dotrack("fawaakih") or -- fawākih, daqāʾiq, makātib, mafātīḥ
-		rfind(stem, "^" .. CONS .. AOPT .. CONS .. AOPTA .. CONS .. SH .. "$")
-			and not rfind(stem, "^" .. T) and dotrack("mawaadd") or -- mawādd, maqāmm, ḍawāll; exclude t- so we don't catch form-VI verbal nouns like taḍādd (HACK!!!)
-		rfind(stem, "^" .. CONS .. U .. CONS .. AOPT .. CONS .. AOPTA .. HAMZA .. "$") and dotrack("wuzaraa") or -- wuzarāʾ "ministers", juhalāʾ "ignorant (pl.)"
-		rfind(stem, ELCD_START .. SKOPT .. CONS .. IOPT .. CONS .. AOPTA .. HAMZA .. "$") and dotrack("asdiqaa") or -- ʾaṣdiqāʾ
-		rfind(stem, ELCD_START .. IOPT .. CONS .. SH .. AOPTA .. HAMZA .. "$") and dotrack("aqillaa") -- ʾaqillāʾ, ʾajillāʾ "important (pl.)", ʾaḥibbāʾ "lovers"
-		) then
-		return "di"
-	elseif num == "sg" and ( -- diptote singular patterns (nouns/adjectives)
-		rfind(stem, "^" .. CONS .. A .. CONS .. SK .. CONS .. AOPTA .. HAMZA .. "$") and dotrack("qamraa") or -- qamrāʾ "moon-white, moonlight"; baydāʾ "desert"; ṣaḥrāʾ "desert-like, desert"; tayhāʾ "trackless, desolate region"; not pl. to avoid catching e.g. ʾabnāʾ "sons", ʾaḥmāʾ "fathers-in-law", ʾamlāʾ "steppes, deserts" (pl. of malan), ʾanbāʾ "reports" (pl. of nabaʾ)
-		rfind(stem, ELCD_START .. SK .. CONS .. A .. CONS .. "$") and dotrack("abyad") or -- ʾabyaḍ "white", ʾakbar "greater"; FIXME nouns like ʾaʿzab "bachelor", ʾaḥmad "Ahmed" but not ʾarnab "rabbit", ʾanjar "anchor", ʾabjad "abjad", ʾarbaʿ "four", ʾandar "threshing floor" (cf. diptote ʾandar "rarer")
-		rfind(stem, ELCD_START .. A .. CONS .. SH .. "$") and dotrack("alaff") or -- ʾalaff "plump", ʾaḥabb "more desirable"
-		-- do the following on the origstem so we can check specifically for alif madda
-		rfind(origstem, "^" .. AMAD .. CONS .. A .. CONS .. "$") and dotrack("aalam") -- ʾālam "more painful", ʾāḵar "other"
-		) then
-		return "di"
-	elseif num == "sg" and pos == "adjective" and ( -- diptote singular patterns (adjectives)
-		rfind(stem, "^" .. CONS .. A .. CONS .. SK .. CONS .. AOPTA .. N .. "$") and dotrack("kaslaan") or -- kaslān "lazy", ʿaṭšān "thirsty", jawʿān "hungry", ḡaḍbān "angry", tayhān "wandering, perplexed"; but not nouns like qaṭrān "tar", šayṭān "devil", mawtān "plague", maydān "square"
-		-- rfind(stem, "^" .. CONS .. A .. CONS .. SH .. AOPTA .. N .. "$") and dotrack("laffaa") -- excluded because of too many false positives e.g. ḵawwān "disloyal", not to mention nouns like jannān "gardener"; only diptote example I can find is ʿayyān "incapable, weary" (diptote per Lane but not Wehr)
-		rfind(stem, "^" .. CONS .. A .. CONS .. SH .. AOPTA .. HAMZA .. "$") and dotrack("laffaa") -- laffāʾ "plump (fem.)"; but not nouns like jarrāʾ "runner", ḥaddāʾ "camel driver", lawwāʾ "wryneck"
-		) then
-		return "di"
-	elseif rfind(stem, AMAQ .. "$") then -- kaslā, ḏikrā (spelled with alif maqṣūra)
-		return "inv"
-	elseif rfind(stem, "[" .. ALIF .. SK .. "]" .. Y .. AOPTA .. "$") then -- dunyā, hadāyā (spelled with tall alif after yāʾ)
-		return "inv"
-	elseif rfind(stem, ALIF .. "$") then -- kāmērā, lībiyā (spelled with tall alif; we catch dunyā and hadāyā above)
-		return "lwinv"
-	elseif rfind(stem, II .. "$") then -- cases like كُوبْرِي kubrī "bridge" and صَوَانِي ṣawānī pl. of ṣīniyya; modern words that would probably end with -in
-		dotrack("ii")
-		return "inv"
-	elseif rfind(stem, UU .. "$") then -- FIXME: Does this occur? Check the tracking
-		dotrack("uu")
-		return "inv"
-	else
-		return "tri"
+
+	-- Normalize a form that may be in any case and state to the nominative indefinite form (minus ʔiʕrāb except after
+	-- final-weak forms). Note that we know for sure by this point the case and state of the form. `data` contains the
+	-- following:
+	-- (1) Several fields specifying Lua patterns matching particular endings. Each field is a Lua pattern or list of
+	--     patterns (which are tried in turn) to match the appropriate ending. The remainder (which is matched using
+	--     `(.-)`) becomes the form.
+	-- * `nom_ind`: Regex to match the nominative indefinite ending. The remainder will be the form.
+	-- * `nom_def`: Regex to match the nominative definite ending. The remainder will be the form. Defaults to
+	--   `nom_ind`.
+	-- * `nom_con`: Regex to match the nominative consstruct ending. The remainder will be the form.
+	local function normalize_to_nom_ind(data)
+		local this_retform, this_retcase, this_retstate
+		while true do
+			this_retform = rmatch(form, "^(.-)" .. data.nom_ind .. "$")
+			if this_retform then
+				this_retcase = "nom"
+				this_retstate = {"ind", "def"}
+				break
+			end
+			if data
+			this_retform = rmatch(form, "^(.-)" .. data.obl_ind .. "$")
+			if this_retform then
+				this_retcase = {"acc", "gen"}
+				this_retstate = {"ind", "def"}
+				break
+			end
+			this_retform = rmatch(form, "^(.-)" .. data.nom_con .. "$")
+			if this_retform then
+				this_retcase = "nom"
+				this_retstate = "con"
+				break
+			end
+			this_retform = rmatch(form, "^(.-)" .. data.obl_con .. "$")
+			if this_retform then
+				this_retcase = {"acc", "gen"}
+				this_retstate = "con"
+				break
+			end
+			return false
+		end
+
+		this_retform = this_retform .. data.normalized_ending
+		if data.reject_if and data.reject_if(this_retform, this_retcase, this_retstate) then
+			return false
+		end
+		retform = this_retform
+		retcase = this_retcase
+		retstate = this_retstate
+		return true
 	end
+
+	while true do
+		if num == "du" then
+			if normalize_nom_obl {
+				nom_ind = AOPTA .. NI .. "?",
+				obl_ind = AY .. SKOPT .. NI .. "?",
+				nom_con = AOPTA,
+				obl_con = AY .. SKOPT,
+				normalized_ending = AAN,
+			} then
+				retdecl = "d"
+				break
+			else
+				error("Malformed form for dual, should end in -ān(i), -ayn(i), -ā or -ay: '" .. origform .. "'")
+			end
+		end
+		if num == "pl" then
+			if not decl or decl == "awnp" then
+				if normalize_to_nom_ind {
+					nom_ind_def = AW .. SKOPT .. N .. AOPT,
+					obl_ind_def = AY .. SKOPT .. N .. AOPT,
+					nom_con = AW .. SKOPT,
+					obl_con = AY .. SKOPT,
+					normalized_ending = AWN,
+				} then
+					retdecl = "awnp"
+					retgender = "m"
+					break
+				elseif decl == "awnp" then
+					error("Malformed form for -awn plural, should end in -awn(a), -ayn(a), -aw or -ay: '" ..
+						origform .. "'")
+				end
+			end
+			if not decl or decl == "sp" or decl == "sfp" then
+				local at = AOPTA .. T
+				if normalize_to_nom_ind {
+					nom_ind = at .. UNOPT,
+					obl_ind = at .. INOPT,
+					nom_def_con = at .. UOPT,
+					obl_def_con = at .. IOPT,
+					normalized_ending = AAT,
+					reject_if = function(form)
+						-- Avoid getting tripped up by plurals like ʔawqāt "times", ʔaḥwāt "fishes", ʔabyāt "verses",
+						-- ʔazyāt "oils", ʔaṣwāt "voices", ʔamwāt "dead (pl.)".
+						return not decl and rfind(form, "^" .. HAMZA_ON_ALIF .. A .. CONS .. SK .. CONS .. AAT .. "$")
+					end,
+				} then
+					retdecl = "sfp"
+					retgender = "f"
+					break
+				elseif decl == "sfp" then
+					error("Malformed form for strong feminine plural, should end in -āt(u/i)(n): '" .. origform .. "'")
+				end
+			end
+			if not decl or decl == "sp" or decl == "smp" then
+				if normalize_to_nom_ind {
+					nom_ind_def = UUN .. AOPT,
+					obl_ind_def = IIN .. AOPT,
+					nom_con = UU,
+					obl_con = II,
+					normalized_ending = UUN,
+					reject_if = function(form)
+						-- Avoid getting tripped up by plurals like ʕuyūn "eyes", qurūn "horns" (note we check for U
+						-- between first two consonants so we correctly ignore cases like sinūn "hours" (from sana),
+						-- riʔūn "lungs" (from riʔa) and banūn "sons" (from ibn).
+						return not decl and rfind(form, "^" .. CONS .. U .. CONS .. UUN .. AOPT .. "$")
+					end,
+				} then
+					retdecl = "sfp"
+					retgender = "f"
+					break
+				elseif decl == "sfp" then
+					error("Malformed form for strong feminine plural, should end in -āt(u/i)(n): '" .. origform .. "'")
+				end
+			end
+		end
+		if rfind(form, IN .. "$") then -- -in words
+			if num == "pl" and rfind(form, "^" .. CONS .. AOPT .. CONS .. AOPTA .. CONS .. IN .. "$") then -- layālin
+				return "diin"
+			else -- other -in words
+				return "triin"
+			end
+	end
+
+			return detect_in_type(form, num == "pl")
+		elseif rfind(form, AN .. "[" .. ALIF .. AMAQ .. "]$") then
+			return "an"
+		elseif rfind(form, AN .. "$") then
+			error("Malformed form, fatḥatan should be over second-to-last letter: " .. origform)
+		elseif num == "pl" and rfind(form, ALIF .. T .. UNOPT .. "$") and
+			-- Avoid getting tripped up by plurals like ʔawqāt "times",
+			-- ʔaḥwāt "fishes", ʔabyāt "verses", ʔazyāt "oils", ʔaṣwāt "voices",
+			-- ʔamwāt "dead (pl.)".
+			not rfind(form, HAMZA_ON_ALIF .. A .. CONS .. SK .. CONS .. AAT .. UNOPT .. "$") then
+			return "sfp"
+		elseif num == "pl" and rfind(form, W .. N .. AOPT .. "$") and
+			-- Avoid getting tripped up by plurals like ʕuyūn "eyes",
+			-- qurūn "horns" (note we check for U between first two consonants
+			-- so we correctly ignore cases like sinūn "hours" (from sana),
+			-- riʔūn "lungs" (from riʔa) and banūn "sons" (from ibn).
+			not rfind(form, "^" .. CONS .. U .. CONS .. UUN .. AOPT .. "$") then
+			return "smp"
+		elseif rfind(form, UN .. "$") then -- explicitly specified triptotes (we catch sound feminine plurals above)
+			return "tri"
+		elseif rfind(form, U .. "$") then -- explicitly specified diptotes
+			return "di"
+		elseif -- num == "pl" and
+			( -- various diptote plural patterns; these are diptote even in the singular (e.g. yanāyir "January", falāfil "falafel", tuʔabāʔ "yawn, fatigue"
+			  -- currently we sometimes end up with such plural patterns in the "singular" in a singular
+			  -- ʔidāfa construction with plural modifier. (FIXME: These should be fixed to the correct number.)
+			rfind(form, "^" .. CONS .. AOPT .. CONS .. AOPTA .. CONS .. IOPT .. Y .. "?" .. CONS .. "$") and dotrack("fawaakih") or -- fawākih, daqāʔiq, makātib, mafātīḥ
+			rfind(form, "^" .. CONS .. AOPT .. CONS .. AOPTA .. CONS .. SH .. "$")
+				and not rfind(form, "^" .. T) and dotrack("mawaadd") or -- mawādd, maqāmm, ḍawāll; exclude t- so we don't catch form-VI verbal nouns like taḍādd (HACK!!!)
+			rfind(form, "^" .. CONS .. U .. CONS .. AOPT .. CONS .. AOPTA .. HAMZA .. "$") and dotrack("wuzaraa") or -- wuzarāʔ "ministers", juhalāʔ "ignorant (pl.)"
+			rfind(form, ELCD_START .. SKOPT .. CONS .. IOPT .. CONS .. AOPTA .. HAMZA .. "$") and dotrack("asdiqaa") or -- ʔaṣdiqāʔ
+			rfind(form, ELCD_START .. IOPT .. CONS .. SH .. AOPTA .. HAMZA .. "$") and dotrack("aqillaa") -- ʔaqillāʔ, ʔajillāʔ "important (pl.)", ʔaḥibbāʔ "lovers"
+			) then
+			return "di"
+		elseif num == "sg" and ( -- diptote singular patterns (nouns/adjectives)
+			rfind(form, "^" .. CONS .. A .. CONS .. SK .. CONS .. AOPTA .. HAMZA .. "$") and dotrack("qamraa") or -- qamrāʔ "moon-white, moonlight"; baydāʔ "desert"; ṣaḥrāʔ "desert-like, desert"; tayhāʔ "trackless, desolate region"; not pl. to avoid catching e.g. ʔabnāʔ "sons", ʔaḥmāʔ "fathers-in-law", ʔamlāʔ "steppes, deserts" (pl. of malan), ʔanbāʔ "reports" (pl. of nabaʔ)
+			rfind(form, ELCD_START .. SK .. CONS .. A .. CONS .. "$") and dotrack("abyad") or -- ʔabyaḍ "white", ʔakbar "greater"; FIXME nouns like ʔaʕzab "bachelor", ʔaḥmad "Ahmed" but not ʔarnab "rabbit", ʔanjar "anchor", ʔabjad "abjad", ʔarbaʕ "four", ʔandar "threshing floor" (cf. diptote ʔandar "rarer")
+			rfind(form, ELCD_START .. A .. CONS .. SH .. "$") and dotrack("alaff") or -- ʔalaff "plump", ʔaḥabb "more desirable"
+			-- do the following on the origform so we can check specifically for alif madda
+			rfind(origform, "^" .. AMAD .. CONS .. A .. CONS .. "$") and dotrack("aalam") -- ʔālam "more painful", ʔāḵar "other"
+			) then
+			return "di"
+		elseif num == "sg" and pos == "adjective" and ( -- diptote singular patterns (adjectives)
+			rfind(form, "^" .. CONS .. A .. CONS .. SK .. CONS .. AOPTA .. N .. "$") and dotrack("kaslaan") or -- kaslān "lazy", ʕaṭšān "thirsty", jawʕān "hungry", ḡaḍbān "angry", tayhān "wandering, perplexed"; but not nouns like qaṭrān "tar", šayṭān "devil", mawtān "plague", maydān "square"
+			-- rfind(form, "^" .. CONS .. A .. CONS .. SH .. AOPTA .. N .. "$") and dotrack("laffaa") -- excluded because of too many false positives e.g. ḵawwān "disloyal", not to mention nouns like jannān "gardener"; only diptote example I can find is ʕayyān "incapable, weary" (diptote per Lane but not Wehr)
+			rfind(form, "^" .. CONS .. A .. CONS .. SH .. AOPTA .. HAMZA .. "$") and dotrack("laffaa") -- laffāʔ "plump (fem.)"; but not nouns like jarrāʔ "runner", ḥaddāʔ "camel driver", lawwāʔ "wryneck"
+			) then
+			return "di"
+		elseif rfind(form, AMAQ .. "$") then -- kaslā, ḏikrā (spelled with alif maqṣūra)
+			return "inv"
+		elseif rfind(form, "[" .. ALIF .. SK .. "]" .. Y .. AOPTA .. "$") then -- dunyā, hadāyā (spelled with tall alif after yāʔ)
+			return "inv"
+		elseif rfind(form, ALIF .. "$") then -- kāmērā, lībiyā (spelled with tall alif; we catch dunyā and hadāyā above)
+			return "lwinv"
+		elseif rfind(form, II .. "$") then -- cases like كُوبْرِي kubrī "bridge" and صَوَانِي ṣawānī pl. of ṣīniyya; modern words that would probably end with -in
+			dotrack("ii")
+			return "inv"
+		elseif rfind(form, UU .. "$") then -- FIXME: Does this occur? Check the tracking
+			dotrack("uu")
+			return "inv"
+		else
+			return "tri"
+		end
 end
 
 -- Replace hamza (of any sort) at the end of a word, possibly followed by
 -- a nominative case ending or -in or -an, with HAMZA_PH, and replace alif
 -- madda at the end of a word with HAMZA_PH plus fatḥa + alif. To undo these
 -- changes, use hamza_seat().
-function canon_hamza(word)
+local function canon_hamza(word)
 	word = rsub(word, AMAD .. "$", HAMZA_PH .. AA)
 	word = rsub(word, HAMZA_ANY .. "([" .. UN .. U .. IN .. "]?)$", HAMZA_PH .. "%1")
 	word = rsub(word, HAMZA_ANY .. "(" .. AN .. "[" .. ALIF .. AMAQ .. "])$", HAMZA_PH .. "%1")
@@ -1884,7 +2134,7 @@ function canon_hamza(word)
 end
 
 -- Supply the appropriate hamza seat(s) for a placeholder hamza.
-function hamza_seat(word)
+local function hamza_seat(word)
 	if rfind(word, HAMZA_PH) then -- optimization to avoid many regexp substs
 		return ar_utilities.process_hamza(word)
 	end
@@ -1894,7 +2144,7 @@ end
 --[[
 -- Supply the appropriate hamza seat for a placeholder hamza in a combined
 -- Arabic/translation expression.
-function split_and_hamza_seat(word)
+local function split_and_hamza_seat(word)
 	if rfind(word, HAMZA_PH) then -- optimization to avoid many regexp substs
 		local ar, tr = split_arabic_tr(word)
 		-- FIXME: Do something with all values returned
@@ -1936,7 +2186,7 @@ function export.stem_and_type(word, sg, sgtype, isfem, num, pos)
 
 	local ar, tr = split_arabic_tr(word)
 	-- Need to reorder shaddas here so that shadda at the end of a stem
-	-- followed by ʾiʿrāb or a plural ending or whatever can get processed
+	-- followed by ʔiʕrāb or a plural ending or whatever can get processed
 	-- correctly. This processing happens in various places so make sure
 	-- we return the reordered Arabic in all circumstances.
 	ar = reorder_shadda(ar)
@@ -1996,16 +2246,16 @@ function export.stem_and_type(word, sg, sgtype, isfem, num, pos)
 		
 	local function is_feminine_cd_adj(ar)
 		return pos == "adjective" and
-			(rfind(ar, "^" .. CONS .. A .. CONS .. SK .. CONS .. AOPTA .. HAMZA .. UOPT .. "$") or -- ʾḥamrāʾ/ʿamyāʾ/bayḍāʾ
-			rfind(ar, "^" .. CONS .. A .. CONS .. SH .. AOPTA .. HAMZA .. UOPT .. "$") -- laffāʾ
+			(rfind(ar, "^" .. CONS .. A .. CONS .. SK .. CONS .. AOPTA .. HAMZA .. UOPT .. "$") or -- ʔḥamrāʔ/ʕamyāʔ/bayḍāʔ
+			rfind(ar, "^" .. CONS .. A .. CONS .. SH .. AOPTA .. HAMZA .. UOPT .. "$") -- laffāʔ
 			)
 	end
 
 	local function is_elcd_adj(ar)
-		return rfind(ar, ELCD_START .. SK .. CONS .. A .. CONS .. UOPT .. "$") or -- ʾabyaḍ "white", ʾakbar "greater"
-			rfind(ar, ELCD_START .. A .. CONS .. SH .. UOPT .. "$") or -- ʾalaff "plump", ʾaqall "fewer"
-			rfind(ar, ELCD_START .. SK .. CONS .. AAMAQ .. "$") or -- ʾaʿmā "blind", ʾadnā "lower"
-			rfind(ar, "^" .. AMAD .. CONS .. A .. CONS .. UOPT .. "$") -- ʾālam "more painful", ʾāḵar "other"
+		return rfind(ar, ELCD_START .. SK .. CONS .. A .. CONS .. UOPT .. "$") or -- ʔabyaḍ "white", ʔakbar "greater"
+			rfind(ar, ELCD_START .. A .. CONS .. SH .. UOPT .. "$") or -- ʔalaff "plump", ʔaqall "fewer"
+			rfind(ar, ELCD_START .. SK .. CONS .. AAMAQ .. "$") or -- ʔaʕmā "blind", ʔadnā "lower"
+			rfind(ar, "^" .. AMAD .. CONS .. A .. CONS .. UOPT .. "$") -- ʔālam "more painful", ʔāḵar "other"
 	end
 
 	if word == "?" or
@@ -2020,7 +2270,7 @@ function export.stem_and_type(word, sg, sgtype, isfem, num, pos)
 			error("Singular stem not in CACCān form: " .. sgar)
 		end
 		local ret = (
-			sub(AMAD .. N .. UOPT .. "$", AMAD, "nu?$", "") or -- ends in -ʾān
+			sub(AMAD .. N .. UOPT .. "$", AMAD, "nu?$", "") or -- ends in -ʔān
 			sub(AOPTA .. N .. UOPT .. "$", AMAQ, "nu?$", "") -- ends in -ān
 		)
 		return ret, "inv"
@@ -2029,15 +2279,15 @@ function export.stem_and_type(word, sg, sgtype, isfem, num, pos)
 	if word == "elf" then
 		local ret = (
 			sub(ELCD_START .. SK .. "[" .. Y .. W .. "]" .. A .. CONSPAR .. UOPT .. "$",
-				"%1" .. UU .. "%2" .. AMAQ, "ʔa(.)[yw]a(.)u?", "%1ū%2ā") or -- ʾajyad
+				"%1" .. UU .. "%2" .. AMAQ, "ʔa(.)[yw]a(.)u?", "%1ū%2ā") or -- ʔajyad
 			sub(ELCD_START .. SK .. CONSPAR .. A .. CONSPAR .. UOPT .. "$",
-				"%1" .. U .. "%2" .. SK .. "%3" .. AMAQ, "ʔa(.)(.)a(.)u?", "%1u%2%3ā") or -- ʾakbar
+				"%1" .. U .. "%2" .. SK .. "%3" .. AMAQ, "ʔa(.)(.)a(.)u?", "%1u%2%3ā") or -- ʔakbar
 			sub(ELCD_START .. A .. CONSPAR .. SH .. UOPT .. "$",
-				"%1" .. U .. "%2" .. SH .. AMAQ, "ʔa(.)a(.)%2u?", "%1u%2%2ā") or -- ʾaqall
+				"%1" .. U .. "%2" .. SH .. AMAQ, "ʔa(.)a(.)%2u?", "%1u%2%2ā") or -- ʔaqall
 			sub(ELCD_START .. SK .. CONSPAR .. AAMAQ .. "$",
-				"%1" .. U .. "%2" .. SK .. Y .. ALIF, "ʔa(.)(.)ā", "%1u%2yā") or -- ʾadnā
+				"%1" .. U .. "%2" .. SK .. Y .. ALIF, "ʔa(.)(.)ā", "%1u%2yā") or -- ʔadnā
 			sub("^" .. AMAD .. CONSPAR .. A .. CONSPAR .. UOPT .. "$",
-				HAMZA_ON_ALIF .. U .. "%1" .. SK .. "%2" .. AMAQ, "ʔā(.)a(.)u?", "ʔu%1%2ā") -- ʾālam "more painful", ʾāḵar "other"
+				HAMZA_ON_ALIF .. U .. "%1" .. SK .. "%2" .. AMAQ, "ʔā(.)a(.)u?", "ʔu%1%2ā") -- ʔālam "more painful", ʔāḵar "other"
 		)
 		if not ret then
 			error("Singular stem not an elative adjective: " .. sgar)
@@ -2048,11 +2298,11 @@ function export.stem_and_type(word, sg, sgtype, isfem, num, pos)
 	if word == "cdf" then
 		local ret = (
 			sub(ELCD_START .. SK .. CONSPAR .. A .. CONSPAR .. UOPT .. "$",
-				"%1" .. A .. "%2" .. SK .. "%3" .. AA .. HAMZA, "ʔa(.)(.)a(.)u?", "%1a%2%3āʔ") or -- ʾaḥmar
+				"%1" .. A .. "%2" .. SK .. "%3" .. AA .. HAMZA, "ʔa(.)(.)a(.)u?", "%1a%2%3āʔ") or -- ʔaḥmar
 			sub(ELCD_START .. A .. CONSPAR .. SH .. UOPT .. "$",
-				"%1" .. A .. "%2" .. SH .. AA .. HAMZA, "ʔa(.)a(.)%2u?", "%1a%2%2āʔ") or -- ʾalaff
+				"%1" .. A .. "%2" .. SH .. AA .. HAMZA, "ʔa(.)a(.)%2u?", "%1a%2%2āʔ") or -- ʔalaff
 			sub(ELCD_START .. SK .. CONSPAR .. AAMAQ .. "$",
-				"%1" .. A .. "%2" .. SK .. Y .. AA .. HAMZA, "ʔa(.)(.)ā", "%1a%2yāʔ") -- ʾaʿmā
+				"%1" .. A .. "%2" .. SK .. Y .. AA .. HAMZA, "ʔa(.)(.)ā", "%1a%2yāʔ") -- ʔaʕmā
 		)
 		if not ret then
 			error("Singular stem not a color/defect adjective: " .. sgar)
@@ -2075,11 +2325,11 @@ function export.stem_and_type(word, sg, sgtype, isfem, num, pos)
 			sub(AN .. "[" .. ALIF .. AMAQ .. "]$", AAH, "an$", "āh") or -- ends in -an
 			sub(IN .. "$", IY .. AH, "in$", "iya") or -- ends in -in
 			sub(AOPT .. "[" .. ALIF .. AMAQ .. "]$", AAH, "ā$", "āh") or -- ends in alif or alif maqṣūra
-			-- We separate the ʾiʿrāb and no-ʾiʿrāb cases even though we can
+			-- We separate the ʔiʕrāb and no-ʔiʕrāb cases even though we can
 			-- do a single Arabic regexp to cover both because we want to
-			-- remove u(n) from the translit only when ʾiʿrāb is present to
+			-- remove u(n) from the translit only when ʔiʕrāb is present to
 			-- lessen the risk of removing -un in the actual stem. We also
-			-- allow for cases where the ʾiʿrāb is present in Arabic but not
+			-- allow for cases where the ʔiʕrāb is present in Arabic but not
 			-- in translit.
 			sub(UNU .. "$", AH, "un?$", "a", "$", "a") or -- anything else + -u(n)
 			sub("$", AH, "$", "a") -- anything else
@@ -2187,18 +2437,18 @@ function export.stem_and_type(word, sg, sgtype, isfem, num, pos)
 			sub(IN .. "$", IY .. AAN, "in$", "iyān") or -- ends in -in
 			sgtype == "lwinv" and sub(AOPTA .. "$", AT .. AAN, "[āa]$", "atān") or -- lwinv, ends in alif; allow translit with short -a
 			sub(AOPT .. "[" .. ALIF .. AMAQ .. "]$", AY .. AAN, "ā$", "ayān") or -- ends in alif or alif maqṣūra
-			-- We separate the ʾiʿrāb and no-ʾiʿrāb cases even though we can
+			-- We separate the ʔiʕrāb and no-ʔiʕrāb cases even though we can
 			-- do a single Arabic regexp to cover both because we want to
-			-- remove u(n) from the translit only when ʾiʿrāb is present to
+			-- remove u(n) from the translit only when ʔiʕrāb is present to
 			-- lessen the risk of removing -un in the actual stem. We also
-			-- allow for cases where the ʾiʿrāb is present in Arabic but not
+			-- allow for cases where the ʔiʕrāb is present in Arabic but not
 			-- in translit.
 			--
 			-- NOTE: Collapsing the "h$" and "$" cases into "h?$" doesn't work
 			-- in the case of words ending in -āh, which end up having the
 			-- translit end in -tāntān.
-			sub(TAM .. UNU .. "$", T .. AAN, "[ht]un?$", "tān", "h$", "tān", "$", "tān") or -- ends in tāʾ marbuṭa + -u(n)
-			sub(TAM .. "$", T .. AAN, "h$", "tān", "$", "tān") or -- ends in tāʾ marbuṭa
+			sub(TAM .. UNU .. "$", T .. AAN, "[ht]un?$", "tān", "h$", "tān", "$", "tān") or -- ends in tāʔ marbuṭa + -u(n)
+			sub(TAM .. "$", T .. AAN, "h$", "tān", "$", "tān") or -- ends in tāʔ marbuṭa
 			-- Same here as above
 			sub(UNU .. "$", AAN, "un?$", "ān", "$", "ān") or -- anything else + -u(n)
 			sub("$", AAN, "$", "ān") -- anything else
@@ -2222,11 +2472,11 @@ function export.stem_and_type(word, sg, sgtype, isfem, num, pos)
 			sgtype == "lwinv" and (
 				sub(AOPTA .. "$", AAT, "[āa]$", "āt") -- loanword ending in tall alif; allow translit with short -a
 			) or
-			-- We separate the ʾiʿrāb and no-ʾiʿrāb cases even though we can
+			-- We separate the ʔiʕrāb and no-ʔiʕrāb cases even though we can
 			-- do a single Arabic regexp to cover both because we want to
-			-- remove u(n) from the translit only when ʾiʿrāb is present to
+			-- remove u(n) from the translit only when ʔiʕrāb is present to
 			-- lessen the risk of removing -un in the actual stem. We also
-			-- allow for cases where the ʾiʿrāb is present in Arabic but not
+			-- allow for cases where the ʔiʕrāb is present in Arabic but not
 			-- in translit.
 			sub(UNU .. "$", AAT, "un?$", "āt", "$", "āt") or -- anything else + -u(n)
 			sub("$", AAT, "$", "āt") -- anything else
@@ -2251,19 +2501,19 @@ function export.stem_and_type(word, sg, sgtype, isfem, num, pos)
 	if word == "cdp" then
 		local ret = (
 			sub(ELCD_START .. SK .. W .. A .. CONSPAR .. UOPT .. "$",
-				"%1" .. UU .. "%2", "ʔa(.)wa(.)u?", "%1ū%2") or -- ʾaswad
+				"%1" .. UU .. "%2", "ʔa(.)wa(.)u?", "%1ū%2") or -- ʔaswad
 			sub(ELCD_START .. SK .. Y .. A .. CONSPAR .. UOPT .. "$",
-				"%1" .. II .. "%2", "ʔa(.)ya(.)u?", "%1ī%2") or -- ʾabyaḍ
+				"%1" .. II .. "%2", "ʔa(.)ya(.)u?", "%1ī%2") or -- ʔabyaḍ
 			sub(ELCD_START .. SK .. CONSPAR .. A .. CONSPAR .. UOPT .. "$",
-				"%1" .. U .. "%2" .. SK .. "%3", "ʔa(.)(.)a(.)u?", "%1u%2%3") or -- ʾaḥmar
+				"%1" .. U .. "%2" .. SK .. "%3", "ʔa(.)(.)a(.)u?", "%1u%2%3") or -- ʔaḥmar
 			sub(ELCD_START .. A .. CONSPAR .. SH .. UOPT .. "$",
-				"%1" .. U .. "%2" .. SH, "ʔa(.)a(.)%2u?", "%1u%2%2") or -- ʾalaff
+				"%1" .. U .. "%2" .. SH, "ʔa(.)a(.)%2u?", "%1u%2%2") or -- ʔalaff
 			sub(ELCD_START .. SK .. CONSPAR .. AAMAQ .. "$",
-				"%1" .. U .. "%2" .. Y, "ʔa(.)(.)ā", "%1u%2y") or -- ʾaʿmā
-			sub("^" .. CONSPAR .. A .. W .. SKOPT .. CONSPAR .. AA .. HAMZA .. UOPT .. "$", "%1" .. UU .. "%2", "(.)aw(.)āʔu?", "%1ū%2") or -- sawdāʾ
-			sub("^" .. CONSPAR .. A .. Y .. SKOPT .. CONSPAR .. AA .. HAMZA .. UOPT .. "$", "%1" .. II .. "%2", "(.)ay(.)āʔu?", "%1ī%2") or -- bayḍāʾ
-			sub("^" .. CONSPAR .. A .. CONSPAR .. SK .. CONSPAR .. AA .. HAMZA .. UOPT .. "$", "%1" .. U .. "%2" .. SK .. "%3", "(.)a(.)(.)āʔu?", "%1u%2%3") or -- ʾḥamrāʾ/ʿamyāʾ
-			sub("^" .. CONSPAR .. A .. CONSPAR .. SH .. AA .. HAMZA .. UOPT .. "$", "%1" .. U .. "%2" .. SH, "(.)a(.)%2āʔu?", "%1u%2%2") -- laffāʾ
+				"%1" .. U .. "%2" .. Y, "ʔa(.)(.)ā", "%1u%2y") or -- ʔaʕmā
+			sub("^" .. CONSPAR .. A .. W .. SKOPT .. CONSPAR .. AA .. HAMZA .. UOPT .. "$", "%1" .. UU .. "%2", "(.)aw(.)āʔu?", "%1ū%2") or -- sawdāʔ
+			sub("^" .. CONSPAR .. A .. Y .. SKOPT .. CONSPAR .. AA .. HAMZA .. UOPT .. "$", "%1" .. II .. "%2", "(.)ay(.)āʔu?", "%1ī%2") or -- bayḍāʔ
+			sub("^" .. CONSPAR .. A .. CONSPAR .. SK .. CONSPAR .. AA .. HAMZA .. UOPT .. "$", "%1" .. U .. "%2" .. SK .. "%3", "(.)a(.)(.)āʔu?", "%1u%2%3") or -- ʔḥamrāʔ/ʕamyāʔ
+			sub("^" .. CONSPAR .. A .. CONSPAR .. SH .. AA .. HAMZA .. UOPT .. "$", "%1" .. U .. "%2" .. SH, "(.)a(.)%2āʔu?", "%1u%2%2") -- laffāʔ
 		)
 		if not ret then
 			error("For 'cdp', singular must be masculine or feminine color/defect adjective: " .. sgar)
@@ -2303,7 +2553,7 @@ local innersep = LRM .. "/"
 -- TRAILING_ARTRMODS, passing the newly generated list of ARTRMOD items
 -- down the next recursion level with the shorter LIST_OF_MODS. We end up
 -- returning a string to insert into the Wiki-markup table.
-function show_form_1(form, list_of_mods, trailing_artrmods, use_parens)
+local function show_form_1(form, list_of_mods, trailing_artrmods, use_parens)
 	if #list_of_mods == 0 then
 		local arabicvals = {}
 		local latinvals = {}
@@ -2411,7 +2661,7 @@ end
 -- "ARABIC/TRANSLIT", i.e. an Arabic string and a Latin string separated
 -- by a slash. We loop over all possible combinations of elements from
 -- each array; this requires recursion.
-function show_form(form, list_of_mods, use_parens)
+local function show_form(form, list_of_mods, use_parens)
 	if not form then
 		return "&mdash;"
 	elseif type(form) ~= "table" then
@@ -2429,7 +2679,7 @@ end
 
 -- Create a Wiki-markup table using the values in DATA and the template in
 -- WIKICODE.
-function make_table(data, wikicode)
+local function make_table(data, wikicode)
 	-- Function used as replace arg of call to rsub(). Replace the
 	-- specified param with its (HTML) value. The param references appear
 	-- as {{{PARAM}}} in the wikicode.
@@ -2472,7 +2722,7 @@ function make_table(data, wikicode)
 end
 
 -- Generate part of the noun table for a given number spec NUM (e.g. sg)
-function generate_noun_num(num)
+local function generate_noun_num(num)
 	return [=[! style="background: #CDCDCD;" | Indefinite
 ! style="background: #CDCDCD;" | Definite
 ! style="background: #CDCDCD;" | Construct
@@ -2500,7 +2750,7 @@ function generate_noun_num(num)
 end
 
 -- Make the noun table
-function make_noun_table(data)
+local function make_noun_table(data)
 	local wikicode = [=[<div class="NavFrame">
 <div class="NavHead">Declension of {{{pos}}} {{{lemma}}}</div>
 <div class="NavContent">
@@ -2529,7 +2779,7 @@ end
 
 -- Generate part of the gendered-noun table for a given numgen spec
 -- NUM (e.g. m_sg)
-function generate_gendered_noun_num(num)
+local function generate_gendered_noun_num(num)
 	return [=[|-
 ! style="background: #CDCDCD;" | Indefinite
 ! style="background: #CDCDCD;" | Definite
@@ -2573,7 +2823,7 @@ function generate_gendered_noun_num(num)
 end
 
 -- Make the gendered noun table
-function make_gendered_noun_table(data)
+local function make_gendered_noun_table(data)
 	local wikicode = [=[<div class="NavFrame">
 <div class="NavHead">Declension of {{{pos}}} {{{lemma}}}</div>
 <div class="NavContent">
@@ -2606,7 +2856,7 @@ function make_gendered_noun_table(data)
 end
 
 -- Generate part of the adjective table for a given numgen spec NUM (e.g. m_sg)
-function generate_adj_num(num)
+local function generate_adj_num(num)
 	return [=[|-
 ! style="background: #CDCDCD;" | Indefinite
 ! style="background: #CDCDCD;" | Definite
@@ -2640,7 +2890,7 @@ function generate_adj_num(num)
 end
 
 -- Make the adjective table
-function make_adj_table(data)
+local function make_adj_table(data)
 	local wikicode = [=[<div class="NavFrame">
 <div class="NavHead">Declension of {{{pos}}} {{{lemma}}}</div>
 <div class="NavContent">
