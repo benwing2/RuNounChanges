@@ -342,57 +342,48 @@ Format a usex or quotation. Implementation of {{tl|ux}}, {{tl|quote}} and {{tl|q
 
 Takes a single object `data`, containining the following fields:
 
-* `usex`: The text of the usex or quotation to format. Semi-mandatory (a maintenance line is displayed if missing).
-* `lang`: The language object of the text. Mandatory. May be an etymology language.
+* `usex`: An object describing the usex or quotation to format, with the following fields:
+** `text`: The text of the usex or quotation. Semi-mandatory (a maintenance line is displayed if missing).
+** `lang`: The language object of the text. Mandatory. May be an etymology language.
+** `sc`: The script object of the text. Autodetected if not given.
+** `translation`: Translation of the usex or quotation, if in a foreign language.
+** `lit`: Literal translation (if the translation in `translation` is idiomatic and differs significantly from the
+		 literal translation).
+** `normalization`: Normalized version of the usex or quotation (esp. for older languages where nonstandard spellings
+				    were common).
+** `normsc`: Script object of the normalized text. If unspecified, use the script object given in `sc` if any, otherwise
+             do script detection on the normalized text. If "auto", do script detection on the normalized text even if
+			 a script was specified in `sc`.
+** `transliteration`: Transliteration of the usex. If unspecified, transliterate the normalization if specified and not
+                      in a Latin script and transliterable, otherwise fall back to transliterating the usex text.
+** `transcription`: Transcription of the usex, for languages where the transliteration differs significantly from the
+                    pronunciation.
+** `subst`: String indicating substitutions to perform on the usex/quotation and normalization prior to transliterating
+            them. Multiple substs are comma-separated and individual substs are of the form FROM//TO where FROM is a
+		    Lua pattern and TO is a Lua replacement spec. (FROM/TO is also recognized if no // is present in the
+		    substitution.)
+** `q`: If specified, a list of left qualifiers to display before the usex/quotation text.
+** `qq`: If specified, a list of right qualifiers to display after the usex/quotation text.
+** `qualifiers`: If specified, a list of right qualifiers to display after the usex/quotation text, for compatibility
+                 purposes.
+** `ref`: Reference text to display directly after the right qualifiers. (FIXME: Instead, this should be actual
+          references.)
+** `audio`: Name of the audio file containing the usex in spoken form.
+* `orig`: An object describing the original text of the usex or quotation, if the primary text is a translation.
+          Has the same format as `usex`.
+* `alts`: List of alternative renderings of the usex, typically but not necessarily in different languages. This can be
+          used, for example, if the usex was translated several times (e.g. Hebrew -> Greek -> Latin -> French ->
+		  English), and it is important to include the intermediary translations. It can also be used if a translation
+		  elucidates important information about the original usex. (For example, many older Albanian texts were
+		  published with an Italian translation supplied by the same author, which can help with the understanding of
+		  difficult Albanian words. Sometimes the Italian translation is the only clear indication of a given meaning
+		  of a specific word.) Each element in the list is an object of the same format as `usex` and `orig`, but has
+		  an additional field `prefix` indicating the description to prefix the text with (e.g.
+		  {"Translation into Italian: "}).
 * `termlang`: The language object of the term, which may be different from the language of the text. Defaults to `lang`.
               Used for categories. May be an etymology language.
-* `sc`: The script object of the text. Autodetected if not given.
 * `quote`: If specified, this is a quotation rather than a usex (uses a different CSS class that affects formatting).
 * `inline`: If specified, format the usex or quotation inline (on one line).
-* `translation`: Translation of the usex or quotation, if in a foreign language.
-* `lit`: Literal translation (if the translation in `translation` is idiomatic and differs significantly from the
-		 literal translation).
-* `normalization`: Normalized version of the usex or quotation (esp. for older languages where nonstandard spellings
-				   were common).
-* `normsc`: Script object of the normalized text. If unspecified, use the script object given in `sc` if any, otherwise
-            do script detection on the normalized text. If "auto", do script detection on the normalized text even if
-			a script was specified in `sc`.
-* `transliteration`: Transliteration of the usex. If unspecified, transliterate the normalization if specified and not
-                     in a Latin script and transliterable, otherwise fall back to transliterating the usex text.
-* `transcription`: Transcription of the usex, for languages where the transliteration differs significantly from the
-                   pronunciation.
-* `subst`: String indicating substitutions to perform on the usex/quotation and normalization prior to transliterating
-           them. Multiple substs are comma-separated and individual substs are of the form FROM//TO where FROM is a
-		   Lua pattern and TO is a Lua replacement spec. (FROM/TO is also recognized if no // is present in the
-		   substitution.)
-* `q`: If specified, a list of left qualifiers to display before the usex/quotation text.
-* `qq`: If specified, a list of right qualifiers to display after the usex/quotation text.
-* `qualifiers`: If specified, a list of right qualifiers to display after the usex/quotation text, for compatibility
-                purposes.
-* `ref`: Reference text to display directly after the right qualifiers. (FIXME: Instead, this should be actual
-         references.)
-* `audio`: Name of the audio file containing the usex in spoken form.
-* `orig`: Original text, if the primary text of the usex or quotation is a translation.
-* `origlang`: The language object of the original text. Mandatory if original text given. May be an etymology language.
-* `origsc`: The script object of the original text. Autodetected if not given.
-* `orignorm`: Normalized version of the original text (esp. for older languages where nonstandard spellings were
-              common).
-* `orignormsc`: Script object of the normalized original text. If unspecified, use the script object given in `origsc`
-                if any, otherwise do script detection on the normalized original text. If "auto", do script detection
-                on the normalized text even if a script was specified in `origsc`.
-* `origtr`: Transliteration of the original text. If unspecified, transliterate the normalized original text if
-            specified and not in a Latin script and transliterable, otherwise fall back to transliterating the original
-            text.
-* `origts`: Transcription of the original text, for languages where the transliteration differs significantly from the
-            pronunciation.
-* `origsubst`: String indicating substitutions to perform on the original text and normalization thereof prior to
-               transliterating them. Multiple substs are comma-separated and individual substs are of the form FROM//TO
-               where FROM is a Lua pattern and TO is a Lua replacement spec. (FROM/TO is also recognized if no // is
-               present in the substitution.)
-* `origq`: If specified, a list of left qualifiers to display before the original text.
-* `origqq`: If specified, a list of right qualifiers to display after the original text.
-* `origref`: Reference text to display directly after the right qualifiers of the original text. (FIXME: Instead, this
-             should be actual references.)
 * `source`: Source of the quotation, displayed in parens after the quotation text.
 * `footer`: Footer displaying miscellaneous information, shown after the quotation. (Typically this should be in a
             small font.)
