@@ -1,7 +1,9 @@
+local remove_comments = require("Module:string utilities").remove_comments
+
 local export = {}
 
 local function track(page)
-	--[[Special:WhatLinksHere/Template:tracking/descendants tree/PAGE]]
+	--[[Special:WhatLinksHere/Wiktionary:Tracking/descendants tree/PAGE]]
 	return require("Module:debug").track("descendants tree/" .. page)
 end
 
@@ -13,8 +15,8 @@ local function preview_error(what, entry_name, language_name, reason)
 end
 
 local function get_content_after_senseid(content, entry_name, lang, id)
-	local m_templateparser = require("Module:templateparser")
-	local code = lang:getNonEtymologicalCode()
+	local m_templateparser = require("Module:template parser")
+	local code = lang:getFullCode()
 	local t_start = nil
 	local t_end = nil
 	for name, args, _, index in m_templateparser.findTemplates(content) do
@@ -53,12 +55,12 @@ local function get_content_after_senseid(content, entry_name, lang, id)
 end
 
 function export.getAlternativeForms(lang, sc, term, id)
-	local entry_name = require("Module:links").getLinkPage(term, lang, sc)
+	local entry_name = require("Module:links").get_link_page(term, lang, sc)
 	local page = mw.title.new(entry_name)
 	local content = page:getContent()
 
 	local function alt_form_error(reason)
-		preview_error("alternative forms", entry_name, lang:getNonEtymologicalName(), reason)
+		preview_error("alternative forms", entry_name, lang:getFullName(), reason)
 	end
 	
 	if not content then
@@ -69,7 +71,7 @@ function export.getAlternativeForms(lang, sc, term, id)
 	end
 	
 	local _, index = string.find(content,
-		"==[ \t]*" .. require("Module:string").pattern_escape(lang:getNonEtymologicalName()) .. "[ \t]*==")
+		"==[ \t]*" .. require("Module:string utilities").pattern_escape(lang:getFullName()) .. "[ \t]*==")
 	
 	if not index then
 		-- FIXME, should be an error
@@ -96,7 +98,7 @@ function export.getAlternativeForms(lang, sc, term, id)
 		return ""
 	end
 
-	local langCodeRegex = require("Module:string").pattern_escape(lang:getNonEtymologicalCode())
+	local langCodeRegex = require("Module:string utilities").pattern_escape(lang:getFullCode())
 	index = string.find(content, "{{alte?r?|" .. langCodeRegex .. "|[^|}]+", index)
 	if (not index) or (next_lang and next_lang < index) then
 		-- FIXME, should be an error
@@ -113,8 +115,8 @@ function export.getAlternativeForms(lang, sc, term, id)
 
 	local altforms = require("Module:alternative forms")
 
-	for name, args, _, index in require("Module:templateparser").findTemplates(alternative_forms_section) do
-		if (name == "alt" or name == "alter") and args[1] == lang:getNonEtymologicalCode() then
+	for name, args, _, index in require("Module:template parser").findTemplates(alternative_forms_section) do
+		if name == "alter" and args[1] == lang:getFullCode() then
 			saw_alter = true
 			local formatted_altforms = altforms.display_alternative_forms(args, entry_name, "show dialect tags after terms", "allow self link")
 			table.insert(terms_list, formatted_altforms)
@@ -133,13 +135,13 @@ function export.getAlternativeForms(lang, sc, term, id)
 end
 
 function export.getDescendants(lang, sc, term, id, noerror)
-	local entry_name = require("Module:links").getLinkPage(term, lang, sc)
+	local entry_name = require("Module:links").get_link_page(term, lang, sc)
 	local page = mw.title.new(entry_name)
 	local content = page:getContent()
 	local namespace = mw.title.getCurrentTitle().nsText
 
 	local function desc_error(reason)
-		preview_error("descendants", entry_name, lang:getNonEtymologicalName(), reason)
+		preview_error("descendants", entry_name, lang:getFullName(), reason)
 	end
 
 	if not content then
@@ -150,8 +152,7 @@ function export.getDescendants(lang, sc, term, id, noerror)
 	end
 	
 	-- Ignore HTML comments, columns and blank lines.
-	content = content
-		:gsub("<!%-%-.-%-%->", "")
+	content = remove_comments(content)
 		:gsub("{{top%d}}%s", "")
 		:gsub("{{mid%d}}%s", "")
 		:gsub("{{bottom}}%s", "")
@@ -164,10 +165,10 @@ function export.getDescendants(lang, sc, term, id, noerror)
 		:gsub("\n%s*\n", "\n")
 	
 	local _, index = string.find(content,
-		"%f[^\n%z]==[ \t]*" .. lang:getNonEtymologicalName() .. "[ \t]*==", nil, true)
+		"%f[^\n%z]==[ \t]*" .. lang:getFullName() .. "[ \t]*==", nil, true)
 	if not index then
 		_, index = string.find(content, "%f[^\n%z]==[ \t]*"
-				.. require("Module:utilities").pattern_escape(lang:getNonEtymologicalName())
+				.. require("Module:string utilities").pattern_escape(lang:getFullName())
 				.. "[ \t]*==", nil, false)
 	end
 	if not index then
@@ -190,8 +191,8 @@ function export.getDescendants(lang, sc, term, id, noerror)
 			return "<small class=\"error previewonly\">(" ..
 				"Please either change this template to {{desc}} " ..
 				"or insert a ====Descendants==== section in [[" ..
-				entry_name .. "#" .. lang:getNonEtymologicalName() .. "]])</small>" ..
-				"[[Category:" .. lang:getNonEtymologicalName() .. " descendants to be fixed in desctree]]"
+				entry_name .. "#" .. lang:getFullName() .. "]])</small>" ..
+				"[[Category:" .. lang:getFullName() .. " descendants to be fixed in desctree]]"
 		else
 			error("No Descendants section was found in the entry [[" .. entry_name .. "]].")
 		end
@@ -201,11 +202,11 @@ function export.getDescendants(lang, sc, term, id, noerror)
 			return "<small class=\"error previewonly\">(" ..
 				"Please either change this template to {{desc}} " ..
 				"or insert a ====Descendants==== section in [[" ..
-				entry_name .. "#" .. lang:getNonEtymologicalName() .. "]])</small>" ..
-				"[[Category:" .. lang:getNonEtymologicalName() .. " descendants to be fixed in desctree]]"
+				entry_name .. "#" .. lang:getFullName() .. "]])</small>" ..
+				"[[Category:" .. lang:getFullName() .. " descendants to be fixed in desctree]]"
 		else
 			error("No Descendants section was found in the entry [[" .. entry_name
-					.. "]] under the header for " .. lang:getNonEtymologicalName() .. ".")
+					.. "]] under the header for " .. lang:getFullName() .. ".")
 		end
 	end
 	
