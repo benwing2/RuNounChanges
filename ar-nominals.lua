@@ -225,25 +225,44 @@ local function strip_ar_tr_ending(ar, tr, ending, interr)
 	return ar, tr
 end
 
+local function copy_stem_and_replace(stem, ar, tr)
+	stem = m_table.shallowcopy(stem)
+	stem.form = ar
+	stem.translit = tr
+	return stem
+end
+
 local function strip_ending(stem, ending, interr)
 	local ar, tr = stem.form, stem.translit
 	ar, tr = strip_ar_tr_ending(ar, tr, ending, interr)
-	stem.form = ar
-	stem.translit = tr
+	return copy_stem_and_replace(stem, ar, tr)
 end
 
 -------------------------------------
--- Functions for building inflections
+-- Functions for building declensions
 -------------------------------------
 
--- Functions that do the actual inflecting by creating the forms of a basic term.
-local inflections = {}
+-- Functions that do the actual inflecting of a given declension type. Each function is passed three arguments: `base`,
+-- `slot` (the slot prefix to insert the inflected forms into) and `stem` (a form object containing the stem onto which
+-- case and state endings should be added). The transliteration is always present in `stem.translit`. The Arabic in
+-- `stem.form` will always be in the normalize form output by detect_declension(), i.e.  it will be nominative
+-- indefinite and without ʔiʕrāb except for final-weak stems. Alif madda will be regularized into hamza + fatḥa + alif
+-- to ease operations; this will be undone later in postprocessing. The function should generally call add_declensions()
+-- to add the actual declensions to the appropriate slots.
+local declensions = {}
 
-local max_mods = 9 -- maximum number of modifiers
-local mod_list = {"mod"} -- list of "mod", "mod2", "mod3", ...
-for i=2,max_mods do
-	table.insert(mod_list, "mod" .. i)
-end
+-- Table of additional properties of a declension type. Currently there are two: `cats` (a string or list of strings
+-- specifying the category or categories to insert the lemma into, or a function of three arguments `base`, `slot` and
+-- `stem`, as above, to generate the same) and `ann` (a string specifying the English annotation to add to the
+-- declension table, or a function of three arguments `base`, `slot` and `stem`, as above, to generate the same. The
+-- category strings should not have the word "Arabic", which will automatically be prefixed, and should use all-caps
+-- placeholders to represent values that will be appropriately substituted, specifically:
+-- * NUMBER is replaced with the English equivalent of the form's number (e.g. "singular", "dual", "plural", "paucal");
+-- * BROKNUM is replaced with the word "broken" followed by the English equivalent of the form's number;
+-- * POS is replaced with the part of speech, generally "noun" or "adjective";
+-- * PLPOS is replaced with the plural form of the part of speech.
+-- The annotation strings can contain the same placeholders.
+local declprops = {}
 
 -- Create and return the 'data' structure that will hold all of the
 -- generated declensional forms, as well as other ancillary information
@@ -364,20 +383,6 @@ local function parse_state_etc_spec(data, args)
 		elseif data[dataval] == "no" then
 			data[dataval] = false
 		end
-	end
-
-	-- Make sure no holes in mod values
-	for i=1,(#mod_list)-1 do
-		if args[mod_list[i+1]] and not args[mod_list[i]] then
-			error("Hole in modifier arguments -- " .. mod_list[i+1] ..
-				" present but not " .. mod_list[i])
-		end
-	end
-	
-	-- FIXME! Remove this once we're sure there are no instances of mod2
-	-- that haven't been converted to modhead2.
-	if args["mod2"] then
-		track("mod2")
 	end
 
 	-- Set default value; may be overridden e.g. by arg["state"] or
@@ -583,7 +588,7 @@ local function parse_state_etc_spec(data, args)
 	end
 
 	-- Make sure modN_numgen is initialized, to modN_number if necessary.
-	-- This simplifies logic in certain places, e.g. call_inflections().
+	-- This simplifies logic in certain places, e.g. call_declensions().
 	-- Also convert ind-def to ind.
 	for _, mod in ipairs(mod_list) do
 		data[mod .. "_numgen"] = data[mod .. "_numgen"] or data[mod .. "_number"]
@@ -687,8 +692,8 @@ local function handle_lemma_and_overrides(data, args)
 					handle_override(arg)
 					if args[arg] and not data.noirreg then
 						insert_cat(data, mod, numgen,
-							"Arabic NOUNs with irregular SINGULAR",
-							"SINGULAR of irregular NOUN")
+							"Arabic PLPOS with irregular NUMBER",
+							"NUMBER of irregular POS")
 					end
 				end
 			end
@@ -857,66 +862,66 @@ local function do_gender_number(data, args, argprefs, sgs, default, isfem, num)
 	return basemodtable
 end
 
--- Generate inflections for the given combined stem and type, for MOD
+-- Generate declensions for the given combined stem and type, for MOD
 -- (either "" if we're working on the base or "mod_", "mod2_", etc. if we're
 -- working on a modifier) and NUMGEN (number or number-gender combination,
 -- of the sort that forms part of the keys in DATA.FORMS).
-local function call_inflection(combined_stem, ty, data, mod, numgen)
+local function call_declension(combined_stem, ty, data, mod, numgen)
 	if ty == "-" then
 		return
 	end
 
-	if not inflections[ty] then
-		error("Unknown inflection type '" .. ty .. "'")
+	if not declensions[ty] then
+		error("Unknown declension type '" .. ty .. "'")
 	end
 	
 	local ar, tr = split_arabic_tr(combined_stem)
-	inflections[ty](ar, tr, data, mod, numgen)
+	declensions[ty](ar, tr, data, mod, numgen)
 end
 
--- Generate inflections for the stems of a given number/gender combination
+-- Generate declensions for the stems of a given number/gender combination
 -- and for either the base or the modifier. STEMTYPES is a stem-type list
 -- (see do_gender_number()), listing all the stems and corresponding
 -- declension types. MOD is either "", "mod_", "mod2_", etc. depending on
 -- whether we're working on the base or a modifier. NUMGEN is the number or
 -- number-gender combination we're working on, of the sort that forms part
 -- of the keys in DATA.FORMS, e.g. "sg" or "m_sg".
-local function call_inflections(stemtypes, data, mod, numgen)
+local function call_declensions(stemtypes, data, mod, numgen)
 	local mod_with_modnumgen = mod ~= "" and data[mod .. "numgen"]
 	-- If modN_numgen= is given, do nothing if NUMGEN isn't the same
 	if mod_with_modnumgen and data[mod .. "numgen"] ~= numgen then
 		return
 	end
-	-- always call inflection() if mod_with_modnumgen since it may affect
+	-- always call declension() if mod_with_modnumgen since it may affect
 	-- other numbers (cf. يَوْم الاِثْنَيْن)
 	if mod_with_modnumgen or contains(data.numbers, rsub(numgen, "^.*_", "")) then
 		for _, stemtype in ipairs(stemtypes) do
-			call_inflection(stemtype[1], stemtype[2], data, mod, numgen)
+			call_declension(stemtype[1], stemtype[2], data, mod, numgen)
 		end
 	end
 end
 
--- Generate the entire set of inflections for a noun or adjective.
+-- Generate the entire set of declensions for a noun or adjective.
 -- Also handle any manually-specified part of speech and any manual
--- inflection overrides. The value of INFLECTIONS is an array of stem
+-- declension overrides. The value of INFLECTIONS is an array of stem
 -- specifications, one per number, where each element is a size-two
 -- array of a stem specification (containing the set of stems and
 -- corresponding declension types for the base and any modifiers;
 -- see do_gender_number()) and a NUMGEN string, i.e. a string identifying
 -- the number or number/gender in question (e.g. "sg", "du", "pl",
 -- "m_sg", "f_pl", etc.).
-local function do_inflections_and_overrides(data, args, inflections)
-	-- do this before generating inflections so POS change is reflected in
+local function do_declensions_and_overrides(data, args, declensions)
+	-- do this before generating declensions so POS change is reflected in
 	-- categories
 	if args["pos"] then
 		data.pos = args["pos"]
 	end
 
-	for _, inflection in ipairs(inflections) do
-		call_inflections(inflection[1]["base"] or {}, data, "", inflection[2])
+	for _, declension in ipairs(declensions) do
+		call_declensions(declension[1]["base"] or {}, data, "", declension[2])
 		for _, mod in ipairs(mod_list) do
-			call_inflections(inflection[1][mod] or {}, data,
-				mod .. "_", inflection[2])
+			call_declensions(declension[1][mod] or {}, data,
+				mod .. "_", declension[2])
 		end
 	end
 
@@ -1007,7 +1012,7 @@ function export.show_noun(frame)
 
 	determine_noun_numbers(data, args, pls)
 
-	do_inflections_and_overrides(data, args,
+	do_declensions_and_overrides(data, args,
 		{{sgs, "sg"}, {dus, "du"}, {pls, "pl"}})
 
 	-- Make the table
@@ -1095,7 +1100,7 @@ function export.show_coll_noun(frame)
 	end
 
 	-- Generate the collective, singulative, dual, paucal and plural forms
-	do_inflections_and_overrides(data, args,
+	do_declensions_and_overrides(data, args,
 		{{colls, "coll"}, {sings, "sing"}, {dus, "du"}, {paucs, "pauc"}, {pls, "pl"}})
 
 	-- Make the table
@@ -1149,7 +1154,7 @@ function export.show_sing_noun(frame)
 	end
 
 	-- Generate the singulative, collective, dual, paucal and plural forms
-	do_inflections_and_overrides(data, args,
+	do_declensions_and_overrides(data, args,
 		{{sings, "sing"}, {colls, "coll"}, {dus, "du"}, {paucs, "pauc"}, {pls, "pl"}})
 
 	-- Make the table
@@ -1197,7 +1202,7 @@ local function show_gendered(frame, isadj, pos)
 	end
 
 	-- Generate the singular, dual and plural forms
-	do_inflections_and_overrides(data, args,
+	do_declensions_and_overrides(data, args,
 		{{msgs, "m_sg"}, {fsgs, "f_sg"}, {mdus, "m_du"}, {fdus, "f_du"},
 		 {mpls, "m_pl"}, {fpls, "f_pl"}})
 
@@ -1327,7 +1332,7 @@ end
 -- list of ARABIC/TRANSLIT strings; if more than one is present in the list,
 -- they represent hamza variants, i.e. different ways of writing a hamza
 -- sound, such as مُبْتَدَؤُون vs. مُبْتَدَأُون (see init_data()).
-local function add_inflection(data, key, prefix, stem, tr, ending)
+local function add_declension(data, key, prefix, stem, tr, ending)
 	if data.forms[key] == nil then
 		data.forms[key] = {}
 	end
@@ -1340,26 +1345,26 @@ local function add_inflection(data, key, prefix, stem, tr, ending)
 	end
 end
 
--- Form inflections from combination of STEM, with transliteration TR,
--- and ENDINGS (and definite article where necessary, plus any specified
--- prefixes) and store in DATA, for the number or gender/number
--- determined by MOD ("", "mod_", "mod2_", etc.; see call_inflection()) and
--- NUMGEN ("sg", "du", "pl", or "m_sg", "f_pl", etc. for adjectives). ENDINGS
--- is an array of 15 values, each of which is a string or array of
--- alternatives. The order of ENDINGS is indefinite nom, acc, gen; definite
--- nom, acc, gen; construct-state nom, acc, gen; informal indefinite, definite,
--- construct; lemma indefinite, definite, construct. (Normally the lemma is
--- based off of the indefinite, but if the inflection has been restricted to
--- particular states, it comes from one of those states, in the order
--- indefinite, definite, construct.) See also add_inflection() for more info
--- on exactly what is inserted into DATA.
-local function add_inflections(stem, tr, data, mod, numgen, endings)
+-- Add declensions for all cases and states of the noun or adjective form whose prefix is `slot` (e.g. "" for the
+-- base form, "pl_" for the plural of nouns, etc.). The declensions are formed by adding endings to `stem` (a form
+-- object, with Arabic, transliteration and optional footnotes). `endings` is a list of 13 endings to add, in the
+-- following order:
+-- * 1, 2, 3: ind_nom, ind_acc, ind_gen;
+-- * 4, 5, 6: def_nom, def_acc, def_gen;
+-- * 7, 8, 9: con_nom, con_acc, con_gen;
+-- * 10, 11, 12: inf_nom, inf_acc, inf_gen ("informal" endings i.e. without ʔiʕrāb);
+-- * 13: lemma (the form used in the lemma, whose specific shape will vary depending on the term's state and case as
+--              specified in `base.state` and `base.case`).
+-- Each of the elements of `endings` can be either nil (don't add any form corresponding to this state/case
+-- combination) or an abbreviated form list (see [[Module:inflection utilities]]; i.e. a string, list of strings,
+-- form object, or list of form objects).
+local function add_declensions(base, slot, stem, endings)
 	stem = canon_hamza(stem)
 	assert(#endings == 15)
 	local ismod = mod ~= ""
 	-- If working on modifier and modN_numgen= is given, it better agree with
 	-- NUMGEN; the case where it doesn't agree should have been caught in
-	-- call_inflections().
+	-- call_declensions().
 	if ismod and data[mod .. "numgen"] then
 		assert(data[mod .. "numgen"] == numgen)
 	end
@@ -1402,7 +1407,7 @@ local function add_inflections(stem, tr, data, mod, numgen, endings)
 	for _, ng in ipairs(numgens) do
 		for _, state in ipairs(data.allstates) do
 			for _, case in ipairs(data.allcases_with_lemma) do
-				-- We are generating the inflections for STATE, but sometimes
+				-- We are generating the declensions for STATE, but sometimes
 				-- we want to use the inflected form of a different state, e.g.
 				-- if modN_state= or basestate= is set to some particular state.
 				-- If we're dealing with an adjectival modifier, then in
@@ -1417,7 +1422,7 @@ local function add_inflections(stem, tr, data, mod, numgen, endings)
 				-- Don't substitute value of modcase for lemma/informal "cases"
 				local thecase = is_lemmainf and case or
 					ismod and data[mod .. "case"] or case
-				add_inflection(data, mod .. case .. "_" .. ng .. "_" .. state,
+				add_declension(data, mod .. case .. "_" .. ng .. "_" .. state,
 					data[mod .. "prefix"] or "",
 					stems[thestate], trs[thestate],
 					endings[data.statecases[thestate][thecase]])
@@ -1428,11 +1433,11 @@ end
 
 -- Insert into a category and a type variable (e.g. m_sg_type) for the
 -- declension type of a particular declension (e.g. masculine singular for
--- adjectives). MOD and NUMGEN are as in call_inflection(). CATVALUE is the
+-- adjectives). MOD and NUMGEN are as in call_declension(). CATVALUE is the
 -- category and ENGVALUE is the English description of the declension type.
--- In these values, NOUN is replaced with either "noun" or "adjective",
--- SINGULAR is replaced with the English equivalent of the number in NUMGEN
--- (e.g. "singular", "dual" or "plural") while BROKSING is the same but uses
+-- In these values, POS is replaced with either "noun" or "adjective",
+-- NUMBER is replaced with the English equivalent of the number in NUMGEN
+-- (e.g. "singular", "dual" or "plural") while BROKNUM is the same but uses
 -- "broken plural" in place of "plural" and "broken paucal" in place of
 -- "paucal".
 local function insert_cat(data, mod, numgen, catvalue, engvalue)
@@ -1440,19 +1445,19 @@ local function insert_cat(data, mod, numgen, catvalue, engvalue)
 	assert(singpl ~= nil)
 	local broksingpl = rsub(singpl, "plural", "broken plural")
 	broksingpl = rsub(broksingpl, "paucal", "broken paucal")
-	if rfind(broksingpl, "broken plural") and (rfind(catvalue, "BROKSING") or
-			rfind(engvalue, "BROKSING")) then
+	if rfind(broksingpl, "broken plural") and (rfind(catvalue, "BROKNUM") or
+			rfind(engvalue, "BROKNUM")) then
 		table.insert(data.categories, "Arabic " .. data.pos .. "s with broken plural")
 	end
 	if rfind(catvalue, "irregular") or rfind(engvalue, "irregular") then
 		table.insert(data.categories, "Arabic irregular " .. data.pos .. "s")
 	end
-	catvalue = rsub(catvalue, "NOUN", data.pos)
-	catvalue = rsub(catvalue, "SINGULAR", singpl)
-	catvalue = rsub(catvalue, "BROKSING", broksingpl)
-	engvalue = rsub(engvalue, "NOUN", data.pos)
-	engvalue = rsub(engvalue, "SINGULAR", singpl)
-	engvalue = rsub(engvalue, "BROKSING", broksingpl)
+	catvalue = rsub(catvalue, "POS", data.pos)
+	catvalue = rsub(catvalue, "NUMBER", singpl)
+	catvalue = rsub(catvalue, "BROKNUM", broksingpl)
+	engvalue = rsub(engvalue, "POS", data.pos)
+	engvalue = rsub(engvalue, "NUMBER", singpl)
+	engvalue = rsub(engvalue, "BROKNUM", broksingpl)
 	if mod == "" and catvalue ~= "" then
 		insert_if_not(data.categories, catvalue)
 	end
@@ -1468,10 +1473,10 @@ local function insert_cat(data, mod, numgen, catvalue, engvalue)
 	end
 end
 
--- Return true if we're handling modifier inflections and the modifier's
+-- Return true if we're handling modifier declensions and the modifier's
 -- case is limited to an oblique case (gen or acc; typically genitive,
 -- in an ʔidāfa construction). This is used when returning lemma
--- inflections -- the modifier part of the lemma should agree in case
+-- declensions -- the modifier part of the lemma should agree in case
 -- with modifier's case if it's restricted in case.
 local function mod_oblique(mod, data)
 	return mod ~= "" and data[mod .. "case"] and (
@@ -1484,18 +1489,18 @@ local function mod_acc(mod, data)
 	return mod ~= "" and data[mod .. "case"] and data[mod .. "case"] == "acc"
 end
 
--- Handle triptote and diptote inflections
-local function triptote_diptote(base, slot, stem, data, mod, numgen, is_dip, lc)
+-- Handle triptote and diptote declensions
+local function triptote_diptote(base, slot, stem, is_dip, lc)
+	local ar, tr = stem.form, stem.translit
 	-- Remove any case ending
-	if rfind(stem, "[" .. UN .. U .. "]$") then
-		stem = rsub(stem, "[" .. UN .. U .. "]$", "")
-		tr = rsub(tr, "un?$", "")
+	if rfind(ar, "[" .. UN .. U .. "]$") then
+		error(("Internal error: Stem '%s' should not have ʔiʕrāb on it at this point"):format(ar))
 	end
 
 	-- special-case for صلوة pronounced ṣalāh; check translit
-	local is_aah = rfind(stem, TAM .. "$") and rfind(tr, "āh$")
+	local is_aah = rfind(ar, TAM .. "$") and rfind(tr, "āh$")
 
-	if rfind(stem, TAM .. "$") then
+	if rfind(ar, TAM .. "$") then
 		if rfind(tr, "h$") then
 			tr = rsub(tr, "h$", "t")
 		elseif not rfind(tr, "t$") then
@@ -1503,28 +1508,30 @@ local function triptote_diptote(base, slot, stem, data, mod, numgen, is_dip, lc)
 		end
 	end
 
-	add_inflections(stem, tr, data, mod, numgen,
+	stem = copy_stem_and_replace(stem, ar, tr)
+
+	add_declensions(base, slot, stem,
 		{is_dip and U or UN,
 		 is_dip and A or AN .. ((rfind(stem, "[" .. HAMZA_ON_ALIF .. TAM .. "]$")
-			or rfind(stem, "[" .. AMAD .. ALIF .. "]" .. HAMZA .. "$")
+			or rfind(stem, ALIF .. HAMZA .. "$")
 			) and "" or ALIF),
 		 is_dip and A or IN,
 		 U, A, I,
 		 lc and UU or U,
 		 lc and AA or A,
 		 lc and II or I,
-		 {}, {}, {}, -- omit informal inflections
-		 {}, {}, {}, -- omit lemma inflections
+		 -- omit informal declensions
+		 -- omit lemma declensions
 		})
 
-	-- add category and informal and lemma inflections
+	-- add category and informal and lemma declensions
 	local tote = lc and "long construct" or is_dip and "diptote" or "triptote"
-	local singpl_tote = "BROKSING " .. tote
-	local cat_prefix = "Arabic NOUNs with " .. tote .. " BROKSING"
+	local singpl_tote = "BROKNUM " .. tote
+	local cat_prefix = "Arabic PLPOS with " .. tote .. " BROKNUM"
 	-- since we're checking translit for -āh we probably don't need to
 	-- check stem too
 	if is_aah or rfind(stem, "[" .. AMAD .. ALIF .. "]" .. TAM .. "$") then
-		add_inflections(stem, rsub(tr, "t$", ""), data, mod, numgen,
+		add_declensions(stem, rsub(tr, "t$", ""), data, mod, numgen,
 			{{}, {}, {},
 			 {}, {}, {},
 			 {}, {}, {},
@@ -1534,7 +1541,7 @@ local function triptote_diptote(base, slot, stem, data, mod, numgen, is_dip, lc)
 		insert_cat(data, mod, numgen, cat_prefix .. " in -āh",
 			singpl_tote .. " in " .. make_link(HYPHEN .. AAH))
 	elseif rfind(stem, TAM .. "$") then
-		add_inflections(stem, rsub(tr, "t$", ""), data, mod, numgen,
+		add_declensions(stem, rsub(tr, "t$", ""), data, mod, numgen,
 			{{}, {}, {},
 			 {}, {}, {},
 			 {}, {}, {},
@@ -1544,7 +1551,7 @@ local function triptote_diptote(base, slot, stem, data, mod, numgen, is_dip, lc)
 		insert_cat(data, mod, numgen, cat_prefix .. " in -a",
 			singpl_tote .. " in " .. make_link(HYPHEN .. AH))
 	elseif lc then
-		add_inflections(stem, tr, data, mod, numgen,
+		add_declensions(stem, tr, data, mod, numgen,
 			{{}, {}, {},
 			 {}, {}, {},
 			 {}, {}, {},
@@ -1559,15 +1566,15 @@ local function triptote_diptote(base, slot, stem, data, mod, numgen, is_dip, lc)
 		if rfind(stem, IY .. SH .. "$") then
 			local infstem = rsub(stem, SH .. "$", "")
 			local inftr = rsub(tr, "iyy$", "ī")
-			-- add informal and lemma inflections separately
-			add_inflections(infstem, inftr, data, mod, numgen,
+			-- add informal and lemma declensions separately
+			add_declensions(infstem, inftr, data, mod, numgen,
 				{{}, {}, {},
 				 {}, {}, {},
 				 {}, {}, {},
 				 "", "", "",
 				 {}, {}, {},
 				})
-			add_inflections(stem, tr, data, mod, numgen,
+			add_declensions(stem, tr, data, mod, numgen,
 				{{}, {}, {},
 				 {}, {}, {},
 				 {}, {}, {},
@@ -1575,7 +1582,7 @@ local function triptote_diptote(base, slot, stem, data, mod, numgen, is_dip, lc)
 				 "", "", "",
 				})
 		else
-			add_inflections(stem, tr, data, mod, numgen,
+			add_declensions(stem, tr, data, mod, numgen,
 				{{}, {}, {},
 				 {}, {}, {},
 				 {}, {}, {},
@@ -1583,18 +1590,18 @@ local function triptote_diptote(base, slot, stem, data, mod, numgen, is_dip, lc)
 				 "", "", "",
 				})
 		end
-		insert_cat(data, mod, numgen, "Arabic NOUNs with basic " .. tote .. " BROKSING",
+		insert_cat(data, mod, numgen, "Arabic PLPOS with basic " .. tote .. " BROKNUM",
 			"basic " .. singpl_tote)
 	end
 end
 
 -- Regular triptote
-inflections["tri"] = function(stem, tr, data, mod, numgen)
+declensions["tri"] = function(stem, tr, data, mod, numgen)
 	triptote_diptote(stem, tr, data, mod, numgen, false)
 end
 
 -- Regular diptote
-inflections["di"] = function(stem, tr, data, mod, numgen)
+declensions["di"] = function(stem, tr, data, mod, numgen)
 	triptote_diptote(stem, tr, data, mod, numgen, true)
 end
 
@@ -1609,32 +1616,33 @@ local function elative_color_defect(stem, tr, data, mod, numgen)
 end
 
 -- Elative: usually same as diptote, might be invariable
-inflections["el"] = function(stem, tr, data, mod, numgen)
+declensions["el"] = function(stem, tr, data, mod, numgen)
 	elative_color_defect(stem, tr, data, mod, numgen)
 end
 
 -- Color/defect adjective: Same as elative
-inflections["cd"] = function(stem, tr, data, mod, numgen)
+declensions["cd"] = function(stem, tr, data, mod, numgen)
 	elative_color_defect(stem, tr, data, mod, numgen)
 end
 
 -- Triptote with lengthened ending in the construct state
-inflections["lc"] = function(stem, tr, data, mod, numgen)
+declensions["lc"] = function(stem, tr, data, mod, numgen)
 	triptote_diptote(stem, tr, data, mod, numgen, false, true)
 end
 
 local function in_final_weak(base, slot, stem, tri)
-	strip_ending(stem, IN)
+	stem = strip_ending(stem, IN)
 
 	local acc_ind_ending = tri and IY .. AN .. ALIF or IY .. A
-	add_inflections(base, slot, stem,
+	add_declensions(base, slot, stem,
 		{IN, acc_ind_ending, IN,
 		 II, IY .. A, II,
 		 II, IY .. A, II,
 		 II, II, II,
-		 -- FIXME: This used to check for mod_acc() and set the first value below to acc_ind_ending if so.
-		 -- Why was this done? There was a common that this may not be correct but the situation rarely if ever occurs.
+		 -- FIXME: It's not clear that the indefinite accusative lemma form should end in -iya(n); but this situation
+		 -- rarely if ever occurs so it may not matter.
 		 IN, II, II,
+		 base.state == "ind" and (base.case == "acc" and acc_ind_ending or IN) or "II",
 		})
 end
 
@@ -1642,65 +1650,58 @@ inflprops[
 
 
 	local tote = tri and "triptote" or "diptote"
-	insert_cat(data, mod, numgen, "Arabic NOUNs with " .. tote .. " BROKSING in -in",
-		"BROKSING " .. tote .. " in " .. make_link(HYPHEN .. IN))
-end
-
--- Final-weak in -in
-inflections["in"] = function(stem, tr, data, mod, numgen)
-	in_final_weak(stem, tr, data, mod, numgen,
-		detect_in_type(stem, rfind(numgen, "pl")) == "triin")
+	insert_cat(data, mod, numgen, "Arabic PLPOS with " .. tote .. " BROKNUM in -in",
+		"BROKNUM " .. tote .. " in " .. make_link(HYPHEN .. IN))
 end
 
 -- Final-weak in -in, force "triptote" variant
-inflections["triin"] = function(stem, tr, data, mod, numgen)
+declensions["triin"] = function(base, slot, stem, stem, tr, data, mod, numgen)
 	in_final_weak(stem, tr, data, mod, numgen, true)
 end
 
 -- Final-weak in -in, force "diptote" variant
-inflections["diin"] = function(stem, tr, data, mod, numgen)
+declensions["diin"] = function(stem, tr, data, mod, numgen)
 	in_final_weak(stem, tr, data, mod, numgen, false)
 end
 
 -- Final-weak in -an (comes in two variants, depending on spelling with tall alif or alif maqṣūra)
-inflections["an"] = function(base, slot, stem)
+declensions["an"] = function(base, slot, stem)
 	local tall_alif
 	if rfind(stem, AN .. ALIF .. "$") then
 		tall_alif = true
-		stem = rsub(stem, AN .. ALIF .. "$", "")
+		strip_ar_tr_ending(stem, AN .. ALIF, "an", "internal")
 	elseif rfind(stem, AN .. AMAQ .. "$") then
 		tall_alif = false
-		stem = rsub(stem, AN .. AMAQ .. "$", "")
+		strip_ar_tr_ending(stem, AN .. AMAQ, "an", "internal")
 	else
-		error("Invalid stem for 'an' declension type: " .. stem)
+		error(("Internal error: Invalid ending for -an stem: %s"):format(stem.form))
 	end
-	tr = rsub(tr, "an$", "")
 
 	if tall_alif then
-		add_inflections(stem, tr, data, mod, numgen,
+		add_declensions(base, slot, stem,
 			{AN .. ALIF, AN .. ALIF, AN .. ALIF,
 			 AA, AA, AA,
 			 AA, AA, AA,
 			 AA, AA, AA,
-			 AN .. ALIF, AA, AA,
+			 base.state == "ind" and AN .. ALIF or AA
 			})
 	else
-		add_inflections(stem, tr, data, mod, numgen,
+		add_declensions(stem, tr, data, mod, numgen,
 			{AN .. AMAQ, AN .. AMAQ, AN .. AMAQ,
 			 AAMAQ, AAMAQ, AAMAQ,
 			 AAMAQ, AAMAQ, AAMAQ,
 			 AAMAQ, AAMAQ, AAMAQ,
-			 AN .. AMAQ, AAMAQ, AAMAQ,
+			 base.state == "ind" and AN .. AMAQ or AAMAQ
 			})
 	end
 
 	-- FIXME: Should we distinguish between tall alif and alif maqṣūra?
-	insert_cat(data, mod, numgen, "Arabic NOUNs with BROKSING in -an",
-		"BROKSING in " .. make_link(HYPHEN .. AN .. (tall_alif and ALIF or AMAQ)))
+	insert_cat(data, mod, numgen, "Arabic PLPOS with BROKNUM in -an",
+		"BROKNUM in " .. make_link(HYPHEN .. AN .. (tall_alif and ALIF or AMAQ)))
 end
 
 local function invariable(stem, tr, data, mod, numgen)
-	add_inflections(stem, tr, data, mod, numgen,
+	add_declensions(stem, tr, data, mod, numgen,
 		{"", "", "",
 		 "", "", "",
 		 "", "", "",
@@ -1708,40 +1709,31 @@ local function invariable(stem, tr, data, mod, numgen)
 		 "", "", "",
 		})
 	
-	insert_cat(data, mod, numgen, "Arabic NOUNs with invariable BROKSING",
-		"BROKSING invariable")
+	insert_cat(data, mod, numgen, "Arabic PLPOS with invariable BROKNUM",
+		"BROKNUM invariable")
 end
 
 -- Invariable in -ā (non-loanword type)
-inflections["inv"] = function(stem, tr, data, mod, numgen)
+declensions["inv"] = function(stem, tr, data, mod, numgen)
 	invariable(stem, tr, data, mod, numgen)
 end
 
 -- Invariable in -ā (loanword type, behaving in the dual as if ending in -a, I think!)
-inflections["lwinv"] = function(stem, tr, data, mod, numgen)
+declensions["lwinv"] = function(stem, tr, data, mod, numgen)
 	invariable(stem, tr, data, mod, numgen)
 end
 
--- Duals
-inflections["d"] = function(base, slot, stem, lemma_props)
-	check_num(lemma_props, "du")
-	local ar, tr = stem.form, stem.translit
-	if rfind(stem.form, ALIF .. N .. "$") then
-		stem.form = rsub(stem.form, AOPTA .. N .. "$", "")
-	elseif rfind(stem.form, AMAD .. N .. "$") then
-		stem.form = rsub(stem.form, AMAD .. N .. "$", HAMZA_PH)
-	else
-		error("Internal error: Dual stem should end in -ān: '" .. stem .. "'")
-	end
+-- Dual
+declensions["d"] = function(base, slot, stem)
+	check_num(base, "du")
+	stem = strip_ending(stem, AAN, "internal")
 
-	stem.tr = strip_tr_ending(stem.tr, "ān", "internal")
-	local obl = lemma_props.case ~= "nom"
-	add_inflections(base, slot, stem,
+	add_declensions(base, slot, stem,
 		{AANI, AYNI, AYNI,
 		 AANI, AYNI, AYNI,
 		 AA, AYSK, AYSK,
 		 AYN, AYN, AYSK,
-		 obl and AYN or AAN, obl and AYN or AAN, obl and AYSK or AA,
+		 base.case == "nom" and (base.state == "con" and AA or AAN) or (base.state == "con" and AYSK or AYN),
 		})
 end
 
@@ -1751,72 +1743,69 @@ declprops["d"] = {
 }
 
 -- Sound masculine plural
-inflections["smp"] = function(base, slot, stem, lemma_props)
-	check_num(lemma_props, {"pl", "pauc"})
-	strip_ending(stem, UUN)
-	local obl = lemma_props.case ~= "nom"
-	add_inflections(base, slot, stem,
+declensions["smp"] = function(base, slot, stem)
+	check_num(base, {"pl", "pauc"})
+	stem = strip_ending(stem, UUN)
+	add_declensions(base, slot, stem,
 		{UUNA, IINA, IINA,
 		 UUNA, IINA, IINA,
 		 UU,   II,   II,
 		 IIN,  IIN,  II,
-		 obl and IIN or UUN, obl and IIN or UUN, obl and II or UU,
+		 base.case == "nom" and (base.state == "con" and UU or UUN) or (base.state == "con" and II or IIN),
 		})
-	insert_cat(data, mod, numgen, "Arabic NOUNs with sound masculine SINGULAR",
-		"sound masculine SINGULAR")
 end
 
 declprops["smp"] = {
-	-- use SINGULAR because conceivably this might be used with the paucal
+	-- use NUMBER because conceivably this might be used with the paucal
 	-- instead of plural
-	cats = {"NOUNs with sound masculine SINGULAR"},
-	ann = "sound masculine SINGULAR",
+	cats = {"PLPOS with sound masculine NUMBER"},
+	ann = "sound masculine NUMBER",
 }
 
 -- Sound feminine plural
-inflections["sfp"] = function(stem, tr, data, mod, numgen)
+declensions["sfp"] = function(stem, tr, data, mod, numgen)
 	if not rfind(stem, "[" .. ALIF .. AMAD .. "]" .. T .. UN .. "?$") then
 		error("Sound feminine plural stem should end in -āt(un): '" .. stem .. "'")
 	end
 	stem = rsub(stem, UN .. "$", "")
 	tr = rsub(tr, "un$", "")
-	add_inflections(stem, tr, data, mod, numgen,
+	add_declensions(stem, tr, data, mod, numgen,
 		{UN, IN, IN,
 		 U,  I,  I,
 		 U,  I,  I,
 		 "", "", "",
 		 "", "", "",
 		})
-	-- use SINGULAR because this might be used with the paucal
+	-- use NUMBER because this might be used with the paucal
 	-- instead of plural
-	insert_cat(data, mod, numgen, "Arabic NOUNs with sound feminine SINGULAR",
-		"sound feminine SINGULAR")
+	insert_cat(data, mod, numgen, "Arabic PLPOS with sound feminine NUMBER",
+		"sound feminine NUMBER")
 end
 
 -- Plural of final-weak in -an
-inflections["awnp"] = function(stem, tr, data, mod, numgen)
+declensions["awnp"] = function(stem, tr, data, mod, numgen)
 	if not rfind(stem, AWNA .. "?$") then
 		error("'awnp' plural stem should end in -awn(a): '" .. stem .. "'")
 	end
 	stem = rsub(stem, AWNA .. "?$", "")
 	tr = rsub(tr, "awna?$", "")
 	local mo = mod_oblique(mod, data)
-	add_inflections(stem, tr, data, mod, numgen,
+	add_declensions(stem, tr, data, mod, numgen,
 		{AWNA, AYNA, AYNA,
 		 AWNA, AYNA, AYNA,
 		 AWSK, AYSK, AYSK,
 		 AYN, AYN, AYSK,
 		 mo and AYN or AWN, mo and AYN or AWN, mo and AYSK or AWSK,
 		})
-	-- use SINGULAR because conceivably this might be used with the paucal
+	-- use NUMBER because conceivably this might be used with the paucal
 	-- instead of plural
-	insert_cat(data, mod, numgen, "Arabic NOUNs with sound SINGULAR in -awna",
-		"sound SINGULAR in " .. make_link(HYPHEN .. AWNA))
+	insert_cat(data, mod, numgen, "Arabic PLPOS with sound NUMBER in -awna",
+		"sound NUMBER in " .. make_link(HYPHEN .. AWNA))
 end
 
 -- Unknown
-inflections["?"] = function(stem, tr, data, mod, numgen)
-	add_inflections("?", "?", data, mod, numgen,
+declensions["?"] = function(stem, tr, data, mod, numgen)
+	add_declensions("?", "?", data, mod, numgen,
 		{"", "", "",
 		 "", "", "",
 		 "", "", "",
@@ -1824,8 +1813,8 @@ inflections["?"] = function(stem, tr, data, mod, numgen)
 		 "", "", "",
 		})
 	
-	insert_cat(data, mod, numgen, "Arabic NOUNs with unknown SINGULAR",
-		"SINGULAR unknown")
+	insert_cat(data, mod, numgen, "Arabic PLPOS with unknown NUMBER",
+		"NUMBER unknown")
 end
 
 --[==[
@@ -1929,12 +1918,74 @@ function export.detect_declension(data)
 	-- (1) Several fields specifying Lua patterns matching particular endings. Each field is a Lua pattern or list of
 	--     patterns (which are tried in turn) to match the appropriate ending. The remainder (which is matched using
 	--     `(.-)`) becomes the form.
-	-- * `nom_ind`: Regex to match the nominative indefinite ending. The remainder will be the form.
-	-- * `nom_def`: Regex to match the nominative definite ending. The remainder will be the form. Defaults to
-	--   `nom_ind`.
-	-- * `nom_con`: Regex to match the nominative consstruct ending. The remainder will be the form.
+	-- * `nom_ind`: Pattern or patterns to match the nominative indefinite ending.
+	-- * `nom_def`: Pattern or patterns to match the nominative definite ending.
+	-- * `nom_con`: Pattern or patterns to match the nominative construct ending.
+	-- * `nom_ind_def`: Pattern or patterns to match both the nominative indefinite and definite endings. Equivalent to
+	--                  setting `nom_ind` and `nom_def` to the same value.
+	-- * `nom_def_con`: Pattern or patterns to match both the nominative definite and construct endings. Equivalent to
+	--                  setting `nom_def` and `nom_con` to the same value.
+	-- * `acc_ind`: Pattern or patterns to match the accusative indefinite ending.
+	-- * `acc_def`: Pattern or patterns to match the accusative definite ending.
+	-- * `acc_con`: Pattern or patterns to match the accusative construct ending.
+	-- * `acc_ind_def`: Pattern or patterns to match both the accusative indefinite and definite endings. Equivalent to
+	--                  setting `acc_ind` and `acc_def` to the same value.
+	-- * `acc_def_con`: Pattern or patterns to match both the accusative definite and construct endings. Equivalent to
+	--                  setting `acc_def` and `acc_con` to the same value.
+	-- * `gen_ind`: Pattern or patterns to match the genitive indefinite ending.
+	-- * `gen_def`: Pattern or patterns to match the genitive definite ending.
+	-- * `gen_con`: Pattern or patterns to match the genitive construct ending.
+	-- * `gen_ind_def`: Pattern or patterns to match both the genitive indefinite and definite endings. Equivalent to
+	--                  setting `gen_ind` and `gen_def` to the same value.
+	-- * `gen_def_con`: Pattern or patterns to match both the genitive definite and construct endings. Equivalent to
+	--                  setting `gen_def` and `gen_con` to the same value.
+	-- * `obl_ind`: Pattern or patterns to match the oblique (accusative and genitive) indefinite ending.
+	-- * `obl_def`: Pattern or patterns to match the oblique (accusative and genitive) definite ending.
+	-- * `obl_con`: Pattern or patterns to match the oblique (accusative and genitive) construct ending.
+	-- * `obl_ind_def`: Pattern or patterns to match both the oblique (accusative and genitive) indefinite and definite
+	--                  endings. Equivalent to setting `obl_ind` and `obl_def` to the same value.
+	-- * `obl_def_con`: Pattern or patterns to match both the oblique (accusative and genitive) definite and construct
+	--                  endings. Equivalent to setting `obl_def` and `obl_con` to the same value.
+	-- (2) Other fields:
+	-- * `normalized_ending`: Ending to add to the stem extracted from the above patterns to get the normalized
+	--                        nominative indefinite form. Required.
+	-- * `reject_if`: If specified, a function that should return true if this match should be rejected. It is passed
+	--                three arguments: (1) the normalized form that would be returned, (2) the determined case, (3) the
+	--                determined state. It can be used for example to avoid treating plurals like ʕuyūn "eyes" and
+	--                qurūn "horns" as sound masculine plurals if the declension wasn't explicitly specified as sound.
 	local function normalize_to_nom_ind(data)
 		local this_retform, this_retcase, this_retstate
+		local try_cases, try_states
+		if case == "nom" then
+			try_cases = {"nom"}
+		elseif case == "acc" or case == "gen" then
+			try_cases = {case, "obl"}
+		else
+			error(("Internal error: Unrecognized case '%s'"):format(case))
+		end
+		if state == "ind" then
+			try_states = {"ind", "ind_def"}
+		elseif state == "def" then
+			try_states = {"def", "ind_def", "def_con"}
+		elseif state == "con" then
+			try_states = {"con", "def_con"}
+		else
+			error(("Internal error: Unrecognized state '%s'"):format(state))
+		end
+
+		for _, try_case in ipairs(try_cases) do
+			for _, try_state in ipairs(try_states) do
+				local field = ("%s_%s"):format(try_case, try_state)
+				local patterns = data[field]
+				if patterns then
+					if type(patterns) == "string" then
+						patterns = {patterns}
+					end
+					for _, pattern in ipairs(patterns) do
+
+
+
+
 		while true do
 			this_retform = rmatch(form, "^(.-)" .. data.nom_ind .. "$")
 			if this_retform then
@@ -2035,7 +2086,7 @@ function export.detect_declension(data)
 					obl_con = II,
 					normalized_ending = UUN,
 					reject_if = function(form)
-						-- Avoid getting tripped up by plurals like ʕuyūn "eyes", qurūn "horns" (note we check for U
+						-- Avoid getting tripped up by plurals like ʕuyūn "eyes", qurūn "horns". Note, we check for U
 						-- between first two consonants so we correctly ignore cases like sinūn "hours" (from sana),
 						-- riʔūn "lungs" (from riʔa) and banūn "sons" (from ibn).
 						return not decl and rfind(form, "^" .. CONS .. U .. CONS .. UUN .. AOPT .. "$")
@@ -2227,15 +2278,15 @@ function export.stem_and_type(word, sg, sgtype, isfem, num, pos)
 	end
 
 	if (num ~= "sg" or not isfem) and (word == "elf" or word == "cdf" or word == "intf" or word == "rf" or word == "f") then
-		error("Inference of form for inflection type '" .. word .. "' only allowed in singular feminine")
+		error("Inference of form for declension type '" .. word .. "' only allowed in singular feminine")
 	end
 	
 	if num ~= "du" and word == "d" then
-		error("Inference of form for inflection type '" .. word .. "' only allowed in dual")
+		error("Inference of form for declension type '" .. word .. "' only allowed in dual")
 	end
 	
 	if num ~= "pl" and (word == "sfp" or word == "smp" or word == "awnp" or word == "cdp" or word == "sp" or word == "fp" or word == "p") then
-		error("Inference of form for inflection type '" .. word .. "' only allowed in plural")
+		error("Inference of form for declension type '" .. word .. "' only allowed in plural")
 	end
 
 	local function is_intensive_adj(ar)
@@ -2348,7 +2399,7 @@ function export.stem_and_type(word, sg, sgtype, isfem, num, pos)
 			-- If form is elative or color-defect, we don't know which of
 			-- the two it is, and each has a special feminine which isn't
 			-- the regular "just add ة", so shunt to unknown. This will
-			-- ensure that ?'s appear in place of the inflection -- also
+			-- ensure that ?'s appear in place of the declension -- also
 			-- for dual and plural.
 			return export.stem_and_type("?", sg, sgtype, true, "sg", pos)
 		else
@@ -2407,7 +2458,7 @@ function export.stem_and_type(word, sg, sgtype, isfem, num, pos)
 
 	-- Conservative plural, as used for masculine plural adjectives.
 	-- If singular type is color-defect, shunt to color-defect plural; else
-	-- shunt to unknown, so ? appears in place of the inflections.
+	-- shunt to unknown, so ? appears in place of the declensions.
 	if word == "p" then
 		if sgtype == "cd" then
 			return export.stem_and_type("cdp", sg, sgtype, isfem, "pl", pos)
@@ -2707,7 +2758,7 @@ local function make_table(data, wikicode)
 	end
 	
 	-- For states not in the list of those to be displayed, clear out the
-	-- corresponding inflections so they appear as a dash.
+	-- corresponding declensions so they appear as a dash.
 	for _, state in ipairs(data.allstates) do
 		if not contains(data.states, state) then
 			for _, numgen in ipairs(data.numgens()) do
