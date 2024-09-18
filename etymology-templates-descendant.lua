@@ -1,3 +1,5 @@
+local export = {}
+
 local concat = table.concat
 local insert = table.insert
 local listToSet = require("Module:table/listToSet")
@@ -7,8 +9,6 @@ local put_module = "Module:parse utilities"
 local labels_module = "Module:labels"
 local languages_module = "Module:languages"
 local scripts_module = "Module:scripts"
-
-local export = {}
 
 local error_on_no_descendants = false
 
