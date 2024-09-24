@@ -2,10 +2,12 @@ local export = {}
 
 -- Named constants for all modules used, to make it easier to swap out sandbox versions.
 local debug_track_module = "Module:debug/track"
+local en_utilities_module = "Module:en-utilities"
 local gender_and_number_module = "Module:gender and number"
 local headword_data_module = "Module:headword/data"
 local headword_page_module = "Module:headword/page"
 local links_module = "Module:links"
+local pages_module = "Module:pages"
 local palindromes_module = "Module:palindromes"
 local qualifier_module = "Module:qualifier"
 local scripts_module = "Module:scripts"
@@ -27,7 +29,7 @@ local format_categories = require_when_needed(utilities_module, "format_categori
 local format_genders = require_when_needed(gender_and_number_module, "format_genders")
 local format_qualifier = require_when_needed(qualifier_module, "format_qualifier")
 local full_link = require_when_needed(links_module, "full_link")
-local get_current_L2 = require_when_needed(utilities_module, "get_current_L2")
+local get_current_L2 = require_when_needed(pages_module, "get_current_L2")
 local get_link_page = require_when_needed(links_module, "get_link_page")
 local get_script = require_when_needed(scripts_module, "getByCode")
 local insert = table.insert
@@ -39,7 +41,7 @@ local max = math.max
 local new_title = mw.title.new
 local pairs = pairs
 local pattern_escape = m_str_utils.pattern_escape
-local pluralize = m_str_utils.pluralize
+local pluralize = require_when_needed(en_utilities_module, "pluralize")
 local process_page = require_when_needed(headword_page_module, "process_page")
 local remove_links = require_when_needed(links_module, "remove_links")
 local shallowcopy = require_when_needed(table_module, "shallowcopy")
@@ -115,7 +117,7 @@ end
 local spacingPunctuation = "[%s%p]+"
 --[[ List of punctuation or spacing characters that are found inside of words.
 	 Used to exclude characters from the regex above. ]]
-local wordPunc = "-־׳״'.·*’་•:᠊"
+local wordPunc = "-#%%&@־׳״'.·*’་•:᠊"
 local notWordPunc = "[^" .. wordPunc .. "]+"
 
 
@@ -218,7 +220,9 @@ end
 
 
 local function non_categorizable(full_raw_pagename)
-	return full_raw_pagename:find("^Appendix:Gestures/")
+	return full_raw_pagename:find("^Appendix:Gestures/") or
+		-- Unsupported titles with descriptive names.
+		(full_raw_pagename:find("^Unsupported titles/") and not full_raw_pagename:find("`"))
 end
 
 local function tag_text_and_add_quals_and_refs(data, head, formatted, j)
@@ -652,12 +656,15 @@ function export.full_headword(data)
 	end
 
 	-- Check the namespace against the language type.
-	if page.namespace == "" then
+	local namespace = page.namespace
+	if namespace == "" then
 		if data.lang:hasType("reconstructed") then
 			error("Entries in " .. langname .. " must be placed in the Reconstruction: namespace")
 		elseif data.lang:hasType("appendix-constructed") then
 			error("Entries in " .. langname .. " must be placed in the Appendix: namespace")
 		end
+	elseif namespace == "Citations" or namespace == "Thesaurus" then
+		error("Headword templates should not be used in the " .. namespace .. ": namespace.")
 	end
 
 	------------ 3. Initialize `data.heads` table; if old-style, convert to new-style. ------------
@@ -749,7 +756,7 @@ function export.full_headword(data)
 	------------ 5. Create a default headword, and add links to multiword page names. ------------
 
 	-- Determine if term is reconstructed
-	local is_reconstructed = page.namespace == "Reconstruction" or data.lang:hasType("reconstructed")
+	local is_reconstructed = namespace == "Reconstruction" or data.lang:hasType("reconstructed")
 
 	-- Create a default headword based on the pagename, which is determined in
 	-- advance by the data module so that it only needs to be done once.
@@ -779,6 +786,9 @@ function export.full_headword(data)
 			head.term = default_head
 		elseif head.term == default_head then
 			has_redundant_head_param = true
+		elseif head.term:find("^[!?]$") then
+			-- If explicit head= just consists of ! or ?, add it to the end of the default head.
+			head.term = default_head .. head.term
 		end
 		
 		if is_reconstructed then
@@ -900,7 +910,7 @@ function export.full_headword(data)
 	-- about the best we can do (alternatively we could potentially do script detection on the pagename).
 	local dt_script = data.heads[1].sc
 	local dt_script_code = dt_script:getCode()
-	local page_non_ascii = page.namespace == "" and not page.pagename:find("^[%z\1-\127]+$")
+	local page_non_ascii = namespace == "" and not page.pagename:find("^[%z\1-\127]+$")
 	local unsupported_pagename, unsupported = page.full_raw_pagename:gsub("^Unsupported titles/", "")
 	if unsupported == 1 and page.unsupported_titles[unsupported_pagename] then
 		display_title = 'Unsupported titles/<span class="' .. dt_script_code .. '">' .. page.unsupported_titles[unsupported_pagename] .. '</span>'
@@ -911,7 +921,7 @@ function export.full_headword(data)
 	-- Keep Han entries region-neutral in the display title.
 	elseif page_non_ascii and (dt_script_code == "Hant" or dt_script_code == "Hans") then
 		display_title = '<span class="Hani">' .. page.full_raw_pagename .. '</span>'
-	elseif page.namespace == "Reconstruction" then
+	elseif namespace == "Reconstruction" then
 		local matched
 		display_title, matched = ugsub(
 			page.full_raw_pagename,
@@ -923,6 +933,17 @@ function export.full_headword(data)
 		if matched == 0 then
 			display_title = nil
 		end
+	end
+	-- FIXME: Generalize this.
+	-- If the current language uses ur-Arab (for Urdu, etc.), ku-Arab (Central Kurdish) or pa-Arab
+	-- (Shahmukhi, for Punjabi) and there's more than one language on the page, don't set the display title
+	-- because these three scripts display in Nastaliq and we don't want this for terms that also exist in other
+	-- languages that don't display in Nastaliq (e.g. Arabic or Persian) to display in Nastaliq. Because the word
+	-- "Urdu" occurs near the end of the alphabet, Urdu fonts tend to override the fonts of other languages.
+	-- FIXME: This is checking for more than one language on the page but instead needs to check if there are any
+	-- languages using scripts other than the ones just mentioned.
+	if (dt_script_code == "ur-Arab" or dt_script_code == "ku-Arab" or dt_script_code == "pa-Arab") and page.L2_list.n > 1 then
+		display_title = nil
 	end
 
 	if display_title then
@@ -969,7 +990,7 @@ function export.full_headword(data)
 	end
 
 	-- Reconstructed terms often use weird combinations of scripts and realistically aren't spelled so much as notated.
-	if page.namespace ~= "Reconstruction" then
+	if namespace ~= "Reconstruction" then
 		-- Map from languages to a string containing the characters to ignore when considering whether a term has
 		-- multiple written scripts in it. Typically these are Greek or Cyrillic letters used for their phonetic
 		-- values.
@@ -1153,14 +1174,14 @@ function export.full_headword(data)
 	end
 	
 	-- Categorise for palindromes
-	if not data.nopalindromecat and page.namespace ~= "Reconstruction" and ulen(page.pagename) > 2
+	if not data.nopalindromecat and namespace ~= "Reconstruction" and ulen(page.pagename) > 2
 		-- FIXME: Use of first script here seems hacky. What is the clean way of doing this in the presence of
 		-- multiple scripts?
 		and is_palindrome(page.pagename, data.lang, data.heads[1].sc) then
 		insert(data.categories, full_langname .. " palindromes")
 	end
 
-	if page.namespace == "" and not data.lang:hasType("reconstructed") then
+	if namespace == "" and not data.lang:hasType("reconstructed") then
 		for _, head in ipairs(data.heads) do
 			if page.full_raw_pagename ~= get_link_page(remove_links(head.term), data.lang, head.sc) then
 				-- [[Special:WhatLinksHere/Wiktionary:Tracking/headword/pagename spelling mismatch]]
