@@ -3,47 +3,10 @@ local export = {}
 local labels_module = "Module:labels"
 local qualifier_module = "Module:qualifier"
 local references_module = "Module:references"
-local string_utilities_module = "Module:string utilities"
 
 local function track(page)
 	require("Module:debug/track")("pron qualifier/" .. page)
 	return true
-end
-
-local function split_labels(term)
-	if not term then
-		return nil
-	end
-	return require(labels_module).split_labels_on_comma(term)
-end
-
---[==[
-'''FIXME:''' Delete this once we've pushed all the new code, as nothing will rely on it.
-
-Parse left and right regular and accent qualifiers, labels and references, for pronunciation or related modules that
-want to provide support for these.
-
-`data` is a structure containing the following fields:
-* `obj`: The object to write the parsed qualifiers, labels and references into.
-* `q`: Left regular qualifier.
-* `qq`: Right regular qualifier.
-* `qualifiers`: Regular qualifier (left or right), for compatibility.
-* `a`: String of comma-separated left accent qualifiers.
-* `aa`: String of comma-separated right accent qualifiers.
-* `l`: String of comma-separated left labels.
-* `ll`: String of comma-separated right labels.
-* `refs: Spec for one or more references; see the documentation of [[Module:IPA]].
-]==]
-function export.parse_qualifiers(data)
-	local obj = data.store_obj
-	obj.refs = data.refs and require(references_module).parse_references(data.refs) or nil
-	obj.q = data.q and {data.q} or nil
-	obj.qq = data.qq and {data.qq} or nil
-	obj.qualifiers = data.qualifiers and {data.qualifiers} or nil
-	obj.a = split_labels(data.a)
-	obj.aa = split_labels(data.aa)
-	obj.l = split_labels(data.l)
-	obj.ll = split_labels(data.ll)
 end
 
 --[==[
