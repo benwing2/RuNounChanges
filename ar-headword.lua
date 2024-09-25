@@ -49,15 +49,6 @@ local TEMPARCOMMA = u(0xFFF1)
 
 local dump = mw.dumpObject
 
--- If Not Empty
-local function ine(arg)
-	if arg == "" then
-		return nil
-	else
-		return arg
-	end
-end
-
 -- version of mw.ustring.gsub() that discards all but the first return value
 local function rsub(term, foo, bar)
 	local retval = rsubn(term, foo, bar)
@@ -308,7 +299,9 @@ function export.show(frame)
 	return require("Module:headword").full_headword(data)
 end
 
--- Get a list of inflections. See handle_infl() for meaning of ARGS and ARGPREF.
+-- Fetch a list of user-specified inflections from `args` that begin with `argpref`, e.g. "pl" for plural inflections.
+-- Also fetches translit under (e.g.) "pltr", "pl2tr", etc.; gender under (e.g.) "plg", "pl2g", etc.; and a second
+-- gender under (e.g.) "plg2", "pl2g2", etc.
 local function getargs(args, argpref)
 	local forms = {}
 	for i, form in ipairs(args[argpref]) do
@@ -324,6 +317,9 @@ local function getargs(args, argpref)
 	return forms
 end
 
+-- Add list parameters to `params` (a structure as passed to [[Module:parameters]]) for a parameter named `argpref`,
+-- along with related transliteration and gender parameters. If `defgender` is given, the gender parameter will have the
+-- specified default value if no values are given.
 local function add_infl_params(params, argpref, defgender)
 	params[argpref] = {list = true, disallow_holes = true}
 	params[argpref .. "\1tr"] = {list = true, allow_holes = true}
@@ -331,15 +327,15 @@ local function add_infl_params(params, argpref, defgender)
 	params[argpref .. "\1g2"] = {list = true}
 end
 
--- Get a list of inflections from the arguments in ARGS based on argument
--- prefix ARGPREF (e.g. "pl" to snarf arguments called "pl", "pl2", etc.,
--- along with "pltr", "pl2tr", etc. and optional gender(s) "plg", "plg2",
--- "pl2g", "pl2g2", "pl3g", "pl3g2", etc.). Label with LABEL (e.g. "plural"),
--- which will appear in the headword. Insert into inflections list
--- INFLS. Optional DEFGENDER is default gender to insert if gender
--- isn't given; otherwise, no gender is inserted. (This is used for
--- singulative forms of collective nouns, and collective forms of singulative
--- nouns, which have different gender from the base form(s).)
+--[=[
+Fetch a list of inflections from the arguments in `args` based on argument prefix `argpref` (e.g. "pl" to snarf
+arguments called "pl", "pl2", etc., along with "pltr", "pl2tr", etc. and optional gender(s) "plg", "plg2", "pl2g",
+"pl2g2", "pl3g", "pl3g2", etc.). Label with `label` (e.g. "plural"), which will appear in the headword. Insert into
+`data.inflections`, where `data` is the structure passed to [[Module:headword]]. If `generate_default` is specified,
+it should be a function of two arguments (`args`, `data`), which should generate the default value if no values are
+specified or if "+" is explicitly given. If `generate_default` isn't specified and the user gave no values, no
+inflection will be inserted.
+]=]
 local function handle_infl(args, data, argpref, label, generate_default)
 	local newinfls = getargs(args, argpref)
 	if #newinfls == 0 and generate_default then
@@ -374,6 +370,13 @@ local function handle_infl(args, data, argpref, label, generate_default)
 	end
 end
 
+
+-- Add the parameter specs to `params` (a structure of the sort passed to [[Module:parameters]]) for a basic inflection
+-- (e.g. plural, feminine), along with the construct, definite and oblique variants of this inflection. This is similar
+-- to `add_infl_params`, and all arguments are the same as that function, but also adds specs for the variant arguments;
+-- e.g. if `argpref` is "pl", this also adds specs for "plcons" for the plural construct state, "pldef" for the plural
+-- definite state, etc. Can also handle the base construct/definite/oblique variants if `argpref` is given as a blank
+-- string (if `argpref` is blank, skip the base inflection).
 local function add_all_infl_params(params, argpref)
 	if argpref ~= "" then
 		add_infl_params(params, argpref)
@@ -385,10 +388,12 @@ local function add_all_infl_params(params, argpref)
 	add_infl_params(params, argpref .. "inf")
 end
 
--- Handle a basic inflection (e.g. plural, feminine) along with the construct,
--- definite and oblique variants of this inflection. Can also handle the base
--- construct/definite/oblique variants if both ARGPREF and LABEL are given
--- as blank strings. If ARGPREF is blank, skip the base inflection.
+-- Insert a basic inflection (e.g. plural, feminine) into `data.inflections` based on user-specified arguments, along
+-- with the construct, definite and oblique variants of this inflection. This is similar to `handle_infl`, and all
+-- arguments are the same as that function, but also checks for the variant arguments; e.g. if `argpref` is "pl", this
+-- also checks for "plcons" for the plural construct state, "pldef" for the plural definite state, etc. Can also handle
+-- the base construct/definite/oblique variants if both `argpref` and `label` are given as blank strings. If `argpref`
+-- is blank, skip the base inflection.
 local function handle_all_infl(args, data, argpref, label, generate_default)
 	if argpref ~= "" then
 		handle_infl(args, data, argpref, label, generate_default)
@@ -565,6 +570,23 @@ pos_functions["nisba adjectives"] = {
 	func = function(args, data)
 		data.pos_category = "adjectives"
 		handle_infl_list_args(args, data, nisba_adj_inflections)
+	end
+}
+
+local nisba_noun_inflections = {
+	{pref = "", label = ""}, -- handle cons, def, obl, inf
+	{pref = "pl", label = "plural", generate_default = make_nisba_default(U .. "ونَ", "ūna")},
+	{pref = "f", label = "feminine", generate_default = make_nisba_default(A .. "ة", "a")},
+}
+
+pos_functions["nisba nouns"] = {
+	params = (function()
+		return create_infl_list_params(nisba_noun_inflections)
+	end)(),
+	func = function(args, data)
+		data.pos_category = "nouns"
+		data.genders = {"m"}
+		handle_infl_list_args(args, data, nisba_noun_inflections)
 	end
 }
 
