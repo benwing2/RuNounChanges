@@ -106,13 +106,15 @@ local consonants_needing_vowels_no_tam = "بتثجحخدذرزسشصضطظعغف
 local rconsonants_no_tam = consonants_needing_vowels_no_tam .. "ويآ"
 -- consonants on the left side; does not include alif madda
 local lconsonants_no_tam = consonants_needing_vowels_no_tam .. "وي"
-local CONS = "[" .. lconsonants_no_tam .. "]"
-local CONSPAR = "([" .. lconsonants_no_tam .. "])"
+-- consonant character class
+local C = "[" .. lconsonants_no_tam .. "]"
+-- capturing consonant character class
+local CCAP = "(" .. C .. ")"
 
 local LRM = u(0x200E) --left-to-right mark
 
 -- First syllable or so of elative/color-defect adjective
-local ELCD_START = "^" .. HAMZA_ON_ALIF .. AOPT .. CONSPAR
+local ELCD_START = "^" .. HAMZA_ON_ALIF .. AOPT .. CCAP
 
 local export = {}
 
@@ -139,7 +141,7 @@ local function make_link(arabic)
 end
 
 local function track(page)
-	require("Module:debug").track("ar-nominals/" .. page)
+	require("Module:debug/track")("ar-nominals/" .. page)
 	return true
 end
 
@@ -1384,7 +1386,7 @@ end
 -- Each of the elements of `endings` can be either nil (don't add any form corresponding to this state/case
 -- combination) or an abbreviated form list (see [[Module:inflection utilities]]; i.e. a string, list of strings,
 -- form object, or list of form objects).
-local function add_declensions(base, slot, stem, endings)
+local function add_declensions(base, props, stem, endings)
 	assert(#endings == 13)
 	-- Return a list of combined of ar/tr forms, with the ending tacked on.
 	-- There may be more than one form because of alternative hamza seats that
@@ -1556,35 +1558,36 @@ local function triptote_diptote(base, props, stem, typ)
 			 nil, nil, nil,
 			 nil, nil, nil,
 			 "", "", "", -- informal forms use -āt
-			-- omit lemma declension
+			-- omit lemma declension because we do it just below
 			})
-		if base.state == "con" then
-			add_declensions(base, slot, stem, {
-				nil, nil, nil,
-				nil, nil, nil,
-				nil, nil, nil,
-				nil, nil, nil,
-				""
-			})
-		else
+		if base.state ~= "con" then
 			-- This is safe because we already copied the stem.
-			stem.translit = stem.translit:gsub("t$", "")
-			add_declensions(base, slot, stem, {
-				nil, nil, nil,
-				nil, nil, nil,
-				nil, nil, nil,
-				nil, nil, nil,
-				{form = "", translit = "h"} -- lemma uses -āh
-			})
+			stem.translit = stem.translit:gsub("t$", "h")
 		end
+		add_declensions(base, props, stem, {
+			nil, nil, nil,
+			nil, nil, nil,
+			nil, nil, nil,
+			nil, nil, nil,
+			"" -- lemma uses -āh not in construct state
+		})
 		insert_cats(base, props, cat_prefix .. " in -āh", singpl_tote .. " in " .. make_link(HYPHEN .. AAH))
 	elseif rfind(stem, TAM .. "$") then
-		add_declensions(stem, rsub(tr, "t$", ""), data, mod, numgen,
+		add_declensions(base, props, stem,
 			{nil, nil, nil,
 			 nil, nil, nil,
 			 nil, nil, nil,
-			 "", "", "/t",
-			 "", "", "/t",
+			 nil, nil, "",
+			 base.state == "con" and "" or nil -- lemma uses -a not in construct state, otherwise -at
+			})
+		-- This is safe because we already copied the stem.
+		stem.translit = stem.translit:gsub("t$", "")
+		add_declensions(base, props, stem,
+			{nil, nil, nil,
+			 nil, nil, nil,
+			 nil, nil, nil,
+			 "", "", nil,
+			 base.state ~= "con" and "" or nil -- lemma uses -a not in construct state, otherwise -at
 			})
 		insert_cats(base, props, cat_prefix .. " in -a", singpl_tote .. " in " .. make_link(HYPHEN .. AH))
 	elseif lc then
@@ -1593,25 +1596,25 @@ local function triptote_diptote(base, props, stem, typ)
 			 nil, nil, nil,
 			 nil, nil, nil,
 			 "", "", UU,
-			 "", "", UU,
+			 base.state == "con" and UU or "",
 			})
 		insert_cats(base, props, cat_prefix, singpl_tote)
 	else
 		-- Also special-case the nisba ending, which has an informal pronunciation.
 		if rfind(stem, IY .. SH .. "$") then
-			local infstem = rsub(stem, SH .. "$", "")
-			local inftr = rsub(tr, "iyy$", "ī")
-			-- add informal and lemma declensions separately
-			add_declensions(infstem, inftr, data, mod, numgen,
-				{nil, nil, nil,
-				 nil, nil, nil,
-				 nil, nil, nil,
-				 "", "", "",
-				 nil, nil, nil,
-				})
 			add_declensions(base, props, stem,
 				{nil, nil, nil,
 				 nil, nil, nil,
+				 nil, nil, nil,
+				 nil, nil, nil,
+				 "",
+				})
+			-- This is safe because we already copied the stem.
+			stem.form = stem.form:gsub(SH .. "$", "")
+			stem.translit = stem.translit:gsub("iyy$", "ī")
+			-- add informal and lemma declensions separately
+			add_declensions(base, props, stem,
+				{nil, nil, nil,
 				 nil, nil, nil,
 				 nil, nil, nil,
 				 "", "", "",
@@ -1690,7 +1693,7 @@ local function in_final_weak(base, props, stem, tri)
 	stem = strip_ending(stem, IN, props.slot, "internal")
 
 	local acc_ind_ending = tri and IY .. AN .. ALIF or IY .. A
-	add_declensions(base, slot, stem,
+	add_declensions(base, props, stem,
 		{IN, acc_ind_ending, IN,
 		 II, IY .. A, II,
 		 II, IY .. A, II,
@@ -1706,7 +1709,7 @@ end
 
 -- Final-weak in -in, force "triptote" variant
 declensions["triin"] = function(base, props, stem)
-	in_final_weak(base, props, stem, true)
+	in_final_weak(base, props, stem, "triptote")
 end
 
 -- Final-weak in -in, force "diptote" variant
@@ -1730,7 +1733,7 @@ declensions["an"] = function(base, props, stem)
 	end
 
 	if tall_alif then
-		add_declensions(base, slot, stem,
+		add_declensions(base, props, stem,
 			{AN .. ALIF, AN .. ALIF, AN .. ALIF,
 			 AA, AA, AA,
 			 AA, AA, AA,
@@ -1814,7 +1817,8 @@ end
 
 -- Unknown
 declensions["?"] = function(base, props, stem)
-	add_declensions("?", "?", data, mod, numgen,
+	stem = copy_stem_and_replace(stem, "?", "?")
+	add_declensions(base, props, stem,
 		{"", "", "",
 		 "", "", "",
 		 "", "", "",
@@ -1901,11 +1905,11 @@ function export.detect_declension(data)
 	-- Not strictly necessary because the caller (form_and_type) already reorders, but won't hurt, and may be necessary
 	-- if this function is called from an external caller.
 	form = reorder_shadda(form)
-	-- So that we don't get tripped up by alif madda, we replace alif madda with the sequence hamza + fatḥa + alif
-	-- before the regexps below. We undo this later; this is necessary because we may replace a form with a different
-	-- case form, which may produce an alif madda that didn't previously exist (e.g. when the dual oblique -ayn(i) is
-	-- replaced with nominative -ān).
-	form = rsub(form, AMAD, HAMZA .. AA)
+	-- So that we don't get tripped up by alif madda, we replace alif madda with the sequence hamza placeholder + fatḥa
+	-- + alif before the regexps below. We undo this later; this is necessary because we may replace a form with a
+	-- different case form, which may produce an alif madda that didn't previously exist (e.g. when the dual oblique
+	-- -ayn(i) is replaced with nominative -ān).
+	form = rsub(form, AMAD, HAMZA_PH .. AA)
 	local retform, retdecl, retcase, retnum, retstate, retgender
 
 	if not data.nodef then
@@ -2076,7 +2080,7 @@ function export.detect_declension(data)
 					reject_if = function(form)
 						-- Avoid getting tripped up by plurals like ʔawqāt "times", ʔaḥwāt "fishes", ʔabyāt "verses",
 						-- ʔazyāt "oils", ʔaṣwāt "voices", ʔamwāt "dead (pl.)".
-						return not decl and rfind(form, "^" .. HAMZA_ON_ALIF .. A .. CONS .. SK .. CONS .. AAT .. "$")
+						return not decl and rfind(form, "^" .. HAMZA_ON_ALIF .. A .. C .. SK .. C .. AAT .. "$")
 					end,
 				} then
 					retdecl = "sfp"
@@ -2097,7 +2101,7 @@ function export.detect_declension(data)
 						-- Avoid getting tripped up by plurals like ʕuyūn "eyes", qurūn "horns". Note, we check for U
 						-- between first two consonants so we correctly ignore cases like sinūn "hours" (from sana),
 						-- riʔūn "lungs" (from riʔa) and banūn "sons" (from ibn).
-						return not decl and rfind(form, "^" .. CONS .. U .. CONS .. UUN .. AOPT .. "$")
+						return not decl and rfind(form, "^" .. C .. U .. C .. UUN .. AOPT .. "$")
 					end,
 				} then
 					retdecl = "sfp"
@@ -2109,7 +2113,7 @@ function export.detect_declension(data)
 			end
 		end
 		if rfind(form, IN .. "$") then -- -in words
-			if num == "pl" and rfind(form, "^" .. CONS .. AOPT .. CONS .. AOPTA .. CONS .. IN .. "$") then -- layālin
+			if num == "pl" and rfind(form, "^" .. C .. AOPT .. C .. AOPTA .. C .. IN .. "$") then -- layālin
 				return "diin"
 			else -- other -in words
 				return "triin"
@@ -2125,14 +2129,14 @@ function export.detect_declension(data)
 			-- Avoid getting tripped up by plurals like ʔawqāt "times",
 			-- ʔaḥwāt "fishes", ʔabyāt "verses", ʔazyāt "oils", ʔaṣwāt "voices",
 			-- ʔamwāt "dead (pl.)".
-			not rfind(form, HAMZA_ON_ALIF .. A .. CONS .. SK .. CONS .. AAT .. UNOPT .. "$") then
+			not rfind(form, HAMZA_ON_ALIF .. A .. C .. SK .. C .. AAT .. UNOPT .. "$") then
 			return "sfp"
 		elseif num == "pl" and rfind(form, W .. N .. AOPT .. "$") and
 			-- Avoid getting tripped up by plurals like ʕuyūn "eyes",
 			-- qurūn "horns" (note we check for U between first two consonants
 			-- so we correctly ignore cases like sinūn "hours" (from sana),
 			-- riʔūn "lungs" (from riʔa) and banūn "sons" (from ibn).
-			not rfind(form, "^" .. CONS .. U .. CONS .. UUN .. AOPT .. "$") then
+			not rfind(form, "^" .. C .. U .. C .. UUN .. AOPT .. "$") then
 			return "smp"
 		elseif rfind(form, UN .. "$") then -- explicitly specified triptotes (we catch sound feminine plurals above)
 			return "tri"
@@ -2142,26 +2146,26 @@ function export.detect_declension(data)
 			( -- various diptote plural patterns; these are diptote even in the singular (e.g. yanāyir "January", falāfil "falafel", tuʔabāʔ "yawn, fatigue"
 			  -- currently we sometimes end up with such plural patterns in the "singular" in a singular
 			  -- ʔidāfa construction with plural modifier. (FIXME: These should be fixed to the correct number.)
-			rfind(form, "^" .. CONS .. AOPT .. CONS .. AOPTA .. CONS .. IOPT .. Y .. "?" .. CONS .. "$") and dotrack("fawaakih") or -- fawākih, daqāʔiq, makātib, mafātīḥ
-			rfind(form, "^" .. CONS .. AOPT .. CONS .. AOPTA .. CONS .. SH .. "$")
+			rfind(form, "^" .. C .. AOPT .. C .. AOPTA .. C .. IOPT .. Y .. "?" .. C .. "$") and dotrack("fawaakih") or -- fawākih, daqāʔiq, makātib, mafātīḥ
+			rfind(form, "^" .. C .. AOPT .. C .. AOPTA .. C .. SH .. "$")
 				and not rfind(form, "^" .. T) and dotrack("mawaadd") or -- mawādd, maqāmm, ḍawāll; exclude t- so we don't catch form-VI verbal nouns like taḍādd (HACK!!!)
-			rfind(form, "^" .. CONS .. U .. CONS .. AOPT .. CONS .. AOPTA .. HAMZA .. "$") and dotrack("wuzaraa") or -- wuzarāʔ "ministers", juhalāʔ "ignorant (pl.)"
-			rfind(form, ELCD_START .. SKOPT .. CONS .. IOPT .. CONS .. AOPTA .. HAMZA .. "$") and dotrack("asdiqaa") or -- ʔaṣdiqāʔ
-			rfind(form, ELCD_START .. IOPT .. CONS .. SH .. AOPTA .. HAMZA .. "$") and dotrack("aqillaa") -- ʔaqillāʔ, ʔajillāʔ "important (pl.)", ʔaḥibbāʔ "lovers"
+			rfind(form, "^" .. C .. U .. C .. AOPT .. C .. AOPTA .. HAMZA .. "$") and dotrack("wuzaraa") or -- wuzarāʔ "ministers", juhalāʔ "ignorant (pl.)"
+			rfind(form, ELCD_START .. SKOPT .. C .. IOPT .. C .. AOPTA .. HAMZA .. "$") and dotrack("asdiqaa") or -- ʔaṣdiqāʔ
+			rfind(form, ELCD_START .. IOPT .. C .. SH .. AOPTA .. HAMZA .. "$") and dotrack("aqillaa") -- ʔaqillāʔ, ʔajillāʔ "important (pl.)", ʔaḥibbāʔ "lovers"
 			) then
 			return "di"
 		elseif num == "sg" and ( -- diptote singular patterns (nouns/adjectives)
-			rfind(form, "^" .. CONS .. A .. CONS .. SK .. CONS .. AOPTA .. HAMZA .. "$") and dotrack("qamraa") or -- qamrāʔ "moon-white, moonlight"; baydāʔ "desert"; ṣaḥrāʔ "desert-like, desert"; tayhāʔ "trackless, desolate region"; not pl. to avoid catching e.g. ʔabnāʔ "sons", ʔaḥmāʔ "fathers-in-law", ʔamlāʔ "steppes, deserts" (pl. of malan), ʔanbāʔ "reports" (pl. of nabaʔ)
-			rfind(form, ELCD_START .. SK .. CONS .. A .. CONS .. "$") and dotrack("abyad") or -- ʔabyaḍ "white", ʔakbar "greater"; FIXME nouns like ʔaʕzab "bachelor", ʔaḥmad "Ahmed" but not ʔarnab "rabbit", ʔanjar "anchor", ʔabjad "abjad", ʔarbaʕ "four", ʔandar "threshing floor" (cf. diptote ʔandar "rarer")
-			rfind(form, ELCD_START .. A .. CONS .. SH .. "$") and dotrack("alaff") or -- ʔalaff "plump", ʔaḥabb "more desirable"
+			rfind(form, "^" .. C .. A .. C .. SK .. C .. AOPTA .. HAMZA .. "$") and dotrack("qamraa") or -- qamrāʔ "moon-white, moonlight"; baydāʔ "desert"; ṣaḥrāʔ "desert-like, desert"; tayhāʔ "trackless, desolate region"; not pl. to avoid catching e.g. ʔabnāʔ "sons", ʔaḥmāʔ "fathers-in-law", ʔamlāʔ "steppes, deserts" (pl. of malan), ʔanbāʔ "reports" (pl. of nabaʔ)
+			rfind(form, ELCD_START .. SK .. C .. A .. C .. "$") and dotrack("abyad") or -- ʔabyaḍ "white", ʔakbar "greater"; FIXME nouns like ʔaʕzab "bachelor", ʔaḥmad "Ahmed" but not ʔarnab "rabbit", ʔanjar "anchor", ʔabjad "abjad", ʔarbaʕ "four", ʔandar "threshing floor" (cf. diptote ʔandar "rarer")
+			rfind(form, ELCD_START .. A .. C .. SH .. "$") and dotrack("alaff") or -- ʔalaff "plump", ʔaḥabb "more desirable"
 			-- do the following on the origform so we can check specifically for alif madda
-			rfind(origform, "^" .. AMAD .. CONS .. A .. CONS .. "$") and dotrack("aalam") -- ʔālam "more painful", ʔāḵar "other"
+			rfind(origform, "^" .. AMAD .. C .. A .. C .. "$") and dotrack("aalam") -- ʔālam "more painful", ʔāḵar "other"
 			) then
 			return "di"
 		elseif num == "sg" and pos == "adjective" and ( -- diptote singular patterns (adjectives)
-			rfind(form, "^" .. CONS .. A .. CONS .. SK .. CONS .. AOPTA .. N .. "$") and dotrack("kaslaan") or -- kaslān "lazy", ʕaṭšān "thirsty", jawʕān "hungry", ḡaḍbān "angry", tayhān "wandering, perplexed"; but not nouns like qaṭrān "tar", šayṭān "devil", mawtān "plague", maydān "square"
-			-- rfind(form, "^" .. CONS .. A .. CONS .. SH .. AOPTA .. N .. "$") and dotrack("laffaa") -- excluded because of too many false positives e.g. ḵawwān "disloyal", not to mention nouns like jannān "gardener"; only diptote example I can find is ʕayyān "incapable, weary" (diptote per Lane but not Wehr)
-			rfind(form, "^" .. CONS .. A .. CONS .. SH .. AOPTA .. HAMZA .. "$") and dotrack("laffaa") -- laffāʔ "plump (fem.)"; but not nouns like jarrāʔ "runner", ḥaddāʔ "camel driver", lawwāʔ "wryneck"
+			rfind(form, "^" .. C .. A .. C .. SK .. C .. AOPTA .. N .. "$") and dotrack("kaslaan") or -- kaslān "lazy", ʕaṭšān "thirsty", jawʕān "hungry", ḡaḍbān "angry", tayhān "wandering, perplexed"; but not nouns like qaṭrān "tar", šayṭān "devil", mawtān "plague", maydān "square"
+			-- rfind(form, "^" .. C .. A .. C .. SH .. AOPTA .. N .. "$") and dotrack("laffaa") -- excluded because of too many false positives e.g. ḵawwān "disloyal", not to mention nouns like jannān "gardener"; only diptote example I can find is ʕayyān "incapable, weary" (diptote per Lane but not Wehr)
+			rfind(form, "^" .. C .. A .. C .. SH .. AOPTA .. HAMZA .. "$") and dotrack("laffaa") -- laffāʔ "plump (fem.)"; but not nouns like jarrāʔ "runner", ḥaddāʔ "camel driver", lawwāʔ "wryneck"
 			) then
 			return "di"
 		elseif rfind(form, AMAQ .. "$") then -- kaslā, ḏikrā (spelled with alif maqṣūra)
@@ -2298,23 +2302,23 @@ function export.stem_and_type(word, sg, sgtype, isfem, num, pos)
 	end
 
 	local function is_intensive_adj(ar)
-		return rfind(ar, "^" .. CONS .. A .. CONS .. SK .. CONS .. AOPTA .. N .. UOPT .. "$") or
-			rfind(ar, "^" .. CONS .. A .. CONS .. SK .. AMAD .. N .. UOPT .. "$") or
-			rfind(ar, "^" .. CONS .. A .. CONS .. SH .. AOPTA .. N .. UOPT .. "$")
+		return rfind(ar, "^" .. C .. A .. C .. SK .. C .. AOPTA .. N .. UOPT .. "$") or
+			rfind(ar, "^" .. C .. A .. C .. SK .. AMAD .. N .. UOPT .. "$") or
+			rfind(ar, "^" .. C .. A .. C .. SH .. AOPTA .. N .. UOPT .. "$")
 	end
 		
 	local function is_feminine_cd_adj(ar)
 		return pos == "adjective" and
-			(rfind(ar, "^" .. CONS .. A .. CONS .. SK .. CONS .. AOPTA .. HAMZA .. UOPT .. "$") or -- ʔḥamrāʔ/ʕamyāʔ/bayḍāʔ
-			rfind(ar, "^" .. CONS .. A .. CONS .. SH .. AOPTA .. HAMZA .. UOPT .. "$") -- laffāʔ
+			(rfind(ar, "^" .. C .. A .. C .. SK .. C .. AOPTA .. HAMZA .. UOPT .. "$") or -- ʔḥamrāʔ/ʕamyāʔ/bayḍāʔ
+			rfind(ar, "^" .. C .. A .. C .. SH .. AOPTA .. HAMZA .. UOPT .. "$") -- laffāʔ
 			)
 	end
 
 	local function is_elcd_adj(ar)
-		return rfind(ar, ELCD_START .. SK .. CONS .. A .. CONS .. UOPT .. "$") or -- ʔabyaḍ "white", ʔakbar "greater"
-			rfind(ar, ELCD_START .. A .. CONS .. SH .. UOPT .. "$") or -- ʔalaff "plump", ʔaqall "fewer"
-			rfind(ar, ELCD_START .. SK .. CONS .. AAMAQ .. "$") or -- ʔaʕmā "blind", ʔadnā "lower"
-			rfind(ar, "^" .. AMAD .. CONS .. A .. CONS .. UOPT .. "$") -- ʔālam "more painful", ʔāḵar "other"
+		return rfind(ar, ELCD_START .. SK .. C .. A .. C .. UOPT .. "$") or -- ʔabyaḍ "white", ʔakbar "greater"
+			rfind(ar, ELCD_START .. A .. C .. SH .. UOPT .. "$") or -- ʔalaff "plump", ʔaqall "fewer"
+			rfind(ar, ELCD_START .. SK .. C .. AAMAQ .. "$") or -- ʔaʕmā "blind", ʔadnā "lower"
+			rfind(ar, "^" .. AMAD .. C .. A .. C .. UOPT .. "$") -- ʔālam "more painful", ʔāḵar "other"
 	end
 
 	if word == "?" or
@@ -2337,15 +2341,15 @@ function export.stem_and_type(word, sg, sgtype, isfem, num, pos)
 
 	if word == "elf" then
 		local ret = (
-			sub(ELCD_START .. SK .. "[" .. Y .. W .. "]" .. A .. CONSPAR .. UOPT .. "$",
+			sub(ELCD_START .. SK .. "[" .. Y .. W .. "]" .. A .. CCAP .. UOPT .. "$",
 				"%1" .. UU .. "%2" .. AMAQ, "ʔa(.)[yw]a(.)u?", "%1ū%2ā") or -- ʔajyad
-			sub(ELCD_START .. SK .. CONSPAR .. A .. CONSPAR .. UOPT .. "$",
+			sub(ELCD_START .. SK .. CCAP .. A .. CCAP .. UOPT .. "$",
 				"%1" .. U .. "%2" .. SK .. "%3" .. AMAQ, "ʔa(.)(.)a(.)u?", "%1u%2%3ā") or -- ʔakbar
-			sub(ELCD_START .. A .. CONSPAR .. SH .. UOPT .. "$",
+			sub(ELCD_START .. A .. CCAP .. SH .. UOPT .. "$",
 				"%1" .. U .. "%2" .. SH .. AMAQ, "ʔa(.)a(.)%2u?", "%1u%2%2ā") or -- ʔaqall
-			sub(ELCD_START .. SK .. CONSPAR .. AAMAQ .. "$",
+			sub(ELCD_START .. SK .. CCAP .. AAMAQ .. "$",
 				"%1" .. U .. "%2" .. SK .. Y .. ALIF, "ʔa(.)(.)ā", "%1u%2yā") or -- ʔadnā
-			sub("^" .. AMAD .. CONSPAR .. A .. CONSPAR .. UOPT .. "$",
+			sub("^" .. AMAD .. CCAP .. A .. CCAP .. UOPT .. "$",
 				HAMZA_ON_ALIF .. U .. "%1" .. SK .. "%2" .. AMAQ, "ʔā(.)a(.)u?", "ʔu%1%2ā") -- ʔālam "more painful", ʔāḵar "other"
 		)
 		if not ret then
@@ -2356,11 +2360,11 @@ function export.stem_and_type(word, sg, sgtype, isfem, num, pos)
 
 	if word == "cdf" then
 		local ret = (
-			sub(ELCD_START .. SK .. CONSPAR .. A .. CONSPAR .. UOPT .. "$",
+			sub(ELCD_START .. SK .. CCAP .. A .. CCAP .. UOPT .. "$",
 				"%1" .. A .. "%2" .. SK .. "%3" .. AA .. HAMZA, "ʔa(.)(.)a(.)u?", "%1a%2%3āʔ") or -- ʔaḥmar
-			sub(ELCD_START .. A .. CONSPAR .. SH .. UOPT .. "$",
+			sub(ELCD_START .. A .. CCAP .. SH .. UOPT .. "$",
 				"%1" .. A .. "%2" .. SH .. AA .. HAMZA, "ʔa(.)a(.)%2u?", "%1a%2%2āʔ") or -- ʔalaff
-			sub(ELCD_START .. SK .. CONSPAR .. AAMAQ .. "$",
+			sub(ELCD_START .. SK .. CCAP .. AAMAQ .. "$",
 				"%1" .. A .. "%2" .. SK .. Y .. AA .. HAMZA, "ʔa(.)(.)ā", "%1a%2yāʔ") -- ʔaʕmā
 		)
 		if not ret then
@@ -2559,20 +2563,20 @@ function export.stem_and_type(word, sg, sgtype, isfem, num, pos)
 	-- color/defect adjective
 	if word == "cdp" then
 		local ret = (
-			sub(ELCD_START .. SK .. W .. A .. CONSPAR .. UOPT .. "$",
+			sub(ELCD_START .. SK .. W .. A .. CCAP .. UOPT .. "$",
 				"%1" .. UU .. "%2", "ʔa(.)wa(.)u?", "%1ū%2") or -- ʔaswad
-			sub(ELCD_START .. SK .. Y .. A .. CONSPAR .. UOPT .. "$",
+			sub(ELCD_START .. SK .. Y .. A .. CCAP .. UOPT .. "$",
 				"%1" .. II .. "%2", "ʔa(.)ya(.)u?", "%1ī%2") or -- ʔabyaḍ
-			sub(ELCD_START .. SK .. CONSPAR .. A .. CONSPAR .. UOPT .. "$",
+			sub(ELCD_START .. SK .. CCAP .. A .. CCAP .. UOPT .. "$",
 				"%1" .. U .. "%2" .. SK .. "%3", "ʔa(.)(.)a(.)u?", "%1u%2%3") or -- ʔaḥmar
-			sub(ELCD_START .. A .. CONSPAR .. SH .. UOPT .. "$",
+			sub(ELCD_START .. A .. CCAP .. SH .. UOPT .. "$",
 				"%1" .. U .. "%2" .. SH, "ʔa(.)a(.)%2u?", "%1u%2%2") or -- ʔalaff
-			sub(ELCD_START .. SK .. CONSPAR .. AAMAQ .. "$",
+			sub(ELCD_START .. SK .. CCAP .. AAMAQ .. "$",
 				"%1" .. U .. "%2" .. Y, "ʔa(.)(.)ā", "%1u%2y") or -- ʔaʕmā
-			sub("^" .. CONSPAR .. A .. W .. SKOPT .. CONSPAR .. AA .. HAMZA .. UOPT .. "$", "%1" .. UU .. "%2", "(.)aw(.)āʔu?", "%1ū%2") or -- sawdāʔ
-			sub("^" .. CONSPAR .. A .. Y .. SKOPT .. CONSPAR .. AA .. HAMZA .. UOPT .. "$", "%1" .. II .. "%2", "(.)ay(.)āʔu?", "%1ī%2") or -- bayḍāʔ
-			sub("^" .. CONSPAR .. A .. CONSPAR .. SK .. CONSPAR .. AA .. HAMZA .. UOPT .. "$", "%1" .. U .. "%2" .. SK .. "%3", "(.)a(.)(.)āʔu?", "%1u%2%3") or -- ʔḥamrāʔ/ʕamyāʔ
-			sub("^" .. CONSPAR .. A .. CONSPAR .. SH .. AA .. HAMZA .. UOPT .. "$", "%1" .. U .. "%2" .. SH, "(.)a(.)%2āʔu?", "%1u%2%2") -- laffāʔ
+			sub("^" .. CCAP .. A .. W .. SKOPT .. CCAP .. AA .. HAMZA .. UOPT .. "$", "%1" .. UU .. "%2", "(.)aw(.)āʔu?", "%1ū%2") or -- sawdāʔ
+			sub("^" .. CCAP .. A .. Y .. SKOPT .. CCAP .. AA .. HAMZA .. UOPT .. "$", "%1" .. II .. "%2", "(.)ay(.)āʔu?", "%1ī%2") or -- bayḍāʔ
+			sub("^" .. CCAP .. A .. CCAP .. SK .. CCAP .. AA .. HAMZA .. UOPT .. "$", "%1" .. U .. "%2" .. SK .. "%3", "(.)a(.)(.)āʔu?", "%1u%2%3") or -- ʔḥamrāʔ/ʕamyāʔ
+			sub("^" .. CCAP .. A .. CCAP .. SH .. AA .. HAMZA .. UOPT .. "$", "%1" .. U .. "%2" .. SH, "(.)a(.)%2āʔu?", "%1u%2%2") -- laffāʔ
 		)
 		if not ret then
 			error("For 'cdp', singular must be masculine or feminine color/defect adjective: " .. sgar)
