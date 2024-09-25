@@ -323,9 +323,17 @@ end
 
 
 function Category:getTOC(toc_type)
-	-- type "none" means everything fits on a single page; fall back to normal behavior (display nothing)
+	-- Type "none" means everything fits on a single page; in that case, display nothing.
 	if toc_type == "none" then
-		return true
+		return nil
+	end
+
+	local function expand_toc_template_if(template)
+		local template_obj = mw.title.new("Template:" .. template)
+		if template_obj.exists then
+			return mw.getCurrentFrame():expandTemplate{title = template_obj.text, args = {}}
+		end
+		return nil
 	end
 
 	-- Return the textual expansion of the first existing template among the given templates, first performing
@@ -344,10 +352,7 @@ function Category:getTOC(toc_type)
 				return false
 			end
 			template = self:substitute_template_specs(template)
-			local template_obj = mw.title.new("Template:" .. template)
-			if template_obj.exists then
-				return mw.getCurrentFrame():expandTemplate{title = template_obj.text, args = {}}
-			end
+			return expand_toc_template_if(template)
 		end
 		return nil
 	end
@@ -361,9 +366,13 @@ function Category:getTOC(toc_type)
 	-- 3. do the default behavior, which is as follows:
 	-- 3a. look up a language-specific "full" template according to the current language (using English if there
 	--     is no current language);
-	-- 3b. look up a language-specific "normal" template according to the current language (using English if there
+	-- 3b. look up a script-specific "full" template according to the first script of current language (using English
+	--     if there is no current language);
+	-- 3c. look up a language-specific "normal" template according to the current language (using English if there
 	--     is no current language);
-	-- 3c. display nothing.
+	-- 3d. look up a script-specific "normal" template according to the first script of the current language (using
+	--     English if there is no current language);
+	-- 3e. display nothing.
 	--
 	-- If TOC type is "normal" (between 200 and 2500 entries), do the following, in order:
 	-- 1. look up and expand the `toc_template` templates (normal or umbrella, depending on whether there is
@@ -371,7 +380,9 @@ function Category:getTOC(toc_type)
 	-- 2. do the default behavior, which is as follows:
 	-- 2a. look up a language-specific "normal" template according to the current language (using English if there
 	--     is no current language);
-	-- 2b. display nothing.
+	-- 2b. look up a script-specific "normal" template according to the first script of the current language (using
+	--     English if there is no current language);
+	-- 2c. display nothing.
 
 	local data_source
 	if self._lang or self._info.raw then
@@ -403,7 +414,28 @@ function Category:getTOC(toc_type)
 	if text == false then
 		return nil
 	end
-	return true
+	local default_toc_templates_to_check = {}
+
+	local lang, sc = self:getCatfixInfo()
+	local langcode = lang and lang:getCode() or "en"
+	local sccode = sc and sc:getCode() or lang and lang:getScriptCodes()[1] or "Latn"
+	-- FIXME: What is toctemplateprefix used for?
+	local tocname = (self._data.toctemplateprefix or "") .. "categoryTOC"
+	if toc_type == "full" then
+		table.insert(default_toc_templates_to_check, ("%s-%s/full"):format(langcode, tocname))
+		table.insert(default_toc_templates_to_check, ("%s-%s/full"):format(sccode, tocname))
+	end
+	table.insert(default_toc_templates_to_check, ("%s-%s"):format(langcode, tocname))
+	table.insert(default_toc_templates_to_check, ("%s-%s"):format(sccode, tocname))
+
+	for _, toc_template in ipairs(default_toc_templates_to_check) do
+		local toc_template_text = expand_toc_template_if(toc_template)
+		if toc_template_text then
+			return toc_template_text
+		end
+	end
+
+	return nil
 end
 
 
@@ -861,9 +893,9 @@ end
 
 
 function Category:getTOCTemplateName()
-	local lang, sc = self:getCatfixInfo()
-	local code = lang and lang:getCode() or "en"
-	return "Template:" .. code .. "-" .. (self._data.toctemplateprefix or "") .. "categoryTOC"
+	-- This should only be invoked if getTOC() returns true, meaning to do the default algorithm, but getTOC()
+	-- implements its own default algorithm.
+	error("Internal error: This should never get called")
 end
 
 
