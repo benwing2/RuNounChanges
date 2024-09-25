@@ -9,6 +9,7 @@ from collections import defaultdict
 
 num_pages_by_dim_ending = defaultdict(int)
 pages_by_dim_ending = defaultdict(list)
+pages_by_dim_ending_set = defaultdict(set)
 
 irregular_diminutives = [
   ("blad", "blaadje"),
@@ -65,7 +66,7 @@ def remove_final_e(form, final_multisyllable_stress=False):
   form = form[:-1]
   if re.search(LONGV + NV + "$", form):
     return devoice_final(form)
-  m = re.search("^" + V + NV + "*([eë][rln]|[oö]r|[eëuü]m)$", form)
+  m = re.search(V + NV + "*([eë][rln]|[oö]r|[eëuü]m|[iï]g)$", form)
   if m and not final_multisyllable_stress:
     return devoice_final(form)
   m = re.search("^(.*)(" + V + NV + ")$", form)
@@ -82,7 +83,12 @@ def remove_final_e(form, final_multisyllable_stress=False):
   return devoice_final(form)
 
 # Based on [https://www.dutchgrammar.com/en/?n=NounsAndArticles.23].
-def default_dim_1(lemma, final_multisyllable_stress=False, modifier_final_multisyllable_stress=False):
+def default_dim_1(lemma, final_multisyllable_stress=False, modifier_final_multisyllable_stress=False, first_only=False):
+  if first_only:
+    m = re.search("^([^ ]+) (.*)$", lemma)
+    if m:
+      first_word, rest = m.groups()
+      return default_dim_1(first_word, final_multisyllable_stress, modifier_final_multisyllable_stress) + " " + rest
   m = re.search("^([^ ]+[eë]) (.*)$", lemma)
   if m:
     first_word, rest = m.groups()
@@ -132,10 +138,10 @@ def default_dim_1(lemma, final_multisyllable_stress=False, modifier_final_multis
     return lemma + "etje"
   return lemma + "je"
 
-def default_dim(lemma, final_multisyllable_stress=False, modifier_final_multisyllable_stress=False):
-  retval = default_dim_1(lemma, final_multisyllable_stress, modifier_final_multisyllable_stress)
-  #msg("default_dim(%s, final_multisyllable_stress=%s, modifier_final_multisyllable_stress=%s) = %s" % (
-  #  lemma, final_multisyllable_stress, modifier_final_multisyllable_stress, retval))
+def default_dim(lemma, final_multisyllable_stress=False, modifier_final_multisyllable_stress=False, first_only=False):
+  retval = default_dim_1(lemma, final_multisyllable_stress, modifier_final_multisyllable_stress, first_only)
+  #msg("default_dim(%s, final_multisyllable_stress=%s, modifier_final_multisyllable_stress=%s, first_only=%s) = %s" % (
+  #  lemma, final_multisyllable_stress, modifier_final_multisyllable_stress, first_only, retval))
   return retval
   
 def process_text_on_page(index, pagetitle, text):
@@ -146,39 +152,67 @@ def process_text_on_page(index, pagetitle, text):
                                              pagemsg, force_final_nls=True)
   if retval is None:
     return
+
   sections, j, secbody, sectail, has_non_lang = retval
+
+  notes = []
 
   def add_dim(dim_ending):
     num_pages_by_dim_ending[dim_ending] += 1
-    if len(pages_by_dim_ending[dim_ending]) < 500:
-      if pagetitle not in pages_by_dim_ending[dim_ending]:
+    if len(pages_by_dim_ending_set[dim_ending]) < 1000:
+      if pagetitle not in pages_by_dim_ending_set[dim_ending]:
+        pages_by_dim_ending_set[dim_ending].add(pagetitle)
         pages_by_dim_ending[dim_ending].append(pagetitle)
 
-  parsed = blib.parse_text(text)
+  parsed = blib.parse_text(secbody)
+
   for t in parsed.filter_templates():
     tn = tname(t)
     if tn == "nl-noun":
       dims = blib.fetch_param_chain(t, "3", "dim")
+      newdims = []
       for dim in dims:
         if dim == "-":
+          newdims.append(dim)
           continue
         if dim == default_dim(pagetitle):
-          add_dim("+")
+          newdim = "+"
         elif dim == default_dim(pagetitle, True):
-          add_dim("++")
+          newdim = "++"
         elif " " in pagetitle and dim == default_dim(pagetitle, False, True):
-          add_dim("++/+")
+          newdim = "++/+"
         elif " " in pagetitle and dim == default_dim(pagetitle, True, True):
-          add_dim("++/++")
+          newdim = "++/++"
+        elif " " in pagetitle and dim == default_dim(pagetitle, False, False, True):
+          newdim = "+first"
+        elif " " in pagetitle and dim == default_dim(pagetitle, True, False, True):
+          newdim = "++first"
         elif dim.startswith(pagetitle):
           dimending = dim[len(pagetitle):]
-          add_dim(dimending)
+          newdim = "-" + dimending
         else:
           pagemsg("WARNING: Can't analyze diminutive %s" % dim)
+          newdims.append(dim)
+          continue
+        add_dim(newdim)
+        newdims.append(newdim)
+        if args.fix:
+          notes.append("replace Dutch diminutive '%s' with '%s'" % (dim, newdim))
+      if args.fix:
+        if dims != newdims:
+          blib.set_param_chain(t, newdims, "3", "dim")
+
+  secbody = str(parsed)
+  # Strip extra newlines added to secbody
+  sections[j] = secbody.rstrip("\n") + sectail
+  text = "".join(sections)
+
+  return text, notes
 
 parser = blib.create_argparser("Analyze {{nl-noun}} diminutive usage",
   include_pagefile=True, include_stdin=True)
 parser.add_argument("--partial-page", action="store_true", help="Input was generated with 'find_regex.py --lang Dutch' and has no ==Dutch== header.")
+parser.add_argument("--fix", action="store_true", help="Modify diminutives to use shortcut notation.")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
