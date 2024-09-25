@@ -9,7 +9,7 @@ local headword_page_module = "Module:headword/page"
 local links_module = "Module:links"
 local pages_module = "Module:pages"
 local palindromes_module = "Module:palindromes"
-local qualifier_module = "Module:qualifier"
+local pron_qualifier_module = "Module:pron qualifier"
 local scripts_module = "Module:scripts"
 local scripts_data_module = "Module:scripts/data"
 local script_utilities_module = "Module:script utilities"
@@ -27,7 +27,7 @@ local encode_entities = m_str_utils.encode_entities
 local find_best_script_without_lang = require_when_needed(scripts_module, "findBestScriptWithoutLang")
 local format_categories = require_when_needed(utilities_module, "format_categories")
 local format_genders = require_when_needed(gender_and_number_module, "format_genders")
-local format_qualifier = require_when_needed(qualifier_module, "format_qualifier")
+local format_pron_qualifiers = require_when_needed(pron_qualifier_module, "format_qualifiers")
 local full_link = require_when_needed(links_module, "full_link")
 local get_current_L2 = require_when_needed(pages_module, "get_current_L2")
 local get_link_page = require_when_needed(links_module, "get_link_page")
@@ -121,53 +121,34 @@ local wordPunc = "-#%%&@־׳״'.·*’་•:᠊"
 local notWordPunc = "[^" .. wordPunc .. "]+"
 
 
--- Format a term (either a head term or an inflection term) along with any left or right qualifiers, references or
--- customized separator: `part` is the object specifying the term, which should optionally contain:
--- * left qualifiers in `q`, an array of strings (or `qualifiers` for compatibility purposes);
+-- Format a term (either a head term or an inflection term) along with any left or right qualifiers, labels, references
+-- or customized separator: `part` is the object specifying the term (and `lang` the language of the term), which should
+-- optionally contain:
+-- * left qualifiers in `q`, an array of strings;
 -- * right qualifiers in `qq`, an array of strings;
+-- * left labels in `l`, an array of strings;
+-- * right labels in `ll`, an array of strings;
 -- * references in `refs`, an array either of strings (formatted reference text) or objects containing fields `text`
 --   (formatted reference text) and optionally `name` and/or `group`;
 -- * a separator in `separator`, defaulting to " <i>or</i> " if this is not the first term (j > 1), otherwise "".
 -- `formatted` is the formatted version of the term itself, and `j` is the index of the term.
-local function format_term_with_qualifiers_and_refs(part, formatted, j)
-	local left_qualifiers, right_qualifiers
-	local reftext
 
-	left_qualifiers = part.q and #part.q > 0 and part.q
-	if left_qualifiers then
-		left_qualifiers = format_qualifier(left_qualifiers) .. " "
-	end
-
-	right_qualifiers = part.qq and #part.qq > 0 and part.qq
-	if right_qualifiers then
-		right_qualifiers = " " .. format_qualifier(right_qualifiers)
-	end
-	if part.refs and #part.refs > 0 then
-		local refs = {}
-		for _, ref in ipairs(part.refs) do
-			if type(ref) ~= "table" then
-				ref = {text = ref}
-			end
-			local refargs
-			if ref.name or ref.group then
-				refargs = {name = ref.name, group = ref.group}
-			end
-			insert(refs, mw.getCurrentFrame():extensionTag("ref", ref.text, refargs))
-		end
-		reftext = concat(refs)
+local function format_term_with_qualifiers_and_refs(lang, part, formatted, j)
+	if part.q and part.q[1] or part.qq and part.qq[1] or part.l and part.l[1] or
+		part.ll and part.ll[1] or part.refs and part.refs[1] then
+		formatted = format_pron_qualifiers {
+			lang = lang,
+			text = formatted,
+			q = part.q,
+			qq = part.qq,
+			l = part.l,
+			ll = part.ll,
+			refs = part.refs,
+		}
 	end
 
 	local separator = part.separator or j > 1 and " <i>or</i> " -- use "" to request no separator
 
-	if left_qualifiers then
-		formatted = left_qualifiers .. formatted
-	end
-	if reftext then
-		formatted = formatted .. reftext
-	end
-	if right_qualifiers then
-		formatted = formatted .. right_qualifiers
-	end
 	if separator then
 		formatted = separator .. formatted
 	end
@@ -228,8 +209,8 @@ end
 local function tag_text_and_add_quals_and_refs(data, head, formatted, j)
 	-- Add language and script wrapper.
 	formatted = tag_text(formatted, data.lang, head.sc, "head", nil, j == 1 and data.id or nil)
-	-- Add qualifiers, references and separator.
-	return format_term_with_qualifiers_and_refs(head, formatted, j)
+	-- Add qualifiers, labels, references and separator.
+	return format_term_with_qualifiers_and_refs(data.lang, head, formatted, j)
 end
 
 -- Format a headword with transliterations.
@@ -436,7 +417,8 @@ local function format_inflection_parts(data, parts)
 				)
 		end
 
-		parts[j] = format_term_with_qualifiers_and_refs(part, formatted, j)
+		parts[j] = format_term_with_qualifiers_and_refs(part.lang or data.lang, part,
+			formatted, j)
 	end
 
 	local parts_output
