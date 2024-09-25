@@ -43,7 +43,21 @@ def process_text_on_page(index, pagetitle, text, langcode, langname, topicstemp)
     notes.append("replace underscores with spaces in [[Category:%s_...]]" % langname)
     text = newtext
 
-  newtext = re.sub(r"\[\[Category:%s:\s*([^|\[\]{}]*?)\s*\|\s*([^|\[\]{}]*?)\s*\]\]" % escaped_langcode, r"{{%s|%s|\1|sort=\2}}" % (topicstemp, langcode), text)
+  def process_sort_key(m, prefix):
+    lang_indep_category, sortkey = m.groups()
+    if sortkey == "":
+      sortkey = "&#32;"
+    elif sortkey == "{{SUBPAGENAME}}":
+      sortkey = None
+    if sortkey:
+      sortkey = "|sort=%s" % sortkey
+    else:
+      sortkey = ""
+    return "{{%s|%s%s}}" % (prefix, lang_indep_category, sortkey)
+
+  newtext = re.sub(
+    r"\[\[Category:%s:\s*([^|\[\]{}]*?)\s*\|\s*([^|\[\]]*?)\s*\]\]" % escaped_langcode,
+    lambda m: process_sort_key(m, "%s|%s" % (topicstemp, langcode)), text)
   if newtext != text:
     notes.append("templatize topical categories with sort key for langcode=%s using {{%s}}" % (langcode, topicstemp))
     text = newtext
@@ -64,7 +78,9 @@ def process_text_on_page(index, pagetitle, text, langcode, langname, topicstemp)
     else:
       break
 
-  newtext = re.sub(r"\[\[Category:%s ([^|\[\]{}]*?)\s*\|\s*([^|\[\]{}]*?)\s*\]\]" % escaped_langname, r"{{cln|%s|\1|sort=\2}}" % langcode, text)
+  newtext = re.sub(
+    r"\[\[Category:%s ([^|\[\]{}]*?)\s*\|\s*([^|\[\]]*?)\s*\]\]" % escaped_langname,
+    lambda m: process_sort_key(m, "cln|%s" % langcode), text)
   if newtext != text:
     notes.append("templatize langname categories with sort key for langcode=%s using {{cln}}" % langcode)
     text = newtext
@@ -88,12 +104,30 @@ def process_text_on_page(index, pagetitle, text, langcode, langname, topicstemp)
 
 if __name__ == "__main__":
   parser = blib.create_argparser("Templatize categories", include_pagefile=True, include_stdin=True)
-  parser.add_argument("--langcode", help="Code of language to templatize", required=True)
-  parser.add_argument("--langname", help="Name of language to templatize", required=True)
+  parser.add_argument("--langcode", help="Code of language to templatize")
+  parser.add_argument("--langname", help="Name of language to templatize")
   parser.add_argument("--topics-template", help="Name of topics template to use", default="C")
   args = parser.parse_args()
   start, end = blib.parse_start_end(args.start, args.end)
 
-  def do_process_text_on_page(index, pagetitle, text):
-    return process_text_on_page(index, pagetitle, text, args.langcode, args.langname, args.topics_template)
-  blib.do_pagefile_cats_refs(args, start, end, do_process_text_on_page, default_cats=[args.langname + " lemmas"], edit=True, stdin=True)
+  langcode = args.langcode
+  langname = args.langname
+  if not langcode and not langname:
+    raise ValueError("Either --langcode or --langname must be specified")
+  if not langcode:
+    blib.getData()
+    if langname not in blib.languages_byCanonicalName:
+      pagemsg("WARNING: Unknown language name %s" % langname)
+    else:
+      langcode = blib.languages_byCanonicalName[langname]["code"]
+  elif not langname:
+    blib.getData()
+    if langcode not in blib.languages_byCode:
+      pagemsg("WARNING: Unknown language code %s" % langcode)
+    else:
+      langname = blib.languages_byCode[langcode]["canonicalName"]
+
+  if langcode and langname:
+    def do_process_text_on_page(index, pagetitle, text):
+      return process_text_on_page(index, pagetitle, text, langcode, langname, args.topics_template)
+    blib.do_pagefile_cats_refs(args, start, end, do_process_text_on_page, default_cats=[langname + " lemmas"], edit=True, stdin=True)
