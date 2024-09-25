@@ -3,6 +3,52 @@ local pos_functions = {}
 
 local lang = require("Module:languages").getByCode("nl")
 local nl_common_module = "Module:nl-common"
+local parse_utilities_module = "Module:parse utilities"
+
+local param_mods = {
+	-- [[Module:headword]] expects part genders in `.genders`.
+	g = {item_dest = "genders", sublist = true},
+	id = {},
+	q = {type = "qualifier"},
+	qq = {type = "qualifier"},
+	l = {type = "labels"},
+	ll = {type = "labels"},
+	-- [[Module:headword]] expects part references in `.refs`.
+	ref = {item_dest = "refs", type = "references"},
+}
+
+local function parse_term_with_modifiers(paramname, val)
+	local function generate_obj(term, parse_err)
+		local obj = {term = term}
+	end
+
+	if val:find("<") then
+		return require(parse_utilities_module).parse_inline_modifiers(val, {
+			paramname = paramname,
+			param_mods = param_mods,
+			generate_obj = generate_obj,
+		})
+	else
+		return generate_obj(val)
+	end
+
+	return part
+end
+
+local function parse_term_list_with_modifiers(paramname, list)
+	local first, restpref
+	if type(paramname) == "table" then
+		first = paramname[1]
+		restpref = paramname[2]
+	else
+		first = paramname
+		restpref = paramname
+	end
+	for i, val in ipairs(list) do
+		list[val] = parse_term_with_modifiers(i == 1 and first or restpref .. i, val)
+	end
+	return list
+end
 
 -- The main entry point.
 -- This is the only function that can be invoked from a template.
@@ -79,44 +125,44 @@ pos_functions["adjectives"] = {
 			table.insert(data.inflections, {label = "not [[Appendix:Glossary#comparable|comparable]]"})
 		else
 			-- Gather parameters
-			local comparatives = args[1]
+			local comparatives = parse_term_list_with_modifiers({"1", "comp"}, args[1])
 			comparatives.label = "[[Appendix:Glossary#comparative|comparative]]"
 
-			local superlatives = args[2]
+			local superlatives = parse_term_list_with_modifiers({"2", "sup"}, args[2])
 			superlatives.label = "[[Appendix:Glossary#superlative|superlative]]"
 
 			-- Generate forms if none were given
 			if #comparatives == 0 then
 				if mode == "inv" or mode == "pred" then
-					table.insert(comparatives, "peri")
+					table.insert(comparatives, {term = "peri"})
 				else
-					table.insert(comparatives, require("Module:nl-adjectives").make_comparative(pagename))
+					table.insert(comparatives, {term = require("Module:nl-adjectives").make_comparative(pagename)})
 				end
 			end
 
 			if #superlatives == 0 then
 				if mode == "inv" or mode == "pred" then
-					table.insert(superlatives, "peri")
+					table.insert(superlatives, {term = "peri"})
 				else
 					-- Add preferred periphrastic superlative, if necessary
 					if
 						pagename:find("[iï]de$") or pagename:find("[^eio]e$") or
 						pagename:find("s$") or pagename:find("sch$") or pagename:find("x$") or
 						pagename:find("sd$") or pagename:find("st$") or pagename:find("sk$") then
-						table.insert(superlatives, "peri")
+						table.insert(superlatives, {term = "peri"})
 					end
 
-					table.insert(superlatives, require("Module:nl-adjectives").make_superlative(pagename))
+					table.insert(superlatives, {term = require("Module:nl-adjectives").make_superlative(pagename)})
 				end
 			end
 
 			-- Replace "peri" with phrase
-			for key, val in ipairs(comparatives) do
-				if val == "peri" then comparatives[key] = "[[meer]] " .. pagename end
+			for _, val in ipairs(comparatives) do
+				if val.term == "peri" then val.term = "[[meer]] " .. pagename end
 			end
 
-			for key, val in ipairs(superlatives) do
-				if val == "peri" then superlatives[key] = "[[meest]] " .. pagename end
+			for _, val in ipairs(superlatives) do
+				if val.term == "peri" then val.term = "[[meest]] " .. pagename end
 			end
 
 			table.insert(data.inflections, comparatives)
@@ -128,21 +174,26 @@ pos_functions["adjectives"] = {
 -- Display additional inflection information for an adverb
 pos_functions["adverbs"] = {
 	params = {
-		[1] = {},
-		[2] = {},
+		[1] = {list = "comp"},
+		[2] = {list = "sup"},
 		},
 	func = function(args, data)
 		local pagename = data.displayed_pagename
-		local comp = args[1]
-		local sup = args[2]
 
-		if comp then
-			if not sup then
-				sup = pagename .. "st"
+		if args[1][1] then
+			-- Gather parameters
+			local comparatives = parse_term_list_with_modifiers({"1", "comp"}, args[1])
+			comparatives.label = "[[Appendix:Glossary#comparative|comparative]]"
+
+			local superlatives = parse_term_list_with_modifiers({"2", "sup"}, args[2])
+			superlatives.label = "[[Appendix:Glossary#superlative|superlative]]"
+
+			if not superlatives[1] then
+				superlatives[1] = {term = pagename .. "st"}
 			end
 
-			table.insert(data.inflections, {label = "[[Appendix:Glossary#comparative|comparative]]", comp})
-			table.insert(data.inflections, {label = "[[Appendix:Glossary#superlative|superlative]]", sup})
+			table.insert(data.inflections, comparatives)
+			table.insert(data.inflections, superlatives)
 		end
 	end
 }
@@ -263,28 +314,31 @@ pos_functions["proper nouns"] = {
 	func = function(args, data)
 		noun_gender(args, data)
 
-		local adjectives = args["adj"]
-		local mdems = args["mdem"]
-		local fdems = args["fdem"]
+		local adjectives = parse_term_list_with_modifiers("adj", args["adj"])
+		local mdems = parse_term_list_with_modifiers("mdem", args["mdem"])
+		local fdems = parse_term_list_with_modifiers("fdem", args["fdem"])
 		local nm = #mdems
 		local nf = #fdems
 		local demonyms = {label = "demonym"}
 
 		--adjective for toponyms
-		if #adjectives>0 then
-			for i, a in ipairs(adjectives) do
-				adjectives[i] = {term = a}
-			end
+		if adjectives[1] then
 			adjectives.label = "adjective"
 			table.insert(data.inflections, adjectives)
 		end
 		--demonyms for toponyms
-		if nm+nf>0 then
+		if nm + nf > 0 then
 			for i, m in ipairs(mdems) do
-				demonyms[i] = {term = m, genders = {"m"}}
+				if not m.genders then
+					m.genders = {"m"}
+				end
+				demonyms[i] = m
 			end
 			for i, f in ipairs(fdems) do
-				demonyms[i+nm] = {term = f, genders = {"f"}}
+				if not f.genders then
+					f.genders = {"m"}
+				end
+				demonyms[i + nm] = f
 			end
 			table.insert(data.inflections, demonyms)
 		end
@@ -295,35 +349,37 @@ pos_functions["proper nouns"] = {
 pos_functions["nouns"] = {
 	params = {
 		[1] = {list = "g"},
-		[2] = {list = "pl"},
+		[2] = {list = "pl", disallow_holes = true},
+		-- FIXME, remove this in favor of inline modifiers
 		["pl\1qual"] = {list = true, allow_holes = true},
 		[3] = {list = "dim"},
 
 		["f"] = {list = true},
 		["m"] = {list = true},
 		},
-	func = function(args, data)
+	func = function(args, data, called_from)
 		local pagename = data.displayed_pagename
 
 		noun_gender(args, data)
 
-		local plurals = args[2]
+		local plurals = parse_term_list_with_modifiers({called_from == "dimtant" and "1" or "2", "pl"}, args[2])
 		local pl_qualifiers = args["plqual"]
-		local diminutives = args[3]
-		local feminines = args["f"]
-		local masculines = args["m"]
+		local diminutives = parse_term_list_with_modifiers({"3", "dim"}, args[3])
+		local feminines = parse_term_list_with_modifiers("f", args["f"])
+		local masculines = parse_term_list_with_modifiers("m", args["m"])
 
 		-- Plural
 		if data.genders[1] == "p" then
 			table.insert(data.inflections, {label = "[[Appendix:Glossary#plural only|plural only]]"})
-		elseif plurals[1] == "-" then
+		elseif plurals[1] and plurals[1].term == "-" then
 			table.insert(data.inflections, {label = "[[Appendix:Glossary#uncountable|uncountable]]"})
 			table.insert(data.categories, "Dutch uncountable nouns")
 		else
 			local generated = generate_plurals(pagename)
 
 			-- Process the plural forms
-			for i, p in ipairs(plurals) do
+			for i, pobj in ipairs(plurals) do
+				local p = pobj.term
 				-- Is this a shortcut form?
 				if p:sub(1,1) == "-" then
 					if not generated[p] then
@@ -397,7 +453,10 @@ pos_functions["nouns"] = {
 					end
 				end
 
-				plurals[i] = {term = p, q = {pl_qualifiers[i]}}
+				pobj.term = p
+				if pl_qualifiers[i] then
+					pobj.q = {pl_qualifiers[i]}
+				end
 			end
 
 			-- Add the plural forms
@@ -408,12 +467,15 @@ pos_functions["nouns"] = {
 		end
 
 		-- Add the diminutive forms
-		if diminutives[1] == "-" then
+		if diminutives[1] and diminutives[1].term == "-" then
 			-- do nothing
 		else
 			-- Process the diminutive forms
-			for i, p in ipairs(diminutives) do
-				diminutives[i] = {term = generate_diminutive(pagename, p), genders = {"n"}}
+			for _, dimobj in ipairs(diminutives) do
+				dimobj.term = generate_diminutive(pagename, dimobj.term)
+				if not dimobj.genders then
+					dimobj.genders = {"n"}
+				end
 			end
 
 			diminutives.label = "[[Appendix:Glossary#diminutive|diminutive]]"
@@ -423,13 +485,13 @@ pos_functions["nouns"] = {
 		end
 
 		-- Add the feminine forms
-		if #feminines > 0 then
+		if feminines[1] then
 			feminines.label = "feminine"
 			table.insert(data.inflections, feminines)
 		end
 
 		-- Add the masculine forms
-		if #masculines > 0 then
+		if masculines[1] then
 			masculines.label = "masculine"
 			table.insert(data.inflections, masculines)
 		end
@@ -449,23 +511,25 @@ pos_functions["diminutive nouns"] = {
 			args[1] = {args[1]}
 		end
 
-		if #args[2] == 0 then
-			args[2] = {"-s"}
+		if not args[2][1] then
+			args[2] = {{term = "-s"}}
 		end
 
-		args[3] = {"-"}
+		args[3] = {{term = "-"}}
 		args["f"] = {}
 		args["m"] = {}
+		-- FIXME: Remove this.
 		args["plqual"] = {}
 
-		pos_functions["nouns"].func(args, data)
+		pos_functions["nouns"].func(args, data, "dim")
 	end
 }
 
 -- Display additional inflection information for diminutiva tantum nouns ({{nl-noun-dim-tant}}).
 pos_functions["diminutiva tantum nouns"] = {
 	params = {
-		[1] = {list = "pl"},
+		[1] = {list = "pl", disallow_holes = true},
+		-- FIXME: Remove this.
 		["pl\1qual"] = {list = true, allow_holes = true},
 
 		["f"] = {list = true},
@@ -477,13 +541,13 @@ pos_functions["diminutiva tantum nouns"] = {
 		args[2] = args[1]
 		args[1] = {"n"}
 
-		if #args[2] == 0 then
-			args[2] = {"-s"}
+		if not args[2][1] then
+			args[2] = {{term = "-s"}}
 		end
 
-		args[3] = {"-"}
+		args[3] = {{term = "-"}}
 
-		pos_functions["nouns"].func(args, data)
+		pos_functions["nouns"].func(args, data, "dimtant")
 	end
 }
 
