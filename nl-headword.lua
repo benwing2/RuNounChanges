@@ -2,6 +2,7 @@ local export = {}
 local pos_functions = {}
 
 local lang = require("Module:languages").getByCode("nl")
+local headword_module = "Module:headword"
 local nl_common_module = "Module:nl-common"
 local parse_utilities_module = "Module:parse utilities"
 
@@ -19,7 +20,7 @@ local param_mods = {
 
 local function parse_term_with_modifiers(paramname, val)
 	local function generate_obj(term, parse_err)
-		local obj = {term = term}
+		return {term = term}
 	end
 
 	if val:find("<") then
@@ -31,8 +32,6 @@ local function parse_term_with_modifiers(paramname, val)
 	else
 		return generate_obj(val)
 	end
-
-	return part
 end
 
 local function parse_term_list_with_modifiers(paramname, list)
@@ -45,7 +44,7 @@ local function parse_term_list_with_modifiers(paramname, list)
 		restpref = paramname
 	end
 	for i, val in ipairs(list) do
-		list[val] = parse_term_with_modifiers(i == 1 and first or restpref .. i, val)
+		list[i] = parse_term_with_modifiers(i == 1 and first or restpref .. i, val)
 	end
 	return list
 end
@@ -92,7 +91,7 @@ function export.show(frame)
 		pos_functions[poscat].func(args, data)
 	end
 
-	return require("Module:headword").full_headword(data) ..
+	return require(headword_module).full_headword(data) ..
 		require("Module:utilities").format_categories(data.tracking_categories, lang, nil)
 end
 
@@ -336,7 +335,7 @@ pos_functions["proper nouns"] = {
 			end
 			for i, f in ipairs(fdems) do
 				if not f.genders then
-					f.genders = {"m"}
+					f.genders = {"f"}
 				end
 				demonyms[i + nm] = f
 			end
@@ -350,8 +349,6 @@ pos_functions["nouns"] = {
 	params = {
 		[1] = {list = "g"},
 		[2] = {list = "pl", disallow_holes = true},
-		-- FIXME, remove this in favor of inline modifiers
-		["pl\1qual"] = {list = true, allow_holes = true},
 		[3] = {list = "dim"},
 
 		["f"] = {list = true},
@@ -363,7 +360,6 @@ pos_functions["nouns"] = {
 		noun_gender(args, data)
 
 		local plurals = parse_term_list_with_modifiers({called_from == "dimtant" and "1" or "2", "pl"}, args[2])
-		local pl_qualifiers = args["plqual"]
 		local diminutives = parse_term_list_with_modifiers({"3", "dim"}, args[3])
 		local feminines = parse_term_list_with_modifiers("f", args["f"])
 		local masculines = parse_term_list_with_modifiers("m", args["m"])
@@ -454,9 +450,6 @@ pos_functions["nouns"] = {
 				end
 
 				pobj.term = p
-				if pl_qualifiers[i] then
-					pobj.q = {pl_qualifiers[i]}
-				end
 			end
 
 			-- Add the plural forms
@@ -512,14 +505,12 @@ pos_functions["diminutive nouns"] = {
 		end
 
 		if not args[2][1] then
-			args[2] = {{term = "-s"}}
+			args[2] = {"-s"}
 		end
 
-		args[3] = {{term = "-"}}
+		args[3] = {"-"}
 		args["f"] = {}
 		args["m"] = {}
-		-- FIXME: Remove this.
-		args["plqual"] = {}
 
 		pos_functions["nouns"].func(args, data, "dim")
 	end
@@ -529,8 +520,6 @@ pos_functions["diminutive nouns"] = {
 pos_functions["diminutiva tantum nouns"] = {
 	params = {
 		[1] = {list = "pl", disallow_holes = true},
-		-- FIXME: Remove this.
-		["pl\1qual"] = {list = true, allow_holes = true},
 
 		["f"] = {list = true},
 		["m"] = {list = true},
@@ -542,10 +531,10 @@ pos_functions["diminutiva tantum nouns"] = {
 		args[1] = {"n"}
 
 		if not args[2][1] then
-			args[2] = {{term = "-s"}}
+			args[2] = {"-s"}
 		end
 
-		args[3] = {{term = "-"}}
+		args[3] = {"-"}
 
 		pos_functions["nouns"].func(args, data, "dimtant")
 	end
