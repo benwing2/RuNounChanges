@@ -90,7 +90,7 @@ def process_text_in_section(secbody, pagemsg):
 
       def split_on_comma_not_in_template(txt):
         retval = []
-        parts = re.split(r"((?:\{\{[^{}]*\}\}|[^{},/])*)", txt)
+        parts = re.split(r"((?:\{\{[^{}]*\}\}|[^{},/])+)", txt)
         parts = [x.strip() for x in parts]
         for i in range(1, len(parts), 2):
           retval.append(parts[i])
