@@ -5,10 +5,13 @@ local insert = table.insert
 local listToSet = require("Module:table/listToSet")
 local rsplit = mw.text.split
 
-local put_module = "Module:parse utilities"
+local descendants_tree_module = "Module:descendants tree"
 local labels_module = "Module:labels"
 local languages_module = "Module:languages"
+local links_module = "Module:links"
+local parse_utilities_module = "Module:parse utilities"
 local scripts_module = "Module:scripts"
+local table_module = "Module:table"
 
 local error_on_no_descendants = false
 
@@ -36,7 +39,7 @@ end
 
 local function split_on_comma(term)
 	if term:find(",%s") then
-		return require(put_module).split_on_comma(term)
+		return require(parse_utilities_module).split_on_comma(term)
 	else
 		return rsplit(term, ",")
 	end
@@ -303,9 +306,11 @@ local function desc_or_desc_tree(frame, desc_tree)
 		error("Terms in appendix-only constructed languages may not be given as descendants.")
 	end
 
+	local fetch_alt_forms = desc_tree and not args.noalts or not desc_tree and args.alts
+
 	local m_desctree
-	if desc_tree or alts then
-		m_desctree = require("Module:descendants tree")
+	if desc_tree or fetch_alt_forms then
+		m_desctree = require(descendants_tree_module)
 	end
 	
 	if lang:getCode() ~= lang:getFullCode() then
@@ -362,10 +367,13 @@ local function desc_or_desc_tree(frame, desc_tree)
 	end
 	
 	local parts = {}
-	local descendants = {}
-	local saw_descendants = false
-	local seen_terms = {}
-	local put
+	local terms_for_descendant_trees = {}
+	-- Keep track of descendants whose descendant tree we fetch. Don't fetch the same descendant tree twice (which
+	-- can happen especially with Arabic-script terms with the same unvocalized spelling but differing vocalization).
+	-- This happens e.g. with Ottoman Turkish [[پورتقال]], which has {{desctree|fa-cls|پُرْتُقَال|پُرْتِقَال|bor=1}}, with
+	-- two terms that have the same unvocalized spelling.
+	local terms_and_ids_fetched = {}
+	local descendant_terms_seen = {}
 	local use_semicolon = false
 
 	local ind = 0
@@ -383,6 +391,7 @@ local function desc_or_desc_tree(frame, desc_tree)
 			local lit = args.lit[ind]
 			local g = args.g[ind] and rsplit(args.g[ind], "%s*,%s*") or {}
 			local link
+			local terms_for_alt_forms = {}
 
 			local termobj =	{
 				lang = proxy_lang,
@@ -403,7 +412,8 @@ local function desc_or_desc_tree(frame, desc_tree)
 				termobj.pos = pos
 				termobj.lit = lit
 			end
-			-- Construct a link out of `termobj`.
+			-- Construct a link out of `termobj`. Also add the term to the list of descendant trees and/or alternative
+			-- forms to fetch, if the page+ID combination hasn't already been seen.
 			local function get_link()
 				local link = ""
 				-- If an individual term has a literal comma in it, use semicolons for all joiners. Otherwise we use
@@ -413,6 +423,37 @@ local function desc_or_desc_tree(frame, desc_tree)
 				end
 				if termobj.term ~= "-" then -- including term == nil
 					link = require("Module:links").full_link(termobj, nil, true)
+					if termobj.term and (desc_tree or fetch_alt_forms) then
+						local entry_name = require(links_module).get_link_page(termobj.term, lang, sc)
+						-- NOTE: We use the term and ID as the key, but not the language. This is OK currently because
+						-- all terms have the same language; but if we ever add support for a term-specific language,
+						-- we need to fix this.
+						local term_and_id = termobj.id and entry_name .. "!!!" .. termobj.id or entry_name
+						if not terms_and_ids_fetched[term_and_id] then
+							terms_and_ids_fetched[term_and_id] = true
+							local term_for_fetching = {
+								lang = lang, entry_name = entry_name, id = termobj.id
+							}
+							if desc_tree then
+								if is_family then
+									error("No support currently (and probably ever) for fetching a descendant tree when a family code instead of language code is given")
+								end
+								if error_on_no_descendants then
+									require(table_module).insertIfNot(descendant_terms_seen,
+										{ term = termobj.term, id = termobj.id })
+								end
+								table.insert(terms_for_descendant_trees, term_for_fetching)
+							end
+							if fetch_alt_forms then
+								if is_family then
+									error("No support currently (and probably ever) for fetching alternative forms when a family code instead of language code is given")
+								end
+								-- [[Special:WhatLinksHere/Wiktionary:Tracking/descendant/alts]]
+								track("alts")
+								table.insert(terms_for_alt_forms, term_for_fetching)
+							end
+						end
+					end
 				elseif termobj.ts or termobj.gloss or #termobj.genders > 0 then
 					-- [[Special:WhatLinksHere/Wiktionary:Tracking/descendant/no term]]
 					track("no term")
@@ -429,29 +470,12 @@ local function desc_or_desc_tree(frame, desc_tree)
 				return link
 			end
 
-			-- Check for new-style argument, e.g. מרים<tr:Miryem>. But exclude HTML entry with <span ...>, <i ...>,
-			-- <br/> or similar in it, caused by wrapping an argument in {{l|...}}, {{af|...}} or similar. Basically,
-			-- all tags of the sort we parse here should consist of less-than + letters + greater-than, e.g. <bor>, or
-			-- less-than + letters + colon + arbitrary text with balanced angle brackets + greater-than, e.g. <tr:...>,
-			-- so if we see a tag on the outer level that isn't in this format, we don't try to parse it. The
-			-- restriction to the outer level is to allow generated HTML inside of e.g. qualifier tags, such as
-			-- foo<q:similar to {{m|fr|bar}}>.
-			--
-			-- FIXME! The last clause in the if-statement below checks for a situation like
-			-- {{desc|bbl|ბე<sup>ნ</sup>|bor=1}}. The top-level check in the preceding clause is simplistic and works
-			-- only up through the <sup>, which "passes" the restriction and thus we go ahead and parse for inline
-			-- modifiers, which fails due to the </sup>. So we include the last clause, which allows a single balanced
-			-- <...> expression preceding the non-modifier-tag-looking HTML. This is a hack and won't catch all
-			-- top-level uses of HTML. We could write a single regular expression to do this if it were not for Lua's
-			-- crippled patterns. As-is, we need (and should write) a function in [[Module:parse utilities]] to check
-			-- this properly.
-			if term and term:find("<") and not term:find("^[^<]*<%l*[^%l:>]") and not term:find("^[^<>]*%b<>[^<>]*<%l*[^%l:>]") then
-				if not put then
-					put = require(put_module)
-				end
-				local run = put.parse_balanced_segment_run(term, "<", ">")
+			-- Check for inline modifier, e.g. מרים<tr:Miryem>. But exclude HTML entry with <span ...>, <i ...>,
+			-- <br/> or similar in it, caused by wrapping an argument in {{l|...}}, {{af|...}} or similar.
+			if term and term:find("<") and not require(parse_utilities_module).term_contains_top_level_html(term) then
+				local run = require(parse_utilities_module).parse_balanced_segment_run(term, "<", ">")
 				-- Split the non-modifier parts of an alternating run on comma, but not on comma+whitespace.
-				local comma_separated_runs = put.split_alternating_runs_on_comma(run)
+				local comma_separated_runs = require(parse_utilities_module).split_alternating_runs_on_comma(run)
 				local sub_links = {}
 
 				local function parse_err(msg)
@@ -540,64 +564,47 @@ local function desc_or_desc_tree(frame, desc_tree)
 			local arrow = get_arrow(args, ind)
 			local preqs = get_pre_qualifiers(args, ind, proxy_lang)
 			local postqs = get_post_qualifiers(args, ind, proxy_lang)
-			local alts
 
-			if desc_tree and term and term ~= "-" then
-				if is_family then
-					error("No support currently (and probably ever) for fetching a descendant tree when a family code instead of language code is given")
-				end
-				insert(seen_terms, term)
-				-- This is what I ([[User:Benwing2]]) had in Nov 2020 when I first implemented this.
-				-- Since then, [[User:Fytcha]] added `true` as the fourth param.
-				-- descendants[ind] = m_desctree.getDescendants(entryLang, term, id, maxmaxindex > 1)
-				descendants[ind] = m_desctree.getDescendants(lang, sc, term, id, true)
-				if descendants[ind] then
-					saw_descendants = true
-				end
-			end
+			insert(parts, {
+				arrow = arrow, preqs = preqs, link = link, terms_for_alt_forms = terms_for_alt_forms, postqs = postqs,
+				use_semicolon = terms[i - 1] == ";"
+			})
+		end
+	end
 
-			descendants[ind] = descendants[ind] or ""
+	local descendant_trees = {}
+	for _, descterm in ipairs(terms_for_descendant_trees) do
+		-- When I ([[User:Benwing2]]) first implemented this in Nov 2020, I had `maxmaxindex > 1` as the last argument.
+		-- Since then, [[User:Fytcha]] changed the last param to `true`.
+		local descendant_tree = m_desctree.get_descendants(descterm.lang, descterm.entry_name, descterm.id, true)
+		if descendant_tree and descendant_tree ~= "" then
+			insert(descendant_trees, descendant_tree)
+		end
+	end
 
-			if term and (desc_tree and not args.noalts or not desc_tree and args.alts) then
-				if is_family then
-					error("No support currently (and probably ever) for fetching alternative forms when a family code instead of language code is given")
-				end
-				-- [[Special:WhatLinksHere/Wiktionary:Tracking/descendant/alts]]
-				track("alts")
-				alts = m_desctree.getAlternativeForms(lang, sc, term, id)
+	if error_on_no_descendants and desc_tree and not descendant_trees[1] then
+		local function format_term_seen(term_seen)
+			if term_seen.id then
+				return ("[[%s]] with ID '%s'"):format(term_seen.term, term_seen.id)
 			else
-				alts = ""
-			end
-
-			local linktext = concat{preqs, link, alts, postqs}
-			if not args.notext then
-				linktext = arrow .. linktext
-			end
-			if linktext ~= "" then
-				if i > 1 then
-					insert(parts, terms[i - 1] == ";" and "; " or ", ")
-				end
-				insert(parts, linktext)
+				return ("[[%s]]"):format(term_seen.term)
 			end
 		end
-	end
-
-	if error_on_no_descendants and desc_tree and not saw_descendants then
-		if #seen_terms == 0 then
+		if #descendant_terms_seen == 0 then
 			error("[[Template:desctree]] invoked but no terms to retrieve descendants from")
-		elseif #seen_terms == 1 then
-			error("No Descendants section was found in the entry [[" .. seen_terms[1] ..
-				"]] under the header for " .. lang:getFullName() .. ".")
+		elseif #descendant_terms_seen == 1 then
+			error(("No Descendants section was found in the entry %s under the header for %s"):format(
+				format_term_seen(descendant_terms_seen[1]), lang:getFullName()))
 		else
-			for i, term in ipairs(seen_terms) do
-				seen_terms[i] = "[[" .. term .. "]]"
+			for i, term_seen in ipairs(descendant_terms_seen) do
+				descendant_terms_seen[i] = format_term_seen(term_seen)
 			end
-			error("No Descendants section was found in any of the entries " ..
-				concat(seen_terms, ", ") .. " under the header for " .. lang:getFullName() .. ".")
+			error(("No Descendants section was found in any of the entries %s under the header for %s"):format(
+				concat(descendant_terms_seen, ", "), lang:getFullName()))
 		end
 	end
 
-	descendants = concat(descendants)
+	local descendants = concat(descendant_trees)
 	if args.noparent then
 		return descendants
 	end
@@ -606,10 +613,31 @@ local function desc_or_desc_tree(frame, desc_tree)
 	local initial_preqs = get_pre_qualifiers(args, 0, proxy_lang)
 	local final_postqs = get_post_qualifiers(args, 0, proxy_lang)
 
-	if use_semicolon then
-		for i = 2, #parts - 1, 2 do
-			parts[i] = ";"
+	-- Now format each part. We wait to do this because we may not know the separator (semicolon or comma) till now.
+	for i, part in ipairs(parts) do
+		local partparts = {}
+		local function ins(text)
+			insert(partparts, text)
 		end
+		if not args.notext then
+			ins(part.arrow)
+		end
+		ins(part.preqs)
+		ins(part.link)
+		for _, altterm in ipairs(part.terms_for_alt_forms) do
+			local altform = m_desctree.get_alternative_forms(altterm.lang, altterm.entry_name, altterm.id,
+				use_semicolon and "; " or ", ")
+			if altform ~= "" then
+				ins(use_semicolon and "; " or ", ")
+				ins(altform)
+			end
+		end
+		ins(part.postqs)
+		local parttext = concat(partparts)
+		if i > 1 and parttext ~= "" then
+			parttext = ((use_semicolon or part.use_semicolon) and "; " or ", ") .. parttext
+		end
+		parts[i] = parttext
 	end
 
 	local all_linktext = initial_preqs .. concat(parts) .. final_postqs .. descendants
@@ -619,7 +647,7 @@ local function desc_or_desc_tree(frame, desc_tree)
 	elseif args.nolang then
 		return initial_arrow .. all_linktext
 	else
-		return concat{initial_arrow, langtag, ":", all_linktext ~= "" and " " or "", all_linktext}
+		return concat { initial_arrow, langtag, ":", all_linktext ~= "" and " " or "", all_linktext }
 	end
 end
 
