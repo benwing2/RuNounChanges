@@ -10,13 +10,13 @@ end
 
 --[==[
 Main function for displaying alternative forms. Extracted out from the template-callable function so this can be
-called by other modules (in particular, [[Module:descendants tree]]). `show_labels_after_terms` no longer has any
-meaning. `allow_self_link` causes terms the same as the pagename to be shown normally; otherwise they are displayed
-unlinked.
+called by other modules (in particular, [[Module:descendants tree]]). `allow_self_link` causes terms the same as the
+pagename to be shown normally; otherwise they are displayed unlinked. `default_separator` controls the separator between
+terms when the user didn't use a special separator term like ";" (defaulting to ", ").
 ]==]
-function export.display_alternative_forms(parent_args, pagename, show_labels_after_terms, allow_self_link)
+function export.display_alternative_forms(parent_args, pagename, allow_self_link, default_separator)
 	local params = {
-		[1] = {required = true, type = "language", etym_lang = true, default = "en"},
+		[1] = {required = true, type = "language", default = "en"},
 		[2] = {list = true, allow_holes = true},
 	}
 
@@ -42,6 +42,7 @@ function export.display_alternative_forms(parent_args, pagename, show_labels_aft
 		stop_when = function(data)
 			return not data.any_param_at_index
 		end,
+		default_separator = default_separator,
 	}
 
 	if not items[1] then
