@@ -680,6 +680,13 @@ local function track(page)
 	return true
 end
 
+local function track_if_ar_conj(base, page)
+	if base.alternant_multiword_spec.source_template == "ar-conj" then
+		require("Module:debug/track")("ar-verb/" .. page)
+	end
+	return true
+end
+
 local function reorder_shadda(word)
 	-- shadda+short-vowel (including tanwīn vowels, i.e. -an -in -un) gets
 	-- replaced with short-vowel+shadda during NFC normalisation, which
@@ -906,24 +913,26 @@ local function vform_supports_final_weak(vform)
 end
 
 local function vform_supports_geminate(vform)
-	return vform == "I" or vform == "III" or vform == "IV" or
-		vform == "VI" or vform == "VII" or vform == "VIII" or vform == "X"
-end
-
-local function vform_supports_hollow(vform)
-	return vform == "I" or vform == "IV" or vform == "VII" or vform == "VIII" or
+	return vform == "I" or vform == "III" or vform == "IV" or vform == "VI" or vform == "VII" or vform == "VIII" or
 		vform == "X"
 end
 
-local function vform_probably_impersonal_passive(vform)
-	return vform == "VI"
+local function vform_supports_hollow(vform)
+	return vform == "I" or vform == "IV" or vform == "VII" or vform == "VIII" or vform == "X"
+end
+
+local function vform_probably_impersonal_passive(vform, weakness, past_vowel, nonpast_vowel)
+	return vform == "I" and req(past_vowel, I) or vform == "V" or vform == "VI" or vform == "X" or vform == "IIq"
+end
+
+local function vform_probably_full_passive(vform)
+	return vform == "II" or vform == "III" or vform == "IV" or vform == "Iq"
 end
 
 local function vform_probably_no_passive(vform, weakness, past_vowel, nonpast_vowel)
-	return vform == "I" and weakness ~= "hollow" and req(past_vowel, U) or
-		vform == "VII" or vform == "IX" or vform == "XI" or vform == "XII" or
-		vform == "XIII" or vform == "XIV" or vform == "XV" or vform == "IIq" or
-		vform == "IIIq" or vform == "IVq"
+	return vform == "I" and req(past_vowel, U) or vform == "VII" or vform == "IX" or
+	vform == "XI" or vform == "XII" or vform == "XIII" or vform == "XIV" or vform == "XV" or
+	vform == "IIIq" or vform == "IVq"
 end
 
 -- Active vforms II, III, IV, Iq use non-past prefixes in -u- instead of -a-.
@@ -3486,26 +3495,37 @@ local function detect_indicator_spec(base)
 		base.grouped_conj_vowels = group_by_nonpast
 	end
 
-	-- Set value of passive. If not specified, default is yes, but no for forms VII, IX,
-	-- XI - XV and IIq - IVq, and impersonal for form VI.
-	local passive = base.passive
-	if not passive then
-		if vform_probably_impersonal_passive(vform) then
-			base.passive = "ipass"
+	-- Set value of passive. If not specified, default is yes for forms II, III, IV and Iq; no but uncertainly for
+	-- forms VII, IX, XI - XV and IIIq - IVq, as well as form I with past vowel u; impersonal but uncertainly for form
+	-- V, VI, X and IIq, as well as form I with past vowel i; and yes but uncertainly for the remainder (form I with
+	-- past vowel only a and form VIII).
+	if not base.passive then
+		base.passive_defaulted = true
+		-- Temporary tracking for defaulted passives by verb form, weakness and (for form I) past/non-past vowels.
+		track_if_ar_conj(base, "passive-defaulted/" .. vform)
+		for _, vowel_spec in ipairs(base.conj_vowels) do
+			track_if_ar_conj(base, "passive-defaulted/" .. vform.. "/" .. vowel_spec.weakness)
+			if vform == "I" then
+				local past_nonpast = ("%s~%s"):format(undia[vowel_spec.past], undia[vowel_spec.nonpast])
+				track_if_ar_conj(base, "passive-defaulted/I/" .. past_nonpast)
+				track_if_ar_conj(base, "passive-defaulted/I/" .. vowel_spec.weakness .. "/" .. past_nonpast)
+			end
+		end
+		if vform_probably_full_passive(vform) then
+			base.passive = "pass"
 		else
-			local has_passive = false
+			base.passive_uncertain = true
 			for _, vowel_spec in ipairs(base.conj_vowels) do
-				if not vform_probably_no_passive(vform, vowel_spec.weakness, vowel_spec.past, vowel_spec.nonpast) then
-					has_passive = true
+				if vform_probably_no_passive(vform, vowel_spec.weakness, vowel_spec.past, vowel_spec.nonpast) then
+					base.passive = "nopass"
+					break
+				elseif vform_probably_impersonal_passive(vform, vowel_spec.weakness, vowel_spec.past,
+					vowel_spec.nonpast) then
+					base.passive = "ipass"
 					break
 				end
 			end
-			if has_passive then
-				base.passive = "pass"
-				base.passive_uncertain = true
-			else
-				base.passive = "nopass"
-			end
+			base.passive = base.passive or "pass"
 		end
 	end
 
@@ -3660,6 +3680,9 @@ local function add_categories_and_annotation(alternant_multiword_spec, base, mul
 	end
 	if base.quadlit then
 		insert_cat("verbs with quadriliteral roots")
+	end
+	if base.passive_defaulted then
+		insert_cat("verbs with defaulted passive")
 	end
 
 	for _, vowel_spec in ipairs(base.conj_vowels) do
@@ -4241,9 +4264,8 @@ local function make_table(alternant_multiword_spec)
 	-- Format the table.
 	forms.notes_clause = forms.footnote ~= "" and m_string_utilities.format(notes_template, forms) or ""
 	local tagged_table = rsub(text, "<<(.-)>>", tag_text)
-	return m_string_utilities.format(tagged_table, forms) .. mw.getCurrentFrame():extensionTag{
-		name = "templatestyles", args = { src = "Template:ar-conj/style.css" }
-	}
+	return m_string_utilities.format(tagged_table, forms) ..
+		require("Module:TemplateStyles")("Template:ar-conj/style.css")
 end
 
 -------------------------------------------------------------------------------
