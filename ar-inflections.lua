@@ -20,6 +20,7 @@ local headword_module = "Module:headword"
 local ar_verb_module = "Module:ar-verb"
 local ar_IPA_module = "Module:ar-IPA"
 local IPA_module = "Module:IPA"
+local pages_module = "Module:pages"
 local parse_utilities_module = "Module:parse utilities"
 local template_parser_module = "Module:template parser"
 local utilities_module = "Module:utilities"
@@ -43,6 +44,16 @@ local function split_on_comma(term)
 	end
 end
 
+local function preprocess(text)
+	if not text then
+		return text
+	end
+	if text:find("{{") then
+		text = mw.getCurrentFrame():preprocess(text)
+	end
+	return text
+end
+	
 local function get_pronun(form, tr)
 	local pronun = require(ar_IPA_module).toIPA({ Arabic = form, tr = tr}, "noerror")
 	if pronun == "" then
@@ -57,7 +68,7 @@ local function find_conjugations(lemma, verb_form, conjid, noconjid)
 	if title then
 		local content = title:getContent()
 		if content then
-			local arabic = require(utilities_module).get_section(content, "Arabic")
+			local arabic = require(pages_module).get_section(content, "Arabic")
 			if arabic then
 				local conjs = {}
 				local other_verb_forms = {}
@@ -75,12 +86,19 @@ local function find_conjugations(lemma, verb_form, conjid, noconjid)
 					if tempname == "ar-conj" then
 						local arg1 = args[1]
 						if arg1 then
-							arg1 = arg1:match("^<(.*)>$") or arg1
-							if arg1:find("<") or arg1:find("%(%(") then
+							-- If there are angle brackets around the whole thing, don't do the
+							-- multiword check because it may wrongly trigger on something like
+							-- <I/a~a.pass.vn:بَعْث<id:verbal noun>> (the conjugation for [[بعث]]).
+							local inside_angle_brackets = arg1:match("^<(.*)>$")
+							if inside_angle_brackets then
+								arg1 = inside_angle_brackets
+							elseif arg1:find("<") or arg1:find("%(%(") then
 								mw.log(('find_conjugations("%s", "%s"): Skipping multiword conjugation: %s'):format(
 									lemma, verb_form, template_invoc))
 								saw_multiword_conj = saw_multiword_conj + 1
-							else
+								arg1 = nil
+							end
+							if arg1 then
 								local arg1_verb_form = arg1:gsub("[/.-].*$", "")
 								if arg1_verb_form == verb_form then
 									local this_conjid = args.id
@@ -140,19 +158,19 @@ local function find_conjugations(lemma, verb_form, conjid, noconjid)
 					if #skipped_restrictions > 0 then
 						skipped_restrictions = (" (but %s)"):format(skipped_restrictions)
 					end
-					return ("For Arabic lemma '%s', found Arabic section but couldn't find any verb conjugations when looking for form %s%s"):format(
+					return ("For Arabic lemma '[[%s]]', found Arabic section but couldn't find any verb conjugations when looking for form %s%s"):format(
 						lemma, verb_form, skipped_restrictions)
 				end
 			else
-				return ("For Arabic lemma '%s', page exists but has no Arabic section when looking for form %s"):format(
+				return ("For Arabic lemma '[[%s]]', page exists but has no Arabic section when looking for form %s"):format(
 					lemma, verb_form)
 			end
 		else
-			return ("For Arabic lemma '%s', couldn't fetch contents for page when looking for form %s; page may not exist"):format(
+			return ("For Arabic lemma '[[%s]]', couldn't fetch contents for page when looking for form %s; page may not exist"):format(
 			lemma, verb_form)
 		end
 	else
-		return ("Bad Arabic lemma '%s' when looking for form %s; couldn't create title object"):format(lemma, verb_form)
+		return ("Bad Arabic lemma '[[%s]]' when looking for form %s; couldn't create title object"):format(lemma, verb_form)
 	end
 end
 
@@ -401,9 +419,10 @@ function export.verb_form(frame)
 		argspecs = {"كتب<I/a~u.pass>"}
 	end
 
-	local function process_argspec(argspec, gloss, i)
-		args[1] = argspec
-		local alternant_multiword_spec = m_verb_module.do_generate_forms(args, "ar-verb form")
+	local function process_argspec(argspec, gloss, i, noerror)
+		local argcopy = m_table.shallowcopy(args)
+		argcopy[1] = argspec
+		local alternant_multiword_spec = m_verb_module.do_generate_forms(argcopy, "ar-verb form")
 
 		local non_lemma_form = alternant_multiword_spec.verb_form_of_form
 
@@ -442,7 +461,12 @@ function export.verb_form(frame)
 		end 
 
 		if not lemmas[1] then
-			error(("Can't identify any lemmas when invoking {{ar-conj|%s}}"):format(args[1]))
+			local errmsg = ("Can't identify any lemmas when invoking {{ar-conj|%s}}"):format(argspec)
+			if noerror then
+				return errmsg
+			else
+				error(errmsg)
+			end
 		end
 
 		local slot_restrictions = args.slots and m_table.listToSet(rsplit(args.slots, ",")) or nil
@@ -521,7 +545,7 @@ function export.verb_form(frame)
 		local function concat_lemmas()
 			local formvals = {}
 			for _, lemma in ipairs(lemmas) do
-				table.insert(formvals, lemma.term)
+				table.insert(formvals, ("[[%s|%s]]"):format((lang:makeEntryName(lemma.term)), lemma.term))
 			end
 			return table.concat(formvals, "/")
 		end
@@ -539,8 +563,13 @@ function export.verb_form(frame)
 			local function check_against_slots_seen(restrictions, prefix)			
 				for slot, _ in pairs(restrictions) do
 					if not slots_seen[slot] then
-						error(("%sslot restriction for slot '%s' had no effect (typo?) because it is not any of the slots matching form '%s' for verb '%s': possible values %s"):format(
-							prefix, slot, non_lemma_form, concat_lemmas(), table.concat(get_slots_seen(), ",")))
+						local errmsg = ("%sslot restriction for slot '%s' had no effect (typo?) because it is not any of the slots matching form '%s' for verb '%s': possible values %s"):format(
+							prefix, slot, non_lemma_form, concat_lemmas(), table.concat(get_slots_seen(), ","))
+						if noerror then
+							return errmsg
+						else
+							error(errmsg)
+						end
 					end
 				end
 			end
@@ -553,8 +582,15 @@ function export.verb_form(frame)
 			end
 		end
 		if not matched then
-			error(("'%s' is not any of the forms of the verb '%s'"):format(non_lemma_form, concat_lemmas()))
+			local errmsg = ("'%s' is not any of the forms of the form-%s verb '%s'"):format(
+				non_lemma_form, table.concat(vforms, "/"), concat_lemmas())
+			if noerror then
+				return errmsg
+			else
+				error(errmsg)
+			end
 		end
+		return nil
 	end
 
 	for i, argspec in ipairs(argspecs) do
@@ -565,8 +601,29 @@ function export.verb_form(frame)
 				m_table.insertIfNot(err_msgs, conjs)
 				m_table.insertIfNot(categories, "Arabic bad invocations of Template:ar-verb form")
 			else
+				local matched = false
+				local errs = {}
 				for _, conj in ipairs(conjs) do
-					process_argspec(conj.conj, conj.gloss, i)
+					local err = process_argspec(conj.conj, preprocess(conj.gloss), i, "noerror")
+					if err then
+						table.insert(errs, err)
+					else
+						matched = true
+					end
+				end
+				if not matched then
+					-- If we didn't match any of the found conjugations, we display an error; otherwise if we only
+					-- matched some, it's fine (e.g. this happens with form [[آسر]] of form-I [[أسر]], which matches
+					-- the active أَسَرَ "to bind, to enslave, to captivate" but not the passive أُسِرَ "to have urinary
+					-- retention"). Note that the joining string needs to contain Latin characters in it (e.g. not
+					-- just a semicolon), or the Unicode BIDI algorithm will cause the output to appear incorrect
+					-- as there won't be anything that forces L2R between the lemma of the first error (which comes
+					-- at the end) and the non-lemma form of the second error (which comes at the beginning).
+					local combined_err = table.concat(errs, "; and ")
+					if combined_err then
+						m_table.insertIfNot(err_msgs, combined_err)
+						m_table.insertIfNot(categories, "Arabic bad invocations of Template:ar-verb form")
+					end
 				end
 			end
 		else
