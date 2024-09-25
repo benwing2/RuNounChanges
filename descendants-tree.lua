@@ -1,10 +1,13 @@
-local remove_comments = require("Module:string utilities").remove_comments
-
 local export = {}
+
+local alternative_forms_module = "Module:alternative forms"
+local string_utilities_module = "Module:string utilities"
+
+local remove_comments = require(string_utilities_module).remove_comments
 
 local function track(page)
 	--[[Special:WhatLinksHere/Wiktionary:Tracking/descendants tree/PAGE]]
-	return require("Module:debug").track("descendants tree/" .. page)
+	return require("Module:debug/track")("descendants tree/" .. page)
 end
 
 
@@ -54,8 +57,7 @@ local function get_content_after_senseid(content, entry_name, lang, id)
 	return content:sub(t_start, t_end)
 end
 
-function export.getAlternativeForms(lang, sc, term, id)
-	local entry_name = require("Module:links").get_link_page(term, lang, sc)
+function export.get_alternative_forms(lang, entry_name, id, default_separator)
 	local page = mw.title.new(entry_name)
 	local content = page:getContent()
 
@@ -71,7 +73,7 @@ function export.getAlternativeForms(lang, sc, term, id)
 	end
 	
 	local _, index = string.find(content,
-		"==[ \t]*" .. require("Module:string utilities").pattern_escape(lang:getFullName()) .. "[ \t]*==")
+		"==[ \t]*" .. require(string_utilities_module).pattern_escape(lang:getFullName()) .. "[ \t]*==")
 	
 	if not index then
 		-- FIXME, should be an error
@@ -98,7 +100,7 @@ function export.getAlternativeForms(lang, sc, term, id)
 		return ""
 	end
 
-	local langCodeRegex = require("Module:string utilities").pattern_escape(lang:getFullCode())
+	local langCodeRegex = require(string_utilities_module).pattern_escape(lang:getFullCode())
 	index = string.find(content, "{{alte?r?|" .. langCodeRegex .. "|[^|}]+", index)
 	if (not index) or (next_lang and next_lang < index) then
 		-- FIXME, should be an error
@@ -118,7 +120,8 @@ function export.getAlternativeForms(lang, sc, term, id)
 	for name, args, _, index in require("Module:template parser").findTemplates(alternative_forms_section) do
 		if name == "alter" and args[1] == lang:getFullCode() then
 			saw_alter = true
-			local formatted_altforms = altforms.display_alternative_forms(args, entry_name, "show dialect tags after terms", "allow self link")
+			local formatted_altforms = altforms.display_alternative_forms(args, entry_name, "allow self link",
+				default_separator)
 			table.insert(terms_list, formatted_altforms)
 		end
 	end
@@ -130,12 +133,10 @@ function export.getAlternativeForms(lang, sc, term, id)
 		return ""
 	end
 
-	-- FIXME: Why do we return a leading comma like this? Why not have the caller add the comma?
-	return ", " .. table.concat(terms_list, "; ")
+	return table.concat(terms_list, default_separator or ", ")
 end
 
-function export.getDescendants(lang, sc, term, id, noerror)
-	local entry_name = require("Module:links").get_link_page(term, lang, sc)
+function export.get_descendants(lang, entry_name, id, noerror)
 	local page = mw.title.new(entry_name)
 	local content = page:getContent()
 	local namespace = mw.title.getCurrentTitle().nsText
@@ -168,7 +169,7 @@ function export.getDescendants(lang, sc, term, id, noerror)
 		"%f[^\n%z]==[ \t]*" .. lang:getFullName() .. "[ \t]*==", nil, true)
 	if not index then
 		_, index = string.find(content, "%f[^\n%z]==[ \t]*"
-				.. require("Module:string utilities").pattern_escape(lang:getFullName())
+				.. require(string_utilities_module).pattern_escape(lang:getFullName())
 				.. "[ \t]*==", nil, false)
 	end
 	if not index then
@@ -185,7 +186,7 @@ function export.getDescendants(lang, sc, term, id, noerror)
 
 	local _, next_lang = string.find(content, "\n==[^=\n]+==", index, false)
 	local _, index = string.find(content, "\n(====*)[ \t]*Descendants[ \t]*%1", index, false)
-	if not index then
+	local function desctree_no_descendants(with_lang_in_error)
 		if noerror and (namespace == "" or namespace == "Reconstruction") then
 			track("desctree-no-descendants")
 			return "<small class=\"error previewonly\">(" ..
@@ -194,20 +195,14 @@ function export.getDescendants(lang, sc, term, id, noerror)
 				entry_name .. "#" .. lang:getFullName() .. "]])</small>" ..
 				"[[Category:" .. lang:getFullName() .. " descendants to be fixed in desctree]]"
 		else
-			error("No Descendants section was found in the entry [[" .. entry_name .. "]].")
+			error(("No Descendants section was found in the entry [[%s]]%s"):format(entry_name,
+				with_lang_in_error and (" under the header for %s"):format(lang:getFullName()) or ""))
 		end
+	end
+	if not index then
+		return desctree_no_descendants()
 	elseif next_lang and next_lang < index then
-		if noerror and (namespace == "" or namespace == "Reconstruction") then
-			track("desctree-no-descendants-in-lang-section")
-			return "<small class=\"error previewonly\">(" ..
-				"Please either change this template to {{desc}} " ..
-				"or insert a ====Descendants==== section in [[" ..
-				entry_name .. "#" .. lang:getFullName() .. "]])</small>" ..
-				"[[Category:" .. lang:getFullName() .. " descendants to be fixed in desctree]]"
-		else
-			error("No Descendants section was found in the entry [[" .. entry_name
-					.. "]] under the header for " .. lang:getFullName() .. ".")
-		end
+		return desctree_no_descendants("with lang in error")
 	end
 	
 	-- Skip past final equals sign.
