@@ -1137,6 +1137,8 @@ def create_argparser(desc, include_pagefile=False, include_stdin=False,
     parser.add_argument("--find-regex", help="Read find_regex.py output from stdin.", action="store_true")
     parser.add_argument("--stdin", help="Read XML dump from stdin.", action="store_true")
     parser.add_argument("--only-lang", help="Only process the section of a page for this language (a canonical language name).")
+  if include_pagefile or include_stdin:
+    parser.add_argument("--ignore-embedded-page-indices", help="When processing find_regex.py or other similar output from stdin or '--pages-from-find-regex', ignore associated page indices and increment sequentially.", action="store_true")
   return parser
 
 def parse_args(args = sys.argv[1:]):
@@ -1409,7 +1411,7 @@ def do_pagefile_cats_refs(args, start, end, process, default_pages=[], default_c
     if args.find_regex:
       index_pagetitle_text_comment = yield_text_from_find_regex(sys.stdin, args.verbose)
       for _, (index, pagetitle, text, prev_comment) in iter_items(index_pagetitle_text_comment, start, end,
-          get_name=lambda x:x[1], get_index=lambda x:x[0]):
+          get_name=lambda x:x[1], get_index=None if args.ignore_embedded_page_indices else lambda x:x[0]):
         retval = do_process_stdin_text_on_page(index, pagetitle, text, prev_comment)
         def pagemsg(txt):
           msg("Page %s %s: %s" % (index, pagetitle, txt))
@@ -1438,14 +1440,14 @@ def do_pagefile_cats_refs(args, start, end, process, default_pages=[], default_c
         open(args.pages_from_find_regex, "r", encoding="utf-8"), args.verbose
       )
       for _, (index, pagetitle, _, _) in iter_items(index_pagetitle_text_comment, start, end,
-          get_name=lambda x:x[1], get_index=lambda x:x[0]):
+          get_name=lambda x:x[1], get_index=None if args.ignore_embedded_page_indices else lambda x:x[0]):
         process_pywikibot_page(index, pywikibot.Page(site, pagetitle))
     if args.pages_from_previous_output:
       index_pagetitle = yield_pages_from_previous_output(
         open(args.pages_from_previous_output, "r", encoding="utf-8"), args.verbose
       )
       for _, (index, pagetitle) in iter_items(index_pagetitle, start, end,
-          get_name=lambda x:x[1], get_index=lambda x:x[0]):
+          get_name=lambda x:x[1], get_index=None if args.ignore_embedded_page_indices else lambda x:x[0]):
         process_pywikibot_page(index, pywikibot.Page(site, pagetitle))
     if args.cats or args.category_file:
       def do_cat(cat):
