@@ -17,10 +17,12 @@ print("#!/bin/sh")
 print()
 
 num_terms_per_run = args.num_terms // args.num_parts
-# MediaWiki allows 1000 terms listed per second; multiply by 1.1 so we start a bit after all terms are listed,
+# MediaWiki allows 1000 terms listed per second; multiply by 1.2 so we start a bit after all terms are listed,
 # to make sure the term listing isn't affected by a run that has already started and saved some terms, which
 # changes the category or references.
-sleep_increment = int(num_terms_per_run / 1000 * 1.1)
+sleep_increment = int(num_terms_per_run / 1000 * 1.2 + 0.5)
+# FIXME, use log_10()
+part_width = 4 if args.num_parts >= 1000 else 3 if args.num_parts >= 100 else 2 if args.num_parts >= 10 else 1
 for run in range(args.num_parts):
   sleep_prefix = ""
   if not args.no_sleep:
@@ -32,10 +34,21 @@ for run in range(args.num_parts):
     last_term_index = args.num_terms
   else:
     last_term_index = (run + 1) * num_terms_per_run + args.overlap_offset
-  save = " --save" if not args.no_save else ""
-  print("%s%s%s %s %s > %s.out.%s.%s-%s &"
-    % (sleep_prefix, args.command, save, first_term_index, last_term_index, args.output_prefix,
-       run + 1, first_term_index, last_term_index))
+  save = "--save" if not args.no_save else ""
+  command_with_indices = args.command
+  if "%START" not in command_with_indices:
+    command_with_indices += " %START %END"
+  if "%SAVE" not in command_with_indices:
+    command_with_indices += " %SAVE"
+  if "%SLEEP" not in command_with_indices:
+    command_with_indices = "%SLEEP " + command_with_indices
+  command_with_indices = (
+    command_with_indices.replace("%START", str(first_term_index)).replace("%END", str(last_term_index))
+    .replace("%SAVE", save).replace("%SLEEP", sleep_prefix)
+  )
+  run_num = ("%%0%dd" % part_width) % (run + 1)
+  print("%s > %s.out.%s.%s-%s &" % (
+    command_with_indices, args.output_prefix, run_num, first_term_index, last_term_index))
 
 print()
 print("wait")
