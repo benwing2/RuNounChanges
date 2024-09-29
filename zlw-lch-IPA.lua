@@ -77,7 +77,13 @@ local function phonemic(txt, do_hyph, lang, is_prep, period, dial)
 	tsub(lg { "([aeáé])u", csb = "([ae])ù" }, "%1U")
 
 	-- rising diphthongs with <iV>
-	local V = lg { pl = "aąeęioóuy" .. "áéôûý", szl = "aãeéioōŏôõuy", csb = "ôòãëùéóąeyuioa", slv = "aãeéëêioóõôuúùyăĭŏŭŭùy̆ā", mas = "aáäeéioóôuûÿ" }
+	local V = lg {
+		pl = "aąeęioóuy" .. "áéôûý",
+		szl = "aãeéioōŏôõuy",
+		csb = "ôòãëùéóąeyuioa",
+		slv = "aãeéëêioóõôuúùyăĭŏŭŭùy̆ā",
+		mas = "aáäeéioóôuûÿ"
+	}
 	tsub(("([^%s])" .. (lang == "slv" and "j" or "i") .. "([%s])"):format(V, V), "%1I%2")
 
 	if txt:find("^*") then
@@ -138,11 +144,27 @@ local function phonemic(txt, do_hyph, lang, is_prep, period, dial)
 
 			-- syllabify common prefixes as separate
 			local prefixes = {
-				"do", "wy", "za", "aktyno", "akusto", "akwa", "anarcho", "andro", "anemo", "antropo", "arachno", "archeo", "archi", "arcy", "areo", "arytmo", "audio", "awio", "balneo", "biblio", "brachy", "broncho", "ceno", "centro", "centy", "chalko", "chiro", "chloro", "chole", "chondro", "choreo", "chromato", "chrysto", "cyber", "cyklo", "cztero", "ćwierć", "daktylo", "decy", "deka", "dendro", "dermato", "diafano", "dwu", "dynamo", "egzo", "ekstra", "elektro", "encefalo", "endo", "entero", "entomo", "ergo", "erytro", "etno", "farmako", "femto", "ferro", "fizjo", "flebo", "franko", "ftyzjo", "galakto", "galwano", "germano", "geronto", "giganto", "giga", "gineko", "giro", "gliko", "gloso", "glotto", "grafo", "granulo", "grawi", "haplo", "helio", "hemato", "hepta", "hetero", "hiper", "histo", "hydro", "info", "inter", "jedno", "kardio", "kortyko", "kosmo", "krypto", "kseno", "logo", "magneto", "między", "niby", "nie", "nowo", "około", "oksy", "onto", "ornito", "para", "pierwo", "pięcio", "pneumo", "poli", "ponad", "post", "poza", "proto", "pseudo", "psycho", "radio", "samo", "sfigmo", "sklero", "staro", "stereo", "tele", "tetra", "wice", "zoo", "żyro", "am[bf]i", "ang[il]o", "ant[ey]", "a?steno", "[be]lasto", "chro[mn]o", "cys?to", "de[rs]mo", "h?ekto", "[gn]eo", "hi[ge]ro", "kontra?", "me[gt]a", "mi[nl]i", "a[efg]ro", "[pt]rzy", "przed?", "wielk?o", "mi?elo", "eur[oy]", "ne[ku]ro", "allo", "astro", "atto", "brio", "heksa", "all?o", "at[mt]o", "a[rs]tro", "br?io", "heksa?", "pato", "ba[tr][oy]", "izo", "myzo", "m[ai]kro", "mi[mzk]o", "chemo", "gono", "kilo", "lipo", "nano", "kilk[ou]", "hem[io]", "home?o", "fi[lt]o", "ma[łn]o", "h[ioy]lo", "hip[ns]?o", "[fm]o[nt]o",
+				"do", "wy", "za", "aktyno", "akusto", "akwa", "anarcho", "andro", "anemo", "antropo", "arachno",
+				"archeo", "archi", "arcy", "areo", "arytmo", "audio", "awio", "balneo", "biblio", "brachy", "broncho",
+				"ceno", "centro", "centy", "chalko", "chiro", "chloro", "chole", "chondro", "choreo", "chromato",
+				"chrysto", "cyber", "cyklo", "cztero", "ćwierć", "daktylo", "decy", "deka", "dendro", "dermato",
+				"diafano", "dwu", "dynamo", "egzo", "ekstra", "elektro", "encefalo", "endo", "entero", "entomo", "ergo",
+				"erytro", "etno", "farmako", "femto", "ferro", "fizjo", "flebo", "franko", "ftyzjo", "galakto",
+				"galwano", "germano", "geronto", "giganto", "giga", "gineko", "giro", "gliko", "gloso", "glotto",
+				"grafo", "granulo", "grawi", "haplo", "helio", "hemato", "hepta", "hetero", "hiper", "histo", "hydro",
+				"info", "inter", "jedno", "kardio", "kortyko", "kosmo", "krypto", "kseno", "logo", "magneto", "między",
+				"niby", "nie", "nowo", "około", "oksy", "onto", "ornito", "para", "pierwo", "pięcio", "pneumo", "poli",
+				"ponad", "post", "poza", "proto", "pseudo", "psycho", "radio", "samo", "sfigmo", "sklero", "staro",
+				"stereo", "tele", "tetra", "wice", "zoo", "żyro", "am[bf]i", "ang[il]o", "ant[ey]", "a?steno",
+				"[be]lasto", "chro[mn]o", "cys?to", "de[rs]mo", "h?ekto", "[gn]eo", "hi[ge]ro", "kontra?", "me[gt]a",
+				"mi[nl]i", "a[efg]ro", "[pt]rzy", "przed?", "wielk?o", "mi?elo", "eur[oy]", "ne[ku]ro", "allo", "astro",
+				"atto", "brio", "heksa", "all?o", "at[mt]o", "a[rs]tro", "br?io", "heksa?", "pato", "ba[tr][oy]", "izo",
+				"myzo", "m[ai]kro", "mi[mzk]o", "chemo", "gono", "kilo", "lipo", "nano", "kilk[ou]", "hem[io]",
+				"home?o", "fi[lt]o", "ma[łn]o", "h[ioy]lo", "hip[ns]?o", "[fm]o[nt]o",
 				-- <na-, po-, o-, u-> would hit too many false positives
 			}
 			for _, v in ipairs(prefixes) do
-				if tfind("^"..v) then
+				if tfind("^" .. v) then
 					local _, other_vowels = rsubn(v, ("[%s]"):format(V), "")
 					if (n_vowels - other_vowels) > 0 then
 						tsub(("^(%s)"):format(v), "%1.")
@@ -152,7 +174,6 @@ local function phonemic(txt, do_hyph, lang, is_prep, period, dial)
 			end
 
 			if do_hyph then
-
 				-- syllabify common suffixes as separate
 				local suffixes = lg {
 					pl = {
@@ -203,12 +224,12 @@ local function phonemic(txt, do_hyph, lang, is_prep, period, dial)
 				return r
 			end
 			if ((ulen(b) < 2) or is_diagraph("^%s$")) then
-				b = "."..b
+				b = "." .. b
 			else
 				local i = 2
 				if is_diagraph("^%s") then i = 3 end
 				if usub(b, i, i):find("^[rlłI-]$") then
-					b = "."..b
+					b = "." .. b
 				else
 					b = ("%s.%s"):format(usub(b, 0, i - 1), usub(b, i))
 				end
@@ -612,28 +633,20 @@ local function multiword(term, lang, period, dial)
 
 		local prepositions = lg {
 			{
-				"beze?", "na", "dla", "do", "ku",
-				"nade?", "o", "ode?", "po", "pode?", "przede?",
-				"przeze?", "przy", "spode?", "u", "we?",
-				"z[ae]?", "znade?", "zza",
+				"beze?", "na", "dla", "do", "ku", "nade?", "o", "ode?", "po", "pode?", "przede?", "przeze?", "przy",
+				"spode?", "u", "we?", "z[ae]?", "znade?", "zza",
 			}, szl = {
-				"bezy?", "na", "dlŏ", "d[oō]", "ku",
-				"nady?", "ô", "ôdy?", "po", "pody?", "przedy?",
-				"przezy?", "przi", "spody?", "u", "w[ey]?",
-				"z[aey]?", "[śs]", "znady?"
+				"bezy?", "na", "dlŏ", "d[oō]", "ku", "nady?", "ô", "ôdy?", "po", "pody?", "przedy?", "przezy?", "przi",
+				"spody?", "u", "w[ey]?", "z[aey]?", "[śs]", "znady?"
 			}, csb = {
-				"beze?", "na", "dlô", "do", "kù",
-				"nade?", "ò", "òde?", "pò", "pòde?", "przede?",
-				"przeze?", "przë", "spòde?", "ù", "we?", "wew",
-				"z[ae]?", "zez", "zeza", "zó", "znade?"
+				"beze?", "na", "dlô", "do", "kù", "nade?", "ò", "òde?", "pò", "pòde?", "przede?", "przeze?", "przë",
+				"spòde?", "ù", "we?", "wew", "z[ae]?", "zez", "zeza", "zó", "znade?"
 			}, slv = {
-				"dlo", "dô", "na", "nade?", "przêde?", "przêze?",
-				"przë", "pô", "pôde?", "sê?", "vô", "we?", "wôde?",
+				"dlo", "dô", "na", "nade?", "przêde?", "przêze?", "przë", "pô", "pôde?", "sê?", "vô", "we?", "wôde?",
 				"wù", "za"
 			}, mas = {
-				"dlá", "do", "ku", "na", "nade?", "po", "pode?",
-				"ponade?", "poza", "prżede?", "prżeze", "prżi",
-				"we?", "ze?", "za", "ô", "ôde?", "û", "beze?"
+				"dlá", "do", "ku", "na", "nade?", "po", "pode?", "ponade?", "poza", "prżede?", "prżeze", "prżi", "we?",
+				"ze?", "za", "ô", "ôde?", "û", "beze?"
 			}
 		}
 
@@ -670,7 +683,7 @@ local function multiword(term, lang, period, dial)
 
 		local function assimilate_preps(str)
 			local function assim(from, to, before)
-				str = rsub(str, ("%s(%%$ ˈ?[%s])"):format(from, before), to.."%1")
+				str = rsub(str, ("%s(%%$ ˈ?[%s])"):format(from, before), to .. "%1")
 			end
 			local T = "ptsʂɕkx"
 			assim("d", "t", T)
@@ -702,7 +715,7 @@ local function multiword(term, lang, period, dial)
 end
 
 -- This handles all the magic characters <*>, <^>, <+>, <.>, <#>.
-local function normalise_input(term, title)
+local function normalise_input(term, pagename)
 
 	local function check_af(str, af, reg, repl, err_msg)
 		reg = reg:format(af)
@@ -717,29 +730,28 @@ local function normalise_input(term, title)
 
 	if term == "#" then
 		-- The diesis stands simply for {{PAGENAME}}.
-		return title
+		return pagename
 	elseif (term == "+") or term:find("^%^+$") or (term == "*") then
 		-- Inputs that are just '+', '*', '^', '^^', etc. are treated as
-		-- if they contained the title with those symbols preceding it.
-		return term .. title
+		-- if they contained the pagename with those symbols preceding it.
+		return term .. pagename
 	-- Handle syntax like <po.>, <.ka> and <po..ka>. This allows to not respell
 	-- the entire word when all is needed is to specify syllabification of a prefix
 	-- and/or a suffix.
 	elseif term:find(".+%.$") then
-		return check_pref(title, term:sub(1, -2))
+		return check_pref(pagename, term:sub(1, -2))
 	elseif term:find("^%..+") then
-		return check_suf(title, term:sub(2))
+		return check_suf(pagename, term:sub(2))
 	elseif term:find(".+%.%..+") then
-		return check_suf(check_pref(title, term:gsub("%.%..+", "")), term:gsub(".+%.%.", ""))
+		return check_suf(check_pref(pagename, term:gsub("%.%..+", "")), term:gsub(".+%.%.", ""))
 	end
 
 	return term
 
 end
 
--- This converts the raw information, the arguments and page title, into
--- tables to be handed over to the IPA module.
-local function get_lect_line(lang_code, page_title, args_terms, args_quals, args_refs, args_period, dial_code)
+-- This converts the raw information, the arguments and pagename, into tables to be handed over to the IPA module.
+local function get_lect_line(lang_code, pagename, args_terms, args_quals, args_refs, args_period, dial_code)
 
 	if #args_terms == 1 and args_terms[1] == "-" then
 		return nil, {}, {}, false
@@ -760,7 +772,7 @@ local function get_lect_line(lang_code, page_title, args_terms, args_quals, args
 	-- Loops over the terms given as arguments.
 	for arg_index, arg_term in ipairs(args_terms) do
 		-- Handles magic symbols in the input.
-		arg_term = normalise_input(arg_term, page_title)
+		arg_term = normalise_input(arg_term, pagename)
 		-- Obtains the transcription and hyphenation for the current index.
 		local prons, hyph = multiword(arg_term, lang_code, args_period, dial_code)
 		-- Obtains the possible qualifiers of the current index, separated by semicolon.
@@ -833,10 +845,10 @@ local function get_lect_line(lang_code, page_title, args_terms, args_quals, args
 		-- If a hyphenation value had been returned by the <multiword> function, it means
 		-- that in any case a hyphenation is required (i.e. it is not a multiword term nor is
 		-- the hyphenation manually turned off, etc.). If the hyphenation value acquired however
-		-- does not match the page title, it is not added to the table.
+		-- does not match the pagename, it is not added to the table.
 		if hyph then
 			do_hyph = true
-			if hyph:gsub("%.", "") == page_title then
+			if hyph:gsub("%.", "") == pagename then
 				table_insert_if_absent(hyph_list, hyph)
 			end
 		end
@@ -871,7 +883,7 @@ function export.get_lect_line_bot(frame)
 		["q"] = { list = true, allow_holes = true, alias_of = "qual" },
 		["period"] = {},
 		["ref"] = { list = true, allow_holes = true },
-		["title"] = {}, -- for debugging or demonstration only
+		["pagename"] = {}, -- for debugging or demonstration only
 		["plp"] = { list = true },
 	})
 
@@ -883,7 +895,7 @@ function export.get_lect_line_bot(frame)
 
 	local pron_list, hyph_list, rhyme_list, do_hyph = get_lect_line(
 		iargs.lang,
-		iargs.title or mw.title.getCurrentTitle().text,
+		iargs.pagename or mw.loadData("Module:headword/data").pagename,
 		terms,
 		iargs.qual,
 		iargs.ref,
@@ -911,17 +923,13 @@ end
 -- This is the function used by the template {{zlw-mpl-IPA}}.
 -- TODO: the template should be deprecated in favour of the new pl-pr template.
 function export.mpl_IPA(frame)
-
 	local args = require("Module:parameters").process(frame:getParent().args, {
-
 		[1] = { list = true },
 		["qual"] = { list = true, allow_holes = true },
 		["q"] = { list = true, allow_holes = true, alias_of = "qual" },
 		["period"] = {},
 		["ref"] = { list = true, allow_holes = true },
-
-		["title"] = {}, -- for debugging or demonstration only
-
+		["pagename"] = {}, -- for debugging or demonstration only
 	})
 
 	local terms = args[1]
@@ -937,7 +945,7 @@ function export.mpl_IPA(frame)
 			lang = lang,
 			items = (get_lect_line(
 				"pl",
-				args.title or mw.title.getCurrentTitle().text,
+				args.pagename or mw.loadData("Module:headword/data").pagename,
 				terms,
 				args.qual,
 				args.ref,
@@ -965,7 +973,6 @@ local function textual_len(text)
 end
 
 function export.IPA(frame)
-
 	local arg_lang = frame.args.lang
 
 	if arg_lang == "pl" then
@@ -973,23 +980,18 @@ function export.IPA(frame)
 	end
 
 	local process_args = {
-
 		[1] = { list = true },
-
 		["qual"] = { list = true, allow_holes = true },
 		["q"] = { list = true, allow_holes = true, alias_of = "qual" },
+		["ref"] = { list = true, allow_holes = true },
 		["hyphs"] = {}, ["h"] = { alias_of = "hyphs" },
 		["rhymes"] = {}, ["r"] = { alias_of = "rhymes" },
 		["audios"] = {}, ["a"] = { alias_of = "audios" },
 		["homophones"] = {}, ["hh"] = { alias_of = "homophones" },
-		["ref"] = { list = true, allow_holes = true },
-
-		["title"] = {}, -- for debugging or demonstration only
-
+		["pagename"] = {}, -- for debugging or demonstration only
 	}
 
 	if arg_lang == "pl" then
-
 		process_args["mpl_period"] = {}
 		process_args["mp_period"] = { alias_of = "mpl_period" }
 
@@ -1006,7 +1008,6 @@ function export.IPA(frame)
 			process_args[alias_code .. "_q"] = { list = true, allow_holes = true, alias_of = lect_code .. "_qual" }
 			process_args[alias_code .. "_ref"] = { list = true, allow_holes = true, alias_of = lect_code .. "_ref" }
 		end
-
 	end
 
 	local args = require("Module:parameters").process(frame:getParent().args, process_args)
@@ -1014,13 +1015,13 @@ function export.IPA(frame)
 	local lang = require("Module:languages").getByCode((arg_lang == "slv" or arg_lang == "mas") and ("zlw-" .. arg_lang) or arg_lang)
 
 	local terms = args[1]
-	local title = args.title or mw.title.getCurrentTitle().text
+	local pagename = args.pagename or mw.loadData("Module:headword/data").pagename
 
 	if #terms == 0 then
 		terms = { "#" }
 	end
 
-	local pron_list, hyph_list, rhyme_list, do_hyph = get_lect_line(arg_lang, title, terms, args.qual, args.ref)
+	local pron_list, hyph_list, rhyme_list, do_hyph = get_lect_line(arg_lang, pagename, terms, args.qual, args.ref)
 
 	local pl_lect_prons
 
@@ -1030,7 +1031,7 @@ function export.IPA(frame)
 				if pl_lect_prons == nil then pl_lect_prons = {} end
 				pl_lect_prons[lect_code] = get_lect_line(
 					"pl",
-					title,
+					pagename,
 					args[lect_code],
 					args[lect_code .. "_qual"],
 					args[lect_code .. "_ref"],
@@ -1178,14 +1179,14 @@ function export.IPA(frame)
 			if audio:find("<[^<>]+>$") then
 				caption = caption .. ", ''" ..
 					(audio:match("<([^<>]+)>$"))
-						:gsub("#", title)
-						:gsub("~", title .. " się")
+						:gsub("#", pagename)
+						:gsub("~", pagename .. " się")
 					.. "''"
 				audio = (audio:gsub("<[^<>]+>$", ""))
 			end
 			ret = ("%s\n*%s"):format(ret, format_audio {
 				lang = lang,
-				file = audio:gsub("#", title),
+				file = audio:gsub("#", pagename),
 				caption = caption,
 			})
 			audio_index = audio_index + 1
@@ -1193,7 +1194,7 @@ function export.IPA(frame)
 	end
 
 	if #rhyme_list > 0 then
-		ret = ("%s\n*%s"):format(ret, require("Module:rhymes").format_rhymes({ lang = lang, rhymes = rhyme_list }))
+		ret = ("%s\n*%s"):format(ret, require("Module:rhymes").format_rhymes { lang = lang, rhymes = rhyme_list })
 	end
 
 	if do_hyph then
@@ -1206,11 +1207,11 @@ function export.IPA(frame)
 					table.insert(hyphs[hyph_i].hyph, syl_v)
 				end
 			end
-			ret = ret..require("Module:hyphenation").format_hyphenations {
+			ret = ret .. require("Module:hyphenation").format_hyphenations {
 				lang = lang, hyphs = hyphs, caption = "Syllabification"
 			}
 		else
-			ret = ret.."Syllabification: <small>[please specify syllabification manually]</small>"
+			ret = ret .. "Syllabification: <small>[please specify syllabification manually]</small>"
 			if mw.title.getCurrentTitle().nsText == "" then
 				ret = ("%s[[Category:%s-pronunciation_without_hyphenation]]"):format(ret, arg_lang)
 			end
