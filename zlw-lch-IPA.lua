@@ -508,12 +508,11 @@ local function phonemic(txt, do_hyph, lang, is_prep, period, dial)
 				stressed_txt = "ˈ" .. stressed_txt
 			end
 		end
-		-- Finally strip away syllable separation marks.
-		return (stressed_txt:gsub("%.", ""))
+		return stressed_txt
 	end
 
 	local should_stress = not (unstressed or txt:find("ˈ"))
-	local prons = should_stress and add_stress(ante) or (txt:gsub("%.", ""))
+	local prons = should_stress and add_stress(ante) or txt
 
 	if is_prep then
 		prons = prons .. "$"
@@ -777,8 +776,14 @@ local function get_lect_line(lang_code, page_title, args_terms, args_quals, args
 		-- regular oscillations (e.g. Middle Polish <rz>, etc.). The references can
 		-- be omitted (if it's the second transcription of a regular oscillation).
 		local function new_pron(pron, additional_qualifier, dont_refs)
+			local bracketed_pron = brackets:format(pron)
+			-- Strip away syllable dividers, but return a version with the syllable dividers for
+			-- comparison purposes with the old {{pl-p}}. FIXME: IMO we should be including the
+			-- syllable dividers in the phonemic output. [Benwing]
+			local bracketed_pron_no_syldivs = bracketed_pron:gsub("%.", "")
 			local ret = {
-				pron = brackets:format(pron),
+				pron = bracketed_pron_no_syldivs,
+				pron_with_syldivs = bracketed_pron,
 				qualifiers = qualifiers,
 				refs = not dont_refs and {args_refs[arg_index]},
 			}
@@ -867,6 +872,7 @@ function export.get_lect_line_bot(frame)
 		["period"] = {},
 		["ref"] = { list = true, allow_holes = true },
 		["title"] = {}, -- for debugging or demonstration only
+		["plp"] = { list = true },
 	})
 
 	local terms = iargs[1]
@@ -875,7 +881,7 @@ function export.get_lect_line_bot(frame)
 		terms = { "#" }
 	end
 
-	local retval = get_lect_line(
+	local pron_list, hyph_list, rhyme_list, do_hyph = get_lect_line(
 		iargs.lang,
 		iargs.title or mw.title.getCurrentTitle().text,
 		terms,
@@ -884,6 +890,20 @@ function export.get_lect_line_bot(frame)
 		iargs.period,
 		iargs.lect
 	)
+
+	local retval = {
+		pron_list = pron_list,
+		hyph_list = hyph_list,
+		rhyme_list = rhyme_list,
+		do_hyph = do_hyph,
+	}
+
+	if iargs.plp[1] then
+		retval.plp_prons = {}
+		for _, plp in ipairs(iargs.plp) do
+			table.insert(retval.plp_prons, "/" .. require("Module:pl-IPA").convert_to_IPA(plp) .. "/")
+		end
+	end
 
 	return require("Module:JSON").toJSON(retval)
 end		
