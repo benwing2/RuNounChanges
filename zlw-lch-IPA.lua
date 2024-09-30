@@ -11,7 +11,7 @@ local ulower = m_str_utils.lower
 local uupper = mw.ustring.upper
 local usub = mw.ustring.sub
 
--- Dialectal data later retrieved in the module.
+-- Lect data later retrieved in the module.
 local data
 
 -- version of rsubn() that discards all but the first return value
@@ -28,7 +28,7 @@ local OVERTIE = u(0x361) -- COMBINING DOUBLE INVERTED BREVE
 	so the reason why the transcriptions are multiple is only because of the -yka alternating stress
 	et sim. This only accepts single-word terms. Multiword terms are handled by multiword().
 --]]
-local function phonemic(txt, do_hyph, lang, is_prep, period, dial)
+local function phonemic(txt, do_hyph, lang, is_prep, period, lect)
 
 	local ante = 0
 	local unstressed = is_prep or false
@@ -110,7 +110,7 @@ local function phonemic(txt, do_hyph, lang, is_prep, period, dial)
 			end
 		end
 		-- Recognise <-yka> and its declined form and automatically assign it an antepenult stress.
-		if tfind(".+[yi][kc].+") and dial == nil then
+		if tfind(".+[yi][kc].+") and lect == nil then
 			local endings = lg {
 				{ "k[aąęio]", "ce", "kach", "kom" },
 				szl = { "k[aãio]", "ce", "kacj", "kōm", "kach" },
@@ -124,7 +124,7 @@ local function phonemic(txt, do_hyph, lang, is_prep, period, dial)
 				end
 			end
 		end
-		if dial == "mpl" then
+		if lect == "mpl" then
 			if tfind(".+[yi]j.+") then
 				local endings = { "[ąáéo]", "[ée]j", "[áo]m", "ach" }
 				for _, v in ipairs(endings) do
@@ -218,7 +218,7 @@ local function phonemic(txt, do_hyph, lang, is_prep, period, dial)
 			local function find(x) return rfind(b, x) end
 			local function is_diagraph(thing)
 				local r = find(thing:format("[crsd]z")) or find(thing:format("ch")) or find(thing:format("d[żź]"))
-				if dial == "mpl" then return r or find(thing:format("b́")) end
+				if lect == "mpl" then return r or find(thing:format("b́")) end
 				if lang == "slv" then return r or find(thing:format("gh")) end
 				if lang == "mas" then return r or find(thing:format("rż")) end
 				return r
@@ -278,7 +278,7 @@ local function phonemic(txt, do_hyph, lang, is_prep, period, dial)
 	tsub("[cs]z", { ["cz"]="t_ʂ", ["sz"]="ʂ" })
 	tsub(lg { "rz", mas = "rż" }, "R")
 	tsub("d([zżź])", "d_%1")
-	if dial == "mpl" then tsub("b́", "bʲ") end
+	if lect == "mpl" then tsub("b́", "bʲ") end
 	if lang == "slv" then tsub("gh", "ɣ") end
 
 	-- basic orthographical rules
@@ -295,10 +295,10 @@ local function phonemic(txt, do_hyph, lang, is_prep, period, dial)
 			["ł"]="w", ["w"]="v", ["ż"]="ʐ",
 			["g"]="ɡ", ["h"]="x",
 		}
-		if dial then
+		if lect then
 			replacements["é"] = "e"
 			replacements["á"] = "ɒ"
-			if dial == "mpl" then
+			if lect == "mpl" then
 				replacements["ę"] = "ɛ̃"
 				replacements["ą"] = "ɔ̃"
 				replacements["y"] = "ɨ"
@@ -312,19 +312,19 @@ local function phonemic(txt, do_hyph, lang, is_prep, period, dial)
 				replacements["ô"] = "wɔ"
 				replacements["û"] = "wu"
 				replacements["ý"] = "Y"
-				if data.lects[dial].mid_o then
+				if data.lects[lect].mid_o then
 					replacements["ó"] = "o"
-				elseif dial == "ekr" then
+				elseif lect == "ekr" then
 					replacements["ó"] = "O"
 				end
-				if data.lects[dial].front_y then
+				if data.lects[lect].front_y then
 					replacements["y"] = "Y"
 				end
-				if data.lects[dial].dark_l then
+				if data.lects[lect].dark_l then
 					replacements["ł"] = "ɫ"
 					replacements["l"] = "lʲ"
 				end
-				if data.lects[dial].glottal_h then
+				if data.lects[lect].glottal_h then
 					replacements["h"] = "h"
 				end
 			end
@@ -429,8 +429,8 @@ local function phonemic(txt, do_hyph, lang, is_prep, period, dial)
 	}
 
 	local trilled_rz = lang == "csb" or lang == "slv" or lang == "mas"
-	if not trilled_rz and dial then
-		trilled_rz = data.lects[dial].trilled_rz
+	if not trilled_rz and lect then
+		trilled_rz = data.lects[lect].trilled_rz
 	end
 
 	if trilled_rz then
@@ -441,7 +441,7 @@ local function phonemic(txt, do_hyph, lang, is_prep, period, dial)
 		devoice["ɣ"] = "x"
 	end
 
-	local mpl_J = dial == "mpl" and "ʲ?" or ""
+	local mpl_J = lect == "mpl" and "ʲ?" or ""
 
 	local arr_list_devoice = arr_list(devoice)
 
@@ -470,7 +470,7 @@ local function phonemic(txt, do_hyph, lang, is_prep, period, dial)
 		tsub("R", "r̝")
 	end
 
-	if dial ~= "mpl" then
+	if lect ~= "mpl" then
 		tsub("S", "ʂ")
 		tsub("R", "ʐ")
 	end
@@ -512,8 +512,8 @@ local function phonemic(txt, do_hyph, lang, is_prep, period, dial)
 	-- Handles stress.
 	local function add_stress(stressed_syllable, force_initial_stress)
 		local stressed_txt
-		if force_initial_stress or (dial and data.lects[dial].initial_stress) then
-			-- Deals with initially stressed dialects.
+		if force_initial_stress or (lect and data.lects[lect].initial_stress) then
+			-- Deals with initially stressed lects.
 			stressed_txt = "ˈ" .. txt
 		else
 			-- Accent elsewhere, usually ante-penult although can vary depending on
@@ -540,17 +540,17 @@ local function phonemic(txt, do_hyph, lang, is_prep, period, dial)
 	end
 
 	if lang == "pl" then
-		if dial then
-			if dial == "ekr" then
+		if lect then
+			if lect == "ekr" then
 				if tfind("O") then
 					prons = { (prons:gsub("O", "o")), (prons:gsub("O", "u")) }
 				end
-			elseif dial == "ora" or dial == "zag" then
+			elseif lect == "ora" or lect == "zag" then
 				local stressed_initially = add_stress(0, true)
 				if stressed_initially ~= prons then
-					prons = dial == "ora" and { stressed_initially, prons } or { prons, stressed_initially }
+					prons = lect == "ora" and { stressed_initially, prons } or { prons, stressed_initially }
 				end
-			elseif dial == "mpl" then
+			elseif lect == "mpl" then
 				if tfind("[RS]") then
 					local mp_early = prons:gsub("[RS]", "r̝")
 					local mp_late = prons:gsub("R", "ʐ"):gsub("S", "ʂ")
@@ -621,7 +621,7 @@ end
 	Handles a single input, returning a table of transcriptions. Returns also a string of
 	hyphenation and a table of rhymes if it is a single-word term.
 --]]
-local function multiword(term, lang, period, dial)
+local function multiword(term, lang, period, lect)
 	if term:find("^%[.+%]$") then
 		return { phonetic = term }
 	elseif term:find(" ") then
@@ -662,7 +662,7 @@ local function multiword(term, lang, period, dial)
 					break
 				end
 			end
-			local v = phonemic(word, false, lang, is_prep, period, dial)
+			local v = phonemic(word, false, lang, is_prep, period, lect)
 			local sep = "%s %s"
 			if p == nil then
 				p = v
@@ -709,7 +709,7 @@ local function multiword(term, lang, period, dial)
 		return p
 
 	else
-		return phonemic(term, dial ~= "mpl", lang, false, period, dial)
+		return phonemic(term, lect ~= "mpl", lang, false, period, lect)
 	end
 
 end
@@ -751,8 +751,8 @@ local function normalise_input(term, pagename)
 end
 
 -- This converts the raw information, the arguments and pagename, into tables to be handed over to the IPA module.
-local function get_lect_line(lang_code, pagename, args_terms, args_quals, args_refs, args_period, dial_code)
-
+-- It is called externally by [[Module:zlw-lch-IPA/testcases/driver]].
+function export.get_lect_pron_info(lang_code, pagename, args_terms, args_quals, args_refs, args_period, lect_code)
 	if #args_terms == 1 and args_terms[1] == "-" then
 		return nil, {}, {}, false
 	end
@@ -763,8 +763,8 @@ local function get_lect_line(lang_code, pagename, args_terms, args_quals, args_r
 	local do_hyph = false
 
 	local brackets = "/%s/"
-	if dial_code then
-		if data.lects[dial_code].phonetic then
+	if lect_code then
+		if data.lects[lect_code].phonetic then
 			brackets = "[%s]"
 		end
 	end
@@ -774,7 +774,7 @@ local function get_lect_line(lang_code, pagename, args_terms, args_quals, args_r
 		-- Handles magic symbols in the input.
 		arg_term = normalise_input(arg_term, pagename)
 		-- Obtains the transcription and hyphenation for the current index.
-		local prons, hyph = multiword(arg_term, lang_code, args_period, dial_code)
+		local prons, hyph = multiword(arg_term, lang_code, args_period, lect_code)
 		-- Obtains the possible qualifiers of the current index, separated by semicolon.
 		local qualifiers = {}
 		if args_quals[arg_index] then
@@ -826,13 +826,13 @@ local function get_lect_line(lang_code, pagename, args_terms, args_quals, args_r
 				pl = { "prescribed", "casual" },
 				szl = { nil, "Western", "Głogówek"},
 			})[lang_code]
-			if lang_code == "pl" and dial_code then
+			if lang_code == "pl" and lect_code then
 				multiple_transcript = ({
 					mpl = { "16<sup>th</sup> c.", "17<sup>th</sup>–18<sup>th</sup> c." },
 					ekr = { "pre-21<sup>st</sup> c.", "21<sup>st</sup> c."},
 					ora = { "Poland", "Slovakia" },
 					zag = { "north", "south" },
-				})[dial_code]
+				})[lect_code]
 			end
 			for i, v in ipairs(prons) do
 				if #pron_list < (i + 1) then pron_list[i + 1] = {} end
@@ -874,7 +874,7 @@ local function get_lect_line(lang_code, pagename, args_terms, args_quals, args_r
 	return pron_list, hyph_list, rhyme_list, do_hyph
 end
 
-function export.get_lect_line_bot(frame)
+function export.get_lect_pron_info_bot(frame)
 	local iargs = require("Module:parameters").process(frame.args, {
 		["lang"] = { default = "pl" },
 		["lect"] = {},
@@ -893,7 +893,7 @@ function export.get_lect_line_bot(frame)
 		terms = { "#" }
 	end
 
-	local pron_list, hyph_list, rhyme_list, do_hyph = get_lect_line(
+	local pron_list, hyph_list, rhyme_list, do_hyph = export.get_lect_pron_info(
 		iargs.lang,
 		iargs.pagename or mw.loadData("Module:headword/data").pagename,
 		terms,
@@ -943,7 +943,7 @@ function export.mpl_IPA(frame)
 		require("Module:accent qualifier").format_qualifiers(lang, {"Middle Polish"}),
 		require("Module:IPA").format_IPA_full {
 			lang = lang,
-			items = (get_lect_line(
+			items = (export.get_lect_pron_info(
 				"pl",
 				args.pagename or mw.loadData("Module:headword/data").pagename,
 				terms,
@@ -1021,7 +1021,8 @@ function export.IPA(frame)
 		terms = { "#" }
 	end
 
-	local pron_list, hyph_list, rhyme_list, do_hyph = get_lect_line(arg_lang, pagename, terms, args.qual, args.ref)
+	local pron_list, hyph_list, rhyme_list, do_hyph =
+		export.get_lect_pron_info(arg_lang, pagename, terms, args.qual, args.ref)
 
 	local pl_lect_prons
 
@@ -1029,7 +1030,7 @@ function export.IPA(frame)
 		for lect_code, _ in pairs(data.lects) do
 			if #args[lect_code] > 0 then
 				if pl_lect_prons == nil then pl_lect_prons = {} end
-				pl_lect_prons[lect_code] = get_lect_line(
+				pl_lect_prons[lect_code] = export.get_lect_pron_info(
 					"pl",
 					pagename,
 					args[lect_code],
@@ -1115,7 +1116,7 @@ function export.IPA(frame)
 			ret = ret .. '\n<div class="vsHide">\n'
 		end
 		local m_format_qualifiers = require("Module:accent qualifier").format_qualifiers
-		-- First groups the lects into their dialect groups.
+		-- First groups the lects into their lect groups.
 		local grouped_lects = {}
 		for lect_code, lect_prons in pairs(pl_lect_prons) do
 			local lect_group = data.lects[lect_code].group
@@ -1150,7 +1151,7 @@ function export.IPA(frame)
 							ret = ret .. "\n*" .. m_format_qualifiers(lang, { data.lect_groups[group_index - 1].name }) .. ":"
 						end
 					end
-					-- Dialect group header.
+					-- Lect group header.
 					ret = ret .. "\n*" .. additional_indent ..
 						m_format_qualifiers(lang, { group.name }) .. ":"
 					-- The lects are sorted according to their <index> value.
