@@ -1,10 +1,15 @@
 local export = {}
 
 local m_str_utils = require("Module:string utilities")
+local audio_module = "Module:audio"
 local links_module = "Module:links"
+local parse_utilities_module = "Module:parse utilities"
+local table_module = "Module:table"
 
 local u = m_str_utils.char
 local rfind = m_str_utils.find
+local rmatch = m_str_utils.match
+local rsplit = m_str_utils.split
 local rsubn = m_str_utils.gsub
 local ulen = m_str_utils.len
 local ulower = m_str_utils.lower
@@ -22,6 +27,181 @@ end
 
 local OVERTIE = u(0x361) -- COMBINING DOUBLE INVERTED BREVE
 
+local function split_on_comma(term)
+	if not term then
+		return nil
+	end
+	if term:find(",%s") or term:find("\\") then
+		return require(parse_utilities_module).split_on_comma(term)
+	else
+		return rsplit(term, ",")
+	end
+end
+
+-- Remove any HTML from the formatted text and resolve links, since the extra characters don't contribute to the
+-- displayed length.
+local function convert_to_raw_text(text)
+	text = rsub(text, "<.->", "")
+	if text:find("%[%[") then
+		text = require(links_module).remove_links(text)
+	end
+	return text
+end
+
+-- Return the approximate displayed length in characters.
+local function textual_len(text)
+	return ulen(convert_to_raw_text(text))
+end
+
+local function parse_respellings_with_modifiers(respelling, paramname)
+	local function generate_obj(respelling, parse_err)
+		return {respelling = respelling}
+	end
+
+	if respelling:find("[<%[]") then
+		local put = require(parse_utilities_module)
+		-- Parse balanced segment runs involving either [...] (substitution notation) or <...> (inline modifiers).
+		-- We do this because we don't want commas inside of square or angle brackets to count as respelling
+		-- delimiters. However, we need to rejoin square-bracketed segments with nearby ones after splitting
+		-- alternating runs on comma. For example, if we are given
+		-- "a[x]a<q:learned>,[vol:vôl,ks]<q:nonstandard>", after calling
+		-- parse_multi_delimiter_balanced_segment_run() we get the following output:
+		--
+		-- {"a", "[x]", "a", "<q:learned>", ",", "[vol:vôl,ks]", "", "<q:nonstandard>", ""}
+		--
+		-- After calling split_alternating_runs(), we get the following:
+		--
+		-- {{"a", "[x]", "a", "<q:learned>", ""}, {"", "[vol:vôl,ks]", "", "<q:nonstandard>", ""}}
+		--
+		-- We need to rejoin stuff on either side of the square-bracketed portions.
+		local segments = put.parse_multi_delimiter_balanced_segment_run(respelling, {{"<", ">"}, {"[", "]"}})
+
+		local comma_separated_groups = put.split_alternating_runs_on_comma(segments)
+
+		-- Process each value.
+		local retval = {}
+		for i, group in ipairs(comma_separated_groups) do
+			-- Rejoin runs that don't involve <...>.
+			local j = 2
+			while j <= #group do
+				if not group[j]:find("^<.*>$") then
+					group[j - 1] = group[j - 1] .. group[j] .. group[j + 1]
+					table.remove(group, j)
+					table.remove(group, j)
+				else
+					j = j + 2
+				end
+			end
+
+			local param_mods = {
+				q = {type = "qualifier"},
+				qq = {type = "qualifier"},
+				a = {type = "labels"},
+				aa = {type = "labels"},
+				ref = {item_dest = "refs", type = "references"},
+			}
+
+			table.insert(retval, put.parse_inline_modifiers_from_segments {
+				group = group,
+				arg = respelling,
+				props = {
+					paramname = paramname,
+					param_mods = param_mods,
+					generate_obj = generate_obj,
+				},
+			})
+		end
+	else
+		local retval = {}
+		for _, item in ipairs(split_on_comma(respelling)) do
+			table.insert(retval, generate_obj(item))
+		end
+		return retval
+	end
+end
+
+-- Parse a pronunciation modifier in `arg`, the argument portion in an inline modifier (after the prefix), which
+-- specifies a pronunciation property such as rhyme, hyphenation/syllabification, homophones or audio. The argument
+-- can itself have inline modifiers, e.g. <audio:Foo.ogg<a:Masovia>>. The allowed inline modifiers are specified
+-- by `param_mods` (of the format expected by `parse_inline_modifiers()`); in addition to any modifiers specified
+-- there, the modifiers <q:...>, <qq:...>, <a:...>, <aa:...> and <ref:...> are always accepted. `generate_obj` and
+-- `parse_err` are like in `parse_inline_modifiers()` and specify respectively a function to generate the object into
+-- which modifier properties are stored given the non-modifier part of the argument, and a function to generate an error
+-- message (given the message). Normally, a comma-separated list of pronunciation properties is accepted and parsed,
+-- where each element in the list can have its own inline modifiers and where no spaces are allowed next to the commas
+-- in order for them to be recognized as separators. This can be overridden with `splitchar` (which can actually be a
+-- Lua pattern). The return value is a list of property objects.
+local function parse_pron_modifier(arg, parse_err, generate_obj, param_mods, splitchar)
+	if arg:find("<") then
+		param_mods.q = {type = "qualifier"}
+		param_mods.qq = {type = "qualifier"}
+		param_mods.a = {type = "labels"}
+		param_mods.aa = {type = "labels"}
+		param_mods.ref = {item_dest = "refs", type = "references"}
+		return require(parse_utilities_module).parse_inline_modifiers(arg, {
+			param_mods = param_mods,
+			generate_obj = generate_obj,
+			parse_err = parse_err,
+			splitchar = splitchar or ",",
+		})
+		return retval
+	else
+		local retval = {}
+		local split_arg = splitchar == "," and split_on_comma(arg) or rsplit(arg, splitchar)
+		for _, term in ipairs(split_arg) do
+			table.insert(retval, generate_obj(term))
+		end
+		return retval
+	end
+end
+
+
+local function generate_audio_obj(arg)
+	return {file = arg}
+end
+
+
+local function parse_audio(arg, parse_err)
+	local param_mods = {
+		IPA = {
+			sublist = true,
+		},
+		text = {},
+		t = {
+			item_dest = "gloss",
+		},
+		-- No tr=, ts=, or sc=; doesn't make sense for Polish.
+		gloss = {},
+		pos = {},
+		-- No alt=; text= already goes in alt=.
+		lit = {},
+		-- No id=; text= already goes in alt= and isn't normally linked.
+		g = {
+			item_dest = "genders",
+			sublist = true,
+		},
+		bad = {},
+		cap = {
+			item_dest = "caption",
+		},
+	}
+
+	-- Split on semicolon instead of comma because some filenames have embedded commas not followed by a space
+	-- (typically followed by an underscore).
+	local retvals = parse_pron_modifier(arg, parse_err, generate_audio_obj, param_mods, "%s*;%s*")
+	for i, retval in ipairs(retvals) do
+		retval.lang = lang
+		local textobj = require(audio_module).construct_audio_textobj(retval)
+		retval.text = textobj
+		-- Set to nil the fields that were moved into `retval.text`.
+		retval.gloss = nil
+		retval.pos = nil
+		retval.lit = nil
+		retval.genders = nil
+	end
+	return retvals
+end
+
 --[[
 	As can be seen from the last lines of the function, this returns a table of transcriptions,
 	and if do_hyph, also a string being the hyphenation. These are based on a single spelling given,
@@ -29,7 +209,6 @@ local OVERTIE = u(0x361) -- COMBINING DOUBLE INVERTED BREVE
 	et sim. This only accepts single-word terms. Multiword terms are handled by multiword().
 --]]
 local function phonemic(txt, do_hyph, lang, is_prep, period, lect)
-
 	local ante = 0
 	local unstressed = is_prep or false
 	local colloquial = true
@@ -51,8 +230,8 @@ local function phonemic(txt, do_hyph, lang, is_prep, period, lect)
 			pl = "ĄĆĘŁŃÓŚŹŻ" --[[and the dialectal]] .. "ÁÉÔÛÝ" --[[and the MPl]] .. "ḾṔẂ",
 			szl = "ÃĆŁŃŌŎÔÕŚŹŻ",
 			csb = "ÔÒÃËÙÉÓĄŚŁŻŹĆŃ",
-			slv = "ÃÉËÊÓÕÔÚÙŃŻ",
-			mas = "ÁÄÉŁŃÓÔŚÛŸŻŹ"
+			["zlw-slv"] = "ÃÉËÊÓÕÔÚÙŃŻ",
+			["pl-mas"] = "ÁÄÉŁŃÓÔŚÛŸŻŹ"
 		})
 		if tfind(capitals) then
 			local i = 1
@@ -81,10 +260,10 @@ local function phonemic(txt, do_hyph, lang, is_prep, period, lect)
 		pl = "aąeęioóuy" .. "áéôûý",
 		szl = "aãeéioōŏôõuy",
 		csb = "ôòãëùéóąeyuioa",
-		slv = "aãeéëêioóõôuúùyăĭŏŭŭùy̆ā",
-		mas = "aáäeéioóôuûÿ"
+		["zlw-slv"] = "aãeéëêioóõôuúùyăĭŏŭŭùy̆ā",
+		["pl-mas"] = "aáäeéioóôuûÿ"
 	}
-	tsub(("([^%s])" .. (lang == "slv" and "j" or "i") .. "([%s])"):format(V, V), "%1I%2")
+	tsub(("([^%s])" .. (lang == "zlw-slv" and "j" or "i") .. "([%s])"):format(V, V), "%1I%2")
 
 	if txt:find("^*") then
 		-- The symbol <*> before a word indicates it is unstressed.
@@ -115,7 +294,7 @@ local function phonemic(txt, do_hyph, lang, is_prep, period, lect)
 				{ "k[aąęio]", "ce", "kach", "kom" },
 				szl = { "k[aãio]", "ce", "kacj", "kōm", "kach" },
 				csb = { "k[aeąãùóoô]", "ce", "kacj", "kóm", "kama", "kach" },
-				slv = { "k[aãêúóoôõ]", "cê", "kacj", "kji", "kóm", "kóma", "kamy", "kach" }
+				["zlw-slv"] = { "k[aãêúóoôõ]", "cê", "kacj", "kji", "kóm", "kóma", "kamy", "kach" }
 			}
 			for _, v in ipairs(endings) do
 				if tfind(("[yi]%s$"):format(v)) then
@@ -186,9 +365,9 @@ local function phonemic(txt, do_hyph, lang, is_prep, period, lect)
 						"nōńć", "dło",
 					}, csb = {
 						"nąc", "dło"
-					}, slv = {
+					}, ["zlw-slv"] = {
 						"nõc", "dlô"
-					}, mas = {
+					}, ["pl-mas"] = {
 						"nóncz", "dło"
 					}
 				}
@@ -219,8 +398,8 @@ local function phonemic(txt, do_hyph, lang, is_prep, period, lect)
 			local function is_diagraph(thing)
 				local r = find(thing:format("[crsd]z")) or find(thing:format("ch")) or find(thing:format("d[żź]"))
 				if lect == "mpl" then return r or find(thing:format("b́")) end
-				if lang == "slv" then return r or find(thing:format("gh")) end
-				if lang == "mas" then return r or find(thing:format("rż")) end
+				if lang == "zlw-slv" then return r or find(thing:format("gh")) end
+				if lang == "pl-mas" then return r or find(thing:format("rż")) end
 				return r
 			end
 			if ((ulen(b) < 2) or is_diagraph("^%s$")) then
@@ -242,7 +421,7 @@ local function phonemic(txt, do_hyph, lang, is_prep, period, lect)
 	if do_hyph then
 		-- Ignore certain symbols and diacritics for the hyphenation.
 		hyph = txt:gsub("'", "."):gsub("-", "")
-		if lang == "slv" then
+		if lang == "zlw-slv" then
 			local BREVE = u(0x306)
 			hyph = rsubn(hyph, "[Iăĭŏŭ" .. BREVE .. "ā]", {
 				["I"] = "j",
@@ -276,10 +455,10 @@ local function phonemic(txt, do_hyph, lang, is_prep, period, lect)
 	-- handle digraphs
 	tsub("ch", "x")
 	tsub("[cs]z", { ["cz"]="t_ʂ", ["sz"]="ʂ" })
-	tsub(lg { "rz", mas = "rż" }, "R")
+	tsub(lg { "rz", ["pl-mas"] = "rż" }, "R")
 	tsub("d([zżź])", "d_%1")
 	if lect == "mpl" then tsub("b́", "bʲ") end
-	if lang == "slv" then tsub("gh", "ɣ") end
+	if lang == "zlw-slv" then tsub("gh", "ɣ") end
 
 	-- basic orthographical rules
 	-- not using lg() here for speed
@@ -356,7 +535,7 @@ local function phonemic(txt, do_hyph, lang, is_prep, period, lect)
 			["ł"]="w", ["w"]="v", ["ż"]="ʒ",
 			["g"]="ɡ", ["h"]="x",
 		})
-	elseif lang == "slv" then
+	elseif lang == "zlw-slv" then
 		tsub(".", {
 			-- vowels
 			["e"]="ɛ", ["é"]="e", ["o"]="ɔ",
@@ -369,7 +548,7 @@ local function phonemic(txt, do_hyph, lang, is_prep, period, lect)
 			["w"]="v", ["ż"]="ʒ",
 			["g"]="ɡ", ["h"]="x",
 		})
-	elseif lang == "mas" then
+	elseif lang == "pl-mas" then
 		tsub(".", {
 			-- vowels
 			["á"]="ɒ", ["ä"]="æ",
@@ -385,7 +564,7 @@ local function phonemic(txt, do_hyph, lang, is_prep, period, lect)
 		})
 	end
 
-	if lang == "csb" or lang == "slv" or lang == "mas" then
+	if lang == "csb" or lang == "zlw-slv" or lang == "pl-mas" then
 		tsub("ʂ", "ʃ")
 		tsub("ʐ", "ʒ")
 	end
@@ -403,7 +582,7 @@ local function phonemic(txt, do_hyph, lang, is_prep, period, lect)
 	tsub(("([%s][.ˈ]?)v"):format(T), "%1f")
 	tsub(("([%s][.ˈ]?)R"):format(T), "%1S")
 
-	if lang == "slv" then
+	if lang == "zlw-slv" then
 		tsub(("([%s][.ˈ]?)ɣ"):format(T), "%1x")
 		tsub(("([%s][.ˈ]?)x"):format(D), "%1ɣ")
 	end
@@ -428,7 +607,7 @@ local function phonemic(txt, do_hyph, lang, is_prep, period, lect)
 		["R"] = "S",
 	}
 
-	local trilled_rz = lang == "csb" or lang == "slv" or lang == "mas"
+	local trilled_rz = lang == "csb" or lang == "zlw-slv" or lang == "pl-mas"
 	if not trilled_rz and lect then
 		trilled_rz = data.lects[lect].trilled_rz
 	end
@@ -437,7 +616,7 @@ local function phonemic(txt, do_hyph, lang, is_prep, period, lect)
 		devoice["R"] = nil
 	end
 
-	if lang == "slv" then
+	if lang == "zlw-slv" then
 		devoice["ɣ"] = "x"
 	end
 
@@ -458,7 +637,7 @@ local function phonemic(txt, do_hyph, lang, is_prep, period, lect)
 		tsub("vw", "w")
 	end
 
-	if lang == "slv" then
+	if lang == "zlw-slv" then
 		local V = "aɛeɔ̃oɵəEɪiʉuyã"
 		tsub("nj$", "n")
 		tsub("nj([^" .. V .. "])", "n%1")
@@ -496,7 +675,8 @@ local function phonemic(txt, do_hyph, lang, is_prep, period, lect)
 		tsub("N([.ˈ]?[pb])", "m%1")
 		tsub("N([.ˈ]?[ɕʑ])", "ɲ%1")
 		tsub("N([.ˈ]?[td]_[ɕʑ])", "ɲ%1")
-		tsub("N([.ˈ]?[tdsz])", "n%1")
+		tsub("N([.ˈ]?[td])", "n%1")
+		tsub("N([.ˈ]?[kɡxɣ])", "ŋ%1")
 		tsub("N([.ˈ]?[wl])", "%1")
 		tsub("ɛN$", "ɛ")
 		tsub("N", "w̃")
@@ -583,7 +763,7 @@ local function phonemic(txt, do_hyph, lang, is_prep, period, lect)
 				(prons:gsub("O", "ɛw")),
 			}
 		end
-	elseif lang == "slv" then
+	elseif lang == "zlw-slv" then
 		if tfind("E") then
 			local V = "aɛeɔ̃oɵəEɪiʉuyã"
 			prons = prons:gsub("ˈ([^" .. V .. "]*)E", "ˈ%1i̯ɛ")
@@ -610,7 +790,7 @@ end
 
 -- Returns rhyme from a transcription.
 local function do_rhyme(pron, lang)
-	local V = ({ pl = "aɛiɔuɘ", szl = "aãɛiɔouɪ", csb = "aãɛeɜiɔoõɞu", slv = "aãɛeĭɪŏɔɵŭʉy", mas = "aɒæɛeiɔou"})[lang]
+	local V = ({ pl = "aɛiɔuɘ", szl = "aãɛiɔouɪ", csb = "aãɛeɜiɔoõɞu", ["zlw-slv"] = "aãɛeĭɪŏɔɵŭʉy", ["pl-mas"] = "aɒæɛeiɔou"})[lang]
 	return {
 		rhyme = rsub(rsub(rsub(pron, "^.*ˈ", ""), ("^[^%s]-([%s])"):format(V, V), "%1"), "%.", ""),
 		num_syl = { select(2, rsubn(pron, ("[%s]"):format(V), "")) }
@@ -622,8 +802,8 @@ end
 	hyphenation and a table of rhymes if it is a single-word term.
 --]]
 local function multiword(term, lang, period, lect)
-	if term:find("^%[.+%]$") then
-		return { phonetic = term }
+	if term:find("^raw:%[.+%]$") then
+		return { phonetic = term:gsub("^raw:", "") }
 	elseif term:find(" ") then
 
 		-- TODO: repeated
@@ -641,10 +821,10 @@ local function multiword(term, lang, period, lect)
 			}, csb = {
 				"beze?", "na", "dlô", "do", "kù", "nade?", "ò", "òde?", "pò", "pòde?", "przede?", "przeze?", "przë",
 				"spòde?", "ù", "we?", "wew", "z[ae]?", "zez", "zeza", "zó", "znade?"
-			}, slv = {
+			}, ["zlw-slv"] = {
 				"dlo", "dô", "na", "nade?", "przêde?", "przêze?", "przë", "pô", "pôde?", "sê?", "vô", "we?", "wôde?",
 				"wù", "za"
-			}, mas = {
+			}, ["pl-mas"] = {
 				"dlá", "do", "ku", "na", "nade?", "po", "pode?", "ponade?", "poza", "prżede?", "prżeze", "prżi", "we?",
 				"ze?", "za", "ô", "ôde?", "û", "beze?"
 			}
@@ -714,9 +894,81 @@ local function multiword(term, lang, period, lect)
 
 end
 
+-- Given a single substitution spec, `to`, figure out the corresponding value of `from` used in a complete
+-- substitution spec. `pagename` is the name of the page, either the actual one or taken from the `pagename` param.
+-- `whole_word`, if set, indicates that the match must be to a whole word (it was preceded by ~).
+local function convert_single_substitution_to_original(to, pagename, whole_word)
+	-- Replace specially-handled characters with a class matching the character and possible replacements.
+	local escaped_from = to
+	escaped_from = escaped_from:gsub("[.']", "")
+	escaped_from = m_str_utils.pattern_escape(escaped_from)
+	-- j can match against i in e.g. [[aikido]] respelled <ajkido> and [[apeiron]] respelled <apejron>
+	escaped_from = escaped_from:gsub("j", "[ji]")
+	-- ń can match against n; in combination with the preceding, ńj can match against ni in e.g. [[Albania]] respelled
+	-- <Albańja>.
+	escaped_from = escaped_from:gsub("ń", "[ńn]")
+	-- k can match against c or cc in e.g. [[altocumulus]] respelled <altokumulus> or [[piccolo]] respelled <pikolo>
+	escaped_from = escaped_from:gsub("k", "[kc]+")
+	-- This is tricky, because we already passed `escaped_from` through pattern_escape() causing a hyphen to get a
+	-- % sign before it, and have to double up the percent signs to match and replace a literal %.
+	escaped_from = escaped_from:gsub("%%%-", "%%-?")
+	escaped_from = "(" .. escaped_from .. ")"
+	if whole_word then
+		escaped_from = "%f[%a]" .. escaped_from .. "%f[%A]"
+	end
+	local match = rmatch(pagename, escaped_from)
+	if match then
+		if match == to then
+			error(("Single substitution spec '%s' found in pagename '%s', replacement would have no effect"):
+				format(to, pagename))
+		end
+		return match
+	end
+	error(("Single substitution spec '%s' couldn't be matched to pagename '%s'"):format(to, pagename))
+end
+
+
+local function apply_substitution_spec(respelling, pagename, parse_err)
+	local subs = split_on_comma(rmatch(respelling, "^%[(.*)%]$"))
+	respelling = pagename
+	for _, sub in ipairs(subs) do
+		local from, escaped_from, to, escaped_to, whole_word
+		if rfind(sub, "^~") then
+			-- whole-word match
+			sub = rmatch(sub, "^~(.*)$")
+			whole_word = true
+		end
+		if sub:find(":") then
+			from, to = rmatch(sub, "^(.-):(.*)$")
+		else
+			to = sub
+			from = convert_single_substitution_to_original(to, pagename, whole_word)
+		end
+		if from then
+			escaped_from = m_str_utils.pattern_escape(from)
+			if whole_word then
+				escaped_from = "%f[%a]" .. escaped_from .. "%f[%A]"
+			end
+			escaped_to = m_str_utils.replacement_escape(to)
+			local subbed_respelling, nsubs = rsubn(respelling, escaped_from, escaped_to)
+			if nsubs == 0 then
+				parse_err(("Substitution spec %s -> %s didn't match processed pagename '%s'"):format(
+					from, to, respelling))
+			elseif nsubs > 1 then
+				parse_err(("Substitution spec %s -> %s matched multiple substrings in processed pagename '%s', add " ..
+					"more context"):format(from, to, respelling))
+			else
+				respelling = subbed_respelling
+			end
+		end
+	end
+
+	return respelling
+end
+
+
 -- This handles all the magic characters <*>, <^>, <+>, <.>, <#>.
 local function normalise_input(term, pagename)
-
 	local function check_af(str, af, reg, repl, err_msg)
 		reg = reg:format(af)
 		if not rfind(str, reg) then
@@ -752,9 +1004,14 @@ end
 
 -- This converts the raw information, the arguments and pagename, into tables to be handed over to the IPA module.
 -- It is called externally by [[Module:zlw-lch-IPA/testcases/driver]].
-function export.get_lect_pron_info(lang_code, pagename, args_terms, args_quals, args_refs, args_period, lect_code)
-	if #args_terms == 1 and args_terms[1] == "-" then
-		return nil, {}, {}, false
+function export.get_lect_pron_info(terms, pagename, lang, lect, period)
+	if #terms == 1 and terms[1].pron == "-" then
+		return {
+			pron_list = nil,
+			rhyme_list = {},
+			hyph_list = {},
+			do_hyph = false,
+		}
 	end
 
 	local pron_list = {{}}
@@ -763,25 +1020,19 @@ function export.get_lect_pron_info(lang_code, pagename, args_terms, args_quals, 
 	local do_hyph = false
 
 	local brackets = "/%s/"
-	if lect_code then
-		if data.lects[lect_code].phonetic then
+	if lect then
+		if data.lects[lect].phonetic then
 			brackets = "[%s]"
 		end
 	end
 
 	-- Loops over the terms given as arguments.
-	for arg_index, arg_term in ipairs(args_terms) do
+	for _, term in ipairs(terms) do
+		local respelling = term.respelling
 		-- Handles magic symbols in the input.
-		arg_term = normalise_input(arg_term, pagename)
+		respelling = normalise_input(respelling, pagename)
 		-- Obtains the transcription and hyphenation for the current index.
-		local prons, hyph = multiword(arg_term, lang_code, args_period, lect_code)
-		-- Obtains the possible qualifiers of the current index, separated by semicolon.
-		local qualifiers = {}
-		if args_quals[arg_index] then
-			for qual in args_quals[arg_index]:gmatch("[^;]+") do
-				table.insert(qualifiers, qual)
-			end
-		end
+		local prons, hyph = multiword(respelling, lang, period, lect)
 
 		-- Return a single phonemic transcription with qualifiers and references
 		-- attached to it. An additional qualifier may be specified, which is for the
@@ -793,17 +1044,20 @@ function export.get_lect_pron_info(lang_code, pagename, args_terms, args_quals, 
 			-- comparison purposes with the old {{pl-p}}. FIXME: IMO we should be including the
 			-- syllable dividers in the phonemic output. [Benwing]
 			local bracketed_pron_no_syldivs = bracketed_pron:gsub("%.", "")
+			local merged_qualifiers = term.q
+			if additional_qualifier then
+				merged_qualifiers = require(table_module).shallowcopy(merged_qualifiers)
+				table.insert(merged_qualifiers, additional_qualifier)
+			end
 			local ret = {
 				pron = bracketed_pron_no_syldivs,
 				pron_with_syldivs = bracketed_pron,
-				qualifiers = qualifiers,
-				refs = not dont_refs and {args_refs[arg_index]},
+				q = merged_qualifiers,
+				qq = term.qq,
+				a = term.a,
+				aa = term.aa,
+				refs = not dont_refs and term.refs or nil,
 			}
-			if additional_qualifier then
-				local new_qualifiers = {unpack(qualifiers)}
-				table.insert(new_qualifiers, additional_qualifier)
-				ret.qualifiers = new_qualifiers
-			end
 			return ret
 		end
 
@@ -811,13 +1065,17 @@ function export.get_lect_pron_info(lang_code, pagename, args_terms, args_quals, 
 		-- was given.
 		if type(prons) == "string" then
 			table.insert(pron_list[1], new_pron(prons))
-			table.insert(rhyme_list[1], do_rhyme(prons, lang_code))
+			table.insert(rhyme_list[1], do_rhyme(prons, lang))
 		-- If the <pron> variable is a table and has a <phonetic> value, then simply return that.
 		elseif prons.phonetic then
 			table.insert(pron_list[1], {
 				pron = prons.phonetic,
-				qualifiers = qualifiers,
-				refs = {args_refs[arg_index]},
+				pron_with_syldivs = prons.phonetic,
+				q = term.q,
+				qq = term.qq,
+				a = term.a,
+				aa = term.aa,
+				refs = term.refs,
 			})
 		-- If the <prons> variably is a table and does not have a <phonetic> value, it is
 		-- a list of transcriptions.
@@ -825,20 +1083,20 @@ function export.get_lect_pron_info(lang_code, pagename, args_terms, args_quals, 
 			local multiple_transcript = ({
 				pl = { "prescribed", "casual" },
 				szl = { nil, "Western", "Głogówek"},
-			})[lang_code]
-			if lang_code == "pl" and lect_code then
+			})[lang]
+			if lang == "pl" and lect then
 				multiple_transcript = ({
 					mpl = { "16<sup>th</sup> c.", "17<sup>th</sup>–18<sup>th</sup> c." },
 					ekr = { "pre-21<sup>st</sup> c.", "21<sup>st</sup> c."},
 					ora = { "Poland", "Slovakia" },
 					zag = { "north", "south" },
-				})[lect_code]
+				})[lect]
 			end
 			for i, v in ipairs(prons) do
 				if #pron_list < (i + 1) then pron_list[i + 1] = {} end
 				table.insert(pron_list[i + 1], new_pron(v, multiple_transcript[i], i ~= 1))
 				if #rhyme_list < (i + 1) then rhyme_list[i + 1] = {} end
-				table.insert(rhyme_list[i + 1], do_rhyme(v, lang_code))
+				table.insert(rhyme_list[i + 1], do_rhyme(v, lang))
 			end
 		end
 
@@ -871,44 +1129,34 @@ function export.get_lect_pron_info(lang_code, pagename, args_terms, args_quals, 
 	pron_list = merge_subtables(pron_list)
 	rhyme_list = merge_subtables(rhyme_list)
 
-	return pron_list, hyph_list, rhyme_list, do_hyph
-end
-
-function export.get_lect_pron_info_bot(frame)
-	local iargs = require("Module:parameters").process(frame.args, {
-		["lang"] = { default = "pl" },
-		["lect"] = {},
-		[1] = { list = true },
-		["qual"] = { list = true, allow_holes = true },
-		["q"] = { list = true, allow_holes = true, alias_of = "qual" },
-		["period"] = {},
-		["ref"] = { list = true, allow_holes = true },
-		["pagename"] = {}, -- for debugging or demonstration only
-		["plp"] = { list = true },
-	})
-
-	local terms = iargs[1]
-
-	if #terms == 0 then
-		terms = { "#" }
-	end
-
-	local pron_list, hyph_list, rhyme_list, do_hyph = export.get_lect_pron_info(
-		iargs.lang,
-		iargs.pagename or mw.loadData("Module:headword/data").pagename,
-		terms,
-		iargs.qual,
-		iargs.ref,
-		iargs.period,
-		iargs.lect
-	)
-
-	local retval = {
+	return {
 		pron_list = pron_list,
 		hyph_list = hyph_list,
 		rhyme_list = rhyme_list,
 		do_hyph = do_hyph,
 	}
+end
+
+function export.get_lect_pron_info_bot(frame)
+	local iargs = require("Module:parameters").process(frame.args, {
+		[1] = {},
+		["lang"] = { default = "pl" },
+		["lect"] = {},
+		["period"] = {},
+		["pagename"] = {}, -- for debugging or demonstration only
+		["plp"] = { list = true },
+	})
+
+	local termspec = iargs[1] or "#"
+	local terms = parse_respellings_with_modifiers(termspec, 1)
+
+	local retval = export.get_lect_pron_info(
+		terms,
+		iargs.pagename or mw.loadData("Module:headword/data").pagename,
+		iargs.lang,
+		iargs.lect,
+		iargs.period
+	)
 
 	if iargs.plp[1] then
 		retval.plp_prons = {}
@@ -918,72 +1166,17 @@ function export.get_lect_pron_info_bot(frame)
 	end
 
 	return require("Module:JSON").toJSON(retval)
-end		
-
--- This is the function used by the template {{zlw-mpl-IPA}}.
--- TODO: the template should be deprecated in favour of the new pl-pr template.
-function export.mpl_IPA(frame)
-	local args = require("Module:parameters").process(frame:getParent().args, {
-		[1] = { list = true },
-		["qual"] = { list = true, allow_holes = true },
-		["q"] = { list = true, allow_holes = true, alias_of = "qual" },
-		["period"] = {},
-		["ref"] = { list = true, allow_holes = true },
-		["pagename"] = {}, -- for debugging or demonstration only
-	})
-
-	local terms = args[1]
-
-	if #terms == 0 then
-		terms = { "#" }
-	end
-
-	local lang = require("Module:languages").getByCode("pl")
-	return ("* %s %s"):format(
-		require("Module:accent qualifier").format_qualifiers(lang, {"Middle Polish"}),
-		require("Module:IPA").format_IPA_full {
-			lang = lang,
-			items = (export.get_lect_pron_info(
-				"pl",
-				args.pagename or mw.loadData("Module:headword/data").pagename,
-				terms,
-				args.qual,
-				args.ref,
-				args.period,
-				"mpl"
-			)),
-		}
-	)
-
 end
 
--- Remove any HTML from the formatted text and resolve links, since the extra characters don't contribute to the
--- displayed length.
-local function convert_to_raw_text(text)
-	text = rsub(text, "<.->", "")
-	if text:find("%[%[") then
-		text = require(links_module).remove_links(text)
-	end
-	return text
-end
+function export.show(frame)
+	local ilang = frame.args.lang
 
--- Return the approximate displayed length in characters.
-local function textual_len(text)
-	return ulen(convert_to_raw_text(text))
-end
-
-function export.IPA(frame)
-	local arg_lang = frame.args.lang
-
-	if arg_lang == "pl" then
+	if ilang == "pl" then
 		data = require("Module:zlw-lch-IPA/data/pl")
 	end
 
 	local process_args = {
-		[1] = { list = true },
-		["qual"] = { list = true, allow_holes = true },
-		["q"] = { list = true, allow_holes = true, alias_of = "qual" },
-		["ref"] = { list = true, allow_holes = true },
+		[1] = {},
 		["hyphs"] = {}, ["h"] = { alias_of = "hyphs" },
 		["rhymes"] = {}, ["r"] = { alias_of = "rhymes" },
 		["audios"] = {}, ["a"] = { alias_of = "audios" },
@@ -991,54 +1184,43 @@ function export.IPA(frame)
 		["pagename"] = {}, -- for debugging or demonstration only
 	}
 
-	if arg_lang == "pl" then
+	if ilang == "pl" then
 		process_args["mpl_period"] = {}
 		process_args["mp_period"] = { alias_of = "mpl_period" }
 
-		for lect_code, _ in pairs(data.lects) do
-			process_args[lect_code] = {list = true}
-			process_args[lect_code .. "_qual"] = { list = true, allow_holes = true }
-			process_args[lect_code .. "_q"] = { list = true, allow_holes = true, alias_of = lect_code .. "_qual" }
-			process_args[lect_code .. "_ref"] = { list = true, allow_holes = true }
+		for lect, _ in pairs(data.lects) do
+			process_args[lect] = {},
 		end
 
-		for alias_code, lect_code in pairs(data.lect_aliases) do
-			process_args[alias_code] = { list = true, alias_of = lect_code }
-			process_args[alias_code .. "_qual"] = { list = true, allow_holes = true, alias_of = lect_code .. "_qual" }
-			process_args[alias_code .. "_q"] = { list = true, allow_holes = true, alias_of = lect_code .. "_qual" }
-			process_args[alias_code .. "_ref"] = { list = true, allow_holes = true, alias_of = lect_code .. "_ref" }
+		for alias, lect in pairs(data.lect_aliases) do
+			process_args[alias] = { alias_of = lect }
 		end
 	end
 
 	local args = require("Module:parameters").process(frame:getParent().args, process_args)
 
-	local lang = require("Module:languages").getByCode((arg_lang == "slv" or arg_lang == "mas") and ("zlw-" .. arg_lang) or arg_lang)
+	local lang = require("Module:languages").getByCode(ilang, true, "allow etym")
 
-	local terms = args[1]
+	local termspec = args[1] or "#"
+	local terms = parse_respellings_with_modifiers(termspec, 1)
 	local pagename = args.pagename or mw.loadData("Module:headword/data").pagename
 
-	if #terms == 0 then
-		terms = { "#" }
-	end
-
-	local pron_list, hyph_list, rhyme_list, do_hyph =
-		export.get_lect_pron_info(arg_lang, pagename, terms, args.qual, args.ref)
+	local pronobj = export.get_lect_pron_info(terms, pagename, ilang)
+	local hyph_list, rhyme_list, do_hyph = pronobj.hyph_list, pronobj.rhyme_list, pronobj.do_hyph
 
 	local pl_lect_prons
 
-	if arg_lang == "pl" then
-		for lect_code, _ in pairs(data.lects) do
-			if #args[lect_code] > 0 then
+	if ilang == "pl" then
+		for lect, _ in pairs(data.lects) do
+			if args[lect] then
 				if pl_lect_prons == nil then pl_lect_prons = {} end
-				pl_lect_prons[lect_code] = export.get_lect_pron_info(
-					"pl",
+				pl_lect_prons[lect] = export.get_lect_pron_info(
+					parse_respellings_with_modifiers(args[lect], lect),
 					pagename,
-					args[lect_code],
-					args[lect_code .. "_qual"],
-					args[lect_code .. "_ref"],
-					args[lect_code .. "_period"],
-					lect_code
-				)
+					"pl",
+					lect,
+					args[lect .. "_period"]
+				).pron_list
 			end
 		end
 	end
@@ -1103,12 +1285,12 @@ function export.IPA(frame)
 
 	local do_collapse = false
 
-	if pron_list then
+	if pronobj.pron_list then
 		if pl_lect_prons then
 			do_collapse = true
 			ret = '<div class="vsSwitcher" data-toggle-category="pronunciations" style="width: {width}em; max-width:100%;"><span class="vsToggleElement" style="float: right;">&nbsp;</span>\n'
 		end
-		ret = ret .. "*" .. m_IPA_format { lang = lang, items = pron_list }
+		ret = ret .. "*" .. m_IPA_format { lang = lang, items = pronobj.pron_list }
 	end
 
 	if pl_lect_prons then
@@ -1118,10 +1300,10 @@ function export.IPA(frame)
 		local m_format_qualifiers = require("Module:accent qualifier").format_qualifiers
 		-- First groups the lects into their lect groups.
 		local grouped_lects = {}
-		for lect_code, lect_prons in pairs(pl_lect_prons) do
-			local lect_group = data.lects[lect_code].group
+		for lect, lect_prons in pairs(pl_lect_prons) do
+			local lect_group = data.lects[lect].group
 			if grouped_lects[lect_group] == nil then grouped_lects[lect_group] = {} end
-			table.insert(grouped_lects[lect_group], { code = lect_code, prons = lect_prons })
+			table.insert(grouped_lects[lect_group], { code = lect, prons = lect_prons })
 		end
 		-- And then displays each group in order.
 
@@ -1214,7 +1396,7 @@ function export.IPA(frame)
 		else
 			ret = ret .. "Syllabification: <small>[please specify syllabification manually]</small>"
 			if mw.title.getCurrentTitle().nsText == "" then
-				ret = ("%s[[Category:%s-pronunciation_without_hyphenation]]"):format(ret, arg_lang)
+				ret = ("%s[[Category:%s-pronunciation_without_hyphenation]]"):format(ret, ilang)
 			end
 		end
 	end
