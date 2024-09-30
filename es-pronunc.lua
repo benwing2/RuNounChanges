@@ -15,7 +15,6 @@ local homophones_module = "Module:homophones"
 local hyphenation_module = "Module:hyphenation"
 local labels_module = "Module:labels"
 local links_module = "Module:links"
-local parameter_utilities_module = "Module:parameter utilities"
 local parameters_module = "Module:parameters"
 local parse_utilities_module = "Module:parse utilities"
 local pron_qualifier_module = "Module:pron qualifier"
@@ -55,7 +54,7 @@ For example, one isogloss is "distinción" (pronouncing written ''s'' and ''c/z'
 (pronouncing them the same). Another is "lleísmo" (pronouncing written ''ll'' and ''y'' differently) vs.
 "yeísmo" (pronouncing them the same). The dominant pronunciation in Spain can be described as
 distinción + yeísmo, while the pronunciation in rural northern Spain can be described as distinción + lléismo
-and the pronunciation across much of the Andes mountains can be described as seseo + lléismo.
+and the pronunciation across much of the Andes mountains and the Philippines can be described as seseo + lléismo.
 
 Specifically, the following isoglosses are recognized (note, the isogloss specs as used in this module
 dispense with written accents):
@@ -84,7 +83,7 @@ which in fact exist). However, for a given word, more than one dialect may prono
 example, a word like [[paz]] has a ''z'' but no ''ll'', and so there are only two possible pronunciations for
 the four dialects. Here, the two styles are "Spain" and "Latin America". Correspondingly, a word like [[pollo]]
 with an ''ll'' but no ''z'' has two styles, which can approximately be described as "most of Spain and Latin
-America" vs. "rural northern Spain, Andes Mountains".
+America" vs. "rural northern Spain, Andes Mountains, Philippines".
 
 A "style spec" (indicated by the style= parameter to {{es-IPA}}) restricts the output to certain styles.
 A style spec can be one of the following:
@@ -882,15 +881,15 @@ local function express_all_styles(style_spec, dodialect)
 		end
 	elseif distincion_different and not lleismo_different then
 		express_style("Spain", "Spain", "distincion-lleismo", "distincion-lleismo-yeismo")
-		express_style("Latin America", "Latin America", "seseo-lleismo", "seseo-lleismo-yeismo")
+		express_style("Latin America, Philippines", "Latin America, Philippines", "seseo-lleismo", "seseo-lleismo-yeismo")
 	elseif not distincion_different and lleismo_different then
 		express_style(false, "most of Spain and Latin America", "distincion-yeismo", "distincion-seseo-yeismo")
-		express_style(false, "rural northern Spain, Andes Mountains", "distincion-lleismo", "distincion-seseo-lleismo")
+		express_style(false, "rural northern Spain, Andes Mountains, Philippines", "distincion-lleismo", "distincion-seseo-lleismo")
 	else
 		express_style("Spain", "most of Spain", "distincion-yeismo")
 		express_style("Latin America", "most of Latin America", "seseo-yeismo")
 		express_style("Spain", "rural northern Spain", "distincion-lleismo")
-		express_style("Latin America", "Andes Mountains", "seseo-lleismo")
+		express_style("Latin America", "Andes Mountains, Philippines", "seseo-lleismo")
 	end
 	if need_rioplat then
 		local hidden_tag = distincion_different and "Latin America" or false
@@ -1464,7 +1463,7 @@ local function parse_audio(arg, parse_err)
 	local retvals = parse_pron_modifier(arg, parse_err, generate_audio_obj, param_mods, "no split on comma")
 	local retval = retvals[1]
 	retval.lang = lang
-	local textobj = require(audio_module).construct_audio_textobj(textobj_args)
+	local textobj = require(audio_module).construct_audio_textobj(retval)
 	retval.text = textobj
 	retval.gloss = nil
 	retval.pos = nil
@@ -1501,7 +1500,7 @@ function export.show_pr(frame)
 		overall_audio = {}
 		for i, audio in ipairs(args.audio) do
 			local function parse_err(msg)
-				error(("%s: parameter audio%s=%s"):format(msg, i == and "" or i, audio))
+				error(("%s: parameter audio%s=%s"):format(msg, i == 1 and "" or i, audio))
 			end
 			local parsed_audio = parse_audio(audio, parse_err, pagename)
 			table.insert(overall_audio, parsed_audio)
