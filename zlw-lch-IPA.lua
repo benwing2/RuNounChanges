@@ -269,7 +269,6 @@ local function phonemic(txt, do_hyph, lang, is_prep, period, lect)
 			szl = "ÃĆŁŃŌŎÔÕŚŹŻ",
 			csb = "ÔÒÃËÙÉÓĄŚŁŻŹĆŃ",
 			["zlw-slv"] = "ÃÉËÊÓÕÔÚÙŃŻ",
-			["pl-mas"] = "ÁÄÉŁŃÓÔŚÛŸŻŹ"
 		})
 		if tfind(capitals) then
 			local i = 1
@@ -299,7 +298,6 @@ local function phonemic(txt, do_hyph, lang, is_prep, period, lect)
 		szl = "aãeéioōŏôõuy",
 		csb = "ôòãëùéóąeyuioa",
 		["zlw-slv"] = "aãeéëêioóõôuúùyăĭŏŭŭùy̆ā",
-		["pl-mas"] = "aáäeéioóôuûÿ"
 	}
 	tsub(("([^%s])" .. (lang == "zlw-slv" and "j" or "i") .. "([%s])"):format(V, V), "%1I%2")
 
@@ -405,9 +403,7 @@ local function phonemic(txt, do_hyph, lang, is_prep, period, lect)
 						"nąc", "dło"
 					}, ["zlw-slv"] = {
 						"nõc", "dlô"
-					}, ["pl-mas"] = {
-						"nóncz", "dło"
-					}
+					},
 				}
 
 				for _, v in ipairs(suffixes) do
@@ -437,7 +433,6 @@ local function phonemic(txt, do_hyph, lang, is_prep, period, lect)
 				local r = find(thing:format("[crsd]z")) or find(thing:format("ch")) or find(thing:format("d[żź]"))
 				if lect == "mpl" then return r or find(thing:format("b́")) end
 				if lang == "zlw-slv" then return r or find(thing:format("gh")) end
-				if lang == "pl-mas" then return r or find(thing:format("rż")) end
 				return r
 			end
 			if ((ulen(b) < 2) or is_diagraph("^%s$")) then
@@ -493,7 +488,7 @@ local function phonemic(txt, do_hyph, lang, is_prep, period, lect)
 	-- handle digraphs
 	tsub("ch", "x")
 	tsub("[cs]z", { ["cz"]="t_ʂ", ["sz"]="ʂ" })
-	tsub(lg { "rz", ["pl-mas"] = "rż" }, "R")
+	tsub("rz", "R")
 	tsub("d([zżź])", "d_%1")
 	if lect == "mpl" then tsub("b́", "bʲ") end
 	if lang == "zlw-slv" then tsub("gh", "ɣ") end
@@ -586,23 +581,9 @@ local function phonemic(txt, do_hyph, lang, is_prep, period, lect)
 			["w"]="v", ["ż"]="ʒ",
 			["g"]="ɡ", ["h"]="x",
 		})
-	elseif lang == "pl-mas" then
-		tsub(".", {
-			-- vowels
-			["á"]="ɒ", ["ä"]="æ",
-			["e"]="ɛ", ["é"]="e",
-			["o"]="ɔ", ["ó"]="o",
-			["ô"]="wɔ", ["ÿ"]="Y",
-			["y"]="Y", ["û"]="wu",
-			-- consonants
-			["c"]="t_s",
-			["ń"]="ɲ", ["ś"]="ʃ",
-			["ł"]="w", ["w"]="v", ["ż"]="ʒ",
-			["g"]="ɡ", ["h"]="x", ["ź"]="ʑ",
-		})
 	end
 
-	if lang == "csb" or lang == "zlw-slv" or lang == "pl-mas" then
+	if lang == "csb" or lang == "zlw-slv" then
 		tsub("ʂ", "ʃ")
 		tsub("ʐ", "ʒ")
 	end
@@ -645,7 +626,7 @@ local function phonemic(txt, do_hyph, lang, is_prep, period, lect)
 		["R"] = "S",
 	}
 
-	local trilled_rz = lang == "csb" or lang == "zlw-slv" or lang == "pl-mas"
+	local trilled_rz = lang == "csb" or lang == "zlw-slv"
 	if not trilled_rz and lect then
 		trilled_rz = data.lects[lect].trilled_rz
 	end
@@ -828,7 +809,7 @@ end
 
 -- Returns rhyme from a transcription.
 local function do_rhyme(pron, lang)
-	local V = ({ pl = "aɛiɔuɘ", szl = "aãɛiɔouɪ", csb = "aãɛeɜiɔoõɞu", ["zlw-slv"] = "aãɛeĭɪŏɔɵŭʉy", ["pl-mas"] = "aɒæɛeiɔou"})[lang]
+	local V = ({ pl = "aɛiɔuɘ", szl = "aãɛiɔouɪ", csb = "aãɛeɜiɔoõɞu", ["zlw-slv"] = "aãɛeĭɪŏɔɵŭʉy"})[lang]
 	return {
 		rhyme = rsub(rsub(rsub(pron, "^.*ˈ", ""), ("^[^%s]-([%s])"):format(V, V), "%1"), "%.", ""),
 		num_syl = { select(2, rsubn(pron, ("[%s]"):format(V), "")) }
@@ -862,10 +843,7 @@ local function multiword(term, lang, period, lect)
 			}, ["zlw-slv"] = {
 				"dlo", "dô", "na", "nade?", "przêde?", "przêze?", "przë", "pô", "pôde?", "sê?", "vô", "we?", "wôde?",
 				"wù", "za"
-			}, ["pl-mas"] = {
-				"dlá", "do", "ku", "na", "nade?", "po", "pode?", "ponade?", "poza", "prżede?", "prżeze", "prżi", "we?",
-				"ze?", "za", "ô", "ôde?", "û", "beze?"
-			}
+			},
 		}
 
 		local p
