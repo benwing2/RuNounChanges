@@ -19,10 +19,24 @@ local usub = mw.ustring.sub
 -- Lect data later retrieved in the module.
 local data
 
+-- FIXME: Implement optional assimilation across word boundaries.
+local assimilate_across_word_boundaries = false
+
 -- version of rsubn() that discards all but the first return value
 local function rsub(term, foo, bar)
 	local retval = rsubn(term, foo, bar)
 	return retval
+end
+
+-- apply rsub() repeatedly until no change
+local function rsub_repeatedly(term, foo, bar)
+	while true do
+		local new_term = rsub(term, foo, bar)
+		if new_term == term then
+			return term
+		end
+		term = new_term
+	end
 end
 
 local OVERTIE = u(0x361) -- COMBINING DOUBLE INVERTED BREVE
@@ -252,8 +266,12 @@ local function phonemic(txt, do_hyph, lang, is_prep, period, lect)
 	local colloquial = true
 
 	function tsub(s, r)
+		local c
 		txt, c = rsubn(txt, s, r)
 		return c > 0
+	end
+	function tsub_repeatedly(s, r)
+		txt = rsub_repeatedly(txt, s, r)
 	end
 	function lg(s) return s[lang] or s[1] end
 	function tfind(s) return rfind(txt, s) end
@@ -286,20 +304,46 @@ local function phonemic(txt, do_hyph, lang, is_prep, period, lect)
 
 	txt = ulower(txt)
 
-	-- Prevent palatisation of the special case kwazi-.
-	tsub("^kwazi", "kwaz-i")
+	-- Replace digraphs with single capital letters to simplify the code below.
+	tsub("[crsd][hzżź]", {
+		cz = "C",
+		rz = "R",
+		sz = "S",
+		dz = "D",
+		ch = "H",
+		["dż"] = "Ż",
+		["dź"] = "Ź",
+	})
+	if lect == "mpl" then
+		tsub("b́", "B")
+	end
+	if lang == "zlw-slv" then
+		tsub("gh", "G")
+		tsub("y̆", "Y")
+	end
 
-	-- falling diphthongs <au> and <eu>, and diacriticised variants
-	tsub(lg { "([aeáé])u", csb = "([ae])ù" }, "%1U")
+	local function undo_digraph_replacement(txt)
+		return rsub(txt, "[CRSDHŻŹBG]", {
+			C = "cz",
+			R = "rz",
+			S = "sz",
+			D = "dz",
+			H = "ch",
+			["Ż"] = "dż",
+			["Ź"] = "dź",
+			B = "b́",
+			G = "gh",
+			Y = "y̆",
+		})
+	end
 
-	-- rising diphthongs with <iV>
-	local V = lg {
+	local V_no_IU = lg {
 		pl = "aąeęioóuy" .. "áéôûý",
 		szl = "aãeéioōŏôõuy",
 		csb = "ôòãëùéóąeyuioa",
-		["zlw-slv"] = "aãeéëêioóõôuúùyăĭŏŭŭùy̆ā",
+		["zlw-slv"] = "aãeéëêioóõôuúùyăĭŏŭŭùāY",
 	}
-	tsub(("([^%s])" .. (lang == "zlw-slv" and "j" or "i") .. "([%s])"):format(V, V), "%1I%2")
+	local V = V_no_IU .. "IU"
 
 	if txt:find("^*") then
 		-- The symbol <*> before a word indicates it is unstressed.
@@ -351,7 +395,9 @@ local function phonemic(txt, do_hyph, lang, is_prep, period, lect)
 		end
 	end
 
-	-- TODO: mpl, csb, szl, slv, mas
+	-- TODO: mpl, csb, szl, zlw-slv
+	-- FIXME: The following condition is not correct. A manual syllable division shouldn't disable prefix/suffix
+	-- checking.
 	if not txt:find("%.") then
 		-- Don't recognise affixes whenever there's only one vowel (or dipthong).
 		local _, n_vowels = rsubn(txt, ("[%s]"):format(V), "")
@@ -425,43 +471,62 @@ local function phonemic(txt, do_hyph, lang, is_prep, period, lect)
 		end
 	end
 
-	-- syllabification
-	for _ = 0, 1 do
-		tsub(("([%sU])([^%sU.']*)([%s])"):format(V, V, V), function (a, b, c)
-			local function find(x) return rfind(b, x) end
-			local function is_diagraph(thing)
-				local r = find(thing:format("[crsd]z")) or find(thing:format("ch")) or find(thing:format("d[żź]"))
-				if lect == "mpl" then return r or find(thing:format("b́")) end
-				if lang == "zlw-slv" then return r or find(thing:format("gh")) end
-				return r
+	-- falling diphthongs <au> and <eu>, and diacriticised variants
+	tsub(lg { "([aeáé])u", csb = "([ae])ù" }, "%1U")
+
+	-- rising diphthongs with <iV>
+	tsub(("([^%s])" .. (lang == "zlw-slv" and "j" or "i") .. "([%s])"):format(V, V), "%1I%2")
+
+	-- Prevent palatalization of the special case kwazi-.
+	tsub("^kwazi", "kwaz-i")
+
+	-- Syllabify by adding a period (.) between syllables. There may already be user-supplied syllable divisions
+	-- (period or single quote), which we need to respect. This works by replacing each sequence of VC*V with
+	-- V.V, V.CV, V.TRV (where T is an obstruent and R is a liquid) or otherwise VTR.C+V or VC.C+V, i.e. if there are
+	-- multiple consonants, place the syllable boundary after the first TR sequence or otherwise the first consonant.
+	-- We need to repeat since each VC*V sequence overlaps the next one. Digraphs have already been replaced by single
+	-- capital letters.
+	--
+	-- FIXME: I don't believe it's necessarily correct in a sequence of obstruents to place the boundary after the
+	-- first one. I think we should respect the possible onsets.
+
+	-- List of obstruents and liquids, including capital letters representing digraphs. We count rz as a liquid even
+	-- in Polish.
+	local obstruent = "bBcćCdDfgGhHkpṕqsSśtxzźżŹŻ"
+	local liquid_no_w = "IjlrR"
+	local liquid = liquid_no_w .. "łwẃ"
+	local C = ("[^%sU.']"):format(V_no_IU)
+	-- We need to treat I (<i> in hiatus) as a consonant, and since we check for two vowels in a row, we don't want
+	-- U to be one of the second vowels.
+	tsub_repeatedly(("([%sU])(%s*)([%s])"):format(V_no_IU, C, V_no_IU), function(v1, cons, v2)
+		local cons_no_hyphen = cons:gsub("%-", "")
+		if ulen(cons_no_hyphen) < 2 or rfind(cons_no_hyphen, ("^[%s][%s]$"):format(obstruent, liquid)) or
+			rfind(cons_no_hyphen, ("^%sI$"):format(C)) then
+			cons = "." .. cons
+		else
+			local nsubs
+			-- Don't syllabify [[niósłby]] as niósł.by or [[jabłczan]] as jabłczan.
+			-- FIXME: Not sure if this is quite right.
+			cons, nsubs = rsubn(cons, ("^(%%-?[%s]%%-?[%s])"):format(obstruent, liquid_no_w), "%1.")
+			if nsubs == 0 then
+				cons = rsub(cons, "^(%-?.)", "%1.")
 			end
-			if ((ulen(b) < 2) or is_diagraph("^%s$")) then
-				b = "." .. b
-			else
-				local i = 2
-				if is_diagraph("^%s") then i = 3 end
-				if usub(b, i, i):find("^[rlłI-]$") then
-					b = "." .. b
-				else
-					b = ("%s.%s"):format(usub(b, 0, i - 1), usub(b, i))
-				end
-			end
-			return ("%s%s%s"):format(a, b, c)
-		end)
-	end
+		end
+		return ("%s%s%s"):format(v1, cons, v2)
+	end)
 
 	local hyph
 	if do_hyph then
 		-- Ignore certain symbols and diacritics for the hyphenation.
 		hyph = txt:gsub("'", "."):gsub("-", "")
 		if lang == "zlw-slv" then
-			local BREVE = u(0x306)
-			hyph = rsubn(hyph, "[Iăĭŏŭ" .. BREVE .. "ā]", {
+			hyph = rsubn(hyph, "[IăĭŏŭYā]", {
 				["I"] = "j",
 				["ă"] = "a", ["ĭ"] = "i", ["ŏ"] = "o",
-				["ŭ"] = "u", [BREVE] = "", ["ā"] = "a",
+				["ŭ"] = "u", ["Y"] = "y", ["ā"] = "a",
 			})
 		end
+		hyph = undo_digraph_replacement(hyph)
 		hyph = hyph:lower()
 		-- Restore uppercase characters.
 		if uppercase_indices then
@@ -485,45 +550,71 @@ local function phonemic(txt, do_hyph, lang, is_prep, period, lect)
 
 	tsub("'", "ˈ")
 
+	txt = undo_digraph_replacement(txt)
+
+	-- handle <x>; must precede ch -> [x]
+	tsub("x", "ks")
+	-- move syllable boundary between [ks] if preceded by a vowel
+	tsub(("([%s])([.ˈ])ks"):format(V), "%1k%2s")
+
 	-- handle digraphs
 	tsub("ch", "x")
 	tsub("[cs]z", { ["cz"]="t_ʂ", ["sz"]="ʂ" })
 	tsub("rz", "R")
 	tsub("d([zżź])", "d_%1")
+	tsub("qu", "kw")
 	if lect == "mpl" then tsub("b́", "bʲ") end
 	if lang == "zlw-slv" then tsub("gh", "ɣ") end
 
 	-- basic orthographical rules
+
+	-- replacements that are the same (almost) everywhere; can be overridden
+	local replacements = {
+		-- vowels
+		["e"]="ɛ", ["o"]="ɔ",
+
+		-- consonants
+		["c"]="t_s", ["ć"]="t_ɕ",
+		["ń"]="ɲ", ["ś"]="ɕ", ["ź"]="ʑ",
+		["ł"]="w", ["w"]="v", ["ż"]="ʐ",
+		["g"]="ɡ", ["h"]="x",
+	}
+
+	local function override(tbl)
+		for k, v in pairs(tbl) do
+			replacements[k] = v
+		end
+	end
+
 	-- not using lg() here for speed
 	if lang == "pl" then
-		local replacements = {
+		override {
 			-- vowels
-			["e"]="ɛ", ["o"]="ɔ",
 			["ą"]="ɔN", ["ę"]="ɛN",
 			["ó"]="u", ["y"]="ɘ",
-			-- consonants
-			["c"]="t_s", ["ć"]="t_ɕ",
-			["ń"]="ɲ", ["ś"]="ɕ", ["ź"]="ʑ",
-			["ł"]="w", ["w"]="v", ["ż"]="ʐ",
-			["g"]="ɡ", ["h"]="x",
 		}
 		if lect then
-			replacements["é"] = "e"
-			replacements["á"] = "ɒ"
+			override {
+				["é"] = "e", ["á"] = "ɒ",
+			}
 			if lect == "mpl" then
-				replacements["ę"] = "ɛ̃"
-				replacements["ą"] = "ɔ̃"
-				replacements["y"] = "ɨ"
-				replacements["ó"] = "o"
-				replacements["ł"] = "ɫ"
-				replacements["ṕ"] = "pʲ"
-				replacements["ḿ"] = "mʲ"
-				replacements["ẃ"] = "vʲ"
-				-- <b́> has no unicode character and is hence handled above
+				override {
+					["ę"] = "ɛ̃",
+					["ą"] = "ɔ̃",
+					["y"] = "ɨ",
+					["ó"] = "o",
+					["ł"] = "ɫ",
+					["ṕ"] = "pʲ",
+					["ḿ"] = "mʲ",
+					["ẃ"] = "vʲ",
+				}
+				-- <b́> has no unicode character and hence is handled above
 			else
-				replacements["ô"] = "wɔ"
-				replacements["û"] = "wu"
-				replacements["ý"] = "Y"
+				override {
+					["ô"] = "wɔ",
+					["û"] = "wu",
+					["ý"] = "Y",
+				}
 				if data.lects[lect].mid_o then
 					replacements["ó"] = "o"
 				elseif lect == "ekr" then
@@ -543,44 +634,32 @@ local function phonemic(txt, do_hyph, lang, is_prep, period, lect)
 		end
 		tsub(".", replacements)
 	elseif lang == "szl" then
-		tsub(".", {
+		override {
 			-- vowels
-			["e"]="ɛ", ["o"]="ɔ",
 			["ō"]="o", ["ŏ"]="O",
 			["ô"]="wɔ", ["õ"] = "ɔ̃",
 			["y"] = "ɪ",
-			-- consonants
-			["c"]="t_s", ["ć"]="t_ɕ",
-			["ń"]="ɲ", ["ś"]="ɕ", ["ź"]="ʑ",
-			["ł"]="w", ["w"]="v", ["ż"]="ʐ",
-			["g"]="ɡ", ["h"]="x",
-		})
+		}
+		tsub(".", replacements)
 	elseif lang == "csb" then
-		tsub(".", {
+		override {
 			-- vowels
-			["e"]="ɛ", ["é"]="e", ["o"]="ɔ",
+			["é"]="e",
 			["ó"]="o", ["ô"]="ɞ", ["ë"]="ɜ",
 			["ò"]="wɛ", ["ù"]="wu", ["y"] = "Y",
 			["ą"] = "ɔ̃",
-			-- consonants
-			["c"]="t_s", ["ć"]="t_ɕ",
-			["ń"]="ɲ", ["ś"]="ɕ", ["ź"]="ʑ",
-			["ł"]="w", ["w"]="v", ["ż"]="ʒ",
-			["g"]="ɡ", ["h"]="x",
-		})
+		}
+		tsub(".", replacements)
 	elseif lang == "zlw-slv" then
-		tsub(".", {
+		override {
 			-- vowels
-			["e"]="ɛ", ["é"]="e", ["o"]="ɔ",
+			["é"]="e",
 			["ó"]="o", ["ô"]="ɵ", ["ë"]="ə", ["ê"]="E",
 			["y"]="ɪ", ["ú"]="ʉ", ["ù"]="y",
-			["õ"]="ɔ̃", ["ù̆"]="y̆", ["ā"]="aː", -- ãăĭŏŭ
-			-- consonants
-			["c"]="t_s",
-			["ń"]="n",
-			["w"]="v", ["ż"]="ʒ",
-			["g"]="ɡ", ["h"]="x",
-		})
+			["õ"]="ɔ̃", ["ā"]="aː", -- ãăĭŏŭ
+			-- breves remain (FIXME: correct?)
+		}
+		tsub(".", replacements)
 	end
 
 	if lang == "csb" or lang == "zlw-slv" then
@@ -588,31 +667,15 @@ local function phonemic(txt, do_hyph, lang, is_prep, period, lect)
 		tsub("ʐ", "ʒ")
 	end
 
-	-- palatalisation
-	local palatise_into = { ["n"] = "ɲ", ["s"] = "ɕ", ["z"] = "ʑ" }
-	tsub("([nsz])I", function (c) return palatise_into[c] end)
-	tsub("([nsz])i", function (c) return palatise_into[c] .. "i" end)
+	-- palatalization
+	local palatalize_into = { ["n"] = "ɲ", ["s"] = "ɕ", ["z"] = "ʑ" }
+	tsub("([nsz])I", function (c) return palatalize_into[c] end)
+	tsub("([nsz])i", function (c) return palatalize_into[c] .. "i" end)
+
+	-- velar assimilation
+	tsub("n([.ˈ]?[kɡx])", "ŋ%1")
 
 	-- voicing and devoicing
-
-	local T = "pftsʂɕkxʃx"
-	local D = "bdzʐʑɡʒɣ"
-
-	tsub(("([%s][.ˈ]?)v"):format(T), "%1f")
-	tsub(("([%s][.ˈ]?)R"):format(T), "%1S")
-
-	if lang == "zlw-slv" then
-		tsub(("([%s][.ˈ]?)ɣ"):format(T), "%1x")
-		tsub(("([%s][.ˈ]?)x"):format(D), "%1ɣ")
-	end
-
-	local function arr_list(x)
-		local r = ""
-		for i in pairs(x) do
-			r = r .. i
-		end
-		return r
-	end
 
 	local devoice = {
 		["b"] = "p",
@@ -623,6 +686,9 @@ local function phonemic(txt, do_hyph, lang, is_prep, period, lect)
 		["ʑ"] = "ɕ",
 		["ʐ"] = "ʂ",
 		["ʒ"] = "ʃ",
+		-- NOTE: was not here before but I think we need it for Polish; if we remove it, we have
+		-- to add x manually to `T` below, the list of unvoiced obstruents
+		["ɣ"] = "x",
 		["R"] = "S",
 	}
 
@@ -635,18 +701,80 @@ local function phonemic(txt, do_hyph, lang, is_prep, period, lect)
 		devoice["R"] = nil
 	end
 
-	if lang == "zlw-slv" then
-		devoice["ɣ"] = "x"
+	--if lang == "zlw-slv" then
+	--	devoice["ɣ"] = "x"
+	--end
+
+	local voice = {}
+	for k, v in pairs(devoice) do
+		voice[v] = k
 	end
 
-	local mpl_J = lect == "mpl" and "ʲ?" or ""
+	local function concat_keys(tbl, exclude)
+		local keys = {}
+		for k, _ in pairs(tbl) do
+			if not exclude or not exclude[k] then
+				table.insert(keys, k)
+			end
+		end
+		return table.concat(keys)
+	end
 
-	local arr_list_devoice = arr_list(devoice)
+	-- Forward assimilation is only devoicing of <w> and <rz>. Backward assimilation both voices and devoices,
+	-- but <w> and <rz> do not cause backward assimilation. (Since we do forward assimilation first, occurrences
+	-- of <w> and <rz> following a voiceless obstruent should not occur in standard Polish when we do backward
+	-- assimilation, but <rz> may occur in lects that have trilled <rz>.) Note that in the event of <w> and <rz>
+	-- between a voiceless obstruent and a voiced one, forward assimilation will devoice them and then they will
+	-- get voiced again by backward assimilation.
+	local T_causes_forward_assim = concat_keys(voice)
+	local T_causes_backward_assim = T_causes_forward_assim
+	local T_gets_backward_assim = T_causes_forward_assim
+	local D_causes_backward_assim = concat_keys(devoice, {v = true, R = true})
+	local D_gets_backward_assim = concat_keys(devoice)
+	-- FIXME! The following operates only in Slovincian and I assume <w> and <rz> do not cause forward voicing
+	-- assimilation.
+	local D_causes_forward_assim = D_causes_backward_assim
 
+	local transparent_liquid = "rlɫw"
+	if trilled_rz then
+		-- FIXME! I hope this is correct.
+		transparent_liquid = transparent_liquid .. "R"
+	end
+	-- forward (progressive) assimilation of <w> and <rz>; proceeds left to right
+	tsub_repeatedly(("([%s]ʲ?[.ˈ]?[%s]?ʲ?[.ˈ]?)([vR])"):format(T_causes_forward_assim, transparent_liquid),
+		function(prev, cons)
+			return prev .. (cons == "v" and "f" or "S")
+		end
+	)
+
+	-- forward (progressive) assimilation of [ɣ] and [x] in Slovincian; proceeds left to right
+	if lang == "zlw-slv" then
+		-- FIXME! Does this occur across an intervening liquid, as in Polish?
+		tsub(("([%s][.ˈ]?)ɣ"):format(T_causes_forward_assim), "%1x")
+		tsub(("([%s][.ˈ]?)x"):format(D_causes_forward_assim), "%1ɣ")
+	end
+
+	-- final devoicing
 	if not is_prep then
-		tsub(("([%s])(%s)$"):format(arr_list_devoice, mpl_J), function (a, b)
-			return devoice[a] .. (type(b) == "string" and b or "")
+		tsub(("([%s])(ʲ?)$"):format(D_gets_backward_assim), function (a, b)
+			return devoice[a] .. b
 		end)
+	end
+
+	-- Backward (regressive) assimilation. It both voices and devoices, and needs to proceed right to left
+	-- in case of sequences of obstruents. The way to do that is to add a .* at the beginning of each pattern
+	-- to replace so we do the rightmost cluster first, and then repeat till nothing changes.
+	local prev_txt
+	local devoice_string = ("^(.*)([%s])(ʲ?[._ˈ]?[%s])"):format(
+		D_gets_backward_assim, T_causes_backward_assim)
+	local voice_string = ("^(.*)([%s])(ʲ?[._ˈ]?[%s])"):format(
+		T_gets_backward_assim, D_causes_backward_assim)
+	local function devoice_func(prev, c1, c2) return prev .. devoice[c1] .. c2 end
+	local function voice_func(prev, c1, c2) return prev .. voice[c1] .. c2 end
+	while txt ~= prev_txt do
+		prev_txt = txt
+		tsub(devoice_string, devoice_func)
+		tsub(voice_string, voice_func)
 	end
 
 	tsub("Y", "i")
@@ -673,22 +801,6 @@ local function phonemic(txt, do_hyph, lang, is_prep, period, lect)
 		tsub("R", "ʐ")
 	end
 
-	local voice = {}
-	for i, v in pairs(devoice) do
-		voice[v] = i
-	end
-
-	local new_text
-	local devoice_string = ("([%s])(%s[._ˈ]?[%s])"):format(arr_list_devoice, mpl_J, T)
-	local voice_string = ("([%s])(%s[._ˈ]?[%s])"):format(arr_list(voice), mpl_J, D)
-	local function devoice_func(a, b) return devoice[a] .. b end
-	local function voice_func(a, b) return voice[a] .. b end
-	while txt ~= new_txt do
-		new_txt = txt
-		tsub(devoice_string, devoice_func)
-		tsub(voice_string, voice_func)
-	end
-
 	if lang == "pl" then
 		-- nasal vowels
 		tsub("N([.ˈ]?[pb])", "m%1")
@@ -701,7 +813,7 @@ local function phonemic(txt, do_hyph, lang, is_prep, period, lect)
 		tsub("N", "w̃")
 	end
 
-	-- Hyphen separator, e.g. to prevent palatisation of <kwazi->.
+	-- Hyphen separator, e.g. to prevent palatalization of <kwazi->.
 	tsub("-", "")
 
 	tsub("_", OVERTIE)
@@ -724,7 +836,7 @@ local function phonemic(txt, do_hyph, lang, is_prep, period, lect)
 			stressed_txt = rsub(txt, "%.(" .. regex .. "[^.]+)$", "ˈ%1")
 			-- If no stress mark could have been placed, it can only be initial,
 			-- e.g. in monosyllables.
-			if not rfind(stressed_txt, "ˈ") then
+			if not stressed_txt:find("ˈ") then
 				stressed_txt = "ˈ" .. stressed_txt
 			end
 		end
@@ -949,7 +1061,7 @@ local function apply_substitution_spec(respelling, pagename, parse_err)
 	respelling = pagename
 	for _, sub in ipairs(subs) do
 		local from, escaped_from, to, escaped_to, whole_word
-		if rfind(sub, "^~") then
+		if sub:find("^~") then
 			-- whole-word match
 			sub = rmatch(sub, "^~(.*)$")
 			whole_word = true
