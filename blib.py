@@ -1410,7 +1410,7 @@ def do_pagefile_cats_refs(args, start, end, process, default_pages=[], default_c
         return do_process_text_on_page(index, pagetitle, text, prev_comment, pagemsg)
     if args.find_regex:
       index_pagetitle_text_comment = yield_text_from_find_regex(sys.stdin, args.verbose)
-      for _, (index, pagetitle, text, prev_comment) in iter_items(index_pagetitle_text_comment, start, end,
+      for index, (_, pagetitle, text, prev_comment) in iter_items(index_pagetitle_text_comment, start, end,
           get_name=lambda x:x[1], get_index=None if args.ignore_embedded_page_indices else lambda x:x[0]):
         retval = do_process_stdin_text_on_page(index, pagetitle, text, prev_comment)
         def pagemsg(txt):
@@ -1439,14 +1439,14 @@ def do_pagefile_cats_refs(args, start, end, process, default_pages=[], default_c
       index_pagetitle_text_comment = yield_text_from_find_regex(
         open(args.pages_from_find_regex, "r", encoding="utf-8"), args.verbose
       )
-      for _, (index, pagetitle, _, _) in iter_items(index_pagetitle_text_comment, start, end,
+      for index, (_, pagetitle, _, _) in iter_items(index_pagetitle_text_comment, start, end,
           get_name=lambda x:x[1], get_index=None if args.ignore_embedded_page_indices else lambda x:x[0]):
         process_pywikibot_page(index, pywikibot.Page(site, pagetitle))
     if args.pages_from_previous_output:
       index_pagetitle = yield_pages_from_previous_output(
         open(args.pages_from_previous_output, "r", encoding="utf-8"), args.verbose
       )
-      for _, (index, pagetitle) in iter_items(index_pagetitle, start, end,
+      for index, (_, pagetitle) in iter_items(index_pagetitle, start, end,
           get_name=lambda x:x[1], get_index=None if args.ignore_embedded_page_indices else lambda x:x[0]):
         process_pywikibot_page(index, pywikibot.Page(site, pagetitle))
     if args.cats or args.category_file:
