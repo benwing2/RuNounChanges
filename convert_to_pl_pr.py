@@ -7,8 +7,10 @@ import blib
 from blib import getparam, rmparam, msg, errandmsg, site, tname, pname, rsub_repeatedly
 
 def process_text_on_page(index, pagetitle, text):
+  template_index = 0
+
   def pagemsg(txt):
-    msg("Page %s %s: %s" % (index, pagetitle, txt))
+    msg("Page %s.%03d %s: %s" % (index, template_index, pagetitle, txt))
   def expand_text(tempcall):
     return blib.expand_text(tempcall, pagetitle, pagemsg, args.verbose)
 
@@ -24,6 +26,7 @@ def process_text_on_page(index, pagetitle, text):
   for t in parsed.filter_templates():
     tn = tname(t)
     if tn in ["pl-pronunciation", "pl-p"]:
+      template_index += 1
       def getp(param):
         return getparam(t, param)
       origt = str(t)
@@ -401,21 +404,6 @@ def process_text_on_page(index, pagetitle, text):
       if saw_respelling_mods:
         stopping_warning.append("saw respelling qualifier(s), needs review")
       carry_over_respelling = not pron_diff.startswith("SAME") or saw_respelling_mods
-      no_change = stopping_warning or carry_over_respelling
-      if no_change:
-        modt = list(blib.parse_text("{{pl-pr%s}}" % (
-          "|" + new_respellings if new_respellings and carry_over_respelling else "")).
-          filter_templates())[0]
-      else:
-        del t.params[:]
-        blib.set_template_name(t, "pl-pr")
-        if new_default_respellings:
-          t.add("1", new_default_respellings)
-        modt = t
-      if new_audio:
-        modt.add("a", new_audio)
-      if homophones:
-        modt.add("hh", homophones)
 
       if hyphenations:
         if carry_over_respelling:
@@ -444,6 +432,22 @@ def process_text_on_page(index, pagetitle, text):
           stopping_warning.append("rhyme(s) not same as auto-rhyme(s) %s, must check manually" %
                                   ",".join(auto_rhymes))
 
+      no_change = stopping_warning or carry_over_respelling
+      if no_change:
+        modt = list(blib.parse_text("{{pl-pr%s}}" % (
+          "|" + new_respellings if new_respellings and carry_over_respelling else "")).
+          filter_templates())[0]
+      else:
+        del t.params[:]
+        blib.set_template_name(t, "pl-pr")
+        if new_default_respellings:
+          t.add("1", new_default_respellings)
+        modt = t
+      if new_audio:
+        modt.add("a", new_audio)
+      if homophones:
+        modt.add("hh", homophones)
+
       if hyphenations:
         hyphenations = ",".join(hyphenations)
         if args.dont_compare_pronuns:
@@ -459,9 +463,9 @@ def process_text_on_page(index, pagetitle, text):
 
       if no_change:
         pagemsg("OLD: <begin> %s <end>" % origt)
-        pagemsg("NEW: %s = %s; {{pl-pr%s}} = %s: %s%s: <begin> %s <end>" % (
-          origt, joined_pl_p_prons, pl_pr_args, joined_pl_pr_prons, pron_diff,
-          "; " + "; ".join(stopping_warning) if stopping_warning else "", str(modt)))
+        msg("NEW Page\t%s.%03d\t%s\t%s\t%s\t%s\t{{pl-pr%s}}\t%s\t%s\t%s\t<begin> %s <end>" % (
+          index, template_index, pagetitle, pagetitle[::-1], origt, joined_pl_p_prons, pl_pr_args, joined_pl_pr_prons,
+          pron_diff, "; ".join(stopping_warning) if stopping_warning else "", str(modt)))
       else:
         pagemsg("Replace %s with %s" % (origt, str(t)))
         notes.append("replace {{pl-p}} with {{pl-pr}}, changing syntax as appropriate")
