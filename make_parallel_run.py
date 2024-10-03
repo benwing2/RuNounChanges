@@ -36,10 +36,10 @@ for run in range(args.num_parts):
     last_term_index = (run + 1) * num_terms_per_run + args.overlap_offset
   save = "--save" if not args.no_save else ""
   command_with_indices = args.command
-  if "%START" not in command_with_indices:
-    command_with_indices += " %START %END"
   if "%SAVE" not in command_with_indices:
     command_with_indices += " %SAVE"
+  if "%START" not in command_with_indices:
+    command_with_indices += " %START %END"
   if "%SLEEP" not in command_with_indices:
     command_with_indices = "%SLEEP " + command_with_indices
   command_with_indices = (
