@@ -86,7 +86,7 @@ def process_text_on_page(index, pagetitle, text):
         homophones = homophones.replace(";", ",")
         if re.search(r"\.[^,]", homophones):
           pagemsg("WARNING: Saw likely syllable divider in hh=%s: %s" % (homophones, origt))
-          stopping_warning.apppend("saw likely syllable divider in homophone(s)")
+          stopping_warning.append("saw likely syllable divider in homophone(s)")
 
       hyphenations = blib.fetch_param_chain(t, "h")
 
@@ -103,26 +103,43 @@ def process_text_on_page(index, pagetitle, text):
       fixstress = getp("fixstress") or getp("fs")
       respellings = blib.fetch_param_chain(t, "1")
       respellings_defaulted = False
+      if not respellings:
+        respellings_defaulted = True
+        respellings = [pagetitle]
+      respelling_mods = []
+      saw_respelling_mods = False
+      def qualifier_to_mod(qualifier):
+        if not qualifier:
+          return ""
+        else:
+          qualifiers = re.split(", *", qualifier)
+          return "<a:%s>" % ",".join(qualifiers)
+      for i, respelling in enumerate(respellings, start=1):
+        qualifier = getp("q%s" % i) or (getp("q") if i == 1 else "")
+        mod = qualifier_to_mod(qualifier)
+        if mod:
+          saw_respelling_mods = True
+        respelling_mods.append(mod)
+      if respellings_defaulted and respelling_mods[0]:
+        respellings_defaulted = False
       new_default_respellings = ""
       if fixstress == "0":
-        if respellings:
+        if not respellings_defaulted:
           pagemsg("WARNING: Saw respellings along with |fs=0, can't handle: %s" % origt)
           stopping_warning.append("saw respellings along with |fs=0, can't handle")
         else:
           respellings = [pagetitle]
+          respellings_defaulted = False
         new_respellings = ["+"]
+        respelling_mods = [""]
         new_default_respellings = "+"
-      elif not respellings:
-        respellings = [pagetitle]
-        respellings_defaulted = True
-        new_respellings = []
       else:
-        if respellings == [pagetitle]:
-          respellings_defaulted = True
-          new_respellings = []
-        else:
-          new_respellings = respellings
-          new_respellings = ["#" if nr == pagetitle else nr for nr in new_respellings]
+        new_respellings = respellings
+        new_respellings = ["#" if nr == pagetitle else nr for nr in new_respellings]
+      new_respellings = ",".join(
+        "%s%s" % (respelling, mod) for respelling, mod in zip(new_respellings, respelling_mods))
+      if new_respellings == "#":
+        new_respellings = ""
 
       for i, audio in enumerate(audios, start=1):
         param = "ac" + ("" if i == 1 else str(i))
@@ -373,7 +390,7 @@ def process_text_on_page(index, pagetitle, text):
       must_continue = False
       for param in t.params:
         pn = pname(param)
-        if not re.search("^([0-9]+|a[0-9]*|ac[0-9]*|h[0-9]*|r[0-9]*|hh|mp[0-9]*|fs|fixstress)$", pn):
+        if not re.search("^([0-9]+|a[0-9]*|ac[0-9]*|h[0-9]*|r[0-9]*|hh|mp[0-9]*|q[0-9]*|fs|fixstress)$", pn):
           pagemsg("WARNING: Unrecognized param %s=%s: %s" % (pn, str(param.value), str(t)))
           must_continue = True
           stopping_warning.append("unrecognized param %s=%s" % (pn, str(param.value)))
@@ -381,10 +398,13 @@ def process_text_on_page(index, pagetitle, text):
       if must_continue:
         continue
 
-      no_change = stopping_warning or not pron_diff.startswith("SAME")
+      if saw_respelling_mods:
+        stopping_warning.append("saw respelling qualifier(s), needs review")
+      carry_over_respelling = not pron_diff.startswith("SAME") or saw_respelling_mods
+      no_change = stopping_warning or carry_over_respelling
       if no_change:
         modt = list(blib.parse_text("{{pl-pr%s}}" % (
-          "|" + ",".join(new_respellings) if new_respellings and not pron_diff.startswith("SAME") else "")).
+          "|" + new_respellings if new_respellings and carry_over_respelling else "")).
           filter_templates())[0]
       else:
         del t.params[:]
