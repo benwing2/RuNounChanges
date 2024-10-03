@@ -29,7 +29,7 @@ def process_text_on_page(index, pagetitle, text):
       origt = str(t)
       stopping_warning = []
 
-      audios = blib.fetch_param_chain(t, "a")
+      audios = blib.fetch_param_chain(t, "a") or blib.fetch_param_chain(t, "audio")
       if audios:
         audioparts = []
         for i, audio in enumerate(audios, start=1):
@@ -87,6 +87,13 @@ def process_text_on_page(index, pagetitle, text):
         if re.search(r"\.[^,]", homophones):
           pagemsg("WARNING: Saw likely syllable divider in hh=%s: %s" % (homophones, origt))
           stopping_warning.append("saw likely syllable divider in homophone(s)")
+        homophones = homophones.split(",")
+        homophone_quals = []
+        for i in range(1, len(homophones) + 1):
+          hhp = getp("hhp%s" % i) or (getp("hhp") if i == 1 else "")
+          if hhp:
+            homophones[i - 1] += "<qq:%s>" % hhp
+        homophones = ",".join(homophones)
 
       hyphenations = blib.fetch_param_chain(t, "h")
 
@@ -101,7 +108,13 @@ def process_text_on_page(index, pagetitle, text):
           stopping_warning.append("need to check Middle Polish respelling(s)")
 
       fixstress = getp("fixstress") or getp("fs")
+      ipas = blib.fetch_param_chain(t, "ipa")
       respellings = blib.fetch_param_chain(t, "1")
+      if ipas and respellings:
+        pagemsg("WARNING: Both ipa= and 1=, can't handle: %s" % origt)
+        continue
+      if ipas:
+        respellings = ["raw:%s" % ipa for ipa in ipas]
       respellings_defaulted = False
       if not respellings:
         respellings_defaulted = True
@@ -114,7 +127,7 @@ def process_text_on_page(index, pagetitle, text):
         else:
           qualifiers = re.split(", *", qualifier)
           return "<a:%s>" % ",".join(qualifiers)
-      for i, respelling in enumerate(respellings, start=1):
+      for i in range(1, len(respellings) + 1):
         qualifier = getp("q%s" % i) or (getp("q") if i == 1 else "")
         mod = qualifier_to_mod(qualifier)
         if mod:
@@ -165,15 +178,21 @@ def process_text_on_page(index, pagetitle, text):
         #  pl_p_prons.append("/" + pl_p_pron + "/")
         #if must_continue:
         #  continue
-        pl_p_args = "".join("|plp%s=%s" % ("" if i == 0 else str(i + 1), respelling)
-                            for i, respelling in enumerate(respellings))
+        if ipas:
+          pl_p_args = ""
+        else:
+          pl_p_args = "".join("|plp%s=%s" % ("" if i == 0 else str(i + 1), respelling)
+                              for i, respelling in enumerate(respellings))
         pl_pr_args = "|" + new_default_respellings if new_default_respellings else ""
         pl_pr_json = expand_text("{{#invoke:zlw-lch-IPA|get_lect_pron_info_bot%s%s}}" % (
           pl_pr_args, pl_p_args))
         if not pl_pr_json:
           continue
         pl_pr_obj = json.loads(pl_pr_json)
-        pl_p_prons = pl_pr_obj["plp_prons"]
+        if ipas:
+          pl_p_prons = ipas
+        else:
+          pl_p_prons = pl_pr_obj["plp_prons"]
         if fixstress and fixstress != "0":
           if len(pl_p_prons) > 1:
             pagemsg("WARNING: Saw multiple respellings along with |fs=%s, can't handle: %s" % (fixstress, origt))
@@ -204,25 +223,6 @@ def process_text_on_page(index, pagetitle, text):
         auto_rhymes = []
         for rhyme_obj in pl_pr_obj["rhyme_list"]:
           auto_rhymes.append(rhyme_obj["rhyme"])
-
-        if hyphenations:
-          if set(auto_hyphenations) == set(hyphenations):
-            pagemsg("Ignoring hyphenation(s) %s same as auto-hyphenation(s): %s" % (",".join(hyphenations), origt))
-            hyphenations = []
-          else:
-            pagemsg("WARNING: Keeping hyphenation(s) %s not same as auto-hyphenation(s) %s, must check manually: %s" % (
-              ",".join(hyphenations), ",".join(auto_hyphenations) or "-", origt))
-            stopping_warning.append("hyphenation(s) not same as auto-hyphenation(s) %s, must check manually" % (
-                                    ",".join(auto_hyphenations) or "-"))
-        if rhymes:
-          if set(auto_rhymes) == set(rhymes):
-            pagemsg("Ignoring rhyme(s) %s same as auto-rhyme(s): %s" % (",".join(rhymes), origt))
-            rhymes = []
-          else:
-            pagemsg("WARNING: Keeping rhyme(s) %s not same as auto-rhyme(s) %s, must check manually: %s" % (
-              ",".join(rhymes), ",".join(auto_rhymes), origt))
-            stopping_warning.append("rhyme(s) not same as auto-rhyme(s) %s, must check manually" %
-                                    ",".join(auto_rhymes))
 
         pl_p_args = ("" if respellings_defaulted else "|" + "|".join(respellings)) + (
           "|fs=%s" % fixstress if fixstress else "")
@@ -345,7 +345,7 @@ def process_text_on_page(index, pagetitle, text):
               break
           voicing_adjusted_pl_pr_prons.append(pl_pr_pron)
         voicing_adjusted_joined_pl_pr_prons = ",".join(voicing_adjusted_pl_pr_prons)
-        msg("voicing_adjusted_joined_pl_pr_prons: %s" % voicing_adjusted_joined_pl_pr_prons)
+        pagemsg("voicing_adjusted_joined_pl_pr_prons: %s" % voicing_adjusted_joined_pl_pr_prons)
 
         # account for clitic prepositions joined to following word
         clitic_adjusted_pl_pr_prons = []
@@ -357,7 +357,7 @@ def process_text_on_page(index, pagetitle, text):
           pl_pr_pron = re.sub(r"(/| )([^aɛiɔuɘ])\.", r"\1\2", pl_pr_pron)
           clitic_adjusted_pl_pr_prons.append("/" + pl_pr_pron + "/")
         clitic_adjusted_joined_pl_pr_prons = ",".join(clitic_adjusted_pl_pr_prons)
-        msg("clitic_adjusted_joined_pl_pr_prons: %s" % clitic_adjusted_joined_pl_pr_prons)
+        pagemsg("clitic_adjusted_joined_pl_pr_prons: %s" % clitic_adjusted_joined_pl_pr_prons)
 
         pron_diff = (
           "SAME" if joined_pl_p_prons == joined_pl_pr_prons else
@@ -390,7 +390,7 @@ def process_text_on_page(index, pagetitle, text):
       must_continue = False
       for param in t.params:
         pn = pname(param)
-        if not re.search("^([0-9]+|a[0-9]*|ac[0-9]*|h[0-9]*|r[0-9]*|hh|mp[0-9]*|q[0-9]*|fs|fixstress)$", pn):
+        if not re.search("^([0-9]+|(a|ac|h|r|mp|q|audio|ipa|hhp)[0-9]*|hh|fs|fixstress)$", pn):
           pagemsg("WARNING: Unrecognized param %s=%s: %s" % (pn, str(param.value), str(t)))
           must_continue = True
           stopping_warning.append("unrecognized param %s=%s" % (pn, str(param.value)))
@@ -416,6 +416,34 @@ def process_text_on_page(index, pagetitle, text):
         modt.add("a", new_audio)
       if homophones:
         modt.add("hh", homophones)
+
+      if hyphenations:
+        if carry_over_respelling:
+          pagemsg("WARNING: Keeping hyphenation(s) %s because respelling(s) being carried over, must check manually: %s" % (
+            ",".join(hyphenations), origt))
+          stopping_warning.append("hyphenation(s) kept because respelling(s) carried over, must check manually")
+        elif set(auto_hyphenations) == set(hyphenations):
+          pagemsg("Ignoring hyphenation(s) %s same as auto-hyphenation(s): %s" % (",".join(hyphenations), origt))
+          hyphenations = []
+        else:
+          pagemsg("WARNING: Keeping hyphenation(s) %s not same as auto-hyphenation(s) %s, must check manually: %s" % (
+            ",".join(hyphenations), ",".join(auto_hyphenations) or "-", origt))
+          stopping_warning.append("hyphenation(s) not same as auto-hyphenation(s) %s, must check manually" % (
+                                  ",".join(auto_hyphenations) or "-"))
+      if rhymes:
+        if carry_over_respelling:
+          pagemsg("WARNING: Keeping rhyme(s) %s because respelling(s) being carried over, must check manually: %s" % (
+            ",".join(rhymes), origt))
+          stopping_warning.append("rhyme(s) kept because respelling(s) carried over, must check manually")
+        elif set(auto_rhymes) == set(rhymes):
+          pagemsg("Ignoring rhyme(s) %s same as auto-rhyme(s): %s" % (",".join(rhymes), origt))
+          rhymes = []
+        else:
+          pagemsg("WARNING: Keeping rhyme(s) %s not same as auto-rhyme(s) %s, must check manually: %s" % (
+            ",".join(rhymes), ",".join(auto_rhymes), origt))
+          stopping_warning.append("rhyme(s) not same as auto-rhyme(s) %s, must check manually" %
+                                  ",".join(auto_rhymes))
+
       if hyphenations:
         hyphenations = ",".join(hyphenations)
         if args.dont_compare_pronuns:
