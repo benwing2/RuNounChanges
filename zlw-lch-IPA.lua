@@ -344,6 +344,7 @@ local function phonemic(txt, do_hyph, lang, is_prep, period, lect)
 		["zlw-slv"] = "aãeéëêioóõôuúùyăĭŏŭŭùāY",
 	}
 	local V = V_no_IU .. "IU"
+	local C = ("[^%sU.']"):format(V_no_IU)
 
 	if txt:find("^*") then
 		-- The symbol <*> before a word indicates it is unstressed.
@@ -398,75 +399,73 @@ local function phonemic(txt, do_hyph, lang, is_prep, period, lect)
 	-- TODO: mpl, csb, szl, zlw-slv
 	-- FIXME: The following condition is not correct. A manual syllable division shouldn't disable prefix/suffix
 	-- checking.
-	if not txt:find("%.") then
-		-- Don't recognise affixes whenever there's only one vowel (or dipthong).
-		local _, n_vowels = rsubn(txt, ("[%s]"):format(V), "")
-		if n_vowels > 1 then
+	-- Don't recognise affixes whenever there's only one vowel (or dipthong).
+	local _, n_vowels = rsubn(txt, ("[%s]"):format(V), "")
+	if n_vowels > 1 then
 
-			-- syllabify common prefixes as separate
-			local prefixes = {
-				"do", "wy", "za", "aktyno", "akusto", "akwa", "anarcho", "andro", "anemo", "antropo", "arachno",
-				"archeo", "archi", "arcy", "areo", "arytmo", "audio", "awio", "balneo", "biblio", "brachy", "broncho",
-				"ceno", "centro", "centy", "chalko", "chiro", "chloro", "chole", "chondro", "choreo", "chromato",
-				"chrysto", "cyber", "cyklo", "cztero", "ćwierć", "daktylo", "decy", "deka", "dendro", "dermato",
-				"diafano", "dwu", "dynamo", "egzo", "ekstra", "elektro", "encefalo", "endo", "entero", "entomo", "ergo",
-				"erytro", "etno", "farmako", "femto", "ferro", "fizjo", "flebo", "franko", "ftyzjo", "galakto",
-				"galwano", "germano", "geronto", "giganto", "giga", "gineko", "giro", "gliko", "gloso", "glotto",
-				"grafo", "granulo", "grawi", "haplo", "helio", "hemato", "hepta", "hetero", "hiper", "histo", "hydro",
-				"info", "inter", "jedno", "kardio", "kortyko", "kosmo", "krypto", "kseno", "logo", "magneto", "między",
-				"niby", "nie", "nowo", "około", "oksy", "onto", "ornito", "para", "pierwo", "pięcio", "pneumo", "poli",
-				"ponad", "post", "poza", "proto", "pseudo", "psycho", "radio", "samo", "sfigmo", "sklero", "staro",
-				"stereo", "tele", "tetra", "wice", "zoo", "żyro", "am[bf]i", "ang[il]o", "ant[ey]", "a?steno",
-				"[be]lasto", "chro[mn]o", "cys?to", "de[rs]mo", "h?ekto", "[gn]eo", "hi[ge]ro", "kontra?", "me[gt]a",
-				"mi[nl]i", "a[efg]ro", "[pt]rzy", "przed?", "wielk?o", "mi?elo", "eur[oy]", "ne[ku]ro", "allo", "astro",
-				"atto", "brio", "heksa", "all?o", "at[mt]o", "a[rs]tro", "br?io", "heksa?", "pato", "ba[tr][oy]", "izo",
-				"myzo", "m[ai]kro", "mi[mzk]o", "chemo", "gono", "kilo", "lipo", "nano", "kilk[ou]", "hem[io]",
-				"home?o", "fi[lt]o", "ma[łn]o", "h[ioy]lo", "hip[ns]?o", "[fm]o[nt]o", "multi"
-				-- <na-, po-, o-, u-> would hit too many false positives
-			}
-			for _, v in ipairs(prefixes) do
-				if tfind("^" .. v) then
-					local _, other_vowels = rsubn(v, ("[%s]"):format(V), "")
-					if (n_vowels - other_vowels) > 0 then
-						tsub(("^(%s)"):format(v), "%1.")
-						break
-					end
+		-- syllabify common prefixes as separate
+		local prefixes = {
+			"do", "wy",
+			"archeo", "arcy", "areo", "arytmo", "audio", "balneo", "biblio",
+			"cztero", "ćwierć",
+			"diafano", "dwu",
+			"nowo", "około", "pierwo", "pięcio",
+			"staro",
+			"aero", "[pt]rzy", "przed?", "wielk?o",
+			"mało",
+			-- <na-, po-, o-, u-> would hit too many false positives
+		}
+		for _, v in ipairs(prefixes) do
+			if tfind("^" .. v) then
+				local _, other_vowels = rsubn(v, ("[%s]"):format(V), "")
+				if (n_vowels - other_vowels) > 0 then
+					-- Make sure the suffix is followed by zero or more consonants (including - but not
+					-- including a syllable divider) followed by a vowel. We do this so that we don't put
+					-- a syllable divider when the user specified the divider in a different place.
+					tsub(("^(%s)(%s*[%s])"):format(v, C, V), "%1.%2")
+					break
 				end
 			end
+		end
 
-			if do_hyph then
-				-- syllabify common suffixes as separate
-				local suffixes = lg {
-					pl = {
-						"nąć",
-						"[sc]tw[aou]", "[sc]twie", "[sc]tw[eo]m", "[sc]twami", "[sc]twach",
-						"dztw[aou]", "dztwie", "dztw[eo]m", "dztwami", "dztwach",
-						"dł[aou]", "dł[eo]m", "dłami", "dłach",
-						"[czs]j[aeięąo]", "[czs]jom", "[czs]jami", "[czs]jach",
-					}, szl = {
-						"nōńć", "dło",
-					}, csb = {
-						"nąc", "dło"
-					}, ["zlw-slv"] = {
-						"nõc", "dlô"
-					},
-				}
+		-- nie + vowel should be broken but only -eu- is a diphthong
+		tsub("^nieu", "nie.u")
 
-				for _, v in ipairs(suffixes) do
-					if tsub(("(%s)$"):format(v), ".%1") then break end
-				end
+		-- syllabify common suffixes as separate
+		local suffixes = lg {
+			pl = {
+				"nąć",
+				"[sc]tw[aou]", "[sc]twie", "[sc]tw[eo]m", "[sc]twami", "[sc]twach",
+				"dztw[aou]", "dztwie", "dztw[eo]m", "dztwami", "dztwach",
+				"dł[aou]", "dł[eo]m", "dłami", "dłach",
+				"[czs]j[aeięąo]", "[czs]jom", "[czs]jami", "[czs]jach",
+			}, szl = {
+				"nōńć", "dło",
+			}, csb = {
+				"nąc", "dło"
+			}, ["zlw-slv"] = {
+				"nõc", "dlô"
+			},
+		}
 
-				-- syllabify <istka> as /ist.ka/
-				if txt:find("[iy]st[kc]") then
-					local endings = lg {
-						{ "k[aąęio]", "ce", "kach", "kom", "kami" },
-						szl = { "k[aãio]", "ce", "kami", "kacj", "kacach", "kōma" },
-						csb = { "k[aãąioôòùó]", "ce", "kami", "kacj", "kacach", },
-					}
-					for _, v in ipairs(endings) do
-						if tsub(("([iy])st(%s)$"):format(v), "%1st.%2") then break end
-					end
-				end
+		for _, v in ipairs(suffixes) do
+			-- Make sure there's no syllable divider elsewhere in the consonant cluster
+			-- preceding the suffix. Same logic as above for prefixes.
+			if tsub(("([%s]%s*)(%s)$"):format(V, C, v), "%1.%2") then break end
+		end
+
+		-- syllabify <istka> as /ist.ka/; same for [[haftka]], [[adiunktka]], [[abiturientka]], [[ćwiartka]],
+		-- [[adeptka]], etc.
+		if txt:find(("[%s][rfnskp]+t[kc]"):format(V)) then
+			local endings = lg {
+				{ "k[aąęio]", "ce", "kach", "kom", "kami" },
+				szl = { "k[aãio]", "ce", "kami", "kacj", "kacach", "kōma" },
+				csb = { "k[aãąioôòùó]", "ce", "kami", "kacj", "kacach", },
+			}
+			for _, v in ipairs(endings) do
+				-- Make sure there's no syllable divider elsewhere in the consonant cluster
+				-- preceding the suffix. Same logic as above for prefixes.
+				if tsub(("([%s][rfnskp]+t)(%s)$"):format(V, v), "%1.%2") then break end
 			end
 		end
 	end
@@ -495,12 +494,11 @@ local function phonemic(txt, do_hyph, lang, is_prep, period, lect)
 	local obstruent = "bBcćCdDfgGhHkpṕqsSśtxzźżŹŻ"
 	local liquid_no_w = "IjlrR"
 	local liquid = liquid_no_w .. "łwẃ"
-	local C = ("[^%sU.']"):format(V_no_IU)
 	-- We need to treat I (<i> in hiatus) as a consonant, and since we check for two vowels in a row, we don't want
 	-- U to be one of the second vowels.
 	tsub_repeatedly(("([%sU])(%s*)([%s])"):format(V_no_IU, C, V_no_IU), function(v1, cons, v2)
 		local cons_no_hyphen = cons:gsub("%-", "")
-		if ulen(cons_no_hyphen) < 2 or rfind(cons_no_hyphen, ("^[%s][%s]$"):format(obstruent, liquid)) or
+		if ulen(cons_no_hyphen) < 2 or rfind(cons_no_hyphen, ("^[%s][%s]I?$"):format(obstruent, liquid)) or
 			rfind(cons_no_hyphen, ("^%sI$"):format(C)) then
 			cons = "." .. cons
 		else
@@ -518,7 +516,7 @@ local function phonemic(txt, do_hyph, lang, is_prep, period, lect)
 	local hyph
 	if do_hyph then
 		-- Ignore certain symbols and diacritics for the hyphenation.
-		hyph = txt:gsub("'", "."):gsub("-", "")
+		hyph = txt:gsub("'", "."):gsub("-", ""):gsub(",", "")
 		if lang == "zlw-slv" then
 			hyph = rsubn(hyph, "[IăĭŏŭYā]", {
 				["I"] = "j",
@@ -921,6 +919,10 @@ end
 
 -- Returns rhyme from a transcription.
 local function do_rhyme(pron, lang)
+	-- No rhymes for multiword terms.
+	if pron:find(" ") then
+		return nil
+	end
 	local V = ({ pl = "aɛiɔuɘ", szl = "aãɛiɔouɪ", csb = "aãɛeɜiɔoõɞu", ["zlw-slv"] = "aãɛeĭɪŏɔɵŭʉy"})[lang]
 	return {
 		rhyme = rsub(rsub(rsub(pron, "^.*ˈ", ""), ("^[^%s]-([%s])"):format(V, V), "%1"), "%.", ""),
@@ -935,8 +937,9 @@ end
 local function multiword(term, lang, period, lect)
 	if term:find("^raw:%[.+%]$") then
 		return { phonetic = term:gsub("^raw:", "") }
-	elseif term:find(" ") then
-
+	end
+	term = rsub(term, "%s*,%s*", " | ")
+	if term:find(" ") then
 		-- TODO: repeated
 		function lg(s)
 			return s[lang] or s[1]
@@ -946,6 +949,8 @@ local function multiword(term, lang, period, lect)
 			{
 				"beze?", "na", "dla", "do", "ku", "nade?", "o", "ode?", "po", "pode?", "przede?", "przeze?", "przy",
 				"spode?", "u", "we?", "z[ae]?", "znade?", "zza",
+				-- clitics
+				"a", "i", "nie",
 			}, szl = {
 				"bezy?", "na", "dlŏ", "d[oō]", "ku", "nady?", "ô", "ôdy?", "po", "pody?", "przedy?", "przezy?", "przi",
 				"spody?", "u", "w[ey]?", "z[aey]?", "[śs]", "znady?"
@@ -962,15 +967,21 @@ local function multiword(term, lang, period, lect)
 		local contains_preps = false
 
 		for word in term:gmatch("[^ ]+") do
-			local is_prep = false
-			for _, prep in ipairs(prepositions) do
-				if (rfind(word, ("^%s$"):format(prep))) then
-					is_prep = true
-					contains_preps = true
-					break
+			local v
+			if word == "|" then
+				-- foot boundary
+				v = word
+			else
+				local is_prep = false
+				for _, prep in ipairs(prepositions) do
+					if (rfind(word, ("^%s$"):format(prep))) then
+						is_prep = true
+						contains_preps = true
+						break
+					end
 				end
+				v = phonemic(word, false, lang, is_prep, period, lect)
 			end
-			local v = phonemic(word, false, lang, is_prep, period, lect)
 			local sep = "%s %s"
 			if p == nil then
 				p = v
@@ -1519,7 +1530,8 @@ function export.show(frame)
 		else
 			ins("Syllabification: <small>[please specify syllabification manually]</small>")
 			if mw.title.getCurrentTitle().nsText == "" then
-				ins(("[[Category:%s-pronunciation_without_hyphenation]]"):format(ilang))
+				ins(("[[Category:%s entries with Template:%s-pr without syllabification]]"):format(
+					lang:getFullName(), ilang))
 			end
 		end
 	end
