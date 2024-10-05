@@ -1625,7 +1625,7 @@ local function triptote_diptote(base, props, stem, typ)
 				 nil, nil, nil,
 				 nil, nil, nil,
 				 "", "", "",
-				 "", "", "",
+				 "",
 				})
 		end
 		insert_cats(base, props, "PLPOS with basic " .. typ .. " BROKNUM", "basic " .. singpl_tote)
@@ -1823,7 +1823,7 @@ declensions["?"] = function(base, props, stem)
 		 "", "", "",
 		 "", "", "",
 		 "", "", "",
-		 "", "", "",
+		 "",
 		})
 	
 	insert_cats(base, props, "PLPOS with unknown NUMBER", "NUMBER unknown")
@@ -2595,6 +2595,197 @@ function export.stem_and_type(word, sg, sgtype, isfem, num, pos)
 	end
 
 	return artr, export.detect_type(ar, isfem, num, pos)
+end
+
+local function parse_indicator_spec(angle_bracket_spec)
+	-- Store the original angle bracket spec so we can reconstruct the overall conj spec with the lemma(s) in them.
+	local base = {
+		angle_bracket_spec = angle_bracket_spec,
+		user_stem_overrides = {},
+		user_slot_overrides = {},
+		slot_explicitly_missing = {},
+		slot_uncertain = {},
+		slot_override_uses_default = {},
+		addnote_specs = {},
+	}
+	local function parse_err(msg)
+		error(msg .. ": " .. angle_bracket_spec)
+	end
+	local function fetch_footnotes(separated_group)
+		local footnotes
+		for j = 2, #separated_group - 1, 2 do
+			if separated_group[j + 1] ~= "" then
+				parse_err("Extraneous text after bracketed footnotes: '" .. table.concat(separated_group) .. "'")
+			end
+			if not footnotes then
+				footnotes = {}
+			end
+			table.insert(footnotes, separated_group[j])
+		end
+		return footnotes
+	end
+
+	local inside = angle_bracket_spec:match("^<(.*)>$")
+	assert(inside)
+	local segments = iut.parse_multi_delimiter_balanced_segment_run(inside, {{"[", "]"}, {"<", ">"}})
+	local dot_separated_groups = iut.split_alternating_runs_and_strip_spaces(segments, "%.")
+
+	-- The first dot-separated element must specify the verb form, e.g. IV or IIq. If the form is I, it needs to include
+	-- the the past and non-past vowels, e.g.  I/a~u for kataba ~ yaktubu. More than one vowel can be given,
+	-- comma-separated, and more than one past~non-past pair can be given, slash-separated, e.g. I/a,u~u/i~a for form I
+	-- كمل, which can be conjugated as kamala/kamula ~ yakmulu or kamila ~ yakmalu. An individual vowel spec must be one
+	-- of a, i or u and in general (a) at least one past~non-past pair most be given, and (b) both past and non-past
+	-- vowels must be given even though sometimes the vowel can be determined from the unvocalized form. An exception is
+	-- passive-only verbs, where the vowels can't in general be determined (except indirectly in some cases by looking
+	-- at an associated non-passive verb); in that case, the vowel~vowel spec can left out.
+	local slash_separated_groups = iut.split_alternating_runs_and_strip_spaces(dot_separated_groups[1], "/")
+	local form_spec = slash_separated_groups[1]
+	base.form_footnotes = fetch_footnotes(form_spec)
+	if form_spec[1] == "" then
+		parse_err("Missing verb form")
+	end
+	if not allowed_vforms_with_weakness_set[form_spec[1]] then
+		parse_err(("Unrecognized verb form '%s', should be one of %s"):format(
+			form_spec[1], m_table.serialCommaJoin(allowed_vforms, {conj = "or", dontTag = true})))
+	end
+	if form_spec[1]:find("%-") then
+		base.verb_form, base.explicit_weakness = form_spec[1]:match("^(.-)%-(.*)$")
+	else
+		base.verb_form = form_spec[1]
+	end
+
+	if #slash_separated_groups > 1 then
+		if base.verb_form ~= "I" then
+			parse_err(("Past~non-past vowels can only be specified when verb form is I, but saw form '%s'"):format(
+				base.verb_form))
+		end
+		for i = 2, #slash_separated_groups do
+			local slash_separated_group = slash_separated_groups[i]
+			local tilde_separated_groups = iut.split_alternating_runs_and_strip_spaces(slash_separated_group, "~")
+			if #tilde_separated_groups ~= 2 then
+				parse_err(("Expected two tilde-separated vowel specs: %s"):format(table.concat(slash_separated_group)))
+			end
+			local function parse_conj_vowels(tilde_separated_group, vtype)
+				local conj_vowel_objects = {}
+				local comma_separated_groups = iut.split_alternating_runs_and_strip_spaces(tilde_separated_group, ",")
+				for _, comma_separated_group in ipairs(comma_separated_groups) do
+					local conj_vowel = comma_separated_group[1]
+					if conj_vowel ~= "a" and conj_vowel ~= "i" and conj_vowel ~= "u" then
+						parse_err(("Expected %s conjugation vowel '%s' to be one of a, i or u in %s"):format(
+							vtype, conj_vowel, table.concat(slash_separated_group)))
+					end
+					conj_vowel = dia[conj_vowel]
+					local conj_vowel_footnotes = fetch_footnotes(comma_separated_group)
+					-- Try to use strings when possible as it makes q() significantly more efficient.
+					if conj_vowel_footnotes then
+						table.insert(conj_vowel_objects, {form = conj_vowel, footnotes = conj_vowel_footnotes})
+					else
+						table.insert(conj_vowel_objects, conj_vowel)
+					end
+				end
+				return conj_vowel_objects
+			end
+			local conj_vowel_spec = {
+				past = parse_conj_vowels(tilde_separated_groups[1], "past"),
+				nonpast = parse_conj_vowels(tilde_separated_groups[2], "non-past"),
+			}
+			table.insert(base.conj_vowels, conj_vowel_spec)
+		end
+	end
+
+	for i = 2, #dot_separated_groups do
+		local dot_separated_group = dot_separated_groups[i]
+		local first_element = dot_separated_group[1]
+		if first_element == "addnote" then
+			local spec_and_footnotes = fetch_footnotes(dot_separated_group)
+			if #spec_and_footnotes < 2 then
+				parse_err("Spec with 'addnote' should be of the form 'addnote[SLOTSPEC][FOOTNOTE][FOOTNOTE][...]'")
+			end
+			local slot_spec = table.remove(spec_and_footnotes, 1)
+			local slot_spec_inside = rmatch(slot_spec, "^%[(.*)%]$")
+			if not slot_spec_inside then
+				parse_err("Internal error: slot_spec " .. slot_spec .. " should be surrounded with brackets")
+			end
+			local slot_specs = rsplit(slot_spec_inside, ",")
+			-- FIXME: Here, [[Module:it-verb]] called strip_spaces(). Generally we don't do this. Should we?
+			table.insert(base.addnote_specs, {slot_specs = slot_specs, footnotes = spec_and_footnotes})
+		elseif first_element:find("^var:") then
+			if #dot_separated_group > 1 then
+				parse_err(("Can't attach footnotes to 'var:' spec '%s'"):format(first_element))
+			end
+			base.variant = first_element:match("^var:(.*)$")
+		elseif first_element:find("^I+V?:") then
+			local root_cons, root_cons_value = first_element:match("^(I+V?):(.*)$")
+			local root_index
+			if root_cons == "I" then
+				root_index = 1
+			elseif root_cons == "II" then
+				root_index = 2
+			elseif root_cons == "III" then
+				root_index = 3
+			elseif root_cons == "IV" then
+				root_index = 4
+				if not base.verb_form:find("q$") then
+					parse_err(("Can't specify root consonant IV for non-quadriliteral verb form '%s': %s"):format(
+						base.verb_form, first_element))
+				end
+			end
+			local cons, translit = root_cons_value:match("^(.*)//(.*)$")
+			if not cons then
+				cons = root_cons_value
+			end
+			local root_footnotes = fetch_footnotes(dot_separated_group)
+			if not translit and not root_footnotes then
+				base.root_consonants[root_index] = cons
+			else
+				base.root_consonants[root_index] = {form = cons, translit = translit, footnotes = root_footnotes}
+			end
+		elseif first_element:find("^[a-z][a-z0-9_]*:") then
+			local slot_or_stem, remainder = first_element:match("^(.-):(.*)$")
+			dot_separated_group[1] = remainder
+			local comma_separated_groups = iut.split_alternating_runs_and_strip_spaces(dot_separated_group, "[,،]")
+			if overridable_stems[slot_or_stem] then
+				if base.user_stem_overrides[slot_or_stem] then
+					parse_err("Overridable stem '" .. slot_or_stem .. "' specified twice")
+				end
+				base.user_stem_overrides[slot_or_stem] = overridable_stems[slot_or_stem](comma_separated_groups,
+					{prefix = slot_or_stem, base = base, parse_err = parse_err, fetch_footnotes = fetch_footnotes})
+			else -- assume a form override; we validate further later when the possible slots are available
+				if base.user_slot_overrides[slot_or_stem] then
+					parse_err("Form override '" .. slot_or_stem .. "' specified twice")
+				end
+				base.user_slot_overrides[slot_or_stem] = allow_multiple_values_for_override(comma_separated_groups,
+					{prefix = slot_or_stem, base = base, parse_err = parse_err, fetch_footnotes = fetch_footnotes},
+					"is form override")
+			end
+		elseif indicator_flags[first_element] then
+			if #dot_separated_group > 1 then
+				parse_err("No footnotes allowed with '" .. first_element .. "' spec")
+			end
+			if base[first_element] then
+				parse_err("Spec '" .. first_element .. "' specified twice")
+			end
+			base[first_element] = true
+		else
+			local passive, uncertain = first_element:match("^(.*)(%?)$")
+			passive = passive or first_element
+			uncertain = not not uncertain
+			if passive_types[passive] then
+				if #dot_separated_group > 1 then
+					parse_err("No footnotes allowed with '" .. passive .. "' spec")
+				end
+				if base.passive then
+					parse_err("Value for passive type specified twice")
+				end
+				base.passive = passive
+				base.passive_uncertain = uncertain
+			else
+				parse_err("Unrecognized spec '" .. first_element .. "'")
+			end
+		end
+	end
+
+	return base
 end
 
 -- local outersep = " <small style=\"color: #888\">or</small> "
