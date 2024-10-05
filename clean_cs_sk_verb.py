@@ -18,7 +18,7 @@ def process_text_on_page(index, pagetitle, text):
     def getp(param):
       return getparam(t, param)
     tn = tname(t)
-    if tn == "cs-verb-old":
+    if tn == "%s-verb-old" % args.lang:
       origt = str(t)
       inf = getp("inf")
       if inf:
@@ -51,16 +51,17 @@ def process_text_on_page(index, pagetitle, text):
       rmparam(t, "1")
       rmparam(t, "2")
       rmparam(t, "3")
-      blib.set_template_name(t, "cs-verb")
+      blib.set_template_name(t, "%s-verb" % args.lang)
       pagemsg("Replaced %s with %s" % (origt, str(t)))
-      notes.append("rename {{cs-verb-old}} to {{cs-verb}} and standardize params")
+      notes.append("rename {{%s-verb-old}} to {{%s-verb}} and standardize params" % (args.lang, args.lang))
 
   text = str(parsed)
   return text, notes
 
-parser = blib.create_argparser("Rename {{cs-verb-old}} to {{cs-verb}} and clean/standardize parameters", include_pagefile=True, include_stdin=True)
+parser = blib.create_argparser("Rename {{cs-verb-old}}/{{sk-verb-old}} to {{cs-verb}}/{{sk-verb}} and clean/standardize parameters", include_pagefile=True, include_stdin=True)
+parser.add_argument("--lang", choices=["cs", "sk"], help="Language of verbs (cs, sk).")
 args = parser.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
 blib.do_pagefile_cats_refs(args, start, end, process_text_on_page, edit=True, stdin=True,
-  default_refs=["Template:cs-verb-old"])
+  default_refs=["Template:%s-verb-old" % args.lang])
