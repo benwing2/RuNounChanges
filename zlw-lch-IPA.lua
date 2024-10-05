@@ -403,15 +403,16 @@ local function phonemic(txt, do_hyph, lang, is_prep, period, lect)
 	local _, n_vowels = rsubn(txt, ("[%s]"):format(V), "")
 	if n_vowels > 1 then
 
-		-- syllabify common prefixes as separate
+		-- syllabify common prefixes as separate; note that since we replaced digraphs above with single
+		-- chars, we need to use the replacement chars here
 		local prefixes = {
 			"do", "wy",
-			"archeo", "arcy", "areo", "arytmo", "audio", "balneo", "biblio",
-			"cztero", "ćwierć",
-			"diafano", "dwu",
+			"arHeo", "arcy", "areo", "arytmo", "audio", "balneo", "biblio",
+			"Ctero", "ćwierć",
+			"diafano", "dwu", "niby",
 			"nowo", "około", "pierwo", "pięcio",
 			"staro",
-			"aero", "[pt]rzy", "przed?", "wielk?o",
+			"aero", "[pt]Ry", "pRed?", "wielk?o",
 			"mało",
 			-- <na-, po-, o-, u-> would hit too many false positives
 		}
