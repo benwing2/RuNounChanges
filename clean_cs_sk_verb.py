@@ -29,11 +29,11 @@ def process_text_on_page(index, pagetitle, text):
         a = "pf"
       elif a == "i":
         a = "impf"
-      elif a in ["p-i", "both"]:
+      elif a in ["b", "p-i", "both"]:
         a = "both"
       else:
         pagemsg("WARNING: Bad aspect a=%s" % a)
-        a = None
+        continue
       if a:
         t.add("a", a)
       else:
@@ -47,7 +47,8 @@ def process_text_on_page(index, pagetitle, text):
           blib.remove_param_chain(t, "aa")
           blib.set_param_chain(t, aa, "pf")
         else:
-          pagemsg("WARNING: Bad aspect a=%s when aa= given")
+          pagemsg("WARNING: No aspect when aa= given")
+          continue
       rmparam(t, "1")
       rmparam(t, "2")
       rmparam(t, "3")
