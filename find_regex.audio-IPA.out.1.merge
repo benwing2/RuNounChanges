@@ -9908,9 +9908,8 @@ From the {{der|fr|lre|kanata||village, settlement}}.
 * {{fr-IPA}}
 ** {{audio|fr|Fr-Canada.ogg|a=Paris}}
 * {{fr-IPA|[da:dâ]|a=Canada}}
-** {{audio-IPA|fr|LL-Q150 (fra)-Simon Villeneuve-Canada.wav|[ka.naˈdɑ]}}
-** {{audio-IPA|fr|Qc-Canada.ogg|[ka.naˈdɔ]}}
-* {{rhymes|fr|a}}
+** {{audio|fr|LL-Q150 (fra)-Simon Villeneuve-Canada.wav|IPA=[ka.naˈdɑ]}}
+** {{audio|fr|Qc-Canada.ogg|IPA=[ka.naˈdɔ]}}
 
 ===Proper noun===
 {{fr-proper noun|m}}
@@ -11258,7 +11257,7 @@ From {{inh|en|enm|parent}}, borrowed from {{der|en|xno|parent}}, {{der|en|frm|pa
 ====Pronunciation====
 * {{fr-IPA}}
 ** {{audio|fr|Fr-parent.ogg}}
-** {{a|fr|Quebec}} {{audio-IPA|fr|FQ-parent.ogg|[paˈʁã]}}
+** {{audio|fr|FQ-parent.ogg|IPA=[paˈʁã]|a=Quebec}}
 
 ====Noun====
 {{fr-noun|m|f=+}}
@@ -12546,8 +12545,8 @@ The word ''god'' is often applied both to males and to females. The word was ori
 ===Pronunciation===
 * {{IPA|nl|/ɣɔt/}}
 * {{rhymes|nl|ɔt|s=1}}
-* {{a|nl|BE}} {{audio-IPA|nl|Nl-god (Belgium).ogg|[ʝɔt]}}
-* {{a|nl|NL}} {{audio-IPA|nl|Nl-God.ogg|[xɔt]|[ɣɔt]}}
+* {{audio|nl|Nl-god (Belgium).ogg|IPA=[ʝɔt]|a=BE}}
+* {{audio|nl|Nl-God.ogg|IPA=[xɔt],[ɣɔt]|a=NL}}
 
 ===Noun===
 {{nl-noun|m|-:en|+|f=godin}}
@@ -13283,7 +13282,8 @@ Page 22 hung: -------- begin text --------
 ==English==
 
 ===Pronunciation===
-* {{audio-IPA|en|en-us-hung.ogg|/ˈhʌŋ/}}
+* {{IPA|en|/ˈhʌŋ/}}
+* {{audio|en|en-us-hung.ogg}}
 * {{rhymes|en|ʌŋ|s=1}}
 
 ===Verb===
@@ -13476,8 +13476,9 @@ Page 23 said: -------- begin text --------
 From {{inh|en|enm|seide|pos=preterite}} and {{m|enm|seid}}, {{m|enm|iseid|pos=past participle}}, from {{inh|en|ang|sǣde}}, {{m|ang|sæġde|pos=preterite}} and {{m|ang|ġesæġd|pos=past participle}}, equivalent to {{suffix|en|say|ed}}.
 
 ===Pronunciation===
-* {{enPR|sĕd}}, {{audio-IPA|en|en-us-said.ogg|/sɛd/|dial=US}}
-* {{enPR|sād|a=dialectical,NZ}}, {{IPA|en|/seɪd/}}<ref>{{R:Bingham IP|75}}</ref>
+* {{enPR|sĕd}}, {{IPA|en|/sɛd/}}
+** {{audio|en|en-us-said.ogg|a=US}}
+* {{enPR|sād|a=dialectal,NZ}}, {{IPA|en|/seɪd/}}<ref>{{R:Bingham IP|75}}</ref>
 * {{rhymes|en|ɛd|s=1}}
 
 ===Verb===
@@ -14639,7 +14640,7 @@ Borrowed from {{bor|nl|fr|base}}, from {{der|nl|la|basis}}. {{doublet|nl|basis}}
 
 ===Pronunciation===
 * {{fr-IPA|bâse}}
-* {{a|fr|France}} {{audio-IPA|fr|Fr-base.ogg|[baz]}}
+* {{audio|fr|Fr-base.ogg|IPA=[baz]|a=France}}
 * {{IPA|fr|[bɑːz]|a=Quebec,formal}}
 * {{IPA|fr|[bɑʊ̯z]|a=Quebec,informal}}
 
@@ -17643,8 +17644,8 @@ Page 26 treize: -------- begin text --------
 
 ===Pronunciation===
 * {{fr-IPA}}
-* {{a|fr|France}} {{audio-IPA|fr|Fr-treize.ogg|[tʁ̥ɛːzə̆]}}
-* {{a|fr|Quebec|informal}} {{audio-IPA|fr|Qc-treize.oga|[tʁ̥aɛ̯zə̆]}}
+* {{audio|fr|Fr-treize.ogg|IPA=[tʁ̥ɛːzə̆]|a=France}}
+* {{audio|fr|Qc-treize.oga|IPA=[tʁ̥aɛ̯zə̆]|a=Quebec,informal}}
 * {{audio|fr|Qc-treize.ogg|a=Canada}}
 * {{rhymes|fr|ɛz|s=1}}
 
@@ -17706,8 +17707,8 @@ In this sense, mostly displaced the native {{ncog|enm|wode}}, from {{ncog|ang|wu
 * {{enPR|fôr′ĭst|fŏr′ĭst|fôrst|a=GA}}, {{IPA|en|/ˈfɔɹəst/|/fɔɹst/}}
 * {{audio|en|LL-Q1860 (eng)-Exilexi-forest.wav|a=GA}}
 * {{IPA|en|/ˈfɑɹɪst/|/ˈfɑɹəst/|a=NYC,Philadelphia}}
-* {{a|en|California}} {{audio-IPA|en|En-us-forest.ogg|[ˈfɔɹ.ɛ̈stʰ]}}
-* {{homophones|en|forced}} {{qualifier|some American accents}}
+* {{audio|en|En-us-forest.ogg|IPA=[ˈfɔɹ.ɛ̈stʰ]|a=California}}
+* {{homophones|en|forced|aa=US,sometimes,especially in fast speech}}
 * {{rhymes|en|ɒɹɪst|s=2}}
 * {{hyphenation|en|for|est}}
 
@@ -18372,8 +18373,8 @@ From {{der|nl|fr|à}}.
 
 ===Pronunciation===
 * {{fr-IPA}}
-* {{a|fr|France|Paris}} {{audio-IPA|fr|Fr-à.ogg|[a]}}
-* {{homophones|fr|a|as|}}
+* {{audio|fr|Fr-à.ogg|a=Paris}}
+* {{homophones|fr|a|as}}
 * {{rhymes|fr|a|s=1}}
 
 ===Notes===
@@ -19104,8 +19105,8 @@ Page 29 neige: -------- begin text --------
 
 ===Pronunciation===
 * {{fr-IPA}}
-* {{a|fr|France|la neige}} {{audio-IPA|fr|Fr-neige.ogg|[la ˈnɛːʒ]}}
-* {{a|fr|Quebec}} {{audio-IPA|fr|Qc-neige.oga|[nae̯ʒ]}}
+* {{audio|fr|Fr-neige.ogg|text=la neige|IPA=[la ˈnɛːʒ]|a=France}}
+* {{audio|fr|Qc-neige.oga|IPA=[nae̯ʒ]|a=Quebec}}
 * {{audio|fr|Qc-neige.ogg|a=Canada}}
 
 ===Noun===
@@ -19192,7 +19193,7 @@ From Early Modern English {{m|en|manage}}, {{m|en|menage}}, from {{inh|en|enm|*m
 ===Pronunciation===
 * {{IPA|en|/ˈmænɪdʒ/|a=RP}}
 * {{a|en|US}}
-** {{IPA|en|/ˈmænədʒ/|a=weak vowel}}
+** {{IPA|en|/ˈmænədʒ/|a=GenAm,weak vowel}}
 *** {{audio|en|en-us-manage.ogg}}
 ** {{IPA|en|/ˈmænɪdʒ/|a=non-weak vowel}}
 * {{hyphenation|en|man|age}}
@@ -19423,7 +19424,7 @@ Equivalent to {{suffix|en|pack|-age}}. Possibly influenced by Anglo-{{uder|en|la
 
 ===Pronunciation===
 * {{IPA|en|/ˈpækɪd͡ʒ/|a=UK,AU,US,CA}}
-** California, US: {{audio-IPA|en|En-us-package.ogg|[ˈpʰakɛd͡ʒ]}}
+** {{audio|en|En-us-package.ogg|IPA=[ˈpʰakɛd͡ʒ]|a=California}}
 * {{rhymes|en|ækɪd͡ʒ|s=2}}
 
 ===Noun===
@@ -19668,7 +19669,7 @@ Mid-17th century, borrowed from {{bor|en|it|chiaroscuro}}, from {{m|it|chiaro|t=
 [[File:Gerrit van Honthorst - De koppelaarster.jpg|thumb|'''chiaroscuro''' with its exaggerated light contrasts]]
 * {{IPA|en|/kɪˌɑːɹəˈskʊəɹəʊ/|a=UK}}
 * {{IPA|en|/ˌkjɑɹəˈsk(j)ʊɹoʊ/|a=US}}
-* {{a|en|CA}} {{audio-IPA|en|en-ca-chiaroscuro.ogg|/ˌkjɒɹəˈskuɹoʊ/}}
+* {{audio|en|en-ca-chiaroscuro.ogg|IPA=/ˌkjɒɹəˈskuɹoʊ/|a=CA}}
 * {{rhymes|en|ʊəɹəʊ|ʊɹəʊ|s1=5|s2=4}}
 
 ===Noun===
@@ -19837,9 +19838,11 @@ Page 33 native: -------- begin text --------
 {{inh+|en|enm|natif}}, from {{der|en|fro|natif}}, from {{der|en|la|nātīvus}}, from {{m|la|nātus||birth}}. {{doublet|en|naive|neif}}.
 
 ===Pronunciation===
-* {{IPA|en|/ˈneɪtɪv/|a=RP,GA}}
-** {{IPA|en|/ˈneɪtəv/|a=weak vowel}}
-** {{audio-IPA|en|en-us-native.ogg|/ˈneɪtɪv/}}
+* {{IPA|en|/ˈneɪtɪv/|a=RP}}
+* {{a|en|US}}
+** {{IPA|en|/ˈneɪtəv/|a=GA,weak vowel}}
+** {{IPA|en|/ˈneɪtɪv/|a=US,non-weak vowel}}
+*** {{audio|en|en-us-native.ogg}}
 * {{rhymes|en|eɪtɪv|s=2}}
 * {{hyphenation|en|na|tive}}
 
@@ -20217,10 +20220,10 @@ Page 34 baleine: -------- begin text --------
 
 ===Pronunciation===
 * {{fr-IPA|balei(ː)ne}}
-** {{a|fr|France|une baleine}} {{audio-IPA|fr|Fr-baleine.ogg|[yn bäˈlɛn]}}
+** {{audio|fr|Fr-baleine.ogg|text=une baleine|IPA=[yn bäˈlɛn]|a=France}}
 ** {{IPA|fr|[baˈlɛn]|a=Eastern Quebec}}
 ** {{IPA|fr|[baˈlẽɪ̯̃n]|[-læ̃ɪ̯̃n]|[-lãɪ̯̃n]|a=Western Quebec}}
-** {{a|fr|Estrie, Quebec}} {{audio-IPA|fr|Qc-baleine.ogg|[baˈlɛ̃ɪ̯̃nə̆]}}
+** {{audio|fr|Qc-baleine.ogg|IPA=[baˈlɛ̃ɪ̯̃nə̆]|a=Quebec,Estrie}}
 * {{rhymes|fr|ɛn|s=2}}
 * {{homophones|fr|baleinent|baleines}}
 
@@ -20315,15 +20318,14 @@ Page 35 fête: -------- begin text --------
 {{inh+|fr|frm|feste}}, from {{inh|fr|fro|feste}}, from {{inh|fr|LL.|fēsta}}, from the plural of {{inh|fr|la|fēstum}}.
 
 ===Pronunciation===
-* {{fr-IPA}}
-** {{a|fr|France, Paris|une fête}} {{audio-IPA|fr|Fr-fête.ogg|[yn fɛt]}}
-** {{homophones|fr|fait|faite|faîte|faites|faîtes|fêtes|fêtent}}
-* {{IPA|fr|/fɛːt/}} {{q|older, now chiefly Belgium and Canada}}
-** {{IPA|fr|[yn fɛːt]|a=Belgium,une fête}}
-** {{a|fr|Canada, Estrie|une fête}} {{audio-IPA|fr|FR QC une fête.ogg|[ʏn ˈfæ̈ɪ̯tʰ]}}
-** {{a|fr|Canada, Abitibi|informal}} {{audio-IPA|fr|Qc-fête.oga|[fɑɪ̯tʰ]}}
-** {{a|fr|Canada, Ottawa|informal}} {{audio-IPA|fr|Fr-CA-Fête.oga|[faɪ̯tʰ]}}
-** {{homophones|fr|faîte|faîtes|fêtes|fêtent}}
+* {{fr-IPA|a=France}}
+** {{audio|fr|Fr-fête.ogg|text=une fête|IPA=[yn fɛt]|a=Paris}}
+** {{homophones|fr|fait|faite|faîte|faites|faîtes|fêtes|fêtent|a=France}}
+* {{IPA|fr|/fɛːt/|aa=older, now chiefly <<Belgium>> and <<Canada>>}}
+** {{audio|fr|FR QC une fête.ogg|text=une fête|IPA=[ʏn ˈfæ̈ɪ̯tʰ]|a=Quebec,Estrie}}
+** {{audio|fr|Qc-fête.oga|IPA=[fɑɪ̯tʰ]|a=Quebec,Abitibi,informal}}
+** {{audio|fr|Fr-CA-Fête.oga|[faɪ̯tʰ]|a=Quebec,Ottawa,informal}}
+** {{homophones|fr|faîte|faîtes|fêtes|fêtent|a=Quebec}}
 
 ===Noun===
 {{fr-noun|f}}
@@ -20383,7 +20385,7 @@ Page 35 fête: -------- begin text --------
 From {{inh|nrf|fro|feste}}, from {{inh|nrf|LL.|fēsta}}, from the plural of {{inh|nrf|la|fēstum}}.
 
 ===Pronunciation===
-* {{qualifier|Jersey}} {{IPA|nrf|/feit/}}
+* {{IPA|nrf|/feit/|a=Jersey}}
 * {{audio|nrf|Jer-fête.ogg|a=Jersey}}
 
 ===Noun===
@@ -20403,15 +20405,15 @@ Page 36 fenêtre: -------- begin text --------
 {{inh+|fr|fro|fenestre}}, inherited from {{inh|fr|la|fenestra}}.
 
 ===Pronunciation===
-* {{fr-IPA|+|fnêtre}}
-** {{a|fr|France|une fenêtre}} {{audio-IPA|fr|Fr-fenêtre.ogg|[yn fø.nɛtχ]}}
-** {{a|fr|Meridional French}} {{IPA|fr|[fə.nɛ.tʁə]}}
+* {{fr-IPA|+|fnêtre|a=France}}
+** {{audio|fr|Fr-fenêtre.ogg|text=une fenêtre|IPA=[yn fø.nɛtχ]|a=France}}
+** {{IPA|fr|[fə.nɛ.tʁə]|a=Meridional}}
 ** {{rhymes|fr|ɛtʁ|s=2,3}}
-* {{fr-IPA|fenêːtre|fnêːtr}} {{q|older, now chiefly Belgium and Canada}}
-** {{a|fr|Canada|formal}} {{audio-IPA|fr|Qc-fenêtre-1.ogg|[fə.nɛːtχ]}}
-** {{a|fr|Canada|informal}} {{audio-IPA|fr|Qc-fenêtre.oga|[fœ̈.naɛ̯tχ]}}
-** {{a|fr|Canada|informal}} {{audio-IPA|fr|FR-Fenêtre (Gaspésie).ogg|[fnaɛ̯tχ]}}
-** {{a|fr|Canada|informal}} {{audio-IPA|fr|F'nêt'.oga|[fnaɛ̯t]}}
+* {{fr-IPA|fenêːtre|fnêːtr|aa=older, now chiefly <<Belgium>> and <<Canada>>}}
+** {{audio|fr|Qc-fenêtre-1.ogg|IPA=[fə.nɛːtχ]|a=Quebec,formal}}
+** {{audio|fr|Qc-fenêtre.oga|IPA=[fœ̈.naɛ̯tχ]|a=Quebec,informal}}
+** {{audio|fr|FR-Fenêtre (Gaspésie).ogg|IPA=[fnaɛ̯tχ]|a=Quebec,Gaspésie,informal}}
+** {{audio|fr|F'nêt'.oga|IPA=[fnaɛ̯t]|a=Quebec,informal}}
 
 ===Noun===
 {{fr-noun|f}}
@@ -20452,7 +20454,8 @@ Page 37 anonym: -------- begin text --------
 Coined or borrowed around 1812, from {{der|en|fr|anonyme}}, from {{der|en|grc|ἀνώνυμος||without name}}.
 
 ===Pronunciation===
-* {{audio-IPA|en|en-us-anonym.ogg|/ˈæn.ə.nɪm/|Audio (US)}}
+* {{IPA|en|/ˈæn.ə.nɪm/}}
+* {{audio|en|en-us-anonym.ogg|a=US}}
 
 ===Noun===
 {{en-noun}}
@@ -20625,8 +20628,8 @@ Page 38 palustral: -------- begin text --------
 From {{der|en|la|palustris}}, from {{m|la|palūs|t=swamp}}, {{af|en|-al}}.
 
 ===Pronunciation===
-* {{IPA|en|/pəˈlʌstɹəl/|a=UK}}
-* {{a|en|US}} {{audio-IPA|en|en-us-palustral.ogg|/pəˈlʌstɹəl/|dial=Midland American English|sex=male}}
+* {{IPA|en|/pəˈlʌstɹəl/}}
+* {{audio|en|en-us-palustral.ogg|a=Midland US|q=male voice}}
 
 ===Adjective===
 {{en-adj}}
@@ -20660,7 +20663,8 @@ Page 39 knickers: -------- begin text --------
 
 ===Pronunciation===
 * {{IPA|en|/ˈnɪkəz/|a=UK}}
-* {{enPR|nĭkʹərz|a=US}}, {{audio-IPA|en|LL-Q1860 (eng)-Vealhurl-knickers.wav|/ˈnɪkɚz/}}
+* {{enPR|nĭkʹərz|a=US}}, {{IPA|en|/ˈnɪkɚz/}}
+** {{audio|en|LL-Q1860 (eng)-Vealhurl-knickers.wav|a=US}}
 * {{rhymes|en|ɪkə(ɹ)z|s=2}}
 
 ===Noun===
@@ -20749,12 +20753,12 @@ Page 41 terre: -------- begin text --------
 See cognates in regional languages in France: {{cog|nrf|terre}}; {{cog|roa-gal|tèrr}} or {{m|roa-gal|terre}}; {{cog|pcd|tère}}; {{cog|roa-brg|târre}}; {{cog|frp,oc|tèrra}}; {{cog|co|terra}}.
 
 ===Pronunciation===
-* {{a|fr|Europe}} {{fr-IPA}}
+* {{fr-IPA|a=Europe}}
 ** {{audio|fr|Fr-Terre.ogg|a=Paris|IPA=[tɛːʁ]}}
+** {{audio|fr|LL-Q150 (fra)-DSwissK-terre.wav|a=Paris|IPA=[tɛːʁ]}}
 * {{IPA|fr|[taɛ̯ʁ]|a=Canada}}
-** {{audio-IPA|fr|Fr-terre-ca-Montréal.ogg|[tæɛ̯ʁ̥]}}
+** {{audio|fr|Fr-terre-ca-Montréal.ogg|IPA=[tæɛ̯ʁ̥]}}
 * {{IPA|fr|[tæ(ɾ)]|a=Louisiana}}
-* {{audio|fr|LL-Q150 (fra)-DSwissK-terre.wav}}
 * {{homophones|fr|taire|terrent|terres}}
 * {{rhymes|fr|ɛʁ|s=1}}
 
@@ -21035,9 +21039,11 @@ See the usage notes about {{m|en|retard}}.
 {{inh+|fr|fro|tard}}, {{m|fro|tart}}, from {{inh|fr|la|tarde}}.
 
 ===Pronunciation===
-* {{a|fr|France}} {{audio-IPA|fr|Fr-tard.ogg|/taʁ/}}
+* {{IPA|fr|/taʁ/|a=France}}
+** {{audio|fr|Fr-tard.ogg}}
 * {{IPA|fr|/tɑːʁ/|a=Quebec,formal}}
-* {{a|fr|Quebec|informal}} {{audio-IPA|fr|FR-Tard (Gaspésie).ogg|/tɑɔ̯ʁ̥/}}
+* {{IPA|fr|/tɑɔ̯ʁ̥/|a=Quebec,Gaspésie,informal}}
+** {{audio|fr|FR-Tard (Gaspésie).ogg}}
 * {{rhymes|fr|aʁ|s=1}}
 
 ===Adverb===
@@ -21124,8 +21130,9 @@ Page 43 vexatious: -------- begin text --------
 ''a'' 1650 {{suffix|en|vexation|ous}}
 
 ===Pronunciation===
-* {{audio-IPA|en|en-us-vexatious.ogg|/vɛkˈseɪʃəs/}}
-* {{audio|en|en-au-vexatious.ogg|a=AU}}
+* {{IPA|en|/vɛkˈseɪʃəs/}}
+** {{audio|en|en-us-vexatious.ogg|a=US}}
+** {{audio|en|en-au-vexatious.ogg|a=AU}}
 * {{rhymes|en|eɪʃəs|s=3}}
 
 ===Adjective===
@@ -21219,18 +21226,18 @@ Page 44 tête: -------- begin text --------
 ===Pronunciation===
 * {{fr-IPA}}
 * {{IPA|fr|[tɛtʰ]|a=Paris}}
-** Paris, France (la tête): {{audio-IPA|fr|Fr-tête.ogg|[la ˈtɛtʰ]}}
-* {{a|fr|Lorraine}} {{a|fr|Belgium}} and {{IPA|fr|[tɛːtʰ]|a=Suisse}}
-** {{audio|fr|LL-Q150 (fra)-Poslovitch-tête.wav|a=Vosges|IPA=[tɛːtʰ]}}
-** Walloon Brabant, Belgium: {{audio-IPA|fr|Fr-BE-tête.ogg|[tɛːtʰ]}}
-** Canton of Valais: {{audio-IPA|fr|LL-Q150 (fra)-DSwissK-tête.wav|[tɛːtʰ]}}
+** {{audio|fr|Fr-tête.ogg|text=la tête|a=Paris}}
+* {{IPA|fr|[tɛːtʰ]|a=Switzerland,Lorraine,Belgium}}
+** {{audio|fr|LL-Q150 (fra)-Poslovitch-tête.wav|a=Vosges}}
+** {{audio|fr|Fr-BE-tête.ogg|a=Walloon Brabant, <<Belgium>>}}
+** {{audio|fr|LL-Q150 (fra)-DSwissK-tête.wav|a=Canton of Valais, <<Switzerland>>}}
 * {{IPA|fr|[tɛɪ̯tʰ]|a=Quebec,standard}}
-** Montreal, Canada: {{audio-IPA|fr|Qc-tête-standard.ogg|[tɛɪ̯tʰ]}}
+** {{audio|fr|Qc-tête-standard.ogg|[tɛɪ̯tʰ]|a=Montreal,standard}}
 * {{IPA|fr|[taɪ̯tʰ]|a=Quebec,nonstandard}}
-** Montreal, Canada: {{audio-IPA|fr|Qc-tête.ogg|[taɪ̯tʰ]}}
-** La Tuque, Canada: {{audio-IPA|fr|Qc-tête.oga|[tɑɪ̯tʰ]}}
-** Saguenay, Canada: {{audio-IPA|fr|LL-Q150 (fra)-Simon Villeneuve-tête.wav|[taɪ̯tʰ]}}
-** Laurentides, Canada {{audio-IPA|fr|FR-CA-tête.oga|[tæɪ̯tʰ]}}
+** {{audio|fr|Qc-tête.ogg|a=Montreal,nonstandard}}
+** {{audio|fr|LL-Q150 (fra)-Simon Villeneuve-tête.wav|a=Quebec,Saguenay}}
+** {{audio|fr|Qc-tête.oga|IPA=[tɑɪ̯tʰ]|a=Quebec,La Tuque}}
+** {{audio|fr|FR-CA-tête.oga|IPA=[tæɪ̯tʰ]|a=Quebec,Laurentides}}
 
 ===Noun===
 {{fr-noun|f}}
@@ -21240,7 +21247,7 @@ Page 44 tête: -------- begin text --------
 # [[head]] {{gloss|leader}}
 # {{lb|fr|soccer}} [[header]]
 # {{lb|fr|colloquial}} a [[bright spark]], a [[quick study]]
-#: {{uxi|fr|Ce type-là, c'est une '''tête'''|This guy is a head}}
+#: {{uxi|fr|Ce type-là, c'est une '''tête'''|That guy is '''bright'''|lit=That guy, he's a '''head'''}}
 
 ====Derived terms====
 {{der4|fr
@@ -21355,7 +21362,8 @@ Page 45 tungjatjeta: -------- begin text --------
 From an [[enclitic]] {{m|sq|tu}} + {{m|sq|gjatë|(n)gjat(ë)}} + {{m|sq|jetë|jeta}}, literal meaning 'may your life be prolonged'.
 
 ===Pronunciation===
-* {{audio-IPA|sq|Sq-tungjatjeta.oga|/tunɟʑaˈtjɛta/}}
+* {{IPA|sq|/tunɟʑaˈtjɛta/}}
+* {{audio|sq|Sq-tungjatjeta.oga}}
 
 ===Interjection===
 {{head|sq|interjection}}
@@ -21635,9 +21643,9 @@ Borrowed from {{bor|zh|ja|H|tr=etchi}}, initialism of {{m|ja|変態||tr=hentai|[
 }}
 
 ====Letter====
-{{head|zh|letters}}
+{{head|zh|letter}}
 
-# {{n-g|The seventh letter of the Latin alphabet.}}
+# {{n-g|the seventh letter of the Latin alphabet}}
 
 =====Derived terms=====
 {{der3|zh|yue:廚叉|H股}}
@@ -21649,9 +21657,9 @@ Borrowed from {{bor|zh|ja|H|tr=etchi}}, initialism of {{m|ja|変態||tr=hentai|[
 }}
 
 =====Letter=====
-{{head|zh|letters}}
+{{head|zh|letter}}
 
-# {{n-g|The seventh letter used in [[w:Pinyin#Letters|Pinyin]].}}
+# {{n-g|the seventh letter used in [[w:Pinyin#Letters|Pinyin]]}}
 
 =====Usage notes=====
 * 《汉语拼音方案》 defines a standard pronunciation for each letter. However, these pronunciations are rarely used in education; another pronunciation is commonly used instead.
@@ -21751,7 +21759,8 @@ Borrowed from {{bor|zh|ja|H|tr=etchi}}, initialism of {{m|ja|変態||tr=hentai|[
 ==French==
 
 ===Pronunciation===
-* {{audio-IPA|fr|Fr-H-fr-Paris.ogg|/aʃ/|dial=France (Paris)}}
+* {{fr-IPA|ache}}
+* {{audio|fr|Fr-H-fr-Paris.ogg|a=Paris}}
 
 ===Letter===
 {{fr-letter|upper=H|lower=h}}
@@ -23116,7 +23125,8 @@ From {{inh|nn|non|vísir}}. Probably related to {{m|nn|visk}}.
 ==Romanian==
 
 ===Pronunciation===
-{{audio-IPA|ro|Ro-vise.ogg|[ˈvi.se]}}
+* {{IPA|ro|[ˈvi.se]}}
+* {{audio|ro|Ro-vise.ogg}}
 
 ===Noun===
 {{head|ro|noun form|g=n-p}}
@@ -23186,7 +23196,8 @@ Page 49 petrification: -------- begin text --------
 From {{uder|en|fr|pétrification}}, from {{uder|en|frm|pétrifier}} + {{m|fr|-ation}}.
 
 ===Pronunciation===
-* {{audio-IPA|en|En-petrification.ogg|/ˌpɛtɹɪfɪˈkeɪʃən/}}
+* {{IPA|en|/ˌpɛtɹɪfɪˈkeɪʃən/}}
+* {{audio|en|En-petrification.ogg}}
 * {{rhymes|en|eɪʃən|s=5}}
 
 ===Noun===
@@ -23230,7 +23241,8 @@ Page 50 sed: -------- begin text --------
 From {{m|en|[[stream|'''s'''tream]] [[editor|'''ed'''itor]]}}.
 
 ====Pronunciation====
-* {{a|en|US}} {{audio-IPA|en|En-us-sed.ogg|/sɛd/}}
+* {{IPA|en|/sɛd/}}
+* {{audio|en|En-us-sed.ogg|a=US}}
 
 ====Proper noun====
 {{en-proper noun}}
@@ -23637,9 +23649,9 @@ Borrowed from {{bor|kw|cy|bras}}.
 ===Pronunciation===
 * {{fr-IPA}}
 ** {{audio|fr|Fr-bras.ogg|a=Paris}}
-* {{a|fr|Northern France}} and {{IPA|fr|[bʁɑ]|[bʁɔ]|a=Canada}}
-** Saguenay, Canada: {{audio-IPA|fr|LL-Q150 (fra)-Simon Villeneuve-bras.wav|[bʁɑ]}}
-* {{rhymes|fr|a|s=1}}, {{rhymes|fr|ɑ}}
+* {{IPA|fr|[bʁɑ]|[bʁɔ]|a=Northern France,Canada}}
+** {{audio|fr|LL-Q150 (fra)-Simon Villeneuve-bras.wav|IPA=[bʁɑ]|a=Quebec,Saguenay}}
+* {{rhymes|fr|a|ɑ|s=1}}
 * {{hyphenation|fr|bras}}
 
 ===Noun===
@@ -24759,8 +24771,9 @@ Page 54 جميل: -------- begin text --------
 
 ===Pronunciation===
 * {{ar-IPA|جَمِيل}}
-* {{audio-IPA|ar|Ar-جميل.ogg|[ʒæˈmiːl]}}
-** {{a|ar|Egyptian}} {{ar-IPA|tr=gamīl}}
+* {{IPA|ar|[ʒæˈmiːl]|a=Levantine}}
+** {{audio|ar|Ar-جميل.ogg}}
+* {{ar-IPA|tr=gamīl|a=Egyptian}}
 
 ===Adjective===
 {{ar-adj|جَمِيل|f=جَمِيلَة|pl=جَمِيلُون|pl2=جُمَلَاء|fpl=جَمِيلَات|fpl2=جَمَائِل|el=أَجْمَل}}
@@ -24870,7 +24883,8 @@ Page 55 ιστορία: -------- begin text --------
 From {{inh|el|grc|ἱστορία}}.
 
 ===Pronunciation===
-* {{audio-IPA|el|Ell-Istoria.ogg|[i.stoˈɾi.a]}}
+* {{IPA|el|[i.stoˈɾi.a]}}
+* {{audio|el|Ell-Istoria.ogg}}
 
 ===Noun===
 {{el-noun|f|ιστορίες}}
@@ -24909,7 +24923,8 @@ From {{m|la|praesciēns||foreknowing; foretelling, predicting}}, {{glossary|pres
 * {{IPA|en|/ˈpɹɛsiənt/|/ˈpɹiːʃiənt/|q2=dated|a=RP}}
 * {{audio|en|en-uk-prescient.ogg|a=RP}}
 * {{IPA|en|/ˈpɹɛʃ(i)ənt/|/ˈpɹiːʃ(i)ənt/|a=GA}}
-* {{a|en|US|rare}} {{audio-IPA|en|En-us-prescient.ogg|/ˈpɹɛs(i)ənt/}}
+* {{IPA|en|/ˈpɹɛsiənt/|a=US,rare}}
+** {{audio|en|En-us-prescient.ogg}}
 * {{hyphenation|en|pre|scient}}
 
 ===Adjective===
@@ -24996,9 +25011,11 @@ Page 57 noh: -------- begin text --------
 Borrowing from {{bor|en|ja|能|tr=nō}}, from {{der|en|ltc|能|tr=nong||talent, ability}}.
 
 ===Pronunciation===
-* {{a|en|UK}} {{audio-IPA|en|en-uk-no.ogg|/nəʊ/|sex=female}}
-* {{a|en|US}} {{audio-IPA|en|en-us-no.ogg|/noʊ/|sex=female}}
-* {{rhymes|en|əʊ|s=1}}
+* {{IPA|en|/nəʊ/|a=UK}}
+** {{audio|en|en-uk-no.ogg|q=female voice}}
+** {{rhymes|en|əʊ|s=1}}
+* {{IPA|en|/noʊ/|a=US}}
+** {{audio|en|en-us-no.ogg|q=female voice}}
 * {{homophones|en|no|know}}
 
 ===Noun===
@@ -25176,7 +25193,8 @@ Page 58 walzen: -------- begin text --------
 From {{der|de|gmh|-}}, from {{der|de|goh|-}} {{m|goh|walzan||to turn}}, from {{der|de|gem-pro|*waltaną||to turn}}, from {{der|de|ine-pro|*wel-||to turn}}.
 
 ===Pronunciation===
-* {{audio-IPA|de|De-walzen.ogg|/ˈvaltsn̩/}}
+* {{IPA|de|/ˈvaltsn̩/}}
+* {{audio|de|De-walzen.ogg}}
 
 ===Verb===
 {{de-verb}}
@@ -25215,7 +25233,8 @@ From {{der|en|grc|Πῡθαγόρᾱς|}}.
 
 ===Pronunciation===
 * {{IPA|en|/paɪˈθæɡ.əɹ.əs/|a=RP}}
-* {{IPA|en|/pɪˈθæɡ.əɹ.əs/|a=US}} or {{audio-IPA|en|en-us-Pythagoras.ogg|/paɪˈθæ.ɡɚ.əs/|dial=Midland American English|sex=male}}
+* {{IPA|en|/pɪˈθæɡ.əɹ.əs/|/paɪˈθæɡ.ɚ.əs/|a=US}}
+** {{audio|en|en-us-Pythagoras.ogg|IPA=/paɪˈθæɡ.ɚ.əs/|a=Midland US|q=male voice}}
 
 ===Proper noun===
 {{en-proper noun}}
@@ -25394,7 +25413,8 @@ Page 60 åka: -------- begin text --------
 From {{inh|sv|gmq-osw|aka}}, from {{inh|sv|non|aka}}, from {{der|sv|gem-pro|*akaną}}. Cognate with {{cog|da|age}}. Ultimately from {{der|sv|ine-pro|*h₂eǵ-}}. Doublet of {{doublet|sv|agera|notext=1}}, which was borrowed from {{cog|la|agō}}, from the same ultimate Proto-Indo-European source.
 
 ===Pronunciation===
-* {{audio-IPA|sv|Sv-åka.ogg|/ˈoːka/}}
+* {{IPA|sv|/ˈoːka/}}
+* {{audio|sv|Sv-åka.ogg}}
 
 ===Verb===
 {{sv-verb-reg|åk|er|te}}
@@ -25457,13 +25477,14 @@ Page 61 théâtre: -------- begin text --------
 {{bor+|fr|la|theātrum}}, from {{der|fr|grc|θέατρον||a place for viewing}}, from {{m|grc|θεάομαι||to see, to watch, to observe}}.
 
 ===Pronunciation===
-* {{fr-IPA}}
-** Paris, France (le théâtre): {{audio-IPA|fr|Fr-théâtre.ogg|[te.atʁ]}}
-* {{a|fr|Belgium}} and {{IPA|fr|[teˈaːtʁ̥]|a=Swiss}}
-** Brussels, Belgium: {{audio-IPA|fr|Fr-Théâtre.ogg|[teˈaːtʀ̥]}}
-** Canton of Valais, Swiss: {{audio-IPA|fr|LL-Q150 (fra)-DSwissK-théâtre.wav|[te.ˈɑːtʁ̥]}}
-* {{a|fr|Quebec}} {{IPA|fr|[teˈɑːtʁ̥]|a=standard}}, {{IPA|fr|[teˈɑu̯tʁ̥]|a=nonstandard}}
-** Montreal, Canada: {{audio-IPA|fr|Qc-théâtre.ogg|[te.ˈɑu̯tʀ̥]}}
+* {{fr-IPA|a=Paris|noalt=1}}
+** {{audio|fr|Fr-théâtre.ogg|text=le théâtre}}
+* {{IPA|fr|[teˈaːtʁ̥]|a=Switzerland,Belgium}}
+** {{audio|fr|Fr-Théâtre.ogg|a=Brussels}}
+* {{IPA|fr|[te.ˈɑːtʁ̥]|a=Switzerland,Canton of Valais,;,Quebec,standard}}
+** {{audio|fr|LL-Q150 (fra)-DSwissK-théâtre.wav}}
+* {{IPA|fr|[teˈɑu̯tʁ̥]|a=Quebec,nonstandard}}
+** {{audio|fr|Qc-théâtre.ogg|a=Montreal}}
 * {{homophones|fr|théâtres}}
 
 ===Noun===
@@ -25559,7 +25580,8 @@ From {{m|he|חָנַךְ||to dedicate, to consecrate|tr=khanákh}}.
 ===Pronunciation===
 * {{IPA|he|/ħa.nukˈkaː/|a=hbo}}
 * {{IPA|he|/χa.nuˈka/|a=IL,formal}}
-* {{a|he|IL|informal}} {{audio-IPA|he|he-il-חנוכה.ogg|/ˈχa.nu.ka/}}
+* {{IPA|he|/ˈχa.nu.ka/|a=IL,informal}}
+** {{audio|he|he-il-חנוכה.ogg}}
 
 ===Proper noun===
 {{he-proper noun|dwv=חֲנֻכָּה|tr=khanuká|g=f|pat=קְטֻלָּה}}
@@ -25616,12 +25638,14 @@ Page 64 no: -------- begin text --------
 * {{l|en|nah}}, {{l|en|nope}}, {{l|en|nay}}
 
 ===Pronunciation===
-* {{a|en|UK}} {{audio-IPA|en|en-uk-no.ogg|/nəʊ/|sex=female}}
-* {{a|en|US}} {{audio-IPA|en|en-us-no.ogg|/noʊ/|sex=female}}
+* {{IPA|en|/nəʊ/|a=UK}}
+** {{audio|en|en-uk-no.ogg|q=female voice}}
+** {{rhymes|en|əʊ|s=1}}
+* {{IPA|en|/noʊ/|a=US}}
+** {{audio|en|en-us-no.ogg|q=female voice}}
 * {{IPA|en|/nəʉ/|/nɐʉ/|a=AU}}
-* {{a|en|NZ}} {{audio-IPA|en|en-nz-no.ogg|/nɐʉ/}}
-* {{rhymes|en|əʊ|s=1}}
-* {{homophones|en|know|noh}}
+* {{IPA|en|/nɐʉ/|a=NZ}}
+** {{audio|en|en-nz-no.ogg}}
 
 ===Etymology 1===
 From {{inh|en|enm|no}}, {{m|enm|noo}}, {{m|enm|na}}, a reduced form of {{m|enm|none}}, {{m|enm|noon}}, {{m|enm|nan||none, not any}} used before consonants (compare {{m|en|a}} to {{m|en|an}}), from {{inh|en|ang|nān|t=none, not any}}, from {{inh|en|gmw-pro|*nain}}, from {{inh|en|gem-pro|*nainaz|t=not any|lit=not one}}, equivalent to {{com|en|ne|t1=not|a}}.
@@ -27379,8 +27403,8 @@ Page 65 à gauche: -------- begin text --------
 ==French==
 
 ===Pronunciation===
-* {{a|fr|FR}} {{fr-IPA}}
-* à gauche (France, Paris) {{audio-IPA|fr|Fr-à gauche.ogg|[a ɡoʃ]|}}
+* {{fr-IPA|a=France}}
+* {{audio|fr|Fr-à gauche.ogg|text=à gauche}}
 
 ===Prepositional phrase===
 {{fr-prep phrase}}
@@ -27446,7 +27470,8 @@ Page 67 developmental: -------- begin text --------
 From {{suffix|en|development|al}}.
 
 ===Pronunciation===
-* {{audio-IPA|en|en-ca-developmental.ogg|/dɪˌvɛləpˈmɛntəl/}}
+* {{IPA|en|/dɪˌvɛləpˈmɛntəl/}}
+* {{audio|en|en-ca-developmental.ogg|a=Canada}}
 * {{rhymes|en|ɛntəl|s=5}}
 
 ===Adjective===
@@ -27480,7 +27505,8 @@ Page 68 newsman: -------- begin text --------
 From {{suffix|en|news|man}}.
 
 ===Pronunciation===
-* {{audio-IPA|en|en-ca-newsman.ogg|/ˈn(j)uːzmæn/}}
+* {{IPA|en|/ˈn(j)uːzmæn/}}
+* {{audio|en|en-ca-newsman.ogg|a=Canada}}
 
 ===Noun===
 {{en-noun|newsmen}}
@@ -27488,12 +27514,10 @@ From {{suffix|en|news|man}}.
 # {{lb|en|US}} A [[reporter]]; a person in the profession of providing [[news]].
 
 ====Related terms====
-*[[newswoman]]
+* {{l|en|newswoman}}
 
 ===Anagrams===
 * {{anagrams|en|a=aemnnsw|Newnams}}
-
-{{cln|en|nouns with irregular plurals}}
 -------- end text --------
 Page 69 ê: -------- begin text --------
 {{also|Appendix:Variations of "e"}}
@@ -27756,7 +27780,8 @@ Page 70 visuri: -------- begin text --------
 ==Romanian==
 
 ===Pronunciation===
-* {{audio-IPA|ro|Ro-visuri.ogg|[ˈvi.surʲ]}}
+* {{IPA|ro|[ˈvi.surʲ]}}
+* {{audio|ro|Ro-visuri.ogg}}
 
 ===Noun===
 {{head|ro|noun form|g=n-p}}
@@ -27812,7 +27837,8 @@ Page 71 homosexualitate: -------- begin text --------
 {{bor+|ro|fr|homosexualité}}. Equivalent to {{suf|ro|homosexual|itate}}.
 
 ===Pronunciation===
-* {{audio-IPA|ro|Ro-homosexualitate.ogg|[homoseksualiˈtate]}}
+* {{IPA|ro|[homoseksualiˈtate]}}
+* {{audio|ro|Ro-homosexualitate.ogg}}
 
 ===Noun===
 {{ro-noun|f|-}}
@@ -27846,9 +27872,9 @@ From {{af|fr|kilo-|mètre}}.
 * {{IPA|fr|/ki.lɔ.mɛːtʁ/|a=Belgium}}
 * {{fr-IPA|a=France}}
 * {{IPA|fr|/ki.lɔ.maɛ̯tʁ/|/kʰi.lɔ.ˈmae̯tʁ̥/|a=Canada}}
-* {{audio|fr|Fr-kilomètre.ogg|a=France}}
-* {{audio|fr|FRQC-kilomètre.oga|a=Quebec}}
 * {{audio|fr|Fr-Paris--kilomètre.ogg|a=Paris}}
+* {{audio|fr|Fr-kilomètre.ogg|text=un kilomètre|IPA=[æ̃ kiloˈmɛtʁ̥]|a=France}}
+* {{audio|fr|FRQC-kilomètre.oga|text=un kilomètre|IPA=[ɚ̃ kʰilɔ̈ˈmae̯tʁ̥]|a=Quebec}}
 
 ===Noun===
 {{fr-noun|m}}
@@ -27908,9 +27934,10 @@ Borrowed from {{bor|nl|fr|enquête}}, from {{der|nl|frm}}, from {{der|nl|fro|enq
 
 ===Pronunciation===
 * {{fr-IPA}}
-** {{a|fr|France|une enquête}} {{audio-IPA|fr|Fr-enquête.ogg|[yn ɒ̃kɛt]}}
-* {{IPA|fr|/ɑ̃.kɛːt/}} {{q|older, now chiefly Belgium and Canada}}
-** {{a|fr|Quebec}} {{audio-IPA|fr|Qc-enquête.oga|[ãkæɪ̯t]}}
+** {{audio|fr|Fr-enquête.ogg|text=une enquête|IPA=[yn ɒ̃kɛt]|a=France}}
+* {{IPA|fr|/ɑ̃.kɛːt/|aa=older, now chiefly <<Belgium>> and <<Canada>>}}
+* {{IPA|fr|[ãkæɪ̯t]|a=Quebec,informal}}
+** {{audio|fr|Qc-enquête.oga}}
 
 ===Noun===
 {{fr-noun|f}}
@@ -27987,7 +28014,8 @@ Page 74 sufletesc: -------- begin text --------
 From {{suffix|ro|suflet|t1=soul, spirit|esc}}.
 
 ===Pronunciation===
-* {{audio-IPA|ro|Ro-sufletesc.ogg|[sufleˈtesk]}}
+* {{IPA|ro|[sufleˈtesk]}}
+* {{audio|ro|Ro-sufletesc.ogg}}
 
 ===Adjective===
 {{ro-adj|i|f=sufletească}}
@@ -28008,7 +28036,8 @@ Page 75 sufletește: -------- begin text --------
 Adverbial form of {{m|ro|sufletesc||spiritual}}, from {{af|ro|suflet|t1=soul, spirit|-ește}}.
 
 ===Pronunciation===
-* {{audio-IPA|ro|Ro-sufletește.ogg|[sufleˈteʃte]}}
+* {{IPA|ro|[sufleˈteʃte]}}
+* {{audio|ro|Ro-sufletește.ogg}}
 
 ===Adverb===
 {{ro-adv}}
@@ -28020,7 +28049,8 @@ Page 76 masturbasem: -------- begin text --------
 ==Romanian==
 
 ===Pronunciation===
-* {{audio-IPA|ro|Ro-masturbasem.ogg|[mas.turˈba.sem]}}
+* {{IPA|ro|[mas.turˈba.sem]}}
+* {{audio|ro|Ro-masturbasem.ogg}}
 
 ===Verb===
 {{head|ro|verb form}}
@@ -28031,8 +28061,10 @@ Page 77 visul: -------- begin text --------
 ==Romanian==
 
 ===Pronunciation===
-* {{audio-IPA|ro|Ro-visul.ogg|[ˈvi.sul]}} {{qualifier|standard, formal}}
-* {{audio-IPA|ro|Ro-visu.ogg|[ˈvi.su]}} {{qualifier|informal}}
+* {{IPA|ro|[ˈvi.sul]|a=standard,formal}}
+** {{audio|ro|Ro-visul.ogg}}
+* {{IPA|ro|[ˈvi.su]|a=informal}}
+** {{audio|ro|Ro-visu.ogg}}
 
 ===Noun===
 {{head|ro|noun form|g=n}}
@@ -28077,7 +28109,8 @@ Page 78 visurilor: -------- begin text --------
 ==Romanian==
 
 ===Pronunciation===
-* {{audio-IPA|ro|Ro-visurilor.ogg|[ˈvi.su.ri.lor]}}
+* {{IPA|ro|[ˈvi.su.ri.lor]}}
+* {{audio|ro|Ro-visurilor.ogg}}
 
 ===Noun===
 {{head|ro|noun form|g=n}}
@@ -28091,7 +28124,8 @@ Page 79 viselor: -------- begin text --------
 ==Romanian==
 
 ===Pronunciation===
-* {{audio-IPA|ro|Ro-viselor.ogg|[ˈvi.se.lor]}}
+* {{IPA|ro|[ˈvi.se.lor]}}
+* {{audio|ro|Ro-viselor.ogg}}
 
 ===Noun===
 {{head|ro|noun form|g=n}}
@@ -28105,7 +28139,8 @@ Page 80 visurile: -------- begin text --------
 ==Romanian==
 
 ===Pronunciation===
-* {{audio-IPA|ro|Ro-visurile.ogg|[ˈvi.su.ri.le]}}
+* {{IPA|ro|[ˈvi.su.ri.le]}}
+* {{audio|ro|Ro-visurile.ogg}}
 
 ===Noun===
 {{head|ro|noun form|g=n}}
@@ -28136,7 +28171,8 @@ From {{suffix|sq|vis|ele|t1=place, land|pos2=enlargement suffix}}.
 ==Romanian==
 
 ===Pronunciation===
-* {{audio-IPA|ro|Ro-visele.ogg|[ˈvi.se.le]}}
+* {{IPA|ro|[ˈvi.se.le]}}
+* {{audio|ro|Ro-visele.ogg}}
 
 ===Noun===
 {{head|ro|noun form|g=n}}
@@ -28183,7 +28219,8 @@ From {{der|ht|fr|les iles|t=the islands}}.
 ==Romanian==
 
 ===Pronunciation===
-* {{audio-IPA|ro|Ro-zile.ogg|[ˈzile]}}
+* {{IPA|ro|[ˈzile]}}
+* {{audio|ro|Ro-zile.ogg}}
 
 ===Noun===
 {{head|ro|noun form|g=f-p}}
@@ -28204,7 +28241,8 @@ Page 83 ziua: -------- begin text --------
 From {{m|ro|zi}}.
 
 ===Pronunciation===
-* {{audio-IPA|ro|Ro-ziua.ogg|/ˈziwa/}}
+* {{IPA|ro|/ˈziwa/}}
+* {{audio|ro|Ro-ziua.ogg}}
 
 ===Adverb===
 {{ro-adv}}
@@ -28232,7 +28270,8 @@ Page 84 bună ziua: -------- begin text --------
 {{lit|good day}}. Compare {{cog|es|buenos días}}, {{cog|pt|bom dia}}, {{cog|fr|bonjour}}, {{cog|it|buondì}}.
 
 ===Pronunciation===
-* {{audio-IPA|ro|Ro-bună ziua.ogg|[ˌbu.nə ˈzi.wa]}}
+* {{IPA|ro|[ˌbu.nə ˈzi.wa]}}
+* {{audio|ro|Ro-bună ziua.ogg}}
 
 ===Interjection===
 {{head|ro|interjection|head=[[bun|bună]] [[zi|ziua]]}}
@@ -28255,7 +28294,8 @@ Page 85 zilei: -------- begin text --------
 ==Romanian==
 
 ===Pronunciation===
-* {{audio-IPA|ro|Ro-zilei.ogg|[ˈzilej]}}
+* {{IPA|ro|[ˈzilej]}}
+* {{audio|ro|Ro-zilei.ogg}}
 
 ===Noun===
 {{head|ro|noun form|g=f}}
@@ -28266,7 +28306,8 @@ Page 86 zilelor: -------- begin text --------
 ==Romanian==
 
 ===Pronunciation===
-* {{audio-IPA|ro|Ro-zilelor.ogg|[ˈzilelor]}}
+* {{IPA|ro|[ˈzilelor]}}
+* {{audio|ro|Ro-zilelor.ogg}}
 
 ===Noun===
 {{head|ro|noun form|g=f-p}}
@@ -28277,7 +28318,8 @@ Page 87 zilele: -------- begin text --------
 ==Romanian==
 
 ===Pronunciation===
-* {{audio-IPA|ro|Ro-zilele.ogg|[ˈzilele]}}
+* {{IPA|ro|[ˈzilele]}}
+* {{audio|ro|Ro-zilele.ogg}}
 
 ===Noun===
 {{head|ro|noun form|g=f-p}}
@@ -28352,7 +28394,8 @@ Page 89 newspaperman: -------- begin text --------
 From {{suffix|en|newspaper|man}}.
 
 ===Pronunciation===
-* {{audio-IPA|en|en-ca-newspaperman.ogg|/ˈn(j)uzpeɪpəɹˌmæn/}}
+* {{IPA|en|/ˈn(j)uspeɪpəɹˌmæn/|/ˈn(j)uzpeɪpəɹˌmæn/|a=GenAm,Canada}}
+* {{audio|en|en-ca-newspaperman.ogg|a=Canada|IPA=/ˈnjuzpeɪpəɹˌmæn/}}
 
 ===Noun===
 {{en-noun|newspapermen}}
@@ -28375,10 +28418,10 @@ Page 90 pâte: -------- begin text --------
 {{inh+|fr|frm|paste}}, from {{inh|fr|fro|paste}}, from {{inh|fr|LL.|pasta}}, from {{der|fr|grc|παστά}}.
 
 ===Pronunciation===
-* {{a|fr|France|predominantly}} {{fr-IPA|pate}}
+* {{fr-IPA|pate|a=France,predominantly}}
 ** {{homophones|fr|pâtes|patte|pattes}}
-** Paris, France (une pâte): {{audio-IPA|fr|Fr-pâte.ogg|[yn ˈpat]}}
-* {{a|fr|traditional}} {{fr-IPA}}
+** {{audio|fr|Fr-pâte.ogg|text=une pâte|a=Paris}}
+* {{fr-IPA|a=France,traditional}}
 ** {{homophones|fr|pâtes}}
 ** {{IPA|fr|[paːt]|a=Belgium,Switzerland}}
 ** {{IPA|fr|[pɑːt]|a=Canada,Lorraine}}
@@ -28428,8 +28471,6 @@ Page 90 pâte: -------- begin text --------
 ===Anagrams===
 * {{l|fr|péta}}, {{l|fr|tape}}, {{l|fr|tapé}}
 
-{{cln|fr|terms inherited from Latin}}
-
 ==Norman==
 
 ===Etymology===
@@ -28449,14 +28490,14 @@ From {{inh|nrf|fro|paste}}, from {{inh|nrf|LL.|pasta}}, from {{der|nrf|grc|πα�
 |{{l|nrf|pâte fielletée||flaky pastry}}
 |{{l|nrf|pâte lévée||bread dough}}}}
 
-{{cln|nrf|terms inherited from Latin}}
 {{C|nrf|Cooking}}
 -------- end text --------
 Page 91 homosexualității: -------- begin text --------
 ==Romanian==
 
 ===Pronunciation===
-* {{audio-IPA|ro|Ro-homosexualității.ogg|/homoseksualiˈtətsi/}}
+* {{IPA|ro|/homoseksualiˈtətsi/}}
+* {{audio|ro|Ro-homosexualității.ogg}}
 
 ===Noun===
 {{head|ro|noun form|g=f}}
@@ -28467,7 +28508,8 @@ Page 92 homosexualitatea: -------- begin text --------
 ==Romanian==
 
 ===Pronunciation===
-* {{audio-IPA|ro|Ro-homosexualitatea.ogg|/homoseksualiˈtate̯a/}}
+* {{IPA|ro|/homoseksualiˈtate̯a/}}
+* {{audio|ro|Ro-homosexualitatea.ogg}}
 
 ===Noun===
 {{head|ro|noun form|g=f}}
@@ -28604,7 +28646,8 @@ From {{der|fi|ro|Timișoara}}.
 {{bor+|ro|hu|Temesvár}}, from {{af|hu|Temes|vár#Hungarian-castle|t1=river [[w:Timiș|Timiș]]|t2=fortress|nocat=1}}.
 
 ===Pronunciation===
-* {{audio-IPA|ro|Ro-Timişoara.oga|/ti.miˈʃwa.ra/}}
+* {{IPA|ro|/ti.miˈʃwa.ra/}}
+* {{audio|ro|Ro-Timişoara.oga}}
 * {{audio|ro|LL-Q7913 (ron)-KlaudiuMihaila-Timișoara.wav}}
 
 ===Proper noun===
@@ -28642,7 +28685,8 @@ Page 94 heterosexualitate: -------- begin text --------
 {{bor+|ro|fr|hétérosexualité}}. Equivalent to {{suf|ro|heterosexual|itate}}.
 
 ===Pronunciation===
-* {{audio-IPA|ro|Ro-heterosexualitate.ogg|[heteroseksualiˈtate]}}
+* {{IPA|ro|[heteroseksualiˈtate]}}
+* {{audio|ro|Ro-heterosexualitate.ogg}}
 
 ===Noun===
 {{ro-noun|f|-}}
@@ -28702,7 +28746,8 @@ Page 95 bisexualitate: -------- begin text --------
 {{bor+|ro|fr|bisexualité}}. Equivalent to {{suf|ro|bisexual|itate}}.
 
 ===Pronunciation===
-* {{audio-IPA|ro|Ro-bisexualitate.ogg|[biseksualiˈtate]}}
+* {{IPA|ro|[biseksualiˈtate]}}
+* {{audio|ro|Ro-bisexualitate.ogg}}
 
 ===Noun===
 {{ro-noun|f|-}}
@@ -28724,7 +28769,8 @@ Page 96 heterosexualitatea: -------- begin text --------
 ==Romanian==
 
 ===Pronunciation===
-* {{audio-IPA|ro|Ro-heterosexualitatea.ogg|/heteroseksualiˈtate̯a/}}
+* {{IPA|ro|/heteroseksualiˈtate̯a/}}
+* {{audio|ro|Ro-heterosexualitatea.ogg}}
 
 ===Noun===
 {{head|ro|noun form|g=f}}
@@ -28735,7 +28781,8 @@ Page 97 heterosexualității: -------- begin text --------
 ==Romanian==
 
 ===Pronunciation===
-* {{audio-IPA|ro|Ro-heterosexualității.ogg|/heteroseksualiˈtətsi/}}
+* {{IPA|ro|/heteroseksualiˈtətsi/}}
+* {{audio|ro|Ro-heterosexualității.ogg}}
 
 ===Noun===
 {{head|ro|noun form|g=f}}
@@ -28746,7 +28793,8 @@ Page 98 bisexualitatea: -------- begin text --------
 ==Romanian==
 
 ===Pronunciation===
-* {{audio-IPA|ro|Ro-bisexualitatea.ogg|/biseksualiˈtate̯a/}}
+* {{IPA|ro|/biseksualiˈtate̯a/}}
+* {{audio|ro|Ro-bisexualitatea.ogg}}
 
 ===Noun===
 {{head|ro|noun form|g=f}}
@@ -28760,7 +28808,8 @@ Page 99 bisexualității: -------- begin text --------
 ==Romanian==
 
 ===Pronunciation===
-* {{audio-IPA|ro|Ro-bisexualității.ogg|/biseksualiˈtət͡si/}}
+* {{IPA|ro|/biseksualiˈtət͡si/}}
+* {{audio|ro|Ro-bisexualității.ogg}}
 
 ===Noun===
 {{head|ro|noun form|g=f}}
@@ -28812,7 +28861,8 @@ Page 100 sexualitate: -------- begin text --------
 {{bor+|ro|fr|sexualité}}. Equivalent to {{suffix|ro|sexual|-itate}}.
 
 ===Pronunciation===
-* {{audio-IPA|ro|Ro-sexualitate.ogg|[seksualiˈtate]}}
+* {{IPA|ro|[seksualiˈtate]}}
+* {{audio|ro|Ro-sexualitate.ogg}}
 
 ===Noun===
 {{ro-noun|f|-}}
@@ -28843,7 +28893,8 @@ Page 101 iolite: -------- begin text --------
 From {{uder|en|grc|ἴον||violet}}{{suffix|en||lite}}.
 
 ===Pronunciation===
-* {{audio-IPA|en|En-iolite.ogg|/ˈaɪəˌlaɪt/}}
+* {{IPA|en|/ˈaɪəˌlaɪt/}}
+* {{audio|en|En-iolite.ogg}}
 
 ===Noun===
 {{en-noun|~}}
@@ -28865,10 +28916,11 @@ Page 102 Europa Centrală: -------- begin text --------
 {{wikipedia|lang=ro}}
 
 ===Etymology===
-''[[Europa]]'' + ''[[central]]''
+{{lit|Central Europe}}.
 
 ===Pronunciation===
-* {{audio-IPA|ro|Ro-Europa Centrală.ogg|[e.uˈɾo.pa.t͡ʃenˌtɾa.lə]}}
+* {{IPA|ro|[e.uˈɾo.pa.t͡ʃenˌtɾa.lə]}}
+* {{audio|ro|Ro-Europa Centrală.ogg}}
 
 ===Proper noun===
 {{head|ro|proper noun|g=f|head=[[Europa]] [[centrală|Centrală]]}}
@@ -28915,7 +28967,8 @@ From {{der|ia|en|society}}, {{der|ia|fr|société}}, {{der|ia|it|società}}, {{d
 {{bor+|ro|la|societas|societās, societātem|society}}, through {{bor|ro|fr|société}}.
 
 ===Pronunciation===
-* {{audio-IPA|ro|Ro-societate.ogg|[so.t͡ʃjeˈta.te]}}
+* {{IPA|ro|[so.t͡ʃjeˈta.te]}}
+* {{audio|ro|Ro-societate.ogg}}
 
 ===Noun===
 {{ro-noun|f|societăți}}
@@ -28932,7 +28985,8 @@ Page 104 sexualității: -------- begin text --------
 ==Romanian==
 
 ===Pronunciation===
-* {{audio-IPA|ro|Ro-sexualității.ogg|/seksualiˈtətsi/}}
+* {{IPA|ro|/seksualiˈtətsi/}}
+* {{audio|ro|Ro-sexualității.ogg}}
 
 ===Noun===
 {{head|ro|noun form|g=f}}
@@ -28943,7 +28997,8 @@ Page 105 sexualitatea: -------- begin text --------
 ==Romanian==
 
 ===Pronunciation===
-* {{audio-IPA|ro|Ro-sexualitatea.ogg|/seksualiˈtate̯a/}}
+* {{IPA|ro|/seksualiˈtate̯a/}}
+* {{audio|ro|Ro-sexualitatea.ogg}}
 
 ===Noun===
 {{head|ro|noun form|g=f}}
@@ -28954,7 +29009,8 @@ Page 106 Katz-und-Maus-Spiel: -------- begin text --------
 ==German==
 
 ===Pronunciation===
-* {{audio-IPA|de|De-Katz-und-Maus-Schpiel.ogg|/ˌkats(ʔ)ʊntˈmaʊ̯sʃpiːl/}}
+* {{IPA|de|/ˌkats(ʔ)ʊntˈmaʊ̯sʃpiːl/}}
+* {{audio|de|De-Katz-und-Maus-Schpiel.ogg}}
 * {{audio|de|De-Katz-und-Maus-Spiel.ogg}}
 
 ===Noun===
@@ -28998,13 +29054,13 @@ Initial consonant derived from {{m|zh|攴}} ({{cog|cmn|-}}: ''pū''), "to knock 
 {{zh-pron
 |m=pō,pē
 }}
+* Phoneme: {{audio|cmn|Zh-pu.ogg|IPA=/pʰ/|text=p|q=[[Pinyin]]}}
 
 ====Letter====
+{{head|zh|letter}}
+
 # 2nd letter of the [[Appendix:Zhuyin script|Zhuyin alphabet]]
 # 3rd letter of the [[Appendix:Zhuyin script|extended Zhuyin alphabet]]
-
-====Phoneme====
-# {{qualifier|general}} sound {{audio-IPA|cmn|Zh-pu.ogg|/pʰ/}} ([[Pinyin]]: p), which is commonly present in Chinese
 
 ===Etymology 2===
 Simplified from {{m|zh|噗}}, typing only ㄆ instead of the full character pronunciation on Zhuyin keyboards.
@@ -29018,11 +29074,13 @@ Simplified from {{m|zh|噗}}, typing only ㄆ instead of the full character pron
 
 ==Northern Qiandong Miao==
 
-===Letter===
-# 2nd letter of the [[Appendix:Zhuyin script| Hmu Zhuyin alphabet]].
+===Pronunciation===
+* Phoneme: {{IPA|hea|/pʰ/}}
 
-===Phoneme===
-# sound {{IPA|hea|/pʰ/}} (Hutton): p'
+===Letter===
+{{head|hea|letter|text=p'}} {{q|Hutton}}
+
+# {{ng|2nd letter of the [[Appendix:Zhuyin script|Hmu Zhuyin alphabet]]}}
 
 ===References===
 * Joakim Enwall, A Myth Become Reality Vol.1 (Stockholm, 1994) page 198
@@ -29058,13 +29116,13 @@ Initial consonant derived from {{m|zh|包}} ({{cog|cmn|-}}: ''bāo''), "to wrap 
 {{zh-pron
 |m=bō,bē
 }}
+* Phoneme: {{audio|cmn|Zh-ba1.ogg|IPA=/p/|text=b|q=[[Pinyin]]}}
 
 ====Letter====
+{{head|zh|letter}}
+
 # 1st letter of the [[Appendix:Zhuyin script|Zhuyin alphabet]]
 # 1st letter of the [[Appendix:Zhuyin script|extended Zhuyin alphabet]]
-
-====Phoneme====
-# {{qualifier|general}} sound {{audio-IPA|cmn|Zh-ba1.ogg|/p/}} ([[Pinyin]]: b), which is commonly present in Chinese
 
 ===Etymology 2===
 Simplified from {{m|zh|吧}}, typing only ㄅ instead of the full character pronunciation on Zhuyin keyboard layouts.
@@ -29090,11 +29148,13 @@ Simplified from {{m|zh|掰}}, typing only ㄅ instead of the full character pron
 
 ==Northern Qiandong Miao==
 
-===Letter===
-# 1st letter of the [[Appendix:Zhuyin script| Hmu Zhuyin alphabet]].
+===Pronunciation===
+* Phoneme: {{IPA|hea|/p/}}
 
-===Phoneme===
-# sound {{IPA|hea|/p/}} (Hutton): b
+===Letter===
+{{head|hea|letter|text=b}} {{q|Hutton}}
+
+# {{ng|1st letter of the [[Appendix:Zhuyin script|Hmu Zhuyin alphabet]]}}
 
 ===References===
 * Joakim Enwall, A Myth Become Reality Vol.1 (Stockholm, 1994) page 198
@@ -29130,15 +29190,15 @@ Initial consonant derived from "cover" radical {{m|zh|冖}} ({{cog|cmn|-}}: ''m�
 {{zh-pron
 |m=mō,mē
 }}
+* Phoneme: {{audio|cmn|Zh-mō.oga|IPA=/m/|text=m|q=[[Pinyin]]}}
+* {{qualifier|when used in a syllable without a rhyme}} used as a modern alternative to (simplification of) {{m|zh|ㆬ}}, representing the sound {{IPAchar|/m̩/}}, transliterating characters such as [[嘸]], [[呒]], [[唔]], and [[呣]]
+*: {{zh-alt-inline|{{l|zh|ㆬ}}}}
 
 ====Letter====
+{{head|zh|letter}}
+
 # 3rd letter of the [[Appendix:Zhuyin script|Zhuyin alphabet]]
 # 4th letter of the [[Appendix:Zhuyin script|extended Zhuyin alphabet]]
-
-====Phoneme====
-# {{qualifier|general}} sound {{audio-IPA|cmn|Zh-mō.oga|/m/}} ([[Pinyin]]: m), which is commonly present in Chinese
-# {{qualifier|when used in a syllable without a rhyme}} used as a modern alternative to (simplification of) {{m|zh|ㆬ}}, representing the sound {{IPAchar|/m̩/}}, transliterating characters such as [[嘸]], [[呒]], [[唔]], and [[呣]].
-#: {{zh-alt-inline|{{l|zh|ㆬ}} }}
 
 ===Etymology 2===
 Simplified from {{m|zh|嗎}} / {{m|zh|吗}}, typing only ㄇ instead of the full character pronunciation on Zhuyin keyboards.
@@ -29152,11 +29212,13 @@ Simplified from {{m|zh|嗎}} / {{m|zh|吗}}, typing only ㄇ instead of the full
 
 ==Northern Qiandong Miao==
 
-===Letter===
-# 3rd letter of the [[Appendix:Zhuyin script| Hmu Zhuyin alphabet]].
+===Pronunciation===
+* Phoneme: {{IPA|hea|/m/}}
 
-===Phoneme===
-# sound {{IPAchar|/m/}} (Hutton): m
+===Letter===
+{{head|hea|letter|tr=m}} {{q|Hutton}}
+
+# {{ng|3rd letter of the [[Appendix:Zhuyin script|Hmu Zhuyin alphabet]]}}
 
 ===References===
 * Joakim Enwall, A Myth Become Reality Vol.1 (Stockholm, 1994) page 198
@@ -29189,13 +29251,13 @@ Initial consonant derived from "right open box" radical {{m|zh|匚}} ({{cog|cmn|
 {{zh-pron
 |m=fō,fē
 }}
+* Phoneme: {{audio|cmn|Zh-fou.ogg|IPA=/f/|text=f|q=[[Pinyin]]}}
 
 ===Letter===
+{{head|zh|letter}}
+
 # 4th letter of the [[Appendix:Zhuyin script|Zhuyin alphabet]]
 # 5th letter of the [[Appendix:Zhuyin script|extended Zhuyin alphabet]]
-
-====Phoneme====
-# {{qualifier|general}} sound {{audio-IPA|cmn|Zh-fou.ogg|/f/}} ([[Pinyin]]: f), which is commonly present in Chinese, with the exceptions being [[Xiamen]] and [[Wenzhou]] dialects.
 
 ===References===
 * 全國主要方言區方音對照表, Chinese Character Reform Commission, Beijing: ZhonghuaBook Company, 1954
@@ -29203,11 +29265,13 @@ Initial consonant derived from "right open box" radical {{m|zh|匚}} ({{cog|cmn|
 
 ==Northern Qiandong Miao==
 
-===Letter===
-# 4th letter of the [[Appendix:Zhuyin script| Hmu Zhuyin alphabet]].
+===Pronunciation===
+* Phoneme: {{IPA|hea|/f/}}
 
-===Phoneme===
-# {{IPA|hea|/f/}} (Hutton): f
+===Letter===
+{{head|hea|letter|tr=f}} {{q|Hutton}}
+
+# {{ng|4th letter of the [[Appendix:Zhuyin script|Hmu Zhuyin alphabet]]}}
 
 ===References===
 * Joakim Enwall, A Myth Become Reality Vol.1 (Stockholm, 1994) page 198
@@ -29223,7 +29287,8 @@ Page 111 kış: -------- begin text --------
 From {{inh|tr|ota|قیش|tr=kış|t=winter}} {{der|tr|trk-pro|*kïĺ|t=winter}}.
 
 ===Pronunciation===
-* {{audio-IPA|tr|Tur-kış.ogg|/kɯʃ/}}
+* {{IPA|tr|/kɯʃ/}}
+* {{audio|tr|Tur-kış.ogg}}
 
 ===Noun===
 {{tr-noun|ı|lar}}
@@ -29251,7 +29316,8 @@ Page 112 rumpy-pumpy: -------- begin text --------
 From {{m|en|rump}}.<ref>Martin, Gary. ''The Phrase Finder'': "[http://www.phrases.org.uk/meanings/rumpy-pumpy.html Rumpy-pumpy]".</ref><ref>''Oxford Dictionaries''. "[https://web.archive.org/web/20141105060951/http://www.oxforddictionaries.com/definition/english/rumpy-pumpy rumpy pumpy]". Oxford University Press (Oxford), 2014.</ref>
 
 ===Pronunciation===
-* {{audio-IPA|en|en-us-rumpy_pumpy.ogg|/ɹʌmpi pʌmpi/|dial=Midland American English|sex=male}}
+* {{IPA|en|/ɹʌmpi pʌmpi/}}
+* {{audio|en|en-us-rumpy_pumpy.ogg|a=Midland US|q=male voice}}
 * {{rhymes|en|ʌmpi}}
 
 ===Noun===
@@ -29284,7 +29350,8 @@ Page 113 illusionism: -------- begin text --------
 From {{suffix|en|illusion|ism}}.
 
 ===Pronunciation===
-* {{audio-IPA|en|en-ca-illusionism.ogg|/ɪˈl(j)uːʒənɪz(ə)m/}}
+* {{IPA|en|/ɪˈl(j)uːʒənɪz(ə)m/}}
+* {{audio|en|en-ca-illusionism.ogg|a=Canada}}
 
 ===Noun===
 {{en-noun|~}}
@@ -29324,15 +29391,15 @@ Initial consonant derived from {{m|zh|乃}} ({{cog|cmn|-}}: ''nǎi''), "be" + rh
 {{zh-pron
 |m=nē
 }}
+* Phoneme: {{audio|cmn|Zh-ne.ogg|IPA=/n/|text=n|q=[[Pinyin]]}}
+* {{qualifier|when used in a syllable without a rhyme}} used as a modern alternative to (simplification of) {{m|zh|ㄯ}}, representing the sound {{IPAchar|/n̩/}}, transliterating characters such as [[咹]], [[哽]], [[唔]], [[嗯]], [[哏]], and [[唵]]
+*: {{zh-alt-inline|{{l|zh|ㄯ}} }}
 
 ====Letter====
+{{head|zh|letter}}
+
 # 7th letter of the [[Appendix:Zhuyin script|Zhuyin alphabet]]
 # 9th letter of the [[Appendix:Zhuyin script|extended Zhuyin alphabet]]
-
-====Phoneme====
-# {{qualifier|general}} Sound {{audio-IPA|cmn|Zh-ne.ogg|/n/}} ([[Pinyin]]: n), which is commonly present in Chinese.
-# {{qualifier|when used in a syllable without a rhyme}} used as a modern alternative to (simplification of) {{m|zh|ㄯ}}, representing the sound {{IPAchar|/n̩/}}, transliterating characters such as [[咹]], [[哽]], [[唔]], [[嗯]], [[哏]], and [[唵]].
-#: {{zh-alt-inline|{{l|zh|ㄯ}} }}
 
 ===Etymology 2===
 Simplified from {{m|zh|你}}, typing only ㄋ instead of the full character pronunciation on Zhuyin keyboards.
@@ -29353,11 +29420,13 @@ Simplified from {{m|zh|呢}}, typing only ㄋ instead of the full character pron
 
 ==Northern Qiandong Miao==
 
-===Letter===
-# 8th letter of the [[Appendix:Zhuyin script| Hmu Zhuyin alphabet]].
+===Pronunciation===
+* Phoneme: {{IPA|hea|/n/}}
 
-===Phoneme===
-# sound {{IPAchar|/n/}} (Hutton): n
+===Letter===
+{{head|hea|letter|tr=n}} {{q|Hutton}}
+
+# {{ng|8th letter of the [[Appendix:Zhuyin script|Hmu Zhuyin alphabet]]}}
 
 ===References===
 * Joakim Enwall, A Myth Become Reality Vol.1 (Stockholm, 1994) page 198
@@ -29390,13 +29459,13 @@ Initial consonant derived from {{m|zh|畎}} ({{cog|cmn|-}}: ''quǎn'') + rhyme.
 {{zh-pron
 |m=qī
 }}
+* Phoneme: {{audio|cmn|Zh-qi1.ogg|IPA=/t͡ɕʰ/|text=q|q=[[Pinyin]]}}
 
 ===Letter===
+{{head|zh|letter}}
+
 # 13th letter of the [[Appendix:Zhuyin script|Zhuyin alphabet]]
 # 18th letter of the [[Appendix:Zhuyin script|extended Zhuyin alphabet]]
-
-====Phoneme====
-# {{qualifier|general}} Sound {{audio-IPA|cmn|Zh-qi1.ogg|/t͡ɕʰ/}} ([[Pinyin]]: q), which is commonly present in Chinese, with one of the exceptions being [[Amoy]] dialect.
 
 ===References===
 * 全國主要方言區方音對照表, Chinese Character Reform Commission, Beijing: ZhonghuaBook Company, 1954
@@ -29404,11 +29473,13 @@ Initial consonant derived from {{m|zh|畎}} ({{cog|cmn|-}}: ''quǎn'') + rhyme.
 
 ==Northern Qiandong Miao==
 
-===Letter===
-# 15th letter of the [[Appendix:Zhuyin script| Hmu Zhuyin alphabet]].
+===Pronunciation===
+* Phoneme: {{IPA|hea|/t͡ɕʰ/}}
 
-===Phoneme===
-# sound {{IPA|hea|/t͡ɕʰ/}} (Hutton): ch
+===Letter===
+{{head|hea|letter|tr=ch}} {{q|Hutton}}
+
+# {{ng|15th letter of the [[Appendix:Zhuyin script|Hmu Zhuyin alphabet]]}}
 
 ===References===
 * Joakim Enwall, A Myth Become Reality Vol.1 (Stockholm, 1994) page 198
@@ -29444,13 +29515,13 @@ Initial consonant derived from {{m|zh|刀}} ({{cog|cmn|-}}: ''dāo'') + rhyme.
 {{zh-pron
 |m=dē
 }}
+* Phoneme: {{audio|cmn|Zh-de.ogg|IPA=/t/|text=d|q=[[Pinyin]]}}
 
 ====Letter====
+{{head|zh|letter}}
+
 # 5th letter of the [[Appendix:Zhuyin script|Zhuyin alphabet]]
 # 7th letter of the [[Appendix:Zhuyin script|extended Zhuyin alphabet]]
-
-====Phoneme====
-# {{qualifier|general}} Sound {{audio-IPA|cmn|Zh-de.ogg|/t/}} ([[Pinyin]]: d), which is commonly present in Chinese.
 
 ===Etymology 2===
 Simplified from {{m|zh|的}}, typing only ㄉ instead of the full character pronunciation on Zhuyin keyboards.
@@ -29476,11 +29547,13 @@ Simplified from {{m|zh|地}}, typing only ㄉ instead of the full character pron
 
 ==Northern Qiandong Miao==
 
-===Letter===
-# 6th letter of the [[Appendix:Zhuyin script| Hmu Zhuyin alphabet]].
+===Pronunciation===
+* Phoneme: {{IPA|hea|/t/}}
 
-===Phoneme===
-# sound {{IPA|hea|/t/}} (Hutton): d
+===Letter===
+{{head|hea|letter|tr=d}} {{q|Hutton}}
+
+# {{ng|6th letter of the [[Appendix:Zhuyin script|Hmu Zhuyin alphabet]]}}
 
 ===References===
 * Joakim Enwall, A Myth Become Reality Vol.1 (Stockholm, 1994) page 198
@@ -29517,13 +29590,13 @@ Initial consonant derived from {{m|zh|突}} ({{cog|cmn|-}}: ''tū'') + rhyme.
 {{zh-pron
 |m=tē
 }}
+* Phoneme: {{audio|cmn|Zh-tè.ogg|IPA=/tʰ/|text=t|q=[[Pinyin]]}}
 
 ===Letter===
+{{head|zh|letter}}
+
 # 6th letter of the [[Appendix:Zhuyin script|Zhuyin alphabet]]
 # 8th letter of the [[Appendix:Zhuyin script|extended Zhuyin alphabet]]
-
-====Phoneme====
-# {{qualifier|general}} Sound {{audio-IPA|cmn|Zh-tè.ogg|/tʰ/}} ([[Hanyu Pinyin]]: t, [[Wade-Giles]]: tʻ), which is commonly present in Chinese.
 
 ===References===
 * 全國主要方言區方音對照表, Chinese Character Reform Commission, Beijing: ZhonghuaBook Company, 1954
@@ -29531,11 +29604,13 @@ Initial consonant derived from {{m|zh|突}} ({{cog|cmn|-}}: ''tū'') + rhyme.
 
 ==Northern Qiandong Miao==
 
-===Letter===
-# 7th letter of the [[Appendix:Zhuyin script| Hmu Zhuyin alphabet]].
+===Pronunciation===
+* Phoneme: {{IPA|hea|/tʰ/}}
 
-===Phoneme===
-# sound {{IPA|hea|/tʰ/}} (Hutton): t'
+===Letter===
+{{head|hea|letter|tr=t'}} {{q|Hutton}}
+
+# {{ng|7th letter of the [[Appendix:Zhuyin script|Hmu Zhuyin alphabet]]}}
 
 ===References===
 * Joakim Enwall, A Myth Become Reality Vol.1 (Stockholm, 1994) page 198
@@ -29550,9 +29625,10 @@ Page 118 ancêtre: -------- begin text --------
 
 ===Pronunciation===
 * {{fr-IPA}}
-** {{a|fr|France|un ancêtre}} {{audio-IPA|fr|Fr-ancêtre.ogg|[œ̃.n‿ɑ̃sɛtʁ]}}
-** {{a|fr|Quebec}} {{audio-IPA|fr|Qc-ancêtre.oga|[ɑ̃sae̯tʁ̥]}}
-* {{audio|fr|Qc-ancêtre.ogg|a=Canada}}
+** {{audio|fr|Fr-ancêtre.ogg|text=un ancêtre|IPA=/ɛ̃.n‿ɑ̃sɛtʁ/ [æ̃.n‿ɒ̃sɛtʁ̥]}}
+* {{IPA|fr|[ɑ̃sae̯tʁ̥]|a=Quebec}}
+** {{audio|fr|Qc-ancêtre.oga|a=Quebec}}
+** {{audio|fr|Qc-ancêtre.ogg|a=Quebec}}
 
 ===Noun===
 {{fr-noun|mfbysense}}
@@ -29573,9 +29649,9 @@ Page 119 Website: -------- begin text --------
 {{bor+|de|en|website}}.
 
 ===Pronunciation===
-* {{IPA|de|/ˈvɛpsaɪ̯t/|q1=most common|q2=approximating the English pronunciation|[ˈwɛpsa͜it]|[ˈwɛbsa͜id]|[ˈwɛpsa͜id]}}
-* {{audio-IPA|de|De-Website.oga|[ˈwɛpsa͜id]}}
-* {{audio-IPA|de|De-Website.ogg|[ˈwɛpˌsaɪ̯t]}}
+* {{IPA|de|/ˈvɛpsaɪ̯t/<q:most common>|[ˈwɛpsa͜it]<q:approximating the English pronunciation>|[ˈwɛbsa͜id]|[ˈwɛpsa͜id]}}
+** {{audio|de|De-Website.oga|IPA=[ˈwɛpsa͜id]}}
+** {{audio|de|De-Website.ogg|IPA=[ˈwɛpˌsaɪ̯t]}}
 * {{hyphenation|de|Web|site}}
 
 ===Noun===
@@ -29645,7 +29721,7 @@ Page 121 à nouveau: -------- begin text --------
 
 ===Pronunciation===
 * {{fr-IPA}}
-* à nouveau (France, Paris) {{audio-IPA|fr|Fr-à nouveau.ogg|[a nu.vo]|}}
+* {{audio|fr|Fr-à nouveau.ogg|text=à nouveau|a=Paris|IPA=[a nu.vo]}}
 
 ===Adverb===
 {{fr-adv}}
@@ -29688,14 +29764,14 @@ Initial consonant derived from {{m|zh|力}} ({{cog|cmn|-}}: ''lì'') + rhyme.
 {{zh-pron
 |m=lē
 }}
+* Phoneme: {{audio|cmn|Zh-le.ogg|IPA=/l/|text=l|q=[[Pinyin]]}}
+* {{qualifier|Taiwanese Hokkien}} Phoneme: {{IPA|zh|/d ~ ɾ/}} {{q|[[Pinyin]]: dd, 15 sounds: 柳}}
 
 ===Letter===
+{{head|zh|letter}}
+
 # 8th letter of the [[Appendix:Zhuyin script|Zhuyin alphabet]]
 # 10th letter of the [[Appendix:Zhuyin script|extended Zhuyin alphabet]]
-
-====Phoneme====
-# {{qualifier|general}} Sound {{audio-IPA|cmn|Zh-le.ogg|/l/}} ([[Pinyin]]: l), which is commonly present in Chinese.
-# {{qualifier|Taiwanese Hokkien}} sound {{IPA|cmn|/d ~ ɾ/}} ([[Pinyin]]: dd, 15 sounds: 柳)
 
 ===References===
 * 全國主要方言區方音對照表, Chinese Character Reform Commission, Beijing: ZhonghuaBook Company, 1954
@@ -29703,11 +29779,13 @@ Initial consonant derived from {{m|zh|力}} ({{cog|cmn|-}}: ''lì'') + rhyme.
 
 ==Northern Qiandong Miao==
 
-===Letter===
-# 9th letter of the [[Appendix:Zhuyin script| Hmu Zhuyin alphabet]].
+===Pronunciation===
+* Phoneme: {{IPA|hea|/l/}}
 
-===Phoneme===
-# sound {{IPA|hea|/l/}} (Hutton): l
+===Letter===
+{{head|hea|letter|tr=l}} {{q|Hutton}}
+
+# {{ng|9th letter of the [[Appendix:Zhuyin script|Hmu Zhuyin alphabet]]}}
 
 ===References===
 * Joakim Enwall, A Myth Become Reality Vol.1 (Stockholm, 1994) page 198
@@ -29743,13 +29821,13 @@ Initial consonant derived from the obsolete character {{m|zh|巜}} ({{cog|cmn|-}
 {{zh-pron
 |m=gē
 }}
+* Phoneme: {{audio|cmn|Zh-gē.oga|IPA=/k/|text=g|q=[[Pinyin]]}}
 
 ===Letter===
+{{head|zh|letter}}
+
 # 9th letter of the [[Appendix:Zhuyin script|Zhuyin alphabet]]
 # 11th letter of the [[Appendix:Zhuyin script|extended Zhuyin alphabet]]
-
-====Phoneme====
-# {{qualifier|general}} Sound {{audio-IPA|cmn|Zh-gē.oga|/k/}} ([[Pinyin]]: g), which is commonly present in Chinese.
 
 ===References===
 * 全國主要方言區方音對照表, Chinese Character Reform Commission, Beijing: ZhonghuaBook Company, 1954
@@ -29757,11 +29835,13 @@ Initial consonant derived from the obsolete character {{m|zh|巜}} ({{cog|cmn|-}
 
 ==Northern Qiandong Miao==
 
-===Letter===
-# 10th letter of the [[Appendix:Zhuyin script| Hmu Zhuyin alphabet]].
+===Pronunciation===
+* Phoneme: {{IPA|hea|/k/}}
 
-===Phoneme===
-# sound {{IPA|hea|/k/}} (Hutton): k, g
+===Letter===
+{{head|hea|letter|tr=k, g}} {{q|Hutton}}
+
+# {{ng|10th letter of the [[Appendix:Zhuyin script|Hmu Zhuyin alphabet]]}}
 
 ===References===
 * Joakim Enwall, A Myth Become Reality Vol.1 (Stockholm, 1994) page 198
@@ -29797,13 +29877,13 @@ Initial consonant derived from {{m|zh|丂}} ({{cog|cmn|-}}: ''kǎo'') + rhyme.
 {{zh-pron
 |m=kē
 }}
+* Phoneme: {{audio|cmn|Zh-kē.ogg|IPA=/kʰ/|text=k|q=[[Pinyin]]}}
 
 ====Letter====
+{{head|zh|letter}}
+
 # 10th letter of the [[Appendix:Zhuyin script|Zhuyin alphabet]]
 # 13th letter of the [[Appendix:Zhuyin script|extended Zhuyin alphabet]]
-
-====Phoneme====
-# {{qualifier|general}} Sound {{audio-IPA|cmn|Zh-kē.ogg|/kʰ/}} ([[Pinyin]]: k), which is commonly present in Chinese.
 
 ===Etymology 2===
 [[onomatopoeia|Onomatopoeia]] of [[sniggering]].
@@ -29820,11 +29900,13 @@ Initial consonant derived from {{m|zh|丂}} ({{cog|cmn|-}}: ''kǎo'') + rhyme.
 
 ==Northern Qiandong Miao==
 
-===Letter===
-# 11th letter of the [[Appendix:Zhuyin script| Hmu Zhuyin alphabet]].
+===Pronunciation===
+* Phoneme: {{IPA|hea|/kʰ/}}
 
-===Phoneme===
-# sound {{IPA|hea|/kʰ/}} (Hutton): k', k
+===Letter===
+{{head|hea|letter|tr=k', k}} {{q|Hutton}}
+
+# {{ng|11th letter of the [[Appendix:Zhuyin script|Hmu Zhuyin alphabet]]}}
 
 ===References===
 * Joakim Enwall, A Myth Become Reality Vol.1 (Stockholm, 1994) page 198
@@ -29860,15 +29942,15 @@ Initial consonant derived from {{m|zh|厂}} ({{cog|cmn|-}}: ''hǎn'') + rhyme.
 {{zh-pron
 |m=hē
 }}
+* {{qualifier|Mandarin}} Phoneme: {{audio|cmn|Zh-he1.ogg|IPA=/x/|text=h|q=[[Pinyin]]}}
+* {{qualifier|Mandarin}} Phoneme: {{IPA|cmn|/h/}} {{q|[[Pinyin]]: h), which is only present in characters that express [[laughter]], such as {{m|zh|哈}} and {{m|zh|呵}}}}
+* {{qualifier|non-Mandarin}} Phoneme: {{IPA|zh|/h/}} {{q|[[Pinyin]]: h), which is commonly present in non-Mandarin varieties}}
 
 ====Letter====
+{{head|zh|letter}}
+
 # 11th letter of the [[Appendix:Zhuyin script|Zhuyin alphabet]]
 # 15th letter of the [[Appendix:Zhuyin script|extended Zhuyin alphabet]]
-
-====Phoneme====
-# {{qualifier|Mandarin}} Sound {{audio-IPA|cmn|Zh-he1.ogg|/x/}} ([[Pinyin]]: h), which is present in [[Standard Chinese]] and some [[Mandarin]] dialects, including [[Lower Yangtze Mandarin]] and [[Sichuanese]].
-# {{qualifier|Mandarin}} Sound {{IPA|cmn|/h/}} ([[Pinyin]]: h), which is only present in characters that express [[laughter]], such as [[哈]] and [[呵]].
-# {{qualifier|non-Mandarin}} Sound {{IPA|cmn|/h/}} ([[Pinyin]]: h), which is commonly present in non-Mandarin dialects.
 
 ===Etymology 2===
 Simplified from {{m|zh|呵}}, typing only ㄏ instead of the full character pronunciation on Zhuyin keyboards.
@@ -29894,13 +29976,25 @@ Confused with {{m|zh|厂}}, simplified version of {{m|zh|廠}} as it is not comm
 
 ==Northern Qiandong Miao==
 
-===Letter===
-# 13th letter of the [[Appendix:Zhuyin script| Hmu Zhuyin alphabet]], representing a fricative.
-# 16th letter of the [[Appendix:Zhuyin script| Hmu Zhuyin alphabet]], representing a nasal.
+===Etymology 1===
 
-===Phoneme===
-# sound {{IPA|hea|/χ/}} (Hutton): h', h
-# sound {{IPA|hea|/nʲ/}} (Hutton): n
+====Pronunciation====
+* Phoneme: {{IPA|hea|/χ/}
+
+====Letter====
+{{head|hea|letter|tr=h', h}} {{q|Hutton}}
+
+# {{ng|13th letter of the [[Appendix:Zhuyin script|Hmu Zhuyin alphabet]], representing a fricative}}
+
+===Etymology 2===
+
+====Pronunciation====
+* Phoneme: {{IPA|hea|/nʲ/}}
+
+====Letter====
+{{head|hea|letter|tr=n}} {{q|Hutton}}
+
+# {{ng|16th letter of the [[Appendix:Zhuyin script|Hmu Zhuyin alphabet]], representing a nasal}}
 
 ===References===
 * Joakim Enwall, A Myth Become Reality Vol.1 (Stockholm, 1994) page 198
@@ -30090,7 +30184,7 @@ Page 127 ʣ: -------- begin text --------
 ==Translingual==
 
 ===Pronunciation===
-* {{audio-IPA|mul|Voiced alveolar sibilant affricate.oga|[d͡z]}}
+* {{audio|mul|Voiced alveolar sibilant affricate.oga|IPA=[d͡z]}}
 
 ===Symbol===
 {{head|mul|symbol}}
@@ -30120,7 +30214,7 @@ Page 128 tjänare: -------- begin text --------
 
 ===Pronunciation===
 * {{IPA|sv|/²ɕɛːnarɛ/|a=Sweden}}
-** {{a|sv|Stockholm e|noun}} {{audio-IPA|sv|Sv-tjänare.ogg|/ɛn ²ɕeːnarɛ/}}
+** {{audio|sv|Sv-tjänare.ogg|text=en tjänare|IPA=/ɛn ²ɕeːnarɛ/|a=Stockholm e,noun}}
 * {{IPA|sv|/ˈt͡ɕeːnɑre/|a=Finland}}
 
 ===Interjection===
@@ -30227,8 +30321,8 @@ Page 130 Pneu: -------- begin text --------
 {{clipping|de|Pneumatik||[[pneumatics]]}}.
 
 ====Pronunciation====
-* {{IPA|de|/pnøː/}}
-* {{audio-IPA|de|De-Pneu.ogg|/pnɔɪ̯/}}
+* {{IPA|de|/pnøː/|/pnɔɪ̯/}}
+* {{audio|de|De-Pneu.ogg|IPA=/pnɔɪ̯/}}
 
 ====Noun====
 {{de-noun|m,s,s}}
@@ -30300,20 +30394,20 @@ Derived from {{m|zh|𠀀}}, inhalation, the reverse of {{m|zh|丂}} and an ancie
 {{zh-pron
 |m=ō
 }}
+* {{qualifier|general, except for [[Hokkien]]}} Phoneme: {{IPA|cmn|/ɔ/}} {{q|[[Pinyin]]: o}}
+* {{qualifier|when pronounced alone}} Phoneme: {{IPA|cmn|/ˀɔ/}} {{q|[[Pinyin]]: o}}
+* {{qualifier|obsolete, up until 1920}} Phoneme: {{audio|cmn|Zh-é.ogg|IPA=/ɤ/}}
+*: {{zh-alt-inline|{{l|zh|ㄮ}} ''obsolete'', {{l|zh|ㄜ}} }}
+* {{qualifier|when preceded by a [[labial]] initial consonant ([[ㄅ]], [[ㄆ]], [[ㄇ]], [[ㄈ]], [[ㄪ]])}} Phoneme: {{IPA|cmn|/wɔ/}} {{q|[[Pinyin]]: o}}
+*: {{zh-alt-inline|{{l|zh|ㄨㄛ}} ''rarely''}}
+* {{qualifier|some varieties, including [[Hokkien]]}} Phoneme: {{IPA|cmn|/o/}} {{q|[[Pinyin]]: o}}
+* {{qualifier|southern Taiwanese varieties}} Phoneme: {{IPA|cmn|/ə/}} {{q|[[Pinyin]]: or}}
 
 ===Letter===
+{{head|zh|letter}}
+
 # 23rd letter of the [[Appendix:Zhuyin script|Zhuyin alphabet]]
 # 33rd letter of the [[Appendix:Zhuyin script|extended Zhuyin alphabet]]
-
-====Phoneme====
-# {{qualifier|general, except for [[Hokkien]]}} Sound {{IPA|cmn|/ɔ/}} ([[Pinyin]]: o), which is commonly present in Chinese.
-# {{qualifier|when pronounced alone}} Sound {{IPA|cmn|/ˀɔ/}} ([[Pinyin]]: o)
-# {{qualifier|obsolete, up until 1920}} Sound {{audio-IPA|cmn|Zh-é.ogg|/ɤ/}}.
-#: {{zh-alt-inline|{{l|zh|ㄮ}} ''obsolete'', {{l|zh|ㄜ}} }}
-# {{qualifier|when preceded by a [[labial]] initial consonant ([[ㄅ]], [[ㄆ]], [[ㄇ]], [[ㄈ]], [[ㄪ]])}} Sound {{IPA|cmn|/wɔ/}} ([[Pinyin]]: o)
-#: {{zh-alt-inline|{{l|zh|ㄨㄛ}} ''rarely''}}
-# {{qualifier|some dialects, including [[Hokkien]]}} Sound {{IPA|cmn|/o/}} ([[Pinyin]]: o).
-# {{qualifier|southern Taiwanese dialects}} Sound {{IPA|cmn|/ə/}} ([[Pinyin]]: or).
 
 ===References===
 * 全國主要方言區方音對照表, Chinese Character Reform Commission, Beijing: ZhonghuaBook Company, 1954
@@ -30321,11 +30415,13 @@ Derived from {{m|zh|𠀀}}, inhalation, the reverse of {{m|zh|丂}} and an ancie
 
 ==Northern Qiandong Miao==
 
-===Letter===
-# 32nd letter of the [[Appendix:Zhuyin script| Hmu Zhuyin alphabet]].
+===Pronunciation===
+* Phoneme: {{IPA|hea|/o/}}
 
-===Phoneme===
-# sound {{IPA|hea|/o/}} (Hutton): o, e
+===Letter===
+{{head|hea|letter|tr=o, e}} {{q|Hutton}}
+
+# {{ng|32nd letter of the [[Appendix:Zhuyin script|Hmu Zhuyin alphabet]]}}
 
 ===References===
 * Joakim Enwall, A Myth Become Reality Vol.1 (Stockholm, 1994) page 198
@@ -30361,13 +30457,13 @@ Initial consonant derived from {{m|zh|糾}} / {{m|zh|纠}} ({{cog|cmn|-}}: ''ji�
 {{zh-pron
 |m=jī
 }}
+* Phoneme: {{audio|cmn|Zh-jī.ogg|IPA=/t͡ɕ/|text=j|q=[[Pinyin]]}}
 
 ===Letter===
+{{head|zh|letter}}
+
 # 12th letter of the [[Appendix:Zhuyin script|Zhuyin alphabet]]
 # 16th letter of the [[Appendix:Zhuyin script|extended Zhuyin alphabet]]
-
-====Phoneme====
-# {{qualifier|general}} Sound {{audio-IPA|cmn|Zh-jī.ogg|/t͡ɕ/}} ([[Pinyin]]: j), which is commonly present in Chinese, with one of the exceptions being [[Amoy]] dialect.
 
 ===References===
 * 全國主要方言區方音對照表, Chinese Character Reform Commission, Beijing: ZhonghuaBook Company, 1954
@@ -30375,11 +30471,13 @@ Initial consonant derived from {{m|zh|糾}} / {{m|zh|纠}} ({{cog|cmn|-}}: ''ji�
 
 ==Northern Qiandong Miao==
 
-===Letter===
-# 14th letter of the [[Appendix:Zhuyin script| Hmu Zhuyin alphabet]].
+===Pronunciation===
+* Phoneme: {{IPA|hea|/t͡ɕ/}}
 
-===Phoneme===
-# sound {{IPA|hea|/t͡ɕ/}} (Hutton): g, j
+===Letter===
+{{head|hea|letter|tr=g, j}} {{q|Hutton}}
+
+# {{ng|14th letter of the [[Appendix:Zhuyin script|Hmu Zhuyin alphabet]]}}
 
 ===References===
 * Joakim Enwall, A Myth Become Reality Vol.1 (Stockholm, 1994) page 198
@@ -30415,15 +30513,15 @@ Initial consonant derived from {{m|zh|下}} ({{cog|cmn|-}}: ''xià'') + rhyme.
 {{zh-pron
 |m=xī
 }}
+* {{qualifier|general}} Phoneme: {{audio|cmn|Zh-xī.ogg|IPA=/ɕ/|text=x|q=[[Pinyin]]}}
+* {{qualifier|Cantonese, Hakka}} Phoneme: {{IPA|zh|/s/}} {{q|[[Jyutping]]: s}}
+* {{qualifier|Amoy|obsolete}} Phoneme: {{IPA|zh|/h/}} {{q|[[Pinyin]]: h, when it is followed by ㄧ ([[Pinyin]]: i)}}
 
 ===Letter===
+{{head|zh|letter}}
+
 # 14th letter of the [[Appendix:Zhuyin script|Zhuyin alphabet]]
 # 20th letter of the [[Appendix:Zhuyin script|extended Zhuyin alphabet]]
-
-====Phoneme====
-# {{qualifier|general}} Sound {{audio-IPA|cmn|Zh-xī.ogg|/ɕ/}} ([[Pinyin]]: x), which is present in Standard Chinese, however it is not present in [[Cantonese]], [[Amoy]], [[Hakka]], and [[Fuzhou]] dialects.
-# {{qualifier|Cantonese, Hakka}} Sound {{IPA|cmn|/s/}} ([[Jyutping]]: s).
-# {{qualifier|Amoy|obsolete}} Sound {{IPA|cmn|/h/}} ([[Pinyin]]: h), when it is followed by ㄧ ([[Pinyin]]: i).
 
 ===References===
 * 全國主要方言區方音對照表, Chinese Character Reform Commission, Beijing: ZhonghuaBook Company, 1954
@@ -30431,11 +30529,13 @@ Initial consonant derived from {{m|zh|下}} ({{cog|cmn|-}}: ''xià'') + rhyme.
 
 ==Northern Qiandong Miao==
 
-===Letter===
-# 17th letter of the [[Appendix:Zhuyin script| Hmu Zhuyin alphabet]].
+===Pronunciation===
+* Phoneme: {{IPA|hea|/ɕ/}}
 
-===Phoneme===
-# sound {{IPA|hea|/ɕ/}} (Hutton): sh
+===Letter===
+{{head|hea|letter|tr=sh}} {{q|Hutton}}
+
+# {{ng|17th letter of the [[Appendix:Zhuyin script|Hmu Zhuyin alphabet]]}}
 
 ===References===
 * Joakim Enwall, A Myth Become Reality Vol.1 (Stockholm, 1994) page 198
@@ -30476,16 +30576,16 @@ Initial consonant derived from {{m|zh|之}} ({{cog|cmn|-}}: ''zhī'') + rhyme.
 {{zh-pron
 |m=zhī
 }}
+* {{qualifier|when followed by a rhyme}} Phoneme: {{audio|cmn|Zh-zhī.ogg|IPA=/ʈ͡ʂ/|text=zh|q=[[Pinyin]]}}
+* {{qualifier|when standing alone}} Phoneme: {{audio|cmn|zh-zhī.ogg|IPA=/ʈ͡ʂʐ̩/|text=zhi|q=[[Pinyin]]}}
+*: {{zh-alt-inline|{{l|zh|ㄓㄭ}} ''obsolete, analytic''}}
+* {{qualifier|Hakka}} Phoneme: {{IPA|zh|/t͡ʃ/}} {{q|[[Pinyin]]: zh}}
 
 ===Letter===
+{{head|zh|letter}}
+
 # 15th letter of the [[Appendix:Zhuyin script|Zhuyin alphabet]]
 # 23rd letter of the [[Appendix:Zhuyin script|extended Zhuyin alphabet]]
-
-====Phoneme====
-# {{qualifier|when followed by a rhyme}} Sound {{audio-IPA|cmn|Zh-zhī.ogg|/ʈ͡ʂ/}} ([[Pinyin]]: zh), which is present in Standard Chinese, but not in other dialects.
-# {{qualifier|when standing alone}} Sound {{audio-IPA|cmn|zh-zhī.ogg|/ʈ͡ʂʐ̩/}} ([[Pinyin]]: zhi).
-#: {{zh-alt-inline|{{l|zh|ㄓㄭ}} ''obsolete, analytic''}}
-# {{qualifier|Hakka}} Sound {{IPA|cmn|/t͡ʃ/}} ([[Pinyin]]: zh)
 
 ===References===
 * 全國主要方言區方音對照表, Chinese Character Reform Commission, Beijing: ZhonghuaBook Company, 1954
@@ -30493,11 +30593,13 @@ Initial consonant derived from {{m|zh|之}} ({{cog|cmn|-}}: ''zhī'') + rhyme.
 
 ==Northern Qiandong Miao==
 
-===Letter===
-# 18th letter of the [[Appendix:Zhuyin script| Hmu Zhuyin alphabet]].
+===Pronunciation===
+* Phoneme: {{IPA|hea|/ʈ͡ʂ/}}
 
-===Phoneme===
-# sound {{IPA|hea|/ʈ͡ʂ/}} (Hutton): ts
+===Letter===
+{{head|hea|letter|tr=ts}} {{q|Hutton}}
+
+# {{ng|18th letter of the [[Appendix:Zhuyin script|Hmu Zhuyin alphabet]]}}
 
 ===References===
 * Joakim Enwall, A Myth Become Reality Vol.1 (Stockholm, 1994) page 198
@@ -30533,16 +30635,16 @@ Initial consonant derived from {{m|zh|彳}} ({{cog|cmn|-}}: ''chì'') + rhyme.
 {{zh-pron
 |m=chī
 }}
+* {{qualifier|when followed by a rhyme}} Phoneme: {{audio|cmn|Zh-chi.ogg|IPA=/ʈ͡ʂʰ/|text=ch|q=[[Pinyin]]}}
+* {{qualifier|when standing alone}} Phoneme: {{audio|cmn|zh-chī.ogg|IPA=/ʈ͡ʂʰʐ̩/|text=chi|q=[[Pinyin]]}}
+*: {{zh-alt-inline|{{l|zh|ㄔㄭ}} ''obsolete, analytic''}}
+* {{qualifier|Hakka}} Phoneme: {{IPA|zh|/t͡ʃʰ/}} {{q|[[Pinyin]]: ch}}
 
 ===Letter===
+{{head|zh|letter}}
+
 # 16th letter of the [[Appendix:Zhuyin script|Zhuyin alphabet]]
 # 24th letter of the [[Appendix:Zhuyin script|extended Zhuyin alphabet]]
-
-====Phoneme====
-# {{qualifier|when followed by a rhyme}} Sound {{audio-IPA|cmn|Zh-chi.ogg|/ʈ͡ʂʰ/}} ([[Pinyin]]: ch), which is present in Standard Chinese, but not in other dialects.
-# {{qualifier|when standing alone}} Sound {{audio-IPA|cmn|zh-chī.ogg|/ʈ͡ʂʰʐ̩/}} ([[Pinyin]]: chi).
-#: {{zh-alt-inline|{{l|zh|ㄔㄭ}} ''obsolete, analytic''}}
-# {{qualifier|Hakka}} Sound {{IPA|cmn|/t͡ʃʰ/}} ([[Pinyin]]: ch)
 
 ===References===
 * 全國主要方言區方音對照表, Chinese Character Reform Commission, Beijing: ZhonghuaBook Company, 1954
@@ -30550,11 +30652,13 @@ Initial consonant derived from {{m|zh|彳}} ({{cog|cmn|-}}: ''chì'') + rhyme.
 
 ==Northern Qiandong Miao==
 
-===Letter===
-# 19th letter of the [[Appendix:Zhuyin script| Hmu Zhuyin alphabet]].
+===Pronunciation===
+* Phoneme: {{IPA|hea|/ʈ͡ʂʰ/}}
 
-===Phoneme===
-# sound {{IPA|hea|/ʈ͡ʂʰ/}} (Hutton): ts'
+===Letter===
+{{head|hea|letter|tr=ts'}} {{q|Hutton}}
+
+# {{ng|19th letter of the [[Appendix:Zhuyin script|Hmu Zhuyin alphabet]]}}
 
 ===References===
 * Joakim Enwall, A Myth Become Reality Vol.1 (Stockholm, 1994) page 198
@@ -30591,16 +30695,16 @@ Initial consonant derived from {{m|zh|尸}} ({{cog|cmn|-}}: ''shī'') + rhyme.
 {{zh-pron
 |m=shī
 }}
+* {{qualifier|when followed by a rhyme}} Phoneme: {{audio|cmn|Zh-shǐ.oga|IPA=/ʂ/|text=sh|q=[[Pinyin]]}}
+* {{qualifier|when standing alone}} Phoneme: {{IPA|cmn|/ʂʐ̩/}} {{q|[[Pinyin]]: shi}}
+*: {{zh-alt-inline|{{l|zh|ㄕㄭ}} ''obsolete, analytic''}}
+* {{qualifier|Hakka}} Phoneme: {{IPA|zh|/ʃ/}} {{q|[[Pinyin]]: sh}}
 
 ===Letter===
+{{head|zh|letter}}
+
 # 17th letter of the [[Appendix:Zhuyin script|Zhuyin alphabet]]
 # 25th letter of the [[Appendix:Zhuyin script|extended Zhuyin alphabet]]
-
-====Phoneme====
-# {{qualifier|when followed by a rhyme}} Sound {{audio-IPA|cmn|Zh-shǐ.oga|/ʂ/}} ([[Pinyin]]: sh), which is present in Standard Chinese, but not in other dialects.
-# {{qualifier|when standing alone}} Sound {{IPA|cmn|/ʂʐ̩/}} ([[Pinyin]]: shi).
-#: {{zh-alt-inline|{{l|zh|ㄕㄭ}} ''obsolete, analytic''}}
-# {{qualifier|Hakka}} Sound {{IPA|cmn|/ʃ/}} ([[Pinyin]]: sh)
 
 ===References===
 * 全國主要方言區方音對照表, Chinese Character Reform Commission, Beijing: ZhonghuaBook Company, 1954
@@ -30608,11 +30712,13 @@ Initial consonant derived from {{m|zh|尸}} ({{cog|cmn|-}}: ''shī'') + rhyme.
 
 ==Northern Qiandong Miao==
 
-===Letter===
-# 20th letter of the [[Appendix:Zhuyin script| Hmu Zhuyin alphabet]].
+===Pronunciation===
+* Phoneme: {{IPA|hea|/ʂ/}}
 
-===Phoneme===
-# sound {{IPA|hea|/ʂ/}} (Hutton): hs
+===Letter===
+{{head|hea|letter|tr=hs}} {{q|Hutton}}
+
+# {{ng|20th letter of the [[Appendix:Zhuyin script|Hmu Zhuyin alphabet]]}}
 
 ===References===
 * Joakim Enwall, A Myth Become Reality Vol.1 (Stockholm, 1994) page 198
@@ -30653,17 +30759,17 @@ Initial consonant derived from {{m|zh|日}} ({{cog|cmn|-}}: ''rì''), "day, sun"
 {{zh-pron
 |m=rī
 }}
+* {{qualifier|when followed by a rhyme}} Phoneme: {{audio|cmn|Zh-ri4.ogg|IPA=/ɻ~ʐ/|text=r|q=[[Pinyin]]}}
+* {{qualifier|when standing alone}} Phoneme: {{audio|cmn|zh-rì.ogg|IPA=/ʐ̩/|text=ri|q=[[Pinyin]]}}
+*: {{zh-alt-inline|{{l|zh|ㄖㄭ}} ''obsolete, analytic''}}
+* {{qualifier|when followed by ㄭ}} Phoneme: {{audio|cmn|zh-rì.ogg|IPA=/ʐ̩/|text=ri|q=[[Pinyin]]}}
+* {{qualifier|Hakka, Fuzhou}} Phoneme: {{IPA|zh|/ʒ/}} {{q|[[Pinyin]]: r}}
 
 ===Letter===
+{{head|zh|letter}}
+
 # 18th letter of the [[Appendix:Zhuyin script|Zhuyin alphabet]]
 # 26th letter of the [[Appendix:Zhuyin script|extended Zhuyin alphabet]]
-
-====Phoneme====
-# {{qualifier|when followed by a rhyme}} Sound {{audio-IPA|cmn|Zh-ri4.ogg|/ɻ~ʐ/}} ([[Pinyin]]: r), which is present only in [[Mandarin]] dialects.
-# {{qualifier|when standing alone}} Sound {{audio-IPA|cmn|zh-rì.ogg|/ʐ̩/}} ([[Pinyin]]: ri).
-#: {{zh-alt-inline|{{l|zh|ㄖㄭ}} ''obsolete, analytic''}}
-# {{qualifier|when followed by ㄭ}} Sound {{audio-IPA|cmn|zh-rì.ogg|/ʐ̩/}} ([[Pinyin]]: ri).
-# {{qualifier|Hakka, Fuzhou}} Sound {{IPA|cmn|/ʒ/}} ([[Pinyin]]: r)
 
 ===References===
 * 全國主要方言區方音對照表, Chinese Character Reform Commission, Beijing: ZhonghuaBook Company, 1954
@@ -30671,11 +30777,13 @@ Initial consonant derived from {{m|zh|日}} ({{cog|cmn|-}}: ''rì''), "day, sun"
 
 ==Northern Qiandong Miao==
 
-===Letter===
-# 21st letter of the [[Appendix:Zhuyin script| Hmu Zhuyin alphabet]].
+===Pronunciation===
+* Phoneme: {{IPA|hea|/ɹ/}}
 
-===Phoneme===
-# sound {{IPA|hea|/ɹ/}} (Hutton): r, rï
+===Letter===
+{{head|hea|letter|tr=r, rï}} {{q|Hutton}}
+
+# {{ng|21st letter of the [[Appendix:Zhuyin script|Hmu Zhuyin alphabet]]}}
 
 ===References===
 * Joakim Enwall, A Myth Become Reality Vol.1 (Stockholm, 1994) page 198
@@ -30711,16 +30819,16 @@ Initial consonant derived from old pronunciation of {{m|zh|節}} ({{cog|cmn|-}}:
 {{zh-pron
 |m=zī
 }}
+* {{qualifier|when followed by a rhyme}} Phoneme: {{audio|cmn|Zh-zì.ogg|IPA=/t͡s/|text=z|q=[[Pinyin]]}}
+* {{qualifier|when standing alone}} Phoneme: {{audio|cmn|zh-zì.ogg|IPA=/t͡sz̩/|text=zi|q=[[Pinyin]]}}
+*: {{zh-alt-inline|{{l|zh|ㄗㄭ}} ''obsolete, analytic''}}
+* {{qualifier|Amoy variety before [[ㄧ]]}} Phoneme: {{IPA|zh|/t͡ɕ/}} {{q|[[Pinyin]]: z}}
 
 ===Letter===
+{{head|zh|letter}}
+
 # 19th letter of the [[Appendix:Zhuyin script|Zhuyin alphabet]]
 # 27th letter of the [[Appendix:Zhuyin script|extended Zhuyin alphabet]]
-
-====Phoneme====
-# {{qualifier|when followed by a rhyme}} Sound {{audio-IPA|cmn|Zh-zì.ogg|/t͡s/}} ([[Pinyin]]: z), which is commonly present in Chinese, apart from [[Cantonese]] and [[Fuzhou]] dialects.
-# {{qualifier|when standing alone}} Sound {{audio-IPA|cmn|zh-zì.ogg|/t͡sz̩/}} ([[Pinyin]]: zi).
-#: {{zh-alt-inline|{{l|zh|ㄗㄭ}} ''obsolete, analytic''}}
-# {{qualifier|Amoy dialect before [[ㄧ]]}} Sound {{IPA|cmn|/t͡ɕ/}} ([[Pinyin]]: z)
 
 ===References===
 * 全國主要方言區方音對照表, Chinese Character Reform Commission, Beijing: ZhonghuaBook Company, 1954
@@ -30728,11 +30836,13 @@ Initial consonant derived from old pronunciation of {{m|zh|節}} ({{cog|cmn|-}}:
 
 ==Northern Qiandong Miao==
 
-===Letter===
-# 22nd letter of the [[Appendix:Zhuyin script| Hmu Zhuyin alphabet]].
+===Pronunciation===
+* Phoneme: {{IPA|hea|/t͡s/}}
 
-===Phoneme===
-# sound {{IPA|hea|/t͡s/}} (Hutton): ts
+===Letter===
+{{head|hea|letter|tr=ts}} {{q|Hutton}}
+
+# {{ng|22nd letter of the [[Appendix:Zhuyin script|Hmu Zhuyin alphabet]]}}
 
 ===References===
 * Joakim Enwall, A Myth Become Reality Vol.1 (Stockholm, 1994) page 198
@@ -30768,16 +30878,16 @@ Initial consonant derived from old pronunciation of {{m|zh|七}} ({{cog|cmn|-}}:
 {{zh-pron
 |m=cī
 }}
+* {{qualifier|when followed by a rhyme}} Phoneme: {{audio|cmn|Zh-ci.ogg|IPA=/t͡sʰ/|text=c|q=[[Pinyin]]}}
+* {{qualifier|when standing alone}} Phoneme: {{audio|cmn|zh-ci.ogg|IPA=/t͡sʰz̩/|text=ci|q=[[Pinyin]]}}
+*: {{zh-alt-inline|{{l|zh|ㄘㄭ}} ''obsolete, analytic''}}
+* {{qualifier|Amoy variety before [[ㄧ]]}} Phoneme: {{IPA|zh|/t͡ɕʰ/}} {{q|[[Pinyin]]: c}}
 
 ===Letter===
+{{head|zh|letter}}
+
 # 20th letter of the [[Appendix:Zhuyin script|Zhuyin alphabet]]
 # 29th letter of the [[Appendix:Zhuyin script|extended Zhuyin alphabet]]
-
-====Phoneme====
-# {{qualifier|when followed by a rhyme}} Sound {{audio-IPA|cmn|Zh-ci.ogg|/t͡sʰ/}} ([[Pinyin]]: c), which is commonly present in Chinese, apart from [[Cantonese]] and [[Fuzhou]] dialects.
-# {{qualifier|when standing alone}} Sound {{audio-IPA|cmn|zh-ci.ogg|/t͡sʰz̩/}} ([[Pinyin]]: ci).
-#: {{zh-alt-inline|{{l|zh|ㄘㄭ}} ''obsolete, analytic''}}
-# {{qualifier|Amoy dialect before [[ㄧ]]}} Sound {{IPA|cmn|/t͡ɕʰ/}} ([[Pinyin]]: c)
 
 ===References===
 * 全國主要方言區方音對照表, Chinese Character Reform Commission, Beijing: ZhonghuaBook Company, 1954
@@ -30785,11 +30895,13 @@ Initial consonant derived from old pronunciation of {{m|zh|七}} ({{cog|cmn|-}}:
 
 ==Northern Qiandong Miao==
 
-===Letter===
-# 23rd letter of the [[Appendix:Zhuyin script| Hmu Zhuyin alphabet]].
+===Pronunciation===
+* Phoneme: {{IPA|hea|/t͡sʰ/}}
 
-===Phoneme===
-# sound {{IPA|hea|/t͡sʰ/}} (Hutton): ts'
+===Letter===
+{{head|hea|letter|tr=ts'}} {{q|Hutton}}
+
+# {{ng|23rd letter of the [[Appendix:Zhuyin script|Hmu Zhuyin alphabet]]}}
 
 ===References===
 * Joakim Enwall, A Myth Become Reality Vol.1 (Stockholm, 1994) page 198
@@ -30826,15 +30938,15 @@ Initial consonant derived from {{m|zh|厶}}, ancient form of {{m|zh|私}} ({{cog
 {{zh-pron
 |m=sī
 }}
+* {{qualifier|when followed by a rhyme}} Phoneme: {{audio|cmn|Zh-si.ogg|IPA=/s/|text=s|q=[[Pinyin]]}}
+* {{qualifier|when standing alone}} Phoneme: {{audio|cmn|zh-si.ogg|IPA=/sz̩/|text=si|q=[[Pinyin]]}}
+*: {{zh-alt-inline|{{l|zh|ㄙㄭ}} ''obsolete, analytic''}}
 
 ===Letter===
+{{head|zh|letter}}
+
 # 21st letter of the [[Appendix:Zhuyin script|Zhuyin alphabet]]
 # 30th letter of the [[Appendix:Zhuyin script|extended Zhuyin alphabet]]
-
-====Phoneme====
-# {{qualifier|when followed by a rhyme}} Sound {{audio-IPA|cmn|Zh-si.ogg|/s/}} ([[Pinyin]]: s), which is commonly present in Chinese, apart from [[Cantonese]].
-# {{qualifier|when standing alone}} Sound {{audio-IPA|cmn|zh-si.ogg|/sz̩/}} ([[Pinyin]]: s).
-#: {{zh-alt-inline|{{l|zh|ㄙㄭ}} ''obsolete, analytic''}}
 
 ===References===
 * 全國主要方言區方音對照表, Chinese Character Reform Commission, Beijing: ZhonghuaBook Company, 1954
@@ -30842,11 +30954,13 @@ Initial consonant derived from {{m|zh|厶}}, ancient form of {{m|zh|私}} ({{cog
 
 ==Northern Qiandong Miao==
 
-===Letter===
-# 24th letter of the [[Appendix:Zhuyin script| Hmu Zhuyin alphabet]].
+===Pronunciation===
+* Phoneme: {{IPA|hea|/s/}}
 
-===Phoneme===
-# sound {{IPA|hea|/s/}} (Hutton): s
+===Letter===
+{{head|hea|letter|tr=s}} {{q|Hutton}}
+
+# {{ng|24th letter of the [[Appendix:Zhuyin script|Hmu Zhuyin alphabet]]}}
 
 ===References===
 * Joakim Enwall, A Myth Become Reality Vol.1 (Stockholm, 1994) page 198
@@ -30882,17 +30996,17 @@ Derived from {{m|zh|丫}} ({{cog|cmn|-}}: ''yā''), "fork".
 {{zh-pron
 |m=ā
 }}
+* {{qualifier|general}} Phoneme: {{audio|cmn|Zh-a.ogg|IPA=/ä/|text=a|q=[[Pinyin]]}}
+* {{qualifier|when pronounced alone}} Phoneme: {{audio|cmn|Zh-a.ogg|IPA=/ˀä/|text=a|q=[[Pinyin]]}}
+* {{qualifier|[[Mazu]] variety if pronounced with the 1st, 2nd, 5th, or 8th tone}} Phoneme: {{IPA|zh|/a/}} {{q|[[Pinyin]]: a}}
+* {{qualifier|[[Miao]] variety, [[Mazu]] variety if pronounced with the 3rd, 4th, or 7th tone}} Phoneme: {{IPA|zh|/ɑ/}} {{q|[[Pinyin]]: a}}
+* {{qualifier|[[Hokkien]] when in a syllable that starts with a nasal consonant ([[ㄇ]], [[ㄋ]], [[ㄫ]], or [[ㄬ]])}} Phoneme: {{IPA|zh|/ã/}} {{q|[[Pinyin]]: ai}}
 
 ===Letter===
+{{head|zh|letter}}
+
 # 22nd letter of the [[Appendix:Zhuyin script|Zhuyin alphabet]]
 # 31st letter of the [[Appendix:Zhuyin script|extended Zhuyin alphabet]]
-
-====Phoneme====
-# {{qualifier|general}} Sound {{audio-IPA|cmn|Zh-a.ogg|/ä/}} ([[Pinyin]]: a), which is commonly present in Chinese.
-# {{qualifier|when pronounced alone}} Sound {{audio-IPA|cmn|Zh-a.ogg|/ˀä/}} ([[Pinyin]]: a)
-# {{qualifier|[[Mazu]] dialect if pronounced with the 1st, 2nd, 5th, or 8th tone}} Sound {{IPA|cmn|/a/}} ([[Pinyin]]: a).
-# {{qualifier|[[Miao]] dialect, [[Mazu]] dialect if pronounced with the 3rd, 4th, or 7th tone}} Sound {{IPA|cmn|/ɑ/}} ([[Pinyin]]: a).
-# {{qualifier|[[Hokkien]] when in a syllable that starts with a nasal consonant ([[ㄇ]], [[ㄋ]], [[ㄫ]], or [[ㄬ]])}} Sound {{IPA|cmn|/ã/}} ([[Pinyin]]: ai)
 
 ===References===
 * 全國主要方言區方音對照表, Chinese Character Reform Commission, Beijing: ZhonghuaBook Company, 1954
@@ -30900,11 +31014,13 @@ Derived from {{m|zh|丫}} ({{cog|cmn|-}}: ''yā''), "fork".
 
 ==Northern Qiandong Miao==
 
-===Letter===
-# 31st letter of the [[Appendix:Zhuyin script| Hmu Zhuyin alphabet]].
+===Pronunciation===
+* Phoneme: {{IPA|hea|/a/}}
 
-===Phoneme===
-# sound {{IPA|hea|/a/}} (Hutton): a
+===Letter===
+{{head|hea|letter|tr=a}} {{q|Hutton}}
+
+# {{ng|31st letter of the [[Appendix:Zhuyin script|Hmu Zhuyin alphabet]]}}
 
 ===References===
 * Joakim Enwall, A Myth Become Reality Vol.1 (Stockholm, 1994) page 198
@@ -30942,17 +31058,17 @@ Derived from {{m|zh|ㄛ}}({{cog|cmn|-}}: ''ō''), which was derived from {{m|zh|
 {{zh-pron
 |m=ē
 }}
+* {{qualifier|general}} Phoneme: {{audio|cmn|Zh-é.ogg|IPA=/ɤ/|text=e|q=[[Pinyin]]}}
+*: {{zh-alt-inline|{{l|zh|ㄮ}}, {{l|zh|ㄛ}} ''obsolete''}}
+* {{qualifier|Standard Chinese when pronounced with the neutral tone}} Phoneme: {{IPA|cmn|/ə/}} {{q|[[Pinyin]]: e}}
+* {{qualifier|when pronounced alone}} Phoneme: {{audio|cmn|Zh-é.ogg|IPA=/ˀɤ/|text=e|q=[[Pinyin]]}}
+* {{qualifier|some varieties, notably [[Hakka]] and [[Wenzhounese]]}} Phoneme: {{IPA|zh|/ə/}} {{q|[[Pinyin]]: e}}
 
 ===Letter===
+{{head|zh|letter}}
+
 # 24th letter of the [[Appendix:Zhuyin script|Zhuyin alphabet]]
 # 36th letter of the [[Appendix:Zhuyin script|extended Zhuyin alphabet]]
-
-====Phoneme====
-# {{qualifier|general}} Sound {{audio-IPA|cmn|Zh-é.ogg|/ɤ/}} ([[Pinyin]]: e), which is present only in Standard Chinese.
-#: {{zh-alt-inline|{{l|zh|ㄮ}}, {{l|zh|ㄛ}} ''obsolete''}}
-# {{qualifier|Standard Chinese when pronounced with the neutral tone}} {{IPA|cmn|/ə/}} ([[Pinyin]]: e)
-# {{qualifier|when pronounced alone}} Sound {{audio-IPA|cmn|Zh-é.ogg|/ˀɤ/}} ([[Pinyin]]: e)
-# {{qualifier|some dialects, notably [[Hakka]] and [[Wenzhounese]]}} Sound {{IPA|cmn|/ə/}} ([[Pinyin]]: e).
 
 ===References===
 * 全國主要方言區方音對照表, Chinese Character Reform Commission, Beijing: ZhonghuaBook Company, 1954
@@ -30960,11 +31076,13 @@ Derived from {{m|zh|ㄛ}}({{cog|cmn|-}}: ''ō''), which was derived from {{m|zh|
 
 ==Northern Qiandong Miao==
 
-===Letter===
-# 33rd letter of the [[Appendix:Zhuyin script| Hmu Zhuyin alphabet]].
+===Pronunciation===
+* Phoneme: {{IPA|hea|/ə/}}
 
-===Phoneme===
-# sound {{IPA|hea|/ə/}} (Hutton): eh
+===Letter===
+{{head|hea|letter|tr=eh}} {{q|Hutton}}
+
+# {{ng|33rd letter of the [[Appendix:Zhuyin script|Hmu Zhuyin alphabet]]}}
 
 ===References===
 * Joakim Enwall, A Myth Become Reality Vol.1 (Stockholm, 1994) page 198
@@ -30975,7 +31093,8 @@ Page 143 Happisburgh: -------- begin text --------
 ==English==
 
 ===Pronunciation===
-* {{a|en|UK}} {{audio-IPA|en|En-Happisburgh.ogg|/ˈheɪzb(ə)ɹə/}}
+* {{IPA|en|/ˈheɪzb(ə)ɹə/|a=UK}}
+* {{audio|en|En-Happisburgh.ogg}}
 
 ===Proper noun===
 {{en-proper noun}}
@@ -30991,13 +31110,15 @@ Page 144 May-day sweep: -------- begin text --------
 {{was wotd|2012|May|1}}
 
 ===Alternative forms===
-* {{l|en|May Day sweep}}
+* {{alt|en|May Day sweep}}
 
 ===Etymology===
-[[May Day]] (workers' spring holiday) + [[sweep]] (shortening of [[chimney sweep]])
+From {{af|en|May Day<t:workers' spring holiday>|sweep<t:ellipsis of {{m|en|chimney sweep}}>}}.
 
 ===Pronunciation===
-* {{audio-IPA|en|en-us-May-day_sweep.ogg|/meɪ deɪ swiːp/}}
+* {{IPA|en|/meɪ deɪ swiːp/|a=RP}}
+* {{IPA|en|/meɪ deɪ swip/|a=US}}
+** {{audio|en|en-us-May-day_sweep.ogg|a=US}}
 * {{audio|en|en-au-May-day sweep.ogg|a=AU}}
 
 ===Noun===
@@ -32000,7 +32121,8 @@ Page 147 yonga: -------- begin text --------
 * {{alter|nys|yongka}}
 
 ===Pronunciation===
-{{audio-IPA|nys|Yonga.ogg|[joŋɡa]}}
+* {{IPA|nys|[joŋɡa]}}
+* {{audio|nys|Yonga.ogg}}
 
 ===Noun===
 {{head|nys|noun}}
@@ -32199,13 +32321,15 @@ Page 149 reître: -------- begin text --------
 * {{alt|fr|reitre||post-1990}}
 
 ===Etymology===
-From {{uder|fr|de|Reiter}}.
+{{bor+|fr|de|Reiter}}.
 
 ===Pronunciation===
 * {{fr-IPA}}
-** Toulouse, France: {{audio-IPA|fr|LL-Q150 (fra)-Lepticed7-reître.wav|[ˈʁɛː.tʁ̥ɐ]}}
-** Saguenay, Canada {{a|fr|formal}}: {{audio-IPA|fr|LL-Q150 (fra)-Simon Villeneuve-reître (ça rime avec « être »).wav|[ʁɛɪ̯tʀ̥]}}
-* {{a|fr|Canada}} {{IPA|fr|[ʁaɪ̯tʁ̥]|a=informal}}
+* {{IPA|fr|[ˈʁɛː.tʁ̥ɐ]|a=Southern France}}
+** {{audio|fr|LL-Q150 (fra)-Lepticed7-reître.wav|a=Toulouse}}
+* {{IPA|fr|[ʁɛɪ̯tʀ̥]|a=Quebec,formal}}
+** {{audio|fr|LL-Q150 (fra)-Simon Villeneuve-reître (ça rime avec « être »).wav|a=Quebec,Saguenay,formal}}
+* {{IPA|fr|[ʁaɪ̯tʁ̥]|a=Quebec,informal}}
 
 ===Noun===
 {{fr-noun|m}}
@@ -37315,11 +37439,11 @@ Page 155 اوږد: -------- begin text --------
 ==Pashto==
 
 ===Pronunciation===
-* {{audio-IPA|ps|اوږد.ogg|/uʐd̪/|a=Kandahar}}
-* {{audio-IPA|ps|اوږد-ګ.ogg|/uɡd̪/|a=Northern}}
-* {{audio-IPA|ps|اوږد-خوست.ogg|/wuɡd̪/|a=Khost}}
-* {{audio-IPA|ps|اوږد-کندز.ogg|/wuʒd̪/|a=Kunduz}}
-* {{audio-IPA|ps|اوږد-يسپزی-يوسفزی.ogg|/uˈɡəd̪/|a=Yusufzai}}
+* {{audio|ps|اوږد.ogg|IPA=/uʐd̪/|a=Kandahar}}
+* {{audio|ps|اوږد-ګ.ogg|IPA=/uɡd̪/|a=Northern}}
+* {{audio|ps|اوږد-خوست.ogg|IPA=/wuɡd̪/|a=Khost}}
+* {{audio|ps|اوږد-کندز.ogg|IPA=/wuʒd̪/|a=Kunduz}}
+* {{audio|ps|اوږد-يسپزی-يوسفزی.ogg|IPA=/uˈɡəd̪/|a=Yusufzai}}
 
 ===Adjective===
 {{ps-adj|g=m|tr=uǵd}}
@@ -37751,17 +37875,17 @@ Derived from {{m|zh|亥}} ({{cog|cmn|-}}: ''hài'') "12th earthly branch".
 {{zh-pron
 |m=āi
 }}
+* {{qualifier|general}} Phoneme: {{audio|cmn|Zh-ai.ogg|IPA=/aɪ̯/|text=ai|q=[[Pinyin]]}}
+* {{qualifier|when pronounced alone}} Phoneme: {{audio|cmn|Zh-ai.ogg|IPA=/ˀaɪ̯/|text=ai|q=[[Pinyin]]}}
+* {{qualifier|casual speech}} Phoneme: {{IPA|cmn|/ae/|/æɪ/}} {{q|[[Pinyin]]: ai}}
+* {{qualifier|casual speech when pronounced alone}} Phoneme: {{IPA|cmn|/ˀae/|/ˀæɪ/}} {{q|[[Pinyin]]: ai}}
+* {{qualifier|[[Hokkien]] when in a syllable that starts with a nasal consonant ([[ㄇ]], [[ㄋ]], [[ㄫ]], or [[ㄬ]])}} Phoneme: {{IPA|zh|/ãɪ̯̃/}} {{q|[[Pinyin]]: ai}}
 
 ===Letter===
+{{head|zh|letter}}
+
 # 26th letter of the [[Appendix:Zhuyin script|Zhuyin alphabet]]
 # 40th letter of the [[Appendix:Zhuyin script|extended Zhuyin alphabet]]
-
-====Phoneme====
-# {{qualifier|general}} Sound {{audio-IPA|cmn|Zh-ai.ogg|/aɪ̯/}} ([[Pinyin]]: ai), which is present in Chinese apart from [[Wu]] dialects.
-# {{qualifier|when pronounced alone}} Sound {{audio-IPA|cmn|Zh-ai.ogg|/ˀaɪ̯/}} ([[Pinyin]]: ai)
-# {{qualifier|casual speech}} Sound {{IPA|cmn|/ae/}} or {{IPA|cmn|/æɪ/}} ([[Pinyin]]: ai)
-# {{qualifier|casual speech when pronounced alone}} Sound {{IPA|cmn|/ˀae/}} or {{IPA|cmn|/ˀæɪ/}} ([[Pinyin]]: ai)
-# {{qualifier|[[Hokkien]] when in a syllable that starts with a nasal consonant ([[ㄇ]], [[ㄋ]], [[ㄫ]], or [[ㄬ]])}} Sound {{IPA|cmn|/ãɪ̯̃/}} ([[Pinyin]]: ai)
 
 ===References===
 * 全國主要方言區方音對照表, Chinese Character Reform Commission, Beijing: ZhonghuaBook Company, 1954
@@ -37769,11 +37893,13 @@ Derived from {{m|zh|亥}} ({{cog|cmn|-}}: ''hài'') "12th earthly branch".
 
 ==Northern Qiandong Miao==
 
-===Letter===
-# 35th letter of the [[Appendix:Zhuyin script| Hmu Zhuyin alphabet]].
+===Pronunciation===
+* Phoneme: {{IPA|hea|/ai/}}
 
-===Phoneme===
-# sound {{IPA|hea|/ai/}} (Hutton): ai
+===Letter===
+{{head|hea|letter|tr=ai}} {{q|Hutton}}
+
+# {{ng|35th letter of the [[Appendix:Zhuyin script|Hmu Zhuyin alphabet]]}}
 
 ===References===
 * Joakim Enwall, A Myth Become Reality Vol.1 (Stockholm, 1994) page 198
@@ -37809,16 +37935,16 @@ Derived from {{m|zh|幺}} ({{cog|cmn|-}}: ''yāo'') "tiny".
 {{zh-pron
 |m=āo
 }}
+* {{qualifier|general}} Phoneme: {{audio|cmn|Zh-ao.ogg|IPA=/ɑʊ̯/|text=ao|q=[[Pinyin]]}}
+* {{qualifier|when pronounced alone}} Phoneme: {{audio|cmn|Zh-ao.ogg|IPA=/ˀɑʊ̯/|text=ao|q=[[Pinyin]]}}
+* {{qualifier|[[Fuzhou]] variety, [[Shanghainese]]}} Phoneme: {{IPA|zh|/ɔ/}}
+* {{qualifier|[[Wu]]}} Phoneme: {{IPA|zh|/aɐ/}} {{q|[[Pinyin]]: ao}}
 
 ===Letter===
+{{head|zh|letter}}
+
 # 28th letter of the [[Appendix:Zhuyin script|Zhuyin alphabet]]
 # 43rd letter of the [[Appendix:Zhuyin script|extended Zhuyin alphabet]]
-
-====Phoneme====
-# {{qualifier|general}} Sound {{audio-IPA|cmn|Zh-ao.ogg|/ɑʊ̯/}} ([[Pinyin]]: ao), which is present in Chinese apart from [[Wu]] dialects and [[Fuzhou]] dialect.
-# {{qualifier|when pronounced alone}} Sound {{audio-IPA|cmn|Zh-ao.ogg|/ˀɑʊ̯/}} ([[Pinyin]]: ao)
-# {{qualifier|[[Fuzhou]] dialect, [[Shanghainese]]}} Sound {{IPA|cmn|/ɔ/}}
-# {{qualifier|[[Wu]]}} Sound {{IPA|cmn|/aɐ/}} ([[Pinyin]]: ao)
 
 ===References===
 * 全國主要方言區方音對照表, Chinese Character Reform Commission, Beijing: ZhonghuaBook Company, 1954
@@ -37826,11 +37952,13 @@ Derived from {{m|zh|幺}} ({{cog|cmn|-}}: ''yāo'') "tiny".
 
 ==Northern Qiandong Miao==
 
-===Letter===
-# 37th letter of the [[Appendix:Zhuyin script| Hmu Zhuyin alphabet]].
+===Pronunciation===
+* Phoneme: {{IPA|hea|/au/}}
 
-===Phoneme===
-# sound {{IPA|hea|/au/}} (Hutton): ao
+===Letter===
+{{head|hea|letter|tr=ao}} {{q|Hutton}}
+
+# {{ng|37th letter of the [[Appendix:Zhuyin script|Hmu Zhuyin alphabet]]}}
 
 ===References===
 * Joakim Enwall, A Myth Become Reality Vol.1 (Stockholm, 1994) page 198
@@ -37863,14 +37991,14 @@ Derived from the ancient character {{m|zh|𢎘}} ({{cog|cmn|-}}: ''hàn'').
 {{zh-pron
 |m=ān
 }}
+* {{qualifier|general}} Phoneme: {{audio|cmn|Zh-an1.ogg|IPA=/än/|text=an|q=[[Pinyin]]}}
+* {{qualifier|when pronounced alone}} Phoneme: {{audio|cmn|Zh-an1.ogg|IPA=/ˀän/|text=an|q=[[Pinyin]]}}
 
 ===Letter===
+{{head|zh|letter}}
+
 # 30th letter of the [[Appendix:Zhuyin script|Zhuyin alphabet]]
 # 50th letter of the [[Appendix:Zhuyin script|extended Zhuyin alphabet]]
-
-====Phoneme====
-# {{qualifier|general}} Sound {{audio-IPA|cmn|Zh-an1.ogg|/än/}} ([[Pinyin]]: an), which is present in Chinese apart from [[Wu]] dialects.
-# {{qualifier|when pronounced alone}} Sound {{audio-IPA|cmn|Zh-an1.ogg|/ˀän/}} ([[Pinyin]]: an)
 
 ===References===
 * 全國主要方言區方音對照表, Chinese Character Reform Commission, Beijing: ZhonghuaBook Company, 1954
@@ -37878,11 +38006,13 @@ Derived from the ancient character {{m|zh|𢎘}} ({{cog|cmn|-}}: ''hàn'').
 
 ==Northern Qiandong Miao==
 
-===Letter===
-# 39th letter of the [[Appendix:Zhuyin script| Hmu Zhuyin alphabet]].
+===Pronunciation===
+* Phoneme: {{IPA|hea|/an/}}
 
-===Phoneme===
-# sound {{IPA|hea|/an/}} (Hutton): an
+===Letter===
+{{head|hea|letter|tr=an}} {{q|Hutton}}
+
+# {{ng|39th letter of the [[Appendix:Zhuyin script|Hmu Zhuyin alphabet]]}}
 
 ===References===
 * Joakim Enwall, A Myth Become Reality Vol.1 (Stockholm, 1994) page 198
@@ -37915,14 +38045,14 @@ Derived from {{m|zh|𠃊}}, an ancient form of {{m|zh|隱}} ({{cog|cmn|-}}: ''y�
 {{zh-pron
 |m=ēn
 }}
+* {{qualifier|general}} Phoneme: {{audio|cmn|Zh-en.ogg|IPA=/ən/|text=en|q=[[Pinyin]]}}
+* {{qualifier|when pronounced alone}} Phoneme: {{audio|cmn|Zh-en.ogg|IPA=/ˀən/|text=en|q=[[Pinyin]]}}
 
 ===Letter===
+{{head|zh|letter}}
+
 # 31st letter of the [[Appendix:Zhuyin script|Zhuyin alphabet]]
 # 51st letter of the [[Appendix:Zhuyin script|extended Zhuyin alphabet]]
-
-====Phoneme====
-# {{qualifier|general}} Sound {{audio-IPA|cmn|Zh-en.ogg|/ən/}} ([[Pinyin]]: en), which is commonly present in Chinese.
-# {{qualifier|when pronounced alone}} Sound {{audio-IPA|cmn|Zh-en.ogg|/ˀən/}} ([[Pinyin]]: en)
 
 ===References===
 * 全國主要方言區方音對照表, Chinese Character Reform Commission, Beijing: ZhonghuaBook Company, 1954
@@ -37930,11 +38060,13 @@ Derived from {{m|zh|𠃊}}, an ancient form of {{m|zh|隱}} ({{cog|cmn|-}}: ''y�
 
 ==Northern Qiandong Miao==
 
-===Letter===
-# 40th letter of the [[Appendix:Zhuyin script| Hmu Zhuyin alphabet]].
+===Pronunciation===
+* Phoneme: {{IPA|hea|/ən/}}
 
-===Phoneme===
-# sound {{IPA|hea|/ən/}} (Hutton): en
+===Letter===
+{{head|hea|letter|tr=en}} {{q|Hutton}}
+
+# {{ng|40th letter of the [[Appendix:Zhuyin script|Hmu Zhuyin alphabet]]}}
 
 ===References===
 * Joakim Enwall, A Myth Become Reality Vol.1 (Stockholm, 1994) page 198
@@ -38706,9 +38838,9 @@ Page 165 cinquante-cinq: -------- begin text --------
 
 ===Pronunciation===
 * {{fr-IPA|cinquante-cinque|a=France}}
-** {{audio-IPA|fr|LL-Q150 (fra)-Arthur Crbz-cinquante-cinq.wav|[sæ̃.kɒ̃t.ˈsæ̃ːk]}}
-* {{a|fr|Southern France}} and {{IPA|fr|[sẽ.kãt.ˈsẽːk]|a=Quebec}}
-** Toulouse, France: {{audio-IPA|fr|LL-Q150 (fra)-Lepticed7-cinquante-cinq.wav|[ˈsẽ.kãt.ˈsẽːk]}}
+** {{audio|fr|LL-Q150 (fra)-Arthur Crbz-cinquante-cinq.wav|IPA=[sæ̃.kɒ̃t.ˈsæ̃ːk]}}
+* {{IPA|fr|[sẽ.kãt.ˈsẽːk]|a=Southern France,Quebec}}
+** {{audio|fr|LL-Q150 (fra)-Lepticed7-cinquante-cinq.wav|IPA=[ˈsẽ.kãt.ˈsẽːk]|a=Toulouse}}
 
 ===Numeral===
 {{fr-card-inv}}
@@ -38719,7 +38851,7 @@ Page 166 tolom·maˀah: -------- begin text --------
 ==Central Sierra Miwok==
 
 ===Pronunciation===
-{{audio-IPA|csm|Csm-tolom·maˀah.flac|/tolomʔmʔah/}}
+* {{audio|csm|Csm-tolom·maˀah.flac|IPA=/tolomʔmʔah/}}
 
 ===Noun===
 {{head|csm|noun}}
@@ -38737,7 +38869,7 @@ Page 167 hukúˀme-: -------- begin text --------
 ==Central Sierra Miwok==
 
 ===Pronunciation===
-{{audio-IPA|csm|Csm-hukúˀme-.flac|/hukˈuʔmeː/}}
+* {{audio|csm|Csm-hukúˀme-.flac|IPA=/hukˈuʔmeː/}}
 
 ===Noun===
 {{head|csm|noun}}
@@ -38761,7 +38893,7 @@ Page 168 User:Benwing2/black: -------- begin text --------
 
 ===Pronunciation===
 * {{enPR|blăk}}, {{IPA|en|/blæk/}}
-* {{a|en|UK}} {{audio-IPA|en|en-uk-black.ogg|/blak/}}
+* {{audio|en|en-uk-black.ogg|IPA=[blak]|a=UK}}
 * {{rhymes|en|æk}}
 
 ===Etymology===
@@ -39750,7 +39882,7 @@ Page 169 User:Benwing2/black-opt: -------- begin text --------
 
 ===Pronunciation===
 * {{enPR|blăk}}, {{IPA|en|/blæk/}}
-* {{a|en|UK}} {{audio-IPA|en|en-uk-black.ogg|/blak/}}
+* {{audio|en|en-uk-black.ogg|IPA=[blak]|a=UK}}
 * {{rhymes|en|æk}}
 
 ===Etymology===
@@ -40777,11 +40909,11 @@ Bopomofo letter {{m|zh|ㄋ}} with a vertical line ({{m|zh|丨}}), which represen
 ===Letter===
 {{head|cmn|letter|sc=Bopo}}
 
-# {{q|rare|archaic}} A letter of the [[Appendix:Zhuyin script|Zhuyin alphabet]] representing the sound {{IPA|cmn|/n̩/}} ([[Pinyin]]: n)
+# {{q|rare|archaic}} A letter of the [[Appendix:Zhuyin script|Zhuyin alphabet]] representing the sound {{IPA|cmn|/n̩/}} {{q|[[Pinyin]]: n}}
 #: {{zh-alt-inline|{{l|zh|ㄋ}} }}
 
 ====Usage notes====
-This representation of a character appears mostly in earlier works, most notably {{zh-l|國語辭典}} [Dictionary of the National Language], but still appearing in some Taiwanese texts.
+* This representation of a character appears mostly in earlier works, most notably {{zh-l|國語辭典}} [Dictionary of the National Language], but still appearing in some Taiwanese texts.
 
 ===References===
 * 全國主要方言區方音對照表, Chinese Character Reform Commission, Beijing: ZhonghuaBook Company, 1954
@@ -40829,8 +40961,8 @@ Page 174 hausförmig: -------- begin text --------
 From {{suffix|de|Haus|-förmig|gloss1=house|gloss2=shaped}}.
 
 ===Pronunciation===
-* {{audio-IPA|de|De-hausförmig.ogg|/ˈhaʊ̯sˌfœʁmɪç/}}
-* {{audio-IPA|de|De-hausförmig2.ogg|/ˈhaʊ̯sˌfœʁmɪk/}}
+* {{audio|de|De-hausförmig.ogg|IPA=/ˈhaʊ̯sˌfœʁmɪç/}}
+* {{audio|de|De-hausförmig2.ogg|IPA=/ˈhaʊ̯sˌfœʁmɪk/}}
 * {{hyphenation|de|haus|för|mig}}
 
 ===Adjective===
@@ -40971,7 +41103,7 @@ from {{bor|omx|pi|ရာမည}}.
 {{pi-alt|Latn=rāmañña}}
 
 ===Pronunciation===
-* {{audio-IPA|pi|Mnw-ရာမည၊ရးမည(omx).wav|/riəmmaɲĕəʔ/|dial=Mon Pali}}
+* {{audio|pi|Mnw-ရာမည၊ရးမည(omx).wav|IPA=/riəmmaɲĕəʔ/|a=Mon Pali}}
 
 ===Noun===
 {{head|pi|noun}}
@@ -40993,7 +41125,7 @@ Page 180 sarīraṃ: -------- begin text --------
 {{pi-alt|Latn=sarīraṃ}}
 
 ===Pronunciation===
-* {{lb|pi|Mon}} {{audio-IPA|pi|သရဳရံ body.ogg|[saˀ rɔe yɔŋ]|dial=Mon Pali}} (See [[w:Mon language#Phonology|Mon phonology]] for IPA key.)<!-- IPA is Provisional -->
+* {{audio|pi|သရဳရံ body.ogg|IPA=[saˀ rɔe yɔŋ]|a=Mon Pali}} (See [[w:Mon language#Phonology|Mon phonology]] for IPA key.)<!-- IPA is Provisional -->
 
 ===Noun===
 {{head|pi|noun form}}
@@ -41009,7 +41141,7 @@ Page 181 ဂျပါန်: -------- begin text --------
 Borrowed from {{bor|mnw|my|ဂျပန်}} or {{bor|mnw|en|Japan}}.
 
 ===Pronunciation===
-* {{audio-IPA|mnw|Mnw-ဂျပါန်-2.oga|/capạ̀n/}}
+* {{audio|mnw|Mnw-ဂျပါန်-2.oga|IPA=/capạ̀n/}}
 
 ===Proper noun===
 {{head|mnw|proper noun|tr=capạ̀n}}
@@ -41036,7 +41168,7 @@ Borrowed from {{bor|mnw|my|ဂျပန်}} or {{bor|mnw|en|Japan}}.
 {{bor+|pi|mnw|ဂျပါန်}}, {{bor|pi|my|ဂျပန်}} or {{bor|pi|en|Japan}}.
 
 ===Pronunciation===
-* {{audio-IPA|pi|ဂျပါန်pi.ogg|/cepạ̀n/|dial=Mon Pali}} (See [[w:Mon Phonology|Mon Phonology]] for an IPA key.)
+* {{audio|pi|ဂျပါန်pi.ogg|IPA=/cepạ̀n/|a=Mon Pali}} (See [[w:Mon Phonology|Mon Phonology]] for an IPA key.)
 
 ===Proper noun===
 {{pi-proper noun|tr=+}}
@@ -41067,7 +41199,7 @@ Page 182 sīsaṃ: -------- begin text --------
 {{pi-alt|Latn=sīsaṃ}}
 
 ===Pronunciation===
-* {{lb|pi|Mon}} {{audio-IPA|pi|သဳသံ head.ogg|[sɔesɔŋ]|dial=Mon Pali}} (for a key to the IPA, see [[w:Mon phonology|Mon phonology]])
+* {{audio|pi|သဳသံ head.ogg|IPA=[sɔesɔŋ]|a=Mon Pali}} (for a key to the IPA, see [[w:Mon phonology|Mon phonology]])
 
 ===Noun===
 {{head|pi|noun form}}
@@ -41085,7 +41217,7 @@ Page 184 ဗုဒ္ဓံ: -------- begin text --------
 {{pi-alt|Latn=buddhaṃ}}
 
 ===Pronunciation===
-* {{q|Mon}} {{audio-IPA|pi|ဗုဒ္ဓံmnw+pi.wav|/bṵtʰɔŋ/|dial=Mon Pali}}
+* {{audio|pi|ဗုဒ္ဓံmnw+pi.wav|IPA=/bṵtʰɔŋ/|a=Mon Pali}}
 
 ===Adjective===
 {{head|pi|adjective form|tr=-}}
@@ -41111,7 +41243,7 @@ Page 185 သာသန: -------- begin text --------
 {{pi-alt|Latn=sāsana}}
 
 ===Pronunciation===
-* {{audio-IPA|pi|သာသန.wav|/sasaʔnɛ̤ʔ/|dial=Mon Pali}}
+* {{audio|pi|သာသန.wav|IPA=/sasaʔnɛ̤ʔ/|a=Mon Pali}}
 
 ===Noun===
 {{pi-noun|n}}
@@ -41155,7 +41287,7 @@ Page 188 ဝင်္က: -------- begin text --------
 {{pi-alt|Latn=vaṅka}}
 
 ===Pronunciation===
-* {{audio-IPA|pi|Mnw-ဝၚ်္က+pi.wav|/liəŋka/|dial=Mon Pali}}
+* {{audio|pi|Mnw-ဝၚ်္က+pi.wav|IPA=/liəŋka/|a=Mon Pali}}
 
 ===Noun===
 {{head|pi|noun}}
@@ -41194,7 +41326,7 @@ From {{bor|en|ktz|Gǃkúnǁʼhòmdímà||the aardvark girl}}.
 From {{com|ktz|gǃkún|t1=aardvark|ǁʼhòm mà|t2=young woman|dí|pos3=feminine suffix}}.
 
 ===Pronunciation===
-* {{audio-IPA|ktz|Gǃkunǁ'homdima.ogg|/ᶢᵏǃ͡χʼṹ ᵑ̊ǁʰòmdí mà/}}
+* {{audio|ktz|Gǃkunǁ'homdima.ogg|IPA=/ᶢᵏǃ͡χʼṹ ᵑ̊ǁʰòmdí mà/}}
 
 ===Proper noun===
 {{head|ktz|proper noun}}
@@ -41229,7 +41361,7 @@ From {{bor|en|ktz|gǃòʼé ǃhú||oryx horn}}.
 From {{com|ktz|gǃòʼé|t1=oryx|ǃhú|t2=horn}}.
 
 ===Pronunciation===
-* {{audio-IPA|ktz|Gǃo'e ǃHu.ogg|/ᶢǃòˀé ǃʰú/}}
+* {{audio|ktz|Gǃo'e ǃHu.ogg|IPA=/ᶢǃòˀé ǃʰú/}}
 
 ===Proper noun===
 {{head|ktz|proper noun}}
@@ -41252,7 +41384,7 @@ Page 195 သုသာနံ: -------- begin text --------
 {{pi-alt|Latn=susāna}}
 
 ===Pronunciation===
-* {{audio-IPA|pi|Mnw-သုသာနံ(Mon Pali).wav|/saoʔsanɑŋ/|dial=Mon Pali}}
+* {{audio|pi|Mnw-သုသာနံ(Mon Pali).wav|IPA=/saoʔsanɑŋ/|a=Mon Pali}}
 
 ===Noun===
 {{pi-noun|n}}
