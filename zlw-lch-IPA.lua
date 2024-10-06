@@ -16,13 +16,18 @@ local ulower = m_str_utils.lower
 local uupper = mw.ustring.upper
 local usub = mw.ustring.sub
 
+local OVERTIE = u(0x361) -- COMBINING DOUBLE INVERTED BREVE
+
+-- In cases where there are two possible stresses (e.g. in words ending in -ika/-yka), we put ALTSTRESS where both
+-- stresses can go, and handle this later in multiword().
+local ALTSTRESS = u(0xFFF0)
 -- Lect data later retrieved in the module.
 local data
 
 -- FIXME: Implement optional assimilation across word boundaries.
 local assimilate_across_word_boundaries = false
 
--- version of rsubn() that discards all but the first return value
+-- Version of rsubn() that discards all but the first return value.
 local function rsub(term, foo, bar)
 	local retval = rsubn(term, foo, bar)
 	return retval
@@ -39,7 +44,34 @@ local function rsub_repeatedly(term, foo, bar)
 	end
 end
 
-local OVERTIE = u(0x361) -- COMBINING DOUBLE INVERTED BREVE
+-- Flat-map a function `fun` over `items`. This is like `map` over a sequence followed by `flatten`, i.e. the function
+-- must itself return a sequence and all of the returned sequences are flattened into a single sequence.
+local function flatmap(items, fun)
+	local new = {}
+	for _, item in ipairs(items) do
+		local results = fun(item)
+		for _, result in ipairs(results) do
+			m_table.insertIfNot(new, result)
+		end
+	end
+	return new
+end
+
+-- Combine two sets of qualifiers, either of which may be nil or a list of qualifiers. Remove duplicate qualifiers.
+-- Return value is nil or a list of qualifiers.
+local function combine_qualifiers(qual1, qual2)
+	if not qual1 then
+		return qual2
+	end
+	if not qual2 then
+		return qual1
+	end
+	local qualifiers = m_table.deepcopy(qual1)
+	for _, qual in ipairs(qual2) do
+		m_table.insertIfNot(qualifiers, qual)
+	end
+	return qualifiers
+end
 
 local function split_on_comma(term)
 	if not term then
@@ -260,10 +292,12 @@ end
 	so the reason why the transcriptions are multiple is only because of the -yka alternating stress
 	et sim. This only accepts single-word terms. Multiword terms are handled by multiword().
 --]]
-local function phonemic(txt, do_hyph, lang, is_prep, period, lect)
-	local ante = 0
+local function single_word(txt, do_hyph, lang, is_prep, period, lect)
+	-- This is the number of syllables before the penultimate syllable onto which to add the stress.
+	local antepenultimate_stress = 0
 	local unstressed = is_prep or false
-	local colloquial = true
+	-- If antepenultimate_stress > 0, add a second stress onto the penult.
+	local double_stress = true
 
 	function tsub(s, r)
 		local c
@@ -351,25 +385,25 @@ local function phonemic(txt, do_hyph, lang, is_prep, period, lect)
 		unstressed = true
 		txt = txt:sub(2)
 	elseif txt:find("^%^+") then
-		-- The symbol <^> before a word indicates it is stressed on the ante-penult,
-		-- <^^> on the ante-ante-penult, etc.
-		ante = txt:gsub("(%^).*", "%1"):len()
-		txt = txt:sub(ante + 1)
+		-- The symbol <^> before a word indicates it is stressed on the antepenult,
+		-- <^^> on the ante-antepenult, etc.
+		antepenultimate_stress = txt:gsub("(%^).*", "%1"):len()
+		txt = txt:sub(antepenultimate_stress + 1)
 	elseif txt:find("^%+") then
 		-- The symbol <+> indicates the word is stressed regularly on the penult. This is useful
 		-- for avoiding the following checks to come into place.
 		txt = txt:sub(2)
 	else
 		if tfind(".+[łlb][iy].+") then
-			-- Some words endings trigger stress on the ante-penult or ante-ante-penult regularly.
+			-- Some words endings trigger stress on the antepenult or ante-antepenult regularly.
 			if tfind("liśmy$") or tfind("[bł]yśmy$") or tfind("liście$") or tfind("[bł]yście$") then
-				ante = 2
+				antepenultimate_stress = 2
 			elseif tfind("by[mś]?$") and not tfind("ła?by[mś]?$") then
-				ante = 1
-				colloquial = false
+				antepenultimate_stress = 1
+				double_stress = false
 			end
 		end
-		-- Recognise <-yka> and its declined form and automatically assign it an antepenult stress.
+		-- Recognise <-yka> and its declined form and automatically assign it an antepenultimate stress.
 		if tfind(".+[yi][kc].+") and lect == nil then
 			local endings = lg {
 				{ "k[aąęio]", "ce", "kach", "kom" },
@@ -379,7 +413,7 @@ local function phonemic(txt, do_hyph, lang, is_prep, period, lect)
 			}
 			for _, v in ipairs(endings) do
 				if tfind(("[yi]%s$"):format(v)) then
-					ante = 1
+					antepenultimate_stress = 1
 					break
 				end
 			end
@@ -389,7 +423,7 @@ local function phonemic(txt, do_hyph, lang, is_prep, period, lect)
 				local endings = { "[ąáéo]", "[ée]j", "[áo]m", "ach" }
 				for _, v in ipairs(endings) do
 					if tfind(("[yi]j%s$"):format(v)) then
-						ante = 1
+						antepenultimate_stress = 1
 					end
 				end
 			end
@@ -820,16 +854,16 @@ local function phonemic(txt, do_hyph, lang, is_prep, period, lect)
 	tsub("U", "w")
 
 	-- Handles stress.
-	local function add_stress(stressed_syllable, force_initial_stress)
+	local function add_stress(penultimate_offset, force_initial_stress)
 		local stressed_txt
 		if force_initial_stress or (lect and data.lects[lect].initial_stress) then
 			-- Deals with initially stressed lects.
 			stressed_txt = "ˈ" .. txt
 		else
-			-- Accent elsewhere, usually ante-penult although can vary depending on
-			-- the <stressed_syllable> value, counting backwards.
+			-- Accent elsewhere, usually antepenult although can vary depending on
+			-- the <penultimate_offset> value, counting backwards.
 			local regex = ""
-			for _ = 0, stressed_syllable do
+			for _ = 0, penultimate_offset do
 				regex = regex .. "[^.]+%."
 			end
 			stressed_txt = rsub(txt, "%.(" .. regex .. "[^.]+)$", "ˈ%1")
@@ -837,13 +871,15 @@ local function phonemic(txt, do_hyph, lang, is_prep, period, lect)
 			-- e.g. in monosyllables.
 			if not stressed_txt:find("ˈ") then
 				stressed_txt = "ˈ" .. stressed_txt
+			elseif penultimate_offset > 0 and double_stress then
+				stressed_txt = rsub("ˈ(.+)%.([^.]+%.[^.]+)$", ALTSTRESS .. "%1" .. ALTSTRESS .. "%2", stressed_txt)
 			end
 		end
 		return stressed_txt
 	end
 
 	local should_stress = not (unstressed or txt:find("ˈ"))
-	local prons = should_stress and add_stress(ante) or txt
+	local prons = should_stress and add_stress(antepenultimate_stress) or txt
 
 	if is_prep then
 		prons = prons .. "$"
@@ -878,10 +914,10 @@ local function phonemic(txt, do_hyph, lang, is_prep, period, lect)
 				end
 			end
 		else
-			if should_stress and ante > 0 and colloquial then
-				local stressed_antepenult = add_stress(0)
-				if stressed_antepenult ~= prons then
-					prons = { prons, stressed_antepenult }
+			if should_stress and antepenultimate_stress > 0 and double_stress then
+				local stressed_penult = add_stress(0)
+				if stressed_penult ~= prons then
+					prons = { prons, stressed_penult }
 				end
 			end
 		end
@@ -908,14 +944,6 @@ local function phonemic(txt, do_hyph, lang, is_prep, period, lect)
 		return prons
 	end
 
-end
-
--- TODO: This might slow things down if used too much?
-local function table_insert_if_absent(t, s)
-	for _, v in ipairs(t) do
-		if v == s then return end
-	end
-	table.insert(t, s)
 end
 
 -- Returns rhyme from a transcription.
@@ -981,7 +1009,7 @@ local function multiword(term, lang, period, lect)
 						break
 					end
 				end
-				v = phonemic(word, false, lang, is_prep, period, lect)
+				v = single_word(word, false, lang, is_prep, period, lect)
 			end
 			local sep = "%s %s"
 			if p == nil then
@@ -1029,7 +1057,7 @@ local function multiword(term, lang, period, lect)
 		return p
 
 	else
-		return phonemic(term, lect ~= "mpl", lang, false, period, lect)
+		return single_word(term, lect ~= "mpl", lang, false, period, lect)
 	end
 
 end
@@ -1194,7 +1222,7 @@ function export.get_lect_pron_info(terms, pagename, paramname, lang, lect, perio
 			local bracketed_pron_no_syldivs = bracketed_pron:gsub("%.", "")
 			local merged_qualifiers = term.q or {}
 			if additional_qualifier then
-				merged_qualifiers = require(table_module).shallowcopy(merged_qualifiers)
+				merged_qualifiers = m_table.shallowcopy(merged_qualifiers)
 				table.insert(merged_qualifiers, additional_qualifier)
 			end
 			local ret = {
@@ -1255,7 +1283,7 @@ function export.get_lect_pron_info(terms, pagename, paramname, lang, lect, perio
 		if hyph then
 			do_hyph = true
 			if hyph:gsub("%.", "") == pagename then
-				table_insert_if_absent(hyph_list, hyph)
+				m_table.insertIfNot(hyph_list, hyph)
 			end
 		end
 	end
