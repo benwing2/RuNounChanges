@@ -8,7 +8,7 @@ local rmatch = mw.ustring.match
 
 local m_table = require("Module:table")
 local com = require("Module:es-common")
-local inflection_utilities_module = "Module:User:Benwing2/inflection utilities"
+local inflection_utilities_module = "Module:inflection utilities"
 local headword_module = "Module:headword"
 local romut_module = "Module:romance utilities"
 local es_verb_module = "Module:es-verb"
@@ -156,7 +156,7 @@ local function check_all_missing(data, forms, plpos)
 		end
 		if form then
 			local title = mw.title.new(form)
-			if title and not title.exists then
+			if title and not title:getContent() then
 				table.insert(data.categories, langname .. " " .. plpos .. " with red links in their headword lines")
 			end
 		end
@@ -982,13 +982,6 @@ pos_functions["verbs"] = {
 			table.insert(data.inflections, {label = "third-person plural only"})
 		end
 
-		local function expand_footnotes_and_references(footnotes)
-			if not footnotes then
-				return nil
-			end
-			return require("Module:inflection utilities").fetch_headword_qualifiers_and_references(footnotes)
-		end
-
 		do_verb_form(args.pres, args.pres_qual, preses, skip_pres_if_empty)
 		do_verb_form(args.pret, args.pret_qual, prets)
 		do_verb_form(args.part, args.part_qual, parts)
@@ -1010,7 +1003,8 @@ pos_functions["verbs"] = {
 		) then
 			data.heads = {}
 			for _, lemma_obj in ipairs(alternant_multiword_spec.forms.infinitive_linked) do
-				local quals, refs = expand_footnotes_and_references(lemma_obj.footnotes)
+				local quals, refs = require(inflection_utilities_module).
+					convert_footnotes_to_qualifiers_and_references(lemma_obj.footnotes)
 				table.insert(data.heads, {term = lemma_obj.form, q = quals, refs = refs})
 			end
 		end
