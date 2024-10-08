@@ -43,7 +43,15 @@ local SUBPAGENAME = mw.title.getCurrentTitle().subpageText
 
 -- Disable tracking on heavy pages to save time.
 local pages_where_tracking_is_disabled = {
+	-- pages that consistently hit timeouts
 	["a"] = true,
+	-- pages that sometimes hit timeouts
+	["de"] = true,
+	["i"] = true,
+	["и"] = true,
+	["山"] = true,
+	["子"] = true,
+	["月"] = true,
 }
 
 -- Add tracking category for PAGE. The tracking category linked to is [[Wiktionary:Tracking/labels/PAGE]].
@@ -700,19 +708,6 @@ function export.process_raw_labels(data)
 end
 
 --[==[
-Older entry point, equivalent to {process_raw_labels()}. Do not use in new code. FIXME: Convert callers.
-]==]
-function export.get_label_list_info(raw_labels, lang, nocat, already_seen, notrack)
-	return export.process_raw_labels {
-		labels = raw_labels,
-		lang = lang,
-		nocat = nocat,
-		already_seen = already_seen,
-		notrack = notrack,
-	}
-end
-
---[==[
 Split a comma-separated string of raw labels and process each label to get a list of objects suitable for passing to
 {format_processed_labels()}. Each object returned is of the format returned by {get_label_info()}. This is equivalent to
 calling {split_labels_on_comma()} followed by {process_raw_labels()}. On input, `data` is an object with the following
@@ -781,9 +776,7 @@ function export.format_processed_labels(data)
 
 	for _, label in ipairs(labels) do
 		omit_preComma = omit_postComma
-		omit_postComma = false
 		omit_preSpace = omit_postSpace
-		omit_postSpace = false
 
 		local raw_text_omit_before = label.raw_text == "middle" or label.raw_text == "end"
 		local raw_text_omit_after = label.raw_text == "middle" or label.raw_text == "begin"
@@ -805,7 +798,12 @@ function export.format_processed_labels(data)
 
 	for i, labelinfo in ipairs(labels) do
 		local label
-		if labelinfo.label == "" then
+		-- Need to check for 'not raw_text' here because blank labels may legitimately occur as raw text if a double
+		-- angle bracket spec occurs at the beginning of a label. In this case we've already taken into account the
+		-- context and don't want to leave out a preceding comma and space e.g. in a case like
+		-- {{lb|en|rare|<<dialect>> or <<eye dialect>>}}. FIXME: We should reconsider whether we need this special case
+		-- at all.
+		if labelinfo.label == "" and not labelinfo.raw_text then
 			label = ""
 		else
 			label = (labelinfo.omit_comma and "" or '<span class="ib-comma">,</span>') ..
