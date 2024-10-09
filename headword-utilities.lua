@@ -1,7 +1,7 @@
 local export = {}
 
 local table_module = "Module:table"
-local pattern_utilities_module = "Module:pattern utilities"
+local string_utilities_module = "Module:pattern utilities"
 local parse_utilities_module = "Module:parse utilities"
 
 local rfind = mw.ustring.find
@@ -16,9 +16,112 @@ local function rsub(term, foo, bar)
 end
 
 
+local param_mods = {
+	-- [[Module:headword]] expects part genders in `.genders`.
+	g = {item_dest = "genders", sublist = true},
+	id = {},
+	q = {type = "qualifier"},
+	qq = {type = "qualifier"},
+	l = {type = "labels"},
+	ll = {type = "labels"},
+	-- [[Module:headword]] expects part references in `.refs`.
+	ref = {item_dest = "refs", type = "references"},
+}
+
+function export.parse_term_with_modifiers(data)
+	local paramname, val, frob = data.paramname, data.val, data.frob
+	local function generate_obj(term, parse_err)
+		if frob then
+			term = frob(term, parse_err)
+		end
+		return {term = term}
+	end
+
+	if val:find("<") then
+		return require(parse_utilities_module).parse_inline_modifiers(val, {
+			paramname = paramname,
+			param_mods = param_mods,
+			generate_obj = generate_obj,
+		})
+	else
+		return generate_obj(val)
+	end
+end
+
+function export.parse_term_list_with_modifiers(data)
+	local paramname, list, frob = data.paramname, data.list, data.frob
+	local qualparams = data.qualparams
+	local first, restpref
+	if type(paramname) == "table" then
+		first = paramname[1]
+		restpref = paramname[2]
+	else
+		first = paramname
+		restpref = paramname
+	end
+	for i, val in ipairs(list) do
+		list[i] = export.parse_term_with_modifiers {
+			paramname = i == 1 and first or restpref .. i,
+			val = val,
+			frob = frob
+		}
+		if qualparams and qualparams[i] then
+			list[i].q = qualparams[i]
+		end
+	end
+	return list
+end
+
+
+--[==[
+Combine two sets of qualifiers or labels. If either is {nil}, just return the other, and if both are {nil}, return
+{nil}.
+]==]
+function export.combine_qualifiers_or_labels(quals1, quals2)
+	if not quals1 and not quals2 then
+		return nil
+	end
+	if not quals1 then
+		return quals2
+	end
+	if not quals2 then
+		return quals1
+	end
+	local m_table = require(table_module)
+	local combined = m_table.shallowcopy(quals1)
+	for _, note in ipairs(quals2) do
+		m_table.insertIfNot(combined, note)
+	end
+	return combined
+end
+
+
+function export.combine_termobj_qualifiers_labels(destobj, srcobj)
+	destobj.q = export.combine_qualifiers_or_labels(destobj.q, srcobj.q)
+	destobj.qq = export.combine_qualifiers_or_labels(destobj.qq, srcobj.qq)
+	destobj.l = export.combine_qualifiers_or_labels(destobj.l, srcobj.l)
+	destobj.ll = export.combine_qualifiers_or_labels(destobj.ll, srcobj.ll)
+	destobj.a = export.combine_qualifiers_or_labels(destobj.a, srcobj.a)
+	destobj.aa = export.combine_qualifiers_or_labels(destobj.aa, srcobj.aa)
+	return destobj
+end
+
+
+function export.termobj_has_qualifiers_or_labels(obj)
+	return obj.q and obj.q[1] or obj.qq and obj.qq[1] or obj.l and obj.l[1] or obj.ll and obj.ll[1] or
+		obj.a and obj.a[1] or obj.aa and obj.aa[1]
+end
+
+
+function export.glossary_link(entry, text)
+	text = text or entry
+	return "[[Appendix:Glossary#" .. entry .. "|" .. text .. "]]"
+end
+
+
 local function link_hyphen_split_component(word, data)
 	if data.link_hyphen_split_component then
-		return  data.link_hyphen_split_component(word)
+		return data.link_hyphen_split_component(word)
 	else
 		return "[[" .. word .. "]]"
 	end
@@ -195,6 +298,7 @@ to split, and the return value should be the split and linked word.
 --
 -- `no_split_apostrophe_words` and `include_hyphen_prefixes` allow for special-case handling of particular words and
 -- are as described in the comment above add_single_word_links().
+]=]
 function export.add_links_to_multiword_term(term, data)
 	if rfind(term, "[%[%]]") then
 		return term
@@ -316,12 +420,12 @@ function export.apply_link_modifiers(linked_term, modifier_spec)
 				error(("Subterm '%s' in modifier spec '%s' cannot have brackets in it"):format(
 					escape_wikicode(subterm), escape_wikicode(modspec)))
 			end
-			local patut = require(pattern_utilities_module)
-			local escaped_subterm = patut.pattern_escape(subterm)
+			local strutil = require(string_utilities_module)
+			local escaped_subterm = strutil.pattern_escape(subterm)
 			local subterm_re = "%[%[" .. escaped_subterm:gsub("(%%?[ '%-])", "%%]*%1%%[*") .. "%]%]"
 			local expanded_dest
 			if dest:find("~") then
-				expanded_dest = dest:gsub("~", patut.replacement_escape(subterm))
+				expanded_dest = dest:gsub("~", strutil.replacement_escape(subterm))
 			else
 				expanded_dest = dest
 			end
@@ -339,7 +443,7 @@ function export.apply_link_modifiers(linked_term, modifier_spec)
 				subterm_replacement = "[[" .. expanded_dest .. "|" .. subterm .. "]]"
 			end
 
-			local replaced_linked_term = rsub(linked_term, subterm_re, patut.replacement_escape(subterm_replacement))
+			local replaced_linked_term = rsub(linked_term, subterm_re, strutil.replacement_escape(subterm_replacement))
 			if replaced_linked_term == linked_term then
 				error(("Subterm '%s' could not be located in %slinked expression %s, or replacement same as subterm"):format(
 					subterm, j > 1 and "intermediate " or "", escape_wikicode(linked_term)))
