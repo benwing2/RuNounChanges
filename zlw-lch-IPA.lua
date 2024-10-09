@@ -1,10 +1,10 @@
 local export = {}
 
 local m_str_utils = require("Module:string utilities")
+local m_table = require("Module:table")
 local audio_module = "Module:audio"
 local links_module = "Module:links"
 local parse_utilities_module = "Module:parse utilities"
-local table_module = "Module:table"
 
 local u = m_str_utils.char
 local rfind = m_str_utils.find
@@ -286,17 +286,19 @@ local function parse_homophones(arg, paramname)
 end
 
 
---[[
-	As can be seen from the last lines of the function, this returns a table of transcriptions,
-	and if do_hyph, also a string being the hyphenation. These are based on a single spelling given,
-	so the reason why the transcriptions are multiple is only because of the -yka alternating stress
-	et sim. This only accepts single-word terms. Multiword terms are handled by multiword().
---]]
-local function single_word(txt, do_hyph, lang, is_prep, period, lect)
+--[=[
+Given a single word in `txt`, compute its "lightly phonetic" IPA representation. If there are multiple possible outputs
+(e.g. because of -yka/-ika words or words with clitics such as -by- or -śmy/-ście), we signal this through special
+symbols such as ALTSTRESS or capital letters (on input, capital letters have been lowercased so we can use capital
+letters as special symbols). The actual generation of multiple outputs happens in multiword() after the full term's IPA
+has been generated. Return two values: the IPA representation and the hyphenation.
+]=]
+local function single_word(data)
+	local txt, lang, lect = data.txt, data.lang, data.lect
 	-- This is the number of syllables before the penultimate syllable onto which to add the stress.
-	local antepenultimate_stress = 0
-	local unstressed = is_prep or false
-	-- If antepenultimate_stress > 0, add a second stress onto the penult.
+	local penultimate_offset = 0
+	local unstressed = data.is_prep or false
+	-- If penultimate_offset > 0, add a second stress onto the penult.
 	local double_stress = true
 
 	function tsub(s, r)
@@ -314,26 +316,24 @@ local function single_word(txt, do_hyph, lang, is_prep, period, lect)
 
 	-- Save indices of uppercase characters before setting everything lowercase.
 	local uppercase_indices
-	if do_hyph then
-		uppercase_indices = {}
-		local capitals = ("[A-Z%s]"):format(lg {
-			pl = "ĄĆĘŁŃÓŚŹŻ" --[[and the dialectal]] .. "ÁÉÔÛÝ" --[[and the MPl]] .. "ḾṔẂ",
-			szl = "ÃĆŁŃŌŎÔÕŚŹŻ",
-			csb = "ÔÒÃËÙÉÓĄŚŁŻŹĆŃ",
-			["zlw-slv"] = "ÃÉËÊÓÕÔÚÙŃŻ",
-		})
-		if tfind(capitals) then
-			local i = 1
-			local str = rsub(txt, "[.'^*+]", "")
-			while rfind(str, capitals, i) do
-				local r, _ = rfind(str, capitals, i)
-				table.insert(uppercase_indices, r)
-				i = r + 1
-			end
+	uppercase_indices = {}
+	local capitals = ("[A-Z%s]"):format(lg {
+		pl = "ĄĆĘŁŃÓŚŹŻ" --[[and the dialectal]] .. "ÁÉÔÛÝ" --[[and the MPl]] .. "ḾṔẂ",
+		szl = "ÃĆŁŃŌŎÔÕŚŹŻ",
+		csb = "ÔÒÃËÙÉÓĄŚŁŻŹĆŃ",
+		["zlw-slv"] = "ÃÉËÊÓÕÔÚÙŃŻ",
+	})
+	if tfind(capitals) then
+		local i = 1
+		local str = rsub(txt, "[.'^*+]", "")
+		while rfind(str, capitals, i) do
+			local r, _ = rfind(str, capitals, i)
+			table.insert(uppercase_indices, r)
+			i = r + 1
 		end
-		if #uppercase_indices == 0 then
-			uppercase_indices = nil
-		end
+	end
+	if #uppercase_indices == 0 then
+		uppercase_indices = nil
 	end
 
 	txt = ulower(txt)
@@ -387,20 +387,23 @@ local function single_word(txt, do_hyph, lang, is_prep, period, lect)
 	elseif txt:find("^%^+") then
 		-- The symbol <^> before a word indicates it is stressed on the antepenult,
 		-- <^^> on the ante-antepenult, etc.
-		antepenultimate_stress = txt:gsub("(%^).*", "%1"):len()
-		txt = txt:sub(antepenultimate_stress + 1)
+		penultimate_offset = txt:gsub("(%^).*", "%1"):len()
+		txt = txt:sub(penultimate_offset + 1)
 	elseif txt:find("^%+") then
 		-- The symbol <+> indicates the word is stressed regularly on the penult. This is useful
 		-- for avoiding the following checks to come into place.
 		txt = txt:sub(2)
 	else
-		if tfind(".+[łlb][iy].+") then
+		if tfind(".+[łlb][iy].+") then -- this first check is an optimization only
 			-- Some words endings trigger stress on the antepenult or ante-antepenult regularly.
-			if tfind("liśmy$") or tfind("[bł]yśmy$") or tfind("liście$") or tfind("[bł]yście$") then
-				antepenultimate_stress = 2
-			elseif tfind("by[mś]?$") and not tfind("ła?by[mś]?$") then
-				antepenultimate_stress = 1
+			if tfind("ł[aoy]?byśmy$") or tfind("libyśmy$") or tfind("ł[aoy]?byście$") or tfind("libyście$") then
+				penultimate_offset = 2
 				double_stress = false
+			elseif tfind("ł[aoy]?by[mś]?$") or tfind("liby[mś]?$") then
+				penultimate_offset = 1
+				double_stress = false
+			elseif tfind("ł[aoy]?śmy$") or tfind("liśmy$") or tfind("ł[aoy]?ście$") or tfind("liście$") then
+				penultimate_offset = 1
 			end
 		end
 		-- Recognise <-yka> and its declined form and automatically assign it an antepenultimate stress.
@@ -413,7 +416,7 @@ local function single_word(txt, do_hyph, lang, is_prep, period, lect)
 			}
 			for _, v in ipairs(endings) do
 				if tfind(("[yi]%s$"):format(v)) then
-					antepenultimate_stress = 1
+					penultimate_offset = 1
 					break
 				end
 			end
@@ -423,7 +426,7 @@ local function single_word(txt, do_hyph, lang, is_prep, period, lect)
 				local endings = { "[ąáéo]", "[ée]j", "[áo]m", "ach" }
 				for _, v in ipairs(endings) do
 					if tfind(("[yi]j%s$"):format(v)) then
-						antepenultimate_stress = 1
+						penultimate_offset = 1
 					end
 				end
 			end
@@ -431,77 +434,61 @@ local function single_word(txt, do_hyph, lang, is_prep, period, lect)
 	end
 
 	-- TODO: mpl, csb, szl, zlw-slv
-	-- FIXME: The following condition is not correct. A manual syllable division shouldn't disable prefix/suffix
-	-- checking.
-	-- Don't recognise affixes whenever there's only one vowel (or dipthong).
-	local _, n_vowels = rsubn(txt, ("[%s]"):format(V), "")
-	if n_vowels > 1 then
-
-		-- syllabify common prefixes as separate; note that since we replaced digraphs above with single
-		-- chars, we need to use the replacement chars here
-		local prefixes = {
-			"do", "wy",
-			"arHeo", "arcy", "areo", "arytmo", "audio", "balneo", "biblio",
-			"Ctero", "ćwierć",
-			"diafano", "dwu", "niby",
-			"nowo", "około", "pierwo", "pięcio",
-			"staro",
-			"aero", "[pt]Ry", "pRed?", "wielk?o",
-			"mało",
-			-- <na-, po-, o-, u-> would hit too many false positives
-		}
-		for _, v in ipairs(prefixes) do
-			if tfind("^" .. v) then
-				local _, other_vowels = rsubn(v, ("[%s]"):format(V), "")
-				if (n_vowels - other_vowels) > 0 then
-					-- Make sure the suffix is followed by zero or more consonants (including - but not
-					-- including a syllable divider) followed by a vowel. We do this so that we don't put
-					-- a syllable divider when the user specified the divider in a different place.
-					tsub(("^(%s)(%s*[%s])"):format(v, C, V), "%1.%2")
-					break
-				end
-			end
+	-- Syllabify common prefixes as separate; note that since we replaced digraphs above with single
+	-- chars, we need to use the replacement chars here. Longer prefixes must precede shorter subprefixes,
+	-- e.g. niedo- must precede nie- for the former to be recognized.
+	local prefixes = {
+		"aero", "arHeo", "arcy", "areo", "arytmo", "audio", "balneo", "bez", "biblio",
+		"Ctero", "ćwierć", "do", "dwu", "mało", "niby", "niedo", "nie",
+		"nowo", "około", "pierwo", "pięcio", "[pt]Ry", "pRed?", "roze?",
+		"staro", "wielk?o", "wy",
+		-- <na-, po-, o-, u-> would hit too many false positives
+	}
+	for _, prefix in ipairs(prefixes) do
+		if tfind("^" .. prefix) then
+			-- Make sure the suffix is followed by zero or more consonants (including - but not
+			-- including a syllable divider) followed by a vowel. We do this so that we don't put
+			-- a syllable divider when the user specified the divider in a different place.
+			tsub(("^(%s)(%s*[%s])"):format(prefix, C, V), "%1.%2")
+			break
 		end
+	end
 
-		-- nie + vowel should be broken but only -eu- is a diphthong
-		tsub("^nieu", "nie.u")
+	-- syllabify common suffixes as separate
+	local suffixes = lg {
+		pl = {
+			"nąć",
+			"[sc]tw[aou]", "[sc]twie", "[sc]tw[eo]m", "[sc]twami", "[sc]twach",
+			"dztw[aou]", "dztwie", "dztw[eo]m", "dztwami", "dztwach",
+			"dł[aou]", "dł[eo]m", "dłami", "dłach",
+			"[czs]j[aeięąo]", "[czs]jom", "[czs]jami", "[czs]jach",
+		}, szl = {
+			"nōńć", "dło",
+		}, csb = {
+			"nąc", "dło"
+		}, ["zlw-slv"] = {
+			"nõc", "dlô"
+		},
+	}
 
-		-- syllabify common suffixes as separate
-		local suffixes = lg {
-			pl = {
-				"nąć",
-				"[sc]tw[aou]", "[sc]twie", "[sc]tw[eo]m", "[sc]twami", "[sc]twach",
-				"dztw[aou]", "dztwie", "dztw[eo]m", "dztwami", "dztwach",
-				"dł[aou]", "dł[eo]m", "dłami", "dłach",
-				"[czs]j[aeięąo]", "[czs]jom", "[czs]jami", "[czs]jach",
-			}, szl = {
-				"nōńć", "dło",
-			}, csb = {
-				"nąc", "dło"
-			}, ["zlw-slv"] = {
-				"nõc", "dlô"
-			},
+	for _, v in ipairs(suffixes) do
+		-- Make sure there's no syllable divider elsewhere in the consonant cluster
+		-- preceding the suffix. Same logic as above for prefixes.
+		if tsub(("([%s]%s*)(%s)$"):format(V, C, v), "%1.%2") then break end
+	end
+
+	-- syllabify <istka> as /ist.ka/; same for [[haftka]], [[adiunktka]], [[abiturientka]], [[ćwiartka]],
+	-- [[adeptka]], etc.
+	if txt:find(("[%s][rfnskp]+t[kc]"):format(V)) then
+		local endings = lg {
+			{ "k[aąęio]", "ce", "kach", "kom", "kami" },
+			szl = { "k[aãio]", "ce", "kami", "kacj", "kacach", "kōma" },
+			csb = { "k[aãąioôòùó]", "ce", "kami", "kacj", "kacach", },
 		}
-
-		for _, v in ipairs(suffixes) do
+		for _, v in ipairs(endings) do
 			-- Make sure there's no syllable divider elsewhere in the consonant cluster
 			-- preceding the suffix. Same logic as above for prefixes.
-			if tsub(("([%s]%s*)(%s)$"):format(V, C, v), "%1.%2") then break end
-		end
-
-		-- syllabify <istka> as /ist.ka/; same for [[haftka]], [[adiunktka]], [[abiturientka]], [[ćwiartka]],
-		-- [[adeptka]], etc.
-		if txt:find(("[%s][rfnskp]+t[kc]"):format(V)) then
-			local endings = lg {
-				{ "k[aąęio]", "ce", "kach", "kom", "kami" },
-				szl = { "k[aãio]", "ce", "kami", "kacj", "kacach", "kōma" },
-				csb = { "k[aãąioôòùó]", "ce", "kami", "kacj", "kacach", },
-			}
-			for _, v in ipairs(endings) do
-				-- Make sure there's no syllable divider elsewhere in the consonant cluster
-				-- preceding the suffix. Same logic as above for prefixes.
-				if tsub(("([%s][rfnskp]+t)(%s)$"):format(V, v), "%1.%2") then break end
-			end
+			if tsub(("([%s][rfnskp]+t)(%s)$"):format(V, v), "%1.%2") then break end
 		end
 	end
 
@@ -548,36 +535,33 @@ local function single_word(txt, do_hyph, lang, is_prep, period, lect)
 		return ("%s%s%s"):format(v1, cons, v2)
 	end)
 
-	local hyph
-	if do_hyph then
-		-- Ignore certain symbols and diacritics for the hyphenation.
-		hyph = txt:gsub("'", "."):gsub("-", ""):gsub(",", "")
-		if lang == "zlw-slv" then
-			hyph = rsubn(hyph, "[IăĭŏŭYā]", {
-				["I"] = "j",
-				["ă"] = "a", ["ĭ"] = "i", ["ŏ"] = "o",
-				["ŭ"] = "u", ["Y"] = "y", ["ā"] = "a",
-			})
-		end
-		hyph = undo_digraph_replacement(hyph)
-		hyph = hyph:lower()
-		-- Restore uppercase characters.
-		if uppercase_indices then
-			-- str_i loops through all the characters of the string
-			-- list_i loops as above but doesn't count dots
-			-- array_i loops through the indices at which the capital letters are
-			local str_i, list_i, array_i = 1, 1, 1
-			function h_sub(x, y) return usub(hyph, x, y) end
-			while array_i <= #uppercase_indices do
-				if h_sub(str_i, str_i) ~= "." then
-					if list_i == uppercase_indices[array_i] then
-						hyph = ("%s%s%s"):format(h_sub(1,str_i-1), uupper(h_sub(str_i,str_i)), h_sub(str_i+1))
-						array_i = array_i + 1
-					end
-					list_i = list_i + 1
+	-- Ignore certain symbols and diacritics for the hyphenation.
+	local hyph = txt:gsub("'", "."):gsub("-", ""):gsub(",", "")
+	if lang == "zlw-slv" then
+		hyph = rsubn(hyph, "[IăĭŏŭYā]", {
+			["I"] = "j",
+			["ă"] = "a", ["ĭ"] = "i", ["ŏ"] = "o",
+			["ŭ"] = "u", ["Y"] = "y", ["ā"] = "a",
+		})
+	end
+	hyph = undo_digraph_replacement(hyph)
+	hyph = hyph:lower()
+	-- Restore uppercase characters.
+	if uppercase_indices then
+		-- str_i loops through all the characters of the string
+		-- list_i loops as above but doesn't count dots
+		-- array_i loops through the indices at which the capital letters are
+		local str_i, list_i, array_i = 1, 1, 1
+		function h_sub(x, y) return usub(hyph, x, y) end
+		while array_i <= #uppercase_indices do
+			if h_sub(str_i, str_i) ~= "." then
+				if list_i == uppercase_indices[array_i] then
+					hyph = ("%s%s%s"):format(h_sub(1,str_i-1), uupper(h_sub(str_i,str_i)), h_sub(str_i+1))
+					array_i = array_i + 1
 				end
-				str_i = str_i + 1
+				list_i = list_i + 1
 			end
+			str_i = str_i + 1
 		end
 	end
 
@@ -788,7 +772,7 @@ local function single_word(txt, do_hyph, lang, is_prep, period, lect)
 	end
 
 	-- final devoicing
-	if not is_prep then
+	if not data.is_prep then
 		tsub(("([%s])(ʲ?)$"):format(D_gets_backward_assim), function (a, b)
 			return devoice[a] .. b
 		end)
@@ -843,7 +827,9 @@ local function single_word(txt, do_hyph, lang, is_prep, period, lect)
 		tsub("N([.ˈ]?[kɡxɣ])", "ŋ%1")
 		tsub("N([.ˈ]?[wl])", "%1")
 		tsub("ɛN$", "ɛ")
-		tsub("N", "w̃")
+		if data.nasal_sibilant_single_output then
+			tsub("N", "w̃")
+		end
 	end
 
 	-- Hyphen separator, e.g. to prevent palatalization of <kwazi->.
@@ -854,96 +840,80 @@ local function single_word(txt, do_hyph, lang, is_prep, period, lect)
 	tsub("U", "w")
 
 	-- Handles stress.
-	local function add_stress(penultimate_offset, force_initial_stress)
+	local function add_stress(first_penultimate_offset, second_penultimate_offset)
 		local stressed_txt
-		if force_initial_stress or (lect and data.lects[lect].initial_stress) then
+		-- Return a regex that matches a syllable divider at the beginning of the appropriate syllable, where offset
+		-- counts backwards from the penultimate (1 = antepenultimate, 2 = ante-antepenultimate, etc.).
+		local function get_stress_regex(offset)
+			local regex = ""
+			for _ = 0, offset do
+				regex = regex .. "[^.]+%."
+			end
+			return "%.(" .. regex .. "[^.]+)$"
+		end
+
+		if first_penultimate_offset < 0 then
 			-- Deals with initially stressed lects.
 			stressed_txt = "ˈ" .. txt
 		else
-			-- Accent elsewhere, usually antepenult although can vary depending on
-			-- the <penultimate_offset> value, counting backwards.
-			local regex = ""
-			for _ = 0, penultimate_offset do
-				regex = regex .. "[^.]+%."
-			end
-			stressed_txt = rsub(txt, "%.(" .. regex .. "[^.]+)$", "ˈ%1")
-			-- If no stress mark could have been placed, it can only be initial,
-			-- e.g. in monosyllables.
+			stressed_txt = rsub(txt, get_stress_regex(first_penultimate_offset), "ˈ%1")
+			-- If no stress mark could have been placed, it can only be initial, e.g. in monosyllables or a 3-syllable
+			-- word when ante-antepenultimate stress is requested (e.g. [[szłybyśmy]]).
 			if not stressed_txt:find("ˈ") then
 				stressed_txt = "ˈ" .. stressed_txt
-			elseif penultimate_offset > 0 and double_stress then
-				stressed_txt = rsub("ˈ(.+)%.([^.]+%.[^.]+)$", ALTSTRESS .. "%1" .. ALTSTRESS .. "%2", stressed_txt)
 			end
+		end
+		if second_penultimate_offset then
+			-- If the stress is farther back than penultimate and `second_penultimate_offset` is set, there is an
+			-- additional variant with stress on the specified syllable (penultimate or sometimes antepenultimate, in
+			-- the case of "ora" and "zag" lects with -śmy/-ście words not in -by-). We handle this by putting ALTSTRESS
+			-- at both stress points and converting this later to two outputs with appropriate qualifiers. Note that
+			-- this substitution may not succeed (e.g. if antepenultimate stress is called for but there are only two
+			-- syllables); that is fine and just means we don't get two outputs in this case.
+			stressed_txt = rsub(stressed_txt, "ˈ(.+)" .. get_stress_regex(second_penultimate_offset),
+				ALTSTRESS .. "%1" .. ALTSTRESS .. "%2")
 		end
 		return stressed_txt
 	end
 
 	local should_stress = not (unstressed or txt:find("ˈ"))
-	local prons = should_stress and add_stress(antepenultimate_stress) or txt
-
-	if is_prep then
-		prons = prons .. "$"
-	end
-
-	if lang == "pl" then
-		if lect then
-			if lect == "ekr" then
-				if tfind("O") then
-					prons = { (prons:gsub("O", "o")), (prons:gsub("O", "u")) }
-				end
-			elseif lect == "ora" or lect == "zag" then
-				local stressed_initially = add_stress(0, true)
-				if stressed_initially ~= prons then
-					prons = lect == "ora" and { stressed_initially, prons } or { prons, stressed_initially }
-				end
-			elseif lect == "mpl" then
-				if tfind("[RS]") then
-					local mp_early = prons:gsub("[RS]", "r̝")
-					local mp_late = prons:gsub("R", "ʐ"):gsub("S", "ʂ")
-					if period == "early" then
-						prons = mp_early
-					elseif period == "late" then
-						prons = mp_late
-					elseif not period then
-						prons = {
-							mp_early, mp_late,
-						}
-					else
-						error(("'%s' is not a supported Middle Polish period; try with 'early' or 'late'"):format(period))
-					end
-				end
-			end
-		else
-			if should_stress and antepenultimate_stress > 0 and double_stress then
-				local stressed_penult = add_stress(0)
-				if stressed_penult ~= prons then
-					prons = { prons, stressed_penult }
-				end
-			end
-		end
-	elseif lang == "szl" then
-		if tfind("O") then
-			prons = {
-				(prons:gsub("O", "ɔ")),
-				(prons:gsub("O", "ɔw")),
-				(prons:gsub("O", "ɛw")),
-			}
-		end
-	elseif lang == "zlw-slv" then
-		if tfind("E") then
-			local V = "aɛeɔ̃oɵəEɪiʉuyã"
-			prons = prons:gsub("ˈ([^" .. V .. "]*)E", "ˈ%1i̯ɛ")
-			prons = prons:gsub("E$", "ə")
-			prons = prons:gsub("E", "ɛ")
-		end
-	end
-
-	if do_hyph then
-		return prons, hyph
+	-- "Oscillating stress" lects have initial stress in some subvarieties; in others, normally penultimate, but
+	-- antepenultimate or ante-antepenultimate in words with clitics (-by-, -śmy/-ście). (That is, they behave like
+	-- standard Polish other than not having the colloquial penultimate stress with certain clitics.)
+	local oscillating_stress = lang == "pl" and (lect == "ora" or lect == "zag")
+	-- "Always initial stress" lects have initial stress in all subvarieties.
+	local always_initial_stress = lect and data.lects[lect].initial_stress
+	local first_penultimate_offset, second_penultimate_offset
+	if oscillating_stress or always_initial_stress then
+		first_penultimate_offset = -1 -- initial stress
 	else
-		return prons
+		first_penultimate_offset = penultimate_offset
+	end
+	if oscillating_stress then
+		second_penultimate_offset = penultimate_offset
+	elseif always_initial_stress then
+		second_penultimate_offset = nil
+	else
+		-- Standard Polish stress; if double_stress is set and the first (prescriptive) stress is antepenultimate or
+		-- earlier, there's a second (colloquial) stress on the penultimate.
+		second_penultimate_offset = penultimate_offset > 0 and double_stress and 0 or nil
+	end
+	if should_stress then
+		txt = add_stress(first_penultimate_offset, second_penultimate_offset)
+	end
+	if data.is_prep then
+		txt = txt .. "$"
 	end
 
+	-- This must follow stress assignment because it depends on whether the E is stressed.
+	if lang == "zlw-slv" and tfind("E") then
+		local V = "aɛeɔ̃oɵəEɪiʉuyã"
+		txt = txt:gsub("ˈ([^" .. V .. "]*)E", "ˈ%1i̯ɛ")
+		txt = txt:gsub("E$", "ə")
+		txt = txt:gsub("E", "ɛ")
+	end
+
+	return txt, hyph
 end
 
 -- Returns rhyme from a transcription.
@@ -960,13 +930,14 @@ local function do_rhyme(pron, lang)
 end
 
 --[[
-	Handles a single input, returning a table of transcriptions. Returns also a string of
-	hyphenation and a table of rhymes if it is a single-word term.
+Handles a single input, returning a table of transcriptions. Returns also a string of hyphenation and a table of rhymes
+if it is a single-word term.
 --]]
-local function multiword(term, lang, period, lect)
+local function multiword(term, lang, period, lect, nasal_sibilant_single_output)
 	if term:find("^raw:%[.+%]$") then
-		return { phonetic = term:gsub("^raw:", "") }
+		return {{ phonetic = term:gsub("^raw:", "") }}
 	end
+	local ipa, hyph
 	term = rsub(term, "%s*,%s*", " | ")
 	if term:find(" ") then
 		-- TODO: repeated
@@ -992,14 +963,18 @@ local function multiword(term, lang, period, lect)
 			},
 		}
 
-		local p
+		local ipaparts, hyphparts = {}, {}
 		local contains_preps = false
 
 		for word in term:gmatch("[^ ]+") do
-			local v
 			if word == "|" then
-				-- foot boundary
-				v = word
+				-- foot boundary, from a comma
+				table.insert(ipaparts, word)
+				if hyphparts[#hyphparts] then
+					hyphparts[#hyphparts] = hyphparts[#hyphparts] .. ","
+				else
+					hyphparts[1] = ","
+				end
 			else
 				local is_prep = false
 				for _, prep in ipairs(prepositions) do
@@ -1009,25 +984,20 @@ local function multiword(term, lang, period, lect)
 						break
 					end
 				end
-				v = single_word(word, false, lang, is_prep, period, lect)
-			end
-			local sep = "%s %s"
-			if p == nil then
-				p = v
-			elseif type(p) == "string" then
-				if type(v) == "string" then
-					p = sep:format(p, v)
-				else
-					p = { sep:format(p, v[1]), sep:format(p, v[2]) }
-				end
-			else
-				if type(v) == "string" then
-					p = { sep:format(p[1], v), sep:format(p[2], v) }
-				else
-					p = { sep:format(p[1], v[1]), sep:format(p[2], v[2]) }
-				end
+				local wordipa, wordhyph = single_word {
+					txt = word,
+					lang = lang,
+					is_prep = is_prep,
+					period = period,
+					lect = pect,
+				}
+				table.insert(ipaparts, wordipa)
+				table.insert(hyphparts, wordhyph)
 			end
 		end
+
+		ipa = table.concat(ipaparts, " ")
+		hyph = table.concat(hyphparts, " ")
 
 		local function assimilate_preps(str)
 			local function assim(from, to, before)
@@ -1046,20 +1016,82 @@ local function multiword(term, lang, period, lect)
 		end
 
 		if contains_preps then
-			if type(p) == "string" then
-				p = assimilate_preps(p)
-			else
-				p[1] = assimilate_preps(p[1])
-				p[2] = assimilate_preps(p[2])
-			end
+			ipa = assimilate_preps(ipa)
 		end
-
-		return p
-
 	else
-		return single_word(term, lect ~= "mpl", lang, false, period, lect)
+		ipa, hyph = single_word {
+			txt = term,
+			lang = lang,
+			is_prep = false,
+			period = period,
+			lect = pect,
+		}
 	end
 
+	local result = {{
+		pron = ipa,
+	}}
+
+	-- Map over each element in `result`. If `from` is found in the element, replace the element with up to three
+	-- elements, respectively replacing `from` with `to1` (with accent qualifiers `a1`), `to2` (with accent qualifiers
+	-- `a2`) and `to3` (with accent qualifiers `a3`). If `to2` or `to3` are nil, no replacement is done for them.
+	local function flatmap_and_sub_post(from, to1, a1, to2, a2, to3, a3)
+		result = flatmap(result, function(item)
+			if rfind(item.pron, from) then
+				local retval = {
+					{
+						pron = rsub(item.pron, from, to1),
+						a = combine_qualifiers(item.a, a1),
+					}
+				}
+				if to2 then
+					table.insert(retval,
+						{
+							pron = rsub(item.pron, from, to2),
+							a = combine_qualifiers(item.a, a2),
+						}
+					)
+				end
+				if to3 then
+					table.insert(retval,
+						{
+							pron = rsub(item.pron, from, to3),
+							a = combine_qualifiers(item.a, a3),
+						}
+					)
+				end
+				return retval
+			else
+				return {item}
+			end
+		end)
+	end
+
+	if lang == "pl" and lect == "ekr" then
+		flatmap_and_sub_post("O", "o", {"pre-21<sup>st</sup> c."}, "u", {"21<sup>st</sup> c."})
+	elseif lang == "pl" and lect == "mpl" then
+		if period == "early" then
+			flatmap_and_sub_post("[RS]", "r̝")
+		elseif period == "late" then
+			flatmap_and_sub_post("[RS]", {R = "ʐ", S = "ʂ"})
+		elseif not period then
+			flatmap_and_sub_post("[RS]", "r̝", {"16<sup>th</sup> c."}, {R = "ʐ", S = "ʂ"}, {"17<sup>th</sup>–18<sup>th</sup> c."})
+		else
+			error(("'%s' is not a supported Middle Polish period; try with 'early' or 'late'"):format(period))
+		end
+	elseif lang == "pl" and lect == "ora" then
+		flatmap_and_sub_post(ALTSTRESS .. "([^ ]-)" .. ALTSTRESS, "ˈ%1.", {"Poland"}, ".%1ˈ", {"Slovakia"})
+	elseif lang == "pl" and lect == "zag" then
+		flatmap_and_sub_post(ALTSTRESS .. "([^ ]-)" .. ALTSTRESS, ".%1ˈ", {"north"}, "ˈ%1.", {"south"})
+	elseif lang == "pl" then
+		flatmap_and_sub_post(ALTSTRESS .. "([^ ]-)" .. ALTSTRESS, "ˈ%1.", {"prescriptive"}, ".%1ˈ", {"colloquial"})
+	elseif lang == "szl" then
+		flatmap_and_sub_post("O", "ɔ", {"non-Western"}, "ɔw", {"Western"}, "ɛw", {"Głogówek"})
+	end
+	-- Two outputs from nasal before sibilant, if not converted to one above.
+	flatmap_and_sub_post("N", "w̃", nil, "n")
+
+	return result, hyph
 end
 
 -- Given a single substitution spec, `to`, figure out the corresponding value of `from` used in a complete
@@ -1180,20 +1212,18 @@ end
 
 -- This converts the raw information, the arguments and pagename, into tables to be handed over to the IPA module.
 -- It is called externally by [[Module:zlw-lch-IPA/testcases/driver]].
-function export.get_lect_pron_info(terms, pagename, paramname, lang, lect, period)
+function export.get_lect_pron_info(terms, pagename, paramname, lang, lect, period, nasal_sibilant_single_output)
 	if #terms == 1 and terms[1].respelling == "-" then
 		return {
 			pron_list = nil,
 			rhyme_list = {},
 			hyph_list = {},
-			do_hyph = false,
 		}
 	end
 
-	local pron_list = {{}}
-	local rhyme_list = {{}}
+	local pron_list = {}
+	local rhyme_list = {}
 	local hyph_list = {}
-	local do_hyph = false
 
 	local brackets = "/%s/"
 	if lect then
@@ -1208,102 +1238,44 @@ function export.get_lect_pron_info(terms, pagename, paramname, lang, lect, perio
 		-- Handles magic symbols in the input.
 		respelling = normalise_input(respelling, pagename, paramname)
 		-- Obtains the transcription and hyphenation for the current index.
-		local prons, hyph = multiword(respelling, lang, period, lect)
+		local prons, hyph = multiword(respelling, lang, period, lect, nasal_sibilant_single_output)
 
-		-- Return a single phonemic transcription with qualifiers and references
-		-- attached to it. An additional qualifier may be specified, which is for the
-		-- regular oscillations (e.g. Middle Polish <rz>, etc.). The references can
-		-- be omitted (if it's the second transcription of a regular oscillation).
-		local function new_pron(pron, additional_qualifier, dont_refs)
-			local bracketed_pron = brackets:format(pron)
-			-- Strip away syllable dividers, but return a version with the syllable dividers for
-			-- comparison purposes with the old {{pl-p}}. FIXME: IMO we should be including the
-			-- syllable dividers in the phonemic output. [Benwing]
-			local bracketed_pron_no_syldivs = bracketed_pron:gsub("%.", "")
-			local merged_qualifiers = term.q or {}
-			if additional_qualifier then
-				merged_qualifiers = m_table.shallowcopy(merged_qualifiers)
-				table.insert(merged_qualifiers, additional_qualifier)
-			end
-			local ret = {
-				pron = bracketed_pron_no_syldivs,
-				pron_with_syldivs = bracketed_pron,
-				q = merged_qualifiers,
-				qq = term.qq,
-				a = term.a,
-				aa = term.aa,
-				refs = not dont_refs and term.refs or nil,
-			}
-			return ret
-		end
-
-		-- If the <prons> variable is a string it means only one transcription
-		-- was given.
-		if type(prons) == "string" then
-			table.insert(pron_list[1], new_pron(prons))
-			table.insert(rhyme_list[1], do_rhyme(prons, lang))
-		-- If the <pron> variable is a table and has a <phonetic> value, then simply return that.
-		elseif prons.phonetic then
-			table.insert(pron_list[1], {
-				pron = prons.phonetic,
-				pron_with_syldivs = prons.phonetic,
-				q = term.q,
-				qq = term.qq,
-				a = term.a,
-				aa = term.aa,
-				refs = term.refs,
-			})
-		-- If the <prons> variably is a table and does not have a <phonetic> value, it is
-		-- a list of transcriptions.
-		else
-			local multiple_transcript = ({
-				pl = { "prescribed", "casual" },
-				szl = { nil, "Western", "Głogówek"},
-			})[lang]
-			if lang == "pl" and lect then
-				multiple_transcript = ({
-					mpl = { "16<sup>th</sup> c.", "17<sup>th</sup>–18<sup>th</sup> c." },
-					ekr = { "pre-21<sup>st</sup> c.", "21<sup>st</sup> c."},
-					ora = { "Poland", "Slovakia" },
-					zag = { "north", "south" },
-				})[lect]
-			end
-			for i, v in ipairs(prons) do
-				if #pron_list < (i + 1) then pron_list[i + 1] = {} end
-				table.insert(pron_list[i + 1], new_pron(v, multiple_transcript[i], i ~= 1))
-				if #rhyme_list < (i + 1) then rhyme_list[i + 1] = {} end
-				table.insert(rhyme_list[i + 1], do_rhyme(v, lang))
+		for i, pron in ipairs(prons) do
+			if prons.phonetic then
+				table.insert(pron_list, {
+					pron = prons.phonetic,
+					pron_with_syldivs = prons.phonetic,
+					q = term.q,
+					qq = term.qq,
+					a = term.a,
+					aa = term.aa,
+					refs = i == 1 and term.refs or nil,
+				})
+			else
+				local bracketed_pron = brackets:format(pron.pron)
+				-- Strip away syllable dividers, but return a version with the syllable dividers for
+				-- comparison purposes with the old {{pl-p}}. FIXME: IMO we should be including the
+				-- syllable dividers in the phonemic output. [Benwing]
+				local bracketed_pron_no_syldivs = bracketed_pron:gsub("%.", "")
+				table.insert(pron_list, {
+					pron = bracketed_pron_no_syldivs,
+					pron_with_syldivs = bracketed_pron,
+					q = term.q,
+					qq = term.qq,
+					a = combine_qualifiers(pron.a, term.a),
+					aa = term.aa,
+					refs = i == 1 and term.refs or nil,
+				})
+				table.insert(rhyme_list, do_rhyme(pron.pron, lang))
 			end
 		end
 
-		-- If a hyphenation value had been returned by the <multiword> function, it means
-		-- that in any case a hyphenation is required (i.e. it is not a multiword term nor is
-		-- the hyphenation manually turned off, etc.). If the hyphenation value acquired however
-		-- does not match the pagename, it is not added to the table.
-		if hyph then
-			do_hyph = true
-			if hyph:gsub("%.", "") == pagename then
-				m_table.insertIfNot(hyph_list, hyph)
-			end
+		-- If a hyphenation value had been returned by multiword(), make sure it matches the pagename; otherwise
+		-- don't add. FIXME: This should be smarter in the presence of hyphens in the lemma.
+		if hyph and hyph:gsub("%.", "") == pagename then
+			m_table.insertIfNot(hyph_list, hyph)
 		end
 	end
-
-	-- TODO: looks rather slow.
-	local function merge_subtables(t)
-		if #t == 1 then
-			return t[1]
-		end
-		local r = {}
-		for _, subtable in ipairs(t) do
-			for _, value in ipairs(subtable) do
-				table.insert(r, value)
-			end
-		end
-		return r
-	end
-
-	pron_list = merge_subtables(pron_list)
-	rhyme_list = merge_subtables(rhyme_list)
 
 	return {
 		pron_list = pron_list,
@@ -1321,6 +1293,7 @@ function export.get_lect_pron_info_bot(frame)
 		["period"] = {},
 		["pagename"] = {}, -- for debugging or demonstration only
 		["plp"] = { list = true },
+		["nasal_sibilant_single_output"] = { type = "boolean" },
 	})
 
 	local termspec = iargs[1] or "#"
@@ -1332,7 +1305,8 @@ function export.get_lect_pron_info_bot(frame)
 		"[from bot]",
 		iargs.lang,
 		iargs.lect,
-		iargs.period
+		iargs.period,
+		iargs.nasal_sibilant_single_output
 	)
 
 	if iargs.plp[1] then
@@ -1383,7 +1357,8 @@ function export.show(frame)
 	local pagename = args.pagename or mw.loadData("Module:headword/data").pagename
 
 	local pronobj = export.get_lect_pron_info(terms, pagename, 1, ilang)
-	local hyph_list, rhyme_list, do_hyph = pronobj.hyph_list, pronobj.rhyme_list, pronobj.do_hyph
+	local hyph_list, rhyme_list = pronobj.hyph_list, pronobj.rhyme_list
+	local do_hyph
 
 	local pl_lect_prons
 
@@ -1406,6 +1381,9 @@ function export.show(frame)
 			hyph_list = split_on_comma(args.hyphs)
 			do_hyph = true
 		end
+	else
+		-- FIXME: Why are we doing this? This is carried over from before.
+		do_hyph = lect ~= "mpl"
 	end
 
 	if args.rhymes then
