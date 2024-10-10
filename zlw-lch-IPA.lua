@@ -438,10 +438,9 @@ local function single_word(data)
 	-- chars, we need to use the replacement chars here. Longer prefixes must precede shorter subprefixes,
 	-- e.g. niedo- must precede nie- for the former to be recognized.
 	local prefixes = {
-		"aero", "arHeo", "arcy", "areo", "arytmo", "audio", "balneo", "bez", "biblio",
+		"aero", "arcy", "bez",
 		"Ctero", "ćwierć", "dwu", "mało", "niby", "niedo", "nie",
-		"nowo", "około", "pierwo", "pięcio", "[pt]Ry", "pRed?", "roze?",
-		"staro", "wielk?o", "współ", "wy",
+		"[pt]Ry", "pRed?", "roze?", "wielo", "współ", "wy",
 		-- <do-, na-, po-, o-, u-> would hit too many false positives
 	}
 	for _, prefix in ipairs(prefixes) do
