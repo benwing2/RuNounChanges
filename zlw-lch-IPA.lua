@@ -22,7 +22,7 @@ local OVERTIE = u(0x361) -- COMBINING DOUBLE INVERTED BREVE
 -- stresses can go, and handle this later in multiword().
 local ALTSTRESS = u(0xFFF0)
 -- Lect data later retrieved in the module.
-local data
+local lectdata
 
 -- FIXME: Implement optional assimilation across word boundaries.
 local assimilate_across_word_boundaries = false
@@ -394,15 +394,15 @@ local function single_word(data)
 		-- for avoiding the following checks to come into place.
 		txt = txt:sub(2)
 	else
-		if tfind(".+[łlb][iy].+") then -- this first check is an optimization only
+		if tfind(".+[łlb][iy]") then -- this first check is an optimization only
 			-- Some words endings trigger stress on the antepenult or ante-antepenult regularly.
-			if tfind("ł[aoy]?byśmy$") or tfind("libyśmy$") or tfind("ł[aoy]?byście$") or tfind("libyście$") then
+			if tfind("łybyśmy$") or tfind("libyśmy$") or tfind("łybyście$") or tfind("libyście$") then
 				penultimate_offset = 2
 				double_stress = false
 			elseif tfind("ł[aoy]?by[mś]?$") or tfind("liby[mś]?$") then
 				penultimate_offset = 1
 				double_stress = false
-			elseif tfind("ł[aoy]?śmy$") or tfind("liśmy$") or tfind("ł[aoy]?ście$") or tfind("liście$") then
+			elseif tfind("łyśmy$") or tfind("liśmy$") or tfind("łyście$") or tfind("liście$") then
 				penultimate_offset = 1
 			end
 		end
@@ -439,10 +439,10 @@ local function single_word(data)
 	-- e.g. niedo- must precede nie- for the former to be recognized.
 	local prefixes = {
 		"aero", "arHeo", "arcy", "areo", "arytmo", "audio", "balneo", "bez", "biblio",
-		"Ctero", "ćwierć", "do", "dwu", "mało", "niby", "niedo", "nie",
+		"Ctero", "ćwierć", "dwu", "mało", "niby", "niedo", "nie",
 		"nowo", "około", "pierwo", "pięcio", "[pt]Ry", "pRed?", "roze?",
-		"staro", "wielk?o", "wy",
-		-- <na-, po-, o-, u-> would hit too many false positives
+		"staro", "wielk?o", "współ", "wy",
+		-- <do-, na-, po-, o-, u-> would hit too many false positives
 	}
 	for _, prefix in ipairs(prefixes) do
 		if tfind("^" .. prefix) then
@@ -632,19 +632,19 @@ local function single_word(data)
 					["û"] = "wu",
 					["ý"] = "Y",
 				}
-				if data.lects[lect].mid_o then
+				if lectdata.lects[lect].mid_o then
 					replacements["ó"] = "o"
 				elseif lect == "ekr" then
 					replacements["ó"] = "O"
 				end
-				if data.lects[lect].front_y then
+				if lectdata.lects[lect].front_y then
 					replacements["y"] = "Y"
 				end
-				if data.lects[lect].dark_l then
+				if lectdata.lects[lect].dark_l then
 					replacements["ł"] = "ɫ"
 					replacements["l"] = "lʲ"
 				end
-				if data.lects[lect].glottal_h then
+				if lectdata.lects[lect].glottal_h then
 					replacements["h"] = "h"
 				end
 			end
@@ -711,7 +711,7 @@ local function single_word(data)
 
 	local trilled_rz = lang == "csb" or lang == "zlw-slv"
 	if not trilled_rz and lect then
-		trilled_rz = data.lects[lect].trilled_rz
+		trilled_rz = lectdata.lects[lect].trilled_rz
 	end
 
 	if trilled_rz then
@@ -821,13 +821,19 @@ local function single_word(data)
 	if lang == "pl" then
 		-- nasal vowels
 		tsub("N([.ˈ]?[pb])", "m%1")
-		tsub("N([.ˈ]?[ɕʑ])", "ɲ%1")
 		tsub("N([.ˈ]?[td]_[ɕʑ])", "ɲ%1")
 		tsub("N([.ˈ]?[td])", "n%1")
-		tsub("N([.ˈ]?[kɡxɣ])", "ŋ%1")
 		tsub("N([.ˈ]?[wl])", "%1")
-		tsub("ɛN$", "ɛ")
-		if data.nasal_sibilant_single_output then
+		if data.match_pl_p_output then
+			tsub("N([.ˈ]?[kɡ])", "ŋ%1")
+			tsub("ɛN$", "ɛ")
+			tsub("N([.ˈ]?[ɕʑ])", "ɲ%1")
+			tsub("N", "w̃")
+		else
+			tsub("N([.ˈ]?[kɡxɣ])", "ŋ%1")
+			tsub("ɛN$", "Ẽ")
+			tsub("ɔN$", "Õ")
+			tsub("N([.ˈ]?[ɕʑszʂʐ])", "Ñ%1")
 			tsub("N", "w̃")
 		end
 	end
@@ -882,7 +888,7 @@ local function single_word(data)
 	-- standard Polish other than not having the colloquial penultimate stress with certain clitics.)
 	local oscillating_stress = lang == "pl" and (lect == "ora" or lect == "zag")
 	-- "Always initial stress" lects have initial stress in all subvarieties.
-	local always_initial_stress = lect and data.lects[lect].initial_stress
+	local always_initial_stress = lect and lectdata.lects[lect].initial_stress
 	local first_penultimate_offset, second_penultimate_offset
 	if oscillating_stress or always_initial_stress then
 		first_penultimate_offset = -1 -- initial stress
@@ -933,7 +939,7 @@ end
 Handles a single input, returning a table of transcriptions. Returns also a string of hyphenation and a table of rhymes
 if it is a single-word term.
 --]]
-local function multiword(term, lang, period, lect, nasal_sibilant_single_output)
+local function multiword(term, lang, period, lect, match_pl_p_output)
 	if term:find("^raw:%[.+%]$") then
 		return {{ phonetic = term:gsub("^raw:", "") }}
 	end
@@ -989,7 +995,8 @@ local function multiword(term, lang, period, lect, nasal_sibilant_single_output)
 					lang = lang,
 					is_prep = is_prep,
 					period = period,
-					lect = pect,
+					lect = lect,
+					match_pl_p_output = match_pl_p_output,
 				}
 				table.insert(ipaparts, wordipa)
 				table.insert(hyphparts, wordhyph)
@@ -1024,7 +1031,8 @@ local function multiword(term, lang, period, lect, nasal_sibilant_single_output)
 			lang = lang,
 			is_prep = false,
 			period = period,
-			lect = pect,
+			lect = lect,
+			match_pl_p_output = match_pl_p_output,
 		}
 	end
 
@@ -1067,6 +1075,14 @@ local function multiword(term, lang, period, lect, nasal_sibilant_single_output)
 		end)
 	end
 
+	-- Replace the first ALTSTRESS with a syllable divider but not at the beginning of a word.
+	local function stress_second(before_first, before_second)
+		if before_first == "" then
+			return before_second .. "ˈ"
+		else
+			return before_first .. "." .. before_second .. "ˈ"
+		end
+	end
 	if lang == "pl" and lect == "ekr" then
 		flatmap_and_sub_post("O", "o", {"pre-21<sup>st</sup> c."}, "u", {"21<sup>st</sup> c."})
 	elseif lang == "pl" and lect == "mpl" then
@@ -1080,24 +1096,28 @@ local function multiword(term, lang, period, lect, nasal_sibilant_single_output)
 			error(("'%s' is not a supported Middle Polish period; try with 'early' or 'late'"):format(period))
 		end
 	elseif lang == "pl" and lect == "ora" then
-		flatmap_and_sub_post(ALTSTRESS .. "([^ ]-)" .. ALTSTRESS, "ˈ%1.", {"Poland"}, ".%1ˈ", {"Slovakia"})
+		flatmap_and_sub_post("([^ ]*)" .. ALTSTRESS .. "([^ ]-)" .. ALTSTRESS, "%1ˈ%2.", {"Poland"}, stress_second, {"Slovakia"})
 	elseif lang == "pl" and lect == "zag" then
-		flatmap_and_sub_post(ALTSTRESS .. "([^ ]-)" .. ALTSTRESS, ".%1ˈ", {"north"}, "ˈ%1.", {"south"})
+		flatmap_and_sub_post("([^ ]*)" .. ALTSTRESS .. "([^ ]-)" .. ALTSTRESS, stress_second, {"north"}, "%1ˈ%2.", {"south"})
 	elseif lang == "pl" then
-		flatmap_and_sub_post(ALTSTRESS .. "([^ ]-)" .. ALTSTRESS, "ˈ%1.", {"prescriptive"}, ".%1ˈ", {"colloquial"})
+		flatmap_and_sub_post("([^ ]*)" .. ALTSTRESS .. "([^ ]-)" .. ALTSTRESS, "%1ˈ%2.", {"prescriptive"}, stress_second, {"colloquial"})
 	elseif lang == "szl" then
 		flatmap_and_sub_post("O", "ɔ", {"non-Western"}, "ɔw", {"Western"}, "ɛw", {"Głogówek"})
 	end
 	-- Two outputs from nasal before sibilant, if not converted to one above.
-	flatmap_and_sub_post("N", "w̃", nil, "n")
-
+	flatmap_and_sub_post("Ñ([.ˈ]?)([szɕʑʂʐ])", "w̃%1%2", nil, function(syldiv, sib)
+		return ((sib == "ɕ" or sib == "ʑ") and "ɲ" or "n") .. syldiv .. sib
+	end)
+	flatmap_and_sub_post("Ẽ", "ɛ", {"normal speech"}, "ɛw̃", {"careful speech"})
+	flatmap_and_sub_post("Õ", "ɔw̃", {"standard"}, "ɔm", {"regional", "or", "dialectal", "proscribed"})
 	return result, hyph
 end
 
 -- Given a single substitution spec, `to`, figure out the corresponding value of `from` used in a complete
 -- substitution spec. `pagename` is the name of the page, either the actual one or taken from the `pagename` param.
--- `whole_word`, if set, indicates that the match must be to a whole word (it was preceded by ~).
-local function convert_single_substitution_to_original(to, pagename, whole_word)
+-- `anchor_begin`, if set, indicates that the match must be to the beginning of a word (it was preceded by ^).
+-- `anchor_end`, if set, indicates that the match must be to the end of a word (it was followed by $).
+local function convert_single_substitution_to_original(to, pagename, anchor_begin, anchor_end)
 	-- Replace specially-handled characters with a class matching the character and possible replacements.
 	local escaped_from = to
 	escaped_from = escaped_from:gsub("[.']", "")
@@ -1113,8 +1133,11 @@ local function convert_single_substitution_to_original(to, pagename, whole_word)
 	-- % sign before it, and have to double up the percent signs to match and replace a literal %.
 	escaped_from = escaped_from:gsub("%%%-", "%%-?")
 	escaped_from = "(" .. escaped_from .. ")"
-	if whole_word then
-		escaped_from = "%f[%a]" .. escaped_from .. "%f[%A]"
+	if anchor_begin then
+		escaped_from = "%f[%a]" .. escaped_from
+	end
+	if anchor_end then
+		escaped_from = escaped_from .. "%f[%A]"
 	end
 	local match = rmatch(pagename, escaped_from)
 	if match then
@@ -1132,22 +1155,35 @@ local function apply_substitution_spec(respelling, pagename, parse_err)
 	local subs = split_on_comma(rmatch(respelling, "^%[(.*)%]$"))
 	respelling = pagename
 	for _, sub in ipairs(subs) do
-		local from, escaped_from, to, escaped_to, whole_word
-		if sub:find("^~") then
-			-- whole-word match
-			sub = rmatch(sub, "^~(.*)$")
-			whole_word = true
+		local from, escaped_from, to, escaped_to, anchor_begin, anchor_end
+		if sub:find("^%^") then
+			-- anchor at beginning
+			sub = rmatch(sub, "^%^(.*)$")
+			anchor_begin = true
 		end
 		if sub:find(":") then
 			from, to = rmatch(sub, "^(.-):(.*)$")
+			if from:find("%$$") then
+				-- anchor at end
+				from = rmatch(from, "^(.*)%$$")
+				anchor_end = true
+			end
 		else
+			if sub:find("%$$") then
+				-- anchor at end
+				sub = rmatch(sub, "^(.*)%$$")
+				anchor_end = true
+			end
 			to = sub
-			from = convert_single_substitution_to_original(to, pagename, whole_word)
+			from = convert_single_substitution_to_original(to, pagename, anchor_begin, anchor_end)
 		end
 		if from then
 			escaped_from = m_str_utils.pattern_escape(from)
-			if whole_word then
-				escaped_from = "%f[%a]" .. escaped_from .. "%f[%A]"
+			if anchor_begin then
+				escaped_from = "%f[%a]" .. escaped_from
+			end
+			if anchor_end then
+				escaped_from = escaped_from .. "%f[%A]"
 			end
 			escaped_to = m_str_utils.replacement_escape(to)
 			local subbed_respelling, nsubs = rsubn(respelling, escaped_from, escaped_to)
@@ -1212,7 +1248,7 @@ end
 
 -- This converts the raw information, the arguments and pagename, into tables to be handed over to the IPA module.
 -- It is called externally by [[Module:zlw-lch-IPA/testcases/driver]].
-function export.get_lect_pron_info(terms, pagename, paramname, lang, lect, period, nasal_sibilant_single_output)
+function export.get_lect_pron_info(terms, pagename, paramname, lang, lect, period, match_pl_p_output)
 	if #terms == 1 and terms[1].respelling == "-" then
 		return {
 			pron_list = nil,
@@ -1227,7 +1263,7 @@ function export.get_lect_pron_info(terms, pagename, paramname, lang, lect, perio
 
 	local brackets = "/%s/"
 	if lect then
-		if data.lects[lect].phonetic then
+		if lectdata.lects[lect].phonetic then
 			brackets = "[%s]"
 		end
 	end
@@ -1238,7 +1274,7 @@ function export.get_lect_pron_info(terms, pagename, paramname, lang, lect, perio
 		-- Handles magic symbols in the input.
 		respelling = normalise_input(respelling, pagename, paramname)
 		-- Obtains the transcription and hyphenation for the current index.
-		local prons, hyph = multiword(respelling, lang, period, lect, nasal_sibilant_single_output)
+		local prons, hyph = multiword(respelling, lang, period, lect, match_pl_p_output)
 
 		for i, pron in ipairs(prons) do
 			if prons.phonetic then
@@ -1281,7 +1317,6 @@ function export.get_lect_pron_info(terms, pagename, paramname, lang, lect, perio
 		pron_list = pron_list,
 		hyph_list = hyph_list,
 		rhyme_list = rhyme_list,
-		do_hyph = do_hyph,
 	}
 end
 
@@ -1293,7 +1328,7 @@ function export.get_lect_pron_info_bot(frame)
 		["period"] = {},
 		["pagename"] = {}, -- for debugging or demonstration only
 		["plp"] = { list = true },
-		["nasal_sibilant_single_output"] = { type = "boolean" },
+		["match_pl_p_output"] = { type = "boolean" },
 	})
 
 	local termspec = iargs[1] or "#"
@@ -1306,7 +1341,7 @@ function export.get_lect_pron_info_bot(frame)
 		iargs.lang,
 		iargs.lect,
 		iargs.period,
-		iargs.nasal_sibilant_single_output
+		iargs.match_pl_p_output
 	)
 
 	if iargs.plp[1] then
@@ -1323,7 +1358,7 @@ function export.show(frame)
 	local ilang = frame.args.lang
 
 	if ilang == "pl" then
-		data = require("Module:zlw-lch-IPA/data/pl")
+		lectdata = require("Module:zlw-lch-IPA/data/pl")
 	end
 
 	local process_args = {
@@ -1339,11 +1374,11 @@ function export.show(frame)
 		process_args["mpl_period"] = {}
 		process_args["mp_period"] = { alias_of = "mpl_period" }
 
-		for lect, _ in pairs(data.lects) do
+		for lect, _ in pairs(lectdata.lects) do
 			process_args[lect] = {}
 		end
 
-		for alias, lect in pairs(data.lect_aliases) do
+		for alias, lect in pairs(lectdata.lect_aliases) do
 			process_args[alias] = { alias_of = lect }
 		end
 	end
@@ -1363,7 +1398,7 @@ function export.show(frame)
 	local pl_lect_prons
 
 	if ilang == "pl" then
-		for lect, _ in pairs(data.lects) do
+		for lect, _ in pairs(lectdata.lects) do
 			if args[lect] then
 				if pl_lect_prons == nil then pl_lect_prons = {} end
 				pl_lect_prons[lect] = export.get_lect_pron_info(
@@ -1381,9 +1416,10 @@ function export.show(frame)
 			hyph_list = split_on_comma(args.hyphs)
 			do_hyph = true
 		end
+	elseif terms[1].respelling == "-" then
+		do_hyph = false
 	else
-		-- FIXME: Why are we doing this? This is carried over from before.
-		do_hyph = lect ~= "mpl"
+		do_hyph = true
 	end
 
 	if args.rhymes then
@@ -1455,7 +1491,7 @@ function export.show(frame)
 		-- First groups the lects into their lect groups.
 		local grouped_lects = {}
 		for lect, lect_prons in pairs(pl_lect_prons) do
-			local lect_group = data.lects[lect].group
+			local lect_group = lectdata.lects[lect].group
 			if grouped_lects[lect_group] == nil then grouped_lects[lect_group] = {} end
 			table.insert(grouped_lects[lect_group], { code = lect, prons = lect_prons })
 		end
@@ -1465,16 +1501,16 @@ function export.show(frame)
 
 		local function display_lect(value, indentation)
 			local formatted = ("%s%s %s"):format(indentation,
-				m_format_qualifiers(lang, { data.lects[value.code].name }),
+				m_format_qualifiers(lang, { lectdata.lects[value.code].name }),
 				m_IPA_format { lang = lang, items = value.prons }
 			)
 			maxlen = math.max(maxlen, textual_len(formatted))
 			ins("\n" .. formatted)
 		end
 
-		for group_index = 1, #data.lect_groups do
+		for group_index = 1, #lectdata.lect_groups do
 			local lects = grouped_lects[group_index]
-			local group = data.lect_groups[group_index]
+			local group = lectdata.lect_groups[group_index]
 			if lects ~= nil then
 				if group.single_lect then
 					display_lect(lects[1], "*")
@@ -1484,13 +1520,13 @@ function export.show(frame)
 					if group.indent_with_prec then
 						additional_indent = "*"
 						if grouped_lects[group_index - 1] == nil then
-							ins("\n*" .. m_format_qualifiers(lang, { data.lect_groups[group_index - 1].name }) .. ":")
+							ins("\n*" .. m_format_qualifiers(lang, { lectdata.lect_groups[group_index - 1].name }) .. ":")
 						end
 					end
 					-- Lect group header.
 					ins("\n*" .. additional_indent .. m_format_qualifiers(lang, { group.name }) .. ":")
 					-- The lects are sorted according to their <index> value.
-					table.sort(lects, function (a, b) return data.lects[a.code].index < data.lects[b.code].index end)
+					table.sort(lects, function (a, b) return lectdata.lects[a.code].index < lectdata.lects[b.code].index end)
 					for _, lect in ipairs(lects) do
 						display_lect(lect, "**" .. additional_indent)
 					end
