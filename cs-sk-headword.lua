@@ -3,21 +3,43 @@ local pos_functions = {}
 
 local force_cat = false -- for testing; if true, categories appear in non-mainspace pages
 
+local parse_utilities_module = "Module:parse utilities"
 local listToSet = require("Module:table/listToSet")
 
--- Table of all valid genders.
-local valid_genders = listToSet {
-	"mfbysense", "mfbysense-p", "mfbysense-an", "mfbysense-an-p", "mfbysense-in", "mfbysense-in-p",
-	"mf-an", "mf-an-p", "mf-in", "mf-in-p", "m-an", "m-an-p", "m-in", "m-in-p",
-	"f", "f-p", "n", "n-p", "?", "?-p",
-}
--- FUCKME. Many Slovak entries are missing the animacy. Fix them and then disallow not entering the animacy.
-local addl_valid_sk_genders = listToSet {
-	"mf", "mf-p", "m", "m-p",
-}
+-- Table of all valid genders, mapping user-specified gender specs to canonicalized versions.
+local valid_cs_gender_specs = {}
+local valid_sk_gender_specs = {}
+
+local valid_genders_with_animacy = {"mfbysense", "mf", "m"}
+local valid_genders_without_animacy = {"f", "n", "?"}
+local valid_cs_animacies = {"an", "in"}
+local valid_sk_animacies = {"pr", "anml", "in"}
+local valid_number_suffixes = {"", "-p"}
+
+for _, lang in ipairs { "cs", "sk" } do
+	local dest = lang == "cs" and valid_cs_gender_specs or valid_sk_gender_specs
+	local animacy_src = lang == "cs" and valid_cs_animacies or valid_sk_animacies
+	for _, gender in ipairs(valid_genders_without_animacy) do
+		for _, number in ipairs(valid_number_suffixes) do
+			local spec = gender .. number
+			dest[spec] = spec
+		end
+	end
+	for _, gender in ipairs(valid_genders_with_animacy) do
+		for _, number in ipairs(valid_number_suffixes) do
+			for _, animacy in ipairs(animacy_src) do
+				local spec = gender .. "-" .. animacy .. number
+				dest[spec] = spec
+			end
+			if lang == "cs" and gender == "mfbysense" then -- HACK for Czech; FIXME: remove this
+				dest[gender .. number] = gender .. "-an" .. number
+			end
+		end
+	end
+end
 
 -- Table of all valid aspects.
-local valid_aspects = {
+local valid_aspects = listToSet {
 	"impf", "pf", "both", "biasp", "?",
 }
 
@@ -117,11 +139,11 @@ function export.show(frame)
 	}
 
 	if pos_functions[poscat] then
-		local params = pos_functions[poscat].params
-		if type(params) == "function" then
-			params = params(lang)
+		local posparams = pos_functions[poscat].params
+		if type(posparams) == "function" then
+			posparams = posparams(lang)
 		end
-		for key, val in pairs(pos_functions[poscat].params) do
+		for key, val in pairs(posparams) do
 			params[key] = val
 		end
 	end
@@ -200,19 +222,17 @@ local function get_noun_params(is_proper)
 end
 
 local function do_nouns(is_proper, args, data)
+	local specs = data.lang:getCode() == "sk" and valid_sk_gender_specs or valid_cs_gender_specs
 	for i, g in ipairs(args.g) do
-		if valid_genders[g] then
-			-- do nothing
-		elseif data.lang:getCode() == "sk" and addl_valid_sk_genders[g] then
-			table.insert(data.categories, data.langname .. " terms with undefined animacy")
+		local canon_g = specs[g]
+		if canon_g then
+			g = canon_g
+		elseif g == "m" or g == "m-p" or g == "mf" or g == "mf-p" or g == "mfbysense" or g == "mfbysense-p" then
+			error("Invalid gender: '" .. g .. "'; must specify animacy along with masculine gender")
+		elseif data.lang:getCode() == "sk" and g:find("%-an") then
+			error("Invalid gender: '" .. g .. "'; instead of m-an, use m-pr for people and m-anml for animals")
 		else
 			error("Unrecognized gender: '" .. g .. "'")
-		end
-		-- mfbysense should always be animate so add that
-		if g == "mfbysense" then
-			g = "mfbysense-an"
-		elseif g == "mfbysense-p" then
-			g = "mfbysense-an-p"
 		end
 		track("gender-" .. g)
 		if args.g_qual[i] then
@@ -222,7 +242,7 @@ local function do_nouns(is_proper, args, data)
 		end
 	end
 	if #data.genders == 0 then
-		table.insert(data.categories, data.langname .. " terms with undefined animacy")
+		table.insert(data.genders, "?")
 	end
 	if args.indecl then
 		table.insert(data.inflections, {label = glossary_link("indeclinable")})
@@ -238,10 +258,12 @@ local function do_nouns(is_proper, args, data)
 	end
 
 	local function handle_infl(arg, label, frob)
-		local vals = parse_term_list_with_modifiers(arg, args[arg], frob)
-		if #vals > 0 then
-			vals.label = label
-			table.insert(data.inflections, vals)
+		if args[arg] then
+			local vals = parse_term_list_with_modifiers(arg, args[arg], frob)
+			if #vals > 0 then
+				vals.label = label
+				table.insert(data.inflections, vals)
+			end
 		end
 	end
 	
