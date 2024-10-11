@@ -476,18 +476,44 @@ local function single_word(data)
 		if tsub(("([%s]%s*)(%s)$"):format(V, C, v), "%1.%2") then break end
 	end
 
-	-- syllabify <istka> as /ist.ka/; same for [[haftka]], [[adiunktka]], [[abiturientka]], [[ćwiartka]],
-	-- [[adeptka]], etc.
-	if txt:find(("[%s][rfnskp]+t[kc]"):format(V)) then
+	-- Syllabify <-Ctka> as /Ct.ka/, e.g. in [[-istka]], [[haftka]], [[adiunktka]], [[abiturientka]], [[ćwiartka]],
+	-- [[adeptka]], etc. Same for any case form.
+	local C_before_t = "łrnfskp"
+	if tfind(("[%s][%s]+t[kc]"):format(V, C_before_t)) then
 		local endings = lg {
-			{ "k[aąęio]", "ce", "kach", "kom", "kami" },
-			szl = { "k[aãio]", "ce", "kami", "kacj", "kacach", "kōma" },
-			csb = { "k[aãąioôòùó]", "ce", "kami", "kacj", "kacach", },
+			-- As with prefixes above, must use digraph replacement codes.
+			{ "k[aąęio]", "ce", "kaH", "kom", "kami" },
+			szl = { "k[aãio]", "ce", "kami", "kacj", "kacaH", "kōma" },
+			csb = { "k[aãąioôòùó]", "ce", "kami", "kacj", "kacaH", },
 		}
-		for _, v in ipairs(endings) do
+		for _, ending in ipairs(endings) do
 			-- Make sure there's no syllable divider elsewhere in the consonant cluster
 			-- preceding the suffix. Same logic as above for prefixes.
-			if tsub(("([%s][rfnskp]+t)(%s)$"):format(V, v), "%1.%2") then break end
+			if tsub(("([%s][%s]+t)(%s)$"):format(V, C_before_t, ending), "%1.%2") then
+				break
+			end
+		end
+	end
+
+	if lang == "pl" then
+		-- FIXME: Add support for other languages and lects.
+		-- Syllabify <-Ctny> as /Ct.ny/, and <-Ctnik> as <Ct.nik>; same for any case form.
+		if tfind(("[%s][%s]+tn"):format(V, C_before_t)) then
+			local endings = lg {
+				-- As with prefixes above, must use digraph replacement codes.
+				   -- -ny
+				{ "n[yaeią]", "nego", "nej", "nyH", "nemu", "nymi?",
+				   -- -nik, -nica
+				  "nik[aui]?", "nikowi", "nikiem", "ników", "ni[kc]om", "ni[kc]ami", "ni[kc]aH", "nic[ayeęąo]?",
+				}
+			}
+			for _, ending in ipairs(endings) do
+				-- Make sure there's no syllable divider elsewhere in the consonant cluster
+				-- preceding the suffix. Same logic as above for prefixes.
+				if tsub(("([%s][%s]+t)(%s)$"):format(V, C_before_t, ending), "%1.%2") then
+					break
+				end
+			end
 		end
 	end
 
