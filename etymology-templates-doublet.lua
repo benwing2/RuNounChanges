@@ -1,12 +1,12 @@
-local require_when_needed = require("Module:utilities/require when needed")
+local export = {}
+
+local require_when_needed = require("Module:require when needed")
 
 local concat = table.concat
 local format_categories = require_when_needed("Module:utilities", "format_categories")
 local insert = table.insert
 local process_params = require_when_needed("Module:parameters", "process")
 local serial_comma_join = require_when_needed("Module:table", "serialCommaJoin")
-
-local export = {}
 
 local rsplit = mw.text.split
 local rsubn = mw.ustring.gsub
