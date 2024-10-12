@@ -299,7 +299,7 @@ local function single_word(data)
 	local penultimate_offset = 0
 	local unstressed = data.is_prep or false
 	-- If penultimate_offset > 0, add a second stress onto the penult.
-	local double_stress = true
+	local double_stress = false
 
 	function tsub(s, r)
 		local c
@@ -325,7 +325,7 @@ local function single_word(data)
 	})
 	if tfind(capitals) then
 		local i = 1
-		local str = rsub(txt, "[.'^*+]", "")
+		local str = rsub(txt, "[.'^*+&]", "")
 		while rfind(str, capitals, i) do
 			local r, _ = rfind(str, capitals, i)
 			table.insert(uppercase_indices, r)
@@ -380,15 +380,21 @@ local function single_word(data)
 	local V = V_no_IU .. "IU"
 	local C = ("[^%sU.']"):format(V_no_IU)
 
-	if txt:find("^*") then
+	if txt:find("^%*") then
 		-- The symbol <*> before a word indicates it is unstressed.
 		unstressed = true
 		txt = txt:sub(2)
 	elseif txt:find("^%^+") then
 		-- The symbol <^> before a word indicates it is stressed on the antepenult,
 		-- <^^> on the ante-antepenult, etc.
-		penultimate_offset = txt:gsub("(%^).*", "%1"):len()
+		penultimate_offset = txt:match("^(%^+)"):len()
 		txt = txt:sub(penultimate_offset + 1)
+	elseif txt:find("^&+") then
+		-- The symbol <&> before a word indicates it has double stress on both the antepenult (prescriptive) and on
+		-- the penult (colloquial); <&&> is similar but for ante-antepenult and penult, etc.
+		penultimate_offset = txt:match("^(&+)"):len()
+		txt = txt:sub(penultimate_offset + 1)
+		double_stress = true
 	elseif txt:find("^%+") then
 		-- The symbol <+> indicates the word is stressed regularly on the penult. This is useful
 		-- for avoiding the following checks to come into place.
@@ -398,35 +404,22 @@ local function single_word(data)
 			-- Some words endings trigger stress on the antepenult or ante-antepenult regularly.
 			if tfind("łybyśmy$") or tfind("libyśmy$") or tfind("łybyście$") or tfind("libyście$") then
 				penultimate_offset = 2
-				double_stress = false
 			elseif tfind("ł[aoy]?by[mś]?$") or tfind("liby[mś]?$") then
 				penultimate_offset = 1
-				double_stress = false
 			elseif tfind("łyśmy$") or tfind("liśmy$") or tfind("łyście$") or tfind("liście$") then
 				penultimate_offset = 1
+				double_stress = true
 			end
 		end
-		-- Recognise <-yka> and its declined form and automatically assign it an antepenultimate stress.
-		if tfind(".+[yi][kc].+") and lect == nil then
-			local endings = lg {
-				{ "k[aąęio]", "ce", "kach", "kom" },
-				szl = { "k[aãio]", "ce", "kacj", "kōm", "kach" },
-				csb = { "k[aeąãùóoô]", "ce", "kacj", "kóm", "kama", "kach" },
-				["zlw-slv"] = { "k[aãêúóoôõ]", "cê", "kacj", "kji", "kóm", "kóma", "kamy", "kach" }
-			}
-			for _, v in ipairs(endings) do
-				if tfind(("[yi]%s$"):format(v)) then
-					penultimate_offset = 1
-					break
-				end
-			end
-		end
+		-- FIXME, is the following correct?
 		if lect == "mpl" then
 			if tfind(".+[yi]j.+") then
 				local endings = { "[ąáéo]", "[ée]j", "[áo]m", "ach" }
 				for _, v in ipairs(endings) do
 					if tfind(("[yi]j%s$"):format(v)) then
 						penultimate_offset = 1
+						-- FIXME: correct?
+						-- double_stress = true
 					end
 				end
 			end
@@ -1063,18 +1056,21 @@ local function multiword(term, lang, period, lect, match_pl_p_output)
 
 	local result = {{
 		pron = ipa,
+		norhyme = false,
 	}}
 
 	-- Map over each element in `result`. If `from` is found in the element, replace the element with up to three
 	-- elements, respectively replacing `from` with `to1` (with accent qualifiers `a1`), `to2` (with accent qualifiers
 	-- `a2`) and `to3` (with accent qualifiers `a3`). If `to2` or `to3` are nil, no replacement is done for them.
-	local function flatmap_and_sub_post(from, to1, a1, to2, a2, to3, a3)
+	-- If `nr1` is true, this variant should not have rhymes generated; likewise for `nr2` and `nr3`.
+	local function flatmap_and_sub_post(from, to1, a1, nr1, to2, a2, nr2, to3, a3, nr3)
 		result = flatmap(result, function(item)
 			if rfind(item.pron, from) then
 				local retval = {
 					{
 						pron = rsub(item.pron, from, to1),
 						a = combine_qualifiers(item.a, a1),
+						norhyme = item.norhyme or nr1,
 					}
 				}
 				if to2 then
@@ -1082,6 +1078,7 @@ local function multiword(term, lang, period, lect, match_pl_p_output)
 						{
 							pron = rsub(item.pron, from, to2),
 							a = combine_qualifiers(item.a, a2),
+							norhyme = item.norhyme or nr2,
 						}
 					)
 				end
@@ -1090,6 +1087,7 @@ local function multiword(term, lang, period, lect, match_pl_p_output)
 						{
 							pron = rsub(item.pron, from, to3),
 							a = combine_qualifiers(item.a, a3),
+							norhyme = item.norhyme or nr3,
 						}
 					)
 				end
@@ -1109,32 +1107,36 @@ local function multiword(term, lang, period, lect, match_pl_p_output)
 		end
 	end
 	if lang == "pl" and lect == "ekr" then
-		flatmap_and_sub_post("O", "o", {"pre-21<sup>st</sup> c."}, "u", {"21<sup>st</sup> c."})
+		flatmap_and_sub_post("O", "o", {"pre-21<sup>st</sup> c."}, false, "u", {"21<sup>st</sup> c."}, false)
 	elseif lang == "pl" and lect == "mpl" then
 		if period == "early" then
-			flatmap_and_sub_post("[RS]", "r̝")
+			flatmap_and_sub_post("[RS]", "r̝", nil, false)
 		elseif period == "late" then
-			flatmap_and_sub_post("[RS]", {R = "ʐ", S = "ʂ"})
+			flatmap_and_sub_post("[RS]", {R = "ʐ", S = "ʂ"}, nil, false)
 		elseif not period then
-			flatmap_and_sub_post("[RS]", "r̝", {"16<sup>th</sup> c."}, {R = "ʐ", S = "ʂ"}, {"17<sup>th</sup>–18<sup>th</sup> c."})
+			flatmap_and_sub_post("[RS]", "r̝", {"16<sup>th</sup> c."}, false,
+				{R = "ʐ", S = "ʂ"}, {"17<sup>th</sup>–18<sup>th</sup> c."}, false)
 		else
 			error(("'%s' is not a supported Middle Polish period; try with 'early' or 'late'"):format(period))
 		end
 	elseif lang == "pl" and lect == "ora" then
-		flatmap_and_sub_post("([^ ]*)" .. ALTSTRESS .. "([^ ]-)" .. ALTSTRESS, "%1ˈ%2.", {"Poland"}, stress_second, {"Slovakia"})
+		flatmap_and_sub_post("([^ ]*)" .. ALTSTRESS .. "([^ ]-)" .. ALTSTRESS, "%1ˈ%2.", {"Poland"}, false,
+			stress_second, {"Slovakia"}, false)
 	elseif lang == "pl" and lect == "zag" then
-		flatmap_and_sub_post("([^ ]*)" .. ALTSTRESS .. "([^ ]-)" .. ALTSTRESS, stress_second, {"north"}, "%1ˈ%2.", {"south"})
+		flatmap_and_sub_post("([^ ]*)" .. ALTSTRESS .. "([^ ]-)" .. ALTSTRESS, stress_second, {"north"}, false,
+			"%1ˈ%2.", {"south"}, false)
 	elseif lang == "pl" then
-		flatmap_and_sub_post("([^ ]*)" .. ALTSTRESS .. "([^ ]-)" .. ALTSTRESS, "%1ˈ%2.", {"prescriptive"}, stress_second, {"colloquial"})
+		flatmap_and_sub_post("([^ ]*)" .. ALTSTRESS .. "([^ ]-)" .. ALTSTRESS, "%1ˈ%2.", {"prescriptive"}, false,
+			stress_second, {"colloquial"}, false)
 	elseif lang == "szl" then
-		flatmap_and_sub_post("O", "ɔ", {"non-Western"}, "ɔw", {"Western"}, "ɛw", {"Głogówek"})
+		flatmap_and_sub_post("O", "ɔ", {"non-Western"}, false, "ɔw", {"Western"}, false, "ɛw", {"Głogówek"}, false)
 	end
 	-- Two outputs from nasal before sibilant, if not converted to one above.
-	flatmap_and_sub_post("Ñ([.ˈ]?)([szɕʑʂʐ])", "w̃%1%2", nil, function(syldiv, sib)
+	flatmap_and_sub_post("Ñ([.ˈ]?)([szɕʑʂʐ])", "w̃%1%2", nil, false, function(syldiv, sib)
 		return ((sib == "ɕ" or sib == "ʑ") and "ɲ" or "n") .. syldiv .. sib
-	end)
-	flatmap_and_sub_post("Ẽ", "ɛ", {"normal speech"}, "ɛw̃", {"careful speech"})
-	flatmap_and_sub_post("Õ", "ɔw̃", {"standard"}, "ɔm", {"regional", "or", "dialectal", "proscribed"})
+	end, nil, true)
+	flatmap_and_sub_post("Ẽ", "ɛ", {"normal speech"}, true, "ɛw̃", {"careful speech"}, false)
+	flatmap_and_sub_post("Õ", "ɔw̃", {"standard"}, false, "ɔm", {"regional", "or", "dialectal", "proscribed"}, true)
 	return result, hyph
 end
 
@@ -1252,8 +1254,8 @@ local function normalise_input(term, pagename, paramname)
 	if term == "#" then
 		-- The diesis stands simply for {{PAGENAME}}.
 		return pagename
-	elseif (term == "+") or term:find("^%^+$") or (term == "*") then
-		-- Inputs that are just '+', '*', '^', '^^', etc. are treated as
+	elseif (term == "+") or term:find("^%^+$") or term:find("^&+$") or (term == "*") then
+		-- Inputs that are just '+', '*', '^', '^^', '&', '&&', etc. are treated as
 		-- if they contained the pagename with those symbols preceding it.
 		return term .. pagename
 	-- Handle syntax like <po.>, <.ka> and <po..ka>. This allows to not respell
@@ -1327,7 +1329,9 @@ function export.get_lect_pron_info(terms, pagename, paramname, lang, lect, perio
 					aa = term.aa,
 					refs = i == 1 and term.refs or nil,
 				})
-				table.insert(rhyme_list, do_rhyme(pron.pron, lang))
+				if not pron.norhyme then
+					table.insert(rhyme_list, do_rhyme(pron.pron, lang))
+				end
 			end
 		end
 
