@@ -27,6 +27,11 @@ local lectdata
 -- FIXME: Implement optional assimilation across word boundaries.
 local assimilate_across_word_boundaries = false
 
+local function track(page)
+    require("Module:debug/track")("zlw-lch-IPA/" .. page)
+    return true
+end
+
 -- Version of rsubn() that discards all but the first return value.
 local function rsub(term, foo, bar)
 	local retval = rsubn(term, foo, bar)
@@ -297,7 +302,9 @@ local function single_word(data)
 	local txt, lang, lect = data.txt, data.lang, data.lect
 	-- This is the number of syllables before the penultimate syllable onto which to add the stress.
 	local penultimate_offset = 0
-	local unstressed = data.is_prep or false
+	local is_prefix = not not txt:find("%-$")
+	local is_suffix = not not txt:find("^%-")
+	local unstressed = data.is_prep or is_prefix
 	-- If penultimate_offset > 0, add a second stress onto the penult.
 	local double_stress = false
 
@@ -371,11 +378,14 @@ local function single_word(data)
 		})
 	end
 
+	-- Vowels, both spelled and IPA vowels. To make the distinction easier, we separate the IPA-only vowels and
+	-- concatenate them at the end. For Polish, we additionally separate the spelled Middle Polish vowels.
 	local V_no_IU = lg {
-		pl = "aąeęioóuy" .. "áéôûý",
-		szl = "aãeéioōŏôõuy",
-		csb = "ôòãëùéóąeyuioa",
-		["zlw-slv"] = "aãeéëêioóõôuúùyăĭŏŭŭùāY",
+		pl = "aąeęioóuy" .. "áéôûý" .. "ɛɔɘ",
+		szl = "aãeéioōŏôõuy" .. "ɛɔɪ",
+		csb = "aãąeéëioôòóuùy" .. "ɛɜɔõɞ",
+		-- NOTE: DO NOT include ɔ̃ here because it's not a single Unicode character.
+		["zlw-slv"] = "aãāăeéëêEiĭoóõôŏuúùŭŭùyY" .. "ɛɪɔɵʉə",
 	}
 	local V = V_no_IU .. "IU"
 	local C = ("[^%sU.']"):format(V_no_IU)
@@ -529,9 +539,10 @@ local function single_word(data)
 	-- FIXME: I don't believe it's necessarily correct in a sequence of obstruents to place the boundary after the
 	-- first one. I think we should respect the possible onsets.
 
+	tsub(("qu([%s])"):format(V), "Q%1") -- replace qu before vowel with Q for easier syllabifying
 	-- List of obstruents and liquids, including capital letters representing digraphs. We count rz as a liquid even
 	-- in Polish.
-	local obstruent = "bBcćCdDfgGhHkpṕqsSśtxzźżŹŻ"
+	local obstruent = "bBcćCdDfgGhHkpṕQqsSśtxzźżŹŻ"
 	local liquid_no_w = "IjlrR"
 	local liquid = liquid_no_w .. "łwẃ"
 	-- We need to treat I (<i> in hiatus) as a consonant, and since we check for two vowels in a row, we don't want
@@ -552,9 +563,10 @@ local function single_word(data)
 		end
 		return ("%s%s%s"):format(v1, cons, v2)
 	end)
+	tsub("Q", "qu") -- undo qu -> Q replacement
 
 	-- Ignore certain symbols and diacritics for the hyphenation.
-	local hyph = txt:gsub("'", "."):gsub("-", ""):gsub(",", "")
+	local hyph = txt:gsub("'", "."):gsub("^%.", ""):gsub("-", ""):gsub(",", "")
 	if lang == "zlw-slv" then
 		hyph = rsubn(hyph, "[IăĭŏŭYā]", {
 			["I"] = "j",
@@ -587,8 +599,8 @@ local function single_word(data)
 
 	txt = undo_digraph_replacement(txt)
 
-	-- handle <x>; must precede ch -> [x]
-	tsub("x", "ks")
+	-- handle <x>; must precede ch -> [x]; use - to prevent palatalization by following i
+	tsub("x", "ks-")
 	-- move syllable boundary between [ks] if preceded by a vowel
 	tsub(("([%s])([.ˈ])ks"):format(V), "%1k%2s")
 
@@ -606,13 +618,13 @@ local function single_word(data)
 	-- replacements that are the same (almost) everywhere; can be overridden
 	local replacements = {
 		-- vowels
-		["e"]="ɛ", ["o"]="ɔ",
+		["e"] = "ɛ", ["o"] = "ɔ",
 
 		-- consonants
-		["c"]="t_s", ["ć"]="t_ɕ",
-		["ń"]="ɲ", ["ś"]="ɕ", ["ź"]="ʑ",
-		["ł"]="w", ["w"]="v", ["ż"]="ʐ",
-		["g"]="ɡ", ["h"]="x",
+		["c"] = "t_s", ["ć"] = "t_ɕ",
+		["ń"] = "ɲ", ["ś"] = "ɕ", ["ź"] = "ʑ",
+		["ł"] = "w", ["w"] = "v", ["ż"] = "ʐ",
+		["g"] = "ɡ", ["h"] = "x",
 	}
 
 	local function override(tbl)
@@ -625,8 +637,8 @@ local function single_word(data)
 	if lang == "pl" then
 		override {
 			-- vowels
-			["ą"]="ɔN", ["ę"]="ɛN",
-			["ó"]="u", ["y"]="ɘ",
+			["ą"] = "ɔN", ["ę"] = "ɛN",
+			["ó"] = "u", ["y"] = "ɘ",
 		}
 		if lect then
 			override {
@@ -671,17 +683,17 @@ local function single_word(data)
 	elseif lang == "szl" then
 		override {
 			-- vowels
-			["ō"]="o", ["ŏ"]="O",
-			["ô"]="wɔ", ["õ"] = "ɔ̃",
+			["ō"] = "o", ["ŏ"] = "O",
+			["ô"] = "wɔ", ["õ"] = "ɔ̃",
 			["y"] = "ɪ",
 		}
 		tsub(".", replacements)
 	elseif lang == "csb" then
 		override {
 			-- vowels
-			["é"]="e",
-			["ó"]="o", ["ô"]="ɞ", ["ë"]="ɜ",
-			["ò"]="wɛ", ["ù"]="wu", ["y"] = "Y",
+			["é"] = "e",
+			["ó"] = "o", ["ô"] = "ɞ", ["ë"] = "ɜ",
+			["ò"] = "wɛ", ["ù"] = "wu", ["y"] = "Y",
 			["ą"] = "ɔ̃",
 		}
 		tsub(".", replacements)
@@ -820,7 +832,6 @@ local function single_word(data)
 	end
 
 	if lang == "zlw-slv" then
-		local V = "aɛeɔ̃oɵəEɪiʉuyã"
 		tsub("nj$", "n")
 		tsub("nj([^" .. V .. "])", "n%1")
 		tsub("ɲ([" .. V .. "])", "nj%1")
@@ -878,12 +889,16 @@ local function single_word(data)
 
 		if first_penultimate_offset < 0 then
 			-- Deals with initially stressed lects.
-			stressed_txt = "ˈ" .. txt
+			stressed_txt = is_suffix and txt or "ˈ" .. txt
 		else
-			stressed_txt = rsub(txt, get_stress_regex(first_penultimate_offset), "ˈ%1")
+			local stress_regex = get_stress_regex(first_penultimate_offset)
+			stressed_txt = rsub(txt, stress_regex, "ˈ%1")
 			-- If no stress mark could have been placed, it can only be initial, e.g. in monosyllables or a 3-syllable
-			-- word when ante-antepenultimate stress is requested (e.g. [[szłybyśmy]]).
-			if not stressed_txt:find("ˈ") then
+			-- word when ante-antepenultimate stress is requested (e.g. [[szłybyśmy]]). Overly short suffixes (normally
+			-- single-syllable, but also disyllabic if stress is antepenultimate, etc.) don't get stress; nor do words
+			-- without vowels.
+			if not stressed_txt:find("ˈ") and rfind(stressed_txt, ("[%s]"):format(V)) and
+				(not is_suffix or rfind("." .. stressed_txt, stress_regex)) then
 				stressed_txt = "ˈ" .. stressed_txt
 			end
 		end
@@ -931,7 +946,6 @@ local function single_word(data)
 
 	-- This must follow stress assignment because it depends on whether the E is stressed.
 	if lang == "zlw-slv" and tfind("E") then
-		local V = "aɛeɔ̃oɵəEɪiʉuyã"
 		txt = txt:gsub("ˈ([^" .. V .. "]*)E", "ˈ%1i̯ɛ")
 		txt = txt:gsub("E$", "ə")
 		txt = txt:gsub("E", "ɛ")
@@ -973,8 +987,13 @@ local function multiword(term, lang, period, lect, match_pl_p_output)
 			{
 				"beze?", "na", "dla", "do", "ku", "nade?", "o", "ode?", "po", "pode?", "przede?", "przeze?", "przy",
 				"spode?", "u", "we?", "z[ae]?", "znade?", "zza",
-				-- clitics
+				-- clitic conjunctions and adverbs
 				"a", "i", "nie",
+				-- clitic pronouns; less common variants with stress need an explicit stress mark (e.g. [[mi]] = variant
+				-- of Greek letter [[my]] or the third note in a musical scale; [[go]] = the game of go; [[mu]] = the
+				-- sound "moo" of a cow; note that [[ci]] is also a stressed pronoun, the nominative virile plural of
+				-- [[ten]])
+				"mi", "ci", "cię", "go", "mu", "się",
 			}, szl = {
 				"bezy?", "na", "dlŏ", "d[oō]", "ku", "nady?", "ô", "ôdy?", "po", "pody?", "przedy?", "przezy?", "przi",
 				"spody?", "u", "w[ey]?", "z[aey]?", "[śs]", "znady?"
@@ -1064,8 +1083,10 @@ local function multiword(term, lang, period, lect, match_pl_p_output)
 	-- `a2`) and `to3` (with accent qualifiers `a3`). If `to2` or `to3` are nil, no replacement is done for them.
 	-- If `nr1` is true, this variant should not have rhymes generated; likewise for `nr2` and `nr3`.
 	local function flatmap_and_sub_post(from, to1, a1, nr1, to2, a2, nr2, to3, a3, nr3)
+		local any_change = false
 		result = flatmap(result, function(item)
 			if rfind(item.pron, from) then
+				any_change = true
 				local retval = {
 					{
 						pron = rsub(item.pron, from, to1),
@@ -1096,6 +1117,8 @@ local function multiword(term, lang, period, lect, match_pl_p_output)
 				return {item}
 			end
 		end)
+		
+		return any_change
 	end
 
 	-- Replace the first ALTSTRESS with a syllable divider but not at the beginning of a word.
@@ -1137,18 +1160,46 @@ local function multiword(term, lang, period, lect, match_pl_p_output)
 	end, nil, true)
 	flatmap_and_sub_post("Ẽ", "ɛ", {"normal speech"}, true, "ɛw̃", {"careful speech"}, false)
 	flatmap_and_sub_post("Õ", "ɔw̃", {"standard"}, false, "ɔm", {"regional", "or", "dialectal", "proscribed"}, true)
+	while true do
+		-- Make all primary stresses but the last one in a given word be secondary.
+		if not flatmap_and_sub_post("([^ ]*)ˈ([^ ]-)ˈ", "%1ˌ%2ˈ") then
+			break
+		end
+	end
+				
+		
 	return result, hyph
 end
 
 -- Given a single substitution spec, `to`, figure out the corresponding value of `from` used in a complete
 -- substitution spec. `pagename` is the name of the page, either the actual one or taken from the `pagename` param.
--- `anchor_begin`, if set, indicates that the match must be to the beginning of a word (it was preceded by ^).
--- `anchor_end`, if set, indicates that the match must be to the end of a word (it was followed by $).
+-- `anchor_begin`, if set, indicates that the match must be to the beginning of a word (it was preceded by ~).
+-- `anchor_end`, if set, indicates that the match must be to the end of a word (it was followed by ~). If there is a
+-- second return value, it indicates that the `from` is a Lua pattern and doesn't need to be pattern-escaped.
 local function convert_single_substitution_to_original(to, pagename, anchor_begin, anchor_end)
 	-- Replace specially-handled characters with a class matching the character and possible replacements.
 	local escaped_from = to
+	-- If the entire single substitution spec is one of the special stress-controlling symbols (&, &&, +, etc.),
+	-- place it at the very beginning of the pagename. We do this by returning a Lua pattern that matches the
+	-- beginning of the string, using the %f notation. (%f[^%z] means a transition from %z, or the NUL character, to
+	-- not-%z; strings are treated for this purpose as if they begin and end with a NUL character.)
+	if escaped_from:find("^[+*^&]+$") then
+		return "%f[^%z]", true
+	end
 	escaped_from = escaped_from:gsub("[.']", "")
-	escaped_from = m_str_utils.pattern_escape(escaped_from)
+	-- Call the equivalent of pattern_escape() in [[Module:string utilities]] but leave out +, *, ^ and -, which we match below.
+	local chars = {
+		["\0"] = "%z", ["$"] = "%$", ["%"] = "%%", ["("] = "%(", [")"] = "%)",
+		["."] = "%.", ["?"] = "%?", ["["] = "%[", ["]"] = "%]",
+	}
+	escaped_from = escaped_from:gsub("[%z$%%().?[%]]", chars)
+	-- A special stress-controlling symbol (&, &&, +, etc.) that occurs in a single substitution expression but
+	-- is not the entire expression matches the beginning of a word. (Contrast the case above when the symbol stands
+	-- alone and matches the beginning of the entire term.) This makes it possible e.g. with an expression like
+	-- [[Koreańska Republika Ludowo-Demokratyczna]] to write the substitution spec [&R] and have it work; it matches
+	-- R at the beginning of a word and converts it to &R, which makes [[Republika]] have optional antepenultimate
+	-- stress. This must precede other replacements esp. k -> [kc]+, otherwise the + will wrongly get matched.
+	escaped_from = escaped_from:gsub("[&+*^]+", "%%f[%%a]")
 	-- j can match against i in e.g. [[aikido]] respelled <ajkido> and [[apeiron]] respelled <apejron>
 	escaped_from = escaped_from:gsub("j", "[ji]")
 	-- ń can match against n; in combination with the preceding, ńj can match against ni in e.g. [[Albania]] respelled
@@ -1156,9 +1207,16 @@ local function convert_single_substitution_to_original(to, pagename, anchor_begi
 	escaped_from = escaped_from:gsub("ń", "[ńn]")
 	-- k can match against c or cc in e.g. [[altocumulus]] respelled <altokumulus> or [[piccolo]] respelled <pikolo>
 	escaped_from = escaped_from:gsub("k", "[kc]+")
-	-- This is tricky, because we already passed `escaped_from` through pattern_escape() causing a hyphen to get a
-	-- % sign before it, and have to double up the percent signs to match and replace a literal %.
-	escaped_from = escaped_from:gsub("%%%-", "%%-?")
+	-- A hyphen can match against a hyphen or nothing in the original. We have to take into account escaping the hyphen
+	-- in the from side, adding a % sign in the replacement to escape the hyphen in the later rmatch, and escaping the
+	-- percent sign in the replacement.
+	escaped_from = escaped_from:gsub("%-", "%%-?")
+	-- A space can match against space or hyphen in the original, so e.g. [[agar-agar]] can use [ ] to respell it as
+	-- <agar agar>.
+	escaped_from = escaped_from:gsub(" ", "[ -]")
+	-- Middle Polish á can match against a, and similarly for é against e.
+	escaped_from = escaped_from:gsub("á", "[aá]")
+	escaped_from = escaped_from:gsub("é", "[eé]")
 	escaped_from = "(" .. escaped_from .. ")"
 	if anchor_begin then
 		escaped_from = "%f[%a]" .. escaped_from
@@ -1174,38 +1232,44 @@ local function convert_single_substitution_to_original(to, pagename, anchor_begi
 		end
 		return match
 	end
-	error(("Single substitution spec '%s' couldn't be matched to pagename '%s'"):format(to, pagename))
+	error(("Single substitution spec '%s' couldn't be matched to pagename '%s' (escaped_from: %s"):format(
+		to, pagename, mw.dumpObject(escaped_from)))
 end
 
 
 local function apply_substitution_spec(respelling, pagename, parse_err)
+	if respelling:find("%^") or respelling:find("%$") then
+		-- Changed to use ~ at beginning or end to avoid clashing with other use of ^; catch old uses
+		track("old-anchor-symbols")
+	end
 	local subs = split_on_comma(rmatch(respelling, "^%[(.*)%]$"))
 	respelling = pagename
 	for _, sub in ipairs(subs) do
 		local from, escaped_from, to, escaped_to, anchor_begin, anchor_end
-		if sub:find("^%^") then
+		if sub:find("^~") then
 			-- anchor at beginning
-			sub = rmatch(sub, "^%^(.*)$")
+			sub = rmatch(sub, "^~(.*)$")
 			anchor_begin = true
 		end
+		local already_escaped
 		if sub:find(":") then
 			from, to = rmatch(sub, "^(.-):(.*)$")
-			if from:find("%$$") then
+			if from:find("~$") then
 				-- anchor at end
-				from = rmatch(from, "^(.*)%$$")
+				from = rmatch(from, "^(.*)~$")
 				anchor_end = true
 			end
 		else
-			if sub:find("%$$") then
+			if sub:find("~$") then
 				-- anchor at end
-				sub = rmatch(sub, "^(.*)%$$")
+				sub = rmatch(sub, "^(.*)~$")
 				anchor_end = true
 			end
 			to = sub
-			from = convert_single_substitution_to_original(to, pagename, anchor_begin, anchor_end)
+			from, already_escaped = convert_single_substitution_to_original(to, pagename, anchor_begin, anchor_end)
 		end
 		if from then
-			escaped_from = m_str_utils.pattern_escape(from)
+			escaped_from = already_escaped and from or m_str_utils.pattern_escape(from)
 			if anchor_begin then
 				escaped_from = "%f[%a]" .. escaped_from
 			end
@@ -1230,7 +1294,7 @@ local function apply_substitution_spec(respelling, pagename, parse_err)
 end
 
 
--- This handles all the magic characters <*>, <^>, <+>, <.>, <#>.
+-- This handles all the magic characters <*>, <^>, <&>, <+>, <.>, <#>.
 local function normalise_input(term, pagename, paramname)
 	local function check_af(str, af, reg, repl, err_msg)
 		reg = reg:format(af)
@@ -1252,7 +1316,7 @@ local function normalise_input(term, pagename, paramname)
 		return apply_substitution_spec(term, pagename, parse_err)
 	end
 	if term == "#" then
-		-- The diesis stands simply for {{PAGENAME}}.
+		-- The pound sign stands simply for {{PAGENAME}}.
 		return pagename
 	elseif (term == "+") or term:find("^%^+$") or term:find("^&+$") or (term == "*") then
 		-- Inputs that are just '+', '*', '^', '^^', '&', '&&', etc. are treated as
