@@ -332,7 +332,7 @@ local function single_word(data)
 	})
 	if tfind(capitals) then
 		local i = 1
-		local str = rsub(txt, "[.'^*+&]", "")
+		local str = rsub(txt, "[.\"'^*+&]", "")
 		while rfind(str, capitals, i) do
 			local r, _ = rfind(str, capitals, i)
 			table.insert(uppercase_indices, r)
@@ -388,7 +388,7 @@ local function single_word(data)
 		["zlw-slv"] = "aãāăeéëêEiĭoóõôŏuúùŭŭùyY" .. "ɛɪɔɵʉə",
 	}
 	local V = V_no_IU .. "IU"
-	local C = ("[^%sU.']"):format(V_no_IU)
+	local C = ("[^%sU.'\"]"):format(V_no_IU)
 
 	if txt:find("^%*") then
 		-- The symbol <*> before a word indicates it is unstressed.
@@ -441,7 +441,7 @@ local function single_word(data)
 	-- chars, we need to use the replacement chars here. Longer prefixes must precede shorter subprefixes,
 	-- e.g. niedo- must precede nie- for the former to be recognized.
 	local prefixes = {
-		"aero", "arcy", "bez",
+		'a"?ero', '"?anty', '"?arcy', "bez",
 		"Ctero", "ćwierć", "dwu", "mało", "niby", "niedo", "nie",
 		"[pt]Ry", "pRed?", "roze?", "wielo", "współ", "wy",
 		-- <do-, na-, po-, o-, u-> would hit too many false positives
@@ -549,8 +549,12 @@ local function single_word(data)
 	-- U to be one of the second vowels.
 	tsub_repeatedly(("([%sU])(%s*)([%s])"):format(V_no_IU, C, V_no_IU), function(v1, cons, v2)
 		local cons_no_hyphen = cons:gsub("%-", "")
-		if ulen(cons_no_hyphen) < 2 or rfind(cons_no_hyphen, ("^[%s][%s]I?$"):format(obstruent, liquid)) or
-			rfind(cons_no_hyphen, ("^%sI$"):format(C)) then
+		-- If there's only one consonant, or just an obstruent-liquid sequence, or any single consonant followed by
+		-- written i in hiatus, put the syllable break before the consonant(s); but don't do this for -ńj-, or -ńi-
+		-- in hiatus, or in the sequence -nii- (which later gets handled specially and converted to -ńji-).
+		if (ulen(cons_no_hyphen) < 2 or rfind(cons_no_hyphen, ("^[%s][%s]I?$"):format(obstruent, liquid)) or
+			rfind(cons_no_hyphen, ("^%sI$"):format(C))) and not rfind(cons_no_hyphen, "^ń[Ij]$") and
+			not (cons_no_hyphen == "nI" and v2 == "i") then
 			cons = "." .. cons
 		else
 			local nsubs
@@ -566,7 +570,7 @@ local function single_word(data)
 	tsub("Q", "qu") -- undo qu -> Q replacement
 
 	-- Ignore certain symbols and diacritics for the hyphenation.
-	local hyph = txt:gsub("'", "."):gsub("^%.", ""):gsub("-", ""):gsub(",", "")
+	local hyph = txt:gsub("['\"]", "."):gsub("^%.", ""):gsub("-", ""):gsub(",", "")
 	if lang == "zlw-slv" then
 		hyph = rsubn(hyph, "[IăĭŏŭYā]", {
 			["I"] = "j",
@@ -596,13 +600,14 @@ local function single_word(data)
 	end
 
 	tsub("'", "ˈ")
+	tsub('"', "ˌ")
 
 	txt = undo_digraph_replacement(txt)
 
 	-- handle <x>; must precede ch -> [x]; use - to prevent palatalization by following i
 	tsub("x", "ks-")
 	-- move syllable boundary between [ks] if preceded by a vowel
-	tsub(("([%s])([.ˈ])ks"):format(V), "%1k%2s")
+	tsub(("([%s])([.ˈˌ])ks"):format(V), "%1k%2s")
 
 	-- handle digraphs
 	tsub("ch", "x")
@@ -716,11 +721,12 @@ local function single_word(data)
 
 	-- palatalization
 	local palatalize_into = { ["n"] = "ɲ", ["s"] = "ɕ", ["z"] = "ʑ" }
+	tsub("([nsz])([.ˈˌ]?)Ii", function (c, divider) return palatalize_into[c] .. divider .. "ji" end)
 	tsub("([nsz])I", function (c) return palatalize_into[c] end)
 	tsub("([nsz])i", function (c) return palatalize_into[c] .. "i" end)
 
 	-- velar assimilation
-	tsub("n([.ˈ]?[kɡx])", "ŋ%1")
+	tsub("n([.ˈˌ]?[kɡx])", "ŋ%1")
 
 	-- voicing and devoicing
 
@@ -788,7 +794,7 @@ local function single_word(data)
 		transparent_liquid = transparent_liquid .. "R"
 	end
 	-- forward (progressive) assimilation of <w> and <rz>; proceeds left to right
-	tsub_repeatedly(("([%s]ʲ?[.ˈ]?[%s]?ʲ?[.ˈ]?)([vR])"):format(T_causes_forward_assim, transparent_liquid),
+	tsub_repeatedly(("([%s]ʲ?[.ˈˌ]?[%s]?ʲ?[.ˈˌ]?)([vR])"):format(T_causes_forward_assim, transparent_liquid),
 		function(prev, cons)
 			return prev .. (cons == "v" and "f" or "S")
 		end
@@ -797,8 +803,8 @@ local function single_word(data)
 	-- forward (progressive) assimilation of [ɣ] and [x] in Slovincian; proceeds left to right
 	if lang == "zlw-slv" then
 		-- FIXME! Does this occur across an intervening liquid, as in Polish?
-		tsub(("([%s][.ˈ]?)ɣ"):format(T_causes_forward_assim), "%1x")
-		tsub(("([%s][.ˈ]?)x"):format(D_causes_forward_assim), "%1ɣ")
+		tsub(("([%s][.ˈˌ]?)ɣ"):format(T_causes_forward_assim), "%1x")
+		tsub(("([%s][.ˈˌ]?)x"):format(D_causes_forward_assim), "%1ɣ")
 	end
 
 	-- final devoicing
@@ -812,9 +818,9 @@ local function single_word(data)
 	-- in case of sequences of obstruents. The way to do that is to add a .* at the beginning of each pattern
 	-- to replace so we do the rightmost cluster first, and then repeat till nothing changes.
 	local prev_txt
-	local devoice_string = ("^(.*)([%s])(ʲ?[._ˈ]?[%s])"):format(
+	local devoice_string = ("^(.*)([%s])(ʲ?[._ˈˌ]?[%s])"):format(
 		D_gets_backward_assim, T_causes_backward_assim)
-	local voice_string = ("^(.*)([%s])(ʲ?[._ˈ]?[%s])"):format(
+	local voice_string = ("^(.*)([%s])(ʲ?[._ˈˌ]?[%s])"):format(
 		T_gets_backward_assim, D_causes_backward_assim)
 	local function devoice_func(prev, c1, c2) return prev .. devoice[c1] .. c2 end
 	local function voice_func(prev, c1, c2) return prev .. voice[c1] .. c2 end
@@ -849,20 +855,20 @@ local function single_word(data)
 
 	if lang == "pl" then
 		-- nasal vowels
-		tsub("N([.ˈ]?[pb])", "m%1")
-		tsub("N([.ˈ]?[td]_[ɕʑ])", "ɲ%1")
-		tsub("N([.ˈ]?[td])", "n%1")
-		tsub("N([.ˈ]?[wl])", "%1")
+		tsub("N([.ˈˌ]?[pb])", "m%1")
+		tsub("N([.ˈˌ]?[td]_[ɕʑ])", "ɲ%1")
+		tsub("N([.ˈˌ]?[td])", "n%1")
+		tsub("N([.ˈˌ]?[wl])", "%1")
 		if data.match_pl_p_output then
-			tsub("N([.ˈ]?[kɡ])", "ŋ%1")
+			tsub("N([.ˈˌ]?[kɡ])", "ŋ%1")
 			tsub("ɛN$", "ɛ")
-			tsub("N([.ˈ]?[ɕʑ])", "ɲ%1")
+			tsub("N([.ˈˌ]?[ɕʑ])", "ɲ%1")
 			tsub("N", "w̃")
 		else
-			tsub("N([.ˈ]?[kɡxɣ])", "ŋ%1")
+			tsub("N([.ˈˌ]?[kɡxɣ])", "ŋ%1")
 			tsub("ɛN$", "Ẽ")
 			tsub("ɔN$", "Õ")
-			tsub("N([.ˈ]?[ɕʑszʂʐ])", "Ñ%1")
+			tsub("N([.ˈˌ]?[ɕʑszʂʐ])", "Ñ%1")
 			tsub("N", "w̃")
 		end
 	end
@@ -882,9 +888,9 @@ local function single_word(data)
 		local function get_stress_regex(offset)
 			local regex = ""
 			for _ = 0, offset do
-				regex = regex .. "[^.]+%."
+				regex = regex .. "[^.ˌ]+[.ˌ]"
 			end
-			return "%.(" .. regex .. "[^.]+)$"
+			return "([.ˌ])(" .. regex .. "[^.ˌ]+)$"
 		end
 
 		if first_penultimate_offset < 0 then
@@ -892,15 +898,24 @@ local function single_word(data)
 			stressed_txt = is_suffix and txt or "ˈ" .. txt
 		else
 			local stress_regex = get_stress_regex(first_penultimate_offset)
-			stressed_txt = rsub(txt, stress_regex, "ˈ%1")
+			stressed_txt = rsub(txt, stress_regex, function(syldiv, rest)
+				if syldiv == "ˌ" then
+					error("Attempt to assign primary stress to syllable already containing secondary stress: " .. txt)
+				else
+					return "ˈ" .. rest
+				end
+			end)
 			-- If no stress mark could have been placed, it can only be initial, e.g. in monosyllables or a 3-syllable
 			-- word when ante-antepenultimate stress is requested (e.g. [[szłybyśmy]]). Overly short suffixes (normally
 			-- single-syllable, but also disyllabic if stress is antepenultimate, etc.) don't get stress; nor do words
 			-- without vowels.
 			if not stressed_txt:find("ˈ") and rfind(stressed_txt, ("[%s]"):format(V)) and
-				(not is_suffix or rfind("." .. stressed_txt, stress_regex)) then
+				(not is_suffix or rfind("[.ˌ]" .. stressed_txt, stress_regex)) then
 				stressed_txt = "ˈ" .. stressed_txt
 			end
+		end
+		if rfind(stressed_txt, "ˈˌ") then
+			error("Attempt to assign primary stress to syllable already containing secondary stress: " .. txt)
 		end
 		if second_penultimate_offset then
 			-- If the stress is farther back than penultimate and `second_penultimate_offset` is set, there is an
@@ -910,7 +925,7 @@ local function single_word(data)
 			-- this substitution may not succeed (e.g. if antepenultimate stress is called for but there are only two
 			-- syllables); that is fine and just means we don't get two outputs in this case.
 			stressed_txt = rsub(stressed_txt, "ˈ(.+)" .. get_stress_regex(second_penultimate_offset),
-				ALTSTRESS .. "%1" .. ALTSTRESS .. "%2")
+				ALTSTRESS .. "%1" .. ALTSTRESS .. "%3")
 		end
 		return stressed_txt
 	end
@@ -946,7 +961,7 @@ local function single_word(data)
 
 	-- This must follow stress assignment because it depends on whether the E is stressed.
 	if lang == "zlw-slv" and tfind("E") then
-		txt = txt:gsub("ˈ([^" .. V .. "]*)E", "ˈ%1i̯ɛ")
+		txt = txt:gsub("([ˈˌ][^" .. V .. "]*)E", "%1i̯ɛ")
 		txt = txt:gsub("E$", "ə")
 		txt = txt:gsub("E", "ɛ")
 	end
@@ -1009,9 +1024,10 @@ local function multiword(term, lang, period, lect, match_pl_p_output)
 		local ipaparts, hyphparts = {}, {}
 		local contains_preps = false
 
-		for word in term:gmatch("[^ ]+") do
+		local words = rsplit(term, " +")
+		for i, word in ipairs(words) do
 			if word == "|" then
-				-- foot boundary, from a comma
+				-- prosodic boundary, from a comma
 				table.insert(ipaparts, word)
 				if hyphparts[#hyphparts] then
 					hyphparts[#hyphparts] = hyphparts[#hyphparts] .. ","
@@ -1020,13 +1036,19 @@ local function multiword(term, lang, period, lect, match_pl_p_output)
 				end
 			else
 				local is_prep = false
-				for _, prep in ipairs(prepositions) do
-					if (rfind(word, ("^%s$"):format(prep))) then
-						is_prep = true
-						contains_preps = true
-						break
+				if word == "nie" and words[i + 1] == "ma" then
+					is_prep = false
+				elseif word == "ma" and words[i - 1] == "nie" then
+					is_prep = true
+				else
+					for _, prep in ipairs(prepositions) do
+						if (rfind(word, ("^%s$"):format(prep))) then
+							is_prep = true
+							break
+						end
 					end
 				end
+				contains_preps = contains_preps or is_prep
 				local wordipa, wordhyph = single_word {
 					txt = word,
 					lang = lang,
@@ -1045,9 +1067,9 @@ local function multiword(term, lang, period, lect, match_pl_p_output)
 
 		local function assimilate_preps(str)
 			local function assim(from, to, before)
-				str = rsub(str, ("%s(%%$ ˈ?[%s])"):format(from, before), to .. "%1")
+				str = rsub(str, ("%s(%%$ [ˈˌ]?[%s])"):format(from, before), to .. "%1")
 			end
-			local T = "ptsʂɕkx"
+			local T = "fptsʂɕkx"
 			assim("d", "t", T)
 			assim("v", "f", T)
 			assim("z", "s", T)
@@ -1155,16 +1177,18 @@ local function multiword(term, lang, period, lect, match_pl_p_output)
 		flatmap_and_sub_post("O", "ɔ", {"non-Western"}, false, "ɔw", {"Western"}, false, "ɛw", {"Głogówek"}, false)
 	end
 	-- Two outputs from nasal before sibilant, if not converted to one above.
-	flatmap_and_sub_post("Ñ([.ˈ]?)([szɕʑʂʐ])", "w̃%1%2", nil, false, function(syldiv, sib)
+	flatmap_and_sub_post("Ñ([.ˈˌ]?)([szɕʑʂʐ])", "w̃%1%2", nil, false, function(syldiv, sib)
 		return ((sib == "ɕ" or sib == "ʑ") and "ɲ" or "n") .. syldiv .. sib
 	end, nil, true)
 	flatmap_and_sub_post("Ẽ", "ɛ", {"normal speech"}, true, "ɛw̃", {"careful speech"}, false)
 	flatmap_and_sub_post("Õ", "ɔw̃", {"standard"}, false, "ɔm", {"regional", "or", "dialectal", "proscribed"}, true)
 	while true do
 		-- Make all primary stresses but the last one in a given word be secondary.
+		-- FIXME: Remove this.
 		if not flatmap_and_sub_post("([^ ]*)ˈ([^ ]-)ˈ", "%1ˌ%2ˈ") then
 			break
 		end
+		track("two-primary-stresses-in-word")
 	end
 				
 		
@@ -1186,7 +1210,7 @@ local function convert_single_substitution_to_original(to, pagename, anchor_begi
 	if escaped_from:find("^[+*^&]+$") then
 		return "%f[^%z]", true
 	end
-	escaped_from = escaped_from:gsub("[.']", "")
+	escaped_from = escaped_from:gsub("[.'\"]", "")
 	-- Call the equivalent of pattern_escape() in [[Module:string utilities]] but leave out +, *, ^ and -, which we match below.
 	local chars = {
 		["\0"] = "%z", ["$"] = "%$", ["%"] = "%%", ["("] = "%(", [")"] = "%)",
@@ -1214,9 +1238,16 @@ local function convert_single_substitution_to_original(to, pagename, anchor_begi
 	-- A space can match against space or hyphen in the original, so e.g. [[agar-agar]] can use [ ] to respell it as
 	-- <agar agar>.
 	escaped_from = escaped_from:gsub(" ", "[ -]")
-	-- Middle Polish á can match against a, and similarly for é against e.
+	-- Middle Polish á can match against a, and similarly for é, ó, ḿ, ṕ, ẃ and b́. The latter is tricky because it's
+	-- two characters in Unicode. (Even though ó exists in modern Polish, Middle Polish often has ó where the spelling
+	-- has o, and sometimes vice-versa.)
 	escaped_from = escaped_from:gsub("á", "[aá]")
 	escaped_from = escaped_from:gsub("é", "[eé]")
+	escaped_from = escaped_from:gsub("ó", "[oó]")
+	escaped_from = escaped_from:gsub("ḿ", "[mḿ]")
+	escaped_from = escaped_from:gsub("ṕ", "[pṕ]")
+	escaped_from = escaped_from:gsub("ẃ", "[wẃ]")
+	escaped_from = escaped_from:gsub("b́", "b́?")
 	escaped_from = "(" .. escaped_from .. ")"
 	if anchor_begin then
 		escaped_from = "%f[%a]" .. escaped_from
@@ -1368,10 +1399,10 @@ function export.get_lect_pron_info(terms, pagename, paramname, lang, lect, perio
 		local prons, hyph = multiword(respelling, lang, period, lect, match_pl_p_output)
 
 		for i, pron in ipairs(prons) do
-			if prons.phonetic then
+			if pron.phonetic then
 				table.insert(pron_list, {
-					pron = prons.phonetic,
-					pron_with_syldivs = prons.phonetic,
+					pron = pron.phonetic,
+					pron_with_syldivs = pron.phonetic,
 					q = term.q,
 					qq = term.qq,
 					a = term.a,
@@ -1380,12 +1411,8 @@ function export.get_lect_pron_info(terms, pagename, paramname, lang, lect, perio
 				})
 			else
 				local bracketed_pron = brackets:format(pron.pron)
-				-- Strip away syllable dividers, but return a version with the syllable dividers for
-				-- comparison purposes with the old {{pl-p}}. FIXME: IMO we should be including the
-				-- syllable dividers in the phonemic output. [Benwing]
-				local bracketed_pron_no_syldivs = bracketed_pron:gsub("%.", "")
 				table.insert(pron_list, {
-					pron = bracketed_pron_no_syldivs,
+					pron = bracketed_pron,
 					pron_with_syldivs = bracketed_pron,
 					q = term.q,
 					qq = term.qq,
@@ -1486,6 +1513,7 @@ function export.show(frame)
 
 	local pronobj = export.get_lect_pron_info(terms, pagename, 1, ilang)
 	local hyph_list, rhyme_list = pronobj.hyph_list, pronobj.rhyme_list
+	local hyph_automatic = true
 	local do_hyph
 
 	local pl_lect_prons
@@ -1503,6 +1531,7 @@ function export.show(frame)
 	end
 
 	if args.hyphs then
+		hyph_automatic = false
 		if args.hyphs == "-" then
 			do_hyph = false
 		else
@@ -1520,14 +1549,14 @@ function export.show(frame)
 			rhyme_list = {}
 		elseif args.rhymes ~= "+" then
 			rhyme_list = {}
-			for _, v in ipairs(split_on_comma(args.rhymes)) do
-				if rfind(v, ".+/.+") then
+			for _, rhyme in ipairs(split_on_comma(args.rhymes)) do
+				if rfind(rhyme, ".+/.+") then
 					table.insert(rhyme_list, {
-						rhyme = rsub(v, "/.+", ""),
-						num_syl = { tonumber(rsub(v, ".+/", "")) },
+						rhyme = rsub(rhyme, "/.+", ""),
+						num_syl = { tonumber(rsub(rhyme, ".+/", "")) },
 					})
 				else
-					error(("The manual rhyme %s did not specify syllable number as RHYME/NUM_SYL"):format(v))
+					error(("The manual rhyme %s did not specify syllable number as RHYME/NUM_SYL"):format(rhyme))
 				end
 			end
 		end
@@ -1537,21 +1566,21 @@ function export.show(frame)
 	if #rhyme_list > 0 then
 		local temp_rhyme_list = {}
 		local indices = {}
-		for _, v in ipairs(rhyme_list) do
-			local index = indices[v.rhyme]
+		for _, rhymeobj in ipairs(rhyme_list) do
+			local index = indices[rhymeobj.rhyme]
 			if index == nil then
-				table.insert(temp_rhyme_list, v)
-				indices[v.rhyme] = #temp_rhyme_list
+				table.insert(temp_rhyme_list, rhymeobj)
+				indices[rhymeobj.rhyme] = #temp_rhyme_list
 			else
 				local different_num_syl = true
 				for _, ns in ipairs(temp_rhyme_list[index].num_syl) do
-					if ns == v.num_syl[1] then
+					if ns == rhymeobj.num_syl[1] then
 						different_num_syl = false
 						break
 					end
 				end
 				if different_num_syl then
-					table.insert(temp_rhyme_list[index].num_syl, v.num_syl[1])
+					table.insert(temp_rhyme_list[index].num_syl, rhymeobj.num_syl[1])
 				end
 			end
 		end
@@ -1654,11 +1683,49 @@ function export.show(frame)
 		ins("\n* ")
 		if #hyph_list > 0 then
 			local hyphs = {}
-			for hyph_i, hyph_v in ipairs(hyph_list) do
-				hyphs[hyph_i] = { hyph = {} }
-				for syl_v in hyph_v:gmatch("[^.]+") do
-					table.insert(hyphs[hyph_i].hyph, syl_v)
+			local seen_num_pron_syls
+			if pronobj.pron_list then
+				-- Compute the number of syllables for each pronunciation, for use below.
+				seen_num_pron_syls = {}
+				for _, pronobj in ipairs(pronobj.pron_list) do
+					local pron = pronobj.pron_with_syldivs
+					-- Convert prosodic boundaries to regular spaces; ignore stress markers at the beginning
+					-- of a word; and then count occurrences of spaces, syllable dividers and stress marks.
+					local num_pron_syls = 1 + ulen(rsub(rsub(rsub(pron:gsub(" | ", " "), " [ˈˌ]", " "), "^[%[/]?[ˈˌ]", ""),
+						"[^.ˈˌ ]", ""))
+					m_table.insertIfNot(seen_num_pron_syls, {pron = pron, nsyl = num_pron_syls})
 				end
+			end
+			for i, hyph in ipairs(hyph_list) do
+				hyphs[i] = { hyph = {} }
+				for syl in hyph:gmatch("[^.]+") do
+					table.insert(hyphs[i].hyph, syl)
+				end
+				if pronobj.pron_list then
+					-- Match each syllabification against the syllable counts of all pronunciations, since we don't have
+					-- any alignment between the two. Only complain if the syllable count of the syllabification doesn't
+					-- match the syllable count of any pronunciation.
+					local num_hyph_syls = 1 + #(hyph:gsub("[^. ]", ""))
+					local matched = false
+					for _, num_pron_syls in ipairs(seen_num_pron_syls) do
+						if num_pron_syls.nsyl == num_hyph_syls then
+							matched = true
+							break
+						end
+					end
+					if not matched then
+						local prons_and_sylcounts = {}
+						for _, num_pron_syls in ipairs(seen_num_pron_syls) do
+							table.insert(prons_and_sylcounts, ("%s:%s"):format(num_pron_syls.pron, num_pron_syls.nsyl))
+						end
+						mw.log(("Syllable count %s for syllabification '%s' doesn't match pronunciation syllable count(s) %s for '%s'"):format(
+							num_hyph_syls, hyph, table.concat(prons_and_sylcounts, ","), pagename))
+						if mw.title.getCurrentTitle().nsText == "" then
+							ins(("[[Category:%s entries with Template:%s-pr with %s syllabification syllable count mismatch]]"):format(
+								lang:getFullName(), ilang, hyph_automatic and "automatic" or "manual"))
+						end
+					end
+				end		
 			end
 			ins(require("Module:hyphenation").format_hyphenations {
 				lang = lang, hyphs = hyphs, caption = "Syllabification"
