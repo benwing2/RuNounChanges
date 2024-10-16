@@ -11,8 +11,9 @@ local m_table = require("Module:table")
 local com = require("Module:es-common")
 local inflection_utilities_module = "Module:inflection utilities"
 local headword_module = "Module:headword"
-local m_headword_utilities = require_when_needed("Module:headword utilities")
-local glossary_link = require_when_needed("Module:headword utilities", "glossary_link")
+local headword_utilities_module = "Module:headword utilities"
+local m_headword_utilities = require_when_needed(headword_utilities_module)
+local glossary_link = require_when_needed(headword_utilities_module, "glossary_link")
 local m_string_utilities = require_when_needed("Module:string utilities")
 local romut_module = "Module:romance utilities"
 local es_verb_module = "Module:es-verb"
@@ -125,43 +126,21 @@ local function replace_hash_with_lemma(term, lemma)
 end
 
 
-local function check_all_missing(data, forms, plpos)
-	for _, form in ipairs(forms) do
-		if type(form) == "table" then
-			form = form.term
-		end
-		if form then
-			local title = mw.title.new(form)
-			if title and not title:getContent() then
-				table.insert(data.categories, langname .. " " .. plpos .. " with red links in their headword lines")
-			end
-		end
-	end
-end
-
-
--- Insert an "ancillary" inflection (one that doesn't require additional processing) into `data.inflections`.
--- The raw arguments come from `args[field]`, which is parsed for inline modifiers. If there is a corresponding
--- qualifier field `FIELD_qual`, qualifiers may additionally come from there. `label` is the label that the inflections
--- are given, which is linked to the glossary unless preceded by * (which is removed). `plpos` is the plural part of
--- speech, used in [[Category:LANGNAME PLPOS with red links in their headword lines]].
-local function insert_ancillary_inflection(data, args, field, label, plpos)
-	local forms = args[field]
-	local quals = args[field .. "_qual"]
-	if forms and forms[1] then
-		local terms = m_headword_utilities.parse_term_list_with_modifiers {
-			paramname = field,
-			list = forms,
-			qualparams = quals,
-		}
-		check_all_missing(data, terms, plpos)
-		if label:find("^%*") then
-			terms.label = label:gsub("^%*", "")
-		else
-			terms.label = glossary_link(label)
-		end
-		table.insert(data.inflections, terms)
-	end
+-- Parse and insert an inflection not requiring additional processing into `data.inflections`. The raw arguments come
+-- from `args[field]`, which is parsed for inline modifiers. `label` is the label that the inflections are given;
+-- sections enclosed in <<...>> are linked to the glossary. `plpos` is the plural part of speech, used in
+-- [[Category:LANGNAME PLPOS with red links in their headword lines]]. `accel` is the accelerator form, or nil.
+local function parse_and_insert_inflection(data, args, field, label, plpos, accel)
+	m_headword_utilities.parse_and_insert_inflection {
+		headdata = data,
+		forms = args[field],
+		paramname = field,
+		label = label,
+		accel = accel and {form = accel} or nil,
+		check_missing = true,
+		lang = lang,
+		plpos = plpos,
+	}
 end
 
 
@@ -169,6 +148,10 @@ end
 -- `plobj` is the parsed object whose `term` field is "+". `defpls` is the list of default plurals. `dest` is the list
 -- into which the plurals are inserted (which inherit their qualifiers and labels from `plobj`).
 local function insert_defpls(defpls, plobj, dest)
+	if not defpls then
+		-- Happens e.g. with [[S.A.]] where the default plural algorithm returns nothing.
+		return
+	end
 	if #defpls == 1 then
 		plobj.term = defpls[1]
 		table.insert(dest, plobj)
@@ -213,31 +196,27 @@ local function do_adjective(args, data, pos, is_suffix, is_superlative)
 
 	local lemma = data.pagename
 
-	local function fetch_inflections(field, default)
+	local function fetch_inflections(field)
 		local retval = m_headword_utilities.parse_term_list_with_modifiers {
 			paramname = field,
-			list = args[field],
-			qualparams = args[field .. "_qual"],
+			forms = args[field],
 		}
-		if not retval[1] and default then
-			return {{term = default}}
+		if not retval[1] then
+			return {{term = "+"}}
 		end
 		return retval
 	end
 
-	local function insert_inflection(forms, label, accel)
-		if forms[1] then
-			if forms[1].term == "-" then
-				table.insert(data.inflections, {label = "no " .. label})
-			else
-				check_all_missing(data, forms, plpos)
-				forms.label = label
-				if accel then
-					forms.accel = {form = accel}
-				end
-				table.insert(data.inflections, forms)
-			end
-		end
+	local function insert_inflection(terms, label, accel)
+		m_headword_utilities.insert_inflection {
+			headdata = data,
+			terms = terms,
+			label = label,
+			accel = accel and {form = accel} or nil,
+			check_missing = true,
+			lang = lang,
+			plpos = plpos,
+		}
 	end
 
 	if args.inv then
@@ -258,7 +237,7 @@ local function do_adjective(args, data, pos, is_suffix, is_superlative)
 		if args.mpl[1] then
 			error("Can't specify explicit masculine plurals with feminine-only " .. pos)
 		end
-		local argsfpl = fetch_inflections("fpl", "+")
+		local argsfpl = fetch_inflections("fpl")
 		for _, fpl in ipairs(argsfpl) do
 			if fpl.term == "+" then
 				-- Generate default feminine plural.
@@ -274,10 +253,10 @@ local function do_adjective(args, data, pos, is_suffix, is_superlative)
 		end
 
 		table.insert(data.inflections, {label = "feminine-only"})
-		insert_inflection(feminine_plurals, "feminine plural", "f|p")
+		insert_inflection(feminine_plurals, "<<feminine>> <<plural>>", "f|p")
 	else
 		-- Gather feminines.
-		for _, f in ipairs(fetch_inflections("f", "+")) do
+		for _, f in ipairs(fetch_inflections("f")) do
 			if f.term == "+" then
 				-- Generate default feminine.
 				f.term = com.make_feminine(lemma, args.sp)
@@ -296,14 +275,14 @@ local function do_adjective(args, data, pos, is_suffix, is_superlative)
 		local mpl_field = "mpl"
 		local fpl_field = "fpl"
 		if args.pl[1] then
-			if args.mpl[1] or args.fpl[1] or args.mpl_qual.maxindex > 0 or args.fpl_qual.maxindex > 0 then
+			if args.mpl[1] or args.fpl[1] then
 				error("Can't specify both pl= and mpl=/fpl=")
 			end
 			mpl_field = "pl"
 			fpl_field = "pl"
 		end
-		local argsmpl = fetch_inflections(mpl_field, "+")
-		local argsfpl = fetch_inflections(fpl_field, "+")
+		local argsmpl = fetch_inflections(mpl_field)
+		local argsfpl = fetch_inflections(fpl_field)
 
 		for _, mpl in ipairs(argsmpl) do
 			if mpl.term == "+" then
@@ -340,7 +319,7 @@ local function do_adjective(args, data, pos, is_suffix, is_superlative)
 			end
 		end
 
-		insert_ancillary_inflection(data, args, "mapoc", "*masculine singular before a noun", plpos)
+		parse_and_insert_inflection(data, args, "mapoc", "<<masculine>> <<singular>> before a noun", plpos)
 
 		local fem_pl_like_masc_pl = masculine_plurals[1] and feminine_plurals[1] and
 			m_table.deepEquals(masculine_plurals, feminine_plurals)
@@ -353,7 +332,7 @@ local function do_adjective(args, data, pos, is_suffix, is_superlative)
 		else
 			-- Make sure there are feminines given and not same as lemma.
 			if not fem_like_lemma then
-				insert_inflection(feminines, "feminine", "f|s")
+				insert_inflection(feminines, "<<feminine>>", "f|s")
 			elseif args.gneut then
 				data.genders = {"gneut"}
 			else
@@ -362,21 +341,21 @@ local function do_adjective(args, data, pos, is_suffix, is_superlative)
 
 			if fem_pl_like_masc_pl then
 				if args.gneut then
-					insert_inflection(masculine_plurals, "plural", "p")
+					insert_inflection(masculine_plurals, "<<plural>>", "p")
 				else
-					insert_inflection(masculine_plurals, "masculine and feminine plural", "p")
+					insert_inflection(masculine_plurals, "<<masculine>> and <<feminine>> <<plural>>", "p")
 				end
 			else
-				insert_inflection(masculine_plurals, "masculine plural", "m|p")
-				insert_inflection(feminine_plurals, "feminine plural", "f|p")
+				insert_inflection(masculine_plurals, "<<masculine>> <<plural>>", "m|p")
+				insert_inflection(feminine_plurals, "<<feminine>> <<plural>>", "f|p")
 			end
 		end
 	end
 
-	insert_ancillary_inflection(data, args, "comp", "comparative", plpos)
-	insert_ancillary_inflection(data, args, "sup", "superlative", plpos)
-	insert_ancillary_inflection(data, args, "dim", "diminutive", plpos)
-	insert_ancillary_inflection(data, args, "aug", "augmentative", plpos)
+	parse_and_insert_inflection(data, args, "comp", "<<comparative>>", plpos)
+	parse_and_insert_inflection(data, args, "sup", "<<superlative>>", plpos)
+	parse_and_insert_inflection(data, args, "dim", "<<diminutive>>", plpos)
+	parse_and_insert_inflection(data, args, "aug", "<<augmentative>>", plpos)
 
 	if args.irreg and is_superlative then
 		table.insert(data.categories, langname .. " irregular superlative " .. plpos)
@@ -391,7 +370,6 @@ local function get_adjective_params(adjtype)
 	}
 	local function ins_infl(field)
 		params[field] = list_param --feminine form(s)
-		params[field .. "_qual"] = {list = field .. "\1_qual", allow_holes = true}
 	end
 
 	ins_infl("f") -- feminine form(s)
@@ -468,7 +446,7 @@ pos_functions["adverbs"] = {
 		["sup"] = list_param, --superlative(s)
 	},
 	func = function(args, data)
-		insert_ancillary_inflection(data, args, "sup", "superlative", "adverbs")
+		parse_and_insert_inflection(data, args, "sup", "<<superlative>>", "adverbs")
 	end,
 }
 
@@ -488,9 +466,9 @@ pos_functions["cardinal numbers"] = {
 
 		if args.f[1] then
 			table.insert(data.genders, "m")
-			insert_ancillary_inflection(data, args, "f", "feminine", plpos)
+			parse_and_insert_inflection(data, args, "f", "<<feminine>>", plpos)
 		end
-		insert_ancillary_inflection(data, args, "mapoc", "*masculine before a noun", plpos)
+		parse_and_insert_inflection(data, args, "mapoc", "<<masculine>> before a noun", plpos)
 	end,
 }
 
@@ -567,9 +545,9 @@ local function do_noun(args, data, pos, is_suffix)
 		end
 		table.insert(data.inflections, {label = glossary_link("plural only")})
 	else
-		local plurals = m_headword_utilities.parse_term_list_with_modifiers {
+		plurals = m_headword_utilities.parse_term_list_with_modifiers {
 			paramname = {2, "pl"},
-			list = args.pl,
+			forms = args[2],
 		}
 		-- Check for special plural signals
 		local mode = nil
@@ -583,7 +561,7 @@ local function do_noun(args, data, pos, is_suffix)
 					error(("Can't specify inline modifiers with plural code '%s'"):format(mode))
 				end
 				table.remove(plurals, 1)  -- Remove the mode parameter
-			else
+			elseif mode ~= "+" and mode ~= "#" then
 				error(("Unexpected plural code '%s'"):format(mode))
 			end
 		end
@@ -656,25 +634,33 @@ local function do_noun(args, data, pos, is_suffix)
 		table.insert(data.categories, langname .. " " .. plpos .. " with multiple plurals")
 	end
 
-	-- Gather masculines/feminines. For each one, generate the corresponding plural(s).
+	-- Gather masculines/feminines. For each one, generate the corresponding plural(s). `field` is the name of the
+	-- field containing the masculine or feminine forms (normally "m" or "f"); `gender` is "m" or "f" for the gender
+	-- of the forms; `inflect` is a function of one or two arguments to generate the default masculine or feminine from
+	-- the lemma (the arguments are the lemma and optionally a "special" flag to indicate how to handle multiword
+	-- lemmas, and the function is normally make_feminine or make_masculine from [[Module:es-common]]); and
+	-- `default_plurals` is a list into which the corresponding default plurals of the gathered or generated masculine
+	-- or feminine forms are stored. Note that there may be more default plurals than masculines or feminines, because
+	-- some terms have multiple possible plurals.
 	local function handle_mf(field, gender, inflect, default_plurals)
 		local mfs = m_headword_utilities.parse_term_list_with_modifiers {
 			paramname = field,
-			list = args[field],
+			forms = args[field],
+			frob = function(term)
+				if term == "+" then
+					-- Generate default masculine/feminine.
+					term = inflect(lemma)
+				else
+					term = replace_hash_with_lemma(term, lemma)
+				end
+				local special = require(romut_module).get_special_indicator(term)
+				if special then
+					term = inflect(lemma, special)
+				end
+				return term
+			end
 		}
-		local retval = {}
 		for _, mf in ipairs(mfs) do
-			if mf.term == "+" then
-				-- Generate default feminine.
-				mf.term = inflect(lemma)
-			else
-				mf.term = replace_hash_with_lemma(mf.term, lemma)
-			end
-			local special = require(romut_module).get_special_indicator(mf.term)
-			if special then
-				mf.term = inflect(lemma, special)
-			end
-			table.insert(retval, mf)
 			local mfpls = com.make_plural(mf.term, gender, special)
 			if mfpls then
 				for _, mfpl in ipairs(mfpls) do
@@ -689,7 +675,7 @@ local function do_noun(args, data, pos, is_suffix)
 				end
 			end
 		end
-		return retval
+		return mfs
 	end
 
 	local feminine_plurals = {}
@@ -698,7 +684,10 @@ local function do_noun(args, data, pos, is_suffix)
 	local masculines = handle_mf("m", "m", com.make_masculine, masculine_plurals)
 
 	local function handle_mf_plural(mfplfield, gender, default_plurals, singulars)
-		local mfpl = args[mfplfield]
+		local mfpl = m_headword_utilities.parse_term_list_with_modifiers {
+			paramname = mfplfield,
+			forms = args[mfplfield],
+		}
 		local new_mfpls = {}
 		local saw_plus
 		for i, mfpl in ipairs(mfpl) do
@@ -722,7 +711,7 @@ local function do_noun(args, data, pos, is_suffix)
 				saw_plus = true
 				for _, defpl in ipairs(default_plurals) do
 					-- defpl is already a table and has an accel field
-					m_headword_utilities.combine_termobj_qualifiers_labels(defpl, mf)
+					m_headword_utilities.combine_termobj_qualifiers_labels(defpl, mfpl)
 					table.insert(new_mfpls, defpl)
 				end
 			elseif mfpl.term:find("^%+") then
@@ -756,25 +745,30 @@ local function do_noun(args, data, pos, is_suffix)
 		masculine_plurals = handle_mf_plural("mpl", "m", masculine_plurals, masculines)
 	end
 
-	local function insert_inflection(forms, label, accel)
-		check_all_missing(data, forms, plpos)
-		if forms[1] then
-			forms.label = label
-			if accel then
-				forms.accel = {form = accel}
-			end
-			table.insert(data.inflections, forms)
-		end
+	local function parse_and_insert_noun_inflection(field, label, accel)
+		parse_and_insert_inflection(data, args, field, label, plpos, accel)
 	end
 
-	insert_inflection(plurals, "plural", "p")
-	insert_inflection(feminines, "feminine", "f")
-	insert_inflection(feminine_plurals, "feminine plural")
-	insert_inflection(masculines, "masculine")
-	insert_inflection(masculine_plurals, "masculine plural")
-	insert_ancillary_inflection(data, args, "dim", "diminutive", plpos)
-	insert_ancillary_inflection(data, args, "aug", "augmentative", plpos)
-	insert_ancillary_inflection(data, args, "pej", "pejorative", plpos)
+	local function insert_noun_inflection(terms, label, accel)
+		m_headword_utilities.insert_inflection {
+			headdata = data,
+			terms = terms,
+			label = label,
+			accel = accel and {form = accel} or nil,
+			check_missing = true,
+			lang = lang,
+			plpos = plpos,
+		}
+	end
+
+	insert_noun_inflection(plurals, "<<plural>>", "p")
+	insert_noun_inflection(feminines, "<<feminine>>", "f")
+	insert_noun_inflection(feminine_plurals, "<<feminine>> <<plural>>")
+	insert_noun_inflection(masculines, "<<masculine>>")
+	insert_noun_inflection(masculine_plurals, "<<masculine>> <<plural>>")
+	parse_and_insert_noun_inflection("dim", "<<diminutive>>")
+	parse_and_insert_noun_inflection("aug", "<<augmentative>>")
+	parse_and_insert_noun_inflection("pej", "<<pejorative>>")
 
 	-- Maybe add category 'Spanish nouns with irregular gender' (or similar)
 	local irreg_gender_lemma = rsub(lemma, " .*", "") -- only look at first word
@@ -1005,16 +999,14 @@ pos_functions["phrases"] = {
 		["g"] = list_param,
 		["g_qual"] = {list = "g\1_qual", allow_holes = true},
 		["m"] = list_param,
-		["m_qual"] = {list = "m\1_qual", allow_holes = true},
 		["f"] = list_param,
-		["f_qual"] = {list = "f\1_qual", allow_holes = true},
 	},
 	func = function(args, data)
 		data.genders = {}
 		process_genders(data, args.g, args.g_qual)
 		local plpos = "phrases"
-		insert_ancillary_inflection(data, args, "m", "masculine", plpos)
-		insert_ancillary_inflection(data, args, "f", "feminine", plpos)
+		parse_and_insert_inflection(data, args, "m", "<<masculine>>", plpos)
+		parse_and_insert_inflection(data, args, "f", "<<feminine>>", plpos)
 	end,
 }
 
