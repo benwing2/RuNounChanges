@@ -6,6 +6,40 @@ import pywikibot, re, sys, argparse, unicodedata, json
 import blib
 from blib import getparam, rmparam, msg, errandmsg, site, tname, pname, rsub_repeatedly
 
+module_name = "zlw-lch-IPA"
+
+prefixes = [
+  "do",
+  "dopo",
+  "na",
+  "nad",
+  "nade",
+  "ob",
+  "obe",
+  "od",
+  "ode",
+  "o",
+  "po",
+  "pod",
+  "pode",
+  "ponad",
+  "ponie",
+  "poprze",
+  "poroz",
+  "poza",
+  "u",
+  "za",
+]
+
+vowel = "aɛiɔuɘ"
+obstruent = "b|t͡s|t͡ɕ|t͡ʂ|d͡z|d͡ʑ|d͡ʐ|d|[fɡxkpsɕʂtvzʑʐ]"
+cons = obstruent + "|[lmnɲrw]"
+liquid = "lrj"
+C = "(?:%s)" % cons
+V = "[%s]" % vowel
+T = "(?:%s)" % obstruent
+R = "[%s]" % liquid
+
 def process_text_on_page(index, pagetitle, text):
   template_index = 0
 
@@ -187,8 +221,9 @@ def process_text_on_page(index, pagetitle, text):
           pl_p_args = "".join("|plp%s=%s" % ("" if i == 0 else str(i + 1), respelling)
                               for i, respelling in enumerate(respellings))
         pl_pr_args = "|" + new_default_respellings if new_default_respellings else ""
-        pl_pr_json = expand_text("{{#invoke:zlw-lch-IPA|get_lect_pron_info_bot%s%s}}" % (
-          pl_pr_args, pl_p_args))
+        get_lect_pron_flags = "|match_pl_p_output=1"
+        pl_pr_json = expand_text("{{#invoke:%s|get_lect_pron_info_bot%s%s%s}}" % (
+          module_name, pl_pr_args, pl_p_args, get_lect_pron_flags))
         if not pl_pr_json:
           continue
         pl_pr_obj = json.loads(pl_pr_json)
@@ -196,6 +231,26 @@ def process_text_on_page(index, pagetitle, text):
           pl_p_prons = ipas
         else:
           pl_p_prons = pl_pr_obj["plp_prons"]
+        # Words in clitic -śmy/-ście not in -by- have two outputs in {{pl-pr}} but only one in {{pl-p}}, so convert the
+        # {{pl-p}} pronun to have two outputs.
+        if respellings == [pagetitle] and len(pl_p_prons) == 1 and re.search("(ł[aoy]?|li)(śmy|ście)$", pagetitle):
+          pl_p_pron_no_slashes = re.sub("^/(.*)/$", r"\1", pl_p_prons[0])
+          antepenult_pl_p_pron = "/" + re.sub(r"(^|\.)([^.]+)ˈ", r"ˈ\2.", pl_p_pron_no_slashes) + "/"
+          if antepenult_pl_p_pron != pl_p_prons[0]:
+            pl_p_prons = [antepenult_pl_p_pron] + pl_p_prons
+        prefix_pl_pr_objs = [(None, pl_pr_obj)]
+        for prefix in prefixes:
+          if re.search("(^| )%s" % prefix, pagetitle):
+            prefix_respelling = "[%s.]" % prefix
+            prefix_pl_pr_json = expand_text("{{#invoke:%s|get_lect_pron_info_bot|%s%s}}" % (
+              module_name, prefix_respelling, get_lect_pron_flags))
+            if not prefix_pl_pr_json:
+              prefix_respelling = "[^%s.]" % prefix
+              prefix_pl_pr_json = expand_text("{{#invoke:%s|get_lect_pron_info_bot|%s%s}}" % (
+                module_name, prefix_respelling, get_lect_pron_flags))
+            if prefix_pl_pr_json:
+              prefix_pl_pr_obj = json.loads(prefix_pl_pr_json)
+              prefix_pl_pr_objs.append((prefix_respelling, prefix_pl_pr_obj))
         if fixstress and fixstress != "0":
           if len(pl_p_prons) > 1:
             pagemsg("WARNING: Saw multiple respellings along with |fs=%s, can't handle: %s" % (fixstress, origt))
@@ -219,176 +274,198 @@ def process_text_on_page(index, pagetitle, text):
               pl_p_pron_2 = pl_p_prons[0]
               pl_p_prons = [pl_p_pron_1, pl_p_pron_2]
 
-        pl_pr_prons = []
-        for pron_obj in pl_pr_obj["pron_list"]:
-          pl_pr_prons.append(pron_obj["pron_with_syldivs"])
-        auto_hyphenations = pl_pr_obj["hyph_list"]
-        auto_rhymes = []
-        for rhyme_obj in pl_pr_obj["rhyme_list"]:
-          auto_rhymes.append(rhyme_obj["rhyme"])
+        def do_pl_pr_obj(prefix_respelling, pl_pr_obj, do_diff):
+          pl_pr_prons = []
+          for pron_obj in pl_pr_obj["pron_list"]:
+            pl_pr_prons.append(pron_obj["pron_with_syldivs"])
+          auto_hyphenations = pl_pr_obj["hyph_list"]
+          auto_rhymes = []
+          for rhyme_obj in pl_pr_obj["rhyme_list"]:
+            auto_rhymes.append(rhyme_obj["rhyme"])
 
-        pl_p_args = ("" if respellings_defaulted else "|" + "|".join(respellings)) + (
-          "|fs=%s" % fixstress if fixstress else "")
-        joined_pl_p_prons = ",".join(pl_p_prons)
-        joined_pl_pr_prons = ",".join(pl_pr_prons)
-        def remove_syldiv(txt):
-          return txt.replace(".", "")
-        def remove_syldiv_stress(txt):
-          return re.sub("[.ˈ]", "", txt)
-        def remove_stress(txt):
-          return txt.replace("ˈ", "")
-        def add_eng(txt):
-          return re.sub("n([.ˈ]?[kɡ])", r"ŋ\1", txt)
-        def add_monosyllabic_stress_to_words(txt1, txt2):
-          if not re.search("[.ˈ]", txt1) and len(re.sub("[^aɛiɔuɘ]", "", txt2)) == 1 and txt2[0] == "ˈ":
-            retval = "ˈ" + txt1
-          else:
-            retval = txt1
-          return retval
-        if len(pl_p_prons) == len(pl_pr_prons):
-          monostress_pl_p_prons = []
-          for pl_p_pron, pl_pr_pron in zip(pl_p_prons, pl_pr_prons):
-            pl_p_pron = re.sub("^/(.*)/$", r"\1", pl_p_pron)
-            pl_pr_pron = re.sub("^/(.*)/$", r"\1", pl_pr_pron)
-            pl_p_pron_words = pl_p_pron.split(" ")
-            pl_pr_pron_words = pl_pr_pron.split(" ")
-            if len(pl_p_pron_words) == len(pl_pr_pron_words):
-              monostress_words = []
-              for i in range(len(pl_p_pron_words)):
-                monostress_words.append(add_monosyllabic_stress_to_words(pl_p_pron_words[i], pl_pr_pron_words[i]))
-              monostress_pl_p_prons.append("/" + " ".join(monostress_words) + "/")
+          pl_p_args = ("" if respellings_defaulted else "|" + "|".join(respellings)) + (
+            "|fs=%s" % fixstress if fixstress else "")
+          joined_pl_p_prons = ",".join(pl_p_prons)
+          joined_pl_pr_prons = ",".join(pl_pr_prons)
+          def remove_syldiv(txt):
+            inptxt = txt
+            txt = txt.replace(".", "")
+            # Also move stress markers to the beginning of any consonant cluster so we don't treat differences in
+            # syllabification directly preceding the stress as a difference in stress.
+            txt = re.sub("(" + C + "+)ˈ", r"ˈ\1", txt)
+            return txt
+          def remove_syldiv_stress(txt):
+            return re.sub("[.ˈ]", "", txt)
+          def remove_stress(txt):
+            return txt.replace("ˈ", "")
+          def add_eng(txt):
+            return re.sub("n([.ˈ]?[kɡ])", r"ŋ\1", txt)
+          def add_monosyllabic_stress_to_words(txt1, txt2):
+            if not re.search("[.ˈ]", txt1) and len(re.sub("[^aɛiɔuɘ]", "", txt2)) == 1 and txt2[0] == "ˈ":
+              retval = "ˈ" + txt1
             else:
-              monostress_pl_p_prons.append("/" + pl_p_pron + "/")
-          monostress_joined_pl_p_prons = ",".join(monostress_pl_p_prons)
-        else:
-          monostress_pl_p_prons = pl_p_prons
-          monostress_joined_pl_p_prons = joined_pl_p_prons
+              retval = txt1
+            return retval
+          if len(pl_p_prons) == len(pl_pr_prons):
+            monostress_pl_p_prons = []
+            for pl_p_pron, pl_pr_pron in zip(pl_p_prons, pl_pr_prons):
+              pl_p_pron = re.sub("^/(.*)/$", r"\1", pl_p_pron)
+              pl_pr_pron = re.sub("^/(.*)/$", r"\1", pl_pr_pron)
+              pl_p_pron_words = pl_p_pron.split(" ")
+              pl_pr_pron_words = pl_pr_pron.split(" ")
+              if len(pl_p_pron_words) == len(pl_pr_pron_words):
+                monostress_words = []
+                for i in range(len(pl_p_pron_words)):
+                  monostress_words.append(add_monosyllabic_stress_to_words(pl_p_pron_words[i], pl_pr_pron_words[i]))
+                monostress_pl_p_prons.append("/" + " ".join(monostress_words) + "/")
+              else:
+                monostress_pl_p_prons.append("/" + pl_p_pron + "/")
+            monostress_joined_pl_p_prons = ",".join(monostress_pl_p_prons)
+          else:
+            monostress_pl_p_prons = pl_p_prons
+            monostress_joined_pl_p_prons = joined_pl_p_prons
 
-        # adjust syldiv boundaries to make old more like new
-        syladjusted_pl_p_prons = []
-        for pl_p_pron in monostress_pl_p_prons:
-          vowel = "aɛiɔuɘ"
-          obstruent = "b|t͡s|t͡ɕ|t͡ʂ|d|d͡z|d͡ʑ|d͡ʐ|[fɡxkpsɕʂtvzʑʐ]"
-          cons = obstruent + "|[lmnɲrw]"
-          liquid = "lrj"
-          C = "[%s]" % cons
-          V = "[%s]" % vowel
-          T = "(?:%s)" % obstruent
-          R = "[%s]" % liquid
-          pl_p_pron = re.sub("(" + V + ")(" + T + r")([.ˈ])(" + R + V + ")", r"\1\3\2\4", pl_p_pron)
-          pl_p_pron = re.sub("(" + V + ")(" + T + r")([.ˈ])(" + R + V + ")", r"\1\3\2\4", pl_p_pron)
-          pl_p_pron = re.sub("(" + V + ")(" + C + r")([.ˈ])(j" + V + ")", r"\1\3\2\4", pl_p_pron)
-          pl_p_pron = re.sub("(" + V + ")(" + C + r")([.ˈ])(j" + V + ")", r"\1\3\2\4", pl_p_pron)
-          syladjusted_pl_p_prons.append(pl_p_pron)
-        syladjusted_joined_pl_p_prons = ",".join(syladjusted_pl_p_prons)
+          # adjust syldiv boundaries to make old more like new
+          syladjusted_pl_p_prons = []
+          for pl_p_pron in monostress_pl_p_prons:
+            pl_p_pron = re.sub("(" + V + ")(" + T + r")([.ˈ])(" + R + V + ")", r"\1\3\2\4", pl_p_pron)
+            pl_p_pron = re.sub("(" + V + ")(" + T + r")([.ˈ])(" + R + V + ")", r"\1\3\2\4", pl_p_pron)
+            pl_p_pron = re.sub("(" + V + ")(" + C + r")([.ˈ])(j" + V + ")", r"\1\3\2\4", pl_p_pron)
+            pl_p_pron = re.sub("(" + V + ")(" + C + r")([.ˈ])(j" + V + ")", r"\1\3\2\4", pl_p_pron)
+            syladjusted_pl_p_prons.append(pl_p_pron)
+          syladjusted_joined_pl_p_prons = ",".join(syladjusted_pl_p_prons)
 
-        long_voicing = {
-          "t͡s": "d͡z",
-          "t͡ɕ": "d͡ʑ",
-          "t͡ʂ": "d͡ʐ",
-        }
-        short_voicing = {
-          "p": "b",
-          "f": "v",
-          "x": "ɣ",
-          "k": "ɡ",
-          "s": "z",
-          "ɕ": "ʑ",
-          "ʂ": "ʐ",
-          "t": "d",
-        }
-        long_unvoiced_obstruents = "|".join(list(long_voicing.keys()))
-        short_unvoiced_obstruents = "|".join(list(short_voicing.keys()))
-        long_voiced_obstruents = "|".join(list(long_voicing.values()))
-        short_voiced_obstruents = "|".join(list(short_voicing.values()))
-        voiced_non_obstruent = "[aɛiɔuɘlmnɲrwj]"
-        voiced_obstruents = "%s|%s" % (long_voiced_obstruents, short_voiced_obstruents)
-        voiced_sounds = "%s|%s|%s" % (long_voiced_obstruents, short_voiced_obstruents, voiced_non_obstruent)
-        voicing_adjusted_pl_pr_prons = []
-        for pl_pr_pron in pl_pr_prons:
-          while True:
-            changed = False
+          long_voicing = {
+            "t͡s": "d͡z",
+            "t͡ɕ": "d͡ʑ",
+            "t͡ʂ": "d͡ʐ",
+          }
+          short_voicing = {
+            "p": "b",
+            "f": "v",
+            "x": "ɣ",
+            "k": "ɡ",
+            "s": "z",
+            "ɕ": "ʑ",
+            "ʂ": "ʐ",
+            "t": "d",
+          }
+          long_unvoiced_obstruents = "|".join(list(long_voicing.keys()))
+          short_unvoiced_obstruents = "|".join(list(short_voicing.keys()))
+          long_voiced_obstruents = "|".join(list(long_voicing.values()))
+          short_voiced_obstruents = "|".join(list(short_voicing.values()))
+          voiced_non_obstruent = "[aɛiɔuɘlmnɲrwj]"
+          voiced_obstruents = "%s|%s" % (long_voiced_obstruents, short_voiced_obstruents)
+          voiced_sounds = "%s|%s|%s" % (long_voiced_obstruents, short_voiced_obstruents, voiced_non_obstruent)
+          voicing_adjusted_pl_pr_prons = []
+          for pl_pr_pron in pl_pr_prons:
             while True:
-              new_pl_pr_pron = re.sub(
-                "^(.*)(%s)( ˈ?(?:%s).*)$" % (long_unvoiced_obstruents, voiced_sounds),
-                lambda m: m.group(1) + long_voicing[m.group(2)] + m.group(3), pl_pr_pron)
-              if new_pl_pr_pron == pl_pr_pron:
+              changed = False
+              #while True:
+              #  new_pl_pr_pron = re.sub(
+              #    "^(.*)(%s)( ˈ?(?:%s).*)$" % (long_unvoiced_obstruents, voiced_sounds),
+              #    lambda m: m.group(1) + long_voicing[m.group(2)] + m.group(3), pl_pr_pron)
+              #  if new_pl_pr_pron == pl_pr_pron:
+              #    break
+              #  else:
+              #    pl_pr_pron = new_pl_pr_pron
+              #    changed = True
+              while True:
+                new_pl_pr_pron = re.sub(
+                  "^(.*)(%s)([ ˈ]*(?:%s).*)$" % (long_unvoiced_obstruents, voiced_obstruents),
+                  lambda m: m.group(1) + long_voicing[m.group(2)] + m.group(3), pl_pr_pron)
+                if new_pl_pr_pron == pl_pr_pron:
+                  break
+                else:
+                  pl_pr_pron = new_pl_pr_pron
+                  changed = True
+              #while True:
+              #  new_pl_pr_pron = re.sub(
+              #    "^(.*)(%s)( ˈ?(?:%s).*)$" % (short_unvoiced_obstruents, voiced_sounds),
+              #    lambda m: m.group(1) + short_voicing[m.group(2)] + m.group(3), pl_pr_pron)
+              #  if new_pl_pr_pron == pl_pr_pron:
+              #    break
+              #  else:
+              #    pl_pr_pron = new_pl_pr_pron
+              #    changed = True
+              while True:
+                new_pl_pr_pron = re.sub(
+                  "^(.*)(%s)([ ˈ]*(?:%s).*)$" % (short_unvoiced_obstruents, voiced_obstruents),
+                  lambda m: m.group(1) + short_voicing[m.group(2)] + m.group(3), pl_pr_pron)
+                if new_pl_pr_pron == pl_pr_pron:
+                  break
+                else:
+                  pl_pr_pron = new_pl_pr_pron
+                  changed = True
+              if not changed:
                 break
-              else:
-                pl_pr_pron = new_pl_pr_pron
-                changed = True
-            while True:
-              new_pl_pr_pron = re.sub(
-                "^(.*)(%s)([ ˈ]*(?:%s).*)$" % (long_unvoiced_obstruents, voiced_obstruents),
-                lambda m: m.group(1) + long_voicing[m.group(2)] + m.group(3), pl_pr_pron)
-              if new_pl_pr_pron == pl_pr_pron:
+            voicing_adjusted_pl_pr_prons.append(pl_pr_pron)
+          voicing_adjusted_joined_pl_pr_prons = ",".join(voicing_adjusted_pl_pr_prons)
+          pagemsg("voicing_adjusted_joined_pl_pr_prons: %s" % voicing_adjusted_joined_pl_pr_prons)
+
+          # account for clitic prepositions joined to following word
+          clitic_adjusted_pl_pr_prons = []
+          for pl_pr_pron in voicing_adjusted_pl_pr_prons:
+            pl_pr_pron = re.sub("^/(.*)/$", r"\1", pl_pr_pron)
+            pl_pr_pron = re.sub("(?:^|(?<= ))([^ .ˈ]+) ", r"\1.", pl_pr_pron)
+            pl_pr_pron = pl_pr_pron.replace(".ˈ", "ˈ")
+            # nonsyllabic clitics should not have a following syllable dividers
+            pl_pr_pron = re.sub(r"(/| )([^aɛiɔuɘ])\.", r"\1\2", pl_pr_pron)
+            clitic_adjusted_pl_pr_prons.append("/" + pl_pr_pron + "/")
+          clitic_adjusted_joined_pl_pr_prons = ",".join(clitic_adjusted_pl_pr_prons)
+          pagemsg("clitic_adjusted_joined_pl_pr_prons: %s" % clitic_adjusted_joined_pl_pr_prons)
+
+          pron_diff = None
+          if do_diff:
+            cmp_funs = [
+              (lambda x: x, "SAME"),
+              (remove_syldiv, "DIFFERENT_ONLY_IN_SYLDIV"),
+              (remove_stress, "DIFFERENT_ONLY_IN_STRESS"),
+              (remove_syldiv_stress, "DIFFERENT_ONLY_IN_SYLDIV_AND_STRESS"),
+            ]
+          else:
+            cmp_funs = [
+              (lambda x: x, "SAME"),
+            ]
+          for cmpfun, cmp_prefix in cmp_funs:
+            for cmp1, cmp2, cmp_suffix in [
+              (joined_pl_p_prons, joined_pl_pr_prons, ""),
+              (monostress_joined_pl_p_prons, joined_pl_pr_prons, "_MODULO_MONOSYLLABIC_STRESS"),
+              (syladjusted_joined_pl_p_prons, joined_pl_pr_prons, "_MODULO_MONOSYLLABIC_STRESS_AND_SYL_ADJUST"),
+              (syladjusted_joined_pl_p_prons, voicing_adjusted_joined_pl_pr_prons, "_MODULO_MONOSYLLABIC_STRESS_SYL_ADJUST_AND_VOICING_ADJUST"),
+              (syladjusted_joined_pl_p_prons, clitic_adjusted_joined_pl_pr_prons, "_MODULO_MONOSYLLABIC_STRESS_SYL_ADJUST_VOICING_ADJUST_AND_CLITIC_ADJUST"),
+              (add_eng(joined_pl_p_prons), add_eng(joined_pl_pr_prons), "_MODULO_ENG_ASSIM"),
+            ]:
+              if cmpfun(cmp1) == cmpfun(cmp2):
+                pron_diff = cmp_prefix + cmp_suffix
                 break
-              else:
-                pl_pr_pron = new_pl_pr_pron
-                changed = True
-            while True:
-              new_pl_pr_pron = re.sub(
-                "^(.*)(%s)( ˈ?(?:%s).*)$" % (short_unvoiced_obstruents, voiced_sounds),
-                lambda m: m.group(1) + short_voicing[m.group(2)] + m.group(3), pl_pr_pron)
-              if new_pl_pr_pron == pl_pr_pron:
-                break
-              else:
-                pl_pr_pron = new_pl_pr_pron
-                changed = True
-            while True:
-              new_pl_pr_pron = re.sub(
-                "^(.*)(%s)([ ˈ]*(?:%s).*)$" % (short_unvoiced_obstruents, voiced_obstruents),
-                lambda m: m.group(1) + short_voicing[m.group(2)] + m.group(3), pl_pr_pron)
-              if new_pl_pr_pron == pl_pr_pron:
-                break
-              else:
-                pl_pr_pron = new_pl_pr_pron
-                changed = True
-            if not changed:
+            if pron_diff:
               break
-          voicing_adjusted_pl_pr_prons.append(pl_pr_pron)
-        voicing_adjusted_joined_pl_pr_prons = ",".join(voicing_adjusted_pl_pr_prons)
-        pagemsg("voicing_adjusted_joined_pl_pr_prons: %s" % voicing_adjusted_joined_pl_pr_prons)
+          if not pron_diff:
+            if not do_diff:
+              return pron_diff, joined_pl_p_prons, joined_pl_pr_prons, auto_hyphenations, auto_rhymes
+            pron_diff = "DIFFERENT_IN_PHONEMES"
+          pagemsg("{{pl-p%s}} = %s; {{pl-pr%s}} = %s: %s" % (
+            pl_p_args, joined_pl_p_prons, "|" + prefix_respelling if prefix_respelling else pl_pr_args,
+            joined_pl_pr_prons, pron_diff))
+          return pron_diff, joined_pl_p_prons, joined_pl_pr_prons, auto_hyphenations, auto_rhymes
 
-        # account for clitic prepositions joined to following word
-        clitic_adjusted_pl_pr_prons = []
-        for pl_pr_pron in voicing_adjusted_pl_pr_prons:
-          pl_pr_pron = re.sub("^/(.*)/$", r"\1", pl_pr_pron)
-          pl_pr_pron = re.sub("(?:^|(?<= ))([^ .ˈ]+) ", r"\1.", pl_pr_pron)
-          pl_pr_pron = pl_pr_pron.replace(".ˈ", "ˈ")
-          # nonsyllabic clitics should not have a following syllable dividers
-          pl_pr_pron = re.sub(r"(/| )([^aɛiɔuɘ])\.", r"\1\2", pl_pr_pron)
-          clitic_adjusted_pl_pr_prons.append("/" + pl_pr_pron + "/")
-        clitic_adjusted_joined_pl_pr_prons = ",".join(clitic_adjusted_pl_pr_prons)
-        pagemsg("clitic_adjusted_joined_pl_pr_prons: %s" % clitic_adjusted_joined_pl_pr_prons)
-
-        pron_diff = (
-          "SAME" if joined_pl_p_prons == joined_pl_pr_prons else
-          "SAME_MODULO_MONOSYLLABIC_STRESS" if monostress_joined_pl_p_prons == joined_pl_pr_prons else
-          "SAME_MODULO_MONOSYLLABIC_STRESS_AND_SYL_ADJUST" if syladjusted_joined_pl_p_prons == joined_pl_pr_prons else
-          "SAME_MODULO_MONOSYLLABIC_STRESS_SYL_ADJUST_AND_VOICING_ADJUST" if syladjusted_joined_pl_p_prons == voicing_adjusted_joined_pl_pr_prons else
-          "SAME_MODULO_MONOSYLLABIC_STRESS_SYL_ADJUST_VOICING_ADJUST_AND_CLITIC_ADJUST" if syladjusted_joined_pl_p_prons == clitic_adjusted_joined_pl_pr_prons else
-          "DIFFERENT_ONLY_IN_SYLDIV" if remove_syldiv(joined_pl_p_prons) == remove_syldiv(joined_pl_pr_prons) else
-          "DIFFERENT_ONLY_IN_SYLDIV_MODULO_MONOSYLLABIC_STRESS" if remove_syldiv(monostress_joined_pl_p_prons) == remove_syldiv(joined_pl_pr_prons) else
-          "DIFFERENT_ONLY_IN_SYLDIV_MODULO_MONOSYLLABIC_STRESS_AND_SYL_ADJUST" if remove_syldiv(syladjusted_joined_pl_p_prons) == remove_syldiv(joined_pl_pr_prons) else
-          "DIFFERENT_ONLY_IN_SYLDIV_MODULO_MONOSYLLABIC_STRESS_SYL_ADJUST_AND_VOICING_ADJUST" if remove_syldiv(syladjusted_joined_pl_p_prons) == remove_syldiv(voicing_adjusted_joined_pl_pr_prons) else
-          "DIFFERENT_ONLY_IN_SYLDIV_MODULO_MONOSYLLABIC_STRESS_SYL_ADJUST_VOICING_ADJUST_AND_CLITIC_ADJUST" if remove_syldiv(syladjusted_joined_pl_p_prons) == remove_syldiv(clitic_adjusted_joined_pl_pr_prons) else
-          "DIFFERENT_ONLY_IN_STRESS" if remove_stress(joined_pl_p_prons) == remove_stress(joined_pl_pr_prons) else
-          "DIFFERENT_ONLY_IN_STRESS_MODULO_SYL_ADJUST" if remove_stress(syladjusted_joined_pl_p_prons) == remove_stress(joined_pl_pr_prons) else
-          "DIFFERENT_ONLY_IN_STRESS_MODULO_SYL_ADJUST_AND_VOICING_ADJUST" if remove_stress(syladjusted_joined_pl_p_prons) == remove_stress(voicing_adjusted_joined_pl_pr_prons) else
-          "DIFFERENT_ONLY_IN_STRESS_MODULO_SYL_ADJUST_VOICING_ADJUST_AND_CLITIC_ADJUST" if remove_stress(syladjusted_joined_pl_p_prons) == remove_stress(clitic_adjusted_joined_pl_pr_prons) else
-          "DIFFERENT_ONLY_IN_SYLDIV_AND_STRESS" if remove_syldiv_stress(joined_pl_p_prons) == remove_syldiv_stress(joined_pl_pr_prons) else
-          "DIFFERENT_ONLY_IN_SYLDIV_AND_STRESS_MODULO_SYL_ADJUST" if remove_syldiv_stress(syladjusted_joined_pl_p_prons) == remove_syldiv_stress(joined_pl_pr_prons) else
-          "DIFFERENT_ONLY_IN_SYLDIV_AND_STRESS_MODULO_SYL_ADJUST_AND_VOICING_ADJUST" if remove_syldiv_stress(syladjusted_joined_pl_p_prons) == remove_syldiv_stress(voicing_adjusted_joined_pl_pr_prons) else
-          "DIFFERENT_ONLY_IN_SYLDIV_AND_STRESS_MODULO_SYL_ADJUST_VOICING_ADJUST_AND_CLITIC_ADJUST" if remove_syldiv_stress(syladjusted_joined_pl_p_prons) == remove_syldiv_stress(clitic_adjusted_joined_pl_pr_prons) else
-          "DIFFERENT_ONLY_IN_ENG_ASSIM" if add_eng(joined_pl_p_prons) == add_eng(joined_pl_pr_prons) else
-          "DIFFERENT_ONLY_IN_ENG_ASSIM_AND_SYLDIV" if remove_syldiv(add_eng(joined_pl_p_prons)) == remove_syldiv(add_eng(joined_pl_pr_prons)) else
-          "DIFFERENT_ONLY_IN_ENG_ASSIM_AND_STRESS" if remove_stress(add_eng(joined_pl_p_prons)) == remove_stress(add_eng(joined_pl_pr_prons)) else
-          "DIFFERENT_ONLY_IN_ENG_ASSIM, SYLDIV_AND_STRESS" if remove_syldiv_stress(add_eng(joined_pl_p_prons)) == remove_syldiv_stress(add_eng(joined_pl_pr_prons)) else
-          "DIFFERENT_IN_PHONEMES"
+      has_prefix_respelling = False
+      for prefix_respelling, pl_pr_obj in prefix_pl_pr_objs:
+        pron_diff, joined_pl_p_prons, joined_pl_pr_prons, auto_hyphenations, auto_rhymes = (
+          do_pl_pr_obj(prefix_respelling, pl_pr_obj, do_diff=False)
         )
-        pagemsg("{{pl-p%s}} = %s; {{pl-pr%s}} = %s: %s" % (
-          pl_p_args, joined_pl_p_prons, pl_pr_args, joined_pl_pr_prons, pron_diff))
+        if pron_diff:
+          if prefix_respelling:
+            has_prefix_respelling = True
+            new_respellings = prefix_respelling
+            new_default_respellings = prefix_respelling
+            pl_pr_args = "|" + prefix_respelling
+          break
+      else: # no break
+        pron_diff, joined_pl_p_prons, joined_pl_pr_prons, auto_hyphenations, auto_rhymes = (
+          do_pl_pr_obj(None, prefix_pl_pr_objs[0][1], do_diff=True)
+        )
 
       must_continue = False
       for param in t.params:
@@ -435,7 +512,7 @@ def process_text_on_page(index, pagetitle, text):
       no_change = stopping_warning or carry_over_respelling
       if no_change:
         modt = list(blib.parse_text("{{pl-pr%s}}" % (
-          "|" + new_respellings if new_respellings and carry_over_respelling else "")).
+          "|" + new_respellings if new_respellings and (has_prefix_respelling or carry_over_respelling) else "")).
           filter_templates())[0]
       else:
         del t.params[:]
@@ -463,9 +540,18 @@ def process_text_on_page(index, pagetitle, text):
 
       if no_change:
         pagemsg("OLD: <begin> %s <end>" % origt)
-        msg("NEW Page\t%s.%03d\t%s\t%s\t%s\t%s\t{{pl-pr%s}}\t%s\t%s\t%s\t<begin> %s <end>" % (
-          index, template_index, pagetitle, pagetitle[::-1], origt, joined_pl_p_prons, pl_pr_args, joined_pl_pr_prons,
-          pron_diff, "; ".join(stopping_warning) if stopping_warning else "", str(modt)))
+        levenshtein_respellings = []
+        for respelling in respellings:
+          if respelling == pagetitle:
+            levenshtein_respellings.append("-")
+          else:
+            levenshtein_respellings.append(
+              str(blib.levenshtein(re.sub("[ ,.-]", "", pagetitle), re.sub("[ ,'.-]", "", respelling))))
+        levenshtein_respellings = ",".join(levenshtein_respellings)
+        msg("NEW Page\t%s.%03d\t%s\t%s\t%s\t%s\t%s\t{{pl-pr%s}}\t%s\t%s\t%s\t<begin> %s <end>" % (
+          index, template_index, pagetitle, pagetitle[::-1], origt, levenshtein_respellings, joined_pl_p_prons,
+          pl_pr_args, joined_pl_pr_prons, pron_diff, "; ".join(stopping_warning) if stopping_warning else "",
+          str(modt)))
       else:
         pagemsg("Replace %s with %s" % (origt, str(t)))
         notes.append("replace {{pl-p}} with {{pl-pr}}, changing syntax as appropriate")
