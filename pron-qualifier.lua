@@ -74,6 +74,7 @@ function export.format_qualifiers(data)
 				close = false,
 				no_ib_content = true,
 				no_track_already_seen = true,
+				ok_to_destructively_modify = true, -- doesn't apply to `labels`
 			}
 		end
 		local m_qualifier = require(qualifier_module)

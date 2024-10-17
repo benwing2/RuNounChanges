@@ -3,9 +3,11 @@ local export = {}
 export.lang_specific_data_list_module = "Module:labels/data/lang"
 export.lang_specific_data_modules_prefix = "Module:labels/data/lang/"
 local m_lang_specific_data = mw.loadData(export.lang_specific_data_list_module)
+
+local require_when_needed = require("Module:utilities/require when needed")
+local m_table = require_when_needed("Module:table")
 local parse_utilities_module = "Module:parse utilities"
 local string_utilities_module = "Module:string utilities"
-local table_module = "Module:table"
 local utilities_module = "Module:utilities"
 
 --[==[ intro:
@@ -673,11 +675,16 @@ objects returned than raw labels passed in.) On input, `data` is an object with 
 * `already_seen`: An object used to track labels already seen, so they aren't displayed twice. Tracking is according
   to the display form of the label, so if two labels have the same display form, the second one won't be displayed
   (but its categories will still be added). If `already_seen` is {nil}, this tracking doesn't happen.
-
-'''WARNING''': This destructively modifies the `data` structure.
+* `ok_to_destructively_modify`: If set, the `data` structure will be destructively modified in the process of this
+  function running.
 ]==]
 function export.process_raw_labels(data)
 	local label_infos = {}
+
+	if not data.ok_to_destructively_modify then
+		data = m_table.shallowcopy(data)
+		data.ok_to_destructively_modify = true
+	end
 
 	local function get_info_and_insert(label)
 		-- Reuse this structure to save memory.
@@ -721,10 +728,14 @@ fields:
 * `already_seen`: An object used to track labels already seen, so they aren't displayed twice. Tracking is according
   to the display form of the label, so if two labels have the same display form, the second one won't be displayed
   (but its categories will still be added). If `already_seen` is {nil}, this tracking doesn't happen.
-
-'''WARNING''': This destructively modifies the `data` structure.
+* `ok_to_destructively_modify`: If set, the `data` structure will be destructively modified in the process of this
+  function running.
 ]==]
 function export.split_and_process_raw_labels(data)
+	if not data.ok_to_destructively_modify then
+		data = m_table.shallowcopy(data)
+		data.ok_to_destructively_modify = true
+	end
 	data.labels = export.split_labels_on_comma(data.labels)
 	return export.process_raw_labels(data)
 end
@@ -750,18 +761,23 @@ On input `data` is an object with the following fields:
   {"ib-brac"} CSS class. If {nil}, no close bracket is displayed.
 * `no_ib_content`: By default, the concatenated formatted labels inside of the open/close brackets are wrapped in the
   {"ib-content"} CSS class. Specify this to suppress this wrapping.
+* `ok_to_destructively_modify`: If set, the `data` structure, and the `data.labels` table inside of it, will be
+  destructively modified in the process of this function running.
 
 Return value is a string containing the contenated labels, optionally surrounded by open/close brackets or parentheses.
 Normally, labels are separated by comma-space sequences, but this may be suppressed for certain labels. If `nocat`
 wasn't given to {get_label_info() or process_raw_labels()}, the label objects will contain formatted categories in
 them, which will be inserted into the returned text. The concatenated text inside of the open/close brackets is normally
 wrapped in the {"ib-content"} CSS class, but this can be suppressed, as mentioned above.
-
-'''WARNING''': This destructively modifies the `data` structure.
 ]==]
 function export.format_processed_labels(data)
 	if not data.labels then
 		error("`data` must now be an object containing the params")
+	end
+	if not data.ok_to_destructively_modify then
+		data = m_table.shallowcopy(data)
+		data.labels = m_table.deepcopy(data.labels)
+		data.ok_to_destructively_modify = true
 	end
 	local labels = data.labels
 	if not labels[1] then
@@ -846,6 +862,8 @@ input `data` is an object with the following fields:
   parenthesis. Set to {false} to disable.
 * `close`: Close bracket or parenthesis to display after the concatenated labels. If {nil}, defaults to a close
   parenthesis. Set to {false} to disable.
+* `ok_to_destructively_modify`: If set, the `data` structure will be destructively modified in the process of this
+  function running.
 
 Compared with {format_processed_labels()}, this function has the following differences:
 # The labels specified in `labels` are raw labels (i.e. strings) rather than formatted objects.
@@ -853,12 +871,14 @@ Compared with {format_processed_labels()}, this function has the following diffe
 # Tracking of already-seen labels is enabled unless explicitly turned off using `no_track_already_seen`.
 # The entire formatted result is wrapped in a {"usage-label-<var>type</var>"} CSS class (depending on the value of
   `mode`).
-
-'''WARNING''': This destructively modifies the `data` structure.
 ]==]
 function export.show_labels(data)
 	if not data.labels then
 		error("`data` must now be an object containing the params")
+	end
+	if not data.ok_to_destructively_modify then
+		data = m_table.shallowcopy(data)
+		data.ok_to_destructively_modify = true
 	end
 	local labels = data.labels
 	if not labels[1] then
@@ -884,7 +904,7 @@ end
 
 --[==[Helper function for the data modules.]==]
 function export.alias(labels, key, aliases)
-	require(table_module).alias(labels, key, aliases)
+	m_table.alias(labels, key, aliases)
 end
 
 --[==[
@@ -930,7 +950,7 @@ end
 
 --[==[Used to finalize the data into the form that is actually returned.]==]
 function export.finalize_data(labels)
-	local shallowcopy = require(table_module).shallowcopy
+	local shallowcopy = m_table.shallowcopy
 	local aliases = {}
 	for label, data in pairs(labels) do
 		if type(data) == "table" then
