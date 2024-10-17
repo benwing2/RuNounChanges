@@ -3,22 +3,29 @@ local pos_functions = {}
 
 local force_cat = false -- for testing; if true, categories appear in non-mainspace pages
 
-local parse_utilities_module = "Module:parse utilities"
-local listToSet = require("Module:table/listToSet")
+local rfind = mw.ustring.find
 
--- Table of all valid genders, mapping user-specified gender specs to canonicalized versions.
-local valid_cs_gender_specs = {}
-local valid_sk_gender_specs = {}
+local require_when_needed = require("Module:utilities/require when needed")
+local m_table = require("Module:table")
+local m_headword_utilities = require_when_needed("Module:headword utilities")
+local glossary_link = require_when_needed("Module:headword utilities", "glossary_link")
+
+local list_param = {list = true, disallow_holes = true}
+
+-- Table of all valid genders by language, mapping user-specified gender specs to canonicalized versions.
+local valid_gender_specs = {}
 
 local valid_genders_with_animacy = {"mfbysense", "mf", "m"}
 local valid_genders_without_animacy = {"f", "n", "?"}
-local valid_cs_animacies = {"an", "in"}
-local valid_sk_animacies = {"pr", "anml", "in"}
+local valid_two_way_animacies = {"an", "in"}
+local valid_three_way_animacies = {"pr", "anml", "in"}
 local valid_number_suffixes = {"", "-p"}
 
-for _, lang in ipairs { "cs", "sk" } do
-	local dest = lang == "cs" and valid_cs_gender_specs or valid_sk_gender_specs
-	local animacy_src = lang == "cs" and valid_cs_animacies or valid_sk_animacies
+for _, lang in ipairs { "cs", "sk", "zlw-ocs", "zlw-osk" } do
+	valid_gender_specs[lang] = {}
+	local dest = valid_gender_specs[lang]
+	-- The following is correct; Old Czech has three-way animacy.
+	local animacy_src = lang == "cs" and valid_two_way_animacies or valid_three_way_animacies
 	for _, gender in ipairs(valid_genders_without_animacy) do
 		for _, number in ipairs(valid_number_suffixes) do
 			local spec = gender .. number
@@ -39,72 +46,32 @@ for _, lang in ipairs { "cs", "sk" } do
 end
 
 -- Table of all valid aspects.
-local valid_aspects = listToSet {
+local valid_aspects = m_table.listToSet {
 	"impf", "pf", "both", "biasp", "?",
 }
 
-local allowed_sk_decl_patterns = listToSet {
+local allowed_sk_decl_patterns = m_table.listToSet {
 	"chlap", "dievča", "dub", "gazdiná", "hrdina", "kosť", "mesto", "srdce", "stroj", "ulica", "vysvedčenie", "žena",
 	-- In use but not in the Appendix
 	"dlaň", "idea", "kuli", "pani",
 }
-
-local rfind = mw.ustring.find
 
 local function track(track_id)
 	require("Module:debug/track")("cs-sk-headword/" .. track_id)
 	return true
 end
 
-local function glossary_link(anchor, text)
-	text = text or anchor
-	return "[[Appendix:Glossary#" .. anchor .. "|" .. text .. "]]"
-end
-
-local param_mods = {
-	-- [[Module:headword]] expects part genders in `.genders`.
-	g = {item_dest = "genders", sublist = true},
-	id = {},
-	q = {type = "qualifier"},
-	qq = {type = "qualifier"},
-	l = {type = "labels"},
-	ll = {type = "labels"},
-	-- [[Module:headword]] expects part references in `.refs`.
-	ref = {item_dest = "refs", type = "references"},
-}
-
-local function parse_term_with_modifiers(paramname, val, frob)
-	local function generate_obj(term, parse_err)
-		if frob then
-			term = frob(term)
-		end
-		return {term = term}
-	end
-
-	if val:find("<") then
-		return require(parse_utilities_module).parse_inline_modifiers(val, {
-			paramname = paramname,
-			param_mods = param_mods,
-			generate_obj = generate_obj,
-		})
-	else
-		return generate_obj(val)
-	end
-end
-
-local function parse_term_list_with_modifiers(paramname, list, frob)
-	local first, restpref
-	if type(paramname) == "table" then
-		first = paramname[1]
-		restpref = paramname[2]
-	else
-		first = paramname
-		restpref = paramname
-	end
-	for i, val in ipairs(list) do
-		list[i] = parse_term_with_modifiers(i == 1 and first or restpref .. i, val, frob)
-	end
-	return list
+-- Parse and insert an inflection not requiring additional processing into `data.inflections`. The raw arguments come
+-- from `args[field]`, which is parsed for inline modifiers. `label` is the label that the inflections are given;
+-- sections enclosed in <<...>> are linked to the glossary. `accel` is the accelerator form, or nil.
+local function parse_and_insert_inflection(data, args, field, label, accel)
+	m_headword_utilities.parse_and_insert_inflection {
+		headdata = data,
+		forms = args[field],
+		paramname = field,
+		label = label,
+		accel = accel and {form = accel} or nil,
+	}
 end
 
 -- The main entry point.
@@ -119,8 +86,8 @@ function export.show(frame)
 	local args = frame:getParent().args
 	local poscat = iargs[1]
 	local langcode = iargs.lang
-	if langcode ~= "cs" and langcode ~= "sk" then
-		error("This module currently only works for lang=cs and lang=sk")
+	if langcode ~= "cs" and langcode ~= "sk" and langcode ~= "zlw-ocs" and langcode ~= "zlw-osk" then
+		error("This module currently only works for lang=cs, lang=sk, lang=zlw-ocs and lang=zlw-osk")
 	end
 	local lang = require("Module:languages").getByCode(langcode, true)
 	local langname = lang:getCanonicalName()
@@ -129,10 +96,9 @@ function export.show(frame)
 	local parargs = frame:getParent().args
 
 	local params = {
-		["head"] = {list = true},
+		["head"] = list_param,
 		["id"] = {},
 		["sort"] = {},
-		["splithyph"] = {type = "boolean"},
 		["nolinkhead"] = {type = "boolean"},
 		["json"] = {type = "boolean"},
 		["pagename"] = {}, -- for testing
@@ -196,7 +162,6 @@ end
 
 local function get_noun_params(is_proper)
 	return function(lang)
-		local list_param = {list = true, disallow_holes = true}
 		params = {
 			[1] = {alias_of = "g"},
 			["g"] = list_param,
@@ -222,7 +187,7 @@ local function get_noun_params(is_proper)
 end
 
 local function do_nouns(is_proper, args, data)
-	local specs = data.lang:getCode() == "sk" and valid_sk_gender_specs or valid_cs_gender_specs
+	local specs = valid_gender_specs[data.lang:getCode()]
 	for i, g in ipairs(args.g) do
 		local canon_g = specs[g]
 		if canon_g then
@@ -257,30 +222,35 @@ local function do_nouns(is_proper, args, data)
 		end
 	end
 
-	local function handle_infl(arg, label, frob)
-		if args[arg] then
-			local vals = parse_term_list_with_modifiers(arg, args[arg], frob)
-			if #vals > 0 then
-				vals.label = label
-				table.insert(data.inflections, vals)
-			end
-		end
+	-- Parse and insert an inflection not requiring additional processing into `data.inflections`. The raw arguments come
+	-- from `args[field]`, which is parsed for inline modifiers. If there is a corresponding qualifier field `FIELD_qual`,
+	-- qualifiers may additionally come from there. `label` is the label that the inflections are given, which is linked to
+	-- the glossary if preceded by * (which is removed). `plpos` is the plural part of speech, used in
+	-- [[Category:LANGNAME PLPOS with red links in their headword lines]]. `accel` is the accelerator form, or nil.
+	local function handle_infl(field, label, frob)
+		m_headword_utilities.parse_and_insert_inflection {
+			headdata = data,
+			forms = args[field],
+			paramname = field,
+			label = label,
+			frob = frob,
+		}
 	end
-	
-	handle_infl("gen", "genitive singular")
-	handle_infl("pl", "nominative plural")
-	handle_infl("genpl", "genitive plural")
+
+	handle_infl("gen", "<<genitive>> <<singular>>")
+	handle_infl("pl", "<<nominative>> <<plural>>")
+	handle_infl("genpl", "<<genitive>> <<plural>>")
 	handle_infl("decl", "declension pattern of", function(decl)
 		return ("[[Appendix:%s declension pattern %s|%s]]"):format(data.langname, decl, decl)
 	end)
 	handle_infl("m", "male equivalent")
 	handle_infl("f", "female equivalent")
-	handle_infl("adj", "related adjective")
-	handle_infl("dim", "diminutive")
-	handle_infl("aug", "augmentative")
-	handle_infl("pej", "pejorative")
-	handle_infl("dem", "demonym")
-	handle_infl("fdem", "female demonym")
+	handle_infl("adj", "<<relational adjective|related adjective>>")
+	handle_infl("dim", "<<diminutive>>")
+	handle_infl("aug", "<<augmentative>>")
+	handle_infl("pej", "<<pejorative>>")
+	handle_infl("dem", "<<demonym>>")
+	handle_infl("fdem", "female <<demonym>>")
 end
 
 pos_functions["nouns"] = {
@@ -300,91 +270,85 @@ pos_functions["proper nouns"] = {
 pos_functions["verbs"] = {
 	params = {
 		["a"] = {default = "?"},
-		["pf"] = {list = true, disallow_holes = true},
-		["impf"] = {list = true, disallow_holes = true},
+		["pf"] = list_param,
+		["impf"] = list_param,
 	},
 	func = function(args, data)
 		if not valid_aspects[args.a] then
 			error("Unrecognized aspect: '" .. args.a .. "'")
 		end
 		data.genders = args.a == "both" and {"biasp"} or {args.a}
-	
-		local pf = args.pf
-		if #pf > 0 then
-			pf.label = "perfective"
-			table.insert(data.inflections, pf)
-		end
-		local impf = args.impf
-		if #impf > 0 then
-			impf.label = "imperfective"
-			table.insert(data.inflections, impf)
-		end
+
+		parse_and_insert_inflection(data, args, "pf", "perfective")
+		parse_and_insert_inflection(data, args, "impf", "imperfective")
 	end,
 }
 
+local function do_comparative_superlative(args, data, plpos)
+	if args[1][1] == "-" then
+		table.insert(data.inflections, {label = "not comparable"})
+		table.insert(data.categories, data.langname .. " uncomparable " .. plpos)
+	elseif args[1][1] then
+		local comp = m_headword_utilities.parse_term_list_with_modifiers {
+			paramname = {1, "comp"},
+			list = args[1],
+		}
+		local sup = m_headword_utilities.parse_term_list_with_modifiers {
+			paramname = {2, "sup"},
+			list = args[2],
+		}
+		if not sup[1] then
+			sup = m_table.deepcopy(comp)
+			for _, s in ipairs(sup) do
+				-- Old Czech has naj-.
+				s.term = (data.lang:getCode() == "cs" and "nej" or "naj") .. s.term
+			end
+		end
+		comp.label = "comparative"
+		comp.accel = {form = "comparative"}
+		sup.label = "superlative"
+		sup.accel = {form = "superlative"}
+		table.insert(data.inflections, comp)
+		table.insert(data.inflections, sup)
+		table.insert(data.categories, data.langname .. " comparable " .. plpos)
+	end
+end
+
 pos_functions["adjectives"] = {
-	params = {
-		[1] = {list = "comp"},
-		[2] = {list = "sup"},
-		["adv"] = {list = true},
-		["indecl"] = {type = "boolean"},
-	},
+	params = function(lang)
+		local params = {
+			[1] = {list = "comp", disallow_holes = true},
+			[2] = {list = "sup", disallow_holes = true},
+			["adv"] = list_param,
+			["indecl"] = {type = "boolean"},
+		}
+		if lang:getCode() == "zlw-ocs" then
+			params.short = list_param
+			params.shortcomp = list_param
+			params.shortsup = list_param
+		end
+		return params
+	end,
 	func = function(args, data)
 		if args.indecl then
 			table.insert(data.inflections, {label = glossary_link("indeclinable")})
 			table.insert(data.categories, data.langname .. " indeclinable adjectives")
 		end
-		if args[1][1] == "-" then
-			table.insert(data.inflections, {label = "not comparable"})
-			table.insert(data.categories, data.langname .. " uncomparable adjectives")
-		elseif #args[1] > 0 then
-			local comp = args[1]
-			local sup = args[2]
-			if #sup == 0 then
-				for _, c in ipairs(comp) do
-					table.insert(sup, "nej" .. c)
-				end
-			end
-			comp.label = "comparative"
-			comp.accel = {form = "comparative"}
-			sup.label = "superlative"
-			sup.accel = {form = "superlative"}
-			table.insert(data.inflections, comp)
-			table.insert(data.inflections, sup)
-			table.insert(data.categories, data.langname .. " comparable adjectives")
-		end
-		if #args.adv > 0 then
-			args.adv.label = "adverb"
-			table.insert(data.inflections, args.adv)
-		end
+		parse_and_insert_inflection(data, args, "short", "short form")
+		do_comparative_superlative(args, data, "adjectives")
+		parse_and_insert_inflection(data, args, "shortcomp", "short <<comparative>>")
+		parse_and_insert_inflection(data, args, "shortsup", "short <<superlative>>")
+		parse_and_insert_inflection(data, args, "adv", "adverb")
 	end,
 }
 
 pos_functions["adverbs"] = {
 	params = {
-		[1] = {list = "comp"},
-		[2] = {list = "sup"},
+		[1] = {list = "comp", disallow_holes = true},
+		[2] = {list = "sup", disallow_holes = true},
 	},
 	func = function(args, data)
-		if args[1][1] == "-" then
-			table.insert(data.inflections, {label = "not comparable"})
-			table.insert(data.categories, data.langname .. " uncomparable adverbs")
-		elseif #args[1] > 0 then
-			local comp = args[1]
-			local sup = args[2]
-			if #sup == 0 then
-				for _, c in ipairs(comp) do
-					table.insert(sup, "naj" .. c)
-				end
-			end
-			comp.label = "comparative"
-			comp.accel = {form = "comparative"}
-			sup.label = "superlative"
-			sup.accel = {form = "superlative"}
-			table.insert(data.inflections, comp)
-			table.insert(data.inflections, sup)
-			table.insert(data.categories, data.langname .. " comparable adverbs")
-		end
+		do_comparative_superlative(args, data, "adverbs")
 	end,
 }
 
