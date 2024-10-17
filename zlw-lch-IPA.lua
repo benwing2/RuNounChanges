@@ -977,9 +977,160 @@ local function do_rhyme(pron, lang)
 	end
 	local V = ({ pl = "aɛiɔuɘ", szl = "aãɛiɔouɪ", csb = "aãɛeɜiɔoõɞu", ["zlw-slv"] = "aãɛeĭɪŏɔɵŭʉy"})[lang]
 	return {
-		rhyme = rsub(rsub(rsub(pron, "^.*ˈ", ""), ("^[^%s]-([%s])"):format(V, V), "%1"), "%.", ""),
+		rhyme = rsub(rsub(pron:gsub("^.*ˈ", ""), ("^[^%s]-([%s])"):format(V, V), "%1"), "[.ˌ]", ""),
 		num_syl = { select(2, rsubn(pron, ("[%s]"):format(V), "")) }
 	}
+end
+
+-- "Align" syllabified respelling `syllab` to original spelling `spelling` by matching character-by-character, allowing
+-- for extra syllable and stress markers as well as mismatching hyphens in the syllabification and certain mismatches
+-- in the consonants. The goal is to produce the appropriately syllabified version of the original spelling (the
+-- pagename) by matching characters in the syllabified respelling to the original spelling, putting the syllable
+-- boundaries in the appropriate places in the original spelling. As an example, given syllabified respelling
+-- `Al'bań.ja` and original spelling `Albania`, we would like to produce `Al.ban.ia`.
+--
+-- If we encounter an extra syllable marker (.), we allow and keep it. If we encounter an extra stress marker in the
+-- syllabification, we replace it with a syllable marker unless it occurs at the beginning of a word. We allow for
+-- mismatches in capitalization and for certain other mismatches, e.g. ń in respelling vs. n in the original, j in the
+-- respelling vs. i in the original, etc. If we can't match, we return nil indicating the alignment failed.
+local function align_syllabification_to_spelling(syllab, spelling)
+	local result = {}
+	local function concat_result()
+		-- Postprocess to remove dots (syllable boundaries) next to hyphens.
+		return (toNFC(table.concat(result)):gsub("%.%-", "-"):gsub("%-%.", "-"))
+	end
+	-- Remove glottal stop (7) from respelling to simplify the code below, because it's never found in the original
+	-- spelling. (FIXME: We should do the same for diacritics, but they're currently removed earlier, in
+	-- syllabify_from_spelling(). We should probably get rid of the removal there and put it here.)
+	syllab = decompose(syllab:gsub("ː", "")):gsub("7", "")
+	spelling = decompose(spelling)
+	local syll_chars = rsplit(ulower(syllab), "")
+	local spelling_chars = rsplit(spelling, "")
+	local i = 1
+	local j = 1
+	local function matches(uci, ucj)
+		-- Return true if a syllabified respelling character (uci) matches the corresponding spelling char (ucj).
+		-- Both uci and ucj should be lowercase.
+		-- Sound is at the key, values are the letters sound can match
+		local matching_chars = {
+			["ń"] = {"n"},
+			["j"] = {"i"},
+			["k"] = {"c"},
+			["z"] = {"s"},
+		}
+
+		return uci == ucj or (matching_chars[uci] and m_table.contains(matching_chars[uci], ucj))
+	end
+	local function silent_spelling_letter(ucj)
+		return ucj == "h" or ucj == "'" or ucj == "-"
+	end
+	local function syll_at(pos)
+		return syll_chars[pos] or ""
+	end
+	local function spell_at(pos)
+		return spelling_chars[pos] or ""
+	end
+	local function uspell_at(pos)
+		local c = spelling_chars[pos]
+		return c and ulower(c) or ""
+	end
+	while i <= #syll_chars or j <= #spelling_chars do
+		local uci = syll_at(i)
+		local cj = spell_at(j)
+		local ucj = uspell_at(j)
+
+		if uci == "g" and syll_at(i - 1) == "n" and syll_at(i + 1) == "." and matches(syll_at(i + 2), ucj) and
+			not matches(syll_at(i + 2), uspell_at(j + 1)) then
+			-- As a special case, before checking whether the corresponding characters match, we have to skip an extra
+			-- g in an -ng- sequence in the syllabified respelling if the corresponding spelling character matches the
+			-- next respelling character (taking into account the syllable boundary). This is so that e.g.
+			-- syll='ba.rang.gay' matches spelling='barangay'. Otherwise we will match the first respelling g against
+			-- the spelling g and the second respelling g won't match. A similar case occurs with
+			-- syll='E.vang.he.lis.ta' and spelling='Evangelista'. But we need an extra condition to not do this hack
+			-- when syll='ba.rang.gay' matches spelling='baranggay'.
+			i = i + 1
+		elseif uci == "g" and ucj == "g" and uspell_at(j + 1) == TILDE  then
+			table.insert(result, cj)
+			table.insert(result, uspell_at(j + 1))
+			i = i + 1
+			j = j + 2
+		elseif matches(uci, ucj) then
+			table.insert(result, cj)
+			i = i + 1
+			j = j + 1
+		elseif ucj == uspell_at(j - 1) and uci == "." and ucj ~= syll_at(i + 1) then
+			-- See below. We want to allow for a doubled letter in spelling that is pronounced single, and preserve the
+			-- doubled letter. But it's tricky in the presence of syllable boundaries on both sides of the doubled
+			-- letter as well as doubled letters pronounced double. Specifically, there are three possibilities,
+			-- exemplified by:
+			-- (1) syll='Mal.lig', spelling='Mallig' -> 'Mal.lig';
+			-- (2) syll='Ma.lig', spelling='Mallig' -> 'Ma.llig';
+			-- (3) syll='Wil.iam', spelling='William' -> 'Will.iam'.
+			-- If we copy the dot first, we get (1) and (2) right but not (3).
+			-- If we copy the double letter first, we get (2) and (3) right but not (1).
+			-- We choose to copy the dot first except in the situation exemplified by (3), where we copy the doubled
+			-- letter first. The condition above handles (3) (the doubled letter matches against a dot) while not
+			-- interfering with (1) (where the doubled letter also matches against a dot but the next letter in the
+			-- syllabification is the same as the doubled letter, because the doubled letter is pronounced double).
+			table.insert(result, cj)
+			j = j + 1
+		elseif silent_spelling_letter(ucj) and uci == "." and ucj ~= syll_at(i + 1) and
+			not rfind(uspell_at(j + 1), V) then
+			-- See below for silent h or apostrophe in spelling. This condition is parallel to the one directly above
+			-- for silent doubled letters in spelling and handles the case of syllab='Abduramán', spelling='Abdurahman',
+			-- which should be syllabified 'Ab.du.rah.man'. But we need a check to see that the next spelling character
+			-- isn't a vowel, because in that case we want the silent letter to go after the period, e.g.
+			-- syllab='Jumu7á', spelling='Jumu'ah' -> 'Ju.mu.'ah' (the 7 is removed above).
+			table.insert(result, cj)
+			j = j + 1
+		elseif uci == "." then
+			table.insert(result, uci)
+			i = i + 1
+		elseif ucj == uspell_at(j - 1) then
+			-- A doubled letter in spelling that is pronounced single. Examples:
+			-- * syllab='Ma.líg', spelling='Mallig' -> 'Ma.llig' (with l)
+			-- * syllab='Lu.il.yér', spelling='Lhuillier' -> 'Lhu.ill.ier' (with l; a more complex example)
+			-- * syllab='a.sa.la.mu a.lai.kum', spelling='assalamu alaikum' -> 'as.sa.la.mu a.lai.kum' (with s)
+			-- * syllab='Jé.fer.son', spelling='Jefferson' -> 'Je.ffer.son' (with f)
+			-- * syllab='Je.ma', spelling='Gemma' -> 'Ge.mma' (with m)
+			-- * syllab='Ha.na', spelling='Hannah' -> 'Ha.nnah' (with n)
+			-- * syllab='A.by', spelling='Abby' -> 'A.bby' (with b)
+			-- * syllab='Ka.ba', spelling='Kaaba' -> 'Kaa.ba' (with a)
+			-- * syllab='Fu.ji', spelling='Fujii' -> 'Fu.jii' (with i)
+			table.insert(result, cj)
+			j = j + 1
+		elseif silent_spelling_letter(ucj) then
+			-- A silent h, apostrophe or hyphen in spelling. Examples:
+			-- * syllab='adán', spelling='adhan' -> 'a.dhan'
+			-- * syllab='Atanasya', spelling='Athanasia' -> 'A.tha.nas.ia'
+			-- * syllab='Cýntiya', spelling='Cynthia' -> 'Cyn.thi.a'
+			-- * syllab='Ermóhenes', spelling='Hermogenes' -> 'Her.mo.ge.nes'
+			-- * syllab='Abduramán', spelling='Abdurahman' -> 'Ab.du.rah.man'
+			-- * syllab='Jumu7á', spelling='Jumu'ah' -> 'Ju.mu.'ah'
+			-- * syllab='pag7ibig', spelling='pag-ibig' -> 'pag-i.big'
+			table.insert(result, cj)
+			j = j + 1
+		elseif uci == AC or uci == GR or uci == CFLEX or uci == DIA or uci == TILDE or uci == MACRON or
+			uci == "y" or uci == "w" then
+			-- skip character
+			i = i + 1
+		else
+			-- non-matching character
+			mw.log(("Syllabification alignment mismatch for pagename '%s' (position %s, character %s), syllabified respelling '%s' (position %s, character %s), aligned result so far '%s'"
+				):format(spelling, j, ucj, syllab, i, uci, concat_result()))
+			return nil
+		end
+	end
+	if i <= #syll_chars or j <= #spelling_chars then
+		-- left-over characters on one side or the other
+		mw.log(("Syllabification alignment mismatch for pagename '%s' (%s), syllabified respelling '%s' (%s), aligned result so far '%s'"
+			):format(
+				spelling, j > #spelling_chars and "end of string" or ("position %s, character %s"):format(j, uspell_at(j)),
+				syllab, i > #syll_chars and "end of string" or ("position %s, character %s"):format(i, syll_at(i)),
+				concat_result()))
+		return nil
+	end
+	return concat_result()
 end
 
 --[[
