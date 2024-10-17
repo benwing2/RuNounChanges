@@ -1560,12 +1560,15 @@ wm_languages = None
 wm_languages_byCode = None
 wm_languages_byCanonicalName = None
 
+language_aliases_to_canonical = None
+
 
 def getData():
   getLanguageData()
   getFamilyData()
   getScriptData()
   getEtymLanguageData()
+  getAliasData()
 
 def json_loads(data):
   try:
@@ -1630,6 +1633,13 @@ def getEtymLanguageData():
       for alias in etyl["aliases"]:
         assert(type(alias) is str)
         etym_languages_byAlias[alias].append(etyl)
+
+
+def getAliasData():
+  global language_aliases_to_canonical
+
+  jsondata = site.expand_text("{{#invoke:User:MewBot|getAliasData}}")
+  language_aliases_to_canonical = json_loads(jsondata)
 
 
 def try_repeatedly(fun, errandpagemsg, operation="save", bad_value_ret=None, max_tries=2, sleep_time=5):
@@ -3128,3 +3138,24 @@ def process_in_parallel(generator, process, num_workers=5):
     q.put(None)
   pool.close()
   pool.join()
+
+# From wikibooks
+def levenshtein(s1, s2):
+    if len(s1) < len(s2):
+        return levenshtein(s2, s1)
+
+    # len(s1) >= len(s2)
+    if len(s2) == 0:
+        return len(s1)
+
+    previous_row = list(range(len(s2) + 1))
+    for i, c1 in enumerate(s1):
+        current_row = [i + 1]
+        for j, c2 in enumerate(s2):
+            insertions = previous_row[j + 1] + 1 # j+1 instead of j since previous_row and current_row are one character longer
+            deletions = current_row[j] + 1       # than s2
+            substitutions = previous_row[j] + (c1 != c2)
+            current_row.append(min(insertions, deletions, substitutions))
+        previous_row = current_row
+
+    return previous_row[-1]
