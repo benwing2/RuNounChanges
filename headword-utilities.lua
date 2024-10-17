@@ -1,13 +1,14 @@
 local export = {}
 
 local table_module = "Module:table"
-local string_utilities_module = "Module:pattern utilities"
+local string_utilities_module = "Module:string utilities"
 local parse_utilities_module = "Module:parse utilities"
 
 local rfind = mw.ustring.find
 local rmatch = mw.ustring.match
 local rsplit = mw.text.split
 local rsubn = mw.ustring.gsub
+local dump = mw.dumpObject
 
 -- version of rsubn() that discards all but the first return value
 local function rsub(term, foo, bar)
@@ -17,8 +18,6 @@ end
 
 
 local param_mods = {
-	-- [[Module:headword]] expects part genders in `.genders`.
-	g = {item_dest = "genders", sublist = true},
 	id = {},
 	q = {type = "qualifier"},
 	qq = {type = "qualifier"},
@@ -28,8 +27,60 @@ local param_mods = {
 	ref = {item_dest = "refs", type = "references"},
 }
 
+local optional_param_mods = {
+	g = {item_dest = "genders", sublist = true},
+	alt = {},
+	lang = {type = "language"},
+	sc = {type = "script"},
+	t = {item_dest = "gloss"},
+	gloss = {},
+	pos = {},
+	lit = {},
+	tr = {item_dest = "translit"},
+	ts = {item_dest = "transcription"},
+	face = {},
+	nolinkinfl = {type = "boolean"},
+}
+
+
+--[==[
+Parse a single inflection form that may have inline modifiers attached. `data` is an object with the following fields:
+* `val`: The raw value to parse. Required.
+* `paramname`: The name of the parameter from which the value was taken; used in error messages. Required.
+* `frob`: An optional function of one value to apply to the form after inline modifiers have been removed (i.e. to
+  apply to the `.term` field of the returned object).
+* `include_mods`: List of extra inline modifiers to include, besides the default ones (see below). Each list item is
+  either a string specifying a recognized extra inline modifier (see `optional_param_mods` in the code), or a two-item
+  list of modifier name and modifier spec, where the spec should follow the syntax for modifier specs in
+  `parse_inline_modifiers` in [[Module:parse utilities]].
+* `exclude_mods`: List of default inline modifiers to not include.
+Returns an object suitable for storing as one element of one of the lists in `headdata.inflections`, where `headdata`
+is the structure passed to [[Module:headword]].
+
+The following default inline modifiers are currently recognized:
+* `q`: Left qualifier.
+* `qq`: Right qualifier.
+* `l`: Comma-separated list of left labels. No space should follow the comma.
+* `ll`: Comma-separated list of right labels. No space should follow the comma.
+* `ref`: Reference or references. See {{tl|IPA}} for the syntax.
+* `id`: Sense ID, in case there are multiple senses. See {{tl|l}}.
+The following are the recognized additional inline modifiers:
+* `g`: Comma-separated list of genders.
+* `alt`: Display text.
+* `lang`: Language code of language of the form, if different from the language of the headword.
+* `sc`: Script code of script of the form. Almost never needed.
+* `t`: Gloss for the form.
+* `gloss`: Gloss for the form (alias for `t`).
+* `pos`: Part of speech of the form.
+* `lit`: Literal meaning of the form.
+* `tr`: Manual transliteration of the form.
+* `ts`: Transcription of the form, for languages where the transliteration differs markedly from the pronunciation.
+* `face`: Face to display the form in, e.g. {"hypothetical"} for a hypothetical form (unlinkable and displayed in italics).
+* `nolinkinfl`: Make the form unlinkable.
+]==]
 function export.parse_term_with_modifiers(data)
 	local paramname, val, frob = data.paramname, data.val, data.frob
+
 	local function generate_obj(term, parse_err)
 		if frob then
 			term = frob(term, parse_err)
@@ -38,6 +89,38 @@ function export.parse_term_with_modifiers(data)
 	end
 
 	if val:find("<") then
+		local param_mods = param_mods
+		if data.include_mods or data.exclude_mods then
+			param_mods = require(table).shallowcopy(param_mods)
+			if data.include_mods then
+				for _, mod in ipairs(data.include_mods) do
+					if type(mod) == "table" then
+						if #mod ~= 2 then
+							error(("Internal error: Modifier spec %s in `include_mods` should be of length 2"):format(
+								dump(mod)))
+						end
+						local modkey, modvalue = unpack(mod)
+						param_mods[modkey] = modvalue
+					elseif not optional_param_mods[mod] then
+						error(("Internal error: Unrecognized modifier spec %s in `include_mods`"):format(
+							dump(mod)))
+					else
+						param_mods[mod] = optional_param_mods[mod]
+					end
+				end
+			end
+			if data.exclude_mods then
+				for _, mod in ipairs(data.exclude_mods) do
+					if not param_mods[mod] then
+						error(("Internal error: Modifier spec %s in `exclude_mods` not found among existing modifiers"
+							):format(dump(mod)))
+					else
+						param_mods[mod] = nil
+					end
+				end
+			end
+		end
+
 		return require(parse_utilities_module).parse_inline_modifiers(val, {
 			paramname = paramname,
 			param_mods = param_mods,
@@ -48,9 +131,23 @@ function export.parse_term_with_modifiers(data)
 	end
 end
 
+
+--[==[
+Parse a list of inflection forms that may have inline modifiers attached. `data` is an object with the following fields:
+* `forms`: The list of raw values to parse. Required.
+* `paramname`: The name of the first parameter from which the value was taken; used in error messages. If this is a
+  two-element list, the first element is the first parameter and the second element is the prefix of the remaining
+  parameters. Parameter names that are numbers are handled correctly, as are those with \1 in it marking where the
+  parameter index goes. Required.
+* `qualifiers`: If specified, a possibly gappy list of left qualifiers to add to the parsed terms (for compatibility
+  purposes).
+* `frob`, `include_mods`, `exclude_mods`: As in `parse_term_with_modifiers()`.
+Returns a list of objects, suitable for storing as one of the lists in `headdata.inflections` (once a label is added),
+where `headdata` is the structure passed to [[Module:headword]].
+]==]
 function export.parse_term_list_with_modifiers(data)
-	local paramname, list, frob = data.paramname, data.list, data.frob
-	local qualparams = data.qualparams
+	local paramname, forms = data.paramname, data.forms
+	local qualifiers = data.qualifiers
 	local first, restpref
 	if type(paramname) == "table" then
 		first = paramname[1]
@@ -59,17 +156,119 @@ function export.parse_term_list_with_modifiers(data)
 		first = paramname
 		restpref = paramname
 	end
-	for i, val in ipairs(list) do
-		list[i] = export.parse_term_with_modifiers {
-			paramname = i == 1 and first or restpref .. i,
+	local terms = {}
+	for i, val in ipairs(forms) do
+		terms[i] = export.parse_term_with_modifiers {
+			paramname = i == 1 and first or type(restpref) == "number" and restpref + i - 1 or
+				restpref:find("\1") and restpref:gsub("\1", tostring(i)) or restpref .. i,
 			val = val,
-			frob = frob
+			frob = data.frob,
+			include_mods = data.include_mods,
+			exclude_mods = data.exclude_mods,
 		}
-		if qualparams and qualparams[i] then
-			list[i].q = qualparams[i]
+		if qualifiers and qualifiers[i] then
+			terms[i].q = qualifiers[i]
 		end
 	end
-	return list
+	return terms
+end
+
+
+--[==[
+Check if any of a list of parsed terms (as returned by `parse_term_list_with_modifiers()`) are red links (i.e.
+nonexistent pages). If so, a category such as [[Category:Spanish nouns with red links in their headword lines]] is added
+to `headdata.categories`. `data` is an object with the following fields:
+* `headdata`: The headword structure passed to [[Module:headword]]. Required.
+* `terms`: The list of parsed terms. Required.
+* `lang`: The language object for the language of the terms. Required.
+* `plpos`: The plural part of speech, for the category name. Required.
+]==]
+function export.check_term_list_missing(data)
+	local headdata, terms, lang, plpos = data.headdata, data.terms, data.lang, data.plpos
+	for _, term in ipairs(terms) do
+		if type(term) == "table" then
+			term = term.term
+		end
+		if term then
+			local title = mw.title.new(term)
+			if title and not title:getContent() then
+				table.insert(headdata.categories, lang:getFullName() .. " " .. plpos ..
+					" with red links in their headword lines")
+			end
+		end
+	end
+end
+
+
+--[==[
+Construct a link to [[Appendix:Glossary]] for `entry`. If `text` is specified, it is the display text; otherwise,
+`entry` is used.
+]==]
+function export.glossary_link(entry, text)
+	text = text or entry
+	return "[[Appendix:Glossary#" .. entry .. "|" .. text .. "]]"
+end
+
+
+--[==[
+Insert previously-parsed terms into `headdata.inflections`. `data` is an object with the following fields:
+* `headdata`: The headword structure passed to [[Module:headword]]. Required.
+* `terms`: The list of parsed terms. If {nil} or omitted, nothing happens.
+* `label`: The label that the inflections are given; any parts of the label surrounded in <<...>> are linked to the
+glossary. (If the contents of <<...> contain a | in them, they are a two-part link.) Required.
+* `accel`: If specified, a full accelerator object to add to the inflections.
+* `check_missing`: If specified, check the parsed terms for red links, and if so, add a category such as
+  [[Category:Spanish nouns with red links in their headword lines]] to `headdata.categories`. If this is given, so must
+  `lang` and `plpos`.
+* `lang`: The language object for the language of the terms. Required if `check_missing` is given.
+* `plpos`: The plural part of speech, for the category name. Required if `check_missing` is given.
+]==]
+function export.insert_inflection(data)
+	local headdata, terms, label = data.headdata, data.terms, data.label
+	if terms and terms[1] then
+		if label:find("<<") then
+			label = label:gsub("<<(.-)|(.-)>>", export.glossary_link):gsub("<<(.-)>>", export.glossary_link)
+		end
+		if terms[1].term == "-" then
+			-- FIXME: Generate an error if there is more than one term or qualifiers or labels specified?
+			table.insert(headdata.inflections, {label = "no " .. label})
+		else
+			if data.check_missing then
+				export.check_term_list_missing {
+					headdata = headdata,
+					terms = terms,
+					lang = data.lang,
+					plpos = data.plpos,
+				}
+			end
+			terms.label = label
+			if data.accel then
+				terms.accel = data.accel
+			end
+			table.insert(headdata.inflections, terms)
+		end
+	end
+end
+
+
+--[==[
+Parse raw arguments from `forms` for inline modifiers, and insert the resulting terms (which should not require
+significant additional processing) into `headdata.inflections`. `data` is an object with the following fields:
+* `forms`: The list of raw values to parse. If {nil} or omitted, nothing happens.
+* `headdata`: The headword structure passed to [[Module:headword]]. Required.
+* `paramname`: As in `parse_term_list_with_modifiers()`. Required.
+* `qualifiers`, `frob`, `include_mods`, `exclude_mods`: As in `parse_term_list_with_modifiers()`.
+* `label`: As in `insert_inflection()`. Required.
+* `accel`, `check_missing`, `lang, `plpos`: As in `insert_inflection()`.
+]==]
+function export.parse_and_insert_inflection(data)
+	local forms = data.forms
+	if forms and forms[1] then
+		data = require(table_module).shallowcopy(data)
+		data.forms = forms
+		data.terms = export.parse_term_list_with_modifiers(data)
+		export.insert_inflection(data)
+	end
 end
 
 
@@ -101,21 +300,13 @@ function export.combine_termobj_qualifiers_labels(destobj, srcobj)
 	destobj.qq = export.combine_qualifiers_or_labels(destobj.qq, srcobj.qq)
 	destobj.l = export.combine_qualifiers_or_labels(destobj.l, srcobj.l)
 	destobj.ll = export.combine_qualifiers_or_labels(destobj.ll, srcobj.ll)
-	destobj.a = export.combine_qualifiers_or_labels(destobj.a, srcobj.a)
-	destobj.aa = export.combine_qualifiers_or_labels(destobj.aa, srcobj.aa)
 	return destobj
 end
 
 
 function export.termobj_has_qualifiers_or_labels(obj)
 	return obj.q and obj.q[1] or obj.qq and obj.qq[1] or obj.l and obj.l[1] or obj.ll and obj.ll[1] or
-		obj.a and obj.a[1] or obj.aa and obj.aa[1]
-end
-
-
-function export.glossary_link(entry, text)
-	text = text or entry
-	return "[[Appendix:Glossary#" .. entry .. "|" .. text .. "]]"
+		obj.refs and obj.refs[1]
 end
 
 
@@ -265,7 +456,8 @@ Auto-add links to a multiword term. `data` contains fields customizing how to do
 
 (1) If the term already has embedded links in it, they are left unchanged.
 (2) Otherwise, if there are spaces present, we split on spaces and link each word separately.
-(3) If a given space-separated component ends in punctuation (defaulting to [,;:?!]), it is separated off, the remainder	of the algorithm run, and the punctuation pasted back on.
+(3) If a given space-separated component ends in punctuation (defaulting to [,;:?!]), it is separated off, the remainder
+    of the algorithm run, and the punctuation pasted back on.
 (4) If there are hyphens in a given space-separated component, we may link each hyphenated term separately depending
     on the settings in `data`. Normally the hyphens are not included in the linked terms, but this can be overridden
     for specific prefixes and/or suffixes. By default, if there are spaces in the multiword term, we do not link
@@ -281,7 +473,7 @@ The settings in `data` are as follows:
 
 `split_hyphen_when_no_space`: Whether to split on hyphens when the term has no spaces. Defaults to true if set to `nil`.
    This can be a function of one argument, to implement a custom splitting algorithm for hyphen-separated terms. If
-   this returns 
+   this returns [FIXME: FINISH ME ...]
 
 
 If `data.split_apostrophe` is specified, we split on apostrophes unless `data.no_split_apostrophe_words` is given and
@@ -292,12 +484,10 @@ Italian [['ndrangheta]] or [[po']]), and includes the apostrophe in the link to 
 but not `true`, it should be a function of one argument that does custom apostrophe-splitting. The argument is the word
 to split, and the return value should be the split and linked word.
 
-	We don't always split on hyphens
--- because of cases like "boire du petit-lait" where "petit-lait" should be linked as a whole, but provide the option to
--- do it for cases like "croyez-le ou non". If there's no space, however, then it makes sense to split on hyphens by
---
--- `no_split_apostrophe_words` and `include_hyphen_prefixes` allow for special-case handling of particular words and
--- are as described in the comment above add_single_word_links().
+We don't always split on hyphens because of cases like "boire du petit-lait" where "petit-lait" should be linked as a
+whole, but provide the option to do it for cases like "croyez-le ou non". If there's no space, however, then it makes
+sense to split on hyphens by `no_split_apostrophe_words` and `include_hyphen_prefixes` allow for special-case handling
+of particular words and are as described in the comment above add_single_word_links().
 ]=]
 function export.add_links_to_multiword_term(term, data)
 	if rfind(term, "[%[%]]") then
@@ -330,36 +520,38 @@ local function escape_wikicode(term)
 end
 
 
--- Given a `linked_term` that is the output of add_links_to_multiword_term(), apply modifications as given in
--- `modifier_spec` to change the link destination of subterms (normally single-word non-lemma forms; sometimes
--- collections of adjacent words). This is usually used to link non-lemma forms to their corresponding lemma, but can
--- also be used to replace a span of adjacent separately-linked words to a single multiword lemma. The format of
--- `modifier_spec` is one or more semicolon-separated subterm specs, where each such spec is of the form
--- SUBTERM:DEST, where SUBTERM is one or more words in the `linked_term` but without brackets in them, and DEST is the
--- corresponding link destination to link the subterm to. Any occurrence of ~ in DEST is replaced with SUBTERM.
--- Alternatively, a single modifier spec can be of the form BEGIN[FROM:TO], which is equivalent to writing
--- BEGINFROM:BEGINTO (see example below).
---
--- For example, given the source phrase [[il bue che dice cornuto all'asino]] "the pot calling the kettle black"
--- (literally "the ox that calls the donkey horned/cuckolded"), the result of calling add_links_to_multiword_term()
--- is [[il]] [[bue]] [[che]] [[dice]] [[cornuto]] [[all']][[asino]]. With a modifier_spec of 'dice:dire', the result
--- is [[il]] [[bue]] [[che]] [[dire|dice]] [[cornuto]] [[all']][[asino]]. Here, based on the modifier spec, the
--- non-lemma form [[dice]] is replaced with the two-part link [[dire|dice]].
---
--- Another example: given the source phrase [[chi semina vento raccoglie tempesta]] "sow the wind, reap the whirlwind"
--- (literally (he) who sows wind gathers [the] tempest"). The result of calling add_links_to_multiword_term() is
--- [[chi]] [[semina]] [[vento]] [[raccoglie]] [[tempesta]], and with a modifier_spec of 'semina:~re; raccoglie:~re',
--- the result is [[chi]] [[seminare|semina]] [[vento]] [[raccogliere|raccoglie]] [[tempesta]]. Here we use the ~
--- notation to stand for the non-lemma form in the destination link.
---
--- A more complex example is [[se non hai altri moccoli puoi andare a letto al buio]], which becomes
--- [[se]] [[non]] [[hai]] [[altri]] [[moccoli]] [[puoi]] [[andare]] [[a]] [[letto]] [[al]] [[buio]] after calling
--- add_links_to_multiword_term(). With the following modifier_spec:
--- 'hai:avere; altr[i:o]; moccol[i:o]; puoi: potere; andare a letto:~; al buio:~', the result of applying the spec is
--- [[se]] [[non]] [[avere|hai]] [[altro|altri]] [[moccolo|moccoli]] [[potere|puoi]] [[andare a letto]] [[al buio]].
--- Here, we rely on the alternative notation mentioned above for e.g. 'altr[i:o]', which is equivalent to 'altri:altro',
--- and link multiword subterms using e.g. 'andare a letto:~'. (The code knows how to handle multiword subexpressions
--- properly, and if the link text and destination are the same, only a single-part link is formed.)
+--[==[
+Given a `linked_term` that is the output of add_links_to_multiword_term(), apply modifications as given in
+`modifier_spec` to change the link destination of subterms (normally single-word non-lemma forms; sometimes
+collections of adjacent words). This is usually used to link non-lemma forms to their corresponding lemma, but can
+also be used to replace a span of adjacent separately-linked words to a single multiword lemma. The format of
+`modifier_spec` is one or more semicolon-separated subterm specs, where each such spec is of the form
+SUBTERM:DEST, where SUBTERM is one or more words in the `linked_term` but without brackets in them, and DEST is the
+corresponding link destination to link the subterm to. Any occurrence of ~ in DEST is replaced with SUBTERM.
+Alternatively, a single modifier spec can be of the form BEGIN[FROM:TO], which is equivalent to writing
+BEGINFROM:BEGINTO (see example below).
+
+For example, given the source phrase [[il bue che dice cornuto all'asino]] "the pot calling the kettle black"
+(literally "the ox that calls the donkey horned/cuckolded"), the result of calling add_links_to_multiword_term()
+is [[il]] [[bue]] [[che]] [[dice]] [[cornuto]] [[all']][[asino]]. With a modifier_spec of 'dice:dire', the result
+is [[il]] [[bue]] [[che]] [[dire|dice]] [[cornuto]] [[all']][[asino]]. Here, based on the modifier spec, the
+non-lemma form [[dice]] is replaced with the two-part link [[dire|dice]].
+
+Another example: given the source phrase [[chi semina vento raccoglie tempesta]] "sow the wind, reap the whirlwind"
+(literally (he) who sows wind gathers [the] tempest"). The result of calling add_links_to_multiword_term() is
+[[chi]] [[semina]] [[vento]] [[raccoglie]] [[tempesta]], and with a modifier_spec of 'semina:~re; raccoglie:~re',
+the result is [[chi]] [[seminare|semina]] [[vento]] [[raccogliere|raccoglie]] [[tempesta]]. Here we use the ~
+notation to stand for the non-lemma form in the destination link.
+
+A more complex example is [[se non hai altri moccoli puoi andare a letto al buio]], which becomes
+[[se]] [[non]] [[hai]] [[altri]] [[moccoli]] [[puoi]] [[andare]] [[a]] [[letto]] [[al]] [[buio]] after calling
+add_links_to_multiword_term(). With the following modifier_spec:
+'hai:avere; altr[i:o]; moccol[i:o]; puoi: potere; andare a letto:~; al buio:~', the result of applying the spec is
+[[se]] [[non]] [[avere|hai]] [[altro|altri]] [[moccolo|moccoli]] [[potere|puoi]] [[andare a letto]] [[al buio]].
+Here, we rely on the alternative notation mentioned above for e.g. 'altr[i:o]', which is equivalent to 'altri:altro',
+and link multiword subterms using e.g. 'andare a letto:~'. (The code knows how to handle multiword subexpressions
+properly, and if the link text and destination are the same, only a single-part link is formed.)
+]==]
 function export.apply_link_modifiers(linked_term, modifier_spec)
 	local split_modspecs = rsplit(modifier_spec, "%s*;%s*")
 	for j, modspec in ipairs(split_modspecs) do
