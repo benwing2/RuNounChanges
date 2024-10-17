@@ -61,6 +61,63 @@ local function get_parsed_parts(template, lang, args, terms)
 	return parts
 end
 
+local function parse_args(data)
+	local raw_args = data.raw_args
+	local has_source = data.has_source
+	local ilang = data.ilang
+
+	if raw_args.lang then
+		error("The |lang= parameter is not used by this template. Place the language code in parameter 1 instead.")
+	end
+
+	local term_index = (ilang and 1 or 2) + (has_source and 1 or 0)
+	local params = {
+		[term_index] = {list = true, allow_holes = true},
+		["sort"] = {},
+		["nocap"] = {type = "boolean"}, -- always allow this even if not used, for use with {{surf}}, which adds it
+	}
+
+	if not ilang then
+		params[1] = {required = true, type = "language", default = "und"}
+	end
+
+	local source_index
+	if has_source then
+		source_index = term_index - 1
+		params[source_index] = {required = true, type = "language", default = "und"}
+	end
+
+    local m_param_utils = require(parameter_utilities_module)
+	local param_mods = m_param_utils.construct_param_mods {
+		-- We want to require an index for all params (or use separate_no_index, which also requires an index for the
+		-- param corresponding to the first item).
+		{default = true, require_index = true},
+		{group = {"link", "ref", "lang", "q", "l"}},
+		-- Override these two to have separate_no_index, unless `data.require_index_for_pos` is specified.
+		{param = "lit", separate_no_index = true},
+		{param = "pos", separate_no_index = not data.require_index_for_pos, require_index = data.require_index_for_pos},
+	}
+	if data.extra_params then
+		data.extra_params(params)
+	end
+
+	local items, args = m_param_utils.process_list_arguments {
+		params = params,
+		param_mods = param_mods,
+		raw_args = raw_args,
+		termarg = term_index,
+		parse_lang_prefix = true,
+		track_module = "homophones",
+		disallow_custom_separators = true,
+		-- For compatibility, we need to not skip completely unspecified items. It is common, for example, to do
+		-- {{suffix|lang||foo}} to generate "+ -foo".
+		dont_skip_items = true,
+		-- Don't pass in `lang` or `sc`, as they will be used as defaults to initialize the items, which we don't want
+		-- (particularly for `lang`), as the code in [[Module:affix]] uses the presence of `lang` as an indicator that
+		-- a part-specific language was explicitly given.
+	}
+end
+
 local function get_args(frame)
 	local boolean = {type = "boolean"}
 	local list = {list = true, allow_holes = true, require_index = true}
