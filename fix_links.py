@@ -278,27 +278,6 @@ def do_remove_diacritics(text, patterns, remove_diacritics):
 thislangcodes = None
 thislangnames = None
 
-# From wikibooks
-def levenshtein(s1, s2):
-    if len(s1) < len(s2):
-        return levenshtein(s2, s1)
-
-    # len(s1) >= len(s2)
-    if len(s2) == 0:
-        return len(s1)
-
-    previous_row = list(range(len(s2) + 1))
-    for i, c1 in enumerate(s1):
-        current_row = [i + 1]
-        for j, c2 in enumerate(s2):
-            insertions = previous_row[j + 1] + 1 # j+1 instead of j since previous_row and current_row are one character longer
-            deletions = current_row[j] + 1       # than s2
-            substitutions = previous_row[j] + (c1 != c2)
-            current_row.append(min(insertions, deletions, substitutions))
-        previous_row = current_row
-
-    return previous_row[-1]
-
 sections_to_always_include = {
   "Anagrams", "Related terms", "Synonyms", "Derived terms", "Alternative forms",
   "Antonyms", "Compounds", "Coordinate terms", "Hyponyms", "Hypernyms",
@@ -415,7 +394,7 @@ def process_text_on_page(index, pagetitle, text):
               # Translit same as explicit translit, ignore
               pass
             else:
-              levdist = levenshtein(accented_translit, translit)
+              levdist = blib.levenshtein(accented_translit, translit)
               tranlen = min(len(translit), len(accented_translit))
               if accented_translit[0].isupper() != translit[0].isupper():
                 pagemsg("WARNING: Upper/lower mismatch between explicit %s and auto %s, not treating as translit (%s) in %s" %
