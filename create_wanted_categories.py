@@ -35,9 +35,14 @@ def process_page(page, index):
     pagemsg("Category is blacklisted, skipping")
     return
   if not args.allow_empty:
-    num_pages = len(list(blib.cat_articles(catname)))
-    num_subcats = len(list(blib.cat_subcats(catname)))
-    if num_pages == 0 and num_subcats == 0:
+    has_article_or_subcats = False
+    for art in blib.cat_articles(catname):
+      has_article_or_subcats = True
+      break
+    if not has_article_or_subcats:
+      for art in blib.cat_subcats(catname):
+        has_article_or_subcats = True
+    if not has_article_or_subcats:
       pagemsg("Skipping empty category")
       return
   contents = "{{auto cat}}"
