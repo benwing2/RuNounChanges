@@ -97,6 +97,9 @@ def read_split_direcfile(direcfile, start, end, repl=False):
       msg("Line %s: %s" % (lineno, txt))
     m = re.match(r"^Page [^ ]+ (.*?): .*?<begin> (.*?) <end>.*$", line)
     if not m:
+      # format for {{pl-p}} -> {{pl-pr}} conversion
+      m = re.match(r"^NEW Page\t[^\t]+\t([^\t]+)\t.*?<begin> (.*?) <end>.*$", line)
+    if not m:
       linemsg("WARNING: Unable to parse line: [%s]" % line)
       continue
     pagename, from_to = m.groups()
