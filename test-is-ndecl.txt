@@ -12,7 +12,9 @@
 * '''with -j- insertion in plural''': {{m|is|beykir||cooper}}; also {{m|is|fleygir||thrower (poetic)}}, {{m|is|fylkir||prince (poetic)}}, {{m|is|kíkir||telescope}}, {{m|is|mækir||sword (poetic)}}
 * {{tl|is-ndecl|m.j|pagename=beykir}}
 
-=== words in -ur ===
+=== words with pl in -ar ===
+
+==== words in -ur with gen in -s and pl in -ar ===
 * {{m|is|hestur||horse}}; masculine nouns in -ur default to gen -s, pl -ar; dat sg here in -i/-inum per Thomson; many words of the same form
 * {{tl|is-ndecl|m|pagename=hestur}}
 * {{m|is|hattur||hat}}; umlauts to höttum in dat pl; dat sg here in -i/-inum per Thomson
@@ -32,19 +34,7 @@
 * '''with -v- insertion in plural''': {{m|is|söngur||song}}
 * {{tl|is-ndecl|m.v.dat-/-|pagename=söngur}}
 
-=== words without -ur in masculine singular ===
-* {{m|is|fugl||bird}}; dat sg in -i/-inum per BÍN
-* {{tl|is-ndecl|m|pagename=fugl}}
-* {{m|is|ís||ice}}; gen sg íss; dat sg in -:-i/-num per BÍN, with a dat sg ísi rare except in fixed expressions
-* {{tl|is-ndecl|m.dat-:i[rare except in fixed expressions]/-|pagename=ís}}
-* {{m|is|dans||dance}}; gen sg dans; dat sg in -i/-inum per BÍN
-* {{tl|is-ndecl|m|pagename=lax}}
-* {{m|is|lax||salmon}}; gen sg lax; dat sg in -i/-inum per BÍN
-* {{tl|is-ndecl|m|pagename=lax}}
-
-* FIXME: more examples relating to dative singular
-
-=== words in -ur, gen in -ar ===
+==== words in -ur, gen in -ar and pl in -ar ====
 * {{m|is|grautur||porridge}}; dat sg in -:-i/-num per BÍN
 * {{tl|is-ndecl|m,ar.sg.dat-:i/-|pagename=grautur}}
 * {{m|is|auður||wealth}}; dat sg in -i/-num per BÍN; gen in -s/-ar per Thomson but gen in -s only per BÍN
@@ -86,9 +76,9 @@
 * {{m|is|þröskuldur||threshold}}
 * {{tl|is-ndecl|m,s:ar,ar:ir.dati/i|pagename=þröskuldur}}
 
-Some proper names:
-* {{m|is|Merkúríus||Mercury}}; gen -ar per Thomson but -s per BÍN; dat - per Thomson but -i per BÍN
-* {{tl|is-ndecl|m.dati|pagename=Merkúríus}}
+==== proper names with genitive in -ar ====
+* {{m|is|Merkúríus||Mercury}}; gen -ar per Thomson but -s per BÍN (NOTE: I think the latter is a istake); dat - per Thomson but -i per BÍN
+* {{tl|is-ndecl|m,ar.dati|pagename=Merkúríus}}
 * {{m|is|Neptúnus||Neptune (god, planet, male given name)}}; gen -ar per Thomson and BÍN; dat - per Thomson but -i per BÍN
 * {{tl|is-ndecl|m,ar.dati|pagename=Neptúnus}}
 * {{m|is|Satúrnus||Saturn}}; gen -ar per Thomson and BÍN; dat - per Thomson but -i per BÍN
@@ -118,7 +108,7 @@ Personal names:
 * {{m|is|Gissur}}; also {{m|is|Össur}}
 * {{tl|is-ndecl|m,ar.stem:#.dati|pagename=Gissur}}
 
-=== words with -ur in masculine singular that belongs to the stem ===
+==== words with -ur in masculine singular that belongs to the stem ====
 * {{m|is|maur||ant}}; gen sg maurs; dat sg in -/-num per BÍN; NOTE: -ur is not an inflectional ending preceded by a, as in {{m|is|aur||loam, mud}}, {{m|is|gaur||ruffian}}, {{m|is|paur||devil; enmity}}, {{m|is|saur||dirt; excrement}}, {{m|is|staur||post}}, {{m|is|ljósastaur||lamp post}}
 * {{tl|is-ndecl|m|pagename=maur}}
 
@@ -138,7 +128,7 @@ Personal names:
 * {{m|is|fingur||finger}}: because certain common irregular nouns have several compounds that behave the same way, they can be handled automatically using '@', which means "built-in". It looks for recognized suffixes and uses an internal mapping to the appropriate declension specs. Examples of compounds of {{m|is|fingur}}: {{m|is|baugfingur||ring finger}}; {{m|is|litlifingur||little finger, pinky}}; {{m|is|skollafingur||fir clubmoss}}; {{m|is|vísifingur||index finger}}; {{m|is|þumalfingur||thumb}}.
 * {{tl|is-ndecl|m.@|pagename=fingur}}
 
-=== words in -r preceded by other than a/i/u ===
+==== words in -r preceded by vowel other than a/i/u ====
 * {{m|is|mór||moor}}; also {{m|is|dínamór||dynamo}}, {{m|is|glær||sea|q=archaic except in fixed expressions, especially {{m|is|kasta á glæ||to squander|lit=to throw into the sea}}}} (sg-only), {{m|is|hór||pothook}}, {{m|is|jór||steed|q=poetic}}, {{m|is|nór||cooling trough (in a smithy)}}, {{m|is|ýr||yew}} (sg-only), {{m|is|þeyr||thaw, thawing wind}} (sg-only).
 * {{tl|is-ndecl|m|pagename=mór}}
 * {{m|is|Freyr|pos=male given name}}; also {{m|is|Gnýr}} ({{m|is|Arnagnýr}}, {{m|is|Þorgnýr}}), {{m|is|Týr}} ({{m|is|Angantýr}}, {{m|is|Hjálmtýr}}, {{m|is|Sigtýr}}, {{m|is|Valtýr}}).
@@ -162,7 +152,7 @@ Personal names:
 * '''with -v- insertion in plural and archaic singular dative''': {{m|is|már||seagull}}
 * {{tl|is-ndecl|m.v.dat:+:mávi[archaic]|pagename=már}}
 
-=== words with -ar in masculine singular that belongs to the stem ===
+==== words with -ar in masculine singular that belongs to the stem ====
 * {{m|is|hamar||hammer}}; also {{m|is|humar||lobster}}, {{m|is|jaðar||edge}}
 * {{tl|is-ndecl|m.stem:#|pagename=hamar}}
 * {{m|is|mar||sea (poetic, in a collective sense)}}; dat sg in -:-i/-num:-inum per BÍN; gen in -ar per Thomson and BÍN
@@ -323,7 +313,19 @@ Personal names:
 * Because of all the compounds, skór is a built-in.
 * {{tl|is-ndecl|m.@|pagename=skór}}
 
-=== words in -ll (not preceded by a/i/u) ===
+=== words without -ur in masculine singular ===
+* {{m|is|fugl||bird}}; dat sg in -i/-inum per BÍN
+* {{tl|is-ndecl|m|pagename=fugl}}
+* {{m|is|ís||ice}}; gen sg íss; dat sg in -:-i/-num per BÍN, with a dat sg ísi rare except in fixed expressions
+* {{tl|is-ndecl|m.dat-:i[rare except in fixed expressions]/-|pagename=ís}}
+* {{m|is|dans||dance}}; gen sg dans; dat sg in -i/-inum per BÍN
+* {{tl|is-ndecl|m|pagename=lax}}
+* {{m|is|lax||salmon}}; gen sg lax; dat sg in -i/-inum per BÍN
+* {{tl|is-ndecl|m|pagename=lax}}
+
+* FIXME: more examples relating to dative singular
+
+==== words in -ll (not preceded by a/i/u) ====
 * {{m|is|bíll||car}}; gen sg bíls; also: {{m|is|aðmíráll||admiral}}, {{m|is|áll||eel}}, {{m|is|annáll||annal, yearbook}}, {{m|is|díll||mark, stain}}, {{m|is|fíll||elephant}}, {{m|is|gúll||oral cavity}}, {{m|is|hóll||hill}}, {{m|is|hvoll||hill}}, {{m|is|hæll||heel}}, {{m|is|klóll||dress}}, {{m|is|kokkáll||cuckold}}, {{m|is|konsúll||consul}}, {{m|is|magáll||tripe}}, {{m|is|makríll||mackerel}}, {{m|is|múll||muzzle; mule}}, {{m|is|páll||spade, pointed shovel}}, {{m|is|panell||paneling}}, {{m|is|píll||willow (archaic)}}, {{m|is|póll||pole}}, {{m|is|skríll||mob, rabble}}, {{m|is|stíll||style; theme, essay}}, {{m|is|stóll||chair}} ({{m|is|vefstóll||loom}}), {{m|is|þræll||slave}}; apparently these almost never have -i in dat sg ind or def
 * {{tl|is-ndecl|m|pagename=bíll}}
 * {{m|is|Njáll||(male given name)}}; has -i in dat sg ind
@@ -331,7 +333,7 @@ Personal names:
 * {{m|is|Þorkell||(male given name)}}; has -archaic alt dat in -katli, handled automatically
 * {{tl|is-ndecl|m|pagename=Þorkell}}
 
-=== words in -ll (preceded by a/i/u) ===
+==== words in -ll (preceded by a/i/u) ====
 * {{m|is|þumall||thumb}}, {{m|is|lykill||key}}, {{m|is|jökull|glacier}} etc. Most masculine nouns in -all/-ill/-ull contract so this is the default. Use `.-con` to turn off contraction. Also: {{m|is|aðall||nobility}} (note dat pl [[öðlum]]), {{m|is|buffall||buffalo}}, {{m|is|gaffall||fork}} (dat pl [[göfflum]]), {{m|is|humall||hop (plant)}}, {{m|is|kaðall||rope}} (dat pl [[köðlum]]), {{m|is|rafall||generator}} (dat pl [[röflum]]), {{m|is|staðall||standard}} (dat pl [[stöðlum]]), {{m|is|biðill||suitor}}, {{m|is|depill||point}}, {{m|is|ekkill||widower}}, {{m|is|fífill||dandelion}}, {{m|is|flygill||grand piano}}, {{m|is|gerill||bacterium}}, {{m|is|hefill||plane (tool)}}, <hemill|brake>>, {{m|is|hnykill||ball of yarn}}, {{m|is|hreyfill||propeller; motor}}, {{m|is|kanill||cinammon}} (dat sg [[kanli]], dat pl [[könlum]]), {{m|is|kirtill||gland; tonsil}}, {{m|is|meitill||chisel}}, {{m|is|nirfill||miser}}, {{m|is|pensill||paintbrush}}, {{m|is|riffill||rifle}}, {{m|is|seðill||slip of paper; bank bill}}, {{m|is|sendill||errand boy}}, {{m|is|sirkill||compass (geometry)}}, {{m|is|snigill||snail}}, {{m|is|sníkill||parasite}}, {{m|is|spegill||mirror}}, {{m|is|spergill||asparagus}}, {{m|is|sýkill||pathogen}}, {{m|is|titill||title}}, {{m|is|trefill||scarf}}, {{m|is|ventill||valve}}, {{m|is|vindill||cigar}}, {{m|is|víxill||bill of exchange}}, {{m|is|þistill||thistle}}, {{m|is|bödull||executioner}}, {{m|is|böggull||package}}, {{m|is|djöfull||devil}}, {{m|is|heigull||coward}}, {{m|is|möndull||axis; axle}}, {{m|is|segull||magnet}}, {{m|is|skutull||harpoon}}, {{m|is|södull||lady's saddle}}, {{m|is|tigull||rhombus; diamond (cards)}}, {{m|is|tígull||same as previous}}, {{m|is|öngull||fish hook}}, {{m|is|öxull||axis; axle}}; given names such as {{m|is|Vífill|pos=male given name}}, {{m|is|Þengill|pos=male given name}}
 * {{tl|is-ndecl|m|pagename=þumall}}
 
@@ -342,7 +344,7 @@ Personal names:
 * {{tl|is-ndecl|m.-imut|pagename=ketill}}
 * {{tl|is-ndecl|m.-imut|pagename=Egill}}
 
-=== words in -nn (not preceded by a/i/u) ===
+==== words in -nn (not preceded by a/i/u) ====
 * {{m|is|daunn||stink}} (dat-/i per Thomson); {{m|is|dúnn||down feather}} (dat-:i/i per Thomson); {{m|is|fleinn||spear}} (dati/i per Thomson); {{m|is|grammófónn||gramophone (dated)}} (dati/i per Thomson); {{m|is|hreinn||reindeer}} (dat-:i/i per Thomson); {{m|is|húnn||knob}} (dat-:i/i per Thomson); {{m|is|kapteinn||captain}} (dat-:i/i per Thomson); {{m|is|prjónn||knitting needle}} (dat-:i/i per Thomson); {{m|is|sveinn||boy, young man}} (dati/i per Thomson); {{m|is|teinn||rod, rail}} (dat-:i/i per Thomson; {{m|is|tónn||(musical) tone}} (dat-:i/i per Thomson); {{m|is|þjónn||servant; waiter}} (dati/i per Thomson).
 
 * {{m|is|stein||stone}} (dati/i per Thomson); derivatives {{m|is|brennisteinn||sulfur}}, {{m|is|flögusteinn||slate}}, {{m|is|múrsteinn||brick}}, {{m|is|skorsteinn||chimney}}
@@ -350,13 +352,33 @@ Personal names:
 * {{m|is|Sveinn||(male given name)}}
 * {{tl|is-ndecl|m|pagename=Sveinn}}
 
-=== words in -nn (preceded by a/i/u) ===
+==== words in -nn (preceded by a/i/u) ====
 * {{m|is|himinn||sky, heaven}}, etc. All or most masculine nouns in -ann/-inn/-unn contract so this is the default. Also: {{m|is|aftann||evening}} (note dat pl [[öftnum]]), {{m|is|arinn||hearth, fireplace}} (note dat pl [[örnum]]), {{m|is|drottinn||lord}}, {{m|is|jötunn||giant}}, {{m|is|morgunn||morning}}; given names such as {{m|is|Kristinn||Christian}}, {{m|is|Óðinn||Odin}}, {{m|is|Þórarinn|pos=given name}}
 * {{tl|is-ndecl|m|pagename=himinn}}
 
 === words in -ó ===
-* {{m|is|strætó||city bus}}; also: {{m|is|gaggó||junior high, middle school}}; {{m|is|menntó|||senior high, gymnasium}}; various place names, e.g. {{m|is|Sigló||Siglufjörð}}
+* {{m|is|strætó||city bus}}; also: {{m|is|gaggó||junior high, middle school}}; {{m|is|menntó|||senior high, gymnasium}}; various place names and proper nouns, e.g. {{m|is|Kennó||the Teachers' College}} (from {{m|is|Kennaraskólinn}}), {{m|is|Sigló}} (from {{m|is|Siglufjörður}})
 * {{tl|is-ndecl|m|pagename=strætó}}
+* NOTE: Some nouns in -ó are not masculine (it depends on what the noun was clipped from), but these are all masculine.
+
+=== words with pl in -ir ===
+
+==== words in -r preceded by vowel other than a/i/u ====
+* NOTE: specifying 'ir' as nom pl autoselects accusative pl in -i. NOTE: explicit dative in the following may not be necessary.
+* {{m|is|nár||corpse}}; also {{m|is|sár||tub (archaic)}}, {{m|is|hár||thole, oarlock (archaic)}} (given below as well)
+* {{tl|is-ndecl|m,,ir.dat-/-}}
+* {{m|is|hár||thole, oarlock (archaic)}}
+* {{tl|is-ndecl|m,,ir.dat-/-}}
+* {{m|is|hár||spiny dogfish (archaic)}}
+* {{tl|is-ndecl|m.v.dat-/-}}
+* {{m|is|kljár||weaving stone (archaic)}}; BÍN says it's singular-only, Thomson gives pl in -ir.
+* {{tl|is-ndecl|m.sg.dat-/-}} or {{tl|is-ndecl|m,,ir.dat-/-}}
+* {{m|is|ljár||scythe}}
+* {{tl|is-ndecl|m,,ir.dat-/-.datpl:+:ljám/ljáunum.genpl:+:ljánna[more common]}}
+* {{m|is|skjár||video screen, monitor, display; animal membrane window (historical)}}
+* {{tl|is-ndecl|m,,ir.dat-/-.datpl:+:skjám[more common]/skjáunum}}
+* {{m|is|skjór||magpie}}; in the following, there are two possible paradigms, one based on a root skjór- with pl in -ar and one based off of a root in skjó with a pl in -ir; the latter has two possible dat pl's, a regular one and a more common contracted one, and corresponding definite forms; we omit the definite forms from the override as they are formed normally from the indef forms (-m -> -num)
+* {{tl|is-ndecl|((<m.stem:#.dat-/->,<m,,ir.dat-/-.datpl:skjóm:+>}}
 
 == masculine weak ==
 
@@ -376,17 +398,17 @@ Personal names:
 * {{m|is|Japani||Japanese}} (dat pl Japönum or more rarely Jöpunum); NOTE: only strong masculine and feminine nouns have a slot for genitive singular endings; weak nouns and neuter nouns have only a slot for the plural (FIXME? maybe make strong neuter nouns have a genitive slot for consistency)
 * {{tl|is-ndecl|m,ir:ar.umut,uumut[rare]|pagename=Japani}}
 
-====plural-only====
+==== plural-only ====
 * {{m|is|feðgar||father and son}}; also {{m|is|foreldrar||parents}}
 * {{tl|is-ndecl|m.pl|pagename=feðgar}}
 * {{m|is|hafrar||oats}} with dat pl höfrum
 * {{tl|is-ndecl|m.pl|pagename=hafrar}}
 
-====personal names====
+==== personal names ====
 * {{m|is|Bjarni}}; also {{m|is|Bogi}}, {{m|is|Bolli}}, {{m|is|Bragi}}, {{m|is|Broddi}}, {{m|is|Elliði}}, {{m|is|Finnbogi}}, {{m|is|Gauti}}, {{m|is|Gísli}}, {{m|is|Gylfi}}, {{m|is|Hafliði}}, {{m|is|Hjalti}}, {{m|is|Illugi}}, {{m|is|Indriði}}, {{m|is|Ingi}}, {{m|is|Ingvi}}, {{m|is|Logi}}, {{m|is|Magni}}, {{m|is|Narfi}}, {{m|is|Pálmi}}, {{m|is|Sindri}}, {{m|is|Skafti}}, {{m|is|Sölvi}}, {{m|is|Torfi}}, {{m|is|Trausti}}, {{m|is|Tryggvi}}, {{m|is|Veturliði}}, {{m|is|Yngvi}}, etc.
 * {{tl|is-ndecl|m|pagename=Bjarni}}
 
-====with -j- infix====
+==== with -j- infix ====
 * {{m|is|kleggi||horsefly; lump}} (has -j- in all forms except the nom sg); also {{m|is|peyi||guy, fellow}}, {{m|is|steggi||male bird, cock}}, {{m|is|tiggi||chieftain (poetic)}}, {{m|is|tyggi||same}}
 * {{tl|is-ndecl|m.j|pagename=kleggi}}
 * {{m|is|aðili||legal party}} (has optional -j- (correct but uncommon by a ratio of 602:16.5, or about 35:1) in all forms except the nom sg)
@@ -395,6 +417,18 @@ Personal names:
 * {{tl|is-ndecl|m.j.sg|pagename=Skeggi}}
 * all words ending in {{m|is|-byggi}}, {{m|is|-ingi}}, {{m|is|-lingi}}, {{m|is|-skeggi}}, {{m|is|-virki}}, {{m|is|-yrki}}, e.g. {{m|is|frumbyggi||aboriginal}}; {{m|is|aumingi||poor wretch}}, {{m|is|foringi||leader}} ({{m|is|liðsforingi||officer}}), {{m|is|höfðingi||chief}}, {{m|is|kunningi||acquaintance}}, {{m|is|skrælingi||barbarian; Eskimo}}, {{m|is|svertingi||Negro}}, {{m|is|ættingi||relation}}; {{m|is|smælingi||common man}}; {{m|is|eyjarskeggi||islander}}; {{m|is|illvirki||evildoer}}, {{m|is|rafvirki||electrician}}, {{m|is|spellvirki||evildoer}}; {{m|is|einyrki||lone farmer}} (''these endings should be recognized automatically; turn off with {{cd|.-j}} if you don't want the -j- infix'')
 * {{tl|is-ndecl|m|pagename=foringi}}
+
+==== words in -andi ====
+FIXME:
+
+==== bóndi, frændi, fjandi ====
+FIXME:
+
+==== Dani et al. ====
+FIXME:
+
+==== grikki et al. ====
+FIXME:
 
 === words in -a ===
 * {{m|is|herra||gentleman; sir (form of address); Mr.}} ({{m|is|sendiherra||ambassador}}); identical to masculine -i nouns except in the nominative in -a
