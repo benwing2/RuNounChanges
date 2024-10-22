@@ -106,25 +106,25 @@ Personal names:
 * {{m|is|Auðunn}}
 * {{tl|is-ndecl|m,s:ar.-con.dati|pagename=Auðunn}}
 * {{m|is|Gissur}}; also {{m|is|Össur}}
-* {{tl|is-ndecl|m,ar.stem:#.dati|pagename=Gissur}}
+* {{tl|is-ndecl|m,ar.#.dati|pagename=Gissur}}
 
 ==== words with -ur in masculine singular that belongs to the stem ====
 * {{m|is|maur||ant}}; gen sg maurs; dat sg in -/-num per BÍN; NOTE: -ur is not an inflectional ending preceded by a, as in {{m|is|aur||loam, mud}}, {{m|is|gaur||ruffian}}, {{m|is|paur||devil; enmity}}, {{m|is|saur||dirt; excrement}}, {{m|is|staur||post}}, {{m|is|ljósastaur||lamp post}}
 * {{tl|is-ndecl|m|pagename=maur}}
 
 * {{m|is|akur||field}}; stem is akur- not ak-; umlauts to ökrum in dat pl. All (?) masculine and neuter nouns with stem in -ur contract, so this is the default. Also: {{m|is|alabastur||alabaster}}, {{m|is|aldur||age, epoch}} ({{m|is|faraldur||epidemic}}, {{m|is|heimsfaraldur||pandemic}}), {{m|is|auðjöfur||tycoon}}, {{m|is|austur||ladling; waste}}, {{m|is|árangur||success; outcome}}, {{m|is|áróður||propaganda; sedition}}, {{m|is|bakstur||baking, pastry}}, {{m|is|Baldur||Baldur (Norse god)}} ({{m|is|skuggabaldur||tomcat-vixen offspring; evil spirit; evildoer}}), {{m|is|berangur||outdoors (?)}}, {{m|is|bifur||beaver; feeling}}, {{m|is|blástur||breeze; act of blowing}} ({{m|is|aðblástur||preaspirion}}, {{m|is|uppblástur||wind erosion}}), {{m|is|bólstur||pillow}}, {{m|is|erindrekstur||diplomatic mission}}, {{m|is|farangur||luggage}}, {{m|is|fjötur||fetter, shackle}}, {{m|is|framúrakstur||overtaking}}, {{m|is|galdur||magic; (magic) trick; charm, spell}}, {{m|is|hafur||buck (male goat)}}, {{m|is|hamstur||hamster}}, {{m|is|heiður||honor}}, {{m|is|jöfur||ruler, monarch}}, {{m|is|kappakstur||speeding; racing}}, {{m|is|kögur||fringe}}, {{m|is|leiðangur||expedition, journey}}, {{m|is|lúður||trumpet, horn}} ({{m|is|þokulúður||foghorn}}), {{m|is|mjaldur||beluga whale}}, {{m|is|mokstur||shoveling}}, {{m|is|muldur||murmuring}}, {{m|is|naður||adder, viper}}, {{m|is|nykur||nixie (type of water demon)}}, {{m|is|otur||otter}} ({{m|is|sæotur||sea otter}}), {{m|is|plástur||plaster, bandage}}, {{m|is|reður||penis}}, {{m|is|sigur||victory}}, {{m|is|sykur||sugar}} ({{m|is|flórsykur||powdered sugar}}, {{m|is|maltsykur||maltose}}, {{m|is|púðursykur||brown sugar}}, {{m|is|sleikjubrjóstsykur||lollipop, sucker}} {{m|is|mjólkursykur||lactose}}, {{m|is|tígur||tiger}} ({{m|is|blettatígur||cheetah}}), {{m|is|tuldur||murmuring}}, {{m|is|tötur||rag, tatter}}, {{m|is|vikur||pumice}}, {{m|is|ölur||alder}} ({{m|is|gráölur||grey alder}}); given names, e.g. {{m|is|Baldur|pos=male given name}}, {{m|is|Pétur||Peter}}, {{m|is|Sigur|pos=male given name}}
-* {{tl|is-ndecl|m.stem:#|pagename=akur}}
+* {{tl|is-ndecl|m.#|pagename=akur}}
 
 * {{m|is|hlátur||laughter}}; two possible genitives, plural defaults to -ar; also: {{m|is|veður||ram (archaic or poetic); battering ram (archaic); spike at the end of a hiking pole}}; {{m|is|árekstur||collision; clash}}
-* {{tl|is-ndecl|m,s:ar.stem:#|pagename=hlátur}}
+* {{tl|is-ndecl|m,s:ar.#|pagename=hlátur}}
 * {{m|is|gróður||plants, vegetation}}; same as {{m|is|hlátur}} but no plural; also: {{m|is|rakstur||raking; shoveling}}
-* {{tl|is-ndecl|m,s:ar.stem:#.sg|pagename=gróður}}
+* {{tl|is-ndecl|m,s:ar.#.sg|pagename=gróður}}
 * {{m|is|lestur||reading, perusal}}; two possible genitives, plural defaults to -ar; also: {{m|is|fyrirlestur||lecture}}, {{m|is|kappróður||regatta}}, {{m|is|rekstur||driving, herding; operation; processing, management}}, {{m|is|róður||rowing}}
-* {{tl|is-ndecl|m,ar:s.stem:#|pagename=lestur}}
+* {{tl|is-ndecl|m,ar:s.#|pagename=lestur}}
 * {{m|is|akkur||benefit, advantage}}; -ur can either be a nom ending or part of the stem. The syntax here is the standard "alternation" syntax found in the inflection specs of all languages that use [[Module:inflection utilities]] (which is several dozen by now).
-* {{tl|is-ndecl|((<m.stem:#.sg>,<m.sg>))|pagename=akkur}}
+* {{tl|is-ndecl|((<m.#.sg>,<m.sg>))|pagename=akkur}}
 * {{m|is|fingur||finger}}: irregular nom/acc pl
-* {{tl|is-ndecl|m.stem:#.nompl+accpl:#|pagename=fingur}}
+* {{tl|is-ndecl|m.#.nompl+accpl:#|pagename=fingur}}
 * {{m|is|fingur||finger}}: because certain common irregular nouns have several compounds that behave the same way, they can be handled automatically using '@', which means "built-in". It looks for recognized suffixes and uses an internal mapping to the appropriate declension specs. Examples of compounds of {{m|is|fingur}}: {{m|is|baugfingur||ring finger}}; {{m|is|litlifingur||little finger, pinky}}; {{m|is|skollafingur||fir clubmoss}}; {{m|is|vísifingur||index finger}}; {{m|is|þumalfingur||thumb}}.
 * {{tl|is-ndecl|m.@|pagename=fingur}}
 
@@ -154,11 +154,11 @@ Personal names:
 
 ==== words with -ar in masculine singular that belongs to the stem ====
 * {{m|is|hamar||hammer}}; also {{m|is|humar||lobster}}, {{m|is|jaðar||edge}}
-* {{tl|is-ndecl|m.stem:#|pagename=hamar}}
+* {{tl|is-ndecl|m|pagename=hamar}}
 * {{m|is|mar||sea (poetic, in a collective sense)}}; dat sg in -:-i/-num:-inum per BÍN; gen in -ar per Thomson and BÍN
-* {{tl|is-ndecl|m,ar.stem:#.sg.dat-:i/-:i|pagename=mar}}
+* {{tl|is-ndecl|m,ar.sg.dat-:i/-:i|pagename=mar}}
 * {{m|is|mar||horse (poetic)}}; dat sg in -:-i/-num:-inum per BÍN; gen in -s per Thomson and BÍN; pl in -ar or -ir; dat pl mörum
-* {{tl|is-ndecl|m,,ar:ir.stem:#.dat-:i/-:i|pagename=mar}}
+* {{tl|is-ndecl|m,,ar:ir.dat-:i/-:i|pagename=mar}}
 
 ==== [[snjór]], [[sjór]], [[skór]] ====
 * FIXME.
@@ -341,8 +341,8 @@ Personal names:
 * {{tl|is-ndecl|m.-con|pagename=kórall}}
 
 * {{m|is|ketill||ketill}}; un-i-umlauts when contracted to e.g. nom pl [[katlar]], and then u-umlauts in dat pl to [[kötlum]]
-* {{tl|is-ndecl|m.-imut|pagename=ketill}}
-* {{tl|is-ndecl|m.-imut|pagename=Egill}}
+* {{tl|is-ndecl|m.deimut|pagename=ketill}}
+* {{tl|is-ndecl|m.deimut|pagename=Egill}}
 
 ==== words in -nn (not preceded by a/i/u) ====
 * {{m|is|daunn||stink}} (dat-/i per Thomson); {{m|is|dúnn||down feather}} (dat-:i/i per Thomson); {{m|is|fleinn||spear}} (dati/i per Thomson); {{m|is|grammófónn||gramophone (dated)}} (dati/i per Thomson); {{m|is|hreinn||reindeer}} (dat-:i/i per Thomson); {{m|is|húnn||knob}} (dat-:i/i per Thomson); {{m|is|kapteinn||captain}} (dat-:i/i per Thomson); {{m|is|prjónn||knitting needle}} (dat-:i/i per Thomson); {{m|is|sveinn||boy, young man}} (dati/i per Thomson); {{m|is|teinn||rod, rail}} (dat-:i/i per Thomson; {{m|is|tónn||(musical) tone}} (dat-:i/i per Thomson); {{m|is|þjónn||servant; waiter}} (dati/i per Thomson).
@@ -363,22 +363,186 @@ Personal names:
 
 === words with pl in -ir ===
 
+==== words in -ur ====
+
+* dat-/-, gen in -s: <<alur|awl>> (dat pl [[ölum]]), <<bolur|trunk; fuselage; undershirt>>, <<dalur|valley>> (dat pl [[dölum]]), <<falur|ferrule, socket>>, <<glæpur|crime>>, <<gripur|thing; farm animal>>, <<hagur|position, advantage>>, <<halur|man (poetic)>>, <<hamur|skin; shape>>, <<hvalur|whale>>, <<keppur|cudgel; sausage>>, <<kippur|jerk, pull, wrench>>, <<líkamur|body>> (rarer variant of {{m|is|líkami}}, esp. in fixed expressions; dat pl [[líkömum]]), <<limur|limb>>, <<lýður|people, crowd, mass>>, <<malur|knapsack, satchel>>, <<seiður|witchcraft>>, <<selur|seal (animal)>>, <<slagur|battle; trick (at cards)>>, <<stafur|staff, stick; letter>>, <<sveipur|eddy; gust>>, <<svipur|appearance; ghost>>, <<stynur|sigh, groan (archaic)>>, <<sægur|crowd>>, <<þytur|whistle, whiz>> (NOTE: Thomson claims stynur, sægur and þytur have -j- infix)
+* {{tl|is-ndecl|m,,ir.dat-/-|pagename=selur}}
+* dat-/-, gen in -s, sg-only: <<dugur|energy, ability>>, <<grunur|suspicion>>; Thomson claims -ir plural (and gen in -ar for grunur)
+* {{tl|is-ndecl|m.sg.dat-/-|pagename=dugur}}
+* dat-:i/i, gen in -s: <<hlynur|maple>>, <<kvittur|rumor>>, <<skerfur|share, portion>>
+* {{tl|is-ndecl|m,,ir.dat-:i/i|pagename=hlynur}}
+* dat-:i/i, gen in -s, sg-only: <<hvinur|whiz, whistling>>
+* {{tl|is-ndecl|m,,ir.sg.dat-:i/i|pagename=hvinur}}
+* dat-/i, gen in -s: <<skvettur|dash, splash>>; FIXME: dat sg [[skvett]] may be a mistake for [[skvetti]]
+* {{tl|is-ndecl|m,,ir.dat-/i|pagename=skvettur}}
+* dat-:i/-, gen in -s: <<kliður|clatter; twittering>>, <<melur|twat, dumbass (term of abuse)>>, <<smiður|smith>>
+* {{tl|is-ndecl|m,,ir.dat-:i/-|pagename=kliður}}
+* dati:-/-, gen in -s: <<búkur|body, trunk>>
+* {{tl|is-ndecl|m,,ir.dati:-/-|pagename=búkur}}
+* dati:-/i, gen in -s: <<pyttur|pool, cesspool>>
+* {{tl|is-ndecl|m,,ir.dati:-/i|pagename=pyttur}}
+* dati:-/-:i, gen in -s: <<sjóður|treasure; fund>>
+* {{tl|is-ndecl|m,,ir.dati:-/-:i|pagename=sjóður}}
+* dat-/-:i, gen in -s: <<grís|young hog>>
+* {{tl|is-ndecl|m,,ir.dat-/-:i|pagename=grís}}
+* dati/i, gen in -s: <<blettur|mark, stain; piece of ground>>, <<brestur|break, crack; lack>>, <<gestur|guest>>, <<guð|god>> (NOTE: no -ur ending), <<gustur|gust>>, <<hvellur|crack, bang>>, <<prettur|deceit, fraud>>, <<skellur|bang, clash>>, <<smellur|bang, crack>>, <<sprettur|sprint, run>>, <<sullur|cyst, boil>>, <<svanur|swan>>
+* {{tl|is-ndecl|m,,ir.dati/i|pagename=blettur}}
+* dati/i, gen in -s, sg-only: <<sollur|carousal, revelry>>; Thomson claims -ir plural
+* {{tl|is-ndecl|m.sg.dati/i|pagename=sollur}}
+* dat-/-, gen in -ar: <<hlutur|thing; lot>>, <<litur|color>>, <<salur|hall>>, <<staður|place>>, <<þulur|announcer>>
+* {{tl|is-ndecl|m,ar,ir.dat-/-|pagename=hlutur}}
+* dat-:i/i, gen in -ar: <<munur|thing, difference>>
+* {{tl|is-ndecl|m,ar,ir.dat-:i/i|pagename=munur}}
+* pl-only: <<fjármunir|goods, property>>; also <<geðsmunir|temperament, temper>, <<skapsmunir|temperament, temper>>
+* {{tl|is-ndecl|m.pl|pagename=fjársmunir}}
+* dati:-/i, gen in -ar: <<verður|meal>>, <<vinur|friend>> (also appears as <<vin>>)
+* {{tl|is-ndecl|m,ar,ir.dati:-/i|pagename=verður}}
+* dat-:i/-:i, gen in -ar: <<kviður|belly; jury>>, <<viður|timber>>
+* {{tl|is-ndecl|m,ar,ir.dat-:i/-:i|pagename=kviður}}
+* dati/i, gen in -ar: <<burður|load; birth>>, <<dögurður|breakfast>>, <<feldur|fur, coat>>, <<fundur|finding; meeting>>, <<lundur|grove>>, <<réttur|right; law court; dish, course>>, <<skurður|cut, trench>>, <<stuldur|theft>>, <<vættur|supernatural being>>
+* {{tl|is-ndecl|m,ar,ir.dati/i|pagename=fundur}}
+* dati/i, gen in -ar, sg-only: <<mundur|dowry>>; Thomson claims -ir plural
+* {{tl|is-ndecl|m,ar.sg.dati/i|pagename=mundur}}
+* pl-only: <<Fljótsdælir|inhabitants of Fljótsdalur (a valley)>>
+* {{tl|is-ndecl|m.pl|pagename=Fljótsdælir}}
+
+; likely unique variants:
+* dat-/-, gen in -s/ar: <<bragur|fashion; habit; poem>> (dat pl brögum)
+* {{tl|is-ndecl|m,s:ar,ir.dat-/-|pagename=bragur}}
+* dat-/-, gen in -ar/s: <<sauður|sheep, wether>>
+* {{tl|is-ndecl|m,ar:s[extremely rare],ir.dat-/-|pagename=sauður}}
+* dati/i, gen in -ar/s: <<kostur|choice, advantage>>
+* {{tl|is-ndecl|m,ar:s,ir.dati/i|pagename=kostur}}
+* dati/i, gen in -ar/s, accpl in -i/-u: <<vegur|way>>
+* {{tl|is-ndecl|m,ar:s[in fixed expressions],ir.dati/i.accpli:u[literary]|pagename=vegur}}
+* dat-:i/-, gen in -ar/s: <<vaður|rope; fishing line>>
+* {{tl|is-ndecl|m,ar:s,ir.dat-:i/-|pagename=vaður}}
+* dat-:i/- (see footnote below), gen in -ar/s: <<liður|joint, link, item, limb>>
+* {{tl|is-ndecl|m,ar:s,ir.dat-:i[mostly in fixed expressions]/-|pagename=liður}}
+* dat-:i/-, gen in -ar/s (see footnote below): <<tugur|group of ten or so, dozen>>; <<tigur|pos=variant of {{m|is|tugur}}>>
+* {{tl|is-ndecl|m,ar:s[sometimes proscribed],ir.dat-:i/-|pagename=tugur}}
+* dat-/-, gen in -s, pl in -ir/-ar: <<reitur|marked-out area>>, <<skítur|dirt; excrement>>, <<stígur|path>>
+* {{tl|is-ndecl|m,,ir:ar.dat-/-|pagename=reitur}}
+* dat-:i/-, gen in -s, pl in -ir/-ar: <<skutur|stern>>
+* {{tl|is-ndecl|m,,ir:ar.dat-:i/-|pagename=skutur}}
+* dat-:i/-:i, gen in -s, pl in -ir/-ar: <<sveppur|fungus, mushroom>>
+* {{tl|is-ndecl|m,,ir:ar.dat-:i/-:i|pagename=sveppur}}
+* dat-/-, gen in -s, pl in -ir/-ar: <<refur|fox>>
+* {{tl|is-ndecl|m,,ir:ar[obsolete except in set phrases].dat-/-|pagename=refur}}
+* dat-/-, gen in -s, pl in -ir/-ar: <<stig|path>>
+* {{tl|is-ndecl|m,,ir:ar[rare, mostly in set phrases].dat-/-.accpli:a:u[in set phrases]|pagename=stigur}}
+* dati/-, gen in -s, pl in -ir/-ar: <<bugur|bend, curve>>
+* {{tl|is-ndecl|m,,ir:ar.dati/-|pagename=bugur}}
+* dati/i, gen in -s, pl in -ir/-ar: <<kvistur|twig; knot>>
+* {{tl|is-ndecl|m,,ir:ar.dati/i|pagename=kvistur}}
+* dat-:i/i, gen in -s, pl in -ar/-ir: <<meiður|pole; tree; sled runner>>
+* {{tl|is-ndecl|m,,ar:ir.dat-:i/i|pagename=meiður}}
+* dat-/-, gen in -s, acc pl in -u/-i: <<bur|son (poetic)>>
+* {{tl|is-ndecl|m,,ir.#.dat-/-.accplu[archaic but more common in practice]:i[regular but rare]|pagename=bur}}
+* dat-/-:i, gen in -ar/-s, acc pl in -i/-u: <<siður|custom, habit>>
+* {{tl|is-ndecl|m,ar:s[in certain expressions],ir.dat-/-:i.accpli:u[in some texts]|pagename=siður}}
+* dat-/-- (see footnote below; -- indicates a missing form), gen in -ar: <<hugur|mind, heart, courage>>
+* {{tl|is-ndecl|m,ar,ir.dat-/--[replaced by the weak-noun form {{m|is|huganum}}, but only in fossilized expressions]|pagename=bugur}}
+* dat:möl/meli, defdat:mölnum/melnum (FIXME: error for melinum?), gen -s, nom pl melir, acc pl meli, dat pl mölum, gen pl missing: <<mölur|clothes moth>>
+* {{tl|is-ndecl|m,,ir.imut.dat-:i.genpl--|pagename=mölum}}
+* dat-/-, gen in -s, pl in -ir, optional -j-: <<smekkur|taste; bib>>
+* {{tl|is-ndecl|m,,ir.dat-/-.j,-j|pagename=smekkur}}
+* NOTE: <<konur|man, descendant (poetic)>> not in BÍN; claimed to be dati/i, gen in -ar, pl in -ir
+* NOTE: <<ver|wake of oars>> not in BÍN; claimed to be dat-/-, gen in -s, pl in -ir
+
+==== words in -aður ====
+* <<fagnaður|welcome reception>>, <<mannfagnaður|assembly>> (dat pl mannfögnuðum)
+* {{tl|is-ndecl|m,ar,ir.dati/i:-.uumut|pagename=fagnaður}}
+* {{tl|is-ndecl|m.@|pagename=fagnaður}}
+* <<safnaður|collection>>; also <<batnaður|betterment>>, <<búnaður|farming>>, <<dugnaður|drive, activity>>, <<fatnaður|clothing>>, <<hagnaður|profit, benefit>>, <<hugnaður|liking, pleasure>>, <<iðnaður>>, <<jafnaður|equal distribution>>, <<klæðnaður|clothing>>, <<kostnaður|cost>>, <<matnaður|board, feeding>>, <<munaður|delight, luxury>>, <<skapnaður|form, shape>>, <<sparnaður|saving>>, <<trúnaður|confidence, reliance>>, <<varnaður|protection; warning>>, <<þrifnaður|cleanliness; thriving>>
+* {{tl|is-ndecl|m,ar.dati/i:-.sg|pagename=safnaður}}
+* {{tl|is-ndecl|m.@.sg|pagename=safnaður}}
+* <<fénaður|sheep; cattle>>, <<lifnaður|life, conduct>>, <<vefnaður|weaving; fabric>>
+* {{tl|is-ndecl|m,ar.dati.sg|pagename=fénaður}}
+* <<getnaður|conception; fetus>>, <<skilnaður|separation, divorce>>
+* {{tl|is-ndecl|m,ar,ir.dati.uumut|pagename=getnaður}}
+* <<markaður|market>>
+* {{tl|is-ndecl|m,ar:s,ir.dati/i:-.uumut|pagename=markaður}}
+* <<unaður|pleasure, delight>>
+* {{tl|is-ndecl|m,ar:s.dati/i:-.sg|pagename=unaður}}
+
 ==== words in -r preceded by vowel other than a/i/u ====
 * NOTE: specifying 'ir' as nom pl autoselects accusative pl in -i. NOTE: explicit dative in the following may not be necessary.
 * {{m|is|nár||corpse}}; also {{m|is|sár||tub (archaic)}}, {{m|is|hár||thole, oarlock (archaic)}} (given below as well)
-* {{tl|is-ndecl|m,,ir.dat-/-}}
+* {{tl|is-ndecl|m,,ir.dat-/-|pagename=nár}}
 * {{m|is|hár||thole, oarlock (archaic)}}
-* {{tl|is-ndecl|m,,ir.dat-/-}}
+* {{tl|is-ndecl|m,,ir.dat-/-|pagename=hár}}
 * {{m|is|hár||spiny dogfish (archaic)}}
-* {{tl|is-ndecl|m.v.dat-/-}}
+* {{tl|is-ndecl|m.v.dat-/-|pagename=hár}}
 * {{m|is|kljár||weaving stone (archaic)}}; BÍN says it's singular-only, Thomson gives pl in -ir.
-* {{tl|is-ndecl|m.sg.dat-/-}} or {{tl|is-ndecl|m,,ir.dat-/-}}
+* {{tl|is-ndecl|m.sg.dat-/-|pagename=kljár}} or {{tl|is-ndecl|m,,ir.dat-/-|pagename=kljár}}
 * {{m|is|ljár||scythe}}
-* {{tl|is-ndecl|m,,ir.dat-/-.datpl:+:ljám/ljáunum.genpl:+:ljánna[more common]}}
+* {{tl|is-ndecl|m,,ir.dat-/-.datpl:+:ljám/ljáunum.genpl:+:ljánna[more common]|pagename=ljár}}
 * {{m|is|skjár||video screen, monitor, display; animal membrane window (historical)}}
-* {{tl|is-ndecl|m,,ir.dat-/-.datpl:+:skjám[more common]/skjáunum}}
+* {{tl|is-ndecl|m,,ir.dat-/-.datpl:+:skjám[more common]/skjáunum|pagename=skjár}}
 * {{m|is|skjór||magpie}}; in the following, there are two possible paradigms, one based on a root skjór- with pl in -ar and one based off of a root in skjó with a pl in -ir; the latter has two possible dat pl's, a regular one and a more common contracted one, and corresponding definite forms; we omit the definite forms from the override as they are formed normally from the indef forms (-m -> -num)
-* {{tl|is-ndecl|((<m.stem:#.dat-/->,<m,,ir.dat-/-.datpl:skjóm:+>}}
+* {{tl|is-ndecl|((<m.#.dat-/->,<m,,ir.dat-/-.datpl:skjóm:+>))|pagename=skjór}}
+
+==== words in -ur with -j- infix ====
+* dati:-/i:-, gen in -s/-jar: <<beður|bed (poetic)>>
+* {{tl|is-ndecl|m,s:jar,ir.j.dati:-|pagename=beður}}
+* dat-/-, gen in -jar/-s: <<bekkur|bench; grade in school>>, <<byr|fair wind>>, <<kekkur|lump>>, <<reykur|smoke>>, <<rykkur|jerk, wrench>>, <<sekkur|bag, sack>>, <<veggur|wall>>
+* {{tl|is-ndecl|m,jar:s,ir.j|pagename=bekkur}}<!-- should have stem bekk- -->
+* {{tl|is-ndecl|m,jar:s,ir.j|pagename=byr}}<!-- should have stem byr- -->
+* dat-/-, gen in -s/-jar: <<belgur|bellows; skin>>, <<blær|breeze; tint>>, <<fengur|profit; catch in hunting>>, <<flekkur|spot, fleck; drying hay>>, <<hlekkur|link of chain>>, <<rif|beam on loom>>, <<serkur|shirt>>, <<strengur|string>>, <<þvengur|thong>>
+* {{tl|is-ndecl|m,s:jar,ir.j|pagename=belgur}}
+* dat-/-, gen in -s/-jar, pl in -jir: <<bylur|gust, squall>>; NOTE: explicit -jar and -jir endings imply that -j- infix is not added to them; acc pl derived from nom pl by removing the -r
+* {{tl|is-ndecl|m,s:jar,jir.j|pagename=bylur}}
+* dat-/-, gen in -jar: <<bær|farm; town>>, <<drykkur|drink>>, <<eykur|draft animal>>, <<lækur|brook, creek>>, <<verkur|pain, ache>>
+* {{tl|is-ndecl|m,jar,ir.j|pagename=bær}}<!-- should have stem bæ- -->
+* {{tl|is-ndecl|m,jar,ir.j|pagename=drykkur}}<!-- should have stem drykk- -->
+* dat-/-, gen in -s: <<drengur|boy>>, <<gnýr|clash, crash>>, <<grikkur|disservice, trick>>, <<heggur|bird cherry>>, <<her|army>>, <<hlykkur|bend, curve>>, <<hnykkur|pull, jerk; trick>>, <<hrekkur|prank, joke>>, <<kengur|stable; bend>>, <<kveikur|wick>>, <<kækur|bad habit>>, <<lækur|umbilical cord (obsolete)>>, <<seggur|man (poetic)>>, <<skeggur|bearded man>>, <<sprengur|bursting>>, <<steggur|male bird, cock>>, <<stingur|sting>>, <<styrkur|strength, support, help>>, <<svelgur|whirlpool, eddy>>
+* {{tl|is-ndecl|m,,ir.j|pagename=drengur}}<!-- should have stem dreng- -->
+* {{tl|is-ndecl|m,,ir.j|pagename=gnýr}}<!-- should have stem gný- -->
+* {{tl|is-ndecl|m,,ir.j|pagename=her}}<!-- should have stem her- -->
+* dat-/-, gen in -s, sg-only: <<drukkur|whey + water>>; Thomson claims -j- infix, pl in -ir
+* {{tl|is-ndecl|m.sg|pagename=drukkur}}
+* dat-/-, gen in -jar, sg-only: <<mergur|marrow>>, <<styr|battle, disturbance>>
+* {{tl|is-ndecl|m,jar.sg.j|pagename=mergur}}<!-- should have stem merg- -->
+* {{tl|is-ndecl|m,jar.sg.j|pagename=styr}}<!-- should have stem styr- -->
+* dat-/-, gen in -s/-jar, sg-only: <<ylur|warmth>>, <<þefur|bad smell>>
+* {{tl|is-ndecl|m,s:jar.sg.j|pagename=ylur}}
+* dat-:i/i, gen in -s: <<dynur|din, noise>>
+* {{tl|is-ndecl|m,,ir.j.dat-:i/i|pagename=dynur}}
+* dat-/-, gen in -s/-jar, optional -j- infix in plural: <<elgur|elk; slush>>; NOTE: we need to specify dat- because -j- infix implies stem elgj- which implies no dat -i, but non-j infix implies stem elg- which implies dat -i
+* {{tl|is-ndecl|m,s:jar,ir.j:-j.dat-|pagename=elgur}}
+* dat-/-, gen in -s, either -j- infix with -ir or no -j- infix with -ar in plural: <<hringur|ring>>, <<leikar|game>>; NOTE: we need to specify dat- because -j- infix implies stem hringj- which implies no dat -i, but non-j infix implies stem hring- which implies dat -i
+* {{tl|is-ndecl|((<m,,ir[usually for jewelry].j>,<m,,ar[usually for non-jewelry].dat->))|pagename=hringur}}
+* {{tl|is-ndecl|((<m,,ir[set of rules or instance of such rules to be played].j>,<m,,ar[sports competition, match].dat->))|pagename=leikur}}
+* dat-/-, gen in -jar/-s, either -j- infix with -ir or no -j- infix with -ar in plural: <<stekkur|sheepfold>>
+* {{tl|is-ndecl|((<m,jar,ir.j>,<m,,ar.dat->))|pagename=stekkur}}
+* dat-/-, gen in -jar/-s (with footnotes): <<hryggur|back, spine; ridge>>, <<vefur|web, tissue>>
+* {{tl|is-ndecl|m,jar:s[uncommon except in compounds, sometimes proscribed],ir.j|pagename=hryggur}}
+* {{tl|is-ndecl|m,jar:s[mostly in computer language],ir.j|pagename=vefur}}
+* dat-/-, gen in -s/-jar (with footnotes): <<vængur|wing>>
+* {{tl|is-ndecl|m,s:jar[rare],ir.j|pagename=vængur}}
+* dat-:i/-, gen in -s/jar,nom pl in -jir/-ir: <<hylur|fire (poetic)>>
+* {{tl|is-ndecl|m,s:jar,jir:ir.j.dat-:i/-|pagename=hylur}}
+
+== masculine weak ==
+
+=== words in -i ===
+* {{m|is|tími||time, hour}}; also: {{m|is|áttaviti||compass}}, {{m|is|bogi||bow}}, {{m|is|bolli||cup}}, {{m|is|bolti||ball; bolt (for a lock)}} ({{m|is|hornabolti||baseball}}, {{m|is|skrúfbolti||bolt (large screw)}}, {{m|is|Breti||Britisher, Briton}}, {{m|is|bursti||brush}} ({{m|is|hárbursti||hairbrush}}, {{m|is|málningarbursti||paintbrush}}, {{m|is|tannbursti||toothbrush}}), {{m|is|fáni||flag}}, {{m|is|flói||bay}}, {{m|is|hiti||heat}}, {{m|is|hluti||part}}, {{m|is|íkorni||squirrel}}, {{m|is|ísótópi||isotope}} (rare, also seen rarely as {{m|is|ísótópa}}, more common as {{m|is|ísótópur}} but still rare compared with {{m|is|samsæta}}), {{m|is|kalkúni||turkey}}, {{m|is|koddi||pillow}}, {{m|is|kuldi||cold}}, {{m|is|kvóti||quota, share; quotient}}, {{m|is|-leiki|pos=abstract noun suffix}} ({{m|is|erfiðleiki||difficulty}}, {{m|is|möguleiki||possibility}}), {{m|is|listi||list}}, {{m|is|logi||flame}}, {{m|is|metri||meter}}, {{m|is|miði||slip of paper}} ({{m|is|aðgöngumiði||admission ticket}}, {{m|is|farmiði||travel ticket}}), {{m|is|olnbogi||elbow}}, {{m|is|penni||pen}}, {{m|is|poki||bag, sack}}, {{m|is|púði||cushion}}, {{m|is|risi||giant}}, {{m|is|runni||bush}}, {{m|is|sími||telephone}}, {{m|is|skóli||school}} ({{m|is|háskóli||university}}), {{m|is|sproti||twig}}, {{m|is|steðji||anvil}}, {{m|is|stigi||ladder; staircase}}, {{m|is|Svíi||Swede}}, {{m|is|vökvi||liquid}}, {{m|is|Þjóðverji||German}}
+* {{tl|is-ndecl|m|pagename=tími}}
+* {{m|is|hani||rooster}} (dat pl hönum); also {{m|is|banki||bank (for money)}}, {{m|is|frakki||coat}}, {{m|is|Frakki||French person}}, {{m|is|gluggi||window}}, {{m|is|hafri||oat}} (cf. {{m|is|hafrar||oats}}), {{m|is|hanski||glove}}, {{m|is|hvati||catalyst}}, {{m|is|jakki||jacket}}, {{m|is|kassi||box}}, {{m|is|lampi||lamp}}, {{m|is|líkami||body}}, {{m|is|magi||stomach, belly}}, {{m|is|nagli||nail (for wood)}}, {{m|is|planki||plank}}, {{m|is|safi||juice}}, {{m|is|snagi||hook, coat hook}}, {{m|is|spaði||spade (shovel or in cards)}}, {{m|is|vasi||pocket}}
+* {{tl|is-ndecl|m|pagename=hani}}
+* {{m|is|bakari||baker}} (dat pl bökurum); also {{m|is|kjallari||cellar, basement}}, {{m|is|rakari||barber}}
+* {{tl|is-ndecl|m.uumut|pagename=bakari}}
+* {{m|is|borgari||citizen}} (dat pl borgurum); also {{m|is|hamborgari||hamburger}}, {{m|is|dómari||judge}}, {{m|is|kennari||teacher}}, {{m|is|nefnari||denominator}}, {{m|is|ritari||secretary}}, {{m|is|teljari||numerator}}, {{m|is|úðari||sprinkler}}
+* {{tl|is-ndecl|m.uumut|pagename=borgari}}
+* {{m|is|banani||banana}} (dat pl banönum or bönunum); also {{m|is|kastali||fortress, castle}}, {{m|is|sandali||sandal}}
+* {{tl|is-ndecl|m.umut,uumut|pagename=bakari}}
+* {{m|is|dauði||death}}, {{m|is|rjómi||cream}}, {{m|is|vilji||will}}
+* {{tl|is-ndecl|m.sg|pagename=dauði}}
+* {{m|is|Japani||Japanese}} (dat pl Japönum or more rarely Jöpunum); NOTE: only strong masculine and feminine nouns have a slot for genitive singular endings; weak nouns and neuter nouns have only a slot for the plural (FIXME? maybe make strong neuter nouns have a genitive slot for consistency)
+* {{tl|is-ndecl|m,ir:ar.umut,uumut[rare]|pagename=Japani}}
+
+==== plural-only ====
 
 == masculine weak ==
 
