@@ -1,18 +1,6 @@
 == masculine strong ==
 
-=== words in -ir ===
-* {{m|is|læknir||physician}}; many words of the same form
-* {{tl|is-ndecl|m|pagename=læknir}}
-* {{m|is|Hilmir|pos=male given name}}
-* {{tl|is-ndecl|m|pagename=Hilmir}}
-* {{m|is|Geysir|pos=name of the most famous geyser in Iceland}}
-* {{tl|is-ndecl|m.sg|pagename=Geysir}}
-* '''with irregular plural stem''': {{m|is|eyrir||öre (unit of currency)}}; also {{m|is|gjaldeyrir||currency}}
-* {{tl|is-ndecl|m.plstem:aur|pagename=eyrir}}
-* '''with -j- insertion in plural''': {{m|is|beykir||cooper}}; also {{m|is|fleygir||thrower (poetic)}}, {{m|is|fylkir||prince (poetic)}}, {{m|is|kíkir||telescope}}, {{m|is|mækir||sword (poetic)}}
-* {{tl|is-ndecl|m.j|pagename=beykir}}
-
-=== words with pl in -ar ===
+=== words in -ur (or -r or no ending) with pl in -ar ===
 
 ==== words in -ur with gen in -s and pl in -ar ===
 * {{m|is|hestur||horse}}; masculine nouns in -ur default to gen -s, pl -ar; dat sg here in -i/-inum per Thomson; many words of the same form
@@ -340,9 +328,9 @@ Personal names:
 * NOTE: Thomson claims {{m|is|kórall||coral}} and {{m|is|kristall||crystal}} are irregular in having singular stem in -al but plural stem in -all. If this was once the case, it is no longer per BÍN; they just lack contraction. Note umlaut in dat pl [[kórölum]] and [[kristölum]].
 * {{tl|is-ndecl|m.-con|pagename=kórall}}
 
-* {{m|is|ketill||ketill}}; un-i-umlauts when contracted to e.g. nom pl [[katlar]], and then u-umlauts in dat pl to [[kötlum]]
-* {{tl|is-ndecl|m.deimut|pagename=ketill}}
-* {{tl|is-ndecl|m.deimut|pagename=Egill}}
+* {{m|is|ketill||ketill}}; un-i-mutates when contracted to e.g. nom pl [[katlar]], and then u-mutates in dat pl to [[kötlum]]
+* {{tl|is-ndecl|m.unimut|pagename=ketill}}
+* {{tl|is-ndecl|m.unimut|pagename=Egill}}
 
 ==== words in -nn (not preceded by a/i/u) ====
 * {{m|is|daunn||stink}} (dat-/i per Thomson); {{m|is|dúnn||down feather}} (dat-:i/i per Thomson); {{m|is|fleinn||spear}} (dati/i per Thomson); {{m|is|grammófónn||gramophone (dated)}} (dati/i per Thomson); {{m|is|hreinn||reindeer}} (dat-:i/i per Thomson); {{m|is|húnn||knob}} (dat-:i/i per Thomson); {{m|is|kapteinn||captain}} (dat-:i/i per Thomson); {{m|is|prjónn||knitting needle}} (dat-:i/i per Thomson); {{m|is|sveinn||boy, young man}} (dati/i per Thomson); {{m|is|teinn||rod, rail}} (dat-:i/i per Thomson; {{m|is|tónn||(musical) tone}} (dat-:i/i per Thomson); {{m|is|þjónn||servant; waiter}} (dati/i per Thomson).
@@ -414,7 +402,7 @@ Personal names:
 * dati/i, gen in -ar/s: <<kostur|choice, advantage>>
 * {{tl|is-ndecl|m,ar:s,ir.dati/i|pagename=kostur}}
 * dati/i, gen in -ar/s, accpl in -i/-u: <<vegur|way>>
-* {{tl|is-ndecl|m,ar:s[in fixed expressions],ir.dati/i.accpli:u[literary]|pagename=vegur}}
+* {{tl|is-ndecl|m,ar:s[in fixed expressions],ir.dati/i.accpli:u[archaic or literary]|pagename=vegur}}
 * dat-:i/-, gen in -ar/s: <<vaður|rope; fishing line>>
 * {{tl|is-ndecl|m,ar:s,ir.dat-:i/-|pagename=vaður}}
 * dat-:i/- (see footnote below), gen in -ar/s: <<liður|joint, link, item, limb>>
@@ -450,13 +438,13 @@ Personal names:
 * NOTE: <<konur|man, descendant (poetic)>> not in BÍN; claimed to be dati/i, gen in -ar, pl in -ir
 * NOTE: <<ver|wake of oars>> not in BÍN; claimed to be dat-/-, gen in -s, pl in -ir
 
-==== words in -aður ====
+==== words in -aður, mostly -naður ====
 * <<fagnaður|welcome reception>>, <<mannfagnaður|assembly>> (dat pl mannfögnuðum)
 * {{tl|is-ndecl|m,ar,ir.dati/i:-.uumut|pagename=fagnaður}}
-* {{tl|is-ndecl|m.@|pagename=fagnaður}}
+* {{tl|is-ndecl|m.@|pagename=fagnaður}}<!-- based on -naður -->
 * <<safnaður|collection>>; also <<batnaður|betterment>>, <<búnaður|farming>>, <<dugnaður|drive, activity>>, <<fatnaður|clothing>>, <<hagnaður|profit, benefit>>, <<hugnaður|liking, pleasure>>, <<iðnaður>>, <<jafnaður|equal distribution>>, <<klæðnaður|clothing>>, <<kostnaður|cost>>, <<matnaður|board, feeding>>, <<munaður|delight, luxury>>, <<skapnaður|form, shape>>, <<sparnaður|saving>>, <<trúnaður|confidence, reliance>>, <<varnaður|protection; warning>>, <<þrifnaður|cleanliness; thriving>>
 * {{tl|is-ndecl|m,ar.dati/i:-.sg|pagename=safnaður}}
-* {{tl|is-ndecl|m.@.sg|pagename=safnaður}}
+* {{tl|is-ndecl|m.@.sg|pagename=safnaður}}<!-- based on -naður -->
 * <<fénaður|sheep; cattle>>, <<lifnaður|life, conduct>>, <<vefnaður|weaving; fabric>>
 * {{tl|is-ndecl|m,ar.dati.sg|pagename=fénaður}}
 * <<getnaður|conception; fetus>>, <<skilnaður|separation, divorce>>
@@ -465,6 +453,64 @@ Personal names:
 * {{tl|is-ndecl|m,ar:s,ir.dati/i:-.uumut|pagename=markaður}}
 * <<unaður|pleasure, delight>>
 * {{tl|is-ndecl|m,ar:s.dati/i:-.sg|pagename=unaður}}
+
+==== words in -uður ====
+* <<söfnuður|congregation>>: gen sg söfnuðar/safnaðar, gen pl söfnuða/safnaða; also <<fögnuður|rejoicing>>
+* {{tl|is-ndecl|m,ar,ir.-unuumut,unuumut.dati/i:-|pagename=söfnuður}}
+* {{tl|is-ndecl|m.@|pagename=söfnuður}}<!-- based on -nuður -->
+* <<mánuður|month>>: gen sg mánaðar, gen pl mánaða
+* {{tl|is-ndecl|m,ar,ir.unuumut.dati|pagename=mánuður}}
+* <<jöfnuður|equal distribution>>: gen sg jafnaðar/jöfnuðar, sg-only; also <<söknuður|regret, longing>>
+* {{tl|is-ndecl|m,ar.unuumut,-unuumut.dati.sg|pagename=jöfnuður}}
+* <<frömuður|promoter>>; also <<hugsuður|thinker>>, <<könnuður|investigator>> (alternatives mentioned by Thomson are not in BÍN)
+* {{tl|is-ndecl|m,ar,ir.dati|pagename=frömuður}}
+
+==== words in -ur with i-mutation ====
+* <<háttur|way, manner>>; dat sg hætti, nom pl hættir, acc pl hætti/háttu (def acc pl only hættina, it seems)
+* {{tl|is-ndecl|m,ar,ir.imut.accpli:u[archaic or literary]|pagename=háttur}}
+* <<dráttur|drawing; delay>>; dat sg drætti, nom pl drættir, acc pl drætti; also <<máttur|might>>,  <<sláttur|mowing; heartbeat, pulse>>, <<þáttur|part, factor>>, <<þráður|thread, wire>>
+* {{tl|is-ndecl|m,ar,ir.imut|pagename=dráttur}}
+* <<sonur|son>> (also <<son>>, archaic or literary): dat sg syni, nom pl synir, acc pl syni:sonu[archaic or literary] but def acc pl only synina; should be handled automatically by rejecting acc pl forms ending in -u
+* {{tl|is-ndecl|m,ar,ir.imut.dati.accpli:u[archaic or literary]|pagename=sonur}}
+* {{tl|is-ndecl|m,ar,ir.imut.dati.accpli:u[archaic or literary]|pagename=son}}
+* <<Eiríksson|pos=patronymic>>, <<Helgason|pos=patronymic>>, etc.
+* {{tl|is-ndecl|m,ar,ir.imut.dati|pagename=Eiríksson}}
+* {{tl|is-ndecl|m.@|pagename=Eiríksson}}
+* <<ás|ás (type of god)>>: dat sg ás per BÍN but æsi per Thomson
+* {{tl|is-ndecl|m,,ir.imut.dat:-:i[archaic]|pagename=ás}}
+* <<spónn|horn or bone spoon; veneer; (wood) shaving>>: dat sg spæni; nom pl spænir
+* {{tl|is-ndecl|((<m,s:ar[dated],ir.imut.dati>,<m.[proscribed].dati>))|pagename=spónn}}
+
+==== words in -ur with un-u-mutation and i-mutation ====
+* <<köttur|cat>>; dat sg ketti, nom pl kettir, acc pl ketti:köttu[archaic or literary], gen sg kattar, gen pl katta; also <<völlur|plain>>, <<vöxtur|growth; (plural) interest>> (<<ávöxtur|fruit>>)
+* {{tl|is-ndecl|m,ar,ir.unumut.imut.accpli:u[archaic or literary]|pagename=köttur}}
+* <<böllur|ball>>; also <<börkur|bark (of a tree)>>, <<göltur|boar>> (<<broddgöltur|hedgehog, porcupine>>), <<hnöttur|globe, sphere>>, <<höttur|hood>>, <<knörr|ship (poetic)>>, <<knöttur|ball>>, <<köstur|pile, heap>>, <<löstur|vice, fault>>, <<mörður|marten>>, <<svörður|sward; skin on head>>, <<vöndur|rod>>, <<vörður|guard, watch (person or action)>>, <<vöttur|glove, mitten>>, <<þröstur|thrush>>, <<örn|eagle>>
+* {{tl|is-ndecl|m,ar,ir.unumut.imut|pagename=böllur}}
+* {{tl|is-ndecl|m,ar,ir.unumut.imut|pagename=knörr}}
+* {{tl|is-ndecl|m,ar,ir.unumut.imut|pagename=örn}}
+* <<flötur|plane, surface>>; also <<knör|ship (poetic; proscribed)>>, <<lögur|liquid>>, <<mögur|son (poetic)>>
+* {{tl|is-ndecl|m,ar,ir.unumut.imut.dati|pagename=flötur}}
+* <<Höður|pos=male given name>>; also <<Hörður|pos=male given name>>
+* {{tl|is-ndecl|m,ar,ir.unumut.imut.persname|pagename=Höður}}
+* <<kökkur|lump, clod, clot>> (more common as [[kekkur]], with -j- insertion)
+* {{tl|is-ndecl|m,ar[traditional or modern]:s[modern],ir.unumut.imut.dati:-|pagename=kökkur}}
+* <<mökkur|dense cloud (of steam, smoke, dust)>>
+* {{tl|is-ndecl|m,ar:s,ir.unumut.imut.dati:-|pagename=mökkur}}
+* <<spölur|a short distance>>; also <<völur|stick>>
+* {{tl|is-ndecl|m,ar,ir.unumut.imut.dati:-|pagename=spölur}}
+* <<gröftur|digging; something dug up; pus>>; Thomson claims pl forms greftir, grefti, gröftum, graft(r)a; Íslensk stafsetningarorðabók agrees; in the following, we use full overrides to handle the forms with -r- and add a footnote to the entire plural using `addnote`, indicating that it is sometimes proscribed (e.g. not in BÍN)
+* {{tl|is-ndecl|m,ar,ir.unumut.imut.dat:greftri[common]:grefti[rare].gen:graftar[common]:graftrar[rare].genpl:grafta[common]:graftra[rare].addnote[.*pl][sometimes proscribed]|pagename=gröftur}}
+* <<fjörður|fjord>>: as a special case, i-mutation of <ja> -> <i>; also <<skjöldur|shield>>
+* {{tl|is-ndecl|m,ar,ir.unumut.imut.accpli:u[archaic or literary]|pagename=fjörður}}
+* <<björn|bear>>: i-mutation of <ja> -> <i>; also <<hjörtur|hart, deer>>
+* {{tl|is-ndecl|m,ar,ir.unumut.imut|pagename=björn}}
+* {{tl|is-ndecl|m,ar,ir.unumut.imut|pagename=hjörtur}}
+* <<kjölur|keel; backbone of book>>; also <<mjöður>>
+* {{tl|is-ndecl|m,ar,ir.unumut.imut.dati|pagename=kjölur}}
+* <<Njörður|pos=male given name>>
+* {{tl|is-ndecl|m,ar.unumut.imut.persname|pagename=Njörður}}
+* <<Björn|pos=male given name>>
+* {{tl|is-ndecl|m,s:ar.unumut.imut.persname|pagename=Björn}}
 
 ==== words in -r preceded by vowel other than a/i/u ====
 * NOTE: specifying 'ir' as nom pl autoselects accusative pl in -i. NOTE: explicit dative in the following may not be necessary.
@@ -523,6 +569,53 @@ Personal names:
 * {{tl|is-ndecl|m,s:jar[rare],ir.j|pagename=vængur}}
 * dat-:i/-, gen in -s/jar,nom pl in -jir/-ir: <<hylur|fire (poetic)>>
 * {{tl|is-ndecl|m,s:jar,jir:ir.j.dat-:i/-|pagename=hylur}}
+
+=== miscellaneous irregular words in -ur ===
+* <<maður|man; one>>; here, the underlying stem is 'mann' and, as shown by the def nom/acc pl, the underlying plural is -ir, but replaced in the indef nom/acc pl with [[menn]]. We handle this by setting the stem appropriately and then overriding only the indefinite nom and acc pl (the ! means to only do the indefinite, not both indefinite and definite as would normally happen). We also make this a built-in as there are so many compounds of -maður.
+* {{tl|is-ndecl|m,s,ir.stem:mann.imut.!nompl+!accpl:menn|pagename=maður}}
+* {{tl|is-ndecl|m.@|pagename=maður}}
+* <<fótur|foot>>; i-mutation in dat sg fæti and in nom/acc pl fætur. Here, the ^ in ^ur is a special signal to do i-mutation of the stem before the ending, even if it doesn't contain -i-. Internally, -ur as nom pl is treated specially in that the accusative plural is also -ur instead of -u as you'd normally expect.
+* {{tl|is-ndecl|m,ar,^ur.imut.dati|pagename=fótur}}
+* {{tl|is-ndecl|m.@|pagename=fótur}}
+* <<vetur|winter>>; no i-mutation, just irregular plural -ur (see comments for [[fótur]]). # means nominative is stem (same as `stem:#`). Contraction is the default in such a case.
+* {{tl|is-ndecl|m,ar,ur.#|pagename=vetur}}
+* {{tl|is-ndecl|m.@|pagename=vetur}}
+* <<fingur|finger>>; almost identical story to [[vetur]], just a different ending in the gen sg. As with [[vetur]], contraction is the default.
+* {{tl|is-ndecl|m,s,ur.#|pagename=fingur}}
+* {{tl|is-ndecl|m.@|pagename=fingur}}
+
+=== words in -ir ===
+* {{m|is|læknir||physician}}; many words of the same form
+* {{tl|is-ndecl|m|pagename=læknir}}
+* {{m|is|Hilmir|pos=male given name}}
+* {{tl|is-ndecl|m|pagename=Hilmir}}
+* {{m|is|Geysir|pos=name of the most famous geyser in Iceland}}
+* {{tl|is-ndecl|m.sg|pagename=Geysir}}
+* '''with irregular plural stem''': {{m|is|eyrir||öre (unit of currency)}}; also {{m|is|gjaldeyrir||currency}}
+* {{tl|is-ndecl|m.plstem:aur|pagename=eyrir}}
+* '''with -j- insertion in plural''': {{m|is|beykir||cooper}}; also {{m|is|fleygir||thrower (poetic)}}, {{m|is|fylkir||prince (poetic)}}, {{m|is|kíkir||telescope}}, {{m|is|mækir||sword (poetic)}}
+* {{tl|is-ndecl|m.j|pagename=beykir}}
+
+=== miscellaneous irregular words in -ir ===
+* <<bróðir|brother>>; acc/dat/gen sg are [[bróður]], nom/acc pl [[bræður]], dat pl [[bræðrum]], gen pl [[bræðra]]. `rstem` selects the right endings and contraction (same for [[dóttir]], [[systir]], [[faðir]], [[móðir]]). `imut` applies i-mutation to the plural.
+* {{tl|is-ndecl|m.rstem.imut|pagename=bróðir}}
+* {{tl|is-ndecl|m.@|pagename=bróðir}}
+
+* <<dóttir|daughter>>; acc/dat/gen sg are [[dóttur]], nom/acc pl [[dætur]], dat pl [[dætrum]], gen pl [[dætra]]. `rstem` selects the right endings and contraction as above; `imut` isn't actually necessary because we explicitly set the pl stem 'dætur' (i-mutation by default would produce #'dættur').
+* {{tl|is-ndecl|m.rstem.imut.plstem:dætur|pagename=dóttir}}
+* {{tl|is-ndecl|f.@|pagename=dóttir}}
+
+* <<systir|sister>>; acc/dat/gen sg are [[systur]], nom/acc pl [[systur]], dat pl [[systrum]], gen pl [[systra]]. `rstem` selects the right endings and contraction as above. Nothing else needed.
+* {{tl|is-ndecl|f.rstem|pagename=systir}}
+* {{tl|is-ndecl|f.@|pagename=systir}}
+
+* <<faðir|father>>; acc/dat/gen sg are [[föður]], nom/acc pl [[feður]], dat pl [[feðrum]], gen pl [[feðra]]. `rstem` selects the right endings and contraction as above. `umut` produces u-mutated [[föður]] in the singular and `i-mut` producces i-mutated [[feður]] in the plural.
+* {{tl|is-ndecl|m.rstem.umut.imut|pagename=faðir}}
+* {{tl|is-ndecl|m.@|pagename=faðir}}
+
+* <<móðir|mother>>; acc/dat/gen sg are [[móður]], nom/acc pl [[mæður]], dat pl [[mæðrum]], gen pl [[mæðra]]. `rstem` selects the right endings and contraction as above. `i-mut` producces i-mutated [[mæður]] in the plural.
+* {{tl|is-ndecl|f.rstem.imut|pagename=móðir}}
+* {{tl|is-ndecl|f.@|pagename=móðir}}
 
 == masculine weak ==
 
