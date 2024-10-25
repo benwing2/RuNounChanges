@@ -582,7 +582,7 @@ FIXME:
 * {{tl|is-ndecl|f.genpl:kvenna|pagename=kona}}
 * {{tl|is-ndecl|f.@|pagename=kona}}
 
-=== no ending ===
+=== no ending in lemma ===
 
 ==== plural mostly in -ur ====
 * NOTE: Default is gen -ar, nom pl -ur
@@ -624,6 +624,7 @@ FIXME:
 * {{tl|is-ndecl|f.sg|pagename=gát}}
 * {{m|is|nótt||night}}
 * {{tl|is-ndecl|f,:nætur,:nætur.dat-:u[in fixed expressions].genpl:nótta:nátta|pagename=nótt}}
+* NOTE: for `unimut`, the non-i-mutated forms are the acc/dat sg and dat/gen pl. See also <<kýr>>, <<sýr>>, <<ær>>.
 * {{m|is|hættur||bedtime; quitting time}}; dat pl háttum, gen pl hátta; also {{m|is|mætur||appreciation, liking}}
 * {{tl|is-ndecl|f.pl.unimut|pagename=hættur}}
 
@@ -750,22 +751,6 @@ FIXME:
 * {{m|is|gýgur||troll woman}} (also masculine)
 * {{tl|is-ndecl|f,jar,jar:ir.j|pagename=gýgur}}
 
-===== irregular =====
-* {{m|is|mær||maid}}, {{m|is|mey||maid}}; NOTE: def nom/acc/dat meyin, meyna, meynni
-* {{tl|is-ndecl|f,,jar.decllemma:mey.j.datju:-|pagename=mær}}
-* {{tl|is-ndecl|f,,jar.j.datju:-|pagename=mey}}
-* {{m|is|fjöður||feather}}; NOTE: unumut is the default and contraction should apply first; # is needed because fjöður- not fjöð- is the stem.
-* {{tl|is-ndecl|f.#.con.defcon|pagename=fjöður}}
-* {{m|is|alin||ell}}; `vstem` overrides the vowel stem i.e. the stem before endings beginning with a vowel; same stem that's affected by contraction.
-* {{tl|is-ndecl|f.con.vstem:áln|pagename=alin}}
-* {{m|is|öxi||axe}}, {{m|is|öx||axe}}, {{m|is|exi||axe}}
-* {{tl|is-ndecl|f.gen:axar:öxar|pagename=öx}}
-* `unumut` isn't the default for feminines in -i/-a (e.g. we don't want to un-u-mutate {{m|is|tölva}}).
-* {{tl|is-ndecl|f.unumut.gen:axar:öxar|pagename=öxi}}
-* For `exi`, easiest is to set the gen sg and plstem directly. (Feminines in -i by default have -i in the entire singular.)
-* {{tl|is-ndecl|f.gen:axar.plstem:ax|pagename=exi}}
-
-
 ==== plural mostly in -ir ====
 
 ===== plural mostly in -ir, without suffix =====
@@ -842,8 +827,78 @@ FIXME:
 * {{tl|is-ndecl|f.sg|pagename=bötun}}
 
 ==== terms needing uumut ====
-* {{m|is|ætlan||opinion; intention}}, ...
+* {{m|is|ætlan||opinion; intention}}, <<alúðarheilsan>>, ...
 * {{tl|is-ndecl|f.uumut|pagename=ætlan}}, ...
+
+==== root ending in long vowel ====
+
+===== ending in -á =====
+* <<á|river>>; gen in -r, nom pl in -r, dat pl in -m; also <<brá|eyelash; eyelid; greasy film on water>>, <<flá|float on net>>, <<gjá|gorge, canyon>>, <<gljá|glitter, brilliancy>>, <<lá|sea near the shore; film on water>>, <<sjá|device for seeing; seeing>> (<<eggsjá|device for X-ray examination of eggs>>, <<ísjá|attention>>, <<litsjá|spectroscope>>, <<ratsjá|radar>>, <<rúmsjá|stereoscope>>, <<skuggsjá|mirror>>, <<smásjá|microscope>>, <<viðsjá|caution, wariness; (plural) quarrels>>, <<víðsjá|wide view; survey>>), <<slá|bolt (on door)>>, <<spá|prophecy; sleeveless coat>> (also neuter in the meaning "sleeveless coat"), <<þrá|longing>>
+* {{tl|is-ndecl|f|pagename=á}}
+* <<andrá|instant>>; gen in -r; also <<gá|barking; attention>> (<<goðgá|blasphemy>>, <<hundgá|barking of dogs>>), <<ljá|newmown hay>>, <<líkþrá|leprosy>>, <<ásjá|assistance>>, <<forsjá|foresight>>, <<tilsjá|supervision; hope of help>>, 
+* {{tl|is-ndecl|f.sg|pagename=andrá}}
+* <<Andrá|pos=organization name>>; gen in -r or -ar; singular by default
+* {{tl|is-ndecl|f,r:ar|pagename=Andrá}}
+* <<blá|marsh>>; gen in -ar, nom pl in -r
+* {{tl|is-ndecl|f,ar|pagename=blá}}
+* <<há|horse skin; aftergrass>>; gen in -r/ar, nom pl in -r; also <<krá|saloon, bar; nook>>, <<rá|roe deer>>, <<skrá|catalog, list; lock>>
+* {{tl|is-ndecl|f,r:ar|pagename=há}}
+* <<þinghá|administrative district>>; gen in -r/ar; also <<ná|goddess (poetic)>>; also <<gná|goddess (poetic)>>? (not in BÍN)
+* {{tl|is-ndecl|f,r:ar.sg|pagename=þinghá}}
+* <<rá|sailyard>>
+* {{tl|is-ndecl|f,r:ar,r:^r|pagename=rá}}
+* <<tá|toe>> (declined like words in -ó)
+* {{tl|is-ndecl|f,ar,^r|pagename=tá}}
+
+===== ending in -ó =====
+* <<fló|flea>>; gen in -ar, nom pl in -r with umlaut, dat pl in -m; also <<kló|claw>>, <<kónguló|spider>>, <<könguló|spider>>, <<köngulló|spider>> (proscribed), <<köngurló|spider>> (proscribed), <<ló|pile, nap; wool waste>>, <<ró|washer; nut>>
+* {{tl|is-ndecl|f|pagename=fló}}
+* <<fró|relief, comfort>>, <<ró|quiet, tranquility>>
+* {{tl|is-ndecl|f.sg|pagename=fró}}
+* <<kró|corner, nook>>
+* {{tl|is-ndecl|f,,^r:r|pagename=kró}}
+* <<sló|bony core of a horn>>; NOTE: dative plural; indef slóum, def slónum
+* {{tl|is-ndecl|f,r:ar,r:ar:^r.datplum/m|pagename=sló}}
+* <<tó|lawn>>
+* {{tl|is-ndecl|f,r:ar,r:^r|pagename=tó}}
+* <<þró|trough, tank>>; NOTE: dative plural; indef þróm/þróum, def þrónum
+* {{tl|is-ndecl|f,ar:r,^r:r.datplm:um/m|pagename=þró}}
+* <<stó|hearth, fireplace>> (<<eldstó|cooking stove>>)
+* {{tl|is-ndecl|f,r:ar,r:ar|pagename=stó}}
+
+===== ending in -ú =====
+* <<frú|married woman>>; gen in -ar, nom pl in -r, dat pl in -m (also <<húsfrú|housewife>>, <<piparjómfrú|spinster>>, <<ungfrú|unmarried woman>>, <<trú|faith, belief>>)
+* {{tl|is-ndecl|f|pagename=stó}}
+* <<jómfrú|virgin, maiden>>
+* {{tl|is-ndecl|f,ar:r[dated]|pagename=jómfrú}}
+* <<brú|bridge>>
+* {{tl|is-ndecl|f,ar,^r|pagename=brú}}
+
+==== irregular/misc ====
+* {{m|is|mær||maid}}, {{m|is|mey||maid}}; NOTE: def nom/acc/dat meyin, meyna, meynni
+* {{tl|is-ndecl|f,,jar.decllemma:mey.j.datju:-|pagename=mær}}
+* {{tl|is-ndecl|f,,jar.j.datju:-|pagename=mey}}
+* {{m|is|fjöður||feather}}; NOTE: unumut is the default and contraction should apply first; # is needed because fjöður- not fjöð- is the stem.
+* {{tl|is-ndecl|f.#.con.defcon|pagename=fjöður}}
+* {{m|is|alin||ell}}; `vstem` overrides the vowel stem i.e. the stem before endings beginning with a vowel; same stem that's affected by contraction.
+* {{tl|is-ndecl|f.con.vstem:áln|pagename=alin}}
+* {{m|is|öxi||axe}}, {{m|is|öx||axe}}, {{m|is|exi||axe}}
+* {{tl|is-ndecl|f.gen:axar:öxar|pagename=öx}}
+* `unumut` isn't the default for feminines in -i/-a (e.g. we don't want to un-u-mutate {{m|is|tölva}}).
+* {{tl|is-ndecl|f.unumut.gen:axar:öxar|pagename=öxi}}
+* For `exi`, easiest is to set the gen sg and plstem directly. (Feminines in -i by default have -i in the entire singular.)
+* {{tl|is-ndecl|f.gen:axar.plstem:ax|pagename=exi}}
+* <<kýr|cow>>, gen ^r, nom pl ^r, dat pl -m; also <<sýr|sow (archaic)>>, <<ær|ewe>>. NOTE: for `unimut`, the non-i-mutated forms are the acc/dat sg and dat/gen pl. See also <<hættur>>, <<mætur>>.
+* {{tl|is-ndecl|f.unimut|pagename=kýr}}
+* {{tl|is-ndecl|f.unimut|pagename=ær}}
+* <<mús|mouse>>; also <<lús|louse>>
+* {{tl|is-ndecl|f,,^|pagename=mús}}
+* <<dyr|door(way)>>
+* {{tl|is-ndecl|f.pl.decllemma:dyrir|pagename=dyr}}
+* <<brún|eyebrow; rim, edge>>
+* {{tl|is-ndecl|f,,:brúnir[all meanings]:brýn[in fixed expressions]:brýr[colloquial, in the meaning "eyebrow"]/:brúnir[all meanings]:brýn[literary, in the meaning "eyebrow"]:brýr[colloquial, in the meaning "eyebrow"]|pagename=brún}}
+* <<augabrún|eyebrow>>; also <<augnabrún|eyebrow>>
+* {{tl|is-ndecl|f,,:augabrúnir:augabrýr[especially colloquial]/:augabrúnir:augabrýn:augabrýr[especially colloquial]|pagename=augabrún}}
 
 ==== female personal names ====
 
@@ -911,12 +966,17 @@ FIXME:
 * {{tl|is-ndecl|f.pers|pagename=Friðmey}}<!-- defaults to acc/dat - or -ju + -j- infix with pers (not otherwise) -->
 
 ===== in -björg =====
-* {{m|is|Björg|pos=female given name}}
+* female personal names in -björg: {{m|is|Björg}}, {{m|is|Arnbjörg}}, {{m|is|Ástbjörg}}, {{m|is|Auðbjörg}}, {{m|is|Eybjörg}}, {{m|is|Finnbjörg}}, {{m|is|Guðbjörg}}, {{m|is|Hallbjörg}}, {{m|is|Ingibjörg}}, {{m|is|Kristbjörg}}, {{m|is|Sigurbjörg}}, {{m|is|Sveinbjörg}}, {{m|is|Þorbjörg}}
 * {{tl|is-ndecl|f.pers.acc+datu|pagename=Björg}}
 * {{tl|is-ndecl|f.pers|pagename=Björg}}<!-- defaults to unumut with acc/dat -u with pers (not otherwise, cf. company/organization name [[Fingurbjörg]] [but [[Auðbjörg]], [[Guðbjörg]], [[Ingibjörg]], [[Sæbjörg]] have acc/dat -u as company name], common noun [[björg]], [[fingurbjörg]]) -->
-* female personal names in -björg: {{m|is|Arnbjörg}}, {{m|is|Ástbjörg}}, {{m|is|Auðbjörg}}, {{m|is|Eybjörg}}, {{m|is|Finnbjörg}}, {{m|is|Guðbjörg}}, {{m|is|Hallbjörg}}, {{m|is|Ingibjörg}}, {{m|is|Kristbjörg}}, {{m|is|Sigurbjörg}}, {{m|is|Sveinbjörg}}, {{m|is|Þorbjörg}}
 * {{tl|is-ndecl|f.pers|pagename=Ingibjörg}}
 * {{tl|is-ndecl|f.sg|pagename=Fingurbjörg}}<!-- should not have -u in acc/dat -->
+
+===== in -vör =====
+* female personal names in -vör: {{m|is|Eyvör}}, <<Gunnvör>>, <<Hervör>>, <<Steinvör>>
+* {{tl|is-ndecl|f.pers.acc+datu|pagename=Eyvör}}
+* {{tl|is-ndecl|f.pers|pagename=Eyvör}}<!-- defaults to unumut with acc/dat -u with pers (not otherwise, cf. company/organization name [[Eyvör]], [[Hervör]], [[Steinvör]]) -->
+* {{tl|is-ndecl|f.sg|pagename=Eyvör}}<!-- should not have -u in acc/dat -->
 
 ===== in -dís =====
 * female personal names in -dís: {{m|is|Þórdís}}, {{m|is|Aldís}}, {{m|is|Árdís}}, {{m|is|Ásdís}}, {{m|is|Bryndís}}, {{m|is|Eydís}}, {{m|is|Freydís}}, {{m|is|Halldís}}, {{m|is|Herdís}}, {{m|is|Jódís}}, {{m|is|Svandís}}, {{m|is|Valdís}}, {{m|is|Védís}}, {{m|is|Vigdís}}
@@ -933,22 +993,178 @@ FIXME:
 * {{tl|is-ndecl|f.pers|pagename=Þórunn}}<!-- defaults to acc/dat -i with pers (not otherwise, cf. company/organization name ... without -i; likewise common noun [[jórunn]]) -->
 
 ===== misc female personal names =====
-* not needing un-u-mutation: {{m|is|Eygló}}, {{m|is|Hlín}}, {{m|is|Ósk}}
+* not needing un-u-mutation, no acc/dat ending: {{m|is|Eygló}}, {{m|is|Hlín}}, {{m|is|Ósk}}
 * {{tl|is-ndecl|f.pers|pagename=Eygló}}
 * not needing un-u-mutation, optional -i in acc/dat: {{m|is|Svanhvít}}
 * {{tl|is-ndecl|f.pers.acc+dati:-|pagename=Svanhvít}}
 * not needing un-u-mutation, -i in acc/dat: {{m|is|Ýr}}
 * {{tl|is-ndecl|f.pers.acc+dati|pagename=Ýr}}
-* needing un-u-mutation: {{m|is|Björk}}, {{m|is|Dröfn}}, <s>{{m|is|Gjöll}}</s> (not in BÍN as name), {{m|is|Hlökk}}, {{m|is|Hrönn}}, {{m|is|Sjöfn}}, <s>{{m|is|Þökk}}</s> (not in BÍN as name), {{m|is|Ögn}}; `unumut` is the default
+* needing un-u-mutation, no acc/dat ending: {{m|is|Björk}}, {{m|is|Dröfn}}, <s>{{m|is|Gjöll}}</s> (not in BÍN as name), {{m|is|Hlökk}}, {{m|is|Hrönn}}, {{m|is|Sjöfn}}, <s>{{m|is|Þökk}}</s> (not in BÍN as name), {{m|is|Ögn}}; `unumut` is the default
 * {{tl|is-ndecl|f.pers|pagename=Björk}}
 * needing un-u-mutation, optional -u in acc/dat: {{m|is|Björt}}
 * {{tl|is-ndecl|f.pers.acc+dat-:u|pagename=Björt}}
-* needing un-u-mutation, -u in acc/dat: {{m|is|Dagbjört}}, {{m|is|Guðbjört}}, {{m|is|Heiðbjört}}
+* needing un-u-mutation, -u in acc/dat: {{m|is|Dagbjört}}, {{m|is|Guðbjört}}, {{m|is|Heiðbjört}}, {{m|is|Ólöf}}
 * {{tl|is-ndecl|f.pers.acc+datu|pagename=Dagbjört}}
 * {{m|is|Elísabet|pos=female given name}}
 * {{tl|is-ndecl|f.pers.acc+datu|pagename=Elísabet}}
 * {{m|is|Margrét|pos=female given name}}
 * {{tl|is-ndecl|f.pers.acc+dati:u|pagename=Margrét}}
+
+== neuter ==
+
+=== no ending in lemma ===
+
+==== with u-mutation in plural if possible ===
+* The default for neuters without ending is gen -s, nom/acc pl - with u-mutation
+* <<borð|table; board>> (<<strauborð|ironing board>>); many others; also <<ár|year>>, <<aldin|fruit>> (<<greipaldin|grapefruit>>), <<atóm|atom>>, <<bein|bone>>, <<blóm|flower>>, <<brauð|bread>>, <<bréf|letter>>, <<brekán|coarse blanket>> (synonym: <<brekan>>), <<brjóst|breast>>, <<bú|housekeeping; estate, farm>> (<<býflugnabú|beehive>>), <<dýr|animal>>, <<geð|mood, temper, disposition; mind, spirit; liking>>, <<gólf|floor>>, [<<gremj|anger, irritation>>; not in BÍN], <<gull|gold>>, <<hár|hair>>, <<hjól|wheel; bicycle>>, <<hlé|pause, break; lee>>, <<hljóð|sound>>, <<horn|horn; angle, corner>>, <<hótel|hotel>>, <<hrísgrjón|rice>>, <<hús|house>> (<<eldhús|kitchen>>, <<gróðurhús|greenhouse>>), <<járn|iron>> (hlújárn|hoe>>, <<hreykijárn|hoe>>, <<skrúfjárn|screwdriver>>, <<straujárn|clothes iron>>), <<klósett|closet>>, <<korn|grain, corn>>, <<kort|card; map>>, <<krem|cream>> (<<tannkrem|toothpaste>>), <<kvöld|evening>>, <<lauf|foliage>>, <<léreft|linen>>, <<líf|life>>, <<lím|glue, adhesive>>, <<ljós|light>>, <<lok|lid>>, <<mál|speech, language; matter, affair>> (<<tungumál|language>>), <<naut|bull>>, <<orgel|organ>>, <<oxíð|oxide>>, <<píanó|piano>>, <<pródúkt|product>>, <<rúm|bed; place, room, space>>, <<sement|cement>>, <<skáld|poet>>, <<skinn|hide, skin>>, <<spil|playing card; game of cards>>, <<stál|steel>>, <<stígvél|boot>>, <<strá|straw>> [Thomson claims dat pl also strám; not in BÍN], <<stökk|jump; gallop>>, <<súlfít|sulfite>>, <<sverð|sword>>, <<systkin|brother(s) and sister(s)>>, <<tungl|moon>>, <<vé|sanctuary>>, <<ver|sea; station, area; (pillow)case, cover>>, <<verð|price>>, <<verk|work>> (<<málverk|painting>>), <<vín|wine>> (<<brennivín|brandy>>), <<vopn|weapon>>, <<þorp|village>>, <<þúsund|thousand>> (also feminine), <<eð|letter ð>>, <<ypsílon|letter Y; letter ypsilon>>
+* {{tl|is-ndecl|n|pagename=borð}}
+* <<blað|leaf; sheet of paper; newspaper>>; many others; note that u-mutation without -u or -v in the ending is indicated by ^^; also <<afl|power, strength>>, <<bað|bath>> (<<steypibað|shower (when washing oneself)>>), <<bak|back>>, <<ball|ball, dance>>, <<band|band, binding>> (<<límband|adhesive tape>>, <<málband|measuring tape>>, <<segulband|magnetic recording tape>>), <<bar|bar (unit)>>, <<barn|child>>, <<fat|dish; barrel; garment>>, <<fjall|mountain>> (<<eldfjall|volcano>>), <<gagn|use, advantage; (plural) data>>, <<gas|gas>>, <<gat|hole>>, <<gramm|gram>>, <<gras|grass>>, <<lag|layer; shape, condition; melody; (plural) law>>, <<lak|bedsheet>>, <<lakk|varnish>>, <<land|land, country>>, <<magn|quantity; strength, power>>, <<nafn|name>>, <<raf|amber; electricity (in compounds)>>, <<salt|salt>>, <<sjónvarp|television>>, <<tal|speech, conversation; enumeration, list>> (<<samtal|conversation>>), <<útvarp|broadcasting>>, <<vatn|water; lake>>, <<vatt|wadding; watt>>, <<vaff|letter V>>
+* {{tl|is-ndecl|n|pagename=blað}}
+* <<andlit|face>>
+* {{tl|is-ndecl|n,s:is[in fixed expressions]|pagename=andlit}}
+* <<bíó|movie theater>>; also <<óbó|oboe>>
+* {{tl|is-ndecl|n.dat-:i/i|pagename=bíó}}
+* <<bón|polish>>, <<bygg|barley>>, <<duft|powder, dust>>, <<gúmmí|gum>> (<<tyggigúmmí|chewing gum>>), <<kál|cabbage>> (<<blómkál|cauliflower>>, <<hvítkál|white cabbage>>, <<rauðkál|red cabbage>>, <<rósakál|Brussels sprouts>>), <<kjöt|meat>>, <<rafmagn|electricity>>, <<mjöl|flour>>, <<nælon|nylon>>, <<óson|ozone>>, <<sag|sawdust>>, <<sink|zinc>>, <<skrök|falsehood, lie>>, <<smjör|butter>>, <<sorp|garbage, trash>>, <<spé|mockery>>, <<súlfíð|sulfide>>, <<te|tea>>, <<tin|tin>>, <<viskí|whiskey>>
+* {{tl|is-ndecl|n.sg|pagename=bón}}
+* <<emj|cries, shouting>>
+* {{tl|is-ndecl|n,--.sg|pagename=emj}}
+* <<feðgin|father and daughter>>, <<hjón|married couple>>, <<jól|Christmas>>, <<lok|end>>, [<<meðgin|mother and son>>; not in BÍN]
+* {{tl|is-ndecl|n.pl|pagename=feðgin}}
+* <<högg|blow>>
+* {{tl|is-ndecl|n.genpla:va[literary, in fixed expressions]/a|pagename=högg}}
+* <<jarðgöng|tunnel>>
+* {{tl|is-ndecl|n.pl.unumut|pagename=jarðgöng}}
+* <<kex|cracker, dry cookie>>; gen [[kex]] because clusters consonant + ss not allowed; also <<pils|skirt>>
+* {{tl|is-ndecl|n|pagename=kex}}
+* {{tl|is-ndecl|n|pagename=pils}}
+* <<vax|wax>>; gen [[vax]] because clusters consonant + ss not allowed
+* {{tl|is-ndecl|n|pagename=vax}}
+* <<Ísland|Iceland>>; singular by default
+* {{tl|is-ndecl|n|pagename=Ísland}}
+* <<bé|letter B>>; also <<cé|letter C>>, <<dé|letter D>>, <<eff|letter F>>, <<gé|letter G>> (also <<ge>>), <<há|letter H>>, <<joð|letter J>>, <<ká|letter K>>, <<ell|letter L>>, <<emm|letter M>>, <<enn|letter N>>, <<pé|letter P>>, <<kú|letter Q>>, <<err|letter R>>, <<té|letter T>>
+* {{tl|is-ndecl|n,-:s/s.dat-:i/i|pagename=bé}}
+* <<ess|letter S>>, <<ex|letter X>>
+* {{tl|is-ndecl|n.dat-:i/i|pagename=ess}}
+* <<frí|vacation>>; listed as j-inserting in Thomson; likewise <<men|necklace, collar>>
+* {{tl|is-ndecl|n|pagename=frí}}
+* <<flet|couch, interior bed>>; listed as optionally j-inserting in Thomson; likewise <<kið|goat kid>>, <<net|net>>, <<veð|pledge>>
+* {{tl|is-ndecl|n|pagename=flet}}
+* <<folald|foal>>; also <<áhald|appliance, instrument>>, <<afsal|conveyance (legal)>>, <<akarn|acorn>>, <<almanak|calendar>>, <<átvagl|glutton>>, <<brekan|coarse blanket>> (synonym: <<brekán>>), <<félag|company, society>>, <<fóarn|gizzard>>, <<forlag|publishing house>>, <<fosfat|phosphate>>, <<gímald|large opening; vast space>>, <<kafald|snowfall>>, <<karat|carat>>, <<karbónat|carbonate>>, <<kerald|tub>>, <<kjarald|tub>>, <<kolhýdrat|carbohydrate>>, <<líkan|model; statue>>, <<organ|organ (musical; archaic)>>, <<rekald|flotsam>>, <<salat|salad; lettuce>>, <<súlfat|sulfate>>
+* {{tl|is-ndecl|n|pagename=folald}}
+* <<meðal|means; drug, medicine>>; also <<hundrað|hundred>>
+* {{tl|is-ndecl|n.uumut|pagename=meðal}}
+* <<aðal|nature, character>>; also <<boldang|thick linen cloth; sailcloth>>, <<hunang|honey>>, <<mundang|balance pointer; mean>>, <<spínat|spinach>>, 
+* {{tl|is-ndecl|n.sg|pagename=aðal}}
+* <<hafald|heddle (guide thread in loom)>>; u_umut indicates double u-mutation with both a's going to ö
+* {{tl|is-ndecl|n.umut,u_umut|pagename=hafald}}
+* <<hérað|district>>; also <<óðal|hereditary farm>>
+* {{tl|is-ndecl|n.uumut,umut|pagename=hérað}}
+
+==== irregular, ending in -é ====
+* <<tré|tree; wood>>; def nom/acc sg -ð (no -i-); dat sg -; def nom/acc pl -n (no -i-); dat pl -m; def gen pl has no -a ending); all handled by <já> indicator; also <<hné|knee>>, <<kné|knee>>
+* {{tl|is-ndecl|n.já|pagename=tré}}
+* <<fé|sheep; cattle; money>>
+* {{tl|is-ndecl|n.já.sg|pagename=fé}}
+
+==== with contraction, ending in -ur ====
+* <<hreiður|nest>>; contraction is the default here; note that defcon (extra definite contraction) is also the default; also <<blómstur|flower>>, <<dægur|day, night (12 hours)>>, <<eitur|poison>>, <<fóður|fodder; lining>>, <<klaustur|monastery>>, <<kögur|fringe>>, <<leður|leather>>, <<myrkur|darkness>>, <<slátur|sheep innards>>, <<slíður|scabbard>> (synonym: <<slíðrar>>, feminine plural), <<tjóður|tether>>, <<veður|weather; storm>>, <<öskur|cry, roar>>
+* {{tl|is-ndecl|n|pagename=hreiður}}
+* <<austur|east>>; contraction and defcon are the default here; also <<daður|flirting; tailwagging>>, <<fiður|feathers; down>>, <<veggfóður|wallpaper>>, <<gaspur|idle talk, twaddle>>, <<hreistur|fish scale>>, <<jórtur|cud; cud chewing>>, <<lamstur|thrashing, beating>>, <<norður|north>>, <<okur|usury, profiteering>>, <<púður|gunpowder; (cosmetic) powder>>, <<rökkur|twilight>>, <<silfur|silver>>, <<suður|south>>, <<sykur|sugar>> (also masculine), <<timbur|wood, lumber>>, <<vestur|west>>, <<vikur|pumice>> (also masculine), <<þvaður|idle talk, twaddle>>
+* {{tl|is-ndecl|n.sg|pagename=austur}}
+* <<mastur|mast>>; contraction and defcon are the default here; u-mutation produces [[möstur]] in the plural
+* {{tl|is-ndecl|n|pagename=mastur}}
+
+==== with contraction, a different ending ====
+* <<höfuð|head>>; contraction is not the default here and defcon doesn't occur
+* {{tl|is-ndecl|n.con|pagename=höfuð}}
+* <<gaman|pleasure, fun>>
+* {{tl|is-ndecl|n.con.-defcon,defcon[uncommon]|pagename=gaman}}
+* <<megin|power, strength>>
+* {{tl|is-ndecl|n.con.defcon|pagename=megin}}
+* <<sumar|summer>>
+* {{tl|is-ndecl|n.con.nompl+accpl:sumur.defnompl+defaccpl:sumrin[when referring to summers in general]:sumurin[when referring to a specific number of summers]|pagename=sumar}}
+* <<regin|gods>>; declension given as <regin, regin, rögnum, ragna> in Thomson but this must be obsolete; not in BÍN
+* {{tl|is-ndecl|n.pl|pagename=regin}}
+
+==== with -j- insertion ====
+* <<kyn|sex, gender; family, kind>>; also <<ben|wound>> (also feminine <<ben>>, also with j-insertino), <<ber|berry>> (<<bláber|blueberry, whortleberry, bilberry>>, <<hindber|raspberry>>, <<jarðarber|strawberry>>, <<kirsuber|cherry>>, <<kirsiber|cherry (proscribed)>>, <<rifsber|red or white currant>>, <<sólber|black currant>>, <<stöngulber|gooseberry>>, <<týtuber|red whortleberry>>, <<vínber|grape>>), <<dý|bog>>, <<egg|egg>>, <<él|snow/hail snower>>, [<<el|snow/hail shower>>, not in BÍN], <<fen|bog>>, <<fley|ship (poetic)>>, <<fræ|seed>>, <<fyl|unborn foal>>, <<gil|gorge, canyon>>, <<gren|lair, earth>> (also neuter <<greni>>), <<grey|dog; poor wretch>>, <<hey|hay>>, <<hregg|storm>>, <<hræ|carcass, carrion>>, <<lyf|drug>>, <<mý|gnat; letter mu>>, <<nef|nose; beak>>, <<nes|ness, headland>>, <<sel|mountain cowhouse>>, <<skegg|beard>>, <<sker|skerry>>, <<ský|cloud>>, <<stef|verse, stanza; main point>>, <<þil|panel, partition>>
+* {{tl|is-ndecl|n.j|pagename=kyn}}
+* <<blý|lead (metal)>>; listed as non-j-inserting in Thomson
+* {{tl|is-ndecl|n.j|pagename=blý}}
+* <<ker|large vessel, tub>> (<<baðker|bathtub>>); listed as non-j-inserting in Thomson
+* {{tl|is-ndecl|n.-j,j|pagename=ker}}
+* <<rif|rib; reef>>
+* {{tl|is-ndecl|n.j[in the meaning "rib", and sometimes in the meaning "reef"],-j[usually in the meaning "reef"]|pagename=rif}}
+* <<gler|glass>>
+* {{tl|is-ndecl|n.j,-j|pagename=gler}}
+
+fresh food midnight memory
+recommendation
+protest
+tradition
+rest, peace
+lodging, accommodations ministry,
+government department quarrel, banter
+lavatory
+truth
+independence
+telegram
+(pair of) scissors necktie margarine
+street
+base, site; place to stand parking place parking workshop chocolate
+
+
+=== lemma ends in -i ===
+
+==== without -j- insertion ====
+* <<kvæði|poem; song>>; -i -i -i -is in singular, -i -i -um -a in plural; also <<anddyri|entrance hall>>, <<afmæli|birthday>>, <<akkeri|anchor>>, <<ankeri|anchor>> (uncommon), <<atriði|point, matter>>, <<beisli|bridle>>, <<belti|belt>>, <<bindi|volume; binding; necktie>>, <<dæmi|example>>, <<efni|substance, material>>, <<frumefni|element>>, <<enni|forehead>>, <<epli|apple>>, <<fangelsi|prison>>, <<fiðrildi|butterfly>>, <<færi|opportunity; fishing line>> (<<hljóðfæri|musical instrument>>, <<veiðarfæri|fishing line>>, <<verkfæri|tool>>), <<gildi|value>>, <<heimili|home>>, <<heiti|name, term>>, <<hænsni|hens, chickens>>, <<kerfi|system>>, <<klæði|cloth; (plural) clothes>> (<<handklæði|towel>>), <<leyni|hiding place>>, <<limgerði|hedge>>, <<lýðveldi|republic>>, <<miðnætti|midnight>>, <<minni|memory>>, <<ráðuneyti|ministry, government department>>, <<rifrildi|quarrel, banter>>, <<salerni|lavatory>>, <<skeyti|telegram>> (<<símskeyti|telegram>>), <<slifsi|necktie>>, <<slipsi|necktie>>, <<stræti|street>>, <<stæði|base, site; place>> (<<bílastæði|parking place>>), <<verkstæði|workshop>>, <<sæti|seat>>, <<teppi|cover, bedcover; carpet, rug>>, <<gólfteppi|carpet, rug>>, <<kolvetni|hydrocarbon>>, <<viðskipti|business, trade (plural except in fixed expressions)>>, <<virði|value>>, <<þjóðerni|nationality>>, 
+gildi h heimili h heiti h hveiti h hænsni hft ildi h
+jafndægri hft kaffi h
+kerfi h
+klæði h
+handklæði h kvæði h
+-leysi h: minnisleysi h reynsluleysi h
+leyni 
+* {{tl|is-ndecl|n|pagename=klæði}}
+* <<bindindi|teetotalism, abstinence>>; also <<eðli|nature>>, <<súrefni|oxygen>>, <<fæði|food, board>>, <<hveiti|wheat, corn>>, <<ildi|oxygen>>, <<kaffi|coffee>>, <<minnisleysi|forgetfulness>>, <<reynsluleysi|inexperience>>, <<leyti|respect, extent>>, <<hreinlæti|cleanliness>>, <<þakklæti|gratitude>>, <<marmelaði|marmalade, jam>>, <<fiskmeti|fish for eating>>, <<grænmeti|vegetables>>, <<hrámeti|raw food>>, <<léttmeti|light food>>, <<ljósmeti|lamp fuel (e.g. oil)>>, <<nýmeti|fresh food>>, <<næði|rest, peace>> (<<húsnæði|lodging, accommodations>>), <<sjálfstæði|independence>>, <<smjörlíki|margarine>>, <<súkkulaði|chocolate>>, <<umhverfi|surroundings, environment>>, <<vetni|hydrogen>>, 
+* {{tl|is-ndecl|n.sg|pagename=bindindi}}
+* <<fræði|branch of knowledge>>, <<jafndægri|equinox>>, <<meðmæli|recommendation>>, <<mótmæli|protest>>, <<munnmæli|tradition>>, <<sannindi|truth>>, <<skæri|(pair of) scissors>>, <<bílastæði|parking>>, <<vísindi|knowledge, learning>>, <<raunvísindi|science>>, <<þægindi|comfort>>
+* {{tl|is-ndecl|n.pl|pagename=fræði}}
+
+==== irregular ====
+* <<læti|behavior, demeanor>>; likewise <<ólæti|noise, racket>>
+* {{tl|is-ndecl|n.pl.unimut|pagename=læti}}
+* <<altari|altar>>; u-mutates to pl ölturu
+* {{tl|is-ndecl|n.uumut|pagename=altari}}
+
+==== in -ki, -gi or with -j- insertion ====
+* NOTE: Per Thomson, -j- insertion occurs in all neuter words ending in -ki and -gi, so it should be automatic.
+* <<öryggi|safety; fuse (electrical)>>; Thomson lists it as without -j- insertion (possibly an error)
+* {{tl|is-ndecl|n|pagename=öryggi}}
+* <<ríki|state, kingdom>>; also, <<engi|meadow>>, <<fylki|county, district>>, <<gengi|exchange rate>>, <<herbergi|room>>, <<líkneski|statue>>, <<lægi|berth, anchorage; lay (of land)>>, <<merki|mark, sign; signal; symptom>> (<<frímerki|postage stamp>>, [<<flugpóstmergi|airmail sticker>>, <<flugpóstsmergi|airmail sticker>>, neither in BÍN]), <<síki|channel, ditch>>, <<stykki|piece>> (<<skrúfstykki|vise>>), <<tæki|appliance, apparatus, tool>> (<<farartæki|vehicle>>, <<fyrirtæki|firm>>, <<viðtæki|radio receiver>>), <<veski|lady's purse; billfold>>, <<vígi|fortress>>, <<virki|work, fortress>> (<<illvirki|crime>>, <<mannvirki|erection, construction>>), <<æki|wagon load>>
+* {{tl|is-ndecl|n|pagename=ríki}}
+* <<áfengi|alcoholic liquor>>; also <<birki|birch>>, <<fiski|fishing;large fish>> (also feminine meaning "fishing", mostly in fixed expressions) (<<heilagfiski|halibut>>), <<fylgi|support, following>>, <<greni|spruce; fir>>, <<silki|silk>>, [<<tylgi|stearin>>, not in BÍN]
+* {{tl|is-ndecl|n.sg|pagename=áfengi}}
+* <<Alþingi|the Icelandic parliament>>; should be singular-only, indefinite-only
+* {{tl|is-ndecl|n|pagename=Alþingi}}
+* <<hádegi|noon, midday>>; Thomson lists it with -j- insertion but BÍN says without
+* {{tl|is-ndecl|n.-j|pagename=hádegi}}
+* <<greni|den, lair (of some animals)>>
+* {{tl|is-ndecl|n.j|pagename=greni}}
+
+=== lemma ends in -a ===
+
+==== common nouns====
+* <<auga|eye>>; forms are -a -a -a -a, -u -u -um -na (where the -u- endings trigger u-mutation); in the definite, -i- always drop out; all this should be the default for neuters in -a; also, <<gagnauga|temple (at side of head)>>, <<glerauga|pair of glasses? single lens in eyeglass?>>, <<bjúga|sausage>> (rarely feminine), <<eista|testicle>>, <<eyra|ear>>, <<firma|firm>>, <<hnoða|ball of yarn (archaic; also feminine)>>, [<<leika|toy, doll (archaic; only given as feminine in BÍN, indicated as more commonly feminine in Thomson>>], <<lunga|lung>>, <<milta|spleen>> (also neuter <<milti>>), <<nýra|kidney>>, <<síma|string, cord (archaic)>>, <<skema|scheme>>, <<tema|theme, subject>>, <<þema|theme, subject>>, <<þrúga|snowshoe>> (more often feminine)
+* {{tl|is-ndecl|n|pagename=auga}}
+* <<hjarta|heart>>; with u-mutation in nom/acc/dat pl
+* {{tl|is-ndecl|n|pagename=hjarta}}
+* <<gleraugu|(eye)glasses, spectacles>>
+* {{tl|is-ndecl|n.pl|pagename=glerauga}}
+
+==== place names====
+* <<Flórída|Florida>>; sg-only, indef-only; also <<Kanada|Canada>>, <<Kína|China>>, [<<Mallorca|Mallorca>>; in BÍN only as <<Majorka>> feminine], etc.
+* {{tl|is-ndecl|n|pagename=Flórída}}
 
 ==Notes==
 * I-mutation:
