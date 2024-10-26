@@ -53,7 +53,6 @@
 * pl-only; {{m|is|tónleikar||conert}}
 * {{tl|is-ndecl|m.pl|pagename=tónleikar}}
 
-
 ; with genitive not (only) in -s, contra Thomson
 * dati/i, gen -s/-ar; {{m|is|kraftur||force, strength}}
 * {{tl|is-ndecl|m,s:ar|pagename=kraftur}}
@@ -211,7 +210,7 @@ Personal names:
 * {{tl|is-ndecl|m.@|pagename=fingur}}
 
 ==== words in -r preceded by vowel other than a/i/u ====
-* {{m|is|mór||moor}}; also {{m|is|dínamór||dynamo}}, {{m|is|glær||sea|q=archaic except in fixed expressions, especially {{m|is|kasta á glæ||to squander|lit=to throw into the sea}}}} (sg-only), {{m|is|hór||pothook}}, {{m|is|jór||steed|q=poetic}}, {{m|is|nór||cooling trough (in a smithy)}}, {{m|is|ýr||yew}} (sg-only), {{m|is|þeyr||thaw, thawing wind}} (sg-only).
+* {{m|is|mór||moor}}; also {{m|is|dínamór||dynamo}}, {{m|is|glær||sea}} {{q|archaic except in fixed expressions, especially {{m|is|kasta á glæ||to squander|lit=to throw into the sea}}}} (sg-only), {{m|is|hór||pothook}}, {{m|is|jór||steed}} {{q|poetic}}, {{m|is|nór||cooling trough (in a smithy)}}, {{m|is|ýr||yew}} (sg-only), {{m|is|þeyr||thaw, thawing wind}} (sg-only).
 * {{tl|is-ndecl|m|pagename=mór}}
 * {{m|is|Freyr|pos=male given name}}; also {{m|is|Gnýr}} ({{m|is|Arnagnýr}}, {{m|is|Þorgnýr}}), {{m|is|Týr}} ({{m|is|Angantýr}}, {{m|is|Hjálmtýr}}, {{m|is|Sigtýr}}, {{m|is|Valtýr}}).
 * {{tl|is-ndecl|m|pagename=Freyr}}
@@ -1202,7 +1201,7 @@ FIXME:
 * {{tl|is-ndecl|n.pl|pagename=regin}}
 
 ==== with -j- insertion ====
-* {{m|is|kyn||sex, gender; family, kind}}; also {{m|is|ben||wound}} (also feminine {{m|is|ben}}, also with j-insertino), {{m|is|ber||berry}} ({{m|is|bláber||blueberry, whortleberry, bilberry}}, {{m|is|hindber||raspberry}}, {{m|is|jarðarber||strawberry}}, {{m|is|kirsuber||cherry}}, {{m|is|kirsiber||cherry (proscribed)}}, {{m|is|rifsber||red or white currant}}, {{m|is|sólber||black currant}}, {{m|is|stöngulber||gooseberry}}, {{m|is|týtuber||red whortleberry}}, {{m|is|vínber||grape}}), {{m|is|dý||bog}}, {{m|is|egg||egg}}, {{m|is|él||snow/hail snower}}, [{{m|is|el||snow/hail shower}}, not in BÍN], {{m|is|fen||bog}}, {{m|is|fley||ship (poetic)}}, {{m|is|fræ||seed}}, {{m|is|fyl||unborn foal}}, {{m|is|gil||gorge, canyon}}, {{m|is|gren||lair, earth}} (also neuter {{m|is|greni}}), {{m|is|grey||dog; poor wretch}}, {{m|is|hey||hay}}, {{m|is|hregg||storm}}, {{m|is|hræ||carcass, carrion}}, {{m|is|lyf||drug}}, {{m|is|mý||gnat; letter mu}}, {{m|is|nef||nose; beak}}, {{m|is|nes||ness, headland}}, {{m|is|sel||mountain cowhouse}}, {{m|is|skegg||beard}}, {{m|is|sker||skerry}}, {{m|is|ský||cloud}}, {{m|is|stef||verse, stanza; main point}}, {{m|is|þil||panel, partition}}
+* {{m|is|kyn||sex, gender; family, kind}}; also {{m|is|ben||wound}} (also feminine {{m|is|ben}}, also with j-insertion), {{m|is|ber||berry}} ({{m|is|bláber||blueberry, whortleberry, bilberry}}, {{m|is|hindber||raspberry}}, {{m|is|jarðarber||strawberry}}, {{m|is|kirsuber||cherry}}, {{m|is|kirsiber||cherry (proscribed)}}, {{m|is|rifsber||red or white currant}}, {{m|is|sólber||black currant}}, {{m|is|stöngulber||gooseberry}}, {{m|is|týtuber||red whortleberry}}, {{m|is|vínber||grape}}), {{m|is|dý||bog}}, {{m|is|egg||egg}}, {{m|is|él||snow/hail snower}}, [{{m|is|el||snow/hail shower}}, not in BÍN], {{m|is|fen||bog}}, {{m|is|fley||ship (poetic)}}, {{m|is|fræ||seed}}, {{m|is|fyl||unborn foal}}, {{m|is|gil||gorge, canyon}}, {{m|is|gren||lair, earth}} (also neuter {{m|is|greni}}), {{m|is|grey||dog; poor wretch}}, {{m|is|hey||hay}}, {{m|is|hregg||storm}}, {{m|is|hræ||carcass, carrion}}, {{m|is|lyf||drug}}, {{m|is|mý||gnat; letter mu}}, {{m|is|nef||nose; beak}}, {{m|is|nes||ness, headland}}, {{m|is|sel||mountain cowhouse}}, {{m|is|skegg||beard}}, {{m|is|sker||skerry}}, {{m|is|ský||cloud}}, {{m|is|stef||verse, stanza; main point}}, {{m|is|þil||panel, partition}}
 * {{tl|is-ndecl|n.j|pagename=kyn}}
 * {{m|is|blý||lead (metal)}}; listed as non-j-inserting in Thomson
 * {{tl|is-ndecl|n.j|pagename=blý}}
@@ -1213,33 +1212,10 @@ FIXME:
 * {{m|is|gler||glass}}
 * {{tl|is-ndecl|n.j,-j|pagename=gler}}
 
-fresh food midnight memory
-recommendation
-protest
-tradition
-rest, peace
-lodging, accommodations ministry,
-government department quarrel, banter
-lavatory
-truth
-independence
-telegram
-(pair of) scissors necktie margarine
-street
-base, site; place to stand parking place parking workshop chocolate
-
-
 === lemma ends in -i ===
 
 ==== without -j- insertion ====
-* {{m|is|kvæði||poem; song}}; -i -i -i -is in singular, -i -i -um -a in plural; also {{m|is|anddyri||entrance hall}}, {{m|is|afmæli||birthday}}, {{m|is|akkeri||anchor}}, {{m|is|ankeri||anchor}} (uncommon), {{m|is|atriði||point, matter}}, {{m|is|beisli||bridle}}, {{m|is|belti||belt}}, {{m|is|bindi||volume; binding; necktie}}, {{m|is|dæmi||example}}, {{m|is|efni||substance, material}}, {{m|is|frumefni||element}}, {{m|is|enni||forehead}}, {{m|is|epli||apple}}, {{m|is|fangelsi||prison}}, {{m|is|fiðrildi||butterfly}}, {{m|is|færi||opportunity; fishing line}} ({{m|is|hljóðfæri||musical instrument}}, {{m|is|veiðarfæri||fishing line}}, {{m|is|verkfæri||tool}}), {{m|is|gildi||value}}, {{m|is|heimili||home}}, {{m|is|heiti||name, term}}, {{m|is|hænsni||hens, chickens}}, {{m|is|kerfi||system}}, {{m|is|klæði||cloth; (plural) clothes}} ({{m|is|handklæði||towel}}), {{m|is|leyni||hiding place}}, {{m|is|limgerði||hedge}}, {{m|is|lýðveldi||republic}}, {{m|is|miðnætti||midnight}}, {{m|is|minni||memory}}, {{m|is|ráðuneyti||ministry, government department}}, {{m|is|rifrildi||quarrel, banter}}, {{m|is|salerni||lavatory}}, {{m|is|skeyti||telegram}} ({{m|is|símskeyti||telegram}}), {{m|is|slifsi||necktie}}, {{m|is|slipsi||necktie}}, {{m|is|stræti||street}}, {{m|is|stæði||base, site; place}} ({{m|is|bílastæði||parking place}}), {{m|is|verkstæði||workshop}}, {{m|is|sæti||seat}}, {{m|is|teppi||cover, bedcover; carpet, rug}}, {{m|is|gólfteppi||carpet, rug}}, {{m|is|kolvetni||hydrocarbon}}, {{m|is|viðskipti||business, trade (plural except in fixed expressions)}}, {{m|is|virði||value}}, {{m|is|þjóðerni||nationality}}, 
-gildi h heimili h heiti h hveiti h hænsni hft ildi h
-jafndægri hft kaffi h
-kerfi h
-klæði h
-handklæði h kvæði h
--leysi h: minnisleysi h reynsluleysi h
-leyni 
+* {{m|is|kvæði||poem; song}}; -i -i -i -is in singular, -i -i -um -a in plural; also {{m|is|anddyri||entrance hall}}, {{m|is|afmæli||birthday}}, {{m|is|akkeri||anchor}}, {{m|is|ankeri||anchor}} (uncommon), {{m|is|atriði||point, matter}}, {{m|is|beisli||bridle}}, {{m|is|belti||belt}}, {{m|is|bindi||volume; binding; necktie}}, {{m|is|dæmi||example}}, {{m|is|efni||substance, material}}, {{m|is|frumefni||element}}, {{m|is|enni||forehead}}, {{m|is|epli||apple}}, {{m|is|fangelsi||prison}}, {{m|is|fiðrildi||butterfly}}, {{m|is|færi||opportunity; fishing line}} ({{m|is|hljóðfæri||musical instrument}}, {{m|is|veiðarfæri||fishing line}}, {{m|is|verkfæri||tool}}), {{m|is|gildi||value}}, {{m|is|heimili||home}}, {{m|is|heiti||name, term}}, {{m|is|hænsni||hens, chickens}}, {{m|is|kerfi||system}}, {{m|is|klæði||cloth; (plural) clothes}} ({{m|is|handklæði||towel}}), {{m|is|leyni||hiding place}}, {{m|is|limgerði||hedge}}, {{m|is|lýðveldi||republic}}, {{m|is|miðnætti||midnight}}, {{m|is|minni||memory}}, {{m|is|ráðuneyti||ministry, government department}}, {{m|is|rifrildi||quarrel, banter}}, {{m|is|salerni||lavatory}}, {{m|is|skeyti||telegram}} ({{m|is|símskeyti||telegram}}), {{m|is|slifsi||necktie}}, {{m|is|slipsi||necktie}}, {{m|is|stræti||street}}, {{m|is|stæði||base, site; place}} ({{m|is|bílastæði||parking place}}), {{m|is|verkstæði||workshop}}, {{m|is|sæti||seat}}, {{m|is|teppi||cover, bedcover; carpet, rug}}, {{m|is|gólfteppi||carpet, rug}}, {{m|is|kolvetni||hydrocarbon}}, {{m|is|viðskipti||business, trade (plural except in fixed expressions)}}, {{m|is|virði||value}}, {{m|is|þjóðerni||nationality}} 
 * {{tl|is-ndecl|n|pagename=klæði}}
 * {{m|is|bindindi||teetotalism, abstinence}}; also {{m|is|eðli||nature}}, {{m|is|súrefni||oxygen}}, {{m|is|fæði||food, board}}, {{m|is|hveiti||wheat, corn}}, {{m|is|ildi||oxygen}}, {{m|is|kaffi||coffee}}, {{m|is|minnisleysi||forgetfulness}}, {{m|is|reynsluleysi||inexperience}}, {{m|is|leyti||respect, extent}}, {{m|is|hreinlæti||cleanliness}}, {{m|is|þakklæti||gratitude}}, {{m|is|marmelaði||marmalade, jam}}, {{m|is|fiskmeti||fish for eating}}, {{m|is|grænmeti||vegetables}}, {{m|is|hrámeti||raw food}}, {{m|is|léttmeti||light food}}, {{m|is|ljósmeti||lamp fuel (e.g. oil)}}, {{m|is|nýmeti||fresh food}}, {{m|is|næði||rest, peace}} ({{m|is|húsnæði||lodging, accommodations}}), {{m|is|sjálfstæði||independence}}, {{m|is|smjörlíki||margarine}}, {{m|is|súkkulaði||chocolate}}, {{m|is|umhverfi||surroundings, environment}}, {{m|is|vetni||hydrogen}}, 
 * {{tl|is-ndecl|n.sg|pagename=bindindi}}
@@ -1270,12 +1246,12 @@ leyni
 === lemma ends in -a ===
 
 ==== common nouns====
-* {{m|is|auga||eye}}; forms are -a -a -a -a, -u -u -um -na (where the -u- endings trigger u-mutation); in the definite, -i- always drop out; all this should be the default for neuters in -a; also, {{m|is|gagnauga||temple (at side of head)}}, {{m|is|glerauga||pair of glasses? single lens in eyeglass?}}, {{m|is|bjúga||sausage}} (rarely feminine), {{m|is|eista||testicle}}, {{m|is|eyra||ear}}, {{m|is|firma||firm}}, {{m|is|hnoða||ball of yarn (archaic; also feminine)}}, [{{m|is|leika||toy, doll (archaic; only given as feminine in BÍN, indicated as more commonly feminine in Thomson}}], {{m|is|lunga||lung}}, {{m|is|milta||spleen}} (also neuter {{m|is|milti}}), {{m|is|nýra||kidney}}, {{m|is|síma||string, cord (archaic)}}, {{m|is|skema||scheme}}, {{m|is|tema||theme, subject}}, {{m|is|þema||theme, subject}}, {{m|is|þrúga||snowshoe}} (more often feminine)
+* {{m|is|auga||eye}}; forms are -a -a -a -a, -u -u -um -na (where the -u- endings trigger u-mutation); in the definite, -i- always drop out; all this should be the default for neuters in -a; also, {{m|is|gagnauga||temple (at side of head)}}, {{m|is|glerauga||glass eye}}, {{m|is|bjúga||sausage}} (rarely feminine), {{m|is|eista||testicle}}, {{m|is|eyra||ear}}, {{m|is|firma||firm}}, {{m|is|hnoða||ball of yarn (archaic; also feminine)}}, [{{m|is|leika||toy, doll (archaic; only given as feminine in BÍN, indicated as more commonly feminine in Thomson}}], {{m|is|lunga||lung}}, {{m|is|milta||spleen}} (also neuter {{m|is|milti}}), {{m|is|nýra||kidney}}, {{m|is|síma||string, cord (archaic)}}, {{m|is|skema||scheme}}, {{m|is|tema||theme, subject}}, {{m|is|þema||theme, subject}}, {{m|is|þrúga||snowshoe}} (more often feminine)
 * {{tl|is-ndecl|n|pagename=auga}}
 * {{m|is|hjarta||heart}}; with u-mutation in nom/acc/dat pl
 * {{tl|is-ndecl|n|pagename=hjarta}}
 * {{m|is|gleraugu||(eye)glasses, spectacles}}
-* {{tl|is-ndecl|n.pl|pagename=glerauga}}
+* {{tl|is-ndecl|n.pl|pagename=gleraugu}}
 
 ==== place names====
 * {{m|is|Flórída||Florida}}; sg-only, indef-only; also {{m|is|Kanada||Canada}}, {{m|is|Kína||China}}, [{{m|is|Mallorca||Mallorca}}; in BÍN only as {{m|is|Majorka}} feminine], etc.
