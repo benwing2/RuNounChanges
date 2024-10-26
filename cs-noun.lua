@@ -911,7 +911,7 @@ decls["hard-f"] = function(base, stems)
 	-- [[skica]] "sketch", [[gejša]] "geisha", [[rikša]] "rickshaw (vehicle)"; [[arakača]], [[čača]], [[čiča]] (drink),
 	-- [[dača]] "dacha", [[gutaperča]] "guttapercha", [[viskača]]; [[babča]], [[číča]], [[káča]], [[mamča]], [[úča]].
 	-- Also appears to apply to ď (e.g. [[Naďa]]) and ť, as well as certain words with stems in -ň and -j (e.g. [[doňa]],
-	-- and personal names such as [[Táña]] and [[Darja]]), which normally have a mixed declension.
+	-- and personal names such as [[Táňa]] and [[Darja]]), which normally have a mixed declension.
 	local soft_cons = rfind(base.vowel_stem, "[cčšžďťjň]$") and not base.c_as_k
 	local dat_s = soft_cons and {"ě", "i"} or "ě"
 	local loc_s = dat_s
@@ -3199,9 +3199,9 @@ local function make_table(alternant_multiword_spec)
 	local function template_prelude(min_width)
 		return rsub([=[
 <div>
-<div class="NavFrame" style="display: inline-block; min-width: MINWIDTHem">
+<div class="NavFrame" style="max-width:MINWIDTHem">
 <div class="NavHead" style="background:#eff7ff">{title}{annotation}</div>
-<div class="NavContent">
+<div class="NavContent" style="overflow:auto">
 {\op}| style="background:#F9F9F9;text-align:center;min-width:MINWIDTHem" class="inflection-table"
 |-
 ]=], "MINWIDTH", min_width)
