@@ -111,88 +111,92 @@
 * {{tl|is-ndecl|m.pers.imut.dati:-|pagename=Dagur}}
 * '''with -v- insertion in plural''': {{m|is|söngur||song}} (including before -um)
 * {{tl|is-ndecl|m.v.dat-/-|pagename=söngur}}
+* {{m|is|Jesús||Jesus}}
+* {{tl|is-ndecl|m.pers.stem:Jesú.acc-:m[archaic or Biblical].dat+gen-|pagename=Jesús}}
 
 ==== personal names ====
 FIXME: Fill in from p. 48.
 
 ==== words in -ur, gen in -ar and pl in -ar ====
-* {{m|is|grautur||porridge}}; dat sg in -:-i/-num per BÍN
-* {{tl|is-ndecl|m,ar.sg.dat-:i/-|pagename=grautur}}
-* {{m|is|auður||wealth}}; dat sg in -i/-num per BÍN; gen in -s/-ar per Thomson but gen in -s only per BÍN
-* {{tl|is-ndecl|m.dati/-|pagename=auður}}
-* {{m|is|bógur||bow (of a ship)}}; dat sg in -:-i/-num:-inum per BÍN; gen in -s/-ar per Thomson but gen in -s only per BÍN
+[ALL IN THIS SECTION CHECKED WITH BÍN]
+* dat-:i/-; {{m|is|grautur||porridge}}
+* {{tl|is-ndecl|m,ar.dat-:i/-|pagename=grautur}}
+* dati/-, sg-only; {{m|is|auður||wealth}}; gen in -s/-ar per Thomson but gen in -s only per BÍN
+* {{tl|is-ndecl|m.sg.dati/-|pagename=auður}}
+* dat-:i/-:i; {{m|is|bógur||bow (of a ship)}}; gen in -s/-ar per Thomson but gen in -s only per BÍN
 * {{tl|is-ndecl|m.dat-:i/-:i|pagename=bógur}}
-* {{m|is|friður||peace}}; dat sg in -i/-num:-inum per BÍN; gen in -ar per Thomson but gen in -ar/-s per BÍN
-* {{tl|is-ndecl|m,ar:s.sg.dati/-:i|pagename=friður}}
-* {{m|is|hrollur||shudder}}; dat sg in -i/-inum per BÍN; gen in -s/-ar per Thomson but gen in -s only per BÍN
-* {{tl|is-ndecl|m.sg.dati/i|pagename=hrollur}}
-* {{m|is|höfundur||author}}; dat sg in -i/-inum per BÍN; gen in -ar per Thomson and BÍN
-* {{tl|is-ndecl|m,ar.dati/i|pagename=höfundur}}
-* {{m|is|lávarður||lord (English nobleman)}}; dat sg in -i/-inum per BÍN; gen in -s per Thomson but -s/-ar per BÍN; dat pl lávörðum
-* {{tl|is-ndecl|m,s:ar.dati/i|pagename=lávarður}}
-* {{m|is|niður||murmur (of water)}}; dat sg in -:-i/-num:-inum per BÍN; gen in -ar per Thomson and BÍN
+* dati/-:i, sg-only; {{m|is|friður||peace}}; gen in -ar per Thomson but gen in -ar/-s per BÍN, but -arins only in def
+* {{tl|is-ndecl|m,ar:s/ar.sg.dati/-:i|pagename=friður}}
+* dati/i, sg-only; {{m|is|hrollur||shudder}}; gen in -s/-ar per Thomson but gen in -s only per BÍN
+* {{tl|is-ndecl|m.sg|pagename=hrollur}}
+* dati/i; {{m|is|höfundur||author}}; gen in -ar per Thomson and BÍN
+* {{tl|is-ndecl|m,ar|pagename=höfundur}}
+* dati/i; {{m|is|lávarður||lord (English nobleman)}}; gen in -s per Thomson but -s/-ar per BÍN; dat pl lávörðum
+* {{tl|is-ndecl|m,s:ar|pagename=lávarður}}
+* dat-/-; {{m|is|matur||food}}; gen in -ar per Thomson and BÍN
+* {{tl|is-ndecl|m,ar.dat-/-|pagename=matur}}
+* dat-:i/-:i; {{m|is|niður||murmur (of water)}}; gen in -ar per Thomson and BÍN
 * {{tl|is-ndecl|m,ar.sg.dat-:i/-:i|pagename=niður}}
-* '''with -j- insertion:''' {{m|is|niður||descendant}}; dat sg in -:-i/-inum per BÍN
+* dat-:i/i, '''with -j- insertion:''' {{m|is|niður||descendant}}
 * {{tl|is-ndecl|m,jar.j.dat-:i/i|pagename=niður}}
-* {{m|is|óður||song, poetry}}; gen in -ar/-s per Thomson but -s only per BÍN
-* {{tl|is-ndecl|m.dati:-/-:i|pagename=óður}}
+* dati:-/-:i; {{m|is|óður||song, poetry}}; gen in -ar/-s per Thomson but -s only per BÍN
+* {{tl|is-ndecl|m.sg.dati:-/-:i|pagename=óður}}
 * {{m|is|-skapur||-ship}}, e.g. {{m|is|vinskapur||friendship}}; dat in -/-num, gen in -ar, sg only unless overridden; handled automatically; some examples: {{m|is|asnaskapur||foolishness}}, {{m|is|barnaskapur||childishness, naivete}}, {{m|is|búskapur||farming; housekeeping}}, {{m|is|drykkjuskapur||drunkenness, drinking}}, {{m|is|félagsskapur||friendship; society}}, {{m|is|heyskapur||haymaking}}, {{m|is|hjúskapur||marriage}}, {{m|is|hrottaskapur||brutality}}, {{m|is|kveðskapur||poetry}}, {{m|is|saumaskapur||sewing}}, {{m|is|sóðaskapur||impurity, uncleanliness}}
 * {{tl|is-ndecl|m|pagename=vinskapur}}
-* {{m|is|skógur||wood, forest}}; dat in -i/-inum per BÍN, gen in -ar per Thomson and BÍN
+* dati/i; {{m|is|skógur||wood, forest}}; gen in -ar per Thomson and BÍN
 * {{tl|is-ndecl|m,ar.dati/i|pagename=skógur}}
-* {{m|is|skriður||gliding, speed}}; dat in -i:-/-num per BÍN, gen in -ar/-s per Thomson but -s only per BÍN
+* dati:-/-; {{m|is|skriður||gliding, speed}}; gen in -ar/-s per Thomson but -s only per BÍN
 * {{tl|is-ndecl|m.sg.dati:-/-|pagename=skriður}}
-* {{m|is|snúður||turning; roll, bun}}; dat in -/-num per Thomson but -:-i/-num:-inum per BÍN, gen in -s/-ar per Thomson and BÍN
+* dat-:i/-:i; {{m|is|snúður||turning; roll, bun}}; gen in -s/-ar per Thomson and BÍN
 * {{tl|is-ndecl|m,s:ar.dat-:i/-:i|pagename=snúður}}
-* {{m|is|sultur||hunger}}
-* {{tl|is-ndecl|m,ar:s.sg.dati/i|pagename=sultur}}
-* {{m|is|veigur||strength, solidity}}
+* dati/i, sg-only; {{m|is|sultur||hunger}}
+* {{tl|is-ndecl|m,ar:s.sg|pagename=sultur}}
+* dat-/-; {{m|is|veigur||strength, solidity}}
 * {{tl|is-ndecl|m,s:ar.sg.dat-/-|pagename=veigur}}
-* {{m|is|vindur||wind}}
-* {{tl|is-ndecl|m,s:ar[rare].dati/i|pagename=vindur}}
-* {{m|is|vísundur||bison, buffalo}}
-* {{tl|is-ndecl|m,s:ar.dati/i|pagename=vísundur}}
-* {{m|is|þróttur||strength, vigor}}
-* {{tl|is-ndecl|m,ar.sg.dati/i|pagename=þróttur}}
-* {{m|is|þröskuldur||threshold}}
-* {{tl|is-ndecl|m,s:ar,ar:ir.dati/i|pagename=þröskuldur}}
+* dati/i; {{m|is|vindur||wind}}
+* {{tl|is-ndecl|m,s:ar[rare]|pagename=vindur}}
+* dati/i; {{m|is|vísundur||bison, buffalo}}
+* {{tl|is-ndecl|m,s:ar|pagename=vísundur}}
+* dati/i; {{m|is|þróttur||strength, vigor}}
+* {{tl|is-ndecl|m,ar.sg|pagename=þróttur}}
+* dati/i; {{m|is|þröskuldur||threshold}}
+* {{tl|is-ndecl|m,s:ar,ar:ir|pagename=þröskuldur}}
 
 ==== proper names with genitive in -ar ====
-* {{m|is|Merkúríus||Mercury}}; gen -ar per Thomson but -s per BÍN (NOTE: I think the latter is a istake); dat - per Thomson but -i per BÍN
-* {{tl|is-ndecl|m,ar.dati|pagename=Merkúríus}}
+[ALL IN THIS SECTION CHECKED WITH BÍN]
+; proper names default to dative in -i
+* {{m|is|Merkúríus||Mercury}}; gen -ar per Thomson but -s per BÍN (NOTE: I think the latter is a mistake); dat - per Thomson but -i per BÍN
+* {{tl|is-ndecl|m,ar|pagename=Merkúríus}}
 * {{m|is|Neptúnus||Neptune (god, planet, male given name)}}; gen -ar per Thomson and BÍN; dat - per Thomson but -i per BÍN
-* {{tl|is-ndecl|m,ar.dati|pagename=Neptúnus}}
+* {{tl|is-ndecl|m,ar|pagename=Neptúnus}}
 * {{m|is|Satúrnus||Saturn}}; gen -ar per Thomson and BÍN; dat - per Thomson but -i per BÍN
-* {{tl|is-ndecl|m,ar.dati|pagename=Merkúríus}}
-* {{m|is|Skánn||Scania, Skåne}}; gen -ar per Thomson but -s per BÍN; dat -i per Thomson and BÍN
-* {{tl|is-ndecl|m.dati|pagename=Skánn}}
+* {{tl|is-ndecl|m,ar|pagename=Merkúríus}}
+* {{m|is|Skánn||Scania, Skåne}}; gen -ar per Thomson but -s per BÍN; dat -i per Thomson and BÍN; stem is Skán-
+* {{tl|is-ndecl|m|pagename=Skánn}}
 * {{m|is|Spánn||Spain}}; gen -ar per Thomson and BÍN; dat -i per Thomson and BÍN
-* {{tl|is-ndecl|m,ar.dati|pagename=Spánn}}
-* {{m|is|Úranus||Uranus}}; gen -ar per Thomson and BÍN; dat - per Thomson but -i per BÍN
-* {{tl|is-ndecl|m,ar.dati|pagename=Úranus}}
+* {{tl|is-ndecl|m,ar|pagename=Spánn}}
+* {{m|is|Úranus||Uranus (god, planet, male given name)}}; gen -ar per Thomson and BÍN; dat - per Thomson but -i per BÍN
+* {{tl|is-ndecl|m,ar|pagename=Úranus}}
 
 Personal names:
 * {{m|is|Jóhannes||John}}; also {{m|is|Elías}}, {{m|is|Filippus}}, {{m|is|Hákon}}, {{m|is|Hannes}}, {{m|is|Jason}}, {{m|is|Jónas}}, {{m|is|Júlíus}}, {{m|is|Lárus}}, {{m|is|Magnús}}, {{m|is|Markús}}, {{m|is|Matthías}}, {{m|is|Nikulás}}, {{m|is|Sigfús}}, {{m|is|Símon}}, {{m|is|Tómas}}, {{m|is|Vigfús}}
-* {{tl|is-ndecl|m,ar.dati|pagename=Jóhannes}}
+* {{tl|is-ndecl|m,ar.pers|pagename=Jóhannes}}
 * {{m|is|Hálfdan}}; also {{m|is|Hálfdán}}
-* {{tl|is-ndecl|m,ar:s.dati|pagename=Jóhannes}}
-* {{m|is|Salómon}}
+* {{tl|is-ndecl|m,ar:s.pers|pagename=Hálfdan}}
+* dat-:i per BÍN; {{m|is|Salómon}}
 * {{tl|is-ndecl|m.dat-:i|pagename=Salómon}}
-* {{m|is|Bárður}}; also {{m|is|Eyvindur}}, {{m|is|Geirröður}}, {{m|is|Guðröður}}, {{m|is|Hallfreður}}, {{m|is|Jörundur}}, {{m|is|Völundur}}, {{m|is|Þórður}}, {{m|is|Þrándur}}, {{m|is|Önundur}}, names in -mundur ({{m|is|Ásmundur}}, {{m|is|Geirmundur}}, {{m|is|Guðmundur}}, {{m|is|Ingimundur}}, {{m|is|Kristmundur}}, {{m|is|Sigmundur}}, {{m|is|Sigurmundur}}, {{m|is|Sæmundur}}, {{m|is|Vilmundur}}, {{m|is|Ögmundur}})
-* {{tl|is-ndecl|m,ar.dati|pagename=Bárður}}
+* {{m|is|Bárður}}; also {{m|is|Eyvindur}}, {{m|is|Geirröður}}, {{m|is|Guðröður}}, {{m|is|Hallfreður}}, {{m|is|Jörundur}}, {{m|is|Völundur}}, {{m|is|Þórður}}, {{m|is|Þrándur}}, {{m|is|Önundur}}, names in -mundur ({{m|is|Ásmundur}}, {{m|is|Geirmundur}}, {{m|is|Guðmundur}} [in patronymics, Guðmunds- is dominant but Guðmundar- sometimes seen], {{m|is|Ingimundur}}, {{m|is|Kristmundur}}, {{m|is|Sigmundur}}, {{m|is|Sigurmundur}}, {{m|is|Sæmundur}}, {{m|is|Vilmundur}} [in patronymics, Vilmundar- is dominant but Vilmunds- rarely seen], {{m|is|Ögmundur}} [in patronymics, Ögmunds- is dominant but Ögmundar- sometimes seen])
+* {{tl|is-ndecl|m,ar|pagename=Bárður}}
 * {{m|is|Freymóður}}; also {{m|is|Hermóður}}, {{m|is|Hreggviður}}, {{m|is|Þormóður}}, {{m|is|Guðvarður}}
-* {{tl|is-ndecl|m,s:ar.dati|pagename=Freymóður}}
-* {{m|is|Höskuldur}}; also {{m|is|Sigurður}}, {{m|is|Einvarður}}, {{m|is|Hallvarður}}, {{m|is|Hávarður}}, {{m|is|Þorvarður}}
-* {{tl|is-ndecl|m,ar:s.dati|pagename=Höskuldur}}
+* {{tl|is-ndecl|m,s:ar|pagename=Freymóður}}
+* {{m|is|Höskuldur}}; also {{m|is|Sigurður}} [gen Sigurðs sometimes proscribed but dominates in men's patronymics, while Sigurðar- is the only form seen in women's patronymics], {{m|is|Einvarður}}, {{m|is|Hallvarður}}, {{m|is|Hávarður}}, {{m|is|Þorvarður}}
+* {{tl|is-ndecl|m,ar:s|pagename=Höskuldur}}
 * {{m|is|Auðunn}}
-* {{tl|is-ndecl|m,s:ar.-con.dati|pagename=Auðunn}}
+* {{tl|is-ndecl|m,s:ar.-con|pagename=Auðunn}}
 * {{m|is|Gissur}}; also {{m|is|Össur}}
-* {{tl|is-ndecl|m,ar.#.dati|pagename=Gissur}}
+* {{tl|is-ndecl|m,ar.#|pagename=Gissur}}
 
 ==== words with -ur in masculine singular that belongs to the stem ====
-* {{m|is|maur||ant}}; gen sg maurs; dat sg in -/-num per BÍN; NOTE: -ur is not an inflectional ending preceded by a, as in {{m|is|aur||loam, mud}}, {{m|is|gaur||ruffian}}, {{m|is|paur||devil; enmity}}, {{m|is|saur||dirt; excrement}}, {{m|is|staur||post}}, {{m|is|ljósastaur||lamp post}}
-* {{tl|is-ndecl|m|pagename=maur}}
-
 * {{m|is|akur||field}}; stem is akur- not ak-; umlauts to ökrum in dat pl. All (?) masculine and neuter nouns with stem in -ur contract, so this is the default. Also: {{m|is|alabastur||alabaster}}, {{m|is|aldur||age, epoch}} ({{m|is|faraldur||epidemic}}, {{m|is|heimsfaraldur||pandemic}}), {{m|is|auðjöfur||tycoon}}, {{m|is|austur||ladling; waste}}, {{m|is|árangur||success; outcome}}, {{m|is|áróður||propaganda; sedition}}, {{m|is|bakstur||baking, pastry}}, {{m|is|Baldur||Baldur (Norse god)}} ({{m|is|skuggabaldur||tomcat-vixen offspring; evil spirit; evildoer}}), {{m|is|berangur||outdoors (?)}}, {{m|is|bifur||beaver; feeling}}, {{m|is|blástur||breeze; act of blowing}} ({{m|is|aðblástur||preaspirion}}, {{m|is|uppblástur||wind erosion}}), {{m|is|bólstur||pillow}}, {{m|is|erindrekstur||diplomatic mission}}, {{m|is|farangur||luggage}}, {{m|is|fjötur||fetter, shackle}}, {{m|is|framúrakstur||overtaking}}, {{m|is|galdur||magic; (magic) trick; charm, spell}}, {{m|is|hafur||buck (male goat)}}, {{m|is|hamstur||hamster}}, {{m|is|heiður||honor}}, {{m|is|jöfur||ruler, monarch}}, {{m|is|kappakstur||speeding; racing}}, {{m|is|kögur||fringe}}, {{m|is|leiðangur||expedition, journey}}, {{m|is|lúður||trumpet, horn}} ({{m|is|þokulúður||foghorn}}), {{m|is|mjaldur||beluga whale}}, {{m|is|mokstur||shoveling}}, {{m|is|muldur||murmuring}}, {{m|is|naður||adder, viper}}, {{m|is|nykur||nixie (type of water demon)}}, {{m|is|otur||otter}} ({{m|is|sæotur||sea otter}}), {{m|is|plástur||plaster, bandage}}, {{m|is|reður||penis}}, {{m|is|sigur||victory}}, {{m|is|sykur||sugar}} ({{m|is|flórsykur||powdered sugar}}, {{m|is|maltsykur||maltose}}, {{m|is|púðursykur||brown sugar}}, {{m|is|sleikjubrjóstsykur||lollipop, sucker}} {{m|is|mjólkursykur||lactose}}, {{m|is|tígur||tiger}} ({{m|is|blettatígur||cheetah}}), {{m|is|tuldur||murmuring}}, {{m|is|tötur||rag, tatter}}, {{m|is|vikur||pumice}}, {{m|is|ölur||alder}} ({{m|is|gráölur||grey alder}}); given names, e.g. {{m|is|Baldur|pos=male given name}}, {{m|is|Pétur||Peter}}, {{m|is|Sigur|pos=male given name}}
 * {{tl|is-ndecl|m.#|pagename=akur}}
 
@@ -209,45 +213,283 @@ Personal names:
 * {{m|is|fingur||finger}}: because certain common irregular nouns have several compounds that behave the same way, they can be handled automatically using '@', which means "built-in". It looks for recognized suffixes and uses an internal mapping to the appropriate declension specs. Examples of compounds of {{m|is|fingur}}: {{m|is|baugfingur||ring finger}}; {{m|is|litlifingur||little finger, pinky}}; {{m|is|skollafingur||fir clubmoss}}; {{m|is|vísifingur||index finger}}; {{m|is|þumalfingur||thumb}}.
 * {{tl|is-ndecl|m.@|pagename=fingur}}
 
-==== words in -r preceded by vowel other than a/i/u ====
-* {{m|is|mór||moor}}; also {{m|is|dínamór||dynamo}}, {{m|is|glær||sea}} {{q|archaic except in fixed expressions, especially {{m|is|kasta á glæ||to squander|lit=to throw into the sea}}}} (sg-only), {{m|is|hór||pothook}}, {{m|is|jór||steed}} {{q|poetic}}, {{m|is|nór||cooling trough (in a smithy)}}, {{m|is|ýr||yew}} (sg-only), {{m|is|þeyr||thaw, thawing wind}} (sg-only).
-* {{tl|is-ndecl|m|pagename=mór}}
-* {{m|is|Freyr|pos=male given name}}; also {{m|is|Gnýr}} ({{m|is|Arnagnýr}}, {{m|is|Þorgnýr}}), {{m|is|Týr}} ({{m|is|Angantýr}}, {{m|is|Hjálmtýr}}, {{m|is|Sigtýr}}, {{m|is|Valtýr}}).
-* {{tl|is-ndecl|m|pagename=Freyr}}
-* {{m|is|Már|pos=male given name}}; here, + stands for the default (in this case Má)
-* {{tl|is-ndecl|m.dat:+:Mávi[archaic]|pagename=Már}}
+=== words in -ár ===
+
+==== common nouns====
+[ALL IN THIS SECTION CHECKED WITH BÍN]
+* NOTE: in most of these, the stem ends in -á, which is the default.
+* NOTE: specifying 'ir' as nom pl autoselects accusative pl in -i.
+* NOTE: default dative is -/-.
+* {{m|is|nár||corpse}}; also {{m|is|sár||tub (archaic)}}, {{m|is|hár||thole, oarlock (archaic)}} (given below as well), <<sænár|sea corpse???>>; dat pl in -um
+* {{tl|is-ndecl|m,,ir|pagename=nár}}
+* {{m|is|hár||thole, oarlock (archaic)}}
+* {{tl|is-ndecl|m,,ir|pagename=hár}}
+* {{m|is|hár||spiny dogfish (archaic)}}
+* {{tl|is-ndecl|m.v|pagename=hár}}
+* {{m|is|kljár||weaving stone (archaic)}}; BÍN says it's singular-only, Thomson gives pl in -ir.
+* {{tl|is-ndecl|m.sg|pagename=kljár}} or {{tl|is-ndecl|m,,ir|pagename=kljár}}
+* {{m|is|ljár||scythe}}; Thomson says def gen pl ljánna is more common than ljáanna, while BÍN lists only ljáanna.
+* {{tl|is-ndecl|m,,ir.datplum:m[archaic]/um|pagename=ljár}}
+* {{m|is|skjár||video screen, monitor, display; animal membrane window (historical)}}
+* {{tl|is-ndecl|m,,ir.datplum:m[more common but sometimes proscribed]/um|pagename=skjár}}
+* '''with -v- insertion in plural and obsolete singular dative (mentioned in Thomson, not in BÍN)''': {{m|is|már||seagull}}
+* {{tl|is-ndecl|m.v.dat-:vi[obsolete]|pagename=már}}
+* '''with -v- insertion in genitive singular''': {{m|is|sjár||sea}} (more common: <<sjór>>); also <<snjár|snow>> (more common: <<snjór>>, <<snær>>)
+* {{tl|is-ndecl|m,var.v.sg|pagename=sjár}}
+* stem ends in r: {{m|is|ár||?}} (archaic)
+* {{tl|is-ndecl|m.#.dati/i|pagename=ár}}
+* stem ends in r, dat-/-: {{m|is|lár||wooden box for wool}}; also <<klár|inferior horse, nag>>, <<pílár|slat, fence post; spoke>> (dated; usually <<pílári>>), <<kentár|centaur>>
+* {{tl|is-ndecl|m.#|pagename=lár}}
+
+==== proper nouns====
+[ALL IN THIS SECTION CHECKED WITH BÍN]
+* NOTE: For simplicity, all proper names except those whose stem ends in a vowel have dati as the default.
+* stem is 'Má': {{m|is|Már|pos=male given name}}; obsolete singular dative Mávi (mentioned in Thomson, not in BÍN)
+* {{tl|is-ndecl|m.dat-:vi[obsolete]|pagename=Már}}
+* stem is 'Frá': {{m|is|Frár|pos=male given name}}
+* {{tl|is-ndecl|m|pagename=Frár}}
+* stem ends in r: {{m|is|Kár|pos=male given name}}; also <<Lár|pos=male given name>>, <<Hár|pos=proper noun of some sort>>
+* {{tl|is-ndecl|m.#.dat-|pagename=Kár}}
+
+=== words in -ór ===
+[ALL IN THIS SECTION CHECKED WITH BÍN]
+* NOTE: stem includes -r by default.
+* NOTE: default dative of words whose stem ends in vowel or -r after a vowel is -/-.
+* NOTE: For simplicity, all proper names except those whose stem ends in a vowel have dati as the default.
+* <<bjór|beer; beaver>>; also <<flór|dung channel in cow barn>>, <<hór|adulterer>> (archaic), <<kondór|condor>>, <<kontór|office>>, <<kór|choir>>, <<dór|?>>, <<þjór|bull>> (archaic), <<stjór|?>>, <<tenór|tenor>>, <<ökuþór|professional sports driver>>
+* {{tl|is-ndecl|m|pagename=bjór}}
+* <<klór|chlorine>>
+* {{tl|is-ndecl|m.sg|pagename=klór}}
+* <<hór|pothook>>; ## means "stem is from lemma without final -r"; also <<mór|moor>>, <<dínamór|dynamo>>, <<jór|steed (poetic)>>, <<nór|cooling trough (in a smithy)>>
+* {{tl|is-ndecl|m.##|pagename=hór}}
+* <<þrór|?>> (obsolete)
+* {{tl|is-ndecl|m.##.sg|pagename=þrór}}
+* {{m|is|skjór||magpie}}; in the following, there are two possible paradigms, one based on a root skjór- with pl in -ar and one based off of a root in skjó with a pl in -ir; the latter has two possible dat pl's, a regular one and a more common contracted one, and corresponding definite forms; we omit the definite forms from the override as they are formed normally from the indef forms (-m -> -num)
+* {{tl|is-ndecl|((<m>,<m,,ir.##.datplm:um>))|pagename=skjór}}
+* {{m|is|sjór||sea}}; in the following, ## indicates that the stem subtracts -r from the lemma; the colon at the beginning of the genitive ending (after the first comma) means that the overrides are full forms; and the ~ stands for the stem.
+* {{tl|is-ndecl|m,:sjávar:~ar:~s,ir.##|pagename=sjór}}
+* {{m|is|snjór||snow}}; in the following, ## indicates that the stem subtracts -r from the lemma.
+* {{tl|is-ndecl|m,s:var[dated]:ar,ar:var[dated].##|pagename=snjór}}
+* stem is 'Dór': {{m|is|Dór|pos=male given name}}; also <<Tór>>, <<Þór>>
+* {{tl|is-ndecl|m.dat-|pagename=Dór}}
+* {{m|is|skór||shoe}}; compounds: we currently have three in Wiktionary: {{m|is|fjallgönguskór||climbing boot}}, {{m|is|ilskór||sandal}} and {{m|is|strigaskór||sneaker, trainer}}. But BÍN lists over 100. NOTE: acc pl is formed from nom pl by subtracting the -r except in the case of -ur.
+* {{tl|is-ndecl|m,,r.datplm.defgenplnna|pagename=skór}}
+* Because of all the compounds, skór is a built-in.
+* {{tl|is-ndecl|m.@|pagename=skór}}
+
+=== words in -ær ===
+[ALL IN THIS SECTION CHECKED WITH BÍN]
+* NOTE: stem does *NOT* include -r by default.
+* NOTE: default dative of words whose stem ends in vowel or -r after a vowel is -/-.
+* NOTE: For simplicity, all proper names except those whose stem ends in a vowel have dati as the default.
+* {{m|is|glær||sea}} {{q|archaic except in fixed expressions, especially {{m|is|kasta á glæ||to squander|lit=to throw into the sea}}}} (sg-only); also <<skær|?>> (obsolete)
+* {{tl|is-ndecl|m.sg|pagename=glær}}
 * {{m|is|blær||gentle breeze}}
 * {{tl|is-ndecl|m,s:jar:var[obsolete],ir.j|pagename=blær}}
-* '''with -v- insertion in plural''': {{m|is|blær||ram (archaic); sword (archaic)}}
-* {{tl|is-ndecl|m.v|pagename=blær}}
-* '''with -v- insertion in plural''': {{m|is|bör||tree, wood (poetic)}}
+* '''with -v- insertion in plural''': {{m|is|blær||ram (obsolete); sword (obsolete)}}; NOT IN BÍN (from Thomson)
+* {{tl|is-ndecl|m.v|pagename=blær}} 
+* {{m|is|bær||farm; town}}; also <<óbær|?>>
+* {{tl|is-ndecl|m,jar,ir.j|pagename=bær}}
+* {{m|is|sær||sea}}
+* {{tl|is-ndecl|m,var.sg|pagename=sær}}
+* {{m|is|snær||snow}}
+* {{tl|is-ndecl|m,s:var.sg.dat-:vi[in fixed expressions]|pagename=snær}}
+
+=== words in -ýr ===
+
+==== common nouns ====
+[ALL IN THIS SECTION CHECKED WITH BÍN]
+* NOTE: stem does *NOT* include -r by default.
+* NOTE: default dative of words whose stem ends in vowel or -r after a vowel is -/-.
+* NOTE: For simplicity, all proper names except those whose stem ends in a vowel have dati as the default.
+* NOTE: For simplicity, all proper names except those whose stem ends in a vowel or vowel + r have dati as the default.
+* {{m|is|ýr||yew}} (sg-only)
+* {{tl|is-ndecl|m.sg|pagename=ýr}}
+* {{m|is|býr||town, farm}}; also {{m|is|gnýr||clash, crash, roar, rumble; blue wildebeest}}
+* {{tl|is-ndecl|m,,ir.j|pagename=býr}}
+* '''with -v- insertion in plural and irregular plural stem''': {{m|is|týr||hero; god (poetic)}}
+* {{tl|is-ndecl|m.plstem:tív|pagename=týr}}
+* {{m|is|fýr||dude, guy (informal)}}; also <<lýr|pollock>>, <<sýr|?>> (poetic), <<ýr|?>> (obsolete; gen ýrs, nom pl ýrar), <<hlýr|?>> (obsolete)
+* {{tl|is-ndecl|m.#|pagename=fýr}}
+* {{m|is|sýr||? (poetic)}}; also <<glýr|?>> (obsolete)
+* {{tl|is-ndecl|m.sg.#|pagename=sýr}}
+
+==== proper nouns ====
+[ALL IN THIS SECTION CHECKED WITH BÍN]
+* {{m|is|Týr|pos=male given name}} ({{m|is|Angantýr}}, {{m|is|Hjálmtýr}}, {{m|is|Sigtýr}}, {{m|is|Valtýr}}, <<Vigtýr>>); also <<Gnýr>> ({{m|is|Arnagnýr}}, {{m|is|Þorgnýr}}), <<Dagnýr>>, <<Guðnýr>>, <<Oddnýr>>
+* {{tl|is-ndecl|m|pagename=Týr}}
+
+=== words in -eyr ===
+[ALL IN THIS SECTION CHECKED WITH BÍN]
+* NOTE: stem does *NOT* include -r by default.
+* NOTE: default dative of words whose stem ends in vowel or -r after a vowel is -/-.
+* NOTE: For simplicity, all proper names except those whose stem ends in a vowel have dati as the default.
+* {{m|is|þeyr||thaw, thawing wind}} (sg-only)
+* {{tl|is-ndecl|m.sg|pagename=þeyr}}
+* {{m|is|reyr||reed}}
+* {{tl|is-ndecl|m.sg.#|pagename=reyr}}
+* {{m|is|Freyr|pos=male given name}}
+* {{tl|is-ndecl|m|pagename=Freyr}}
+
+=== words in -ör ===
+[ALL IN THIS SECTION CHECKED WITH BÍN]
+* NOTE: stem *DOES* include -r by default.
+* NOTE: default dative of words whose stem ends in vowel or -r after a vowel is -/-.
+* NOTE: For simplicity, all proper names except those whose stem ends in a vowel have dati as the default.
+* '''with -v- insertion in plural''': {{m|is|bör||tree, wood (poetic)}} [NOT IN BÍN]
 * {{tl|is-ndecl|m.v|pagename=bör}}
 * '''with -v- insertion in plural''': {{m|is|hjör||sword (poetic)}}
 * {{tl|is-ndecl|m.v|pagename=hjör}}
 * '''with -v- insertion in plural''': {{m|is|spör||sparrow}}
 * {{tl|is-ndecl|m.v|pagename=spör}}
-* '''with -v- insertion in plural?''': {{m|is|mör||suet}} (in BÍN, sg-only)
+* '''with -v- insertion in plural?''': {{m|is|mör||suet}} (in BÍN, sg-only); also <<blóðmör|blood sausage>>
 * {{tl|is-ndecl|m.sg|pagename=mör}}
-* '''with -v- insertion in plural and irregular plural stem''': {{m|is|týr||hero; god}}
-* {{tl|is-ndecl|m.plstem:tív|pagename=týr}}
-* '''with -v- insertion in plural and archaic singular dative''': {{m|is|már||seagull}}
-* {{tl|is-ndecl|m.v.dat:+:mávi[archaic]|pagename=már}}
+* {{m|is|hör||flax}}
+* {{tl|is-ndecl|m.sg|pagename=hör}}
+* {{m|is|líkjör||liqueur}}; also <<amatör|amateur>>
+* {{tl|is-ndecl|m|pagename=líkjör}}
+* {{m|is|Nör|pos=proper name (?)}} (archaic)
+* {{tl|is-ndecl|m.dat-|pagename=Nör}}
+* {{m|is|knör||ship (poetic; proscribed for <<knörr>>)}}
+* {{tl|is-ndecl|m,ar,ir.unumut.imut.dati/i|pagename=knör}}
+* {{m|is|Knör|pos=place name}}
+* {{tl|is-ndecl|m,ar.unumit.imut|pagename=Knör}}
 
-==== words with -ar in masculine singular that belongs to the stem ====
-* {{m|is|hamar||hammer}}; also {{m|is|humar||lobster}}, {{m|is|jaðar||edge}}
-* {{tl|is-ndecl|m|pagename=hamar}}
+=== words in -aur ===
+[ALL IN THIS SECTION CHECKED WITH BÍN]
+* NOTE: stem *DOES* include -r by default.
+* NOTE: default dative of words whose stem ends in vowel or -r after a vowel is -/-.
+* NOTE: For simplicity, all proper names except those whose stem ends in a vowel have dati as the default.
+* {{m|is|maur||ant}}; also {{m|is|gaur||ruffian}}, {{m|is|paur||devil; enmity}}, {{m|is|staur||post}} ({{m|is|ljósastaur||lamp post}})
+* {{tl|is-ndecl|m|pagename=maur}}
+* {{m|is|aur||loam, mud}}; also <<smáaur|penny; (pl) small change, small amount>>
+* {{tl|is-ndecl|m.dat-:i[in fixed expressions]/-|pagename=aur}}
+* <<smáaur|penny; (pl) small change, small amount>>; also <<sandaur|?>> <<svifaur|?>>
+* {{tl|is-ndecl|m.dat-:i/-|pagename=smáaur}}
+* {{m|is|saur||dirt; excrement}}
+* {{tl|is-ndecl|m.sg}}
+* {{m|is|Jókuaur|pos=place name}}
+* {{tl|is-ndecl|m.dat-:i}}
+
+=== words in -ar ===
+
+==== words in -ar that contract ====
+[ALL IN THIS SECTION CHECKED WITH BÍN]
+* NOTE: stem *DOES* include -r by default.
+* NOTE: default dative of words whose stem ends in vowel or -r after a vowel is -/-, except when contraction takes place (it produces a two-consonant cluster in the dative).
+* NOTE: For simplicity, all proper names except those whose stem ends in a vowel have dati as the default.
+* {{m|is|hamar||hammer}} (dat pl [[hömrum]]); also {{m|is|humar||lobster}}, {{m|is|jaðar||edge}} (dat pl [[jöðrum]]), <<gagar|?>> (archaic), <<kamar|chamber?>>, <<lokar|?>> (archaic), <<nafar|navel?>>, compounds
+* {{tl|is-ndecl|m.con|pagename=hamar}}
+
+==== words in -ar that don't contract ====
+[ALL IN THIS SECTION CHECKED WITH BÍN]
+* dat-/-: <<radar|radar>> (dat pl [[radörum]]); also <<bar|bar (unit)>> (usually neuter; dat pl [[börum]]), <<spíkar|large nail>> (rare; dat pl [[spíkörum]]), <<basar|bazaar>> (dat pl [[basörum]]), <<dínar|dinar>> (dat pl [[dínörum]]), <<lúkar|hatch?>> (dat pl [[lúkörum]]), <<lúgar|poetic for [[lúkar]]>>, <<sígar|cigar>> (dat pl [[sígörum]]), <<sítar|sitar>> (dat pl [[sítörum]]), <<sónar|sonar>> (dat pl [[sónörum]]), <<tapar|?>> (obsolete; dat pl [[tapörum]])
+* {{tl|is-ndecl|m|pagename=radar}}
+* dat-/-: <<bikar|beaker>> (dat pl [[bikurum]]), <<dollar|dollar>> (dat pl [[dollurum]])
+* {{tl|is-ndecl|m.uumut|pagename=bikar}}
+* dat-/-: <<gítar|guitar>> (dat pl [[gítörum]]/[[gíturum]])
+* {{tl|is-ndecl|m.umut,uumut|pagename=gítar}}
+* dat-/-, sg-only: <<kopar|copper>>; also <<pipar|pepper>>, <<agar|agar?>> (also neuter), <<hasar|action?>>
+* {{tl|is-ndecl|m.sg|pagename=kopar}}
+* dat-/i:-: <<tsar|tsar>> (dat pl [[tsörum]]); also <<zar|tsar (proscribed)>>
+* {{tl|is-ndecl|m.dat-/i:-|pagename=tsar}}
+* {{m|is|Ánar|pos=proper name; poetic}}; also <<Kíar>>, <<Ónar>>
+* {{tl|is-ndecl|m}}
+* {{m|is|Ásar|pos=male given name}}; also <<Ísar>>, <<Ívar>>, <<Ómar>>, <<Róar>>, <<Ýrar>>, <<Ævar>>, <<Öxar>>
+* {{tl|is-ndecl|m}}
+
+; poetic, monosyllabic:
 * {{m|is|mar||sea (poetic, in a collective sense)}}; dat sg in -:-i/-num:-inum per BÍN; gen in -ar per Thomson and BÍN
 * {{tl|is-ndecl|m,ar.sg.dat-:i/-:i|pagename=mar}}
 * {{m|is|mar||horse (poetic)}}; dat sg in -:-i/-num:-inum per BÍN; gen in -s per Thomson and BÍN; pl in -ar or -ir; dat pl mörum
 * {{tl|is-ndecl|m,,ar:ir.dat-:i/-:i|pagename=mar}}
 
-==== [[snjór]], [[sjór]], [[skór]] ====
-* FIXME.
+=== words in -or ===
+[ALL IN THIS SECTION CHECKED WITH BÍN]
+* NOTE: stem *DOES* include -r by default.
+* NOTE: default dative of words whose stem ends in vowel or -r after a vowel is -/-.
+* NOTE: For simplicity, all proper names except those whose stem ends in a vowel have dati as the default.
+* dat-/-: <<bor|drill>> (also <<eldbor|?>>, <<trébor|?>>, <<vélbor|?>>); also <<doktor|doctor>>, <<lektor|professor>>, <<mótor|motor>>, <<prófessor|professor>>, <<rektor|high school principal; university president>>, <<traktor|tractor>>, <<hónor|?>>, <<major|?>>, <<príor|?>>, <<faktor|?>>, <<kantor|?>>, <<mentor|?>>, <<pastor|?>>, <<signor|?>> (archaic), <<vektor|?>>
+* {{tl|is-ndecl|m|pagename=bor}}
+* dat-/-: <<hor|?>>; also <<amor|?>> (obsolete), <<húmor|?>>, <<terror|?>>
+* {{tl|is-ndecl|m.sg|pagename=hor}}
+* dat-:i/-: <<flúor|flourine>> (also neuter; also masculine <<flúr>>)
+* {{tl|is-ndecl|m.sg.dat-:i/-|pagename=flúor}}
+* dat-: <<Tor|pos=male given name>>; also <<Anor>>, <<Thor>>, <<Príor>>, <<Gregor>>
+* {{tl|is-ndecl|m.dat-|pagename=Tor}}
+* dat-: <<Amor|pos=proper name>>
+* {{tl|is-ndecl|m.dat-|pagename=Amor}}
+* dat-: <<Orator|pos=organization name>>
+* {{tl|is-ndecl|m.dat-|pagename=Orator}}
+* dati: <<Ektor|pos=proper name>>; also <<Hector>>, <<Hektor>>, <<Kastor>>, <<Victor>>, <<Viktor>>
+* {{tl|is-ndecl|m|pagename=Ektor}}
 
-* {{m|is|skór||shoe}}; compounds: we currently have three in Wiktionary: {{m|is|fjallgönguskór||climbing boot}}, {{m|is|ilskór||sandal}} and {{m|is|strigaskór||sneaker, trainer}}. But BÍN lists over 100.
-* {{tl|is-ndecl|m.nompl:skór.accpl:skó.datpl:skóm|pagename=skór}}
-* Because of all the compounds, skór is a built-in.
-* {{tl|is-ndecl|m.@|pagename=skór}}
+=== words in -er, -ér, -eir, -ír, -úr, -yr ===
+* NOTE: stem *DOES* include -r by default.
+* NOTE: default dative of words whose stem ends in vowel or -r after a vowel is -/-.
+* NOTE: For simplicity, all proper names except those whose stem ends in a vowel have dati as the default.
+
+==== in -er ====
+[ALL IN THIS SECTION CHECKED WITH BÍN]
+* dat-:i/-; {{m|is|ver||man, husband (poetic)}}
+* {{tl|is-ndecl|m.dat-:i/-|pagename=ver}}
+* dat-/-; {{m|is|her||army}}
+* {{tl|is-ndecl|m,,ir.j|pagename=her}}
+* dat-/-; {{m|is|hver||hot spring??}}
+* {{tl|is-ndecl|m,,ir:ar[archaic]|pagename=hver}}
+* dat-/-; {{m|is|eter||?}}
+* {{tl|is-ndecl|m.sg|pagename=eter}}
+* NOTE: {{m|is|ver||wake of oars}} not in BÍN; claimed to be dat-/-, gen in -s, pl in -ir
+* dat-; <<Per|pos=male given name>>; also <<Ver>>
+* {{tl|is-ndecl|m.dat-|pagename=Per}}
+* dat-; <<Grer|pos=proper name>>
+* {{tl|is-ndecl|m.dat-|pagename=Grer}}
+
+==== in -eir ====
+[ALL IN THIS SECTION CHECKED WITH BÍN]
+* dat-:i/-; {{m|is|geir||?}}
+* {{tl|is-ndecl|m.dat-:i/-|pagename=geir}}
+* dat-:i/-, sg-only; {{m|is|eir||copper}}
+* {{tl|is-ndecl|m.sg.dat-:i/-|pagename=eir}}
+* dat-/-; <<leir|clay>>
+* {{tl|is-ndecl|m.sg|pagename=leir}}
+* dat-; <<Geir|pos=male given name>>
+* {{tl|is-ndecl|m.dat-|pagename=Geir}}
+
+==== in -ír ====
+[ALL IN THIS SECTION CHECKED WITH BÍN]
+* dat-/-; {{m|is|gír||gear (auto)}}; also <<pappír|paper>>, <<safír|sapphire>> (<<saffír|sapphire>>, proscribed), <<vesír|vizier>>, <<vír|wire>>, <<fír|??? (fairy?)>>, <<emír|emir>>
+* {{tl|is-ndecl|m|pagename=gír}}
+* dat-/-, sg-only; {{m|is|tír||honor}}
+* {{tl|is-ndecl|m,s:ar.sg|pagename=tír}}
+* dat-; <<Kasmír|Kashmir>>
+* {{tl|is-ndecl|m,-[more common]:s.dat-|pagename=Kasmír}}
+* dat-; <<Amír|pos=male given name>>
+* {{tl|is-ndecl|m.dat-|pagename=Amír}}
+
+==== in -úr ====
+[ALL IN THIS SECTION CHECKED WITH BÍN]
+* dat-/-; {{m|is|múr||wall}}; also <<skúr|shed>> (<<bílskúr|garage>>), <<dúr|major (music)>>, <<kúr|?>>, <<lúr|nap???>>, <<túr|tour???>>, <<lemúr|lemur>>
+* {{tl|is-ndecl|m|pagename=múr}}
+* dat-/-; {{m|is|gúr||gourd???}}; also <<súr|???>>, <<asúr|???>>, <<lasúr|enamel glaze???>>
+* {{tl|is-ndecl|m.sg|pagename=gúr}}
+* dat-/-; {{m|is|skúr||rain shower}} (usually feminine)
+* {{tl|is-ndecl|m,,ir|pagename=skúr}}
+* dat-:i/-:i; {{m|is|flúr||fluorine}} (proscribed for <<flúor>>)
+* {{tl|is-ndecl|m.sg.dat-:i/-:i|pagename=flúr}}
+* dati: <<Artúr|pos=male given name>>
+* {{tl|is-ndecl|m|pagename=Artúr}}
+
+==== in -yr ====
+[ALL IN THIS SECTION CHECKED WITH BÍN]
+* dat-/-; {{m|is|byr||fair wind}}
+* {{tl|is-ndecl|m,jar:s,ir.j|pagename=byr}}
+* dat-/-; {{m|is|styr||battle, disturbance}}
+* {{tl|is-ndecl|m,jar.sg.j|pagename=styr}}
+* dat-/-; {{m|is|hyr||??? (poetic)}}
+* {{tl|is-ndecl|m,s:jar.sg|pagename=hyr}}
+* dat-/-; {{m|is|Styr|pos=male given name}}
+* {{tl|is-ndecl|m.sg.dat-|pagename=Styr}}
 
 === words without -ur in masculine singular ===
 * {{m|is|fugl||bird}}; dat sg in -i/-inum per BÍN
@@ -396,7 +638,6 @@ Personal names:
 * dat-/-, gen in -s, pl in -ir, optional -j-: {{m|is|smekkur||taste; bib}}; NOTE: -j- infix implies dat-/-, but without -j- infix we would get dati/i, so we need an override
 * {{tl|is-ndecl|m,,ir.dat-/-.j,-j|pagename=smekkur}}
 * NOTE: {{m|is|konur||man, descendant (poetic)}} not in BÍN; claimed to be dati/i, gen in -ar, pl in -ir
-* NOTE: {{m|is|ver||wake of oars}} not in BÍN; claimed to be dat-/-, gen in -s, pl in -ir
 
 ==== words in -aður, mostly -naður ====
 * {{m|is|fagnaður||welcome reception}}, {{m|is|mannfagnaður||assembly}} (dat pl mannfögnuðum)
@@ -446,7 +687,7 @@ Personal names:
 * {{tl|is-ndecl|m,ar,ir.unumut.imut.accpli:u[archaic or literary]|pagename=köttur}}
 * {{m|is|böllur||ball}}; also {{m|is|börkur||bark (of a tree)}}, {{m|is|göltur||boar}} ({{m|is|broddgöltur||hedgehog, porcupine}}), {{m|is|hnöttur||globe, sphere}}, {{m|is|höttur||hood}}, {{m|is|knörr||ship (poetic)}}, {{m|is|knöttur||ball}}, {{m|is|köstur||pile, heap}}, {{m|is|löstur||vice, fault}}, {{m|is|mörður||marten}}, {{m|is|svörður||sward; skin on head}}, {{m|is|vöndur||rod}}, {{m|is|vörður||guard, watch (person or action)}}, {{m|is|vöttur||glove, mitten}}, {{m|is|þröstur||thrush}}, {{m|is|örn||eagle}}
 * {{tl|is-ndecl|m,ar,ir.unumut.imut|pagename=böllur}}
-* {{tl|is-ndecl|m,ar,ir.unumut.imut|pagename=knörr}}
+* {{tl|is-ndecl|m,ar,ir.unumut.imut.dati/i|pagename=knörr}}
 * {{tl|is-ndecl|m,ar,ir.unumut.imut|pagename=örn}}
 * {{m|is|flötur||plane, surface}}; also {{m|is|knör||ship (poetic; proscribed)}}, {{m|is|lögur||liquid}}, {{m|is|mögur||son (poetic)}}
 * {{tl|is-ndecl|m,ar,ir.unumut.imut.dati|pagename=flötur}}
@@ -472,45 +713,24 @@ Personal names:
 * {{m|is|Björn|pos=male given name}}
 * {{tl|is-ndecl|m,s:ar.unumut.imut.pers|pagename=Björn}}
 
-==== words in -r preceded by vowel other than a/i/u ====
-* NOTE: specifying 'ir' as nom pl autoselects accusative pl in -i. NOTE: explicit dative in the following may not be necessary.
-* {{m|is|nár||corpse}}; also {{m|is|sár||tub (archaic)}}, {{m|is|hár||thole, oarlock (archaic)}} (given below as well)
-* {{tl|is-ndecl|m,,ir.dat-/-|pagename=nár}}
-* {{m|is|hár||thole, oarlock (archaic)}}
-* {{tl|is-ndecl|m,,ir.dat-/-|pagename=hár}}
-* {{m|is|hár||spiny dogfish (archaic)}}
-* {{tl|is-ndecl|m.v.dat-/-|pagename=hár}}
-* {{m|is|kljár||weaving stone (archaic)}}; BÍN says it's singular-only, Thomson gives pl in -ir.
-* {{tl|is-ndecl|m.sg.dat-/-|pagename=kljár}} or {{tl|is-ndecl|m,,ir.dat-/-|pagename=kljár}}
-* {{m|is|ljár||scythe}}
-* {{tl|is-ndecl|m,,ir.dat-/-.datpl:+:ljám/ljáunum.genpl:+:ljánna[more common]|pagename=ljár}}
-* {{m|is|skjár||video screen, monitor, display; animal membrane window (historical)}}
-* {{tl|is-ndecl|m,,ir.dat-/-.datpl:+:skjám[more common]/skjáunum|pagename=skjár}}
-* {{m|is|skjór||magpie}}; in the following, there are two possible paradigms, one based on a root skjór- with pl in -ar and one based off of a root in skjó with a pl in -ir; the latter has two possible dat pl's, a regular one and a more common contracted one, and corresponding definite forms; we omit the definite forms from the override as they are formed normally from the indef forms (-m -> -num)
-* {{tl|is-ndecl|((<m.#.dat-/->,<m,,ir.dat-/-.datpl:skjóm:+>))|pagename=skjór}}
-
 ==== words in -ur with -j- infix ====
 * dati:-/i:-, gen in -s/-jar: {{m|is|beður||bed (poetic)}}
 * {{tl|is-ndecl|m,s:jar,ir.j.dati:-|pagename=beður}}
-* dat-/-, gen in -jar/-s: {{m|is|bekkur||bench; grade in school}}, {{m|is|byr||fair wind}}, {{m|is|kekkur||lump}}, {{m|is|reykur||smoke}}, {{m|is|rykkur||jerk, wrench}}, {{m|is|sekkur||bag, sack}}, {{m|is|veggur||wall}}
+* dat-/-, gen in -jar/-s: {{m|is|bekkur||bench; grade in school}}, {{m|is|kekkur||lump}}, {{m|is|reykur||smoke}}, {{m|is|rykkur||jerk, wrench}}, {{m|is|sekkur||bag, sack}}, {{m|is|veggur||wall}}
 * {{tl|is-ndecl|m,jar:s,ir.j|pagename=bekkur}}<!-- should have stem bekk- -->
-* {{tl|is-ndecl|m,jar:s,ir.j|pagename=byr}}<!-- should have stem byr- -->
 * dat-/-, gen in -s/-jar: {{m|is|belgur||bellows; skin}}, {{m|is|blær||breeze; tint}}, {{m|is|fengur||profit; catch in hunting}}, {{m|is|flekkur||spot, fleck; drying hay}}, {{m|is|hlekkur||link of chain}}, {{m|is|rif||beam on loom}}, {{m|is|serkur||shirt}}, {{m|is|strengur||string}}, {{m|is|þvengur||thong}}
 * {{tl|is-ndecl|m,s:jar,ir.j|pagename=belgur}}
 * dat-/-, gen in -s/-jar, pl in -jir: {{m|is|bylur||gust, squall}}; NOTE: explicit -jar and -jir endings imply that -j- infix is not added to them; acc pl derived from nom pl by removing the -r
 * {{tl|is-ndecl|m,s:jar,jir.j|pagename=bylur}}
-* dat-/-, gen in -jar: {{m|is|bær||farm; town}}, {{m|is|drykkur||drink}}, {{m|is|eykur||draft animal}}, {{m|is|lækur||brook, creek}}, {{m|is|verkur||pain, ache}}
+* dat-/-, gen in -jar: {{m|is|drykkur||drink}}, {{m|is|eykur||draft animal}}, {{m|is|lækur||brook, creek}}, {{m|is|verkur||pain, ache}}
 * {{tl|is-ndecl|m,jar,ir.j|pagename=bær}}<!-- should have stem bæ- -->
 * {{tl|is-ndecl|m,jar,ir.j|pagename=drykkur}}<!-- should have stem drykk- -->
-* dat-/-, gen in -s: {{m|is|drengur||boy}}, {{m|is|gnýr||clash, crash}}, {{m|is|grikkur||disservice, trick}}, {{m|is|heggur||bird cherry}}, {{m|is|her||army}}, {{m|is|hlykkur||bend, curve}}, {{m|is|hnykkur||pull, jerk; trick}}, {{m|is|hrekkur||prank, joke}}, {{m|is|kengur||stable; bend}}, {{m|is|kveikur||wick}}, {{m|is|kækur||bad habit}}, {{m|is|lækur||umbilical cord (obsolete)}}, {{m|is|seggur||man (poetic)}}, {{m|is|skeggur||bearded man}}, {{m|is|sprengur||bursting}}, {{m|is|steggur||male bird, cock}}, {{m|is|stingur||sting}}, {{m|is|styrkur||strength, support, help}}, {{m|is|svelgur||whirlpool, eddy}}
+* dat-/-, gen in -s: {{m|is|drengur||boy}}, {{m|is|grikkur||disservice, trick}}, {{m|is|heggur||bird cherry}}, {{m|is|hlykkur||bend, curve}}, {{m|is|hnykkur||pull, jerk; trick}}, {{m|is|hrekkur||prank, joke}}, {{m|is|kengur||stable; bend}}, {{m|is|kveikur||wick}}, {{m|is|kækur||bad habit}}, {{m|is|lækur||umbilical cord (obsolete)}}, {{m|is|seggur||man (poetic)}}, {{m|is|skeggur||bearded man}}, {{m|is|sprengur||bursting}}, {{m|is|steggur||male bird, cock}}, {{m|is|stingur||sting}}, {{m|is|styrkur||strength, support, help}}, {{m|is|svelgur||whirlpool, eddy}}
 * {{tl|is-ndecl|m,,ir.j|pagename=drengur}}<!-- should have stem dreng- -->
-* {{tl|is-ndecl|m,,ir.j|pagename=gnýr}}<!-- should have stem gný- -->
-* {{tl|is-ndecl|m,,ir.j|pagename=her}}<!-- should have stem her- -->
 * dat-/-, gen in -s, sg-only: {{m|is|drukkur||whey + water}}; Thomson claims -j- infix, pl in -ir
 * {{tl|is-ndecl|m.sg|pagename=drukkur}}
-* dat-/-, gen in -jar, sg-only: {{m|is|mergur||marrow}}, {{m|is|styr||battle, disturbance}}
+* dat-/-, gen in -jar, sg-only: {{m|is|mergur||marrow}}
 * {{tl|is-ndecl|m,jar.sg.j|pagename=mergur}}<!-- should have stem merg- -->
-* {{tl|is-ndecl|m,jar.sg.j|pagename=styr}}<!-- should have stem styr- -->
 * dat-/-, gen in -s/-jar, sg-only: {{m|is|ylur||warmth}}, {{m|is|þefur||bad smell}}
 * {{tl|is-ndecl|m,s:jar.sg.j|pagename=ylur}}
 * dat-:i/i, gen in -s: {{m|is|dynur||din, noise}}
