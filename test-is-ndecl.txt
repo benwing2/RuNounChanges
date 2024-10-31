@@ -498,30 +498,30 @@ Personal names:
 
 ==== ending in two consonants ====
 [ALL IN THIS SECTION CHECKED WITH BÍN]
-* dat i/i; <<botn|bottom>>, <<fugl|bird>> (<<alifugl|poultry (usually plural?)>>), [<<hvinn|petty thief>> not in BÍN], <<ofn|stove; radiator>>, <<stofn|stem>>, <<turn|tower>> (<<söluturn|kiosk>>, <<vitaturn|lighthouse>>), <<þegn|subject>>
+* dat i/i; {{m|is|botn||bottom}}, {{m|is|fugl||bird}} ({{m|is|alifugl||poultry (usually plural?)}}), [{{m|is|hvinn||petty thief}} not in BÍN], {{m|is|ofn||stove; radiator}}, {{m|is|stofn||stem}}, {{m|is|turn||tower}} ({{m|is|söluturn||kiosk}}, {{m|is|vitaturn||lighthouse}}), {{m|is|þegn||subject}}
 * {{tl|is-ndecl|m|pagename=botn}}
-* dat i/i, sg-only; <<svefn|sleep>
+* dat i/i, sg-only; {{m|is|svefn||sleep}}
 * {{tl|is-ndecl|m.sg|pagename=svefn}}
-* dat i/i, with umut; <<afl|forge>>, <<gafl|gable>>, <<hrafn|raven>>, <<jarl|earl, count>>, <<jaxl|molar (tooth)>>, <<kall|guy, dude; ten-krónur bill>>, <karl|man, guy>> (<<hákarl|shark>>; dat pl [[hákörlum]]), <<skafl|snowdrift; sand drift>>, <<stafn|stem (of ship)>>, <<vagl|tie beam>>, <<vagn|wagon>> (<<barnavagn|baby carriage>>, <<strætisvagn|city bus>>)
+* dat i/i, with umut; {{m|is|afl||forge}}, {{m|is|gafl||gable}}, {{m|is|hrafn||raven}}, {{m|is|jarl||earl, count}}, {{m|is|jaxl||molar (tooth)}}, {{m|is|kall||guy, dude; ten-krónur bill}}, <karl|man, guy>> ({{m|is|hákarl||shark}}; dat pl [[hákörlum]]), {{m|is|skafl||snowdrift; sand drift}}, {{m|is|stafn||stem (of ship)}}, {{m|is|vagl||tie beam}}, {{m|is|vagn||wagon}} ({{m|is|barnavagn||baby carriage}}, {{m|is|strætisvagn||city bus}})
 * {{tl|is-ndecl|m|pagename=afl}}
-* dat i/i, with loss of -s in gen sg after C + s; <<foss|waterfall>>, <<háls|neck>>, <<koss|kiss>>, <<kross|cross>>
+* dat i/i, with loss of -s in gen sg after C + s; {{m|is|foss||waterfall}}, {{m|is|háls||neck}}, {{m|is|koss||kiss}}, {{m|is|kross||cross}}
 * {{tl|is-ndecl|m|pagename=foss}}
-* dat i/i, with umut and loss of -s in gen sg after C + s; <<dans|dance>>, <<lax|salmon>>, <<rass|ass, posterior>>, <<vals|rotating cylinder in machinery; waltz>>
+* dat i/i, with umut and loss of -s in gen sg after C + s; {{m|is|dans||dance}}, {{m|is|lax||salmon}}, {{m|is|rass||ass, posterior}}, {{m|is|vals||rotating cylinder in machinery; waltz}}
 * {{tl|is-ndecl|m|pagename=dans}}
 * {{tl|is-ndecl|m|pagename=lax}}
-* dat i:-/i, with loss of -s in gen sg after C + s; <<prins|prince>>
+* dat i:-/i, with loss of -s in gen sg after C + s; {{m|is|prins||prince}}
 * {{tl|is-ndecl|m.dati:-/i|pagename=prins}}
-* dat i:-/i, with umut and loss of -s in gen sg after C + s; <<krans|wreath, garland>>
+* dat i:-/i, with umut and loss of -s in gen sg after C + s; {{m|is|krans||wreath, garland}}
 * {{tl|is-ndecl|m.dati:-/i|pagename=krans}}
-* dat -/i, with loss of -s in gen sg after C + s; <<pels|fur; fur coat>>
+* dat -/i, with loss of -s in gen sg after C + s; {{m|is|pels||fur; fur coat}}
 * {{tl|is-ndecl|m.dat-/i|pagename=pels}}
-* dat -/i, with umut and loss of -s in gen sg after C + s; <<mars|March; march (military song)>>, <<sjans|chance>> (also <<séns>>)
+* dat -/i, with umut and loss of -s in gen sg after C + s; {{m|is|mars||March; march (military song)}}, {{m|is|sjans||chance}} (also {{m|is|séns}})
 * {{tl|is-ndecl|m.dat-/i|pagename=mars}}
 
 ; personal names
-* dat i; <<Hrafn|pos=male given name>>, <<Jón|pos=male given name>>, <<Karl|pos=male given name>>
+* dat i; {{m|is|Hrafn|pos=male given name}}, {{m|is|Jón|pos=male given name}}, {{m|is|Karl|pos=male given name}}
 * {{tl|is-ndecl|m|pagename=Hrafn}}
-* dat -; <<Mars|Mars (planet; male given name; Roman god)>>
+* dat -; {{m|is|Mars||Mars (planet; male given name; Roman god)}}
 * {{tl|is-ndecl|m.dat-|pagename=Mars}}
 
 ==== ending in one consonant ====
@@ -530,45 +530,45 @@ Personal names:
 [ALL IN THIS SECTION CHECKED WITH BÍN]
 * dat i:-[footnote]/-; {{m|is|ós||river mouth}}
 * {{tl|is-ndecl|m.dati:-[significantly less common]/-|pagename=ós}}
-* dat -:i/-; <<ás|beam; axle; ridge, long hill; ace>>; also <<bás|stall in cow barn>>, <<hnaus|piece of turf>>, <<lás|lock>> (<<rennilás|zipper>>), <<ys|noise>>
+* dat -:i/-; {{m|is|ás||beam; axle; ridge, long hill; ace}}; also {{m|is|bás||stall in cow barn}}, {{m|is|hnaus||piece of turf}}, {{m|is|lás||lock}} ({{m|is|rennilás||zipper}}), {{m|is|ys||noise}}
 * {{tl|is-ndecl|m.dat-:i/-|pagename=ás}}
-* dat -:i/-:i; <<plús|plus (sign)>>
+* dat -:i/-:i; {{m|is|plús||plus (sign)}}
 * {{tl|is-ndecl|m.dat-:i/-:i|pagename=plús}}
 * dat -:i[footnote]/-; {{m|is|ís||ice}}
 * {{tl|is-ndecl|m.dat-:i[rare except in fixed expressions]/-|pagename=ís}}
-* dat -/-; <<haus|head>>; also <<þys|noise>>
+* dat -/-; {{m|is|haus||head}}; also {{m|is|þys||noise}}
 * {{tl|is-ndecl|m.dat-/-|pagename=haus}}
-* dat -/-, pl -ir with i-mut; <<ás|ás (type of Norse god)>>
+* dat -/-, pl -ir with i-mut; {{m|is|ás||ás (type of Norse god)}}
 * {{tl|is-ndecl|m,,ir.imut.dat-:i[archaic]/-|pagename=ás}}: dat sg ás per BÍN but æsi per Thomson
 
 ===== polysyllabic =====
 
 ====== common nouns =====
 [ALL IN THIS SECTION CHECKED WITH BÍN]
-* dat i/-:i; <<biskup|bishop (priest; chess)>>
+* dat i/-:i; {{m|is|biskup||bishop (priest; chess)}}
 * {{tl|is-ndecl|m.dati/-:i|pagename=biskup}}
-* dat -:i/-:i, gen -/-s; <<tennis|tennis>>
+* dat -:i/-:i, gen -/-s; {{m|is|tennis||tennis}}
 * {{tl|is-ndecl|m,-:s.sg.dat-:i/-:i|pagename=tennis}}
-* dat -:i/-; <<kjaftás|chatterbox>>, <<prímus|primus stove>>, <<radíus|radius>>
+* dat -:i/-; {{m|is|kjaftás||chatterbox}}, {{m|is|prímus||primus stove}}, {{m|is|radíus||radius}}
 * {{tl|is-ndecl|m.dat-:i/-|pagename=kjaftás}}
-* dat -/i; <<barón|baron>>; also <<dívan|divan>> (dat pl [[dívönum]]), <<dósent|assistant professor>>, <<kalkún|turkey>> (more commonly <<kalkúnn>> or <<kalkúni>>), <<kumpán|comrade, buddy>> (also <<kompán>>; more commonly <<kumpáni>>), <<soldán|sultan>>, <<sópran|soprano>> (dat pl [[sóprönum]]), <<stúdent|student>>, <<tangens|tangent>>, <<tendens|tendency>>
+* dat -/i; {{m|is|barón||baron}}; also {{m|is|dívan||divan}} (dat pl [[dívönum]]), {{m|is|dósent||assistant professor}}, {{m|is|kalkún||turkey}} (more commonly {{m|is|kalkúnn}} or {{m|is|kalkúni}}), {{m|is|kumpán||comrade, buddy}} (also {{m|is|kompán}}; more commonly {{m|is|kumpáni}}), {{m|is|soldán||sultan}}, {{m|is|sópran||soprano}} (dat pl [[sóprönum]]), {{m|is|stúdent||student}}, {{m|is|tangens||tangent}}, {{m|is|tendens||tendency}}
 * {{tl|is-ndecl|m.dat-/i|pagename=barón}}
-* dat -/i, sg-only; <<saffran|saffron>> (also <<safran|same, proscribed>>; more commonly neuter)
+* dat -/i, sg-only; {{m|is|saffran||saffron}} (also {{m|is|safran||same, proscribed}}; more commonly neuter)
 * {{tl|is-ndecl|m.sg.dat-/i|pagename=saffran}}
-* dat -/i:-; <<ananas|pineapple>> (dat pl [[ananösum]])
+* dat -/i:-; {{m|is|ananas||pineapple}} (dat pl [[ananösum]])
 * {{tl|is-ndecl|m.dat-/i:-|pagename=ananas}}
-* dat -/-; <<kompás|compass>>, <<kósínus|cosine>>, <<sínus|sine>>
+* dat -/-; {{m|is|kompás||compass}}, {{m|is|kósínus||cosine}}, {{m|is|sínus||sine}}
 * {{tl|is-ndecl|m.dat-/-|pagename=kompás}}
-* dat -/-, sg-only; <<kandís|sugar candy>>, <<maís|corn, maize>>, <<spíritus|spirit, alcohol>>
+* dat -/-, sg-only; {{m|is|kandís||sugar candy}}, {{m|is|maís||corn, maize}}, {{m|is|spíritus||spirit, alcohol}}
 * {{tl|is-ndecl|m.sg.dat-/-|pagename=kandís}}
 
 ====== proper nouns =====
 [ALL IN THIS SECTION CHECKED WITH BÍN]
-* dat -/i; <<Satan|Satan>> (dat pl [[Satönum]]; also <<satan|proscribed>>)
+* dat -/i; {{m|is|Satan||Satan}} (dat pl [[Satönum]]; also {{m|is|satan||proscribed}})
 * {{tl|is-ndecl|m.both.def.dat-/i|pagename=Satan}}
-* dat -; <<Júpíter|Jupiter (planet; Roman god)>> (<<Júpiter|same, proscribed>>)
+* dat -; {{m|is|Júpíter||Jupiter (planet; Roman god)}} ({{m|is|Júpiter||same, proscribed}})
 * {{tl|is-ndecl|m.dat-|pagename=Júpíter}}
-* dat -; <<Plútó|Pluto (planet; Roman god)>>; dat- is the default for stems ending in a vowel
+* dat -; {{m|is|Plútó||Pluto (planet; Roman god)}}; dat- is the default for stems ending in a vowel
 * {{tl|is-ndecl|m|pagename=Plútó}}
 * FIXME: pp. 58-60 in Thomson
 
@@ -593,12 +593,12 @@ Personal names:
 ===== proper nouns ====
 [ALL IN THIS SECTION CHECKED WITH BÍN]
 * NOTE: Defaults to dati when a proper name.
-* {{m|is|Njáll|pos=male given name}}; also <<Ársæll>>, <<Páll>>
+* {{m|is|Njáll|pos=male given name}}; also {{m|is|Ársæll}}, {{m|is|Páll}}
 * {{tl|is-ndecl|m|pagename=Njáll}}
-* {{m|is|Þorkell|pos=male given name}}; has archaic alt dat in -katli, handled automatically; also <<Áskell>>, <<Grímkell>>, <<Hallkell>>, <<Hrafnkell>>
+* {{m|is|Þorkell|pos=male given name}}; has archaic alt dat in -katli, handled automatically; also {{m|is|Áskell}}, {{m|is|Grímkell}}, {{m|is|Hallkell}}, {{m|is|Hrafnkell}}
 * {{tl|is-ndecl|m.dat:~i:Þorkatli[archaic]|pagename=Þorkell}}
 * {{tl|is-ndecl|m|pagename=Þorkell}}
-* {{m|is|Hóll|pos=place name}}; also <<Hvoll>>
+* {{m|is|Hóll|pos=place name}}; also {{m|is|Hvoll}}
 * {{tl|is-ndecl|m.dati:-|pagename=Hóll}}
 
 ==== words in -ll (preceded by a/i/u) ====
@@ -610,11 +610,11 @@ Personal names:
 * {{tl|is-ndecl|m|pagename=þumall}}
 * dati/i, sg-only; {{m|is|aðall||nobility, aristocracy}}
 * {{tl|is-ndecl|m.sg|pagename=aðall}}
-* dati/-:i without contraction, dat i/i with contraction; {{m|is|rafall||generator}} (also <<rafali>>; dat pl [[rafölum]] without contraction, [[röflunum]] with contraction)
+* dati/-:i without contraction, dat i/i with contraction; {{m|is|rafall||generator}} (also {{m|is|rafali}}; dat pl [[rafölum]] without contraction, [[röflunum]] with contraction)
 * {{tl|is-ndecl|((<m.-con.dati/-:i>,<m>))|pagename=rafall}}
-* dat-/-, without contraction; {{m|is|kórall||coral}} (dat pl [[kórölum]]), {{m|is|kristall||crystal}} (cf. <<kristallur>>; dat pl [[kristölum]])
+* dat-/-, without contraction; {{m|is|kórall||coral}} (dat pl [[kórölum]]), {{m|is|kristall||crystal}} (cf. {{m|is|kristallur}}; dat pl [[kristölum]])
 * {{tl|is-ndecl|m.-con|pagename=kórall}}
-* dat-/-, sg-only, without contraction; {{m|is|kanill||cinnamon}} (also <<kanell>>)
+* dat-/-, sg-only, without contraction; {{m|is|kanill||cinnamon}} (also {{m|is|kanell}})
 * {{tl|is-ndecl|m.sg.-con|pagename=kanill}}
 
 * NOTE: Thomson claims {{m|is|kórall||coral}} and {{m|is|kristall||crystal}} are irregular in having singular stem in -al but plural stem in -all. If this was once the case, it is no longer per BÍN; they just lack contraction. Note umlaut in dat pl [[kórölum]] and [[kristölum]].
@@ -622,12 +622,12 @@ Personal names:
 
 * dati/i; {{m|is|ketill||ketill}}; un-i-mutates when contracted to dat sg [[katli]], nom pl [[katlar]], and then u-mutates in dat pl to [[kötlum]]
 * {{tl|is-ndecl|m.unimut|pagename=ketill}}
-* dati/i; {{m|is|Egill|pos=male given name}}; un-i-mutates when contracted to dat sg [[Agli]]; likewise <<Ketill|pos=male given name>>, <<Ketill|pos=place name>>
+* dati/i; {{m|is|Egill|pos=male given name}}; un-i-mutates when contracted to dat sg [[Agli]]; likewise {{m|is|Ketill|pos=male given name}}, {{m|is|Ketill|pos=place name}}
 * {{tl|is-ndecl|m.unimut|pagename=Egill}}
 
 ===== proper nouns =====
 [ALL IN THIS SECTION CHECKED WITH BÍN]
-* dati, with contraction; {{m|is|Vífill|pos=male given name}}; also <<Þengill>>
+* dati, with contraction; {{m|is|Vífill|pos=male given name}}; also {{m|is|Þengill}}
 * {{tl|is-ndecl|m.sg|pagename=Vífill}}
 
 ==== words in -nn (not preceded by a/i/u) ====
@@ -636,17 +636,17 @@ Personal names:
 [ALL IN THIS SECTION CHECKED WITH BÍN]
 * NOTE: Defaults to dati/i, both common and proper.
 * dat i/i; <<fleinn||spear>>
-* {{tl|is-ndecl|m|pagename=fleinn}}; also <<grammófónn|phonograph, gramophone (dated)>>, <<hreinn|reindeer>>, <<kapteinn|captain>>, <<prjónn|knitting needle>>, <<steinn|rock, stone>> (<<flögusteinn|slate>>, <<múrsteinn|brick>>, <<skorsteinn|chimney>>), <<sveinn|boy, young man>>, <<teinn|rod, rail>>, <<þjónn|(man)servant; waiter>>
-* dat i/i, sg-only; <<daunn||stink>>; also <<brennisteinn|sulfur>>
+* {{tl|is-ndecl|m|pagename=fleinn}}; also {{m|is|grammófónn||phonograph, gramophone (dated)}}, {{m|is|hreinn||reindeer}}, {{m|is|kapteinn||captain}}, {{m|is|prjónn||knitting needle}}, {{m|is|steinn||rock, stone}} ({{m|is|flögusteinn||slate}}, {{m|is|múrsteinn||brick}}, {{m|is|skorsteinn||chimney}}), {{m|is|sveinn||boy, young man}}, {{m|is|teinn||rod, rail}}, {{m|is|þjónn||(man)servant; waiter}}
+* dat i/i, sg-only; <<daunn||stink>>; also {{m|is|brennisteinn||sulfur}}
 * {{tl|is-ndecl|m.sg|pagename=daunn}}
-* dat i:-/i; <<húnn||knob>>; also <<tónn|tone (music)>>
+* dat i:-/i; {{m|is|húnn||knob}}; also {{m|is|tónn||tone (music)}}
 * {{tl|is-ndecl|m.dati:-/i|pagename=húnn}}
-* dat i:-/i, sg-only; <<dúnn||down (feathers)>>
+* dat i:-/i, sg-only; {{m|is|dúnn||down (feathers)}}
 * {{tl|is-ndecl|m.sg.dati:-/i|pagename=dúnn}}
 
 ===== proper nouns =====
 [ALL IN THIS SECTION CHECKED WITH BÍN]
-* dat i/i; {{m|is|Sveinn|pos=male given name}}; also <<Beinteinn>>, <<Bergsveinn>>, <<Hreinn>>, <<Kolbeinn>>, <<Marteinn>>, <<Steinn>> (<<Aðalsteinn>>, <<Bergsteinn>>, <<Eysteinn>>, <<Freysteinn>>, <<Friðsteinn>>, <<Gunnsteinn>>, <<Hafsteinn>>, <<Hallsteinn>>, <<Hersteinn>>, <<Hólmsteinn>>, <<Jósteinn>>, <<Sigursteinn>>, <<Unnsteinn>>, <<Vésteinn>>, <<Þorsteinn>>)
+* dat i/i; {{m|is|Sveinn|pos=male given name}}; also {{m|is|Beinteinn}}, {{m|is|Bergsveinn}}, {{m|is|Hreinn}}, {{m|is|Kolbeinn}}, {{m|is|Marteinn}}, {{m|is|Steinn}} ({{m|is|Aðalsteinn}}, {{m|is|Bergsteinn}}, {{m|is|Eysteinn}}, {{m|is|Freysteinn}}, {{m|is|Friðsteinn}}, {{m|is|Gunnsteinn}}, {{m|is|Hafsteinn}}, {{m|is|Hallsteinn}}, {{m|is|Hersteinn}}, {{m|is|Hólmsteinn}}, {{m|is|Jósteinn}}, {{m|is|Sigursteinn}}, {{m|is|Unnsteinn}}, {{m|is|Vésteinn}}, {{m|is|Þorsteinn}})
 * {{tl|is-ndecl|m|pagename=Sveinn}}
 
 ==== words in -nn (preceded by a/i/u) ====
