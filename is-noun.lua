@@ -112,107 +112,6 @@ local cases = {
 }
 
 
---[=[
-
-Maybe modify the stem and/or ending in certain special cases:
-1. Final -e in vocative singular triggers first palatalization of the stem in some cases (e.g. hard masc).
-2. Endings beginning with ě, i, í trigger second palatalization, as does -e in the loc_s.
-
-NOTE: Correctly handling -e vs. -ě and -tdn/-ťďň alternations is tricky. We have to deal with the following:
-1. Soft-stem and t-stem neuters can have either -e or -ě. With coronals we have both [[poledne]] "noon" with /n/ and
-   [[kutě]] "bed" with /ť/. We also have soft-stem neuter [[Labe]] with /b/ vs. t-stem neuter [[hříbě]] with /bj/.
-2. Underlying palatal coronals maintain their nature before back vowels and when not followed by a vowel, e.g. [[štěně]]
-   "puppy" becomes 'štěňata' in the nom/acc/voc plural and [[přítelkyně]] "girlfriend" becomes 'přítelkyň' in the gen
-   plural, but underlying palatal labials become non-palatal, e.g. [[hříbě]] "foal" becomes 'hříbata' in the nom/acc/voc
-   plural.
-3. There are at least four types of endings beginning with '-e':
-   a. "maintaining" endings, e.g. instrumental singular '-em', which do not change the nature of the consonant, e.g.
-      [[zákon]] "law" becomes 'zákonem' while [[vězeň]] "prisoner" becomes 'vězeněm';
-   b. "palatalizing" endings, e.g. locative singular '-e', which palatalizes t/d/n (and more generally applies the
-      Slavic second palatalization, e.g. k -> c, r -> ř), e.g. [[žena]] "woman" becomes 'ženě';
-   c. "depalatalizing" endings, e.g. feminine i-stem dative plural '-em', which actively depalatalize ť/ď/ň, e.g.
-      [[oběť]] "sacrifice, victim" becomes 'obětem';
-   d. vocative singular '-e' of hard-stem masculines, which applies the Slavic first palatalization in some
-      circumstances (e.g. k -> č, Cr -> Cř, sometimes c -> č).
-The way we handle this as follows:
-1. We maintain the underlying stems always in their "pronounced" form, i.e. if the last consonant is pronounced ť/ď/ň
-   we maintain the stem in that form, but if pronounced t/d/n, we use those consonants. Hence neuter [[poledne]] "noon"
-   has stem 'poledn-' but neuter [[štěně]] "puppy" has stem 'štěň'. If the stem ends in labial + /j/, we use a special
-   TEMP_SOFT_LABIAL character after the labial (rather than 'j', in case of stems that actually have a written 'j' in
-   them such as [[banjo]]).
-2. We signal types (a), (b) and (c) above using respectively 'e', 'ě' and 'E'. Type (d) uses 'e' and sets
-   `base.palatalize_voc`.
-3. In combine_stem_ending(), we convert the stem back to the written form before adding the ending. If the ending begins
-   with -e, this may entail converting -e to -ě, and in all cases -E is converted to -e. "Converting to the written
-   form" converts ť/ď/ň to plain equivalents and deletes TEMP_SOFT_LABIAL before -e, converting -e to -ě with such
-   consonants. The same conversions happen before other front consonants -ě/-é/-i/-í, which don't allow ť/ď/ň to
-   precede, and in all cases with TEMP_SOFT_LABIAL, which is not an actual consonant.
-4. If the ending is specified using -ě, this is maintained after plain coronals and labials in combine_stem_ending(),
-   and converted to -e in other cases.
-5. Applying the first and second palatalization happens below in apply_special_cases().
-]=]
-local function apply_special_cases(base, slot, stem, ending)
-	local palatalize_voc
-	if base.c_as_k and rfind(ending, "^[aouyáóúůý]") then
-		local k_stem = rsub(stem, "c$", "k")
-		stem = {stem, k_stem}
-	elseif slot == "voc_s" and ending == "e" and base.palatalize_voc and not base["-velar"] then
-		-- Don't palatalize words like [[hadíth]] with silent -h.
-		local palstem = com.apply_first_palatalization(stem)
-		-- According to IJP, nouns ending in -Cr palatalize in the vocative, but those in -Vr don't. In reality,
-		-- though, it's more complex. It appears that animate nouns in -Cr tend to palatalize but inanimate nouns
-		-- do it optionally. Specifics:
-		-- -- Inanimate nouns with optional palatalization (ř listed second): [[alabastr]], [[amfiteátr]], [[barometr]],
-		--	[[centilitr]], [[centrimetr]], [[decilitr]], [[decimetr]], [[Dněstr]], [[filtr]], [[galvanometr]],
-		--	[[hektolitr]], [[kalorimetr]], [[litr]], [[lustr]], [[manometr]], [[manšestr]], [[metr]] (NOTE: is both
-		--	animate and inanimate), [[mikrometr]], [[miliampérmetr]], [[mililitr]], [[nanometr]], [[orchestr]],
-		--	[[parametr]], [[piastr]], [[půllitr]], [[radiometr]], [[registr]], [[rotmistr]], [[semestr]], [[skútr]],
-		--	[[spirometr]], [[svetr]], [[šutr]], [[tachometr]], [[titr]], [[vítr]] (NOTE: has í-ě alternation),
-		--	[[voltmetr]]; [[bagr]], [[bunkr]], [[cedr]], [[Dněpr]], [[fofr]], [[habr]] (NOTE: ř listed first), [[hadr]]
-		--	(NOTE: ř listed first), [[hamr]], [[kafr]], [[kepr]], [[kopr]], [[koriandr]], [[krekr]], [[kufr]],
-		--	[[Kypr]], [[lágr]], [[lógr]], [[manévr]], [[masakr]], [[okr]], [[oleandr]], [[pulovr]], [[šlágr]],
-		--	[[vichr]] (NOTE: ř listed first), [[žánr]]
-		--
-		-- -- Inanimate nouns that don't palatalize: [[ampérmetr]], [[anemometr]], [[sfygmomanometr]], [[sfygmometr]];
-		--	[[dodekaedr]], [[Hamr]], [[ikozaedr]], [[kvádr]], [[sandr]], [[torr]]
-		--
-		-- -- Animate nouns that palatalize: [[arbitr]], [[bratr]], [[ekonometr]], [[foniatr]], [[fotr]], [[geometr]],
-		--	[[kmotr]], [[lotr]], [[magistr]], [[metr]] (NOTE: is both animate and inanimate), [[ministr]], [[mistr]],
-		--	[[pediatr]], [[Petr]], [[psychiatr]], [[purkmistr]], [[setr]], [[šamstr]]; [[bobr]], [[fajnšmekr]],
-		--	[[humr]], [[hypochondr]], [[kapr]], [[lídr]], [[negr]], [[obr]], [[salamandr]], [[sólokapr]], [[švagr]],
-		--	[[tygr]], [[zlobr]], [[zubr]]
-		--
-		-- -- Animate nouns with optional palatalization (ř listed first): [[Silvestr]]; [[Alexandr]], [[snajpr]]
-		--
-		-- Note the inconsistencies, e.g. [[sfygmomanometr]] and [[ampérmetr]] don't palatalize but [[manometr]] and
-		-- [[miliampérmetr]] do it optionally. In reality, inanimate vocatives are extremely rare so this may not be the
-		-- final word.
-		if base.animacy == "inan" and rfind(stem, com.cons_c .. "r$") and not rfind(stem, "rr$") then
-			-- optional r -> ř
-			stem = {stem, palstem}
-		else
-			stem = palstem
-		end
-	elseif rfind(ending, "^[ěií]") or slot == "loc_s" and ending == "e" then
-		if rfind(stem, "ck$") and rfind(base.lemma, "ck$") then
-			-- IJP says nouns in -ck (back, comeback, crack, deadlock, hatchback, hattrick, joystick, paperback, quarterback,
-			-- rock, soundtrack, track, truck) simplify the resulting -cc ending in the loc_p to -c. Similarly [[quarterback]]
-			-- has nom_pl 'quarterbaci, quarterbackove'. We need to check the lemma as well because nouns in -cek don't do this.
-			stem = rsub(stem, "ck$", "k")
-		end
-		if base.velar then
-			-- [[petanque]] /petank/ -> loc pl 'petancích'.
-			stem = rsub(stem, "gu$", "g")
-			stem = rsub(stem, "qu$", "k")
-		end
-		-- loc_s of hard masculines is sometimes -e/ě; the user might indicate this as -e, which we should handle
-		-- correctly
-		stem = com.apply_second_palatalization(stem)
-	end
-	return stem, ending
-end
-
-
 local function skip_slot(number, slot)
 	return number == "sg" and rfind(slot, "_p$") or
 		number == "pl" and rfind(slot, "_s$")
@@ -220,37 +119,50 @@ end
 
 
 -- Basic function to combine stem(s) and other properties with ending(s) and insert the result into the appropriate
--- slot. `props` is an object containing computed stems and other information (such as whether i-mutation is active).
--- The information found in `props` cannot be stored in `base` because there may be more than one set of such properties
--- per `base` (e.g. if the user specified 'umut,uumut' or '-j,j' or '-imut,imut' or some combination of these; in such
--- a case, the caller will iterate over all possible combinations, and ultimately invoke add() multiple times, one per
--- combination).  The properties in `props` are:
--- * Stems:
--- ** `stem`: The basic stem. May be overridden by more specific variants.
--- ** `nonvstem`: The stem used when the ending is null or starts with a consonant, unless overridden by a more specific
---    variant. Defaults to `stem`.
--- ** `umut_nonvstem`: The stem used when the ending is null or starts with a consonant and u-mutation is in effect,
---    unless overridden by a more specific variant. Defaults to `nonvstem`.
--- ** `imut_nonvstem`: The stem used when the ending is null or starts with a consonant and i-mutation is in effect.
+-- slot. `base` is the object describing all the properties of the word being inflected for a single alternant (in case
+-- there are multiple alternants specified using `((...))`). `slot` is the slot to add the resulting forms to. `props`
+-- is an object containing computed stems and other information (such as whether i-mutation is active). The information
+-- found in `props` cannot be stored in `base` because there may be more than one set of such properties per `base`
+-- (e.g. if the user specified 'umut,uumut' or '-j,j' or '-imut,imut' or some combination of these; in such a case, the
+-- caller will iterate over all possible combinations, and ultimately invoke add() multiple times, one per combination).
+-- `indef_endings` is the ending or endings added to the appropriate stem (after any j or v infix) to get the indefinite
+-- form. Its value can be a single string, a list of strings, or a list of form objects (i.e. in general list form).
+-- `def_endings` is similar to `indef_endings` but for definite forms (not including the definite clitics added
+-- afterwards). Most of the time (but not always), `indef_endings` and `def_endings` will be the same. `def_clitics` is
+-- the clitic or clitics to add after the definite ending(s) to form the actual definite form value inserted into the
+-- slot, in the same format as `def_endings` and `indef_endings`. `ending_override`, if true, indicates that the
+-- ending(s) supplied in `indef_endings` and `def_endings` come from a user-specified override, and hence j and v
+-- infixes should not be added as they are already included in the override if needed.
+--
+-- The properties in `props` are:
+-- * Stems (each stem should be in general list form; see [[Module:inflection utilities]]);
+-- ** `stems`: The basic stem(s). May be overridden by more specific variants.
+-- ** `nonvstems`: The stem(s) used when the ending is null or starts with a consonant, unless overridden by a more
+--    specific variant. Defaults to `stems`.
+-- ** `umut_nonvstems`: The stem(s) used when the ending is null or starts with a consonant and u-mutation is in effect,
+--    unless overridden by a more specific variant. Defaults to `nonvstems`.
+-- ** `imut_nonvstems`: The stem(s) used when the ending is null or starts with a consonant and i-mutation is in effect.
 --    If i-mutation is in effect, this should always be specified (otherwise an internal error will occur); hence it has
 --    no default.
--- ** `vstem`: The stem used when the ending starts with a vowel, unless overridden by a more specific variant. Defaults
---    to `stem`.
--- ** `umut_vstem`: The stem used when the ending starts with a vowel and u-mutation is in effect. Defaults to `vstem`.
--- ** `imut_vstem`: The stem used when the ending starts with a vowel and i-mutation is in effect. If i-mutation is in
---    effect, this should always be specified (otherwise an internal error will occur); hence it has no default.
--- ** `null_defvstem`: The stem used when the ending is null and is followed by a definite ending that begins with a
---    vowel, unless overridden by a more specific variant. Defaults to `nonvstem`. This is normally set when `defcon` is
---    specified.
--- ** `umut_null_defvstem`: The stem used when the ending is null and is followed by a definite ending that begins with
---    a vowel, and u-mutation is in effect. Defaults to `umut_nonvstem`. This is normally set when `defcon` is specified
---    and u-mutation is needed, as in the nom/acc pl of neuter [[mastur]] "mast".
+-- ** `vstems`: The stem(s) used when the ending starts with a vowel, unless overridden by a more specific variant.
+--    Defaults to `stems`.
+-- ** `umut_vstems`: The stem(s) used when the ending starts with a vowel and u-mutation is in effect. Defaults to
+--    `vstems`.
+-- ** `imut_vstems`: The stem(s) used when the ending starts with a vowel and i-mutation is in effect. If i-mutation is
+--    in effect, this should always be specified (otherwise an internal error will occur); hence it has no default.
+-- ** `null_defvstems`: The stem(s) used when the ending is null and is followed by a definite ending that begins with a
+--    vowel, unless overridden by a more specific variant. Defaults to `nonvstems`. This is normally set when `defcon`
+--    is specified.
+-- ** `umut_null_defvstems`: The stem(s) used when the ending is null and is followed by a definite ending that begins
+--    with a vowel, and u-mutation is in effect. Defaults to `umut_nonvstems`. This is normally set when `defcon` is
+--    specified and u-mutation is needed, as in the nom/acc pl of neuter [[mastur]] "mast".
 -- * Other properties:
--- ** `jinfix`: If present, either "" or "j". May have attached footnote. Inserted between the stem and ending when the
---    ending begins with a vowel other than "i". Note that j-infixes don't apply to ending overrides.
--- ** `vinfix`: If present, either "" or "v". May have attached footnote. Inserted between the stem and ending when the
---    ending begins with a vowel. Note that v-infixes don't apply to ending overrides. `jinfix` and `vinfix` cannot both
---    be specified.
+-- ** `jinfix`: If present, either "" or "j". Inserted between the stem and ending when the ending begins with a vowel
+--    other than "i". Note that j-infixes don't apply to ending overrides.
+-- ** `jinfix_footnotes`: Footnotes to attach to forms where j-infixing is possible (even if it's not present).
+-- ** `vinfix`: If present, either "" or "v". Inserted between the stem and ending when the ending begins with a vowel.
+--    Note that v-infixes don't apply to ending overrides. `jinfix` and `vinfix` cannot both be specified.
+-- ** `vinfix_footnotes`: Footnotes to attach to forms where v-infixing is possible (even if it's not present).
 -- ** `imut`: If specified (i.e. not nil), either true or false. If specified, there may be associated footnotes in
 --    `imut_footnotes`. If true, i-mutation and associated footnotes are in effect before endings starting with "i". If
 --    false, associated footnotes still apply before endings starting with "i". Note that i-mutation is also in effect
@@ -274,7 +186,7 @@ end
 --    *not* in effect, the associated footnotes in `unimut_footnotes` apply. If false, the associated footnotes in
 --    `unimut_footnotes` still apply in the same circumstances where they would apply if `unimut` where true.
 -- ** `unimut_footnotes`: See `unimut`.
-local function add(base, slot, props, indef_endings, def_endings, def_clitics, ending_override, footnotes)
+local function add(base, slot, props, indef_endings, def_endings, def_clitics, ending_override)
 	if not indef_endings and not def_endings then
 		return
 	end
@@ -283,7 +195,7 @@ local function add(base, slot, props, indef_endings, def_endings, def_clitics, e
 	if skip_slot(base.number, slot) then
 		return
 	end
-	footnotes = iut.combine_footnotes(iut.combine_footnotes(base.footnotes, props.footnotes), footnotes)
+	footnotes = iut.combine_footnotes(base.footnotes, footnotes)
 	-- Do both indefinite and definite endings. They behave very similarly except that definite endings have non-empty
 	-- clitics to append after them. Most but not all of the time the definite and indefinite endings are the same (and
 	-- will be set this way by the calling function), and again, most but not all of the time there is only one definite
@@ -306,11 +218,26 @@ local function add(base, slot, props, indef_endings, def_endings, def_clitics, e
 				endings = {endings}
 			end
 			-- Loop over each ending and clitic.
-			for _, ending in ipairs(endings) do
-				for _, clitic in ipairs(clitics) do
-					local function interr(msg)
-						error(("Internal error: For slot '%s', ending '%s', %s: %s"):format(slot, ending, msg,
-							dump(props)))
+			for _, endingobj in ipairs(endings) do
+				local ending, ending_footnotes
+				if type(endingobj) == "string" then
+					ending = endingobj
+				else
+					ending = endingobj.form
+					ending_footnotes = endingobj.footnotes
+				end
+				local function interr(msg)
+					error(("Internal error: For slot '%s', ending '%s', %s: %s"):format(slot, ending, msg,
+						dump(props)))
+				end
+
+				for _, cliticobj in ipairs(clitics) do
+					local clitic, clitic_footnotes
+					if type(cliticobj) == "string" then
+						clitic = cliticobj
+					else
+						clitic = cliticobj.form
+						clitic_footnotes = cliticobj.footnotes
 					end
 
 					-- Compute whether i-mutation or u-mutation is in effect, and compute the "mutation footnotes",
@@ -362,26 +289,26 @@ local function add(base, slot, props, indef_endings, def_endings, def_clitics, e
 						end
 					elseif ending_in_u then
 						mut_in_effect = "u"
-						-- umut and uumut footnotes are incorporated into the appropriate umut_* stem
+						-- umut and uumut footnotes are incorporated into the appropriate umut_* stems
 					elseif props.unumut then
 						mut_in_effect = "u"
 					end
 
-					-- Now compute the appropriate stem to which the ending and clitic are added.
+					-- Now compute the appropriate stems to which the ending and clitic are added.
 					if mut_in_effect == "i" then
 						-- NOTE: It appears that imut and defcon never co-occur; otherwise we'd need to flesh out the
 						-- set of stems to include i-mutation versions of defcon stems, similar to what we do for
 						-- u-mutation.
 						if is_vowel_ending then
-							if not stems.imut_vstem then
-								interr("i-mutation in effect and ending begins with a vowel but '.imut_vstem' not defined")
+							if not stems.imut_vstems then
+								interr("i-mutation in effect and ending begins with a vowel but '.imut_vstems' not defined")
 							end
-							stem = stems.imut_vstem
+							stems = stems.imut_vstems
 						else
-							if not stems.imut_nonvstem then
-								interr("i-mutation in effect and ending does not begin with a vowel but '.imut_nonvstem' not defined")
+							if not stems.imut_nonvstems then
+								interr("i-mutation in effect and ending does not begin with a vowel but '.imut_nonvstems' not defined")
 							end
-							stem = stems.imut_nonvstem
+							stems = stems.imut_nonvstems
 						end
 					else
 						-- Careful with the following logic; it is written carefully and should not be changed without
@@ -397,35 +324,36 @@ local function add(base, slot, props, indef_endings, def_endings, def_clitics, e
 						-- lemma would incorrectly produce #[[masturið]].
 						if (ending == "" or ending == "-") and is_vowel_clitic then
 							if has_umut then
-								stem = stems.umut_null_defvstem
+								stems = stems.umut_null_defvstems
 							else
-								stem = stems.null_defvstem
+								stems = stems.null_defvstems
 							end
 						end
-						-- If the stem was not set above and the ending is "-", it means to use the lemma as the form
+						-- If the stems were not set above and the ending is "-", it means to use the lemma as the form
 						-- directly (before adding any definite clitic) rather than try to construct the form from a
 						-- stem and ending. See the comment above for why we want to do this.
-						if not stem and ending == "-" then
-							stem = base.actual_lemma
+						if not stems and ending == "-" then
+							stems = base.actual_lemma
 							ending = ""
 						end
-						-- If the stem is still unset, then use the vowel or non-vowel stem if available. When
-						-- u-mutation is active, we first check for u-mutated versions of the vowel or non-vowel stem
-						-- before falling back to the regular vowel or non-vowel stem. Note that an expression like
-						-- `has_umut and stems.umut_vstem or stems.vstem` here is NOT equivalent to an if-else or
-						-- ternary operator expression because if `has_umut` is true and `umut_vstem` is missing, it
-						-- will still fall back to `vstem` (which is what we want).
-						if not stem then
+						-- If the stems are still unset, then use the vowel or non-vowel stems if available. When
+						-- u-mutation is active, we first check for u-mutated versions of the vowel or non-vowel stems
+						-- before falling back to the regular vowel or non-vowel stems. Note that an expression like
+						-- `has_umut and stems.umut_vstems or stems.vstems` here is NOT equivalent to an if-else or
+						-- ternary operator expression because if `has_umut` is true and `umut_vstems` is missing, it
+						-- will still fall back to `vstems` (which is what we want).
+						if not stems then
 							if is_vowel_ending then
-								stem = has_umut and stems.umut_vstem or stems.vstem
+								stems = has_umut and stems.umut_vstems or stems.vstems
 							else
-								stem = has_umut and stems.umut_nonvstem or stems.nonvstem
+								stems = has_umut and stems.umut_nonvstems or stems.nonvstems
 							end
 						end
-						-- Finally, fall back to the basic stem, which is always defined.
-						stem = stem or stems.stem
+						-- Finally, fall back to the basic stems, which are always defined.
+						stems = stems or stems.stems
 					end
 
+					local infix, infix_footnotes
 					-- Compute the infix (j, v or nothing) that goes between the stem and ending.
 					if not ending_override and is_vowel_ending then
 						if props.vinfix and props.jinfix then
@@ -433,19 +361,38 @@ local function add(base, slot, props, indef_endings, def_endings, def_clitics, e
 						end
 						if props.vinfix then
 							infix = props.vinfix
+							infix_footnotes = props.vinfix_footnotes
 						elseif props.jinfix and not ending_in_i then
 							infix = props.jinfix
+							infix_footnotes = props.jinfix_footnotes
 						end
 					end
 
-					-- Now combine stem, infix, ending and clitic. 
-					clitic = iut.combine_form_and_footnotes(ending, iut.combine_footnotes(footnotes)
-					local function combine_stem_ending(stem, ending)
-						return com.combine_stem_ending(base, slot, stem, ending)
+					-- If base-level footnotes specified, they go before any stem footnotes, so we need to clone the
+					-- stems an insert the base-level footnotes appropriately. In general, we want the footnotes to be
+					-- in the order [base.footnotes, stem.footnotes, mut_footnotes, infix_footnotes, ending.footnotes,
+					-- clitic.footnotes].
+					if base.footnotes then
+						local stems_with_footnotes = {}
+						for _, stem in ipairs(stems) do
+							stem = m_table.shallowcopy(stem)
+							stem.footnotes = iut.combine_footnotes(base.footnotes, stem.footnotes)
+							table.insert(stems_with_footnotes, stem)
+						end
+						stems = stems_with_footnotes
 					end
-					iut.add_forms(base.forms, slot, stem, ending, combine_stem_ending)
+
+					-- Now combine stems, infix, ending and clitic. [FIXME: Not done coding]
+					local stem_and_ending = foo
+					clitic = iut.combine_form_and_footnotes(ending, iut.combine_footnotes(footnotes))
+					local function combine_stem_ending(stems, ending)
+						return com.combine_stem_ending(base, slot, stems, ending)
+					end
+					iut.add_forms(base.forms, slot, stems, ending, combine_stem_ending)
+				end
 			end
 		end
+	end
 end
 
 
@@ -2408,8 +2355,8 @@ local function determine_declension(base)
 				base.decl = "strong-m"
 			end
 		end
-		if not stem then
-
+		-- FIXME
+	end
 
 	if stem then
 		if base.gender == "m" then
