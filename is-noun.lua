@@ -274,8 +274,8 @@ end
 --    *not* in effect, the associated footnotes in `unimut_footnotes` apply. If false, the associated footnotes in
 --    `unimut_footnotes` still apply in the same circumstances where they would apply if `unimut` where true.
 -- ** `unimut_footnotes`: See `unimut`.
-local function add(base, slot, props, endings, def_endings, ending_override, footnotes)
-	if not endings then
+local function add(base, slot, props, indef_endings, def_endings, def_clitics, ending_override, footnotes)
+	if not indef_endings and not def_endings then
 		return
 	end
 	-- Call skip_slot() based on the declined number; if the actual number is different, we correct this in
@@ -283,120 +283,169 @@ local function add(base, slot, props, endings, def_endings, ending_override, foo
 	if skip_slot(base.number, slot) then
 		return
 	end
-	local props_footnotes = type(props) == "table" and props.footnotes or nil
-	footnotes = iut.combine_footnotes(iut.combine_footnotes(base.footnotes, props_footnotes), footnotes)
-	if type(endings) == "string" then
-		endings = {endings}
-	end
-	for _, ending in ipairs(endings) do
-		-- Compute the stem. If ending is "-", use the lemma regardless. Otherwise if `props` is a string, use it as the
-		-- stem (FIXME: not sure if this applies to Icelandic). Otherwise `props` is an object as described above;
-		-- compute the appropriate stem based on the ending.
-		local stem, defstem, infix, mut_footnotes
-		if ending == "-" then
-			stem = base.actual_lemma
-			ending = ""
-		elseif type(props) == "string" then
-			stem = props
-		end
-		local function interr(msg)
-			error(("Internal error: For slot '%s', ending '%s', %s: %s"):format(slot, ending, msg, dump(props)))
-		end
-		local explicit_imut, explicit_umut
-		ending, explicit_umut = rsubb(ending, "^%^%^", "")
-		if not explicit_umut then
-			ending, explicit_imut = rsubb(ending, "^%^", "")
-		end
-		local is_vowel_ending = rfind(ending, "^" .. com.vowel_c)
-		local mut_in_effect
-		local ending_in_a = not not ending:find("^a")
-		local ending_in_i = not not ending:find("^i")
-		local ending_in_u = not not ending:find("^u")
-		if explicit_imut then
-			mut_in_effect = "i"
-		elseif explicit_umut then
-			mut_in_effect = "u"
-		elseif props.unimut ~= nil then
-			local is_unimut_slot
-			if base.gender == "m" then
-				is_unimut_slot = slot == "dat_s" or slot:find("_p")
-			elseif base.gender == "f" then
-				is_unimut_slot = slot == "acc_s" or slot == "dat_s" or slot == "dat_p" or slot == "gen_p"
-			else
-				interr("'unimut' shouldn't be specified with neuter nouns; don't know what slots would be affected; neuter pluralia tantum nouns using 'unimut' should have synthesized a singular without i-mutation")
+	footnotes = iut.combine_footnotes(iut.combine_footnotes(base.footnotes, props.footnotes), footnotes)
+	-- Do both indefinite and definite endings. They behave very similarly except that definite endings have non-empty
+	-- clitics to append after them. Most but not all of the time the definite and indefinite endings are the same (and
+	-- will be set this way by the calling function), and again, most but not all of the time there is only one definite
+	-- clitic per slot.
+	for _, endtype in ipairs { "indef", "def" } do
+		local endings, clitics
+		if endtype == "indef" then
+			endings = indef_endings
+			clitics = {""}
+		else
+			endings = def_endings
+			clitics = def_clitics
+			if type(clitics) == "string" then
+				clitics = {clitics}
 			end
-			if is_unimut_slot then
-				mut_footnotes = props.unimut_footnotes
-			elseif props.unimut then
-				mut_in_effect = "i"
-			end
-		elseif ending_in_i then
-			if props.imut then
-				mut_in_effect = "i"
-				mut_footnotes = props.imut_footnotes
-			elseif props.imut == false then
-				mut_footnotes = props.imut_footnotes
-			elseif props.unumut ~= nil then
-				mut_footnotes = props.unumut_footnotes
-			end
-		elseif ending_in_a then
-			if props.unumut ~= nil then
-				mut_footnotes = props.unumut_footnotes
-			end
-		elseif ending_in_u then
-			mut_in_effect = "u"
-			-- umut and uumut footnotes are incorporated into the appropriate umut_* stem
-		elseif props.unumut then
-			mut_in_effect = "u"
 		end
+		-- If `endings` is nil, it means to entirely skip adding any endings of this sort (indefinite or definite).
+		if endings then
+			if type(endings) == "string" then
+				endings = {endings}
+			end
+			-- Loop over each ending and clitic.
+			for _, ending in ipairs(endings) do
+				for _, clitic in ipairs(clitics) do
+					local function interr(msg)
+						error(("Internal error: For slot '%s', ending '%s', %s: %s"):format(slot, ending, msg,
+							dump(props)))
+					end
 
-		if mut_in_effect == "i" then
-			if is_vowel_ending then
-				if not stems.imut_vstem then
-					interr("i-mutation in effect and ending begins with a vowel but '.imut_vstem' not defined")
-				end
-				stem = stem or stems.imut_vstem
-			else
-				if not stems.imut_nonvstem then
-					interr("i-mutation in effect and ending does not begin with a vowel but '.imut_nonvstem' not defined")
-				end
-				stem = stem or stems.imut_nonvstem
-		if not ending_override and is_vowel_ending then
-			if props.vinfix and props.jinfix then
-				interr("can't have specifications for both '.vinfix' and '.jinfix'; should have been caught above")
-			end
-			if props.vinfix then
-				infix = props.vinfix
-			elseif props.jinfix and not ending_in_i then
-				infix = props.jinfix
+					-- Compute whether i-mutation or u-mutation is in effect, and compute the "mutation footnotes",
+					-- which are footnotes attached to a mutation-related indicator and which may need to be added even
+					-- if no mutation is in effect (specifically when dealing with an ending that would trigger a
+					-- mutation if in effect). AFAIK you cannot have both mutations in effect at once, and i-mutation
+					-- overrides u-mutation if both would be in effect.
+					local explicit_imut, explicit_umut
+					ending, explicit_umut = rsubb(ending, "^%^%^", "")
+					if not explicit_umut then
+						ending, explicit_imut = rsubb(ending, "^%^", "")
+					end
+					local is_vowel_ending = rfind(ending, "^" .. com.vowel_c)
+					local is_vowel_clitic = rfind(clitic, "^" .. com.vowel_c)
+					local mut_in_effect, mut_footnotes
+					local ending_in_a = not not ending:find("^a")
+					local ending_in_i = not not ending:find("^i")
+					local ending_in_u = not not ending:find("^u")
+					if explicit_imut then
+						mut_in_effect = "i"
+					elseif explicit_umut then
+						mut_in_effect = "u"
+					elseif props.unimut ~= nil then
+						local is_unimut_slot
+						if base.gender == "m" then
+							is_unimut_slot = slot == "dat_s" or slot:find("_p")
+						elseif base.gender == "f" then
+							is_unimut_slot = slot == "acc_s" or slot == "dat_s" or slot == "dat_p" or slot == "gen_p"
+						else
+							interr("'unimut' shouldn't be specified with neuter nouns; don't know what slots would be affected; neuter pluralia tantum nouns using 'unimut' should have synthesized a singular without i-mutation")
+						end
+						if is_unimut_slot then
+							mut_footnotes = props.unimut_footnotes
+						elseif props.unimut then
+							mut_in_effect = "i"
+						end
+					elseif ending_in_i then
+						if props.imut then
+							mut_in_effect = "i"
+							mut_footnotes = props.imut_footnotes
+						elseif props.imut == false then
+							mut_footnotes = props.imut_footnotes
+						elseif props.unumut ~= nil then
+							mut_footnotes = props.unumut_footnotes
+						end
+					elseif ending_in_a then
+						if props.unumut ~= nil then
+							mut_footnotes = props.unumut_footnotes
+						end
+					elseif ending_in_u then
+						mut_in_effect = "u"
+						-- umut and uumut footnotes are incorporated into the appropriate umut_* stem
+					elseif props.unumut then
+						mut_in_effect = "u"
+					end
+
+					-- Now compute the appropriate stem to which the ending and clitic are added.
+					if mut_in_effect == "i" then
+						-- NOTE: It appears that imut and defcon never co-occur; otherwise we'd need to flesh out the
+						-- set of stems to include i-mutation versions of defcon stems, similar to what we do for
+						-- u-mutation.
+						if is_vowel_ending then
+							if not stems.imut_vstem then
+								interr("i-mutation in effect and ending begins with a vowel but '.imut_vstem' not defined")
+							end
+							stem = stems.imut_vstem
+						else
+							if not stems.imut_nonvstem then
+								interr("i-mutation in effect and ending does not begin with a vowel but '.imut_nonvstem' not defined")
+							end
+							stem = stems.imut_nonvstem
+						end
+					else
+						-- Careful with the following logic; it is written carefully and should not be changed without
+						-- a thorough understanding of its functioning.
+						local has_umut = mut_in_effect == "u"
+						-- First, if the ending is null, and we have a vowel-initial definite-article clitic, use the
+						-- special 'defcon' stems if available. We do this even if the ending is "-", which normally
+						-- means to use the lemma regardless (which avoids problems with e.g. thinking that the
+						-- masculine singular nominative ending -ur would trigger u-mutation, which will happen if we
+						-- construct the nominative singular from the stem instead of just using the lemma directly).
+						-- The reason for this is that when 'defcon' is active, it applies to the nominative singular,
+						-- producing e.g. definite [[mastrið]] of neuter lemma [[mastur]] "mast"; here, using the
+						-- lemma would incorrectly produce #[[masturið]].
+						if (ending == "" or ending == "-") and is_vowel_clitic then
+							if has_umut then
+								stem = stems.umut_null_defvstem
+							else
+								stem = stems.null_defvstem
+							end
+						end
+						-- If the stem was not set above and the ending is "-", it means to use the lemma as the form
+						-- directly (before adding any definite clitic) rather than try to construct the form from a
+						-- stem and ending. See the comment above for why we want to do this.
+						if not stem and ending == "-" then
+							stem = base.actual_lemma
+							ending = ""
+						end
+						-- If the stem is still unset, then use the vowel or non-vowel stem if available. When
+						-- u-mutation is active, we first check for u-mutated versions of the vowel or non-vowel stem
+						-- before falling back to the regular vowel or non-vowel stem. Note that an expression like
+						-- `has_umut and stems.umut_vstem or stems.vstem` here is NOT equivalent to an if-else or
+						-- ternary operator expression because if `has_umut` is true and `umut_vstem` is missing, it
+						-- will still fall back to `vstem` (which is what we want).
+						if not stem then
+							if is_vowel_ending then
+								stem = has_umut and stems.umut_vstem or stems.vstem
+							else
+								stem = has_umut and stems.umut_nonvstem or stems.nonvstem
+							end
+						end
+						-- Finally, fall back to the basic stem, which is always defined.
+						stem = stem or stems.stem
+					end
+
+					-- Compute the infix (j, v or nothing) that goes between the stem and ending.
+					if not ending_override and is_vowel_ending then
+						if props.vinfix and props.jinfix then
+							interr("can't have specifications for both '.vinfix' and '.jinfix'; should have been caught above")
+						end
+						if props.vinfix then
+							infix = props.vinfix
+						elseif props.jinfix and not ending_in_i then
+							infix = props.jinfix
+						end
+					end
+
+					-- Now combine stem, infix, ending and clitic. 
+					clitic = iut.combine_form_and_footnotes(ending, iut.combine_footnotes(footnotes)
+					local function combine_stem_ending(stem, ending)
+						return com.combine_stem_ending(base, slot, stem, ending)
+					end
+					iut.add_forms(base.forms, slot, stem, ending, combine_stem_ending)
 			end
 		end
-
-
-		-- FIXME: Rest of this is all code to be rewritten
-
-			if props.oblique_slots == "all" or
-				(props.oblique_slots == "gen_p" or props.oblique_slots == "all-oblique") and slot == "gen_p" or
-				props.oblique_slots == "all-oblique" and (slot == "ins_s" or slot == "dat_p" or slot == "loc_p" or slot == "ins_p") then
-				if is_vowel_ending then
-					stem = props.oblique_vowel_stem
-				else
-					stem = props.oblique_nonvowel_stem
-				end
-			elseif is_vowel_ending then
-				stem = props.vowel_stem
-			else
-				stem = props.nonvowel_stem
-			end
-		end
-		-- Maybe apply the first or second Slavic palatalization.
-		stem, ending = apply_special_cases(base, slot, stem, ending)
-		ending = iut.combine_form_and_footnotes(ending, footnotes)
-		local function combine_stem_ending(stem, ending)
-			return com.combine_stem_ending(base, slot, stem, ending)
-		end
-		iut.add_forms(base.forms, slot, stem, ending, combine_stem_ending)
-	end
 end
 
 
