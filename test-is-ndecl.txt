@@ -1503,13 +1503,17 @@ FIXME:
 * {{m|is|folald||foal}}; also {{m|is|áhald||appliance, instrument}}, {{m|is|afsal||conveyance (legal)}}, {{m|is|akarn||acorn}}, {{m|is|almanak||calendar}}, {{m|is|átvagl||glutton}}, {{m|is|brekan||coarse blanket}} (synonym: {{m|is|brekán}}), {{m|is|félag||company, society}}, {{m|is|fóarn||gizzard}}, {{m|is|forlag||publishing house}}, {{m|is|fosfat||phosphate}}, {{m|is|gímald||large opening; vast space}}, {{m|is|kafald||snowfall}}, {{m|is|karat||carat}}, {{m|is|karbónat||carbonate}}, {{m|is|kerald||tub}}, {{m|is|kjarald||tub}}, {{m|is|kolhýdrat||carbohydrate}}, {{m|is|líkan||model; statue}}, {{m|is|organ||organ (musical; archaic)}}, {{m|is|rekald||flotsam}}, {{m|is|salat||salad; lettuce}}, {{m|is|súlfat||sulfate}}
 * {{tl|is-ndecl|n|pagename=folald}}
 * {{m|is|meðal||means; drug, medicine}}; also {{m|is|hundrað||hundred}}
-* {{tl|is-ndecl|n.uumut|pagename=meðal}}
-* {{m|is|aðal||nature, character}}; also {{m|is|boldang||thick linen cloth; sailcloth}}, {{m|is|hunang||honey}}, {{m|is|mundang||balance pointer; mean}}, {{m|is|spínat||spinach}}, 
+* {{tl|is-ndecl|n.uumut[traditional, prescribed],umut[also common]|pagename=meðal}}
+* {{m|is|hundrað||hundred}}
+* {{tl|is-ndecl|n.uumut|pagename=hundrað}}
+* {{m|is|aðal||nature, character}}; also {{m|is|boldang||thick linen cloth; sailcloth}}, {{m|is|hunang||honey}}, {{m|is|mundang||balance pointer; mean}}, {{m|is|spínat||spinach}}
 * {{tl|is-ndecl|n.sg|pagename=aðal}}
 * {{m|is|hafald||heddle (guide thread in loom)}}; u_umut indicates double u-mutation with both a's going to ö
 * {{tl|is-ndecl|n.umut,u_umut|pagename=hafald}}
-* {{m|is|hérað||district}}; also {{m|is|óðal||hereditary farm}}
+* {{m|is|hérað||district}}
 * {{tl|is-ndecl|n.uumut,umut|pagename=hérað}}
+* {{m|is|óðal||hereditary farm}}
+* {{tl|is-ndecl|n.uumut[traditional],umut[also common]|pagename=óðal}}
 
 ==== irregular, ending in -é ====
 * {{m|is|tré||tree; wood}}; def nom/acc sg -ð (no -i-); dat sg -; def nom/acc pl -n (no -i-); dat pl -m; def gen pl has no -a ending); all handled by <já> indicator; also {{m|is|hné||knee}}, {{m|is|kné||knee}}
