@@ -77,15 +77,15 @@ end
 local output_noun_slots = {
 	nom_s = "nom|s",
 	nom_s_linked = "nom|s",
-	gen_s = "gen|s",
-	gen_s_linked = "gen|s",
-	dat_s = "dat|s",
 	acc_s = "acc|s",
+	acc_s_linked = "acc|s", -- for [[sig]]
+	dat_s = "dat|s",
+	gen_s = "gen|s",
 	nom_p = "nom|p",
 	nom_p_linked = "nom|p",
-	gen_p = "gen|p",
-	dat_p = "dat|p",
 	acc_p = "acc|p",
+	dat_p = "dat|p",
+	gen_p = "gen|p",
 }
 
 
@@ -101,16 +101,48 @@ local function get_output_noun_slots(alternant_multiword_spec)
 end
 
 
-local potential_lemma_slots = {"nom_s", "nom_p", "gen_s"}
+local potential_lemma_slots = {"nom_s", "nom_p", "acc_s"}
 
 
 local cases = {
 	nom = true,
-	gen = true,
-	dat = true,
 	acc = true,
+	dat = true,
+	gen = true,
 }
 
+local clitic_articles = {
+	m = {
+		nom_s = "inn",
+		acc_s = "inn",
+		dat_s = "num",
+		gen_s = "ins",
+		nom_p = "nir",
+		acc_p = "na",
+		dat_p = "num",
+		gen_p = "nna",
+	},
+	f = {
+		nom_s = "in",
+		acc_s = "ina",
+		dat_s = "inni",
+		gen_s = "innar",
+		nom_p = "nar",
+		acc_p = "nar",
+		dat_p = "num",
+		gen_p = "nna",
+	},
+	n = {
+		nom_s = "ið",
+		acc_s = "ið",
+		dat_s = "nu",
+		gen_s = "ins",
+		nom_p = "in",
+		acc_p = "in",
+		dat_p = "num",
+		gen_p = "nna",
+	},
+}
 
 local function skip_slot(number, slot)
 	return number == "sg" and rfind(slot, "_p$") or
@@ -168,11 +200,20 @@ end
 --    false, associated footnotes still apply before endings starting with "i". Note that i-mutation is also in effect
 --    if the ending has ^ prepended, but the associated footnotes don't apply here.
 -- ** `imut_footnotes`: See `imut`.
--- ** `unumut`: If specified (i.e. not nil), either true or false. If specified, there may be associated footnotes in
---    `unumut_footnotes`. If true, u-mutation is in effect *except* before an ending that starts with an "a" or "i"
---    (unless i-mutation is in effect, which takes precedence). When u-mutation is *not* in effect, and i-mutation is
---    also not in effect, the associated footnotes in `unumut_footnotes` apply. If false, the associated footnotes in
---    `unumut_footnotes` still apply in the same circumstances where they would apply if `unumut` where true.
+-- ** `unumut`: If specified (i.e. not nil), the type of un-u-mutation requested (either "unumut" or "unuumut", or the
+--    negation of the same using "-unumut" or "-unuumut" for no un-u-mutation; the two differ in which slots any
+--    associated footnote are placed). If specified, there may be associated footnotes in `unumut_footnotes`. If
+--    "unumut", u-mutation is in effect *except* before an ending that starts with an "a" or "i" (unless i-mutation is
+--    in effect, which takes precedence). If "unuumut", the rules are different: when masculine, u-mutation is in effect
+--    *except* in the gen sg and pl (examples are [[söfnuður]] "congregation" and [[mánuður]] "month"); when feminine,
+--    u-mutation is in effect except in the nom/acc/gen pl (examples are [[verslun]] "trade, business; store, shop" and
+--    [[kvörtun]] "complaint"; also note [[örvun]] "encouragement; stimulation" where the un-u-mutated form is 'örvan-'
+--    rather than expected #'arvan-', because the -v- blocks the un-u-mutation of ö). When u-mutation is *not* in
+--    effect, and i-mutation is also not in effect, the associated footnotes in `unumut_footnotes` apply. If `unumut` is
+--    "-unumut" or "-unuumut", there is no un-u-mutation (i.e. there are no special u-mutated stems, and the basic
+--    stems, which typically have u-mutation built into them, apply throughout), but the associated footnotes in
+--    `unumut_footnotes` still apply in the same circumstances where they would apply if `unumut` were "unumut" or
+--    "unuumut".
 -- ** `unumut_footnotes`: See `unumut`.
 -- ** `unimut`: If specified (i.e. not nil), either true or false. If specified, there may be associated footnotes in
 --    `unimut_footnotes`. If true, i-mutation is in effect *except* in certain case/num combinations that depend on the
@@ -274,7 +315,19 @@ local function add(base, slot, props, indef_endings, def_endings, def_clitics, e
 						elseif props.unimut then
 							mut_in_effect = "i"
 						end
-					elseif ending_in_i then
+					elseif props.imut ~= nil then
+						if ending_in_i then
+							if props.imut then
+								mut_in_effect = "i"
+								mut_footnotes = props.imut_footnotes
+							elseif props.imut == false then
+								mut_footnotes = props.imut_footnotes
+							end
+						end
+					elseif props.unumut ~= nil then
+						-- FIXME everything from here down to "Now compute the appropriate stems ..." needs rewriting.
+						if props.unumut == "unumut" or props.unumut == "-unumut" then
+							if ending_in_i 
 						if props.imut then
 							mut_in_effect = "i"
 							mut_footnotes = props.imut_footnotes
@@ -283,13 +336,15 @@ local function add(base, slot, props, indef_endings, def_endings, def_clitics, e
 						elseif props.unumut ~= nil then
 							mut_footnotes = props.unumut_footnotes
 						end
+					elseif ending_in_u then
+						mut_in_effect = "u"
+						-- umut and uumut footnotes are incorporated into the appropriate umut_* stems
+
 					elseif ending_in_a then
 						if props.unumut ~= nil then
 							mut_footnotes = props.unumut_footnotes
 						end
 					elseif ending_in_u then
-						mut_in_effect = "u"
-						-- umut and uumut footnotes are incorporated into the appropriate umut_* stems
 					elseif props.unumut then
 						mut_in_effect = "u"
 					end
@@ -382,13 +437,53 @@ local function add(base, slot, props, indef_endings, def_endings, def_clitics, e
 						stems = stems_with_footnotes
 					end
 
-					-- Now combine stems, infix, ending and clitic. [FIXME: Not done coding]
-					local stem_and_ending = foo
-					clitic = iut.combine_form_and_footnotes(ending, iut.combine_footnotes(footnotes))
-					local function combine_stem_ending(stems, ending)
-						return com.combine_stem_ending(base, slot, stems, ending)
+					local function combine_stem_ending(stem, clitic)
+						if stem == "?" then
+							return "?"
+						end
+						local function drop_clitic_i()
+							clitic = clitic:gsub("^i", "")
+						end
+						-- * at the end of a definite ending indicates that the following i- of the clitic should drop,
+						-- as with neuter [[tré]], [[kné]], [[fé]].
+						if ending:find("%*$") then
+							ending = ending:gsub("%*$", "")
+							drop_clitic_i()
+						end
+						local stem_with_infix = stem .. (infix or "")
+						local stem_with_ending
+						-- An initial s- of the ending drops after a cluster of cons + s (including written <x>).
+						if ending:find("^s") and (stem_with_infix:find("x$") or
+							stem_with_infix:find(com.cons_c .. "s$")) then
+							stem_with_ending = stem_with_infix .. ending:gsub("^s", "")
+						else
+							stem_with_ending = stem_with_infix .. ending
+						end
+						if clitic == "" then
+							return stem_with_ending
+						end
+						if slot == "dat_p" then
+							stem_with_ending = stem_with_ending:gsub("m$", "")
+						end
+						if clitic:find("^i.*[aiu]") then -- disyllabic clitics in i-
+							-- in practice, fem acc_s -ina, dat_s -inni, gen_s -innar
+							if rfind(stem_with_ending, com.vowel_c .. "$") then
+								drop_clitic_i()
+							end
+						elseif clitic:find("^i") then -- monosyllabic clitics in i-
+							if ending:find("[aiu]$") then
+								drop_clitic_i()
+							end
+						end
+						return stem_with_ending .. clitic
 					end
-					iut.add_forms(base.forms, slot, stems, ending, combine_stem_ending)
+
+					local combined_footnotes = iut.combine_footnotes(
+						iut.combine_footnotes(mut_footnotes, infix_footnotes),
+						iut.combine_footnotes(ending_footnotes, clitic_footnotes)
+					)
+					local clitic_with_notes = iut.combine_form_and_footnotes(clitic, combined_footnotes)
+					iut.add_forms(base.forms, slot, stems, clitic_with_notes, combine_stem_ending)
 				end
 			end
 		end
@@ -532,62 +627,6 @@ local decls = {}
 --   may not be a list of strings, as only one annotation is displayed. If omitted, it is derived from the category
 --   spec(s) by taking the last category (if more than one is given) and removing ' POS' before keyword substitution.
 local declprops = {}
-
--- Return the default masculine animate nominative plural ending(s) given `base` and `stems`. This is called for hard
--- and soft masculines ending in a consonant, but not for nouns ending in a vowel, which have their own defaults
--- (particularly nouns in -a, where -ista/-ita/-asta behave differently from other nouns in -a).
-local function default_masc_animate_nom_pl(base, stems)
-	return
-		-- [monosyllabic words: Dánové, Irové, králové, mágové, Rusové, sokové, synové, špehové, zběhové, zeťové, manové, danové
-		-- (but Žid → Židé, Čech → Češi).] -- There are too many exceptions to this to make a special rule. It is better to use
-		-- the overall default of -i and require that cases with -ove, -ove/-i, -i/-ove, etc. use overrides.
-		-- com.is_monosyllabic(base.lemma) and "ové" or
-		-- reducible terms in -Cek; order of -ové vs. -i sometimes varies:
-		-- [[fracek]] (ové/i), [[klacek]] (i/ové), [[macek]] (ové/i), [[nácek]] (i/ové), [[prcek]] (ové/i), [[racek]] (ové/i);
-		-- [[bazilišek]] (i/ové), [[černoušek]] (i/ové), [[drahoušek]] (ové/i), [[fanoušek]] (i/ové), [[františek]] (an/inan,
-		-- ends in -i/-y but not -ové), [[koloušek]] (-i only), [[kulíšek]] (i/ové), [[oříšek]] (i/ové), [[papoušek]] (-i only),
-		-- [[prášek]] (i/ové), [[šašek]] (i/ové).
-		-- make sure to check `stems` as we don't want to include non-reducible words in -Cek (but do want to include
-		-- [[quarterback]], with -i/-ové)
-		rfind(stems.vowel_stem, "^" .. com.lowercase_c .. ".*" .. com.cons_c .. "k$") and {"i", "ové"} or
-		-- [[stoik]], [[neurotik]], [[logik]], [[fyzik]], etc.
-		rfind(base.lemma, "^" .. com.lowercase_c .. ".ik$") and {"i", "ové"} or
-		-- barmani, gentlemani, jazzmani, kameramani, narkomani, ombudsmani, pivotmani, rekordmani, showmani, supermani, toxikomani
-		rfind(base.lemma, "^" .. com.lowercase_c .. ".*man$") and "i" or
-		-- terms ending in -an after a palatal or a consonant that doesn't change when palatalized, i.e. labial or l (but -man
-		-- forms -mani unless in a proper noun): Brňan → Brňané, křesťan → křesťané, měšťan → měšťané, Moravan → Moravané,
-		-- občan → občané, ostrovan → ostrované, Pražan → Pražané, Slovan → Slované, svatebčan → svatebčané, venkovan → venkované,
-		-- Australan → Australané; also s, because there are many demonyms in -san e.g. [[Andalusan]], [[Barbadosan]], [[Oděsan]],
-		-- and few proper nouns in -san; similarly z because of [[Belizan]], [[Gazan]], [[Kavkazan]], etc.; also w, which isn't a
-		-- normal consonant in Icelandic but occurs in [[Glasgowan]] and [[Zimbabwan]]; NOTE: a few misc words like [[pohan]] also
-		-- work this way but need manual overrides
-		rfind(base.lemma, "[" .. com.inherently_soft .. com.labial .. "wlsz]an$") and {"é", "i"} or -- most now can also take -i
-		-- proper names: Baťové, Novákové, Petrové, Tomášové, Vláďové; exclude demonyms (but include surnames)
-		rfind(base.lemma, "^" .. com.uppercase_c) and (base.surname or not rfind(base.lemma, "[eě]c$")) and "ové" or
-		-- demonyms: [[Albánec]], [[Gruzínec]], [[Izraelec]], [[Korejec]], [[Libyjec]], [[Litevec]], [[Němec]], [[Portugalec]]
-		rfind(base.lemma, "^" .. com.uppercase_c .. ".*[eě]c$") and "i" or
-		-- From here on down, we're dealing only with lowercase terms.
-		-- buditelé, budovatelé, čekatelé, činitelé, hostitelé, jmenovatelé, pisatelé, ručitelé, velitelé, živitelé
-		rfind(base.lemma, ".*tel$") and "é" or
-		-- nouns in -j: čaroděj → čarodějové, lokaj → lokajové, patricij → patricijové, plebej → plebejové, šohaj → šohajové, žokej → žokejové
-		-- nouns in -l: apoštol → apoštolové, břídil → břídilové, fňukal → fňukalové, hýřil → hýřilové, kutil → kutilové,
-		--   loudal → loudalové, mazal → mazalové, škrabal → škrabalové, škudlil → škudlilové, vyvrhel → vyvrhelové, žvanil → žvanilové
-		--   (we excluded those in -tel above)
-		rfind(base.lemma, ".*[jl]$") and "ové" or
-		-- archeolog → archeologové, biolog → biologové, geolog → geologové, meteorolog → meteorologové
-		rfind(base.lemma, ".*log$") and "ové" or
-		-- dramaturg → dramaturgové, chirurg → chirurgové
-		rfind(base.lemma, ".*urg$") and "ové" or
-		-- fotograf → fotografové, geograf → geografové, lexikograf → lexikografové
-		rfind(base.lemma, ".*graf$") and "ové" or
-		-- bibliofil → bibliofilové, germanofil → germanofilové
-		rfind(base.lemma, ".*fil$") and "ové" or
-		-- rusofob → rusofobové
-		rfind(base.lemma, ".*fob$") and "ové" or
-		-- agronom → agronomové, ekonom → ekonomové
-		rfind(base.lemma, ".*nom$") and "ové" or
-		"i"
-end
 
 
 decls["strong-m"] = function(base, stems)
