@@ -293,60 +293,75 @@ local function add(base, slot, props, indef_endings, def_endings, def_clitics, e
 					end
 					local is_vowel_ending = rfind(ending, "^" .. com.vowel_c)
 					local is_vowel_clitic = rfind(clitic, "^" .. com.vowel_c)
-					local mut_in_effect, mut_footnotes
+					local mut_in_effect, mut_not_in_effect, mut_footnotes
 					local ending_in_a = not not ending:find("^a")
 					local ending_in_i = not not ending:find("^i")
 					local ending_in_u = not not ending:find("^u")
+					if props.unimut ~= nil and props.unumut ~= nil then
+						interr("Cannot have both 'unimut' and 'unumut' in effect at the same time")
+					end
+					if props.unimut ~= nil and props.imut ~= nil then
+						interr("Cannot have both 'unimut' and 'imut' in effect at the same time")
+					end
 					if explicit_imut then
 						mut_in_effect = "i"
 					elseif explicit_umut then
 						mut_in_effect = "u"
-					elseif props.unimut ~= nil then
-						local is_unimut_slot
-						if base.gender == "m" then
-							is_unimut_slot = slot == "dat_s" or slot:find("_p")
-						elseif base.gender == "f" then
-							is_unimut_slot = slot == "acc_s" or slot == "dat_s" or slot == "dat_p" or slot == "gen_p"
-						else
-							interr("'unimut' shouldn't be specified with neuter nouns; don't know what slots would be affected; neuter pluralia tantum nouns using 'unimut' should have synthesized a singular without i-mutation")
-						end
-						if is_unimut_slot then
-							mut_footnotes = props.unimut_footnotes
-						elseif props.unimut then
-							mut_in_effect = "i"
-						end
-					elseif props.imut ~= nil then
-						if ending_in_i then
-							if props.imut then
+					else
+						if props.unimut ~= nil then
+							local is_unimut_slot
+							if base.gender == "m" then
+								is_unimut_slot = slot == "dat_s" or slot:find("_p")
+							elseif base.gender == "f" then
+								is_unimut_slot = slot == "acc_s" or slot == "dat_s" or slot == "dat_p" or
+									slot == "gen_p"
+							else
+								interr("'unimut' shouldn't be specified with neuter nouns; don't know what slots would be affected; neuter pluralia tantum nouns using 'unimut' should have synthesized a singular without i-mutation")
+							end
+							if is_unimut_slot then
+								mut_not_in_effect = "i"
+								mut_footnotes = props.unimut_footnotes
+							elseif props.unimut then
 								mut_in_effect = "i"
-								mut_footnotes = props.imut_footnotes
-							elseif props.imut == false then
-								mut_footnotes = props.imut_footnotes
+							end
+						elseif props.imut ~= nil then
+							if ending_in_i then
+								if props.imut then
+									mut_in_effect = "i"
+									mut_footnotes = props.imut_footnotes
+								elseif props.imut == false then
+									mut_not_in_effect = "i"
+									mut_footnotes = props.imut_footnotes
+								end
 							end
 						end
-					elseif props.unumut ~= nil then
-						-- FIXME everything from here down to "Now compute the appropriate stems ..." needs rewriting.
-						if props.unumut == "unumut" or props.unumut == "-unumut" then
-							if ending_in_i 
-						if props.imut then
-							mut_in_effect = "i"
-							mut_footnotes = props.imut_footnotes
-						elseif props.imut == false then
-							mut_footnotes = props.imut_footnotes
-						elseif props.unumut ~= nil then
-							mut_footnotes = props.unumut_footnotes
-						end
-					elseif ending_in_u then
-						mut_in_effect = "u"
-						-- umut and uumut footnotes are incorporated into the appropriate umut_* stems
-
-					elseif ending_in_a then
 						if props.unumut ~= nil then
-							mut_footnotes = props.unumut_footnotes
+							local is_unumut_slot
+							if props.unumut == "unumut" or props.unumut == "-unumut" then
+								is_unumut_slot = ending_in_a or ending_in_i
+							elseif base.gender == "m" then
+								is_unumut_slot = slot == "gen_s" or slot == "gen_p"
+							elseif base.gender == "f" then
+								is_unumut_slot = slot == "nom_p" or slot == "acc_p" or slot == "gen_p"
+							else
+								interr("'unumut' and 'unuumut' shouldn't be specified with neuter nouns; don't know what slots would be affected; neuter pluralia tantum nouns using 'unumut'/'unuumut' should have synthesized a singular without u-mutation")
+							end
+							if not mut_in_effect and not mut_not_in_effect then
+								-- do nothing if mut_in_effect or mut_not_in_effect because i-mut takes precedence over
+								-- u-mut; FIXME: I hope this is correct in all cases.
+								if is_unumut_slot then
+									mut_not_in_effect = "u"
+									mut_footnotes = props.unumut_footnotes
+								elseif props.unumut then
+									mut_in_effect = "u"
+								end
+							end
 						end
-					elseif ending_in_u then
-					elseif props.unumut then
-						mut_in_effect = "u"
+						if ending_in_u and not mut_in_effect and not mut_not_in_effect then
+							-- FIXME: I hope the `not mut_not_in_effect` is correct here.
+							mut_in_effect = "u"
+							-- umut and uumut footnotes are incorporated into the appropriate umut_* stems
+						end
 					end
 
 					-- Now compute the appropriate stems to which the ending and clitic are added.
