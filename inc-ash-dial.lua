@@ -1,5 +1,6 @@
 local lang = require("Module:languages").getByCode("inc-ash")
 local m_links = require("Module:links")
+local m_labels = require("Module:labels")
 local iut = require("Module:inflection utilities")
 local m_string_utilities = require("Module:string utilities")
 local sub = mw.ustring.sub
@@ -380,7 +381,6 @@ function export.main(frame)
 				end
 				if attested_point then
 					table.insert(attested, {point_data[3], point_data[2]})
-					categories = categories .. "[[Category:" .. point_data[2] .. " Ashokan Prakrit]]"
 				end
 				text = text .. "\n|-"
 				if i == 1 then
@@ -399,10 +399,11 @@ function export.main(frame)
 		text = text .. '\n|-\n! style="background:#FFF7FB; padding-top:5px; padding-bottom: 5px" | ' ..
 			"<small>Note</small>\n| colspan=2|<small><i>" .. note .. "</i></small>"
 	end
-	
-	local res = "Attested at "
-	table.sort(attested, function(first, second) return first[2] < second[2] end)
-	for i, dialect in ipairs(attested) do
+
+	local attested_parts = {}
+	table.sort(attested)
+	for _, label in ipairs(attested) do
+		table.insert(attested_parts, m_labels.show_forms
 		if i == #attested and i ~= 1 then
 			res = res .. " and "
 		elseif i ~= 1 then
@@ -411,6 +412,7 @@ function export.main(frame)
 		res = res .. '[[w:' .. dialect[1] .. '|' .. dialect[2] .. ']]'
 	end
 	
+	local res = "Attested at "
 	return res .. '.\n' .. text .. '\n|}' .. categories
 end
 
