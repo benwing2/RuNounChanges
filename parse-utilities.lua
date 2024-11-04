@@ -305,7 +305,7 @@ adjacent runs before further parsing.
 `parse_multi_delimiter_balanced_segment_run()`, i.e. a list of textual runs, where even-numbered elements begin and end
 with a matched delimiter and odd-numbered elements are surrounding text) and `delimiter_pattern` (a Lua pattern matching
 delimited textual runs that we want to rejoin with the surrounding text). `delimiter_pattern` should normally be
-anchored at the beginning; e.g. {"^%["} would be the corret pattern to use when rejoining square-bracket-delimited
+anchored at the beginning; e.g. {"^%["} would be the correct pattern to use when rejoining square-bracket-delimited
 textual runs, as described above.
 ]==]
 function export.rejoin_delimited_runs(data)
@@ -360,6 +360,17 @@ function export.split_alternating_runs_and_frob_raw_text(run, splitchar, frob, p
 	local split_runs = export.split_alternating_runs(run, splitchar, preserve_splitchar)
 	export.frob_raw_text_alternating_runs(split_runs, frob, preserve_splitchar)
 	return split_runs
+end
+
+
+--[==[
+FIXME: Older entry point. Call `split_alternating_runs_and_frob_raw_text()` in [[Module:parse utilities]] directly.
+Like `split_alternating_runs()` but strips spaces from both ends of the odd-numbered elements (only in odd-numbered runs
+if `preserve_splitchar` is given). Effectively we leave alone the footnotes and splitchars themselves, but otherwise
+strip extraneous spaces. Spaces in the middle of an element are also left alone.
+]==]
+function export.split_alternating_runs_and_strip_spaces(segment_runs, splitchar, preserve_splitchar)
+	return export.split_alternating_runs_and_frob_raw_text(segment_runs, splitchar, export.strip_spaces, preserve_splitchar)
 end
 
 
