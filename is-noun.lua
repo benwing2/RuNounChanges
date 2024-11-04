@@ -27,6 +27,7 @@ FIXME:
 
 1. Support 'plstem' overrides.
 2. Support definite lemmas such as [[Bandaríkin]] "the United States".
+3. Support adjectivally-declined terms.
 
 ]=]
 
@@ -77,35 +78,13 @@ local function track(track_id)
 end
 
 
-local output_noun_slots = {
-	nom_s = "nom|s",
-	nom_s_linked = "nom|s",
-	acc_s = "acc|s",
-	acc_s_linked = "acc|s", -- for [[sig]]
-	dat_s = "dat|s",
-	gen_s = "gen|s",
-	nom_p = "nom|p",
-	nom_p_linked = "nom|p",
-	acc_p = "acc|p",
-	dat_p = "dat|p",
-	gen_p = "gen|p",
+local potential_lemma_slots = {
+	"ind_nom_s",
+	"ind_nom_p",
+	"def_nom_s",
+	"def_nom_p",
+	"ind_acc_s", -- for [[sig]]
 }
-
-
-local function get_output_noun_slots(alternant_multiword_spec)
-	-- FIXME: To save memory we modify the table in-place. This won't work if we ever end up with multiple calls to
-	-- this module in the same Lua invocation, and we would need to clone the table.
-	if alternant_multiword_spec.actual_number ~= "both" then
-		for slot, accel_form in pairs(output_noun_slots) do
-			output_noun_slots[slot] = accel_form:gsub("|[sp]$", "")
-		end
-	end
-	return output_noun_slots
-end
-
-
-local potential_lemma_slots = {"nom_s", "nom_p", "acc_s"}
-
 
 local cases = {
 	nom = true,
@@ -152,6 +131,27 @@ local clitic_articles = {
 		gen_p = "nna",
 	},
 }
+
+
+local function get_output_noun_slots(alternant_multiword_spec)
+	local output_noun_slots = {}
+	for _, def in ipairs {"ind", "def"} do
+		for _, case in ipairs(cases) do
+			for _, num in {"s", "p"} do
+				local slot = ("%s_%s_%s"):format(def, case, num)
+				local accel = ("%s|%s"):format(def, case)
+				if alternant_multiword_spec.actual_number == "both" then
+					accel = accel .. "|" .. num
+				end
+				output_noun_slots[slot] = accel
+			end
+		end
+	end
+	for _, potential_lemma_slot in ipairs(potential_lemma_slots) do
+		output_noun_slots[potential_lemma_slot .. "_linked"] = output_noun_slots[potential_lemma_slot]
+	end
+	return output_noun_slots
+end
 
 
 local function generate_list_of_possibilities_for_err(list)
@@ -562,13 +562,13 @@ local function process_slot_overrides(base, do_slot)
 end
 
 
-local function add_decl(base, stems,
+local function add_decl(base, props,
 	acc_s, dat_s, gen_s, nom_p, acc_p, dat_p, gen_p, footnotes
 )
-	add(base, "nom_s", stems, "-", footnotes)
-	add(base, "acc_s", stems, acc_s, footnotes)
-	add(base, "dat_s", stems, dat_s, footnotes)
-	add(base, "gen_s", stems, gen_s, footnotes)
+	add(base, "nom_s", props, "-", footnotes)
+	add(base, "acc_s", props, acc_s, footnotes)
+	add(base, "dat_s", props, dat_s, footnotes)
+	add(base, "gen_s", props, gen_s, footnotes)
 	if base.number == "pl" then
 		-- If this is a plurale tantum noun and we're processing the nominative plural, use the user-specified lemma
 		-- rather than generating the plural from the synthesized singular, which may not match the specified lemma
@@ -580,10 +580,10 @@ local function add_decl(base, stems,
 			acc_p = "-"
 		end
 	end
-	add(base, "nom_p", stems, nom_p, footnotes)
-	add(base, "acc_p", stems, acc_p, footnotes)
-	add(base, "dat_p", stems, dat_p, footnotes)
-	add(base, "gen_p", stems, gen_p, footnotes)
+	add(base, "nom_p", props, nom_p, footnotes)
+	add(base, "acc_p", props, acc_p, footnotes)
+	add(base, "dat_p", props, dat_p, footnotes)
+	add(base, "gen_p", props, gen_p, footnotes)
 end
 
 local function add_sg_decl(base, stems,
@@ -1524,14 +1524,11 @@ local function set_pron_defaults(base)
 		end
 	end
 
-	local gender, number, animacy, has_clitic = pron_props()
+	local gender, number = pron_props()
 	base.gender = gender
 	base.actual_gender = gender
 	base.number = number
 	base.actual_number = number
-	base.animacy = animacy
-	base.actual_animacy = animacy
-	base.has_clitic = has_clitic
 end
 
 
@@ -1604,14 +1601,11 @@ local function set_num_defaults(base)
 		return "none", "pl", "none", false
 	end
 
-	local gender, number, animacy, has_clitic = num_props()
+	local gender, number = num_props()
 	base.gender = gender
 	base.actual_gender = gender
 	base.number = number
 	base.actual_number = number
-	base.animacy = animacy
-	base.actual_animacy = animacy
-	base.has_clitic = has_clitic
 end
 
 
@@ -1676,14 +1670,11 @@ local function set_det_defaults(base)
 		return "none", "none", "none", false
 	end
 
-	local gender, number, animacy, has_clitic = det_props()
+	local gender, number = det_props()
 	base.gender = gender
 	base.actual_gender = gender
 	base.number = number
 	base.actual_number = number
-	base.animacy = animacy
-	base.actual_animacy = animacy
-	base.has_clitic = has_clitic
 end
 
 
@@ -2296,7 +2287,6 @@ local function set_all_defaults_and_check_bad_indicators(alternant_multiword_spe
 	iut.map_word_specs(alternant_multiword_spec, function(base)
 		set_defaults_and_check_bad_indicators(base)
 		base.multiword = is_multiword -- FIXME: not currently used; consider deleting
-		alternant_multiword_spec.has_clitic = alternant_multiword_spec.has_clitic or base.has_clitic
 		if base.pron then
 			alternant_multiword_spec.saw_pron = true
 		else
@@ -2863,31 +2853,6 @@ end
 local function determine_stems(base)
 	if not base.stem_sets then
 		base.stem_sets = {{}}
-	end
-	-- Set default reducible and check for default mixed reducible, which needs to be expanded into two entries.
-	local default_mixed_reducible = false
-	for _, stems in ipairs(base.stem_sets) do
-		if stems.reducible == nil then
-			stems.reducible = base.default_reducible
-		end
-		if stems.reducible == "mixed" then
-			default_mixed_reducible = true
-		end
-	end
-	if default_mixed_reducible then
-		local new_stem_sets = {}
-		for _, stems in ipairs(base.stem_sets) do
-			if stems.reducible == "mixed" then
-				local non_reducible_copy = m_table.shallowcopy(stems)
-				non_reducible_copy.reducible = false
-				stems.reducible = true
-				table.insert(new_stem_sets, stems)
-				table.insert(new_stem_sets, non_reducible_copy)
-			else
-				table.insert(new_stem_sets, stems)
-			end
-		end
-		base.stem_sets = new_stem_sets
 	end
 
 	-- Now determine all the stems for each stem set.
@@ -3550,7 +3515,6 @@ local function make_table(alternant_multiword_spec)
 
 	local table_spec =
 		alternant_multiword_spec.actual_number == "both" and table_spec_both or
-		alternant_multiword_spec.has_clitic and get_table_spec_one_number_clitic(number, numcode) or
 		get_table_spec_one_number(number, numcode)
 	forms.notes_clause = forms.footnote ~= "" and
 		m_string_utilities.format(notes_template, forms) or ""
