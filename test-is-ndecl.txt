@@ -791,8 +791,8 @@ Personal names:
 * {{m|is|dráttur||drawing; delay}}; dat sg drætti, nom pl drættir, acc pl drætti; also {{m|is|máttur||might}},  {{m|is|sláttur||mowing; heartbeat, pulse}}, {{m|is|þáttur||part, factor}}, {{m|is|þráður||thread, wire}}
 * {{tl|is-ndecl|m,ar,ir.imut|pagename=dráttur}}
 * {{m|is|sonur||son}} (also {{m|is|son}}, archaic or literary): dat sg syni, nom pl synir, acc pl syni:sonu[archaic or literary] but def acc pl only synina; should be handled automatically by rejecting acc pl forms ending in -u
-* {{tl|is-ndecl|m,ar,ir.imut.dati.accpli:u[archaic or literary]|pagename=sonur}}
-* {{tl|is-ndecl|m,ar,ir.imut.dati.accpli:u[archaic or literary]|pagename=son}}
+* {{tl|is-ndecl|m,ar,ir.imut:y.dati.accpli:u[archaic or literary]|pagename=sonur}}
+* {{tl|is-ndecl|m,ar,ir.imut:y.dati.accpli:u[archaic or literary]|pagename=son}}
 * {{m|is|Eiríksson|pos=patronymic}}, {{m|is|Helgason|pos=patronymic}}, etc.
 * {{tl|is-ndecl|m,ar,ir.imut.dati|pagename=Eiríksson}}
 * {{tl|is-ndecl|m.@|pagename=Eiríksson}}
@@ -869,7 +869,7 @@ Personal names:
 
 === miscellaneous irregular words in -ur ===
 * {{m|is|maður||man; one}}; here, the underlying stem is 'mann' and, as shown by the def nom/acc pl, the underlying plural is -ir, but replaced in the indef nom/acc pl with [[menn]]. We handle this by setting the stem appropriately and then overriding only the indefinite nom and acc pl (the ! means to only do the indefinite, not both indefinite and definite as would normally happen). We also make this a built-in as there are so many compounds of -maður.
-* {{tl|is-ndecl|m,s,ir.decllemma:mannur.imut.!nompl+!accpl:menn|pagename=maður}}
+* {{tl|is-ndecl|m,s,ir.decllemma:mannur.imut.nompl+accpl:menn|pagename=maður}}
 * {{tl|is-ndecl|m.@|pagename=maður}}
 * {{m|is|fótur||foot}}; i-mutation in dat sg fæti and in nom/acc pl fætur. Here, the ^ in ^ur is a special signal to do i-mutation of the stem before the ending, even if it doesn't contain -i-. Internally, -ur as nom pl is treated specially in that the accusative plural is also -ur instead of -u as you'd normally expect.
 * {{tl|is-ndecl|m,ar,^ur.imut.dati|pagename=fótur}}
