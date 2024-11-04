@@ -25,6 +25,9 @@ TERMINOLOGY:
 
 FIXME:
 
+1. Support 'plstem' overrides.
+2. Support definite lemmas such as [[Bandaríkin]] "the United States".
+
 ]=]
 
 local lang = require("Module:languages").getByCode("is")
@@ -111,6 +114,12 @@ local cases = {
 	gen = true,
 }
 
+local overridable_stems = {
+	stem = true,
+	vstem = true,
+	plstem = true,
+}
+
 local clitic_articles = {
 	m = {
 		nom_s = "inn",
@@ -143,6 +152,17 @@ local clitic_articles = {
 		gen_p = "nna",
 	},
 }
+
+
+local function generate_list_of_possibilities_for_err(list)
+	local quoted_list = {}
+	for _, item in pairs(list) do
+		table.insert(quoted_list, "'" .. item .. "'")
+	end
+	table.sort(quoted_list)
+	return m_table.serialCommaJoin(quoted_list, {dontTag = true})
+end
+
 
 local function skip_slot(number, slot)
 	return number == "sg" and rfind(slot, "_p$") or
@@ -1687,11 +1707,90 @@ declprops["det"] = {
 }
 
 
-local function fetch_footnotes(separated_group)
+-- Return the lemmas for this term. The return value is a list of {form = FORM, footnotes = FOOTNOTES}.
+-- If `linked_variant` is given, return the linked variants (with embedded links if specified that way by the user),
+-- otherwies return variants with any embedded links removed. If `remove_footnotes` is given, remove any
+-- footnotes attached to the lemmas.
+function export.get_lemmas(alternant_multiword_spec, linked_variant, remove_footnotes)
+	local slots_to_fetch = get_lemma_slots(alternant_multiword_spec.props)
+	local linked_suf = linked_variant and "_linked" or ""
+	for _, slot in ipairs(slots_to_fetch) do
+		if alternant_multiword_spec.forms[slot .. linked_suf] then
+			local lemmas = alternant_multiword_spec.forms[slot .. linked_suf]
+			if remove_footnotes then
+				local lemmas_no_footnotes = {}
+				for _, lemma in ipairs(lemmas) do
+					table.insert(lemmas_no_footnotes, {form = lemma.form})
+				end
+				return lemmas_no_footnotes
+			else
+				return lemmas
+			end
+		end
+	end
+	return {}
+end
+
+
+local function handle_derived_slots_and_overrides(base)
+	process_slot_overrides(base)
+
+	-- Compute linked versions of potential lemma slots, for use in {{de-noun}}.
+	-- We substitute the original lemma (before removing links) for forms that
+	-- are the same as the lemma, if the original lemma has links.
+	for _, slot in ipairs(get_lemma_slots(base.props)) do
+		iut.insert_forms(base.forms, slot .. "_linked", iut.map_forms(base.forms[slot], function(form)
+			if form == base.orig_lemma_no_links and rfind(base.orig_lemma, "%[%[") then
+				return base.orig_lemma
+			else
+				return form
+			end
+		end))
+	end
+end
+
+
+-- Process specs given by the user using 'addnote[SLOTSPEC][FOOTNOTE][FOOTNOTE][...]'.
+local function process_addnote_specs(base)
+	for _, spec in ipairs(base.addnote_specs) do
+		for _, slot_spec in ipairs(spec.slot_specs) do
+			slot_spec = "^" .. slot_spec .. "$"
+			for slot, forms in pairs(base.forms) do
+				if rfind(slot, slot_spec) then
+					-- To save on memory, side-effect the existing forms.
+					for _, form in ipairs(forms) do
+						form.footnotes = iut.combine_footnotes(form.footnotes, spec.footnotes)
+					end
+				end
+			end
+		end
+	end
+end
+
+
+-- Like iut.split_alternating_runs_and_strip_spaces(), but ensure that backslash-escaped commas and periods are not
+-- treated as separators.
+local function split_alternating_runs_with_escapes(segments, splitchar)
+	for i, segment in ipairs(segments) do
+		segments[i] = rsub(segment, "\\,", SUB_ESCAPED_COMMA)
+		segments[i] = rsub(segment, "\\%.", SUB_ESCAPED_PERIOD)
+	end
+	local separated_groups = iut.split_alternating_runs_and_strip_spaces(segments, splitchar)
+	for _, separated_group in ipairs(separated_groups) do
+		for i, segment in ipairs(separated_group) do
+			separated_group[i] = rsub(segment, SUB_ESCAPED_COMMA, ",")
+			separated_group[i] = rsub(segment, SUB_ESCAPED_PERIOD, ".")
+		end
+	end
+	return separated_groups
+end
+
+
+local function fetch_footnotes(separated_group, parse_err)
 	local footnotes
 	for j = 2, #separated_group - 1, 2 do
 		if separated_group[j + 1] ~= "" then
-			error("Extraneous text after bracketed footnotes: '" .. table.concat(separated_group) .. "'")
+			parse_err("Extraneous text after bracketed footnotes: '" .. table.concat(separated_group) .. "'")
 		end
 		if not footnotes then
 			footnotes = {}
@@ -1702,66 +1801,135 @@ local function fetch_footnotes(separated_group)
 end
 
 
+-- Fetch and parse a slot override, e.g. "ar:s" or "um:m[archaic]/um" or ":~i:Þorkatli[archaic]"; that is, everything
+-- after the slot name(s), including the initial colon. `segments` is the input in the form of a list where the
+-- footnotes have been separated out (see `parse_override` below); `spectype` is used in error messages and specifies
+-- e.g. "genitive" or "dat+gen slot override"; `allow_blank` indicates that a completely blank override spec is allowed
+-- (in that case, nil will be returned); `allow_slash` indicates that two slash-separated specs (indefinite and
+-- definite) are allowed; and `parse_err` is a function of one argument to throw a parse error. The return value is an
+-- object containing fields `full`, `bare` and `def`, of the format described below in the comment above
+-- `parse_override`.
+local function fetch_slot_override(segments, spectype, allow_blank, allow_slash, parse_err)
+	if allow_blank and #segments == 1 and segments[1] == "" then
+		return nil
+	end
+	local full = false
+	if segments[1]:find("^:") then
+		full = true
+		segments[1] = segments[1]:gsub("^:", "")
+	end
+	local slash_separated_groups = iut.split_alternating_runs_and_strip_spaces(segments, "/")
+	if #slash_separated_groups > 2 then
+		parse_err(("Can specify at most two slash-separated override groups for %s, but saw %s"):format(
+			spectype, #slash_separated_groups))
+	end
+	if slash_separated_groups[2] and not allow_slash then
+		parse_err(("Can't specify two slash-separated override groups for %s; the second override group is for the definite slot variant, but the slot is already definite"):format(
+			spectype))
+	end
+	local ret
+	for i, slash_separated_group in ipairs(slash_separated_groups) do
+		local retfield = i == 1 and "bare" or "def"
+		local colon_separated_groups = iut.split_alternating_runs_and_strip_spaces(slash_separated_groups, ":")
+		local specs = {}
+		for _, colon_separated_group in ipairs(colon_separated_groups) do
+			local form = colon_separated_group[1]
+			if form == "" then
+				parse_err(("Use - to indicate an empty ending for %s: '%s'"):format(spectype, table.concat(segments)))
+			elseif form == "-" then
+				form = ""
+			elseif form == "--" then -- missing
+				form = "-"
+			end
+			local new_spec = {form = form, footnotes = fetch_footnotes(colon_separated_group, parse_err)}
+			for _, existing_spec in ipairs(specs) do
+				if existing_spec.form == new_spec.form then
+					parse_err("Duplicate " .. spectype .. " spec '" .. table.concat(colon_separated_group) .. "'")
+				end
+			end
+			table.insert(specs, new_spec)
+		end
+		ret[retfield] = specs
+	end
+	ret.full = full
+	return ret
+end
+
+
 --[=[
-Parse a single override spec (e.g. 'nomplé:ové' or 'ins:autodráhou:autodrahou[rare]') and return
-two values: the slot(s) the override applies to, and an object describing the override spec.
-The input is actually a list where the footnotes have been separated out; for example,
-given the spec 'inspl:čobotami:čobotámi[rare]:čobitmi[archaic]', the input will be a list
-{"inspl:čobotami:čobotámi", "[rare]", ":čobitmi", "[archaic]", ""}. The object returned
-for 'ins:autodráhou:autodrahou[rare]' looks like this:
+Parse a single override spec (e.g. 'dat-:i/-' or 'defnompl+defaccpl:sumrin[when referring to summers in general]:sumurin[when referring to a specific number of summers]')
+and return two values: the slot(s) the override applies to, and an object describing the override spec. The input is
+actually a list where the footnotes have been separated out; for example, given the second example spec above, the input
+will be a list {"defnompl+defaccpl:sumrin", "[when referring to summers in general]", ":sumurin",
+  "[when referring to a specific number of summers]", ""}.
+
+The object returned for 'dat-:i[mostly in the context of violent actions]/-' looks like this:
 
 {
-  full = true,
-  values = {
+  bare = {
 	{
-	  form = "autodráhou"
+	  form = ""
 	},
 	{
-	  form = "autodrahou",
-	  footnotes = {"[rare]"}
+	  form = "i",
+	  footnotes = {"[mostly in the context of violent actions]"}
+	}
+  },
+  def = {
+    {
+	  form = ""
 	}
   }
 }
 
-The object returned for 'nomplé:ové' looks like this:
+The object returned for 'defnompl+defaccpl:sumrin[when referring to summers in general]:sumurin[when referring to a specific number of summers]'
+looks like this:
 
 {
-  values = {
+  full = true,
+  bare = {
 	{
-	  form = "é",
+	  form = "sumrin",
+	  footnotes = {"[when referring to summers in general]"}
 	},
 	{
-	  form = "ové",
+	  form = "sumurin",
+	  footnotes = {"[when referring to a specific number of summers]"}
 	}
   }
 }
 ]=]
-local function parse_override(segments)
-	local retval = {values = {}}
+local function parse_override(segments, parse_err)
 	local part = segments[1]
 	local slots = {}
+	local slot_def
 	while true do
+		local this_slot_def
+		if part:find("^def") then
+			this_slot_def = true
+			part = usub(part, 4)
+		else
+			this_slot_def = false
+		end
+		if slot_def == nil then
+			slot_def = this_slot_def
+		elseif slot_def ~= this_slot_def then
+			parse_err(("When multiple slot overrides are combined with +, all must be definite or indefinite: '%s'"):
+				format(table.concat(segments)))
+		end
 		local case = usub(part, 1, 3)
 		if cases[case] then
 			-- ok
 		else
-			error(("Unrecognized case '%s' in override: '%s'"):format(case, table.concat(segments)))
+			parse_err(("Unrecognized case '%s' in override: '%s'"):format(case, table.concat(segments)))
 		end
 		part = usub(part, 4)
-		local slot
+		local slot = slot_def and "def_" or "ind_"
 		if rfind(part, "^pl") then
 			part = usub(part, 3)
-			slot = case .. "_p"
-		elseif rfind(part, "^cl") then
-			-- No plural clitic cases at this point.
-			part = usub(part, 3)
-			if clitic_cases[case] then
-				slot = "clitic_" .. case .. "_s"
-			else
-				error(("Unrecognized clitic case '%s' in override: '%s'"):format(case, table.concat(segments)))
-			end
+			slot = slot .. case .. "_p"
 		else
-			slot = case .. "_s"
+			slot = slot .. case .. "_s"
 		end
 		table.insert(slots, slot)
 		if rfind(part, "^%+") then
@@ -1770,228 +1938,290 @@ local function parse_override(segments)
 			break
 		end
 	end
-	if rfind(part, "^:") then
-		retval.full = true
-		part = usub(part, 2)
-	end
 	segments[1] = part
-	local colon_separated_groups = iut.split_alternating_runs_and_strip_spaces(segments, ":")
-	for i, colon_separated_group in ipairs(colon_separated_groups) do
-		local value = {}
-		local form = colon_separated_group[1]
-		if form == "" then
-			error(("Use - to indicate an empty ending for slot%s '%s': '%s'"):format(#slots > 1 and "s" or "", table.concat(slots), table.concat(segments)))
-		elseif form == "-" then
-			value.form = ""
-		else
-			value.form = form
-		end
-		value.footnotes = fetch_footnotes(colon_separated_group)
-		table.insert(retval.values, value)
-	end
+	local retval = fetch_slot_override(segments, ("%s slot override"):format(table.concat(slots)), false,
+		not slot_def, parse_err)
 	return slots, retval
 end
 
 
 --[=[
-Parse an indicator spec (text consisting of angle brackets and zero or more
-dot-separated indicators within them). Return value is an object of the form
+Parse an indicator spec (text consisting of angle brackets and zero or more dot-separated indicators within them).
+Return value is an object of the form
 
 {
   overrides = {
-	SLOT = {OVERRIDE, OVERRIDE, ...}, -- as returned by parse_override()
+	SLOT = {OVERRIDE, OVERRIDE, ...},
 	...
-  },
+  }, -- where SLOT is the actual name of the slot, such as "ind_gen_s" (NOT the slot name as specified by the user,
+		which would be just "gen" for "ind_gen_s") and OVERRIDE is
+		{full = BOOLEAN, bare = {FORMOBJ, FORMOBJ, ...}, def = nil or {FORMOBJ, FORMOBJ, ...}}, where `full` is true if
+		the override began with a colon (indicating that the values are full forms rather than endings); FORMOBJ is
+		{form = FORM, footnotes = FOOTNOTES} as in the `forms` table ("-" means to suppress the slot entirely and is
+		signaled by "--" as the form value); `bare` means the override(s) coming before a slash; `def` means the
+		override(s) coming after a slash, which are not allowed for definite slots
+  gens = {GEN_SG_SPEC, GEN_SG_SPEC, ...}, same form as OVERRIDE above
+  pls = {PL_SPEC, PL_SPEC, ...}, same form as OVERRIDE above
   forms = {}, -- forms for a single spec alternant; see `forms` below
-  footnotes = {"FOOTNOTE", "FOOTNOTE", ...}, -- may be missing
-  stems = { -- may be missing
-	{
-	  reducible = TRUE_OR_FALSE,
-	  footnotes = {"FOOTNOTE", "FOOTNOTE", ...}, -- may be missing
-	  -- The following fields are filled in by determine_stems()
-	  vowel_stem = "STEM",
-	  nonvowel_stem = "STEM",
-	  oblique_slots = one of {nil, "gen_p", "all", "all-oblique"},
-	  oblique_vowel_stem = "STEM" or nil (only needs to be set if oblique_slots is non-nil),
-	  oblique_nonvowel_stem = "STEM" or nil (only needs to be set if oblique_slots is non-nil),
-	},
-	...
-  },
-  gender = "GENDER", -- "m", "f", "n"
-  number = "NUMBER", -- "sg", "pl"; may be missing
-  animacy = "ANIMACY", -- "inan", "an"; may be missing
-  hard = true, -- may be missing
-  soft = true, -- may be missing
-  mixed = true, -- may be missing
-  surname = true, -- may be missing
-  istem = true, -- may be missing
-  ["-istem"] = true, -- may be missing
-  tstem = true, -- may be missing
-  nstem = true, -- may be missing
-  tech = true, -- may be missing
-  foreign = true, -- may be missing
-  mostlyindecl = true, -- may be missing
-  indecl = true, -- may be missing
-  manual = true, -- may be missing
-  adj = true, -- may be missing
-  decllemma = "DECLENSION-LEMMA", -- may be missing
-  declgender = "DECLENSION-GENDER", -- may be missing
-  declnumber = "DECLENSION-NUMBER", -- may be missing
+  props = {
+	PROP = true,
+	PROP = true,
+    ...
+  }, -- misc Boolean properties: "dem" (a demonym, i.e. a capitalized noun such as [[Svisslendingur]] "Swiss person"
+		that behaves like a common noun); "pers" (a personal name; has special declension properties); "rstem" (an
+		r-stem like [[bróðir]] "brother" or [[dóttir]] "daughter")
+  number = "NUMBER", -- "sg", "pl", "both"; may be missing
+  adj = true, -- may be missing; indicates that the term declines like an adjective (NOT IMPLEMENTED YET)
+  decllemma = nil or "DECLLEMMA", -- decline like the specified lemma
+  stem = {FORMOBJ, FORMOBJ, ...}, -- override the stem(s); see above for FORMOBJ
+  vstem = {FORMOBJ, FORMOBJ, ...}, -- override the stem(s) used before vowel-initial endings; see above for FORMOBJ
+  plstem = {FORMOBJ, FORMOBJ, ...}, -- override the plural stem(s); see above for FORMOBJ
+  footnotes = nil or {"FOOTNOTE", "FOOTNOTE", ...}, -- alternant-level footnotes, specified using `.[footnote]`, i.e.
+													   a footnote by itself
+  addnote_specs = {
+	ADDNOTE_SPEC, ADDNOTE_SPEC, ...
+  }, -- where ADDNOTE_SPEC is {slot_specs = {"SPEC", "SPEC", ...}, footnotes = {"FOOTNOTE", "FOOTNOTE", ...}}; SPEC is
+		a Lua pattern matching slots (anchored on both sides) and FOOTNOTE is a footnote to add to those slots
+  MUTATION_GROUP = {
+	MUTATION_SPEC, MUTATION_SPEC, ...
+  }, -- where MUTATION_GROUP is one of "umut", "imut", "unumut", "unimut", "con", "defcon", "def", "j" or "v", and
+		MUTATION_SPEC is {key = "KEY", value = "VALUE" or true, footnotes = nil or {"FOOTNOTE", "FOOTNOTE", ...}}; the
+		mutation groups are as follows: umut (u-mutation), imut (i-mutation), unumut (reverse u-mutation), unimut
+		(reverse i-mutation), con (stem contraction before vowel-initial endings), defcon (stem contraction before
+		vowel-initial definite clitics when the ending itself is null), def (definite forms are/aren't present), j
+		(j-infix before vowel-initial endings not beginning with an i), v (v-infix before vowel-initial endings)
 
   -- The following additional fields are added by other functions:
-  orig_lemma = "ORIGINAL-LEMMA", -- as given by the user
+  orig_lemma = "ORIGINAL-LEMMA", -- as given by the user or taken from pagename
   orig_lemma_no_links = "ORIGINAL-LEMMA-NO-LINKS", -- links removed
-  lemma = "LEMMA", -- `orig_lemma_no_links`, converted to singular form if plural and lowercase if all-uppercase
+  lemma = "LEMMA", -- `orig_lemma_no_links`,
   forms = {
 	SLOT = {
 	  {
 		form = "FORM",
-		footnotes = {"FOOTNOTE", "FOOTNOTE", ...} -- may be missing
+		footnotes = nil or {"FOOTNOTE", "FOOTNOTE", ...},
 	  },
 	  ...
 	},
 	...
   },
-  decl = "DECL", -- declension, e.g. "hard-m"
-  vowel_stem = "VOWEL-STEM", -- derived from vowel-ending lemmas
-  nonvowel_stem = "NONVOWEL-STEM", -- derived from non-vowel-ending lemmas
 }
 ]=]
-local function parse_indicator_spec(angle_bracket_spec)
+local function parse_indicator_spec(angle_bracket_spec, lemma, pagename, proper_noun)
+	if lemma == "" then
+		lemma = pagename
+	end
+	local base = {
+		forms = {},
+		overrides = {},
+		props = {prop = proper_noun},
+		addnote_specs = {},
+	}
+	base.orig_lemma = lemma
+	base.orig_lemma_no_links = m_links.remove_links(lemma)
+	base.lemma = base.orig_lemma_no_links
 	local inside = rmatch(angle_bracket_spec, "^<(.*)>$")
 	assert(inside)
-	local base = {overrides = {}, forms = {}}
+
+	local function parse_err(msg)
+		error(msg .. ": <" .. inside .. ">")
+	end
+
 	if inside ~= "" then
 		local segments = iut.parse_balanced_segment_run(inside, "[", "]")
-		local dot_separated_groups = iut.split_alternating_runs_and_strip_spaces(segments, "%.")
+		local dot_separated_groups = split_alternating_runs_with_escapes(segments, "%.")
 		for i, dot_separated_group in ipairs(dot_separated_groups) do
+			-- Parse a "mutation" spec such as "umut,uumut[rare]" or "-unuumut,unuumut" or "imut:y". This assumes the
+			-- mutation spec is contained in `dot_separated_group` (already split on brackets) and the result of parsing
+			-- should go in `base[dest]`. `allowed_specs` is a list of the allowed mutation specs in this group, such
+			-- as {"umut", "uumut", "u_umut"} or {"-imut", "imut"}, and `allowed_specs_with_values` is a list of the
+			-- specs that can have an associated value, as in "imut:y", or nil if no specs can have such values. The
+			-- result of parsing is a list of structures of the form {
+			--   key = "KEY",
+			--   value = "VALUE" or true,
+			--   footnotes = nil or {"FOOTNOTE", "FOOTNOTE", ...},
+			-- }.
+			local function parse_mutation_spec(dest, allowed_specs, allowed_specs_with_values)
+				if base[dest] then
+					parse_err(("Can't specify '%s'-type mutation spec twice; second such spec is '%s'"):format(
+						dest, table.concat(dot_separated_group)))
+				end
+				base[dest] = {}
+				local comma_separated_groups = split_alternating_runs_with_escapes(dot_separated_group, ",")
+				for _, comma_separated_group in ipairs(comma_separated_groups) do
+					local specobj = {}
+					local spec = comma_separated_group[1]
+					if spec:find(":") then
+						if not allowed_specs_with_values then
+							parse_err(("'%s'-type mutation spec cannot have an associated value, but saw '%s'"):format(
+								dest, spec))
+						end
+						local key, value = spec:match("^(.-)%s*:%s*(.-)$")
+						if not m_table.contains(allowed_specs_with_values, key) then
+							parse_err(("For '%s'-type mutation spec, only %s can have an associated value, but saw '%s'"):format(
+								dest, generate_list_of_possibilities_for_err(allowed_specs_with_values), key))
+						end
+						specobj.key = key
+						specobj.value = value
+					elseif not m_table.contains(allowed_specs, spec) then
+						parse_err(("For '%s'-type mutation spec, saw unrecognized spec '%s'; valid values are %s"):
+							format(dest, generate_list_of_possibilities_for_err(allowed_specs), spec))
+					else
+						specobj.key = spec
+						specobj.value = true
+					end
+					specobj.footnotes = fetch_footnotes(comma_separated_group, parse_err)
+					table.insert(base[dest], specobj)
+				end
+			end
+
 			local part = dot_separated_group[1]
-			local case_prefix = usub(part, 1, 3)
-			if cases[case_prefix] then
-				local slots, override = parse_override(dot_separated_group)
+			if i == 1 then
+				local comma_separated_groups = split_alternating_runs_with_escapes(dot_separated_group, ",")
+				if #comma_separated_groups > 3 then
+					parse_err(("At most three comma-separated specs are allowed but saw %s"):format(
+						#comma_separated_groups))
+				end
+				if comma_separated_groups[1][2] then
+					parse_err("Footnotes not allowed on gender indicator")
+				end
+				base.gender = comma_separated_groups[1][1]
+				if not base.gender:find("^[mfn]$") then
+					parse_err(("Unrecognized gender '%s', should be 'm', 'f' or 'n'"):format(base.gender))
+				end
+				if comma_separated_groups[2] then
+					base.gens = fetch_slot_override(comma_separated_groups[2], "genitive", true, true, parse_err)
+				end
+				if comma_separated_groups[3] then
+					base.pls = fetch_slot_override(comma_separated_groups[3], "nominative plural", true, true,
+						parse_err)
+				end
+			elseif part == "" then
+				if not dot_separated_group[2] then
+					parse_err("Blank indicator; not allowed without attached footnotes")
+				end
+				base.footnotes = fetch_footnotes(dot_separated_group, parse_err)
+			elseif part == "addnote" then
+				local spec_and_footnotes = fetch_footnotes(dot_separated_group, parse_err)
+				if #spec_and_footnotes < 2 then
+					parse_err("Spec with 'addnote' should be of the form 'addnote[SLOTSPEC][FOOTNOTE][FOOTNOTE][...]'")
+				end
+				local slot_spec = table.remove(spec_and_footnotes, 1)
+				local slot_spec_inside = rmatch(slot_spec, "^%[(.*)%]$")
+				if not slot_spec_inside then
+					parse_err("Internal error: slot_spec " .. slot_spec .. " should be surrounded with brackets")
+				end
+				local slot_specs = rsplit(slot_spec_inside, ",")
+				-- FIXME: Here, [[Module:it-verb]] called strip_spaces(). Generally we don't do this. Should we?
+				table.insert(base.addnote_specs, {slot_specs = slot_specs, footnotes = spec_and_footnotes})
+			elseif ulen(part) > 3 and cases[usub(part, 1, 3)] or (
+				ulen(part) > 6 and usub(part, 1, 3) == "def" and cases[usub(part, 4, 6)]) then
+				local slots, overrides = parse_override(dot_separated_group, parse_err)
 				for _, slot in ipairs(slots) do
 					if base.overrides[slot] then
 						error(("Two overrides specified for slot '%s'"):format(slot))
 					else
-						base.overrides[slot] = {override}
+						base.overrides[slot] = overrides
 					end
 				end
-			elseif part == "" then
-				if #dot_separated_group == 1 then
-					error("Blank indicator: '" .. inside .. "'")
+			elseif part:find("^u[u_]*mut") then
+				parse_mutation_spec("umut", {"umut", "uumut", "u_umut"}, {"umut"})
+			elseif part:find("^%-?imut") then
+				parse_mutation_spec("imut", {"imut", "-imut"}, {"imut"})
+			elseif part:find("^%-?unu+mut") then
+				parse_mutation_spec("unumut", {"unumut", "-unumut", "unuumut", "-unuumut"})
+			elseif part:find("^%-?unimut") then
+				parse_mutation_spec("unimut", {"unimut", "-unimut"})
+			elseif part:find("^%-?con") then
+				parse_mutation_spec("con", {"con", "-con"})
+			elseif part:find("^%-?defcon") then
+				parse_mutation_spec("defcon", {"defcon", "-defcon"})
+			elseif part:find("^%-?def") then
+				parse_mutation_spec("def", {"def", "-def"})
+			elseif part:find("^%-?j") then
+				parse_mutation_spec("j", {"j", "-j"})
+			elseif part:find("^%-?v") then
+				parse_mutation_spec("v", {"v", "-v"})
+			elseif part:find("^decllemma%s*:") then
+				local value = part:match("^decllemma%s*:%s*(.+)$")
+				if not value then
+					parse_err(("Syntax error in decllemma indicator: '%s'"):format(part))
 				end
-				base.footnotes = fetch_footnotes(dot_separated_group)
-			elseif rfind(part, "^[-*#ě]*$") or rfind(part, "^[-*#ě]*,") then
-				if base.stem_sets then
-					error("Can't specify reducible/vowel-alternant indicator twice: '" .. inside .. "'")
+				if base.decllemma then
+					parse_err("Can't specify 'decllemma:' twice")
 				end
-				local comma_separated_groups = iut.split_alternating_runs_and_strip_spaces(dot_separated_group, ",")
-				local stem_sets = {}
-				for i, comma_separated_group in ipairs(comma_separated_groups) do
-					local pattern = comma_separated_group[1]
-					local orig_pattern = pattern
-					local reducible, vowelalt, oblique_slots
-					if pattern == "-" then
-						-- default reducible, no vowel alt
+				if dot_separated_group[2] then
+					parse_err(("Footnotes not allowed with 'decllemma': '%s'"):format(
+						table.concat(dot_separated_group)))
+				end
+				base.decllemma = value
+			elseif rfind(part, ":") then
+				local spec, value = part:match("^([a-z]+)%s*:%s*(.+)$")
+				if not spec then
+					parse_err(("Syntax error in indicator with value, expecting alphabetic slot or stem/lemma override indicator: '%s'"):format(part))
+				end
+				if not overridable_stems[spec] then
+					local overridable_stem_list = {}
+					for k, _ in pairs(overridable_stems) do
+						table.insert(overridable_stem_list, k)
+					end
+					parse_err(("Unrecognized stem override indicator '%s', should be %s"):format(
+						part, generate_list_of_possibilities_for_err(overridable_stem_list)))
+				end
+				if base[spec] then
+					if spec == "stem" then
+						parse_err("Can't specify spec for 'stem:' twice (including using 'stem:' along with # or ##)")
 					else
-						local before, after
-						before, reducible, after = rmatch(pattern, "^(.-)(%-?%*)(.-)$")
-						if before then
-							pattern = before .. after
-							reducible = reducible == "*"
-						end
-						if pattern ~= "" then
-							if not rfind(pattern, "^##?ě?$") then
-								error("Unrecognized vowel-alternation pattern '" .. pattern .. "', should be one of #, ##, #ě or ##ě: '" .. inside .. "'")
-							end
-							if pattern == "#ě" or pattern == "##ě" then
-								vowelalt = "quant-ě"
-							else
-								vowelalt = "quant"
-							end
-							-- `oblique_slots` will be later changed to "all" if the lemma ends in a consonant.
-							if pattern == "##" or pattern == "##ě" then
-								oblique_slots = "all-oblique"
-							else
-								oblique_slots = "gen_p"
-							end
+						parse_err(("Can't specify '%s:' twice"):format(spec))
+					end
+				end
+				base[spec] = {}
+				dot_separated_group[1] = value
+				local colon_separated_groups = iut.split_alternating_runs_and_strip_spaces(dot_separated_group, ":")
+				for _, colon_separated_group in ipairs(colon_separated_groups) do
+					local form = colon_separated_group[1]
+					if form == "" then
+						parse_err("Blank stem not allowed")
+					end
+					local new_spec = {form = form, footnotes = fetch_footnotes(colon_separated_group, parse_err)}
+					for _, existing_spec in ipairs(base[specs]) do
+						if existing_spec.form == new_spec.form then
+							parse_err(("Duplicate stem '%s' for '%s:'"):format(new_spec.form, spec))
 						end
 					end
-					table.insert(stem_sets, {
-						reducible = reducible,
-						vowelalt = vowelalt,
-						oblique_slots = oblique_slots,
-						footnotes = fetch_footnotes(comma_separated_group)
-					})
+					table.insert(base[spec], new_spec)
 				end
-				base.stem_sets = stem_sets
 			elseif #dot_separated_group > 1 then
-				error("Footnotes only allowed with slot overrides, reducible or vowel alternation specs or by themselves: '" .. table.concat(dot_separated_group) .. "'")
-			elseif part == "m" or part == "f" or part == "n" then
-				if base.gender then
-					error("Can't specify gender twice: '" .. inside .. "'")
-				end
-				base.gender = part
-			elseif part == "sg" or part == "pl" then
+				parse_err(
+					("Footnotes only allowed with slot/stem overrides, negatable indicators and by themselves: '%s'"):
+					format(table.concat(dot_separated_group)))
+			elseif part == "sg" or part == "pl" or part == "both" then
 				if base.number then
-					error("Can't specify number twice: '" .. inside .. "'")
+					if base.number ~= part then
+						parse_err("Can't specify '" .. part .. "' along with '" .. base.number .. "'")
+					else
+						parse_err("Can't specify '" .. part .. "' twice")
+					end
 				end
 				base.number = part
-			elseif part == "an" or part == "inan" then
-				if base.animacy then
-					error("Can't specify animacy twice: '" .. inside .. "'")
+			elseif part == "#" or part == "##" then
+				if base.stem then
+					parse_err("Can't specify a stem spec ('stem:', # or ##) twice")
 				end
-				base.animacy = part
-			elseif part == "hard" or part == "soft" or part == "mixed" or part == "surname" or part == "istem" or
-				part == "-istem" or part == "tstem" or part == "nstem" or part == "tech" or part == "foreign" or
-				part == "mostlyindecl" or part == "indecl" or part == "pron" or part == "det" or part == "num" or
-				-- Use 'velar' with words like [[petanque]] and [[Braque]] that end with a pronounced velar (and hence are declined
-				-- like velars) but not with a spelled velar; use '-velar' with words like [[hadíth]] that end with a spelled but
-				-- silent velar.
-				part == "collapse_ee" or part == "persname" or part == "c_as_k" or part == "velar" or part == "-velar" then
-				if base[part] then
-					error("Can't specify '" .. part .. "' twice: '" .. inside .. "'")
-				end
-				base[part] = true
-				-- Allow 'hard' to signal that -y is allowed after -c, as in hard masculine nouns such as [[hec]]
-				-- "joke", and also feminines in -ca where the c is pronounced as /k/, e.g. [[ayahuasca]], [[pororoca]],
-				-- [[Petrarca]], [[Mallorca]], [[Casablanca]]. (Contrast [[mangalica]], [[Kusturica]], [[Bjelica]],
-				-- where the c is pronounced as /ts/ and -y is disallowed.)
-				if part == "hard" then
-					base.hard_c = true
-				end
+				base.stem = part
 			elseif part == "+" then
 				if base.adj then
-					error("Can't specify '+' twice: '" .. inside .. "'")
+					parse_err("Can't specify '+' twice")
 				end
 				base.adj = true
-			elseif part == "!" then
-				if base.manual then
-					error("Can't specify '!' twice: '" .. inside .. "'")
+				parse_err("Adjectival indicator '+' not implemented yet")
+			elseif part == "dem" or part == "pers" or part == "rstem" then
+				if base.props[part] then
+					parse_err("Can't specify '" .. part .. "' twice")
 				end
-				base.manual = true
-			elseif rfind(part, "^mixedistem:") then
-				if base.mixedistem then
-					error("Can't specify 'mixedistem:' twice: '" .. inside .. "'")
-				end
-				base.mixedistem = rsub(part, "^mixedistem:", "")
-			elseif rfind(part, "^decllemma:") then
-				if base.decllemma then
-					error("Can't specify 'decllemma:' twice: '" .. inside .. "'")
-				end
-				base.decllemma = rsub(part, "^decllemma:", "")
-			elseif rfind(part, "^declgender:") then
-				if base.declgender then
-					error("Can't specify 'declgender:' twice: '" .. inside .. "'")
-				end
-				base.declgender = rsub(part, "^declgender:", "")
-			elseif rfind(part, "^declnumber:") then
-				if base.declnumber then
-					error("Can't specify 'declnumber:' twice: '" .. inside .. "'")
-				end
-				base.declnumber = rsub(part, "^declnumber:", "")
+				base.props[part] = true
 			else
-				error("Unrecognized indicator '" .. part .. "': '" .. inside .. "'")
+				parse_err("Unrecognized indicator '" .. part .. "'")
 			end
 		end
 	end
@@ -2001,18 +2231,6 @@ end
 
 local function is_regular_noun(base)
 	return not base.adj and not base.pron and not base.det and not base.num
-end
-
-
-local function process_declnumber(base)
-	base.actual_number = base.number
-	if base.declnumber then
-		if base.declnumber == "sg" or base.declnumber == "pl" then
-			base.number = base.declnumber
-		else
-			error(("Unrecognized value '%s' for 'declnumber', should be 'sg' or 'pl'"):format(base.declnumber))
-		end
-	end
 end
 
 
@@ -2095,24 +2313,6 @@ local function set_all_defaults_and_check_bad_indicators(alternant_multiword_spe
 			alternant_multiword_spec.saw_non_num = true
 		end
 	end)
-end
-
-
-local function undo_second_palatalization(base, word, is_adjective)
-	local function try(from, to)
-		local stem = rmatch(word, "^(.*)" .. from .. "$")
-		if stem then
-			return stem .. to
-		end
-		return nil
-	end
-	return is_adjective and try("št", "sk") or
-		is_adjective and try("čt", "ck") or
-		try("c", "k") or -- FIXME, this could be wrong and c correct
-		try("ř", "r") or
-		try("z", "h") or -- FIXME, this could be wrong and z or g correct
-		try("š", "ch") or
-		word
 end
 
 
@@ -2395,6 +2595,12 @@ local function determine_declension(base)
 	local stem, contracted
 	-- Determine declension
 	if base.gender == "m" then
+		stem = rmatch(base.lemma, "^(.*á)r$")
+		if stem then
+			-- [[nár]] "corpse", [[aur]] "loam, mud", [[gaur]] "ruffian", [[paur]] "devil; enmity",
+			-- [[saur]] "dirt; excrement", [[staur]] "post", [[ljósastaur]] "lamp post"
+			base.decl = "strong-m"
+		end
 		stem = rmatch(base.lemma, "^(.*)ir$")
 		if stem then
 			-- [[maur]] "ant", [[aur]] "loam, mud", [[gaur]] "ruffian", [[paur]] "devil; enmity",
@@ -2643,67 +2849,6 @@ local function determine_declension(base)
 		return
 	end
 	error("Unrecognized ending for lemma: '" .. base.lemma .. "'")
-end
-
-
--- Determine the default value for the 'reducible' flag.
-local function determine_default_reducible(base)
-	-- Nouns in vowels other than -a/o as well as masculine nouns ending in all vowels don't have null endings so not
-	-- reducible. Note, we are never called on adjectival nouns.
-	if rfind(base.lemma, "[iyuíeě]$") or base.gender == "m" and rfind(base.lemma, "[ao]$") or base.tstem then
-		base.default_reducible = false
-		return
-	end
-
-	local stem
-	stem = rmatch(base.lemma, "^(.*" .. com.cons_c .. ")$")
-	if stem then
-		-- When analyzing existing manual declensions in -ec and -ek, 290 were reducible vs. 23 non-reducible. Of these
-		-- 23, 15 were monosyllabic (and none of the 290 reducible nouns were monosyllabic) -- and two of these were
-		-- actually reducible but irregularly: [[švec]] "shoemaker" (gen sg 'ševce') and [[žnec]] "reaper (person)"
-		-- (gen sg. 'žence'). Of the remaining 8 multisyllabic non-reducible words, two were actually reducible but
-		-- irregularly: [[stařec]] "old man" (gen sg 'starce') and [[tkadlec]] "weaver" (gen sg 'tkalce'). The remaining
-		-- six consisted of 5 compounds of monosyllabic words: [[dotek]], [[oblek]], [[kramflek]], [[pucflek]],
-		-- [[pokec]], plus [[česnek]], which should be reducible but would lead to an impossible consonant cluster.
-		if base.gender == "m" and rfind(stem, "[eě][ck]$") and not com.is_monosyllabic(stem) then
-			base.default_reducible = true
-		elseif base.gender == "f" and rfind(stem, "[eě]ň$") then
-			-- [[pochodeň]] "torch", [[píseň]] "leather", [[žeň]] "harvest"; not [[reveň]] "rhubarb" or [[dřeň]] "pulp",
-			-- which need an override.
-			base.default_reducible = true
-		else
-			base.default_reducible = false
-		end
-		return
-	end
-	if base.number == "sg" then
-		base.default_reducible = false
-		return
-	end
-	if rfind(base.lemma, "isko$") then
-		-- e.g. [[středisko]]
-		base.default_reducible = "mixed"
-		return
-	end
-	stem = rmatch(base.lemma, "^(.*)" .. com.vowel_c .. "$")
-	if not stem then
-		error(("Internal error: Something wrong, lemma '%s' doesn't end in consonant or vowel"):format(base.lemma))
-	end
-	-- Substitute 'ch' with a single character to make the following code simpler.
-	stem = stem:gsub("ch", com.TEMP_CH)
-	if rfind(stem, com.cons_c .. "[lr]" .. com.cons_c .. "$") then
-		-- [[vrba]], [[vlha]]; not reducible. (But note [[jablko]], reducible; needs override.)
-		base.default_reducible = false
-	elseif not base.foreign and (rfind(stem, com.cons_c .. "[bkhlrmnv]$") or base.c_as_k and rfind(stem, com.cons_c .. "c$")) then
-		-- [[ayahuasca]] has gen pl 'ayahuasek'
-		base.default_reducible = true
-	elseif base.foreign and rfind(stem, com.cons_c .. "r$") then
-		-- Foreign nouns in -CCum seem generally non-reducible in the gen pl except for those in -Crum like [[centrum]],
-		-- Examples: [[album]], [[verbum]], [[signum]], [[interregnum]], [[sternum]]. [[infernum]] has gen pl 'infern/inferen'.
-		base.default_reducible = true
-	else
-		base.default_reducible = false
-	end
 end
 
 
@@ -3044,6 +3189,7 @@ local function decline_noun(base)
 			base.forms["nom" .. erase_num .. "_linked"] = nil
 		end
 	end
+	process_addnote_specs(base)
 end
 
 
@@ -3288,103 +3434,89 @@ local function make_table(alternant_multiword_spec)
 	end
 
 	local table_spec_both = template_prelude("45") .. [=[
-! style="width:33%;background:#d9ebff" |
-! style="background:#d9ebff" | singular
-! style="background:#d9ebff" | plural
+! style="width:20%;background:#d9ebff" |
+! style="background:#d9ebff" colspan="2" | singular
+! style="background:#d9ebff" colspan="2" | plural
+|-
+! style="background:#d9ebff" | indefinite
+! style="background:#d9ebff" | definite
+! style="background:#d9ebff" | indefinite
+! style="background:#d9ebff" | definite
 |-
 !style="background:#eff7ff"|nominative
-| {nom_s}
-| {nom_p}
-|-
-!style="background:#eff7ff"|genitive
-| {gen_s}
-| {gen_p}
-|-
-!style="background:#eff7ff"|dative
-| {dat_s}
-| {dat_p}
+| {ind_nom_s}
+| {def_nom_s}
+| {ind_nom_p}
+| {def_nom_p}
 |-
 !style="background:#eff7ff"|accusative
-| {acc_s}
-| {acc_p}
+| {ind_acc_s}
+| {def_acc_s}
+| {ind_acc_p}
+| {def_acc_p}
 |-
-!style="background:#eff7ff"|vocative
-| {voc_s}
-| {voc_p}
+!style="background:#eff7ff"|dative
+| {ind_dat_s}
+| {def_dat_s}
+| {ind_dat_p}
+| {def_dat_p}
 |-
-!style="background:#eff7ff"|locative
-| {loc_s}
-| {loc_p}
-|-
-!style="background:#eff7ff"|instrumental
-| {ins_s}
-| {ins_p}
+!style="background:#eff7ff"|genitive
+| {ind_gen_s}
+| {def_gen_s}
+| {ind_gen_p}
+| {def_gen_p}
 ]=] .. template_postlude()
 
 	local function get_table_spec_one_number(number, numcode)
 		local table_spec_one_number = [=[
 ! style="width:33%;background:#d9ebff" |
-! style="background:#d9ebff" | NUMBER
+! style="background:#d9ebff" colspan="2" | NUMBER
+|-
+! style="background:#d9ebff" | indefinite
+! style="background:#d9ebff" | definite
 |-
 !style="background:#eff7ff"|nominative
-| {nom_CODE}
-|-
-!style="background:#eff7ff"|genitive
-| {gen_CODE}
-|-
-!style="background:#eff7ff"|dative
-| {dat_CODE}
+| {ind_nom_NUM}
+| {def_nom_NUM}
 |-
 !style="background:#eff7ff"|accusative
-| {acc_CODE}
+| {ind_acc_NUM}
+| {def_acc_NUM}
 |-
-!style="background:#eff7ff"|vocative
-| {voc_CODE}
+!style="background:#eff7ff"|dative
+| {ind_dat_NUM}
+| {def_dat_NUM}
 |-
-!style="background:#eff7ff"|locative
-| {loc_CODE}
-|-
-!style="background:#eff7ff"|instrumental
-| {ins_CODE}
+!style="background:#eff7ff"|genitive
+| {ind_gen_NUM}
+| {def_gen_NUM}
 ]=]
-		return template_prelude("30") .. table_spec_one_number:gsub("NUMBER", number):gsub("CODE", numcode) ..
+		return template_prelude("30") .. table_spec_one_number:gsub("NUMBER", number):gsub("NUM", numcode) ..
 			template_postlude()
 	end
 
-	local function get_table_spec_one_number_clitic(number, numcode)
-		local table_spec_one_number_clitic = [=[
-! rowspan=2 style="width:33%;background:#d9ebff"|
-! colspan=2 style="background:#d9ebff" | NUMBER
+	local function get_table_spec_one_number_one_def(number, numcode, definiteness, defcode)
+		local table_spec_one_number_one_def = [=[
+! style="width:50%;background:#d9ebff" |
+! style="background:#d9ebff" | NUMBER
 |-
-! style="width:33%;background:#d9ebff" | stressed
-! style="background:#d9ebff" | clitic
+! style="background:#d9ebff" | DEFINITENESS
 |-
 !style="background:#eff7ff"|nominative
-| colspan=2 | {nom_CODE}
-|-
-!style="background:#eff7ff"|genitive
-| {gen_CODE}
-| {clitic_gen_CODE}
-|-
-!style="background:#eff7ff"|dative
-| {dat_CODE}
-| {clitic_dat_CODE}
+| {DEF_nom_NUM}
 |-
 !style="background:#eff7ff"|accusative
-| {acc_CODE}
-| {clitic_acc_CODE}
+| {DEF_acc_NUM}
 |-
-!style="background:#eff7ff"|vocative
-| colspan=2 | {voc_CODE}
+!style="background:#eff7ff"|dative
+| {DEF_dat_NUM}
 |-
-!style="background:#eff7ff"|locative
-| colspan=2 | {loc_CODE}
-|-
-!style="background:#eff7ff"|instrumental
-| colspan=2 | {ins_CODE}
+!style="background:#eff7ff"|genitive
+| {DEF_gen_NUM}
 ]=]
-		return template_prelude("40") .. table_spec_one_number_clitic:gsub("NUMBER", number):gsub("CODE", numcode) ..
-			template_postlude()
+		return template_prelude("20") .. (table_spec_one_number_one_def:gsub("NUMBER", number):gsub("NUM", numcode)
+			:gsub("DEFINITENESS", definiteness):gsub("DEF", defcode)) .. template_postlude()
 	end
 
 	local notes_template = [=[

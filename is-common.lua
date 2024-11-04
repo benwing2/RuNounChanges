@@ -157,10 +157,35 @@ local lesser_u_mutation = {
 	["A"] = "Ö",
 }
 
+local lesser_reverse_u_mutation = {
+	["ö"] = "a",
+	["Ö"] = "A",
+}
+
 local greater_u_mutation = {
 	["a"] = "u",
 	["A"] = "U", -- FIXME, may not occur
 }
+
+local greater_reverse_u_mutation = {
+	["u"] = "a",
+	["U"] = "A", -- FIXME, may not occur
+}
+
+local function apply_au_sub(stem)
+	-- au doesn't mutate; easiest way to handle this is to temporarily convert au and variants to single characters
+	stem = stem:gsub("au", AU_SUB)
+	stem = stem:gsub("Au", CAP_AU_SUB)
+	stem = stem:gsub("AU", ALL_CAP_AU_SUB)
+	return stem
+end
+
+local function undo_au_sub(stem)
+	stem = stem:gsub(AU_SUB, "au")
+	stem = stem:gsub(CAP_AU_SUB, "Au")
+	stem = stem:gsub(ALL_CAP_AU_SUB, "AU")
+	return stem
+end
 
 -- Apply u-mutation to the `stem`. `typ` is the type of u-mutation, which should be one of "umut" (mutate the last
 -- vowel if possible, with a -> ö), "uumut" (mutate the last two vowels if possible, with a -> ö in the second-to-last
@@ -168,17 +193,7 @@ local greater_u_mutation = {
 -- in [[hafald]] "heddle (guide thread in loom)").
 function export.apply_u_mutation(stem, typ)
 	local origstem = stem
-	-- au doesn't mutate; easiest way to handle this is to temporarily convert au and variants to single characters
-	stem = stem:gsub("au", AU_SUB)
-	stem = stem:gsub("Au", CAP_AU_SUB)
-	stem = stem:gsub("AU", ALL_CAP_AU_SUB)
-	local function undo_au_sub(stem)
-		stem = stem:gsub(AU_SUB, "au")
-		stem = stem:gsub(CAP_AU_SUB, "Au")
-		stem = stem:gsub(ALL_CAP_AU_SUB, "AU")
-		return stem
-	end
-			
+	stem = apply_au_sub(stem)
 	if typ == "uumut" or typ == "u_umut" then
 		local first, v1, middle, v2, last = rmatch(stem, "^(.*)(" .. com.vowel_c .. ")(" .. com.cons_c .. "*)(" ..
 			com.vowel_c .. ")(" .. com.cons_c .. "*)$")
@@ -203,23 +218,13 @@ function export.apply_u_mutation(stem, typ)
 end
 
 
--- Apply reverse u-mutation to the `stem`. `typ` is the type of u-mutation, which should be one of "umut" (mutate the last
--- vowel if possible, with a -> ö), "uumut" (mutate the last two vowels if possible, with a -> ö in the second-to-last
--- and a -> u in the last), or "u_umut" (mutate the last two vowels if possible, with a -> ö in the last two vowels, as
--- in [[hafald]] "heddle (guide thread in loom)").
+-- Apply reverse u-mutation to the `stem`. `typ` is the type of u-mutation, which should be one of "umut" (unmutate the
+-- last vowel if possible, with ö -> a), "uumut" (unmutate the last two vowels if possible, with ö -> a in the
+-- second-to-last [unless followed by v in the following consonant cluster] and u -> a in the last), or "u_umut"
+-- (unmutate the last two vowels if possible, with ö -> a in the last two vowels).
 function export.apply_reverse_u_mutation(stem, typ)
 	local origstem = stem
-	-- au doesn't mutate; easiest way to handle this is to temporarily convert au and variants to single characters
-	stem = stem:gsub("au", AU_SUB)
-	stem = stem:gsub("Au", CAP_AU_SUB)
-	stem = stem:gsub("AU", ALL_CAP_AU_SUB)
-	local function undo_au_sub(stem)
-		stem = stem:gsub(AU_SUB, "au")
-		stem = stem:gsub(CAP_AU_SUB, "Au")
-		stem = stem:gsub(ALL_CAP_AU_SUB, "AU")
-		return stem
-	end
-			
+	stem = apply_au_sub(stem)
 	if typ == "uumut" or typ == "u_umut" then
 		local first, v1, middle, v2, last = rmatch(stem, "^(.*)(" .. com.vowel_c .. ")(" .. com.cons_c .. "*)(" ..
 			com.vowel_c .. ")(" .. com.cons_c .. "*)$")
@@ -227,19 +232,21 @@ function export.apply_reverse_u_mutation(stem, typ)
 			-- FIXME, throw an error?
 			return undo_au_sub(stem)
 		end
-		v1 = lesser_u_mutation[v1] or v1
-		v2 = (typ == "uumut" and greater_u_mutation or lesser_u_mutation)[v2] or v2
+		if not middle:find("v") then -- [[örvun]] -> [[örvan]] not #[[arvan]]
+			v1 = lesser_reverse_u_mutation[v1] or v1
+		end
+		v2 = (typ == "uumut" and greater_reverse_u_mutation or lesser_reverse_u_mutation)[v2] or v2
 		return undo_au_sub(first .. v1 .. middle .. v2 .. last)
 	end
 	if typ ~= "umut" then
-		error(("Internal error: For stem '%s', saw unrecognized u-mutation type '%s'"):format(origstem, typ))
+		error(("Internal error: For stem '%s', saw unrecognized reverse u-mutation type '%s'"):format(origstem, typ))
 	end
 	local first, v, last = rmatch(stem, "^(.*)(" .. com.vowel_c .. ")(" .. com.cons_c .. "*)$")
 	if not first then
 		-- FIXME, throw an error?
 		return undo_au_sub(stem)
 	end
-	v = lesser_u_mutation[v] or v
+	v = lesser_reverse_u_mutation[v] or v
 	return undo_au_sub(first .. v .. last)
 end
 
