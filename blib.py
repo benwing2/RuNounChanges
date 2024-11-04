@@ -725,7 +725,7 @@ def get_contributions(user, startprefix=None, endprefix=None, max=None, namespac
   for i, current in iter_items(itemiter, startprefix, endprefix, get_name=lambda item: item['title']):
     yield i, current
 
-def yield_articles(page, seen, startprefix=None, prune_cats_regex=None, recurse=False):
+def yield_articles(page, seen, startprefix=None, filter_cats_regex=None, prune_cats_regex=None, recurse=False):
   if not recurse:
     # Only use when non-recursive. Has a recurse= flag but doesn't allow for prune_cats_regex, doesn't correctly
     # ignore subcats and pages that may be seen multiple times.
@@ -738,7 +738,8 @@ def yield_articles(page, seen, startprefix=None, prune_cats_regex=None, recurse=
           seen.add(pagetitle)
           yield article
   else:
-    for subcat in yield_subcats(page, seen, prune_cats_regex=prune_cats_regex, do_this_page=True, recurse=True):
+    for subcat in yield_subcats(page, seen, filter_cats_regex=filter_cats_regex, prune_cats_regex=prune_cats_regex,
+                                do_this_page=True, recurse=True):
       for article in subcat.articles(startprefix=startprefix):
         if seen is None:
           yield article
@@ -748,38 +749,47 @@ def yield_articles(page, seen, startprefix=None, prune_cats_regex=None, recurse=
             seen.add(pagetitle)
             yield article
 
-def raw_cat_articles(page, seen, startprefix=None, prune_cats_regex=None, recurse=False):
+def raw_cat_articles(page, seen, startprefix=None, filter_cats_regex=None, prune_cats_regex=None, recurse=False):
   if isinstance(page, str):
     if not page.startswith("Category:"):
       page = "Category:" + page
     page = pywikibot.Category(site, page)
-  for article in yield_articles(page, seen, startprefix=startprefix, prune_cats_regex=prune_cats_regex, recurse=recurse):
+  for article in yield_articles(page, seen, startprefix=startprefix, filter_cats_regex=filter_cats_regex,
+                                prune_cats_regex=prune_cats_regex, recurse=recurse):
     yield article
 
-def cat_articles(page, startprefix=None, endprefix=None, seen=None, prune_cats_regex=None, recurse=False, track_seen=False):
+def cat_articles(page, startprefix=None, endprefix=None, seen=None, filter_cats_regex=None, prune_cats_regex=None,
+                 recurse=False, track_seen=False):
   if seen is None and track_seen:
     seen = set()
-  for i, current in iter_items(raw_cat_articles(page, seen, startprefix=startprefix if not isinstance(startprefix, int) else None,
-      prune_cats_regex=prune_cats_regex, recurse=recurse), startprefix, endprefix):
+  for i, current in iter_items(raw_cat_articles(
+    page, seen, startprefix=startprefix if not isinstance(startprefix, int) else None,
+    filter_cats_regex=filter_cats_regex, prune_cats_regex=prune_cats_regex, recurse=recurse), startprefix, endprefix):
     yield i, current
 
-def yield_subcats(page, seen, prune_cats_regex=None, do_this_page=False, recurse=False):
+def yield_subcats(page, seen, filter_cats_regex=None, prune_cats_regex=None, do_this_page=False, recurse=False):
   if seen is not None:
     pagetitle = str(page.title())
     if pagetitle in seen:
       return
     seen.add(pagetitle)
+  if filter_cats_regex:
+    this_cat = re.sub("^Category:", "", str(page.title()))
+    if not re.search(filter_cats_regex, this_cat):
+      msg("Skipping category '%s' as it doesn't match --filter-cats regex '%s'" % (this_cat, filter_cats_regex))
+      return
   if prune_cats_regex:
     this_cat = re.sub("^Category:", "", str(page.title()))
     if re.search(prune_cats_regex, this_cat):
-      msg("Pruned category '%s'" % this_cat)
+      msg("Skipping category '%s' as it matches --prune-cats regex '%s'" % (this_cat, prune_cats_regex))
       return
   if do_this_page:
     yield page
   subcats = page.subcategories()
   if recurse:
     for subcat in subcats:
-      for cat in yield_subcats(subcat, seen, prune_cats_regex=prune_cats_regex, do_this_page=True, recurse=True):
+      for cat in yield_subcats(subcat, seen, filter_cats_regex=filter_cats_regex, prune_cats_regex=prune_cats_regex,
+                               do_this_page=True, recurse=True):
         yield cat
   else:
     for subcat in subcats:
@@ -791,14 +801,16 @@ def yield_subcats(page, seen, prune_cats_regex=None, do_this_page=False, recurse
           seen.add(pagetitle)
           yield subcat
 
-def cat_subcats(page, startprefix=None, endprefix=None, seen=None, prune_cats_regex=None, do_this_page=False, recurse=False):
+def cat_subcats(page, startprefix=None, endprefix=None, seen=None, filter_cats_regex=None, prune_cats_regex=None,
+                do_this_page=False, recurse=False):
   if seen is None:
     seen = set()
   if isinstance(page, str):
     if not page.startswith("Category:"):
       page = "Category:" + page
     page = pywikibot.Category(site, page)
-  pageiter = yield_subcats(page, seen, prune_cats_regex=prune_cats_regex, do_this_page=do_this_page, recurse=recurse)
+  pageiter = yield_subcats(page, seen, filter_cats_regex=filter_cats_regex, prune_cats_regex=prune_cats_regex,
+                           do_this_page=do_this_page, recurse=recurse)
   # Recursive support is built into page.subcategories() but it isn't smart enough to skip pages
   # already seen, which can lead to infinite loops, e.g. ku:All topics -> ku:List of topics -> ku:All topics.
   # pageiter = page.subcategories(recurse=recurse) #no startprefix; startprefix = startprefix if not isinstance(startprefix, int) else None)
@@ -1107,6 +1119,7 @@ def create_argparser(desc, include_pagefile=False, include_stdin=False,
     parser.add_argument("--track-seen", action="store_true",
       help="Track previously seen articles and don't visit them again.")
     parser.add_argument("--prune-cats", help="Regex to use to prune categories when processing subcategories recursively; any categories matching the regex will be skipped along with any of their subcategories (unless reachable in some other manner).")
+    parser.add_argument("--filter-cats", help="Regex to use to filter categories when processing subcategories recursively; any categories not matching the regex will be skipped along with any of their subcategories (unless reachable in some other manner).")
     parser.add_argument("--refs", help="List of references to process, comma-separated.")
     parser.add_argument("--pages-and-refs", help="List of pages to process, comma-separated, along with references to those pages.")
     parser.add_argument("--specials", help="Special pages to do, comma-separated.")
@@ -1427,6 +1440,7 @@ def do_pagefile_cats_refs(args, start, end, process, default_pages=[], default_c
       parse_dump(sys.stdin, do_process_stdin_dump_text_on_page, start, end)
 
   elif args_has_non_default_pages(args):
+    args_filter_cats = args.filter_cats
     args_prune_cats = args.prune_cats
     if args.pages:
       pages = split_arg(args.pages, canonicalize=canonicalize_pagename)
@@ -1452,16 +1466,19 @@ def do_pagefile_cats_refs(args, start, end, process, default_pages=[], default_c
     if args.cats or args.category_file:
       def do_cat(cat):
         if args.do_cat_and_subcats:
-          for index, subcat in cat_subcats(cat, start, end, seen=seen, prune_cats_regex=args_prune_cats,
-              do_this_page=True, recurse=args.recursive):
+          for index, subcat in cat_subcats(cat, start, end, seen=seen, filter_cats_regex=args_filter_cats,
+                                           prune_cats_regex=args_prune_cats, do_this_page=True,
+                                           recurse=args.recursive):
             process_pywikibot_page(index, subcat, no_check_seen=True)
         elif args.do_subcats:
-          for index, subcat in cat_subcats(cat, start, end, seen=seen, prune_cats_regex=args_prune_cats,
-              do_this_page=False, recurse=args.recursive):
+          for index, subcat in cat_subcats(cat, start, end, seen=seen, filter_cats_regex=args_filter_cats,
+                                           prune_cats_regex=args_prune_cats, do_this_page=False,
+                                           recurse=args.recursive):
             process_pywikibot_page(index, subcat, no_check_seen=True)
         else:
-          for index, page in cat_articles(cat, start, end, seen=seen, prune_cats_regex=args_prune_cats,
-              recurse=args.recursive, track_seen=args.track_seen):
+          for index, page in cat_articles(cat, start, end, seen=seen, filter_cats_regex=args_filter_cats,
+                                          prune_cats_regex=args_prune_cats, recurse=args.recursive,
+                                          track_seen=args.track_seen):
             process_pywikibot_page(index, page, no_check_seen=True)
       if args.cats:
         for cat in split_arg(args.cats):
@@ -1485,8 +1502,9 @@ def do_pagefile_cats_refs(args, start, end, process, default_pages=[], default_c
         for index, page in query_special_pages(special, start, end):
           title = str(page.title())
           if args.do_specials_cat_pages and title.startswith("Category:"):
-            for index2, subcat in cat_articles(re.sub("^Category:", "", title), seen=seen, prune_cats_regex=args_prune_cats,
-                recurse=args.recursive):
+            for index2, subcat in cat_articles(
+                re.sub("^Category:", "", title), seen=seen, filter_cats_regex=args_filter_cats,
+                prune_cats_regex=args_prune_cats, recurse=args.recursive):
               process_pywikibot_page(index2, subcat, no_check_seen=True)
           if args.do_specials_refs:
             # We don't use ref_namespaces here because the user might not want it.
