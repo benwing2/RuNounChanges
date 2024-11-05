@@ -28,7 +28,7 @@ FIXME:
 1. Support 'plstem' overrides.
 2. Support definite lemmas such as [[Bandaríkin]] "the United States".
 3. Support adjectivally-declined terms.
-
+4. Support @ for built-in irregular lemmas.
 ]=]
 
 local lang = require("Module:languages").getByCode("is")
@@ -172,19 +172,20 @@ end
 
 -- Basic function to combine stem(s) and other properties with ending(s) and insert the result into the appropriate
 -- slot. `base` is the object describing all the properties of the word being inflected for a single alternant (in case
--- there are multiple alternants specified using `((...))`). `slot` is the slot to add the resulting forms to. `props`
--- is an object containing computed stems and other information (such as whether i-mutation is active). The information
--- found in `props` cannot be stored in `base` because there may be more than one set of such properties per `base`
--- (e.g. if the user specified 'umut,uumut' or '-j,j' or '-imut,imut' or some combination of these; in such a case, the
--- caller will iterate over all possible combinations, and ultimately invoke add() multiple times, one per combination).
--- `indef_endings` is the ending or endings added to the appropriate stem (after any j or v infix) to get the indefinite
--- form. Its value can be a single string, a list of strings, or a list of form objects (i.e. in general list form).
--- `def_endings` is similar to `indef_endings` but for definite forms (not including the definite clitics added
--- afterwards). Most of the time (but not always), `indef_endings` and `def_endings` will be the same. `def_clitics` is
--- the clitic or clitics to add after the definite ending(s) to form the actual definite form value inserted into the
--- slot, in the same format as `def_endings` and `indef_endings`. `ending_override`, if true, indicates that the
--- ending(s) supplied in `indef_endings` and `def_endings` come from a user-specified override, and hence j and v
--- infixes should not be added as they are already included in the override if needed.
+-- there are multiple alternants specified using `((...))`). `slot_prefix` is either "ind_" or "def_" and is prefixed to
+-- the slot value in `slot` to get the actual slot to add the resulting forms to. (`slot_prefix` is separated out
+-- because the code below frequently needs to conditionalize on the value of `slot` and should not have to worry about
+-- the definite and indefinite slot variants). `props` is an object containing computed stems and other information
+-- (such as whether i-mutation is active). The information found in `props` cannot be stored in `base` because there may
+-- be more than one set of such properties per `base` (e.g. if the user specified 'umut,uumut' or '-j,j' or '-imut,imut'
+-- or some combination of these; in such a case, the caller will iterate over all possible combinations, and ultimately
+-- invoke add() multiple times, one per combination). `endings` is the ending or endings added to the appropriate stem
+-- (after any j or v infix) to get the form(s) to add to the slot. Its value can be a single string, a list of strings,
+-- or a list of form objects (i.e. in general list form). `clitics` is the clitic or clitics to add after the endings to
+-- form the actual form value inserted into definite slots; it should be nil for indefinite slots. Its format is the
+-- same as for `endings`. `ending_override`, if true, indicates that the ending(s) supplied in `endings` come from a
+-- user-specified override, and hence j and v infixes should not be added as they are already included in the override
+-- if needed.
 --
 -- The properties in `props` are:
 -- * Stems (each stem should be in general list form; see [[Module:inflection utilities]]);
@@ -247,8 +248,8 @@ end
 --    *not* in effect, the associated footnotes in `unimut_footnotes` apply. If false, the associated footnotes in
 --    `unimut_footnotes` still apply in the same circumstances where they would apply if `unimut` where true.
 -- ** `unimut_footnotes`: See `unimut`.
-local function add(base, slot, props, indef_endings, def_endings, def_clitics, ending_override)
-	if not indef_endings and not def_endings then
+local function add_slotval(base, slot_prefix, slot, props, endings, clitics, ending_override)
+	if not endings then
 		return
 	end
 	-- Call skip_slot() based on the declined number; if the actual number is different, we correct this in
@@ -257,276 +258,335 @@ local function add(base, slot, props, indef_endings, def_endings, def_clitics, e
 		return
 	end
 	footnotes = iut.combine_footnotes(base.footnotes, footnotes)
-	-- Do both indefinite and definite endings. They behave very similarly except that definite endings have non-empty
-	-- clitics to append after them. Most but not all of the time the definite and indefinite endings are the same (and
-	-- will be set this way by the calling function), and again, most but not all of the time there is only one definite
-	-- clitic per slot.
-	for _, endtype in ipairs { "indef", "def" } do
-		local endings, clitics
-		if endtype == "indef" then
-			endings = indef_endings
-			clitics = {""}
+	if not clitics then
+		clitics = {""}
+	elseif type(clitics) == "string" then
+		clitics = {clitics}
+	end
+	if type(endings) == "string" then
+		endings = {endings}
+	end
+	-- Loop over each ending and clitic.
+	for _, endingobj in ipairs(endings) do
+		local ending, ending_footnotes
+		if type(endingobj) == "string" then
+			ending = endingobj
 		else
-			endings = def_endings
-			clitics = def_clitics
-			if type(clitics) == "string" then
-				clitics = {clitics}
-			end
+			ending = endingobj.form
+			ending_footnotes = endingobj.footnotes
 		end
-		-- If `endings` is nil, it means to entirely skip adding any endings of this sort (indefinite or definite).
-		if endings then
-			if type(endings) == "string" then
-				endings = {endings}
+		local function interr(msg)
+			error(("Internal error: For slot '%s%s', ending '%s', %s: %s"):format(slot_prefix, slot, ending, msg,
+			dump(props)))
+		end
+
+		for _, cliticobj in ipairs(clitics) do
+			local clitic, clitic_footnotes
+			if type(cliticobj) == "string" then
+				clitic = cliticobj
+			else
+				clitic = cliticobj.form
+				clitic_footnotes = cliticobj.footnotes
 			end
-			-- Loop over each ending and clitic.
-			for _, endingobj in ipairs(endings) do
-				local ending, ending_footnotes
-				if type(endingobj) == "string" then
-					ending = endingobj
-				else
-					ending = endingobj.form
-					ending_footnotes = endingobj.footnotes
-				end
-				local function interr(msg)
-					error(("Internal error: For slot '%s', ending '%s', %s: %s"):format(slot, ending, msg,
-						dump(props)))
-				end
 
-				for _, cliticobj in ipairs(clitics) do
-					local clitic, clitic_footnotes
-					if type(cliticobj) == "string" then
-						clitic = cliticobj
+			-- Compute whether i-mutation or u-mutation is in effect, and compute the "mutation footnotes", which are
+			-- footnotes attached to a mutation-related indicator and which may need to be added even if no mutation is
+			-- in effect (specifically when dealing with an ending that would trigger a mutation if in effect). AFAIK
+			-- you cannot have both mutations in effect at once, and i-mutation overrides u-mutation if both would be in
+			-- effect.
+			local explicit_imut, explicit_umut
+			ending, explicit_umut = rsubb(ending, "^%^%^", "")
+			if not explicit_umut then
+				ending, explicit_imut = rsubb(ending, "^%^", "")
+			end
+			local is_vowel_ending = rfind(ending, "^" .. com.vowel_c)
+			local is_vowel_clitic = rfind(clitic, "^" .. com.vowel_c)
+			local mut_in_effect, mut_not_in_effect, mut_footnotes
+			local ending_in_a = not not ending:find("^a")
+			local ending_in_i = not not ending:find("^i")
+			local ending_in_u = not not ending:find("^u")
+			if props.unimut ~= nil and props.unumut ~= nil then
+				interr("Cannot have both 'unimut' and 'unumut' in effect at the same time")
+			end
+			if props.unimut ~= nil and props.imut ~= nil then
+				interr("Cannot have both 'unimut' and 'imut' in effect at the same time")
+			end
+			if explicit_imut then
+				mut_in_effect = "i"
+			elseif explicit_umut then
+				mut_in_effect = "u"
+			else
+				if props.unimut ~= nil then
+					local is_unimut_slot
+					if base.gender == "m" then
+						is_unimut_slot = slot == "dat_s" or slot:find("_p")
+					elseif base.gender == "f" then
+						is_unimut_slot = slot == "acc_s" or slot == "dat_s" or slot == "dat_p" or
+							slot == "gen_p"
 					else
-						clitic = cliticobj.form
-						clitic_footnotes = cliticobj.footnotes
+						interr("'unimut' shouldn't be specified with neuter nouns; don't know what slots would be affected; neuter pluralia tantum nouns using 'unimut' should have synthesized a singular without i-mutation")
 					end
-
-					-- Compute whether i-mutation or u-mutation is in effect, and compute the "mutation footnotes",
-					-- which are footnotes attached to a mutation-related indicator and which may need to be added even
-					-- if no mutation is in effect (specifically when dealing with an ending that would trigger a
-					-- mutation if in effect). AFAIK you cannot have both mutations in effect at once, and i-mutation
-					-- overrides u-mutation if both would be in effect.
-					local explicit_imut, explicit_umut
-					ending, explicit_umut = rsubb(ending, "^%^%^", "")
-					if not explicit_umut then
-						ending, explicit_imut = rsubb(ending, "^%^", "")
-					end
-					local is_vowel_ending = rfind(ending, "^" .. com.vowel_c)
-					local is_vowel_clitic = rfind(clitic, "^" .. com.vowel_c)
-					local mut_in_effect, mut_not_in_effect, mut_footnotes
-					local ending_in_a = not not ending:find("^a")
-					local ending_in_i = not not ending:find("^i")
-					local ending_in_u = not not ending:find("^u")
-					if props.unimut ~= nil and props.unumut ~= nil then
-						interr("Cannot have both 'unimut' and 'unumut' in effect at the same time")
-					end
-					if props.unimut ~= nil and props.imut ~= nil then
-						interr("Cannot have both 'unimut' and 'imut' in effect at the same time")
-					end
-					if explicit_imut then
+					if is_unimut_slot then
+						mut_not_in_effect = "i"
+						mut_footnotes = props.unimut_footnotes
+					elseif props.unimut then
 						mut_in_effect = "i"
-					elseif explicit_umut then
-						mut_in_effect = "u"
+					end
+				elseif props.imut ~= nil then
+					if ending_in_i then
+						if props.imut then
+							mut_in_effect = "i"
+							mut_footnotes = props.imut_footnotes
+						elseif props.imut == false then
+							mut_not_in_effect = "i"
+							mut_footnotes = props.imut_footnotes
+						end
+					end
+				end
+				if props.unumut ~= nil then
+					local is_unumut_slot
+					if props.unumut == "unumut" or props.unumut == "-unumut" then
+						is_unumut_slot = ending_in_a or ending_in_i
+					elseif base.gender == "m" then
+						is_unumut_slot = slot == "gen_s" or slot == "gen_p"
+					elseif base.gender == "f" then
+						is_unumut_slot = slot == "nom_p" or slot == "acc_p" or slot == "gen_p"
 					else
-						if props.unimut ~= nil then
-							local is_unimut_slot
-							if base.gender == "m" then
-								is_unimut_slot = slot == "dat_s" or slot:find("_p")
-							elseif base.gender == "f" then
-								is_unimut_slot = slot == "acc_s" or slot == "dat_s" or slot == "dat_p" or
-									slot == "gen_p"
-							else
-								interr("'unimut' shouldn't be specified with neuter nouns; don't know what slots would be affected; neuter pluralia tantum nouns using 'unimut' should have synthesized a singular without i-mutation")
-							end
-							if is_unimut_slot then
-								mut_not_in_effect = "i"
-								mut_footnotes = props.unimut_footnotes
-							elseif props.unimut then
-								mut_in_effect = "i"
-							end
-						elseif props.imut ~= nil then
-							if ending_in_i then
-								if props.imut then
-									mut_in_effect = "i"
-									mut_footnotes = props.imut_footnotes
-								elseif props.imut == false then
-									mut_not_in_effect = "i"
-									mut_footnotes = props.imut_footnotes
-								end
-							end
-						end
-						if props.unumut ~= nil then
-							local is_unumut_slot
-							if props.unumut == "unumut" or props.unumut == "-unumut" then
-								is_unumut_slot = ending_in_a or ending_in_i
-							elseif base.gender == "m" then
-								is_unumut_slot = slot == "gen_s" or slot == "gen_p"
-							elseif base.gender == "f" then
-								is_unumut_slot = slot == "nom_p" or slot == "acc_p" or slot == "gen_p"
-							else
-								interr("'unumut' and 'unuumut' shouldn't be specified with neuter nouns; don't know what slots would be affected; neuter pluralia tantum nouns using 'unumut'/'unuumut' should have synthesized a singular without u-mutation")
-							end
-							if not mut_in_effect and not mut_not_in_effect then
-								-- do nothing if mut_in_effect or mut_not_in_effect because i-mut takes precedence over
-								-- u-mut; FIXME: I hope this is correct in all cases.
-								if is_unumut_slot then
-									mut_not_in_effect = "u"
-									mut_footnotes = props.unumut_footnotes
-								elseif props.unumut then
-									mut_in_effect = "u"
-								end
-							end
-						end
-						if ending_in_u and not mut_in_effect and not mut_not_in_effect then
-							-- FIXME: I hope the `not mut_not_in_effect` is correct here.
+						interr("'unumut' and 'unuumut' shouldn't be specified with neuter nouns; don't know what slots would be affected; neuter pluralia tantum nouns using 'unumut'/'unuumut' should have synthesized a singular without u-mutation")
+					end
+					if not mut_in_effect and not mut_not_in_effect then
+						-- Do nothing if mut_in_effect or mut_not_in_effect because i-mut takes precedence over u-mut;
+						-- FIXME: I hope this is correct in all cases.
+						if is_unumut_slot then
+							mut_not_in_effect = "u"
+							mut_footnotes = props.unumut_footnotes
+						elseif props.unumut then
 							mut_in_effect = "u"
-							-- umut and uumut footnotes are incorporated into the appropriate umut_* stems
 						end
 					end
-
-					-- Now compute the appropriate stems to which the ending and clitic are added.
-					if mut_in_effect == "i" then
-						-- NOTE: It appears that imut and defcon never co-occur; otherwise we'd need to flesh out the
-						-- set of stems to include i-mutation versions of defcon stems, similar to what we do for
-						-- u-mutation.
-						if is_vowel_ending then
-							if not stems.imut_vstems then
-								interr("i-mutation in effect and ending begins with a vowel but '.imut_vstems' not defined")
-							end
-							stems = stems.imut_vstems
-						else
-							if not stems.imut_nonvstems then
-								interr("i-mutation in effect and ending does not begin with a vowel but '.imut_nonvstems' not defined")
-							end
-							stems = stems.imut_nonvstems
-						end
-					else
-						-- Careful with the following logic; it is written carefully and should not be changed without
-						-- a thorough understanding of its functioning.
-						local has_umut = mut_in_effect == "u"
-						-- First, if the ending is null, and we have a vowel-initial definite-article clitic, use the
-						-- special 'defcon' stems if available. We do this even if the ending is "-", which normally
-						-- means to use the lemma regardless (which avoids problems with e.g. thinking that the
-						-- masculine singular nominative ending -ur would trigger u-mutation, which will happen if we
-						-- construct the nominative singular from the stem instead of just using the lemma directly).
-						-- The reason for this is that when 'defcon' is active, it applies to the nominative singular,
-						-- producing e.g. definite [[mastrið]] of neuter lemma [[mastur]] "mast"; here, using the
-						-- lemma would incorrectly produce #[[masturið]].
-						if (ending == "" or ending == "-") and is_vowel_clitic then
-							if has_umut then
-								stems = stems.umut_null_defvstems
-							else
-								stems = stems.null_defvstems
-							end
-						end
-						-- If the stems were not set above and the ending is "-", it means to use the lemma as the form
-						-- directly (before adding any definite clitic) rather than try to construct the form from a
-						-- stem and ending. See the comment above for why we want to do this.
-						if not stems and ending == "-" then
-							stems = base.actual_lemma
-							ending = ""
-						end
-						-- If the stems are still unset, then use the vowel or non-vowel stems if available. When
-						-- u-mutation is active, we first check for u-mutated versions of the vowel or non-vowel stems
-						-- before falling back to the regular vowel or non-vowel stems. Note that an expression like
-						-- `has_umut and stems.umut_vstems or stems.vstems` here is NOT equivalent to an if-else or
-						-- ternary operator expression because if `has_umut` is true and `umut_vstems` is missing, it
-						-- will still fall back to `vstems` (which is what we want).
-						if not stems then
-							if is_vowel_ending then
-								stems = has_umut and stems.umut_vstems or stems.vstems
-							else
-								stems = has_umut and stems.umut_nonvstems or stems.nonvstems
-							end
-						end
-						-- Finally, fall back to the basic stems, which are always defined.
-						stems = stems or stems.stems
-					end
-
-					local infix, infix_footnotes
-					-- Compute the infix (j, v or nothing) that goes between the stem and ending.
-					if not ending_override and is_vowel_ending then
-						if props.vinfix and props.jinfix then
-							interr("can't have specifications for both '.vinfix' and '.jinfix'; should have been caught above")
-						end
-						if props.vinfix then
-							infix = props.vinfix
-							infix_footnotes = props.vinfix_footnotes
-						elseif props.jinfix and not ending_in_i then
-							infix = props.jinfix
-							infix_footnotes = props.jinfix_footnotes
-						end
-					end
-
-					-- If base-level footnotes specified, they go before any stem footnotes, so we need to clone the
-					-- stems an insert the base-level footnotes appropriately. In general, we want the footnotes to be
-					-- in the order [base.footnotes, stem.footnotes, mut_footnotes, infix_footnotes, ending.footnotes,
-					-- clitic.footnotes].
-					if base.footnotes then
-						local stems_with_footnotes = {}
-						for _, stem in ipairs(stems) do
-							stem = m_table.shallowcopy(stem)
-							stem.footnotes = iut.combine_footnotes(base.footnotes, stem.footnotes)
-							table.insert(stems_with_footnotes, stem)
-						end
-						stems = stems_with_footnotes
-					end
-
-					local function combine_stem_ending(stem, clitic)
-						if stem == "?" then
-							return "?"
-						end
-						local function drop_clitic_i()
-							clitic = clitic:gsub("^i", "")
-						end
-						-- * at the end of a definite ending indicates that the following i- of the clitic should drop,
-						-- as with neuter [[tré]], [[kné]], [[fé]].
-						if ending:find("%*$") then
-							ending = ending:gsub("%*$", "")
-							drop_clitic_i()
-						end
-						local stem_with_infix = stem .. (infix or "")
-						local stem_with_ending
-						-- An initial s- of the ending drops after a cluster of cons + s (including written <x>).
-						if ending:find("^s") and (stem_with_infix:find("x$") or
-							stem_with_infix:find(com.cons_c .. "s$")) then
-							stem_with_ending = stem_with_infix .. ending:gsub("^s", "")
-						else
-							stem_with_ending = stem_with_infix .. ending
-						end
-						if clitic == "" then
-							return stem_with_ending
-						end
-						if slot == "dat_p" then
-							stem_with_ending = stem_with_ending:gsub("m$", "")
-						end
-						if clitic:find("^i.*[aiu]") then -- disyllabic clitics in i-
-							-- in practice, fem acc_s -ina, dat_s -inni, gen_s -innar
-							if rfind(stem_with_ending, com.vowel_c .. "$") then
-								drop_clitic_i()
-							end
-						elseif clitic:find("^i") then -- monosyllabic clitics in i-
-							if ending:find("[aiu]$") then
-								drop_clitic_i()
-							end
-						end
-						return stem_with_ending .. clitic
-					end
-
-					local combined_footnotes = iut.combine_footnotes(
-						iut.combine_footnotes(mut_footnotes, infix_footnotes),
-						iut.combine_footnotes(ending_footnotes, clitic_footnotes)
-					)
-					local clitic_with_notes = iut.combine_form_and_footnotes(clitic, combined_footnotes)
-					iut.add_forms(base.forms, slot, stems, clitic_with_notes, combine_stem_ending)
+				end
+				if ending_in_u and not mut_in_effect and not mut_not_in_effect then
+					-- FIXME: I hope the `not mut_not_in_effect` is correct here.
+					mut_in_effect = "u"
+					-- umut and uumut footnotes are incorporated into the appropriate umut_* stems
 				end
 			end
+
+			-- Now compute the appropriate stems to which the ending and clitic are added.
+			if mut_in_effect == "i" then
+
+				-- NOTE: It appears that imut and defcon never co-occur; otherwise we'd need to flesh out the set of
+				-- stems to include i-mutation versions of defcon stems, similar to what we do for u-mutation.
+				if is_vowel_ending then
+					if not stems.imut_vstems then
+						interr("i-mutation in effect and ending begins with a vowel but '.imut_vstems' not defined")
+					end
+					stems = stems.imut_vstems
+				else
+					if not stems.imut_nonvstems then
+						interr("i-mutation in effect and ending does not begin with a vowel but '.imut_nonvstems' not defined")
+					end
+					stems = stems.imut_nonvstems
+				end
+			else
+				-- Careful with the following logic; it is written carefully and should not be changed without a
+				-- thorough understanding of its functioning.
+				local has_umut = mut_in_effect == "u"
+				-- First, if the ending is null, and we have a vowel-initial definite-article clitic, use the special
+				-- 'defcon' stems if available. We do this even if the ending is "*", which normally means to use the
+				-- lemma regardless (which avoids problems with e.g. thinking that the masculine singular nominative
+				-- ending -ur would trigger u-mutation, which will happen if we construct the nominative singular from
+				-- the stem instead of just using the lemma directly).  The reason for this is that when 'defcon' is
+				-- active, it applies to the nominative singular, producing e.g. definite [[mastrið]] of neuter lemma
+				-- [[mastur]] "mast"; here, using the lemma would incorrectly produce #[[masturið]].
+				if (ending == "" or ending == "*") and is_vowel_clitic then
+					if has_umut then
+						stems = stems.umut_null_defvstems
+					else
+						stems = stems.null_defvstems
+					end
+				end
+				-- If the stems were not set above and the ending is "*", it means to use the lemma as the form directly
+				-- (before adding any definite clitic) rather than try to construct the form from a stem and ending. See
+				-- the comment above for why we want to do this.
+				if not stems and ending == "*" then
+					stems = base.actual_lemma
+					ending = ""
+				end
+				-- If the stems are still unset, then use the vowel or non-vowel stems if available. When u-mutation is
+				-- active, we first check for u-mutated versions of the vowel or non-vowel stems before falling back to
+				-- the regular vowel or non-vowel stems. Note that an expression like `has_umut and stems.umut_vstems or
+				-- stems.vstems` here is NOT equivalent to an if-else or ternary operator expression because if
+				-- `has_umut` is true and `umut_vstems` is missing, it will still fall back to `vstems` (which is what
+				-- we want).
+				if not stems then
+					if is_vowel_ending then
+						stems = has_umut and stems.umut_vstems or stems.vstems
+					else
+						stems = has_umut and stems.umut_nonvstems or stems.nonvstems
+					end
+				end
+				-- Finally, fall back to the basic stems, which are always defined.
+				stems = stems or stems.stems
+			end
+
+			local infix, infix_footnotes
+			-- Compute the infix (j, v or nothing) that goes between the stem and ending.
+			if not ending_override and is_vowel_ending then
+				if props.vinfix and props.jinfix then
+					interr("can't have specifications for both '.vinfix' and '.jinfix'; should have been caught above")
+				end
+				if props.vinfix then
+					infix = props.vinfix
+					infix_footnotes = props.vinfix_footnotes
+				elseif props.jinfix and not ending_in_i then
+					infix = props.jinfix
+					infix_footnotes = props.jinfix_footnotes
+				end
+			end
+
+			-- If base-level footnotes specified, they go before any stem footnotes, so we need to clone the stems an
+			-- insert the base-level footnotes appropriately. In general, we want the footnotes to be in the order
+			-- [base.footnotes, stem.footnotes, mut_footnotes, infix_footnotes, ending.footnotes, clitic.footnotes].
+			if base.footnotes then
+				local stems_with_footnotes = {}
+				for _, stem in ipairs(stems) do
+					stem = m_table.shallowcopy(stem)
+					stem.footnotes = iut.combine_footnotes(base.footnotes, stem.footnotes)
+					table.insert(stems_with_footnotes, stem)
+				end
+				stems = stems_with_footnotes
+			end
+
+			local function combine_stem_ending(stem, clitic)
+				if stem == "?" then
+					return "?"
+				end
+				local function drop_clitic_i()
+					clitic = clitic:gsub("^i", "")
+				end
+				-- % at the end of a definite ending indicates that the following i- of the clitic should drop, as with
+				-- neuter [[tré]], [[kné]], [[fé]]. There's no counterpart to force irregular inclusion of an i- that
+				-- would normally drop; just include it in the ending (as with acc/dat sg of [[eygló]] "eyeball???" and
+				-- [[sígó]] "cig").
+				if ending:find("%%$") then
+					ending = ending:gsub("%%$", "")
+					drop_clitic_i()
+				end
+				local stem_with_infix = stem .. (infix or "")
+				-- Drop final -j- of stem before an ending beginning with a consonant. This happens e.g. in [[kirkja]]
+				-- "church" with genitive plural -na, producing [[kirkna]]. It does not happen with a null ending; cf.
+				-- neuter [[emj]] "cries, shouting" and [[gremj]] "anger, irritation" (the latter not in BÍN).
+				if stem_with_infix:find("j$") and rfind(ending, "^" .. com.c) then
+					stem_with_infix = stem_with_infix:gsub("j$", "")
+				end
+				local stem_with_ending
+				-- An initial s- of the ending drops after a cluster of cons + s (including written <x>).
+				if ending:find("^s") and (stem_with_infix:find("x$") or rfind(stem_with_infix, com.cons_c .. "s$")) then
+					stem_with_ending = stem_with_infix .. ending:gsub("^s", "")
+				else
+					stem_with_ending = stem_with_infix .. ending
+				end
+				if clitic == "" then
+					return stem_with_ending
+				end
+				if slot == "dat_p" then
+					stem_with_ending = stem_with_ending:gsub("m$", "")
+				end
+				if clitic:find("^i.*[aiu]") then -- disyllabic clitics in i-
+					-- in practice, fem acc_s -ina, dat_s -inni, gen_s -innar
+					if rfind(stem_with_ending, com.vowel_c .. "$") then
+						drop_clitic_i()
+					end
+				elseif clitic:find("^i") then -- monosyllabic clitics in i-
+					if ending:find("[aiu]$") then
+						drop_clitic_i()
+					end
+				end
+				return stem_with_ending .. clitic
+			end
+
+			local combined_footnotes = iut.combine_footnotes(
+				iut.combine_footnotes(mut_footnotes, infix_footnotes),
+				iut.combine_footnotes(ending_footnotes, clitic_footnotes)
+			)
+			local clitic_with_notes = iut.combine_form_and_footnotes(clitic, combined_footnotes)
+			iut.add_forms(base.forms, slot_prefix .. slot, stems, clitic_with_notes, combine_stem_ending)
 		end
 	end
 end
 
 
+-- Add the definite and indefinite variants of a slot by combining the appropriate stem in `props` with (optionally) an
+-- infix in `props` and the endings in `endings`, tacking on the definite article clitic in the definite slot variant.
+-- This calls the underlying function add_slotval() twice, once for indefinite forms and once for definite forms, and is
+-- normally called by add_decl() or similar function to add an entire declension. `endings` can be nil (no endings are
+-- added), a single string, a list of strings, a list of form objects (i.e. in general list form), or a table containing
+-- fields `indef` and `def` (each of which can be any of the previous formats) to add separate sets of endings for the
+-- indefinite and definite slot variants. If any of the formats for `endings` is supplied other than the separate
+-- indefinite/definite table, the supplied set of endings is used for both indefinite and definite slot variants.
+local function add(base, slot, props, endings)
+	if not endings then
+		return
+	end
+	local indef_endings, def_endings
+	if type(endings) == "table" and (endings.indef or endings.def) then
+		indef_endings = endings.indef
+		def_endings = endings.def
+	else
+		indef_endings = endings
+		def_endings = endings
+	end
+	if indef_endings then
+		add_slotval(base, "ind_", slot, props, indef_endings)
+	end
+	if def_endings then
+		local clitic = clitic_articles[base.gender]
+		if not clitic then
+			error(("Internal error: Unrecognized value for base.gender: %s"):format(dump(base.gender)))
+		end
+		clitic = clitic[slot]
+		if not clitic then
+			error(("Internal error: Unrecognized value for `slot` in add(): %s"):format(dump(slot)))
+		end
+		add_slotval(base, "def_", slot, props, def_endings, clitic)
+	end
+end
+
+
+-- Generate the accusative plural ending from the nominative plural. For feminines and neuters, both are the same.
+-- For masculines, drop the -r except in -ur.
+local function acc_p_from_nom_p(base, nom_p)
+	if base.gender == "f" or base.gender == "n" then
+		return nom_p
+	end
+	if not nom_p then
+		return nom_p
+	end
+	local function form_masc_acc_p(ending)
+		if ending == "ur" then
+			return "ur"
+		else
+			return (ending:gsub("r$", ""))
+		end
+	end
+	if type(nom_p) == "string" then
+		return form_masc_acc_p(nom_p)
+	end
+	local acc_p = {}
+	for _, ending in ipairs(nom_p) do
+		if type(ending) == "string" then
+			table.insert(acc_p, form_masc_acc_p(ending))
+		else
+			table.insert(acc_p, {form = form_masc_acc_p(ending.form), footnotes = ending.footnotes})
+		end
+	end
+	return acc_p
+end
+
+
 local function process_slot_overrides(base, do_slot)
+	-- FIXME: Rewrite for Icelandic
 	for slot, overrides in pairs(base.overrides) do
 		-- Call skip_slot() based on the declined number; if the actual number is different, we correct this in
 		-- decline_noun() at the end.
@@ -545,11 +605,11 @@ local function process_slot_overrides(base, do_slot)
 							iut.insert_form(base.forms, slot, {form = form, footnotes = combined_notes})
 						end
 					else
-						-- Convert a null ending to "-" in the acc/voc sg slots so that e.g. [[Kerberos]] declared as
+						-- Convert a null ending to "*" in the acc slot so that e.g. [[Kerberos]] declared as
 						-- <m.sg.foreign.gena:u.acc-:a> works correctly and generates accusative 'Kerberos/Kerbera' not
-						-- #'Kerber/Kerbera'.
-						if (slot == "acc_s" or slot == "voc_s") and form == "" then
-							form = "-"
+						-- #'Kerber/Kerbera'. FIXME: This is from the Czech module; does this still apply in Icelandic?
+						if slot == "acc_s" and form == "" then
+							form = "*"
 						end
 						for _, stems in ipairs(base.stem_sets) do
 							add(base, slot, stems, form, combined_notes)
@@ -562,47 +622,55 @@ local function process_slot_overrides(base, do_slot)
 end
 
 
-local function add_decl(base, props,
-	acc_s, dat_s, gen_s, nom_p, acc_p, dat_p, gen_p, footnotes
-)
-	add(base, "nom_s", props, "-", footnotes)
-	add(base, "acc_s", props, acc_s, footnotes)
-	add(base, "dat_s", props, dat_s, footnotes)
-	add(base, "gen_s", props, gen_s, footnotes)
+-- Generate the full declension for the term given the endings for each slot except the nom_s (which is taken directly
+-- from the lemma). acc_p, dat_p and gen_p can be omitted and will be defaulted: dat_p defaults to "um", gen_p defaults
+-- to "a", and acc_p defaults to the nom_p except for masculines not in -ur, where the -r is dropped. Use `false` as the
+-- value of an ending to disable generating any value for that slot.
+local function add_decl(base, props, acc_s, dat_s, gen_s, nom_p, acc_p, dat_p, gen_p)
+	add(base, "nom_s", props, "*")
+	add(base, "acc_s", props, acc_s)
+	add(base, "dat_s", props, dat_s)
+	add(base, "gen_s", props, gen_s)
 	if base.number == "pl" then
 		-- If this is a plurale tantum noun and we're processing the nominative plural, use the user-specified lemma
 		-- rather than generating the plural from the synthesized singular, which may not match the specified lemma
 		-- (e.g. [[tvargle]] "Olomouc cheese" using <m.pl.mixed> would try to generate 'tvargle/tvargly', and [[peníze]]
-		-- "money" using <m.pl.#ě.genpl-> would try to generate 'peněze').
+		-- "money" using <m.pl.#ě.genpl-> would try to generate 'peněze'). FIXME: Rewrite for Icelandic.
 		local acc_p_like_nom = m_table.deepEquals(nom_p, acc_p)
-		nom_p = "-"
+		nom_p = "*"
 		if acc_p_like_nom then
-			acc_p = "-"
+			acc_p = "*"
 		end
 	end
-	add(base, "nom_p", props, nom_p, footnotes)
-	add(base, "acc_p", props, acc_p, footnotes)
-	add(base, "dat_p", props, dat_p, footnotes)
-	add(base, "gen_p", props, gen_p, footnotes)
+	add(base, "nom_p", props, nom_p)
+	-- Generate defaults for acc_p, dat_p, gen_p if nil was specified; but be careful not to do so for false, which
+	-- means to generate no form.
+	if acc_p == nil then
+		acc_p = acc_p_from_nom_p(base, nom_p)
+	end
+	if dat_p == nil then
+		dat_p = "um"
+	end
+	if gen_p == nil then
+		gen_p = "a"
+	end
+	add(base, "acc_p", props, acc_p)
+	add(base, "dat_p", props, dat_p)
+	add(base, "gen_p", props, gen_p)
 end
 
-local function add_sg_decl(base, stems,
-	gen_s, dat_s, acc_s, voc_s, loc_s, ins_s, footnotes
-)
-	add_decl(base, stems, gen_s, dat_s, acc_s, voc_s, loc_s, ins_s,
-		nil, nil, nil, nil, nil, nil, footnotes)
+local function add_sg_decl(base, props, acc_s, dat_s, gen_s)
+	add_decl(base, props, acc_s, dat_s, gen_s, false, false, false, false)
 end
 
-local function add_pl_only_decl(base, stems,
-	gen_p, dat_p, acc_p, loc_p, ins_p, footnotes
-)
-	add_decl(base, stems, nil, nil, nil, nil, nil, nil, 
-		"-", gen_p, dat_p, acc_p, loc_p, ins_p, footnotes)
+local function add_pl_only_decl(base, props, acc_p, dat_p, gen_p)
+	add_decl(base, props, false, false, false, "*", acc_p, dat_p, gen_p)
 end
 
 local function handle_derived_slots_and_overrides(base)
+	-- FIXME: Rewrite for Icelandic
 	local function is_non_derived_slot(slot)
-		return slot ~= "voc_p" and slot ~= "acc_s"
+		return slot ~= "acc_s"
 	end
 
 	local function is_derived_slot(slot)
@@ -647,40 +715,21 @@ end
 -- and how to modify it for the given ending are handled in add_decl(); the declension functions just need to generate
 -- the appropriate endings.
 local decls = {}
--- Table specifying additional properties for declension types. Every declension type must have such a table, which
--- specifies which category or categories to add and what annotation to show in the title bar of the declension table.
---
--- * Only the `cat` property of this table is mandatory; there is also a `desc` property to specify the annotation, but
---   this can be omitted and the annotation will then be computed from the `cat` property. The `cat` property is either
---   a string, a list of strings or a function (of two arguments, `base` and `stems` as above) returning a string or
---   list of strings. The string can contain the keywords GENDER to substitute the gender (and animacy for masculine
---   nouns) and POS (to substitute the pluralized part of speech). The keyword GENPOS is equivalent to 'GENDER POS'. If
---   no keyword is present, ' GENPOS' is added onto the end. If only GENDER is present, ' POS' is added onto the end.
---   In all cases, the language name is added onto the beginning to form the full category name.
--- * The `desc` property is of the same form as the `cat` property and specifies the annotation to display in the title
---   bar (which may have the same format as the category minus the part of speech, or may be abbreviated). The value
---   may not be a list of strings, as only one annotation is displayed. If omitted, it is derived from the category
---   spec(s) by taking the last category (if more than one is given) and removing ' POS' before keyword substitution.
-local declprops = {}
 
 
-decls["strong-m"] = function(base, stems)
+decls["strong-m"] = function(base, props)
 	-- [[kádí]] "qadi (Islamic judge)", [[mahdí]] "Mahdi (Islamic prophet)", [[muftí]] "mufti (Islamic scholar)",
 	-- [[sipáhí]] "sipahi (Algerian cavalryman in the French army)"
 	--
 	-- No obvious examples in -ý, but the support is there.
 	--
 	-- NOTE: The stem ends in -í/-ý.
-	add_decl(base, stems, "ho", "mu", nil, "-", "m", "m",
+	add_decl(base, props, "ho", "mu", nil, "*", "m", "m",
 		{"ové", ""}, {"ů", "ch"}, {"ům", "m"}, {"e", ""}, "ích", "mi")
 end
 
-declprops["í-m"] = {
-	cat = "GENPOS in -í/-ý"
-}
 
-
-decls["hard-m"] = function(base, stems)
+decls["hard-m"] = function(base, props)
 	-- Nouns ending in hard -c, e.g. [[hec]] "joke", [[kibuc]] "kibbutz", don't palatalize.
 	base.palatalize_voc = not rfind(stems.vowel_stem, "c$")
 	base.hard_c = true
@@ -715,7 +764,7 @@ decls["hard-m"] = function(base, stems)
 	-- need to give this manually using <voce>; it will trigger the first palatalization automatically.
 	local voc_s = velar and "u" or "e" -- 'e' will trigger first palatalization in apply_special_cases()
 	-- Nom_p in -i will trigger second palatalization in apply_special_cases().
-	local nom_p = base.animacy == "inan" and "y" or default_masc_animate_nom_pl(base, stems)
+	local nom_p = base.animacy == "inan" and "y" or default_masc_animate_nom_pl(base, props)
 	-- Per IJP and Janda and Townsend:
 	-- * loc_p in -ích is currently the default for velars but not otherwise; it will automatically trigger the second
 	--   palatalization (e.g. [[práh]] "threshold", loc_p 'prazích'). Otherwise, -ích needs to be given manually using
@@ -731,32 +780,15 @@ decls["hard-m"] = function(base, stems)
 	local loc_p =
 		base.animacy == "inan" and rfind(base.lemma, "[cč]ek$") and rfind(stems.vowel_stem, "[cč]k$") and {"ích", "ách"} or
 		velar and "ích" or "ech"
-	add_decl(base, stems, gen_s, dat_s, nil, voc_s, loc_s, "em",
+	add_decl(base, props, gen_s, dat_s, nil, voc_s, loc_s, "em",
 		-- loc_p in -ích not after velar stems (e.g. [[les]] "forest"; [[hotel]] "hotel") needs to be given manually
 		-- using <locplích>; it will automatically trigger the second palatalization; loc_p in -ách (e.g. [[plech]]
 		-- "metal plate") also needs to be given manually using <locplách>
 		nom_p, "ů", "ům", "y", loc_p, "y")
 end
 
-declprops["hard-m"] = {
-	desc = function(base, stems)
-		if base.velar or not base["-velar"] and rfind(stems.vowel_stem, com.velar_c .. "$") then
-			return "velar GENDER"
-		else
-			return "hard GENDER"
-		end
-	end,
-	cat = function(base, stems)
-		if base.velar or not base["-velar"] and rfind(stems.vowel_stem, com.velar_c .. "$") then
-			return "velar-stem"
-		else
-			return "hard"
-		end
-	end
-}
 
-
-decls["semisoft-m"] = function(base, stems)
+decls["semisoft-m"] = function(base, props)
 	-- Examples:
 	-- * Animate in -ius: génius, nuncius, nonius (breed of horse), notárius, ordinárius, patricius, primárius,
 	--   pronuncius, various names
@@ -766,16 +798,12 @@ decls["semisoft-m"] = function(base, stems)
 	local dat_s = base.animacy == "inan" and "u" or base.surname and "ovi" or {"ovi", "u"}
 	local loc_s = dat_s
 	local nom_p = base.animacy == "inan" and "e" or "ové"
-	add_decl(base, stems, "a", dat_s, nil, "e", loc_s, "em",
+	add_decl(base, props, "a", dat_s, nil, "e", loc_s, "em",
 		nom_p, "ů", "ům", "e", "ích", "i")
 end
 
-declprops["semisoft-m"] = {
-	cat = "semisoft"
-}
 
-
-decls["soft-m"] = function(base, stems)
+decls["soft-m"] = function(base, props)
 	base.palatalize_voc = true
 	-- animates with dat_s only in -i need to give this manually, using '<dati>'
 	local dat_s = base.animacy == "inan" and "i" or base.surname and "ovi" or {"ovi", "i"}
@@ -788,18 +816,14 @@ decls["soft-m"] = function(base, stems)
 	-- Not [[Kadlec]] (surname).
 	local voc_s = base.animacy == "an" and rfind(base.lemma, "[eě]c$") and stems.reducible and
 		(not base.surname and rfind(base.lemma, "^" .. com.uppercase_c) and {"e", "i"} or "e") or "i"
-	local nom_p = base.animacy == "inan" and "e" or default_masc_animate_nom_pl(base, stems)
+	local nom_p = base.animacy == "inan" and "e" or default_masc_animate_nom_pl(base, props)
 	-- nouns with loc_p in -ech (e.g. [[cíl]] "goal") need to give this manually, using <locplech>
-	add_decl(base, stems, "e", dat_s, nil, voc_s, loc_s, "em",
+	add_decl(base, props, "e", dat_s, nil, voc_s, loc_s, "em",
 		nom_p, "ů", "ům", "e", "ích", "i")
 end
 
-declprops["soft-m"] = {
-	cat = "soft"
-}
 
-
-decls["mixed-m"] = function(base, stems)
+decls["mixed-m"] = function(base, props)
 	-- NOTE: IJP tends to list the soft endings first, but per their section on this
 	-- (https://prirucka.ujc.cas.cz/en/?id=220), the hard endings tend to predominate in modern use, so we list them
 	-- first.
@@ -809,7 +833,7 @@ decls["mixed-m"] = function(base, stems)
 			-- from the other two, with more soft forms. [[manžel]] has plural in -é or -ové and needs an override.
 			local dat_s = base.surname and "ovi" or {"ovi", "u"}
 			local loc_s = dat_s
-			add_decl(base, stems, "a", dat_s, nil, "i", loc_s, "em",
+			add_decl(base, props, "a", dat_s, nil, "i", loc_s, "em",
 				"é", "ů", "ům", {"y", "e"}, {"ech", "ích"}, {"y", "i"})
 		else
 			-- -s/-z: rorýs, platýs, pilous, markýz, všekaz, stávkokaz, penězokaz, listokaz, dřevokaz, zrnokaz, boss.
@@ -819,7 +843,7 @@ decls["mixed-m"] = function(base, stems)
 			-- Both hard and soft endings throughout. Most have -i and -ové in the nominative plural.
 			local dat_s = base.surname and "ovi" or {"u", "i", "ovi"}
 			local loc_s = dat_s
-			add_decl(base, stems, {"a", "e"}, dat_s, nil, {"e", "i"}, loc_s, "em",
+			add_decl(base, props, {"a", "e"}, dat_s, nil, {"e", "i"}, loc_s, "em",
 				{"i", "ové"}, "ů", "ům", {"y", "e"}, {"ech", "ích"}, {"y", "i"})
 		end
 	else
@@ -827,24 +851,20 @@ decls["mixed-m"] = function(base, stems)
 		-- úběl, plus reducible nouns cumel, chrchel, [[kotel]] "cauldron", sopel, uhel. Also [[městys]]. Many of them are listed in the
 		-- IJP tables with only hard or with fewer soft forms, so need to be investigated individually.
 		if rfind(base.lemma, "[ls]$") then
-			add_decl(base, stems, {"u", "e"}, {"u", "i"}, nil, {"e", "i"}, {"u", "e", "i"}, "em",
+			add_decl(base, props, {"u", "e"}, {"u", "i"}, nil, {"e", "i"}, {"u", "e", "i"}, "em",
 				{"y", "e"}, "ů", "ům", {"y", "e"}, {"ech", "ích"}, {"y", "i"})
 		else
 			-- -n/-t; hard in the plural: hřeben, ječmen, [[kámen]] "stone", kmen, kořen, křemen, plamen,
 			-- [[pramen]] "source", [[řemen]] "strap", den, týden, [[loket]] "elbow".
 			-- There may be deviations (e.g. soft plural forms for [[den]]), so need to be investigated individually.
-			add_decl(base, stems, {"u", "e"}, {"u", "i"}, nil, "i", {"u", "i"}, "em",
+			add_decl(base, props, {"u", "e"}, {"u", "i"}, nil, "i", {"u", "i"}, "em",
 				"y", "ů", "ům", "y", "ech", "y")
 		end
 	end
 end
 
-declprops["mixed-m"] = {
-	cat = "mixed"
-}
 
-
-decls["a-m"] = function(base, stems)
+decls["a-m"] = function(base, props)
 	-- husita → husité, izraelita → izraelité, jezuita → jezuité, kosmopolita → kosmopolité, táborita → táborité
 	-- fašista → fašisté, filatelista → filatelisté, fotbalista → fotbalisté, kapitalista → kapitalisté,
 	-- marxista → marxisté, šachista → šachisté, terorista → teroristé. NOTE: most these words actually appear in
@@ -862,31 +882,23 @@ decls["a-m"] = function(base, stems)
 	local loc_p =
 		(base.velar or not base["-velar"] and rfind(stems.vowel_stem, com.velar_c .. "$") or rfind(stems.vowel_stem, com.inherently_soft_c .. "$")) and
 		"ích" or "ech"
-	add_decl(base, stems, "y", "ovi", "u", "o", "ovi", "ou",
+	add_decl(base, props, "y", "ovi", "u", "o", "ovi", "ou",
 		it_ist and {"é", "i"} or "ové", "ů", "ům", "y", loc_p, "y")
 end
 
-declprops["a-m"] = {
-	cat = "GENPOS in -a"
-}
 
-
-decls["e-m"] = function(base, stems)
+decls["e-m"] = function(base, props)
 	-- [[zachránce]] "savior"; [[soudce]] "judge"; etc.
 	-- At least two inanimates: [[průvodce]] "guide, guidebook; computing wizard"; [[správce]] "manager (software program), configuration program"
 	local dat_s = base.animacy == "inan" and "i" or base.surname and "ovi" or {"ovi", "i"}
 	local loc_s = dat_s
-	add_decl(base, stems, "e", dat_s, nil, "-", loc_s, "em",
+	add_decl(base, props, "e", dat_s, nil, "*", loc_s, "em",
 		-- nouns with -ové as well (e.g. [[soudce]] "judge") will need to specify that manually, e.g. <nompli:ové>
 		base.animacy == "inan" and "e" or "i", "ů", "ům", "e", "ích", "i")
 end
 
-declprops["e-m"] = {
-	cat = "GENPOS in -e"
-}
 
-
-decls["i-m"] = function(base, stems)
+decls["i-m"] = function(base, props)
 	-- [[kivi]] "kiwi (bird)"; [[kuli]] "coolie"; [[lori]] "lory, lorikeet (bird)" (loc_pl 'loriech/loriích/lorich');
 	-- [[vini]] "parrot of the genus Vini"; [[yetti]]/[[yeti]] "yeti". other examples: [[aguti]], [[efendi]], [[hadži]],
 	-- [[pekari]], [[regenschori]], [[yetti]]/[[yeti]].
@@ -897,43 +909,31 @@ decls["i-m"] = function(base, stems)
 	--   radiation)"; [[Nagy]] (surname).
 	--
 	-- NOTE: The stem ends in -i/-y.
-	add_decl(base, stems, "ho", "mu", nil, "-", "m", "m",
+	add_decl(base, props, "ho", "mu", nil, "*", "m", "m",
 		-- ins_pl 'kivii/kivimi'
 		{"ové", ""}, {"ů", "ch"}, {"ům", "m"}, {"e", ""}, {"ích", "ch"}, {"i", "mi"})
 end
 
-declprops["i-m"] = {
-	cat = "GENPOS in -i/-y"
-}
 
-
-decls["ie-m"] = function(base, stems)
+decls["ie-m"] = function(base, props)
 	-- [[zombie]] "zombie" (also fem/neut), [[hippie]] "hippie", [[yuppie]] "yuppie", [[rowdie]] "rowdy/hooligan"
 	--
 	-- NOTE: The stem ends in -i (not -ie, because of the plural).
-	add_decl(base, stems, "eho", "emu", nil, "-", "em", "em",
+	add_decl(base, props, "eho", "emu", nil, "*", "em", "em",
 		{"ové", "es"}, {"ů", "es"}, {"ům", "es"}, {"e", "es"}, {"ích", "es"}, {"i", "es"})
 end
 
-declprops["ie-m"] = {
-	cat = "GENPOS in -ie"
-}
 
-
-decls["ee-m"] = function(base, stems)
+decls["ee-m"] = function(base, props)
 	-- [[Yankee]] "Yankee"
 	--
 	-- NOTE: The stem ends in -ee.
-	add_decl(base, stems, "ho", "mu", nil, "-", "m", "m",
+	add_decl(base, props, "ho", "mu", nil, "*", "m", "m",
 		"ové", "ů", "ům", "e", "ích", "i")
 end
 
-declprops["ee-m"] = {
-	cat = "GENPOS in -ee"
-}
 
-
-decls["o-m"] = function(base, stems)
+decls["o-m"] = function(base, props)
 	-- [[kápo]] "head, leader"; [[lamželezo]] "strongman"; [[torero]] "bullfighter"; [[žako]] "African gray parrot";
 	-- [[dingo]] "dingo"; [[kakapo]] "kakapo" (given in Wiktionary with dat_s/loc_s in -ovi only not -ovi/-u; probably
 	-- wrong but not in IJP); [[maestro]] "maestro"; [[Bruno]] "Bruno", [[Hugo]] "Hugo"; [[Ivo]] "Yves" (these names
@@ -952,16 +952,12 @@ decls["o-m"] = function(base, stems)
 	local dat_s = base.animacy == "inan" and "u" or base.surname and "ovi"or {"ovi", "u"}
 	local loc_s = dat_s
 	local loc_p = velar and "ích" or "ech"
-	add_decl(base, stems, "a", dat_s, nil, "-", loc_s, "em",
+	add_decl(base, props, "a", dat_s, nil, "*", loc_s, "em",
 		"ové", "ů", "ům", "y", loc_p, "y")
 end
 
-declprops["o-m"] = {
-	cat = "GENPOS in -o"
-}
 
-
-decls["u-m"] = function(base, stems)
+decls["u-m"] = function(base, props)
 	-- [[emu]] "emu", [[guru]] "guru", [[kakadu]] "cockatoo", [[marabu]] "marabou" (declined the same way)
 	-- [[Osamu]] "Osamu (Japanese male given name)" [how declined?]
 	-- [[Višnu]] "Vishnu" (declined like [[guru]] but singular-only)
@@ -969,213 +965,78 @@ decls["u-m"] = function(base, stems)
 	-- budižkničemové etc. in the plural, declinable as feminine hard stem budižkničemy etc. in the plural when feminine).
 	--
 	-- NOTE: The stem ends in -u.
-	add_decl(base, stems, "a", "ovi", nil, "-", "ovi", "em",
+	add_decl(base, props, "a", "ovi", nil, "*", "ovi", "em",
 		"ové", "ů", "ům", "y", "ech", "y")
 end
 
-declprops["u-m"] = {
-	cat = "GENPOS in -u"
-}
 
-
-decls["tstem-m"] = function(base, stems)
+decls["tstem-m"] = function(base, props)
 	-- E.g. [[kníže]] "prince", [[hrabě]] "earl", [[markrabě]] "margrave".
-	add_decl(base, stems, "ete", "eti", "ete", "-", "eti", "etem",
+	add_decl(base, props, "ete", "eti", "ete", "*", "eti", "etem",
 		"ata", "at", "atům", "ata", "atech", "aty")
 end
 
-declprops["tstem-m"] = {
-	cat = "t-stem"
-}
 
-
-decls["hard-f"] = function(base, stems)
-	base.no_palatalize_c = true
-	if base.c_as_k then
-		-- forms like 'ayahuascy' are allowed.
-		base.hard_c = true
-	end
-	-- [[skica]] "sketch", [[gejša]] "geisha", [[rikša]] "rickshaw (vehicle)"; [[arakača]], [[čača]], [[čiča]] (drink),
-	-- [[dača]] "dacha", [[gutaperča]] "guttapercha", [[viskača]]; [[babča]], [[číča]], [[káča]], [[mamča]], [[úča]].
-	-- Also appears to apply to ď (e.g. [[Naďa]]) and ť, as well as certain words with stems in -ň and -j (e.g. [[doňa]],
-	-- and personal names such as [[Táňa]] and [[Darja]]), which normally have a mixed declension.
-	local soft_cons = rfind(base.vowel_stem, "[cčšžďťjň]$") and not base.c_as_k
-	local dat_s = soft_cons and {"ě", "i"} or "ě"
-	local loc_s = dat_s
-	add_decl(base, stems, "y", dat_s, "u", "o", loc_s, "ou",
-		"y", "", "ám", "y", "ách", "ami")
+decls["strong-f"] = function(base, props)
+	add_decl(base, props, "", "", "ar", "ir")
 end
 
-declprops["hard-f"] = {
-	cat = "hard"
-}
 
-
-decls["soft-f"] = function(base, stems)
-	-- This also includes feminines in -ie, e.g. [[belarie]], [[signorie]], [[uncie]], and feminines in -oe, e.g.
-	-- [[kánoe]], [[aloe]] and medical terms like [[dyspnoe]], [[apnoe]], [[hemoptoe]], [[kalanchoe]].
-
-	-- Nouns in -ice like [[ulice]] "street" have null genitive plural e.g. 'ulic'; nouns in -yně e.g. [[přítelkyně]]
-	-- "girlfriend" have gen pl 'přítelkyň' or 'přítelkyní' with two possible endings; otherwise -í. (Alternation between
-	-- -ň and -n and between -e and -ě handled automatically by combine_stem_ending().)
-	local gen_p = rfind(base.lemma, "ice$") and "" or rfind(base.lemma, "yně$") and {"", "í"} or "í"
-	-- Vocative really ends in -e, not just a copy of the nominative; cf. [[sinfonia]], which is soft-f except for
-	-- the nominative and has -e in the vocative singular.
-	add_decl(base, stems, "e", "i", "i", "e", "i", "í",
-		"e", gen_p, "ím", "e", "ích", "emi")
+decls["strong-f-ung"] = function(base, props)
+	add_decl(base, props, "", "", "ar", "ar")
 end
 
-declprops["soft-f"] = {
-	cat = "soft"
-}
 
-
-decls["mixed-f"] = function(base, stems)
-	-- Lowercase nouns in -ňa (e.g. bárišňa/báryšňa, doňa, dueňa, piraňa, vikuňa) and -ja (e.g. maracuja, papája, sója).
-	-- Also non-personal proper nouns in -ňa (e.g. [[Keňa]] "Kenya") and -ja (e.g. [[Troja]]/[[Trója]] "Troy",
-	-- [[Amudarja]] "Amu Darya"). Does not appear to apply to personal proper nouns (e.g. [[Táňa]] "Tanya", [[Darja]] "Daria"),
-	-- which usually decline like [[gejša]], [[dača]], [[skica]]).
-	add_decl(base, stems, {"i", "e"}, {"e", "i"}, "u", "o", {"e", "i"}, "ou",
-			{"i", "e"}, {"", "í"}, {"ám", "ím"}, {"i", "e"}, {"ách", "ích"}, {"ami", "emi"})
+decls["strong-f-ing"] = function(base, props)
+	add_decl(base, props, "u", "u", "ar", "ar")
 end
 
-declprops["mixed-f"] = {
-	cat = "mixed"
-}
 
-
-decls["cons-f"] = function(base, stems)
-	-- e.g. [[dlaň]] "palm (of the hand)"
-	add_decl(base, stems, "e", "i", "-", "i", "i", "í",
-		"e", "í", "ím", "e", "ích", "emi")
+decls["strong-f-ur"] = function(base, props)
+	add_decl(base, props, "i", "i", "ar", "ir")
 end
 
-declprops["cons-f"] = {
-	cat = "soft zero-ending"
-}
 
-
-decls["istem-f"] = function(base, stems)
-	add_decl(base, stems, "i", "i", "-", "i", "i", "í",
-		-- See above under apply_special_cases(); -E causes depalatalization of ť/ď/ň.
-		"i", "í", "Em", "i", "Ech", "mi")
+decls["strong-f-i"] = function(base, props)
+	add_decl(base, props, "i", "i", "ar", "ir")
 end
 
-declprops["istem-f"] = {
-	cat = "i-stem"
-}
 
-
-decls["mixed-istem-f"] = function(base, stems)
-	local gen_s, nom_p, dat_p, loc_p, ins_p
-	-- Use of ě vs E below is intentional. Contrast [[oběť]] dat pl 'obětem' (depalatalizing) with [[nit]] ins pl
-	-- 'nitěmi' (palatalizing). See comment above under apply_special_cases().
-	if base.mixedistem == "pěst" then
-		-- pěst, past, mast, lest [reducible; ins pl 'lstmi'], pelest, propust, plst, oběť, zeď [reducible; ins pl
-		-- 'zdmi'], paměť [ins pl 'pamětmi/paměťmi]
-		gen_s, nom_p, dat_p, loc_p, ins_p = "i", "i", {"ím", "Em"}, {"ích", "Ech"}, "mi"
-	elseif base.mixedistem == "moc" then
-		-- moc, nemoc, pomoc, velmoc; NOTE: pravomoc has -i/-e alternation in gen_s, nom_p
-		gen_s, nom_p, dat_p, loc_p, ins_p = "i", "i", {"Em", "ím"}, {"Ech", "ích"}, "ěmi"
-	elseif base.mixedistem == "myš" then
-		-- myš, veš [reducible, ins pl vešmi], hruď, měď, pleť, spleť, směs, smrt, step, odpověď [ins pl 'odpověď'mi/odpovědmi'], šeď,
-		-- závěť [ins pl 'závěťmi/závětmi'], plsť [ins pl 'plstmi']
-		gen_s, nom_p, dat_p, loc_p, ins_p = "i", "i", "ím", "ích", "mi"
-	elseif base.mixedistem == "noc" then
-		-- lež [reducible], noc, mosaz, rez [reducible], ves [reducible], mysl, sůl, běl, žluť
-		gen_s, nom_p, dat_p, loc_p, ins_p = "i", "i", "ím", "ích", "ěmi"
-	elseif base.mixedistem == "žluč" then
-		-- žluč, moč, modř, čeleď, kapraď, záď, žerď, čtvrť/čtvrt, drť, huť, chuť, nit, pečeť, závrať, pouť, stať, ocel
-		gen_s, nom_p, dat_p, loc_p, ins_p = {"i", "ě"}, {"i", "ě"}, "ím", "ích", "ěmi"
-	elseif base.mixedistem == "loď" then
-		-- loď, suť
-		gen_s, nom_p, dat_p, loc_p, ins_p = {"i", "ě"}, {"i", "ě"}, "ím", "ích", {"ěmi", "mi"}
+decls["strong-f-long-vowel"] = function(base, props)
+	-- nouns in -á, e.g. [[á]] "river", [[gjá]] "gorge, canyon", [[skuggská]] "mirror", [[slá]] "door bolt";
+	-- nouns in -ó, e.g. [[fló]] "flea", [[kónguló]] "spider", [[kló]] "claw";
+	-- nouns in -ú, e.g. [[frú]] "married woman", [[trú]] "faith, belief".
+	-- Each is slightly different.
+	local gen, nompl
+	if props.stem:find("á$") then
+		gen = "r"
+		nompl = "r"
+	elseif props.stem:find("ó$") then
+		gen = "ar"
+		nompl = "^r"
+	elseif props.stem:find("ú$") then
+		gen = "ar"
+		nompl = "r"
 	else
-		error(("Unrecognized value '%s' for 'mixedistem', should be one of 'pěst', 'moc', 'myš', 'noc', 'žluč' or 'loď'"):
-			format(base.mixedistem))
+		error(("Unrecognized stem '%s' for long-vowel feminine; should end in -á, -ó or -ú"))
 	end
-	add_decl(base, stems, gen_s, "i", "-", "i", "i", "í",
-		nom_p, "í", dat_p, nom_p, loc_p, ins_p)
+	add_decl(base, props, "", "", gen, nompl, "m", {indef = "a", def = ""})
 end
 
-declprops["mixed-istem-f"] = {
-	-- Include subtype in the table description but not in the category to avoid too many categories.
-	desc = function(base, stems)
-		return ("mixed i-stem [type '%s'] GENDER"):format(base.mixedistem)
-	end,
-	cat = function(base, stems)
-		return {"mixed i-stem", ("mixed i-stem GENPOS (type '%s')"):format(base.mixedistem)}
-	end,
-}
 
-
-decls["i-f"] = function(base, stems)
-	-- [[máti]] "mother" (singular-only), [[pramáti]] "foremother"; very similar to the 'noc' mixed i-stem type
-	add_decl(base, stems, "i", "i", "-", "i", "i", "í",
-		"i", "í", "ím", "i", "ích", "ěmi")
+decls["strong-f-long-umlaut-vowel-r"] = function(base, props)
+	-- nouns in long umlauted vowel + -r: [[kýr]] "cow", [[sýr]] "sow (archaic)", [[ær]] and compounds.
+	add_decl(base, props, "", "", "^r", "^r", "m", {indef = "a", def = ""})
 end
 
-declprops["i-f"] = {
-	cat = "GENPOS in -i"
-}
 
-
-decls["ea-f"] = function(base, stems)
-	-- Stem ends in -e.
-	if base.tech then
-		-- diarea, gonorea, chorea, nauzea, paleogea, seborea, trachea
-		add_decl(base, stems, "y", "i", "u", "o", "i", "ou",
-			"y", "í", {"ám", "ím"}, "y", {"ách", "ích"}, "ami")
-	elseif base.persname then
-		-- Medea, Andrea, etc.
-		add_decl(base, stems, {"y", "je", "ji"}, {"e", "je", "ji"}, "u", "o", {"e", "je", "ji"}, "ou",
-			-- this is a guess, based on the same as below; plural of personal names not attested in IJP
-			{"y", "je"}, "jí", {"ám", "jím"}, {"y", "je"}, {"ách", "jích"}, {"ami", "jemi"})
-	else
-		-- idea, odysea ("wandering pilgrimage"), orchidea, palea, spirea
-		-- proper names Galilea, Judea, Caesarea, Korea, Odyssea ("epic poem")
-		add_decl(base, stems, {"y", "je"}, "ji", "u", "o", "ji", {"ou", "jí"},
-			{"y", "je"}, "jí", {"ám", "jím"}, {"y", "je"}, {"ách", "jích"}, {"ami", "jemi"})
-	end
+decls["weak-f"] = function(base, props)
+	add_decl(base, props, "u", "u", "u", "ur")
 end
 
-declprops["ea-f"] = {
-	cat = function(base, stems)
-		if base.tech then
-			return {"GENPOS in -ea", "technical GENPOS in -ea"}
-		else
-			return "GENPOS in -ea"
-		end
-	end
-}
 
-
-decls["oa-f"] = function(base, stems)
-	-- Stem ends in -o/-u.
-	-- stoa, kongrua; proper names Samoa, Managua, Nikaragua, Capua
-	add_decl(base, stems, "y", "i", "u", "o", "i", "ou",
-		"y", "í", "ám", "y", "ách", "ami")
-end
-
-declprops["oa-f"] = {
-	cat = "GENPOS in -oa/-ua"
-}
-
-
-decls["ia-f"] = function(base, stems)
-	-- Stem ends in -i.
-	-- belaria, signoria, uncia; paranoia, sinfonia;
-	-- proper names Alexandria, Alexia, Livia, Monrovia, Olympia, Sofia
-	-- Identical to soft declension except for nom sg.
-	decls["soft-f"](base, stems)
-end
-
-declprops["ia-f"] = {
-	cat = "GENPOS in -ia"
-}
-
-
-decls["hard-n"] = function(base, stems)
+decls["strong-n"] = function(base, props)
+	add_decl(base, props, "u", "u", "u", "ur")
 	local velar = base.velar or not base["-velar"] and rfind(stems.vowel_stem, com.velar_c .. "$")
 	-- NOTE: Per IJP it appears the meaning of the preceding preposition makes a difference: 'o' = "about" takes
 	-- '-u' or '-ě', while 'na/v' = "in, on" normally takes '-ě'.
@@ -1209,7 +1070,7 @@ decls["hard-n"] = function(base, stems)
 		-- "risk" normally has '-ích' and needs and override.
 		velar and "ách" or
 		"ech"
-	add_decl(base, stems, "a", "u", "-", "-", loc_s, "em",
+	add_decl(base, props, "a", "u", "*", "*", loc_s, "em",
 		"a", "", "ům", "a", loc_p, "y")
 	-- FIXME: paired body parts e.g. [[rameno]] "shoulder" (gen_p/loc_p 'ramenou/ramen'), [[koleno]] "knee"
 	-- (gen_p/loc_p 'kolenou/kolen'), [[prsa]] "chest, breasts" (plurale tantum; gen_p/loc_p 'prsou').
@@ -1217,25 +1078,8 @@ decls["hard-n"] = function(base, stems)
 	-- [[bedro]] "hip", [[vrátka]] "gate".
 end
 
-declprops["hard-n"] = {
-	desc = function(base, stems)
-		if base.velar or not base["-velar"] and rfind(stems.vowel_stem, com.velar_c .. "$") then
-			return "velar GENDER"
-		else
-			return "hard GENDER"
-		end
-	end,
-	cat = function(base, stems)
-		if base.velar or not base["-velar"] and rfind(stems.vowel_stem, com.velar_c .. "$") then
-			return "velar-stem"
-		else
-			return "hard"
-		end
-	end
-}
 
-
-decls["semisoft-n"] = function(base, stems)
+decls["semisoft-n"] = function(base, props)
 	-- Examples:
 	-- * In -ao: [[kakao]] "cacao", [[makao]] "Macao (gambling card game, see Wikipedia)", [[curaçao]] "curaçao (liqueur)"
 	--   (IJP gives gen pl 'curaç' but ASSC [https://slovnikcestiny.cz/heslo/cura%C3%A7ao/0/9967] says 'curaçí' as expected),
@@ -1265,16 +1109,12 @@ decls["semisoft-n"] = function(base, stems)
 	else
 		dat_p, loc_p, ins_p = "ím", "ích", "i"
 	end
-	add_decl(base, stems, "a", "u", "-", "-", "u", "em",
+	add_decl(base, props, "a", "u", "*", "*", "u", "em",
 		"a", "í", dat_p, "a", loc_p, ins_p)
 end
 
-declprops["semisoft-n"] = {
-	cat = "semisoft"
-}
 
-
-decls["soft-n"] = function(base, stems)
+decls["soft-n"] = function(base, props)
 	-- Examples: [[moře]] "sea", [[slunce]] "sun", [[srdce]] "heart", [[citoslovce]] "interjection", 
 	-- [[dopoledne]] "late morning", [[odpoledne]] "afternoon", [[hoře]] "sorrow, grief" (archaic or literary),
 	-- [[inhalace]] "inhalation", [[kafe]] "coffee", [[kanape]] "sofa", [[kutě]] "bed", [[Labe]] "Elbe (singular only)",
@@ -1283,7 +1123,7 @@ decls["soft-n"] = function(base, stems)
 	--
 	-- Many nouns in -iště, with null genitive plural.
 	local gen_p = rfind(base.vowel_stem, "išť$") and "" or "í"
-	add_decl(base, stems, "e", "i", "-", "-", "i", "em",
+	add_decl(base, props, "e", "i", "*", "*", "i", "em",
 		"e", gen_p, "ím", "e", "ích", "i")
 	-- NOTE: Some neuter words in -e indeclinable, e.g. [[Belize]], [[Chile]], [[garde]] "chaperone", [[karaoke]],
 	-- [[karate]], [[re]] "double raise (card games)", [[ukulele]], [[Zimbabwe]], [[zombie]] (pl. 'zombie' or
@@ -1291,37 +1131,25 @@ decls["soft-n"] = function(base, stems)
 	-- some nearly indeclinable, e.g. [[finále]], [[chucpe]]; see mostly-indecl below
 end
 
-declprops["soft-n"] = {
-	cat = "soft"
-}
 
-
-decls["í-n"] = function(base, stems)
+decls["í-n"] = function(base, props)
 	-- [[nábřeží]] "waterfront" and a zillion others; also [[úterý]] "Tuesday".
 	-- NOTE: The stem ends in -í/-ý.
-	add_decl(base, stems, "", "", "-", "-", "", "m",
+	add_decl(base, props, "", "", "*", "*", "", "m",
 		"", "", "m", "", "ch", "mi")
 end
 
-declprops["í-n"] = {
-	cat = "GENPOS in -í/-ý"
-}
 
-
-decls["n-n"] = function(base, stems)
+decls["n-n"] = function(base, props)
 	-- E.g. [[břemeno]] "burden" (also [[břímě]], use 'decllemma:'); [[písmeno]] "letter"; [[plemeno]] "breed";
 	-- [[rameno]] "shoulder" (also [[rámě]], use 'decllemma:'); [[semeno]] "seed" (also [[sémě]], [[símě]], use
 	-- 'decllemma:'); [[temeno]] "crown (of the head)"; [[vemeno]] "udder"
-	add_decl(base, stems, {"a", "e"}, {"i", "u"}, "-", "-", {"ě", "i", "u"}, "em",
+	add_decl(base, props, {"a", "e"}, {"i", "u"}, "*", "*", {"ě", "i", "u"}, "em",
 		"a", "", "ům", "a", "ech", "y")
 end
 
-declprops["n-n"] = {
-	cat = "n-stem"
-}
 
-
-decls["tstem-n"] = function(base, stems)
+decls["tstem-n"] = function(base, props)
 	-- E.g. [[batole]] "toddler", [[čuně]] "pig", [[daňče]] "fallow deer fawn", [[děvče]] "girl", [[ďouče]] "girl"
 	-- (dialectal), [[dítě]] "child" (NOTE: feminine in the plural [[děti]], declined as a feminine i-stem), [[dvojče]]
 	-- "twin", [[hádě]] "young snake", [[house]] "gosling", [[hříbě]] "foal" (pl. hříbata), [[jehně]] "lamb", [[kavče]]
@@ -1339,32 +1167,24 @@ decls["tstem-n"] = function(base, stems)
 	-- Some referring to inanimates, e.g. [[doupě]] "lair" (pl. doupata), [[koště]]/[[chvoště]] "broom", [[paraple]]
 	-- "umbrella", [[poupě]] "bud", [[pukrle]] "curtsey" (also soft-n), [[rajče]] "tomato", [[šuple]] "drawer",
 	-- [[varle]] "testicle", [[vole]] "craw (of a bird); goiter".
-	add_decl(base, stems, "ete", "eti", "-", "-", "eti", "etem",
+	add_decl(base, props, "ete", "eti", "*", "*", "eti", "etem",
 		"ata", "at", "atům", "ata", "atech", "aty")
 end
 
-declprops["tstem-n"] = {
-	cat = "t-stem"
-}
 
-
-decls["ma-n"] = function(base, stems)
+decls["ma-n"] = function(base, props)
 	-- E.g. [[drama]] "drama", [[dogma]] "dogma", [[aneurysma]]/[[aneuryzma]] "aneurysm", [[dilema]] "dilemma",
 	-- [[gumma]] "gumma" (non-cancerous syphilitic growth), [[klima]] "climate", [[kóma]] "coma", [[lemma]] "lemma",
 	-- [[melisma]] "melisma", [[paradigma]] "paradigm", [[plasma]]/[[plazma]] "plasma [partly ionized gas]"
 	-- (note [[plasma]]/[[plazma]] "blood plasma" is feminine), [[revma]] "rheumatism", [[schéma]] "schema, diagram",
 	-- [[schisma]]/[[schizma]] "schism", [[smegma]] "smegma", [[sofisma]]/[[sofizma]] "sophism", [[sperma]] "sperm",
 	-- [[stigma]] "stigma", [[téma]] "theme", [[trauma]] "trauma", [[trilema]] "trilemma", [[zeugma]] "zeugma".
-	add_decl(base, stems, "atu", "atu", "-", "-", "atu", "atem",
+	add_decl(base, props, "atu", "atu", "*", "*", "atu", "atem",
 		"ata", "at", "atům", "ata", "atech", "aty")
 end
 
-declprops["ma-n"] = {
-	cat = "ma-stem"
-}
 
-
-decls["adj"] = function(base, stems)
+decls["adj"] = function(base, props)
 	local props = {}
 	local propspec = table.concat(props, ".")
 	if propspec ~= "" then
@@ -1432,57 +1252,25 @@ local function get_stemtype(base)
 	end
 end
 
-declprops["adj"] = {
-	cat = function(base, stems)
-		return {"adjectival POS", get_stemtype(base) .. " GENDER adjectival POS"}
-	end,
-}
 
-
-decls["mostly-indecl"] = function(base, stems)
+decls["mostly-indecl"] = function(base, props)
 	-- Several neuters: E.g. [[finále]] "final (sports)", [[čtvrtfinále]] "quarterfinal", [[chucpe]] "chutzpah",
 	-- [[penále]] "fine, penalty", [[promile]] "" (NOTE: loc pl also promilech), [[rande]] "rendezvous", [[semifinále]]
 	-- "semifinal", [[skóre]] "score".
 	-- At least one masculine animate: [[kamikaze]]/[[kamikadze]], where IJP says only -m in the ins sg.
-	local ins_s = base.gender == "m" and "m" or {"-", "m"}
-	add_decl(base, stems, "-", "-", "-", "-", "-", ins_s,
-		"-", "-", "-", "-", "-", "-")
+	local ins_s = base.gender == "m" and "m" or {"*", "m"}
+	add_decl(base, props, "*", "*", "*", "*", "*", ins_s,
+		"*", "*", "*", "*", "*", "*")
 end
 
-declprops["mostly-indecl"] = {
-	cat = "mostly indeclinable"
-}
 
-
-decls["indecl"] = function(base, stems)
+decls["indecl"] = function(base, props)
 	-- Indeclinable. Note that fully indeclinable nouns should not have a table at all rather than one all of whose forms
 	-- are the same; but having an indeclinable declension is useful for nouns that may or may not be indeclinable, e.g.
 	-- [[desatero]] "group of ten" or the plural of [[peso]], which may be indeclinable 'pesos'.
-	add_decl(base, stems, "-", "-", "-", "-", "-", "-",
-		"-", "-", "-", "-", "-", "-")
+	add_decl(base, props, "*", "*", "*", "*", "*", "*",
+		"*", "*", "*", "*", "*", "*")
 end
-
-declprops["indecl"] = {
-	cat = function(base, stems)
-		if base.adj then
-			return {"adjectival POS", "indeclinable adjectival POS", "indeclinable GENDER adjectival POS"}
-		else
-			return {"indeclinable POS", "indeclinable GENPOS"}
-		end
-	end
-}
-
-
-decls["manual"] = function(base, stems)
-	-- Anything declined manually using overrides. We don't set any declensions except the nom_s (or nom_p if plurale
-	-- tantum).
-	add(base, base.number == "pl" and "nom_p" or "nom_s", stems, "-")
-end
-
-declprops["manual"] = {
-	desc = "GENDER",
-	cat = {},
-}
 
 
 local function set_pron_defaults(base)
@@ -1541,54 +1329,49 @@ local function determine_pronoun_stems(base)
 end
 
 
-decls["pron"] = function(base, stems)
+decls["pron"] = function(base, props)
 	local after_prep_footnote =	"[after a preposition]"
 	local animate_footnote = "[animate]"
 	if base.lemma == "kdo" then
-		add_decl(base, stems, "koho", "komu", nil, nil, "kom", "kým")
+		add_decl(base, props, "koho", "komu", nil, nil, "kom", "kým")
 	elseif base.lemma == "co" then
-		add_decl(base, stems, "čeho", "čemu", nil, nil, "čem", "čím")
+		add_decl(base, props, "čeho", "čemu", nil, nil, "čem", "čím")
 	elseif base.lemma == "já" then
-		add_sg_decl_with_clitic(base, stems, "mne", "mě", "mně", "mi", nil, nil, nil, "mně", "mnou")
+		add_sg_decl_with_clitic(base, props, "mne", "mě", "mně", "mi", nil, nil, nil, "mně", "mnou")
 	elseif base.lemma == "ty" then
-		add_sg_decl_with_clitic(base, stems, "tebe", "tě", "tobě", "ti", nil, nil, nil, "tobě", "tebou")
+		add_sg_decl_with_clitic(base, props, "tebe", "tě", "tobě", "ti", nil, nil, nil, "tobě", "tebou")
 	elseif base.lemma == "my" then
-		add_pl_only_decl(base, stems, "nás", "nám", "nás", "nás", "námi")
+		add_pl_only_decl(base, props, "nás", "nám", "nás", "nás", "námi")
 	elseif base.lemma == "vy" then
-		add_pl_only_decl(base, stems, "vás", "vám", "vás", "vás", "vámi")
+		add_pl_only_decl(base, props, "vás", "vám", "vás", "vás", "vámi")
 	elseif base.lemma == "on" or base.lemma == "ono" then
 		local acc_s = base.lemma == "on" and "jej" or {"jej", "je"}
 		local clitic_acc_s = base.lemma == "on" and {"jej", "ho"} or {"jej", "ho", "je"}
 		local prep_acc_s = base.lemma == "on" and "něj" or {"něj", "ně"}
 		local prep_clitic_acc_s = base.lemma == "on" and "-ň" or nil
-		add_sg_decl_with_clitic(base, stems, {"jeho", "jej"}, {"ho", "jej"}, "jemu", "mu", acc_s, clitic_acc_s, nil, nil, "jím")
-		add_sg_decl_with_clitic(base, stems, {"něho", "něj"}, nil, "němu", nil, prep_acc_s, prep_clitic_acc_s, nil, "něm", "ním",
+		add_sg_decl_with_clitic(base, props, {"jeho", "jej"}, {"ho", "jej"}, "jemu", "mu", acc_s, clitic_acc_s, nil, nil, "jím")
+		add_sg_decl_with_clitic(base, props, {"něho", "něj"}, nil, "němu", nil, prep_acc_s, prep_clitic_acc_s, nil, "něm", "ním",
 			after_prep_footnote)
 		if base.lemma == "on" then
-		add_sg_decl_with_clitic(base, stems, nil, nil, nil, nil, "jeho", nil, nil, nil, nil,
+		add_sg_decl_with_clitic(base, props, nil, nil, nil, nil, "jeho", nil, nil, nil, nil,
 			animate_footnote)
-		add_sg_decl_with_clitic(base, stems, nil, nil, nil, nil, "něho", nil, nil, nil, nil,
+		add_sg_decl_with_clitic(base, props, nil, nil, nil, nil, "něho", nil, nil, nil, nil,
 			after_prep_footnote and animate_footnote)
 		end
 	elseif base.lemma == "ona" and base.number == "sg" then
-		add_sg_decl(base, stems, "jí", "jí", "ji", nil, nil, "jí")
-		add_sg_decl(base, stems, "ní", "ní", "ni", nil, "ní", "ní", after_prep_footnote)
+		add_sg_decl(base, props, "jí", "jí", "ji", nil, nil, "jí")
+		add_sg_decl(base, props, "ní", "ní", "ni", nil, "ní", "ní", after_prep_footnote)
 	elseif base.lemma == "oni" or base.lemma == "ony" or base.lemma == "ona" then
-		add_pl_only_decl(base, stems, "jich", "jim", "je", nil, "jimi")
-		add_pl_only_decl(base, stems, "nich", "nim", "ně", "nich", "nimi", after_prep_footnote)
+		add_pl_only_decl(base, props, "jich", "jim", "je", nil, "jimi")
+		add_pl_only_decl(base, props, "nich", "nim", "ně", "nich", "nimi", after_prep_footnote)
 	elseif base.lemma == "sebe" then
 		-- Underlyingly we handle [[sebe]]'s slots as singular.
-		add_sg_decl_with_clitic(base, stems, "sebe", "sebe", "sobě", "si", "sebe", "se", nil, "sobě", "sebou",
+		add_sg_decl_with_clitic(base, props, "sebe", "sebe", "sobě", "si", "sebe", "se", nil, "sobě", "sebou",
 			nil, "no nom_s")
 	else
 		error(("Internal error: Unrecognized pronoun lemma '%s'"):format(base.lemma))
 	end
 end
-
-declprops["pron"] = {
-	desc = "GENDER pronoun",
-	cat = {},
-}
 
 
 local function set_num_defaults(base)
@@ -1619,45 +1402,40 @@ local function determine_numeral_stems(base)
 end
 
 
-decls["num"] = function(base, stems)
+decls["num"] = function(base, props)
 	local after_prep_footnote =	"[after a preposition]"
 	if base.lemma == "dva" or base.lemma == "dvě" then
 		-- in compound numbers; stem is dv-
-		add_pl_only_decl(base, stems, "ou", "ěma", "-", "ou", "ěma")
+		add_pl_only_decl(base, props, "ou", "ěma", "*", "ou", "ěma")
 	elseif base.lemma == "tři" or base.lemma == "čtyři" then
 		-- stem is without -i
 		local is_three = base.lemma == "tři"
-		add_pl_only_decl(base, stems, is_three and "í" or "", "em", "-", "ech", is_three and "emi" or "mi")
-		add_pl_only_decl(base, stems, "ech", nil, nil, nil, nil, "[colloquial]")
-		add_pl_only_decl(base, stems, nil, nil, nil, nil, is_three and "ema" or "ma",
+		add_pl_only_decl(base, props, is_three and "í" or "", "em", "*", "ech", is_three and "emi" or "mi")
+		add_pl_only_decl(base, props, "ech", nil, nil, nil, nil, "[colloquial]")
+		add_pl_only_decl(base, props, nil, nil, nil, nil, is_three and "ema" or "ma",
 			"[when modifying a form ending in ''-ma'']")
 	elseif base.lemma == "devět" then
-		add_pl_only_decl(base, "", "devíti", "devíti", "-", "devíti", "devíti", stems.footnotes)
+		add_pl_only_decl(base, "", "devíti", "devíti", "*", "devíti", "devíti", stems.footnotes)
 	elseif base.lemma == "sta" or base.lemma == "stě" or base.lemma == "set" then
-		add_pl_only_decl(base, "", "set", "stům", "-", "stech", "sty", stems.footnotes)
+		add_pl_only_decl(base, "", "set", "stům", "*", "stech", "sty", stems.footnotes)
 	elseif rfind(base.lemma, "[is]et$") then
 		-- [[deset]] and all numbers ending in -cet ([[dvacet]], [[třicet]], [[čtyřicet]] and inverted compound
 		-- numerals such as [[pětadvacet]] "25" and [[dvaatřicet]] "32")
 		local begin = rmatch(base.lemma, "^(.*)et$")
-		add_pl_only_decl(base, stems, "i", "i", "-", "i", "i")
-		add_pl_only_decl(base, begin, "íti", "íti", "-", "íti", "íti", stems.footnotes)
+		add_pl_only_decl(base, props, "i", "i", "*", "i", "i")
+		add_pl_only_decl(base, begin, "íti", "íti", "*", "íti", "íti", stems.footnotes)
 	elseif rfind(base.lemma, "oje$") then
 		-- [[dvoje]], [[troje]]
 		-- stem is without -e
-		add_pl_only_decl(base, stems, "ích", "ím", "-", "ích", "ími")
+		add_pl_only_decl(base, props, "ích", "ím", "*", "ích", "ími")
 	elseif rfind(base.lemma, "ery$") then
 		-- [[čtvery]], [[patery]], [[šestery]], [[sedmery]], [[osmery]], [[devatery]], [[desatery]]
 		-- stem is without -y
-		add_pl_only_decl(base, stems, "ých", "ým", "-", "ých", "ými")
+		add_pl_only_decl(base, props, "ých", "ým", "*", "ých", "ými")
 	else
-		add_pl_only_decl(base, stems, "i", "i", "-", "i", "i")
+		add_pl_only_decl(base, props, "i", "i", "*", "i", "i")
 	end
 end
-
-declprops["num"] = {
-	desc = "GENDER numeral",
-	cat = {},
-}
 
 
 local function set_det_defaults(base)
@@ -1688,14 +1466,9 @@ local function determine_determiner_stems(base)
 end
 
 
-decls["det"] = function(base, stems)
-	add_sg_decl(base, stems, "a", "a", "-", nil, "a", "a")
+decls["det"] = function(base, props)
+	add_sg_decl(base, props, "a", "a", "*", nil, "a", "a")
 end
-
-declprops["det"] = {
-	desc = "GENDER determiner",
-	cat = {},
-}
 
 
 -- Return the lemmas for this term. The return value is a list of {form = FORM, footnotes = FOOTNOTES}.
@@ -1962,8 +1735,10 @@ Return value is an object of the form
 		that behaves like a common noun); "pers" (a personal name; has special declension properties); "rstem" (an
 		r-stem like [[bróðir]] "brother" or [[dóttir]] "daughter")
   number = "NUMBER", -- "sg", "pl", "both"; may be missing
+  gender = "GENDER", -- "m", "f" or "n"; always specified by the user
   adj = true, -- may be missing; indicates that the term declines like an adjective (NOT IMPLEMENTED YET)
   decllemma = nil or "DECLLEMMA", -- decline like the specified lemma
+  declgender = nil or "DECLGENDER", -- decline like the specified gender
   stem = {FORMOBJ, FORMOBJ, ...}, -- override the stem(s); see above for FORMOBJ
   vstem = {FORMOBJ, FORMOBJ, ...}, -- override the stem(s) used before vowel-initial endings; see above for FORMOBJ
   plstem = {FORMOBJ, FORMOBJ, ...}, -- override the plural stem(s); see above for FORMOBJ
@@ -2129,23 +1904,23 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename, proper_
 				parse_mutation_spec("defcon", {"defcon", "-defcon"})
 			elseif part:find("^%-?def") then
 				parse_mutation_spec("def", {"def", "-def"})
-			elseif part:find("^%-?j") then
+			elseif not part:find("^já") and part:find("^%-?j") then -- don't trip over .já indicator
 				parse_mutation_spec("j", {"j", "-j"})
 			elseif part:find("^%-?v") then
 				parse_mutation_spec("v", {"v", "-v"})
-			elseif part:find("^decllemma%s*:") then
-				local value = part:match("^decllemma%s*:%s*(.+)$")
+			elseif part:find("^decllemma%s*:") or part:find("^declgender%s*:") then
+				local field, value = part:match("^(decl[a-z]+)%s*:%s*(.+)$")
 				if not value then
-					parse_err(("Syntax error in decllemma indicator: '%s'"):format(part))
+					parse_err(("Syntax error in decllemma/declgender indicator: '%s'"):format(part))
 				end
-				if base.decllemma then
-					parse_err("Can't specify 'decllemma:' twice")
+				if base[field] then
+					parse_err(("Can't specify '%s:' twice"):format(field))
 				end
 				if dot_separated_group[2] then
-					parse_err(("Footnotes not allowed with 'decllemma': '%s'"):format(
-						table.concat(dot_separated_group)))
+					parse_err(("Footnotes not allowed with '%s': '%s'"):format(
+						field, table.concat(dot_separated_group)))
 				end
-				base.decllemma = value
+				base[field] = value
 			elseif rfind(part, ":") then
 				local spec, value = part:match("^([a-z]+)%s*:%s*(.+)$")
 				if not spec then
@@ -2206,7 +1981,13 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename, proper_
 				end
 				base.adj = true
 				parse_err("Adjectival indicator '+' not implemented yet")
-			elseif part == "dem" or part == "pers" or part == "rstem" then
+			elseif part == "@" then
+				if base.builtin then
+					parse_err("Can't specify '@' twice")
+				end
+				base.builtin = true
+				parse_err("Built-in indicator '@' not implemented yet")
+			elseif part == "dem" or part == "pers" or part == "rstem" or part == "já" then
 				if base.props[part] then
 					parse_err("Can't specify '" .. part .. "' twice")
 				end
@@ -2236,11 +2017,7 @@ local function set_defaults_and_check_bad_indicators(base)
 		set_num_defaults(base)
 	elseif not base.adj then
 		if not base.gender then
-			if base.manual then
-				base.gender = "none"
-			else
-				error("For nouns, gender must be specified")
-			end
+			error("For nouns, gender must be specified")
 		end
 		base.number = base.number or "both"
 		process_declnumber(base)
@@ -2250,10 +2027,8 @@ local function set_defaults_and_check_bad_indicators(base)
 		if base.declgender then
 			if base.declgender == "m-an" then
 				base.gender = "m"
-				base.animacy = "an"
 			elseif base.declgender == "m-in" then
 				base.gender = "m"
-				base.animacy = "inan"
 			elseif base.declgender == "f" or base.declgender == "n" then
 				base.gender = base.declgender
 			else
@@ -2606,7 +2381,28 @@ local function determine_declension(base)
 			end
 		end
 		-- FIXME
-	end
+	elseif base.gender == "f" then
+		stem = rmatch(base.lemma, "^(.*)a$")
+		if stem then
+			base.decl = "weak-f"
+		end
+		if not stem then
+			stem = rmatch(base.lemma, "^(.*)i$")
+			if stem then
+				base.decl = "strong-f-i"
+			end
+		end
+		if not stem then
+			stem = rmatch(base.lemma, "^(.*)ur$")
+			if stem then
+				base.decl = "strong-f-ur"
+			end
+		end
+		if not stem then
+			base.decl = "strong-f"
+		end
+
+
 
 	if stem then
 		if base.gender == "m" then
@@ -2850,43 +2646,43 @@ end
 -- in `base.stem_sets`, meaning that if the user gave multiple reducible or vowel-alternation
 -- patterns, we will compute multiple sets of stems. The reason is that the stems may vary
 -- depending on the reducibility and vowel alternation.
-local function determine_stems(base)
-	if not base.stem_sets then
-		base.stem_sets = {{}}
+local function determine_props(base)
+	if not base.prop_sets then
+		base.prop_sets = {{}}
 	end
 
-	-- Now determine all the stems for each stem set.
-	for _, stems in ipairs(base.stem_sets) do
+	-- Now determine all the props for each stem set.
+	for _, props in ipairs(base.prop_sets) do
 		local lemma_is_vowel_stem = not not base.vowel_stem
 		if base.vowel_stem then
-			stems.vowel_stem = base.vowel_stem
-			stems.nonvowel_stem = stems.vowel_stem
+			props.vowel_stem = base.vowel_stem
+			props.nonvowel_stem = props.vowel_stem
 			-- Apply vowel alternation first in cases like jádro -> jader; apply_vowel_alternation() will throw an error
 			-- if the vowel being modified isn't the last vowel in the stem.
-			stems.oblique_nonvowel_stem = com.apply_vowel_alternation(stems.vowelalt, stems.nonvowel_stem)
-			if stems.reducible then
-				stems.nonvowel_stem = dereduce(base, stems.nonvowel_stem)
-				stems.oblique_nonvowel_stem = dereduce(base, stems.oblique_nonvowel_stem)
+			props.oblique_nonvowel_stem = com.apply_vowel_alternation(props.vowelalt, props.nonvowel_stem)
+			if props.reducible then
+				props.nonvowel_stem = dereduce(base, props.nonvowel_stem)
+				props.oblique_nonvowel_stem = dereduce(base, props.oblique_nonvowel_stem)
 			end
 		else
-			stems.nonvowel_stem = base.nonvowel_stem
+			props.nonvowel_stem = base.nonvowel_stem
 			-- The user specified #, #ě, ## or ##ě and we're dealing with a term like masculine [[bůh]] or feminine
 			-- [[sůl]] that ends in a consonant. In this case, all slots except the nom_s and maybe acc_s have vowel
 			-- alternation.
-			if stems.oblique_slots then
-				stems.oblique_slots = "all"
+			if props.oblique_slots then
+				props.oblique_slots = "all"
 			end
-			stems.oblique_nonvowel_stem = com.apply_vowel_alternation(stems.vowelalt, stems.nonvowel_stem)
-			if stems.reducible then
-				stems.vowel_stem = com.reduce(base.nonvowel_stem)
-				if not stems.vowel_stem then
+			props.oblique_nonvowel_stem = com.apply_vowel_alternation(props.vowelalt, props.nonvowel_stem)
+			if props.reducible then
+				props.vowel_stem = com.reduce(base.nonvowel_stem)
+				if not props.vowel_stem then
 					error("Unable to reduce stem '" .. base.nonvowel_stem .. "'")
 				end
 			else
-				stems.vowel_stem = base.nonvowel_stem
+				props.vowel_stem = base.nonvowel_stem
 			end
 		end
-		stems.oblique_vowel_stem = com.apply_vowel_alternation(stems.vowelalt, stems.vowel_stem)
+		props.oblique_vowel_stem = com.apply_vowel_alternation(props.vowelalt, props.vowel_stem)
 	end
 end
 
@@ -2901,13 +2697,6 @@ local function detect_indicator_spec(base)
 	elseif base.adj then
 		process_declnumber(base)
 		synthesize_adj_lemma(base)
-	elseif base.manual then
-		if base.stem_sets then
-			-- FIXME, maybe this should be allowed?
-			error("Reducible and vowel alternation specs cannot be given with manual declensions")
-		end
-		base.stem_sets = {{reducible = false, vowel_stem = "", nonvowel_stem = ""}}
-		base.decl = "manual"
 	else
 		if base.number == "pl" then
 			synthesize_singular_lemma(base)
@@ -3133,7 +2922,7 @@ local function decline_noun(base)
 		if not decls[base.decl] then
 			error("Internal error: Unrecognized declension type '" .. base.decl .. "'")
 		end
-		decls[base.decl](base, stems)
+		decls[base.decl](base, props)
 	end
 	handle_derived_slots_and_overrides(base)
 	local function copy(from_slot, to_slot)
@@ -3239,7 +3028,7 @@ local function compute_categories_and_annotation(alternant_multiword_spec)
 			local props = declprops[base.decl]
 			local cats = props.cat
 			if type(cats) == "function" then
-				cats = cats(base, stems)
+				cats = cats(base, props)
 			end
 			if type(cats) == "string" then
 				cats = {cats}
@@ -3264,7 +3053,7 @@ local function compute_categories_and_annotation(alternant_multiword_spec)
 
 			local desc = props.desc
 			if type(desc) == "function" then
-				desc = desc(base, stems)
+				desc = desc(base, props)
 			end
 			desc = desc or default_desc
 			desc = desc:gsub("GENDER", genanim)

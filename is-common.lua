@@ -68,23 +68,27 @@ end
 
 
 local lc_i_mutation = {
-	["a"] = "e", -- [[dagur]] "dat" dat sg [[degi]]; [[faðir]] "father" nom pl [[feður]]; [[maður]] "man" -> nom pl
-				 -- [[menn]]; [[taka]] "to take" 1sg pres ind [[tek]]
-	["á"] = "æ", -- [[háttur]] "way, manner" nom pl [[hættir]]; [[hár]] "high" comp [[hærri]]
+	["a"] = "e", -- [[dagur]] "dat" -> dat sg [[degi]]; [[faðir]] "father" -> nom pl [[feður]]; [[maður]] "man" -> nom
+				 -- pl [[menn]]; [[taka]] "to take" -> 1sg pres ind [[tek]]; [[langur]] "long" -> [[lengd]] "length"
+	["á"] = "æ", -- [[háttur]] "way, manner" -> nom pl [[hættir]]; [[hár]] "high" -> comp [[hærri]]
 	["e"] = "i", -- this may mostly occur in reverse
-	["o"] = "e", -- [[hnot]] "nut; small ball of yarn" nom pl [[hnetur]]; [[koma]] "to come" -> 1sg pres ind [[kem]]
-	-- ["o"] = "y", -- [[sonur]] "son" nom pl [[synir]]; needs explicit vowel
-	["ö"] = "e", -- [[mölur]] "clothes moth" nom pl [[melir]]; [[köttur]] "cat" nom pl [[kettir]]
-	["ó"] = "æ", -- [[bók]] "book" nom pl [[bækur]]; [[stór]] "big" comp [[stærri]]
-	["u"] = "y", -- [[fullur]] "full" comp [[fyllri]]
-	["ú"] = "ý", -- [[mús]] "mouse" nom pl [[mýs]]; [[brú]] "bridge" nom pl [[brýr]]
+	["o"] = "e", -- [[hnot]] "nut; small ball of yarn" -> nom pl [[hnetur]]; [[koma]] "to come" -> 1sg pres ind [[kem]]
+	-- ["o"] = "y", -- [[sonur]] "son" -> nom pl [[synir]]; needs explicit vowel
+	["ö"] = "e", -- [[mölur]] "clothes moth" -> nom pl [[melir]]; [[köttur]] "cat" -> nom pl [[kettir]]; [[slökkva]]
+				 -- "to extinguish" -> 1sg pres ind [[slekk]]; [[dökkur]] "dark" -> comp [[dekkri]]
+	["ó"] = "æ", -- [[bók]] "book" -> nom pl [[bækur]]; [[stór]] "big" -> comp [[stærri]]; [[dómur]] "judgement" ->
+				 -- [[dæmdur]] "judged"
+	["u"] = "y", -- [[fullur]] "full" -> comp [[fyllri]]; [[þungur]] "heavy/weighty" -> [[þyngd]] "weight"
+	["ú"] = "ý", -- [[mús]] "mouse" -> nom pl [[mýs]]; [[brú]] "bridge" -> nom pl [[brýr]]; [[búa]] "to reside" ->
+				 -- 1sg pres ind [[bý]]; [[hús]] "house" -> [[hýsa]] "to house"
 	["ja"] = "i", -- un-u-mutated version of jö
-	["jö"] = "i", -- [[fjörður]] "fjord" dat sg [[firði]], nom pl [[firðir]]
-	-- ["jö"] = "é", -- [[stjölur]] "?" dat sg [[stéli]], nom pl [[stélir]]; needs explicit vowel
-	["jó"] = "ý", -- [[bjóða]] "to offer" 1sg pres ind [[býð]]
-	["ju"] = "y", -- [[við]] [[bjuggum]] "we lived" subjunctive [[við]] [[byggjum]]
-	["jú"] = "ý", -- [[ljúga]] "to lie" 1sg pres ind [[lýg]]
-	["au"] = "ey", -- [[ausa]] "to dip, to scoop" 1sg pres ind [[eys]]
+	["jö"] = "i", -- [[fjörður]] "fjord" -> dat sg [[firði]], nom pl [[firðir]]
+	-- ["jö"] = "é", -- [[stjölur]] "?" -> dat sg [[stéli]], nom pl [[stélir]]; needs explicit vowel
+	["jó"] = "ý", -- [[bjóða]] "to offer" -> 1sg pres ind [[býð]]; [[ljós]] "light" -> [[lýsa]] "to illuminate"
+	["ju"] = "y", -- [[við]] [[bjuggum]] "we lived" -> subjunctive [[við]] [[byggjum]]
+	["jú"] = "ý", -- [[ljúga]] "to lie" -> 1sg pres ind [[lýg]]
+	["au"] = "ey", -- [[ausa]] "to dip, to scoop" -> 1sg pres ind [[eys]]; [[aumur]] "wretched" -> [[eymd]]
+				   -- "wretchedness"
 }
 
 local i_mutation = {}
