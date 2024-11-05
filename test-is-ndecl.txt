@@ -502,7 +502,7 @@ Personal names:
 * {{tl|is-ndecl|m|pagename=botn}}
 * dat i/i, sg-only; {{m|is|svefn||sleep}}
 * {{tl|is-ndecl|m.sg|pagename=svefn}}
-* dat i/i, with umut; {{m|is|afl||forge}}, {{m|is|gafl||gable}}, {{m|is|hrafn||raven}}, {{m|is|jarl||earl, count}}, {{m|is|jaxl||molar (tooth)}}, {{m|is|kall||guy, dude; ten-krónur bill}}, <karl|man, guy>> ({{m|is|hákarl||shark}}; dat pl [[hákörlum]]), {{m|is|skafl||snowdrift; sand drift}}, {{m|is|stafn||stem (of ship)}}, {{m|is|vagl||tie beam}}, {{m|is|vagn||wagon}} ({{m|is|barnavagn||baby carriage}}, {{m|is|strætisvagn||city bus}})
+* dat i/i, with umut; {{m|is|afl||forge}}, {{m|is|gafl||gable}}, {{m|is|hrafn||raven}}, {{m|is|jarl||earl, count}}, {{m|is|jaxl||molar (tooth)}}, {{m|is|kall||guy, dude; ten-krónur bill}}, {{m|is|karl||man, guy}} ({{m|is|hákarl||shark}}; dat pl [[hákörlum]]), {{m|is|skafl||snowdrift; sand drift}}, {{m|is|stafn||stem (of ship)}}, {{m|is|vagl||tie beam}}, {{m|is|vagn||wagon}} ({{m|is|barnavagn||baby carriage}}, {{m|is|strætisvagn||city bus}})
 * {{tl|is-ndecl|m|pagename=afl}}
 * dat i/i, with loss of -s in gen sg after C + s; {{m|is|foss||waterfall}}, {{m|is|háls||neck}}, {{m|is|koss||kiss}}, {{m|is|kross||cross}}
 * {{tl|is-ndecl|m|pagename=foss}}
@@ -635,9 +635,9 @@ Personal names:
 ===== common nouns =====
 [ALL IN THIS SECTION CHECKED WITH BÍN]
 * NOTE: Defaults to dati/i, both common and proper.
-* dat i/i; <<fleinn||spear>>
+* dat i/i; {{m|is|fleinn||spear}}
 * {{tl|is-ndecl|m|pagename=fleinn}}; also {{m|is|grammófónn||phonograph, gramophone (dated)}}, {{m|is|hreinn||reindeer}}, {{m|is|kapteinn||captain}}, {{m|is|prjónn||knitting needle}}, {{m|is|steinn||rock, stone}} ({{m|is|flögusteinn||slate}}, {{m|is|múrsteinn||brick}}, {{m|is|skorsteinn||chimney}}), {{m|is|sveinn||boy, young man}}, {{m|is|teinn||rod, rail}}, {{m|is|þjónn||(man)servant; waiter}}
-* dat i/i, sg-only; <<daunn||stink>>; also {{m|is|brennisteinn||sulfur}}
+* dat i/i, sg-only; {{m|is|daunn||stink}}; also {{m|is|brennisteinn||sulfur}}
 * {{tl|is-ndecl|m.sg|pagename=daunn}}
 * dat i:-/i; {{m|is|húnn||knob}}; also {{m|is|tónn||tone (music)}}
 * {{tl|is-ndecl|m.dati:-/i|pagename=húnn}}
@@ -1001,20 +1001,24 @@ FIXME:
 == feminine ==
 
 === weak in -a ===
-* {{m|is|stofa||room}} ({{m|is|forstofa||hall, lobby}}); also {{m|is|álfa||continent}}, {{m|is|appelsína||orange}}, {{m|is|apríkósa||apricot}}, {{m|is|draga||dragnet}}, {{m|is|eyja||island}}, {{m|is|hæna||hen}}, {{m|is|króna||crown etc.}}, {{m|is|krukka||jar}}, {{m|is|lilja||lily}}, {{m|is|melóna||melon}}, {{m|is|meyja||maid}}, {{m|is|pera||pear}}, {{m|is|ljósapera||light bulb}}, {{m|is|peysa||sweater}}, {{m|is|renna||gutter}}, {{m|is|seta||letter Z}}, {{m|is|sósa||sauce}}, {{m|is|spenna||electrical tension; buckle, clasp}}, {{m|is|summa||sum, total}}, {{m|is|sýra||acid}}, {{m|is|tunna||barrel, cask}} ({{m|is|sorptunna||garbage can}}), {{m|is|tölva||computer}}, {{m|is|ýsa||haddock}}, {{m|is|þvottaklemma||clothes pin}}, {{m|is|hætta||danger}}, {{m|is|messa||mass (church service)}}, {{m|is|taða||hay from the homefield}}
+* {{m|is|stofa||room}} ({{m|is|forstofa||hall, lobby}}); also {{m|is|álfa||continent}}, {{m|is|appelsína||orange}}, {{m|is|apríkósa||apricot}}, {{m|is|eyja||island}} (also {{m|is|ey}}, with overlapping forms), {{m|is|hæna||hen}}, {{m|is|króna||crown etc.}}, {{m|is|krukka||jar}}, {{m|is|lilja||lily}}, {{m|is|melóna||melon}}, {{m|is|meyja||maid}}, {{m|is|pera||pear}}, {{m|is|ljósapera||light bulb}}, {{m|is|peysa||sweater}} ("properly" spelled {{m|is|peisa}} but that form is dated), {{m|is|renna||gutter}}, {{m|is|seta||letter Z}}, {{m|is|sósa||sauce}}, {{m|is|spenna||electrical tension; buckle, clasp}}, {{m|is|summa||sum, total}}, {{m|is|sýra||acid}}, {{m|is|tunna||barrel, cask}} ({{m|is|sorptunna||garbage can}}), {{m|is|tölva||computer}}, {{m|is|ýsa||haddock}}, {{m|is|þvottaklemma||clothes pin}}, {{m|is|hætta||danger}}, {{m|is|messa||mass (church service)}}
 * {{tl|is-ndecl|f|pagename=stofa}}
 * {{m|is|vinna||work}}
 * {{tl|is-ndecl|f.sg|pagename=vinna}}
-* {{m|is|vara||ware, goods, product}}; note u-mutation with all endings beginning with u- (everywhere but nom sg and gen pl); also {{m|is|amma||grandmother}}, {{m|is|haka||chin}}, {{m|is|mamma||mother}}, {{m|is|panna||pan}}
+* with u-mutation in all endings beginning with u- (everywhere but nom sg and gen pl); {{m|is|vara||ware, goods, product}}; also {{m|is|amma||grandmother}}, {{m|is|haka||chin}}, {{m|is|mamma||mother}}, {{m|is|panna||pan}}, {{m|is|draga||dragnet}}, {{m|is|taða||hay from the homefield}}
 * {{tl|is-ndecl|f|pagename=vara}}
-* {{m|is|danska||Danish}} (with u-mutation); also {{m|is|enska||English}}, {{m|is|franska||French}}, {{m|is|íslenska||Icelandic}}, {{m|is|latína||Latin}}, {{m|is|norska||Norwegian}}, {{m|is|sænska||Swedish}}, {{m|is|þýska||German}}, {{m|is|eintala||singular}}, {{m|is|fleirtala||plural}}
+* {{m|is|danska||Danish}} (with u-mutation); also {{m|is|enska||English}}, {{m|is|franska||French}} (with u-mutation), {{m|is|íslenska||Icelandic}}, {{m|is|latína||Latin}}, {{m|is|norska||Norwegian}}, {{m|is|sænska||Swedish}}, {{m|is|þýska||German}}, {{m|is|eintala||singular}} (with u-mutation), {{m|is|fleirtala||plural}} (with u-mutation)
 * {{tl|is-ndecl|f.sg|pagename=danska}}<!-- with u-mutation -->
 * {{tl|is-ndecl|f.sg|pagename=enska}}
-* {{m|is|frönskur||French fries}}; also {{m|is|hjólbörur||wheelbarrow}}
-* {{tl|is-ndecl|f.pl.unumut|pagename=frönskur}}
-* {{m|is|alda||wave}}; also {{m|is|blússa||blouse}}, {{m|is|gólfábreiða||carpet, rug}}, {{m|is|greiða||comb}}, {{m|is|hrífa||rake}}, {{m|is|húfa||cap}}, {{m|is|kápa||coat}}, {{m|is|kommóða||chest of drawers, bureau}}, {{m|is|lirfa||larva, caterpillar}}, {{m|is|lúða||halibut}}, {{m|is|motta||mat}}, {{m|is|samloka||sandwich}}, {{m|is|sápa||soap}}, {{m|is|sígaretta||cigarette}}, {{m|is|skúffa||drawer}}, {{m|is|sturta||shower (bath)}}, {{m|is|taska||bag, case}}, {{m|is|vespa||wasp}}, {{m|is|færa||passable road; implement?}}, {{m|is|hosa||trouser leg; oversock; (plural) trousers, pants}}, {{m|is|jata||manger}}, {{m|is|mylla||mill}}, {{m|is|skata||skate (fish)}}, {{m|is|smuga||narrow cleft; hiding place}}
+* {{m|is|frönskur||French fries}}
+* {{tl|is-ndecl|f.pl.unumut.genplna:a|pagename=frönskur}}
+* {{m|is|hjólbörur||wheelbarrow}}
+* {{tl|is-ndecl|f.pl.unumut|pagename=hjólbörur}}
+* {{m|is|blússa||blouse}}, {{m|is|gólfábreiða||carpet, rug}}, {{m|is|greiða||comb}}, {{m|is|hrífa||rake}}, {{m|is|húfa||cap}}, {{m|is|kápa||coat}}, {{m|is|kommóða||chest of drawers, bureau}}, {{m|is|lirfa||larva, caterpillar}}, {{m|is|lúða||halibut}}, {{m|is|motta||mat}}, {{m|is|samloka||sandwich}}, {{m|is|sápa||soap}}, {{m|is|sígaretta||cigarette}}, {{m|is|skúffa||drawer}}, {{m|is|sturta||shower (bath)}}, {{m|is|vespa||wasp}}, {{m|is|færa||passable road; implement?}}, {{m|is|hosa||trouser leg; oversock; (plural) trousers, pants}}, {{m|is|mylla||mill}}, {{m|is|smuga||narrow cleft; hiding place}}
+* {{tl|is-ndecl|f.genpla:na|pagename=blússa}}
+* with u-mutation: {{m|is|alda||wave}}, {{m|is|taska||bag, case}}, {{m|is|jata||manger}}, {{m|is|skata||skate (fish)}}
 * {{tl|is-ndecl|f.genpla:na|pagename=alda}}
-* {{m|is|dæla||pump; syringe}}; also {{m|is|fata||bucket}}, {{m|is|hlaða||barn}} ({{m|is|rafhlaða||battery}}), {{m|is|hola||hole}}, {{m|is|kaka||cake}} ({{m|is|eggjakaka||omelette, pancake}}, {{m|is|pönnukaka||pancake}}), {{m|is|kartafla||potato}}, {{m|is|plóma||plum}}, {{m|is|pylsa||sausage}}, {{m|is|sala||sale, selling}}, {{m|is|skófla||shovel, spade}} ({{m|is|fægiskófla||dustpan}}), {{m|is|sulta||jam (from fruit)}}, {{m|is|súpa||soup}}, {{m|is|svunta||apron}}, {{m|is|tafla||table, chart}} ({{m|is|veggtafla||blackboard}}), {{m|is|terta||tart}}, {{m|is|þyrla||helicopter}}, {{m|is|áhyggja||care, concern}}, {{m|is|bóla||blister}}, {{m|is|bylgja||wave}}, {{m|is|frilla||mistress (of a married man)}}, {{m|is|gáta||riddle}}, {{m|is|glósa||note, gloss; (plural) sarcasm, taunting}}, {{m|is|hella||stone slab, flagstone}}, {{m|is|kista||chest, box}}, {{m|is|-laga}} ({{m|is|álaga||tax (usually plural in the modern language)}}, {{m|is|tillaga||proposal, suggestion}}), {{m|is|leiga||rent}}, {{m|is|leika||genitals of a female animal (archaic)}}, {{m|is|pípa||pipe}}, {{m|is|rófa||tail (of dog or cat)}} ({{m|is|gulrófa||rape, cole}}, {{m|is|rauðrófa||beet}}, {{m|is|sykurrófa||sugar beet}}), {{m|is|skeifa||horseshoe}}, {{m|is|skrúfa||screw; propeller}}, {{m|is|skytta||marksman, shot; shuttle}}, {{m|is|skækja||whore}}, {{m|is|slægja||mown field; grassland; profit, gain}}, {{m|is|stríða||severity; adversity}} ({{m|is|ástríða||passion}}), {{m|is|stúka||box (in a theater); lodge (of masons, etc.)}}, {{m|is|vala||sheep's kneebone}}, {{m|is|þrúga||grape; wine press; snowshoe}}
+* {{m|is|dæla||pump; syringe}}; also {{m|is|fata||bucket}}, {{m|is|hlaða||barn}} ({{m|is|rafhlaða||battery}}), {{m|is|hola||hole}}, {{m|is|kaka||cake}} ({{m|is|eggjakaka||omelette, pancake}}, {{m|is|pönnukaka||pancake}}), {{m|is|kartafla||potato}}, {{m|is|plóma||plum}}, {{m|is|pylsa||sausage}} (also: {{m|is|pulsa}}), {{m|is|sala||sale, selling}}, {{m|is|skófla||shovel, spade}} ({{m|is|fægiskófla||dustpan}}), {{m|is|sulta||jam (from fruit)}}, {{m|is|súpa||soup}}, {{m|is|svunta||apron}}, {{m|is|tafla||table, chart}} ({{m|is|veggtafla||blackboard}}), {{m|is|terta||tart}}, {{m|is|þyrla||helicopter}}, {{m|is|áhyggja||care, concern}}, {{m|is|bóla||blister}}, {{m|is|bylgja||wave}}, {{m|is|frilla||mistress (of a married man)}}, {{m|is|gáta||riddle}}, {{m|is|glósa||note, gloss; (plural) sarcasm, taunting}}, {{m|is|hella||stone slab, flagstone}}, {{m|is|kista||chest, box}}, {{m|is|-laga}} ({{m|is|álaga||tax (usually plural in the modern language)}}, {{m|is|tillaga||proposal, suggestion}}), {{m|is|leiga||rent}}, {{m|is|leika||genitals of a female animal (archaic)}}, {{m|is|pípa||pipe}}, {{m|is|rófa||tail (of dog or cat)}} ({{m|is|gulrófa||rape, cole}}, {{m|is|rauðrófa||beet}}, {{m|is|sykurrófa||sugar beet}}), {{m|is|skeifa||horseshoe}}, {{m|is|skrúfa||screw; propeller}}, {{m|is|skytta||marksman, shot; shuttle}}, {{m|is|skækja||whore}}, {{m|is|slægja||mown field; grassland; profit, gain}}, {{m|is|stríða||severity; adversity}} ({{m|is|ástríða||passion}}), {{m|is|stúka||box (in a theater); lodge (of masons, etc.)}}, {{m|is|vala||sheep's kneebone}}, {{m|is|þrúga||grape; wine press; snowshoe}}
 * {{tl|is-ndecl|f.genplna:a|pagename=dæla}}
 * {{tl|is-ndecl|f.genplna:a|pagename=fata}}<!-- with u-mutation -->
 * {{tl|is-ndecl|f.genplna:a|pagename=ferskja}}<!-- -j- should drop before -na -->
@@ -1244,8 +1248,10 @@ FIXME:
 * {{tl|is-ndecl|f.sg|pagename=ull}}
 * {{m|is|Venus||Venus (personal name, goddess, planet)}}
 * {{tl|is-ndecl|f.sg.acc+dat-:i|pagename=Venus}}
-* {{m|is|eygló||?}}; NOTE: acc/dat are [[eyglóina]], [[eyglóinni]] NOT with loss of -i-; FIXME: I think this is a mistake.
-* {{tl|is-ndecl|f.sg|pagename=eygló}}
+* {{m|is|eygló||eyeball??}}; NOTE: acc/dat are [[eyglóina]], [[eyglóinni]] NOT with loss of -i-.
+* {{tl|is-ndecl|f.sg.acc+dat-/i|pagename=eygló}}
+* {{m|is|sígó||cig, cigarette}}; NOTE: acc/dat are [[sígóna]]/[[sígóina]], [[sígónni]]/[[sígóinni]] with optional loss of -i-. Def gen sg doesn't exist.
+* {{tl|is-ndecl|f,-/--.sg.acc+dat-/-:i|pagename=sígó}}
 
 ===== plural mostly in -ir, with suffix =====
 * {{m|is|athugasemd||remark}}
@@ -1284,7 +1290,7 @@ FIXME:
 ==== root ending in long vowel ====
 
 ===== ending in -á =====
-* {{m|is|á||river}}; gen in -r, nom pl in -r, dat pl in -m; also {{m|is|brá||eyelash; eyelid; greasy film on water}}, {{m|is|flá||float on net}}, {{m|is|gjá||gorge, canyon}}, {{m|is|gljá||glitter, brilliancy}}, {{m|is|lá||sea near the shore; film on water}}, {{m|is|sjá||device for seeing; seeing}} ({{m|is|eggsjá||device for X-ray examination of eggs}}, {{m|is|ísjá||attention}}, {{m|is|litsjá||spectroscope}}, {{m|is|ratsjá||radar}}, {{m|is|rúmsjá||stereoscope}}, {{m|is|skuggsjá||mirror}}, {{m|is|smásjá||microscope}}, {{m|is|viðsjá||caution, wariness; (plural) quarrels}}, {{m|is|víðsjá||wide view; survey}}), {{m|is|slá||bolt (on door)}}, {{m|is|spá||prophecy; sleeveless coat}} (also neuter in the meaning "sleeveless coat"), {{m|is|þrá||longing}}
+* {{m|is|á||river}}; gen in -r, nom pl in -r, dat pl in -m, gen pl in -a but drops in the definite; also {{m|is|brá||eyelash; eyelid; greasy film on water}}, {{m|is|flá||float on net}}, {{m|is|gjá||gorge, canyon}}, {{m|is|gljá||glitter, brilliancy}}, {{m|is|lá||sea near the shore; film on water}}, {{m|is|sjá||device for seeing; seeing}} ({{m|is|eggsjá||device for X-ray examination of eggs}}, {{m|is|ísjá||attention}}, {{m|is|litsjá||spectroscope}}, {{m|is|ratsjá||radar}}, {{m|is|rúmsjá||stereoscope}}, {{m|is|skuggsjá||mirror}}, {{m|is|smásjá||microscope}}, {{m|is|viðsjá||caution, wariness; (plural) quarrels}}, {{m|is|víðsjá||wide view; survey}}), {{m|is|slá||bolt (on door)}}, {{m|is|spá||prophecy; sleeveless coat}} (also neuter in the meaning "sleeveless coat"), {{m|is|þrá||longing}}
 * {{tl|is-ndecl|f|pagename=á}}
 * {{m|is|andrá||instant}}; gen in -r; also {{m|is|gá||barking; attention}} ({{m|is|goðgá||blasphemy}}, {{m|is|hundgá||barking of dogs}}), {{m|is|ljá||newmown hay}}, {{m|is|líkþrá||leprosy}}, {{m|is|ásjá||assistance}}, {{m|is|forsjá||foresight}}, {{m|is|tilsjá||supervision; hope of help}}, 
 * {{tl|is-ndecl|f.sg|pagename=andrá}}
@@ -1302,7 +1308,7 @@ FIXME:
 * {{tl|is-ndecl|f,ar,^r|pagename=tá}}
 
 ===== ending in -ó =====
-* {{m|is|fló||flea}}; gen in -ar, nom pl in -r with umlaut, dat pl in -m; also {{m|is|kló||claw}}, {{m|is|kónguló||spider}}, {{m|is|könguló||spider}}, {{m|is|köngulló||spider}} (proscribed), {{m|is|köngurló||spider}} (proscribed), {{m|is|ló||pile, nap; wool waste}}, {{m|is|ró||washer; nut}}
+* {{m|is|fló||flea}}; gen in -ar, nom pl in -r with umlaut, dat pl in -m, gen pl in -a but drops in the definite; also {{m|is|kló||claw}}, {{m|is|kónguló||spider}}, {{m|is|könguló||spider}}, {{m|is|köngulló||spider}} (proscribed), {{m|is|köngurló||spider}} (proscribed), {{m|is|ló||pile, nap; wool waste}}, {{m|is|ró||washer; nut}}
 * {{tl|is-ndecl|f|pagename=fló}}
 * {{m|is|fró||relief, comfort}}, {{m|is|ró||quiet, tranquility}}
 * {{tl|is-ndecl|f.sg|pagename=fró}}
@@ -1318,7 +1324,7 @@ FIXME:
 * {{tl|is-ndecl|f,r:ar,r:ar|pagename=stó}}
 
 ===== ending in -ú =====
-* {{m|is|frú||married woman}}; gen in -ar, nom pl in -r, dat pl in -m (also {{m|is|húsfrú||housewife}}, {{m|is|piparjómfrú||spinster}}, {{m|is|ungfrú||unmarried woman}}, {{m|is|trú||faith, belief}})
+* {{m|is|frú||married woman}}; gen in -ar, nom pl in -r, dat pl in -m, gen pl in -a but drops in the definite (also {{m|is|húsfrú||housewife}}, {{m|is|piparjómfrú||spinster}}, {{m|is|ungfrú||unmarried woman}}, {{m|is|trú||faith, belief}})
 * {{tl|is-ndecl|f|pagename=stó}}
 * {{m|is|jómfrú||virgin, maiden}}
 * {{tl|is-ndecl|f,ar:r[dated]|pagename=jómfrú}}
@@ -1339,7 +1345,7 @@ FIXME:
 * {{tl|is-ndecl|f.unumut.gen:axar:öxar|pagename=öxi}}
 * For `exi`, easiest is to set the gen sg and plstem directly. (Feminines in -i by default have -i in the entire singular.)
 * {{tl|is-ndecl|f.gen:axar.plstem:ax|pagename=exi}}
-* {{m|is|kýr||cow}}, gen ^r, nom pl ^r, dat pl -m; also {{m|is|sýr||sow (archaic)}}, {{m|is|ær||ewe}}. NOTE: for `unimut`, the non-i-mutated forms are the acc/dat sg and dat/gen pl. See also {{m|is|hættur}}, {{m|is|mætur}}.
+* {{m|is|kýr||cow}}, gen ^r, nom pl ^r, dat pl -m, gen pl in -a but drops in the definite; also {{m|is|sýr||sow (archaic)}}, {{m|is|ær||ewe}}. NOTE: for `unimut`, the non-i-mutated forms are the acc/dat sg and dat/gen pl. See also {{m|is|hættur}}, {{m|is|mætur}}.
 * {{tl|is-ndecl|f.unimut|pagename=kýr}}
 * {{tl|is-ndecl|f.unimut|pagename=ær}}
 * {{m|is|mús||mouse}}; also {{m|is|lús||louse}}
