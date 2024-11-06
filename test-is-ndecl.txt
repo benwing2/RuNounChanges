@@ -869,7 +869,7 @@ Personal names:
 
 === miscellaneous irregular words in -ur ===
 * {{m|is|maður||man; one}}; here, the underlying stem is 'mann' and, as shown by the def nom/acc pl, the underlying plural is -ir, but replaced in the indef nom/acc pl with [[menn]]. We handle this by setting the stem appropriately and then overriding only the indefinite nom and acc pl (the ! means to only do the indefinite, not both indefinite and definite as would normally happen). We also make this a built-in as there are so many compounds of -maður.
-* {{tl|is-ndecl|m,s,ir.decllemma:mannur.imut.nompl+accpl:menn|pagename=maður}}
+* {{tl|is-ndecl|m,s,ir.decllemma:mannur.imut.!nompl+accpl:menn|pagename=maður}}
 * {{tl|is-ndecl|m.@|pagename=maður}}
 * {{m|is|fótur||foot}}; i-mutation in dat sg fæti and in nom/acc pl fætur. Here, the ^ in ^ur is a special signal to do i-mutation of the stem before the ending, even if it doesn't contain -i-. Internally, -ur as nom pl is treated specially in that the accusative plural is also -ur instead of -u as you'd normally expect.
 * {{tl|is-ndecl|m,ar,^ur.imut.dati|pagename=fótur}}
@@ -1152,18 +1152,17 @@ FIXME:
 ===== in -ung, -ing =====
 * NOTE: nouns in -ung, -ing default to -ar plural, and nouns in -ing default to acc/dat sg -u
 * {{m|is|nýjung||newness, novelty; piece of news}}; NOTE: Thomson lists alternative dat sg in -u, but not in BÍN; also {{m|is|nauðung||constraint, compulsion}}
-* {{tl|is-ndecl|f,,ar|pagename=nýjung}}
-* {{tl|is-ndecl|f|pagename=nýjung}}<!-- nouns in -ung default to -ar plural -->
+* {{tl|is-ndecl|f|pagename=nýjung}}
 * {{m|is|djörfung||boldness, daring}}, {{m|is|háðung||shame, disgrace}} (given with plural in Thomson), {{m|is|launung||secrecy}}, {{m|is|lausung||moral looseness}}
 * {{tl|is-ndecl|f.sg|pagename=djörfung}}
 * {{m|is|sundrung||scattering; dissension, division, disunity}}
-* {{tl|is-ndecl|f.sg.acc+dat-:u|pagename=sundrung}}
+* {{tl|is-ndecl|f.sg.acc+dat-:u/-|pagename=sundrung}}
+
+* NOTE: nouns in -ing default to -ar plural and acc/dat sg -u
 * {{m|is|kerling||old woman}}; given with acc/dat -u in both Thomson and BÍN; also {{m|is|bygging||building; settlement}}, {{m|is|drottning||queen}}, {{m|is|eining||unity; unit}}, {{m|is|fæðing||birth}}, {{m|is|gifting||marriage; wedding}}, {{m|is|girðing||fence}}, {{m|is|kenning||kenning (in poetry)}}, {{m|is|lækning||healing}}, {{m|is|merking||meaning}}, {{m|is|rigning||rain}}, {{m|is|setning||sentence; placing, putting}}, {{m|is|sigling||sailing; voyage}}, {{m|is|tilfinning||feeling; perception}}, {{m|is|virðing||valuation; esteem, respect; respect (aspect, feature)}}, {{m|is|þýðing||translation; meaning}}
-* {{tl|is-ndecl|f,,ar.acc+datu|pagename=kerling}}
-* {{tl|is-ndecl|f|pagename=kerling}}<!-- defaults as above for feminine nouns in -ing -->
+* {{tl|is-ndecl|f|pagename=kerling}}
 * {{m|is|málning||paint}}, {{m|is|menning||culture}}, {{m|is|þekking||knowledge, understanding}}, {{m|is|örvænting||despair}}
-* {{tl|is-ndecl|f.sg.acc+datu|pagename=málning}}
-* {{tl|is-ndecl|f.sg|pagename=málning}}<!-- defaults as above for feminine nouns in -ing -->
+* {{tl|is-ndecl|f.sg|pagename=málning}}
 
 ===== in -ur or -i =====
 
@@ -1224,24 +1223,24 @@ FIXME:
 * {{tl|is-ndecl|f,,ir[traditional]:ar[increasingly common]|pagename=hurð}}
 * {{m|is|Kaupmannahöfn||Copenhagen}}
 * {{tl|is-ndecl|f.sg|pagename=Kaupmannahöfn}}
-* {{m|is|höll||castle, palace}}; note ! meaning indefinite only
-* {{tl|is-ndecl|f.acc+dat-:!u[archaic or literary]|pagename=höll}}
-* {{m|is|jörð||earth}}; note ! meaning indefinite only, here applying only to the acc, not dat
-* {{tl|is-ndecl|f.acc-:!u[in fixed expressions].dat-:u[in fixed expressions]|pagename=jörd}}
-* {{m|is|laut||small depression in the ground}}; note ! meaning indefinite only
-* {{tl|is-ndecl|f.acc+dat-:!u[archaic or literary]|pagename=laut}}
+* {{m|is|höll||castle, palace}}
+* {{tl|is-ndecl|f.acc+dat-:u[archaic or literary]/-|pagename=höll}}
+* {{m|is|jörð||earth}}; note that alternative ending -u applies in def dat but not def acc
+* {{tl|is-ndecl|f.acc-:u[in fixed expressions]/-.dat-:u[in fixed expressions]|pagename=jörd}}
+* {{m|is|laut||small depression in the ground}}
+* {{tl|is-ndecl|f.acc+dat-:u[archaic or literary]/-|pagename=laut}}
 * {{m|is|lest||train; cargo hold; ton}}
 * {{tl|is-ndecl|f,,ir[most meanings]:ar[in the meaning "cargo hold"]|pagename=lest}}
 * {{m|is|mold||earth, soil}}; note ! meaning indefinite only
-* {{tl|is-ndecl|f.acc-:!u[rare; archaic or literary].dat-:!u[archaic or literary]|pagename=mold}}
-* {{m|is|rödd||voice}}; note ! meaning indefinite only
-* {{tl|is-ndecl|f.acc-:!u[rare; archaic or literary].dat-:!u[archaic or literary]|pagename=rödd}}
+* {{tl|is-ndecl|f.acc-:u[rare; archaic or literary]/-.dat-:u[archaic or literary]/-|pagename=mold}}
+* {{m|is|rödd||voice}}
+* {{tl|is-ndecl|f.acc-:u[rare; archaic or literary]/-.dat-:u[archaic or literary]/-|pagename=rödd}}
 * {{m|is|síld||herring}}
 * {{tl|is-ndecl|f,,ar[modern]:ir[traditional]|pagename=síld}}
-* {{m|is|sól||sun}}; NOTE: explicitly listing both indef and def, separated by slash, is an alternative to using ! to mean indefinite only
+* {{m|is|sól||sun}}
 * {{tl|is-ndecl|f.acc+dat-:u[literary]/-:u[rare].accpla:na|pagename=sól}}
 * {{m|is|stund||time, while}}; also {{m|is|klukkustund}} (including with same footnote)
-* {{tl|is-ndecl|f.dat-:!u[archaic or literary]|pagename=stund}}
+* {{tl|is-ndecl|f.dat-:u[archaic or literary]/-|pagename=stund}}
 * {{m|is|svalir||balcony; porch}}
 * {{tl|is-ndecl|f.pl|pagename=svalir}}
 * {{m|is|ull||wool}}; also {{m|is|bómull||cotton}}
@@ -1573,7 +1572,7 @@ FIXME:
 * {{m|is|læti||behavior, demeanor}}; likewise {{m|is|ólæti||noise, racket}}
 * {{tl|is-ndecl|n.pl.unimut|pagename=læti}}
 * {{m|is|altari||altar}}; u-mutates to pl ölturu
-* {{tl|is-ndecl|n.uumut|pagename=altari}}
+* {{tl|is-ndecl|((<n.uumut.nompl+accplu>,<n>))|pagename=altari}}
 
 ==== in -ki, -gi or with -j- insertion ====
 * NOTE: Per Thomson, -j- insertion occurs in all neuter words ending in -ki and -gi, so it should be automatic.
