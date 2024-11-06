@@ -29,6 +29,7 @@ FIXME:
 2. Support definite lemmas such as [[Bandaríkin]] "the United States".
 3. Support adjectivally-declined terms.
 4. Support @ for built-in irregular lemmas.
+5. Somehow if the user specifies v-infix, it should prevent default unumut from happening in strong feminines.
 ]=]
 
 local lang = require("Module:languages").getByCode("is")
@@ -268,19 +269,21 @@ local function add_slotval(base, slot_prefix, slot, props, endings, clitics, end
 	end
 	-- Loop over each ending and clitic.
 	for _, endingobj in ipairs(endings) do
-		local ending, ending_footnotes
-		if type(endingobj) == "string" then
-			ending = endingobj
-		else
-			ending = endingobj.form
-			ending_footnotes = endingobj.footnotes
-		end
-		local function interr(msg)
-			error(("Internal error: For slot '%s%s', ending '%s', %s: %s"):format(slot_prefix, slot, ending, msg,
-			dump(props)))
-		end
-
 		for _, cliticobj in ipairs(clitics) do
+			-- Do the following inside of the innermost loop even though it does not depend on the value of `cliticobj`,
+			-- because that way we are free to mutate `ending` below.
+			local ending, ending_footnotes
+			if type(endingobj) == "string" then
+				ending = endingobj
+			else
+				ending = endingobj.form
+				ending_footnotes = endingobj.footnotes
+			end
+			local function interr(msg)
+				error(("Internal error: For slot '%s%s', ending '%s', %s: %s"):format(slot_prefix, slot, ending, msg,
+				dump(props)))
+			end
+
 			local clitic, clitic_footnotes
 			if type(cliticobj) == "string" then
 				clitic = cliticobj
@@ -294,11 +297,20 @@ local function add_slotval(base, slot_prefix, slot, props, endings, clitics, end
 			-- in effect (specifically when dealing with an ending that would trigger a mutation if in effect). AFAIK
 			-- you cannot have both mutations in effect at once, and i-mutation overrides u-mutation if both would be in
 			-- effect.
+
+			-- Single ^ at the beginning of an ending indicates that the i-mutated version of the stem should apply, and
+			-- double ^^ at the beginning indicates that the u-mutated version should apply.
 			local explicit_imut, explicit_umut
+			-- % at the end of a definite ending indicates that the following i- of the clitic should drop, as with
+			-- neuter [[tré]], [[kné]], [[fé]]. There's no counterpart to force irregular inclusion of an i- that would
+			-- normally drop; just include it in the ending (as with acc/dat sg of [[eygló]] "eyeball???" and [[sígó]]
+			-- "cig").
+			local clitic_i_drops
 			ending, explicit_umut = rsubb(ending, "^%^%^", "")
 			if not explicit_umut then
 				ending, explicit_imut = rsubb(ending, "^%^", "")
 			end
+			ending, clitic_i_drops = rsubb(ending, "%%$", "")
 			local is_vowel_ending = rfind(ending, "^" .. com.vowel_c)
 			local is_vowel_clitic = rfind(clitic, "^" .. com.vowel_c)
 			local mut_in_effect, mut_not_in_effect, mut_footnotes
@@ -465,12 +477,8 @@ local function add_slotval(base, slot_prefix, slot, props, endings, clitics, end
 				local function drop_clitic_i()
 					clitic = clitic:gsub("^i", "")
 				end
-				-- % at the end of a definite ending indicates that the following i- of the clitic should drop, as with
-				-- neuter [[tré]], [[kné]], [[fé]]. There's no counterpart to force irregular inclusion of an i- that
-				-- would normally drop; just include it in the ending (as with acc/dat sg of [[eygló]] "eyeball???" and
-				-- [[sígó]] "cig").
-				if ending:find("%%$") then
-					ending = ending:gsub("%%$", "")
+				-- % at the end of a definite ending indicates that the following i- of the clitic should drop; see above.
+				if clitic_i_drops then
 					drop_clitic_i()
 				end
 				local stem_with_infix = stem .. (infix or "")
@@ -564,8 +572,8 @@ local function acc_p_from_nom_p(base, nom_p)
 		return nom_p
 	end
 	local function form_masc_acc_p(ending)
-		if ending == "ur" then
-			return "ur"
+		if ending:find("^%^*ur$") then
+			return ending
 		else
 			return (ending:gsub("r$", ""))
 		end
@@ -622,12 +630,12 @@ local function process_slot_overrides(base, do_slot)
 end
 
 
--- Generate the full declension for the term given the endings for each slot except the nom_s (which is taken directly
--- from the lemma). acc_p, dat_p and gen_p can be omitted and will be defaulted: dat_p defaults to "um", gen_p defaults
--- to "a", and acc_p defaults to the nom_p except for masculines not in -ur, where the -r is dropped. Use `false` as the
--- value of an ending to disable generating any value for that slot.
-local function add_decl(base, props, acc_s, dat_s, gen_s, nom_p, acc_p, dat_p, gen_p)
-	add(base, "nom_s", props, "*")
+-- Generate the full declension for the term given the endings for each slot. acc_p, dat_p and gen_p can be omitted and
+-- will be defaulted: dat_p defaults to "um", gen_p defaults to "a", and acc_p defaults to the nom_p except for masculines
+-- not in -ur, where the -r is dropped. Use `false` as the value of an ending to disable generating any value for that
+-- slot.
+local function add_decl_with_nom_sg(base, props, nom_s, acc_s, dat_s, gen_s, nom_p, acc_p, dat_p, gen_p)
+	add(base, "nom_s", props, nom_s)
 	add(base, "acc_s", props, acc_s)
 	add(base, "dat_s", props, dat_s)
 	add(base, "gen_s", props, gen_s)
@@ -657,6 +665,17 @@ local function add_decl(base, props, acc_s, dat_s, gen_s, nom_p, acc_p, dat_p, g
 	add(base, "acc_p", props, acc_p)
 	add(base, "dat_p", props, dat_p)
 	add(base, "gen_p", props, gen_p)
+end
+
+-- Generate the full declension for the term given the endings for each slot except the nom_s. This is like
+-- add_decl_with_nom_sg() but takes the nom sg directly from the lemma instead of trying to reconstruct it from a stem,
+-- which is more correct in the vast majority of circumstances. The * below is a signal to the underlying add() function
+-- to use the actual lemma (not any stem, and not the value of 'decllemma:' if given) for the nom sg. Note that add() is
+-- smart enough to ignore this for the definite nom sg when the 'defcon' indicator is given, because in that case the stem
+-- for the def nom sg is contracted compared with the lemma. (Specifically, it uses the correct contracted stem and a null
+-- ending; AFAIK all cases of 'defcon' occur with lemmas with a null ending in the nom sg.)
+local function add_decl(base, props, acc_s, dat_s, gen_s, nom_p, acc_p, dat_p, gen_p)
+	add_decl_with_nom_sg(base, props, "*", acc_s, dat_s, gen_s, nom_p, acc_p, dat_p, gen_p)
 end
 
 local function add_sg_decl(base, props, acc_s, dat_s, gen_s)
@@ -977,32 +996,39 @@ decls["tstem-m"] = function(base, props)
 end
 
 
-decls["strong-f"] = function(base, props)
+decls["f"] = function(base, props)
+	-- Normal strong feminine nouns; default to genitive -ar, plural -ir.
 	add_decl(base, props, "", "", "ar", "ir")
 end
 
 
-decls["strong-f-ung"] = function(base, props)
+decls["f-ung"] = function(base, props)
+	-- Strong feminine nouns in -ung, e.g. [[nýjung]] "newness, novelty; piece of news", [[nauðung]]
+	-- "constraint, compulsion". Most such nouns are singular-only, e.g. [[djörfung]] "boldness, daring", [[launung]]
+	-- "secrecy". Occasional nouns need overrides, e.g. [[sundrung]] "scattering; dissension, division, disunity" with
+	-- acc/dat sg either - or -u (but only - in the definite acc/dat sg).
 	add_decl(base, props, "", "", "ar", "ar")
 end
 
 
-decls["strong-f-ing"] = function(base, props)
+decls["f-ing"] = function(base, props)
+	-- Strong feminine nouns in -ing, e.g. [[kerling]] "old woman", [[eining]] "unity; unit". Singular-only: e.g.
+	-- [[málning] "paint", [[menning]] "culture", [[örvænting]] "despair".
 	add_decl(base, props, "u", "u", "ar", "ar")
 end
 
 
-decls["strong-f-ur"] = function(base, props)
+decls["f-ur"] = function(base, props)
 	add_decl(base, props, "i", "i", "ar", "ir")
 end
 
 
-decls["strong-f-i"] = function(base, props)
+decls["f-i"] = function(base, props)
 	add_decl(base, props, "i", "i", "ar", "ir")
 end
 
 
-decls["strong-f-long-vowel"] = function(base, props)
+decls["f-long-vowel"] = function(base, props)
 	-- nouns in -á, e.g. [[á]] "river", [[gjá]] "gorge, canyon", [[skuggská]] "mirror", [[slá]] "door bolt";
 	-- nouns in -ó, e.g. [[fló]] "flea", [[kónguló]] "spider", [[kló]] "claw";
 	-- nouns in -ú, e.g. [[frú]] "married woman", [[trú]] "faith, belief".
@@ -1020,13 +1046,13 @@ decls["strong-f-long-vowel"] = function(base, props)
 	else
 		error(("Unrecognized stem '%s' for long-vowel feminine; should end in -á, -ó or -ú"))
 	end
-	add_decl(base, props, "", "", gen, nompl, "m", {indef = "a", def = ""})
+	add_decl(base, props, "", "", gen, nompl, nompl, "m", {indef = "a", def = ""})
 end
 
 
-decls["strong-f-long-umlaut-vowel-r"] = function(base, props)
+decls["f-long-umlaut-vowel-r"] = function(base, props)
 	-- nouns in long umlauted vowel + -r: [[kýr]] "cow", [[sýr]] "sow (archaic)", [[ær]] and compounds.
-	add_decl(base, props, "", "", "^r", "^r", "m", {indef = "a", def = ""})
+	add_decl(base, props, "", "", "^r", "^r", "^r", "m", {indef = "a", def = ""})
 end
 
 
@@ -1035,152 +1061,31 @@ decls["weak-f"] = function(base, props)
 end
 
 
-decls["strong-n"] = function(base, props)
-	add_decl(base, props, "u", "u", "u", "ur")
-	local velar = base.velar or not base["-velar"] and rfind(stems.vowel_stem, com.velar_c .. "$")
-	-- NOTE: Per IJP it appears the meaning of the preceding preposition makes a difference: 'o' = "about" takes
-	-- '-u' or '-ě', while 'na/v' = "in, on" normally takes '-ě'.
-	local loc_s =
-		-- Exceptions: [[mléko]] "milk" ('mléku' or 'mléce'), [[břicho]] "belly" ('břiše' or (less often) 'břichu'),
-		-- [[roucho]] ('na rouchu' or 'v rouše'; why the difference in preposition?).
-		velar and "u" or
-		-- IJP says nouns in -dlo take only -e but the declension tables show otherwise. It appears -u is possible
-		-- but significantly less common. Other nouns in -lo usually take just -e ([[čelo]] "forehead",
-		-- [[kolo]] "wheel", [[křeslo]] "armchair", [[máslo]] "butter", [[peklo]] "hell", [[sklo]] "glass",
-		-- [[světlo]] "light", [[tělo]] "body"; but [[číslo]] "number' with -e/-u; [[zlo]] "evil" and [[kouzlo]] "spell"
-		-- with -u/-e).
-		rfind(base.lemma, "dlo$") and {"ě", "u"} or
-		rfind(base.lemma, "lo$") and "ě" or
-		(rfind(base.lemma, "[sc]tvo$") or rfind(base.lemma, "ivo$")) and "u" or
-		-- Per IJP: Borrowed words and abstracts take -u (e.g. [[banjo]]/[[bendžo]]/[[benžo]] "banjo", [[depo]] "depot",
-		-- [[chladno]] "cold", [[mokro]] "damp, dampness", [[právo]] "law, right", [[šeru]] "twilight?",
-		-- [[temno]] "dark, darkness", [[tempo]] "rate, tempo", [[ticho]] "quiet, silence", [[vedro]] "heat") and others
-		-- often take -ě/-u. Formerly we defaulted to -ě/-u but it seems better to default to just -u, similarly to hard
-		-- masculines.
-		-- {"ě", "u"}
-		"u"
-	local loc_p =
-		-- Note, lemmas in -isko also have mixed-reducible as default, handled in determine_default_reducible().
-		-- Note also, ending -ích triggers the second palatalization.
-		rfind(base.lemma, "isko$") and {"ích", "ách"} or
-		-- Diminutives in -ko, -čko, -tko; also [[lýtko]], [[děcko]], [[vrátka]], [[dvířka]], [[jho]], [[roucho]],
-		-- [[tango]], [[mango]], [[sucho]], [[blaho]], [[víko]], [[echo]], [[embargo]], [[largo]], [[jericho]] (from
-		-- IJP). Also foreign nouns in -kum: [[antibiotikum]], [[narkotikum]], [[afrodiziakum]], [[analgetikum]], etc.
-		-- [[jablko]] "apple" has '-ách' or '-ích' and needs an override; likewise for [[vojsko]] "troop"; [[riziko]]
-		-- "risk" normally has '-ích' and needs and override.
-		velar and "ách" or
-		"ech"
-	add_decl(base, props, "a", "u", "*", "*", loc_s, "em",
-		"a", "", "ům", "a", loc_p, "y")
-	-- FIXME: paired body parts e.g. [[rameno]] "shoulder" (gen_p/loc_p 'ramenou/ramen'), [[koleno]] "knee"
-	-- (gen_p/loc_p 'kolenou/kolen'), [[prsa]] "chest, breasts" (plurale tantum; gen_p/loc_p 'prsou').
-	-- FIXME: Nouns with both neuter and feminine forms in the plural, e.g. [[lýtko]] "calf (of the leg)",
-	-- [[bedro]] "hip", [[vrátka]] "gate".
+decls["n"] = function(base, props)
+	-- Normal (strong) neuter nouns.
+	add_decl(base, props, "", "i", "s", "^^")
 end
 
 
-decls["semisoft-n"] = function(base, props)
-	-- Examples:
-	-- * In -ao: [[kakao]] "cacao", [[makao]] "Macao (gambling card game, see Wikipedia)", [[curaçao]] "curaçao (liqueur)"
-	--   (IJP gives gen pl 'curaç' but ASSC [https://slovnikcestiny.cz/heslo/cura%C3%A7ao/0/9967] says 'curaçí' as expected),
-	--   [[farao]] "faro (card game)"; also [[Makao]], [[Pathet Lao]], but these are sg-only
-	-- * In -eo: [[stereo]], [[rodeo]], [[video]], [[solideo]]; also [[Borneo]], [[Montevideo]], but these are sg-only
-	-- * In -io: [[rádio]] "radio", [[gramorádio]], [[studio]], [[scenário]], [[trio]], [[ážio]] (also spelled [[agio]]),
-	--   [[disážio]], [[folio]], [[vibrio]]; also [[arpeggio]], [[adagio]], [[capriccio]], [[solfeggio]] although
-	--   pronounced the Italian way without /i/; also [[Ohio]], [[Ontario]], [[Tokio]], but these are sg-only
-	-- * In -uo: only [[duo]]
-	-- * In -yo: only [[embryo]]
-	-- * In -eum: [[muzeum]], [[lyceum]], [[linoleum]], [[ileum]], etc.
-	-- * In -ium: [[atrium]] "atrium", most chemical elements, etc.
-	-- * In -uum: [[individuum]], [[kontinuum]], [[premenstruum]], [[residuum]], [[vakuum]]/[[vacuum]]
-	-- * In -yum: only [[baryum]] "barium" (none others in SSJC)
-	-- * In -ion: [[enkómion]] "encomium", [[eufonion]] (variant of [[eufonium]]), [[amnion]], [[ganglion]], [[gymnasion]],
-	--   [[scholion]], [[kritérion]] (rare for [[kritérium]]), [[onomatopoion]] (variant of [[onomatopoie]]),
-	--   [[symposion]], [[synedrion]]; also [[Byzantion]], but this is sg-only; most words in -ion are masculine
-	-- Hard in the singular, mostly soft in the plural. Those in -eo and -uo have alternative hard endings in the
-	-- dat/loc/ins pl, but not those in -eum or -uum. Those in -ao have only hard endings except in the gen pl. (There are
-	-- apparently no neuters in -eon; those in -eon or -yon e.g. [[akordeon]], [[neon]], [[nukleon]], [[karyon]], [[Lyon]]
-	-- are masculine.)
-	local dat_p, loc_p, ins_p
-	if rfind(base.actual_lemma, "ao$") then
-		dat_p, loc_p, ins_p = "ům", "ech", "y"
-	elseif rfind(base.actual_lemma, "[eu]o$") then
-		dat_p, loc_p, ins_p = {"ím", "ům"}, {"ích", "ech"}, {"i", "y"}
-	else
-		dat_p, loc_p, ins_p = "ím", "ích", "i"
-	end
-	add_decl(base, props, "a", "u", "*", "*", "u", "em",
-		"a", "í", dat_p, "a", loc_p, ins_p)
+decls["n-já"] = function(base, props)
+	-- [[tré]] "tree; wood"; [[hné]]/[[kné]] "knee"; [[fé]] "sheep; cattle; money"; the stem has previously been set
+	-- to not include final -é; fé has genitive fjár while the others have genitive in -és.
+	local gen = props.stem:find("f$") and "jár" or "és"
+	add_decl_with_nom_sg(base, props, "é%", "é%", "é", gen, "é%", "é%", "jám", {indef = "jáa", def = "já"})
 end
 
 
-decls["soft-n"] = function(base, props)
-	-- Examples: [[moře]] "sea", [[slunce]] "sun", [[srdce]] "heart", [[citoslovce]] "interjection", 
-	-- [[dopoledne]] "late morning", [[odpoledne]] "afternoon", [[hoře]] "sorrow, grief" (archaic or literary),
-	-- [[inhalace]] "inhalation", [[kafe]] "coffee", [[kanape]] "sofa", [[kutě]] "bed", [[Labe]] "Elbe (singular only)",
-	-- [[líce]] "cheek", [[lože]] "bed", [[nebe]] "sky; heaven", [[ovoce]] "fruit", [[pole]] "field", [[poledne]]
-	-- "noon", [[příslovce]] "adverb", [[pukrle]] "curtsey" (also t-n), [[vejce]] "egg" (NOTE: gen pl 'vajec').
-	--
-	-- Many nouns in -iště, with null genitive plural.
-	local gen_p = rfind(base.vowel_stem, "išť$") and "" or "í"
-	add_decl(base, props, "e", "i", "*", "*", "i", "em",
-		"e", gen_p, "ím", "e", "ích", "i")
-	-- NOTE: Some neuter words in -e indeclinable, e.g. [[Belize]], [[Chile]], [[garde]] "chaperone", [[karaoke]],
-	-- [[karate]], [[re]] "double raise (card games)", [[ukulele]], [[Zimbabwe]], [[zombie]] (pl. 'zombie' or
-	-- 'zombies')
-	-- some nearly indeclinable, e.g. [[finále]], [[chucpe]]; see mostly-indecl below
+decls["n-i"] = function(base, props)
+	-- Neuter nouns in -i, e.g. [[kvæði]] "poem, song". Nouns in -ki and -gi e.g. [[ríki]] "state, kingdom" and [[engi]]
+	-- "meadow" have j-insertion by default, which is set elsewhere.
+	add_decl(base, props, "i", "i", "is", "i")
 end
 
 
-decls["í-n"] = function(base, props)
-	-- [[nábřeží]] "waterfront" and a zillion others; also [[úterý]] "Tuesday".
-	-- NOTE: The stem ends in -í/-ý.
-	add_decl(base, props, "", "", "*", "*", "", "m",
-		"", "", "m", "", "ch", "mi")
-end
-
-
-decls["n-n"] = function(base, props)
-	-- E.g. [[břemeno]] "burden" (also [[břímě]], use 'decllemma:'); [[písmeno]] "letter"; [[plemeno]] "breed";
-	-- [[rameno]] "shoulder" (also [[rámě]], use 'decllemma:'); [[semeno]] "seed" (also [[sémě]], [[símě]], use
-	-- 'decllemma:'); [[temeno]] "crown (of the head)"; [[vemeno]] "udder"
-	add_decl(base, props, {"a", "e"}, {"i", "u"}, "*", "*", {"ě", "i", "u"}, "em",
-		"a", "", "ům", "a", "ech", "y")
-end
-
-
-decls["tstem-n"] = function(base, props)
-	-- E.g. [[batole]] "toddler", [[čuně]] "pig", [[daňče]] "fallow deer fawn", [[děvče]] "girl", [[ďouče]] "girl"
-	-- (dialectal), [[dítě]] "child" (NOTE: feminine in the plural [[děti]], declined as a feminine i-stem), [[dvojče]]
-	-- "twin", [[hádě]] "young snake", [[house]] "gosling", [[hříbě]] "foal" (pl. hříbata), [[jehně]] "lamb", [[kavče]]
-	-- "young jackdaw; chough", [[káče]] "duckling", [[káně]] "buzzard chick" (NOTE: also feminine meaning "buzzard"),
-	-- [[klíště]] "tick", [[kose]] "blackbird chick" (rare), [[kuře]] "chick (young chicken)", [[kůzle]]
-	-- "kid (young goat)", [[lišče]] "fox cub", [[lvíče]] "lion cub", [[medvídě]] "bear cub", [[mládě]] "baby animal",
-	-- [[morče]] "guinea pig", [[mrně]] "toddler", [[nemluvně]] "infant", [[novorozeně]] "newborn", [[orle]] "eaglet",
-	-- [[osle]] "donkey foal", [[pachole]] "boy (obsolete); page, squire", [[páže]] "page, squire", [[podsvinče]]
-	-- "suckling pig", [[prase]] "pig", [[prtě]] "toddler", [[ptáče]] "chick (young bird)",
-	-- [[robě]] "baby, small child", [[saranče]] "locust" (NOTE: also feminine), [[sele]] "piglet",
-	-- [[slůně]] "baby elephant", [[škvrně]] "toddler", [[štěně]] "puppy", [[tele]] "calf", [[velbloudě]] "camel colt",
-	-- [[vlče]] "wolf cub", [[vnouče]] "grandchild", [[vyžle]] "small hunting dog; slender person",
-	-- [[zvíře]] "animal, beast".
-	--
-	-- Some referring to inanimates, e.g. [[doupě]] "lair" (pl. doupata), [[koště]]/[[chvoště]] "broom", [[paraple]]
-	-- "umbrella", [[poupě]] "bud", [[pukrle]] "curtsey" (also soft-n), [[rajče]] "tomato", [[šuple]] "drawer",
-	-- [[varle]] "testicle", [[vole]] "craw (of a bird); goiter".
-	add_decl(base, props, "ete", "eti", "*", "*", "eti", "etem",
-		"ata", "at", "atům", "ata", "atech", "aty")
-end
-
-
-decls["ma-n"] = function(base, props)
-	-- E.g. [[drama]] "drama", [[dogma]] "dogma", [[aneurysma]]/[[aneuryzma]] "aneurysm", [[dilema]] "dilemma",
-	-- [[gumma]] "gumma" (non-cancerous syphilitic growth), [[klima]] "climate", [[kóma]] "coma", [[lemma]] "lemma",
-	-- [[melisma]] "melisma", [[paradigma]] "paradigm", [[plasma]]/[[plazma]] "plasma [partly ionized gas]"
-	-- (note [[plasma]]/[[plazma]] "blood plasma" is feminine), [[revma]] "rheumatism", [[schéma]] "schema, diagram",
-	-- [[schisma]]/[[schizma]] "schism", [[smegma]] "smegma", [[sofisma]]/[[sofizma]] "sophism", [[sperma]] "sperm",
-	-- [[stigma]] "stigma", [[téma]] "theme", [[trauma]] "trauma", [[trilema]] "trilemma", [[zeugma]] "zeugma".
-	add_decl(base, props, "atu", "atu", "*", "*", "atu", "atem",
-		"ata", "at", "atům", "ata", "atech", "aty")
+decls["weak-n"] = function(base, props)
+	-- "Weak" neuter nouns in -a, e.g. [[auga]] "eye", [[hjarta]] "heart". U-mutation occurs in the nom/acc/dat pl but
+	-- doesn't need to be indicated explicitly because the ending begins with u-.
+	add_decl(base, props, "a", "a", "a", "u", nil, nil, "na")
 end
 
 
@@ -2357,7 +2262,8 @@ end
 -- vowel), which is used by determine_stems(). In some cases (specifically with certain foreign nouns), we set
 -- base.lemma to a new value; this is as if the user specified 'decllemma:'.
 local function determine_declension(base)
-	local stem, contracted
+	local stem
+	local default_mutations = {}
 	-- Determine declension
 	if base.gender == "m" then
 		stem = rmatch(base.lemma, "^(.*á)r$")
@@ -2389,17 +2295,54 @@ local function determine_declension(base)
 		if not stem then
 			stem = rmatch(base.lemma, "^(.*)i$")
 			if stem then
-				base.decl = "strong-f-i"
+				base.decl = "f-i"
 			end
 		end
 		if not stem then
 			stem = rmatch(base.lemma, "^(.*)ur$")
 			if stem then
-				base.decl = "strong-f-ur"
+				base.decl = "f-ur"
 			end
 		end
 		if not stem then
-			base.decl = "strong-f"
+			stem = rmatch(base.lemma, "^(.*)ung$")
+			if stem then
+				base.decl = "f-ung"
+			end
+		end
+		if not stem then
+			stem = rmatch(base.lemma, "^(.*)ung$")
+			if stem then
+				base.decl = "f-ing"
+			end
+		end
+		if not stem then
+			stem = rmatch(base.lemma, "^(.*[áóúÁÓÚ])$")
+			if stem then
+				base.decl = "f-long-vowel"
+			end
+		end
+		if not stem then
+			stem = rmatch(base.lemma, "^(.*[ýæÝÆ])r$")
+			if stem then
+				-- [[kýr]] "cow", [[sýr]] "sow (archaic)", [[ær]] "ewe" and compounds
+				base.decl = "f-long-umlaut-vowel-r"
+			end
+		end
+		if not stem then
+			stem = rmatch(base.lemma, "^(.*[^aA]un)$")
+			if stem then
+				-- [[pöntun]] "order (in commerce)"; [[verslun]] "trade, business; store, shop"; [[efun]] "doubt";
+				-- [[bötun]] "improvement"; [[örvun]] "encouragement; stimulation" (pl. örvanir); etc.
+				base.decl = "f"
+				default_mutations.unumut = "unuumut"
+			end
+		end
+		if not stem then
+			stem = base.lemma
+			base.decl = "f"
+			-- FIXME! Somehow if the user specifies v-infix, it should prevent unumut from happening.
+			default_mutations.unumut = "unumut"
 		end
 
 
