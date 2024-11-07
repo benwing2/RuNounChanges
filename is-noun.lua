@@ -384,6 +384,8 @@ local function add_slotval(base, slot_prefix, slot, props, endings, clitics, end
 				end
 			end
 
+			local stems
+
 			-- Now compute the appropriate stems to which the ending and clitic are added.
 			if mut_in_effect == "i" then
 
@@ -619,8 +621,8 @@ local function process_slot_overrides(base, do_slot)
 						if slot == "acc_s" and form == "" then
 							form = "*"
 						end
-						for _, stems in ipairs(base.stem_sets) do
-							add(base, slot, stems, form, combined_notes)
+						for _, props in ipairs(base.prop_sets) do
+							add(base, slot, props, form, combined_notes)
 						end
 					end
 				end
@@ -737,7 +739,7 @@ local decls = {}
 
 
 decls["m"] = function(base, props)
-	local gen = ...
+	local dat = ...
 	add_decl(base, props, "", dat, "s", "ar")
 end
 
@@ -971,11 +973,11 @@ local function set_pron_defaults(base)
 end
 
 
-local function determine_pronoun_stems(base)
-	if base.stem_sets then
+local function determine_pronoun_props(base)
+	if base.prop_sets then
 		error("Reducible and vowel alternation specs cannot be given with pronouns")
 	end
-	base.stem_sets = {{vowel_stem = "", nonvowel_stem = ""}}
+	base.prop_sets = {{vowel_stem = "", nonvowel_stem = ""}}
 	base.decl = "pron"
 end
 
@@ -1043,12 +1045,12 @@ local function set_num_defaults(base)
 end
 
 
-local function determine_numeral_stems(base)
-	if base.stem_sets then
+local function determine_numeral_props(base)
+	if base.prop_sets then
 		error("Reducible and vowel alternation specs cannot be given with numerals")
 	end
 	local stem = rmatch(base.lemma, "^(.*)" .. com.vowel_c .. "$") or base.lemma
-	base.stem_sets = {{vowel_stem = stem, nonvowel_stem = stem}}
+	base.prop_sets = {{vowel_stem = stem, nonvowel_stem = stem}}
 	base.decl = "num"
 end
 
@@ -1066,15 +1068,15 @@ decls["num"] = function(base, props)
 		add_pl_only_decl(base, props, nil, nil, nil, nil, is_three and "ema" or "ma",
 			"[when modifying a form ending in ''-ma'']")
 	elseif base.lemma == "devět" then
-		add_pl_only_decl(base, "", "devíti", "devíti", "*", "devíti", "devíti", stems.footnotes)
+		add_pl_only_decl(base, "", "devíti", "devíti", "*", "devíti", "devíti", props.footnotes)
 	elseif base.lemma == "sta" or base.lemma == "stě" or base.lemma == "set" then
-		add_pl_only_decl(base, "", "set", "stům", "*", "stech", "sty", stems.footnotes)
+		add_pl_only_decl(base, "", "set", "stům", "*", "stech", "sty", props.footnotes)
 	elseif rfind(base.lemma, "[is]et$") then
 		-- [[deset]] and all numbers ending in -cet ([[dvacet]], [[třicet]], [[čtyřicet]] and inverted compound
 		-- numerals such as [[pětadvacet]] "25" and [[dvaatřicet]] "32")
 		local begin = rmatch(base.lemma, "^(.*)et$")
 		add_pl_only_decl(base, props, "i", "i", "*", "i", "i")
-		add_pl_only_decl(base, begin, "íti", "íti", "*", "íti", "íti", stems.footnotes)
+		add_pl_only_decl(base, begin, "íti", "íti", "*", "íti", "íti", props.footnotes)
 	elseif rfind(base.lemma, "oje$") then
 		-- [[dvoje]], [[troje]]
 		-- stem is without -e
@@ -1107,12 +1109,12 @@ local function set_det_defaults(base)
 end
 
 
-local function determine_determiner_stems(base)
-	if base.stem_sets then
+local function determine_determiner_props(base)
+	if base.prop_sets then
 		error("Reducible and vowel alternation specs cannot be given with determiners")
 	end
 	local stem = rmatch(base.lemma, "^(.*)" .. com.vowel_c .. "$") or base.lemma
-	base.stem_sets = {{vowel_stem = stem, nonvowel_stem = stem}}
+	base.prop_sets = {{vowel_stem = stem, nonvowel_stem = stem}}
 	base.decl = "det"
 end
 
@@ -1366,7 +1368,8 @@ Return value is an object of the form
 
 {
   overrides = {
-	SLOT = {OVERRIDE, OVERRIDE, ...},
+	SLOT = OVERRIDE,
+	SLOT = OVERRIDE,
 	...
   }, -- where SLOT is the actual name of the slot, such as "ind_gen_s" (NOT the slot name as specified by the user,
 		which would be just "gen" for "ind_gen_s") and OVERRIDE is
@@ -1375,8 +1378,8 @@ Return value is an object of the form
 		{form = FORM, footnotes = FOOTNOTES} as in the `forms` table ("-" means to suppress the slot entirely and is
 		signaled by "--" as the form value); `bare` means the override(s) coming before a slash; `def` means the
 		override(s) coming after a slash, which are not allowed for definite slots
-  gens = {GEN_SG_SPEC, GEN_SG_SPEC, ...}, same form as OVERRIDE above
-  pls = {PL_SPEC, PL_SPEC, ...}, same form as OVERRIDE above
+  gens = nil or OVERRIDE, same form as OVERRIDE above
+  pls = nil or OVERRIDE, same form as OVERRIDE above
   forms = {}, -- forms for a single spec alternant; see `forms` below
   props = {
 	PROP = true,
@@ -1390,9 +1393,9 @@ Return value is an object of the form
   adj = true, -- may be missing; indicates that the term declines like an adjective (NOT IMPLEMENTED YET)
   decllemma = nil or "DECLLEMMA", -- decline like the specified lemma
   declgender = nil or "DECLGENDER", -- decline like the specified gender
-  stem = {FORMOBJ, FORMOBJ, ...}, -- override the stem(s); see above for FORMOBJ
-  vstem = {FORMOBJ, FORMOBJ, ...}, -- override the stem(s) used before vowel-initial endings; see above for FORMOBJ
-  plstem = {FORMOBJ, FORMOBJ, ...}, -- override the plural stem(s); see above for FORMOBJ
+  stem = nil or "STEM", -- override the stem; may have # (= lemma) or ## (= lemma minus -ur or -r)
+  vstem = nil or "STEM", -- override the stem used before vowel-initial endings; same format as `stem`
+  plstem = nil or "STEM", -- override the plural stem; see above for FORMOBJ
   footnotes = nil or {"FOOTNOTE", "FOOTNOTE", ...}, -- alternant-level footnotes, specified using `.[footnote]`, i.e.
 													   a footnote by itself
   addnote_specs = {
@@ -1533,12 +1536,12 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename, proper_
 				table.insert(base.addnote_specs, {slot_specs = slot_specs, footnotes = spec_and_footnotes})
 			elseif ulen(part) > 3 and cases[usub(part, 1, 3)] or (
 				ulen(part) > 6 and usub(part, 1, 3) == "def" and cases[usub(part, 4, 6)]) then
-				local slots, overrides = parse_override(dot_separated_group, parse_err)
+				local slots, override = parse_override(dot_separated_group, parse_err)
 				for _, slot in ipairs(slots) do
 					if base.overrides[slot] then
 						error(("Two overrides specified for slot '%s'"):format(slot))
 					else
-						base.overrides[slot] = overrides
+						base.overrides[slot] = override
 					end
 				end
 			elseif part:find("^u[u_]*mut") then
@@ -1559,6 +1562,10 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename, proper_
 				parse_mutation_spec("j", {"j", "-j"})
 			elseif part:find("^%-?v") then
 				parse_mutation_spec("v", {"v", "-v"})
+			elseif #dot_separated_group > 1 then
+				parse_err(
+					("Footnotes only allowed with slot overrides, negatable indicators and by themselves: '%s'"):
+					format(table.concat(dot_separated_group)))
 			elseif part:find("^decllemma%s*:") or part:find("^declgender%s*:") then
 				local field, value = part:match("^(decl[a-z]+)%s*:%s*(.+)$")
 				if not value then
@@ -1566,10 +1573,6 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename, proper_
 				end
 				if base[field] then
 					parse_err(("Can't specify '%s:' twice"):format(field))
-				end
-				if dot_separated_group[2] then
-					parse_err(("Footnotes not allowed with '%s': '%s'"):format(
-						field, table.concat(dot_separated_group)))
 				end
 				base[field] = value
 			elseif rfind(part, ":") then
@@ -1592,26 +1595,7 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename, proper_
 						parse_err(("Can't specify '%s:' twice"):format(spec))
 					end
 				end
-				base[spec] = {}
-				dot_separated_group[1] = value
-				local colon_separated_groups = iut.split_alternating_runs_and_strip_spaces(dot_separated_group, ":")
-				for _, colon_separated_group in ipairs(colon_separated_groups) do
-					local form = colon_separated_group[1]
-					if form == "" then
-						parse_err("Blank stem not allowed")
-					end
-					local new_spec = {form = form, footnotes = fetch_footnotes(colon_separated_group, parse_err)}
-					for _, existing_spec in ipairs(base[specs]) do
-						if existing_spec.form == new_spec.form then
-							parse_err(("Duplicate stem '%s' for '%s:'"):format(new_spec.form, spec))
-						end
-					end
-					table.insert(base[spec], new_spec)
-				end
-			elseif #dot_separated_group > 1 then
-				parse_err(
-					("Footnotes only allowed with slot/stem overrides, negatable indicators and by themselves: '%s'"):
-					format(table.concat(dot_separated_group)))
+				base[spec] = value
 			elseif part == "sg" or part == "pl" or part == "both" then
 				if base.number then
 					if base.number ~= part then
@@ -1735,14 +1719,14 @@ end
 -- For a plural-only lemma, synthesize a likely singular lemma. It doesn't have to be
 -- theoretically correct as long as it generates all the correct plural forms.
 local function synthesize_singular_lemma(base)
-	if not base.stem_sets then
-		base.stem_sets = {{}}
+	if not base.prop_sets then
+		base.prop_sets = {{}}
 	end
 
 	local lemma_determined
 	-- Loop over all stem sets in case the user specified multiple ones (e.g. '*,-*'). If we try to reconstruct
 	-- different lemmas for different stem sets, we'll throw an error below.
-	for _, stems in ipairs(base.stem_sets) do
+	for _, props in ipairs(base.prop_sets) do
 		local stem, lemma
 		while true do
 			if base.indecl then
@@ -1983,23 +1967,32 @@ local function synthesize_adj_lemma(base)
 	end
 
 	-- Now set the stem sets if not given.
-	for _, stems in ipairs(base.stem_sets) do
+	for _, props in ipairs(base.prop_sets) do
 		-- Set the stems.
-		stems.vowel_stem = stem
-		stems.nonvowel_stem = stem
+		props.vowel_stem = stem
+		props.nonvowel_stem = stem
 	end
 end
 
 
 -- Determine the declension based on the lemma, gender and number. The declension is set in base.decl. In the process,
 -- we set either base.vowel_stem (if the lemma ends in a vowel) or base.nonvowel_stem (if the lemma does not end in a
--- vowel), which is used by determine_stems(). In some cases (specifically with certain foreign nouns), we set
+-- vowel), which is used by determine_props(). In some cases (specifically with certain foreign nouns), we set
 -- base.lemma to a new value; this is as if the user specified 'decllemma:'.
 local function determine_declension(base)
 	local stem
 	local default_mutations = {}
 	-- Determine declension
 	if base.gender == "m" then
+		if not stem then
+			stem = rmatch(base.lemma, "^(.*aur)$")
+			if stem then
+				-- [[maur]] "ant", [[aur]] "loam, mud", [[gaur]] "ruffian", [[paur]] "devil; enmity",
+				-- [[saur]] "dirt; excrement", [[staur]] "post", [[ljósastaur]] "lamp post"
+				base.decl = "m"
+			end
+		end
+		stem = rmatch(base.lemma, "^(.*á)r$")
 		stem = rmatch(base.lemma, "^(.*á)r$")
 		if stem then
 			-- [[nár]] "corpse", [[aur]] "loam, mud", [[gaur]] "ruffian", [[paur]] "devil; enmity",
@@ -2011,14 +2004,6 @@ local function determine_declension(base)
 			-- [[maur]] "ant", [[aur]] "loam, mud", [[gaur]] "ruffian", [[paur]] "devil; enmity",
 			-- [[saur]] "dirt; excrement", [[staur]] "post", [[ljósastaur]] "lamp post"
 			base.decl = "m-ir"
-		end
-		if not stem then
-			stem = rmatch(base.lemma, "^(.*aur)$")
-			if stem then
-				-- [[maur]] "ant", [[aur]] "loam, mud", [[gaur]] "ruffian", [[paur]] "devil; enmity",
-				-- [[saur]] "dirt; excrement", [[staur]] "post", [[ljósastaur]] "lamp post"
-				base.decl = "m"
-			end
 		end
 		-- FIXME
 	elseif base.gender == "f" then
@@ -2319,14 +2304,12 @@ end
 -- and plural. We assume that one of base.vowel_stem or base.nonvowel_stem has been
 -- set in determine_declension(), depending on whether the lemma ends in
 -- a vowel. We construct all the rest given the reducibility, vowel alternation spec and
--- any explicit stems given. We store the determined stems inside of the stem-set objects
--- in `base.stem_sets`, meaning that if the user gave multiple reducible or vowel-alternation
+-- any explicit stems given. We store the determined stems inside of the property-set objects
+-- in `base.prop_sets`, meaning that if the user gave multiple reducible or vowel-alternation
 -- patterns, we will compute multiple sets of stems. The reason is that the stems may vary
 -- depending on the reducibility and vowel alternation.
 local function determine_props(base)
-	if not base.prop_sets then
-		base.prop_sets = {{}}
-	end
+	base.prop_sets = {}
 
 	-- Now determine all the props for each stem set.
 	for _, props in ipairs(base.prop_sets) do
@@ -2353,13 +2336,53 @@ local function determine_props(base)
 end
 
 
+local function determine_default_masc_dat_sg(base, props)
+	-- We only need to compute the default dative singular for regular masculines (not masculines in -ir, -ó, -i, etc.).
+	-- These other types have specific defaults for the entire type.
+	if base.decl ~= "m" or base.number == "pl" then
+		return
+	end
+	local default_dat_sg
+	-- FIXME: Probably won't work with definite-only lemmas.
+	if base.overrides.ind_dat_s and base.overrides.ind_dat_s.def then
+		-- Override specified in INDEF/DEF form.
+		default_dat_sg = false -- no default
+	else
+		local stem = props.stem.form
+		local first_letter = usub(stem, 1, 1)
+		local second_letter = usub(stem, 2, 2)
+		if stem:find("[iu]ng$") then
+			default_dat_sg = {indef = "i", def = ""}
+		elseif stem:find("x$") or rfind(stem, com.cons_c .. com.cons_c .. "$") then
+			default_dat_sg = "i"
+		elseif not base.dem and not rfind(stem, com.vowel_c .. "$") and ulower(first_letter) ~= first_letter and
+			uupper(second_letter) ~= second_letter then
+			-- proper noun whose stem does not end in a vowel
+			default_dat_sg = "i"
+		elseif props.con.form == "con" then
+			default_dat_sg = "i"
+		elseif rfind(stem, com.vowel_c .. "r?$") then
+			default_dat_sg = ""
+		elseif base.overrides.ind_dat_s then
+			error("Saw dative singular override of just the indefinite ending, but requires both the indefinite and " ..
+				"definite endings of the dative singular in the form 'datINDEF/DEF'")
+		else
+			error("Most masculine nouns must explicitly specify the indefinite and definite endings of the dative " ..
+				"singular using an override of the form 'datINDEF/DEF'; exceptions are nouns in -ir, -ó or -i; proper " ..
+				"nouns; plural-only nouns; nouns with stem contraction; nouns whose stem ends in two or more " ..
+				"consonants; and nouns whose stem ends in a vowel or vowel + r")
+		end
+	end
+	props.default_dat_sg = default_dat_sg
+end
+
 local function detect_indicator_spec(base)
 	if base.pron then
-		determine_pronoun_stems(base)
+		determine_pronoun_props(base)
 	elseif base.det then
-		determine_determiner_stems(base)
+		determine_determiner_props(base)
 	elseif base.num then
-		determine_numeral_stems(base)
+		determine_numeral_props(base)
 	elseif base.adj then
 		process_declnumber(base)
 		synthesize_adj_lemma(base)
@@ -2368,7 +2391,7 @@ local function detect_indicator_spec(base)
 			synthesize_singular_lemma(base)
 		end
 		determine_declension(base)
-		determine_stems(base)
+		determine_props(base)
 	end
 end
 
@@ -2583,7 +2606,7 @@ end
 
 
 local function decline_noun(base)
-	for _, stems in ipairs(base.stem_sets) do
+	for _, props in ipairs(base.prop_sets) do
 		if not decls[base.decl] then
 			error("Internal error: Unrecognized declension type '" .. base.decl .. "'")
 		end
@@ -2688,7 +2711,7 @@ local function compute_categories_and_annotation(alternant_multiword_spec)
 			-- [[:Category:Icelandic masculine nouns]], [[:Icelandic animate nouns]] are auto-inserted.
 			insert(actual_genanim .. " " .. alternant_multiword_spec.plpos)
 		end
-		for _, stems in ipairs(base.stem_sets) do
+		for _, props in ipairs(base.prop_sets) do
 			local props = declprops[base.decl]
 			local cats = props.cat
 			if type(cats) == "function" then
@@ -2725,10 +2748,10 @@ local function compute_categories_and_annotation(alternant_multiword_spec)
 			m_table.insertIfNot(decldescs, trim(desc))
 
 			local vowelalt
-			if stems.vowelalt == "quant" then
+			if props.vowelalt == "quant" then
 				vowelalt = "quant-alt"
 				insert("nouns with quantitative vowel alternation")
-			elseif stems.vowelalt == "quant-ě" then
+			elseif props.vowelalt == "quant-ě" then
 				vowelalt = "í-ě-alt"
 				insert("nouns with í-ě alternation")
 			end
@@ -2749,7 +2772,7 @@ local function compute_categories_and_annotation(alternant_multiword_spec)
 				m_table.insertIfNot(irregs, "irreg-stem")
 				insert("nouns with irregular stem")
 			end
-			m_table.insertIfNot(stemspecs, stems.vowel_stem)
+			m_table.insertIfNot(stemspecs, props.vowel_stem)
 		end
 	end
 	local key_entry = alternant_multiword_spec.first_noun or 1
