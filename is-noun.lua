@@ -30,6 +30,7 @@ FIXME:
 3. Support adjectivally-declined terms.
 4. Support @ for built-in irregular lemmas.
 5. Somehow if the user specifies v-infix, it should prevent default unumut from happening in strong feminines.
+6. Def acc pl should ignore -u ending in indef acc pl.
 ]=]
 
 local lang = require("Module:languages").getByCode("is")
@@ -189,27 +190,37 @@ end
 -- if needed.
 --
 -- The properties in `props` are:
--- * Stems (each stem should be in general list form; see [[Module:inflection utilities]]);
--- ** `stems`: The basic stem(s). May be overridden by more specific variants.
--- ** `nonvstems`: The stem(s) used when the ending is null or starts with a consonant, unless overridden by a more
---    specific variant. Defaults to `stems`.
--- ** `umut_nonvstems`: The stem(s) used when the ending is null or starts with a consonant and u-mutation is in effect,
---    unless overridden by a more specific variant. Defaults to `nonvstems`.
--- ** `imut_nonvstems`: The stem(s) used when the ending is null or starts with a consonant and i-mutation is in effect.
+-- * Stems (each stem is either a string or a form object, i.e. an object with `form` and `footnotes` properties; see
+--   [[Module:inflection utilities]]; stems in general may be missing, i.e. nil, unless otherwise specified, and default
+--   to more general variants):
+-- ** `stem`: The basic stem. Always set. May be overridden by more specific variants.
+-- ** `nonvstem`: The stem used when the ending is null or starts with a consonant, unless overridden by a more
+--    specific variant. Defaults to `stem`. Not currently used, but could be if e.g. a user stem override `nonvstem:...`
+--    were supported.
+-- ** `umut_nonvstem`: The stem used when the ending is null or starts with a consonant and u-mutation is in effect,
+--    unless overridden by a more specific variant. Defaults to `nonvstem`. Will only be present when the result of
+--    u-mutation is different from the stem to which u-mutation is applied.
+-- ** `imut_nonvstem`: The stem used when the ending is null or starts with a consonant and i-mutation is in effect.
 --    If i-mutation is in effect, this should always be specified (otherwise an internal error will occur); hence it has
---    no default.
--- ** `vstems`: The stem(s) used when the ending starts with a vowel, unless overridden by a more specific variant.
---    Defaults to `stems`.
--- ** `umut_vstems`: The stem(s) used when the ending starts with a vowel and u-mutation is in effect. Defaults to
---    `vstems`.
--- ** `imut_vstems`: The stem(s) used when the ending starts with a vowel and i-mutation is in effect. If i-mutation is
---    in effect, this should always be specified (otherwise an internal error will occur); hence it has no default.
--- ** `null_defvstems`: The stem(s) used when the ending is null and is followed by a definite ending that begins with a
---    vowel, unless overridden by a more specific variant. Defaults to `nonvstems`. This is normally set when `defcon`
+--    no default. Note that i-mutation is only in effect when either (a) `imut` or `unimut` was specified; (b) a
+--    user-specified override is given that begins with a single ^ (indicating i-mutation); or (c) a declension type is
+--    in effect that contains default endings beginning with a single ^ (examples are `f-long-vowel` for lemmas in -ó
+--    and `f-long-umlaut-vowel-r`).
+-- ** `vstem`: The stem used when the ending starts with a vowel, unless overridden by a more specific variant. Defaults
+--    to `stem`. Will be specified when contraction is in effect or the user specified `vstem:...`.
+-- ** `umut_vstem`: The stem(s) used when the ending starts with a vowel and u-mutation is in effect. Defaults to
+--    `vstem`. Note that u-mutation applies to the contracted stem if both u-mutation and contraction are in effect.
+--    Will only be present when the result of u-mutation is different from the stem to which u-mutation is applied.
+-- ** `imut_vstem`: The stem(s) used when the ending starts with a vowel and i-mutation is in effect. If i-mutation is
+--    in effect, this should always be specified (otherwise an internal error will occur); hence it has no default. Note
+--    that i-mutation applies to the contracted stem if both i-mutation and contraction are in effect.
+-- ** `null_defvstem`: The stem(s) used when the ending is null and is followed by a definite ending that begins with a
+--    vowel, unless overridden by a more specific variant. Defaults to `nonvstem`. This is normally set when `defcon`
 --    is specified.
--- ** `umut_null_defvstems`: The stem(s) used when the ending is null and is followed by a definite ending that begins
---    with a vowel, and u-mutation is in effect. Defaults to `umut_nonvstems`. This is normally set when `defcon` is
---    specified and u-mutation is needed, as in the nom/acc pl of neuter [[mastur]] "mast".
+-- ** `umut_null_defvstem`: The stem(s) used when the ending is null and is followed by a definite ending that begins
+--    with a vowel, and u-mutation is in effect. Defaults to `umut_nonvstem`. This is normally set when `defcon` is
+--    specified and u-mutation is needed, as in the nom/acc pl of neuter [[mastur]] "mast". Will only be present when
+--    the result of u-mutation is different from the stem to which u-mutation is applied.
 -- * Other properties:
 -- ** `jinfix`: If present, either "" or "j". Inserted between the stem and ending when the ending begins with a vowel
 --    other than "i". Note that j-infixes don't apply to ending overrides.
@@ -384,30 +395,30 @@ local function add_slotval(base, slot_prefix, slot, props, endings, clitics, end
 				end
 			end
 
-			local stems
+			local stem_in_effect
 
-			-- Now compute the appropriate stems to which the ending and clitic are added.
+			-- Now compute the appropriate stem to which the ending and clitic are added.
 			if mut_in_effect == "i" then
 
 				-- NOTE: It appears that imut and defcon never co-occur; otherwise we'd need to flesh out the set of
 				-- stems to include i-mutation versions of defcon stems, similar to what we do for u-mutation.
 				if is_vowel_ending then
-					if not stems.imut_vstems then
-						interr("i-mutation in effect and ending begins with a vowel but '.imut_vstems' not defined")
+					if not props.imut_vstem then
+						interr("i-mutation in effect and ending begins with a vowel but '.imut_vstem' not defined")
 					end
-					stems = stems.imut_vstems
+					stem_in_effect = props.imut_vstem
 				else
-					if not stems.imut_nonvstems then
-						interr("i-mutation in effect and ending does not begin with a vowel but '.imut_nonvstems' not defined")
+					if not props.imut_nonvstem then
+						interr("i-mutation in effect and ending does not begin with a vowel but '.imut_nonvstem' not defined")
 					end
-					stems = stems.imut_nonvstems
+					stem_in_effect = props.imut_nonvstem
 				end
 			else
 				-- Careful with the following logic; it is written carefully and should not be changed without a
 				-- thorough understanding of its functioning.
 				local has_umut = mut_in_effect == "u"
 				-- First, if the ending is null, and we have a vowel-initial definite-article clitic, use the special
-				-- 'defcon' stems if available. We do this even if the ending is "*", which normally means to use the
+				-- 'defcon' stem if available. We do this even if the ending is "*", which normally means to use the
 				-- lemma regardless (which avoids problems with e.g. thinking that the masculine singular nominative
 				-- ending -ur would trigger u-mutation, which will happen if we construct the nominative singular from
 				-- the stem instead of just using the lemma directly).  The reason for this is that when 'defcon' is
@@ -415,33 +426,33 @@ local function add_slotval(base, slot_prefix, slot, props, endings, clitics, end
 				-- [[mastur]] "mast"; here, using the lemma would incorrectly produce #[[masturið]].
 				if (ending == "" or ending == "*") and is_vowel_clitic then
 					if has_umut then
-						stems = stems.umut_null_defvstems
+						stem_in_effect = props.umut_null_defvstem
 					else
-						stems = stems.null_defvstems
+						stem_in_effect = props.null_defvstem
 					end
 				end
-				-- If the stems were not set above and the ending is "*", it means to use the lemma as the form directly
+				-- If the stem was not set above and the ending is "*", it means to use the lemma as the form directly
 				-- (before adding any definite clitic) rather than try to construct the form from a stem and ending. See
 				-- the comment above for why we want to do this.
-				if not stems and ending == "*" then
-					stems = base.actual_lemma
+				if not stem_in_effect and ending == "*" then
+					stem_in_effect = base.actual_lemma
 					ending = ""
 				end
-				-- If the stems are still unset, then use the vowel or non-vowel stems if available. When u-mutation is
-				-- active, we first check for u-mutated versions of the vowel or non-vowel stems before falling back to
-				-- the regular vowel or non-vowel stems. Note that an expression like `has_umut and stems.umut_vstems or
-				-- stems.vstems` here is NOT equivalent to an if-else or ternary operator expression because if
-				-- `has_umut` is true and `umut_vstems` is missing, it will still fall back to `vstems` (which is what
-				-- we want).
-				if not stems then
+				-- If the stem is still unset, then use the vowel or non-vowel stem if available. When u-mutation is
+				-- active, we first check for the u-mutated version of the vowel or non-vowel stem before falling back
+				-- to the regular vowel or non-vowel stem. Note that an expression like `has_umut and stems.umut_vstem
+				-- or props.vstem` here is NOT equivalent to an if-else or ternary operator expression because if
+				-- `has_umut` is true and `umut_vstem` is missing, it will still fall back to `vstem` (which is what we
+				-- want).
+				if not stem_in_effect then
 					if is_vowel_ending then
-						stems = has_umut and stems.umut_vstems or stems.vstems
+						stem_in_effect = has_umut and props.umut_vstem or props.vstem
 					else
-						stems = has_umut and stems.umut_nonvstems or stems.nonvstems
+						stem_in_effect = has_umut and props.umut_nonvstem or props.nonvstem
 					end
 				end
-				-- Finally, fall back to the basic stems, which are always defined.
-				stems = stems or stems.stems
+				-- Finally, fall back to the basic stem, which is always defined.
+				stem_in_effect = stem_in_effect or props.stem
 			end
 
 			local infix, infix_footnotes
@@ -927,6 +938,7 @@ end
 
 
 local function set_pron_defaults(base)
+	-- FIXME: Update for Icelandic
 	if base.gender or base.lemma ~= "ona" and base.number or base.animacy then
 		error("Can't specify gender, number or animacy for pronouns")
 	end
@@ -974,6 +986,7 @@ end
 
 
 local function determine_pronoun_props(base)
+	-- FIXME: Update for Icelandic
 	if base.prop_sets then
 		error("Reducible and vowel alternation specs cannot be given with pronouns")
 	end
@@ -983,6 +996,7 @@ end
 
 
 decls["pron"] = function(base, props)
+	-- FIXME: Update for Icelandic
 	local after_prep_footnote =	"[after a preposition]"
 	local animate_footnote = "[animate]"
 	if base.lemma == "kdo" then
@@ -1028,6 +1042,7 @@ end
 
 
 local function set_num_defaults(base)
+	-- FIXME: Update for Icelandic
 	if base.gender or base.number or base.animacy then
 		error("Can't specify gender, number or animacy for numeral")
 	end
@@ -1046,6 +1061,7 @@ end
 
 
 local function determine_numeral_props(base)
+	-- FIXME: Update for Icelandic
 	if base.prop_sets then
 		error("Reducible and vowel alternation specs cannot be given with numerals")
 	end
@@ -1056,6 +1072,7 @@ end
 
 
 decls["num"] = function(base, props)
+	-- FIXME: Update for Icelandic
 	local after_prep_footnote =	"[after a preposition]"
 	if base.lemma == "dva" or base.lemma == "dvě" then
 		-- in compound numbers; stem is dv-
@@ -1092,6 +1109,7 @@ end
 
 
 local function set_det_defaults(base)
+	-- FIXME: Update for Icelandic
 	if base.gender or base.number or base.animacy then
 		error("Can't specify gender, number or animacy for determiner")
 	end
@@ -1110,6 +1128,7 @@ end
 
 
 local function determine_determiner_props(base)
+	-- FIXME: Update for Icelandic
 	if base.prop_sets then
 		error("Reducible and vowel alternation specs cannot be given with determiners")
 	end
@@ -1120,6 +1139,7 @@ end
 
 
 decls["det"] = function(base, props)
+	-- FIXME: Update for Icelandic
 	add_sg_decl(base, props, "a", "a", "*", nil, "a", "a")
 end
 
@@ -1129,6 +1149,7 @@ end
 -- otherwies return variants with any embedded links removed. If `remove_footnotes` is given, remove any
 -- footnotes attached to the lemmas.
 function export.get_lemmas(alternant_multiword_spec, linked_variant, remove_footnotes)
+	-- FIXME: Update for Icelandic
 	local slots_to_fetch = get_lemma_slots(alternant_multiword_spec.props)
 	local linked_suf = linked_variant and "_linked" or ""
 	for _, slot in ipairs(slots_to_fetch) do
@@ -1150,6 +1171,7 @@ end
 
 
 local function handle_derived_slots_and_overrides(base)
+	-- FIXME: Update for Icelandic
 	process_slot_overrides(base)
 
 	-- Compute linked versions of potential lemma slots, for use in {{de-noun}}.
@@ -1556,8 +1578,6 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename, proper_
 				parse_mutation_spec("con", {"con", "-con"})
 			elseif part:find("^%-?defcon") then
 				parse_mutation_spec("defcon", {"defcon", "-defcon"})
-			elseif part:find("^%-?def") then
-				parse_mutation_spec("def", {"def", "-def"})
 			elseif not part:find("^já") and part:find("^%-?j") then -- don't trip over .já indicator
 				parse_mutation_spec("j", {"j", "-j"})
 			elseif part:find("^%-?v") then
@@ -1622,7 +1642,8 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename, proper_
 				end
 				base.builtin = true
 				parse_err("Built-in indicator '@' not implemented yet")
-			elseif part == "dem" or part == "pers" or part == "rstem" or part == "já" then
+			elseif part == "dem" or part == "def" or or part == "-def" or part == "pers" or part == "rstem" or
+				part == "já" then
 				if base.props[part] then
 					parse_err("Can't specify '" .. part .. "' twice")
 				end
@@ -1642,6 +1663,7 @@ end
 
 
 local function set_defaults_and_check_bad_indicators(base)
+	-- FIXME: Update for Icelandic
 	-- Set default values.
 	local regular_noun = is_regular_noun(base)
 	if base.pron then
@@ -1656,19 +1678,13 @@ local function set_defaults_and_check_bad_indicators(base)
 		end
 		base.number = base.number or "both"
 		process_declnumber(base)
-		base.animacy = base.animacy or "inan"
 		base.actual_gender = base.gender
-		base.actual_animacy = base.animacy
 		if base.declgender then
-			if base.declgender == "m-an" then
-				base.gender = "m"
-			elseif base.declgender == "m-in" then
-				base.gender = "m"
-			elseif base.declgender == "f" or base.declgender == "n" then
-				base.gender = base.declgender
-			else
-				error(("Unrecognized value '%s' for 'declgender', should be 'm-an', 'm-in', 'f' or 'n'"):format(base.declgender))
+			if not base.declgender:find("^[mfn]$") then
+				error(("Unrecognized gender '%s' for 'declgender:', should be 'm', 'f' or 'n'"):format(
+					base.declgender))
 			end
+			base.gender = base.declgender
 		end
 	end
 	-- Check for bad indicator combinations.
@@ -1688,6 +1704,50 @@ local function set_defaults_and_check_bad_indicators(base)
 	end
 	if base.declgender and not regular_noun then
 		error("'declgender' can only be specified with regular nouns")
+	end
+
+	-- Compute whether i-mutation stems are needed.
+	if not base.need_imut then -- might be set by the detected declension
+		if base.imut then
+			for _, formobj in ipairs(base.imut) do
+				if formobj.form == "imut" then
+					base.need_imut = true
+					break
+				end
+			end
+		end
+	end
+
+	if not base.need_imut then
+		if base.unimut then
+			for _, formobj in ipairs(base.unimut) do
+				if formobj.form == "unimut" then
+					base.need_imut = true
+					break
+				end
+			end
+		end
+	end
+
+	if not base.need_imut then
+		for slot, override in pairs(base.overrides) do
+			if not override.full then
+				local function check_for_imut(list)
+					for _, formobj in ipairs(list) do
+						if formobj.form:find("^%^") and not formobj.form:find("^%^%^") then
+							base.need_imut = true
+							break
+						end
+					end
+				end
+				if override.bare then
+					check_for_imut(override.bare)
+				end
+				if not base.need_imput and override.def then
+					check_for_imut(override.def)
+				end
+			end
+		end
 	end
 end
 
@@ -2039,6 +2099,9 @@ local function determine_declension(base)
 			stem = rmatch(base.lemma, "^(.*[áóúÁÓÚ])$")
 			if stem then
 				base.decl = "f-long-vowel"
+				if rfind(stem, "[óÓ]$") then
+					base.need_imut = true
+				end
 			end
 		end
 		if not stem then
@@ -2046,6 +2109,7 @@ local function determine_declension(base)
 			if stem then
 				-- [[kýr]] "cow", [[sýr]] "sow (archaic)", [[ær]] "ewe" and compounds
 				base.decl = "f-long-umlaut-vowel-r"
+				base.need_imut = true
 			end
 		end
 		if not stem then
@@ -2299,6 +2363,16 @@ local function determine_declension(base)
 	error("Unrecognized ending for lemma: '" .. base.lemma .. "'")
 end
 
+local mutation_specs = {
+	"umut",
+	"imut",
+	"unumut",
+	"unimut",
+	"con",
+	"defcon",
+	"j",
+	"v",
+}
 
 -- Determine the stems to use for each stem set: vowel and nonvowel stems, for singular
 -- and plural. We assume that one of base.vowel_stem or base.nonvowel_stem has been
@@ -2309,10 +2383,57 @@ end
 -- patterns, we will compute multiple sets of stems. The reason is that the stems may vary
 -- depending on the reducibility and vowel alternation.
 local function determine_props(base)
-	base.prop_sets = {}
+	base.prop_sets = {{}}
 
-	-- Now determine all the props for each stem set.
-	for _, props in ipairs(base.prop_sets) do
+	-- Construct the prop sets from all combinations of mutation specs, in case any given spec has more than one
+	-- possibility.
+	for _, mutation_spec in ipairs(mutation_specs) do
+		local specvals = base[mutation_spec]
+		if #specvals == 1 then
+			for _, prop_set in ipairs(base.prop_sets) do
+				prop_set[mutation_spec] = specvals[1]
+			end
+		else
+			local new_prop_sets = {}
+			for _, prop_set in ipairs(base.prop_sets) do
+				for _, specval in ipairs(specvals) do
+					local new_prop_set = m_table.shallowcopy(prop_set)
+					new_prop_set[mutation_spec] = specval
+					table.insert(new_prop_sets, new_prop_set)
+				end
+			end
+			base.prop_sets = new_prop_sets
+		end
+	end
+
+-- ** `stem`: The basic stem. May be overridden by more specific variants.
+-- ** `nonvstem`: The stem used when the ending is null or starts with a consonant, unless overridden by a more
+--    specific variant. Defaults to `stem`.
+-- ** `umut_nonvstem`: The stem used when the ending is null or starts with a consonant and u-mutation is in effect,
+--    unless overridden by a more specific variant. Defaults to `nonvstem`.
+-- ** `imut_nonvstem`: The stem used when the ending is null or starts with a consonant and i-mutation is in effect.
+--    If i-mutation is in effect, this should always be specified (otherwise an internal error will occur); hence it has
+--    no default.
+-- ** `vstem`: The stem used when the ending starts with a vowel, unless overridden by a more specific variant. Defaults
+--    to `stem`.
+-- ** `umut_vstem`: The stem(s) used when the ending starts with a vowel and u-mutation is in effect. Defaults to
+--    `vstem`.
+-- ** `imut_vstem`: The stem(s) used when the ending starts with a vowel and i-mutation is in effect. If i-mutation is
+--    in effect, this should always be specified (otherwise an internal error will occur); hence it has no default.
+-- ** `null_defvstem`: The stem(s) used when the ending is null and is followed by a definite ending that begins with a
+--    vowel, unless overridden by a more specific variant. Defaults to `nonvstem`. This is normally set when `defcon`
+--    is specified.
+-- ** `umut_null_defvstem`: The stem(s) used when the ending is null and is followed by a definite ending that begins
+--    with a vowel, and u-mutation is in effect. Defaults to `umut_nonvstem`. This is normally set when `defcon` is
+--    specified and u-mutation is needed, as in the nom/acc pl of neuter [[mastur]] "mast".
+
+	-- Now determine all the props for each prop set.
+	for _, prop_set in ipairs(base.prop_sets) do
+		prop_set.stem = base.stem -- set by the user using '#', '##' or 'stem:...' or in determine_declension().
+
+
+
+
 		local lemma_is_vowel_stem = not not base.vowel_stem
 		if base.vowel_stem then
 			props.vowel_stem = base.vowel_stem
@@ -2377,6 +2498,7 @@ local function determine_default_masc_dat_sg(base, props)
 end
 
 local function detect_indicator_spec(base)
+	-- FIXME: Update for Icelandic
 	if base.pron then
 		determine_pronoun_props(base)
 	elseif base.det then
@@ -2397,6 +2519,7 @@ end
 
 
 local function detect_all_indicator_specs(alternant_multiword_spec)
+	-- FIXME: Update for Icelandic
 	-- Keep track of all genders seen in the singular and plural so we can determine whether to add the term to
 	-- [[:Category:Icelandic nouns that change gender in the plural]].
 	alternant_multiword_spec.sg_genders = {}
@@ -2427,6 +2550,7 @@ local propagate_multiword_properties
 
 
 local function propagate_alternant_properties(alternant_spec, property, mixed_value, nouns_only)
+	-- FIXME: Update for Icelandic
 	local seen_property
 	for _, multiword_spec in ipairs(alternant_spec.alternants) do
 		propagate_multiword_properties(multiword_spec, property, mixed_value, nouns_only)
@@ -2441,6 +2565,7 @@ end
 
 
 propagate_multiword_properties = function(multiword_spec, property, mixed_value, nouns_only)
+	-- FIXME: Update for Icelandic
 	local seen_property = nil
 	local last_seen_nounal_pos = 0
 	local word_specs = multiword_spec.alternant_or_word_specs or multiword_spec.word_specs
@@ -2479,6 +2604,7 @@ end
 
 
 local function propagate_properties_downward(alternant_multiword_spec, property, default_propval)
+	-- FIXME: Update for Icelandic
 	local function set_and_fetch(obj, default)
 		local retval
 		if obj[property] then
@@ -2537,6 +2663,7 @@ adjectives. We proceed as follows:
    neighbors.
 ]=]
 local function propagate_properties(alternant_multiword_spec, property, default_propval, mixed_value)
+	-- FIXME: Update for Icelandic
 	propagate_multiword_properties(alternant_multiword_spec, property, mixed_value, "nouns only")
 	propagate_multiword_properties(alternant_multiword_spec, property, mixed_value, false)
 	propagate_properties_downward(alternant_multiword_spec, property, default_propval)
@@ -2544,6 +2671,7 @@ end
 
 
 local function determine_noun_status(alternant_multiword_spec)
+	-- FIXME: Update for Icelandic
 	for i, alternant_or_word_spec in ipairs(alternant_multiword_spec.alternant_or_word_specs) do
 		if alternant_or_word_spec.alternants then
 			local is_noun = false
@@ -2569,6 +2697,7 @@ end
 
 -- Set the part of speech based on properties of the individual words.
 local function set_pos(alternant_multiword_spec)
+	-- FIXME: Update for Icelandic
 	if alternant_multiword_spec.args.pos then
 		alternant_multiword_spec.pos = alternant_multiword_spec.args.pos
 	elseif alternant_multiword_spec.saw_pron and not alternant_multiword_spec.saw_non_pron then
@@ -2585,6 +2714,7 @@ end
 
 
 local function normalize_all_lemmas(alternant_multiword_spec, pagename)
+	-- FIXME: Update for Icelandic
 	iut.map_word_specs(alternant_multiword_spec, function(base)
 		if base.lemma == "" then
 			base.lemma = pagename
@@ -2606,6 +2736,7 @@ end
 
 
 local function decline_noun(base)
+	-- FIXME: Update for Icelandic
 	for _, props in ipairs(base.prop_sets) do
 		if not decls[base.decl] then
 			error("Internal error: Unrecognized declension type '" .. base.decl .. "'")
@@ -2652,6 +2783,7 @@ end
 -- declension title bar. We combine the code to do these functions as both categories and
 -- title bar contain similar information.
 local function compute_categories_and_annotation(alternant_multiword_spec)
+	-- FIXME: Update for Icelandic
 	local all_cats = {}
 	local function insert(cattype)
 		m_table.insertIfNot(all_cats, "Icelandic " .. cattype)
@@ -2973,6 +3105,7 @@ local function make_table(alternant_multiword_spec)
 	elseif alternant_multiword_spec.actual_number == "pl" then
 		number, numcode = "plural", "p"
 	elseif alternant_multiword_spec.actual_number == "none" then -- used for [[sebe]]
+		-- FIXME: Update for Icelandic
 		number, numcode = "", "s"
 	end
 
@@ -2994,11 +3127,7 @@ local function compute_headword_genders(alternant_multiword_spec)
 		number = ""
 	end
 	iut.map_word_specs(alternant_multiword_spec, function(base)
-		local animacy = base.animacy
-		if animacy == "inan" then
-			animacy = "in"
-		end
-		m_table.insertIfNot(genders, base.gender .. "-" .. animacy .. number)
+		m_table.insertIfNot(genders, base.gender .. number)
 	end)
 	return genders
 end
