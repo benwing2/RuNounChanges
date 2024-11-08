@@ -791,10 +791,10 @@ Personal names:
 * {{m|is|dráttur||drawing; delay}}; dat sg drætti, nom pl drættir, acc pl drætti; also {{m|is|máttur||might}},  {{m|is|sláttur||mowing; heartbeat, pulse}}, {{m|is|þáttur||part, factor}}, {{m|is|þráður||thread, wire}}
 * {{tl|is-ndecl|m,ar,ir.imut|pagename=dráttur}}
 * {{m|is|sonur||son}} (also {{m|is|son}}, archaic or literary): dat sg syni, nom pl synir, acc pl syni:sonu[archaic or literary] but def acc pl only synina; should be handled automatically by rejecting acc pl forms ending in -u
-* {{tl|is-ndecl|m,ar,ir.imut:y.dati.accpli:u[archaic or literary]|pagename=sonur}}
-* {{tl|is-ndecl|m,ar,ir.imut:y.dati.accpli:u[archaic or literary]|pagename=son}}
+* {{tl|is-ndecl|m,ar,ir.imut.imutval:y.dati.accpli:u[archaic or literary]|pagename=sonur}}
+* {{tl|is-ndecl|m,ar,ir.imut.imutval:y.dati.accpli:u[archaic or literary]|pagename=son}}
 * {{m|is|Eiríksson|pos=patronymic}}, {{m|is|Helgason|pos=patronymic}}, etc.
-* {{tl|is-ndecl|m,ar,ir.imut.dati|pagename=Eiríksson}}
+* {{tl|is-ndecl|m,ar,ir.both.imut.imutval:y.dati|pagename=Eiríksson}}
 * {{tl|is-ndecl|m.@|pagename=Eiríksson}}
 * {{m|is|spónn||horn or bone spoon; veneer; (wood) shaving}}: dat sg spæni; nom pl spænir
 * {{tl|is-ndecl|((<m,s:ar[dated],ir.imut.dati>,<m.[proscribed].dati>))|pagename=spónn}}
