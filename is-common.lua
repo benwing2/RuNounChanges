@@ -191,7 +191,7 @@ local function undo_au_sub(stem)
 	return stem
 end
 
--- Apply u-mutation to the `stem`. `typ` is the type of u-mutation, which should be one of "umut" (mutate the last
+-- Apply u-mutation to `stem`. `typ` is the type of u-mutation, which should be one of "umut" (mutate the last
 -- vowel if possible, with a -> ö), "uumut" (mutate the last two vowels if possible, with a -> ö in the second-to-last
 -- and a -> u in the last), or "u_umut" (mutate the last two vowels if possible, with a -> ö in the last two vowels, as
 -- in [[hafald]] "heddle (guide thread in loom)").
@@ -222,7 +222,7 @@ function export.apply_u_mutation(stem, typ)
 end
 
 
--- Apply reverse u-mutation to the `stem`. `typ` is the type of u-mutation, which should be one of "umut" (unmutate the
+-- Apply reverse u-mutation to `stem`. `typ` is the type of u-mutation, which should be one of "umut" (unmutate the
 -- last vowel if possible, with ö -> a), "uumut" (unmutate the last two vowels if possible, with ö -> a in the
 -- second-to-last [unless followed by v in the following consonant cluster] and u -> a in the last), or "u_umut"
 -- (unmutate the last two vowels if possible, with ö -> a in the last two vowels).
@@ -252,6 +252,20 @@ function export.apply_reverse_u_mutation(stem, typ)
 	end
 	v = lesser_reverse_u_mutation[v] or v
 	return undo_au_sub(first .. v .. last)
+end
+
+
+-- Apply contraction to `stem`. Throw an error if the stem can't be contracted.
+function export.apply_contraction(stem)
+	-- Contraction only applies when the last vowel is a/i/u and followed by a single consonant. There are restrictions
+	-- on what the consonant can be but I'm not sure exactly what they are; r/l/n/ð are all possible (cf. [[hamar]],
+	-- [[megin]], [[höfuð]], [[þumall]], where in the last case the final -l is the nominative singular ending).
+	local butlast, v, last = rmatch(stem, "^(.*" .. com.cons_c .. ")([aiu])(" .. com.cons_c .. ")$")
+	if not butlast then
+		error(("Contraction cannot be applied to stem '%s' because it doesn't end in a/i/u preceded by a consonant and followed by a single consonant"
+			):format(stem))
+	end
+	return butlast .. last
 end
 
 
