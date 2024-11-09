@@ -103,6 +103,17 @@ local overridable_stems = {
 	imutval = true,
 }
 
+local mutation_specs = {
+	"umut",
+	"imut",
+	"unumut",
+	"unimut",
+	"con",
+	"defcon",
+	"j",
+	"v",
+}
+
 local clitic_articles = {
 	m = {
 		nom_s = "inn",
@@ -173,6 +184,13 @@ local function skip_slot(number, slot)
 		number == "pl" and rfind(slot, "_s$")
 end
 
+-- Return true if `stem` refers to a proper noun (first character is uppercase, second character is lowercase).
+local function is_proper_noun(stem)
+	local first_letter = usub(stem, 1, 1)
+	local second_letter = usub(stem, 2, 2)
+	return ulower(first_letter) ~= first_letter and (not second_letter or second_letter == "") or
+		uupper(second_letter) ~= second_letter
+end
 
 -- Basic function to combine stem(s) and other properties with ending(s) and insert the result into the appropriate
 -- slot. `base` is the object describing all the properties of the word being inflected for a single alternant (in case
@@ -444,7 +462,6 @@ local function add_slotval(base, slot_prefix, slot, props, endings, clitics, end
 					if (ending == "" or ending == "*") and is_vowel_clitic then
 						stem_in_effect = has_umut and props[prefix .. "umut_null_defvstem"] or
 							props[prefix .. "null_defvstem"]
-						end
 					end
 					-- If the stem was not set above and the ending is "*", it means to use the lemma as the form
 					-- directly (before adding any definite clitic) rather than try to construct the form from a stem
@@ -773,7 +790,8 @@ local decls = {}
 
 
 decls["m"] = function(base, props)
-	local dat = ...
+	-- The default dative singular is computed below in determine_default_masc_dat_sg().
+	local dat = props.default_dat_sg
 	add_decl(base, props, "", dat, "s", "ar")
 end
 
@@ -1440,6 +1458,7 @@ Return value is an object of the form
   adj = true, -- may be missing; indicates that the term declines like an adjective (NOT IMPLEMENTED YET)
   decllemma = nil or "DECLLEMMA", -- decline like the specified lemma
   declgender = nil or "DECLGENDER", -- decline like the specified gender
+  declnumber = nil or "DECLNUMBER", -- decline like the specified number
   stem = nil or "STEM", -- override the stem; may have # (= lemma) or ## (= lemma minus -ur or -r)
   vstem = nil or "STEM", -- override the stem used before vowel-initial endings; same format as `stem`
   plstem = nil or "STEM", -- override the plural stem; see above for FORMOBJ
@@ -1596,10 +1615,10 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename, proper_
 				parse_err(
 					("Footnotes only allowed with slot overrides, negatable indicators and by themselves: '%s'"):
 					format(table.concat(dot_separated_group)))
-			elseif part:find("^decllemma%s*:") or part:find("^declgender%s*:") then
+			elseif part:find("^decllemma%s*:") or part:find("^declgender%s*:") or part:find("^declnumber%s*:") then
 				local field, value = part:match("^(decl[a-z]+)%s*:%s*(.+)$")
 				if not value then
-					parse_err(("Syntax error in decllemma/declgender indicator: '%s'"):format(part))
+					parse_err(("Syntax error in decllemma/declgender/declnumber indicator: '%s'"):format(part))
 				end
 				if base[field] then
 					parse_err(("Can't specify '%s:' twice"):format(field))
@@ -1672,8 +1691,19 @@ local function is_regular_noun(base)
 end
 
 
+local function process_declnumber(base)
+	base.actual_number = base.number
+	if base.declnumber then
+		if base.declnumber == "sg" or base.declnumber == "pl" then
+			base.number = base.declnumber
+		else
+			error(("Unrecognized value '%s' for 'declnumber', should be 'sg' or 'pl'"):format(base.declnumber))
+		end
+	end
+end
+
+
 local function set_defaults_and_check_bad_indicators(base)
-	-- FIXME: Update for Icelandic
 	-- Set default values.
 	local regular_noun = is_regular_noun(base)
 	if base.pron then
@@ -1682,11 +1712,13 @@ local function set_defaults_and_check_bad_indicators(base)
 		set_det_defaults(base)
 	elseif base.num then
 		set_num_defaults(base)
+	elseif base.adj then
+		-- FIXME: Do adjective-specific checks then return
 	elseif not base.adj then
 		if not base.gender then
-			error("For nouns, gender must be specified")
+			error("Internal error: For nouns, gender must be specified")
 		end
-		base.number = base.number or "both"
+		base.number = base.number or is_proper_noun(base.lemma) and not base.dem and "sg" or "both"
 		process_declnumber(base)
 		base.actual_gender = base.gender
 		if base.declgender then
@@ -1697,23 +1729,28 @@ local function set_defaults_and_check_bad_indicators(base)
 			base.gender = base.declgender
 		end
 	end
+
+	if not regular_noun then
+		for _, mutation_spec in ipairs(mutation_specs) do
+			if base[mutation_spec] then
+				-- FIXME, maybe with adjectives
+				error(("'%s' can only be specified with regular nouns"):format(mutation_spec))
+			end
+		if base.declgender then
+			error("'declgender' can only be specified with regular nouns")
+		end
+		return
+	end
+
 	-- Check for bad indicator combinations.
-	if (base.hard and 1 or 0) + (base.soft and 1 or 0) + (base.mixed and 1 or 0) > 1 then
-		error("At most one of 'hard', 'soft' and 'mixed' can be specified")
+	if base.imut and base.unimut then
+		error("'imut' and 'unimut' specs cannot be specified together")
 	end
-	if base.istem and base["-istem"] then
-		error("'istem' and '-istem' cannot be specified together")
+	if base.umut and base.unumut then
+		error("'umut' and 'unumut' specs cannot be specified together")
 	end
-	if (base.istem or base["-istem"]) then
-		if base.gender ~= "f" then
-			error("'istem' and '-istem' can only be specified with the feminine gender")
-		end
-		if not regular_noun then
-			error("'istem' and '-istem' can only be specified with regular nouns")
-		end
-	end
-	if base.declgender and not regular_noun then
-		error("'declgender' can only be specified with regular nouns")
+	if base.unimut and base.unumut then
+		error("'unimut' and 'unumut' specs cannot be specified together")
 	end
 
 	if base.plvstem and not base.plstem then
@@ -1797,6 +1834,7 @@ end
 -- For a plural-only lemma, synthesize a likely singular lemma. It doesn't have to be
 -- theoretically correct as long as it generates all the correct plural forms.
 local function synthesize_singular_lemma(base)
+	-- FIXME: Update for Icelandic
 	if not base.prop_sets then
 		base.prop_sets = {{}}
 	end
@@ -1904,6 +1942,7 @@ end
 
 -- For an adjectival lemma, synthesize the masc singular form.
 local function synthesize_adj_lemma(base)
+	-- FIXME: Update for Icelandic
 	local stem
 	if base.indecl then
 		base.decl = "indecl"
@@ -2058,6 +2097,7 @@ end
 -- vowel), which is used by determine_props(). In some cases (specifically with certain foreign nouns), we set
 -- base.lemma to a new value; this is as if the user specified 'decllemma:'.
 local function determine_declension(base)
+	-- FIXME: Update for Icelandic
 	local stem
 	local default_mutations = {}
 	-- Determine declension
@@ -2381,17 +2421,6 @@ local function determine_declension(base)
 	error("Unrecognized ending for lemma: '" .. base.lemma .. "'")
 end
 
-local mutation_specs = {
-	"umut",
-	"imut",
-	"unumut",
-	"unimut",
-	"con",
-	"defcon",
-	"j",
-	"v",
-}
-
 -- Determine the stems to use for each stem set: vowel and nonvowel stems, for singular
 -- and plural. We assume that one of base.vowel_stem or base.nonvowel_stem has been
 -- set in determine_declension(), depending on whether the lemma ends in
@@ -2407,9 +2436,14 @@ local function determine_props(base)
 	-- possibility.
 	for _, mutation_spec in ipairs(mutation_specs) do
 		local specvals = base[mutation_spec]
+		-- Handle unspecified mutation specs.
+		if not specvals then
+			specvals = {false}
+		end
 		if #specvals == 1 then
 			for _, prop_set in ipairs(base.prop_sets) do
-				prop_set[mutation_spec] = specvals[1]
+				-- Convert 'false' back to nil
+				prop_set[mutation_spec] = specvals[1] or nil
 			end
 		else
 			local new_prop_sets = {}
@@ -2426,6 +2460,13 @@ local function determine_props(base)
 
 	-- Now determine all the props for each prop set.
 	for _, props in ipairs(base.prop_sets) do
+		-- Almost all nouns have dative plural -um, which triggers u-mutation, so we need to compute the u-mutation
+		-- stem using "umut" if not specifically given. Set `defaulted` to an error isn't triggered if there's no
+		-- special u-mutated form.
+		local base_umut = base.umut
+		if not base.unumut or base.unumut.form:find("^%-") then
+			base_umut = {form = "umut", defaulted = true}
+		end
 		-- First do all the stems, handling overall and plural-specific stems separately.
 		for _, prefix in ipairs {"", "pl_"} do
 			local base_stem, base_vstem
@@ -2473,8 +2514,8 @@ local function determine_props(base)
 				imut_nonvstem = base_stem
 				nonvstem = com.apply_reverse_i_mutation(imut_nonvstem, base.imutval)
 				stem = nonvstem
-				if base.umut then
-					umut_nonvstem = com.apply_u_mutation(nonvstem, base.umut.form, not base.umut.defaulted)
+				if base_umut then
+					umut_nonvstem = com.apply_u_mutation(nonvstem, base_umut.form, not base_umut.defaulted)
 				end
 				if base_vstem then
 					error(("Don't currently know how to combine '%svstem:' with 'unimut' specs"):format(
@@ -2486,16 +2527,16 @@ local function determine_props(base)
 					imut_vstem = base_stem
 				end
 				vstem = com.apply_reverse_i_mutation(imut_vstem, base.imutval)
-				if base.umut then
-					umut_vstem = com.apply_u_mutation(vstem, base.umut.form, not base.umut.defaulted)
+				if base_umut then
+					umut_vstem = com.apply_u_mutation(vstem, base_umut.form, not base_umut.defaulted)
 				end
 				if base.defcon and base.defcon.form == "defcon" then
 					error("Don't currently know how to combine 'defcon' with 'unimut' specs")
 				end
-			elseif base.umut then
+			elseif base_umut then
 				stem = base_stem
 				nonvstem = stem
-				umut_nonvstem = com.apply_u_mutation(nonvstem, base.umut.form, not base.umut.defaulted)
+				umut_nonvstem = com.apply_u_mutation(nonvstem, base_umut.form, not base_umut.defaulted)
 				if base.need_imut then
 					imut_nonvstem = com.apply_i_mutation(nonvstem, base.imutval)
 				end
@@ -2503,7 +2544,7 @@ local function determine_props(base)
 				if base.con and base.con.form == "con" then
 					vstem = com.apply_contraction(vstem)
 				end
-				umut_vstem = com.apply_u_mutation(vstem, base.umut.form, not base.umut.defaulted)
+				umut_vstem = com.apply_u_mutation(vstem, base_umut.form, not base_umut.defaulted)
 				if base.need_imut then
 					imut_vstem = com.apply_i_mutation(vstem, base.imutval)
 				end
@@ -2512,7 +2553,7 @@ local function determine_props(base)
 				else
 					null_defvstem = base_stem
 				end
-				umut_null_defvstem = com.apply_u_mutation(null_defvstem, base.umut.form, not base.umut.defaulted)
+				umut_null_defvstem = com.apply_u_mutation(null_defvstem, base_umut.form, not base_umut.defaulted)
 			else
 				-- Normally u-mutated forms should always be available, unless 'unumut' is in effect.
 				error(("Internal error: Neither 'unumut' or 'umut' specified: %s"):format(dump(props)))
@@ -2528,8 +2569,8 @@ local function determine_props(base)
 				-- are still active. However, there's no such thing as -umut, and any time that there's an explicit umut
 				-- variant given, umut_nonvstem will be different from nonvstem (otherwise an error will occur in
 				-- apply_u_mutation), so we don't need this extra check here.
-				if base.umut then
-					umut_nonvstem = iut.combine_form_and_footnotes(umut_nonvstem, base.umut.footnotes)
+				if base_umut then
+					umut_nonvstem = iut.combine_form_and_footnotes(umut_nonvstem, base_umut.footnotes)
 				end
 				props[prefix .. "umut_nonvstem"] = umut_nonvstem
 			end
@@ -2548,9 +2589,9 @@ local function determine_props(base)
 			if umut_vstem ~= vstem or base.con and base.con.footnotes then
 				-- See comment above under `umut_nonvstem ~= nonvstem`. There's no -umut so whenever there's a specific
 				-- umut variant with footnote, umut_vstem will be different from vstem so we don't need to check for
-				-- `or base.umut and base.umut.footnotes` above.
+				-- `or base_umut and base_umut.footnotes` above.
 				local footnotes = iut.combine_footnotes(base.con and base.con.footnotes or nil,
-					base.umut and base.umut.footnotes or nil)
+					base_umut and base_umut.footnotes or nil)
 				umut_vstem = iut.combine_form_and_footnotes(umut_vstem, footnotes)
 				props[prefix .. "umut_vstem"] = umut_vstem
 			end
@@ -2569,7 +2610,7 @@ local function determine_props(base)
 			if umut_null_defvstem ~= null_defvstem or base.defcon and base.defcon.footnotes then
 				-- Analogous situation to the clause above that checks for `umut_vstem ~= vstem`.
 				local footnotes = iut.combine_footnotes(base.defcon and base.defcon.footnotes or nil,
-					base.umut and base.umut.footnotes or nil)
+					base_umut and base_umut.footnotes or nil)
 				umut_null_defvstem = iut.combine_form_and_footnotes(umut_null_defvstem, footnotes)
 				props[prefix .. "umut_null_defvstem"] = umut_null_defvstem
 			end
@@ -2605,14 +2646,11 @@ local function determine_default_masc_dat_sg(base, props)
 		default_dat_sg = false -- no default
 	else
 		local stem = props.stem.form
-		local first_letter = usub(stem, 1, 1)
-		local second_letter = usub(stem, 2, 2)
 		if stem:find("[iu]ng$") then
 			default_dat_sg = {indef = "i", def = ""}
 		elseif stem:find("x$") or rfind(stem, com.cons_c .. com.cons_c .. "$") then
 			default_dat_sg = "i"
-		elseif not base.dem and not rfind(stem, com.vowel_c .. "$") and ulower(first_letter) ~= first_letter and
-			uupper(second_letter) ~= second_letter then
+		elseif not base.dem and not rfind(stem, com.vowel_c .. "$") and is_proper_noun(stem) then
 			-- proper noun whose stem does not end in a vowel
 			default_dat_sg = "i"
 		elseif props.con.form == "con" then
@@ -2849,7 +2887,6 @@ end
 
 
 local function normalize_all_lemmas(alternant_multiword_spec, pagename)
-	-- FIXME: Update for Icelandic
 	iut.map_word_specs(alternant_multiword_spec, function(base)
 		if base.lemma == "" then
 			base.lemma = pagename
