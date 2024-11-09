@@ -195,30 +195,45 @@ end
 -- vowel if possible, with a -> ö), "uumut" (mutate the last two vowels if possible, with a -> ö in the second-to-last
 -- and a -> u in the last), or "u_umut" (mutate the last two vowels if possible, with a -> ö in the last two vowels, as
 -- in [[hafald]] "heddle (guide thread in loom)").
-function export.apply_u_mutation(stem, typ)
+function export.apply_u_mutation(stem, typ, error_if_unmatchable)
 	local origstem = stem
 	stem = apply_au_sub(stem)
 	if typ == "uumut" or typ == "u_umut" then
 		local first, v1, middle, v2, last = rmatch(stem, "^(.*)(" .. com.vowel_c .. ")(" .. com.cons_c .. "*)(" ..
 			com.vowel_c .. ")(" .. com.cons_c .. "*)$")
 		if not first then
-			-- FIXME, throw an error?
+			if error_if_unmatchable then
+				error(("Can't apply u-mutation of type '%s' because stem '%s' doesn't have two syllables"):
+					format(typ, origstem))
+			end
 			return undo_au_sub(stem)
 		end
 		v1 = lesser_u_mutation[v1] or v1
 		v2 = (typ == "uumut" and greater_u_mutation or lesser_u_mutation)[v2] or v2
-		return undo_au_sub(first .. v1 .. middle .. v2 .. last)
+		local retval = undo_au_sub(first .. v1 .. middle .. v2 .. last)
+		if retval == origstem and error_if_unmatchable then
+			error(("Can't apply u-mutation of type '%s' to stem '%s'; result would be the same as the original"):
+				format(typ, origstem))
+		end
+		return retval
 	end
 	if typ ~= "umut" then
 		error(("Internal error: For stem '%s', saw unrecognized u-mutation type '%s'"):format(origstem, typ))
 	end
 	local first, v, last = rmatch(stem, "^(.*)(" .. com.vowel_c .. ")(" .. com.cons_c .. "*)$")
 	if not first then
-		-- FIXME, throw an error?
+		if error_if_unmatchable then
+			error(("Can't apply u-mutation of type '%s' because stem '%s' doesn't have a vowel"):format(typ, origstem))
+		end
 		return undo_au_sub(stem)
 	end
 	v = lesser_u_mutation[v] or v
-	return undo_au_sub(first .. v .. last)
+	local retval = undo_au_sub(first .. v .. last)
+	if retval == origstem and error_if_unmatchable then
+		error(("Can't apply u-mutation of type '%s' to stem '%s'; result would be the same as the original"):
+			format(typ, origstem))
+	end
+	return retval
 end
 
 
@@ -226,32 +241,48 @@ end
 -- last vowel if possible, with ö -> a), "uumut" (unmutate the last two vowels if possible, with ö -> a in the
 -- second-to-last [unless followed by v in the following consonant cluster] and u -> a in the last), or "u_umut"
 -- (unmutate the last two vowels if possible, with ö -> a in the last two vowels).
-function export.apply_reverse_u_mutation(stem, typ)
+function export.apply_reverse_u_mutation(stem, typ, error_if_unmatchable)
 	local origstem = stem
 	stem = apply_au_sub(stem)
 	if typ == "uumut" or typ == "u_umut" then
 		local first, v1, middle, v2, last = rmatch(stem, "^(.*)(" .. com.vowel_c .. ")(" .. com.cons_c .. "*)(" ..
 			com.vowel_c .. ")(" .. com.cons_c .. "*)$")
 		if not first then
-			-- FIXME, throw an error?
+			if error_if_unmatchable then
+				error(("Can't apply reverse u-mutation of type '%s' because stem '%s' doesn't have two syllables"):
+					format(typ, origstem))
+			end
 			return undo_au_sub(stem)
 		end
 		if not middle:find("v") then -- [[örvun]] -> [[örvan]] not #[[arvan]]
 			v1 = lesser_reverse_u_mutation[v1] or v1
 		end
 		v2 = (typ == "uumut" and greater_reverse_u_mutation or lesser_reverse_u_mutation)[v2] or v2
-		return undo_au_sub(first .. v1 .. middle .. v2 .. last)
+		local retval = undo_au_sub(first .. v1 .. middle .. v2 .. last)
+		if retval == origstem and error_if_unmatchable then
+			error(("Can't apply reverse u-mutation of type '%s' to stem '%s'; result would be the same as the original"):
+				format(typ, origstem))
+		end
+		return retval
 	end
 	if typ ~= "umut" then
 		error(("Internal error: For stem '%s', saw unrecognized reverse u-mutation type '%s'"):format(origstem, typ))
 	end
 	local first, v, last = rmatch(stem, "^(.*)(" .. com.vowel_c .. ")(" .. com.cons_c .. "*)$")
 	if not first then
-		-- FIXME, throw an error?
+		if error_if_unmatchable then
+			error(("Can't apply reverse u-mutation of type '%s' because stem '%s' doesn't have a vowel"):
+				format(typ, origstem))
+		end
 		return undo_au_sub(stem)
 	end
 	v = lesser_reverse_u_mutation[v] or v
-	return undo_au_sub(first .. v .. last)
+	local retval = undo_au_sub(first .. v .. last)
+	if retval == origstem and error_if_unmatchable then
+		error(("Can't apply reverse u-mutation of type '%s' to stem '%s'; result would be the same as the original"):
+			format(typ, origstem))
+	end
+	return retval
 end
 
 

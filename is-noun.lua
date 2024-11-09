@@ -99,6 +99,8 @@ local overridable_stems = {
 	stem = true,
 	vstem = true,
 	plstem = true,
+	plvstem = true,
+	imutval = true,
 }
 
 local clitic_articles = {
@@ -199,28 +201,38 @@ end
 --    were supported.
 -- ** `umut_nonvstem`: The stem used when the ending is null or starts with a consonant and u-mutation is in effect,
 --    unless overridden by a more specific variant. Defaults to `nonvstem`. Will only be present when the result of
---    u-mutation is different from the stem to which u-mutation is applied.
+--    u-mutation is different from the stem to which u-mutation is applied. (In this case, it will be present even if
+--    `nonvstem` is missing, because there is no generic `umut_stem`.)
 -- ** `imut_nonvstem`: The stem used when the ending is null or starts with a consonant and i-mutation is in effect.
 --    If i-mutation is in effect, this should always be specified (otherwise an internal error will occur); hence it has
 --    no default. Note that i-mutation is only in effect when either (a) `imut` or `unimut` was specified; (b) a
 --    user-specified override is given that begins with a single ^ (indicating i-mutation); or (c) a declension type is
 --    in effect that contains default endings beginning with a single ^ (examples are `f-long-vowel` for lemmas in -ó
---    and `f-long-umlaut-vowel-r`).
+--    and `f-long-umlaut-vowel-r`). Note also that this will be present even if `nonvstem` is missing, because there is
+--    no generic `imut_stem`.
 -- ** `vstem`: The stem used when the ending starts with a vowel, unless overridden by a more specific variant. Defaults
 --    to `stem`. Will be specified when contraction is in effect or the user specified `vstem:...`.
 -- ** `umut_vstem`: The stem(s) used when the ending starts with a vowel and u-mutation is in effect. Defaults to
 --    `vstem`. Note that u-mutation applies to the contracted stem if both u-mutation and contraction are in effect.
 --    Will only be present when the result of u-mutation is different from the stem to which u-mutation is applied.
+--    (In this case, it will be present even if `vstem` is missing, because there is no generic `umut_stem`.)
 -- ** `imut_vstem`: The stem(s) used when the ending starts with a vowel and i-mutation is in effect. If i-mutation is
 --    in effect, this should always be specified (otherwise an internal error will occur); hence it has no default. Note
---    that i-mutation applies to the contracted stem if both i-mutation and contraction are in effect.
+--    that i-mutation applies to the contracted stem if both i-mutation and contraction are in effect. See
+--    `imut_nonvstem` for comments on when this stem will be present.
 -- ** `null_defvstem`: The stem(s) used when the ending is null and is followed by a definite ending that begins with a
 --    vowel, unless overridden by a more specific variant. Defaults to `nonvstem`. This is normally set when `defcon`
 --    is specified.
 -- ** `umut_null_defvstem`: The stem(s) used when the ending is null and is followed by a definite ending that begins
---    with a vowel, and u-mutation is in effect. Defaults to `umut_nonvstem`. This is normally set when `defcon` is
+--    with a vowel, and u-mutation is in effect. Defaults to `null_defvstem`. This is normally set when `defcon` is
 --    specified and u-mutation is needed, as in the nom/acc pl of neuter [[mastur]] "mast". Will only be present when
 --    the result of u-mutation is different from the stem to which u-mutation is applied.
+-- ** `pl_stem`: The basic stem used for plural inflections. Only set when `plstem:...` is specified by the user. If
+--    this is set, the alternative plural-specific stem variants are used, where each of the above stems has a
+--    plural-specific counterpart, and the identical algorithms and fallbacks are used to determine the correct stem.
+-- ** `pl_nonvstem`, `pl_umut_nonvstem`, `pl_imut_nonvstem`, `pl_vstem`, `pl_umut_vstem`, `pl_imut_vstem`, 
+--    `pl_null_defvstem`, `pl_umut_null_defvstem`: Plural-specific counterparts of the above stems. See the comment
+--    under `pl_stem` for when these are used.
 -- * Other properties:
 -- ** `jinfix`: If present, either "" or "j". Inserted between the stem and ending when the ending begins with a vowel
 --    other than "i". Note that j-infixes don't apply to ending overrides.
@@ -395,71 +407,80 @@ local function add_slotval(base, slot_prefix, slot, props, endings, clitics, end
 				end
 			end
 
-			local stem_in_effect
+			-- Now compute the appropriate stem to which the ending and clitic are added. `prefix` is either an empty
+			-- string or "pl_" and selects the set of stems to consider when computing the stem in effect. See the
+			-- comment above for `pl_stem`.
+			local function compute_stem_in_effect(prefix)
+				local stem_in_effect
 
-			-- Now compute the appropriate stem to which the ending and clitic are added.
-			if mut_in_effect == "i" then
-
-				-- NOTE: It appears that imut and defcon never co-occur; otherwise we'd need to flesh out the set of
-				-- stems to include i-mutation versions of defcon stems, similar to what we do for u-mutation.
-				if is_vowel_ending then
-					if not props.imut_vstem then
-						interr("i-mutation in effect and ending begins with a vowel but '.imut_vstem' not defined")
-					end
-					stem_in_effect = props.imut_vstem
-				else
-					if not props.imut_nonvstem then
-						interr("i-mutation in effect and ending does not begin with a vowel but '.imut_nonvstem' not defined")
-					end
-					stem_in_effect = props.imut_nonvstem
-				end
-			else
-				-- Careful with the following logic; it is written carefully and should not be changed without a
-				-- thorough understanding of its functioning.
-				local has_umut = mut_in_effect == "u"
-				-- First, if the ending is null, and we have a vowel-initial definite-article clitic, use the special
-				-- 'defcon' stem if available. We do this even if the ending is "*", which normally means to use the
-				-- lemma regardless (which avoids problems with e.g. thinking that the masculine singular nominative
-				-- ending -ur would trigger u-mutation, which will happen if we construct the nominative singular from
-				-- the stem instead of just using the lemma directly).  The reason for this is that when 'defcon' is
-				-- active, it applies to the nominative singular, producing e.g. definite [[mastrið]] of neuter lemma
-				-- [[mastur]] "mast"; here, using the lemma would incorrectly produce #[[masturið]].
-				if (ending == "" or ending == "*") and is_vowel_clitic then
-					if has_umut then
-						stem_in_effect = props.umut_null_defvstem
-					else
-						stem_in_effect = props.null_defvstem
-					end
-				end
-				-- If the stem was not set above and the ending is "*", it means to use the lemma as the form directly
-				-- (before adding any definite clitic) rather than try to construct the form from a stem and ending. See
-				-- the comment above for why we want to do this.
-				if not stem_in_effect and ending == "*" then
-					stem_in_effect = base.actual_lemma
-					ending = ""
-				end
-				-- If the stem is still unset, then use the vowel or non-vowel stem if available. When u-mutation is
-				-- active, we first check for the u-mutated version of the vowel or non-vowel stem before falling back
-				-- to the regular vowel or non-vowel stem. Note that an expression like `has_umut and stems.umut_vstem
-				-- or props.vstem` here is NOT equivalent to an if-else or ternary operator expression because if
-				-- `has_umut` is true and `umut_vstem` is missing, it will still fall back to `vstem` (which is what we
-				-- want).
-				if not stem_in_effect then
+				if mut_in_effect == "i" then
+					-- NOTE: It appears that imut and defcon never co-occur; otherwise we'd need to flesh out the set of
+					-- stems to include i-mutation versions of defcon stems, similar to what we do for u-mutation.
 					if is_vowel_ending then
-						stem_in_effect = has_umut and props.umut_vstem or props.vstem
+						if not props[prefix .. "imut_vstem"] then
+							interr(("i-mutation in effect and ending begins with a vowel but '.%simut_vstem' not defined"):
+								format(prefix))
+						end
+						stem_in_effect = props[prefix .. "imut_vstem"]
 					else
-						stem_in_effect = has_umut and props.umut_nonvstem or props.nonvstem
+						if not props[prefix .. "imut_nonvstem"] then
+							interr(("i-mutation in effect and ending does not begin with a vowel but '.%simut_nonvstem' not defined"):
+								format(prefix))
+						end
+						stem_in_effect = props[prefix .. "imut_nonvstem"]
 					end
+				else
+					-- Careful with the following logic; it is written carefully and should not be changed without a
+					-- thorough understanding of its functioning.
+					local has_umut = mut_in_effect == "u"
+					-- First, if the ending is null, and we have a vowel-initial definite-article clitic, use the
+					-- special 'defcon' stem if available. We do this even if the ending is "*", which normally means to
+					-- use the lemma regardless (which avoids problems with e.g. thinking that the masculine singular
+					-- nominative ending -ur would trigger u-mutation, which will happen if we construct the nominative
+					-- singular from the stem instead of just using the lemma directly). The reason for this is that
+					-- when 'defcon' is active, it applies to the nominative singular, producing e.g. definite
+					-- [[mastrið]] of neuter lemma [[mastur]] "mast"; here, using the lemma would incorrectly produce
+					-- #[[masturið]].
+					if (ending == "" or ending == "*") and is_vowel_clitic then
+						stem_in_effect = has_umut and props[prefix .. "umut_null_defvstem"] or
+							props[prefix .. "null_defvstem"]
+						end
+					end
+					-- If the stem was not set above and the ending is "*", it means to use the lemma as the form
+					-- directly (before adding any definite clitic) rather than try to construct the form from a stem
+					-- and ending. See the comment above for why we want to do this.
+					if not stem_in_effect and ending == "*" then
+						stem_in_effect = base.actual_lemma
+						ending = ""
+					end
+					-- If the stem is still unset, then use the vowel or non-vowel stem if available. When u-mutation is
+					-- active, we first check for the u-mutated version of the vowel or non-vowel stem before falling
+					-- back to the regular vowel or non-vowel stem. Note that an expression like `has_umut and
+					-- props[prefix .. "umut_vstem"] or props[prefix .. "vstem"]` here is NOT equivalent to an if-else
+					-- or ternary operator expression because if `has_umut` is true and `umut_vstem` is missing, it will
+					-- still fall back to `vstem` (which is what we want).
+					if not stem_in_effect then
+						if is_vowel_ending then
+							stem_in_effect = has_umut and props[prefix .. "umut_vstem"] or props[prefix .. "vstem"]
+						else
+							stem_in_effect = has_umut and props[prefix .. "umut_nonvstem"] or
+								props[prefix .. "nonvstem"]
+						end
+					end
+					-- Finally, fall back to the basic stem, which is always defined.
+					stem_in_effect = stem_in_effect or props[prefix .. "stem"]
 				end
-				-- Finally, fall back to the basic stem, which is always defined.
-				stem_in_effect = stem_in_effect or props.stem
+
+				return stem_in_effect
 			end
+
+			local stem_in_effect = props.pl_stem and compute_stem_in_effect("pl_") or compute_stem_in_effect("")
 
 			local infix, infix_footnotes
 			-- Compute the infix (j, v or nothing) that goes between the stem and ending.
 			if not ending_override and is_vowel_ending then
 				if props.vinfix and props.jinfix then
-					interr("can't have specifications for both '.vinfix' and '.jinfix'; should have been caught above")
+					interr("Can't have specifications for both '.vinfix' and '.jinfix'; should have been caught above")
 				end
 				if props.vinfix then
 					infix = props.vinfix
@@ -470,17 +491,18 @@ local function add_slotval(base, slot_prefix, slot, props, endings, clitics, end
 				end
 			end
 
-			-- If base-level footnotes specified, they go before any stem footnotes, so we need to clone the stems an
-			-- insert the base-level footnotes appropriately. In general, we want the footnotes to be in the order
-			-- [base.footnotes, stem.footnotes, mut_footnotes, infix_footnotes, ending.footnotes, clitic.footnotes].
+			-- If base-level footnotes specified, they go before any stem footnotes, so we need to extract any footnotes
+			-- from the stem in effect and insert the base-level footnotes before. In general, we want the footnotes to
+			-- be in the order [base.footnotes, stem.footnotes, mut_footnotes, infix_footnotes, ending.footnotes,
+			-- clitic.footnotes].
 			if base.footnotes then
-				local stems_with_footnotes = {}
-				for _, stem in ipairs(stems) do
-					stem = m_table.shallowcopy(stem)
-					stem.footnotes = iut.combine_footnotes(base.footnotes, stem.footnotes)
-					table.insert(stems_with_footnotes, stem)
+				local stem_in_effect_footnotes
+				if type(stem_in_effect) == "table" then
+					stem_in_effect_footnotes = stem_in_effect.footnotes
+					stem_in_effect = stem_in_effect.form
 				end
-				stems = stems_with_footnotes
+				stem_in_effect = iut.combine_form_and_footnotes(stem_in_effect,
+					iut.combine_footnotes(base.footnotes, stem_in_effect_footnotes))
 			end
 
 			local function combine_stem_ending(stem, clitic)
@@ -532,7 +554,8 @@ local function add_slotval(base, slot_prefix, slot, props, endings, clitics, end
 				iut.combine_footnotes(ending_footnotes, clitic_footnotes)
 			)
 			local clitic_with_notes = iut.combine_form_and_footnotes(clitic, combined_footnotes)
-			iut.add_forms(base.forms, slot_prefix .. slot, stems, clitic_with_notes, combine_stem_ending)
+			iut.add_forms(base.forms, slot_prefix .. slot, stem_in_effect, clitic_with_notes,
+				combine_stem_ending)
 		end
 	end
 end
@@ -1408,8 +1431,10 @@ Return value is an object of the form
 	PROP = true,
     ...
   }, -- misc Boolean properties: "dem" (a demonym, i.e. a capitalized noun such as [[Svisslendingur]] "Swiss person"
-		that behaves like a common noun); "pers" (a personal name; has special declension properties); "rstem" (an
-		r-stem like [[bróðir]] "brother" or [[dóttir]] "daughter")
+		that behaves like a common noun); "def" (definite forms are present in a proper noun); "-def" (definite forms
+		aren't present in a common noun); "pers" (a personal name; has special declension properties); "rstem" (an
+		r-stem like [[bróðir]] "brother" or [[dóttir]] "daughter"); "já" (a neuter in -é whose stem alternates with
+		-já, such as [[tré]] "tree" and [[hné]]/[[kné]] "knee")
   number = "NUMBER", -- "sg", "pl", "both"; may be missing
   gender = "GENDER", -- "m", "f" or "n"; always specified by the user
   adj = true, -- may be missing; indicates that the term declines like an adjective (NOT IMPLEMENTED YET)
@@ -1426,12 +1451,12 @@ Return value is an object of the form
 		a Lua pattern matching slots (anchored on both sides) and FOOTNOTE is a footnote to add to those slots
   MUTATION_GROUP = {
 	MUTATION_SPEC, MUTATION_SPEC, ...
-  }, -- where MUTATION_GROUP is one of "umut", "imut", "unumut", "unimut", "con", "defcon", "def", "j" or "v", and
+  }, -- where MUTATION_GROUP is one of "umut", "imut", "unumut", "unimut", "con", "defcon", "j" or "v", and
 		MUTATION_SPEC is {key = "KEY", value = "VALUE" or true, footnotes = nil or {"FOOTNOTE", "FOOTNOTE", ...}}; the
 		mutation groups are as follows: umut (u-mutation), imut (i-mutation), unumut (reverse u-mutation), unimut
 		(reverse i-mutation), con (stem contraction before vowel-initial endings), defcon (stem contraction before
-		vowel-initial definite clitics when the ending itself is null), def (definite forms are/aren't present), j
-		(j-infix before vowel-initial endings not beginning with an i), v (v-infix before vowel-initial endings)
+		vowel-initial definite clitics when the ending itself is null), j (j-infix before vowel-initial endings not
+		beginning with an i), v (v-infix before vowel-initial endings)
 
   -- The following additional fields are added by other functions:
   orig_lemma = "ORIGINAL-LEMMA", -- as given by the user or taken from pagename
@@ -1473,17 +1498,15 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename, proper_
 		local segments = iut.parse_balanced_segment_run(inside, "[", "]")
 		local dot_separated_groups = split_alternating_runs_with_escapes(segments, "%.")
 		for i, dot_separated_group in ipairs(dot_separated_groups) do
-			-- Parse a "mutation" spec such as "umut,uumut[rare]" or "-unuumut,unuumut" or "imut:y". This assumes the
+			-- Parse a "mutation" spec such as "umut,uumut[rare]" or "-unuumut,unuumut" or "imut". This assumes the
 			-- mutation spec is contained in `dot_separated_group` (already split on brackets) and the result of parsing
 			-- should go in `base[dest]`. `allowed_specs` is a list of the allowed mutation specs in this group, such
-			-- as {"umut", "uumut", "u_umut"} or {"-imut", "imut"}, and `allowed_specs_with_values` is a list of the
-			-- specs that can have an associated value, as in "imut:y", or nil if no specs can have such values. The
-			-- result of parsing is a list of structures of the form {
-			--   key = "KEY",
-			--   value = "VALUE" or true,
+			-- as {"umut", "uumut", "u_umut"} or {"-imut", "imut"}. The result of parsing is a list of structures of the
+			-- form {
+			--   form = "FORM",
 			--   footnotes = nil or {"FOOTNOTE", "FOOTNOTE", ...},
 			-- }.
-			local function parse_mutation_spec(dest, allowed_specs, allowed_specs_with_values)
+			local function parse_mutation_spec(dest, allowed_specs)
 				if base[dest] then
 					parse_err(("Can't specify '%s'-type mutation spec twice; second such spec is '%s'"):format(
 						dest, table.concat(dot_separated_group)))
@@ -1493,24 +1516,11 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename, proper_
 				for _, comma_separated_group in ipairs(comma_separated_groups) do
 					local specobj = {}
 					local spec = comma_separated_group[1]
-					if spec:find(":") then
-						if not allowed_specs_with_values then
-							parse_err(("'%s'-type mutation spec cannot have an associated value, but saw '%s'"):format(
-								dest, spec))
-						end
-						local key, value = spec:match("^(.-)%s*:%s*(.-)$")
-						if not m_table.contains(allowed_specs_with_values, key) then
-							parse_err(("For '%s'-type mutation spec, only %s can have an associated value, but saw '%s'"):format(
-								dest, generate_list_of_possibilities_for_err(allowed_specs_with_values), key))
-						end
-						specobj.key = key
-						specobj.value = value
-					elseif not m_table.contains(allowed_specs, spec) then
+					if not m_table.contains(allowed_specs, spec) then
 						parse_err(("For '%s'-type mutation spec, saw unrecognized spec '%s'; valid values are %s"):
 							format(dest, generate_list_of_possibilities_for_err(allowed_specs), spec))
 					else
-						specobj.key = spec
-						specobj.value = true
+						specobj.form = spec
 					end
 					specobj.footnotes = fetch_footnotes(comma_separated_group, parse_err)
 					table.insert(base[dest], specobj)
@@ -1567,9 +1577,9 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename, proper_
 					end
 				end
 			elseif part:find("^u[u_]*mut") then
-				parse_mutation_spec("umut", {"umut", "uumut", "u_umut"}, {"umut"})
+				parse_mutation_spec("umut", {"umut", "uumut", "u_umut"})
 			elseif part:find("^%-?imut") then
-				parse_mutation_spec("imut", {"imut", "-imut"}, {"imut"})
+				parse_mutation_spec("imut", {"imut", "-imut"})
 			elseif part:find("^%-?unu+mut") then
 				parse_mutation_spec("unumut", {"unumut", "-unumut", "unuumut", "-unuumut"})
 			elseif part:find("^%-?unimut") then
@@ -1706,6 +1716,10 @@ local function set_defaults_and_check_bad_indicators(base)
 		error("'declgender' can only be specified with regular nouns")
 	end
 
+	if base.plvstem and not base.plstem then
+		error("When 'plvstem:' given, 'plstem:' must also be given")
+	end
+
 	-- Compute whether i-mutation stems are needed.
 	if not base.need_imut then -- might be set by the detected declension
 		if base.imut then
@@ -1743,11 +1757,15 @@ local function set_defaults_and_check_bad_indicators(base)
 				if override.bare then
 					check_for_imut(override.bare)
 				end
-				if not base.need_imput and override.def then
+				if not base.need_imut and override.def then
 					check_for_imut(override.def)
 				end
 			end
 		end
+	end
+
+	if base.imutval and not base.need_imut then
+		error("'imutval:...' specified but 'imut' and 'unimut' not specified and no forms need i-mutation")
 	end
 end
 
@@ -2406,53 +2424,170 @@ local function determine_props(base)
 		end
 	end
 
--- ** `stem`: The basic stem. May be overridden by more specific variants.
--- ** `nonvstem`: The stem used when the ending is null or starts with a consonant, unless overridden by a more
---    specific variant. Defaults to `stem`.
--- ** `umut_nonvstem`: The stem used when the ending is null or starts with a consonant and u-mutation is in effect,
---    unless overridden by a more specific variant. Defaults to `nonvstem`.
--- ** `imut_nonvstem`: The stem used when the ending is null or starts with a consonant and i-mutation is in effect.
---    If i-mutation is in effect, this should always be specified (otherwise an internal error will occur); hence it has
---    no default.
--- ** `vstem`: The stem used when the ending starts with a vowel, unless overridden by a more specific variant. Defaults
---    to `stem`.
--- ** `umut_vstem`: The stem(s) used when the ending starts with a vowel and u-mutation is in effect. Defaults to
---    `vstem`.
--- ** `imut_vstem`: The stem(s) used when the ending starts with a vowel and i-mutation is in effect. If i-mutation is
---    in effect, this should always be specified (otherwise an internal error will occur); hence it has no default.
--- ** `null_defvstem`: The stem(s) used when the ending is null and is followed by a definite ending that begins with a
---    vowel, unless overridden by a more specific variant. Defaults to `nonvstem`. This is normally set when `defcon`
---    is specified.
--- ** `umut_null_defvstem`: The stem(s) used when the ending is null and is followed by a definite ending that begins
---    with a vowel, and u-mutation is in effect. Defaults to `umut_nonvstem`. This is normally set when `defcon` is
---    specified and u-mutation is needed, as in the nom/acc pl of neuter [[mastur]] "mast".
-
 	-- Now determine all the props for each prop set.
-	for _, prop_set in ipairs(base.prop_sets) do
-		prop_set.stem = base.stem -- set by the user using '#', '##' or 'stem:...' or in determine_declension().
-
-
-
-
-		local lemma_is_vowel_stem = not not base.vowel_stem
-		if base.vowel_stem then
-			props.vowel_stem = base.vowel_stem
-			props.nonvowel_stem = props.vowel_stem
-			-- Apply vowel alternation first in cases like jádro -> jader; apply_vowel_alternation() will throw an error
-			-- if the vowel being modified isn't the last vowel in the stem.
-			props.oblique_nonvowel_stem = com.apply_vowel_alternation(props.vowelalt, props.nonvowel_stem)
-		else
-			props.nonvowel_stem = base.nonvowel_stem
-			-- The user specified #, #ě, ## or ##ě and we're dealing with a term like masculine [[bůh]] or feminine
-			-- [[sůl]] that ends in a consonant. In this case, all slots except the nom_s and maybe acc_s have vowel
-			-- alternation.
-			if props.oblique_slots then
-				props.oblique_slots = "all"
+	for _, props in ipairs(base.prop_sets) do
+		-- First do all the stems, handling overall and plural-specific stems separately.
+		for _, prefix in ipairs {"", "pl_"} do
+			local base_stem, base_vstem
+			if prefix == "" then
+				base_stem = base.stem
+				base_vstem = base.vstem
+			else
+				base_stem = base.plstem
+				base_vstem = base.plvstem
 			end
-			props.oblique_nonvowel_stem = com.apply_vowel_alternation(props.vowelalt, props.nonvowel_stem)
-			props.vowel_stem = base.nonvowel_stem
+			-- The plstem is almost never set, so don't do a lot of unnecessary computation.
+			if prefix == "pl_" and not base_stem then
+				break
+			end
+			local stem, nonvstem, umut_nonvstem, imut_nonvstem, vstem, umut_vstem, imut_vstem, null_defvstem,
+				umut_null_defvstem
+			if base.unumut and not base.unumut.form:find("^%-") then
+				umut_nonvstem = base_stem
+				nonvstem = com.apply_reverse_u_mutation(umut_nonvstem, base.unumut.form, not base.unumut.defaulted)
+				stem = nonvstem
+				if base.need_imut then
+					imut_nonvstem = com.apply_i_mutation(nonvstem, base.imutval)
+				end
+				if base_vstem then
+					error(("Don't currently know how to combine '%svstem:' with 'unumut' specs"):format(
+						prefix == "pl_" and "pl" or ""))
+				end
+				if base.con and base.con.form == "con" then
+					umut_vstem = com.apply_contraction(base_stem)
+				else
+					umut_vstem = base_stem
+				end
+				vstem = com.apply_reverse_u_mutation(umut_vstem, base.unumut.form, not base.unumut.defaulted)
+				if base.need_imut then
+					imut_vstem = com.apply_i_mutation(vstem, base.imutval)
+				end
+				if base.defcon and base.defcon.form == "defcon" then
+					umut_null_defvstem = com.apply_contraction(base_stem)
+				else
+					umut_null_defvstem = base_stem
+				end
+				null_defvstem = com.apply_reverse_u_mutation(umut_null_defvstem, base.unumut.form,
+					not base.unumut.defaulted)
+			elseif base.unimut and not base.unimut.form:find("^%-") then
+				imut_nonvstem = base_stem
+				nonvstem = com.apply_reverse_i_mutation(imut_nonvstem, base.imutval)
+				stem = nonvstem
+				if base.umut then
+					umut_nonvstem = com.apply_u_mutation(nonvstem, base.umut.form, not base.umut.defaulted)
+				end
+				if base_vstem then
+					error(("Don't currently know how to combine '%svstem:' with 'unimut' specs"):format(
+						prefix == "pl_" and "pl" or ""))
+				end
+				if base.con and base.con.form == "con" then
+					imut_vstem = com.apply_contraction(base_stem)
+				else
+					imut_vstem = base_stem
+				end
+				vstem = com.apply_reverse_i_mutation(imut_vstem, base.imutval)
+				if base.umut then
+					umut_vstem = com.apply_u_mutation(vstem, base.umut.form, not base.umut.defaulted)
+				end
+				if base.defcon and base.defcon.form == "defcon" then
+					error("Don't currently know how to combine 'defcon' with 'unimut' specs")
+				end
+			elseif base.umut then
+				stem = base_stem
+				nonvstem = stem
+				umut_nonvstem = com.apply_u_mutation(nonvstem, base.umut.form, not base.umut.defaulted)
+				if base.need_imut then
+					imut_nonvstem = com.apply_i_mutation(nonvstem, base.imutval)
+				end
+				vstem = base_vstem or base_stem
+				if base.con and base.con.form == "con" then
+					vstem = com.apply_contraction(vstem)
+				end
+				umut_vstem = com.apply_u_mutation(vstem, base.umut.form, not base.umut.defaulted)
+				if base.need_imut then
+					imut_vstem = com.apply_i_mutation(vstem, base.imutval)
+				end
+				if base.defcon and base.defcon.form == "defcon" then
+					null_defvstem = com.apply_contraction(base_stem)
+				else
+					null_defvstem = base_stem
+				end
+				umut_null_defvstem = com.apply_u_mutation(null_defvstem, base.umut.form, not base.umut.defaulted)
+			else
+				-- Normally u-mutated forms should always be available, unless 'unumut' is in effect.
+				error(("Internal error: Neither 'unumut' or 'umut' specified: %s"):format(dump(props)))
+			end
+
+			props[prefix .. "stem"] = stem
+			if nonvstem ~= stem then
+				props[prefix .. "nonvstem"] = nonvstem
+			end
+			if umut_nonvstem ~= nonvstem then
+				-- For 'con' and 'defcon' below, footnotes can be placed on -con or -defcon so we have to check for those
+				-- footnotes as well as checking for the vstem and such being different, so the -con and -defcon footnotes
+				-- are still active. However, there's no such thing as -umut, and any time that there's an explicit umut
+				-- variant given, umut_nonvstem will be different from nonvstem (otherwise an error will occur in
+				-- apply_u_mutation), so we don't need this extra check here.
+				if base.umut then
+					umut_nonvstem = iut.combine_form_and_footnotes(umut_nonvstem, base.umut.footnotes)
+				end
+				props[prefix .. "umut_nonvstem"] = umut_nonvstem
+			end
+			if base.need_imut then
+				-- imut footnotes handled specially below
+				props[prefix .. "imut_nonvstem"] = imut_nonvstem
+			end
+			if vstem ~= stem or base.con and base.con.footnotes then
+				-- See comment above for why we need to check for base.con.footnotes (basically, to handle footnotes on
+				-- -con).
+				if base.con then
+					vstem = iut.combine_form_and_footnotes(vstem, base.con.footnotes)
+				end
+				props[prefix .. "vstem"] = vstem
+			end
+			if umut_vstem ~= vstem or base.con and base.con.footnotes then
+				-- See comment above under `umut_nonvstem ~= nonvstem`. There's no -umut so whenever there's a specific
+				-- umut variant with footnote, umut_vstem will be different from vstem so we don't need to check for
+				-- `or base.umut and base.umut.footnotes` above.
+				local footnotes = iut.combine_footnotes(base.con and base.con.footnotes or nil,
+					base.umut and base.umut.footnotes or nil)
+				umut_vstem = iut.combine_form_and_footnotes(umut_vstem, footnotes)
+				props[prefix .. "umut_vstem"] = umut_vstem
+			end
+			if base.need_imut then
+				-- imut footnotes handled specially below
+				props[prefix .. "imut_vstem"] = imut_vstem
+			end
+			if null_defvstem ~= nonvstem or base.defcon and base.defcon.footnotes then
+				-- See comment above for why we need to check for base.defcon.footnotes (basically, to handle footnotes on
+				-- -defcon).
+				if base.defcon then
+					null_defvstem = iut.combine_form_and_footnotes(null_defvstem, base.defcon.footnotes)
+				end
+				props[prefix .. "null_defvstem"] = null_defvstem
+			end
+			if umut_null_defvstem ~= null_defvstem or base.defcon and base.defcon.footnotes then
+				-- Analogous situation to the clause above that checks for `umut_vstem ~= vstem`.
+				local footnotes = iut.combine_footnotes(base.defcon and base.defcon.footnotes or nil,
+					base.umut and base.umut.footnotes or nil)
+				umut_null_defvstem = iut.combine_form_and_footnotes(umut_null_defvstem, footnotes)
+				props[prefix .. "umut_null_defvstem"] = umut_null_defvstem
+			end
 		end
-		props.oblique_vowel_stem = com.apply_vowel_alternation(props.vowelalt, props.vowel_stem)
+
+		-- Do the j-infix, v-infix, imut, unimut and unumut properties.
+		props.jinfix = props.j == "j" and "j" or ""
+		props.jinfix_footnotes = props.j.footnotes
+		props.j = nil
+		props.vinfix = props.v == "v" and "v" or ""
+		props.vinfix_footnotes = props.v.footnotes
+		props.v = nil
+		props.imut_footnotes = props.imut.footnotes
+		props.imut = props.imut.form == "imut" and true or false
+		props.unimut_footnotes = props.unimut.footnotes
+		props.unimut = props.unimut.form == "unimut" and true or false
+		props.unumut_footnotes = props.unumut.footnotes
+		props.unumut = props.unumut.form
 	end
 end
 
