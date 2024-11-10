@@ -801,6 +801,22 @@ decls["m-ir"] = function(base, props)
 end
 
 
+decls["m-ó"] = function(base, props)
+	-- abbreviations of school names generally have null genitive: [[Kennó]] from [[Kennaraskóla]] "Teachers' College"),
+	-- [[Astró]], [[Borgó]] (from [[Borgarholtsskóla]]), [[Bríó]], [[Foldó]] (from [[Foldaskóla]]), [[Hafró]] (from
+	-- [[Hafrannsóknastofnun]] "Marine Research Institute" (of Norway), [[Hagó]] (from [[Hagaskóla]]), [[Húsó]],
+	-- [[Kvennó]] (from [[Kvennaskóla]]), [[Meló]] (from [[Melaskóla]]), [[Menntó]] (from [[Menntaskóla]]), [[Tónó]]
+	-- (from [[Tónlistarskóla]]), [[Való]] (from [[Valhúsaskóla]]), [[Versló]]/[[Verzló]] (from
+	-- [[Verslunarskóla Íslands|Iceland Business School]]); but these are completely outweighed by male given names,
+	-- nicknames and historical names of men in -ó (e.g. [[Bó]], [[Bóbó]], [[Brúnó]], [[Dittó]], [[Filpó]], [[Galíleó]],
+	-- [[Jagó]], [[Kató]], [[Kristó]], [[Leó]], [[Leónardó]], [[Markó]], etc.) as well as common nouns in -ó (e.g.
+	-- [[bóleró]] "bolero", [[evró]] "Euro (dated)", [[faraó]] "pharaoh", [[kanó]] "canoe", [[kímonó]] "kimono",
+	-- [[mambó]] "mambo", [[pesó]] "peso", [[pikkóló]] "piccolo", [[róló]] "roller blind?", [[sleikjó]] "lollipop",
+	-- etc.)
+	add_decl(base, props, "", "", "s", "ar")
+end
+
+
 decls["m-rstem"] = function(base, props)
 	-- This code is also used by decls["f-rstem"]
 	local imut
@@ -2226,13 +2242,23 @@ local function determine_declension(base)
 			end
 		end
 		if not stem then
-			stem = rmatch(base.lemma, "^(.*)i$")
+			stem = rmatch(base.lemma, "^(.*)[ia]$")
 			if stem then
-				-- [[tími]] "time, hour" and many others
+				-- [[tími]] "time, hour" and many others; [[herra]] "gentleman" ([[sendiherra|ambassador]]),
+				-- [[séra]]/[[síra]] "reverend"
 				base.decl = "m-weak"
 			end
 		end
-		-- FIXME
+		if not stem then
+			stem = rmatch(base.lemma, "^(.*ó)$")
+			if stem then
+				-- [[kanó]] "canoe", [[pesó]] "peso", [[Plútó]] "Pluto", [[Markó]] (male given name), etc.
+				base.decl = "m-ó"
+			end
+		end
+		-- Miscellaneous masculine terms without ending
+		stem = base.lemma
+		base.decl = "m"
 	elseif base.gender == "f" then
 		stem = rmatch(base.lemma, "^(.*)a$")
 		if stem then
