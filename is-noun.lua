@@ -796,6 +796,43 @@ decls["m"] = function(base, props)
 end
 
 
+decls["m-ir"] = function(base, props)
+	add_decl(base, props, "i", "i", "is", "ar")
+end
+
+
+decls["m-rstem"] = function(base, props)
+	-- This code is also used by decls["f-rstem"]
+	local imut
+	if props.stem:find("syst$") then
+		imut = ""
+	else
+		imut = "^"
+	end
+	add_decl(base, props, "ur", "ur", "ur", imut .. "ur", nil, imut .. "rum", imut .. "ra")
+end
+
+
+decls["m-weak"] = function(base, props)
+	-- Words in -i like [[tími]] "time, hour"; also words in -a e.g. [[herra]] "gentleman; sir, Mr. (term of address)",
+	-- [[séra]]/[[síra]] "reverend"
+	add_decl(base, props, "a", "a", "a", "ar")
+end
+
+
+decls["m-ndi"] = function(base, props)
+	-- Words in -ndi, mostly derived from present participles and mostly in [[andi]]; but cf. [[bóndi]], [[frændi]],
+	-- and [[fjandi]] with two plurals with different meanings.
+	local imut
+	if props.stem:find("ænd$") then
+		imut = ""
+	else
+		imut = "^"
+	end
+	add_decl(base, props, "a", "a", "a", imut .. "ur", nil, imut .. "um", imut .. "a")
+end
+
+
 decls["f"] = function(base, props)
 	-- Normal strong feminine nouns; default to genitive -ar, plural -ir.
 	add_decl(base, props, "", "", "ar", "ir")
@@ -854,6 +891,9 @@ decls["f-long-umlaut-vowel-r"] = function(base, props)
 	-- nouns in long umlauted vowel + -r: [[kýr]] "cow", [[sýr]] "sow (archaic)", [[ær]] and compounds.
 	add_decl(base, props, "", "", "^r", "^r", "^r", "m", {indef = "a", def = ""})
 end
+
+
+decls["f-rstem"] = decls["m-rstem"]
 
 
 decls["weak-f"] = function(base, props)
@@ -2099,29 +2139,98 @@ end
 local function determine_declension(base)
 	-- FIXME: Update for Icelandic
 	local stem
-	local default_mutations = {}
+	local default_props = {}
 	-- Determine declension
 	if base.gender == "m" then
 		if not stem then
-			stem = rmatch(base.lemma, "^(.*aur)$")
+			stem = rmatch(base.lemma, "^(.*[Aa]ur)$")
 			if stem then
 				-- [[maur]] "ant", [[aur]] "loam, mud", [[gaur]] "ruffian", [[paur]] "devil; enmity",
 				-- [[saur]] "dirt; excrement", [[staur]] "post", [[ljósastaur]] "lamp post"
 				base.decl = "m"
 			end
 		end
-		stem = rmatch(base.lemma, "^(.*á)r$")
-		stem = rmatch(base.lemma, "^(.*á)r$")
-		if stem then
-			-- [[nár]] "corpse", [[aur]] "loam, mud", [[gaur]] "ruffian", [[paur]] "devil; enmity",
-			-- [[saur]] "dirt; excrement", [[staur]] "post", [[ljósastaur]] "lamp post"
-			base.decl = "m"
+		if not stem then
+			stem = rmatch(base.lemma, "^(.*)ur$")
+			if stem then
+				if base.stem == base.lemma then
+					-- [[akur]] "field" etc. where the stem includes the final -r
+					stem = base.stem
+					default_props.con = "con"
+				end
+				-- [[hestur]] "horse" and lots of others
+				base.decl = "m"
+			end
 		end
-		stem = rmatch(base.lemma, "^(.*)ir$")
-		if stem then
-			-- [[maur]] "ant", [[aur]] "loam, mud", [[gaur]] "ruffian", [[paur]] "devil; enmity",
-			-- [[saur]] "dirt; excrement", [[staur]] "post", [[ljósastaur]] "lamp post"
-			base.decl = "m-ir"
+		if not stem then
+			stem = rmatch(base.lemma, "^(.*[Ee]ir)$")
+			if stem then
+				-- [[geir]] "?", [[eir]] "copper", [[leir]] "clay", [[Geir]] (male given name)
+				base.decl = "m"
+			end
+		end
+		if not stem then
+			stem = rmatch(base.lemma, "^(.*)ir$")
+			if stem then
+				-- [[læknir]] "physician" and many others
+				-- [[bróðir]], [[faðir]] are r-stems
+				base.decl = base.rstem and "m-rstem" or "m-ir"
+			end
+		end
+		if not stem then
+			stem = rmatch(base.lemma, "^(.*l)l$")
+			if stem then
+				if rfind(stem, com.cons_c .. "[aiu]l$") or stem:find("^[aiuAIU]l$") then
+					-- [[gaffall]] "fork" (dat pl [[göfflum]]), [[þumall]] "thumb"; [[ekkill]] "widower";
+					-- [[spegill]] "mirror"; [[segull]] "magnet"; [[öxull]] "axis; axle"; etc. Note that the check
+					-- for a consonant preceding the a/i/u is important as there are words like [[manúall]] "manual",
+					-- [[ritúall]] "ritual", [[kokteill]] "cocktail", [[feill]] "flaw, error", [[deill]] "dispute???"
+					-- (rare, regional), [[haull]] "hernia", [[straull]] "? (rare, regional)" that don't have
+					-- contraction. Beware of the rare word [[síill]] "sieve? strainer?" that per BÍN does contract to
+					-- síl- before vowels. Currently the code to handle contraction will throw an error if you attempt
+					-- to contract that word, but you can use 'vstem:...'. 
+					--
+					-- There are also lots of words in a vowel other than a/i/u followed by -ll, such as [[bíll]] "car",
+					-- [[áll]] "eel", [[konsúll]] "consul", [[þræll]] "slave", [[hvoll]] "hill", [[stóll]] "chair", etc.
+					-- In these, the final -l is the nominative singular ending, as above.
+					default_props.con = "con"
+				end
+				base.decl = "m"
+			end
+		end
+		if not stem then
+			stem = rmatch(base.lemma, "^(.*n)n$")
+			if stem then
+				if rfind(stem, com.cons_c .. "[aiu]n$") or stem:find("^[aiuAIU]n$") then
+					-- As with -all/-ill/-ull although there are fewer such words in -nn. Examples: [[aftann]] "evening"
+					-- (dat pl öftnum), [[arinn]] "hearth, fireplace" (dat pl örnum), [[drottinn]] "lord", [[himinn]]
+					-- "sky, heaven", [[morgunn]] "morning", [[jötunn]] "giant", etc.
+					--
+					-- There are also lots of words in a vowel other than a/i/u followed by -nn, such as [[fleinn]]
+					-- "spear", [[steinn]] "rock", [[prjónn]] "knitting needle", [[daunn]] "stink", [[húnn]] "knob".
+					-- In these, the final -n is the nominative singular ending, as above.
+					default_props.con = "con"
+				end
+				base.decl = "m"
+			end
+		end
+		if not stem and not base.weak then
+			stem = rmatch(base.lemma, "^(.*nd)i$")
+			if stem then
+				-- [[nemandi]] "student" and many others; terms in -jandi like [[byrjandi]]
+				-- "beginner", [[seljandi]] "seller" umlaut to -jend- in the plural instead of -ind-
+				base.decl = "m-ndi"
+				if stem:find("jand$") then
+					default_props.imutval = "je"
+				end
+			end
+		end
+		if not stem then
+			stem = rmatch(base.lemma, "^(.*)i$")
+			if stem then
+				-- [[tími]] "time, hour" and many others
+				base.decl = "m-weak"
+			end
 		end
 		-- FIXME
 	elseif base.gender == "f" then
@@ -2176,14 +2285,14 @@ local function determine_declension(base)
 				-- [[pöntun]] "order (in commerce)"; [[verslun]] "trade, business; store, shop"; [[efun]] "doubt";
 				-- [[bötun]] "improvement"; [[örvun]] "encouragement; stimulation" (pl. örvanir); etc.
 				base.decl = "f"
-				default_mutations.unumut = "unuumut"
+				default_props.unumut = "unuumut"
 			end
 		end
 		if not stem then
 			stem = base.lemma
 			base.decl = "f"
 			-- FIXME! Somehow if the user specifies v-infix, it should prevent unumut from happening.
-			default_mutations.unumut = "unumut"
+			default_props.unumut = "unumut"
 		end
 
 
@@ -2646,9 +2755,17 @@ local function determine_default_masc_dat_sg(base, props)
 		default_dat_sg = false -- no default
 	else
 		local stem = props.stem.form
-		if stem:find("[iu]ng$") then
+		if props.jinfix == "j" then
+			-- Stems with j-infix normally have null dative even if they end in two consonants, e.g.
+			-- [[belgur]] "bellows; skin", [[fengur]] "profit", [[flekkur]] "spot, fleck", [[serkur]]
+			-- "shirt", [[stingur]] "sting"
+			default_dat_sg = ""
+		elseif stem:find(com.vowel_c .. ".*[iu]ng$") then
+			-- Stems in suffix -ing or -ung normally have indef dat -i, def dat null
 			default_dat_sg = {indef = "i", def = ""}
-		elseif stem:find("x$") or rfind(stem, com.cons_c .. com.cons_c .. "$") then
+		elseif stem:find("x$") or (rfind(stem, com.cons_c .. com.cons_c .. "$") and not stem:find("kk$") and not stem:find("pp$")) then
+			-- Other stems in two consonants normally have dat -i, but those in -kk or -pp normally
+			-- don't, so exclude them and require explicit specification
 			default_dat_sg = "i"
 		elseif not base.dem and not rfind(stem, com.vowel_c .. "$") and is_proper_noun(stem) then
 			-- proper noun whose stem does not end in a vowel
@@ -2662,9 +2779,9 @@ local function determine_default_masc_dat_sg(base, props)
 				"definite endings of the dative singular in the form 'datINDEF/DEF'")
 		else
 			error("Most masculine nouns must explicitly specify the indefinite and definite endings of the dative " ..
-				"singular using an override of the form 'datINDEF/DEF'; exceptions are nouns in -ir, -ó or -i; proper " ..
-				"nouns; plural-only nouns; nouns with stem contraction; nouns whose stem ends in two or more " ..
-				"consonants; and nouns whose stem ends in a vowel or vowel + r")
+				"singular using an override of the form 'datINDEF/DEF'; exceptions are nouns in -ir, -ó or -i; " ..
+				"proper nouns; plural-only nouns; nouns with stem contraction or j-infix; nouns whose stem ends in " ..
+				"two or more consonants, except for -kk and -pp; and nouns whose stem ends in a vowel or vowel + r")
 		end
 	end
 	props.default_dat_sg = default_dat_sg
