@@ -654,8 +654,26 @@ Personal names:
 * {{tl|is-ndecl|m|pagename=himinn}}
 
 === words in -ó ===
-* {{m|is|strætó||city bus}}; also: {{m|is|gaggó||junior high, middle school}}; {{m|is|menntó||senior high, gymnasium}}; various place names and proper nouns, e.g. {{m|is|Kennó||the Teachers' College}} (from {{m|is|Kennaraskólinn}}), {{m|is|Sigló}} (from {{m|is|Siglufjörður}})
-* {{tl|is-ndecl|m|pagename=strætó}}
+* acc/dat -, gen variously -s or -, nom acc dat gen pl -ar -a -um -a
+* {{m|is|strætó||city bus}}, <<næturstrætó|night bus>>
+* {{tl|is-ndecl|m,s:-|pagename=strætó}}
+* {{m|is|Strætó|pos=company name}}
+* {{tl|is-ndecl|m,s:-|pagename=Strætó}}
+* {{m|is|gaggó||junior high, middle school}}
+* {{tl|is-ndecl|m,-|pagename=gaggó}}
+* {{m|is|menntó||senior high, gymnasium}} (behaves like a proper noun)
+* {{tl|is-ndecl|m,-.sg.-def|pagename=menntó}}
+* {{m|is|Kennó||the Teachers' College}} (from {{m|is|Kennaraskóla}}), <<Astró|?>>, <<Borgó|?>> (from {{m|is|Borgarholtsskóla}}), <<Bríó|?>>, <<Foldó|?>> (from <<Foldaskóla>>), <<Hafró|?>> (from <<Hafrannsóknastofnun|Marine Research Institute>> of Norway), <<Hagó|?>> (from <<Hagaskóla>>), <<Húsó|?>> (company name), <<Kvennó|?>> (from <<Kvennaskóla>>), <<Meló|?>> (from <<Melaskóla>>), <<Menntó|?>> (from <<Menntaskóla>>), <<Tónó|?>> (from <<Tónlistarskóla>>), <<Való|>> (from <<Valhúsaskóla>>), <<Versló|pos=company name>>/<<Verzló|pos=company name>> (from <<Verslunarskóla Íslands|Iceland Business School>>)
+* {{tl|is-ndecl|m,-|pagename=Kennó}}
+* {{m|is|Bjössaróló||?}}, <<Bó|nickname>>, <<Bóbó|nickname>>, <<Brúnó|male given name>>, <<Dittó|male given name>>, <<Dúmbó|?>>, <<Erró|artist's name>>, <<Eyjó|nickname>>, <<Filpó|male given name>>, <<Fígaró|company name>>, <<Galíleó|Galileo>>, <<Harbó|male given name>>, <<Húgó|male given name>>, <<Ingó|nickname>>, <<Jagó|Iago?>>, <<Kató|male given name>>, <<Keikó|?>>, <<Kristó|nickname>>, <<Leó|male given name>>, <<Leónardó|Leonardo (da Vinci)>>, <<Marinó|male given name>>, <<Marínó|male given name>>, <<Markó|male given name>>, <<Mekkinó|male given name>>, <<Míó|male given name>>, <<Nemó|Nemo>>, <<Neró|Nero>>, <<Nýló|?>> (from <<Nýlistasafn|Museum of Contemporary Art>>), <<Októ|male given name>>, <<Ottó|male given name>>, <<Plató|Plato; male given name>>, <<Plútó|Pluto (planet, Roman god)>>, <<Rambó|Rambo>>, <<Rómeó|Romeo>>, <<Teó|male given name>>, <<Theó|male given name>>, <<Tító|Tito>>, <<Varnó|male given name>>, <<Viggó|male given name>>, <<Óþelló|Othello>>
+* {{tl|is-ndecl|m,s|pagename=Bjössaróló}}
+* {{m|is|Sigló}} (from {{m|is|Siglufjörður}}) [NOT IN BÍN]
+* {{m|is|bóleró||?}}, <<róló|roller blind?>> (either masculine or neuter), <<evró|Euro (dated)>>, <<faraó|pharaoh>>, <<kanó|canoe>>, <<kímonó|kimono>>, <<kæró|? (informal)>> (also feminine and neuter), <<leó|lion? (archaic)>>, <<mambó|mambo?>>, <<pesó|peso>> (informal; correctly but rarely <<pesi>>), <<pikkóló|piccolo>>, <<pusjó|?>>, <<síseró|?>>, <<sleikjó|lollipop>>
+* {{tl|is-ndecl|m,s|pagename=bóleró}}
+* <<sóló|solo>> (also feminine, neuter)
+* {{tl|is-ndecl|m,s.dat-:i|pagename=sóló}}
+* <<tangó|tango>>
+* {{tl|is-ndecl|m,s.dat-:i[rare]|pagename=tangó}}
 * NOTE: Some nouns in -ó are not masculine (it depends on what the noun was clipped from), but these are all masculine.
 
 === words with pl in -ir ===
@@ -903,24 +921,24 @@ Personal names:
 * {{tl|is-ndecl|m.def|pagename=Geysir}}
 
 ==== miscellaneous irregular words in -ir ====
-* {{m|is|bróðir||brother}}; acc/dat/gen sg are [[bróður]], nom/acc pl [[bræður]], dat pl [[bræðrum]], gen pl [[bræðra]]. `rstem` selects the right endings and contraction (same for [[dóttir]], [[systir]], [[faðir]], [[móðir]]). `imut` applies i-mutation to the plural.
-* {{tl|is-ndecl|m.rstem.imut|pagename=bróðir}}
+* {{m|is|bróðir||brother}}; acc/dat/gen sg are [[bróður]], nom/acc pl [[bræður]], dat pl [[bræðrum]], gen pl [[bræðra]]. `rstem` selects the right endings, contraction and i-mutation (same for [[dóttir]], [[systir]], [[faðir]], [[móðir]], except that [[systir]] has no i-mutation).
+* {{tl|is-ndecl|m.rstem|pagename=bróðir}}
 * {{tl|is-ndecl|m.@|pagename=bróðir}}
 
-* {{m|is|dóttir||daughter}}; acc/dat/gen sg are [[dóttur]], nom/acc pl [[dætur]], dat pl [[dætrum]], gen pl [[dætra]]. `rstem` selects the right endings and contraction as above; `imut` isn't actually necessary because we explicitly set the pl stem 'dætur' (i-mutation by default would produce #'dættur').
-* {{tl|is-ndecl|m.rstem.imut.plstem:dætur|pagename=dóttir}}
+* {{m|is|dóttir||daughter}}; acc/dat/gen sg are [[dóttur]], nom/acc pl [[dætur]], dat pl [[dætrum]], gen pl [[dætra]]. `rstem` selects the right endings, contraction and i-mutation. We set the plstem to 'dót' so its i-mutation is 'dæt'.
+* {{tl|is-ndecl|m.rstem.plstem:dót|pagename=dóttir}}
 * {{tl|is-ndecl|f.@|pagename=dóttir}}
 
-* {{m|is|systir||sister}}; acc/dat/gen sg are [[systur]], nom/acc pl [[systur]], dat pl [[systrum]], gen pl [[systra]]. `rstem` selects the right endings and contraction as above. Nothing else needed.
+* {{m|is|systir||sister}}; acc/dat/gen sg are [[systur]], nom/acc pl [[systur]], dat pl [[systrum]], gen pl [[systra]]. `rstem` selects the right endings and contraction as above (no i-mutation).
 * {{tl|is-ndecl|f.rstem|pagename=systir}}
 * {{tl|is-ndecl|f.@|pagename=systir}}
 
-* {{m|is|faðir||father}}; acc/dat/gen sg are [[föður]], nom/acc pl [[feður]], dat pl [[feðrum]], gen pl [[feðra]]. `rstem` selects the right endings and contraction as above. `umut` produces u-mutated [[föður]] in the singular and `i-mut` producces i-mutated [[feður]] in the plural.
-* {{tl|is-ndecl|m.rstem.umut.imut|pagename=faðir}}
+* {{m|is|faðir||father}}; acc/dat/gen sg are [[föður]], nom/acc pl [[feður]], dat pl [[feðrum]], gen pl [[feðra]]. `rstem` selects the right endings, contraction and i-mutation as above. The -ur ending in acc/dat/gen sg automatically trigger u-mutation.
+* {{tl|is-ndecl|m.rstem|pagename=faðir}}
 * {{tl|is-ndecl|m.@|pagename=faðir}}
 
-* {{m|is|móðir||mother}}; acc/dat/gen sg are [[móður]], nom/acc pl [[mæður]], dat pl [[mæðrum]], gen pl [[mæðra]]. `rstem` selects the right endings and contraction as above. `i-mut` producces i-mutated [[mæður]] in the plural.
-* {{tl|is-ndecl|f.rstem.imut|pagename=móðir}}
+* {{m|is|móðir||mother}}; acc/dat/gen sg are [[móður]], nom/acc pl [[mæður]], dat pl [[mæðrum]], gen pl [[mæðra]]. `rstem` selects the right endings, contraction and i-mutation as above.
+* {{tl|is-ndecl|f.rstem|pagename=móðir}}
 * {{tl|is-ndecl|f.@|pagename=móðir}}
 
 == masculine weak ==
@@ -969,23 +987,26 @@ Personal names:
 
 ==== bóndi, frændi, fjandi ====
 * {{m|is|bóndi||farmer; husband}}; see above under -andi for ^ur and imut
-* {{tl|is-ndecl|m,^ur.imut|pagename=bóndi}}
+* {{tl|is-ndecl|m|pagename=bóndi}}
 * {{m|is|frændi||relative}}
-* {{tl|is-ndecl|m,ur|pagename=frændi}}
+* {{tl|is-ndecl|m|pagename=frændi}}
 * {{m|is|fjandi||enemy; devil}}
-; meaning "enemy":
-* {{tl|is-ndecl|m,^ur.imut|pagename=fjandi}}<!-- per BÍN -->
-* {{tl|is-ndecl|m,^ur.imut,-imut|pagename=fjandi}}<!-- per Thomson -->
-; meaning "devil":
-* {{tl|is-ndecl|m|pagename=fjandi}}
+* Note in the following that `.weak` disables special -ndi handling and makes it decline like a regular weak noun (fjandar not #fjendur); we also add footnotes indicating that the plural fjandar etc. means only "devil" and that in the singular, where both meanings use the same form, the meaning "enemy" is rare.
+* {{tl|is-ndecl|((<m.weak.addnote[.*_p][in the meaning "devil"].addnote[.*_s][in the meaning "devil"; rarely used in the singular to mean "enemy"]>,<m.[in the meaning "enemy"]>))|pagename=fjandi}}<!-- per BÍN; per Thomson in the meaning "enemy", it can also decline in the plural like "devil" -->
 
 ==== Dani et al. ====
-* {{m|is|Dani||Dane}}
-* {{tl|is-ndecl|m,ir|pagename=Dani}}
-* {{m|is|Frísi||Frisian}}; also {{m|is|Írani||Iranian}} (dat pl Írönum), {{m|is|Ítali||Italian}} (dat pl Ítölum)
-* {{tl|is-ndecl|m,ir:ar|pagename=Frísi}}
-* {{m|is|Japani||Japanese}} (dat pl Japönum or more rarely Jöpunum); NOTE: only strong masculine and feminine nouns have a slot for genitive singular endings; weak nouns and neuter nouns have only a slot for the plural (FIXME? maybe make strong neuter nouns have a genitive slot for consistency)
-* {{tl|is-ndecl|m,ir:ar.umut,uumut[rare]|pagename=Japani}}
+* {{m|is|Dani||Dane}} (dat pl Dönum); also {{m|is|Ítali||Italian}} (dat pl Ítölum)
+* {{tl|is-ndecl|m,,ir.dem|pagename=Dani}}
+* {{m|is|Frísi||Frisian}}; also {{m|is|Írani||Iranian}} (dat pl Írönum), <<Germani|German>> (dat pl Germönum)
+* {{tl|is-ndecl|m,,ir:ar.dem|pagename=Frísi}}
+* {{m|is|Japani||Japanese}} (dat pl Japönum or more rarely Jöpunum)
+* {{tl|is-ndecl|m,,ir:ar.dem.umut,uumut[rare]|pagename=Japani}}
+* {{m|is|Afgani||Afghan}}; also <<Albani|Albanian>>
+* {{tl|is-ndecl|m,,ar:ir.dem|pagename=Afgani}}
+* {{m|is|Bútani||Bhutanese}}
+* {{tl|is-ndecl|m,,ar:ir[less common].dem|pagename=Bútani}} (dat pl Bútönum)
+* {{m|is|Persi||Persian}}
+* {{tl|is-ndecl|m.dem|pagename=Persi}}; also {{m|is|Afríkani||African}} (dat pl Afríkönum), <<Ameríkani|American>> (dat pl Ameríkönum), <<Arákani|Arakanese>> (dat pl Arákönum), <<Arabi|Arab>> (dat pl Aröbum), <<Asteki|Aztec>>, <<Baski|Basque>> (dat pl Böskum), <<Bauni|Dane (archaic)>>, <<Bretóni|Breton>>, <<Búi|Boer>>, etc.
 
 ==== Grikki et al. ====
 * {{m|is|Grikki||Greek person}}; also {{m|is|Rygi||Rogalander}} (?; not in BÍN), {{m|is|Serki||Saracen}}, {{m|is|Tyrki||Turk}}
