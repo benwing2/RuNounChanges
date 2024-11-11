@@ -39,7 +39,7 @@ local m_links = require("Module:links")
 local m_string_utilities = require("Module:string utilities")
 local iut = require("Module:inflection utilities")
 local m_para = require("Module:parameters")
-local com = require("Module:is-common")
+local com = require("Module:User:Benwing2/is-common")
 
 local current_title = mw.title.getCurrentTitle()
 local NAMESPACE = current_title.nsText
@@ -58,6 +58,9 @@ local ulower = mw.ustring.lower
 local dump = mw.dumpObject
 
 local force_cat = false -- set to true to make categories appear in non-mainspace pages, for testing
+
+local SUB_ESCAPED_PERIOD = u(0xFFF0)
+local SUB_ESCAPED_COMMA = u(0xFFF1)
 
 -- version of rsubn() that discards all but the first return value
 local function rsub(term, foo, bar)
@@ -153,8 +156,8 @@ local clitic_articles = {
 local function get_output_noun_slots(alternant_multiword_spec)
 	local output_noun_slots = {}
 	for _, def in ipairs {"ind", "def"} do
-		for _, case in ipairs(cases) do
-			for _, num in {"s", "p"} do
+		for case, _ in pairs(cases) do
+			for _, num in ipairs {"s", "p"} do
 				local slot = ("%s_%s_%s"):format(def, case, num)
 				local accel = ("%s|%s"):format(def, case)
 				if alternant_multiword_spec.actual_number == "both" then
@@ -190,8 +193,8 @@ end
 local function is_proper_noun(stem)
 	local first_letter = usub(stem, 1, 1)
 	local second_letter = usub(stem, 2, 2)
-	return ulower(first_letter) ~= first_letter and (not second_letter or second_letter == "") or
-		uupper(second_letter) ~= second_letter
+	return ulower(first_letter) ~= first_letter and ((not second_letter or second_letter == "") or
+		uupper(second_letter) ~= second_letter)
 end
 
 -- Basic function to combine stem(s) and other properties with ending(s) and insert the result into the appropriate
@@ -1217,6 +1220,21 @@ decls["det"] = function(base, props)
 end
 
 
+-- Return the slots that may contain a lemma, in the order they should be checked. `props` is a property table,
+-- coming either from `base` or `alternant_multiword_spec`.
+local function get_lemma_slots(props)
+	if props.surname then
+		error("FIXME")
+		-- return {"nom_m_s"}
+	elseif props.overall_adj then
+		error("FIXME")
+		-- return {"str_nom_s", "str_nom_p"}
+	else
+		return potential_lemma_slots
+	end
+end
+
+
 -- Return the lemmas for this term. The return value is a list of {form = FORM, footnotes = FOOTNOTES}.
 -- If `linked_variant` is given, return the linked variants (with embedded links if specified that way by the user),
 -- otherwies return variants with any embedded links removed. If `remove_footnotes` is given, remove any
@@ -1284,13 +1302,13 @@ end
 -- treated as separators.
 local function split_alternating_runs_with_escapes(segments, splitchar)
 	for i, segment in ipairs(segments) do
-		segments[i] = rsub(segment, "\\,", SUB_ESCAPED_COMMA)
+		segment = rsub(segment, "\\,", SUB_ESCAPED_COMMA)
 		segments[i] = rsub(segment, "\\%.", SUB_ESCAPED_PERIOD)
 	end
 	local separated_groups = iut.split_alternating_runs_and_strip_spaces(segments, splitchar)
 	for _, separated_group in ipairs(separated_groups) do
 		for i, segment in ipairs(separated_group) do
-			separated_group[i] = rsub(segment, SUB_ESCAPED_COMMA, ",")
+			segment = rsub(segment, SUB_ESCAPED_COMMA, ",")
 			separated_group[i] = rsub(segment, SUB_ESCAPED_PERIOD, ".")
 		end
 	end
@@ -1339,10 +1357,10 @@ local function fetch_slot_override(segments, spectype, allow_blank, allow_slash,
 		parse_err(("Can't specify two slash-separated override groups for %s; the second override group is for the definite slot variant, but the slot is already definite"):format(
 			spectype))
 	end
-	local ret
+	local ret = {}
 	for i, slash_separated_group in ipairs(slash_separated_groups) do
 		local retfield = i == 1 and "bare" or "def"
-		local colon_separated_groups = iut.split_alternating_runs_and_strip_spaces(slash_separated_groups, ":")
+		local colon_separated_groups = iut.split_alternating_runs_and_strip_spaces(slash_separated_group, ":")
 		local specs = {}
 		for _, colon_separated_group in ipairs(colon_separated_groups) do
 			local form = colon_separated_group[1]
@@ -1436,7 +1454,7 @@ local function parse_override(segments, parse_err)
 			parse_err(("Unrecognized case '%s' in override: '%s'"):format(case, table.concat(segments)))
 		end
 		part = usub(part, 4)
-		local slot = slot_def and "def_" or "ind_"
+		local slot = slot_def and "def_" or ""
 		if rfind(part, "^pl") then
 			part = usub(part, 3)
 			slot = slot .. case .. "_p"
@@ -1707,8 +1725,8 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename, proper_
 				end
 				base.builtin = true
 				parse_err("Built-in indicator '@' not implemented yet")
-			elseif part == "dem" or part == "def" or or part == "-def" or part == "pers" or part == "rstem" or
-				part == "já" then
+			elseif part == "dem" or part == "def" or part == "weak" or part == "-def" or part == "pers" or
+				part == "rstem" or part == "já" then
 				if base.props[part] then
 					parse_err("Can't specify '" .. part .. "' twice")
 				end
@@ -1772,6 +1790,7 @@ local function set_defaults_and_check_bad_indicators(base)
 				-- FIXME, maybe with adjectives
 				error(("'%s' can only be specified with regular nouns"):format(mutation_spec))
 			end
+		end
 		if base.declgender then
 			error("'declgender' can only be specified with regular nouns")
 		end
@@ -2356,6 +2375,53 @@ local function determine_declension(base)
 	end
 end
 
+
+local function determine_default_masc_dat_sg(base, props)
+	-- We only need to compute the default dative singular for regular masculines (not masculines in -ir, -ó, -i, etc.).
+	-- These other types have specific defaults for the entire type.
+	if base.decl ~= "m" or base.number == "pl" then
+		return
+	end
+	local default_dat_sg
+	-- FIXME: Probably won't work with definite-only lemmas.
+	if base.overrides.ind_dat_s and base.overrides.ind_dat_s.def then
+		-- Override specified in INDEF/DEF form.
+		default_dat_sg = false -- no default
+	else
+		local stem = base.stem
+		if props.j and props.j.form == "j" then
+			-- Stems with j-infix normally have null dative even if they end in two consonants, e.g.
+			-- [[belgur]] "bellows; skin", [[fengur]] "profit", [[flekkur]] "spot, fleck", [[serkur]]
+			-- "shirt", [[stingur]] "sting"
+			default_dat_sg = ""
+		elseif stem:find(com.vowel_c .. ".*[iu]ng$") then
+			-- Stems in suffix -ing or -ung normally have indef dat -i, def dat null
+			default_dat_sg = {indef = "i", def = ""}
+		elseif stem:find("x$") or (rfind(stem, com.cons_c .. com.cons_c .. "$") and not stem:find("kk$") and not stem:find("pp$")) then
+			-- Other stems in two consonants normally have dat -i, but those in -kk or -pp normally
+			-- don't, so exclude them and require explicit specification
+			default_dat_sg = "i"
+		elseif not base.dem and not rfind(stem, com.vowel_c .. "$") and is_proper_noun(stem) then
+			-- proper noun whose stem does not end in a vowel
+			default_dat_sg = "i"
+		elseif props.con and props.con.form == "con" then
+			default_dat_sg = "i"
+		elseif rfind(stem, com.vowel_c .. "r?$") then
+			default_dat_sg = ""
+		elseif base.overrides.dat_s and not base.overrides.dat_s.def then
+			error("Saw dative singular override of just the indefinite ending, but requires both the indefinite and " ..
+				"definite endings of the dative singular in the form 'datINDEF/DEF'")
+		elseif not base.overrides.dat_s then
+			error("Most masculine nouns must explicitly specify the indefinite and definite endings of the dative " ..
+				"singular using an override of the form 'datINDEF/DEF'; exceptions are nouns in -ir, -ó or -i; " ..
+				"proper nouns; plural-only nouns; nouns with stem contraction or j-infix; nouns whose stem ends in " ..
+				"two or more consonants, except for -kk and -pp; and nouns whose stem ends in a vowel or vowel + r")
+		end
+	end
+	props.default_dat_sg = default_dat_sg
+end
+
+
 -- Determine the stems to use for each stem set: vowel and nonvowel stems, for singular
 -- and plural. We assume that one of base.vowel_stem or base.nonvowel_stem has been
 -- set in determine_declension(), depending on whether the lemma ends in
@@ -2395,6 +2461,9 @@ local function determine_props(base)
 
 	-- Now determine all the props for each prop set.
 	for _, props in ipairs(base.prop_sets) do
+		-- Determine the default dative singular for masculine nouns using declension "m".
+		determine_default_masc_dat_sg(base, props)
+
 		-- Almost all nouns have dative plural -um, which triggers u-mutation, so we need to compute the u-mutation
 		-- stem using "umut" if not specifically given. Set `defaulted` to an error isn't triggered if there's no
 		-- special u-mutated form.
@@ -2552,66 +2621,31 @@ local function determine_props(base)
 		end
 
 		-- Do the j-infix, v-infix, imut, unimut and unumut properties.
-		props.jinfix = props.j == "j" and "j" or ""
-		props.jinfix_footnotes = props.j.footnotes
-		props.j = nil
-		props.vinfix = props.v == "v" and "v" or ""
-		props.vinfix_footnotes = props.v.footnotes
-		props.v = nil
-		props.imut_footnotes = props.imut.footnotes
-		props.imut = props.imut.form == "imut" and true or false
-		props.unimut_footnotes = props.unimut.footnotes
-		props.unimut = props.unimut.form == "unimut" and true or false
-		props.unumut_footnotes = props.unumut.footnotes
-		props.unumut = props.unumut.form
-	end
-end
-
-
-local function determine_default_masc_dat_sg(base, props)
-	-- We only need to compute the default dative singular for regular masculines (not masculines in -ir, -ó, -i, etc.).
-	-- These other types have specific defaults for the entire type.
-	if base.decl ~= "m" or base.number == "pl" then
-		return
-	end
-	local default_dat_sg
-	-- FIXME: Probably won't work with definite-only lemmas.
-	if base.overrides.ind_dat_s and base.overrides.ind_dat_s.def then
-		-- Override specified in INDEF/DEF form.
-		default_dat_sg = false -- no default
-	else
-		local stem = props.stem.form
-		if props.jinfix == "j" then
-			-- Stems with j-infix normally have null dative even if they end in two consonants, e.g.
-			-- [[belgur]] "bellows; skin", [[fengur]] "profit", [[flekkur]] "spot, fleck", [[serkur]]
-			-- "shirt", [[stingur]] "sting"
-			default_dat_sg = ""
-		elseif stem:find(com.vowel_c .. ".*[iu]ng$") then
-			-- Stems in suffix -ing or -ung normally have indef dat -i, def dat null
-			default_dat_sg = {indef = "i", def = ""}
-		elseif stem:find("x$") or (rfind(stem, com.cons_c .. com.cons_c .. "$") and not stem:find("kk$") and not stem:find("pp$")) then
-			-- Other stems in two consonants normally have dat -i, but those in -kk or -pp normally
-			-- don't, so exclude them and require explicit specification
-			default_dat_sg = "i"
-		elseif not base.dem and not rfind(stem, com.vowel_c .. "$") and is_proper_noun(stem) then
-			-- proper noun whose stem does not end in a vowel
-			default_dat_sg = "i"
-		elseif props.con.form == "con" then
-			default_dat_sg = "i"
-		elseif rfind(stem, com.vowel_c .. "r?$") then
-			default_dat_sg = ""
-		elseif base.overrides.ind_dat_s then
-			error("Saw dative singular override of just the indefinite ending, but requires both the indefinite and " ..
-				"definite endings of the dative singular in the form 'datINDEF/DEF'")
-		else
-			error("Most masculine nouns must explicitly specify the indefinite and definite endings of the dative " ..
-				"singular using an override of the form 'datINDEF/DEF'; exceptions are nouns in -ir, -ó or -i; " ..
-				"proper nouns; plural-only nouns; nouns with stem contraction or j-infix; nouns whose stem ends in " ..
-				"two or more consonants, except for -kk and -pp; and nouns whose stem ends in a vowel or vowel + r")
+		if props.j then
+			props.jinfix = props.j == "j" and "j" or ""
+			props.jinfix_footnotes = props.j.footnotes
+			props.j = nil
+		end
+		if props.v then
+			props.vinfix = props.v == "v" and "v" or ""
+			props.vinfix_footnotes = props.v.footnotes
+			props.v = nil
+		end
+		if props.imut then
+			props.imut_footnotes = props.imut.footnotes
+			props.imut = props.imut.form == "imut" and true or false
+		end
+		if props.unimut then
+			props.unimut_footnotes = props.unimut.footnotes
+			props.unimut = props.unimut.form == "unimut" and true or false
+		end
+		if props.unumut then
+			props.unumut_footnotes = props.unumut.footnotes
+			props.unumut = props.unumut.form
 		end
 	end
-	props.default_dat_sg = default_dat_sg
 end
+
 
 local function detect_indicator_spec(base)
 	if base.stem then
@@ -3021,7 +3055,7 @@ local function make_table(alternant_multiword_spec)
 	end
 
 	local table_spec_both = template_prelude("45") .. [=[
-! style="width:20%;background:#d9ebff" |
+! style="width:20%;background:#d9ebff" rowspan="2" |
 ! style="background:#d9ebff" colspan="2" | singular
 ! style="background:#d9ebff" colspan="2" | plural
 |-
@@ -3057,7 +3091,7 @@ local function make_table(alternant_multiword_spec)
 
 	local function get_table_spec_one_number(number, numcode)
 		local table_spec_one_number = [=[
-! style="width:33%;background:#d9ebff" |
+! style="width:33%;background:#d9ebff" rowspan="2" |
 ! style="background:#d9ebff" colspan="2" | NUMBER
 |-
 ! style="background:#d9ebff" | indefinite
