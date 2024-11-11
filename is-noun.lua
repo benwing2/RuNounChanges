@@ -187,9 +187,12 @@ local function generate_list_of_possibilities_for_err(list)
 end
 
 
-local function skip_slot(number, slot)
+local function skip_slot(number, definiteness, slot)
 	return number == "sg" and rfind(slot, "_p$") or
-		number == "pl" and rfind(slot, "_s$")
+		number == "pl" and rfind(slot, "_s$") or
+		-- FIXME: Handle definite-only nouns properly
+		number == "def" and rfind(slot, "^ind_") or
+		number == "indef" and rfind(slot, "^def_")
 end
 
 -- Return true if `stem` refers to a proper noun (first character is uppercase, second character is lowercase).
@@ -302,9 +305,9 @@ local function add_slotval(base, slot_prefix, slot, props, endings, clitics, end
 	if not endings then
 		return
 	end
-	-- Call skip_slot() based on the declined number; if the actual number is different, we correct this in
-	-- decline_noun() at the end.
-	if skip_slot(base.number, slot) then
+	-- Call skip_slot() based on the declined number and definiteness; if the actual number is different, we correct
+	-- this in decline_noun() at the end.
+	if skip_slot(base.number, base.definiteness, slot) then
 		return
 	end
 	footnotes = iut.combine_footnotes(base.footnotes, footnotes)
@@ -328,9 +331,13 @@ local function add_slotval(base, slot_prefix, slot, props, endings, clitics, end
 				ending = endingobj.form
 				ending_footnotes = endingobj.footnotes
 			end
+			-- Ending of "-" means the user used -- to indicate there should be no form here.
+			if ending == "-" then
+				return
+			end
 			local function interr(msg)
-				error(("Internal error: For slot '%s%s', ending '%s', %s: %s"):format(slot_prefix, slot, ending, msg,
-				dump(props)))
+				error(("Internal error: For lemma '%s', slot '%s%s', ending '%s', %s: %s"):format(base.lemma, slot_prefix,
+					slot, ending, msg, dump(props)))
 			end
 
 			local clitic, clitic_footnotes
@@ -672,10 +679,11 @@ end
 
 
 local function process_one_slot_override(base, slot, spec)
-	-- Call skip_slot() based on the declined number; if the actual number is different, we correct this in
-	-- decline_noun() at the end.
-	if skip_slot(base.number, slot) then
-		error("Override specified for invalid slot '" .. slot .. "' due to '" .. base.number .. "' number restriction")
+	-- Call skip_slot() based on the declined number and definiteness; if the actual number is different, we correct
+	-- this in decline_noun() at the end.
+	if skip_slot(base.number, base.definiteness, slot) then
+		error(("Override specified for invalid slot '%s' due to '%s' number restriction and/or '%s' definiteness restriction"):format(
+			slot, base.number, base.definiteness))
 	end
 	local def_only = slot:find("^def_")
 	if def_only then
@@ -1538,6 +1546,7 @@ Return value is an object of the form
 		noun; used in the declension of [[fjandi]] to disable the special -ndi declension)
   number = "NUMBER", -- "sg", "pl", "both"; may be missing
   gender = "GENDER", -- "m", "f" or "n"; always specified by the user
+  definiteness = "DEFINITENESS", -- "def", "indef" or "both"; computed from other settings
   adj = true, -- may be missing; indicates that the term declines like an adjective (NOT IMPLEMENTED YET)
   decllemma = nil or "DECLLEMMA", -- decline like the specified lemma
   declgender = nil or "DECLGENDER", -- decline like the specified gender
@@ -1579,14 +1588,11 @@ Return value is an object of the form
   },
 }
 ]=]
-local function parse_indicator_spec(angle_bracket_spec, lemma, pagename, proper_noun)
-	if lemma == "" then
-		lemma = pagename
-	end
+local function parse_indicator_spec(angle_bracket_spec, lemma)
 	local base = {
 		forms = {},
 		overrides = {},
-		props = {prop = proper_noun},
+		props = {},
 		addnote_specs = {},
 	}
 	base.orig_lemma = lemma
@@ -1695,7 +1701,7 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename, proper_
 				parse_mutation_spec("defcon", {"defcon", "-defcon"})
 			elseif not part:find("^já") and part:find("^%-?j") then -- don't trip over .já indicator
 				parse_mutation_spec("j", {"j", "-j"})
-			elseif part:find("^%-?v") then
+			elseif not part:find("^vstem") and part:find("^%-?v") then
 				parse_mutation_spec("v", {"v", "-v"})
 			elseif #dot_separated_group > 1 then
 				parse_err(
@@ -1757,7 +1763,7 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename, proper_
 				end
 				base.builtin = true
 				parse_err("Built-in indicator '@' not implemented yet")
-			elseif part == "dem" or part == "def" or part == "weak" or part == "-def" or part == "pers" or
+			elseif part == "dem" or part == "def" or part == "-def" or part == "weak" or part == "pers" or
 				part == "rstem" or part == "já" then
 				if base.props[part] then
 					parse_err("Can't specify '" .. part .. "' twice")
@@ -1804,7 +1810,10 @@ local function set_defaults_and_check_bad_indicators(base)
 		if not base.gender then
 			error("Internal error: For nouns, gender must be specified")
 		end
-		base.number = base.number or is_proper_noun(base.lemma) and not base.dem and "sg" or "both"
+		base.number = base.number or is_proper_noun(base.lemma) and not base.props.dem and "sg" or "both"
+		-- FIXME: Support definite-only nouns.
+		base.definiteness = base.definiteness or base.props.def and "both" or base.props["-def"] and "indef" or
+			is_proper_noun(base.lemma) and not base.props.dem and "indef" or "both"
 		process_declnumber(base)
 		base.actual_gender = base.gender
 		if base.declgender then
@@ -1868,7 +1877,10 @@ local function set_defaults_and_check_bad_indicators(base)
 	end
 
 	if not base.need_imut then
-		for slot, override in pairs(base.overrides) do
+		local function check_override_for_imut(override)
+			if not override then
+				return
+			end
 			if not override.full then
 				local function check_for_imut(list)
 					for _, formobj in ipairs(list) do
@@ -1886,6 +1898,11 @@ local function set_defaults_and_check_bad_indicators(base)
 				end
 			end
 		end
+		for slot, override in pairs(base.overrides) do
+			check_override_for_imut(override)
+		end
+		check_override_for_imut(base.gens)
+		check_override_for_imut(base.pls)
 	end
 
 	if base.imutval and not base.need_imut then
@@ -1898,6 +1915,13 @@ local function set_all_defaults_and_check_bad_indicators(alternant_multiword_spe
 	local is_multiword = #alternant_multiword_spec.alternant_or_word_specs > 1
 	iut.map_word_specs(alternant_multiword_spec, function(base)
 		set_defaults_and_check_bad_indicators(base)
+		-- FIXME: This probably needs more sophistication to handle the equivalent of St. Vincent and the Grenadines
+		-- in Icelandic.
+		if alternant_multiword_spec.definiteness == nil then
+			alternant_multiword_spec.definiteness = base.definiteness
+		elseif alternant_multiword_spec.definiteness ~= base.definiteness then
+			error("With multiple words or alternants, all must agree in definiteness")
+		end
 		base.multiword = is_multiword -- FIXME: not currently used; consider deleting
 		if base.pron then
 			alternant_multiword_spec.saw_pron = true
@@ -2220,7 +2244,7 @@ local function determine_declension(base)
 			if stem then
 				-- [[læknir]] "physician" and many others
 				-- [[bróðir]], [[faðir]] are r-stems
-				base.decl = base.rstem and "m-rstem" or "m-ir"
+				base.decl = base.props.rstem and "m-rstem" or "m-ir"
 			end
 		end
 		if not stem then
@@ -2260,7 +2284,7 @@ local function determine_declension(base)
 				base.decl = "m"
 			end
 		end
-		if not stem and not base.weak then
+		if not stem and not base.props.weak then
 			stem = rmatch(base.lemma, "^(.*nd)i$")
 			if stem then
 				-- [[nemandi]] "student" and many others; terms in -jandi like [[byrjandi]]
@@ -2309,13 +2333,13 @@ local function determine_declension(base)
 			end
 		end
 		if not stem then
-			stem = rmatch(base.lemma, "^(.*)ung$")
+			stem = rmatch(base.lemma, "^(.*ung)$")
 			if stem then
 				base.decl = "f-ung"
 			end
 		end
 		if not stem then
-			stem = rmatch(base.lemma, "^(.*)ing$")
+			stem = rmatch(base.lemma, "^(.*ing)$")
 			if stem then
 				base.decl = "f-ing"
 			end
@@ -2362,8 +2386,15 @@ local function determine_declension(base)
 		end
 		if not stem then
 			stem = rmatch(base.lemma, "^(.*)é$")
-			if stem and base["já"] then
-				base.decl = "n-já"
+			if stem then
+				if base.props["já"] then
+					-- Indicator 'já' for [[tré]], [[hné]]/[[kné]], etc.
+					base.decl = "n-já"
+				else
+					-- [[té]] (letter T), etc.
+					stem = stem .. "é"
+					base.decl = "n"
+				end
 			end
 		end
 		if not stem then
@@ -2380,7 +2411,7 @@ local function determine_declension(base)
 			end
 		end
 		if not stem then
-			stem = rmatch(base.lemma, "^(.*" .. con.cons_c .. "ur)$")
+			stem = rmatch(base.lemma, "^(.*" .. com.cons_c .. "ur)$")
 			if stem then
 				base.decl = "n"
 				default_props.con = "con"
@@ -2433,7 +2464,7 @@ local function determine_default_masc_dat_sg(base, props)
 			-- Other stems in two consonants normally have dat -i, but those in -kk or -pp normally
 			-- don't, so exclude them and require explicit specification
 			default_dat_sg = "i"
-		elseif not base.dem and not rfind(stem, com.vowel_c .. "$") and is_proper_noun(stem) then
+		elseif not base.props.dem and not rfind(stem, com.vowel_c .. "$") and is_proper_noun(stem) then
 			-- proper noun whose stem does not end in a vowel
 			default_dat_sg = "i"
 		elseif props.con and props.con.form == "con" then
@@ -2441,13 +2472,15 @@ local function determine_default_masc_dat_sg(base, props)
 		elseif rfind(stem, com.vowel_c .. "r?$") then
 			default_dat_sg = ""
 		elseif base.overrides.dat_s and not base.overrides.dat_s.def then
-			error("Saw dative singular override of just the indefinite ending, but requires both the indefinite and " ..
-				"definite endings of the dative singular in the form 'datINDEF/DEF'")
+			error(("Saw masculine stem '%s' and dative singular override of just the indefinite ending, but " ..
+				"requires both the indefinite and definite endings of the dative singular in the form 'datINDEF/DEF'"):
+				format(stem))
 		elseif not base.overrides.dat_s then
-			error("Most masculine nouns must explicitly specify the indefinite and definite endings of the dative " ..
-				"singular using an override of the form 'datINDEF/DEF'; exceptions are nouns in -ir, -ó or -i; " ..
-				"proper nouns; plural-only nouns; nouns with stem contraction or j-infix; nouns whose stem ends in " ..
-				"two or more consonants, except for -kk and -pp; and nouns whose stem ends in a vowel or vowel + r")
+			error(("Saw masculine stem '%s' and no dative override: Most masculine nouns must explicitly specify " ..
+				"the indefinite and definite endings of the dative singular using an override of the form " ..
+				"'datINDEF/DEF'; exceptions are nouns in -ir, -ó or -i; proper nouns; plural-only nouns; nouns with " ..
+				"stem contraction or j-infix; nouns whose stem ends in two or more consonants, except for -kk and " ..
+				"-pp; and nouns whose stem ends in a vowel or vowel + r"):format(stem))
 		end
 	end
 	props.default_dat_sg = default_dat_sg
@@ -2831,8 +2864,8 @@ end
 
 
 --[=[
-Propagate `property` (one of "animacy", "gender" or "number") from nouns to adjacent
-adjectives. We proceed as follows:
+Propagate `property` (one of "gender" or "number" [FIXME: definiteness?]) from nouns to adjacent adjectives. We proceed
+as follows:
 1. We assume the properties in question are already set on all nouns. This should happen in
    set_defaults_and_check_bad_indicators().
 2. We first propagate properties upwards and sideways. We recurse downwards from the top. When we encounter a multiword
@@ -3151,10 +3184,7 @@ local function make_table(alternant_multiword_spec)
 
 	local function get_table_spec_one_number_one_def(number, numcode, definiteness, defcode)
 		local table_spec_one_number_one_def = [=[
-! style="width:50%;background:#d9ebff" |
-! style="background:#d9ebff" | NUMBER
-|-
-! style="background:#d9ebff" | DEFINITENESS
+! style="width:100%;background:#d9ebff" colspan="2" | DEFINITENESS NUMBER
 |-
 !style="background:#eff7ff"|nominative
 | {DEF_nom_NUM}
@@ -3202,7 +3232,16 @@ local function make_table(alternant_multiword_spec)
 		number, numcode = "", "s"
 	end
 
+	local definiteness, defcode
+	if alternant_multiword_spec.definiteness == "indef" then
+		definiteness, defcode = "indefinite", "ind"
+	elseif alternant_multiword_spec.definiteness == "def" then
+		definiteness, defcode = "definite", "def"
+	end
+
 	local table_spec =
+		alternant_multiword_spec.actual_number ~= "both" and alternant_multiword_spec.definiteness ~= "both" and
+			get_table_spec_one_number_one_def(number, numcode, definiteness, defcode) or
 		alternant_multiword_spec.actual_number == "both" and table_spec_both or
 		get_table_spec_one_number(number, numcode)
 	forms.notes_clause = forms.footnote ~= "" and
@@ -3278,7 +3317,7 @@ function export.do_generate_forms(parent_args, from_headword)
 	alternant_multiword_spec.output_noun_slots = get_output_noun_slots(alternant_multiword_spec)
 	local inflect_props = {
 		skip_slot = function(slot)
-			return skip_slot(alternant_multiword_spec.actual_number, slot)
+			return skip_slot(alternant_multiword_spec.actual_number, alternant_multiword_spec.definiteness, slot)
 		end,
 		slot_table = alternant_multiword_spec.output_noun_slots,
 		get_variants = get_variants,
