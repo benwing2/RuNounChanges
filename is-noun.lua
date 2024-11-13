@@ -29,8 +29,8 @@ FIXME:
 2. Support definite lemmas such as [[Bandaríkin]] "the United States".
 3. Support adjectivally-declined terms.
 4. Support @ for built-in irregular lemmas.
-5. Somehow if the user specifies v-infix, it should prevent default unumut from happening in strong feminines.
-6. Def acc pl should ignore -u ending in indef acc pl.
+5. Somehow if the user specifies v-infix, it should prevent default unumut from happening in strong feminines. [DONE]
+6. Def acc pl should ignore -u ending in indef acc pl. [DONE]
 ]=]
 
 local lang = require("Module:languages").getByCode("is")
@@ -196,7 +196,10 @@ local function skip_slot(number, definiteness, slot)
 end
 
 -- Return true if `stem` refers to a proper noun (first character is uppercase, second character is lowercase).
-local function is_proper_noun(stem)
+local function is_proper_noun(base, stem)
+	if base.props.dem then
+		return false
+	end
 	local first_letter = usub(stem, 1, 1)
 	local second_letter = usub(stem, 2, 2)
 	return ulower(first_letter) ~= first_letter and ((not second_letter or second_letter == "") or
@@ -379,6 +382,9 @@ local function add_slotval(base, slot_prefix, slot, props, endings, clitics, end
 			if props.unimut ~= nil and props.imut ~= nil then
 				interr("Cannot have both 'unimut' and 'imut' in effect at the same time")
 			end
+			if props.unumut ~= nil and props.umut ~= nil then
+				interr("Cannot have both 'unumut' and 'umut' in effect at the same time")
+			end
 			if explicit_imut then
 				mut_in_effect = "i"
 			elseif explicit_umut then
@@ -433,12 +439,13 @@ local function add_slotval(base, slot_prefix, slot, props, endings, clitics, end
 						end
 					end
 				end
-				if ending_in_u and not mut_in_effect and not mut_not_in_effect then
-					-- FIXME: I hope the `not mut_not_in_effect` is correct here.
+				if ending_in_u and not mut_in_effect then
 					mut_in_effect = "u"
 					-- umut and uumut footnotes are incorporated into the appropriate umut_* stems
 				end
 			end
+
+			local ending_was_asterisk = ending == "*"
 
 			-- Now compute the appropriate stem to which the ending and clitic are added. `prefix` is either an empty
 			-- string or "pl_" and selects the set of stems to consider when computing the stem in effect. See the
@@ -488,42 +495,43 @@ local function add_slotval(base, slot_prefix, slot, props, endings, clitics, end
 					end
 					-- Finally, fall back to the basic stem, which is always defined.
 					stem_in_effect = stem_in_effect or props[prefix .. "stem"]
-					-- If the ending is "*", it means to use the lemma as the form directly (before adding any definite
-					-- clitic) rather than try to construct the form from a stem and ending. We need to do this for the
-					-- lemma slot and especially for the nominative singular, because we don't have the nominative
-					-- singular ending available and it may vary (e.g. it may be -ur, -l, -n, -a, etc. especially in
-					-- the masculine). Not trying to construct the form from stem + ending also avoids complications
-					-- from the nominative singular in -ur, which exceptionally does not trigger u-mutation. However,
-					-- when 'defcon' is active and we're processing a definite form beginning with a vowel (i.e.
-					-- is_vowel_clitic is set), we can't do this, because the form to which the clitic is added is not
-					-- the lemma but the contracted version. As it happens, this works out because in all situations
-					-- where 'defcon' is active, the nominative singular has a null ending. (If this weren't the case,
-					-- we'd have to change all the declension functions to pass in the nominative singular ending in
-					-- addition to other endings.) An example where 'defcon' is active is neuter [[mastur]] "mast" with
-					-- definite nominative singular [[mastrið]]; here, using the lemma would incorrectly produce
-                    -- #[[masturið]].
-					--
-					-- Finally, however, if there is a footnote associated with the computed stem in effect, we need to
-					-- preserve it.
-					if ending == "*" then
-						if not is_vowel_clitic or not props.defcon or props.defcon.form ~= "defcon" then
-							local stem_in_effect_footnotes
-							if type(stem_in_effect) == "table" then
-								stem_in_effect_footnotes = stem_in_effect.footnotes
-							end
-							stem_in_effect = iut.combine_form_and_footnotes(base.actual_lemma, stem_in_effect_footnotes)
+				end
+				
+				-- If the ending is "*", it means to use the lemma as the form directly (before adding any definite
+				-- clitic) rather than try to construct the form from a stem and ending. We need to do this for the
+				-- lemma slot and especially for the nominative singular, because we don't have the nominative singular
+				-- ending available and it may vary (e.g. it may be -ur, -l, -n, -a, etc. especially in the masculine).
+				-- Not trying to construct the form from stem + ending also avoids complications from the nominative
+				-- singular in -ur, which exceptionally does not trigger u-mutation. However, when 'defcon' is active
+				-- and we're processing a definite form beginning with a vowel (i.e.  is_vowel_clitic is set), we can't
+				-- do this, because the form to which the clitic is added is not the lemma but the contracted version.
+				-- As it happens, this works out because in all situations where 'defcon' is active, the nominative
+				-- singular has a null ending. (If this weren't the case, we'd have to change all the declension
+				-- functions to pass in the nominative singular ending in addition to other endings.) An example where
+				-- 'defcon' is active is neuter [[mastur]] "mast" with definite nominative singular [[mastrið]]; here,
+				-- using the lemma would incorrectly produce #[[masturið]].
+
+				-- Finally, however, if there is a footnote associated with the computed stem in effect, we need to
+				-- preserve it.
+				if ending == "*" then
+					if not is_vowel_clitic or not props.defcon or props.defcon.form ~= "defcon" then
+						local stem_in_effect_footnotes
+						if type(stem_in_effect) == "table" then
+							stem_in_effect_footnotes = stem_in_effect.footnotes
 						end
-						-- See comment above. When 'defcon' is not in effect, we changed the stem to be the lemma and
-						-- want to use a null ending; otherwise, the ending is always null anyway, so it's safe to set
-						-- it thus.
-						ending = ""
+						stem_in_effect = iut.combine_form_and_footnotes(base.actual_lemma, stem_in_effect_footnotes)
 					end
+					-- See comment above. When 'defcon' is not in effect, we changed the stem to be the lemma and
+					-- want to use a null ending; otherwise, the ending is always null anyway, so it's safe to set
+					-- it thus.
+					ending = ""
 				end
 
 				return stem_in_effect
 			end
 
-			local stem_in_effect = props.pl_stem and compute_stem_in_effect("pl_") or compute_stem_in_effect("")
+			local stem_in_effect = props.pl_stem and slot:find("_p$") and compute_stem_in_effect("pl_") or
+				compute_stem_in_effect("")
 
 			local infix, infix_footnotes
 			-- Compute the infix (j, v or nothing) that goes between the stem and ending.
@@ -591,7 +599,8 @@ local function add_slotval(base, slot_prefix, slot, props, endings, clitics, end
 						drop_clitic_i()
 					end
 				elseif clitic:find("^i") then -- monosyllabic clitics in i-
-					if ending:find("[aiu]$") then
+					local ending_for_clitic_dropping = ending_was_asterisk and base.lemma_ending or ending
+					if ending_for_clitic_dropping:find("[aiu]$") then
 						drop_clitic_i()
 					end
 				end
@@ -848,6 +857,12 @@ end
 
 decls["m-ir"] = function(base, props)
 	add_decl(base, props, "i", "i", "is", "ar")
+end
+
+
+decls["m-skapur"] = function(base, props)
+	-- Nouns in -skapur; default gen is -ar, default dat is -/-, default num is sg.
+	add_decl(base, props, "", "", "ar", "ar")
 end
 
 
@@ -1810,10 +1825,11 @@ local function set_defaults_and_check_bad_indicators(base)
 		if not base.gender then
 			error("Internal error: For nouns, gender must be specified")
 		end
-		base.number = base.number or is_proper_noun(base.lemma) and not base.props.dem and "sg" or "both"
+		base.number = base.number or is_proper_noun(base, base.lemma) and "sg" or
+			base.gender == "m" and base.lemma:find("skapur$") and not base.stem and "sg" or "both"
 		-- FIXME: Support definite-only nouns.
 		base.definiteness = base.definiteness or base.props.def and "both" or base.props["-def"] and "indef" or
-			is_proper_noun(base.lemma) and not base.props.dem and "indef" or "both"
+			is_proper_noun(base, base.lemma) and "indef" or "both"
 		process_declnumber(base)
 		base.actual_gender = base.gender
 		if base.declgender then
@@ -2208,10 +2224,31 @@ end
 -- vowel), which is used by determine_props(). In some cases (specifically with certain foreign nouns), we set
 -- base.lemma to a new value; this is as if the user specified 'decllemma:'.
 local function determine_declension(base)
-	local stem
+	local stem, ending
 	local default_props = {}
 	-- Determine declension
 	if base.gender == "m" then
+		if not stem then
+			stem, ending = rmatch(base.lemma, "^(.*[ÁáÆæÝý])(r)$")
+			if stem then
+				-- in -ár:
+				-- [[nár]] "corpse", [[sár]] "tub (archaic)", [[hár]] "thole, oarlock (archaic)", [[hár]]
+				-- "spiny dogfish (archaic)" (with v-infix), [[kljár]] "weaving stone (archaic)", [[ljár]] "scythe",
+				-- [[skjár]] "video screen, display", [[már]] "seagull", [[sjár]] "sea", [[snjár]] "snow" (with
+				-- v-infix); vs. stems ending in -r: [[ár]] "? (archaic)", [[lár]] "wooden box for wool", [[klár]]
+				-- "inferior horse, nag", [[pílár]] "slat, fence post; spoke (dated)", [[kentár]] "centaur"
+				--
+				-- in -ær:
+				-- [[glær]] "sea", [[skær]] "? (obsolete)", [[blær]] "gentle breeze", [[bær]] "farm; town", [[óbær]]
+				-- "?", [[sær]] "sea", [[snær]] "snow"
+				--
+				-- in -ýr:
+				-- [[ýr]] "yew", [[býr]] "town, farm", [[gnýr]] "clash, rumble; blue wildebeest", [[týr]] "hero; god",
+				-- also many proper names; vs. stems ending in -r: [[fýr]] "dude, guy", [[lýr]] "pollock", [[sýr]]
+				-- "? (poetic)", [[ýr]] "? (obsolete)", [[hlýr]] "? (obsolete)", [[glýr]] "? (obsolete)"
+				base.decl = "m"
+			end
+		end
 		if not stem then
 			stem = rmatch(base.lemma, "^(.*[Aa]ur)$")
 			if stem then
@@ -2221,34 +2258,51 @@ local function determine_declension(base)
 			end
 		end
 		if not stem then
-			stem = rmatch(base.lemma, "^(.*)ur$")
+			stem, ending = rmatch(base.lemma, "^(.*)(ur)$")
 			if stem then
-				if base.stem == base.lemma then
-					-- [[akur]] "field" etc. where the stem includes the final -r
-					stem = base.stem
-					default_props.con = "con"
+				if stem:find("skap$") and not base.stem then
+					-- tons of words in -skapur
+					base.decl = "m-skapur"
+				else
+					if base.stem == base.lemma then
+						-- [[akur]] "field" etc. where the stem includes the final -r
+						stem = base.stem
+						ending = "" -- not actually used
+						default_props.con = "con"
+					end
+					-- [[hestur]] "horse" and lots of others
+					base.decl = "m"
 				end
-				-- [[hestur]] "horse" and lots of others
-				base.decl = "m"
 			end
 		end
 		if not stem then
-			stem = rmatch(base.lemma, "^(.*[Ee]ir)$")
+			stem = rmatch(base.lemma, "^(.*[Ee][iy]r)$")
 			if stem then
+				-- in -eir (all include -r in the stem):
 				-- [[geir]] "?", [[eir]] "copper", [[leir]] "clay", [[Geir]] (male given name)
+				--
+				-- in -eyr, including -r in the stem:
+				-- [[reyr]] "reed", [[Reyr]] (male given name)
+				-- in -eyr, not including -r in the stem:
+				-- [[þeyr]] "thaw, thawing wind", [[Þeyr]] (male given name), [[Freyr]] (male given name)
 				base.decl = "m"
 			end
 		end
 		if not stem then
-			stem = rmatch(base.lemma, "^(.*)ir$")
+			stem, ending = rmatch(base.lemma, "^(.*)(ir)$")
 			if stem then
 				-- [[læknir]] "physician" and many others
 				-- [[bróðir]], [[faðir]] are r-stems
-				base.decl = base.props.rstem and "m-rstem" or "m-ir"
+				if base.props.rstem then
+					base.decl = "m-rstem"
+					base.need_imut = true
+				else
+					base.decl = "m-ir"
+				end
 			end
 		end
 		if not stem then
-			stem = rmatch(base.lemma, "^(.*l)l$")
+			stem, ending = rmatch(base.lemma, "^(.*l)(l)$")
 			if stem then
 				if rfind(stem, com.cons_c .. "[aiu]l$") or stem:find("^[aiuAIU]l$") then
 					-- [[gaffall]] "fork" (dat pl [[göfflum]]), [[þumall]] "thumb"; [[ekkill]] "widower";
@@ -2269,7 +2323,7 @@ local function determine_declension(base)
 			end
 		end
 		if not stem then
-			stem = rmatch(base.lemma, "^(.*n)n$")
+			stem, ending = rmatch(base.lemma, "^(.*n)(n)$")
 			if stem then
 				if rfind(stem, com.cons_c .. "[aiu]n$") or stem:find("^[aiuAIU]n$") then
 					-- As with -all/-ill/-ull although there are fewer such words in -nn. Examples: [[aftann]] "evening"
@@ -2285,7 +2339,7 @@ local function determine_declension(base)
 			end
 		end
 		if not stem and not base.props.weak then
-			stem = rmatch(base.lemma, "^(.*nd)i$")
+			stem, ending = rmatch(base.lemma, "^(.*nd)(i)$")
 			if stem then
 				-- [[nemandi]] "student" and many others; terms in -jandi like [[byrjandi]]
 				-- "beginner", [[seljandi]] "seller" umlaut to -jend- in the plural instead of -ind-
@@ -2296,7 +2350,7 @@ local function determine_declension(base)
 			end
 		end
 		if not stem then
-			stem = rmatch(base.lemma, "^(.*)[ia]$")
+			stem, ending = rmatch(base.lemma, "^(.*)([ia])$")
 			if stem then
 				-- [[tími]] "time, hour" and many others; [[herra]] "gentleman" ([[sendiherra|ambassador]]),
 				-- [[séra]]/[[síra]] "reverend"
@@ -2316,20 +2370,32 @@ local function determine_declension(base)
 			base.decl = "m"
 		end
 	elseif base.gender == "f" then
-		stem = rmatch(base.lemma, "^(.*)a$")
+		stem, ending = rmatch(base.lemma, "^(.*)(a)$")
 		if stem then
 			base.decl = "f-weak"
 		end
 		if not stem then
-			stem = rmatch(base.lemma, "^(.*[^eE])i$")
+			stem, ending = rmatch(base.lemma, "^(.*[^eE])(i)$")
 			if stem then
 				base.decl = "f-i"
 			end
 		end
 		if not stem then
-			stem = rmatch(base.lemma, "^(.*)ur$")
+			stem, ending = rmatch(base.lemma, "^(.*)(ur)$")
 			if stem then
 				base.decl = "f-ur"
+			end
+		end
+		if not stem and base.props.rstem then
+			stem, ending = rmatch(base.lemma, "^(.*)(ir)$")
+			if stem then
+				-- [[dóttir]], [[móðir]], [[systir]]
+				if base.props.rstem then
+					base.decl = "m-rstem"
+					if not stem:find("syst$") then
+						base.need_imut = true
+					end
+				end
 			end
 		end
 		if not stem then
@@ -2354,7 +2420,7 @@ local function determine_declension(base)
 			end
 		end
 		if not stem then
-			stem = rmatch(base.lemma, "^(.*[ýæÝÆ])r$")
+			stem, ending = rmatch(base.lemma, "^(.*[ýæÝÆ])(r)$")
 			if stem then
 				-- [[kýr]] "cow", [[sýr]] "sow (archaic)", [[ær]] "ewe" and compounds
 				base.decl = "f-long-umlaut-vowel-r"
@@ -2374,18 +2440,26 @@ local function determine_declension(base)
 			-- Miscellaneous feminine terms without ending
 			stem = base.lemma
 			base.decl = "f"
-			-- FIXME! Somehow if the user specifies v-infix, it should prevent unumut from happening.
-			default_props.unumut = "unumut"
+			-- A function here means we resolve it to its actual value later. We don't want to trigger
+			-- unumut of the user specified v-infix or any type of u-mutation (e.g. 'uumut' in [[ætlan]]).
+			default_props.unumut = function(base, props)
+				if props.v and props.v.form == "v" or props.umut then
+					return nil
+				else
+					return {form = "unumut", defaulted = true}
+				end
+			end
 		end
 	elseif base.gender == "n" then
 		if not stem then
-			stem = rmatch(base.lemma, "^(.*)a$")
+			stem, ending = rmatch(base.lemma, "^(.*)(a)$")
 			if stem then
 				base.decl = "n-weak"
 			end
 		end
 		if not stem then
-			stem = rmatch(base.lemma, "^(.*)é$")
+			-- stem actually includes -é but due to the change to já we include it in the ending
+			stem, ending = rmatch(base.lemma, "^(.*)(é)$")
 			if stem then
 				if base.props["já"] then
 					-- Indicator 'já' for [[tré]], [[hné]]/[[kné]], etc.
@@ -2398,14 +2472,14 @@ local function determine_declension(base)
 			end
 		end
 		if not stem then
-			stem = rmatch(base.lemma, "^(.*[kKgG])i$")
+			stem, ending = rmatch(base.lemma, "^(.*[kKgG])(i)$")
 			if stem then
 				base.decl = "n-i"
 				default_props.j = "j"
 			end
 		end
 		if not stem then
-			stem = rmatch(base.lemma, "^(.*[^eE])i$")
+			stem, ending = rmatch(base.lemma, "^(.*[^eE])(i)$")
 			if stem then
 				base.decl = "n-i"
 			end
@@ -2426,11 +2500,24 @@ local function determine_declension(base)
 	else
 		error(("Internal error: `base.gender` is '%s' but should be 'm', 'f' or 'n'"):dump(base.gender))
 	end
-	base.stem = base.stem or stem
+	if base.stem then
+		-- This isn't necessarily accurate but doesn't really matter. We only record the lemma ending to help with
+		-- contraction of definite clitics in the nominative singular, and in the cases where the user gives an explicit
+		-- stem, it's usually with # (meaning the ending is null) or ## (meaning the ending ends in -r), and in both
+		-- cases there's no contraction of initial vowels in definite clitics in any case.
+		base.lemma_ending = ""
+	else
+		base.stem = stem
+		base.lemma_ending = ending or ""
+	end
 	for k, v in pairs(default_props) do
 		if not base[k] then
 			if mutation_spec_set[k] then
-				base[k] = {{form = v, defaulted = true}}
+				if type(v) == "function" then
+					base[k] = {v}
+				else
+					base[k] = {{form = v, defaulted = true}}
+				end
 			else
 				base[k] = v
 			end
@@ -2464,13 +2551,27 @@ local function determine_default_masc_dat_sg(base, props)
 			-- Other stems in two consonants normally have dat -i, but those in -kk or -pp normally
 			-- don't, so exclude them and require explicit specification
 			default_dat_sg = "i"
-		elseif not base.props.dem and not rfind(stem, com.vowel_c .. "$") and is_proper_noun(stem) then
+		elseif not rfind(stem, com.vowel_c .. "$") and is_proper_noun(base, stem) then
 			-- proper noun whose stem does not end in a vowel
 			default_dat_sg = "i"
 		elseif props.con and props.con.form == "con" then
 			default_dat_sg = "i"
 		elseif rfind(stem, com.vowel_c .. "r?$") then
 			default_dat_sg = ""
+		elseif rfind(base.lemma, "ll$") then
+			-- nouns in -ll without contraction, which generally includes those not in -all/-ill/-ull plus a few in these
+			-- endings such as [[panill]] "paneling" (rare variant of [[panell]]), [[kórall]] "coral", [[kristall]]
+			-- "crystal", [[kanill]] "cinnamon" (also [[kanell]]); only a few exceptions, such as [[rafall]] "generator",
+			-- which optionally contracts and has with dati/-:i without contraction; [[hvoll]] "hill", [[kokkáll]]
+			-- "cuckold", [[páll]] "spade, pointed shovel", [[þræll]] "slave" with dat-:i/-; [[hóll]] "hill", [[hæll]]
+			-- "heel", [[stóll]] "chair", which are dat-:i[footnote]/- with a footnote variously indicating that the
+			-- dative in -i occurs only in fixed expressions, compounds, place names, etc.
+			default_dat_sg = ""
+		elseif rfind(base.lemma, "nn$") then
+			-- nouns in -nn without contraction, which generally includes those not in -ann/-inn/-unn; there are fewer of
+			-- these than the corresponding nouns in -ll and they have default dative i/i; only exceptions I can find are
+			-- [[húnn]] "knob", [[tónn]] "tone (music)", [[dúnn]] "down (feathers)"", which have dati:-/i.
+			default_dat_sg = "i"
 		elseif base.overrides.dat_s and not base.overrides.dat_s.def then
 			error(("Saw masculine stem '%s' and dative singular override of just the indefinite ending, but " ..
 				"requires both the indefinite and definite endings of the dative singular in the form 'datINDEF/DEF'"):
@@ -2521,6 +2622,17 @@ local function determine_props(base)
 				end
 			end
 			base.prop_sets = new_prop_sets
+		end
+	end
+
+	-- Now resolve any functions among the properties, which indicate properties dependent on others.
+	-- FIXME: If this gets more complex, there may be dependencies among functions, which will get messy.
+	for _, props in ipairs(base.prop_sets) do
+		for _, mutation_spec in ipairs(mutation_specs) do
+			local specval = props[mutation_spec]
+			if type(specval) == "function" then
+				props[mutation_spec] = specval(base, props)
+			end
 		end
 	end
 
