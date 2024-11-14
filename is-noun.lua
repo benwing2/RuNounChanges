@@ -31,6 +31,7 @@ FIXME:
 4. Support @ for built-in irregular lemmas.
 5. Somehow if the user specifies v-infix, it should prevent default unumut from happening in strong feminines. [DONE]
 6. Def acc pl should ignore -u ending in indef acc pl. [DONE]
+7. Footnotes on omitted forms should be possible.
 ]=]
 
 local lang = require("Module:languages").getByCode("is")
@@ -200,7 +201,7 @@ local function is_proper_noun(base, stem)
 	if base.props.dem then
 		return false
 	end
-	if base.props.pers then
+	if base.props.proper or base.props.pers then
 		return true
 	end
 	local first_letter = usub(stem, 1, 1)
@@ -224,7 +225,8 @@ end
 -- form the actual form value inserted into definite slots; it should be nil for indefinite slots. Its format is the
 -- same as for `endings`. `ending_override`, if true, indicates that the ending(s) supplied in `endings` come from a
 -- user-specified override, and hence j and v infixes should not be added as they are already included in the override
--- if needed.
+-- if needed. `endings_are_full`, if true, indicates that the supplied ending(s) are actually full words and a null stem
+-- should be used.
 --
 -- The properties in `props` are:
 -- * Stems (each stem is either a string or a form object, i.e. an object with `form` and `footnotes` properties; see
@@ -307,7 +309,7 @@ end
 --    *not* in effect, the associated footnotes in `unimut_footnotes` apply. If false, the associated footnotes in
 --    `unimut_footnotes` still apply in the same circumstances where they would apply if `unimut` where true.
 -- ** `unimut_footnotes`: See `unimut`.
-local function add_slotval(base, slot_prefix, slot, props, endings, clitics, ending_override)
+local function add_slotval(base, slot_prefix, slot, props, endings, clitics, ending_override, endings_are_full)
 	if not endings then
 		return
 	end
@@ -316,7 +318,6 @@ local function add_slotval(base, slot_prefix, slot, props, endings, clitics, end
 	if skip_slot(base.number, base.definiteness, slot) then
 		return
 	end
-	footnotes = iut.combine_footnotes(base.footnotes, footnotes)
 	if not clitics then
 		clitics = {""}
 	elseif type(clitics) == "string" then
@@ -565,6 +566,9 @@ local function add_slotval(base, slot_prefix, slot, props, endings, clitics, end
 					iut.combine_footnotes(base.footnotes, stem_in_effect_footnotes))
 			end
 
+			local ending_is_full
+			ending, ending_is_full = rsubb(ending, "^!", "")
+
 			local function combine_stem_ending(stem, clitic)
 				if stem == "?" then
 					return "?"
@@ -576,7 +580,7 @@ local function add_slotval(base, slot_prefix, slot, props, endings, clitics, end
 				if clitic_i_drops then
 					drop_clitic_i()
 				end
-				local stem_with_infix = stem .. (infix or "")
+				local stem_with_infix = ending_is_full and "" or stem .. (infix or "")
 				-- Drop final -j- of stem before an ending beginning with a consonant. This happens e.g. in [[kirkja]]
 				-- "church" with genitive plural -na, producing [[kirkna]]. It does not happen with a null ending; cf.
 				-- neuter [[emj]] "cries, shouting" and [[gremj]] "anger, irritation" (the latter not in BÍN).
@@ -630,7 +634,8 @@ end
 -- fields `indef` and `def` (each of which can be any of the previous formats) to add separate sets of endings for the
 -- indefinite and definite slot variants. If any of the formats for `endings` is supplied other than the separate
 -- indefinite/definite table, the supplied set of endings is used for both indefinite and definite slot variants.
-local function add(base, slot, props, endings, ending_override)
+-- `ending_override` and `endings_are_full` are as in add_slotval().
+local function add(base, slot, props, endings, ending_override, endings_are_full)
 	if not endings then
 		return
 	end
@@ -643,18 +648,23 @@ local function add(base, slot, props, endings, ending_override)
 		def_endings = endings
 	end
 	if indef_endings then
-		add_slotval(base, "ind_", slot, props, indef_endings, nil, ending_override)
+		add_slotval(base, "ind_", slot, props, indef_endings, nil, ending_override, endings_are_full)
 	end
 	if def_endings then
-		local clitic = clitic_articles[base.gender]
-		if not clitic then
-			error(("Internal error: Unrecognized value for base.gender: %s"):format(dump(base.gender)))
+		local clitic
+		if base.adj or base.props.weakprefix then -- FIXME: eliminate weakprefix
+			clitic = ""
+		else
+			clitic = clitic_articles[base.gender]
+			if not clitic then
+				error(("Internal error: Unrecognized value for base.gender: %s"):format(dump(base.gender)))
+			end
+			clitic = clitic[slot]
+			if not clitic then
+				error(("Internal error: Unrecognized value for `slot` in add(): %s"):format(dump(slot)))
+			end
 		end
-		clitic = clitic[slot]
-		if not clitic then
-			error(("Internal error: Unrecognized value for `slot` in add(): %s"):format(dump(slot)))
-		end
-		add_slotval(base, "def_", slot, props, def_endings, clitic, ending_override)
+		add_slotval(base, "def_", slot, props, def_endings, clitic, ending_override, endings_are_full)
 	end
 end
 
@@ -666,10 +676,11 @@ local function acc_p_from_nom_p(base, nom_p)
 		return nom_p
 	end
 	if not nom_p then
-		return nom_p
+		return nom_p -- this is correct as `nom_p` could be nil or false and we want to return the same thing
 	end
 	local function form_masc_acc_p(ending)
-		if ending:find("^%^*ur$") then
+		-- If the ending is full (begins with !), check the whole thing for -ur at the end.
+		if ending:find("^%^*ur$") or ending:find("^!.*[^Aa]ur$") then
 			return ending
 		else
 			return (ending:gsub("r$", ""))
@@ -697,48 +708,57 @@ local function process_one_slot_override(base, slot, spec)
 		error(("Override specified for invalid slot '%s' due to '%s' number restriction and/or '%s' definiteness restriction"):format(
 			slot, base.number, base.definiteness))
 	end
-	local def_only = slot:find("^def_")
-	if def_only then
+	local defslot = slot:find("^def_")
+	if defslot then
 		base.forms[slot] = nil
 	else
-		base.forms["ind_" .. slot] = nil
-		base.forms["def_" .. slot] = nil
+		if spec.indef ~= false then
+			base.forms["ind_" .. slot] = nil
+		end
+		if spec.def ~= false then
+			base.forms["def_" .. slot] = nil
+		end
 	end
-	if spec.full then
-		error("FIXME")
-		local form = value.form
-		local combined_notes = iut.combine_footnotes(base.footnotes, value.footnotes)
-		if form ~= "" then
-			iut.insert_form(base.forms, slot, {form = form, footnotes = combined_notes})
+	if defslot then
+		local slot_prefix
+		-- Don't call add(), like below, because it adds both indefinite and definite variants, including definite
+		-- clitics in the latter. Instead, directly call add_slotval(). But we need to separate the slot into slot
+		-- prefix "def_" and the remainder because add_slotval() expects slots to be missing the prefix when
+		-- checking which stem to use (which may depend on the slot).
+		slot_prefix, slot = slot:match("^(def_)(.*)$")
+		for _, props in ipairs(base.prop_sets) do
+			add_slotval(base, slot_prefix, slot, props, spec.def, nil, "ending override")
 		end
 	else
-		if slot:find("^def_") then
-			error("FIXME")
-		else
-			local endings
-			if spec.bare and spec.def then
-				endings = {
-					indef = spec.bare,
-					def = spec.def,
-				}
-			elseif slot == "acc_p" then
-				-- As a special case, don't carry over literary acc_p ending -u to the definite.
-				local def_endings = {}
-				for _, ending in ipairs(spec.bare) do
-					if ending.form ~= "u" then
-						table.insert(def_endings, ending)
-					end
+		local endings
+		if spec.indef ~= nil and spec.def ~= nil then
+			-- This could include `false` as the value of either `spec.indef` or `spec.def` to not touch those slots.
+			-- Note that specifying something like 'dat/i' is allowed and will only override the definite slot, but
+			-- is different from a definite-slot override 'defdatinum' because the latter includes the clitic in it.
+			endings = {
+				indef = spec.indef,
+				def = spec.def,
+			}
+		elseif not spec.indef then
+			error(("Internal error: Unless both `spec.indef` and `spec.def` have non-nil values (i.e. the user included a slash in the override, `spec.indef` must be defined: %s"):dump(spec))
+		elseif slot == "acc_p" then
+			-- As a special case, don't carry over literary acc_p ending -u to the definite.
+			local def_endings = {}
+			for _, ending in ipairs(spec.indef) do
+				-- If the ending is full (begins with !), check the whole thing for -u at the end.
+				if not ending.form:find("^%^*u$") and not ending.form:find("^!.*[^Aa]u$") then
+					table.insert(def_endings, ending)
 				end
-				endings = {
-					indef = spec.bare,
-					def = def_endings,
-				}
-			else
-				endings = spec.bare
 			end
-			for _, props in ipairs(base.prop_sets) do
-				add(base, slot, props, endings, "ending override")
-			end
+			endings = {
+				indef = spec.indef,
+				def = def_endings,
+			}
+		else
+			endings = spec.indef
+		end
+		for _, props in ipairs(base.prop_sets) do
+			add(base, slot, props, endings, "ending override")
 		end
 	end
 end
@@ -751,15 +771,11 @@ local function process_slot_overrides(base)
 	if base.pls then
 		local spec = base.pls
 		process_one_slot_override(base, "nom_p", spec)
-		if spec.full then
-			error("FIXME")
-		else
-			local acc_p_spec = {
-				bare = acc_p_from_nom_p(base, spec.bare),
-				def = acc_p_from_nom_p(base, spec.def),
-			}
-			process_one_slot_override(base, "acc_p", acc_p_spec)
-		end
+		local acc_p_spec = {
+			indef = acc_p_from_nom_p(base, spec.indef),
+			def = acc_p_from_nom_p(base, spec.def),
+		}
+		process_one_slot_override(base, "acc_p", acc_p_spec)
 	end
 	for slot, spec in pairs(base.overrides) do
 		process_one_slot_override(base, slot, spec)
@@ -869,17 +885,24 @@ decls["m-skapur"] = function(base, props)
 end
 
 
+decls["m-kell"] = function(base, props)
+	-- Proper nouns in -kell; [[Þorkell]], [[Grímkell]], etc.
+	local alt_dat_s = base.stem:gsub("kel$", "katli")
+	add_decl(base, props, "", {"i", {form = "!" .. alt_dat_s, footnotes = {"[archaic]"}}}, "s", false, false, false, false)
+end
+
+
 decls["m-ó"] = function(base, props)
 	-- abbreviations of school names generally have null genitive: [[Kennó]] from [[Kennaraskóla]] "Teachers' College"),
-	-- [[Astró]], [[Borgó]] (from [[Borgarholtsskóla]]), [[Bríó]], [[Foldó]] (from [[Foldaskóla]]), [[Hafró]] (from
-	-- [[Hafrannsóknastofnun]] "Marine Research Institute" (of Norway), [[Hagó]] (from [[Hagaskóla]]), [[Húsó]],
-	-- [[Kvennó]] (from [[Kvennaskóla]]), [[Meló]] (from [[Melaskóla]]), [[Menntó]] (from [[Menntaskóla]]), [[Tónó]]
-	-- (from [[Tónlistarskóla]]), [[Való]] (from [[Valhúsaskóla]]), [[Versló]]/[[Verzló]] (from
-	-- [[Verslunarskóla Íslands|Iceland Business School]]); but these are completely outweighed by male given names,
+	-- [[Astró]], [[Borgó]] (from [[Borgarholtsskóli]]), [[Bríó]], [[Foldó]] (from [[Foldaskóli]]), [[Hafró]] (from
+	-- [[Hafrannsóknastofnun]] "Marine Research Institute" (of Norway), [[Hagó]] (from [[Hagaskóli]]), [[Húsó]],
+	-- [[Kvennó]] (from [[Kvennaskóli]]), [[Meló]] (from [[Melaskóli]]), [[Menntó]] (from [[Menntaskóli]]), [[Tónó]]
+	-- (from [[Tónlistarskóli]]), [[Való]] (from [[Valhúsaskóli]]), [[Versló]]/[[Verzló]] (from
+	-- [[Verslunarskóli Íslands|Iceland Business School]]); but these are completely outweighed by male given names,
 	-- nicknames and historical names of men in -ó (e.g. [[Bó]], [[Bóbó]], [[Brúnó]], [[Dittó]], [[Filpó]], [[Galíleó]],
 	-- [[Jagó]], [[Kató]], [[Kristó]], [[Leó]], [[Leónardó]], [[Markó]], etc.) as well as common nouns in -ó (e.g.
 	-- [[bóleró]] "bolero", [[evró]] "Euro (dated)", [[faraó]] "pharaoh", [[kanó]] "canoe", [[kímonó]] "kimono",
-	-- [[mambó]] "mambo", [[pesó]] "peso", [[pikkóló]] "piccolo", [[róló]] "roller blind?", [[sleikjó]] "lollipop",
+	-- [[mambó]] "mambo", [[pesó]] "peso", [[pikkóló]] "piccolo", [[róló]] "playground", [[sleikjó]] "lollipop",
 	-- etc.)
 	add_decl(base, props, "", "", "s", "ar")
 end
@@ -889,13 +912,6 @@ decls["m-rstem"] = function(base, props)
 	local imut = "^"
 	add_decl(base, props, "ur", "ur", {"ur", {form = "urs", footnotes = {"[proscribed]"}}},
 		imut .. "ur", nil, imut .. "rum", imut .. "ra")
-end
-
-
-decls["m-weak"] = function(base, props)
-	-- Words in -i like [[tími]] "time, hour"; also words in -a e.g. [[herra]] "gentleman; sir, Mr. (term of address)",
-	-- [[séra]]/[[síra]] "reverend"
-	add_decl(base, props, "a", "a", "a", "ar")
 end
 
 
@@ -909,6 +925,19 @@ decls["m-ndi"] = function(base, props)
 		imut = "^"
 	end
 	add_decl(base, props, "a", "a", "a", imut .. "ur", nil, imut .. "um", imut .. "a")
+end
+
+
+decls["m-weak"] = function(base, props)
+	-- Words in -i like [[tími]] "time, hour"; also words in -a e.g. [[herra]] "gentleman; sir, Mr. (term of address)",
+	-- [[séra]]/[[síra]] "reverend"
+	add_decl(base, props, "a", "a", "a", "ar")
+end
+
+
+decls["m-weakprefix"] = function(base, props)
+	-- FIXME! This is just a weak adjective.
+	add_decl(base, props, "a", "a", "a", "u", "u", "u", "u")
 end
 
 
@@ -989,6 +1018,12 @@ decls["f-weak"] = function(base, props)
 end
 
 
+decls["f-weakprefix"] = function(base, props)
+	-- FIXME! This is just a weak adjective.
+	add_decl(base, props, "u", "u", "u", "u", "u", "u", "u")
+end
+
+
 decls["n"] = function(base, props)
 	-- Normal (strong) neuter nouns.
 	add_decl(base, props, "", "i", "s", "^^")
@@ -1014,6 +1049,12 @@ decls["n-weak"] = function(base, props)
 	-- "Weak" neuter nouns in -a, e.g. [[auga]] "eye", [[hjarta]] "heart". U-mutation occurs in the nom/acc/dat pl but
 	-- doesn't need to be indicated explicitly because the ending begins with u-.
 	add_decl(base, props, "a", "a", "a", "u", nil, nil, "na")
+end
+
+
+decls["n-weakprefix"] = function(base, props)
+	-- FIXME! This is just a weak adjective.
+	add_decl(base, props, "a", "a", "a", "u", "u", "u", "u")
 end
 
 
@@ -1393,72 +1434,73 @@ local function fetch_footnotes(separated_group, parse_err)
 end
 
 
--- Fetch and parse a slot override, e.g. "ar:s" or "um:m[archaic]/um" or ":~i:Þorkatli[archaic]"; that is, everything
--- after the slot name(s), including the initial colon. `segments` is the input in the form of a list where the
--- footnotes have been separated out (see `parse_override` below); `spectype` is used in error messages and specifies
--- e.g. "genitive" or "dat+gen slot override"; `allow_blank` indicates that a completely blank override spec is allowed
--- (in that case, nil will be returned); `allow_slash` indicates that two slash-separated specs (indefinite and
--- definite) are allowed; and `parse_err` is a function of one argument to throw a parse error. The return value is an
--- object containing fields `full`, `bare` and `def`, of the format described below in the comment above
--- `parse_override`.
-local function fetch_slot_override(segments, spectype, allow_blank, allow_slash, parse_err)
+-- Fetch and parse a slot override, e.g. "ar:s" or "um:m[archaic]/um" or "i:!Þorkatli[archaic]" (where ! indicates that
+-- the override is the full form including the stem); that is, everything after the slot name(s). `segments` is the
+-- input in the form of a list where the footnotes have been separated out (see `parse_override` below); `spectype` is
+-- used in error messages and specifies e.g. "genitive" or "dat+gen slot override"; `allow_blank` indicates that a
+-- completely blank override spec is allowed (in that case, nil will be returned); `defslot`, if true, indicates that
+-- we're processing a definite slot override, i.e. two slash-separated specs (indefinite and definite) are not allowed
+-- and the return overrides will be stored into `def; and `parse_err` is a function of one argument to throw a parse
+-- error. The return value is an object containing fields `indef` and/or `def`, of the format described below in the
+-- comment above `parse_override`.
+local function fetch_slot_override(segments, spectype, allow_blank, defslot, parse_err)
 	if allow_blank and #segments == 1 and segments[1] == "" then
 		return nil
-	end
-	local full = false
-	if segments[1]:find("^:") then
-		full = true
-		segments[1] = segments[1]:gsub("^:", "")
 	end
 	local slash_separated_groups = iut.split_alternating_runs_and_strip_spaces(segments, "/")
 	if #slash_separated_groups > 2 then
 		parse_err(("Can specify at most two slash-separated override groups for %s, but saw %s"):format(
 			spectype, #slash_separated_groups))
 	end
-	if slash_separated_groups[2] and not allow_slash then
+	if slash_separated_groups[2] and defslot then
 		parse_err(("Can't specify two slash-separated override groups for %s; the second override group is for the definite slot variant, but the slot is already definite"):format(
 			spectype))
 	end
 	local ret = {}
 	for i, slash_separated_group in ipairs(slash_separated_groups) do
-		local retfield = i == 1 and "bare" or "def"
-		local colon_separated_groups = iut.split_alternating_runs_and_strip_spaces(slash_separated_group, ":")
-		local specs = {}
-		for _, colon_separated_group in ipairs(colon_separated_groups) do
-			local form = colon_separated_group[1]
-			if form == "" then
-				parse_err(("Use - to indicate an empty ending for %s: '%s'"):format(spectype, table.concat(segments)))
-			elseif form == "-" then
-				form = ""
-			elseif form == "--" then -- missing
-				form = "-"
-			end
-			local new_spec = {form = form, footnotes = fetch_footnotes(colon_separated_group, parse_err)}
-			for _, existing_spec in ipairs(specs) do
-				if existing_spec.form == new_spec.form then
-					parse_err("Duplicate " .. spectype .. " spec '" .. table.concat(colon_separated_group) .. "'")
+		local retfield = defslot and "def" or i == 1 and "indef" or "def"
+		if #slash_separated_group == 1 and slash_separated_group[1] == "" then
+			ret[retfield] = false
+		else
+			local colon_separated_groups = iut.split_alternating_runs_and_strip_spaces(slash_separated_group, ":")
+			local specs = {}
+			for _, colon_separated_group in ipairs(colon_separated_groups) do
+				local form = colon_separated_group[1]
+				if form == "" then
+					parse_err(("Use - to indicate an empty ending for %s: '%s'"):format(spectype,
+						table.concat(segments)))
+				elseif form == "-" then
+					form = ""
+				elseif form == "--" then -- missing
+					form = "-"
 				end
+				local new_spec = {form = form, footnotes = fetch_footnotes(colon_separated_group, parse_err)}
+				for _, existing_spec in ipairs(specs) do
+					if existing_spec.form == new_spec.form then
+						parse_err("Duplicate " .. spectype .. " spec '" .. table.concat(colon_separated_group) .. "'")
+					end
+				end
+				table.insert(specs, new_spec)
 			end
-			table.insert(specs, new_spec)
+			ret[retfield] = specs
 		end
-		ret[retfield] = specs
 	end
-	ret.full = full
 	return ret
 end
 
 
 --[=[
-Parse a single override spec (e.g. 'dat-:i/-' or 'defnompl+defaccpl:sumrin[when referring to summers in general]:sumurin[when referring to a specific number of summers]')
+Parse a single override spec (e.g. 'dat-:i/-' or 'nompl+accpl^/' or
+'defnompl+defaccpl!sumrin[when referring to summers in general]:!sumurin[when referring to a specific number of summers]')
 and return two values: the slot(s) the override applies to, and an object describing the override spec. The input is
-actually a list where the footnotes have been separated out; for example, given the second example spec above, the input
-will be a list {"defnompl+defaccpl:sumrin", "[when referring to summers in general]", ":sumurin",
+actually a list where the footnotes have been separated out; for example, given the third example spec above, the input
+will be a list {"defnompl+defaccpl!sumrin", "[when referring to summers in general]", ":!sumurin",
   "[when referring to a specific number of summers]", ""}.
 
 The object returned for 'dat-:i[mostly in the context of violent actions]/-' looks like this:
 
 {
-  bare = {
+  indef = {
 	{
 	  form = ""
 	},
@@ -1474,18 +1516,28 @@ The object returned for 'dat-:i[mostly in the context of violent actions]/-' loo
   }
 }
 
-The object returned for 'defnompl+defaccpl:sumrin[when referring to summers in general]:sumurin[when referring to a specific number of summers]'
+The object returned for '!nompl+accpl^/' looks like this:
+
+{
+  indef = {
+	{
+	  form = "^"
+	},
+  },
+  def = false
+}
+
+The object returned for 'defnompl+defaccpl!sumrin[when referring to summers in general]:!sumurin[when referring to a specific number of summers]'
 looks like this:
 
 {
-  full = true,
-  bare = {
+  def = {
 	{
-	  form = "sumrin",
+	  form = "!sumrin",
 	  footnotes = {"[when referring to summers in general]"}
 	},
 	{
-	  form = "sumurin",
+	  form = "!sumurin",
 	  footnotes = {"[when referring to a specific number of summers]"}
 	}
   }
@@ -1494,18 +1546,18 @@ looks like this:
 local function parse_override(segments, parse_err)
 	local part = segments[1]
 	local slots = {}
-	local slot_def
+	local defslot
 	while true do
-		local this_slot_def
+		local this_defslot
 		if part:find("^def") then
-			this_slot_def = true
+			this_defslot = true
 			part = usub(part, 4)
 		else
-			this_slot_def = false
+			this_defslot = false
 		end
-		if slot_def == nil then
-			slot_def = this_slot_def
-		elseif slot_def ~= this_slot_def then
+		if defslot == nil then
+			defslot = this_defslot
+		elseif defslot ~= this_defslot then
 			parse_err(("When multiple slot overrides are combined with +, all must be definite or indefinite: '%s'"):
 				format(table.concat(segments)))
 		end
@@ -1516,7 +1568,7 @@ local function parse_override(segments, parse_err)
 			parse_err(("Unrecognized case '%s' in override: '%s'"):format(case, table.concat(segments)))
 		end
 		part = usub(part, 4)
-		local slot = slot_def and "def_" or ""
+		local slot = defslot and "def_" or ""
 		if rfind(part, "^pl") then
 			part = usub(part, 3)
 			slot = slot .. case .. "_p"
@@ -1531,8 +1583,8 @@ local function parse_override(segments, parse_err)
 		end
 	end
 	segments[1] = part
-	local retval = fetch_slot_override(segments, ("%s slot override"):format(table.concat(slots)), false,
-		not slot_def, parse_err)
+	local retval = fetch_slot_override(segments, ("%s slot override"):format(table.concat(slots)), false, defslot,
+		parse_err)
 	return slots, retval
 end
 
@@ -1548,11 +1600,13 @@ Return value is an object of the form
 	...
   }, -- where SLOT is the actual name of the slot, such as "ind_gen_s" (NOT the slot name as specified by the user,
 		which would be just "gen" for "ind_gen_s") and OVERRIDE is
-		{full = BOOLEAN, bare = {FORMOBJ, FORMOBJ, ...}, def = nil or {FORMOBJ, FORMOBJ, ...}}, where `full` is true if
-		the override began with a colon (indicating that the values are full forms rather than endings); FORMOBJ is
+		{indef = {FORMOBJ, FORMOBJ, ...}, def = nil or false or {FORMOBJ, FORMOBJ, ...}}, where FORMOBJ is
 		{form = FORM, footnotes = FOOTNOTES} as in the `forms` table ("-" means to suppress the slot entirely and is
-		signaled by "--" as the form value); `bare` means the override(s) coming before a slash; `def` means the
-		override(s) coming after a slash, which are not allowed for definite slots
+		signaled by "--" as the form value; a value preceded by ! means it's a full form rather than an ending; in
+		such forms you can use # to indicate the lemma and ## to indicate the lemma minus -ur or -r, as with stems);
+		`indef` means the override(s) coming before a slash; `def` means the override(s) coming after a slash, or the
+		overrides for definite slots, and `false` for either means that the user left the value before or after the
+		slash completely blank, meaning not to override the indefinite or definite forms
   gens = nil or OVERRIDE, same form as OVERRIDE above
   pls = nil or OVERRIDE, same form as OVERRIDE above
   forms = {}, -- forms for a single spec alternant; see `forms` below
@@ -1560,12 +1614,18 @@ Return value is an object of the form
 	PROP = true,
 	PROP = true,
     ...
-  }, -- misc Boolean properties: "dem" (a demonym, i.e. a capitalized noun such as [[Svisslendingur]] "Swiss person"
-		that behaves like a common noun); "def" (definite forms are present in a proper noun); "-def" (definite forms
-		aren't present in a common noun); "pers" (a personal name; has special declension properties); "rstem" (an
-		r-stem like [[bróðir]] "brother" or [[dóttir]] "daughter"); "já" (a neuter in -é whose stem alternates with
-		-já, such as [[tré]] "tree" and [[hné]]/[[kné]] "knee"); "weak" (the noun should decline like an ordinary weak
-		noun; used in the declension of [[fjandi]] to disable the special -ndi declension)
+  }, -- misc Boolean properties:
+		* "dem" (a demonym, i.e. a capitalized noun such as [[Svisslendingur]] "Swiss person" that behaves like a
+		  common noun);
+		* "proper" (a lowercase noun that behaves like a proper noun, i.e. defaults to no plural or definite forms);
+		* "def" (definite forms are present in a proper noun);
+		* "-def" (definite forms aren't present in a common noun);
+		* "pers" (a personal name; like "proper" but has special declension properties);
+		* "rstem" (an r-stem like [[bróðir]] "brother" or [[dóttir]] "daughter");
+		* "já" (a neuter in -é whose stem alternates with -já, such as [[tré]] "tree" and [[hné]]/[[kné]] "knee");
+		* "weak" (the noun should decline like an ordinary weak noun; used in the declension of [[fjandi]] to disable
+		  the special -ndi declension);
+		* "weakprefix" (a prefix behaving like a weak adjective; FIXME: replace this with + for adjective declension);
   number = "NUMBER", -- "sg", "pl", "both"; may be missing
   gender = "GENDER", -- "m", "f" or "n"; always specified by the user
   definiteness = "DEFINITENESS", -- "def", "indef" or "both"; computed from other settings
@@ -1675,10 +1735,10 @@ local function parse_indicator_spec(angle_bracket_spec, lemma)
 					parse_err(("Unrecognized gender '%s', should be 'm', 'f' or 'n'"):format(base.gender))
 				end
 				if comma_separated_groups[2] then
-					base.gens = fetch_slot_override(comma_separated_groups[2], "genitive", true, true, parse_err)
+					base.gens = fetch_slot_override(comma_separated_groups[2], "genitive", true, false, parse_err)
 				end
 				if comma_separated_groups[3] then
-					base.pls = fetch_slot_override(comma_separated_groups[3], "nominative plural", true, true,
+					base.pls = fetch_slot_override(comma_separated_groups[3], "nominative plural", true, false,
 						parse_err)
 				end
 			elseif part == "" then
@@ -1785,8 +1845,8 @@ local function parse_indicator_spec(angle_bracket_spec, lemma)
 				end
 				base.builtin = true
 				parse_err("Built-in indicator '@' not implemented yet")
-			elseif part == "dem" or part == "def" or part == "-def" or part == "weak" or part == "pers" or
-				part == "rstem" or part == "já" then
+			elseif part == "dem" or part == "def" or part == "-def" or part == "weak" or part == "weakprefix" or
+				part == "proper" or part == "pers" or part == "rstem" or part == "já" then
 				if base.props[part] then
 					parse_err("Can't specify '" .. part .. "' twice")
 				end
@@ -1814,6 +1874,52 @@ local function process_declnumber(base)
 			error(("Unrecognized value '%s' for 'declnumber', should be 'sg' or 'pl'"):format(base.declnumber))
 		end
 	end
+end
+
+
+-- Map `fn` over an override spec (either `gens`, `pls` or one of the overrides in `overrides`). `fn` is passed one
+-- item (the form object of the override), which it can mutate if needed. If it ever returns non-nil, mapping stops
+-- and that value is returned as the return value of `map_override`; otherwise mapping runs to completion and nil is
+-- returned.
+local function map_override(override, fn)
+	if not override then
+		return nil
+	end
+	local function map_one_list(list)
+		if not list then
+			return nil
+		end
+		for _, formobj in ipairs(list) do
+			local retval = fn(formobj)
+			if retval ~= nil then
+				return retval
+			end
+		end
+		return nil
+	end
+	local retval = map_one_list(override.indef)
+	if retval ~= nil then
+		return retval
+	end
+	return map_one_list(override.def)
+end
+
+-- Map `fn` over all override specs in `base` (`gens`, `pls` and the overrides in `overrides`). `fn` is passed one
+-- item (the form object of the override), which it can mutate if needed. If it ever returns non-nil, mapping stops
+-- and that value is returned as the return value of `map_override`; otherwise mapping runs to completion and nil is
+-- returned.
+local function map_all_overrides(base, fn)
+	for slot, override in pairs(base.overrides) do
+		local retval = map_override(override, fn)
+		if retval ~= nil then
+			return retval
+		end
+	end
+	local retval = map_override(base.gens, fn)
+	if retval ~= nil then
+		return retval
+	end
+	return map_override(base.pls, fn)
 end
 
 
@@ -1884,6 +1990,8 @@ local function set_defaults_and_check_bad_indicators(base)
 	end
 
 	-- Compute whether i-mutation stems are needed.
+	
+	-- First check for 'imut' set by user.
 	if not base.need_imut then -- might be set by the detected declension
 		if base.imut then
 			for _, formobj in ipairs(base.imut) do
@@ -1895,6 +2003,7 @@ local function set_defaults_and_check_bad_indicators(base)
 		end
 	end
 
+	-- Then check for 'unimut' set by user.
 	if not base.need_imut then
 		if base.unimut then
 			for _, formobj in ipairs(base.unimut) do
@@ -1906,33 +2015,14 @@ local function set_defaults_and_check_bad_indicators(base)
 		end
 	end
 
+	-- Then check all overrides for any beginning with a single ^.
 	if not base.need_imut then
-		local function check_override_for_imut(override)
-			if not override then
-				return
+		map_all_overrides(base, function(formobj)
+			if formobj.form:find("^%^") and not formobj.form:find("^%^%^") then
+				base.need_imut = true
+				return true
 			end
-			if not override.full then
-				local function check_for_imut(list)
-					for _, formobj in ipairs(list) do
-						if formobj.form:find("^%^") and not formobj.form:find("^%^%^") then
-							base.need_imut = true
-							break
-						end
-					end
-				end
-				if override.bare then
-					check_for_imut(override.bare)
-				end
-				if not base.need_imut and override.def then
-					check_for_imut(override.def)
-				end
-			end
-		end
-		for slot, override in pairs(base.overrides) do
-			check_override_for_imut(override)
-		end
-		check_override_for_imut(base.gens)
-		check_override_for_imut(base.pls)
+		end)
 	end
 
 	if base.imutval and not base.need_imut then
@@ -2113,7 +2203,7 @@ local function synthesize_singular_lemma(base)
 	end
 	base.lemma = lemma_determined
 	if pls_determined then
-		base.pls = {bare = {{form = pls_determined}}}
+		base.pls = {indef = {{form = pls_determined}}}
 	end
 end
 
@@ -2309,7 +2399,8 @@ local function determine_declension(base)
 			end
 		end
 		if not stem then
-			stem, ending = rmatch(base.lemma, "^(.*)(ur)$")
+			-- There must be at least one vowel; lemmas like [[bur]] don't count.
+			stem, ending = rmatch(base.lemma, "^(.*" .. com.vowel_c .. ".*)(ur)$")
 			if stem then
 				if stem:find("skap$") and not base.stem then
 					-- tons of words in -skapur
@@ -2340,7 +2431,9 @@ local function determine_declension(base)
 			end
 		end
 		if not stem then
-			stem, ending = rmatch(base.lemma, "^(.*)(ir)$")
+			-- There must be at least one vowel (although there don't appear to be any single-syllable
+			-- lemmas ending in -ir other than in -eir).
+			stem, ending = rmatch(base.lemma, "^(.*" .. com.vowel_c .. ".*)(ir)$")
 			if stem then
 				-- [[læknir]] "physician" and many others
 				-- [[bróðir]], [[faðir]] are r-stems
@@ -2355,22 +2448,26 @@ local function determine_declension(base)
 		if not stem then
 			stem, ending = rmatch(base.lemma, "^(.*l)(l)$")
 			if stem then
-				if rfind(stem, com.cons_c .. "[aiu]l$") or stem:find("^[aiuAIU]l$") then
-					-- [[gaffall]] "fork" (dat pl [[göfflum]]), [[þumall]] "thumb"; [[ekkill]] "widower";
-					-- [[spegill]] "mirror"; [[segull]] "magnet"; [[öxull]] "axis; axle"; etc. Note that the check
-					-- for a consonant preceding the a/i/u is important as there are words like [[manúall]] "manual",
-					-- [[ritúall]] "ritual", [[kokteill]] "cocktail", [[feill]] "flaw, error", [[deill]] "dispute???"
-					-- (rare, regional), [[haull]] "hernia", [[straull]] "? (rare, regional)" that don't have
-					-- contraction. Beware of the rare word [[síill]] "sieve? strainer?" that per BÍN does contract to
-					-- síl- before vowels. Currently the code to handle contraction will throw an error if you attempt
-					-- to contract that word, but you can use 'vstem:...'. 
-					--
-					-- There are also lots of words in a vowel other than a/i/u followed by -ll, such as [[bíll]] "car",
-					-- [[áll]] "eel", [[konsúll]] "consul", [[þræll]] "slave", [[hvoll]] "hill", [[stóll]] "chair", etc.
-					-- In these, the final -l is the nominative singular ending, as above.
-					default_props.con = "con"
+				if is_proper_noun(base, stem) and stem:find("kel$") then
+					base.decl = "m-kell"
+				else
+					if rfind(stem, com.cons_c .. "[aiu]l$") or stem:find("^[aiuAIU]l$") then
+						-- [[gaffall]] "fork" (dat pl [[göfflum]]), [[þumall]] "thumb"; [[ekkill]] "widower";
+						-- [[spegill]] "mirror"; [[segull]] "magnet"; [[öxull]] "axis; axle"; etc. Note that the check
+						-- for a consonant preceding the a/i/u is important as there are words like [[manúall]]
+						-- "manual", [[ritúall]] "ritual", [[kokteill]] "cocktail", [[feill]] "flaw, error", [[deill]]
+						-- "dispute???" (rare, regional), [[haull]] "hernia", [[straull]] "? (rare, regional)" that
+						-- don't have contraction. Beware of the rare word [[síill]] "sieve? strainer?" that per BÍN
+						-- does contract to síl- before vowels. Currently the code to handle contraction will throw an
+						-- error if you attempt to contract that word, but you can use 'vstem:...'. 
+						--
+						-- There are also lots of words in a vowel other than a/i/u followed by -ll, such as [[bíll]]
+						-- "car", [[áll]] "eel", [[konsúll]] "consul", [[þræll]] "slave", [[hvoll]] "hill", [[stóll]]
+						-- "chair", etc. In these, the final -l is the nominative singular ending, as above.
+						default_props.con = "con"
+					end
+					base.decl = "m"
 				end
-				base.decl = "m"
 			end
 		end
 		if not stem then
@@ -2408,7 +2505,8 @@ local function determine_declension(base)
 			if stem then
 				-- [[tími]] "time, hour" and many others; [[herra]] "gentleman" ([[sendiherra|ambassador]]),
 				-- [[séra]]/[[síra]] "reverend"
-				base.decl = "m-weak"
+				-- FIXME! Eliminate weakprefix in favor of +.
+				base.decl = base.props.weakprefix and "m-weakprefix" or "m-weak"
 			end
 		end
 		if not stem then
@@ -2424,9 +2522,12 @@ local function determine_declension(base)
 			base.decl = "m"
 		end
 	elseif base.gender == "f" then
-		stem, ending = rmatch(base.lemma, "^(.*)(a)$")
-		if stem then
-			base.decl = "f-weak"
+		if not stem then
+			stem, ending = rmatch(base.lemma, "^(.*)(a)$")
+			if stem then
+				-- FIXME! Eliminate weakprefix in favor of +.
+				base.decl = base.props.weakprefix and "f-weakprefix" or "f-weak"
+			end
 		end
 		if not stem then
 			stem, ending = rmatch(base.lemma, "^(.*[^eE])(i)$")
@@ -2435,20 +2536,18 @@ local function determine_declension(base)
 			end
 		end
 		if not stem then
-			stem, ending = rmatch(base.lemma, "^(.*)(ur)$")
-			if stem then
+			stem, ending = rmatch(base.lemma, "^(.*[^aA])(ur)$")
+			if stem and rfind(stem, com.vowel_c) then
 				base.decl = "f-ur"
 			end
 		end
 		if not stem and base.props.rstem then
-			stem, ending = rmatch(base.lemma, "^(.*)(ir)$")
-			if stem then
+			stem, ending = rmatch(base.lemma, "^(.*[^eE])(ir)$")
+			if stem and base.props.rstem then
 				-- [[dóttir]], [[móðir]], [[systir]]
-				if base.props.rstem then
-					base.decl = "f-rstem"
-					if not stem:find("syst$") then
-						base.need_imut = true
-					end
+				base.decl = "f-rstem"
+				if not stem:find("syst$") then
+					base.need_imut = true
 				end
 			end
 		end
@@ -2483,9 +2582,10 @@ local function determine_declension(base)
 		end
 		if not stem then
 			stem = rmatch(base.lemma, "^(.*[^aA]un)$")
-			if stem then
+			if stem and rfind(stem, com.vowel_c) then
 				-- [[pöntun]] "order (in commerce)"; [[verslun]] "trade, business; store, shop"; [[efun]] "doubt";
 				-- [[bötun]] "improvement"; [[örvun]] "encouragement; stimulation" (pl. örvanir); etc.
+				-- Exclude words in -aun like [[baun]] "bean", [[laun]] "secret", [[raun]] "experience".
 				base.decl = "f"
 				default_props.unumut = "unuumut"
 			end
@@ -2508,7 +2608,8 @@ local function determine_declension(base)
 		if not stem then
 			stem, ending = rmatch(base.lemma, "^(.*)(a)$")
 			if stem then
-				base.decl = "n-weak"
+				-- FIXME! Eliminate weakprefix in favor of +.
+				base.decl = base.props.weakprefix and "n-weakprefix" or "n-weak"
 			end
 		end
 		if not stem then
@@ -2539,7 +2640,8 @@ local function determine_declension(base)
 			end
 		end
 		if not stem then
-			stem = rmatch(base.lemma, "^(.*" .. com.cons_c .. "ur)$")
+			-- -ur preceded by a consonant and at least one vowel.
+			stem = rmatch(base.lemma, "^(.*" .. com.vowel_c .. ".*" .. com.cons_c .. "ur)$")
 			if stem then
 				base.decl = "n"
 				default_props.con = "con"
@@ -2841,19 +2943,33 @@ local function determine_props(base)
 end
 
 
-local function detect_indicator_spec(base)
-	if base.stem then
-		if base.stem:find("##") then
-			local lemma_minus_r
-			if base.lemma:find("[^Aa]ur$") then
-				lemma_minus_r = base.lemma:gsub("ur$", "")
-			else
-				lemma_minus_r = base.lemma:gsub("r$", "")
-			end
-			base.stem = base.stem:gsub("##", m_string_utilities.replacement_escape(lemma_minus_r))
-		end
-		base.stem = base.stem:gsub("#", m_string_utilities.replacement_escape(base.lemma))
+local function replace_hashvals(base, val)
+	if not val then
+		return val
 	end
+	if val:find("##") then
+		local lemma_minus_r
+		if base.lemma:find("[^Aa]ur$") then
+			lemma_minus_r = base.lemma:gsub("ur$", "")
+		else
+			lemma_minus_r = base.lemma:gsub("r$", "")
+		end
+		val = val:gsub("##", m_string_utilities.replacement_escape(lemma_minus_r))
+	end
+	val = val:gsub("#", m_string_utilities.replacement_escape(base.lemma))
+	return val
+end
+	
+
+local function detect_indicator_spec(base)
+	-- Replace # and ## in all overridable stems as well as all overrides.
+	for stemkey, _ in pairs(overridable_stems) do
+		base[stemkey] = replace_hashvals(base, base[stemkey])
+	end
+	map_all_overrides(base, function(formobj)
+		formobj.form = replace_hashvals(base, formobj.form)
+	end)
+
 	if base.pron then
 		determine_pronoun_props(base)
 	elseif base.det then
