@@ -200,6 +200,9 @@ local function is_proper_noun(base, stem)
 	if base.props.dem then
 		return false
 	end
+	if base.props.pers then
+		return true
+	end
 	local first_letter = usub(stem, 1, 1)
 	local second_letter = usub(stem, 2, 2)
 	return ulower(first_letter) ~= first_letter and ((not second_letter or second_letter == "") or
@@ -883,14 +886,9 @@ end
 
 
 decls["m-rstem"] = function(base, props)
-	-- This code is also used by decls["f-rstem"]
-	local imut
-	if props.stem:find("syst$") then
-		imut = ""
-	else
-		imut = "^"
-	end
-	add_decl(base, props, "ur", "ur", "ur", imut .. "ur", nil, imut .. "rum", imut .. "ra")
+	local imut = "^"
+	add_decl(base, props, "ur", "ur", {"ur", {form = "urs", footnotes = {"[proscribed]"}}},
+		imut .. "ur", nil, imut .. "rum", imut .. "ra")
 end
 
 
@@ -974,7 +972,16 @@ decls["f-long-umlaut-vowel-r"] = function(base, props)
 end
 
 
-decls["f-rstem"] = decls["m-rstem"]
+decls["f-rstem"] = function(base, props)
+	local imut
+	if props.stem:find("syst$") then
+		imut = ""
+	else
+		imut = "^"
+	end
+	local sg_ending = {"ur", {form = "ir", footnotes = {"[proscribed]"}}}
+	add_decl(base, props, sg_ending, sg_ending, sg_ending, imut .. "ur", nil, imut .. "rum", imut .. "ra")
+end
 
 
 decls["f-weak"] = function(base, props)
@@ -1811,6 +1818,9 @@ end
 
 
 local function set_defaults_and_check_bad_indicators(base)
+	local function check_err(msg)
+		error(("Lemma '%s': %s"):format(base.lemma, msg))
+	end
 	-- Set default values.
 	local regular_noun = is_regular_noun(base)
 	if base.pron then
@@ -1823,7 +1833,7 @@ local function set_defaults_and_check_bad_indicators(base)
 		-- FIXME: Do adjective-specific checks then return
 	elseif not base.adj then
 		if not base.gender then
-			error("Internal error: For nouns, gender must be specified")
+			check_err("Internal error: For nouns, gender must be specified")
 		end
 		base.number = base.number or is_proper_noun(base, base.lemma) and "sg" or
 			base.gender == "m" and base.lemma:find("skapur$") and not base.stem and "sg" or "both"
@@ -1834,7 +1844,7 @@ local function set_defaults_and_check_bad_indicators(base)
 		base.actual_gender = base.gender
 		if base.declgender then
 			if not base.declgender:find("^[mfn]$") then
-				error(("Unrecognized gender '%s' for 'declgender:', should be 'm', 'f' or 'n'"):format(
+				check_err(("Unrecognized gender '%s' for 'declgender:', should be 'm', 'f' or 'n'"):format(
 					base.declgender))
 			end
 			base.gender = base.declgender
@@ -1845,28 +1855,32 @@ local function set_defaults_and_check_bad_indicators(base)
 		for _, mutation_spec in ipairs(mutation_specs) do
 			if base[mutation_spec] then
 				-- FIXME, maybe with adjectives
-				error(("'%s' can only be specified with regular nouns"):format(mutation_spec))
+				check_err(("'%s' can only be specified with regular nouns"):format(mutation_spec))
 			end
 		end
 		if base.declgender then
-			error("'declgender' can only be specified with regular nouns")
+			check_err("'declgender' can only be specified with regular nouns")
 		end
 		return
 	end
 
 	-- Check for bad indicator combinations.
 	if base.imut and base.unimut then
-		error("'imut' and 'unimut' specs cannot be specified together")
+		check_err("'imut' and 'unimut' specs cannot be specified together")
 	end
 	if base.umut and base.unumut then
-		error("'umut' and 'unumut' specs cannot be specified together")
+		check_err("'umut' and 'unumut' specs cannot be specified together")
 	end
 	if base.unimut and base.unumut then
-		error("'unimut' and 'unumut' specs cannot be specified together")
+		check_err("'unimut' and 'unumut' specs cannot be specified together")
+	end
+
+	if base.declnumber == "pl" and (base.gens or base.pls) then
+		check_err("Cannot set genitive or plural specs after the gender in plural-only lemmas")
 	end
 
 	if base.plvstem and not base.plstem then
-		error("When 'plvstem:' given, 'plstem:' must also be given")
+		check_err("When 'plvstem:' given, 'plstem:' must also be given")
 	end
 
 	-- Compute whether i-mutation stems are needed.
@@ -1922,7 +1936,7 @@ local function set_defaults_and_check_bad_indicators(base)
 	end
 
 	if base.imutval and not base.need_imut then
-		error("'imutval:...' specified but 'imut' and 'unimut' not specified and no forms need i-mutation")
+		check_err("'imutval:...' specified but 'imut' and 'unimut' not specified and no forms need i-mutation")
 	end
 end
 
@@ -1958,112 +1972,149 @@ local function set_all_defaults_and_check_bad_indicators(alternant_multiword_spe
 end
 
 
--- For a plural-only lemma, synthesize a likely singular lemma. It doesn't have to be
--- theoretically correct as long as it generates all the correct plural forms.
+local function expand_property_sets(base)
+	base.prop_sets = {{}}
+
+	-- Construct the prop sets from all combinations of mutation specs, in case any given spec has more than one
+	-- possibility.
+	for _, mutation_spec in ipairs(mutation_specs) do
+		local specvals = base[mutation_spec]
+		-- Handle unspecified mutation specs.
+		if not specvals then
+			specvals = {false}
+		end
+		if #specvals == 1 then
+			for _, prop_set in ipairs(base.prop_sets) do
+				-- Convert 'false' back to nil
+				prop_set[mutation_spec] = specvals[1] or nil
+			end
+		else
+			local new_prop_sets = {}
+			for _, prop_set in ipairs(base.prop_sets) do
+				for _, specval in ipairs(specvals) do
+					local new_prop_set = m_table.shallowcopy(prop_set)
+					new_prop_set[mutation_spec] = specval
+					table.insert(new_prop_sets, new_prop_set)
+				end
+			end
+			base.prop_sets = new_prop_sets
+		end
+	end
+end
+
+
+-- For a plural-only lemma, synthesize a likely singular lemma. It doesn't have to be theoretically correct as long as
+-- it generates all the correct plural forms.
 local function synthesize_singular_lemma(base)
-	-- FIXME: Update for Icelandic
-	if not base.prop_sets then
-		base.prop_sets = {{}}
+	local lemma_determined, pls_determined
+	if base.pls then
+		interr("Should not have pl override with pl-only lemma; should have been caught earlier")
 	end
 
-	local lemma_determined
 	-- Loop over all stem sets in case the user specified multiple ones (e.g. '*,-*'). If we try to reconstruct
 	-- different lemmas for different stem sets, we'll throw an error below.
 	for _, props in ipairs(base.prop_sets) do
-		local stem, lemma
-		while true do
-			if base.indecl then
-				-- If specified as indeclinable, leave it alone; e.g. 'pesos' indeclinable plural of [[peso]].
-				lemma = base.lemma
-				break
-			elseif base.gender == "m" then
-				if base.animacy == "an" then
-					stem = rmatch(base.lemma, "^(.*)i$")
-					if stem then
-						if base.soft then
-							-- [[Blíženci]] "Gemini"
-							-- Since the nominative singular has no ending.
-							lemma = com.convert_paired_plain_to_palatal(stem, ending)
-						else
-							lemma = undo_second_palatalization(base, stem)
-						end
-					else
-						stem = rmatch(base.lemma, "^(.*)ové$") or rmatch(base.lemma, "^(.*)é$")
-						if stem then
-							-- [[manželé]] "married couple", [[Velšané]] "Welsh people"
-							lemma = stem
-						else
-							error(("Animate masculine plural-only lemma '%s' should end in -i, -ové or -é"):format(base.lemma))
-						end
-					end
-				else
-					stem = rmatch(base.lemma, "^(.*)y$")
-					if stem then
-						-- [[droby]] "giblets"; [[tvarůžky]] "Olomouc cheese"; [[alimenty]] "alimony"; etc.
-						lemma = stem
-					else
-						local ending
-						stem, ending = rmatch(base.lemma, "^(.*)([eě])$")
-						if stem then
-							-- [[peníze]] "money", [[tvargle]] "Olomouc cheese" (mixed declension), [[údaje]] "data",
-							-- [[Lazce]] (a village), [[lováče]] "money", [[Krkonoše]] "Giant Mountains", [[kříže]] "clubs"
-							lemma = com.convert_paired_plain_to_palatal(stem, ending)
-							if not base.mixed then
-								base.soft = true
-							end
-						else
-							error(("Inanimate masculine plural-only lemma '%s' should end in -y, -e or -ě"):format(base.lemma))
-						end
-					end
-				end
-				break
-			elseif base.gender == "f" then
-				stem = rmatch(base.lemma, "^(.*)y$")
-				if stem then
-					lemma = stem .. "a"
-					break
-				end
-				stem = rmatch(base.lemma, "^(.*)[eě]$")
-				if stem then
-					-- Singular like the plural. Cons-stem feminines like [[dlaň]] "palm (of the hand)" have identical
-					-- plurals to soft-stem feminines like [[růže]] (modulo e/ě differences), so we don't need to
-					-- reconstruct the former type.
-					lemma = base.lemma
-					break
-				end
-				stem = rmatch(base.lemma, "^(.*)i$")
-				if stem then
-					-- i-stems.
-					lemma = stem
-					base.istem = true
-					break
-				end
-				error(("Feminine plural-only lemma '%s' should end in -y, -ě, -e or -i"):format(base.lemma))
-			elseif base.gender == "n" then
-				-- -ata nouns like [[slůně]] "baby elephant" nom pl 'slůňata' are declined in the plural same as if
-				-- the singular were 'slůňato' so we don't have to worry about them.
-				stem = rmatch(base.lemma, "^(.*)a$")
-				if stem then
-					lemma = stem .. "o"
-					break
-				end
-				stem = rmatch(base.lemma, "^(.*)[eěí]$")
-				if stem then
-					-- singular lemma also in -e, -ě or -í; e.g. [[věčná loviště]] "[[happy hunting ground]]"
-					lemma = base.lemma
-					break
-				end
-				error(("Neuter plural-only lemma '%s' should end in -a, -í, -ě or -e"):format(base.lemma))
-			else
-				error(("Internal error: Unrecognized gender '%s'"):format(base.gender))
-			end
+		local function interr(msg)
+			error(("Internal error: For lemma '%s', %s: %s"):format(base.lemma, msg, dump(props)))
 		end
+
+		local stem, lemma, ending, sg_ending, default_unumut, pls
+		if base.gender == "m" or base.gender == "f" then
+			stem, ending = rmatch(base.lemma, "^(.*)([aiu]r)$")
+			if stem then
+				-- masc:
+				--
+				-- [[tónkeikar]] "concert"; [[feðgar]] "father and son"; [[hafrar]] "oats" (dat pl höfrum);
+				-- [[fjármunir]] "goods, property"; [[Fljótsdælir]] "inhabitants of Fljótsdalur (a valley)"
+				-- (occurs definite, needs 'dem', no unimut); [[Ásmegir]] "sons of the Gods" (occurs definite, dat
+				-- pl Ásmögum, gen pl Ásmaga, i.e. needs 'def' and 'unimut'); similarly [[ljóðmegir]];
+				-- [[buskuleggir]] "?" (has 'j' in dat pl [[buskuleggjum]], gen pl [[buskuleggja]]; [[Bekkir]]
+				-- (place name; has 'j' in dat pl [[Bekkjum]], gen pl [[Bekkja]])
+				--
+				-- fem:
+				-- [[frönskur]] "French fries" (with unumut); [[hjólbörur]] "wheelbarrow" (with unumut); [[buxur]]
+				-- "trousers, pants", [[hættur]] "bedtime; quitting time" (with unimut); [[herðar]] "shoulders";
+				-- [[limar]] "branches"; [[öfgar]] "exaggeration, extreme" (no unumut); [[drefjar]]
+				-- "stains, traces"; [[viðjar]] "chains, fetters"; many others in -jar, but the -j- is throughout
+				-- the plural; [[svalir]] "balcony; porch"; [[dyr]] "doorway" (uses decllemma:dyrir)
+				pls = ending
+				if ending == "ur" then
+					default_unumut = "unumut"
+				end
+				sg_ending = "ur"
+			else
+				error(("Masculine or feminine plural-only lemma '%s' should end in -ar, -ir or -ur"):format(base.lemma))
+			end
+		elseif base.gender == "n" then
+			-- Weak neuters in -i. Examples: [[fræði]] "branch of knowledge", [[jafndægri]] "equinox",
+			-- [[meðmæli]] "recommendation, [[sannindi]] "truth", [[skæri]] "pair of scissors", [[vísindi]]
+			-- "knowedge, learning". unimut is possible and occurs in [[læti]] "behavior, demeanor", [[ólæti]]
+			-- "noise, racket".
+			stem = rmatch(base.lemma, "^(.*[^eE])i$")
+			if stem then
+				sg_ending = "i"
+			end
+			if not stem then
+				stem = rmatch(base.lemma, "^(.*[^aA])u$")
+				if stem then
+					sg_ending = "a"
+					default_unumut = "unumut"
+				end
+			end
+			if not stem then
+				-- Generally, plural will look like singular, with no ending in the plural (but there will be umut
+				-- if possible). Examples: [[feðgin]] "father and daughter", [[hjón]] "married couple", [[jól]]
+				-- "Christmas", [[lok]] "end"; [[jarðgöng]] "tunnel" needing 'unumut'.
+				stem = base.lemma
+				sg_ending = ""
+				default_unumut = "unumut"
+			end
+		else
+			interr(("Unrecognized gender '%s'"):format(base.gender))
+		end
+		if default_unumut and not props.unumut and not props.umut and not props.unimut then
+			props.unumut = {form = default_unumut, defaulted = true}
+		end
+		if props.unumut and props.unimut then
+			interr("Shouldn't see both 'unumut' and 'unimut' set in plural-only lemma")
+		end
+		if props.unumut and props.unumut.form:find("^un") then
+			stem = com.apply_reverse_u_mutation(stem, props.unumut.form, not props.unumut.defaulted)
+			if props.umut then
+				interr("Shouldn't see both 'unumut' and 'umut' set in plural-only lemma")
+			end
+			props.umut = {form = rsub(props.unumut.form, "^un", ""), footnotes = props.unumut.footnotes,
+				defaulted = props.unumut.defaulted}
+			props.unumut = nil
+		end
+		if props.unimut and props.unimut.form:find("^un") then
+			stem = com.apply_reverse_i_mutation(stem, base.imutval)
+			if props.imut then
+				interr("Shouldn't see both 'unimut' and 'imut' set in plural-only lemma")
+			end
+			props.imut = {form = rsub(props.unimut.form, "^un", ""), footnotes = props.unimut.footnotes}
+			if pls and not pls:find("^i") then
+				pls = "^" .. pls
+				-- need_imut should have already been set by unimut setting
+			end
+			props.unimut = nil
+		end
+		lemma = stem .. sg_ending
 		if lemma_determined and lemma_determined ~= lemma then
 			error(("Attempt to set two different singular lemmas '%s' and '%s'"):format(lemma_determined, lemma))
 		end
 		lemma_determined = lemma
+		pls = pls or false -- use false so it's distinguished from nil; but later on if we see 'false' or 'nil' in
+		-- pls_determined we don't set `base.pls`
+		if pls_determined ~= nil and pls_determined ~= pls then
+			error(("Attempt to set two different plural settings %s and %s"):format(dump(pls_determined), dump(pls)))
+		end
+		pls_determined = pls
 	end
 	base.lemma = lemma_determined
+	if pls_determined then
+		base.pls = {bare = {{form = pls_determined}}}
+	end
 end
 
 
@@ -2344,6 +2395,9 @@ local function determine_declension(base)
 				-- [[nemandi]] "student" and many others; terms in -jandi like [[byrjandi]]
 				-- "beginner", [[seljandi]] "seller" umlaut to -jend- in the plural instead of -ind-
 				base.decl = "m-ndi"
+				if not stem:find("ænd$") then
+					base.need_imut = true
+				end
 				if stem:find("jand$") then
 					default_props.imutval = "je"
 				end
@@ -2391,7 +2445,7 @@ local function determine_declension(base)
 			if stem then
 				-- [[dóttir]], [[móðir]], [[systir]]
 				if base.props.rstem then
-					base.decl = "m-rstem"
+					base.decl = "f-rstem"
 					if not stem:find("syst$") then
 						base.need_imut = true
 					end
@@ -2513,10 +2567,12 @@ local function determine_declension(base)
 	for k, v in pairs(default_props) do
 		if not base[k] then
 			if mutation_spec_set[k] then
-				if type(v) == "function" then
-					base[k] = {v}
-				else
-					base[k] = {{form = v, defaulted = true}}
+				for _, props in ipairs(base.prop_sets) do
+					if type(v) == "function" then
+						props[k] = v(base, props)
+					else
+						props[k] = {form = v, defaulted = true}
+					end
 				end
 			else
 				base[k] = v
@@ -2597,45 +2653,6 @@ end
 -- patterns, we will compute multiple sets of stems. The reason is that the stems may vary
 -- depending on the reducibility and vowel alternation.
 local function determine_props(base)
-	base.prop_sets = {{}}
-
-	-- Construct the prop sets from all combinations of mutation specs, in case any given spec has more than one
-	-- possibility.
-	for _, mutation_spec in ipairs(mutation_specs) do
-		local specvals = base[mutation_spec]
-		-- Handle unspecified mutation specs.
-		if not specvals then
-			specvals = {false}
-		end
-		if #specvals == 1 then
-			for _, prop_set in ipairs(base.prop_sets) do
-				-- Convert 'false' back to nil
-				prop_set[mutation_spec] = specvals[1] or nil
-			end
-		else
-			local new_prop_sets = {}
-			for _, prop_set in ipairs(base.prop_sets) do
-				for _, specval in ipairs(specvals) do
-					local new_prop_set = m_table.shallowcopy(prop_set)
-					new_prop_set[mutation_spec] = specval
-					table.insert(new_prop_sets, new_prop_set)
-				end
-			end
-			base.prop_sets = new_prop_sets
-		end
-	end
-
-	-- Now resolve any functions among the properties, which indicate properties dependent on others.
-	-- FIXME: If this gets more complex, there may be dependencies among functions, which will get messy.
-	for _, props in ipairs(base.prop_sets) do
-		for _, mutation_spec in ipairs(mutation_specs) do
-			local specval = props[mutation_spec]
-			if type(specval) == "function" then
-				props[mutation_spec] = specval(base, props)
-			end
-		end
-	end
-
 	-- Now determine all the props for each prop set.
 	for _, props in ipairs(base.prop_sets) do
 		-- Determine the default dative singular for masculine nouns using declension "m".
@@ -2847,6 +2864,7 @@ local function detect_indicator_spec(base)
 		process_declnumber(base)
 		synthesize_adj_lemma(base)
 	else
+		expand_property_sets(base)
 		if base.number == "pl" then
 			synthesize_singular_lemma(base)
 		end
