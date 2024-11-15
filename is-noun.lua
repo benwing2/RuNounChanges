@@ -967,7 +967,7 @@ end
 
 
 decls["f-ur"] = function(base, props)
-	add_decl(base, props, "i", "i", "ar", "ir")
+	add_decl(base, props, "", "", "ar", "ir")
 end
 
 
@@ -1001,6 +1001,18 @@ end
 decls["f-long-umlaut-vowel-r"] = function(base, props)
 	-- nouns in long umlauted vowel + -r: [[kýr]] "cow", [[sýr]] "sow (archaic)", [[ær]] and compounds.
 	add_decl(base, props, "", "", "^r", "^r", "^r", "m", {indef = "a", def = ""})
+end
+
+
+decls["f-pers-acc-dat-u"] = function(base, props)
+	-- Personal female names with -u in acc and dat sg; but -leif names can also have null dative
+	local acc_dat
+	if props.stem:find("leif$") then
+		acc_dat = {"", "u"}
+	else
+		acc_dat = "u"
+	end
+	add_decl(base, props, acc_dat, acc_dat, "ar", "ar")
 end
 
 
@@ -2428,6 +2440,26 @@ local function determine_declension(base)
 					base.need_imut = true
 				end
 			end
+		end
+		if not stem and base.props.pers then
+			local lemma = base.lemma
+			if (lemma:find("borg$") or lemma:find("ín$") or lemma:find("laug$") or lemma:find("leif$") or
+				lemma:find("ljót$") or lemma:find("rún$") or lemma:find("veig$")) then
+				-- -borg names e.g. [[Elínborg]], [[Finnborg]], [[Herborg]], [[Sólborg]], [[Svanborg]], [[Valborg]],
+				--   [[Vilborg]]
+				-- -ín names e.g. [[Elín]], [[Katrín]], [[Kristín]]
+				-- -laug names e.g. [[Áslaug]], [[Droplaug]], [[Geirlaug]], [[Guðlaug]], [[Sigurlaug]], [[Snjólaug]],
+				--   [[Svanlaug]]
+				-- -leif names e.g. [[Dýrleif]], [[Guðleif]], [[Ingileif]]; have either - or u in the acc/dat sg;
+				--   (handled by the decl handler)
+				-- -ljót names e.g. [[Bergljót]]
+				-- -rún names e.g. [[Eyrún]], [[Heiðrún]], [[Kolbrún]], [[Kristrún]], [[Sólrún]]
+				-- -veig names e.g. [[Ástveig]], [[Bjarnveig]], [[Brynveig]], [[Eyveig]], [[Guðveig]], [[Hallveig]],
+				--   [[Heiðveig]], [[Kristveig]], [[Rannveig]], [[Sigurveig]], [[Solveig]], [[Sólveig]]
+				stem = lemma
+				base.decl = "f-pers-acc-dat-u"
+			end
+			-- FIXME: Not done
 		end
 		if not stem then
 			stem = rmatch(base.lemma, "^(.*ung)$")
