@@ -753,18 +753,17 @@ local function make_table(alternant_multiword_spec)
 
 	local function template_prelude(min_width)
 		return rsub([===[
-<div>
-<div class="NavFrame" style="display: inline-block; min-width: MINWIDTHem">
+<div class="NavFrame" style="display: inline-block; max-width: MINWIDTHem">
 <div class="NavHead" style="background:#eff7ff">{title}{annotation}</div>
 <div class="NavContent">
-{\op}| border="1px solid #000000" style="border-collapse:collapse;background:#F9F9F9;text-align:center; min-width:MINWIDTHem" class="inflection-table"
+{\op}| border="1px solid #000000" style="border-collapse:collapse;background:#F9F9F9;text-align:center; width: 100%" class="inflection-table"
 |-
 ]===], "MINWIDTH", min_width)
 	end
 
 	local function template_postlude()
 		return [=[
-|{\cl}{notes_clause}</div></div></div>]=]
+|{\cl}{notes_clause}</div></div>]=]
 	end
 
 	local table_spec_sg = [=[
