@@ -93,11 +93,13 @@ local potential_lemma_slots = {
 }
 
 local cases = {
-	nom = true,
-	acc = true,
-	dat = true,
-	gen = true,
+	"nom",
+	"acc",
+	"dat",
+	"gen",
 }
+
+local case_set = m_table.listToSet(cases)
 
 local overridable_stems = {
 	stem = true,
@@ -154,24 +156,24 @@ local clitic_articles = {
 }
 
 
-local function get_output_noun_slots(alternant_multiword_spec)
-	local output_noun_slots = {}
-	for _, def in ipairs {"ind", "def"} do
-		for case, _ in pairs(cases) do
-			for _, num in ipairs {"s", "p"} do
+local function get_noun_slots(alternant_multiword_spec)
+	local noun_slots_list = {}
+	for _, case in ipairs(cases) do
+		for _, num in ipairs {"s", "p"} do
+			for _, def in ipairs {"ind", "def"} do
 				local slot = ("%s_%s_%s"):format(def, case, num)
 				local accel = ("%s|%s"):format(def, case)
 				if alternant_multiword_spec.actual_number == "both" then
 					accel = accel .. "|" .. num
 				end
-				output_noun_slots[slot] = accel
+				table.insert(noun_slots_list, {slot, accel})
 			end
 		end
 	end
 	for _, potential_lemma_slot in ipairs(potential_lemma_slots) do
-		output_noun_slots[potential_lemma_slot .. "_linked"] = output_noun_slots[potential_lemma_slot]
+		table.insert(noun_slots_list, {potential_lemma_slot .. "_linked", "-"})
 	end
-	return output_noun_slots
+	return noun_slots_list
 end
 
 
@@ -885,6 +887,13 @@ decls["m-skapur"] = function(base, props)
 end
 
 
+decls["m-naður"] = function(base, props)
+	-- Nouns in -naður; default gen is -ar, default dat is dati/i:-, default nom pl is -ir, default num is sg,
+	-- default u-mutation is uumut.
+	add_decl(base, props, "", {indef = "i", def = {"i", ""}}, "ar", "ir")
+end
+
+
 decls["m-kell"] = function(base, props)
 	-- Proper nouns in -kell; [[Þorkell]], [[Grímkell]], etc.
 	local alt_dat_s = base.stem:gsub("kel$", "katli")
@@ -1059,7 +1068,7 @@ decls["adj"] = function(base, props)
 			base.forms[to_slot] = source
 		end
 		local function copy_gender_number_forms(gender, number, state)
-			for case, _ in pairs(cases) do
+			for _, case in ipairs(cases) do
 				-- We want to avoid sharing form objects (although sharing footnotes is OK, but we don't avoid cloning them
 				-- here) so we can later side-effect form objects as needed.
 				copy(state .. "_" .. case .. "_" .. gender .. "_" .. number, "ind_" .. case .. "_" .. number)
@@ -1532,7 +1541,7 @@ local function parse_override(segments, parse_err)
 				format(table.concat(segments)))
 		end
 		local case = usub(part, 1, 3)
-		if cases[case] then
+		if case_set[case] then
 			-- ok
 		else
 			parse_err(("Unrecognized case '%s' in override: '%s'"):format(case, table.concat(segments)))
@@ -1728,8 +1737,8 @@ local function parse_indicator_spec(angle_bracket_spec, lemma)
 				local slot_specs = rsplit(slot_spec_inside, ",")
 				-- FIXME: Here, [[Module:it-verb]] called strip_spaces(). Generally we don't do this. Should we?
 				table.insert(base.addnote_specs, {slot_specs = slot_specs, footnotes = spec_and_footnotes})
-			elseif ulen(part) > 3 and cases[usub(part, 1, 3)] or (
-				ulen(part) > 6 and usub(part, 1, 3) == "def" and cases[usub(part, 4, 6)]) then
+			elseif ulen(part) > 3 and case_set[usub(part, 1, 3)] or (
+				ulen(part) > 6 and usub(part, 1, 3) == "def" and case_set[usub(part, 4, 6)]) then
 				local slots, override = parse_override(dot_separated_group, parse_err)
 				for _, slot in ipairs(slots) do
 					if base.overrides[slot] then
@@ -1909,8 +1918,8 @@ local function set_defaults_and_check_bad_indicators(base)
 		if not base.gender then
 			check_err("Internal error: For nouns, gender must be specified")
 		end
-		base.number = base.number or is_proper_noun(base, base.lemma) and "sg" or
-			base.gender == "m" and base.lemma:find("skapur$") and not base.stem and "sg" or "both"
+		base.number = base.number or is_proper_noun(base, base.lemma) and "sg" or base.gender == "m" and
+			(base.lemma:find("skapur$") or base.lemma:find("naður$")) and not base.stem and "sg" or "both"
 		-- FIXME: Support definite-only nouns.
 		base.definiteness = base.definiteness or base.props.def and "both" or base.props["-def"] and "indef" or
 			is_proper_noun(base, base.lemma) and "indef" or "both"
@@ -2272,6 +2281,10 @@ local function determine_declension(base)
 				if stem:find("skap$") and not base.stem then
 					-- tons of words in -skapur
 					base.decl = "m-skapur"
+				elseif stem:find("nað$") and not base.stem then
+					-- lots of words in -naður
+					base.decl = "m-naður"
+					default_props.umut = "uumut"
 				else
 					if base.stem == base.lemma then
 						-- [[akur]] "field" etc. where the stem includes the final -r
@@ -3068,21 +3081,24 @@ local function decline_noun(base)
 	end
 	handle_derived_slots_and_overrides(base)
 	local function copy(from_slot, to_slot)
-		base.forms[to_slot] = base.forms[from_slot]
+		base.forms["ind_" .. to_slot] = base.forms["ind_" .. from_slot]
+		base.forms["def_" .. to_slot] = base.forms["def_" .. from_slot]
 	end
 	if base.actual_number ~= base.number then
 		local source_num = base.number == "sg" and "_s" or "_p"
 		local dest_num = base.number == "sg" and "_p" or "_s"
-		for case, _ in pairs(cases) do
+		for _, case in ipairs(cases) do
 			copy(case .. source_num, case .. dest_num)
 			copy("nom" .. source_num .. "_linked", "nom" .. dest_num .. "_linked")
 		end
 		if base.actual_number ~= "both" then
 			local erase_num = base.actual_number == "sg" and "_p" or "_s"
-			for case, _ in pairs(cases) do
-				base.forms[case .. erase_num] = nil
+			for _, case in ipairs(cases) do
+				base.forms["ind_" .. case .. erase_num] = nil
+				base.forms["def_" .. case .. erase_num] = nil
 			end
-			base.forms["nom" .. erase_num .. "_linked"] = nil
+			base.forms["ind_nom" .. erase_num .. "_linked"] = nil
+			base.forms["def_nom" .. erase_num .. "_linked"] = nil
 		end
 	end
 	process_addnote_specs(base)
@@ -3194,7 +3210,7 @@ local function show_forms(alternant_multiword_spec)
 	end
 	local props = {
 		lemmas = lemmas,
-		slot_table = alternant_multiword_spec.output_noun_slots,
+		slot_list = alternant_multiword_spec.noun_slots,
 		lang = lang,
 		canonicalize = function(form)
 			-- return com.remove_variant_codes(form)
@@ -3419,12 +3435,12 @@ function export.do_generate_forms(parent_args, from_headword)
 	propagate_properties(alternant_multiword_spec, "actual_number", "both", "both")
 	determine_noun_status(alternant_multiword_spec)
 	set_pos(alternant_multiword_spec)
-	alternant_multiword_spec.output_noun_slots = get_output_noun_slots(alternant_multiword_spec)
+	alternant_multiword_spec.noun_slots = get_noun_slots(alternant_multiword_spec)
 	local inflect_props = {
 		skip_slot = function(slot)
 			return skip_slot(alternant_multiword_spec.actual_number, alternant_multiword_spec.definiteness, slot)
 		end,
-		slot_table = alternant_multiword_spec.output_noun_slots,
+		slot_list = alternant_multiword_spec.noun_slots,
 		get_variants = get_variants,
 		inflect_word_spec = decline_noun,
 	}
