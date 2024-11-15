@@ -27,7 +27,7 @@ FIXME:
 
 1. Support 'plstem' overrides. [DONE]
 2. Support definite lemmas such as [[Bandaríkin]] "the United States".
-3. Support adjectivally-declined terms.
+3. Support adjectivally-declined terms. [DONE PARTIALLY]
 4. Support @ for built-in irregular lemmas.
 5. Somehow if the user specifies v-infix, it should prevent default unumut from happening in strong feminines. [DONE]
 6. Def acc pl should ignore -u ending in indef acc pl. [DONE]
@@ -652,7 +652,7 @@ local function add(base, slot, props, endings, ending_override, endings_are_full
 	end
 	if def_endings then
 		local clitic
-		if base.adj or base.props.weakprefix then -- FIXME: eliminate weakprefix
+		if base.adj then -- FIXME: not necessary once we get adjective inflections from [[Module:is-adjective]]
 			clitic = ""
 		else
 			clitic = clitic_articles[base.gender]
@@ -935,12 +935,6 @@ decls["m-weak"] = function(base, props)
 end
 
 
-decls["m-weakprefix"] = function(base, props)
-	-- FIXME! This is just a weak adjective.
-	add_decl(base, props, "a", "a", "a", "u", "u", "u", "u")
-end
-
-
 decls["f"] = function(base, props)
 	-- Normal strong feminine nouns; default to genitive -ar, plural -ir.
 	add_decl(base, props, "", "", "ar", "ir")
@@ -1018,12 +1012,6 @@ decls["f-weak"] = function(base, props)
 end
 
 
-decls["f-weakprefix"] = function(base, props)
-	-- FIXME! This is just a weak adjective.
-	add_decl(base, props, "u", "u", "u", "u", "u", "u", "u")
-end
-
-
 decls["n"] = function(base, props)
 	-- Normal (strong) neuter nouns.
 	add_decl(base, props, "", "i", "s", "^^")
@@ -1052,67 +1040,50 @@ decls["n-weak"] = function(base, props)
 end
 
 
-decls["n-weakprefix"] = function(base, props)
-	-- FIXME! This is just a weak adjective.
-	add_decl(base, props, "a", "a", "a", "u", "u", "u", "u")
-end
-
-
 decls["adj"] = function(base, props)
-	local props = {}
-	local propspec = table.concat(props, ".")
-	if propspec ~= "" then
-		propspec = "<" .. propspec .. ">"
-	end
-	local adj_alternant_multiword_spec = require("Module:is-adjective").do_generate_forms({base.lemma .. propspec})
-	local function copy(from_slot, to_slot)
-		base.forms[to_slot] = adj_alternant_multiword_spec.forms[from_slot]
-	end
-	if base.number ~= "pl" then
-		if base.gender == "m" then
-			copy("nom_m", "nom_s")
-			copy("gen_mn", "gen_s")
-			copy("dat_mn", "dat_s")
-			copy("loc_mn", "loc_s")
-			copy("ins_mn", "ins_s")
-		elseif base.gender == "f" then
-			copy("nom_f", "nom_s")
-			copy("gen_f", "gen_s")
-			copy("dat_f", "dat_s")
-			copy("acc_f", "acc_s")
-			copy("loc_f", "loc_s")
-			copy("ins_f", "ins_s")
-		else
-			copy("nom_n", "nom_s")
-			copy("gen_mn", "gen_s")
-			copy("dat_mn", "dat_s")
-			copy("acc_n", "acc_s")
-			copy("loc_mn", "loc_s")
-			copy("ins_mn", "ins_s")
+	local state = base.props.weak and "wk" or "str"
+	if state == "str" then
+		error("FIXME: Not implemented yet")
+		local props = {}
+		-- FIXME, write the in-between code
+		local propspec = table.concat(props, ".")
+		if propspec ~= "" then
+			propspec = "<" .. propspec .. ">"
 		end
-		if not base.forms.voc_s then
-			iut.insert_forms(base.forms, "voc_s", base.forms.nom_s)
-		end
-	end
-	if base.number ~= "sg" then
-		if base.gender == "m" then
-			if base.animacy == "an" then
-				copy("nom_mp_an", "nom_p")
-			else
-				copy("nom_fp", "nom_p")
+		local adj_alternant_multiword_spec = require("Module:is-adjective").do_generate_forms({base.lemma .. propspec})
+		local function copy(from_slot, to_slot, do_clone)
+			local source = adj_alternant_multiword_spec.forms[from_slot]
+			if do_clone then
+				source = m_table.deepcopy(source)
 			end
-			copy("acc_mfp", "acc_p")
-		elseif base.gender == "f" then
-			copy("nom_fp", "nom_p")
-			copy("acc_mfp", "acc_p")
-		else
-			copy("nom_np", "nom_p")
-			copy("acc_np", "acc_p")
+			base.forms[to_slot] = source
 		end
-		copy("gen_p", "gen_p")
-		copy("dat_p", "dat_p")
-		copy("ins_p", "ins_p")
-		copy("loc_p", "loc_p")
+		local function copy_gender_number_forms(gender, number, state)
+			for case, _ in pairs(cases) do
+				-- We want to avoid sharing form objects (although sharing footnotes is OK, but we don't avoid cloning them
+				-- here) so we can later side-effect form objects as needed.
+				copy(state .. "_" .. case .. "_" .. gender .. "_" .. number, "ind_" .. case .. "_" .. number)
+				copy(state .. "_" .. case .. "_" .. gender .. "_" .. number, "def_" .. case .. "_" .. number, "do clone")
+			end
+		end
+
+		if base.number ~= "pl" then
+			copy_gender_number_forms(base.gender, "s", state)
+		end
+		if base.number ~= "sg" then
+			copy_gender_number_forms(base.gender, "p", state)
+		end
+	else
+		-- FIXME: this code should go away
+		if base.gender == "m" then
+			add_decl(base, props, "a", "a", "a", "u", "u", "u", "u")
+		elseif base.gender == "f" then
+			add_decl(base, props, "u", "u", "u", "u", "u", "u", "u")
+		elseif base.gender == "n" then
+			add_decl(base, props, "a", "a", "a", "u", "u", "u", "u")
+		else
+			error(("Internal error: Unrecognized gender '%s'"):format(base.gender))
+		end
 	end
 end
 
@@ -1365,10 +1336,9 @@ end
 
 
 local function handle_derived_slots_and_overrides(base)
-	-- FIXME: Update for Icelandic
 	process_slot_overrides(base)
 
-	-- Compute linked versions of potential lemma slots, for use in {{de-noun}}.
+	-- Compute linked versions of potential lemma slots, for use in {{is-noun}}.
 	-- We substitute the original lemma (before removing links) for forms that
 	-- are the same as the lemma, if the original lemma has links.
 	for _, slot in ipairs(get_lemma_slots(base.props)) do
@@ -1625,7 +1595,6 @@ Return value is an object of the form
 		* "já" (a neuter in -é whose stem alternates with -já, such as [[tré]] "tree" and [[hné]]/[[kné]] "knee");
 		* "weak" (the noun should decline like an ordinary weak noun; used in the declension of [[fjandi]] to disable
 		  the special -ndi declension);
-		* "weakprefix" (a prefix behaving like a weak adjective; FIXME: replace this with + for adjective declension);
   number = "NUMBER", -- "sg", "pl", "both"; may be missing
   gender = "GENDER", -- "m", "f" or "n"; always specified by the user
   definiteness = "DEFINITENESS", -- "def", "indef" or "both"; computed from other settings
@@ -1721,7 +1690,7 @@ local function parse_indicator_spec(angle_bracket_spec, lemma)
 			end
 
 			local part = dot_separated_group[1]
-			if i == 1 then
+			if i == 1 and part ~= "+" and part ~= "@" then
 				local comma_separated_groups = split_alternating_runs_with_escapes(dot_separated_group, ",")
 				if #comma_separated_groups > 3 then
 					parse_err(("At most three comma-separated specs are allowed but saw %s"):format(
@@ -1838,15 +1807,14 @@ local function parse_indicator_spec(angle_bracket_spec, lemma)
 					parse_err("Can't specify '+' twice")
 				end
 				base.adj = true
-				parse_err("Adjectival indicator '+' not implemented yet")
 			elseif part == "@" then
 				if base.builtin then
 					parse_err("Can't specify '@' twice")
 				end
 				base.builtin = true
 				parse_err("Built-in indicator '@' not implemented yet")
-			elseif part == "dem" or part == "def" or part == "-def" or part == "weak" or part == "weakprefix" or
-				part == "proper" or part == "pers" or part == "rstem" or part == "já" then
+			elseif part == "dem" or part == "def" or part == "-def" or part == "weak" or part == "proper" or
+				part == "pers" or part == "rstem" or part == "já" then
 				if base.props[part] then
 					parse_err("Can't specify '" .. part .. "' twice")
 				end
@@ -2210,152 +2178,51 @@ end
 
 -- For an adjectival lemma, synthesize the masc singular form.
 local function synthesize_adj_lemma(base)
-	-- FIXME: Update for Icelandic
-	local stem
+	-- FIXME: Add support for strong adjectives.
+	local stem, ending
 	if base.indecl then
 		base.decl = "indecl"
 		stem = base.lemma
 	else
-		local gender, number
-		local function sub_ov(stem)
-			stem = stem:gsub("ov$", "ův")
-			return stem
-		end
-		while true do
-			if base.number == "pl" then
-				if base.gender == "m" then
-					stem = rmatch(base.lemma, "^(.*)í$")
-					if stem then
-						if base.soft then
-							-- nothing to do
-						else
-							if base.animacy ~= "an" then
-								error(("Masculine plural-only adjectival lemma '%s' ending in -í can only be animate unless '.soft' is specified"):
-									format(base.lemma))
-							end
-							base.lemma = undo_second_palatalization(base, stem, "is adjective") .. "ý"
-						end
-						break
-					end
-					stem = rmatch(base.lemma, "^(.*)é$")
-					if stem then
-						if base.animacy == "an" then
-							error(("Masculine plural-only adjectival lemma '%s' ending in -é must be inanimate"):
-								format(base.lemma))
-						end
-						base.lemma = stem .. "ý"
-						break
-					end
-					stem = rmatch(base.lemma, "^(.*ov)i$") or rmatch(base.lemma, "^(.*in)i$")
-					if stem then
-						if base.animacy ~= "an" then
-							error(("Masculine plural-only possessive adjectival lemma '%s' ending in -i must be animate"):
-								format(base.lemma))
-						end
-						base.lemma = sub_ov(stem)
-						break
-					end
-					stem = rmatch(base.lemma, "^(.*ov)y$") or rmatch(base.lemma, "^(.*in)y$")
-					if stem then
-						if base.animacy == "an" then
-							error(("Masculine plural-only possessive adjectival lemma '%s' ending in -y must be inanimate"):
-								format(base.lemma))
-						end
-						base.lemma = sub_ov(stem)
-						break
-					end
-					if base.animacy == "an" then
-						error(("Animate masculine plural-only adjectival lemma '%s' should end in -í, -ovi or -ini"):
-							format(base.lemma))
-					elseif base.soft then
-						error(("Soft masculine plural-only adjectival lemma '%s' should end in -í"):format(base.lemma))
-					else
-						error(("Inanimate masculine plural-only adjectival lemma '%s' should end in -é, -ovy or -iny"):
-							format(base.lemma))
-					end
-				elseif base.gender == "f" then
-					stem = rmatch(base.lemma, "^(.*)é$") -- hard adjective
-					if stem then
-						base.lemma = stem .. "ý"
-						break
-					end
-					stem = rmatch(base.lemma, "^(.*)í$") -- soft adjective
-					if stem then
-						break
-					end
-					stem = rmatch(base.lemma, "^(.*ov)y$") or rmatch(base.lemma, "^(.*in)y$") -- possessive adjective
-					if stem then
-						base.lemma = sub_ov(stem)
-						break
-					end
-					error(("Feminine plural-only adjectival lemma '%s' should end in -é, -í, -ovy or -iny"):format(base.lemma))
-				else
-					stem = rmatch(base.lemma, "^(.*)á$") -- hard adjective
-					if stem then
-						base.lemma = stem .. "ý"
-						break
-					end
-					stem = rmatch(base.lemma, "^(.*)í$") -- soft adjective
-					if stem then
-						break
-					end
-					stem = rmatch(base.lemma, "^(.*ov)a$") or rmatch(base.lemma, "^(.*in)a$") -- possessive adjective
-					if stem then
-						base.lemma = sub_ov(stem)
-						break
-					end
-					error(("Neuter plural-only adjectival lemma '%s' should end in -á, -í, -ova or -ina"):format(base.lemma))
+		if base.number == "pl" then
+			stem, ending = rmatch(base.lemma, "^(.*[^Aa])(u)$")
+			if stem then
+				base.props.weak = true
+				base.lemma = stem .. "ur"
+				if not stem then
+					error("No support for strong adjectives yet")
 				end
-			else
-				if base.gender == "m" then
-					stem = rmatch(base.lemma, "^(.*)[ýí]$") or rmatch(base.lemma, "^(.*)ův$") or rmatch(base.lemma, "^(.*)in$")
-					if stem then
-						break
-					end
-					error(("Masculine adjectival lemma '%s' should end in -ý, -í, -ův or -in"):format(base.lemma))
-				elseif base.gender == "f" then
-					stem = rmatch(base.lemma, "^(.*)á$")
-					if stem then
-						base.lemma = stem .. "ý"
-						break
-					end
-					stem = rmatch(base.lemma, "^(.*)í$")
-					if stem then
-						break
-					end
-					stem = rmatch(base.lemma, "^(.*ov)a$") or rmatch(base.lemma, "^(.*in)a$")
-					if stem then
-						base.lemma = sub_ov(stem)
-						break
-					end
-					error(("Feminine adjectival lemma '%s' should end in -á, -í, -ova or -ina"):format(base.lemma))
-				else
-					stem = rmatch(base.lemma, "^(.*)é$")
-					if stem then
-						base.lemma = stem .. "ý"
-						break
-					end
-					stem = rmatch(base.lemma, "^(.*)í$")
-					if stem then
-						break
-					end
-					stem = rmatch(base.lemma, "^(.*ov)o$") or rmatch(base.lemma, "^(.*in)o$")
-					if stem then
-						base.lemma = sub_ov(stem)
-						break
-					end
-					error(("Neuter adjectival lemma '%s' should end in -é, -í, -ovo or -ino"):format(base.lemma))
+			end
+		else
+			if base.gender == "m" then
+				stem, ending = rmatch(base.lemma, "^(.*[^Ee])(i)$")
+				if stem then
+					base.props.weak = true
+					base.lemma = stem .. "ur"
+				end
+				if not stem then
+					error("No support for strong adjectives yet")
+				end
+			elseif base.gender == "f" or base.gender == "n" then
+				stem, ending = rmatch(base.lemma, "^(.*)(a)$")
+				if stem then
+					base.props.weak = true
+					base.lemma = stem .. "ur"
+				end
+				if not stem then
+					error("No support for strong adjectives yet")
 				end
 			end
 		end
 		base.decl = "adj"
 	end
-
-	-- Now set the stem sets if not given.
-	for _, props in ipairs(base.prop_sets) do
-		-- Set the stems.
-		props.vowel_stem = stem
-		props.nonvowel_stem = stem
+	if base.stem then
+		-- This isn't necessarily accurate but doesn't really matter. We only record the lemma ending to help with
+		-- contraction of definite clitics in the nominative singular, which doesn't apply for adjectives.
+		base.lemma_ending = ""
+	else
+		base.stem = stem
+		base.lemma_ending = ending or ""
 	end
 end
 
@@ -2505,8 +2372,7 @@ local function determine_declension(base)
 			if stem then
 				-- [[tími]] "time, hour" and many others; [[herra]] "gentleman" ([[sendiherra|ambassador]]),
 				-- [[séra]]/[[síra]] "reverend"
-				-- FIXME! Eliminate weakprefix in favor of +.
-				base.decl = base.props.weakprefix and "m-weakprefix" or "m-weak"
+				base.decl = "m-weak"
 			end
 		end
 		if not stem then
@@ -2525,8 +2391,7 @@ local function determine_declension(base)
 		if not stem then
 			stem, ending = rmatch(base.lemma, "^(.*)(a)$")
 			if stem then
-				-- FIXME! Eliminate weakprefix in favor of +.
-				base.decl = base.props.weakprefix and "f-weakprefix" or "f-weak"
+				base.decl = "f-weak"
 			end
 		end
 		if not stem then
@@ -2608,8 +2473,7 @@ local function determine_declension(base)
 		if not stem then
 			stem, ending = rmatch(base.lemma, "^(.*)(a)$")
 			if stem then
-				-- FIXME! Eliminate weakprefix in favor of +.
-				base.decl = base.props.weakprefix and "n-weakprefix" or "n-weak"
+				base.decl = "n-weak"
 			end
 		end
 		if not stem then
@@ -2978,7 +2842,9 @@ local function detect_indicator_spec(base)
 		determine_numeral_props(base)
 	elseif base.adj then
 		process_declnumber(base)
+		expand_property_sets(base)
 		synthesize_adj_lemma(base)
+		determine_props(base)
 	else
 		expand_property_sets(base)
 		if base.number == "pl" then
@@ -3015,7 +2881,6 @@ local propagate_multiword_properties
 
 
 local function propagate_alternant_properties(alternant_spec, property, mixed_value, nouns_only)
-	-- FIXME: Update for Icelandic
 	local seen_property
 	for _, multiword_spec in ipairs(alternant_spec.alternants) do
 		propagate_multiword_properties(multiword_spec, property, mixed_value, nouns_only)
@@ -3030,7 +2895,6 @@ end
 
 
 propagate_multiword_properties = function(multiword_spec, property, mixed_value, nouns_only)
-	-- FIXME: Update for Icelandic
 	local seen_property = nil
 	local last_seen_nounal_pos = 0
 	local word_specs = multiword_spec.alternant_or_word_specs or multiword_spec.word_specs
@@ -3069,7 +2933,6 @@ end
 
 
 local function propagate_properties_downward(alternant_multiword_spec, property, default_propval)
-	-- FIXME: Update for Icelandic
 	local function set_and_fetch(obj, default)
 		local retval
 		if obj[property] then
@@ -3128,7 +2991,6 @@ as follows:
    neighbors.
 ]=]
 local function propagate_properties(alternant_multiword_spec, property, default_propval, mixed_value)
-	-- FIXME: Update for Icelandic
 	propagate_multiword_properties(alternant_multiword_spec, property, mixed_value, "nouns only")
 	propagate_multiword_properties(alternant_multiword_spec, property, mixed_value, false)
 	propagate_properties_downward(alternant_multiword_spec, property, default_propval)
@@ -3136,7 +2998,6 @@ end
 
 
 local function determine_noun_status(alternant_multiword_spec)
-	-- FIXME: Update for Icelandic
 	for i, alternant_or_word_spec in ipairs(alternant_multiword_spec.alternant_or_word_specs) do
 		if alternant_or_word_spec.alternants then
 			local is_noun = false
@@ -3162,7 +3023,6 @@ end
 
 -- Set the part of speech based on properties of the individual words.
 local function set_pos(alternant_multiword_spec)
-	-- FIXME: Update for Icelandic
 	if alternant_multiword_spec.args.pos then
 		alternant_multiword_spec.pos = alternant_multiword_spec.args.pos
 	elseif alternant_multiword_spec.saw_pron and not alternant_multiword_spec.saw_non_pron then
@@ -3200,7 +3060,6 @@ end
 
 
 local function decline_noun(base)
-	-- FIXME: Update for Icelandic
 	for _, props in ipairs(base.prop_sets) do
 		if not decls[base.decl] then
 			error("Internal error: Unrecognized declension type '" .. base.decl .. "'")
