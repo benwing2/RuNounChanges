@@ -32,6 +32,8 @@ FIXME:
 5. Somehow if the user specifies v-infix, it should prevent default unumut from happening in strong feminines. [DONE]
 6. Def acc pl should ignore -u ending in indef acc pl. [DONE]
 7. Footnotes on omitted forms should be possible.
+8. Remove setting of override on pl when processing plural-only terms in synthesize_singular_lemma(); interferes
+   with decllemma in [[dyr]]. But then need to fix handling of masculine accusative plural. [DONE]
 ]=]
 
 local lang = require("Module:languages").getByCode("is")
@@ -681,6 +683,9 @@ local function acc_p_from_nom_p(base, nom_p)
 		return nom_p -- this is correct as `nom_p` could be nil or false and we want to return the same thing
 	end
 	local function form_masc_acc_p(ending)
+		if ending == "*" then
+			ending = "!" .. base.actual_lemma
+		end
 		-- If the ending is full (begins with !), check the whole thing for -ur at the end.
 		if ending:find("^%^*ur$") or ending:find("^!.*[^Aa]ur$") then
 			return ending
@@ -796,14 +801,10 @@ local function add_decl_with_nom_sg(base, props, nom_s, acc_s, dat_s, gen_s, nom
 	add(base, "gen_s", props, gen_s)
 	if base.number == "pl" then
 		-- If this is a plurale tantum noun and we're processing the nominative plural, use the user-specified lemma
-		-- rather than generating the plural from the synthesized singular, which may not match the specified lemma
-		-- (e.g. [[tvargle]] "Olomouc cheese" using <m.pl.mixed> would try to generate 'tvargle/tvargly', and [[peníze]]
-		-- "money" using <m.pl.#ě.genpl-> would try to generate 'peněze'). FIXME: Rewrite for Icelandic.
-		local acc_p_like_nom = m_table.deepEquals(nom_p, acc_p)
+		-- rather than generating the plural from the synthesized singular, which may not match the specified lemma.
+		-- This is both because we don't set a plural override to specify what the plural should look like and because
+		-- of exceptional cases like [[dyr]], which is plural-only and uses 'decllemma:dyrir'.
 		nom_p = "*"
-		if acc_p_like_nom then
-			acc_p = "*"
-		end
 	end
 	add(base, "nom_p", props, nom_p)
 	-- Generate defaults for acc_p, dat_p, gen_p if nil was specified; but be careful not to do so for false, which
@@ -1004,15 +1005,21 @@ decls["f-long-umlaut-vowel-r"] = function(base, props)
 end
 
 
-decls["f-pers-acc-dat-u"] = function(base, props)
-	-- Personal female names with -u in acc and dat sg; but -leif names can also have null dative
+decls["f-acc-dat-u"] = function(base, props)
+	-- Personal female names with -u or -ju in acc and dat sg; but -leif and -mey names can also have null dative
 	local acc_dat
-	if props.stem:find("leif$") then
+	if props.stem:find("leif$") or props.stem:find("mey$") then
 		acc_dat = {"", "u"}
 	else
 		acc_dat = "u"
 	end
 	add_decl(base, props, acc_dat, acc_dat, "ar", "ar")
+end
+
+
+decls["f-acc-dat-i"] = function(base, props)
+	-- Personal and some proper female names with -i in the acc and dat sg
+	add_decl(base, props, "i", "i", "ar", "ar")
 end
 
 
@@ -1574,7 +1581,7 @@ local function parse_override(segments, parse_err)
 		end
 	end
 	segments[1] = part
-	local retval = fetch_slot_override(segments, ("%s slot override"):format(table.concat(slots)), false, defslot,
+	local retval = fetch_slot_override(segments, ("%s slot override"):format(table.concat(slots, "+")), false, defslot,
 		parse_err)
 	return slots, retval
 end
@@ -2085,10 +2092,7 @@ end
 -- For a plural-only lemma, synthesize a likely singular lemma. It doesn't have to be theoretically correct as long as
 -- it generates all the correct plural forms.
 local function synthesize_singular_lemma(base)
-	local lemma_determined, pls_determined
-	if base.pls then
-		interr("Should not have pl override with pl-only lemma; should have been caught earlier")
-	end
+	local lemma_determined
 
 	-- Loop over all stem sets in case the user specified multiple ones (e.g. '*,-*'). If we try to reconstruct
 	-- different lemmas for different stem sets, we'll throw an error below.
@@ -2097,7 +2101,9 @@ local function synthesize_singular_lemma(base)
 			error(("Internal error: For lemma '%s', %s: %s"):format(base.lemma, msg, dump(props)))
 		end
 
-		local stem, lemma, ending, sg_ending, default_unumut, pls
+		-- `ending` refers to the plural ending but is not currently used much. Instead, in add_decl(), when we process
+		-- pl-only terms, we set the nom_pl to "*" so that the lemma is used directly.
+		local stem, lemma, ending, sg_ending, default_unumut
 		if base.gender == "m" or base.gender == "f" then
 			stem, ending = rmatch(base.lemma, "^(.*)([aiu]r)$")
 			if stem then
@@ -2116,25 +2122,28 @@ local function synthesize_singular_lemma(base)
 				-- [[limar]] "branches"; [[öfgar]] "exaggeration, extreme" (no unumut); [[drefjar]]
 				-- "stains, traces"; [[viðjar]] "chains, fetters"; many others in -jar, but the -j- is throughout
 				-- the plural; [[svalir]] "balcony; porch"; [[dyr]] "doorway" (uses decllemma:dyrir)
-				pls = ending
 				if ending == "ur" then
 					default_unumut = "unumut"
 				end
 				sg_ending = "ur"
+			elseif base.lemma:find("ær$") then
+				-- [[barnatær]], [[fultær]], proper name [[Tær]]
+				stem = base.lemma
+				sg_ending = ""
 			else
 				error(("Masculine or feminine plural-only lemma '%s' should end in -ar, -ir or -ur"):format(base.lemma))
 			end
 		elseif base.gender == "n" then
-			-- Weak neuters in -i. Examples: [[fræði]] "branch of knowledge", [[jafndægri]] "equinox",
-			-- [[meðmæli]] "recommendation, [[sannindi]] "truth", [[skæri]] "pair of scissors", [[vísindi]]
-			-- "knowedge, learning". unimut is possible and occurs in [[læti]] "behavior, demeanor", [[ólæti]]
-			-- "noise, racket".
-			stem = rmatch(base.lemma, "^(.*[^eE])i$")
+			-- Neuters in -i. Examples: [[fræði]] "branch of knowledge", [[jafndægri]] "equinox", [[meðmæli]]
+			-- "recommendation", [[sannindi]] "truth", [[skæri]] "pair of scissors", [[vísindi]] "knowedge, learning".
+			-- unimut is possible and occurs in [[læti]] "behavior, demeanor", [[ólæti]] "noise, racket".
+			stem, ending = rmatch(base.lemma, "^(.*[^eE])(i)$")
 			if stem then
 				sg_ending = "i"
 			end
 			if not stem then
-				stem = rmatch(base.lemma, "^(.*[^aA])u$")
+				-- Weak neuters in -u like [[gleraugu]] "glasses/spectacles".
+				stem, ending = rmatch(base.lemma, "^(.*[^aA])(u)$")
 				if stem then
 					sg_ending = "a"
 					default_unumut = "unumut"
@@ -2172,10 +2181,6 @@ local function synthesize_singular_lemma(base)
 				interr("Shouldn't see both 'unimut' and 'imut' set in plural-only lemma")
 			end
 			props.imut = {form = rsub(props.unimut.form, "^un", ""), footnotes = props.unimut.footnotes}
-			if pls and not pls:find("^i") then
-				pls = "^" .. pls
-				-- need_imut should have already been set by unimut setting
-			end
 			props.unimut = nil
 		end
 		lemma = stem .. sg_ending
@@ -2183,17 +2188,9 @@ local function synthesize_singular_lemma(base)
 			error(("Attempt to set two different singular lemmas '%s' and '%s'"):format(lemma_determined, lemma))
 		end
 		lemma_determined = lemma
-		pls = pls or false -- use false so it's distinguished from nil; but later on if we see 'false' or 'nil' in
-		-- pls_determined we don't set `base.pls`
-		if pls_determined ~= nil and pls_determined ~= pls then
-			error(("Attempt to set two different plural settings %s and %s"):format(dump(pls_determined), dump(pls)))
-		end
-		pls_determined = pls
 	end
 	base.lemma = lemma_determined
-	if pls_determined then
-		base.pls = {indef = {{form = pls_determined}}}
-	end
+	base.lemma_ending = ending or ""
 end
 
 
@@ -2428,7 +2425,21 @@ local function determine_declension(base)
 		if not stem then
 			stem, ending = rmatch(base.lemma, "^(.*[^aA])(ur)$")
 			if stem and rfind(stem, com.vowel_c) then
-				base.decl = "f-ur"
+				if is_proper_noun(base, stem) then
+					-- [[Auður]], [[Heiður]], [[Ingveldur]], [[Móeiður]], [[Þórelfur]], [[-frídur]] ([[Gunnfríður]],
+					-- [[Hólmfríður]], [[Málfríður]], [[Sigfríður]]), [[Gerður]] ([[Hallgerður]], [[Ingigerður]],
+					-- [[Þorgerður]]), [[Gunnur]] ([[Arngunnur]], [[Hildigunnur]]), [[Heiður]] ([[Aðalheiður]],
+					-- [[Arnheiður]], [[Brynheiður]], [[Ragnheiður]]), [[Hildur]] ([[Ásthildur]], [[Berghildur]],
+					-- [[Brynhildur]], [[Geirhildur]], [[Gunnhildur]], [[Ragnhildur]], [[Þórhildur]]), [[Ástríður]]
+					-- (related names [[Guðríður]], [[Sigríður]], [[Þuríður]]), [[Þrúður]] [also a man's name]
+					-- ([[Jarþrúður]], [[Jarðþrúður]], [[Sigþrúður]])
+					--
+					-- also with company/organization names like [[Berghildur]], [[Gunnhildur]]; likewise place names
+					-- like [[Þuríður]]
+					base.decl = "f-acc-dat-i"
+				else
+					base.decl = "f-ur"
+				end
 			end
 		end
 		if not stem and base.props.rstem then
@@ -2450,16 +2461,39 @@ local function determine_declension(base)
 				-- -ín names e.g. [[Elín]], [[Katrín]], [[Kristín]]
 				-- -laug names e.g. [[Áslaug]], [[Droplaug]], [[Geirlaug]], [[Guðlaug]], [[Sigurlaug]], [[Snjólaug]],
 				--   [[Svanlaug]]
-				-- -leif names e.g. [[Dýrleif]], [[Guðleif]], [[Ingileif]]; have either - or u in the acc/dat sg;
+				-- -leif names e.g. [[Dýrleif]], [[Guðleif]], [[Ingileif]]; have either - or u in the acc/dat sg
 				--   (handled by the decl handler)
 				-- -ljót names e.g. [[Bergljót]]
 				-- -rún names e.g. [[Eyrún]], [[Heiðrún]], [[Kolbrún]], [[Kristrún]], [[Sólrún]]
 				-- -veig names e.g. [[Ástveig]], [[Bjarnveig]], [[Brynveig]], [[Eyveig]], [[Guðveig]], [[Hallveig]],
 				--   [[Heiðveig]], [[Kristveig]], [[Rannveig]], [[Sigurveig]], [[Solveig]], [[Sólveig]]
 				stem = lemma
-				base.decl = "f-pers-acc-dat-u"
+				base.decl = "f-acc-dat-u"
+			elseif lemma:find("ný$") or lemma:find("ey$") then
+				-- -ný names e.g. [[Dagný]], [[Árný]], [[Bergný]], [[Eirný]], [[Friðný]], [[Geirný]], [[Guðný]],
+				--   [[Hroðný]], [[Lyngný]], [[Oddný]], [[Signý]], [[Véný]], [[Þórný]]
+				--   NOTE: Uncompounded names [[Anný]], [[Benný]], [[Henný]], [[Magný]] do not have -ju in acc/dat sg.
+				-- -ey (not -mey) names e.g. [[Bjargey]], [[Bjarney]], [[Bjartey]], [[Fanney]], [[Laufey]], [[Líney]],
+				--   [[Sóley]], [[Steiney]], [[Þórey]]
+				-- -mey names e.g. [[Friðmey]]; have either - or -ju in the acc/dat sg (handled by the decl handler)
+				stem = lemma
+				base.decl = "f-acc-dat-u"
+				default_props.j = "j"
+			elseif lemma:find("[Bb]jörg$") or lemma:find("vör$") then
+				-- -björg names e.g. [[Björg]], [[Arnbjörg]], [[Ástbjörg]], [[Auðbjörg]], [[Eybjörg]], [[Finnbjörg]],
+				-- [[Guðbjörg]], [[Hallbjörg]], [[Ingibjörg]], [[Kristbjörg]], [[Sigurbjörg]], [[Sveinbjörg]],
+				-- [[Þorbjörg]]
+				-- -vör names e.g. [[Eyvör]], [[Gunnvör]], [[Hervör]], [[Steinvör]]
+				stem = lemma
+				base.decl = "f-acc-dat-u"
+				default_props.unumut = "unuumut"
+			elseif lemma:find("dís$") or lemma:find("unn$") then
+				-- -dís names e.g. [[Þórdís]], [[Aldís]], [[Árdís]], [[Ásdís]], [[Bryndís]], [[Eydís]], [[Freydís]],
+				-- [[Halldís]], [[Herdís]], [[Jódís]], [[Svandís]], [[Valdís]], [[Védís]], [[Vigdís]]
+				-- -unn names e.g. [[Þórunn]], [[Dýrunn]], [[Iðunn]], [[Ingunn]], [[Jórunn]], [[Steinunn]], [[Sæunn]]
+				stem = lemma
+				base.decl = "f-acc-dat-i"
 			end
-			-- FIXME: Not done
 		end
 		if not stem then
 			stem = rmatch(base.lemma, "^(.*ung)$")
@@ -2482,12 +2516,14 @@ local function determine_declension(base)
 				end
 			end
 		end
-		if not stem then
-			stem, ending = rmatch(base.lemma, "^(.*[ýæÝÆ])(r)$")
+		if not stem and not base.stem then
+			-- Not when base.stem is set, which includes [[Ýr]], following the regular endingless f declension where
+			-- -r is part of the stem.
+			stem, ending = rmatch(base.lemma, "^(.*[ýÝæÆ])(r)$")
 			if stem then
 				-- [[kýr]] "cow", [[sýr]] "sow (archaic)", [[ær]] "ewe" and compounds
 				base.decl = "f-long-umlaut-vowel-r"
-				base.need_imut = true
+				default_props.unimut = "unimut"
 			end
 		end
 		if not stem then
@@ -2507,7 +2543,7 @@ local function determine_declension(base)
 			-- A function here means we resolve it to its actual value later. We don't want to trigger
 			-- unumut of the user specified v-infix or any type of u-mutation (e.g. 'uumut' in [[ætlan]]).
 			default_props.unumut = function(base, props)
-				if props.v and props.v.form == "v" or props.umut then
+				if base.vstem or props.v and props.v.form == "v" or props.umut then
 					return nil
 				else
 					return {form = "unumut", defaulted = true}
@@ -2669,6 +2705,19 @@ local function determine_props(base)
 		-- Determine the default dative singular for masculine nouns using declension "m".
 		determine_default_masc_dat_sg(base, props)
 
+		-- Convert regular `umut` to `u_mut` (applying to the second-to-last syllable) when contraction
+		-- is in place and we're computing the u-mutation or reverse u-mutation version of the non-vowel
+		-- stem. Cf. neuter [[mastur]] "mast" with plural [[möstur]].
+		local function map_nonvstem_umut(val)
+			if val == "umut" and props.con and props.con.form == "con" then
+				return "u_mut"
+			elseif val == "unumut" and props.con and props.con.form == "con" then
+				return "unu_mut"
+			else
+				return val
+			end
+		end
+
 		-- Almost all nouns have dative plural -um, which triggers u-mutation, so we need to compute the u-mutation
 		-- stem using "umut" if not specifically given. Set `defaulted` to an error isn't triggered if there's no
 		-- special u-mutated form.
@@ -2694,7 +2743,8 @@ local function determine_props(base)
 				umut_null_defvstem
 			if props.unumut and not props.unumut.form:find("^%-") then
 				umut_nonvstem = base_stem
-				nonvstem = com.apply_reverse_u_mutation(umut_nonvstem, props.unumut.form, not props.unumut.defaulted)
+				nonvstem = com.apply_reverse_u_mutation(umut_nonvstem, map_nonvstem_umut(props.unumut.form),
+					not props.unumut.defaulted)
 				stem = nonvstem
 				if base.need_imut then
 					imut_nonvstem = com.apply_i_mutation(nonvstem, base.imutval)
@@ -2712,19 +2762,25 @@ local function determine_props(base)
 				if base.need_imut then
 					imut_vstem = com.apply_i_mutation(vstem, base.imutval)
 				end
+				local props_unumut_form = props.unumut.form
 				if props.defcon and props.defcon.form == "defcon" then
 					umut_null_defvstem = com.apply_contraction(base_stem)
 				else
 					umut_null_defvstem = base_stem
+					-- If contraction but not defcon is applicable, the stem we'll be applying reverse u-mutation
+					-- to is the uncontracted stem so we need to apply reverse u-mutation to the second-to-last
+					-- vowel.
+					props_unumut_form = map_nonvstem_umut(props_unumut_form)
 				end
-				null_defvstem = com.apply_reverse_u_mutation(umut_null_defvstem, props.unumut.form,
+				null_defvstem = com.apply_reverse_u_mutation(umut_null_defvstem, props_unumut_form,
 					not props.unumut.defaulted)
 			elseif props.unimut and not props.unimut.form:find("^%-") then
 				imut_nonvstem = base_stem
 				nonvstem = com.apply_reverse_i_mutation(imut_nonvstem, base.imutval)
 				stem = nonvstem
 				if props_umut then
-					umut_nonvstem = com.apply_u_mutation(nonvstem, props_umut.form, not props_umut.defaulted)
+					umut_nonvstem = com.apply_u_mutation(nonvstem, map_nonvstem_umut(props_umut.form),
+						not props_umut.defaulted)
 				end
 				if base_vstem then
 					error(("Don't currently know how to combine '%svstem:' with 'unimut' specs"):format(
@@ -2742,10 +2798,12 @@ local function determine_props(base)
 				if props.defcon and props.defcon.form == "defcon" then
 					error("Don't currently know how to combine 'defcon' with 'unimut' specs")
 				end
+				base.need_imut = true
 			elseif props_umut then
 				stem = base_stem
 				nonvstem = stem
-				umut_nonvstem = com.apply_u_mutation(nonvstem, props_umut.form, not props_umut.defaulted)
+				umut_nonvstem = com.apply_u_mutation(nonvstem, map_nonvstem_umut(props_umut.form),
+					not props_umut.defaulted)
 				if base.need_imut then
 					imut_nonvstem = com.apply_i_mutation(nonvstem, base.imutval)
 				end
