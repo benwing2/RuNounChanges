@@ -104,12 +104,14 @@ local cases = {
 local case_set = m_table.listToSet(cases)
 
 local overridable_stems = {
-	stem = true,
-	vstem = true,
-	plstem = true,
-	plvstem = true,
-	imutval = true,
+	"stem",
+	"vstem",
+	"plstem",
+	"plvstem",
+	"imutval",
 }
+
+local overridable_stem_set = m_table.listToSet(overridable_stems)
 
 local mutation_specs = {
 	"umut",
@@ -656,7 +658,7 @@ local function add(base, slot, props, endings, ending_override, endings_are_full
 	end
 	if def_endings then
 		local clitic
-		if base.adj then -- FIXME: not necessary once we get adjective inflections from [[Module:is-adjective]]
+		if base.props.adj then -- FIXME: not necessary once we get adjective inflections from [[Module:is-adjective]]
 			clitic = ""
 		else
 			clitic = clitic_articles[base.gender]
@@ -840,25 +842,6 @@ end
 
 local function add_pl_only_decl(base, props, acc_p, dat_p, gen_p)
 	add_decl(base, props, false, false, false, "*", acc_p, dat_p, gen_p)
-end
-
-local function handle_derived_slots_and_overrides(base)
-	-- Process slot overrides: First slots specified after the gender, then individual slot overrides specified as
-	-- separate indicators.
-	process_slot_overrides(base)
-
-	-- Compute linked versions of potential lemma slots, for use in {{is-noun}}.
-	-- We substitute the original lemma (before removing links) for forms that
-	-- are the same as the lemma, if the original lemma has links.
-	for _, slot in ipairs(potential_lemma_slots) do
-		iut.insert_forms(base.forms, slot .. "_linked", iut.map_forms(base.forms[slot], function(form)
-			if form == base.orig_lemma_no_links and rfind(base.orig_lemma, "%[%[") then
-				return base.orig_lemma
-			else
-				return form
-			end
-		end))
-	end
 end
 
 
@@ -1116,40 +1099,30 @@ decls["adj"] = function(base, props)
 end
 
 local function set_pron_defaults(base)
-	-- FIXME: Update for Icelandic
-	if base.gender or base.lemma ~= "ona" and base.number or base.animacy then
-		error("Can't specify gender, number or animacy for pronouns")
+	if base.gender or base.number then
+		error("Can't specify gender or number for pronouns")
 	end
 
 	local function pron_props()
-		-- Return values are GENDER, NUMBER, ANIMACY, HAS_CLITIC.
-		if base.lemma == "kdo" then
-			return "none", "sg", "an", false
-		elseif base.lemma == "co" then
-			return "none", "sg", "inan", false
-		elseif base.lemma == "já" or base.lemma == "ty" then
-			return "none", "sg", "an", true
-		elseif base.lemma == "my" or base.lemma == "vy" then
-			return "none", "pl", "an", false
-		elseif base.lemma == "on" then
-			return "m", "sg", "none", true
-		elseif base.lemma == "ono" then
-			return "n", "sg", "inan", true
-		elseif base.lemma == "oni" then
-			return "m", "pl", "an", false
-		elseif base.lemma == "ony" then
-			return "none", "pl", "none", false
-		elseif base.lemma == "ona" then
-			if base.number ~= "sg" and base.number ~= "pl" then
-				error("Must specify '.sg' or '.pl' with lemma 'ona'")
-			end
-			if base.number == "sg" then
-				return "f", "sg", "none", false
-			else
-				return "n", "pl", "inan", false
-			end
-		elseif base.lemma == "sebe" then
-			return "none", "none", "none", true
+		-- Return values are GENDER, NUMBER
+		if base.lemma == "ég" or base.lemma == "þú" then
+			return "none", "sg"
+		elseif base.lemma == "við" or base.lemma == "þið" then
+			return "none", "pl"
+		elseif base.lemma == "hann" then
+			return "m", "sg"
+		elseif base.lemma == "hún" then
+			return "m", "sg"
+		elseif base.lemma == "það" then
+			return "n", "sg"
+		elseif base.lemma == "þeir" then
+			return "m", "pl"
+		elseif base.lemma == "þær" then
+			return "f", "pl"
+		elseif base.lemma == "þau" then
+			return "n", "pl"
+		elseif base.lemma == "sig" then
+			return "none", "none"
 		else
 			error(("Unrecognized pronoun '%s'"):format(base.lemma))
 		end
@@ -1164,55 +1137,35 @@ end
 
 
 local function determine_pronoun_props(base)
-	-- FIXME: Update for Icelandic
-	if base.prop_sets then
-		error("Reducible and vowel alternation specs cannot be given with pronouns")
-	end
-	base.prop_sets = {{vowel_stem = "", nonvowel_stem = ""}}
+	base.prop_sets = {{}}
 	base.decl = "pron"
 end
 
 
 decls["pron"] = function(base, props)
-	-- FIXME: Update for Icelandic
-	local after_prep_footnote =	"[after a preposition]"
-	local animate_footnote = "[animate]"
-	if base.lemma == "kdo" then
-		add_decl(base, props, "koho", "komu", nil, nil, "kom", "kým")
-	elseif base.lemma == "co" then
-		add_decl(base, props, "čeho", "čemu", nil, nil, "čem", "čím")
-	elseif base.lemma == "já" then
-		add_sg_decl_with_clitic(base, props, "mne", "mě", "mně", "mi", nil, nil, nil, "mně", "mnou")
-	elseif base.lemma == "ty" then
-		add_sg_decl_with_clitic(base, props, "tebe", "tě", "tobě", "ti", nil, nil, nil, "tobě", "tebou")
-	elseif base.lemma == "my" then
-		add_pl_only_decl(base, props, "nás", "nám", "nás", "nás", "námi")
-	elseif base.lemma == "vy" then
-		add_pl_only_decl(base, props, "vás", "vám", "vás", "vás", "vámi")
-	elseif base.lemma == "on" or base.lemma == "ono" then
-		local acc_s = base.lemma == "on" and "jej" or {"jej", "je"}
-		local clitic_acc_s = base.lemma == "on" and {"jej", "ho"} or {"jej", "ho", "je"}
-		local prep_acc_s = base.lemma == "on" and "něj" or {"něj", "ně"}
-		local prep_clitic_acc_s = base.lemma == "on" and "-ň" or nil
-		add_sg_decl_with_clitic(base, props, {"jeho", "jej"}, {"ho", "jej"}, "jemu", "mu", acc_s, clitic_acc_s, nil, nil, "jím")
-		add_sg_decl_with_clitic(base, props, {"něho", "něj"}, nil, "němu", nil, prep_acc_s, prep_clitic_acc_s, nil, "něm", "ním",
-			after_prep_footnote)
-		if base.lemma == "on" then
-		add_sg_decl_with_clitic(base, props, nil, nil, nil, nil, "jeho", nil, nil, nil, nil,
-			animate_footnote)
-		add_sg_decl_with_clitic(base, props, nil, nil, nil, nil, "něho", nil, nil, nil, nil,
-			after_prep_footnote and animate_footnote)
-		end
-	elseif base.lemma == "ona" and base.number == "sg" then
-		add_sg_decl(base, props, "jí", "jí", "ji", nil, nil, "jí")
-		add_sg_decl(base, props, "ní", "ní", "ni", nil, "ní", "ní", after_prep_footnote)
-	elseif base.lemma == "oni" or base.lemma == "ony" or base.lemma == "ona" then
-		add_pl_only_decl(base, props, "jich", "jim", "je", nil, "jimi")
-		add_pl_only_decl(base, props, "nich", "nim", "ně", "nich", "nimi", after_prep_footnote)
-	elseif base.lemma == "sebe" then
-		-- Underlyingly we handle [[sebe]]'s slots as singular.
-		add_sg_decl_with_clitic(base, props, "sebe", "sebe", "sobě", "si", "sebe", "se", nil, "sobě", "sebou",
-			nil, "no nom_s")
+	if base.lemma == "ég" then
+		add_sg_decl(base, props, "mig", "mér", "mín")
+	elseif base.lemma == "þú" then
+		add_sg_decl(base, props, "þig", "þér", "þín")
+	elseif base.lemma == "hann" then
+		add_sg_decl(base, props, "hann", "honum", "hans")
+	elseif base.lemma == "hún" then
+		add_sg_decl(base, props, "hana", "henni", "hennar")
+	elseif base.lemma == "það" then
+		add_sg_decl(base, props, "það", "því", "þess")
+	elseif base.lemma == "við" then
+		add_pl_only_decl(base, props, "okkur", "okkur", "okkar")
+	elseif base.lemma == "þið" then
+		add_pl_only_decl(base, props, "ykkur", "ykkur", "ykkar")
+	elseif base.lemma == "þeir" then
+		add_pl_only_decl(base, props, "þá", "þeim", "þeirra")
+	elseif base.lemma == "þær" then
+		add_pl_only_decl(base, props, "þær", "þeim", "þeirra")
+	elseif base.lemma == "þau" then
+		add_pl_only_decl(base, props, "þau", "þeim", "þeirra")
+	elseif base.lemma == "sig" then
+		-- Underlyingly we handle [[sig]]'s slots as singular.
+		add_decl_with_nom_sg(base, props, false, "*", "sér", "sín", false, false, false, false)
 	else
 		error(("Internal error: Unrecognized pronoun lemma '%s'"):format(base.lemma))
 	end
@@ -1235,54 +1188,6 @@ local function set_num_defaults(base)
 	base.actual_gender = gender
 	base.number = number
 	base.actual_number = number
-end
-
-
-local function determine_numeral_props(base)
-	-- FIXME: Update for Icelandic
-	if base.prop_sets then
-		error("Reducible and vowel alternation specs cannot be given with numerals")
-	end
-	local stem = rmatch(base.lemma, "^(.*)" .. com.vowel_c .. "$") or base.lemma
-	base.prop_sets = {{vowel_stem = stem, nonvowel_stem = stem}}
-	base.decl = "num"
-end
-
-
-decls["num"] = function(base, props)
-	-- FIXME: Update for Icelandic
-	local after_prep_footnote =	"[after a preposition]"
-	if base.lemma == "dva" or base.lemma == "dvě" then
-		-- in compound numbers; stem is dv-
-		add_pl_only_decl(base, props, "ou", "ěma", "*", "ou", "ěma")
-	elseif base.lemma == "tři" or base.lemma == "čtyři" then
-		-- stem is without -i
-		local is_three = base.lemma == "tři"
-		add_pl_only_decl(base, props, is_three and "í" or "", "em", "*", "ech", is_three and "emi" or "mi")
-		add_pl_only_decl(base, props, "ech", nil, nil, nil, nil, "[colloquial]")
-		add_pl_only_decl(base, props, nil, nil, nil, nil, is_three and "ema" or "ma",
-			"[when modifying a form ending in ''-ma'']")
-	elseif base.lemma == "devět" then
-		add_pl_only_decl(base, "", "devíti", "devíti", "*", "devíti", "devíti", props.footnotes)
-	elseif base.lemma == "sta" or base.lemma == "stě" or base.lemma == "set" then
-		add_pl_only_decl(base, "", "set", "stům", "*", "stech", "sty", props.footnotes)
-	elseif rfind(base.lemma, "[is]et$") then
-		-- [[deset]] and all numbers ending in -cet ([[dvacet]], [[třicet]], [[čtyřicet]] and inverted compound
-		-- numerals such as [[pětadvacet]] "25" and [[dvaatřicet]] "32")
-		local begin = rmatch(base.lemma, "^(.*)et$")
-		add_pl_only_decl(base, props, "i", "i", "*", "i", "i")
-		add_pl_only_decl(base, begin, "íti", "íti", "*", "íti", "íti", props.footnotes)
-	elseif rfind(base.lemma, "oje$") then
-		-- [[dvoje]], [[troje]]
-		-- stem is without -e
-		add_pl_only_decl(base, props, "ích", "ím", "*", "ích", "ími")
-	elseif rfind(base.lemma, "ery$") then
-		-- [[čtvery]], [[patery]], [[šestery]], [[sedmery]], [[osmery]], [[devatery]], [[desatery]]
-		-- stem is without -y
-		add_pl_only_decl(base, props, "ých", "ým", "*", "ých", "ými")
-	else
-		add_pl_only_decl(base, props, "i", "i", "*", "i", "i")
-	end
 end
 
 
@@ -1322,28 +1227,13 @@ decls["det"] = function(base, props)
 end
 
 
--- Return the slots that may contain a lemma, in the order they should be checked. `props` is a property table,
--- coming either from `base` or `alternant_multiword_spec`.
-local function get_lemma_slots(props)
-	if props.surname then
-		error("FIXME")
-		-- return {"nom_m_s"}
-	elseif props.overall_adj then
-		error("FIXME")
-		-- return {"str_nom_s", "str_nom_p"}
-	else
-		return potential_lemma_slots
-	end
-end
-
-
 -- Return the lemmas for this term. The return value is a list of {form = FORM, footnotes = FOOTNOTES}.
 -- If `linked_variant` is given, return the linked variants (with embedded links if specified that way by the user),
 -- otherwies return variants with any embedded links removed. If `remove_footnotes` is given, remove any
 -- footnotes attached to the lemmas.
 function export.get_lemmas(alternant_multiword_spec, linked_variant, remove_footnotes)
 	-- FIXME: Update for Icelandic
-	local slots_to_fetch = get_lemma_slots(alternant_multiword_spec.props)
+	local slots_to_fetch = potential_lemma_slots
 	local linked_suf = linked_variant and "_linked" or ""
 	for _, slot in ipairs(slots_to_fetch) do
 		if alternant_multiword_spec.forms[slot .. linked_suf] then
@@ -1364,12 +1254,13 @@ end
 
 
 local function handle_derived_slots_and_overrides(base)
+	-- Process slot overrides: First slots specified after the gender, then individual slot overrides specified as
+	-- separate indicators.
 	process_slot_overrides(base)
 
-	-- Compute linked versions of potential lemma slots, for use in {{is-noun}}.
-	-- We substitute the original lemma (before removing links) for forms that
-	-- are the same as the lemma, if the original lemma has links.
-	for _, slot in ipairs(get_lemma_slots(base.props)) do
+	-- Compute linked versions of potential lemma slots, for use in {{is-noun}}.  We substitute the original lemma
+	-- (before removing links) for forms that are the same as the lemma, if the original lemma has links.
+	for _, slot in ipairs(potential_lemma_slots) do
 		iut.insert_forms(base.forms, slot .. "_linked", iut.map_forms(base.forms[slot], function(form)
 			if form == base.orig_lemma_no_links and rfind(base.orig_lemma, "%[%[") then
 				return base.orig_lemma
@@ -1396,6 +1287,52 @@ local function process_addnote_specs(base)
 			end
 		end
 	end
+end
+
+
+-- Map `fn` over an override spec (either `gens`, `pls` or one of the overrides in `overrides`). `fn` is passed one
+-- item (the form object of the override), which it can mutate if needed. If it ever returns non-nil, mapping stops
+-- and that value is returned as the return value of `map_override`; otherwise mapping runs to completion and nil is
+-- returned.
+local function map_override(override, fn)
+	if not override then
+		return nil
+	end
+	local function map_one_list(list)
+		if not list then
+			return nil
+		end
+		for _, formobj in ipairs(list) do
+			local retval = fn(formobj)
+			if retval ~= nil then
+				return retval
+			end
+		end
+		return nil
+	end
+	local retval = map_one_list(override.indef)
+	if retval ~= nil then
+		return retval
+	end
+	return map_one_list(override.def)
+end
+
+-- Map `fn` over all override specs in `base` (`gens`, `pls` and the overrides in `overrides`). `fn` is passed one
+-- item (the form object of the override), which it can mutate if needed. If it ever returns non-nil, mapping stops
+-- and that value is returned as the return value of `map_override`; otherwise mapping runs to completion and nil is
+-- returned.
+local function map_all_overrides(base, fn)
+	for slot, override in pairs(base.overrides) do
+		local retval = map_override(override, fn)
+		if retval ~= nil then
+			return retval
+		end
+	end
+	local retval = map_override(base.gens, fn)
+	if retval ~= nil then
+		return retval
+	end
+	return map_override(base.pls, fn)
 end
 
 
@@ -1587,9 +1524,236 @@ local function parse_override(segments, parse_err)
 end
 
 
+-- Subfunction of find_builtin_noun(). Match a single prefix + spec (where the prefix may begin with ^ to anchor
+-- against the beginning, otherwise anchored only at the end) against `noun`. Return the prefix and main noun.
+local function match_prefixed_spec_against_noun(specprefix, spec, noun)
+	if specprefix:find("^%^") then
+		-- must match exactly
+		specprefix = specprefix:gsub("^%^", "")
+		if specprefix == "" then
+			-- We can't use the second branch of the if-else statement because an empty () returns the current position
+			-- in rmatch().
+			local main_noun = rmatch(noun, "^(" .. spec .. ")$")
+			if main_noun then
+				return "", main_noun
+			end
+		else
+			local prefix, main_noun = rmatch(noun, "^(" .. specprefix .. ")(" .. spec .. ")$")
+			if prefix then
+				return prefix, main_noun
+			end
+		end
+	else
+		local prefix, main_noun = rmatch(noun, "^(.*" .. specprefix .. ")(" .. spec .. ")$")
+		if prefix then
+			return prefix, main_noun
+		end
+	end
+end
+
+
+-- Find and return the prefix, main noun and decl spec for the built-in noun matching user-specified noun `noun`.
+local function find_builtin_noun(noun)
+	if not m_builtin then
+		m_builtin = require("Module:st-noun/builtin")
+	end
+	for _, builtin_noun in ipairs(m_builtin.builtin_nouns) do
+		local spec, conj, desc = unpack(builtin_noun)
+
+		if type(spec) == "string" then
+			local prefix, main_noun = match_spec_against_noun(spec, noun)
+			if prefix then
+				return prefix, main_noun, conj
+			end
+		else
+			-- Of the form {term = "ergere", prefixes = {"^", "ad", "ri"}}. Note that the prefixes not preceded by ^
+			-- can have further prefixes before them.
+			for _, spec_prefix in ipairs(spec.prefixes) do
+				local prefix, main_noun = match_prefixed_spec_against_noun(spec_prefix, spec.term, noun)
+				if prefix then
+					return prefix, main_noun, conj
+				end
+			end
+		end
+	end
+end
+
+
+local function parse_inside(inside, base, is_builtin_noun)
+	local function parse_err(msg)
+		error((is_builtin_verb and "Internal error processing built-in noun spec: " or "") .. msg .. ": <" ..
+			inside .. ">")
+    end
+
+	local segments = iut.parse_balanced_segment_run(inside, "[", "]")
+	local dot_separated_groups = split_alternating_runs_with_escapes(segments, "%.")
+	for i, dot_separated_group in ipairs(dot_separated_groups) do
+		-- Parse a "mutation" spec such as "umut,uumut[rare]" or "-unuumut,unuumut" or "imut". This assumes the
+		-- mutation spec is contained in `dot_separated_group` (already split on brackets) and the result of parsing
+		-- should go in `base[dest]`. `allowed_specs` is a list of the allowed mutation specs in this group, such
+		-- as {"umut", "uumut", "u_umut"} or {"-imut", "imut"}. The result of parsing is a list of structures of the
+		-- form {
+		--   form = "FORM",
+		--   footnotes = nil or {"FOOTNOTE", "FOOTNOTE", ...},
+		-- }.
+		local function parse_mutation_spec(dest, allowed_specs)
+			if base[dest] then
+				parse_err(("Can't specify '%s'-type mutation spec twice; second such spec is '%s'"):format(
+					dest, table.concat(dot_separated_group)))
+			end
+			base[dest] = {}
+			local comma_separated_groups = split_alternating_runs_with_escapes(dot_separated_group, ",")
+			for _, comma_separated_group in ipairs(comma_separated_groups) do
+				local specobj = {}
+				local spec = comma_separated_group[1]
+				if not m_table.contains(allowed_specs, spec) then
+					parse_err(("For '%s'-type mutation spec, saw unrecognized spec '%s'; valid values are %s"):
+						format(dest, spec, generate_list_of_possibilities_for_err(allowed_specs)))
+				else
+					specobj.form = spec
+				end
+				specobj.footnotes = fetch_footnotes(comma_separated_group, parse_err)
+				table.insert(base[dest], specobj)
+			end
+		end
+
+		local part = dot_separated_group[1]
+		if i == 1 and part ~= "+" and part ~= "@" then
+			local comma_separated_groups = split_alternating_runs_with_escapes(dot_separated_group, ",")
+			if #comma_separated_groups > 3 then
+				parse_err(("At most three comma-separated specs are allowed but saw %s"):format(
+					#comma_separated_groups))
+			end
+			if comma_separated_groups[1][2] then
+				parse_err("Footnotes not allowed on gender indicator")
+			end
+			base.gender = comma_separated_groups[1][1]
+			if not base.gender:find("^[mfn]$") then
+				parse_err(("Unrecognized gender '%s', should be 'm', 'f' or 'n'"):format(base.gender))
+			end
+			if comma_separated_groups[2] then
+				base.gens = fetch_slot_override(comma_separated_groups[2], "genitive", true, false, parse_err)
+			end
+			if comma_separated_groups[3] then
+				base.pls = fetch_slot_override(comma_separated_groups[3], "nominative plural", true, false,
+					parse_err)
+			end
+		elseif part == "" then
+			if not dot_separated_group[2] then
+				parse_err("Blank indicator; not allowed without attached footnotes")
+			end
+			base.footnotes = fetch_footnotes(dot_separated_group, parse_err)
+		elseif part == "addnote" then
+			local spec_and_footnotes = fetch_footnotes(dot_separated_group, parse_err)
+			if #spec_and_footnotes < 2 then
+				parse_err("Spec with 'addnote' should be of the form 'addnote[SLOTSPEC][FOOTNOTE][FOOTNOTE][...]'")
+			end
+			local slot_spec = table.remove(spec_and_footnotes, 1)
+			local slot_spec_inside = rmatch(slot_spec, "^%[(.*)%]$")
+			if not slot_spec_inside then
+				parse_err("Internal error: slot_spec " .. slot_spec .. " should be surrounded with brackets")
+			end
+			local slot_specs = rsplit(slot_spec_inside, ",")
+			-- FIXME: Here, [[Module:it-verb]] called strip_spaces(). Generally we don't do this. Should we?
+			table.insert(base.addnote_specs, {slot_specs = slot_specs, footnotes = spec_and_footnotes})
+		elseif ulen(part) > 3 and case_set[usub(part, 1, 3)] or (
+			ulen(part) > 6 and usub(part, 1, 3) == "def" and case_set[usub(part, 4, 6)]) then
+			local slots, override = parse_override(dot_separated_group, parse_err)
+			for _, slot in ipairs(slots) do
+				if base.overrides[slot] then
+					error(("Two overrides specified for slot '%s'"):format(slot))
+				else
+					base.overrides[slot] = override
+				end
+			end
+		elseif part:find("^u[u_]*mut") then
+			parse_mutation_spec("umut", {"umut", "uumut", "u_umut"})
+		elseif not part:find("^imutval") and part:find("^%-?imut") then
+			parse_mutation_spec("imut", {"imut", "-imut"})
+		elseif part:find("^%-?unu+mut") then
+			parse_mutation_spec("unumut", {"unumut", "-unumut", "unuumut", "-unuumut"})
+		elseif part:find("^%-?unimut") then
+			parse_mutation_spec("unimut", {"unimut", "-unimut"})
+		elseif part:find("^%-?con") then
+			parse_mutation_spec("con", {"con", "-con"})
+		elseif part:find("^%-?defcon") then
+			parse_mutation_spec("defcon", {"defcon", "-defcon"})
+		elseif not part:find("^já") and part:find("^%-?j") then -- don't trip over .já indicator
+			parse_mutation_spec("j", {"j", "-j"})
+		elseif not part:find("^vstem") and part:find("^%-?v") then
+			parse_mutation_spec("v", {"v", "-v"})
+		elseif #dot_separated_group > 1 then
+			parse_err(
+				("Footnotes only allowed with slot overrides, negatable indicators and by themselves: '%s'"):
+				format(table.concat(dot_separated_group)))
+		elseif part:find("^decllemma%s*:") or part:find("^declgender%s*:") or part:find("^declnumber%s*:") then
+			local field, value = part:match("^(decl[a-z]+)%s*:%s*(.+)$")
+			if not value then
+				parse_err(("Syntax error in decllemma/declgender/declnumber indicator: '%s'"):format(part))
+			end
+			if base[field] then
+				parse_err(("Can't specify '%s:' twice"):format(field))
+			end
+			base[field] = value
+		elseif rfind(part, ":") then
+			local spec, value = part:match("^([a-z]+)%s*:%s*(.+)$")
+			if not spec then
+				parse_err(("Syntax error in indicator with value, expecting alphabetic slot or stem/lemma override indicator: '%s'"):format(part))
+			end
+			if not overridable_stem_set[spec] then
+				parse_err(("Unrecognized stem override indicator '%s', should be %s"):format(
+					part, generate_list_of_possibilities_for_err(overridable_stems)))
+			end
+			if base[spec] then
+				if spec == "stem" then
+					parse_err("Can't specify spec for 'stem:' twice (including using 'stem:' along with # or ##)")
+				else
+					parse_err(("Can't specify '%s:' twice"):format(spec))
+				end
+			end
+			base[spec] = value
+		elseif part == "sg" or part == "pl" or part == "both" then
+			if base.number then
+				if base.number ~= part then
+					parse_err("Can't specify '" .. part .. "' along with '" .. base.number .. "'")
+				else
+					parse_err("Can't specify '" .. part .. "' twice")
+				end
+			end
+			base.number = part
+		elseif part == "#" or part == "##" then
+			if base.stem then
+				parse_err("Can't specify a stem spec ('stem:', # or ##) twice")
+			end
+			base.stem = part
+		elseif part == "+" then
+			if base.props.adj then
+				parse_err("Can't specify '+' twice")
+			end
+			base.props.adj = true
+		elseif part == "@" then
+			if base.builtin then
+				parse_err("Can't specify '@' twice")
+			end
+			base.props.builtin = true
+			parse_err("Built-in indicator '@' not implemented yet")
+		elseif part == "dem" or part == "def" or part == "-def" or part == "weak" or part == "proper" or
+			part == "pers" or part == "rstem" or part == "já" then
+			if base.props[part] then
+				parse_err("Can't specify '" .. part .. "' twice")
+			end
+			base.props[part] = true
+		else
+			parse_err("Unrecognized indicator '" .. part .. "'")
+		end
+	end
+
+	return base
+end
+
+
 --[=[
-Parse an indicator spec (text consisting of angle brackets and zero or more dot-separated indicators within them).
-Return value is an object of the form
+Create an empty `base` object for holding the result of parsing and later the generated forms. The object is of the form
 
 {
   overrides = {
@@ -1626,7 +1790,6 @@ Return value is an object of the form
   number = "NUMBER", -- "sg", "pl", "both"; may be missing
   gender = "GENDER", -- "m", "f" or "n"; always specified by the user
   definiteness = "DEFINITENESS", -- "def", "indef" or "both"; computed from other settings
-  adj = true, -- may be missing; indicates that the term declines like an adjective (NOT IMPLEMENTED YET)
   decllemma = nil or "DECLLEMMA", -- decline like the specified lemma
   declgender = nil or "DECLGENDER", -- decline like the specified gender
   declnumber = nil or "DECLNUMBER", -- decline like the specified number
@@ -1667,197 +1830,94 @@ Return value is an object of the form
   },
 }
 ]=]
-local function parse_indicator_spec(angle_bracket_spec, lemma)
-	local base = {
+local function create_base()
+	return {
 		forms = {},
 		overrides = {},
 		props = {},
 		addnote_specs = {},
 	}
+end
+
+
+--[=[
+Parse an indicator spec (text consisting of angle brackets and zero or more dot-separated indicators within them).
+Return value is an object of the form indicated in the comment above create_base().
+]=]
+local function parse_indicator_spec(angle_bracket_spec, lemma, pagename)
+	local base = create_base()
+	if lemma == "" then
+		lemma = pagename
+	end
 	base.orig_lemma = lemma
-	base.orig_lemma_no_links = m_links.remove_links(lemma)
-	base.lemma = base.orig_lemma_no_links
+	base.orig_lemma_no_links = m_links.remove_links(base.lemma)
+	base.lemma = base.orig_lemma_no_links -- may get changed later in normalize_all_lemmas()
+
 	local inside = rmatch(angle_bracket_spec, "^<(.*)>$")
 	assert(inside)
+	parse_inside(base, inside, false)
 
 	local function parse_err(msg)
-		error(msg .. ": <" .. inside .. ">")
+		error(msg .. ": " .. angle_bracket_spec)
 	end
 
-	if inside ~= "" then
-		local segments = iut.parse_balanced_segment_run(inside, "[", "]")
-		local dot_separated_groups = split_alternating_runs_with_escapes(segments, "%.")
-		for i, dot_separated_group in ipairs(dot_separated_groups) do
-			-- Parse a "mutation" spec such as "umut,uumut[rare]" or "-unuumut,unuumut" or "imut". This assumes the
-			-- mutation spec is contained in `dot_separated_group` (already split on brackets) and the result of parsing
-			-- should go in `base[dest]`. `allowed_specs` is a list of the allowed mutation specs in this group, such
-			-- as {"umut", "uumut", "u_umut"} or {"-imut", "imut"}. The result of parsing is a list of structures of the
-			-- form {
-			--   form = "FORM",
-			--   footnotes = nil or {"FOOTNOTE", "FOOTNOTE", ...},
-			-- }.
-			local function parse_mutation_spec(dest, allowed_specs)
-				if base[dest] then
-					parse_err(("Can't specify '%s'-type mutation spec twice; second such spec is '%s'"):format(
-						dest, table.concat(dot_separated_group)))
-				end
-				base[dest] = {}
-				local comma_separated_groups = split_alternating_runs_with_escapes(dot_separated_group, ",")
-				for _, comma_separated_group in ipairs(comma_separated_groups) do
-					local specobj = {}
-					local spec = comma_separated_group[1]
-					if not m_table.contains(allowed_specs, spec) then
-						parse_err(("For '%s'-type mutation spec, saw unrecognized spec '%s'; valid values are %s"):
-							format(dest, spec, generate_list_of_possibilities_for_err(allowed_specs)))
-					else
-						specobj.form = spec
-					end
-					specobj.footnotes = fetch_footnotes(comma_separated_group, parse_err)
-					table.insert(base[dest], specobj)
-				end
-			end
+	if base.props.builtin then
+		local prefix, main_noun, declspec = find_builtin_noun(base.lemma)
+		if not prefix then
+			parse_err("Unable to find built-in noun corresponding to '" .. base.lemma .. "'")
+		end
+		-- Create a new `base`, fill it with properties from the built-in noun, and copy over the user-specified
+		-- properties on top of it.
+		local nbase = create_base()
+		nbase.orig_lemma = base.orig_lemma
+		nbase.orig_lemma_no_links = base.orig_lemma_no_links
+		nbase.lemma = base.lemma
+		nbase.prefix = prefix
+		nbase.main_noun = main_noun
+		parse_inside(nbase, declspec, "is builtin")
 
-			local part = dot_separated_group[1]
-			if i == 1 and part ~= "+" and part ~= "@" then
-				local comma_separated_groups = split_alternating_runs_with_escapes(dot_separated_group, ",")
-				if #comma_separated_groups > 3 then
-					parse_err(("At most three comma-separated specs are allowed but saw %s"):format(
-						#comma_separated_groups))
+		-- If there's a prefix, add it now to all the specs derived from the built-in noun.
+		if prefix ~= "" then
+			map_all_overrides(base, function(formobj)
+				if formobj.form:find("^!") then
+					formobj.form = "!" .. prefix .. usub(formobj.form, 2)
 				end
-				if comma_separated_groups[1][2] then
-					parse_err("Footnotes not allowed on gender indicator")
+			end)
+		end
+
+		local function copy_properties(plist)
+			-- Copy various properties.
+			for _, prop in ipairs(plist) do
+				if base[prop] ~= nil then
+					nbase[prop] = base[prop]
 				end
-				base.gender = comma_separated_groups[1][1]
-				if not base.gender:find("^[mfn]$") then
-					parse_err(("Unrecognized gender '%s', should be 'm', 'f' or 'n'"):format(base.gender))
-				end
-				if comma_separated_groups[2] then
-					base.gens = fetch_slot_override(comma_separated_groups[2], "genitive", true, false, parse_err)
-				end
-				if comma_separated_groups[3] then
-					base.pls = fetch_slot_override(comma_separated_groups[3], "nominative plural", true, false,
-						parse_err)
-				end
-			elseif part == "" then
-				if not dot_separated_group[2] then
-					parse_err("Blank indicator; not allowed without attached footnotes")
-				end
-				base.footnotes = fetch_footnotes(dot_separated_group, parse_err)
-			elseif part == "addnote" then
-				local spec_and_footnotes = fetch_footnotes(dot_separated_group, parse_err)
-				if #spec_and_footnotes < 2 then
-					parse_err("Spec with 'addnote' should be of the form 'addnote[SLOTSPEC][FOOTNOTE][FOOTNOTE][...]'")
-				end
-				local slot_spec = table.remove(spec_and_footnotes, 1)
-				local slot_spec_inside = rmatch(slot_spec, "^%[(.*)%]$")
-				if not slot_spec_inside then
-					parse_err("Internal error: slot_spec " .. slot_spec .. " should be surrounded with brackets")
-				end
-				local slot_specs = rsplit(slot_spec_inside, ",")
-				-- FIXME: Here, [[Module:it-verb]] called strip_spaces(). Generally we don't do this. Should we?
-				table.insert(base.addnote_specs, {slot_specs = slot_specs, footnotes = spec_and_footnotes})
-			elseif ulen(part) > 3 and case_set[usub(part, 1, 3)] or (
-				ulen(part) > 6 and usub(part, 1, 3) == "def" and case_set[usub(part, 4, 6)]) then
-				local slots, override = parse_override(dot_separated_group, parse_err)
-				for _, slot in ipairs(slots) do
-					if base.overrides[slot] then
-						error(("Two overrides specified for slot '%s'"):format(slot))
-					else
-						base.overrides[slot] = override
-					end
-				end
-			elseif part:find("^u[u_]*mut") then
-				parse_mutation_spec("umut", {"umut", "uumut", "u_umut"})
-			elseif not part:find("^imutval") and part:find("^%-?imut") then
-				parse_mutation_spec("imut", {"imut", "-imut"})
-			elseif part:find("^%-?unu+mut") then
-				parse_mutation_spec("unumut", {"unumut", "-unumut", "unuumut", "-unuumut"})
-			elseif part:find("^%-?unimut") then
-				parse_mutation_spec("unimut", {"unimut", "-unimut"})
-			elseif part:find("^%-?con") then
-				parse_mutation_spec("con", {"con", "-con"})
-			elseif part:find("^%-?defcon") then
-				parse_mutation_spec("defcon", {"defcon", "-defcon"})
-			elseif not part:find("^já") and part:find("^%-?j") then -- don't trip over .já indicator
-				parse_mutation_spec("j", {"j", "-j"})
-			elseif not part:find("^vstem") and part:find("^%-?v") then
-				parse_mutation_spec("v", {"v", "-v"})
-			elseif #dot_separated_group > 1 then
-				parse_err(
-					("Footnotes only allowed with slot overrides, negatable indicators and by themselves: '%s'"):
-					format(table.concat(dot_separated_group)))
-			elseif part:find("^decllemma%s*:") or part:find("^declgender%s*:") or part:find("^declnumber%s*:") then
-				local field, value = part:match("^(decl[a-z]+)%s*:%s*(.+)$")
-				if not value then
-					parse_err(("Syntax error in decllemma/declgender/declnumber indicator: '%s'"):format(part))
-				end
-				if base[field] then
-					parse_err(("Can't specify '%s:' twice"):format(field))
-				end
-				base[field] = value
-			elseif rfind(part, ":") then
-				local spec, value = part:match("^([a-z]+)%s*:%s*(.+)$")
-				if not spec then
-					parse_err(("Syntax error in indicator with value, expecting alphabetic slot or stem/lemma override indicator: '%s'"):format(part))
-				end
-				if not overridable_stems[spec] then
-					local overridable_stem_list = {}
-					for k, _ in pairs(overridable_stems) do
-						table.insert(overridable_stem_list, k)
-					end
-					parse_err(("Unrecognized stem override indicator '%s', should be %s"):format(
-						part, generate_list_of_possibilities_for_err(overridable_stem_list)))
-				end
-				if base[spec] then
-					if spec == "stem" then
-						parse_err("Can't specify spec for 'stem:' twice (including using 'stem:' along with # or ##)")
-					else
-						parse_err(("Can't specify '%s:' twice"):format(spec))
-					end
-				end
-				base[spec] = value
-			elseif part == "sg" or part == "pl" or part == "both" then
-				if base.number then
-					if base.number ~= part then
-						parse_err("Can't specify '" .. part .. "' along with '" .. base.number .. "'")
-					else
-						parse_err("Can't specify '" .. part .. "' twice")
-					end
-				end
-				base.number = part
-			elseif part == "#" or part == "##" then
-				if base.stem then
-					parse_err("Can't specify a stem spec ('stem:', # or ##) twice")
-				end
-				base.stem = part
-			elseif part == "+" then
-				if base.adj then
-					parse_err("Can't specify '+' twice")
-				end
-				base.adj = true
-			elseif part == "@" then
-				if base.builtin then
-					parse_err("Can't specify '@' twice")
-				end
-				base.builtin = true
-				parse_err("Built-in indicator '@' not implemented yet")
-			elseif part == "dem" or part == "def" or part == "-def" or part == "weak" or part == "proper" or
-				part == "pers" or part == "rstem" or part == "já" then
-				if base.props[part] then
-					parse_err("Can't specify '" .. part .. "' twice")
-				end
-				base.props[part] = true
-			else
-				parse_err("Unrecognized indicator '" .. part .. "'")
 			end
 		end
+		copy_properties(mutation_specs)
+		copy_properties(overridable_stems)
+		copy_properties { "gens", "pls", "gender", "number", "definiteness", "decllemma", "declgender", "declnumber" }
+		nbase.footnotes = iut.combine_footnotes(nbase.footnotes, base.footnotes)
+		-- Now copy remaining user-specified specs into the built-in noun `base`.
+		for _, prop_table in ipairs { "overrides", "props" } do
+			for slot, prop in pairs(base[prop_table]) do
+				nbase[prop_table][slot] = prop
+			end
+		end
+		-- Copy addnote specs.
+		for _, prop_list in ipairs { "addnote_specs" } do
+			for _, prop in ipairs(base[prop_list]) do
+				m_table.insertIfNot(nbase[prop_list], prop)
+			end
+		end
+		return nbase
 	end
+
 	return base
 end
 
 
 local function is_regular_noun(base)
-	return not base.adj and not base.pron and not base.det and not base.num
+	return not base.props.adj and not base.props.pron and not base.props.det
 end
 
 
@@ -1873,67 +1933,19 @@ local function process_declnumber(base)
 end
 
 
--- Map `fn` over an override spec (either `gens`, `pls` or one of the overrides in `overrides`). `fn` is passed one
--- item (the form object of the override), which it can mutate if needed. If it ever returns non-nil, mapping stops
--- and that value is returned as the return value of `map_override`; otherwise mapping runs to completion and nil is
--- returned.
-local function map_override(override, fn)
-	if not override then
-		return nil
-	end
-	local function map_one_list(list)
-		if not list then
-			return nil
-		end
-		for _, formobj in ipairs(list) do
-			local retval = fn(formobj)
-			if retval ~= nil then
-				return retval
-			end
-		end
-		return nil
-	end
-	local retval = map_one_list(override.indef)
-	if retval ~= nil then
-		return retval
-	end
-	return map_one_list(override.def)
-end
-
--- Map `fn` over all override specs in `base` (`gens`, `pls` and the overrides in `overrides`). `fn` is passed one
--- item (the form object of the override), which it can mutate if needed. If it ever returns non-nil, mapping stops
--- and that value is returned as the return value of `map_override`; otherwise mapping runs to completion and nil is
--- returned.
-local function map_all_overrides(base, fn)
-	for slot, override in pairs(base.overrides) do
-		local retval = map_override(override, fn)
-		if retval ~= nil then
-			return retval
-		end
-	end
-	local retval = map_override(base.gens, fn)
-	if retval ~= nil then
-		return retval
-	end
-	return map_override(base.pls, fn)
-end
-
-
 local function set_defaults_and_check_bad_indicators(base)
 	local function check_err(msg)
 		error(("Lemma '%s': %s"):format(base.lemma, msg))
 	end
 	-- Set default values.
 	local regular_noun = is_regular_noun(base)
-	if base.pron then
+	if base.props.pron then
 		set_pron_defaults(base)
-	elseif base.det then
+	elseif base.props.det then
 		set_det_defaults(base)
-	elseif base.num then
-		set_num_defaults(base)
-	elseif base.adj then
+	elseif base.props.adj then
 		-- FIXME: Do adjective-specific checks then return
-	elseif not base.adj then
+	elseif not base.props.adj then
 		if not base.gender then
 			check_err("Internal error: For nouns, gender must be specified")
 		end
@@ -2039,20 +2051,15 @@ local function set_all_defaults_and_check_bad_indicators(alternant_multiword_spe
 			error("With multiple words or alternants, all must agree in definiteness")
 		end
 		base.multiword = is_multiword -- FIXME: not currently used; consider deleting
-		if base.pron then
+		if base.props.pron then
 			alternant_multiword_spec.saw_pron = true
 		else
 			alternant_multiword_spec.saw_non_pron = true
 		end
-		if base.det then
+		if base.props.det then
 			alternant_multiword_spec.saw_det = true
 		else
 			alternant_multiword_spec.saw_non_det = true
-		end
-		if base.num then
-			alternant_multiword_spec.saw_num = true
-		else
-			alternant_multiword_spec.saw_non_num = true
 		end
 	end)
 end
@@ -2930,20 +2937,18 @@ end
 
 local function detect_indicator_spec(base)
 	-- Replace # and ## in all overridable stems as well as all overrides.
-	for stemkey, _ in pairs(overridable_stems) do
+	for _, stemkey in ipairs(overridable_stems) do
 		base[stemkey] = replace_hashvals(base, base[stemkey])
 	end
 	map_all_overrides(base, function(formobj)
 		formobj.form = replace_hashvals(base, formobj.form)
 	end)
 
-	if base.pron then
+	if base.props.pron then
 		determine_pronoun_props(base)
-	elseif base.det then
+	elseif base.props.det then
 		determine_determiner_props(base)
-	elseif base.num then
-		determine_numeral_props(base)
-	elseif base.adj then
+	elseif base.props.adj then
 		process_declnumber(base)
 		expand_property_sets(base)
 		synthesize_adj_lemma(base)
@@ -2974,8 +2979,8 @@ local function detect_all_indicator_specs(alternant_multiword_spec)
 			alternant_multiword_spec.pl_genders[base.actual_gender] = true
 		end
 	end)
-	if (alternant_multiword_spec.saw_pron and 1 or 0) + (alternant_multiword_spec.saw_det and 1 or 0) + (alternant_multiword_spec.saw_num and 1 or 0) > 1 then
-		error("Can't combine pronouns, determiners and/or numerals")
+	if (alternant_multiword_spec.saw_pron and 1 or 0) + (alternant_multiword_spec.saw_det and 1 or 0) > 1 then
+		error("Can't combine pronouns and/or determiners")
 	end
 end
 
@@ -3132,8 +3137,6 @@ local function set_pos(alternant_multiword_spec)
 		alternant_multiword_spec.pos = "pronoun"
 	elseif alternant_multiword_spec.saw_det and not alternant_multiword_spec.saw_non_det then
 		alternant_multiword_spec.pos = "determiner"
-	elseif alternant_multiword_spec.saw_num and not alternant_multiword_spec.saw_non_num then
-		alternant_multiword_spec.pos = "numeral"
 	else
 		alternant_multiword_spec.pos = "noun"
 	end
@@ -3141,21 +3144,9 @@ local function set_pos(alternant_multiword_spec)
 end
 
 
-local function normalize_all_lemmas(alternant_multiword_spec, pagename)
+local function normalize_all_lemmas(alternant_multiword_spec)
 	iut.map_word_specs(alternant_multiword_spec, function(base)
-		if base.lemma == "" then
-			base.lemma = pagename
-		end
-		base.orig_lemma = base.lemma
-		base.orig_lemma_no_links = m_links.remove_links(base.lemma)
 		local lemma = base.orig_lemma_no_links
-		-- If the lemma is all-uppercase, lowercase it but note this, so that later in combine_stem_ending() we convert it
-		-- back to uppercase. This allows us to handle all-uppercase acronyms without a lot of extra complexity.
-		-- FIXME: This may not make sense at all.
-		if uupper(lemma) == lemma then
-			base.all_uppercase = true
-			lemma = ulower(lemma)
-		end
 		base.actual_lemma = lemma
 		base.lemma = base.decllemma or lemma
 	end)
@@ -3502,16 +3493,18 @@ function export.do_generate_forms(parent_args, from_headword)
 	end
 
 	local args = m_para.process(parent_args, params)
+	local pagename = args.pagename or from_headword and args.head[1] or mw.loadData("Module:headword/data").pagename
 	local parse_props = {
-		parse_indicator_spec = parse_indicator_spec,
+		parse_indicator_spec = function(angle_bracket_spec, lemma)
+			return parse_indicator_spec(angle_bracket_spec, lemma, pagename)
+		end,
 		angle_brackets_omittable = true,
 		allow_blank_lemma = true,
 	}
 	local alternant_multiword_spec = iut.parse_inflected_text(args[1], parse_props)
 	alternant_multiword_spec.title = args.title
 	alternant_multiword_spec.args = args
-	local pagename = args.pagename or from_headword and args.head[1] or mw.title.getCurrentTitle().subpageText
-	normalize_all_lemmas(alternant_multiword_spec, pagename)
+	normalize_all_lemmas(alternant_multiword_spec)
 	set_all_defaults_and_check_bad_indicators(alternant_multiword_spec)
 	-- These need to happen before detect_all_indicator_specs() so that adjectives get their genders and numbers set
 	-- appropriately, which are needed to correctly synthesize the adjective lemma.
