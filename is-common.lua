@@ -198,7 +198,7 @@ end
 function export.apply_u_mutation(stem, typ, error_if_unmatchable)
 	local origstem = stem
 	stem = apply_au_sub(stem)
-	if typ == "uumut" or typ == "u_umut" then
+	if typ == "uumut" or typ == "u_umut" or typ == "u_mut" then
 		local first, v1, middle, v2, last = rmatch(stem, "^(.*)(" .. export.vowel_c .. ")(" .. export.cons_c .. "*)(" ..
 			export.vowel_c .. ")(" .. export.cons_c .. "*)$")
 		if not first then
@@ -209,7 +209,7 @@ function export.apply_u_mutation(stem, typ, error_if_unmatchable)
 			return undo_au_sub(stem)
 		end
 		v1 = lesser_u_mutation[v1] or v1
-		v2 = (typ == "uumut" and greater_u_mutation or lesser_u_mutation)[v2] or v2
+		v2 = typ == "u_mut" and v2 or (typ == "uumut" and greater_u_mutation or lesser_u_mutation)[v2] or v2
 		local retval = undo_au_sub(first .. v1 .. middle .. v2 .. last)
 		if retval == origstem and error_if_unmatchable then
 			error(("Can't apply u-mutation of type '%s' to stem '%s'; result would be the same as the original"):
@@ -244,7 +244,7 @@ end
 function export.apply_reverse_u_mutation(stem, typ, error_if_unmatchable)
 	local origstem = stem
 	stem = apply_au_sub(stem)
-	if typ == "unuumut" or typ == "unu_umut" then
+	if typ == "unuumut" or typ == "unu_umut" or typ == "unu_mut" then
 		local first, v1, middle, v2, last = rmatch(stem, "^(.*)(" .. export.vowel_c .. ")(" .. export.cons_c .. "*)(" ..
 			export.vowel_c .. ")(" .. export.cons_c .. "*)$")
 		if not first then
@@ -257,7 +257,7 @@ function export.apply_reverse_u_mutation(stem, typ, error_if_unmatchable)
 		if not middle:find("v") then -- [[örvun]] -> [[örvan]] not #[[arvan]]
 			v1 = lesser_reverse_u_mutation[v1] or v1
 		end
-		v2 = (typ == "unuumut" and greater_reverse_u_mutation or lesser_reverse_u_mutation)[v2] or v2
+		v2 = typ == "unu_mut" and v2 or (typ == "unuumut" and greater_reverse_u_mutation or lesser_reverse_u_mutation)[v2] or v2
 		local retval = undo_au_sub(first .. v1 .. middle .. v2 .. last)
 		if retval == origstem and error_if_unmatchable then
 			error(("Can't apply reverse u-mutation of type '%s' to stem '%s'; result would be the same as the original"):
