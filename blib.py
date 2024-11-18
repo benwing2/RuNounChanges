@@ -2956,7 +2956,7 @@ def compare_new_and_old_template_forms(origt, newt, generate_old_forms, generate
     errandpagemsg("WARNING: Error generating new forms, can't compare")
     return False
   new_forms = new_result if already_split else split_generate_args(new_result)
-  for form in set(old_forms.keys() + new_forms.keys()):
+  for form in set(old_forms.keys()) | set(new_forms.keys()):
     if form not in new_forms:
       pagemsg("WARNING: for original %s and new %s, form %s=%s in old forms but missing in new forms" % (
         origt, newt, form, old_forms[form]))
