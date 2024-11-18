@@ -655,7 +655,7 @@ Personal names:
 
 === words in -ó ===
 * acc/dat -, gen variously -s or -, nom acc dat gen pl -ar -a -um -a
-* {{m|is|strætó||city bus}}, <<næturstrætó|night bus>>
+* {{m|is|strætó||city bus}}, {{m|is|næturstrætó||night bus}}
 * {{tl|is-ndecl|m,s:-|pagename=strætó}}
 * {{m|is|Strætó|pos=company name}}
 * {{tl|is-ndecl|m,s:-|pagename=Strætó}}
@@ -663,16 +663,16 @@ Personal names:
 * {{tl|is-ndecl|m,-|pagename=gaggó}}
 * {{m|is|menntó||senior high, gymnasium}} (behaves like a proper noun)
 * {{tl|is-ndecl|m,-.sg.-def|pagename=menntó}}
-* {{m|is|Kennó||the Teachers' College}} (from {{m|is|Kennaraskóla}}), <<Astró|?>>, <<Borgó|?>> (from {{m|is|Borgarholtsskóla}}), <<Bríó|?>>, <<Foldó|?>> (from <<Foldaskóla>>), <<Hafró|?>> (from <<Hafrannsóknastofnun|Marine Research Institute>> of Norway), <<Hagó|?>> (from <<Hagaskóla>>), <<Húsó|?>> (company name), <<Kvennó|?>> (from <<Kvennaskóla>>), <<Meló|?>> (from <<Melaskóla>>), <<Menntó|?>> (from <<Menntaskóla>>), <<Tónó|?>> (from <<Tónlistarskóla>>), <<Való|>> (from <<Valhúsaskóla>>), <<Versló|pos=company name>>/<<Verzló|pos=company name>> (from <<Verslunarskóla Íslands|Iceland Business School>>)
+* {{m|is|Kennó||the Teachers' College}} (from {{m|is|Kennaraskóla}}), {{m|is|Astró||?}}, {{m|is|Borgó||?}} (from {{m|is|Borgarholtsskóla}}), {{m|is|Bríó||?}}, {{m|is|Foldó||?}} (from {{m|is|Foldaskóla}}), {{m|is|Hafró||?}} (from {{m|is|Hafrannsóknastofnun||Marine Research Institute}} of Norway), {{m|is|Hagó||?}} (from {{m|is|Hagaskóla}}), {{m|is|Húsó||?}} (company name), {{m|is|Kvennó||?}} (from {{m|is|Kvennaskóla}}), {{m|is|Meló||?}} (from {{m|is|Melaskóla}}), {{m|is|Menntó||?}} (from {{m|is|Menntaskóla}}), {{m|is|Tónó||?}} (from {{m|is|Tónlistarskóla}}), {{m|is|Való||}} (from {{m|is|Valhúsaskóla}}), {{m|is|Versló|pos=company name}}/{{m|is|Verzló|pos=company name}} (from {{m|is|Verslunarskóla Íslands||Iceland Business School}})
 * {{tl|is-ndecl|m,-|pagename=Kennó}}
-* {{m|is|Bjössaróló||?}}, <<Bó|nickname>>, <<Bóbó|nickname>>, <<Brúnó|male given name>>, <<Dittó|male given name>>, <<Dúmbó|?>>, <<Erró|artist's name>>, <<Eyjó|nickname>>, <<Filpó|male given name>>, <<Fígaró|company name>>, <<Galíleó|Galileo>>, <<Harbó|male given name>>, <<Húgó|male given name>>, <<Ingó|nickname>>, <<Jagó|Iago?>>, <<Kató|male given name>>, <<Keikó|?>>, <<Kristó|nickname>>, <<Leó|male given name>>, <<Leónardó|Leonardo (da Vinci)>>, <<Marinó|male given name>>, <<Marínó|male given name>>, <<Markó|male given name>>, <<Mekkinó|male given name>>, <<Míó|male given name>>, <<Nemó|Nemo>>, <<Neró|Nero>>, <<Nýló|?>> (from <<Nýlistasafn|Museum of Contemporary Art>>), <<Októ|male given name>>, <<Ottó|male given name>>, <<Plató|Plato; male given name>>, <<Plútó|Pluto (planet, Roman god)>>, <<Rambó|Rambo>>, <<Rómeó|Romeo>>, <<Teó|male given name>>, <<Theó|male given name>>, <<Tító|Tito>>, <<Varnó|male given name>>, <<Viggó|male given name>>, <<Óþelló|Othello>>
+* {{m|is|Bjössaróló||?}}, {{m|is|Bó||nickname}}, {{m|is|Bóbó||nickname}}, {{m|is|Brúnó||male given name}}, {{m|is|Dittó||male given name}}, {{m|is|Dúmbó||?}}, {{m|is|Erró||artist's name}}, {{m|is|Eyjó||nickname}}, {{m|is|Filpó||male given name}}, {{m|is|Fígaró||company name}}, {{m|is|Galíleó||Galileo}}, {{m|is|Harbó||male given name}}, {{m|is|Húgó||male given name}}, {{m|is|Ingó||nickname}}, {{m|is|Jagó||Iago?}}, {{m|is|Kató||male given name}}, {{m|is|Keikó||?}}, {{m|is|Kristó||nickname}}, {{m|is|Leó||male given name}}, {{m|is|Leónardó||Leonardo (da Vinci)}}, {{m|is|Marinó||male given name}}, {{m|is|Marínó||male given name}}, {{m|is|Markó||male given name}}, {{m|is|Mekkinó||male given name}}, {{m|is|Míó||male given name}}, {{m|is|Nemó||Nemo}}, {{m|is|Neró||Nero}}, {{m|is|Nýló||?}} (from {{m|is|Nýlistasafn||Museum of Contemporary Art}}), {{m|is|Októ||male given name}}, {{m|is|Ottó||male given name}}, {{m|is|Plató||Plato; male given name}}, {{m|is|Plútó||Pluto (planet, Roman god)}}, {{m|is|Rambó||Rambo}}, {{m|is|Rómeó||Romeo}}, {{m|is|Teó||male given name}}, {{m|is|Theó||male given name}}, {{m|is|Tító||Tito}}, {{m|is|Varnó||male given name}}, {{m|is|Viggó||male given name}}, {{m|is|Óþelló||Othello}}
 * {{tl|is-ndecl|m,s|pagename=Bjössaróló}}
 * {{m|is|Sigló}} (from {{m|is|Siglufjörður}}) [NOT IN BÍN]
-* {{m|is|bóleró||?}}, <<róló|roller blind?>> (either masculine or neuter), <<evró|Euro (dated)>>, <<faraó|pharaoh>>, <<kanó|canoe>>, <<kímonó|kimono>>, <<kæró|? (informal)>> (also feminine and neuter), <<leó|lion? (archaic)>>, <<mambó|mambo?>>, <<pesó|peso>> (informal; correctly but rarely <<pesi>>), <<pikkóló|piccolo>>, <<pusjó|?>>, <<síseró|?>>, <<sleikjó|lollipop>>
+* {{m|is|bóleró||?}}, {{m|is|róló||roller blind?}} (either masculine or neuter), {{m|is|evró||Euro (dated)}}, {{m|is|faraó||pharaoh}}, {{m|is|kanó||canoe}}, {{m|is|kímonó||kimono}}, {{m|is|kæró||? (informal)}} (also feminine and neuter), {{m|is|leó||lion? (archaic)}}, {{m|is|mambó||mambo?}}, {{m|is|pesó||peso}} (informal; correctly but rarely {{m|is|pesi}}), {{m|is|pikkóló||piccolo}}, {{m|is|pusjó||?}}, {{m|is|síseró||?}}, {{m|is|sleikjó||lollipop}}
 * {{tl|is-ndecl|m,s|pagename=bóleró}}
-* <<sóló|solo>> (also feminine, neuter)
+* {{m|is|sóló||solo}} (also feminine, neuter)
 * {{tl|is-ndecl|m,s.dat-:i|pagename=sóló}}
-* <<tangó|tango>>
+* {{m|is|tangó||tango}}
 * {{tl|is-ndecl|m,s.dat-:i[rare]|pagename=tangó}}
 * NOTE: Some nouns in -ó are not masculine (it depends on what the noun was clipped from), but these are all masculine.
 
@@ -997,16 +997,16 @@ Personal names:
 ==== Dani et al. ====
 * {{m|is|Dani||Dane}} (dat pl Dönum); also {{m|is|Ítali||Italian}} (dat pl Ítölum)
 * {{tl|is-ndecl|m,,ir.dem|pagename=Dani}}
-* {{m|is|Frísi||Frisian}}; also {{m|is|Írani||Iranian}} (dat pl Írönum), <<Germani|German>> (dat pl Germönum)
+* {{m|is|Frísi||Frisian}}; also {{m|is|Írani||Iranian}} (dat pl Írönum), {{m|is|Germani||German}} (dat pl Germönum)
 * {{tl|is-ndecl|m,,ir:ar.dem|pagename=Frísi}}
 * {{m|is|Japani||Japanese}} (dat pl Japönum or more rarely Jöpunum)
 * {{tl|is-ndecl|m,,ir:ar.dem.umut,uumut[rare]|pagename=Japani}}
-* {{m|is|Afgani||Afghan}}; also <<Albani|Albanian>>
+* {{m|is|Afgani||Afghan}}; also {{m|is|Albani||Albanian}}
 * {{tl|is-ndecl|m,,ar:ir.dem|pagename=Afgani}}
 * {{m|is|Bútani||Bhutanese}}
 * {{tl|is-ndecl|m,,ar:ir[less common].dem|pagename=Bútani}} (dat pl Bútönum)
 * {{m|is|Persi||Persian}}
-* {{tl|is-ndecl|m.dem|pagename=Persi}}; also {{m|is|Afríkani||African}} (dat pl Afríkönum), <<Ameríkani|American>> (dat pl Ameríkönum), <<Arákani|Arakanese>> (dat pl Arákönum), <<Arabi|Arab>> (dat pl Aröbum), <<Asteki|Aztec>>, <<Baski|Basque>> (dat pl Böskum), <<Bauni|Dane (archaic)>>, <<Bretóni|Breton>>, <<Búi|Boer>>, etc.
+* {{tl|is-ndecl|m.dem|pagename=Persi}}; also {{m|is|Afríkani||African}} (dat pl Afríkönum), {{m|is|Ameríkani||American}} (dat pl Ameríkönum), {{m|is|Arákani||Arakanese}} (dat pl Arákönum), {{m|is|Arabi||Arab}} (dat pl Aröbum), {{m|is|Asteki||Aztec}}, {{m|is|Baski||Basque}} (dat pl Böskum), {{m|is|Bauni||Dane (archaic)}}, {{m|is|Bretóni||Breton}}, {{m|is|Búi||Boer}}, etc.
 
 ==== Grikki et al. ====
 * {{m|is|Grikki||Greek person}}; also {{m|is|Rygi||Rogalander}} (?; not in BÍN), {{m|is|Serki||Saracen}}, {{m|is|Tyrki||Turk}}
@@ -1564,7 +1564,7 @@ FIXME:
 * {{tl|is-ndecl|n.sg.con.defcon|pagename=megin}}
 * {{m|is|sumar||summer}}
 * {{tl|is-ndecl|n.con.nompl+accpl:sumur.defnompl+defaccpl:sumrin[when referring to summers in general]:sumurin[when referring to a specific number of summers]|pagename=sumar}}
-* {{m|is|regin||gods}}; declension given as <regin, regin, rögnum, ragna> in Thomson but this must be obsolete; not in BÍN
+* {{m|is|regin||gods}}; declension given as <regin, regin, rögnum, ragna> in Thomson but this must be obsolete; BÍN just has <regin, regin, reginum, regina>
 * {{tl|is-ndecl|n.pl|pagename=regin}}
 
 ==== with -j- insertion ====
