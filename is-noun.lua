@@ -28,7 +28,7 @@ FIXME:
 1. Support 'plstem' overrides. [DONE]
 2. Support definite lemmas such as [[Bandaríkin]] "the United States".
 3. Support adjectivally-declined terms. [DONE PARTIALLY]
-4. Support @ for built-in irregular lemmas.
+4. Support @ for built-in irregular lemmas. [DONE]
 5. Somehow if the user specifies v-infix, it should prevent default unumut from happening in strong feminines. [DONE]
 6. Def acc pl should ignore -u ending in indef acc pl. [DONE]
 7. Footnotes on omitted forms should be possible.
@@ -42,11 +42,8 @@ local m_links = require("Module:links")
 local m_string_utilities = require("Module:string utilities")
 local iut = require("Module:inflection utilities")
 local m_para = require("Module:parameters")
-local com = require("Module:User:Benwing2/is-common")
-
-local current_title = mw.title.getCurrentTitle()
-local NAMESPACE = current_title.nsText
-local PAGENAME = current_title.text
+local com = require("Module:is-common")
+local is_noun_builtin_module = "Module:is-noun/builtin"
 
 local u = mw.ustring.char
 local rsplit = mw.text.split
@@ -198,16 +195,22 @@ local function skip_slot(number, definiteness, slot)
 	return number == "sg" and rfind(slot, "_p$") or
 		number == "pl" and rfind(slot, "_s$") or
 		-- FIXME: Handle definite-only nouns properly
-		number == "def" and rfind(slot, "^ind_") or
-		number == "indef" and rfind(slot, "^def_")
+		definiteness == "def" and rfind(slot, "^ind_") or
+		(definiteness == "indef" or definiteness == "none") and rfind(slot, "^def_")
 end
 
 -- Return true if `stem` refers to a proper noun (first character is uppercase, second character is lowercase).
 local function is_proper_noun(base, stem)
-	if base.props.dem then
+	if base.props.common or base.props.dem then
 		return false
 	end
 	if base.props.proper or base.props.pers then
+		return true
+	end
+	if base.source_template == "is-noun" then
+		return false
+	end
+	if base.source_template == "is-proper noun" then
 		return true
 	end
 	local first_letter = usub(stem, 1, 1)
@@ -625,6 +628,9 @@ local function add_slotval(base, slot_prefix, slot, props, endings, clitics, end
 				iut.combine_footnotes(ending_footnotes, clitic_footnotes)
 			)
 			local clitic_with_notes = iut.combine_form_and_footnotes(clitic, combined_footnotes)
+			if not stem_in_effect then
+				interr("stem_in_effect is nil")
+			end
 			iut.add_forms(base.forms, slot_prefix .. slot, stem_in_effect, clitic_with_notes,
 				combine_stem_ending)
 		end
@@ -653,10 +659,10 @@ local function add(base, slot, props, endings, ending_override, endings_are_full
 		indef_endings = endings
 		def_endings = endings
 	end
-	if indef_endings then
+	if indef_endings and base.definiteness ~= "def" then
 		add_slotval(base, "ind_", slot, props, indef_endings, nil, ending_override, endings_are_full)
 	end
-	if def_endings then
+	if def_endings and (base.definiteness ~= "indef" and base.definiteness ~= "none") then
 		local clitic
 		if base.props.adj then -- FIXME: not necessary once we get adjective inflections from [[Module:is-adjective]]
 			clitic = ""
@@ -951,7 +957,7 @@ end
 
 
 decls["f-ur"] = function(base, props)
-	add_decl(base, props, "", "", "ar", "ir")
+	add_decl(base, props, "i", "i", "ar", "ir")
 end
 
 
@@ -1099,8 +1105,8 @@ decls["adj"] = function(base, props)
 end
 
 local function set_pron_defaults(base)
-	if base.gender or base.number then
-		error("Can't specify gender or number for pronouns")
+	if base.gender or base.number or base.definiteness then
+		error("Can't specify gender, number or definiteness for pronouns")
 	end
 
 	local function pron_props()
@@ -1112,7 +1118,7 @@ local function set_pron_defaults(base)
 		elseif base.lemma == "hann" then
 			return "m", "sg"
 		elseif base.lemma == "hún" then
-			return "m", "sg"
+			return "f", "sg"
 		elseif base.lemma == "það" then
 			return "n", "sg"
 		elseif base.lemma == "þeir" then
@@ -1133,11 +1139,12 @@ local function set_pron_defaults(base)
 	base.actual_gender = gender
 	base.number = number
 	base.actual_number = number
+	base.definiteness = "none"
 end
 
 
 local function determine_pronoun_props(base)
-	base.prop_sets = {{}}
+	base.prop_sets = {{stem = {form = ""}}}
 	base.decl = "pron"
 end
 
@@ -1169,25 +1176,6 @@ decls["pron"] = function(base, props)
 	else
 		error(("Internal error: Unrecognized pronoun lemma '%s'"):format(base.lemma))
 	end
-end
-
-
-local function set_num_defaults(base)
-	-- FIXME: Update for Icelandic
-	if base.gender or base.number or base.animacy then
-		error("Can't specify gender, number or animacy for numeral")
-	end
-
-	local function num_props()
-		-- Return values are GENDER, NUMBER, ANIMACY, HAS_CLITIC.
-		return "none", "pl", "none", false
-	end
-
-	local gender, number = num_props()
-	base.gender = gender
-	base.actual_gender = gender
-	base.number = number
-	base.actual_number = number
 end
 
 
@@ -1524,6 +1512,23 @@ local function parse_override(segments, parse_err)
 end
 
 
+-- Subfunction of find_builtin_noun(). Match a single spec (which may begin with ^ to anchor against the beginning,
+-- otherwise anchored only at the end) against `noun`. Return the prefix and main noun.
+local function match_spec_against_noun(spec, noun)
+	if spec:find("^%^") then
+		-- must match exactly
+		if rfind(noun, spec .. "$") then
+			return "", noun
+		end
+	else
+		local prefix, main_noun = rmatch(noun, "^(.*)(" .. spec .. ")$")
+		if prefix then
+			return prefix, main_noun
+		end
+	end
+end
+
+
 -- Subfunction of find_builtin_noun(). Match a single prefix + spec (where the prefix may begin with ^ to anchor
 -- against the beginning, otherwise anchored only at the end) against `noun`. Return the prefix and main noun.
 local function match_prefixed_spec_against_noun(specprefix, spec, noun)
@@ -1554,9 +1559,7 @@ end
 
 -- Find and return the prefix, main noun and decl spec for the built-in noun matching user-specified noun `noun`.
 local function find_builtin_noun(noun)
-	if not m_builtin then
-		m_builtin = require("Module:st-noun/builtin")
-	end
+	local m_builtin = require(is_noun_builtin_module)
 	for _, builtin_noun in ipairs(m_builtin.builtin_nouns) do
 		local spec, conj, desc = unpack(builtin_noun)
 
@@ -1566,8 +1569,8 @@ local function find_builtin_noun(noun)
 				return prefix, main_noun, conj
 			end
 		else
-			-- Of the form {term = "ergere", prefixes = {"^", "ad", "ri"}}. Note that the prefixes not preceded by ^
-			-- can have further prefixes before them.
+			-- Of the form {term = "ergere", prefixes = {"^", "ad", "ri"}}. [FIXME: Update] Note that the prefixes
+			-- not preceded by ^ can have further prefixes before them.
 			for _, spec_prefix in ipairs(spec.prefixes) do
 				local prefix, main_noun = match_prefixed_spec_against_noun(spec_prefix, spec.term, noun)
 				if prefix then
@@ -1579,9 +1582,9 @@ local function find_builtin_noun(noun)
 end
 
 
-local function parse_inside(inside, base, is_builtin_noun)
+local function parse_inside(base, inside, is_builtin_noun)
 	local function parse_err(msg)
-		error((is_builtin_verb and "Internal error processing built-in noun spec: " or "") .. msg .. ": <" ..
+		error((is_builtin_noun and "Internal error processing built-in noun spec: " or "") .. msg .. ": <" ..
 			inside .. ">")
     end
 
@@ -1618,7 +1621,7 @@ local function parse_inside(inside, base, is_builtin_noun)
 		end
 
 		local part = dot_separated_group[1]
-		if i == 1 and part ~= "+" and part ~= "@" then
+		if i == 1 and part ~= "+" and part ~= "@" and part ~= "pron" then
 			local comma_separated_groups = split_alternating_runs_with_escapes(dot_separated_group, ",")
 			if #comma_separated_groups > 3 then
 				parse_err(("At most three comma-separated specs are allowed but saw %s"):format(
@@ -1736,9 +1739,8 @@ local function parse_inside(inside, base, is_builtin_noun)
 				parse_err("Can't specify '@' twice")
 			end
 			base.props.builtin = true
-			parse_err("Built-in indicator '@' not implemented yet")
-		elseif part == "dem" or part == "def" or part == "-def" or part == "weak" or part == "proper" or
-			part == "pers" or part == "rstem" or part == "já" then
+		elseif part == "def" or part == "-def" or part == "weak" or part == "proper" or part == "pers" or
+			part == "common" or part == "dem" or part == "rstem" or part == "já" or part == "pron" then
 			if base.props[part] then
 				parse_err("Can't specify '" .. part .. "' twice")
 			end
@@ -1788,8 +1790,8 @@ Create an empty `base` object for holding the result of parsing and later the ge
 		* "weak" (the noun should decline like an ordinary weak noun; used in the declension of [[fjandi]] to disable
 		  the special -ndi declension);
   number = "NUMBER", -- "sg", "pl", "both"; may be missing
-  gender = "GENDER", -- "m", "f" or "n"; always specified by the user
-  definiteness = "DEFINITENESS", -- "def", "indef" or "both"; computed from other settings
+  gender = "GENDER", -- "m", "f", "n" or "none" (for certain pronouns); always specified by the user
+  definiteness = "DEFINITENESS", -- "def", "indef", "both" or "none" (for pronouns); computed from other settings
   decllemma = nil or "DECLLEMMA", -- decline like the specified lemma
   declgender = nil or "DECLGENDER", -- decline like the specified gender
   declnumber = nil or "DECLNUMBER", -- decline like the specified number
@@ -1850,7 +1852,7 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename)
 		lemma = pagename
 	end
 	base.orig_lemma = lemma
-	base.orig_lemma_no_links = m_links.remove_links(base.lemma)
+	base.orig_lemma_no_links = m_links.remove_links(lemma)
 	base.lemma = base.orig_lemma_no_links -- may get changed later in normalize_all_lemmas()
 
 	local inside = rmatch(angle_bracket_spec, "^<(.*)>$")
@@ -1876,13 +1878,26 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename)
 		nbase.main_noun = main_noun
 		parse_inside(nbase, declspec, "is builtin")
 
-		-- If there's a prefix, add it now to all the specs derived from the built-in noun.
+		-- If there's a prefix, add it now to all the full overrides in the built-in noun, as well as 'decllemma'
+		-- and all stem overrides.
 		if prefix ~= "" then
-			map_all_overrides(base, function(formobj)
-				if formobj.form:find("^!") then
+			map_all_overrides(nbase, function(formobj)
+				-- Not if the override contains # or ##, which expand to the full lemma (possibly minus -r
+				-- or -ur).
+				if formobj.form:find("^!") and not formobj.form:find("#") then
 					formobj.form = "!" .. prefix .. usub(formobj.form, 2)
 				end
 			end)
+			if nbase.decllemma then
+				nbase.decllemma = prefix .. nbase.decllemma
+			end
+			for _, stem in ipairs(overridable_stems) do
+				-- Only actual stems, not imutval; and not if the stem contains # or ##, which
+				-- expand to the full lemma (possibly minus -r or -ur).
+				if nbase[stem] and stem:find("stem$") and not nbase[stem]:find("#") then
+					nbase[stem] = prefix .. nbase[stem]
+				end
+			end
 		end
 
 		local function copy_properties(plist)
@@ -1901,6 +1916,15 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename)
 		for _, prop_table in ipairs { "overrides", "props" } do
 			for slot, prop in pairs(base[prop_table]) do
 				nbase[prop_table][slot] = prop
+			end
+		end
+		-- If user specified 'sg', cancel out any pl overrides, otherwise we'll get an error.
+		if base.number == "sg" then
+			nbase.pls = nil
+			for slot, _ in pairs(base.overrides) do
+				if slot:find("_p$") then
+					nbase.overrides[slot] = nil
+				end
 			end
 		end
 		-- Copy addnote specs.
@@ -2383,10 +2407,15 @@ local function determine_declension(base)
 			end
 		end
 		if not stem and not base.props.weak then
-			stem, ending = rmatch(base.lemma, "^(.*nd)(i)$")
+			stem, ending = rmatch(base.lemma, "^(.*[aóæ]nd)(i)$")
 			if stem then
 				-- [[nemandi]] "student" and many others; terms in -jandi like [[byrjandi]]
 				-- "beginner", [[seljandi]] "seller" umlaut to -jend- in the plural instead of -ind-
+				-- also terms in -óndi (probably all compounds of [[bóndi]] "farmer") and in -ændi
+				-- (probably all compounds of [[frændi]]). Terms like [[andi]] "breath, spirit" and
+				-- [[heiðasandi]] "heath sand?" need '.weak' to disable this, as does [[fjandi]] in
+				-- the meaning "devil, demon" (vs. "enemy", which has plural [[fjendur]]). Terms like
+				-- [[vandi]] "trouble; responsibility; custom, habit" and compounds are singular-only.
 				base.decl = "m-ndi"
 				if not stem:find("ænd$") then
 					base.need_imut = true
@@ -2399,9 +2428,15 @@ local function determine_declension(base)
 		if not stem then
 			stem, ending = rmatch(base.lemma, "^(.*)([ia])$")
 			if stem then
-				-- [[tími]] "time, hour" and many others; [[herra]] "gentleman" ([[sendiherra|ambassador]]),
+				-- [[tími]] "time, hour" and many others; [[herra]] "gentleman" ([[sendiherra]] "ambassador"),
 				-- [[séra]]/[[síra]] "reverend"
 				base.decl = "m-weak"
+				-- Recognize certain endings and automatically make them j-infixing. For -ingi, only when a vowel
+				-- precedes (not [[ingi]], [[Ingi]], [[stingi]], [[þvingi]]). Use `-j` to turn this off.
+				if ending == "i" and (stem:find("[Bb]ygg$") or rfind(stem, com.vowel_c .. ".*ing$") or
+					stem:find("[Ss]kegg$") or stem:find("[Vv]irk$") or stem:find("[Yy]rk$")) then
+					default_props.j = "j"
+				end
 			end
 		end
 		if not stem then
@@ -2548,9 +2583,11 @@ local function determine_declension(base)
 			stem = base.lemma
 			base.decl = "f"
 			-- A function here means we resolve it to its actual value later. We don't want to trigger
-			-- unumut of the user specified v-infix or any type of u-mutation (e.g. 'uumut' in [[ætlan]]).
+			-- unumut if the user specified v-infix or any type of u-mutation (e.g. 'uumut' in [[ætlan]]),
+			-- or if the last vowel of the term is 'a' ([[dragt]], [[aukavakt]]).
 			default_props.unumut = function(base, props)
-				if base.vstem or props.v and props.v.form == "v" or props.umut then
+				if base.vstem or props.v and props.v.form == "v" or props.umut or
+					rfind(stem, "[Aa]" .. com.cons_c .. "*$") then
 					return nil
 				else
 					return {form = "unumut", defaulted = true}
@@ -3149,6 +3186,7 @@ local function normalize_all_lemmas(alternant_multiword_spec)
 		local lemma = base.orig_lemma_no_links
 		base.actual_lemma = lemma
 		base.lemma = base.decllemma or lemma
+		base.source_template = alternant_multiword_spec.source_template
 	end)
 end
 
@@ -3218,17 +3256,16 @@ local function compute_categories_and_annotation(alternant_multiword_spec)
 	local annotation
 	local annparts = {}
 	local irregs = {}
+	local genderspecs = {}
 	local stemspecs = {}
-	local function get_genanim(gender, animacy)
+	local function get_gender(gender)
 		local gender_code_to_desc = {
 			m = "masculine",
 			f = "feminine",
 			n = "neuter",
 			none = nil,
 		}
-		local descs = {}
-		table.insert(descs, gender_code_to_desc[gender])
-		return table.concat(descs, " ")
+		return gender_code_to_desc[gender]
 	end
 
 	local function trim(text)
@@ -3237,6 +3274,18 @@ local function compute_categories_and_annotation(alternant_multiword_spec)
 	end
 
 	local function do_word_spec(base)
+		local actual_gender = get_gender(base.actual_gender)
+		local declined_gender = get_gender(base.gender)
+		local gender
+		if actual_gender ~= declined_gender then
+            gender = ("%s (declined as %s)"):format(actual_gender, declined_gender)
+			insert("nouns with actual gender different from declined gender")
+		else
+			gender = actual_gender
+		end
+		if gender then
+			m_table.insertIfNot(genderspecs, gender)
+		end
 		for _, props in ipairs(base.prop_sets) do
 			-- User-specified 'decllemma:' indicates irregular stem.
 			if base.decllemma then
@@ -3264,6 +3313,9 @@ local function compute_categories_and_annotation(alternant_multiword_spec)
 		-- not "both" or "none" (for [[sebe]])
 		table.insert(annparts, alternant_multiword_spec.actual_number == "sg" and "sg-only" or "pl-only")
 	end
+    if #genderspecs > 0 then
+        table.insert(annparts, table.concat(genderspecs, " // "))
+    end
 	if #irregs > 0 then
 		table.insert(annparts, table.concat(irregs, " // "))
 	end
@@ -3439,6 +3491,8 @@ local function make_table(alternant_multiword_spec)
 		definiteness, defcode = "indefinite", "ind"
 	elseif alternant_multiword_spec.definiteness == "def" then
 		definiteness, defcode = "definite", "def"
+	elseif alternant_multiword_spec.definiteness == "none" then
+		definiteness, defcode = "", "ind"
 	end
 
 	local table_spec =
@@ -3472,28 +3526,9 @@ end
 -- `ALTERNANT_MULTIWORD_SPEC.forms` for each slot. If there are no values for a slot, the
 -- slot key will be missing. The value for a given slot is a list of objects
 -- {form=FORM, footnotes=FOOTNOTES}.
-function export.do_generate_forms(parent_args, from_headword)
-	local params = {
-		[1] = {required = true, default = "akur<m.#>"},
-		title = {},
-		pagename = {},
-		json = {type = "boolean"},
-		pos = {},
-	}
-
-	if from_headword then
-		params["head"] = {list = true}
-		params["lemma"] = {list = true}
-		params["g"] = {list = true}
-		params["f"] = {list = true}
-		params["m"] = {list = true}
-		params["adj"] = {list = true}
-		params["dim"] = {list = true}
-		params["id"] = {}
-	end
-
-	local args = m_para.process(parent_args, params)
-	local pagename = args.pagename or from_headword and args.head[1] or mw.loadData("Module:headword/data").pagename
+function export.do_generate_forms(args, source_template)
+	local from_headword = source_template == "is-noun" or source_template == "is-proper noun"
+	local pagename = args.pagename or mw.loadData("Module:headword/data").pagename
 	local parse_props = {
 		parse_indicator_spec = function(angle_bracket_spec, lemma)
 			return parse_indicator_spec(angle_bracket_spec, lemma, pagename)
@@ -3504,6 +3539,7 @@ function export.do_generate_forms(parent_args, from_headword)
 	local alternant_multiword_spec = iut.parse_inflected_text(args[1], parse_props)
 	alternant_multiword_spec.title = args.title
 	alternant_multiword_spec.args = args
+	alternant_multiword_spec.source_template = source_template
 	normalize_all_lemmas(alternant_multiword_spec)
 	set_all_defaults_and_check_bad_indicators(alternant_multiword_spec)
 	-- These need to happen before detect_all_indicator_specs() so that adjectives get their genders and numbers set
@@ -3542,7 +3578,16 @@ end
 -- user-specified arguments and generate a displayable table of the declined forms.
 function export.show(frame)
 	local parent_args = frame:getParent().args
-	local alternant_multiword_spec = export.do_generate_forms(parent_args)
+	local params = {
+		[1] = {required = true, default = "akur<m.#>"},
+		noautolinktext = {type = "boolean"},
+		noautolinkverb = {type = "boolean"},
+		title = {},
+ 		pagename = {},
+		json = {type = "boolean"},
+	}
+	local args = m_para.process(parent_args, params)
+	local alternant_multiword_spec = export.do_generate_forms(args, "is-ndecl")
 	if type(alternant_multiword_spec) == "string" then
 		-- JSON return value
 		return alternant_multiword_spec
