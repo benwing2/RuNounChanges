@@ -26,7 +26,7 @@ TERMINOLOGY:
 FIXME:
 
 1. Support 'plstem' overrides. [DONE]
-2. Support definite lemmas such as [[Bandaríkin]] "the United States".
+2. Support definite lemmas such as [[Bandaríkin]] "the United States". [DONE]
 3. Support adjectivally-declined terms. [DONE PARTIALLY]
 4. Support @ for built-in irregular lemmas. [DONE]
 5. Somehow if the user specifies v-infix, it should prevent default unumut from happening in strong feminines. [DONE]
@@ -156,6 +156,26 @@ local clitic_articles = {
 	},
 }
 
+local gender_code_to_desc = {
+	m = "masculine",
+	f = "feminine",
+	n = "neuter",
+	none = nil,
+}
+
+local number_code_to_desc = {
+	sg = "singular",
+	pl = "plural",
+	both = "both",
+	none = nil,
+}
+
+local definiteness_code_to_desc = {
+	indef = "indefinite-only",
+	def = "definite-only",
+	both = "indefinite and definite",
+	none = nil,
+}
 
 local function get_noun_slots(alternant_multiword_spec)
 	local noun_slots_list = {}
@@ -194,7 +214,6 @@ end
 local function skip_slot(number, definiteness, slot)
 	return number == "sg" and rfind(slot, "_p$") or
 		number == "pl" and rfind(slot, "_s$") or
-		-- FIXME: Handle definite-only nouns properly
 		definiteness == "def" and rfind(slot, "^ind_") or
 		(definiteness == "indef" or definiteness == "none") and rfind(slot, "^def_")
 end
@@ -585,7 +604,13 @@ local function add_slotval(base, slot_prefix, slot, props, endings, clitics, end
 				local function drop_clitic_i()
 					clitic = clitic:gsub("^i", "")
 				end
-				-- % at the end of a definite ending indicates that the following i- of the clitic should drop; see above.
+				-- If we're definite-only and using the actual lemma as the stem, the clitic is already incorporated
+				-- into the stem.
+				if base.definiteness == "def" and ending_was_asterisk then
+					return stem
+				end
+				-- % at the end of a definite ending indicates that the following i- of the clitic should drop; see
+				-- above.
 				if clitic_i_drops then
 					drop_clitic_i()
 				end
@@ -691,15 +716,27 @@ local function acc_p_from_nom_p(base, nom_p)
 		return nom_p -- this is correct as `nom_p` could be nil or false and we want to return the same thing
 	end
 	local function form_masc_acc_p(ending)
+		-- Form the masculine accusative by dropping -r unless the form ends in -ur, which is kept. If the ending is *,
+		-- we substitute the entire actual lemma. In that case, if the lemma is definite-only, we have to strip off
+		-- the nominative plural clitic -nir before generating the accusative. We don't add the clitic -na because it
+		-- will be added in add_slotval().
 		if ending == "*" then
 			ending = "!" .. base.actual_lemma
 		end
+		if base.definiteness == "def" and ending:find("^!") then
+			ending = ending:match("^(.*)nir$")
+			if not ending then
+				error(("Masculine plural definite-only lemma '%s' does not end in expected clitic '-nir'; " ..
+					"don't know how to compute the corresponding accusative plural"):format(base.actual_lemma))
+			end
+		end
 		-- If the ending is full (begins with !), check the whole thing for -ur at the end.
 		if ending:find("^%^*ur$") or ending:find("^!.*[^Aa]ur$") then
-			return ending
+			-- as-is
 		else
-			return (ending:gsub("r$", ""))
+			ending = ending:gsub("r$", "")
 		end
+		return ending
 	end
 	if type(nom_p) == "string" then
 		return form_masc_acc_p(nom_p)
@@ -1724,6 +1761,17 @@ local function parse_inside(base, inside, is_builtin_noun)
 				end
 			end
 			base.number = part
+		elseif part == "indef" or part == "def" or part == "defonly" then
+			local new_def = part == "def" and "both" or part == "defonly" and "def" or "indef"
+			if base.definiteness then
+				if base.definiteness ~= new_def then
+					parse_err(("Can't specify two conflicting definiteness values; saw '%s' (%s) when existing definiteness is %s"):
+						format(part, definiteness_code_to_desc[new_def], definiteness_code_to_desc[base.definiteness]))
+				else
+					parse_err("Can't specify '" .. part .. "' twice")
+				end
+			end
+			base.definiteness = new_def
 		elseif part == "#" or part == "##" then
 			if base.stem then
 				parse_err("Can't specify a stem spec ('stem:', # or ##) twice")
@@ -1739,8 +1787,8 @@ local function parse_inside(base, inside, is_builtin_noun)
 				parse_err("Can't specify '@' twice")
 			end
 			base.props.builtin = true
-		elseif part == "def" or part == "-def" or part == "weak" or part == "proper" or part == "pers" or
-			part == "common" or part == "dem" or part == "rstem" or part == "já" or part == "pron" then
+		elseif part == "proper" or part == "pers" or part == "common" or part == "dem" or
+			part == "weak" or part == "iending" or part == "rstem" or part == "já" or part == "pron" then
 			if base.props[part] then
 				parse_err("Can't specify '" .. part .. "' twice")
 			end
@@ -1789,9 +1837,10 @@ Create an empty `base` object for holding the result of parsing and later the ge
 		* "já" (a neuter in -é whose stem alternates with -já, such as [[tré]] "tree" and [[hné]]/[[kné]] "knee");
 		* "weak" (the noun should decline like an ordinary weak noun; used in the declension of [[fjandi]] to disable
 		  the special -ndi declension);
-  number = "NUMBER", -- "sg", "pl", "both"; may be missing
+  number = "NUMBER", -- "sg", "pl", "both" or "none" (for certain pronouns); may be missing and if so is defaulted
   gender = "GENDER", -- "m", "f", "n" or "none" (for certain pronouns); always specified by the user
-  definiteness = "DEFINITENESS", -- "def", "indef", "both" or "none" (for pronouns); computed from other settings
+  definiteness = "DEFINITENESS", -- "def", "indef", "both" or "none" (for pronouns); may be missing and if so is
+									defaulted
   decllemma = nil or "DECLLEMMA", -- decline like the specified lemma
   declgender = nil or "DECLGENDER", -- decline like the specified gender
   declnumber = nil or "DECLNUMBER", -- decline like the specified number
@@ -1975,9 +2024,7 @@ local function set_defaults_and_check_bad_indicators(base)
 		end
 		base.number = base.number or is_proper_noun(base, base.lemma) and "sg" or base.gender == "m" and
 			(base.lemma:find("skapur$") or base.lemma:find("naður$")) and not base.stem and "sg" or "both"
-		-- FIXME: Support definite-only nouns.
-		base.definiteness = base.definiteness or base.props.def and "both" or base.props["-def"] and "indef" or
-			is_proper_noun(base, base.lemma) and "indef" or "both"
+		base.definiteness = base.definiteness or is_proper_noun(base, base.lemma) and "indef" or "both"
 		process_declnumber(base)
 		base.actual_gender = base.gender
 		if base.declgender then
@@ -2125,8 +2172,8 @@ end
 local function synthesize_singular_lemma(base)
 	local lemma_determined
 
-	-- Loop over all stem sets in case the user specified multiple ones (e.g. '*,-*'). If we try to reconstruct
-	-- different lemmas for different stem sets, we'll throw an error below.
+	-- Loop over all property sets in case the user specified multiple ones (e.g. using different mutation specs). If
+	-- we try to reconstruct different lemmas for different property sets, we'll throw an error below.
 	for _, props in ipairs(base.prop_sets) do
 		local function interr(msg)
 			error(("Internal error: For lemma '%s', %s: %s"):format(base.lemma, msg, dump(props)))
@@ -2189,18 +2236,18 @@ local function synthesize_singular_lemma(base)
 				default_unumut = "unumut"
 			end
 		else
-			interr(("Unrecognized gender '%s'"):format(base.gender))
+			interr(("unrecognized gender '%s'"):format(base.gender))
 		end
 		if default_unumut and not props.unumut and not props.umut and not props.unimut then
 			props.unumut = {form = default_unumut, defaulted = true}
 		end
 		if props.unumut and props.unimut then
-			interr("Shouldn't see both 'unumut' and 'unimut' set in plural-only lemma")
+			interr("shouldn't see both 'unumut' and 'unimut' set in plural-only lemma")
 		end
 		if props.unumut and props.unumut.form:find("^un") then
 			stem = com.apply_reverse_u_mutation(stem, props.unumut.form, not props.unumut.defaulted)
 			if props.umut then
-				interr("Shouldn't see both 'unumut' and 'umut' set in plural-only lemma")
+				interr("shouldn't see both 'unumut' and 'umut' set in plural-only lemma")
 			end
 			props.umut = {form = rsub(props.unumut.form, "^un", ""), footnotes = props.unumut.footnotes,
 				defaulted = props.unumut.defaulted}
@@ -2209,7 +2256,7 @@ local function synthesize_singular_lemma(base)
 		if props.unimut and props.unimut.form:find("^un") then
 			stem = com.apply_reverse_i_mutation(stem, base.imutval)
 			if props.imut then
-				interr("Shouldn't see both 'unimut' and 'imut' set in plural-only lemma")
+				interr("shouldn't see both 'unimut' and 'imut' set in plural-only lemma")
 			end
 			props.imut = {form = rsub(props.unimut.form, "^un", ""), footnotes = props.unimut.footnotes}
 			props.unimut = nil
@@ -2224,6 +2271,82 @@ local function synthesize_singular_lemma(base)
 	base.lemma_ending = ending or ""
 end
 
+
+-- For a nominative definite lemma, synthesize the corresponding indefinite lemma. Note that a plural definite lemma may
+-- need to be processed twice, first to convert to plural indefinite and then to convert to singular indefinite using
+-- synthesize_singular_lemma().
+local function synthesize_indefinite_lemma(base)
+	local lemma_determined
+
+	-- Loop over all property sets in case the user specified multiple ones (e.g. using different mutation specs). If
+	-- we try to reconstruct different lemmas for different property sets, we'll throw an error below.
+	for _, props in ipairs(base.prop_sets) do
+		local function interr(msg)
+			error(("Internal error: For lemma '%s', %s: %s"):format(base.lemma, msg, dump(props)))
+		end
+
+		-- There are only 6 clitic articles, depending on the combination of gender and number:
+		-- singular: m = -inn, f = -in, n = -ið; plural: m = -nir, f = -nar, n = -in. The two beginning in n- aren't
+		-- problematic because in all cases they simply append to the actual form. The remaining four, however, drop
+		-- the i- before an ending [aiu]. This means we can uniquely reconstruct the dropped vowel if we see e.g.
+		-- -að or -uð in place of -ið. But if we see -ið, we don't know whether the lemma ended in -i or a consonant.
+		-- And in general it's important to know because it affects some forms; e.g. compare definite neuter 'knippið'
+		-- from [[knippi]] "bundle, bunch" with 'klappið' from [[klapp]] "applause; pat, stroke". The former has
+		-- definite genitive 'knippisins' and the latter 'klappsins'. And in fact, all three genders commonly have
+		-- both consonant-ending and i-ending nouns in the singular. This means we need an indicator to distinguish
+		-- them. Probably easiest is 'iending'; reusing 'weak' won't work so well because neuters in -i, and sometimes
+		-- feminines in -i, are considered strong.
+
+		local function process_n_clitic(clitic)
+			local lemma = base.lemma:match("^(.*)" .. clitic .. "$")
+			if not lemma then
+				error(("Lemma '%s' declared as %s %s should end in clitic '-%s'"):format(base.lemma,
+					gender_code_to_desc[base.gender] or "NONE", number_code_to_desc[base.number] or "NONE",
+					clitic))
+			end
+			return lemma
+		end
+
+		local function process_i_clitic(clitic)
+			local clitic_cons_end = clitic:match("^i(.*)$")
+			if not clitic_cons_end then
+				interr(("clitic '%s' should begin with 'i'"):format(clitic))
+			end
+			local lemma_begin, ending = base.lemma:match("^(.*)([aiu])" .. clitic_cons_end .. "$")
+			if not lemma_begin then
+				error(("Lemma '%s' declared as %s %s should end in clitic '-%s' or in '-a%s' or '-u%s'"):format(
+					base.lemma, gender_code_to_desc[base.gender] or "NONE", number_code_to_desc[base.number] or "NONE",
+					clitic, clitic_cons_end, clitic_cons_end))
+			end
+			if ending == "a" or ending == "u" then
+				if base.props.iending then
+					error(("Property 'iending' cannot be specified because definite lemma '%s' does not end in '-%s'"):
+						format(base.lemma, clitic))
+				end
+				return lemma_begin .. ending
+			end
+			if base.props.iending then
+				return lemma_begin .. "i"
+			else
+				return lemma_begin
+			end
+		end
+
+		local clitic = clitic_articles[base.gender]["nom_" .. (base.number == "pl" and "p" or "s")]
+		local lemma
+		if clitic:find("^n") then
+			lemma = process_n_clitic(clitic)
+		else
+			lemma = process_i_clitic(clitic)
+		end
+		if lemma_determined and lemma_determined ~= lemma then
+			error(("Attempt to set two different indefinite lemmas '%s' and '%s'"):format(lemma_determined, lemma))
+		end
+		lemma_determined = lemma
+	end
+	base.lemma = lemma_determined
+	base.lemma_ending = ""
+end
 
 -- For an adjectival lemma, synthesize the masc singular form.
 local function synthesize_adj_lemma(base)
@@ -2371,7 +2494,7 @@ local function determine_declension(base)
 				if is_proper_noun(base, stem) and stem:find("kel$") then
 					base.decl = "m-kell"
 				else
-					if rfind(stem, com.cons_c .. "[aiu]l$") or stem:find("^[aiuAIU]l$") then
+					if not base.stem and (rfind(stem, com.cons_c .. "[aiu]l$") or stem:find("^[aiuAIU]l$")) then
 						-- [[gaffall]] "fork" (dat pl [[göfflum]]), [[þumall]] "thumb"; [[ekkill]] "widower";
 						-- [[spegill]] "mirror"; [[segull]] "magnet"; [[öxull]] "axis; axle"; etc. Note that the check
 						-- for a consonant preceding the a/i/u is important as there are words like [[manúall]]
@@ -2384,6 +2507,9 @@ local function determine_declension(base)
 						-- There are also lots of words in a vowel other than a/i/u followed by -ll, such as [[bíll]]
 						-- "car", [[áll]] "eel", [[konsúll]] "consul", [[þræll]] "slave", [[hvoll]] "hill", [[stóll]]
 						-- "chair", etc. In these, the final -l is the nominative singular ending, as above.
+						--
+						-- Note that if the user overrode the stem (e.g. using '#' as with [[Ármann]]), we don't
+						-- default to contraction as it may cause an error to be thrown.
 						default_props.con = "con"
 					end
 					base.decl = "m"
@@ -2393,7 +2519,7 @@ local function determine_declension(base)
 		if not stem then
 			stem, ending = rmatch(base.lemma, "^(.*n)(n)$")
 			if stem then
-				if rfind(stem, com.cons_c .. "[aiu]n$") or stem:find("^[aiuAIU]n$") then
+				if not base.stem and (rfind(stem, com.cons_c .. "[aiu]n$") or stem:find("^[aiuAIU]n$")) then
 					-- As with -all/-ill/-ull although there are fewer such words in -nn. Examples: [[aftann]] "evening"
 					-- (dat pl öftnum), [[arinn]] "hearth, fireplace" (dat pl örnum), [[drottinn]] "lord", [[himinn]]
 					-- "sky, heaven", [[morgunn]] "morning", [[jötunn]] "giant", etc.
@@ -2401,6 +2527,9 @@ local function determine_declension(base)
 					-- There are also lots of words in a vowel other than a/i/u followed by -nn, such as [[fleinn]]
 					-- "spear", [[steinn]] "rock", [[prjónn]] "knitting needle", [[daunn]] "stink", [[húnn]] "knob".
 					-- In these, the final -n is the nominative singular ending, as above.
+					--
+					-- Note that if the user overrode the stem (e.g. using '#' as with [[Ármann]]), we don't default
+					-- to contraction as it may cause an error to be thrown.
 					default_props.con = "con"
 				end
 				base.decl = "m"
@@ -2670,6 +2799,7 @@ local function determine_declension(base)
 			end
 		end
 	end
+	track("decl/" .. base.decl)
 end
 
 
@@ -2683,6 +2813,7 @@ local function determine_default_masc_dat_sg(base, props)
 	-- FIXME: Probably won't work with definite-only lemmas.
 	if base.overrides.ind_dat_s and base.overrides.ind_dat_s.def then
 		-- Override specified in INDEF/DEF form.
+		track("masc-dat-sg-override")
 		default_dat_sg = false -- no default
 	else
 		local stem = base.stem
@@ -2992,6 +3123,9 @@ local function detect_indicator_spec(base)
 		determine_props(base)
 	else
 		expand_property_sets(base)
+		if base.definiteness == "def" then
+			synthesize_indefinite_lemma(base)
+		end
 		if base.number == "pl" then
 			synthesize_singular_lemma(base)
 		end
@@ -3259,12 +3393,6 @@ local function compute_categories_and_annotation(alternant_multiword_spec)
 	local genderspecs = {}
 	local stemspecs = {}
 	local function get_gender(gender)
-		local gender_code_to_desc = {
-			m = "masculine",
-			f = "feminine",
-			n = "neuter",
-			none = nil,
-		}
 		return gender_code_to_desc[gender]
 	end
 
