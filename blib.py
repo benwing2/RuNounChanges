@@ -350,7 +350,7 @@ def fetch_param_chain(t, first, pref=None, firstdefault="", holes="close", error
       ret.append(val)
   if pref:
     if pref not in first and t.has(pref):
-      return "Parameter error: Saw unrecognized param %s=: %s" % (pref, str(t))
+      return handle_error("Parameter error: Saw unrecognized param %s=: %s" % (pref, str(t)))
     param = pref + "1"
     val = getparam(t, param)
     if val:
