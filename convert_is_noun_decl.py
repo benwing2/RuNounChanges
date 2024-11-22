@@ -18,7 +18,10 @@ from blib import getparam, rmparam, getrmparam, tname, pname, msg, errandmsg, si
 #      - i=?i specifies dati:-/i, but is also used for dat-:i/i
 #      - i=? specifies dati:-/i:-; but is also used for dati:-/-:i, etc.
 #      - i=?- specifies dati:-/-, but is also used for dat-:i/-
-#      - i=[unspecified] specifies dat-/-; except when 2=a and 3=g, in which case dati/i along with umlaut
+#      - i=-i specifies dat-/i
+#      - i=-? specifies dat-/i:-, but is also used for dat-/-:i
+#      - i=- specifies dat-/-
+#      - i=[unspecified] usually specifies dat-/- (see code below)
 #      - (NOTE: All of the above are frequently wrongly used and need manual review)
 #    - gen -s, sg-only:
 #      {{is-decl-noun-m-s1|h|a|mp|ur|i=i|pl=-}}
@@ -44,9 +47,9 @@ from blib import getparam, rmparam, getrmparam, tname, pname, msg, errandmsg, si
 #      {{is-decl-noun-m-s3|skuldun|au|t|u=u}} [THIS ONE IS WRONG]
 #      {{is-decl-noun-m-s3|hl|u|t}}
 #      - NOTE: empty 4th param would be needed to not get -ur in nominative
-#    - gen -ar, pl -ir, uumut to [[mörkuðum]]:
+#    - gen -ar, pl -ir, uUmut to [[mörkuðum]]:
 #      {{is-decl-noun-m-s3|m|a|rk|a|ð}}
-#    - gen -ar, pl -ir, unuumut to [[mánaðar]] (lemma [[mánuður]]):
+#    - gen -ar, pl -ir, unuUmut to [[mánaðar]] (lemma [[mánuður]]):
 #      {{is-decl-noun-m-s3|m|á|n|a|ð|u=u}}
 #    - gen -ar, pl -ir, i-mut in dat sg and nom/acc pl:
 #      {{is-decl-noun-m-s3|h|á|tt|u=u}}
@@ -277,7 +280,8 @@ def compare_new_and_old_templates(origt, newt, pagetitle, pagemsg, errandpagemsg
     new_result = expand_text(new_generate_template)
     if not new_result:
       return None
-    args = json.loads(new_result)["forms"]
+    raw_args = json.loads(new_result)
+    args = raw_args["forms"]
     def flatten_values(values):
       retval = []
       for v in values:
@@ -295,10 +299,17 @@ def compare_new_and_old_templates(origt, newt, pagetitle, pagemsg, errandpagemsg
       if not k.endswith("_linked")
     }
     args = {k: sort_multiple(v) for k, v in args.items()}
-    return args
+    return args, raw_args["genders"], raw_args["number"]
 
-  return blib.compare_new_and_old_template_forms(origt, newt, generate_old_forms,
-    generate_new_forms, pagemsg, errandpagemsg, already_split=True, show_all=True)
+  retval = generate_new_forms()
+  if retval is None:
+    new_forms_for_compare, new_forms, new_genders, new_number = None, {}, [], ""
+  else:
+    new_forms, new_genders, new_number = retval
+    new_forms_for_compare = new_forms
+
+  return blib.compare_new_and_old_template_forms(origt, newt, generate_old_forms, lambda: new_forms_for_compare,
+    pagemsg, errandpagemsg, already_split=True, show_all=True), new_forms, new_genders, new_number
 
 def convert_template_to_new(t, pagetitle, pagemsg, errandpagemsg, notes):
   global args
@@ -311,6 +322,7 @@ def convert_template_to_new(t, pagetitle, pagemsg, errandpagemsg, notes):
   i = ""
   j = ""
   extra_candidates = [""]
+  parts_candidates = [""]
   sg = getp("sg")
   pl = getp("pl")
   def_ = getp("def")
@@ -340,21 +352,21 @@ def convert_template_to_new(t, pagetitle, pagemsg, errandpagemsg, notes):
       if not skapur_nadur:
         pls = "" if pl == "-" or tn == "is-decl-noun-m-s1" else ",%sir" % v
         if ar == "?" or tn == "is-decl-noun-m-s3" and s == "?":
-          parts.append(",s:%sar" % (j or v) + pls)
+          parts_candidates = ["", ",s:%sar" % (j or v) + pls]
         elif ar == "ar" or tn == "is-decl-noun-m-s3" and not s:
-          parts.append(",%sar" % (j or v) + pls)
+          parts_candidates = ["", ",%sar" % (j or v) + pls]
         elif pls:
-          parts.append("," + pls)
-    if p4 == "u" and p5 == "r" or p3 in ["ll", "nn"] and not p4 and not p5:
-      parts.append(".#")
+          parts_candidates = ["", "," + pls]
+    if pagetitle.endswith("ur"):
+      extra_candidates = ["", ".#"]
+    elif pagetitle.endswith("r"):
+      extra_candidates = ["", ".#", ".##"]
     if p2 in ["a", "i", "u"] and p3 == p4 and p3 in ["l", "n"]:
       # [[rafall]], [[Auðunn]] which don't contract, contrary to the norm for words in a/i/u + -ll/-nn
-      parts.append(".-con")
-    if p4 == "r":
-      extra_candidates = ["", ".##"]
+      parts_candidates = [p + ".-con" for p in parts_candidates]
     if u:
       if p4:
-        extra_candidates = ["", ".unuumut"]
+        extra_candidates = ["", ".unuUmut"]
       else:
         extra_candidates = ["", ".unumut.imut", ".imut"]
     if sg != "-":
@@ -370,9 +382,17 @@ def convert_template_to_new(t, pagetitle, pagemsg, errandpagemsg, notes):
         datspec = "dati:-" if def_ == "-" else "dati:-/i:-"
       elif i == "?-":
         datspec = "dati:-/-"
+      elif i == "-i":
+        datspec = "dat-/i"
+      elif i == "-?":
+        datspec = "dat-/i:-"
+      elif i == "-":
+        datspec = "dat-" if def_ == "-" else "dat-/-"
       elif i:
         pagemsg("WARNING: Unrecognized value i=%s: %s" % (i, origt))
         return None
+      elif tn == "is-decl-noun-m-s3" and (p4 or u == "u"):
+        datspec = "dati" if def_ == "-" else "dati/i"
       else:
         datspec = "dat-" if def_ == "-" else "dat-/-"
       datspec = "." + datspec
@@ -387,7 +407,7 @@ def convert_template_to_new(t, pagetitle, pagemsg, errandpagemsg, notes):
     j = getp("j")
     parts = ["m"]
     if p5 in ["r", "st", "l", "n"]:
-      extra_candidates = ["", ".uumut", ".umut,uumut"]
+      extra_candidates = ["", ".uUmut", ".umut,uUmut"]
   elif tn in ["is-decl-noun-m-w2"]:
     p1 = getp("1")
     p2 = getp("2")
@@ -413,21 +433,21 @@ def convert_template_to_new(t, pagetitle, pagemsg, errandpagemsg, notes):
              ",%sar" % (j or v) if tn == "is-decl-noun-f-s1" else ",%s%sur" % (imut_prefix, j or v))
       if tn == "is-decl-noun-f-s1" and not p3:
         if ar == "?":
-          parts.append(",r:%sar" % (j or v) + pls)
+          parts_candidates = ["", ",r:%sar" % (j or v) + pls]
         elif not ar and not j and not v:
-          parts.append(",r" + pls)
+          parts_candidates = ["", ",r" + pls]
         elif pls:
-          parts.append("," + pls)
+          parts_candidates = ["", "," + pls]
       elif tn == "is-decl-noun-f-s1" and p4 == "i":
         # strong feminines in -i like [[ermi]] "sleeve" and [[heiði]] "heath"; we need to override the gen (and pl,
         # which happens above), otherwise the genitive gets -i and plural gets -ir like weak feminines in -i
-        parts.append(",%sar" % (j or v) + pls)
+        parts_candidates = ["", ",%sar" % (j or v) + pls]
       elif ur == "?":
-        parts.append(",%sar:%sur" % (j or v, imut_prefix) + pls)
+        parts_candidates = ["", ",%sar:%sur" % (j or v, imut_prefix) + pls]
       elif ur == "ur":
-        parts.append(",%sur" % imut_prefix + pls)
+        parts_candidates = ["", ",%sur" % imut_prefix + pls]
       elif pls:
-        parts.append("," + pls)
+        parts_candidates = ["", "," + pls]
     if u == "u":
       extra_candidates = ["", ".acc+dat%su" % (j or v)]
     elif i == "i":
@@ -444,7 +464,7 @@ def convert_template_to_new(t, pagetitle, pagemsg, errandpagemsg, notes):
     parts = ["f"]
     if sg != "-" and pl != "-":
       if ar == "ar":
-        parts.append(",,%sar" % j)
+        parts_candidates = ["", ",,%sar" % j]
     # Put these overrides after things like .pl
     if pl != "-":
       if n == "n":
@@ -485,59 +505,65 @@ def convert_template_to_new(t, pagetitle, pagemsg, errandpagemsg, notes):
   pagetitle_for_proper_check = re.sub("^.*[ -](.)", r"\1", pagetitle)
   isproper = pagetitle_for_proper_check[0].isupper()
   builtin_plural = tn == "is-decl-noun-læti" or pagetitle.endswith("dyr")
+  def append_parts(part):
+    nonlocal parts_candidates
+    parts_candidates = [p + part for p in parts_candidates]
   if pl == "-" and def_ == "-":
     if isproper:
       pass
     elif skapur_nadur:
-      parts.append(".-def")
+      append_parts(".indef")
     else:
-      parts.append(".sg.-def")
+      append_parts(".sg.indef")
   elif pl == "-":
     if isproper:
-      parts.append(".def")
+      append_parts(".def")
     elif skapur_nadur:
       pass
     else:
-      parts.append(".sg")
+      append_parts(".sg")
   elif sg == "-" and def_ == "-":
     if isproper:
-      parts.append(".pl")
+      append_parts(".pl")
     elif builtin_plural:
-      parts.append(".-def")
+      append_parts(".indef")
     else:
-      parts.append(".pl.-def")
+      append_parts(".pl.indef")
   elif sg == "-":
     if isproper:
-      parts.append(".pl.def")
+      append_parts(".pl.def")
     elif builtin_plural:
       pass
     else:
-      parts.append(".pl")
+      append_parts(".pl")
   else:
     if isproper:
-      parts.append(".common")
+      append_parts(".common")
     elif skapur_nadur:
-      parts.append(".both")
+      append_parts(".both")
     else:
       pass
 
   candidate_pref = "".join(parts)
   if v:
-    candidate_pref += ".v"
-  def generate_candidates(prefix, extra_candidate):
+    append_parts(".v")
+  def generate_candidates(parts_candidates, extra_candidate):
+    prefix = candidate_pref + parts_candidates
     if j:
       return [prefix + extra_candidate, prefix + ".j" + extra_candidate]
     else:
       return [prefix + extra_candidate]
   candidates = [candidate
     for extra_candidate in extra_candidates
-    for candidate in generate_candidates(candidate_pref, extra_candidate)
+    for parts_candidate in parts_candidates
+    for candidate in generate_candidates(parts_candidate, extra_candidate)
   ]
   good_candidate = None
   for candidate in candidates:
     newt = "{{is-ndecl|%s}}" % candidate
     pagemsg("Considering replacing %s with %s" % (origt, newt))
-    is_same = compare_new_and_old_templates(origt, newt, pagetitle, pagemsg, errandpagemsg)
+    is_same, new_forms, new_genders, new_number = compare_new_and_old_templates(
+        origt, newt, pagetitle, pagemsg, errandpagemsg)
     if is_same:
       pagemsg("Replaced %s with %s" % (origt, newt))
       good_candidate = candidate
@@ -550,28 +576,7 @@ def convert_template_to_new(t, pagetitle, pagemsg, errandpagemsg, notes):
   del t.params[:]
   blib.set_template_name(t, "is-ndecl")
   t.add("1", good_candidate)
-  return t
-
-def process_page(page, index, parsed):
-  pagetitle = str(page.title())
-  def pagemsg(txt):
-    msg("Page %s %s: %s" % (index, pagetitle, txt))
-  def errandpagemsg(txt):
-    errandmsg("Page %s %s: %s" % (index, pagetitle, txt))
-
-  pagemsg("Processing")
-
-  notes = []
-
-  for t in parsed.filter_templates():
-    tn = tname(t)
-    if tn.startswith("is-decl-noun-"):
-      if convert_template_to_new(t, pagetitle, pagemsg, errandpagemsg, notes):
-        pass
-      else:
-        return
-
-  return str(parsed), notes
+  return t, new_forms, new_genders, new_number
 
 def process_text_on_page(index, pagetitle, text):
   global args
@@ -595,7 +600,7 @@ def process_text_on_page(index, pagetitle, text):
     origt = str(t)
     def getp(param):
       return getparam(t, param)
-    if tn in ["is-noun", "is-proper noun"]:
+    if tn in ["is-noun", "is-proper noun", "is-noun/old", "is-proper noun/old"]:
       pagemsg("Saw %s" % str(t))
       saw_headt = True
       if headt:
@@ -611,13 +616,50 @@ def process_text_on_page(index, pagetitle, text):
       #  pagemsg("WARNING: Saw head template %s with different params from declension template %s" % (
       #    str(headt), str(t)))
       #  return
-      if convert_template_to_new(t, pagetitle, pagemsg, errandpagemsg, notes):
+      retval = convert_template_to_new(t, pagetitle, pagemsg, errandpagemsg, notes)
+      if retval is not None:
+        newt, new_forms, new_genders, new_number = retval
         if headt:
+          #if new_number == "pl":
+          #  new_genders = ["%s-p" % g for g in new_genders]
+          def convert_empty_to_hyphen(val):
+            if not val:
+              return "-"
+            return val
+          headt_genders = blib.fetch_param_chain(headt, ["1", "g", "gen"], "g")
+          headt_gens = blib.fetch_param_chain(headt, "2", "gen")
+          headt_pls = blib.fetch_param_chain(headt, ["3", "pl"], "pl")
+          headt_genders = sorted(headt_genders)
+          headt_gens = convert_empty_to_hyphen(",".join(sorted(headt_gens)))
+          headt_pls = convert_empty_to_hyphen(",".join(sorted(headt_pls)))
+          new_genders = sorted(new_genders)
+          new_gens = convert_empty_to_hyphen(new_forms.get("ind_gen_s", ""))
+          new_pls = convert_empty_to_hyphen(new_forms.get("ind_nom_p", ""))
+          if headt_genders != new_genders:
+            pagemsg("WARNING: Head gender(s) %s don't match new decl gender(s) %s: head=%s, newdecl=%s" % (
+              ",".join(headt_genders), ",".join(new_genders), str(headt), str(newt)))
+            return
+          if headt_gens != "-" and headt_gens != new_gens:
+            pagemsg("WARNING: Head genitive(s) %s don't match new decl genitive(s) %s: head=%s, newdecl=%s" % (
+              headt_gens, new_gens, str(headt), str(newt)))
+            return
+          if headt_pls != "-" and headt_pls != new_pls:
+            pagemsg("WARNING: Head plural(s) %s don't match new decl plural(s) %s: head=%s, newdecl=%s" % (
+              headt_pls, new_pls, str(headt), str(newt)))
+            return
           orig_headt = str(headt)
           headtn = tname(headt)
+          if headtn.endswith("/old"):
+            headtn = re.sub("/old$", "", headtn)
+            blib.set_template_name(headt, headtn)
           # Erase all params
           del headt.params[:]
           headt.add("1", getparam(t, "1"))
+          words = re.split("[ -]", pagetitle)
+          if headtn == "is-noun" and any(word.isupper() for word in words):
+            pagemsg("WARNING: Uppercase term with {{is-noun}}, review manually: %s" % str(headt))
+          elif headtn == "is-proper noun" and any(word.islower() for word in words):
+            pagemsg("WARNING: Lowercase term with {{is-proper noun}}, review manually: %s" % str(headt))
           #if pagetitle in manual_decls:
           #  headt.add("1", manual_decls[pagetitle])
           notes.append("convert %s to %s" % (orig_headt, str(headt)))
