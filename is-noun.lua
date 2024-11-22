@@ -34,6 +34,9 @@ FIXME:
 7. Footnotes on omitted forms should be possible.
 8. Remove setting of override on pl when processing plural-only terms in synthesize_singular_lemma(); interferes
    with decllemma in [[dyr]]. But then need to fix handling of masculine accusative plural. [DONE]
+9. Rationalize conventions used in u-mutation types. [DONE]
+10. Compute defaulted number and definiteness early so it's usable when merging built-in and user-specified
+	specs. [DONE]
 ]=]
 
 local lang = require("Module:languages").getByCode("is")
@@ -207,7 +210,7 @@ local function generate_list_of_possibilities_for_err(list)
 		table.insert(quoted_list, "'" .. item .. "'")
 	end
 	table.sort(quoted_list)
-	return m_table.serialCommaJoin(quoted_list, {dontTag = true})
+	return mw.text.listToText(quoted_list)
 end
 
 
@@ -245,7 +248,7 @@ end
 -- because the code below frequently needs to conditionalize on the value of `slot` and should not have to worry about
 -- the definite and indefinite slot variants). `props` is an object containing computed stems and other information
 -- (such as whether i-mutation is active). The information found in `props` cannot be stored in `base` because there may
--- be more than one set of such properties per `base` (e.g. if the user specified 'umut,uumut' or '-j,j' or '-imut,imut'
+-- be more than one set of such properties per `base` (e.g. if the user specified 'umut,uUmut' or '-j,j' or '-imut,imut'
 -- or some combination of these; in such a case, the caller will iterate over all possible combinations, and ultimately
 -- invoke add() multiple times, one per combination). `endings` is the ending or endings added to the appropriate stem
 -- (after any j or v infix) to get the form(s) to add to the slot. Its value can be a single string, a list of strings,
@@ -310,20 +313,18 @@ end
 --    false, associated footnotes still apply before endings starting with "i". Note that i-mutation is also in effect
 --    if the ending has ^ prepended, but the associated footnotes don't apply here.
 -- ** `imut_footnotes`: See `imut`.
--- ** `unumut`: If specified (i.e. not nil), the type of un-u-mutation requested (either "unumut" or "unuumut", or the
---    negation of the same using "-unumut" or "-unuumut" for no un-u-mutation; the two differ in which slots any
---    associated footnote are placed). If specified, there may be associated footnotes in `unumut_footnotes`. If
---    "unumut", u-mutation is in effect *except* before an ending that starts with an "a" or "i" (unless i-mutation is
---    in effect, which takes precedence). If "unuumut", the rules are different: when masculine, u-mutation is in effect
---    *except* in the gen sg and pl (examples are [[söfnuður]] "congregation" and [[mánuður]] "month"); when feminine,
---    u-mutation is in effect except in the nom/acc/gen pl (examples are [[verslun]] "trade, business; store, shop" and
---    [[kvörtun]] "complaint"; also note [[örvun]] "encouragement; stimulation" where the un-u-mutated form is 'örvan-'
---    rather than expected #'arvan-', because the -v- blocks the un-u-mutation of ö). When u-mutation is *not* in
---    effect, and i-mutation is also not in effect, the associated footnotes in `unumut_footnotes` apply. If `unumut` is
---    "-unumut" or "-unuumut", there is no un-u-mutation (i.e. there are no special u-mutated stems, and the basic
---    stems, which typically have u-mutation built into them, apply throughout), but the associated footnotes in
---    `unumut_footnotes` still apply in the same circumstances where they would apply if `unumut` were "unumut" or
---    "unuumut".
+-- ** `unumut`: If specified (i.e. not nil), the type of un-u-mutation requested (either "unumut" or a variant, or the
+--    negation of the same using "-unumut" or a variant for no un-u-mutation; "unumut" and variants differ in which
+--    slots any associated footnote are placed). If specified, there may be associated footnotes in `unumut_footnotes`.
+--    If "unumut" itself, u-mutation is in effect *except* before an ending that starts with an "a" or "i" (unless
+--    i-mutation is in effect, which takes precedence). If any other variant, the rules are different: when masculine,
+--    u-mutation is in effect *except* in the gen sg and pl (examples are [[söfnuður]] "congregation" and [[mánuður]]
+--    "month"); when feminine, u-mutation is in effect except in the nom/acc/gen pl (examples are [[verslun]] "trade,
+--    business; store, shop" and [[kvörtun]] "complaint"). When u-mutation is *not* in effect, and i-mutation is also
+--    not in effect, the associated footnotes in `unumut_footnotes` apply. If `unumut` is "-unumut" or a variant, there
+--    is no un-u-mutation (i.e. there are no special u-mutated stems, and the basic stems, which typically have
+--    u-mutation built into them, apply throughout), but the associated footnotes in `unumut_footnotes` still apply in
+--    the same circumstances where they would apply if `unumut` were the non-negated counterpart.
 -- ** `unumut_footnotes`: See `unumut`.
 -- ** `unimut`: If specified (i.e. not nil), either true or false. If specified, there may be associated footnotes in
 --    `unimut_footnotes`. If true, i-mutation is in effect *except* in certain case/num combinations that depend on the
@@ -458,7 +459,7 @@ local function add_slotval(base, slot_prefix, slot, props, endings, clitics, end
 					elseif base.gender == "f" then
 						is_unumut_slot = slot == "nom_p" or slot == "acc_p" or slot == "gen_p"
 					else
-						interr("'unumut' and 'unuumut' shouldn't be specified with neuter nouns; don't know what slots would be affected; neuter pluralia tantum nouns using 'unumut'/'unuumut' should have synthesized a singular without u-mutation")
+						interr("'unumut' and variants shouldn't be specified with neuter nouns; don't know what slots would be affected; neuter pluralia tantum nouns using 'unumut'and variants should have synthesized a singular without u-mutation")
 					end
 					if not mut_in_effect and not mut_not_in_effect then
 						-- Do nothing if mut_in_effect or mut_not_in_effect because i-mut takes precedence over u-mut;
@@ -473,7 +474,7 @@ local function add_slotval(base, slot_prefix, slot, props, endings, clitics, end
 				end
 				if ending_in_u and not mut_in_effect then
 					mut_in_effect = "u"
-					-- umut and uumut footnotes are incorporated into the appropriate umut_* stems
+					-- umut and uUmut footnotes are incorporated into the appropriate umut_* stems
 				end
 			end
 
@@ -916,7 +917,7 @@ end
 
 decls["m-naður"] = function(base, props)
 	-- Nouns in -naður; default gen is -ar, default dat is dati/i:-, default nom pl is -ir, default num is sg,
-	-- default u-mutation is uumut.
+	-- default u-mutation is uUmut.
 	add_decl(base, props, "", {indef = "i", def = {"i", ""}}, "ar", "ir")
 end
 
@@ -1090,7 +1091,7 @@ end
 decls["n-weak"] = function(base, props)
 	-- "Weak" neuter nouns in -a, e.g. [[auga]] "eye", [[hjarta]] "heart". U-mutation occurs in the nom/acc/dat pl but
 	-- doesn't need to be indicated explicitly because the ending begins with u-.
-	add_decl(base, props, "a", "a", "a", "u", nil, nil, "na")
+	add_decl(base, props, "a", "a", "a", "u")
 end
 
 
@@ -1315,6 +1316,23 @@ local function process_addnote_specs(base)
 end
 
 
+local function is_regular_noun(base)
+	return not base.props.adj and not base.props.pron and not base.props.det
+end
+
+
+local function process_declnumber(base)
+	base.actual_number = base.number
+	if base.declnumber then
+		if base.declnumber == "sg" or base.declnumber == "pl" then
+			base.number = base.declnumber
+		else
+			error(("Unrecognized value '%s' for 'declnumber', should be 'sg' or 'pl'"):format(base.declnumber))
+		end
+	end
+end
+
+
 -- Map `fn` over an override spec (either `gens`, `pls` or one of the overrides in `overrides`). `fn` is passed one
 -- item (the form object of the override), which it can mutate if needed. If it ever returns non-nil, mapping stops
 -- and that value is returned as the return value of `map_override`; otherwise mapping runs to completion and nil is
@@ -1400,7 +1418,7 @@ end
 -- used in error messages and specifies e.g. "genitive" or "dat+gen slot override"; `allow_blank` indicates that a
 -- completely blank override spec is allowed (in that case, nil will be returned); `defslot`, if true, indicates that
 -- we're processing a definite slot override, i.e. two slash-separated specs (indefinite and definite) are not allowed
--- and the return overrides will be stored into `def; and `parse_err` is a function of one argument to throw a parse
+-- and the return overrides will be stored into `def`; and `parse_err` is a function of one argument to throw a parse
 -- error. The return value is an object containing fields `indef` and/or `def`, of the format described below in the
 -- comment above `parse_override`.
 local function fetch_slot_override(segments, spectype, allow_blank, defslot, parse_err)
@@ -1628,11 +1646,11 @@ local function parse_inside(base, inside, is_builtin_noun)
 	local segments = iut.parse_balanced_segment_run(inside, "[", "]")
 	local dot_separated_groups = split_alternating_runs_with_escapes(segments, "%.")
 	for i, dot_separated_group in ipairs(dot_separated_groups) do
-		-- Parse a "mutation" spec such as "umut,uumut[rare]" or "-unuumut,unuumut" or "imut". This assumes the
+		-- Parse a "mutation" spec such as "umut,uUmut[rare]" or "-unuUmut,unuUmut" or "imut". This assumes the
 		-- mutation spec is contained in `dot_separated_group` (already split on brackets) and the result of parsing
 		-- should go in `base[dest]`. `allowed_specs` is a list of the allowed mutation specs in this group, such
-		-- as {"umut", "uumut", "u_umut"} or {"-imut", "imut"}. The result of parsing is a list of structures of the
-		-- form {
+		-- as {"umut", "Umut", "uumut", "uUmut", "u_mut"} or {"imut", "-imut"}. The result of parsing is a list of
+		-- structures of the form {
 		--   form = "FORM",
 		--   footnotes = nil or {"FOOTNOTE", "FOOTNOTE", ...},
 		-- }.
@@ -1706,12 +1724,13 @@ local function parse_inside(base, inside, is_builtin_noun)
 					base.overrides[slot] = override
 				end
 			end
-		elseif part:find("^u[u_]*mut") then
-			parse_mutation_spec("umut", {"umut", "uumut", "u_umut"})
+		elseif part:find("^[Uu]+_?mut") then
+			parse_mutation_spec("umut", {"umut", "Umut", "uumut", "uUmut", "u_mut"})
 		elseif not part:find("^imutval") and part:find("^%-?imut") then
 			parse_mutation_spec("imut", {"imut", "-imut"})
-		elseif part:find("^%-?unu+mut") then
-			parse_mutation_spec("unumut", {"unumut", "-unumut", "unuumut", "-unuumut"})
+		elseif part:find("^%-?un[uU]+_?mut") then
+			parse_mutation_spec("unumut", {"unumut", "unUmut", "unuumut", "unuUmut", "unu_mut",
+										   "-unumut", "-unUmut", "-unuumut", "-unuUmut", "-unu_mut"})
 		elseif part:find("^%-?unimut") then
 			parse_mutation_spec("unimut", {"unimut", "-unimut"})
 		elseif part:find("^%-?con") then
@@ -1783,7 +1802,7 @@ local function parse_inside(base, inside, is_builtin_noun)
 			end
 			base.props.adj = true
 		elseif part == "@" then
-			if base.builtin then
+			if base.props.builtin then
 				parse_err("Can't specify '@' twice")
 			end
 			base.props.builtin = true
@@ -1858,7 +1877,7 @@ Create an empty `base` object for holding the result of parsing and later the ge
 	MUTATION_SPEC, MUTATION_SPEC, ...
   }, -- where MUTATION_GROUP is one of "umut", "imut", "unumut", "unimut", "con", "defcon", "j" or "v", and
 		MUTATION_SPEC is {form = "FORM", footnotes = nil or {"FOOTNOTE", "FOOTNOTE", ...}, defaulted = BOOLEAN}, where
-		FORM is as specified by the user (e.g. "uumut", "-unumut") or set as a default by the code (in which case
+		FORM is as specified by the user (e.g. "uUmut", "-unumut") or set as a default by the code (in which case
 		`defaulted` will be set to true for mutation groups "umut" and "unumut"); the mutation groups are as follows:
 		umut (u-mutation), imut (i-mutation), unumut (reverse u-mutation), unimut (reverse i-mutation), con (stem
 		contraction before vowel-initial endings), defcon (stem contraction before vowel-initial definite clitics when
@@ -1890,6 +1909,31 @@ local function create_base()
 	}
 end
 
+-- Set some defaults (e.g. number and definiteness) now, because they (esp. the number) may be needed
+-- below when determining how to merge built-in and user-specified properies.
+local function set_early_base_defaults(base)
+	if not base.props.adj and not base.props.pron then
+		local function check_err(msg)
+			error(("Lemma '%s': %s"):format(base.lemma, msg))
+		end
+
+		if not base.gender then
+			check_err("Internal error: For nouns, gender must be specified")
+		end
+		base.number = base.number or is_proper_noun(base, base.lemma) and "sg" or base.gender == "m" and
+			(base.lemma:find("skapur$") or base.lemma:find("naður$")) and not base.stem and "sg" or "both"
+		base.definiteness = base.definiteness or is_proper_noun(base, base.lemma) and "indef" or "both"
+		process_declnumber(base)
+		base.actual_gender = base.gender
+		if base.declgender then
+			if not base.declgender:find("^[mfn]$") then
+				check_err(("Unrecognized gender '%s' for 'declgender:', should be 'm', 'f' or 'n'"):format(
+					base.declgender))
+			end
+			base.gender = base.declgender
+		end
+	end
+end
 
 --[=[
 Parse an indicator spec (text consisting of angle brackets and zero or more dot-separated indicators within them).
@@ -1912,7 +1956,9 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename)
 		error(msg .. ": " .. angle_bracket_spec)
 	end
 
-	if base.props.builtin then
+	if not base.props.builtin then
+		set_early_base_defaults(base)
+	else
 		local prefix, main_noun, declspec = find_builtin_noun(base.lemma)
 		if not prefix then
 			parse_err("Unable to find built-in noun corresponding to '" .. base.lemma .. "'")
@@ -1961,48 +2007,34 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename)
 		copy_properties(overridable_stems)
 		copy_properties { "gens", "pls", "gender", "number", "definiteness", "decllemma", "declgender", "declnumber" }
 		nbase.footnotes = iut.combine_footnotes(nbase.footnotes, base.footnotes)
-		-- Now copy remaining user-specified specs into the built-in noun `base`.
-		for _, prop_table in ipairs { "overrides", "props" } do
-			for slot, prop in pairs(base[prop_table]) do
-				nbase[prop_table][slot] = prop
-			end
-		end
-		-- If user specified 'sg', cancel out any pl overrides, otherwise we'll get an error.
-		if base.number == "sg" then
-			nbase.pls = nil
-			for slot, _ in pairs(base.overrides) do
-				if slot:find("_p$") then
-					nbase.overrides[slot] = nil
-				end
-			end
-		end
 		-- Copy addnote specs.
 		for _, prop_list in ipairs { "addnote_specs" } do
 			for _, prop in ipairs(base[prop_list]) do
 				m_table.insertIfNot(nbase[prop_list], prop)
 			end
 		end
+		-- Now copy remaining user-specified specs into the built-in noun `base`.
+		for _, prop_table in ipairs { "overrides", "props" } do
+			for slot, prop in pairs(base[prop_table]) do
+				nbase[prop_table][slot] = prop
+			end
+		end
+		-- Now determine the defaulted number and definiteness (after copying relevant settings
+		-- but before the check just below that relies on `nbase.number` being set).
+		set_early_base_defaults(nbase)
+		-- If user specified 'sg', cancel out any pl overrides, otherwise we'll get an error.
+		if nbase.number == "sg" then
+			nbase.pls = nil
+			for slot, _ in pairs(nbase.overrides) do
+				if slot:find("_p$") then
+					nbase.overrides[slot] = nil
+				end
+			end
+		end
 		return nbase
 	end
 
 	return base
-end
-
-
-local function is_regular_noun(base)
-	return not base.props.adj and not base.props.pron and not base.props.det
-end
-
-
-local function process_declnumber(base)
-	base.actual_number = base.number
-	if base.declnumber then
-		if base.declnumber == "sg" or base.declnumber == "pl" then
-			base.number = base.declnumber
-		else
-			error(("Unrecognized value '%s' for 'declnumber', should be 'sg' or 'pl'"):format(base.declnumber))
-		end
-	end
 end
 
 
@@ -2019,21 +2051,7 @@ local function set_defaults_and_check_bad_indicators(base)
 	elseif base.props.adj then
 		-- FIXME: Do adjective-specific checks then return
 	elseif not base.props.adj then
-		if not base.gender then
-			check_err("Internal error: For nouns, gender must be specified")
-		end
-		base.number = base.number or is_proper_noun(base, base.lemma) and "sg" or base.gender == "m" and
-			(base.lemma:find("skapur$") or base.lemma:find("naður$")) and not base.stem and "sg" or "both"
-		base.definiteness = base.definiteness or is_proper_noun(base, base.lemma) and "indef" or "both"
-		process_declnumber(base)
-		base.actual_gender = base.gender
-		if base.declgender then
-			if not base.declgender:find("^[mfn]$") then
-				check_err(("Unrecognized gender '%s' for 'declgender:', should be 'm', 'f' or 'n'"):format(
-					base.declgender))
-			end
-			base.gender = base.declgender
-		end
+		-- FIXME: Do something?
 	end
 
 	if not regular_noun then
@@ -2447,7 +2465,7 @@ local function determine_declension(base)
 				elseif stem:find("nað$") and not base.stem then
 					-- lots of words in -naður
 					base.decl = "m-naður"
-					default_props.umut = "uumut"
+					default_props.umut = "uUmut"
 				else
 					if base.stem == base.lemma then
 						-- [[akur]] "field" etc. where the stem includes the final -r
@@ -2593,7 +2611,8 @@ local function determine_declension(base)
 				base.decl = "f-i"
 			end
 		end
-		if not stem then
+		if not stem and not base.stem then
+			-- Don't match when base.stem is set, e.g. [[gimbur]] "female lamb", where the -ur is part of the stem
 			stem, ending = rmatch(base.lemma, "^(.*[^aA])(ur)$")
 			if stem and rfind(stem, com.vowel_c) then
 				if is_proper_noun(base, stem) then
@@ -2650,14 +2669,16 @@ local function determine_declension(base)
 				stem = lemma
 				base.decl = "f-acc-dat-u"
 				default_props.j = "j"
-			elseif lemma:find("[Bb]jörg$") or lemma:find("vör$") then
+			elseif lemma:find("[Bb]jörg$") or lemma:find("björt$") or lemma:find("vör$") then
 				-- -björg names e.g. [[Björg]], [[Arnbjörg]], [[Ástbjörg]], [[Auðbjörg]], [[Eybjörg]], [[Finnbjörg]],
 				-- [[Guðbjörg]], [[Hallbjörg]], [[Ingibjörg]], [[Kristbjörg]], [[Sigurbjörg]], [[Sveinbjörg]],
 				-- [[Þorbjörg]]
+				-- -björt names, e.g. [[Dagbjört]], [[Gunnbjört]], [[Hróðbjört]], [[Valbjört]], etc. but not [[Björt]]
+				-- itself, which has acc+dat-:u.
 				-- -vör names e.g. [[Eyvör]], [[Gunnvör]], [[Hervör]], [[Steinvör]]
 				stem = lemma
 				base.decl = "f-acc-dat-u"
-				default_props.unumut = "unuumut"
+				default_props.unumut = "unumut"
 			elseif lemma:find("dís$") or lemma:find("unn$") then
 				-- -dís names e.g. [[Þórdís]], [[Aldís]], [[Árdís]], [[Ásdís]], [[Bryndís]], [[Eydís]], [[Freydís]],
 				-- [[Halldís]], [[Herdís]], [[Jódís]], [[Svandís]], [[Valdís]], [[Védís]], [[Vigdís]]
@@ -2703,8 +2724,10 @@ local function determine_declension(base)
 				-- [[pöntun]] "order (in commerce)"; [[verslun]] "trade, business; store, shop"; [[efun]] "doubt";
 				-- [[bötun]] "improvement"; [[örvun]] "encouragement; stimulation" (pl. örvanir); etc.
 				-- Exclude words in -aun like [[baun]] "bean", [[laun]] "secret", [[raun]] "experience".
+				-- Some words need a different indicator, e.g. [[örvun]] "encouragement; stimulation" (pl. örvanir),
+				-- [[fjölgun]] "increase, proliferation" (pl. fjölganir), which need "unUmut".
 				base.decl = "f"
-				default_props.unumut = "unuumut"
+				default_props.unumut = "unuUmut"
 			end
 		end
 		if not stem then
@@ -2712,7 +2735,7 @@ local function determine_declension(base)
 			stem = base.lemma
 			base.decl = "f"
 			-- A function here means we resolve it to its actual value later. We don't want to trigger
-			-- unumut if the user specified v-infix or any type of u-mutation (e.g. 'uumut' in [[ætlan]]),
+			-- unumut if the user specified v-infix or any type of u-mutation (e.g. 'uUmut' in [[ætlan]]),
 			-- or if the last vowel of the term is 'a' ([[dragt]], [[aukavakt]]).
 			default_props.unumut = function(base, props)
 				if base.vstem or props.v and props.v.form == "v" or props.umut or
@@ -2810,56 +2833,67 @@ local function determine_default_masc_dat_sg(base, props)
 		return
 	end
 	local default_dat_sg
-	-- FIXME: Probably won't work with definite-only lemmas.
-	if base.overrides.ind_dat_s and base.overrides.ind_dat_s.def then
-		-- Override specified in INDEF/DEF form.
+	if base.overrides.dat_s then
+		-- Track explicit override.
 		track("masc-dat-sg-override")
-		default_dat_sg = false -- no default
-	else
-		local stem = base.stem
-		if props.j and props.j.form == "j" then
-			-- Stems with j-infix normally have null dative even if they end in two consonants, e.g.
-			-- [[belgur]] "bellows; skin", [[fengur]] "profit", [[flekkur]] "spot, fleck", [[serkur]]
-			-- "shirt", [[stingur]] "sting"
-			default_dat_sg = ""
-		elseif stem:find(com.vowel_c .. ".*[iu]ng$") then
-			-- Stems in suffix -ing or -ung normally have indef dat -i, def dat null
-			default_dat_sg = {indef = "i", def = ""}
-		elseif stem:find("x$") or (rfind(stem, com.cons_c .. com.cons_c .. "$") and not stem:find("kk$") and not stem:find("pp$")) then
-			-- Other stems in two consonants normally have dat -i, but those in -kk or -pp normally
-			-- don't, so exclude them and require explicit specification
-			default_dat_sg = "i"
-		elseif not rfind(stem, com.vowel_c .. "$") and is_proper_noun(base, stem) then
-			-- proper noun whose stem does not end in a vowel
-			default_dat_sg = "i"
-		elseif props.con and props.con.form == "con" then
-			default_dat_sg = "i"
-		elseif rfind(stem, com.vowel_c .. "r?$") then
-			default_dat_sg = ""
-		elseif rfind(base.lemma, "ll$") then
-			-- nouns in -ll without contraction, which generally includes those not in -all/-ill/-ull plus a few in these
-			-- endings such as [[panill]] "paneling" (rare variant of [[panell]]), [[kórall]] "coral", [[kristall]]
-			-- "crystal", [[kanill]] "cinnamon" (also [[kanell]]); only a few exceptions, such as [[rafall]] "generator",
-			-- which optionally contracts and has with dati/-:i without contraction; [[hvoll]] "hill", [[kokkáll]]
-			-- "cuckold", [[páll]] "spade, pointed shovel", [[þræll]] "slave" with dat-:i/-; [[hóll]] "hill", [[hæll]]
-			-- "heel", [[stóll]] "chair", which are dat-:i[footnote]/- with a footnote variously indicating that the
-			-- dative in -i occurs only in fixed expressions, compounds, place names, etc.
-			default_dat_sg = ""
-		elseif rfind(base.lemma, "nn$") then
-			-- nouns in -nn without contraction, which generally includes those not in -ann/-inn/-unn; there are fewer of
-			-- these than the corresponding nouns in -ll and they have default dative i/i; only exceptions I can find are
-			-- [[húnn]] "knob", [[tónn]] "tone (music)", [[dúnn]] "down (feathers)"", which have dati:-/i.
-			default_dat_sg = "i"
-		elseif base.overrides.dat_s and not base.overrides.dat_s.def then
-			error(("Saw masculine stem '%s' and dative singular override of just the indefinite ending, but " ..
-				"requires both the indefinite and definite endings of the dative singular in the form 'datINDEF/DEF'"):
-				format(stem))
-		elseif not base.overrides.dat_s then
+	end
+	local stem = base.stem
+	if props.j and props.j.form == "j" then
+		-- Stems with j-infix normally have null dative even if they end in two consonants, e.g.
+		-- [[belgur]] "bellows; skin", [[fengur]] "profit", [[flekkur]] "spot, fleck", [[serkur]]
+		-- "shirt", [[stingur]] "sting"
+		default_dat_sg = ""
+	elseif stem:find(com.vowel_c .. ".*[iu]ng$") then
+		-- Stems in suffix -ing or -ung normally have indef dat -i, def dat null
+		default_dat_sg = {indef = "i", def = ""}
+	elseif stem:find("x$") or (rfind(stem, com.cons_c .. com.cons_c .. "$") and not stem:find("kk$") and not stem:find("pp$")) then
+		-- Other stems in two consonants normally have dat -i, but those in -kk or -pp normally
+		-- don't, so exclude them and require explicit specification
+		default_dat_sg = "i"
+	elseif not rfind(stem, com.vowel_c .. "$") and is_proper_noun(base, stem) then
+		-- proper noun whose stem does not end in a vowel
+		default_dat_sg = "i"
+	elseif props.con and props.con.form == "con" then
+		default_dat_sg = "i"
+	elseif rfind(stem, com.vowel_c .. "r?$") then
+		default_dat_sg = ""
+	elseif rfind(base.lemma, "ll$") then
+		-- nouns in -ll without contraction, which generally includes those not in -all/-ill/-ull plus a few in these
+		-- endings such as [[panill]] "paneling" (rare variant of [[panell]]), [[kórall]] "coral", [[kristall]]
+		-- "crystal", [[kanill]] "cinnamon" (also [[kanell]]); only a few exceptions, such as [[rafall]] "generator",
+		-- which optionally contracts and has with dati/-:i without contraction; [[hvoll]] "hill", [[kokkáll]]
+		-- "cuckold", [[páll]] "spade, pointed shovel", [[þræll]] "slave" with dat-:i/-; [[hóll]] "hill", [[hæll]]
+		-- "heel", [[stóll]] "chair", which are dat-:i[footnote]/- with a footnote variously indicating that the
+		-- dative in -i occurs only in fixed expressions, compounds, place names, etc.
+		default_dat_sg = ""
+	elseif rfind(base.lemma, "nn$") then
+		-- nouns in -nn without contraction, which generally includes those not in -ann/-inn/-unn; there are fewer of
+		-- these than the corresponding nouns in -ll and they have default dative i/i; only exceptions I can find are
+		-- [[húnn]] "knob", [[tónn]] "tone (music)", [[dúnn]] "down (feathers)"", which have dati:-/i.
+		default_dat_sg = "i"
+	elseif base.overrides.def_dat_s and base.definiteness == "def" then
+		-- OK; user supplied def_dat_s override for a definite-only lemma
+	elseif base.overrides.dat_s and base.overrides.dat_s.indef and base.definiteness == "indef" then
+		-- OK; user supplied dat_s override with indefinite setting, for an indefinite-only lemma
+	elseif base.overrides.dat_s and base.overrides.dat_s.indef and base.overrides.def_dat_s then
+		-- OK; user supplied dat_s override with indefinite setting and def_dat_s override, which
+		-- together provide both indefinite and definite values
+	elseif base.overrides.dat_s and not base.overrides.dat_s.def then
+		error(("Saw masculine stem '%s' and dative singular override of just the indefinite ending, but " ..
+			"requires both the indefinite and definite endings of the dative singular in the form 'datINDEF/DEF'"):
+			format(stem))
+	elseif not base.overrides.dat_s then
+		local exceptions = "exceptions are nouns in -ir, -ó or -i; proper nouns; plural-only nouns; nouns with " ..
+			"stem contraction or j-infix; nouns whose stem ends in two or more consonants, except for -kk and " ..
+			"-pp; and nouns whose stem ends in a vowel or vowel + r"
+		if base.definiteness == "indef" then
+			error(("Saw masculine stem '%s' and no dative override: Most indefinite-only masculine nouns must " ..
+				"explicitly specify the indefinite ending of the dative singular using an override of the form " ..
+				"'datINDEF'; %s"):format(stem, exceptions))
+		else
 			error(("Saw masculine stem '%s' and no dative override: Most masculine nouns must explicitly specify " ..
 				"the indefinite and definite endings of the dative singular using an override of the form " ..
-				"'datINDEF/DEF'; exceptions are nouns in -ir, -ó or -i; proper nouns; plural-only nouns; nouns with " ..
-				"stem contraction or j-infix; nouns whose stem ends in two or more consonants, except for -kk and " ..
-				"-pp; and nouns whose stem ends in a vowel or vowel + r"):format(stem))
+				"'datINDEF/DEF'; %s"):format(stem, exceptions))
 		end
 	end
 	props.default_dat_sg = default_dat_sg
@@ -3643,7 +3677,9 @@ local function compute_headword_genders(alternant_multiword_spec)
 		number = ""
 	end
 	iut.map_word_specs(alternant_multiword_spec, function(base)
-		m_table.insertIfNot(genders, base.gender .. number)
+		if base.actual_gender ~= "none" then
+			m_table.insertIfNot(genders, base.actual_gender .. number)
+		end
 	end)
 	return genders
 end
