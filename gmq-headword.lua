@@ -10,6 +10,9 @@ local m_table = require("Module:table")
 local headword_utilities_module = "Module:headword utilities"
 local m_headword_utilities = require_when_needed(headword_utilities_module)
 local glossary_link = require_when_needed(headword_utilities_module, "glossary_link")
+local inflection_utilities_module = "Module:inflection utilities"
+local m_inflection_utilities = require_when_needed(inflection_utilities_module)
+local is_noun_module = "Module:is-noun"
 
 local list_param = {list = true, disallow_holes = true}
 
@@ -129,7 +132,7 @@ function export.show(frame)
 	return require("Module:headword").full_headword(data)
 end
 
-local function get_noun_params(is_proper)
+local function get_manual_noun_params(is_proper)
 	return function(lang)
 		params = {
 			[1] = {alias_of = "g"},
@@ -150,7 +153,7 @@ local function get_noun_params(is_proper)
 	end
 end
 
-local function do_nouns(is_proper, args, data)
+local function do_manual_nouns(is_proper, args, data)
 	local specs = valid_gender_specs[data.lang:getCode()]
 	for i, g in ipairs(args.g) do
 		local canon_g = specs[g]
@@ -199,6 +202,121 @@ local function do_nouns(is_proper, args, data)
 	handle_infl("pej", "<<pejorative>>")
 	handle_infl("dem", "<<demonym>>")
 	handle_infl("fdem", "female <<demonym>>")
+end
+
+local function get_auto_noun_params(is_proper)
+	return function(lang)
+		params = {
+			[1] = {},
+			["m"] = list_param,
+			["f"] = list_param,
+			["dim"] = list_param,
+			["aug"] = list_param,
+			["pej"] = list_param,
+			["dem"] = list_param,
+			["fdem"] = list_param,
+		}
+		return params
+	end
+end
+
+local function do_auto_nouns(is_proper, args, data)
+	if data.lang:getCode() ~= "is" then
+		error("Internal error: Only Icelandic supported at the moment")
+	end
+	local m_is_noun = require(is_noun_module)
+	local alternant_multiword_spec = m_is_noun.do_generate_forms(args, nil, "from headword", proper)
+	data.heads = alternant_multiword_spec.args.head
+	data.genders = alternant_multiword_spec.genders
+
+	local function do_noun_form(slot, label, label_for_not_present, accel_form)
+		local forms = alternant_multiword_spec.forms[slot]
+		local retval
+		if not forms then
+			if not label_for_not_present then
+				return
+			end
+			retval = {label = "no " .. label}
+		else
+			retval = {label = label, accel = accel_form and {form = accel_form} or nil}
+			local prev_footnotes
+			for _, form in ipairs(forms) do
+				local footnotes = form.footnotes
+				if footnotes and prev_footnotes and m_table.deepEquals(footnotes, prev_footnotes) then
+					footnotes = nil
+				end
+				prev_footnotes = form.footnotes
+				local quals, refs
+				if footnotes then
+					quals, refs = m_inflection_utilities.fetch_headword_qualifiers_and_references(footnotes)
+				end
+				local term = form.form
+				table.insert(retval, {term = term, q = quals, refs = refs})
+			end
+		end
+
+		table.insert(data.inflections, retval)
+	end
+
+	if proper then
+		table.insert(data.inflections, {label = glossary_link("proper noun")})
+	end
+	if not alternant_multiword_spec.first_noun and alternant_multiword_spec.first_adj then
+		table.insert(data.inflections, {label = "adjectival"})
+	end
+	if alternant_multiword_spec.number == "pl" then
+		table.insert(data.inflections, {label = glossary_link("plural only")})
+	else
+		do_noun_form("gen_s", "genitive singular", "genitive singular")
+		do_noun_form("nom_p", "nominative plural", not proper and "plural" or nil)
+	end
+
+	-- Parse and insert an inflection not requiring additional processing into `data.inflections`. The raw arguments
+	-- come from `args[field]`, which is parsed for inline modifiers. If there is a corresponding qualifier field
+	-- `FIELD_qual`, qualifiers may additionally come from there. `label` is the label that the inflections are given,
+	-- which is linked to the glossary if surrounded by <<..>> (which is removed). `plpos` is the plural part of speech,
+	-- used in [[Category:LANGNAME PLPOS with red links in their headword lines]]. `accel` is the accelerator form, or
+	-- nil.
+	local function handle_infl(field, label, frob)
+		m_headword_utilities.parse_and_insert_inflection {
+			headdata = data,
+			forms = args[field],
+			paramname = field,
+			label = label,
+			frob = frob,
+		}
+	end
+
+	handle_infl("m", "male equivalent")
+	handle_infl("f", "female equivalent")
+	handle_infl("dim", "<<diminutive>>")
+	handle_infl("aug", "<<augmentative>>")
+	handle_infl("pej", "<<pejorative>>")
+	handle_infl("dem", "<<demonym>>")
+	handle_infl("fdem", "female <<demonym>>")
+	-- Add categories.
+	for _, cat in ipairs(alternant_multiword_spec.categories) do
+		table.insert(data.categories, cat)
+	end
+
+	-- Use the "linked" form of the lemma as the head if no head= explicitly given.
+	if #data.heads == 0 then
+		data.heads = {}
+		local lemmas = m_is_noun.get_lemmas(alternant_multiword_spec, "linked variant")
+		for _, lemma_obj in ipairs(lemmas) do
+			local head = lemma_obj.form
+			--local head = alternant_multiword_spec.args.nolinkhead and lemma_obj.form or
+			--	m_headword_utilities.add_lemma_links(lemma_obj.form, alternant_multiword_spec.args.splithyph)
+			local quals, refs
+			if lemma_obj.footnotes then
+				quals, refs = m_inflection_utilities.fetch_headword_qualifiers_and_references(lemma_obj.footnotes)
+			end
+			table.insert(data.heads, {term = head, q = quals, refs = refs})
+		end
+	end
+end
+
+local function do_auto_nouns(is_proper, args, data)
 end
 
 pos_functions["nouns"] = {
