@@ -1,6 +1,15 @@
 local export = {}
 local pos_functions = {}
 
+--[=[
+Author: Benwing2
+
+This module is eventually intended for all the headword templates of all North Germanic languages, especially the ones
+that still maintain complex inflection systems (Icelandic, Faroese, Old Norse, Old Swedish, Elfdalian, etc.), but could
+definitely be extended to support other North Germanic languages (Swedish, Danish, Norwegian *). Currently it only
+supports Icelandic.
+]=]
+
 local force_cat = false -- for testing; if true, categories appear in non-mainspace pages
 
 local rfind = mw.ustring.find
@@ -24,7 +33,7 @@ local valid_gender_specs = {}
 for _, gender in ipairs(valid_genders) do
 	for _, number in ipairs(valid_number_suffixes) do
 		local spec = gender .. number
-		dest[spec] = spec
+		valid_gender_specs[spec] = spec
 	end
 end
 
@@ -58,8 +67,8 @@ function export.show(frame)
 	local args = frame:getParent().args
 	local poscat = iargs[1]
 	local langcode = iargs.lang
-	if langcode ~= "cs" and langcode ~= "sk" and langcode ~= "zlw-ocs" and langcode ~= "zlw-osk" then
-		error("This module currently only works for lang=cs, lang=sk, lang=zlw-ocs and lang=zlw-osk")
+	if langcode ~= "is" then
+		error("This module currently only works for lang=is")
 	end
 	local lang = require("Module:languages").getByCode(langcode, true)
 	local langname = lang:getCanonicalName()
@@ -132,25 +141,22 @@ function export.show(frame)
 	return require("Module:headword").full_headword(data)
 end
 
-local function get_manual_noun_params(is_proper)
-	return function(lang)
-		params = {
-			[1] = {alias_of = "g"},
-			["g"] = list_param,
-			["g_qual"] = {list = "g\1_qual", allow_holes = true},
-			["indecl"] = {type = "boolean"},
-			["m"] = list_param,
-			["f"] = list_param,
-			["dim"] = list_param,
-			["aug"] = list_param,
-			["pej"] = list_param,
-			["dem"] = list_param,
-			["fdem"] = list_param,
-			["gen"] = list_param,
-			["pl"] = list_param,
-		}
-		return params
-	end
+local function get_manual_noun_params(lang, is_proper)
+	return {
+		[1] = {alias_of = "g"},
+		["g"] = list_param,
+		["g_qual"] = {list = "g\1_qual", allow_holes = true},
+		["indecl"] = {type = "boolean"},
+		["m"] = list_param,
+		["f"] = list_param,
+		["dim"] = list_param,
+		["aug"] = list_param,
+		["pej"] = list_param,
+		["dem"] = list_param,
+		["fdem"] = list_param,
+		["gen"] = list_param,
+		["pl"] = list_param,
+	}
 end
 
 local function do_manual_nouns(is_proper, args, data)
@@ -204,28 +210,29 @@ local function do_manual_nouns(is_proper, args, data)
 	handle_infl("fdem", "female <<demonym>>")
 end
 
-local function get_auto_noun_params(is_proper)
-	return function(lang)
-		params = {
-			[1] = {},
-			["m"] = list_param,
-			["f"] = list_param,
-			["dim"] = list_param,
-			["aug"] = list_param,
-			["pej"] = list_param,
-			["dem"] = list_param,
-			["fdem"] = list_param,
-		}
-		return params
-	end
+local function get_auto_noun_params(lang, is_proper)
+	return {
+        [1] = {required = true, default = "akur<m.#>"},
+        ["pos"] = {},
+		["m"] = list_param,
+		["f"] = list_param,
+		["dim"] = list_param,
+		["aug"] = list_param,
+		["pej"] = list_param,
+		["dem"] = list_param,
+		["fdem"] = list_param,
+	}
 end
 
 local function do_auto_nouns(is_proper, args, data)
 	if data.lang:getCode() ~= "is" then
 		error("Internal error: Only Icelandic supported at the moment")
 	end
+	if args.pos then
+		data.pos_category = args.pos
+	end
 	local m_is_noun = require(is_noun_module)
-	local alternant_multiword_spec = m_is_noun.do_generate_forms(args, nil, "from headword", proper)
+	local alternant_multiword_spec = m_is_noun.do_generate_forms(args, is_proper and "is-proper noun" or "is-noun")
 	data.heads = alternant_multiword_spec.args.head
 	data.genders = alternant_multiword_spec.genders
 
@@ -236,7 +243,7 @@ local function do_auto_nouns(is_proper, args, data)
 			if not label_for_not_present then
 				return
 			end
-			retval = {label = "no " .. label}
+			retval = {label = "no " .. label_for_not_present}
 		else
 			retval = {label = label, accel = accel_form and {form = accel_form} or nil}
 			local prev_footnotes
@@ -258,17 +265,25 @@ local function do_auto_nouns(is_proper, args, data)
 		table.insert(data.inflections, retval)
 	end
 
-	if proper then
+	if is_proper then
 		table.insert(data.inflections, {label = glossary_link("proper noun")})
 	end
 	if not alternant_multiword_spec.first_noun and alternant_multiword_spec.first_adj then
 		table.insert(data.inflections, {label = "adjectival"})
 	end
+	local def_prefix
+	if alternant_multiword_spec.definiteness == "def" then
+		def_prefix = "def_"
+		table.insert(data.inflections, {label = glossary_link("definite") .. " only"})
+	else
+		def_prefix = "ind_"
+	end
 	if alternant_multiword_spec.number == "pl" then
 		table.insert(data.inflections, {label = glossary_link("plural only")})
+		do_noun_form(def_prefix .. "gen_p", "genitive plural", "genitive plural")
 	else
-		do_noun_form("gen_s", "genitive singular", "genitive singular")
-		do_noun_form("nom_p", "nominative plural", not proper and "plural" or nil)
+		do_noun_form(def_prefix .. "gen_s", "genitive singular", "genitive singular")
+		do_noun_form(def_prefix .. "nom_p", "nominative plural", not is_proper and "plural" or nil)
 	end
 
 	-- Parse and insert an inflection not requiring additional processing into `data.inflections`. The raw arguments
@@ -316,22 +331,27 @@ local function do_auto_nouns(is_proper, args, data)
 	end
 end
 
-local function do_auto_nouns(is_proper, args, data)
+local function get_noun_pos_functions(is_proper)
+	return {
+		params = function(lang)
+			if lang:getCode() == "is" then
+				return get_auto_noun_params(lang, is_proper)
+			else
+				return get_manual_noun_params(lang, is_proper)
+			end
+		end,
+	 func = function(args, data)
+			if data.lang:getCode() == "is" then
+				return do_auto_nouns(is_proper, args, data)
+			else
+				return do_manual_nouns(is_proper, args, data)
+			end
+	 end,
+	}
 end
 
-pos_functions["nouns"] = {
-	 params = get_noun_params(false),
-	 func = function(args, data)
-	 	return do_nouns(false, args, data)
-	 end,
-}
-
-pos_functions["proper nouns"] = {
-	 params = get_noun_params("proper noun"),
-	 func = function(args, data)
-	 	return do_nouns("proper noun", args, data)
-	 end,
-}
+pos_functions["nouns"] = get_noun_pos_functions(false)
+pos_functions["proper nouns"] = get_noun_pos_functions("proper noun")
 
 local function do_comparative_superlative(args, data, plpos)
 	if args[1][1] == "-" then
