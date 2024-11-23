@@ -1754,6 +1754,18 @@ local function parse_inside(base, inside, is_builtin_noun)
 				parse_err(("Can't specify '%s:' twice"):format(field))
 			end
 			base[field] = value
+		elseif part:find("^q%s*:") or part:find("header%s*:") then
+			local field, value = part:match("^(q)%s*:%s*(.+)$")
+			if not value then
+				field, value = part:match("^(header)%s*:%s*(.+)$")
+			end
+			if not value then
+				parse_err(("Syntax error in q/header indicator: '%s'"):format(part))
+			end
+			if base[field] then
+				parse_err(("Can't specify '%s:' twice"):format(field))
+			end
+			base[field] = value
 		elseif rfind(part, ":") then
 			local spec, value = part:match("^([a-z]+)%s*:%s*(.+)$")
 			if not spec then
@@ -2005,7 +2017,8 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename)
 		end
 		copy_properties(mutation_specs)
 		copy_properties(overridable_stems)
-		copy_properties { "gens", "pls", "gender", "number", "definiteness", "decllemma", "declgender", "declnumber" }
+		copy_properties { "gens", "pls", "gender", "number", "definiteness", "decllemma", "declgender", "declnumber",
+			"q", "header" }
 		nbase.footnotes = iut.combine_footnotes(nbase.footnotes, base.footnotes)
 		-- Copy addnote specs.
 		for _, prop_list in ipairs { "addnote_specs" } do
@@ -2139,7 +2152,16 @@ local function set_all_defaults_and_check_bad_indicators(alternant_multiword_spe
 		elseif alternant_multiword_spec.definiteness ~= base.definiteness then
 			error("With multiple words or alternants, all must agree in definiteness")
 		end
-		base.multiword = is_multiword -- FIXME: not currently used; consider deleting
+		for _, global_prop in ipairs { "q", "header" } do
+			if base[global_prop] then
+				if alternant_multiword_spec[global_prop] == nil then
+					alternant_multiword_spec[global_prop] = base[global_prop]
+				elseif alternant_multiword_spec[global_prop] ~= base[global_prop] then
+					error(("With multiple words or alternants, set '%s' on only one of them or make them all agree"):
+						format(global_prop))
+				end
+			end
+		end
 		if base.props.pron then
 			alternant_multiword_spec.saw_pron = true
 		else
@@ -2457,7 +2479,7 @@ local function determine_declension(base)
 		end
 		if not stem then
 			-- There must be at least one vowel; lemmas like [[bur]] don't count.
-			stem, ending = rmatch(base.lemma, "^(.*" .. com.vowel_c .. ".*)(ur)$")
+			stem, ending = rmatch(base.lemma, "^(.*" .. com.vowel_or_hyphen_c .. ".*)(ur)$")
 			if stem then
 				if stem:find("skap$") and not base.stem then
 					-- tons of words in -skapur
@@ -2494,7 +2516,7 @@ local function determine_declension(base)
 		if not stem then
 			-- There must be at least one vowel (although there don't appear to be any single-syllable
 			-- lemmas ending in -ir other than in -eir).
-			stem, ending = rmatch(base.lemma, "^(.*" .. com.vowel_c .. ".*)(ir)$")
+			stem, ending = rmatch(base.lemma, "^(.*" .. com.vowel_or_hyphen_c .. ".*)(ir)$")
 			if stem then
 				-- [[læknir]] "physician" and many others
 				-- [[bróðir]], [[faðir]] are r-stems
@@ -2580,7 +2602,7 @@ local function determine_declension(base)
 				base.decl = "m-weak"
 				-- Recognize certain endings and automatically make them j-infixing. For -ingi, only when a vowel
 				-- precedes (not [[ingi]], [[Ingi]], [[stingi]], [[þvingi]]). Use `-j` to turn this off.
-				if ending == "i" and (stem:find("[Bb]ygg$") or rfind(stem, com.vowel_c .. ".*ing$") or
+				if ending == "i" and (stem:find("[Bb]ygg$") or rfind(stem, com.vowel_or_hyphen_c .. ".*ing$") or
 					stem:find("[Ss]kegg$") or stem:find("[Vv]irk$") or stem:find("[Yy]rk$")) then
 					default_props.j = "j"
 				end
@@ -2614,7 +2636,7 @@ local function determine_declension(base)
 		if not stem and not base.stem then
 			-- Don't match when base.stem is set, e.g. [[gimbur]] "female lamb", where the -ur is part of the stem
 			stem, ending = rmatch(base.lemma, "^(.*[^aA])(ur)$")
-			if stem and rfind(stem, com.vowel_c) then
+			if stem and rfind(stem, com.vowel_or_hyphen_c) then
 				if is_proper_noun(base, stem) then
 					-- [[Auður]], [[Heiður]], [[Ingveldur]], [[Móeiður]], [[Þórelfur]], [[-frídur]] ([[Gunnfríður]],
 					-- [[Hólmfríður]], [[Málfríður]], [[Sigfríður]]), [[Gerður]] ([[Hallgerður]], [[Ingigerður]],
@@ -2720,7 +2742,7 @@ local function determine_declension(base)
 		end
 		if not stem then
 			stem = rmatch(base.lemma, "^(.*[^aA]un)$")
-			if stem and rfind(stem, com.vowel_c) then
+			if stem and rfind(stem, com.vowel_or_hyphen_c) then
 				-- [[pöntun]] "order (in commerce)"; [[verslun]] "trade, business; store, shop"; [[efun]] "doubt";
 				-- [[bötun]] "improvement"; [[örvun]] "encouragement; stimulation" (pl. örvanir); etc.
 				-- Exclude words in -aun like [[baun]] "bean", [[laun]] "secret", [[raun]] "experience".
@@ -2782,7 +2804,7 @@ local function determine_declension(base)
 		end
 		if not stem then
 			-- -ur preceded by a consonant and at least one vowel.
-			stem = rmatch(base.lemma, "^(.*" .. com.vowel_c .. ".*" .. com.cons_c .. "ur)$")
+			stem = rmatch(base.lemma, "^(.*" .. com.vowel_or_hyphen_c .. ".*" .. com.cons_c .. "ur)$")
 			if stem then
 				base.decl = "n"
 				default_props.con = "con"
@@ -2843,7 +2865,7 @@ local function determine_default_masc_dat_sg(base, props)
 		-- [[belgur]] "bellows; skin", [[fengur]] "profit", [[flekkur]] "spot, fleck", [[serkur]]
 		-- "shirt", [[stingur]] "sting"
 		default_dat_sg = ""
-	elseif stem:find(com.vowel_c .. ".*[iu]ng$") then
+	elseif stem:find(com.vowel_or_hyphen_c .. ".*[iu]ng$") then
 		-- Stems in suffix -ing or -ung normally have indef dat -i, def dat null
 		default_dat_sg = {indef = "i", def = ""}
 	elseif stem:find("x$") or (rfind(stem, com.cons_c .. com.cons_c .. "$") and not stem:find("kk$") and not stem:find("pp$")) then
@@ -3523,9 +3545,9 @@ local function make_table(alternant_multiword_spec)
 		return rsub([=[
 <div>
 <div class="NavFrame" style="max-width:MINWIDTHem">
-<div class="NavHead" style="background:#eff7ff">{title}{annotation}</div>
+<div class="NavHead" style="background: var(--wikt-palette-lighterblue, #eff7ff);">{title}{annotation}</div>
 <div class="NavContent" style="overflow:auto">
-{\op}| style="background:#F9F9F9;text-align:center;min-width:MINWIDTHem" class="inflection-table"
+{\op}| style="min-width:MINWIDTHem" class="inflection-table is-inflection-table"
 |-
 ]=], "MINWIDTH", min_width)
 	end
@@ -3536,34 +3558,34 @@ local function make_table(alternant_multiword_spec)
 	end
 
 	local table_spec_both = template_prelude("45") .. [=[
-! style="width:20%;background:#d9ebff" rowspan="2" |
-! style="background:#d9ebff" colspan="2" | singular
-! style="background:#d9ebff" colspan="2" | plural
+! class="is-header" style="width:20%;" rowspan="2" |
+! class="is-header" colspan="2" | singular
+! class="is-header" colspan="2" | plural
 |-
-! style="background:#d9ebff" | indefinite
-! style="background:#d9ebff" | definite
-! style="background:#d9ebff" | indefinite
-! style="background:#d9ebff" | definite
+! class="is-header" | indefinite
+! class="is-header" | definite
+! class="is-header" | indefinite
+! class="is-header" | definite
 |-
-!style="background:#eff7ff"|nominative
+!class="is-row"|nominative
 | {ind_nom_s}
 | {def_nom_s}
 | {ind_nom_p}
 | {def_nom_p}
 |-
-!style="background:#eff7ff"|accusative
+!class="is-row"|accusative
 | {ind_acc_s}
 | {def_acc_s}
 | {ind_acc_p}
 | {def_acc_p}
 |-
-!style="background:#eff7ff"|dative
+!class="is-row"|dative
 | {ind_dat_s}
 | {def_dat_s}
 | {ind_dat_p}
 | {def_dat_p}
 |-
-!style="background:#eff7ff"|genitive
+!class="is-row"|genitive
 | {ind_gen_s}
 | {def_gen_s}
 | {ind_gen_p}
@@ -3572,25 +3594,25 @@ local function make_table(alternant_multiword_spec)
 
 	local function get_table_spec_one_number(number, numcode)
 		local table_spec_one_number = [=[
-! style="width:33%;background:#d9ebff" rowspan="2" |
-! style="background:#d9ebff" colspan="2" | NUMBER
+! class="is-header" style="width:33%;" rowspan="2" |
+! class="is-header" colspan="2" | NUMBER
 |-
-! style="background:#d9ebff" | indefinite
-! style="background:#d9ebff" | definite
+! class="is-header" | indefinite
+! class="is-header" | definite
 |-
-!style="background:#eff7ff"|nominative
+!class="is-row"|nominative
 | {ind_nom_NUM}
 | {def_nom_NUM}
 |-
-!style="background:#eff7ff"|accusative
+!class="is-row"|accusative
 | {ind_acc_NUM}
 | {def_acc_NUM}
 |-
-!style="background:#eff7ff"|dative
+!class="is-row"|dative
 | {ind_dat_NUM}
 | {def_dat_NUM}
 |-
-!style="background:#eff7ff"|genitive
+!class="is-row"|genitive
 | {ind_gen_NUM}
 | {def_gen_NUM}
 ]=]
@@ -3600,18 +3622,18 @@ local function make_table(alternant_multiword_spec)
 
 	local function get_table_spec_one_number_one_def(number, numcode, definiteness, defcode)
 		local table_spec_one_number_one_def = [=[
-! style="width:100%;background:#d9ebff" colspan="2" | DEFINITENESS NUMBER
+! class="is-header" style="width:100%;" colspan="2" | DEFINITENESS NUMBER
 |-
-!style="background:#eff7ff"|nominative
+!class="is-row"|nominative
 | {DEF_nom_NUM}
 |-
-!style="background:#eff7ff"|accusative
+!class="is-row"|accusative
 | {DEF_acc_NUM}
 |-
-!style="background:#eff7ff"|dative
+!class="is-row"|dative
 | {DEF_dat_NUM}
 |-
-!style="background:#eff7ff"|genitive
+!class="is-row"|genitive
 | {DEF_gen_NUM}
 ]=]
 		return template_prelude("20") .. (table_spec_one_number_one_def:gsub("NUMBER", number):gsub("NUM", numcode)
@@ -3619,8 +3641,8 @@ local function make_table(alternant_multiword_spec)
 	end
 
 	local notes_template = [=[
-<div style="width:100%;text-align:left;background:#d9ebff">
-<div style="display:inline-block;text-align:left;padding-left:1em;padding-right:1em">
+<div class="is-footnote-outer-div" style="width:100%;">
+<div class="is-footnote-inner-div">
 {footnote}
 </div></div>
 ]=]
@@ -3664,7 +3686,7 @@ local function make_table(alternant_multiword_spec)
 		get_table_spec_one_number(number, numcode)
 	forms.notes_clause = forms.footnote ~= "" and
 		m_string_utilities.format(notes_template, forms) or ""
-	return m_string_utilities.format(table_spec, forms)
+	return require("Module:TemplateStyles")("Module:is-noun/style.css") .. m_string_utilities.format(table_spec, forms)
 end
 
 
@@ -3685,12 +3707,11 @@ local function compute_headword_genders(alternant_multiword_spec)
 end
 
 
--- Externally callable function to parse and decline a noun given user-specified arguments.
--- Return value is ALTERNANT_MULTIWORD_SPEC, an object where the declined forms are in
--- `ALTERNANT_MULTIWORD_SPEC.forms` for each slot. If there are no values for a slot, the
--- slot key will be missing. The value for a given slot is a list of objects
--- {form=FORM, footnotes=FOOTNOTES}.
-function export.do_generate_forms(args, source_template)
+-- Externally callable function to parse and decline a noun given user-specified arguments and the argument spec
+-- `argspec` (specified because the user may give multiple such specs). Return value is ALTERNANT_MULTIWORD_SPEC, an
+-- object where the declined forms are in `ALTERNANT_MULTIWORD_SPEC.forms` for each slot. If there are no values for a
+-- slot, the slot key will be missing. The value for a given slot is a list of objects {form=FORM, footnotes=FOOTNOTES}.
+function export.do_generate_forms(args, argspec, source_template)
 	local from_headword = source_template == "is-noun" or source_template == "is-proper noun"
 	local pagename = args.pagename or mw.loadData("Module:headword/data").pagename
 	local parse_props = {
@@ -3700,7 +3721,7 @@ function export.do_generate_forms(args, source_template)
 		angle_brackets_omittable = true,
 		allow_blank_lemma = true,
 	}
-	local alternant_multiword_spec = iut.parse_inflected_text(args[1], parse_props)
+	local alternant_multiword_spec = iut.parse_inflected_text(argspec, parse_props)
 	alternant_multiword_spec.title = args.title
 	alternant_multiword_spec.args = args
 	alternant_multiword_spec.source_template = source_template
@@ -3743,22 +3764,41 @@ end
 function export.show(frame)
 	local parent_args = frame:getParent().args
 	local params = {
-		[1] = {required = true, default = "akur<m.#>"},
-		noautolinktext = {type = "boolean"},
-		noautolinkverb = {type = "boolean"},
+		[1] = {required = true, list = true, default = "akur<m.#>"},
 		title = {},
  		pagename = {},
 		json = {type = "boolean"},
 	}
 	local args = m_para.process(parent_args, params)
-	local alternant_multiword_spec = export.do_generate_forms(args, "is-ndecl")
-	if type(alternant_multiword_spec) == "string" then
-		-- JSON return value
-		return alternant_multiword_spec
+	local alternant_multiword_specs = {}
+	for i, argspec in ipairs(args[1]) do
+		alternant_multiword_specs[i] = export.do_generate_forms(args, argspec, "is-ndecl")
 	end
-	show_forms(alternant_multiword_spec)
-	return make_table(alternant_multiword_spec) ..
-		require("Module:utilities").format_categories(alternant_multiword_spec.categories, lang, nil, nil, force_cat)
+	if args.json then
+		-- JSON return value
+		if #args[1] == 1 then
+			return alternant_multiword_specs[1]
+		else
+			return alternant_multiword_specs
+		end
+	end
+	local parts = {}
+	local function ins(txt)
+		table.insert(parts, txt)
+	end
+	for _, alternant_multiword_spec in ipairs(alternant_multiword_specs) do
+		show_forms(alternant_multiword_spec)
+		if alternant_multiword_spec.header then
+			ins(("'''%s:'''\n"):format(alternant_multiword_spec.header))
+		end
+		if alternant_multiword_spec.q then
+			ins(("''%s''\n"):format(alternant_multiword_spec.q))
+		end
+		ins(make_table(alternant_multiword_spec))
+		ins(require("Module:utilities").format_categories(alternant_multiword_spec.categories, lang, nil, nil,
+			force_cat))
+	end
+	return table.concat(parts)
 end
 
 
