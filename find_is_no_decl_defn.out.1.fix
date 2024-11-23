@@ -169,59 +169,48 @@ Page 214 rebbi: <begin> {{is-ndecl|m}} <end> <begin> {{is-noun/old|m}} <end> def
 Page 215 viðrini: <begin> {{is-ndecl|n}} <end> <begin> {{is-noun/old|n|viðrinis|viðrini}} <end> defn: [[wimp]], [[namby-pamby]]
 Page 216 víð: <begin> {{is-ndecl|f.sg}} <end> <begin> {{is-noun/old|f}} <end> defn: {{n-g|Used in set phrases.}}
 Page 218 svefnpurka: <begin> {{is-ndecl|f.genplna:a}} <end> <begin> {{is-noun/old|f|svefnpurku|svefnpurkur}} <end> defn: a [[sleepyhead]], a [[lie-a-bed]]/[[lieabed]], a [[sluggard]]
-
-
-
-
-
-
-
-
-
-
-
-
-# got here
-
-
-
-
-
-
-
-
-
 Page 219 ártíð: <begin> {{is-ndecl|f}} <end> <begin> {{is-noun/old|f|ártíðar|ártíðir}} <end> defn: an [[anniversary]] of somebody's [[death]];ux:Í dag er 15 ára '''ártíð''' ömmu.|Today marks 15 years since my grandma died.;ux:Safnið var opnað á 200 ára '''ártíð''' [[rithöfundur|rithöfundsins]].|The museum was opened 200 years after the [[author]]'s passing.
-Page 220 heitur pottur: <begin> {{is-ndecl|m}} <end> <begin> {{is-noun/old|m|heits potts|heitir pottar}} <end> defn: (bathing)a [[hot tub]]
+#Page 220 heitur pottur: <begin> {{is-ndecl|m}} <end> <begin> {{is-noun/old|m|heits potts|heitir pottar}} <end> defn: (bathing)a [[hot tub]]
 Page 221 fimbulfambi: <begin> {{is-ndecl|m}} <end> <begin> {{is-noun/old|m|fimbulfamba|fimbulfambar}} <end> defn: a [[mighty]] [[fool]]
 Page 222 voð: <begin> {{is-ndecl|f}} <end> <begin> {{is-noun/old|f|voðar|voðir}} <end> defn: [[raiment]], a piece [[cloth]], [[weeds]], [[clothing]], [[garment]], [[weave]], [[fabric]];{{w|Hávamál}} ([[s:en:Poetic Edda/Hávamál|English source]], [[s:is:Hávamál|Icelandic source]]);{{quote|is|Elds er þörf<br>þeim er inn er kominn<br>og á kné kalinn.<br>Matar og '''voða'''<br>er manni þörf,<br>þeim er hefir um fjall farið.|Fire he needs<br>who with frozen knees<br>Has come from the cold without\;<br>Food and '''clothes'''<br>must the farer have,<br>The man from the mountains come.}}
-Page 223 beint andlag: <begin> {{is-ndecl|n}} <end> <begin> {{is-noun/old|n|beins andlags|bein andlög}} <end> defn: (grammar)a [[direct object]]
-Page 224 óbeint andlag: <begin> {{is-ndecl|n}} <end> <begin> {{is-noun/old|n|óbeins andlags|óbein andlög}} <end> defn: (grammar)an [[indirect object]]
+#Page 223 beint andlag: <begin> {{is-ndecl|n}} <end> <begin> {{is-noun/old|n|beins andlags|bein andlög}} <end> defn: (grammar)a [[direct object]]
+#Page 224 óbeint andlag: <begin> {{is-ndecl|n}} <end> <begin> {{is-noun/old|n|óbeins andlags|óbein andlög}} <end> defn: (grammar)an [[indirect object]]
 Page 225 skipti: <begin> {{is-ndecl|n}} <end> <begin> {{is-noun/old|n|skiptis|skipti}} <end> defn: a [[change]], an [[exchange]];a [[change]];ux:Slæm '''skipti'''.|A '''change''' for the worse.;[[time]], as in [[occurrence]];{{syn|is|sinn}};ux:Mér gengur betur [[í þetta skipti|í þetta '''skipti''']].|I'll do better this '''time'''.;ux:Þú vinnur [[í hvert skipti|í hvert '''skipti''']]!|You win [[every time|every '''time''']]!;[[division]]
 Page 226 trjágöng: <begin> {{is-ndecl|n.pl}} <end> <begin> {{is-noun/old|n-p}} <end> defn: an [[alley]] or [[passage]] of [[tree]]s
-Page 227 óræð tala: <begin> {{is-ndecl|f}} <end> <begin> {{is-noun/old|f|óræðrar tölu|óræðar tölur}} <end> defn: (mathematics)(arithmetic)(not comparable)an [[irrational number]]\; any [[real number]] that cannot be expressed as a [[ratio]] of two integers;ux:&pi\; er '''óræð tala'''.|The '''number''' &pi\; is '''irrational'''.
-Page 228 stírur: <begin> {{is-ndecl|n.pl}} <end> <begin> {{is-noun/old|n-p}} <end> defn: [[sleep]], [[rheum]]\; [[stiffness]] in the [[eye]]s due to sleep, a substance found in the corner of the eyes after waking;ux:Ég hef alltaf '''stírur''' í augunum þegar ég vakna.|I always have '''sleep''' in my eyes when I wake up.
+#Page 227 óræð tala: <begin> {{is-ndecl|f}} <end> <begin> {{is-noun/old|f|óræðrar tölu|óræðar tölur}} <end> defn: (mathematics)(arithmetic)(not comparable)an [[irrational number]]\; any [[real number]] that cannot be expressed as a [[ratio]] of two integers;ux:&pi\; er '''óræð tala'''.|The '''number''' &pi\; is '''irrational'''.
+Page 228 stírur: <begin> {{is-ndecl|n.pl.genpl--}} <end> <begin> {{is-noun/old|n-p}} <end> defn: [[sleep]], [[rheum]]\; [[stiffness]] in the [[eye]]s due to sleep, a substance found in the corner of the eyes after waking;ux:Ég hef alltaf '''stírur''' í augunum þegar ég vakna.|I always have '''sleep''' in my eyes when I wake up.
 Page 229 ummál: <begin> {{is-ndecl|n}} <end> <begin> {{is-noun/old|n|ummáls|ummál}} <end> defn: (mathematics)a [[perimeter]]\; {{gloss|sum of the distance of all the lengths of the sides of an object}};(mathematics)a [[circumference]]\; {{gloss|length of a line that bounds a circle or other two-dimensional figure}}
 Page 230 tvíund: <begin> {{is-ndecl|f}} <end> <begin> {{is-noun/old|f|tvíundar|tvíundir}} <end> defn: (music)[[second]] (interval between adjacent notes)
-Page 231 hór: <begin> {{is-ndecl|m}} <end> <begin> {{is-noun/old|m|hórs|hórar}} <end> defn: (obsolete)the [[lover]] of a [[married]] [[woman]]
 Page 232 ölkelda: <begin> {{is-ndecl|f}} <end> <begin> {{is-noun/old|f|ölkeldu|ölkeldur}} <end> defn: the name of [[Icelandic]] mineral wells, a spring which flows with cold water which appears to be boiling due to the [[carbonic acid]]
-Page 233 besti vinur mannsins: <begin> {{is-ndecl|m}} <end> <begin> {{is-noun/old|m|besta vinar mannsins|bestu vinir mannsins}} <end> defn: a [[man's best friend]], a [[sobriquet]] for a [[dog]]
+#Page 233 besti vinur mannsins: <begin> {{is-ndecl|m}} <end> <begin> {{is-noun/old|m|besta vinar mannsins|bestu vinir mannsins}} <end> defn: a [[man's best friend]], a [[sobriquet]] for a [[dog]]
 Page 234 þríhyrningur: <begin> {{is-ndecl|m}} <end> <begin> {{is-noun/old|m|þríhyrnings|þríhyrningar}} <end> defn: (geometry)a [[triangle]]
-Page 235 skollaleikur: <begin> {{is-ndecl|m}} <end> <begin> {{is-noun/old|m|skollaleiks}} <end> defn: [[blind man's buff]]
-Page 236 jógúrt: <begin> {{is-ndecl|f,n}} <end> <begin> {{is-noun/old|f|g2=n|jógúrtar|gen2=jógúrts}} <end> defn: [[yoghurt]]
+Page 235 skollaleikur: <begin> {{is-ndecl|m.sg.dat-/-}} <end> <begin> {{is-noun/old|m|skollaleiks}} <end> defn: [[blind man's buff]]
 Page 237 MR-ingur: <begin> {{is-ndecl|m.dem}} <end> <begin> {{is-noun/old|m}} <end> defn: A current or former student of Reykjavik Junior College (''Menntaskólinn í Reykjavík'').
 Page 238 þjarki: <begin> {{is-ndecl|m}} <end> <begin> {{is-noun/old|m|þjarka|þjarkar}} <end> defn: (rare)a [[robot]];{{syn|is|róbot|róbóti|vélmenni}};# (common)[[w:surgical robot|surgical robot]]
-Page 239 lýsingarháttur þátíðar: <begin> {{is-ndecl|m}} <end> <begin> {{is-noun/old|m|lýsingarháttar þátíðar|lýsingarhættir þátíðar}} <end> defn: (grammar)[[past participle]] (abbreviation: '''[[lh. þt.]]''')
-Page 240 svartþröstur: <begin> {{is-ndecl|m}} <end> <begin> {{is-noun/old|m|svartþrastar|svartþrestir}} <end> defn: [[Eurasian blackbird]] ({{taxfmt|Turdus merula|species}})
+#Page 239 lýsingarháttur þátíðar: <begin> {{is-ndecl|m}} <end> <begin> {{is-noun/old|m|lýsingarháttar þátíðar|lýsingarhættir þátíðar}} <end> defn: (grammar)[[past participle]] (abbreviation: '''[[lh. þt.]]''')
+Page 240 svartþröstur: <begin> {{is-ndecl|@}} <end> <begin> {{is-noun/old|m|svartþrastar|svartþrestir}} <end> defn: [[Eurasian blackbird]] ({{taxfmt|Turdus merula|species}})
 Page 241 strandfura: <begin> {{is-ndecl|f}} <end> <begin> {{is-noun/old|f|strandfuru|strandfurur}} <end> defn: [[maritime pine]] ({{taxfmt|Pinus pinaster|species}})
-Page 242 svartsvanur: <begin> {{is-ndecl|m}} <end> <begin> {{is-noun/old|m|svartsvans|svartsvanir}} <end> defn: a [[black swan]] (the bird cygnus atratus)
-Page 243 blær: <begin> {{is-ndecl|m}} <end> <begin> {{is-noun/old|m}} <end> defn: (describing the appearance of something)[[look]], [[ambience]], [[mood]], [[feeling]];{{syn|is|yfirbragð|ásýnd}}
+Page 242 svartsvanur: <begin> {{is-ndecl|m,,ir.dati/i}} <end> <begin> {{is-noun/old|m|svartsvans|svartsvanir}} <end> defn: a [[black swan]] (the bird cygnus atratus)
 Page 244 turnfálki: <begin> {{is-ndecl|m}} <end> <begin> {{is-noun/old|m|turnfálka|turnfálkar}} <end> defn: [[kestrel]] ({{taxfmt|Falco tinnunculus|species}})
 Page 245 vampíra: <begin> {{is-ndecl|f}} <end> <begin> {{is-noun/old|f|vampíru|vampírur}} <end> defn: [[vampire]];[[vampire bat]]
-Page 247 skor: <begin> {{is-ndecl|f}} <end> <begin> {{is-noun/old|f|skorar|skorir}} <end> defn: (education)(in a school or a university)a [[department]]
-Page 248 ryðfrítt stál: <begin> {{is-ndecl|n}} <end> <begin> {{is-noun/old|n|ryðfrís stáls}} <end> defn: [[stainless steel]]
-Page 249 viðbót: <begin> {{is-ndecl|f}} <end> <begin> {{is-noun/old|f|viðbótar|viðbætur}} <end> defn: [[addition]]
-Page 250 rabbabari: <begin> {{is-ndecl|m}} <end> <begin> {{is-noun/old|m}} <end> defn: {{alternative spelling of|is|rabarbari}}
+#Page 248 ryðfrítt stál: <begin> {{is-ndecl|n}} <end> <begin> {{is-noun/old|n|ryðfrís stáls}} <end> defn: [[stainless steel]]
+#
+#
+#
+#
+#
+#
+#
+# GOT HERE
+#
+#
+#
+#
+#
+#
+#
+#
+#
 Page 251 bendir: <begin> {{is-ndecl|m}} <end> <begin> {{is-noun/old|m|bendis|bendar}} <end> defn: (programming)[[pointer]], [[reference]] {{gloss|a variable which holds the address of a memory location where a value can be stored}}<ref name="tos">{{cite-web|url=http://tos.sky.is/tos/to/word/isl/443/|accessdate=20 September 2010|archiveurl=https://web.archive.org/web/20160305082142/http://tos.sky.is/tos/to/word/isl/443/|archivedate=5 March 2016}}</ref>;(computing)[[pointer]], [[cursor]] {{gloss|an icon that indicates the position of the mouse}}<ref name="tos"/>
 Page 252 njóla: <begin> {{is-ndecl|f}} <end> <begin> {{is-noun/old|f|njólu}} <end> defn: (poetic)[[night]]
 Page 253 Njóla: <begin> {{is-ndecl|f.dem}} <end> <begin> {{is-noun/old|f|Njólu}} <end> defn: (rare){{given name|is|female}}
@@ -283,7 +272,6 @@ Page 306 doktorsritgerð: <begin> {{is-ndecl|f}} <end> <begin> {{is-noun/old|f|d
 Page 307 rafmagnssnúra: <begin> {{is-ndecl|f}} <end> <begin> {{is-noun/old|f|rafmagnssnúru|rafmagnssnúrur}} <end> defn: [[electrical cord]], [[power cable]], [[power cord]], a [[flex]] (UK);{{syn|is|snúra}}
 Page 308 völuberg: <begin> {{is-ndecl|n.sg}} <end> <begin> {{is-noun/old|n|völubergs|-}} <end> defn: (geology)a [[conglomerate]]
 Page 309 samsteypa: <begin> {{is-ndecl|f}} <end> <begin> {{is-noun/old|f|samsteypu|samsteypur}} <end> defn: (of corporations)a [[conglomerate]];a political [[coalition]]
-Page 310 vöðuselur: <begin> {{is-ndecl|m}} <end> <begin> {{is-noun/old|m|vöðusels|vöðuselir}} <end> defn: a [[harp seal]] ({{taxlink|Phoca groenlandica|species}})
 Page 311 vorboð: <begin> {{is-ndecl|n}} <end> <begin> {{is-noun/old|n|vorboðs|vorboð}} <end> defn: the [[harbinger]] of [[spring]], a [[sign]] that spring is coming\; a [[harbinger-of-spring]]
 Page 312 stýripinni: <begin> {{is-ndecl|m}} <end> <begin> {{is-noun/old|m|stýripinna|stýripinnar}} <end> defn: a [[joystick]]
 Page 313 Nash-jafnvægi: <begin> {{is-ndecl|n.dem}} <end> <begin> {{is-noun/old|n|Nash-jafnvægis|-}} <end> defn: a [[Nash equilibrium]]
