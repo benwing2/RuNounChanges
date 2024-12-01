@@ -25,7 +25,7 @@ local lang = require("Module:languages").getByCode("de")
 local m_links = require("Module:links")
 local m_table = require("Module:table")
 local m_string_utilities = require("Module:string utilities")
-local iut = require("Module:User:Benwing2/inflection utilities")
+local iut = require("Module:inflection utilities")
 local com = require("Module:de-common")
 
 local u = mw.ustring.char
@@ -605,25 +605,25 @@ end
 
 
 local single_state_table_spec = [=[
-! style="background:#COLOR" | nominative
+! style="background:#COLOR;color:inherit" | nominative
 | {COMPSUPSTATE_nom_m}
 | {COMPSUPSTATE_nom_f}
 | {COMPSUPSTATE_nom_n}
 | {COMPSUPSTATE_nom_p}
 |-
-! style="background:#COLOR" | genitive
+! style="background:#COLOR;color:inherit" | genitive
 | {COMPSUPSTATE_gen_m}
 | {COMPSUPSTATE_gen_f}
 | {COMPSUPSTATE_gen_n}
 | {COMPSUPSTATE_gen_p}
 |-
-! style="background:#COLOR" | dative
+! style="background:#COLOR;color:inherit" | dative
 | {COMPSUPSTATE_dat_m}
 | {COMPSUPSTATE_dat_f}
 | {COMPSUPSTATE_dat_n}
 | {COMPSUPSTATE_dat_p}
 |-
-! style="background:#COLOR" | accusative
+! style="background:#COLOR;color:inherit" | accusative
 | {COMPSUPSTATE_acc_m}
 | {COMPSUPSTATE_acc_f}
 | {COMPSUPSTATE_acc_n}
@@ -651,18 +651,18 @@ local function make_table(alternant_multiword_spec)
 <div class="NavFrame"style = "width:50%;">
 <div class="NavHead" style="text-align: left;">{title}{annotation}</div>
 <div class="NavContent">
-{\op}| border="1px solid #cdcdcd" style="border-collapse:collapse; background:#FEFEFE; width:100%;" class="inflection-table"
+{\op}| border="1px solid #cdcdcd" style="border-collapse:collapse; background:var(--wikt-palette-white,#ffffff); color:inherit; width:100%" class="inflection-table"
 |-
-! rowspan="2" style="background:#C0C0C0" | number & gender
-! colspan="3" style="background:#C0C0C0" | singular
-! rowspan="2" style="background:#C0C0C0" | plural
+! rowspan="2" style="background:var(--wikt-palette-lightgrey,#cccccc);color:inherit" | number & gender
+! colspan="3" style="background:var(--wikt-palette-lightgrey,#cccccc);color:inherit" | singular
+! rowspan="2" style="background:var(--wikt-palette-lightgrey,#cccccc);color:inherit" | plural
 |-
-! style="background:#C0C0C0" | masculine
-! style="background:#C0C0C0" | feminine
-! style="background:#C0C0C0" | neuter
+! style="background:var(--wikt-palette-lightgrey,#cccccc);color:inherit" | masculine
+! style="background:var(--wikt-palette-lightgrey,#cccccc);color:inherit" | feminine
+! style="background:var(--wikt-palette-lightgrey,#cccccc);color:inherit" | neuter
 |-
 ]=] ..
-rsub(rsub(single_state_table_spec, "COLOR", "efefff"), "STATE", alternant_multiword_spec.state) .. [=[
+rsub(rsub(single_state_table_spec, "#COLOR", "var(--wikt-palette-lightindigo,#e9e9ff)"), "STATE", alternant_multiword_spec.state) .. [=[
 |{\cl}{notes_clause}</div></div>]=]
 
 or not alternant_multiword_spec.args.truncate and
@@ -672,31 +672,31 @@ or not alternant_multiword_spec.args.truncate and
 <div class="NavFrame">
 <div class="NavHead" style="text-align: left">{title}{annotation}</div>
 <div class="NavContent">
-{\op}| border="1px solid #cdcdcd" style="border-collapse:collapse; background:#FEFEFE; width:100%" class="inflection-table"
+{\op}| border="1px solid #cdcdcd" style="border-collapse:collapse; background:var(--wikt-palette-white,#ffffff); color:inherit; width:100%" class="inflection-table"
 |-
-! colspan="2" rowspan="2" style="background:#C0C0C0" | number & gender
-! colspan="3" style="background:#C0C0C0" | singular
-! rowspan="2" style="background:#C0C0C0" | plural
+! colspan="2" rowspan="2" style="background:var(--wikt-palette-lightgrey,#cccccc);color:inherit" | number & gender
+! colspan="3" style="background:var(--wikt-palette-lightgrey,#cccccc);color:inherit" | singular
+! rowspan="2" style="background:var(--wikt-palette-lightgrey,#cccccc);color:inherit" | plural
 |-
-! style="background:#C0C0C0" | masculine
-! style="background:#C0C0C0" | feminine
-! style="background:#C0C0C0" | neuter
+! style="background:var(--wikt-palette-lightgrey,#cccccc);color:inherit" | masculine
+! style="background:var(--wikt-palette-lightgrey,#cccccc);color:inherit" | feminine
+! style="background:var(--wikt-palette-lightgrey,#cccccc);color:inherit" | neuter
 |-
-! colspan="2" style="background:#EEEEB0" | predicative
+! colspan="2" style="background:var(--wikt-palette-yellow,#ebe8b9);color:inherit" | predicative
 | {COMPSUPpred_m}
 | {COMPSUPpred_f}
 | {COMPSUPpred_n}
 | {COMPSUPpred_p}
 |-
-! rowspan="4" style="background:#c0cfe4" | strong declension <br/> (without article)
+! rowspan="4" style="background:var(--wikt-palette-lightblue,#d9ebff);color:inherit" | strong declension <br/> (without article)
 ]=] ..
-rsub(rsub(single_state_table_spec, "COLOR", "c0cfe4"), "STATE", "str") .. [=[
-! rowspan="4" style="background:#c0e4c0" | weak declension <br/> (with definite article)
+rsub(rsub(single_state_table_spec, "#COLOR", "var(--wikt-palette-lightblue,#d9ebff)"), "STATE", "str") .. [=[
+! rowspan="4" style="background:var(--wikt-palette-mint,#c0e4c0);color:inherit" | weak declension <br/> (with definite article)
 ]=] ..
-rsub(rsub(single_state_table_spec, "COLOR", "c0e4c0"), "STATE", "wk") .. [=[
-! rowspan="4" style="background:#e4d4c0" | mixed declension <br/> (with indefinite article)
+rsub(rsub(single_state_table_spec, "#COLOR", "var(--wikt-palette-mint,#c0e4c0)"), "STATE", "wk") .. [=[
+! rowspan="4" style="background:var(--wikt-palette-peach,#e4d4c0);color:inherit" | mixed declension <br/> (with indefinite article)
 ]=] ..
-rsub(rsub(single_state_table_spec, "COLOR", "e4d4c0"), "STATE", "mix") .. [=[
+rsub(rsub(single_state_table_spec, "#COLOR", "var(--wikt-palette-peach,#e4d4c0)"), "STATE", "mix") .. [=[
 |{\cl}{notes_clause}</div></div>]=]
 
 or
@@ -706,55 +706,55 @@ or
 <div class="NavFrame">
 <div class="NavHead" style="text-align: left">{title}{annotation}</div>
 <div class="NavContent">
-{\op}| border="1px solid #cdcdcd" style="border-collapse:collapse; background:#FEFEFE; width:100%" class="inflection-table"
+{\op}| border="1px solid #cdcdcd" style="border-collapse:collapse; background:var(--wikt-palette-white,#ffffff); color:inherit; width:100%" class="inflection-table"
 |-
-! colspan="2" rowspan="2" style="background:#C0C0C0" | number & gender
-! colspan="3" style="background:#C0C0C0" | singular
-! rowspan="2" style="background:#C0C0C0" | plural
+! colspan="2" rowspan="2" style="background:var(--wikt-palette-lightgrey,#cccccc);color:inherit" | number & gender
+! colspan="3" style="background:var(--wikt-palette-lightgrey,#cccccc);color:inherit" | singular
+! rowspan="2" style="background:var(--wikt-palette-lightgrey,#cccccc);color:inherit" | plural
 |-
-! style="background:#C0C0C0" | masculine
-! style="background:#C0C0C0" | feminine
-! style="background:#C0C0C0" | neuter
+! style="background:var(--wikt-palette-lightgrey,#cccccc);color:inherit" | masculine
+! style="background:var(--wikt-palette-lightgrey,#cccccc);color:inherit" | feminine
+! style="background:var(--wikt-palette-lightgrey,#cccccc);color:inherit" | neuter
 |-
-! colspan="2" style="background:#EEEEB0" | predicative
+! colspan="2" style="background:var(--wikt-palette-yellow,#ebe8b9);color:inherit" | predicative
 | {COMPSUPpred_m}
 | {COMPSUPpred_f}
 | {COMPSUPpred_n}
 | {COMPSUPpred_p}
 |-
-! rowspan="2" style="background:#c0cfe4" | strong declension <br/> (without article)
-! style="background:#c0cfe4" | nominative
+! rowspan="2" style="background:var(--wikt-palette-lightblue,#d9ebff);color:inherit" | strong declension <br/> (without article)
+! style="background:var(--wikt-palette-lightblue,#d9ebff);color:inherit" | nominative
 | {COMPSUPstr_nom_m}
 | {COMPSUPstr_nom_f}
 | {COMPSUPstr_nom_n}
 | {COMPSUPstr_nom_p}
 |-
-! style="background:#c0cfe4" | ...
+! style="background:var(--wikt-palette-lightblue,#d9ebff);color:inherit" | ...
 | colspan="4" | ...
 |-
-! rowspan="2" style="background:#c0e4c0" | weak declension <br/> (with definite article)
-! style="background:#c0e4c0" | nominative
+! rowspan="2" style="background:var(--wikt-palette-mint,#c0e4c0);color:inherit" | weak declension <br/> (with definite article)
+! style="background:var(--wikt-palette-mint,#c0e4c0);color:inherit" | nominative
 | {COMPSUPwk_nom_m}
 | {COMPSUPwk_nom_f}
 | {COMPSUPwk_nom_n}
 | {COMPSUPwk_nom_p}
 |-
-! style="background:#c0e4c0" | ...
+! style="background:var(--wikt-palette-mint,#c0e4c0);color:inherit" | ...
 | colspan="4" | ...
 |-
-! rowspan="2" style="background:#e4d4c0" | mixed declension <br/> (with indefinite article)
-! style="background:#e4d4c0" | nominative
+! rowspan="2" style="background:var(--wikt-palette-peach,#e4d4c0);color:inherit" | mixed declension <br/> (with indefinite article)
+! style="background:var(--wikt-palette-peach,#e4d4c0);color:inherit" | nominative
 | {COMPSUPmix_nom_m}
 | {COMPSUPmix_nom_f}
 | {COMPSUPmix_nom_n}
 | {COMPSUPmix_nom_p}
 |-
-! style="background:#e4d4c0" | ...
+! style="background:var(--wikt-palette-peach,#e4d4c0);color:inherit" | ...
 | colspan="4" | ...
 |{\cl}{notes_clause}</div></div>]=])
 
 	local notes_template = [===[
-<div style="width:100%;text-align:left;background:#d9ebff">
+<div style="width:100%;text-align:left;background:var(--wikt-palette-lightblue,#d9ebff);color:inherit">
 <div style="display:inline-block;text-align:left;padding-left:1em;padding-right:1em">
 {footnote}
 </div></div>
