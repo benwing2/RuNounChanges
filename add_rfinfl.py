@@ -41,6 +41,12 @@ pos_to_headword_template = {
     "adjective": "cs-adj",
     "verb": "cs-verb",
   },
+  "is": {
+    "noun": "(is-noun|is-noun/old)",
+    "proper noun": "(is-proper noun|is-proper noun/old)",
+    "adjective": "is-adj",
+    "verb": "is-verb.*",
+  },
   "hi": {
     "noun": "hi-noun",
     "proper noun": "hi-proper noun",
@@ -79,6 +85,9 @@ def uk_lemma_is_indeclinable(t, pagetitle, pagemsg):
 def cs_lemma_is_indeclinable(t, pagetitle, pagemsg):
   return not not getparam(t, "indecl")
 
+def is_lemma_is_indeclinable(t, pagetitle, pagemsg):
+  return not not getparam(t, "indec")
+
 def hi_lemma_is_indeclinable(t, pagetitle, pagemsg):
   if tname(t) in ["hi-noun", "hi-proper noun"]:
     return not not getparam(t, "ind")
@@ -100,6 +109,7 @@ lemma_is_indeclinable = {
   "ru": ru_lemma_is_indeclinable,
   "uk": uk_lemma_is_indeclinable,
   "cs": cs_lemma_is_indeclinable,
+  "is": is_lemma_is_indeclinable,
   "hi": hi_lemma_is_indeclinable,
 }
 
@@ -107,6 +117,7 @@ pos_to_nonlemma_template = {
   "be": None,
   "bg": "(bg-verbal noun|bg-verbal noun form|bg-part|bg-part form)",
   "cs": None,
+  "is": None,
   "ru": "(ru-noun form|ru-.*alt-ё|ru-verb-cform)",
   "uk": None,
   "hi": "(hi-verb-form|hi-noun-form|hi-adj-form)",
@@ -143,6 +154,12 @@ pos_to_infl_template = {
     "verb": "cs-conj.*",
     "adjective": "cs-adecl",
   },
+  "is": {
+    "noun": "is-ndecl",
+    "proper noun": "is-ndecl",
+    "verb": "is-conj.*",
+    "adjective": "is-decl-adj.*",
+  },
   "hi": {
     "noun": "hi-ndecl",
     "proper noun": "hi-ndecl",
@@ -165,6 +182,7 @@ lang_to_name = {
   "ru": "Russian",
   "uk": "Ukrainian",
   "cs": "Czech",
+  "is": "Icelandic",
   "hi": "Hindi",
 }
 
