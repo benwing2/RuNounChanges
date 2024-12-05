@@ -2628,10 +2628,7 @@ local function synthesize_adj_lemma(base)
 end
 
 
--- Determine the declension based on the lemma, gender and number. The declension is set in base.decl. In the process,
--- we set either base.vowel_stem (if the lemma ends in a vowel) or base.nonvowel_stem (if the lemma does not end in a
--- vowel), which is used by determine_props(). In some cases (specifically with certain foreign nouns), we set
--- base.lemma to a new value; this is as if the user specified 'decllemma:'.
+-- Determine the declension based on the lemma, gender and number. The declension is set in base.decl.
 local function determine_declension(base)
 	local stem, ending
 	local default_props = {}
@@ -3101,7 +3098,7 @@ local function determine_props(base)
 		end
 
 		-- Almost all nouns have dative plural -um, which triggers u-mutation, so we need to compute the u-mutation
-		-- stem using "umut" if not specifically given. Set `defaulted` to an error isn't triggered if there's no
+		-- stem using "umut" if not specifically given. Set `defaulted` so an error isn't triggered if there's no
 		-- special u-mutated form.
 		local props_umut = props.umut
 		if not props_umut and (not props.unumut or props.unumut.form:find("^%-")) then
