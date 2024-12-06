@@ -1261,23 +1261,6 @@ local function set_det_defaults(base)
 end
 
 
-local function determine_determiner_props(base)
-	-- FIXME: Update for Icelandic
-	if base.prop_sets then
-		error("Reducible and vowel alternation specs cannot be given with determiners")
-	end
-	local stem = rmatch(base.lemma, "^(.*)" .. com.vowel_c .. "$") or base.lemma
-	base.prop_sets = {{vowel_stem = stem, nonvowel_stem = stem}}
-	base.decl = "det"
-end
-
-
-decls["det"] = function(base, props)
-	-- FIXME: Update for Icelandic
-	add_sg_decl(base, props, "a", "a", "*", nil, "a", "a")
-end
-
-
 -- Return the lemmas for this term. The return value is a list of {form = FORM, footnotes = FOOTNOTES}.
 -- If `linked_variant` is given, return the linked variants (with embedded links if specified that way by the user),
 -- otherwies return variants with any embedded links removed. If `remove_footnotes` is given, remove any
@@ -1342,7 +1325,7 @@ end
 
 
 local function is_regular_noun(base)
-	return not base.props.adj and not base.props.pron and not base.props.det
+	return not base.props.adj and not base.props.pron
 end
 
 
@@ -1589,178 +1572,6 @@ local function parse_override(segments, parse_err)
 	local retval = fetch_slot_override(segments, ("%s slot override"):format(table.concat(slots, "+")), false, defslot,
 		parse_err)
 	return slots, retval
-end
-
-
--- Find the declension spec by scraping the contents of the Icelandic section of `lemma`, looking for {{is-ndecl}}
--- calls. if `declid` is given, it must match the value of the |id= param specified to {{is-ndecl}}; otherwise, any
--- {{is-ndecl}} call will work. If anything goes wrong in the process, a string is returned describing the error
--- message; otherwise a table of declensions is returned, each containing a field `decl` with the declension spec. The
--- declension spec comes from the |deriv=, |deriv2=, etc. params in {{is-ndecl}} if specified and `is_deriv` is given;
--- otherwise from 1=, 2=, etc. Exported so it can be called from [[Module:gmq-headword]].
-function export.find_declension(lemma, is_deriv, declid)
-	local title = mw.title.new(lemma)
-	if title then
-		local content = title:getContent()
-		if content then
-			local icelandic = require(pages_module).get_section(content, "Icelandic")
-			if icelandic then
-				local num_is_ndecl = 0
-				local decl_sets_by_id = {}
-				local decl_sets_without_id = {}
-				local ordered_seen_ids = {}
-				for template in require(template_parser_module).find_templates(icelandic) do
-					if template:get_name() == "is-ndecl" then
-						num_is_ndecl = num_is_ndecl + 1
-						local args = template:get_arguments()
-						local decls = {}
-						if is_deriv and args.deriv then
-							local i = 1
-							while true do
-								local deriv_param = "deriv" .. (i == 1 and "" or tostring(i))
-								if args[deriv_param] then
-									table.insert(decls, {decl = args[deriv_param]})
-									i = i + 1
-								else
-									break
-								end
-							end
-						elseif not args[1] then
-							return ("For Icelandic base lemma '[[%s]]', saw no declension spec in 1="):format(lemma)
-						else
-							local i = 1
-							while true do
-								if args[i] then
-									table.insert(decls, {decl = args[i]})
-									i = i + 1
-								else
-									break
-								end
-							end
-						end
-						local decl_set = {decls = decls}
-						if args.id then
-							if decl_sets_by_id[args.id] then
-								return ("For Icelandic base lemma '[[%s]]', saw id='%s' twice"):format(args.id)
-							end
-							decl_sets_by_id[args.id] = decl_set
-							m_table.insertIfNot(ordered_seen_ids, args.id)
-						else
-							table.insert(decl_sets_without_id, decl_set)
-						end
-					end
-				end
-				local function concat_ordered_seen_ids()
-					local quoted_seen_ids = {}
-					for _, seen_id in ipairs(ordered_seen_ids) do
-						table.insert(quoted_seen_ids, "'" .. seen_id .. "'")
-					end
-					return m_table.serialCommaJoin(quoted_seen_ids, {dontTag = true})
-				end
-				if ordered_seen_ids[1] and decl_sets_without_id[1] then
-					return ("For Icelandic base lemma '[[%s]]', saw %s [[Template:is-ndecl]]%s with id=%s " ..
-						"as well as %s [[Template:is-ndecl]]%s without ID; this is not allowed; with multiple " ..
-						"[[Template:is-ndecl]] calls, all must have id= params"):format(#ordered_seen_ids,
-						ordered_seen_ids[2] and "'s" or "", concat_ordered_seen_ids(), #decl_sets_without_id,
-						decl_sets_without_id[2] and "'s" or "")
-				elseif not ordered_seen_ids[1] and not decl_sets_without_id[1] then
-					return ("For Icelandic base lemma '[[%s]]', found Icelandic section but couldn't find " ..
-							"any calls to [[Template:is-ndecl]]"):format(lemma)
-				elseif #decl_sets_without_id > 1 then
-					return ("For Icelandic base lemma '[[%s]]', found %s [[Template:is-ndecl]]'s without " ..
-						"ID's; this is not allowed; with multiple [[Template:is-ndecl]] calls, all must have " ..
-						"id= params"):format(lemma, #decl_sets_without_id)
-				elseif declid then
-					if decl_sets_by_id[declid] then
-						return decl_sets_by_id[declid].decls
-					elseif ordered_seen_ids[1] then
-							return ("For Icelandic base lemma '[[%s]]', found Icelandic section but couldn't find " ..
-								"any declensions matching ID '%s'; instead found ID's %s; you may have misspelled " ..
-								"the ID"):format(lemma, declid, concat_ordered_seen_ids())
-					else
-						return ("For Icelandic base lemma '[[%s]]', found Icelandic section with a single " ..
-							"[[Template:is-ndecl]] without ID, but ID requirement '%s' specified; consider " ..
-							"removing the ID requirement"):format(lemma, declid)
-					end
-				elseif decl_sets_without_id[1] then
-					-- only one {{is-ndecl}}, and it doesn't have an id=; return it
-					return decl_sets_without_id[1].decls
-				elseif ordered_seen_ids[2] then
-					return ("For Icelandic base lemma '[[%s]]', saw %s [[Template:is-ndecl]]'s with id=%s " ..
-						"but with a request to return the declension without ID; consider adding an ID " ..
-						"restriction to the scrape request, e.g. '@@:%s' for self-scraping or '@%s:%s' for " ..
-						"scraping from another page"):format(lemma, #ordered_seen_ids, concat_ordered_seen_ids(),
-						ordered_seen_ids[1], usub(lemma, 1, 1), ordered_seen_ids[1])
-				else
-					return ("For Icelandic base lemma '[[%s]]', found Icelandic section with a single " ..
-						"[[Template:is-ndecl]] with id=%s, but the scrape request didn't specify an ID; " ..
-						"consider removing the id= param from the [[Template:is-ndecl]] call unless you " ..
-						"expect to add more such calls to the page in the future (in which case add the ID " ..
-						"to the scrape request, e.g. '@@:%s' for self-scraping or '@%s:%s' for scraping from " ..
-						"another page"):format(lemma, concat_ordered_seen_ids(), ordered_seen_ids[1],
-						usub(lemma, 1, 1), ordered_seen_ids[1])
-				end
-			else
-				return ("For Icelandic base lemma '[[%s]]', page exists but has no Icelandic section"):format(lemma)
-			end
-		else
-			return ("For Icelandic base lemma '[[%s]]', couldn't fetch contents for page; page may not exist"):
-				format(lemma)
-		end
-	else
-		return ("Bad Icelandic base lemma '[[%s]]'; couldn't create title object"):format(lemma)
-	end
-end
-
-
--- Find and return the prefix, base noun and decl spec for a scraped noun given `lemma` (the lemma with an `@l` or
--- similar indicator spec), the scraping spec (e.g. "l", i.e. the portion after the @ sign), and optionally a `declid`
--- restriction. The base noun is the noun whose declension was scraped, and `prefix` is the portion of the lemma before
--- the base noun (which must be a suffix of the lemma). For example, if `lemma` is [[ljósabekkur]] "sunbed, tanning bed"
--- and `scrape_spec` is "@b", the base noun will be [[bekkur]] "bench" and the prefix will be "ljósa". The decl
--- returned will be either an object containing a field `decl` containing the scraped decl spec, or a string indicating
--- an error to display.
-local function find_scraped_decl(lemma, scrape_spec, scrape_is_suffix, scrape_is_uppercase, declid)
-	local lemma_minus_r, final_nom_ending = parse_off_final_nom_ending(lemma)
-	local escaped_scrape_spec = m_string_utilities.pattern_escape(scrape_spec)
-	local prefix, base_noun = rmatch(lemma_minus_r, "^(.*)(" .. escaped_scrape_spec .. ".-)$")
-	if not prefix then
-		error(("Can't determine base noun to scrape given lemma '%s' and scraping spec '@%s'; scraping spec not " ..
-			"found in lemma"):format(lemma, scrape_spec))
-	end
-	base_noun = base_noun .. final_nom_ending
-	if scrape_is_uppercase then
-		local base_first, base_rest = rmatch(base_noun, "^(.)(.*)$")
-		if not base_first then
-			error(("Internal error: Something wrong, couldn't match a single character in %s"):format(dump(base_noun)))
-		end
-		base_noun = uupper(base_first) .. base_rest
-	end
-	if scrape_is_suffix then
-		base_noun = "-" .. base_noun
-	end
-	local decl = export.find_declension(base_noun, "is deriv", declid)
-	local errmsg = nil
-	if type(decl) == "table" then
-		if decl[2] then
-			errmsg = ("For Icelandic base lemma '[[%s]]', saw %s declension specs; currently, can only handle one"):
-				format(base_noun, #decl)
-		else
-			decl = decl[1]
-			local argspec = decl.decl
-			if argspec:find("<") then
-				errmsg = ("For Icelandic base lemma '[[%s]]', saw explicit angle bracket spec in declension, likely " ..
-					"indicating a multiword declension; can't handle yet: %s"):format(lemma, argspec)
-			elseif argspec:find("%(%(") then
-				errmsg = ("For Icelandic base lemma '[[%s]]', saw alternant specs; can't handle yet: %s"):
-					format(lemma, argspec)
-			end
-		end
-		if errmsg then
-			decl = errmsg
-		end
-	end
-	return prefix, base_noun, decl
 end
 
 
@@ -2116,9 +1927,16 @@ local function parse_inside_and_merge(inside, lemma, scrape_chain)
 		return base
 	else
 		local prefix, base_noun, declspec
-		prefix, base_noun, declspec = find_scraped_decl(lemma, base.scrape_spec, base.scrape_is_suffix,
-			base.scrape_is_uppercase, base.scrape_id)
-
+		prefix, base_noun, declspec = com.find_scraped_decl {
+			lemma = lemma,
+			scrape_spec = base.scrape_spec,
+			scrape_is_suffix = base.scrape_is_suffix,
+			scrape_is_uppercase = base.scrape_is_uppercase,
+			infltemp = "is-ndecl",
+			allow_empty_infl = false,
+			inflid = base.scrape_id,
+			parse_off_ending = parse_off_final_nom_ending,
+		}
 		if type(declspec) == "string" then
 			base.prefix = prefix
 			base.base_noun = base_noun
@@ -2242,8 +2060,6 @@ local function set_defaults_and_check_bad_indicators(base)
 	local regular_noun = is_regular_noun(base)
 	if base.props.pron then
 		set_pron_defaults(base)
-	elseif base.props.det then
-		set_det_defaults(base)
 	elseif base.props.adj then
 		-- FIXME: Do adjective-specific checks then return
 	elseif not base.props.adj then
@@ -2342,11 +2158,6 @@ local function set_all_defaults_and_check_bad_indicators(alternant_multiword_spe
 			alternant_multiword_spec.saw_pron = true
 		else
 			alternant_multiword_spec.saw_non_pron = true
-		end
-		if base.props.det then
-			alternant_multiword_spec.saw_det = true
-		else
-			alternant_multiword_spec.saw_non_det = true
 		end
 		if base.props.indecl then
 			alternant_multiword_spec.saw_indecl = true
@@ -3313,8 +3124,6 @@ local function detect_indicator_spec(base)
 
 	if base.props.pron then
 		determine_pronoun_props(base)
-	elseif base.props.det then
-		determine_determiner_props(base)
 	elseif base.props.adj then
 		process_declnumber(base)
 		expand_property_sets(base)
@@ -3349,9 +3158,6 @@ local function detect_all_indicator_specs(alternant_multiword_spec)
 			alternant_multiword_spec.pl_genders[base.actual_gender] = true
 		end
 	end)
-	if (alternant_multiword_spec.saw_pron and 1 or 0) + (alternant_multiword_spec.saw_det and 1 or 0) > 1 then
-		error("Can't combine pronouns and/or determiners")
-	end
 end
 
 
@@ -3506,8 +3312,6 @@ local function set_pos(alternant_multiword_spec)
 		alternant_multiword_spec.pos = alternant_multiword_spec.args.pos
 	elseif alternant_multiword_spec.saw_pron and not alternant_multiword_spec.saw_non_pron then
 		alternant_multiword_spec.pos = "pronoun"
-	elseif alternant_multiword_spec.saw_det and not alternant_multiword_spec.saw_non_det then
-		alternant_multiword_spec.pos = "determiner"
 	else
 		alternant_multiword_spec.pos = "noun"
 	end
