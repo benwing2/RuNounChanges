@@ -835,12 +835,7 @@ local function parse_override(segments, parse_err)
 		else
 			local form = colon_separated_group[1]
 			if form == "" then
-				parse_err(("Use - to indicate an empty ending for %s: '%s'"):format(spectype,
-					table.concat(segments)))
-			elseif form == "-" then
-				form = ""
-			elseif form == "--" then -- missing
-				form = "-"
+				parse_err(("Empty overrides not allowed for %s: '%s'"):format(spectype, table.concat(segments)))
 			end
 			local new_spec = {form = form, footnotes = fetch_footnotes(colon_separated_group, parse_err)}
 			for _, existing_spec in ipairs(specs) do
@@ -1548,7 +1543,18 @@ local function determine_declension(base)
 end
 
 
-local function generate_default_comp(base)
+local function generate_default_stem(base)
+	if base.props.ss then
+		return rsub(base.lemma, "ß$", "ss")
+	end
+	if base.lemma:find("e$") then
+		return rsub(base.lemma, "e$", "")
+	end
+	return rsub(base.lemma, "([ai])bel$", "%1b" .. OMITTED_E .. "l")
+end
+
+
+local function generate_default_comp(base, stem)
 	return stem .. "er"
 end
 
@@ -1615,6 +1621,51 @@ local function generate_default_sup(base, stem)
 		return {stem .. "est", stem .. "st"}
 	else
 		return stem .. "st"
+	end
+end
+
+
+local function process_spec(base, destforms, slot, specs, base_stem, form_default)
+	local function do_form_default(form)
+		local retval = form_default(base, form)
+		if type(retval) ~= "table" then
+			retval = {retval}
+		end
+		return retval
+	end
+	specs = specs or {{form = "+"}}
+	for _, spec in ipairs(specs) do
+		local forms
+		if spec.form == "-" then
+			-- Skip "-"; effectively, no forms get inserted into output.comp.
+		elseif spec.form == "+" then
+			forms = iut.flatmap_forms(base_stem, do_form_default)
+		elseif rfind(spec.form, "^%+") then
+			local ending = rsub(spec.form, "^%+", "")
+			forms = iut.map_forms(base_stem, function(form) return form .. ending end)
+		elseif spec.form == "^" then
+			forms = iut.flatmap_forms(base_stem, function(form) return do_form_default(com.apply_umlaut(form)) end)
+		elseif rfind(spec.form, "^%^") then
+			local ending = rsub(spec.form, "^%^", "")
+			forms = iut.map_forms(base_stem, function(form) return com.apply_umlaut(form) .. ending end)
+		elseif spec.form == "-e" then
+			forms = iut.flatmap_forms(base_stem, function(form)
+				local non_ending, ending = rmatch(form, "^(.*)e([lmnr])$")
+				if not non_ending then
+					error("Can't use '-e' with stem '" .. form .. "'; should end in -el, -em, -en or -er")
+				end
+				if base.props.ss then
+					non_ending = rsub(non_ending, "ss$", "ß")
+				end
+				return do_form_default(non_ending .. OMITTED_E .. ending)
+			end)
+		else
+			iut.insert_form(destforms, slot, spec)
+		end
+		if forms then
+			forms = iut.convert_to_general_list_form(forms, spec.footnotes)
+			iut.insert_forms(destforms, slot, forms)
+		end
 	end
 end
 
