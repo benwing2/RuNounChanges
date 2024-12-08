@@ -1242,25 +1242,6 @@ decls["pron"] = function(base, props)
 end
 
 
-local function set_det_defaults(base)
-	-- FIXME: Update for Icelandic
-	if base.gender or base.number or base.definiteness then
-		error("Can't specify gender, number or definiteness for determiner")
-	end
-
-	local function det_props()
-		-- Return values are GENDER, NUMBER, DEFINITENESS.
-		return "none", "none", "none"
-	end
-
-	local gender, number = det_props()
-	base.gender = gender
-	base.actual_gender = gender
-	base.number = number
-	base.actual_number = number
-end
-
-
 -- Return the lemmas for this term. The return value is a list of {form = FORM, footnotes = FOOTNOTES}.
 -- If `linked_variant` is given, return the linked variants (with embedded links if specified that way by the user),
 -- otherwies return variants with any embedded links removed. If `remove_footnotes` is given, remove any
