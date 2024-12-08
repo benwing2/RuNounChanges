@@ -1,0 +1,234 @@
+== masculine strong ==
+
+=== words in -ur ===
+* {{m|is|gulur||yellow}}, {{m|is|djúpur||deep}}, {{m|is|drjúgur||substantial; conceited}}, {{m|is|dökkur||dark}}, {{m|is|frægur||famous}}, {{m|is|fullur||full}}, {{m|is|glöggur||clear}}, {{m|is|grunnur||shallow}}, {{m|is|heitur||hot}}, {{m|is|helgur||holy}}, {{m|is|hvítur||white}}, {{m|is|hvorugur||neither (of two)}}, {{m|is|illur||bad; angry}}, {{m|is|íslenskur||Icelandic}}, {{m|is|lágur||low}}, {{m|is|líkur||like, similar}} ({{m|is|hvílíkur||what, what kind of}}, {{m|is|ólíkur||unlike, different}}, {{m|is|þvílíkur||such}}), {{m|is|ljótur||ugly}}, {{m|is|mjúkur||soft}}, {{m|is|ríkur||rich}}, {{m|is|slíkur||such}}, {{m|is|slæmur||bad; unwell}}, {{m|is|sterkur||strong}}, {{m|is|sumur||some}}, {{m|is|sætur||sweet}}, {{m|is|tómur||empty}}, {{m|is|ungur||young}}, {{m|is|þröngur||narrow}}, {{m|is|þungur||heavy}}, {{m|is|þunnur||thin}}, {{m|is|þykkur||thick}}, {{m|is|þýskur||German}}, {{m|is|örlátur||generous}}, {{m|is|öruggur||safe, sure, reliable}}
+* 'comp' by itself means the same as 'comp:+' i.e. there is a comparative and it uses the default algorithm. Having a comparative implies a superlative by default; by default the superlative(s) is/are derived from the specified comparative(s). Use '-sup' to turn off superlatives.
+* {{tl|is-adecl|comp|pagename=gulur}}
+* '^' by itself for the comparative means the stem is umlauted and -ri is added. If contraction is active, the contracted stem is used (which means the -r- of -ri will usually be elided). '^' by itself for the superlative means -st is added to the uncontracted stem.
+* {{tl|is-adecl|comp:^:+|pagename=djúpur}}
+* {{tl|is-adecl|comp:^|pagename=djúpur}}
+* {{tl|is-adecl|comp:^|pagename=dökkur}}
+* '~' stands for the computed stem (uncontracted if there is a contracted stem).
+* {{tl|is-adecl|comp:+:~ri|pagename=frægur}}
+* {{tl|is-adecl|comp:^|pagename=fullur}}
+* {{tl|is-adecl|comp:^:+:~vari|pagename=glöggur}}
+* {{tl|is-adecl|comp:^|pagename=grunnur}}
+* {{tl|is-adecl|strong.-comp|pagename=hvorugur}}
+* {{tl|is-adecl|comp|pagename=líkur}}
+* {{tl|is-adecl|-comp|pagename=hvílíkur}}
+* {{tl|is-adecl|-comp|pagename=þvílíkur}}
+* With comparatives in -rri, the same rules apply for determining whether to include the first -r- in the stem as for lemmas in -r but not -ur. Here we get a stem ver-, leading to default (correct) superative [[verstur]]. To force a stem division, put a / between stem and ending.
+* {{tl|is-adecl|comp:verri|pagename=illur}}
+* {{tl|is-adecl|comp:^|pagename=lágur}}
+* {{tl|is-adecl|comp:^|pagename=mjúkur}}
+* {{tl|is-adecl|strong.-comp|pagename=slíkur}}
+* {{tl|is-adecl|comp:verri|pagename=slæmur}}
+* {{tl|is-adecl|strong.-comp|pagename=sumur}}
+* {{tl|is-adecl|comp:^|pagename=ungur}}
+* {{tl|is-adecl|comp:^|pagename=þröngur}}
+* {{tl|is-adecl|comp:^|pagename=þungur}}
+* {{tl|is-adecl|comp:^|pagename=þunnur}}
+
+* with u-mutation:
+* {{m|is|flatur||flat}}, {{m|is|allur||all; whole}}, {{m|is|franskur||French}}, {{m|is|grannur||thin, slim}}, {{m|is|heilagur||holy}}, {{m|is|langur||long}}, {{m|is|margur||many}}, {{m|is|-samur||-ful, -some, -able/-ible}} ({{m|is|friðsamur||peaceful}}, {{m|is|reglusamur||orderly}}, {{m|is|skynsamur||sensible}}), {{m|is|skammur||short}}, {{m|is|svalur||cool}}, {{m|is|svangur||hungry}}, {{m|is|vanur||accustomed}}, {{m|is|þarfur||useful}}
+* {{tl|is-adecl|comp|pagename=flatur}}
+* {{m|is|allur}} has no comparative or superlative. This is the default but specifying '-comp' positively identifies the adjective as lacking comparative/superlative and categorizes appropriately as well as putting the appropriate label ''no comparative'' in the headword.
+* {{tl|is-adecl|-comp|pagename=allur}}
+* Per BÍN, {{m|is|franskur}} has a comparative.
+* {{tl|is-adecl|comp|pagename=franskur}}
+* {{tl|is-adecl|comp:^|pagename=grannur}}
+* Per BÍN, {{m|is|heilagur}} has two comparatives [[heilagri]] and [[heilagari]] but only [[heilagastur]]. Here, ~ refers to the stem and + to the default in -ari. The default + for the superlative is not derived from the comparative, unlike when you omit the sup: spec entirely (which would result in two superlatives, incorrect #[[heilagstur]] and correct [[heilagastur]]).
+* {{tl|is-adecl|comp:~ri:+.sup:+|pagename=heilagur}}
+* {{tl|is-adecl|comp:^|pagename=langur}}
+* Here, wk_m and wk_f are shortcuts respectively for wk_nom_m+wk_obl_m and wk_nom_f+wk_obl_f.
+* {{tl|is-adecl|wk_m+wk_f:-.comp:fleiri.sup:flestur|pagename=margur}}
+* {{tl|is-adecl|comp:^|pagename=skammur}}
+* {{tl|is-adecl|comp:^|pagename=svangur}}
+* with loss of -d after consonant in neuter:
+* {{m|is|vondur||bad; angry}}, {{m|is|blindur||blind}}, {{m|is|auðveldur||easy}}
+* {{tl|is-adecl|comp:verri|pagename=vondur}}
+* with loss of -d after consonant in neuter, and u-mutation:
+* {{m|is|kaldur||cold}}
+* {{tl|is-adecl|comp|pagename=kaldur}}
+* with loss of -ð after consonant in neuter:
+* {{m|is|breiður||wide}}, {{m|is|erfiður||difficult}}, {{m|is|rauður||red}}
+* {{tl|is-adecl|comp|pagename=breiður}}
+* with loss of -ð after consonant in neuter, and u-mutation:
+* {{m|is|harður||hard}}
+* {{tl|is-adecl|comp|pagename=harður}}
+* with loss of -t after consonant in neuter:
+* {{m|is|réttur||right, correct}}, {{m|is|stuttur||short}}, {{m|is|þyrstur||thirsty}}
+* {{tl|is-adecl|comp|pagename=réttur}}
+* with loss of -t after consonant in neuter, and u-mutation:
+* {{m|is|fastur||firm, fixed}}, {{m|is|brattur||steep}}, {{m|is|bjartur||bright}}, {{m|is|svartur||black}}, 
+* {{tl|is-adecl|comp|pagename=fastur}}
+* with assimilation of -dd -> -tt in neuter:
+* with assimilation of -dd -> -tt in neuter, and u-mutation:
+* {{m|is|saddur||full, satiated}}
+* {{tl|is-adecl|comp|pagename=saddur}}
+* with assimilation of -ð after vowel -> -tt in neuter:
+* with assimilation of -ð after vowel -> -tt in neuter, and u-mutation (uU mutation in the superlative):
+* {{m|is|glaður||glad}}, {{m|is|athafnaglaður||industrious?}}
+* {{tl|is-adecl|comp|pagename=glaður}}
+* {{tl|is-adecl|comp.-pp|pagename=athafnaglaður}}
+* with maintenance of -ð after vowel in neuter:
+* with maintenance of -ð after vowel in neuter, uU-mutation in the positive, -ri in the comparative, -ast in the superlative with uUU-mutation (e.g. gallaðastur -> feminine [[gölluðust]]); all this should be the default when 'pp' is active:
+* {{m|is|kallaður||called}}, {{m|is|gáfaður||gifted}}, {{m|is|gallaður||faulty, defetive}}
+* {{tl|is-adecl|-comp|pagename=kallaður}}
+* {{tl|is-adecl|comp|pagename=gáfaður}}
+* {{tl|is-adecl|comp|pagename=gallaður}}
+
+==== words in -legur and -ugur ====
+* in {{m|is|-legur}} (comparison different from {{m|is|gulur}} adjectives):
+* {{m|is|eðlilegur||natural}}, {{m|is|fallegur||beautiful}}, {{m|is|laglegur||pretty}}, {{m|is|lélegur||bad, inferior}}, {{m|is|maklegur||well deserved}}, {{m|is|skemmtilegur||amusing; interesting}}, {{m|is|veglegur||stately, magnificnet}}, {{m|is|venjulegur||usual}}, {{m|is|þjösnalegur||rough, coarse}}
+* {{tl|is-adecl|pagename=fallegur}}
+* in {{m|is|-ugur}} (comparison different from {{m|is|gulur}} adjectives, optional poetic contraction before vocalic endings):
+* {{m|is|auðugur||rich}}, {{m|is|grösugur||grassy}}, {{m|is|göfugur||noble}}, {{m|is|kunnugur||acquainted, known}}, {{m|is|máttugur||mighty}}, {{m|is|slóttugur||cunning, sly}}, {{m|is|öflugur||strong}}, {{m|is|öfugur||reversed; wrong}}, {{m|is|önugur||sullen}}
+* {{tl|is-adecl|pagename=auðugur}}
+
+==== words in -ár, -ór, -úr where the -r is not part of the stem ====
+* <<blár|blue>>, <<flár|gaping, distended; deceitful>>, <<frár|swift(footed)>>, <<gljár|bright, shining>>, <<grár|gray>>, <<hrár|raw>>, <<knár|vigorous, clever>>, <<-skár>> (<<herskár|warlike>>, <<níðskár|libelous (of poets)>>), <<-spár>> (<<forspár|prophetic>>, <<sannspár|prophetic>>), <<þrár|obstinate, persistent>>
+* Default comparative in -rri, default superlative in -astur; endings in -t and -r double the consonant after the long vowel
+* {{tl|is-adecl|comp|pagename=blár}}
+* Per BÍN, <<gljár>> has no comparative or superlative
+* {{tl|is-adecl|-comp|pagename=gljár}}
+* {{m|is|fár||few}}
+* {{tl|is-adecl|comp:^|pagename=fár}}
+* {{m|is|hár||high}}
+* {{tl|is-adecl|comp:^|pagename=fár}}
+* {{m|is|smár||small}}
+* {{tl|is-adecl|comp:^|pagename=smár}}
+* <<frjór|fruitful>>, <<mjór|thin, slender>>, <<rór|peaceful>>, <<sljór|blunt>>
+* Like -ár words, when the stem ends in a long vowel, default comparative is -rri and superlative is -astur; but these words need ## as by default the -r is part of the stem.
+* {{tl|is-adecl|##.comp|pagename=frjór}}
+* <<mjór>> has superlative in -stur not -astur
+* {{tl|is-adecl|##.comp.sup:~stur|pagename=mjór}}
+* <<trúr|faithful>>
+* Like -ár words, when the stem ends in a long vowel, default comparative is -rri and superlative is -astur; but these words need ## as by default the -r is part of the stem.
+* {{tl|is-adecl|##.comp|pagename=trúr}}
+
+==== words in -ær, -ýr where the -r is not part of the stem ====
+* <<glær|clear, bright; translucent; pale and ragged>>, <<langær|long-lasting>>, <<-sær>> (<<auðsær|evident>>, <<djúpsær|profound>>, <<einsær|evident>>, <<gagnsær|transparent>>, <<glöggsær|clearsighted>>, <<víðsær|wide-seeing>>)
+* Default comparative in -rri, default superlative in -jastur as j-infix is the default here before vocalic endings.
+* {{tl|is-adecl|comp|pagename=langær}}
+* <<glær>> seems to traditionally (per Thomson, Íslensk orðsifjabók) have a stem glæ- but in modern usage (per BÍN) have a stem glær-; note the * at the beginning of the first footnote, which cancels out the footnote when another footnote is added to the form; that ensures that forms that overlap between the two usages have no footnoe
+* {{tl|is-adecl|((<comp.[*traditional]>,<#.comp.[modern usage]>))|pagename=glær}}
+* <<hlýr|warm>>, <<nýr|new>>
+
+==== words in vowel + -r where the -r is part of the stem ====
+* {{m|is|stór||big}}
+* Here, the stem is automatically 'stór' because the lemma doesn't end in -ár, -ær or -ýr.
+* {{tl|is-adecl|comp:^|pagename=stór}}
+
+==== irregular words ====
+* {{m|is|sannur||true}}
+* {{tl|is-adecl|str_nom_n:satt.comp|pagename=sannur}}
+* {{m|is|góður||good}}
+* {{tl|is-adecl|str_nom_n:gott.comp:betri.sup:bestur|pagename=góður}}
+* {{m|is|lítill||little}}
+* {{tl|is-adecl|con.vstem:litl.str_acc_m:lítinn.str_nom_n:lítið.comp:minni.sup:minnstur|pagename=lítill}}
+* {{m|is|mikill||much, great}}
+* {{tl|is-adecl|con.str_acc_m:mikinn.str_nom_n:mikið.comp:minni.sup:minnstur|pagename=lítill}}
+* {{m|is|ýmis||various}}
+* {{tl|is-adecl|con.str_dat_f:ýmissi.str_gen_f:ýmissar.str_nom_np:ýmis:ýms.str_gen_p:ýmissa:ýmsra.wk_m+wk_f+wk_n:-.-comp.sup:+|pagename=ýmis}}
+
+
+==== words in -ur that is part of the stem ====
+* Contraction is the norm here. Default comparative and superlative have contraction + -ari, -astur.
+* {{m|is|bitur||bitter; sharp}}, {{m|is|digur||thick, burly}}, {{m|is|ítur||excellent, beautiful}}, {{m|is|lipur||nimble}}, {{m|is|vitur||wise, clever}}
+* {{tl|is-adecl|#.comp|pagename=bitur}}
+* {{m|is|digur}} has an alternative comparative [[digurri]]. Here ~ stands for the (uncontracted) digur-.
+* {{tl|is-adecl|#.comp:+:~ri.sup:+|pagename=digur}}
+* with u-mutation: {{m|is|dapur||sad, downhearted}}, {{m|is|fagur||beautiful, fair}}, {{m|is|magur||lean}}, {{m|is|vakur||movable; ambling (horse)}} ({{m|is|árvakur||vigilant; rising early}})
+* {{tl|is-adecl|#.comp|pagename=dapur}}
+* As mentioned above, '^' by itself for the comparative means the stem is umlauted and -ri is added. If contraction is active, the contracted stem is used (which means the -r- of -ri will usually be elided). '^' by itself for the superlative means -st is added to the uncontracted umlauted stem (which umlauts the second-to-last vowel when the stem ends in -ur).
+* {{tl|is-adecl|#.comp:^:fegurri.sup:^|pagename=fagur}}
+* {{tl|is-adecl|#.comp:^:+|pagename=magur}}
+
+=== words with no masculine nominative singular ending ===
+* {{m|is|fús||willing, eager}}, {{m|is|ern||vigorous, hale}}, {{m|is|forn||ancient, old}}, {{m|is|frækn||valiant}}, {{m|is|gegn||favorable, useful}}, {{m|is|hás||hoarse}}, {{m|is|laus||loose; free}} ({{m|is|heyrnarlaus||deaf}}, {{m|is|mállaus||mute}}, {{m|is|vitlaus||silly, crazy; incorrect}}), {{m|is|ljós||bright, light; clear, evident}}, {{m|is|lygn||calm (of water, weather)}}, {{m|is|læs||legible; readable; able to read}}, {{m|is|megn||strong, mighty}}, {{m|is|skyggn||clearsighted; having second sight}}, {{m|is|sýkn||innocent}}, {{m|is|vís||wise; certain}}
+* {{tl|is-adecl|comp|pagename=fús}}
+* with u-mutation: {{m|is|gjarn||eager, ready}} ({{m|is|goðgjarn||kindly}}), {{m|is|jafn||equal, even, level}}, {{m|is|snjall||masterly, excellent, clever}}
+* with loss of -s after a consonant before genitive -s: {{m|is|frjáls||free}}, {{m|is|hress||in good spirits, well}}, {{m|is|viss||certain}}
+* {{tl|is-adecl|comp|pagename=frjáls}}
+* with loss of -s after a consonant before genitive -s, and u-mutation: {{m|is|hvass||keen, sharp; stormy}}
+* {{tl|is-adecl|comp|pagename=hvass}}
+* with loss of -r after a consonant before endings beginning with -r: {{m|is|kyrr||quiet}}, {{m|is|þurr||dry}}
+* {{tl|is-adecl|comp|pagename=kyrr}}
+* with loss of -r after a consonant before endings beginning with -r, and u-mutation: [there seem to be none]
+
+=== words in -ll ===
+* {{m|is|gamall||old}}
+* {{tl|is-adecl|con.uUmut.comp:eldri.sup:elstur|pagename=gamall}}
+
+=== words that are comparative-only or superlative-only ===
+* {{m|is|eystri||more to the east}}
+* Specifying -pos means "no positive form" and the lemma is in comparative form, unless -pos and -comp are both given, in which case the lemma is in superlative form. Comparative-form lemmas are automatically weak-only in the comparative but both states (weak and strong) in the superlative.
+* {{tl|is-adecl|-pos.-sup|pagename=eystri}}
+* {{m|is|austari||more to the east}}
+* BÍN lists a superlative <<austastur|easternmost>> for <<austari>> but not for <<eystri>>. The default whenever a comparative is present is for a superlative also to be present and the superlative of comparative-form lemmas is derived by converting -ri to -stur (or -li/-ni to -lastur/-nastur).
+* {{tl|is-adecl|-pos|pagename=austari}}
+* {{m|is|vestri||more to the west}}
+* {{tl|is-adecl|-pos.-sup|pagename=vestri}}
+* {{m|is|vestari||more to the west}}
+* As with <<eystri>> vs. <<austari>>, BÍN lists a superlative <<vestastur|westernmost>> of <<vestari>> but not of synonymous <<vestri>>.
+* {{tl|is-adecl|-pos|pagename=vestari}}
+* {{m|is|nyrðri||more to the north}}
+* The superlative <<nyrstur|northernmost>> is irregular (the regular form would be #<<nyrðstur>>).
+* {{tl|is-adecl|-pos.sup:nyrstur|pagename=nyrðri}}
+* {{m|is|norðari||more to the north}}
+* FIXME: Thomson gives a superlative <<norðastur|northernmost>> but not BÍN. Forms do exist but seem rare.
+* {{tl|is-adecl|-pos.-sup|pagename=norðari}}
+* {{m|is|syðri||more to the south}}
+* The superlative <<syðstur|southernmost>> is regular and generated automatically.
+* {{tl|is-adecl|-pos|pagename=syðri}}
+* {{m|is|aftari||more to the rear/back, rear, hind(er)}}
+* {{tl|is-adecl|-pos|pagename=aftari}} (with regular <<aftastur|rearmost, hindmost>>)
+* [{{m|is|eftri||more to the rear/back, rear, hind(er)}}]; not in BÍN
+* {{tl|is-adecl|-pos.-sup|pagename=eftri}}
+* {{m|is|efri||upper}} (with regular <<efstur|uppermost>>)
+* {{tl|is-adecl|-pos|pagename=efri}}
+* {{m|is|fjærri||farther}} (with regular <<fjærstur|farthest>>)
+* Here, the rules for handling -rri treat á/æ/ý as the end of the stem, but other vowels include the -r- in the stem. FIXME: We should consider changing this to only special-case á.
+* {{tl|is-adecl|-pos.compstem:fjær|pagename=fjærri}}
+* FIXME: BÍN has only <<fjærstur>>, not <<fjærri>>.
+* {{tl|is-adecl|-pos.-comp|pagename=fjærstur}}
+* {{m|is|fremri||front, forward}} (with regular <<fremstur|foremost>>)
+* {{tl|is-adecl|-pos|pagename=fremri}}
+* {{m|is|fyrri||earlier}} (with regular <<fyrstur|earliest, first>>)
+* {{tl|is-adecl|-pos|pagename=fyrri}}
+* FIXME: BÍN has <<fyrri>> and <<fyrstur>> separately as comparative-only and positive-only lemmas (not superlative-only in the latter case).
+* {{tl|is-adecl|-pos.-sup|pagename=fyrri}}
+* {{tl|is-adecl|-comp|pagename=fyrstur}}
+* {{m|is|handari||farther}} {{q|archaic}}
+* {{tl|is-adecl|-pos.-sup|pagename=handari}}
+* {{m|is|heimari||nearer home}} (with regular <<heimastur|nearest home>>) {{q|dated}}
+* {{tl|is-adecl|-pos|pagename=heimari}}
+* {{m|is|heldri||superior, better}} (with irregular <<helstur|foremost, most important>>)
+* {{tl|is-adecl|-pos.sup:helstur|pagename=heldri}}
+* {{m|is|hinstur||last}}
+* {{tl|is-adecl|-pos.-comp|pagename=hinstur}}
+* {{m|is|hægri||to the right}}
+* {{tl|is-adecl|-pos.-sup|pagename=hægri}}
+* {{m|is|innri||inner}} (with regular <<innstur|innermost>>)
+* {{tl|is-adecl|-pos.comp_wk_obl_m:innri:innra[especially in conjunction with forms of {{m|is|maður}}]|pagename=innri}}
+* {{m|is|neðri||lower}} (with regular <<neðstur|lowest>>)
+* {{tl|is-adecl|-pos|pagename=neðri}}
+* {{m|is|nærri||nearer}} (with regular <<næstur|nearest, next>>)
+* Here, the rules for handling -rri treat á/æ/ý as the end of the stem; see above. FIXME: BÍN doesn't give <<nærri>> at all except as an adverb and preposition, and lists <<næstur>> as superlative-only.
+* {{tl|is-adecl|-pos|pagename=nærri}}
+* {{tl|is-adecl|-pos.-comp|pagename=næstur}}
+* {{m|is|síðari||later}} (with regular <<síðastur|latest, last>>)
+* {{tl|is-adecl|-pos|pagename=síðari}}
+* {{m|is|síðri||inferior}} (with irregular <<sístur|most inferior, worst>>)
+* {{tl|is-adecl|-pos.sup:sístur|pagename=síðri}}
+* {{m|is|skárri||better}} (with regular <<skástur|best>>)
+* {{tl|is-adecl|-pos|pagename=skárri}}
+* {{m|is|vinstri||to the left}}
+* {{tl|is-adecl|-pos.-sup|pagename=vinstri}}
+* {{m|is|ytri||outer}} (with irregular <<ystur|outermost>>)
+* {{tl|is-adecl|-pos.sup:ystur|pagename=ytri}}
+* [{{m|is|utastur||outermost}}] FIXME: not in BÍN
+* {{tl|is-adecl|-pos.-comp|pagename=utastur}}
+* {{m|is|æðri||higher}} (with regular <<æðstur|highest>>)
+* {{tl|is-adecl|-pos|pagename=æðri}}
