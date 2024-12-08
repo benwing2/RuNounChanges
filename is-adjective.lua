@@ -1405,7 +1405,7 @@ end
 -- vowel), which is used by determine_props(). In some cases (specifically with certain foreign nouns), we set
 -- base.lemma to a new value; this is as if the user specified 'decllemma:'.
 local function determine_declension(base)
-	local stem, ending
+	local stem, ending, default_comp, default_sup
 	local default_props = {}
 	-- Determine declension
 	if base.props.indecl then
@@ -1554,7 +1554,8 @@ local function generate_default_stem(base)
 end
 
 
-local function generate_default_comp(base, stem)
+local function generate_default_comp(base)
+	if base.lemma:
 	return stem .. "er"
 end
 
@@ -1640,25 +1641,14 @@ local function process_spec(base, destforms, slot, specs, base_stem, form_defaul
 			-- Skip "-"; effectively, no forms get inserted into output.comp.
 		elseif spec.form == "+" then
 			forms = iut.flatmap_forms(base_stem, do_form_default)
-		elseif rfind(spec.form, "^%+") then
-			local ending = rsub(spec.form, "^%+", "")
+		elseif rfind(spec.form, "^~") then
+			local ending = rsub(spec.form, "^~", "")
 			forms = iut.map_forms(base_stem, function(form) return form .. ending end)
 		elseif spec.form == "^" then
 			forms = iut.flatmap_forms(base_stem, function(form) return do_form_default(com.apply_umlaut(form)) end)
 		elseif rfind(spec.form, "^%^") then
 			local ending = rsub(spec.form, "^%^", "")
 			forms = iut.map_forms(base_stem, function(form) return com.apply_umlaut(form) .. ending end)
-		elseif spec.form == "-e" then
-			forms = iut.flatmap_forms(base_stem, function(form)
-				local non_ending, ending = rmatch(form, "^(.*)e([lmnr])$")
-				if not non_ending then
-					error("Can't use '-e' with stem '" .. form .. "'; should end in -el, -em, -en or -er")
-				end
-				if base.props.ss then
-					non_ending = rsub(non_ending, "ss$", "ß")
-				end
-				return do_form_default(non_ending .. OMITTED_E .. ending)
-			end)
 		else
 			iut.insert_form(destforms, slot, spec)
 		end
@@ -1765,36 +1755,101 @@ end
 
 
 local function detect_indicator_spec(base)
-	if base.short then
-		if not base.lemma:find("ý$") then
-			error("Short forms can only be specified for lemmas ending in -ý, but saw '" .. base.lemma .. "'")
+	-- Replace # and ## in all overridable stems as well as all overrides.
+	for _, stemkey in ipairs(overridable_stems) do
+		base[stemkey] = replace_hashvals(base, base[stemkey])
+	end
+	map_all_overrides(base, function(formobj)
+		formobj.form = replace_hashvals(base, formobj.form)
+	end)
+
+	if base.props.pron then
+		determine_pronoun_props(base)
+	else
+		expand_property_sets(base)
+		if base.definiteness == "def" then
+			synthesize_indefinite_lemma(base)
 		end
-		local stem = rmatch(base.lemma, "^(.*)ý$")
-		for _, short_spec in ipairs(base.short) do
-			if short_spec.base.form == "+" then
-				short_spec.base.form = stem
-			elseif short_spec.base.form == "*" then
-				short_spec.base.form = com.dereduce(base, stem)
-				if not short_spec.base.form then
-					error("Unable to construct non-reduced variant of stem '" .. stem .. "'")
-				end
+		if base.number == "pl" then
+			synthesize_singular_lemma(base)
+		end
+		determine_declension(base)
+		determine_props(base)
+	end
+end
+
+
+local function detect_indicator_spec(alternant_multiword_spec, base)
+	-- First generate the stem(s), substituting + with the default formed from the lemma.
+	process_spec(base, base.stems, "stem", base.stem, {{form = generate_default_stem(base)}},
+	   function(base, stem) return stem end)
+
+	-- Next process the superative, if specified. We do this first so that if there is a superative and no
+	-- comparative specified, we add a comparative; but if sup:- is given, we don't add a comparative.
+	if base.sup then
+		process_spec(base, base.stems, "sup", base.sup, base.stems.stem, generate_default_sup)
+		if base.stems.sup and not base.comp then
+			base.comp = {{form = "+"}}
+		end
+	end
+	-- Next process the comparative, if specified (or defaulted because a superlative was specified).
+	if base.comp then
+		process_spec(base, base.stems, "comp", base.comp, base.stems.stem, generate_default_comp)
+	end
+	-- Next, if comparative specified but not superlative, derive the superlative(s) from the comparative(s).
+	if base.stems.comp and not base.sup then
+		local sups = iut.flatmap_forms(base.stems.comp, function(form)
+			if not rfind(form, "er$") then
+				error("Don't know how to derive superlative from comparative '" .. form .. "' because it doesn't end in -er; specify the superlative explicitly using sup:...")
 			end
-			if not short_spec.stem then
-				short_spec.stem = {
-					form = short_spec.base.form,
-					footnotes = short_spec.base.footnotes
-				}
+			local retval = generate_default_sup(base, rsub(form, "er$", ""))
+			if type(retval) ~= "table" then
+				retval = {retval}
 			end
-			if short_spec.stem.form == "+" or short_spec.stem.form == "*" then
-				short_spec.stem.form = stem
-			end
+			return retval
+		end)
+		iut.insert_forms(base.stems, "sup", sups)
+	end
+
+	-- Make sure all alternants agree in having a comparative and/or superlative.
+	for _, compsup in ipairs { {"comp", "has_comp", "comparative"}, {"sup", "has_sup", "superlative"} } do
+		local stem, altprop, desc = unpack(compsup)
+		local has_stem = not not base.stems[stem]
+		if alternant_multiword_spec.props[altprop] == nil then
+			alternant_multiword_spec.props[altprop] = has_stem
+		elseif alternant_multiword_spec.props[altprop] ~= has_stem then
+			error("If one alternant has a " .. desc .. ", all must")
 		end
 	end
 
-	if base.irreg then
-		base.decl = "irreg"
-	else
-		base.decl = "normal"
+	if base.props.predonly then
+		base.props.indecl = true
+	end
+	if base.overrides.pred and base.overrides.pred[1].form == "-" then
+		base.props.nopred = true
+	end
+	if base.props.predonly and base.props.nopred then
+		error("Can't be both 'predonly' and 'pred:-'")
+	end
+
+	-- Make sure all alternants agree in 'state' if specified.
+	local stateval = base.state or false
+	if alternant_multiword_spec.state == nil then
+		alternant_multiword_spec.state = stateval
+	elseif alternant_multiword_spec.state ~= stateval then
+		error("All alternants must agree in the value of 'state', if specified")
+	end
+
+	-- Make sure all alternants agree in various properties.
+	for _, propdesc in ipairs { {"indecl"}, {"nopred", "pred:-"}, {"predonly"} } do
+		local prop, desc = unpack(propdesc)
+		desc = desc or prop
+		local val = not not base.props[prop]
+		if alternant_multiword_spec.props[prop] == nil then
+			alternant_multiword_spec.props[prop] = val
+		elseif alternant_multiword_spec.props[prop] ~= val then
+			error("If one alternant specifies '" .. desc .. "', all must")
+		end
 	end
 end
 
@@ -1802,6 +1857,67 @@ end
 local function detect_all_indicator_specs(alternant_multiword_spec)
 	iut.map_word_specs(alternant_multiword_spec, function(base)
 		detect_indicator_spec(base)
+	end)
+end
+
+
+local function replace_hashvals(base, val)
+	if not val then
+		return val
+	end
+	if val:find("##") then
+		local lemma_minus_r, final_nom_ending = parse_off_final_nom_ending(base.lemma)
+		val = val:gsub("##", m_string_utilities.replacement_escape(lemma_minus_r))
+	end
+	val = val:gsub("#", m_string_utilities.replacement_escape(base.lemma))
+	return val
+end
+	
+
+local function detect_indicator_spec(base)
+	-- Replace # and ## in all overridable stems as well as all overrides.
+	for _, stemkey in ipairs(overridable_stems) do
+		base[stemkey] = replace_hashvals(base, base[stemkey])
+	end
+	map_all_overrides(base, function(formobj)
+		formobj.form = replace_hashvals(base, formobj.form)
+	end)
+
+	if base.props.pron then
+		determine_pronoun_props(base)
+	elseif base.props.adj then
+		process_declnumber(base)
+		expand_property_sets(base)
+		synthesize_adj_lemma(base)
+		determine_props(base)
+	else
+		expand_property_sets(base)
+		if base.definiteness == "def" then
+			synthesize_indefinite_lemma(base)
+		end
+		if base.number == "pl" then
+			synthesize_singular_lemma(base)
+		end
+		determine_declension(base)
+		determine_props(base)
+	end
+end
+
+
+local function detect_all_indicator_specs(alternant_multiword_spec)
+	-- Keep track of all genders seen in the singular and plural so we can determine whether to add the term to
+	-- [[:Category:Icelandic nouns that change gender in the plural]]. FIXME: Is this needed for Icelandic? It's copied
+	-- from Czech.
+	alternant_multiword_spec.sg_genders = {}
+	alternant_multiword_spec.pl_genders = {}
+	iut.map_word_specs(alternant_multiword_spec, function(base)
+		detect_indicator_spec(base)
+		if base.number ~= "pl" then
+			alternant_multiword_spec.sg_genders[base.actual_gender] = true
+		end
+		if base.number ~= "sg" then
+			alternant_multiword_spec.pl_genders[base.actual_gender] = true
+		end
 	end)
 end
 
