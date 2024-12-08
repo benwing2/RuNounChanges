@@ -117,11 +117,21 @@ def process_text_on_page(
               break
       else:
         for old_param, new_param in params_to_rename:
+          can_overwrite = False
+          if new_param.startswith("!"):
+            can_overwrite = True
+            new_param = new_param[1:]
           if t.has(old_param):
+            will_overwrite = True
             if t.has(new_param):
-              pagemsg("WARNING: When renaming %s=%s to %s=, already has %s=%s" % (
-                old_param, getp(old_param), new_param, new_param, getp(new_param)))
-            else:
+              if can_overwrite:
+                pagemsg("When renaming %s=%s to %s=, already has %s=%s, overwriting" % (
+                  old_param, getp(old_param), new_param, new_param, getp(new_param)))
+              else:
+                pagemsg("WARNING: When renaming %s=%s to %s=, already has %s=%s" % (
+                  old_param, getp(old_param), new_param, new_param, getp(new_param)))
+                will_overwrite = False
+            if will_overwrite:
               t.add(new_param, getparam(t, old_param), before=old_param, preserve_spacing=False)
               rmparam(t, old_param)
               notes.append("rename %s= to %s= in {{%s}}" % (old_param, new_param, tn))
@@ -216,7 +226,7 @@ pa.add_argument("-r", "--remove", help="Param to remove, can be specified multip
     action="append")
 pa.add_argument("--from", help="Old name of param, can be specified multiple times",
     metavar="FROM", dest="from_", action="append")
-pa.add_argument("--to", help="New name of param, can be specified multiple times",
+pa.add_argument("--to", help="New name of param, can be specified multiple times; if param preceded by an !, can overwrite existing param",
     action="append")
 pa.add_argument("--from-to-regex", help="Interpret values in --from and --to as regexes.", action="store_true")
 pa.add_argument("--prepend", help="PARAM=VALUE to add at the beginning, can be specified multiple times; VALUE can have {{PAGENAME}} in it to substitute the page title",
