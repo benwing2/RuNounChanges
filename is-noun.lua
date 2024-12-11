@@ -266,103 +266,26 @@ local function is_proper_noun(base, stem)
 		uupper(second_letter) ~= second_letter)
 end
 
--- Basic function to combine stem(s) and other properties with ending(s) and insert the result into the appropriate
--- slot. `base` is the object describing all the properties of the word being inflected for a single alternant (in case
--- there are multiple alternants specified using `((...))`). `slot_prefix` is either "ind_" or "def_" and is prefixed to
--- the slot value in `slot` to get the actual slot to add the resulting forms to. (`slot_prefix` is separated out
--- because the code below frequently needs to conditionalize on the value of `slot` and should not have to worry about
--- the definite and indefinite slot variants). `props` is an object containing computed stems and other information
--- (such as whether i-mutation is active). The information found in `props` cannot be stored in `base` because there may
--- be more than one set of such properties per `base` (e.g. if the user specified 'umut,uUmut' or '-j,j' or '-imut,imut'
--- or some combination of these; in such a case, the caller will iterate over all possible combinations, and ultimately
--- invoke add() multiple times, one per combination). `endings` is the ending or endings added to the appropriate stem
--- (after any j or v infix) to get the form(s) to add to the slot. Its value can be a single string, a list of strings,
--- or a list of form objects (i.e. in general list form). `clitics` is the clitic or clitics to add after the endings to
--- form the actual form value inserted into definite slots; it should be nil for indefinite slots. Its format is the
--- same as for `endings`. `ending_override`, if true, indicates that the ending(s) supplied in `endings` come from a
--- user-specified override, and hence j and v infixes should not be added as they are already included in the override
--- if needed. `endings_are_full`, if true, indicates that the supplied ending(s) are actually full words and a null stem
--- should be used.
---
--- The properties in `props` are:
--- * Stems (each stem is either a string or a form object, i.e. an object with `form` and `footnotes` properties; see
---   [[Module:inflection utilities]]; stems in general may be missing, i.e. nil, unless otherwise specified, and default
---   to more general variants):
--- ** `stem`: The basic stem. Always set. May be overridden by more specific variants.
--- ** `nonvstem`: The stem used when the ending is null or starts with a consonant, unless overridden by a more
---    specific variant. Defaults to `stem`. Not currently used, but could be if e.g. a user stem override `nonvstem:...`
---    were supported.
--- ** `umut_nonvstem`: The stem used when the ending is null or starts with a consonant and u-mutation is in effect,
---    unless overridden by a more specific variant. Defaults to `nonvstem`. Will only be present when the result of
---    u-mutation is different from the stem to which u-mutation is applied. (In this case, it will be present even if
---    `nonvstem` is missing, because there is no generic `umut_stem`.)
--- ** `imut_nonvstem`: The stem used when the ending is null or starts with a consonant and i-mutation is in effect.
---    If i-mutation is in effect, this should always be specified (otherwise an internal error will occur); hence it has
---    no default. Note that i-mutation is only in effect when either (a) `imut` or `unimut` was specified; (b) a
---    user-specified override is given that begins with a single ^ (indicating i-mutation); or (c) a declension type is
---    in effect that contains default endings beginning with a single ^ (examples are `f-long-vowel` for lemmas in -ó
---    and `f-long-umlaut-vowel-r`). Note also that this will be present even if `nonvstem` is missing, because there is
---    no generic `imut_stem`.
--- ** `vstem`: The stem used when the ending starts with a vowel, unless overridden by a more specific variant. Defaults
---    to `stem`. Will be specified when contraction is in effect or the user specified `vstem:...`.
--- ** `umut_vstem`: The stem(s) used when the ending starts with a vowel and u-mutation is in effect. Defaults to
---    `vstem`. Note that u-mutation applies to the contracted stem if both u-mutation and contraction are in effect.
---    Will only be present when the result of u-mutation is different from the stem to which u-mutation is applied.
---    (In this case, it will be present even if `vstem` is missing, because there is no generic `umut_stem`.)
--- ** `imut_vstem`: The stem(s) used when the ending starts with a vowel and i-mutation is in effect. If i-mutation is
---    in effect, this should always be specified (otherwise an internal error will occur); hence it has no default. Note
---    that i-mutation applies to the contracted stem if both i-mutation and contraction are in effect. See
---    `imut_nonvstem` for comments on when this stem will be present.
--- ** `null_defvstem`: The stem(s) used when the ending is null and is followed by a definite ending that begins with a
---    vowel, unless overridden by a more specific variant. Defaults to `nonvstem`. This is normally set when `defcon`
---    is specified.
--- ** `umut_null_defvstem`: The stem(s) used when the ending is null and is followed by a definite ending that begins
---    with a vowel, and u-mutation is in effect. Defaults to `null_defvstem`. This is normally set when `defcon` is
---    specified and u-mutation is needed, as in the nom/acc pl of neuter [[mastur]] "mast". Will only be present when
---    the result of u-mutation is different from the stem to which u-mutation is applied.
--- ** `pl_stem`: The basic stem used for plural inflections. Only set when `plstem:...` is specified by the user. If
---    this is set, the alternative plural-specific stem variants are used, where each of the above stems has a
---    plural-specific counterpart, and the identical algorithms and fallbacks are used to determine the correct stem.
--- ** `pl_nonvstem`, `pl_umut_nonvstem`, `pl_imut_nonvstem`, `pl_vstem`, `pl_umut_vstem`, `pl_imut_vstem`, 
---    `pl_null_defvstem`, `pl_umut_null_defvstem`: Plural-specific counterparts of the above stems. See the comment
---    under `pl_stem` for when these are used.
--- * Other properties:
--- ** `jinfix`: If present, either "" or "j". Inserted between the stem and ending when the ending begins with a vowel
---    other than "i". Note that j-infixes don't apply to ending overrides.
--- ** `jinfix_footnotes`: Footnotes to attach to forms where j-infixing is possible (even if it's not present).
--- ** `vinfix`: If present, either "" or "v". Inserted between the stem and ending when the ending begins with a vowel.
---    Note that v-infixes don't apply to ending overrides. `jinfix` and `vinfix` cannot both be specified.
--- ** `vinfix_footnotes`: Footnotes to attach to forms where v-infixing is possible (even if it's not present).
--- ** `imut`: If specified (i.e. not nil), either true or false. If specified, there may be associated footnotes in
---    `imut_footnotes`. If true, i-mutation and associated footnotes are in effect before endings starting with "i". If
---    false, associated footnotes still apply before endings starting with "i". Note that i-mutation is also in effect
---    if the ending has ^ prepended, but the associated footnotes don't apply here.
--- ** `imut_footnotes`: See `imut`.
--- ** `unumut`: If specified (i.e. not nil), the type of un-u-mutation requested (either "unumut" or a variant, or the
---    negation of the same using "-unumut" or a variant for no un-u-mutation; "unumut" and variants differ in which
---    slots any associated footnote are placed). If specified, there may be associated footnotes in `unumut_footnotes`.
---    If "unumut" itself, u-mutation is in effect *except* before an ending that starts with an "a" or "i" (unless
---    i-mutation is in effect, which takes precedence). If any other variant, the rules are different: when masculine,
---    u-mutation is in effect *except* in the gen sg and pl (examples are [[söfnuður]] "congregation" and [[mánuður]]
---    "month"); when feminine, u-mutation is in effect except in the nom/acc/gen pl (examples are [[verslun]] "trade,
---    business; store, shop" and [[kvörtun]] "complaint"). When u-mutation is *not* in effect, and i-mutation is also
---    not in effect, the associated footnotes in `unumut_footnotes` apply. If `unumut` is "-unumut" or a variant, there
---    is no un-u-mutation (i.e. there are no special u-mutated stems, and the basic stems, which typically have
---    u-mutation built into them, apply throughout), but the associated footnotes in `unumut_footnotes` still apply in
---    the same circumstances where they would apply if `unumut` were the non-negated counterpart.
--- ** `unumut_footnotes`: See `unumut`.
--- ** `unimut`: If specified (i.e. not nil), either true or false. If specified, there may be associated footnotes in
---    `unimut_footnotes`. If true, i-mutation is in effect *except* in certain case/num combinations that depend on the
---    gender. Specifically: (1) for masculine nouns e.g. [[ketill]] "kettle" and proper names [[Egill]] and [[Ketill]],
---    i-mutation does not apply in the dat sg and throughout the plural; (2) for feminine nouns e.g. [[kýr]] "cow",
---    [[sýr]] "sow (archaic)" and [[ær]] "ewe", i-mutation does not apply in the acc and dat sg and in the dat and gen
---    pl. Cf. also feminine pl-only [[hættur]] "bedtime, quitting time" and [[mætur]] "appreciation, liking", which use
---    'unimut' to get e.g. dat pl [[háttum]] and gen pl [[hátta]]; but these are handled by synthesizing a singular
---    without i-mutation in the lemma. Very similar are neuter pl [[læti]] "behavior, demeanor" and [[ólæti]] "noise,
---    racket", with e.g. dat pl [[látum]] and gen pl [[láta]], which are handled in the same way. When i-mutation is
---    *not* in effect, the associated footnotes in `unimut_footnotes` apply. If false, the associated footnotes in
---    `unimut_footnotes` still apply in the same circumstances where they would apply if `unimut` where true.
--- ** `unimut_footnotes`: See `unimut`.
+--[=[
+Basic function to combine stem(s) and other properties with ending(s) and insert the result into the appropriate
+slot. `base` is the object describing all the properties of the word being inflected for a single alternant (in case
+there are multiple alternants specified using `((...))`). `slot_prefix` is either "ind_" or "def_" and is prefixed to
+the slot value in `slot` to get the actual slot to add the resulting forms to. (`slot_prefix` is separated out
+because the code below frequently needs to conditionalize on the value of `slot` and should not have to worry about
+the definite and indefinite slot variants). `props` is a property set object containing computed stems and other
+information (such as whether i-mutation is active) about a particular combination of mutation specs. See the comment
+above create_base() for more information. The information found in `props` cannot be stored in `base` because there may
+be more than one set of such properties per `base` (e.g. if the user specified 'umut,uUmut' or '-j,j' or '-imut,imut'
+or some combination of these; in such a case, the caller will iterate over all possible combinations, and ultimately
+invoke add() multiple times, one per combination). `endings` is the ending or endings added to the appropriate stem
+(after any j or v infix) to get the form(s) to add to the slot. Its value can be a single string, a list of strings,
+or a list of form objects (i.e. in general list form). `clitics` is the clitic or clitics to add after the endings to
+form the actual form value inserted into definite slots; it should be nil for indefinite slots. Its format is the
+same as for `endings`. `ending_override`, if true, indicates that the ending(s) supplied in `endings` come from a
+user-specified override, and hence j and v infixes should not be added as they are already included in the override
+if needed. `endings_are_full`, if true, indicates that the supplied ending(s) are actually full words and a null stem
+should be used.
+]=]
 local function add_slotval(base, slot_prefix, slot, props, endings, clitics, ending_override, endings_are_full)
 	if not endings then
 		return
@@ -1842,7 +1765,100 @@ Create an empty `base` object for holding the result of parsing and later the ge
 	},
 	...
   },
+  prop_sets = {
+    PROPSET, -- see below
+	...,
+  },
 }
+
+There is one PROPSET (property set) for each combination of mutation specs; in the lower limit, there is a single
+property set. There may be more than one property set e.g. if the user specified 'umut,uUmut' or '-j,j' or '-imut,imut'
+or some combination of these. The properties in a given property set specify the values themselves of each mutation
+group, as well as stems (derived from the mutation specs) that are used to construct the various forms and populate the
+slots in `forms` with these values. The information found in the property sets cannot be stored in `base` because it
+depends on a particular combination of mutation specs, of which there may be more than one (see above). The
+decline_noun() function iterates over all property sets and calls the appropriate declension function on each one in
+turn, which adds forms to each slot in `base.forms`, automatically deduplicating.
+
+The properties in each property set are:
+* Stems (each stem is either a string or a form object, i.e. an object with `form` and `footnotes` properties; see
+  [[Module:inflection utilities]]; stems in general may be missing, i.e. nil, unless otherwise specified, and default
+  to more general variants):
+** `stem`: The basic stem. Always set. May be overridden by more specific variants.
+** `nonvstem`: The stem used when the ending is null or starts with a consonant, unless overridden by a more
+   specific variant. Defaults to `stem`. Not currently used, but could be if e.g. a user stem override `nonvstem:...`
+   were supported.
+** `umut_nonvstem`: The stem used when the ending is null or starts with a consonant and u-mutation is in effect,
+   unless overridden by a more specific variant. Defaults to `nonvstem`. Will only be present when the result of
+   u-mutation is different from the stem to which u-mutation is applied. (In this case, it will be present even if
+   `nonvstem` is missing, because there is no generic `umut_stem`.)
+** `imut_nonvstem`: The stem used when the ending is null or starts with a consonant and i-mutation is in effect.
+   If i-mutation is in effect, this should always be specified (otherwise an internal error will occur); hence it has
+   no default. Note that i-mutation is only in effect when either (a) `imut` or `unimut` was specified; (b) a
+   user-specified override is given that begins with a single ^ (indicating i-mutation); or (c) a declension type is
+   in effect that contains default endings beginning with a single ^ (examples are `f-long-vowel` for lemmas in -ó
+   and `f-long-umlaut-vowel-r`). Note also that this will be present even if `nonvstem` is missing, because there is
+   no generic `imut_stem`.
+** `vstem`: The stem used when the ending starts with a vowel, unless overridden by a more specific variant. Defaults
+   to `stem`. Will be specified when contraction is in effect or the user specified `vstem:...`.
+** `umut_vstem`: The stem(s) used when the ending starts with a vowel and u-mutation is in effect. Defaults to
+   `vstem`. Note that u-mutation applies to the contracted stem if both u-mutation and contraction are in effect.
+   Will only be present when the result of u-mutation is different from the stem to which u-mutation is applied.
+   (In this case, it will be present even if `vstem` is missing, because there is no generic `umut_stem`.)
+** `imut_vstem`: The stem(s) used when the ending starts with a vowel and i-mutation is in effect. If i-mutation is
+   in effect, this should always be specified (otherwise an internal error will occur); hence it has no default. Note
+   that i-mutation applies to the contracted stem if both i-mutation and contraction are in effect. See
+   `imut_nonvstem` for comments on when this stem will be present.
+** `null_defvstem`: The stem(s) used when the ending is null and is followed by a definite ending that begins with a
+   vowel, unless overridden by a more specific variant. Defaults to `nonvstem`. This is normally set when `defcon`
+   is specified.
+** `umut_null_defvstem`: The stem(s) used when the ending is null and is followed by a definite ending that begins
+   with a vowel, and u-mutation is in effect. Defaults to `null_defvstem`. This is normally set when `defcon` is
+   specified and u-mutation is needed, as in the nom/acc pl of neuter [[mastur]] "mast". Will only be present when
+   the result of u-mutation is different from the stem to which u-mutation is applied.
+** `pl_stem`: The basic stem used for plural inflections. Only set when `plstem:...` is specified by the user. If
+   this is set, the alternative plural-specific stem variants are used, where each of the above stems has a
+   plural-specific counterpart, and the identical algorithms and fallbacks are used to determine the correct stem.
+** `pl_nonvstem`, `pl_umut_nonvstem`, `pl_imut_nonvstem`, `pl_vstem`, `pl_umut_vstem`, `pl_imut_vstem`, 
+   `pl_null_defvstem`, `pl_umut_null_defvstem`: Plural-specific counterparts of the above stems. See the comment
+   under `pl_stem` for when these are used.
+* Other properties:
+** `jinfix`: If present, either "" or "j". Inserted between the stem and ending when the ending begins with a vowel
+   other than "i". Note that j-infixes don't apply to ending overrides.
+** `jinfix_footnotes`: Footnotes to attach to forms where j-infixing is possible (even if it's not present).
+** `vinfix`: If present, either "" or "v". Inserted between the stem and ending when the ending begins with a vowel.
+   Note that v-infixes don't apply to ending overrides. `jinfix` and `vinfix` cannot both be specified.
+** `vinfix_footnotes`: Footnotes to attach to forms where v-infixing is possible (even if it's not present).
+** `imut`: If specified (i.e. not nil), either true or false. If specified, there may be associated footnotes in
+   `imut_footnotes`. If true, i-mutation and associated footnotes are in effect before endings starting with "i". If
+   false, associated footnotes still apply before endings starting with "i". Note that i-mutation is also in effect
+   if the ending has ^ prepended, but the associated footnotes don't apply here.
+** `imut_footnotes`: See `imut`.
+** `unumut`: If specified (i.e. not nil), the type of un-u-mutation requested (either "unumut" or a variant, or the
+   negation of the same using "-unumut" or a variant for no un-u-mutation; "unumut" and variants differ in which
+   slots any associated footnote are placed). If specified, there may be associated footnotes in `unumut_footnotes`.
+   If "unumut" itself, u-mutation is in effect *except* before an ending that starts with an "a" or "i" (unless
+   i-mutation is in effect, which takes precedence). If any other variant, the rules are different: when masculine,
+   u-mutation is in effect *except* in the gen sg and pl (examples are [[söfnuður]] "congregation" and [[mánuður]]
+   "month"); when feminine, u-mutation is in effect except in the nom/acc/gen pl (examples are [[verslun]] "trade,
+   business; store, shop" and [[kvörtun]] "complaint"). When u-mutation is *not* in effect, and i-mutation is also
+   not in effect, the associated footnotes in `unumut_footnotes` apply. If `unumut` is "-unumut" or a variant, there
+   is no un-u-mutation (i.e. there are no special u-mutated stems, and the basic stems, which typically have
+   u-mutation built into them, apply throughout), but the associated footnotes in `unumut_footnotes` still apply in
+   the same circumstances where they would apply if `unumut` were the non-negated counterpart.
+** `unumut_footnotes`: See `unumut`.
+** `unimut`: If specified (i.e. not nil), either true or false. If specified, there may be associated footnotes in
+   `unimut_footnotes`. If true, i-mutation is in effect *except* in certain case/num combinations that depend on the
+   gender. Specifically: (1) for masculine nouns e.g. [[ketill]] "kettle" and proper names [[Egill]] and [[Ketill]],
+   i-mutation does not apply in the dat sg and throughout the plural; (2) for feminine nouns e.g. [[kýr]] "cow",
+   [[sýr]] "sow (archaic)" and [[ær]] "ewe", i-mutation does not apply in the acc and dat sg and in the dat and gen
+   pl. Cf. also feminine pl-only [[hættur]] "bedtime, quitting time" and [[mætur]] "appreciation, liking", which use
+   'unimut' to get e.g. dat pl [[háttum]] and gen pl [[hátta]]; but these are handled by synthesizing a singular
+   without i-mutation in the lemma. Very similar are neuter pl [[læti]] "behavior, demeanor" and [[ólæti]] "noise,
+   racket", with e.g. dat pl [[látum]] and gen pl [[láta]], which are handled in the same way. When i-mutation is
+   *not* in effect, the associated footnotes in `unimut_footnotes` apply. If false, the associated footnotes in
+   `unimut_footnotes` still apply in the same circumstances where they would apply if `unimut` where true.
+** `unimut_footnotes`: See `unimut`.
 ]=]
 local function create_base()
 	return {
@@ -2205,7 +2221,7 @@ local function synthesize_singular_lemma(base)
 			if stem then
 				-- masc:
 				--
-				-- [[tónkeikar]] "concert"; [[feðgar]] "father and son"; [[hafrar]] "oats" (dat pl höfrum);
+				-- [[tónleikar]] "concert"; [[feðgar]] "father and son"; [[hafrar]] "oats" (dat pl höfrum);
 				-- [[fjármunir]] "goods, property"; [[Fljótsdælir]] "inhabitants of Fljótsdalur (a valley)"
 				-- (occurs definite, needs 'dem', no unimut); [[Ásmegir]] "sons of the Gods" (occurs definite, dat
 				-- pl Ásmögum, gen pl Ásmaga, i.e. needs 'def' and 'unimut'); similarly [[ljóðmegir]];
