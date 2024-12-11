@@ -103,6 +103,10 @@ local case_set = m_table.listToSet(cases)
 local overridable_stems = {
 	"stem",
 	"vstem",
+	"compstem",
+	"compvstem",
+	"supstem",
+	"supvstem",
 }
 
 local overridable_stem_set = m_table.listToSet(overridable_stems)
@@ -113,6 +117,7 @@ local mutation_specs = {
 	"j",
 	"v",
 	"pp",
+	"ppdent",
 }
 
 local mutation_spec_set = m_table.listToSet(mutation_specs)
@@ -197,42 +202,13 @@ add_slots("sup_", true, true)
 -- user-specified override, and hence j and v infixes should not be added as they are already included in the override
 -- if needed. `endings_are_full`, if true, indicates that the supplied ending(s) are actually full words and a null stem
 -- should be used.
---
--- The properties in `props` are:
--- * Stems (each stem is either a string or a form object, i.e. an object with `form` and `footnotes` properties; see
---   [[Module:inflection utilities]]; stems in general may be missing, i.e. nil, unless otherwise specified, and default
---   to more general variants):
--- ** `stem`: The basic stem. Always set. May be overridden by more specific variants.
--- ** `nonvstem`: The stem used when the ending is null or starts with a consonant, unless overridden by a more
---    specific variant. Defaults to `stem`. Not currently used, but could be if e.g. a user stem override `nonvstem:...`
---    were supported.
--- ** `umut_nonvstem`: The stem used when the ending is null or starts with a consonant and u-mutation is in effect,
---    unless overridden by a more specific variant. Defaults to `nonvstem`. Will only be present when the result of
---    u-mutation is different from the stem to which u-mutation is applied. (In this case, it will be present even if
---    `nonvstem` is missing, because there is no generic `umut_stem`.)
--- ** `vstem`: The stem used when the ending starts with a vowel, unless overridden by a more specific variant. Defaults
---    to `stem`. Will be specified when contraction is in effect or the user specified `vstem:...`.
--- ** `umut_vstem`: The stem(s) used when the ending starts with a vowel and u-mutation is in effect. Defaults to
---    `vstem`. Note that u-mutation applies to the contracted stem if both u-mutation and contraction are in effect.
---    Will only be present when the result of u-mutation is different from the stem to which u-mutation is applied.
---    (In this case, it will be present even if `vstem` is missing, because there is no generic `umut_stem`.)
--- * Other properties:
--- ** `jinfix`: If present, either "" or "j". Inserted between the stem and ending when the ending begins with a vowel
---    other than "i". Note that j-infixes don't apply to ending overrides.
--- ** `jinfix_footnotes`: Footnotes to attach to forms where j-infixing is possible (even if it's not present).
--- ** `vinfix`: If present, either "" or "v". Inserted between the stem and ending when the ending begins with a vowel.
---    Note that v-infixes don't apply to ending overrides. `jinfix` and `vinfix` cannot both be specified.
--- ** `vinfix_footnotes`: Footnotes to attach to forms where v-infixing is possible (even if it's not present).
--- ** `pp`: If present, either `true` or `false`. Indicates how to assimilate neuter ending -t to a previous final -ð
---    after a vowel. If true, the result is -ð, as in past participles; otherwise, the result is -tt.
--- ** `pp_footnotes`: Footnotes to attach to forms where `pp`-influenced assimilation happens.
-local function add(base, slot_prefix, slot, props, endings, ending_override, endings_are_full)
+local function add(base, slot, degree, props, endings, ending_override, endings_are_full)
 	if not endings then
 		return
 	end
-	-- Call skip_slot() based on the declined number and definiteness; if the actual number is different, we correct
-	-- this in decline_noun() at the end.
-	if skip_slot(base.number, base.definiteness, slot) then
+	-- Call skip_slot() based on the declined number and state; if the actual number is different, we correct
+	-- this in decline_adj() at the end.
+	if skip_slot(degree.number, degree.state, slot) then
 		return
 	end
 	if type(endings) == "string" then
@@ -247,7 +223,7 @@ local function add(base, slot_prefix, slot, props, endings, ending_override, end
 			ending = endingobj.form
 			ending_footnotes = endingobj.footnotes
 		end
-		-- Ending of "-" means the user used -- to indicate there should be no form here.
+		-- Ending of "-" means the user used - to indicate there should be no form here.
 		if ending == "-" then
 			return
 		end
@@ -424,7 +400,7 @@ local function add(base, slot_prefix, slot, props, endings, ending_override, end
 end
 
 
-local function add_strong_decl_with_nom_sg(base, props,
+local function add_strong_decl_with_nom_sg(base, degree, props,
 	nom_m, nom_f, nom_n,
 	acc_m, acc_f,      
 	dat_m, dat_f, dat_n,
@@ -434,26 +410,26 @@ local function add_strong_decl_with_nom_sg(base, props,
 	dat_p,
 	gen_p
 )
-	add(base, "str_nom_m", props, nom_m)
-	add(base, "str_nom_f", props, nom_f)
-	add(base, "str_nom_n", props, nom_n)
-	add(base, "str_acc_m", props, acc_m)
-	add(base, "str_acc_f", props, acc_f)
-	add(base, "str_dat_m", props, dat_m)
-	add(base, "str_dat_f", props, dat_f)
-	add(base, "str_dat_n", props, dat_n)
-	add(base, "str_gen_m", props, gen_m)
-	add(base, "str_gen_f", props, gen_f)
+	add(base, "str_nom_m", degree, props, nom_m)
+	add(base, "str_nom_f", degree, props, nom_f)
+	add(base, "str_nom_n", degree, props, nom_n)
+	add(base, "str_acc_m", degree, props, acc_m)
+	add(base, "str_acc_f", degree, props, acc_f)
+	add(base, "str_dat_m", degree, props, dat_m)
+	add(base, "str_dat_f", degree, props, dat_f)
+	add(base, "str_dat_n", degree, props, dat_n)
+	add(base, "str_gen_m", degree, props, gen_m)
+	add(base, "str_gen_f", degree, props, gen_f)
 	if gen_n == nil then -- not 'false'; use to specify no value for gen_n
 		gen_n = gen_m
 	end
-	add(base, "str_gen_n", props, gen_n)
-	add(base, "str_nom_mp", props, nom_mp)
-	add(base, "str_nom_fp", props, nom_fp)
-	add(base, "str_nom_np", props, nom_np)
-	add(base, "str_acc_mp", props, acc_mp)
-	add(base, "str_dat_p", props, dat_p)
-	add(base, "str_gen_p", props, gen_p)
+	add(base, "str_gen_n", degree, props, gen_n)
+	add(base, "str_nom_mp", degree, props, nom_mp)
+	add(base, "str_nom_fp", degree, props, nom_fp)
+	add(base, "str_nom_np", degree, props, nom_np)
+	add(base, "str_acc_mp", degree, props, acc_mp)
+	add(base, "str_dat_p", degree, props, dat_p)
+	add(base, "str_gen_p", degree, props, gen_p)
 end
 
 
@@ -510,13 +486,13 @@ local function add_decl(base, props,
 	wk_obl_m, wk_obl_f,
 	wk_p
 )
-	add_strong_decl(
+	add_strong_decl(base, props,
 		nom_f, nom_n, acc_m, acc_f,      
 		dat_m, dat_f, dat_n, gen_m, gen_f, gen_n,
 		nom_mp, nom_fp, nom_np, acc_mp,
 		dat_p, gen_p
 	)
-	add_weak_decl(
+	add_weak_decl(base, props,
 		wk_nom_m, wk_nom_f, wk_n,
 		wk_obl_m, wk_obl_f,
 		wk_p
@@ -528,7 +504,7 @@ local decls = {}
 decls["normal"] = function(base, props)
 	add_decl(base, props,
 		      "^^",  "t",
-		"an", "a",
+		base.inn and "*" or "an", "a",
 		"um", "ri",  "u",
 		"s",  "rar", nil,
 		"ir", "ar", "^^",
@@ -542,19 +518,11 @@ decls["normal"] = function(base, props)
 end
 
 
-decls["inn"] = function(base, props)
-	add_decl(base, props,
-		       "in",    "ið",
-		"*",   "na",
-		"num", "inni",  "nu",
-		"ins", "innar", nil,
-		"nir", "nar",   "in",
-		"na",
-		"num",
-		"inna",
-		"ni",  "na",    "na",
-		"na",  "nu",
-		"nu",
+decls["comp"] = function(base, props)
+	add_weak_decl(base, props,
+		"i",  "i",   "a",
+		"i",  "i",
+		"i",
 	)
 end
 
@@ -1037,67 +1005,70 @@ end
 
 
 --[=[
-Create an empty `base` object for holding the result of parsing and later the generated forms. The object is of the form
+Create an empty `base` object for holding the result of parsing and later the generated forms. The object (including
+fields later filled out by other functions) is of the form
 
 {
-  overrides = {
-	SLOT = OVERRIDE,
-	SLOT = OVERRIDE,
-	...
-  }, -- where SLOT is the actual name of the slot, such as "ind_gen_s" (NOT the slot name as specified by the user,
-		which would be just "gen" for "ind_gen_s") and OVERRIDE is
-		{indef = {FORMOBJ, FORMOBJ, ...}, def = nil or false or {FORMOBJ, FORMOBJ, ...}}, where FORMOBJ is
-		{form = FORM, footnotes = FOOTNOTES} as in the `forms` table ("-" means to suppress the slot entirely and is
-		signaled by "--" as the form value; a value preceded by ! means it's a full form rather than an ending; in
-		such forms you can use # to indicate the lemma and ## to indicate the lemma minus -ur or -r, as with stems);
-		`indef` means the override(s) coming before a slash; `def` means the override(s) coming after a slash, or the
-		overrides for definite slots, and `false` for either means that the user left the value before or after the
-		slash completely blank, meaning not to override the indefinite or definite forms
-  gens = nil or OVERRIDE, same form as OVERRIDE above
-  pls = nil or OVERRIDE, same form as OVERRIDE above
-  forms = {}, -- forms for a single spec alternant; see `forms` below
-  props = {
-	PROP = true,
-	PROP = true,
-    ...
-  }, -- misc Boolean properties:
-		* "dem" (a demonym, i.e. a capitalized noun such as [[Svisslendingur]] "Swiss person" that behaves like a
-		  common noun);
-		* "proper" (a lowercase noun that behaves like a proper noun, i.e. defaults to no plural or definite forms);
-		* "rstem" (an r-stem like [[bróðir]] "brother" or [[dóttir]] "daughter");
-		* "já" (a neuter in -é whose stem alternates with -já, such as [[tré]] "tree" and [[hné]]/[[kné]] "knee");
-		* "weak" (the noun should decline like an ordinary weak noun; used in the declension of [[fjandi]] to disable
-		  the special -ndi declension);
-  number = "NUMBER", -- "sg", "pl", "both" or "none" (for certain pronouns); may be missing and if so is defaulted
-  gender = "GENDER", -- "m", "f", "n" or "none" (for certain pronouns); always specified by the user
-  definiteness = "DEFINITENESS", -- "def", "indef", "bothdef" or "none" (for pronouns); may be missing and if so is
-									defaulted
-  decllemma = nil or "DECLLEMMA", -- decline like the specified lemma
-  declgender = nil or "DECLGENDER", -- decline like the specified gender
-  declnumber = nil or "DECLNUMBER", -- decline like the specified number
-  stem = nil or "STEM", -- override the stem; may have # (= lemma) or ## (= lemma minus -ur or -r)
-  vstem = nil or "STEM", -- override the stem used before vowel-initial endings; same format as `stem`
-  footnotes = nil or {"FOOTNOTE", "FOOTNOTE", ...}, -- alternant-level footnotes, specified using `.[footnote]`, i.e.
-													   a footnote by itself
-  addnote_specs = {
-	ADDNOTE_SPEC, ADDNOTE_SPEC, ...
-  }, -- where ADDNOTE_SPEC is {slot_specs = {"SPEC", "SPEC", ...}, footnotes = {"FOOTNOTE", "FOOTNOTE", ...}}; SPEC is
-		a Lua pattern matching slots (anchored on both sides) and FOOTNOTE is a footnote to add to those slots
-  MUTATION_GROUP = {
-	MUTATION_SPEC, MUTATION_SPEC, ...
-  }, -- where MUTATION_GROUP is one of "umut", "con", "pp", "j" or "v", and
-		MUTATION_SPEC is {form = "FORM", footnotes = nil or {"FOOTNOTE", "FOOTNOTE", ...}, defaulted = BOOLEAN}, where
-		FORM is as specified by the user (e.g. "uUmut", "-unumut") or set as a default by the code (in which case
-		`defaulted` will be set to true for mutation groups "umut" and "unumut"); the mutation groups are as follows:
-		umut (u-mutation), imut (i-mutation), unumut (reverse u-mutation), unimut (reverse i-mutation), con (stem
-		contraction before vowel-initial endings), defcon (stem contraction before vowel-initial definite clitics when
-		the ending itself is null), j (j-infix before vowel-initial endings not beginning with an i), v (v-infix before
-		vowel-initial endings)
-
-  -- The following additional fields are added by other functions:
-  orig_lemma = "ORIGINAL-LEMMA", -- as given by the user or taken from pagename
-  orig_lemma_no_links = "ORIGINAL-LEMMA-NO-LINKS", -- links removed
-  lemma = "LEMMA", -- `orig_lemma_no_links`,
+  -- The original lemma as specified by the user in the declension spec, or taken from the pagename. May have
+  -- double-bracket links in it.
+  orig_lemma = "ORIGINAL_LEMMA",
+  -- Same as `orig_lemma` but with double-bracket links removed and two-part links resolved to the right side.
+  orig_lemma_no_links = "ORIGINAL_LEMMA_NO_LINKS",
+  -- Per-degree structures (`pos` = positive, `comp` = comparative, `sup` = superlative). Each slot (`pos`, `comp` or
+  -- `sup`) maps to a list of degree objects, one for each per-degree lemma. There will only be one positive degree
+  -- object (different positive lemmas will be handled as alternants at a higher level), but there may be multiple
+  -- comparative and/or superlative degree objects. Multiple such objects generally happens because the user specifies
+  -- multiple comparatives or superlatives (e.g. for [[fagur]], using the spec '#.comp:^:fegurri.sup:^', which specifies
+  -- comparative lemmas [[fegri]] and [[fegurri]]), but occasionally the default superlative operation generates more
+  -- than one superlative; e.g. for [[förull]] the spec is 'con,-con.comp:+:~~ari' which explicitly mentions two
+  -- comparatives, but two superlatives are also generated because of the 'con,-con' portion of the spec. There will
+  -- always be a `pos` slot filled, but if the user didn't explicitly either specify that a comparative is present or
+  -- specify no comparative using '-comp', there will be no `comp` slot (likewise for `sup`). If the user specified
+  -- '-comp', there will be a `comp` slot mapping to an empty list.
+  degree = {
+    pos = {
+	  {
+		-- The actual lemma, without any links. For the positive degree, same as `base.orig_lemma_no_links`. For the
+		-- comparative and superlative degrees, as specified by the user or defaulted.
+		actual_lemma = "ACTUAL_LEMMA",
+		-- The lemma to use for declension. Will differ from `actual_lemma` if `decllemma:...` is given, in which case
+		-- the value of `decllemma` will be here.
+		lemma = "LEMMA",
+		number = "NUMBER", -- "sg", "pl" or "both"; may be missing and if so is defaulted
+		state = "STATE", -- "strong", "weak" or "bothstates"; may be missing and if so is defaulted
+		-- computed stem; after parse_indicator_spec(), either nil or a user-specified stem override, which may have
+		-- # (= lemma) or ## (= lemma minus -ur or -r) as the value; after determine_declension(), filled in with the
+		-- actual stem
+		stem = "STEM",
+		-- override the stem used before vowel-initial endings; after parse_indicator_spec(), either nil or a
+		-- user-specified stem override in the same format as `stem`
+		vstem = nil or "STEM",
+		-- alternant-level footnotes, specified using `.[footnote]`, i.e. a footnote by itself; apply to all degrees
+		footnotes = nil or {"FOOTNOTE", "FOOTNOTE", ...},
+		-- where MUTATION_GROUP is one of "umut", "con", "pp", "j" or "v", and MUTATION_SPEC is {form = "FORM",
+		-- footnotes = nil or {"FOOTNOTE", "FOOTNOTE", ...}, defaulted = BOOLEAN}, where FORM is as specified by the
+		-- user (e.g. "uUmut", "-pp") or set as a default by the code (in which case `defaulted` will be set to true for
+		-- mutation group "umut"); the mutation groups are as follows:
+		-- * umut (u-mutation);
+		-- * con (stem contraction before vowel-initial endings);
+		-- * j (j-infix before vowel-initial endings not beginning with an i);
+		-- * v (v-infix before vowel-initial endings);
+		-- * pp (past-participle-like inflection, with -ð in the nominative/accusative neuter singular instead of -t);
+		-- * ppdent (dental infix in past participles before vowel-initial endings);
+		MUTATION_GROUP = {
+		  MUTATION_SPEC, MUTATION_SPEC, ...
+		},
+		prop_sets = {
+		  PROPSET, -- see below
+		  ...,
+		},
+	  },
+	  ...
+	},
+	comp = { { ... }, { ... }, ... },
+	sup = { { ... }, { ... }, ... },
+  },
+  -- forms for a single spec alternant
   forms = {
 	SLOT = {
 	  {
@@ -1108,6 +1079,70 @@ Create an empty `base` object for holding the result of parsing and later the ge
 	},
 	...
   },
+  -- where SLOT is the actual name of the slot, such as "str_nom_n" and OVERRIDE is a list of form objects, where a
+  -- form object is {form = FORM, footnotes = FOOTNOTES} as in the `forms` table ("-" means to suppress the slot
+  -- entirely)
+  overrides = {
+	SLOT = OVERRIDE,
+	SLOT = OVERRIDE,
+	...
+  },
+  -- misc Boolean properties:
+  -- * "irreg" (an irregular term such as a number or determiner);
+  props = {
+	PROP = true,
+	PROP = true,
+    ...
+  },
+  decllemma = nil or "DECLLEMMA", -- decline like the specified lemma
+  declnumber = nil or "DECLNUMBER", -- decline like the specified number
+  declstate = nil or "DECLSTATE", -- decline like the specified state
+  -- alternant-level footnotes, specified using `.[footnote]`, i.e. a footnote by itself; apply to all degrees
+  footnotes = nil or {"FOOTNOTE", "FOOTNOTE", ...},
+  -- ADDNOTE_SPEC is {slot_specs = {"SPEC", "SPEC", ...}, footnotes = {"FOOTNOTE", "FOOTNOTE", ...}}; SPEC is a Lua
+  -- pattern matching slots (anchored on both sides) and FOOTNOTE is a footnote to add to those slots
+  addnote_specs = {
+	ADDNOTE_SPEC, ADDNOTE_SPEC, ...
+  },
+}
+
+There is one PROPSET (property set) for each combination of mutation specs; in the lower limit, there is a single
+property set. There may be more than one property set e.g. if the user specified 'umut,uUmut' or '-j,j' or some
+combination of these. The properties in a given property set specify the values themselves of each mutation group, as
+well as stems (derived from the mutation specs) that are used to construct the various forms and populate the slots in
+`forms` with these values. The information found in the property sets cannot be stored in `base` because it depends on a
+particular combination of mutation specs, of which there may be more than one (see above). The decline_adj() function
+iterates over all property sets and calls the appropriate declension function on each one in turn, which adds forms to
+each slot in `base.forms`, automatically deduplicating.
+
+The properties in each property set are:
+* Stems (each stem is either a string or a form object, i.e. an object with `form` and `footnotes` properties; see
+  [[Module:inflection utilities]]; stems in general may be missing, i.e. nil, unless otherwise specified, and default
+  to more general variants):
+** `stem`: The basic stem. Always set. May be overridden by more specific variants.
+** `nonvstem`: The stem used when the ending is null or starts with a consonant, unless overridden by a more
+   specific variant. Defaults to `stem`. Not currently used, but could be if e.g. a user stem override `nonvstem:...`
+   were supported.
+** `umut_nonvstem`: The stem used when the ending is null or starts with a consonant and u-mutation is in effect,
+   unless overridden by a more specific variant. Defaults to `nonvstem`. Will only be present when the result of
+   u-mutation is different from the stem to which u-mutation is applied. (In this case, it will be present even if
+   `nonvstem` is missing, because there is no generic `umut_stem`.)
+** `vstem`: The stem used when the ending starts with a vowel, unless overridden by a more specific variant. Defaults
+   to `stem`. Will be specified when contraction is in effect or the user specified `vstem:...`.
+** `umut_vstem`: The stem(s) used when the ending starts with a vowel and u-mutation is in effect. Defaults to
+   `vstem`. Note that u-mutation applies to the contracted stem if both u-mutation and contraction are in effect.
+   Will only be present when the result of u-mutation is different from the stem to which u-mutation is applied.
+   (In this case, it will be present even if `vstem` is missing, because there is no generic `umut_stem`.)
+* Other properties:
+** `jinfix`: If present, either "" or "j". Inserted between the stem and ending when the ending begins with a vowel
+   other than "i". Note that j-infixes don't apply to ending overrides.
+** `jinfix_footnotes`: Footnotes to attach to forms where j-infixing is possible (even if it's not present).
+** `vinfix`: If present, either "" or "v". Inserted between the stem and ending when the ending begins with a vowel.
+   Note that v-infixes don't apply to ending overrides. `jinfix` and `vinfix` cannot both be specified.
+** `vinfix_footnotes`: Footnotes to attach to forms where v-infixing is possible (even if it's not present).
+** `pp`: If present, either `true` or `false`. Indicates how to assimilate neuter ending -t to a previous final -ð
+   after a vowel. If true, the result is -ð, as in past participles; otherwise, the result is -tt.
+** `pp_footnotes`: Footnotes to attach to forms where `pp`-influenced assimilation happens.
 }
 ]=]
 local function create_base()
@@ -1116,6 +1151,7 @@ local function create_base()
 		overrides = {},
 		props = {},
 		addnote_specs = {},
+		degrees = {pos = {{}}},
 	}
 end
 
@@ -1357,32 +1393,32 @@ local function set_all_defaults_and_check_bad_indicators(alternant_multiword_spe
 end
 
 
-local function expand_property_sets(base)
-	base.prop_sets = {{}}
+local function expand_property_sets(degree)
+	degree.prop_sets = {{}}
 
 	-- Construct the prop sets from all combinations of mutation specs, in case any given spec has more than one
 	-- possibility.
 	for _, mutation_spec in ipairs(mutation_specs) do
-		local specvals = base[mutation_spec]
+		local specvals = degree[mutation_spec]
 		-- Handle unspecified mutation specs.
 		if not specvals then
 			specvals = {false}
 		end
 		if #specvals == 1 then
-			for _, prop_set in ipairs(base.prop_sets) do
+			for _, prop_set in ipairs(degree.prop_sets) do
 				-- Convert 'false' back to nil
 				prop_set[mutation_spec] = specvals[1] or nil
 			end
 		else
 			local new_prop_sets = {}
-			for _, prop_set in ipairs(base.prop_sets) do
+			for _, prop_set in ipairs(degree.prop_sets) do
 				for _, specval in ipairs(specvals) do
 					local new_prop_set = m_table.shallowcopy(prop_set)
 					new_prop_set[mutation_spec] = specval
 					table.insert(new_prop_sets, new_prop_set)
 				end
 			end
-			base.prop_sets = new_prop_sets
+			degree.prop_sets = new_prop_sets
 		end
 	end
 end
@@ -1405,78 +1441,106 @@ end
 -- vowel), which is used by determine_props(). In some cases (specifically with certain foreign nouns), we set
 -- base.lemma to a new value; this is as if the user specified 'decllemma:'.
 local function determine_declension(base)
-	local stem, ending, default_comp, default_sup
+	local stem, ending
+	local pos = base.degrees.pos[1]
 	local default_props = {}
 	-- Determine declension
 	if base.props.indecl then
-		base.decl = "indecl"
-		stem = base.lemma
+		pos.decl = "indecl"
+		stem = pos.lemma
 	elseif base.props["decl?"] then
-		base.decl = "decl?"
-		stem = base.lemma
-	if not stem then
-		stem, ending = rmatch(base.lemma, "^(.*[ÁáÆæÝý])(r)$")
-		if stem then
-			-- in -ár:
-			-- [[nár]] "corpse", [[sár]] "tub (archaic)", [[hár]] "thole, oarlock (archaic)", [[hár]]
-			-- "spiny dogfish (archaic)" (with v-infix), [[kljár]] "weaving stone (archaic)", [[ljár]] "scythe",
-			-- [[skjár]] "video screen, display", [[már]] "seagull", [[sjár]] "sea", [[snjár]] "snow" (with
-			-- v-infix); vs. stems ending in -r: [[ár]] "? (archaic)", [[lár]] "wooden box for wool", [[klár]]
-			-- "inferior horse, nag", [[pílár]] "slat, fence post; spoke (dated)", [[kentár]] "centaur"
-			--
-			-- in -ær:
-			-- [[glær]] "sea", [[skær]] "? (obsolete)", [[blær]] "gentle breeze", [[bær]] "farm; town", [[óbær]]
-			-- "?", [[sær]] "sea", [[snær]] "snow"
-			--
-			-- in -ýr:
-			-- [[ýr]] "yew", [[býr]] "town, farm", [[gnýr]] "clash, rumble; blue wildebeest", [[týr]] "hero; god",
-			-- also many proper names; vs. stems ending in -r: [[fýr]] "dude, guy", [[lýr]] "pollock", [[sýr]]
-			-- "? (poetic)", [[ýr]] "? (obsolete)", [[hlýr]] "? (obsolete)", [[glýr]] "? (obsolete)"
-			base.decl = "normal"
-			base.double_r = true
-		end
-	end
+		pos.decl = "decl?"
+		stem = pos.lemma
 	if not stem then
 		-- There must be at least one vowel; lemmas like [[bur]] don't count.
-		stem, ending = rmatch(base.lemma, "^(.*" .. com.vowel_or_hyphen_c .. ".*)(ur)$")
+		stem, ending = rmatch(pos.lemma, "^(.*" .. com.vowel_or_hyphen_c .. ".*)(ur)$")
 		if stem then
-			if base.stem == base.lemma then
+			if pos.stem == pos.lemma then
 				-- [[dapur]] "sad" etc. where the stem includes the final -r
-				stem = base.stem
+				stem = pos.stem
 				ending = "" -- not actually used
 				default_props.con = "con"
+				default_props.defcomp = com.apply_contraction(stem) .. "ari"
+			elseif not pos.stem and (stem:find("leg$") or stem:find("ug$")) then
+				-- [[fallegur]] "beautiful" and others in -legur; [[auðugur]] "rich" and others in -ugur; note that
+				-- this includes words like [[lóugur]] and [[snjóugur]] with a vowel preeding the -ugur (there are no
+				-- adjectives in -augur).
+				default_props.defcomp = stem .. "ri"
+			else
+				-- [[gulur]] "yellow" and lots of others
+				-- defcomp, defsup computed later
 			end
-			-- [[gulur]] "yellow" and lots of others
-			base.decl = "m"
 		end
 	end
 	if not stem then
-		stem, ending = rmatch(base.lemma, "^(.*l)(l)$")
+		stem, ending = rmatch(pos.lemma, "^(.*[ÁáÆæ])(r)$")
 		if stem then
-			if not base.stem and (rfind(stem, com.cons_c .. "[aiu]l$") or stem:find("^[aiuAIU]l$")) then
-				-- [[gaffall]] "fork" (dat pl [[göfflum]]), [[þumall]] "thumb"; [[ekkill]] "widower";
-				-- [[spegill]] "mirror"; [[segull]] "magnet"; [[öxull]] "axis; axle"; etc. Note that the check
-				-- for a consonant preceding the a/i/u is important as there are words like [[manúall]]
-				-- "manual", [[ritúall]] "ritual", [[kokteill]] "cocktail", [[feill]] "flaw, error", [[deill]]
-				-- "dispute???" (rare, regional), [[haull]] "hernia", [[straull]] "? (rare, regional)" that
-				-- don't have contraction. Beware of the rare word [[síill]] "sieve? strainer?" that per BÍN
-				-- does contract to síl- before vowels. Currently the code to handle contraction will throw an
-				-- error if you attempt to contract that word, but you can use 'vstem:...'. 
-				--
-				-- There are also lots of words in a vowel other than a/i/u followed by -ll, such as [[bíll]]
-				-- "car", [[áll]] "eel", [[konsúll]] "consul", [[þræll]] "slave", [[hvoll]] "hill", [[stóll]]
-				-- "chair", etc. In these, the final -l is the nominative singular ending, as above.
-				--
-				-- Note that if the user overrode the stem (e.g. using '#' as with [[Ármann]]), we don't
-				-- default to contraction as it may cause an error to be thrown.
-				default_props.con = "con"
+			if (not pos.stem or pos.stem == stem) then
+				-- The default for these lemmas is to not include the -r in the stem.
+				pos.double_r = true
+				default_props.defcomp = stem .. "rri"
+				if rfind(stem, "[Ææ]$") then
+					default_props.j = "j"
+					default_props.defsup = stem .. "jastur"
+				else
+					-- defsup computed later
+				end
+			else
+				-- Process later on in the null-ending arm.
+				stem = nil
+				ending = nil
 			end
-			base.decl = "m"
 		end
 	end
 	if not stem then
-		stem, ending = rmatch(base.lemma, "^(.*n)(n)$")
+		stem, ending = rmatch(pos.lemma, "^(.*[Ýý])(r)$")
 		if stem then
+			if pos.stem == stem then
+				-- The default for these lemmas is to include the -r in the stem. This includes lemmas like
+				-- [[nýr]] "new" and [[hlýr]] "warm".
+				pos.double_r = true
+				default_props.j = "j"
+				default_props.defcomp = stem .. "rri"
+				default_props.defsup = stem .. "jastur"
+			else
+				-- Process later on in the null-ending arm.
+				stem = nil
+				ending = nil
+			end
+		end
+	end
+	if not stem then
+		stem, ending = rmatch(pos.lemma, "^(.*l)(l)$")
+		if stem then
+			-- [[heill]] "whole; healthy", [[fúll]] "foul", [[þögull]] "taciturn" (with or without contraction), etc.
+			default_props.defcomp = stem .. "li"
+			-- defsup computed later, depending on the value of 'con'
+		end
+	end
+	if not stem then
+		stem, ending = rmatch(pos.lemma, "^(.*n)(n)$")
+		if stem then
+			if stem:find("[^e]in$") then
+				-- [[boginn]] "curved, crooked"; [[heiðinn]] "heathen"; [[fyndinn]] "witty"; also [[náinn]] "near" and
+				-- others in -Vinn other than -einn; also [[söngvinn]] "fond of singing, musical" and [[höggvinn]]
+				-- "chopped" where the -v- disappears before contracted -n-. These adjectives have contraction before
+				-- vowel endings where stem -in becomes -n (except in past participles with the 'ppdent' property,
+				-- where the -n is replaced with a dental, either -d- (after l/m/n), -t- (after a voiceless consonant)
+				-- or -ð- (otherwise). They also have a couple of special endings: acc masc sg is in -inn not expected
+				-- #-nan, and nom/acc neut sg is in -ið. We signal this by setting `pos.inn`. In addition, if 'ppdent'
+				-- applies and there is a comparative and superlative, the dental stem applies, as in [[vantalinn]]
+				-- "not included, omitted, understated (of assets/money)" with comparative [[vantaldari]] and
+				-- superlative [[vantaldastur]].
+				pos.inn = true
+				default_props.defcomp = function(base, pos, props)
+					if props.ppdent and props.ppdent.form == "ppdent" then
+						-- Chop off final -in
+						props.dental_stem = com.add_dental_ending(usub(stem, 1, -3))
+
+
+
+
+
 			if not base.stem and (rfind(stem, com.cons_c .. "[aiu]n$") or stem:find("^[aiuAIU]n$")) then
 				-- As with -all/-ill/-ull although there are fewer such words in -nn. Examples: [[aftann]] "evening"
 				-- (dat pl öftnum), [[arinn]] "hearth, fireplace" (dat pl örnum), [[drottinn]] "lord", [[himinn]]
@@ -1512,7 +1576,8 @@ local function determine_declension(base)
 	if not stem then
 		-- Miscellaneous terms without ending
 		stem = base.lemma
-		base.decl = "m"
+		base.decl = "normal"
+		base.
 	end
 	if base.stem then
 		-- This isn't necessarily accurate but doesn't really matter. We only record the lemma ending to help with
@@ -1540,89 +1605,6 @@ local function determine_declension(base)
 		end
 	end
 	track("decl/" .. base.decl)
-end
-
-
-local function generate_default_stem(base)
-	if base.props.ss then
-		return rsub(base.lemma, "ß$", "ss")
-	end
-	if base.lemma:find("e$") then
-		return rsub(base.lemma, "e$", "")
-	end
-	return rsub(base.lemma, "([ai])bel$", "%1b" .. OMITTED_E .. "l")
-end
-
-
-local function generate_default_comp(base)
-	if base.lemma:
-	return stem .. "er"
-end
-
-
-local function generate_default_sup(base, stem)
-	if rfind(stem, OMITTED_E .. "[lmnr]$") then
-		-- If we omitted -e- in the stem, put it back. E.g. [[simpel]], stem ''simpl-'', comparative
-		-- ''simpler'', superlative ''simpelst-'', or [[abgeschlossen]], comparative ''abgeschlossener'' or
-		-- ''abgeschlossner'', superlative just ''abgeschlossenst-''.
-		local non_ending, ending = rmatch(stem, "^(.*)" .. OMITTED_E .. "([lmnr])$")
-		if base.props.ss then
-			-- [[abgeschlossen]] -> ''abgeschloßner'' -> ''abgeschlossenst'' (pre-1996 spelling)
-			non_ending = rsub(non_ending, "ß$", "ss")
-		end
-		return non_ending .. "e" .. ending .. "st"
-	elseif rfind(stem, "gr[oö]ß$") or rfind(stem, "gr[oö]ss$") then
-		-- Write this way so we can be called either on positive or comparative stem.
-		return stem .. "t"
-	elseif rfind(stem, "h[oö]h$") then
-		-- [[hoch]], [[ranghoch]], etc.
-		-- Write this way so we can be called either on positive or comparative stem.
-		return rsub(stem, "..$", "öchst")
-	elseif rfind(stem, "n[aä]h$") then
-		-- [[nah]], [[äquatornah]], [[bahnhofsnah]], [[bodennah]], [[citynah]], [[hautnah]] (has no comp in dewikt),
-		-- [[körpernah]], [[zeitnah]], etc.
-		-- NOTE: [[erdnah]], [[praxisnah]] can be either regular (like [[froh]] below) or following [[nah]].
-		-- Write this way so we can be called either on positive or comparative stem.
-		return rsub(stem, "..$", "ächst")
-	elseif rfind(stem, "[aeiouäöü]h$") then
-		-- [[froh]], [[farbenfroh]], [[lebensfroh]], [[schadenfroh]], [[früh]], [[jäh]] (has only jähest in dewikt), [[rauh]],
-		-- [[roh]], [[weh]], [[zäh]]
-		return {stem .. "st", stem .. "est"}
-	elseif rfind(stem, "e[rl]?nd$") then
-		-- Present participles; non-present-participles like [[elend]], [[behend]]/[[behende]], [[horrend]] need special-casing
-		return stem .. "st"
-	elseif rfind(stem, "[^wi]e[rl]?t$") then
-		-- Most adjectives in -et, -elt, -ert (past participles specifically), but not adjectives in -iert, -ielt or
-		-- non-past-participles in -wert; other non-past-participles like [[alert]], [[inert]], [[concret]], [[discret]],
-		-- [[obsolet]] need special-casing
-		return stem .. "st"
-	elseif rfind(stem, "[^e]igt$") then
-		-- Most adjectives in -igt (past participles specifically), but not adjectives in -eigt such as [[abgeneigt]];
-		-- exceptions like [[gewitzigt]], [[gerechtfertigt]] need special-casing
-		return stem .. "st"
-	elseif rfind(stem, "[ae][iuwy]$") then
-		-- Those ending in diphthongs can take either -est -or -st (scheu, neu, schlau, frei, blau/blaw, etc.)
-		return {stem .. "est", stem .. "st"}
-	elseif rfind(stem, "[szxßdt]$") then
-		if base.props.ss and rfind(stem, "ß$") then
-			return rsub(stem, ".$", "ssest")
-		end
-		return stem .. "est"
-	elseif rfind(stem, "sk$") then
-		-- [[burlesk]], [[chevaleresk]], [[dantesk]], [[grotesk]], [[pittoresk]], [[pythonesk]]; also [[brüsk]], [[promisk]]
-		return stem .. "est"
-	elseif rfind(stem, "[^i]sch$") then
-		-- Adjectives in -sch where it is not an adjective-forming ending typically can take either -est or -st; examples
-		-- are [[barsch]], [[falsch]], [[fesch]], [[forsch]]/[[nassforsch]], [[frisch]]/[[taufrisch]], [[harsch]],
-		-- [[keusch]]/[[unkeusch]], [[lasch]], [[morsch]], [[rasch]], [[wirsch]]/[[unwirsch]]; maybe [[krüsch]]/[[krütsch]]?
-		-- (dewikt says sup. only ''krüschst'', Duden says only ''krüschest''); a few can take only -est per dewikt
-		-- [[deutsch]]/[[süddeutsch]]/[[teutsch]], [[hübsch]], [[krosch]], [[resch]], [[rösch]]
-		-- Cases where -sch without -isch occurs that is an adjective-forming ending need special-casing, e.g.
-		-- [[figelinsch]]
-		return {stem .. "est", stem .. "st"}
-	else
-		return stem .. "st"
-	end
 end
 
 
@@ -1754,31 +1736,6 @@ local function determine_props(base)
 end
 
 
-local function detect_indicator_spec(base)
-	-- Replace # and ## in all overridable stems as well as all overrides.
-	for _, stemkey in ipairs(overridable_stems) do
-		base[stemkey] = replace_hashvals(base, base[stemkey])
-	end
-	map_all_overrides(base, function(formobj)
-		formobj.form = replace_hashvals(base, formobj.form)
-	end)
-
-	if base.props.pron then
-		determine_pronoun_props(base)
-	else
-		expand_property_sets(base)
-		if base.definiteness == "def" then
-			synthesize_indefinite_lemma(base)
-		end
-		if base.number == "pl" then
-			synthesize_singular_lemma(base)
-		end
-		determine_declension(base)
-		determine_props(base)
-	end
-end
-
-
 local function detect_indicator_spec(alternant_multiword_spec, base)
 	-- First generate the stem(s), substituting + with the default formed from the lemma.
 	process_spec(base, base.stems, "stem", base.stem, {{form = generate_default_stem(base)}},
@@ -1854,13 +1811,6 @@ local function detect_indicator_spec(alternant_multiword_spec, base)
 end
 
 
-local function detect_all_indicator_specs(alternant_multiword_spec)
-	iut.map_word_specs(alternant_multiword_spec, function(base)
-		detect_indicator_spec(base)
-	end)
-end
-
-
 local function replace_hashvals(base, val)
 	if not val then
 		return val
@@ -1885,11 +1835,6 @@ local function detect_indicator_spec(base)
 
 	if base.props.pron then
 		determine_pronoun_props(base)
-	elseif base.props.adj then
-		process_declnumber(base)
-		expand_property_sets(base)
-		synthesize_adj_lemma(base)
-		determine_props(base)
 	else
 		expand_property_sets(base)
 		if base.definiteness == "def" then
@@ -1905,19 +1850,8 @@ end
 
 
 local function detect_all_indicator_specs(alternant_multiword_spec)
-	-- Keep track of all genders seen in the singular and plural so we can determine whether to add the term to
-	-- [[:Category:Icelandic nouns that change gender in the plural]]. FIXME: Is this needed for Icelandic? It's copied
-	-- from Czech.
-	alternant_multiword_spec.sg_genders = {}
-	alternant_multiword_spec.pl_genders = {}
 	iut.map_word_specs(alternant_multiword_spec, function(base)
 		detect_indicator_spec(base)
-		if base.number ~= "pl" then
-			alternant_multiword_spec.sg_genders[base.actual_gender] = true
-		end
-		if base.number ~= "sg" then
-			alternant_multiword_spec.pl_genders[base.actual_gender] = true
-		end
 	end)
 end
 
