@@ -48,6 +48,9 @@ export.vowel_or_hyphen_c = "[" .. export.vowel_or_hyphen .. "]"
 export.non_vowel_c = "[^" .. export.vowel .. "]"
 export.cons_c = "[^" .. export.vowel .. "]"
 
+local V = export.vowel_c
+local C = export.cons_c
+
 
 local lc_i_mutation = {
 	["a"] = "e", -- [[dagur]] "dat" -> dat sg [[degi]]; [[faðir]] "father" -> nom pl [[feður]]; [[maður]] "man" -> nom
@@ -103,15 +106,15 @@ function export.apply_i_mutation(stem, newv)
 	local function subfunc(origv, post)
 		return (newv or i_mutation[origv]) .. post
 	end
-	modstem, subbed = rsubb(stem, "([Aa]u)(" .. export.cons_c .. "*)$", subfunc)
+	modstem, subbed = rsubb(stem, "([Aa]u)(" .. C .. "*)$", subfunc)
 	if subbed then
 		return modstem
 	end
-	modstem, subbed = rsubb(stem, "([Jj][aöóúu])(" .. export.cons_c .. "*)$", subfunc)
+	modstem, subbed = rsubb(stem, "([Jj][aöóúu])(" .. C .. "*)$", subfunc)
 	if subbed then
 		return modstem
 	end
-	modstem, subbed = rsubb(stem, "([aáeoöóúuAÁEOÖÓÚU])(" .. export.cons_c .. "*)$", subfunc)
+	modstem, subbed = rsubb(stem, "([aáeoöóúuAÁEOÖÓÚU])(" .. C .. "*)$", subfunc)
 	if subbed then
 		return modstem
 	end
@@ -126,11 +129,11 @@ function export.apply_reverse_i_mutation(stem, newv)
 	local function subfunc(origv, post)
 		return (newv or reverse_i_mutation[origv]) .. post
 	end
-	modstem, subbed = rsubb(stem, "([Ee]y)(" .. export.cons_c .. "*)$", subfunc)
+	modstem, subbed = rsubb(stem, "([Ee]y)(" .. C .. "*)$", subfunc)
 	if subbed then
 		return modstem
 	end
-	modstem, subbed = rsubb(stem, "([æeiýyÆEIÝY])(" .. export.cons_c .. "*)$", subfunc)
+	modstem, subbed = rsubb(stem, "([æeiýyÆEIÝY])(" .. C .. "*)$", subfunc)
 	if subbed then
 		return modstem
 	end
@@ -178,13 +181,46 @@ end
 -- * "Umut" (mutate the last vowel if possible, with a -> u);
 -- * "uumut" (mutate the last two vowels if possible, with a -> ö in the second-to-last and a -> ö in the last);
 -- * "uUmut" (mutate the last two vowels if possible, with a -> ö in the second-to-last and a -> u in the last);
+-- * "uUUmut" (mutate the last three vowels if possible, with a -> ö in the third-to-last and a -> u in the last and
+--			   second-to-last; needed in superlatives of past-participle-derived adjectives like [[saltaður]] "salty"
+--			   with superlative [[saltaðastur]] whose nominative feminine singular is [[söltuðust]]);
 -- * "u_mut" (mutate the second-to-last vowel if possible, with a -> ö, leaving alone the last vowel).
 function export.apply_u_mutation(stem, typ, error_if_unmatchable)
 	local origstem = stem
 	stem = apply_au_sub(stem)
+	if typ == "uUUmut" then
+		local first, v1, mid1, v2, mid2, v3, last = rmatch(stem, "^(.*)(" .. V .. ")(" .. C .. "*)(" .. V .. ")(" ..
+			C .. "*)(" .. V .. ")(" .. C .. ")$")
+		if first then
+			v1 = lesser_u_mutation[v1] or v1
+		elseif not stem:find("^%-") then
+			if error_if_unmatchable then
+				error(("Can't apply u-mutation of type '%s' because stem '%s' doesn't have three syllables"):
+					format(typ, origstem))
+			end
+			return undo_au_sub(stem)
+		else
+			first, v2, mid2, v3, last = rmatch(stem, "^(.*)(" .. V .. ")(" .. C .. "*)(" ..  V .. ")(" .. C .. "*)$")
+			if not first then
+				if error_if_unmatchable then
+					error(("Can't apply u-mutation of type '%s' because suffix stem '%s' doesn't have two syllables"):
+						format(typ, origstem))
+				end
+				return undo_au_sub(stem)
+			v1 = ""
+			mid1 = ""
+		end
+		v2 = greater_u_mutation[v2] or v2
+		v3 = greater_u_mutation[v3] or v3
+		local retval = undo_au_sub(first .. v1 .. mid1 .. v2 .. mid2 .. v3 .. last)
+		if retval == origstem and error_if_unmatchable then
+			error(("Can't apply u-mutation of type '%s' to stem '%s'; result would be the same as the original"):
+				format(typ, origstem))
+		end
+		return retval
+	end
 	if typ == "uUmut" or typ == "uumut" or typ == "u_mut" then
-		local first, v1, middle, v2, last = rmatch(stem, "^(.*)(" .. export.vowel_c .. ")(" .. export.cons_c .. "*)(" ..
-			export.vowel_c .. ")(" .. export.cons_c .. "*)$")
+		local first, v1, middle, v2, last = rmatch(stem, "^(.*)(" .. V .. ")(" .. C .. "*)(" .. V .. ")(" .. C .. "*)$")
 		if first then
 			v1 = lesser_u_mutation[v1] or v1
 		elseif not stem:find("^%-") then
@@ -194,7 +230,7 @@ function export.apply_u_mutation(stem, typ, error_if_unmatchable)
 			end
 			return undo_au_sub(stem)
 		else
-			first, v2, last = rmatch(stem, "^(.*)(" .. export.vowel_c .. ")(" .. export.cons_c .. "*)$")
+			first, v2, last = rmatch(stem, "^(.*)(" .. V .. ")(" .. C .. "*)$")
 			if not first then
 				if error_if_unmatchable then
 					error(("Can't apply u-mutation of type '%s' because suffix stem '%s' doesn't have even one syllable"):
@@ -216,7 +252,7 @@ function export.apply_u_mutation(stem, typ, error_if_unmatchable)
 	if typ ~= "umut" and typ ~= "Umut" then
 		error(("Internal error: For stem '%s', saw unrecognized u-mutation type '%s'"):format(origstem, typ))
 	end
-	local first, v, last = rmatch(stem, "^(.*)(" .. export.vowel_c .. ")(" .. export.cons_c .. "*)$")
+	local first, v, last = rmatch(stem, "^(.*)(" .. V .. ")(" .. C .. "*)$")
 	if not first then
 		if error_if_unmatchable then
 			error(("Can't apply u-mutation of type '%s' because stem '%s' doesn't have a vowel"):format(typ, origstem))
@@ -239,12 +275,13 @@ end
 -- * "unuumut" (unmutate the last two vowels if possible, with ö -> a in the second-to-last and ö -> a in the last);
 -- * "unuUmut" (unmutate the last two vowels if possible, with ö -> a in the second-to-last and u -> a in the last);
 -- * "unu_mut" (unmutate the second-to-last vowel if possible, with ö -> a, leaving alone the last vowel).
+-- NOTE: "unuUUmut" isn't implemented at this point because AFAIK it's not needed anywhere.
 function export.apply_reverse_u_mutation(stem, typ, error_if_unmatchable)
 	local origstem = stem
 	stem = apply_au_sub(stem)
 	if typ == "unuumut" or typ == "unuUmut" or typ == "unu_mut" then
-		local first, v1, middle, v2, last = rmatch(stem, "^(.*)(" .. export.vowel_c .. ")(" .. export.cons_c .. "*)(" ..
-			export.vowel_c .. ")(" .. export.cons_c .. "*)$")
+		local first, v1, middle, v2, last =
+			rmatch(stem, "^(.*)(" .. V .. ")(" .. C .. "*)(" ..  V .. ")(" .. C .. "*)$")
 		if not first then
 			if error_if_unmatchable then
 				error(("Can't apply reverse u-mutation of type '%s' because stem '%s' doesn't have two syllables"):
@@ -264,7 +301,7 @@ function export.apply_reverse_u_mutation(stem, typ, error_if_unmatchable)
 	if typ ~= "unumut" and typ ~= "unUmut" then
 		error(("Internal error: For stem '%s', saw unrecognized reverse u-mutation type '%s'"):format(origstem, typ))
 	end
-	local first, v, last = rmatch(stem, "^(.*)(" .. export.vowel_c .. ")(" .. export.cons_c .. "*)$")
+	local first, v, last = rmatch(stem, "^(.*)(" .. V .. ")(" .. C .. "*)$")
 	if not first then
 		if error_if_unmatchable then
 			error(("Can't apply reverse u-mutation of type '%s' because stem '%s' doesn't have a vowel"):
@@ -287,12 +324,31 @@ function export.apply_contraction(stem)
 	-- Contraction only applies when the last vowel is a/i/u and followed by a single consonant. There are restrictions
 	-- on what the consonant can be but I'm not sure exactly what they are; r/l/n/ð are all possible (cf. [[hamar]],
 	-- [[megin]], [[höfuð]], [[þumall]], where in the last case the final -l is the nominative singular ending).
-	local butlast, v, last = rmatch(stem, "^(.*" .. export.cons_c .. ")([aiu])(" .. export.cons_c .. ")$")
+	local butlast, v, last = rmatch(stem, "^(.*" .. C .. ")([aiu])(" .. C .. ")$")
 	if not butlast then
 		error(("Contraction cannot be applied to stem '%s' because it doesn't end in a/i/u preceded by a consonant and followed by a single consonant"
 			):format(stem))
 	end
 	return butlast .. last
+end
+
+
+-- Add a dental ending (d/t/ð) to `stem`.
+function export.add_dental_ending(stem)
+	if stem:find("[lmn]$") then
+		-- [[talinn]] "counted" -> tald-; [[framinn]] "performed" -> framd-; [[hruninn]] "fallen down/in" -> hrund-
+		return stem .. "d"
+	elseif stem:find("ð$") then
+		-- I dunno if this ever happens.
+		return usub(stem, 1, -2) .. "dd"
+	elseif rfind(stem, "[pkt]$") then
+		-- [[glapinn]] "confused" -> glapt-; [[lukinn]] "(en)closed" -> lukt-; no examples with -t-
+		return stem .. "t"
+	else
+		-- [[vafinn]] "wrapped" -> vafð-; [[varinn]] "defended" -> varð-; [[tugginn]] "chewed" -> tuggð- (or tuggn-);
+		-- [[spúinn]] "vomited" -> spúð-
+		return stem .. "ð"
+	end
 end
 
 
