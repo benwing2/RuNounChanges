@@ -18,52 +18,153 @@ local string_utilities_module = "Module:string utilities"
 local table_module = "Module:table"
 local utilities_module = "Module:utilities"
 
-local require = require
-local require_when_needed = require("Module:require when needed")
-local m_str_utils = require(string_utilities_module)
-
 local concat = table.concat
-local encode_entities = m_str_utils.encode_entities
-local find_best_script_without_lang = require_when_needed(scripts_module, "findBestScriptWithoutLang")
-local format_categories = require_when_needed(utilities_module, "format_categories")
-local format_genders = require_when_needed(gender_and_number_module, "format_genders")
-local format_pron_qualifiers = require_when_needed(pron_qualifier_module, "format_qualifiers")
-local full_link = require_when_needed(links_module, "full_link")
-local get_current_L2 = require_when_needed(pages_module, "get_current_L2")
-local get_link_page = require_when_needed(links_module, "get_link_page")
-local get_script = require_when_needed(scripts_module, "getByCode")
 local insert = table.insert
 local ipairs = ipairs
-local is_palindrome = require_when_needed(palindromes_module, "is_palindrome")
-local language_link = require_when_needed(links_module, "language_link")
 local load_data = mw.loadData
 local max = math.max
 local new_title = mw.title.new
 local pairs = pairs
-local pattern_escape = m_str_utils.pattern_escape
-local pluralize = require_when_needed(en_utilities_module, "pluralize")
-local process_page = require_when_needed(headword_page_module, "process_page")
-local remove_links = require_when_needed(links_module, "remove_links")
-local shallowcopy = require_when_needed(table_module, "shallowcopy")
-local tag_text = require_when_needed(script_utilities_module, "tag_text")
-local tag_transcription = require_when_needed(script_utilities_module, "tag_transcription")
-local tag_translit = require_when_needed(script_utilities_module, "tag_translit")
+local require = require
 local toNFC = mw.ustring.toNFC
 local toNFD = mw.ustring.toNFD
-local trim = m_str_utils.trim
 local type = type
 local ufind = mw.ustring.find
 local ugmatch = mw.ustring.gmatch
 local ugsub = mw.ustring.gsub
-local ulen = m_str_utils.len
 local umatch = mw.ustring.match
 
-local m_data = load_data(headword_data_module)
+--[==[
+Loaders for functions in other modules, which overwrite themselves with the target function when called. This ensures modules are only loaded when needed, retains the speed/convenience of locally-declared pre-loaded functions, and has no overhead after the first call, since the target functions are called directly in any subsequent calls.]==]
+	local function debug_track(...)
+		debug_track = require(debug_track_module)
+		return debug_track(...)
+	end
+	
+	local function encode_entities(...)
+		encode_entities = require(string_utilities_module).encode_entities
+		return encode_entities(...)
+	end
 
-local isLemma = m_data.lemmas
-local isNonLemma = m_data.nonlemmas
-local notranslit = m_data.notranslit
-local toBeTagged = m_data.toBeTagged
+	local function find_best_script_without_lang(...)
+		find_best_script_without_lang = require(scripts_module).findBestScriptWithoutLang
+		return find_best_script_without_lang(...)
+	end
+
+	local function format_categories(...)
+		format_categories = require(utilities_module).format_categories
+		return format_categories(...)
+	end
+
+	local function format_genders(...)
+		format_genders = require(gender_and_number_module).format_genders
+		return format_genders(...)
+	end
+
+	local function format_pron_qualifiers(...)
+		format_pron_qualifiers = require(pron_qualifier_module).format_qualifiers
+		return format_pron_qualifiers(...)
+	end
+
+	local function full_link(...)
+		full_link = require(links_module).full_link
+		return full_link(...)
+	end
+
+	local function get_current_L2(...)
+		get_current_L2 = require(pages_module).get_current_L2
+		return get_current_L2(...)
+	end
+
+	local function get_link_page(...)
+		get_link_page = require(links_module).get_link_page
+		return get_link_page(...)
+	end
+
+	local function get_script(...)
+		get_script = require(scripts_module).getByCode
+		return get_script(...)
+	end
+
+	local function is_palindrome(...)
+		is_palindrome = require(palindromes_module).is_palindrome
+		return is_palindrome(...)
+	end
+
+	local function language_link(...)
+		language_link = require(links_module).language_link
+		return language_link(...)
+	end
+
+	local function pattern_escape(...)
+		pattern_escape = require(string_utilities_module).pattern_escape
+		return pattern_escape(...)
+	end
+
+	local function pluralize(...)
+		pluralize = require(en_utilities_module).pluralize
+		return pluralize(...)
+	end
+
+	local function process_page(...)
+		process_page = require(headword_page_module).process_page
+		return process_page(...)
+	end
+
+	local function remove_links(...)
+		remove_links = require(links_module).remove_links
+		return remove_links(...)
+	end
+
+	local function shallowcopy(...)
+		shallowcopy = require(table_module).shallowcopy
+		return shallowcopy(...)
+	end
+
+	local function tag_text(...)
+		tag_text = require(script_utilities_module).tag_text
+		return tag_text(...)
+	end
+
+	local function tag_transcription(...)
+		tag_transcription = require(script_utilities_module).tag_transcription
+		return tag_transcription(...)
+	end
+
+	local function tag_translit(...)
+		tag_translit = require(script_utilities_module).tag_translit
+		return tag_translit(...)
+	end
+
+	local function trim(...)
+		trim = require(string_utilities_module).trim
+		return trim(...)
+	end
+
+	local function ulen(...)
+		ulen = require(string_utilities_module).len
+		return ulen(...)
+	end
+
+--[==[
+Loaders for objects, which load data (or some other object) into some variable, which can then be accessed as "foo or get_foo()", where the function get_foo sets the object to "foo" and then returns it. This ensures they are only loaded when needed, and avoids the need to check for the existence of the object each time, since once "foo" has been set, "get_foo" will not be called again.]==]
+	local m_data
+	local function get_data()
+		m_data = load_data(headword_data_module)
+		return m_data
+	end
+	
+	local script_data
+	local function get_script_data()
+		script_data = load_data(scripts_data_module)
+		return script_data
+	end
+	
+	local script_utilities_data
+	local function get_script_utilities_data()
+		script_utilities_data = load_data(script_utilities_data_module)
+		return script_utilities_data
+	end
 
 -- If set to true, categories always appear, even in non-mainspace pages
 local test_force_categories = false
@@ -80,14 +181,13 @@ local test_force_categories = false
 -- references at etymology-only language, both that language's code and its full parent's code are tracked.
 local function track(track_id, lang)
 	local tracking_page = "headword/" .. track_id
-	local m_debug_track = require(debug_track_module)
 	if lang and lang:hasType("etymology-only") then
-		m_debug_track{tracking_page, tracking_page .. "/" .. lang:getCode(),
+		debug_track{tracking_page, tracking_page .. "/" .. lang:getCode(),
 			tracking_page .. "/" .. lang:getFullCode()}
 	elseif lang then
-		m_debug_track{tracking_page, tracking_page .. "/" .. lang:getCode()}
+		debug_track{tracking_page, tracking_page .. "/" .. lang:getCode()}
 	else
-		m_debug_track(tracking_page)
+		debug_track(tracking_page)
 	end
 	return true
 end
@@ -134,8 +234,19 @@ local notWordPunc = "[^" .. wordPunc .. "]+"
 -- `formatted` is the formatted version of the term itself, and `j` is the index of the term.
 
 local function format_term_with_qualifiers_and_refs(lang, part, formatted, j)
-	if part.q and part.q[1] or part.qq and part.qq[1] or part.l and part.l[1] or
-		part.ll and part.ll[1] or part.refs and part.refs[1] then
+	local function part_non_empty(field)
+		local list = part[field]
+		if not list then
+			return nil
+		end
+		if type(list) ~= "table" then
+			error(("Internal error: Wrong type for `part.%s`=%s, should be \"table\""):format(field, mw.dumpObject(list)))
+		end
+		return list[1]
+	end
+		
+	if part_non_empty("q") or part_non_empty("qq") or part_non_empty("l") or
+		part_non_empty("ll") or part_non_empty("ref") then
 		formatted = format_pron_qualifiers {
 			lang = lang,
 			text = formatted,
@@ -343,10 +454,11 @@ local function format_headword_genders(data)
 			retval = ","
 		end
 		local pos_for_cat
-		if not data.nogendercat and not m_data.no_gender_cat[data.lang:getCode()] and
-			not m_data.no_gender_cat[data.lang:getFullCode()] then
-			local pos_category = data.pos_category:gsub("^reconstructed ", "")
-			pos_for_cat = m_data.pos_for_gender_number_cat[pos_category]
+		if not data.nogendercat then
+			local no_gender_cat = (m_data or get_data()).no_gender_cat
+			if not (no_gender_cat[data.lang:getCode()] or no_gender_cat[data.lang:getFullCode()]) then
+				pos_for_cat = (m_data or get_data()).pos_for_gender_number_cat[data.pos_category:gsub("^reconstructed ", "")]
+			end
 		end
 		local text, cats = format_genders(data.genders, data.lang, pos_for_cat)
 		for _, cat in ipairs(cats) do
@@ -370,7 +482,7 @@ local function format_inflection_parts(data, parts)
 		local face = part.face or "bold"
 		if face ~= "bold" and face ~= "plain" and face ~= "hypothetical" then
 			error("The face `" .. face .. "` " .. (
-				load_data(script_utilities_data_module).faces[face] and
+				(script_utilities_data or get_script_utilities_data()).faces[face] and
 				"should not be used for non-headword terms on the headword line." or
 				"is invalid."
 			))
@@ -458,25 +570,29 @@ local function format_inflections(data)
 end
 
 --[==[
--- Returns the plural form of `pos`, a raw part of speech input, which could be singular or
--- plural. Irregular plural POS are taken into account (e.g. "kanji" pluralizes to
--- "kanji").]==]
+Returns the plural form of `pos`, a raw part of speech input, which could be singular or
+plural. Irregular plural POS are taken into account (e.g. "kanji" pluralizes to
+"kanji").
+]==]
 function export.pluralize_pos(pos)
 	-- Make the plural form of the part of speech
-	return m_data.irregular_plurals[pos] or
-		pos:sub(-1) == "s" and pos or pluralize(pos)
+	return (m_data or get_data()).irregular_plurals[pos] or
+		pos:sub(-1) == "s" and pos or
+		pluralize(pos)
 end
 
 --[==[
--- Return "lemma" if the given POS is a lemma, "non-lemma form" if a non-lemma form, or nil
--- if unknown. The POS passed in must be in its plural form ("nouns", "prefixes", etc.).
--- If you have a POS in its singular form, call export.pluralize_pos() above to pluralize it
--- in a smart fashion that knows when to add "-s" and when to add "-es", and also takes
--- into account any irregular plurals.]==]
---
--- If `best_guess` is given and the POS is in neither the lemma nor non-lemma list, guess
--- based on whether it ends in " forms"; otherwise, return nil.]==]
+Return "lemma" if the given POS is a lemma, "non-lemma form" if a non-lemma form, or nil
+if unknown. The POS passed in must be in its plural form ("nouns", "prefixes", etc.).
+If you have a POS in its singular form, call {export.pluralize_pos()} above to pluralize it
+in a smart fashion that knows when to add "-s" and when to add "-es", and also takes
+into account any irregular plurals.
+
+If `best_guess` is given and the POS is in neither the lemma nor non-lemma list, guess
+based on whether it ends in " forms"; otherwise, return nil.
+]==]
 function export.pos_lemma_or_nonlemma(plpos, best_guess)
+	local isLemma = (m_data or get_data()).lemmas
 	-- Is it a lemma category?
 	if isLemma[plpos] then
 		return "lemma"
@@ -486,6 +602,7 @@ function export.pos_lemma_or_nonlemma(plpos, best_guess)
 		return "lemma"
 	end
 	-- Is it a nonlemma category?
+	local isNonLemma = (m_data or get_data()).nonlemmas
 	if isNonLemma[plpos] or isNonLemma[plpos_no_recon] then
 		return "non-lemma form"
 	end
@@ -499,6 +616,29 @@ function export.pos_lemma_or_nonlemma(plpos, best_guess)
 	end
 end
 
+--[==[
+Canonicalize a part of speech as specified in 2= in {{tl|head}}. This checks for POS aliases and non-lemma form
+aliases ending in 'f', and then pluralizes if the POS term does not have an invariable plural.
+]==]
+function export.canonicalize_pos(pos)
+	-- FIXME: Temporary code to throw an error for alias 'pre' (= preposition) that will go away.
+	if pos == "pre" then
+		-- Don't throw error on 'pref' as it's an alias for "prefix".
+		error("POS 'pre' for 'preposition' no longer allowed as it's too ambiguous; use 'prep'")
+	end
+	-- Likewise for pro = pronoun.
+	if pos == "pro" or pos == "prof" then
+		error("POS 'pro' for 'pronoun' no longer allowed as it's too ambiguous; use 'pron'")
+	end
+	local data = m_data or get_data()
+	if data.pos_aliases[pos] then
+		pos = data.pos_aliases[pos]
+	elseif pos:sub(-1) == "f" then
+		pos = pos:sub(1, -2)
+		pos = (data.pos_aliases[pos] or pos) .. " forms"
+	end
+	return export.pluralize_pos(pos)
+end
 
 -- Find and return the maximum index in the array `data[element]` (which may have gaps in it), and initialize it to a
 -- zero-length array if unspecified. Check to make sure all keys are numeric (other than "maxindex", which is set by
@@ -631,10 +771,10 @@ function export.full_headword(data)
 	local full_langname = data.lang:getFullName()
 
 	local raw_pagename, page = data.pagename
-	if raw_pagename and raw_pagename ~= m_data.pagename then -- for testing, doc pages, etc.
+	if raw_pagename and raw_pagename ~= (m_data or get_data()).pagename then -- for testing, doc pages, etc.
 		page = process_page(raw_pagename)
 	else
-		page = m_data.page
+		page = (m_data or get_data()).page
 	end
 
 	-- Check the namespace against the language type.
@@ -679,6 +819,11 @@ function export.full_headword(data)
 
 	------------ 4. Initialize and validate `data.categories` and `data.whole_page_categories`, and determine `pos_category` if not given, and add basic categories. ------------
 
+	-- EXPERIMENTAL: see [[Wiktionary:Beer parlour/2024/June#Decluttering the altform mess]]
+	if data.altform then
+		data.noposcat = true
+	end
+		
 	init_and_find_maximum_index(data, "categories")
 	init_and_find_maximum_index(data, "whole_page_categories")
 	local pos_category_already_present = false
@@ -734,6 +879,11 @@ function export.full_headword(data)
 	elseif not data.noposcat then
 		insert(data.categories, 1, full_langname .. " " .. postype .. "s")
 	end
+	
+	-- EXPERIMENTAL: see [[Wiktionary:Beer parlour/2024/June#Decluttering the altform mess]]
+	if data.altform then
+		insert(data.categories, 1, full_langname .. " alternative forms")
+	end
 
 	------------ 5. Create a default headword, and add links to multiword page names. ------------
 
@@ -745,9 +895,11 @@ function export.full_headword(data)
 	local default_head = page.pagename
 
 	-- Add links to multi-word page names when appropriate
-	if not data.nolinkhead and not m_data.no_multiword_links[langcode] and not m_data.no_multiword_links[full_langcode]
-		and	not is_reconstructed and export.head_is_multiword(default_head) then
-		default_head = export.add_multiword_links(default_head, true)
+	if not (is_reconstructed or data.nolinkhead) then
+		local no_links = (m_data or get_data()).no_multiword_links
+		if not (no_links[langcode] or no_links[full_langcode]) and export.head_is_multiword(default_head) then
+			default_head = export.add_multiword_links(default_head, true)
+		end
 	end
 
 	if is_reconstructed then
@@ -822,50 +974,54 @@ function export.full_headword(data)
 
 		-- Make transliterations
 		head.tr_manual = nil
+		
 
 		-- Try to generate a transliteration if necessary
 		if head.tr == "-" then
 			head.tr = nil
-		elseif not notranslit[langcode] and not notranslit[full_langcode] and head.sc:isTransliterated() then
-			head.tr_manual = not not head.tr
+		else
+			local notranslit = (m_data or get_data()).notranslit
+			if not (notranslit[langcode] or notranslit[full_langcode]) and head.sc:isTransliterated() then
+				head.tr_manual = not not head.tr
 
-			local text = head.term
-			if not data.lang:link_tr(head.sc) then
-				text = remove_links(text)
-			end
+				local text = head.term
+				if not data.lang:link_tr(head.sc) then
+					text = remove_links(text)
+				end
 
-			local automated_tr, tr_categories
-			automated_tr, head.tr_fail, tr_categories = data.lang:transliterate(text, head.sc)
+				local automated_tr, tr_categories
+				automated_tr, head.tr_fail, tr_categories = data.lang:transliterate(text, head.sc)
 
-			if automated_tr or head.tr_fail then
-				local manual_tr = head.tr
+				if automated_tr or head.tr_fail then
+					local manual_tr = head.tr
 
-				if manual_tr then
-					if (remove_links(manual_tr) == remove_links(automated_tr)) and (not head.tr_fail) then
-						insert(data.categories, full_langname .. " terms with redundant transliterations")
-					elseif not head.tr_fail then
-						insert(data.categories, full_langname .. " terms with non-redundant manual transliterations")
+					if manual_tr then
+						if (remove_links(manual_tr) == remove_links(automated_tr)) and (not head.tr_fail) then
+							insert(data.categories, full_langname .. " terms with redundant transliterations")
+						elseif not head.tr_fail then
+							insert(data.categories, full_langname .. " terms with non-redundant manual transliterations")
+						end
+					end
+
+					if not manual_tr then
+						head.tr = automated_tr
+						for _, category in ipairs(tr_categories) do
+							insert(data.categories, category)
+						end
 					end
 				end
 
-				if not manual_tr then
-					head.tr = automated_tr
-					for _, category in ipairs(tr_categories) do
-						insert(data.categories, category)
-					end
+				-- There is still no transliteration?
+				-- Add the entry to a cleanup category.
+				if not head.tr then
+					head.tr = "<small>transliteration needed</small>"
+					-- FIXME: No current support for 'Request for transliteration of Classical Persian terms' or similar.
+					-- Consider adding this support in [[Module:category tree/poscatboiler/data/entry maintenance]].
+					insert(data.categories, "Requests for transliteration of " .. full_langname .. " terms")
+				else
+					-- Otherwise, trim it.
+					head.tr = trim(head.tr)
 				end
-			end
-
-			-- There is still no transliteration?
-			-- Add the entry to a cleanup category.
-			if not head.tr then
-				head.tr = "<small>transliteration needed</small>"
-				-- FIXME: No current support for 'Request for transliteration of Classical Persian terms' or similar.
-				-- Consider adding this support in [[Module:category tree/poscatboiler/data/entry maintenance]].
-				insert(data.categories, "Requests for transliteration of " .. full_langname .. " terms")
-			else
-				-- Otherwise, trim it.
-				head.tr = trim(head.tr)
 			end
 		end
 
@@ -896,7 +1052,7 @@ function export.full_headword(data)
 	local unsupported_pagename, unsupported = page.full_raw_pagename:gsub("^Unsupported titles/", "")
 	if unsupported == 1 and page.unsupported_titles[unsupported_pagename] then
 		display_title = 'Unsupported titles/<span class="' .. dt_script_code .. '">' .. page.unsupported_titles[unsupported_pagename] .. '</span>'
-	elseif page_non_ascii and toBeTagged[dt_script_code]
+	elseif page_non_ascii and (m_data or get_data()).toBeTagged[dt_script_code]
 		or (dt_script_code == "Jpan" and (text_in_script(page.pagename, "Hira") or text_in_script(page.pagename, "Kana")))
 		or (dt_script_code == "Kore" and text_in_script(page.pagename, "Hang")) then
 		display_title = '<span class="' .. dt_script_code .. '">' .. page.full_raw_pagename .. '</span>'
@@ -949,18 +1105,18 @@ function export.full_headword(data)
 	end
 
 	-- If the first head is multiword (after removing links), maybe insert into "LANG multiword terms".
-	if not data.nomultiwordcat and any_script_has_spaces and postype == "lemma" and
-		not m_data.no_multiword_cat[langcode] and not m_data.no_multiword_cat[full_langcode] then
-		-- Check for spaces or hyphens, but exclude prefixes and suffixes.
-		-- Use the pagename, not the head= value, because the latter may have extra
-		-- junk in it, e.g. superscripted text that throws off the algorithm.
-		local checkpattern = ".[%s%-፡]."
-		if m_data.hyphen_not_multiword_sep[langcode] or m_data.hyphen_not_multiword_sep[full_langcode] then
-			-- Exclude hyphens if the data module states that they should for this language
-			checkpattern = ".[%s፡]."
-		end
-		if umatch(page.pagename, checkpattern) and not non_categorizable(page.full_raw_pagename) then
-			insert(data.categories, full_langname .. " multiword terms")
+	if not data.nomultiwordcat and any_script_has_spaces and postype == "lemma" then
+		local no_multiword_cat = (m_data or get_data()).no_multiword_cat
+		if not (no_multiword_cat[langcode] or no_multiword_cat[full_langcode]) then
+			-- Check for spaces or hyphens, but exclude prefixes and suffixes.
+			-- Use the pagename, not the head= value, because the latter may have extra
+			-- junk in it, e.g. superscripted text that throws off the algorithm.
+			local no_hyphen = (m_data or get_data()).hyphen_not_multiword_sep
+			-- Exclude hyphens if the data module states that they should for this language.
+			local checkpattern = (no_hyphen[langcode] or no_hyphen[full_langcode]) and ".[%s፡]." or ".[%s%-፡]."
+			if umatch(page.pagename, checkpattern) and not non_categorizable(page.full_raw_pagename) then
+				insert(data.categories, full_langname .. " multiword terms")
+			end
 		end
 	end
 
@@ -1024,7 +1180,6 @@ function export.full_headword(data)
 		if ch_to_ignore then
 			canon_pagename = ugsub(canon_pagename, "[" .. ch_to_ignore .. "]", "")
 		end
-		local script_data = load_data(scripts_data_module)
 		while true do
 			if canon_pagename == "" or num_seen_scripts >= 2 or num_loops >= 10 then
 				break
@@ -1040,8 +1195,12 @@ function export.full_headword(data)
 			local script_code = pagename_script:getCode()
 			local replaced
 			canon_pagename, replaced = ugsub(canon_pagename, "[" .. script_chars .. "]", "")
-			if replaced and script_code ~= "Zmth" and script_data[script_code] and
-				script_data[script_code].character_category ~= false then
+			if (
+				replaced and
+				script_code ~= "Zmth" and
+				(script_data or get_script_data())[script_code] and
+				script_data[script_code].character_category ~= false
+			) then
 				script_code = script_code:gsub("^.-%-", "")
 				if not seen_scripts[script_code] then
 					seen_scripts[script_code] = true
