@@ -1,16 +1,75 @@
+insert = table.insert
+local process_params = require("Module:parameters").process
+
 local export = {}
 
+local function get_args(frame)
+	local boolean = {type = "boolean"}
+	local boolean_list_allow_holes = {type = "boolean", list = true, allow_holes = true}
+	local list_allow_holes = {list = true, allow_holes = true}
+	return process_params(frame:getParent().args, {
+		[1] = {required = true, type = "language", default = "und"},
+		["sc"] = {type = "script"},
+		["sort"] = true,
+
+		[2] = {required = true, default = "nouns"},
+		["sccat"] = boolean,
+		["noposcat"] = boolean,
+		["nomultiwordcat"] = boolean,
+		["nogendercat"] = boolean,
+		["nopalindromecat"] = boolean,
+		["nolinkhead"] = boolean,
+		["autotrinfl"] = boolean,
+		["altform"] = boolean, -- EXPERIMENTAL: see [[Wiktionary:Beer parlour/2024/June#Decluttering the altform mess]]
+		["cat2"] = true,
+		["cat3"] = true,
+		["cat4"] = true,
+		
+		["head"] = list_allow_holes,
+		["id"] = true,
+		["tr"] = list_allow_holes,
+		["ts"] = list_allow_holes,
+		["gloss"] = true,
+		["g"] = {list = true},
+		["g\1qual"] = list_allow_holes,
+		
+		[3] = list_allow_holes,
+		
+		["f\1accel-form"] = list_allow_holes,
+		["f\1accel-translit"] = list_allow_holes,
+		["f\1accel-lemma"] = list_allow_holes,
+		["f\1accel-lemma-translit"] = list_allow_holes,
+		["f\1accel-gender"] = list_allow_holes,
+		["f\1accel-nostore"] = boolean_list_allow_holes,
+		["f\1request"] = list_allow_holes,
+		["f\1alt"] = list_allow_holes,
+		["f\1lang"] = {list = true, allow_holes = true, type = "language"},
+		["f\1sc"] = {list = true, allow_holes = true, type = "script"},
+		["f\1id"] = list_allow_holes,
+		["f\1tr"] = list_allow_holes,
+		["f\1ts"] = list_allow_holes,
+		["f\1g"] = list_allow_holes,
+		["f\1qual"] = list_allow_holes,
+		["f\1autotr"] = boolean_list_allow_holes,
+		["f\1nolink"] = boolean_list_allow_holes,
+	})
+end
+
 function export.head_t(frame)
+	local m_headword = require("Module:headword")
+	
 	local function track(page)
 		require("Module:debug/track")("headword/templates/" .. page)
 		return true
 	end
 
-	local args = require("Module:parameters").process(frame:getParent().args, mw.loadData("Module:parameters/data")["headword/templates"].head_t, nil, "headword/templates", "head_t")
-	
+	local args = get_args(frame)
+
 	-- Get language and script information
 	local data = {}
-	data.lang = require("Module:languages").getByCode(args[1], 1, "allow etym")
+	data.lang = args[1]
+	data.sc = args["sc"]
+	data.sccat = args["sccat"]
 	data.sort_key = args["sort"]
 	data.heads = args["head"]
 	data.id = args["id"]
@@ -19,7 +78,7 @@ function export.head_t(frame)
 	data.gloss = args["gloss"]
 	data.genders = args["g"]
 	-- This shouldn't really happen.
-	for i=1,args["head"].maxindex do
+	for i = 1,args["head"].maxindex do
 		if not args["head"][i] then
 			track("head-with-holes")
 		end
@@ -35,45 +94,41 @@ function export.head_t(frame)
 		end
 	end
 
-	-- Script
-	data.sc = args["sc"] and require("Module:scripts").getByCode(args["sc"], "sc") or nil
-	data.sccat = args["sccat"]
-
+	-- EXPERIMENTAL: see [[Wiktionary:Beer parlour/2024/June#Decluttering the altform mess]]
+	data.altform = args["altform"]
+		
 	-- Part-of-speech category
-	data.pos_category = args[2]
+	local pos_category = args[2]
 	data.noposcat = args["noposcat"]
-
-	local headword_data = mw.loadData("Module:headword/data")
-
-	-- Check for headword aliases and then pluralize if the POS term does not have an invariable plural.
-	data.pos_category = headword_data.pos_aliases[data.pos_category] or data.pos_category
-	if not data.pos_category:find("s$") and not headword_data.invariable[data.pos_category] then
-		-- Make the plural form of the part of speech
-		data.pos_category = data.pos_category:gsub("x$", "%0e") .. "s"
-	end
 	
+	-- Check for headword aliases and then pluralize if the POS term does not have an invariable plural.
+	data.pos_category = m_headword.canonicalize_pos(pos_category)
+
 	-- Additional categories.
 	data.categories = {}
 	data.whole_page_categories = {}
 	data.nomultiwordcat = args["nomultiwordcat"]
 	data.nogendercat = args["nogendercat"]
 	data.nopalindromecat = args["nopalindromecat"]
-	
+
 	if args["cat2"] then
-		table.insert(data.categories, data.lang:getNonEtymologicalName() .. " " .. args["cat2"])
+		insert(data.categories, data.lang:getFullName() .. " " .. args["cat2"])
 	end
-	
+
 	if args["cat3"] then
-		table.insert(data.categories, data.lang:getNonEtymologicalName() .. " " .. args["cat3"])
+		insert(data.categories, data.lang:getFullName() .. " " .. args["cat3"])
 	end
-	
+
 	if args["cat4"] then
-		table.insert(data.categories, data.lang:getNonEtymologicalName() .. " " .. args["cat4"])
+		insert(data.categories, data.lang:getFullName() .. " " .. args["cat4"])
 	end
-	
+
+	-- Headword linking
+	data.nolinkhead = args["nolinkhead"]
+
 	-- Inflected forms
 	data.inflections = {enable_auto_translit = args["autotrinfl"]}
-	
+
 	for i = 1, math.ceil(args[3].maxindex / 2) do
 		local infl_part = {
 			label    = args[3][i * 2 - 1],
@@ -95,38 +150,30 @@ function export.head_t(frame)
 			genders       =  args["fg"][i] and mw.text.split(args["fg"][i], ",") or {},
 			id            =  args["fid"][i],
 			lang          =  args["flang"][i],
-			nolink        =  args["fnolink"][i],
+			nolinkinfl    =  args["fnolink"][i],
 			q             = {args["fqual"][i]},
 			sc            =  args["fsc"][i],
 			translit      =  args["ftr"][i],
 			transcription =  args["fts"][i],
 		}
 		
-		if form.lang then
-			form.lang = require("Module:languages").getByCode(form.lang, "f" .. i .. "lang", "allow etym")
-		end
-		
-		if form.sc then
-			form.sc = require("Module:scripts").getByCode(form.sc, "f" .. i .. "sc")
-		end
-		
 		-- If no term or alt is given, then the label is shown alone.
 		if form.term or form.alt then
-			table.insert(infl_part, form)
+			insert(infl_part, form)
 		end
 		
 		if infl_part.label == "or" then
 			-- Append to the previous inflection part, if one exists
 			if #infl_part > 0 and data.inflections[1] then
-				table.insert(data.inflections[#data.inflections], form)
+				insert(data.inflections[#data.inflections], form)
 			end
 		elseif infl_part.label then
 			-- Add a new inflection part
-			table.insert(data.inflections, infl_part)
+			insert(data.inflections, infl_part)
 		end
 	end
 	
-	return require("Module:headword").full_headword(data)
+	return m_headword.full_headword(data)
 end
 
 return export
