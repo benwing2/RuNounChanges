@@ -40,7 +40,7 @@ Loaders for functions in other modules, which overwrite themselves with the targ
 		debug_track = require(debug_track_module)
 		return debug_track(...)
 	end
-	
+
 	local function encode_entities(...)
 		encode_entities = require(string_utilities_module).encode_entities
 		return encode_entities(...)
@@ -153,13 +153,13 @@ Loaders for objects, which load data (or some other object) into some variable, 
 		m_data = load_data(headword_data_module)
 		return m_data
 	end
-	
+
 	local script_data
 	local function get_script_data()
 		script_data = load_data(scripts_data_module)
 		return script_data
 	end
-	
+
 	local script_utilities_data
 	local function get_script_utilities_data()
 		script_utilities_data = load_data(script_utilities_data_module)
@@ -244,7 +244,7 @@ local function format_term_with_qualifiers_and_refs(lang, part, formatted, j)
 		end
 		return list[1]
 	end
-		
+
 	if part_non_empty("q") or part_non_empty("qq") or part_non_empty("l") or
 		part_non_empty("ll") or part_non_empty("ref") then
 		formatted = format_pron_qualifiers {
@@ -425,7 +425,7 @@ local function format_headword(data)
 		if not saw_translit_page and data.lang:hasType("etymology-only") then
 			langname = data.lang:getFullName()
 			transliteration_page = new_title(langname .. " transliteration", "Wiktionary")
-			
+
 			if transliteration_page and transliteration_page.exists then
 				translits_formatted = " [[Wiktionary:" .. langname .. " transliteration|•]]" .. translits_formatted
 			end
@@ -716,7 +716,7 @@ do
 		end
 		return sortkey
 	end
-	
+
 	function export.maintenance_cats(page, lang, lang_cats, page_cats)
 		for _, cat in ipairs(page.cats) do
 			insert(page_cats, cat)
@@ -823,7 +823,7 @@ function export.full_headword(data)
 	if data.altform then
 		data.noposcat = true
 	end
-		
+
 	init_and_find_maximum_index(data, "categories")
 	init_and_find_maximum_index(data, "whole_page_categories")
 	local pos_category_already_present = false
@@ -879,7 +879,7 @@ function export.full_headword(data)
 	elseif not data.noposcat then
 		insert(data.categories, 1, full_langname .. " " .. postype .. "s")
 	end
-	
+
 	-- EXPERIMENTAL: see [[Wiktionary:Beer parlour/2024/June#Decluttering the altform mess]]
 	if data.altform then
 		insert(data.categories, 1, full_langname .. " alternative forms")
@@ -924,7 +924,7 @@ function export.full_headword(data)
 			-- If explicit head= just consists of ! or ?, add it to the end of the default head.
 			head.term = default_head .. head.term
 		end
-		
+
 		if is_reconstructed then
 			local head_term = head.term
 			if head_term:find("%[%[") then
@@ -937,7 +937,7 @@ function export.full_headword(data)
 
 		------ 6b. Try to detect the script(s) if not provided. If a per-head script is provided, that takes precedence,
 		------     otherwise fall back to the overall script if given. If neither given, autodetect the script.
-		
+
 		local auto_sc = data.lang:findBestScript(head.term)
 		if (
 			auto_sc:getCode() == "None" and
@@ -974,7 +974,7 @@ function export.full_headword(data)
 
 		-- Make transliterations
 		head.tr_manual = nil
-		
+
 
 		-- Try to generate a transliteration if necessary
 		if head.tr == "-" then
@@ -1213,7 +1213,7 @@ function export.full_headword(data)
 			insert(data.categories, full_langname .. " terms written in multiple scripts")
 		end
 	end
-	
+
 	-- Categorise for unusual characters. Takes into account combining characters, so that we can categorise for characters with diacritics that aren't encoded as atomic characters (e.g. U̠). These can be in two formats: single combining characters (i.e. character + diacritic(s)) or double combining characters (i.e. character + diacritic(s) + character). Each can have any number of diacritics.
 	local standard = data.lang:getStandardCharacters()
 	if standard and not non_categorizable(page.full_raw_pagename) then
@@ -1305,7 +1305,7 @@ function export.full_headword(data)
 			end
 		end
 	end
-	
+
 	if data.heads[1].sc:isSystem("alphabet") then
 		local pagename, i = page.pagename:ulower(), 2
 		while umatch(pagename, "(%a)" .. ("%1"):rep(i)) do
@@ -1313,7 +1313,7 @@ function export.full_headword(data)
 			insert(data.categories, full_langname .. " terms with " .. i .. " consecutive instances of the same letter")
 		end
 	end
-	
+
 	-- Categorise for palindromes
 	if not data.nopalindromecat and namespace ~= "Reconstruction" and ulen(page.pagename) > 2
 		-- FIXME: Use of first script here seems hacky. What is the clean way of doing this in the presence of
