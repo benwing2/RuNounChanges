@@ -1291,45 +1291,113 @@ de_specs = [
   )),
 ]
 
-el_specs = [
-  # NOTE: Has automatic, non-controllable initial caps that we're ignoring.
-  # No final period.
-  ("el-form-of-adv", (
-    lambda data:
-      ("comparative of",
-        ("comment", "rename {{__TEMPNAME__|deg=comp}} to {{comparative of|el|...|POS=adverb}}"),
-        ("error-if", ("present-except", ["deg", "1", "alt", "gloss"])),
-        ("set", "1", [
-          "el",
-          ("copy", "1"),
-          ("copy", "alt"),
-          ("copy", "gloss", "t"),
-        ]),
-        ("set", "POS", "adverb"),
-      ) if data.getp("deg") == "comp" else
-      ("infl of",
-        ("comment", "rename {{__TEMPNAME__|deg=sup}} to {{inflection of|el|...|asupd}}"),
-        ("error-if", ("present-except", ["deg", "1", "alt", "gloss"])),
-        ("error-if", ("neq", "deg", "sup")),
-        ("set", "1", [
-          "el",
-          ("copy", "1"),
-          ("copy", "alt"),
-          "asupd",
-        ]),
-        ("copy", "gloss", "t"),
-        ("set", "p", "adv"),
-      )
-  )),
+def el_adj_form(data):
+  form = data.getp("form")
+  if form in ["pos", ""]:
+    pos = "adjf"
+  elif form == "comp":
+    pos = "compadj" if data.pagetitle.endswith("ος") else "compadjf"
+  elif form == "sup":
+    pos = "supadj" if data.pagetitle.endswith("ος") else "supadjf"
+  else:
+    raise BadTemplateValue("Unrecognized param form=%s" % form)
+  return (
+    "head",
+    ("comment", "rename {{__TEMPNAME__}} to {{head|el|%s}}" % pos),
+    # ignore 1= (translit)
+    ("error-if", ("present-except", ["1", "form"])),
+    ("set", "1", [
+      "el",
+      pos,
+    ]),
+  )
 
-  # NOTE: Has automatic, non-controllable initial caps and controllable
-  # final period (using nodot). Both ignored.
-  ("el-form-of-nounadj", (
+def el_copy_head_if_brackets(data):
+  head = data.getp("head")
+  if "[[" in head:
+    return head
+  else:
+    return []
+
+def el_noun_form(data, pos):
+  return (
+    "head",
+    ("comment", "rename {{__TEMPNAME__}} to {{head|el|%s}}" % pos),
+    # ignore 2= (translit)
+    ("error-if", ("present-except", ["1", "2", "g2", "head"])),
+    ("set", "1", [
+      "el",
+      pos,
+    ]),
+    ("set", "head", el_copy_head_if_brackets),
+    ("set", "g",
+      ("lookup", "1", {
+        "m": ("lookup", "g2", {
+          "f": "mf",
+          "": "m"
+        }),
+        "f": "f",
+        "n": "n",
+        "m-p": "m-p",
+        "f-p": "f-p",
+        "n-p": "n-p",
+        "m-f": "mf",
+        "-": [],
+        "": [],
+      }
+     )
+    )
+  )
+
+# NOTE: Has automatic, non-controllable initial caps and controllable
+# final period (using nodot). Both ignored.
+def el_form_of_nounadj(data):
+  comp_of = ()
+  lemma = data.getp("1")
+  comment = "rename {{__TEMPNAME__}} to {{infl of|el|...}}"
+  dval = data.getp("d")
+  if dval in ["c", "as"]:
+    if data.getp("c") in ["nom", "n"] and data.getp("g") == "m" and data.getp("n") == "s":
+      if dval == "c":
+        return (
+          "comparative of",
+          ("comment", "rename {{__TEMPNAME__|d=c}} for base form to {{comparative of|el}}"),
+          ("error-if", ("present-except", ["1", "c", "n", "g", "d", "t", "nodot"])),
+          ("set", "1", [
+            "el",
+            ("copy", "1"),
+          ]),
+          ("copy", "t"),
+        )
+      else:
+        return (
+          "infl of",
+          ("comment", "rename {{__TEMPNAME__|d=as}} for base form to {{infl of|el|...||asupd}}"),
+          ("error-if", ("present-except", ["1", "c", "n", "g", "d", "t", "nodot"])),
+          ("set", "1", [
+            "el",
+            ("copy", "1"),
+            "",
+            "asupd",
+          ]),
+          ("copy", "t"),
+        )
+    else:
+      m = re.search("^(.*)(η|ου|ο|ε|ης|ων|α|ες|οι|ους)$", data.pagetitle)
+      if not m:
+        raise BadTemplateValue("Unable to infer comparative/superlative stem from non-lemma form %s" % data.pagetitle)
+      complemma = m.group(1) + "ος"
+      param = "comp-of" if dval == "c" else "asup-of"
+      comp_of = (("set", param, lemma),)
+      lemma = complemma
+      comment = "rename {{__TEMPNAME__|d=%s}} to {{infl of|el|...|%s=...}}" % (dval, param)
+  return (
     "infl of",
+    ("comment", comment),
     ("error-if", ("present-except", ["1", "c", "n", "g", "d", "t", "nodot"])),
     ("set", "1", [
       "el",
-      ("copy", "1"),
+      lemma,
     ]),
     ("copy", "t"),
     ("set", "3", [
@@ -1368,13 +1436,45 @@ el_specs = [
         "": [], # occurs with numbers
       }),
       ("lookup", "d", {
-        "c": "comd",
-        "rs": "rsupd",
-        "as": "asupd",
+        "c": [],
+        "as": [],
         "": [],
       }),
     ]),
+  ) + comp_of
+
+el_specs = [
+  # NOTE: Has automatic, non-controllable initial caps that we're ignoring.
+  # No final period.
+  ("el-form-of-adv", (
+    lambda data:
+      ("comparative of",
+        ("comment", "rename {{__TEMPNAME__|deg=comp}} to {{comparative of|el|...|POS=adverb}}"),
+        ("error-if", ("present-except", ["deg", "1", "alt", "gloss"])),
+        ("set", "1", [
+          "el",
+          ("copy", "1"),
+          ("copy", "alt"),
+          ("copy", "gloss", "t"),
+        ]),
+        ("set", "POS", "adverb"),
+      ) if data.getp("deg") == "comp" else
+      ("infl of",
+        ("comment", "rename {{__TEMPNAME__|deg=sup}} to {{inflection of|el|...|asupd}}"),
+        ("error-if", ("present-except", ["deg", "1", "alt", "gloss"])),
+        ("error-if", ("neq", "deg", "sup")),
+        ("set", "1", [
+          "el",
+          ("copy", "1"),
+          ("copy", "alt"),
+          "asupd",
+        ]),
+        ("copy", "gloss", "t"),
+        ("set", "p", "adv"),
+      )
   )),
+
+  ("el-form-of-nounadj", el_form_of_nounadj),
 
   ("el-form-of-pronoun", "el-form-of-nounadj"),
 
@@ -1481,6 +1581,22 @@ el_specs = [
   )),
 
   ("el-verb form of", "el-form-of-verb"),
+
+  ("el-adj-form", el_adj_form),
+
+  ("el-noun-form", lambda data: el_noun_form(data, "nounf")),
+  ("el-proper-noun-form", lambda data: el_noun_form(data, "propnf")),
+
+  ("el-verb-form", (
+    "head",
+    ("comment", "rename {{__TEMPNAME__}} to {{head|el|verbf}}"),
+    # ignore 1= (translit)
+    ("error-if", ("present-except", ["1"])),
+    ("set", "1", [
+      "el",
+      "verbf",
+    ]),
+  )),
 ]
 
 def en_verb_form(parts):
