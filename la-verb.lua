@@ -1,10 +1,8 @@
 local m_utilities = require("Module:utilities")
 local m_table = require("Module:table")
 local m_links = require("Module:links")
-local make_link = m_links.full_link
 local m_la_headword = require("Module:la-headword")
 local m_la_utilities = require("Module:la-utilities")
-local m_para = require("Module:parameters")
 
 -- TODO:
 -- 1. (DONE) detect_decl_and_subtypes doesn't do anything with perf_stem or supine_stem.
@@ -22,19 +20,15 @@ local test_new_la_verb_module = false
 local export = {}
 
 local lang = require("Module:languages").getByCode("la")
+local sc = require("Module:scripts").getByCode("Latn")
 
 local title = mw.title.getCurrentTitle()
 local NAMESPACE = title.nsText
-local PAGENAME = title.text
 
 -- Conjugations are the functions that do the actual
 -- conjugating by creating the forms of a basic verb.
 -- They are defined further down.
 local conjugations = {}
-
--- Check if this verb is reconstructed
--- i.e. the pagename is Reconstruction:Latin/...
-local reconstructed = NAMESPACE == "Reconstruction" and PAGENAME:find("^Latin/")
 
 -- Forward functions
 
@@ -85,6 +79,10 @@ local function form_is_empty(form)
 	return not form or form == "" or form == "-" or form == "—" or form == "&mdash;" or (
 		type(form) == "table" and (form[1] == "" or form[1] == "-" or form[1] == "—" or form[1] == "&mdash;")
 	)
+end
+
+local function make_link(page, display, face, accel)
+	return m_links.full_link({term = page, alt = display, lang = lang, sc = sc, accel = accel}, face)
 end
 
 local function initialize_slots()
@@ -213,20 +211,14 @@ local function concat_vals(val)
 	end
 end
 
--- Construct a one- or two-part link. For reasons I don't understand, if we're in
--- the reconstructed namespace (e.g. for the page [[Reconstruction:Latin/nuo]]), we
--- need to construct a special type of link; full_link() doesn't handle this
--- correctly (although it tries ...). Ideally we should fix full_link() instead of
--- doing this.
+-- Construct a simple one- or two-part link, which will be put through full_link later.
 local function make_raw_link(page, display)
-	if reconstructed then
-		display = display or page
-		page = lang:makeEntryName(page)
-		return "[[" .. NAMESPACE .. ":Latin/" .. page .. "|" .. display .. "]]"
-	elseif display then
-		return "[[" .. lang:makeEntryName(page) .. "|" .. display .. "]]"
-	else
+	if page and display then
+		return "[[" .. page .. "|" .. display .. "]]"
+	elseif page then
 		return "[[" .. page .. "]]"
+	else
+		return display
 	end
 end
 
@@ -767,15 +759,15 @@ local function notes_override(data, args)
 		if note == "-" then
 			data.footnotes[n] = nil
 		elseif note == "p3inf" then
-			data.footnotes[n] = "The present passive infinitive in -ier is a rare poetic form which is attested."
+			data.footnotes[n] = "The present passive infinitive in ''-ier'' is a rare poetic form which is attested."
 		elseif note == "poetsyncperf" then
 			data.footnotes[n] = "At least one rare poetic syncopated perfect form is attested."
 		elseif note == "sigm" then
-			data.footnotes[n] = "At least one use of the archaic \"sigmatic future\" and \"sigmatic aorist\" tenses is attested, which are used by Old Latin writers; most notably Plautus and Terence. The sigmatic future is generally ascribed a future or future perfect meaning, while the sigmatic aorist expresses a possible desire (\"might want to\")."
+			data.footnotes[n] = "At least one use of the archaic \"sigmatic future\" and \"sigmatic aorist\" tenses is attested, which are used by [[Old Latin]] writers; most notably [[w:Plautus|Plautus]] and [[w:Terence|Terence]]. The sigmatic future is generally ascribed a future or future perfect meaning, while the sigmatic aorist expresses a possible desire (\"might want to\")."
 		elseif note == "sigmpasv" then
-			data.footnotes[n] = "At least one use of the archaic \"sigmatic future\" and \"sigmatic aorist\" tenses is attested, which are used by Old Latin writers; most notably Plautus and Terence. The sigmatic future is generally ascribed a future or future perfect meaning, while the sigmatic aorist expresses a possible desire (\"might want to\"). It is also attested as having a rare sigmatic future passive indicative form (\"will have been\")."
+			data.footnotes[n] = "At least one use of the archaic \"sigmatic future\" and \"sigmatic aorist\" tenses is attested, which are used by [[Old Latin]] writers; most notably [[w:Plautus|Plautus]] and [[w:Terence|Terence]]. The sigmatic future is generally ascribed a future or future perfect meaning, while the sigmatic aorist expresses a possible desire (\"might want to\"). It is also attested as having a rare sigmatic future passive indicative form (\"will have been\"), which is not attested in the plural for any verb."
 		elseif note == "sigmdepon" then
-			data.footnotes[n] = "At least one use of the archaic \"sigmatic future\" tense is attested, which is used by Old Latin writers; most notably Plautus and Terence. The sigmatic future is generally ascribed a future or future perfect meaning, and, as the verb is deponent, takes the form of what would otherwise be the rare sigmatic future passive indicative tense."
+			data.footnotes[n] = "At least one use of the archaic \"sigmatic future\" tense is attested, which is used by [[Old Latin]] writers; most notably [[w:Plautus|Plautus]] and [[w:Terence|Terence]]. The sigmatic future is generally ascribed a future or future perfect meaning, and, as the verb is deponent, takes the form of what would otherwise be the rare sigmatic future passive indicative tense (which is not attested in the plural for any verb)."
 		elseif note then
 			data.footnotes[n] = note
 		end
@@ -850,7 +842,7 @@ function export.make_data(parent_args, from_headword, def1, def2)
 		params.cat = {list = true}
 	end
 
-	local args = m_para.process(parent_args, params)
+	local args = require("Module:parameters").process(parent_args, params, nil, "la-verb", "make_data")
 	local conj_type, conj_subtype, subtypes, orig_lemma, lemma =
 		detect_decl_and_subtypes(args)
 
@@ -1066,10 +1058,10 @@ local function make_perfect_passive(data)
 	end
 	local ppplinks = {}
 	for _, pppform in ipairs(ppp) do
-		table.insert(ppplinks, make_link({lang = lang, term = pppform}, "term"))
+		table.insert(ppplinks, make_link(pppform, nil, "term"))
 	end
 	local ppplink = table.concat(ppplinks, " or ")
-	local sumlink = make_link({lang = lang, term = "sum"}, "term")
+	local sumlink = make_link("sum", nil, "term")
 
 	text_for_slot = {
 		perf_pasv_indc = "present active indicative",
@@ -1093,10 +1085,10 @@ local function make_perfect_passive(data)
 		ppp = {"factum"}
 		ppplinks = {}
 		for _, pppform in ipairs(ppp) do
-			table.insert(ppplinks, make_link({lang = lang, term = pppform}, "term"))
+			table.insert(ppplinks, make_link(pppform, nil, "term"))
 		end
 		ppplink = table.concat(ppplinks, " or ")
-		sumlink = make_link({lang = lang, term = "sum"}, "term")
+		sumlink = make_link("sum", nil, "term")
 		for slot, text in pairs(text_for_slot) do
 			data.forms[slot] =
 				data.forms[slot] .. " or " .. ppplink .. " + " .. text .. " of " .. sumlink
@@ -1459,9 +1451,10 @@ postprocess = function(data, typeinfo)
 	if typeinfo.subtypes.noperf then
 		-- Some verbs have no perfect stem (e.g. inalbēscō, -ěre)
 		m_table.insertIfNot(data.title, "no [[perfect tense|perfect]] stem")
-		m_table.insertIfNot(data.categories, "Latin verbs with missing perfect stem")
 		m_table.insertIfNot(data.categories, "Latin defective verbs")
-
+        if not typeinfo.subtypes.depon then
+			m_table.insertIfNot(data.categories, "Latin verbs with missing perfect stem")
+			end
 		-- Remove all active perfect forms (passive perfect forms may
 		-- still exist as they are formed with the supine stem)
 		for key, _ in pairs(data.forms) do
@@ -1569,7 +1562,7 @@ postprocess = function(data, typeinfo)
 			end
 			data.forms[form] = newvals
 			data.form_footnote_indices[form] = tostring(noteindex)
-			data.footnotes[noteindex] = 'The present passive infinitive in -ier is a rare poetic form which is attested.'
+			data.footnotes[noteindex] = "The present passive infinitive in ''-ier'' is a rare poetic form which is attested."
 	end
 
 	--Add the syncopated perfect forms, omitting the separately handled fourth conjugation cases
@@ -1711,6 +1704,18 @@ conjugations["1st"] = function(args, data, typeinfo)
 	table.insert(data.title, "[[Appendix:Latin first conjugation|first conjugation]]")
 	table.insert(data.categories, "Latin first conjugation verbs")
 
+    if typeinfo.subtypes.depon then
+		m_table.insertIfNot(data.categories, "Latin first conjugation deponent verbs")
+    elseif typeinfo.subtypes.noperf then
+		m_table.insertIfNot(data.categories, "Latin first conjugation verbs with missing perfect stem")
+    end
+
+    if typeinfo.subtypes.nosup then
+		m_table.insertIfNot(data.categories, "Latin first conjugation verbs with missing supine stem")
+    elseif typeinfo.subtypes.supfutractvonly then
+		m_table.insertIfNot(data.categories, "Latin first conjugation verbs with missing supine stem except in the future active participle‎ ")
+    end
+
 	for _, perf_stem in ipairs(typeinfo.perf_stem) do
 		if perf_stem == typeinfo.pres_stem .. "āv" then
 			table.insert(data.categories, "Latin first conjugation verbs with perfect in -av-")
@@ -1749,6 +1754,18 @@ conjugations["2nd"] = function(args, data, typeinfo)
 	table.insert(data.title, "[[Appendix:Latin second conjugation|second conjugation]]")
 	table.insert(data.categories, "Latin second conjugation verbs")
 
+    if typeinfo.subtypes.depon then
+		m_table.insertIfNot(data.categories, "Latin second conjugation deponent verbs")
+    elseif typeinfo.subtypes.noperf then
+		m_table.insertIfNot(data.categories, "Latin second conjugation verbs with missing perfect stem")
+    end
+
+    if typeinfo.subtypes.nosup then
+		m_table.insertIfNot(data.categories, "Latin second conjugation verbs with missing supine stem")
+    elseif typeinfo.subtypes.supfutractvonly then
+		m_table.insertIfNot(data.categories, "Latin second conjugation verbs with missing supine stem except in the future active participle‎ ")
+    end
+
 	for _, perf_stem in ipairs(typeinfo.perf_stem) do
 		local pres_stem = typeinfo.pres_stem
 		pres_stem = pres_stem:gsub("qu", "1")
@@ -1778,6 +1795,18 @@ end
 
 local function set_3rd_conj_categories(data, typeinfo)
 	table.insert(data.categories, "Latin third conjugation verbs")
+
+    if typeinfo.subtypes.depon then
+		m_table.insertIfNot(data.categories, "Latin third conjugation deponent verbs")
+    elseif typeinfo.subtypes.noperf then
+		m_table.insertIfNot(data.categories, "Latin third conjugation verbs with missing perfect stem")
+    end
+
+    if typeinfo.subtypes.nosup then
+		m_table.insertIfNot(data.categories, "Latin third conjugation verbs with missing supine stem")
+    elseif typeinfo.subtypes.supfutractvonly then
+		m_table.insertIfNot(data.categories, "Latin third conjugation verbs with missing supine stem except in the future active participle‎ ")
+    end
 
 	for _, perf_stem in ipairs(typeinfo.perf_stem) do
 		local pres_stem = typeinfo.pres_stem
@@ -1914,6 +1943,17 @@ conjugations["4th"] = function(args, data, typeinfo)
 	table.insert(data.title, "[[Appendix:Latin fourth conjugation|fourth conjugation]]")
 	table.insert(data.categories, "Latin fourth conjugation verbs")
 
+    if typeinfo.subtypes.depon then
+		m_table.insertIfNot(data.categories, "Latin fourth conjugation deponent verbs")
+    elseif typeinfo.subtypes.noperf then
+		m_table.insertIfNot(data.categories, "Latin fourth conjugation verbs with missing perfect stem")
+    end
+
+    if typeinfo.subtypes.nosup then
+		m_table.insertIfNot(data.categories, "Latin fourth conjugation verbs with missing supine stem")
+    elseif typeinfo.subtypes.supfutractvonly then
+		m_table.insertIfNot(data.categories, "Latin fourth conjugation verbs with missing supine stem except in the future active participle‎ ")
+    end
 
 	for _, perf_stem in ipairs(typeinfo.perf_stem) do
 		local pres_stem = typeinfo.pres_stem
@@ -2156,7 +2196,7 @@ end
 
 irreg_conjugations["do"] = function(args, data, typeinfo)
 	table.insert(data.title, "[[Appendix:Latin first conjugation|first conjugation]]")
-	table.insert(data.title, "[[Appendix:Latin irregular verbs|irregular]] short ''a'' in most forms except " .. make_link({lang = lang, alt = "dās"}, "term") .. " and " .. make_link({lang = lang, alt = "dā"}, "term"))
+	table.insert(data.title, "[[Appendix:Latin irregular verbs|irregular]] short ''a'' in most forms except " .. make_link(nil, "dās", "term") .. " and " .. make_link(nil, "dā", "term"))
 	table.insert(data.categories, "Latin first conjugation verbs")
 	table.insert(data.categories, "Latin irregular verbs")
 
@@ -2738,8 +2778,8 @@ irreg_conjugations["piget"] = function(args, data, typeinfo)
 
 	--[[
 	-- not used
-	local ppplink = make_link({lang = lang, term = prefix .. "ausus"}, "term")
-	local sumlink = make_link({lang = lang, term = "sum"}, "term")
+	local ppplink = make_link(prefix .. "ausus", nil, "term")
+	local sumlink = make_link("sum", nil, "term")
 	--]]
 
 	data.forms["3s_pres_actv_indc"] = prefix .. "piget"
@@ -3291,12 +3331,12 @@ make_sigm = function(data, typeinfo, sigm_stem)
 	end
 	data.form_footnote_indices["sigm"] = noteindex
 	if (typeinfo.subtypes.sigm or typeinfo.subtypes.sigmpasv) and not (typeinfo.subtypes.depon) then
-		data.footnotes[noteindex] = 'At least one use of the archaic \"sigmatic future\" and \"sigmatic aorist\" tenses is attested, which are used by Old Latin writers; most notably Plautus and Terence. The sigmatic future is generally ascribed a future or future perfect meaning, while the sigmatic aorist expresses a possible desire (\"might want to\").'
+		data.footnotes[noteindex] = 'At least one use of the archaic \"sigmatic future\" and \"sigmatic aorist\" tenses is attested, which are used by [[Old Latin]] writers; most notably [[w:Plautus|Plautus]] and [[w:Terence|Terence]]. The sigmatic future is generally ascribed a future or future perfect meaning, while the sigmatic aorist expresses a possible desire (\"might want to\").'
 		if typeinfo.subtypes.sigmpasv then
-			data.footnotes[noteindex] = data.footnotes[noteindex] .. ' It is also attested as having a rare sigmatic future passive indicative form (\"will have been\").'
+			data.footnotes[noteindex] = data.footnotes[noteindex] .. ' It is also attested as having a rare sigmatic future passive indicative form (\"will have been\"), which is not attested in the plural for any verb.'
 		end
 	elseif typeinfo.subtypes.depon then
-		data.footnotes[noteindex] = 'At least one use of the archaic \"sigmatic future\" tense is attested, which is used by Old Latin writers; most notably Plautus and Terence. The sigmatic future is generally ascribed a future or future perfect meaning, and, as the verb is deponent, takes the form of what would otherwise be the rare sigmatic future passive indicative tense.'
+		data.footnotes[noteindex] = 'At least one use of the archaic \"sigmatic future\" tense is attested, which is used by [[Old Latin]] writers; most notably [[w:Plautus|Plautus]] and [[w:Terence|Terence]]. The sigmatic future is generally ascribed a future or future perfect meaning, and, as the verb is deponent, takes the form of what would otherwise be the rare sigmatic future passive indicative tense (which is not attested in the plural for any verb).'
 	end
 end
 
@@ -3316,16 +3356,14 @@ local function show_form(form, accel)
 	for key, subform in ipairs(form) do
 		if form_is_empty(subform) then
 			form[key] = "&mdash;"
-		elseif reconstructed and not subform:find(NAMESPACE .. ":Latin/") then
-			form[key] = make_link({lang = lang, term = NAMESPACE .. ":Latin/" .. subform, alt = subform})
 		elseif subform:find("[%[%]]") then
 			-- Don't put accelerators on forms already containing links such as
 			-- the perfect passive infinitive and future active infinitive, or
 			-- the participles wrongly get tagged as infinitives as well as
 			-- participles.
-			form[key] = make_link({lang = lang, term = subform})
+			form[key] = make_link(subform)
 		else
-			form[key] = make_link({lang = lang, term = subform, accel = accel})
+			form[key] = make_link(subform, nil, nil, accel)
 		end
 	end
 
@@ -3425,17 +3463,13 @@ local function get_displayable_lemma(lemma_forms)
 	end
 	local lemma_links = {}
 	for _, subform in ipairs(lemma_forms) do
-		table.insert(lemma_links, make_link({lang = lang, alt = subform}, "term"))
+		table.insert(lemma_links, make_link(nil, subform, "term"))
 	end
 	return table.concat(lemma_links, ", ")
 end
 
 -- Make the table
 make_table = function(data)
-	local pagename = PAGENAME
-	if reconstructed then
-		pagename = pagename:gsub("Latin/","")
-	end
 	data.actual_lemma = export.get_lemma_forms(data)
 	convert_forms_into_links(data)
 
@@ -3800,7 +3834,7 @@ checkexist = function(data)
 			end
 			for _, conj in ipairs(conjugation) do
 				if not cfind(conj, " ") then
-					local title = lang:makeEntryName(conj)
+					local title = (lang:makeEntryName(conj))
 					local t = mw.title.new(title)
 					if t and not t.exists then
 						table.insert(data.categories, "Latin verbs with red links in their inflection tables")
