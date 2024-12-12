@@ -35,7 +35,7 @@ local lang = require("Module:languages").getByCode("pt")
 local m_str_utils = require("Module:string utilities")
 local m_links = require("Module:links")
 local m_table = require("Module:table")
-local iut = require("Module:User:Benwing2/inflection utilities")
+local iut = require("Module:inflection utilities")
 local com = require("Module:pt-common")
 
 local format = m_str_utils.format
@@ -2447,8 +2447,7 @@ local notes_template = [=[
 <div style="width:100%;text-align:left;background:#d9ebff">
 <div style="display:inline-block;text-align:left;padding-left:1em;padding-right:1em">
 {footnote}
-</div></div>
-]=]
+</div></div>]=]
 
 local basic_table = [=[
 {description}<div class="NavFrame">
@@ -2577,8 +2576,7 @@ local basic_table = [=[
 | style="border: 1px solid #999999; vertical-align: top;" | {neg_imp_1p}
 | style="border: 1px solid #999999; vertical-align: top;" | {neg_imp_2p}
 | style="border: 1px solid #999999; vertical-align: top;" | {neg_imp_3p}
-|{\cl}{notes_clause}</div></div>
-]=]
+|{\cl}{notes_clause}</div></div>]=]
 
 local double_pp_template = [=[
 
