@@ -2301,8 +2301,8 @@ end
 
 
 local notes_template = [=[
-<div style="width:100%;text-align:left;background:#d9ebff">
-<div style="display:inline-block;text-align:left;padding-left:1em;padding-right:1em">
+<div class="roa-footnote-outer-div" style="width:100%;">
+<div class="roa-footnote-inner-div">
 {footnote}
 </div></div>
 ]=]
@@ -2311,166 +2311,166 @@ local basic_table = [=[
 {description}<div class="NavFrame">
 <div class="NavHead" align=center>&nbsp; &nbsp; Conjugation of {title}</div>
 <div class="NavContent" align="left">
-{\op}| class="inflection-table" style="background:#F6F6F6; text-align: left; border: 1px solid #999999;" cellpadding="3" cellspacing="0"
+{\op}| class="roa-inflection-table" data-toggle-category="inflection"
 |-
-! style="border: 1px solid #999999; background:#B0B0B0" rowspan="2" |
-! style="border: 1px solid #999999; background:#D0D0D0" colspan="3" | Singular
-! style="border: 1px solid #999999; background:#D0D0D0" colspan="3" | Plural
+! class="roa-person-number-header" rowspan="2" |
+! class="roa-person-number-header" colspan="3" | Singular
+! class="roa-person-number-header" colspan="3" | Plural
 |-
-! style="border: 1px solid #999999; background:#D0D0D0; width:12.5%" | First-person<br />(<<eu>>)
-! style="border: 1px solid #999999; background:#D0D0D0; width:12.5%" | Second-person<br />(<<ti>>)
-! style="border: 1px solid #999999; background:#D0D0D0; width:12.5%" | Third-person<br />(<<el>> / <<ela>> / <<vostede|Vde.>>)
-! style="border: 1px solid #999999; background:#D0D0D0; width:12.5%" | First-person<br />(<<nós>>)
-! style="border: 1px solid #999999; background:#D0D0D0; width:12.5%" | Second-person<br />(<<vós>>)
-! style="border: 1px solid #999999; background:#D0D0D0; width:12.5%" | Third-person<br />(<<eles>> / <<elas>> / <<vostedes|Vdes.>>)
+! class="roa-person-number-header" style="width:12.5%" | First-person<br />(<<eu>>)
+! class="roa-person-number-header" style="width:12.5%" | Second-person<br />(<<ti>>)
+! class="roa-person-number-header" style="width:12.5%" | Third-person<br />(<<el>> / <<ela>> / <<vostede|Vde.>>)
+! class="roa-person-number-header" style="width:12.5%" | First-person<br />(<<nós>>)
+! class="roa-person-number-header" style="width:12.5%" | Second-person<br />(<<vós>>)
+! class="roa-person-number-header" style="width:12.5%" | Third-person<br />(<<eles>> / <<elas>> / <<vostedes|Vdes.>>)
 |-
-! style="border: 1px solid #999999; background:#e2c0c0" colspan="7" | ''<span title="infinitivo">Infinitive</span>''
+! class="roa-nonfinite-header" colspan="7" | ''<span title="infinitivo">Infinitive</span>''
 |-
-! style="border: 1px solid #999999; background:#f3d1d1" | '''<span title="infinitivo impersoal">Impersonal</span>'''
-| style="border: 1px solid #999999; vertical-align: top;" colspan="6" | {infinitive}
+! class="roa-nonfinite-header" | '''<span title="infinitivo impersoal">Impersonal</span>'''
+| colspan="6" | {infinitive}
 |-
-! style="border: 1px solid #999999; background:#f3d1d1" | '''<span title="infinitivo conxugado">Personal</span>'''
-| style="border: 1px solid #999999; vertical-align: top;" | {pers_inf_1s}
-| style="border: 1px solid #999999; vertical-align: top;" | {pers_inf_2s}
-| style="border: 1px solid #999999; vertical-align: top;" | {pers_inf_3s}
-| style="border: 1px solid #999999; vertical-align: top;" | {pers_inf_1p}
-| style="border: 1px solid #999999; vertical-align: top;" | {pers_inf_2p}
-| style="border: 1px solid #999999; vertical-align: top;" | {pers_inf_3p}
+! class="roa-nonfinite-header" | '''<span title="infinitivo conxugado">Personal</span>'''
+| {pers_inf_1s}
+| {pers_inf_2s}
+| {pers_inf_3s}
+| {pers_inf_1p}
+| {pers_inf_2p}
+| {pers_inf_3p}
 |-
-! style="border: 1px solid #999999; background:#dddda0" colspan="7" | ''<span title="xerundio">Gerund</span>''
+! class="roa-nonfinite-header" colspan="7" | ''<span title="xerundio">Gerund</span>''
 |-
-| style="border: 1px solid #999999; background:#eeeeb1" |
-| style="border: 1px solid #999999; vertical-align: top;" colspan="6" | {gerund}
+| class="roa-nonfinite-header" |
+| colspan="6" | {gerund}
 |-{pp_clause}
-! style="border: 1px solid #999999; background:#d0dff4" colspan="7" | ''<span title="indicativo">Indicative</span>''
+! class="roa-indicative-left-rail" colspan="7" | ''<span title="indicativo">Indicative</span>''
 |-
-! style="border: 1px solid #999999; background:#b0bfd4" | <span title="presente">Present</span>
-| style="border: 1px solid #999999; vertical-align: top;" | {pres_1s}
-| style="border: 1px solid #999999; vertical-align: top;" | {pres_2s}
-| style="border: 1px solid #999999; vertical-align: top;" | {pres_3s}
-| style="border: 1px solid #999999; vertical-align: top;" | {pres_1p}
-| style="border: 1px solid #999999; vertical-align: top;" | {pres_2p}
-| style="border: 1px solid #999999; vertical-align: top;" | {pres_3p}
+! class="roa-indicative-left-rail" | <span title="presente">Present</span>
+| {pres_1s}
+| {pres_2s}
+| {pres_3s}
+| {pres_1p}
+| {pres_2p}
+| {pres_3p}
 |-
-! style="border: 1px solid #999999; background:#b0bfd4" | <span title="pretérito imperfecto">Imperfect</span>
-| style="border: 1px solid #999999; vertical-align: top;" | {impf_1s}
-| style="border: 1px solid #999999; vertical-align: top;" | {impf_2s}
-| style="border: 1px solid #999999; vertical-align: top;" | {impf_3s}
-| style="border: 1px solid #999999; vertical-align: top;" | {impf_1p}
-| style="border: 1px solid #999999; vertical-align: top;" | {impf_2p}
-| style="border: 1px solid #999999; vertical-align: top;" | {impf_3p}
+! class="roa-indicative-left-rail" | <span title="pretérito imperfecto">Imperfect</span>
+| {impf_1s}
+| {impf_2s}
+| {impf_3s}
+| {impf_1p}
+| {impf_2p}
+| {impf_3p}
 |-
-! style="border: 1px solid #999999; background:#b0bfd4" | <span title="pretérito perfecto">Preterite</span>
-| style="border: 1px solid #999999; vertical-align: top;" | {pret_1s}
-| style="border: 1px solid #999999; vertical-align: top;" | {pret_2s}
-| style="border: 1px solid #999999; vertical-align: top;" | {pret_3s}
-| style="border: 1px solid #999999; vertical-align: top;" | {pret_1p}
-| style="border: 1px solid #999999; vertical-align: top;" | {pret_2p}
-| style="border: 1px solid #999999; vertical-align: top;" | {pret_3p}
+! class="roa-indicative-left-rail" | <span title="pretérito perfecto">Preterite</span>
+| {pret_1s}
+| {pret_2s}
+| {pret_3s}
+| {pret_1p}
+| {pret_2p}
+| {pret_3p}
 |-
-! style="border: 1px solid #999999; background:#b0bfd4" | <span title="pretérito pluscuamperfecto">Pluperfect</span>
-| style="border: 1px solid #999999; vertical-align: top;" | {plup_1s}
-| style="border: 1px solid #999999; vertical-align: top;" | {plup_2s}
-| style="border: 1px solid #999999; vertical-align: top;" | {plup_3s}
-| style="border: 1px solid #999999; vertical-align: top;" | {plup_1p}
-| style="border: 1px solid #999999; vertical-align: top;" | {plup_2p}
-| style="border: 1px solid #999999; vertical-align: top;" | {plup_3p}
+! class="roa-indicative-left-rail" | <span title="pretérito pluscuamperfecto">Pluperfect</span>
+| {plup_1s}
+| {plup_2s}
+| {plup_3s}
+| {plup_1p}
+| {plup_2p}
+| {plup_3p}
 |-
-! style="border: 1px solid #999999; background:#b0bfd4" | <span title="futuro do presente">Future</span>
-| style="border: 1px solid #999999; vertical-align: top;" | {fut_1s}
-| style="border: 1px solid #999999; vertical-align: top;" | {fut_2s}
-| style="border: 1px solid #999999; vertical-align: top;" | {fut_3s}
-| style="border: 1px solid #999999; vertical-align: top;" | {fut_1p}
-| style="border: 1px solid #999999; vertical-align: top;" | {fut_2p}
-| style="border: 1px solid #999999; vertical-align: top;" | {fut_3p}
+! class="roa-indicative-left-rail" | <span title="futuro do presente">Future</span>
+| {fut_1s}
+| {fut_2s}
+| {fut_3s}
+| {fut_1p}
+| {fut_2p}
+| {fut_3p}
 |-
-! style="border: 1px solid #999999; background:#b0bfd4" | <span title="condicional">Conditional</span>
-| style="border: 1px solid #999999; vertical-align: top;" | {cond_1s}
-| style="border: 1px solid #999999; vertical-align: top;" | {cond_2s}
-| style="border: 1px solid #999999; vertical-align: top;" | {cond_3s}
-| style="border: 1px solid #999999; vertical-align: top;" | {cond_1p}
-| style="border: 1px solid #999999; vertical-align: top;" | {cond_2p}
-| style="border: 1px solid #999999; vertical-align: top;" | {cond_3p}
+! class="roa-indicative-left-rail" | <span title="condicional">Conditional</span>
+| {cond_1s}
+| {cond_2s}
+| {cond_3s}
+| {cond_1p}
+| {cond_2p}
+| {cond_3p}
 |-
-! style="border: 1px solid #999999; background:#d0f4d0" colspan="7" | ''<span title="subxuntivo">Subjunctive</span>''
+! class="roa-subjunctive-left-rail" colspan="7" | ''<span title="subxuntivo">Subjunctive</span>''
 |-
-! style="border: 1px solid #999999; background:#b0d4b0" | <span title=" presente do subxuntivo">Present</span>
-| style="border: 1px solid #999999; vertical-align: top;" | {pres_sub_1s}
-| style="border: 1px solid #999999; vertical-align: top;" | {pres_sub_2s}
-| style="border: 1px solid #999999; vertical-align: top;" | {pres_sub_3s}
-| style="border: 1px solid #999999; vertical-align: top;" | {pres_sub_1p}
-| style="border: 1px solid #999999; vertical-align: top;" | {pres_sub_2p}
-| style="border: 1px solid #999999; vertical-align: top;" | {pres_sub_3p}
+! class="roa-subjunctive-left-rail" | <span title=" presente do subxuntivo">Present</span>
+| {pres_sub_1s}
+| {pres_sub_2s}
+| {pres_sub_3s}
+| {pres_sub_1p}
+| {pres_sub_2p}
+| {pres_sub_3p}
 |-
-! style="border: 1px solid #999999; background:#b0d4b0" | <span title="pretérito imperfecto do subxuntivo">Imperfect</span>
-| style="border: 1px solid #999999; vertical-align: top;" | {impf_sub_1s}
-| style="border: 1px solid #999999; vertical-align: top;" | {impf_sub_2s}
-| style="border: 1px solid #999999; vertical-align: top;" | {impf_sub_3s}
-| style="border: 1px solid #999999; vertical-align: top;" | {impf_sub_1p}
-| style="border: 1px solid #999999; vertical-align: top;" | {impf_sub_2p}
-| style="border: 1px solid #999999; vertical-align: top;" | {impf_sub_3p}
+! class="roa-subjunctive-left-rail" | <span title="pretérito imperfecto do subxuntivo">Imperfect</span>
+| {impf_sub_1s}
+| {impf_sub_2s}
+| {impf_sub_3s}
+| {impf_sub_1p}
+| {impf_sub_2p}
+| {impf_sub_3p}
 |-
-! style="border: 1px solid #999999; background:#b0d4b0" | <span title="futuro do subxuntivo">Future</span>
-| style="border: 1px solid #999999; vertical-align: top;" | {fut_sub_1s}
-| style="border: 1px solid #999999; vertical-align: top;" | {fut_sub_2s}
-| style="border: 1px solid #999999; vertical-align: top;" | {fut_sub_3s}
-| style="border: 1px solid #999999; vertical-align: top;" | {fut_sub_1p}
-| style="border: 1px solid #999999; vertical-align: top;" | {fut_sub_2p}
-| style="border: 1px solid #999999; vertical-align: top;" | {fut_sub_3p}
+! class="roa-subjunctive-left-rail" | <span title="futuro do subxuntivo">Future</span>
+| {fut_sub_1s}
+| {fut_sub_2s}
+| {fut_sub_3s}
+| {fut_sub_1p}
+| {fut_sub_2p}
+| {fut_sub_3p}
 |-
-! style="border: 1px solid #999999; background:#f4e4d0" colspan="7" | ''<span title="imperativo">Imperative</span>''
+! class="roa-imperative-left-rail" colspan="7" | ''<span title="imperativo">Imperative</span>''
 |-
-! style="border: 1px solid #999999; background:#d4c4b0" | <span title="imperativo afirmativo">Affirmative</span>
-| style="border: 1px solid #999999; vertical-align: top;" rowspan="2" |
-| style="border: 1px solid #999999; vertical-align: top;" | {imp_2s}
-| style="border: 1px solid #999999; vertical-align: top;" | {imp_3s}
-| style="border: 1px solid #999999; vertical-align: top;" | {imp_1p}
-| style="border: 1px solid #999999; vertical-align: top;" | {imp_2p}
-| style="border: 1px solid #999999; vertical-align: top;" | {imp_3p}
+! class="roa-imperative-left-rail" | <span title="imperativo afirmativo">Affirmative</span>
+| rowspan="2" |
+| {imp_2s}
+| {imp_3s}
+| {imp_1p}
+| {imp_2p}
+| {imp_3p}
 |-
-! style="border: 1px solid #999999; background:#d4c4b0" | <span title="imperativo negativo">Negative</span> (<<non>>)
-| style="border: 1px solid #999999; vertical-align: top;" | {neg_imp_2s}
-| style="border: 1px solid #999999; vertical-align: top;" | {neg_imp_3s}
-| style="border: 1px solid #999999; vertical-align: top;" | {neg_imp_1p}
-| style="border: 1px solid #999999; vertical-align: top;" | {neg_imp_2p}
-| style="border: 1px solid #999999; vertical-align: top;" | {neg_imp_3p}
+! class="roa-imperative-left-rail" | <span title="imperativo negativo">Negative</span> (<<non>>)
+| {neg_imp_2s}
+| {neg_imp_3s}
+| {neg_imp_1p}
+| {neg_imp_2p}
+| {neg_imp_3p}
 |{\cl}{notes_clause}</div></div>
 ]=]
 
 local double_pp_template = [=[
 
-! style="border: 1px solid #999999; background:#e2e4c0" colspan="7" | ''<span title="participio irregular">Short past participle</span>''
+! class="roa-nonfinite-header" colspan="7" | ''<span title="participio irregular">Short past participle</span>''
 |-
-! style="border: 1px solid #999999; background:#f3f5d1" | Masculine
-| style="border: 1px solid #999999; vertical-align: top;" colspan="3" | {short_pp_ms}
-| style="border: 1px solid #999999; vertical-align: top;" colspan="3" | {short_pp_mp}
+! class="roa-nonfinite-header" | Masculine
+| colspan="3" | {short_pp_ms}
+| colspan="3" | {short_pp_mp}
 |-
-! style="border: 1px solid #999999; background:#f3f5d1" | Feminine
-| style="border: 1px solid #999999; vertical-align: top;" colspan="3" | {short_pp_fs}
-| style="border: 1px solid #999999; vertical-align: top;" colspan="3" | {short_pp_fp}
+! class="roa-nonfinite-header" | Feminine
+| colspan="3" | {short_pp_fs}
+| colspan="3" | {short_pp_fp}
 |-
-! style="border: 1px solid #999999; background:#e2e4c0" colspan="7" | ''<span title="participio regular">Long past participle</span>''
+! class="roa-nonfinite-header" colspan="7" | ''<span title="participio regular">Long past participle</span>''
 |-
-! style="border: 1px solid #999999; background:#f3f5d1" | Masculine
-| style="border: 1px solid #999999; vertical-align: top;" colspan="3" | {pp_ms}
-| style="border: 1px solid #999999; vertical-align: top;" colspan="3" | {pp_mp}
+! class="roa-nonfinite-header" | Masculine
+| colspan="3" | {pp_ms}
+| colspan="3" | {pp_mp}
 |-
-! style="border: 1px solid #999999; background:#f3f5d1" | Feminine
-| style="border: 1px solid #999999; vertical-align: top;" colspan="3" | {pp_fs}
-| style="border: 1px solid #999999; vertical-align: top;" colspan="3" | {pp_fp}
+! class="roa-nonfinite-header" | Feminine
+| colspan="3" | {pp_fs}
+| colspan="3" | {pp_fp}
 |-]=]
 
 local single_pp_template = [=[
 
-! style="border: 1px solid #999999; background:#e2e4c0" colspan="7" | ''<span title="participio pasado">Past participle</span>''
+! class="roa-nonfinite-header" colspan="7" | ''<span title="participio pasado">Past participle</span>''
 |-
-! style="border: 1px solid #999999; background:#f3f5d1" | Masculine
-| style="border: 1px solid #999999; vertical-align: top;" colspan="3" | {pp_ms}
-| style="border: 1px solid #999999; vertical-align: top;" colspan="3" | {pp_mp}
+! class="roa-nonfinite-header" | Masculine
+| colspan="3" | {pp_ms}
+| colspan="3" | {pp_mp}
 |-
-! style="border: 1px solid #999999; background:#f3f5d1" | Feminine
-| style="border: 1px solid #999999; vertical-align: top;" colspan="3" | {pp_fs}
-| style="border: 1px solid #999999; vertical-align: top;" colspan="3" | {pp_fp}
+! class="roa-nonfinite-header" | Feminine
+| colspan="3" | {pp_fs}
+| colspan="3" | {pp_fp}
 |-]=]
 
 local function make_table(alternant_multiword_spec)
