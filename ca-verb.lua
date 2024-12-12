@@ -34,7 +34,7 @@ local lang = require("Module:languages").getByCode("ca")
 local m_string_utilities = require("Module:string utilities")
 local m_links = require("Module:links")
 local m_table = require("Module:table")
-local iut = require("Module:User:Benwing2/inflection utilities")
+local iut = require("Module:inflection utilities")
 local com = require("Module:ca-common")
 
 local force_cat = false -- set to true for debugging
