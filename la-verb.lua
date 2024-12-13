@@ -611,7 +611,7 @@ function export.show(frame)
 		end
 		track(difconj and "different-conj" or "same-conj")
 	end
-	
+
 	if typeinfo.subtypes.suffix then data.categories = {} end
 
 	-- Check if the links to the verb forms exist
@@ -754,7 +754,7 @@ end
 
 local function notes_override(data, args)
 	local notes = {args["note1"], args["note2"], args["note3"]}
-	
+
 	for n, note in pairs(notes) do
 		if note == "-" then
 			data.footnotes[n] = nil
@@ -772,7 +772,7 @@ local function notes_override(data, args)
 			data.footnotes[n] = note
 		end
 	end
-	
+
 	if args["notes"] == "-" then
 		data.footnotes = {}
 	end
@@ -858,7 +858,7 @@ function export.make_data(parent_args, from_headword, def1, def2)
 		footnotes = {},
 		id = args.id,
 		overriding_lemma = args.lemma,
-	}  --note: the addition of red superscripted footnotes ('<sup style="color: red">' ... </sup>) is only implemented for the three form printing loops in which it is used
+	}  --note: the addition of red superscripted footnotes ('<sup class="roa-red-superscript">' ... </sup>) is only implemented for the three form printing loops in which it is used
 	local typeinfo = {
 		lemma = lemma,
 		orig_lemma = orig_lemma,
@@ -954,11 +954,11 @@ function export.make_data(parent_args, from_headword, def1, def2)
 
 	-- Prepend any prefixes, append any suffixes
 	add_prefix_suffix(data)
-	
+
 	if args["label"] then
 		m_table.insertIfNot(data.title, args["label"])
 	end
-	
+
 	notes_override(data, args)
 
 	-- Check if the verb is irregular
@@ -1233,7 +1233,7 @@ postprocess = function(data, typeinfo)
 			end
 		end
 	end
-	
+
 	-- Add information for the passive perfective forms
 	if data.forms["perf_pasv_ptc"] and not form_is_empty(data.forms["perf_pasv_ptc"]) then
 		if typeinfo.subtypes.passimpers then
@@ -1626,7 +1626,7 @@ postprocess = function(data, typeinfo)
 			add_sync_perf(v[1], v[2])
 		end
 		data.footnotes[noteindex] = "At least one rare poetic syncopated perfect form is attested." end
-		
+
 	-- Add category for sigmatic forms
 	if typeinfo.subtypes.sigm or typeinfo.subtypes.sigmpasv then
 		m_table.insertIfNot(data.categories, "Latin verbs with sigmatic forms")
@@ -1682,7 +1682,7 @@ local function get_regular_stems(args, typeinfo)
 	else
 		typeinfo.supine_stem = {}
 	end
-	
+
 		if typeinfo.sigm_stem then
 		typeinfo.sigm_stem = split(typeinfo.sigm_stem, "/")
 	else
@@ -1731,7 +1731,7 @@ conjugations["1st"] = function(args, data, typeinfo)
 	make_pres_1st(data, typeinfo, typeinfo.pres_stem)
 	make_perf_and_supine(data, typeinfo)
 	make_sigm(data, typeinfo, typeinfo.sigm_stem)
-	
+
 	--Additional forms in specific cases
 	if typeinfo.pres_stem == "dīlapid" then
 		add_form(data, "3p_sigf_actv_indc", "", "dīlapidāssunt", 2 )
@@ -1786,7 +1786,7 @@ conjugations["2nd"] = function(args, data, typeinfo)
 	make_pres_2nd(data, typeinfo, typeinfo.pres_stem)
 	make_perf_and_supine(data, typeinfo)
 	make_sigm(data, typeinfo, typeinfo.sigm_stem)
-	
+
 	--Additional forms in specific cases
 	if typeinfo.pres_stem == "noc" then
 		add_form(data, "3s_siga_actv_subj", "", "noxsīt", 2 )
@@ -1845,7 +1845,7 @@ conjugations["3rd"] = function(args, data, typeinfo)
 	make_pres_3rd(data, typeinfo, typeinfo.pres_stem)
 	make_perf_and_supine(data, typeinfo)
 	make_sigm(data, typeinfo, typeinfo.sigm_stem)
-	
+
 	--Additional forms in specific cases
 	--FIXME: needs to be cleared up
 	if match(typeinfo.pres_stem, "nōsc") then
@@ -2178,12 +2178,12 @@ irreg_conjugations["dico"] = function(args, data, typeinfo)
 	make_perf(data, prefix .. "dīx")
 	make_supine(data, typeinfo, prefix .. "dict")
 	make_sigm(data, typeinfo, prefix .. "dīx")
-	
+
 	--Archaic regular imperative
 	local noteindex = #(data.footnotes) + 1
 	add_form(data, "2s_pres_actv_impr", prefix, "dīc", 1)
 	data.form_footnote_indices["2s_pres_actv_impr"] = tostring(noteindex)
-	
+
 	--Archaic future forms
 	if prefix == "" then
 		add_form(data, "1s_futr_actv_indc", "", "dīcēbō", 2 )
@@ -3303,7 +3303,7 @@ make_sigm = function(data, typeinfo, sigm_stem)
 		sigm_stem = {sigm_stem}
 	end
 	local noteindex = #(data.footnotes) + 1
-	
+
 	for _, stem in ipairs(sigm_stem) do
 		-- Deponent verbs use the passive form
 		if typeinfo.subtypes.depon then
@@ -3473,14 +3473,14 @@ make_table = function(data)
 	data.actual_lemma = export.get_lemma_forms(data)
 	convert_forms_into_links(data)
 
-	return [=[
-{| style="width: 100%; background: #EEE; border: 1px solid #AAA; font-size: 95%; text-align: center;" class="inflection-table vsSwitcher" data-toggle-category="inflection"
-|-
-! colspan="8" class="vsToggleElement" style="background: #CCC; text-align: left;" | &nbsp;&nbsp;&nbsp;Conjugation of ]=] .. get_displayable_lemma(data.actual_lemma) .. (#data.title > 0 and " (" .. table.concat(data.title, ", ") .. ")" or "") .. [=[
-
+	return require("Module:TemplateStyles")("Module:roa-verb/style.css") .. [=[
+<div class="NavFrame">
+<div class="NavHead"> &nbsp;&nbsp;&nbsp;Conjugation of ]=] .. get_displayable_lemma(data.actual_lemma) .. (#data.title > 0 and " (" .. table.concat(data.title, ", ") .. ")" or "") .. [=[</div>
+<div class="NavContent">
+{| class="roa-inflection-table" data-toggle-category="inflection"
 ]=] .. make_indc_rows(data) .. make_subj_rows(data) .. make_impr_rows(data) .. make_nonfin_rows(data) .. make_vn_rows(data) .. [=[
 
-|}]=].. make_footnotes(data)
+|}</div></div>]=].. make_footnotes(data)
 
 end
 
@@ -3536,13 +3536,13 @@ make_indc_rows = function(data)
 	for _, v in ipairs({"actv", "pasv"}) do
 		local group = {}
 		local nonempty = false
-		
+
 		for _, t in ipairs({"pres", "impf", "futr", "perf", "plup", "futp", "sigf"}) do
 			local row = {}
 			local notempty = false
 
 			if data.forms[t .. "_" .. v .. "_indc"] then
-				row = "\n! colspan=\"6\" style=\"background: #CCC\" |" .. data.forms[t .. "_" .. v .. "_indc"]
+				row = '\n! colspan="6" class="roa-compound-row" |' .. data.forms[t .. "_" .. v .. "_indc"]
 				nonempty = true
 				notempty = true
 			else
@@ -3550,7 +3550,7 @@ make_indc_rows = function(data)
 					local slot = p .. "_" .. t .. "_" .. v .. "_indc"
 					row[col] = "\n| " .. data.forms[slot] .. (
 						data.form_footnote_indices[slot] == nil and "" or
-						'<sup style="color: red">' .. data.form_footnote_indices[slot].."</sup>"
+						'<sup class="roa-red-superscript">' .. data.form_footnote_indices[slot].."</sup>"
 					)
 
 					-- show_form() already called so can just check for "&mdash;"
@@ -3562,38 +3562,38 @@ make_indc_rows = function(data)
 
 				row = table.concat(row)
 			end
-			
+
 			local fn
 			if t == "sigf" and data.form_footnote_indices["sigm"] then
-				fn = '<sup style="color: red">' .. data.form_footnote_indices["sigm"].."</sup>"
+				fn = '<sup class="roa-red-superscript">' .. data.form_footnote_indices["sigm"].."</sup>"
 			else
 				fn = ""
 			end
-			
+
 			if notempty then
-				table.insert(group, "\n! style=\"background:#c0cfe4\" | " .. tenses[t] ..  fn .. row)
+				table.insert(group, '\n! class="roa-indicative-left-rail" | ' .. tenses[t] ..  fn .. row)
 			end
 		end
 
 		if nonempty and #group > 0 then
-			table.insert(indc, "\n|- class=\"vsHide\"\n! rowspan=\"" .. tostring(#group) .. "\" style=\"background:#c0cfe4\" | " .. voices[v] .. "\n" .. table.concat(group, "\n|- class=\"vsHide\""))
+			table.insert(indc, '\n|-\n! rowspan="' .. tostring(#group) .. '" class="roa-indicative-left-rail" | ' .. voices[v] .. "\n" .. table.concat(group, "\n|-"))
 		end
 	end
 
 	return
 [=[
 
-|- class="vsHide"
-! colspan="2" rowspan="2" style="background:#c0cfe4" | indicative
-! colspan="3" style="background:#c0cfe4" | ''singular''
-! colspan="3" style="background:#c0cfe4" | ''plural''
-|- class="vsHide"
-! style="background:#c0cfe4;width:12.5%" | [[first person|first]]
-! style="background:#c0cfe4;width:12.5%" | [[second person|second]]
-! style="background:#c0cfe4;width:12.5%" | [[third person|third]]
-! style="background:#c0cfe4;width:12.5%" | [[first person|first]]
-! style="background:#c0cfe4;width:12.5%" | [[second person|second]]
-! style="background:#c0cfe4;width:12.5%" | [[third person|third]]
+|-
+! colspan="2" rowspan="2" class="roa-indicative-left-rail" | indicative
+! colspan="3" class="roa-indicative-left-rail" | ''singular''
+! colspan="3" class="roa-indicative-left-rail" | ''plural''
+|-
+! class="roa-indicative-left-rail" style="width:12.5%;" | [[first person|first]]
+! class="roa-indicative-left-rail" style="width:12.5%;" | [[second person|second]]
+! class="roa-indicative-left-rail" style="width:12.5%;" | [[third person|third]]
+! class="roa-indicative-left-rail" style="width:12.5%;" | [[first person|first]]
+! class="roa-indicative-left-rail" style="width:12.5%;" | [[second person|second]]
+! class="roa-indicative-left-rail" style="width:12.5%;" | [[third person|third]]
 ]=] .. table.concat(indc)
 
 end
@@ -3610,7 +3610,7 @@ make_subj_rows = function(data)
 			local notempty = false
 
 			if data.forms[t .. "_" .. v .. "_subj"] then
-				row = "\n! colspan=\"6\" style=\"background: #CCC\" |" .. data.forms[t .. "_" .. v .. "_subj"]
+				row = '\n! colspan="6" class="roa-compound-row" |' .. data.forms[t .. "_" .. v .. "_subj"]
 				nonempty = true
 				notempty = true
 			else
@@ -3618,7 +3618,7 @@ make_subj_rows = function(data)
 					local slot = p .. "_" .. t .. "_" .. v .. "_subj"
 					row[col] = "\n| " .. data.forms[slot] .. (
 						data.form_footnote_indices[slot] == nil and "" or
-						'<sup style="color: red">' .. data.form_footnote_indices[slot].."</sup>"
+						'<sup class="roa-red-superscript">' .. data.form_footnote_indices[slot].."</sup>"
 					)
 
 					-- show_form() already called so can just check for "&mdash;"
@@ -3630,38 +3630,38 @@ make_subj_rows = function(data)
 
 				row = table.concat(row)
 			end
-			
+
 			local fn
 			if t == "siga" and data.form_footnote_indices["sigm"] then
-				fn = '<sup style="color: red">' .. data.form_footnote_indices["sigm"].."</sup>"
+				fn = '<sup class="roa-red-superscript">' .. data.form_footnote_indices["sigm"].."</sup>"
 			else
 				fn = ""
 			end
 
 			if notempty then
-				table.insert(group, "\n! style=\"background:#c0e4c0\" | " .. tenses[t] .. fn .. row)
+				table.insert(group, '\n! class="roa-subjunctive-left-rail" | ' .. tenses[t] .. fn .. row)
 			end
 		end
 
 		if nonempty and #group > 0 then
-			table.insert(subj, "\n|- class=\"vsHide\"\n! rowspan=\"" .. tostring(#group) .. "\" style=\"background:#c0e4c0\" | " .. voices[v] .. "\n" .. table.concat(group, "\n|- class=\"vsHide\""))
+			table.insert(subj, '\n|-\n! rowspan=' .. tostring(#group) .. '" class="roa-subjunctive-left-rail" | ' .. voices[v] .. "\n" .. table.concat(group, "\n|-"))
 		end
 	end
 
 	return
 [=[
 
-|- class="vsHide"
-! colspan="2" rowspan="2" style="background:#c0e4c0" | subjunctive
-! colspan="3" style="background:#c0e4c0" | ''singular''
-! colspan="3" style="background:#c0e4c0" | ''plural''
-|- class="vsHide"
-! style="background:#c0e4c0;width:12.5%" | [[first person|first]]
-! style="background:#c0e4c0;width:12.5%" | [[second person|second]]
-! style="background:#c0e4c0;width:12.5%" | [[third person|third]]
-! style="background:#c0e4c0;width:12.5%" | [[first person|first]]
-! style="background:#c0e4c0;width:12.5%" | [[second person|second]]
-! style="background:#c0e4c0;width:12.5%" | [[third person|third]]
+|-
+! colspan="2" rowspan="2" class="roa-subjunctive-left-rail" | subjunctive
+! colspan="3" class="roa-subjunctive-left-rail" | ''singular''
+! colspan="3" class="roa-subjunctive-left-rail" | ''plural''
+|-
+! class="roa-subjunctive-left-rail" style="width:12.5%;" | [[first person|first]]
+! class="roa-subjunctive-left-rail" style="width:12.5%;" | [[second person|second]]
+! class="roa-subjunctive-left-rail" style="width:12.5%;" | [[third person|third]]
+! class="roa-subjunctive-left-rail" style="width:12.5%;" | [[first person|first]]
+! class="roa-subjunctive-left-rail" style="width:12.5%;" | [[second person|second]]
+! class="roa-subjunctive-left-rail" style="width:12.5%;" | [[third person|third]]
 ]=] .. table.concat(subj)
 
 end
@@ -3678,14 +3678,14 @@ make_impr_rows = function(data)
 			local row = {}
 
 			if data.forms[t .. "_" .. v .. "_impr"] then
-				row = "\n! colspan=\"6\" style=\"background: #CCC\" |" .. data.forms[t .. "_" .. v .. "_impr"]
+				row = '\n! colspan="6" class="roa-compound-row" |' .. data.forms[t .. "_" .. v .. "_impr"]
 				nonempty = true
 			else
 				for col, p in ipairs({"1s", "2s", "3s", "1p", "2p", "3p"}) do
 					local slot = p .. "_" .. t .. "_" .. v .. "_impr"
 					row[col] = "\n| " .. data.forms[slot] .. (
 						data.form_footnote_indices[slot] == nil and "" or
-						'<sup style="color: red">' .. data.form_footnote_indices[slot].."</sup>"
+						'<sup class="roa-red-superscript">' .. data.form_footnote_indices[slot].."</sup>"
 					)
 
 					-- show_form() already called so can just check for "&mdash;"
@@ -3697,12 +3697,12 @@ make_impr_rows = function(data)
 				row = table.concat(row)
 			end
 
-			table.insert(group, "\n! style=\"background:#e4d4c0\" | " .. tenses[t] .. row)
+			table.insert(group, '\n! class="roa-imperative-left-rail" | ' .. tenses[t] .. row)
 		end
 
 		if nonempty and #group > 0 then
 			has_impr = true
-			table.insert(impr, "\n|- class=\"vsHide\"\n! rowspan=\"" .. tostring(#group) .. "\" style=\"background:#e4d4c0\" | " .. voices[v] .. "\n" .. table.concat(group, "\n|- class=\"vsHide\""))
+			table.insert(impr, '\n|-\n! rowspan="' .. tostring(#group) .. '" class="roa-imperative-left-rail" | ' .. voices[v] .. "\n" .. table.concat(group, "\n|-"))
 		end
 	end
 
@@ -3712,17 +3712,17 @@ make_impr_rows = function(data)
 	return
 [=[
 
-|- class="vsHide"
-! colspan="2" rowspan="2" style="background:#e4d4c0" | imperative
-! colspan="3" style="background:#e4d4c0" | ''singular''
-! colspan="3" style="background:#e4d4c0" | ''plural''
-|- class="vsHide"
-! style="background:#e4d4c0;width:12.5%" | [[first person|first]]
-! style="background:#e4d4c0;width:12.5%" | [[second person|second]]
-! style="background:#e4d4c0;width:12.5%" | [[third person|third]]
-! style="background:#e4d4c0;width:12.5%" | [[first person|first]]
-! style="background:#e4d4c0;width:12.5%" | [[second person|second]]
-! style="background:#e4d4c0;width:12.5%" | [[third person|third]]
+|-
+! colspan="2" rowspan="2" class="roa-imperative-left-rail" | imperative
+! colspan="3" class="roa-imperative-left-rail" | ''singular''
+! colspan="3" class="roa-imperative-left-rail" | ''plural''
+|-
+! class="roa-imperative-left-rail" style="width:12.5%;" | [[first person|first]]
+! class="roa-imperative-left-rail" style="width:12.5%;" | [[second person|second]]
+! class="roa-imperative-left-rail" style="width:12.5%;" | [[third person|third]]
+! class="roa-imperative-left-rail" style="width:12.5%;" | [[first person|first]]
+! class="roa-imperative-left-rail" style="width:12.5%;" | [[second person|second]]
+! class="roa-imperative-left-rail" style="width:12.5%;" | [[third person|third]]
 ]=] .. table.concat(impr)
 end
 
@@ -3737,29 +3737,29 @@ make_nonfin_rows = function(data)
 			--row[col] = "\n| " .. data.forms[slot]
 			row[col] = "\n| " .. data.forms[slot] .. (
 				data.form_footnote_indices[slot] == nil and "" or
-				'<sup style="color: red">' .. data.form_footnote_indices[slot] .."</sup>"
+				'<sup class="roa-red-superscript">' .. data.form_footnote_indices[slot] .."</sup>"
 			)
 
 		end
 
 		row = table.concat(row)
-		table.insert(nonfin, "\n|- class=\"vsHide\"\n! style=\"background:#e2e4c0\" colspan=\"2\" | " .. nonfins[f] .. row)
+		table.insert(nonfin, '\n|-\n! class="roa-nonfinite-header" colspan="2" | ' .. nonfins[f] .. row)
 	end
 
 	return
 [=[
 
-|- class="vsHide"
-! colspan="2" rowspan="2" style="background:#e2e4c0" | non-finite forms
-! colspan="3" style="background:#e2e4c0" | active
-! colspan="3" style="background:#e2e4c0" | passive
-|- class="vsHide"
-! style="background:#e2e4c0;width:12.5%" | present
-! style="background:#e2e4c0;width:12.5%" | perfect
-! style="background:#e2e4c0;width:12.5%" | future
-! style="background:#e2e4c0;width:12.5%" | present
-! style="background:#e2e4c0;width:12.5%" | perfect
-! style="background:#e2e4c0;width:12.5%" | future
+|-
+! colspan="2" rowspan="2" class="roa-nonfinite-header" | non-finite forms
+! colspan="3" class="roa-nonfinite-header" | active
+! colspan="3" class="roa-nonfinite-header" | passive
+|-
+! class="roa-nonfinite-header" style="width:12.5%;" | present
+! class="roa-nonfinite-header" style="width:12.5%;" | perfect
+! class="roa-nonfinite-header" style="width:12.5%;" | future
+! class="roa-nonfinite-header" style="width:12.5%;" | present
+! class="roa-nonfinite-header" style="width:12.5%;" | perfect
+! class="roa-nonfinite-header" style="width:12.5%;" | future
 ]=] .. table.concat(nonfin)
 
 end
@@ -3777,14 +3777,14 @@ make_vn_rows = function(data)
 		end
 		row[col] = "\n| " .. data.forms[slot] .. (
 			data.form_footnote_indices[slot] == nil and "" or
-			'<sup style="color: red">' .. data.form_footnote_indices[slot] .. "</sup>"
+			'<sup class="roa-red-superscript">' .. data.form_footnote_indices[slot] .. "</sup>"
 		)
 	end
 
 	row = table.concat(row)
 
 	if has_vn then
-		table.insert(vn, "\n|- class=\"vsHide\"" .. row)
+		table.insert(vn, "\n|-" .. row)
 	end
 
 	if not has_vn then
@@ -3793,17 +3793,17 @@ make_vn_rows = function(data)
 	return
 [=[
 
-|- class="vsHide"
-! colspan="2" rowspan="3" style="background:#e0e0b0" | verbal nouns
-! colspan="4" style="background:#e0e0b0" | gerund
-! colspan="2" style="background:#e0e0b0" | supine
-|- class="vsHide"
-! style="background:#e0e0b0;width:12.5%" | genitive
-! style="background:#e0e0b0;width:12.5%" | dative
-! style="background:#e0e0b0;width:12.5%" | accusative
-! style="background:#e0e0b0;width:12.5%" | ablative
-! style="background:#e0e0b0;width:12.5%" | accusative
-! style="background:#e0e0b0;width:12.5%" | ablative]=] .. table.concat(vn)
+|-
+! colspan="2" rowspan="3" class="roa-nonfinite-header" | verbal nouns
+! colspan="4" class="roa-nonfinite-header" | gerund
+! colspan="2" class="roa-nonfinite-header" | supine
+|-
+! class="roa-nonfinite-header" style="width:12.5%;" | genitive
+! class="roa-nonfinite-header" style="width:12.5%;" | dative
+! class="roa-nonfinite-header" style="width:12.5%;" | accusative
+! class="roa-nonfinite-header" style="width:12.5%;" | ablative
+! class="roa-nonfinite-header" style="width:12.5%;" | accusative
+! class="roa-nonfinite-header" style="width:12.5%;" | ablative]=] .. table.concat(vn)
 
 end
 
@@ -3812,7 +3812,7 @@ make_footnotes = function(data)
 	local i = 0
 	for k,v in pairs(data.footnotes) do
 		i = i + 1
-		tbl[i] = '<sup style="color: red">'..tostring(k)..'</sup>'..v..'<br>' end
+		tbl[i] = '<sup class="roa-red-superscript">'..tostring(k)..'</sup>'..v..'<br>' end
 	return table.concat(tbl)
 end
 

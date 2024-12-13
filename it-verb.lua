@@ -3211,51 +3211,51 @@ end
 
 
 local notes_template = [=[
-<div style="width:100%;text-align:left;background:#d9ebff">
-<div style="display:inline-block;text-align:left;padding-left:1em;padding-right:1em">
+<div class="roa-footnote-outer-div" style="width:100%;">
+<div class="roa-footnote-inner-div">
 {footnote}
 </div></div>
 ]=]
 
 local basic_table = [=[
 {description}<div class="NavFrame">
-<div class="NavHead" align=center>&nbsp; &nbsp; Conjugation of {title} (See [[Appendix:Italian verbs]])</div>
+<div class="NavHead">&nbsp; &nbsp; Conjugation of {title} (See [[Appendix:Italian verbs]])</div>
 <div class="NavContent">
-{\op}| style="background:#F0F0F0;border-collapse:separate;border-spacing:2px;width:100%" class="inflection-table"
+{\op}| class="roa-inflection-table" data-toggle-category="inflection"
 |-
-! style="background:#e2e4c0" | <span title="infinito">infinitive</span>
+! class="roa-nonfinite-header" | <span title="infinito">infinitive</span>
 | {inf}
 |-
-! colspan="2" style="background:#e2e4c0" | <span title="verbo ausiliare">auxiliary verb</span>
+! colspan="2" class="roa-nonfinite-header" | <span title="verbo ausiliare">auxiliary verb</span>
 | {aux}
-! colspan="2" style="background:#e2e4c0" | <span title="gerundio">gerund</span>
+! colspan="2" class="roa-nonfinite-header" | <span title="gerundio">gerund</span>
 | colspan="2" | {ger}
 |-
-! colspan="2" style="background:#e2e4c0" |  <span title="participio presente">present participle</span>
+! colspan="2" class="roa-nonfinite-header" |  <span title="participio presente">present participle</span>
 | {presp}
-! colspan="2" style="background:#e2e4c0" | <span title="participio passato">past participle</span>
+! colspan="2" class="roa-nonfinite-header" | <span title="participio passato">past participle</span>
 | colspan="2" | {pp}
 |-
-! rowspan="2" style="background:#C0C0C0" | person
-! colspan="3" style="background:#C0C0C0" | singular
-! colspan="3" style="background:#C0C0C0" | plural
+! rowspan="2" class="roa-person-number-header" | person
+! colspan="3" class="roa-person-number-header" | singular
+! colspan="3" class="roa-person-number-header" | plural
 |-
-! style="background:#C0C0C0;width:12.5%" | first
-! style="background:#C0C0C0;width:12.5%" | second
-! style="background:#C0C0C0;width:12.5%" | third
-! style="background:#C0C0C0;width:12.5%" | first
-! style="background:#C0C0C0;width:12.5%" | second
-! style="background:#C0C0C0;width:12.5%" | third
+! class="roa-person-number-header" style="width:12.5%;" | first
+! class="roa-person-number-header" style="width:12.5%;" | second
+! class="roa-person-number-header" style="width:12.5%;" | third
+! class="roa-person-number-header" style="width:12.5%;" | first
+! class="roa-person-number-header" style="width:12.5%;" | second
+! class="roa-person-number-header" style="width:12.5%;" | third
 |-
-! style="background:#c0cfe4" | <span title="indicativo">indicative</span>
-! style="background:#c0cfe4" | io
-! style="background:#c0cfe4" | tu
-! style="background:#c0cfe4" | lui/lei, esso/essa
-! style="background:#c0cfe4" | noi
-! style="background:#c0cfe4" | voi
-! style="background:#c0cfe4" | loro, essi/esse
+! class="roa-indicative-left-rail" | <span title="indicativo">indicative</span>
+! class="roa-indicative-left-rail" | io
+! class="roa-indicative-left-rail" | tu
+! class="roa-indicative-left-rail" | lui/lei, esso/essa
+! class="roa-indicative-left-rail" | noi
+! class="roa-indicative-left-rail" | voi
+! class="roa-indicative-left-rail" | loro, essi/esse
 |-
-! style="height:3em;background:#c0cfe4" | <span title="presente">present</span>
+! class="roa-indicative-left-rail" style="height:3em;" | <span title="presente">present</span>
 | {pres1s}
 | {pres2s}
 | {pres3s}
@@ -3263,7 +3263,7 @@ local basic_table = [=[
 | {pres2p}
 | {pres3p}
 |-
-! style="height:3em;background:#c0cfe4" | <span title="imperfetto">imperfect</span>
+! class="roa-indicative-left-rail" style="height:3em;" | <span title="imperfetto">imperfect</span>
 | {imperf1s}
 | {imperf2s}
 | {imperf3s}
@@ -3271,7 +3271,7 @@ local basic_table = [=[
 | {imperf2p}
 | {imperf3p}
 |-
-! style="height:3em;background:#c0cfe4" | <span title="passato remoto">past historic</span>
+! class="roa-indicative-left-rail" style="height:3em;" | <span title="passato remoto">past historic</span>
 | {phis1s}
 | {phis2s}
 | {phis3s}
@@ -3279,7 +3279,7 @@ local basic_table = [=[
 | {phis2p}
 | {phis3p}
 |-
-! style="height:3em;background:#c0cfe4" | <span title="futuro semplice">future</span>
+! class="roa-indicative-left-rail" style="height:3em;" | <span title="futuro semplice">future</span>
 | {fut1s}
 | {fut2s}
 | {fut3s}
@@ -3287,15 +3287,7 @@ local basic_table = [=[
 | {fut2p}
 | {fut3p}
 |-
-! style="background:#c0d8e4" | <span title="condizionale">conditional</span>
-! style="background:#c0d8e4" | io
-! style="background:#c0d8e4" | tu
-! style="background:#c0d8e4" | lui/lei, esso/essa
-! style="background:#c0d8e4" | noi
-! style="background:#c0d8e4" | voi
-! style="background:#c0d8e4" | loro, essi/esse
-|-
-! style="height:3em;background:#c0d8e4" | <span title="condizionale presente">present</span>
+! class="roa-indicative-left-rail" style="height:3em;" | <span title="condizionale presente">conditional</span>
 | {cond1s}
 | {cond2s}
 | {cond3s}
@@ -3303,15 +3295,15 @@ local basic_table = [=[
 | {cond2p}
 | {cond3p}
 |-
-! style="background:#c0e4c0" | <span title="congiuntivo">subjunctive</span>
-! style="background:#c0e4c0" | che io
-! style="background:#c0e4c0" | che tu
-! style="background:#c0e4c0" | che lui/che lei, che esso/che essa
-! style="background:#c0e4c0" | che noi
-! style="background:#c0e4c0" | che voi
-! style="background:#c0e4c0" | che loro, che essi/che esse
+! class="roa-subjunctive-left-rail" | <span title="congiuntivo">subjunctive</span>
+! class="roa-subjunctive-left-rail" | che io
+! class="roa-subjunctive-left-rail" | che tu
+! class="roa-subjunctive-left-rail" | che lui/che lei, che esso/che essa
+! class="roa-subjunctive-left-rail" | che noi
+! class="roa-subjunctive-left-rail" | che voi
+! class="roa-subjunctive-left-rail" | che loro, che essi/che esse
 |-
-! style="height:3em;background:#c0e4c0" | <span title="congiuntivo presente">present</span>
+! class="roa-subjunctive-left-rail" style="height:3em;" | <span title="congiuntivo presente">present</span>
 | {sub1s}
 | {sub2s}
 | {sub3s}
@@ -3319,7 +3311,7 @@ local basic_table = [=[
 | {sub2p}
 | {sub3p}
 |-
-! style="height:3em;background:#c0e4c0" | <span title="congiuntivo imperfetto">imperfect</span>
+! class="roa-subjunctive-left-rail" style="height:3em;" | <span title="congiuntivo imperfetto">imperfect</span>
 | {impsub1s}
 | {impsub2s}
 | {impsub3s}
@@ -3327,13 +3319,13 @@ local basic_table = [=[
 | {impsub2p}
 | {impsub3p}
 |-
-! rowspan="2" style="height:3em;background:#e4d4c0" | <span title="imperativo">imperative</span>
-! style="background:#e4d4c0" | &mdash;
-! style="background:#e4d4c0" | tu
-! style="background:#e4d4c0" | Lei
-! style="background:#e4d4c0" | noi
-! style="background:#e4d4c0" | voi
-! style="background:#e4d4c0" | Loro
+! rowspan="2" class="roa-imperative-left-rail" style="height:3em;" | <span title="imperativo">imperative</span>
+! class="roa-imperative-left-rail" | &mdash;
+! class="roa-imperative-left-rail" | tu
+! class="roa-imperative-left-rail" | Lei
+! class="roa-imperative-left-rail" | noi
+! class="roa-imperative-left-rail" | voi
+! class="roa-imperative-left-rail" | Loro
 |-
 |
 | {imp2s}
@@ -3342,7 +3334,7 @@ local basic_table = [=[
 | {imp2p}
 | {imp3p}
 |-
-! style="height:3em;background:#e4d4c0" | <span title="imperativo negativo">negative imperative</span>
+! class="roa-imperative-left-rail" style="height:3em;" | <span title="imperativo negativo">negative imperative</span>
 |
 | {negimp2s}
 | {negimp3s}
@@ -3370,7 +3362,7 @@ local function make_table(alternant_multiword_spec)
 	-- Format the table.
 	forms.footnote = alternant_multiword_spec.forms.footnote
 	forms.notes_clause = forms.footnote ~= "" and m_string_utilities.format(notes_template, forms) or ""
-	return m_string_utilities.format(basic_table, forms)
+	return require("Module:TemplateStyles")("Module:roa-verb/style.css") .. m_string_utilities.format(basic_table, forms)
 end
 
 

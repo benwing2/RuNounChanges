@@ -2035,48 +2035,48 @@ local function make_table()
 	
 	local result = [=[
 <div class="NavFrame">
-<div class="NavHead" style="background:#CDC3CA">&nbsp; &nbsp; conjugation of {{{lemma}}} <small>{{{info}}}</small></div>
+<div class="NavHead">&nbsp; &nbsp; conjugation of {{{lemma}}} <small>{{{info}}}</small></div>
 <div class="NavContent">
 
-{| width=100% style="text-align:center;background:#F0F0F0" class="inflection-table"
+{| class="roa-inflection-table" data-toggle-category="inflection"
 |-
-! colspan="3" style="background:#DED4DB" | <span title="infinitiv">infinitive</span>
+! colspan="3" class="roa-nonfinite-header" | <span title="infinitiv">infinitive</span>
 | colspan="5" | {{{inf}}}
 
 |-
-! colspan="3"  style="background:#DED4DB" | <span title="gerunziu">gerund</span>
+! colspan="3"  class="roa-nonfinite-header" | <span title="gerunziu">gerund</span>
 | colspan="5" | {{{ger}}}
 
 |-
-! colspan="3" style="background:#DED4DB" | <span title="participiu">past participle</span>
+! colspan="3" class="roa-nonfinite-header" | <span title="participiu">past participle</span>
 | colspan="5" | {{{pp}}}
 
 |-
-! colspan="2" style="background:#C0C0C0" | number
-! colspan="3" style="background:#C0C0C0" | singular
-! colspan="3" style="background:#C0C0C0" | plural
+! colspan="2" class="roa-person-number-header" | number
+! colspan="3" class="roa-person-number-header" | singular
+! colspan="3" class="roa-person-number-header" | plural
 
 |-
-! colspan="2" style="background:#C0C0C0" | person
-! style="background:#C0C0C0" | 1st person
-! style="background:#C0C0C0" | 2nd person
-! style="background:#C0C0C0" | 3rd person
-! style="background:#C0C0C0" | 1st person
-! style="background:#C0C0C0" | 2nd person
-! style="background:#C0C0C0" | 3rd person
+! colspan="2" class="roa-person-number-header" | person
+! class="roa-person-number-header" | 1st person
+! class="roa-person-number-header" | 2nd person
+! class="roa-person-number-header" | 3rd person
+! class="roa-person-number-header" | 1st person
+! class="roa-person-number-header" | 2nd person
+! class="roa-person-number-header" | 3rd person
 
 |-
-! rowspan="5" style="background:#BCB2B9" | <span title="indicativ">indicative</span>
-! style="background:#BCB2B9" | 
-! style="background:#BCB2B9" | {{{pronoun_1s}}}
-! style="background:#BCB2B9" | {{{pronoun_2s}}}
-! style="background:#BCB2B9" | {{{pronoun_3s}}}
-! style="background:#BCB2B9" | {{{pronoun_1p}}}
-! style="background:#BCB2B9" | {{{pronoun_2p}}}
-! style="background:#BCB2B9" | {{{pronoun_3p}}}
+! rowspan="5" class="roa-indicative-left-rail" | <span title="indicativ">indicative</span>
+! class="roa-indicative-left-rail" | 
+! class="roa-indicative-left-rail" | {{{pronoun_1s}}}
+! class="roa-indicative-left-rail" | {{{pronoun_2s}}}
+! class="roa-indicative-left-rail" | {{{pronoun_3s}}}
+! class="roa-indicative-left-rail" | {{{pronoun_1p}}}
+! class="roa-indicative-left-rail" | {{{pronoun_2p}}}
+! class="roa-indicative-left-rail" | {{{pronoun_3p}}}
 
 |-
-! style="background:#BCB2B9" | <span title="prezent">present</span>
+! class="roa-indicative-left-rail" | <span title="prezent">present</span>
 | {{{indc_pres_1s}}}
 | {{{indc_pres_2s}}}
 | {{{indc_pres_3s}}}
@@ -2085,7 +2085,7 @@ local function make_table()
 | {{{indc_pres_3p}}}
 
 |-
-! style="background:#BCB2B9" | <span title="imperfect">imperfect</span>
+! class="roa-indicative-left-rail" | <span title="imperfect">imperfect</span>
 | {{{indc_impf_1s}}}
 | {{{indc_impf_2s}}}
 | {{{indc_impf_3s}}}
@@ -2094,7 +2094,7 @@ local function make_table()
 | {{{indc_impf_3p}}}
 
 |-
-! style="background:#BCB2B9" | <span title="perfect simplu">simple perfect</span>
+! class="roa-indicative-left-rail" | <span title="perfect simplu">simple perfect</span>
 | {{{indc_perf_1s}}}
 | {{{indc_perf_2s}}}
 | {{{indc_perf_3s}}}
@@ -2103,7 +2103,7 @@ local function make_table()
 | {{{indc_perf_3p}}}
 
 |-
-! style="background:#BCB2B9" | <span title="mai mult ca perfect">pluperfect</span>
+! class="roa-indicative-left-rail" | <span title="mai mult ca perfect">pluperfect</span>
 | {{{indc_plup_1s}}}
 | {{{indc_plup_2s}}}
 | {{{indc_plup_3s}}}
@@ -2112,17 +2112,17 @@ local function make_table()
 | {{{indc_plup_3p}}}
 
 |-
-! rowspan="2" style="background:#CDC3CA" | <span title="conjunctiv">subjunctive</span>
-! style="background:#CDC3CA" | 
-! style="background:#CDC3CA" | {{{pronoun_1s}}}
-! style="background:#CDC3CA" | {{{pronoun_2s}}}
-! style="background:#CDC3CA" | {{{pronoun_3s}}}
-! style="background:#CDC3CA" | {{{pronoun_1p}}}
-! style="background:#CDC3CA" | {{{pronoun_2p}}}
-! style="background:#CDC3CA" | {{{pronoun_3p}}}
+! rowspan="2" class="roa-subjunctive-left-rail" | <span title="conjunctiv">subjunctive</span>
+! class="roa-subjunctive-left-rail" | 
+! class="roa-subjunctive-left-rail" | {{{pronoun_1s}}}
+! class="roa-subjunctive-left-rail" | {{{pronoun_2s}}}
+! class="roa-subjunctive-left-rail" | {{{pronoun_3s}}}
+! class="roa-subjunctive-left-rail" | {{{pronoun_1p}}}
+! class="roa-subjunctive-left-rail" | {{{pronoun_2p}}}
+! class="roa-subjunctive-left-rail" | {{{pronoun_3p}}}
 
 |-
-! style="background:#CDC3CA" | <span title="prezent">present</span>
+! class="roa-subjunctive-left-rail" | <span title="prezent">present</span>
 | {{{subj_pres_1s}}}
 | {{{subj_pres_2s}}}
 | {{{subj_pres_3s}}}
@@ -2131,17 +2131,17 @@ local function make_table()
 | {{{subj_pres_3p}}}
 
 |-
-! rowspan="3" style="background:#DED4DB" | <span title="imperativ">imperative</span>
-! style="background:#DED4DB" | 
-! style="background:#DED4DB" | —
-! style="background:#DED4DB" | {{{pronoun_2s}}}
-! style="background:#DED4DB" | —
-! style="background:#DED4DB" | —
-! style="background:#DED4DB" | {{{pronoun_2p}}}
-! style="background:#DED4DB" | —
+! rowspan="3" class="roa-imperative-left-rail" | <span title="imperativ">imperative</span>
+! class="roa-imperative-left-rail" | 
+! class="roa-imperative-left-rail" | —
+! class="roa-imperative-left-rail" | {{{pronoun_2s}}}
+! class="roa-imperative-left-rail" | —
+! class="roa-imperative-left-rail" | —
+! class="roa-imperative-left-rail" | {{{pronoun_2p}}}
+! class="roa-imperative-left-rail" | —
 
 |-
-! style="background:#DED4DB" | affirmative
+! class="roa-imperative-left-rail" | affirmative
 | 
 | {{{impr_aff_2s}}}
 | 
@@ -2150,7 +2150,7 @@ local function make_table()
 | 
 
 |-
-! style="background:#DED4DB" | negative
+! class="roa-imperative-left-rail" | negative
 | 
 | {{{impr_neg_2s}}}
 | 
@@ -2159,7 +2159,7 @@ local function make_table()
 | 
 |}</div></div>]=]
 
-	return (mw.ustring.gsub(result, "{{{([a-z0-9_]+)}}}", repl))
+	return require("Module:TemplateStyles")("Module:roa-verb/style.css") .. (mw.ustring.gsub(result, "{{{([a-z0-9_]+)}}}", repl))
 end
 
 local function add_particle(form_table, particle)

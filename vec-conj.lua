@@ -40,54 +40,54 @@ local function make_table(data)
 	local ret = {[=[* Venetan conjugation varies from one region to another. Hence, the following conjugation should be considered as typical, not as exhaustive.
 	
 <div class="NavFrame">
-<div class="NavHead" style="text-align: left">Conjugation of ]=]}
+<div class="NavHead">Conjugation of ]=]}
 	table.insert(ret, m_links.full_link({lang = lang, alt = data.forms.inf[1]}, "term") .. " (" .. data.conj ..  ")</div>\n")
 	table.insert(ret, [=[<div class="NavContent">
-{| style="background:#F0F0F0;border-collapse:separate;border-spacing:2px;width:100%" class="inflection-table"
+{| class="roa-inflection-table" data-toggle-category="inflection"
 |-
-! colspan="1" style="background:#e2e4c0" | infinitive
-| colspan="1" | ]=])
+! class="roa-nonfinite-header" | infinitive
+| ]=])
 	table.insert(ret, show_form(data.forms.inf) .. "\n")
 	table.insert(ret, [=[
 |-
-! colspan="2" style="background:#e2e4c0" | auxiliary verb
-| colspan="1" | ]=])
+! colspan="2" class="roa-nonfinite-header" | auxiliary verb
+| ]=])
 	table.insert(ret, show_form(data.forms.aux) .. "\n")
 	table.insert(ret, [=[
-! colspan="2" style="background:#e2e4c0" | gerund
+! colspan="2" class="roa-nonfinite-header" | gerund
 | colspan="2" | ]=])
 	table.insert(ret, show_form(data.forms.gerund) .. "\n")
 	table.insert(ret, [=[
 |-
-! colspan="2" style="background:#e2e4c0" | past participle
+! colspan="2" class="roa-nonfinite-header" | past participle
 | colspan="2" | ]=])
 	table.insert(ret, show_form(data.forms.past_part) .. "\n")
 	table.insert(ret, [=[
 |-
-! colspan="1" rowspan="2" style="background:#C0C0C0" | person
-! colspan="3" style="background:#C0C0C0" | singular
-! colspan="3" style="background:#C0C0C0" | plural
+! rowspan="2" class="roa-person-number-header" | person
+! colspan="3" class="roa-person-number-header" | singular
+! colspan="3" class="roa-person-number-header" | plural
 
 |-
-! style="background:#C0C0C0;width:12.5%" | first
-! style="background:#C0C0C0;width:12.5%" | second
-! style="background:#C0C0C0;width:12.5%" | third
-! style="background:#C0C0C0;width:12.5%" | first
-! style="background:#C0C0C0;width:12.5%" | second
-! style="background:#C0C0C0;width:12.5%" | third
+! class="roa-person-number-header" style="width:12.5%;" | first
+! class="roa-person-number-header" style="width:12.5%;" | second
+! class="roa-person-number-header" style="width:12.5%;" | third
+! class="roa-person-number-header" style="width:12.5%;" | first
+! class="roa-person-number-header" style="width:12.5%;" | second
+! class="roa-person-number-header" style="width:12.5%;" | third
 
 |-
-! style="background:#c0cfe4" colspan="1" | indicative
-! style="background:#c0cfe4" | mi
-! style="background:#c0cfe4" | ti 
-! style="background:#c0cfe4" | eło / eła 
-! style="background:#c0cfe4" | noialtri / noialtre
-! style="background:#c0cfe4" | voialtri / voialtre
-! style="background:#c0cfe4" | łuri / łore 
+! class="roa-indicative-left-rail" | indicative
+! class="roa-indicative-left-rail" | mi
+! class="roa-indicative-left-rail" | ti 
+! class="roa-indicative-left-rail" | eło / eła 
+! class="roa-indicative-left-rail" | noialtri / noialtre
+! class="roa-indicative-left-rail" | voialtri / voialtre
+! class="roa-indicative-left-rail" | łuri / łore 
 
 |-
 
-! style="height:3em;background:#c0cfe4" colspan="1" | present
+! class="roa-indicative-left-rail" style="height:3em;" | present
 ]=])
 	table.insert(ret, "| " .. show_form(data.forms.pres_ind_1sg) .. "\n")
 	table.insert(ret, "| " .. show_form(data.forms.pres_ind_2sg, "2sg") .. "\n")
@@ -97,7 +97,7 @@ local function make_table(data)
 	table.insert(ret, "| " .. show_form(data.forms.pres_ind_3pl, "3pl") .. "\n")
 	table.insert(ret, [=[
 |-
-! style="height:3em;background:#c0cfe4" colspan="1" | imperfect
+! class="roa-indicative-left-rail" style="height:3em;" | imperfect
 ]=])
 	table.insert(ret, "| " .. show_form(data.forms.impf_ind_1sg) .. "\n")
 	table.insert(ret, "| " .. show_form(data.forms.impf_ind_2sg, "2sg") .. "\n")
@@ -107,7 +107,7 @@ local function make_table(data)
 	table.insert(ret, "| " .. show_form(data.forms.impf_ind_3pl, "3pl") .. "\n")
 	table.insert(ret, [=[
 |-
-! style="height:3em;background:#c0cfe4" colspan="1" | future
+! class="roa-indicative-left-rail" style="height:3em;" | future
 ]=])
 	table.insert(ret, "| " .. show_form(data.forms.futr_ind_1sg) .. "\n")
 	table.insert(ret, "| " .. show_form(data.forms.futr_ind_2sg, "2sg") .. "\n")
@@ -117,15 +117,7 @@ local function make_table(data)
 	table.insert(ret, "| " .. show_form(data.forms.futr_ind_3pl, "3pl") .. "\n")
 	table.insert(ret, [=[
 |-
-! style="background:#c0d8e4" colspan="1" | conditional
-! style="background:#c0d8e4" | mi
-! style="background:#c0d8e4" | ti 
-! style="background:#c0d8e4" | eło / eła 
-! style="background:#c0d8e4" | noialtri / noialtre
-! style="background:#c0d8e4" | voialtri / voialtre
-! style="background:#c0d8e4" | łuri / łore 
-|-
-! style="height:3em;background:#c0d8e4" colspan="1" | present
+! class="roa-indicative-left-rail" style="height:3em;" | conditional
 ]=])
 	table.insert(ret, "| " .. show_form(data.forms.cond_ind_1sg) .. "\n")
 	table.insert(ret, "| " .. show_form(data.forms.cond_ind_2sg, "2sg") .. "\n")
@@ -135,15 +127,15 @@ local function make_table(data)
 	table.insert(ret, "| " .. show_form(data.forms.cond_ind_3pl, "3pl") .. "\n")
 	table.insert(ret, [=[
 |-
-! style="background:#c0e4c0" colspan="1" | subjunctive
-! style="background:#c0e4c0" | che mi
-! style="background:#c0e4c0" | che ti 
-! style="background:#c0e4c0" | che eło / eła 
-! style="background:#c0e4c0" | che noialtri / noialtre
-! style="background:#c0e4c0" | che voialtri / voialtre
-! style="background:#c0e4c0" | che łuri / łore 
+! class="roa-subjunctive-left-rail" | subjunctive
+! class="roa-subjunctive-left-rail" | che mi
+! class="roa-subjunctive-left-rail" | che ti 
+! class="roa-subjunctive-left-rail" | che eło / eła 
+! class="roa-subjunctive-left-rail" | che noialtri / noialtre
+! class="roa-subjunctive-left-rail" | che voialtri / voialtre
+! class="roa-subjunctive-left-rail" | che łuri / łore 
 |-
-! style="height:3em;background:#c0e4c0" colspan="1" | present
+! class="roa-subjunctive-left-rail" style="height:3em;" | present
 ]=])
 	table.insert(ret, "| " .. show_form(data.forms.pres_sub_1sg) .. "\n")
 	table.insert(ret, "| " .. show_form(data.forms.pres_sub_2sg, "2sg") .. "\n")
@@ -153,7 +145,7 @@ local function make_table(data)
 	table.insert(ret, "| " .. show_form(data.forms.pres_sub_3pl, "3pl") .. "\n")
 	table.insert(ret, [=[
 |-
-! style="height:3em;background:#c0e4c0" colspan="1" | imperfect
+! class="roa-subjunctive-left-rail" style="height:3em;" | imperfect
 ]=])
 	table.insert(ret, "| " .. show_form(data.forms.impf_sub_1sg) .. "\n")
 	table.insert(ret, "| " .. show_form(data.forms.impf_sub_2sg, "2sg") .. "\n")
@@ -163,13 +155,13 @@ local function make_table(data)
 	table.insert(ret, "| " .. show_form(data.forms.impf_sub_3pl,"3pl") .. "\n")
 	table.insert(ret, [=[
 |-
-! colspan="1" rowspan="2" style="height:3em;background:#e4d4c0" | imperative
-! style="background:#e4d4c0" | —
-! style="background:#e4d4c0" | ti 
-! style="background:#e4d4c0" | eło / eła 
-! style="background:#e4d4c0" | noialtri / noialtre
-! style="background:#e4d4c0" | voialtri / voialtre
-! style="background:#e4d4c0" | łuri / łore 
+! rowspan="2" class="roa-imperative-left-rail" style="height:3em;" | imperative
+! class="roa-imperative-left-rail" | —
+! class="roa-imperative-left-rail" | ti 
+! class="roa-imperative-left-rail" | eło / eła 
+! class="roa-imperative-left-rail" | noialtri / noialtre
+! class="roa-imperative-left-rail" | voialtri / voialtre
+! class="roa-imperative-left-rail" | łuri / łore 
 |-
 | —
 ]=])
@@ -182,7 +174,7 @@ local function make_table(data)
 |}
 </div></div>]=])
 
-	return table.concat(ret)
+	return require("Module:TemplateStyles")("Module:roa-verb/style.css") .. table.concat(ret)
 end
 
 -- Main entry point

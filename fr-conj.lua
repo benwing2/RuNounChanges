@@ -216,71 +216,70 @@ function export.make_table(data)
 	-- Template parameter syntax refers to the corresponding item in the
 	-- data.forms or colors table:
 	-- {{{inf_nolink}}} -> data.forms.inf_nolink
-	-- {{{green}}}		-> colors.green
 	if data.notes then table.insert(result, data.notes .. '\n') end
 	table.insert(result,
 [=[
-<div class="NavFrame" style="clear:both">
-<div class="NavHead" align=left>Conjugation of ''{{{inf_nolink}}}'' <span style="font-size:90%;">(see also [[Appendix:French verbs]])</span></div>
-<div class="NavContent" align=center>
-{| style="background:{{{top}}};width:100%;border-collapse:separate;border-spacing:2px" class="inflection-table"
+<div class="NavFrame">
+<div class="NavHead" align=center>Conjugation of ''{{{inf_nolink}}}'' <span style="font-size:90%;">(see also [[Appendix:French verbs]])</span></div>
+<div class="NavContent" align=left>
+{| class="roa-inflection-table"
 |-
-! colspan="1" rowspan="2" style="background:{{{straw}}}" | <span title="infinitif">infinitive</span>
-! colspan="1" style="height:3em;background:{{{straw}}}" | <small>simple</small>
+! rowspan="2" class="roa-nonfinite-header" | <span title="infinitif">infinitive</span>
+! class="roa-nonfinite-header" style="height:3em;" | <small>simple</small>
 | {{{inf_nolink}}}
 |-
-! colspan="1" style="height:3em;background:{{{straw}}}" | <small>compound</small>
+! class="roa-nonfinite-header" style="height:3em;" | <small>compound</small>
 ]=])
 	if data.forms.inf_comp == "" then
-		table.insert(result, '! colspan="6" style="background:#DEDEDE" | ' ..data.forms.inf_comp.. ' \n')
+		table.insert(result, '! colspan="6" | ' ..data.forms.inf_comp.. ' \n')
 	elseif data.forms.pp_nolink == "—" then
-		table.insert(result, '! colspan="6" style="background:#DEDEDE" | — \n')
+		table.insert(result, '! colspan="6" | — \n')
 	else
-		table.insert(result, '! colspan="6" style="background:#DEDEDE" | <i>[[' .. data.aux .. ']]</i> + past participle\n')
+		table.insert(result, '! colspan="6" class="roa-native-person-number-header" | <i>[[' .. data.aux .. ']]</i> + past participle\n')
 	end
 	table.insert(result,
 [=[
 |-
-! colspan="1" rowspan="2" style="background:{{{straw}}}" | <span title="participe présent">present participle</span> or <span title="">gerund</span><sup>1</sup>
-! colspan="1" style="height:3em;background:{{{straw}}}" | <small>simple</small>
+! rowspan="2" class="roa-nonfinite-header" | <span title="participe présent">present participle</span> or <span title="">gerund</span><sup>1</sup>
+! class="roa-nonfinite-header" style="height:3em;" | <small>simple</small>
 | {{{ppr}}}
 |-
-! colspan="1" style="height:3em;background:{{{straw}}}" | <small>compound</small>
+! class="roa-nonfinite-header" style="height:3em;" | <small>compound</small>
 ]=])
 	if data.forms.ger_comp == "" then
-		table.insert(result, '! colspan="6" style="background:#DEDEDE" | ' ..data.forms.ger_comp.. '\n')
+		table.insert(result, '! colspan="6" class="roa-native-person-number-header" | ' ..data.forms.ger_comp.. '\n')
 	elseif data.forms.pp_nolink == "—" then
-		table.insert(result, '! colspan="6" style="background:#DEDEDE" | — \n')
+		table.insert(result, '! colspan="6" class="roa-native-person-number-header" | — \n')
 	else
-		table.insert(result, '! colspan="6" style="background:#DEDEDE" | <i>' .. aux_gerund .. '</i> + past participle \n')
+		table.insert(result, '! colspan="6" class="roa-native-person-number-header" | <i>' .. aux_gerund .. '</i> + past participle \n')
 	end
 	table.insert(result,
 [=[
 |-
-! colspan="2" style="background:{{{straw}}}" | <span title="participe passé">past participle</span>
+! colspan="2" class="roa-nonfinite-header" | <span title="participe passé">past participle</span>
 | {{{pp}}}
 |-
 ! colspan="2" rowspan="2" |
-! colspan="3" style="background:{{{gray}}}" | singular
-! colspan="3" style="background:{{{gray}}}" | plural
+! colspan="3" class="roa-person-number-header" | singular
+! colspan="3" class="roa-person-number-header" | plural
 |-
-! style="background:{{{gray}}};width:12.5%" | first
-! style="background:{{{gray}}};width:12.5%" | second
-! style="background:{{{gray}}};width:12.5%" | third
-! style="background:{{{gray}}};width:12.5%" | first
-! style="background:{{{gray}}};width:12.5%" | second
-! style="background:{{{gray}}};width:12.5%" | third
+! class="roa-person-number-header" style="width:12.5%;" | first
+! class="roa-person-number-header" style="width:12.5%;" | second
+! class="roa-person-number-header" style="width:12.5%;" | third
+! class="roa-person-number-header" style="width:12.5%;" | first
+! class="roa-person-number-header" style="width:12.5%;" | second
+! class="roa-person-number-header" style="width:12.5%;" | third
 |-
-! style="background:{{{blue}}}" colspan="2" | <span title="indicatif">indicative</span>
-! style="background:{{{blue}}}" | je (j’)
-! style="background:{{{blue}}}" | tu
-! style="background:{{{blue}}}" | il, elle, on
-! style="background:{{{blue}}}" | nous
-! style="background:{{{blue}}}" | vous
-! style="background:{{{blue}}}" | ils, elles
+! class="roa-indicative-left-rail" colspan="2" | <span title="indicatif">indicative</span>
+! class="roa-indicative-left-rail" | je (j’)
+! class="roa-indicative-left-rail" | tu
+! class="roa-indicative-left-rail" | il, elle, on
+! class="roa-indicative-left-rail" | nous
+! class="roa-indicative-left-rail" | vous
+! class="roa-indicative-left-rail" | ils, elles
 |-
-! rowspan="5" style="background:{{{blue}}}" | <small>(simple<br>tenses)</small>
-! style="height:3em;background:{{{blue}}}" | <span title="présent">present</span>
+! rowspan="5" class="roa-indicative-left-rail" | <small>(simple<br>tenses)</small>
+! class="roa-indicative-left-rail" style="height:3em;" | <span title="présent">present</span>
 | {{{ind_p_1s}}}]=] .. inversion_note .. [=[
 
 | {{{ind_p_2s}}}
@@ -289,7 +288,7 @@ function export.make_table(data)
 | {{{ind_p_2p}}}
 | {{{ind_p_3p}}}
 |-
-! style="height:3em;background:{{{blue}}}" | <span title="imparfait">imperfect</span>
+! class="roa-indicative-left-rail" style="height:3em;" | <span title="imparfait">imperfect</span>
 | {{{ind_i_1s}}}
 | {{{ind_i_2s}}}
 | {{{ind_i_3s}}}
@@ -297,7 +296,7 @@ function export.make_table(data)
 | {{{ind_i_2p}}}
 | {{{ind_i_3p}}}
 |-
-! style="height:3em;background:{{{blue}}}" | <span title="passé simple">past historic</span>]=] .. replacement_note .. [=[
+! class="roa-indicative-left-rail" style="height:3em;" | <span title="passé simple">past historic</span>]=] .. replacement_note .. [=[
 
 | {{{ind_ps_1s}}}
 | {{{ind_ps_2s}}}
@@ -306,7 +305,7 @@ function export.make_table(data)
 | {{{ind_ps_2p}}}
 | {{{ind_ps_3p}}}
 |-
-! style="height:3em;background:{{{blue}}}" | <span title="futur simple">future</span>
+! class="roa-indicative-left-rail" style="height:3em;" | <span title="futur simple">future</span>
 | {{{ind_f_1s}}}
 | {{{ind_f_2s}}}
 | {{{ind_f_3s}}}
@@ -314,7 +313,7 @@ function export.make_table(data)
 | {{{ind_f_2p}}}
 | {{{ind_f_3p}}}
 |-
-! style="height:3em;background:{{{blue}}}" | <span title="conditionnel présent">conditional</span>
+! class="roa-indicative-left-rail" style="height:3em;" | <span title="conditionnel présent">conditional</span>
 | {{{cond_p_1s}}}
 | {{{cond_p_2s}}}
 | {{{cond_p_3s}}}
@@ -322,51 +321,51 @@ function export.make_table(data)
 | {{{cond_p_2p}}}
 | {{{cond_p_3p}}}
 |-
-! rowspan="5" style="background:{{{blue}}}" | <small>(compound<br>tenses)</small>
-! style="height:3em;background:{{{blue}}}" | <span title="passé composé">present perfect</span>
+! rowspan="5" class="roa-indicative-left-rail" | <small>(compound<br>tenses)</small>
+! class="roa-indicative-left-rail" style="height:3em;" | <span title="passé composé">present perfect</span>
 ]=])
 	if data.forms.pp_nolink == "—" then
-		table.insert(result, '! colspan="6" style="background:#DEDEDE" | — \n')
+		table.insert(result, '! colspan="6" class="roa-native-person-number-header" | — \n')
 	else
-		table.insert(result, '! colspan="6" style="background:#DEDEDE" | present indicative of <i>[[' .. data.aux .. ']]</i> + past participle\n')
+		table.insert(result, '! colspan="6" class="roa-native-person-number-header" | present indicative of <i>[[' .. data.aux .. ']]</i> + past participle\n')
 	end
-	table.insert(result, '|-\n! style="height:3em;background:{{{blue}}}" | <span title="plus-que-parfait">pluperfect</span>\n')
+	table.insert(result, '|-\n! class="roa-indicative-left-rail" style="height:3em;" | <span title="plus-que-parfait">pluperfect</span>\n')
 	if data.forms.pp_nolink == "—" then
-		table.insert(result, '! colspan="6" style="background:#DEDEDE" | — \n')
+		table.insert(result, '! colspan="6" class="roa-native-person-number-header" | — \n')
 	else
-		table.insert(result, '! colspan="6" style="background:#DEDEDE" | imperfect indicative of <i>[[' .. data.aux .. ']]</i> + past participle\n')
+		table.insert(result, '! colspan="6" class="roa-native-person-number-header" | imperfect indicative of <i>[[' .. data.aux .. ']]</i> + past participle\n')
 	end
-	table.insert(result, '|-\n! style="height:3em;background:{{{blue}}}" | <span title="passé antérieur">past anterior</span>' .. replacement_note .. '\n')
+	table.insert(result, '|-\n! class="roa-indicative-left-rail" style="height:3em;" | <span title="passé antérieur">past anterior</span>' .. replacement_note .. '\n')
 	if data.forms.pp_nolink == "—" then
-		table.insert(result, '! colspan="6" style="background:#DEDEDE" | — \n')
+		table.insert(result, '! colspan="6" class="roa-native-person-number-header" | — \n')
 	else
-		table.insert(result, '! colspan="6" style="background:#DEDEDE" | past historic of <i>[[' .. data.aux .. ']]</i> + past participle\n')
+		table.insert(result, '! colspan="6" class="roa-native-person-number-header" | past historic of <i>[[' .. data.aux .. ']]</i> + past participle\n')
 	end
-	table.insert(result, '|-\n! style="height:3em;background:{{{blue}}}" | <span title="futur antérieur">future perfect</span>\n')
+	table.insert(result, '|-\n! class="roa-indicative-left-rail" style="height:3em;" | <span title="futur antérieur">future perfect</span>\n')
 	if data.forms.pp_nolink == "—" then
-		table.insert(result, '! colspan="6" style="background:#DEDEDE" | — \n')
+		table.insert(result, '! colspan="6" class="roa-native-person-number-header" | — \n')
 	else
-		table.insert(result, '! colspan="6" style="background:#DEDEDE" | future of <i>[[' .. data.aux .. ']]</i> + past participle\n')
+		table.insert(result, '! colspan="6" class="roa-native-person-number-header" | future of <i>[[' .. data.aux .. ']]</i> + past participle\n')
 	end
-	table.insert(result, '|-\n! style="height:3em;background:{{{blue}}}" | <span title="conditionnel passé">conditional perfect</span>\n')
+	table.insert(result, '|-\n! class="roa-indicative-left-rail" style="height:3em;" | <span title="conditionnel passé">conditional perfect</span>\n')
 	if data.forms.pp_nolink == "—" then
-		table.insert(result, '! colspan="6" style="background:#DEDEDE" | — \n')
+		table.insert(result, '! colspan="6" class="roa-native-person-number-header" | — \n')
 	else
-		table.insert(result, '! colspan="6" style="background:#DEDEDE" | conditional of <i>[[' .. data.aux .. ']]</i> + past participle\n')
+		table.insert(result, '! colspan="6" class="roa-native-person-number-header" | conditional of <i>[[' .. data.aux .. ']]</i> + past participle\n')
 	end
 	table.insert(result,
 [=[
 |-
-! style="background:{{{green}}}" colspan="2" | <span title="subjonctif">subjunctive</span>
-! style="background:{{{green}}}" | que je (j’)
-! style="background:{{{green}}}" | que tu
-! style="background:{{{green}}}" | qu’il, qu’elle
-! style="background:{{{green}}}" | que nous
-! style="background:{{{green}}}" | que vous
-! style="background:{{{green}}}" | qu’ils, qu’elles
+! class="roa-subjunctive-left-rail" colspan="2" | <span title="subjonctif">subjunctive</span>
+! class="roa-subjunctive-left-rail" | que je (j’)
+! class="roa-subjunctive-left-rail" | que tu
+! class="roa-subjunctive-left-rail" | qu’il, qu’elle
+! class="roa-subjunctive-left-rail" | que nous
+! class="roa-subjunctive-left-rail" | que vous
+! class="roa-subjunctive-left-rail" | qu’ils, qu’elles
 |-
-! rowspan="2" style="background:{{{green}}}" | <small>(simple<br>tenses)</small>
-! style="height:3em;background:{{{green}}}" | <span title="subjonctif présent">present</span>
+! rowspan="2" class="roa-subjunctive-left-rail" | <small>(simple<br>tenses)</small>
+! class="roa-subjunctive-left-rail" style="height:3em;" | <span title="subjonctif présent">present</span>
 | {{{sub_p_1s}}}]=] .. inversion_sub_note .. [=[
 
 | {{{sub_p_2s}}}
@@ -375,7 +374,7 @@ function export.make_table(data)
 | {{{sub_p_2p}}}
 | {{{sub_p_3p}}}
 |-
-! style="height:3em;background:{{{green}}}" rowspan="1" | <span title="subjonctif imparfait">imperfect</span>]=] .. replacement_note .. [=[
+! class="roa-subjunctive-left-rail" style="height:3em;" rowspan="1" | <span title="subjonctif imparfait">imperfect</span>]=] .. replacement_note .. [=[
 
 | {{{sub_pa_1s}}}
 | {{{sub_pa_2s}}}
@@ -384,32 +383,32 @@ function export.make_table(data)
 | {{{sub_pa_2p}}}
 | {{{sub_pa_3p}}}
 |-
-! rowspan="2" style="background:{{{green}}}" | <small>(compound<br>tenses)</small>
-! style="height:3em;background:{{{green}}}" | <span title="subjonctif passé">past</span>
+! rowspan="2" class="roa-subjunctive-left-rail" | <small>(compound<br>tenses)</small>
+! class="roa-subjunctive-left-rail" style="height:3em;" | <span title="subjonctif passé">past</span>
 ]=])
 	if data.forms.pp_nolink == "—" then
-		table.insert(result, '! colspan="6" style="background:#DEDEDE" | — \n')
+		table.insert(result, '! colspan="6" class="roa-native-person-number-header" | — \n')
 	else
-		table.insert(result, '! colspan="6" style="background:#DEDEDE" | present subjunctive of <i>[[' .. data.aux .. ']]</i> + past participle\n')
+		table.insert(result, '! colspan="6" class="roa-native-person-number-header" | present subjunctive of <i>[[' .. data.aux .. ']]</i> + past participle\n')
 	end
-	table.insert(result, '|-\n! style="height:3em;background:{{{green}}}" | <span title="subjonctif plus-que-parfait">pluperfect</span>' .. replacement_note .. '\n')
+	table.insert(result, '|-\n! class="roa-subjunctive-left-rail" style="height:3em;" | <span title="subjonctif plus-que-parfait">pluperfect</span>' .. replacement_note .. '\n')
 	if data.forms.pp_nolink == "—" then
-		table.insert(result, '! colspan="6" style="background:#DEDEDE" | — \n')
+		table.insert(result, '! colspan="6" class="roa-native-person-number-header" | — \n')
 	else
-		table.insert(result, '! colspan="6" style="background:#DEDEDE" | imperfect subjunctive of <i>[[' .. data.aux .. ']]</i> + past participle\n')
+		table.insert(result, '! colspan="6" class="roa-native-person-number-header" | imperfect subjunctive of <i>[[' .. data.aux .. ']]</i> + past participle\n')
 	end
 	table.insert(result,
 [=[
 |-
-! colspan="2" style="background:{{{tan}}}" | <span title="impératif">imperative</span>
-! style="background:{{{tan}}}" | –
-! style="background:{{{tan}}}" | <s>tu</s>
-! style="background:{{{tan}}}" | –
-! style="background:{{{tan}}}" | <s>nous</s>
-! style="background:{{{tan}}}" | <s>vous</s>
-! style="background:{{{tan}}}" | –
+! colspan="2" class="roa-imperative-left-rail" | <span title="impératif">imperative</span>
+! class="roa-imperative-left-rail" | –
+! class="roa-imperative-left-rail" | <s>tu</s>
+! class="roa-imperative-left-rail" | –
+! class="roa-imperative-left-rail" | <s>nous</s>
+! class="roa-imperative-left-rail" | <s>vous</s>
+! class="roa-imperative-left-rail" | –
 |-
-! style="height:3em;background:{{{tan}}}" colspan="2" | <span title="">simple</span>
+! class="roa-imperative-left-rail" style="height:3em;" colspan="2" | <span title="">simple</span>
 | —
 | {{{imp_p_2s}}}
 | —
@@ -417,30 +416,30 @@ function export.make_table(data)
 | {{{imp_p_2p}}}
 | —
 |-
-! style="height:3em;background:{{{tan}}}" colspan="2" | <span title="">compound</span>
+! class="roa-imperative-left-rail" style="height:3em;" colspan="2" | <span title="">compound</span>
 | —
 ]=])
 	if data.forms.pp_nolink == "—" then
-		table.insert(result, '! style="background:#DEDEDE" | — \n')
+		table.insert(result, '! class="roa-native-person-number-header" | — \n')
 	else
-		table.insert(result, '! style="background:#DEDEDE" | simple imperative of <i>[[' .. data.aux .. ']]</i> + past participle\n')
+		table.insert(result, '! class="roa-native-person-number-header" | simple imperative of <i>[[' .. data.aux .. ']]</i> + past participle\n')
 	end
 	table.insert(result,
 [=[
 | —
 ]=])
 	if data.forms.pp_nolink == "—" then
-		table.insert(result, '! style="background:#DEDEDE" | — \n')
+		table.insert(result, '! class="roa-native-person-number-header" | — \n')
 	else
-		table.insert(result, '! style="background:#DEDEDE" | simple imperative of <i>[[' .. data.aux .. ']]</i> + past participle\n')
+		table.insert(result, '! class="roa-native-person-number-header" | simple imperative of <i>[[' .. data.aux .. ']]</i> + past participle\n')
 	end
 	table.insert(result,
 [=[
 ]=])
 	if data.forms.pp_nolink == "—" then
-		table.insert(result, '! style="background:#DEDEDE" | — \n')
+		table.insert(result, '! class="roa-native-person-number-header" | — \n')
 	else
-		table.insert(result, '! style="background:#DEDEDE" | simple imperative of <i>[[' .. data.aux .. ']]</i> + past participle\n')
+		table.insert(result, '! class="roa-native-person-number-header" | simple imperative of <i>[[' .. data.aux .. ']]</i> + past participle\n')
 	end
 	table.insert(result,
 [=[

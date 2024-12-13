@@ -2948,8 +2948,8 @@ end
 
 
 local notes_template = [=[
-<div style="width:100%;text-align:left;background:#d9ebff">
-<div style="display:inline-block;text-align:left;padding-left:1em;padding-right:1em">
+<div class="roa-footnote-outer-div" style="width:100%;">
+<div class="roa-footnote-inner-div">
 {footnote}
 </div></div>
 ]=]
@@ -2958,48 +2958,48 @@ local basic_table = [=[
 {description}<div class="NavFrame">
 <div class="NavHead">&nbsp; &nbsp; Conjugation of {title}</div>
 <div class="NavContent">
-{\op}| style="width:100%;background:#F0F0F0;padding:.3em" data-toggle-category="inflection"
+{\op}| class="roa-inflection-table" data-toggle-category="inflection"
 |-
-! colspan="3" style="background:#e2e4c0;" | <span title="infinitiu">infinitive</span>
+! colspan="3" class="roa-nonfinite-header" | <span title="infinitiu">infinitive</span>
 | colspan="5" | {infinitive}
 |-
-! colspan="3" style="background:#e2e4c0;" | <span title="gerundi">gerund</span>
+! colspan="3" class="roa-nonfinite-header" | <span title="gerundi">gerund</span>
 | colspan="5" | {gerund}
 |-
-! rowspan="3" colspan="2" style="background:#e2e4c0" | <span title="participi passat">past participle</span>
-| colspan="2" style="background:#e2e4c0" |
-! colspan="2" style="background:#e2e4c0" | masculine
-! colspan="2" style="background:#e2e4c0" | feminine
+! rowspan="3" colspan="2" class="roa-nonfinite-header" | <span title="participi passat">past participle</span>
+| colspan="2" class="roa-nonfinite-header" |
+! colspan="2" class="roa-nonfinite-header" | masculine
+! colspan="2" class="roa-nonfinite-header" | feminine
 |-
-! colspan="2" style="background:#e2e4c0" | singular
+! colspan="2" class="roa-nonfinite-header" | singular
 | colspan="2" | {pp_ms}
 | colspan="2" | {pp_fs}
 |-
-! colspan="2" style="background:#e2e4c0" | plural
+! colspan="2" class="roa-nonfinite-header" | plural
 | colspan="2" | {pp_mp}
 | colspan="2" | {pp_fp}
 |-
-! colspan="2" rowspan="2" style="background:#e2e4cb;" | person
-! colspan="3" style="background:#e2e4cb;" | singular
-! colspan="3" style="background:#e2e4cb;" | plural
+! colspan="2" rowspan="2" class="roa-person-number-header" | person
+! colspan="3" class="roa-person-number-header" | singular
+! colspan="3" class="roa-person-number-header" | plural
 |-
-! style="background:#e2e4cb;width:12.5%;" | first
-! style="background:#e2e4cb;width:12.5%;" | second
-! style="background:#e2e4cb;width:12.5%;" | third
-! style="background:#e2e4cb;width:12.5%;" | first
-! style="background:#e2e4cb;width:12.5%;" | second
-! style="background:#e2e4cb;width:12.5%;" | third
+! class="roa-person-number-header" style="width:12.5%;" | first
+! class="roa-person-number-header" style="width:12.5%;" | second
+! class="roa-person-number-header" style="width:12.5%;" | third
+! class="roa-person-number-header" style="width:12.5%;" | first
+! class="roa-person-number-header" style="width:12.5%;" | second
+! class="roa-person-number-header" style="width:12.5%;" | third
 |-
-! rowspan="6" style="background:#c0cfe4;" | <span title="indicatiu">indicative</span>
-! style="background:#c0cfe4;" |
-! style="background:#c0cfe4;" | <<jo>>
-! style="background:#c0cfe4;" | <<tu>>
-! style="background:#c0cfe4;" | <<ell>>/<<ella>><br /><<vostè>>
-! style="background:#c0cfe4;" | <<nosaltres>><br /><<nós>>
-! style="background:#c0cfe4;" | <<vosaltres>><br /><<vós>>
-! style="background:#c0cfe4;" | <<ells>>/<<elles>><br /><<vostès>>
+! rowspan="6" class="roa-indicative-left-rail" | <span title="indicatiu">indicative</span>
+! class="roa-indicative-left-rail" |
+! class="roa-indicative-left-rail" | <<jo>>
+! class="roa-indicative-left-rail" | <<tu>>
+! class="roa-indicative-left-rail" | <<ell>>/<<ella>><br /><<vostè>>
+! class="roa-indicative-left-rail" | <<nosaltres>><br /><<nós>>
+! class="roa-indicative-left-rail" | <<vosaltres>><br /><<vós>>
+! class="roa-indicative-left-rail" | <<ells>>/<<elles>><br /><<vostès>>
 |-
-! style="height:3em;background:#c0cfe4;" | <span title="present">present</span>
+! class="roa-indicative-left-rail" style="height:3em;" | <span title="present">present</span>
 | {pres_1s}
 | {pres_2s}
 | {pres_3s}
@@ -3007,7 +3007,7 @@ local basic_table = [=[
 | {pres_2p}
 | {pres_3p}
 |-
-! style="height:3em;background:#c0cfe4;" | <span title="imperfet">imperfect</span>
+! class="roa-indicative-left-rail" style="height:3em;" | <span title="imperfet">imperfect</span>
 | {impf_1s}
 | {impf_2s}
 | {impf_3s}
@@ -3015,7 +3015,7 @@ local basic_table = [=[
 | {impf_2p}
 | {impf_3p}
 |-
-! style="height:3em;background:#c0cfe4;" | <span title="futur">future</span>
+! class="roa-indicative-left-rail" style="height:3em;" | <span title="futur">future</span>
 | {fut_1s}
 | {fut_2s}
 | {fut_3s}
@@ -3023,7 +3023,7 @@ local basic_table = [=[
 | {fut_2p}
 | {fut_3p}
 |-
-! style="height:3em;background:#c0cfe4;" | <span title="passat">preterite</span>
+! class="roa-indicative-left-rail" style="height:3em;" | <span title="passat">preterite</span>
 | {pret_1s}
 | {pret_2s}
 | {pret_3s}
@@ -3031,7 +3031,7 @@ local basic_table = [=[
 | {pret_2p}
 | {pret_3p}
 |-
-! style="height:3em;background:#c0cfe4;" | <span title="condicional">conditional</span>
+! class="roa-indicative-left-rail" style="height:3em;" | <span title="condicional">conditional</span>
 | {cond_1s}
 | {cond_2s}
 | {cond_3s}
@@ -3039,16 +3039,16 @@ local basic_table = [=[
 | {cond_2p}
 | {cond_3p}
 |-
-! style="background:#c0e4c0;" rowspan="3" | <span title="subjuntiu">subjunctive</span>
-! style="background:#c0e4c0;" |
-! style="background:#c0e4c0;" | <<jo>>
-! style="background:#c0e4c0;" | <<tu>>
-! style="background:#c0e4c0;" | <<ell>>/<<ella>><br /><<vostè>>
-! style="background:#c0e4c0;" | <<nosaltres>><br /><<nós>>
-! style="background:#c0e4c0;" | <<vosaltres>><br /><<vós>>
-! style="background:#c0e4c0;" | <<ells>>/<<elles>><br /><<vostès>>
+! class="roa-subjunctive-left-rail" rowspan="3" | <span title="subjuntiu">subjunctive</span>
+! class="roa-subjunctive-left-rail" |
+! class="roa-subjunctive-left-rail" | <<jo>>
+! class="roa-subjunctive-left-rail" | <<tu>>
+! class="roa-subjunctive-left-rail" | <<ell>>/<<ella>><br /><<vostè>>
+! class="roa-subjunctive-left-rail" | <<nosaltres>><br /><<nós>>
+! class="roa-subjunctive-left-rail" | <<vosaltres>><br /><<vós>>
+! class="roa-subjunctive-left-rail" | <<ells>>/<<elles>><br /><<vostès>>
 |-
-! style="height:3em;background:#c0e4c0;" | <span title="present">present</span>
+! class="roa-subjunctive-left-rail" style="height:3em;" | <span title="present">present</span>
 | {pres_sub_1s}
 | {pres_sub_2s}
 | {pres_sub_3s}
@@ -3056,7 +3056,7 @@ local basic_table = [=[
 | {pres_sub_2p}
 | {pres_sub_3p}
 |-
-! style="height:3em;background:#c0e4c0;" rowspan="1" | <span title="imperfet">imperfect</span>
+! class="roa-subjunctive-left-rail" style="height:3em;" rowspan="1" | <span title="imperfet">imperfect</span>
 | {impf_sub_1s}
 | {impf_sub_2s}
 | {impf_sub_3s}
@@ -3064,16 +3064,16 @@ local basic_table = [=[
 | {impf_sub_2p}
 | {impf_sub_3p}
 |-
-! rowspan="3" style="height:3em;background:#e4d4c0;" | <span title="imperatiu">imperative</span>
-! style="background:#e4d4c0;" |
-! style="background:#e4d4c0;" | &mdash;
-! style="background:#e4d4c0;" | <<tu>>
-! style="background:#e4d4c0;" | <<vostè>>
-! style="background:#e4d4c0;" | <<nosaltres>>
-! style="background:#e4d4c0;" | <<vosaltres>><br /><<vós>>
-! style="background:#e4d4c0;" | <<vostès>>
+! rowspan="3" class="roa-imperative-left-rail" style="height:3em;" | <span title="imperatiu">imperative</span>
+! class="roa-imperative-left-rail" |
+! class="roa-imperative-left-rail" | &mdash;
+! class="roa-imperative-left-rail" | <<tu>>
+! class="roa-imperative-left-rail" | <<vostè>>
+! class="roa-imperative-left-rail" | <<nosaltres>>
+! class="roa-imperative-left-rail" | <<vosaltres>><br /><<vós>>
+! class="roa-imperative-left-rail" | <<vostès>>
 |-
-! style="height:3em;background:#e4d4c0;" | <span title="afirmatiu">affirmative</span>
+! class="roa-imperative-left-rail" style="height:3em;" | <span title="afirmatiu">affirmative</span>
 | &mdash;
 | {imp_2s}
 | {imp_3s}
@@ -3081,7 +3081,7 @@ local basic_table = [=[
 | {imp_2p}
 | {imp_3p}
 |-
-! style="height:3em;background:#e4d4c0;" | <span title="negatiu">negative</span> (<<no>>)
+! class="roa-imperative-left-rail" style="height:3em;" | <span title="negatiu">negative</span> (<<no>>)
 | &mdash;
 | {neg_imp_2s}
 | {neg_imp_3s}
@@ -3112,7 +3112,8 @@ local function make_table(alternant_multiword_spec)
 	forms.notes_clause = forms.footnote ~= "" and m_string_utilities.format(notes_template, forms) or ""
 	local table_with_pronouns = rsub(basic_table, "<<([^<>|]-)|([^<>|]-)>>", link_term)
 	local table_with_pronouns = rsub(table_with_pronouns, "<<(.-)>>", link_term)
-	return m_string_utilities.format(table_with_pronouns, forms)
+	return require("Module:TemplateStyles")("Module:roa-verb/style.css") ..
+		m_string_utilities.format(table_with_pronouns, forms)
 end
 
 

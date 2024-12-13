@@ -505,7 +505,7 @@ function irreg_verb(args, skip)
 	if skip == nil then skip = {}
 	elseif type(skip) == "string" then skip = {skip}
 	end
-	
+
 	for k,v in pairs(args) do
 		if k == "pres" and rfind(v, "/") or
 				k ~= "pres" and k ~= "prese" and k ~= "presa" and
@@ -589,8 +589,8 @@ function export.show(frame)
 	if args["suffix"] and data.inf_from_title then
 		data.inf_no_affix = rsub(data.inf_no_affix, args["suffix"] .. "$", "")
 	end
-	
-	
+
+
 
 	-- Set the soft vowel ('pres') and hard vowel ('presa') present stems.
 	-- They can be explicitly set using 'pres' and 'presa' params.
@@ -711,7 +711,7 @@ function process_overrides(args, data)
 		local function getover(n)
 			return args[over .. n]
 		end
-		
+
 		-- Insert an override entry, possibly splitting on commas and
 		-- inserting multiple forms.
 		local function insert_override(entry)
@@ -731,13 +731,13 @@ function process_overrides(args, data)
 		if getover(0) then
 			insert_override(getover(0))
 		end
-		
+
 		-- Look for override of all current forms
 		if getover("") then
 			current = {}
 			insert_override(getover(""))
 		end
-		
+
 		-- See if any of the existing items in current have an override specified.
 		while current[i] do
 			if getover(i) then
@@ -769,7 +769,7 @@ function process_overrides(args, data)
 		if getover("n") then
 			insert_override(getover("n"))
 		end
-		
+
 		return ret
 	end
 
@@ -1038,7 +1038,7 @@ function split_multipart(str, numreq)
 			entries[i] = {entry}
 		end
 	end
-		
+
 	return entries
 end
 
@@ -1447,7 +1447,7 @@ function handle_pres_part(args, data, group, steme)
 		inflect_pres_part(data, group, pres)
 	end
 end
-	
+
 -- Add to DATA the endings for an -er or -ier verb, based on the arguments
 -- in ARGS.
 inflections["i"] = function(args, data)
@@ -1575,57 +1575,57 @@ end
 function make_table(data)
 	return data.frame:preprocess((data.comment:gsub("<<(.-)>>", "{{m|fro|%1}}"))) ..
 	[=[Old French conjugation varies significantly by date and by region. The following conjugation should be treated as a guide.
-<div class="NavFrame" style="clear:both">
-<div class="NavHead" align=left>&nbsp; &nbsp; Conjugation of ]=] .. m_links.full_link({lang = lang, alt = data.forms.infinitive[1]}, "term") .. [=[
+<div class="NavFrame">
+<div class="NavHead">&nbsp; &nbsp; Conjugation of ]=] .. m_links.full_link({lang = lang, alt = data.forms.infinitive[1]}, "term") .. [=[
 <span style="font-size:90%;"> (see also [[Appendix:Old French verbs]])</span></div>
-<div class="NavContent" align=center>
-{| style="width: 100%; background:#F0F0F0;border-collapse:separate;border-spacing:2px" class="inflection-table"
+<div class="NavContent">
+{| class="roa-inflection-table" data-toggle-category="inflection"
 |-
-! colspan="2" style="background:#e2e4c0" |
-! colspan="3" style="background:#e2e4c0" | simple
-! colspan="3" style="background:#e2e4c0" | compound
+! colspan="2" class="roa-nonfinite-header" |
+! colspan="3" class="roa-nonfinite-header" | simple
+! colspan="3" class="roa-nonfinite-header" | compound
 |-
-! colspan="2" style="background:#e2e4c0" | infinitive
+! colspan="2" class="roa-nonfinite-header" | infinitive
 | colspan="3" |  ]=] .. show_form(data.forms.infinitive) .. [=[
 
 | colspan="3" |  ]=] .. show_form(data.forms.aux) .. " " .. show_form(data.forms.past_ptc) .. [=[
 
 |-
-! colspan="2" style="background:#e2e4c0" | gerund
+! colspan="2" class="roa-nonfinite-header" | gerund
 | colspan="3" |  en ]=] .. show_form(data.forms.pres_ptc) .. [=[
 
 | colspan="3" |  gerund of '']=] .. show_form(data.forms.aux) .. [=['' + past participle
 
 |-
-! colspan="2" style="background:#e2e4c0" | present participle
+! colspan="2" class="roa-nonfinite-header" | present participle
 | colspan="3" |  ]=] .. show_form(data.forms.pres_ptc) .. [=[
 
 |-
-! colspan="2" style="background:#e2e4c0" | past participle
+! colspan="2" class="roa-nonfinite-header" | past participle
 | colspan="3" |  ]=] .. show_form(data.forms.past_ptc) .. [=[
 
 |-
-! colspan="2" rowspan="2" style="background:#C0C0C0" | person
-! colspan="3" style="background:#C0C0C0" | singular
-! colspan="3" style="background:#C0C0C0" | plural
+! colspan="2" rowspan="2" class="roa-person-number-header" | person
+! colspan="3" class="roa-person-number-header" | singular
+! colspan="3" class="roa-person-number-header" | plural
 |-
-! style="background:#C0C0C0;width:12.5%" | first
-! style="background:#C0C0C0;width:12.5%" | second
-! style="background:#C0C0C0;width:12.5%" | third
-! style="background:#C0C0C0;width:12.5%" | first
-! style="background:#C0C0C0;width:12.5%" | second
-! style="background:#C0C0C0;width:12.5%" | third
+! class="roa-person-number-header" style="width:12.5%;" | first
+! class="roa-person-number-header" style="width:12.5%;" | second
+! class="roa-person-number-header" style="width:12.5%;" | third
+! class="roa-person-number-header" style="width:12.5%;" | first
+! class="roa-person-number-header" style="width:12.5%;" | second
+! class="roa-person-number-header" style="width:12.5%;" | third
 |-
-! style="background:#c0cfe4" colspan="2" | indicative
-! style="background:#c0cfe4" | jo
-! style="background:#c0cfe4" | tu
-! style="background:#c0cfe4" | il
-! style="background:#c0cfe4" | nos
-! style="background:#c0cfe4" | vos
-! style="background:#c0cfe4" | il
+! class="roa-indicative-left-rail" colspan="2" | indicative
+! class="roa-indicative-left-rail" | jo
+! class="roa-indicative-left-rail" | tu
+! class="roa-indicative-left-rail" | il
+! class="roa-indicative-left-rail" | nos
+! class="roa-indicative-left-rail" | vos
+! class="roa-indicative-left-rail" | il
 |-
-! rowspan="5" style="background:#c0cfe4" | simple<br>tenses
-! style="height:3em;background:#c0cfe4" | present
+! rowspan="5" class="roa-indicative-left-rail" | simple<br>tenses
+! class="roa-indicative-left-rail" style="height:3em;" | present
 | ]=] .. show_form(data.forms.pres_indc_1sg) .. [=[
 
 | ]=] .. show_form(data.forms.pres_indc_2sg) .. [=[
@@ -1639,7 +1639,7 @@ function make_table(data)
 | ]=] .. show_form(data.forms.pres_indc_3pl) .. [=[
 
 |-
-! style="height:3em;background:#c0cfe4" | imperfect
+! class="roa-indicative-left-rail" style="height:3em;" | imperfect
 | ]=] .. show_form(data.forms.impf_indc_1sg) .. [=[
 
 | ]=] .. show_form(data.forms.impf_indc_2sg) .. [=[
@@ -1653,7 +1653,7 @@ function make_table(data)
 | ]=] .. show_form(data.forms.impf_indc_3pl) .. [=[
 
 |-
-! style="height:3em;background:#c0cfe4" | preterite
+! class="roa-indicative-left-rail" style="height:3em;" | preterite
 | ]=] .. show_form(data.forms.pret_indc_1sg) .. [=[
 
 | ]=] .. show_form(data.forms.pret_indc_2sg) .. [=[
@@ -1667,7 +1667,7 @@ function make_table(data)
 | ]=] .. show_form(data.forms.pret_indc_3pl) .. [=[
 
 |-
-! style="height:3em;background:#c0cfe4" | future
+! class="roa-indicative-left-rail" style="height:3em;" | future
 | ]=] .. show_form(data.forms.futr_indc_1sg) .. [=[
 
 | ]=] .. show_form(data.forms.futr_indc_2sg) .. [=[
@@ -1681,7 +1681,7 @@ function make_table(data)
 | ]=] .. show_form(data.forms.futr_indc_3pl) .. [=[
 
 |-
-! style="height:3em;background:#c0cfe4" | conditional
+! class="roa-indicative-left-rail" style="height:3em;" | conditional
 | ]=] .. show_form(data.forms.cond_1sg) .. [=[
 
 | ]=] .. show_form(data.forms.cond_2sg) .. [=[
@@ -1695,37 +1695,37 @@ function make_table(data)
 | ]=] .. show_form(data.forms.cond_3pl) .. [=[
 
 |-
-! rowspan="5" style="background:#c0cfe4" | compound<br>tenses
-! style="height:3em;background:#c0cfe4" | present perfect
-! colspan="6" style="background:#C0C0C0" |  present tense of '']=] .. show_form(data.forms.aux) .. [=['' + past participle
+! rowspan="5" class="roa-indicative-left-rail" | compound<br>tenses
+! class="roa-indicative-left-rail" style="height:3em;" | present perfect
+! colspan="6" class="roa-compound-row" |  present tense of '']=] .. show_form(data.forms.aux) .. [=['' + past participle
 
 |-
-! style="height:3em;background:#c0cfe4" | pluperfect
-! colspan="6" style="background:#C0C0C0" |  imperfect tense of '']=] .. show_form(data.forms.aux) .. [=['' + past participle
+! class="roa-indicative-left-rail" style="height:3em;" | pluperfect
+! colspan="6" class="roa-compound-row" |  imperfect tense of '']=] .. show_form(data.forms.aux) .. [=['' + past participle
 
 |-
-! style="height:3em;background:#c0cfe4" | past anterior
-! colspan="6" style="background:#C0C0C0" |  preterite tense of '']=] .. show_form(data.forms.aux) .. [=['' + past participle
+! class="roa-indicative-left-rail" style="height:3em;" | past anterior
+! colspan="6" class="roa-compound-row" |  preterite tense of '']=] .. show_form(data.forms.aux) .. [=['' + past participle
 
 |-
-! style="height:3em;background:#c0cfe4" | future perfect
-! colspan="6" style="background:#C0C0C0" |  future tense of '']=] .. show_form(data.forms.aux) .. [=['' + past participle
+! class="roa-indicative-left-rail" style="height:3em;" | future perfect
+! colspan="6" class="roa-compound-row" |  future tense of '']=] .. show_form(data.forms.aux) .. [=['' + past participle
 
 |-
-! style="height:3em;background:#c0cfe4" | conditional perfect
-! colspan="6" style="background:#C0C0C0" |  conditional tense of '']=] .. show_form(data.forms.aux) .. [=['' + past participle
+! class="roa-indicative-left-rail" style="height:3em;" | conditional perfect
+! colspan="6" class="roa-compound-row" |  conditional tense of '']=] .. show_form(data.forms.aux) .. [=['' + past participle
 
 |-
-! style="background:#c0e4c0" colspan="2" | subjunctive
-! style="background:#c0e4c0" | que jo
-! style="background:#c0e4c0" | que tu
-! style="background:#c0e4c0" | qu’il
-! style="background:#c0e4c0" | que nos
-! style="background:#c0e4c0" | que vos
-! style="background:#c0e4c0" | qu’il
+! class="roa-subjunctive-left-rail" colspan="2" | subjunctive
+! class="roa-subjunctive-left-rail" | que jo
+! class="roa-subjunctive-left-rail" | que tu
+! class="roa-subjunctive-left-rail" | qu’il
+! class="roa-subjunctive-left-rail" | que nos
+! class="roa-subjunctive-left-rail" | que vos
+! class="roa-subjunctive-left-rail" | qu’il
 |-
-! rowspan="2" style="background:#c0e4c0" | simple<br>tenses
-! style="height:3em;background:#c0e4c0" | present
+! rowspan="2" class="roa-subjunctive-left-rail" | simple<br>tenses
+! class="roa-subjunctive-left-rail" style="height:3em;" | present
 | ]=] .. show_form(data.forms.pres_subj_1sg) .. [=[
 
 | ]=] .. show_form(data.forms.pres_subj_2sg) .. [=[
@@ -1739,7 +1739,7 @@ function make_table(data)
 | ]=] .. show_form(data.forms.pres_subj_3pl) .. [=[
 
 |-
-! style="height:3em;background:#c0e4c0" rowspan="1" | imperfect
+! class="roa-subjunctive-left-rail" style="height:3em;" | imperfect
 | ]=] .. show_form(data.forms.impf_subj_1sg) .. [=[
 
 | ]=] .. show_form(data.forms.impf_subj_2sg) .. [=[
@@ -1753,22 +1753,22 @@ function make_table(data)
 | ]=] .. show_form(data.forms.impf_subj_3pl) .. [=[
 
 |-
-! rowspan="2" style="background:#c0e4c0" | compound<br>tenses
-! style="height:3em;background:#c0e4c0" | past
-! colspan="6" style="background:#C0C0C0" |  present subjunctive of '']=] .. show_form(data.forms.aux) .. [=['' + past participle
+! rowspan="2" class="roa-subjunctive-left-rail" | compound<br>tenses
+! class="roa-subjunctive-left-rail" style="height:3em;" | past
+! colspan="6" class="roa-compound-row" |  present subjunctive of '']=] .. show_form(data.forms.aux) .. [=['' + past participle
 
 |-
-! rowspan="1" style="height:3em;background:#c0e4c0" | pluperfect
-! colspan="6" style="background:#C0C0C0" |  imperfect subjunctive of '']=] .. show_form(data.forms.aux) .. [=['' + past participle
+! class="roa-subjunctive-left-rail" style="height:3em;" | pluperfect
+! colspan="6" class="roa-compound-row" |  imperfect subjunctive of '']=] .. show_form(data.forms.aux) .. [=['' + past participle
 
 |-
-! colspan="2" rowspan="2" style="height:3em;background:#e4d4c0" | imperative
-! style="background:#e4d4c0" | –
-! style="background:#e4d4c0" | tu
-! style="background:#e4d4c0" | –
-! style="background:#e4d4c0" | nos
-! style="background:#e4d4c0" | vos
-! style="background:#e4d4c0" | –
+! colspan="2" rowspan="2" class="roa-imperative-left-rail" style="height:3em;" | imperative
+! class="roa-imperative-left-rail" | –
+! class="roa-imperative-left-rail" | tu
+! class="roa-imperative-left-rail" | –
+! class="roa-imperative-left-rail" | nos
+! class="roa-imperative-left-rail" | vos
+! class="roa-imperative-left-rail" | –
 |-
 | —
 | ]=] .. show_form(data.forms.impr_2sg) .. [=[
