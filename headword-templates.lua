@@ -7,7 +7,8 @@ local function get_args(frame)
 	local boolean = {type = "boolean"}
 	local boolean_list_allow_holes = {type = "boolean", list = true, allow_holes = true}
 	local list_allow_holes = {list = true, allow_holes = true}
-	return process_params(frame:getParent().args, {
+	local parent_args = frame:getParent().args
+	local args = {
 		[1] = {required = true, type = "language", default = "und"},
 		["sc"] = {type = "script"},
 		["sort"] = true,
@@ -52,7 +53,8 @@ local function get_args(frame)
 		["f\1qual"] = list_allow_holes,
 		["f\1autotr"] = boolean_list_allow_holes,
 		["f\1nolink"] = boolean_list_allow_holes,
-	})
+	}
+	return process_params(parent_args, args)
 end
 
 function export.head_t(frame)
