@@ -1443,6 +1443,14 @@ def el_form_of_nounadj(data):
     ]),
   ) + comp_of
 
+def el_form_of_verb_pass_of(data):
+  pass_of = data.getp("active")
+  ta = data.getp("ta")
+  if pass_of:
+    return pass_of + ("<t:%s>" % ta if ta else "")
+  else:
+    return []
+
 el_specs = [
   # NOTE: Has automatic, non-controllable initial caps that we're ignoring.
   # No final period.
@@ -1482,9 +1490,8 @@ el_specs = [
   # final period (using nodot). Both ignored.
   ("el-form-of-verb", (
     "verb form of",
-    # active= and ta= need to be removed prior to renaming this template.
     ("error-if", ("present-except", ["1", "nonfinite", "voice", "pers",
-      "tense", "mood", "t", "nodot"])),
+      "tense", "mood", "t", "nodot", "active", "ta"])),
     ("set", "1", [
       "el",
       ("copy", "1"),
@@ -1546,6 +1553,7 @@ el_specs = [
       }),
     ]),
     ("copy", "t"),
+    ("set", "pass-of", el_form_of_verb_pass_of),
   )),
 
   # NOTE: Has automatic, non-controllable initial caps and controllable
