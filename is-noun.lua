@@ -2878,14 +2878,10 @@ local function determine_default_masc_dat_sg(base, props)
 end
 
 
--- Determine the stems to use for each stem set: vowel and nonvowel stems, for singular
--- and plural. We assume that one of base.vowel_stem or base.nonvowel_stem has been
--- set in determine_declension(), depending on whether the lemma ends in
--- a vowel. We construct all the rest given the reducibility, vowel alternation spec and
--- any explicit stems given. We store the determined stems inside of the property-set objects
--- in `base.prop_sets`, meaning that if the user gave multiple reducible or vowel-alternation
--- patterns, we will compute multiple sets of stems. The reason is that the stems may vary
--- depending on the reducibility and vowel alternation.
+-- Determine the stems and other properties to use for each property set. The list of such properties is given in the
+-- comment above create_base(), along with the explanation of what a property set is and why we have multiple such
+-- property sets (generally, one per combination of mutation specs such as 'con,-con' and 'umut,uUmut'). There are
+-- currently 9 singular stems and a corresponding 9 plural stems.
 local function determine_props(base)
 	-- Now determine all the props for each prop set.
 	for _, props in ipairs(base.prop_sets) do
@@ -3018,11 +3014,11 @@ local function determine_props(base)
 				props[prefix .. "nonvstem"] = nonvstem
 			end
 			if umut_nonvstem ~= nonvstem then
-				-- For 'con' and 'defcon' below, footnotes can be placed on -con or -defcon so we have to check for those
-				-- footnotes as well as checking for the vstem and such being different, so the -con and -defcon footnotes
-				-- are still active. However, there's no such thing as -umut, and any time that there's an explicit umut
-				-- variant given, umut_nonvstem will be different from nonvstem (otherwise an error will occur in
-				-- apply_u_mutation), so we don't need this extra check here.
+				-- For 'con' and 'defcon' below, footnotes can be placed on -con or -defcon so we have to check for
+				-- those footnotes as well as checking for the vstem and such being different, so the -con and -defcon
+				-- footnotes are still active. However, there's no such thing as -umut, and any time that there's an
+				-- explicit umut variant given, umut_nonvstem will be different from nonvstem (otherwise an error will
+				-- occur in apply_u_mutation), so we don't need this extra check here.
 				if props_umut then
 					umut_nonvstem = iut.combine_form_and_footnotes(umut_nonvstem, props_umut.footnotes)
 				end
@@ -3054,8 +3050,8 @@ local function determine_props(base)
 				props[prefix .. "imut_vstem"] = imut_vstem
 			end
 			if null_defvstem ~= nonvstem or props.defcon and props.defcon.footnotes then
-				-- See comment above for why we need to check for props.defcon.footnotes (basically, to handle footnotes on
-				-- -defcon).
+				-- See comment above for why we need to check for props.defcon.footnotes (basically, to handle footnotes
+				-- on -defcon).
 				if props.defcon then
 					null_defvstem = iut.combine_form_and_footnotes(null_defvstem, props.defcon.footnotes)
 				end

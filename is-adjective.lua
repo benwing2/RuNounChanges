@@ -1642,17 +1642,14 @@ local function process_spec(base, destforms, slot, specs, base_stem, form_defaul
 end
 
 
--- Determine the stems to use for each stem set: vowel and nonvowel stems, for singular
--- and plural. We assume that one of base.vowel_stem or base.nonvowel_stem has been
--- set in determine_declension(), depending on whether the lemma ends in
--- a vowel. We construct all the rest given the reducibility, vowel alternation spec and
--- any explicit stems given. We store the determined stems inside of the property-set objects
--- in `base.prop_sets`, meaning that if the user gave multiple reducible or vowel-alternation
--- patterns, we will compute multiple sets of stems. The reason is that the stems may vary
--- depending on the reducibility and vowel alternation.
-local function determine_props(base)
+-- Determine the stems and other properties to use for each property set for each `degree` structure. The list of such
+-- properties is given in the comment above create_base(), along with the explanation of what a degree structure and
+-- property set is and why we have multiple such degree structures (generally, one per base lemma, where there may be
+-- multiple such comparative and/or superlative base lemmas) and property sets (generally, one per combination of
+-- mutation specs such as 'con,-con' and 'umut,uUmut').
+local function determine_props(base, degree)
 	-- Now determine all the props for each prop set.
-	for _, props in ipairs(base.prop_sets) do
+	for _, props in ipairs(degree.prop_sets) do
 		-- Convert regular `umut` to `u_mut` (applying to the second-to-last syllable) when contraction is in place and
 		-- we're computing the u-mutation version of the non-vowel stem. Cf. [[dapur]] "sad" with nominative feminine
 		-- singular [[döpur]].
@@ -1673,14 +1670,31 @@ local function determine_props(base)
 		end
 
 		-- First do all the stems.
-		local base_stem, base_vstem = base.stem,base.vstem
 		local stem, nonvstem, umut_nonvstem, vstem, umut_vstem
-		stem = base_stem
+		stem = degree.stem
 		nonvstem = stem
+		if degree.inn then
+			-- This must happen before u-mutation because u-mutation does not apply to e.g. [[talinn]] "counted", which
+			-- has feminine [[talin]] not #tölin.
+			nonvstem = nonvstem .. "in"
+		end
 		umut_nonvstem = com.apply_u_mutation(nonvstem, map_nonvstem_umut(props_umut.form), not props_umut.defaulted)
-		vstem = base_vstem or base_stem
+		vstem = degree.vstem or degree.stem
 		if props.con and props.con.form == "con" then
+			if degree.inn then
+				error("Internal error: 'con' cannot be specified for adjectives ending in -inn; it's handled automatically internally and should have been caught earlier")
+			end
 			vstem = com.apply_contraction(vstem)
+		end
+		local has_ppdent = props.ppdent and props.ppdent == "ppdent"
+		if degree.inn then
+			if has_ppdent then 
+				vstem = com.add_dental_ending(vstem)
+			else
+				vstem = vstem .. "n"
+			end
+		elseif has_ppdent then
+			error("Internal error: 'ppdent' can only be specified for adjectives ending in -inn and should have been caught earlier")
 		end
 		umut_vstem = com.apply_u_mutation(vstem, props_umut.form, not props_umut.defaulted)
 
@@ -1689,8 +1703,8 @@ local function determine_props(base)
 			props.nonvstem = nonvstem
 		end
 		if umut_nonvstem ~= nonvstem then
-			-- For 'con' and 'defcon' below, footnotes can be placed on -con or -defcon so we have to check for those
-			-- footnotes as well as checking for the vstem and such being different, so the -con and -defcon footnotes
+			-- For 'con' and 'ppdent' below, footnotes can be placed on -con or -ppdent so we have to check for those
+			-- footnotes as well as checking for the vstem and such being different, so the -con and -ppdent footnotes
 			-- are still active. However, there's no such thing as -umut, and any time that there's an explicit umut
 			-- variant given, umut_nonvstem will be different from nonvstem (otherwise an error will occur in
 			-- apply_u_mutation), so we don't need this extra check here.
@@ -1699,20 +1713,20 @@ local function determine_props(base)
 			end
 			props.umut_nonvstem = umut_nonvstem
 		end
-		if vstem ~= stem or props.con and props.con.footnotes then
-			-- See comment above for why we need to check for props.con.footnotes (basically, to handle footnotes on
-			-- -con).
-			if props.con then
-				vstem = iut.combine_form_and_footnotes(vstem, props.con.footnotes)
-			end
+		if vstem ~= stem or props.con and props.con.footnotes or props.ppdent and props.ppdent.footnotes then
+			-- See comment above for why we need to check for props.con.footnotes and props.ppdent.footnotes (basically,
+			-- to handle footnotes on -con and -ppdent).
+			local footnotes = iut.combine_footnotes(props.con and props.con.footnotes or nil,
+				props.ppdent and props.ppdent.footnotes or nil)
+			vstem = iut.combine_form_and_footnotes(vstem, footnotes)
 			props.vstem = vstem
 		end
-		if umut_vstem ~= vstem or props.con and props.con.footnotes then
+		if umut_vstem ~= vstem or props.con and props.con.footnotes or props.ppdent and props.ppdent.footnotes then
 			-- See comment above under `umut_nonvstem ~= nonvstem`. There's no -umut so whenever there's a specific
 			-- umut variant with footnote, umut_vstem will be different from vstem so we don't need to check for
 			-- `or props_umut and props_umut.footnotes` above.
-			local footnotes = iut.combine_footnotes(props.con and props.con.footnotes or nil,
-				props_umut and props_umut.footnotes or nil)
+			local footnotes = iut.combine_footnotes(iut.combine_footnotes(props.con and props.con.footnotes or nil,
+				props_umut and props_umut.footnotes or nil), props.ppdent and props.ppdent.footnotes or nil)
 			umut_vstem = iut.combine_form_and_footnotes(umut_vstem, footnotes)
 			props.umut_vstem = umut_vstem
 		end
