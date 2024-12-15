@@ -30,17 +30,11 @@ from misc_templates_to_rewrite import misc_templates_to_rewrite
 # egy-verb form of (? lots of Egyptian-specific tags) (27)
 # eo-form of (? takes actual ending, generates tags from it, would be a radical shift) (99087)
 # es-verb form of (? very complicated; takes a region param that can/should be moved out) (441797)
-# gl-verb form of (? very complicated) (598)
-# got-nom form of (? has posttext= if comp-of=, sup-of=, presptc-of= or pastptc-of=) (2935)
 # ia-form of (? takes actual ending, generates tags from it, would be a radical shift) (718)
 # io-form of (? takes actual ending, generates tags from it, would be a radical shift) (10116)
 # ja-verb form of (? takes Japanese params, some in Hiragana, would be a radical shift) (93)
 # ka-verb-form-of (? has links to [[Appendix:Georgian verbs]]; has stuff describing object pronouns, which maybe should be posttext) (116)
-# lv-adv form of (2761)
-# lv-participle of (? might need lang-specific tags for "(object-of-perception form)", "(invariable form)", "(variable form)" (5163)
 # mn-verb form of (? maybe? uses a module) (63)
-# nl-adj form of (? would need lang-specific tag for "Predicative/adverbial form", has posttext= if comp-of= or sup-of=) (4559)
-# nn-verb-form of (? maybe? uses a module) (1046)
 # pt-pron def (? not only a form-of template) (24)
 # sce-verb form of (? maybe? uses a module) (1)
 # sw-adj form of (? might be tough) (291)
@@ -1444,12 +1438,21 @@ def el_form_of_nounadj(data):
   ) + comp_of
 
 def el_form_of_verb_pass_of(data):
-  pass_of = data.getp("active")
+  active = data.getp("active")
+  active2 = data.getp("active2")
   ta = data.getp("ta")
-  if pass_of:
-    return pass_of + ("<t:%s>" % ta if ta else "")
+  if active2 and not active:
+    active = active2
+    active2 = ""
+  if active:
+    return active + (",%s" % active2 if active2 else "") + ("<t:%s>" % ta if ta else "")
   else:
     return []
+
+def el_form_of_verb_lemma(data):
+  lemma1 = data.getp("1")
+  lemma2 = data.getp("2")
+  return lemma1 + (",%s" % lemma2 if lemma2 else "")
 
 el_specs = [
   # NOTE: Has automatic, non-controllable initial caps that we're ignoring.
@@ -1489,12 +1492,12 @@ el_specs = [
   # NOTE: Has automatic, non-controllable initial caps and controllable
   # final period (using nodot). Both ignored.
   ("el-form-of-verb", (
-    "verb form of",
-    ("error-if", ("present-except", ["1", "nonfinite", "voice", "pers",
-      "tense", "mood", "t", "nodot", "active", "ta"])),
+    "infl of",
+    ("error-if", ("present-except", [
+      "1", "2", "nonfinite", "voice", "pers", "tense", "mood", "t", "nodot", "active", "active2", "ta"])),
     ("set", "1", [
       "el",
-      ("copy", "1"),
+      el_form_of_verb_lemma,
       "",
       ("lookup", "nonfinite", {
         True: ("lookup", "voice", {
