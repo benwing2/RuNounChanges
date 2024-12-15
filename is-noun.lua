@@ -2436,7 +2436,8 @@ local function synthesize_adj_lemma(base)
 end
 
 
--- Determine the declension based on the lemma, gender and number. The declension is set in base.decl.
+-- Determine the declension and stem based on the lemma and gender. The declension is set in base.decl and the stem in
+-- base.stem if not already set by the user.
 local function determine_declension(base)
 	local stem, ending
 	local default_props = {}

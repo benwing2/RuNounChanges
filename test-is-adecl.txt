@@ -2,51 +2,71 @@
 
 === words in -ur ===
 * {{m|is|gulur||yellow}}, {{m|is|djúpur||deep}}, {{m|is|drjúgur||substantial; conceited}}, {{m|is|dökkur||dark}}, {{m|is|frægur||famous}}, {{m|is|fullur||full}}, {{m|is|glöggur||clear}}, {{m|is|grunnur||shallow}}, {{m|is|heitur||hot}}, {{m|is|helgur||holy}}, {{m|is|hvítur||white}}, {{m|is|hvorugur||neither (of two)}}, {{m|is|illur||bad; angry}}, {{m|is|íslenskur||Icelandic}}, {{m|is|lágur||low}}, {{m|is|líkur||like, similar}} ({{m|is|hvílíkur||what, what kind of}}, {{m|is|ólíkur||unlike, different}}, {{m|is|þvílíkur||such}}), {{m|is|ljótur||ugly}}, {{m|is|mjúkur||soft}}, {{m|is|ríkur||rich}}, {{m|is|slíkur||such}}, {{m|is|slæmur||bad; unwell}}, {{m|is|sterkur||strong}}, {{m|is|sumur||some}}, {{m|is|sætur||sweet}}, {{m|is|tómur||empty}}, {{m|is|ungur||young}}, {{m|is|þröngur||narrow}}, {{m|is|þungur||heavy}}, {{m|is|þunnur||thin}}, {{m|is|þykkur||thick}}, {{m|is|þýskur||German}}, {{m|is|örlátur||generous}}, {{m|is|öruggur||safe, sure, reliable}}
-* 'comp' by itself means the same as 'comp:+' i.e. there is a comparative and it uses the default algorithm. Having a comparative implies a superlative by default; by default the superlative(s) is/are derived from the specified comparative(s). Use '-sup' to turn off superlatives.
+* 'comp' by itself means the same as 'comp:+' i.e. there is a comparative and it uses the default algorithm. Having a comparative implies a superlative by default. By default the superlative(s) is/are derived from the specified comparative(s) by replacing -ri, -li or -ni with -stur. Use '-sup' to turn off superlatives. Note that 'sup:+' is not the same as omitting 'sup' if 'comp:...' is specified, because 'sup:+' requests the default superlative whereas omitting the 'sup' derives the superlative(s) from the specified comparative(s).
+* <<gulur>>, <<heitur>>, <<helgur>>, <<hvítur>>, <<íslenskur>>, <<ljótur>>, <<ríkur>>, <<sterkur>>, <<sætur>>, <<tómur>>, <<þýskur>>, <<örlátur>>, <<öruggur>>
 * {{tl|is-adecl|comp|pagename=gulur}}
-* '^' by itself for the comparative means the stem is umlauted and -ri is added. If contraction is active, the contracted stem is used (which means the -r- of -ri will usually be elided). '^' by itself for the superlative means -st is added to the uncontracted stem.
-* {{tl|is-adecl|comp:^:+|pagename=djúpur}}
-* {{tl|is-adecl|comp:^|pagename=djúpur}}
-* {{tl|is-adecl|comp:^|pagename=dökkur}}
-* '~' stands for the computed stem (uncontracted if there is a contracted stem).
+* '^' stands for the (uncontracted) umlauted stem; if the stem ends in -ur, this umlauts the portion before -ur. ^! stands for the contracted umlauted stem. Note that -Crr- will be elided to -Cr- when constructing the comparative. This means for example that  , and by itself for the comparative means the stem is umlauted and -ri is added. If contraction is active, the contracted stem is used (which means the -r- of -ri will usually be elided). '^' by itself for the superlative means -st is added to the uncontracted stem.
+* per BÍN:
+* {{tl|is-adecl|comp:^ri|pagename=djúpur}}
+* per Thomson:
+* {{tl|is-adecl|comp:^ri:+|pagename=djúpur}}
+* {{tl|is-adecl|comp:^ri|pagename=drjúgur}}
+* {{tl|is-adecl|comp:^ri|pagename=dökkur}}
+* per BÍN:
+* {{tl|is-adecl|comp|pagename=frægur}}
+* per Thomson: Here ~ stands for the uncontracted stem, and ~! for the contracted stem.
 * {{tl|is-adecl|comp:+:~ri|pagename=frægur}}
-* {{tl|is-adecl|comp:^|pagename=fullur}}
-* {{tl|is-adecl|comp:^:+:~vari|pagename=glöggur}}
-* {{tl|is-adecl|comp:^|pagename=grunnur}}
+* {{tl|is-adecl|comp:^ri|pagename=fullur}}
+* per BÍN:
+* {{tl|is-adecl|comp:^ri:+|pagename=glöggur}}
+* per Thomson:
+* {{tl|is-adecl|comp:+:^ri:~vari|pagename=glöggur}}
+* {{tl|is-adecl|comp:^ri|pagename=grunnur}}
 * {{tl|is-adecl|strong.-comp|pagename=hvorugur}}
+* also <<ólíkur>>
 * {{tl|is-adecl|comp|pagename=líkur}}
 * {{tl|is-adecl|-comp|pagename=hvílíkur}}
 * {{tl|is-adecl|-comp|pagename=þvílíkur}}
 * With comparatives in -rri, the same rules apply for determining whether to include the first -r- in the stem as for lemmas in -r but not -ur. Here we get a stem ver-, leading to default (correct) superative [[verstur]]. To force a stem division, put a / between stem and ending.
 * {{tl|is-adecl|comp:verri|pagename=illur}}
-* {{tl|is-adecl|comp:^|pagename=lágur}}
-* {{tl|is-adecl|comp:^|pagename=mjúkur}}
+* {{tl|is-adecl|comp:^ri|pagename=lágur}}
+* {{tl|is-adecl|comp:^ri|pagename=mjúkur}}
 * {{tl|is-adecl|strong.-comp|pagename=slíkur}}
 * {{tl|is-adecl|comp:verri|pagename=slæmur}}
 * {{tl|is-adecl|strong.-comp|pagename=sumur}}
-* {{tl|is-adecl|comp:^|pagename=ungur}}
-* {{tl|is-adecl|comp:^|pagename=þröngur}}
-* {{tl|is-adecl|comp:^|pagename=þungur}}
-* {{tl|is-adecl|comp:^|pagename=þunnur}}
+* {{tl|is-adecl|comp:^ri|pagename=ungur}}
+* {{tl|is-adecl|comp:^ri|pagename=þröngur}}
+* {{tl|is-adecl|comp:^ri|pagename=þungur}}
+* {{tl|is-adecl|comp:^ri|pagename=þunnur}}
+* per BÍN:
+* {{tl|is-adecl|comp|pagename=þykkur}}
+* per Thomson:
+* {{tl|is-adecl|comp:~ri|pagename=þykkur}}
 
 * with u-mutation:
 * {{m|is|flatur||flat}}, {{m|is|allur||all; whole}}, {{m|is|franskur||French}}, {{m|is|grannur||thin, slim}}, {{m|is|heilagur||holy}}, {{m|is|langur||long}}, {{m|is|margur||many}}, {{m|is|-samur||-ful, -some, -able/-ible}} ({{m|is|friðsamur||peaceful}}, {{m|is|reglusamur||orderly}}, {{m|is|skynsamur||sensible}}), {{m|is|skammur||short}}, {{m|is|svalur||cool}}, {{m|is|svangur||hungry}}, {{m|is|vanur||accustomed}}, {{m|is|þarfur||useful}}
+* <<flatur>>, <<friðsamur>>, <<reglusamur>>, <<skynsamur>>, <<vanur>>, <<þarfur>>
 * {{tl|is-adecl|comp|pagename=flatur}}
-* {{m|is|allur}} has no comparative or superlative. This is the default but specifying '-comp' positively identifies the adjective as lacking comparative/superlative and categorizes appropriately as well as putting the appropriate label ''no comparative'' in the headword.
-* {{tl|is-adecl|-comp|pagename=allur}}
+* {{m|is|allur}} is strong-only and has no comparative or superlative. This is the default but specifying '-comp' positively identifies the adjective as lacking comparative/superlative and categorizes appropriately as well as putting the appropriate label ''no comparative'' in the headword.
+* {{tl|is-adecl|strong.-comp|pagename=allur}}
 * Per BÍN, {{m|is|franskur}} has a comparative.
 * {{tl|is-adecl|comp|pagename=franskur}}
-* {{tl|is-adecl|comp:^|pagename=grannur}}
+* {{tl|is-adecl|comp:^ri|pagename=grannur}}
 * Per BÍN, {{m|is|heilagur}} has two comparatives [[heilagri]] and [[heilagari]] but only [[heilagastur]]. Here, ~ refers to the stem and + to the default in -ari. The default + for the superlative is not derived from the comparative, unlike when you omit the sup: spec entirely (which would result in two superlatives, incorrect #[[heilagstur]] and correct [[heilagastur]]).
 * {{tl|is-adecl|comp:~ri:+.sup:+|pagename=heilagur}}
-* {{tl|is-adecl|comp:^|pagename=langur}}
+* {{tl|is-adecl|comp:^ri|pagename=langur}}
 * Here, wk_m and wk_f are shortcuts respectively for wk_nom_m+wk_obl_m and wk_nom_f+wk_obl_f.
 * {{tl|is-adecl|wk_m+wk_f:-.comp:fleiri.sup:flestur|pagename=margur}}
-* {{tl|is-adecl|comp:^|pagename=skammur}}
-* {{tl|is-adecl|comp:^|pagename=svangur}}
+* {{tl|is-adecl|comp:^ri|pagename=skammur}}
+* per BÍN:
+* {{tl|is-adecl|comp:^ri:+|pagename=svangur}}
+* per Thomson:
+* {{tl|is-adecl|comp:^ri|pagename=svangur}}
 * with loss of -d after consonant in neuter:
 * {{m|is|vondur||bad; angry}}, {{m|is|blindur||blind}}, {{m|is|auðveldur||easy}}
 * {{tl|is-adecl|comp:verri|pagename=vondur}}
+* <<blindur>>, <<auðveldur>>
+* {{tl|is-adecl|comp|pagename=blindur}}
 * with loss of -d after consonant in neuter, and u-mutation:
 * {{m|is|kaldur||cold}}
 * {{tl|is-adecl|comp|pagename=kaldur}}
@@ -58,9 +78,11 @@
 * {{tl|is-adecl|comp|pagename=harður}}
 * with loss of -t after consonant in neuter:
 * {{m|is|réttur||right, correct}}, {{m|is|stuttur||short}}, {{m|is|þyrstur||thirsty}}
+* <<rettur>>, <<þyrstur>>
 * {{tl|is-adecl|comp|pagename=réttur}}
+* {{tl|is-adecl|comp:^ri.sup:stystur|pagename=stuttur}}
 * with loss of -t after consonant in neuter, and u-mutation:
-* {{m|is|fastur||firm, fixed}}, {{m|is|brattur||steep}}, {{m|is|bjartur||bright}}, {{m|is|svartur||black}}, 
+* {{m|is|fastur||firm, fixed}}, {{m|is|brattur||steep}}, {{m|is|bjartur||bright}}, {{m|is|svartur||black}},
 * {{tl|is-adecl|comp|pagename=fastur}}
 * with assimilation of -dd -> -tt in neuter:
 * with assimilation of -dd -> -tt in neuter, and u-mutation:
@@ -73,7 +95,7 @@
 * {{tl|is-adecl|comp.-pp|pagename=athafnaglaður}}
 * with maintenance of -ð after vowel in neuter:
 * with maintenance of -ð after vowel in neuter, uU-mutation in the positive, -ri in the comparative, -ast in the superlative with uUU-mutation (e.g. gallaðastur -> feminine [[gölluðust]]); all this should be the default when 'pp' is active:
-* {{m|is|kallaður||called}}, {{m|is|gáfaður||gifted}}, {{m|is|gallaður||faulty, defetive}}
+* {{m|is|kallaður||called}}, {{m|is|gáfaður||gifted}}, {{m|is|gallaður||faulty, defective}}, {{m|is|saltaður||salty}}
 * {{tl|is-adecl|-comp|pagename=kallaður}}
 * {{tl|is-adecl|comp|pagename=gáfaður}}
 * {{tl|is-adecl|comp|pagename=gallaður}}
@@ -144,7 +166,8 @@
 * {{m|is|digur}} has an alternative comparative [[digurri]]. Here ~ stands for the (uncontracted) digur-.
 * {{tl|is-adecl|#.comp:+:~ri.sup:+|pagename=digur}}
 * with u-mutation: {{m|is|dapur||sad, downhearted}}, {{m|is|fagur||beautiful, fair}}, {{m|is|magur||lean}}, {{m|is|vakur||movable; ambling (horse)}} ({{m|is|árvakur||vigilant; rising early}})
-* {{tl|is-adecl|#.comp|pagename=dapur}}
+* {{m|is|dapur}} has comparatives [[daprari]] or uncontracted [[dapurri]] and superlative only [[daprastur]].
+* {{tl|is-adecl|#.comp:+:~ri.usp:+|pagename=dapur}}
 * As mentioned above, '^' by itself for the comparative means the stem is umlauted and -ri is added. If contraction is active, the contracted stem is used (which means the -r- of -ri will usually be elided). '^' by itself for the superlative means -st is added to the uncontracted umlauted stem (which umlauts the second-to-last vowel when the stem ends in -ur).
 * {{tl|is-adecl|#.comp:^:fegurri.sup:^|pagename=fagur}}
 * {{tl|is-adecl|#.comp:^:+|pagename=magur}}
