@@ -34,7 +34,7 @@ local current_title = mw.title.getCurrentTitle()
 local NAMESPACE = current_title.nsText
 local PAGENAME = current_title.text
 
-local u = mw.ustring.char
+local u = require("Module:string/char")
 local rsplit = mw.text.split
 local rfind = mw.ustring.find
 local rmatch = mw.ustring.match
@@ -1396,9 +1396,9 @@ local function make_table(alternant_multiword_spec)
 	local forms = alternant_multiword_spec.forms
 
 	local table_spec_part1 = [=[
-<div class="NavFrame" style="width:60em">
-<div class="NavHead" style="text-align:left; background:#e0e0ff;">{title}{annotation}</div>
-<div class="NavContent">
+<div class="NavFrame" style="max-width:60em">
+<div class="NavHead" style="text-align:left; background:var(--wikt-palette-lightindigo, #e9e9ff);">{title}{annotation}</div>
+<div class="NavContent" style="overflow:auto">
 {\op}| class="inflection-table inflection inflection-uk inflection-verb"
 |+ For declension of participles, see their entries. Adverbial participles are indeclinable.
 |- class="rowgroup"
@@ -1499,7 +1499,7 @@ local function make_table(alternant_multiword_spec)
 		table_spec_part2
 
 	local notes_template = [===[
-<div style="width:100%;text-align:left;background:#d9ebff">
+<div style="width:100%;text-align:left;background:var(--wikt-palette-lightblue, #d9ebff)">
 <div style="display:inline-block;text-align:left;padding-left:1em;padding-right:1em">
 {footnote}
 </div></div>
