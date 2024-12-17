@@ -91,15 +91,6 @@ local potential_lemma_slots = {
 	"sup_str_nom_m", -- for adjectives existing only in superlative forms
 }
 
-local cases = {
-	"nom",
-	"acc",
-	"dat",
-	"gen",
-}
-
-local case_set = m_table.listToSet(cases)
-
 local overridable_stems = {
 	"stem",
 	"vstem",
@@ -107,6 +98,7 @@ local overridable_stems = {
 	"compvstem",
 	"supstem",
 	"supvstem",
+	-- "imutval", FIXME: do we need this?
 }
 
 local overridable_stem_set = m_table.listToSet(overridable_stems)
@@ -156,7 +148,14 @@ local weak_adjective_slots = {
 local adjective_slot_set = {}
 local adjective_slot_list = {}
 
+local adjective_slot_list_positive = {}
+local adjective_slot_list_comparative = {}
+local adjective_slot_list_superlative = {}
+
 local function add_list_slots(prefix, slot_list)
+	local dest_slot_list_single_degree = prefix == "" and adjective_slot_list_positive or
+		prefix == "comp_" and adjective_slot_list_comparative or
+		adjective_slot_list_superlative
 	for _, slot_accel in ipairs(slot_list) do
 		local slot, accel = unpack(slot_accel)
 		local accel_suffix = ""
@@ -167,7 +166,9 @@ local function add_list_slots(prefix, slot_list)
 		end
 		slot = prefix .. slot
 		accel = accel .. accel_suffix
-		table.insert(adjective_slot_list, {slot, accel})
+		slot_accel = {slot, accel}
+		table.insert(adjective_slot_list, slot_accel)
+		table.insert(dest_slot_list_single_degree, slot_accel)
 		adjective_slot_set[slot] = true
 	end
 end
@@ -995,11 +996,13 @@ fields later filled out by other functions) is of the form
   -- Per-degree structures (`pos` = positive, `comp` = comparative, `sup` = superlative). Each slot (`pos`, `comp` or
   -- `sup`) maps to a list of degree objects, one for each per-degree lemma. There will only be one positive degree
   -- object (different positive lemmas will be handled as alternants at a higher level), but there may be multiple
-  -- comparative and/or superlative degree objects. Multiple such objects generally happens because the user specifies
-  -- multiple comparatives or superlatives (e.g. for [[fagur]], using the spec '#.comp:^:fegurri.sup:^', which specifies
-  -- comparative lemmas [[fegri]] and [[fegurri]]), but occasionally the default superlative operation generates more
-  -- than one superlative; e.g. for [[förull]] the spec is 'con,-con.comp:+:~~ari' which explicitly mentions two
-  -- comparatives, but two superlatives are also generated because of the 'con,-con' portion of the spec. There will
+  -- comparative and/or superlative degree objects. (Conversely, there may be multiple property sets per positive-degree
+  -- object, e.g. if the user specifies 'con,-con', but only one property set per comparative and superlative degree
+  -- object.) Multiple degree objects generally happen because the user specifies multiple comparatives or superlatives
+  -- (e.g. for [[fagur]], using the spec '#.comp:^ri:^!i.sup:^stur', which specifies comparative lemmas [[fegurri]] and
+  -- [[fagri]] and superlative [[fegurstur]]), but occasionally the default superlative operation generates more than
+  -- one superlative; e.g. for [[förull]] the spec is 'con,-con.comp:+:~~ari' which explicitly mentions two
+  -- comparatives, and '+' itself generates two superlatives because of the 'con,-con' portion of the spec. There will
   -- always be a `pos` slot filled, but if the user didn't explicitly either specify that a comparative is present or
   -- specify no comparative using '-comp', there will be no `comp` slot (likewise for `sup`). If the user specified
   -- '-comp', there will be a `comp` slot mapping to an empty list.
@@ -1021,9 +1024,10 @@ fields later filled out by other functions) is of the form
 		-- override the stem used before vowel-initial endings; after parse_indicator_spec(), either nil or a
 		-- user-specified stem override in the same format as `stem`
 		vstem = nil or "STEM",
-		-- alternant-level footnotes, specified using `.[footnote]`, i.e. a footnote by itself; apply to all degrees
+		-- degree-level footnotes, specified using `LEMMA[footnote]`, where `LEMMA` is the comparative or superlative
+		-- lemma, + for the default, or a shortened version using ~, ^ or the like
 		footnotes = nil or {"FOOTNOTE", "FOOTNOTE", ...},
-		-- where MUTATION_GROUP is one of "umut", "con", "pp", "j" or "v", and MUTATION_SPEC is {form = "FORM",
+		-- MUTATION_GROUP is one of "umut", "con", "pp", "ppdent", "j" or "v", and MUTATION_SPEC is {form = "FORM",
 		-- footnotes = nil or {"FOOTNOTE", "FOOTNOTE", ...}, defaulted = BOOLEAN}, where FORM is as specified by the
 		-- user (e.g. "uUmut", "-pp") or set as a default by the code (in which case `defaulted` will be set to true for
 		-- mutation group "umut"); the mutation groups are as follows:
@@ -1057,7 +1061,7 @@ fields later filled out by other functions) is of the form
 	},
 	...
   },
-  -- where SLOT is the actual name of the slot, such as "str_nom_n" and OVERRIDE is a list of form objects, where a
+  -- SLOT is the actual name of the slot, such as "str_nom_n", and OVERRIDE is a list of form objects, where a
   -- form object is {form = FORM, footnotes = FOOTNOTES} as in the `forms` table ("-" means to suppress the slot
   -- entirely)
   overrides = {
@@ -1065,8 +1069,14 @@ fields later filled out by other functions) is of the form
 	SLOT = OVERRIDE,
 	...
   },
+  -- Comparative specs as given by the user, consisting of a list of form objects.
+  compspec = { {form = "FORM", footnotes = nil or {"FOOTNOTE", "FOOTNOTE", ...}}, ...},
+  -- Superlative specs as given by the user, consisting of a list of form objects.
+  supspec = { {form = "FORM", footnotes = nil or {"FOOTNOTE", "FOOTNOTE", ...}}, ...},
   -- misc Boolean properties:
   -- * "irreg" (an irregular term such as a number or determiner);
+  -- * "decl?" (unknown declension);
+  -- * "indecl" (indeclinable);
   props = {
 	PROP = true,
 	PROP = true,
@@ -1092,9 +1102,12 @@ iterates over all property sets and calls the appropriate declension function on
 each slot in `base.forms`, automatically deduplicating.
 
 The properties in each property set are:
-* Stems (each stem is either a string or a form object, i.e. an object with `form` and `footnotes` properties; see
-  [[Module:inflection utilities]]; stems in general may be missing, i.e. nil, unless otherwise specified, and default
-  to more general variants):
+* Mutation specs: These are copied from the mutation specs at the degree object level. The key is one of the possible
+  mutation groups ("umut", "con", etc.), but the value is a single form object {form = "FORM", footnotes = nil or
+  {"FOOTNOTE", "FOOTNOTE", ...}}. These are set by expand_property_sets() for the positive degree, and by
+  process_comp_sup_spec() or derive_sup_from_comp() for the comparative and superlative degrees.
+* Stems (each stem is either a string or a form object; stems in general may be missing, i.e. nil, unless otherwise
+  specified, and default to more general variants):
 ** `stem`: The basic stem. Always set. May be overridden by more specific variants.
 ** `nonvstem`: The stem used when the ending is null or starts with a consonant, unless overridden by a more
    specific variant. Defaults to `stem`. Not currently used, but could be if e.g. a user stem override `nonvstem:...`
@@ -1477,7 +1490,8 @@ local function determine_declension(base)
 			end
 		end
 	end
-	if not stem then
+	if not stem and not pos.stem then
+		-- Beware of [[snjall]] "masterly, excellent, clever", where both l's are part of the stem.
 		stem = rmatch(pos.lemma, "^(.*l)l$")
 		if stem then
 			-- [[heill]] "whole; healthy", [[fúll]] "foul", [[þögull]] "taciturn" (with or without contraction), etc.
@@ -1486,7 +1500,7 @@ local function determine_declension(base)
 			-- defsup computed later, depending on the value of 'con'
 		end
 	end
-	if not stem then
+	if not stem and not pos.stem then
 		stem = rmatch(pos.lemma, "^(.*n)n$")
 		if stem then
 			pos.assimilate_r = true
@@ -1504,6 +1518,8 @@ local function determine_declension(base)
 				pos.inn = true
 				local function compute_vowel_stem(props)
 					local vowel_stem = usub(stem, 1, -3) -- chop off final -in
+					-- [[söngvinn]] -> 'söngn-', [[höggvinn]] -> 'höggn-'
+					vowel_stem = vowel_stem:gsub("gv$", "g")
 					if props.ppdent and props.ppdent.form == "ppdent" then
 						vowel_stem = com.add_dental_ending(vowel_stem)
 					else
@@ -1512,6 +1528,7 @@ local function determine_declension(base)
 					return vowel_stem
 				end
 				defcomp = function(base, props)
+					-- Save for later stem computation.
 					props.vowel_stem = compute_vowel_stem(props)
 					return vowel_stem .. "ari"
 				end
@@ -1589,36 +1606,114 @@ local function determine_declension(base)
 end
 
 
-local function process_spec(base, degree, destforms, slot, specs, base_stem, form_default)
-	local pos = base.degrees.pos[1]
-	local function do_form_default(form)
-		local retval = form_default(base, form)
-		if type(retval) ~= "table" then
-			retval = {retval}
+local function insert_degree_object(base, degfield, lemma, footnotes, umut)
+	local stem
+	if degfield == "sup" then
+		stem = lemma:match("^(.*)ur$")
+		if not stem then
+			error(("Superlative lemma '%s' doesn't end in -ur, as expected"):format(lemma))
 		end
-		return retval
+	elseif degfield == "comp" then
+		stem = lemma:match("^(.*)i$")
+		if not stem then
+			error(("Comparative lemma '%s' doesn't end in -i, as expected"):format(lemma))
+		end
+	else
+		error(("Internal error: Unrecognized degree field value %s"):format(dump(degfield)))
 	end
+		
+	table.insert(base.degrees[degfield], {
+		lemma = lemma,
+		actual_lemma = lemma,
+		stem = stem,
+		footnotes = footnotes,
+		decl = degfield == "sup" and "normal" or "comp",
+		state = degfield == "sup" and "bothstates" or "weak",
+		number = "both",
+		prop_sets = {{
+			umut = umut,
+		}},
+	})
+end
+
+
+-- Construct appropriate comparative/superlative property sets based on the default comparative/superlative, and insert
+-- into the appropriated degrees structure. `degfield` is "comp" or "sup" and `spec_footnotes` gives the footnotes
+-- specified along with the "+" spec that triggered this function.
+local function insert_default_comp_sup_specs(base, degfield, spec_footnotes)
+	for _, props in ipairs(base.degrees.pos[1].prop_sets) do
+		-- This fetches the "defcomp" or "defsup" field.
+		local default = props["def" .. degfield]
+		local umut = m_table.shallowcopy(props.umut) or {form = "umut", defaulted = true}
+		if degfield == "sup" then
+			umut.form = umut.form:gsub("mut$", "Umut")
+		end
+		insert_degree_object(base, degfield, default, spec_footnotes, umut)
+	end
+end
+
+-- Process the `comp:...` or `sup:...` spec given by the user and construct the appropriate property sets, one per stem.
+-- `degfield` is either "comp" or "sup", and `specs` gives the user-specified specs. Note that the default u-mutation
+-- for the superlative is uUmut, but if the spec was given (implicity or explicitly) as "+", we use the default
+-- comparative or superlative, and in that case the superlative u-mutation is constructed from the corresponding
+-- positive-degree u-mutation by adding U to the end, so that umut -> uUmut but uUmut -> uUUmut (cf. [[saltaður]]
+-- "salty" with u-mutation uUmut and feminine singular/neuter plural [[söltuð]], and superlative [[saltaðastur]] with
+-- u-mutation uUUmut and feminine singular/neuter plural [[söltuðust]]).
+local function process_comp_sup_spec(base, degfield, specs)
+	local pos = base.degrees.pos[1]
 	specs = specs or {{form = "+"}}
+	if base.degrees[degfield] then
+		error(("Internal error: Attempt to create `degrees` list for field `%s` when it already exists: %s"):format(
+			degfield, dump(base.degrees)))
+	end
+	base.degrees[degfield] = {}
 	for _, spec in ipairs(specs) do
 		local forms
 		if spec.form == "-" then
-			-- Skip "-"; effectively, no forms get inserted into output.comp.
+			-- Skip "-"; effectively, no forms get inserted.
 		elseif spec.form == "+" then
-			forms = iut.flatmap_forms(base_stem, do_form_default)
-		elseif spec.form:find("^~~") then
-			local ending = spec.form:sub(3)
-			forms = com.apply_contraction(pos.stem) .. ending
-		elseif spec.form:find("^~") then
-			local ending = spec.form:sub(2)
-			forms = pos.stem .. ending
-		elseif spec.form == "^" then
-			forms = iut.flatmap_forms(base_stem, function(form) return do_form_default(com.apply_umlaut(form)) end)
+			insert_default_comp_sup_specs(base, degfield, spec.footnotes)
 		else
-			iut.insert_form(destforms, slot, spec)
+			local formval
+			if spec.form:find("^~!") then
+				formval = com.apply_contraction(pos.stem) .. spec.form:sub(3)
+			elseif spec.form:find("^~") then
+				formval = pos.stem .. spec.form:sub(2)
+			elseif spec.form:find("^%^!") then
+				formval = com.apply_i_mutation(com.apply_contraction(pos.stem)) .. spec.form:sub(3)
+			elseif spec.form:find("^%^") then
+				formval = com.apply_i_mutation(pos.stem) .. spec.form:sub(2)
+			else
+				formval = spec.form
+			end
+			spec.resolved_form = formval
+			insert_degree_object(base, degfield, formval, spec.footnotes,
+				{form = degfield == "sup" and "uUmut" or "umut", defaulted = true})
 		end
-		if forms then
-			forms = iut.convert_to_general_list_form(forms, spec.footnotes)
-			iut.insert_forms(destforms, slot, forms)
+	end
+end
+
+
+-- If the `comp:...` spec is given but not the `sup:...` spec, derive the superlative from the comparative.
+local function derive_sup_from_comp(base, compspecs)
+	if base.degrees.sup then
+		error(("Internal error: Attempt to create `degrees` list for field `sup` when it already exists: %s"):format(
+			degfield, dump(base.degrees)))
+	end
+	base.degrees.sup = {}
+	for _, spec in ipairs(compspecs) do
+		local forms
+		if spec.form == "-" then
+			-- Skip "-"; effectively, no forms get inserted.
+		elseif spec.form == "+" then
+			insert_default_comp_sup_specs(base, "sup", spec.footnotes)
+		else
+			local sup_formval = spec.resolved_form:gsub("[rln]i$", "stur")
+			if not sup_formval:find("stur$") then
+				error(("Don't know how to derive superlative lemma from comparative lemma '%s'; specify " ..
+					"superlative lemma explicitly"):format(spec.resolved_form))
+			end
+			insert_degree_object(base, "sup", sup_formval, spec.footnotes, {form = "uUmut", defaulted = true})
 		end
 	end
 end
@@ -1632,17 +1727,6 @@ end
 local function determine_props(base, degree)
 	-- Now determine all the props for each prop set.
 	for _, props in ipairs(degree.prop_sets) do
-		-- Convert regular `umut` to `u_mut` (applying to the second-to-last syllable) when contraction is in place and
-		-- we're computing the u-mutation version of the non-vowel stem. Cf. [[dapur]] "sad" with nominative feminine
-		-- singular [[döpur]].
-		local function map_nonvstem_umut(val)
-			if val == "umut" and props.con and props.con.form == "con" then
-				return "u_mut"
-			else
-				return val
-			end
-		end
-
 		-- All adjectives have u-mutation in the feminine singular and neuter plural (among others), which triggers
 		-- u-mutation, so we need to compute the u-mutation stem using "umut" if not specifically given. Set `defaulted`
 		-- so an error isn't triggered if there's no special u-mutated form.
@@ -1655,28 +1739,14 @@ local function determine_props(base, degree)
 		local stem, nonvstem, umut_nonvstem, vstem, umut_vstem
 		stem = degree.stem
 		nonvstem = stem
-		if degree.inn then
-			-- This must happen before u-mutation because u-mutation does not apply to e.g. [[talinn]] "counted", which
-			-- has feminine [[talin]] not #tölin.
-			nonvstem = nonvstem .. "in"
-		end
-		umut_nonvstem = com.apply_u_mutation(nonvstem, map_nonvstem_umut(props_umut.form), not props_umut.defaulted)
-		vstem = degree.vstem or degree.stem
+		umut_nonvstem = com.apply_u_mutation(nonvstem, props_umut.form, not props_umut.defaulted)
+		-- For -inn adjectives, we already computed the correct vowel stem, so just use it.
+		vstem = props.vowel_stem or degree.vstem or degree.stem
 		if props.con and props.con.form == "con" then
 			if degree.inn then
 				error("Internal error: 'con' cannot be specified for adjectives ending in -inn; it's handled automatically internally and should have been caught earlier")
 			end
 			vstem = com.apply_contraction(vstem)
-		end
-		local has_ppdent = props.ppdent and props.ppdent == "ppdent"
-		if degree.inn then
-			if has_ppdent then 
-				vstem = com.add_dental_ending(vstem)
-			else
-				vstem = vstem .. "n"
-			end
-		elseif has_ppdent then
-			error("Internal error: 'ppdent' can only be specified for adjectives ending in -inn and should have been caught earlier")
 		end
 		umut_vstem = com.apply_u_mutation(vstem, props_umut.form, not props_umut.defaulted)
 
@@ -1732,77 +1802,6 @@ local function determine_props(base, degree)
 end
 
 
-local function detect_indicator_spec(alternant_multiword_spec, base)
-	-- Next process the superative, if specified. We do this first so that if there is a superative and no
-	-- comparative specified, we add a comparative; but if sup:- is given, we don't add a comparative.
-	if base.sup then
-		process_spec(base, base.stems, "sup", base.sup, base.stems.stem, generate_default_sup)
-		if base.stems.sup and not base.comp then
-			base.comp = {{form = "+"}}
-		end
-	end
-	-- Next process the comparative, if specified (or defaulted because a superlative was specified).
-	if base.comp then
-		process_spec(base, base.stems, "comp", base.comp, base.stems.stem, generate_default_comp)
-	end
-	-- Next, if comparative specified but not superlative, derive the superlative(s) from the comparative(s).
-	if base.stems.comp and not base.sup then
-		local sups = iut.flatmap_forms(base.stems.comp, function(form)
-			if not rfind(form, "er$") then
-				error("Don't know how to derive superlative from comparative '" .. form .. "' because it doesn't end in -er; specify the superlative explicitly using sup:...")
-			end
-			local retval = generate_default_sup(base, rsub(form, "er$", ""))
-			if type(retval) ~= "table" then
-				retval = {retval}
-			end
-			return retval
-		end)
-		iut.insert_forms(base.stems, "sup", sups)
-	end
-
-	-- Make sure all alternants agree in having a comparative and/or superlative.
-	for _, compsup in ipairs { {"comp", "has_comp", "comparative"}, {"sup", "has_sup", "superlative"} } do
-		local stem, altprop, desc = unpack(compsup)
-		local has_stem = not not base.stems[stem]
-		if alternant_multiword_spec.props[altprop] == nil then
-			alternant_multiword_spec.props[altprop] = has_stem
-		elseif alternant_multiword_spec.props[altprop] ~= has_stem then
-			error("If one alternant has a " .. desc .. ", all must")
-		end
-	end
-
-	if base.props.predonly then
-		base.props.indecl = true
-	end
-	if base.overrides.pred and base.overrides.pred[1].form == "-" then
-		base.props.nopred = true
-	end
-	if base.props.predonly and base.props.nopred then
-		error("Can't be both 'predonly' and 'pred:-'")
-	end
-
-	-- Make sure all alternants agree in 'state' if specified.
-	local stateval = base.state or false
-	if alternant_multiword_spec.state == nil then
-		alternant_multiword_spec.state = stateval
-	elseif alternant_multiword_spec.state ~= stateval then
-		error("All alternants must agree in the value of 'state', if specified")
-	end
-
-	-- Make sure all alternants agree in various properties.
-	for _, propdesc in ipairs { {"indecl"}, {"nopred", "pred:-"}, {"predonly"} } do
-		local prop, desc = unpack(propdesc)
-		desc = desc or prop
-		local val = not not base.props[prop]
-		if alternant_multiword_spec.props[prop] == nil then
-			alternant_multiword_spec.props[prop] = val
-		elseif alternant_multiword_spec.props[prop] ~= val then
-			error("If one alternant specifies '" .. desc .. "', all must")
-		end
-	end
-end
-
-
 local function replace_hashvals(base, val)
 	if not val then
 		return val
@@ -1816,7 +1815,7 @@ local function replace_hashvals(base, val)
 end
 	
 
-local function detect_indicator_spec(base)
+local function detect_indicator_spec(alternant_multiword_spec, base)
 	-- Replace # and ## in all overridable stems as well as all overrides.
 	for _, stemkey in ipairs(overridable_stems) do
 		base[stemkey] = replace_hashvals(base, base[stemkey])
@@ -1829,9 +1828,60 @@ local function detect_indicator_spec(base)
 		determine_irreg_props(base)
 	else
 		expand_property_sets(base.degrees.pos[1])
-		FIXME: deal with comparative/superlative only lemmas
+		-- FIXME: deal with comparative/superlative only lemmas
 		determine_declension(base)
-		determine_props(base)
+		determine_props(base, base.degrees.pos[1])
+		-- Next process the superative, if specified. We do this first so that if there is a superative and no
+		-- comparative specified, we add a comparative; but if sup:- is given, we don't add a comparative.
+		if base.supspec then
+			process_comp_sup_spec(base, "sup", base.supspec)
+			if not base.compspec then
+				base.compspec = base.degrees.sup[1] and {{form = "+"}} or {{form = "-"}}
+			end
+		end
+		-- Next process the comparative, if specified (or defaulted because a superlative was specified).
+		if base.compspec then
+			process_comp_sup_spec(base, "comp", base.compspec)
+		end
+		-- Next, if comparative specified but not superlative, derive the superlative(s) from the comparative(s).
+		if base.compspec and not base.supspec then
+			derive_sup_from_comp(base, base.compspec)
+		end
+		for _, degfield in ipairs { "comp", "sup" } do
+			for _, degree in ipairs(base.degrees[degfield]) do
+				determine_props(base, degree)
+			end
+		end
+
+		-- Make sure all alternants agree in having a comparative and/or superlative.
+		for _, compsup in ipairs { {"comp", "hascomp", "comparative"}, {"sup", "hassup", "superlative"} } do
+			local degfield, altprop, desc = unpack(compsup)
+			local has_deg = base.degrees[degfield] and (base.degrees[degfield][1] and "has" or "hasnot") or "unspec"
+			if alternant_multiword_spec[altprop] == nil then
+				alternant_multiword_spec[altprop] = has_deg
+			elseif alternant_multiword_spec[altprop] ~= has_deg then
+				error(("All alternants must agree in whether they have a %s, but saw one alternant with value '%s' " ..
+					"and another with value '%s'"):format(alternant_multiword_spec[altprop], has_deg))
+			end
+		end
+
+		-- Make sure all alternants agree in 'state' if specified.
+		local stateval = base.degrees.pos[1].state or false
+		if alternant_multiword_spec.state == nil then
+			alternant_multiword_spec.state = stateval
+		elseif alternant_multiword_spec.state ~= stateval then
+			error("All alternants must agree in the value of 'state', if specified")
+		end
+
+		-- Make sure all alternants agree in various properties.
+		for _, prop in ipairs { "decl?", "indecl" } do
+			local val = not not base.props[prop]
+			if alternant_multiword_spec[prop] == nil then
+				alternant_multiword_spec[prop] = val
+			elseif alternant_multiword_spec[prop] ~= val then
+				error(("If one alternant specifies '%s', all must"):format(prop))
+			end
+		end
 	end
 end
 
@@ -1844,7 +1894,7 @@ end
 
 
 local function decline_adjective(base)
-	for degree_val, degree_list in ipairs(base.degrees) do
+	for degfield, degree_list in ipairs(base.degrees) do
 		for _, degree in ipairs(degree_list) do
 			for _, props in ipairs(degree.prop_sets) do
 				if not decls[degree.decl] then
@@ -1865,21 +1915,10 @@ local function add_categories(alternant_multiword_spec)
 	local function insert(cattype)
 		m_table.insertIfNot(cats, "Icelandic " .. cattype .. " " .. plpos)
 	end
-	if not alternant_multiword_spec.manual then
-		iut.map_word_specs(alternant_multiword_spec, function(base)
-			if base.decl == "irreg" then
-				insert("irregular")
-			elseif rfind(base.lemma, "ý$") then
-				insert("hard")
-			elseif rfind(base.lemma, "í$") then
-				insert("soft")
-			else
-				insert("possessive")
-			end
-			if base.short then
-				table.insert(cats, "Icelandic " .. plpos .. " with short forms")
-			end
-		end)
+	if alternant_multiword_spec.hascomp == "has" and alternant_multiword_spec.hassup == "has" then
+		insert("comparable")
+	elseif alternant_multiword_spec.hascomp == "hasnot" and alternant_multiword_spec.hassup == "hasnot" then
+		insert("uncomparable")
 	end
 	alternant_multiword_spec.categories = cats
 end
@@ -1887,19 +1926,31 @@ end
 
 local function show_forms(alternant_multiword_spec)
 	local lemmas = {}
-	local lemmaform = alternant_multiword_spec.forms.nom_m or alternant_multiword_spec.forms.nom_mp or
-		alternant_multiword_spec.forms.nom_mp_an
-	if lemmaform then
-		for _, form in ipairs(lemmaform) do
-			table.insert(lemmas, form.form)
+	for _, slot in ipairs(potential_lemma_slots) do
+		if alternant_multiword_spec.forms[slot] then
+			for _, formobj in ipairs(alternant_multiword_spec.forms[slot]) do
+				table.insert(lemmas, formobj)
+			end
+			break
 		end
 	end
 	local props = {
 		lemmas = lemmas,
-		slot_list = adjective_slot_list,
 		lang = lang,
 	}
+	props.slot_list = adjective_slot_list_positive
 	iut.show_forms(alternant_multiword_spec.forms, props)
+	alternant_multiword_spec.footnote_positive = alternant_multiword_spec.forms.footnote
+	if alternant_multiword_spec.hascomp == "has" then
+		props.slot_list = adjective_slot_list_comparative
+		iut.show_forms(alternant_multiword_spec.forms, props)
+		alternant_multiword_spec.footnote_comparative = alternant_multiword_spec.forms.footnote
+	end
+	if alternant_multiword_spec.hassup == "has" then
+		props.slot_list = adjective_slot_list_superlative
+		iut.show_forms(alternant_multiword_spec.forms, props)
+		alternant_multiword_spec.footnote_superlative = alternant_multiword_spec.forms.footnote
+	end
 end
 
 
@@ -1913,7 +1964,7 @@ local function make_table(alternant_multiword_spec)
 <div class="NavFrame" style="max-width:MINWIDTHem">
 <div class="NavHead" style="background: var(--wikt-palette-lighterblue, #eff7ff);">{title}{annotation}</div>
 <div class="NavContent" style="overflow:auto">
-{\op}| style="min-width:MINWIDTHem" class="inflection-table is-inflection-table"
+{\op}| style="min-width:MINWIDTHem" class="is-inflection-table" data-toggle-category="inflection"
 |-
 ]=], "MINWIDTH", min_width)
 	end
@@ -2074,11 +2125,7 @@ local function make_table(alternant_multiword_spec)
 </div></div>
 ]=]
 
-	if alternant_multiword_spec.title then
-		forms.title = alternant_multiword_spec.title
-	else
-		forms.title = 'Declension of <i lang="is">' .. forms.lemma .. '</i>'
-	end
+	local ital_lemma = '<i lang="is" class="Latn">' .. forms.lemma .. "</i>"
 
 	local annotation = alternant_multiword_spec.annotation
 	if annotation == "" then
@@ -2088,7 +2135,26 @@ local function make_table(alternant_multiword_spec)
 	end
 
 	-- Format the positive table.
-	local positive_table_spec = rsub(table_spec, "COMPSUP", "")
+	local function state_to_abbr(state)
+		if state == "strong" then
+			return "str"
+		elseif state == "weak" then
+			return "wk"
+		else
+			error(("Internal error: Saw state '%s' but expected 'strong' or 'weak'"):format(state))
+		end
+	end
+
+	local positive_table_spec =
+		alternant_multiword_spec.state == "bothstates" and alternant_multiword_spec.number == "both" and
+			get_table_spec_all_number_all_state("") or
+		alternant_multiword_spec.number == "both" and
+			get_table_spec_all_number_one_state("", state_to_abbr(alternant_multiword_spec.state),
+				alternant_multiword_spec.irreg) or
+		alternant_multiword_spec.state == "bothstates" and
+			get_table_spec_one_number_all_state("", alternant_multiword_spec.number) or
+		get_table_spec_one_number_one_state("", alternant_multiword_spec.number,
+			state_to_abbr(alternant_multiword_spec.state), alternant_multiword_spec.irreg)
 	forms.title = "positive forms of " .. ital_lemma
 	forms.footnote = alternant_multiword_spec.footnote_positive
 	forms.notes_clause = forms.footnote ~= "" and m_string_utilities.format(notes_template, forms) or ""
@@ -2096,8 +2162,8 @@ local function make_table(alternant_multiword_spec)
 
 	-- Maybe format the comparative table.
 	local comparative_table = ""
-	if alternant_multiword_spec.props.has_comp then
-		local comparative_table_spec = rsub(table_spec, "COMPSUP", "comp_")
+	if alternant_multiword_spec.props.hascomp == "has" then
+		local comparative_table_spec = get_table_spec_all_number_one_state("comp_", "wk")
 		forms.title = "comparative forms of " .. ital_lemma
 		forms.footnote = alternant_multiword_spec.footnote_comparative
 		forms.notes_clause = forms.footnote ~= "" and m_string_utilities.format(notes_template, forms) or ""
@@ -2106,8 +2172,8 @@ local function make_table(alternant_multiword_spec)
 
 	-- Maybe format the superlative table.
 	local superlative_table = ""
-	if alternant_multiword_spec.props.has_sup then
-		local superlative_table_spec = rsub(table_spec, "COMPSUP", "sup_")
+	if alternant_multiword_spec.props.hassup == "has" then
+		local superlative_table_spec = get_table_spec_all_number_all_state("sup_")
 		forms.title = "superlative forms of " .. ital_lemma
 		forms.footnote = alternant_multiword_spec.footnote_superlative
 		forms.notes_clause = forms.footnote ~= "" and m_string_utilities.format(notes_template, forms) or ""
@@ -2115,7 +2181,7 @@ local function make_table(alternant_multiword_spec)
 	end
 
 	-- Paste them together.
-	return require("Module:TemplateStyles")("Module:is-adjective/style.css") .. return positive_table ..
+	return require("Module:TemplateStyles")("Module:is-adjective/style.css") .. positive_table ..
 		comparative_table .. superlative_table
 end
 
@@ -2166,47 +2232,6 @@ function export.do_generate_forms(parent_args, pos, from_headword, def)
 	iut.inflect_multiword_or_alternant_multiword_spec(alternant_multiword_spec, inflect_props)
 	-- Do non-accusative overrides so they get copied to the accusative forms appropriately.
 	process_overrides(alternant_multiword_spec.forms, args)
-	set_accusative(alternant_multiword_spec)
-	-- Do accusative overrides after copying the accusative forms.
-	process_overrides(alternant_multiword_spec.forms, args, "do acc")
-	add_categories(alternant_multiword_spec)
-	if args.json and not from_headword then
-		return require("Module:JSON").toJSON(alternant_multiword_spec)
-	end
-	return alternant_multiword_spec
-end
-
-
--- Externally callable function to parse and decline an adjective where all
--- forms are given manually. Return value is WORD_SPEC, an object where the
--- declined forms are in `WORD_SPEC.forms` for each slot. If there are no values
--- for a slot, the slot key will be missing. The value for a given slot is a
--- list of objects {form=FORM, footnotes=FOOTNOTES}.
-function export.do_generate_forms_manual(parent_args, pos, from_headword, def)
-	local params = {
-		pos = {},
-		special = {},
-		json = {type = "boolean"}, -- for use with bots
-		title = {},
-	}
-	for slot, _ in pairs(input_adjective_slots) do
-		params[slot] = {}
-	end
-
-	local args = require("Module:parameters").process(parent_args, params)
-	local alternant_multiword_spec = {
-		pos = args.pos,
-		special = args.special,
-		title = args.title, 
-		forms = {},
-		manual = true,
-	}
-	check_allowed_overrides(alternant_multiword_spec, args)
-	-- Do non-accusative overrides so they get copied to the accusative forms appropriately.
-	process_overrides(alternant_multiword_spec.forms, args)
-	set_accusative(alternant_multiword_spec)
-	-- Do accusative overrides after copying the accusative forms.
-	process_overrides(alternant_multiword_spec.forms, args, "do acc")
 	add_categories(alternant_multiword_spec)
 	if args.json and not from_headword then
 		return require("Module:JSON").toJSON(alternant_multiword_spec)
@@ -2221,17 +2246,6 @@ end
 function export.show(frame)
 	local parent_args = frame:getParent().args
 	local alternant_multiword_spec = export.do_generate_forms(parent_args)
-	show_forms(alternant_multiword_spec)
-	return make_table(alternant_multiword_spec) .. require("Module:utilities").format_categories(alternant_multiword_spec.categories, lang)
-end
-
-
--- Entry point for {{is-adecl-manual}}. Template-callable function to parse and
--- decline an adjective given manually-specified inflections and generate a
--- displayable table of the declined forms.
-function export.show_manual(frame)
-	local parent_args = frame:getParent().args
-	local alternant_multiword_spec = export.do_generate_forms_manual(parent_args)
 	show_forms(alternant_multiword_spec)
 	return make_table(alternant_multiword_spec) .. require("Module:utilities").format_categories(alternant_multiword_spec.categories, lang)
 end
