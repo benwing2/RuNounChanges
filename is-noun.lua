@@ -1781,9 +1781,11 @@ decline_noun() function iterates over all property sets and calls the appropriat
 turn, which adds forms to each slot in `base.forms`, automatically deduplicating.
 
 The properties in each property set are:
-* Stems (each stem is either a string or a form object, i.e. an object with `form` and `footnotes` properties; see
-  [[Module:inflection utilities]]; stems in general may be missing, i.e. nil, unless otherwise specified, and default
-  to more general variants):
+* Mutation specs: These are copied from the mutation specs at the base level. The key is one of the possible mutation
+  groups ("umut", "imut", "con", etc.), but the value is a single form object {form = "FORM", footnotes = nil or
+  {"FOOTNOTE", "FOOTNOTE", ...}}. These are set by expand_property_sets().
+* Stems (each stem is either a string or a form object; stems in general may be missing, i.e. nil, unless otherwise
+  specified, and default to more general variants):
 ** `stem`: The basic stem. Always set. May be overridden by more specific variants.
 ** `nonvstem`: The stem used when the ending is null or starts with a consonant, unless overridden by a more
    specific variant. Defaults to `stem`. Not currently used, but could be if e.g. a user stem override `nonvstem:...`
@@ -2889,19 +2891,6 @@ local function determine_props(base)
 		-- Determine the default dative singular for masculine nouns using declension "m".
 		determine_default_masc_dat_sg(base, props)
 
-		-- Convert regular `umut` to `u_mut` (applying to the second-to-last syllable) when contraction
-		-- is in place and we're computing the u-mutation or reverse u-mutation version of the non-vowel
-		-- stem. Cf. neuter [[mastur]] "mast" with plural [[möstur]].
-		local function map_nonvstem_umut(val)
-			if val == "umut" and props.con and props.con.form == "con" then
-				return "u_mut"
-			elseif val == "unumut" and props.con and props.con.form == "con" then
-				return "unu_mut"
-			else
-				return val
-			end
-		end
-
 		-- Almost all nouns have dative plural -um, which triggers u-mutation, so we need to compute the u-mutation
 		-- stem using "umut" if not specifically given. Set `defaulted` so an error isn't triggered if there's no
 		-- special u-mutated form.
@@ -2927,8 +2916,7 @@ local function determine_props(base)
 				umut_null_defvstem
 			if props.unumut and not props.unumut.form:find("^%-") then
 				umut_nonvstem = base_stem
-				nonvstem = com.apply_reverse_u_mutation(umut_nonvstem, map_nonvstem_umut(props.unumut.form),
-					not props.unumut.defaulted)
+				nonvstem = com.apply_reverse_u_mutation(umut_nonvstem, props.unumut.form, not props.unumut.defaulted)
 				stem = nonvstem
 				if base.need_imut then
 					imut_nonvstem = com.apply_i_mutation(nonvstem, base.imutval)
@@ -2951,10 +2939,6 @@ local function determine_props(base)
 					umut_null_defvstem = com.apply_contraction(base_stem)
 				else
 					umut_null_defvstem = base_stem
-					-- If contraction but not defcon is applicable, the stem we'll be applying reverse u-mutation
-					-- to is the uncontracted stem so we need to apply reverse u-mutation to the second-to-last
-					-- vowel.
-					props_unumut_form = map_nonvstem_umut(props_unumut_form)
 				end
 				null_defvstem = com.apply_reverse_u_mutation(umut_null_defvstem, props_unumut_form,
 					not props.unumut.defaulted)
@@ -2963,8 +2947,7 @@ local function determine_props(base)
 				nonvstem = com.apply_reverse_i_mutation(imut_nonvstem, base.imutval)
 				stem = nonvstem
 				if props_umut then
-					umut_nonvstem = com.apply_u_mutation(nonvstem, map_nonvstem_umut(props_umut.form),
-						not props_umut.defaulted)
+					umut_nonvstem = com.apply_u_mutation(nonvstem, props_umut.form, not props_umut.defaulted)
 				end
 				if base_vstem then
 					error(("Don't currently know how to combine '%svstem:' with 'unimut' specs"):format(
@@ -2986,8 +2969,7 @@ local function determine_props(base)
 			elseif props_umut then
 				stem = base_stem
 				nonvstem = stem
-				umut_nonvstem = com.apply_u_mutation(nonvstem, map_nonvstem_umut(props_umut.form),
-					not props_umut.defaulted)
+				umut_nonvstem = com.apply_u_mutation(nonvstem, props_umut.form, not props_umut.defaulted)
 				if base.need_imut then
 					imut_nonvstem = com.apply_i_mutation(nonvstem, base.imutval)
 				end
@@ -3495,10 +3477,6 @@ local function show_forms(alternant_multiword_spec)
 		lemmas = lemmas,
 		slot_list = alternant_multiword_spec.noun_slots,
 		lang = lang,
-		canonicalize = function(form)
-			-- return com.remove_variant_codes(form)
-			return form
-		end,
 	}
 	iut.show_forms(alternant_multiword_spec.forms, props)
 end
@@ -3513,7 +3491,7 @@ local function make_table(alternant_multiword_spec)
 <div class="NavFrame" style="max-width:MINWIDTHem">
 <div class="NavHead" style="background: var(--wikt-palette-lighterblue, #eff7ff);">{title}{annotation}</div>
 <div class="NavContent" style="overflow:auto">
-{\op}| style="min-width:MINWIDTHem" class="inflection-table is-inflection-table"
+{\op}| style="min-width:MINWIDTHem" class="is-inflection-table" data-toggle-category="inflection"
 |-
 ]=], "MINWIDTH", min_width)
 	end

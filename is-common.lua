@@ -38,7 +38,8 @@ end
 
 local AU_SUB = u(0xFFF0) -- temporary substitution for 'au'
 local CAP_AU_SUB = u(0xFFF1) -- temporary substitution for 'Au'
-local ALL_CAP_AU_SUB = u(0xFFF1) -- temporary substitution for 'AU'
+local ALL_CAP_AU_SUB = u(0xFFF2) -- temporary substitution for 'AU'
+local UR_SUB = u(0xFFF3) -- temporary substitution for final 'ur'; should be treated as consonant
 local lc_vowel = "aeiouyáéíóúýöæ"
 local uc_vowel = uupper(lc_vowel)
 export.vowel = lc_vowel .. uc_vowel .. AU_SUB .. CAP_AU_SUB .. ALL_CAP_AU_SUB
@@ -50,6 +51,28 @@ export.cons_c = "[^" .. export.vowel .. "]"
 
 local V = export.vowel_c
 local C = export.cons_c
+
+
+local function apply_au_ur_sub(stem, ur_only)
+	if not ur_only then
+		-- au doesn't u-mutate; easiest way to handle this is to temporarily convert au and variants to single
+		-- characters
+		stem = stem:gsub("au", AU_SUB)
+		stem = stem:gsub("Au", CAP_AU_SUB)
+		stem = stem:gsub("AU", ALL_CAP_AU_SUB)
+	end
+	-- There must be at least one vowel to treat -ur as a suffix; lemmas like [[bur]] don't count.
+	stem = rsub(stem, "^(.*" .. com.vowel_or_hyphen_c .. ".*)ur$", "%1" .. UR_SUB)
+	return stem
+end
+
+local function undo_au_ur_sub(stem)
+	stem = stem:gsub(UR_SUB, "ur")
+	stem = stem:gsub(AU_SUB, "au")
+	stem = stem:gsub(CAP_AU_SUB, "Au")
+	stem = stem:gsub(ALL_CAP_AU_SUB, "AU")
+	return stem
+end
 
 
 local lc_i_mutation = {
@@ -98,46 +121,48 @@ for k, v in pairs(lc_reverse_i_mutation) do
 	reverse_i_mutation[ucap(k)] = ucap(v)
 end
 
--- Apply i-mutation to the last vowel of `stem`. If `newv` is given, use that vowel (for cases like [[sonur]] "son"
--- nom pl [[synir]] but [[hnot]] "nut; small ball of yarn" nom pl [[hnetur]]); otherwise use the appropriate default
--- vowel.
+-- Apply i-mutation to the last vowel of `stem`, excluding suffixal -ur. If `newv` is given, use that vowel (for cases
+-- like [[sonur]] "son" nom pl [[synir]] but [[hnot]] "nut; small ball of yarn" nom pl [[hnetur]]); otherwise use the
+-- appropriate default vowel.
 function export.apply_i_mutation(stem, newv)
 	local modstem, subbed
 	local function subfunc(origv, post)
 		return (newv or i_mutation[origv]) .. post
 	end
+	stem = apply_au_ur_sub(stem, "ur only")
 	modstem, subbed = rsubb(stem, "([Aa]u)(" .. C .. "*)$", subfunc)
 	if subbed then
-		return modstem
+		return undo_au_ur_sub(modstem)
 	end
 	modstem, subbed = rsubb(stem, "([Jj][aöóúu])(" .. C .. "*)$", subfunc)
 	if subbed then
-		return modstem
+		return undo_au_ur_sub(modstem)
 	end
 	modstem, subbed = rsubb(stem, "([aáeoöóúuAÁEOÖÓÚU])(" .. C .. "*)$", subfunc)
 	if subbed then
-		return modstem
+		return undo_au_ur_sub(modstem)
 	end
-	error(("Stem '%s' does not contain an i-mutable vowel as its last vowel"):format(stem))
+	error(("Stem '%s' does not contain an i-mutable vowel as its last vowel"):format(undo_au_ur_sub(stem)))
 end
 
 
--- Apply reverse i-mutation to the last vowel of `stem`. If `newv` is given, use that vowel; otherwise use the
--- appropriate default vowel.
+-- Apply reverse i-mutation to the last vowel of `stem`, excluding suffixal -ur. If `newv` is given, use that vowel;
+-- otherwise use the appropriate default vowel.
 function export.apply_reverse_i_mutation(stem, newv)
 	local modstem, subbed
 	local function subfunc(origv, post)
 		return (newv or reverse_i_mutation[origv]) .. post
 	end
+	stem = apply_au_ur_sub(stem, "ur only")
 	modstem, subbed = rsubb(stem, "([Ee]y)(" .. C .. "*)$", subfunc)
 	if subbed then
-		return modstem
+		return undo_au_ur_sub(modstem)
 	end
 	modstem, subbed = rsubb(stem, "([æeiýyÆEIÝY])(" .. C .. "*)$", subfunc)
 	if subbed then
-		return modstem
+		return undo_au_ur_sub(modstem)
 	end
-	error(("Stem '%s' does not contain a reversible i-mutated vowel as its last vowel"):format(stem))
+	error(("Stem '%s' does not contain a reversible i-mutated vowel as its last vowel"):format(undo_au_ur_sub(stem)))
 end
 
 
@@ -161,22 +186,7 @@ local greater_reverse_u_mutation = {
 	["U"] = "A", -- FIXME, may not occur
 }
 
-local function apply_au_sub(stem)
-	-- au doesn't mutate; easiest way to handle this is to temporarily convert au and variants to single characters
-	stem = stem:gsub("au", AU_SUB)
-	stem = stem:gsub("Au", CAP_AU_SUB)
-	stem = stem:gsub("AU", ALL_CAP_AU_SUB)
-	return stem
-end
-
-local function undo_au_sub(stem)
-	stem = stem:gsub(AU_SUB, "au")
-	stem = stem:gsub(CAP_AU_SUB, "Au")
-	stem = stem:gsub(ALL_CAP_AU_SUB, "AU")
-	return stem
-end
-
--- Apply u-mutation to `stem`. `typ` is the type of u-mutation:
+-- Apply u-mutation to `stem`, excluding suffixal -ur. `typ` is the type of u-mutation:
 -- * "umut" (mutate the last vowel if possible, with a -> ö);
 -- * "Umut" (mutate the last vowel if possible, with a -> u);
 -- * "uumut" (mutate the last two vowels if possible, with a -> ö in the second-to-last and a -> ö in the last);
@@ -187,7 +197,7 @@ end
 -- * "u_mut" (mutate the second-to-last vowel if possible, with a -> ö, leaving alone the last vowel).
 function export.apply_u_mutation(stem, typ, error_if_unmatchable)
 	local origstem = stem
-	stem = apply_au_sub(stem)
+	stem = apply_au_ur_sub(stem)
 	if typ == "uUUmut" then
 		local first, v1, mid1, v2, mid2, v3, last = rmatch(stem, "^(.*)(" .. V .. ")(" .. C .. "*)(" .. V .. ")(" ..
 			C .. "*)(" .. V .. ")(" .. C .. ")$")
@@ -198,7 +208,7 @@ function export.apply_u_mutation(stem, typ, error_if_unmatchable)
 				error(("Can't apply u-mutation of type '%s' because stem '%s' doesn't have three syllables"):
 					format(typ, origstem))
 			end
-			return undo_au_sub(stem)
+			return undo_au_ur_sub(stem)
 		else
 			first, v2, mid2, v3, last = rmatch(stem, "^(.*)(" .. V .. ")(" .. C .. "*)(" ..  V .. ")(" .. C .. "*)$")
 			if not first then
@@ -206,13 +216,13 @@ function export.apply_u_mutation(stem, typ, error_if_unmatchable)
 					error(("Can't apply u-mutation of type '%s' because suffix stem '%s' doesn't have two syllables"):
 						format(typ, origstem))
 				end
-				return undo_au_sub(stem)
+				return undo_au_ur_sub(stem)
 			v1 = ""
 			mid1 = ""
 		end
 		v2 = greater_u_mutation[v2] or v2
 		v3 = greater_u_mutation[v3] or v3
-		local retval = undo_au_sub(first .. v1 .. mid1 .. v2 .. mid2 .. v3 .. last)
+		local retval = undo_au_ur_sub(first .. v1 .. mid1 .. v2 .. mid2 .. v3 .. last)
 		if retval == origstem and error_if_unmatchable then
 			error(("Can't apply u-mutation of type '%s' to stem '%s'; result would be the same as the original"):
 				format(typ, origstem))
@@ -228,7 +238,7 @@ function export.apply_u_mutation(stem, typ, error_if_unmatchable)
 				error(("Can't apply u-mutation of type '%s' because stem '%s' doesn't have two syllables"):
 					format(typ, origstem))
 			end
-			return undo_au_sub(stem)
+			return undo_au_ur_sub(stem)
 		else
 			first, v2, last = rmatch(stem, "^(.*)(" .. V .. ")(" .. C .. "*)$")
 			if not first then
@@ -236,13 +246,13 @@ function export.apply_u_mutation(stem, typ, error_if_unmatchable)
 					error(("Can't apply u-mutation of type '%s' because suffix stem '%s' doesn't have even one syllable"):
 						format(typ, origstem))
 				end
-				return undo_au_sub(stem)
+				return undo_au_ur_sub(stem)
 			end
 			v1 = ""
 			middle = ""
 		end
 		v2 = typ == "u_mut" and v2 or (typ == "uUmut" and greater_u_mutation or lesser_u_mutation)[v2] or v2
-		local retval = undo_au_sub(first .. v1 .. middle .. v2 .. last)
+		local retval = undo_au_ur_sub(first .. v1 .. middle .. v2 .. last)
 		if retval == origstem and error_if_unmatchable then
 			error(("Can't apply u-mutation of type '%s' to stem '%s'; result would be the same as the original"):
 				format(typ, origstem))
@@ -257,10 +267,10 @@ function export.apply_u_mutation(stem, typ, error_if_unmatchable)
 		if error_if_unmatchable then
 			error(("Can't apply u-mutation of type '%s' because stem '%s' doesn't have a vowel"):format(typ, origstem))
 		end
-		return undo_au_sub(stem)
+		return undo_au_ur_sub(stem)
 	end
 	v = (typ == "Umut" and greater_u_mutation or lesser_u_mutation)[v] or v
-	local retval = undo_au_sub(first .. v .. last)
+	local retval = undo_au_ur_sub(first .. v .. last)
 	if retval == origstem and error_if_unmatchable then
 		error(("Can't apply u-mutation of type '%s' to stem '%s'; result would be the same as the original"):
 			format(typ, origstem))
@@ -269,7 +279,7 @@ function export.apply_u_mutation(stem, typ, error_if_unmatchable)
 end
 
 
--- Apply reverse u-mutation to `stem`. `typ` is the type of u-mutation:
+-- Apply reverse u-mutation to `stem`, excluding suffixal -ur. `typ` is the type of u-mutation:
 -- * "unumut" (unmutate the last vowel if possible, with ö -> a);
 -- * "unUmut" (unmutate the last vowel if possible, with u -> a);
 -- * "unuumut" (unmutate the last two vowels if possible, with ö -> a in the second-to-last and ö -> a in the last);
@@ -278,7 +288,7 @@ end
 -- NOTE: "unuUUmut" isn't implemented at this point because AFAIK it's not needed anywhere.
 function export.apply_reverse_u_mutation(stem, typ, error_if_unmatchable)
 	local origstem = stem
-	stem = apply_au_sub(stem)
+	stem = apply_au_ur_sub(stem)
 	if typ == "unuumut" or typ == "unuUmut" or typ == "unu_mut" then
 		local first, v1, middle, v2, last =
 			rmatch(stem, "^(.*)(" .. V .. ")(" .. C .. "*)(" ..  V .. ")(" .. C .. "*)$")
@@ -287,11 +297,11 @@ function export.apply_reverse_u_mutation(stem, typ, error_if_unmatchable)
 				error(("Can't apply reverse u-mutation of type '%s' because stem '%s' doesn't have two syllables"):
 					format(typ, origstem))
 			end
-			return undo_au_sub(stem)
+			return undo_au_ur_sub(stem)
 		end
 		v1 = lesser_reverse_u_mutation[v1] or v1
 		v2 = typ == "unu_mut" and v2 or (typ == "unuUmut" and greater_reverse_u_mutation or lesser_reverse_u_mutation)[v2] or v2
-		local retval = undo_au_sub(first .. v1 .. middle .. v2 .. last)
+		local retval = undo_au_ur_sub(first .. v1 .. middle .. v2 .. last)
 		if retval == origstem and error_if_unmatchable then
 			error(("Can't apply reverse u-mutation of type '%s' to stem '%s'; result would be the same as the original"):
 				format(typ, origstem))
@@ -307,10 +317,10 @@ function export.apply_reverse_u_mutation(stem, typ, error_if_unmatchable)
 			error(("Can't apply reverse u-mutation of type '%s' because stem '%s' doesn't have a vowel"):
 				format(typ, origstem))
 		end
-		return undo_au_sub(stem)
+		return undo_au_ur_sub(stem)
 	end
 	v = (typ == "unUmut" and greater_reverse_u_mutation or lesser_reverse_u_mutation)[v] or v
-	local retval = undo_au_sub(first .. v .. last)
+	local retval = undo_au_ur_sub(first .. v .. last)
 	if retval == origstem and error_if_unmatchable then
 		error(("Can't apply reverse u-mutation of type '%s' to stem '%s'; result would be the same as the original"):
 			format(typ, origstem))
