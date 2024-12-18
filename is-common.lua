@@ -4,6 +4,8 @@ local lang = require("Module:languages").getByCode("is")
 local m_links = require("Module:links")
 local m_table = require("Module:table")
 local m_string_utilities = require("Module:string utilities")
+local pages_module = "Module:pages"
+local template_parser_module = "Module:template parser"
 
 local u = mw.ustring.char
 local rsplit = mw.text.split
@@ -62,7 +64,7 @@ local function apply_au_ur_sub(stem, ur_only)
 		stem = stem:gsub("AU", ALL_CAP_AU_SUB)
 	end
 	-- There must be at least one vowel to treat -ur as a suffix; lemmas like [[bur]] don't count.
-	stem = rsub(stem, "^(.*" .. com.vowel_or_hyphen_c .. ".*)ur$", "%1" .. UR_SUB)
+	stem = rsub(stem, "^(.*" ..export.vowel_or_hyphen_c .. ".*)ur$", "%1" .. UR_SUB)
 	return stem
 end
 
@@ -200,7 +202,7 @@ function export.apply_u_mutation(stem, typ, error_if_unmatchable)
 	stem = apply_au_ur_sub(stem)
 	if typ == "uUUmut" then
 		local first, v1, mid1, v2, mid2, v3, last = rmatch(stem, "^(.*)(" .. V .. ")(" .. C .. "*)(" .. V .. ")(" ..
-			C .. "*)(" .. V .. ")(" .. C .. ")$")
+			C .. "*)(" .. V .. ")(" .. C .. "*)$")
 		if first then
 			v1 = lesser_u_mutation[v1] or v1
 		elseif not stem:find("^%-") then
@@ -217,6 +219,7 @@ function export.apply_u_mutation(stem, typ, error_if_unmatchable)
 						format(typ, origstem))
 				end
 				return undo_au_ur_sub(stem)
+			end
 			v1 = ""
 			mid1 = ""
 		end
