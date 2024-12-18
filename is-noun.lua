@@ -54,14 +54,11 @@ local m_string_utilities = require("Module:string utilities")
 local iut = require("Module:inflection utilities")
 local m_para = require("Module:parameters")
 local com = require("Module:is-common")
-local pages_module = "Module:pages"
-local template_parser_module = "Module:template parser"
 
 local u = mw.ustring.char
 local rsplit = mw.text.split
 local rfind = mw.ustring.find
 local rmatch = mw.ustring.match
-local rgmatch = mw.ustring.gmatch
 local rsubn = mw.ustring.gsub
 local ulen = mw.ustring.len
 local usub = mw.ustring.sub
@@ -240,10 +237,10 @@ end
 
 
 local function skip_slot(number, definiteness, slot)
-	return number == "sg" and rfind(slot, "_p$") or
-		number == "pl" and rfind(slot, "_s$") or
-		definiteness == "def" and rfind(slot, "^ind_") or
-		(definiteness == "indef" or definiteness == "none") and rfind(slot, "^def_")
+	return number == "sg" and slot:find("_p$") or
+		number == "pl" and slot:find("_s$") or
+		definiteness == "def" and slot:find("^ind_") or
+		(definiteness == "indef" or definiteness == "none") and slot:find("^def_")
 end
 
 -- Return true if `stem` refers to a proper noun (first character is uppercase, second character is lowercase).
@@ -1200,7 +1197,7 @@ local function handle_derived_slots_and_overrides(base)
 	-- (before removing links) for forms that are the same as the lemma, if the original lemma has links.
 	for _, slot in ipairs(potential_lemma_slots) do
 		iut.insert_forms(base.forms, slot .. "_linked", iut.map_forms(base.forms[slot], function(form)
-			if form == base.orig_lemma_no_links and rfind(base.orig_lemma, "%[%[") then
+			if form == base.orig_lemma_no_links and base.orig_lemma:find("%[%[") then
 				return base.orig_lemma
 			else
 				return form
@@ -1459,14 +1456,14 @@ local function parse_override(segments, parse_err)
 		end
 		part = usub(part, 4)
 		local slot = defslot and "def_" or ""
-		if rfind(part, "^pl") then
+		if part:find("^pl") then
 			part = usub(part, 3)
 			slot = slot .. case .. "_p"
 		else
 			slot = slot .. case .. "_s"
 		end
 		table.insert(slots, slot)
-		if rfind(part, "^%+") then
+		if part:find("^%+") then
 			part = usub(part, 2)
 		else
 			break
@@ -1629,7 +1626,7 @@ local function parse_inside(base, inside, is_scraped_noun)
 				base.scrape_is_uppercase = true
 				base.scrape_spec = lower_scrape_init .. scrape_rest
 			end
-		elseif rfind(part, ":") then
+		elseif part:find(":") then
 			local spec, value = part:match("^([a-z]+)%s*:%s*(.+)$")
 			if not spec then
 				parse_err(("Syntax error in indicator with value, expecting alphabetic slot or stem/lemma override indicator: '%s'"):format(part))
@@ -2838,7 +2835,7 @@ local function determine_default_masc_dat_sg(base, props)
 		default_dat_sg = "i"
 	elseif rfind(stem, com.vowel_c .. "r?$") then
 		default_dat_sg = ""
-	elseif rfind(base.lemma, "ll$") then
+	elseif base.lemma:find("ll$") then
 		-- nouns in -ll without contraction, which generally includes those not in -all/-ill/-ull plus a few in these
 		-- endings such as [[panill]] "paneling" (rare variant of [[panell]]), [[kórall]] "coral", [[kristall]]
 		-- "crystal", [[kanill]] "cinnamon" (also [[kanell]]); only a few exceptions, such as [[rafall]] "generator",
@@ -2847,7 +2844,7 @@ local function determine_default_masc_dat_sg(base, props)
 		-- "heel", [[stóll]] "chair", which are dat-:i[footnote]/- with a footnote variously indicating that the
 		-- dative in -i occurs only in fixed expressions, compounds, place names, etc.
 		default_dat_sg = ""
-	elseif rfind(base.lemma, "nn$") then
+	elseif base.lemma:find("nn$") then
 		-- nouns in -nn without contraction, which generally includes those not in -ann/-inn/-unn; there are fewer of
 		-- these than the corresponding nouns in -ll and they have default dative i/i; only exceptions I can find are
 		-- [[húnn]] "knob", [[tónn]] "tone (music)", [[dúnn]] "down (feathers)"", which have dati:-/i.
@@ -3338,24 +3335,10 @@ local function decline_noun(base)
 end
 
 
-local function get_variants(form)
-	return nil
-	--[=[
-	FIXME
-	return
-		form:find(com.VAR1) and "var1" or
-		form:find(com.VAR2) and "var2" or
-		form:find(com.VAR3) and "var3" or
-		nil
-	]=]
-end
-
-
 -- Compute the categories to add the noun to, as well as the annotation to display in the
 -- declension title bar. We combine the code to do these functions as both categories and
 -- title bar contain similar information.
 local function compute_categories_and_annotation(alternant_multiword_spec)
-	-- FIXME: Update for Icelandic
 	local all_cats = {}
 	local function inscat(cattype)
 		m_table.insertIfNot(all_cats, "Icelandic " .. cattype)
@@ -3384,11 +3367,6 @@ local function compute_categories_and_annotation(alternant_multiword_spec)
 			table.insert(annparts, joiner)
 		end
 		table.insert(annparts, txt)
-	end
-
-	local function trim(text)
-		text = text:gsub(" +", " ")
-		return mw.text.trim(text)
 	end
 
 	local function do_word_spec(base)
@@ -3438,7 +3416,7 @@ local function compute_categories_and_annotation(alternant_multiword_spec)
 	end)
 	if alternant_multiword_spec.actual_number == "sg" or alternant_multiword_spec.actual_number == "pl" then
 		-- not "both" or "none" (for [[sebe]])
-		insann(alternant_multiword_spec.actual_number == "sg" and "sg-only" or "pl-only", " ")
+		insann(alternant_multiword_spec.actual_number .. "-only", " ")
 	end
     if #genderspecs > 0 then
         insann(table.concat(genderspecs, " // "), " ")
@@ -3702,7 +3680,6 @@ function export.do_generate_forms(args, argspec, source_template)
 				return skip_slot(alternant_multiword_spec.actual_number, alternant_multiword_spec.definiteness, slot)
 			end,
 			slot_list = alternant_multiword_spec.noun_slots,
-			get_variants = get_variants,
 			inflect_word_spec = decline_noun,
 		}
 		iut.inflect_multiword_or_alternant_multiword_spec(alternant_multiword_spec, inflect_props)
