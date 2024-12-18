@@ -393,9 +393,19 @@ end
 
 local function process_slot_overrides(base)
 	for slot, spec in pairs(base.overrides) do
-		if skip_slot(base.number, base.state, slot) then
-			error(("Override specified for invalid slot '%s' due to '%s' number restriction and/or '%s' state restriction"):
-				format(slot, base.number, base.state))
+		local degfield = slot:match("^(comp)_")
+		if not degfield then
+			degfield = slot:match("^(sup)_")
+		end
+		degfield = degfield or "pos"
+		if not base.degrees[degfield] then
+			error(("Override specified for invalid slot '%s' because degree '%s' doesn't exist"):format(slot, degfield))
+		end
+		for _, degree in ipairs(base.degrees[degfield]) do
+			if skip_slot(degree.number, degree.state, slot) then
+				error(("Override specified for invalid slot '%s' due to '%s' number restriction and/or '%s' state " ..
+					"restriction of degree '%s'"):format(slot, degree.number, degree.state, degfield))
+			end
 		end
 		base.forms[slot] = spec
 	end
@@ -757,11 +767,7 @@ local function map_all_overrides(base, fn)
 			return retval
 		end
 	end
-	local retval = map_override(base.gens, fn)
-	if retval ~= nil then
-		return retval
-	end
-	return map_override(base.pls, fn)
+	return nil
 end
 
 
@@ -873,6 +879,7 @@ local function parse_inside(base, inside, is_scraped_noun)
 			inside .. ">")
     end
 
+	local pos = base.degrees.pos[1]
 	local segments = iut.parse_balanced_segment_run(inside, "[", "]")
 	local dot_separated_groups = split_alternating_runs_with_escapes(segments, "%.")
 	for i, dot_separated_group in ipairs(dot_separated_groups) do
@@ -885,7 +892,6 @@ local function parse_inside(base, inside, is_scraped_noun)
 		--   footnotes = nil or {"FOOTNOTE", "FOOTNOTE", ...},
 		-- }.
 		local function parse_mutation_spec(dest, allowed_specs)
-			local pos = base.degrees.pos[1]
 			if pos[dest] then
 				parse_err(("Can't specify '%s'-type mutation spec twice; second such spec is '%s'"):format(
 					dest, table.concat(dot_separated_group)))
@@ -1009,14 +1015,14 @@ local function parse_inside(base, inside, is_scraped_noun)
 					"or comparative/superlative override indicator: '%s'"):format(part))
 			end
 			if overridable_stem_set[spec] then
-				if base[spec] then
+				if pos[spec] then
 					if spec == "stem" then
 						parse_err("Can't specify spec for 'stem:' twice (including using 'stem:' along with # or ##)")
 					else
 						parse_err(("Can't specify '%s:' twice"):format(spec))
 					end
 				end
-				base[spec] = value
+				pos[spec] = value
 			elseif spec == "comp" or spec == "sup" then
 				if base[spec .. "spec"] then
 					error(("Two spec sets specified for '%s'"):format(spec))
@@ -1056,12 +1062,11 @@ local function parse_inside(base, inside, is_scraped_noun)
 			end
 			base.state = part
 		elseif part == "#" or part == "##" then
-			if base.stem then
+			if pos.stem then
 				parse_err("Can't specify a stem spec ('stem:', # or ##) twice")
 			end
-			base.stem = part
-		elseif part == "det" or part == "num" or part == "archaic" or part == "article" or part == "indecl" or
-			part == "decl?" then
+			pos.stem = part
+		elseif part == "irreg" or part == "archaic" or part == "article" or part == "indecl" or part == "decl?" then
 			if base.props[part] then
 				parse_err("Can't specify '" .. part .. "' twice")
 			end
@@ -1240,8 +1245,9 @@ end
 -- how to merge scraped and user-specified properies.
 local function set_early_base_defaults(base)
 	if not base.props.irreg then
-		base.degrees.pos[1].number = base.number or "both"
-		base.degrees.pos[1].state = base.state or "bothstates"
+		local pos = base.degrees.pos[1]
+		pos.number = base.number or "both"
+		pos.state = base.state or "bothstates"
 	end
 end
 
@@ -1260,7 +1266,8 @@ local function parse_inside_and_merge(inside, lemma, scrape_chain)
 	end
 
 	local base = create_base()
-	base.degrees.pos[1].lemma = lemma
+	local base_pos = base.degrees.pos[1]
+	base_pos.lemma = lemma
 	base.scrape_chain = scrape_chain
 	parse_inside(base, inside, #scrape_chain > 0)
 
@@ -1295,11 +1302,12 @@ local function parse_inside_and_merge(inside, lemma, scrape_chain)
 		-- user-specified properties on top of it.
 		table.insert(scrape_chain, base_noun)
 		local inner_base = parse_inside_and_merge(declspec.decl, base_noun, scrape_chain)
-		inner_base.degrees.pos[1].lemma = lemma
+		local inner_base_pos = inner_base.degrees.pos[1]
+		inner_base_pos.lemma = lemma
 		inner_base.prefix = prefix
 		inner_base.base_noun = base_noun
 
-		-- Add `prefix` to a full variant of the base noun (e.g. a stem spec or full override). We may need
+		-- Add `prefix` to a full variant of the base noun (e.g. a stem spec or override). We may need
 		-- to adjust the variant to take into account the base noun being a suffix and/or uppercase (e.g. when
 		-- we use [[-dómur]] to generate the inflection of [[vísdómur]] or [[Björn]] to generate the inflection
 		-- of [[Ásbjörn]]).
@@ -1316,14 +1324,14 @@ local function parse_inside_and_merge(inside, lemma, scrape_chain)
 			return prefix .. form
 		end
 
-		-- If there's a prefix, add it now to all the full overrides in the scraped noun, as well as 'decllemma'
+		-- If there's a prefix, add it now to all the overrides in the scraped noun, as well as 'decllemma'
 		-- and all stem overrides.
 		if prefix ~= "" then
 			map_all_overrides(inner_base, function(formobj)
 				-- Not if the override contains # or ##, which expand to the full lemma (possibly minus -r
-				-- or -ur).
-				if formobj.form:find("^!") and not formobj.form:find("#") then
-					formobj.form = "!" .. add_prefix(usub(formobj.form, 2))
+				-- or -ur), or if the override begins with ~ or ^, indicating the stem or its i-mutated variant.
+				if not formobj.form:find("#") and not formobj.form:find("^[^~]") then
+					formobj.form = add_prefix(formobj.form)
 				end
 			end)
 			if inner_base.decllemma then
@@ -1332,8 +1340,8 @@ local function parse_inside_and_merge(inside, lemma, scrape_chain)
 			for _, stem in ipairs(overridable_stems) do
 				-- Only actual stems, not imutval; and not if the stem contains # or ##, which
 				-- expand to the full lemma (possibly minus -r or -ur).
-				if inner_base[stem] and stem:find("stem$") and not inner_base[stem]:find("#") then
-					inner_base[stem] = add_prefix(inner_base[stem])
+				if inner_base_pos[stem] and stem:find("stem$") and not inner_base_pos[stem]:find("#") then
+					inner_base_pos[stem] = add_prefix(inner_base_pos[stem])
 				end
 			end
 		end
@@ -1367,7 +1375,6 @@ local function parse_inside_and_merge(inside, lemma, scrape_chain)
 		set_early_base_defaults(inner_base)
 		-- If user specified 'sg', cancel out any pl overrides, otherwise we'll get an error.
 		if inner_base.number == "sg" then
-			inner_base.pls = nil
 			for slot, _ in pairs(inner_base.overrides) do
 				if slot:find("_p$") then
 					inner_base.overrides[slot] = nil
@@ -1483,8 +1490,9 @@ end
 local function normalize_all_lemmas(alternant_multiword_spec)
 	iut.map_word_specs(alternant_multiword_spec, function(base)
 		local lemma = base.orig_lemma_no_links
-		base.degrees.pos[1].actual_lemma = lemma
-		base.degrees.pos[1].lemma = base.decllemma or lemma
+		local pos = base.degrees.pos[1]
+		pos.actual_lemma = lemma
+		pos.lemma = base.decllemma or lemma
 		base.source_template = alternant_multiword_spec.source_template
 	end)
 end
@@ -1683,7 +1691,7 @@ local function determine_declension(base)
 			if type(v) == "function" then
 				props[k] = v(base, props)
 			else
-				props[k] = {form = v, defaulted = true}
+				props[k] = v
 			end
 		end
 	end
@@ -1893,19 +1901,21 @@ local function replace_hashvals(base, val)
 	if not val then
 		return val
 	end
+	local pos = base.degrees.pos[1]
 	if val:find("##") then
-		local lemma_minus_r, final_nom_ending = parse_off_final_nom_ending(base.degrees.pos[1].lemma)
+		local lemma_minus_r, final_nom_ending = parse_off_final_nom_ending(pos.lemma)
 		val = val:gsub("##", m_string_utilities.replacement_escape(lemma_minus_r))
 	end
-	val = val:gsub("#", m_string_utilities.replacement_escape(base.degrees.pos[1].lemma))
+	val = val:gsub("#", m_string_utilities.replacement_escape(pos.lemma))
 	return val
 end
 	
 
 local function detect_indicator_spec(alternant_multiword_spec, base)
 	-- Replace # and ## in all overridable stems as well as all overrides.
+	local pos = base.degrees.pos[1]
 	for _, stemkey in ipairs(overridable_stems) do
-		base[stemkey] = replace_hashvals(base, base[stemkey])
+		pos[stemkey] = replace_hashvals(base, pos[stemkey])
 	end
 	map_all_overrides(base, function(formobj)
 		formobj.form = replace_hashvals(base, formobj.form)
@@ -1914,10 +1924,11 @@ local function detect_indicator_spec(alternant_multiword_spec, base)
 	if base.props.irreg then
 		determine_irreg_props(base)
 	else
-		expand_property_sets(base.degrees.pos[1])
+		local pos = base.degrees.pos[1]
+		expand_property_sets(pos)
 		-- FIXME: deal with comparative/superlative only lemmas
 		determine_declension(base)
-		determine_props(base, base.degrees.pos[1])
+		determine_props(base, pos)
 		-- Next process the superative, if specified. We do this first so that if there is a superative and no
 		-- comparative specified, we add a comparative; but if sup:- is given, we don't add a comparative.
 		if base.supspec then
@@ -1954,7 +1965,7 @@ local function detect_indicator_spec(alternant_multiword_spec, base)
 
 		-- Make sure all alternants agree in 'number' and 'state' if specified.
 		for _, prop in ipairs { "number", "state" } do
-			local val = base.degrees.pos[1][prop] or false
+			local val = pos[prop] or false
 			if alternant_multiword_spec[prop] == nil then
 				alternant_multiword_spec[prop] = val
 			elseif alternant_multiword_spec[prop] ~= val then
@@ -2175,6 +2186,18 @@ local function make_table(alternant_multiword_spec)
 | colspan=3 | {COMPSUPstr_gen_p}
 ]=],
 
+		comp_weak_sg = [=[
+! class="is-col-header" |
+! class="is-col-header" | masculine
+! class="is-col-header" | feminine
+! class="is-col-header" | neuter
+|-
+! class="is-col-header" | singular (all-case)
+| {COMPSUPwk_nom_m}
+| {COMPSUPwk_nom_f}
+| {COMPSUPwk_n}
+]=],
+
 		weak_sg = [=[
 ! class="is-col-header" | singular
 ! class="is-col-header" | masculine
@@ -2184,31 +2207,16 @@ local function make_table(alternant_multiword_spec)
 !class="is-row-header"|nominative
 | {COMPSUPwk_nom_m}
 | {COMPSUPwk_nom_f}
-| rowspan=4 | {COMPSUPwk_n}
+| rowspan=2 | {COMPSUPwk_n}
 |-
-!class="is-row-header"|accusative
-| rowspan=3 | {COMPSUPwk_obl_m}
-| rowspan=3 | {COMPSUPwk_obl_f}
-|-
-!class="is-row-header"|dative
-|-
-!class="is-row-header"|genitive
+!class="is-row-header"|acc/dat/gen
+| {COMPSUPwk_obl_m}
+| {COMPSUPwk_obl_f}
 ]=],
 
 		weak_pl = [=[
-! class="is-col-header" | plural
-! class="is-col-header" | masculine
-! class="is-col-header" | feminine
-! class="is-col-header" | neuter
-|-
-!class="is-row-header"|nominative
+! class="is-col-header" | plural (all-case)
 | rowspan=4 colspan=3 | {COMPSUPwk_p}
-|-
-!class="is-row-header"|accusative
-|-
-!class="is-row-header"|dative
-|-
-!class="is-row-header"|genitive
 ]=]
 }
 
@@ -2216,6 +2224,10 @@ local function make_table(alternant_multiword_spec)
 		return (table_spec_left_rail:gsub("TOTALROWS", tostring(totalrows))
 			:gsub("STATE", state)
 			:gsub("DEFINITENESS", state == "weak" and "definite" or "indefinite"))
+	end
+
+	local function get_table_spec(compsup, number, state)
+		return table_spec_parts[compsup .. state .. "_" .. number] or table_spec_parts[state .. "_" .. number]
 	end
 
 	local function construct_table(compsup, inside)
@@ -2234,7 +2246,7 @@ local function make_table(alternant_multiword_spec)
 			if not omit_state then
 				ins(format_left_rail(state, 5))
 			end
-			ins(table_spec_parts[state .. "_" .. number])
+			ins(get_table_spec(compsup, number, state))
 		end)
 	end
 
@@ -2243,33 +2255,33 @@ local function make_table(alternant_multiword_spec)
 			if not omit_state then
 				ins(format_left_rail(state, 10))
 			end
-			ins(table_spec_parts[state .. "_sg"])
+			ins(get_table_spec(compsup, "sg", state))
 			ins("|-\n")
-			ins(table_spec_parts[state .. "_pl"])
+			ins(get_table_spec(compsup, "pl", state))
 		end)
 	end
 
 	local function get_table_spec_one_number_all_state(compsup, number)
 		return construct_table(compsup, function(ins)
 			ins(format_left_rail("strong", 5))
-			ins(table_spec_parts["strong_" .. number])
+			ins(get_table_spec(compsup, number, "strong"))
 			ins("|-\n")
 			ins(format_left_rail("weak", 5))
-			ins(table_spec_parts["weak_" .. number])
+			ins(get_table_spec(compsup, number, "weak"))
 		end)
 	end
 
 	local function get_table_spec_all_number_all_state(compsup)
 		return construct_table(compsup, function(ins)
 			ins(format_left_rail("strong", 10))
-			ins(table_spec_parts["strong_sg"])
+			ins(get_table_spec(compsup, "sg", "strong"))
 			ins("|-\n")
-			ins(table_spec_parts["strong_pl"])
+			ins(get_table_spec(compsup, "pl", "strong"))
 			ins("|-\n")
 			ins(format_left_rail("weak", 10))
-			ins(table_spec_parts["weak_sg"])
+			ins(get_table_spec(compsup, "sg", "weak"))
 			ins("|-\n")
-			ins(table_spec_parts["weak_pl"])
+			ins(get_table_spec(compsup, "pl", "weak"))
 		end)
 	end
 
