@@ -351,6 +351,8 @@ local function add(base, slot, degree, props, endings)
 					end
 				elseif degree.double_r then
 					ending = "r" .. ending
+				elseif rfind(stem_with_infix, com.cons_c .. "r$") then
+					ending = ending:sub(2)
 				end
 			elseif ending == "t" then
 				if stem_with_infix:find("dd$") then
@@ -1289,7 +1291,7 @@ local function parse_inside_and_merge(inside, lemma, scrape_chain)
 			infltemp = "is-adecl",
 			allow_empty_infl = true,
 			inflid = base.scrape_id,
-			parse_off_ending = parse_off_final_nom_ending,
+			parse_off_ending = com.parse_off_final_nom_ending,
 		}
 		if type(declspec) == "string" then
 			base.prefix = prefix
@@ -1572,7 +1574,7 @@ local function determine_declension(base)
 			if pos.stem == stem or (not pos.stem and rfind(stem, "[ÁáÆæ]$")) then
 				pos.double_r = true
 				defcomp = stem .. "rri"
-				if rfind(stem, "[ÆæYy]$") then
+				if rfind(stem, "[ÆæÝý]$") then
 					-- Lemmas like [[nýr]] "new", [[hlýr]] "warm", [[langær]] "long-lasting"
 					default_props.j = "j"
 					defsup = stem .. "jastur"
@@ -1612,7 +1614,7 @@ local function determine_declension(base)
 				-- superlative [[vantaldastur]].
 				pos.inn = true
 				local function compute_vowel_stem(props)
-					local vowel_stem = usub(stem, 1, -3) -- chop off final -in
+					local vowel_stem = stem:sub(1, -3) -- chop off final -in
 					-- [[söngvinn]] -> 'söngn-', [[höggvinn]] -> 'höggn-'
 					vowel_stem = vowel_stem:gsub("gv$", "g")
 					if props.ppdent and props.ppdent.form == "ppdent" then
@@ -1625,7 +1627,7 @@ local function determine_declension(base)
 				defcomp = function(base, props)
 					-- Save for later stem computation.
 					props.vowel_stem = compute_vowel_stem(props)
-					return vowel_stem .. "ari"
+					return props.vowel_stem .. "ari"
 				end
 				defsup = function(base, props)
 					-- props.vowel_stem stored in defcomp
@@ -1837,13 +1839,17 @@ local function determine_props(base, degree)
 		umut_nonvstem = com.apply_u_mutation(nonvstem, props_umut.form, not props_umut.defaulted)
 		-- For -inn adjectives, we already computed the correct vowel stem, so just use it.
 		vstem = props.vowel_stem or degree.vstem or degree.stem
-		if props.con and props.con.form == "con" then
+		local is_contracted = props.con and props.con.form == "con"
+		if is_contracted then
 			if degree.inn then
 				error("Internal error: 'con' cannot be specified for adjectives ending in -inn; it's handled automatically internally and should have been caught earlier")
 			end
 			vstem = com.apply_contraction(vstem)
 		end
-		umut_vstem = com.apply_u_mutation(vstem, props_umut.form, not props_umut.defaulted)
+		-- Contracted stems should use regular u-mutation even if the uncontracted stem uses uUmut. Otherwise we either
+		-- get an error because uUmut can't be applied to a single-syllable word (e.g. in [[gamall]]) or we get the
+		-- wrong result (e.g. in [[einsamall]] with strong dative plural #einsumlum).
+		umut_vstem = com.apply_u_mutation(vstem, is_contracted and "umut" or props_umut.form, not props_umut.defaulted)
 
 		props.stem = stem
 		if nonvstem ~= stem then
@@ -1897,34 +1903,19 @@ local function determine_props(base, degree)
 end
 
 
-local function replace_hashvals(base, val)
-	if not val then
-		return val
-	end
-	local pos = base.degrees.pos[1]
-	if val:find("##") then
-		local lemma_minus_r, final_nom_ending = parse_off_final_nom_ending(pos.lemma)
-		val = val:gsub("##", m_string_utilities.replacement_escape(lemma_minus_r))
-	end
-	val = val:gsub("#", m_string_utilities.replacement_escape(pos.lemma))
-	return val
-end
-	
-
 local function detect_indicator_spec(alternant_multiword_spec, base)
 	-- Replace # and ## in all overridable stems as well as all overrides.
 	local pos = base.degrees.pos[1]
 	for _, stemkey in ipairs(overridable_stems) do
-		pos[stemkey] = replace_hashvals(base, pos[stemkey])
+		pos[stemkey] = com.replace_hashvals(pos[stemkey], pos.lemma)
 	end
 	map_all_overrides(base, function(formobj)
-		formobj.form = replace_hashvals(base, formobj.form)
+		formobj.form = com.replace_hashvals(formobj.form, pos.lemma)
 	end)
 
 	if base.props.irreg then
 		determine_irreg_props(base)
 	else
-		local pos = base.degrees.pos[1]
 		expand_property_sets(pos)
 		-- FIXME: deal with comparative/superlative only lemmas
 		determine_declension(base)
