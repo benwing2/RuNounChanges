@@ -365,6 +365,37 @@ function export.add_dental_ending(stem)
 end
 
 
+-- Parse off and return a final -ur or -r nominative ending. Return the portion before the ending as well as the ending
+-- itself. If the lemma ends in -aur, only the -r is stripped off. This is used by ## and by the `@l` scraping
+-- indicator (so that e.g. `@r` when applied to a compound of [[réttur]] "law; court; course (of a meal)" won't get
+-- confused by the final -r).
+function export.parse_off_final_nom_ending(lemma)
+	local lemma_minus_r, final_nom_ending
+	if lemma:find("[^Aa]ur$") then
+		lemma_minus_r, final_nom_ending = lemma:match("^(.*)(ur)$")
+	elseif lemma:find("r$") then
+		lemma_minus_r, final_nom_ending = lemma:match("^(.*)(r)$")
+	else
+		lemma_minus_r, final_nom_ending = lemma, ""
+	end
+	return lemma_minus_r, final_nom_ending
+end
+
+
+-- Replace # and ## with `val`, substituting `lemma` as necessary (possibly without final -r or -ur).
+function export.replace_hashvals(val, lemma)
+	if not val then
+		return val
+	end
+	if val:find("##") then
+		local lemma_minus_r, final_nom_ending = export.parse_off_final_nom_ending(lemma)
+		val = val:gsub("##", m_string_utilities.replacement_escape(lemma_minus_r))
+	end
+	val = val:gsub("#", m_string_utilities.replacement_escape(lemma))
+	return val
+end
+	
+
 -- Find the inflection spec by scraping the contents of the Icelandic section of `lemma`, looking for `infltemp` calls
 -- (where template is e.g. "is-ndecl", "is-adecl" or "is-conj") If `inflid` is given, it must match the value of the
 -- |id= param specified to the inflection template; otherwise, any inflection template call will work. If anything goes
