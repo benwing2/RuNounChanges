@@ -415,7 +415,7 @@ local function add(base, slot, degree, props, endings)
 		end
 		local function interr(msg)
 			error(("Internal error: For lemma '%s', slot '%s%s', ending '%s', %s: %s"):format(degree.lemma, slot_prefix,
-				slot, ending, msg, dump(props)))
+				slot, ending, msg, dump(base)))
 		end
 
 		-- Compute whether i-mutation or u-mutation is in effect, and compute the "mutation footnotes", which are
@@ -563,10 +563,11 @@ local function add(base, slot, degree, props, endings)
 
 		local combined_footnotes = iut.combine_footnotes(iut.combine_footnotes(mut_footnotes, infix_footnotes),
 			ending_footnotes)
+		local ending_with_notes = iut.combine_form_and_footnotes(ending, combined_footnotes)
 		if not stem_in_effect then
 			interr("stem_in_effect is nil")
 		end
-		iut.add_forms(base.forms, slot_prefix .. slot, stem_in_effect, ending, combine_stem_ending)
+		iut.add_forms(base.forms, slot_prefix .. slot, stem_in_effect, ending_with_notes, combine_stem_ending)
 	end
 end
 
@@ -668,6 +669,7 @@ end
 
 local decls = {}
 
+	
 decls["normal"] = function(base, degree, props)
 	add_strong_decl(base, degree, props,
 		      "^^",  "t",
@@ -693,6 +695,21 @@ decls["comp"] = function(base, degree, props)
 		"i",  "i",
 		"i"
 	)
+end
+
+
+local function set_irreg_defaults(base)
+	local number, state
+	local basedeg = base.base_degree
+	local lemma = basedeg.lemma
+	if lemma == "einn" then
+		state = "bothstates"
+		base.sup = {{form = "einastur"}}
+	elseif lemma == "tveir" or lemma == "þrír" or lemma == "fjórir" or lemma == "báðir" or lemma == "fáeinir" then
+		number = "pl"
+	end
+	basedeg.number = number or "both"
+	basedeg.state = state or "strong"
 end
 
 
@@ -727,11 +744,11 @@ decls["irreg"] = function(base, degree, props)
 
 	if degree.lemma == "þessi" then
 		add_strong_decl(base, degree, props,
-					"þessi", {"þetta", {form = "þettað", footnotes = {"uncommon"}}},
-			{"þennan", {form = "þenna", footnotes = {"archaic"}}}, "þessa",
+					"þessi", {"þetta", {form = "þettað", footnotes = {"[uncommon]"}}},
+			{"þennan", {form = "þenna", footnotes = {"[archaic]"}}}, "þessa",
 			"þessum", "þessari", "þessu",
 			"þessa", "þessarar", nil,
-			"þessir", "þessar", {"þessi", {form = "þaug", footnotes = {"uncommon"}}},
+			"þessir", "þessar", {"þessi", {form = "þaug", footnotes = {"[uncommon]"}}},
 			"þessa",
 			"þessum",
 			"þessara"
@@ -797,8 +814,8 @@ decls["irreg"] = function(base, degree, props)
 	if stem then
 		add_strong_decl(base, degree, props,
 					stem, {
-						{form = neutstem .. "hvert", footnotes = {"used with a noun"}},
-						{form = neutstem .. "hvað", footnotes = {"used alone"}},
+						{form = neutstem .. "hvert", footnotes = {"[used with a noun]"}},
+						{form = neutstem .. "hvað", footnotes = {"[used alone]"}},
 					},
 			stem .. "n", stem .. "ja",
 			stem .. "jum", stem .. "ri", stem .. "ju",
@@ -815,8 +832,8 @@ decls["irreg"] = function(base, degree, props)
 		stem = "nokk"
 		add_strong_decl(base, degree, props,
 					stem .. "ur", {
-						{form = stem .. "urt", footnotes = {"used with a noun"}},
-						{form = stem .. "uð", footnotes = {"used alone"}},
+						{form = stem .. "urt", footnotes = {"[used with a noun]"}},
+						{form = stem .. "uð", footnotes = {"[used alone]"}},
 					},
 			stem .. "urn", stem .. "ra",
 			stem .. "rum", stem .. "urri", stem .. "ru",
@@ -842,12 +859,12 @@ decls["irreg"] = function(base, degree, props)
 				"öngra"
 			)
 		else
-			local engi = {form = "engi", footnotes = {"poetic"}}
+			local engi = {form = "engi", footnotes = {"[poetic]"}}
 			add_strong_decl_with_nom_sg(base, degree, props,
-				{"*", engi}, {"engin", engi}, {"ekkert", {form = "ekki", footnotes = {"in some fixed expressions"}}},
+				{"*", engi}, {"engin", engi}, {"ekkert", {form = "ekki", footnotes = {"[in some fixed expressions]"}}},
 				"engan", "enga",
-				"engum", "engri", {"engu", {"einugi", {footnotes = {"in some fixed expressions"}}}},
-				{"einskis", {form = "einkis", footnotes = {"occasionally"}}}, "engrar", nil,
+				"engum", "engri", {"engu", {form = "einugi", footnotes = {"[in some fixed expressions]"}}},
+				{"einskis", {form = "einkis", footnotes = {"[occasionally]"}}}, "engrar", nil,
 				"engir", "engar", "engin",
 				"enga",
 				"engum",
@@ -1988,7 +2005,9 @@ local function detect_indicator_spec(alternant_multiword_spec, base)
 	end)
 
 	if base.props.irreg then
-		determine_irreg_props(base)
+		expand_property_sets(basedeg)
+		basedeg.stem = ""
+		basedeg.decl = "irreg"
 	else
 		if base.base_degfield == "sup" then
 			-- Superlative-only lemmas (like other superlatives) default to uUmut unless explicitly specified otherwise.
@@ -2022,54 +2041,55 @@ local function detect_indicator_spec(alternant_multiword_spec, base)
 				process_comp_sup_spec(base, "sup", base.supspec or {{form = "+"}})
 			end
 		end
-		for _, degspec in ipairs(compsup_degrees) do
-			local degfield, desc = unpack(degspec)
-			if base.degrees[degfield] then
-				for _, degree in ipairs(base.degrees[degfield]) do
-					determine_props(base, degree)
-				end
+	end
+
+	for _, degspec in ipairs(compsup_degrees) do
+		local degfield, desc = unpack(degspec)
+		if base.degrees[degfield] then
+			for _, degree in ipairs(base.degrees[degfield]) do
+				determine_props(base, degree)
 			end
 		end
+	end
 
-		-- Make sure all alternants agree in having a positive, comparative and/or superlative.
-		for _, degspec in ipairs(compsup_degrees) do
-			local degfield, desc = unpack(degspec)
-			local hasprop = "has" .. degfield
-			local has_deg = base.degrees[degfield] and (base.degrees[degfield][1] and "has" or "hasnot") or "unspec"
-			if alternant_multiword_spec[hasprop] == nil then
-				alternant_multiword_spec[hasprop] = has_deg
-			elseif alternant_multiword_spec[hasprop] ~= has_deg then
-				error(("All alternants must agree in whether they have a %s, but saw one alternant with value '%s' " ..
-					"and another with value '%s'"):format(alternant_multiword_spec[hasprop], has_deg))
-			end
+	-- Make sure all alternants agree in having a positive, comparative and/or superlative.
+	for _, degspec in ipairs(compsup_degrees) do
+		local degfield, desc = unpack(degspec)
+		local hasprop = "has" .. degfield
+		local has_deg = base.degrees[degfield] and (base.degrees[degfield][1] and "has" or "hasnot") or "unspec"
+		if alternant_multiword_spec[hasprop] == nil then
+			alternant_multiword_spec[hasprop] = has_deg
+		elseif alternant_multiword_spec[hasprop] ~= has_deg then
+			error(("All alternants must agree in whether they have a %s, but saw one alternant with value '%s' " ..
+				"and another with value '%s'"):format(alternant_multiword_spec[hasprop], has_deg))
 		end
+	end
 
-		-- Make sure all alternants agree in 'number' and 'state' for each degree if specified.
-		for _, degspec in ipairs(compsup_degrees) do
-			local degfield, desc = unpack(degspec)
-			if base.degrees[degfield] then
-				for _, degree in ipairs(base.degrees[degfield]) do
-					for _, prop in ipairs { "number", "state" } do
-						local val = degree[prop] or false
-						if alternant_multiword_spec[prop][degfield] == nil then
-							alternant_multiword_spec[prop][degfield] = val
-						elseif alternant_multiword_spec[prop][degfield] ~= val then
-							error(("All %s alternants must agree in the value of '%s', if specified"):format(
-								desc, prop))
-						end
+	-- Make sure all alternants agree in 'number' and 'state' for each degree if specified.
+	for _, degspec in ipairs(compsup_degrees) do
+		local degfield, desc = unpack(degspec)
+		if base.degrees[degfield] then
+			for _, degree in ipairs(base.degrees[degfield]) do
+				for _, prop in ipairs { "number", "state" } do
+					local val = degree[prop] or false
+					if alternant_multiword_spec[prop][degfield] == nil then
+						alternant_multiword_spec[prop][degfield] = val
+					elseif alternant_multiword_spec[prop][degfield] ~= val then
+						error(("All %s alternants must agree in the value of '%s', if specified"):format(
+							desc, prop))
 					end
 				end
 			end
 		end
+	end
 
-		-- Make sure all alternants agree in various properties.
-		for _, prop in ipairs { "decl?", "indecl", "irreg" } do
-			local val = not not base.props[prop]
-			if alternant_multiword_spec[prop] == nil then
-				alternant_multiword_spec[prop] = val
-			elseif alternant_multiword_spec[prop] ~= val then
-				error(("If one alternant specifies '%s', all must"):format(prop))
-			end
+	-- Make sure all alternants agree in various properties.
+	for _, prop in ipairs { "decl?", "indecl", "irreg" } do
+		local val = not not base.props[prop]
+		if alternant_multiword_spec[prop] == nil then
+			alternant_multiword_spec[prop] = val
+		elseif alternant_multiword_spec[prop] ~= val then
+			error(("If one alternant specifies '%s', all must"):format(prop))
 		end
 	end
 end
@@ -2087,7 +2107,7 @@ local function decline_adjective(base)
 		for _, degree in ipairs(degree_list) do
 			for _, props in ipairs(degree.prop_sets) do
 				if not decls[degree.decl] then
-					error(("Internal error: Unrecognized declension type '%s': %s"):format(degree.decl, dump(degree)))
+					error(("Internal error: Unrecognized declension type '%s': %s"):format(degree.decl or "(nil)", dump(degree)))
 				end
 				decls[degree.decl](base, degree, props)
 			end
