@@ -77,6 +77,16 @@ local function make_quoted_list(list)
 end
 
 
+local function make_quoted_keys(dict)
+	local quoted_list = {}
+	for key, _ in pairs(dict) do
+		table.insert(quoted_list, "'" .. key .. "'")
+	end
+	table.sort(quoted_list)
+	return mw.text.listToText(quoted_list)
+end
+
+
 local function make_quoted_slot_list(slot_list)
 	local quoted_list = {}
 	for _, slot_accel in ipairs(slot_list) do
@@ -167,6 +177,27 @@ local weak_adjective_slots = {
 	{"wk_p", "wk|p"},
 }
 
+-- Abbreviations for use in addnote specs and overrides. Key is the abbreviation, value is a Lua pattern matching the
+-- slots to select, or a list of such patterns. Patterns are anchored at both ends.
+local adjective_slot_abbrs = {
+	wk_m = "wk_.*m",
+	wk_f = "wk_.*f",
+	comp_wk_m = "comp_wk_.*m",
+	comp_wk_f = "comp_.*f",
+	sup_wk_m = "sup_wk_.*m",
+	sup_wk_f = "sup_.*_f",
+	str_s = "str_.*[mfn]",
+	wk_s = "wk_.*[mfn]",
+	str_p = "str_.*p",
+	comp_wk_s = "comp_wk_.*[mfn]",
+	sup_str_s = "sup_str_.*[mfn]",
+	sup_wk_s = "sup_wk_.*[mfn]",
+	sup_str_p = "sup_str_.*p",
+	wk = "wk_.*",
+	str = "str_.*",
+	sup_wk = "sup_wk_.*",
+	sup_str = "sup_str_.*",
+}
 
 local adjective_slot_set = {}
 local adjective_slot_list = {}
@@ -300,6 +331,12 @@ fields later filled out by other functions) is of the form
 	SLOT = OVERRIDE,
 	...
   },
+  -- Used to track duplicate slot overrides.
+  override_slots_seen = {
+	SLOT = true,
+	SLOT = true,
+	...
+  },
   -- Comparative specs as given by the user, consisting of a list of form objects.
   compspec = { {form = "FORM", footnotes = nil or {"FOOTNOTE", "FOOTNOTE", ...}}, ...},
   -- Superlative specs as given by the user, consisting of a list of form objects.
@@ -369,6 +406,7 @@ local function create_base()
 	return {
 		forms = {},
 		overrides = {},
+		override_slots_seen = {},
 		props = {},
 		addnote_specs = {},
 		degrees = {},
@@ -572,8 +610,28 @@ local function add(base, slot, degree, props, endings)
 end
 
 
+local function do_slot_abbreviation(base, abbr, fn)
+	local patterns = adjective_slot_abbrs[abbr]
+	if not patterns then
+		error(("Internal error: Invalid abbreviation '%s' passed into do_slot_abbreviation()"):format(abbr))
+	end
+	if type(patterns) ~= "table" then
+		patterns = {patterns}
+	end
+	for _, pattern in ipairs(patterns) do
+		pattern = "^" .. pattern .. "$"
+		for single_slot, forms in pairs(base.forms) do
+			if rfind(single_slot, pattern) then
+				fn(single_slot)
+			end
+		end
+	end
+end
+
+
 local function process_slot_overrides(base)
-	for slot, spec in pairs(base.overrides) do
+	-- Set a single slot. Check to make sure we're not hitting a degree, number or state restriction.
+	local function do_slot(slot, spec)
 		local degfield = slot_to_degfield(slot)
 		if not base.degrees[degfield] or not base.degrees[degfield][1] then
 			error(("Override specified for invalid slot '%s' because degree '%s' doesn't exist"):format(slot, degfield))
@@ -584,7 +642,20 @@ local function process_slot_overrides(base)
 					"restriction of degree '%s'"):format(slot, degree.number, degree.state, degfield))
 			end
 		end
-		base.forms[slot] = spec
+		if spec[1].form ~= "-" then
+			-- Make sure distinct slots don't share forms.
+			base.forms[slot] = m_table.deepCopy(spec)
+		else
+			base.forms[slot] = nil
+		end
+	end
+
+	for slot, spec in pairs(base.overrides) do
+		if adjective_slot_abbrs[slot] then
+			do_slot_abbreviation(base, slot, function(slot) do_slot(slot, spec) end)
+		else
+			do_slot(slot, spec)
+		end
 	end
 end
 
@@ -991,16 +1062,27 @@ end
 
 -- Process specs given by the user using 'addnote[SLOTSPEC][FOOTNOTE][FOOTNOTE][...]'.
 local function process_addnote_specs(base)
+	local function do_one(slot_spec)
+		slot_spec = "^" .. slot_spec .. "$"
+		for slot, forms in pairs(base.forms) do
+			if rfind(slot, slot_spec) then
+				-- To save on memory, side-effect the existing forms.
+				for _, form in ipairs(forms) do
+					form.footnotes = iut.combine_footnotes(form.footnotes, spec.footnotes)
+				end
+			end
+		end
+	end
+
 	for _, spec in ipairs(base.addnote_specs) do
 		for _, slot_spec in ipairs(spec.slot_specs) do
-			slot_spec = "^" .. slot_spec .. "$"
-			for slot, forms in pairs(base.forms) do
-				if rfind(slot, slot_spec) then
-					-- To save on memory, side-effect the existing forms.
-					for _, form in ipairs(forms) do
-						form.footnotes = iut.combine_footnotes(form.footnotes, spec.footnotes)
-					end
+			slot_spec = adjective_slot_abbrs[slot_spec] or slot_spec
+			if type(slot_spec) == "table" then
+				for _, ss in ipairs(slot_spec) do
+					do_one(ss)
 				end
+			else
+				do_one(ss)
 			end
 		end
 	end
@@ -1135,11 +1217,12 @@ local function parse_override(segments, parse_err)
 			end
 			slots = rsplit(colon_separated_group[1], "%+")
 			for _, slot in ipairs(slots) do
-				if not adjective_slot_set[slot] then
+				if not adjective_slot_set[slot] and not adjective_slot_abbrs[slot] then
 					parse_err(("Unrecognized slot '%s' in override; expected strong slot %s; weak slot %s; " ..
-						"comparative slot preceded by 'comp_'; superlative slot preceded by 'sup_'; or " ..
-						"stem %s: %s"):format(slot, make_quoted_slot_list(strong_adjective_slots),
-						make_quoted_slot_list(weak_adjective_slots), make_quoted_list(overridable_stems),
+						"comparative slot preceded by 'comp_'; superlative slot preceded by 'sup_'; " ..
+						"abbreviation %s; or stem %s: %s"):format(slot, make_quoted_slot_list(strong_adjective_slots),
+						make_quoted_slot_list(weak_adjective_slots), make_quoted_keys(adjective_slot_abbrs),
+						make_quoted_list(overridable_stems),
 						require(parse_utilities_module).escape_wikicode(table.concat(segments))))
 				end
 			end
@@ -1308,18 +1391,26 @@ local function parse_inside(base, inside, is_scraped_noun)
 				base_degree[spec] = value
 			elseif spec == "comp" or spec == "sup" then
 				if base[spec .. "spec"] then
-					error(("Two spec sets specified for '%s'"):format(spec))
+					parse_err(("Two spec sets specified for '%s'"):format(spec))
 				else
 					base[spec .. "spec"] = parse_comp_sup_spec(dot_separated_group, parse_err)
 				end
 			else
 				local slots, override = parse_override(dot_separated_group, parse_err)
-				for _, slot in ipairs(slots) do
-					if base.overrides[slot] then
-						error(("Two overrides specified for slot '%s'"):format(slot))
+				local function check_duplication(slot)
+					if base.override_slots_seen[slot] then
+						parse_err(("Two overrides specified for slot '%s'"):format(slot))
 					else
-						base.overrides[slot] = override
+						base.override_slots_seen[slot] = true
 					end
+				end
+				for _, slot in ipairs(slots) do
+					if adjective_slot_abbrs[slot] then
+						do_slot_abbreviation(base, slot, check_duplication)
+					else
+						check_duplication(slot)
+					end
+					base.overrides[slot] = override
 				end
 			end
 		elseif #dot_separated_group > 1 then
