@@ -186,22 +186,6 @@ local definiteness_code_to_desc = {
 	none = nil,
 }
 
--- Parse off and return a final -ur or -r nominative ending. Return the portion before the ending as well as the ending
--- itself. If the lemma ends in -aur, only the -r is stripped off. This is used by ## and by the `@l` scraping
--- indicator (so that e.g. `@r` when applied to a compound of [[réttur]] "law; court; course (of a meal)" won't get
--- confused by the final -r).
-local function parse_off_final_nom_ending(lemma)
-	local lemma_minus_r, final_nom_ending
-	if lemma:find("[^Aa]ur$") then
-		lemma_minus_r, final_nom_ending = lemma:match("^(.*)(ur)$")
-	elseif lemma:find("r$") then
-		lemma_minus_r, final_nom_ending = lemma:match("^(.*)(r)$")
-	else
-		lemma_minus_r, final_nom_ending = lemma, ""
-	end
-	return lemma_minus_r, final_nom_ending
-end
-
 local function get_noun_slots(alternant_multiword_spec)
 	local noun_slots_list = {}
 	for _, case in ipairs(cases) do
@@ -1931,7 +1915,7 @@ local function parse_inside_and_merge(inside, lemma, scrape_chain)
 			infltemp = "is-ndecl",
 			allow_empty_infl = false,
 			inflid = base.scrape_id,
-			parse_off_ending = parse_off_final_nom_ending,
+			parse_off_ending = com.parse_off_final_nom_ending,
 		}
 		if type(declspec) == "string" then
 			base.prefix = prefix
@@ -3073,26 +3057,13 @@ local function determine_props(base)
 end
 
 
-local function replace_hashvals(base, val)
-	if not val then
-		return val
-	end
-	if val:find("##") then
-		local lemma_minus_r, final_nom_ending = parse_off_final_nom_ending(base.lemma)
-		val = val:gsub("##", m_string_utilities.replacement_escape(lemma_minus_r))
-	end
-	val = val:gsub("#", m_string_utilities.replacement_escape(base.lemma))
-	return val
-end
-	
-
 local function detect_indicator_spec(base)
 	-- Replace # and ## in all overridable stems as well as all overrides.
 	for _, stemkey in ipairs(overridable_stems) do
-		base[stemkey] = replace_hashvals(base, base[stemkey])
+		base[stemkey] = com.replace_hashvals(base[stemkey], base.lemma)
 	end
 	map_all_overrides(base, function(formobj)
-		formobj.form = replace_hashvals(base, formobj.form)
+		formobj.form = com.replace_hashvals(formobj.form, base.lemma)
 	end)
 
 	if base.props.pron then
