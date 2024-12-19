@@ -1,9 +1,7 @@
-== masculine strong ==
-
-=== words in -ur ===
+== words in -ur ==
 * {{m|is|gulur||yellow}}, {{m|is|djúpur||deep}}, {{m|is|drjúgur||substantial; conceited}}, {{m|is|dökkur||dark}}, {{m|is|frægur||famous}}, {{m|is|fullur||full}}, {{m|is|glöggur||clear}}, {{m|is|grunnur||shallow}}, {{m|is|heitur||hot}}, {{m|is|helgur||holy}}, {{m|is|hvítur||white}}, {{m|is|hvorugur||neither (of two)}}, {{m|is|illur||bad; angry}}, {{m|is|íslenskur||Icelandic}}, {{m|is|lágur||low}}, {{m|is|líkur||like, similar}} ({{m|is|hvílíkur||what, what kind of}}, {{m|is|ólíkur||unlike, different}}, {{m|is|þvílíkur||such}}), {{m|is|ljótur||ugly}}, {{m|is|mjúkur||soft}}, {{m|is|ríkur||rich}}, {{m|is|slíkur||such}}, {{m|is|slæmur||bad; unwell}}, {{m|is|sterkur||strong}}, {{m|is|sumur||some}}, {{m|is|sætur||sweet}}, {{m|is|tómur||empty}}, {{m|is|ungur||young}}, {{m|is|þröngur||narrow}}, {{m|is|þungur||heavy}}, {{m|is|þunnur||thin}}, {{m|is|þykkur||thick}}, {{m|is|þýskur||German}}, {{m|is|örlátur||generous}}, {{m|is|öruggur||safe, sure, reliable}}
 * 'comp' by itself means the same as 'comp:+' i.e. there is a comparative and it uses the default algorithm. Having a comparative implies a superlative by default. By default the superlative(s) is/are derived from the specified comparative(s) by replacing -ri, -li or -ni with -stur. Use '-sup' to turn off superlatives. Note that 'sup:+' is not the same as omitting 'sup' if 'comp:...' is specified, because 'sup:+' requests the default superlative whereas omitting the 'sup' derives the superlative(s) from the specified comparative(s).
-* <<gulur>>, <<heitur>>, <<helgur>>, <<hvítur>>, <<íslenskur>>, <<ljótur>>, <<ríkur>>, <<sterkur>>, <<sætur>>, <<tómur>>, <<þýskur>>, <<örlátur>>, <<öruggur>>
+* {{m|is|gulur}}, {{m|is|heitur}}, {{m|is|helgur}}, {{m|is|hvítur}}, {{m|is|íslenskur}}, {{m|is|ljótur}}, {{m|is|ríkur}}, {{m|is|sterkur}}, {{m|is|sætur}}, {{m|is|tómur}}, {{m|is|þýskur}}, {{m|is|örlátur}}, {{m|is|öruggur}}
 * {{tl|is-adecl|comp|pagename=gulur}}
 * '^' stands for the (uncontracted) umlauted stem; if the stem ends in -ur, this umlauts the portion before -ur. ^! stands for the contracted umlauted stem. Note that -Crr- will be elided to -Cr- when constructing the comparative. This means for example that  , and by itself for the comparative means the stem is umlauted and -ri is added. If contraction is active, the contracted stem is used (which means the -r- of -ri will usually be elided). '^' by itself for the superlative means -st is added to the uncontracted stem.
 * per BÍN:
@@ -23,7 +21,7 @@
 * {{tl|is-adecl|comp:+:^ri:~vari|pagename=glöggur}}
 * {{tl|is-adecl|comp:^ri|pagename=grunnur}}
 * {{tl|is-adecl|strong.-comp|pagename=hvorugur}}
-* also <<ólíkur>>
+* also {{m|is|ólíkur}}
 * {{tl|is-adecl|comp|pagename=líkur}}
 * {{tl|is-adecl|-comp|pagename=hvílíkur}}
 * {{tl|is-adecl|-comp|pagename=þvílíkur}}
@@ -45,7 +43,7 @@
 
 * with u-mutation:
 * {{m|is|flatur||flat}}, {{m|is|allur||all; whole}}, {{m|is|franskur||French}}, {{m|is|grannur||thin, slim}}, {{m|is|heilagur||holy}}, {{m|is|langur||long}}, {{m|is|margur||many}}, {{m|is|-samur||-ful, -some, -able/-ible}} ({{m|is|friðsamur||peaceful}}, {{m|is|reglusamur||orderly}}, {{m|is|skynsamur||sensible}}), {{m|is|skammur||short}}, {{m|is|svalur||cool}}, {{m|is|svangur||hungry}}, {{m|is|vanur||accustomed}}, {{m|is|þarfur||useful}}
-* <<flatur>>, <<friðsamur>>, <<reglusamur>>, <<skynsamur>>, <<vanur>>, <<þarfur>>
+* {{m|is|flatur}}, {{m|is|friðsamur}}, {{m|is|reglusamur}}, {{m|is|skynsamur}}, {{m|is|vanur}}, {{m|is|þarfur}}
 * {{tl|is-adecl|comp|pagename=flatur}}
 * {{m|is|allur}} is strong-only and has no comparative or superlative. This is the default but specifying '-comp' positively identifies the adjective as lacking comparative/superlative and categorizes appropriately as well as putting the appropriate label ''no comparative'' in the headword.
 * {{tl|is-adecl|strong.-comp|pagename=allur}}
@@ -65,7 +63,7 @@
 * with loss of -d after consonant in neuter:
 * {{m|is|vondur||bad; angry}}, {{m|is|blindur||blind}}, {{m|is|auðveldur||easy}}
 * {{tl|is-adecl|comp:verri|pagename=vondur}}
-* <<blindur>>, <<auðveldur>>
+* {{m|is|blindur}}, {{m|is|auðveldur}}
 * {{tl|is-adecl|comp|pagename=blindur}}
 * with loss of -d after consonant in neuter, and u-mutation:
 * {{m|is|kaldur||cold}}
@@ -78,7 +76,7 @@
 * {{tl|is-adecl|comp|pagename=harður}}
 * with loss of -t after consonant in neuter:
 * {{m|is|réttur||right, correct}}, {{m|is|stuttur||short}}, {{m|is|þyrstur||thirsty}}
-* <<rettur>>, <<þyrstur>>
+* {{m|is|rettur}}, {{m|is|þyrstur}}
 * {{tl|is-adecl|comp|pagename=réttur}}
 * {{tl|is-adecl|comp:^ri.sup:stystur|pagename=stuttur}}
 * with loss of -t after consonant in neuter, and u-mutation:
@@ -100,7 +98,7 @@
 * {{tl|is-adecl|comp|pagename=gáfaður}}
 * {{tl|is-adecl|comp|pagename=gallaður}}
 
-==== words in -legur and -ugur ====
+=== words in -legur and -ugur ===
 * in {{m|is|-legur}}; comparative in -ri, superlative in -astur
 * {{m|is|eðlilegur||natural}}, {{m|is|fallegur||beautiful}}, {{m|is|laglegur||pretty}}, {{m|is|lélegur||bad, inferior}}, {{m|is|maklegur||well deserved}}, {{m|is|skemmtilegur||amusing; interesting}}, {{m|is|veglegur||stately, magnificnet}}, {{m|is|venjulegur||usual}}, {{m|is|þjösnalegur||rough, coarse}}
 * {{tl|is-adecl|comp|pagename=fallegur}}
@@ -108,7 +106,7 @@
 * {{m|is|auðugur||rich}}, {{m|is|grösugur||grassy}}, {{m|is|göfugur||noble}}, {{m|is|kunnugur||acquainted, known}}, {{m|is|máttugur||mighty}}, {{m|is|slóttugur||cunning, sly}}, {{m|is|öflugur||strong}}, {{m|is|öfugur||reversed; wrong}}, {{m|is|önugur||sullen}}
 * {{tl|is-adecl|comp|pagename=auðugur}}
 
-==== words in -ár, -ór, -úr where the -r is not part of the stem ====
+=== words in -ár, -ór, -úr where the -r is not part of the stem ===
 * {{m|is|blár||blue}}, {{m|is|flár||gaping, distended; deceitful}}, {{m|is|frár||swift(footed)}}, {{m|is|gljár||bright, shining}}, {{m|is|grár||gray}}, {{m|is|hrár||raw}}, {{m|is|knár||vigorous, clever}}, {{m|is|-skár}} ({{m|is|herskár||warlike}}, {{m|is|níðskár||libelous (of poets)}}), {{m|is|-spár}} ({{m|is|forspár||prophetic}}, {{m|is|sannspár||prophetic}}), {{m|is|þrár||obstinate, persistent}}
 * Default comparative in -rri, default superlative in -astur; endings in -t and -r double the consonant after the long vowel. Thomson claims {{m|is|trúr}} and {{m|is|þrár}} can have alternative superlatives {{m|is|trústur}} and {{m|is|þrástur}} but BÍN doesn't show them.
 * {{tl|is-adecl|comp|pagename=blár}}
@@ -129,7 +127,7 @@
 * Like -ár words, when the stem ends in a long vowel, default comparative is -rri and superlative is -astur; but these words need ## as by default the -r is part of the stem.
 * {{tl|is-adecl|##.comp|pagename=trúr}}
 
-==== words in -ær, -ýr where the -r is not part of the stem ====
+=== words in -ær, -ýr where the -r is not part of the stem ===
 * {{m|is|glær||clear, bright; translucent; pale and ragged}}, {{m|is|langær||long-lasting}}, {{m|is|-sær}} ({{m|is|auðsær||evident}}, {{m|is|djúpsær||profound}}, {{m|is|einsær||evident}}, {{m|is|gagnsær||transparent}}, {{m|is|glöggsær||clearsighted}}, {{m|is|víðsær||wide-seeing}})
 * Default comparative in -rri, default superlative in -jastur as j-infix is the default here before vocalic endings.
 * {{tl|is-adecl|comp|pagename=langær}}
@@ -138,7 +136,7 @@
 * {{m|is|hlýr||warm}}, {{m|is|nýr||new}}
 * {{tl|is-adecl|##.comp|pagename=nýr}}
 
-==== words in vowel + -r where the -r is part of the stem ====
+=== words in vowel + -r where the -r is part of the stem ===
 * {{m|is|sár||sore}}, {{m|is|varkár||cautious}}
 * Words in -ár and -ær need # to include the -r in the stem. Comparative is -ari, superlative -astur. Thomson claims that all these words have alternative comparatives in -ri and superlatives in -stur but BÍN doesn't show them.
 * {{tl|is-adecl|#.comp|pagename=sár}}
@@ -158,31 +156,31 @@
 * {{m|is|ör||brisk, prompt; liberal, generous}}
 * {{tl|is-adecl|comp|pagename=ör}}
 
-==== words in -ur that is part of the stem ====
+=== words in -ur that is part of the stem ===
 * Contraction is the norm here. Default comparative and superlative have contraction + -ari, -astur.
 * {{m|is|bitur||bitter; sharp}}, {{m|is|digur||thick, burly}}, {{m|is|ítur||excellent, beautiful}}, {{m|is|lipur||nimble}}, {{m|is|vitur||wise, clever}}
 * {{m|is|bitur}} has an alternative comparative [[biturri]]. Here ~ stands for the (uncontracted) bitur-.
 * {{tl|is-adecl|#.comp:+:~ri.dup:+|pagename=bitur}}
-* {{m|is|digur}}, <<lipur>>, <<vitur>> are like <<bitur>>.
+* {{m|is|digur}}, {{m|is|lipur}}, {{m|is|vitur}} are like {{m|is|bitur}}.
 * {{tl|is-adecl|#.comp:+:~ri.sup:+|pagename=digur}}
 * {{tl|is-adecl|#.comp:+:~ri.sup:+|pagename=lipur}}
 * {{tl|is-adecl|#.comp:+:~ri.sup:+|pagename=vitur}}
 * {{tl|is-adecl|#.comp|pagename=ítur}}
 * with u-mutation: {{m|is|dapur||sad, downhearted}}, {{m|is|fagur||beautiful, fair}}, {{m|is|magur||lean}}, {{m|is|vakur||movable; ambling (horse)}} ({{m|is|árvakur||vigilant; rising early}})
-* {{m|is|dapur}} has comparatives [[daprari]] or uncontracted [[dapurri]] and superlative only [[daprastur]]. Note that the u-mutation of <<dapur>> in the feminine singular and neuter plural is [[döpur]].
+* {{m|is|dapur}} has comparatives [[daprari]] or uncontracted [[dapurri]] and superlative only [[daprastur]]. Note that the u-mutation of {{m|is|dapur}} in the feminine singular and neuter plural is [[döpur]].
 * {{tl|is-adecl|#.comp:+:~ri.usp:+|pagename=dapur}}
 * As mentioned above, ^ applies i-mutation to the stem (which umlauts the second-to-last vowel when the stem ends in -ur) and ^! applies i-mutation to the contracted stem.
 * {{tl|is-adecl|#.comp:^ri:^!i.sup:^stur|pagename=fagur}}
 * {{tl|is-adecl|#.comp:+:^ri|pagename=magur}}
-* <<vakur>>, <<árvakur>>
+* {{m|is|vakur}}, {{m|is|árvakur}}
 * {{tl|is-adecl|#.comp|pagename=vakur}}
 
-=== words with no masculine nominative singular ending ===
+== words with no masculine nominative singular ending ==
 * {{m|is|fús||willing, eager}}, {{m|is|ern||vigorous, hale}}, {{m|is|forn||ancient, old}}, {{m|is|frækn||valiant}}, {{m|is|gegn||favorable, useful}}, {{m|is|hás||hoarse}}, {{m|is|laus||loose; free}} ({{m|is|heyrnarlaus||deaf}}, {{m|is|mállaus||mute}}, {{m|is|vitlaus||silly, crazy; incorrect}}), {{m|is|ljós||bright, light; clear, evident}}, {{m|is|lygn||calm (of water, weather)}}, {{m|is|læs||legible; readable; able to read}}, {{m|is|megn||strong, mighty}}, {{m|is|skyggn||clearsighted; having second sight}}, {{m|is|sýkn||innocent}}, {{m|is|vís||wise; certain}}
 * {{tl|is-adecl|comp|pagename=fús}}
 * with u-mutation: {{m|is|gjarn||eager, ready}} ({{m|is|goðgjarn||kindly}; not in BÍN}), {{m|is|jafn||equal, even, level}}, {{m|is|snjall||masterly, excellent, clever}}
 * {{tl|is-adecl|comp|pagename=gjarn}}
-* In <<snjall>>, both l's are part of the stem.
+* In {{m|is|snjall}}, both l's are part of the stem.
 * {{tl|is-adecl|#.comp|pagename=snjall}}
 * with loss of -s after a consonant before genitive -s: {{m|is|frjáls||free}}, {{m|is|hress||in good spirits, well}}, {{m|is|viss||certain}}
 * {{tl|is-adecl|comp|pagename=frjáls}}
@@ -192,7 +190,7 @@
 * {{tl|is-adecl|comp|pagename=kyrr}}
 * with loss of -r after a consonant before endings beginning with -r, and u-mutation: [there seem to be none]
 
-=== words in -ll ===
+== words in -ll ==
 * Comparative in -li, superlative in -astur. Endings in -r assimilate the r to l.
 * {{m|is|-býll}} ({{m|is|strjálbýll||thinly populated}}, {{m|is|þéttbýll||thickly populated}}), {{m|is|fúll||foul}}, {{m|is|háll||slippery}}, {{m|is|heill||whole; healthy}}, {{m|is|-máll}} ({{m|is|brigðmáll||false to promises}}, {{m|is|fámáll||taciturn}}, {{m|is|lausmáll||talkative; indiscreet; false to promises}}), {{m|is|-sjáll}} ({{m|is|aðsjáll||thrifty; parsimonious}}, {{m|is|forsjáll||prudent, provident}}, {{m|is|viðsjáll||sly, untrustworthy}}), {{m|is|strjáll||scattered, sparse}}, {{m|is|sæll||happy}} ({{m|is|vansæll||unhappy}}, {{m|is|vesæll||pitiful, weak; sick}}), {{m|is|þjáll||manageable, pliant}}
 * {{tl|is-adecl|comp|pagename=sæll}}
@@ -202,23 +200,23 @@
 * {{tl|is-adecl|comp|pagename=gjöfull}}
 * {{m|is|förull}} has both contracted and uncontracted forms. Contracted comparative in -ari ([[förlari]]), uncontracted in -li ([[förulli]]); but although in the positive and superlative, the contracted is given first, in the comparative the uncontracted [[förulli]] occurs before [[förlari]]. Here ~! means contracted stem. {{m|is|víðförull}} is identical to förull.
 * {{tl|is-adecl|con,-con.comp:+:~!ari.sup:+|pagename=förull}}
-* {{m|is|sögull}} is given only with contracted positive and superlative, but the comparative is still uncontracted [[sögulli]]. {{m|is|sannsögull}} and {{m|is|þögull}} are like {{m|is|förull}} rather than <<sögull>>.
+* {{m|is|sögull}} is given only with contracted positive and superlative, but the comparative is still uncontracted [[sögulli]]. {{m|is|sannsögull}} and {{m|is|þögull}} are like {{m|is|förull}} rather than {{m|is|sögull}}.
 * {{tl|is-adecl|con.comp|pagename=sögull}}
 * {{tl|is-adecl|con,-con.comp:+:~!ari.sup:+|pagename=sannsögull}}
 * {{tl|is-adecl|con,-con.comp:+:~!ari.sup:+|pagename=þögull}}
 * {{m|is|heimill||available; allowed}}
 * {{tl|is-adecl|-comp|pagename=heimill}}
 * {{m|is|gamall||old}}
-* <<gamall>> has uUmut in the positive, leading to feminine [[gömul]].
+* {{m|is|gamall}} has uUmut in the positive, leading to feminine [[gömul]].
 * {{tl|is-adecl|con.uUmut.comp:eldri.sup:elstur|pagename=gamall}}
-* <<einsamall>> has uUmut in the positive, leading to feminine [[einsömul]].
+* {{m|is|einsamall}} has uUmut in the positive, leading to feminine [[einsömul]].
 * {{m|is|einsamall||alone}}
 * {{tl|is-adecl|con.uUmut.-comp|pagename=einsamall}}
 * {{m|is|vesall||pitiful, weak; sick}} (less common variant of {{m|is|vesæll}})
 * Per Thomson, the pattern of {{m|is|vesall}} is complex with multiple alternants. BÍN shows a simplified version with regular umut in the feminine [[vesöl]] and no contraction.
 * {{tl|is-adecl|comp|pagename=vesall}}
 
-=== words in -nn but not -Cinn ===
+== words in -nn but not -Cinn ==
 * Comparative in -ni, superlative in -astur. Endings in -r assimilate the r to n.
 * {{m|is|beinn||straight}}, {{m|is|brúnn||brown}}, {{m|is|brýnn||urgent}}, {{m|is|grænn||green}}, {{m|is|hreinn||clean, pure}}, {{m|is|kænn||shrewd, cunning}}, {{m|is|-rænn}} ({{m|is|austrænn||eastern}}, {{m|is|einrænn||odd, eccentric; shy, unsociable}}, {{m|is|lífrænn||organic}}, {{m|is|norrænn||nordic}}, {{m|is|suðrænn||southern}}, {{m|is|vestrænn||western}}), {{m|is|seinn||late}}, {{m|is|sýnn||visible; clear, evident}} ({{m|is|auðsýnn||obvious}}, {{m|is|bjartsýnn||optimistic}}, {{m|is|fjarsýnn||longsighted}}, {{m|is|nærsýnn||shortsighted, nearsighted}}, {{m|is|svartsýnn||pessimistic}}, {{m|is|víðsýnn||with a good view; liberal, broad-minded}}), {{m|is|vænn||good, fine, promising; fine-looking}}
 * {{tl|is-adecl|comp|pagename=beinn}}
@@ -228,7 +226,7 @@
 * {{tl|is-adecl|comp|pagename=auðsýnn}}
 * {{tl|is-adecl|sup:~stur:+|pagename=vænn}}
 
-===words in -inn other than -einn ===
+== words in -inn other than -einn ==
 * {{m|is|boginn||curved, crooked}}, {{m|is|bólginn||swollen; inflamed}} {{m|is|feginn||pleased, glad}}, {{m|is|feiminn||shy}}, {{m|is|freðinn||frozen}}, {{m|is|fyndinn||witty}}, {{m|is|gætinn||cautious}}, {{m|is|heiðinn||heathen}}, {{m|is|hlýðinn||obedient}}, {{m|is|hnipinn||sad, downhearted}} (also {{m|is|hnípinn}}), {{m|is|hnugginn||sad, downhearted}}, {{m|is|hokinn||bowed, bent down}}, {{m|is|hólpinn||saved (religiously)}}, {{m|is|hygginn||clever, judicious}}, {{m|is|hæðinn||ironic}}, {{m|is|hæpinn||doubtful, dangerous}}, {{m|is|iðinn||industrious}}, {{m|is|kíminn||mocking}} (also {{m|is|kýminn}}; proscribed), {{m|is|kristinn||christian}}, {{m|is|loðinn||hairy, shaggy}}, {{m|is|náinn||near}}, {{m|is|opinn||open}}, {{m|is|rotinn||rotten}}, {{m|is|sollinn||swollen}}, {{m|is|soltinn||(very) hungry}}, {{m|is|söngvinn||fond of song; musical}}, {{m|is|þolinn||enduring, persevering}}, {{m|is|þrifinn||cleanly}}
 * Comparative in -nari (contracted), likewise superlative contracted in -nastur
 * {{tl|is-adecl|comp|pagename=boginn}}
@@ -239,7 +237,7 @@
 * Vowel stem is söngn- without -v-; likewise {{m|is|höggvinn}} and various derivatives of it
 * {{tl|is-adecl|comp|pagename=söngvinn}}
 
-==== irregular words ====
+=== irregular words ===
 * {{m|is|sannur||true}}
 * {{tl|is-adecl|str_nom_n:satt.comp|pagename=sannur}}
 * {{m|is|góður||good}}
@@ -251,7 +249,7 @@
 * {{m|is|ýmis||various}}
 * {{tl|is-adecl|con.str_dat_f:ýmissi.str_gen_f:ýmissar.str_nom_np:ýmis:ýms.str_gen_p:ýmissa:ýmsra.wk_m+wk_f+wk_n:-.-comp.sup:+|pagename=ýmis}}
 
-=== words that are comparative-only or superlative-only ===
+== words that are comparative-only or superlative-only ==
 * {{m|is|eystri||more to the east}}
 * Specifying -pos means "no positive form" and the lemma is in comparative form, unless -pos and -comp are both given, in which case the lemma is in superlative form. Comparative-form lemmas are automatically weak-only in the comparative but both states (weak and strong) in the superlative.
 * {{tl|is-adecl|-pos.-sup|pagename=eystri}}
