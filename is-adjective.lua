@@ -463,7 +463,7 @@ local function add(base, slot, degree, props, endings)
 		end
 		-- Finally, fall back to the basic stem, which is always defined.
 		stem_in_effect = stem_in_effect or props.stem
-		
+
 		-- If the ending is "*", it means to use the lemma as the form directly rather than try to construct the form
 		-- from a stem and ending. We need to do this for the lemma slot and especially for the nominative singular,
 		-- because we don't have the nominative singular ending available and it may vary (e.g. it may be -ur, -l, -n,
@@ -523,7 +523,7 @@ local function add(base, slot, degree, props, endings)
 				ending = ending:sub(2)
 			elseif ending:find("^r") then
 				if degree.assimilate_r then
-					local stem_butlast, stem_last = stem_with_infix:match("^(.*)([ln])$") 
+					local stem_butlast, stem_last = stem_with_infix:match("^(.*)([ln])$")
 					if stem_last then
 						ending = stem_last .. ending:sub(2)
 					end
@@ -600,7 +600,7 @@ end
 -- In addition, if `gen_n` is nil, it is copied from `gen_m`.
 local function add_strong_decl_with_nom_sg(base, degree, props,
 	nom_m, nom_f, nom_n,
-	acc_m, acc_f,      
+	acc_m, acc_f,
 	dat_m, dat_f, dat_n,
 	gen_m, gen_f, gen_n,
 	nom_mp, nom_fp, nom_np,
@@ -636,7 +636,7 @@ end
 -- taken directly from the lemma.
 local function add_strong_decl(base, degree, props,
 	       nom_f, nom_n,
-	acc_m, acc_f,      
+	acc_m, acc_f,
 	dat_m, dat_f, dat_n,
 	gen_m, gen_f, gen_n,
 	nom_mp, nom_fp, nom_np,
@@ -645,9 +645,24 @@ local function add_strong_decl(base, degree, props,
 	gen_p
 )
 	add_strong_decl_with_nom_sg(base, degree, props,
-		"*", nom_f, nom_n, acc_m, acc_f,      
+		"*", nom_f, nom_n, acc_m, acc_f,
 		dat_m, dat_f, dat_n, gen_m, gen_f, gen_n,
 		nom_mp, nom_fp, nom_np, acc_mp,
+		dat_p, gen_p
+	)
+end
+
+-- Add all plural strong state forms other than the nominative plural.
+local function add_strong_decl_pl_only(base, degree, props,
+			nom_fp, nom_np,
+	acc_mp,
+	dat_p,
+	gen_p
+)
+	add_strong_decl_with_nom_sg(base, degree, props,
+		false, false, false, false, false,
+		false, false, false, false, false, false,
+		"*", nom_fp, nom_np, acc_mp,
 		dat_p, gen_p
 	)
 end
@@ -666,10 +681,19 @@ local function add_weak_decl(base, degree, props,
 	add(base, "wk_p", degree, props, wk_p)
 end
 
+-- Add all plural weak state forms.
+local function add_weak_decl_pl_only(base, degree, props, wk_p)
+	add_weak_decl(base, degree, props,
+		false, false, false,
+		false, false,
+		wk_p
+	)
+end
+
 
 local decls = {}
 
-	
+
 decls["normal"] = function(base, degree, props)
 	add_strong_decl(base, degree, props,
 		      "^^",  "t",
@@ -874,12 +898,73 @@ decls["irreg"] = function(base, degree, props)
 		return
 	end
 
-	if degree.lemma == "einn" then
-		error("FIXME")
+	if degree.lemma == "fáeinir" then
+		stem = "fáein"
+		add_strong_decl_pl_only(base, degree, props,
+					stem .. "ar", stem,
+			stem .. "a",
+			stem .. "um",
+			stem .. "na"
+		)
+		add_weak_decl_pl_only(base, degree, props,
+			stem .. "u"
+		)
 		return
 	end
 
-	error("FIXME")
+	if degree.lemma == "tveir" then
+		add_strong_decl_pl_only(base, degree, props,
+					"tvær", "tvö",
+			"tvo",
+			{"tveimur", "tveim"},
+			"tveggja"
+		)
+		return
+	end
+
+	if degree.lemma == "þrír" then
+		add_strong_decl_pl_only(base, degree, props,
+					"þrjár", "þrjú",
+			"þrjá",
+			{"þremur", "þrem"},
+			"þriggja"
+		)
+		return
+	end
+
+	if degree.lemma == "fjórir" then
+		add_strong_decl_pl_only(base, degree, props,
+					"fjórar", "fjögur",
+			"fjóra",
+			"fjórum",
+			{"fjögurra", {form = "fjögra", footnotes = {"[rare in writing]"}}}
+		)
+		return
+	end
+
+	if degree.lemma == "báðir" then
+		add_strong_decl_pl_only(base, degree, props,
+					"báðar", "bæði",
+			"báða",
+			"báðum",
+			"beggja"
+		)
+		return
+	end
+
+	if degree.lemma == "annar" then
+		add_strong_decl(base, degree, props,
+					"önnur", "annað",
+			"annan", "aðra",
+			"öðrum", "annarri", "öðru",
+			"annars", "annarrar", "annars",
+			"aðrir", "aðrar", "önnur",
+			"aðra",
+			"öðrum",
+			"annarra"
+		)
+		return
+	end
 
 	error("Unrecognized irregular lemma '" .. degree.lemma .. "'")
 end
@@ -1178,7 +1263,7 @@ local function parse_inside(base, inside, is_scraped_noun)
 			end
 			-- If we saw a hyphen, set `scrape_is_suffix` to true, otherwise false
 			base.scrape_is_suffix = base.scrape_is_suffix == "-"
-			
+
 			if not base.scrape_spec or base.scrape_spec == "" then
 				parse_err(("Syntax error in scrape directive '%s"):format(part))
 			end
@@ -1351,7 +1436,7 @@ local function parse_inside_and_merge(inside, lemma, scrape_chain)
 		return base
 	else
 		local prefix, base_noun, declspec
-		prefix, base_noun, declspec = com.find_scraped_decl {
+		prefix, base_noun, declspec = com.find_scraped_infl {
 			lemma = lemma,
 			scrape_spec = base.scrape_spec,
 			scrape_is_suffix = base.scrape_is_suffix,
@@ -2123,7 +2208,10 @@ end
 local function compute_categories_and_annotation(alternant_multiword_spec)
 	local all_cats = {}
 	local function inscat(cattype)
-		m_table.insertIfNot(all_cats, "Icelandic " .. cattype)
+		-- Don't insert categories with determiners/pronouns; all are irregular in various ways.
+		if not alternant_multiword_spec.irreg then
+			m_table.insertIfNot(all_cats, "Icelandic " .. cattype)
+		end
 	end
 	if alternant_multiword_spec.saw_indecl and not alternant_multiword_spec.saw_non_indecl then
 		inscat("indeclinable adjectives")
@@ -2480,7 +2568,7 @@ function export.do_generate_forms(args, argspec, source_template)
 			table.insert(scrape_errors, base.scrape_error)
 		end
 	end)
-	
+
 	if scrape_errors[1] then
 		alternant_multiword_spec.scrape_errors = scrape_errors
 	else
