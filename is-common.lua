@@ -13,6 +13,7 @@ local rfind = mw.ustring.find
 local rmatch = mw.ustring.match
 local rsubn = mw.ustring.gsub
 local ulen = mw.ustring.len
+local usub = mw.ustring.sub
 local uupper = mw.ustring.upper
 
 -- Capitalize the first letter.
