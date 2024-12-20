@@ -53,7 +53,7 @@ local m_links = require("Module:links")
 local m_string_utilities = require("Module:string utilities")
 local iut = require("Module:inflection utilities")
 local m_para = require("Module:parameters")
-local com = require("Module:is-common")
+local com = require("Module:User:Benwing2/is-common")
 
 local u = mw.ustring.char
 local rsplit = mw.text.split
@@ -1906,7 +1906,7 @@ local function parse_inside_and_merge(inside, lemma, scrape_chain)
 		return base
 	else
 		local prefix, base_noun, declspec
-		prefix, base_noun, declspec = com.find_scraped_decl {
+		prefix, base_noun, declspec = com.find_scraped_infl {
 			lemma = lemma,
 			scrape_spec = base.scrape_spec,
 			scrape_is_suffix = base.scrape_is_suffix,
@@ -1926,7 +1926,7 @@ local function parse_inside_and_merge(inside, lemma, scrape_chain)
 		-- Parse the inside spec from the scraped noun (merging any sub-scraping specs), and copy over the
 		-- user-specified properties on top of it.
 		table.insert(scrape_chain, base_noun)
-		local inner_base = parse_inside_and_merge(declspec.decl, base_noun, scrape_chain)
+		local inner_base = parse_inside_and_merge(declspec.infl, base_noun, scrape_chain)
 		inner_base.lemma = lemma
 		inner_base.prefix = prefix
 		inner_base.base_noun = base_noun
