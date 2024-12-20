@@ -1038,7 +1038,7 @@ decls["adj"] = function(base, props)
 		local function copy(from_slot, to_slot, do_clone)
 			local source = adj_alternant_multiword_spec.forms[from_slot]
 			if do_clone then
-				source = m_table.deepcopy(source)
+				source = m_table.deepCopy(source)
 			end
 			base.forms[to_slot] = source
 		end
@@ -1151,7 +1151,6 @@ end
 -- otherwies return variants with any embedded links removed. If `remove_footnotes` is given, remove any
 -- footnotes attached to the lemmas.
 function export.get_lemmas(alternant_multiword_spec, linked_variant, remove_footnotes)
-	-- FIXME: Update for Icelandic
 	local slots_to_fetch = potential_lemma_slots
 	local linked_suf = linked_variant and "_linked" or ""
 	for _, slot in ipairs(slots_to_fetch) do
@@ -2173,7 +2172,7 @@ local function expand_property_sets(base)
 			local new_prop_sets = {}
 			for _, prop_set in ipairs(base.prop_sets) do
 				for _, specval in ipairs(specvals) do
-					local new_prop_set = m_table.shallowcopy(prop_set)
+					local new_prop_set = m_table.shallowCopy(prop_set)
 					new_prop_set[mutation_spec] = specval
 					table.insert(new_prop_sets, new_prop_set)
 				end
