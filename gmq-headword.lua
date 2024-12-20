@@ -123,22 +123,34 @@ function export.show(frame)
 		table.insert(data.inflections, {label = singular_poscat .. "-forming suffix"})
 	end
 
+	local multiple_data = nil
 	if pos_functions[poscat] then
-		pos_functions[poscat].func(args, data)
+		multiple_data = pos_functions[poscat].func(args, data)
 	end
 
 	-- mw.ustring.toNFD performs decomposition, so letters that decompose
 	-- to an ASCII vowel and a diacritic, such as é, are counted as vowels and
 	-- do not need to be included in the pattern.
 	if not pagename:find("[ %-]") and not rfind(mw.ustring.lower(mw.ustring.toNFD(pagename)), "[aeiouyæœø]") then
-		table.insert(data.categories, langname .. " words without vowels")
+		local cat = langname .. " words without vowels"
+		if multiple_data then
+			table.insert(multiple_data[1].categories, cat)
+		else
+			table.insert(data.categories, cat)
+		end
 	end
 
-    if args.json then
-        return require("Module:JSON").toJSON(data)
-    end
-	
-	return require("Module:headword").full_headword(data)
+	if multiple_data then
+		if args.json then
+			return require("Module:JSON").toJSON(multiple_data)
+		end
+		return pos_functions[poscat].process_multiple_headword_data(multiple_data)
+	else
+		if args.json then
+			return require("Module:JSON").toJSON(data)
+		end
+		return require("Module:headword").full_headword(data)
+	end
 end
 
 local function get_manual_noun_params(lang, is_proper)
@@ -212,7 +224,7 @@ end
 
 local function get_auto_noun_params(lang, is_proper)
 	return {
-        [1] = {required = true, default = "akur<m.#>"},
+        [1] = {required = true, list = true, default = "akur<m.#>"},
         ["pos"] = {},
 		["m"] = list_param,
 		["f"] = list_param,
@@ -232,103 +244,161 @@ local function do_auto_nouns(is_proper, args, data)
 		data.pos_category = args.pos
 	end
 	local m_is_noun = require(is_noun_module)
-	local alternant_multiword_spec = m_is_noun.do_generate_forms(args, is_proper and "is-proper noun" or "is-noun")
-	data.heads = alternant_multiword_spec.args.head
-	data.genders = alternant_multiword_spec.genders
-
-	local function do_noun_form(slot, label, label_for_not_present, accel_form)
-		local forms = alternant_multiword_spec.forms[slot]
-		local retval
-		if not forms then
-			if not label_for_not_present then
-				return
+	local alternant_multiword_specs = {}
+	local multiple_data = {}
+	local all_genders = {}
+	local declspecs = args[1]
+	if not declspecs[2] and declspecs[1]:find("^@@") then
+		local declid
+		if declspecs[1] ~= "@@" then
+			declid = declspecs[1]:match("^@@%s*:%s*(.+)$")
+			if not declid then
+				error(("Syntax error in self-scraping spec '%s'"):format(declspecs[1]))
 			end
-			retval = {label = "no " .. label_for_not_present}
+		end
+		local decls = m_is_noun.find_declension(data.pagename, false, declid)
+		if type(decls) == "string" then
+			data.alternant_multiword_spec = {scrape_errors = {decls}}
+			return {data}
+		end
+		for i, declobj in ipairs(decls) do
+			decls[i] = declobj.decl
+		end
+		declspecs = decls
+	end
+	for i, declspec in ipairs(declspecs) do
+		local alternant_multiword_spec =
+			m_is_noun.do_generate_forms(args, declspec, is_proper and "is-proper noun" or "is-noun")
+		alternant_multiword_specs[i] = alternant_multiword_spec
+		local this_data
+		if i < #declspecs then
+			this_data = m_table.shallowCopy(data)
+			this_data.categories = {}
+			this_data.inflections = {}
+			-- genders gets overwritten just below
 		else
-			retval = {label = label, accel = accel_form and {form = accel_form} or nil}
-			local prev_footnotes
-			for _, form in ipairs(forms) do
-				local footnotes = form.footnotes
-				if footnotes and prev_footnotes and m_table.deepEquals(footnotes, prev_footnotes) then
-					footnotes = nil
+			-- for the last (or usually only) spec, save memory by not cloning
+			this_data = data
+		end
+		multiple_data[i] = this_data
+		this_data.alternant_multiword_spec = alternant_multiword_spec
+		this_data.heads = args.head
+		if not alternant_multiword_spec.scrape_errors then
+			this_data.genders = alternant_multiword_spec.genders
+			for _, gender in ipairs(this_data.genders) do
+				m_table.insertIfNot(all_genders, gender)
+			end
+	
+			local function do_noun_form(slot, label, label_for_not_present, accel_form)
+				local forms = alternant_multiword_spec.forms[slot]
+				local retval
+				if not forms then
+					if not label_for_not_present then
+						return
+					end
+					retval = {label = "no " .. label_for_not_present}
+				else
+					retval = {label = label, accel = accel_form and {form = accel_form} or nil}
+					local prev_footnotes
+					for _, form in ipairs(forms) do
+						local footnotes = form.footnotes
+						if footnotes and prev_footnotes and m_table.deepEquals(footnotes, prev_footnotes) then
+							footnotes = nil
+						end
+						prev_footnotes = form.footnotes
+						local quals, refs
+						if footnotes then
+							quals, refs = m_inflection_utilities.fetch_headword_qualifiers_and_references(footnotes)
+						end
+						local term = form.form
+						table.insert(retval, {term = term, q = quals, refs = refs})
+					end
 				end
-				prev_footnotes = form.footnotes
-				local quals, refs
-				if footnotes then
-					quals, refs = m_inflection_utilities.fetch_headword_qualifiers_and_references(footnotes)
+	
+				table.insert(this_data.inflections, retval)
+			end
+	
+			if is_proper then
+				table.insert(this_data.inflections, {label = glossary_link("proper noun")})
+			end
+			if not alternant_multiword_spec.first_noun and alternant_multiword_spec.first_adj then
+				table.insert(this_data.inflections, {label = "adjectival"})
+			end
+			local def_prefix
+			if alternant_multiword_spec.definiteness == "def" then
+				def_prefix = "def_"
+				table.insert(this_data.inflections, {label = glossary_link("definite") .. " only"})
+			else
+				def_prefix = "ind_"
+			end
+			if alternant_multiword_spec.number == "pl" then
+				table.insert(this_data.inflections, {label = glossary_link("plural only")})
+			end
+			if alternant_multiword_spec.saw_indecl and not alternant_multiword_spec.saw_non_indecl then
+				table.insert(this_data.inflections, {label = glossary_link("indeclinable")})
+			elseif alternant_multiword_spec.saw_unknown_decl and not alternant_multiword_spec.saw_non_unknown_decl then
+				table.insert(this_data.inflections, {label = "unknown declension"})
+			elseif alternant_multiword_spec.number == "pl" then
+				do_noun_form(def_prefix .. "gen_p", "genitive plural", "genitive plural")
+			else
+				do_noun_form(def_prefix .. "gen_s", "genitive singular", "genitive singular")
+				do_noun_form(def_prefix .. "nom_p", "nominative plural", not is_proper and "plural" or nil)
+			end
+	
+			if i == 1 then
+				-- Parse and insert an inflection not requiring additional processing into `this_data.inflections`. The raw
+				-- arguments come from `args[field]`, which is parsed for inline modifiers. If there is a corresponding
+				-- qualifier field `FIELD_qual`, qualifiers may additionally come from there. `label` is the label that the
+				-- inflections are given, which is linked to the glossary if surrounded by <<..>> (which is removed).
+				-- `plpos` is the plural part of speech, used in [[Category:LANGNAME PLPOS with red links in their headword
+				-- lines]]. `accel` is the accelerator form, or nil.
+				local function handle_infl(field, label, frob)
+					m_headword_utilities.parse_and_insert_inflection {
+						headdata = this_data,
+						forms = args[field],
+						paramname = field,
+						label = label,
+						frob = frob,
+					}
 				end
-				local term = form.form
-				table.insert(retval, {term = term, q = quals, refs = refs})
+	
+				handle_infl("m", "male equivalent")
+				handle_infl("f", "female equivalent")
+				handle_infl("dim", "<<diminutive>>")
+				handle_infl("aug", "<<augmentative>>")
+				handle_infl("pej", "<<pejorative>>")
+				handle_infl("dem", "<<demonym>>")
+				handle_infl("fdem", "female <<demonym>>")
+			end
+
+			-- Add categories.
+			for _, cat in ipairs(alternant_multiword_spec.categories) do
+				table.insert(this_data.categories, cat)
+			end
+	
+			-- Use the "linked" form of the lemma as the head if no head= explicitly given.
+			if #this_data.heads == 0 then
+				this_data.heads = {}
+				local lemmas = m_is_noun.get_lemmas(alternant_multiword_spec, "linked variant")
+				for _, lemma_obj in ipairs(lemmas) do
+					local head = lemma_obj.form
+					--local head = alternant_multiword_spec.args.nolinkhead and lemma_obj.form or
+					--	m_headword_utilities.add_lemma_links(lemma_obj.form, alternant_multiword_spec.args.splithyph)
+					local quals, refs
+					if lemma_obj.footnotes then
+						quals, refs = m_inflection_utilities.fetch_headword_qualifiers_and_references(lemma_obj.footnotes)
+					end
+					table.insert(this_data.heads, {term = head, q = quals, refs = refs})
+				end
 			end
 		end
-
-		table.insert(data.inflections, retval)
 	end
 
-	if is_proper then
-		table.insert(data.inflections, {label = glossary_link("proper noun")})
-	end
-	if not alternant_multiword_spec.first_noun and alternant_multiword_spec.first_adj then
-		table.insert(data.inflections, {label = "adjectival"})
-	end
-	local def_prefix
-	if alternant_multiword_spec.definiteness == "def" then
-		def_prefix = "def_"
-		table.insert(data.inflections, {label = glossary_link("definite") .. " only"})
-	else
-		def_prefix = "ind_"
-	end
-	if alternant_multiword_spec.number == "pl" then
-		table.insert(data.inflections, {label = glossary_link("plural only")})
-		do_noun_form(def_prefix .. "gen_p", "genitive plural", "genitive plural")
-	else
-		do_noun_form(def_prefix .. "gen_s", "genitive singular", "genitive singular")
-		do_noun_form(def_prefix .. "nom_p", "nominative plural", not is_proper and "plural" or nil)
+	if #all_genders > 1 then
+		table.insert(multiple_data[1].categories, data.langname .. " nouns with multiple genders")
 	end
 
-	-- Parse and insert an inflection not requiring additional processing into `data.inflections`. The raw arguments
-	-- come from `args[field]`, which is parsed for inline modifiers. If there is a corresponding qualifier field
-	-- `FIELD_qual`, qualifiers may additionally come from there. `label` is the label that the inflections are given,
-	-- which is linked to the glossary if surrounded by <<..>> (which is removed). `plpos` is the plural part of speech,
-	-- used in [[Category:LANGNAME PLPOS with red links in their headword lines]]. `accel` is the accelerator form, or
-	-- nil.
-	local function handle_infl(field, label, frob)
-		m_headword_utilities.parse_and_insert_inflection {
-			headdata = data,
-			forms = args[field],
-			paramname = field,
-			label = label,
-			frob = frob,
-		}
-	end
-
-	handle_infl("m", "male equivalent")
-	handle_infl("f", "female equivalent")
-	handle_infl("dim", "<<diminutive>>")
-	handle_infl("aug", "<<augmentative>>")
-	handle_infl("pej", "<<pejorative>>")
-	handle_infl("dem", "<<demonym>>")
-	handle_infl("fdem", "female <<demonym>>")
-	-- Add categories.
-	for _, cat in ipairs(alternant_multiword_spec.categories) do
-		table.insert(data.categories, cat)
-	end
-
-	-- Use the "linked" form of the lemma as the head if no head= explicitly given.
-	if #data.heads == 0 then
-		data.heads = {}
-		local lemmas = m_is_noun.get_lemmas(alternant_multiword_spec, "linked variant")
-		for _, lemma_obj in ipairs(lemmas) do
-			local head = lemma_obj.form
-			--local head = alternant_multiword_spec.args.nolinkhead and lemma_obj.form or
-			--	m_headword_utilities.add_lemma_links(lemma_obj.form, alternant_multiword_spec.args.splithyph)
-			local quals, refs
-			if lemma_obj.footnotes then
-				quals, refs = m_inflection_utilities.fetch_headword_qualifiers_and_references(lemma_obj.footnotes)
-			end
-			table.insert(data.heads, {term = head, q = quals, refs = refs})
-		end
-	end
+	return multiple_data
 end
 
 local function get_noun_pos_functions(is_proper)
@@ -340,13 +410,41 @@ local function get_noun_pos_functions(is_proper)
 				return get_manual_noun_params(lang, is_proper)
 			end
 		end,
-	 func = function(args, data)
+		func = function(args, data)
 			if data.lang:getCode() == "is" then
 				return do_auto_nouns(is_proper, args, data)
 			else
 				return do_manual_nouns(is_proper, args, data)
 			end
-	 end,
+		end,
+		process_multiple_headword_data = function(multiple_data)
+			local parts = {}
+			local function ins(txt)
+				table.insert(parts, txt)
+			end
+			for i, data in ipairs(multiple_data) do
+				local alternant_multiword_spec = data.alternant_multiword_spec
+				if alternant_multiword_spec.header then
+					ins(("'''%s:'''<br />"):format(alternant_multiword_spec.header))
+				elseif alternant_multiword_spec.q then
+					ins((" ''%s''<br />"):format(alternant_multiword_spec.q))
+				elseif i > 1 then
+					ins(" ''or''<br />")
+				end
+				if alternant_multiword_spec.scrape_errors then
+					local errmsgs = {}
+					for _, scrape_error in ipairs(alternant_multiword_spec.scrape_errors) do
+						table.insert(errmsgs, '<span style="font-weight: bold; color: #CC2200;">' .. scrape_error .. "</span>")
+					end
+					ins(table.concat(errmsgs, "<br />"))
+					ins(require("Module:utilities").format_categories({"Icelandic scraping errors in Template:is-ndecl"},
+						data.lang, nil, nil, force_cat))
+				else
+					ins(require("Module:headword").full_headword(data))
+				end
+			end
+			return table.concat(parts)
+		end,
 	}
 end
 
@@ -409,5 +507,6 @@ pos_functions["adverbs"] = {
 		do_comparative_superlative(args, data, "adverbs")
 	end,
 }
+
 
 return export
