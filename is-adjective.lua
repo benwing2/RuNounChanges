@@ -163,7 +163,6 @@ local strong_adjective_slots = {
 	{"str_nom_fp", "str|nom//acc|f|p"},
 	{"str_nom_np", "str|nom//acc|n|p"},
 	{"str_acc_mp", "str|acc|m|p"},
-	{"str_acc_np", "str|acc|m|p"},
 	{"str_gen_p", "str|gen|p"},
 	{"str_dat_p", "str|dat|p"},
 }
@@ -337,10 +336,12 @@ fields later filled out by other functions) is of the form
 	SLOT = true,
 	...
   },
+  -- Positive specs as given by the user, currently only if the user specifies '-pos'.
+  posspec = nil or { {form = "-"} },
   -- Comparative specs as given by the user, consisting of a list of form objects.
-  compspec = { {form = "FORM", footnotes = nil or {"FOOTNOTE", "FOOTNOTE", ...}}, ...},
+  compspec = nil or { {form = "FORM", footnotes = nil or {"FOOTNOTE", "FOOTNOTE", ...}}, ...},
   -- Superlative specs as given by the user, consisting of a list of form objects.
-  supspec = { {form = "FORM", footnotes = nil or {"FOOTNOTE", "FOOTNOTE", ...}}, ...},
+  supspec = nil or { {form = "FORM", footnotes = nil or {"FOOTNOTE", "FOOTNOTE", ...}}, ...},
   -- misc Boolean properties:
   -- * "irreg" (an irregular term such as a number or determiner);
   -- * "decl?" (unknown declension);
@@ -813,7 +814,7 @@ decls["irreg"] = function(base, degree, props)
 		add_strong_decl(base, degree, props,
 					"sú", "það",
 			"þann", "þá",
-			"þeim", "þeirri", {"því", "þí"},
+			"þeim", "þeirri", "því",
 			"þess", "þeirrar", nil,
 			"þeir", "þær", "þau",
 			"þá",
@@ -827,7 +828,7 @@ decls["irreg"] = function(base, degree, props)
 		add_strong_decl(base, degree, props,
 					"hún", "það",
 			"hann", "hana",
-			"honum", "henni", {"því", "þí"},
+			"honum", "henni", "því",
 			"hans", "hennar", "þess",
 			"þeir", "þær", "þau",
 			"þá",
@@ -1481,6 +1482,10 @@ local function parse_inside(base, inside, is_scraped_noun)
 	if base_degfield ~= "pos" then
 		-- Indicate that the positive degree is explicitly disabled.
 		base.degrees.pos = {}
+	elseif degree_disabled(base.compspec) and not base.supspec then
+		-- If we're in the positive degree and the comparative was explicitly disabled, the superlative should be
+		-- explicitly disable if unspecified.
+		base.supspec = {{form = "-"}}
 	end
 
 	return base
@@ -1979,6 +1984,17 @@ local function initialize_degree_object_stem_and_decl(degree, degfield, lemma)
 end
 
 
+-- Get the default superlative u-mutation. If the superlative ends in -astur, it should be "one up" from the positive
+-- u-mutation value (umut -> uUmut, uUmut -> uUUmut); else (superlative ends in -stur) it should be the same.
+local function default_superlative_umut(lemma, pos_umut)
+	pos_umut = pos_umut or "umut"
+	if lemma:endswith("astur$") then
+		pos_umut = pos_umut:gsub("mut$", "Umut")
+	end
+	return pos_umut
+end
+
+
 -- Insert a comparative/superlative degree object, typically based on a user-specified or defaulted spec.
 local function insert_degree_object(base, degfield, lemma, footnotes, umut)
 	local degree = {
@@ -1989,7 +2005,7 @@ local function insert_degree_object(base, degfield, lemma, footnotes, umut)
 		state = degfield == "sup" and "bothstates" or "weak",
 		number = "both",
 		prop_sets = {{
-			umut = umut or {form = degfield == "sup" and "uUmut" or "umut", defaulted = true}
+			umut = umut or {form = degfield == "sup" and default_superlative_umut(lemma) or "umut", defaulted = true}
 		}},
 	}
 	initialize_degree_object_stem_and_decl(degree, degfield, lemma)
@@ -2006,7 +2022,7 @@ local function insert_default_comp_sup_specs(base, degfield, spec_footnotes)
 		local default = props["def" .. degfield]
 		local umut = m_table.shallowCopy(props.umut) or {form = "umut", defaulted = true}
 		if degfield == "sup" then
-			umut.form = umut.form:gsub("mut$", "Umut")
+			umut.form = default_superlative_umut(default, umut.form)
 		end
 		insert_degree_object(base, degfield, default, spec_footnotes, umut)
 	end
@@ -2014,11 +2030,11 @@ end
 
 -- Process the `comp:...` or `sup:...` spec given by the user and construct the appropriate property sets, one per stem.
 -- `degfield` is either "comp" or "sup", and `specs` gives the user-specified specs. Note that the default u-mutation
--- for the superlative is uUmut, but if the spec was given (implicity or explicitly) as "+", we use the default
--- comparative or superlative, and in that case the superlative u-mutation is constructed from the corresponding
--- positive-degree u-mutation by adding U to the end, so that umut -> uUmut but uUmut -> uUUmut (cf. [[saltaður]]
--- "salty" with u-mutation uUmut and feminine singular/neuter plural [[söltuð]], and superlative [[saltaðastur]] with
--- u-mutation uUUmut and feminine singular/neuter plural [[söltuðust]]).
+-- for superlatives in -astur is uUmut, but if the spec was given (implicity or explicitly) as "+", we use the default
+-- comparative or superlative, and in that case the u-mutation for superlatives in -astur is constructed from the
+-- corresponding positive-degree u-mutation by adding U to the end, so that umut -> uUmut but uUmut -> uUUmut (cf.
+-- [[saltaður]] "salty" with u-mutation uUmut and feminine singular/neuter plural [[söltuð]], and superlative
+-- [[saltaðastur]] with u-mutation uUUmut and feminine singular/neuter plural [[söltuðust]]).
 local function process_comp_sup_spec(base, degfield, specs)
 	local basedeg = base.base_degree
 	specs = specs or {{form = "+"}}
@@ -2187,7 +2203,7 @@ local function detect_indicator_spec(alternant_multiword_spec, base)
 	else
 		if base.base_degfield == "sup" then
 			-- Superlative-only lemmas (like other superlatives) default to uUmut unless explicitly specified otherwise.
-			basedeg.umut = basedeg.umut or {{form = "uUmut", defaulted = true}}
+			basedeg.umut = basedeg.umut or {{form = default_superlative_umut(basedeg.lemma), defaulted = true}}
 		end
 		expand_property_sets(basedeg)
 		if base.base_degfield == "pos" then
