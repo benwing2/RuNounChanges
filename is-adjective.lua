@@ -566,13 +566,15 @@ local function add(base, slot, degree, props, endings)
 					if stem_last then
 						ending = stem_last .. ending:sub(2)
 					end
-				elseif degree.double_r then
+				elseif degree.double_r_and_t then
 					ending = "r" .. ending
 				elseif rfind(stem_with_infix, com.cons_c .. "r$") then
 					ending = ending:sub(2)
 				end
 			elseif ending == "t" then
-				if stem_with_infix:find("dd$") then
+				if degree.double_r_and_t then
+					ending = "tt"
+				elseif stem_with_infix:find("dd$") then
 					stem_with_infix = stem_with_infix:gsub("dd$", "t")
 				else
 					local stem_butlast, stem_last = rmatch(stem_with_infix, "^(.*" .. com.cons_c .. ")([dðt])$")
@@ -1039,6 +1041,31 @@ decls["irreg"] = function(base, degree, props)
 	end
 
 	error("Unrecognized irregular lemma '" .. degree.lemma .. "'")
+end
+
+
+-- Return the lemmas for this term. The return value is a list of {form = FORM, footnotes = FOOTNOTES}.
+-- If `linked_variant` is given, return the linked variants (with embedded links if specified that way by the user),
+-- otherwies return variants with any embedded links removed. If `remove_footnotes` is given, remove any
+-- footnotes attached to the lemmas.
+function export.get_lemmas(alternant_multiword_spec, linked_variant, remove_footnotes)
+	local slots_to_fetch = potential_lemma_slots
+	local linked_suf = linked_variant and "_linked" or ""
+	for _, slot in ipairs(slots_to_fetch) do
+		if alternant_multiword_spec.forms[slot .. linked_suf] then
+			local lemmas = alternant_multiword_spec.forms[slot .. linked_suf]
+			if remove_footnotes then
+				local lemmas_no_footnotes = {}
+				for _, lemma in ipairs(lemmas) do
+					table.insert(lemmas_no_footnotes, {form = lemma.form})
+				end
+				return lemmas_no_footnotes
+			else
+				return lemmas
+			end
+		end
+	end
+	return {}
 end
 
 
@@ -1831,7 +1858,7 @@ local function determine_positive_declension(base)
 			-- If the user doesn't want the -r in the stem they need to explicitly specify this using e.g. '##' (or
 			-- conversely, for -ár/-ær lemmas, use '#' to include the -r in the stem).
 			if pos.stem == stem or (not pos.stem and rfind(stem, "[ÁáÆæ]$")) then
-				pos.double_r = true
+				pos.double_r_and_t = true
 				defcomp = stem .. "rri"
 				if rfind(stem, "[ÆæÝý]$") then
 					-- Lemmas like [[nýr]] "new", [[hlýr]] "warm", [[langær]] "long-lasting"
@@ -1988,7 +2015,7 @@ end
 -- u-mutation value (umut -> uUmut, uUmut -> uUUmut); else (superlative ends in -stur) it should be the same.
 local function default_superlative_umut(lemma, pos_umut)
 	pos_umut = pos_umut or "umut"
-	if lemma:endswith("astur$") then
+	if lemma:find("astur$") then
 		pos_umut = pos_umut:gsub("mut$", "Umut")
 	end
 	return pos_umut
@@ -2028,6 +2055,26 @@ local function insert_default_comp_sup_specs(base, degfield, spec_footnotes)
 	end
 end
 
+local function generate_umlauted_comp_sup(stem, spec)
+	if spec == "^" then
+		stem = com.apply_i_mutation(stem)
+	elseif spec == "^!" then
+		stem = com.apply_i_mutation(com.apply_contraction(stem))
+	end
+	local gencomp, gensup
+	if rfind(stem, com.vowel_c .. "$") then
+		gencomp = stem .. "rri"
+	elseif rfind(stem, com.vowel_c .. "[ln]$") then
+		gencomp = stem .. usub(stem, -1) .. "i"
+	elseif rfind(stem, com.cons_c .. "r$") then
+		gencomp = stem .. "i"
+	else
+		gencomp = stem .. "ri"
+	end
+	gensup = stem .. "stur"
+	return gencomp, gensup
+end
+
 -- Process the `comp:...` or `sup:...` spec given by the user and construct the appropriate property sets, one per stem.
 -- `degfield` is either "comp" or "sup", and `specs` gives the user-specified specs. Note that the default u-mutation
 -- for superlatives in -astur is uUmut, but if the spec was given (implicity or explicitly) as "+", we use the default
@@ -2055,10 +2102,14 @@ local function process_comp_sup_spec(base, degfield, specs)
 				formval = com.apply_contraction(basedeg.stem) .. spec.form:sub(3)
 			elseif spec.form:find("^~") then
 				formval = basedeg.stem .. spec.form:sub(2)
-			elseif spec.form:find("^%^!") then
-				formval = com.apply_i_mutation(com.apply_contraction(basedeg.stem)) .. spec.form:sub(3)
-			elseif spec.form:find("^%^") then
-				formval = com.apply_i_mutation(basedeg.stem) .. spec.form:sub(2)
+			elseif spec.form == "^" or spec.form == "^!" then
+				local gencomp, gensup = generate_umlauted_comp_sup(basedeg.stem, spec.form)
+				if degfield == "comp" then
+					formval = gencomp
+					spec.gensup = gensup
+				else
+					formval = gensup
+				end
 			else
 				formval = spec.form
 			end
@@ -2092,6 +2143,8 @@ local function derive_sup_from_comp(base, compspecs)
 			-- Skip "-"; effectively, no forms get inserted.
 		elseif spec.form == "+" then
 			insert_default_comp_sup_specs(base, "sup", spec.footnotes)
+		elseif spec.form == "^" or spec.form == "^!" then
+			insert_degree_object(base, "sup", spec.gensup, spec.footnotes)
 		else
 			insert_degree_object(base, "sup", derive_sup_lemma_from_comp_lemma(spec.resolved_form), spec.footnotes)
 		end
