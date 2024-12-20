@@ -2943,8 +2943,10 @@ def split_generate_args(tempresult):
         args[name] = value
   return args
 
-def compare_new_and_old_template_forms(origt, newt, generate_old_forms, generate_new_forms, pagemsg, errandpagemsg,
-    already_split=False, show_all=False):
+def compare_new_and_old_template_forms(
+  origt, newt, generate_old_forms, generate_new_forms, pagemsg, errandpagemsg, already_split=False, show_all=False,
+  no_warn_on_mismatch=False
+):
   bad = False
   old_result = generate_old_forms()
   if old_result is None:
@@ -2955,17 +2957,22 @@ def compare_new_and_old_template_forms(origt, newt, generate_old_forms, generate
   if new_result is None:
     errandpagemsg("WARNING: Error generating new forms, can't compare")
     return False
+  def warn(txt):
+    if no_warn_on_mismatch:
+      pagemsg(txt)
+    else:
+      pagemsg("WARNING: " + txt)
   new_forms = new_result if already_split else split_generate_args(new_result)
   for form in set(old_forms.keys()) | set(new_forms.keys()):
     if form not in new_forms:
-      pagemsg("WARNING: for original %s and new %s, form %s=%s in old forms but missing in new forms" % (
+      warn("for original %s and new %s, form %s=%s in old forms but missing in new forms" % (
         origt, newt, form, old_forms[form]))
       bad = True
       if not show_all:
         return False
       continue
     if form not in old_forms:
-      pagemsg("WARNING: for original %s and new %s, form %s=%s in new forms but missing in old forms" % (
+      warn("for original %s and new %s, form %s=%s in new forms but missing in old forms" % (
         origt, newt, form, new_forms[form]))
       bad = True
       if not show_all:
@@ -2978,8 +2985,8 @@ def compare_new_and_old_template_forms(origt, newt, generate_old_forms, generate
     if type(oforms) is list:
       oforms = set(oforms)
     if nforms != oforms:
-      pagemsg("WARNING: for original %s and new %s, form %s=%s in old forms but =%s in new forms" % (
-        origt, newt, form, old_forms[form], new_forms[form]))
+      warn("for original %s and new %s, form %s=%s in old forms but =%s in new forms" % (
+          origt, newt, form, old_forms[form], new_forms[form]))
       bad = True
       if not show_all:
         return False
