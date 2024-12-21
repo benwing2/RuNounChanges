@@ -324,7 +324,7 @@ def process_text_on_page(index, pagetitle, text):
             blib.set_template_name(headt, headtn)
           # Erase all params
           del headt.params[:]
-          headt.add("1", getparam(t, "1"))
+          headt.add("1", "@@")
           #if pagetitle in manual_decls:
           #  headt.add("1", manual_decls[pagetitle])
           notes.append("convert %s to %s" % (orig_headt, str(headt)))
