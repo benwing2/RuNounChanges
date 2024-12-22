@@ -53,7 +53,7 @@ local m_links = require("Module:links")
 local m_string_utilities = require("Module:string utilities")
 local iut = require("Module:inflection utilities")
 local m_para = require("Module:parameters")
-local com = require("Module:User:Benwing2/is-common")
+local com = require("Module:is-common")
 
 local u = mw.ustring.char
 local rsplit = mw.text.split
