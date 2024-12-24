@@ -112,15 +112,17 @@ local compsup_degrees = {
 	{"sup", "superlative"},
 }
 
-local overridable_stems = {
+-- Export some of these below for use by [[Module:is-noun]].
+
+export.overridable_stems = {
 	"stem",
 	"vstem",
 	-- "imutval", FIXME: do we need this?
 }
 
-local overridable_stem_set = m_table.listToSet(overridable_stems)
+export.overridable_stem_set = m_table.listToSet(export.overridable_stems)
 
-local mutation_specs = {
+export.control_specs = {
 	"umut",
 	"con",
 	"j",
@@ -129,7 +131,7 @@ local mutation_specs = {
 	"ppdent",
 }
 
-local mutation_spec_set = m_table.listToSet(mutation_specs)
+export.control_spec_set = m_table.listToSet(export.control_specs)
 
 local function slot_to_degfield(slot)
 	local degfield = slot:match("^(comp)_")
@@ -296,18 +298,18 @@ fields later filled out by other functions) is of the form
 		-- degree-level footnotes, specified using `LEMMA[footnote]`, where `LEMMA` is the comparative or superlative
 		-- lemma, + for the default, or a shortened version using ~, ^ or the like
 		footnotes = nil or {"FOOTNOTE", "FOOTNOTE", ...},
-		-- MUTATION_GROUP is one of "umut", "con", "pp", "ppdent", "j" or "v", and MUTATION_SPEC is {form = "FORM",
+		-- CONTROL_GROUP is one of "umut", "con", "pp", "ppdent", "j" or "v", and CONTROL_SPEC is {form = "FORM",
 		-- footnotes = nil or {"FOOTNOTE", "FOOTNOTE", ...}, defaulted = BOOLEAN}, where FORM is as specified by the
 		-- user (e.g. "uUmut", "-pp") or set as a default by the code (in which case `defaulted` will be set to true for
-		-- mutation group "umut"); the mutation groups are as follows:
+		-- control group "umut"); the control groups are as follows:
 		-- * umut (u-mutation);
 		-- * con (stem contraction before vowel-initial endings);
 		-- * j (j-infix before vowel-initial endings not beginning with an i);
 		-- * v (v-infix before vowel-initial endings);
 		-- * pp (past-participle-like inflection, with -ð in the nominative/accusative neuter singular instead of -t);
 		-- * ppdent (dental infix in past participles before vowel-initial endings);
-		MUTATION_GROUP = {
-		  MUTATION_SPEC, MUTATION_SPEC, ...
+		CONTROL_GROUP = {
+		  CONTROL_SPEC, CONTROL_SPEC, ...
 		},
 		prop_sets = {
 		  PROPSET, -- see below
@@ -373,18 +375,18 @@ fields later filled out by other functions) is of the form
   },
 }
 
-There is one PROPSET (property set) for each combination of mutation specs; in the lower limit, there is a single
+There is one PROPSET (property set) for each combination of control specs; in the lower limit, there is a single
 property set. There may be more than one property set e.g. if the user specified 'umut,uUmut' or '-j,j' or some
-combination of these. The properties in a given property set specify the values themselves of each mutation group, as
-well as stems (derived from the mutation specs) that are used to construct the various forms and populate the slots in
+combination of these. The properties in a given property set specify the values themselves of each control group, as
+well as stems (derived from the control specs) that are used to construct the various forms and populate the slots in
 `forms` with these values. The information found in the property sets cannot be stored in `base` because it depends on a
-particular combination of mutation specs, of which there may be more than one (see above). The decline_adjective()
+particular combination of control specs, of which there may be more than one (see above). The decline_adjective()
 function iterates over all property sets and calls the appropriate declension function on each one in turn, which adds
 forms to each slot in `base.forms`, automatically deduplicating.
 
 The properties in each property set are:
-* Mutation specs: These are copied from the mutation specs at the degree object level. The key is one of the possible
-  mutation groups ("umut", "con", etc.), but the value is a single form object {form = "FORM", footnotes = nil or
+* Mutation specs: These are copied from the control specs at the degree object level. The key is one of the possible
+  control groups ("umut", "con", etc.), but the value is a single form object {form = "FORM", footnotes = nil or
   {"FOOTNOTE", "FOOTNOTE", ...}}. These are set by expand_property_sets() for the positive degree, and by
   process_comp_sup_spec() or derive_sup_from_comp() for the comparative and superlative degrees.
 * Stems (each stem is either a string or a form object; stems in general may be missing, i.e. nil, unless otherwise
@@ -1313,7 +1315,7 @@ local function parse_override(segments, parse_err)
 						"comparative slot preceded by 'comp_'; superlative slot preceded by 'sup_'; " ..
 						"abbreviation %s; or stem %s: %s"):format(slot, make_quoted_slot_list(strong_adjective_slots),
 						make_quoted_slot_list(weak_adjective_slots), make_quoted_keys(adjective_slot_abbrs),
-						make_quoted_list(overridable_stems),
+						make_quoted_list(export.overridable_stems),
 						require(parse_utilities_module).escape_wikicode(table.concat(segments))))
 				end
 			end
@@ -1322,6 +1324,27 @@ local function parse_override(segments, parse_err)
 		end
 	end
 	return slots, specs
+end
+
+
+-- Export for use by [[Module:is-noun]].
+function export.parse_for_control_specs(part, parse_control_spec)
+	if part:find("^[Uu]+_?mut") then
+		parse_control_spec("umut", com.umut_types)
+	elseif part:find("^%-?con") then
+		parse_control_spec("con", {"con", "-con"})
+	elseif part:find("^%-?ppdent") then
+		parse_control_spec("ppdent", {"ppdent", "-ppdent"})
+	elseif part:find("^%-?pp") then
+		parse_control_spec("pp", {"pp", "-pp"})
+	elseif part:find("^%-?j") then
+		parse_control_spec("j", {"j", "-j"})
+	elseif not part:find("^vstem") and part:find("^%-?v") then
+		parse_control_spec("v", {"v", "-v"})
+	else
+		return false
+	end
+	return true
 end
 
 
@@ -1335,17 +1358,17 @@ local function parse_inside(base, inside, is_scraped_noun)
 	local segments = iut.parse_balanced_segment_run(inside, "[", "]")
 	local dot_separated_groups = split_alternating_runs_with_escapes(segments, "%.")
 	for i, dot_separated_group in ipairs(dot_separated_groups) do
-		-- Parse a "mutation" spec such as "umut,uUmut[rare]". This assumes the mutation spec is contained in
+		-- Parse a control spec such as "umut,uUmut[rare]". This assumes the control spec is contained in
 		-- `dot_separated_group` (already split on brackets) and the result of parsing should go in `base[dest]`.
-		-- `allowed_specs` is a list of the allowed mutation specs in this group, such as
-		-- {"umut", "Umut", "uumut", "uUmut", "u_mut"} or {"pp", "-pp"}. The result of parsing is a list of structures
-		-- of the form {
+		-- `allowed_specs` is a list of the allowed control specs in this group, such as
+		-- {"umut", "Umut", "uumut", "uUmut", "uUUmut", "u_mut"} or {"pp", "-pp"}. The result of parsing is a list of
+		-- structures of the form {
 		--   form = "FORM",
 		--   footnotes = nil or {"FOOTNOTE", "FOOTNOTE", ...},
 		-- }.
-		local function parse_mutation_spec(dest, allowed_specs)
+		local function parse_control_spec(dest, allowed_specs)
 			if base_degree[dest] then
-				parse_err(("Can't specify '%s'-type mutation spec twice; second such spec is '%s'"):format(
+				parse_err(("Can't specify '%s'-type control spec twice; second such spec is '%s'"):format(
 					dest, table.concat(dot_separated_group)))
 			end
 			base_degree[dest] = {}
@@ -1354,7 +1377,7 @@ local function parse_inside(base, inside, is_scraped_noun)
 				local specobj = {}
 				local spec = comma_separated_group[1]
 				if not m_table.contains(allowed_specs, spec) then
-					parse_err(("For '%s'-type mutation spec, saw unrecognized spec '%s'; valid values are %s"):
+					parse_err(("For '%s'-type control spec, saw unrecognized spec '%s'; valid values are %s"):
 						format(dest, spec, generate_list_of_possibilities_for_err(allowed_specs)))
 				else
 					specobj.form = spec
@@ -1383,18 +1406,8 @@ local function parse_inside(base, inside, is_scraped_noun)
 			local slot_specs = rsplit(slot_spec_inside, ",")
 			-- FIXME: Here, [[Module:it-verb]] called strip_spaces(). Generally we don't do this. Should we?
 			table.insert(base.addnote_specs, {slot_specs = slot_specs, footnotes = spec_and_footnotes})
-		elseif part:find("^[Uu]+_?mut") then
-			parse_mutation_spec("umut", {"umut", "Umut", "uumut", "uUmut", "u_mut"})
-		elseif part:find("^%-?con") then
-			parse_mutation_spec("con", {"con", "-con"})
-		elseif part:find("^%-?ppdent") then
-			parse_mutation_spec("ppdent", {"ppdent", "-ppdent"})
-		elseif part:find("^%-?pp") then
-			parse_mutation_spec("pp", {"pp", "-pp"})
-		elseif part:find("^%-?j") then
-			parse_mutation_spec("j", {"j", "-j"})
-		elseif not part:find("^vstem") and part:find("^%-?v") then
-			parse_mutation_spec("v", {"v", "-v"})
+		elseif parse_for_control_specs(part, parse_control_spec) then
+			-- nothing more to do
 		elseif part:find("^decllemma%s*:") then -- or part:find("^declstate%s*:") or part:find("^declnumber%s*:") then
 			local field, value = part:match("^(decl[a-z]+)%s*:%s*(.+)$")
 			if not value then
@@ -1473,7 +1486,7 @@ local function parse_inside(base, inside, is_scraped_noun)
 				parse_err(("Syntax error in indicator with value, expecting alphabetic slot, stem/lemma override " ..
 					"or comparative/superlative override indicator: '%s'"):format(part))
 			end
-			if overridable_stem_set[spec] then
+			if export.overridable_stem_set[spec] then
 				if base_degree[spec] then
 					if spec == "stem" then
 						parse_err("Can't specify spec for 'stem:' twice (including using 'stem:' along with # or ##)")
@@ -1678,7 +1691,7 @@ local function parse_inside_and_merge(inside, lemma, scrape_chain)
 			if inner_base.decllemma then
 				inner_base.decllemma = add_prefix(inner_base.decllemma)
 			end
-			for _, stem in ipairs(overridable_stems) do
+			for _, stem in ipairs(export.overridable_stems) do
 				-- Only actual stems, not imutval; and not if the stem contains # or ##, which
 				-- expand to the full lemma (possibly minus -r or -ur).
 				if inner_basedeg[stem] and stem:find("stem$") and not inner_basedeg[stem]:find("#") then
@@ -1701,8 +1714,8 @@ local function parse_inside_and_merge(inside, lemma, scrape_chain)
 				end
 			end
 		end
-		copy_basedeg_properties(mutation_specs)
-		copy_basedeg_properties(overridable_stems)
+		copy_basedeg_properties(export.control_specs)
+		copy_basedeg_properties(export.overridable_stems)
 		copy_basedeg_properties { "number", "state" }
 		copy_base_properties { "decllemma", "q", "header" }
 		for _, degspec in ipairs(compsup_degrees) do
@@ -1777,9 +1790,9 @@ local function set_defaults_and_check_bad_indicators(base)
 	-- Set default values.
 	if base.props.irreg then
 		set_irreg_defaults(base)
-		for _, mutation_spec in ipairs(mutation_specs) do
-			if base[mutation_spec] then
-				check_err(("'%s' can only be specified with regular adjectives"):format(mutation_spec))
+		for _, control_spec in ipairs(export.control_specs) do
+			if base[control_spec] then
+				check_err(("'%s' can only be specified with regular adjectives"):format(control_spec))
 			end
 		end
 		return
@@ -1828,25 +1841,25 @@ end
 local function expand_property_sets(degree)
 	degree.prop_sets = {{}}
 
-	-- Construct the prop sets from all combinations of mutation specs, in case any given spec has more than one
+	-- Construct the prop sets from all combinations of control specs, in case any given spec has more than one
 	-- possibility.
-	for _, mutation_spec in ipairs(mutation_specs) do
-		local specvals = degree[mutation_spec]
-		-- Handle unspecified mutation specs.
+	for _, control_spec in ipairs(export.control_specs) do
+		local specvals = degree[control_spec]
+		-- Handle unspecified control specs.
 		if not specvals then
 			specvals = {false}
 		end
 		if #specvals == 1 then
 			for _, prop_set in ipairs(degree.prop_sets) do
 				-- Convert 'false' back to nil
-				prop_set[mutation_spec] = specvals[1] or nil
+				prop_set[control_spec] = specvals[1] or nil
 			end
 		else
 			local new_prop_sets = {}
 			for _, prop_set in ipairs(degree.prop_sets) do
 				for _, specval in ipairs(specvals) do
 					local new_prop_set = m_table.shallowCopy(prop_set)
-					new_prop_set[mutation_spec] = specval
+					new_prop_set[control_spec] = specval
 					table.insert(new_prop_sets, new_prop_set)
 				end
 			end
@@ -2031,7 +2044,7 @@ local function determine_positive_declension(base)
 	-- property set and need to be set on each one.
 	for k, v in pairs(default_props) do
 		if not pos[k] then
-			if mutation_spec_set[k] then
+			if export.control_spec_set[k] then
 				for _, props in ipairs(pos.prop_sets) do
 					if type(v) == "function" then
 						props[k] = v(base, props)
@@ -2243,7 +2256,7 @@ end
 -- properties is given in the comment above create_base(), along with the explanation of what a degree structure and
 -- property set is and why we have multiple such degree structures (generally, one per base lemma, where there may be
 -- multiple such comparative and/or superlative base lemmas) and property sets (generally, one per combination of
--- mutation specs such as 'con,-con' and 'umut,uUmut').
+-- control specs such as 'con,-con' and 'umut,uUmut').
 local function determine_props(base, degree)
 	-- Now determine all the props for each prop set.
 	for _, props in ipairs(degree.prop_sets) do
@@ -2332,7 +2345,7 @@ end
 local function detect_indicator_spec(alternant_multiword_spec, base)
 	local basedeg = base.base_degree
 	-- Replace # and ## in all overridable stems as well as all overrides.
-	for _, stemkey in ipairs(overridable_stems) do
+	for _, stemkey in ipairs(export.overridable_stems) do
 		basedeg[stemkey] = com.replace_hashvals(basedeg[stemkey], basedeg.lemma)
 	end
 	map_all_overrides(base, function(slot, formobj)

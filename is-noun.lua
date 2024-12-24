@@ -48,13 +48,15 @@ FIXME:
 ]=]
 
 local lang = require("Module:languages").getByCode("is")
+
+local require_when_needed = require("Module:utilities/require when needed")
 local m_table = require("Module:table")
 local m_links = require("Module:links")
 local m_string_utilities = require("Module:string utilities")
 local iut = require("Module:inflection utilities")
 local m_para = require("Module:parameters")
 local com = require("Module:is-common")
-local is_adjective_module = "Module:is-adjective"
+local m_is_adjective = require_when_needed("Module:is-adjective")
 
 local u = mw.ustring.char
 local rsplit = mw.text.split
@@ -120,7 +122,7 @@ local overridable_stems = {
 
 local overridable_stem_set = m_table.listToSet(overridable_stems)
 
-local mutation_specs = {
+local control_specs = {
 	"umut",
 	"imut",
 	"unumut",
@@ -131,7 +133,7 @@ local mutation_specs = {
 	"v",
 }
 
-local mutation_spec_set = m_table.listToSet(mutation_specs)
+local control_spec_set = m_table.listToSet(control_specs)
 
 local clitic_articles = {
 	m = {
@@ -254,10 +256,10 @@ Create an empty `base` object for holding the result of parsing and later the ge
 	},
 	...
   },
-  -- Specs for mutation/control groups as specified by the user. MUTATION_GROUP is as below and MUTATION_SPEC is
+  -- Specs for control groups as specified by the user. CONTROL_GROUP is as below and CONTROL_SPEC is
   -- {form = "FORM", footnotes = nil or {"FOOTNOTE", "FOOTNOTE", ...}, defaulted = BOOLEAN}, where FORM is as specified
   -- by the user (e.g. "uUmut", "-unumut") or set as a default by the code (in which case `defaulted` will be set to
-  -- true for mutation groups "umut" and "unumut"). The mutation groups are as follows:
+  -- true for control groups "umut" and "unumut"). The control groups are as follows:
   -- * umut (u-mutation);
   -- * imut (i-mutation);
   -- * unumut (reverse u-mutation);
@@ -266,11 +268,11 @@ Create an empty `base` object for holding the result of parsing and later the ge
   -- * defcon (stem contraction before vowel-initial definite clitics when the ending itself is null);
   -- * j (j-infix before vowel-initial endings not beginning with an i);
   -- * v (v-infix before vowel-initial endings).
-  MUTATION_GROUP = {
-	MUTATION_SPEC, MUTATION_SPEC, ...
+  CONTROL_GROUP = {
+	CONTROL_SPEC, CONTROL_SPEC, ...
   },
-  -- Property sets containing computed stems, one per each combination of mutation/control group values. Described in
-  -- more detail below.
+  -- Property sets containing computed stems, one per each combination of control group values. Described in more detail
+  -- below.
   prop_sets = {
     PROPSET, -- see below
 	...,
@@ -359,17 +361,17 @@ Create an empty `base` object for holding the result of parsing and later the ge
   },
 }
 
-There is one PROPSET (property set) for each combination of mutation specs; in the lower limit, there is a single
+There is one PROPSET (property set) for each combination of control specs; in the lower limit, there is a single
 property set. There may be more than one property set e.g. if the user specified 'umut,uUmut' or '-j,j' or '-imut,imut'
-or some combination of these. The properties in a given property set specify the values themselves of each mutation
-group, as well as stems (derived from the mutation specs) that are used to construct the various forms and populate the
+or some combination of these. The properties in a given property set specify the values themselves of each control
+group, as well as stems (derived from the control specs) that are used to construct the various forms and populate the
 slots in `forms` with these values. The information found in the property sets cannot be stored in `base` because it
-depends on a particular combination of mutation specs, of which there may be more than one (see above). The
+depends on a particular combination of control specs, of which there may be more than one (see above). The
 decline_noun() function iterates over all property sets and calls the appropriate declension function on each one in
 turn, which adds forms to each slot in `base.forms`, automatically deduplicating.
 
 The properties in each property set are:
-* Mutation specs: These are copied from the mutation specs at the base level. The key is one of the possible mutation
+* Control specs: These are copied from the control specs at the base level. The key is one of the possible control
   groups ("umut", "imut", "con", etc.), but the value is a single form object {form = "FORM", footnotes = nil or
   {"FOOTNOTE", "FOOTNOTE", ...}}. These are set by expand_property_sets().
 * Stems (each stem is either a string or a form object; stems in general may be missing, i.e. nil, unless otherwise
@@ -488,7 +490,7 @@ there are multiple alternants specified using `((...))`). `slot_prefix` is eithe
 the slot value in `slot` to get the actual slot to add the resulting forms to. (`slot_prefix` is separated out
 because the code below frequently needs to conditionalize on the value of `slot` and should not have to worry about
 the definite and indefinite slot variants). `props` is a property set object containing computed stems and other
-information (such as whether i-mutation is active) about a particular combination of mutation specs. See the comment
+information (such as whether i-mutation is active) about a particular combination of control specs. See the comment
 above create_base() for more information. The information found in `props` cannot be stored in `base` because there may
 be more than one set of such properties per `base` (e.g. if the user specified 'umut,uUmut' or '-j,j' or '-imut,imut'
 or some combination of these; in such a case, the caller will iterate over all possible combinations, and ultimately
@@ -1253,6 +1255,26 @@ decls["n-weak"] = function(base, props)
 end
 
 
+local function reconstruct_control_spec(control_specs)
+	local parts = {}
+	local function ins(txt)
+		table.insert(parts, txt)
+	end
+	for i, spec in ipairs(control_specs) do
+		if i > 1 then
+			ins(",")
+		end
+		ins(spec.form)
+		if spec.footnotes then
+			for _, footnote in ipairs(spec.footnotes) do
+				ins(footnote) -- already has brackets around it
+			end
+		end
+	end
+	return table.concat(parts)
+end
+
+
 decls["adj"] = function(base, props)
 	-- This maps from a slot name constructed from the individual state, case, gender and number properties to the
 	-- actual syncretic slot name used in [[Module:is-adjective]].
@@ -1307,15 +1329,20 @@ decls["adj"] = function(base, props)
 		wk_dat_n_p = "wk_p",
 	}
 
-	local state = base.props.weak and "wk" or "str"
-	-- FIXME: Fill in user-specified properties.
+	local state = base.adj_is_weak and "wk" or "str"
 	local props = {"-comp"}
+	for _, spectype in ipairs(m_is_adjective.control_specs) do
+		if base[spectype] then
+			table.insert(props, reconstruct_control_spec(base[spectype]))
+		end
+	end
+
 	local propspec = table.concat(props, ".")
 	if propspec ~= "" then
 		propspec = "<" .. propspec .. ">"
 	end
 	local argspec = base.lemma .. propspec
-	local adj_alternant_multiword_spec = require(is_adjective_module).do_generate_forms({argspec}, argspec, "is-ndecl")
+	local adj_alternant_multiword_spec = m_is_adjective.do_generate_forms({argspec}, argspec, "is-ndecl")
 	local function copy(from_slot, to_slot, do_clone)
 		local source = adj_alternant_multiword_spec.forms[from_slot]
 		if do_clone then
@@ -1776,17 +1803,17 @@ local function parse_inside(base, inside, is_scraped_noun)
 	local segments = iut.parse_balanced_segment_run(inside, "[", "]")
 	local dot_separated_groups = split_alternating_runs_with_escapes(segments, "%.")
 	for i, dot_separated_group in ipairs(dot_separated_groups) do
-		-- Parse a "mutation" spec such as "umut,uUmut[rare]" or "-unuUmut,unuUmut" or "imut". This assumes the
-		-- mutation spec is contained in `dot_separated_group` (already split on brackets) and the result of parsing
-		-- should go in `base[dest]`. `allowed_specs` is a list of the allowed mutation specs in this group, such
-		-- as {"umut", "Umut", "uumut", "uUmut", "u_mut"} or {"imut", "-imut"}. The result of parsing is a list of
+		-- Parse a control spec such as "umut,uUmut[rare]" or "-unuUmut,unuUmut" or "imut". This assumes the control
+		-- spec is contained in `dot_separated_group` (already split on brackets) and the result of parsing should go in
+		-- `base[dest]`. `allowed_specs` is a list of the allowed control specs in this group, such as
+		-- {"umut", "Umut", "uumut", "uUmut", "uUUmut", "u_mut"} or {"con", "-con"}. The result of parsing is a list of
 		-- structures of the form {
 		--   form = "FORM",
 		--   footnotes = nil or {"FOOTNOTE", "FOOTNOTE", ...},
 		-- }.
-		local function parse_mutation_spec(dest, allowed_specs)
+		local function parse_control_spec(dest, allowed_specs)
 			if base[dest] then
-				parse_err(("Can't specify '%s'-type mutation spec twice; second such spec is '%s'"):format(
+				parse_err(("Can't specify '%s'-type control spec twice; second such spec is '%s'"):format(
 					dest, table.concat(dot_separated_group)))
 			end
 			base[dest] = {}
@@ -1795,7 +1822,7 @@ local function parse_inside(base, inside, is_scraped_noun)
 				local specobj = {}
 				local spec = comma_separated_group[1]
 				if not m_table.contains(allowed_specs, spec) then
-					parse_err(("For '%s'-type mutation spec, saw unrecognized spec '%s'; valid values are %s"):
+					parse_err(("For '%s'-type control spec, saw unrecognized spec '%s'; valid values are %s"):
 						format(dest, spec, generate_list_of_possibilities_for_err(allowed_specs)))
 				else
 					specobj.form = spec
@@ -1806,176 +1833,228 @@ local function parse_inside(base, inside, is_scraped_noun)
 		end
 
 		local part = dot_separated_group[1]
-		if i == 1 and part ~= "+" and not part:find("^adj") and not part:find("^@") and part ~= "pron" then
-			local comma_separated_groups = split_alternating_runs_with_escapes(dot_separated_group, ",")
-			if #comma_separated_groups > 3 then
-				parse_err(("At most three comma-separated specs are allowed but saw %s"):format(
-					#comma_separated_groups))
+		local isadj = false
+		while true do
+			if i == 1 and part ~= "+" and not part:find("^adj") and not part:find("^@") and part ~= "pron" then
+				local comma_separated_groups = split_alternating_runs_with_escapes(dot_separated_group, ",")
+				if #comma_separated_groups > 3 then
+					parse_err(("At most three comma-separated specs are allowed but saw %s"):format(
+						#comma_separated_groups))
+				end
+				if comma_separated_groups[1][2] then
+					parse_err("Footnotes not allowed on gender indicator")
+				end
+				base.gender = comma_separated_groups[1][1]
+				if not base.gender:find("^[mfn]$") then
+					parse_err(("Unrecognized gender '%s', should be 'm', 'f' or 'n'"):format(base.gender))
+				end
+				if comma_separated_groups[2] then
+					base.gens = fetch_slot_override(comma_separated_groups[2], "genitive", true, false, parse_err)
+				end
+				if comma_separated_groups[3] then
+					base.pls = fetch_slot_override(comma_separated_groups[3], "nominative plural", true, false,
+						parse_err)
+				end
+				break
+			elseif part == "" then
+				if not dot_separated_group[2] then
+					parse_err("Blank indicator; not allowed without attached footnotes")
+				end
+				base.footnotes = fetch_footnotes(dot_separated_group, parse_err)
+				break
+			elseif part == "addnote" then
+				local spec_and_footnotes = fetch_footnotes(dot_separated_group, parse_err)
+				if #spec_and_footnotes < 2 then
+					parse_err("Spec with 'addnote' should be of the form 'addnote[SLOTSPEC][FOOTNOTE][FOOTNOTE][...]'")
+				end
+				local slot_spec = table.remove(spec_and_footnotes, 1)
+				local slot_spec_inside = rmatch(slot_spec, "^%[(.*)%]$")
+				if not slot_spec_inside then
+					parse_err("Internal error: slot_spec " .. slot_spec .. " should be surrounded with brackets")
+				end
+				local slot_specs = rsplit(slot_spec_inside, ",")
+				-- FIXME: Here, [[Module:it-verb]] called strip_spaces(). Generally we don't do this. Should we?
+				table.insert(base.addnote_specs, {slot_specs = slot_specs, footnotes = spec_and_footnotes})
+				break
+			elseif ulen(part) > 3 and case_set[usub(part, 1, 3)] or (
+				ulen(part) > 6 and usub(part, 1, 3) == "def" and case_set[usub(part, 4, 6)]) then
+				local slots, override = parse_override(dot_separated_group, parse_err)
+				for _, slot in ipairs(slots) do
+					if base.overrides[slot] then
+						error(("Two overrides specified for slot '%s'"):format(slot))
+					else
+						base.overrides[slot] = override
+					end
+				end
+				break
 			end
-			if comma_separated_groups[1][2] then
-				parse_err("Footnotes not allowed on gender indicator")
-			end
-			base.gender = comma_separated_groups[1][1]
-			if not base.gender:find("^[mfn]$") then
-				parse_err(("Unrecognized gender '%s', should be 'm', 'f' or 'n'"):format(base.gender))
-			end
-			if comma_separated_groups[2] then
-				base.gens = fetch_slot_override(comma_separated_groups[2], "genitive", true, false, parse_err)
-			end
-			if comma_separated_groups[3] then
-				base.pls = fetch_slot_override(comma_separated_groups[3], "nominative plural", true, false,
-					parse_err)
-			end
-		elseif part == "" then
-			if not dot_separated_group[2] then
-				parse_err("Blank indicator; not allowed without attached footnotes")
-			end
-			base.footnotes = fetch_footnotes(dot_separated_group, parse_err)
-		elseif part == "addnote" then
-			local spec_and_footnotes = fetch_footnotes(dot_separated_group, parse_err)
-			if #spec_and_footnotes < 2 then
-				parse_err("Spec with 'addnote' should be of the form 'addnote[SLOTSPEC][FOOTNOTE][FOOTNOTE][...]'")
-			end
-			local slot_spec = table.remove(spec_and_footnotes, 1)
-			local slot_spec_inside = rmatch(slot_spec, "^%[(.*)%]$")
-			if not slot_spec_inside then
-				parse_err("Internal error: slot_spec " .. slot_spec .. " should be surrounded with brackets")
-			end
-			local slot_specs = rsplit(slot_spec_inside, ",")
-			-- FIXME: Here, [[Module:it-verb]] called strip_spaces(). Generally we don't do this. Should we?
-			table.insert(base.addnote_specs, {slot_specs = slot_specs, footnotes = spec_and_footnotes})
-		elseif ulen(part) > 3 and case_set[usub(part, 1, 3)] or (
-			ulen(part) > 6 and usub(part, 1, 3) == "def" and case_set[usub(part, 4, 6)]) then
-			local slots, override = parse_override(dot_separated_group, parse_err)
-			for _, slot in ipairs(slots) do
-				if base.overrides[slot] then
-					error(("Two overrides specified for slot '%s'"):format(slot))
-				else
-					base.overrides[slot] = override
+			if isadj then
+				if m_is_adjective.parse_for_control_specs(part, parse_control_spec) then
+					break
+				end
+			else
+				if part:find("^[Uu]+_?mut") then
+					parse_control_spec("umut", com.umut_tyes)
+					break
+				elseif not part:find("^imutval") and part:find("^%-?imut") then
+					parse_control_spec("imut", {"imut", "-imut"})
+					break
+				elseif part:find("^%-?un[uU]+_?mut") then
+					local unumut_types_and_negated = {}
+					for _, typ in ipairs(com.unumut_types) do
+						table.insert(unumut_types_and_negated, typ)
+						table.insert(unumut_types_and_negated, "-" .. typ)
+					end
+					parse_control_spec("unumut", unumut_types_and_negated)
+					break
+				elseif part:find("^%-?unimut") then
+					parse_control_spec("unimut", {"unimut", "-unimut"})
+					break
+				elseif part:find("^%-?con") then
+					parse_control_spec("con", {"con", "-con"})
+					break
+				elseif part:find("^%-?defcon") then
+					parse_control_spec("defcon", {"defcon", "-defcon"})
+					break
+				elseif not part:find("^já") and part:find("^%-?j") then -- don't trip over .já indicator
+					parse_control_spec("j", {"j", "-j"})
+					break
+				elseif not part:find("^vstem") and part:find("^%-?v") then
+					parse_control_spec("v", {"v", "-v"})
+					break
 				end
 			end
-		elseif part:find("^[Uu]+_?mut") then
-			parse_mutation_spec("umut", {"umut", "Umut", "uumut", "uUmut", "u_mut"})
-		elseif not part:find("^imutval") and part:find("^%-?imut") then
-			parse_mutation_spec("imut", {"imut", "-imut"})
-		elseif part:find("^%-?un[uU]+_?mut") then
-			parse_mutation_spec("unumut", {"unumut", "unUmut", "unuumut", "unuUmut", "unu_mut",
-										   "-unumut", "-unUmut", "-unuumut", "-unuUmut", "-unu_mut"})
-		elseif part:find("^%-?unimut") then
-			parse_mutation_spec("unimut", {"unimut", "-unimut"})
-		elseif part:find("^%-?con") then
-			parse_mutation_spec("con", {"con", "-con"})
-		elseif part:find("^%-?defcon") then
-			parse_mutation_spec("defcon", {"defcon", "-defcon"})
-		elseif not part:find("^já") and part:find("^%-?j") then -- don't trip over .já indicator
-			parse_mutation_spec("j", {"j", "-j"})
-		elseif not part:find("^vstem") and part:find("^%-?v") then
-			parse_mutation_spec("v", {"v", "-v"})
-		elseif #dot_separated_group > 1 then
-			parse_err(
-				("Footnotes only allowed with slot overrides, negatable indicators and by themselves: '%s'"):
-				format(table.concat(dot_separated_group)))
-		elseif part == "+" or part:find("^adj") then
-			-- FIXME: Convert uses of '+' to 'adj'
-			if base.adjspec then
-				parse_err("Can't specify two adjective specs")
-			end
-			if part == "+" then
-				base.adjspec = {}
-			else
-				base.adjspec = parse_adjspec(base, part:sub(4), parse_err)
-			end
-		elseif part:find("^decllemma%s*:") or part:find("^declgender%s*:") or part:find("^declnumber%s*:") then
-			local field, value = part:match("^(decl[a-z]+)%s*:%s*(.+)$")
-			if not value then
-				parse_err(("Syntax error in decllemma/declgender/declnumber indicator: '%s'"):format(part))
-			end
-			if base[field] then
-				parse_err(("Can't specify '%s:' twice"):format(field))
-			end
-			base[field] = value
-		elseif part:find("^q%s*:") or part:find("header%s*:") then
-			local field, value = part:match("^(q)%s*:%s*(.+)$")
-			if not value then
-				field, value = part:match("^(header)%s*:%s*(.+)$")
-			end
-			if not value then
-				parse_err(("Syntax error in q/header indicator: '%s'"):format(part))
-			end
-			if base[field] then
-				parse_err(("Can't specify '%s:' twice"):format(field))
-			end
-			base[field] = value
-		elseif part:find("^@") then
-			if base.scrape_spec then
-				parse_err("Can't specify scrape directive '@...' twice")
-			end
-			if part:find(":") then
-				base.scrape_is_suffix, base.scrape_spec, base.scrape_id = part:match("^@(%-?)(.-)%s*:%s*(.+)$")
-			else
-				base.scrape_is_suffix, base.scrape_spec = part:match("^@(%-?)(.-)$")
-			end
-			-- If we saw a hyphen, set `scrape_is_suffix` to true, otherwise false
-			base.scrape_is_suffix = base.scrape_is_suffix == "-"
-			
-			if not base.scrape_spec or base.scrape_spec == "" then
-				parse_err(("Syntax error in scrape directive '%s"):format(part))
-			end
-			local scrape_init, scrape_rest = rmatch(base.scrape_spec, "^(.)(.*)$")
-			local lower_scrape_init = ulower(scrape_init)
-			if ulower(scrape_init) ~= scrape_init then
-				base.scrape_is_uppercase = true
-				base.scrape_spec = lower_scrape_init .. scrape_rest
-			end
-		elseif part:find(":") then
-			local spec, value = part:match("^([a-z]+)%s*:%s*(.+)$")
-			if not spec then
-				parse_err(("Syntax error in indicator with value, expecting alphabetic slot or stem/lemma override indicator: '%s'"):format(part))
-			end
-			if not overridable_stem_set[spec] then
-				parse_err(("Unrecognized stem override indicator '%s', should be %s"):format(
-					part, generate_list_of_possibilities_for_err(overridable_stems)))
-			end
-			if base[spec] then
-				if spec == "stem" then
-					parse_err("Can't specify spec for 'stem:' twice (including using 'stem:' along with # or ##)")
-				else
-					parse_err(("Can't specify '%s:' twice"):format(spec))
+			if #dot_separated_group > 1 then
+				parse_err(
+					("Footnotes only allowed with slot overrides, negatable indicators and by themselves: '%s'"):
+					format(table.concat(dot_separated_group)))
+			elseif part == "+" or part:find("^adj") then
+				if i > 1 then
+					parse_err("Adjective spec must be the first indicator")
 				end
-			end
-			base[spec] = value
-		elseif part == "sg" or part == "pl" or part == "both" then
-			if base.number then
-				if base.number ~= part then
-					parse_err("Can't specify '" .. part .. "' along with '" .. base.number .. "'")
+				-- FIXME: Convert uses of '+' to 'adj'
+				if base.adjspec then
+					parse_err("Can't specify two adjective specs")
+				end
+				isadj = true
+				if part == "+" then
+					base.adjspec = {}
 				else
+					base.adjspec = parse_adjspec(base, part:sub(4), parse_err)
+				end
+				break
+			elseif not isadj and (part:find("^decllemma%s*:") or part:find("^declgender%s*:") or
+					part:find("^declnumber%s*:")) then
+				local field, value = part:match("^(decl[a-z]+)%s*:%s*(.+)$")
+				if not value then
+					parse_err(("Syntax error in decllemma/declgender/declnumber indicator: '%s'"):format(part))
+				end
+				if base[field] then
+					parse_err(("Can't specify '%s:' twice"):format(field))
+				end
+				base[field] = value
+				break
+			elseif part:find("^q%s*:") or part:find("header%s*:") then
+				local field, value = part:match("^(q)%s*:%s*(.+)$")
+				if not value then
+					field, value = part:match("^(header)%s*:%s*(.+)$")
+				end
+				if not value then
+					parse_err(("Syntax error in q/header indicator: '%s'"):format(part))
+				end
+				if base[field] then
+					parse_err(("Can't specify '%s:' twice"):format(field))
+				end
+				base[field] = value
+				break
+			elseif not isadj and part:find("^@") then
+				-- FIXME: Implement adjective scraping
+				if base.scrape_spec then
+					parse_err("Can't specify scrape directive '@...' twice")
+				end
+				if part:find(":") then
+					base.scrape_is_suffix, base.scrape_spec, base.scrape_id = part:match("^@(%-?)(.-)%s*:%s*(.+)$")
+				else
+					base.scrape_is_suffix, base.scrape_spec = part:match("^@(%-?)(.-)$")
+				end
+				-- If we saw a hyphen, set `scrape_is_suffix` to true, otherwise false
+				base.scrape_is_suffix = base.scrape_is_suffix == "-"
+				
+				if not base.scrape_spec or base.scrape_spec == "" then
+					parse_err(("Syntax error in scrape directive '%s"):format(part))
+				end
+				local scrape_init, scrape_rest = rmatch(base.scrape_spec, "^(.)(.*)$")
+				local lower_scrape_init = ulower(scrape_init)
+				if ulower(scrape_init) ~= scrape_init then
+					base.scrape_is_uppercase = true
+					base.scrape_spec = lower_scrape_init .. scrape_rest
+				end
+				break
+			elseif part:find(":") then
+				local spec, value = part:match("^([a-z]+)%s*:%s*(.+)$")
+				if not spec then
+					parse_err(("Syntax error in indicator with value, expecting alphabetic slot or stem/lemma " ..
+						"override indicator: '%s'"):format(part))
+				end
+				local stem_set = isadj and m_is_adjective.overridable_stem_set or overridable_stem_set
+				if not stem_set[spec] then
+					parse_err(("Unrecognized stem override indicator '%s', should be %s"):format(
+						part, generate_list_of_possibilities_for_err(
+						isadj and m_is_adjective.overridable_stems or overridable_stems)))
+				end
+				if base[spec] then
+					if spec == "stem" then
+						parse_err("Can't specify spec for 'stem:' twice (including using 'stem:' along with # or ##)")
+					else
+						parse_err(("Can't specify '%s:' twice"):format(spec))
+					end
+				end
+				base[spec] = value
+				break
+			elseif part == "#" or part == "##" then
+				if base.stem then
+					parse_err("Can't specify a stem spec ('stem:', # or ##) twice")
+				end
+				base.stem = part
+				break
+			elseif not isadj and (part == "sg" or part == "pl" or part == "both") then
+				if base.number then
+					if base.number ~= part then
+						parse_err("Can't specify '" .. part .. "' along with '" .. base.number .. "'")
+					else
+						parse_err("Can't specify '" .. part .. "' twice")
+					end
+				end
+				base.number = part
+				break
+			elseif not isadj and (part == "indef" or part == "def" or part == "bothdef") then
+				if base.definiteness then
+					if base.definiteness ~= part then
+						parse_err(("Can't specify two conflicting definiteness values; saw '%s' (%s) when existing " ..
+							"definiteness is %s"):format(part, definiteness_code_to_desc[part],
+								definiteness_code_to_desc[base.definiteness]))
+					else
+						parse_err("Can't specify '" .. part .. "' twice")
+					end
+				end
+				base.definiteness = part
+				break
+			elseif not isadj and (part == "proper" or part == "common" or part == "dem" or
+					part == "weak" or part == "iending" or part == "rstem" or part == "já" or part == "pron") or
+				isadj and (part == "irreg" or part == "article" or part == "archaic") or
+				part == "indecl" or part == "decl?" then
+				if base.props[part] then
 					parse_err("Can't specify '" .. part .. "' twice")
 				end
-			end
-			base.number = part
-		elseif part == "indef" or part == "def" or part == "bothdef" then
-			if base.definiteness then
-				if base.definiteness ~= part then
-					parse_err(("Can't specify two conflicting definiteness values; saw '%s' (%s) when existing definiteness is %s"):
-						format(part, definiteness_code_to_desc[part], definiteness_code_to_desc[base.definiteness]))
-				else
-					parse_err("Can't specify '" .. part .. "' twice")
+				base.props[part] = true
+				break
+			elseif isadj and m_table.contains(com.unumut_tyes, part) then
+				if base.adj_unumut then
+					parse_err("Can't specify two values for reverse u-mutation spec with adjectives")
 				end
+				base.adj_unumut = part
+				break
 			end
-			base.definiteness = part
-		elseif part == "#" or part == "##" then
-			if base.stem then
-				parse_err("Can't specify a stem spec ('stem:', # or ##) twice")
-			end
-			base.stem = part
-		elseif part == "proper" or part == "common" or part == "dem" or
-			part == "weak" or part == "iending" or part == "rstem" or part == "já" or part == "pron" or
-			part == "indecl" or part == "decl?" then
-			if base.props[part] then
-				parse_err("Can't specify '" .. part .. "' twice")
-			end
-			base.props[part] = true
-		else
 			parse_err("Unrecognized indicator '" .. part .. "'")
 		end
 	end
@@ -2111,7 +2190,7 @@ local function parse_inside_and_merge(inside, lemma, scrape_chain)
 				end
 			end
 		end
-		copy_properties(mutation_specs)
+		copy_properties(control_specs)
 		copy_properties(overridable_stems)
 		copy_properties { "gens", "pls", "gender", "number", "definiteness", "decllemma", "declgender", "declnumber",
 			"q", "header" }
@@ -2179,10 +2258,10 @@ local function set_defaults_and_check_bad_indicators(base)
 	end
 
 	if not regular_noun then
-		for _, mutation_spec in ipairs(mutation_specs) do
-			if base[mutation_spec] then
+		for _, control_spec in ipairs(control_specs) do
+			if base[control_spec] then
 				-- FIXME, maybe with adjectives
-				check_err(("'%s' can only be specified with regular nouns"):format(mutation_spec))
+				check_err(("'%s' can only be specified with regular nouns"):format(control_spec))
 			end
 		end
 		if base.declgender then
@@ -2288,25 +2367,25 @@ end
 local function expand_property_sets(base)
 	base.prop_sets = {{}}
 
-	-- Construct the prop sets from all combinations of mutation specs, in case any given spec has more than one
+	-- Construct the prop sets from all combinations of control specs, in case any given spec has more than one
 	-- possibility.
-	for _, mutation_spec in ipairs(mutation_specs) do
-		local specvals = base[mutation_spec]
-		-- Handle unspecified mutation specs.
+	for _, control_spec in ipairs(control_specs) do
+		local specvals = base[control_spec]
+		-- Handle unspecified control specs.
 		if not specvals then
 			specvals = {false}
 		end
 		if #specvals == 1 then
 			for _, prop_set in ipairs(base.prop_sets) do
 				-- Convert 'false' back to nil
-				prop_set[mutation_spec] = specvals[1] or nil
+				prop_set[control_spec] = specvals[1] or nil
 			end
 		else
 			local new_prop_sets = {}
 			for _, prop_set in ipairs(base.prop_sets) do
 				for _, specval in ipairs(specvals) do
 					local new_prop_set = m_table.shallowCopy(prop_set)
-					new_prop_set[mutation_spec] = specval
+					new_prop_set[control_spec] = specval
 					table.insert(new_prop_sets, new_prop_set)
 				end
 			end
@@ -2321,7 +2400,7 @@ end
 local function synthesize_singular_lemma(base)
 	local lemma_determined
 
-	-- Loop over all property sets in case the user specified multiple ones (e.g. using different mutation specs). If
+	-- Loop over all property sets in case the user specified multiple ones (e.g. using different control specs). If
 	-- we try to reconstruct different lemmas for different property sets, we'll throw an error below.
 	for _, props in ipairs(base.prop_sets) do
 		local function interr(msg)
@@ -2427,7 +2506,7 @@ end
 local function synthesize_indefinite_lemma(base)
 	local lemma_determined
 
-	-- Loop over all property sets in case the user specified multiple ones (e.g. using different mutation specs). If
+	-- Loop over all property sets in case the user specified multiple ones (e.g. using different control specs). If
 	-- we try to reconstruct different lemmas for different property sets, we'll throw an error below.
 	for _, props in ipairs(base.prop_sets) do
 		local function interr(msg)
@@ -2568,7 +2647,7 @@ local function synthesize_adj_lemma(base)
 		elseif base.number == "pl" then
 			stem, ending = rmatch(base.lemma, "^(.*[^Aa])(u)$")
 			if stem then
-				base.props.weak = true
+				base.adj_is_weak = true
 				base.lemma = stem_to_adj_lemma(stem)
 			end
 			if not stem then
@@ -2578,14 +2657,14 @@ local function synthesize_adj_lemma(base)
 			if base.gender == "m" then
 				stem, ending = rmatch(base.lemma, "^(.*[^Ee])(i)$")
 				if stem then
-					base.props.weak = true
+					base.adj_is_weak = true
 					base.lemma = stem_to_adj_lemma(stem)
 				end
 				-- Otherwise the form is strong and should remain as is.
 			elseif base.gender == "f" or base.gender == "n" then
 				stem, ending = rmatch(base.lemma, "^(.*)(a)$")
 				if stem then
-					base.props.weak = true
+					base.adj_is_weak = true
 					base.lemma = stem_to_adj_lemma(stem)
 				end
 				if not stem then
@@ -2966,7 +3045,7 @@ local function determine_declension(base)
 	end
 	for k, v in pairs(default_props) do
 		if not base[k] then
-			if mutation_spec_set[k] then
+			if control_spec_set[k] then
 				for _, props in ipairs(base.prop_sets) do
 					if type(v) == "function" then
 						props[k] = v(base, props)
@@ -3059,7 +3138,7 @@ end
 
 -- Determine the stems and other properties to use for each property set. The list of such properties is given in the
 -- comment above create_base(), along with the explanation of what a property set is and why we have multiple such
--- property sets (generally, one per combination of mutation specs such as 'con,-con' and 'umut,uUmut'). There are
+-- property sets (generally, one per combination of control specs such as 'con,-con' and 'umut,uUmut'). There are
 -- currently 9 singular stems and a corresponding 9 plural stems.
 local function determine_props(base)
 	-- Now determine all the props for each prop set.
@@ -3446,14 +3525,13 @@ end
 
 -- Set the part of speech based on properties of the individual words.
 local function set_pos(alternant_multiword_spec)
-	if alternant_multiword_spec.args.pos then
-		alternant_multiword_spec.pos = alternant_multiword_spec.args.pos
-	elseif alternant_multiword_spec.saw_pron and not alternant_multiword_spec.saw_non_pron then
-		alternant_multiword_spec.pos = "pronoun"
-	else
-		alternant_multiword_spec.pos = "noun"
+	if not alternant_multiword_spec.pos then
+		if alternant_multiword_spec.saw_pron and not alternant_multiword_spec.saw_non_pron then
+			alternant_multiword_spec.pos = "pronoun"
+		else
+			alternant_multiword_spec.pos = "noun"
+		end
 	end
-	alternant_multiword_spec.plpos = require("Module:string utilities").pluralize(alternant_multiword_spec.pos)
 end
 
 
@@ -3505,21 +3583,25 @@ end
 -- title bar contain similar information.
 local function compute_categories_and_annotation(alternant_multiword_spec)
 	local all_cats = {}
+	local plpos = m_string_utilities.pluralize(alternant_multiword_spec.pos)
 	local function inscat(cattype)
 		m_table.insertIfNot(all_cats, "Icelandic " .. cattype)
 	end
-	if alternant_multiword_spec.pos == "noun" then
-		if alternant_multiword_spec.actual_number == "sg" then
-			inscat("uncountable nouns")
-		elseif alternant_multiword_spec.actual_number == "pl" then
-			inscat("pluralia tantum")
+	local function inscat_noun(cattype)
+		if plpos == "nouns" then
+			inscat(cattype)
 		end
-		if alternant_multiword_spec.saw_indecl and not alternant_multiword_spec.saw_non_indecl then
-			inscat("indeclinable nouns")
-		end
-		if alternant_multiword_spec.saw_unknown_decl and not alternant_multiword_spec.saw_non_unknown_decl then
-			inscat("nouns with unknown declension")
-		end
+	end
+	if alternant_multiword_spec.saw_indecl and not alternant_multiword_spec.saw_non_indecl then
+		inscat("indeclinable " .. plpos)
+	end
+	if alternant_multiword_spec.saw_unknown_decl and not alternant_multiword_spec.saw_non_unknown_decl then
+		inscat(plpos .. " with unknown declension")
+	end
+	if alternant_multiword_spec.actual_number == "sg" then
+		inscat_noun("uncountable nouns")
+	elseif alternant_multiword_spec.actual_number == "pl" then
+		inscat_noun("pluralia tantum")
 	end
 	local annotation
 	local annparts = {}
@@ -3540,7 +3622,7 @@ local function compute_categories_and_annotation(alternant_multiword_spec)
 		local gender
 		if actual_gender ~= declined_gender then
             gender = ("%s (declined as %s)"):format(actual_gender, declined_gender)
-			inscat("nouns with actual gender different from declined gender")
+			inscat_noun("nouns with actual gender different from declined gender")
 		else
 			gender = actual_gender
 		end
@@ -3551,7 +3633,7 @@ local function compute_categories_and_annotation(alternant_multiword_spec)
 			-- User-specified 'decllemma:' indicates irregular stem.
 			if base.decllemma then
 				m_table.insertIfNot(irregs, "irreg-stem")
-				inscat("nouns with irregular stem")
+				inscat_noun("nouns with irregular stem")
 			end
 			m_table.insertIfNot(stemspecs, props.stem)
 		end
@@ -3591,15 +3673,15 @@ local function compute_categories_and_annotation(alternant_multiword_spec)
 	end
 	if #scrape_chains > 0 then
 		insann(("based on %s"):format(m_table.serialCommaJoin(scrape_chains)), ", ")
-		inscat("nouns declined using scraped base noun declensions")
+		inscat(plpos .. " declined using scraped base declensions")
 	end
 		
 	alternant_multiword_spec.annotation = table.concat(annparts)
 	if #stemspecs > 1 then
-		inscat("nouns with multiple stems")
+		inscat_noun("nouns with multiple stems")
 	end
 	if alternant_multiword_spec.actual_number == "both" and not m_table.deepEquals(alternant_multiword_spec.sg_genders, alternant_multiword_spec.pl_genders) then
-		inscat("nouns that change gender in the plural")
+		inscat_noun("nouns that change gender in the plural")
 	end
 	alternant_multiword_spec.categories = all_cats
 end
@@ -3817,6 +3899,7 @@ function export.do_generate_forms(args, argspec, source_template)
 	}
 	local alternant_multiword_spec = iut.parse_inflected_text(argspec, parse_props)
 	alternant_multiword_spec.title = args.title
+	alternant_multiword_spec.pos = args.pos
 	alternant_multiword_spec.args = args
 	alternant_multiword_spec.source_template = source_template
 
@@ -3874,6 +3957,7 @@ function export.show(frame)
 		[1] = {required = true, list = true, default = "akur<m.#>"},
 		deriv = {list = true},
 		id = {},
+		pos = {},
 		title = {},
  		pagename = {},
 		json = {type = "boolean"},

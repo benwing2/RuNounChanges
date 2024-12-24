@@ -55,6 +55,11 @@ export.cons_c = "[^" .. export.vowel .. "]"
 local V = export.vowel_c
 local C = export.cons_c
 
+export.umut_types = {"umut", "Umut", "uumut", "uUmut", "uUUmut", "u_mut"}
+export.unumut_types = {}
+for _, umut_type in ipairs(export.umut_types) do
+	table.insert(export.unumut_types, "un" .. umut_type)
+end
 
 local function apply_au_ur_sub(stem, ur_only)
 	if not ur_only then
@@ -195,8 +200,8 @@ local greater_reverse_u_mutation = {
 -- * "uumut" (mutate the last two vowels if possible, with a -> ö in the second-to-last and a -> ö in the last);
 -- * "uUmut" (mutate the last two vowels if possible, with a -> ö in the second-to-last and a -> u in the last);
 -- * "uUUmut" (mutate the last three vowels if possible, with a -> ö in the third-to-last and a -> u in the last and
---			   second-to-last; needed in superlatives of past-participle-derived adjectives like [[saltaður]] "salty"
---			   with superlative [[saltaðastur]] whose nominative feminine singular is [[söltuðust]]);
+--             second-to-last; needed in superlatives of past-participle-derived adjectives like [[saltaður]] "salty"
+--             with superlative [[saltaðastur]] whose nominative feminine singular is [[söltuðust]]);
 -- * "u_mut" (mutate the second-to-last vowel if possible, with a -> ö, leaving alone the last vowel).
 function export.apply_u_mutation(stem, typ, error_if_unmatchable)
 	local origstem = stem
@@ -288,11 +293,46 @@ end
 -- * "unUmut" (unmutate the last vowel if possible, with u -> a);
 -- * "unuumut" (unmutate the last two vowels if possible, with ö -> a in the second-to-last and ö -> a in the last);
 -- * "unuUmut" (unmutate the last two vowels if possible, with ö -> a in the second-to-last and u -> a in the last);
+-- * "unuUUmut" (unmutate the last three vowels if possible, with ö -> a in the third-to-last and u -> a in the last and
+--			     second-to-last; needed, at least theoretically, in declining adjective-noun multiword terms where the
+--			     adjective is an inflected-form superlative of a past-participle-derived adjective such as [[söltuðust]]
+--			     "saltiest", nominative feminine singular of [[saltaðastur]]);
 -- * "unu_mut" (unmutate the second-to-last vowel if possible, with ö -> a, leaving alone the last vowel).
--- NOTE: "unuUUmut" isn't implemented at this point because AFAIK it's not needed anywhere.
 function export.apply_reverse_u_mutation(stem, typ, error_if_unmatchable)
 	local origstem = stem
 	stem = apply_au_ur_sub(stem)
+	if typ == "uUUmut" then
+		local first, v1, mid1, v2, mid2, v3, last = rmatch(stem, "^(.*)(" .. V .. ")(" .. C .. "*)(" .. V .. ")(" ..
+			C .. "*)(" .. V .. ")(" .. C .. "*)$")
+		if first then
+			v1 = lesser_reverse_u_mutation[v1] or v1
+		elseif not stem:find("^%-") then
+			if error_if_unmatchable then
+				error(("Can't apply reverse u-mutation of type '%s' because stem '%s' doesn't have three syllables"):
+					format(typ, origstem))
+			end
+			return undo_au_ur_sub(stem)
+		else
+			first, v2, mid2, v3, last = rmatch(stem, "^(.*)(" .. V .. ")(" .. C .. "*)(" ..  V .. ")(" .. C .. "*)$")
+			if not first then
+				if error_if_unmatchable then
+					error(("Can't apply reverse u-mutation of type '%s' because suffix stem '%s' doesn't have two syllables"):
+						format(typ, origstem))
+				end
+				return undo_au_ur_sub(stem)
+			end
+			v1 = ""
+			mid1 = ""
+		end
+		v2 = greater_reverse_u_mutation[v2] or v2
+		v3 = greater_reverse_u_mutation[v3] or v3
+		local retval = undo_au_ur_sub(first .. v1 .. mid1 .. v2 .. mid2 .. v3 .. last)
+		if retval == origstem and error_if_unmatchable then
+			error(("Can't apply reverse u-mutation of type '%s' to stem '%s'; result would be the same as the original"):
+				format(typ, origstem))
+		end
+		return retval
+	end
 	if typ == "unuumut" or typ == "unuUmut" or typ == "unu_mut" then
 		local first, v1, middle, v2, last =
 			rmatch(stem, "^(.*)(" .. V .. ")(" .. C .. "*)(" ..  V .. ")(" .. C .. "*)$")
