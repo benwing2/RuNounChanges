@@ -164,7 +164,7 @@ function export.categorize(frame, return_raw, noerror)
 	pagename = pagename or args.pagename
 	local title
 	if pagename then
-		title = mw.title.new(pagename)
+		title = mw.title.new(pagename, 'Module')
 	else
 		title = mw.title.getCurrentTitle()
 		-- Fuckme, sometimes this function is called with a faked frame and a title with the namespace already chopped out,
@@ -323,7 +323,7 @@ function export.categorize(frame, return_raw, noerror)
 					local function construct_lang_or_sc_cat(obj, suffix)
 						local prefix
 						if obj:hasType("language") then
-							prefix = obj:getNonEtymologicalName()
+							prefix = obj:getFullName()
 						else
 							prefix = obj:getCategoryName()
 						end
