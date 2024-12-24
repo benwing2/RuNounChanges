@@ -443,7 +443,7 @@ function export.find_inflection(lemma, infltemp, allow_empty_infl, is_deriv, inf
 								end
 							end
 						end
-						local infl_set = {infls = infls}
+						local infl_set = {infls = infls, pos = args.pos}
 						if args.id then
 							if infl_sets_by_id[args.id] then
 								return ("For Icelandic base lemma '[[%s]]', saw id='%s' twice"):format(args.id)
@@ -465,8 +465,8 @@ function export.find_inflection(lemma, infltemp, allow_empty_infl, is_deriv, inf
 				if ordered_seen_ids[1] and infl_sets_without_id[1] then
 					return ("For Icelandic base lemma '[[%s]]', saw %s [[Template:%s]]%s with id=%s " ..
 						"as well as %s [[Template:%s]]%s without ID; this is not allowed; with multiple " ..
-						"[[Template:%s]] calls, all must have id= params"):format(#ordered_seen_ids,
-						ordered_seen_ids[2] and "'s" or "", infltemp, concat_ordered_seen_ids(), #infl_sets_without_id,
+						"[[Template:%s]] calls, all must have id= params"):format(lemma, #ordered_seen_ids,
+						infltemp, ordered_seen_ids[2] and "'s" or "",concat_ordered_seen_ids(), #infl_sets_without_id,
 						infltemp, infl_sets_without_id[2] and "'s" or "", infltemp)
 				elseif not ordered_seen_ids[1] and not infl_sets_without_id[1] then
 					return ("For Icelandic base lemma '[[%s]]', found Icelandic section but couldn't find " ..
@@ -477,7 +477,7 @@ function export.find_inflection(lemma, infltemp, allow_empty_infl, is_deriv, inf
 						format(lemma, #infl_sets_without_id, infltemp, infltemp)
 				elseif inflid then
 					if infl_sets_by_id[inflid] then
-						return infl_sets_by_id[inflid].infls
+						return infl_sets_by_id[inflid]
 					elseif ordered_seen_ids[1] then
 							return ("For Icelandic base lemma '[[%s]]', found Icelandic section but couldn't find " ..
 								"any inflections matching ID '%s'; instead found ID's %s; you may have misspelled " ..
@@ -489,7 +489,7 @@ function export.find_inflection(lemma, infltemp, allow_empty_infl, is_deriv, inf
 					end
 				elseif infl_sets_without_id[1] then
 					-- only one {{is-ninfl}}, and it doesn't have an id=; return it
-					return infl_sets_without_id[1].infls
+					return infl_sets_without_id[1]
 				elseif ordered_seen_ids[2] then
 					return ("For Icelandic base lemma '[[%s]]', saw %s [[Template:%s]]'s with id=%s " ..
 						"but with a request to return the inflection without ID; consider adding an ID " ..
@@ -529,14 +529,20 @@ function export.find_scraped_infl(data)
 	local lemma, scrape_spec, scrape_is_suffix, scrape_is_uppercase, infltemp, allow_empty_infl, inflid =
 		data.lemma, data.scrape_spec, data.scrape_is_suffix, data.scrape_is_uppercase, data.infltemp,
 		data.allow_empty_infl, data.inflid
-	local lemma_minus_ending, final_ending = data.parse_off_ending(lemma)
-	local escaped_scrape_spec = m_string_utilities.pattern_escape(scrape_spec)
-	local prefix, base_lemma = rmatch(lemma_minus_ending, "^(.*)(" .. escaped_scrape_spec .. ".-)$")
-	if not prefix then
-		error(("Can't determine base lemma to scrape given lemma '%s' and scraping spec '@%s'; scraping spec not " ..
-			"found in lemma"):format(lemma, scrape_spec))
+	local prefix, base_lemma
+	if scrape_spec == "@" then -- @@ specified
+		base_lemma = lemma
+		prefix = ""
+	else
+		local lemma_minus_ending, final_ending = data.parse_off_ending(lemma)
+		local escaped_scrape_spec = m_string_utilities.pattern_escape(scrape_spec)
+		prefix, base_lemma = rmatch(lemma_minus_ending, "^(.*)(" .. escaped_scrape_spec .. ".-)$")
+		if not prefix then
+			error(("Can't determine base lemma to scrape given lemma '%s' and scraping spec '@%s'; scraping spec not " ..
+				"found in lemma"):format(lemma, scrape_spec))
+		end
+		base_lemma = base_lemma .. final_ending
 	end
-	base_lemma = base_lemma .. final_ending
 	if scrape_is_uppercase then
 		local base_first, base_rest = rmatch(base_lemma, "^(.)(.*)$")
 		if not base_first then
@@ -550,6 +556,7 @@ function export.find_scraped_infl(data)
 	local infl = export.find_inflection(base_lemma, infltemp, allow_empty_infl, "is deriv", inflid)
 	local errmsg = nil
 	if type(infl) == "table" then
+		infl = infl.infls
 		if infl[2] then
 			errmsg = ("For Icelandic base lemma '[[%s]]', saw %s inflection specs; currently, can only handle one"):
 				format(base_lemma, #infl)
