@@ -55,8 +55,8 @@ local m_links = require("Module:links")
 local m_string_utilities = require("Module:string utilities")
 local iut = require("Module:inflection utilities")
 local m_para = require("Module:parameters")
-local com = require("Module:is-common")
-local m_is_adjective = require_when_needed("Module:is-adjective")
+local com = require("Module:User:Benwing2/is-common")
+local m_is_adjective = require_when_needed("Module:User:Benwing2/is-adjective")
 
 local u = mw.ustring.char
 local rsplit = mw.text.split
@@ -323,8 +323,6 @@ Create an empty `base` object for holding the result of parsing and later the ge
   plvstem = nil or "STEM",
   -- decline like an adjective; will be present if the user gave a spec starting with 'adj'
   adjspec = {
-	-- User specified ^ directly after 'adj' to indicate that the given form should be lowercased to get the lemma.
-	lowercase = nil or true,
 	-- User explicitly specified the lemma using a colon + lemma.
 	lemma = nil or LEMMA
 	-- User gave a one-part or two-part substitution spec such as 'tvöfalt<adj/dur>' or 'ryðfrítt<adj/tt/r>'.
@@ -347,6 +345,8 @@ Create an empty `base` object for holding the result of parsing and later the ge
   -- * "já" (a neuter in -é whose stem alternates with -já, such as [[tré]] "tree" and [[hné]]/[[kné]] "knee");
   -- * "weak" (the noun should decline like an ordinary weak noun; used in the declension of [[fjandi]] to disable the
   --           special -ndi declension);
+  -- * "linkasis" (when linking definite-only and plural-only lemmas in the headword, link as-is instead of
+  --               linking the singular indefinite version);
   props = {
 	PROP = true,
 	PROP = true,
@@ -1329,11 +1329,36 @@ decls["adj"] = function(base, props)
 		wk_dat_n_p = "wk_p",
 	}
 
-	local state = base.adj_is_weak and "wk" or "str"
-	local props = {"-comp"}
+	local props = {}
+	local function ins(prop)
+		table.insert(props, prop)
+	end
 	for _, spectype in ipairs(m_is_adjective.control_specs) do
 		if base[spectype] then
-			table.insert(props, reconstruct_control_spec(base[spectype]))
+			ins(reconstruct_control_spec(base[spectype]))
+		end
+	end
+	-- If a specific reverse u-mutation type was specified and no u-mutation was given, convert the reverse
+	-- u-mutation into a regular u-mutation by chopping off the "un" at the beginning.
+	if base.adj_unumut and not base.umut then
+		ins(base.adj_unumut:sub(3))
+	end
+	for k, _ in pairs(base.props) do
+		if k ~= "iscomp" then
+			ins(k)
+		end
+	end
+	if not base.props.irreg then
+		ins(base.props.iscomp and "-pos" or "-comp")
+	end
+	if base.stem == "#" or base.stem == "##" then
+		ins(base.stem)
+	elseif base.stem then
+		ins("stem:" .. base.stem)
+	end
+	for _, stem in ipairs(m_is_adjective.overridable_stems) do
+		if stem ~= "stem" and base[stem] then
+			ins(("%s:%s"):format(stem, base.stem))
 		end
 	end
 
@@ -1344,24 +1369,35 @@ decls["adj"] = function(base, props)
 	local argspec = base.lemma .. propspec
 	local adj_alternant_multiword_spec = m_is_adjective.do_generate_forms({argspec}, argspec, "is-ndecl")
 	local function copy(from_slot, to_slot, do_clone)
+		-- We want to avoid sharing form objects (although sharing footnotes is OK, but we don't avoid cloning them
+		-- here) so we can later side-effect form objects as needed. `do_clone` is set to avoid such sharing,
+		-- specifically when the weak form of the adjective is used for both definite and indefinite slots.
 		local source = adj_alternant_multiword_spec.forms[from_slot]
 		if do_clone then
 			source = m_table.deepCopy(source)
 		end
 		base.forms[to_slot] = source
 	end
-	local function copy_gender_number_forms(gender, number, state)
+	local function copy_gender_number_forms(gender, number)
+		local state = base.adj_is_weak and "wk" or "str"
+		local degree_pref = base.props.iscomp and "comp_" or ""
 		for _, case in ipairs(cases) do
-			-- We want to avoid sharing form objects (although sharing footnotes is OK, but we don't avoid cloning them
-			-- here) so we can later side-effect form objects as needed.
 			local individual_slot = state .. "_" .. case .. "_" .. gender .. "_" .. number
+			local wk_individual_slot = "wk_" .. case .. "_" .. gender .. "_" .. number
 			local syncretic_slot = slot_to_syncretic_slot_mapping[individual_slot]
+			local wk_syncretic_slot = slot_to_syncretic_slot_mapping[wk_individual_slot]
 			if not syncretic_slot then
 				error(("Internal error: Constructed bad individual slot '%s' with no entry in syncretic slot mapping"):
 					format(individual_slot))
 			end
+			syncretic_slot = degree_pref .. syncretic_slot
+			if not wk_syncretic_slot then
+				error(("Internal error: Constructed bad weak individual slot '%s' with no entry in syncretic slot mapping"):
+					format(wk_individual_slot))
+			end
+			wk_syncretic_slot = degree_pref .. wk_syncretic_slot
 			copy(syncretic_slot, "ind_" .. case .. "_" .. number)
-			copy(syncretic_slot, "def_" .. case .. "_" .. number, "do clone")
+			copy(wk_syncretic_slot, "def_" .. case .. "_" .. number, syncretic_slot == wk_syncretic_slot)
 		end
 	end
 
@@ -1482,8 +1518,21 @@ local function handle_derived_slots_and_overrides(base)
 	-- (before removing links) for forms that are the same as the lemma, if the original lemma has links.
 	for _, slot in ipairs(potential_lemma_slots) do
 		iut.insert_forms(base.forms, slot .. "_linked", iut.map_forms(base.forms[slot], function(form)
-			if form == base.orig_lemma_no_links and base.orig_lemma:find("%[%[") then
-				return base.orig_lemma
+			if form == base.orig_lemma_no_links then
+				if base.orig_lemma:find("%[%[") then
+					return base.orig_lemma
+				elseif not base.is_multiword then
+					return form
+				elseif base.lemma ~= base.orig_lemma_no_links and not base.props.linkasis then
+					local lemma_for_linking = base.lemma
+					if base.link_lowercase then
+						local init, rest = rmatch(lemma_for_linking, "^(.)(.*)$")
+						lemma_for_linking = ulower(init) .. rest
+					end
+					return ("[[%s|%s]]"):format(lemma_for_linking, base.orig_lemma_no_links)
+				else
+					return ("[[%s]]"):format(form)
+				end
 			else
 				return form
 			end
@@ -1764,15 +1813,7 @@ end
 local function parse_adjspec(base, spec, parse_err)
 	local ret = {}
 	local origspec = spec
-	if spec:find("^%^") then
-		ret.lowercase = true
-		spec = spec:sub(2)
-	end
 	if spec:find("^:") then
-		if ret.lowercase then
-			parse_err(("Can't specify lowercasing indicator ^ in conjunction with explicit adjective lemma after a " ..
-				"colon in adjective spec 'adj%s'"):format(origspec))
-		end
 		ret.lemma = spec:sub(2)
 	elseif spec:find("^/") then
 		local from, to = spec:match("^/([^/]*)/([^/]*)$")
@@ -1802,6 +1843,7 @@ local function parse_inside(base, inside, is_scraped_noun)
 
 	local segments = iut.parse_balanced_segment_run(inside, "[", "]")
 	local dot_separated_groups = split_alternating_runs_with_escapes(segments, "%.")
+	local isadj = false
 	for i, dot_separated_group in ipairs(dot_separated_groups) do
 		-- Parse a control spec such as "umut,uUmut[rare]" or "-unuUmut,unuUmut" or "imut". This assumes the control
 		-- spec is contained in `dot_separated_group` (already split on brackets) and the result of parsing should go in
@@ -1833,7 +1875,6 @@ local function parse_inside(base, inside, is_scraped_noun)
 		end
 
 		local part = dot_separated_group[1]
-		local isadj = false
 		while true do
 			if i == 1 and part ~= "+" and not part:find("^adj") and not part:find("^@") and part ~= "pron" then
 				local comma_separated_groups = split_alternating_runs_with_escapes(dot_separated_group, ",")
@@ -1894,7 +1935,7 @@ local function parse_inside(base, inside, is_scraped_noun)
 				end
 			else
 				if part:find("^[Uu]+_?mut") then
-					parse_control_spec("umut", com.umut_tyes)
+					parse_control_spec("umut", com.umut_types)
 					break
 				elseif not part:find("^imutval") and part:find("^%-?imut") then
 					parse_control_spec("imut", {"imut", "-imut"})
@@ -2039,16 +2080,22 @@ local function parse_inside(base, inside, is_scraped_noun)
 				end
 				base.definiteness = part
 				break
-			elseif not isadj and (part == "proper" or part == "common" or part == "dem" or
-					part == "weak" or part == "iending" or part == "rstem" or part == "já" or part == "pron") or
-				isadj and (part == "irreg" or part == "article" or part == "archaic") or
+			elseif not isadj and (part == "proper" or part == "common" or part == "dem" or part == "weak" or
+				part == "iending" or part == "rstem" or part == "já" or part == "pron" or part == "linkasis") or
+				isadj and (part == "irreg" or part == "article" or part == "archaic" or part == "iscomp") or
 				part == "indecl" or part == "decl?" then
 				if base.props[part] then
 					parse_err("Can't specify '" .. part .. "' twice")
 				end
 				base.props[part] = true
 				break
-			elseif isadj and m_table.contains(com.unumut_tyes, part) then
+			elseif part == "~" then
+				if base.link_lowercase then
+					parse_err("Can't specify '~' twice")
+				end
+				base.link_lowercase = true
+				break
+			elseif isadj and m_table.contains(com.unumut_types, part) then
 				if base.adj_unumut then
 					parse_err("Can't specify two values for reverse u-mutation spec with adjectives")
 				end
@@ -2193,7 +2240,7 @@ local function parse_inside_and_merge(inside, lemma, scrape_chain)
 		copy_properties(control_specs)
 		copy_properties(overridable_stems)
 		copy_properties { "gens", "pls", "gender", "number", "definiteness", "decllemma", "declgender", "declnumber",
-			"q", "header" }
+			"q", "header", "link_lowercase" }
 		inner_base.footnotes = iut.combine_footnotes(inner_base.footnotes, base.footnotes)
 		-- Copy addnote specs.
 		for _, prop_list in ipairs { "addnote_specs" } do
@@ -2243,6 +2290,27 @@ local function parse_indicator_spec(angle_bracket_spec, lemma, pagename)
 	return base
 end
 
+
+-- Determine if the term has more than one word in it. Normally we just look at the number of words
+-- at top level. However, it's possible to have a single alternant at top level with multiple words
+-- in one of the arms, e.g. the equivalent of ((rēspūblica<>,rēs<>pūblica<>)). So if there's only one
+-- top-level "word" and it's an alternant, check the length of each arm.
+local function compute_is_multiword(alternant_multiword_spec)
+	if #alternant_multiword_spec.alternant_or_word_specs > 1 then
+		return true
+	end
+	local alternant_or_word_spec = alternant_multiword_spec.alternant_or_word_specs[1]
+	if alternant_or_word_spec.alternants then
+		for _, multiword_spec in ipairs(alternant_or_word_spec.alternants) do
+			if #multiword_spec > 1 then
+				return true
+			end
+		end
+	end
+	return false
+end
+
+
 local function set_defaults_and_check_bad_indicators(base)
 	local function check_err(msg)
 		error(("Lemma '%s': %s"):format(base.lemma, msg))
@@ -2251,19 +2319,16 @@ local function set_defaults_and_check_bad_indicators(base)
 	local regular_noun = is_regular_noun(base)
 	if base.props.pron then
 		set_pron_defaults(base)
-	elseif base.adjspec then
-		-- FIXME: Do adjective-specific checks then return
-	else
-		-- FIXME: Do something?
 	end
 
-	if not regular_noun then
+	if not regular_noun and not base.adjspec then
 		for _, control_spec in ipairs(control_specs) do
 			if base[control_spec] then
-				-- FIXME, maybe with adjectives
-				check_err(("'%s' can only be specified with regular nouns"):format(control_spec))
+				check_err(("'%s' cannot be specified with pronouns"):format(control_spec))
 			end
 		end
+	end
+	if not regular_noun then
 		if base.declgender then
 			check_err("'declgender' can only be specified with regular nouns")
 		end
@@ -2332,8 +2397,10 @@ end
 
 
 local function set_all_defaults_and_check_bad_indicators(alternant_multiword_spec)
-	local is_multiword = #alternant_multiword_spec.alternant_or_word_specs > 1
+	-- Used when determining how to link definite-only and plural-only nouns.
+	alternant_multiword_spec.is_multiword = compute_is_multiword(alternant_multiword_spec)
 	iut.map_word_specs(alternant_multiword_spec, function(base)
+		base.is_multiword = alternant_multiword_spec.is_multiword
 		set_defaults_and_check_bad_indicators(base)
 		for _, global_prop in ipairs { "q", "header" } do
 			if base[global_prop] then
@@ -2395,6 +2462,34 @@ local function expand_property_sets(base)
 end
 
 
+-- Return the most likely ending to add to a stem form (e.g. from the feminine singular or the plural) to
+-- to get the lemma form (masculine singular).
+-- We use the following rules:
+-- 1. Stems in -nn or -ll take -ur.
+-- 2. Stems in -Vn or -Vl double the last letter, but not if this will result in contraction (the default
+--    for nouns in -[aiu]nn and -[aiu]ll, but for adjectives only in -inn), in which case -ur is added.
+-- 3. Stems in -Cn, -Cl, -r or -s remain unchanged.
+-- 4. Stems in a vowel add -r.
+-- 5. Remaining stems add -ur.
+-- Exceptional lemma forms for adjectives will need to be handled through a slash substitution spec or by
+-- directly specifying the lemma after a colon.
+local function stem_to_masc_sg_lemma_ending(stem, isadj)
+	if stem:find("nn$") or stem:find("ll$") then
+		return "ur"
+	elseif not isadj and stem:find("[aiu][nl]$") or isadj and stem:find("in$") then
+		return "ur"
+	elseif stem:find(com.vowel_c .. "[nl]$") then
+		return stem:sub(-1)
+	elseif stem:find("[nlrs]$") then
+		return ""
+	elseif rfind(stem, com.vowel_c .. "$") then
+		return "r"
+	else
+		return "ur"
+	end
+end
+
+
 -- For a plural-only lemma, synthesize a likely singular lemma. It doesn't have to be theoretically correct as long as
 -- it generates all the correct plural forms.
 local function synthesize_singular_lemma(base)
@@ -2429,9 +2524,15 @@ local function synthesize_singular_lemma(base)
 				-- "stains, traces"; [[viðjar]] "chains, fetters"; many others in -jar, but the -j- is throughout
 				-- the plural; [[svalir]] "balcony; porch"; [[dyr]] "doorway" (uses decllemma:dyrir)
 				if ending == "ur" then
+					-- FIXME: Does -ur as masculine plural ending occur? What should the singular be?
+					sg_ending =	base.gender == "f" and "a" or nil
 					default_unumut = "unumut"
+				else
+					sg_ending = base.gender == "f" and "" or nil
 				end
-				sg_ending = "ur"
+				if not sg_ending then
+					sg_ending = stem_to_masc_sg_lemma_ending(stem)
+				end
 			elseif base.lemma:find("ær$") then
 				-- [[barnatær]], [[fultær]], proper name [[Tær]]
 				stem = base.lemma
@@ -2577,48 +2678,20 @@ local function synthesize_indefinite_lemma(base)
 end
 
 
--- Attempt to convert an adjective stem form (e.g. from the feminine singular) to the lemma form (masculine singular).
--- We use the following rules:
--- 1. Stems in -nn or -ll take -ur.
--- 2. Stems in -Vn or -Vl double the last letter.
--- 3. Stems in -Cn, -Cl, -r or -s remain unchanged.
--- 4. Stems in a vowel add -r.
--- 5. Remaining stems add -ur.
--- Exceptional lemma forms will need to be handled through a slash substitution spec or by directly specifying the
--- lemma after a colon.
-local function stem_to_adj_lemma(stem)
-	if stem:find("nn$") or stem:find("ll$") then
-		return stem .. "ur"
-	elseif stem:find(com.vowel_c .. "[nl]$") then
-		return (stem:gsub("(.)$", "%1%1"))
-	elseif stem:find("[nlrs]$") then
-		return stem
-	elseif rfind(stem, com.vowel_c .. "$") then
-		return stem .. "r"
-	else
-		return stem .. "ur"
-	end
-end
-
-
 -- For an adjectival lemma, synthesize the masc singular form.
 local function synthesize_adj_lemma(base)
-	-- FIXME: Add support for strong adjectives.
 	local stem, ending
 	if base.props.indecl then
 		base.decl = "indecl"
-		stem = base.lemma
+		return
 	elseif base.props["decl?"] then
 		base.decl = "decl?"
-		stem = base.lemma
+		return
 	else
+		base.decl = "adj"
 		local adjspec = base.adjspec
 		if not adjspec then
 			error("Internal error: synthesize_adj_lemma() called without a parsed adjective spec in `base.adjspec`")
-		end
-		if adjspec.lowercase then
-			local init, rest = rmatch(base.lemma, "^(.)(.*)$")
-			base.lemma = ulower(init) .. rest
 		end
 		if adjspec.lemma then
 			base.lemma = adjspec.lemma
@@ -2644,51 +2717,83 @@ local function synthesize_adj_lemma(base)
 				end
 				base.lemma = usub(base.lemma, 1, -num_to_remove - 1) .. to
 			end
-		elseif base.number == "pl" then
-			stem, ending = rmatch(base.lemma, "^(.*[^Aa])(u)$")
-			if stem then
-				base.adj_is_weak = true
-				base.lemma = stem_to_adj_lemma(stem)
-			end
-			if not stem then
-				error("No support for strong adjectives yet")
-			end
 		else
-			if base.gender == "m" then
-				stem, ending = rmatch(base.lemma, "^(.*[^Ee])(i)$")
-				if stem then
-					base.adj_is_weak = true
-					base.lemma = stem_to_adj_lemma(stem)
+			local stem, stem_is_lemma
+			if base.props.iscomp then
+				base.adj_is_weak = true
+				if base.number ~= "pl" and base.gender == "n" then
+					stem = base.lemma:match("^(.*)a$")
+					if not stem then
+						error(("Neuter singular weak comparative adjective form should end in -a: %s"
+							):format(base.lemma))
+					end
+					stem = stem .. "i"
+				else
+					if not base.lemma:find("i$") then
+						error(("Plural or masculine/feminine singular weak comparative adjective form should " ..
+							"end in -i: %s"):format(base.lemma))
+					end
+					stem = base.lemma
 				end
-				-- Otherwise the form is strong and should remain as is.
-			elseif base.gender == "f" or base.gender == "n" then
-				stem, ending = rmatch(base.lemma, "^(.*)(a)$")
+				stem_is_lemma = true
+			elseif base.number == "pl" then
+				stem = base.lemma:match("^(.*[^Aa])u$")
 				if stem then
 					base.adj_is_weak = true
-					base.lemma = stem_to_adj_lemma(stem)
 				end
 				if not stem then
-					if base.gender == "n" then
-						error(("No automatic rules for inferring the adjective lemma from strong neuter form '%s'; " ..
-							"you must use a slash substitution spec such as 'tvöfalt<adj/dur>' (which chops off the " ..
-							"last letter and replaces it with 'dur') or 'ryðfrítt<adj/tt/r>' (which chops off 'tt' " ..
-							"and replaces it with 'r'), or directly specify the lemma using e.g. 'tvö<adj:tveir>'"
-						):format(base.lemma))
+					if base.gender == "m" then
+						stem = base.lemma:match("^(.*)ir$")
+						if not stem then
+							error(("Masculine plural strong adjective form should end in -ir: %s"):format(base.lemma))
+						end
+					elseif base.gender == "f" then
+						stem = base.lemma:match("^(.*)ar$")
+						if not stem then
+							error(("Feminine plural strong adjective form should end in -ar: %s"):format(base.lemma))
+						end
 					else
-						base.lemma = stem_to_adj_lemma(base.lemma)
+						stem = base.lemma
+					end
+				end
+			else
+				if base.gender == "m" then
+					stem = base.lemma:match("^(.*[^Ee])i$")
+					if stem then
+						base.adj_is_weak = true
+					else
+						-- Otherwise the form is strong and should remain as is.
+						stem = base.lemma
+						stem_is_lemma = true
+					end
+				elseif base.gender == "f" or base.gender == "n" then
+					stem = base.lemma:match("^(.*)a$")
+					if stem then
+						base.adj_is_weak = true
+					end
+					if not stem then
+						if base.gender == "n" then
+							error(("No automatic rules for inferring the adjective lemma from strong neuter form " ..
+								"'%s'; you must use a slash substitution spec such as 'tvöfalt<adj/dur>' (which " ..
+								"chops off the last letter and replaces it with 'dur') or 'ryðfrítt<adj/tt/r>' " ..
+								"(which chops off 'tt' and replaces it with 'r'), or directly specify the lemma " ..
+								"using e.g. 'tvö<adj:tveir>'"
+							):format(base.lemma))
+						else
+							stem = base.lemma
+						end
 					end
 				end
 			end
+			if not stem_is_lemma then
+				if base.adj_unumut then
+					stem = com.apply_reverse_u_mutation(stem, base.adj_unumut, "error if unmatchable")
+				end
+				base.lemma = stem .. stem_to_masc_sg_lemma_ending(stem)
+			else
+				base.lemma = stem
+			end
 		end
-		base.decl = "adj"
-	end
-	if base.stem then
-		-- This isn't necessarily accurate but doesn't really matter. We only record the lemma ending to help with
-		-- contraction of definite clitics in the nominative singular, which doesn't apply for adjectives.
-		base.lemma_ending = ""
-	else
-		base.stem = stem
-		base.lemma_ending = ending or ""
 	end
 end
 
@@ -3332,14 +3437,6 @@ end
 
 
 local function detect_indicator_spec(base)
-	-- Replace # and ## in all overridable stems as well as all overrides.
-	for _, stemkey in ipairs(overridable_stems) do
-		base[stemkey] = com.replace_hashvals(base[stemkey], base.lemma)
-	end
-	map_all_overrides(base, function(formobj)
-		formobj.form = com.replace_hashvals(formobj.form, base.lemma)
-	end)
-
 	base.prop_sets = {{}}
 	if base.props.pron then
 		determine_pronoun_props(base)
@@ -3347,6 +3444,13 @@ local function detect_indicator_spec(base)
 		process_declnumber(base)
 		synthesize_adj_lemma(base)
 	else
+		-- Replace # and ## in all overridable stems as well as all overrides.
+		for _, stemkey in ipairs(overridable_stems) do
+			base[stemkey] = com.replace_hashvals(base[stemkey], base.lemma)
+		end
+		map_all_overrides(base, function(formobj)
+			formobj.form = com.replace_hashvals(formobj.form, base.lemma)
+		end)
 		expand_property_sets(base)
 		if base.definiteness == "def" then
 			synthesize_indefinite_lemma(base)
