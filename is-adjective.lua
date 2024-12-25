@@ -27,7 +27,7 @@ local m_links = require("Module:links")
 local m_string_utilities = require("Module:string utilities")
 local iut = require("Module:inflection utilities")
 local m_para = require("Module:parameters")
-local com = require("Module:is-common")
+local com = require("Module:User:Benwing2/is-common")
 local parse_utilities_module = "Module:parse utilities"
 
 local u = mw.ustring.char
@@ -1143,19 +1143,19 @@ end
 
 -- Process specs given by the user using 'addnote[SLOTSPEC][FOOTNOTE][FOOTNOTE][...]'.
 local function process_addnote_specs(base)
-	local function do_one(slot_spec)
-		slot_spec = "^" .. slot_spec .. "$"
-		for slot, forms in pairs(base.forms) do
-			if rfind(slot, slot_spec) then
-				-- To save on memory, side-effect the existing forms.
-				for _, form in ipairs(forms) do
-					form.footnotes = iut.combine_footnotes(form.footnotes, spec.footnotes)
+	for _, spec in ipairs(base.addnote_specs) do
+		local function do_one(slot_spec)
+			slot_spec = "^" .. slot_spec .. "$"
+			for slot, forms in pairs(base.forms) do
+				if rfind(slot, slot_spec) then
+					-- To save on memory, side-effect the existing forms.
+					for _, form in ipairs(forms) do
+						form.footnotes = iut.combine_footnotes(form.footnotes, spec.footnotes)
+					end
 				end
 			end
 		end
-	end
-
-	for _, spec in ipairs(base.addnote_specs) do
+	
 		for _, slot_spec in ipairs(spec.slot_specs) do
 			slot_spec = adjective_slot_abbrs[slot_spec] or slot_spec
 			if type(slot_spec) == "table" then
@@ -1163,7 +1163,7 @@ local function process_addnote_specs(base)
 					do_one(ss)
 				end
 			else
-				do_one(ss)
+				do_one(slot_spec)
 			end
 		end
 	end
@@ -1406,7 +1406,7 @@ local function parse_inside(base, inside, is_scraped_noun)
 			local slot_specs = rsplit(slot_spec_inside, ",")
 			-- FIXME: Here, [[Module:it-verb]] called strip_spaces(). Generally we don't do this. Should we?
 			table.insert(base.addnote_specs, {slot_specs = slot_specs, footnotes = spec_and_footnotes})
-		elseif parse_for_control_specs(part, parse_control_spec) then
+		elseif export.parse_for_control_specs(part, parse_control_spec) then
 			-- nothing more to do
 		elseif part:find("^decllemma%s*:") then -- or part:find("^declstate%s*:") or part:find("^declnumber%s*:") then
 			local field, value = part:match("^(decl[a-z]+)%s*:%s*(.+)$")
