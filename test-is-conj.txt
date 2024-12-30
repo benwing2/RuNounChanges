@@ -1,0 +1,163 @@
+==strong verbs==
+
+===strong class 1===
+* Type a: <<bíta|to bite>> (bít, beit, bitum, bitinn), <<bíða|wait>> (irregular supine beðið, irregular past participle beðinn is archaic), <<drífa|to drive, to drift, to snow>>, <<grípa|to seize, to catch, to grip>>, <<hrífa|to have an effect, to fascinate>>, <<hrína|to cry>>, <<hvína|to whiz>>, <<kvíða|to fear for>>
+* {{tl|is-conj|s1|pagename=bíta}}
+* {{tl|is-conj|s1.pp:beðinn[archaic].sup:beðið|pagename=bíða}}
+
+===strong class 4===
+* Type a: <<bera|to bear, to carry>> (ber, bar, bárum, borinn), <<skera|to cut>>, <<stela|to steal>>, <<fela|to conceal>> (past participle [[fólginn]]; also weak 1 fela, faldi, falinn)
+
+==weak verbs==
+
+===weak class 1===
+;type a (-e- root vowel)
+* <<vefja|to wrap>> (vef, vafði, vafinn(vafð-)) [NOTE: BÍN lists middle question forms but not middle imperatives]
+* {{tl|is-conj|w1.mid|pagename=vefja}}
+* <<telja|to count>> (tel, taldi, talinn(tald-)); the past participle follows /; here + or +inn selects the default pp in -inn while +ur selects the default pp in -ur [NOTE: BÍN lists middle question forms but not middle imperatives; Einarsson says there is an alternative past participle taldur but BÍN doesn't recognize it]
+* {{tl|is-conj|w1.mid|pagename=telja}} (note: 2pl teljið)
+* <<vekja|to awaken>> (vek, vakti, vakinn(vakt-)) [NOTE: BÍN lists middle question forms but not middle imperatives; Einarsson says there is an alternative past participle vaktur but BÍN doesn't recognize it; per BÍN, the middle is rare]
+* {{tl|is-conj|w1.mid[rare]|pagename=vekja}} (note: 2pl vekið)
+* <<berja|to beat>> (ber, barði, barinn(barð-)) [NOTE: BÍN lists both middle question forms and middle imperatives; Einarsson says there is an alternative past participle barður but BÍN doesn't recognize it]
+* {{tl|is-conj|w1.mid|pagename=berja}}
+* <<velja|to choose>> (vel, valdi, valinn(vald-)) [NOTE: BÍN lists middle question forms but not middle imperatives; Einarsson says there is an alternative past participle valdur but BÍN recognizes it only as an adjective]
+* {{tl|is-conj|w1.mid|pagename=velja}}
+* <<hrekja|to treat roughly>> (hrek, hrakti, hrakinn(hrakt-)) [NOTE: BÍN lists middle question forms but not middle imperatives, as well as an active impersonal form with accusative subject; Einarsson says there is an alternative past participle hraktur but BÍN doesn't recognize it]
+* {{tl|is-conj|w1.mid|pagename=hrekja}}
+* <<þekja|to cover up, to thatch>> (þek, þakti, þakinn(þakt-)) [NOTE: BÍN lists middle question forms but not middle imperatives; Einarsson says there is an alternative past participle þaktur but BÍN doesn't recognize it]
+* {{tl|is-conj|w1.mid|pagename=þekja}}
+* <<gleðja|to gladden>> (gleð, gladdi, gladdur) [NOTE: BÍN lists both middle question forms and middle imperatives]
+* {{tl|is-conj|w1/+ur.mid|pagename=gleðja}}
+* <<kveðja|to say goodbye>> (kveð, kvaddi, kvaddur) [NOTE: BÍN lists both middle question forms and middle imperatives]
+* {{tl|is-conj|w1/+ur.mid|pagename=kveðja}}
+* <<seðja|to satisfy (one's hunger)>> (seð, saddi, saddur) [NOTE: BÍN lists middle question forms but not middle imperatives]
+* {{tl|is-conj|w1/+ur.mid|pagename=seðja}}
+
+;irregular in -ggja
+* <<leggja|to lay>> (legg, lagði, lagður) [NOTE: BÍN lists both middle question forms and middle imperatives, as well as active impersonal with accusative subject and middle impersonal with dative subject; there is also the middle past participle lagstur; the note mentions a proscribed 2s joined imperative legðu, found in texts; Einarsson says there is an alternative past participle laginn but BÍN recognizes it only as an adjective]
+* {{tl|is-conj|w1,lagði/lagður.mid.midpp:lagstur.imp_2sj:+:legðu[proscribed but found in writing]|pagename=leggja}}
+* <<þiggja|to accept>> (þigg, þáði:þá[archaic]#þáðum:þágum, past subj. þægi/þæði, þeginn(þegn-) or þáður) [NOTE: per BÍN, no middle]
+* {{tl|is-conj|w1:s5,þáði:þá[archaic]#þáðum:þágum,þægi:þæði/þeginn(n):þáður.-mid|pagename=þiggja}}
+* <<hyggja|to think>> (hygg, hugði, no past participle or suple) [NOTE: BÍN lists both middle question forms and middle imperatives]
+* {{tl|is-conj|w1,hugði/-.mid|pagename=hyggja}}
+* <<tyggja|to chew>> (tygg, tuggði, tugginn(tuggn-/tuggð-)) [NOTE: BÍN omits both middle question forms and middle imperatives]
+* {{tl|is-conj|w1:s3/+(n:ð).mid|pagename=tyggja}}
+
+
+;type b (-y- root vowel)
+* <<smyrja|to butter, to smear, to grease>> (smyr, smurði, smurinn(smurð-)) [NOTE: BÍN omits both middle question forms and middle imperatives; Einarsson says there is an alternative past participle smurður but BÍN recognizes it only as an adjective]
+* {{tl|is-conj|w1.mid.imp_2sj:smyrðu[prescribed]:smurðu[quite common]|pagename=smyrja}} (note: 2pl smyrjið)
+* <<mylja|to crush>> (myl, muldi, mulinn(muld-)) [BÍN omits both middle question forms and middle imperatives]
+* {{tl|is-conj|w1.mid|pagename=mylja}}
+* <<styðja|to support>> (styð, studdi, studdur) [BÍN includes both middle question forms and middle imperatives]
+* {{tl|is-conj|w1/+ur.mid|pagename=styðja}}
+* <<flytja|to move>> (flyt, flutti, fluttur) [BÍN includes both middle question forms and middle imperatives]
+* {{tl|is-conj|w1/+ur.mid|pagename=flytja}}
+* <<dylja|to conceal>> (dyl, duldi, dulinn(duld-)) [NOTE: BÍN lists middle question forms but not middle imperatives; Einarsson says there is an alternative past participle duldur but BÍN doesn't recognize it]
+* {{tl|is-conj|w1.mid|pagename=dylja}}
+* <<spyrja|to ask>> (spyr, spurði, spurður) [NOTE: BÍN includes both middle question forms and middle imperatives]
+* {{tl|is-conj|w1.mid.imp_2sj:spyrðu[prescribed]:spurðu[quite common]|pagename=spyrja}} (note: 2pl spyrjið)
+* <<bryðja|to crunch>> (bryð, bruddi, bruddur) [NOTE: per BÍN, no middle]
+* {{tl|is-conj|w1/+ur.-mid|pagename=bryðja}}
+* <<ryðja|to clear (out of the way)>> (ryð, ruddi, ruddur) [NOTE: BÍN includes both middle question forms and middle imperatives]
+* {{tl|is-conj|w1/+ur.mid|pagename=ryðja}}
+
+;type c (usually -ý- root vowel)
+* <<flýja|to flee, to fly>>, also found in the infinitive as <<flúa>> (flý, flúði or flýði but only flýði in the past subjunctive [which is expected as the past subj. of weak-1 verbs has i-mutation], flúinn(flún-)) [no middle per BÍN]
+* {{tl|is-conj|w1,flúði:flýði.-mid|pagename=flýja}} (note: 2sg flýrð, 3sg flýr, 2pl flýið)
+* <<gnýja|to storm, to rage>> (gný, gnúði, gnúinn(gnún-)) [no middle per BÍN]
+* {{tl|is-conj|w1.-mid|pagename=gnýja}}
+* <<knýja|to compel>> (kný, knúði, knúinn(knún-)) [BÍN omits both middle question forms and middle imperatives; Einarsson says there is an alternative past participle knúður but BÍN doesn't recognize it]
+* {{tl|is-conj|w1.mid|pagename=gnýja}}
+* <<núa|to rub>> (ný, núði, núinn(nún-), imp. nú/núið) [but per BÍN, past is neri or néri; BÍN omits both middle question forms and middle imperatives; ný in pres sg. be automatic for weak-1 verbs, and likewise imperative without i-mutation; Einarsson says there is an alternative past participle núður but BÍN doesn't recognize it]
+* {{tl|is-conj|w1,neri:néri.mid|pagename=núa}} (per BÍN)
+* {{tl|is-conj|w1.mid|pagename=núa}} (per Einarsson)
+* <<rýja|to shear (the wool)>> (ryí or rý[archaic and no longer recommended], rúði, rúinn(rún-) or rúður; note only rýi in the present subjunctive [which is expected as the pres. subj. is based off of the indic pl. stem, which is only rýjum/rýið/rýja], rúði not rýði in the past subjunctive [which is unexpected for weak class 1]) [weak class 3 [maybe actually 2] or 1 per Einarsson; forms given here are from BÍN; no middle; past participle unexpectedly omits forms starting with rúðr- i.e. fem dat sg. #rúðri, fem gen sg. #rúðrar, gen pl. #rúðra; FIXME: there should be a better way of handling this, esp. if it occurs in several verbs]
+* {{tl|is-conj|w2:w1,rýi:rý[archaic and no longer recommended]\rúði,rúði/rúinn:rúður.-mid.pp_dat_f:rúinni.pp_gen_f:rúinnar.pp_gen_p:rúinna|pagename=rýja}}
+* <<tæja|to tease; to pick the wool>>, also found in the infinitive as <<tá>> in literature (per BÍN, weak 3 [maybe actually 2] in two variants: tæi or tái but only tæjum in the plural, táði, táður or táinn(tán-); present subjunctive irregularly tæi or tái in the singular, only tæjum in the plural, much like indicative, but strangely the 3s is tæi or táir instead of expected tæi or tái; I assume this is a mistake) (per Einarsson: tæ, táði, táinn "also weak class 3") [no middle or imperative per BÍN]; in the following, before the backslash is the present, which is of the form INDIC,SUBJ or extended as INDICSG#INDICPL,SUBJSG#SUBJPL where if omitted the INDICPL comes by default from the infinitive stem, the subjunctive singular defaults to the indicative plural stem, and the subjunctive plural defaults to the subjunctive singular stem (FIXME: make sure this latter default is correct); between \ and / is the past, which is either of the same form as the present or the subjunctive can be specified in parens after an individual indicative form, giving the whole subjunctive matching a given indicative form or ^ to indicate umlaut or -^ to indicate no umlaut; after the slash is the past participle
+* {{tl|is-conj|w3,tæi:tái,tæi:tái#tæjum\táði(^)/táður:táinn.-mid.-imp|pagename=tæja}}
+
+;type d (-e-/-i- root vowel without reverse i-mutation)
+* <<selja|to sell>> (sel, seldi, seldur) [NOTE: BÍN lists middle question forms but not middle imperatives]
+* {{tl|is-conj|w1,seldi/+ur.mid|pagename=selja}}
+* <<skilja|to understand>> (skil, skildi, skilinn(skild-)) [NOTE: per BÍN, also impersonal in both active and middle [FIXME: should we list impersonal forms separately? Probably not since they're easily derivable from the 3s of personal conjugations]; BÍN lists middle question forms but not middle imperatives]
+* {{tl|is-conj|w1.mid|pagename=skilja}}
+* <<setja|to set>> (set, setti, settur) [per BÍN, also impersonal in the active, distinguishing types of impersonal, one with dative subject given with all persons, and one without subject given only in the 3rd person with það; BÍN includes both middle question forms and middle imperatives; also has a special middle voice past participle [[sestur]] ]
+* {{tl|is-conj|w1,setti/+ur.mid.midpp:sestur|pagename=setta}}
+* <<deyja|to die>> (dey, deyði, [deyður]) [per Einarsson, "usually strong class 6"]
+* <<deyja|to die>> (dey, dó, dóum, past subj. dæi, dáinn(dán-)) [per BÍN; no middle]
+* {{tl|is-conj|s6.-mid|pagename=deyja}}
+
+;type e (irregular infinitives)
+* <<flá|to flay, to skin>> (flæ or flái, fláði or fló, past pl. fláðum or flógum, subj. only flái, past subj. fláði or flægi, fleginn(flegn-) or fláður; supine listed as fláð or flegið) [NOTE: no imperative; no middle; no question forms; per BÍN note, there are actually two different meanings,each with associated differences in forms; we should split the verb paradigms accordingly]
+* {{tl|is-conj|?|pagename=flá}}
+* <<ná|to reach, to get>> (næ, náði, náður; past indic náði, past subj næði) [NOTE: BÍN lists middle question forms but not middle imperatives]; umlauting in the present singular and past subjunctive should be automatic; note supine and neut sg náð not #nátt
+* {{tl|is-conj|w1/+ur[occasionally used in speech and informal writing](+).mid|pagename=ná}}
+* <<þvo|to wash>> (þvæ, þvoði, þveginn(þvegn-); past subj þvægi) [per Einarsson, "also strong class 6" and lists supine þvoð, not in BÍN; BÍN lists strong pret subjunctive only; no middle question forms or middle imperatives]; umlauting in the present singular is normally automatic, but here we have þvæ instead of expected þve
+* {{tl|is-conj|w1,þvæ\+,þvægi/þveginn~n.mid|pagename=þvo}}
+* <<ljá|to lend>> (ljæ, léði, léður) [per Einarsson]
+* <<ljá|to lend>> (ljæ or ljái, léði or ljáði, léður, pres subj only ljái [expected], pret subj only léði [unexpected], supine léð/ljáð [unexpected]) [per BÍN; no middle]; note supine and neut sg léð not #létt
+* {{tl|is-conj|w1:w2,léði:ljáði,léði/léður,léð:ljáð.-mid|pagename=ljá}}
+* <<tjá|to tell>> (tjái, tjáði or téði[now rare], léður, pres subj only tjái [expected], pret subj tjáði or téði [expected], past participle tjáður [téður also expected but now only an adjective] supine tjáð [expected]) [per BÍN; middle question forms but no middle imperative; middle past and past subjunctive only with tjáð-]
+* {{tl|is-conj|w2,+:téði[now rare]/tjáður.mid.midpast:tjáði|pagename=tjá}}
+* <<hafa|to have>> (hef[dominant in speech] or hefi[common in writing], hafði, hafður, pres subj hefði) [BÍN: has both middle question forms and middle imperatives]; the following assigns the two presents to weak 1 and weak 3, but disables the past and middle in weak 3 as only weak 1 forms seem to exist there, except for literary supine hafað, not mentioned in the tables but included below; FIXME: BÍN also includes past infinitive hefðu, we should include it somehow]
+* {{tl|is-conj|((<w1,+[dominant in speech]\/+ur.mid.pastinf:hefðu>,<w3,+[common in writing]\-/-,+[literary].-mid>))|pagename=hafa}}
+* <<fela|to conceal>> (fel, faldi, falinn) [per Einarsson; "also strong class 4 and 6"]
+* <<fela|to hide (something[acc])>> (fel, faldi, falinn(fald-), pres sub feldi) [per BÍN; has both middle question forms and middle imperatives]
+* {{tl|is-conj|w1.mid|pagename=fela}}
+* <<fela|to entrust, to charge (someone[dat] with something[acc]); also fela í sér [+ acc] "to involve, to consist of (something)>> (fel, fól#fólum, falið [no pastp], pres sub fæli) [per BÍN; has both middle question forms and middle imperatives]; the syntax below shows a missing past participle (after the forward slash) but a present supine after the past participle
+* {{tl|is-conj|s6/-,+.mid|pagename=fela}}
+
+===weak class 2===
+; type 1: most regular
+* <<dæma|to judge>> (dæmi, dæmdi, dæmdur) [per BÍN, middle question forms but no middle imperative]
+* {{tl|is-conj|w2.mid|pagename=dæma}}
+* <<heyra|to hear>> (heyri, heyrði, heyrður) [per BÍN, middle question forms but no middle imperative; BÍN includes middle impersonal forms, both with dative subject and no subject]
+* {{tl|is-conj|w2.mid|pagename=heyra}}
+* <<þreyja|to wait patiently for>> (þreyi, þreyði, þreyð or þreyjað) [per BÍN, no middle, and bare imperative #þrey missing; 3rd singular present indic has þreyir/þreyr[literary]; note supine þreyð not #þreytt; I am assuming after all vowels, the pp neuter singular has -ð instead of -tt]
+* {{tl|is-conj|w2/-,+:þreyjað.-mid.pres_3s:þreyir:þreyr[literary].imp_2s:-|pagename=þreyja}}
+* <<byggja|to build>> (byggi, byggði, byggður) [per BÍN, middle question forms but no middle imperative]
+* {{tl|is-conj|w2.mid|pagename=byggja}}
+* <<breiða|to spread out>> (breiði, breiddi, breiddur) [per BÍN, middle question forms but no middle imperative]
+* {{tl|is-conj|w2.mid|pagename=breiða}}
+* <<þekkja|to know, to recognize>> (þekki, þekkti, þekktur) [per BÍN, middle question forms but no middle imperative; has impersonal middle with dative subject]
+* {{tl|is-conj|w2.mid|pagename=þekkja}}
+* <<kyssa|to kiss>> (kyssi, kyssti, kysstur) [per BÍN, middle question forms but no middle imperative; BÍN says the verb is reciprocal in the middle and hence only found with a plural subject, but lists singular middle forms]
+* {{tl|is-conj|w2.mid|pagename=kyssa}}
+
+; irregular:
+* <<kaupa|to buy>> (kaupi, keypti, keyptur) [per BÍN, no middle; a note says the correct joined 2nd singular imperative i kauptu, but keyptu is very common; here, the past participle keyptur should automatically be derived from the past because it's a weak verb]
+* {{tl|is-conj|w2,keypti.-mid.imp_2sj:+:kepytu[proscribed but common]|pagename=kaupa}}
+* <<meina|to mean>> (meina, meinti, meintur; imp. mein) [per BÍN, no middle]; here, the specified present singular doesn't affect anything else.
+* {{tl|is-conj|w2,meina\.-mid|pagename=meina}}
+* vs. regular <<meina|to hinder, to prevent>> (meina, meinaði, meinaður; imp. meina) [per BÍN, middle question forms but no middle imperative]
+* {{tl|is-conj|w4.mid|pagename=meina}}
+* <<sækja|to seek, to fetch>> (sæki, sótti, past subj. sækti, sóttur) [per BÍN, middle question forms but no middle imperative; also has active subjectless impersonal and middle impersonal with dative subject]; past participle sóttur is auto-derived from the past indicative
+* {{tl|is-conj|w2,sótti,sækti.mid|pagename=sækja}}
+* <<yrkja|to compose a poem>> (yrki, orti, ortur; past subj. presumably orti as well) [BÍN lists two past indic yrkti/orti, two past subj. likewise yrkti/orti, and two past participles yrktur/ortur and says past tense yrkti is for the meaning "cultivate (the land)" while orti is for "compose (poetry)"; Einarsson says "compose (poetry)" has past indicative orti but past subjunctive yrkti, but that seems doubtful given what BÍN says; per BÍN, middle question forms but no middle imperative]
+* {{tl|is-conj|w2,orti.mid|pagename=yrkja}}
+* <<yrkja|to cultivate (the land)>> (yrki, yrkti, yrktur) [see above]
+* {{tl|is-conj|w2.mid|pagename=yrkja}}
+* <<þykja|to think, feel, seem>> (þyki, þótti, past subj. þætti, þótt) [per BÍN, middle but no imperative; middle question forms exist; subjectless impersonal exists]
+* {{tl|is-conj|w2,þótti,^/-,+.mid.-imp|pagename=þykja}}
+
+; type 2: infinitive in -gja or -kja
+* <<vígja|to consecrate>> (vígi, vígði, vígður) [per BÍN, middle question forms but no middle imperative]
+* {{tl|is-conj|w2.mid|pagename=vígja}}
+* <<steikja|to roast>> (steiki, steikti, steiktur) [per BÍN, middle question forms but no middle imperative]
+* {{tl|is-conj|w2.mid|pagename=steikja}}
+
+; type 3: infinitive in -va
+* <<slökkva|to put out (the light)>> (slökkvi, slökkti, past subj. slekkti, slökktur) [per Einarsson; also strong class 3: slökkva (slekk, (slökk#slukkum, slokkinn)) "usually has a weak preterite and past participle"]
+* <<slökkva|to put out (the light)>> (slekk, slökkti, past subj. slekkti, slökktur) [per BÍN; i-mutation in pres sg. and past subj. is automatic]
+* {{tl|is-conj|w1.-mid|pagename=slökkva}}
+* <<stökkva|to spray>> (stökkvi, stökkti, past sub. stekkti, stökkt) [per Einarsson; also strong class 3 in the meaning "to jump": stökkva (stekk, stökk#stukkum, stokkinn)]
+* <<stökkva|to spray; to drive away>> (stökkvi, stökkti, past sub. stökkti, stökkt) [per BÍN; no middle; note, no i-mutation in past subj., which is the default for weak class 2 and 3]
+* {{tl|is-conj|w2/-,+.-mid|pagename=stökkva}}
+* <<stökkva|to jump>> (stekk, stökk#stukkum, past sub. stykki, stokkinn) [per BÍN; no middle; stökk#stukkum should be automatic for class 3 strong verbs in -ökkva as there are four of them]
+* {{tl|is-conj|s3.-mid|pagename=stökkva}}
+* <<sökkva|to sink (a ship, etc.; trans.)>> (sökkvi, sökkti, past subj. sekkti, sökkt) [per Einarsson; also strong class 3 in the intransitive meaning "to sink": sökkva (sekk, sökk#sukkum, sokkinn)]
+* <<sökkva|to sink (intrans.)>> (sekk, sökk#sukkum, past subj. sykki, sokkinn) [per BÍN; no middle; no imperative; sökk#sukkum should be automatic, see <<stökkva|to jump>> above]
+* {{tl|is-conj|s3.-mid.-imp|pagename=sökkva}}
+* <<sökkva|to sink (a ship, etc.; trans.)>> (sökkvi, sökkti, past subj. sökkti, sökkt) [per BÍN; no middle; note, no i-mutation in past subj., which is the default; see above]
+* {{tl|is-conj|w2/-,+.-mid|pagename=sökkva}}
