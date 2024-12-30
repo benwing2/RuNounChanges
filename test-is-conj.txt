@@ -32,6 +32,10 @@
 * {{tl|is-conj|w1/+ur.mid|pagename=kveðja}}
 * <<seðja|to satisfy (one's hunger)>> (seð, saddi, saddur) [NOTE: BÍN lists middle question forms but not middle imperatives]
 * {{tl|is-conj|w1/+ur.mid|pagename=seðja}}
+* <<fletja|to flatten; to cut open (fish)>> (flet, flatti, flattur) [NOTE: BÍN lists middle question forms but not middle imperatives]
+* {{tl|is-conj|w1/+ur.mid|pagename=fletja}}
+* <<hvetja|to exhort, to encourage; to whet>> (hvet, hvatti, hvattur) [NOTE: no middle]
+* {{tl|is-conj|w1/+ur.-mid|pagename=hvetja}}
 
 ;irregular in -ggja
 * <<leggja|to lay>> (legg, lagði, lagður) [NOTE: BÍN lists both middle question forms and middle imperatives, as well as active impersonal with accusative subject and middle impersonal with dative subject; there is also the middle past participle lagstur; the note mentions a proscribed 2s joined imperative legðu, found in texts; Einarsson says there is an alternative past participle laginn but BÍN recognizes it only as an adjective]
@@ -61,6 +65,8 @@
 * {{tl|is-conj|w1/+ur.-mid|pagename=bryðja}}
 * <<ryðja|to clear (out of the way)>> (ryð, ruddi, ruddur) [NOTE: BÍN includes both middle question forms and middle imperatives]
 * {{tl|is-conj|w1/+ur.mid|pagename=ryðja}}
+* <<lykja|to lock (up), to enclose>> (lyk, lykti, lyktur) [NOTE: BÍN omits both middle question forms and middle imperatives]
+* {{tl|is-conj|w1/+:+ur.mid.addnote[act][rare]|pagename=lykja}}
 
 ;type c (usually -ý- root vowel)
 * <<flýja|to flee, to fly>>, also found in the infinitive as <<flúa>> (flý, flúði or flýði but only flýði in the past subjunctive [which is expected as the past subj. of weak-1 verbs has i-mutation], flúinn(flún-)) [no middle per BÍN]
