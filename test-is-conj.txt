@@ -251,3 +251,46 @@
 * {{tl|is-conj|w4.mid|pagename=flaka}}
 * <<brosa|to smile>> (brosi, brosti, brosað) [per BÍN, supine but not pp; no middle]
 * {{tl|is-conj|w3/-,+.-mid|pagename=brosa}}
+* <<duga|to avail>> (dugi/duga, dugði/dugaði, past sub. dygði/dugaði, dugað) [per BÍN, supine but not pp; no middle; has impersonal, both with dative subject and subjectless]
+* {{tl|is-conj|((<w3,+,^/-,+.-mid>,<w4/-,+.-mid>))|pagename=duga}}
+* {{tl|is-conj|w3:w4,+,dygði:dugaði/-,+.-mid|pagename=duga}}
+* <<una|to like, to enjoy>> (uni, undi, past sub. yndi, unað) [per BÍN, supine but not pp; no middle]
+* {{tl|is-conj|w3,+,^/-,+.-mid|pagename=una}}
+
+; type c1: stems in a lax vowel + two consonants
+* <<horfa|to look at, to watch; to look, to appear, to seem>> (horfi, horfði, horft) [per BÍN, supine but not pp; middle with both middle question forms and middle imperative; both active and middle subjectless impersonal]
+* {{tl|is-conj|w3/-,+.mid+imp|pagename=horfa}}
+* <<hanga|to hang>> (hangi, hékk#héngum, past subj. héngi pl. héngjum [FIXME: is this regular? yes, per p. 94 section 5 of Einarsson], hanginn(n)) [per BÍN, no middle]; the following combines present weak 3 with past strong 7
+* {{tl|is-conj|((<w3,-.-mid>,<s7,-#-\hékk#héngum.-mid>))|pagename=horfa}}
+* <<glotta|to grin>> (glotti, glotti, glott) [per BÍN, supine but not pp; no middle]
+* {{tl|is-conj|w3/-,+.-mid|pagename=glotta}}
+* <<skorta|to lack>> (skortir, skorti, skort) [per BÍN, impersonal, with accusative subject or subjectless; no middle; no imperative or question forms, which is expected for an impersonal verb]
+* {{tl|is-conj|w3/-,+.-mid.impers|pagename=skorta}}
+* <<hvolfa|to capsize>> (hvolfi, hvolfdi, hvolft) [per BÍN, supine but not pp; has active impersonal with dative subject; has middle question forms but no middle imperative; not -d not -ð because of the l; see Einarsson's detailed notes]
+* {{tl|is-conj|w3/-,+.mid|pagename=hvolfa}}
+
+; type c2: stems in a tense vowel + one or more consonants
+* <<slóra|to loaf, to loiter, to slack off, to hang around>> (slori, slorði, slort/slorað) [per Einarsson]
+* <<slóra|to loaf, to loiter, to slack off, to hang around>> (slora, sloraði, sloraður) [per BÍN and ÍNO; has pp and middle; has middle question forms but no middle imperative]
+* {{tl|is-conj|w4.mid|pagename=slóra}}
+* <<góna|to stare>> (góni, góndi, gónt) [per BÍN; supine but not pp; no middle]
+* {{tl|is-conj|w3/-,+.-mid|pagename=góna}}
+* <<glápa|to stare>> (glápi, glápdi, glápt) [per BÍN; supine but not pp; no middle]
+* {{tl|is-conj|w3/-,+.-mid|pagename=glápa}}
+* <<húka|to squat>> (húki, húkdi, húkt) [per BÍN; supine but not pp; no middle]
+* {{tl|is-conj|w3/-,+.-mid|pagename=húka}}
+* <<skúta|to jut out, to protrude, to overhang>> (skúti, skútti, skútt) [per Einarsson]
+* {{tl|is-conj|w3/-,+.-mid|pagename=húka}}
+* <<skúta|to jut out, to protrude, to overhang? or is this a totally different verb?>> (skúta, skútaði, skútaður) [per BÍN; weak 4; has middle but no middle question form or middle imperative; no active question form either]
+* {{tl|is-conj|w4.mid-q.-q|pagename=skúta}}
+* <<slúta|to project, to hang down>> (slúta, slútti, slútt) [per BÍN; supine but not pp; no middle; no question forms]
+* {{tl|is-conj|w3/-,+.-mid.-q|pagename=slúta}}
+* <<tolla|to stand still>> (tolli, tolldi, past sub. tylldi, tollað) [per BÍN; supine but not pp; no middle]
+* {{tl|is-conj|w3,+,y/-,tollað.-mid|pagename=tolla}}
+* <<tolla|to tax>> (tolla, tollaði, tollaður) [per BÍN; middle question forms but no middle imperative]
+* {{tl|is-conj|w4.mid|pagename=tolla}}
+
+; type d: irregular preterites
+* <<olla|to cause>> (olli, olli, past sub. ylli, ollað) [per Einarsson; not in BÍN, ÍNO or Íslenks orðsifjabók; in Ritmálssafn]
+* {{tl|is-conj|w3,+,y/-,tollað.-mid|pagename=tolla}}
+* <<valda|to cause>> (veld, olli, past sub. ylli, valdið) [per BÍN; also mentioned in Einarsson with exactly same principal parts as alternative to olla]
