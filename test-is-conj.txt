@@ -81,7 +81,7 @@
 * {{m|is|rýja||to shear (the wool)}} (ryí or rý[archaic and no longer recommended], rúði, rúinn(rún-) or rúður; note only rýi in the present subjunctive [which is expected as the pres. subj. is based off of the indic pl. stem, which is only rýjum/rýið/rýja], rúði not rýði in the past subjunctive [which is unexpected for weak class 1]) [weak class 3 [maybe actually 2] or 1 per Einarsson; forms given here are from BÍN; no middle; past participle unexpectedly omits forms starting with rúðr- i.e. fem dat sg. #rúðri, fem gen sg. #rúðrar, gen pl. #rúðra; FIXME: there should be a better way of handling this, esp. if it occurs in several verbs]
 * {{tl|is-conj|w3:w1,rýi:rý[archaic and no longer recommended]\rúði,rúði/rúinn:rúður.-mid.pp_dat_f:rúinni.pp_gen_f:rúinnar.pp_gen_p:rúinna|pagename=rýja}}
 * {{m|is|tæja||to tease; to pick the wool}}, also found in the infinitive as {{m|is|tá}} in literature (per BÍN, weak 3 [maybe actually 2] in two variants: tæi or tái but only tæjum in the plural, táði, táður or táinn(tán-); present subjunctive irregularly tæi or tái in the singular, only tæjum in the plural, much like indicative, but strangely the 3s is tæi or táir instead of expected tæi or tái; I assume this is a mistake) (per Einarsson: tæ, táði, táinn "also weak class 3") [no middle or imperative per BÍN]; in the following, before the backslash is the present, which is of the form INDIC,SUBJ or extended as INDICSG#INDICPL,SUBJSG#SUBJPL where if omitted the INDICPL comes by default from the infinitive stem, the subjunctive singular defaults to the indicative plural stem, and the subjunctive plural defaults to the subjunctive singular stem (FIXME: make sure this latter default is correct); between \ and / is the past, which is either of the same form as the present or the subjunctive can be specified in parens after an individual indicative form, giving the whole subjunctive matching a given indicative form or ^ to indicate umlaut or -^ to indicate no umlaut; after the slash is the past participle
-* {{tl|is-conj|w3,tæi:tái,tæi:tái#tæjum\táði(^)/táður:táinn.-mid.-imp|pagename=tæja}}
+* {{tl|is-conj|w3,tæi:tái,tæi:tái#tæjum\táði,^/táður:táinn.-mid.-imp|pagename=tæja}}
 
 ;type d (-e-/-i- root vowel without reverse i-mutation)
 * {{m|is|selja||to sell}} (sel, seldi, seldur) [NOTE: BÍN lists middle question forms but not middle imperatives]
@@ -292,5 +292,36 @@
 
 ; type d: irregular preterites
 * <<olla|to cause>> (olli, olli, past sub. ylli, ollað) [per Einarsson; not in BÍN, ÍNO or Íslenks orðsifjabók; in Ritmálssafn]
-* {{tl|is-conj|w3,+,y/-,tollað.-mid|pagename=tolla}}
-* <<valda|to cause>> (veld, olli, past sub. ylli, valdið) [per BÍN; also mentioned in Einarsson with exactly same principal parts as alternative to olla]
+* <<valda|to cause; to manage, to successfully do (a task)>> (veld, olli, past sub. ylli, valdið) [per BÍN; no middle, no imperative; supine but no pp; also mentioned in Einarsson with exactly same principal parts as alternative to olla]
+* {{tl|is-conj|w1,olli,y/-,valdið.-mid.-imp|pagename=valda}}
+* <<valda|to protect, to guard (a piece in chess)>> (valda, valdaði, valdaður) [per BÍN; weak 4; has middle question form but no middle imperative]
+* {{tl|is-conj|w4.mid|pagename=valda}}
+* <<skolla|to hang loosely>> (skolli, skolli, past sub. skolli, skollað) [per Einarsson; not in BÍN or ÍNO; in Íslenks orðsifjabók meaning "to dangle; to prove unreliable or deceitful"]
+* <<skrolla|to hang loosely>> (skrolli, skrolli, past sub. skrolli, skrollað) [per Einarsson; not in BÍN or ÍNO; in Íslenks orðsifjabók meaning "to be too wide, to be loose (of clothes); to float on top of"]
+* <<skrolla|to laugh loudly>> (per Íslenks orðsifjabók)
+* <<skrolla|to pronounce a guttural /r/>> (in ÍNO and Íslenks orðsifjabók; apparently weak 4)
+* <<skrolla|to scroll (in a computer)>> (skrolla, skrollaði, skrollaður) [per BÍN; has middle question form but no middle imperative]
+* {{tl|is-conj|w4.mid|pagename=skrolla}}
+
+; type e [my invention]: j-presents
+* <<segja|to say>> (segi, sagði, past subj. segði, sagður) [per BIN, has impersonal middle with dative subject; has middle question forms but no middle imperative; NOTE: 1p pres ind segjum, probably regular; weak 3 j-presents have reverse u-mutation by default in past and past participle, but umlaut in the past subjunctive only happens in strong and weak 1 verbs; expected pp is #sagaður (?) rather than sagður]
+* {{tl|is-conj|w3,+,^/sagður.mid|pagename=segja}}
+* <<þegja|to be silent>> (þegi, þagði, past subj. þegði, þagaður/þagður<nonvnonsylstem:->) [per BIN, no middle; past part is þagaður or þagður, but only the former form is used before non-vowel, non-syllabic endings, i.e. gen m/n s, nom f s, nom/acc n s, nom/acc n p; imp 2s þegi or þeg (very rare) but joined imp 2s only þegiðu]
+* {{tl|is-conj|w3,+,^/þagaður:þagður<nonvnonsylstem:->.-mid.imp_2s:þegi:þeg[very rare].imp_2sj:þegiðu|pagename=þegja}}
+* <<æja|rest and graze horses>> listed farther up in weak 3
+* <<heyja|to hold (a meeting); to carry out; to wage (a battle)>> (hey/heyi, háði, past subj. háði, háður) [per BIN, middle is reciprocal with only plural forms; no middle question forms, which makes sense as the middle question form is singular-only; no middle imperative; past participle should be derivable from past indic; past subj given because w1 would umlaut it but weak 3 wouldn't; infinitive há appears in texts]
+* {{tl|is-conj|w1:w3,háði,háði.mid<onlypl>|pagename=heyja}}
+* <<heyja|to make hay>> (heyja, heyjaði, heyjaður) [per BÍN, middle is subjectless impersonal only]
+* {{tl|is-conj|w4.mid<impers>|pagename=heyja}}
+* <<tæja|to tease; to pick (wool)>> listed farther up in weak 1
+* <<dýja|to shake (of quicksand)>> listed farther up in weak 3
+* <<hlýja|to warm; to cover up>> (hlýi, hlúði, past subj. hlúði, hlúð) [per Einarsson; also hlú(a), hlúi]
+* <<hlýja|to warm; to cover up>> (hlýja, hlýjaði, hlýjað) [per BÍN and ÍNO; no middle, supine but no pp]
+* {{tl|is-conj|w4,-,+.-mid|pagename=hlýja}}
+* <<hlúa|to warm; to cover up>> (hlúi, hlúði, past subj. hlúði, hlúð:hlúað) [per BÍN; supine but no pp; no middle]
+* {{tl|is-conj|w3,-,hlúð:hlúað.-mid|pagename=hlýja}}
+* <<lýja|to tire>> (lýi, lúði, past subj. lýði, lúður:lúinn<n>, supine lúið:lúð but middle supine lúðst:lúist) [per BÍN; has middle question forms but no middle imperative]
+* {{tl|is-conj|w4,+,^/lúður:lúinn,lúið:lúð.mid</+,lúð:lúið>|pagename=lýja}}
+* <<rýja|to shear (the wool)>> listed farther up in weak 1
+* <<spýja|to spew, to vomit>> (spý, spjó/spúði#spúðum, past subj. spýði, spúið/spúð) [per BÍN, supine but not pp; middle question forms but no middle imperative; BÍN says pp's spúinn and spúður can be found in Islandsk grammatik from 1922 but examples are very rare]
+* {{tl|is-conj|w1:s7,spjó:spúði#spúðum,^/-,spúið:spúð.mid|pagename=spýja}}
