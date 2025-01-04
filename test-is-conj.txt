@@ -39,7 +39,7 @@
 
 ;irregular in -ggja
 * {{m|is|leggja||to lay}} (legg, lagði, lagður) [NOTE: BÍN lists both middle question forms and middle imperatives, as well as active impersonal with accusative subject and middle impersonal with dative subject; there is also the middle past participle lagstur; the note mentions a proscribed 2s joined imperative legðu, found in texts; Einarsson says there is an alternative past participle laginn but BÍN recognizes it only as an adjective]
-* {{tl|is-conj|w1,lagði/lagður.mid.midpp:lagstur.imp_2sj:+:legðu[proscribed but found in writing]|pagename=leggja}}
+* {{tl|is-conj|w1,lagði/lagður.mid<+/lagstur>.imp_2sj:+:legðu[proscribed but found in writing]|pagename=leggja}}
 * {{m|is|þiggja||to accept}} (þigg, þáði:þá[archaic]#þáðum:þágum, past subj. þægi/þæði, þeginn(þegn-) or þáður) [NOTE: per BÍN, no middle]
 * {{tl|is-conj|w1:s5,þáði:þá[archaic]#þáðum:þágum,þægi:þæði/þeginn(n):þáður.-mid|pagename=þiggja}}
 * {{m|is|hyggja||to think}} (hygg, hugði, no past participle or suple) [NOTE: BÍN lists both middle question forms and middle imperatives]
@@ -89,7 +89,7 @@
 * {{m|is|skilja||to understand}} (skil, skildi, skilinn(skild-)) [NOTE: per BÍN, also impersonal in both active and middle [FIXME: should we list impersonal forms separately? Probably not since they're easily derivable from the 3s of personal conjugations]; BÍN lists middle question forms but not middle imperatives]
 * {{tl|is-conj|w1.mid|pagename=skilja}}
 * {{m|is|setja||to set}} (set, setti, settur) [per BÍN, also impersonal in the active, distinguishing types of impersonal, one with dative subject given with all persons, and one without subject given only in the 3rd person with það; BÍN includes both middle question forms and middle imperatives; also has a special middle voice past participle [[sestur]] ]
-* {{tl|is-conj|w1,setti/+ur.mid.midpp:sestur|pagename=setta}}
+* {{tl|is-conj|w1,setti/+ur.mid<+/sestur>|pagename=setta}}
 * {{m|is|deyja||to die}} (dey, deyði, [deyður]) [per Einarsson, "usually strong class 6"]
 * {{m|is|deyja||to die}} (dey, dó, dóum, past subj. dæi, dáinn(dán-)) [per BÍN; no middle]
 * {{tl|is-conj|s6.-mid|pagename=deyja}}
@@ -105,7 +105,7 @@
 * {{m|is|ljá||to lend}} (ljæ or ljái, léði or ljáði, léður, pres subj only ljái [expected], pret subj only léði [unexpected], supine léð/ljáð [unexpected]) [per BÍN; no middle]; note supine and neut sg léð not #létt
 * {{tl|is-conj|w1:w3,léði:ljáði,léði/léður,léð:ljáð.-mid|pagename=ljá}}
 * {{m|is|tjá||to tell}} (tjái, tjáði or téði[now rare], léður, pres subj only tjái [expected], pret subj tjáði or téði [expected], past participle tjáður [téður also expected but now only an adjective] supine tjáð [expected]) [per BÍN; middle question forms but no middle imperative; middle past and past subjunctive only with tjáð-]
-* {{tl|is-conj|w3,+:téði[now rare]/tjáður.mid.midpast:tjáði|pagename=tjá}}
+* {{tl|is-conj|w3,+:téði[now rare]/tjáður.mid<+,tjáði>|pagename=tjá}}
 * {{m|is|hafa||to have}} (hef[dominant in speech] or hefi[common in writing], hafði, hafður, pres subj hefði) [BÍN: has both middle question forms and middle imperatives]; the following assigns the two presents to weak 1 and weak 3, but disables the past and middle in weak 3 as only weak 1 forms seem to exist there, except for literary supine hafað, not mentioned in the tables but included below; FIXME: BÍN also includes past infinitive hefðu, we should include it somehow]
 * {{tl|is-conj|((<w1,+[dominant in speech]\/+ur.mid.pastinf:hefðu>,<w3,+[common in writing]\-/-,+[literary].-mid>))|pagename=hafa}}
 * {{m|is|fela||to conceal}} (fel, faldi, falinn) [per Einarsson; "also strong class 4 and 6"]
@@ -183,7 +183,7 @@
 * <<hvá|to say [[hvað]], to beg one's pardon>> (hvái, hváði, hváð) [per BÍN: no middle, supine but no pp]
 * {{tl|is-conj|w3/-,+.-mid|pagename=hvá}}
 * <<lá|to blame (someone [dat] for something [acc]); (middle) to forget (to do something), to omit (doing something)>> (lái, láði, láð) [per BÍN: middle impersonal only, both with dative subject and subjectless; also subjectless impersonal in the active; supine but no pp; no middle imperative or question forms, probably necessarily given it's impersonal-only]
-* {{tl|is-conj|w3/-,+.midimpers|pagename=lá}}
+* {{tl|is-conj|w3/-,+.mid<impers>|pagename=lá}}
 * <<má|to erase>> (mái, máði, máður) [per BÍN, middle question forms but no middle imperative]
 * {{tl|is-conj|w3.mid|pagename=má}}
 * <<sá|to sow>> (sái, sáði, sáður) [per BÍN, middle question forms but no middle imperative]
@@ -240,7 +240,7 @@
 * <<vara|to suspect>> (vari, varði, varað, impersonal) [per BÍN, supine but not pp; impersonal with accusative subject or subjectless; no middle; no imperative or question forms, which should be the default for impersonal verbs]
 * {{tl|is-conj|w3/-,+.-mid.impers|pagename=vara}}
 * <<vara|to warn, to beware>> (vara, varaði, varaður) [per BÍN; has both middle question forms and middle imperative]
-* {{tl|is-conj|w4.mid+imp|pagename=vara}}
+* {{tl|is-conj|w4.mid<+imp>|pagename=vara}}
 * <<vofa|to threaten, to hang (over)>> +[[yfir]] (vofi, vofði, vofað) [per BÍN, supine but not pp; no middle; no imperative]
 * {{tl|is-conj|w3/-,+.-mid.-imp|pagename=vofa}}
 * <<blasa|to lie open before the eye>> +[[við]] (blasi, blasti, blasað) [per BÍN, supine but not pp; no middle; no imperative]
@@ -259,7 +259,7 @@
 
 ; type c1: stems in a lax vowel + two consonants
 * <<horfa|to look at, to watch; to look, to appear, to seem>> (horfi, horfði, horft) [per BÍN, supine but not pp; middle with both middle question forms and middle imperative; both active and middle subjectless impersonal]
-* {{tl|is-conj|w3/-,+.mid+imp|pagename=horfa}}
+* {{tl|is-conj|w3/-,+.mid<+imp>|pagename=horfa}}
 * <<hanga|to hang>> (hangi, hékk#héngum, past subj. héngi pl. héngjum [FIXME: is this regular? yes, per p. 94 section 5 of Einarsson], hanginn(n)) [per BÍN, no middle]; the following combines present weak 3 with past strong 7
 * {{tl|is-conj|((<w3,-.-mid>,<s7,-#-\hékk#héngum.-mid>))|pagename=horfa}}
 * <<glotta|to grin>> (glotti, glotti, glott) [per BÍN, supine but not pp; no middle]
@@ -268,6 +268,10 @@
 * {{tl|is-conj|w3/-,+.-mid.impers|pagename=skorta}}
 * <<hvolfa|to capsize>> (hvolfi, hvolfdi, hvolft) [per BÍN, supine but not pp; has active impersonal with dative subject; has middle question forms but no middle imperative; not -d not -ð because of the l; see Einarsson's detailed notes]
 * {{tl|is-conj|w3/-,+.mid|pagename=hvolfa}}
+* <<snerta|to touch; to concern, to affect>> (snerti, snerti/snart[literary, solemn]#snertum/snurtum[literary, rare], past subj. only snerti, snertur/snortinn(n)[only in the sense "to move (emotionally)"]) [per BÍN, has middle but not middle question forms or imperative; midle has no strong forms]
+* {{tl|is-conj|((<w3.mid<-q>>,<s3,-#-\+[literary, solemn]#+[literary, rare],-/+[only in the sense "to move (emotionally)"].-mid>))|pagename=snerta}}
+* <<ugga|to fear>> (uggi, uggði, past subj. uggði, uggað) [per BÍN, no middle; supine but no pp]
+* {{tl|is-conj|w3,+,^/-,uggað.-mid|pagename=ugga}}
 
 ; type c2: stems in a tense vowel + one or more consonants
 * <<slóra|to loaf, to loiter, to slack off, to hang around>> (slori, slorði, slort/slorað) [per Einarsson]
@@ -282,7 +286,7 @@
 * <<skúta|to jut out, to protrude, to overhang>> (skúti, skútti, skútt) [per Einarsson]
 * {{tl|is-conj|w3/-,+.-mid|pagename=húka}}
 * <<skúta|to jut out, to protrude, to overhang? or is this a totally different verb?>> (skúta, skútaði, skútaður) [per BÍN; weak 4; has middle but no middle question form or middle imperative; no active question form either]
-* {{tl|is-conj|w4.mid-q.-q|pagename=skúta}}
+* {{tl|is-conj|w4.mid<-q>.-q|pagename=skúta}}
 * <<slúta|to project, to hang down>> (slúta, slútti, slútt) [per BÍN; supine but not pp; no middle; no question forms]
 * {{tl|is-conj|w3/-,+.-mid.-q|pagename=slúta}}
 * <<tolla|to stand still>> (tolli, tolldi, past sub. tylldi, tollað) [per BÍN; supine but not pp; no middle]
@@ -306,8 +310,8 @@
 ; type e [my invention]: j-presents
 * <<segja|to say>> (segi, sagði, past subj. segði, sagður) [per BIN, has impersonal middle with dative subject; has middle question forms but no middle imperative; NOTE: 1p pres ind segjum, probably regular; weak 3 j-presents have reverse u-mutation by default in past and past participle, but umlaut in the past subjunctive only happens in strong and weak 1 verbs; expected pp is #sagaður (?) rather than sagður]
 * {{tl|is-conj|w3,+,^/sagður.mid|pagename=segja}}
-* <<þegja|to be silent>> (þegi, þagði, past subj. þegði, þagaður/þagður<nonvnonsylstem:->) [per BIN, no middle; past part is þagaður or þagður, but only the former form is used before non-vowel, non-syllabic endings, i.e. gen m/n s, nom f s, nom/acc n s, nom/acc n p; imp 2s þegi or þeg (very rare) but joined imp 2s only þegiðu]
-* {{tl|is-conj|w3,+,^/þagaður:þagður<nonvnonsylstem:->.-mid.imp_2s:þegi:þeg[very rare].imp_2sj:þegiðu|pagename=þegja}}
+* <<þegja|to be silent>> (þegi, þagði, past subj. þegði, þagaður/þagður<nonsylstem:->) [per BIN, no middle; past part is þagaður or þagður, but only the former form is used before non-syllabic endings, i.e. gen m/n s, nom f s, nom/acc n s, nom/acc n p; imp 2s þegi or þeg (very rare) but joined imp 2s only þegiðu]
+* {{tl|is-conj|w3,+,^/þagaður:þagður<nonsylstem:->.-mid.imp_2s:þegi:þeg[very rare].imp_2sj:þegiðu|pagename=þegja}}
 * <<æja|rest and graze horses>> listed farther up in weak 3
 * <<heyja|to hold (a meeting); to carry out; to wage (a battle)>> (hey/heyi, háði, past subj. háði, háður) [per BIN, middle is reciprocal with only plural forms; no middle question forms, which makes sense as the middle question form is singular-only; no middle imperative; past participle should be derivable from past indic; past subj given because w1 would umlaut it but weak 3 wouldn't; infinitive há appears in texts]
 * {{tl|is-conj|w1:w3,háði,háði.mid<onlypl>|pagename=heyja}}
