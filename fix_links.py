@@ -230,6 +230,7 @@ language_codes_to_properties = {
     'nl':["Dutch", lambda x:x, latin_charset, "latin"],
     'nn':["Norwegian Nynorsk", lambda x:x, latin_charset, "latin"],
     'no':["Norwegian", lambda x:x, latin_charset, "latin"],
+    'non':["Old Norse", lambda x:x, latin_charset, "latin"],
     'oc':["Occitan", lambda x:x, latin_charset, "latin"],
     'or':["Oriya", lambda x:x, "\u0B01-\u0B77", False],
     'pa':["Punjabi", lambda x:x, "\u0A01-\u0A75", "notranslit"],
