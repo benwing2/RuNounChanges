@@ -80,13 +80,13 @@ def process_text_on_page(pageindex, pagetitle, text):
         qualifier = None
         while True:
           # check for qualifiers specified using a qualifier template
-          m = re.search("^(.*?)\{\{(?:qualifier|qual|q|i)\|([^{}|=]*)\}\}(.*?)$", syns)
+          m = re.search(r"^(.*?)\{\{(?:qualifier|qual|q|i)\|([^{}|=]*)\}\}(.*?)$", syns)
           if m:
             before_text, qualifier, after_text = m.groups()
             syns = before_text + after_text
             break
           # check for qualifiers using e.g. {{lb|ru|...}}
-          m = re.search("^(.*?)\{\{(?:lb)\|%s\|([^{}=]*)\}\}(.*?)$" % re.escape(args.langcode), syns)
+          m = re.search(r"^(.*?)\{\{(?:lb)\|%s\|([^{}=]*)\}\}(.*?)$" % re.escape(args.langcode), syns)
           if m:
             before_text, qualifier, after_text = m.groups()
             # do this before handling often/sometimes/etc. in case the label has often|_|pejorative or similar
@@ -101,13 +101,13 @@ def process_text_on_page(pageindex, pagetitle, text):
             syns = before_text + after_text
             break
           # check for qualifier-like ''(...)''
-          m = re.search("^(.*?)''\(([^'{}]*)\)''(.*?)$", syns)
+          m = re.search(r"^(.*?)''\(([^'{}]*)\)''(.*?)$", syns)
           if m:
             before_text, qualifier, after_text = m.groups()
             syns = before_text + after_text
             break
           # check for qualifier-like (''...'')
-          m = re.search("^(.*?)\(''([^'{}]*)''\)(.*?)$", syns)
+          m = re.search(r"^(.*?)\(''([^'{}]*)''\)(.*?)$", syns)
           if m:
             before_text, qualifier, after_text = m.groups()
             syns = before_text + after_text
