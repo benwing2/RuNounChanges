@@ -1,16 +1,65 @@
 local export = {}
 
-local dump = mw.dumpObject
-local labels_module = "Module:labels"
-local languages_module = "Module:languages"
+local debug_track_module = "Module:debug/track"
 local parameters_module = "Module:parameters"
 local parse_utilities_module = "Module:parse utilities"
-local references_module = "Module:references"
-local scripts_module = "Module:scripts"
 local table_module = "Module:table"
 
+local dump = mw.dumpObject
+
+--[==[
+Loaders for functions in other modules, which overwrite themselves with the target function when called. This ensures modules are only loaded when needed, retains the speed/convenience of locally-declared pre-loaded functions, and has no overhead after the first call, since the target functions are called directly in any subsequent calls.]==]
+	local function debug_track(...)
+		debug_track = require(debug_track_module)
+		return debug_track(...)
+	end
+	
+	local function length(...)
+		length = require(table_module).length
+		return length(...)
+	end
+	
+	local function list_to_set(...)
+		list_to_set = require(table_module).listToSet
+		return list_to_set(...)
+	end
+	
+	local function parse_term_with_lang(...)
+		parse_term_with_lang = require(parse_utilities_module).parse_term_with_lang
+		return parse_term_with_lang(...)
+	end
+	
+	local function parse_inline_modifiers(...)
+		parse_inline_modifiers = require(parse_utilities_module).parse_inline_modifiers
+		return parse_inline_modifiers(...)
+	end
+	
+	local function process_params(...)
+		process_params = require(parameters_module).process
+		return process_params(...)
+	end
+	
+	local function shallow_copy(...)
+		shallow_copy = require(table_module).shallowCopy
+		return shallow_copy(...)
+	end
+	
+	local function term_contains_top_level_html(...)
+		term_contains_top_level_html = require(parse_utilities_module).term_contains_top_level_html
+		return term_contains_top_level_html(...)
+	end
+
 local function track(page, track_module)
-	return require("Module:debug/track")((track_module or "parameter utilities") .. "/" .. page)
+	return debug_track((track_module or "parameter utilities") .. "/" .. page)
+end
+
+-- Throw an error prefixed with the words "Internal error" (and suffixed with a dumped version of `spec`, if provided).
+-- This is for logic errors in the code itself rather than template user errors.
+local function internal_error(msg, spec)
+	if spec then
+		msg = ("%s: %s"):format(msg, dump(spec))
+	end
+	error(("Internal error: %s"):format(msg))
 end
 
 -- Table listing the recognized special separator arguments and how they display.
@@ -55,7 +104,7 @@ function export.show(frame)
 	-- `disallow_holes = true` (if omitting terms is not allowed). (If neither `allow_holes` nor `disallow_holes` is
 	-- specified, an error is thrown in process_list_arguments().)
 	local params = {
-		[1] = {required = true, type = "language", etym_lang = true, default = "und"},
+		[1] = {required = true, type = "language", default = "und"},
 		[2] = {list = true, allow_holes = true, required = true, default = "term"},
 	}
 
@@ -105,11 +154,11 @@ conceptually very similar to the `param_mods` structure used by `parse_inline_mo
 parameter (e.g. {"t"}, {"pos"}) and the value is a table with optional elements as follows:
 * `item_dest`, `store`: Same as the corresponding fields in the `param_mods` structure passed to
   `parse_inline_modifiers()`.
-* `type`, `set`, `sublist`, `convert` and associated fields such as `etym_lang`, `family` and `method`: These control
-  parsing and conversion of the raw values specified by the user and have the same meaning as in [[Module:parameters]]
-  and also in `parse_inline_modifiers()` (which delegates the actual conversion to [[Module:parameters]]). These fields
-  — and for that matter, all fields other than `item_dest`, `store` and `overall` — are forwarded to the `process()`
-  function in [[Module:parameters]].
+* `type`, `set`, `sublist`, `convert` and associated fields such as `family` and `method`: These control parsing and
+  conversion of the raw values specified by the user and have the same meaning as in [[Module:parameters]] and also in
+  `parse_inline_modifiers()` (which delegates the actual conversion to [[Module:parameters]]). These fields — and for
+  that matter, all fields other than `item_dest`, `store` and `overall` — are forwarded to the `process()` function in
+  [[Module:parameters]].
 * `alias_of`: This parameter is an alias of some other parameter. This spec is recognized only by `process()` in
   [[Module:parameters]], and not by `parse_inline_modifiers()`; to set up an alias in `parse_inline_modifiers()`, you
   need to make sure (using `item_dest`) that both the alias and aliasee modifiers store their values in the same
@@ -242,7 +291,6 @@ local recognized_param_mod_groups = {
 		lang = {
 			require_index = true,
 			type = "language",
-			etym_lang = true,
 		},
 	},
 	q = {
@@ -267,8 +315,7 @@ local recognized_param_mod_groups = {
 
 
 local function merge_param_mod_settings(orig, additions)
-	local shallowcopy = require(table_module).shallowcopy
-	local merged = shallowcopy(orig)
+	local merged = shallow_copy(orig)
 	for k, v in pairs(additions) do
 		merged[k] = v
 		if k == "require_index" then
@@ -302,6 +349,7 @@ local function verify_well_constructed_spec(spec)
 	if num_control == 0 then
 		internal_error(
 			"Spec passed to construct_param_mods() must have either the `default`, `group` or `param` keys set", spec)
+	end
 	if num_control > 1 then
 		internal_error(
 			"Exactly one of `default`, `group` or `param` must be set in construct_param_mods() spec", spec)
@@ -385,7 +433,7 @@ The built-in parameter groups are as follows:
 ! Group !! Group meaning !! Parameter !! Parameter meaning !! Default properties
 |-
 | rowspan=10| `link`
-| link parameters; same as those available on {{tl|l}}, {{tl|m}} and other linking templates
+| rowspan=10| link parameters; same as those available on {{tl|l}}, {{tl|m}} and other linking templates
 | `alt` || display text, overriding the term's display form || —
 |-
 | `t` || gloss (translation) of a non-English term || {item_dest = "gloss"}
@@ -407,19 +455,19 @@ The built-in parameter groups are as follows:
 | `sc` || the script code (see [[Wiktionary:Scripts]]) for the script that the term is written in; rarely necessary, as the script is autodetected (in most cases, correctly) || {separate_no_index = true, type = "script"}
 |-
 | rowspan=2| `q`
-| left and right normal qualifiers (as displayed using {{tl|q}})
+| rowspan=2| left and right normal qualifiers (as displayed using {{tl|q}})
 | `q` || left normal qualifier || {separate_no_index = true, type = "qualifier"}
 |-
 | `qq` || right normal qualifier || {separate_no_index = true, type = "qualifier"}
 |-
 | rowspan=2| `a`
-| left and right accent qualifiers (as displayed using {{tl|a}})
+| rowspan=2| left and right accent qualifiers (as displayed using {{tl|a}})
 | `a` || comma-separated list of left accent qualifiers; whitespace must not surround the comma || {separate_no_index = true, type = "labels"}
 |-
 | `aa` || comma-separated list of right accent qualifiers; whitespace must not surround the comma || {separate_no_index = true, type = "labels"}
 |-
 | rowspan=2| `l`
-| left and right labels (as displayed using {{tl|lb}}, but without categorizing)
+| rowspan=2| left and right labels (as displayed using {{tl|lb}}, but without categorizing)
 | `l` || comma-separated list of left labels; whitespace must not surround the comma || {separate_no_index = true, type = "labels"}
 |-
 | `ll` || comma-separated list of right labels; whitespace must not surround the comma || {separate_no_index = true, type = "labels"}
@@ -430,17 +478,17 @@ The built-in parameter groups are as follows:
 |-
 | `lang`
 | language for an individual term (provided for compatibility; it is preferred to specify languages for individual terms using language prefixes instead)
-| `lang` || language code (see [[Wiktionary:Languages]]) for the term || {require_index = true, type = "language", etym_lang = true}
+| `lang` || language code (see [[Wiktionary:Languages]]) for the term || {require_index = true, type = "language"}
 |}
 ]==]
 function export.construct_param_mods(specs)
-	local shallowcopy = require(table_module).shallowcopy
 	local param_mods = {}
 	local default_specs = {}
 	for _, spec in ipairs(specs) do
 		verify_well_constructed_spec(spec)
 		if spec.default then
-			default_specs = spec.default
+			-- This will have an extra `default` field in it, but it will be erased by merge_param_mod_settings()
+			default_specs = spec
 		else
 			if spec.group then
 				local groups = spec.group
@@ -449,11 +497,11 @@ function export.construct_param_mods(specs)
 				end
 				local include_set
 				if spec.include then
-					include_set = require(table_module).listToSet(spec.include)
+					include_set = list_to_set(spec.include)
 				end
 				local exclude_set
 				if spec.exclude then
-					exclude_set = require(table_module).listToSet(spec.exclude)
+					exclude_set = list_to_set(spec.exclude)
 				end
 				for _, group in ipairs(groups) do
 					local group_specs = recognized_param_mod_groups[group]
@@ -515,79 +563,6 @@ function export.construct_param_mods(specs)
 	return param_mods
 end
 
---[==[
-'''FIXME''': This will be deleted as soon as all new code is pushed, as nothing will rely on this.
-
-Add "pronunciation qualifiers" to `param_mods`. By default, this consists of {"q"}, {"qq"}, {"a"}, {"aa"} and {"ref"},
-along with `type` values to appropriately parse and convert the values. By default, all but {"ref"} have
-`separate_no_index = true` set. The `qspecs` parameter can be used to override the set of properties added and
-optionally the specs for these properties. Its value is a list of specs, each of which is either a string (a parameter
-set to add) or an object containing properties `param` (the parameter set to add) and any additional properties to set
-in the parameter specs. Any specified properties override default values (see below). For example, if
-`separate_no_index` is specified and set to {true} or {false}, it overrides the default value of `separate_no_index`
-associated with the parameters specified by `param`. The possible values of `param`, the respective parameters
-controlled and their default values are specified in the following table:
-
-{|class="wikitable"
-! value of `param` !! parameters controlled !! meaning !! destination field !! default for `separate_no_index`
-|-
-| {"q"} || {"q"}, {"qq"} || left and right regular qualifier || `q`, `qq` || {true}
-|-
-| {"a"} || {"a"}, {"aa"} || left and right comma-separated list of accent qualifiers || `a`, `aa` || {true}
-|-
-| {"l"} || {"l"}, {"ll"} || left and right comma-separated list of labels || `l`, `ll` || {true}
-|-
-| {"ref"} || {"ref"} || references of the format used by [[Module:references]] || `refs` || {false}
-|}
-]==]
-function export.augment_param_mods_with_pron_qualifiers(param_mods, qspecs)
-	qspecs = qspecs or {"q", "a", "ref"}
-	for _, qspec in ipairs(qspecs) do
-		if type(qspec) == "string" then
-			qspec = {param = qspec}
-		end
-		local param = qspec.param
-
-		local function make_spec(typ, default_separate_no_index, item_dest)
-			local separate_no_index = qspec.separate_no_index
-			if separate_no_index == nil then
-				separate_no_index = default_separate_no_index
-			end
-			local spec = {
-				separate_no_index = separate_no_index,
-				type = qspec.type or typ,
-				item_dest = qspec.item_dest or item_dest,
-			}
-			for k, v in pairs(qspec) do
-				if k ~= "param" and k ~= "separate_no_index" and k ~= "type" and k ~= "item_dest" then
-					spec[k] = v
-				end
-			end
-			return spec
-		end
-
-		if param == "q" then
-			local qspec = make_spec("qualifier", true)
-			param_mods.q = qspec
-			param_mods.qq = qspec
-		elseif param == "a" or param == "l" then
-			local laspec = make_spec("labels", true)
-			if param == "a" then
-				param_mods.a = laspec
-				param_mods.aa = laspec
-			else
-				param_mods.l = laspec
-				param_mods.ll = laspec
-			end
-		elseif param == "ref" then
-			local refspec = make_spec("references", false, "refs")
-			param_mods.ref = refspec
-		else
-			error(("Internal error: Unrecognized qualifier type %s"):format(dump(param)))
-		end
-	end
-end
-
 -- Return true if `k` is a "built-in" (specially recognized) key in a `param_mod` specification. All other keys
 -- are forwarded to the structure passed to [[Module:parameters]].
 local function param_mod_spec_key_is_builtin(k)
@@ -617,7 +592,7 @@ function export.augment_params_with_modifiers(params, param_mods, overall_only)
 		-- Add parameters for each term modifier.
 		for param_mod, param_mod_spec in pairs(param_mods) do
 			local has_extra_specs = false
-			for k, _ in pairs(param_mod_spec) do
+			for k in pairs(param_mod_spec) do
 				if not param_mod_spec_key_is_builtin(k) then
 					has_extra_specs = true
 					break
@@ -649,22 +624,13 @@ function export.item_key_is_property(k)
 		k ~= "separator"
 end
 
--- Throw an error prefixed with the words "Internal error" (and suffixed with a dumped version of `spec`, if provided).
--- This is for logic errors in the code itself rather than template user errors.
-local function internal_error(msg, spec)
-	if spec then
-		msg = ("%s: %s"):format(msg, dump(spec))
-	end
-	error(("Internal error: %s"):format(msg))
-end
-
 -- Fetch the argument in `args` corresponding to `index_or_value`, which may be a string of the form "foo.default"
 -- (requesting the value of `args["foo"].default`); a string or number (requesting the value at that key); a function of
 -- one argument (`args`), which returns the argument value; or the value itself.
 local function fetch_argument(args, index_or_value)
 	if type(index_or_value) == "string" then
-		local index_without_default = index_or_value:match("^(.*)%.default$")
-		if index_without_default then
+		if index_or_value:sub(-8) == ".default" then
+			local index_without_default = index_or_value:sub(1, -9)
 			local arg_obj = fetch_argument(args, index_without_default)
 			if type(arg_obj) ~= "table" then
 				internal_error(("Requested that the '.default' key of argument `%s` be fetched, but argument value is undefined or not a table"):
@@ -672,7 +638,7 @@ local function fetch_argument(args, index_or_value)
 			end
 			return arg_obj.default
 		end
-		if index_or_value:find("^[0-9]+$") then
+		if index_or_value:match("^%d+$") then
 			index_or_value = tonumber(index_or_value)
 		end
 		return args[index_or_value]
@@ -747,16 +713,19 @@ inline modifiers or separate parameters. `data` is an object containing the foll
   their handling are the same as with `lang`. In general, as with `lang`,  it is not necessary to specify this. However,
   if specified, it is used to supply the default for the `sc` property of returned items if not otherwise set (e.g. by
   the {{para|sc<var>N</var>}} parameter or `<sc:...>` inline modifier).
-* `disallow_custom_separators`: If specified, disallow specifying a bare semicolon as an item value to indicate that the
-  item's previous separator should be a semicolon. By default, the previous separator of each item is considered to be
-  an empty string (for the first item) and otherwise a comma + space, unless either the preceding item is a bare
-  semicolon (which causes the following item's previous separator to be a semicolon + space) or an item has an embedded
-  comma in it (which causes ''all'' items other than the first to have their previous separator be a semicolon + space).
-  The previous separator of each item is set on the item's `separator` property. Bare semicolons do not count when
-  indexing items using separate parameters. For example, the following is correct:
+* `disallow_custom_separators`: If specified, disallow specifying custom separators (semicolon, underscore, tilde; see
+  the internal `special_separators` table) as an item value to override the default separator. By default, the previous
+  separator of each item is considered to be an empty string (for the first item) and otherwise the value of
+  `default_separator` (normally a comma + space), unless either the preceding item is one of the values listed in
+  `special_separators`, such as a bare semicolon (which causes the following item's previous separator to be a semicolon
+  + space) or an item has an embedded comma in it (which causes ''all'' items other than the first to have their
+  previous separator be a semicolon + space). The previous separator of each item is set on the item's `separator`
+  property. Bare semicolons and other separator arguments do not count when indexing items using separate parameters.
+  For example, the following is correct:
   ** {{tl|template|lang|item 1|q1=qualifier 1|;|item 2|q2=qualifier 2}}
-  If `disallow_custom_separators` is specified, however, the `separator` property is not set and bare semicolons do not
-  get any special treatment.
+  If `disallow_custom_separators` is specified, however, the `separator` property is not set and separator arguments are
+  not recognized.
+* `default_separator`: Override the default separator (normally {", "}).
 * `dont_skip_items`: Normally, items that are completely unspecified (have no term and no properties) are skipped and
   not inserted into the returned list of items. (Such items cannot occur if `disallow_holes = true` is set on the term
   specification in the `params` structure passed to `process()` in [[Module:parameters]]. It is generally recommended
@@ -816,19 +785,22 @@ function export.process_list_arguments(data)
 		if not termarg_spec then
 			internal_error("There must be a spec in `data.params` corresponding to `data.termarg`")
 		end
-		if not termarg_spec.list then
+		if termarg_spec == true or not termarg_spec.list then
 			internal_error("Term spec in `data.params` must have `list` set", termarg_spec)
 		end
-		if not termarg_spec.allow_holes and not termarg_spec.disallow_holes then
+		if termarg_spec == true or not (termarg_spec.allow_holes or termarg_spec.disallow_holes) then
 			internal_error("Term spec in `data.params` must have either `allow_holes` or `disallow_holes` set", termarg_spec)
 		end
 		export.augment_params_with_modifiers(data.params, data.param_mods)
-		args = require(parameters_module).process(data.raw_args, data.params)
+		args = process_params(data.raw_args, data.params)
 	else
+		args = data.processed_args or data.args
+		if not args then
+			internal_error("Either `data.raw_args` or `data.processed_args` must be specified")
+		end
 		if data.params then
 			internal_error("When `data.processed_args` is specified, `data.params` should not be specified")
 		end
-		args = data.processed_args or data.args
 	end
 
 	if data.process_args_before_parsing then
@@ -838,26 +810,25 @@ function export.process_list_arguments(data)
 	-- Find the maximum index among any of the list parameters.
 	local term_args = args[data.termarg]
 	-- As a special case, the term args might not have a `maxindex` field because they might have
-	-- been declared with `disallow_holes = true`, so fall back to the actual length of the list.
-	local maxmaxindex = term_args.maxindex or #term_args
-	for k, v in pairs(args) do
+	-- been declared with `disallow_holes = true`, so fall back to the actual length of the list
+	-- using the length function, since # can be unpredictable with arbitrary tables.
+	local maxmaxindex = term_args.maxindex or length(term_args)
+	for _, v in pairs(args) do
 		if type(v) == "table" and v.maxindex and v.maxindex > maxmaxindex then
 			maxmaxindex = v.maxindex
 		end
 	end
 
 
-	local items = {}
-	local ind = 0
+	local items, lang_cache, use_semicolon = {}, {}
 	local lang = fetch_argument(args, data.lang)
-	local sc = fetch_argument(args, data.sc)
-	local lang_cache = {}
 	if lang then
 		lang_cache[lang:getCode()] = lang
 	end
-	local use_semicolon = false
+	local sc = fetch_argument(args, data.sc)
 	local term_dest = data.term_dest or "term"
 
+	-- FIXME: this is vulnerable to abusive inputs like 1000000=.
 	local itemno = 0
 	for i = 1, maxmaxindex do
 		local term = term_args[i]
@@ -913,10 +884,13 @@ function export.process_list_arguments(data)
 						termobj[dest] = arg
 					end
 				end
-
+				
+				-- Add 1 because first term index starts at 2.
+				local paramname = data.termarg + i - 1
+				
 				local function generate_obj(term, parse_err)
 					if data.parse_lang_prefix and term:find(":") then
-						local actual_term, termlangs = require(parse_utilities_module).parse_term_with_lang {
+						local actual_term, termlangs = parse_term_with_lang {
 							term = term,
 							parse_err = parse_err,
 							paramname = paramname,
@@ -944,10 +918,9 @@ function export.process_list_arguments(data)
 
 				-- Check for inline modifier, e.g. מרים<tr:Miryem>. But exclude top-level HTML entry with <span ...>,
 				-- <br/> or similar in it, often caused by wrapping an argument in {{m|...}} or similar.
-				if term and term:find("<") and not require(parse_utilities_module).term_contains_top_level_html(term) then
-					require(parse_utilities_module).parse_inline_modifiers(term, {
-						-- Add 1 because first term index starts at 2.
-						paramname = data.termarg + i - 1,
+				if term and term:find("<") and not term_contains_top_level_html(term) then
+					parse_inline_modifiers(term, {
+						paramname = paramname,
 						param_mods = data.param_mods,
 						generate_obj = generate_obj,
 					})
@@ -964,7 +937,7 @@ function export.process_list_arguments(data)
 					-- the terms.
 					local term_text = termobj[term_dest] or termobj.alt
 					if not use_semicolon and term_text then
-						if term_text:find(",", 1, true) then
+						if term_text:find(",") then
 							use_semicolon = true
 						end
 					end
@@ -976,16 +949,17 @@ function export.process_list_arguments(data)
 	end
 
 	if not data.disallow_custom_separators then
-		-- Set the default separator of all those items for which a separator wasn't explicitly given to comma
-		-- (or semicolon if any items have embedded commas).
-		for i, item in ipairs(items) do
+		-- Set the default separator of all those items for which a separator wasn't explicitly given to the default
+		-- separator, defaulting to comma + space; but if any items have embedded commas, set the separator to
+		-- semicolon + space.
+		for _, item in ipairs(items) do
 			if not item.separator then
-				item.separator = use_semicolon and "; " or ", "
+				item.separator = use_semicolon and "; " or data.default_separator or ", "
 			end
 		end
 	end
 
-	return items
+	return items, args
 end
 
 
