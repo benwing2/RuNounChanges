@@ -7,7 +7,14 @@ import blib
 from blib import getparam, rmparam, msg, site, tname, pname
 
 blib.getLanguageData()
-#blib.languages_byCanonicalName = {"English": {"code": "en"}}
+#blib.languages_byCanonicalName = {
+#  "English": {"code": "en"},
+#  "Japanese": {"code": "ja"},
+#  "Chinese": {"code": "zh"},
+#  "Spanish": {"code": "es"},
+#  "Norwegian Bokmål": {"code": "nb"},
+#  "Norwegian Nynorsk": {"code": "nn"},
+#}
 
 shortcut_to_expansion = {
   "alt": "Alternative forms",
@@ -49,6 +56,74 @@ header_to_col_top_abbrev = {
   "Related terms": "rel",
   "Synonyms": "syn",
 }
+
+
+# Simplify a link consisting of `left` and possibly a `right` part. This may come from a raw or templated link.
+# `altval` is an explicit |alt= value given in a templated link. `langcode`, if given, is the language code of the
+# templated link, `sec_langcode` is the language code of the section we're in, and `sec_langname` is the corresponding
+# language name.
+def simplify_link(left, right, altval, langcode, sec_langcode, sec_langname, pagemsg):
+  if "[[" in left:
+    m = re.search(r"^\[\[([^\[\]|=]+)\]\]$", left)
+    if m:
+      left = m.group(1)
+    else:
+      m = re.search(r"^\[\[([^\[\]|]+)\|([^\[\]|]+)\]\]$", left)
+      if m:
+        newleft, newright = m.groups()
+        if right:
+          pagemsg("WARNING: Both two-part link %s and display value %s given; overriding the display in the former with the latter" % (
+            left, right))
+          newright = right
+        left = newleft
+        right = newright
+      else:
+        if right and altval:
+          pagemsg("WARNING: All three of embedded link %s, display value %s and alt value %s given; ignoring display value, and beware that alt value will be ignored as well" % (
+            left, right, altval))
+          right = None
+        elif right:
+          pagemsg("WARNING: Both embedded link %s and display value %s given; converting display value to alt value, but beware that it will be ignored" % (
+            left, right))
+          altval = right
+          right = None
+        elif altval:
+          pagemsg("WARNING: Both embedded link %s and alt value %s given; beware that alt value will be ignored" % (
+            left, altval))
+
+  origlink = left if "[[" in left else "[[%s%s]]" % (left, "|%s" % right if right else "")
+  langcode = langcode or ""
+  if langcode and langcode == sec_langcode:
+    langcode = ""
+  if "[[" not in left:
+    m = re.search("^(.*?)#(.*)$", left)
+    if m:
+      newleft, explicit_langname = m.groups()
+      if explicit_langname not in blib.languages_byCanonicalName:
+        pagemsg("WARNING: Unknown language name %s in link %s, not removing" % (explicit_langname, origlink))
+      else:
+        explicit_langcode = blib.languages_byCanonicalName[explicit_langname]["code"]
+        if not langcode or langcode == explicit_langcode:
+          langcode = explicit_langcode
+        else:
+          pagemsg("WARNING: Language code '%s' explicitly found in link %s doesn't agree with language code '%s' explicitly specified in link template, which is different from language code '%s' of section; overriding link language code" % (
+            explicit_langcode, origlink, langcode, sec_langcode))
+          langcode = explicit_langcode
+        left = newleft
+        if langcode == sec_langcode:
+          langcode = ""
+  if right and left == right:
+    right = None
+  if not right and altval and "[[" not in altval:
+    right = altval
+    altval = None
+    if left == right:
+      right = None
+  if "[[" not in left and right:
+    link = "[[%s|%s]]" % (left, right)
+  else:
+    link = left
+  return "%s%s%s%s" % (langcode, ":" if langcode else "", link, "<alt:%s>" % altval if altval else "")
 
 def process_text_on_page(index, pagetitle, text):
   def pagemsg(txt):
@@ -94,8 +169,12 @@ def process_text_on_page(index, pagetitle, text):
               continue
             if col_top_header != expected_abbrev:
               col_top_header = shortcut_to_expansion.get(col_top_header, col_top_header)
-              newlines.append("{{q|%s}}:" % col_top_header)
-            newlines.append("{{col|%s" % langcode)
+            else:
+              col_top_header = ""
+            newlines.append("{{col|%s%s%s" % (
+              langcode, "|sort=0" if langcode in ["ja", "ryu"] else "",
+              "|title=%s" % col_top_header if col_top_header else ""
+            ))
             newlines.extend(col_elements)
             newlines.append("}}")
             notes.append("convert {{col-top}}/{{col-bottom}} to {{col|%s|...}} with %s line%s" % (
@@ -108,13 +187,13 @@ def process_text_on_page(index, pagetitle, text):
             pagemsg("WARNING: Non-bulleted line, can't yet convert to {{col}}: %s" % line)
             cant_convert = True
             continue
-          if line.startswith("**"):
+          if re.search(r"^\*[*:#]", line):
             pagemsg("WARNING: Multiply indented line, can't yet convert to {{col}}: %s" % line)
             cant_convert = True
             continue
-          m = re.search(r"^\* *([\[{'].*)$", line)
+          m = re.search(r"^\* *(.*)$", line)
           if not m:
-            pagemsg("WARNING: Line doesn't have a term after a single bullet: %s" % line)
+            pagemsg("WARNING: Internal error: Line doesn't have a term after a single bullet: %s" % line)
             cant_convert = True
             continue
           line = m.group(1).strip()
@@ -125,8 +204,10 @@ def process_text_on_page(index, pagetitle, text):
             continue
           left_qual = []
           right_qual = []
-          def extract_left_or_right_qualifier(line, on_left=True):
+          exterior_genders = []
+          def extract_left_or_right_qualifier_or_gender(line, on_left=True):
             this_qual = None
+            this_gender = None
             # check for left qualifiers specified using a qualifier template
             if on_left:
               left_re = ""
@@ -134,9 +215,16 @@ def process_text_on_page(index, pagetitle, text):
             else:
               left_re = "(.*?) "
               right_re = ""
-            m = re.search(r"^%s\{\{(?:qualifier|qual|q|i)\|([^{}|=]*)\}\}%s" % (left_re, right_re), line)
-            if m:
-              this_qual, line = m.groups()
+            m = None
+            if not m and not on_left:
+              m = re.search(r"^%s\{\{(?:g|g2)\|([^{}=]*)\}\}%s$" % (left_re, right_re), line)
+              if m:
+                line, this_gender = m.groups()
+                this_gender = this_gender.replace("|", ",")
+            if not m:
+              m = re.search(r"^%s\{\{(?:qualifier|qual|q|i)\|([^{}|=]*)\}\}%s$" % (left_re, right_re), line)
+              if m:
+                this_qual, line = m.groups()
             if not m:
               # check for qualifier-like ''(...)''
               m = re.search(r"^%s''\(([^'{}]*)\)''%s$" % (left_re, right_re), line)
@@ -153,61 +241,151 @@ def process_text_on_page(index, pagetitle, text):
               if m:
                 this_qual, line = m.groups()
             if this_qual is None:
-              return None, line
+              return None, this_gender, line
             if not on_left:
               this_qual, line = line, this_qual
-            return this_qual, line
+            return this_qual, this_gender, line
 
           while True:
-            this_left_qual, line = extract_left_or_right_qualifier(line, on_left=True)
+            this_left_qual, this_left_gender, line = extract_left_or_right_qualifier_or_gender(line, on_left=True)
             if this_left_qual is None:
               break
             left_qual.append(this_left_qual)
 
           while True:
-            this_right_qual, line = extract_left_or_right_qualifier(line, on_left=False)
-            if this_right_qual is None:
+            this_right_qual, this_right_gender, line = extract_left_or_right_qualifier_or_gender(line, on_left=False)
+            if this_right_qual is None and this_right_gender is None:
               break
-            right_qual.append(this_right_qual)
+            if this_right_qual:
+              right_qual.append(this_right_qual)
+            if this_right_gender:
+              exterior_genders.append(this_right_gender)
 
           def append_with_quals(vals):
+            def convert_quals(quals, is_left, has_pos, has_g):
+              qualparts = []
+              non_converted_quals = []
+              def convert_qual(qual):
+                nonlocal has_pos, has_g
+                gender_map = {
+                  "m": "m",
+                  "m.": "m",
+                  "masc": "m",
+                  "masc.": "m",
+                  "masculine": "m",
+                  "f": "f",
+                  "f.": "f",
+                  "fem": "f",
+                  "fem.": "f",
+                  "feminine": "f",
+                  "n": "n",
+                  "n.": "n",
+                  "neut": "n",
+                  "neut.": "n",
+                  "neuter": "n",
+                  "mp": "m-p",
+                  "m.p.": "m-p",
+                  "m.pl.": "m-p",
+                  "m-p": "m-p",
+                  "m p": "m-p",
+                  "m pl": "m-p",
+                  "m. p.": "m-p",
+                  "m. pl.": "m-p",
+                  "masc pl": "m-p",
+                  "masc. pl.": "m-p",
+                  "masculine plural": "m-p",
+                  "fp": "f-p",
+                  "f.p.": "f-p",
+                  "f.pl.": "f-p",
+                  "f-p": "f-p",
+                  "f p": "f-p",
+                  "f pl": "f-p",
+                  "f. p.": "f-p",
+                  "f. pl.": "f-p",
+                  "fem pl": "f-p",
+                  "fem. pl.": "f-p",
+                  "feminine plural": "f-p",
+                  "np": "n-p",
+                  "n.p.": "n-p",
+                  "n.pl.": "n-p",
+                  "n-p": "n-p",
+                  "n p": "n-p",
+                  "n pl": "n-p",
+                  "n. p.": "n-p",
+                  "n. pl.": "n-p",
+                  "neut pl": "n-p",
+                  "neut. pl.": "n-p",
+                  "neuter plural": "f-p",
+                  "pl": "p",
+                  "pl.": "p",
+                  "plural": "p",
+                }
+                if qual in [
+                  "rare", "uncommon", "colloquial", "informal", "nonstandard", "offsensive", "figurative",
+                  "figuratively", "formal",
+                  "obsolete", "archaic", "dated", "diminutive", "US", "UK", "American", "British", "sports", "medicine",
+                  "law", "logic",
+                ]:
+                  qualparts.append("<%s:%s>" % ("l" if is_left else "ll", qual))
+                elif not has_pos and qual in [
+                  "noun", "adjective", "adj", "verb", "v", "vb", "adverb", "adv", "preposition", "prep", "conjunction",
+                  "conj"
+                ]:
+                  qualparts.append("<pos:%s>" % qual)
+                  has_pos = True
+                elif not has_g and qual in gender_map:
+                  if is_left:
+                    qualparts.append("<g:%s>" % gender_map[qual])
+                    has_g = True
+                  else:
+                    exterior_genders.append(gender_map[qual])
+                else:
+                  non_converted_quals.append(qual)
+              for qual in quals:
+                convert_qual(qual)
+              if non_converted_quals:
+                qualparts.append("<%s:%s>" % ("q" if is_left else "qq", ", ".join(non_converted_quals)))
+              return "".join(qualparts)
+
             if left_qual:
-              vals[0] += "<q:%s>" % ", ".join(left_qual)
+              vals[0] += convert_quals(left_qual, True, "<pos:" in vals[0], "<g:" in vals[0])
             if right_qual:
-              vals[-1] += "<qq:%s>" % ", ".join(right_qual)
+              vals[-1] += convert_quals(right_qual, False, "<pos:" in vals[-1], "<g:" in vals[-1])
+            if exterior_genders:
+              if "<g:" in vals[-1]:
+                pagemsg("WARNING: Saw both interior and exterior genders, trying to combine")
+                vals[-1] = re.sub("(<g:.*?)>", r"\1,%s>" % ",".join(exterior_genders), vals[-1])
+              else:
+                vals[-1] += "<g:%s>" % ",".join(exterior_genders)
             col_elements.append("|%s" % ",".join(vals))
+
+          match_link_template_re = r"\{\{ *[lm](?:-self)? *\|"
 
           def handle_parse_error(reason):
             nonlocal cant_convert
-            if re.search(r"\{\{ *[lm] *\|", line):
+            if re.search(match_link_template_re, line):
               pagemsg("WARNING: %s and line has templated link, inserting raw: %s" % (reason, line))
               col_elements.append("|%s" % origline)
             else:
               pagemsg("WARNING: %s and no templated link present, can't convert to {{col}}: %s" % (reason, line))
               cant_convert = True
 
-          if re.search(r"^\{\{ *[lm] *\||\[\[", line):
-            template_or_raw_link_split_re = r"""(\{\{ *[lm] *\|(?:[^{}]|\{\{[^{}]*\}\})*\}\}|\[\[[^\[\]|=]+\]\])"""
+          if re.search(r"^%s|\[\[" % match_link_template_re, line):
+            template_or_raw_link_split_re = (
+              r"""(%s(?:[^{}]|\{\{[^{}]*\}\})*\}\}|\[\[[^\[\]]+\]\])""" % match_link_template_re
+            )
             line_parts = re.split(template_or_raw_link_split_re, line)
             for i in range(0, len(line_parts), 2):
-              if not re.search(r"^\s*,*\s*$", line_parts[i]):
+              if not re.search(r"^\s*([,/]|or)*\s*$", line_parts[i]):
                 handle_parse_error("Unrecognized separator <%s> in line" % line_parts[i])
                 break
             else: # no break
               els = []
+              has_pos = False
               for i in range(1, len(line_parts), 2):
-                m = re.search(r"^\[\[([^\[\]|=]+)\]\]$", line_parts[i])
-                if m:
-                  els.append(m.group(1))
-                  continue
-                m = re.search(r"^\[\[([^\[\]|=]+)\|([^\[\]|=]+)\]\]$", line_parts[i])
-                if m:
-                  els.append(line_parts[i])
-                  continue
                 if line_parts[i].startswith("[["):
-                  handle_parse_error("Unable to convert raw link <%s> in bulleted line to {{col}} element" %
-                                     line_parts[i])
-                  break
+                  els.append(simplify_link(line_parts[i], None, None, None, langcode, langname, pagemsg))
+                  continue
                 linkt = list(blib.parse_text(line_parts[i]).filter_templates())[0]
                 def getp(param):
                   return getparam(linkt, param).strip()
@@ -215,17 +393,11 @@ def process_text_on_page(index, pagetitle, text):
                 def app(val):
                   parts.append(val)
                 link_langcode = getp("1")
-                if link_langcode != langcode:
-                  app("%s:" % link_langcode)
-                dest = getp("2")
-                alt = getp("alt") or getp("3")
-                if alt:
-                  if "[" not in dest and "[" not in alt:
-                    app("[[%s|%s]]" % (dest, alt))
-                  else:
-                    app("%s<alt:%s>" % (dest, alt))
-                else:
-                  app(dest)
+                left = getp("2")
+                right = getp("3")
+                alt = getp("alt")
+                link = simplify_link(left, right, alt, link_langcode, langcode, langname, pagemsg)
+                app(link)
                 gloss = getp("t") or getp("gloss") or getp("4")
                 if gloss:
                   app("<t:%s>" % gloss)
@@ -243,8 +415,7 @@ def process_text_on_page(index, pagetitle, text):
                 if genders:
                   app("<g:%s>" % ",".join(genders))
                 els.append("".join(parts))
-              else: # no break
-                append_with_quals(els)
+              append_with_quals(els)
           else:
             handle_parse_error("Can't parse links")
         else:
