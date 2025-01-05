@@ -328,10 +328,12 @@ def process_text_on_page(index, pagetitle, text):
                 }
                 if qual in [
                   "rare", "uncommon", "colloquial", "informal", "nonstandard", "non-standard", "offsensive",
-                  "figurative", "figuratively", "formal", "learned", "impersonal", "slang",
-                  "obsolete", "archaic", "dated", "diminutive", "US", "UK", "American", "British", "sports", "medicine",
+                  "figurative", "figuratively", "formal", "learned", "impersonal", "slang", "vulgar", "literary",
+                  "dialectal", "derogatory", "expressive", "poetic",
+                  "obsolete", "archaic", "dated", "diminutive", "augmentative", "sports", "medicine",
+                  "US", "UK", "American", "British", "New Latin", "Anglo-Norman", "Standard Malay",
                   "law", "logic", "Puter", "Sursilvan", "Sutsilvan", "Surmiran", "Vallader", "shipping", "theology",
-                  "geology", "botany",
+                  "geology", "botany", "ornithology", "sociology",
                 ]:
                   qualparts.append("<%s:%s>" % ("l" if is_left else "ll", qual))
                 elif not has_pos and qual in [
