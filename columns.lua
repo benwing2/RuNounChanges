@@ -1,18 +1,29 @@
-local export = {}
-
-local html = mw.html.create
-local m_str_utils = require("Module:string utilities")
 local links_module = "Module:links"
 local parameter_utilities_module = "Module:parameter utilities"
+local parameters_module = "Module:parameters"
 local pron_qualifier_module = "Module:pron qualifier"
+local string_utilities_module = "Module:string utilities"
 
+local m_str_utils = require(string_utilities_module)
+
+local concat = table.concat
+local html = mw.html.create
+local is_substing = mw.isSubsting
+local find = string.find
+local insert = table.insert
+local match = string.match
+local remove = table.remove
+local sub = string.sub
+local trim = m_str_utils.trim
 local u = m_str_utils.char
+
+local export = {}
 
 local function format_list_items(list, args)
 	local function term_already_linked(term)
 		-- FIXME: "<span" is an ugly hack to prevent double-linking of terms already run through {{l|...}}:
 		-- [[Thread:User talk:CodeCat/MewBot adding lang to column templates]]
-		return term:find("<span")
+		return find(term, "<span")
 	end
 	for _, item in ipairs(args.content) do
 		if item == false then
@@ -130,10 +141,11 @@ end
 
 
 function export.display_from(frame_args, parent_args, frame)
+	local boolean = {type = "boolean"}
 	local iparams = {
-		["class"] = {},
+		["class"] = true,
 		-- Default for auto-collapse. Overridable by template |collapse= param.
-		["collapse"] = {type = "boolean"},
+		["collapse"] = boolean,
 		-- If specified, this specifies the number of columns, and no columns
 		-- parameter is available on the template. Otherwise, the columns
 		-- parameter is the first available numbered param after the language-code
@@ -142,43 +154,31 @@ function export.display_from(frame_args, parent_args, frame)
 		-- If specified, this specifies the language code, and no language-code
 		-- parameter is available on the template. Otherwise, the language-code
 		-- parameter can be specified as either |lang= or |1=.
-		["lang"] = {type = "language", etym_lang = true},
+		["lang"] = {type = "language"},
 		-- Default for auto-sort. Overridable by template |sort= param.
-		["sort"] = {type = "boolean"},
+		["sort"] = boolean,
 		-- The following is accepted but currently ignored, per an extended discussion in
 		-- [[Wiktionary:Beer parlour/2018/November#Titles of morphological relations templates]].
 		["title"] = {default = ""},
-		["toggle_category"] = {},
+		["toggle_category"] = true,
 	}
 
 	local iargs = require(parameters_module).process(frame_args, iparams)
 
 	local compat = iargs.lang or parent_args.lang
 	local lang_param = compat and "lang" or 1
-	local offset = compat and 0 or 1
-	local columns_param, first_content_param
-
-	-- New-style #columns specification is through parameter n= so we can transition to the situation where
-	-- omitting it results in auto-determination. Old-style #columns specification is through the first numbered
-	-- parameter after the lang parameter.
-	if parent_args.n then
-		columns_param = "n"
-		first_content_param = compat and 1 or 2
-	else
-		columns_param = compat and 1 or 2
-		first_content_param = columns_param + (iargs.columns and 0 or 1)
-	end
+	local first_content_param = compat and 1 or 2
 	local deprecated
 
 	local params = {
 		[lang_param] =
-			not iargs.lang and {required = true, type = "language", etym_lang = true, default = "und"} or nil,
-		[columns_param] = not iargs.columns and {required = true, default = 2} or nil,
+			not iargs.lang and {required = true, type = "language", default = "und"} or nil,
+		["n"] = not iargs.columns and {type = "number"} or nil,
 		[first_content_param] = {list = true, allow_holes = true},
 
 		["title"] = {},
-		["collapse"] = {type = "boolean"},
-		["sort"] = {type = "boolean"},
+		["collapse"] = boolean,
+		["sort"] = boolean,
 		["sc"] = {type = "script"},
 		["omit"] = {list = true}, -- used when calling from [[Module:saurus]] so the page displaying the synonyms/antonyms doesn't occur in the list
 	}
@@ -221,7 +221,8 @@ function export.display_from(frame_args, parent_args, frame)
 	if args.collapse ~= nil then
 		collapse = args.collapse
 	end
-	
+
+	local number_of_items = 0
 	for i, item in ipairs(items) do
 		-- If a separate language code was given for the term, display the language name as a right qualifier.
 		-- Otherwise it may not be obvious that the term is in a separate language (e.g. if the main language is 'zh'
@@ -231,12 +232,12 @@ function export.display_from(frame_args, parent_args, frame)
 			local qqs = {}
 			for _, termlang in ipairs(item.termlangs) do
 				local termlangcode = termlang:getCode()
-				if termlanglangcode ~= langcode and termlangcode ~= "mul" then
-					table.insert(qqs, termlang:getCanonicalName())
+				if termlangcode ~= langcode and termlangcode ~= "mul" then
+					insert(qqs, termlang:getCanonicalName())
 				end
 				if item.qq then
 					for _, qq in ipairs(item.qq) do
-						table.insert(qqs, qq)
+						insert(qqs, qq)
 					end
 				end
 			end
@@ -252,18 +253,30 @@ function export.display_from(frame_args, parent_args, frame)
 		if omitted then
 			-- signal create_list() to omit this item
 			items[i] = false
+		else
+			number_of_items = number_of_items + 1
 		end
 	end
 
+	local column_count = iargs.columns or args.n
+	-- FIXME: This needs a total rewrite.
+	if column_count == nil then
+		column_count = number_of_items <= 3 and 1 or
+			number_of_items <= 9 and 2 or
+			number_of_items <= 27 and 3 or
+			number_of_items <= 81 and 4 or
+			5
+	end
+
 	local ret = export.create_list {
-		column_count = iargs.columns or args[columns_param],
+		column_count = column_count,
 		content = items,
 		alphabetize = sort,
 		header = args.title,
-		background_color = "#F8F8FF",
 		collapse = collapse,
 		toggle_category = iargs.toggle_category,
-		class = iargs.class,
+		-- columns-bg (in [[MediaWiki:Gadget-Site.css]]) provides the background color
+		class = (iargs.class and iargs.class .. " columns-bg" or "columns-bg"),
 		lang = lang,
 		sc = sc,
 		format_header = true
@@ -273,7 +286,59 @@ function export.display_from(frame_args, parent_args, frame)
 end
 
 function export.display(frame)
-	return export.display_from(frame.args, frame:getParent().args, frame)
+	if not is_substing() then
+		return export.display_from(frame.args, frame:getParent().args, frame)
+	end
+	
+	-- If substed, unsubst template with newlines between each term, redundant wikilinks removed, and remove duplicates + sort terms if sort is enabled.
+	local m_table = require("Module:table")
+	local m_template_parser = require("Module:template parser")
+	
+	local parent = frame:getParent()
+	local elems = m_table.shallowCopy(parent.args)
+	local code = remove(elems, 1)
+	code = code and trim(code)
+	local lang = require("Module:languages").getByCode(code, 1)
+	
+	local i = 1
+	while true do
+		local elem = elems[i]
+		while elem do
+			elem = trim(elem, "%s")
+			if elem ~= "" then
+				break
+			end
+			remove(elems, i)
+			elem = elems[i]
+		end
+		if not elem then
+			break
+		elseif not ( -- Strip redundant wikilinks.
+			not match(elem, "^()%[%[") or
+			find(elem, "[[", 3, true) or
+			find(elem, "]]", 3, true) ~= #elem - 1 or
+			find(elem, "|", 3, true)
+		) then
+			elem = sub(elem, 3, -3)
+			elem = trim(elem, "%s")
+		end
+		elems[i] = elem .. "\n"
+		i = i + 1
+	end
+	
+	-- If sort is enabled, remove duplicates then sort elements.
+	if require("Module:yesno")(frame.args.sort) then
+		elems = m_table.removeDuplicates(elems)
+		require("Module:collation").sort(elems, lang)
+	end
+	
+	-- Readd the langcode.
+	insert(elems, 1, code .. "\n")
+	
+	-- TODO: Place non-numbered parameters after 1 and before 2.
+	local template = m_template_parser.getTemplateInvocationName(mw.title.new(parent:getTitle()))
+	
+	return "{{" .. concat(m_template_parser.buildTemplate(template, elems), "|") .. "}}"
 end
 
 return export
