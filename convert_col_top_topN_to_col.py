@@ -12,6 +12,9 @@ blib.getLanguageData()
 #  "Japanese": {"code": "ja"},
 #  "Chinese": {"code": "zh"},
 #  "Spanish": {"code": "es"},
+#  "French": {"code": "fr"},
+#  "Portuguese": {"code": "pt"},
+#  "Latin": {"code": "la"},
 #  "Norwegian Bokmål": {"code": "nb"},
 #  "Norwegian Nynorsk": {"code": "nn"},
 #}
@@ -148,37 +151,40 @@ def process_text_on_page(index, pagetitle, text):
       lines = subsections[k].split("\n")
       newlines = []
       in_col_top = False
+      col_top_tn = None
       col_elements = None
       raw_col_lines = None
       cant_convert = False
-      ncol = None
       col_top_header = None
       for line in lines:
         if in_col_top:
           raw_col_lines.append(line)
-          if re.search("^\{\{ *col-bottom *\|", line.strip()):
+          m = re.search("^\{\{ *((?:col-)?bottom) *\|", line.strip())
+          if m:
             if not cant_convert:
-              pagemsg("WARNING: Saw {{col-bottom}} with params, can't convert to {{col}}: %s" % line)
+              pagemsg("WARNING: Saw {{%s}} with params, can't convert to {{col}}: %s" % (m.group(1), line))
             newlines.extend(raw_col_lines)
             in_col_top = False
             continue
-          if re.search("^\{\{ *col-bottom *\}\}$", line.strip()):
+          m = re.search("^\{\{ *((?:col-)?bottom) *\}\}$", line.strip())
+          if m:
             if cant_convert:
               newlines.extend(raw_col_lines)
               in_col_top = False
               continue
-            if col_top_header != expected_abbrev:
+            if col_top_header and col_top_header != expected_abbrev:
               col_top_header = shortcut_to_expansion.get(col_top_header, col_top_header)
             else:
               col_top_header = ""
+            col_bottom_tn = m.group(1)
             newlines.append("{{col|%s%s%s" % (
               langcode, "|sort=0" if langcode in ["ja", "ryu"] else "",
               "|title=%s" % col_top_header if col_top_header else ""
             ))
             newlines.extend(col_elements)
             newlines.append("}}")
-            notes.append("convert {{col-top}}/{{col-bottom}} to {{col|%s|...}} with %s line%s" % (
-              langcode, len(col_elements), "" if len(col_elements) == 1 else "s"))
+            notes.append("convert {{%s}}/{{%s}} to {{col|%s|...}} with %s line%s" % (
+              col_top_tn, col_bottom_tn, langcode, len(col_elements), "" if len(col_elements) == 1 else "s"))
             in_col_top = False
             continue
           if cant_convert:
@@ -420,9 +426,23 @@ def process_text_on_page(index, pagetitle, text):
           else:
             handle_parse_error("Can't parse links")
         else:
-          m = re.search(r"^\{\{col-top\|([0-9]+)\|([^|=]*)\}\}$", line)
+          m = re.search(r"^\{\{(col-top)\|[0-9]+\|([^|=]*)\}\}$", line)
           if m:
-            ncol, col_top_header = m.groups()
+            col_top_tn, col_top_header = m.groups()
+          if not m:
+            m = re.search(r"^\{\{(top[0-9])\}\}$", line)
+            if m:
+              col_top_tn = m.group(1)
+              col_top_header = ""
+          if not m:
+            m = re.search(r"^\{\{(top[0-9])\|([^{}]*)\}\}$", line)
+            if m:
+              col_top_tn, col_top_header = m.groups()
+              if col_top_header == langcode:
+                col_top_header = ""
+              if col_top_header.startswith("title="):
+                col_top_header = col_top_header[6:]
+          if m:
             in_col_top = True
             col_elements = []
             cant_convert = False
@@ -430,7 +450,7 @@ def process_text_on_page(index, pagetitle, text):
           else:
             newlines.append(line)
       if in_col_top:
-        pagemsg("WARNING: Saw {{col-top}} with closing {{col-bottom}}")
+        pagemsg("WARNING: Saw {{col-top}} without closing {{col-bottom}}")
         newlines.extend(raw_col_lines)
       subsections[k] = "\n".join(newlines)
     sections[j] = "".join(subsections)
