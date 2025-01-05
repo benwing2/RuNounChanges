@@ -321,17 +321,18 @@ def process_text_on_page(index, pagetitle, text):
                   "plural": "p",
                 }
                 if qual in [
-                  "rare", "uncommon", "colloquial", "informal", "nonstandard", "offsensive", "figurative",
-                  "figuratively", "formal",
+                  "rare", "uncommon", "colloquial", "informal", "nonstandard", "non-standard", "offsensive",
+                  "figurative", "figuratively", "formal", "learned", "impersonal", "slang",
                   "obsolete", "archaic", "dated", "diminutive", "US", "UK", "American", "British", "sports", "medicine",
-                  "law", "logic",
+                  "law", "logic", "Puter", "Sursilvan", "Sutsilvan", "Surmiran", "Vallader", "shipping", "theology",
+                  "geology", "botany",
                 ]:
                   qualparts.append("<%s:%s>" % ("l" if is_left else "ll", qual))
                 elif not has_pos and qual in [
-                  "noun", "adjective", "adj", "verb", "v", "vb", "adverb", "adv", "preposition", "prep", "conjunction",
-                  "conj"
+                  "noun", "proper noun", "adjective", "adj", "verb", "v", "vb", "adverb", "adv", "preposition", "prep",
+                  "conjunction", "conj", "verbal noun", "[[vi]]", "[[vt]]",
                 ]:
-                  qualparts.append("<pos:%s>" % qual)
+                  qualparts.append("<pos:%s>" % qual.replace("[[", "").replace("]]", ""))
                   has_pos = True
                 elif not has_g and qual in gender_map:
                   if is_left:
