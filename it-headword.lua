@@ -25,7 +25,7 @@ local headword_module = "Module:headword"
 local romut_module = "Module:romance utilities"
 local it_verb_module = "Module:it-verb"
 local inflection_utilities_module = "Module:inflection utilities"
-local parse_utilities_module = "Module:parse utilities"
+local parse_modifiers_interface_module = "Module:parse modifiers interface"
 local string_utilities_module = "Module:string utilities"
 local com = require("Module:it-common")
 local lang = require("Module:languages").getByCode("it")
@@ -284,45 +284,13 @@ local function parse_term_with_modifiers(paramname, val)
 		return {term = term}
 	end
 
-	local retval
-	local splitchars = "[/;,]"
-	-- Check for inline modifier, e.g. מרים<tr:Miryem>.
-	if val:find("<") then
-		retval = require(parse_utilities_module).parse_inline_modifiers(val, {
+	return require(parse_modifiers_interface_module).parse_inline_modifiers(val, {
 			paramname = paramname,
 			param_mods = param_mods,
 			generate_obj = generate_obj,
-			splitchar = splitchars,
+			splitchar = "[/;,]",
 			preserve_splitchar = true,
 		})
-	else
-		local split
-        if val:find(",%s") then
-			local put = require(parse_utilities_module)
-            split = put.split_escaping(val, splitchars, true, put.escape_comma_whitespace,
-				put.unescape_comma_whitespace)
-        else
-            split = rsplit(val, "(" .. splitchars .. ")")
-        end
-		retval = {}
-        for j = 1, #split, 2 do
-			local obj = generate_obj(split[j])
-			if j > 1 then
-				obj.separator = split[j - 1]
-			end
-			table.insert(retval, obj)
-        end
-	end
-
-	for _, obj in ipairs(retval) do
-		if obj.separator == ";" then
-			obj.separator = "; "
-		elseif obj.separator == "," then
-			obj.separator = nil
-		end
-	end
-
-	return retval
 end
 
 

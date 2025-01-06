@@ -6,6 +6,7 @@ local languages_module = "Module:languages"
 local load_module = "Module:load"
 local parameters_module = "Module:parameters"
 local parse_utilities_module = "Module:parse utilities"
+local parse_modifiers_interface_module = "Module:parse modifiers interface"
 local string_utilities_module = "Module:string utilities"
 local utilities_module = "Module:utilities"
 
@@ -52,7 +53,7 @@ local function load_data(...)
 end
 
 local function parse_inline_modifiers(...)
-	parse_inline_modifiers = require(parse_utilities_module).parse_inline_modifiers
+	parse_inline_modifiers = require(parse_modifiers_interface_module).parse_inline_modifiers
 	return parse_inline_modifiers(...)
 end
 
@@ -74,11 +75,6 @@ end
 local function split(...)
 	split = require(string_utilities_module).split
 	return split(...)
-end
-
-local function split_on_comma(...)
-	split_on_comma = require(parse_utilities_module).split_on_comma
-	return split_on_comma(...)
 end
 
 local function split_tag_set(...)
@@ -296,39 +292,12 @@ local function parse_terms_with_inline_modifiers(paramname, val, lang)
 		return {lang = lang, term = decode_entities(term)}
 	end
 
-	local retval
-	-- Check for inline modifier, e.g. מרים<tr:Miryem>. But exclude HTML entry with <span ...>, <i ...>, <br/> or
-	-- similar in it, caused by wrapping an argument in {{l|...}}, {{af|...}} or similar. Basically, all tags of
-	-- the sort we parse here should consist of a less-than sign, plus letters, plus a colon, e.g. <tr:...>, so if
-	-- we see a tag on the outer level that isn't in this format, we don't try to parse it. The restriction to the
-	-- outer level is to allow generated HTML inside of e.g. qualifier tags, such as foo<q:similar to {{m|fr|bar}}>.
-	if val:find("<") and not val:find("^[^<]*<%l*[^%l:]") then
-		retval = parse_inline_modifiers(val, {
-			paramname = paramname,
-			param_mods = term_param_mods,
-			generate_obj = generate_obj,
-			splitchar = ",",
-		})
-	else
-		if val:find(",<") then
-			-- this happens when there's an embedded {{,}} template, as in [[MMR]], [[TMA]], [[DEI]], where an initialism
-			-- expands to multiple terms; easiest not to try and parse the lemma spec as multiple lemmas
-			retval = {val}
-		elseif val:find(",%s") or (val:find(",") and val:find("[\\%[<]")) then
-			-- Comma after whitespace not split; nor are backslash-escaped commas or commas inside of square or
-			-- angle brackets. If we see any of these, use the more sophisticated algorithm in
-			-- [[Module:parse utilities]]. Otherwise it's safe to just split on commas directly. This optimization avoids
-			-- loading [[Module:parse utilities]] unnecessarily.
-			retval = split_on_comma(val)
-		else
-			retval = split(val, ",")
-		end
-		for i, split in ipairs(retval) do
-			retval[i] = generate_obj(split)
-		end
-	end
-
-	return retval
+	return parse_inline_modifiers(val, {
+		paramname = paramname,
+		param_mods = term_param_mods,
+		generate_obj = generate_obj,
+		splitchar = ",",
+	})
 end
 
 
