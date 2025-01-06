@@ -302,6 +302,16 @@ internal links are treated as units (i.e. parens and angle brackets occurring in
 that we don't treat square brackets as delimiters, so we want to rejoin square-bracket-delimited textual runs with
 adjacent runs before further parsing.
 
+There are two primary workflows when using this function:
+# If you only care about balanced delimiters occurring inside of other balanced delimiters (e.g. in the above example
+  with [[Module:object usage]], you can call `rejoin_delimited_runs()` directly after
+  `parse_multi_delimiter_balanced_segment_run()`.
+# However, if you care about single delimiters such as commas and slashes occurring inside of balanced delimiters (e.g.
+  if you allow multiple comma-separated terms, e.g. of which can have associated inline modifiers, and you don't want
+  commas inside of internal links to be treated as delimiters), you need to call `rejoin_delimited_runs()` ''after''
+  calling `split_alternating_runs()`. This is used, for example, in `parse_inline_modifiers()` for exactly this reason,
+  when a `splitchar` is provided.
+
 `data` is an object of properties. Currently there are two: `runs` (the output of calling
 `parse_multi_delimiter_balanced_segment_run()`, i.e. a list of textual runs, where even-numbered elements begin and end
 with a matched delimiter and odd-numbered elements are surrounding text) and `delimiter_pattern` (a Lua pattern matching
@@ -764,8 +774,8 @@ Parse a term that may have inline modifiers attached (e.g. {rifiuti<q:plural-onl
    per-term objects directly, and no modifier may have an `overall` property.
 ** `preserve_splitchar`, if specified, causes the actual delimiter matched by `splitchar` to be returned in the
    parsed object describing the element that comes after the delimiter. The delimiter is stored in a key whose
-   name is controlled by `separator_key`, which defaults to "separator".
-** `separator_key` controls the key into which the actual delimiter is written when `preserve_splitchar` is used.
+   name is controlled by `delimiter_key`, which defaults to "delimiter".
+** `delimiter_key` controls the key into which the actual delimiter is written when `preserve_splitchar` is used.
    See above.
 ** `escape_fun` and `unescape_fun` are as in split_escaping() and split_alternating_runs_escaping() above and
    control the protected sequences that won't be split. By default, `escape_comma_whitespace` and
@@ -866,7 +876,32 @@ and `outer_container` are given, the return value is the value of `outer_contain
 into the `terms` field of this object.
 ]==]
 function export.parse_inline_modifiers(arg, props)
-	local segments = export.parse_balanced_segment_run(arg, "<", ">")
+	local segments
+
+	local function rejoin_bracket_delimited_runs(segments)
+		return export.rejoin_delimited_runs {
+			runs = segments,
+			delimiter_pattern = "^%[.*%]$",
+		}
+	end
+
+	local rejoin_square_brackets_after_split = false
+	-- The following is an optimization. If we see a square bracket (normally a double square bracket internal link
+	-- [[...]]), we want to not treat delimiter characters inside (either <...> balanced delimiters or separators such
+	-- as commas) as delimiters. But this requires a more sophisticated and slower algorithm, and most of the time it
+	-- isn't needed because there are no square brackets. So we check for a square bracket and fall back to a simpler
+	-- algorithm otherwise (which, since it involves only a single balanced delimiter, can use the built-in %b() Lua
+	-- pattern syntax, which AFAIK is implemented in C).
+	if arg:find("%[") then
+		segments = export.parse_multi_delimiter_balanced_segment_run(arg, {{"[", "]"}, {"<", ">"}})
+		if not args.splitchar then
+			segments = rejoin_bracket_delimited_runs(segments)
+		else
+			rejoin_square_brackets_after_split = true
+		end
+	else
+		segments = export.parse_balanced_segment_run(arg, "<", ">")
+	end
 
 	local function verify_no_overall()
 		for mod, mod_props in pairs(props.param_mods) do
@@ -886,7 +921,7 @@ function export.parse_inline_modifiers(arg, props)
 			group_index = nil,
 			separated_groups = nil,
 			arg = arg,
-			props = props
+			props = props,
 		}
 	else
 		local terms = {}
@@ -899,15 +934,18 @@ function export.parse_inline_modifiers(arg, props)
 			props.preserve_splitchar, props.escape_fun or export.escape_comma_whitespace,
 			props.unescape_fun or export.unescape_comma_whitespace)
 		for j = 1, #separated_groups, (props.preserve_splitchar and 2 or 1) do
+			if rejoin_square_brackets_after_split then
+				separated_groups[j] = rejoin_bracket_delimited_runs(separated_groups[j])
+			end
 			local parsed = export.parse_inline_modifiers_from_segments {
 				group = separated_groups[j],
 				group_index = j,
 				separated_groups = separated_groups,
 				arg = arg,
-				props = props
+				props = props,
 			}
 			if props.preserve_splitchar and j > 1 then
-				parsed[props.separator_key or "separator"] = separated_groups[j - 1][1]
+				parsed[props.delimiter_key or "delimiter"] = separated_groups[j - 1][1]
 			end
 			table.insert(terms, parsed)
 		end
@@ -929,7 +967,7 @@ which is an object with the following fields:
   [[Module:parse utilities]]), or one of the lists returned by calling {split_alternating_runs()}.
 * `separated_groups`: The list of groups (each of which is of the form of `group`) describing all the terms in the
   argument parsed by {parse_inline_modifiers()}, or {nil} if this isn't applicable (i.e. multiple terms aren't allowed
-  in the argument).
+  in the argument). Currently used only the check the number of groups in the list against `group_index`.
 * `group_index`: The index into `separated_groups` where `group` can be found, or {nil} if not applicable (see below).
 * `arg`: The original user-specified argument being parsed; used only for error messages and only when `props.parse_err`
   is not specified.
