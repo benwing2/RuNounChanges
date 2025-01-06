@@ -1,13 +1,125 @@
-local insert = table.insert
-local m_form_of = require("Module:form of")
-local m_params = require("Module:parameters")
-local put_module = "Module:parse utilities"
-local rfind = mw.ustring.find
-local rmatch = mw.ustring.match
-local rsplit = mw.text.split
-local rgsplit = mw.text.gsplit
-
 local export = {}
+
+local debug_track_module = "Module:debug/track"
+local form_of_module = "Module:form of"
+local languages_module = "Module:languages"
+local load_module = "Module:load"
+local parameters_module = "Module:parameters"
+local parse_utilities_module = "Module:parse utilities"
+local string_utilities_module = "Module:string utilities"
+local utilities_module = "Module:utilities"
+
+local insert = table.insert
+local ipairs = ipairs
+local pairs = pairs
+local require = require
+
+--[==[
+Loaders for functions in other modules, which overwrite themselves with the target function when called. This ensures modules are only loaded when needed, retains the speed/convenience of locally-declared pre-loaded functions, and has no overhead after the first call, since the target functions are called directly in any subsequent calls.]==]
+local function debug_track(...)
+	debug_track = require(debug_track_module)
+	return debug_track(...)
+end
+
+local function decode_entities(...)
+	decode_entities = require(string_utilities_module).decode_entities
+	return decode_entities(...)
+end
+
+local function format_categories(...)
+	format_categories = require(utilities_module).format_categories
+	return format_categories(...)
+end
+
+local function format_form_of(...)
+	format_form_of = require(form_of_module).format_form_of
+	return format_form_of(...)
+end
+
+local function get_lang(...)
+	get_lang = require(languages_module).getByCode
+	return get_lang(...)
+end
+
+local function gsplit(...)
+	gsplit = require(string_utilities_module).gsplit
+	return gsplit(...)
+end
+
+local function load_data(...)
+	load_data = require(load_module).load_data
+	return load_data(...)
+end
+
+local function parse_inline_modifiers(...)
+	parse_inline_modifiers = require(parse_utilities_module).parse_inline_modifiers
+	return parse_inline_modifiers(...)
+end
+
+local function pattern_escape(...)
+	pattern_escape = require(string_utilities_module).pattern_escape
+	return pattern_escape(...)
+end
+
+local function process_params(...)
+	process_params = require(parameters_module).process
+	return process_params(...)
+end
+
+local function safe_load_data(...)
+	safe_load_data = require(load_module).safe_load_data
+	return safe_load_data(...)
+end
+
+local function split(...)
+	split = require(string_utilities_module).split
+	return split(...)
+end
+
+local function split_on_comma(...)
+	split_on_comma = require(parse_utilities_module).split_on_comma
+	return split_on_comma(...)
+end
+
+local function split_tag_set(...)
+	split_tag_set = require(form_of_module).split_tag_set
+	return split_tag_set(...)
+end
+
+local function tagged_inflections(...)
+	tagged_inflections = require(form_of_module).tagged_inflections
+	return tagged_inflections(...)
+end
+
+local function trim(...)
+	trim = require(string_utilities_module).trim
+	return trim(...)
+end
+
+local function ucfirst(...)
+	ucfirst = require(string_utilities_module).ucfirst
+	return ucfirst(...)
+end
+
+--[==[
+Loaders for objects, which load data (or some other object) into some variable, which can then be accessed as "foo or get_foo()", where the function get_foo sets the object to "foo" and then returns it. This ensures they are only loaded when needed, and avoids the need to check for the existence of the object each time, since once "foo" has been set, "get_foo" will not be called again.]==]
+local force_cat
+local function get_force_cat()
+	force_cat, get_force_cat = require(form_of_module).force_cat, nil
+	return force_cat
+end
+
+local m_form_of_pos
+local function get_m_form_of_pos()
+	m_form_of_pos, get_m_form_of_pos = load_data(require(form_of_module).form_of_pos_module), nil
+	return m_form_of_pos
+end
+
+local module_prefix
+local function get_module_prefix()
+	module_prefix, get_module_prefix = require(form_of_module).form_of_lang_data_module_prefix, nil
+	return module_prefix
+end
 
 --[==[ intro:
 This module contains code that directly implements {{tl|form of}}, {{tl|inflection of}}, and the various other
@@ -19,7 +131,7 @@ This module contains code that directly implements {{tl|form of}}, {{tl|inflecti
 -- [[Wiktionary:Tracking/form-of/TEMPLATE/PAGE]]. If TEMPLATE is omitted, the tracking category is of the form
 -- [[Wiktionary:Tracking/form-of/PAGE]].
 local function track(page, template)
-	require("Module:debug/track")("form-of/" .. (template and template .. "/" or "") .. page)
+	debug_track("form-of/" .. (template and template .. "/" or "") .. page)
 end
 
 
@@ -68,7 +180,7 @@ local function process_parent_args(template, parent_args, params, defaults, igno
 	if #defaults > 0 or #ignorespecs > 0 then
 		local new_parent_args = {}
 		for _, default in ipairs(defaults) do
-			local defparam, defval = rmatch(default, "^(.-)=(.*)$")
+			local defparam, defval = default:match("^(.-)=(.*)$")
 			if not defparam then
 				error("Bad default spec " .. default)
 			end
@@ -80,17 +192,16 @@ local function process_parent_args(template, parent_args, params, defaults, igno
 		local named_list_params_to_ignore = {}
 
 		for _, ignorespec in ipairs(ignorespecs) do
-			for ignore in rgsplit(ignorespec, ",") do
-				local param = rmatch(ignore, "^(.*):list$")
+			for ignore in gsplit(ignorespec, ",") do
+				local param = ignore:match("^(.*):list$")
 				if param then
-					if rfind(param, "^[0-9]+$") then
+					if param:match("^%d+$") then
 						insert(numbered_list_params_to_ignore, tonumber(param))
 					else
-						insert(named_list_params_to_ignore,
-							"^" .. require("Module:string utilities").pattern_escape(param) .. "[0-9]*$")
+						insert(named_list_params_to_ignore, "^" .. pattern_escape(param) .. "%d*$")
 					end
 				else
-					if rfind(ignore, "^[0-9]+$") then
+					if ignore:match("^%d+$") then
 						ignore = tonumber(ignore)
 					end
 					params_to_ignore[ignore] = true
@@ -110,7 +221,7 @@ local function process_parent_args(template, parent_args, params, defaults, igno
 					end
 				else
 					for _, lparam in ipairs(named_list_params_to_ignore) do
-						if rfind(k, lparam) then
+						if k:match(lparam) then
 							ignore_me = true
 							break
 						end
@@ -124,7 +235,7 @@ local function process_parent_args(template, parent_args, params, defaults, igno
 		parent_args = new_parent_args
 	end
 
-	local args = m_params.process(parent_args, params, nil, "form of/templates", function_name)
+	local args = process_params(parent_args, params, nil, "form of/templates", function_name)
 
 	-- Tracking for certain user-specified params. This is generally used for
 	-- parameters that we accept but ignore, so that we can eventually remove
@@ -149,7 +260,7 @@ local function split_inflection_tags(tagspecs, split_regex)
 	end
 	local inflection_tags = {}
 	for _, tagspec in ipairs(tagspecs) do
-		for tag in rgsplit(tagspec, split_regex) do
+		for tag in gsplit(tagspec, split_regex) do
 			insert(inflection_tags, tag)
 		end
 	end
@@ -159,20 +270,16 @@ end
 
 local term_param_mods = {
 	t = {
-		-- We need to store the <t:...> inline modifier into the "gloss" key of the parsed part, because that is what
-		-- [[Module:links]] expects.
+		-- [[Module:links]] expects the gloss in the "gloss" key.
 		item_dest = "gloss",
 	},
 	gloss = {},
 	tr = {},
 	ts = {},
 	g = {
-		-- We need to store the <g:...> inline modifier into the "genders" key of the parsed part, because that is what
-		-- [[Module:links]] expects.
+		-- [[Module:links]] expects genders in the "genders" key.
 		item_dest = "genders",
-		convert = function(arg)
-			return rsplit(arg, ",")
-		end,
+		sublist = true,
 	},
 	id = {},
 	alt = {},
@@ -180,19 +287,13 @@ local term_param_mods = {
 	qq = {},
 	lit = {},
 	pos = {},
-	sc = {
-		-- FIXME: [[Module:parse utilities]] should be integrated with [[Module:parameters]], to allow fully automatic error handling.
-		convert = function(arg, parse_err)
-			return require("Module:scripts").getByCode(arg) or
-				parse_err("Parameter \"sc\" should be a valid script code; the value " .. mw.dumpObject(arg) .. " is not valid. See [[WT:LOS]].")
-		end,
-	}
+	sc = { type = "script" },
 }
 
 
 local function parse_terms_with_inline_modifiers(paramname, val, lang)
 	local function generate_obj(term)
-		return {lang = lang, term = term}
+		return {lang = lang, term = decode_entities(term)}
 	end
 
 	local retval
@@ -201,8 +302,8 @@ local function parse_terms_with_inline_modifiers(paramname, val, lang)
 	-- the sort we parse here should consist of a less-than sign, plus letters, plus a colon, e.g. <tr:...>, so if
 	-- we see a tag on the outer level that isn't in this format, we don't try to parse it. The restriction to the
 	-- outer level is to allow generated HTML inside of e.g. qualifier tags, such as foo<q:similar to {{m|fr|bar}}>.
-	if val:find("<") and not val:find("^[^<]*<[a-z]*[^a-z:]") then
-		retval = require(put_module).parse_inline_modifiers(val, {
+	if val:find("<") and not val:find("^[^<]*<%l*[^%l:]") then
+		retval = parse_inline_modifiers(val, {
 			paramname = paramname,
 			param_mods = term_param_mods,
 			generate_obj = generate_obj,
@@ -218,9 +319,9 @@ local function parse_terms_with_inline_modifiers(paramname, val, lang)
 			-- angle brackets. If we see any of these, use the more sophisticated algorithm in
 			-- [[Module:parse utilities]]. Otherwise it's safe to just split on commas directly. This optimization avoids
 			-- loading [[Module:parse utilities]] unnecessarily.
-			retval = require(put_module).split_on_comma(val)
+			retval = split_on_comma(val)
 		else
-			retval = rsplit(val, ",")
+			retval = split(val, ",")
 		end
 		for i, split in ipairs(retval) do
 			retval[i] = generate_obj(split)
@@ -242,9 +343,9 @@ end
 -- entry itself; TERM_PARAM + 1 will be the display text, and TERM_PARAM + 2
 -- will be the gloss, unless NO_NUMBERED_GLOSS is given.
 local function add_link_params(parent_args, params, term_param, no_numbered_gloss)
-	for k, v in pairs(parent_args) do
+	for k in pairs(parent_args) do
 		if type(k) == "string" then
-			local base, num = k:match("^([a-z]+)([0-9]+)$")
+			local base = k:match("^(%l+)(%d+)$")
 			if base and link_param_set[base] then
 				track("multiple-lemmas")
 				error("Support for the separate-parameter style of multiple lemmas in form-of templates is going away; use a comma-separated lemma param with inline modifiers")
@@ -272,27 +373,32 @@ local function add_link_params(parent_args, params, term_param, no_numbered_glos
 	end
 end
 
+-- Need to do what [[Module:parameters]] does to string arguments from parent_args as we're running this
+-- before calling [[Module:parameters]] on parent_args.
+local function ine(arg)
+	if not arg then
+		return nil
+	end
+	arg = trim(arg)
+	return arg ~= "" and arg or nil
+end
 
 local function add_base_lemma_params(parent_args, iargs, params, compat)
-	-- Need to do what [[Module:parameters]] does to string arguments from parent_args as we're running this
-	-- before calling [[Module:parameters]] on parent_args.
-	local function ine(arg)
-		if not arg then
-			return nil
-		end
-		arg = mw.text.trim(arg)
-		return arg ~= "" and arg or nil
-	end
-
-	local langcode = ine(parent_args[compat and "lang" or 1]) or iargs["lang"] or "und"
-	if m_form_of.langs_with_lang_specific_tags[langcode] then
-		local langdata = mw.loadData(m_form_of.form_of_lang_data_module_prefix .. langcode)
-		if langdata.base_lemma_params then
-			for _, param in ipairs(langdata.base_lemma_params) do
-				params[param.param] = {}
+	-- Check the language-specific data for additional base lemma params. But if there's no language-specific data,
+	-- attempt any parent varieties as well (i.e. superordinate varieties).
+	local lang = get_lang(ine(parent_args[compat and "lang" or 1]) or ine(iargs["lang"]) or "und", nil, true)
+	while lang do
+		local langdata = safe_load_data((module_prefix or get_module_prefix()) .. lang:getCode())
+		if langdata then
+			local base_lemma_params = langdata.base_lemma_params
+			if base_lemma_params then
+				for _, param in ipairs(base_lemma_params) do
+					params[param.param] = {}
+				end
+				return base_lemma_params
 			end
-			return langdata.base_lemma_params
 		end
+		lang = lang:getParent()
 	end
 end
 
@@ -339,11 +445,11 @@ local function get_lemmas_and_categories(iargs, args, term_param, compat, base_l
 
 	if not args["nocat"] then
 		for _, cat in ipairs(iargs["cat"]) do
-			insert(categories, lang:getCanonicalName() .. " " .. cat)
+			insert(categories, lang:getFullName() .. " " .. cat)
 		end
 	end
 	for _, cat in ipairs(args["cat"]) do
-		insert(categories, lang:getCanonicalName() .. " " .. cat)
+		insert(categories, lang:getFullName() .. " " .. cat)
 	end
 
 	-- Format the link, preceding text and categories
@@ -356,8 +462,8 @@ local function get_lemmas_and_categories(iargs, args, term_param, compat, base_l
 		-- maybe add tracking category if primary entry doesn't exist (this is an
 		-- expensive call so we don't do it by default)
 		if iargs["noprimaryentrycat"] and term and mw.title.getCurrentTitle().nsText == ""
-			and not mw.title.new(term).exists then
-			insert(categories, lang:getCanonicalName() .. " " .. iargs["noprimaryentrycat"])
+			and not mw.title.new(term):getContent() then
+			insert(categories, lang:getFullName() .. " " .. iargs["noprimaryentrycat"])
 		end
 	end
 
@@ -388,7 +494,6 @@ local function get_lemmas_and_categories(iargs, args, term_param, compat, base_l
 		end
 
 		-- sc= but not invocation arg sc= should override inline modifier sc=.
-		local sc
 		if args["sc"] then
 			lemmas[1].sc = args["sc"]
 		elseif not lemmas[1].sc and iargs["sc"] then
@@ -398,7 +503,7 @@ local function get_lemmas_and_categories(iargs, args, term_param, compat, base_l
 		if #args["g"] > 0 then
 			local genders = {}
 			for _, g in ipairs(args["g"]) do
-				extend_list(genders, rsplit(g, ","))
+				extend_list(genders, split(g, ","))
 			end
 			lemmas[1].genders = genders
 		end
@@ -467,13 +572,13 @@ local function construct_form_of_text(iargs, args, term_param, compat, base_lemm
 	if #lemma_data.categories == 0 then
 		return text
 	end
-	return text .. require("Module:utilities").format_categories(lemma_data.categories, lemma_data.lang, args["sort"],
+	return text .. format_categories(lemma_data.categories, lemma_data.lang, args["sort"],
 		-- If lemma_is_sort_key is given, supply the first lemma term as the sort base if possible. If sort= is given,
 		-- it will override the base; otherwise, the base will be converted appropriately to a sort key using the
 		-- same algorithm applied to pagenames.
 		iargs.lemma_is_sort_key and type(lemma_data.lemmas) == "table" and lemma_data.lemmas[1].term,
 		-- Supply the first lemma's script for sort key computation.
-		m_form_of.force_cat, type(lemma_data.lemmas) == "table" and lemma_data.lemmas[1].sc)
+		force_cat or get_force_cat(), type(lemma_data.lemmas) == "table" and lemma_data.lemmas[1].sc)
 end
 
 
@@ -553,7 +658,7 @@ Invocation params:
 function export.form_of_t(frame)
 	local iparams = get_common_invocation_params()
 	iparams[1] = {required = true}
-	local iargs = m_params.process(frame.args, iparams)
+	local iargs = process_params(frame.args, iparams)
 	local parent_args = frame:getParent().args
 
 	local term_param = iargs["term_param"]
@@ -598,12 +703,12 @@ function export.form_of_t(frame)
 
 	local text = args["notext"] and "" or iargs[1]
 	if args["cap"] or iargs["withcap"] and not args["nocap"] then
-		text = require("Module:string utilities").ucfirst(text)
+		text = ucfirst(text)
 	end
 
 	return construct_form_of_text(iargs, args, term_param, compat, base_lemma_params,
 		function(lemma_data)
-			return m_form_of.format_form_of {text = text, lemmas = lemma_data.lemmas, enclitics = lemma_data.enclitics,
+			return format_form_of{text = text, lemmas = lemma_data.lemmas, enclitics = lemma_data.enclitics,
 				base_lemmas = lemma_data.base_lemmas, lemma_face = "term", posttext = iargs["posttext"]}, {}
 		end
 	)
@@ -623,7 +728,7 @@ local function construct_tagged_form_of_text(iargs, args, term_param, compat, ba
 	return construct_form_of_text(iargs, args, term_param, compat, base_lemma_params,
 		function(lemma_data)
 			-- NOTE: tagged_inflections returns two values, so we do too.
-			return m_form_of.tagged_inflections {
+			return tagged_inflections{
 				lang = lemma_data.lang,
 				tags = tags,
 				lemmas = lemma_data.lemmas,
@@ -680,7 +785,7 @@ function export.tagged_form_of_t(frame)
 	iparams[1] = {list = true, required = true}
 	iparams["split_tags"] = {}
 
-	local iargs = m_params.process(frame.args, iparams)
+	local iargs = process_params(frame.args, iparams)
 	local parent_args = frame:getParent().args
 
 	local term_param = iargs["term_param"]
@@ -727,7 +832,7 @@ function export.tagged_form_of_t(frame)
 		split_inflection_tags(iargs[1], iargs["split_tags"]))
 end
 
---[=[
+--[==[
 Function that implements {{tl|inflection of}} and certain semi-specific variants, such as {{tl|participle of}} and
 {{tl|past participle form of}}. This function is intended for templates that allow the user to specify a set of
 inflection tags.
@@ -735,8 +840,10 @@ inflection tags.
 It works similarly to {form_of_t()} and {tagged_form_of_t()} except that the calling convention for the calling
 template is
 : { {{TEMPLATE|LANG|MAIN_ENTRY_LINK|MAIN_ENTRY_DISPLAY_TEXT|TAG|TAG|...}}}
+
 instead of 
 : { {{TEMPLATE|LANG|MAIN_ENTRY_LINK|MAIN_ENTRY_DISPLAY_TEXT|GLOSS}}}
+
 Note that there isn't a numbered parameter for the gloss, but it can still be specified using {{para|t}} or
 {{para|gloss}}.
 
@@ -766,14 +873,14 @@ Invocation params:
 ; {{para|noprimaryentrycat}}
 ; {{para|lemma_is_sort_key}}
 : All of these are the same as in {form_of_t()}.
-]=]--
+]==]
 function export.inflection_of_t(frame)
 	local iparams = get_common_invocation_params()
 	iparams["preinfl"] = {list = true}
 	iparams["postinfl"] = {list = true}
 	iparams["split_tags"] = {}
 
-	local iargs = m_params.process(frame.args, iparams)
+	local iargs = process_params(frame.args, iparams)
 	local parent_args = frame:getParent().args
 
 	local term_param = iargs["term_param"]
@@ -846,7 +953,7 @@ function export.inflection_of_t(frame)
 			extend_list(infls, args[tagsind])
 			extend_list(infls, split_postinfl)
 		else
-			local groups = m_form_of.split_tags_into_tag_sets(args[tagsind])
+			local groups = split_tag_set(args[tagsind])
 			for _, group in ipairs(groups) do
 				if #infls > 0 then
 					insert(infls, ";")
@@ -872,14 +979,14 @@ function export.normalize_pos(frame)
 		[1] = {},
 		["default"] = {},
 	}
-	local iargs = m_params.process(frame.args, iparams)
+	local iargs = process_params(frame.args, iparams)
 	if not iargs[1] and not iargs["default"] then
 		error("Either 1= or default= must be given in the invocation args")
 	end
 	if not iargs[1] then
 		return iargs["default"]
 	end
-	return mw.loadData(m_form_of.form_of_pos_module)[iargs[1]] or iargs[1]
+	return (m_form_of_pos or get_m_form_of_pos())[iargs[1]] or iargs[1]
 end
 
 return export
