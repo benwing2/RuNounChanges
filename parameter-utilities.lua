@@ -2,6 +2,7 @@ local export = {}
 
 local debug_track_module = "Module:debug/track"
 local parameters_module = "Module:parameters"
+local parse_modifiers_interface_module = "Module:parse modifiers interface"
 local parse_utilities_module = "Module:parse utilities"
 local table_module = "Module:table"
 
@@ -9,45 +10,42 @@ local dump = mw.dumpObject
 
 --[==[
 Loaders for functions in other modules, which overwrite themselves with the target function when called. This ensures modules are only loaded when needed, retains the speed/convenience of locally-declared pre-loaded functions, and has no overhead after the first call, since the target functions are called directly in any subsequent calls.]==]
-	local function debug_track(...)
-		debug_track = require(debug_track_module)
-		return debug_track(...)
-	end
-	
-	local function length(...)
-		length = require(table_module).length
-		return length(...)
-	end
-	
-	local function list_to_set(...)
-		list_to_set = require(table_module).listToSet
-		return list_to_set(...)
-	end
-	
-	local function parse_term_with_lang(...)
-		parse_term_with_lang = require(parse_utilities_module).parse_term_with_lang
-		return parse_term_with_lang(...)
-	end
-	
-	local function parse_inline_modifiers(...)
-		parse_inline_modifiers = require(parse_utilities_module).parse_inline_modifiers
-		return parse_inline_modifiers(...)
-	end
-	
-	local function process_params(...)
-		process_params = require(parameters_module).process
-		return process_params(...)
-	end
-	
-	local function shallow_copy(...)
-		shallow_copy = require(table_module).shallowCopy
-		return shallow_copy(...)
-	end
-	
-	local function term_contains_top_level_html(...)
-		term_contains_top_level_html = require(parse_utilities_module).term_contains_top_level_html
-		return term_contains_top_level_html(...)
-	end
+local function debug_track(...)
+	debug_track = require(debug_track_module)
+	return debug_track(...)
+end
+
+local function length(...)
+	length = require(table_module).length
+	return length(...)
+end
+
+local function list_to_set(...)
+	list_to_set = require(table_module).listToSet
+	return list_to_set(...)
+end
+
+local function parse_term_with_lang(...)
+	parse_term_with_lang = require(parse_utilities_module).parse_term_with_lang
+	return parse_term_with_lang(...)
+end
+
+local function parse_inline_modifiers(...)
+	parse_inline_modifiers = require(parse_modifiers_interface_module).parse_inline_modifiers
+	return parse_inline_modifiers(...)
+end
+
+local function process_params(...)
+	process_params = require(parameters_module).process
+	return process_params(...)
+end
+
+local function shallow_copy(...)
+	shallow_copy = require(table_module).shallowCopy
+	return shallow_copy(...)
+end
+
+----------------- end loaders ----------------
 
 local function track(page, track_module)
 	return debug_track((track_module or "parameter utilities") .. "/" .. page)
@@ -744,6 +742,27 @@ inline modifiers or separate parameters. `data` is an object containing the foll
   The function should return true to stop processing items and return the ones processed so far (not including the item
   currently being processed). This is used, for example, in [[Module:alternative forms]], where an unspecified item
   signal the end of items and the start of labels.
+* `splitchar` is a Lua pattern. If specified, each user-specified argument can consist of multiple delimiter-separated
+  subitems, each of which may be followed by inline modifiers. In this case, each element in the returned list of items
+  is no longer an object describing an item, but instead an object with a `terms` field, whose value is a list
+  describing the subitems (whose format is the same as the normal format of an item in the top-level list when
+  `splitchar` is not specified). Each subitem object will have a `delimiter` field holding the actual delimiter
+  occurring before the subitem, which is useful in the case where `splitchar` matches multiple possible characters. In
+  this case, it is possible to specify that a given modifier can only occur after the last subitem and effectively
+  modifies the whole collection of subitems by setting `overall = true` on the modifier. In this case, the modifier's
+  value will be stored in the top-level object (the object with the `terms` field specifying the subitems). Likewise,
+  any modifiers specified in the form of separate parameters will be treated as overall; if you want them to apply to
+  the subitems, it is your responsibility to set the subitem properties appropriately. Note that splitting on delimiters
+  will not happen in certain protected sequences (by default comma+whitespace; see below). In addition, the algorithm to
+  split on delimiters is sensitive to inline modifier syntax and will not be confused by delimiters inside of inline
+  modifiers or inside of square brackets, which do not trigger splitting (whether or not contained within protected
+  sequences). Note that when `splitchar` is set, the code always sets `preserve_splitchar` in the call to
+  `parse_inline_modifiers()`, meaning that the delimiter preceding the subitems is always available on the `delimiter`
+  key of the corresponding objects.
+* `escape_fun` and `unescape_fun` are as in split_escaping() and split_alternating_runs_escaping() in
+  [[Module:parse utilities]] and control the protected sequences that won't be split when `splitchar` is specified (see
+  previous item). By default, `escape_comma_whitespace` and `unescape_comma_whitespace` are used, so that
+  comma+whitespace sequences won't be split.
 
 Two values are returned, the list of items and the processed `args` structure. In each returned item, there will be one
 field set for each specified property (either through inline modifiers or separate parameters). In addition, the
@@ -884,11 +903,11 @@ function export.process_list_arguments(data)
 						termobj[dest] = arg
 					end
 				end
-				
+
 				-- Add 1 because first term index starts at 2.
 				local paramname = data.termarg + i - 1
-				
-				local function generate_obj(term, parse_err)
+
+				local function generate_subobj(termobj, term, parse_err)
 					if data.parse_lang_prefix and term:find(":") then
 						local actual_term, termlangs = parse_term_with_lang {
 							term = term,
@@ -916,31 +935,47 @@ function export.process_list_arguments(data)
 					return termobj
 				end
 
-				-- Check for inline modifier, e.g. מרים<tr:Miryem>. But exclude top-level HTML entry with <span ...>,
-				-- <br/> or similar in it, often caused by wrapping an argument in {{m|...}} or similar.
-				if term and term:find("<") and not term_contains_top_level_html(term) then
-					parse_inline_modifiers(term, {
-						paramname = paramname,
-						param_mods = data.param_mods,
-						generate_obj = generate_obj,
-					})
-				elseif term then
-					generate_obj(term)
+				local function generate_obj(term, parse_err)
+					return generate_subobj(data.splitchar and {} or termobj, term, parse_err)
 				end
-				-- Set these after parsing inline modifiers, not in generate_obj(), otherwise we'll get an error in
-				-- parse_inline_modifiers() if we try to use <lang:...> or <sc:...> as inline modifiers.
-				termobj.lang = termobj.lang or lang
-				termobj.sc = termobj.sc or sc
 
-				if not data.disallow_custom_separators then
-					-- If the displayed term (from .term/etc. or .alt) has an embedded comma, use a semicolon to join
-					-- the terms.
-					local term_text = termobj[term_dest] or termobj.alt
-					if not use_semicolon and term_text then
-						if term_text:find(",") then
+				parse_inline_modifiers(term, {
+					paramname = paramname,
+					param_mods = data.param_mods,
+					generate_obj = generate_obj,
+					splitchar = data.splitchar,
+					preserve_splitchar = true,
+					escape_fun = data.escape_fun,
+					unescape_fun = data.unescape_fun,
+					outer_container = data.splitchar and termobj or nil,
+				})
+
+				local function postprocess_termobj(termobj)
+					-- Set these after parsing inline modifiers, not in generate_obj(), otherwise we'll get an error in
+					-- parse_inline_modifiers() if we try to use <lang:...> or <sc:...> as inline modifiers.
+					termobj.lang = termobj.lang or lang
+					termobj.sc = termobj.sc or sc
+
+					if not data.disallow_custom_separators and not use_semicolon then
+						if data.splitchar and termobj.delimiter == "," then
 							use_semicolon = true
+						else
+							-- If the displayed term (from .term/etc. or .alt) has an embedded comma, use a semicolon to
+							-- join the terms.
+							local term_text = termobj[term_dest] or termobj.alt
+							if term_text and term_text:find(",") then
+								use_semicolon = true
+							end
 						end
 					end
+				end
+
+				if data.splitchar then
+					for _, subobj in ipairs(termobj.terms) do
+						postprocess_termobj(subobj)
+					end
+				else
+					postprocess_termobj(termobj)
 				end
 
 				table.insert(items, termobj)
