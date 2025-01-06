@@ -34,23 +34,14 @@ local langs_supported = {
 		cont_adv = {"ąc$"},
 		ant_adv = false,
 	},
-	["zlw-mas"] = {
-		peri_comp = "barżi",
-		sup = "ná",
-		-- participle endings
-		act = {"óncÿ$"},
-		pass = {"[aó]nÿ$", "[tł]i$"},
-		cont_adv = {"ónc$"},
-		ant_adv = {"[wł]sÿ$"},
-	},
 	["zlw-opl"] = {
 		peri_comp = "barziej",
 		sup = false,
 		-- participle endings
-		act = false,
-		pass = false,
-		cont_adv = false,
-		ant_adv = false,
+		act = {"ąc[yae]$"},  -- biegnący
+		pass = {"[ntł][yae]$"},  -- otwarty, uwielbiany, legły
+		cont_adv = {"ąc$"},
+		ant_adv = {"szy$"},
 	},
 	["pox"] = {
 		peri_comp = false,
@@ -63,15 +54,14 @@ local langs_supported = {
 		has_dual = true,
 	},
 	["zlw-slv"] = {
-		peri_comp = false,
-		sup = false,
+		peri_comp = "barżé",
+		sup = "no",
 		-- participle endings
 		act = false,
 		pass = false,
 		cont_adv = false,
 		ant_adv = false,
 		has_dual = true,
-		head_is_1 = true,
 	},
 }
 
@@ -101,12 +91,12 @@ local param_mods = {
 	qq = {store = "insert"},
 }
 
--- Parse the inflections specified by the raw arguments in `infls`. `subpage` is the subpage, used to substitute
+-- Parse the inflections specified by the raw arguments in `infls`. `pagename` is the pagename, used to substitute
 -- # in arguments. Parse inline modifiers attached to the raw arguments. Return `infls` if there are any inflections,
 -- otherwise nil. WARNING: Destructively modifies `infls`.
-local function parse_inflection(infls, subpage)
+local function parse_inflection(infls, pagename)
 	local function generate_obj(term, parse_err)
-		return {term = term:gsub("#", subpage)}
+		return {term = term:gsub("#", pagename)}
 	end
 
 	for i, infl in ipairs(infls) do
@@ -168,9 +158,9 @@ function export.show(frame)
 	end
 	local lang = require("Module:languages").getByCode(langcode)
 	local langname = lang:getCanonicalName()
-	local head_is_1 = langs_supported[langcode].head_is_1
 
 	local params = {
+		["head"] = {list = true},
 		["nolink"] = {type = "boolean"},
 		["nolinkhead"] = {type = "boolean", alias_of = "nolink"},
 		["suffix"] = {type = "boolean"},
@@ -179,11 +169,6 @@ function export.show(frame)
 		["abbr"] = {list = true},
 		["pagename"] = {}, -- for testing
 	}
-	if head_is_1 then
-		params[1] = {list = "head"}
-	else
-		params["head"] = {list = true}
-	end
 
 	if pos_functions[poscat] then
 		local posparams = pos_functions[poscat].params
@@ -198,13 +183,13 @@ function export.show(frame)
 	local parargs = frame:getParent().args
 	local args = require("Module:parameters").process(parargs, params)
 
-	local subpage = args.pagename or mw.title.getCurrentTitle().subpageText
+	local pagename = args.pagename or mw.loadData("Module:headword/data").pagename
 
-	local user_specified_heads = args[head_is_1 and 1 or "head"]
+	local user_specified_heads = args.head
 	local heads = user_specified_heads
 	if args.nolink then
 		if #heads == 0 then
-			heads = {subpage}
+			heads = {pagename}
 		end
 	end
 
@@ -215,21 +200,19 @@ function export.show(frame)
 		pos_category = poscat,
 		categories = {},
 		heads = heads,
-		head_is_1 = head_is_1,
 		user_specified_heads = user_specified_heads,
 		no_redundant_head_cat = #user_specified_heads == 0,
 		genders = {},
 		inflections = {},
 		categories = {},
-		pagename = args.pagename,
-		subpage = subpage,
+		pagename = pagename,
 		id = args.id,
 		force_cat_output = force_cat,
 	}
 
 	data.is_suffix = false
 	if args.suffix or (
-		not args.nosuffix and subpage:find("^%-") and poscat ~= "suffixes" and poscat ~= "suffix forms"
+		not args.nosuffix and pagename:find("^%-") and poscat ~= "suffixes" and poscat ~= "suffix forms"
 	) then
 		data.is_suffix = true
 		data.pos_category = "suffixes"
@@ -242,7 +225,7 @@ function export.show(frame)
 		pos_functions[poscat].func(args, data)
 	end
 
-	local abbrs = parse_inflection(args.abbr, subpage)
+	local abbrs = parse_inflection(args.abbr, pagename)
 	insert_inflection(data, abbrs, "abbreviation")
 
 	if args.json then
@@ -268,6 +251,8 @@ local function get_noun_inflection_specs(langcode)
 		{"f", "female equivalent"},
 		{"m", "male equivalent"},
 		{"n", "neuter equivalent"},
+		{"marr", "traditional married form"},
+		{"unmarr", "traditional unmarried form"},
 		{"dim", "diminutive"},
 		{"pej", "pejorative"},
 		{"aug", "augmentative"},
@@ -287,7 +272,7 @@ local function get_noun_pos(is_proper)
 		params = function(langcode)
 			local params = {
 				["indecl"] = {type = "boolean"},
-				[langs_supported[langcode].head_is_1 and 2 or 1] = {list = "g"},
+				[1] = {list = "g"},
 			}
 			for _, spec in ipairs(get_noun_inflection_specs(langcode)) do
 				local param, desc = unpack(spec)
@@ -340,7 +325,7 @@ local function get_noun_pos(is_proper)
 			end
 			
 			-- Gather, validate and canonicalize genders
-			for _, gspec in ipairs(args[data.head_is_1 and 2 or 1]) do
+			for _, gspec in ipairs(args[1]) do
 				for _, g in ipairs(rsplit(gspec, ",")) do
 					if not allowed_genders[g] then
 						error("Unrecognized " .. data.langname .. " gender: " .. g)
@@ -358,7 +343,7 @@ local function get_noun_pos(is_proper)
 			-- Process all inflections.
 			for _, spec in ipairs(get_noun_inflection_specs(data.langcode)) do
 				local param, desc = unpack(spec)
-				local infls = parse_inflection(args[param], data.subpage)
+				local infls = parse_inflection(args[param], data.pagename)
 				insert_inflection(data, infls, desc)
 			end
 		end
@@ -382,25 +367,24 @@ local function get_verb_pos()
 		{"freq", "frequentative"},
 	}
 	
+	local params = {
+		[1] = {default = "?"},
+		["def"] = {type = "boolean"},
+	}
+	for _, spec in ipairs(verb_inflection_specs) do
+		local param, desc = unpack(spec)
+		params[param] = {list = true, disallow_holes = true}
+	end
+
 	return {
-		params = function(langcode)
-			local params = {
-				[langs_supported[langcode].head_is_1 and 2 or 1] = {default = "?"},
-				["def"] = {type = "boolean"},
-			}
-			for _, spec in ipairs(verb_inflection_specs) do
-				local param, desc = unpack(spec)
-				params[param] = {list = true, disallow_holes = true}
-			end
-			return params
-		end,
+		params = params,
 		func = function(args, data)
-			local allowed_aspects = require("Module:table/listToSet") {
+			local allowed_aspects = require("Module:table").listToSet {
 				"pf", "impf", "biasp", "both", "impf-det", "impf-indet", "impf-freq", "?"
 			}
 
 			-- Gather aspects
-			for _, a in ipairs(rsplit(args[data.head_is_1 and 2 or 1], ",")) do
+			for _, a in ipairs(rsplit(args[1], ",")) do
 				table.insert(data.genders, a)
 			end
 
@@ -449,7 +433,7 @@ local function get_verb_pos()
 			-- Process all inflections.
 			for _, spec in ipairs(verb_inflection_specs) do
 				local param, desc = unpack(spec)
-				local infls = parse_inflection(args[param], data.subpage)
+				local infls = parse_inflection(args[param], data.pagename)
 				if infls then
 					if param == "pf" and not pf_allowed then
 						error("Aspectual-pair perfectives not allowed with perfective-only verb")
@@ -482,7 +466,7 @@ local function get_adj_adv_pos(pos)
 	return {
 		params = function(langcode)
 			local params = {
-				[langs_supported[langcode].head_is_1 and 2 or 1] = {list = true, disallow_holes = true},
+				[1] = {list = true, disallow_holes = true},
 				["dim"] = {list = true, disallow_holes = true},
 				["sup"] = {list = true, disallow_holes = true},
 				["nodefsup"] = {type = "boolean"},
@@ -498,7 +482,8 @@ local function get_adj_adv_pos(pos)
 			return params
 		end,
 		func = function(args, data)
-			local comps = parse_inflection(args[data.head_is_1 and 2 or 1], data.subpage)
+			local default_sups = {}
+			local comps = parse_inflection(args[1], data.pagename)
 			if comps then
 				lang_data = langs_supported[data.langcode]
 				if comps[1].term == "-" then
@@ -513,73 +498,73 @@ local function get_adj_adv_pos(pos)
 					end
 					table.remove(comps, 1)
 				end
-				local default_sups = {}
 				for i, comp in ipairs(comps) do
 					if comp.term == "peri" then
 						if not lang_data.peri_comp then
 							error("Don't know how to form periphrastic comparatives for " .. data.langname)
 						end
-						comp.term = ("[[%s]] [[%s]]"):format(lang_data.peri_comp, data.subpage)
+						comp.term = ("[[%s]] [[%s]]"):format(lang_data.peri_comp, data.pagename)
 						if lang_data.sup then
 							table.insert(default_sups, {term = ("[[%s%s]] [[%s]]"):format(
-								lang_data.sup, lang_data.peri_comp, data.subpage), q = comp.q, qq = comp.qq, id = comp.id})
+								lang_data.sup, lang_data.peri_comp, data.pagename), q = comp.q, qq = comp.qq, id = comp.id})
 						end
 					elseif lang_data.sup then
 						table.insert(default_sups, {term = ("%s%s"):format(lang_data.sup, comp.term), q = comp.q, qq = comp.qq,
 							id = comp.id})
 					end
 				end
-				local sups = parse_inflection(args.sup, data.subpage)
-				if not sups then
-					sups = args.nodefsup and {} or {{term = "+"}}
+			end
+			insert_inflection(data, comps, "comparative", {form = "comparative"})
+
+			local sups = parse_inflection(args.sup, data.pagename)
+			if not sups then
+				sups = args.nodefsup and {} or {{term = "+"}}
+			end
+			local combined_sups = {}
+			local function combine_qualifiers(q1, q2)
+				if not q1 then
+					return q2
 				end
-				local combined_sups = {}
-				local function combine_qualifiers(q1, q2)
-					if not q1 then
-						return q2
-					end
-					if not q2 then
-						return q1
-					end
-					local combined = {}
-					for _, q in ipairs(q1) do
-						table.insert(combined, q)
-					end
-					for _, q in ipairs(q2) do
-						table.insert(combined, q)
-					end
-					return combined
+				if not q2 then
+					return q1
 				end
-				for _, sup in ipairs(sups) do
-					if sup.term == "+" then
-						for _, def_sup in ipairs(default_sups) do
-							def_sup.q = combine_qualifiers(def_sup.q, sup.q)
-							def_sup.qq = combine_qualifiers(def_sup.qq, sup.qq)
-							def_sup.id = def_sup.id or sup.id
-							table.insert(combined_sups, def_sup)
-						end
-					else
-						table.insert(combined_sups, sup)
+				local combined = {}
+				for _, q in ipairs(q1) do
+					table.insert(combined, q)
+				end
+				for _, q in ipairs(q2) do
+					table.insert(combined, q)
+				end
+				return combined
+			end
+			for _, sup in ipairs(sups) do
+				if sup.term == "+" then
+					for _, def_sup in ipairs(default_sups) do
+						def_sup.q = combine_qualifiers(def_sup.q, sup.q)
+						def_sup.qq = combine_qualifiers(def_sup.qq, sup.qq)
+						def_sup.id = def_sup.id or sup.id
+						table.insert(combined_sups, def_sup)
 					end
+				else
+					table.insert(combined_sups, sup)
 				end
-				insert_inflection(data, comps, "comparative", {form = "comparative"})
-				insert_inflection(data, combined_sups, "superlative", {form = "superlative"})
-				if data.langcode == "pl" then
-					local mpcomp = parse_inflection(args.mpcomp, data.subpage)
-					insert_inflection(data, mpcomp, "Middle Polish comparative")
-					local mpsup = parse_inflection(args.mpsup, data.subpage)
-					insert_inflection(data, mpsup, "Middle Polish superlative")
-				end
+			end
+			insert_inflection(data, combined_sups, "superlative", {form = "superlative"})
+			if data.langcode == "pl" then
+				local mpcomp = parse_inflection(args.mpcomp, data.pagename)
+				insert_inflection(data, mpcomp, "Middle Polish comparative")
+				local mpsup = parse_inflection(args.mpsup, data.pagename)
+				insert_inflection(data, mpsup, "Middle Polish superlative")
 			end
 			if pos == "adjective" then
 				if args.indecl then
 					table.insert(data.inflections, {label = glossary_link("indeclinable")})
 					table.insert(data.categories, data.langname .. " indeclinable adjectives")
 				end
-				local infls = parse_inflection(args.adv, data.subpage)
+				local infls = parse_inflection(args.adv, data.pagename)
 				insert_inflection(data, infls, "derived adverb")
 			end
-			local infls = parse_inflection(args.dim, data.subpage)
+			local infls = parse_inflection(args.dim, data.pagename)
 			insert_inflection(data, infls, "diminutive")
 		end,
 	}
@@ -592,23 +577,22 @@ pos_functions["adverbs"] = get_adj_adv_pos("adverb")
 ----------------------------------------------- Participles --------------------------------------------
 
 local function get_part_pos()
+	local params = {
+		[1] = {},
+		["a"] = {list = true, disallow_holes = true},
+	}
 
 	return {
-		params = function(langcode)
-			return {
-				[langs_supported[langcode].head_is_1 and 2 or 1] = {},
-				["a"] = {list = true, disallow_holes = true},
-			}
-		end,
+		params = params,
 		func = function(args, data)
 			if data.langcode ~= "pl" then
 				error("Internal error: Unable to handle languages other than Polish for participles: " .. data.langname)
 			end
 			-- Compute allowed aspects, and map incomplete aspects to specs with a "?" in them.
-			local allowed_aspects = require("Module:table/listToSet") {
+			local allowed_aspects = require("Module:table").listToSet {
 				"pf", "impf", "biasp", "both", "pf-it", "pf-sem", "impf-it", "impf-dur", "?"
 			}
-			local allowed_types = require("Module:table/listToSet") {
+			local allowed_types = require("Module:table").listToSet {
 				"pass", "act", "ant-adv", "cont-adv", "?"
 			}
 
@@ -652,13 +636,13 @@ local function get_part_pos()
 					return false
 				end
 				for _, ending in ipairs(endings) do
-					if rfind(data.subpage, ending) then
+					if rfind(data.pagename, ending) then
 						return true
 					end
 				end
 				return false
 			end
-			local ptype = args[data.head_is_1 and 2 or 1]
+			local ptype = args[1]
 			if ptype then
 				if not allowed_types[ptype] then
 					error("Unrecognized " .. data.langname .. " participle type: " .. ptype)
@@ -671,12 +655,12 @@ local function get_part_pos()
 				ptype = "cont-adv"
 			elseif matches_parttype("ant_adv") then
 				ptype = "ant-adv"
-			elseif (data.subpage:find("%-participle$") or data.subpage:find("%-part$")) and
+			elseif (data.pagename:find("%-participle$") or data.pagename:find("%-part$")) and
 				mw.title.getCurrentTitle().nsText == "Template" then
 				ptype = "pass"
 			else
-				error(("Missing %s participle type and can't infer from subpage '%s'"):format(data.langname,
-					data.subpage))
+				error(("Missing %s participle type and can't infer from pagename '%s'"):format(data.langname,
+					data.pagename))
 			end
 
 			if ptype == "act" then
