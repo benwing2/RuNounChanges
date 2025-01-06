@@ -3,6 +3,7 @@ local export = {}
 local m_string_utilities = require("Module:string utilities")
 local parameters_module = "Module:parameters"
 
+local list_to_text = mw.text.listToText
 local rfind = mw.ustring.find
 local rsplit = mw.text.split
 local u = mw.ustring.char
@@ -987,7 +988,7 @@ function export.parse_inline_modifiers_from_segments(data)
 			end
 			parse_err(("Modifier %s%s lacks a prefix, should begin with one of %s"):format(
 				group_k, group_k ~= group[k] and (" (normalized from %s)"):format(group[k]) or "",
-				require("Module:table").serialCommaJoin(valid_prefixes, {dontTag = true})))
+				list_to_text(valid_prefixes)))
 		end
 		local prefix_parse_err
 		if props.parse_err then
@@ -1083,7 +1084,7 @@ function export.parse_inline_modifiers_from_segments(data)
 				valid_prefixes[i] = "'" .. valid_prefix .. "'"
 			end
 			prefix_parse_err("Unrecognized prefix, should be one of " ..
-				require("Module:table").serialCommaJoin(valid_prefixes, {dontTag = true}))
+				list_to_text(valid_prefixes))
 		end
 	end
 	return term_obj
