@@ -24,96 +24,6 @@ local function rsubb(term, foo, bar)
 	return retval, nsubs > 0
 end
 
--- if not empty
-local function ine(val)
-	if val == "" then
-		return nil
-	end
-	return val
-end
-
--- Convert a value that is not a string or number to a string using mw.dumpObject(), for debugging purposes.
-local function dump_if_unusual(val)
-	return (type(val) == "string" or type(val) == "number") and val or dump(val)
-end
-
-local function parse_form(args, i, default)
-	local m_form_data = mw.loadData('Module:form of/data')
-
-	local output = {}
-	while args[i] do
-		local tag = args[i]
-		if m_form_data.shortcuts[tag] then
-			tag = m_form_data.shortcuts[tag]
-		end
-		table.insert(output, tag)
-		i = i + 1
-	end
-
-	return (#output > 0) and table.concat(output, " ") or default
-end
-
-function export.show_bare(frame)
-	local pargs = frame:getParent().args
-	
-	local lang = pargs[1]
-	local means = pargs["means"]
-	
-	if mw.title.getCurrentTitle().nsText == "Template" then
-		lang = "und"
-		means = "meaning"
-	end
-	
-	lang = lang and require("Module:languages").getByCode(lang) or require("Module:languages").err(lang, 1)
-	
-	return "[+" .. parse_form(pargs, 2, "object") .. (means and (" = " .. means) or "") .. "]"
-end
-
-function export.show_prep(frame)
-	local pargs = frame:getParent().args
-	
-	local lang = pargs[1]
-	local means = pargs["means"]
-	local term = ine(pargs[2])
-	local alt = ine(pargs["alt"])
-	local senseid = ine(pargs["senseid"])
-	
-	if mw.title.getCurrentTitle().nsText == "Template" then
-		lang = "und"
-		means = "meaning"
-		term = "preposition"
-	end
-	
-	lang = lang and require('Module:languages').getByCode(lang) or require('Module:languages').err(lang, 1)
-
-	return "[+ <span>" ..
-		require('Module:links').full_link({lang = lang, term = term, alt = alt, id = senseid, tr = "-"}, "term") ..
-		" <span>(" .. parse_form(pargs, 3, "object") .. ")</span></span>" .. (means and (" = " .. means) or "") .. "]"
-end
-
-function export.show_postp(frame)
-	local pargs = frame:getParent().args
-	
-	local lang = pargs[1]
-	local means = pargs["means"] or nil
-	local term = ine(pargs[2])
-	local alt = ine(pargs["alt"])
-	local senseid = ine(pargs["senseid"])
-	
-	if mw.title.getCurrentTitle().nsText == "Template" then
-		lang = "und"
-		means = "meaning"
-		term = "postposition"
-	end
-	
-	lang = lang and require('Module:languages').getByCode(lang) or require('Module:languages').err(lang, 1)
-
-	return "[+ <span><span>(" .. parse_form(pargs, 3, "object") .. ")</span> " ..
-		require('Module:links').full_link({lang = lang, term = term, alt = alt, id = senseid, tr = "-"}, "term") ..
-		"</span>" .. (means and (" = " .. means) or "") .. "]"
-end
-
-
 function export.show_obj(frame)
 	local pargs = frame:getParent().args
 
@@ -230,8 +140,14 @@ function export.show_obj(frame)
 				local form = parse_one_form(split_runs[i])
 				local prev_joiner = i > 1 and rsub(split_runs[i - 1][1], "^%s*(.-)%s*$", "%1")
 				if prev_joiner == "/" then
+					local this_alternants = parsed_object.arguments[#parsed_object.arguments].alternants
 					-- Join to the previous alternant.
-					table.insert(parsed_object.arguments[#parsed_object.arguments].alternants, form)
+					table.insert(this_alternants, form)
+					if not form.is_term and form.form == "etc." then
+						for j = 2, #this_alternants do
+							this_alternants[j].separator = ", "
+						end
+					end
 				else
 					local suppress_with = prev_joiner == "&" 
 					-- Create a new argument.
@@ -330,7 +246,24 @@ function export.show_obj(frame)
 				separator = i > 1 and " " or ""
 				prefix = ""
 			end
+
+			-- If there are multiple alternants and a non-final alternant has a gloss, assume that each alternant has
+			-- its own gloss, or at least that the gloss on the final alternant doesn't apply to all alternants.
+			-- Otherwise, we assume the gloss on the final alternant applies to all alternants. This affects the
+			-- placement of right labels and qualifiers vis-à-vis the gloss: if there's a single gloss applying to
+			-- multiple alternants, we put the right labels and qualifiers before gloss, otherwise after.
+			local gloss_with_non_final_alternant = false
 			for j, alternant in ipairs(argument.alternants) do
+				if j < #argument.alternants and alternant.t then
+					gloss_with_non_final_alternant = true
+					break
+				end
+			end
+
+			-- Process each alternant.
+			for j, alternant in ipairs(argument.alternants) do
+				-- Construct the "case text" for the alternant (what goes in parens). We always assume that a given case
+				-- text goes only with its associated alternant, unlike for the gloss (see above).
 				local case_text
 				if alternant.case then
 					if type(alternant.case) == "string" then
@@ -347,6 +280,7 @@ function export.show_obj(frame)
 					end
 				end
 
+				-- Construct the argument itself (inflection tag or literal word), and add any case text.
 				local form
 				--local text_classes = "object-usage-form-of-tag"
 				local text_classes = "object-usage-tag"
@@ -374,11 +308,44 @@ function export.show_obj(frame)
 					end
 				end
 
+				local part = form
+
+				local function add_qualifiers_and_labels_to_alternant(refs)
+					if alternant.q or alternant.qq or alternant.l or alternant.ll or refs then
+						part = require(pron_qualifier_module).format_qualifiers {
+							text = part,
+							lang = lang,
+							q = alternant.q and {alternant.q} or nil,
+							qq = alternant.qq and {alternant.qq} or nil,
+							l = alternant.l,
+							ll = alternant.ll,
+							refs = refs,
+						}
+					end
+				end
+
 				local meaning_text = ""
 				if alternant.t then
 					meaning_text = " <small>‘" .. alternant.t .. "’</small>"
 				end
-				local part = form .. meaning_text
+				if gloss_with_non_final_alternant or #argument.alternants == 1 then
+					-- See above. If there is only one alternant, or multiple alternants where each gloss goes with an
+					-- individual alternant, right labels and qualifiers go after the gloss, otherwise before. The
+					-- reference always goes directly after the form (before the gloss), so if the right labels and
+					-- qualifiers go after the gloss, we need to split up their handling.
+					if alternant.refs then
+						part = require(pron_qualifier_module).format_qualifiers {
+							text = part,
+							lang = lang,
+							refs = alternant.refs,
+						}
+					end
+					part = part .. meaning_text
+					add_qualifiers_and_labels_to_alternant()
+				else
+					add_qualifiers_and_labels_to_alternant(alternant.refs)
+ 					part = part .. meaning_text
+ 				end
 				if j > 1 and not used_with_in_prefix and not recursive_suppress_with then
 					-- If we used e.g. {{+obj|ca|&transitve/:en}} to suppress the initial ''with'', we want it
 					-- to appear after the ''or'' so we get ''transitive or with [[en]]'' rather than just
@@ -386,20 +353,12 @@ function export.show_obj(frame)
 					part = "''with'' " .. part
 					used_with_in_prefix = true
 				end
-				if alternant.q or alternant.qq or alternant.l or alternant.ll or alternant.refs then
-					part = require(pron_qualifier_module).format_qualifiers {
-						text = part,
-						lang = lang,
-						q = alternant.q and {alternant.q} or nil,
-						qq = alternant.qq and {alternant.qq} or nil,
-						l = alternant.l,
-						ll = alternant.ll,
-						refs = alternant.refs,
-					}
+				if j > 1 then
+					table.insert(alternant_parts, alternant.separator or " ''or'' ")
 				end
 				table.insert(alternant_parts, part)
 			end
-			local part = prefix .. table.concat(alternant_parts, " ''or'' ")
+			local part = prefix .. table.concat(alternant_parts)
 			if argument.q or argument.qq or argument.l or argument.ll then
 				part = require(pron_qualifier_module).format_qualifiers {
 					text = part,
@@ -420,14 +379,14 @@ function export.show_obj(frame)
 	local function ins(txt)
 		table.insert(object_parts, txt)
 	end
-	ins(require("Module:TemplateStyles")("Module:User:Benwing2/object usage/style.css"))
+	ins(require("Module:TemplateStyles")("Module:object usage/style.css"))
 	ins("[")
 	for i, parsed_object in ipairs(parsed_objects) do
 		if i > 1 then
 			if parsed_object.separator == ";" then
-				ins("; ''in addition,''&ensp;")
+				ins("; ''in addition,'' ")
 			else
-				ins("; ''or''&ensp;")
+				ins("; ''or'' ")
 			end
 		end
 		ins(format_parsed_object(parsed_object, false))
