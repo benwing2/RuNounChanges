@@ -24,13 +24,13 @@ local m_table = require("Module:table")
 local headword_module = "Module:headword"
 local romut_module = "Module:romance utilities"
 local it_verb_module = "Module:it-verb"
-local put_module = "Module:parse utilities"
+local inflection_utilities_module = "Module:inflection utilities"
+local parse_utilities_module = "Module:parse utilities"
 local string_utilities_module = "Module:string utilities"
 local com = require("Module:it-common")
 local lang = require("Module:languages").getByCode("it")
 local langname = lang:getCanonicalName()
--- Assigned to `require("Module:parse utilities")` as necessary.
-local put
+
 local m_str_utils = require(string_utilities_module)
 
 local rfind = m_str_utils.find
@@ -262,14 +262,12 @@ local param_mods = {
 		-- We need to store the <g:...> inline modifier into the "genders" key of the parsed part, because that is what
 		-- [[Module:links]] expects.
 		item_dest = "genders",
-		convert = function(arg, parse_err)
-			return rsplit(arg, ",")
-		end,
+		sublist = true,
 	},
 	id = {},
 	alt = {},
-	q = {},
-	qq = {},
+	q = {type = "qualifier"},
+	qq = {type = "qualifier"},
 	lit = {},
 	pos = {},
 	-- no 'sc', doesn't make sense for Italian
@@ -290,10 +288,7 @@ local function parse_term_with_modifiers(paramname, val)
 	local splitchars = "[/;,]"
 	-- Check for inline modifier, e.g. מרים<tr:Miryem>.
 	if val:find("<") then
-		if not put then
-			put = require(put_module)
-		end
-		retval = put.parse_inline_modifiers(val, {
+		retval = require(parse_utilities_module).parse_inline_modifiers(val, {
 			paramname = paramname,
 			param_mods = param_mods,
 			generate_obj = generate_obj,
@@ -303,9 +298,7 @@ local function parse_term_with_modifiers(paramname, val)
 	else
 		local split
         if val:find(",%s") then
-			if not put then
-				put = require(put_module)
-			end
+			local put = require(parse_utilities_module)
             split = put.split_escaping(val, splitchars, true, put.escape_comma_whitespace,
 				put.unescape_comma_whitespace)
         else
@@ -798,7 +791,7 @@ local function do_adjective(args, data, tracking_categories, pos, is_suffix, is_
 			end
 			table.sort(indicators)
 			error("Special inflection indicator beginning can only be " ..
-				m_table.serialCommaJoin(indicators, {dontTag = true}) .. ": " .. args.sp)
+				mw.text.listToText(indicators) .. ": " .. args.sp)
 		end
 	end
 
@@ -1150,13 +1143,6 @@ pos_functions["verbs"] = {
 
 			local alternant_multiword_spec = require(it_verb_module).do_generate_forms(args, "from headword", data.heads[1])
 
-			local function expand_footnotes_and_references(footnotes)
-				if not footnotes then
-					return nil
-				end
-				return require("Module:inflection utilities").fetch_headword_qualifiers_and_references(footnotes)
-			end
-
 			local function do_verb_form(slot, label, rowslot, rowlabel)
 				local forms = alternant_multiword_spec.forms[slot]
 				local retval
@@ -1185,7 +1171,8 @@ pos_functions["verbs"] = {
 					-- footnote which gets repeated in the traditional form ''succedètti'' (which also has the
 					-- footnote "[traditional]").
 					for _, form in ipairs(forms) do
-						local quals, refs = expand_footnotes_and_references(form.footnotes)
+						local quals, refs = require(inflection_utilities_module).
+							convert_footnotes_to_qualifiers_and_references(form.footnotes)
 						local quals_with_ditto = quals
 						if quals and prev_footnotes then
 							local quals_contains_previous = true
@@ -1293,7 +1280,8 @@ pos_functions["verbs"] = {
 			) then
 				data.heads = {}
 				for _, lemma_obj in ipairs(alternant_multiword_spec.forms.inf) do
-					local quals, refs = expand_footnotes_and_references(lemma_obj.footnotes)
+					local quals, refs = require(inflection_utilities_module).
+						convert_footnotes_to_qualifiers_and_references(lemma_obj.footnotes)
 					table.insert(data.heads, {term = lemma_obj.form, q = quals, refs = refs})
 				end
 			end
