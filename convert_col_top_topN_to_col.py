@@ -162,7 +162,7 @@ def process_text_on_page(index, pagetitle, text):
           m = re.search("^\{\{ *((?:col-)?bottom) *\|", line.strip())
           if m:
             if not cant_convert:
-              pagemsg("WARNING: Saw {{%s}} with params, can't convert to {{col}}: %s" % (m.group(1), line))
+              pagemsg("WARNING: Saw {{%s}} with params, can't convert to {{col}}: %s" % (m.group(1), origline))
             newlines.extend(raw_col_lines)
             in_col_top = False
             continue
@@ -193,20 +193,26 @@ def process_text_on_page(index, pagetitle, text):
             pagemsg("WARNING: Non-bulleted line, can't yet convert to {{col}}: %s" % line)
             cant_convert = True
             continue
-          if re.search(r"^\*[*:#]", line):
-            pagemsg("WARNING: Multiply indented line, can't yet convert to {{col}}: %s" % line)
-            cant_convert = True
-            continue
-          m = re.search(r"^\* *(.*)$", line)
+          m = re.search(r"^(\*+)(.*)$", line)
           if not m:
             pagemsg("WARNING: Internal error: Line doesn't have a term after a single bullet: %s" % line)
             cant_convert = True
             continue
-          line = m.group(1).strip()
           origline = line
+          number_of_bullets, line = m.groups()
+          if re.search("^[:#]", line):
+            pagemsg("WARNING: Saw *: or *# at beginning of line, can't convert to {{col}}: %s" % origline)
+            cant_convert = True
+            continue
+          if len(number_of_bullets) == 1:
+            bullet_prefix = ""
+          else:
+            bullet_prefix = number_of_bullets[1:] + " "
+          line = line.strip()
+          bulleted_line = bullet_prefix + line
           if re.search(r"\{\{ *(ja-l|ja-r|ja-r/args|ryu-l|ryu-r|ryu-r/args|ko-l|zh-l|vi-l|he-l) *\|", line):
-            pagemsg("WARNING: Unable to convert Asian specialized linking template to {{col}} format, inserting raw: %s" % line)
-            col_elements.append("|%s" % origline)
+            pagemsg("WARNING: Unable to convert Asian specialized linking template to {{col}} format, inserting raw: %s" % origline)
+            col_elements.append("|%s" % bulleted_line)
             continue
           left_qual = []
           right_qual = []
@@ -284,7 +290,7 @@ def process_text_on_page(index, pagetitle, text):
                   "fem": "f",
                   "fem.": "f",
                   "feminine": "f",
-                  "n": "n",
+                  #"n": "n", existing uses seem to be "noun" not "neuter"
                   "n.": "n",
                   "neut": "n",
                   "neut.": "n",
@@ -337,7 +343,7 @@ def process_text_on_page(index, pagetitle, text):
                 ]:
                   qualparts.append("<%s:%s>" % ("l" if is_left else "ll", qual))
                 elif not has_pos and qual in [
-                  "noun", "proper noun", "adjective", "adj", "verb", "v", "vb", "adverb", "adv", "preposition", "prep",
+                  "noun", "n", "proper noun", "adjective", "adj", "verb", "v", "vb", "adverb", "adv", "preposition", "prep",
                   "conjunction", "conj", "verbal noun", "[[vi]]", "[[vt]]",
                 ]:
                   qualparts.append("<pos:%s>" % qual.replace("[[", "").replace("]]", ""))
@@ -366,17 +372,17 @@ def process_text_on_page(index, pagetitle, text):
                 vals[-1] = re.sub("(<g:.*?)>", r"\1,%s>" % ",".join(exterior_genders), vals[-1])
               else:
                 vals[-1] += "<g:%s>" % ",".join(exterior_genders)
-            col_elements.append("|%s" % ",".join(vals))
+            col_elements.append("|%s%s" % (bullet_prefix, ",".join(vals)))
 
           match_link_template_re = r"\{\{ *[lm](?:-self)? *\|"
 
           def handle_parse_error(reason):
             nonlocal cant_convert
             if re.search(match_link_template_re, line):
-              pagemsg("WARNING: %s and line has templated link, inserting raw: %s" % (reason, line))
-              col_elements.append("|%s" % origline)
+              pagemsg("WARNING: %s and line has templated link, inserting raw: %s" % (reason, origline))
+              col_elements.append("|%s" % bulleted_line)
             else:
-              pagemsg("WARNING: %s and no templated link present, can't convert to {{col}}: %s" % (reason, line))
+              pagemsg("WARNING: %s and no templated link present, can't convert to {{col}}: %s" % (reason, origline))
               cant_convert = True
 
           if re.search(r"^%s|\[\[" % match_link_template_re, line):
