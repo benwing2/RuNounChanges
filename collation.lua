@@ -82,13 +82,11 @@ local function make_sortkey_func(lang, make_sortbase)
 	end
 end
 
--- When comparing two elements with code points outside the BMP, the less-than
--- operator treats all code points above U+FFFF as equal because of a bug in
--- glibc. See [[phab:T193096#4161287]]. Instead, compares bytes, which always
--- yields the same result as comparing code points in valid UTF-8 strings.
--- UTF-8-encoded characters that do not belong to the Basic Multilingual Plane
--- (that is, with code points greater than U+FFFF) have byte sequences that
--- begin with the bytes 240 to 244.
+-- When comparing two elements with code points outside the BMP, the less-than operator treats all code points above
+-- U+FFFF as equal because of a bug in glibc. See [[phab:T193096#4161287]]. Instead, compare bytes, which always yields
+-- the same result as comparing code points in valid UTF-8 strings. UTF-8-encoded characters that do not belong to the
+-- Basic Multilingual Plane (that is, with code points greater than U+FFFF) have byte sequences that begin with the
+-- bytes 240 to 244.
 do
 	-- Memoize match with the `simple` flag, which means it should only be used
 	-- with fixed additional arguments (in this case, the pattern).
