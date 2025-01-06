@@ -19,11 +19,44 @@ local u = m_str_utils.char
 
 local export = {}
 
+
+-- Format a list of items using HTML. `list` is an HTML object (as created by `mw.html.create`), to which the formatted
+-- items are added. `args` is an object specifying the items to add and related properties, with the following fields:
+-- * `content`: A list of the items to format. See below for the format of the items.
+-- * `lang`: The language object of the items to format, if the items in `content` are strings.
+-- * `sc`: The script object of the items to format, if the items in `content` are strings.
+-- There may be other fields in `args` for use by `create_list` (the caller), but they are ignored.
+--
+-- Each item on `content` is in one of the following formats:
+-- * A string. This is for compatibility and should not be used by new callers.
+-- * An object describing an item to format, in the format expected by full_link() in [[Module:links]] but can also
+--   have left or right qualifiers, left or right labels, or references.
+-- * An object describing a list of subitems to format, displayed side-by-side, separated by a comma or other separator.
+--   This format is identified by the presence of a key `terms` specifying the list of subitems. Each subitem is in
+--   the same format as for a single top-level item, except that it should also have a `separator` field specifying the
+--   separator to display before each item (which will typically be a blank string before the first item).
 local function format_list_items(list, args)
 	local function term_already_linked(term)
 		-- FIXME: "<span" is an ugly hack to prevent double-linking of terms already run through {{l|...}}:
 		-- [[Thread:User talk:CodeCat/MewBot adding lang to column templates]]
 		return find(term, "<span")
+	end
+	local function format_single_item(item)
+		local text = item.term and term_already_linked(item.term) and item.term or require(links_module).full_link(item)
+		-- We could use the "show qualifiers" flag to full_link() but not when term_already_linked().
+		if item.q and item.q[1] or item.qq and item.qq[1] or item.l and item.l[1] or item.ll and item.ll[1] or
+			item.refs and item.refs[1] then
+			text = require(pron_qualifier_module).format_qualifiers {
+				lang = item.lang or args.lang,
+				text = text,
+				q = item.q,
+				qq = item.qq,
+				l = item.l,
+				ll = item.ll,
+				refs = item.refs,
+			}
+		end
+		return text
 	end
 	for _, item in ipairs(args.content) do
 		if item == false then
@@ -31,20 +64,24 @@ local function format_list_items(list, args)
 		else
 			local text
 			if type(item) == "table" then
-				text = item.term and term_already_linked(item.term) and item.term or
-					require(links_module).full_link(item)
-				-- We could use the "show qualifiers" flag to full_link() but not when term_already_linked().
-				if item.q and item.q[1] or item.qq and item.qq[1] or item.l and item.l[1] or item.ll and item.ll[1] or
-					item.refs and item.refs[1] then
-					text = require(pron_qualifier_module).format_qualifiers {
-						lang = item.lang or args.lang,
-						text = text,
-						q = item.q,
-						qq = item.qq,
-						l = item.l,
-						ll = item.ll,
-						refs = item.refs,
-					}
+				if item.terms then
+					local parts = {}
+					local is_first = true
+					for _, subitem in ipairs(item.terms) do
+						if subitem == false then
+							-- omitted subitem; do nothing
+						else
+							local separator = subitem.separator or not is_first and args.subitem_separator
+							if separator then
+								insert(parts, separator)
+							end
+							insert(parts, format_single_item(subitem))
+							is_first = false
+						end
+					end
+					text = concat(parts)
+				else
+					text = format_single_item(item)
 				end
 			elseif args.lang and not term_already_linked(item) then
 				text = require(links_module).full_link {lang = args.lang, term = item, sc = args.sc} 
@@ -65,7 +102,16 @@ local function make_sortbase(item)
 	if item == false then
 		return "*" -- doesn't matter, will be omitted in format_list_items()
 	elseif type(item) == "table" then
-		return item.alt or item.term
+		if item.terms then
+			for _, subitem in ipairs(item.terms) do
+				if subitem ~= false then
+					return subitem.alt or subitem.term
+				end
+			end
+			return "*" -- doesn't matter, entire group will be omitted in format_list_items()
+		else
+			return item.alt or item.term
+		end
 	end
 	return item
 end
@@ -196,7 +242,7 @@ function export.display_from(frame_args, parent_args, frame)
 		{group = {"ref", "l", "q"}, require_index = true},
 	}
 
-	local items, args = m_param_utils.process_list_arguments {
+	local groups, args = m_param_utils.process_list_arguments {
 		params = params,
 		param_mods = param_mods,
 		raw_args = parent_args,
@@ -207,6 +253,7 @@ function export.display_from(frame_args, parent_args, frame)
 		track_module = "columns",
 		lang = iargs.lang or lang_param,
 		sc = "sc.default",
+		splitchar = ",",
 	}
 
 	local lang = iargs.lang or args[lang_param]
@@ -222,55 +269,71 @@ function export.display_from(frame_args, parent_args, frame)
 		collapse = args.collapse
 	end
 
-	local number_of_items = 0
-	for i, item in ipairs(items) do
-		-- If a separate language code was given for the term, display the language name as a right qualifier.
-		-- Otherwise it may not be obvious that the term is in a separate language (e.g. if the main language is 'zh'
-		-- and the term language is a Chinese lect such as Min Nan). But don't do this for Translingual terms, which
-		-- are often added to the list of English and other-language terms.
-		if item.termlangs then
-			local qqs = {}
-			for _, termlang in ipairs(item.termlangs) do
-				local termlangcode = termlang:getCode()
-				if termlangcode ~= langcode and termlangcode ~= "mul" then
-					insert(qqs, termlang:getCanonicalName())
+	local number_of_groups = 0
+	for i, group in ipairs(groups) do
+		local number_of_items = 0
+		for j, item in ipairs(group.terms) do
+			if j == 1 then
+				local extra_indent, actual_term = item.term and item.term:match("^(%*+) +(.-)$")
+				if extra_indent then
+					item.term = actual_term
+					group.extra_indent = extra_indent
 				end
-				if item.qq then
-					for _, qq in ipairs(item.qq) do
-						insert(qqs, qq)
+			end
+			-- If a separate language code was given for the term, display the language name as a right qualifier.
+			-- Otherwise it may not be obvious that the term is in a separate language (e.g. if the main language is
+			-- 'zh' and the term language is a Chinese lect such as Min Nan). But don't do this for Translingual terms,
+			-- which are often added to the list of English and other-language terms.
+			if item.termlangs then
+				local qqs = {}
+				for _, termlang in ipairs(item.termlangs) do
+					local termlangcode = termlang:getCode()
+					if termlangcode ~= langcode and termlangcode ~= "mul" then
+						insert(qqs, termlang:getCanonicalName())
+					end
+					if item.qq then
+						for _, qq in ipairs(item.qq) do
+							insert(qqs, qq)
+						end
 					end
 				end
+				item.qq = qqs
 			end
-			item.qq = qqs
-		end
-		local omitted = false
-		for _, omitted_item in ipairs(args.omit) do
-			if omitted_item == item.term then
-				omitted = true
-				break
+			local omitted = false
+			for _, omitted_item in ipairs(args.omit) do
+				if omitted_item == item.term then
+					omitted = true
+					break
+				end
+			end
+			if omitted then
+				-- signal create_list() to omit this item
+				group.terms[j] = false
+			else
+				number_of_items = number_of_items + 1
 			end
 		end
-		if omitted then
-			-- signal create_list() to omit this item
-			items[i] = false
+		if number_of_items == 0 then
+			-- omit the whole group
+			groups[i] = false
 		else
-			number_of_items = number_of_items + 1
+			number_of_groups = number_of_groups + 1
 		end
 	end
 
 	local column_count = iargs.columns or args.n
 	-- FIXME: This needs a total rewrite.
 	if column_count == nil then
-		column_count = number_of_items <= 3 and 1 or
-			number_of_items <= 9 and 2 or
-			number_of_items <= 27 and 3 or
-			number_of_items <= 81 and 4 or
+		column_count = number_of_groups <= 3 and 1 or
+			number_of_groups <= 9 and 2 or
+			number_of_groups <= 27 and 3 or
+			number_of_groups <= 81 and 4 or
 			5
 	end
 
 	local ret = export.create_list {
 		column_count = column_count,
-		content = items,
+		content = groups,
 		alphabetize = sort,
 		header = args.title,
 		collapse = collapse,
@@ -279,7 +342,8 @@ function export.display_from(frame_args, parent_args, frame)
 		class = (iargs.class and iargs.class .. " columns-bg" or "columns-bg"),
 		lang = lang,
 		sc = sc,
-		format_header = true
+		format_header = true,
+		subitem_separator = ", ",
 	}
 
 	return deprecated and frame:expandTemplate{title = "check deprecated lang param usage", args = {ret, lang = args[lang_param]}} or ret
@@ -289,17 +353,17 @@ function export.display(frame)
 	if not is_substing() then
 		return export.display_from(frame.args, frame:getParent().args, frame)
 	end
-	
+
 	-- If substed, unsubst template with newlines between each term, redundant wikilinks removed, and remove duplicates + sort terms if sort is enabled.
 	local m_table = require("Module:table")
 	local m_template_parser = require("Module:template parser")
-	
+
 	local parent = frame:getParent()
 	local elems = m_table.shallowCopy(parent.args)
 	local code = remove(elems, 1)
 	code = code and trim(code)
 	local lang = require("Module:languages").getByCode(code, 1)
-	
+
 	local i = 1
 	while true do
 		local elem = elems[i]
@@ -325,19 +389,19 @@ function export.display(frame)
 		elems[i] = elem .. "\n"
 		i = i + 1
 	end
-	
+
 	-- If sort is enabled, remove duplicates then sort elements.
 	if require("Module:yesno")(frame.args.sort) then
 		elems = m_table.removeDuplicates(elems)
 		require("Module:collation").sort(elems, lang)
 	end
-	
+
 	-- Readd the langcode.
 	insert(elems, 1, code .. "\n")
-	
+
 	-- TODO: Place non-numbered parameters after 1 and before 2.
 	local template = m_template_parser.getTemplateInvocationName(mw.title.new(parent:getTitle()))
-	
+
 	return "{{" .. concat(m_template_parser.buildTemplate(template, elems), "|") .. "}}"
 end
 
