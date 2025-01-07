@@ -3,6 +3,7 @@ local parameter_utilities_module = "Module:parameter utilities"
 local parameters_module = "Module:parameters"
 local pron_qualifier_module = "Module:pron qualifier"
 local string_utilities_module = "Module:string utilities"
+local collation_module = "Module:collation"
 
 local m_str_utils = require(string_utilities_module)
 
@@ -16,6 +17,7 @@ local remove = table.remove
 local sub = string.sub
 local trim = m_str_utils.trim
 local u = m_str_utils.char
+local dump = mw.dumpObject
 
 local export = {}
 
@@ -135,6 +137,10 @@ local function make_sortbase(item)
 	end
 end
 
+local function make_node_sortbase(node)
+	return make_sortbase(node.item)
+end
+
 function export.create_list(args)
 	-- Fields in args that are used:
 	-- args.column_count, args.content, args.alphabetize, args.background_color,
@@ -155,6 +161,8 @@ function export.create_list(args)
 			:wikitext(header)
 	end
 
+	local list = html("ul")
+
 	local any_extra_indented_item = false
 	for _, item in ipairs(args.content) do
 		if item == false then
@@ -168,13 +176,14 @@ function export.create_list(args)
 	-- If any extra indented item, convert the items to a nested structure, which is necessary both for sorting and
 	-- for converting to HTML.
 	if any_extra_indented_item then
-		local node_stack = {}
-		local last_indent = 0
 		local function make_node(item)
 			return {
 				item = item
 			}
 		end
+		local root_node = make_node(nil)
+		local node_stack = {root_node}
+		local last_indent = 0
 		local function append_subnode(node, subnode)
 			if not node.subnodes then
 				node.subnodes = {}
@@ -191,36 +200,45 @@ function export.create_list(args)
 				else
 					this_indent = (item.extra_indent or 0) + 1
 				end
+				local node = make_node(item)
 				if this_indent == last_indent then
-					append_subitem(node_stack[#node_stack], make_node(item))
+					append_subitem(node_stack[#node_stack], node)
 				elseif this_indent > last_indent + 1 then
 					error(("Element #%s (%s) has indent %s, which is more than one greater than the previous item with indent %s"):format(
 						i, make_sortbase(item), this_indent, last_indent))
 				elseif this_indent > last_indent then
-					insert(item_stack[#item_stack].subitems, {
-						item = item,
-
-
-			if item.terms then
-				for _, subitem in ipairs(item.terms) do
-					if subitem ~= false then
-						return subitem.alt or subitem.term
+					local subitems = node_stack[#node_stack].subitems
+					if not subitems then
+						error(("Internal error: Not first item and no subitems at preceding level %s: %s"):format(
+							#node_stack, dump(node_stack)))
+					end
+					insert(node_stack, subitems[#subitems])
+					append_subitem(node_stack[#node_stack], node)
+					last_indent = this_indent
+				else
+					while last_indent > this_indent do
+						local finished_node = table.remove(node_stack)
+						if args.alphabetize then
+							require(collation_module).sort(finished_node.subitems, args.lang, make_node_sortbase)
+						end
+						last_indent = last_indent - 1
 					end
 				end
-				return "*" -- doesn't matter, entire group will be omitted in format_list_items()
-			else
-				return item.alt or item.term
 			end
 		end
-	return item
-end
-
-	if args.alphabetize then
-		require("Module:collation").sort(args.content, args.lang, make_sortbase)
+		if args.alphabetize then
+			while node_stack[1] do
+				local finished_node = table.remove(node_stack)
+				require(collation_module).sort(finished_node.subitems, args.lang, make_node_sortbase)
+			end
+		end
+		-- FIXME: format nested list
+	else
+		if args.alphabetize then
+			require(collation_module).sort(args.content, args.lang, make_sortbase)
+		end
+		list = format_list_items(list, args)
 	end
-
-	local list = html("ul")
-	list = format_list_items(list, args)
 
 	local output = html("div")
 		:addClass(class)
