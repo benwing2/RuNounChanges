@@ -61,47 +61,37 @@ header_to_col_top_abbrev = {
 }
 
 
-# Simplify a link consisting of `left` and possibly a `right` part. This may come from a raw or templated link.
-# `altval` is an explicit |alt= value given in a templated link. `langcode`, if given, is the language code of the
-# templated link, `sec_langcode` is the language code of the section we're in, and `sec_langname` is the corresponding
-# language name.
-def simplify_link(left, right, altval, langcode, sec_langcode, sec_langname, pagemsg):
-  if "[[" in left:
-    m = re.search(r"^\[\[([^\[\]|=]+)\]\]$", left)
-    if m:
-      left = m.group(1)
-    else:
-      m = re.search(r"^\[\[([^\[\]|]+)\|([^\[\]|]+)\]\]$", left)
-      if m:
-        newleft, newright = m.groups()
-        if right:
-          pagemsg("WARNING: Both two-part link %s and display value %s given; overriding the display in the former with the latter" % (
-            left, right))
-          newright = right
-        left = newleft
-        right = newright
-      else:
-        if right and altval:
-          pagemsg("WARNING: All three of embedded link %s, display value %s and alt value %s given; ignoring display value, and beware that alt value will be ignored as well" % (
-            left, right, altval))
-          right = None
-        elif right:
-          pagemsg("WARNING: Both embedded link %s and display value %s given; converting display value to alt value, but beware that it will be ignored" % (
-            left, right))
-          altval = right
-          right = None
-        elif altval:
-          pagemsg("WARNING: Both embedded link %s and alt value %s given; beware that alt value will be ignored" % (
-            left, altval))
-
-  origlink = left if "[[" in left else "[[%s%s]]" % (left, "|%s" % right if right else "")
+# Simplify a link `link` that may have an `altval` (display value) specified in |3= or |alt= if the link comes from a
+# templated link. `langcode`, if given, is the language code of the templated link, `sec_langcode` is the language code
+# of the section we're in, and `sec_langname` is the corresponding language name.
+def simplify_link(link, altval, langcode, sec_langcode, sec_langname, pagemsg, expand_text):
+  link = link or ""
+  right = ""
+  altval = altval or ""
   langcode = langcode or ""
+
+  # Blank out langcode if specified and same as section language code.
   if langcode and langcode == sec_langcode:
     langcode = ""
-  if "[[" not in left:
-    m = re.search("^(.*?)#(.*)$", left)
+
+  origlink = link
+
+  # First try to simplify one-part or two-part link.
+  if link and "[[" in link:
+    m = re.search(r"^\[\[([^\[\]|=]+)\]\]$", link)
     if m:
-      newleft, explicit_langname = m.groups()
+      link = m.group(1)
+    else:
+      m = re.search(r"^\[\[([^\[\]|]+)\|([^\[\]|]+)\]\]$", link)
+      if m:
+        link, right = m.groups()
+
+  # If link part does not have embedded links and has an explicit language code, try to remove it or transfer it to the
+  # language prefix.
+  if link and "[[" not in link:
+    m = re.search("^(.*?)#(.*)$", link)
+    if m:
+      newlink, explicit_langname = m.groups()
       if explicit_langname not in blib.languages_byCanonicalName:
         pagemsg("WARNING: Unknown language name %s in link %s, not removing" % (explicit_langname, origlink))
       else:
@@ -112,25 +102,69 @@ def simplify_link(left, right, altval, langcode, sec_langcode, sec_langname, pag
           pagemsg("WARNING: Language code '%s' explicitly found in link %s doesn't agree with language code '%s' explicitly specified in link template, which is different from language code '%s' of section; overriding link language code" % (
             explicit_langcode, origlink, langcode, sec_langcode))
           langcode = explicit_langcode
-        left = newleft
+        link = newlink
         if langcode == sec_langcode:
           langcode = ""
-  if right and left == right:
-    right = None
-  if not right and altval and "[[" not in altval:
-    right = altval
-    altval = None
-    if left == right:
-      right = None
-  if "[[" not in left and right:
-    link = "[[%s|%s]]" % (left, right)
-  else:
-    link = left
+
+  # Remove right or altval same as link.
+  if link == right:
+    right = ""
+  if link == altval:
+    altval = ""
+  # If link and either right side of link or display form map to the same entry name, use the latter as the link.
+  if link and "[[" not in link and (right or altval and "[[" not in altval):
+    link_entry_name = expand_text("{{#invoke:languages/templates|getByCode|%s|makeEntryName|%s}}" % (
+      langcode or sec_langcode, link))
+    if link_entry_name and right:
+      right_entry_name = expand_text("{{#invoke:languages/templates|getByCode|%s|makeEntryName|%s}}" % (
+        langcode or sec_langcode, right))
+      if right_entry_name and right_entry_name == link_entry_name:
+        pagemsg("Using right side of link '%s' in place of left side '%s' because both map to the same entry name" % (
+          right, link))
+        link = right
+        right = ""
+    elif altval and "[[" not in altval:
+      altval_entry_name = expand_text("{{#invoke:languages/templates|getByCode|%s|makeEntryName|%s}}" % (
+        langcode or sec_langcode, altval))
+      if altval_entry_name and altval_entry_name == link_entry_name:
+        pagemsg("Using display value '%s' in place of left side link '%s' because both map to the same entry name" % (
+          altval, link))
+        link = altval
+        altval = ""
+
+  if not link:
+    # If link is empty, we must use the format '<alt:foo>' with an empty link, not '[[|foo]]'.
+    if right and altval:
+      pagemsg("WARNING: Empty link along with both right side '%s' and display value '%s' given; using right side in place of display value" % (
+        right, altval))
+    altval = right
+    right = ""
+  elif "[[" in link:
+    # If link still has embedded links (we tried to remove them above), display value will be ignored, but we can at
+    # least put something there (in <alt:...>) to minimize loss of information.
+    if right:
+      pagemsg("WARNING: Internal error: Right '%s' should not be set" % right)
+      right = ""
+    if altval:
+      pagemsg("WARNING: Display value '%s' found along with embedded link '%s'; the former will be ignored" % (
+        altval, link))
+  elif right:
+    if "[[" in right:
+      pagemsg("WARNING: Internal error: Right '%s' should not have embedded links" % right)
+      right = ""
+    else:
+      link = "[[%s|%s]]" % (link, right)
+  elif altval and "[[" not in altval:
+    link = "[[%s|%s]]" % (link, altval)
+    altval = ""
+
   return "%s%s%s%s" % (langcode, ":" if langcode else "", link, "<alt:%s>" % altval if altval else "")
 
 def process_text_on_page(index, pagetitle, text):
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
+  def expand_text(tempcall):
+    return blib.expand_text(tempcall, pagetitle, pagemsg, args.verbose)
 
   notes = []
 
@@ -399,7 +433,7 @@ def process_text_on_page(index, pagetitle, text):
               has_pos = False
               for i in range(1, len(line_parts), 2):
                 if line_parts[i].startswith("[["):
-                  els.append(simplify_link(line_parts[i], None, None, None, langcode, langname, pagemsg))
+                  els.append(simplify_link(line_parts[i], None, None, langcode, langname, pagemsg, expand_text))
                   continue
                 linkt = list(blib.parse_text(line_parts[i]).filter_templates())[0]
                 def getp(param):
@@ -408,10 +442,14 @@ def process_text_on_page(index, pagetitle, text):
                 def app(val):
                   parts.append(val)
                 link_langcode = getp("1")
-                left = getp("2")
-                right = getp("3")
+                link = getp("2")
+                display = getp("3")
                 alt = getp("alt")
-                link = simplify_link(left, right, alt, link_langcode, langcode, langname, pagemsg)
+                if display and alt:
+                  pagemsg("WARNING: Found both 3=%s and alt=%s; this should be triggering a Lua error: %s" % (
+                    display, alt, str(linkt)))
+                alt = alt or display
+                link = simplify_link(link, alt, link_langcode, langcode, langname, pagemsg, expand_text)
                 app(link)
                 gloss = getp("t") or getp("gloss") or getp("4")
                 if gloss:
