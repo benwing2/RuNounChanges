@@ -103,7 +103,25 @@ local function make_sortbase(item)
 		return "*" -- doesn't matter, will be omitted in format_list_items()
 	elseif type(item) == "table" then
 		if item.terms then
-			for _, subitem in ipairs(item.terms) do
+			-- Optimize for the common case of only a single term
+			if item.terms[2] then
+				local parts = {}
+				-- multiple terms
+				local first = true
+				for _, subitem in ipairs(item.terms) do
+					if subitem ~= false then
+						if not first then
+							insert(", ")
+						end
+						insert(subitem.alt or subitem.term)
+						first = false
+					end
+				end
+				if parts[1] then
+					return concat(parts)
+				end
+			else
+				local subitem = item.terms[1]
 				if subitem ~= false then
 					return subitem.alt or subitem.term
 				end
@@ -112,8 +130,9 @@ local function make_sortbase(item)
 		else
 			return item.alt or item.term
 		end
+	else
+		return item
 	end
-	return item
 end
 
 function export.create_list(args)
@@ -135,6 +154,66 @@ function export.create_list(args)
 			:addClass("term-list-header")
 			:wikitext(header)
 	end
+
+	local any_extra_indented_item = false
+	for _, item in ipairs(args.content) do
+		if item == false then
+			-- do nothing
+		elseif type(item) == "table" and item.extra_indent and item.extra_indent > 0 then
+			any_extra_indented_item = true
+			break
+		end
+	end
+
+	-- If any extra indented item, convert the items to a nested structure, which is necessary both for sorting and
+	-- for converting to HTML.
+	if any_extra_indented_item then
+		local node_stack = {}
+		local last_indent = 0
+		local function make_node(item)
+			return {
+				item = item
+			}
+		end
+		local function append_subnode(node, subnode)
+			if not node.subnodes then
+				node.subnodes = {}
+			end
+			insert(node.subnodes, subnode)
+		end
+		for i, item in ipairs(args.content) do
+			if item == false then
+				-- do nothing
+			else
+				local this_indent
+				if type(item) ~= "table" then
+					this_indent = 1
+				else
+					this_indent = (item.extra_indent or 0) + 1
+				end
+				if this_indent == last_indent then
+					append_subitem(node_stack[#node_stack], make_node(item))
+				elseif this_indent > last_indent + 1 then
+					error(("Element #%s (%s) has indent %s, which is more than one greater than the previous item with indent %s"):format(
+						i, make_sortbase(item), this_indent, last_indent))
+				elseif this_indent > last_indent then
+					insert(item_stack[#item_stack].subitems, {
+						item = item,
+
+
+			if item.terms then
+				for _, subitem in ipairs(item.terms) do
+					if subitem ~= false then
+						return subitem.alt or subitem.term
+					end
+				end
+				return "*" -- doesn't matter, entire group will be omitted in format_list_items()
+			else
+				return item.alt or item.term
+			end
+		end
+	return item
+end
 
 	if args.alphabetize then
 		require("Module:collation").sort(args.content, args.lang, make_sortbase)
@@ -277,7 +356,7 @@ function export.display_from(frame_args, parent_args, frame)
 				local extra_indent, actual_term = item.term and item.term:match("^(%*+) +(.-)$")
 				if extra_indent then
 					item.term = actual_term
-					group.extra_indent = extra_indent
+					group.extra_indent = #extra_indent
 				end
 			end
 			-- If a separate language code was given for the term, display the language name as a right qualifier.
