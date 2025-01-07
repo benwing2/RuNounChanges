@@ -22,82 +22,58 @@ local dump = mw.dumpObject
 local export = {}
 
 
--- Format a list of items using HTML. `list` is an HTML object (as created by `mw.html.create`), to which the formatted
--- items are added. `args` is an object specifying the items to add and related properties, with the following fields:
--- * `content`: A list of the items to format. See below for the format of the items.
--- * `lang`: The language object of the items to format, if the items in `content` are strings.
--- * `sc`: The script object of the items to format, if the items in `content` are strings.
--- There may be other fields in `args` for use by `create_list` (the caller), but they are ignored.
---
--- Each item on `content` is in one of the following formats:
--- * A string. This is for compatibility and should not be used by new callers.
--- * An object describing an item to format, in the format expected by full_link() in [[Module:links]] but can also
---   have left or right qualifiers, left or right labels, or references.
--- * An object describing a list of subitems to format, displayed side-by-side, separated by a comma or other separator.
---   This format is identified by the presence of a key `terms` specifying the list of subitems. Each subitem is in
---   the same format as for a single top-level item, except that it should also have a `separator` field specifying the
---   separator to display before each item (which will typically be a blank string before the first item).
-local function format_list_items(list, args)
-	local function term_already_linked(term)
-		-- FIXME: "<span" is an ugly hack to prevent double-linking of terms already run through {{l|...}}:
-		-- [[Thread:User talk:CodeCat/MewBot adding lang to column templates]]
-		return find(term, "<span")
+local function term_already_linked(term)
+	-- FIXME: "<span" is an ugly hack to prevent double-linking of terms already run through {{l|...}}:
+	-- [[Thread:User talk:CodeCat/MewBot adding lang to column templates]]
+	return find(term, "<span")
+end
+
+local function format_subitem(subitem, args)
+	local text = subitem.term and term_already_linked(subitem.term) and subitem.term or
+		require(links_module).full_link(subitem)
+	-- We could use the "show qualifiers" flag to full_link() but not when term_already_linked().
+	if subitem.q and subitem.q[1] or subitem.qq and subitem.qq[1] or subitem.l and subitem.l[1] or
+		subitem.ll and subitem.ll[1] or subitem.refs and subitem.refs[1] then
+		text = require(pron_qualifier_module).format_qualifiers {
+			lang = subitem.lang or args.lang,
+			text = text,
+			q = subitem.q,
+			qq = subitem.qq,
+			l = subitem.l,
+			ll = subitem.ll,
+			refs = subitem.refs,
+		}
 	end
-	local function format_single_item(item)
-		local text = item.term and term_already_linked(item.term) and item.term or require(links_module).full_link(item)
-		-- We could use the "show qualifiers" flag to full_link() but not when term_already_linked().
-		if item.q and item.q[1] or item.qq and item.qq[1] or item.l and item.l[1] or item.ll and item.ll[1] or
-			item.refs and item.refs[1] then
-			text = require(pron_qualifier_module).format_qualifiers {
-				lang = item.lang or args.lang,
-				text = text,
-				q = item.q,
-				qq = item.qq,
-				l = item.l,
-				ll = item.ll,
-				refs = item.refs,
-			}
-		end
-		return text
-	end
-	for _, item in ipairs(args.content) do
-		if item == false then
-			-- omitted item; do nothing
-		else
-			local text
-			if type(item) == "table" then
-				if item.terms then
-					local parts = {}
-					local is_first = true
-					for _, subitem in ipairs(item.terms) do
-						if subitem == false then
-							-- omitted subitem; do nothing
-						else
-							local separator = subitem.separator or not is_first and args.subitem_separator
-							if separator then
-								insert(parts, separator)
-							end
-							insert(parts, format_single_item(subitem))
-							is_first = false
-						end
-					end
-					text = concat(parts)
+	return text
+end
+
+local function format_item(item, args)
+	local text
+	if type(item) == "table" then
+		if item.terms then
+			local parts = {}
+			local is_first = true
+			for _, subitem in ipairs(item.terms) do
+				if subitem == false then
+					-- omitted subitem; do nothing
 				else
-					text = format_single_item(item)
+					local separator = subitem.separator or not is_first and (args.subitem_separator or ", ")
+					if separator then
+						insert(parts, separator)
+					end
+					insert(parts, format_subitem(subitem, args))
+					is_first = false
 				end
-			elseif args.lang and not term_already_linked(item) then
-				text = require(links_module).full_link {lang = args.lang, term = item, sc = args.sc} 
-			else
-				text = item
 			end
-
-			list = list:node(html("li")
-				:wikitext(text)
-			)
+			return concat(parts)
+		else
+			return format_subitem(item, args)
 		end
+	elseif args.lang and not term_already_linked(item) then
+		return require(links_module).full_link {lang = args.lang, term = item, sc = args.sc}
+	else
+		return item
 	end
-
-	return list
 end
 
 local function make_sortbase(item)
@@ -141,11 +117,34 @@ local function make_node_sortbase(node)
 	return make_sortbase(node.item)
 end
 
+--[==[
+Format a list of items using HTML. `args` is an object specifying the items to add and related properties, with the
+following fields:
+* `content`: A list of the items to format. See below for the format of the items.
+* `lang`: The language object of the items to format, if the items in `content` are strings.
+* `sc`: The script object of the items to format, if the items in `content` are strings.
+* `raw`: If true, return the list raw, without any collapsing or background color.
+* `class`: The CSS class of the surrounding <div>. Defaults to {"derivedterms"}.
+* `column_count`: Number of columns to format the list into.
+* `background_color`: The color of the background of the table.
+* `alphabetize`: If true, sort the items in the table.
+* `collapse`: If true, make the table partially collapsed by default, with a "Show more" button at the bottom.
+* `toggle_category`: Value of `data-toggle-category` property grouping collapsible elements.
+* `header`: If specified, Wikicode to prepend to the output.
+* `format_header`: If specified and `header` given, put a <div> around the specified header text.
+* `subitem_separator`: Separator used between subitems when multiple subitems occur on a line, if not specified in the
+                       subitem itself (using the `separator` field). Defaults to {", "}.
+
+Each item in `content` is in one of the following formats:
+* A string. This is for compatibility and should not be used by new callers.
+* An object describing an item to format, in the format expected by full_link() in [[Module:links]] but can also
+  have left or right qualifiers, left or right labels, or references.
+* An object describing a list of subitems to format, displayed side-by-side, separated by a comma or other separator.
+  This format is identified by the presence of a key `terms` specifying the list of subitems. Each subitem is in
+  the same format as for a single top-level item, except that it should also have a `separator` field specifying the
+  separator to display before each item (which will typically be a blank string before the first item).
+]==]
 function export.create_list(args)
-	-- Fields in args that are used:
-	-- args.column_count, args.content, args.alphabetize, args.background_color,
-	-- args.collapse, args.toggle_category, args.class, args.lang
-	-- Check for required fields?
 	if type(args) ~= "table" then
 		error("expected table, got " .. type(args))
 	end
@@ -161,7 +160,7 @@ function export.create_list(args)
 			:wikitext(header)
 	end
 
-	local list = html("ul")
+	local list
 
 	local any_extra_indented_item = false
 	for _, item in ipairs(args.content) do
@@ -207,12 +206,16 @@ function export.create_list(args)
 					error(("Element #%s (%s) has indent %s, which is more than one greater than the previous item with indent %s"):format(
 						i, make_sortbase(item), this_indent, last_indent))
 				elseif this_indent > last_indent then
-					local subitems = node_stack[#node_stack].subitems
-					if not subitems then
-						error(("Internal error: Not first item and no subitems at preceding level %s: %s"):format(
-							#node_stack, dump(node_stack)))
+					-- Start a new sublist attached to the last item of the sublist one level up; but we need special
+					-- handling for the root node (last_indent == 0).
+					if last_indent > 0 then
+						local subitems = node_stack[#node_stack].subitems
+						if not subitems then
+							error(("Internal error: Not first item and no subitems at preceding level %s: %s"):format(
+								#node_stack, dump(node_stack)))
+						end
+						insert(node_stack, subitems[#subitems])
 					end
-					insert(node_stack, subitems[#subitems])
 					append_subitem(node_stack[#node_stack], node)
 					last_indent = this_indent
 				else
@@ -232,35 +235,65 @@ function export.create_list(args)
 				require(collation_module).sort(finished_node.subitems, args.lang, make_node_sortbase)
 			end
 		end
-		-- FIXME: format nested list
+
+		local function format_node(node)
+			local sublist
+			if node.subnodes then
+				sublist = html("ul")
+				for _, subnode in ipairs(nodes.subnodes) do
+					sublist = sublist:node(format_node(subnode))
+				end
+			end
+			if not nodes.item then
+				-- At the root.
+				return sublist
+			end
+			local listitem = html("li"):wikitext(format_item(item, args))
+			if sublist then
+				listitem = listitem:node(sublist)
+			end
+			return sublist
+		end
+
+		list = format_node(root_node)
 	else
 		if args.alphabetize then
 			require(collation_module).sort(args.content, args.lang, make_sortbase)
 		end
-		list = format_list_items(list, args)
+		list = html("ul")
+		for _, item in ipairs(args.content) do
+			if item == false then
+				-- omitted item; do nothing
+			else
+				list = list:node(html("li"):wikitext(format_item(item, args)))
+			end
+		end
 	end
 
-	local output = html("div")
-		:addClass(class)
-		:addClass("term-list")
-		:addClass("ul-column-count")
-		:attr("data-column-count", column_count)
-		:css("background-color", args.background_color)
-		:node(list)
-
-	if args.collapse then
-		local nbsp = u(0xA0)
+	local output = list
+	if not args.raw then
 		output = html("div")
-			:node(output)
-			:addClass("list-switcher")
-			:attr("data-toggle-category", toggle_category)
-			:node(html("div")
-				:addClass("list-switcher-element")
-				:attr("data-showtext", nbsp .. "show more ▼" .. nbsp)
-				:attr("data-hidetext", nbsp .. "show less ▲" .. nbsp)
-				:css("display", "none")
-				:wikitext(nbsp)
-			)
+			:addClass(class)
+			:addClass("term-list")
+			:addClass("ul-column-count")
+			:attr("data-column-count", column_count)
+			:css("background-color", args.background_color)
+			:node(list)
+
+		if args.collapse then
+			local nbsp = u(0xA0)
+			output = html("div")
+				:node(output)
+				:addClass("list-switcher")
+				:attr("data-toggle-category", toggle_category)
+				:node(html("div")
+					:addClass("list-switcher-element")
+					:attr("data-showtext", nbsp .. "show more ▼" .. nbsp)
+					:attr("data-hidetext", nbsp .. "show less ▲" .. nbsp)
+					:css("display", "none")
+					:wikitext(nbsp)
+				)
+		end
 	end
 
 	return tostring(header or "") .. tostring(output)
@@ -304,6 +337,9 @@ function export.display_from(frame_args, parent_args, frame)
 		-- [[Wiktionary:Beer parlour/2018/November#Titles of morphological relations templates]].
 		["title"] = {default = ""},
 		["toggle_category"] = true,
+		-- Minimum number of rows required to format into a multicolumn list. If below this, the list is displayed
+		-- "raw" (no columns, no background color).
+		["minrows"] = {type = "number", default = 5},
 	}
 
 	local iargs = require(parameters_module).process(frame_args, iparams)
@@ -360,7 +396,17 @@ function export.display_from(frame_args, parent_args, frame)
 	local sort = iargs.sort
 	if args.sort ~= nil then
 		sort = args.sort
+	else
+		-- HACK! For Japanese-script languages (Japanese, Okinawan, Miyako, etc.), sorting doesn't yet work properly, so
+		-- disable it.
+		for _, langsc in ipairs(lang:getScriptCodes()) do
+			if langsc == "Jpan" then
+				sort = false
+				break
+			end
+		end
 	end
+
 	local collapse = iargs.collapse
 	if args.collapse ~= nil then
 		collapse = args.collapse
@@ -427,9 +473,11 @@ function export.display_from(frame_args, parent_args, frame)
 			number_of_groups <= 81 and 4 or
 			5
 	end
+	local raw = number_of_groups < iargs.minrows
 
 	local ret = export.create_list {
 		column_count = column_count,
+		raw = raw,
 		content = groups,
 		alphabetize = sort,
 		header = args.title,
