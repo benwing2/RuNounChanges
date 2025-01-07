@@ -52,7 +52,7 @@ def process_text_on_page(index, pagetitle, text):
     def getp(param):
       return getparam(t, param)
     tn = tname(t)
-    if tn in ["zh-der", "zh-list", "zh-syn-list", "zh-ant-list"]:
+    if tn in ["zh-der", "zh-der/fast", "zh-list", "zh-syn-list", "zh-ant-list"]:
       out_items = []
       hide_pron = getp("hide_pron")
       if hide_pron:
