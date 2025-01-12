@@ -1,36 +1,82 @@
+local export = {}
+
+local collation_module = "Module:collation"
+local debug_track_module = "Module:debug/track"
+local headword_data_module = "Module:headword/data"
+local languages_module = "Module:languages"
 local links_module = "Module:links"
+local pages_module = "Module:pages"
 local parameter_utilities_module = "Module:parameter utilities"
 local parameters_module = "Module:parameters"
 local pron_qualifier_module = "Module:pron qualifier"
 local string_utilities_module = "Module:string utilities"
-local collation_module = "Module:collation"
+local table_module = "Module:table"
 
 local m_str_utils = require(string_utilities_module)
 
 local concat = table.concat
 local html = mw.html.create
 local is_substing = mw.isSubsting
-local find = string.find
 local insert = table.insert
-local match = string.match
+local rmatch = m_str_utils.match
 local remove = table.remove
 local sub = string.sub
 local trim = m_str_utils.trim
 local u = m_str_utils.char
 local dump = mw.dumpObject
 
-local export = {}
 
+local function track(page)
+    require(debug_track_module)("columns/" .. page)
+    return true
+end
 
+local function deepEquals(...)
+    deepEquals = require(table_module).deepEquals
+    return deepEquals(...)
+end 
+    
 local function term_already_linked(term)
 	-- FIXME: "<span" is an ugly hack to prevent double-linking of terms already run through {{l|...}}:
 	-- [[Thread:User talk:CodeCat/MewBot adding lang to column templates]]
-	return find(term, "<span")
+	return term:find("<span")
 end
 
+-- Suppress false positives in categories like [[Category:English links with redundant wikilinks]] so people won't
+-- be tempted to "correct" them; terms like embedded ~ like [[Micros~1]] or embedded comma not followed by a space
+-- such as [[1,6-Cleves acid]] need to have a link around them to avoid the tilde or comma being interpreted as a
+-- delimiter.
+local function suppress_redundant_wikilink_cat(term, alt)
+	return term:find("~") or term:find(",%S")
+end
+
+local function full_link_and_track_self_links(item)
+	if item.term then
+		local pagename = mw.loadData(headword_data_module).pagename
+		local term_is_pagename = item.term == pagename
+		local term_contains_pagename = item.term:find("%[%[" .. m_str_utils.pattern_escape(pagename) .. "[|%]]")
+		if term_contains_pagename or term_contains_pagename then
+			local current_L2 = require(pages_module).get_current_L2()
+			if current_L2 then
+				local current_L2_lang = require(languages_module).getByCanonicalName(current_L2)
+				if current_L2_lang and current_L2_lang:getCode() == item.lang:getCode() then
+					if term_is_pagename then
+						track("term-is-pagename")
+					else
+						track("term-contains-pagename")
+					end
+				end
+			end
+		end
+	end
+
+	item.suppress_redundant_wikilink_cat = suppress_redundant_wikilink_cat
+	return require(links_module).full_link(item)
+end
+				
 local function format_subitem(subitem, args)
 	local text = subitem.term and term_already_linked(subitem.term) and subitem.term or
-		require(links_module).full_link(subitem)
+		full_link_and_track_self_links(subitem)
 	-- We could use the "show qualifiers" flag to full_link() but not when term_already_linked().
 	if subitem.q and subitem.q[1] or subitem.qq and subitem.qq[1] or subitem.l and subitem.l[1] or
 		subitem.ll and subitem.ll[1] or subitem.refs and subitem.refs[1] then
@@ -70,9 +116,23 @@ local function format_item(item, args)
 			return format_subitem(item, args)
 		end
 	elseif args.lang and not term_already_linked(item) then
-		return require(links_module).full_link {lang = args.lang, term = item, sc = args.sc}
+		return full_link_and_track_self_links {lang = args.lang, term = item, sc = args.sc}
 	else
 		return item
+	end
+end
+
+-- Construct the sort base of a single item, using the display form preferentially, otherwise the term itself.
+-- As a hack, sort appendices after mainspace items.
+local function item_sortbase(item)
+	local val = item.alt or item.term
+	if not val then
+		-- This should not normally happen.
+		return u(0x10FFFF)
+	elseif val:find("^%[*Appendix:") then
+		return u(0x10FFFE) .. val
+	else
+		return val
 	end
 end
 
@@ -89,9 +149,9 @@ local function make_sortbase(item)
 				for _, subitem in ipairs(item.terms) do
 					if subitem ~= false then
 						if not first then
-							insert(", ")
+							insert(parts, ", ")
 						end
-						insert(subitem.alt or subitem.term)
+						insert(parts, item_sortbase(subitem))
 						first = false
 					end
 				end
@@ -101,12 +161,12 @@ local function make_sortbase(item)
 			else
 				local subitem = item.terms[1]
 				if subitem ~= false then
-					return subitem.alt or subitem.term
+					return item_sortbase(subitem)
 				end
 			end
 			return "*" -- doesn't matter, entire group will be omitted in format_list_items()
 		else
-			return item.alt or item.term
+			return item_sortbase(item)
 		end
 	else
 		return item
@@ -117,16 +177,56 @@ local function make_node_sortbase(node)
 	return make_sortbase(node.item)
 end
 
+-- Sort a sublist of `list` in place, keeping the first `keepfirst` and last `keeplast` items fixed.
+-- `lang` is the language of the items and `make_sortbase` creates the appropriate sort base.
+local function sort_sublist(list, lang, make_sortbase, keepfirst, keeplast)
+	if keepfirst == 0 and keeplast == 0 then
+		require(collation_module).sort(list, lang, make_sortbase)
+	else
+		local sublist = {}
+		for i = keepfirst + 1, #list - keeplast do
+			sublist[i - keepfirst] = list[i]
+		end
+		require(collation_module).sort(sublist, lang, make_sortbase)
+		for i = keepfirst + 1, #list - keeplast do
+			list[i] = sublist[i - keepfirst]
+		end
+	end
+end
+		
+
+local large_text_scripts = {
+	["Arab"] = true,
+	["Beng"] = true,
+	["Deva"] = true,
+	["Gujr"] = true,
+	["Guru"] = true,
+	["Hebr"] = true,
+	["Khmr"] = true,
+	["Knda"] = true,
+	["Laoo"] = true,
+	["Mlym"] = true,
+	["Mong"] = true,
+	["Mymr"] = true,
+	["Orya"] = true,
+	["Sinh"] = true,
+	["Syrc"] = true,
+	["Taml"] = true,
+	["Telu"] = true,
+	["Tfng"] = true,
+	["Thai"] = true,
+	["Tibt"] = true,
+}
+
 --[==[
 Format a list of items using HTML. `args` is an object specifying the items to add and related properties, with the
 following fields:
 * `content`: A list of the items to format. See below for the format of the items.
 * `lang`: The language object of the items to format, if the items in `content` are strings.
 * `sc`: The script object of the items to format, if the items in `content` are strings.
-* `raw`: If true, return the list raw, without any collapsing or background color.
-* `class`: The CSS class of the surrounding <div>. Defaults to {"derivedterms"}.
+* `raw`: If true, return the list raw, without any collapsing or columns.
+* `class`: The CSS class of the surrounding <div>.
 * `column_count`: Number of columns to format the list into.
-* `background_color`: The color of the background of the table.
 * `alphabetize`: If true, sort the items in the table.
 * `collapse`: If true, make the table partially collapsed by default, with a "Show more" button at the bottom.
 * `toggle_category`: Value of `data-toggle-category` property grouping collapsible elements.
@@ -149,10 +249,17 @@ function export.create_list(args)
 		error("expected table, got " .. type(args))
 	end
 
-	local class = args.class or "derivedterms"
 	local column_count = args.column_count or 1
 	local toggle_category = args.toggle_category or "derived terms"
 	local header = args.header
+	local keepfirst = args.keepfirst or 0
+	local keeplast = args.keeplast or 0
+	if keepfirst > 0 then
+		track("keepfirst")
+	end
+	if keeplast > 0 then
+		track("keeplast")
+	end
 
 	if header and args.format_header then
 		header = html("div")
@@ -201,7 +308,7 @@ function export.create_list(args)
 				end
 				local node = make_node(item)
 				if this_indent == last_indent then
-					append_subitem(node_stack[#node_stack], node)
+					append_subnode(node_stack[#node_stack], node)
 				elseif this_indent > last_indent + 1 then
 					error(("Element #%s (%s) has indent %s, which is more than one greater than the previous item with indent %s"):format(
 						i, make_sortbase(item), this_indent, last_indent))
@@ -209,30 +316,37 @@ function export.create_list(args)
 					-- Start a new sublist attached to the last item of the sublist one level up; but we need special
 					-- handling for the root node (last_indent == 0).
 					if last_indent > 0 then
-						local subitems = node_stack[#node_stack].subitems
-						if not subitems then
-							error(("Internal error: Not first item and no subitems at preceding level %s: %s"):format(
+						local subnodes = node_stack[#node_stack].subnodes
+						if not subnodes then
+							error(("Internal error: Not first item and no subnodes at preceding level %s: %s"):format(
 								#node_stack, dump(node_stack)))
 						end
-						insert(node_stack, subitems[#subitems])
+						insert(node_stack, subnodes[#subnodes])
 					end
-					append_subitem(node_stack[#node_stack], node)
+					append_subnode(node_stack[#node_stack], node)
 					last_indent = this_indent
 				else
 					while last_indent > this_indent do
 						local finished_node = table.remove(node_stack)
 						if args.alphabetize then
-							require(collation_module).sort(finished_node.subitems, args.lang, make_node_sortbase)
+							require(collation_module).sort(finished_node.subnodes, args.lang, make_node_sortbase)
 						end
 						last_indent = last_indent - 1
 					end
+					append_subnode(node_stack[#node_stack], node)
 				end
 			end
 		end
 		if args.alphabetize then
 			while node_stack[1] do
 				local finished_node = table.remove(node_stack)
-				require(collation_module).sort(finished_node.subitems, args.lang, make_node_sortbase)
+				if node_stack[1] then
+					-- We're sorting something other than the root node.
+					require(collation_module).sort(finished_node.subnodes, args.lang, make_node_sortbase)
+				else
+					-- We're sorting the root node; honor `keepfirst` and `keeplast`.
+					sort_sublist(finished_node.subnodes, args.lang, make_node_sortbase, keepfirst, keeplast)
+				end
 			end
 		end
 
@@ -240,59 +354,86 @@ function export.create_list(args)
 			local sublist
 			if node.subnodes then
 				sublist = html("ul")
-				for _, subnode in ipairs(nodes.subnodes) do
-					sublist = sublist:node(format_node(subnode))
+				local prevnode = nil
+				for _, subnode in ipairs(node.subnodes) do
+					local thisnode = format_node(subnode)
+					if not prevnode or not deepEquals(prevnode, thisnode) then
+						sublist = sublist:node(thisnode)
+						prevnode = thisnode
+					end
 				end
 			end
-			if not nodes.item then
+			if not node.item then
 				-- At the root.
 				return sublist
 			end
-			local listitem = html("li"):wikitext(format_item(item, args))
+			local listitem = html("li"):wikitext(format_item(node.item, args))
 			if sublist then
 				listitem = listitem:node(sublist)
 			end
-			return sublist
+			return listitem
 		end
 
 		list = format_node(root_node)
 	else
 		if args.alphabetize then
-			require(collation_module).sort(args.content, args.lang, make_sortbase)
+			sort_sublist(args.content, args.lang, make_sortbase, keepfirst, keeplast)
 		end
 		list = html("ul")
+		local previtem = nil
 		for _, item in ipairs(args.content) do
 			if item == false then
 				-- omitted item; do nothing
 			else
-				list = list:node(html("li"):wikitext(format_item(item, args)))
+				local thisitem = format_item(item, args)
+				if not previtem or previtem ~= thisitem then
+					list = list:node(html("li"):wikitext(thisitem))
+					previtem = thisitem
+				end
 			end
 		end
 	end
 
-	local output = list
+	local output = html("div")
+		:addClass("term-list")
+		:node(list)
+			
+	if args.class then
+		output:addClass(args.class)
+	end
+	
 	if not args.raw then
-		output = html("div")
-			:addClass(class)
-			:addClass("term-list")
-			:addClass("ul-column-count")
+		output:addClass("ul-column-count")
 			:attr("data-column-count", column_count)
-			:css("background-color", args.background_color)
-			:node(list)
 
 		if args.collapse then
-			local nbsp = u(0xA0)
 			output = html("div")
-				:node(output)
-				:addClass("list-switcher")
-				:attr("data-toggle-category", toggle_category)
-				:node(html("div")
-					:addClass("list-switcher-element")
-					:attr("data-showtext", nbsp .. "show more ▼" .. nbsp)
-					:attr("data-hidetext", nbsp .. "show less ▲" .. nbsp)
-					:css("display", "none")
-					:wikitext(nbsp)
+				:addClass("list-switcher-wrapper")
+				:node(
+					html("div")
+						:node(output)
+						:addClass("list-switcher")
+						:attr("data-toggle-category", toggle_category)
 				)
+		end
+
+		-- identify commonly used scripts that use large text and
+		-- provide a special CSS class to make the template bigger
+		local sc = args.sc
+		if sc == nil then
+			local scripts = args.lang:getScripts()
+			if #scripts > 0 then
+				sc = scripts[1]
+			end
+		end
+		if sc ~= nil then
+			local scriptcode = sc:getParentCode()
+			if scriptcode == "top" then
+				scriptcode = sc:getCode()
+			end
+			if large_text_scripts[scriptcode] then
+				output:addClass("list-switcher-large-text")
+			end
 		end
 	end
 
@@ -306,7 +447,7 @@ function export.create_table(...)
 	-- Earlier arguments to create_table:
 	-- n_columns, content, alphabetize, bg, collapse, class, title, column_width, line_start, lang
 	local args = {}
-	args.column_count, args.content, args.alphabetize, args.background_color,
+	args.column_count, args.content, args.alphabetize,
 		args.collapse, args.class, args.header, args.column_width,
 		args.line_start, args.lang = ...
 
@@ -338,7 +479,7 @@ function export.display_from(frame_args, parent_args, frame)
 		["title"] = {default = ""},
 		["toggle_category"] = true,
 		-- Minimum number of rows required to format into a multicolumn list. If below this, the list is displayed
-		-- "raw" (no columns, no background color).
+		-- "raw" (no columns, no collapsbility).
 		["minrows"] = {type = "number", default = 5},
 	}
 
@@ -360,6 +501,8 @@ function export.display_from(frame_args, parent_args, frame)
 		["sort"] = boolean,
 		["sc"] = {type = "script"},
 		["omit"] = {list = true}, -- used when calling from [[Module:saurus]] so the page displaying the synonyms/antonyms doesn't occur in the list
+		["keepfirst"] = {type = "number", default = 0},
+		["keeplast"] = {type = "number", default = 0},
 	}
 
 	if lang_param == "lang" then
@@ -386,7 +529,7 @@ function export.display_from(frame_args, parent_args, frame)
 		track_module = "columns",
 		lang = iargs.lang or lang_param,
 		sc = "sc.default",
-		splitchar = ",",
+		splitchar = "[,~]",
 	}
 
 	local lang = iargs.lang or args[lang_param]
@@ -395,6 +538,9 @@ function export.display_from(frame_args, parent_args, frame)
 
 	local sort = iargs.sort
 	if args.sort ~= nil then
+		if not args.sort then
+			track("nosort")
+		end
 		sort = args.sort
 	else
 		-- HACK! For Japanese-script languages (Japanese, Okinawan, Miyako, etc.), sorting doesn't yet work properly, so
@@ -409,6 +555,9 @@ function export.display_from(frame_args, parent_args, frame)
 
 	local collapse = iargs.collapse
 	if args.collapse ~= nil then
+		if not args.collapse then
+			track("nocollapse")
+		end
 		collapse = args.collapse
 	end
 
@@ -417,11 +566,17 @@ function export.display_from(frame_args, parent_args, frame)
 		local number_of_items = 0
 		for j, item in ipairs(group.terms) do
 			if j == 1 then
-				local extra_indent, actual_term = item.term and item.term:match("^(%*+) +(.-)$")
-				if extra_indent then
-					item.term = actual_term
-					group.extra_indent = #extra_indent
+				if item.term then
+					local extra_indent, actual_term = rmatch(item.term, "^(%*+)%s+(.-)$")
+					if extra_indent then
+						item.term = actual_term
+						group.extra_indent = #extra_indent
+					end
 				end
+			elseif item.delimiter == "~" then
+				item.separator = " ~ "
+			else
+				item.separator = ", "
 			end
 			-- If a separate language code was given for the term, display the language name as a right qualifier.
 			-- Otherwise it may not be obvious that the term is in a separate language (e.g. if the main language is
@@ -489,6 +644,8 @@ function export.display_from(frame_args, parent_args, frame)
 		sc = sc,
 		format_header = true,
 		subitem_separator = ", ",
+		keepfirst = args.keepfirst,
+		keeplast = args.keeplast,
 	}
 
 	return deprecated and frame:expandTemplate{title = "check deprecated lang param usage", args = {ret, lang = args[lang_param]}} or ret
@@ -523,10 +680,10 @@ function export.display(frame)
 		if not elem then
 			break
 		elseif not ( -- Strip redundant wikilinks.
-			not match(elem, "^()%[%[") or
-			find(elem, "[[", 3, true) or
-			find(elem, "]]", 3, true) ~= #elem - 1 or
-			find(elem, "|", 3, true)
+			not elem:match("^()%[%[") or
+			elem:find("[[", 3, true) or
+			elem:find("]]", 3, true) ~= #elem - 1 or
+			elem:find("|", 3, true)
 		) then
 			elem = sub(elem, 3, -3)
 			elem = trim(elem, "%s")
