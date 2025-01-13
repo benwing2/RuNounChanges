@@ -8,9 +8,11 @@ local links_module = "Module:links"
 local pages_module = "Module:pages"
 local parameter_utilities_module = "Module:parameter utilities"
 local parameters_module = "Module:parameters"
+local parse_interface_module = "Module:parse interface"
 local pron_qualifier_module = "Module:pron qualifier"
 local string_utilities_module = "Module:string utilities"
 local table_module = "Module:table"
+local utilities_module = "Module:utilities"
 
 local m_str_utils = require(string_utilities_module)
 
@@ -24,6 +26,7 @@ local sub = string.sub
 local trim = m_str_utils.trim
 local u = m_str_utils.char
 local dump = mw.dumpObject
+local ucfirst = m_str_utils.ucfirst
 
 
 local function track(page)
@@ -34,8 +37,8 @@ end
 local function deepEquals(...)
     deepEquals = require(table_module).deepEquals
     return deepEquals(...)
-end 
-    
+end
+
 local function term_already_linked(term)
 	-- FIXME: "<span" is an ugly hack to prevent double-linking of terms already run through {{l|...}}:
 	-- [[Thread:User talk:CodeCat/MewBot adding lang to column templates]]
@@ -71,12 +74,12 @@ local function full_link_and_track_self_links(item)
 	end
 
 	item.suppress_redundant_wikilink_cat = suppress_redundant_wikilink_cat
-	return require(links_module).full_link(item)
+	return require(links_module).full_link(item, face)
 end
 				
-local function format_subitem(subitem, args)
+local function format_subitem(subitem, lang, face)
 	local text = subitem.term and term_already_linked(subitem.term) and subitem.term or
-		full_link_and_track_self_links(subitem)
+		full_link_and_track_self_links(subitem, face)
 	-- We could use the "show qualifiers" flag to full_link() but not when term_already_linked().
 	if subitem.q and subitem.q[1] or subitem.qq and subitem.qq[1] or subitem.l and subitem.l[1] or
 		subitem.ll and subitem.ll[1] or subitem.refs and subitem.refs[1] then
@@ -93,7 +96,7 @@ local function format_subitem(subitem, args)
 	return text
 end
 
-local function format_item(item, args)
+local function format_item(item, args, face)
 	local text
 	if type(item) == "table" then
 		if item.terms then
@@ -107,16 +110,16 @@ local function format_item(item, args)
 					if separator then
 						insert(parts, separator)
 					end
-					insert(parts, format_subitem(subitem, args))
+					insert(parts, format_subitem(subitem, args.lang, face))
 					is_first = false
 				end
 			end
 			return concat(parts)
 		else
-			return format_subitem(item, args)
+			return format_subitem(item, args.lang, face)
 		end
 	elseif args.lang and not term_already_linked(item) then
-		return full_link_and_track_self_links {lang = args.lang, term = item, sc = args.sc}
+		return full_link_and_track_self_links({lang = args.lang, term = item, sc = args.sc}, face)
 	else
 		return item
 	end
@@ -474,9 +477,6 @@ function export.display_from(frame_args, parent_args, frame)
 		["lang"] = {type = "language"},
 		-- Default for auto-sort. Overridable by template |sort= param.
 		["sort"] = boolean,
-		-- The following is accepted but currently ignored, per an extended discussion in
-		-- [[Wiktionary:Beer parlour/2018/November#Titles of morphological relations templates]].
-		["title"] = {default = ""},
 		["toggle_category"] = true,
 		-- Minimum number of rows required to format into a multicolumn list. If below this, the list is displayed
 		-- "raw" (no columns, no collapsbility).
@@ -487,12 +487,66 @@ function export.display_from(frame_args, parent_args, frame)
 
 	local compat = iargs.lang or parent_args.lang
 	local lang_param = compat and "lang" or 1
+	local deprecated = lang_param == "lang"
+
+	local ret = export.handle_display_from_or_topic_list(iargs, parent_args, {}, nil)
+
+	return deprecated and frame:expandTemplate{title = "check deprecated lang param usage",
+		args = {ret, lang = args[lang_param]}} or ret
+end
+
+
+function export.topic_list(frame)
+	local raw_item_args = frame.args
+	local frame_parent = frame:getParent()
+	local raw_user_args = frame_parent.args
+	local topic_list_template = frame_parent:getTitle()
+
+	local user_params = {
+		nocat = {type = "boolean"},
+		sortbase = {},
+	}
+
+	local user_args = require(parameters_module).process(raw_user_args, user_params)
+
+	return export.handle_display_from_or_topic_list({}, raw_item_args, user_args, topic_list_template)
+end
+
+local function convert_delimiter_to_separator(item, itemind)
+	if itemind == 1 then
+		item.separator = nil
+	elseif item.delimiter == "~" then
+		item.separator = " ~ "
+	else
+		item.separator = ", "
+	end
+end
+
+-- FIXME: This needs to be implemented properly in [[Module:links]].
+local function get_left_side_link(link)
+	local left, right = link:match("^%[%[([^%[%]|]+)|([^%[%]|]+)%]%]$")
+	if left, right then
+		return left
+	end
+	local single_part = link:match("^%[%[([^%[%]|]+)%]%]$")
+	if single_part then
+		return single_part
+	end
+	if not link:match("%[%[") then
+		return link
+	end
+	return nil
+end
+
+function export.handle_display_from_or_topic_list(iargs, raw_item_args, user_args, topic_list_template)
+	local boolean = {type = "boolean"}
+	local compat = iargs.lang or raw_item_args.lang
+	local lang_param = compat and "lang" or 1
 	local first_content_param = compat and 1 or 2
-	local deprecated
 
 	local params = {
 		[lang_param] =
-			not iargs.lang and {required = true, type = "language", default = "und"} or nil,
+			not iargs.lang and {required = true, type = "language", template_default = "und"} or nil,
 		["n"] = not iargs.columns and {type = "number"} or nil,
 		[first_content_param] = {list = true, allow_holes = true},
 
@@ -503,10 +557,13 @@ function export.display_from(frame_args, parent_args, frame)
 		["omit"] = {list = true}, -- used when calling from [[Module:saurus]] so the page displaying the synonyms/antonyms doesn't occur in the list
 		["keepfirst"] = {type = "number", default = 0},
 		["keeplast"] = {type = "number", default = 0},
+		["pagename"] = {}, -- for testing of topic list
 	}
 
-	if lang_param == "lang" then
-		deprecated = true
+	if topic_list_template then
+		params["cat"] = {}
+		params["enhypernym"] = {}
+		params["hypernym"] = {}
 	end
 
 	local m_param_utils = require(parameter_utilities_module)
@@ -534,6 +591,7 @@ function export.display_from(frame_args, parent_args, frame)
 
 	local lang = iargs.lang or args[lang_param]
 	local langcode = lang:getCode()
+	local fulllangcode = lang:getFullCode()
 	local sc = args.sc.default
 
 	local sort = iargs.sort
@@ -561,6 +619,88 @@ function export.display_from(frame_args, parent_args, frame)
 		collapse = args.collapse
 	end
 
+	local title = args.title
+	local formatted_cats
+	if topic_list_template then
+		local cats
+		-- Chop off anything after a slash. There are templates with names like
+		-- [[Template:list:days of the week/cim/Luserna]] (for the Luserna dialect of Cimbrian) and
+		-- [[Template:list:days of the week/cim/13]] (for the Tredici Comuni dialect of Cimbrian) so we can't just
+		-- assume there will be a single slash followed by a language code.
+		local default_title = topic_list_template:gsub("^Template:", ""):gsub("^list:", ""):gsub("/.*$", "")
+		if not args.cat then
+			local default_cat = ucfirst(default_title)
+			local cat_title = mw.title.new(("Category:%s"):format(default_cat))
+			if cat_title and cat_title.exists then
+				cats = {fulllangcode .. ":" .. default_cat}
+			end
+		elseif args.cat ~= "-" then
+			cats = require(parse_interface_module).split_on_comma(args.cat)
+			for i, cat in ipairs(cats) do
+				if cat:find("^Category:") then
+					cats[i] = cat:gsub("^Category:", "")
+				else
+					cats[i] = fulllangcode .. ":" .. cats[i]
+				end
+			end
+		end
+		if not title then
+			local titleparts = {}
+			local function ins(txt)
+				table.insert(titleparts, txt)
+			end
+			local enhypernym = args.enhypernym or default_title
+			if cats and not enhypernym:find("%[%[") then
+				ins(("[[:Category:%s|%s]]"):format(cats[1], enhypernym))
+			else
+				ins(enhypernym)
+			end
+			if args.hypernym then
+				local function generate_obj(term, parse_err)
+					local actual_term, termlang = require(parse_interface_module).parse_term_with_lang {
+						term = term,
+						parse_err = parse_err,
+						paramname = "hypernym",
+					}
+					return {
+						term = actual_term ~= "" and actual_term or nil,
+						lang = termlang or lang,
+					}
+				end
+				local lang_hypernyms = require(parse_interface_module).parse_inline_modifiers(args.hypernym, {
+					paramname = "hypernym",
+					param_mods = param_mods,
+					generate_obj = generate_obj,
+					splitchar = "[,~]",
+					preserve_splitchar = true,
+					outer_container = {},
+				})
+				local hypernym_is_page = false
+				local pagename = args.pagename or mw.loadData("Module:headword/data").pagename
+				for i, lang_hypernym in ipairs(lang_hypernyms.terms) do
+					convert_delimiter_to_separator(lang_hypernym, i)
+					-- Do this afterwards rather than in generate_obj() or use of <sc:...> will trigger an error
+					-- because the modifier is already set.
+					if not lang_hypernym.sc and sc then
+						lang_hypernym.sc = sc
+					end
+					if lang_hypernym.term then
+						local left_side = get_left_side_link(lang_hypernym.term)
+						if left_side and left_side == pagename then
+							hypernym_is_page = true
+							break
+						end
+					end
+				end
+				if cats and not user_args.nocat and not hypernym_is_page then
+					formatted_cats = require(utilities_module).format_categories(cats, lang, nil, user_args.sortbase)
+				end
+				local formatted_hypernyms = format_item(lang_hypernyms, {lang = lang}, "bold")
+				ins(": " .. formatted_hypernyms)
+			end
+		end
+	end
+
 	local number_of_groups = 0
 	for i, group in ipairs(groups) do
 		local number_of_items = 0
@@ -573,11 +713,10 @@ function export.display_from(frame_args, parent_args, frame)
 						group.extra_indent = #extra_indent
 					end
 				end
-			elseif item.delimiter == "~" then
-				item.separator = " ~ "
-			else
-				item.separator = ", "
 			end
+
+			convert_delimiter_to_separator(item, j)
+
 			-- If a separate language code was given for the term, display the language name as a right qualifier.
 			-- Otherwise it may not be obvious that the term is in a separate language (e.g. if the main language is
 			-- 'zh' and the term language is a Chinese lect such as Min Nan). But don't do this for Translingual terms,
@@ -630,12 +769,12 @@ function export.display_from(frame_args, parent_args, frame)
 	end
 	local raw = number_of_groups < iargs.minrows
 
-	local ret = export.create_list {
+	return export.create_list {
 		column_count = column_count,
 		raw = raw,
 		content = groups,
 		alphabetize = sort,
-		header = args.title,
+		header = title,
 		collapse = collapse,
 		toggle_category = iargs.toggle_category,
 		-- columns-bg (in [[MediaWiki:Gadget-Site.css]]) provides the background color
@@ -646,14 +785,12 @@ function export.display_from(frame_args, parent_args, frame)
 		subitem_separator = ", ",
 		keepfirst = args.keepfirst,
 		keeplast = args.keeplast,
-	}
-
-	return deprecated and frame:expandTemplate{title = "check deprecated lang param usage", args = {ret, lang = args[lang_param]}} or ret
+	} .. (formatted_cats or "")
 end
 
 function export.display(frame)
 	if not is_substing() then
-		return export.display_from(frame.args, frame:getParent().args, frame)
+		return export.display_from(frame.args, frame:getParent().args, frame, false)
 	end
 
 	-- If substed, unsubst template with newlines between each term, redundant wikilinks removed, and remove duplicates + sort terms if sort is enabled.
