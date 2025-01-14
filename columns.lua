@@ -53,7 +53,7 @@ local function suppress_redundant_wikilink_cat(term, alt)
 	return term:find("~") or term:find(",%S")
 end
 
-local function full_link_and_track_self_links(item)
+local function full_link_and_track_self_links(item, face)
 	if item.term then
 		local pagename = mw.loadData(headword_data_module).pagename
 		local term_is_pagename = item.term == pagename
@@ -265,9 +265,11 @@ function export.create_list(args)
 	end
 
 	if header and args.format_header then
+		-- hopefully a temporary solution, hence not done with much effort
 		header = html("div")
-			:addClass("term-list-header")
-			:wikitext(header)
+			:node(html("i"):wikitext("("))
+			:node(html("span"):addClass("ib-content"):wikitext(header))
+			:node(html("i"):wikitext("):"))
 	end
 
 	local list
@@ -411,32 +413,33 @@ function export.create_list(args)
 
 		if args.collapse then
 			output = html("div")
+				:node(output)
+				:addClass("list-switcher")
+				:attr("data-toggle-category", toggle_category)
+			
+			-- identify commonly used scripts that use large text and
+			-- provide a special CSS class to make the template bigger
+			local sc = args.sc
+			if sc == nil then
+				local scripts = args.lang:getScripts()
+				if #scripts > 0 then
+					sc = scripts[1]
+				end
+			end
+			if sc ~= nil then
+				local scriptcode = sc:getParentCode()
+				if scriptcode == "top" then
+					scriptcode = sc:getCode()
+				end
+				if large_text_scripts[scriptcode] then
+					output:addClass("list-switcher-large-text")
+				end
+			end
+			
+			-- wrap in wrapper to prevent interference from floating elements
+			output = html("div")
 				:addClass("list-switcher-wrapper")
-				:node(
-					html("div")
-						:node(output)
-						:addClass("list-switcher")
-						:attr("data-toggle-category", toggle_category)
-				)
-		end
-
-		-- identify commonly used scripts that use large text and
-		-- provide a special CSS class to make the template bigger
-		local sc = args.sc
-		if sc == nil then
-			local scripts = args.lang:getScripts()
-			if #scripts > 0 then
-				sc = scripts[1]
-			end
-		end
-		if sc ~= nil then
-			local scriptcode = sc:getParentCode()
-			if scriptcode == "top" then
-				scriptcode = sc:getCode()
-			end
-			if large_text_scripts[scriptcode] then
-				output:addClass("list-switcher-large-text")
-			end
+				:node(output)
 		end
 	end
 
@@ -509,7 +512,7 @@ function export.topic_list(frame)
 
 	local user_args = require(parameters_module).process(raw_user_args, user_params)
 
-	return export.handle_display_from_or_topic_list({}, raw_item_args, user_args, topic_list_template)
+	return export.handle_display_from_or_topic_list({minrows = 2, sort = true, collapse = true}, raw_item_args, user_args, topic_list_template)
 end
 
 local function convert_delimiter_to_separator(item, itemind)
@@ -525,7 +528,7 @@ end
 -- FIXME: This needs to be implemented properly in [[Module:links]].
 local function get_left_side_link(link)
 	local left, right = link:match("^%[%[([^%[%]|]+)|([^%[%]|]+)%]%]$")
-	if left, right then
+	if left then
 		return left
 	end
 	local single_part = link:match("^%[%[([^%[%]|]+)%]%]$")
@@ -578,7 +581,7 @@ function export.handle_display_from_or_topic_list(iargs, raw_item_args, user_arg
 	local groups, args = m_param_utils.process_list_arguments {
 		params = params,
 		param_mods = param_mods,
-		raw_args = parent_args,
+		raw_args = raw_item_args,
 		termarg = first_content_param,
 		parse_lang_prefix = true,
 		allow_multiple_lang_prefixes = true,
@@ -644,6 +647,7 @@ function export.handle_display_from_or_topic_list(iargs, raw_item_args, user_arg
 				end
 			end
 		end
+		local hypernym_is_page
 		if not title then
 			local titleparts = {}
 			local function ins(txt)
@@ -692,12 +696,13 @@ function export.handle_display_from_or_topic_list(iargs, raw_item_args, user_arg
 						end
 					end
 				end
-				if cats and not user_args.nocat and not hypernym_is_page then
-					formatted_cats = require(utilities_module).format_categories(cats, lang, nil, user_args.sortbase)
-				end
 				local formatted_hypernyms = format_item(lang_hypernyms, {lang = lang}, "bold")
 				ins(": " .. formatted_hypernyms)
 			end
+			title = table.concat(titleparts)
+		end
+		if cats and not user_args.nocat and not hypernym_is_page then
+			formatted_cats = require(utilities_module).format_categories(cats, lang, nil, user_args.sortbase)
 		end
 	end
 
