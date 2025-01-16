@@ -274,13 +274,13 @@ Page 638 Template:list:sexual orientations/nb: -------- begin text --------
 -------- end text --------
 Page 648 Template:list:Gregorian calendar months/ba: -------- begin text --------
 {{#invoke:topic list|show<!-- FIXME: rename to [[Template:list:.../ba/native]] -->
-|enhypernym=Gregorian calendar months (native-origin)
+|enhypernym=+ (native-origin)
 |hypernym=[[ай]]ҙар
 |һыуығай|шаҡай|буранай|алағарай|һабанай|һатай|майай|урағай|һарысай|ҡарасай|ҡырпағай|аҡъюлай}}<noinclude>[[fr:Modèle:tableau-mois/ba]]{{list doc}}</noinclude>
 -------- end text --------
 Page 648 Template:list:Gregorian calendar months/ba/Russian: -------- begin text --------
 {{#invoke:topic list|show
-|enhypernym=Gregorian calendar months (Russian-origin)
+|enhypernym=+ (Russian-origin)
 |hypernym=[[ай]]ҙар
 |ғинуар|февраль|март|апрель|май|июнь|июль|август|сентябрь|октябрь|ноябрь|декабрь}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
@@ -1749,24 +1749,21 @@ Do NOT add Kosovo here
 -->}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 2933 Template:list:Gregorian calendar months/et: -------- begin text --------
-{{list helper 2
-|title=Gregorian calendar months
-|cat=et:Months
-|hypernym=Gregoriuse kalendri {{l|et|kuu}}
-|list=<!--
--->{{l-self|et|jaanuar}}, <!--
--->{{l-self|et|veebruar}}, <!--
--->{{l-self|et|märts}}, <!--
--->{{l-self|et|aprill}}, <!--
--->{{l-self|et|mai}}, <!--
--->{{l-self|et|juuni}}, <!--
--->{{l-self|et|juuli}}, <!--
--->{{l-self|et|august}}, <!--
--->{{l-self|et|september}}, <!--
--->{{l-self|et|oktoober}}, <!--
--->{{l-self|et|november}}, <!--
--->{{l-self|et|detsember}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[Gregorius]]e [[kalender|kalendri]] [[kuu]]d
+|jaanuar
+|veebruar
+|märts
+|aprill
+|mai
+|juuni
+|juuli
+|august
+|september
+|oktoober
+|november
+|detsember
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 2950 Template:list:days of the week/mk: -------- begin text --------
 {{#invoke:topic list|show
@@ -1781,23 +1778,20 @@ Page 2950 Template:list:days of the week/mk: -------- begin text --------
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 2993 Template:list:Gregorian calendar months/liv: -------- begin text --------
-{{list helper 2
-|title=Gregorian calendar months
-|cat=liv:Months
-|list=<!--
--->{{l-self|liv|janvār}}, <!--
--->{{l-self|liv|februar}}, <!--
--->{{l-self|liv|märts}}, <!--
--->{{l-self|liv|april}}, <!--
--->{{l-self|liv|maij}}, <!--
--->{{l-self|liv|jūnij}}, <!--
--->{{l-self|liv|jūlij}}, <!--
--->{{l-self|liv|ougust}}, <!--
--->{{l-self|liv|septembõr}}, <!--
--->{{l-self|liv|oktōbõr}}, <!--
--->{{l-self|liv|novembõr}}, <!--
--->{{l-self|liv|detsembõr}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|janvār
+|februar
+|märts
+|april
+|maij
+|jūnij
+|jūlij
+|ougust
+|septembõr
+|oktōbõr
+|novembõr
+|detsembõr
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 3002 Template:list:days of the week/liv: -------- begin text --------
 {{#invoke:topic list|show
@@ -1811,23 +1805,20 @@ Page 3002 Template:list:days of the week/liv: -------- begin text --------
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 3133 Template:list:Gregorian calendar months/vro: -------- begin text --------
-{{list helper 2
-|title=Gregorian calendar months
-|cat=vro:Months
-|list=<!--
--->{{l-self|vro|vahtsõaastakuu}}, <!--
--->{{l-self|vro|radokuu}}, <!--
--->{{l-self|vro|urbõkuu}}, <!--
--->{{l-self|vro|mahlakuu}}, <!--
--->{{l-self|vro|lehekuu}}, <!--
--->{{l-self|vro|piimäkuu}}, <!--
--->{{l-self|vro|hainakuu}}, <!--
--->{{l-self|vro|põimukuu}}, <!--
--->{{l-self|vro|süküskuu}}, <!--
--->{{l-self|vro|rehekuu}}, <!--
--->{{l-self|vro|märtekuu}}, <!--
--->{{l-self|vro|joulukuu}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|vahtsõaastakuu
+|radokuu
+|urbõkuu
+|mahlakuu
+|lehekuu
+|piimäkuu
+|hainakuu
+|põimukuu
+|süküskuu
+|rehekuu
+|märtekuu
+|joulukuu
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 4017 Template:list:days of the week/km: -------- begin text --------
 {{#invoke:topic list|show
@@ -1841,27 +1832,20 @@ Page 4017 Template:list:days of the week/km: -------- begin text --------
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 4259 Template:list:Gregorian calendar months/hu: -------- begin text --------
-{{list helper 2
-|title=Gregorian calendar months
-|cat=hu:Months
-|list=<!--
--->{{l-self|hu|január}}, <!--
--->{{l-self|hu|február}}, <!--
--->{{l-self|hu|március}}, <!--
--->{{l-self|hu|április}}, <!--
--->{{l-self|hu|május}}, <!--
--->{{l-self|hu|június}}, <!--
--->{{l-self|hu|július}}, <!--
--->{{l-self|hu|augusztus}}, <!--
--->{{l-self|hu|szeptember}}, <!--
--->{{l-self|hu|október}}, <!--
--->{{l-self|hu|november}}, <!--
--->{{l-self|hu|december}}<!--
--->}}<!--
-
---><noinclude>
-{{list doc}}
-
+{{#invoke:topic list|show
+|január
+|február
+|március
+|április
+|május
+|június
+|július
+|augusztus
+|szeptember
+|október
+|november
+|december
+}}<noinclude>{{list doc}}
 [[az:Şablon:İlin ayları-hu]]
 [[de:Vorlage:Monate (Ungarisch)]]
 [[et:Mall:kuunimed-hu]]
@@ -2180,28 +2164,21 @@ Page 5022 Template:list:days of the week/es: -------- begin text --------
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5023 Template:list:Gregorian calendar months/es: -------- begin text --------
-{{list helper 2
-|title=Gregorian calendar months
-|cat=es:Months
-|hypernym={{l|es|mes}} del {{l|es|calendario gregoriano}}
-|list=<!--
--->{{l-self|es|enero}}, <!--
--->{{l-self|es|febrero}}, <!--
--->{{l-self|es|marzo}}, <!--
--->{{l-self|es|abril}}, <!--
--->{{l-self|es|mayo}}, <!--
--->{{l-self|es|junio}}, <!--
--->{{l-self|es|julio}}, <!--
--->{{l-self|es|agosto}}, <!--
--->{{l-self|es|septiembre}}, <!--
--->{{l-self|es|octubre}}, <!--
--->{{l-self|es|noviembre}}, <!--
--->{{l-self|es|diciembre}}<!--
--->}}<!--
-
---><noinclude>
-{{list doc}}
-
+{{#invoke:topic list|show
+|hypernym=[[mes]]es del [[calendario gregoriano]]
+|enero
+|febrero
+|marzo
+|abril
+|mayo
+|junio
+|julio
+|agosto
+|septiembre
+|octubre
+|noviembre
+|diciembre
+}}<noinclude>{{list doc}}
 [[af:Sjabloon:es-maande van die Greg-jaar]]
 [[az:Şablon:İlin ayları-es]]
 [[da:Skabelon:es-måned]]
@@ -2257,37 +2234,38 @@ Page 5043 Template:list:days of the week/da: -------- begin text --------
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5044 Template:list:Gregorian calendar months/da: -------- begin text --------
-{{list helper 2
-|title=Gregorian calendar months
-|cat=da:Months
-|hypernym={{l|da|måned}} i {{l|da|den gregorianske kalender}}
-|list=<!--
--->{{l-self|da|januar}}, <!--
--->{{l-self|da|februar}}, <!--
--->{{l-self|da|marts}}, <!--
--->{{l-self|da|april}}, <!--
--->{{l-self|da|maj}}, <!--
--->{{l-self|da|juni}}, <!--
--->{{l-self|da|juli}}, <!--
--->{{l-self|da|august}}, <!--
--->{{l-self|da|september}}, <!--
--->{{l-self|da|oktober}}, <!--
--->{{l-self|da|november}}, <!--
--->{{l-self|da|december}}<!--
---><br/>''Obsolete words:'' <!--
--->{{l-self|da|glugmåned}}, <!--
--->{{l-self|da|blidemåned}}, <!--
--->{{l-self|da|tormåned}}, <!--
--->{{l-self|da|fåremåned}}, <!--
--->?, <!--
--->?, <!--
--->{{l-self|da|ormemåned}}, <!--
--->{{l-self|da|høstmåned}}, <!--
--->{{l-self|da|fiskemåned}}, <!--
--->{{l-self|da|liljemåned}}, <!--
--->{{l-self|da|slagtemåned}}, <!--
--->{{l-self|da|kristmåned}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[måned]]er i [[den gregorianske kalender]]
+|januar
+|februar
+|marts
+|april
+|maj
+|juni
+|juli
+|august
+|september
+|oktober
+|november
+|december
+-------- end text --------
+Page 5044 Template:list:Gregorian calendar months/da/obsolete: -------- begin text --------
+{{#invoke:topic list|show
+|enhypernym=+ (obsolete)
+|hypernym=[[måned]]er i [[den gregorianske kalender]]
+|glugmåned
+|blidemåned
+|tormåned
+|fåremåned
+|?
+|?
+|ormemåned
+|høstmåned
+|fiskemåned
+|liljemåned
+|slagtemåned
+|kristmåned
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5053 Template:list:days of the week/nn: -------- begin text --------
 {{#invoke:topic list|show
@@ -2314,28 +2292,21 @@ Page 5054 Template:list:days of the week/nb: -------- begin text --------
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5055 Template:list:Gregorian calendar months/no: -------- begin text --------
-{{list helper 2
-|title=Gregorian calendar months
-|cat=no:Months
-|hypernym={{l|nn|månad}} i den {{l|no|gregorianske kalenderen}}|hypernym2={{l|nb|måned}} i den {{l|no|gregorianske kalender}}
-|list=<!--
--->{{l-self|no|januar}}, <!--
--->{{l-self|no|februar}}, <!--
--->{{l-self|no|mars}}, <!--
--->{{l-self|no|april}}, <!--
--->{{l-self|no|mai}}, <!--
--->{{l-self|no|juni}}, <!--
--->{{l-self|no|juli}}, <!--
--->{{l-self|no|august}}, <!--
--->{{l-self|no|september}}, <!--
--->{{l-self|no|oktober}}, <!--
--->{{l-self|no|november}}, <!--
--->{{l-self|no|desember}}<!--
--->}}<!--
-
---><noinclude>
-{{list doc}}
-
+{{#invoke:topic list|show
+|hypernym=nn:[[månad]]er i den [[gregorianske kalenderen]],nb:[[måned]]er i den [[gregorianske kalender]]
+|januar
+|februar
+|mars
+|april
+|mai
+|juni
+|juli
+|august
+|september
+|oktober
+|november
+|desember
+}}<noinclude>{{list doc}}
 [[af:Sjabloon:no-maande van die Greg-jaar]]
 [[az:Şablon:İlin ayları-no]]
 [[de:Vorlage:Monate (Norwegisch)]]
@@ -2384,24 +2355,21 @@ Page 5058 Template:list:states of Brazil/en: -------- begin text --------
 -->}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5059 Template:list:Gregorian calendar months/eo: -------- begin text --------
-{{list helper 2
-|title=Gregorian calendar months
-|cat=eo:Months
-|hypernym={{l|eo|monatoj}} de la {{l|eo|Gregoria kalendaro}}
-|list=<!--
--->{{l-self|eo|januaro}}/{{l-self|eo|Januaro}}, <!--
--->{{l-self|eo|februaro}}/{{l-self|eo|Februaro}}, <!--
--->{{l-self|eo|marto}}/{{l-self|eo|Marto}}, <!--
--->{{l-self|eo|aprilo}}/{{l-self|eo|Aprilo}}, <!--
--->{{l-self|eo|majo}}/{{l-self|eo|Majo}}, <!--
--->{{l-self|eo|junio}}/{{l-self|eo|Junio}}, <!--
--->{{l-self|eo|julio}}/{{l-self|eo|Julio}}, <!--
--->{{l-self|eo|aŭgusto}}/{{l-self|eo|Aŭgusto}}, <!--
--->{{l-self|eo|septembro}}/{{l-self|eo|Septembro}}, <!--
--->{{l-self|eo|oktobro}}/{{l-self|eo|Oktobro}}, <!--
--->{{l-self|eo|novembro}}/{{l-self|eo|Novembro}}, <!--
--->{{l-self|eo|decembro}}/{{l-self|eo|Decembro}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[monato]]j de la [[Gregoria kalendaro]]
+|januaro~Januaro
+|februaro~Februaro
+|marto~Marto
+|aprilo~Aprilo
+|majo~Majo
+|junio~Junio
+|julio~Julio
+|aŭgusto~Aŭgusto
+|septembro~Septembro
+|oktobro~Oktobro
+|novembro~Novembro
+|decembro~Decembro
+}}<noinclude>{{list doc}}<~noinclude>
 -------- end text --------
 Page 5066 Template:list:Greek script letter names/es: -------- begin text --------
 {{#invoke:topic list|show
@@ -3300,44 +3268,36 @@ Page 5220 Template:list:electromagnetic radiation/es: -------- begin text ------
 -->}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5221 Template:list:Gregorian calendar months/en: -------- begin text --------
-{{list helper 2
-|title=Gregorian calendar months
-|cat=en:Gregorian calendar months
-|hypernym={{l|en|Gregorian calendar}} {{l|en|month}}
-|list=<!--
--->{{l-self|en|January}}, <!--
--->{{l-self|en|February}}, <!--
--->{{l-self|en|March}}, <!--
--->{{l-self|en|April}}, <!--
--->{{l-self|en|May}}, <!--
--->{{l-self|en|June}}, <!--
--->{{l-self|en|July}}, <!--
--->{{l-self|en|August}}, <!--
--->{{l-self|en|September}}, <!--
--->{{l-self|en|October}}, <!--
--->{{l-self|en|November}}, <!--
--->{{l-self|en|December}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|January
+|February
+|March
+|April
+|May
+|June
+|July
+|August
+|September
+|October
+|November
+|December
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5222 Template:list:Hebrew calendar months/en: -------- begin text --------
-{{list helper 2
-|title=Hebrew calendar months
-|hypernym={{l|en|Hebrew calendar}} {{l|en|month}}|hypernym2={{l|en|Jewish calendar}} {{l|en|month}}
-|cat=en:Hebrew calendar months
-|list=<!--
--->{{l-self|en|Tishrei}}, <!--
--->{{l-self|en|Cheshvan}}, <!--
--->{{l-self|en|Kislev}}, <!--
--->{{l-self|en|Tevet}}, <!--
--->{{l-self|en|Shevat}}, <!--
--->{{l-self|en|Adar}}, <!--
--->{{l-self|en|Nisan}}, <!--
--->{{l-self|en|Iyar}}, <!--
--->{{l-self|en|Sivan}}, <!--
--->{{l-self|en|Tammuz}}, <!--
--->{{l-self|en|Av}}, <!--
--->{{l-self|en|Elul}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|Tishrei
+|Cheshvan
+|Kislev
+|Tevet
+|Shevat
+|Adar
+|Nisan
+|Iyar
+|Sivan
+|Tammuz
+|Av
+|Elul
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5223 Template:list:fundamental interactions/ru: -------- begin text --------
 {{#invoke:topic list|show
@@ -3497,24 +3457,21 @@ Page 5266 Template:list:sexual orientations/pl: -------- begin text --------
 -->}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5269 Template:list:Gregorian calendar months/pt: -------- begin text --------
-{{list helper 2
-|title=Gregorian calendar months
-|cat=pt:Months
-|hypernym={{l|pt|mês}} do {{l|pt|calendário gregoriano}}
-|list=<!--
--->{{l-self|pt|janeiro}}, <!--
--->{{l-self|pt|fevereiro}}, <!--
--->{{l-self|pt|março}}, <!--
--->{{l-self|pt|abril}}, <!--
--->{{l-self|pt|maio}}, <!--
--->{{l-self|pt|junho}}, <!--
--->{{l-self|pt|julho}}, <!--
--->{{l-self|pt|agosto}}, <!--
--->{{l-self|pt|setembro}}, <!--
--->{{l-self|pt|outubro}}, <!--
--->{{l-self|pt|novembro}}, <!--
--->{{l-self|pt|dezembro}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[mês|meses]] do [[calendário gregoriano]]
+|janeiro
+|fevereiro
+|março
+|abril
+|maio
+|junho
+|julho
+|agosto
+|setembro
+|outubro
+|novembro
+|dezembro
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5270 Template:list:fundamental interactions/pl: -------- begin text --------
 {{#invoke:topic list|show
@@ -3539,28 +3496,21 @@ Page 5277 Template:list:sexual orientations/ca: -------- begin text --------
 -->}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5283 Template:list:Gregorian calendar months/it: -------- begin text --------
-{{list helper 2
-|title=Gregorian calendar months
-|cat=it:Months
-|hypernym={{l|it|mese}} del {{l|it|calendario gregoriano}}
-|list=<!--
--->{{l-self|it|gennaio}}, <!--
--->{{l-self|it|febbraio}}, <!--
--->{{l-self|it|marzo}}, <!--
--->{{l-self|it|aprile}}, <!--
--->{{l-self|it|maggio}}, <!--
--->{{l-self|it|giugno}}, <!--
--->{{l-self|it|luglio}}, <!--
--->{{l-self|it|agosto}}, <!--
--->{{l-self|it|settembre}}, <!--
--->{{l-self|it|ottobre}}, <!--
--->{{l-self|it|novembre}}, <!--
--->{{l-self|it|dicembre}}<!--
--->}}<!--
-
---><noinclude>
-{{list doc}}
-
+{{#invoke:topic list|show
+|hypernym=[[mese|mesi]] del [[calendario gregoriano]]
+|gennaio
+|febbraio
+|marzo
+|aprile
+|maggio
+|giugno
+|luglio
+|agosto
+|settembre
+|ottobre
+|novembre
+|dicembre
+}}<noinclude>{{list doc}}
 [[az:Şablon:İlin ayları-it]]
 [[da:Skabelon:it-måned]]
 [[de:Vorlage:Monate (Italienisch)]]
@@ -3604,16 +3554,13 @@ Page 5285 Template:list:planets of the Solar System/it: -------- begin text ----
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5286 Template:list:seasons/it: -------- begin text --------
-{{list helper 2
-|title=seasons
-|cat=it:Seasons
-|hypernym={{l|it|stagione}}
-|list=<!--
--->{{l-self|it|primavera}}, <!--
--->{{l-self|it|estate}}, <!--
--->{{l-self|it|autunno}}, <!--
--->{{l-self|it|inverno}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[stagione|stagioni]]
+|primavera
+|estate
+|autunno
+|inverno
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5287 Template:list:dwarf planets of the Solar System/en: -------- begin text --------
 {{list helper 2
@@ -3954,24 +3901,21 @@ Page 5329 Template:list:states of Mexico/en: -------- begin text --------
 -->}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5333 Template:list:Gregorian calendar months/ru: -------- begin text --------
-{{list helper 2
-|title=Gregorian calendar months
-|cat=ru:Months
-|hypernym={{l|ru|[[ме́сяц]] [[григорианский календарь|григориа́нского календаря́]]}}
-|list=<!--
--->{{l-self|ru|янва́рь}}, <!--
--->{{l-self|ru|февра́ль}}, <!--
--->{{l-self|ru|март}}, <!--
--->{{l-self|ru|апре́ль}}, <!--
--->{{l-self|ru|май}}, <!--
--->{{l-self|ru|ию́нь}}, <!--
--->{{l-self|ru|ию́ль}}, <!--
--->{{l-self|ru|а́вгуст}}, <!--
--->{{l-self|ru|сентя́брь}}, <!--
--->{{l-self|ru|октя́брь}}, <!--
--->{{l-self|ru|ноя́брь}}, <!--
--->{{l-self|ru|дека́брь}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[месяц|ме́сяцы]] [[григорианский календарь|григориа́нского календаря́]]
+|янва́рь
+|февра́ль
+|март
+|апре́ль
+|май
+|ию́нь
+|ию́ль
+|а́вгуст
+|сентя́брь
+|октя́брь
+|ноя́брь
+|дека́брь
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5334 Template:list:oceans/en: -------- begin text --------
 {{list helper 2
@@ -3987,38 +3931,39 @@ Page 5334 Template:list:oceans/en: -------- begin text --------
 -->}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5336 Template:list:Gregorian calendar months/de: -------- begin text --------
-{{list helper 2
-|title=Gregorian calendar months
-|cat=de:Gregorian calendar months
-|hypernym={{l|de|Monat}} im {{l|de|gregorianischer Kalender|gregorianischen Kalender}} ({{l|de|Gregorianischer Kalender|Gregorianischen Kalender}})
-|list=<br/>
-* {{q|common}} <!--
--->{{l-self|de|Januar}} / {{l-self|de|Jänner}}, <!--
--->{{l-self|de|Februar}} / {{l-self|de|Feber}}, <!--
--->{{l-self|de|März}}, <!--
--->{{l-self|de|April}}, <!--
--->{{l-self|de|Mai}}, <!--
--->{{l-self|de|Juni}} ({{l-self|de|Juno}}), <!--
--->{{l-self|de|Juli}} ({{l-self|de|Julei}}), <!--
--->{{l-self|de|August}}, <!--
--->{{l-self|de|September}}, <!--
--->{{l-self|de|Oktober}}, <!--
--->{{l-self|de|November}}, <!--
--->{{l-self|de|Dezember}}<br/>
-* {{q|archaic|poetic}} <!--
--->{{l-self|de|Hartung}}, <!--
--->{{l-self|de|Hornung}}, <!--
--->{{l-self|de|Lenzing}}, <!--
--->{{l-self|de|Launing}} / {{l-self|de|Ostermond}} / {{l-self|de|Ostermonat}}, <!--
--->{{l-self|de|Wonnemond}}, <!--
--->{{l-self|de|Brachet}}, <!--
--->{{l-self|de|Heuert}} / {{l-self|de|Heumonat}}, <!--
--->{{l-self|de|Ernting}} / {{l-self|de|Erntemond}} / {{l-self|de|Erntemonat}}, <!--
--->{{l-self|de|Scheiding}}, <!--
--->{{l-self|de|Gilbhart}}, <!--
--->{{l-self|de|Nebelung}}, <!--
--->{{l-self|de|Julmond}} <!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[Monat]]e im [[gregorianischer Kalender|gregorianischen Kalender]]
+|Januar,Jänner<l:Austria,South Tyrol>
+|Februar,Feber<l:Austria,dated>
+|März
+|April
+|Mai
+|Juni,Juno
+|Juli,Julei
+|August
+|September
+|Oktober
+|November
+|Dezember
+}}<noinclude>{{list doc}}</noinclude>
+-------- end text --------
+Page 5336 Template:list:Gregorian calendar months/de/archaic: -------- begin text --------
+{{#invoke:topic list|show
+|enhypernym=+ (archaic or poetic)
+|hypernym=[[Monat]]e im [[gregorianischer Kalender|gregorianischen Kalender]]
+|Hartung
+|Hornung
+|Lenzing
+|Launing,Ostermond~Ostermonat
+|Wonnemond
+|Brachet
+|Heuert,Heumonat
+|Ernting,Erntemond~Erntemonat
+|Scheiding
+|Gilbhart
+|Nebelung
+|Julmond
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5337 Template:list:states of Malaysia/en: -------- begin text --------
 {{list helper 2
@@ -4576,16 +4521,13 @@ Page 5362 Template:list:countries of Asia/en: -------- begin text --------
 -->}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5363 Template:list:seasons/fa: -------- begin text --------
-{{list helper 2
-|title=seasons
-|cat=fa:Seasons
-|hypernym={{l-self|fa|فصل|صل‌ها|tr=fasl-hâ}}
-|list=<!--
--->{{l-self|fa|بهار|tr=bahâr}}, <!--
--->{{l-self|fa|تابستان|tr=tâbestân}}, <!--
--->{{l-self|fa|پاییز|tr=pâyiz}}, <!--
--->{{l-self|fa|زمستان|tr=zemestân}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[فصل|صل‌ها]]<tr:fasl-hâ>
+|بهار<tr:bahâr>
+|تابستان<tr:tâbestân>
+|پاییز<tr:pâyiz>
+|زمستان<tr:zemestân>
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5364 Template:list:books of the Protestant Old Testament/en: -------- begin text --------
 {{list helper 2
@@ -4772,24 +4714,22 @@ Page 5404 Template:list:Hebrew calendar months/he: -------- begin text --------
 -->}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5410 Template:list:Gregorian calendar months/mt: -------- begin text --------
-{{list helper 2
-|title=Gregorian calendar months
-|cat=mt:Months
-|hypernym={{l|mt|xahar|xhur}} tas-{{l|mt|sena}} fil-{{l|mt|kalendarju Gregorjan}}
+{{#invoke:topic list|show
+|hypernym=[[xahar|xhur]] tas-[[sena]] fil-[[kalendarju Gregorjan]]
 |list=<!--
--->{{l-self|mt|Jannar}}, <!--
--->{{l-self|mt|Frar}}, <!--
--->{{l-self|mt|Marzu}}, <!--
--->{{l-self|mt|April}}, <!--
--->{{l-self|mt|Mejju}}, <!--
--->{{l-self|mt|Ġunju}}, <!--
--->{{l-self|mt|Lulju}}, <!--
--->{{l-self|mt|Awwissu}}, <!--
--->{{l-self|mt|Settembru}}, <!--
--->{{l-self|mt|Ottubru}}, <!--
--->{{l-self|mt|Novembru}}, <!--
--->{{l-self|mt|Diċembru}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+|Jannar
+|Frar
+|Marzu
+|April
+|Mejju
+|Ġunju
+|Lulju
+|Awwissu
+|Settembru
+|Ottubru
+|Novembru
+|Diċembru
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5413 Template:list:days of the week/ht: -------- begin text --------
 {{#invoke:topic list|show
@@ -4833,18 +4773,15 @@ Page 5454 Template:list:days of the week/is: -------- begin text --------
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5464 Template:list:seasons/bn: -------- begin text --------
-{{list helper 2
-|title=seasons
-|cat=bn:Seasons
-|hypernym=ঋতু
-|list=<!--
--->{{l-self|bn|গ্রীষ্ম}}, <!--
--->{{l-self|bn|বর্ষা}}, <!--
--->{{l-self|bn|শরৎ}}, <!--
--->{{l-self|bn|হেমন্ত}}, <!--
--->{{l-self|bn|শীত}}, <!--
--->{{l-self|bn|বসন্ত}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=ঋতু<!-- FIXME: is this plural? -->
+|গ্রীষ্ম
+|বর্ষা
+|শরৎ
+|হেমন্ত
+|শীত
+|বসন্ত
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5496 Template:list:days of the week/bn: -------- begin text --------
 {{#invoke:topic list|show
@@ -4859,11 +4796,19 @@ Page 5496 Template:list:days of the week/bn: -------- begin text --------
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5497 Template:list:Gregorian calendar months/bn: -------- begin text --------
-{{list helper 2
-|title=Gregorian calendar months
-|cat=bn:Months
-|hypernym=
-|list={{l-self|bn|জানুয়ারি}}, {{l-self|bn|ফেব্রুয়ারি}}, {{l-self|bn|মার্চ|tr=marc}}, {{l-self|bn|এপ্রিল}}, {{l-self|bn|মে}}, {{l-self|bn|জুন}}, {{l-self|bn|জুলাই}}, {{l-self|bn|আগস্ট|tr=agosṭ}}, {{l-self|bn|সেপ্টেম্বর|tr=sepṭembor}}, {{l-self|bn|অক্টোবর}}, {{l-self|bn|নভেম্বর}}, {{l-self|bn|ডিসেম্বর|tr=ḍisembor}}
+{{#invoke:topic list|show
+|জানুয়ারি
+|ফেব্রুয়ারি
+|মার্চ<tr:marc>
+|এপ্রিল
+|মে
+|জুন
+|জুলাই
+|আগস্ট<tr:agosṭ>
+|সেপ্টেম্বর<tr:sepṭembor>
+|অক্টোবর
+|নভেম্বর
+|ডিসেম্বর<tr:ḍisembor>
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5551 Template:list:divisions of Bangladesh/en: -------- begin text --------
@@ -5008,24 +4953,21 @@ Page 5646 Template:list:days of the week/ca: -------- begin text --------
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5650 Template:list:Gregorian calendar months/ca: -------- begin text --------
-{{list helper 2
-|title=Gregorian calendar months
-|cat=ca:Months
-|hypernym={{l|ca|mes}} del {{l|ca|calendari gregorià}}
-|list=<!--
--->{{l-self|ca|gener}}, <!--
--->{{l-self|ca|febrer}}, <!--
--->{{l-self|ca|març}}, <!--
--->{{l-self|ca|abril}}, <!--
--->{{l-self|ca|maig}}, <!--
--->{{l-self|ca|juny}}, <!--
--->{{l-self|ca|juliol}}, <!--
--->{{l-self|ca|agost}}, <!--
--->{{l-self|ca|setembre}}, <!--
--->{{l-self|ca|octubre}}, <!--
--->{{l-self|ca|novembre}}, <!--
--->{{l-self|ca|desembre}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[mes]]os del [[calendari gregorià]]
+|gener
+|febrer
+|març
+|abril
+|maig
+|juny
+|juliol
+|agost
+|setembre
+|octubre
+|novembre
+|desembre
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5652 Template:list:electromagnetic radiation/ca: -------- begin text --------
 {{list helper 2
@@ -5062,24 +5004,21 @@ Page 5669 Template:list:quarks/ru: -------- begin text --------
 -->}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5685 Template:list:Gregorian calendar months/sv: -------- begin text --------
-{{list helper 2
-|title=Gregorian calendar months
-|cat=sv:Months
-|hypernym={{l|sv|månad}} i {{l|sv|gregoriansk}}a kalendern
-|list=<!--
--->{{l-self|sv|januari}}, <!--
--->{{l-self|sv|februari}}, <!--
--->{{l-self|sv|mars}}, <!--
--->{{l-self|sv|april}}, <!--
--->{{l-self|sv|maj}}, <!--
--->{{l-self|sv|juni}}, <!--
--->{{l-self|sv|juli}}, <!--
--->{{l-self|sv|augusti}}, <!--
--->{{l-self|sv|september}}, <!--
--->{{l-self|sv|oktober}}, <!--
--->{{l-self|sv|november}}, <!--
--->{{l-self|sv|december}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[månad]]er i [[gregoriansk]]a [[kalender]]n
+|januari
+|februari
+|mars
+|april
+|maj
+|juni
+|juli
+|augusti
+|september
+|oktober
+|november
+|december
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5686 Template:list:continents/sv: -------- begin text --------
 {{list helper 2
@@ -5133,52 +5072,40 @@ Page 5748 Template:list:days of the week/az: -------- begin text --------
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5751 Template:list:seasons/ru: -------- begin text --------
-{{list helper 2
-|title=seasons
-|cat=ru:Seasons
-|hypernym={{l-self|ru|времена́ го́да}} or {{l-self|ru|сезо́ны}} {{i|less commonly}}
-|list=<!--
--->{{l-self|ru|весна́}}, <!--
--->{{l-self|ru|ле́то}}, <!--
--->{{l-self|ru|о́сень}}, <!--
--->{{l-self|ru|зима́}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[время года|времена́ го́да]],[[сезон|сезо́ны]]<qq:less commonly>
+|весна́
+|ле́то
+|о́сень
+|зима́
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5752 Template:list:seasons/be: -------- begin text --------
-{{list helper 2
-|title=seasons
-|cat=be:Seasons
-|hypernym={{l|be|пара года|по́ры го́да}}
-|list=<!--
--->{{l-self|be|вясна́}}, <!--
--->{{l-self|be|ле́та}}, <!--
--->{{l-self|be|во́сень}}, <!--
--->{{l-self|be|зіма́}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[пара года|по́ры го́да]]
+|вясна́
+|ле́та
+|во́сень
+|зіма́
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5753 Template:list:seasons/uk: -------- begin text --------
-{{list helper 2
-|title=seasons
-|cat=uk:Seasons
-|hypernym={{l|uk|пора року|пори року}}
-|list=<!--
--->{{l-self|uk|весна}}, <!--
--->{{l-self|uk|літо}}, <!--
--->{{l-self|uk|осінь}}, <!--
--->{{l-self|uk|зима}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[пора року|по́ри ро́ку]]
+|весна́
+|лі́то
+|о́сінь
+|зима́
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5754 Template:list:seasons/ba: -------- begin text --------
-{{list helper 2
-|title=seasons
-|cat=ba:Seasons
+{{#invoke:topic list|show
 |hypernym=[[йыл миҙгеле|йыл миҙгелдәре]]
-|list=<!--
--->{{l-self|ba|яҙ}}, <!--
--->{{l-self|ba|йәй}}, <!--
--->{{l-self|ba|көҙ}}, <!--
--->{{l-self|tt|ҡыш}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+|яҙ
+|йәй
+|көҙ
+|ҡыш
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5759 Template:list:planets of the Solar System/ht: -------- begin text --------
 {{#invoke:topic list|show
@@ -5206,119 +5133,95 @@ Page 5767 Template:list:days of the week/eu: -------- begin text --------
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5768 Template:list:Gregorian calendar months/eu: -------- begin text --------
-{{list helper 2
-|title=Gregorian calendar months
-|cat=eu:Months
-|hypernym={{l|eu|gregoriar egutegi|gregoriar egutegiaren}} {{l|eu|hil|hilak}}
-|list=<!--
--->{{l-self|eu|urtarril}}, <!--
--->{{l-self|eu|otsail}}, <!--
--->{{l-self|eu|martxo}}, <!--
--->{{l-self|eu|apiril}}, <!--
--->{{l-self|eu|maiatz}}, <!--
--->{{l-self|eu|ekain}}, <!--
--->{{l-self|eu|uztail}}, <!--
--->{{l-self|eu|abuztu}}, <!--
--->{{l-self|eu|irail}}, <!--
--->{{l-self|eu|urri}}, <!--
--->{{l-self|eu|azaro}}, <!--
--->{{l-self|eu|abendu}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[gregoriar egutegi|gregoriar egutegiaren]] [[hil]]ak
+|urtarril
+|otsail
+|martxo
+|apiril
+|maiatz
+|ekain
+|uztail
+|abuztu
+|irail
+|urri
+|azaro
+|abendu
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5818 Template:list:seasons/sv: -------- begin text --------
-{{list helper 2
-|title=seasons
-|cat=sv:Seasons
-|hypernym=årstid
-|list=<!--
--->{{l-self|sv|vår}}, <!--
--->{{l-self|sv|sommar}}, <!--
--->{{l-self|sv|höst}}, <!--
--->{{l-self|sv|vinter}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[årstid]]er
+|vår
+|sommar
+|höst
+|vinter
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5819 Template:list:Gregorian calendar months/hy: -------- begin text --------
-{{list helper 2
-|title=Gregorian calendar months
-|cat=hy:Months
-|hypernym=
-|list=<!--
--->{{l-self|hy|հունվար}}, <!--
--->{{l-self|hy|փետրվար}}, <!--
--->{{l-self|hy|մարտ}}, <!--
--->{{l-self|hy|ապրիլ}}, <!--
--->{{l-self|hy|մայիս}}, <!--
--->{{l-self|hy|հունիս}}, <!--
--->{{l-self|hy|հուլիս}}, <!--
--->{{l-self|hy|օգոստոս}}, <!--
--->{{l-self|hy|սեպտեմբեր}}, <!--
--->{{l-self|hy|հոկտեմբեր}}, <!--
--->{{l-self|hy|նոյեմբեր}}, <!--
--->{{l-self|hy|դեկտեմբեր}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|հունվար
+|փետրվար
+|մարտ
+|ապրիլ
+|մայիս
+|հունիս
+|հուլիս
+|օգոստոս
+|սեպտեմբեր
+|հոկտեմբեր
+|նոյեմբեր
+|դեկտեմբեր
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5820 Template:list:Gregorian calendar months/xcl: -------- begin text --------
-{{list helper 2
-|title=Gregorian calendar months
-|cat=xcl:Months
-|hypernym=
-|list=<!--
--->{{l-self|xcl|յունուար}}, <!--
--->{{l-self|xcl|փեբրուարիոս}}, <!--
--->{{l-self|xcl|մարտ}}, <!--
--->{{l-self|xcl|ապրիլ}}, <!--
--->{{l-self|xcl|մայիս}}, <!--
--->{{l-self|xcl|յունիս}}, <!--
--->{{l-self|xcl|յուլիս}}, <!--
--->{{l-self|xcl|օգոստոս}}, <!--
--->{{l-self|xcl|սեպտեմբեր}}, <!--
--->{{l-self|xcl|հոկտեմբեր}}, <!--
--->{{l-self|xcl|նոյեմբեր}}, <!--
--->{{l-self|xcl|դեկտեմբեր}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|յունուար
+|փեբրուարիոս
+|մարտ
+|ապրիլ
+|մայիս
+|յունիս
+|յուլիս
+|օգոստոս
+|սեպտեմբեր
+|հոկտեմբեր
+|նոյեմբեր
+|դեկտեմբեր
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5824 Template:list:Gregorian calendar months/cy: -------- begin text --------
-{{list helper 2
-|title=Gregorian calendar months
-|cat=cy:Months
-|list=<!--
--->{{l-self|cy|Ionawr}}, <!--
--->{{l-self|cy|Chwefror}}, <!--
--->{{l-self|cy|Mawrth}}, <!--
--->{{l-self|cy|Ebrill}}, <!--
--->{{l-self|cy|Mai}}, <!--
--->{{l-self|cy|Mehefin}}, <!--
--->{{l-self|cy|Gorffennaf}}, <!--
--->{{l-self|cy|Awst}}, <!--
--->{{l-self|cy|Medi}}, <!--
--->{{l-self|cy|Hydref}}, <!--
--->{{l-self|cy|Tachwedd}}, <!--
--->{{l-self|cy|Rhagfyr}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|Ionawr
+|Chwefror
+|Mawrth
+|Ebrill
+|Mai
+|Mehefin
+|Gorffennaf
+|Awst
+|Medi
+|Hydref
+|Tachwedd
+|Rhagfyr
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5828 Template:list:Gregorian calendar months/nl: -------- begin text --------
-{{list helper 2
-|title=Gregorian calendar months
-|cat=nl:Months
-|hypernym={{l|nl|[[maand|maanden]]}} van de {{l|nl|gregoriaans|gregoriaanse}} {{l|nl|kalender}}
-|list=<!--
--->{{l-self|nl|januari}}, <!--
--->{{l-self|nl|februari}}, <!--
--->{{l-self|nl|maart}}, <!--
--->{{l-self|nl|april}}, <!--
--->{{l-self|nl|mei}}, <!--
--->{{l-self|nl|juni}}, <!--
--->{{l-self|nl|juli}}, <!--
--->{{l-self|nl|augustus}}, <!--
--->{{l-self|nl|september}}, <!--
--->{{l-self|nl|oktober}}, <!--
--->{{l-self|nl|november}}, <!--
--->{{l-self|nl|december}}<!--
--->}}<!--
-
---><noinclude>
-{{list doc}}
-
+{{#invoke:topic list|show
+|hypernym=[[maand]]en van de [[gregoriaans]]e [[kalender]]
+|januari
+|februari
+|maart
+|april
+|mei
+|juni
+|juli
+|augustus
+|september
+|oktober
+|november
+|december
+}}<noinclude>{{list doc}}
 [[af:Sjabloon:nl-maande van die Greg-jaar]]
 [[da:Skabelon:nl-måned]]
 [[de:Vorlage:Monate (Niederländisch)]]
@@ -5463,29 +5366,21 @@ Page 5838 Template:list:reds/da: -------- begin text --------
 -->}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5841 Template:list:Gregorian calendar months/mk: -------- begin text --------
-{{#invoke:checkparams|warn}}<!-- Validate template parameters
--->{{list helper 2
-|title=Gregorian calendar months
-|cat=mk:Months
-|hypernym={{l|mk|[[месец|ме́сеци]] [[од]] [[грегоријански календар|грегорија́нскиот ка́лендар]]}}
-|list=<!--
--->{{l-self|mk|јануа́ри}}, <!--
--->{{l-self|mk|февруа́ри}}, <!--
--->{{l-self|mk|март}}, <!--
--->{{l-self|mk|а́прил}}, <!--
--->{{l-self|mk|мај}}, <!--
--->{{l-self|mk|ју́ни}}, <!--
--->{{l-self|mk|ју́ли}}, <!--
--->{{l-self|mk|а́вгуст}}, <!--
--->{{l-self|mk|септе́мври}}, <!--
--->{{l-self|mk|окто́мври}}, <!--
--->{{l-self|mk|ное́мври}}, <!--
--->{{l-self|mk|деке́мври}}<!--
--->}}<!--
-
---><noinclude>
-{{list doc}}
-
+{{#invoke:topic list|show
+|hypernym=[[месец|ме́сеци]] [[од]] [[грегоријански календар|грегорија́нскиот ка́лендар]]
+|јануа́ри
+|февруа́ри
+|март
+|а́прил
+|мај
+|ју́ни
+|ју́ли
+|а́вгуст
+|септе́мври
+|окто́мври
+|ное́мври
+|деке́мври
+}}<noinclude>{{list doc}}
 [[az:Şablon:İlin ayları-mk]]
 [[fr:Modèle:tableau-mois/mk]]
 [[nl:Sjabloon:mkd-maand]]
@@ -5541,43 +5436,37 @@ Page 5860 Template:list:planets of the Solar System/et: -------- begin text ----
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5862 Template:list:Gregorian calendar months/chr: -------- begin text --------
-{{list helper 2
-|title=Gregorian calendar months
-|cat=chr:Months
-|hypernym={{l|chr|ᏏᏅᏙ}}
-|list=<!--
--->{{l-self|chr|ᏚᏃᎸᏔᏂ}}, <!--
--->{{l-self|chr|ᎧᎦᎵ}}, <!--
--->{{l-self|chr|ᎤᏄᎳᎯ}}, <!--
--->{{l-self|chr|ᏥᎶᏂ}}, <!--
--->{{l-self|chr|ᎠᏅᎢᏍᎬᏘ}}, <!--
--->{{l-self|chr|ᏓᏣᎷᏂ}}, <!--
--->{{l-self|chr|ᎫᏰᏉᏂ}}, <!--
--->{{l-self|chr|ᎦᎶᏂ}}, <!--
--->{{l-self|chr|ᏚᎵᏍᏗ}}, <!--
--->{{l-self|chr|ᏚᏂᏅᏗ}}, <!--
--->{{l-self|chr|ᏄᏓᏕᏆ}}, <!--
--->{{l-self|chr|ᎥᏍᎩᎦ}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=ᏏᏅᏙ<!-- FIXME: pluralize if not already plural -->
+|ᏚᏃᎸᏔᏂ
+|ᎧᎦᎵ
+|ᎤᏄᎳᎯ
+|ᏥᎶᏂ
+|ᎠᏅᎢᏍᎬᏘ
+|ᏓᏣᎷᏂ
+|ᎫᏰᏉᏂ
+|ᎦᎶᏂ
+|ᏚᎵᏍᏗ
+|ᏚᏂᏅᏗ
+|ᏄᏓᏕᏆ
+|ᎥᏍᎩᎦ
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5863 Template:list:Gregorian calendar months/fo: -------- begin text --------
-{{list helper 2
-|title=Gregorian calendar months
-|cat=fo:Months
-|list=<!--
--->{{l-self|fo|januar}}, <!--
--->{{l-self|fo|februar}}, <!--
--->{{l-self|fo|mars}}, <!--
--->{{l-self|fo|apríl}}, <!--
--->{{l-self|fo|mai}}, <!--
--->{{l-self|fo|juni}}, <!--
--->{{l-self|fo|juli}}, <!--
--->{{l-self|fo|august}}, <!--
--->{{l-self|fo|september}}, <!--
--->{{l-self|fo|oktober}}, <!--
--->{{l-self|fo|november}}, <!--
--->{{l-self|fo|desember}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|januar
+|februar
+|mars
+|apríl
+|mai
+|juni
+|juli
+|august
+|september
+|oktober
+|november
+|desember
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5864 Template:list:days of the week/chr: -------- begin text --------
 {{#invoke:topic list|show
@@ -5761,28 +5650,21 @@ Page 5960 Template:list:days of the week/lb: -------- begin text --------
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5963 Template:list:Gregorian calendar months/lb: -------- begin text --------
-{{list helper 2
-|title=Gregorian calendar months
-|cat=lb:Months
-|hypernym={{l|lb|Mount}} am {{l|lb|Gregorianesch|Gregorianesche}} {{l|lb|Kalenner}}
-|list=<!--
--->{{l-self|lb|Januar}}, <!--
--->{{l-self|lb|Februar}}, <!--
--->{{l-self|lb|Mäerz}}, <!--
--->{{l-self|lb|Abrëll}}, <!--
--->{{l-self|lb|Mee}}, <!--
--->{{l-self|lb|Juni}}, <!--
--->{{l-self|lb|Juli}}, <!--
--->{{l-self|lb|August}}, <!--
--->{{l-self|lb|September}}, <!--
--->{{l-self|lb|Oktober}}, <!--
--->{{l-self|lb|November}}, <!--
--->{{l-self|lb|Dezember}}<!--
--->}}<!--
-
---><noinclude>
-{{list doc}}
-
+{{#invoke:topic list|show
+|hypernym=[[Mount|Méint]] am [[Gregorianesch]]e [[Kalenner]]
+|Januar
+|Februar
+|Mäerz
+|Abrëll
+|Mee
+|Juni
+|Juli
+|August
+|September
+|Oktober
+|November
+|Dezember
+}}<noinclude>{{list doc}}
 [[da:Skabelon:lb-måned]]
 [[fr:Modèle:tableau-mois/lb]]
 [[lb:Schabloun:Méint]]
@@ -5816,23 +5698,20 @@ Page 5981 Template:list:days of the week/af: -------- begin text --------
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5983 Template:list:Gregorian calendar months/my: -------- begin text --------
-{{list helper 2
-|title=Gregorian calendar months
-|cat=my:Months
-|list=<!--
--->{{l-self|my|ဇန်နဝါရီ}}, <!--
--->{{l-self|my|ဖေဖော်ဝါရီ}}, <!--
--->{{l-self|my|မတ်}}, <!--
--->{{l-self|my|ဧပြီ}}, <!--
--->{{l-self|my|မေ}}, <!--
--->{{l-self|my|ဇွန်}}, <!--
--->{{l-self|my|ဇူလိုင်}}, <!--
--->{{l-self|my|ဩဂုတ်}}, <!--
--->{{l-self|my|စက်တင်ဘာ}}, <!--
--->{{l-self|my|အောက်တိုဘာ}}, <!--
--->{{l-self|my|နိုဝင်ဘာ}}, <!--
--->{{l-self|my|ဒီဇင်ဘာ}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|ဇန်နဝါရီ
+|ဖေဖော်ဝါရီ
+|မတ်
+|ဧပြီ
+|မေ
+|ဇွန်
+|ဇူလိုင်
+|ဩဂုတ်
+|စက်တင်ဘာ
+|အောက်တိုဘာ
+|နိုဝင်ဘာ
+|ဒီဇင်ဘာ
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5984 Template:list:days of the week/my: -------- begin text --------
 {{#invoke:topic list|show
@@ -5858,16 +5737,13 @@ Page 5985 Template:list:tastes/lb: -------- begin text --------
 -->}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5988 Template:list:seasons/lb: -------- begin text --------
-{{list helper 2
-|title=seasons
-|cat=lb:Seasons
-|hypernym=Joreszäit
-|list=<!--
--->{{l-self|lb|Fréijoer}}, <!--
--->{{l-self|lb|Summer}}, <!--
--->{{l-self|lb|Hierscht}}, <!--
--->{{l-self|lb|Wanter}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[Joreszäit]]en
+|Fréijoer
+|Summer
+|Hierscht
+|Wanter
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5989 Template:list:Western astrology signs/lb: -------- begin text --------
 {{list helper 2
@@ -5902,103 +5778,87 @@ Page 5997 Template:list:days of the week/nv: -------- begin text --------
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 6000 Template:list:Gregorian calendar months/fi: -------- begin text --------
-{{list helper 2
-|title=Gregorian calendar months
-|cat=fi:Months
-|list=<!--
--->{{l-self|fi|tammikuu}}, <!--
--->{{l-self|fi|helmikuu}}, <!--
--->{{l-self|fi|maaliskuu}}, <!--
--->{{l-self|fi|huhtikuu}}, <!--
--->{{l-self|fi|toukokuu}}, <!--
--->{{l-self|fi|kesäkuu}}, <!--
--->{{l-self|fi|heinäkuu}}, <!--
--->{{l-self|fi|elokuu}}, <!--
--->{{l-self|fi|syyskuu}}, <!--
--->{{l-self|fi|lokakuu}}, <!--
--->{{l-self|fi|marraskuu}}, <!--
--->{{l-self|fi|joulukuu}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|tammikuu
+|helmikuu
+|maaliskuu
+|huhtikuu
+|toukokuu
+|kesäkuu
+|heinäkuu
+|elokuu
+|syyskuu
+|lokakuu
+|marraskuu
+|joulukuu
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 6006 Template:list:Gregorian calendar months/nv: -------- begin text --------
-{{list helper 2
-|title=Gregorian calendar months
-|cat=nv:Months
-|hypernym={{l|nv|náhidizídígíí}}
-|list=<!--
--->{{l-self|nv|Yas Niłtʼees}}, <!--
--->{{l-self|nv|Atsá Biyáázh}}, <!--
--->{{l-self|nv|Wóózhchʼį́į́d}}, <!--
--->{{l-self|nv|Tʼą́ą́chil}}, <!--
--->{{l-self|nv|Tʼą́ą́tsoh}}, <!--
--->{{l-self|nv|Yaʼiishjááshchilí}}, <!--
--->{{l-self|nv|Yaʼiishjáástsoh}}, <!--
--->{{l-self|nv|Biniʼantʼą́ą́tsʼózí}}, <!--
--->{{l-self|nv|Biniʼantʼą́ą́tsoh}}, <!--
--->{{l-self|nv|Ghąąjįʼ}}, <!--
--->{{l-self|nv|Níłchʼitsʼósí}}, <!--
--->{{l-self|nv|Níłchʼitsoh}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=náhidizídígíí<!-- seems both singular and plural -->
+|Yas Niłtʼees
+|Atsá Biyáázh
+|Wóózhchʼį́į́d
+|Tʼą́ą́chil
+|Tʼą́ą́tsoh
+|Yaʼiishjááshchilí
+|Yaʼiishjáástsoh
+|Biniʼantʼą́ą́tsʼózí
+|Biniʼantʼą́ą́tsoh
+|Ghąąjįʼ
+|Níłchʼitsʼósí
+|Níłchʼitsoh
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 6007 Template:list:Gregorian calendar months/km: -------- begin text --------
-{{list helper 2
-|title=Gregorian calendar months
-|cat=km:Gregorian calendar months
-|hypernym={{l|km|[[ខែ]][[សុរិយ]][[គតិ]]|tr=khae soreyaʾ kĕəʾteʾ}}
-|list=<!--
--->{{l-self|km|មករា}}, <!--
--->{{l-self|km|កុម្ភៈ}}, <!--
--->{{l-self|km|មីនា}}, <!--
--->{{l-self|km|មេសា}}, <!--
--->{{l-self|km|ឧសភា}}, <!--
--->{{l-self|km|មិថុនា}}, <!--
--->{{l-self|km|កក្កដា}}, <!--
--->{{l-self|km|សីហា}}, <!--
--->{{l-self|km|កញ្ញា}}, <!--
--->{{l-self|km|តុលា}}, <!--
--->{{l-self|km|វិច្ឆិកា}}, <!--
--->{{l-self|km|ធ្នូ}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[ខែ]][[សុរិយ]][[គតិ]]<tr:khae soreyaʾ kĕəʾteʾ><!-- FIXME: is this plural? -->
+|មករា
+|កុម្ភៈ
+|មីនា
+|មេសា
+|ឧសភា
+|មិថុនា
+|កក្កដា
+|សីហា
+|កញ្ញា
+|តុលា
+|វិច្ឆិកា
+|ធ្នូ
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 6008 Template:list:Gregorian calendar months/ar: -------- begin text --------
-{{list helper 2
-|title=Gregorian calendar months
-|cat=ar:Gregorian calendar months
-|hypernym={{l|ar|[[شهر|الْأَشْهُر]] [[فِي]] [[تقويم|التَّقْوِيم]] [[التقويم الميلادي|الْمِيلَادِي]]}}
-|list=<!--
--->{{l-self|ar|يَنَايِر}}, <!--
--->{{l-self|ar|فِبْرَايِر}}, <!--
--->{{l-self|ar|مَارِس}}, <!--
--->{{l-self|ar|أَبْرِيل}}/{{l-self|ar|إِبْرِيل}}, <!--
--->{{l-self|ar|مَايُو}}/{{l-self|ar|مَاي}}, <!--
--->{{l-self|ar|يُونِيُو}}, <!--
--->{{l-self|ar|يُولِيُو}}/{{l-self|ar|يُولِيُوز}}, <!--
--->{{l-self|ar|أَغُسْطُس}}/{{l-self|ar|غُشْت}}, <!--
--->{{l-self|ar|سِبْتِمْبِر}}/{{l-self|ar|شُتَنْبِر}}/{{l-self|ar|شُتَمْبِر}}, <!--
--->{{l-self|ar|أُكْتُوبِر}}, <!--
--->{{l-self|ar|نُوفِمْبِر}}/{{l-self|ar|نُوَنْبِر}}/{{l-self|ar|نُوَمْبِر}}, <!--
--->{{l-self|ar|دِيسِمْبِر}}/{{l-self|ar|دُجَنْبِر}}/{{l-self|ar|دُجَمْبِر}}, <!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[شهر|الْأَشْهُر]] [[فِي]] [[تقويم|التَّقْوِيم]] [[التقويم الميلادي|الْمِيلَادِي]]
+|يَنَايِر
+|فِبْرَايِر
+|مَارِس
+|أَبْرِيل~إِبْرِيل
+|مَايُو~مَاي
+|يُونِيُو
+|يُولِيُو~يُولِيُوز
+|أَغُسْطُس~غُشْت
+|سِبْتِمْبِر~شُتَنْبِر~شُتَمْبِر
+|أُكْتُوبِر
+|نُوفِمْبِر~نُوَنْبِر~نُوَمْبِر
+|دِيسِمْبِر~دُجَنْبِر~دُجَمْبِر
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 6009 Template:list:Gregorian calendar months/ka: -------- begin text --------
-{{list helper 2
-|title=Gregorian calendar months
-|cat=ka:Months
-|hypernym=
-|list=<!--
--->{{l-self|ka|იანვარი}}, <!--
--->{{l-self|ka|თებერვალი}}, <!--
--->{{l-self|ka|მარტი}}, <!--
--->{{l-self|ka|აპრილი}}, <!--
--->{{l-self|ka|მაისი}}, <!--
--->{{l-self|ka|ივნისი}}, <!--
--->{{l-self|ka|ივლისი}}, <!--
--->{{l-self|ka|აგვისტო}}, <!--
--->{{l-self|ka|სექტემბერი}}, <!--
--->{{l-self|ka|ოქტომბერი}}, <!--
--->{{l-self|ka|ნოემბერი}}, <!--
--->{{l-self|ka|დეკემბერი}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|იანვარი
+|თებერვალი
+|მარტი
+|აპრილი
+|მაისი
+|ივნისი
+|ივლისი
+|აგვისტო
+|სექტემბერი
+|ოქტომბერი
+|ნოემბერი
+|დეკემბერი
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 6010 Template:list:days of the week/ka: -------- begin text --------
 {{#invoke:topic list|show
@@ -6013,16 +5873,13 @@ Page 6010 Template:list:days of the week/ka: -------- begin text --------
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 6037 Template:list:seasons/eo: -------- begin text --------
-{{list helper 2
-|title=seasons
-|cat=eo:Seasons
-|hypernym=sezono
-|list=<!--
--->{{l-self|eo|printempo}}, <!--
--->{{l-self|eo|somero}}, <!--
--->{{l-self|eo|aŭtuno}}, <!--
--->{{l-self|eo|vintro}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[sezono]]j
+|printempo
+|somero
+|aŭtuno
+|vintro
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 6038 Template:list:parts of speech/eo: -------- begin text --------
 {{list helper 2
@@ -6046,16 +5903,13 @@ Page 6038 Template:list:parts of speech/eo: -------- begin text --------
 -->}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 6071 Template:list:seasons/sq: -------- begin text --------
-{{list helper 2
-|title=seasons
-|cat=sq:Seasons
-|hypernym=stinë
-|list=<!--
--->{{l-self|sq|pranverë}}, <!--
--->{{l-self|sq|verë}}, <!--
--->{{l-self|sq|vjeshtë}}, <!--
--->{{l-self|sq|dimër}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=stinë<!-- plural same as singular -->
+|pranverë
+|verë
+|vjeshtë
+|dimër
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 6076 Template:list:Greek mythology Muses/en: -------- begin text --------
 {{list helper 2
@@ -6074,16 +5928,13 @@ Page 6076 Template:list:Greek mythology Muses/en: -------- begin text --------
 -->}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 6093 Template:list:seasons/nl: -------- begin text --------
-{{list helper 2
-|title=seasons
-|cat=nl:Seasons
-|hypernym={{l|nl|seizoen}}, {{l|nl|jaargetijde}}
-|list=<!--
--->{{l-self|nl|lente}}/{{l-self|nl|voorjaar}}, <!--
--->{{l-self|nl|zomer}}, <!--
--->{{l-self|nl|herfst}}/{{l-self|nl|najaar}}, <!--
--->{{l-self|nl|winter}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[seizoen]]en,[[jaargetijde]]n
+|lente,voorjaar
+|zomer
+|herfst,najaar
+|winter
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 6109 Template:list:days of the week/et: -------- begin text --------
 {{#invoke:topic list|show
@@ -6214,24 +6065,21 @@ Page 6386 Template:list:planets of the Solar System/nv: -------- begin text ----
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 6391 Template:list:Gregorian calendar months/fr: -------- begin text --------
-{{list helper 2
-|title=Gregorian calendar months
-|cat=fr:Gregorian calendar months
-|hypernym={{l|fr|mois}} du {{l|fr|calendrier grégorien}}
-|list=<!--
--->{{l-self|fr|janvier}}, <!--
--->{{l-self|fr|février}}, <!--
--->{{l-self|fr|mars}}, <!--
--->{{l-self|fr|avril}}, <!--
--->{{l-self|fr|mai}}, <!--
--->{{l-self|fr|juin}}, <!--
--->{{l-self|fr|juillet}}, <!--
--->{{l-self|fr|août}}, <!--
--->{{l-self|fr|septembre}}, <!--
--->{{l-self|fr|octobre}}, <!--
--->{{l-self|fr|novembre}}, <!--
--->{{l-self|fr|décembre}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[mois]] du [[calendrier grégorien]]
+|janvier
+|février
+|mars
+|avril
+|mai
+|juin
+|juillet
+|août
+|septembre
+|octobre
+|novembre
+|décembre
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 6424 Template:list:varieties of Latin/en: -------- begin text --------
 {{list helper 2
@@ -6327,23 +6175,20 @@ Page 6454 Template:list:Borrowdale sheep counting: -------- begin text --------
 --><noinclude>[[Category:English list templates]]</noinclude>
 -------- end text --------
 Page 6455 Template:list:Gregorian calendar months/ast: -------- begin text --------
-{{list helper 2
-|title=Gregorian calendar months
-|cat=ast:Months
-|list=<!--
--->{{l-self|ast|xineru}}, <!--
--->{{l-self|ast|febreru}}, <!--
--->{{l-self|ast|marzu}}, <!--
--->{{l-self|ast|abril}}, <!--
--->{{l-self|ast|mayu}}, <!--
--->{{l-self|ast|xunu}}, <!--
--->{{l-self|ast|xunetu}}, <!--
--->{{l-self|ast|agostu}}, <!--
--->{{l-self|ast|setiembre}}, <!--
--->{{l-self|ast|ochobre}}, <!--
--->{{l-self|ast|payares}}, <!--
--->{{l-self|ast|avientu}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|xineru
+|febreru
+|marzu
+|abril
+|mayu
+|xunu
+|xunetu
+|agostu
+|setiembre
+|ochobre
+|payares
+|avientu
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 6466 Template:list:days of the week/esu: -------- begin text --------
 {{#invoke:topic list|show
@@ -6358,72 +6203,59 @@ Page 6466 Template:list:days of the week/esu: -------- begin text --------
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 6480 Template:list:Gregorian calendar months/esu: -------- begin text --------
-{{list helper 2
-|title=Gregorian calendar months
-|cat=esu:Months
-|hypernym={{l|esu|iraluq|iralua}} {{l|esu|iralissuun|iralissuum}}
-|list=<!--
--->{{l-self|esu|Kanruyauciq}}, <!--
--->{{l-self|esu|Kep'nerciq}}, <!--
--->{{l-self|esu|Tengmiirviguaq}}, <!--
--->{{l-self|esu|Tengmiirvik}}, <!--
--->{{l-self|esu|Qusiirvik}}, <!--
--->{{l-self|esu|Kaugun}}, <!--
--->{{l-self|esu|Ingun}}, <!--
--->{{l-self|esu|Amirairun}}, <!--
--->{{l-self|esu|Amiraayaaq}}, <!--
--->{{l-self|esu|Nulirun}}, <!--
--->{{l-self|esu|Cauyarvik}}, <!--
--->{{l-self|esu|Uivik}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[iraluq|iralua]] [[iralissuun|iralissuum]]
+|Kanruyauciq
+|Kep'nerciq
+|Tengmiirviguaq
+|Tengmiirvik
+|Qusiirvik
+|Kaugun
+|Ingun
+|Amirairun
+|Amiraayaaq
+|Nulirun
+|Cauyarvik
+|Uivik
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 6482 Template:list:Gregorian calendar months/haw: -------- begin text --------
-{{list helper 2
-|title=Gregorian calendar months
-|cat=haw:Months
-|hypernym=nā {{l|haw|mahina}} o ka {{l|haw|makahiki}}
-|list=<!--
--->{{l-self|haw|Ianuali}}, <!--
--->{{l-self|haw|Pepeluali}}, <!--
--->{{l-self|haw|Malaki}}, <!--
--->{{l-self|haw|ʻApelila}}, <!--
--->{{l-self|haw|Mei}}, <!--
--->{{l-self|haw|Iune}}, <!--
--->{{l-self|haw|Iulai}}, <!--
--->{{l-self|haw|ʻAukake}}, <!--
--->{{l-self|haw|Kepakemapa}}, <!--
--->{{l-self|haw|ʻOkakopa}}, <!--
--->{{l-self|haw|Nowemapa}}, <!--
--->{{l-self|haw|Kēkēmapa}}<!--
--->}}<!--
-
---><noinclude>
-{{list doc}}
-
+{{#invoke:topic list|show
+|hypernym=nā [[mahina]] o ka [[makahiki]]
+|Ianuali
+|Pepeluali
+|Malaki
+|ʻApelila
+|Mei
+|Iune
+|Iulai
+|ʻAukake
+|Kepakemapa
+|ʻOkakopa
+|Nowemapa
+|Kēkēmapa
+}}<noinclude>{{list doc}}
 [[fr:Modèle:tableau-mois/haw]]
 [[nl:Sjabloon:haw-maand]]
 [[pt:Predefinição:meses/haw]]
 </noinclude>
 -------- end text --------
 Page 6483 Template:list:Gregorian calendar months/mi: -------- begin text --------
-{{list helper 2
-|title=Gregorian calendar months
-|cat=mi:Months
-|hypernym=ngā {{l|mi|marama}} o te {{l|mi|tau}}
-|list=<!--
--->{{l-self|mi|Hānuere}}, <!--
--->{{l-self|mi|Pēpuere}}, <!--
--->{{l-self|mi|Māehe}}, <!--
--->{{l-self|mi|Āperire}}, <!--
--->{{l-self|mi|Mei}}, <!--
--->{{l-self|mi|Hune}}, <!--
--->{{l-self|mi|Hūrae}}, <!--
--->{{l-self|mi|Ākuhata}}, <!--
--->{{l-self|mi|Hepetema}}, <!--
--->{{l-self|mi|Oketopa}}, <!--
--->{{l-self|mi|Noema}}, <!--
--->{{l-self|mi|Tīhema}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=ngā [[marama]] o te [[tau]]
+|Hānuere
+|Pēpuere
+|Māehe
+|Āperire
+|Mei
+|Hune
+|Hūrae
+|Ākuhata
+|Hepetema
+|Oketopa
+|Noema
+|Tīhema
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 6495 Template:list:days of the week/mi: -------- begin text --------
 {{#invoke:topic list|show
@@ -6553,24 +6385,21 @@ Page 6527 Template:list:days of the week/tt: -------- begin text --------
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 6528 Template:list:Gregorian calendar months/tr: -------- begin text --------
-{{list helper 2
-|title=Gregorian calendar months
-|cat=tr:Months
-|hypernym={{l-self|tr|ay}}
-|list=<!--
--->{{l-self|tr|ocak}}, <!--
--->{{l-self|tr|şubat}}, <!--
--->{{l-self|tr|mart}}, <!--
--->{{l-self|tr|nisan}}, <!--
--->{{l-self|tr|mayıs}}, <!--
--->{{l-self|tr|haziran}}, <!--
--->{{l-self|tr|temmuz}}, <!--
--->{{l-self|tr|ağustos}}, <!--
--->{{l-self|tr|eylül}}, <!--
--->{{l-self|tr|ekim}}, <!--
--->{{l-self|tr|kasım}}, <!--
--->{{l-self|tr|aralık}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[ay]]lar
+|ocak
+|şubat
+|mart
+|nisan
+|mayıs
+|haziran
+|temmuz
+|ağustos
+|eylül
+|ekim
+|kasım
+|aralık
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 6559 Template:list:days of the week/ro: -------- begin text --------
 {{#invoke:topic list|show
@@ -6650,24 +6479,20 @@ Page 6577 Template:list:continents/te: -------- begin text --------
 -->}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 6579 Template:list:Gregorian calendar months/te: -------- begin text --------
-{{list helper 2
-|title=Gregorian calendar months
-|cat=te:Gregorian calendar months
-|hypernym=
-|list=<!--
--->{{l-self|te|జనవరి}}, <!--
--->{{l-self|te|ఫిబ్రవరి}}, <!--
--->{{l-self|te|మార్చి}}, <!--
--->{{l-self|te|ఏప్రిల్}}, <!--
--->{{l-self|te|మే}}, <!--
--->{{l-self|te|జూన్}}, <!--
--->{{l-self|te|జూలై}}, <!--
--->{{l-self|te|ఆగష్టు}}, <!--
--->{{l-self|te|సెప్టెంబర్}}, <!--
--->{{l-self|te|అక్టోబర్}}, <!--
--->{{l-self|te|నవంబర్}}, <!--
--->{{l-self|te|డిసెంబర్}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|జనవరి
+|ఫిబ్రవరి
+|మార్చి
+|ఏప్రిల్
+|మే
+|జూన్
+|జూలై
+|ఆగష్టు
+|సెప్టెంబర్
+|అక్టోబర్
+|నవంబర్
+|డిసెంబర్
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 6580 Template:list:Islamic calendar months/fa: -------- begin text --------
 {{list helper 2
@@ -6868,52 +6693,40 @@ Page 6592 Template:list:states of India/ru: -------- begin text --------
 -->}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 6593 Template:list:seasons/sk: -------- begin text --------
-{{list helper 2
-|title=seasons
-|cat=sk:Seasons
-|hypernym={{l-self|sk|ročné obdobie}}
-|list=<!--
--->{{l-self|sk|jar}}, <!--
--->{{l-self|sk|leto}}, <!--
--->{{l-self|sk|jeseň}}, <!--
--->{{l-self|sk|zima}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[ročné obdobie|ročné obdobia]]
+|jar
+|leto
+|jeseň
+|zima
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 6594 Template:list:seasons/pl: -------- begin text --------
-{{list helper 2
-|title=seasons
-|cat=pl:Seasons
-|hypernym=[[pora roku]]
-|list=<!--
--->{{l-self|pl|wiosna}}, <!--
--->{{l-self|pl|lato}}, <!--
--->{{l-self|pl|jesień}}, <!--
--->{{l-self|pl|zima}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[pora roku|pory roku]]
+|wiosna
+|lato
+|jesień
+|zima
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 6596 Template:list:seasons/fi: -------- begin text --------
-{{list helper 2
-|title=seasons
-|cat=fi:Seasons
-|hypernym={{l-self|fi|vuodenaika}}
-|list=<!--
--->{{l-self|fi|kevät}}, <!--
--->{{l-self|fi|kesä}}, <!--
--->{{l-self|fi|syksy}}, <!--
--->{{l-self|fi|talvi}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[vuodenaika|vuodenajat]]
+|kevät
+|kesä
+|syksy
+|talvi
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 6597 Template:list:seasons/lv: -------- begin text --------
-{{list helper 2
-|title=seasons
-|cat=lv:Seasons
-|hypernym={{l|lv|četri}} {{l|lv|gadalaiks|gadalaiki}}
-|list=<!--
--->{{l-self|lv|pavasaris}}, <!--
--->{{l-self|lv|vasara}}, <!--
--->{{l-self|lv|rudens}}, <!--
--->{{l-self|lv|ziema}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[četri]] [[gadalaiks|gadalaiki]]<!-- FIXME: This appears to mean "four seasons"; is "four" really necessary? -->
+|pavasaris
+|vasara
+|rudens
+|ziema
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 6604 Template:list:continents/ru: -------- begin text --------
 {{list helper 2
@@ -6932,20 +6745,17 @@ Page 6604 Template:list:continents/ru: -------- begin text --------
 -->}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 6606 Template:list:seasons/te: -------- begin text --------
-{{list helper 2
-|title=seasons
-|cat=te:Seasons
-|hypernym=కాలము|hypernym2=ఋతువు
-|list=<!--
--->{{l-self|te|వసంతము}}, <!--
--->{{l-self|te|వేసవికాలము}}, <!--
--->{{l-self|te|గ్రీష్మము}}, <!--
--->{{l-self|te|వర్షాకాలము}}, <!--
--->{{l-self|te|శరదృతువు}}, <!--
--->{{l-self|te|చలికాలము}}, <!--
--->{{l-self|te|హేమంతము}}, <!--
--->{{l-self|te|శిశిరము}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[కాలము|కాలములు)]],[[ఋతువు|ఋతువులు]]
+|వసంతము
+|వేసవికాలము
+|గ్రీష్మము
+|వర్షాకాలము
+|శరదృతువు
+|చలికాలము
+|హేమంతము
+|శిశిరము
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 6609 Template:list:tastes/te: -------- begin text --------
 {{list helper 2
@@ -6961,100 +6771,75 @@ Page 6609 Template:list:tastes/te: -------- begin text --------
 -->}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 6616 Template:list:seasons/ka: -------- begin text --------
-{{list helper 2
-|title=seasons
-|cat=ka:Seasons
-|hypernym=წელიწადის დროები
-|list=<!--
--->{{l-self|ka|გაზაფხული}}, <!--
--->{{l-self|ka|ზაფხული}}, <!--
--->{{l-self|ka|შემოდგომა}}, <!--
--->{{l-self|ka|ზამთარი}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[წელიწადის დრო|წელიწადის დროები]]
+|გაზაფხული
+|ზაფხული
+|შემოდგომა
+|ზამთარი
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 6617 Template:list:seasons/hy: -------- begin text --------
-{{list helper 2
-|title=seasons
-|cat=hy:Seasons
-|hypernym=
-|list=<!--
--->{{l-self|hy|գարուն}}, <!--
--->{{l-self|hy|ամառ}}, <!--
--->{{l-self|hy|աշուն}}, <!--
--->{{l-self|hy|ձմեռ}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|գարուն
+|ամառ
+|աշուն
+|ձմեռ
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 6618 Template:list:seasons/vo: -------- begin text --------
-{{list helper 2
-|title=seasons
-|cat=vo:Seasons
-|hypernym=säsun
-|list=<!--
--->{{l-self|vo|florüp}}, <!--
--->{{l-self|vo|hitüp}}, <!--
--->{{l-self|vo|fluküp}}, <!--
--->{{l-self|vo|nifüp}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[säsun]]s
+|florüp
+|hitüp
+|fluküp
+|nifüp
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 6619 Template:list:seasons/fo: -------- begin text --------
-{{list helper 2
-|title=seasons
-|cat=fo:Seasons
-|hypernym={{l-self|fo|árstíð}}
-|list=<!--
--->{{l-self|fo|vár}}, <!--
--->{{l-self|fo|summar}}, <!--
--->{{l-self|fo|heyst}}, <!--
--->{{l-self|fo|vetur}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[árstíð]]ar
+|vár
+|summar
+|heyst
+|vetur
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 6621 Template:list:seasons/cy: -------- begin text --------
-{{list helper 2
-|title=seasons
-|cat=cy:Seasons
-|hypernym=tymor
-|list=<!--
--->{{l-self|cy|gwanwyn}}, <!--
--->{{l-self|cy|haf}}, <!--
--->{{l-self|cy|hydref}}, <!--
--->{{l-self|cy|gaeaf}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[tymor|tymhorau]]
+|gwanwyn
+|haf
+|hydref
+|gaeaf
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 6622 Template:list:seasons/ga: -------- begin text --------
-{{list helper 2
-|title=seasons
-|cat=ga:Seasons
-|hypernym={{l-self|ga|séasúr}}
-|list=<!--
--->{{l-self|ga|earrach}}, <!--
--->{{l-self|ga|samhradh}}, <!--
--->{{l-self|ga|fómhar}}, <!--
--->{{l-self|ga|geimhreadh}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[séasúr|séasúir]]
+|earrach
+|samhradh
+|fómhar
+|geimhreadh
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 6623 Template:list:seasons/gd: -------- begin text --------
-{{list helper 2
-|title=seasons
-|cat=gd:Seasons
-|hypernym=[[ràith]]
-|list=<!--
--->{{l-self|gd|earrach}}, <!--
--->{{l-self|gd|samhradh}}, <!--
--->{{l-self|gd|foghar}}, <!--
--->{{l-self|gd|geamhradh}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[ràith]]ean
+|earrach
+|samhradh
+|foghar
+|geamhradh
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 6635 Template:list:seasons/br: -------- begin text --------
-{{list helper 2
-|title=seasons
-|cat=br:Seasons
-|hypernym=koulz-amzer|hypernym2=rannvloaz
-|list=<!--
--->{{l-self|br|nevezamzer}}, <!--
--->{{l-self|br|hañv}}, <!--
--->{{l-self|br|diskar-amzer}}, <!--
--->{{l-self|br|goañv}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=koulz-amzer,rannvloaz<!-- FIXME: need to pluralize -->
+|nevezamzer
+|hañv
+|diskar-amzer
+|goañv
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 6636 Template:list:states of India/or: -------- begin text --------
 {{list helper 2
@@ -7264,24 +7049,21 @@ Page 6642 Template:list:days of the week/yi: -------- begin text --------
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 6643 Template:list:Gregorian calendar months/yi: -------- begin text --------
-{{list helper 2
-|title=months of the year
-|cat=yi:Months
-|hypernym={{l|yi|[[די]] [[חדשים]] [[פֿונעם]] [[יאָר]]|tr=di khadoshem funem yor}}
-|list=<!--
--->{{l-self|yi|יאַנואַר}}, <!--
--->{{l-self|yi|פֿעברואַר}}, <!--
--->{{l-self|yi|מאַרץ}}, <!--
--->{{l-self|yi|אַפּריל}}, <!--
--->{{l-self|yi|מײַ}}, <!--
--->{{l-self|yi|יוני}}, <!--
--->{{l-self|yi|יולי}}, <!--
--->{{l-self|yi|אויגוסט}}, <!--
--->{{l-self|yi|סעפּטעמבער}}, <!--
--->{{l-self|yi|אָקטאָבער}}, <!--
--->{{l-self|yi|נאָוועמבער}}, <!--
--->{{l-self|yi|דעצעמבער}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[די]] [[חדשים]] [[פֿונעם]] [[יאָר]]<tr:di khadoshem funem yor>
+|יאַנואַר
+|פֿעברואַר
+|מאַרץ
+|אַפּריל
+|מײַ
+|יוני
+|יולי
+|אויגוסט
+|סעפּטעמבער
+|אָקטאָבער
+|נאָוועמבער
+|דעצעמבער
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 6645 Template:list:continents/is: -------- begin text --------
 {{list helper 2
@@ -7312,15 +7094,13 @@ Page 6646 Template:list:days of the week/sla-pro: -------- begin text --------
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 6647 Template:list:seasons/sla-pro: -------- begin text --------
-{{list helper 2
-|title=seasons
-|hypernym={{l|sla-pro|*[[vermę]] [[godъ|goda]]}}
-|list=<!--
--->{{l|sla-pro|*jaro}}&nbsp;/ {{l|sla-pro|*vesna}}, <!--
--->{{l|sla-pro|*lěto}}, <!--
--->{{l|sla-pro|*(j)esenь}}, <!--
--->{{l|sla-pro|*zima}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=*[[vermę|vermena]] [[godъ|goda]]
+|*jaro,*vesna
+|*lěto
+|*(j)esenь
+|*zima
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 6648 Template:list:times of day/sla-pro: -------- begin text --------
 {{list helper 2
@@ -7586,23 +7366,21 @@ Page 6676 Template:list:days of the week/ug: -------- begin text --------
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 6684 Template:list:Gregorian calendar months/sl: -------- begin text --------
-{{list helper 2
-|title=Gregorian calendar months
-|hypernym={{l|sl|mesec|méseci}} {{l|sl|gregorijanski koledar|gregorijánskega koledárja}}
-|list=<!--
--->{{l-self|sl|januar|jánuar}}, <!--
--->{{l-self|sl|februar|fébruar}}, <!--
--->{{l-self|sl|marec|márec}}, <!--
--->{{l-self|sl|april|apríl}}, <!--
--->{{l-self|sl|maj|máj}}, <!--
--->{{l-self|sl|junij|júnij}}, <!--
--->{{l-self|sl|julij|júlij}}, <!--
--->{{l-self|sl|avgust|avgúst}}, <!--
--->{{l-self|sl|september|septêmber}}, <!--
--->{{l-self|sl|oktober|október}}, <!--
--->{{l-self|sl|november|novêmber}}, <!--
--->{{l-self|sl|december|decêmber}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[mesec|méseci]] [[gregorijanski koledar|gregorijánskega koledárja]]
+|jánuar
+|fébruar
+|márec
+|apríl
+|máj
+|júnij
+|júlij
+|avgúst
+|septêmber
+|október
+|novêmber
+|decêmber
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 6686 Template:list:Cereals/en: -------- begin text --------
 {{list helper 2
@@ -7798,43 +7576,37 @@ Page 6798 Template:list:oceans/pt: -------- begin text --------
 -->}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 6800 Template:list:Gregorian calendar months/ga: -------- begin text --------
-{{list helper 2
-|title=Gregorian calendar months
-|cat=ga:Months
-|list=<!--
--->{{l-self|ga|Eanáir}}, <!--
--->{{l-self|ga|Feabhra}}, <!--
--->{{l-self|ga|Márta}}, <!--
--->{{l-self|ga|Aibreán}}, <!--
--->{{l-self|ga|Bealtaine}}, <!--
--->{{l-self|ga|Meitheamh}}, <!--
--->{{l-self|ga|Iúil}}, <!--
--->{{l-self|ga|Lúnasa}}, <!--
--->{{l-self|ga|Meán Fómhair}}, <!--
--->{{l-self|ga|Deireadh Fómhair}}, <!--
--->{{l-self|ga|Samhain}}, <!--
--->{{l-self|ga|Mí na Nollag}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|Eanáir
+|Feabhra
+|Márta
+|Aibreán
+|Bealtaine
+|Meitheamh
+|Iúil
+|Lúnasa
+|Meán Fómhair
+|Deireadh Fómhair
+|Samhain
+|Mí na Nollag
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 6816 Template:list:Gregorian calendar months/sw: -------- begin text --------
-{{list helper 2
-|title=Gregorian calendar months
-|cat=sw:Months
-|hypernym={{l|sw|mwezi|miezi}} ya {{l|sw|mwaka}}<ref group=c>Months are more commonly referred to by number rather than name, e.g. ''mwezi wa kwanza'', ''mwezi wa pili'', ''mwezi wa kumi na mbili'' rather than ''Januari'', ''Februari'', ''Desemba''.</ref>
-|list=<!--
--->{{l-self|sw|Januari}}, <!--
--->{{l-self|sw|Februari}}, <!--
--->{{l-self|sw|Machi}}, <!--
--->{{l-self|sw|Aprili}}, <!--
--->{{l-self|sw|Mei}}, <!--
--->{{l-self|sw|Juni}}, <!--
--->{{l-self|sw|Julai}}, <!--
--->{{l-self|sw|Agosti}}, <!--
--->{{l-self|sw|Septemba}}, <!--
--->{{l-self|sw|Oktoba}}, <!--
--->{{l-self|sw|Novemba}}, <!--
--->{{l-self|sw|Desemba}}<!--
--->}}{{reflist|group=c}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[mwezi|miezi]] ya [[mwaka]]<ref:Months are more commonly referred to by number rather than name, e.g. ''mwezi wa kwanza'', ''mwezi wa pili'', ''mwezi wa kumi na mbili'' rather than ''Januari'', ''Februari'', ''Desemba''.<<group:c>>>
+|Januari
+|Februari
+|Machi
+|Aprili
+|Mei
+|Juni
+|Julai
+|Agosti
+|Septemba
+|Oktoba
+|Novemba
+|Desemba
+}}{{reflist|group=c}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 6832 Template:list:C major scale/pt: -------- begin text --------
 {{list helper 2
@@ -7889,16 +7661,13 @@ Page 6855 Template:list:crocodilians/pt: -------- begin text --------
 -->}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 6864 Template:list:seasons/sga: -------- begin text --------
-{{list helper 2
-|title=seasons
-|cat=sga:Seasons
-|hypernym={{l-self|sga|aimser}}
-|list=<!--
--->{{l-self|sga|errach}}, <!--
--->{{l-self|sga|samrad}}, <!--
--->{{l-self|sga|fogamar}}, <!--
--->{{l-self|sga|gaimred}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[aimser]]a
+|errach
+|samrad
+|fogamar
+|gaimred
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 6908 Template:list:days of the week/kla: -------- begin text --------
 {{#invoke:topic list|show
@@ -7924,23 +7693,20 @@ Page 6916 Template:list:days of the week/zza: -------- begin text --------
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 6917 Template:list:Gregorian calendar months/zza: -------- begin text --------
-{{list helper 2
-|title=Gregorian calendar months
-|cat=zza:Months
-|list=<!--
--->{{l-self|zza|çele}}, <!--
--->{{l-self|zza|şıbat}}, <!--
--->{{l-self|zza|mert}}, <!--
--->{{l-self|zza|lisan}}, <!--
--->{{l-self|zza|gulan}}, <!--
--->{{l-self|zza|heziran}}, <!--
--->{{l-self|zza|temuz}}, <!--
--->{{l-self|zza|ağıstos}}, <!--
--->{{l-self|zza|keşkelun}}, <!--
--->{{l-self|zza|tışrine}}, <!--
--->{{l-self|zza|kelverdan}}, <!--
--->{{l-self|zza|gağan}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|çele
+|şıbat
+|mert
+|lisan
+|gulan
+|heziran
+|temuz
+|ağıstos
+|keşkelun
+|tışrine
+|kelverdan
+|gağan
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 6943 Template:list:parts of speech/lv: -------- begin text --------
 {{list helper 2
@@ -8019,16 +7785,13 @@ Page 6957 Template:list:camelids/en: -------- begin text --------
 -->}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 6959 Template:list:seasons/zh: -------- begin text --------
-{{list helper 2
-|title=seasons
-|cat=zh:Seasons
-|hypernym={{l-self|zh|季節}}
-|list=<!--
--->{{l-self|zh|春天}}, <!--
--->{{l-self|zh|夏天}}, <!--
--->{{l-self|zh|秋天}}, <!--
--->{{l-self|zh|冬天}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=季節
+|春天
+|夏天
+|秋天
+|冬天
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 6964 Template:list:states of India/fr: -------- begin text --------
 {{list helper 2
@@ -8414,24 +8177,21 @@ Page 7147 Template:list:Greek script letters/el: -------- begin text --------
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 7180 Template:list:Gregorian calendar months/tet: -------- begin text --------
-{{list helper 2
-|title=Gregorian calendar months
-|cat=tet:Months
-|hypernym=[[folan]] iha [[kalendáriu gregorianu]]
-|list=<!--
--->{{l-self|tet|janeiru}}, <!--
--->{{l-self|tet|fevereiru}}, <!--
--->{{l-self|tet|marsu}}, <!--
--->{{l-self|tet|abríl}}, <!--
--->{{l-self|tet|maiu}}, <!--
--->{{l-self|tet|juñu}}, <!--
--->{{l-self|tet|jullu}}, <!--
--->{{l-self|tet|agostu}}, <!--
--->{{l-self|tet|setembru}}, <!--
--->{{l-self|tet|outubru}}, <!--
--->{{l-self|tet|novembru}}, <!--
--->{{l-self|tet|dezembru}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[folan]] iha [[kalendáriu gregorianu]]<!-- FIXME: is this plural? -->
+|janeiru
+|fevereiru
+|marsu
+|abríl
+|maiu
+|juñu
+|jullu
+|agostu
+|setembru
+|outubru
+|novembru
+|dezembru
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 7183 Template:list:Runic script letters/gmq-pro: -------- begin text --------
 {{#invoke:topic list|show
@@ -8499,27 +8259,24 @@ Page 7192 Template:list:lunar months/th: -------- begin text --------
 -->}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 7205 Template:list:Gregorian calendar months/th: -------- begin text --------
-{{list helper 2
-|title=Gregorian calendar months
-|cat=th:Gregorian calendar months
-|list=<!--
--->{{l-self|th|มกราคม}}, <!--
--->{{l-self|th|กุมภาพันธ์}}, <!--
--->{{l-self|th|มีนาคม}}, <!--
--->{{l-self|th|เมษายน}}, <!--
--->{{l-self|th|พฤษภาคม}}, <!--
--->{{l-self|th|มิถุนายน}}, <!--
--->{{l-self|th|กรกฎาคม}}, <!--
--->{{l-self|th|สิงหาคม}}, <!--
--->{{l-self|th|กันยายน}}, <!--
--->{{l-self|th|ตุลาคม}}, <!--
--->{{l-self|th|พฤศจิกายน}}, <!--
--->{{l-self|th|ธันวาคม}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|มกราคม
+|กุมภาพันธ์
+|มีนาคม
+|เมษายน
+|พฤษภาคม
+|มิถุนายน
+|กรกฎาคม
+|สิงหาคม
+|กันยายน
+|ตุลาคม
+|พฤศจิกายน
+|ธันวาคม
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 7215 Template:list:planets of the Solar System/ka: -------- begin text --------
 {{#invoke:topic list|show
-|hypernym =[[მზის სისტემის]] [[პლანეტა|პლანეტები]]
+|hypernym=[[მზის სისტემის]] [[პლანეტა|პლანეტები]]
 |მერკური
 |ვენერა
 |დედამიწა
@@ -8534,7 +8291,7 @@ Page 7216 Template:list:religions/ka: -------- begin text --------
 {{list helper 2
 |title=religions
 |cat=ka:Religion
-|hypernym = {{l|ka|რელიგია}}
+|hypernym={{l|ka|რელიგია}}
 |list={{l|ka|ქრისტიანობა}}, <!--
 -->{{l|ka|ისლამი}}, <!--
 -->{{l|ka|ჰინდუიზმი}}, <!--
@@ -8580,7 +8337,7 @@ Page 7257 Template:list:diplomatic mission heads/th: -------- begin text -------
 {{list helper 2
 | title=diplomatic mission heads
 | cat =
-| hypernym ={{l|th|หัวหน้าคณะผู้แทนทางทูต}}
+| hypernym={{l|th|หัวหน้าคณะผู้แทนทางทูต}}
 | list = <br>
 * {{sense|first rank}} {{l|th|เอกอัครราชทูต||ambassador}}, {{l|th|เอกอัครสมณทูต||nuncio}}
 * {{sense|second rank}} {{l|th|รัฐทูต||envoy}}, {{l|th|อัครราชทูต||minister}}, {{l|th|อัครสมณทูต||internuncio}}
@@ -8589,24 +8346,22 @@ Page 7257 Template:list:diplomatic mission heads/th: -------- begin text -------
 <noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 7264 Template:list:Gregorian calendar months/ka/archaic: -------- begin text --------
-{{list helper 2
-|title = Gregorian calendar month names in archaic Georgian
-|cat = ka:Months
-|hypernym = [[კალენდრული]] [[თვე|თვეები]]
-|list=<!--
--->{{l-self|ka|[[აპნისი]] / [[აპანი]]}}, <!--
--->{{l-self|ka|სურწყუნისი}}, <!--
--->{{l-self|ka|მირკანი}}, <!--
--->{{l-self|ka|იგრიკა}}, <!--
--->{{l-self|ka|ვარდობისა}}, <!--
--->{{l-self|ka|[[თიბათვე]] / [[ივანობისთვე]]}}, <!--
--->{{l-self|ka|მკათათვე}}, <!--
--->{{l-self|ka|მარიამობისთვე}}, <!--
--->{{l-self|ka|ენკენისთვე}}, <!--
--->{{l-self|ka|ღვინობისთვე}}, <!--
--->{{l-self|ka|გიორგობისთვე}}, <!--
--->{{l-self|ka|ქრისტეშობისთვე}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|enhypernym=+ (archaic)
+|hypernym=[[კალენდრული]] [[თვე|თვეები]]
+|აპნისი~აპანი
+|სურწყუნისი
+|მირკანი
+|იგრიკა
+|ვარდობისა
+|თიბათვე,ივანობისთვე
+|მკათათვე
+|მარიამობისთვე
+|ენკენისთვე
+|ღვინობისთვე
+|გიორგობისთვე
+|ქრისტეშობისთვე
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 7266 Template:list:noble ranks/th: -------- begin text --------
 {{list helper 2
@@ -8656,16 +8411,12 @@ Page 7300 Template:list:compass points/ady: -------- begin text --------
 <noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 7301 Template:list:seasons/kbd: -------- begin text --------
-{{list helper 2
-|title=seasons
-|cat=kbd:Seasons
-|hypernym=
-|list=<!--
--->{{l-self|ady|гъатхэ}}, <!--
--->{{l-self|ady|гъэмахуэ}}, <!--
--->{{l-self|ady|бжьыхьэ}}, <!--
--->{{l-self|ady|щӏымахуэ}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|гъатхэ
+|гъэмахуэ
+|бжьыхьэ
+|щӏымахуэ
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 7305 Template:list:scale degrees/mul: -------- begin text --------
 {{list helper 2
@@ -8683,29 +8434,21 @@ Page 7305 Template:list:scale degrees/mul: -------- begin text --------
 -->}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 7342 Template:list:Gregorian calendar months/lv: -------- begin text --------
-{{#invoke:checkparams|warn}}<!-- Validate template parameters
--->{{list helper 2
-|title=Gregorian calendar months
-|cat=lv:Months
-|hypernym={{l|lv|w:lv:Gregora kalendārs|Gregora}} {{l|lv|kalendāra}} {{l|lv|mēneši}}
-|list=<!--
--->{{l-self|lv|janvāris}}, <!--
--->{{l-self|lv|februāris}}, <!--
--->{{l-self|lv|marts}}, <!--
--->{{l-self|lv|aprīlis}}, <!--
--->{{l-self|lv|maijs}}, <!--
--->{{l-self|lv|jūnijs}}, <!--
--->{{l-self|lv|jūlijs}}, <!--
--->{{l-self|lv|augusts}}, <!--
--->{{l-self|lv|septembris}}, <!--
--->{{l-self|lv|oktobris}}, <!--
--->{{l-self|lv|novembris}}, <!--
--->{{l-self|lv|decembris}}<!--
--->}}<!--
-
---><noinclude>
-{{list doc}}
-
+{{#invoke:topic list|show
+|hypernym=[[Gregors|Gregora]] [[kalendārs|kalendāra]] [[mēnesis|mēneši]]
+|janvāris
+|februāris
+|marts
+|aprīlis
+|maijs
+|jūnijs
+|jūlijs
+|augusts
+|septembris
+|oktobris
+|novembris
+|decembris
+}}<noinclude>{{list doc}}
 [[az:Şablon:İlin ayları-lv]]
 [[et:Mall:kuunimed-lv]]
 [[fr:Modèle:tableau-mois/lv]]
@@ -8786,24 +8529,21 @@ Page 7343 Template:list:Hindu Jovian years/te: -------- begin text --------
 -->}}
 -------- end text --------
 Page 7353 Template:list:Gregorian calendar months/ro: -------- begin text --------
-{{list helper 2
-|title=Gregorian calendar months
-|cat=ro:Months
-|hypernym={{l|ro|lună}} a {{l|ro|calendar gregorian|calendarului gregorian}}
-|list=<!--
--->{{l-self|ro|ianuarie}}, <!--
--->{{l-self|ro|februarie}}, <!--
--->{{l-self|ro|martie}}, <!--
--->{{l-self|ro|aprilie}}, <!--
--->{{l-self|ro|mai}}, <!--
--->{{l-self|ro|iunie}}, <!--
--->{{l-self|ro|iulie}}, <!--
--->{{l-self|ro|august}}, <!--
--->{{l-self|ro|septembrie}}, <!--
--->{{l-self|ro|octombrie}}, <!--
--->{{l-self|ro|noiembrie}}, <!--
--->{{l-self|ro|decembrie}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[lună|luni]] a [[calendar gregorian|calendarului gregorian]]
+|ianuarie
+|februarie
+|martie
+|aprilie
+|mai
+|iunie
+|iulie
+|august
+|septembrie
+|octombrie
+|noiembrie
+|decembrie
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 7361 Template:list:planets of the Solar System/ar: -------- begin text --------
 {{#invoke:topic list|show
@@ -9057,38 +8797,30 @@ Page 7397 Template:list:days of the week/io: -------- begin text --------
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 7398 Template:list:seasons/io: -------- begin text --------
-{{list helper 2
-|title=seasons
-|cat=io:Seasons
-|hypernym=sezono
-|list=<!--
--->{{l-self|io|printempo}}, <!--
--->{{l-self|io|somero}}, <!--
--->{{l-self|io|autuno}}, <!--
--->{{l-self|io|vintro}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[sezono|sezoni]]
+|printempo
+|somero
+|autuno
+|vintro
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 7399 Template:list:Gregorian calendar months/io: -------- begin text --------
-{{list helper 2
-|title=Gregorian calendar months
-|cat=io:Months
-|hypernym={{l|io|monati}} di la {{l|io|Gregoriala kalendario}}
-|list=<!--
--->{{l-self|io|januaro}}, <!--
--->{{l-self|io|februaro}}, <!--
--->{{l-self|io|marto}}, <!--
--->{{l-self|io|aprilo}}, <!--
--->{{l-self|io|mayo}}, <!--
--->{{l-self|io|junio}}, <!--
--->{{l-self|io|julio}}, <!--
--->{{l-self|io|agosto}}, <!--
--->{{l-self|io|septembro}}, <!--
--->{{l-self|io|oktobro}}, <!--
--->{{l-self|io|novembro}}, <!--
--->{{l-self|io|decembro}}<!--
--->}}<!--
-
---><includeonly>[[Category:io:Gregorian calendar months]]</includeonly><noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[monato|monati]] di la [[Gregoriala kalendario]]
+|januaro
+|februaro
+|marto
+|aprilo
+|mayo
+|junio
+|julio
+|agosto
+|septembro
+|oktobro
+|novembro
+|decembro
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 7401 Template:list:planets of the Solar System/io: -------- begin text --------
 {{#invoke:topic list|show
@@ -9181,23 +8913,20 @@ Page 7443 Template:list:days of the week/se: -------- begin text --------
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 7452 Template:list:Gregorian calendar months/se: -------- begin text --------
-{{list helper 2
-|title=Gregorian calendar months
-|cat=se:Months
-|list=<!--
--->{{l-self|se|ođđajagimánnu}}, <!--
--->{{l-self|se|guovvamánnu}}, <!--
--->{{l-self|se|njukčamánnu}}, <!--
--->{{l-self|se|cuoŋọmánnu}}, <!--
--->{{l-self|se|miessẹmánnu}}, <!--
--->{{l-self|se|geassẹmánnu}}, <!--
--->{{l-self|se|suoidnẹmánnu}}, <!--
--->{{l-self|se|borgẹmánnu}}, <!--
--->{{l-self|se|čakčamánnu}}, <!--
--->{{l-self|se|golggotmánnu}}, <!--
--->{{l-self|se|skábmamánnu}}, <!--
--->{{l-self|se|juovlamánnu}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|ođđajagimánnu
+|guovvamánnu
+|njukčamánnu
+|cuoŋọmánnu
+|miessẹmánnu
+|geassẹmánnu
+|suoidnẹmánnu
+|borgẹmánnu
+|čakčamánnu
+|golggotmánnu
+|skábmamánnu
+|juovlamánnu
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 7454 Template:list:planets of the Solar System/se: -------- begin text --------
 {{#invoke:topic list|show
@@ -9407,23 +9136,20 @@ Page 7507 Template:list:Hebrew calendar months/yi: -------- begin text --------
 -->}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 7508 Template:list:Gregorian calendar months/hi: -------- begin text --------
-{{list helper 2
-|title=Gregorian calendar months
-|cat=hi:Gregorian calendar months
-|hypernym={{l|hi|[[ग्रेगोरी]] [[महीना|महीने]]}}
-|list=<!--
--->{{l-self|hi|जनवरी|tr=janvarī}}, <!--
--->{{l-self|hi|फ़रवरी|tr=farvarī}}, <!--
--->{{l-self|hi|मार्च}}, <!--
--->{{l-self|hi|अप्रैल}}, <!--
--->{{l-self|hi|मई}}, <!--
--->{{l-self|hi|जून}}, <!--
--->{{l-self|hi|जुलाई}}, <!--
--->{{l-self|hi|अगस्त}}, <!--
--->{{l-self|hi|सितंबर}}, <!--
--->{{l-self|hi|अक्टूबर}}, <!--
--->{{l-self|hi|नवंबर}}, <!--
--->{{l-self|hi|दिसंबर}}<!--
+{{#invoke:topic list|show
+|hypernym=[[ग्रेगोरी]] [[महीना|महीने]]
+|जनवरी<tr:janvarī>
+|फ़रवरी<tr:farvarī>
+|मार्च
+|अप्रैल
+|मई
+|जून
+|जुलाई
+|अगस्त
+|सितंबर
+|अक्टूबर
+|नवंबर
+|दिसंबर
 -->}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 7522 Template:list:titles/en: -------- begin text --------
@@ -9505,24 +9231,21 @@ Page 7554 Template:list:Chinese zodiac signs/th: -------- begin text --------
 -->}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 7557 Template:list:Gregorian calendar months/tk: -------- begin text --------
-{{list helper 2
-|title=Gregorian calendar months
-|cat=tk:Months
-|hypernym={{l-self|tk|aý}}
-|list=<!--
--->{{l-self|tk|ýanwar}}, <!--
--->{{l-self|tk|fewral}}, <!--
--->{{l-self|tk|mart}}, <!--
--->{{l-self|tk|aprel}}, <!--
--->{{l-self|tk|maý}}, <!--
--->{{l-self|tk|iýun}}, <!--
--->{{l-self|tk|iýul}}, <!--
--->{{l-self|tk|awgust}}, <!--
--->{{l-self|tk|sentýabr}}, <!--
--->{{l-self|tk|oktýabr}}, <!--
--->{{l-self|tk|noýabr}}, <!--
--->{{l-self|tk|dekabr}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[aý]]lar
+|ýanwar
+|fewral
+|mart
+|aprel
+|maý
+|iýun
+|iýul
+|awgust
+|sentýabr
+|oktýabr
+|noýabr
+|dekabr
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 7559 Template:list:Western astrology signs/th: -------- begin text --------
 {{list helper 2
@@ -9572,24 +9295,21 @@ Page 7566 Template:list:Hindu calendar months/hi: -------- begin text --------
 }}
 -------- end text --------
 Page 7576 Template:list:Gregorian calendar months/gl: -------- begin text --------
-{{list helper 2
-|title=Gregorian calendar months
-|cat=gl:Months
-|hypernym={{l|gl|mes}} do {{l|gl|calendario gregoriano}}
-|list=<!--
--->{{l-self|gl|xaneiro}}, <!--
--->{{l-self|gl|febreiro}}, <!--
--->{{l-self|gl|marzo}}, <!--
--->{{l-self|gl|abril}}, <!--
--->{{l-self|gl|maio}}, <!--
--->{{l-self|gl|xuño}}, <!--
--->{{l-self|gl|xullo}}, <!--
--->{{l-self|gl|agosto}}, <!--
--->{{l-self|gl|setembro}}, <!--
--->{{l-self|gl|outubro}}, <!--
--->{{l-self|gl|novembro}}, <!--
--->{{l-self|gl|decembro}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[mes]]es do [[calendario gregoriano]]
+|xaneiro
+|febreiro
+|marzo
+|abril
+|maio
+|xuño
+|xullo
+|agosto
+|setembro
+|outubro
+|novembro
+|decembro
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 7577 Template:list:days of the week/gl: -------- begin text --------
 {{#invoke:topic list|show
@@ -9704,125 +9424,126 @@ Page 7635 Template:list:days of the week/svm: -------- begin text --------
 |nedilja
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
-Page 7641 Template:list:Gregorian calendar months/sh/Latn: -------- begin text --------
-{{list helper 2
-|title=Gregorian calendar months
-|cat=sh:Gregorian calendar months
-|hypernym={{l|sh|[[mjesec|m(j)eseci]] [[gregorijanski kalendar|gregorijanskog kalendara]]}}
-|list=<!--
--->{{l-self|sh|januar}}/{{l-self|sh|siječanj}}, <!--
--->{{l-self|sh|februar}}/{{l-self|sh|veljača}}, <!--
--->{{l-self|sh|mart}}/{{l-self|sh|ožujak}}, <!--
--->{{l-self|sh|april}}/{{l-self|sh|travanj}}, <!--
--->{{l-self|sh|maj}}/{{l-self|sh|svibanj}}, <!--
--->{{l-self|sh|jun}}/{{l-self|sh|juni}}/{{l-self|sh|lipanj}}, <!--
--->{{l-self|sh|jul}}/{{l-self|sh|juli}}/{{l-self|sh|srpanj}}, <!--
--->{{l-self|sh|avgust}}/{{l-self|sh|august}}/{{l-self|sh|kolovoz}}, <!--
--->{{l-self|sh|septembar}}/{{l-self|sh|rujan}}, <!--
--->{{l-self|sh|oktobar}}/{{l-self|sh|listopad}}, <!--
--->{{l-self|sh|novembar}}/{{l-self|sh|studeni}}, <!--
--->{{l-self|sh|decembar}}/{{l-self|sh|prosinac}} <!--
+Page 7641 Template:list:Gregorian calendar months/sh/Latn/Bosnia-Serbia: -------- begin text --------
+{{#invoke:topic list|show<!-- FIXME: rename from [[Template:list:Gregorian calendar months/sh/Latn]] -->
+|enhypernym=+ (Bosnia/Serbia)
+|hypernym=[[mjesec|m(j)eseci]] [[gregorijanski kalendar|gregorijanskog kalendara]]
+|jȁnuār
+|fȅbruār
+|mȁrt
+|àprīl
+|mȁj
+|jȗni~jȗn
+|jȗli~jȗl
+|àvgust<ll:Serbia>~àugust<ll:Bosnia>
+|sèptēmbar
+|òktōbar
+|nòvēmbar
+|dècēmbar
+-->}}<noinclude>{{list doc}}</noinclude>
+-------- end text --------
+Page 7641 Template:list:Gregorian calendar months/sh/Latn/Croatia: -------- begin text --------
+{{#invoke:topic list|show<!-- FIXME: create -->
+|enhypernym=+ (Croatia)
+|hypernym=[[mjesec|mjeseci]] [[gregorijanski kalendar|gregorijanskog kalendara]]
+|sijȇčanj
+|vèljača
+|òžujak
+|trȃvanj
+|svȋbanj
+|lȋpanj
+|sȓpanj
+|kȍlovōz
+|rȗjan
+|lȉstopād
+|stùdenī
+|pròsinac
 -->}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 7642 Template:list:Gregorian calendar months/svm: -------- begin text --------
-{{list helper 2
-|title=Gregorian calendar months
-|cat=svm:Gregorian calendar months
-|hypernym={{l|svm|[[misac|misaca]] [[do]] [[gregorijanski kalendarij|gregorijanskoga kalendarija]]}}
-|list=<!--
--->{{l-self|svm|jenar}}, <!--
--->{{l-self|svm|febrar}}/{{l-self|svm|frebar}}, <!--
--->{{l-self|svm|marac}}, <!--
--->{{l-self|svm|abril}}/{{l-self|svm|abrija}}, <!--
--->{{l-self|svm|maj}}, <!--
--->{{l-self|svm|džuni}}/{{l-self|svm|džunj}}, <!--
--->{{l-self|svm|lulj}}, <!--
--->{{l-self|svm|august}}/{{l-self|svm|agušt}}, <!--
--->{{l-self|svm|sutembr}}/{{l-self|svm|sutemar}}, <!--
--->{{l-self|svm|utobr}}/{{l-self|svm|atubar}}, <!--
--->{{l-self|svm|novembr}}/{{l-self|svm|novemar}}, <!--
--->{{l-self|svm|dičembr}}/{{l-self|svm|dučemar}} <!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[misac|misaca]] [[do]] [[gregorijanski kalendarij|gregorijanskoga kalendarija]]
+|jenar
+|febrar~frebar
+|marac
+|abril~abrija
+|maj
+|džuni~džunj
+|lulj
+|august~agušt
+|sutembr~sutemar
+|utobr~atubar
+|novembr~novemar
+|dičembr~dučemar
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 7643 Template:list:Gregorian calendar months/uz: -------- begin text --------
-{{list helper 2
-|title=Gregorian calendar months
-|cat=uz:Months
-|hypernym={{l-self|uz|oy}}
-|list=<!--
--->{{l-self|uz|yanvar}}, <!--
--->{{l-self|uz|fevral}}, <!--
--->{{l-self|uz|mart}}, <!--
--->{{l-self|uz|aprel}}, <!--
--->{{l-self|uz|may}}, <!--
--->{{l-self|uz|iyun}}, <!--
--->{{l-self|uz|iyul}}, <!--
--->{{l-self|uz|avgust}}, <!--
--->{{l-self|uz|sentabr}}, <!--
--->{{l-self|uz|oktabr}}, <!--
--->{{l-self|uz|noyabr}}, <!--
--->{{l-self|uz|dekabr}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[oy]]lar
+|yanvar
+|fevral
+|mart
+|aprel
+|may
+|iyun
+|iyul
+|avgust
+|sentabr
+|oktabr
+|noyabr
+|dekabr
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 7644 Template:list:Gregorian calendar months/az: -------- begin text --------
-{{list helper 2
-|title=Gregorian calendar months
-|cat=az:Months
-|hypernym={{l-self|az|ay}}
-|list=<!--
--->{{l-self|az|yanvar}}, <!--
--->{{l-self|az|fevral}}, <!--
--->{{l-self|az|mart}}, <!--
--->{{l-self|az|aprel}}, <!--
--->{{l-self|az|may}}, <!--
--->{{l-self|az|iyun}}, <!--
--->{{l-self|az|iyul}}, <!--
--->{{l-self|az|avqust}}, <!--
--->{{l-self|az|sentyabr}}, <!--
--->{{l-self|az|oktyabr}}, <!--
--->{{l-self|az|noyabr}}, <!--
--->{{l-self|az|dekabr}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[ay]]lar
+|yanvar
+|fevral
+|mart
+|aprel
+|may
+|iyun
+|iyul
+|avqust
+|sentyabr
+|oktyabr
+|noyabr
+|dekabr
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 7645 Template:list:Gregorian calendar months/crh: -------- begin text --------
-{{list helper 2
-|title=Gregorian calendar months
-|cat=crh:Months
-|hypernym={{l-self|crh|ay}}
-|list=<!--
--->{{l-self|crh|yanvar}}, <!--
--->{{l-self|crh|fevral}}, <!--
--->{{l-self|crh|mart}}, <!--
--->{{l-self|crh|aprel}}, <!--
--->{{l-self|crh|mayıs}}, <!--
--->{{l-self|crh|iyün}}, <!--
--->{{l-self|crh|iyül}}, <!--
--->{{l-self|crh|avgust}}, <!--
--->{{l-self|crh|sentâbr}}, <!--
--->{{l-self|crh|oktâbr}}, <!--
--->{{l-self|crh|noyabr}}, <!--
--->{{l-self|crh|dekabr}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[ay]]lar
+|yanvar
+|fevral
+|mart
+|aprel
+|mayıs
+|iyün
+|iyül
+|avgust
+|sentâbr
+|oktâbr
+|noyabr
+|dekabr
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 7646 Template:list:Gregorian calendar months/gag: -------- begin text --------
-{{list helper 2
-|title=Gregorian calendar months
-|cat=gag:Months
-|hypernym={{l-self|gag|ay}}
-|list=<!--
--->{{l-self|gag|Büük ay}}, <!--
--->{{l-self|gag|Küçük ay}}, <!--
--->{{l-self|gag|Baba marta}}, <!--
--->{{l-self|gag|Çiçek ay}}, <!--
--->{{l-self|gag|Hederlez ay}}, <!--
--->{{l-self|gag|Kirez ay}}, <!--
--->{{l-self|gag|Orak ay}}, <!--
--->{{l-self|gag|Harman ay}}, <!--
--->{{l-self|gag|Ceviz ay}}, <!--
--->{{l-self|gag|Canavar ay}}, <!--
--->{{l-self|gag|Kasım ay}}, <!--
--->{{l-self|gag|Kırım ay}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[ay]]lar
+|Büük ay
+|Küçük ay
+|Baba marta
+|Çiçek ay
+|Hederlez ay
+|Kirez ay
+|Orak ay
+|Harman ay
+|Ceviz ay
+|Canavar ay
+|Kasım ay
+|Kırım ay
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 7647 Template:list:continents/ro: -------- begin text --------
 {{list helper 2
@@ -9970,24 +9691,20 @@ Page 7666 Template:list:decennial cycle/th: -------- begin text --------
 -->}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 7667 Template:list:Gregorian calendar months/sms: -------- begin text --------
-{{list helper 2
-|title=Gregorian calendar months
-|list=<!--
--->{{l-self|sms|ođđeeʹjjmään}}, <!--
--->{{l-self|sms|täʹlvvmään}}, <!--
--->{{l-self|sms|pâʹzzlâšttammään}}, <!--
--->{{l-self|sms|pââʹzzmään}}, <!--
--->{{l-self|sms|vueʹssmään}}, <!--
--->{{l-self|sms|ǩieʹssmään}}, <!--
--->{{l-self|sms|sueiʹnnmään}}, <!--
--->{{l-self|sms|påʹrǧǧmään}}, <!--
--->{{l-self|sms|čõhččmään}}, <!--
--->{{l-self|sms|kålggmään}}, <!--
--->{{l-self|sms|skamm-mään}}/{{l-self|sms|vuʹvrrmään}}, <!--
--->{{l-self|sms|rosttovmään}}<!--
--->}}<!--
-
---><noinclude>{{documentation}}</noinclude>
+{{#invoke:topic list|show
+|ođđeeʹjjmään
+|täʹlvvmään
+|pâʹzzlâšttammään
+|pââʹzzmään
+|vueʹssmään
+|ǩieʹssmään
+|sueiʹnnmään
+|påʹrǧǧmään
+|čõhččmään
+|kålggmään
+|skamm-mään,vuʹvrrmään
+|rosttovmään
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 7668 Template:list:dwarf planets of the Solar System/ja: -------- begin text --------
 {{list helper 2
@@ -10050,68 +9767,61 @@ Page 7698 Template:list:sexual orientations/io: -------- begin text --------
 -->}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 7740 Template:list:Gregorian calendar months/be: -------- begin text --------
-{{list helper 2
-|title=Gregorian calendar months
-|cat=be:Months
-|hypernym={{l|be|[[месяц|ме́сяц]] [[грыгарыянскі каляндар|грыгарыя́нскага календара́]]}}
-|list=<!--
--->{{l-self|be|сту́дзень}}, <!--
--->{{l-self|be|лю́ты}}, <!--
--->{{l-self|be|сакаві́к}}, <!--
--->{{l-self|be|красаві́к}}, <!--
--->{{l-self|be|тра́вень}} / {{l-self|be|май}}, <!--
--->{{l-self|be|чэ́рвень}}, <!--
--->{{l-self|be|лі́пень}}, <!--
--->{{l-self|be|жні́вень}}, <!--
--->{{l-self|be|ве́расень}}, <!--
--->{{l-self|be|кастры́чнік}}, <!--
--->{{l-self|be|лістапа́д}}, <!--
--->{{l-self|be|сне́жань}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[месяц|ме́сяцы]] [[грыгарыянскі каляндар|грыгарыя́нскага календара́]]
+|сту́дзень
+|лю́ты
+|сакаві́к
+|красаві́к
+|тра́вень,май
+|чэ́рвень
+|лі́пень
+|жні́вень
+|ве́расень
+|кастры́чнік
+|лістапа́д
+|сне́жань
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 7741 Template:list:Gregorian calendar months/uk: -------- begin text --------
 {{list helper 2
 |title=Gregorian calendar months
 |cat=uk:Months
-|hypernym={{l|uk|[[мі́сяць]] [[григоріанський календар|григоріа́нського календаря́]]}}
-|list=<!--
--->{{l-self|uk|сі́чень}}, <!--
--->{{l-self|uk|лю́тий}}, <!--
--->{{l-self|uk|бе́резень}}, <!--
--->{{l-self|uk|кві́тень}}, <!--
--->{{l-self|uk|тра́вень}}, <!--
--->{{l-self|uk|че́рвень}}, <!--
--->{{l-self|uk|ли́пень}}, <!--
--->{{l-self|uk|се́рпень}}, <!--
--->{{l-self|uk|ве́ресень}}, <!--
--->{{l-self|uk|жо́втень}}, <!--
--->{{l-self|uk|листопа́д}}, <!--
--->{{l-self|uk|гру́день}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+|hypernym=[[місяць|місяці́]] [[григоріанський календар|григоріа́нського календаря́]]
+|сі́чень
+|лю́тий
+|бе́резень
+|кві́тень
+|тра́вень
+|че́рвень
+|ли́пень
+|се́рпень
+|ве́ресень
+|жо́втень
+|листопа́д
+|гру́день
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 7742 Template:list:Gregorian calendar months/sk: -------- begin text --------
-{{list helper 2
-|title=Gregorian calendar months
-|cat=sk:Months
-|hypernym={{l|sk|[[mesiac]] [[gregoriánsky kalendár|gregoriánskeho kalendára]]}}
-|list=<!--
--->{{l-self|sk|január}}, <!--
--->{{l-self|sk|február}}, <!--
--->{{l-self|sk|marec}}, <!--
--->{{l-self|sk|apríl}}, <!--
--->{{l-self|sk|máj}}, <!--
--->{{l-self|sk|jún}}, <!--
--->{{l-self|sk|júl}}, <!--
--->{{l-self|sk|august}}, <!--
--->{{l-self|sk|september}}, <!--
--->{{l-self|sk|október}}, <!--
--->{{l-self|sk|november}}, <!--
--->{{l-self|sk|december}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[mesiac]]e [[gregoriánsky kalendár|gregoriánskeho kalendára]]
+|január
+|február
+|marec
+|apríl
+|máj
+|jún
+|júl
+|august
+|september
+|október
+|november
+|december
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 7751 Template:list:Arabic script letters/ky: -------- begin text --------
 {{#invoke:topic list|show
-|hypernym=[[тамга|тамгалар]]
+|hypernym=[[тамга]]лар
 |ا
 |ب
 |پ
@@ -10219,24 +9929,21 @@ Page 7832 Template:list:days of the week/ny: -------- begin text --------
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 7847 Template:list:Gregorian calendar months/ms: -------- begin text --------
-{{list helper 2
-|title=Gregorian calendar months
-|cat=ms:Gregorian calendar months
-|hypernym={{l|ms|bulan}} {{l|ms|takwim Gregory}}
-|list=<!--
--->{{l-self|ms|Januari}}, <!--
--->{{l-self|ms|Februari}}, <!--
--->{{l-self|ms|Mac}}/{{l-self|ms|Maret}}, <!--
--->{{l-self|ms|April}}, <!--
--->{{l-self|ms|Mei}}, <!--
--->{{l-self|ms|Jun}}, <!--
--->{{l-self|ms|Julai}}, <!--
--->{{l-self|ms|Ogos}}, <!--
--->{{l-self|ms|September}}, <!--
--->{{l-self|ms|Oktober}}, <!--
--->{{l-self|ms|November}}, <!--
--->{{l-self|ms|Disember}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[bulan|bulan-bulan]] [[takwim Gregory]]
+|Januari
+|Februari
+|Mac,Maret
+|April
+|Mei
+|Jun
+|Julai
+|Ogos
+|September
+|Oktober
+|November
+|Disember
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 7849 Template:list:planets of the Solar System/ga: -------- begin text --------
 {{#invoke:topic list|show
@@ -10626,24 +10333,21 @@ Page 8014 Template:list:Western astrology signs/de: -------- begin text --------
 -->}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 8030 Template:list:Gregorian calendar months/dtp: -------- begin text --------
-{{list helper 2
-|title=Gregorian calendar months
-|cat=dtp:Gregorian calendar months
-|hypernym=wulan id kalenḏo
-|list=<!--
--->{{l-self|dtp|Milatok}}, <!--
--->{{l-self|dtp|Mansak}}, <!--
--->{{l-self|dtp|Gomot}}, <!--
--->{{l-self|dtp|Ngiop}}, <!--
--->{{l-self|dtp|Mikat}}, <!--
--->{{l-self|dtp|Mahas}}, <!--
--->{{l-self|dtp|Madas}}, <!--
--->{{l-self|dtp|Magus}}, <!--
--->{{l-self|dtp|Manom}}, <!--
--->{{l-self|dtp|Gumas}}, <!--
--->{{l-self|dtp|Milau}}, <!--
--->{{l-self|dtp|Momuhau}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[wulan]] [[id]] [[kalenḏo]]<!-- FIXME, needs to be plural -->
+|Milatok
+|Mansak
+|Gomot
+|Ngiop
+|Mikat
+|Mahas
+|Madas
+|Magus
+|Manom
+|Gumas
+|Milau
+|Momuhau
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 8031 Template:list:days of the week/wym: -------- begin text --------
 {{#invoke:topic list|show
@@ -10693,24 +10397,21 @@ Page 8036 Template:list:days of the week/ty: -------- begin text --------
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 8037 Template:list:Gregorian calendar months/rue: -------- begin text --------
-{{list helper 2
-|title=Gregorian calendar months
-|cat=rue:Months
-|hypernym={{l|rue|мі́сяць}}
-|list=<!--
--->{{l-self|rue|януа́р}}, <!--
--->{{l-self|rue|фебруа́р}}, <!--
--->{{l-self|rue|ма́рец}}, <!--
--->{{l-self|rue|а́пріль}}, <!--
--->{{l-self|rue|май}}, <!--
--->{{l-self|rue|юн}}/{{l-self|rue|ю́ній}}, <!--
--->{{l-self|rue|юл}}/{{l-self|rue|ю́лій}}, <!--
--->{{l-self|rue|а́вґуст}}, <!--
--->{{l-self|rue|септе́мбер}}, <!--
--->{{l-self|rue|окто́бер}}, <!--
--->{{l-self|rue|нове́мбер}}, <!--
--->{{l-self|rue|деце́мбер}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=мі́сяць<!-- FIXME: this just means "month"; we need at least the plural, ideally "Gregorian calendar months" -->
+|януа́р
+|фебруа́р
+|ма́рец
+|а́пріль
+|май
+|юн~ю́ній
+|юл~ю́лій
+|а́вґуст
+|септе́мбер
+|окто́бер
+|нове́мбер
+|деце́мбер
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 8040 Template:list:Cyrillic script letters/kpy: -------- begin text --------
 {{#invoke:topic list|show
@@ -11146,24 +10847,21 @@ Page 8125 Template:list:days of the week/ha: -------- begin text --------
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 8133 Template:list:Gregorian calendar months/ha: -------- begin text --------
-{{list helper 2
-|title=Gregorian calendar months
-|cat=ha:Gregorian calendar months
-|hypernym={{l|ha|wata}}
-|list=<!--
--->{{l-self|ha|Janairu}}, <!--
--->{{l-self|ha|Fabrairu}}, <!--
--->{{l-self|ha|Maris}}, <!--
--->{{l-self|ha|Afrilu}}, <!--
--->{{l-self|ha|Mayu}}, <!--
--->{{l-self|ha|Yuni}}, <!--
--->{{l-self|ha|Yuli}}, <!--
--->{{l-self|ha|Agusta}}, <!--
--->{{l-self|ha|Satumba}}, <!--
--->{{l-self|ha|Oktoba}}, <!--
--->{{l-self|ha|Nuwamba}}, <!--
--->{{l-self|ha|Disamba}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[wata|wàtànnī]]
+|Janairu
+|Fabrairu
+|Maris
+|Afrilu
+|Mayu
+|Yuni
+|Yuli
+|Agusta
+|Satumba
+|Oktoba
+|Nuwamba
+|Disamba
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 8141 Template:list:Islamic calendar months/ha: -------- begin text --------
 {{list helper 2
@@ -11186,22 +10884,19 @@ Page 8141 Template:list:Islamic calendar months/ha: -------- begin text --------
 -->}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 8157 Template:list:Gregorian calendar months/lt: -------- begin text --------
-{{list helper 2
-|title=Gregorian calendar months
-|cat=lt:Months
-|list=<!--
--->{{l-self|lt|sausis}}, <!--
--->{{l-self|lt|vasaris}}, <!--
--->{{l-self|lt|kovas}}, <!--
--->{{l-self|lt|balandis}}, <!--
--->{{l-self|lt|gegužė}}, <!--
--->{{l-self|lt|birželis}}, <!--
--->{{l-self|lt|liepa}}, <!--
--->{{l-self|lt|rugpjūtis}}, <!--
--->{{l-self|lt|rugsėjis}}, <!--
--->{{l-self|lt|spalis}}, <!--
--->{{l-self|lt|lapkritis}}, <!--
--->{{l-self|lt|gruodis}} <!--
+{{#invoke:topic list|show
+|saũsis
+|vasãris
+|kóvas
+|balañdis
+|gegužė̃~gegùžė
+|biržẽlis
+|líepa
+|rugpjū́tis
+|rugsė́jis
+|spãlis
+|lãpkritis
+|grúodis
 -->}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 8158 Template:list:countries of Europe/lt: -------- begin text --------
@@ -11383,63 +11078,50 @@ Page 8171 Template:list:days of the week/as: -------- begin text --------
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 8173 Template:list:Assamese calendar months/as: -------- begin text --------
-
-{{list helper 2
-|title=Assamese calendar months
-|cat=as:Months
-|hypernym=
-|list=<!--
--->{{l-self|as|ব’হাগ}}, <!--
--->{{l-self|as|জেঠ}}, <!--
--->{{l-self|as|আহাৰ}}, <!--
--->{{l-self|as|শাওন}}, <!--
--->{{l-self|as|ভাদ|tr=bhado}}, <!--
--->{{l-self|as|আহিন}}, <!--
--->{{l-self|as|কাতি}}, <!--
--->{{l-self|as|আঘোণ}}, <!--
--->{{l-self|as|পুহ}}, <!--
--->{{l-self|as|মাঘ}}, <!--
--->{{l-self|as|ফাগুন}}, <!--
--->{{l-self|as|চ’ত}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|ব’হাগ
+|জেঠ
+|আহাৰ
+|শাওন
+|ভাদ<tr:bhado>
+|আহিন
+|কাতি
+|আঘোণ
+|পুহ
+|মাঘ
+|ফাগুন
+|চ’ত
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 8174 Template:list:Gregorian calendar months/as: -------- begin text --------
-
-{{list helper 2
-|title=Gregorian calendar months
-|cat=as:Months
-|hypernym=
-|list=<!--
--->{{l-self|as|জানুৱাৰী}}, <!--
--->{{l-self|as|ফেব্ৰুৱাৰী}}, <!--
--->{{l-self|as|মাৰ্চ|tr=mars}}, <!--
--->{{l-self|as|এপ্ৰিল}}, <!--
--->{{l-self|as|মে’}}, <!--
--->{{l-self|as|জুন}}, <!--
--->{{l-self|as|জুলাই}}, <!--
--->{{l-self|as|আগষ্ট}}, <!--
--->{{l-self|as|ছেপ্টেম্বৰ}}, <!--
--->{{l-self|as|অক্টোবৰ}}, <!--
--->{{l-self|as|নৱেম্বৰ}}, <!--
--->{{l-self|as|ডিচেম্বৰ}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|জানুৱাৰী
+|ফেব্ৰুৱাৰী
+|মাৰ্চ<tr:mars>
+|এপ্ৰিল
+|মে’
+|জুন
+|জুলাই
+|আগষ্ট
+|ছেপ্টেম্বৰ
+|অক্টোবৰ
+|নৱেম্বৰ
+|ডিচেম্বৰ
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 8175 Template:list:seasons/as: -------- begin text --------
-{{list helper 2
-|title=seasons
-|cat=as:Seasons
-|hypernym=ঋতু
-|list=<!--
--->{{l-self|as|গ্ৰীষ্ম}}, <!--
--->{{l-self|as|বৰ্ষা}}, <!--
--->{{l-self|as|শৰৎ}}, <!--
--->{{l-self|as|হেমন্ত}}, <!--
--->{{l-self|as|শীত}}, <!--
--->{{l-self|as|বসন্ত}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=ঋতু<!-- FIXME: needs to be plural -->
+|গ্ৰীষ্ম
+|বৰ্ষা
+|শৰৎ
+|হেমন্ত
+|শীত
+|বসন্ত
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 8178 Template:list:planets of the Solar System/ms: -------- begin text --------
-{{#invoke:topic list|show<!-- FIXME: Rename to [[Template:.../ms/Jawi]] -->
+{{#invoke:topic list|show<!-- FIXME: Rename to [[Template:.../ms/Arab]] -->
 |hypernym=[[ڤلانيت]] [[سيستم]] [[سوريا]]<tr:[[planet]] [[sistem]] [[suria]]>
 |عطارد<tr:[[Utarid]]>
 |زهرة<tr:[[Zuhrah]]>
@@ -11625,24 +11307,21 @@ Page 8319 Template:list:planets of the Solar System/as: -------- begin text ----
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 8334 Template:list:Gregorian calendar months/lij: -------- begin text --------
-{{list helper 2
-|title=Gregorian calendar months
-|cat=lij:Gregorian calendar months
-|hypernym={{l|lij|méize}} do {{l|lij|lunâio gregoriàn}}
-|list=<!--
--->{{l-self|lij|zenâ}}, <!--
--->{{l-self|lij|frevâ}}, <!--
--->{{l-self|lij|màrso}}, <!--
--->{{l-self|lij|arvî}}, <!--
--->{{l-self|lij|màzzo}}, <!--
--->{{l-self|lij|zùgno}}, <!--
--->{{l-self|lij|lùggio}}, <!--
--->{{l-self|lij|agósto}}, <!--
--->{{l-self|lij|seténbre}}, <!--
--->{{l-self|lij|òtôbre}}, <!--
--->{{l-self|lij|novénbre}}, <!--
--->{{l-self|lij|dexénbre}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[méize|méixi]] do [[lunâio gregoriàn]]
+|zenâ
+|frevâ
+|màrso
+|arvî
+|màzzo
+|zùgno
+|lùggio
+|agósto
+|seténbre
+|òtôbre
+|novénbre
+|dexénbre
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 8343 Template:list:days of the week/cs: -------- begin text --------
 {{#invoke:topic list|show
@@ -11693,64 +11372,55 @@ Page 8346 Template:list:days of the week/tl: -------- begin text --------
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 8347 Template:list:Gregorian calendar months/el: -------- begin text --------
-{{list helper 2
-|title=Gregorian calendar months
-|cat=el:Months
-|hypernym={{l|el|μήνες}}
-|list=<!--
--->{{l-self|el|Ιανουάριος}}, <!--
--->{{l-self|el|Φεβρουάριος}}, <!--
--->{{l-self|el|Μάρτιος}}, <!--
--->{{l-self|el|Απρίλιος}}, <!--
--->{{l-self|el|Μάιος}}, <!--
--->{{l-self|el|Ιούνιος}}, <!--
--->{{l-self|el|Ιούλιος}}, <!--
--->{{l-self|el|Αύγουστος}}, <!--
--->{{l-self|el|Σεπτέμβριος}}, <!--
--->{{l-self|el|Οκτώβριος}}, <!--
--->{{l-self|el|Νοέμβριος}}, <!--
--->{{l-self|el|Δεκέμβριος}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[μήνας|μήνες]]
+|Ιανουάριος
+|Φεβρουάριος
+|Μάρτιος
+|Απρίλιος
+|Μάιος
+|Ιούνιος
+|Ιούλιος
+|Αύγουστος
+|Σεπτέμβριος
+|Οκτώβριος
+|Νοέμβριος
+|Δεκέμβριος
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 8353 Template:list:Gregorian calendar months/mwl: -------- begin text --------
-{{list helper 2
-|title=Gregorian calendar months
-|cat=mwl:Months
-|hypernym={{l|mwl|meses}} de l {{l|mwl|calendairo griegoriano}}
-|list=<!--
--->{{l-self|mwl|Janeiro}}, <!--
--->{{l-self|mwl|Febreiro}}, <!--
--->{{l-self|mwl|Márcio}}, <!--
--->{{l-self|mwl|Abril}}, <!--
--->{{l-self|mwl|Maio}}, <!--
--->{{l-self|mwl|Júnio}}, <!--
--->{{l-self|mwl|Júlio}}, <!--
--->{{l-self|mwl|Agosto}}, <!--
--->{{l-self|mwl|Setembre}}, <!--
--->{{l-self|mwl|Outubre}}, <!--
--->{{l-self|mwl|Nobembre}}, <!--
--->{{l-self|mwl|Dezembre}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[més|meses]] de l [[calendairo griegoriano]]
+|Janeiro
+|Febreiro
+|Márcio
+|Abril
+|Maio
+|Júnio
+|Júlio
+|Agosto
+|Setembre
+|Outubre
+|Nobembre
+|Dezembre
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 8363 Template:list:Gregorian calendar months/cs: -------- begin text --------
-{{list helper 2
-|title=Gregorian calendar months
-|cat=cs:Months
-|hypernym={{l|cs|[[měsíc]] [[gregoriánský kalendář|gregoriánského kalendáře]]}}
-|list=<!--
--->{{l-self|cs|leden}}, <!--
--->{{l-self|cs|únor}}, <!--
--->{{l-self|cs|březen}}, <!--
--->{{l-self|cs|duben}}, <!--
--->{{l-self|cs|květen}}, <!--
--->{{l-self|cs|červen}}, <!--
--->{{l-self|cs|červenec}}, <!--
--->{{l-self|cs|srpen}}, <!--
--->{{l-self|cs|září}}, <!--
--->{{l-self|cs|říjen}}, <!--
--->{{l-self|cs|listopad}}, <!--
--->{{l-self|cs|prosinec}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[měsíc]]e [[gregoriánský kalendář|gregoriánského kalendáře]]
+|leden
+|únor
+|březen
+|duben
+|květen
+|červen
+|červenec
+|srpen
+|září
+|říjen
+|listopad
+|prosinec
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 8371 Template:list:countries of Europe/id: -------- begin text --------
 {{list helper 2
@@ -12019,24 +11689,21 @@ Page 8452 Template:list:bones of the tarsus/hu: -------- begin text --------
 -->}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 8455 Template:list:gregorian calendar months/cab: -------- begin text --------
-{{list helper 2
-|title=Gregorian calendar months
-|cat=cab:Months
-|hypernym={{l-self|cab|hati}}
-|list=<!--
--->{{l-self|cab|eneru}}, <!--
--->{{l-self|cab|biyan hati}}, <!--
--->{{l-self|cab|ürüwa hati}}, <!--
--->{{l-self|cab|gadürü hati}}, <!--
--->{{l-self|cab|seingü hati}}, <!--
--->{{l-self|cab|sisi hati}}, <!--
--->{{l-self|cab|sedü hati}}, <!--
--->{{l-self|cab|widü hati}}, <!--
--->{{l-self|cab|nefu hati}}, <!--
--->{{l-self|cab|disi hati}}, <!--
--->{{l-self|cab|unsu hati}}, <!--
--->{{l-self|cab|dusu hati}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=hati<!-- FIXME: means "month"; at least must be pluralized -->
+|eneru
+|biyan hati
+|ürüwa hati
+|gadürü hati
+|seingü hati
+|sisi hati
+|sedü hati
+|widü hati
+|nefu hati
+|disi hati
+|unsu hati
+|dusu hati
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 8460 Template:list:cranial nerves/hu: -------- begin text --------
 {{list helper 2
@@ -12094,26 +11761,21 @@ Page 8496 Template:list:Egyptian calendar months/cop: -------- begin text ------
 --><includeonly>[[Category:cop:Egyptian calendar months]]</includeonly><noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 8498 Template:list:Gregorian calendar months/cop: -------- begin text --------
-{{list helper 2
-|title=Gregorian calendar months
-|hypernym=[[ⲛⲓ-|ⲛⲓ]]{{l|cop|ⲁⲃⲟⲧ}}
-|cat=cop:Gregorian calendar months
-|list=<!--
--->{{l-self|cop|ⲓⲁⲛⲟⲩⲁⲣⲓⲟⲥ|Ⲓⲁⲛⲟⲩⲁⲣⲓⲟⲥ}}, <!--
--->{{l-self|cop|ⲫⲉⲃⲣⲟⲩⲁⲣⲓⲟⲥ|ⲫⲉⲃⲣⲟⲩⲁⲣⲓⲟⲥ}}, <!--
--->{{l-self|cop|ⲙⲁⲣⲧⲓⲟⲥ|Ⲙⲁⲣⲧⲓⲟⲥ}}, <!--
--->{{l-self|cop|ⲁⲡⲣⲓⲗⲓⲟⲥ|Ⲁⲡⲣⲓⲗⲓⲟⲥ}}, <!--
--->{{l-self|cop|ⲙⲁⲓⲟⲥ|Ⲙⲁⲓⲟⲥ}}, <!--
--->{{l-self|cop|ⲓⲟⲩⲛⲓⲟⲥ|Ⲓⲟⲩⲛⲓⲟⲥ}}, <!--
--->{{l-self|cop|ⲓⲟⲩⲗⲓⲟⲥ|Ⲓⲟⲩⲗⲓⲟⲥ}} <!--
--->{{l-self|cop|ⲁⲩⲅⲟⲩⲥⲧⲟⲥ|Ⲁⲩⲅⲟⲩⲥⲧⲟⲥ}}, <!--
--->{{l-self|cop|ⲥⲉⲡⲧⲉⲙⲃⲣⲓⲟⲥ|Ⲥⲉⲡⲧⲉⲙⲃⲣⲓⲟⲥ}}, <!--
--->{{l-self|cop|ⲟⲕⲧⲱⲃⲣⲓⲟⲥ|Ⲟⲕⲧⲱⲃⲣⲓⲟⲥ}}, <!--
--->{{l-self|cop|ⲛⲟⲉⲙⲃⲣⲓⲟⲥ|Ⲛⲟⲉⲙⲃⲣⲓⲟⲥ}}, <!--
--->{{l-self|cop|ⲇⲉⲕⲉⲙⲃⲣⲓⲟⲥ|Ⲇⲉⲕⲉⲙⲃⲣⲓⲟⲥ}},<!--
--->}}<!--
-
---><includeonly>[[Category:cop:Gregorian calendar months]]</includeonly><noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[ⲛⲓ-|ⲛⲓ]][[ⲁⲃⲟⲧ]]
+|[[ⲓⲁⲛⲟⲩⲁⲣⲓⲟⲥ|Ⲓⲁⲛⲟⲩⲁⲣⲓⲟⲥ]]
+|[[ⲫⲉⲃⲣⲟⲩⲁⲣⲓⲟⲥ|ⲫⲉⲃⲣⲟⲩⲁⲣⲓⲟⲥ]]
+|[[ⲙⲁⲣⲧⲓⲟⲥ|Ⲙⲁⲣⲧⲓⲟⲥ]]
+|[[ⲁⲡⲣⲓⲗⲓⲟⲥ|Ⲁⲡⲣⲓⲗⲓⲟⲥ]]
+|[[ⲙⲁⲓⲟⲥ|Ⲙⲁⲓⲟⲥ]]
+|[[ⲓⲟⲩⲛⲓⲟⲥ|Ⲓⲟⲩⲛⲓⲟⲥ]]
+|[[ⲓⲟⲩⲗⲓⲟⲥ|Ⲓⲟⲩⲗⲓⲟⲥ]]
+|[[ⲁⲩⲅⲟⲩⲥⲧⲟⲥ|Ⲁⲩⲅⲟⲩⲥⲧⲟⲥ]]
+|[[ⲥⲉⲡⲧⲉⲙⲃⲣⲓⲟⲥ|Ⲥⲉⲡⲧⲉⲙⲃⲣⲓⲟⲥ]]
+|[[ⲟⲕⲧⲱⲃⲣⲓⲟⲥ|Ⲟⲕⲧⲱⲃⲣⲓⲟⲥ]]
+|[[ⲛⲟⲉⲙⲃⲣⲓⲟⲥ|Ⲛⲟⲉⲙⲃⲣⲓⲟⲥ]]
+|[[ⲇⲉⲕⲉⲙⲃⲣⲓⲟⲥ|Ⲇⲉⲕⲉⲙⲃⲣⲓⲟⲥ]]
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 8510 Template:list:planets of the Solar System/cop: -------- begin text --------
 {{#invoke:topic list|show
@@ -12246,24 +11908,21 @@ Page 8583 Template:list:days of the week/fi: -------- begin text --------
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 8585 Template:list:Gregorian calendar months/ny: -------- begin text --------
-{{list helper 2
-|title=Gregorian calendar months
-|cat=ny:Months
-|hypernym={{l|ny|mwezi|miyezi}} ya {{l|ny|chaka}}
-|list=<!--
--->{{l-self|ny|Januwale}}, <!--
--->{{l-self|ny|Febuluwale}}, <!--
--->{{l-self|ny|Malichi}}, <!--
--->{{l-self|ny|Epulo}}, <!--
--->{{l-self|ny|Meyi}}, <!--
--->{{l-self|ny|Juni}}, <!--
--->{{l-self|ny|Julaye}}, <!--
--->{{l-self|ny|Ogasiti}}, <!--
--->{{l-self|ny|Sepitembala}}, <!--
--->{{l-self|ny|Okutobala}}, <!--
--->{{l-self|ny|Novembala}}, <!--
--->{{l-self|ny|Disembala}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[mwezi|miyezi]] ya [[chaka]]
+|Januwale
+|Febuluwale
+|Malichi
+|Epulo
+|Meyi
+|Juni
+|Julaye
+|Ogasiti
+|Sepitembala
+|Okutobala
+|Novembala
+|Disembala
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 8599 Template:list:times of day/ug: -------- begin text --------
 {{list helper 2
@@ -12287,54 +11946,45 @@ Page 8599 Template:list:times of day/ug: -------- begin text --------
 -->}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 8600 Template:list:seasons/ug: -------- begin text --------
-{{list helper 2
-|title=seasons
-|cat=ug:Seasons
-|hypernym={{l-self|ug|پەسىللەر}}
-|list=<!--
--->{{l-self|ug|ئەتىياز}}/{{l-self|ug|باھار}}, <!--
--->{{l-self|ug|ياز}}, <!--
--->{{l-self|ug|كۈز}}, <!--
--->{{l-self|ug|قىش}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[پەسىل|پەسىللەر]]
+|ئەتىياز,باھار
+|ياز
+|كۈز
+|قىش
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 8616 Template:list:Gregorian calendar months/sco: -------- begin text --------
-{{list helper 2
-|title=Gregorian calendar months
-|cat=sco:Gregorian calendar months
-|list=<!--
--->{{l-self|sco|Januar}}, <!--
--->{{l-self|sco|Februar}}, <!--
--->{{l-self|sco|Mairch}}, <!--
--->{{l-self|sco|Apryle}}, <!--
--->{{l-self|sco|Mey}}, <!--
--->{{l-self|sco|Juin}}, <!--
--->{{l-self|sco|Julie}}, <!--
--->{{l-self|sco|August}}, <!--
--->{{l-self|sco|September}}, <!--
--->{{l-self|sco|October}}, <!--
--->{{l-self|sco|November}}, <!--
--->{{l-self|sco|December}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|Januar
+|Februar
+|Mairch
+|Apryle
+|Mey
+|Juin
+|Julie
+|August
+|September
+|October
+|November
+|December
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 8617 Template:list:Gregorian calendar months/gd: -------- begin text --------
-{{list helper 2
-|title=Gregorian calendar months
-|cat=gd:Gregorian calendar months
-|list=<!--
--->{{l-self|gd|Faoilleach}}, <!--
--->{{l-self|gd|Gearran}}, <!--
--->{{l-self|gd|Màrt}}, <!--
--->{{l-self|gd|Giblean}}, <!--
--->{{l-self|gd|Cèitean}}, <!--
--->{{l-self|gd|Ògmhios}}, <!--
--->{{l-self|gd|Iuchar}}, <!--
--->{{l-self|gd|Lùnastal}}, <!--
--->{{l-self|gd|Sultain}}, <!--
--->{{l-self|gd|Dàmhair}}, <!--
--->{{l-self|gd|Samhain}}, <!--
--->{{l-self|gd|Dùbhlachd}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|Faoilleach
+|Gearran
+|Màrt
+|Giblean
+|Cèitean
+|Ògmhios
+|Iuchar
+|Lùnastal
+|Sultain
+|Dàmhair
+|Samhain
+|Dùbhlachd
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 8618 Template:list:days of the week/sco: -------- begin text --------
 {{#invoke:topic list|show
@@ -12349,7 +11999,7 @@ Page 8618 Template:list:days of the week/sco: -------- begin text --------
 -------- end text --------
 Page 8629 Template:list:planets of the Solar System/vi: -------- begin text --------
 {{#invoke:topic list|show<!-- rename to [[Template:list:planets of the Solar System/vi/standard]] -->
-|enhypernym=planets of the Solar System (standard)
+|enhypernym=+ (standard)
 |hypernym=[[hành tinh]] của [[hệ Mặt Trời]]
 |sao Thuỷ
 |sao Kim
@@ -12363,7 +12013,7 @@ Page 8629 Template:list:planets of the Solar System/vi: -------- begin text ----
 -------- end text --------
 Page 8629 Template:list:planets of the Solar System/vi/Sino-Vietnamese: -------- begin text --------
 {{#invoke:topic list|show
-|enhypernym=planets of the Solar System (Sino-Vietnamese; formal, rare)
+|enhypernym=+ (Sino-Vietnamese; formal, rare)
 |hypernym=[[hành tinh]] của [[hệ Mặt Trời]]
 |Thuỷ tinh
 |Kim tinh
@@ -12672,24 +12322,21 @@ Page 8645 Template:list:oceans/tl: -------- begin text --------
 -->}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 8646 Template:list:Gregorian calendar months/tl: -------- begin text --------
-{{list helper 2
-|title=Gregorian calendar months
-|cat=tl:Gregorian calendar months
-|hypernym={{l|tl|buwan}} ng {{l|tl|kalendaryong Gregoryano}}
-|list=<!--
--->{{l-self|tl|Enero}}, <!--
--->{{l-self|tl|Pebrero}}, <!--
--->{{l-self|tl|Marso}}, <!--
--->{{l-self|tl|Abril}}, <!--
--->{{l-self|tl|Mayo}}, <!--
--->{{l-self|tl|Hunyo}}, <!--
--->{{l-self|tl|Hulyo}}, <!--
--->{{l-self|tl|Agosto}}, <!--
--->{{l-self|tl|Setyembre}}, <!--
--->{{l-self|tl|Oktubre}}, <!--
--->{{l-self|tl|Nobyembre}}, <!--
--->{{l-self|tl|Disyembre}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=mga [[buwan]] ng [[kalendaryong Gregoryano]]
+|Enero
+|Pebrero
+|Marso
+|Abril
+|Mayo
+|Hunyo
+|Hulyo
+|Agosto
+|Setyembre
+|Oktubre
+|Nobyembre
+|Disyembre
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 8647 Template:list:continents/tl: -------- begin text --------
 {{list helper 2
@@ -12783,7 +12430,7 @@ Page 8720 Template:list:days of the week/lkt: -------- begin text --------
 -------- end text --------
 Page 8733 Template:list:days of the week/gsw/Formazza: -------- begin text --------
 {{#invoke:topic list|show
-|enhypernym=days of the week (Formazza dialect)
+|enhypernym=+ (Formazza dialect)
 |hypernym=[[tag]] der [[wucha]]<!-- FIXME: [[tag]] needs to be pluralized -->
 |mäntag
 |zischtag
@@ -12796,7 +12443,7 @@ Page 8733 Template:list:days of the week/gsw/Formazza: -------- begin text -----
 -------- end text --------
 Page 8734 Template:list:days of the week/gsw/Carcoforo: -------- begin text --------
 {{#invoke:topic list|show
-|enhypernym=days of the week (Carcoforo dialect)
+|enhypernym=+ (Carcoforo dialect)
 |hypernym=[[tog]] der [[wuchu]]<!-- FIXME: [[tog]] needs to be pluralized -->
 |meintog
 |zischtog
@@ -12809,7 +12456,7 @@ Page 8734 Template:list:days of the week/gsw/Carcoforo: -------- begin text ----
 -------- end text --------
 Page 8735 Template:list:days of the week/gsw/Gressoney: -------- begin text --------
 {{#invoke:topic list|show
-|enhypernym=days of the week (Gressoney dialect)
+|enhypernym=+ (Gressoney dialect)
 |hypernym=[[tag]] der [[wòchò]]<!-- FIXME: [[tag]] needs to be pluralized -->
 |méntag
 |tschischtag
@@ -12822,7 +12469,7 @@ Page 8735 Template:list:days of the week/gsw/Gressoney: -------- begin text ----
 -------- end text --------
 Page 8736 Template:list:days of the week/gsw/Issime: -------- begin text --------
 {{#invoke:topic list|show
-|enhypernym=days of the week (Issime dialect)
+|enhypernym=+ (Issime dialect)
 |hypernym=[[tag]] der [[wuchu]]<!-- FIXME: [[tag]] needs to be pluralized -->
 |miantag
 |zéischtag
@@ -12835,7 +12482,7 @@ Page 8736 Template:list:days of the week/gsw/Issime: -------- begin text -------
 -------- end text --------
 Page 8737 Template:list:days of the week/gsw/RCM: -------- begin text --------
 {{#invoke:topic list|show
-|enhypernym=days of the week (Rimella and Campello Monti dialect)
+|enhypernym=+ (Rimella and Campello Monti dialect)
 |hypernym=[[tàg]] der [[wucchu]]<!-- FIXME: [[tàg]] needs to be pluralized -->
 |mìntàg
 |zischtàg
@@ -13157,24 +12804,21 @@ Page 8844 Template:list:days of the week/shn: -------- begin text --------
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 8918 Template:list:Gregorian calendar months/pl: -------- begin text --------
-{{list helper 2
-|title=Gregorian calendar months
-|cat=pl:Months
-|hypernym={{l|pl|miesiące}} {{l|pl|[[kalendarz gregoriański|kalendarza gregoriańskiego]]}}
-|list=<!--
--->{{l-self|pl|styczeń}}, <!--
--->{{l-self|pl|luty}}, <!--
--->{{l-self|pl|marzec}}, <!--
--->{{l-self|pl|kwiecień}}, <!--
--->{{l-self|pl|maj}}, <!--
--->{{l-self|pl|czerwiec}}, <!--
--->{{l-self|pl|lipiec}}, <!--
--->{{l-self|pl|sierpień}}, <!--
--->{{l-self|pl|wrzesień}}, <!--
--->{{l-self|pl|październik}}, <!--
--->{{l-self|pl|listopad}}, <!--
--->{{l-self|pl|grudzień}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[miesiąc]]e [[kalendarz gregoriański|kalendarza gregoriańskiego]]
+|styczeń
+|luty
+|marzec
+|kwiecień
+|maj
+|czerwiec
+|lipiec
+|sierpień
+|wrzesień
+|październik
+|listopad
+|grudzień
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 8919 Template:list:days of the week/pl: -------- begin text --------
 {{#invoke:topic list|show
@@ -13820,7 +13464,7 @@ Page 9080 Template:list:adjectival derivatives of body parts/hu: -------- begin 
 -------- end text --------
 Page 9083 Template:list:days of the week/cim/7: -------- begin text --------
 {{#invoke:topic list|show
-|enhypernym=days of the week (Sette Comuni dialect)
+|enhypernym=+ (Sette Comuni dialect)
 |hypernym=[[tag|taaghe]] dar [[bòcha|bòchen]]
 |méentag
 |èrtag
@@ -13833,7 +13477,7 @@ Page 9083 Template:list:days of the week/cim/7: -------- begin text --------
 -------- end text --------
 Page 9084 Template:list:days of the week/cim/Luserna: -------- begin text --------
 {{#invoke:topic list|show
-|enhypernym=days of the week (Luserna dialect)
+|enhypernym=+ (Luserna dialect)
 |menta
 |erta
 |mitta
@@ -13845,7 +13489,7 @@ Page 9084 Template:list:days of the week/cim/Luserna: -------- begin text ------
 -------- end text --------
 Page 9085 Template:list:days of the week/cim/13: -------- begin text --------
 {{#invoke:topic list|show
-|enhypernym=days of the week (Tredici Comuni dialect)
+|enhypernym=+ (Tredici Comuni dialect)
 |matak
 |mertak
 |mittak
@@ -14081,41 +13725,37 @@ Page 9131 Template:list:privative adjectival derivatives of body parts/hu: -----
 -->}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 9158 Template:list:Gregorian calendar months/cim/7: -------- begin text --------
-{{list helper 2
-|title=Gregorian calendar months: Sette Comuni dialect
-|cat=cim:Gregorian calendar months
-|list=<!--
--->{{l-self|cim|genaaro}}/{{l-self|cim|ghenaar}}, <!--
--->{{l-self|cim|febraaro}}/{{l-self|cim|hòrnich}}, <!--
--->{{l-self|cim|maartzo}}/{{l-self|cim|mèertzo}}, <!--
--->{{l-self|cim|avrell}}, <!--
--->{{l-self|cim|majo}}/{{l-self|cim|moajo}}, <!--
--->{{l-self|cim|jugno}}/{{l-self|cim|praachot}}, <!--
--->{{l-self|cim|lujo}}/{{l-self|cim|hubiot}}, <!--
--->{{l-self|cim|agòsten}}, <!--
--->{{l-self|cim|septembar}}/{{l-self|cim|zibante maanont}}, <!--
--->{{l-self|cim|oktòbar}}/{{l-self|cim|achte maanont}}, <!--
--->{{l-self|cim|november}}/{{l-self|cim|nòinte maanont}}, <!--
--->{{l-self|cim|disèmber}}/{{l-self|cim|sègante maanont}}<!--
+{{#invoke:topic list|show
+|enhypernym=+ (Sette Comuni dialect)
+|genaaro~ghenaar
+|febraaro,hòrnich
+|maartzo~mèertzo
+|avrell
+|majo~moajo
+|jugno,praachot
+|lujo,hubiot
+|agòsten
+|septembar,zibante maanont
+|oktòbar,achte maanont
+|november,nòinte maanont
+|disèmber,sègante maanont
 -->}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 9159 Template:list:Gregorian calendar months/cim/Luserna: -------- begin text --------
-{{list helper 2
-|title=Gregorian calendar months: Luserna dialect
-|cat=cim:Gregorian calendar months
-|list=<!--
--->{{l-self|cim|djenaro}}/{{l-self|cim|hochnach}}, <!--
--->{{l-self|cim|fevraro}}/{{l-self|cim|hornung}}, <!--
--->{{l-self|cim|martzo}}/{{l-self|cim|lentz}}, <!--
--->{{l-self|cim|abrèl}}/{{l-self|cim|aprile}}, <!--
--->{{l-self|cim|madjo}}, <!--
--->{{l-self|cim|sunjo}}/{{l-self|cim|prachmånat}}, <!--
--->{{l-self|cim|ludjo}}/{{l-self|cim|höbiat}}, <!--
--->{{l-self|cim|agosto}}/{{l-self|cim|snittmånat}}, <!--
--->{{l-self|cim|septembre}}/{{l-self|cim|herbestmånat}}, <!--
--->{{l-self|cim|otobre}}/{{l-self|cim|bimmat}}, <!--
--->{{l-self|cim|novembre}}/{{l-self|cim|bintarmånat}}, <!--
--->{{l-self|cim|ditzembre}}/{{l-self|cim|kristmånat}}<!--
+{{#invoke:topic list|show
+|enhypernym=+ (Luserna dialect)
+|djenaro,hochnach
+|fevraro,hornung
+|martzo,lentz
+|abrèl,aprile
+|madjo
+|sunjo,prachmånat
+|ludjo,höbiat
+|agosto,snittmånat
+|septembre,herbestmånat
+|otobre,bimmat
+|novembre,bintarmånat
+|ditzembre,kristmånat
 -->}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 9178 Template:list:days of the week/bnt-phu: -------- begin text --------
@@ -14130,24 +13770,21 @@ Page 9178 Template:list:days of the week/bnt-phu: -------- begin text --------
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 9185 Template:list:Gregorian calendar months/tum: -------- begin text --------
-{{list helper 2
-|title=Gregorian calendar months
-|cat=tum:Months
-|hypernym={{l|tum|mwezi|miyezi}} ya {{l|tum|cirumika}}
-|list=<!--
--->{{l-self|tum|Janyuwale}}, <!--
--->{{l-self|tum|Febuluwale}}, <!--
--->{{l-self|tum|Malichi}}, <!--
--->{{l-self|tum|Epulo}}, <!--
--->{{l-self|tum|Meyi}}, <!--
--->{{l-self|tum|Juni}}, <!--
--->{{l-self|tum|Julayi}}, <!--
--->{{l-self|tum|Ogasiti}}, <!--
--->{{l-self|tum|Seputembala}}, <!--
--->{{l-self|tum|Okutobala}}, <!--
--->{{l-self|tum|Novembala}}, <!--
--->{{l-self|tum|Disembala}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[mwezi|miyezi]] ya [[cirumika]]
+|Janyuwale
+|Febuluwale
+|Malichi
+|Epulo
+|Meyi
+|Juni
+|Julayi
+|Ogasiti
+|Seputembala
+|Okutobala
+|Novembala
+|Disembala
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 9188 Template:list:days of the week/tum: -------- begin text --------
 {{#invoke:topic list|show
@@ -14292,58 +13929,58 @@ Page 9228 Template:list:Arabic script letters/kk: -------- begin text --------
 |ي
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
+Page 9232 Template:list:Gregorian calendar months/rw/Rwanda: -------- begin text --------
+{{#invoke:topic list|show
+|enhypernym=+ (Rwanda)
+|hypernym=[[ukwezi|amezi]] y'[[umwaka]]<ref:For interdialectal communication, months are referred by number rather than name, e.g. ''ukwezi kwa mbere'' (for short, ''ukwa mbere'') for January and ''ukwezi kwa kabiri'' (for short, ''ukwa kabiri'') for February.<<group:c>>>
+|Mutarama
+|Gashyantare
+|Werurwe
+|Mata
+|Gicurasi
+|Kamena
+|Nyakanga
+|Kanama
+|Nzeri
+|Ukwakira
+|Ugushyingo
+|Ukuboza
+}}{{reflist|group=c}}<noinclude>{{list doc}}</noinclude>
+-------- end text --------
 Page 9232 Template:list:Gregorian calendar months/rw: -------- begin text --------
-{{list helper 2
-|title=Gregorian calendar months
-|cat=rw:Months
-|hypernym={{l|rw|ukwezi|amezi}} y'{{l|rw|umwaka}}<ref group=c>For interdialectal communication, months are referred by number rather than name, e.g. ''ukwezi kwa mbere'' (for short, ''ukwa mbere'') for January and ''ukwezi kwa kabiri'' (for short, ''ukwa kabiri'') for February.</ref>
-|list=<!--
---><br>'''Rwanda''': {{l-self|rw|Mutarama}}, <!--
--->{{l-self|rw|Gashyantare}}, <!--
--->{{l-self|rw|Werurwe}}, <!--
--->{{l-self|rw|Mata}}, <!--
--->{{l-self|rw|Gicurasi}}, <!--
--->{{l-self|rw|Kamena}}, <!--
--->{{l-self|rw|Nyakanga}}, <!--
--->{{l-self|rw|Kanama}}, <!--
--->{{l-self|rw|Nzeri}}, <!--
--->{{l-self|rw|Ukwakira}}, <!--
--->{{l-self|rw|Ugushyingo}}, <!--
--->{{l-self|rw|Ukuboza}}<br><!--
--->'''Burundi''': {{l-self|rw|Nzero}}, <!--
--->{{l-self|rw|Nyamagoma}} / {{l-self|rw|Ruhuhuma}}, <!--
--->{{l-self|rw|Ntwarante}} / {{l-self|rw|Rwirabura}} / {{l-self|rw|Rubungubungu}}, <!--
--->{{l-self|rw|Ndamukiza}} / {{l-self|rw|Kaboza}}, <!--
--->{{l-self|rw|Rusama}}, <!--
--->{{l-self|rw|Kiyumpu}} / {{l-self|rw|Ruheshi}}, <!--
--->{{l-self|rw|Mukakaro}}, <!--
--->{{l-self|rw|Myandagaro}}, <!--
--->{{l-self|rw|Nyakanga}}, <!--
--->{{l-self|rw|Gitugutu}}, <!--
--->{{l-self|rw|Munyonyo}}, <!--
--->{{l-self|rw|Kigarama}}<!--
--->}}
-{{reflist|group=c}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|enhypernym=+ (Rwanda)
+|hypernym=[[ukwezi|amezi]] y'[[umwaka]]<ref:For interdialectal communication, months are referred by number rather than name, e.g. ''ukwezi kwa mbere'' (for short, ''ukwa mbere'') for January and ''ukwezi kwa kabiri'' (for short, ''ukwa kabiri'') for February.<<group:c>>>
+|Nzero
+|Nyamagoma,Ruhuhuma
+|Ntwarante,Rwirabura,Rubungubungu
+|Ndamukiza,Kaboza
+|Rusama
+|Kiyumpu,Ruheshi
+|Mukakaro
+|Myandagaro
+|Nyakanga
+|Gitugutu
+|Munyonyo
+|Kigarama
+-->}}{{reflist|group=c}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 9265 Template:list:Gregorian calendar months/ms/Arab: -------- begin text --------
-{{list helper 2
-|title=Gregorian calendar months
-|cat=ms:Gregorian calendar months
-|hypernym={{l|ms|تقويم ݢريݢوري}} {{l|ms|بولن}}
-|list=<!--
--->{{l-self|ms|جانواري}}, <!--
--->{{l-self|ms|فيبرواري}}, <!--
--->{{l-self|ms|مچ}}/{{l-self|ms|مارت}}, <!--
--->{{l-self|ms|اڤريل}}, <!--
--->{{l-self|ms|مي}}, <!--
--->{{l-self|ms|جون}}, <!--
--->{{l-self|ms|جولاي}}, <!--
--->{{l-self|ms|اوݢوس}}, <!--
--->{{l-self|ms|سيڤتيمبر}}, <!--
--->{{l-self|ms|اوکتوبر}}, <!--
--->{{l-self|ms|نوۏيمبر}}, <!--
--->{{l-self|ms|ديسيمبر}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[تقويم ݢريݢوري]] [[بولن|بولن-بولن]]
+|جانواري
+|فيبرواري
+|مچ,مارت
+|اڤريل
+|مي
+|جون
+|جولاي
+|اوݢوس
+|سيڤتيمبر
+|اوکتوبر
+|نوۏيمبر
+|ديسيمبر
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 9267 Template:list:Islamic calendar months/tr: -------- begin text --------
 {{list helper 2
@@ -14394,23 +14031,20 @@ Page 9274 Template:list:days of the week/ary: -------- begin text --------
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 9318 Template:list:Gregorian calendar months/mhn: -------- begin text --------
-{{list helper 2
-|title=Gregorian calendar months
-|cat=mhn:Gregorian calendar months
-|list=<!--
--->{{l-self|mhn|genner}}, <!--
--->{{l-self|mhn|hourneng}}, <!--
--->{{l-self|mhn|merz}}, <!--
--->{{l-self|mhn|oberel}}, <!--
--->{{l-self|mhn|moi}}, <!--
--->{{l-self|mhn|prochet}}, <!--
--->{{l-self|mhn|heibeger}}, <!--
--->{{l-self|mhn|agst}}, <!--
--->{{l-self|mhn|leistagst}}, <!--
--->{{l-self|mhn|schanmikeal}}, <!--
--->{{l-self|mhn|òlderhaileng}}, <!--
--->{{l-self|mhn|schantònderer}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|genner
+|hourneng
+|merz
+|oberel
+|moi
+|prochet
+|heibeger
+|agst
+|leistagst
+|schanmikeal
+|òlderhaileng
+|schantònderer
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 9328 Template:list:countries of Asia/fi: -------- begin text --------
 {{list helper 2
@@ -14537,36 +14171,30 @@ Page 9329 Template:list:countries of Africa/fi: -------- begin text --------
 -->}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 9331 Template:list:Gregorian calendar months/unm: -------- begin text --------
-{{list helper 2
-|title=Gregorian calendar months
-|cat=unm:Months
-|hypernym={{l|unm|kishux|kishuxunk}}
-|list=<!--
--->{{l-self|unm|Enikwsi Kishux}}, <!--
--->{{l-self|unm|Chkwali Kishux}}, <!--
--->{{l-self|unm|Shëwanamèkwi Kishux}}, <!--
--->{{l-self|unm|Tehim Otaeyu Kishux}}, <!--
--->{{l-self|unm|Tainipën}}, <!--
--->{{l-self|unm|Kichi Nipën}}, <!--
--->{{l-self|unm|Lainipën}}, <!--
--->{{l-self|unm|Winaminke Kishux}}, <!--
--->{{l-self|unm|Kichi Tahkokën}}, <!--
--->{{l-self|unm|Pukwsit Kishux}}, <!--
--->{{l-self|unm|Wini Kishux}}, <!--
--->{{l-self|unm|Muxkòtae Kishux}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[kishux|kishuxunk]]
+|Enikwsi Kishux
+|Chkwali Kishux
+|Shëwanamèkwi Kishux
+|Tehim Otaeyu Kishux
+|Tainipën
+|Kichi Nipën
+|Lainipën
+|Winaminke Kishux
+|Kichi Tahkokën
+|Pukwsit Kishux
+|Wini Kishux
+|Muxkòtae Kishux
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 9344 Template:list:seasons/mhn: -------- begin text --------
-{{list helper 2
-|title=seasons
-|cat=mhn:Seasons
-|hypernym={{l|mhn|jorzait|jorzaitn}}
-|list=<!--
--->{{l-self|mhn|langes}}, <!--
--->{{l-self|mhn|summer}}, <!--
--->{{l-self|mhn|binter}}, <!--
--->{{l-self|mhn|herbest}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[jorzait]]n
+|langes
+|summer
+|binter
+|herbest
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 9346 Template:list:days of the week/mhn: -------- begin text --------
 {{#invoke:topic list|show
@@ -14717,48 +14345,41 @@ Page 9362 Template:list:compass points/ja: -------- begin text --------
 <noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 9363 Template:list:Gregorian calendar months/wa: -------- begin text --------
-{{list helper 2
-|title=Gregorian calendar months
-|cat=wa:Months
-|list=<!--
--->{{l-self|wa|djanvî}}, <!--
--->{{l-self|wa|fevrî}}, <!--
--->{{l-self|wa|måss}}, <!--
--->{{l-self|wa|avri}}, <!--
--->{{l-self|wa|may}}, <!--
--->{{l-self|wa|djun}}, <!--
--->{{l-self|wa|djulete}}, <!--
--->{{l-self|wa|awousse}}, <!--
--->{{l-self|wa|setimbe}}, <!--
--->{{l-self|wa|octôbe}}, <!--
--->{{l-self|wa|nôvimbe}}, <!--
--->{{l-self|wa|decimbe}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|djanvî
+|fevrî
+|måss
+|avri
+|may
+|djun
+|djulete
+|awousse
+|setimbe
+|octôbe
+|nôvimbe
+|decimbe
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 9367 Template:list:Gregorian calendar months/is: -------- begin text --------
-{{list helper 2
-|title=Gregorian calendar months
-|cat=is:Months
-|list=<!--
--->{{l-self|is|janúar}}, <!--
--->{{l-self|is|febrúar}}, <!--
--->{{l-self|is|mars}}, <!--
--->{{l-self|is|apríl}}, <!--
--->{{l-self|is|maí}}, <!--
--->{{l-self|is|júní}}, <!--
--->{{l-self|is|júlí}}, <!--
--->{{l-self|is|ágúst}}, <!--
--->{{l-self|is|september}}, <!--
--->{{l-self|is|október}}, <!--
--->{{l-self|is|nóvember}}, <!--
--->{{l-self|is|desember}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[mánuður|mánuðir]]<!-- FIXME: include "Gregorian calendar" -->
+|janúar
+|febrúar
+|mars
+|apríl
+|maí
+|júní
+|júlí
+|ágúst
+|september
+|október
+|nóvember
+|desember
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 9368 Template:list:Gregorian calendar months/sh/Cyrl: -------- begin text --------
-{{list helper 2
-|title=Gregorian calendar months
-|cat=sh:Gregorian calendar months
-|hypernym={{l|sh|[[мјесец|м(ј)есеци]] [[грегоријански календар|грегоријанског календара]]}}
+{{#invoke:topic list|show
+|hypernym=[[мјесец|м(ј)есеци]] [[грегоријански календар|грегоријанског календара]]
 |list=<!--
 -->{{l-self|sh|јануар}}/{{l-self|sh|сијечањ}}, <!--
 -->{{l-self|sh|фебруар}}/{{l-self|sh|вељача}}, <!--
@@ -14772,6 +14393,42 @@ Page 9368 Template:list:Gregorian calendar months/sh/Cyrl: -------- begin text -
 -->{{l-self|sh|октобар}}/{{l-self|sh|листопад}}, <!--
 -->{{l-self|sh|новембар}}/{{l-self|sh|студени}}, <!--
 -->{{l-self|sh|децембар}}/{{l-self|sh|просинац}} <!--
+-->}}<noinclude>{{list doc}}</noinclude>
+-------- end text --------
+Page 9368 Template:list:Gregorian calendar months/sh/Cyrl/Bosnia-Serbia: -------- begin text --------
+{{#invoke:topic list|show<!-- FIXME: renamed from [[Template:list:Gregorian calendar months/sh/Cyrl]] -->
+|enhypernym=+ (Bosnia/Serbia)
+|hypernym=[[мјесец|м(ј)есеци]] [[грегоријански календар|грегоријанског календара]]
+|jȁnuār
+|fȅbruār
+|mȁrt
+|àprīl
+|mȁj
+|jȗni~jȗn
+|jȗli~jȗl
+|àvgust<ll:Serbia>~àugust<ll:Bosnia>
+|sèptēmbar
+|òktōbar
+|nòvēmbar
+|dècēmbar
+-->}}<noinclude>{{list doc}}</noinclude>
+-------- end text --------
+Page 9368 Template:list:Gregorian calendar months/sh/Cyrl/Croatia: -------- begin text --------
+{{#invoke:topic list|show<!-- FIXME: create -->
+|enhypernym=+ (Croatia; rare)
+|hypernym=[[мјесец|мјесеци]] [[грегоријански календар|грегоријанског календара]]
+|сије̑чањ
+|вѐљача
+|о̀жујак
+|тра̑вањ
+|сви̑бањ
+|ли̑пањ
+|ср̑пањ
+|ко̏лово̄з
+|ру̑јан
+|ли̏стопа̄д
+|сту̀денӣ
+|про̀синац
 -->}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 9369 Template:list:compass points/de: -------- begin text --------
@@ -14807,18 +14464,18 @@ Page 9372 Template:list:Gregorian calendar months/scn: -------- begin text -----
 |title=Gregorian calendar months
 |cat=scn:Months
 |list=<!--
--->{{l-self|scn|jinnaru}}, <!--
--->{{l-self|scn|frivaru}}, <!--
--->{{l-self|scn|marzu}}, <!--
--->{{l-self|scn|aprili}}, <!--
--->{{l-self|scn|maiu}}, <!--
--->{{l-self|scn|giugnu}}, <!--
--->{{l-self|scn|giugnettu}}, <!--
--->{{l-self|scn|austu}}, <!--
--->{{l-self|scn|sittèmmiru}}, <!--
--->{{l-self|scn|uttùviru}}, <!--
--->{{l-self|scn|nuvèmmiru}}, <!--
--->{{l-self|scn|dicèmmiru}}<!--
+|jinnaru
+|frivaru
+|marzu
+|aprili
+|maiu
+|giugnu
+|giugnettu
+|austu
+|sittèmmiru
+|uttùviru
+|nuvèmmiru
+|dicèmmiru
 -->}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 9388 Template:list:principal signs of the Ifa divination system/yo: -------- begin text --------
@@ -14833,18 +14490,18 @@ Page 9432 Template:list:Gregorian calendar months/fj: -------- begin text ------
 |title=Gregorian calendar months
 |cat=fj:Months
 |list=<!--
--->{{l-self|fj|Janueri}}, <!--
--->{{l-self|fj|Veverueri}}, <!--
--->{{l-self|fj|Maji}}, <!--
--->{{l-self|fj|Epereli}}, <!--
--->{{l-self|fj|May}}, <!--
--->{{l-self|fj|June}}, <!--
--->{{l-self|fj|Jiulai}}, <!--
--->{{l-self|fj|Okosita}}, <!--
--->{{l-self|fj|Seviteba}}, <!--
--->{{l-self|fj|Okotova}}, <!--
--->{{l-self|fj|Noveba}}, <!--
--->{{l-self|fj|Tiseba}}<!--
+|Janueri
+|Veverueri
+|Maji
+|Epereli
+|May
+|June
+|Jiulai
+|Okosita
+|Seviteba
+|Okotova
+|Noveba
+|Tiseba
 -->}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 9443 Template:list:Japanese scribal abbreviations/ja: -------- begin text --------
@@ -15868,16 +15525,13 @@ Page 9692 Template:list:planets of the Solar System/mk: -------- begin text ----
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 9694 Template:list:seasons/mk: -------- begin text --------
-{{list helper 2
-|title=seasons
-|cat=mk:Seasons
-|hypernym={{l-self|mk|[[годишен|годишни]] [[време|времиња]]}}
-|list=<!--
--->{{l-self|mk|пролет|g=f}}, <!--
--->{{l-self|mk|лето|g=n}}, <!--
--->{{l-self|mk|есен|g=f}}, <!--
--->{{l-self|mk|зима|g=f}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[годишен|годишни]] [[време|времиња]]
+|пролет
+|лето
+|есен
+|зима
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 9695 Template:list:oceans/mk: -------- begin text --------
 {{list helper 2
@@ -17836,27 +17490,21 @@ Page 10188 Template:list:days of the week/xag: -------- begin text --------
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 10191 Template:list:seasons/sxr: -------- begin text --------
-{{list helper 2
-|title=seasons
-|cat=sxr:Seasons
-|hypernym={{l|sxr|pakamia}}
-|list=<!--
--->{{l-self|sxr|ahlavʉngʉlaia}}, <!--
--->{{l-self|sxr|ahlamacicia}}/{{l-self|sxr|kahlamara}}, <!--
--->{{l-self|sxr|ahlakahlamara}}/{{l-self|sxr|ahlausahla}}, <!--
--->{{l-self|sxr|ahla'amisana}}/{{l-self|sxr|'amisana}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=pakamia<!-- FIXME: needs to be plural if not already -->
+|ahlavʉngʉlaia
+|ahlamacicia,kahlamara
+|ahlakahlamara,ahlausahla
+|ahla'amisana,'amisana
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 10202 Template:list:seasons/aii: -------- begin text --------
-{{list helper 2
-|title=seasons
-|cat=aii:Seasons
-|hypernym={{l|aii|ܐܸܩܡܹ̈ܐ}}
-|list=<!--
--->{{l-self|aii|ܪܒ݂ܝܼܥܵܐ}} ''or'' {{l-self|aii|ܒܹܝܬ݇ ܢܝܼ̈ܣܵܢܹ̈ܐ|t=spring}}, <!--
--->{{l-self|aii|ܩܲܝܛܵܐ|t=summer}}, <!--
--->{{l-self|aii|ܬܸܫܪ̈ܝܵܘܵܬܹܐ|t=autumn}}, <!--
--->{{l-self|aii|ܣܸܬܘܵܐ|t=winter}}, <!--
+{{#invoke:topic list|show
+|hypernym=[[ܐܸܩܡܵܐ|ܐܸܩܡܹ̈ܐ]]
+-->ܪܒ݂ܝܼܥܵܐ,ܒܹܝܬ݇ ܢܝܼ̈ܣܵܢܹ̈ܐ
+-->ܩܲܝܛܵܐ
+-->ܬܸܫܪ̈ܝܵܘܵܬܹܐ
+-->ܣܸܬܘܵܐ
 -->}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 10203 Template:list:planets of the Solar System/aii: -------- begin text --------
@@ -17874,7 +17522,7 @@ Page 10203 Template:list:planets of the Solar System/aii: -------- begin text --
 -------- end text --------
 Page 10213 Template:list:days of the week/yo: -------- begin text --------
 {{#invoke:topic list|show<!-- FIXME: rename to [[Template:list:days of the week/yo/native]] -->
-|enhypernym=days of the week (native)
+|enhypernym=+ (native-origin)
 |hypernym=[[ọjọ́]] [[ọ̀sẹ̀]]<!-- FIXME: does this need to be pluralized? -->
 |ọjọ́ Àìkú
 |ọjọ́ Ajé
@@ -17887,7 +17535,7 @@ Page 10213 Template:list:days of the week/yo: -------- begin text --------
 -------- end text --------
 Page 10213 Template:list:days of the week/yo: -------- begin text --------
 {{#invoke:topic list|show<!-- FIXME: rename to [[Template:list:days of the week/yo/Hausa]] -->
-|enhypernym=days of the week (Hausa/Arabic-derived)
+|enhypernym=+ (Hausa/Arabic-derived)
 |hypernym=[[ọjọ́]] [[ọ̀sẹ̀]]<!-- FIXME: does this need to be pluralized? -->
 |Àlàádì
 |Àtìní
@@ -17900,7 +17548,7 @@ Page 10213 Template:list:days of the week/yo: -------- begin text --------
 -------- end text --------
 Page 10213 Template:list:days of the week/yo: -------- begin text --------
 {{#invoke:topic list|show<!-- FIXME: rename to [[Template:list:days of the week/yo/tradtional]] -->
-|enhypernym=days of the week (traditional four-day cycle)
+|enhypernym=+ (traditional four-day cycle)
 |hypernym=[[ọjọ́]] [[ọ̀sẹ̀]]<!-- FIXME: does this need to be pluralized? -->
 |ọ̀sẹ̀ Ọbàtálá
 |ọ̀sẹ̀ Ifá
@@ -19735,18 +19383,15 @@ Page 10497 Template:list:poetic meter/fr: -------- begin text --------
 -->}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 10498 Template:list:seasons/qya: -------- begin text --------
-{{list helper 2
-|title=seasons
-|hypernym={{qya-self|loa}}
-|cat=qya:Seasons
-|list=<!--
--->{{qya-self|tuilë|t=spring}}, <!--
--->{{qya-self|lairë|t=summer}}, <!--
--->{{qya-self|yávië|t=autumn}}, <!--
--->{{qya-self|quellë|t=fading}}, <!--
--->{{qya-self|hrívë|t=winter}}, <!--
--->{{qya-self|coirë|t=stirring}} <!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym={{qya-self|loa}}<!-- FIXME: needs to be plural -->
+|{{qya-self|tuilë}}
+|{{qya-self|lairë}}
+|{{qya-self|yávië}}
+|{{qya-self|quellë}}
+|{{qya-self|hrívë}}
+|{{qya-self|coirë}}
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 10502 Template:list:compass points/qya: -------- begin text --------
 {{list helper 2|title=compass points|list=}}
@@ -20234,17 +19879,13 @@ Page 10559 Template:list:days of the week/pam: -------- begin text --------
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 10572 Template:list:seasons/sjn: -------- begin text --------
-{{list helper 2
-|title=seasons
-|hypernym={{sjn-self|}}
-|cat=sjn:Seasons
-|list=<!--
--->{{sjn-self|ethuil|t=spring}}, <!--
--->{{sjn-self|laer|t=summer}}, <!--
--->{{sjn-self|iavas|t=autumn}}, <!--
--->{{sjn-self|firith|t=fading}}, <!--
--->{{sjn-self|rhîw|t=winter}}, <!--
--->{{sjn-self|echuir|t=stirring}} <!--
+{{#invoke:topic list|show
+|{{sjn-self|ethuil}}
+|{{sjn-self|laer}}
+|{{sjn-self|iavas}}
+|{{sjn-self|firith}}
+|{{sjn-self|rhîw}}
+|{{sjn-self|echuir}}
 -->}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 10579 Template:list:districts of Mymensingh/en: -------- begin text --------
@@ -22858,28 +22499,22 @@ Brunei, East Timor, Indonesia, Malaysia, and the Philippines are considered as S
 -->}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 11091 Template:list:seasons/ky: -------- begin text --------
-{{list helper 2
-|title=seasons
-|cat=ky:Seasons
-|hypernym={{l|ky|жыл мезгили|жыл мезгилдери}}
-|list=<!--
--->{{l-self|ky|жаз}}, <!--
--->{{l-self|ky|жай}}, <!--
--->{{l-self|ky|күз}}, <!--
--->{{l-self|ky|кыш}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[жыл мезгили|жыл мезгилдери]]
+|жаз
+|жай
+|күз
+|кыш
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 11092 Template:list:seasons/tr: -------- begin text --------
-{{list helper 2
-|title=seasons
-|cat=tr:Seasons
-|hypernym={{l-self|tr|mevsim|mevsimleri}}
-|list=<!--
--->{{l-self|tr|ilkbahar}}, <!--
--->{{l-self|tr|yaz}}, <!--
--->{{l-self|tr|sonbahar}}, <!--
--->{{l-self|tr|kış}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[mevsim]]leri
+|ilkbahar
+|yaz
+|sonbahar
+|kış
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 11093 Template:list:countries of Central America/uk: -------- begin text --------
 {{list helper 2
@@ -25256,7 +24891,7 @@ Page 11566 Template:list:compass points/gu: -------- begin text --------
 -------- end text --------
 Page 11568 Template:list:days of the week/guw: -------- begin text --------
 {{#invoke:topic list|show<!-- FIXME: rename to [[Template:list:days of the week/guw/Benin]] -->
-|enhypernym=days of the week (Benin)
+|enhypernym=+ (Benin)
 |hypernym=[[azán]] [[osɛ̀]] tɔ̀n
 |Tɛ́nígbè
 |Ogúzángbè
@@ -25269,7 +24904,7 @@ Page 11568 Template:list:days of the week/guw: -------- begin text --------
 -------- end text --------
 Page 11568 Template:list:days of the week/guw/Nigeria: -------- begin text --------
 {{#invoke:topic list|show
-|enhypernym=days of the week (Nigeria)
+|enhypernym=+ (Nigeria)
 |hypernym=[[azán]] [[osẹ̀]] tọ̀n
 |Tẹ́nígbè
 |Ogúzángbè
@@ -26024,17 +25659,14 @@ Page 11692 Template:list:days of the week/mhr: -------- begin text --------
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 11693 Template:list:seasons/gu: -------- begin text --------
-{{list helper 2
-|title=seasons
-|cat=gu:Seasons
-|hypernym=ઋતુ
-|list=<!--
--->{{l-self|gu|ઉનાળો}}, <!--
--->{{l-self|gu|ચોમાસું}}, <!--
--->{{l-self|gu|પાનખર}}, <!--
--->{{l-self|gu|શિયાળો}}, <!--
--->{{l-self|gu|વસંત}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=ઋતુ<!-- FIXME: needs to be plural -->
+|ઉનાળો
+|ચોમાસું
+|પાનખર
+|શિયાળો
+|વસંત
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 11697 Template:list:states of Austria/de: -------- begin text --------
 {{list helper 2
@@ -26785,18 +26417,15 @@ Page 11764 Template:list:days of the week/or: -------- begin text --------
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 11765 Template:list:seasons/or: -------- begin text --------
-{{list helper 2
-|title=seasons
-|cat=or:Seasons
-|hypernym=ଋତୁ
-|list=<!--
--->{{l-self|or|ଗ୍ରୀଷ୍ମ}}, <!--
--->{{l-self|or|ଚତୁର୍ମାସ}}, <!--
--->{{l-self|or|ଶରତ୍}}, <!--
--->{{l-self|or|ହେମାଳ}}, <!--
--->{{l-self|or|ଶୀତ}}, <!--
--->{{l-self|or|ବସନ୍ତ}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=ଋତୁ<!-- FIXME: needs to be plural -->
+|ଗ୍ରୀଷ୍ମ
+|ଚତୁର୍ମାସ
+|ଶରତ୍
+|ହେମାଳ
+|ଶୀତ
+|ବସନ୍ତ
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 11766 Template:list:Gregorian calendar months/or: -------- begin text --------
 {{list helper 2
@@ -28961,7 +28590,7 @@ Page 12114 Template:list:Gregorian calendar months/gn: -------- begin text -----
 {{list helper 2
  | title    = Gregorian calendar months
  | cat      = gn:Months
- | hypernym = {{l|gn|Gyregório arapapaha}} {{l|gn|jasy}}
+ | hypernym={{l|gn|Gyregório arapapaha}} {{l|gn|jasy}}
  | list     = <!--
 
 --> {{l-self|gn|jasyteĩ}},     <!--
@@ -29042,30 +28671,24 @@ Page 12129 Template:list:Islamic calendar months/id: -------- begin text -------
 -->}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 12132 Template:list:seasons/mr: -------- begin text --------
-{{list helper 2
-|title=seasons
-|cat=mr:Seasons
-|hypernym=ऋतू
-|list=<!--
--->{{l-self|mr|उन्हाळा}}, <!--
--->{{l-self|mr|पावसाळा}}, <!--
--->{{l-self|mr|शरद}}, <!--
--->{{l-self|mr|हिवाळा}}, <!--
--->{{l-self|mr|वसंत}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=ऋतू<!-- FIXME: needs to be plural -->
+|उन्हाळा
+|पावसाळा
+|शरद
+|हिवाळा
+|वसंत
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 12133 Template:list:seasons/kok: -------- begin text --------
-{{list helper 2
-|title=seasons
-|cat=kok:Seasons
-|hypernym=रुतू
-|list=<!--
--->{{l-self|kok|गिमाळो}}, <!--
--->{{l-self|kok|पावसाळो}}, <!--
--->{{l-self|kok|शरद}}, <!--
--->{{l-self|kok|शिंयाळो}}, <!--
--->{{l-self|kok|वसंत}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=रुतू<!-- FIXME: needs to be plural -->
+|गिमाळो
+|पावसाळो
+|शरद
+|शिंयाळो
+|वसंत
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 12143 Template:list:countries of Asia/yo: -------- begin text --------
 {{list helper 2
@@ -29410,16 +29033,13 @@ Brunei, East Timor, Indonesia, Malaysia, and the Philippines are considered as S
 -->}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 12181 Template:list:seasons/rsk: -------- begin text --------
-{{list helper 2
-|title=seasons
-|cat=rsk:Seasons
-|hypernym={{l-self|rsk|рочна часц|рочни часци}}
-|list=<!--
--->{{l-self|rsk|яр}}, <!--
--->{{l-self|rsk|лєто}}, <!--
--->{{l-self|rsk|єшень}}, <!--
--->{{l-self|rsk|жима}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[рочна часц|рочни часци]]
+|яр
+|лєто
+|єшень
+|жима
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 12186 Template:list:Runic script letters/ang: -------- begin text --------
 {{#invoke:topic list|show
