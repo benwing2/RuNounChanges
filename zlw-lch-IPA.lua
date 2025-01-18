@@ -62,6 +62,10 @@ local function flatmap(items, fun)
 	return new
 end
 
+local function generate_obj(respelling)
+	return {respelling = respelling}
+end
+
 -- Combine two sets of qualifiers, either of which may be nil or a list of qualifiers. Remove duplicate qualifiers.
 -- Return value is nil or a list of qualifiers.
 local function combine_qualifiers(qual1, qual2)
@@ -71,7 +75,7 @@ local function combine_qualifiers(qual1, qual2)
 	if not qual2 then
 		return qual1
 	end
-	local qualifiers = m_table.deepcopy(qual1)
+	local qualifiers = m_table.deepCopy(qual1)
 	for _, qual in ipairs(qual2) do
 		m_table.insertIfNot(qualifiers, qual)
 	end
@@ -105,10 +109,6 @@ local function textual_len(text)
 end
 
 local function parse_respellings_with_modifiers(respelling, paramname)
-	local function generate_obj(respelling, parse_err)
-		return {respelling = respelling}
-	end
-
 	if respelling:find("[<%[]") then
 		local put = require(parse_utilities_module)
 		-- Parse balanced segment runs involving either [...] (substitution notation) or <...> (inline modifiers).
@@ -131,7 +131,7 @@ local function parse_respellings_with_modifiers(respelling, paramname)
 
 		-- Process each value.
 		local retval = {}
-		for i, group in ipairs(comma_separated_groups) do
+		for _, group in ipairs(comma_separated_groups) do
 			-- Rejoin runs that don't involve <...>.
 			local j = 2
 			while j <= #group do
@@ -250,7 +250,7 @@ local function parse_audio(lang, arg, pagename, paramname)
 	-- Split on semicolon instead of comma because some filenames have embedded commas not followed by a space
 	-- (typically followed by an underscore).
 	local retvals = parse_pron_modifier(arg, paramname, generate_audio_obj, param_mods, "%s*;%s*")
-	for i, retval in ipairs(retvals) do
+	for _, retval in ipairs(retvals) do
 		retval.lang = lang
 		retval.text = process_special_chars(retval.text)
 		retval.caption = process_special_chars(retval.caption)
@@ -710,6 +710,7 @@ local function single_word(data)
 			["y"]="ɪ", ["ú"]="ʉ", ["ù"]="y",
 			["õ"]="ɔ̃", ["ā"]="aː", -- ãăĭŏŭ
 			-- breves remain (FIXME: correct?)
+			["ń"] = "n", -- purely etymological
 		}
 		tsub(".", replacements)
 	end
@@ -866,8 +867,15 @@ local function single_word(data)
 			tsub("N", "w̃")
 		else
 			tsub("N([.ˈˌ]?[kɡxɣ])", "ŋ%1")
-			tsub("ɛN$", "Ẽ")
-			tsub("ɔN$", "Õ")
+			-- For now, we have two outputs for final -ę for standard (nasal and non-nasal), but nasal-only
+			-- for Middle Polish and non-nasal-only for all modern dialects.
+			if not lect then
+				tsub("ɛN$", "Ẽ")
+			elseif lect ~= "mpl" then
+				tsub("ɛN$", "ɛ")
+			end
+			-- Turn this off for now; too simplistic.
+			-- tsub("ɔN$", "Õ")
 			tsub("N([.ˈˌ]?[ɕʑszʂʐ])", "Ñ%1")
 			tsub("N", "w̃")
 		end
@@ -969,168 +977,29 @@ local function single_word(data)
 	return txt, hyph
 end
 
+-- Determine number of syllables of a pronunciation. For this to work, there must be either stress marks or syllable
+-- divisions at each syllable boundary.
+local function count_syllables(pron)
+	-- Convert prosodic boundaries to regular spaces; ignore stress markers at the beginning
+	-- of a word; and then count occurrences of spaces, syllable dividers and stress marks.
+	return 1 + ulen(rsub(rsub(rsub(pron:gsub(" | ", " "), " [ˈˌ]", " "), "^[%[/]?[ˈˌ]", ""), "[^.ˈˌ ]", ""))
+end
+
 -- Returns rhyme from a transcription.
 local function do_rhyme(pron, lang)
 	-- No rhymes for multiword terms.
 	if pron:find(" ") then
 		return nil
 	end
-	local V = ({ pl = "aɛiɔuɘ", szl = "aãɛiɔouɪ", csb = "aãɛeɜiɔoõɞu", ["zlw-slv"] = "aãɛeĭɪŏɔɵŭʉy"})[lang]
+	-- Combined list of single-Unicode-character vowels for all lects. FIXME: Consider using definition of V from above.
+	-- DO NOT include multi-character sequences such as ɛ̃ ɔ̃ i̯ aː because that will mess everything up. The regex below
+	-- looks for a sequence of non-vowels followed by a vowel and truncates the non-vowels. The above sequences have the
+	-- vowel first, which means things will work out fine without the diacritics included among the vowel characters.
+	local V = "aãăɒeɛɜɘiĭɨɪoõŏɔɞɵuŭʉy"
 	return {
 		rhyme = rsub(rsub(pron:gsub("^.*ˈ", ""), ("^[^%s]-([%s])"):format(V, V), "%1"), "[.ˌ]", ""),
-		num_syl = { select(2, rsubn(pron, ("[%s]"):format(V), "")) }
+		num_syl = { count_syllables(pron) },
 	}
-end
-
--- "Align" syllabified respelling `syllab` to original spelling `spelling` by matching character-by-character, allowing
--- for extra syllable and stress markers as well as mismatching hyphens in the syllabification and certain mismatches
--- in the consonants. The goal is to produce the appropriately syllabified version of the original spelling (the
--- pagename) by matching characters in the syllabified respelling to the original spelling, putting the syllable
--- boundaries in the appropriate places in the original spelling. As an example, given syllabified respelling
--- `Al'bań.ja` and original spelling `Albania`, we would like to produce `Al.ban.ia`.
---
--- If we encounter an extra syllable marker (.), we allow and keep it. If we encounter an extra stress marker in the
--- syllabification, we replace it with a syllable marker unless it occurs at the beginning of a word. We allow for
--- mismatches in capitalization and for certain other mismatches, e.g. ń in respelling vs. n in the original, j in the
--- respelling vs. i in the original, etc. If we can't match, we return nil indicating the alignment failed.
-local function align_syllabification_to_spelling(syllab, spelling)
-	local result = {}
-	local function concat_result()
-		-- Postprocess to remove dots (syllable boundaries) next to hyphens.
-		return (toNFC(table.concat(result)):gsub("%.%-", "-"):gsub("%-%.", "-"))
-	end
-	-- Remove glottal stop (7) from respelling to simplify the code below, because it's never found in the original
-	-- spelling. (FIXME: We should do the same for diacritics, but they're currently removed earlier, in
-	-- syllabify_from_spelling(). We should probably get rid of the removal there and put it here.)
-	syllab = decompose(syllab:gsub("ː", "")):gsub("7", "")
-	spelling = decompose(spelling)
-	local syll_chars = rsplit(ulower(syllab), "")
-	local spelling_chars = rsplit(spelling, "")
-	local i = 1
-	local j = 1
-	local function matches(uci, ucj)
-		-- Return true if a syllabified respelling character (uci) matches the corresponding spelling char (ucj).
-		-- Both uci and ucj should be lowercase.
-		-- Sound is at the key, values are the letters sound can match
-		local matching_chars = {
-			["ń"] = {"n"},
-			["j"] = {"i"},
-			["k"] = {"c"},
-			["z"] = {"s"},
-		}
-
-		return uci == ucj or (matching_chars[uci] and m_table.contains(matching_chars[uci], ucj))
-	end
-	local function silent_spelling_letter(ucj)
-		return ucj == "h" or ucj == "'" or ucj == "-"
-	end
-	local function syll_at(pos)
-		return syll_chars[pos] or ""
-	end
-	local function spell_at(pos)
-		return spelling_chars[pos] or ""
-	end
-	local function uspell_at(pos)
-		local c = spelling_chars[pos]
-		return c and ulower(c) or ""
-	end
-	while i <= #syll_chars or j <= #spelling_chars do
-		local uci = syll_at(i)
-		local cj = spell_at(j)
-		local ucj = uspell_at(j)
-
-		if uci == "g" and syll_at(i - 1) == "n" and syll_at(i + 1) == "." and matches(syll_at(i + 2), ucj) and
-			not matches(syll_at(i + 2), uspell_at(j + 1)) then
-			-- As a special case, before checking whether the corresponding characters match, we have to skip an extra
-			-- g in an -ng- sequence in the syllabified respelling if the corresponding spelling character matches the
-			-- next respelling character (taking into account the syllable boundary). This is so that e.g.
-			-- syll='ba.rang.gay' matches spelling='barangay'. Otherwise we will match the first respelling g against
-			-- the spelling g and the second respelling g won't match. A similar case occurs with
-			-- syll='E.vang.he.lis.ta' and spelling='Evangelista'. But we need an extra condition to not do this hack
-			-- when syll='ba.rang.gay' matches spelling='baranggay'.
-			i = i + 1
-		elseif uci == "g" and ucj == "g" and uspell_at(j + 1) == TILDE  then
-			table.insert(result, cj)
-			table.insert(result, uspell_at(j + 1))
-			i = i + 1
-			j = j + 2
-		elseif matches(uci, ucj) then
-			table.insert(result, cj)
-			i = i + 1
-			j = j + 1
-		elseif ucj == uspell_at(j - 1) and uci == "." and ucj ~= syll_at(i + 1) then
-			-- See below. We want to allow for a doubled letter in spelling that is pronounced single, and preserve the
-			-- doubled letter. But it's tricky in the presence of syllable boundaries on both sides of the doubled
-			-- letter as well as doubled letters pronounced double. Specifically, there are three possibilities,
-			-- exemplified by:
-			-- (1) syll='Mal.lig', spelling='Mallig' -> 'Mal.lig';
-			-- (2) syll='Ma.lig', spelling='Mallig' -> 'Ma.llig';
-			-- (3) syll='Wil.iam', spelling='William' -> 'Will.iam'.
-			-- If we copy the dot first, we get (1) and (2) right but not (3).
-			-- If we copy the double letter first, we get (2) and (3) right but not (1).
-			-- We choose to copy the dot first except in the situation exemplified by (3), where we copy the doubled
-			-- letter first. The condition above handles (3) (the doubled letter matches against a dot) while not
-			-- interfering with (1) (where the doubled letter also matches against a dot but the next letter in the
-			-- syllabification is the same as the doubled letter, because the doubled letter is pronounced double).
-			table.insert(result, cj)
-			j = j + 1
-		elseif silent_spelling_letter(ucj) and uci == "." and ucj ~= syll_at(i + 1) and
-			not rfind(uspell_at(j + 1), V) then
-			-- See below for silent h or apostrophe in spelling. This condition is parallel to the one directly above
-			-- for silent doubled letters in spelling and handles the case of syllab='Abduramán', spelling='Abdurahman',
-			-- which should be syllabified 'Ab.du.rah.man'. But we need a check to see that the next spelling character
-			-- isn't a vowel, because in that case we want the silent letter to go after the period, e.g.
-			-- syllab='Jumu7á', spelling='Jumu'ah' -> 'Ju.mu.'ah' (the 7 is removed above).
-			table.insert(result, cj)
-			j = j + 1
-		elseif uci == "." then
-			table.insert(result, uci)
-			i = i + 1
-		elseif ucj == uspell_at(j - 1) then
-			-- A doubled letter in spelling that is pronounced single. Examples:
-			-- * syllab='Ma.líg', spelling='Mallig' -> 'Ma.llig' (with l)
-			-- * syllab='Lu.il.yér', spelling='Lhuillier' -> 'Lhu.ill.ier' (with l; a more complex example)
-			-- * syllab='a.sa.la.mu a.lai.kum', spelling='assalamu alaikum' -> 'as.sa.la.mu a.lai.kum' (with s)
-			-- * syllab='Jé.fer.son', spelling='Jefferson' -> 'Je.ffer.son' (with f)
-			-- * syllab='Je.ma', spelling='Gemma' -> 'Ge.mma' (with m)
-			-- * syllab='Ha.na', spelling='Hannah' -> 'Ha.nnah' (with n)
-			-- * syllab='A.by', spelling='Abby' -> 'A.bby' (with b)
-			-- * syllab='Ka.ba', spelling='Kaaba' -> 'Kaa.ba' (with a)
-			-- * syllab='Fu.ji', spelling='Fujii' -> 'Fu.jii' (with i)
-			table.insert(result, cj)
-			j = j + 1
-		elseif silent_spelling_letter(ucj) then
-			-- A silent h, apostrophe or hyphen in spelling. Examples:
-			-- * syllab='adán', spelling='adhan' -> 'a.dhan'
-			-- * syllab='Atanasya', spelling='Athanasia' -> 'A.tha.nas.ia'
-			-- * syllab='Cýntiya', spelling='Cynthia' -> 'Cyn.thi.a'
-			-- * syllab='Ermóhenes', spelling='Hermogenes' -> 'Her.mo.ge.nes'
-			-- * syllab='Abduramán', spelling='Abdurahman' -> 'Ab.du.rah.man'
-			-- * syllab='Jumu7á', spelling='Jumu'ah' -> 'Ju.mu.'ah'
-			-- * syllab='pag7ibig', spelling='pag-ibig' -> 'pag-i.big'
-			table.insert(result, cj)
-			j = j + 1
-		elseif uci == AC or uci == GR or uci == CFLEX or uci == DIA or uci == TILDE or uci == MACRON or
-			uci == "y" or uci == "w" then
-			-- skip character
-			i = i + 1
-		else
-			-- non-matching character
-			mw.log(("Syllabification alignment mismatch for pagename '%s' (position %s, character %s), syllabified respelling '%s' (position %s, character %s), aligned result so far '%s'"
-				):format(spelling, j, ucj, syllab, i, uci, concat_result()))
-			return nil
-		end
-	end
-	if i <= #syll_chars or j <= #spelling_chars then
-		-- left-over characters on one side or the other
-		mw.log(("Syllabification alignment mismatch for pagename '%s' (%s), syllabified respelling '%s' (%s), aligned result so far '%s'"
-			):format(
-				spelling, j > #spelling_chars and "end of string" or ("position %s, character %s"):format(j, uspell_at(j)),
-				syllab, i > #syll_chars and "end of string" or ("position %s, character %s"):format(i, syll_at(i)),
-				concat_result()))
-		return nil
-	end
-	return concat_result()
 end
 
 --[[
@@ -1332,7 +1201,8 @@ local function multiword(term, lang, period, lect, match_pl_p_output)
 		return ((sib == "ɕ" or sib == "ʑ") and "ɲ" or "n") .. syldiv .. sib
 	end, nil, true)
 	flatmap_and_sub_post("Ẽ", "ɛ", {"normal speech"}, true, "ɛw̃", {"careful speech"}, false)
-	flatmap_and_sub_post("Õ", "ɔw̃", {"standard"}, false, "ɔm", {"regional", "or", "dialectal", "proscribed"}, true)
+	-- Turn this off for now; too simplistic.
+	-- flatmap_and_sub_post("Õ", "ɔw̃", {"standard"}, false, "ɔm", {"regional", "or", "dialectal", "proscribed"}, true)
 	while true do
 		-- Make all primary stresses but the last one in a given word be secondary.
 		-- FIXME: Remove this.
@@ -1420,13 +1290,13 @@ end
 
 
 local function apply_substitution_spec(respelling, pagename, parse_err)
-	if respelling:find("%^") or respelling:find("%$") then
-		-- Changed to use ~ at beginning or end to avoid clashing with other use of ^; catch old uses
-		track("old-anchor-symbols")
-	end
 	local subs = split_on_comma(rmatch(respelling, "^%[(.*)%]$"))
 	respelling = pagename
 	for _, sub in ipairs(subs) do
+		if sub:find("%^") or sub:find("%$") then
+			-- Changed to use ~ at beginning or end to avoid clashing with other use of ^; catch old uses
+			track("old-anchor-symbols")
+		end
 		local from, escaped_from, to, escaped_to, anchor_begin, anchor_end
 		if sub:find("^~") then
 			-- anchor at beginning
@@ -1572,6 +1442,7 @@ function export.get_lect_pron_info(terms, pagename, paramname, lang, lect, perio
 					refs = i == 1 and term.refs or nil,
 				})
 				if not pron.norhyme then
+					-- Make sure to pass a version of the pronunciation with syllable dividers.
 					table.insert(rhyme_list, do_rhyme(pron.pron, lang))
 				end
 			end
@@ -1626,50 +1497,54 @@ function export.get_lect_pron_info_bot(frame)
 end
 
 function export.show(frame)
-	local ilang = frame.args.lang
+	local process = require("Module:parameters").process
+	local lang = process(frame.args, {
+		["lang"] = { required = true, type = "language" }
+	}).lang
+	local langcode = lang:getCode()
 
-	if ilang == "pl" then
+	if langcode == "pl" then
 		lectdata = require("Module:zlw-lch-IPA/data/pl")
 	end
 
-	local process_args = {
+	local params = {
 		[1] = {},
-		["hyphs"] = {}, ["h"] = { alias_of = "hyphs" },
-		["rhymes"] = {}, ["r"] = { alias_of = "rhymes" },
-		["audios"] = {}, ["a"] = { alias_of = "audios" },
-		["homophones"] = {}, ["hh"] = { alias_of = "homophones" },
-		["pagename"] = {}, -- for debugging or demonstration only
+		["hyphs"] = true, ["h"] = { alias_of = "hyphs" },
+		["rhymes"] = true, ["r"] = { alias_of = "rhymes" },
+		["audios"] = true, ["a"] = { alias_of = "audios" },
+		["homophones"] = true, ["hh"] = { alias_of = "homophones" },
+		["pagename"] = true, -- for debugging or demonstration only
+		["indent"] = true,
 	}
 
-	if ilang == "pl" then
-		process_args["mpl_period"] = {}
-		process_args["mp_period"] = { alias_of = "mpl_period" }
+	if langcode == "pl" then
+		params["mpl_period"] = true
+		params["mp_period"] = { alias_of = "mpl_period" }
 
 		for lect, _ in pairs(lectdata.lects) do
-			process_args[lect] = {}
+			params[lect] = true
 		end
 
 		for alias, lect in pairs(lectdata.lect_aliases) do
-			process_args[alias] = { alias_of = lect }
+			params[alias] = { alias_of = lect }
 		end
 	end
 
-	local args = require("Module:parameters").process(frame:getParent().args, process_args)
-
-	local lang = require("Module:languages").getByCode(ilang, true, "allow etym")
+	local args = process(frame:getParent().args, params)
 
 	local termspec = args[1] or "#"
 	local terms = parse_respellings_with_modifiers(termspec, 1)
 	local pagename = args.pagename or mw.loadData("Module:headword/data").pagename
+	local indent = args.indent or "*"
 
-	local pronobj = export.get_lect_pron_info(terms, pagename, 1, ilang)
+	local pronobj = export.get_lect_pron_info(terms, pagename, 1, langcode)
 	local hyph_list, rhyme_list = pronobj.hyph_list, pronobj.rhyme_list
 	local hyph_automatic = true
 	local do_hyph
 
 	local pl_lect_prons
 
-	if ilang == "pl" then
+	if langcode == "pl" then
 		for lect, _ in pairs(lectdata.lects) do
 			if args[lect] then
 				if pl_lect_prons == nil then pl_lect_prons = {} end
@@ -1751,7 +1626,7 @@ function export.show(frame)
 			do_collapse = true
 			ins('<div class="vsSwitcher" data-toggle-category="pronunciations" style="width: {width}em; max-width:100%;"><span class="vsToggleElement" style="float: right;">&nbsp;</span>\n')
 		end
-		ins("*" .. m_IPA_format { lang = lang, items = pronobj.pron_list })
+		ins(indent .. m_IPA_format { lang = lang, items = pronobj.pron_list })
 	end
 
 	local em_length
@@ -1786,10 +1661,10 @@ function export.show(frame)
 			local group = lectdata.lect_groups[group_index]
 			if lects ~= nil then
 				if group.single_lect then
-					display_lect(lects[1], "*")
+					display_lect(lects[1], indent)
 				else
 					-- Checks to indent Goral under Lesser Polish.
-					additional_indent = ""
+					local additional_indent = ""
 					if group.indent_with_prec then
 						additional_indent = "*"
 						if grouped_lects[group_index - 1] == nil then
@@ -1822,16 +1697,16 @@ function export.show(frame)
 			if num_audios > 1 and not audio_obj.caption then
 				audio_obj.caption = "Audio " .. i
 			end
-			ins("\n* " .. format_audio(audio_obj))
+			ins("\n" .. indent .. " " .. format_audio(audio_obj))
 		end
 	end
 
 	if #rhyme_list > 0 then
-		ins("\n* " .. require("Module:rhymes").format_rhymes { lang = lang, rhymes = rhyme_list })
+		ins("\n" .. indent .. " " .. require("Module:rhymes").format_rhymes { lang = lang, rhymes = rhyme_list })
 	end
 
 	if do_hyph then
-		ins("\n* ")
+		ins("\n" .. indent .. " ")
 		if #hyph_list > 0 then
 			local hyphs = {}
 			local seen_num_pron_syls
@@ -1840,10 +1715,7 @@ function export.show(frame)
 				seen_num_pron_syls = {}
 				for _, pronobj in ipairs(pronobj.pron_list) do
 					local pron = pronobj.pron_with_syldivs
-					-- Convert prosodic boundaries to regular spaces; ignore stress markers at the beginning
-					-- of a word; and then count occurrences of spaces, syllable dividers and stress marks.
-					local num_pron_syls = 1 + ulen(rsub(rsub(rsub(pron:gsub(" | ", " "), " [ˈˌ]", " "), "^[%[/]?[ˈˌ]", ""),
-						"[^.ˈˌ ]", ""))
+					local num_pron_syls = count_syllables(pron)
 					m_table.insertIfNot(seen_num_pron_syls, {pron = pron, nsyl = num_pron_syls})
 				end
 			end
@@ -1873,7 +1745,7 @@ function export.show(frame)
 							num_hyph_syls, hyph, table.concat(prons_and_sylcounts, ","), pagename))
 						if mw.title.getCurrentTitle().nsText == "" then
 							ins(("[[Category:%s entries with Template:%s-pr with %s syllabification syllable count mismatch]]"):format(
-								lang:getFullName(), ilang, hyph_automatic and "automatic" or "manual"))
+								lang:getFullName(), langcode, hyph_automatic and "automatic" or "manual"))
 						end
 					end
 				end		
@@ -1885,14 +1757,14 @@ function export.show(frame)
 			ins("Syllabification: <small>[please specify syllabification manually]</small>")
 			if mw.title.getCurrentTitle().nsText == "" then
 				ins(("[[Category:%s entries with Template:%s-pr without syllabification]]"):format(
-					lang:getFullName(), ilang))
+					lang:getFullName(), langcode))
 			end
 		end
 	end
 
 	if args.homophones then
 		local homophone_list = parse_homophones(args.homophones, "homophones")
-		ins("\n* " .. require("Module:homophones").format_homophones {
+		ins("\n" .. indent .. " " .. require("Module:homophones").format_homophones {
 			lang = lang,
 			homophones = homophone_list,
 		})
