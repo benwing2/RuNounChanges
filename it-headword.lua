@@ -284,13 +284,22 @@ local function parse_term_with_modifiers(paramname, val)
 		return {term = term}
 	end
 
-	return require(parse_modifiers_interface_module).parse_inline_modifiers(val, {
+	local retval = require(parse_modifiers_interface_module).parse_inline_modifiers(val, {
 			paramname = paramname,
 			param_mods = param_mods,
 			generate_obj = generate_obj,
 			splitchar = "[/;,]",
 			preserve_splitchar = true,
 		})
+
+	for _, obj in ipairs(retval) do
+		if obj.delimiter == ";" then
+			obj.separator = "; "
+		elseif obj.delimiter == "/" then
+			obj.separator = "/"
+		-- default to nil for comma
+		end
+	end
 end
 
 
