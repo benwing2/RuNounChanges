@@ -582,17 +582,17 @@ end
 
 
 --[==[
-Parse a term that may have a language code (or possibly multiple comma-separated language codes, if `allow_multiple`
-is given) preceding it (e.g. {la:minūtia} or {grc:[[σκῶρ|σκατός]]} or {nan-hbl,hak:[[毋]][[知]]}). Return four
-arguments:
+Parse a term that may have a language code (or possibly multiple plus-separated language codes, if
+`data.allow_multiple` is given) preceding it (e.g. {la:minūtia} or {grc:[[σκῶρ|σκατός]]} or
+{nan-hbl+hak:[[毋]][[知]]}). Return four arguments:
 # the term minus the language code;
-# the language object corresponding to the language code (possibly a family object if `allow_family` is given), or a
-  list of such objects if `allow_multiple` is given;
+# the language object corresponding to the language code (possibly a family object if `data.allow_family` is given), or
+  a list of such objects if `data.allow_multiple` is given;
 # the link if the term is of the form {[[<var>link</var>|<var>display</var>]]} (it may be generated into that form with
   Wikipedia and Wikisource prefixes) or of the form {{[[<var>link</var>]]}, otherwise the full term;
 # the display part if the term is of the form {[[<var>link</var>|<var>display</var>]]}, otherwise nil.
-Etymology-only languages are allowed. This function also correctly handles Wikipedia prefixes (e.g. {w:Abatemarco}
-or {w:it:Colle Val d'Elsa} or {lw:ru:Филарет}) and Wikisource prefixes (e.g. {s:Twelve O'Clock} or
+Etymology-only languages are always allowed. This function also correctly handles Wikipedia prefixes (e.g.
+{w:Abatemarco} or {w:it:Colle Val d'Elsa} or {lw:ru:Филарет}) and Wikisource prefixes (e.g. {s:Twelve O'Clock} or
 {s:[[Walden/Chapter XVIII|Walden]]} or {s:fr:Perceval ou le conte du Graal} or {s:ro:[[Domnul Vucea|Mr. Vucea]]} or
 {ls:ko:이상적 부인} or {ls:ko:[[조선 독립의 서#一. 槪論|조선 독립의 서]]}) and converts them into two-part links,
 with the display form not including the Wikipedia or Wikisource prefix unless it was explicitly specified using a
@@ -605,10 +605,25 @@ NOTE: Embedded links are not correctly handled currently. If an embedded link is
 as the link part (third argument), and the display part is nil. If you construct your own link from the link and
 display parts, you must check for this.
 
-`parse_err_or_paramname` is an optional function of one or two arguments to display an error, or a string naming a
-parameter to display in the error message. If omitted, a function is generated based off of `term`. (The second
-argument to the function is the number of stack frames to ignore when calling error(); if you declare your error
-function with only one argument, things will still work fine.)
+The preferred calling convention is to pass in a single argument `data` containing the following fields:
+* `term`: The term to parse.
+* `parse_err`: An optional function of one or two arguments to display an error. (The second argument to the function is
+  the number of stack frames to ignore when calling error(); if you declare your error function with only one argument,
+  things will still work fine.)
+* `paramname`: If `parse_err` is omitted, this should be a string naming a parameter to display in the error message,
+  along with the term in question, and will be used to generate a `parse_err` function using `make_parse_err()`. (If
+  `paramname` is omitted, just the term itself appears in the error message.)
+* `allow_multiple`: Allow multiple plus-separated language codes, e.g. {nan-hbl+hak:[[毋]][[知]]}. See above.
+* `allow_family`: Allow family objects to appear in place of language codes.
+* `allow_bad`: Don't throw an error on invalid language code prefixes; instead, include the prefix and colon as part of
+  the term. Note that if a prefix doesn't look like a language code (e.g. if it's a number), the code won't even try to
+  parse it as a language code, regardless of the `allow_bad` setting, but will always include it in the term.
+* `lang_cache`: A table mapping language codes to language objects. If the value is `false`, the language code is
+  invalid. If specified, the cache will be consulted before calling `getByCode()` in [[Module:languages]], and the
+  result cached. If not specified, no cache will be used.
+
+An alternative, deprecated calling convention passes the term in the first parameter, and either `parse_err` or
+`paramname` in the second parameter. This does not allow setting any of the other fields mentioned above.
 ]==]
 function export.parse_term_with_lang(data_or_term, parse_err_or_paramname)
 	if type(data_or_term) == "string" then
@@ -699,9 +714,9 @@ function export.parse_term_with_lang(data_or_term, parse_err_or_paramname)
 
 	if data_or_term.allow_multiple then
 		local termlang_spec
-		termlang_spec, actual_term = term:match("^([a-zA-Z.,-]+):([^ ].*)$")
+		termlang_spec, actual_term = term:match("^([a-zA-Z.,+-]+):([^ ].*)$")
 		if termlang_spec then
-			termlang = rsplit(termlang_spec, ",")
+			termlang = rsplit(termlang_spec, "[,+]")
 			local all_possible_code = true
 			for _, code in ipairs(termlang) do
 				if not is_possible_lang_code(code) then
@@ -894,7 +909,7 @@ function export.parse_inline_modifiers(arg, props)
 	-- pattern syntax, which AFAIK is implemented in C).
 	if arg:find("%[") then
 		segments = export.parse_multi_delimiter_balanced_segment_run(arg, {{"[", "]"}, {"<", ">"}})
-		if not args.splitchar then
+		if not props.splitchar then
 			segments = rejoin_bracket_delimited_runs(segments)
 		else
 			rejoin_square_brackets_after_split = true
