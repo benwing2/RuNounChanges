@@ -18,6 +18,8 @@ local usub = mw.ustring.sub
 
 local OVERTIE = u(0x361) -- COMBINING DOUBLE INVERTED BREVE
 
+local vowels = "aãăɒeɛɜɘiĭɨɪoõŏɔɞɵuŭʉy"
+
 -- In cases where there are two possible stresses (e.g. in words ending in -ika/-yka), we put ALTSTRESS where both
 -- stresses can go, and handle this later in multiword().
 local ALTSTRESS = u(0xFFF0)
@@ -963,15 +965,15 @@ local function single_word(data)
 	if should_stress then
 		txt = add_stress(first_penultimate_offset, second_penultimate_offset)
 	end
-	if data.is_prep then
-		txt = txt .. "$"
-	end
-
 	-- This must follow stress assignment because it depends on whether the E is stressed.
 	if lang == "zlw-slv" and tfind("E") then
 		txt = txt:gsub("([ˈˌ][^" .. V .. "]*)E", "%1i̯ɛ")
 		txt = txt:gsub("E$", "ə")
 		txt = txt:gsub("E", "ɛ")
+	end
+
+	if data.is_prep then
+		txt = txt .. "$"
 	end
 
 	return txt, hyph
@@ -995,7 +997,7 @@ local function do_rhyme(pron, lang)
 	-- DO NOT include multi-character sequences such as ɛ̃ ɔ̃ i̯ aː because that will mess everything up. The regex below
 	-- looks for a sequence of non-vowels followed by a vowel and truncates the non-vowels. The above sequences have the
 	-- vowel first, which means things will work out fine without the diacritics included among the vowel characters.
-	local V = "aãăɒeɛɜɘiĭɨɪoõŏɔɞɵuŭʉy"
+	local V = vowels
 	return {
 		rhyme = rsub(rsub(pron:gsub("^.*ˈ", ""), ("^[^%s]-([%s])"):format(V, V), "%1"), "[.ˌ]", ""),
 		num_syl = { count_syllables(pron) },
@@ -1079,15 +1081,20 @@ local function multiword(term, lang, period, lect, match_pl_p_output)
 				}
 				table.insert(ipaparts, wordipa)
 				table.insert(hyphparts, wordhyph)
+				if i < #words then
+					local separator = is_prep and "‿" or " "
+					table.insert(ipaparts, separator)
+					table.insert(hyphparts, separator)
+				end
 			end
 		end
 
-		ipa = table.concat(ipaparts, " ")
-		hyph = table.concat(hyphparts, " ")
+		ipa = table.concat(ipaparts)
+		hyph = table.concat(hyphparts)
 
 		local function assimilate_preps(str)
 			local function assim(from, to, before)
-				str = rsub(str, ("%s(%%$ [ˈˌ]?[%s])"):format(from, before), to .. "%1")
+				str = rsub(str, ("%s(%%$‿[ˈˌ]?[%s])"):format(from, before), to .. "%1")
 			end
 			local T = "fptsʂɕkx"
 			assim("d", "t", T)
@@ -1103,6 +1110,11 @@ local function multiword(term, lang, period, lect, match_pl_p_output)
 
 		if contains_preps then
 			ipa = assimilate_preps(ipa)
+			-- Move stress before non-syllabic clitics attached with tie bar. FIXME: We should be using # or similar
+			-- at string boundaries to avoid the need to substitute twice.
+			local C = "[^" .. vowels .. "]"
+			ipa = rsub(ipa, ("([‿ ])(%s+)‿([ˈˌ])"):format(C), "%1%3%2")
+			ipa = rsub(ipa, ("^(%s+)‿([ˈˌ])"):format(C), "%2%1‿")
 		end
 	else
 		ipa, hyph = single_word {
@@ -1185,13 +1197,13 @@ local function multiword(term, lang, period, lect, match_pl_p_output)
 			error(("'%s' is not a supported Middle Polish period; try with 'early' or 'late'"):format(period))
 		end
 	elseif lang == "pl" and lect == "ora" then
-		flatmap_and_sub_post("([^ ]*)" .. ALTSTRESS .. "([^ ]-)" .. ALTSTRESS, "%1ˈ%2.", {"Poland"}, false,
+		flatmap_and_sub_post("([^ ‿]*)" .. ALTSTRESS .. "([^ ‿]-)" .. ALTSTRESS, "%1ˈ%2.", {"Poland"}, false,
 			stress_second, {"Slovakia"}, false)
 	elseif lang == "pl" and lect == "zag" then
-		flatmap_and_sub_post("([^ ]*)" .. ALTSTRESS .. "([^ ]-)" .. ALTSTRESS, stress_second, {"north"}, false,
+		flatmap_and_sub_post("([^ ‿]*)" .. ALTSTRESS .. "([^ ‿]-)" .. ALTSTRESS, stress_second, {"north"}, false,
 			"%1ˈ%2.", {"south"}, false)
 	elseif lang == "pl" then
-		flatmap_and_sub_post("([^ ]*)" .. ALTSTRESS .. "([^ ]-)" .. ALTSTRESS, "%1ˈ%2.", {"prescriptive"}, false,
+		flatmap_and_sub_post("([^ ‿]*)" .. ALTSTRESS .. "([^ ‿]-)" .. ALTSTRESS, "%1ˈ%2.", {"prescriptive"}, false,
 			stress_second, {"colloquial"}, false)
 	elseif lang == "szl" then
 		flatmap_and_sub_post("O", "ɔ", {"non-Western"}, false, "ɔw", {"Western"}, false, "ɛw", {"Głogówek"}, false)
@@ -1206,7 +1218,7 @@ local function multiword(term, lang, period, lect, match_pl_p_output)
 	while true do
 		-- Make all primary stresses but the last one in a given word be secondary.
 		-- FIXME: Remove this.
-		if not flatmap_and_sub_post("([^ ]*)ˈ([^ ]-)ˈ", "%1ˌ%2ˈ") then
+		if not flatmap_and_sub_post("([^ ‿]*)ˈ([^ ‿]-)ˈ", "%1ˌ%2ˈ") then
 			break
 		end
 		track("two-primary-stresses-in-word")
@@ -1450,7 +1462,7 @@ function export.get_lect_pron_info(terms, pagename, paramname, lang, lect, perio
 
 		-- If a hyphenation value had been returned by multiword(), make sure it matches the pagename; otherwise
 		-- don't add. FIXME: This should be smarter in the presence of hyphens in the lemma.
-		if hyph and hyph:gsub("%.", "") == pagename then
+		if hyph and hyph:gsub("%.", ""):gsub("‿", " ") == pagename then
 			m_table.insertIfNot(hyph_list, hyph)
 		end
 	end
