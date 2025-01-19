@@ -76,7 +76,7 @@ local function full_link_and_track_self_links(item, face)
 	item.suppress_redundant_wikilink_cat = suppress_redundant_wikilink_cat
 	return require(links_module).full_link(item, face)
 end
-				
+
 local function format_subitem(subitem, lang, face)
 	local text = subitem.term and term_already_linked(subitem.term) and subitem.term or
 		full_link_and_track_self_links(subitem, face)
@@ -196,7 +196,7 @@ local function sort_sublist(list, lang, make_sortbase, keepfirst, keeplast)
 		end
 	end
 end
-		
+
 
 local large_text_scripts = {
 	["Arab"] = true,
@@ -402,11 +402,11 @@ function export.create_list(args)
 	local output = html("div")
 		:addClass("term-list")
 		:node(list)
-			
+
 	if args.class then
 		output:addClass(args.class)
 	end
-	
+
 	if not args.raw then
 		output:addClass("ul-column-count")
 			:attr("data-column-count", column_count)
@@ -416,7 +416,7 @@ function export.create_list(args)
 				:node(output)
 				:addClass("list-switcher")
 				:attr("data-toggle-category", toggle_category)
-			
+
 			-- identify commonly used scripts that use large text and
 			-- provide a special CSS class to make the template bigger
 			local sc = args.sc
@@ -435,7 +435,7 @@ function export.create_list(args)
 					output:addClass("list-switcher-large-text")
 				end
 			end
-			
+
 			-- wrap in wrapper to prevent interference from floating elements
 			output = html("div")
 				:addClass("list-switcher-wrapper")
@@ -560,13 +560,14 @@ function export.handle_display_from_or_topic_list(iargs, raw_item_args, user_arg
 		["omit"] = {list = true}, -- used when calling from [[Module:saurus]] so the page displaying the synonyms/antonyms doesn't occur in the list
 		["keepfirst"] = {type = "number", default = 0},
 		["keeplast"] = {type = "number", default = 0},
-		["pagename"] = {}, -- for testing of topic list
+		["horiz"] = {},
 	}
 
 	if topic_list_template then
 		params["cat"] = {}
 		params["enhypernym"] = {}
 		params["hypernym"] = {}
+		params["pagename"] = {} -- for testing of topic list
 	end
 
 	local m_param_utils = require(parameter_utilities_module)
