@@ -4,8 +4,11 @@ local string_utilities_module = "Module:string utilities"
 local parse_utilities_module = "Module:parse utilities"
 local table_module = "Module:table"
 
---[==[
-Loaders for functions in other modules, which overwrite themselves with the target function when called. This ensures modules are only loaded when needed, retains the speed/convenience of locally-declared pre-loaded functions, and has no overhead after the first call, since the target functions are called directly in any subsequent calls.]==]
+--[=[
+Loaders for functions in other modules, which overwrite themselves with the target function when called. This ensures
+modules are only loaded when needed, retains the speed/convenience of locally-declared pre-loaded functions, and has no
+overhead after the first call, since the target functions are called directly in any subsequent calls.
+]=]
 local function rfind(...)
 	rfind = require(string_utilities_module).find
 	return rfind(...)
@@ -29,6 +32,11 @@ end
 local function parse_inline_modifiers(...)
 	parse_inline_modifiers = require(parse_utilities_module).parse_inline_modifiers
 	return parse_inline_modifiers(...)
+end
+
+local function parse_term_with_lang(...)
+	parse_term_with_lang = require(parse_utilities_module).parse_term_with_lang
+	return parse_term_with_lang(...)
 end
 
 local function term_contains_top_level_html(...)
@@ -60,6 +68,37 @@ local function decode_entities(...)
 	-- [[Module:string utilities]] is essentially always loaded so there's little point.
 	str_decode_entities = require(string_utilities_module).decode_entities
 	return str_decode_entities(...)
+end
+
+
+--[==[
+This is an almost drop-in replacement for split_on_comma() in [[Module:parse utilities]], with optimizations to avoid
+loading and running the while algorithm in [[Module:parse utilities]] except when necessary.
+]==]
+local function export.split_on_comma(val)
+	if val:find(",%s") or (val:find(",") and val:find("[\\%[<]")) then
+		-- Comma after whitespace not split; nor are backslash-escaped commas or commas inside of square or
+		-- angle brackets. If we see any of these, use the more sophisticated algorithm in
+		-- [[Module:parse utilities]]. Otherwise it's safe to just split on commas directly. This optimization
+		-- avoids loading [[Module:parse utilities]] unnecessarily.
+		return split_on_comma(val)
+	else
+		return rsplit(val, ",")
+	end
+end
+
+
+--[==[
+This is similar to parse_term_with_lang() in [[Module:parse utilities]], but if there is no colon + non-space in the
+term, it will be returned directly and not parsed into link/display format. If you need the link/display arguments
+even in the absence of a language prefix, call [[Module:parse utilities]] directly.
+]==]
+local function export.parse_term_with_lang(data)
+	if data.term:find(":[^ ]") then
+		return parse_term_with_lang(data)
+	else
+		return data.term, nil, nil, nil
+	end
 end
 
 
@@ -106,14 +145,8 @@ function export.parse_inline_modifiers(val, props)
 			-- This happens when there's an embedded {{,}} template, as in [[MMR]], [[TMA]], [[DEI]], where an
 			-- initialism expands to multiple terms; easiest not to try and parse the lemma spec as multiple lemmas.
 			retval = {val}
-		elseif val:find(",%s") or (val:find(",") and val:find("[\\%[<]")) then
-			-- Comma after whitespace not split; nor are backslash-escaped commas or commas inside of square or
-			-- angle brackets. If we see any of these, use the more sophisticated algorithm in
-			-- [[Module:parse utilities]]. Otherwise it's safe to just split on commas directly. This optimization
-			-- avoids loading [[Module:parse utilities]] unnecessarily.
-			retval = split_on_comma(val)
 		else
-			retval = rsplit(val, ",")
+			retval = export.split_on_comma(val)
 		end
 		for i, split in ipairs(retval) do
 			retval[i] = generate_obj(split)
