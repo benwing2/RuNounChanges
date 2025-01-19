@@ -74,13 +74,32 @@ def escape_inline_val(val):
     except blib.ParseException:
       return val.replace("<", "&lt;").replace(">", "&gt;")
   return val
-def make_inline_modifier(key, val):
-  return "<%s:%s>" % (key, escape_inline_val(val))
+
+def escape_template_delimiters(val, pagemsg):
+  # Escape = and | occurring in raw text that will become a template parameter.
+  # FIXME: Params inside of HTML tags shouldn't be escaped. All occurrences though are in <ref ...> tags except for
+  # a single occurrence in the text between <ref> and </ref> tags, which we don't handle currently.
+  try:
+    run = blib.parse_multi_delimiter_balanced_segment_run(val, [(r"\[", r"\]"), (r"\{", r"\}"), ("<[a-z!/]", ">")])
+  except blib.ParseException:
+    # FIXME: Do something better in this case. Ideally we should make parse_multi_delimiter_balanced_segment_run()
+    # have an `ignore_mismatch` flag.
+    if "=" in val or "|" in val:
+      pagemsg("WARNING: Mismatched delimiters and found = or | in raw line to be templated, may lead to error: %s" %
+              val)
+    return val
+  for j, segment in enumerate(run):
+    if j % 2 == 0:
+      run[j] = segment.replace("=", "{{=}}").replace("|", "{{!}}")
+  return "".join(run)
+
+def make_inline_modifier(key, val, pagemsg):
+  return "<%s:%s>" % (key, escape_inline_val(escape_template_delimiters(val, pagemsg)))
 
 # Simplify a link `link` that may have an `altval` (display value) specified in |3= or |alt= if the link comes from a
 # templated link. `langcode`, if given, is the language code of the templated link, `sec_langcode` is the language code
 # of the section we're in, and `sec_langname` is the corresponding language name.
-def simplify_link(link, altval, langcode, sec_langcode, sec_langname, pagemsg, expand_text):
+def simplify_link(is_raw, link, altval, langcode, sec_langcode, sec_langname, pagemsg, expand_text):
   link = link or ""
   right = ""
   altval = altval or ""
@@ -148,6 +167,11 @@ def simplify_link(link, altval, langcode, sec_langcode, sec_langname, pagemsg, e
         link = altval
         altval = ""
 
+  # Converting a raw link to a templatized link; if the raw link begins with a * (e.g. [[*69]]), it must get a
+  # backslash as a templatized link.
+  if is_raw and link and link.startswith("*"):
+    pagemsg("Converting raw link beginning with * to templated link by adding backslash: %s" % link)
+    link = "\\" + link
   if not link:
     # If link is empty, we must use the format '<alt:foo>' with an empty link, not '[[|foo]]'.
     if right and altval:
@@ -179,13 +203,15 @@ def simplify_link(link, altval, langcode, sec_langcode, sec_langname, pagemsg, e
     # comma or tilde being interpreted as a delimiter.
     link = "[[%s]]" % link
 
-  return "%s%s%s%s" % (langcode, ":" if langcode else "", link, make_inline_modifier("alt", altval) if altval else "")
+  return "%s%s%s%s" % (langcode, ":" if langcode else "", link, make_inline_modifier("alt", altval, pagemsg) if altval else "")
 
 def process_text_on_page(index, pagetitle, text):
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
   def expand_text(tempcall):
     return blib.expand_text(tempcall, pagetitle, pagemsg, args.verbose)
+  def make_inline_mod(key, val):
+    return make_inline_modifier(key, val, pagemsg)
 
   match_link_template_re = r"\{\{ *(?:[lm](?:-self)?|ll) *\|"
 
@@ -354,6 +380,8 @@ def process_text_on_page(index, pagetitle, text):
           "place name": "toponym",
           "placename": "toponym",
           "place": "toponym",
+          "Colloquial": "colloquial",
+          "Rare": "rare",
         }
         pos_map = {
           "adj.": "adj",
@@ -362,9 +390,9 @@ def process_text_on_page(index, pagetitle, text):
           "intransitive": "vi",
           "transitive": "vt",
         }
-        m = re.search("^'*literally[:;'\" ]+(.*?)['\"]+$", qual)
+        m = re.search("^'*literally[:;'\" ]+(.*?)['\"]?$", qual)
         if m:
-          qualparts.append(make_inline_modifier("lit", m.group(1)))
+          qualparts.append(make_inline_mod("lit", m.group(1)))
         elif qual in label_map:
           labels.append(label_map[qual])
         elif qual in [
@@ -373,15 +401,15 @@ def process_text_on_page(index, pagetitle, text):
           "humble speech", "jocular", "euphemistic", "derogatory", "expressive", "vernacular", "childish",
           "abbreviation", "initialism", "back-formation", "clipping", "blend", "proverb",
           "active", "passive", "reflexive",
-          "dialectal", "regional", "poetic", "uncertain",
+          "dialectal", "regional", "poetic", "uncertain", "honorific",
           "toponym", "surname", "patronymic", "female patronymic", "male patronymic", "former name",
           "obsolete", "archaic", "dated", "deprecated", "diminutive", "augmentative", "endearing", "semelfactive",
           "US", "American", "North America", "Canada", "Canadian", "UK", "British", "Britain", "British English",
-          "Australia", "Australian", "Ireland", "Irish", "New Zealand", "Indian English",
+          "Australia", "Australian", "Ireland", "Irish", "New Zealand", "Indian English", "AU", "NZ",
           "Anglo-Norman", "Standard Malay", "Indonesian",
           "Spain", "Argentina", "Venezuela", "Dominican Republic", "Costa Rica", "Mexico", "Puerto Rico", "Paraguay",
           "Uruguay", "Chile", "Bolivia", "Colombia", "Costa Rica", "Cuba", "Panama", "Nicaragua", "Ecuador",
-          "El Salvador", "Honduras", "Peru", "Guatemala", "Brazil", "Portugal",
+          "El Salvador", "Honduras", "Peru", "Guatemala", "Brazil", "Portugal", "Belize",
           "Puter", "Sursilvan", "Sutsilvan", "Surmiran", "Vallader",
           "sports", "medicine", "law", "logic", "shipping", "theology", "phonology", "music", "grammar", "religion",
           "linguistics", "geology", "botany", "ornithology", "sociology", "psychiatry", "zoology", "anatomy",
@@ -391,17 +419,17 @@ def process_text_on_page(index, pagetitle, text):
         ]:
           labels.append(qual)
         elif not has_pos and qual in pos_map:
-          qualparts.append(make_inline_modifier("pos", pos_map[qual]))
+          qualparts.append(make_inline_mod("pos", pos_map[qual]))
           has_pos = True
         elif not has_pos and qual in [
           "noun", "n", "proper noun", "adjective", "adj", "verb", "v", "vb", "adverb", "adv", "preposition", "prep",
           "conjunction", "conj", "verbal noun", "[[vi]]", "[[vt]]", "participle", "adjective, noun",
         ]:
-          qualparts.append(make_inline_modifier("pos", qual.replace("[[", "").replace("]]", "")))
+          qualparts.append(make_inline_mod("pos", qual.replace("[[", "").replace("]]", "")))
           has_pos = True
         elif not has_g and qual in gender_map:
           if is_left:
-            qualparts.append(make_inline_modifier("g", gender_map[qual]))
+            qualparts.append(make_inline_mod("g", gender_map[qual]))
             has_g = True
           else:
             exterior_genders.append(gender_map[qual])
@@ -411,9 +439,9 @@ def process_text_on_page(index, pagetitle, text):
       for qual in quals:
         convert_qual(qual)
       if labels:
-        qualparts.append(make_inline_modifier("l" if is_left else "ll", ",".join(labels)))
+        qualparts.append(make_inline_mod("l" if is_left else "ll", ",".join(labels)))
       if non_converted_quals:
-        qualparts.append(make_inline_modifier("q" if is_left else "qq", ", ".join(non_converted_quals)))
+        qualparts.append(make_inline_mod("q" if is_left else "qq", ", ".join(non_converted_quals)))
       return "".join(qualparts)
 
     if left_qual:
@@ -425,16 +453,16 @@ def process_text_on_page(index, pagetitle, text):
         pagemsg("WARNING: Saw both interior and exterior genders, trying to combine")
         vals[-1] = re.sub("(<g:.*?)>", r"\1,%s>" % escape_inline_val(",".join(exterior_genders)), vals[-1])
       else:
-        vals[-1] += make_inline_modifier("g", ",".join(exterior_genders))
+        vals[-1] += make_inline_mod("g", ",".join(exterior_genders))
     if right_gloss:
       if "<t:" in vals[-1]:
         pagemsg("WARNING: Saw both interior and exterior glosses, trying to combine")
         vals[-1] = re.sub("(<t:.*?)>", r"\1; %s>" % escape_inline_val("; ".join(right_gloss)), vals[-1])
       else:
-        vals[-1] += make_inline_modifier("t", "; ".join(right_gloss))
+        vals[-1] += make_inline_mod("t", "; ".join(right_gloss))
     return ",".join(vals) + line_comment
 
-  def convert_one_line(line):
+  def convert_one_line(line, line_non_templated):
     this_notes = []
     if re.search(r"^%s|\[\[" % match_link_template_re, line):
       template_or_raw_link_split_re = (
@@ -452,7 +480,8 @@ def process_text_on_page(index, pagetitle, text):
         has_pos = False
         for i in range(1, len(line_parts), 2):
           if line_parts[i].startswith("[["):
-            els.append(simplify_link(line_parts[i], None, None, langcode, langname, pagemsg, expand_text))
+            els.append(simplify_link(line_non_templated, line_parts[i], None, None, langcode, langname, pagemsg,
+                                     expand_text))
             continue
           linkt = list(blib.parse_text(line_parts[i]).filter_templates())[0]
           def getp(param):
@@ -468,27 +497,27 @@ def process_text_on_page(index, pagetitle, text):
             pagemsg("WARNING: Found both 3=%s and alt=%s; this should be triggering a Lua error: %s" % (
               display, alt, str(linkt)))
           alt = alt or display
-          link = simplify_link(link, alt, link_langcode, langcode, langname, pagemsg, expand_text)
+          link = simplify_link(False, link, alt, link_langcode, langcode, langname, pagemsg, expand_text)
           app(link)
-          gloss = getp("t") or getp("gloss") or getp("4")
-          if gloss:
-            app(make_inline_modifier("t", gloss))
           def append_if(param):
             val = getp(param)
             if val:
               if param == "tr" and val == "-" and link_langcode == "el":
                 this_notes.append("remove tr=- from Modern Greek link")
               else:
-                app(make_inline_modifier(param, val))
+                app(make_inline_mod(param, val))
           append_if("tr")
           append_if("ts")
+          gloss = getp("t") or getp("gloss") or getp("4")
+          if gloss:
+            app(make_inline_mod("t", gloss))
           append_if("sc")
           append_if("pos")
           append_if("lit")
           append_if("id")
           genders = blib.fetch_param_chain(linkt, "g")
           if genders:
-            app(make_inline_modifier("g", ",".join(genders)))
+            app(make_inline_mod("g", ",".join(genders)))
           els.append("".join(parts))
         return els, this_notes
     else:
@@ -529,7 +558,7 @@ def process_text_on_page(index, pagetitle, text):
                 beginspace, maintext, endspace = m.groups()
                 newmaintext, left_qual, right_qual, exterior_genders, right_gloss, line_comment = (
                   extract_left_and_right_qualifiers_and_genders(maintext))
-                newparts, new_notes = convert_one_line(newmaintext)
+                newparts, new_notes = convert_one_line(newmaintext, False)
                 if type(newparts) is str:
                   pagemsg("WARNING: %s, not changing: %s" % (newparts, pv.strip()))
                 elif newparts is not None:
@@ -587,8 +616,9 @@ def process_text_on_page(index, pagetitle, text):
             newlines.extend(col_elements)
             newlines.append("}}")
             notes.extend(new_notes)
-            notes.append("convert {{%s}}/{{%s}} to {{col|%s|...}} with %s line%s" % (
-              col_top_tn, col_bottom_tn, langcode, len(col_elements), "" if len(col_elements) == 1 else "s"))
+            notes.append("convert {{%s}}/{{%s}} to {{col|%s|...}} with %s line%s in ==%s==" % (
+              col_top_tn, col_bottom_tn, langcode, len(col_elements), "" if len(col_elements) == 1 else "s",
+              header.strip()))
             in_col_top = False
             continue
           if cant_convert:
@@ -599,6 +629,10 @@ def process_text_on_page(index, pagetitle, text):
             continue
           if re.search(r"\{\{ *desc *\|", line):
             pagemsg("WARNING: Line with {{desc}}, can't convert to {{col}}: %s" % line)
+            cant_convert = True
+            continue
+          if re.search(r"\{\{ *desctree *\|", line):
+            pagemsg("WARNING: Line with {{desctree}}, can't convert to {{col}}: %s" % line)
             cant_convert = True
             continue
           m = re.search(r"^(\*+)(.*)$", line)
@@ -617,7 +651,7 @@ def process_text_on_page(index, pagetitle, text):
           else:
             bullet_prefix = number_of_bullets[1:] + " "
           line = line.strip()
-          bulleted_line = bullet_prefix + line
+          bulleted_line = escape_template_delimiters(bullet_prefix + line, pagemsg)
           if re.search(r"\{\{ *(ja-l|ja-r|ja-r/args|ryu-l|ryu-r|ryu-r/args|ko-l|zh-l|vi-l|he-l) *\|", line):
             pagemsg("WARNING: Unable to convert Asian specialized linking template to {{col}} format, inserting raw: %s" % origline)
             col_elements.append("|%s" % bulleted_line)
@@ -634,7 +668,7 @@ def process_text_on_page(index, pagetitle, text):
 
           line, left_qual, right_qual, exterior_genders, right_gloss, line_comment = (
             extract_left_and_right_qualifiers_and_genders(line))
-          els, this_new_notes = convert_one_line(line)
+          els, this_new_notes = convert_one_line(line, True)
           if type(els) is str:
             handle_parse_error(els)
           elif els is None:
