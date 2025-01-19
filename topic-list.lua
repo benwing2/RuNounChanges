@@ -3,6 +3,83 @@ local export = {}
 local columns_module = "Module:columns"
 local parameters_module = "Module:parameters"
 
+local function letter_like_category(data)
+	return ("Category:%s letters"):format(data.lang:getCanonicalName())
+end
+
+local function page_exists(page)
+	local title = mw.title.new(appendix)
+	return title and title.exists
+end
+
+local function letter_like_appendix(data)
+	local appendices = {}
+	local alphabet_appendix = ("Appendix:%s alphabet"):format(data.lang:getCanonicalName())
+	if page_exists(alphabet_appendix) then
+		table.insert(appendices, ("[[%s|alphabet appendix]]"):format(alphabet_appendix))
+	end
+	local script_name = data.default_title:match("^(.* script) .*$")
+	if not script_name then
+		error(("Internal error: Can't pull out script name from default title '%s'"):format(data.default_title))
+	end
+	local script_appendix = "Appendix:" .. script_name
+	if page_exists(script_appendix) then
+		table.insert(appendices, ("[[%s|script appendix]]"):format(script_appendix))
+	end
+	if appendices[1] then
+		return table.concat(appendices, ",")
+	else
+		return nil
+	end
+end
+
+local letter_like_properties = {
+	horiz = "comma",
+	sort = false,
+	cat = letter_like_category,
+	appendix = letter_like_appendix,
+	notr = true,
+	space_delim = true,
+	narrow_tilde = true,
+}
+
+local function letter_name_category(data)
+	local script_name = data.default_title:match("^(.*) script .*$")
+	if not script_name then
+		error(("Internal error: Can't pull out script name from default title '%s'"):format(data.default_title))
+	end
+	return ("%s letter names"):format(script_name)
+end
+
+local topic_list_properties = {
+	{".* calendar months", {sort = false}},
+	{".* calendar month adjectives", {sort = false}},
+	{".* script letters", letter_like_properties},
+	{".* script vowels", letter_like_properties},
+	{".* script consonants", letter_like_properties},
+	{".* script diacritics", letter_like_properties},
+	{".* script digraphs", letter_like_properties},
+	-- FIXME: We may need to be smarter, and use a regular columnar display in some cases (e.g. when translit is
+	-- present)
+	{".* script letter names", {horiz = "bullet", sort = false, cat = letter_name_category}},
+	{"canids", {horiz = "bullet"}}, -- only 5 items on most lists
+	{"countries in .*", {appendix = "Appendix:Countries of the world"}},
+	{"days of the week", {horiz = "bullet", sort = false, appendix = "Appendix:Days of the week"}},
+	{"dentistry location adjectives", {cat = "Dentistry"}},
+	{"fundamental interactions", {cat = "Physics"}},
+	{"human anatomy location adjectives", {cat = "Medicine"}},
+	{"Islamic prophets", {sort = false}},
+	{"leptons", {sort = false, horiz = "bullet"}},
+	{"antileptons", {sort = false, horiz = "bullet", cat = "Leptons"}},
+	{"oceans", {horiz = "bullet"}},
+	{"planets of the Solar System", {horiz = "bullet", sort = false}},
+	{"religions", {cat = "Religion"}}, -- FIXME, use "Religions"
+	{"religious adherents", {cat = "Religion"}},
+	{"religious texts", {cat = "Religion"}},
+	{"seasons", {horiz = "bullet", sort = false}},
+	{"taxonomic ranks", {sort = false}},
+	{"times of day", {sort = false}},
+}
 
 --[==[
 This implements topic lists. A given topic list template must directly invoke this function rather than
