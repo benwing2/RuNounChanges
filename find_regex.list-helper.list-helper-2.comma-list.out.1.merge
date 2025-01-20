@@ -855,45 +855,36 @@ Page 12 Template:list helper: -------- begin text --------
 {{documentation}}</noinclude>
 -------- end text --------
 Page 13 Template:list:sexual orientations/ko: -------- begin text --------
-{{list helper 2
-|title=sexual orientations
-|cat=ko:Sexual orientations
-|hypernym={{l-self|ko|성적 지향(性的指向)}}
-|list=<!--
--->{{l-self|ko|무성애(無性愛)}}, <!--
--->{{l-self|ko|양성애(兩性愛)}}, <!--
--->{{l-self|ko|동성애(同性愛)}}, <!--
--->{{l-self|ko|이성애(異性愛)}}, <!--
--->{{l-self|ko|범성애(汎性愛)}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=성적 지향(性的指向)
+|무성애(無性愛)
+|양성애(兩性愛)
+|동성애(同性愛)
+|이성애(異性愛)
+|범성애(汎性愛)
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 14 Template:list:sexual orientations/zh: -------- begin text --------
-{{list helper 2
-|title=sexual orientations
-|cat=zh:Sexual orientations
-|hypernym={{zh-l|性取向}}
-|list=<!--
--->{{zh-l|同性戀}}, <!--
--->{{zh-l|異性戀}}, <!--
--->{{zh-l|雙性戀}}, <!--
--->{{zh-l|無性戀}}, <!--
--->{{zh-l|泛性戀}}, <!--
--->{{zh-l|智性戀}} <!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=性取向
+|{{zh-l|同性戀}}
+|{{zh-l|異性戀}}
+|{{zh-l|雙性戀}}
+|{{zh-l|無性戀}}
+|{{zh-l|泛性戀}}
+|{{zh-l|智性戀}}
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 15 Template:list:quarks/ko: -------- begin text --------
-{{list helper 2
-|cat=ko:Quarks
-|title=quarks
+{{#invoke:topic list|show
 |hypernym=쿼크
-|list=<!--
--->{{l-self|ko|위 쿼크}}, <!--
--->{{l-self|ko|아래 쿼크}}, <!--
--->{{l-self|ko|야릇한 쿼크}}, <!--
--->{{l-self|ko|맵시 쿼크}}, <!--
--->{{l-self|ko|바닥 쿼크}}, <!--
--->{{l-self|ko|꼭대기 쿼크}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+|위 쿼크
+|아래 쿼크
+|야릇한 쿼크
+|맵시 쿼크
+|바닥 쿼크
+|꼭대기 쿼크
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 17 Template:list:days of the week/ko: -------- begin text --------
 {{#invoke:topic list|show
@@ -1383,17 +1374,14 @@ Page 44 Template:list:compass points/ko: -------- begin text --------
 <noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 46 Template:list:quarks/zh: -------- begin text --------
-{{list helper 2
-|title=quarks
-|cat=zh:Quarks
+{{#invoke:topic list|show
 |hypernym={{zh-l|夸克}}
-|list=<!--
--->{{zh-l|上夸克}}, <!--
--->{{zh-l|下夸克}}, <!--
--->{{zh-l|魅夸克}} / {{zh-l|粲夸克}}, <!--
--->{{zh-l|奇夸克}} / {{zh-l|奇異夸克}}, <!--
--->{{zh-l|頂夸克}}, <!--
--->{{zh-l|底夸克}}<!--
+|{{zh-l|上夸克}}
+|{{zh-l|下夸克}}
+|{{zh-l|魅夸克}}~{{zh-l|粲夸克}}
+|{{zh-l|奇夸克}}~{{zh-l|奇異夸克}}
+|{{zh-l|頂夸克}}
+|{{zh-l|底夸克}}
 -->}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 48 Template:list:Chinese zodiac signs/zh: -------- begin text --------
@@ -2176,24 +2164,38 @@ Page 4999 Template:list:grammatical numbers/en: -------- begin text --------
 -->}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5003 Template:list:sexual orientations/en: -------- begin text --------
-{{list helper 2
-|title=sexual orientations
-|cat=en:Sexual orientations
-|hypernym=[[sexual orientation]]
-|list=<!--
--->{{l-self|en|asexual}} ({{l-self|en|asexuality|-ity}}, {{l-self|en|ace}}), <!--
--->{{l-self|en|bisexual}} ({{l-self|en|bisexuality|-ity}}, {{l-self|en|bi}}), <!--
--->{{l-self|en|demisexual}} ({{l-self|en|demisexuality|-ity}}, {{l-self|en|demi}}), <!--
--->{{l-self|en|graysexual}} ({{l-self|en|graysexuality|-ity}}), <!--
--->{{l-self|en|heterosexual}} ({{l-self|en|heterosexuality|-ity}}, {{l-self|en|straight}}), <!--
--->{{l-self|en|homosexual}} ({{l-self|en|homosexuality|-ity}}, {{l-self|en|gay}}, {{l-self|en|lesbian}}), <!--
--->{{l-self|en|omnisexual}} ({{l-self|en|omnisexuality|-ity}}), <!--
--->{{l-self|en|pansexual}} ({{l-self|en|pansexuality|-ity}}, {{l-self|en|pan}}), <!--
--->{{l-self|en|polysexual}} ({{l-self|en|polysexuality|-ity}}), <!--
--->{{l-self|en|sapiosexual}} ({{l-self|en|sapiosexuality|-ity}}), <!--
--->{{l-self|en|androsexual}} ({{l-self|en|androsexuality|-ity}}), <!--
--->{{l-self|en|gynesexual}} ({{l-self|en|gynesexuality|-ity}})<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|asexuality
+|bisexuality
+|demisexuality
+|graysexuality
+|heterosexuality
+|homosexuality
+|omnisexuality
+|pansexuality
+|polysexuality
+|sapiosexuality
+|androsexuality
+|gynesexuality
+}}<noinclude>{{list doc}}</noinclude>
+-------- end text --------
+Page 5003 Template:list:sexual orientation adjectives/en: -------- begin text --------
+{{#invoke:topic list|show<!-- FIXME: create -->
+|asexual,ace
+|bisexual,bi
+|demisexual,demi
+|graysexual
+|heterosexual,straight
+|homosexual
+|* gay
+|* lesbian
+|omnisexual
+|pansexual,pan
+|polysexual
+|sapiosexual
+|androsexual
+|gynesexual
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5004 Template:list:Hiragana/ja: -------- begin text --------
 {{list helper 2
@@ -2593,33 +2595,26 @@ Page 5073 Template:list:planets of the Solar System/nn: -------- begin text ----
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5091 Template:list:sexual orientations/fa: -------- begin text --------
-{{list helper 2
-|title=sexual orientations
-|cat=fa:Sexual orientations
-|hypernym=گرایش جنسی
-|hypernym2=تمایل جنسی
-|list=<!--
--->{{l-self|fa|بی‌جنس‌گرایی}}, <!--
--->{{l-self|fa|دوجنس‌گرایی}}, <!--
--->{{l-self|fa|دگرجنس‌گرایی}}, <!--
--->{{l-self|fa|هم‌جنس‌گرایی}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[گرایش جنسی|گرایش‌های جنسی]]<tr:garâyeš-hâ-ye jensi>,[[تمایل جنسی|تمایلات جنسی]]<tr:tamâyolât-e jensi>
+|بی‌جنس‌گرایی
+|دوجنس‌گرایی
+|دگرجنس‌گرایی
+|هم‌جنس‌گرایی
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5094 Template:list:sexual orientations/tr: -------- begin text --------
-{{list helper 2
-|title=sexual orientations
-|cat=tr:Sexual orientations
-|hypernym=cinsel yönelim
-|list=<!--
--->{{l-self|tr|aseksüellik}}, <!--
--->{{l-self|tr|biseksüellik}}, <!--
--->{{l-self|tr|eşcinsellik}}/{{l-self|tr|homoseksüellik}}, <!--
--->{{l-self|tr|heteroseksüellik}}, <!--
--->{{l-self|tr|monoseksüellik}}, <!--
--->{{l-self|tr|omniseksüellik}}, <!--
--->{{l-self|tr|panseksüellik}}, <!--
--->{{l-self|tr|poliseksüellik}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[cinsel yönelim]]ler
+|aseksüellik
+|biseksüellik
+|eşcinsellik,homoseksüellik
+|heteroseksüellik
+|monoseksüellik
+|omniseksüellik
+|panseksüellik
+|poliseksüellik
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5095 Template:list:planets of the Solar System/es: -------- begin text --------
 {{#invoke:topic list|show
@@ -2635,18 +2630,15 @@ Page 5095 Template:list:planets of the Solar System/es: -------- begin text ----
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5096 Template:list:sexual orientations/es: -------- begin text --------
-{{list helper 2
-|title=sexual orientations
-|cat=es:Sexual orientations
-|hypernym=orientación sexual
-|list=<!--
--->{{l-self|es|asexualidad}}, <!--
--->{{l-self|es|bisexualidad}}, <!--
--->{{l-self|es|demisexualidad}}, <!--
--->{{l-self|es|heterosexualidad}}, <!--
--->{{l-self|es|homosexualidad}}, <!--
--->{{l-self|es|pansexualidad}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[orientación sexual|orientaciones sexuales]]
+|asexualidad
+|bisexualidad
+|demisexualidad
+|heterosexualidad
+|homosexualidad
+|pansexualidad
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5097 Template:list:elementary particles/es: -------- begin text --------
 {{list helper 2
@@ -2668,18 +2660,15 @@ Page 5098 Template:list:fermions/es: -------- begin text --------
 -->}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5099 Template:list:quarks/es: -------- begin text --------
-{{list helper 2
-|title=quarks
-|cat=es:Quarks
+{{#invoke:topic list|show
 |hypernym=quark
-|list=<!--
--->{{l-self|es|quark arriba}}, <!--
--->{{l-self|es|quark abajo}}, <!--
--->{{l-self|es|quark encantado}}, <!--
--->{{l-self|es|quark extraño}}, <!--
--->{{l-self|es|quark cima}}, <!--
--->{{l-self|es|quark fondo}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+|quark arriba
+|quark abajo
+|quark encantado
+|quark extraño
+|quark cima
+|quark fondo
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5100 Template:list:leptons/es: -------- begin text --------
 {{#invoke:topic list|show
@@ -2707,299 +2696,258 @@ Page 5101 Template:list:bosons/es: -------- begin text --------
 -->}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5115 Template:list:sexual orientations/pt: -------- begin text --------
-{{list helper 2
-|title=sexual orientations
-|cat=pt:Sexual orientations
-|hypernym=[[orientação sexual]]
-|list=<!--
--->{{l-self|pt|assexual}} ({{l-self|pt|assexualidade|-idade}}), <!--
--->{{l-self|pt|bissexual}} ({{l-self|pt|bissexualidade|-idade}}), <!--
--->{{l-self|pt|demissexual}} ({{l-self|pt|demissexualidade|-idade}}), <!--
--->{{l-self|pt|heterossexual}} ({{l-self|pt|heterossexualidade|-idade}}), <!--
--->{{l-self|pt|homossexual}} ({{l-self|pt|homossexualidade|-idade}}, {{l-self|pt|gay}}, {{l-self|pt|lésbica}}), <!--
--->{{l-self|pt|onissexual}} ({{l-self|pt|onissexualidade|-idade}}), <!--
--->{{l-self|pt|pansexual}} ({{l-self|pt|pansexualidade|-idade}})<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[orientação sexual|orientações sexuais]]
+|assexualidade
+|bissexualidade
+|demissexualidade
+|heterossexualidade
+|homossexualidade
+|onissexualidade
+|pansexualidade
+}}<noinclude>{{list doc}}</noinclude>
+-------- end text --------
+Page 5115 Template:list:sexual orientation adjectives/pt: -------- begin text --------
+{{#invoke:topic list|show
+|hypernym=[[adjetivo]]s de [[orientação sexual]]
+|assexual
+|bissexual
+|demissexual
+|heterossexual
+|homossexual
+|* gay
+|* lésbica
+|onissexual
+|pansexual
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5117 Template:list:sexual orientations/hu: -------- begin text --------
-{{list helper 2
-|title=sexual orientations
-|cat=hu:Sexual orientations
-|hypernym=szexuális irányultság
-|list=<!--
--->{{l-self|hu|aszexualitás}}, <!--
--->{{l-self|hu|autoszexualitás}}, <!--
--->{{l-self|hu|biszexualitás}}, <!--
--->{{l-self|hu|heteroszexualitás}}, <!--
--->{{l-self|hu|homoszexualitás}}, <!--
--->{{l-self|hu|leszbikusság}}, <!--
--->{{l-self|hu|monoszexualitás}}, <!--
--->{{l-self|hu|pánszexualitás}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[szexuális irányultság]]ok
+|aszexualitás
+|autoszexualitás
+|biszexualitás
+|heteroszexualitás
+|homoszexualitás
+|leszbikusság
+|monoszexualitás
+|pánszexualitás
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5119 Template:list:sexual orientations/he: -------- begin text --------
-{{list helper 2
-|title=sexual orientations
-|cat=he:Sexual orientations
-|hypernym=נטייה מינית
-|list=<!--
--->{{l-self|he|ביסקסואליות}}, <!--
--->{{l-self|he|הומוסקסואליות}}, <!--
--->{{l-self|he|הטרוסקסואליות}}, <!--
--->{{l-self|he|פאנסקסואליות}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[נטייה מינית|נְטִיּוֹת מִינִיּוֹת]]<tr:n'tiyót miniyót>
+|ביסקסואליות
+|הומוסקסואליות
+|הטרוסקסואליות
+|פאנסקסואליות
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5120 Template:list:sexual orientations/it: -------- begin text --------
-{{list helper 2
-|title=sexual orientations
-|cat=it:Sexual orientations
-|hypernym=orientamento sessuale
-|list=<!--
--->{{l-self|it|asessualità}}, <!--
--->{{l-self|it|bisessualità}}, <!--
--->{{l-self|it|eterosessualità}}, <!--
--->{{l-self|it|omosessualità}}, <!--
--->{{l-self|it|pansessualità}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[orientamento sessuale|orientamenti sessuali]]
+|asessualità
+|bisessualità
+|eterosessualità
+|omosessualità
+|pansessualità
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5121 Template:list:sexual orientations/de: -------- begin text --------
-{{list helper 2
-|title=sexual orientations
-|cat=de:Sexual orientations
-|hypernym=sexuelle Orientierung|hypernym2=Sexualorientierung
-|list=<!--
--->{{l-self|de|Asexualität}}, <!--
--->{{l-self|de|Bisexualität}}, <!--
--->{{l-self|de|Heterosexualität}}, <!--
--->{{l-self|de|Homosexualität}}, <!--
--->{{l-self|de|Pansexualität}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[sexuelle Orientierung]]en,[[Sexualorientierung]]en
+|Asexualität
+|Bisexualität
+|Heterosexualität
+|Homosexualität
+|Pansexualität
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5122 Template:list:sexual orientations/eo: -------- begin text --------
-{{list helper 2
-|title=sexual orientations
-|cat=eo:Sexual orientations
-|hypernym=[[seksa orientiĝo]]
-|list=<!--
--->{{l-self|eo|aliseksemo}}, <!--
--->{{l-self|eo|ambaŭseksemo}}, <!--
---><!--unattested: {{l-self|eo|neseksemo}}, --><!--
--->{{l-self|eo|samseksemo}}, <!--
--->{{l-self|eo|ĉiuseksemo}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[seksa orientiĝo|seksaj orientiĝoj]]
+|aliseksemo
+|ambaŭseksemo
+<!--unattested: |neseksemo -->
+|samseksemo
+|ĉiuseksemo
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5123 Template:list:sexual orientations/fi: -------- begin text --------
-{{list helper 2
-|title=sexual orientations
-|cat=fi:Sexual orientations
-|hypernym={{l-self|fi|seksuaalinen suuntautuminen}} ({{l-self|fi|sukupuolinen suuntautuminen}})
-|list=<!--
--->{{l-self|fi|aseksuaalisuus}}, <!--
--->{{l-self|fi|biseksuaalisuus}}, <!--
--->{{l-self|fi|heteroseksuaalisuus}}, <!--
--->{{l-self|fi|homoseksuaalisuus}}, <!--
--->{{l-self|fi|panseksuaalisuus}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[seksuaalinen suuntautuminen|seksuaaliset suuntautumiset]],[[sukupuolinen suuntautuminen|sukupuoliset suuntautumiset]]
+|aseksuaalisuus
+|biseksuaalisuus
+|heteroseksuaalisuus
+|homoseksuaalisuus
+|panseksuaalisuus
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5124 Template:list:sexual orientations/fr: -------- begin text --------
-{{list helper 2
-|title=sexual orientations
-|cat=fr:Sexual orientations
-|hypernym=orientation sexuelle
-|list=<!--
--->{{l-self|fr|asexualité}}, <!--
--->{{l-self|fr|bisexualité}}, <!--
--->{{l-self|fr|hétérosexualité}}, <!--
--->{{l-self|fr|homosexualité}}, <!--
--->{{l-self|fr|pansexualité}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[orientation sexuelle|orientations sexuelles]]
+|asexualité
+|bisexualité
+|hétérosexualité
+|homosexualité
+|pansexualité
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5125 Template:list:sexual orientations/ro: -------- begin text --------
-{{list helper 2
-|title=sexual orientations
-|cat=ro:Sexual orientations
-|hypernym=orientare sexuală
-|list=<!--
--->{{l-self|ro|asexualitate}}, <!--
--->{{l-self|ro|bisexualitate}}, <!--
--->{{l-self|ro|heterosexualitate}}, <!--
--->{{l-self|ro|homosexualitate}}, <!--
--->{{l-self|ro|pansexualitate}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[orientare sexuală|orientări sexuale]]
+|asexualitate
+|bisexualitate
+|heterosexualitate
+|homosexualitate
+|pansexualitate
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5126 Template:list:sexual orientations/ru: -------- begin text --------
-{{list helper 2
-|title=sexual orientations
-|cat=ru:Sexual orientations
-|hypernym=сексуальная ориентация
-|list=<!--
--->{{l-self|ru|асексуа́льность|tr=asɛksuálʹnostʹ}}, <!--
--->{{l-self|ru|бисексуа́льность|tr=bisɛksuálʹnostʹ}}, <!--
--->{{l-self|ru|гетеросексуа́льность|tr=getɛrosɛksuálʹnostʹ}}, <!--
--->{{l-self|ru|гомосексуа́льность|tr=gomosɛksuálʹnostʹ}}, <!--
--->{{l-self|ru|пансексуа́льность|tr=pansɛksuálʹnostʹ}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[сексуальная ориентация|сексуа́льные ориента́цие]]<tr:sɛksuálʹnyje orijentácii>
+|асексуа́льность<tr:asɛksuálʹnostʹ>
+|бисексуа́льность<tr:bisɛksuálʹnostʹ>
+|гетеросексуа́льность<tr:getɛrosɛksuálʹnostʹ>
+|гомосексуа́льность<tr:gomosɛksuálʹnostʹ>
+|пансексуа́льность<tr:pansɛksuálʹnostʹ>
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5127 Template:list:quarks/en: -------- begin text --------
-{{list helper 2
-|title=quarks
-|cat=en:Quarks
-|hypernym=quark
-|list=<!--
--->{{l-self|en|up quark}}, <!--
--->{{l-self|en|down quark}}, <!--
--->{{l-self|en|charm quark}}, <!--
--->{{l-self|en|strange quark}}, <!--
--->{{l-self|en|top quark}}/{{l-self|en|truth quark}}, <!--
--->{{l-self|en|bottom quark}}/{{l-self|en|beauty quark}}<!--
-   {{l-self|en|anti-up quark}},
-   {{l-self|en|anti-down quark}},
-   {{l-self|en|anti-charm quark}},
-   {{l-self|en|anti-strange quark}},
-   {{l-self|en|anti-top quark}},
-   {{l-self|en|anti-bottom quark}}
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|up quark
+|down quark
+|charm quark
+|strange quark
+|top quark~truth quark
+|bottom quark~beauty quark
+}}<noinclude>{{list doc}}</noinclude>
+-------- end text --------
+Page 5127 Template:list:antiquarks/en: -------- begin text --------
+{{#invoke:topic list|show<!-- FIXME: create this list -->
+|anti-up quark
+|anti-down quark
+|anti-charm quark
+|anti-strange quark
+|anti-top quark
+|anti-bottom quark
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5128 Template:list:sexual orientations/nl: -------- begin text --------
-{{list helper 2
-|title=sexual orientations
-|cat=nl:Sexual orientations
-|hypernym=seksuele geaardheid
-|list=<!--
--->{{l-self|nl|aseksualiteit}}, <!--
--->{{l-self|nl|biseksualiteit}}, <!--
--->{{l-self|nl|heteroseksualiteit}}, <!--
--->{{l-self|nl|homoseksualiteit}}, <!--
--->{{l-self|nl|gyneseksualiteit}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[seksuele geaardheid|seksuele geaardheden]]
+|aseksualiteit
+|biseksualiteit
+|heteroseksualiteit
+|homoseksualiteit
+|gyneseksualiteit
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5129 Template:list:sexual orientations/is: -------- begin text --------
-{{list helper 2
-|title=sexual orientations
-|cat=is:Sexual orientations
-|hypernym=[[kynhneigð]]
-|list=<!--
--->{{l-self|is|gagnkynhneigð}}, <!--
--->{{l-self|is|samkynhneigð}}, <!--
--->{{l-self|is|tvíkynhneigð}}, <!--
--->{{l-self|is|eikynhneigð}}, <!--
--->{{l-self|is|aðkynhneigð}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[kynhneigð]]ar
+|gagnkynhneigð
+|samkynhneigð
+|tvíkynhneigð
+|eikynhneigð
+|aðkynhneigð
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5130 Template:list:sexual orientations/da: -------- begin text --------
-{{list helper 2
-|title=sexual orientations
-|cat=da:Sexual orientations
-|hypernym=seksuel orientering
-|list=<!--
--->{{l-self|da|aseksualitet}}, <!--
--->{{l-self|da|biseksualitet}}, <!--
--->{{l-self|da|heteroseksualitet}}, <!--
--->{{l-self|da|homoseksualitet}}, <!--
--->{{l-self|da|panseksualitet}}/{{l-self|da|omniseksualitet}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[seksuel orientering|seksuelle orienteringer]]
+|aseksualitet
+|biseksualitet
+|heteroseksualitet
+|homoseksualitet
+|panseksualitet,omniseksualitet
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5138 Template:list:sexual orientations/sv: -------- begin text --------
-{{list helper 2
-|title=sexual orientations
-|cat=sv:Sexual orientations
-|hypernym=sexuell läggning
-|list=<!--
--->{{l-self|sv|asexualitet}}, <!--
--->{{l-self|sv|bisexualitet}}, <!--
--->{{l-self|sv|heterosexualitet}}, <!--
--->{{l-self|sv|homosexualitet}}, <!--
--->{{l-self|sv|pansexualitet}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[sexuell läggning|sexuella läggningar]]
+|asexualitet
+|bisexualitet
+|heterosexualitet
+|homosexualitet
+|pansexualitet
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5140 Template:list:sexual orientations/uz: -------- begin text --------
-{{list helper 2
-|title=sexual orientations
-|cat=uz:Sexual orientations
-|hypernym=jinsiy moyillik
-|list=<!--
--->{{l-self|uz|aseksuallik}}, <!--
--->{{l-self|uz|biseksuallik}}, <!--
--->{{l-self|uz|geteroseksuallik}}, <!--
--->{{l-self|uz|gomoseksuallik}}, <!--
--->{{l-self|uz|omniseksuallik}}, <!--
--->{{l-self|uz|panseksuallik}}, <!--
--->{{l-self|uz|poliseksuallik}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[jinsiy moyillik]]lar<!-- FIXME: verify -->
+|aseksuallik
+|biseksuallik
+|geteroseksuallik
+|gomoseksuallik
+|omniseksuallik
+|panseksuallik
+|poliseksuallik
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5147 Template:list:sexual orientations/lt: -------- begin text --------
-{{list helper 2
-|title=sexual orientations
-|cat=lt:Sexual orientations
-|hypernym=seksualinė orientacija|hypernym2=lytinė orientacija
-|list=<!--
--->{{l-self|lt|biseksualumas}}, <!--
--->{{l-self|lt|heteroseksualumas}}, <!--
--->{{l-self|lt|homoseksualumas}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[seksualinė orientacija|seksualinės orientacijos]],[[lytinė orientacija|lytinės orientacijos]]
+|biseksualumas
+|heteroseksualumas
+|homoseksualumas
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5148 Template:list:sexual orientations/lv: -------- begin text --------
-{{list helper 2
-|title=sexual orientations
-|cat=lv:Sexual orientations
-|hypernym={{l|lv|seksuālās}} {{l|lv|orientācijas}}
-|list=<!--
--->{{l-self|lv|aseksualitāte}} ({{l-self|lv|aseksuāls|-āls}}, {{l-self|lv|aseksuālisms|-isms}}, {{l-self|lv|aseksuālists|-ists}}), <!--
--->{{l-self|lv|biseksualitāte}} ({{l-self|lv|biseksuāls|-āls}}, {{l-self|lv|biseksuālisms|-isms}}, {{l-self|lv|biseksuālists|-ists}}), <!--
--->{{l-self|lv|heteroseksualitāte}} ({{l-self|lv|heteroseksuāls|-āls}}, {{l-self|lv|heteroseksuālisms|-isms}}, {{l-self|lv|heteroseksuālists|-ists}}), <!--
--->{{l-self|lv|homoseksualitāte}} ({{l-self|lv|homoseksuāls|-āls}}, {{l-self|lv|homoseksuālisms|-isms}}, {{l-self|lv|homoseksuālists|-ists}}) <!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[seksuālā orientācija|seksuālās orientācijas]]
+|aseksualitāte,aseksuālisms
+|biseksualitāte,biseksuālisms
+|heteroseksualitāte,heteroseksuālisms
+|homoseksualitāte,homoseksuālisms
+}}<noinclude>{{list doc}}</noinclude>
+-------- end text --------
+Page 5148 Template:list:sexual orientation adjectives/lv: -------- begin text --------
+{{#invoke:topic list|show<!-- FIXME: create -->
+|aseksuāls
+|biseksuāls
+|heteroseksuāls
+|homoseksuāls
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5149 Template:list:sexual orientations/vi: -------- begin text --------
-{{list helper 2
-|title=sexual orientations
-|cat=vi:Sexual orientations
-|hypernym=[[thiên hướng tình dục]]
-|list=<!--
--->{{l-self|vi|dị tính luyến ái}}, <!--
--->{{l-self|vi|đồng tính luyến ái}}, <!--
--->{{l-self|vi|song tính luyến ái}}, <!--
--->{{l-self|vi|vô tính}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=thiên hướng tình dục<!-- FIXME: plural? -->
+|dị tính luyến ái
+|đồng tính luyến ái
+|song tính luyến ái
+|vô tính
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5150 Template:list:sexual orientations/bn: -------- begin text --------
-{{list helper 2
-|title=sexual orientations
-|cat=bn:Sexual orientations
-|hypernym=যৌন অভিমুখীতা
-|list=<!--
--->{{l-self|bn|উভকামিতা}}, <!--
--->{{l-self|bn|বিপরীতকামিতা}}, <!--
--->{{l-self|bn|সমকামিতা}}, <!--
--->{{l-self|bn|সর্বকামিতা}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=যৌন অভিমুখীতা<!-- FIXME: pluralize -->
+|উভকামিতা
+|বিপরীতকামিতা
+|সমকামিতা
+|সর্বকামিতা
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5152 Template:list:sexual orientations/bg: -------- begin text --------
-{{list helper 2
-|title=sexual orientations
-|cat=bg:Sexual orientations
-|hypernym=сексуална ориентация
-|list=<!--
--->{{l-self|bg|асексуалност}}, <!--
--->{{l-self|bg|бисексуалност}}, <!--
--->{{l-self|bg|пансексуалност}}, <!--
--->{{l-self|bg|хетеросексуалност}}, <!--
--->{{l-self|bg|хомосексуалност}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[сексуална ориентация|сексуа́лни ориента́ции]]
+|асексуа́лност
+|бисексуа́лност
+|пансексуа́лност
+|хетеросексуа́лност
+|хомосексуа́лност
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5158 Template:list:quarks/ar: -------- begin text --------
-{{list helper 2
-|title=quarks
-|cat=ar:Quarks
-|hypernym=كُوَارْك
-|list=<!--
--->{{l-self|ar|كُوَارْكُ سَاحِر|tr=kuwarku sāḥir}}, <!--
--->{{l-self|ar|كُوَارْكُ سُفْلِيّ|tr=kuwarku sufliyy}}, <!--
--->{{l-self|ar|كُوَارْكُ عُلْوِيّ|tr=kuwarku ʿulwiyy}}, <!--
--->{{l-self|ar|كُوَارْكُ غَرِيب|tr=kuwarku ḡarīb}}, <!--
--->{{l-self|ar|كُوَارْكُ قَعْرِيّ|tr=kuwarku qaʿriyy}}, <!--
--->{{l-self|ar|كُوَارْكُ قَمِّيّ|tr=kuwarku qammiyy}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[كُوَارْك|كُوَارْكَات]]
+|كُوَارْكُ سَاحِر<tr:kuwarku sāḥir>
+|كُوَارْكُ سُفْلِيّ<tr:kuwarku sufliyy>
+|كُوَارْكُ عُلْوِيّ<tr:kuwarku ʿulwiyy>
+|كُوَارْكُ غَرِيب<tr:kuwarku ḡarīb>
+|كُوَارْكُ قَعْرِيّ<tr:kuwarku qaʿriyy>
+|كُوَارْكُ قَمِّيّ<tr:kuwarku qammiyy>
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5160 Template:list:days of the week/fa: -------- begin text --------
 {{#invoke:topic list|show
@@ -3011,9 +2959,7 @@ Page 5160 Template:list:days of the week/fa: -------- begin text --------
 |چَهارْشَنْبِه<tr:čahâršanbe>
 |پَنْج‌شَنْبِه<tr:panj-šanbe>
 |آدینِه<tr:âdine>,جُمْعِه<tr:jom'e>
-|}}
-
---><noinclude>{{list doc}}</noinclude>
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5161 Template:list:days of the week/tg: -------- begin text --------
 {{#invoke:topic list|show
@@ -3337,33 +3283,28 @@ Page 5199 Template:list:fundamental interactions/ca: -------- begin text -------
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5219 Template:list:electromagnetic radiation/en: -------- begin text --------
-{{list helper 2
-|title=electromagnetic radiation
-|hypernym=electromagnetic radiation
-|list=<!--
--->{{l-self|en|radio wave}}, <!--
--->{{l-self|en|microwave}}, <!--
--->{{l-self|en|terahertz radiation}}, <!--
--->{{l-self|en|infrared radiation}}, <!--
--->{{l-self|en|visible light}}, <!--
--->{{l-self|en|ultraviolet light}}, <!--
--->{{l-self|en|X-ray}}, <!--
--->{{l-self|en|gamma ray}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|radio wave
+|microwave
+|terahertz radiation
+|infrared radiation
+|visible light
+|ultraviolet light
+|X-ray
+|gamma ray
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5220 Template:list:electromagnetic radiation/es: -------- begin text --------
-{{list helper 2
-|title=electromagnetic radiation
+{{#invoke:topic list|show
 |hypernym=radiación electromagnética
-|list=<!--
--->{{l-self|es|radio}}, <!--
--->{{l-self|es|microonda}}, <!--
--->{{l-self|es|infrarrojo}}, <!--
--->{{l-self|es|espectro visible}}, <!--
--->{{l-self|es|ultravioleta}}, <!--
--->{{l-self|es|rayo X}}, <!--
--->{{l-self|es|rayo gamma}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+|radio
+|microonda
+|infrarrojo
+|espectro visible
+|ultravioleta
+|rayo X
+|rayo gamma
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5221 Template:list:Gregorian calendar months/en: -------- begin text --------
 {{#invoke:topic list|show
@@ -3431,65 +3372,49 @@ Page 5232 Template:list:days of the week/ru: -------- begin text --------
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5233 Template:list:sexual orientations/hi: -------- begin text --------
-{{list helper 2
-|title=sexual orientations
-|cat=hi:Sexual orientations
+{{#invoke:topic list|show
 |hypernym=
-|list=<!--
--->{{l-self|hi|उभयलैंगिकता}}, <!--
--->{{l-self|hi|समलैंगिकता}}, <!--
--->{{l-self|hi|विषमलैंगिकता}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+|उभयलैंगिकता
+|समलैंगिकता
+|विषमलैंगिकता
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5234 Template:list:sexual orientations/ast: -------- begin text --------
-{{list helper 2
-|title=sexual orientations
-|cat=ast:Sexual orientations
-|hypernym=orientación sexual
-|list=<!--
--->{{l-self|ast|asexualidá}}, <!--
--->{{l-self|ast|bisexualidá}}, <!--
--->{{l-self|ast|heterosexualidá}}, <!--
--->{{l-self|ast|homosexualidá}}, <!--
--->{{l-self|ast|pansexualidá}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[orientación sexual|orientaciones sexuales]]
+|asexualidá
+|bisexualidá
+|heterosexualidá
+|homosexualidá
+|pansexualidá
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5240 Template:list:quarks/hy: -------- begin text --------
-{{list helper 2
-|title=quarks
-|cat=hy:Quarks
-|hypernym=քվարկ
-|list=<!--
--->{{l-self|hy|u-քվարկ}}, <!--
--->{{l-self|hy|d-քվարկ}}, <!--
--->{{l-self|hy|c-քվարկ}}, <!--
--->{{l-self|hy|s-քվարկ}}, <!--
--->{{l-self|hy|t-քվարկ}}, <!--
--->{{l-self|hy|b-քվարկ}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[քվարկ]]ներ
+|u-քվարկ
+|d-քվարկ
+|c-քվարկ
+|s-քվարկ
+|t-քվարկ
+|b-քվարկ
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5241 Template:list:sexual orientations/ka: -------- begin text --------
-{{list helper 2
-|title=sexual orientations
-|cat=ka:Sexual orientations
-|hypernym=სექსუალური ორიენტაცია
-|list=<!--
--->{{l-self|ka|ასექსუალობა}}, <!--
--->{{l-self|ka|ბისექსუალობა}}, <!--
--->{{l-self|ka|ჰეტეროსექსუალობა}}, <!--
--->{{l-self|ka|ჰომოსექსუალობა}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[სექსუალური ორიენტაცია|სექსუალური ორიენტაციები]]
+|ასექსუალობა
+|ბისექსუალობა
+|ჰეტეროსექსუალობა
+|ჰომოსექსუალობა
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5245 Template:list:sexual orientations/ta: -------- begin text --------
-{{list helper 2
-|title=sexual orientations
-|cat=ta:Sexual orientations
-|hypernym=<!--?-->
-|list=<!--
--->{{l-self|ta|தன்பாலீர்ப்பு|t=homosexuality}}, <!--
--->{{l-self|ta|இருபாலீர்ப்பு|t=bisexuality}}, <!--
--->{{l-self|ta|எதிர்பாலீர்ப்பு|t=heterosexuality}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|தன்பாலீர்ப்பு
+|இருபாலீர்ப்பு
+|எதிர்பாலீர்ப்பு
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5258 Template:list:Greek mythology Titans/en: -------- begin text --------
 {{list helper 2
@@ -3532,27 +3457,21 @@ Page 5260 Template:list:Greek mythology Olympian gods/en: -------- begin text --
 -->}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5261 Template:list:sexual orientations/et: -------- begin text --------
-{{list helper 2
-|title=sexual orientations
-|cat=et:Sexual orientations
-|hypernym=seksuaalne orientatsioon|hypernym2=seksuaalne suundumus
-|list=<!--
--->{{l-self|et|aseksuaalsus}}, <!--
--->{{l-self|et|biseksuaalsus}}, <!--
--->{{l-self|et|heteroseksuaalsus}}, <!--
--->{{l-self|et|homoseksuaalsus}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[seksuaalne orientatsioon|seksuaalsed orientatsioonid]],[[seksuaalne suundumus|seksuaalsed suundumused]]
+|aseksuaalsus
+|biseksuaalsus
+|heteroseksuaalsus
+|homoseksuaalsus
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5266 Template:list:sexual orientations/pl: -------- begin text --------
-{{list helper 2
-|title=sexual orientations
-|cat=pl:Sexual orientations
-|hypernym=orientacja seksualna
-|list=<!--
--->{{l-self|pl|biseksualizm}}, <!--
--->{{l-self|pl|heteroseksualizm}}, <!--
--->{{l-self|pl|homoseksualizm}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[orientacja seksualna|orientacje seksualne]]
+|biseksualizm
+|heteroseksualizm
+|homoseksualizm
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5269 Template:list:Gregorian calendar months/pt: -------- begin text --------
 {{#invoke:topic list|show
@@ -3581,17 +3500,14 @@ Page 5270 Template:list:fundamental interactions/pl: -------- begin text -------
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5277 Template:list:sexual orientations/ca: -------- begin text --------
-{{list helper 2
-|title=sexual orientations
-|cat=ca:Sexual orientations
-|hypernym=orientació sexual
-|list=<!--
--->{{l-self|ca|asexualitat}}, <!--
--->{{l-self|ca|bisexualitat}}, <!--
--->{{l-self|ca|heterosexualitat}}, <!--
--->{{l-self|ca|homosexualitat}}, <!--
--->{{l-self|ca|pansexualitat}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[orientació sexual|orientacions sexuals]]
+|asexualitat
+|bisexualitat
+|heterosexualitat
+|homosexualitat
+|pansexualitat
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5283 Template:list:Gregorian calendar months/it: -------- begin text --------
 {{#invoke:topic list|show
@@ -3731,98 +3647,70 @@ Page 5293 Template:list:canids/en: -------- begin text --------
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5294 Template:list:parts of speech/it: -------- begin text --------
-{{list helper 2
-|title=parts of speech
-|cat=it:Parts of speech
-|hypernym=parte del discorso
-|list=<!--
--->{{l-self|it|aggettivo}}, <!--
--->{{l-self|it|articolo}}, <!--
--->{{l-self|it|avverbio}}, <!--
--->{{l-self|it|congiunzione}}, <!--
--->{{l-self|it|interiezione}}/{{l-self|it|interjezione}}, <!--
--->{{l-self|it|nome}}, <!--
--->{{l-self|it|nome aggettivo}}, <!--
--->{{l-self|it|nome sostantivo}}, <!--
--->{{l-self|it|numero}}, <!--
--->{{l-self|it|particella}}, <!--
--->{{l-self|it|preposizione}}, <!--
--->{{l-self|it|pronome}}, <!--
--->{{l-self|it|sostantivo}}, <!--
--->{{l-self|it|verbo}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[parte|parti]] del [[discorso]]
+|aggettivo
+|articolo
+|avverbio
+|congiunzione
+|interiezione~interjezione
+|nome,sostantivo
+|numero
+|particella
+|preposizione
+|pronome
+|verbo
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5295 Template:list:parts of speech/en: -------- begin text --------
-{{list helper 2
-|title=parts of speech
-|cat=en:Parts of speech
-|hypernym=part of speech
-|list=<!--
--->{{l-self|en|adjective}}, <!--
--->{{l-self|en|adnoun}}, <!--
--->{{l-self|en|adverb}}, <!--
--->{{l-self|en|article}}, <!--
--->{{l-self|en|conjunction}}, <!--
--->{{l-self|en|determiner}}, <!--
--->{{l-self|en|interjection}}, <!--
--->{{l-self|en|noun}}, <!--
--->{{l-self|en|noun adjective}}, <!--
--->{{l-self|en|noun substantive}}, <!--
--->{{l-self|en|number}}, <!--
--->{{l-self|en|numeral}}, <!--
--->{{l-self|en|particle}}, <!--
--->{{l-self|en|participle}}, <!--
--->{{l-self|en|postposition}}, <!--
--->{{l-self|en|preposition}}, <!--
--->{{l-self|en|pronoun}}, <!--
--->{{l-self|en|substantive}}, <!--
--->{{l-self|en|verb}}; <!--
--->{{l-self|en|action word}}, <!--
--->{{l-self|en|connecting word}}, <!--
--->{{l-self|en|describing word}}, <!--
--->{{l-self|en|description word}}, <!--
--->{{l-self|en|name word}}, <!--
--->{{l-self|en|naming word}} <!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|adjective
+|adverb
+|article
+|conjunction
+|determiner
+|interjection
+|noun,substantive
+|number
+|numeral
+|particle
+|participle
+|postposition
+|preposition
+|pronoun
+|proper noun
+|verb
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5296 Template:list:sexual orientations/cs: -------- begin text --------
-{{list helper 2
-|title=sexual orientations
-|cat=cs:Sexual orientations
-|hypernym=sexuální orientace
-|list=<!--
--->{{l-self|cs|asexualita}}, <!--
--->{{l-self|cs|bisexualita}}, <!--
--->{{l-self|cs|heterosexualita}}, <!--
--->{{l-self|cs|homosexualita}}, <!--
--->{{l-self|cs|pansexualita}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=sexuální orientace<!-- same singular as plural -->
+|asexualita
+|bisexualita
+|heterosexualita
+|homosexualita
+|pansexualita
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5302 Template:list:sexual orientations/sk: -------- begin text --------
-{{list helper 2
-|title=sexual orientations
-|cat=sk:Sexual orientations
-|hypernym=sexuálna orientácia
-|list=<!--
--->{{l-self|sk|asexualita}}, <!--
--->{{l-self|sk|bisexualita}}, <!--
--->{{l-self|sk|heterosexualita}}, <!--
--->{{l-self|sk|homosexualita}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[sexuálna orientácia|sexuálne orientácie]]
+|asexualita
+|bisexualita
+|heterosexualita
+|homosexualita
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5304 Template:list:quarks/fa: -------- begin text --------
-{{list helper 2
-|title=quarks
-|hypernym=کوارک
-|cat=fa:Quarks
-|list=<!--
--->{{l-self|fa|کوارک سر}}, <!--
--->{{l-self|fa|کوارک ته}}, <!--
--->{{l-self|fa|کوارک مفتون}}, <!--
--->{{l-self|fa|کوارک شگفت}}, <!--
--->{{l-self|fa|کوارک پایین}}, <!--
--->{{l-self|fa|کوارک بالا}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[کوارک|کوارک‌ها]]<tr:kuârk-hâ>
+|کوارک سر
+|کوارک ته
+|کوارک مفتون
+|کوارک شگفت
+|کوارک پایین
+|کوارک بالا
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5308 Template:list:continents/it: -------- begin text --------
 {{#invoke:topic list|show
@@ -4531,84 +4419,78 @@ Page 5363 Template:list:seasons/fa: -------- begin text --------
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5364 Template:list:books of the Protestant Old Testament/en: -------- begin text --------
-{{list helper 2
-|cat=en:Books of the Bible
-|title=books of the Protestant Old Testament
-|list=<!--
--->{{l-self|en|Genesis}}, <!--
--->{{l-self|en|Exodus}}, <!--
--->{{l-self|en|Leviticus}}, <!--
--->{{l-self|en|Numbers}}, <!--
--->{{l-self|en|Deuteronomy}}, <!--
--->{{l-self|en|Joshua}}, <!--
--->{{l-self|en|Judges}}, <!--
--->{{l-self|en|Ruth}}, <!--
--->{{l-self|en|1 Samuel}}, <!--
--->{{l-self|en|2 Samuel}}, <!--
--->{{l-self|en|1 Kings}}, <!--
--->{{l-self|en|2 Kings}}, <!--
--->{{l-self|en|1 Chronicles}}, <!--
--->{{l-self|en|2 Chronicles}}, <!--
--->{{l-self|en|Ezra}}, <!--
--->{{l-self|en|Nehemiah}}, <!--
--->{{l-self|en|Esther}}, <!--
--->{{l-self|en|Job}}, <!--
--->{{l-self|en|Psalms}}, <!--
--->{{l-self|en|Proverbs}}, <!--
--->{{l-self|en|Ecclesiastes}}, <!--
--->{{l-self|en|Song of Solomon}}, <!--
--->{{l-self|en|Isaiah}}, <!--
--->{{l-self|en|Jeremiah}}, <!--
--->{{l-self|en|Lamentations}}, <!--
--->{{l-self|en|Ezekiel}}, <!--
--->{{l-self|en|Daniel}}, <!--
--->{{l-self|en|Hosea}}, <!--
--->{{l-self|en|Joel}}, <!--
--->{{l-self|en|Amos}}, <!--
--->{{l-self|en|Obadiah}}, <!--
--->{{l-self|en|Jonah}}, <!--
--->{{l-self|en|Micah}}, <!--
--->{{l-self|en|Nahum}}, <!--
--->{{l-self|en|Habakkuk}}, <!--
--->{{l-self|en|Zephaniah}}, <!--
--->{{l-self|en|Haggai}}, <!--
--->{{l-self|en|Zechariah}}, <!--
--->{{l-self|en|Malachi}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|Genesis
+|Exodus
+|Leviticus
+|Numbers
+|Deuteronomy
+|Joshua
+|Judges
+|Ruth
+|1 Samuel
+|2 Samuel
+|1 Kings
+|2 Kings
+|1 Chronicles
+|2 Chronicles
+|Ezra
+|Nehemiah
+|Esther
+|Job
+|Psalms
+|Proverbs
+|Ecclesiastes
+|Song of Solomon
+|Isaiah
+|Jeremiah
+|Lamentations
+|Ezekiel
+|Daniel
+|Hosea
+|Joel
+|Amos
+|Obadiah
+|Jonah
+|Micah
+|Nahum
+|Habakkuk
+|Zephaniah
+|Haggai
+|Zechariah
+|Malachi
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5365 Template:list:books of the New Testament/en: -------- begin text --------
-{{list helper 2
-|cat=en:Books of the Bible
-|title=books of the New Testament
-|list=<!--
--->{{l-self|en|Matthew}}, <!--
--->{{l-self|en|Mark}}, <!--
--->{{l-self|en|Luke}}, <!--
--->{{l-self|en|John}}, <!--
--->{{l-self|en|Acts}}, <!--
--->{{l-self|en|Romans}}, <!--
--->{{l-self|en|1 Corinthians}}, <!--
--->{{l-self|en|2 Corinthians}}, <!--
--->{{l-self|en|Galatians}}, <!--
--->{{l-self|en|Ephesians}}, <!--
--->{{l-self|en|Philippians}}, <!--
--->{{l-self|en|Colossians}}, <!--
--->{{l-self|en|1 Thessalonians}}, <!--
--->{{l-self|en|2 Thessalonians}}, <!--
--->{{l-self|en|1 Timothy}}, <!--
--->{{l-self|en|2 Timothy}}, <!--
--->{{l-self|en|Titus}}, <!--
--->{{l-self|en|Philemon}}, <!--
--->{{l-self|en|Hebrews}}, <!--
--->{{l-self|en|James}}, <!--
--->{{l-self|en|1 Peter}}, <!--
--->{{l-self|en|2 Peter}}, <!--
--->{{l-self|en|1 John}}, <!--
--->{{l-self|en|2 John}}, <!--
--->{{l-self|en|3 John}}, <!--
--->{{l-self|en|Jude}}, <!--
--->{{l-self|en|Revelations}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|Matthew
+|Mark
+|Luke
+|John
+|Acts
+|Romans
+|1 Corinthians
+|2 Corinthians
+|Galatians
+|Ephesians
+|Philippians
+|Colossians
+|1 Thessalonians
+|2 Thessalonians
+|1 Timothy
+|2 Timothy
+|Titus
+|Philemon
+|Hebrews
+|James
+|1 Peter
+|2 Peter
+|1 John
+|2 John
+|3 John
+|Jude
+|Revelations
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5367 Template:list:days of the week/ar: -------- begin text --------
 {{#invoke:topic list|show<!-- FIXME: used to have pre-Islamic days as well; split out -->
@@ -4684,16 +4566,13 @@ Page 5372 Template:list:days of the week/vi: -------- begin text --------
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5398 Template:list:sexual orientations/mt: -------- begin text --------
-{{list helper 2
-|title=sexual orientations
-|cat=mt:Sexual orientations
-|hypernym=orjentazzjoni sesswali
-|list=<!--
--->{{l-self|mt|asesswalità}}, <!--
--->{{l-self|mt|bisesswalità}}, <!--
--->{{l-self|mt|eterosesswalità}}, <!--
--->{{l-self|mt|omosesswalità}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[orjentazzjoni sesswali|orjentazzjonijiet sesswali]]
+|asesswalità
+|bisesswalità
+|eterosesswalità
+|omosesswalità
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5404 Template:list:Hebrew calendar months/he: -------- begin text --------
 {{#invoke:topic list|show
@@ -4955,38 +4834,27 @@ Page 5650 Template:list:Gregorian calendar months/ca: -------- begin text ------
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5652 Template:list:electromagnetic radiation/ca: -------- begin text --------
-{{list helper 2
-|title=electromagnetic radiation
+{{#invoke:topic list|show
 |hypernym=radiació electromagnètica
-|list=<!--
--->{{l-self|ca|ona de ràdio}}, <!--
--->{{l-self|ca|microona}}, <!--
--->{{l-self|ca|infraroig}}, <!--
--->{{l-self|ca|llum visible}}, <!--
--->{{l-self|ca|ultraviolat}}, <!--
--->{{l-self|ca|raig X}}, <!--
--->{{l-self|ca|raig gamma}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+|ona de ràdio
+|microona
+|infraroig
+|llum visible
+|ultraviolat
+|raig X
+|raig gamma
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5669 Template:list:quarks/ru: -------- begin text --------
-{{list helper 2
-|title=quarks
-|cat=ru:Quarks
-|hypernym=кварк
-|list=<!--
--->{{l-self|ru|нижний кварк}}/<!--
--->{{l-self|ru|d-кварк}}, <!--
--->{{l-self|ru|верхний кварк}}/<!--
--->{{l-self|ru|u-кварк}}, <!--
--->{{l-self|ru|странный кварк}}/<!--
--->{{l-self|ru|s-кварк}}, <!--
--->{{l-self|ru|очарованный кварк}}/<!--
--->{{l-self|ru|c-кварк}}, <!--
--->{{l-self|ru|прелестный кварк}}/<!--
--->{{l-self|ru|b-кварк}}, <!--
--->{{l-self|ru|истинный кварк}}/<!--
--->{{l-self|ru|t-кварк}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[ква́рк]]и
+|ни́жний ква́рк,d-кварк
+|ве́рхний ква́рк,u-кварк
+|стра́нный кварк,s-кварк
+|очаро́ванный ква́рк,c-кварк
+|преле́стный ква́рк,b-кварк
+|и́стинный ква́рк,t-кварк
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5685 Template:list:Gregorian calendar months/sv: -------- begin text --------
 {{#invoke:topic list|show
@@ -5557,15 +5425,12 @@ Page 5875 Template:list:Katakana/ja: -------- begin text --------
 -->}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5896 Template:list:sexual orientations/tg: -------- begin text --------
-{{list helper 2
-|title=sexual orientations
-|cat=tg:Sexual orientations
-|hypernym=гароиши ҷинсӣ
-|list=<!--
--->{{l-self|tg|дигарҷинсгароӣ}}, <!--
--->{{l-self|tg|дуҷинсгароӣ‍}}, <!--
--->{{l-self|tg|ҳамҷинсгароӣ}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[гароиши ҷинсӣ|гароишхои ҷинсӣ]]<!-- FIXME: verify -->
+|дигарҷинсгароӣ
+|дуҷинсгароӣ
+|ҳамҷинсгароӣ
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5928 Template:list:provinces of Iran/en: -------- begin text --------
 {{#invoke:topic list|show
@@ -5603,18 +5468,15 @@ Page 5928 Template:list:provinces of Iran/en: -------- begin text --------
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5946 Template:list:quarks/lt: -------- begin text --------
-{{list helper 2
-|title=quarks
-|cat=lt:Quarks
-|hypernym=kvarkas
-|list=<!--
--->{{l-self|lt|aukštyn kvarkas}}, <!--
--->{{l-self|lt|žemyn kvarkas}}, <!--
--->{{l-self|lt|keistasis kvarkas}}, <!--
--->{{l-self|lt|žavusis kvarkas}}, <!--
--->{{l-self|lt|žemiausiasis kvarkas}}, <!--
--->{{l-self|lt|aukščiausiasis kvarkas}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[kvarkas|kvárkai]]
+|aukštỹn kvárkas
+|žemỹn kvárkas
+|keistàsis kvárkas
+|žavùsis kvárkas
+|žemiáusiasis kvárkas
+|aukščiáusiasis kvárkas
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5960 Template:list:days of the week/lb: -------- begin text --------
 {{#invoke:topic list|show
@@ -5861,25 +5723,22 @@ Page 6037 Template:list:seasons/eo: -------- begin text --------
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 6038 Template:list:parts of speech/eo: -------- begin text --------
-{{list helper 2
-|title=parts of speech
-|cat=eo:Parts of speech
-|hypernym=vortspeco
-|list=<!--
--->{{l-self|eo|adjektivo}}, <!--
--->{{l-self|eo|artikolo}}, <!--
--->{{l-self|eo|adverbo}}, <!--
--->{{l-self|eo|konjunkcio}}, <!--
--->{{l-self|eo|interjekcio}}, <!--
--->{{l-self|eo|numeralo}}, <!--
--->{{l-self|eo|participo}}, <!--
--->{{l-self|eo|partikulo}}, <!--
--->{{l-self|eo|postpozicio}}, <!--
--->{{l-self|eo|prepozicio}}, <!--
--->{{l-self|eo|pronomo}}, <!--
--->{{l-self|eo|substantivo}}, <!--
--->{{l-self|eo|verbo}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[vortspeco]]j
+|adjektivo
+|artikolo
+|adverbo
+|konjunkcio
+|interjekcio
+|numeralo
+|participo
+|partikulo
+|postpozicio
+|prepozicio
+|pronomo
+|substantivo
+|verbo
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 6071 Template:list:seasons/sq: -------- begin text --------
 {{#invoke:topic list|show
@@ -6472,23 +6331,20 @@ Page 6580 Template:list:Islamic calendar months/fa: -------- begin text --------
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 6581 Template:list:parts of speech/te: -------- begin text --------
-{{list helper 2
-|title=parts of speech
-|cat=te:Parts of speech
-|hypernym=భాషాభాగము
-|list=<!--
--->{{l-self|te|విశేషణము}}, <!--
--->{{l-self|te|ఉపపదము}}, <!--
--->{{l-self|te|క్రియావిశేషణము}}, <!--
--->{{l-self|te|సముచ్చయము}}, <!--
--->{{l-self|te|ఆశ్చర్యార్థకము}}, <!--
--->{{l-self|te|నామవాచకము}}, <!--
--->{{l-self|te|సంఖ్యావాచకము}}, <!--
--->{{l-self|te|అవ్యయము}}, <!--
--->{{l-self|te|అసమాపక క్రియ}}, <!--
--->{{l-self|te|సర్వనామము}}, <!--
--->{{l-self|te|క్రియ}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[భాషాభాగము|భాషాభాగములు]]
+|విశేషణము
+|ఉపపదము
+|క్రియావిశేషణము
+|సముచ్చయము
+|ఆశ్చర్యార్థకము
+|నామవాచకము
+|సంఖ్యావాచకము
+|అవ్యయము
+|అసమాపక క్రియ
+|సర్వనామము
+|క్రియ
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 6588 Template:list:planets of the Solar System/te: -------- begin text --------
 {{#invoke:topic list|show
@@ -7019,53 +6875,45 @@ Page 6647 Template:list:seasons/sla-pro: -------- begin text --------
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 6648 Template:list:times of day/sla-pro: -------- begin text --------
-{{list helper 2
-|title=times of day
-|hypernym={{l|sla-pro|*[[vermę|vermena]] [[dьnь|dьne]]}}
-|list=<!--
--->{{l|sla-pro|*zorja}}, <!--
--->{{l|sla-pro|*(j)utro}}, <!--
--->{{l|sla-pro|*polъdьnь}}, <!--
--->{{l|sla-pro|*popolъdьnь}}, <!--
--->{{l|sla-pro|*večerъ}}, <!--
--->{{l|sla-pro|*sǫmorkъ}}, <!--
--->{{l|sla-pro|*noťь}}, <!--
--->{{l|sla-pro|*polъnoťь}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=*[[vermę|vermena]] [[dьnь|dьne]]
+|*zorja
+|*(j)utro
+|*polъdьnь
+|*popolъdьnь
+|*večerъ
+|*sǫmorkъ
+|*noťь
+|*polъnoťь
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 6649 Template:list:times of day/en: -------- begin text --------
-{{list helper 2
-|title=times of day
-|hypernym={{l-self|en|time of day}}
-|cat=en:Times of day
-|list=<!--
--->{{l-self|en|dawn}}, <!--
--->{{l-self|en|morning}}, <!--
--->{{l-self|en|noon}}/{{l-self|en|midday}}, <!--
--->{{l-self|en|afternoon}}, <!--
--->{{l-self|en|dusk}}, <!--
--->{{l-self|en|evening}}, <!--
--->{{l-self|en|night}}, <!--
--->{{l-self|en|midnight}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|dawn
+|morning
+|noon,midday
+|afternoon
+|dusk
+|evening
+|night
+|midnight
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 6650 Template:list:times of day/nl: -------- begin text --------
-{{list helper 2
-|title=times of day
-|hypernym={{l-self|nl|dagdeel}}
-|list=<!--
--->{{l-self|nl|dageraad}}/{{l-self|nl|ochtendschemering}}, <!--
--->{{l-self|nl|zonsopgang}}/{{l-self|nl|zonsopkomst}}, <!--
--->{{l-self|nl|ochtend}}/{{l-self|nl|morgen}}, <!--
--->{{l-self|nl|voormiddag}}, <!--
--->{{l-self|nl|middag}}, <!--
--->{{l-self|nl|namiddag}}, <!--
--->{{l-self|nl|avond}}, <!--
--->{{l-self|nl|zonsondergang}}, <!--
--->{{l-self|nl|avondschemering}}, <!--
--->{{l-self|nl|nacht}}, <!--
--->{{l-self|nl|middernacht}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[dagdeel|dagdelen]]
+|dageraad,ochtendschemering
+|zonsopgang,zonsopkomst
+|ochtend,morgen
+|voormiddag
+|middag
+|namiddag
+|avond
+|zonsondergang
+|avondschemering
+|nacht
+|middernacht
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 6660 Template:list:Arabic script letters/fa: -------- begin text --------
 {{#invoke:topic list|show
@@ -7374,17 +7222,14 @@ Page 6730 Template:list:days of the week/fo: -------- begin text --------
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 6731 Template:list:geological time units/en: -------- begin text --------
-{{list helper 2
-|title=geological time units
-|hypernym=
-|list=<!--
--->{{l-self|en|supereon}}, <!--
--->{{l-self|en|aeon}}/{{l-self|en|eon}}, <!--
--->{{l-self|en|era}}, <!--
--->{{l-self|en|period}}, <!--
--->{{l-self|en|epoch}}, <!--
--->{{l-self|en|age}}/{{l-self|en|sub-epoch}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|supereon
+|aeon~eon
+|era
+|period
+|epoch
+|age,sub-epoch
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 6737 Template:list:fingers-humorous/pt: -------- begin text --------
 {{list helper 2
@@ -7614,53 +7459,44 @@ Page 6917 Template:list:Gregorian calendar months/zza: -------- begin text -----
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 6943 Template:list:parts of speech/lv: -------- begin text --------
-{{list helper 2
-|title=parts of speech
-|cat=lv:Parts of speech
-|hypernym={{l|lv|runas}} {{l|lv|daļas}}
-|list=<!--
--->{{l|lv|īpašības vārds}} / {{l|lv|adjektīvs}}, <!--
--->{{l|lv|apstākļa vārds}} / {{l|lv|adverbs}}, <!--
--->{{l|lv|artikuls}}, <!--
--->{{l|lv|saiklis}} / {{l|lv|konjunkcija}}, <!--
--->{{l|lv|izsauksmes vārds}} / {{l|lv|interjekcija}}, <!--
--->{{l|lv|lietvārds}} / {{l|lv|substantīvs}}, <!--
--->{{l|lv|skaitļa vārds}} / {{l|lv|numerālis}}, <!--
--->{{l|lv|partikula}}, <!--
--->{{l|lv|prievārds}} / {{l|lv|prepozīcija}}, <!--
--->{{l|lv|vietniekvārds}} / {{l|lv|pronomens}}, <!--
--->{{l|lv|darbības vārds}} / {{l|lv|verbs}} <!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[runa]]s [[daļa]]s
+|īpašības vārds,adjektīvs
+|apstākļa vārds,adverbs
+|artikuls
+|saiklis,konjunkcija
+|izsauksmes vārds,interjekcija
+|lietvārds,substantīvs
+|skaitļa vārds,numerālis
+|partikula
+|prievārds,prepozīcija
+|vietniekvārds,pronomens
+|darbības vārds,verbs
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 6949 Template:list:musical notes/es: -------- begin text --------
-{{list helper 2
-|title=musical notes
-|cat=es:Music
-|hypernym={{l|es|nota}} {{l|es|musical}}
-|list=<!--
--->{{l-self|es|do}}, <!--
--->{{l-self|es|re}}, <!--
--->{{l-self|es|mi}}, <!--
--->{{l-self|es|fa}}, <!--
--->{{l-self|es|sol}}, <!--
--->{{l-self|es|la}}, <!--
--->{{l-self|es|si}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show<!-- FIXME: might need to rename to [[Template:list:musical solfège notes/es]] -->
+|hypernym=[[nota]]s [[musical]]es
+|do
+|re
+|mi
+|fa
+|sol
+|la
+|si
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 6950 Template:list:musical notes/gl: -------- begin text --------
-{{list helper 2
-|title=musical notes
-|cat=gl:Music
-|hypernym={{l|gl|nota}} {{l|gl|musical}}
-|list=<!--
--->{{l-self|gl|dó}}, <!--
--->{{l-self|gl|re}}, <!--
--->{{l-self|gl|mi}}, <!--
--->{{l-self|gl|fa}}, <!--
--->{{l-self|gl|sol}}, <!--
--->{{l-self|gl|la}}, <!--
--->{{l-self|gl|si}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show<!-- FIXME: might need to rename to [[Template:list:musical solfège notes/gl]] -->
+|hypernym=[[nota]]s [[musical|musicais]]
+|dó
+|re
+|mi
+|fa
+|sol
+|la
+|si
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 6955 Template:list:tones in the 12ET/en: -------- begin text --------
 {{list helper 2
@@ -8752,22 +8588,19 @@ Page 7413 Template:list:compass points/se: -------- begin text --------
 <noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 7435 Template:list:times of day/cs: -------- begin text --------
-{{list helper 2
-|title=times of day
-|hypernym={{l-self|cs|[[část]] [[den|dne]]}}
-|cat=cs:Times of day
-|list=<!--
--->{{l-self|cs|úsvit}}, <!--
--->{{l-self|cs|ráno}}, <!--
--->{{l-self|cs|dopoledne}}, <!--
--->{{l-self|cs|poledne}}, <!--
--->{{l-self|cs|odpoledne}}, <!--
--->{{l-self|cs|podvečer}}, <!--
--->{{l-self|cs|večer}}, <!--
--->{{l-self|cs|soumrak}}, <!--
--->{{l-self|cs|noc}}, <!--
--->{{l-self|cs|půlnoc}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[část]]i [[den|dne]]
+|úsvit
+|ráno
+|dopoledne
+|poledne
+|odpoledne
+|podvečer
+|večer
+|soumrak
+|noc
+|půlnoc
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 7437 Template:list:days of the week/ady: -------- begin text --------
 {{#invoke:topic list|show
@@ -9146,23 +8979,20 @@ Page 7559 Template:list:Western astrology signs/th: -------- begin text --------
 -->}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 7563 Template:list:times of day/th: -------- begin text --------
-{{list helper 2
-|title=times of day
-|hypernym={{l-self|th|[[ช่วง]][[เวลา]][[ของ]][[วัน]]|tr=chûuang wee-laa kɔ̌ɔng wan}}
-|cat=th:Times of day
-|list=<!--
--->{{l-self|th|สาง}}, <!--
--->{{l-self|th|รุ่ง}}, <!--
--->{{l-self|th|เช้า}}, <!--
--->{{l-self|th|สาย}}, <!--
--->{{l-self|th|เที่ยงวัน}}, <!--
--->{{l-self|th|บ่าย}}, <!--
--->{{l-self|th|เย็น}}, <!--
--->{{l-self|th|พลบ}}, <!--
--->{{l-self|th|ค่ำ}}, <!--
--->{{l-self|th|คืน}}, <!--
--->{{l-self|th|เที่ยงคืน}} <!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[ช่วง]][[เวลา]][[ของ]][[วัน]]<tr:chûuang wee-laa kɔ̌ɔng wan>
+|สาง
+|รุ่ง
+|เช้า
+|สาย
+|เที่ยงวัน
+|บ่าย
+|เย็น
+|พลบ
+|ค่ำ
+|คืน
+|เที่ยงคืน
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 7566 Template:list:Hindu calendar months/hi: -------- begin text --------
 {{#invoke:topic list|show
@@ -9615,19 +9445,18 @@ Page 7697 Template:list:canids/io: -------- begin text --------
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 7698 Template:list:sexual orientations/io: -------- begin text --------
-{{list helper 2
-|title=sexual orientations
-|cat=io:Sexual orientations
-|hypernym=[[sexuala orientalizo]]
-|list=<!--
--->{{l-self|io|sensexua}}, <!--
--->{{l-self|io|bisexua}}, <!--
--->{{l-self|io|misexua}}, <!--
--->{{l-self|io|heterosexuala}}, <!--
--->{{l-self|io|homeosexuala}}, ({{l-self|io|geyala}}, {{l-self|io|lesbianala}}), <!--
--->{{l-self|io|omnasexua}}, <!--
--->{{l-self|io|polisexua}}, <!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show<!-- FIXME: rename to [[Template:list:sexual orientation adjectives/io]] -->
+|hypernym=[[sexuala orientalizo|sexuala orientalizi]]
+|sensexua
+|bisexua
+|misexua
+|heterosexuala
+|homeosexuala
+|* geyala
+|* lesbianala
+|omnasexua
+|polisexua
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 7740 Template:list:Gregorian calendar months/be: -------- begin text --------
 {{#invoke:topic list|show
@@ -10020,19 +9849,17 @@ Page 7932 Template:list:Roman mythology Olympian gods/ja: -------- begin text --
 -->}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 7959 Template:list:times of day/mk: -------- begin text --------
-{{list helper 2
-|title=times of day
-|hypernym={{l|mk|[[време]] [[од]] [[денот]]}}
-|list=<!--
--->{{l|mk|зора}}, <!--
--->{{l|mk|утро}}, <!--
--->{{l|mk|претпладне}}, <!--
--->{{l|mk|пладне}}, <!--
--->{{l|mk|попладне}}, <!--
--->{{l|mk|вечер}}, <!--
--->{{l|mk|ноќ}}, <!--
--->{{l|mk|полноќ}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[време|времиња]] [[од]] [[ден]]от
+|зора
+|утро
+|претпладне
+|пладне
+|попладне
+|вечер
+|ноќ
+|полноќ
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 7979 Template:list:Cyrillic script letter names/be: -------- begin text --------
 {{#invoke:topic list|show
@@ -11717,25 +11544,22 @@ Page 8585 Template:list:Gregorian calendar months/ny: -------- begin text ------
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 8599 Template:list:times of day/ug: -------- begin text --------
-{{list helper 2
-|title=times of day
-|hypernym={{l-self|ug|[[بىر]] [[كۈن|كۈندىكى]] [[ۋاقىتلار|ۋاقىت]]}}
-|cat=ug:Times of day
-|list=<!--
--->{{l-self|ug|بامدات}}, <!--
--->{{l-self|ug|تاڭ}}, <!--
--->{{l-self|ug|سەھەر}}/{{l-self|ug|ئەتىگەن}}, <!--
--->{{l-self|ug|چۈشتىن بۇرۇن}}, <!--
--->{{l-self|ug|چۈش}}, <!--
--->{{l-self|ug|پېشىن}}, <!--
--->{{l-self|ug|چۈشتىن كېيىن}}, <!--
--->{{l-self|ug|دىگەر}}, <!--
--->{{l-self|ug|كەچقۇرۇن}}, <!--
--->{{l-self|ug|شام}}, <!--
--->{{l-self|ug|كەچ}}/{{l-self|ug|كېچە}}, <!--
--->{{l-self|ug|خۇپتەن}}, <!--
--->{{l-self|ug|تۈن}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[بىر]] [[كۈن|كۈندىكى]] [[ۋاقىتلار|ۋاقىت]]
+|بامدات
+|تاڭ
+|سەھەر,ئەتىگەن
+|چۈشتىن بۇرۇن
+|چۈش
+|پېشىن
+|چۈشتىن كېيىن
+|دىگەر
+|كەچقۇرۇن
+|شام
+|كەچ,كېچە
+|خۇپتەن
+|تۈن
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 8600 Template:list:seasons/ug: -------- begin text --------
 {{#invoke:topic list|show
@@ -12331,32 +12155,28 @@ Page 8752 Template:list:tastes/de: -------- begin text --------
 -->}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 8753 Template:list:times of day/de: -------- begin text --------
-{{list helper 2
-|title=times of day
-|hypernym={{l-self|de|Tageszeit}}
-|cat=de:Times of day
-|list=<!--
--->{{l-self|de|Morgendämmerung}}, <!--
--->{{l-self|de|Morgen}}, <!--
--->{{l-self|de|Vormittag}}, <!--
--->{{l-self|de|Mittag}}, <!--
--->{{l-self|de|Nachmittag}} ({{l-self|de|Frühnachmittag}}, {{l-self|de|Spätnachmittag}}), <!--
--->{{l-self|de|Abenddämmerung}}, <!--
--->{{l-self|de|Abend}}, <!--
--->{{l-self|de|Nacht}}, <!--
--->{{l-self|de|Mitternacht}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[Tageszeit]]en
+|Morgendämmerung
+|Morgen
+|Vormittag
+|Mittag
+|Nachmittag
+|* Frühnachmittag
+|* Spätnachmittag
+|Abenddämmerung
+|Abend
+|Nacht
+|Mitternacht
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 8755 Template:list:senses/ar: -------- begin text --------
-{{list helper 2|title=senses
-|cat=ar:Senses
-|hypernym=Senses<!--
--->|list={{l-self|ar|سَمْع}}, <!--
--->{{l-self|ar|ذَوْق}}/{{l-self|ar|تَذَوُّق}}, <!--
--->{{l-self|ar|لَمْس}}, <!--
--->{{l-self|ar|شَمٌّ}}, <!--
--->{{l-self|ar|بَصَر}}/{{l-self|ar|نَظَر}}/{{l-self|ar|رُؤْيَة}}<!--
--->
+{{#invoke:topic list|show
+|سَمْع
+|ذَوْق,تَذَوُّق
+|لَمْس
+|شَمٌّ
+|بَصَر,نَظَر,رُؤْيَة
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 8769 Template:list:continents/nn: -------- begin text --------
@@ -12616,86 +12436,80 @@ Page 8935 Template:list:days of the week/nr: -------- begin text --------
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 8941 Template:list:books of the New Testament/sw: -------- begin text --------
-{{list helper 2
-|cat=sw:Books of the Bible
-|title=books of the New Testament: vitabu vya {{l|sw|Agano Jipya}}
-|edit=Template:list:books of the New Testament/sw
-|list=<!--
--->{{l-self|sw|Mathayo||Matthew}}, <!--
--->{{l-self|sw|Marko||Mark}}, <!--
--->{{l-self|sw|Luka||Luke}}, <!--
--->{{l-self|sw|Yohane||John}}, <!--
--->{{l-self|sw|Matendo||Acts}}, <!--
--->{{l-self|sw|Waroma||Romans}}, <!--
--->{{l-self|sw|Wakorintho 1||1 Corinthians}}, <!--
--->{{l-self|sw|Wakorintho 2||2 Corinthians}}, <!--
--->{{l-self|sw|Wagalatia||Galatians}}, <!--
--->{{l-self|sw|Waefeso||Ephesians}}, <!--
--->{{l-self|sw|Wafilipi||Philippians}}, <!--
--->{{l-self|sw|Wakolosai||Colossians}}, <!--
--->{{l-self|sw|Wathesalonike 1||1 Thessalonians}}, <!--
--->{{l-self|sw|Wathesalonike 2||2 Thessalonians}}, <!--
--->{{l-self|sw|Timotheo 1||1 Timothy}}, <!--
--->{{l-self|sw|Timotheo 2||2 Timothy}}, <!--
--->{{l-self|sw|Tito||Titus}}, <!--
--->{{l-self|sw|Filemoni||Philemon}}, <!--
--->{{l-self|sw|Waebrania||Hebrews}}, <!--
--->{{l-self|sw|Yakobo||James}}, <!--
--->{{l-self|sw|Petro 1||1 Peter}}, <!--
--->{{l-self|sw|Petro 2||2 Peter}}, <!--
--->{{l-self|sw|Yohane 1||1 John}}, <!--
--->{{l-self|sw|Yohane 2||2 John}}, <!--
--->{{l-self|sw|Yohane 3||3 John}}, <!--
--->{{l-self|sw|Yuda||Jude}}, <!--
--->{{l-self|sw|Ufunuo||Revelations}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[kitabu|vitabu]] vya [[Agano Jipya]]
+|Mathayo
+|Marko
+|Luka
+|Yohane
+|Matendo
+|Waroma
+|Wakorintho 1
+|Wakorintho 2
+|Wagalatia
+|Waefeso
+|Wafilipi
+|Wakolosai
+|Wathesalonike 1
+|Wathesalonike 2
+|Timotheo 1
+|Timotheo 2
+|Tito
+|Filemoni
+|Waebrania
+|Yakobo
+|Petro 1
+|Petro 2
+|Yohane 1
+|Yohane 2
+|Yohane 3
+|Yuda
+|Ufunuo
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 8967 Template:list:books of the Protestant Old Testament/sw: -------- begin text --------
-{{list helper 2
-|cat=sw:Books of the Bible
-|title=books of the Protestant Old Testament: vitabu vya [[Agano la Kale]]
-|edit=Template:list:books of the Protestant Old Testament/sw
-|list=<!--
--->{{l-self|sw|Mwanzo||Genesis}}, <!--
--->{{l-self|sw|Kutoka||Exodus}}, <!--
--->{{l-self|sw|Walawi||Leviticus}}, <!--
--->{{l-self|sw|Hesabu||Numbers}}, <!--
--->{{l-self|sw|Kumbukumbu||Deuteronomy}}, <!--
--->{{l-self|sw|Yoshua||Joshua}}, <!--
--->{{l-self|sw|Waamuzi||Judges}}, <!--
--->{{l-self|sw|Ruthu||Ruth}}, <!--
--->{{l-self|sw|Samueli 1||1 Samuel}}, <!--
--->{{l-self|sw|Samueli 2||2 Samuel}}, <!--
--->{{l-self|sw|Wafalme 1||1 Kings}}, <!--
--->{{l-self|sw|Wafalme 2||2 Kings}}, <!--
--->{{l-self|sw|Mambo ya Nyakati 1||1 Chronicles}}, <!--
--->{{l-self|sw|Mambo ya Nyakati 2||2 Chronicles}}, <!--
--->{{l-self|sw|Ezra||Ezra}}, <!--
--->{{l-self|sw|Nehemia||Nehemiah}}, <!--
--->{{l-self|sw|Esta||Esther}}, <!--
--->{{l-self|sw|Yobu||Job}}, <!--
--->{{l-self|sw|Zaburi||Psalms}}, <!--
--->{{l-self|sw|Methali||Proverbs}}, <!--
--->{{l-self|sw|Mhubiri||Ecclesiastes}}, <!--
--->{{l-self|sw|Wimbo Bora||Song of Solomon}}, <!--
--->{{l-self|sw|Isaya||Isaiah}}, <!--
--->{{l-self|sw|Yeremia||Jeremiah}}, <!--
--->{{l-self|sw|Maombolezo||Lamentations}}, <!--
--->{{l-self|sw|Ezekieli||Ezekiel}}, <!--
--->{{l-self|sw|Danieli||Daniel}}, <!--
--->{{l-self|sw|Hosea||Hosea}}, <!--
--->{{l-self|sw|Yoeli||Joel}}, <!--
--->{{l-self|sw|Amosi||Amos}}, <!--
--->{{l-self|sw|Obadia||Obadiah}}, <!--
--->{{l-self|sw|Yona||Jonah}}, <!--
--->{{l-self|sw|Mika||Micah}}, <!--
--->{{l-self|sw|Nahumu||Nahum}}, <!--
--->{{l-self|sw|Habakuki||Habakkuk}}, <!--
--->{{l-self|sw|Sefania||Zephaniah}}, <!--
--->{{l-self|sw|Hagai||Haggai}}, <!--
--->{{l-self|sw|Zekaria||Zechariah}}, <!--
--->{{l-self|sw|Malaki||Malachi}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[kitabu|vitabu]] vya [[Agano la Kale]]
+|Mwanzo
+|Kutoka
+|Walawi
+|Hesabu
+|Kumbukumbu
+|Yoshua
+|Waamuzi
+|Ruthu
+|Samueli 1
+|Samueli 2
+|Wafalme 1
+|Wafalme 2
+|Mambo ya Nyakati 1
+|Mambo ya Nyakati 2
+|Ezra
+|Nehemia
+|Esta
+|Yobu
+|Zaburi
+|Methali
+|Mhubiri
+|Wimbo Bora
+|Isaya
+|Yeremia
+|Maombolezo
+|Ezekieli
+|Danieli
+|Hosea
+|Yoeli
+|Amosi
+|Obadia
+|Yona
+|Mika
+|Nahumu
+|Habakuki
+|Sefania
+|Hagai
+|Zekaria
+|Malaki
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 9001 Template:list:camelids/sw: -------- begin text --------
 {{list helper 2
@@ -14529,22 +14343,19 @@ Page 9491 Template:list:countries of Central America/hu: -------- begin text ---
 }}{{reflist|group=c}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 9492 Template:list:times of day/hu: -------- begin text --------
-{{list helper 2
-|title=times of day
-|hypernym={{l-self|hu|napszak}}
-|cat=hu:Times of day
-|list=<!--
--->{{l-self|hu|nappal||daytime}}; <!--
--->{{l-self|hu|hajnal}}/{{l-self|hu|virradat}}/{{l-self|hu|pirkadat||dawn}}, <!--
--->{{l-self|hu|reggel||early&nbsp;morning}}, <!--
--->{{l-self|hu|délelőtt||late&nbsp;morning}}, <!--
--->{{l-self|hu|dél||noon}}, <!--
--->{{l-self|hu|délután||afternoon}}, <!--
--->{{l-self|hu|alkony}}/{{l-self|hu|alkonyat}}/{{l-self|hu|szürkület||dusk}}, <!--
--->{{l-self|hu|este||evening}}, <!--
--->{{l-self|hu|éjszaka}}/{{l-self|hu|éjjel||night}}, <!--
--->{{l-self|hu|éjfél||midnight}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[napszak]]ok
+|hajnal,virradat,pirkadat
+|reggel
+|nappal<!-- means daytime; approximate positioning -->
+|délelőtt
+|dél
+|délután
+|alkony~alkonyat,szürkület
+|este
+|éjszaka,éjjel
+|éjfél
+-->}}<noinclude>{{list doc}}<,noinclude>
 -------- end text --------
 Page 9493 Template:list:Gregorian calendar months/ia: -------- begin text --------
 {{#invoke:topic list|show
@@ -14839,36 +14650,34 @@ Page 9592 Template:list:compass points/eu: -------- begin text --------
 <noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 9601 Template:list:times of day/mnw: -------- begin text --------
-* {{list helper 2
-|title=Mon and Pali times of day
-|cat=mnw:Times of day
-|list=<!--
--->{{l-self|mnw|ဥတု|}},<!--
--->{{l-self|mnw|သံဝစ္ဆရံ|သၞာံ}},<!--
--->{{l-self|mnw|မာသော|ဂိတု}},<!--
--->{{l-self|mnw|ဒိ၀သော|တ္ၚဲ }},<!--
--->{{l-self|mnw|ဒိဝါ|အခိၚ်တ္ၚဲ }},<!--
--->{{l-self|mnw|ရတ္တိ|ဗ္တံ }},<!--
--->{{l-self|mnw|ပစ္စုသော|ပျာံဗလာၚ်ယး}},<!--
--->{{l-self|mnw|ပါတော|ပယျာံဂယးပြဟ်}},<!--
--->{{l-self|mnw|နိသဳထော|ပယျာံသဂါတ္ၚဲ }},<!--
--->{{l-self|mnw|မဇ္ဇျဏှော|ပယျာံတ္ၚဲတဴဓဝ် }},<!--
--->{{l-self|mnw|အရုဏော|အရှိုဏ်}},<!--
--->{{l-self|mnw|ပက္ခော|ပွိုၚ်ၜါသတ္တာဟ}},<!--
--->{{l-self|mnw|သတ္တာဟော|ထပှ်တ္ၚဲ }},<!--
--->{{l-self|mnw|ဃဋိကာ|နာဍဳ }},<!--
--->{{l-self|mnw|မုဟုတ္တော|မိနေတ် }},<!--
--->{{l-self|mnw|အစ္ဆရာ|ခဍတ်တဲ }},<!--
--->{{l-self|mnw|ဂိမှာနော|ဥတုဗြဲ }},<!--
--->{{l-self|mnw|ဟေမန္တော|ဥတုသ္ကတ်}},<!--
--->{{l-self|mnw|တ္ၚဲသဳဂိတုပေၚ်|ပုဏ္ဏမာသဳ}},<!--
--->{{l-self|mnw|အမာဝသဳ|တ္ၚဲသဳအာံမဝှ် ပန္နရသဳ}},<!--
--->{{l-self|mnw|အဇ္ဇ|တ္ၚဲဏံ}},<!--
--->{{l-self|mnw|သုဝေ|တ္ၚဲယးဂတ}},<!--
--->{{l-self|mnw|ဟဳယျော|နူတဏေအ်}},<!--
--->{{l-self|mnw|ပရသုဝေ|ကလဳ }},<!--
--->{{l-self|mnw|ပရဟဳယျော|နူတဏိ }}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|enhypernym=Mon and Pali times of day
+|[[ဥတု|]]
+|[[သံဝစ္ဆရံ|သၞာံ]]
+|[[မာသော|ဂိတု]]
+|[[ဒိ၀သော|တ္ၚဲ ]]
+|[[ဒိဝါ|အခိၚ်တ္ၚဲ ]]
+|[[ရတ္တိ|ဗ္တံ ]]
+|[[ပစ္စုသော|ပျာံဗလာၚ်ယး]]
+|[[ပါတော|ပယျာံဂယးပြဟ်]]
+|[[နိသဳထော|ပယျာံသဂါတ္ၚဲ ]]
+|[[မဇ္ဇျဏှော|ပယျာံတ္ၚဲတဴဓဝ် ]]
+|[[အရုဏော|အရှိုဏ်]]
+|[[ပက္ခော|ပွိုၚ်ၜါသတ္တာဟ]]
+|[[သတ္တာဟော|ထပှ်တ္ၚဲ ]]
+|[[ဃဋိကာ|နာဍဳ ]]
+|[[မုဟုတ္တော|မိနေတ် ]]
+|[[အစ္ဆရာ|ခဍတ်တဲ ]]
+|[[ဂိမှာနော|ဥတုဗြဲ ]]
+|[[ဟေမန္တော|ဥတုသ္ကတ်]]
+|[[တ္ၚဲသဳဂိတုပေၚ်|ပုဏ္ဏမာသဳ]]
+|[[အမာဝသဳ|တ္ၚဲသဳအာံမဝှ် ပန္နရသဳ]]
+|[[အဇ္ဇ|တ္ၚဲဏံ]]
+|[[သုဝေ|တ္ၚဲယးဂတ]]
+|[[ဟဳယျော|နူတဏေအ်]]
+|[[ပရသုဝေ|ကလဳ ]]
+|[[ပရဟဳယျော|နူတဏိ ]]
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 9617 Template:list:compass points/mt: -------- begin text --------
 {{list helper 2|title=compass points|hypernym=punti tal-kumpass|list=}}
@@ -15842,19 +15651,16 @@ Page 9835 Template:list:oceans/tr: -------- begin text --------
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 9836 Template:list:musical notes/tr: -------- begin text --------
-{{list helper 2
-|title=musical notes
-|cat=tr:Music
-|hypernym={{l|tr|müzik}} {{l|tr|nota|notası}}
-|list=<!--
--->{{l-self|tr|do}}, <!--
--->{{l-self|tr|re}}, <!--
--->{{l-self|tr|mi}}, <!--
--->{{l-self|tr|fa}}, <!--
--->{{l-self|tr|sol}}, <!--
--->{{l-self|tr|la}}, <!--
--->{{l-self|tr|si}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show<!-- FIXME: might need to rename to [[Template:list:musical solfège notes/tr]] -->
+|hypernym=[[müzik]] [[nota]]sı
+|do
+|re
+|mi
+|fa
+|sol
+|la
+|si
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 9837 Template:list:continents/tr: -------- begin text --------
 {{#invoke:topic list|show
@@ -16297,39 +16103,54 @@ Page 10001 Template:list:compass points/ary: -------- begin text --------
 {{c|ary|Compass points}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 10014 Template:list:times of day/ajp: -------- begin text --------
-{{list helper 2
-|title=times of day
-|hypernym={{l-self|ajp|[[وقت|أوقات]] [[يوم|اليوم]]|tr=ʔawʔāt il-yōm}}
-|cat=ajp:Times of day
-|list=<!--
--->{{l-self|ajp|نهار|tr=nhār|t=daytime}}, <!--
--->{{l-self|ajp|فجر|tr=fajr|t=dawn}}, <!--
--->{{l-self|ajp|صبحية|tr=ṣabaḥiyye|t=early morning}}, <!--
--->{{l-self|ajp|صبح|tr=ṣubḥ|t=morning}}, <!--
--->{{l-self|ajp|ضهر|tr=ḍuhr|t=noon}}, <!--
--->{{l-self|ajp|عصر|tr=ʕaṣr|t=late afternoon}}, <!--
--->{{l-self|ajp|مغرب|tr=maḡreb|t=sunset}}, <!--
--->{{l-self|ajp|مسا|tr=masa|t=evening}}, <!--
--->{{l-self|ajp|ليل|tr=lēl|t=nighttime}} <!--
--->}}<!--
-{{c|ajp|Time}}
---><noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[وقت|أوقات]] [[يوم|اليوم]]<tr:ʔawʔāt il-yōm>
+|فجر<tr:fajr>
+|صبحية<tr:ṣabaḥiyye>
+|صبح<tr:ṣubḥ>
+|نهار<tr:nhār><!-- means "daytime"; approximate positioning -->
+|ضهر<tr:ḍuhr>
+|عصر<tr:ʕaṣr>
+|مغرب<tr:maḡreb>
+|مسا<tr:masa>
+|ليل<tr:lēl>
+}}<noinclude>{{list doc}}</noinclude>
+-------- end text --------
+Page 10028 Template:list:units of time/en: -------- begin text --------
+{{#invoke:topic list|show<!-- FIXME: create -->
+|millenium
+|century
+|decade
+|year
+|month
+|week
+|day
+|hour
+|minute
+|moment<!-- approximate positioning -->
+|second
+|millisecond
+|microsecond
+|nanosecond
+|picosecond
+|femtosecond
+|attosecond
+|zeptosecond
+|yoctosecond
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 10028 Template:list:units of time/ajp: -------- begin text --------
-{{list helper 2
-|title=units of time
-|cat=
-|hypernym={{l|ajp|[[وحدة|وحدات]] [[وقت|الوقت]]|tr=waḥdāt il-waʔt}}
-|list=<!--
--->{{l-self|ajp|سنة|tr=sane|t=year}}, <!--
--->{{l-self|ajp|شهر|tr=šahr|t=month}}, <!--
--->{{l-self|ajp|أسبوع|tr=ʔusbūʕ|t=week}}, <!--
--->{{l-self|ajp|يوم|tr=yōm|t=day}}, <!--
--->{{l-self|ajp|ساعة|tr=sāʕa|t=hour}}, <!--
--->{{l-self|ajp|دقيقة|tr=daʔīʔa|t=minute}}, <!--
--->{{l-self|ajp|ثانية|tr=ṯānye|t=second}}, <!--
--->{{l-self|ajp|لحظة|tr=laḥẓa|t=moment}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[وحدة|وحدات]] [[وقت|الوقت]]<tr:waḥdāt il-waʔt>
+|سنة<tr:sane>
+|شهر<tr:šahr>
+|أسبوع<tr:ʔusbūʕ>
+|يوم<tr:yōm>
+|ساعة<tr:sāʕa>
+|دقيقة<tr:daʔīʔa>
+|لحظة<tr:laḥẓa>
+|ثانية<tr:ṯānye>
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 10032 Template:list:days of the week/aii: -------- begin text --------
 {{#invoke:topic list|show
@@ -16483,18 +16304,16 @@ Page 10043 Template:list:compass points/mrw: -------- begin text --------
 <noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 10046 Template:list:times of day/et: -------- begin text --------
-{{list helper 2
-|title=times of day
-|hypernym={{l|et|päevaaeg|päevaajad}}
-|list=<!--
--->{{l|et|varahommik}}, <!--
--->{{l|et|hommik}}, <!--
--->{{l|et|lõuna}}/{{l|et|keskpäev}}, <!--
--->{{l|et|pärastlõuna}}, <!--
--->{{l|et|õhtu}}, <!--
--->{{l|et|öö}}, <!--
--->{{l|et|kesköö}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[päevaaeg|päevaajad]]
+|varahommik
+|hommik
+|lõuna,keskpäev
+|pärastlõuna
+|õhtu
+|öö
+|kesköö
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 10052 Template:list:compass points/pi: -------- begin text --------
 {{list helper 2|title=compass points|hypernym=|list=}}
@@ -16607,25 +16426,22 @@ Page 10084 Template:list:days of the week/ksw: -------- begin text --------
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 10092 Template:list:times of day/nb: -------- begin text --------
-{{list helper 2
-|title=times of day
-|hypernym=[[døgn|døgnets]] [[tid|tider]]
-|cat=nb:Times of day
-|list=<!--
--->{{l-self|nb|demring}}/{{l-self|nb|daggry}}, <!--
--->{{l-self|nb|soloppgang}}, <!--
--->{{l-self|nb|morgen}}, <!--
--->{{l-self|nb|formiddag}}, <!--
--->{{l-self|nb|middag}}, <!--
--->{{l-self|nb|dag}}, <!--
--->{{l-self|nb|ettermiddag}}, <!--
--->{{l-self|nb|solnedgang}}, <!--
--->{{l-self|nb|blåtime}}, <!--
--->{{l-self|nb|tussmørke}}, <!--
+{{#invoke:topic list|show
+|hypernym=[[døgn]]ets [[tid]]er
+|demring,daggry
+|soloppgang
+|morgen
+|formiddag
+|middag
+|dag
+|ettermiddag
+|solnedgang
+|blåtime
+|tussmørke
 -->{{l-self|nb|kveld}}/{{l-self|nb|aften}}, <!--
--->{{l-self|nb|midnatt}}, <!--
--->{{l-self|nb|natt}}, <!--
--->}}<noinclude>{{list doc}}</noinclude>
+|midnatt
+|natt
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 10099 Template:list:compass points/ps: -------- begin text --------
 {{list helper 2|title=compass points|hypernym=|list=}}
@@ -17035,20 +16851,17 @@ Page 10213 Template:list:days of the week/yo: -------- begin text --------
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 10214 Template:list:continents/mt: -------- begin text --------
-{{list helper 2
-|title=continents
-|cat=mt:Continents
-|hypernym=kontinent
-|list=<!--
--->{{l-self|mt|Afrika|L-Afrika}}, <!--
--->{{l-self|mt|Amerika|L-Amerika}} <!--
--->({{l-self|mt|Amerika ta' Fuq|L-Amerika ta' Fuq}}, <!--
--->{{l-self|mt|Amerika t'Isfel|L-Amerika t'Isfel}}), <!--
--->{{l-self|mt|Antartika|L-Antartika}}, <!--
--->{{l-self|mt|Asja|L-Asja}}, <!--
--->{{l-self|mt|Ewropa|L-Ewropa}}, <!--
--->{{l-self|mt|[[Oċeanja|L-Oċeanja]] ([[Oċjanja|L-Oċjanja]])}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[kontinent]]i
+|[[Afrika|L-Afrika]]
+|[[Amerika|L-Amerika]]
+|* [[Amerika ta' Fuq|L-Amerika ta' Fuq]]
+|* [[Amerika t'Isfel|L-Amerika t'Isfel]]
+|[[Antartika|L-Antartika]]
+|[[Asja|L-Asja]]
+|[[Ewropa|L-Ewropa]]
+|[[Oċeanja|L-Oċeanja]]~[[Oċjanja|L-Oċjanja]]
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 10218 Template:list:Islamic prophets/bn: -------- begin text --------
 {{#invoke:topic list|show
@@ -17351,18 +17164,14 @@ Page 10308 Template:list:days of the week/ceb: -------- begin text --------
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 10314 Template:list:squarks/en: -------- begin text --------
-{{list helper 2
-|title=squarks
-|cat=en:Squarks
-|hypernym=squark
-|list=<!--
--->{{l-self|en|sup squark}}, <!--
--->{{l-self|en|sdown squark}}, <!--
--->{{l-self|en|scharm squark}}, <!--
--->{{l-self|en|sstrange squark}}, <!--
--->{{l-self|en|stop squark}}, <!--
--->{{l-self|en|sbottom squark}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|sup squark
+|sdown squark
+|scharm squark
+|sstrange squark
+|stop squark
+|sbottom squark
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 10323 Template:list:Gregorian calendar months/rgn: -------- begin text --------
 {{#invoke:topic list|show
@@ -17559,36 +17368,30 @@ Page 10381 Template:list:oceans/id: -------- begin text --------
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 10384 Template:list:continents/id: -------- begin text --------
-{{list helper 2
-|title=continents
-|cat=id:Continents
-|hypernym={{l-self|id|benua|benua-benua}}
-|list= <!--
--->{{l-self|id|Afrika}}, <!--
--->{{l-self|id|Amerika}} <!--
--->({{l-self|id|Amerika Utara}}, <!--
--->{{l-self|id|Amerika Selatan}}), <!--
--->{{l-self|id|Antarktika}}, <!--
--->{{l-self|id|Asia}}, <!--
--->{{l-self|id|Eropa}}, <!--
--->{{l-self|id|Oseania}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[benua|benua-benua]]
+|Afrika
+|Amerika
+|* Amerika Utara
+|* Amerika Selatan
+|Antarktika
+|Asia
+|Eropa
+|Oseania
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 10385 Template:list:continents/ms: -------- begin text --------
-{{list helper 2
-|title=continents
-|cat=ms:Continents
-|hypernym={{l-self|ms|benua|benua-benua}}
-|list= <!--
--->{{l-self|ms|Afrika}}, <!--
--->{{l-self|ms|Amerika}} <!--
--->({{l-self|ms|Amerika Utara}}, <!--
--->{{l-self|ms|Amerika Selatan}}), <!--
--->{{l-self|ms|Antartika}}, <!--
--->{{l-self|ms|Asia}}, <!--
--->{{l-self|ms|Eropah}}, <!--
--->{{l-self|ms|Oceania}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[benua|benua-benua]]
+|Afrika
+|Amerika
+|* Amerika Utara
+|* Amerika Selatan
+|Antartika
+|Asia
+|Eropah
+|Oceania
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 10386 Template:list:provinces of the Philippines/tl: -------- begin text --------
 {{#invoke:topic list|show
@@ -18574,7 +18377,7 @@ Page 10464 Template:list:days of the week/ilo: -------- begin text --------
 -------- end text --------
 Page 10474 Template:list:provinces of Pakistan/pnb: -------- begin text --------
 {{#invoke:topic list|show
-|hypernym=[[پاکستان]] [[دے]] [[انتظامی]] [[علاقے]]
+|hypernym=[[پاکستان]] [[دے]] [[انتظامی]] [[علاقہ|علاقے]]
 |ازاد کَشْمِیر
 |بَلوْچِسْتان
 |گِلْگِت بَلْتِسْتان
@@ -18680,19 +18483,16 @@ Page 10486 Template:list:compass points/chr: -------- begin text --------
 <noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 10490 Template:list:units of time/th: -------- begin text --------
-{{list helper 2
-|title=units of time
-|cat=
-|hypernym={{l-self|th|[[หน่วย]][[เวลา]]}}
-|list=<!--
--->{{l-self|th|ปี|t=year}}, <!--
--->{{l-self|th|เดือน|t=month}}, <!--
--->{{l-self|th|สัปดาห์|t=week}} / {{l-self|th|อาทิตย์|t=week}}, <!--
--->{{l-self|th|วัน|t=day}}, <!--
--->{{l-self|th|ชั่วโมง|t=hour}}, <!--
--->{{l-self|th|นาที|t=minute}}, <!--
--->{{l-self|th|วินาที|t=second}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[หน่วย]][[เวลา]]
+|ปี
+|เดือน
+|สัปดาห์,อาทิตย์
+|วัน
+|ชั่วโมง
+|นาที
+|วินาที
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 10491 Template:list:fingers/th: -------- begin text --------
 {{list helper 2
@@ -19602,19 +19402,16 @@ Page 10649 Template:list:states and territories of Australia/mg: -------- begin 
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 10700 Template:list:units of time/km: -------- begin text --------
-{{list helper 2
-|title=units of time
-|cat=
-|hypernym={{l-self|km|[[ឯកតា]][[នៃ]][[ពេលវេលា]]|tr='aektaa nɨy peil veiliə}}
-|list=<!--
--->{{l-self|km|ឆ្នាំ|t=year}}, <!--
--->{{l-self|km|ខែ|t=month}}, <!--
--->{{l-self|km|សប្តាហ៍|t=week}} / {{l-self|km|អាទិត្យ|t=week}}, <!--
--->{{l-self|km|ថ្ងៃ|t=day}}, <!--
--->{{l-self|km|ម៉ោង|t=hour}}, <!--
--->{{l-self|km|នាទី|t=minute}}, <!--
--->{{l-self|km|វិនាទី|t=second}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[ឯកតា]][[នៃ]][[ពេលវេលា<]<tr:'aektaa nɨy peil veiliə>
+|ឆ្នាំ
+|ខែ
+|សប្តាហ៍,អាទិត្យ
+|ថ្ងៃ
+|ម៉ោង
+|នាទី
+|វិនាទី
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 10706 Template:list:lunar months/km: -------- begin text --------
 {{#invoke:topic list|show<!-- FIXME: rename to [[Template:list:Khmer calendar months/km]] -->
@@ -19750,20 +19547,17 @@ Page 10731 Template:list:compass points/zle-ort: -------- begin text --------
 <noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 10733 Template:list:continents/my: -------- begin text --------
-{{list helper 2
-|title=continents
-|cat=my:Continents
-|hypernym={{l-self|my|တိုက်}}
-|list=<!--
--->{{l-self|my|အာဖရိက|t={{l|en|Africa}}}}, <!--
--->{{l-self|my|အမေရိက|t={{l|en|America}}}} <!--
--->({{l-self|my|မြောက်အမေရိက|t={{l|en|North America}}}}, <!--
--->{{l-self|my|တောင်အမေရိက|t={{l|en|South America}}}}), <!--
--->{{l-self|my|အန္တာတိက|t={{l|en|Antarctica}}}}, <!--
--->{{l-self|my|အာရှ|t={{l|en|Asia}}}}, <!--
--->{{l-self|my|ဥရောပ|t={{l|en|Europe}}}}, <!--
--->{{l-self|my|အိုရှန်းနီးယား|t={{l|en|Oceania}}}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=တိုက်<!-- FIXME: needs to be plural -->
+|အာဖရိက
+|အမေရိက
+|* မြောက်အမေရိက
+|* တောင်အမေရိက
+|အန္တာတိက
+|အာရှ
+|ဥရောပ
+|အိုရှန်းနီးယား
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 10736 Template:list:oceans/my: -------- begin text --------
 {{#invoke:topic list|show
@@ -19944,40 +19738,33 @@ Page 10760 Template:list:times of day/my: -------- begin text --------
 -->}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 10773 Template:list:units of time/my: -------- begin text --------
-{{list helper 2
-|title=units of time
-|cat=
-|hypernym=
-|list=<!--
--->{{l-self|my|နှစ်|t={{l|en|year}}}}, <!--
--->{{l-self|my|လ|t={{l|en|month}}}}, <!--
--->{{l-self|my|အပတ်|t={{l|en|week}}}}, <!--
--->{{l-self|my|ရက်|t={{l|en|day}}}} / {{l-self|my|နေ့|t={{l|en|day}}}}, <!--
--->{{l-self|my|နာရီ|t={{l|en|hour}}}}, <!--
--->{{l-self|my|မိနစ်|t={{l|en|minute}}}}, <!--
--->{{l-self|my|စက္ကန့်|t={{l|en|second}}}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|နှစ်
+|လ
+|အပတ်
+|ရက်,နေ့
+|နာရီ
+|မိနစ်
+|စက္ကန့်
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
-Page 10775 Template:list:traditional units of time/my: -------- begin text --------
-{{list helper 2
-|title=traditional units of time
-|cat=my:Units of measure
-|hypernym=
-|list=<!--
--->{{l-self|my|နှစ်|t=year}}, <!--
--->{{l-self|my|လ|t=month}}, <!--
--->{{l-self|my|အပတ်|t=week}}, <!--
--->{{l-self|my|ရက်|t=day}}, <!--
--->{{l-self|my|ဗဟို|t=}} / {{l-self|my|ပဟိုရ်|t=3&nbsp;hours}}, <!--
--->{{l-self|my|နာရီ|t=24&nbsp;minutes}}, <!--
--->{{l-self|my|ပါဒ်|t=6&nbsp;minutes}}, <!--
--->{{l-self|my|ဗီဇနာ|t=24&nbsp;seconds}}, <!--
--->{{l-self|my|ပြန်|t=4&nbsp;seconds}}, <!--
--->{{l-self|my|ခရာ|t=0.4&nbsp;seconds}}, <!--
--->{{l-self|my|ခဏ|t=0.16&nbsp;seconds}}, <!--
--->{{l-self|my|လယ|t=0.04&nbsp;seconds}}, <!--
--->{{l-self|my|အနုခရာ|t=32&nbsp;milliseconds}}, <!--
--->}}<noinclude>{{list doc}}</noinclude>
+Page 10775 Template:list:units of time/my/traditional: -------- begin text --------
+{{#invoke:topic list|show
+|enhypernym=+ (traditional)
+|နှစ်<t:year>
+|လ<t:month>
+|အပတ်<t:week>
+|ရက်<t:day>
+|ဗဟို~ပဟိုရ်<t:3&nbsp;hours>
+|နာရီ<t:24&nbsp;minutes>
+|ပါဒ်<t:6&nbsp;minutes>
+|ဗီဇနာ<t:24&nbsp;seconds>
+|ပြန်<t:4&nbsp;seconds>
+|ခရာ<t:0.4&nbsp;seconds>
+|ခဏ<t:0.16&nbsp;seconds>
+|လယ<t:0.04&nbsp;seconds>
+|အနုခရာ<t:32&nbsp;milliseconds>
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 10782 Template:list:fingers/my: -------- begin text --------
 {{list helper 2
@@ -21308,20 +21095,17 @@ Page 11045 Template:list:countries of Oceania/ru: -------- begin text --------
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 11054 Template:list:continents/uk: -------- begin text --------
-{{list helper 2
-|title=continents
-|cat=uk:Continents
-|hypernym={{l|uk|континент|контине́нти}}
-|list=<!--
--->{{l-self|uk|А́зія}}, <!--
--->{{l-self|uk|Аме́рика}} <!--
--->({{l-self|uk|Півні́чна Аме́рика}}, <!--
--->{{l-self|uk|Півде́нна Аме́рика}}), <!--
--->{{l-self|uk|Антаркти́да}}, <!--
--->{{l-self|uk|А́фрика}}, <!--
--->{{l-self|uk|Євро́па}}, <!--
--->{{l-self|uk|Океа́нія}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[континент|контине́нти]]
+|А́зія
+|Аме́рика
+|* Півні́чна Аме́рика
+|* Півде́нна Аме́рика
+|Антаркти́да
+|А́фрика
+|Євро́па
+|Океа́нія
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 11059 Template:list:planets of the Solar System/uk: -------- begin text --------
 {{#invoke:topic list|show
@@ -22532,20 +22316,17 @@ Page 11291 Template:list:lunar months/ml: -------- begin text --------
 -->}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 11292 Template:list:continents/ml: -------- begin text --------
-{{list helper 2
-|title=continents
-|cat=ml:Continents
-|hypernym=ഭൂഖണ്ഡം
-|list=<!--
--->{{l-self|ml|ആഫ്രിക്ക}}, <!--
--->{{l-self|ml|അമേരിക്ക}} <!--
--->({{l-self|ml|വടക്കേ അമേരിക്ക}}, <!--
--->{{l-self|ml|തെക്കേ അമേരിക്ക}}), <!--
--->{{l-self|ml|അന്റാർട്ടിക്ക}}, <!--
--->{{l-self|ml|ഏഷ്യ}}, <!--
--->{{l-self|ml|യൂറോപ്പ്}}, <!--
--->{{l-self|ml|ഓഷ്യാനിയ}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[ഭൂഖണ്ഡം|ഭൂഖണ്ഡങ്ങൾ]]
+|ആഫ്രിക്ക
+|അമേരിക്ക
+|* വടക്കേ അമേരിക്ക
+|* തെക്കേ അമേരിക്ക
+|അന്റാർട്ടിക്ക
+|ഏഷ്യ
+|യൂറോപ്പ്
+|ഓഷ്യാനിയ
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 11293 Template:list:districts of Kerala/en: -------- begin text --------
 {{#invoke:topic list|show
@@ -23190,21 +22971,18 @@ Page 11465 Template:list:compass points/mic: -------- begin text --------
 <noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 11471 Template:list:continents/cy: -------- begin text --------
-{{list helper 2
-|title=continents
-|cat=cy:Continents
-|hypernym={{l|cy|cyfandir}}
-|list=<!--
--->{{l-self|cy|Affrica}}, <!--
--->{{l-self|cy|yr Amerig}} <!--
--->({{l-self|cy|Gogledd America}}, <!--
--->{{l-self|cy|Canolbarth America}}, <!--
--->{{l-self|cy|De America}}), <!--
--->{{l-self|cy|Antarctica}}, <!--
--->{{l-self|cy|Asia}}, <!--
--->{{l-self|cy|Ewrop}}, <!--
--->{{l-self|cy|Oceania}} ({{l-self|cy|Ynysoedd y De}})<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[cyfandir]]oedd
+|Affrica
+|yr Amerig
+|* Gogledd America
+|** Canolbarth America
+|* De America
+|Antarctica
+|Asia
+|Ewrop
+|Oceania,Ynysoedd y De
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 11472 Template:list:days of the week/krj: -------- begin text --------
 {{#invoke:topic list|show
@@ -25247,20 +25025,17 @@ Page 11741 Template:list:countries of Europe/hrx: -------- begin text --------
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 11742 Template:list:continents/hrx: -------- begin text --------
-{{list helper 2
-|title=continents
-|cat=hrx:Continents
-|hypernym=Kontinent
-|list=<!--
--->{{l-self|hrx|Afrika}}, <!--
--->{{l-self|hrx|Amerika}} <!--
--->({{l-self|hrx|Nordamerika}}, <!--
--->{{l-self|hrx|Siedamerika}}), <!--
-{{l-self|hrx|Antarctica}},
--->{{l-self|hrx|Asje}}, <!--
--->{{l-self|hrx|Ëuropa}}<!--
-{{l-self|hrx|Oceania}}
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=Kontinent<!-- FIXME, needs to be plural -->
+|Afrika
+|Amerika
+|* Nordamerika
+|* Siedamerika
+<!--|Antarctica--><!-- everything commented out is untranslated from English -->
+|Asje
+|Ëuropa
+<!--|Oceania-->
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 11744 Template:list:planets of the Solar System/hrx: -------- begin text --------
 {{#invoke:topic list|show
@@ -25276,20 +25051,17 @@ Page 11744 Template:list:planets of the Solar System/hrx: -------- begin text --
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 11745 Template:list:continents/mhr: -------- begin text --------
-{{list helper 2
-|title=continents
-|cat=mhr:Continents
+{{#invoke:topic list|show
 |hypernym=Континент-влак
-|list=<!--
--->{{l-self|mhr|Африке}}, <!--
--->{{l-self|mhr|Америке}} <!--
--->({{l-self|mhr|Йӱдвел Америке}}, <!--
--->{{l-self|mhr|Кечывалвел Америке}}), <!--
-{{l-self|mhr|Антарктиде}},
--->{{l-self|mhr|Азий}}, <!--
--->{{l-self|mhr|Европо}}<!--
-{{l-self|mhr|Океаний}}
--->}}<noinclude>{{list doc}}</noinclude>
+|Африке
+|Америке
+|* Йӱдвел Америке
+|* Кечывалвел Америке
+<!--|Антарктиде--><!-- everything commented out is untranslated or improperly translated -->
+|Азий
+|Европо
+<!--|Океаний-->
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 11758 Template:list:compass points/mns-nor: -------- begin text --------
 {{list helper 2|title=compass points|hypernym={{m|mns-nor|то̄румпа̄л|то̄румпа̄лыт}}|list=}}
@@ -25422,485 +25194,462 @@ Page 11779 Template:list:days of the week/kok: -------- begin text --------
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 11786 Template:list:books of the Protestant Old Testament/id: -------- begin text --------
-{{list helper 2
-|cat=id:Books of the Bible
-|title=kitab Perjanjian Lama Protestan
-|list=<!--
--->{{l-self|id|Kejadian}}, <!--
--->{{l-self|id|Keluaran}}, <!--
--->{{l-self|id|Imamat}}, <!--
--->{{l-self|id|Bilangan}}, <!--
--->{{l-self|id|Ulangan}}, <!--
--->{{l-self|id|Yosua}}, <!--
--->{{l-self|id|Hakim-hakim}}, <!--
--->{{l-self|id|Rut}}, <!--
--->{{l-self|id|1 Samuel}}, <!--
--->{{l-self|id|2 Samuel}}, <!--
--->{{l-self|id|1 Raja-raja}}, <!--
--->{{l-self|id|2 Raja-raja}}, <!--
--->{{l-self|id|1 Tawarikh}}, <!--
--->{{l-self|id|2 Tawarikh}}, <!--
--->{{l-self|id|Ezra}}, <!--
--->{{l-self|id|Nehemia}}, <!--
--->{{l-self|id|Ester}}, <!--
--->{{l-self|id|Ayub}}, <!--
--->{{l-self|id|Mazmur}}, <!--
--->{{l-self|id|Amsal}}, <!--
--->{{l-self|id|Pengkhotbah}}, <!--
--->{{l-self|id|Kidung Agung}}, <!--
--->{{l-self|id|Yesaya}}, <!--
--->{{l-self|id|Yeremia}}, <!--
--->{{l-self|id|Ratapan}}, <!--
--->{{l-self|id|Yehezkiel}}, <!--
--->{{l-self|id|Daniel}}, <!--
--->{{l-self|id|Hosea}}, <!--
--->{{l-self|id|Yoel}}, <!--
--->{{l-self|id|Amos}}, <!--
--->{{l-self|id|Obaja}}, <!--
--->{{l-self|id|Yunus}}, <!--
--->{{l-self|id|Mikha}}, <!--
--->{{l-self|id|Nahum}}, <!--
--->{{l-self|id|Habakuk}}, <!--
--->{{l-self|id|Zefanya}}, <!--
--->{{l-self|id|Hagai}}, <!--
--->{{l-self|id|Zakharia}}, <!--
--->{{l-self|id|Maleakhi}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[kitab|kitab-kitab]] [[Perjanjian Lama]] [[Protestan]]
+|Kejadian
+|Keluaran
+|Imamat
+|Bilangan
+|Ulangan
+|Yosua
+|Hakim-hakim
+|Rut
+|1 Samuel
+|2 Samuel
+|1 Raja-raja
+|2 Raja-raja
+|1 Tawarikh
+|2 Tawarikh
+|Ezra
+|Nehemia
+|Ester
+|Ayub
+|Mazmur
+|Amsal
+|Pengkhotbah
+|Kidung Agung
+|Yesaya
+|Yeremia
+|Ratapan
+|Yehezkiel
+|Daniel
+|Hosea
+|Yoel
+|Amos
+|Obaja
+|Yunus
+|Mikha
+|Nahum
+|Habakuk
+|Zefanya
+|Hagai
+|Zakharia
+|Maleakhi
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 11795 Template:list:books of the Catholic Old Testament/id: -------- begin text --------
-{{list helper 2
-|cat=id:Books of the Bible
-|title=kitab Perjanjian Lama Katolik
-|list=<!--
--->{{l-self|id|Kejadian}}, <!--
--->{{l-self|id|Keluaran}}, <!--
--->{{l-self|id|Imamat}}, <!--
--->{{l-self|id|Bilangan}}, <!--
--->{{l-self|id|Ulangan}}, <!--
--->{{l-self|id|Yosua}}, <!--
--->{{l-self|id|Hakim-hakim}}, <!--
--->{{l-self|id|Rut}}, <!--
--->{{l-self|id|1 Samuel}}, <!--
--->{{l-self|id|2 Samuel}}, <!--
--->{{l-self|id|1 Raja-raja}}, <!--
--->{{l-self|id|2 Raja-raja}}, <!--
--->{{l-self|id|1 Tawarikh}}, <!--
--->{{l-self|id|2 Tawarikh}}, <!--
--->{{l-self|id|1 Esdras}}, <!--
--->{{l-self|id|2 Esdras}}, <!--
--->{{l-self|id|Ester}}, <!--
--->{{l-self|id|Tobit}}, <!--
--->{{l-self|id|Yudit}}, <!--
--->{{l-self|id|1 Makabe}}, <!--
--->{{l-self|id|2 Makabe}}, <!--
--->{{l-self|id|Ayub}}, <!--
--->{{l-self|id|Mazmur}}, <!--
--->{{l-self|id|Amsal}}, <!--
--->{{l-self|id|Pengkhotbah}}, <!--
--->{{l-self|id|Kidung Agung}}, <!--
--->{{l-self|id|Kebijaksanaan}}, <!--
--->{{l-self|id|Sirakh}}, <!--
--->{{l-self|id|Yesaya}}, <!--
--->{{l-self|id|Yeremia}}, <!--
--->{{l-self|id|Ratapan}}, <!--
--->{{l-self|id|Barukh}}, <!--
--->{{l-self|id|Yehezkiel}}, <!--
--->{{l-self|id|Daniel}}, <!--
--->{{l-self|id|Hosea}}, <!--
--->{{l-self|id|Yoel}}, <!--
--->{{l-self|id|Amos}}, <!--
--->{{l-self|id|Obaja}}, <!--
--->{{l-self|id|Yunus}}, <!--
--->{{l-self|id|Mikha}}, <!--
--->{{l-self|id|Nahum}}, <!--
--->{{l-self|id|Habakuk}}, <!--
--->{{l-self|id|Zefanya}}, <!--
--->{{l-self|id|Hagai}}, <!--
--->{{l-self|id|Zakharia}}, <!--
--->{{l-self|id|Maleakhi}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[kitab|kitab-kitab]] [[Perjanjian Lama]] [[Katolik]]
+|Kejadian
+|Keluaran
+|Imamat
+|Bilangan
+|Ulangan
+|Yosua
+|Hakim-hakim
+|Rut
+|1 Samuel
+|2 Samuel
+|1 Raja-raja
+|2 Raja-raja
+|1 Tawarikh
+|2 Tawarikh
+|1 Esdras
+|2 Esdras
+|Ester
+|Tobit
+|Yudit
+|1 Makabe
+|2 Makabe
+|Ayub
+|Mazmur
+|Amsal
+|Pengkhotbah
+|Kidung Agung
+|Kebijaksanaan
+|Sirakh
+|Yesaya
+|Yeremia
+|Ratapan
+|Barukh
+|Yehezkiel
+|Daniel
+|Hosea
+|Yoel
+|Amos
+|Obaja
+|Yunus
+|Mikha
+|Nahum
+|Habakuk
+|Zefanya
+|Hagai
+|Zakharia
+|Maleakhi
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 11796 Template:list:books of the Catholic Old Testament/en: -------- begin text --------
-{{list helper 2
-|cat=en:Books of the Bible
-|title=books of the Catholic Old Testament
-|list=<!--
--->{{l-self|en|Genesis}}, <!--
--->{{l-self|en|Exodus}}, <!--
--->{{l-self|en|Leviticus}}, <!--
--->{{l-self|en|Numbers}}, <!--
--->{{l-self|en|Deuteronomy}}, <!--
--->{{l-self|en|Joshua}}, <!--
--->{{l-self|en|Judges}}, <!--
--->{{l-self|en|Ruth}}, <!--
--->{{l-self|en|1 Samuel}}, <!--
--->{{l-self|en|2 Samuel}}, <!--
--->{{l-self|en|1 Kings}}, <!--
--->{{l-self|en|2 Kings}}, <!--
--->{{l-self|en|1 Chronicles}}, <!--
--->{{l-self|en|2 Chronicles}}, <!--
--->{{l-self|en|1 Esdras}}, <!--
--->{{l-self|en|2 Esdras}}, <!--
--->{{l-self|en|Esther}}, <!--
--->{{l-self|en|Tobit}}, <!--
--->{{l-self|en|Judith}}, <!--
--->{{l-self|en|1 Maccabees}}, <!--
--->{{l-self|en|2 Maccabees}}, <!--
--->{{l-self|en|Job}}, <!--
--->{{l-self|en|Psalms}}, <!--
--->{{l-self|en|Proverbs}}, <!--
--->{{l-self|en|Ecclesiastes}}, <!--
--->{{l-self|en|Song of Songs}}, <!--
--->{{l-self|en|Wisdom}}, <!--
--->{{l-self|en|Sirach}}, <!--
--->{{l-self|en|Isaiah}}, <!--
--->{{l-self|en|Jeremiah}}, <!--
--->{{l-self|en|Lamentations}}, <!--
--->{{l-self|en|Baruch}}, <!--
--->{{l-self|en|Ezekiel}}, <!--
--->{{l-self|en|Daniel}}, <!--
--->{{l-self|en|Hosea}}, <!--
--->{{l-self|en|Joel}}, <!--
--->{{l-self|en|Amos}}, <!--
--->{{l-self|en|Obadiah}}, <!--
--->{{l-self|en|Jonah}}, <!--
--->{{l-self|en|Micah}}, <!--
--->{{l-self|en|Nahum}}, <!--
--->{{l-self|en|Habakkuk}}, <!--
--->{{l-self|en|Zephaniah}}, <!--
--->{{l-self|en|Haggai}}, <!--
--->{{l-self|en|Zechariah}}, <!--
--->{{l-self|en|Malachi}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|Genesis
+|Exodus
+|Leviticus
+|Numbers
+|Deuteronomy
+|Joshua
+|Judges
+|Ruth
+|1 Samuel
+|2 Samuel
+|1 Kings
+|2 Kings
+|1 Chronicles
+|2 Chronicles
+|1 Esdras
+|2 Esdras
+|Esther
+|Tobit
+|Judith
+|1 Maccabees
+|2 Maccabees
+|Job
+|Psalms
+|Proverbs
+|Ecclesiastes
+|Song of Songs
+|Wisdom
+|Sirach
+|Isaiah
+|Jeremiah
+|Lamentations
+|Baruch
+|Ezekiel
+|Daniel
+|Hosea
+|Joel
+|Amos
+|Obadiah
+|Jonah
+|Micah
+|Nahum
+|Habakkuk
+|Zephaniah
+|Haggai
+|Zechariah
+|Malachi
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 11797 Template:list:books of the New Testament/id: -------- begin text --------
-{{list helper 2
-|cat=id:Books of the Bible
-|title=kitab Perjanjian Baru
-|list=<!--
--->{{l-self|id|Matius}}, <!--
--->{{l-self|id|Markus}}, <!--
--->{{l-self|id|Lukas}}, <!--
--->{{l-self|id|Yohanes}}, <!--
--->{{l-self|id|Kisah Para Rasul}}, <!--
--->{{l-self|id|Roma}}, <!--
--->{{l-self|id|1 Korintus}}, <!--
--->{{l-self|id|2 Korintus}}, <!--
--->{{l-self|id|Galatia}}, <!--
--->{{l-self|id|Efesus}}, <!--
--->{{l-self|id|Filipi}}, <!--
--->{{l-self|id|Kolose}}, <!--
--->{{l-self|id|1 Tesalonika}}, <!--
--->{{l-self|id|2 Tesalonika}}, <!--
--->{{l-self|id|1 Timotius}}, <!--
--->{{l-self|id|2 Timotius}}, <!--
--->{{l-self|id|Titus}}, <!--
--->{{l-self|id|Filemon}}, <!--
--->{{l-self|id|Ibrani}}, <!--
--->{{l-self|id|Yakobus}}, <!--
--->{{l-self|id|1 Petrus}}, <!--
--->{{l-self|id|2 Petrus}}, <!--
--->{{l-self|id|1 Yohanes}}, <!--
--->{{l-self|id|2 Yohanes}}, <!--
--->{{l-self|id|3 Yohanes}}, <!--
--->{{l-self|id|Yudas}}, <!--
--->{{l-self|id|Wahyu}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[kitab|kitab-kitab]] [[Perjanjian Baru]]
+|Matius
+|Markus
+|Lukas
+|Yohanes
+|Kisah Para Rasul
+|Roma
+|1 Korintus
+|2 Korintus
+|Galatia
+|Efesus
+|Filipi
+|Kolose
+|1 Tesalonika
+|2 Tesalonika
+|1 Timotius
+|2 Timotius
+|Titus
+|Filemon
+|Ibrani
+|Yakobus
+|1 Petrus
+|2 Petrus
+|1 Yohanes
+|2 Yohanes
+|3 Yohanes
+|Yudas
+|Wahyu
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 11798 Template:list:books of the New Testament/tl: -------- begin text --------
-{{list helper 2
-|cat=tl:Books of the Bible
-|title=aklat ng Bagong Tipan
-|list=<!--
--->{{l-self|tl|Mateo}}, <!--
--->{{l-self|tl|Marcos}}, <!--
--->{{l-self|tl|Lucas}}, <!--
--->{{l-self|tl|Juan}}, <!--
--->{{l-self|tl|Mga Gawa}}, <!--
--->{{l-self|tl|Roma}}, <!--
--->{{l-self|tl|1 Corinto}}, <!--
--->{{l-self|tl|2 Corinto}}, <!--
--->{{l-self|tl|Galatia}}, <!--
--->{{l-self|tl|Efeso}}, <!--
--->{{l-self|tl|Filipos}}, <!--
--->{{l-self|tl|Colosas}}, <!--
--->{{l-self|tl|1 Tesalonica}}, <!--
--->{{l-self|tl|2 Tesalonica}}, <!--
--->{{l-self|tl|1 Timoteo}}, <!--
--->{{l-self|tl|2 Timoteo}}, <!--
--->{{l-self|tl|Tito}}, <!--
--->{{l-self|tl|Filemon}}, <!--
--->{{l-self|tl|Ebreo}}, <!--
--->{{l-self|tl|Santiago}}, <!--
--->{{l-self|tl|1 Pedro}}, <!--
--->{{l-self|tl|2 Pedro}}, <!--
--->{{l-self|tl|1 Juan}}, <!--
--->{{l-self|tl|2 Juan}}, <!--
--->{{l-self|tl|3 Juan}}, <!--
--->{{l-self|tl|Judas}}, <!--
--->{{l-self|tl|Pahayag}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=mga [[aklat]] ng [[Bagong Tipan]]
+|Mateo
+|Marcos
+|Lucas
+|Juan
+|Mga Gawa
+|Roma
+|1 Corinto
+|2 Corinto
+|Galatia
+|Efeso
+|Filipos
+|Colosas
+|1 Tesalonica
+|2 Tesalonica
+|1 Timoteo
+|2 Timoteo
+|Tito
+|Filemon
+|Ebreo
+|Santiago
+|1 Pedro
+|2 Pedro
+|1 Juan
+|2 Juan
+|3 Juan
+|Judas
+|Pahayag
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 11799 Template:list:books of the New Testament/fr: -------- begin text --------
-{{list helper 2
-|cat=fr:Books of the Bible
-|title=livres du Nouveau Testament
-|list=<!--
--->{{l-self|fr|Matthieu}}, <!--
--->{{l-self|fr|Marc}}, <!--
--->{{l-self|fr|Luc}}, <!--
--->{{l-self|fr|Jean}}, <!--
--->{{l-self|fr|Actes}}, <!--
--->{{l-self|fr|Romains}}, <!--
--->{{l-self|fr|1 Corinthiens}}, <!--
--->{{l-self|fr|2 Corinthiens}}, <!--
--->{{l-self|fr|Galates}}, <!--
--->{{l-self|fr|Éphésiens}}, <!--
--->{{l-self|fr|Philippiens}}, <!--
--->{{l-self|fr|Colossiens}}, <!--
--->{{l-self|fr|1 Thessaloniciens}}, <!--
--->{{l-self|fr|2 Thessaloniciens}}, <!--
--->{{l-self|fr|1 Timothée}}, <!--
--->{{l-self|fr|2 Timothée}}, <!--
--->{{l-self|fr|Tite}}, <!--
--->{{l-self|fr|Philemon}}, <!--
--->{{l-self|fr|Hébreux}}, <!--
--->{{l-self|fr|Jacques}}, <!--
--->{{l-self|fr|1 Pierre}}, <!--
--->{{l-self|fr|2 Pierre}}, <!--
--->{{l-self|fr|1 Jean}}, <!--
--->{{l-self|fr|2 Jean}}, <!--
--->{{l-self|fr|3 Jean}}, <!--
--->{{l-self|fr|Judas}}, <!--
--->{{l-self|fr|Apocalypse}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[livre]]s du [[Nouveau Testament]]
+|Matthieu
+|Marc
+|Luc
+|Jean
+|Actes
+|Romains
+|1 Corinthiens
+|2 Corinthiens
+|Galates
+|Éphésiens
+|Philippiens
+|Colossiens
+|1 Thessaloniciens
+|2 Thessaloniciens
+|1 Timothée
+|2 Timothée
+|Tite
+|Philemon
+|Hébreux
+|Jacques
+|1 Pierre
+|2 Pierre
+|1 Jean
+|2 Jean
+|3 Jean
+|Judas
+|Apocalypse
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 11800 Template:list:books of the New Testament/es: -------- begin text --------
-{{list helper 2
-|cat=es:Books of the Bible
-|title=libros del Nuevo Testamento
-|list=<!--
--->{{l-self|es|Mateo}}, <!--
--->{{l-self|es|Marcos}}, <!--
--->{{l-self|es|Lucas}}, <!--
--->{{l-self|es|Juan}}, <!--
--->{{l-self|es|Hechos}}, <!--
--->{{l-self|es|Romanos}}, <!--
--->{{l-self|es|1 Corintios}}, <!--
--->{{l-self|es|2 Corintios}}, <!--
--->{{l-self|es|Gálatas}}, <!--
--->{{l-self|es|Efesios}}, <!--
--->{{l-self|es|Filipenses}}, <!--
--->{{l-self|es|Colosenses}}, <!--
--->{{l-self|es|1 Tesalonicenses}}, <!--
--->{{l-self|es|2 Tesalonicenses}}, <!--
--->{{l-self|es|1 Timoteo}}, <!--
--->{{l-self|es|2 Timoteo}}, <!--
--->{{l-self|es|Tito}}, <!--
--->{{l-self|en|Filemón}}, <!--
--->{{l-self|en|Hebreos}}, <!--
--->{{l-self|es|Santiago}}, <!--
--->{{l-self|es|1 Pedro}}, <!--
--->{{l-self|es|2 Pedro}}, <!--
--->{{l-self|es|1 Juan}}, <!--
--->{{l-self|es|2 Juan}}, <!--
--->{{l-self|es|3 Juan}}, <!--
--->{{l-self|es|Judas}}, <!--
--->{{l-self|es|Apocalipsis}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[libro]]s del [[Nuevo Testamento]]
+|Mateo
+|Marcos
+|Lucas
+|Juan
+|Hechos
+|Romanos
+|1 Corintios
+|2 Corintios
+|Gálatas
+|Efesios
+|Filipenses
+|Colosenses
+|1 Tesalonicenses
+|2 Tesalonicenses
+|1 Timoteo
+|2 Timoteo
+|Tito
+|Filemón
+|Hebreos
+|Santiago
+|1 Pedro
+|2 Pedro
+|1 Juan
+|2 Juan
+|3 Juan
+|Judas
+|Apocalipsis
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 11801 Template:list:books of the New Testament/pt: -------- begin text --------
-{{list helper 2
-|cat=pt:Books of the Bible
-|title=livros do Novo Testamento
-|list=<!--
--->{{l-self|pt|Mateus}}, <!--
--->{{l-self|pt|Marcos}}, <!--
--->{{l-self|pt|Lucas}}, <!--
--->{{l-self|pt|João}}, <!--
--->{{l-self|pt|Atos}}, <!--
--->{{l-self|pt|Romanos}}, <!--
--->{{l-self|pt|1 Coríntios}}, <!--
--->{{l-self|pt|2 Coríntios}}, <!--
--->{{l-self|pt|Gálatas}}, <!--
--->{{l-self|pt|Efésios}}, <!--
--->{{l-self|pt|Filipenses}}, <!--
--->{{l-self|pt|Colossenses}}, <!--
--->{{l-self|pt|1 Tessalonicenses}}, <!--
--->{{l-self|pt|2 Tessalonicenses}}, <!--
--->{{l-self|pt|1 Timóteo}}, <!--
--->{{l-self|pt|2 Timóteo}}, <!--
--->{{l-self|pt|Tito}}, <!--
--->{{l-self|pt|Filémon}}, <!--
--->{{l-self|pt|Hebreus}}, <!--
--->{{l-self|pt|Tiago}}, <!--
--->{{l-self|pt|1 Pedro}}, <!--
--->{{l-self|pt|2 Pedro}}, <!--
--->{{l-self|pt|1 João}}, <!--
--->{{l-self|pt|2 João}}, <!--
--->{{l-self|pt|3 João}}, <!--
--->{{l-self|pt|Judas}}, <!--
--->{{l-self|pt|Apocalipse}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[livro]]s do [[Novo Testamento]]
+|Mateus
+|Marcos
+|Lucas
+|João
+|Atos
+|Romanos
+|1 Coríntios
+|2 Coríntios
+|Gálatas
+|Efésios
+|Filipenses
+|Colossenses
+|1 Tessalonicenses
+|2 Tessalonicenses
+|1 Timóteo
+|2 Timóteo
+|Tito
+|Filémon<ll:Portugal>~Filêmon<ll:Brazil>
+|Hebreus
+|Tiago
+|1 Pedro
+|2 Pedro
+|1 João
+|2 João
+|3 João
+|Judas
+|Apocalipse
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 11811 Template:list:books of the Catholic Old Testament/es: -------- begin text --------
-{{list helper 2
-|cat=es:Books of the Bible
-|title=libros del Antiguo Testamento católico
-|list=<!--
--->{{l-self|es|Génesis}}, <!--
--->{{l-self|es|Éxodo}}, <!--
--->{{l-self|es|Levítico}}, <!--
--->{{l-self|es|Números}}, <!--
--->{{l-self|es|Deuteronomio}}, <!--
--->{{l-self|es|Josué}}, <!--
--->{{l-self|es|Jueces}}, <!--
--->{{l-self|es|Rut}}, <!--
--->{{l-self|es|1 Samuel}}, <!--
--->{{l-self|es|2 Samuel}}, <!--
--->{{l-self|es|1 Reyes}}, <!--
--->{{l-self|es|2 Reyes}}, <!--
--->{{l-self|es|1 Crónicas}}, <!--
--->{{l-self|es|2 Crónicas}}, <!--
--->{{l-self|es|1 Esdras}}, <!--
--->{{l-self|es|2 Esdras}}, <!--
--->{{l-self|es|Ester}}, <!--
--->{{l-self|es|Tobías}}, <!--
--->{{l-self|es|Judit}}, <!--
--->{{l-self|es|1 Macabeos}}, <!--
--->{{l-self|es|2 Macabeos}}, <!--
--->{{l-self|es|Job}}, <!--
--->{{l-self|es|Salmos}}, <!--
--->{{l-self|es|Proverbios}}, <!--
--->{{l-self|es|Eclesiastés}}, <!--
--->{{l-self|es|Cantar de los Cantares}}, <!--
--->{{l-self|es|Sabiduría}}, <!--
--->{{l-self|es|Sirácides}}, <!--
--->{{l-self|es|Isaías}}, <!--
--->{{l-self|es|Jeremías}}, <!--
--->{{l-self|es|Lamentaciones}}, <!--
--->{{l-self|es|Baruc}}, <!--
--->{{l-self|es|Ezequiel}}, <!--
--->{{l-self|es|Daniel}}, <!--
--->{{l-self|es|Oseas}}, <!--
--->{{l-self|es|Joel}}, <!--
--->{{l-self|es|Amós}}, <!--
--->{{l-self|es|Abdías}}, <!--
--->{{l-self|es|Jonás}}, <!--
--->{{l-self|es|Miqueas}}, <!--
--->{{l-self|es|Nahúm}}, <!--
--->{{l-self|es|Habacuc}}, <!--
--->{{l-self|es|Sofonías}}, <!--
--->{{l-self|es|Hageo}}, <!--
--->{{l-self|es|Zacarías}}, <!--
--->{{l-self|es|Malaquías}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[libro]]s del [[Antiguo Testamento]] [[católico]]
+|Génesis
+|Éxodo
+|Levítico
+|Números
+|Deuteronomio
+|Josué
+|Jueces
+|Rut
+|1 Samuel
+|2 Samuel
+|1 Reyes
+|2 Reyes
+|1 Crónicas
+|2 Crónicas
+|1 Esdras
+|2 Esdras
+|Ester
+|Tobías
+|Judit
+|1 Macabeos
+|2 Macabeos
+|Job
+|Salmos
+|Proverbios
+|Eclesiastés
+|Cantar de los Cantares
+|Sabiduría
+|Sirácides
+|Isaías
+|Jeremías
+|Lamentaciones
+|Baruc
+|Ezequiel
+|Daniel
+|Oseas
+|Joel
+|Amós
+|Abdías
+|Jonás
+|Miqueas
+|Nahúm
+|Habacuc
+|Sofonías
+|Hageo
+|Zacarías
+|Malaquías
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 11812 Template:list:books of the Catholic Old Testament/pt: -------- begin text --------
-{{list helper 2
-|cat=pt:Books of the Bible
-|title=livros do Antigo Testamento católico
-|list=<!--
--->{{l-self|pt|Génesis}}/{{l-self|pt|Gênesis}} {{q|Brazil}}, <!--
--->{{l-self|pt|Êxodo}}, <!--
--->{{l-self|pt|Levítico}}, <!--
--->{{l-self|pt|Números}}, <!--
--->{{l-self|pt|Deuteronómio}}/{{l-self|pt|Deuteronômio}} {{q|Brazil}}, <!--
--->{{l-self|pt|Josué}}, <!--
--->{{l-self|pt|Juízes}}, <!--
--->{{l-self|pt|Rute}}, <!--
--->{{l-self|pt|1 Samuel}}, <!--
--->{{l-self|pt|2 Samuel}}, <!--
--->{{l-self|pt|1 Reis}}, <!--
--->{{l-self|pt|2 Reis}}, <!--
--->{{l-self|pt|1 Crónicas}}/{{l-self|pt|1 Crônicas}} {{q|Brazil}}, <!--
--->{{l-self|pt|2 Crónicas}}/{{l-self|pt|2 Crônicas}} {{q|Brazil}}, <!--
--->{{l-self|pt|Esdras}}, <!--
--->{{l-self|pt|Neemias}}, <!--
--->{{l-self|pt|Tobias}}, <!--
--->{{l-self|pt|Judite}}, <!--
--->{{l-self|pt|Ester}}, <!--
--->{{l-self|pt|1 Macabeus}}, <!--
--->{{l-self|pt|2 Macabeus}}, <!--
--->{{l-self|pt|Jó}}, <!--
--->{{l-self|pt|Salmos}}, <!--
--->{{l-self|pt|Provérbios}}, <!--
--->{{l-self|pt|Eclesiastes}}, <!--
--->{{l-self|pt|Cântico dos Cânticos}}, <!--
--->{{l-self|pt|Sabedoria}}, <!--
--->{{l-self|pt|Eclesiástico}}, <!--
--->{{l-self|pt|Isaías}}, <!--
--->{{l-self|pt|Jeremias}}, <!--
--->{{l-self|pt|Lamentações}}, <!--
--->{{l-self|pt|Baruque}}, <!--
--->{{l-self|pt|Ezequiel}}, <!--
--->{{l-self|pt|Daniel}}, <!--
--->{{l-self|pt|Oseias}}, <!--
--->{{l-self|pt|Joel}}, <!--
--->{{l-self|pt|Amós}}, <!--
--->{{l-self|pt|Abdias}}, <!--
--->{{l-self|pt|Jonas}}, <!--
--->{{l-self|pt|Miqueias}}, <!--
--->{{l-self|pt|Naum}}, <!--
--->{{l-self|pt|Habacuc}}, <!--
--->{{l-self|pt|Sofonias}}, <!--
--->{{l-self|pt|Ageu}}, <!--
--->{{l-self|pt|Zacarias}}, <!--
--->{{l-self|pt|Malaquias}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[livro]]s do [[Antigo Testamento]] [[católico]]
+|Génesis<ll:Portugal>~Gênesis<ll:Brazil>
+|Êxodo
+|Levítico
+|Números
+|Deuteronómio<ll:Portugal>~Deuteronômio<ll:Brazil>
+|Josué
+|Juízes
+|Rute
+|1 Samuel
+|2 Samuel
+|1 Reis
+|2 Reis
+|1 Crónicas<ll:Portugal>~1 Crônicas<ll:Brazil>
+|2 Crónicas<ll:Portugal>~2 Crônicas<ll:Brazil>
+|Esdras
+|Neemias
+|Tobias
+|Judite
+|Ester
+|1 Macabeus
+|2 Macabeus
+|Jó
+|Salmos
+|Provérbios
+|Eclesiastes
+|Cântico dos Cânticos
+|Sabedoria
+|Eclesiástico
+|Isaías
+|Jeremias
+|Lamentações
+|Baruque
+|Ezequiel
+|Daniel
+|Oseias
+|Joel
+|Amós
+|Abdias
+|Jonas
+|Miqueias
+|Naum
+|Habacuc
+|Sofonias
+|Ageu
+|Zacarias
+|Malaquias
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 11820 Template:list:books of the Catholic Old Testament/fr: -------- begin text --------
-{{list helper 2
-|cat=fr:Books of the Bible
-|title=livres de l'Ancien Testament catholique
-|list=<!--
--->{{l-self|fr|Genèse}}, <!--
--->{{l-self|fr|Exode}}, <!--
--->{{l-self|fr|Lévitique}}, <!--
--->{{l-self|fr|Nombres}}, <!--
--->{{l-self|fr|Deutéronome}}, <!--
--->{{l-self|fr|Josué}}, <!--
--->{{l-self|fr|Juges}}, <!--
--->{{l-self|fr|Ruth}}, <!--
--->{{l-self|fr|1 Samuel}}, <!--
--->{{l-self|fr|2 Samuel}}, <!--
--->{{l-self|fr|1 Rois}}, <!--
--->{{l-self|fr|2 Rois}}, <!--
--->{{l-self|fr|1 Crónicas}}, <!--
--->{{l-self|fr|2 Crónicas}}, <!--
--->{{l-self|fr|1 Esdras}}, <!--
--->{{l-self|fr|2 Esdras}}, <!--
--->{{l-self|fr|Esther}}, <!--
--->{{l-self|fr|Tobit}}, <!--
--->{{l-self|fr|Judith}}, <!--
--->{{l-self|fr|1 Maccabées}}, <!--
--->{{l-self|fr|2 Maccabées}}, <!--
--->{{l-self|fr|Job}}, <!--
--->{{l-self|fr|Psaumes}}, <!--
--->{{l-self|fr|Proverbes}}, <!--
--->{{l-self|fr|Ecclésiaste}}, <!--
--->{{l-self|fr|Cantique des Cantiques}}, <!--
--->{{l-self|fr|Sagesse}}, <!--
--->{{l-self|fr|Siracide}}, <!--
--->{{l-self|fr|Isaïe}}, <!--
--->{{l-self|fr|Jérémie}}, <!--
--->{{l-self|fr|Lamentations}}, <!--
--->{{l-self|fr|Baruch}}, <!--
--->{{l-self|fr|Ézéchiel}}, <!--
--->{{l-self|fr|Daniel}}, <!--
--->{{l-self|fr|Osée}}, <!--
--->{{l-self|fr|Joël}}, <!--
--->{{l-self|fr|Amos}}, <!--
--->{{l-self|fr|Abdias}}, <!--
--->{{l-self|fr|Jonas}}, <!--
--->{{l-self|fr|Michée}}, <!--
--->{{l-self|fr|Nahúm}}, <!--
--->{{l-self|fr|Habacuc}}, <!--
--->{{l-self|fr|Sophonie}}, <!--
--->{{l-self|fr|Aggée}}, <!--
--->{{l-self|fr|Zacharie}}, <!--
--->{{l-self|fr|Malachie}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[livre]]s de l'[[Ancien Testament]] [[catholique]]
+|Genèse
+|Exode
+|Lévitique
+|Nombres
+|Deutéronome
+|Josué
+|Juges
+|Ruth
+|1 Samuel
+|2 Samuel
+|1 Rois
+|2 Rois
+|1 Crónicas
+|2 Crónicas
+|1 Esdras
+|2 Esdras
+|Esther
+|Tobit
+|Judith
+|1 Maccabées
+|2 Maccabées
+|Job
+|Psaumes
+|Proverbes
+|Ecclésiaste
+|Cantique des Cantiques
+|Sagesse
+|Siracide
+|Isaïe
+|Jérémie
+|Lamentations
+|Baruch
+|Ézéchiel
+|Daniel
+|Osée
+|Joël
+|Amos
+|Abdias
+|Jonas
+|Michée
+|Nahúm
+|Habacuc
+|Sophonie
+|Aggée
+|Zacharie
+|Malachie
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 11829 Template:list:compass points/sd: -------- begin text --------
 {{list helper 2|title=compass points|hypernym=|list=}}
@@ -25927,21 +25676,18 @@ Page 11830 Template:list:compass points/or: -------- begin text --------
 <noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 11831 Template:list:continents/or: -------- begin text --------
-{{list helper 2
-|title=continents
-|cat=or:Continents
-|hypernym=ମହାଦେଶ
-|list=<!--
--->{{l-self|or|ଆଣ୍ଟର୍କାଟିକା}}, <!--
--->{{l-self|or|ଆଫ୍ରିକା}}, <!--
--->{{l-self|or|ଆମେରିକା}} <!--
--->({{l-self|or|ଉତ୍ତର ଆମେରିକା}}, <!--
--->{{l-self|or|ଦକ୍ଷିଣ ଆମେରିକା}}), <!--
--->{{l-self|or|ଇଉରେସିଆ}} <!--
--->({{l-self|or|ଇଉରୋପ}}, <!--
--->{{l-self|or|ଏସିଆ}}), <!--
--->{{l-self|or|ଓସେନିଆ}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[ମହାଦେଶ|ମହାଦେଶଗୁଡ଼ିକ]]
+|ଆଣ୍ଟର୍କାଟିକା
+|ଆଫ୍ରିକା
+|ଆମେରିକା
+|* ଉତ୍ତର ଆମେରିକା
+|* ଦକ୍ଷିଣ ଆମେରିକା
+|ଇଉରେସିଆ
+|* ଇଉରୋପ
+|* ଏସିଆ
+|ଓସେନିଆ
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 11834 Template:list:times of day/tpw: -------- begin text --------
 {{list helper 2
@@ -26293,84 +26039,80 @@ Page 11882 Template:list:oceans/cy: -------- begin text --------
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 11883 Template:list:books of the New Testament/cy: -------- begin text --------
-{{list helper 2
-|cat=cy:Books of the Bible
-|title=llyfrau'r {{l|cy|Testament Newydd}}
-|list=<!--
--->{{l-self|cy|Mathew}}, <!--
--->{{l-self|cy|Marc}}, <!--
--->{{l-self|cy|Luc}}, <!--
--->{{l-self|cy|Ioan}}, <!--
--->{{l-self|cy|Actau'r Apostolion}}, <!--
--->{{l-self|cy|Rhufeiniaid}}, <!--
--->{{l-self|cy|1 Corinthiaid}}, <!--
--->{{l-self|cy|2 Corinthiaid}}, <!--
--->{{l-self|cy|Galatiaid}}, <!--
--->{{l-self|cy|Effesiaid}}, <!--
--->{{l-self|cy|Philipiaid}}, <!--
--->{{l-self|cy|Colosiaid}}, <!--
--->{{l-self|cy|1 Thesaloniaid}}, <!--
--->{{l-self|cy|2 Thesaloniaid}}, <!--
--->{{l-self|cy|1 Timotheus}}, <!--
--->{{l-self|cy|2 Timotheus}}, <!--
--->{{l-self|cy|Titus}}, <!--
--->{{l-self|cy|Philemon}}, <!--
--->{{l-self|cy|Hebreaid}}, <!--
--->{{l-self|cy|Iago}}, <!--
--->{{l-self|cy|1 Pedr}}, <!--
--->{{l-self|cy|2 Pedr}}, <!--
--->{{l-self|cy|1 Ioan}}, <!--
--->{{l-self|cy|2 Ioan}}, <!--
--->{{l-self|cy|3 Ioan}}, <!--
--->{{l-self|cy|Jwdas}}, <!--
--->{{l-self|cy|Datguddiad}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[llyfr]]au'r [[Testament Newydd]]
+|Mathew
+|Marc
+|Luc
+|Ioan
+|Actau'r Apostolion
+|Rhufeiniaid
+|1 Corinthiaid
+|2 Corinthiaid
+|Galatiaid
+|Effesiaid
+|Philipiaid
+|Colosiaid
+|1 Thesaloniaid
+|2 Thesaloniaid
+|1 Timotheus
+|2 Timotheus
+|Titus
+|Philemon
+|Hebreaid
+|Iago
+|1 Pedr
+|2 Pedr
+|1 Ioan
+|2 Ioan
+|3 Ioan
+|Jwdas
+|Datguddiad
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 11884 Template:list:books of the Protestant Old Testament/cy: -------- begin text --------
-{{list helper 2
-|cat=cy:Books of the Bible
-|title=llyfrau'r [[Hen Destament]] [[Protestannaidd]]
-|list=<!--
--->{{l-self|cy|Genesis}}, <!--
--->{{l-self|cy|Exodus}}, <!--
--->{{l-self|cy|Lefiticus}}, <!--
--->{{l-self|cy|Numeri}}, <!--
--->{{l-self|cy|Deuteronomium}}, <!--
--->{{l-self|cy|Josua}}, <!--
--->{{l-self|cy|Barnwyr}}, <!--
--->{{l-self|cy|Ruth}}, <!--
--->{{l-self|cy|1 Samuel}}, <!--
--->{{l-self|cy|2 Samuel}}, <!--
--->{{l-self|cy|1 Brenhinoedd}}, <!--
--->{{l-self|cy|2 Brenhinoedd}}, <!--
--->{{l-self|cy|1 Cronicl}}, <!--
--->{{l-self|cy|2 Cronicl}}, <!--
--->{{l-self|cy|Esra}}, <!--
--->{{l-self|cy|Nehemeia}}, <!--
--->{{l-self|cy|Esther}}, <!--
--->{{l-self|cy|Job}}, <!--
--->{{l-self|cy|Salmau}}, <!--
--->{{l-self|cy|Diarhebion}}, <!--
--->{{l-self|cy|Pregethwr}}, <!--
--->{{l-self|cy|Caniad Solomon}}, <!--
--->{{l-self|cy|Eseia}}, <!--
--->{{l-self|cy|Jeremeia}}, <!--
--->{{l-self|cy|Galarnad}}, <!--
--->{{l-self|cy|Eseciel}}, <!--
--->{{l-self|cy|Daniel}}, <!--
--->{{l-self|cy|Hosea}}, <!--
--->{{l-self|cy|Joel}}, <!--
--->{{l-self|cy|Amos}}, <!--
--->{{l-self|cy|Obadeia}}, <!--
--->{{l-self|cy|Jona}}, <!--
--->{{l-self|cy|Micha}}, <!--
--->{{l-self|cy|Nahum}}, <!--
--->{{l-self|cy|Habacuc}}, <!--
--->{{l-self|cy|Seffaneia}}, <!--
--->{{l-self|cy|Haggai}}, <!--
--->{{l-self|cy|Sechareia}}, <!--
--->{{l-self|cy|Malachi}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[llyfr]]au'r [[Hen Destament]] [[Protestannaidd]]
+|Genesis
+|Exodus
+|Lefiticus
+|Numeri
+|Deuteronomium
+|Josua
+|Barnwyr
+|Ruth
+|1 Samuel
+|2 Samuel
+|1 Brenhinoedd
+|2 Brenhinoedd
+|1 Cronicl
+|2 Cronicl
+|Esra
+|Nehemeia
+|Esther
+|Job
+|Salmau
+|Diarhebion
+|Pregethwr
+|Caniad Solomon
+|Eseia
+|Jeremeia
+|Galarnad
+|Eseciel
+|Daniel
+|Hosea
+|Joel
+|Amos
+|Obadeia
+|Jona
+|Micha
+|Nahum
+|Habacuc
+|Seffaneia
+|Haggai
+|Sechareia
+|Malachi
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 11885 Template:list:oceans/kw: -------- begin text --------
 {{#invoke:topic list|show
@@ -26405,20 +26147,17 @@ Page 11891 Template:list:compass points/acw: -------- begin text --------
 {{c|acw|Compass points}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 11892 Template:list:continents/ms/Arab: -------- begin text --------
-{{list helper 2
-|title=continents
-|cat=ms:Continents
-|hypernym={{l-self|ms|بنوا}}
-|list= <!--
--->{{l-self|ms|افريکا}}, <!--
--->{{l-self|ms|اميريکا}} <!--
--->({{l-self|ms|اميريکا اوتارا}}, <!--
--->{{l-self|ms|اميريکا سلاتن}}), <!--
--->{{l-self|ms|انترتيکا}}, <!--
--->{{l-self|ms|اسيا}}, <!--
--->{{l-self|ms|ايروڤه}}, <!--
--->{{l-self|ms|اوسيانيا}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[بنوا|بنوا-بنوا]]
+|افريکا
+|اميريکا
+|* اميريکا اوتارا
+|* اميريکا سلاتن
+|انترتيکا
+|اسيا
+|ايروڤه
+|اوسيانيا
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 11893 Template:list:Arabic script letter names/ms: -------- begin text --------
 {{#invoke:topic list|show
@@ -26461,57 +26200,55 @@ Page 11893 Template:list:Arabic script letter names/ms: -------- begin text ----
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 11894 Template:list:books of the Catholic Old Testament/tl: -------- begin text --------
-{{list helper 2
-|cat=tl:Books of the Bible
-|title=aklat ng Lupang Tipang Katoliko
-|list=<!--
--->{{l-self|tl|Genesis}}, <!--
--->{{l-self|tl|Exodo}}, <!--
--->{{l-self|tl|Levitico}}, <!--
--->{{l-self|tl|Mga Bilang}}, <!--
--->{{l-self|tl|Deuteronomio}}, <!--
--->{{l-self|tl|Josue}}, <!--
--->{{l-self|tl|Mga Hukom}}, <!--
--->{{l-self|tl|Rut}}, <!--
--->{{l-self|tl|1 Samuel}}, <!--
--->{{l-self|tl|2 Samuel}}, <!--
--->{{l-self|tl|1 Mga Hari}}, <!--
--->{{l-self|tl|2 Mga Hari}}, <!--
--->{{l-self|tl|1 Cronica}}, <!--
--->{{l-self|tl|2 Cronica}}, <!--
--->{{l-self|tl|1 Esdras}}, <!--
--->{{l-self|tl|2 Esdras}}, <!--
--->{{l-self|tl|Ester}}, <!--
--->{{l-self|tl|Tobit}}, <!--
--->{{l-self|tl|Judit}}, <!--
--->{{l-self|tl|1 Mga Macabeo}}, <!--
--->{{l-self|tl|2 Mga Macabeo}}, <!--
--->{{l-self|tl|Job}}, <!--
--->{{l-self|tl|Salmo}}, <!--
--->{{l-self|tl|Kawikaan}}, <!--
--->{{l-self|tl|Eclesiastes}}, <!--
--->{{l-self|tl|Awit ng mga Awit}}, <!--
--->{{l-self|tl|Karunungan}}, <!--
--->{{l-self|tl|Sirac}}, <!--
--->{{l-self|tl|Isaias}}, <!--
--->{{l-self|tl|Jeremias}}, <!--
--->{{l-self|tl|Mga Panaghoy}}, <!--
--->{{l-self|tl|Baruc}}, <!--
--->{{l-self|tl|Ezequiel}}, <!--
--->{{l-self|tl|Daniel}}, <!--
--->{{l-self|tl|Oseas}}, <!--
--->{{l-self|tl|Joel}}, <!--
--->{{l-self|tl|Amos}}, <!--
--->{{l-self|tl|Abdias}}, <!--
--->{{l-self|tl|Jonas}}, <!--
--->{{l-self|tl|Miqueas}}, <!--
--->{{l-self|tl|Nahum}}, <!--
--->{{l-self|tl|Habakuk}}, <!--
--->{{l-self|tl|Sofonias}}, <!--
--->{{l-self|tl|Hagai}}, <!--
--->{{l-self|tl|Zacarias}}, <!--
--->{{l-self|tl|Malaquias}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=mga [[aklat]] ng [[Lupang Tipang]] [[Katoliko]]
+|Genesis
+|Exodo
+|Levitico
+|Mga Bilang
+|Deuteronomio
+|Josue
+|Mga Hukom
+|Rut
+|1 Samuel
+|2 Samuel
+|1 Mga Hari
+|2 Mga Hari
+|1 Cronica
+|2 Cronica
+|1 Esdras
+|2 Esdras
+|Ester
+|Tobit
+|Judit
+|1 Mga Macabeo
+|2 Mga Macabeo
+|Job
+|Salmo
+|Kawikaan
+|Eclesiastes
+|Awit ng mga Awit
+|Karunungan
+|Sirac
+|Isaias
+|Jeremias
+|Mga Panaghoy
+|Baruc
+|Ezequiel
+|Daniel
+|Oseas
+|Joel
+|Amos
+|Abdias
+|Jonas
+|Miqueas
+|Nahum
+|Habakuk
+|Sofonias
+|Hagai
+|Zacarias
+|Malaquias
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 11895 Template:list:countries of Africa/ms: -------- begin text --------
 {{#invoke:topic list|show
@@ -26573,35 +26310,29 @@ Page 11895 Template:list:countries of Africa/ms: -------- begin text --------
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 11906 Template:list:musical notes/uk: -------- begin text --------
-{{list helper 2
-|title=musical notes
-|cat=uk:Music
-|hypernym={{l|uk|[[музичний|музичні]] [[нота|ноти]]}}
-|list=<!--
--->{{l-self|uk|до}}, <!--
--->{{l-self|uk|ре}}, <!--
--->{{l-self|uk|мі}}, <!--
--->{{l-self|uk|фа}}, <!--
--->{{l-self|uk|соль}}, <!--
--->{{l-self|uk|ля}}, <!--
--->{{l-self|uk|сі}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show<!-- FIXME: might need to rename to [[Template:list:musical solfège notes/uk]] -->
+|hypernym=[[музичний|музичні]] [[нота|ноти]]
+|до
+|ре
+|мі
+|фа
+|соль
+|ля
+|сі
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 11909 Template:list:continents/hsb: -------- begin text --------
-{{list helper 2
-|title=continents
-|cat=hsb:Continents
-|hypernym=kontinent
-|list=<!--
--->{{l-self|hsb|Afrika}}, <!--
--->{{l-self|hsb|Amerika}} <!--
--->({{l-self|hsb|Sewjerna Amerika}}, <!--
--->{{l-self|hsb|Južna Amerika}}), <!--
-{{l-self|hsb|Antarktis}},
--->{{l-self|hsb|Azija}}, <!--
--->{{l-self|hsb|Europa}}<!--
-{{l-self|hsb|Oceaniska}}
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=kontinent<!-- FIXME: needs to be plural -->
+|Afrika
+|Amerika
+|* Sewjerna Amerika
+|* Južna Amerika
+<!--|Antarktis--><!-- everything commented out is untranslated or improperly translated -->
+|Azija
+|Europa
+<!--|Oceaniska-->
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 11910 Template:list:Haft Sin/fa: -------- begin text --------
 {{list helper 2
@@ -26934,50 +26665,47 @@ Page 11977 Template:list:countries of Europe/la: -------- begin text --------
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 11997 Template:list:books of the Protestant Old Testament/gd: -------- begin text --------
-{{list helper 2
-|cat=gd:Books of the Bible
-|title=Scottish Gaelic books of the Old Testament
-|list=<!--
--->{{l-self|gd|Genesis}}, <!--
--->{{l-self|gd|Ecsodus}}, <!--
--->{{l-self|gd|Lebhiticus}}, <!--
--->{{l-self|gd|Àireamh}}, <!--
--->{{l-self|gd|Deuteronomi}}, <!--
--->{{l-self|gd|Iosua}}, <!--
--->{{l-self|gd|Britheamhan}}, <!--
--->{{l-self|gd|Rut}}, <!--
--->{{l-self|gd|1 Samuel}}, <!--
--->{{l-self|gd|2 Samuel}}, <!--
--->{{l-self|gd|1 Rìghrean}}, <!--
--->{{l-self|gd|2 Rìghrean}}, <!--
--->{{l-self|gd|1 Eachdraidh}}, <!--
--->{{l-self|gd|2 Eachdraidh}}, <!--
--->{{l-self|gd|Esra}}, <!--
--->{{l-self|gd|Nehemiah}}, <!--
--->{{l-self|gd|Ester}}, <!--
--->{{l-self|gd|Iob}}, <!--
--->{{l-self|gd|Sailm}}, <!--
--->{{l-self|gd|Gnàth-fhacail}}, <!--
--->{{l-self|gd|Eclesiastes}}, <!--
--->{{l-self|gd|Dàn Sholaimh}}, <!--
--->{{l-self|gd|Isaiah}}, <!--
--->{{l-self|gd|Ieremiah}}, <!--
--->{{l-self|gd|Tuireadh}}, <!--
--->{{l-self|gd|Eseciel}}, <!--
--->{{l-self|gd|Daniel}}, <!--
--->{{l-self|gd|Hosèa}}, <!--
--->{{l-self|gd|Ioel}}, <!--
--->{{l-self|gd|Amos}}, <!--
--->{{l-self|gd|Obadiah}}, <!--
--->{{l-self|gd|Ionah}}, <!--
--->{{l-self|gd|Micah}}, <!--
--->{{l-self|gd|Nahum}}, <!--
--->{{l-self|gd|Habacuc}}, <!--
--->{{l-self|gd|Sephaniah}}, <!--
--->{{l-self|gd|Hagai}}, <!--
--->{{l-self|gd|Sechariah}}, <!--
--->{{l-self|gd|Malachi}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|Genesis
+|Ecsodus
+|Lebhiticus
+|Àireamh
+|Deuteronomi
+|Iosua
+|Britheamhan
+|Rut
+|1 Samuel
+|2 Samuel
+|1 Rìghrean
+|2 Rìghrean
+|1 Eachdraidh
+|2 Eachdraidh
+|Esra
+|Nehemiah
+|Ester
+|Iob
+|Sailm
+|Gnàth-fhacail
+|Eclesiastes
+|Dàn Sholaimh
+|Isaiah
+|Ieremiah
+|Tuireadh
+|Eseciel
+|Daniel
+|Hosèa
+|Ioel
+|Amos
+|Obadiah
+|Ionah
+|Micah
+|Nahum
+|Habacuc
+|Sephaniah
+|Hagai
+|Sechariah
+|Malachi
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 12013 Template:list:Gregorian calendar months/pln: -------- begin text --------
 {{#invoke:topic list|show
@@ -26996,19 +26724,16 @@ Page 12013 Template:list:Gregorian calendar months/pln: -------- begin text ----
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 12015 Template:list:units of time/hi: -------- begin text --------
-{{list helper 2
-|title=units of time
-|cat=
-|hypernym={{l-self|hi|[[समय]] के [[मात्रक]]}}
-|list=<!--
--->{{l-self|hi|बरस|t=year}} / {{l-self|hi|साल|t=year}}, <!--
--->{{l-self|hi|मास|t=month}} / {{l-self|hi|महीना|t=month}}, <!--
--->{{l-self|hi|सप्ताह|t=week}}, <!--
--->{{l-self|hi|दिन|t=day}}, <!--
--->{{l-self|hi|घंटा|t=hour}}, <!--
--->{{l-self|hi|मिनट|t=minute}}, <!--
--->{{l-self|hi|सैकंड|t=second}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[समय]] के [[मात्रक]]<!-- मात्रक is same singular and plural -->
+|बरस,साल
+|मास,महीना
+|सप्ताह
+|दिन
+|घंटा
+|मिनट
+|सैकंड
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 12017 Template:list:countries of Europe/sk: -------- begin text --------
 {{#invoke:topic list|show
@@ -27655,20 +27380,17 @@ Page 12147 Template:list:days of the week/tsg: -------- begin text --------
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 12155 Template:list:units of time/acw: -------- begin text --------
-{{list helper 2
-|title=units of time
-|cat=
-|hypernym={{l|acw|[[وحدة|وحدات]] [[وقت|الوقت]]|tr=wiḥdāt al-wagt}}
-|list=<!--
--->{{l-self|acw|سنة|tr=sana|t=year}}, <!--
--->{{l-self|acw|شهر|tr=šahar|t=month}}, <!--
--->{{l-self|acw|أسبوع|tr=ʔusbūʕ|t=week}}, <!--
--->{{l-self|acw|يوم|tr=yōm|t=day}}, <!--
--->{{l-self|acw|ساعة|tr=sāʕa|t=hour}}, <!--
--->{{l-self|acw|دقيقة|tr=dagīga|t=minute}}, <!--
--->{{l-self|acw|ثانية|tr=ṯānya|t=second}}, <!--
--->{{l-self|acw|لحظة|tr=laḥẓa|t=moment}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[وحدة|وحدات]] [[وقت|الوقت]]<tr:wiḥdāt al-wagt>
+|سنة<tr:sana>
+|شهر<tr:šahar>
+|أسبوع<tr:ʔusbūʕ>
+|يوم<tr:yōm>
+|ساعة<tr:sāʕa>
+|دقيقة<tr:dagīga>
+|لحظة<tr:laḥẓa>
+|ثانية<tr:ṯānya>
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 12156 Template:list:days of the week/acw: -------- begin text --------
 {{#invoke:topic list|show
@@ -27915,50 +27637,48 @@ Page 12190 Template:list:days of the week/zle-ono: -------- begin text --------
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 12191 Template:list:books of the Protestant Old Testament/pt: -------- begin text --------
-{{list helper 2
-|cat=pt:Books of the Bible
-|title=livros do Antigo Testamento protestante
-|list=<!--
--->{{l-self|pt|Génesis}}/{{l-self|pt|Gênesis}} {{q|Brazil}}, <!--
--->{{l-self|pt|Êxodo}}, <!--
--->{{l-self|pt|Levítico}}, <!--
--->{{l-self|pt|Números}}, <!--
--->{{l-self|pt|Deuteronómio}}/{{l-self|pt|Deuteronômio}} {{q|Brazil}}, <!--
--->{{l-self|pt|Josué}}, <!--
--->{{l-self|pt|Juízes}}, <!--
--->{{l-self|pt|Rute}}, <!--
--->{{l-self|pt|1 Samuel}}, <!--
--->{{l-self|pt|2 Samuel}}, <!--
--->{{l-self|pt|1 Reis}}, <!--
--->{{l-self|pt|2 Reis}}, <!--
--->{{l-self|pt|1 Crónicas}}/{{l-self|pt|1 Crônicas}} {{q|Brazil}}, <!--
--->{{l-self|pt|2 Crónicas}}/{{l-self|pt|2 Crônicas}} {{q|Brazil}}, <!--
--->{{l-self|pt|Esdras}}, <!--
--->{{l-self|pt|Neemias}}, <!--
--->{{l-self|pt|Ester}}, <!--
--->{{l-self|pt|Jó}}, <!--
--->{{l-self|pt|Salmos}}, <!--
--->{{l-self|pt|Provérbios}}, <!--
--->{{l-self|pt|Eclesiastes}}, <!--
--->{{l-self|pt|Cântico dos Cânticos}}, <!--
--->{{l-self|pt|Isaías}}, <!--
--->{{l-self|pt|Jeremias}}, <!--
--->{{l-self|pt|Lamentações}}, <!--
--->{{l-self|pt|Ezequiel}}, <!--
--->{{l-self|pt|Daniel}}, <!--
--->{{l-self|pt|Oseias}}, <!--
--->{{l-self|pt|Joel}}, <!--
--->{{l-self|pt|Amós}}, <!--
--->{{l-self|pt|Obadias}}, <!--
--->{{l-self|pt|Jonas}}, <!--
--->{{l-self|pt|Miqueias}}, <!--
--->{{l-self|pt|Naum}}, <!--
--->{{l-self|pt|Habacuque}}, <!--
--->{{l-self|pt|Sofonias}}, <!--
--->{{l-self|pt|Ageu}}, <!--
--->{{l-self|pt|Zacarias}}, <!--
--->{{l-self|pt|Malaquias}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[livro]]s do [[Antigo Testamento]] [[protestante]]
+|Génesis<ll:Portugal>~Gênesis<ll:Brazil>
+|Êxodo
+|Levítico
+|Números
+|Deuteronómio<ll:Portugal>~Deuteronômio<ll:Brazil>
+|Josué
+|Juízes
+|Rute
+|1 Samuel
+|2 Samuel
+|1 Reis
+|2 Reis
+|1 Crónicas<ll:Portugal>~1 Crônicas<ll:Brazil>
+|2 Crónicas<ll:Portugal>~2 Crônicas<ll:Brazil>
+|Esdras
+|Neemias
+|Ester
+|Jó
+|Salmos
+|Provérbios
+|Eclesiastes
+|Cântico dos Cânticos
+|Isaías
+|Jeremias
+|Lamentações
+|Ezequiel
+|Daniel
+|Oseias
+|Joel
+|Amós
+|Obadias
+|Jonas
+|Miqueias
+|Naum
+|Habacuque
+|Sofonias
+|Ageu
+|Zacarias
+|Malaquias
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 12198 Template:list:Gregorian calendar months/rsk: -------- begin text --------
 {{#invoke:topic list|show
@@ -28417,20 +28137,17 @@ Page 12277 Template:list:countries of Central America/pl: -------- begin text --
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 12278 Template:list:continents/pl: -------- begin text --------
-{{list helper 2
-|title=continents
-|cat=pl:Continents
-|hypernym={{l|pl|kontynent|kontynenty}}
-|list=<!--
--->{{l-self|pl|Afryka}}, <!--
--->{{l-self|pl|Ameryka}} <!--
--->({{l-self|pl|Ameryka Południowa}}, <!--
--->{{l-self|pl|Ameryka Północna}}), <!--
--->{{l-self|pl|Antarktyda}}, <!--
--->{{l-self|pl|Azja}}, <!--
--->{{l-self|pl|Europa}}, <!--
--->{{l-self|pl|Oceania}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[kontynent]]y
+|Afryka
+|Ameryka
+|* Ameryka Południowa
+|* Ameryka Północna
+|Antarktyda
+|Azja
+|Europa
+|Oceania
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 12279 Template:list:countries of Oceania/pl: -------- begin text --------
 {{#invoke:topic list|show
@@ -28559,38 +28276,31 @@ Page 12301 Template:list:countries of Europe/et: -------- begin text --------
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 12304 Template:list:units of time/mnw: -------- begin text --------
-{{list helper 2
-|title=units of time
-|cat=
-|hypernym=
-|list=<!--
--->{{l-self|mnw|သၞာံ|t=year}}, <!--
--->{{l-self|mnw|ဂိတု|t=month}}, <!--
--->{{l-self|mnw|သတ္တဟ|t=week}}, <!--
--->{{l-self|mnw|တ္ၚဲ|t=day}}, <!--
--->{{l-self|mnw|အခိၚ်|t=hour}}, <!--
--->{{l-self|mnw|ဂအုံ|t=minute}}, <!--
--->{{l-self|mnw|နာဍေက်|t=second}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|သၞာံ
+|ဂိတု
+|သတ္တဟ
+|တ္ၚဲ
+|အခိၚ်
+|ဂအုံ
+|နာဍေက်
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 12305 Template:list:units of time/lo: -------- begin text --------
-{{list helper 2
-|title=units of time
-|cat=
-|hypernym={{l-self|lo|[[ໜ່ວຍ]][[ເວລາ]]}}
-|list=<!--
--->{{l-self|lo|ປີ|t=year}}, <!--
--->{{l-self|lo|ເດືອນ|t=month}}, <!--
--->{{l-self|lo|ສັບປະດາ|t=week}} / {{l-self|lo|ອາທິດ|t=week}}, <!--
--->{{l-self|lo|ມື້|t=day}} / {{l-self|lo|ວັນ|t=day}}, <!--
--->{{l-self|lo|ຊົ່ວໂມງ|t=hour}}, <!--
--->{{l-self|lo|ນາທີ|t=minute}}, <!--
--->{{l-self|lo|ວິນາທີ|t=second}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[ໜ່ວຍ]][[ເວລາ]]
+|ປີ
+|ເດືອນ
+|ສັບປະດາ,ອາທິດ
+|ມື້,ວັນ
+|ຊົ່ວໂມງ
+|ນາທີ
+|ວິນາທີ
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 12307 Template:list:countries of Europe/lv: -------- begin text --------
 {{#invoke:topic list|show
-|hypernym=[[Eiropa|Eiropas]] [[valsts|valstis]]
+|hypernym=[[Eiropa]]s [[valsts|valstis]]
 |Albānija
 |Andora
 |Apvienotā Karaliste
@@ -29580,16 +29290,13 @@ Page 12466 Template:list:compass points/su: -------- begin text --------
 <noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 12467 Template:list:times of day/yrl: -------- begin text --------
-{{list helper 2
-|title=times of day
-|hypernym={{l-self|yrl|ara}} {{l-self|yrl|angawa|rangawa-itá}}
-|cat=yrl:Times of day
-|list=<!--
--->{{l-self|yrl|kuẽma}}, <!--
--->{{l-self|yrl|yandara}}, <!--
--->{{l-self|yrl|karuka}}, <!--
--->{{l-self|yrl|pisayé}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[ara]] [[angawa|rangawa-itá]]
+|kuẽma
+|yandara
+|karuka
+|pisayé
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 12470 Template:list:states of Austria/pl: -------- begin text --------
 {{#invoke:topic list|show
