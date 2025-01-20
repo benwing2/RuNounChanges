@@ -62,23 +62,31 @@ local topic_list_properties = {
 	-- FIXME: We may need to be smarter, and use a regular columnar display in some cases (e.g. when translit is
 	-- present)
 	{".* script letter names", {horiz = "bullet", sort = false, cat = letter_name_category}},
+	{"books of the.* Testament", {sort = false, cat = "Books of the Bible"}},
 	{"canids", {horiz = "bullet"}}, -- only 5 items on most lists
 	{"countries in .*", {appendix = "Appendix:Countries of the world"}},
 	{"days of the week", {horiz = "bullet", sort = false, appendix = "Appendix:Days of the week"}},
 	{"dentistry location adjectives", {cat = "Dentistry"}},
+	{"electromagnetic radiation", {sort = false, cat = "Electromagnetism"}},
 	{"fundamental interactions", {cat = "Physics"}},
+	{"geological time units", {sort = false, cat = "Units of time,Geology"}},
 	{"human anatomy location adjectives", {cat = "Medicine"}},
 	{"Islamic prophets", {sort = false}},
 	{"leptons", {sort = false, horiz = "bullet"}},
 	{"antileptons", {sort = false, horiz = "bullet", cat = "Leptons"}},
 	{"oceans", {horiz = "bullet"}},
 	{"planets of the Solar System", {horiz = "bullet", sort = false}},
+	{"quarks", {sort = false, horiz = "bullet"}},
+	{"squarks", {sort = false, horiz = "bullet", cat = "Quarks"}},
+	{"antiquarks", {sort = false, horiz = "bullet", cat = "Quarks"}},
 	{"religions", {cat = "Religion"}}, -- FIXME, use "Religions"
 	{"religious adherents", {cat = "Religion"}},
 	{"religious texts", {cat = "Religion"}},
 	{"seasons", {horiz = "bullet", sort = false}},
+	{"sexual orientation adjectives", {cat = "Sexual orientations"}},
 	{"taxonomic ranks", {sort = false}},
 	{"times of day", {sort = false}},
+	{"units of time", {sort = false}},
 }
 
 --[==[
