@@ -1,14 +1,18 @@
 local export = {}
 
 local columns_module = "Module:columns"
+local languages_module = "Module:languages"
 local parameters_module = "Module:parameters"
+local string_utilities_module = "Module:string utilities"
+
+local rfind = require(string_utilities_module).find
 
 local function letter_like_category(data)
 	return ("Category:%s letters"):format(data.lang:getCanonicalName())
 end
 
 local function page_exists(page)
-	local title = mw.title.new(appendix)
+	local title = mw.title.new(page)
 	return title and title.exists
 end
 
@@ -18,9 +22,9 @@ local function letter_like_appendix(data)
 	if page_exists(alphabet_appendix) then
 		table.insert(appendices, ("[[%s|alphabet appendix]]"):format(alphabet_appendix))
 	end
-	local script_name = data.default_title:match("^(.* script) .*$")
+	local script_name = data.list_name:match("^(.* script) .*$")
 	if not script_name then
-		error(("Internal error: Can't pull out script name from default title '%s'"):format(data.default_title))
+		error(("Internal error: Can't pull out script name from list name '%s'"):format(data.list_name))
 	end
 	local script_appendix = "Appendix:" .. script_name
 	if page_exists(script_appendix) then
@@ -39,16 +43,24 @@ local letter_like_properties = {
 	cat = letter_like_category,
 	appendix = letter_like_appendix,
 	notr = true,
-	space_delim = true,
-	narrow_tilde = true,
+	allow_space_delim = true, -- allow space as a delimiter
+	tilde_delim = "~", -- use a tilde without spaces around it
 }
 
 local function letter_name_category(data)
-	local script_name = data.default_title:match("^(.*) script .*$")
+	local script_name = data.list_name:match("^(.*) script .*$")
 	if not script_name then
-		error(("Internal error: Can't pull out script name from default title '%s'"):format(data.default_title))
+		error(("Internal error: Can't pull out script name from list name '%s'"):format(data.list_name))
 	end
 	return ("%s letter names"):format(script_name)
+end
+
+local function countries_of_category(data)
+	local region = data.list_name:match("^countries of (.*)$")
+	if not region then
+		error(("Internal error: Can't pull out region from list name '%s'"):format(data.list_name))
+	end
+	return "Countries in " .. region
 end
 
 local topic_list_properties = {
@@ -65,6 +77,8 @@ local topic_list_properties = {
 	{"books of the.* Testament", {sort = false, cat = "Books of the Bible"}},
 	{"canids", {horiz = "bullet"}}, -- only 5 items on most lists
 	{"countries in .*", {appendix = "Appendix:Countries of the world"}},
+	-- FIXME: Delete the following once we rename these categories to 'countries in ...'
+	{"countries of .*", {appendix = "Appendix:Countries of the world", cat = countries_of_category}},
 	{"days of the week", {horiz = "bullet", sort = false, appendix = "Appendix:Days of the week"}},
 	{"dentistry location adjectives", {cat = "Dentistry"}},
 	{"electromagnetic radiation", {sort = false, cat = "Electromagnetism"}},
@@ -127,12 +141,20 @@ The syntax of the params is largely the same as for {{tl|col}}, but the followin
 * {{para|enhypernym}}: The English-language hypernym, e.g. `continents` in the above example. If omitted, this is
   derived from the template name by chopping off the initial `list:` and anything starting with a slash. This will be
   hyperlinked to the first category that the page categorizes into, if such a category exists.
+* {{para|appendix}}: One or more comma-separated appendices to display after the hypernym, in parens. The appendix
+  should be a full pagename including the namespace `Appendix:`, or a two-part link giving a pagename and display form.
+  If a link is not specified, the display form will be `appendix`.
+* {{para|pagename}}: Override the pagename, which should normally be a template of the form
+  `Template:list:<var>list name</var>/<var>langcode</var>` or
+  `Template:list:<var>list name</var>/<var>langcode</var>/<var>variety</var>`. The list name and language code are
+  parsed out of the pagename and used as the default title and language, and various other defaults are set based on the
+  list name.
 ]==]
 function export.show(frame)
 	local raw_item_args = frame.args
 	local frame_parent = frame:getParent()
 	local raw_user_args = frame_parent.args
-	local topic_list_template = frame_parent:getTitle()
+	local topic_list_template = raw_item_args.pagename or frame_parent:getTitle()
 
 	local user_params = {
 		nocat = {type = "boolean"},
@@ -141,8 +163,63 @@ function export.show(frame)
 
 	local user_args = require(parameters_module).process(raw_user_args, user_params)
 
+	-- Analyze template name for list name and language. Note that there are templates with names like
+	-- [[Template:list:days of the week/cim/Luserna]] (for the Luserna dialect of Cimbrian) and
+	-- [[Template:list:days of the week/cim/13]] (for the Tredici Comuni dialect of Cimbrian) so we can't just
+	-- assume there will be a single slash followed by a language code.
+	local list_name_plus_lang = topic_list_template:gsub("^Template:", ""):gsub("^list:", "")
+	local list_name, langcode_and_variety = list_name_plus_lang:match("^(.-)/(.*)$")
+	local lang, variety
+	if langcode_and_variety then
+		local langcode
+		langcode, variety = langcode_and_variety:match("^(.-)/(.*)$")
+		langcode = langcode or langcode_and_variety
+		lang = require(languages_module).getByCode(langcode, nil, "allow etym")
+		if not lang then
+			error(("Unrecognized language code '%s' in topic list template name [[%s]]"):format(
+				langcode, topic_list_template))
+		end
+	else
+		error(("Can't parse language code out of topic list template name [[%s]]; it should be of the form " ..
+			"'Template:list:LISTNAME/LANGCODE' or 'Template:list:LISTNAME/LANGCODE/VARIETY'"):format(
+			topic_list_template))
+	end
+
+	local default_props
+	for _, pattern_and_props in ipairs(topic_list_properties) do
+		local pattern, props = unpack(pattern_and_props)
+		if rfind(list_name, "^" .. pattern .. "$") then
+			default_props = props
+			break
+		end
+	end
+	if default_props then
+		-- Make sure to make a copy of the default props as it will be overwritten with user-specified arguments in
+		-- [[Module:columns]].
+		local default_props_copy = {}
+		for k, v in pairs(default_props) do
+			if type(v) == "function" then
+				default_props_copy[k] = v {
+					topic_list_template = topic_list_template,
+					list_name = list_name,
+					lang = lang,
+					variety = variety,
+				}
+			else
+				default_props_copy[k] = v
+			end
+		end
+		default_props = default_props_copy
+	end
+
 	return require(columns_module).handle_display_from_or_topic_list(
-		{minrows = 2, sort = true, collapse = true}, raw_item_args, user_args, topic_list_template)
+		{minrows = 2, sort = true, collapse = true, lang = lang}, raw_item_args, user_args, {
+			topic_list_template = topic_list_template,
+			list_name = list_name,
+			variety = variety,
+			default_props = default_props,
+		}
+	)
 end
 
 return export
