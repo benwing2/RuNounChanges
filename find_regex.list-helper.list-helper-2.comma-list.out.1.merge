@@ -317,7 +317,7 @@ Page 648 Template:list:Gregorian calendar months/ba: -------- begin text -------
 |һыуығай|шаҡай|буранай|алағарай|һабанай|һатай|майай|урағай|һарысай|ҡарасай|ҡырпағай|аҡъюлай}}<noinclude>[[fr:Modèle:tableau-mois/ba]]{{list doc}}</noinclude>
 -------- end text --------
 Page 648 Template:list:Gregorian calendar months/ba/Russian: -------- begin text --------
-{{#invoke:topic list|show
+{{#invoke:topic list|show<!-- FIXME: create -->
 |enhypernym=+ (Russian-origin)
 |hypernym=[[ай]]ҙар
 |ғинуар|февраль|март|апрель|май|июнь|июль|август|сентябрь|октябрь|ноябрь|декабрь}}<noinclude>{{list doc}}</noinclude>
@@ -1430,30 +1430,24 @@ Page 50 Template:list:taxonomy/ko: -------- begin text --------
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 51 Template:list:senses/zh: -------- begin text --------
-{{list helper 2
-|title=senses
-|cat=zh:Senses
+{{#invoke:topic list|show
 |hypernym={{zh-l|五感}}
-|list=<!--
--->{{zh-l|嗅覺|t={{l|en|smell}}}}, <!--
--->{{zh-l|視覺|t={{l|en|vision}}}}, <!--
--->{{zh-l|聽覺|t={{l|en|hearing}}}}, <!--
--->{{zh-l|觸覺|t={{l|en|touch}}}}, <!--
--->{{zh-l|味覺|t={{l|en|taste}}}}, <!--
--->}}<noinclude>{{list doc}}</noinclude>
+|{{zh-l|嗅覺}}
+|{{zh-l|視覺}}
+|{{zh-l|聽覺}}
+|{{zh-l|觸覺}}
+|{{zh-l|味覺}}
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 52 Template:list:senses/ko: -------- begin text --------
-{{list helper 2
-|title=senses
-|cat=ko:Senses
+{{#invoke:topic list|show
 |hypernym={{ko-l|오감|五感}}
-|list=<!--
--->{{ko-l|후각|嗅覺|{{l|en|smell}}}}, <!--
--->{{ko-l|시각|視覺|{{l|en|vision}}}}, <!--
--->{{ko-l|청각|聽覺|{{l|en|hearing}}}}, <!--
--->{{ko-l|촉각|觸覺|{{l|en|touch}}}}, <!--
--->{{ko-l|미각|味覺|{{l|en|taste}}}} <!--
--->}}<noinclude>{{list doc}}</noinclude>
+|{{ko-l|후각|嗅覺|{{l|en|smell}}}}
+|{{ko-l|시각|視覺|{{l|en|vision}}}}
+|{{ko-l|청각|聽覺|{{l|en|hearing}}}}
+|{{ko-l|촉각|觸覺|{{l|en|touch}}}}
+|{{ko-l|미각|味覺|{{l|en|taste}}}}
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 53 Template:list:Chinese sexagenary cycle terms/ko: -------- begin text --------
 {{list helper 2
@@ -1750,8 +1744,8 @@ Page 69 Template:list:cantons of Switzerland/it: -------- begin text --------
 |Zurigo
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
-Page 70 Template:list:countries of Europe/ko/South Korea: -------- begin text --------
-{{#invoke:topic list|show
+Page 70 Template:list:countries of Europe/ko: -------- begin text --------
+{{#invoke:topic list|show<!-- FIXME: rename to [[Template:list:countries of Europe/ko/South Korea]] -->
 |hypernym=[[유럽]][[-의]] [[나라]]
 |그리스
 |네덜란드
@@ -1806,7 +1800,7 @@ Page 70 Template:list:countries of Europe/ko/South Korea: -------- begin text --
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 70 Template:list:countries of Europe/ko/North Korea: -------- begin text --------
-{{#invoke:topic list|show
+{{#invoke:topic list|show<!-- FIXME: create -->
 |hypernym=[[유럽]][[-의]] [[나라]]
 |그리스
 |네데를란드
@@ -1997,73 +1991,65 @@ Page 4837 Template:list:days of the week/vro: -------- begin text --------
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 4990 Template:list:blues/pt: -------- begin text --------
-{{list helper 2
-|title=blues
-|cat=pt:Colors
-|cat2=pt:Blues
-|hypernym=azul
-|list=<!--
--->{{l-self|pt|azul céu}}, <!--
--->{{l-self|pt|azul gelo}}, <!--
--->{{l-self|pt|safira}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[azul|azuis]]
+|azul céu
+|azul gelo
+|safira
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 4995 Template:list:blues/en: -------- begin text --------
-{{list helper 2
-|title=blues
-|cat=en:Blues
-|hypernym=blue
-|list=<!--
--->{{l-self|en|Alice blue}}, <!--
--->{{l-self|en|aqua}}, <!--
--->{{l-self|en|aquamarine}}, <!--
--->{{l-self|en|azure}}, <!--
--->{{l-self|en|baby blue}}, <!--
--->{{l-self|en|beryl}}, <!--
--->{{l-self|en|bice}}, <!--
--->{{l-self|en|bice blue}}, <!--
--->{{l-self|en|blue green}}, <!--
--->{{l-self|en|blue violet}}, <!--
--->{{l-self|en|blueberry}}, <!--
--->{{l-self|en|cadet blue}}, <!--
--->{{l-self|en|Cambridge blue}}, <!--
--->{{l-self|en|cerulean}}, <!--
--->{{l-self|en|cobalt blue}}, <!--
--->{{l-self|en|Copenhagen blue}}, <!--
--->{{l-self|en|cornflower}}, <!--
--->{{l-self|en|cornflower blue}}, <!--
--->{{l-self|en|cyan}}, <!--
--->{{l-self|en|dark blue}}, <!--
--->{{l-self|en|Dodger blue}}, <!--
--->{{l-self|en|duck-egg blue}}, <!--
--->{{l-self|en|eggshell blue}}, <!--
--->{{l-self|en|electric blue}}, <!--
--->{{l-self|en|gentian blue}}, <!--
--->{{l-self|en|ice blue}}, <!--
--->{{l-self|en|lapis lazuli}}, <!--
--->{{l-self|en|light blue}}, <!--
--->{{l-self|en|lovat}}, <!--
--->{{l-self|en|mazarine}}, <!--
--->{{l-self|en|midnight blue}}, <!--
--->{{l-self|en|navy}}, <!--
--->{{l-self|en|Nile blue}}, <!--
--->{{l-self|en|Oxford blue}}, <!--
--->{{l-self|en|peacock blue}}, <!--
--->{{l-self|en|petrol blue}}, <!--
--->{{l-self|en|powder blue}}, <!--
--->{{l-self|en|Prussian blue}}, <!--
--->{{l-self|en|robin's-egg blue}}, <!--
--->{{l-self|en|royal blue}}, <!--
--->{{l-self|en|sapphire}}, <!--
--->{{l-self|en|saxe blue}}, <!--
--->{{l-self|en|slate blue}}, <!--
--->{{l-self|en|sky blue}}, <!--
--->{{l-self|en|teal}}, <!--
--->{{l-self|en|turquoise}}, <!--
--->{{l-self|en|ultramarine}}, <!--
--->{{l-self|en|Wedgwood blue}}, <!--
--->{{l-self|en|zaffre}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|Alice blue
+|aqua
+|aquamarine
+|azure
+|baby blue
+|beryl
+|bice
+|bice blue
+|blue green
+|blue violet
+|blueberry
+|cadet blue
+|Cambridge blue
+|cerulean
+|cobalt blue
+|Copenhagen blue
+|cornflower
+|cornflower blue
+|cyan
+|dark blue
+|Dodger blue
+|duck-egg blue
+|eggshell blue
+|electric blue
+|gentian blue
+|ice blue
+|lapis lazuli
+|light blue
+|lovat
+|mazarine
+|midnight blue
+|navy
+|Nile blue
+|Oxford blue
+|peacock blue
+|petrol blue
+|powder blue
+|Prussian blue
+|robin's-egg blue
+|royal blue
+|sapphire
+|saxe blue
+|slate blue
+|sky blue
+|teal
+|turquoise
+|ultramarine
+|Wedgwood blue
+|zaffre
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 4996 Template:list:computer keys/en: -------- begin text --------
 {{list helper 2
@@ -2091,65 +2077,61 @@ Page 4997 Template:list:brain lobes/en: -------- begin text --------
 -->}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 4998 Template:list:reds/en: -------- begin text --------
-{{list helper 2
-|title=reds
-|cat=en:Reds
-|hypernym=red
-|list=<!--
--->{{l-self|en|blood red}}, <!--
--->{{l-self|en|brick red}}, <!--
--->{{l-self|en|burgundy}}, <!--
--->{{l-self|en|cardinal}}, <!--
--->{{l-self|en|carmine}}, <!--
--->{{l-self|en|carnation}}, <!--
--->{{l-self|en|cerise}}, <!--
--->{{l-self|en|cherry}}, <!--
--->{{l-self|en|cherry red}}, <!--
--->{{l-self|en|Chinese red}}, <!--
--->{{l-self|en|cinnabar}}, <!--
--->{{l-self|en|claret}}, <!--
--->{{l-self|en|crimson}}, <!--
--->{{l-self|en|damask}}, <!--
--->{{l-self|en|fire brick}}, <!--
--->{{l-self|en|fire engine red}}, <!--
--->{{l-self|en|flame}}, <!--
--->{{l-self|en|flamingo}}, <!--
--->{{l-self|en|fuchsia}}, <!--
--->{{l-self|en|garnet}}, <!--
--->{{l-self|en|geranium}}, <!--
--->{{l-self|en|gules}}, <!--
--->{{l-self|en|hot pink}}, <!--
--->{{l-self|en|incarnadine}}, <!--
--->{{l-self|en|Indian red}}, <!--
--->{{l-self|en|magenta}}, <!--
--->{{l-self|en|maroon}}, <!--
--->{{l-self|en|misty rose}}, <!--
--->{{l-self|en|nacarat}}, <!--
--->{{l-self|en|oxblood}}, <!--
--->{{l-self|en|pillar-box red}}, <!--
--->{{l-self|en|pink}}, <!--
--->{{l-self|en|Pompeian red}}, <!--
--->{{l-self|en|poppy}}, <!--
--->{{l-self|en|raspberry}}, <!--
--->{{l-self|en|red violet}}, <!--
--->{{l-self|en|rose}}, <!--
--->{{l-self|en|rouge}}, <!--
--->{{l-self|en|ruby}}, <!--
--->{{l-self|en|ruddy}}, <!--
--->{{l-self|en|salmon}}, <!--
--->{{l-self|en|sanguine}}, <!--
--->{{l-self|en|scarlet}}, <!--
--->{{l-self|en|shocking pink}}, <!--
--->{{l-self|en|stammel}}, <!--
--->{{l-self|en|strawberry}}, <!--
--->{{l-self|en|Turkey red}}, <!--
--->{{l-self|en|Venetian red}}, <!--
--->{{l-self|en|vermilion}}, <!--
--->{{l-self|en|vinaceous}}, <!--
--->{{l-self|en|vinous}}, <!--
--->{{l-self|en|violet red}}, <!--
--->{{l-self|en|wine}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|blood red
+|brick red
+|burgundy
+|cardinal
+|carmine
+|carnation
+|cerise
+|cherry
+|cherry red
+|Chinese red
+|cinnabar
+|claret
+|crimson
+|damask
+|fire brick
+|fire engine red
+|flame
+|flamingo
+|fuchsia
+|garnet
+|geranium
+|gules
+|hot pink
+|incarnadine
+|Indian red
+|magenta
+|maroon
+|misty rose
+|nacarat
+|oxblood
+|pillar-box red
+|pink
+|Pompeian red
+|poppy
+|raspberry
+|red violet
+|rose
+|rouge
+|ruby
+|ruddy
+|salmon
+|sanguine
+|scarlet
+|shocking pink
+|stammel
+|strawberry
+|Turkey red
+|Venetian red
+|vermilion
+|vinaceous
+|vinous
+|violet red
+|wine
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 4999 Template:list:grammatical numbers/en: -------- begin text --------
 {{list helper 2
@@ -2374,8 +2356,7 @@ Page 5044 Template:list:Gregorian calendar months/da: -------- begin text ------
 |december
 -------- end text --------
 Page 5044 Template:list:Gregorian calendar months/da/obsolete: -------- begin text --------
-{{#invoke:topic list|show
-|enhypernym=+ (obsolete)
+{{#invoke:topic list|show<!-- FIXME: create -->
 |hypernym=[[måned]]er i [[den gregorianske kalender]]
 |glugmåned
 |blidemåned
@@ -2711,7 +2692,7 @@ Page 5115 Template:list:sexual orientations/pt: -------- begin text --------
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5115 Template:list:sexual orientation adjectives/pt: -------- begin text --------
-{{#invoke:topic list|show
+{{#invoke:topic list|show<!-- FIXME: create -->
 |hypernym=[[adjetivo]]s de [[orientação sexual]]
 |assexual
 |bissexual
@@ -2827,7 +2808,7 @@ Page 5127 Template:list:quarks/en: -------- begin text --------
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5127 Template:list:antiquarks/en: -------- begin text --------
-{{#invoke:topic list|show<!-- FIXME: create this list -->
+{{#invoke:topic list|show<!-- FIXME: create -->
 |anti-up quark
 |anti-down quark
 |anti-charm quark
@@ -3912,7 +3893,7 @@ Page 5336 Template:list:Gregorian calendar months/de: -------- begin text ------
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5336 Template:list:Gregorian calendar months/de/archaic: -------- begin text --------
-{{#invoke:topic list|show
+{{#invoke:topic list|show<!-- FIXME: create -->
 |enhypernym=+ (archaic or poetic)
 |hypernym=[[Monat]]e im [[gregorianischer Kalender|gregorianischen Kalender]]
 |Hartung
@@ -4489,7 +4470,7 @@ Page 5365 Template:list:books of the New Testament/en: -------- begin text -----
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5367 Template:list:days of the week/ar: -------- begin text --------
-{{#invoke:topic list|show<!-- FIXME: used to have pre-Islamic days as well; split out -->
+{{#invoke:topic list|show
 |hypernym=[[يوم|أَيَّامُ]] [[أسبوع|الْأُسْبُوع]]
 |الْأَحَد
 |الْاِثْنَيْن
@@ -4501,7 +4482,7 @@ Page 5367 Template:list:days of the week/ar: -------- begin text --------
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5367 Template:list:days of the week/ar/pre-Islamic: -------- begin text --------
-{{#invoke:topic list|show<!-- FIXME: create; split out of [[Template:list:days of the week/ar]] -->
+{{#invoke:topic list|show<!-- FIXME: create -->
 |cat=Days of the week
 |hypernym=[[يوم|أَيَّامُ]] [[أسبوع|الْأُسْبُوع]] [[سابق|السَّابِقَة]] [[لِ]][[إسلام|لْإِسْلَام]]
 |أَوْل<id:weekday>~أَوَّل<id:weekday>
@@ -5122,94 +5103,88 @@ Page 5832 Template:list:days of the week/ab: -------- begin text --------
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5835 Template:list:blues/da: -------- begin text --------
-{{list helper 2
-|title=blues
-|cat=da:Blues
-|hypernym=blå
-|list=<!--
--->{{l-self|da|akvamarin}}, <!--
--->{{l-self|da|azurblå}}, <!--
--->{{l-self|da|babyblå}}, <!--
--->{{l-self|da|blågrøn}}, <!--
--->{{l-self|da|blågrå}}, <!--
--->{{l-self|da|blåhvid}}, <!--
--->{{l-self|da|blålilla}}, <!--
--->{{l-self|da|blårød}}, <!--
--->{{l-self|da|blåsort}}, <!--
--->{{l-self|da|blåviolet}}, <!--
--->{{l-self|da|cyan}}, <!--
--->{{l-self|da|dybblå}}, <!--
--->{{l-self|da|havblå}}, <!--
--->{{l-self|da|himmelblå}}, <!--
--->{{l-self|da|indigo}}, <!--
--->{{l-self|da|indigoblå}}, <!--
--->{{l-self|da|knaldblå}}, <!--
--->{{l-self|da|koboltblå}}, <!--
--->{{l-self|da|kongeblå}}, <!--
--->{{l-self|da|kornblå}}, <!--
--->{{l-self|da|lyseblå}}, <!--
--->{{l-self|da|marineblå}}, <!--
--->{{l-self|da|mellemblå}}, <!--
--->{{l-self|da|mørkeblå}}, <!--
--->{{l-self|da|oceanblå}}, <!--
--->{{l-self|da|rødblå}}, <!--
--->{{l-self|da|safirblå}}, <!--
--->{{l-self|da|turkisblå}}, <!--
--->{{l-self|da|ultramarin}}, <!--
--->{{l-self|da|ultramarinblå}}, <!--
--->{{l-self|da|violblå}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=blå<!-- same singular as plural it seems? FIXME: verify -->
+|akvamarin
+|azurblå
+|babyblå
+|blågrøn
+|blågrå
+|blåhvid
+|blålilla
+|blårød
+|blåsort
+|blåviolet
+|cyan
+|dybblå
+|havblå
+|himmelblå
+|indigo
+|indigoblå
+|knaldblå
+|koboltblå
+|kongeblå
+|kornblå
+|lyseblå
+|marineblå
+|mellemblå
+|mørkeblå
+|oceanblå
+|rødblå
+|safirblå
+|turkisblå
+|ultramarin
+|ultramarinblå
+|violblå
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5838 Template:list:reds/da: -------- begin text --------
-{{list helper 2
-|title=reds
-|cat=da:Reds
-|hypernym=rød
-|list=<!--
--->{{l-self|da|blegrosa}}, <!--
--->{{l-self|da|blegrød}}, <!--
--->{{l-self|da|blodrød}}, <!--
--->{{l-self|da|bordeaux}}, <!--
--->{{l-self|da|bordeauxrød}}, <!--
--->{{l-self|da|cerise}}, <!--
--->{{l-self|da|ceriserød}}, <!--
--->{{l-self|da|cinnober}}, <!--
--->{{l-self|da|cinnoberrød}}, <!--
--->{{l-self|da|dybrød}}, <!--
--->{{l-self|da|gammelrosa}}, <!--
--->{{l-self|da|højrød}}, <!--
--->{{l-self|da|ildrød}}, <!--
--->{{l-self|da|karmin}}, <!--
--->{{l-self|da|karminrød}}, <!--
--->{{l-self|da|karmoisinrød}}, <!--
--->{{l-self|da|kirsebærrød}}, <!--
--->{{l-self|da|knaldrød}}, <!--
--->{{l-self|da|kobberrød}}, <!--
--->{{l-self|da|kochenille}}, <!--
--->{{l-self|da|kraprød}}, <!--
--->{{l-self|da|lakrød}}, <!--
--->{{l-self|da|lyserød}}, <!--
--->{{l-self|da|mørkerød}}, <!--
--->{{l-self|da|pink}}, <!--
--->{{l-self|da|postkasserød}}, <!--
--->{{l-self|da|purpur}}, <!--
--->{{l-self|da|purpurrød}}, <!--
--->{{l-self|da|rosenrød}}, <!--
--->{{l-self|da|rosa}}, <!--
--->{{l-self|da|rubinrød}}, <!--
--->{{l-self|da|ræverød}}, <!--
--->{{l-self|da|rødgrå}}, <!--
--->{{l-self|da|rødgul}}, <!--
--->{{l-self|da|rødgylden}}, <!--
--->{{l-self|da|rødlilla}}, <!--
--->{{l-self|da|rødorange}}, <!--
--->{{l-self|da|rødviolet}}, <!--
--->{{l-self|da|sartrosa}}, <!--
--->{{l-self|da|skarlagen}}, <!--
--->{{l-self|da|skarlagenrød}}, <!--
--->{{l-self|da|teglstensrød}}, <!--
--->{{l-self|da|vinrød}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[rød]]e<!-- FIXME: means "red ones" -->
+|blegrosa
+|blegrød
+|blodrød
+|bordeaux
+|bordeauxrød
+|cerise
+|ceriserød
+|cinnober
+|cinnoberrød
+|dybrød
+|gammelrosa
+|højrød
+|ildrød
+|karmin
+|karminrød
+|karmoisinrød
+|kirsebærrød
+|knaldrød
+|kobberrød
+|kochenille
+|kraprød
+|lakrød
+|lyserød
+|mørkerød
+|pink
+|postkasserød
+|purpur
+|purpurrød
+|rosenrød
+|rosa
+|rubinrød
+|ræverød
+|rødgrå
+|rødgul
+|rødgylden
+|rødlilla
+|rødorange
+|rødviolet
+|sartrosa
+|skarlagen
+|skarlagenrød
+|teglstensrød
+|vinrød
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5841 Template:list:Gregorian calendar months/mk: -------- begin text --------
 {{#invoke:topic list|show
@@ -7228,17 +7203,14 @@ Page 6731 Template:list:geological time units/en: -------- begin text --------
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 6737 Template:list:fingers-humorous/pt: -------- begin text --------
-{{list helper 2
-|title=humorous finger names
-|hypernym={{l-self|pt|dedo}}
-|cat=pt:Fingers
-|list=<!--
--->{{l-self|pt|mata-piolho}}, <!--
--->{{l-self|pt|fura-bolos}}, <!--
--->{{l-self|pt|pai-de-todos}}, <!--
--->{{l-self|pt|seu-vizinho}}, <!--
--->{{l-self|pt|mindinho}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show<!-- FIXME: rename to [[Template:list:terms for fingers/pt/humorous]] -->
+|hypernym=[[termo]]s [[para]] os [[dedo]]s ([[engraçado]]s)
+|mata-piolho
+|fura-bolos
+|pai-de-todos
+|seu-vizinho
+|mindinho
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 6743 Template:list:compass points/pt: -------- begin text --------
 {{list helper 2|title=compass points|hypernym=[[ponto cardeal]]|list=}}
@@ -7289,16 +7261,14 @@ Page 6759 Template:list:fidalgo/roa-opt: -------- begin text --------
 -->}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 6782 Template:list:senses/pt: -------- begin text --------
-{{list helper 2
-|title=human senses
-|hypernym={{l-self|pt|sentido}}
-|list=<!--
--->{{l-self|pt|audição}}, <!--
--->{{l-self|pt|olfacto}}/{{l-self|pt|olfato}}, <!--
--->{{l-self|pt|gosto}}/{{l-self|pt|paladar}}, <!--
--->{{l-self|pt|tacto}}/{{l-self|pt|tato}}, <!--
--->{{l-self|pt|visão}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[sentido]]s
+|audição
+|olfato<ll:Brazil,Portugal>~olfacto<ll:<<Portugal>> only>
+|gosto,paladar
+|tato<ll:Brazil,Portugal>~tacto<ll:<<Portugal>> only>
+|visão
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 6785 Template:list:colonies/pt: -------- begin text --------
 {{list helper 2
@@ -7369,17 +7339,14 @@ Page 6832 Template:list:C major scale/pt: -------- begin text --------
 -->}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 6833 Template:list:fingers/pt: -------- begin text --------
-{{list helper 2
-|title=fingers
-|hypernym={{l-self|pt|dedo}}
-|cat=pt:Fingers
-|list=<!--
--->({{l-self|pt|dedo polegar|dedo}}) {{l-self|pt|polegar}}, <!--
--->({{l-self|pt|dedo indicador|dedo}}) {{l-self|pt|indicador}}, <!--
--->{{l-self|pt|dedo médio}}, <!--
--->{{l-self|pt|dedo anelar}}, <!--
--->{{l-self|pt|dedo mínimo}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show<!-- FIXME: rename this and other to [[Template:list:terms for fingers/pt]] -->
+|hypernym=[[termo]]s [[para]] os [[dedo]]s
+|dedo polegar
+|dedo indicador
+|dedo médio
+|dedo anelar
+|dedo mínimo
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 6849 Template:list:planets of the Solar System/lv: -------- begin text --------
 {{#invoke:topic list|show
@@ -8071,7 +8038,6 @@ Page 7257 Template:list:diplomatic mission heads/th: -------- begin text -------
 -------- end text --------
 Page 7264 Template:list:Gregorian calendar months/ka/archaic: -------- begin text --------
 {{#invoke:topic list|show
-|enhypernym=+ (archaic)
 |hypernym=[[კალენდრული]] [[თვე|თვეები]]
 |აპნისი~აპანი
 |სურწყუნისი
@@ -9122,8 +9088,8 @@ Page 7635 Template:list:days of the week/svm: -------- begin text --------
 |nedilja
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
-Page 7641 Template:list:Gregorian calendar months/sh/Latn/Bosnia-Serbia: -------- begin text --------
-{{#invoke:topic list|show<!-- FIXME: rename from [[Template:list:Gregorian calendar months/sh/Latn]] -->
+Page 7641 Template:list:Gregorian calendar months/sh/Latn: -------- begin text --------
+{{#invoke:topic list|show<!-- FIXME: rename to [[Template:list:Gregorian calendar months/sh/Latn/Bosnia-Serbia]] -->
 |enhypernym=+ (Bosnia/Serbia)
 |hypernym=[[mjesec|m(j)eseci]] [[gregorijanski kalendar|gregorijanskog kalendara]]
 |jȁnuār
@@ -9142,7 +9108,6 @@ Page 7641 Template:list:Gregorian calendar months/sh/Latn/Bosnia-Serbia: -------
 -------- end text --------
 Page 7641 Template:list:Gregorian calendar months/sh/Latn/Croatia: -------- begin text --------
 {{#invoke:topic list|show<!-- FIXME: create -->
-|enhypernym=+ (Croatia)
 |hypernym=[[mjesec|mjeseci]] [[gregorijanski kalendar|gregorijanskog kalendara]]
 |sijȇčanj
 |vèljača
@@ -10331,8 +10296,8 @@ Page 8081 Template:list:Egyptian calendar months/en: -------- begin text -------
 |Mesore
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
-Page 8092 Template:list:Egyptian calendar months/egy/Middle Kingdom: -------- begin text --------
-{{#invoke:topic list|show<!-- FIXME: rename from [[Template:list:Egyptian calendar months/egy]] -->
+Page 8092 Template:list:Egyptian calendar months/egy: -------- begin text --------
+{{#invoke:topic list|show<!-- FIXME: rename to [[Template:list:Egyptian calendar months/egy/Middle Kingdom]] -->
 |enhypernym=+ (Middle Kingdom/Memphite)
 |tḫj
 |mnḫt
@@ -11431,8 +11396,8 @@ Page 8530 Template:list:Chinese zodiac signs/km: -------- begin text --------
 -->{{l-self|km|កុរ}} <!--
 -->}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
-Page 8540 Template:list:continents/ja/landmasses: -------- begin text --------
-{{#invoke:topic list|show
+Page 8540 Template:list:continents/ja: -------- begin text --------
+{{#invoke:topic list|show<!-- FIXME: rename to [[Template:list:continents/ja/landmasses]] -->
 |enhypernym=Landmasses
 |hypernym={{ja-r|[[六]]%[[大陸|大%陸]]|ろく%たい%りく}}<ref:Traditionally, Japanese distinguishes six "continents" (Africa, North America, South America, Europe, Asia, Oceania) from six "landmasses" (Africa, North America, South America, Eurasia, Australia, Antarctica).<<group:c>>>
 |{{ja-r|^アフリカ}}
@@ -11445,7 +11410,7 @@ Page 8540 Template:list:continents/ja/landmasses: -------- begin text --------
 }}{{reflist|group=c}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 8540 Template:list:continents/ja/continents: -------- begin text --------
-{{#invoke:topic list|show
+{{#invoke:topic list|show<!-- FIXME: create -->
 |enhypernym=Continents (per se)
 |hypernym={{ja-r|六%大%州|ろく%だい%しゅう}}<ref:Traditionally, Japanese distinguishes six "continents" (Africa, North America, South America, Europe, Asia, Oceania) from six "landmasses" (Africa, North America, South America, Eurasia, Australia, Antarctica).<<group:c>>>
 |cat=ja:Continents
@@ -11606,7 +11571,6 @@ Page 8618 Template:list:days of the week/sco: -------- begin text --------
 -------- end text --------
 Page 8629 Template:list:planets of the Solar System/vi: -------- begin text --------
 {{#invoke:topic list|show<!-- rename to [[Template:list:planets of the Solar System/vi/standard]] -->
-|enhypernym=+ (standard)
 |hypernym=[[hành tinh]] của [[hệ Mặt Trời]]
 |sao Thuỷ
 |sao Kim
@@ -11619,7 +11583,7 @@ Page 8629 Template:list:planets of the Solar System/vi: -------- begin text ----
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 8629 Template:list:planets of the Solar System/vi/Sino-Vietnamese: -------- begin text --------
-{{#invoke:topic list|show
+{{#invoke:topic list|show<!-- FIXME: create -->
 |enhypernym=+ (Sino-Vietnamese; formal, rare)
 |hypernym=[[hành tinh]] của [[hệ Mặt Trời]]
 |Thuỷ tinh
@@ -11916,8 +11880,9 @@ Page 8646 Template:list:Gregorian calendar months/tl: -------- begin text ------
 |Disyembre
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
-Page 8647 Template:list:continents/tl/Latn: -------- begin text --------
-{{#invoke:topic list|show<!-- FIXME: split form [[Template:list:continents]] -->
+Page 8647 Template:list:continents/tl: -------- begin text --------
+{{#invoke:topic list|show<!-- FIXME: rename to [[Template:list:continents/Latn]] -->
+|enhypernym=+ (Latin script)
 |hypernym=mga [[kontinente]]
 |Aprika
 |Amerika
@@ -11930,7 +11895,8 @@ Page 8647 Template:list:continents/tl/Latn: -------- begin text --------
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 8647 Template:list:continents/tl/Tglg: -------- begin text --------
-{{#invoke:topic list|show<!-- FIXME: split form [[Template:list:continents]] -->
+{{#invoke:topic list|show<!-- FIXME: create -->
+|enhypernym=+ (Baybayin script)
 |hypernym={{tl-bay sc|manga}} [[{{tl-bay sc|kontinente}}]]
 |{{tl-bay sc|Aprika}}
 |{{tl-bay sc|Amerika}}
@@ -11943,7 +11909,7 @@ Page 8647 Template:list:continents/tl/Tglg: -------- begin text --------
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 8693 Template:list:Sylheti calendar months/syl: -------- begin text --------
-{{#invoke:topic list|show<!-- FIXME: rename -->
+{{#invoke:topic list|show<!-- FIXME: rename to [[Template:list:Hindu calendar months/syl]] -->
 |ꠛꠂꠡꠣꠉ
 |ꠎꠂꠑ<tr:zoiṭ>
 |ꠀꠀꠠ<tr:aáṛ>
@@ -13437,9 +13403,8 @@ Page 9228 Template:list:Arabic script letters/kk: -------- begin text --------
 |ي
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
-Page 9232 Template:list:Gregorian calendar months/rw/Rwanda: -------- begin text --------
-{{#invoke:topic list|show
-|enhypernym=+ (Rwanda)
+Page 9232 Template:list:Gregorian calendar months/rw: -------- begin text --------
+{{#invoke:topic list|show<!-- FIXME: rename to [[Template:list:Gregorian calendar months/rw/Rwanda]] -->
 |hypernym=[[ukwezi|amezi]] y'[[umwaka]]<ref:For interdialectal communication, months are referred by number rather than name, e.g. ''ukwezi kwa mbere'' (for short, ''ukwa mbere'') for January and ''ukwezi kwa kabiri'' (for short, ''ukwa kabiri'') for February.<<group:c>>>
 |Mutarama
 |Gashyantare
@@ -13455,9 +13420,8 @@ Page 9232 Template:list:Gregorian calendar months/rw/Rwanda: -------- begin text
 |Ukuboza
 }}{{reflist|group=c}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
-Page 9232 Template:list:Gregorian calendar months/rw: -------- begin text --------
-{{#invoke:topic list|show
-|enhypernym=+ (Rwanda)
+Page 9232 Template:list:Gregorian calendar months/rw/Burundi: -------- begin text --------
+{{#invoke:topic list|show<!-- FIXME: create -->
 |hypernym=[[ukwezi|amezi]] y'[[umwaka]]<ref:For interdialectal communication, months are referred by number rather than name, e.g. ''ukwezi kwa mbere'' (for short, ''ukwa mbere'') for January and ''ukwezi kwa kabiri'' (for short, ''ukwa kabiri'') for February.<<group:c>>>
 |Nzero
 |Nyamagoma,Ruhuhuma
@@ -13874,8 +13838,8 @@ Page 9367 Template:list:Gregorian calendar months/is: -------- begin text ------
 |desember
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
-Page 9368 Template:list:Gregorian calendar months/sh/Cyrl/Bosnia-Serbia: -------- begin text --------
-{{#invoke:topic list|show<!-- FIXME: renamed from [[Template:list:Gregorian calendar months/sh/Cyrl]] -->
+Page 9368 Template:list:Gregorian calendar months/sh/Cyrl: -------- begin text --------
+{{#invoke:topic list|show<!-- FIXME: rename to [[Template:list:Gregorian calendar months/sh/Cyrl/Bosnia-Serbia]] -->
 |enhypernym=+ (Bosnia/Serbia)
 |hypernym=[[мјесец|м(ј)есеци]] [[грегоријански календар|грегоријанског календара]]
 |ја̏нуа̄р
@@ -16823,8 +16787,8 @@ Page 10213 Template:list:days of the week/yo: -------- begin text --------
 |ọjọ́ Àbámẹ́ta
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
-Page 10213 Template:list:days of the week/yo: -------- begin text --------
-{{#invoke:topic list|show<!-- FIXME: rename to [[Template:list:days of the week/yo/Hausa]] -->
+Page 10213 Template:list:days of the week/yo/Hausa: -------- begin text --------
+{{#invoke:topic list|show<!-- FIXME: create -->
 |enhypernym=+ (Hausa/Arabic-derived)
 |hypernym=[[ọjọ́]] [[ọ̀sẹ̀]]<!-- FIXME: does this need to be pluralized? -->
 |Àlàádì
@@ -16836,8 +16800,8 @@ Page 10213 Template:list:days of the week/yo: -------- begin text --------
 |Àsàbùta
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
-Page 10213 Template:list:days of the week/yo: -------- begin text --------
-{{#invoke:topic list|show<!-- FIXME: rename to [[Template:list:days of the week/yo/tradtional]] -->
+Page 10213 Template:list:days of the week/yo/traditional: -------- begin text --------
+{{#invoke:topic list|show<!-- FIXME: create -->
 |enhypernym=+ (traditional four-day cycle)
 |hypernym=[[ọjọ́]] [[ọ̀sẹ̀]]<!-- FIXME: does this need to be pluralized? -->
 |ọ̀sẹ̀ Ọbàtálá
@@ -17101,24 +17065,19 @@ Page 10299 Template:list:Gregorian calendar month adjectives/hu: -------- begin 
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 10300 Template:list:times of day/aii: -------- begin text --------
-{{list helper 2
-|title=times of day
-|hypernym={{l-self|aii|[[ܥܕܢܐ|ܥܸܕܵܢܹ̈ܐ]] [[ܕ-|ܕ]][[ܝܘܡܐ|ܝܵܘܡܵܐ]]|tr=ˁiddānē d-yāwmā}}
-|cat=aii:Times of day
-|list=<!--
--->{{l-self|aii|ܐܝܼܡܵܡܵܐ|t=[[daytime]]}}, <!--
--->{{l-self|aii|ܢܘܼܓ݂ܗܵܐ|t=[[dawn]]}}, <!--
--->{{l-self|aii|ܕܸܢܚܵܐ|t=[[sunrise]]}}, <!--
--->{{l-self|aii|ܨܲܦܪܵܐ|t=[[morning]]}}, <!--
--->{{l-self|aii|ܛܲܗܪܵܐ|t=[[noon]], [[afternoon]]}}, <!--
--->{{l-self|aii|ܥܪܵܒ݂ܵܐ|t=[[sunset]]}}, <!--
--->{{l-self|aii|ܢܘܼܨܦܵܐ|t=[[dusk]]}}, <!--
--->{{l-self|aii|ܪܲܡܫܵܐ|t=[[evening]]}}, <!--
--->{{l-self|aii|ܦܲܠܓܵܐ ܕܠܲܝܠܹܐ|tr=palgā d-laylē|t=[[midnight]]}}, <!--
--->{{l-self|aii|ܠܲܝܠܹܐ|t=[[nighttime]]}} <!--
--->}}<!--
-{{c|aii|Time}}
---><noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[ܥܕܢܐ|ܥܸܕܵܢܹ̈ܐ]] [[ܕ-|ܕ]][[ܝܘܡܐ|ܝܵܘܡܵܐ]]<tr:ˁiddānē d-yāwmā>
+|ܢܘܼܓ݂ܗܵܐ
+|ܕܸܢܚܵܐ
+|ܨܲܦܪܵܐ
+|ܐܝܼܡܵܡܵܐ
+|ܛܲܗܪܵܐ
+|ܥܪܵܒ݂ܵܐ
+|ܢܘܼܨܦܵܐ
+|ܪܲܡܫܵܐ
+|ܠܲܝܠܹܐ
+|ܦܲܠܓܵܐ ܕܠܲܝܠܹܐ<tr:palgā d-laylē>
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 10306 Template:list:Gregorian calendar months/xmf: -------- begin text --------
 {{#invoke:topic list|show
@@ -18495,17 +18454,14 @@ Page 10490 Template:list:units of time/th: -------- begin text --------
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 10491 Template:list:fingers/th: -------- begin text --------
-{{list helper 2
-|title=Fingers
-|cat=th:Fingers
-|hypernym={{l-self|th|นิ้ว}}
-|list=<!--
--->{{l-self|th|หัวแม่มือ}} / {{l-self|th|หัวแม่เท้า}} / {{l-self|th|นิ้วโป้ง|t=thumb}}, <!--
--->{{l-self|th|นิ้วชี้|t=index finger}}, <!--
--->{{l-self|th|นิ้วกลาง|t=the middle finger}}, <!--
--->{{l-self|th|นิ้วนาง|t=ring finger}}, <!--
--->{{l-self|th|นิ้วก้อย|t=little finger}}, <!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show<!-- FIXME: rename to [[Template:list:terms for fingers/th]] -->
+|hypernym=นิ้ว<!-- FIXME: should read "terms for fingers" -->
+|หัวแม่มือ,หัวแม่เท้า,นิ้วโป้ง
+|นิ้วชี้
+|นิ้วกลาง
+|นิ้วนาง
+|นิ้วก้อย
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 10495 Template:list:poetic meter/ro: -------- begin text --------
 {{list helper 2
@@ -18632,17 +18588,14 @@ Page 10521 Template:list:Gregorian calendar months/qya: -------- begin text ----
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 10531 Template:list:fingers/qya: -------- begin text --------
-{{list helper 2
-|title=Fingers
-|cat=qya:Fingers
+{{#invoke:topic list|show<!-- FIXME: rename to [[Template:list:terms for fingers/qya]] -->
 |hypernym={{qya-self|leper|leperi}}
-|list=<!--
--->{{qya-self|nápo}}, <!--
--->{{qya-self|lepetas}}/{{qya-self|tassa}}, <!--
--->{{qya-self|lependë}}, <!--
--->{{qya-self|lepecan}}, <!--
--->{{qya-self|lepincë}}/{{qya-self|nícë}}, <!--
--->}}<noinclude>{{list doc}}</noinclude>
+|{{qya-self|nápo}}
+|{{qya-self|lepetas}},{{qya-self|tassa}}
+|{{qya-self|lependë}}
+|{{qya-self|lepecan}}
+|{{qya-self|lepincë}},{{qya-self|nícë}}
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 10536 Template:list:compass points/pl: -------- begin text --------
 {{list helper 2|title={{#if:{{{end|}}}|adjectives from&nbsp;}}compass points|hypernym=[[strona świata|strony świata]]|list=}}
@@ -18675,22 +18628,17 @@ Page 10539 Template:list:Gregorian calendar months/lzz: -------- begin text ----
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 10540 Template:list:times of day/qya: -------- begin text --------
-{{list helper 2
-|title=times of day
+{{#invoke:topic list|show
 |hypernym={{qya-self|[[lúmë|lúmi]] [[ré|i réo]]}}
-|cat=qya:Times of day
-|list=<!--
--->{{qya-self|aurë|t=daytime}}, <!--
--->{{qya-self|amaurë|t=dawn}}, <!--
--->{{qya-self|arin|t=morning}}, <!--
--->{{qya-self|endaurë|t=noon}}, <!--
--->{{qya-self||t=afternoon}}, <!--
--->{{qya-self|andúnë|t=sunset}}, <!--
--->{{qya-self|sinyë|t=evening}}, <!--
+|{{qya-self|amaurë|t=dawn}}
+|{{qya-self|arin|t=morning}}
+|{{qya-self|aurë|t=daytime}}
+|{{qya-self|endaurë|t=noon}}
+|{{qya-self||t=afternoon}}
+|{{qya-self|andúnë|t=sunset}}
+|{{qya-self|sinyë|t=evening}}
 -->{{qya-self|lómë|t=nighttime}} <!--
--->}}<!--
-{{c|qya|Time}}
---><noinclude>{{list doc}}</noinclude>
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 10543 Template:list:countries of Europe/ru: -------- begin text --------
 {{#invoke:topic list|show
@@ -19056,17 +19004,14 @@ Page 10581 Template:list:compass points/akk: -------- begin text --------
 |lang=akk}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 10591 Template:list:fingers/sjn: -------- begin text --------
-{{list helper 2
-|title=Fingers
-|cat=sjn:Fingers
+{{#invoke:topic list|show<!-- FIXME: rename to [[Template:list:terms for fingers/sjn]] -->
 |hypernym={{sjn-self|leber|lebir}}
-|list=<!--
--->{{sjn-self|naub}}, <!--
--->{{sjn-self|lebdas}}/{{sjn-self|tas}}, <!--
--->{{sjn-self|lebenedh}}, <!--
--->{{sjn-self|lebent}}, <!--
--->{{sjn-self|lebig}}/{{sjn-self|niged}}, <!--
--->}}<noinclude>{{list doc}}</noinclude>
+|{{sjn-self|naub}}
+|{{sjn-self|lebdas}},{{sjn-self|tas}}
+|{{sjn-self|lebenedh}}
+|{{sjn-self|lebent}}
+|{{sjn-self|lebig}},{{sjn-self|niged}}
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 10600 Template:list:compass points/mi: -------- begin text --------
 {{list helper 2|title=[[compass point]]s|list=}}
@@ -19438,17 +19383,14 @@ Page 10706 Template:list:lunar months/km: -------- begin text --------
 -->}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 10714 Template:list:fingers/km: -------- begin text --------
-{{list helper 2
-|title=Fingers
-|cat=km:Fingers
-|hypernym={{l-self|km|ម្រាមដៃ}}
-|list=<!--
--->{{l-self|km|មេដៃ|t=thumb}}, <!--
--->{{l-self|km|ម្រាមដៃចង្អុល|t=forefinger}}, <!--
--->{{l-self|km|ម្រាមដៃកណ្ដាល|t=middle finger}}, <!--
--->{{l-self|km|ម្រាមដៃនាង|t=ring finger}}, <!--
--->{{l-self|km|ម្រាមកូនដៃ|t=little finger}}, <!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show<!-- FIXME: rename to [[Template:list:terms for fingers/km]] -->
+|hypernym=ម្រាមដៃ<!-- FIXME: should read "terms for fingers" -->
+|មេដៃ
+|ម្រាមដៃចង្អុល
+|ម្រាមដៃកណ្ដាល
+|ម្រាមដៃនាង
+|ម្រាមកូនដៃ
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 10729 Template:list:provinces of Turkey/tr: -------- begin text --------
 {{#invoke:topic list|show
@@ -19722,23 +19664,19 @@ Page 10759 Template:list:Western astrology signs/my: -------- begin text -------
 -->}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 10760 Template:list:times of day/my: -------- begin text --------
-{{list helper 2
-|title=times of day
-|hypernym=
-|cat=my:Times of day
-|list=<!--
--->{{l-self|my|အရုဏ်တက်|t=daybreak}}, <!--
--->{{l-self|my|အရုဏ်|t=dawn}}, <!--
--->{{l-self|my|နံနက်|t=morning}} / {{l-self|my|မနက်|t=morning}} / {{l-self|my|နေတက်|t=}}, <!--
--->{{l-self|my|မွန်းလတ်|t=late morning}}, <!--
--->{{l-self|my|မွန်းတည့်|t=noon}} / {{l-self|my|နေ့လယ်|t=}}, <!--
--->{{l-self|my|မွန်းတိမ်း|t=early afternoon}}, <!--
--->{{l-self|my|မွန်းလွဲ|t=afternoon}} / {{l-self|my|မွန်းစောင်း|t=}} / {{l-self|my|ညနေ|t=}} / {{l-self|my|နေ့ခင်း|t=}}, <!--
--->{{l-self|my|နေဝင်ဖျိုးဖျ|t=dusk}}, <!--
--->{{l-self|my|ညချမ်း|t=evening}}, <!--
--->{{l-self|my|ည|t=night}}, <!--
--->{{l-self|my|သန်းခေါင်|t=midnight}} / {{l-self|my|ညသန်းခေါင်|t=}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|အရုဏ်တက်
+|အရုဏ်
+|နံနက်,မနက်,နေတက်
+|မွန်းလတ်
+|မွန်းတည့်,နေ့လယ်
+|မွန်းတိမ်း
+|မွန်းလွဲ,မွန်းစောင်း,ညနေ,နေ့ခင်း
+|နေဝင်ဖျိုးဖျ
+|ညချမ်း
+|ည
+|သန်းခေါင်,ညသန်းခေါင်
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 10773 Template:list:units of time/my: -------- begin text --------
 {{#invoke:topic list|show
@@ -19752,8 +19690,7 @@ Page 10773 Template:list:units of time/my: -------- begin text --------
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 10775 Template:list:units of time/my/traditional: -------- begin text --------
-{{#invoke:topic list|show
-|enhypernym=+ (traditional)
+{{#invoke:topic list|show<!-- FIXME: create -->
 |နှစ်<t:year>
 |လ<t:month>
 |အပတ်<t:week>
@@ -19770,17 +19707,14 @@ Page 10775 Template:list:units of time/my/traditional: -------- begin text -----
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 10782 Template:list:fingers/my: -------- begin text --------
-{{list helper 2
-|title=Fingers
-|cat=my:Fingers
-|hypernym={{l-self|my|လက်ချောင်း}}
-|list=<!--
--->{{l-self|my|လက်မ|t={{l|en|thumb}}}}, <!--
--->{{l-self|my|လက်ညှိုး|t={{l|en|index finger}}}}, <!--
--->{{l-self|my|လက်ခလယ်|t={{l|en|middle finger}}}}, <!--
--->{{l-self|my|လက်သူကြွယ်|t={{l|en|ring finger}}}}, <!--
--->{{l-self|my|လက်သန်း|t={{l|en|little finger}}}}, <!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show<!-- FIXME: rename to [[Template:list:terms for fingers/my]] -->
+|hypernym=လက်ချောင်း<!-- FIXME: should read "terms for fingers" -->
+|လက်မ
+|လက်ညှိုး
+|လက်ခလယ်
+|လက်သူကြွယ်
+|လက်သန်း
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 10788 Template:list:Burmese zodiac signs/my: -------- begin text --------
 {{list helper 2
@@ -19852,17 +19786,14 @@ Page 10795 Template:list:descendants/th: -------- begin text --------
 -->}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 10798 Template:list:senses/my: -------- begin text --------
-{{list helper 2
-|title=senses
-|cat=my:Senses
-|hypernym={{l-self|my|အာရုံငါးပါး}}
-|list=<!--
--->{{l-self|my|ဂန္ဓာရုံ|t={{l|en|smell}}}}, <!--
--->{{l-self|my|ရူပါရုံ|t={{l|en|vision}}}}, <!--
--->{{l-self|my|သဒ္ဒါရုံ|t={{l|en|hearing}}}}, <!--
--->{{l-self|my|ဖေါဋ္ဌဗ္ဗာရုံ|t={{l|en|touch}}}}, <!--
--->{{l-self|my|ရသာရုံ|t={{l|en|taste}}}}, <!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=အာရုံငါးပါး
+|ဂန္ဓာရုံ
+|ရူပါရုံ
+|သဒ္ဒါရုံ
+|ဖေါဋ္ဌဗ္ဗာရုံ
+|ရသာရုံ
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 10804 Template:list:military ranks/my: -------- begin text --------
 {{list helper 2
@@ -20653,7 +20584,7 @@ Page 10971 Template:list:Chinese sexagenary cycle terms/za: -------- begin text 
 -->}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 10986 Template:list:Gregorian calendar months/fa/ira: -------- begin text --------
-{{#invoke:topic list|show<!-- FIXME: rename to [[Template:list:Gregorian calendar months/fa/Iran]] -->
+{{#invoke:topic list|show<!-- FIXME: rename to [[Template:list:Gregorian calendar months/fa-ira]] -->
 |enhypernym=+ (Iranian Persian)
 |hypernym=[[ماه|ماه‌هایِ]] [[تَقْویمِ]] [[گْریگوری]]<tr:mâh-hâ-ye taqvim-e grêgôri>
 |ژانْوِیِه<tr:žânviye>
@@ -20673,7 +20604,6 @@ Page 10986 Template:list:Gregorian calendar months/fa/ira: -------- begin text -
 Page 10987 Template:list:Gregorian calendar months/tg: -------- begin text --------
 {{#invoke:topic list|show
 |hypernym=[[моҳ|моҳҳои]] [[тақвим|тақвими]] [[Григорий]]
-|list=<!--
 |январ
 |феврал
 |март
@@ -20689,7 +20619,7 @@ Page 10987 Template:list:Gregorian calendar months/tg: -------- begin text -----
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 10988 Template:list:Gregorian calendar months/fa/dari: -------- begin text --------
-{{#invoke:topic list|show|lang=prs<!-- FIXME: rename to [[Template:list:Gregorian calendar months/fa/Dari]] -->
+{{#invoke:topic list|show<!-- FIXME: rename to [[Template:list:Gregorian calendar months/prs]] -->
 |enhypernym=+ (Dari)
 |hypernym=[[ماه|ماه‌هایِ]] [[تَقوِیمِ]] [[گریگورِی]]<tr:māh-hā-yi taqwīm-i grēgōrī>
 |جنوری<tr:janwarī>
@@ -23295,17 +23225,14 @@ Page 11528 Template:list:compass points/tpw: -------- begin text --------
 |lang=tpw}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 11531 Template:list:fingers/tpw: -------- begin text --------
-{{list helper 2
-|title=fingers
-|hypernym={{l-self|tpw|pûã}}
-|cat=tpw:Fingers
-|list=<!--
--->{{l-self|tpw|pûãgûasu}}, <!--
--->{{l-self|tpw|pûãbe'engaba}}, <!--
--->{{l-self|tpw|pûãmytera}}, <!--
--->{{l-self|tpw|pûãmyterybyrixûara}}, <!--
--->{{l-self|tpw|pûãmirĩ}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show<!-- FIXME: rename to [[Template:list:terms for fingers/tpw]] -->
+|hypernym=pûã<!-- FIXME: should read "terms for fingers" -->
+|pûãgûasu
+|pûãbe'engaba
+|pûãmytera
+|pûãmyterybyrixûara
+|pûãmirĩ
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 11536 Template:list:camelids/pt: -------- begin text --------
 {{list helper 2
@@ -23407,23 +23334,20 @@ Page 11540 Template:list:countries of Africa/pt: -------- begin text --------
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 11541 Template:list:times of day/zlw-ocs: -------- begin text --------
-{{list helper 2
-|title=times of day
-|hypernym={{l-self|zlw-ocs|[[část]] [[den|dne]]}}
-|cat=zlw-ocs:Times of day
-|list=<!--
--->{{l-self|zlw-ocs|úsvit}}, <!--
--->{{l-self|zlw-ocs|jutro}}/{{l-self|zlw-ocs|ráno}}, <!--
--->{{l-self|zlw-ocs|dopoledne}}, <!--
--->{{l-self|zlw-ocs|poledne}}, <!--
--->{{l-self|zlw-ocs|spoledne}}, <!--
--->{{l-self|zlw-ocs|nešpor}}, <!--
--->{{l-self|zlw-ocs|večer}}, <!--
--->{{l-self|zlw-ocs|súmrak}}, <!--
--->{{l-self|zlw-ocs|prvospi}}, <!--
--->{{l-self|zlw-ocs|noc}}, <!--
--->{{l-self|zlw-ocs|pólnoc}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[čiest]]i [[den|dne]]
+|úsvit
+|jutro,ráno
+|dopoledne
+|poledne
+|spoledne
+|nešpor
+|večer
+|súmrak
+|prvospi
+|noc
+|pólnoc
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 11545 Template:list:felids/en: -------- begin text --------
 {{#invoke:topic list|show
@@ -23693,7 +23617,6 @@ Page 11566 Template:list:compass points/gu: -------- begin text --------
 -------- end text --------
 Page 11568 Template:list:days of the week/guw: -------- begin text --------
 {{#invoke:topic list|show<!-- FIXME: rename to [[Template:list:days of the week/guw/Benin]] -->
-|enhypernym=+ (Benin)
 |hypernym=[[azán]] [[osɛ̀]] tɔ̀n
 |Tɛ́nígbè
 |Ogúzángbè
@@ -23705,8 +23628,7 @@ Page 11568 Template:list:days of the week/guw: -------- begin text --------
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 11568 Template:list:days of the week/guw/Nigeria: -------- begin text --------
-{{#invoke:topic list|show
-|enhypernym=+ (Nigeria)
+{{#invoke:topic list|show<!-- FIXME: create -->
 |hypernym=[[azán]] [[osẹ̀]] tọ̀n
 |Tẹ́nígbè
 |Ogúzángbè
@@ -23928,17 +23850,14 @@ Page 11599 Template:list:countries of Europe/yi: -------- begin text --------
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 11607 Template:list:fingers/yrl: -------- begin text --------
-{{list helper 2
-|title=fingers
-|hypernym={{l-self|yrl|dedu}}
-|cat=yrl:Fingers
-|list=<!--
--->{{l-self|yrl|deduwasú}}, <!--
--->({{l-self|yrl|dedu-mukameẽsara|dedu-}}){{l-self|yrl|mukameẽsara}}, <!--
--->{{l-self|yrl|dedu-piterapura}}, <!--
--->({{l-self|yrl|dedu-memuriasara|dedu-}}){{l-self|yrl|memuriasara}}, <!--
--->{{l-self|yrl|dedu-rakapira}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show<!-- FIXME: rename to [[Template:list:terms for fingers/yrl]] -->
+|hypernym=dedu<!-- FIXME: should read "terms for fingers" -->
+|deduwasú
+|([[dedu-mukameẽsara|dedu-]])[[mukameẽsara]]
+|dedu-piterapura
+|([[dedu-memuriasara|dedu-]])[[memuriasara]]
+|dedu-rakapira
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 11608 Template:list:countries of South America/pt: -------- begin text --------
 {{#invoke:topic list|show
@@ -23980,7 +23899,7 @@ Page 11613 Template:list:canids/tpw: -------- begin text --------
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 11618 Template:list:days of the week/dng: -------- begin text --------
-{{#invoke:topic list|show<!-- FIXME: Rename to [[Template:list:days of the week/dng/Chinese-1]]? -->
+{{#invoke:topic list|show<!-- FIXME: Rename to [[Template:list:days of the week/dng/Chinese-1]] -->
 |title=days of the week (Chinese I)
 |щинчийи
 |щинчиэр
@@ -23992,7 +23911,7 @@ Page 11618 Template:list:days of the week/dng: -------- begin text --------
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 11618 Template:list:days of the week/dng/Chinese-2: -------- begin text --------
-{{#invoke:topic list|show
+{{#invoke:topic list|show<!-- FIMXE: create -->
 |title=days of the week (Chinese II)
 |либэйи
 |либээр
@@ -24004,7 +23923,7 @@ Page 11618 Template:list:days of the week/dng/Chinese-2: -------- begin text ---
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 11618 Template:list:days of the week/dng/Persian: -------- begin text --------
-{{#invoke:topic list|show
+{{#invoke:topic list|show<!-- FIMXE: create -->
 |title=days of the week (Persian)
 |дўшанбэ
 |щешанбэ
@@ -24170,21 +24089,18 @@ Page 11644 Template:list:governorates of Egypt/ar: -------- begin text --------
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 11651 Template:list:times of day/pt: -------- begin text --------
-{{list helper 2
-|title=times of day
-|hypernym={{l-self|pt|hora do dia}}
-|cat=pt:Times of day
-|list=<!--
--->{{l-self|pt|amanhecer}}, <!--
--->{{l-self|pt|manhãzinha}}, <!--
--->{{l-self|pt|manhã}}, <!--
--->{{l-self|pt|meio-dia}}, <!--
--->{{l-self|pt|tarde}}, <!--
--->{{l-self|pt|tardinha}}/{{l-self|pt|entardecer}}, <!--
--->{{l-self|pt|noitinha}}/{{l-self|pt|anoitecer}}, <!--
--->{{l-self|pt|noite}}, <!--
--->{{l-self|pt|madrugada}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[hora]]s do [[dia]]
+|amanhecer
+|manhãzinha
+|manhã
+|meio-dia
+|tarde
+|tardinha,entardecer
+|noitinha,anoitecer
+|noite
+|madrugada
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 11652 Template:list:provinces of the Netherlands/fr: -------- begin text --------
 {{#invoke:topic list|show
@@ -24510,8 +24426,9 @@ Page 11710 Template:list:countries of Asia/zh: -------- begin text --------
 |中國
 }}<noinclude>{{list doc></noinclude>
 -------- end text --------
-Page 11711 Template:list:countries of Asia/tl/Latn: -------- begin text --------
-{{#invoke:topic list|show
+Page 11711 Template:list:countries of Asia/tl: -------- begin text --------
+{{#invoke:topic list|show<!-- FIXME: rename to [[Template:list:countries of Asia/tl/Latn]] -->
+|enhypernym=+ (Latin script)
 |hypernym=mga [[bansa]] sa [[Asya]]
 |Afghanistan
 |Armenya
@@ -24563,8 +24480,9 @@ Page 11711 Template:list:countries of Asia/tl/Latn: -------- begin text --------
 |Yemen
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
-Page 11711 Template:list:countries of Asia/tl: -------- begin text --------
-{{#invoke:topic list|show
+Page 11711 Template:list:countries of Asia/tl/Tglg: -------- begin text --------
+{{#invoke:topic list|show<!-- FIXME: create -->
+|enhypernym=+ (Baybayin script)
 |hypernym={{tl-bay sc|manga}} [[{{tl-bay sc|bansa}}]] {{tl-bay sc|sa}} [[{{tl-bay sc|Asya}}]]
 |{{tl-bay sc|Afganistan}}
 |{{tl-bay sc|Asya}}
@@ -24964,19 +24882,16 @@ Page 11732 Template:list:countries of Asia/hi: -------- begin text --------
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 11733 Template:list:times of day/bar: -------- begin text --------
-{{list helper 2
-|title=times of day
-|hypernym={{l-self|bar|Tågeszeit}}
-|cat=bar:Times of day
-|list=<!--
--->{{l-self|bar|Fruah}}, <!--
--->{{l-self|bar|Vuamittåg}}, <!--
--->{{l-self|bar|Mittåg}}, <!--
--->{{l-self|bar|Nåchmittåg}}, <!--
--->{{l-self|bar|Åbend}}, <!--
--->{{l-self|bar|Nåcht}}, <!--
--->{{l-self|bar|Mitternåcht}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[Tågeszeid]]n<!-- FIXME: likely to be wrong -->
+|Fruah
+|Vuamittåg
+|Mittåg
+|Nåchmittåg
+|Åbend
+|Nåcht
+|Mitternåcht
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 11741 Template:list:countries of Europe/hrx: -------- begin text --------
 {{#invoke:topic list|show
@@ -25700,20 +25615,17 @@ Page 11831 Template:list:continents/or: -------- begin text --------
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 11834 Template:list:times of day/tpw: -------- begin text --------
-{{list helper 2
-|title=times of day
-|cat=tpw:Times of day
-|list=<!--
--->{{l-self|tpw|ko'emytanga}}, <!-- aurora
--->{{l-self|tpw|ko'ema}}, <!-- manhã
--->{{l-self|tpw|asaîé}}/{{l-self|tpw|'araybysokeme}}/{{l-self|tpw|îandara|pos=LGA}}, <!-- 12:00
--->{{l-self|tpw|karuka}}, <!-- tarde
--->{{l-self|tpw|karukypy}}, <!-- tardinha
--->{{l-self|tpw|putuna}}, <!-- noite
--->{{l-self|tpw|karupysaîé}}, <!-- 22:00
--->{{l-self|tpw|pysaîé}}, <!-- 00:00
--->{{l-self|tpw|pysaîe'ĩ}}<!-- 03:00
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|ko'emytanga<!-- aurora -->
+|ko'ema<!-- manhã -->
+|asaîé,'araybysokeme,îandara<pos:LGA><!-- 12:00 -->
+|karuka<!-- tarde -->
+|karukypy<!-- tardinha -->
+|putuna<!-- noite -->
+|karupysaîé<!-- 22:00 -->
+|pysaîé<!-- 00:00 -->
+|pysaîe'ĩ<!-- 03:00 -->
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 11835 Template:list:compass points/myv: -------- begin text --------
 {{list helper 2|title=compass points|hypernym=|list=}}
@@ -27088,22 +27000,18 @@ Page 12110 Template:list:provinces of Algeria/en: -------- begin text --------
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 12111 Template:list:times of day/slr: -------- begin text --------
-{{list helper 2
-|title=times of day
-|hypernym=
-|cat=slr:Times of day
-|list=<!--
--->{{l-self|slr|güntüs||daytime}}; <!--
--->{{l-self|slr|tañ||dawn}}, <!--
--->{{l-self|slr|er||morning}}, <!--
--->{{l-self|slr|goşluq||forenoon}}, <!--
--->{{l-self|slr|öyle||noon}}, <!--
--->{{l-self|slr|öyleden soña||afternoon}}, <!--
--->{{l-self|slr|şam}}/{{l-self|slr|diger||dusk}}, <!--
--->{{l-self|slr|geş||evening}}, <!--
--->{{l-self|slr|gece}}/{{l-self|slr|dün||night}}, <!--
--->{{l-self|slr|yarım gece||midnight}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|tañ
+|er
+|güntüs<!-- means "daytime"; approximate positioning -->
+|goşluq
+|öyle
+|öyleden soña
+|şam,diger
+|geş
+|gece,dün
+|yarım gece
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 12112 Template:list:countries of Africa/de: -------- begin text --------
 {{#invoke:topic list|show
@@ -27527,8 +27435,8 @@ Page 12165 Template:list:countries of Africa/pl: -------- begin text --------
 |Zimbabwe
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
-Page 12167 Template:list:Gregorian calendar months/csb/Latin: -------- begin text --------
-{{#invoke:topic list|show
+Page 12167 Template:list:Gregorian calendar months/csb: -------- begin text --------
+{{#invoke:topic list|show<!-- FIXME: rename to [[Template:list:Gregorian calendar months/csb/Latin]] -->
 |enhypernym=+ (Latin-origin)
 |hypernym=[[miesąc]]e [[kalãdôrz gregòriańsczi|kalãdôrza gregòriańscziego]]
 |januar
@@ -27546,7 +27454,7 @@ Page 12167 Template:list:Gregorian calendar months/csb/Latin: -------- begin tex
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 12167 Template:list:Gregorian calendar months/csb/Slavic: -------- begin text --------
-{{#invoke:topic list|show
+{{#invoke:topic list|show<!-- FIXME: create -->
 |enhypernym=+ (Slavic-origin; often neologisms)
 |hypernym=[[miesąc]]e [[kalãdôrz gregòriańsczi|kalãdôrza gregòriańscziego]]
 |stëczéń,stëcznik,zetnik
@@ -28514,17 +28422,14 @@ Page 12326 Template:list:Gregorian calendar months/kw: -------- begin text -----
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 12334 Template:list:fingers/hrx: -------- begin text --------
-{{list helper 2
-|title=fingers
-|hypernym={{l-self|hrx|Finger}}
-|cat=hrx:Fingers
-|list=<!--
--->{{l-self|hrx|Daume}}, <!--
---> {{l-self|hrx|Zeichefinger}}, <!--
--->{{l-self|hrx|Mittelfinger}}, <!--
--->{{l-self|hrx|Ringfinger}}, <!--
--->{{l-self|hrx}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show<!-- FIXME: rename to [[Template:list:terms for fingers/hrx]] -->
+|hypernym=Finger<!-- FIXME: should read "terms for fingers" -->
+|Daume
+|Zeichefinger
+|Mittelfinger
+|Ringfinger
+|?
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 12336 Template:list:countries of Europe/rsk: -------- begin text --------
 {{#invoke:topic list|show
@@ -28978,8 +28883,9 @@ Page 12366 Template:list:countries of Europe/hy: -------- begin text --------
 |Ֆրանսիա
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
-Page 12372 Template:list:countries of Europe/az/Latn: -------- begin text --------
-{{#invoke:topic list|show<!-- FIXME: renamed from [[Template:list:countries of Europe/az]] -->
+Page 12372 Template:list:countries of Europe/az: -------- begin text --------
+{{#invoke:topic list|show<!-- FIXME: rename to [[Template:list:countries of Europe/az/Latn]] -->
+|enhypernym=+ (Latin script)
 |hypernym=[[Avropa]]nın [[ölkə]]ləri
 |Albaniya
 |Almaniya
@@ -29035,7 +28941,8 @@ Page 12372 Template:list:countries of Europe/az/Latn: -------- begin text ------
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 12373 Template:list:countries of Europe/az/Cyrl: -------- begin text --------
-{{#invoke:topic list|show
+{{#invoke:topic list|show<!-- FIXME: create -->
+|enhypernym=+ (Cyrillic script)
 |hypernym=[[Авропа|Авропа]]нын [[өлкә]]ләри
 |Австрија
 |Азәрбајҹан
@@ -29149,18 +29056,21 @@ Page 12404 Template:list:provinces of Belgium/wa: -------- begin text --------
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 12405 Template:list:times of day/id: -------- begin text --------
-{{list helper 2
-|title=times of day
-|hypernym={{l-self|id|waktu dalam sehari}}
-|cat=id:Times of day
-|list=<!--
--->{{l-self|id|pagi buta}} ({{l-self|id|dini hari, subuh)}}, <!--
--->{{l-self|id|pagi}}, <!--
--->{{l-self|id|siang}} ({{l-self|id|tengah hari}}, {{l-self|id|zuhur}}), <!--
--->{{l-self|id|sore}} ({{l-self|id|asar}}, {{l-self|id|petang}}, {{l-self|id|magrib}}, {{l-self|id|senja}}), <!--
--->{{l-self|id|malam}}, <!--
--->({{l-self|id|isya}}, {{l-self|id|tengah malam}}) <!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[waktu|waktu-waktu]] [[dalam]] [[sehari]]
+|subuh<!-- FIXME: needs ordering from an Indonesian speaker -->
+|pagi buta,dini hari
+|pagi
+|siang
+|tengah hari,zuhur
+|asar
+|sore,petang
+|magrib
+|senja
+|malam
+|isya
+|tengah malam
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 12406 Template:list:countries of Europe/wa: -------- begin text --------
 {{#invoke:topic list|show
