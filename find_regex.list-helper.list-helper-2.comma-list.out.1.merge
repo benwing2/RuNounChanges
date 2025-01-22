@@ -1559,6 +1559,7 @@ Page 55 Template:list:countries of Europe/ar: -------- begin text --------
 |أَيِرْلَنْدَا
 |إِيطَالِيَا
 |كَازَاخِسْتَان
+|كُوسُوفُو
 |لَاتْفِيَا
 |لِيخْتَنْشْتَايْن
 |لِتُوَانِيَا
@@ -1801,6 +1802,7 @@ Page 70 Template:list:countries of Europe/ko/South Korea: -------- begin text --
 |프랑스
 |핀란드
 |헝가리
+|코소보
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 70 Template:list:countries of Europe/ko/North Korea: -------- begin text --------
@@ -1855,6 +1857,7 @@ Page 70 Template:list:countries of Europe/ko/North Korea: -------- begin text --
 |프랑스
 |핀란드
 |마쟈르
+|꼬쏘보
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 2933 Template:list:Gregorian calendar months/et: -------- begin text --------
@@ -3083,24 +3086,20 @@ Page 5169 Template:list:continents/es: -------- begin text --------
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5170 Template:list:Western astrology signs/en: -------- begin text --------
-{{list helper 2
-|title=Western astrology signs
-|cat=en:Astrology
-|hypernym={{l|en|Western astrology}} {{l|en|sign}}|hypernym2=astrological sign|hypernym3=star sign
-|list=<!--
--->{{l-self|en|Aries}}, <!--
--->{{l-self|en|Taurus}}, <!--
--->{{l-self|en|Gemini}}, <!--
--->{{l-self|en|Cancer}}, <!--
--->{{l-self|en|Leo}}, <!--
--->{{l-self|en|Virgo}}, <!--
--->{{l-self|en|Libra}}, <!--
--->{{l-self|en|Scorpio}}, <!--
--->{{l-self|en|Sagittarius}}, <!--
--->{{l-self|en|Capricorn}}, <!--
--->{{l-self|en|Aquarius}}, <!--
--->{{l-self|en|Pisces}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show<!-- FIXME: rename to [[Template:list:Western zodiac signs]] -->
+|Aries
+|Taurus
+|Gemini
+|Cancer
+|Leo
+|Virgo
+|Libra
+|Scorpio
+|Sagittarius
+|Capricorn
+|Aquarius
+|Pisces
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5171 Template:list:states of India/en: -------- begin text --------
 {{#invoke:topic list|show
@@ -3605,30 +3604,27 @@ Page 5288 Template:list:planets of the Solar System/pt: -------- begin text ----
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5290 Template:list:Western astrology signs/pt: -------- begin text --------
-{{list helper 2
-|title=Western astrology signs
-|cat=pt:Astrology
-|hypernym={{l|pt|signo}} da {{l|pt|astrologia ocidental}}
-|list=<!--
--->{{l-self|pt|Áries}}/{{l-self|pt|Carneiro}}, <!--
--->{{l-self|pt|Touro}}, <!--
--->{{l-self|pt|Gêmeos}}/{{l-self|pt|Gémeos}}, <!--
--->{{l-self|pt|Câncer}}/{{l-self|pt|Caranguejo}}, <!--
--->{{l-self|pt|Leão}}, <!--
--->{{l-self|pt|Virgem}}, <!--
--->{{l-self|pt|Libra}}/{{l-self|pt|Balança}}, <!--
--->{{l-self|pt|Escorpião}}, <!--
--->{{l-self|pt|Sagitário}}, <!--
--->{{l-self|pt|Capricórnio}}, <!--
--->{{l-self|pt|Aquário}}, <!--
--->{{l-self|pt|Peixes}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[signo zodiacal|signos zodiacais]] [[ocidental|ocidentais]]
+|Áries<ll:Brazil>,Carneiro<ll:Portugal>
+|Touro
+|Gêmeos<ll:Brazil>~Gémeos<ll:Portugal>
+|Câncer<ll:Brazil>,Caranguejo<ll:Portugal>
+|Leão
+|Virgem
+|Libra<ll:Brazil>,Balança<ll:Portugal>
+|Escorpião
+|Sagitário
+|Capricórnio
+|Aquário
+|Peixes
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 5291 Template:list:dwarf planets of the solar system/pt: -------- begin text --------
 {{list helper 2
 |title=dwarf planets of the solar system
 |cat=pt:Dwarf planets
-|hypernym={{l|pt|planeta anão}} do {{l|pt|sistema solar}}
+|hypernym=[[planeta anão|planetas anẽos]] do [[sistema solar]]
 |list=<!--
 -->{{l-self|pt|Ceres}}, <!--
 -->{{l-self|pt|Plutão}}, <!--
@@ -7644,24 +7640,21 @@ Page 6984 Template:list:Gothic script letters/got: -------- begin text --------
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 7003 Template:list:Western astrology signs/ka: -------- begin text --------
-{{list helper 2
-|title=Western astrology signs
-|cat=ka:Astrology
-|hypernym={{l|ka|ასტროლოგიური ნიშნები}}|hypernym2=astrological sign|hypernym3=star sign
-|list=<!--
--->{{l-self|ka|ვერძი}}, <!--
--->{{l-self|ka|კურო}}, <!--
--->{{l-self|ka|მარჩბივი}}, <!--
--->{{l-self|ka|კირჩხიბი}}, <!--
--->{{l-self|ka|ლომი}}, <!--
--->{{l-self|ka|ქალწული}}, <!--
--->{{l-self|ka|სასწორი}}, <!--
--->{{l-self|ka|ღრიანკალი}}, <!--
--->{{l-self|ka|მშვილდოსანი}}, <!--
--->{{l-self|ka|თხის რქა}}, <!--
--->{{l-self|ka|მერწყული}}, <!--
--->{{l-self|ka|თევზები}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[ასტროლოგია|ასტროლოგიური]] [[ნიშანი|ნიშნები]]
+|ვერძი
+|კურო
+|მარჩბივი
+|კირჩხიბი
+|ლომი
+|ქალწული
+|სასწორი
+|ღრიანკალი
+|მშვილდოსანი
+|თხის რქა
+|მერწყული
+|თევზები
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 7089 Template:list:days of the week/qu: -------- begin text --------
 {{#invoke:topic list|show
@@ -7676,21 +7669,18 @@ Page 7089 Template:list:days of the week/qu: -------- begin text --------
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 7091 Template:List:Peruvian ecoregions/qu: -------- begin text --------
-{{list helper 2
-|title=Peruvian ecoregions
-|cat=qu:Peruvian ecoregions
-|hypernym={{l|qu|Piruw|Piruwpi}} {{l|qu|allpa}} {{l|qu|suyu|suyukuna}}
-|list=<!--
--->{{l-self|qu|challa}}, <!--
--->{{l-self|qu|hanka}}, <!--
--->{{l-self|qu|puna}}, <!--
--->{{l-self|qu|qichwa}}/{{l-self|qu|qhichwa}}, <!--
--->{{l-self|qu|rupha rupha}}, <!--
--->{{l-self|qu|sallqa}}<!--
--->{{l-self|qu|suni}}, <!--
--->{{l-self|qu|umawa}}, <!--
--->{{l-self|qu|yunka}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show<!-- FIXME: rename to [[Template:list:Peruvian ecoregions/qu]] -->
+|hypernym=[[Piruw]]pi [[allpa]] [[suyu]]kuna
+|challa
+|hanka
+|puna
+|qichwa~qhichwa
+|rupha rupha
+|sallqa
+|suni
+|umawa
+|yunka
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 7095 Template:list:Georgian script letters/ka: -------- begin text --------
 {{#invoke:topic list|show
@@ -11090,6 +11080,7 @@ Page 8371 Template:list:countries of Europe/id: -------- begin text --------
 |Jerman
 |Kazakhstan
 |Kroasia
+|Kosovo
 |Latvia
 |Listenstaina
 |Lituania
@@ -11726,6 +11717,7 @@ Page 8638 Template:list:countries of Europe/ja: -------- begin text --------
 |{{ja-r|^キプロス}}
 |{{ja-r|^ギリシャ}}
 |{{ja-r|^クロアチア}}
+|{{ja-r|^コソボ}}~{{ja-r|^コソヴォ}}
 |{{ja-r|^サン ^マリノ}}
 |{{ja-r|^ジョージア}}
 |{{ja-r|^スイス}}
@@ -13367,6 +13359,7 @@ Page 9218 Template:list:countries of Europe/mn/Cyrl: -------- begin text -------
 |Итали
 |Казахстан
 |Кипр
+|Косово
 |Латви
 |Литва
 |Лихтенштайн
@@ -14260,6 +14253,7 @@ Page 9487 Template:list:countries of Europe/hu: -------- begin text --------
 |Izland
 |Írország
 |Kazahsztán
+|Koszovó
 |Lengyelország
 |Lettország
 |Liechtenstein
@@ -15484,14 +15478,14 @@ Page 9810 Template:list:groups/en: -------- begin text --------
 Page 9811 Template:list:compass points/az: -------- begin text --------
 {{list helper 2|title=compass points|list=}}
 {{compass
-	|n=şimal|n2=([[quzey]])
-	|ne=şimal-şərq|ne2=([[quzey-doğu]])|ne3=([[quzey-gündoğan]])
-	|e=şərq|e2=([[doğu]])|e3=([[gündoğan]])
-	|se=cənub-şərq|se2=([[güney-doğu]])|se3=([[güney-gündoğan]])
-	|s=cənub|s2=([[güney]])
-	|sw=cənub-qərb|sw2=([[güney-batı]])|sw3=([[güney-günbatan]])
-	|w=qərb|w2=([[batı]])|w3=([[günbatan]])
-	|nw=şimal-qərb|nw2=([[quzey-batı]])|nw3=([[quzey-günbatan]])
+	|n=şimal|n2=[[quzey]]
+	|ne=şimal-şərq|ne2=[[quzey-doğu]]|ne3=[[quzey-günçıxan]]|ne4=[[quzey-gündoğan]]
+	|e=şərq|e2=[[doğu]]|e3=[[günçıxan]]|e4=[[gündoğan]]
+	|se=cənub-şərq|se2=[[güney-doğu]]|se3=[[güney-günçıxan]]|se4=[[güney-gündoğan]]
+	|s=cənub|s2=[[güney]]
+	|sw=cənub-qərb|sw2=[[güney-batı]]|sw3=[[güney-günbatan]]
+	|w=qərb|w2=[[batı]]|w3=[[günbatan]]
+	|nw=şimal-qərb|nw2=[[quzey-batı]]|nw3=[[quzey-günbatan]]
 |lang=az}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 9813 Template:list:compass points/ar: -------- begin text --------
@@ -15529,6 +15523,7 @@ Page 9820 Template:list:countries of Europe/nb: -------- begin text --------
 |Island
 |Italia
 |Kasakhstan
+|Kosovo
 |Kroatia
 |Kypros
 |Latvia
@@ -15706,6 +15701,7 @@ Page 9838 Template:list:countries of Europe/tr: -------- begin text --------
 |Karadağ
 |Kazakistan
 |Kıbrıs
+|Kosova
 |Kuzey Makedonya
 |Letonya
 |Lihtenştayn
@@ -17852,6 +17848,7 @@ Page 10396 Template:list:countries of Europe/es: -------- begin text --------
 |Islandia
 |Italia
 |Kazajistán
+|Kosovo
 |Letonia
 |Liechtenstein
 |Lituania
@@ -17892,6 +17889,7 @@ Page 10397 Template:list:countries of Europe/pt: -------- begin text --------
 |Bulgária
 |Cazaquistão
 |Chipre
+|Cosovo~Kosovo
 |Croácia
 |Dinamarca
 |Eslováquia
@@ -17960,6 +17958,7 @@ Page 10398 Template:list:countries of Europe/fr: -------- begin text --------
 |Islande
 |Italie
 |Kazakhstan
+|Kosovo~Cossovo
 |Lettonie
 |Liechtenstein
 |Lituanie
@@ -18199,6 +18198,7 @@ Page 10420 Template:list:countries of Europe/pa: -------- begin text --------
 |ਬੋਸਨੀਆ ਅਤੇ ਹਰਜ਼ੇਗੋਵੀਨਾ
 |ਬੁਲਗਾਰੀਆ
 |ਕ੍ਰੋਏਸ਼ੀਆ
+|ਕੋਸੋਵੋ
 |ਸਾਇਪ੍ਰਸ
 |ਚੈਕ ਗਣਰਾਜ
 |ਡੈਨਮਾਰਕ
@@ -18716,6 +18716,7 @@ Page 10543 Template:list:countries of Europe/ru: -------- begin text --------
 |Испа́ния
 |Казахста́н
 |Кипр
+|Ко́сово
 |Ла́твия
 Лихтенште́йн<tr:Lixtɛnštɛ́jn>
 |Литва́
@@ -18771,6 +18772,7 @@ Page 10544 Template:list:countries of Europe/uk: -------- begin text --------
 |Іта́лія
 |Казахста́н
 |Кіпр
+|Ко́сово
 |Ла́твія
 |Литва́
 |Ліхтенште́йн
@@ -18830,6 +18832,7 @@ Page 10545 Template:list:countries of Europe/pl: -------- begin text --------
 |Irlandia
 |Islandia
 |Kazachstan
+|Kosowo
 |Liechtenstein
 |Litwa
 |Luksemburg
@@ -19989,7 +19992,7 @@ Page 10821 Template:list:lunar months/sa: -------- begin text --------
 |श्रावण
 |भाद्र
 |अश्विन्
-|कार्तिक
+|कार्त्तिक
 |मार्गशीर्ष,अग्रहायण
 |पौष
 |माघ
@@ -22782,6 +22785,7 @@ Page 11434 Template:list:countries of Europe/cs: -------- begin text --------
 |Island
 |Itálie
 |Kazachstán
+|Kosovo
 |Kypr
 |Lichtenštejnsko
 |Litva
@@ -23469,6 +23473,7 @@ Page 11548 Template:list:countries of Europe/fi: -------- begin text --------
 |Italia
 |Itävalta
 |Kazakstan
+|Kosovo
 |Kreikka
 |Kroatia
 |Kypros
@@ -23523,6 +23528,7 @@ Page 11549 Template:list:countries of Europe/de: -------- begin text --------
 |Irland
 |Island
 |Italien
+|Kosovo
 |Kroatien
 |Lettland
 |Liechtenstein
@@ -23583,6 +23589,7 @@ Page 11550 Template:list:countries of Europe/it: -------- begin text --------
 |Islanda
 |Italia
 |Kazakistan
+|Kosovo~Kossovo~Cossovo
 |Lettonia
 |Liechtenstein
 |Lituania
@@ -24688,6 +24695,7 @@ Page 11720 Template:list:countries of Europe/ms: -------- begin text --------
 |Itali
 |Jerman
 |Kazakhstan
+|Kosovo
 |Latvia
 |Liechtenstein
 |Lithuania
@@ -24747,6 +24755,7 @@ Page 11721 Template:list:countries of Europe/ca: -------- begin text --------
 |Islàndia
 |Itàlia
 |Kazakhs
+|Kosovo
 |Letònia
 |Liechtenstein
 |Lituània
@@ -24804,6 +24813,7 @@ Page 11722 Template:list:countries of Europe/eu: -------- begin text --------
 |Islandia
 |Italia
 |Kazakhstan
+|Kosovo
 |Kroazia
 |Letonia
 |Liechtenstein
@@ -25774,6 +25784,7 @@ Page 11868 Template:list:countries of Europe/cy: -------- begin text --------
 |Bosnia a Hertsegofina
 |Bwlgaria
 |Casachstan
+|Cosofo
 |Croatia
 |Cyprus
 |Denmarc
@@ -26639,6 +26650,7 @@ Page 11977 Template:list:countries of Europe/la: -------- begin text --------
 |Hungaria
 |Īslandia
 |Ī̆talia
+|Kosovia
 |Lettonia
 |Lichtenstēnum
 |Lītuānia
@@ -26760,6 +26772,7 @@ Page 12017 Template:list:countries of Europe/sk: -------- begin text --------
 |Írsko
 |Island
 |Kazachstan
+|Kosovo
 |Lichtenštajnsko
 |Litva
 |Lotyšsko
@@ -27838,6 +27851,7 @@ Page 12261 Template:list:countries of Europe/sl: -------- begin text --------
 |Islándija
 |Itálija
 |Kázahstan
+|Kosovo
 |Látvija
 |Lihtenštajn
 |Lítva
@@ -28061,6 +28075,7 @@ Page 12273 Template:list:countries of Europe/tk: -------- begin text --------
 |Ispaniýa
 |Italiýa
 |Kipr
+|Kosowo
 |Latwiýa
 |Lihtenşteýn
 |Litwa
@@ -28240,6 +28255,7 @@ Page 12301 Template:list:countries of Europe/et: -------- begin text --------
 |Island
 |Itaalia
 |Kasahstan
+|Kosovo
 |Kreeka
 |Küpros
 |Leedu
@@ -28323,6 +28339,7 @@ Page 12307 Template:list:countries of Europe/lv: -------- begin text --------
 |Īrija
 |Kazahstāna
 |Kipra
+|Kosova
 |Krievija
 |Latvija
 |Lietuva
@@ -28534,6 +28551,7 @@ Page 12336 Template:list:countries of Europe/rsk: -------- begin text --------
 |Италия
 |Казахстан
 |Кипар
+|Косово<!-- FIXME: a guess; seems highly likely though -->
 |Летония,Латвия
 |Литвания
 |Лихтенштайн
@@ -28624,6 +28642,7 @@ Page 12348 Template:list:countries of Europe/he: -------- begin text --------
 |פִינְלַנְד<tr:fínland>
 |צָרְפַת<tr:tsarfát>
 |צֶ׳כְיָה<tr:chékhya>
+|קוֹסוֹבוֹ<tr:kosovo><!-- FIXME: where is the stress? -->
 |קָזַחְסְטָן<tr:kazakhstán>
 |קַפְרִיסִין<tr:kafrisín>
 |קְרוֹאַטְיָה<tr:kro'átya>
@@ -28657,6 +28676,7 @@ Page 12349 Template:list:countries of Europe/nl: -------- begin text --------
 |IJsland
 |Italië
 |Kazachstan
+|Kosovo
 |Kroatië
 |Letland
 |Liechtenstein
@@ -28823,6 +28843,7 @@ Page 12352 Template:list:countries of Europe/da: -------- begin text --------
 |Island
 |Italien
 |Kasakhstan
+|Kosovo
 |Kroatien
 |Letland
 |Liechtenstein
@@ -28952,6 +28973,7 @@ Page 12366 Template:list:countries of Europe/hy: -------- begin text --------
 |Սլովենիա
 |Վատիկան
 |Վրաստան
+|Կոսովո
 |Ֆինլանդիա
 |Ֆրանսիա
 }}<noinclude>{{list doc}}</noinclude>
@@ -28984,6 +29006,7 @@ Page 12372 Template:list:countries of Europe/az/Latn: -------- begin text ------
 |İsveçrə
 |İtaliya
 |Kipr
+|Kosovo
 |Qazaxıstan
 |Latviya
 |Lixtenşteyn
@@ -29037,6 +29060,7 @@ Page 12373 Template:list:countries of Europe/az/Cyrl: -------- begin text ------
 |Италија
 |Јунаныстан
 |Кипр
+|Косово
 |Ҝүрҹүстан
 |Латвија
 |Литва
