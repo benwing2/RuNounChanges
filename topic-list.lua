@@ -44,7 +44,6 @@ local letter_like_properties = {
 	appendix = letter_like_appendix,
 	notr = true,
 	allow_space_delim = true, -- allow space as a delimiter
-	tilde_delim = "~", -- use a tilde without spaces around it
 }
 
 local function letter_name_category(data)
@@ -53,6 +52,14 @@ local function letter_name_category(data)
 		error(("Internal error: Can't pull out script name from list name '%s'"):format(data.list_name))
 	end
 	return ("%s letter names"):format(script_name)
+end
+
+local function calendar_month_adjectives_category(data)
+	local calendar = data.list_name:match("^(.*) calendar month ajdectives$")
+	if not calendar then
+		error(("Internal error: Can't pull out calendar type from list name '%s'"):format(data.list_name))
+	end
+	return calendar .. "calendar months"
 end
 
 local function countries_of_category(data)
@@ -65,7 +72,7 @@ end
 
 local topic_list_properties = {
 	{".* calendar months", {sort = false}},
-	{".* calendar month adjectives", {sort = false}},
+	{".* calendar month adjectives", {sort = false, cat = calendar_month_adjectives_category}},
 	{".* script letters", letter_like_properties},
 	{".* script vowels", letter_like_properties},
 	{".* script consonants", letter_like_properties},
@@ -75,15 +82,24 @@ local topic_list_properties = {
 	-- present)
 	{".* script letter names", {horiz = "bullet", sort = false, cat = letter_name_category}},
 	{"books of the.* Testament", {sort = false, cat = "Books of the Bible"}},
+	-- FIXME: Use the following instead of the previous when we create 'Books of the Old Testament' and
+	-- 'Books of the New Testament'
+	--{"books of the Old Testament", {sort = false}},
+	--{"books of the .*New Testament", {sort = false, cat = "Books of the New Testament"}},
 	{"canids", {horiz = "bullet"}}, -- only 5 items on most lists
 	{"countries in .*", {appendix = "Appendix:Countries of the world"}},
 	-- FIXME: Delete the following once we rename these categories to 'countries in ...'
 	{"countries of .*", {appendix = "Appendix:Countries of the world", cat = countries_of_category}},
 	{"days of the week", {horiz = "bullet", sort = false, appendix = "Appendix:Days of the week"}},
 	{"dentistry location adjectives", {cat = "Dentistry"}},
-	{"electromagnetic radiation", {sort = false, cat = "Electromagnetism"}},
+	-- FIXME: Delete the following once we rename these categories to 'electromagnetic spectrum'
+	{"electromagnetic radiation", {sort = false, cat = "Electromagnetic spectrum"}}, -- FIXME, add category
+	{"electromagnetic spectrum", {sort = false}},
+	-- FIXME: Delete the following once we rename these categories to 'terms for fingers'
+	{"fingers", {sort = false, cat = "Terms for fingers"}},
+	{"terms for fingers", {sort = false, cat = "Terms for fingers"}},
 	{"fundamental interactions", {cat = "Physics"}},
-	{"geological time units", {sort = false, cat = "Units of time,Geology"}},
+	{"geological time units", {sort = false, cat = "Units of time,Geology"}}, -- FIXME, add category 'Units of time'
 	{"human anatomy location adjectives", {cat = "Medicine"}},
 	{"Islamic prophets", {sort = false}},
 	{"leptons", {sort = false, horiz = "bullet"}},
@@ -93,14 +109,14 @@ local topic_list_properties = {
 	{"quarks", {sort = false, horiz = "bullet"}},
 	{"squarks", {sort = false, horiz = "bullet", cat = "Quarks"}},
 	{"antiquarks", {sort = false, horiz = "bullet", cat = "Quarks"}},
-	{"religions", {cat = "Religion"}}, -- FIXME, use "Religions"
+	{"religions", {cat = "Religion"}}, -- FIXME, add and use category 'Religions'
 	{"religious adherents", {cat = "Religion"}},
-	{"religious texts", {cat = "Religion"}},
+	{"religious texts", {cat = "Religion"}}, -- FIXME, add and use category 'Religious texts'
 	{"seasons", {horiz = "bullet", sort = false}},
 	{"sexual orientation adjectives", {cat = "Sexual orientations"}},
-	{"taxonomic ranks", {sort = false}},
+	{"taxonomic ranks", {sort = false}}, -- FIXME, add category 'Taxonomic ranks'
 	{"times of day", {sort = false}},
-	{"units of time", {sort = false}},
+	{"units of time", {sort = false}}, -- FIXME, add category 'Units of time'
 }
 
 --[==[
