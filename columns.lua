@@ -10,9 +10,11 @@ local parameter_utilities_module = "Module:parameter utilities"
 local parameters_module = "Module:parameters"
 local parse_interface_module = "Module:parse interface"
 local pron_qualifier_module = "Module:pron qualifier"
+local qualifier_module = "Module:qualifier"
 local string_utilities_module = "Module:string utilities"
 local table_module = "Module:table"
 local utilities_module = "Module:utilities"
+local yesno_module = "Module:yesno"
 
 local m_str_utils = require(string_utilities_module)
 
@@ -28,6 +30,8 @@ local u = m_str_utils.char
 local dump = mw.dumpObject
 local ucfirst = m_str_utils.ucfirst
 
+local force_cat = false -- for testing
+
 
 local function track(page)
     require(debug_track_module)("columns/" .. page)
@@ -42,8 +46,27 @@ end
 local function term_already_linked(term)
 	-- FIXME: "<span" is an ugly hack to prevent double-linking of terms already run through {{l|...}}:
 	-- [[Thread:User talk:CodeCat/MewBot adding lang to column templates]]
-	return term:find("<span")
+	-- Also make sure not to pass uses of {{ja-r/args}}, {{ryu-r/args}} or {{ko-l/args}} through full_link(),
+	-- which will mangle them.
+	return term:find("<span") or term:find("{{ja%-r|") or term:find("{{ryu%-r|") or term:find("{{ko%-l|")
 end
+
+local function convert_delimiter_to_separator(item, itemind, args)
+	if itemind == 1 then
+		item.separator = nil
+	elseif item.delimiter == " " then
+		item.separator = args.space_delim
+	elseif item.delimiter == "~" then
+		item.separator = args.tilde_delim
+	else
+		item.separator = args.comma_delim
+	end
+end
+
+local function get_horizontal_separator(args_horiz, embedded_comma)
+	return args_horiz == "bullet" and " · " or embedded_comma and "; " or ", "
+end
+
 
 -- Suppress false positives in categories like [[Category:English links with redundant wikilinks]] so people won't
 -- be tempted to "correct" them; terms like embedded ~ like [[Micros~1]] or embedded comma not followed by a space
@@ -58,7 +81,7 @@ local function full_link_and_track_self_links(item, face)
 		local pagename = mw.loadData(headword_data_module).pagename
 		local term_is_pagename = item.term == pagename
 		local term_contains_pagename = item.term:find("%[%[" .. m_str_utils.pattern_escape(pagename) .. "[|%]]")
-		if term_contains_pagename or term_contains_pagename then
+		if term_is_pagename or term_contains_pagename then
 			local current_L2 = require(pages_module).get_current_L2()
 			if current_L2 then
 				local current_L2_lang = require(languages_module).getByCanonicalName(current_L2)
@@ -77,9 +100,25 @@ local function full_link_and_track_self_links(item, face)
 	return require(links_module).full_link(item, face)
 end
 
-local function format_subitem(subitem, lang, face)
-	local text = subitem.term and term_already_linked(subitem.term) and subitem.term or
-		full_link_and_track_self_links(subitem, face)
+local function format_subitem(subitem, lang, face, compute_embedded_comma)
+	local embedded_comma = false
+	local text
+	if subitem.term and term_already_linked(subitem.term) then
+		text = subitem.term
+		if compute_embedded_comma then
+			embedded_comma = not not require(utilities_module).get_plaintext(text):find(",")
+		end
+	else
+		text = full_link_and_track_self_links(subitem, face)
+		if compute_embedded_comma then
+			-- We don't check qualifier, label or reference text for commas as it's inside parens or displayed
+			-- elsewhere.
+			local subitem_plaintext = subitem.alt or subitem.term
+			if subitem_plaintext then
+				embedded_comma = not not subitem_plaintext:find(",")
+			end
+		end
+	end
 	-- We could use the "show qualifiers" flag to full_link() but not when term_already_linked().
 	if subitem.q and subitem.q[1] or subitem.qq and subitem.qq[1] or subitem.l and subitem.l[1] or
 		subitem.ll and subitem.ll[1] or subitem.refs and subitem.refs[1] then
@@ -93,11 +132,12 @@ local function format_subitem(subitem, lang, face)
 			refs = subitem.refs,
 		}
 	end
-	return text
+	return text, embedded_comma
 end
 
 local function format_item(item, args, face)
-	local text
+	local compute_embedded_comma = args.horiz == "comma"
+	local embedded_comma = false
 	if type(item) == "table" then
 		if item.terms then
 			local parts = {}
@@ -108,20 +148,31 @@ local function format_item(item, args, face)
 				else
 					local separator = subitem.separator or not is_first and (args.subitem_separator or ", ")
 					if separator then
+						if compute_embedded_comma then
+							embedded_comma = embedded_comma or not not separator:find(",")
+						end
 						insert(parts, separator)
 					end
-					insert(parts, format_subitem(subitem, args.lang, face))
+					local formatted, this_embedded_comma = format_subitem(subitem, args.lang, face,
+						compute_embedded_comma)
+					embedded_comma = embedded_comma or this_embedded_comma
+					insert(parts, formatted)
 					is_first = false
 				end
 			end
-			return concat(parts)
+			return concat(parts), embedded_comma
 		else
-			return format_subitem(item, args.lang, face)
+			return format_subitem(item, args.lang, face, compute_embedded_comma)
 		end
-	elseif args.lang and not term_already_linked(item) then
-		return full_link_and_track_self_links({lang = args.lang, term = item, sc = args.sc}, face)
 	else
-		return item
+		if compute_embedded_comma then
+			embedded_comma = not not require(utilities_module).get_plaintext(item):find(",")
+		end
+		if args.lang and not term_already_linked(item) then
+			return full_link_and_track_self_links({lang = args.lang, term = item, sc = args.sc}, face), embedded_comma
+		else
+			return item, embedded_comma
+		end
 	end
 end
 
@@ -141,7 +192,7 @@ end
 
 local function make_sortbase(item)
 	if item == false then
-		return "*" -- doesn't matter, will be omitted in format_list_items()
+		return "*" -- doesn't matter, will be omitted in create_list()
 	elseif type(item) == "table" then
 		if item.terms then
 			-- Optimize for the common case of only a single term
@@ -167,7 +218,7 @@ local function make_sortbase(item)
 					return item_sortbase(subitem)
 				end
 			end
-			return "*" -- doesn't matter, entire group will be omitted in format_list_items()
+			return "*" -- doesn't matter, entire group will be omitted in create_list()
 		else
 			return item_sortbase(item)
 		end
@@ -234,9 +285,15 @@ following fields:
 * `collapse`: If true, make the table partially collapsed by default, with a "Show more" button at the bottom.
 * `toggle_category`: Value of `data-toggle-category` property grouping collapsible elements.
 * `header`: If specified, Wikicode to prepend to the output.
-* `format_header`: If specified and `header` given, put a <div> around the specified header text.
+* `title_new_style`: If true, the header is treated as a title and displayed in a new style. This is ignored if `horiz`
+					 is non-nil.
 * `subitem_separator`: Separator used between subitems when multiple subitems occur on a line, if not specified in the
                        subitem itself (using the `separator` field). Defaults to {", "}.
+* `keepfirst`: If > 0, keep this many rows unsorted at the beginning of the top level.
+* `keeplast`: If > 0, keep this many rows unsorted at the end of the top level.
+* `horiz`: If non-nil, format the items horizontally. If the value is "bullet", put a center dot/bullet (·) between
+		   items. If the value is "comma", put a comma between items (but if there is an embedded comma in any item,
+		   put a semicolon between all items).
 
 Each item in `content` is in one of the following formats:
 * A string. This is for compatibility and should not be used by new callers.
@@ -254,7 +311,6 @@ function export.create_list(args)
 
 	local column_count = args.column_count or 1
 	local toggle_category = args.toggle_category or "derived terms"
-	local header = args.header
 	local keepfirst = args.keepfirst or 0
 	local keeplast = args.keeplast or 0
 	if keepfirst > 0 then
@@ -264,12 +320,22 @@ function export.create_list(args)
 		track("keeplast")
 	end
 
-	if header and args.format_header then
-		-- hopefully a temporary solution, hence not done with much effort
-		header = html("div")
-			:node(html("i"):wikitext("("))
-			:node(html("span"):addClass("ib-content"):wikitext(header))
-			:node(html("i"):wikitext("):"))
+	local old_style_header = nil
+	if args.header then
+		-- maybe construct old-style header
+		local function ib_colon()
+			return tostring(html("span"):addClass("ib-colon"):addClass("ib-content"):wikitext(":"))
+		end
+		if args.horiz then
+			old_style_header = require(qualifier_module).format_qualifiers({args.header}, "", "") .. ib_colon() ..
+				" "
+		elseif not args.title_new_style then
+			old_style_header = require(qualifier_module).format_qualifiers({args.header}) .. ib_colon()
+			old_style_header = tostring(html("div"):wikitext(old_style_header))
+		end
+	end
+	if args.horiz then
+		old_style_header = "* " .. (old_style_header or "")
 	end
 
 	local list
@@ -355,95 +421,156 @@ function export.create_list(args)
 			end
 		end
 
-		local function format_node(node)
+		local function format_node(node, depth)
 			local sublist
+			local embedded_comma = false
 			if node.subnodes then
-				sublist = html("ul")
+				if args.horiz then
+					sublist = {}
+				else
+					sublist = html("ul")
+				end
 				local prevnode = nil
 				for _, subnode in ipairs(node.subnodes) do
-					local thisnode = format_node(subnode)
+					local thisnode, this_embedded_comma = format_node(subnode, depth + 1)
+					embedded_comma = embedded_comma or this_embedded_comma
 					if not prevnode or not deepEquals(prevnode, thisnode) then
-						sublist = sublist:node(thisnode)
+						if args.horiz then
+							table.insert(sublist, thisnode)
+						else
+							sublist = sublist:node(thisnode)
+						end
 						prevnode = thisnode
 					end
+				end
+				if args.horiz then
+					sublist = table.concat(sublist, get_horizontal_separator(args.horiz, embedded_comma))
 				end
 			end
 			if not node.item then
 				-- At the root.
-				return sublist
+				return sublist, embedded_comma
 			end
-			local listitem = html("li"):wikitext(format_item(node.item, args))
-			if sublist then
-				listitem = listitem:node(sublist)
+			local formatted, listitem
+			-- Ignore embedded commas in subitems inside of parens or square brackets.
+			formatted, embedded_comma = format_item(node.item, args)
+			if args.horiz then
+				listitem = formatted
+				if sublist then
+					-- Use parens for the first, third, fifth, etc. sublists and square brackets for the remainder.
+					if depth % 2 == 1 then
+						listitem = ("%s (%s)"):format(listitem, sublist)
+					else
+						listitem = ("%s [%s]"):format(listitem, sublist)
+					end
+				end
+			else
+				listitem = html("li"):wikitext(formatted)
+				if sublist then
+					listitem = listitem:node(sublist)
+				end
 			end
-			return listitem
+			return listitem, embedded_comma
 		end
 
-		list = format_node(root_node)
+		list = format_node(root_node, 0)
 	else
 		if args.alphabetize then
 			sort_sublist(args.content, args.lang, make_sortbase, keepfirst, keeplast)
 		end
-		list = html("ul")
+		if args.horiz then
+			list = {}
+		else
+			list = html("ul")
+		end
 		local previtem = nil
+		local embedded_comma = false
 		for _, item in ipairs(args.content) do
 			if item == false then
 				-- omitted item; do nothing
 			else
-				local thisitem = format_item(item, args)
+				local thisitem, this_embedded_comma = format_item(item, args)
+				embedded_comma = embedded_comma or this_embedded_comma
 				if not previtem or previtem ~= thisitem then
-					list = list:node(html("li"):wikitext(thisitem))
+					if args.horiz then
+						table.insert(list, thisitem)
+					else
+						list = list:node(html("li"):wikitext(thisitem))
+					end
 					previtem = thisitem
 				end
 			end
 		end
-	end
-
-	local output = html("div")
-		:addClass("term-list")
-		:node(list)
-
-	if args.class then
-		output:addClass(args.class)
-	end
-
-	if not args.raw then
-		output:addClass("ul-column-count")
-			:attr("data-column-count", column_count)
-
-		if args.collapse then
-			output = html("div")
-				:node(output)
-				:addClass("list-switcher")
-				:attr("data-toggle-category", toggle_category)
-
-			-- identify commonly used scripts that use large text and
-			-- provide a special CSS class to make the template bigger
-			local sc = args.sc
-			if sc == nil then
-				local scripts = args.lang:getScripts()
-				if #scripts > 0 then
-					sc = scripts[1]
-				end
-			end
-			if sc ~= nil then
-				local scriptcode = sc:getParentCode()
-				if scriptcode == "top" then
-					scriptcode = sc:getCode()
-				end
-				if large_text_scripts[scriptcode] then
-					output:addClass("list-switcher-large-text")
-				end
-			end
-
-			-- wrap in wrapper to prevent interference from floating elements
-			output = html("div")
-				:addClass("list-switcher-wrapper")
-				:node(output)
+		if args.horiz then
+			list = table.concat(list, get_horizontal_separator(args.horiz, embedded_comma))
 		end
 	end
 
-	return tostring(header or "") .. tostring(output)
+	local output
+	if args.horiz then
+		output = list
+	else
+		output = html("div"):addClass("term-list"):node(list)
+
+		if args.class then
+			output:addClass(args.class)
+		end
+
+		if not args.raw then
+			output:addClass("ul-column-count")
+				:attr("data-column-count", column_count)
+
+			if args.collapse then
+				output = html("div")
+					:node(output)
+					:addClass("list-switcher")
+					:attr("data-toggle-category", toggle_category)
+
+				-- identify commonly used scripts that use large text and
+				-- provide a special CSS class to make the template bigger
+				local sc = args.sc
+				if sc == nil then
+					local scripts = args.lang:getScripts()
+					if #scripts > 0 then
+						sc = scripts[1]
+					end
+				end
+				if sc ~= nil then
+					local scriptcode = sc:getParentCode()
+					if scriptcode == "top" then
+						scriptcode = sc:getCode()
+					end
+					if large_text_scripts[scriptcode] then
+						output:addClass("list-switcher-large-text")
+					end
+				end
+			end
+
+			if args.collapse or args.title_new_style then
+				-- wrap in wrapper to prevent interference from floating elements
+				local list_switcher_wrapper = html("div")
+					:addClass("list-switcher-wrapper")
+					
+				if args.title_new_style then
+					-- TODO styles to be moved to site CSS
+					list_switcher_wrapper
+						:node(require("Module:TemplateStyles")("Template:topN-collapsible/style.css"))
+						:node(
+						html("div")
+							:addClass("list-switcher-header")
+							:wikitext(args.header)
+					)
+				end
+				
+				list_switcher_wrapper:node(output)
+				output = list_switcher_wrapper
+			end
+		end
+
+		output = tostring(output)
+	end
+
+	return (old_style_header or "") .. output
 end
 
 
@@ -457,8 +584,6 @@ function export.create_table(...)
 		args.collapse, args.class, args.header, args.column_width,
 		args.line_start, args.lang = ...
 
-	args.format_header = true
-
 	return export.create_list(args)
 end
 
@@ -469,28 +594,26 @@ function export.display_from(frame_args, parent_args, frame)
 		["class"] = true,
 		-- Default for auto-collapse. Overridable by template |collapse= param.
 		["collapse"] = boolean,
-		-- If specified, this specifies the number of columns, and no columns
-		-- parameter is available on the template. Otherwise, the columns
-		-- parameter is the first available numbered param after the language-code
-		-- parameter.
+		-- If specified, this specifies the number of columns, and no columns parameter is available on the template.
+		-- Otherwise, the columns parameter is named |n=.
 		["columns"] = {type = "number"},
-		-- If specified, this specifies the language code, and no language-code
-		-- parameter is available on the template. Otherwise, the language-code
-		-- parameter can be specified as either |lang= or |1=.
+		-- If specified, this specifies the default language code, which can be overridden using |lang= in the template.
+		-- Otherwise, the language-code parameter is required and normally found in |1=, but for compatibility can be
+		-- specified as |lang= (which leads to deprecation handling).
 		["lang"] = {type = "language"},
 		-- Default for auto-sort. Overridable by template |sort= param.
 		["sort"] = boolean,
 		["toggle_category"] = true,
-		-- Minimum number of rows required to format into a multicolumn list. If below this, the list is displayed
-		-- "raw" (no columns, no collapsbility).
+		-- Minimum number of rows required to format into a multicolumn list. If below this, the list is displayed "raw"
+		-- (no columns, no collapsbility).
 		["minrows"] = {type = "number", default = 5},
 	}
 
 	local iargs = require(parameters_module).process(frame_args, iparams)
 
-	local compat = iargs.lang or parent_args.lang
-	local lang_param = compat and "lang" or 1
-	local deprecated = lang_param == "lang"
+	local langcode_in_lang = iargs.lang or parent_args.lang
+	local lang_param = langcode_in_lang and "lang" or 1
+	local deprecated = not iargs.lang and langcode_in_lang
 
 	local ret = export.handle_display_from_or_topic_list(iargs, parent_args, {}, nil)
 
@@ -498,32 +621,6 @@ function export.display_from(frame_args, parent_args, frame)
 		args = {ret, lang = args[lang_param]}} or ret
 end
 
-
-function export.topic_list(frame)
-	local raw_item_args = frame.args
-	local frame_parent = frame:getParent()
-	local raw_user_args = frame_parent.args
-	local topic_list_template = frame_parent:getTitle()
-
-	local user_params = {
-		nocat = {type = "boolean"},
-		sortbase = {},
-	}
-
-	local user_args = require(parameters_module).process(raw_user_args, user_params)
-
-	return export.handle_display_from_or_topic_list({minrows = 2, sort = true, collapse = true}, raw_item_args, user_args, topic_list_template)
-end
-
-local function convert_delimiter_to_separator(item, itemind)
-	if itemind == 1 then
-		item.separator = nil
-	elseif item.delimiter == "~" then
-		item.separator = " ~ "
-	else
-		item.separator = ", "
-	end
-end
 
 -- FIXME: This needs to be implemented properly in [[Module:links]].
 local function get_left_side_link(link)
@@ -541,15 +638,15 @@ local function get_left_side_link(link)
 	return nil
 end
 
-function export.handle_display_from_or_topic_list(iargs, raw_item_args, user_args, topic_list_template)
+function export.handle_display_from_or_topic_list(iargs, raw_item_args, user_args, topic_list_data)
 	local boolean = {type = "boolean"}
-	local compat = iargs.lang or raw_item_args.lang
-	local lang_param = compat and "lang" or 1
-	local first_content_param = compat and 1 or 2
+	local langcode_in_lang = iargs.lang or raw_item_args.lang
+	local lang_param = langcode_in_lang and "lang" or 1
+	local first_content_param = langcode_in_lang and 1 or 2
 
 	local params = {
-		[lang_param] =
-			not iargs.lang and {required = true, type = "language", template_default = "und"} or nil,
+		[lang_param] = {required = not iargs.lang, type = "language",
+			template_default = not iargs.lang and "und" or nil},
 		["n"] = not iargs.columns and {type = "number"} or nil,
 		[first_content_param] = {list = true, allow_holes = true},
 
@@ -557,16 +654,24 @@ function export.handle_display_from_or_topic_list(iargs, raw_item_args, user_arg
 		["collapse"] = boolean,
 		["sort"] = boolean,
 		["sc"] = {type = "script"},
-		["omit"] = {list = true}, -- used when calling from [[Module:saurus]] so the page displaying the synonyms/antonyms doesn't occur in the list
+		-- used when calling from [[Module:saurus]] so the page displaying the synonyms/antonyms doesn't occur in the
+		-- list
+		["omit"] = {list = true},
 		["keepfirst"] = {type = "number", default = 0},
 		["keeplast"] = {type = "number", default = 0},
 		["horiz"] = {},
+		["notr"] = boolean,
+		["allow_space_delim"] = boolean,
+		["tilde_delim"] = {},
+		["space_delim"] = {},
+		["comma_delim"] = {},
 	}
 
-	if topic_list_template then
+	if topic_list_data then
 		params["cat"] = {}
 		params["enhypernym"] = {}
 		params["hypernym"] = {}
+		params["appendix"] = {}
 		params["pagename"] = {} -- for testing of topic list
 	end
 
@@ -579,10 +684,49 @@ function export.handle_display_from_or_topic_list(iargs, raw_item_args, user_arg
 		{group = {"ref", "l", "q"}, require_index = true},
 	}
 
+	m_param_utils.augment_params_with_modifiers(params, param_mods)
+	local processed_args = require(parameters_module).process(raw_item_args, params)
+	local horiz = processed_args.horiz
+	if horiz and horiz ~= "comma" and horiz ~= "bullet" then
+		horiz = require(yesno_module)(horiz)
+		if horiz == nil then
+			error(("Unrecognized value |horiz=%s; should be 'comma', 'bullet' or a recognized Boolean value such " ..
+				"as 'yes' or '1' (same as 'bullet') or 'no' or '0'"):format(processed_args.horiz))
+		end
+		if horiz == true then
+			horiz = "bullet"
+		end
+		processed_args.horiz = horiz
+	end
+		
+	-- If default argument values specified, set them after parsing the caller-specified arguments in `raw_item_args`.
+	if topic_list_data then
+		local default_props = topic_list_data.default_props
+		if default_props then
+			for k, v in pairs(default_props) do
+				if processed_args[k] == nil then
+					processed_args[k] = v
+				end
+			end
+		end
+	end
+
+	-- Now set defaults for the various delimiters, depending in some cases on whether horiz was set.
+	-- We can't set these defaults (even regardless of their dependency on horiz=) in `local params` above
+	-- because we want any defaults specified in `default_props` to override these.
+	if not processed_args.tilde_delim then
+		processed_args.tilde_delim = processed_args.horiz and "~" or " ~ "
+	end
+	if not processed_args.space_delim then
+		processed_args.space_delim = "&nbsp;"
+	end
+	if not processed_args.comma_delim then
+		processed_args.comma_delim = processed_args.horiz and "/" or ", "
+	end
+
 	local groups, args = m_param_utils.process_list_arguments {
-		params = params,
 		param_mods = param_mods,
-		raw_args = raw_item_args,
+		processed_args = processed_args,
 		termarg = first_content_param,
 		parse_lang_prefix = true,
 		allow_multiple_lang_prefixes = true,
@@ -590,7 +734,7 @@ function export.handle_display_from_or_topic_list(iargs, raw_item_args, user_arg
 		track_module = "columns",
 		lang = iargs.lang or lang_param,
 		sc = "sc.default",
-		splitchar = "[,~]",
+		splitchar = processed_args.allow_space_delim and "[,~ ]" or "[,~]",
 	}
 
 	local lang = iargs.lang or args[lang_param]
@@ -625,13 +769,9 @@ function export.handle_display_from_or_topic_list(iargs, raw_item_args, user_arg
 
 	local title = args.title
 	local formatted_cats
-	if topic_list_template then
+	if topic_list_data then
 		local cats
-		-- Chop off anything after a slash. There are templates with names like
-		-- [[Template:list:days of the week/cim/Luserna]] (for the Luserna dialect of Cimbrian) and
-		-- [[Template:list:days of the week/cim/13]] (for the Tredici Comuni dialect of Cimbrian) so we can't just
-		-- assume there will be a single slash followed by a language code.
-		local default_title = topic_list_template:gsub("^Template:", ""):gsub("^list:", ""):gsub("/.*$", "")
+		local default_title = topic_list_data.list_name
 		if not args.cat then
 			local default_cat = ucfirst(default_title)
 			local cat_title = mw.title.new(("Category:%s"):format(default_cat))
@@ -654,7 +794,15 @@ function export.handle_display_from_or_topic_list(iargs, raw_item_args, user_arg
 			local function ins(txt)
 				table.insert(titleparts, txt)
 			end
-			local enhypernym = args.enhypernym or default_title
+			local enhypernym
+			if args.enhypernym then
+				enhypernym = args.enhypernym:gsub("%+", m_str_utils.replacement_escape(default_title))
+			else
+				enhypernym = default_title
+				if topic_list_data.variety then
+					enhypernym = ("%s (%s)"):format(enhypernym, topic_list_data.variety)
+				end
+			end
 			if cats and not enhypernym:find("%[%[") then
 				ins(("[[:Category:%s|%s]]"):format(cats[1], enhypernym))
 			else
@@ -683,7 +831,7 @@ function export.handle_display_from_or_topic_list(iargs, raw_item_args, user_arg
 				local hypernym_is_page = false
 				local pagename = args.pagename or mw.loadData("Module:headword/data").pagename
 				for i, lang_hypernym in ipairs(lang_hypernyms.terms) do
-					convert_delimiter_to_separator(lang_hypernym, i)
+					convert_delimiter_to_separator(lang_hypernym, i, args)
 					-- Do this afterwards rather than in generate_obj() or use of <sc:...> will trigger an error
 					-- because the modifier is already set.
 					if not lang_hypernym.sc and sc then
@@ -700,10 +848,28 @@ function export.handle_display_from_or_topic_list(iargs, raw_item_args, user_arg
 				local formatted_hypernyms = format_item(lang_hypernyms, {lang = lang}, "bold")
 				ins(": " .. formatted_hypernyms)
 			end
+			if args.appendix then
+				local appendices = require(parse_interface_module).split_on_comma(args.appendix)
+				for i, appendix in ipairs(appendices) do
+					if not appendix:find("%[%[") then
+						appendices[i] = ("[[%s|appendix]]"):format(appendix)
+					end
+				end
+				ins((" (<small>%s</small>)"):format(table.concat(appendices, ", ")))
+			end
 			title = table.concat(titleparts)
 		end
+
+		if not args.horiz then
+			-- append edit button to title
+			local edit_link = html("span")
+				:addClass("plainlinks list-switcher-edit")
+				:wikitext("[" .. mw.title.new(topic_list_data.topic_list_template):fullUrl{action = "edit"} .. " edit]")
+			title = title .. tostring(edit_link)
+		end
+
 		if cats and not user_args.nocat and not hypernym_is_page then
-			formatted_cats = require(utilities_module).format_categories(cats, lang, nil, user_args.sortbase)
+			formatted_cats = require(utilities_module).format_categories(cats, lang, nil, user_args.sortbase, force_cat)
 		end
 	end
 
@@ -721,7 +887,11 @@ function export.handle_display_from_or_topic_list(iargs, raw_item_args, user_arg
 				end
 			end
 
-			convert_delimiter_to_separator(item, j)
+			convert_delimiter_to_separator(item, j, args)
+
+			if args.notr then
+				item.tr = "-"
+			end
 
 			-- If a separate language code was given for the term, display the language name as a right qualifier.
 			-- Otherwise it may not be obvious that the term is in a separate language (e.g. if the main language is
@@ -775,23 +945,33 @@ function export.handle_display_from_or_topic_list(iargs, raw_item_args, user_arg
 	end
 	local raw = number_of_groups < iargs.minrows
 
+	local horiz_edit_button
+	if topic_list_data and args.horiz then
+		-- append edit button to title
+		horiz_edit_button = tostring(html("small"):node(html("sup")
+			:wikitext("&nbsp;&#91;[" .. mw.title.new(topic_list_data.topic_list_template):fullUrl{action = "edit"} ..
+				" edit]&#93;")
+		))
+	end
+
 	return export.create_list {
 		column_count = column_count,
 		raw = raw,
 		content = groups,
 		alphabetize = sort,
 		header = title,
+		title_new_style = not not topic_list_data,
 		collapse = collapse,
 		toggle_category = iargs.toggle_category,
 		-- columns-bg (in [[MediaWiki:Gadget-Site.css]]) provides the background color
 		class = (iargs.class and iargs.class .. " columns-bg" or "columns-bg"),
 		lang = lang,
 		sc = sc,
-		format_header = true,
 		subitem_separator = ", ",
 		keepfirst = args.keepfirst,
 		keeplast = args.keeplast,
-	} .. (formatted_cats or "")
+		horiz = args.horiz,
+	} .. (horiz_edit_button or "") .. (formatted_cats or "")
 end
 
 function export.display(frame)
