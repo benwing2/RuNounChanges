@@ -8655,31 +8655,28 @@ Page 7479 Template:list:planets of the Solar System/hi: -------- begin text ----
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 7480 Template:list:parts of speech/hu: -------- begin text --------
-{{list helper 2
-|title=parts of speech
-|cat=hu:Parts of speech
-|hypernym=szófaj
-|list=<!--
--->{{l-self|hu|főnév}}, <!--
--->{{l-self|hu|határozószó}}, <!--
--->{{l-self|hu|indulatszó}}, <!--
--->{{l-self|hu|ige}}, <!--
--->{{l-self|hu|igekötő}}, <!--
--->{{l-self|hu|igenév}}, <!--
--->{{l-self|hu|indulatszó}}, <!--
--->{{l-self|hu|kötőszó}}, <!--
--->{{l-self|hu|melléknév}}, <!--
--->{{l-self|hu|módosítószó}}, <!--
--->{{l-self|hu|mondatszó}}, <!--
--->{{l-self|hu|névelő}}, <!--
--->{{l-self|hu|névmás}}, <!--
--->{{l-self|hu|névutó}}, <!--
--->{{l-self|hu|partikula}}, <!--
--->{{l-self|hu|segédige}}, <!--
--->{{l-self|hu|számnév}}, <!--
--->{{l-self|hu|tagadószó}}, <!--
--->{{l-self|hu|viszonyszó}} <!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[szófaj]]ok
+|főnév
+|határozószó
+|indulatszó
+|ige
+|igekötő
+|igenév
+|indulatszó
+|kötőszó
+|melléknév
+|módosítószó
+|mondatszó
+|névelő
+|névmás
+|névutó
+|partikula
+|segédige
+|számnév
+|tagadószó
+|viszonyszó
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 7495 Template:list:days of the week/id: -------- begin text --------
 {{#invoke:topic list|show
@@ -8743,26 +8740,23 @@ Page 7501 Template:list:Latin script letter names/io: -------- begin text ------
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 7503 Template:list:parts of speech/io: -------- begin text --------
-{{list helper 2
-|title=parts of speech
-|cat=io:Parts of speech
-|hypernym=vortospeci
-|list=<!--
--->{{l-self|io|adjektivo}}, <!--
--->{{l-self|io|adverbo}}, <!--
--->{{l-self|io|artiklo}}, <!--
--->{{l-self|io|konjunciono}}, <!--
--->{{l-self|io|interjeciono}}, <!--
--->{{l-self|io|substantivo}}, <!--
--->{{l-self|io|nombro}}, <!--
--->{{l-self|io|numeralo}}, <!--
--->{{l-self|io|partikulo}}, <!--
--->{{l-self|io|participo}}, <!--
--->{{l-self|io|postpoziciono}}, <!--
--->{{l-self|io|prepoziciono}}, <!--
--->{{l-self|io|pronomo}}, <!--
--->{{l-self|io|verbo}} <!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[vortospeco|vortospeci]]
+|adjektivo
+|adverbo
+|artiklo
+|konjunciono
+|interjeciono
+|substantivo
+|nombro
+|numeralo
+|partikulo
+|participo
+|postpoziciono
+|prepoziciono
+|pronomo
+|verbo
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 7504 Template:list:continents/io: -------- begin text --------
 {{#invoke:topic list|show
@@ -11835,23 +11829,20 @@ Page 8643 Template:list:countries of Oceania/ja: -------- begin text --------
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 8644 Template:list:parts of speech/ja: -------- begin text --------
-{{list helper 2
-|title=parts of speech
-|cat=ja:Parts of speech
+{{#invoke:topic list|show
 |hypernym={{ja-r|品%詞|ひん%し}}
-|list=<!--
-|{{ja-r|冠%詞|かん%し|{{l|en|article}}}}
-|{{ja-r|感%動%詞|かん%どう%し|{{l|en|interjection}}}}
-|{{ja-r|形%容%詞|けい%よう%し|{{l|en|adjective}}}}
-|{{ja-r|形%容 動%詞|けい%よう どう%し|{{l|en|adjectival noun}}}}
-|{{ja-r|数%詞|すう%し|{{l|en|numeral}}}}
-|{{ja-r|接%続%詞|せつ%ぞく%し|{{l|en|conjunction}}}}
-|{{ja-r|前%置%詞|ぜん%ち%し|{{l|en|preposition}}}}
-|{{ja-r|代%名%詞|だい%めい%し|{{l|en|pronoun}}}}
-|{{ja-r|動%詞|どう%し|{{l|en|verb}}}}
-|{{ja-r|副%詞|ふく%し|{{l|en|adverb}}}}
-|{{ja-r|名%詞|めい%し|{{l|en|noun}}}}
--->}}<noinclude>{{list doc}}</noinclude>
+|{{ja-r|冠%詞|かん%し}}
+|{{ja-r|感%動%詞|かん%どう%し}}
+|{{ja-r|形%容%詞|けい%よう%し}}
+|{{ja-r|形%容 動%詞|けい%よう どう%し}}
+|{{ja-r|数%詞|すう%し}}
+|{{ja-r|接%続%詞|せつ%ぞく%し}}
+|{{ja-r|前%置%詞|ぜん%ち%し}}
+|{{ja-r|代%名%詞|だい%めい%し}}
+|{{ja-r|動%詞|どう%し}}
+|{{ja-r|副%詞|ふく%し}}
+|{{ja-r|名%詞|めい%し}}
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 8645 Template:list:oceans/tl: -------- begin text --------
 {{#invoke:topic list|show
@@ -19598,37 +19589,24 @@ Page 10752 Template:list:divisions of Myanmar/my: -------- begin text --------
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 10755 Template:list:parts of speech/my: -------- begin text --------
-{{list helper 2
-|title=parts of speech
-|cat=my:Parts of speech
-|hypernym={{l-self|my|ဝါစင်္ဂ}}
-|list=<!--
--->{{l-self|my|နာမဝိသေသန|t=adjective}}, <!--
-{{l-self|my|adnoun}}, 
--->{{l-self|my|ကြိယာဝိသေသန|t=adverb}}, <!--
-{{l-self|my|article}}, 
--->{{l-self|my|သင်္ချာပစ္စည်း|t=classifier}}, <!--
--->{{l-self|my|သမ္ဗန္ဓ|t=conjunction}}, <!--
-{{l-self|my|determiner}}, 
--->{{l-self|my|အာမေဍိတ်|t=exclamation}}, <!--
--->{{l-self|my|နာမ်|t=noun}}, <!--
-{{l-self|my|noun adjective}}, 
-{{l-self|my|noun substantive}}, 
--->{{l-self|my|ကိန်း|t=numeral}}, <!--
--->{{l-self|my|ပစ္စည်း|t=particle}}, <!--
-{{l-self|my|participle}}, 
--->{{l-self|my|ဝိဘတ်|t=postposition}}, <!--
--->{{l-self|my|ရှေ့ဆက်|t=preposition}}, <!--
--->{{l-self|my|နာမ်စား|t=pronoun}}, <!--
-{{l-self|my|substantive}}, 
--->{{l-self|my|ကြိယာ|t=verb}}; <!--
-{{l-self|my|action word}}, 
--->{{l-self|my|ပေါင်းစပ်ကြိယာ|t=conjunction}}, <!--
-{{l-self|my|describing word}}, 
-{{l-self|my|description word}}, 
-{{l-self|my|name word}}, 
-{{l-self|my|naming word}}, 
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=ဝါစင်္ဂ
+|နာမဝိသေသန
+|ကြိယာဝိသေသန
+<!--|article-->
+|သင်္ချာပစ္စည်း
+|သမ္ဗန္ဓ,ပေါင်းစပ်ကြိယာ
+<!--|determiner-->
+|အာမေဍိတ်
+|နာမ်
+|ကိန်း
+|ပစ္စည်း
+<!--|participle-->
+|ဝိဘတ်
+|ရှေ့ဆက်
+|နာမ်စား
+|ကြိယာ
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 10756 Template:list:planets of the Solar System/my: -------- begin text --------
 {{#invoke:topic list|show
@@ -23981,36 +23959,26 @@ Page 11635 Template:list:counties of Romania/en: -------- begin text --------
 }}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 11640 Template:list:parts of speech/pt: -------- begin text --------
-{{list helper 2
-|title=parts of speech
-|cat=pt:Parts of speech
-|hypernym=classe gramatical
-|list=<!--
--->{{l-self|pt|adjetivo}}, <!--
--->{{l-self|pt|adjetivo substantivado}}, <!--
--->{{l-self|pt|advérbio}}, <!--
--->{{l-self|pt|artigo}}, <!--
--->{{l-self|pt|conjunção}}, <!--
--->{{l-self|pt|determinante}}, <!--
--->{{l-self|pt|interjeição}}, <!--
--->{{l-self|pt|nome}}/{{l-self|pt|substantivo}}, <!--
--->{{l-self|pt|nome adjetivo}}, <!--
--->{{l-self|pt|nome próprio}}/{{l-self|pt|substantivo próprio}}, <!--
--->{{l-self|pt|nome substantivo}}, <!--
--->{{l-self|pt|número}}, <!--
--->{{l-self|pt|numeral}}, <!--
--->{{l-self|pt|partícula}}, <!--
--->{{l-self|pt|particípio}}, <!--
--->{{l-self|pt|posposição}}, <!--
--->{{l-self|pt|preposição}}, <!--
--->{{l-self|pt|pronome}}, <!--
--->{{l-self|pt|verbo}}; <!--
--->{{l-self|pt|palavra de ação}}, <!--
--->{{l-self|pt|palavra de conexão}}, <!--
--->{{l-self|pt|palavra de atividade}}, <!--
--->{{l-self|pt|palavra principal}}, <!--
--->{{l-self|pt|palavra de qualidade}}<!--
--->}}<noinclude>{{list doc}}</noinclude>
+{{#invoke:topic list|show
+|hypernym=[[classe gramatical|classes gramaticais]]
+|adjetivo
+|adjetivo substantivado
+|advérbio
+|artigo
+|conjunção
+|determinante
+|interjeição
+|nome,substantivo
+|nome próprio,substantivo próprio
+|número
+|numeral
+|partícula
+|particípio
+|posposição
+|preposição
+|pronome
+|verbo
+}}<noinclude>{{list doc}}</noinclude>
 -------- end text --------
 Page 11641 Template:list:provinces of Canada/pt: -------- begin text --------
 {{#invoke:topic list|show
