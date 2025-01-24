@@ -9,23 +9,6 @@ from collections import defaultdict
 
 site = pywikibot.Site()
 
-max_truncate_len = 80
-
-# Truncate a string so its length is <= max_truncate_len including a ... added at the end.
-def truncate(text, truncate_len=max_truncate_len):
-  text = text.replace("\n", r"\n") # escape newlines
-  if len(text) <= truncate_len:
-    return text
-  return text[0:truncate_len - 3] + "..."
-
-# Truncate a string so its UTF-8 length is <= max_truncate_len including a ... added at the end.
-def truncate_bytes(text, truncate_len=max_truncate_len):
-  text = text.replace("\n", r"\n") # escape newlines
-  textbytes = text.encode("utf-8")
-  if len(textbytes) <= truncate_len:
-    return text
-  return textbytes[0:truncate_len - 3].decode("utf-8", "ignore") + "..."
-
 def form_repl_curr(repl, curr):
   return (undo_slash_newline(repl, repl=True), undo_slash_newline(curr))
 
@@ -178,7 +161,7 @@ def push_one_set_of_manual_changes(pagetitle, index, text, repl_curr_changes, co
           pagemsg("WARNING: Something wrong, length mismatch during replacement: Expected length change=%s, actual=%s, ratio=%.2f, curr=%s, repl=%s"
               % (repl_curr_diff, newtext_text_diff, ratio, curr_template,
                 repl_template))
-      changelog = "replace <%s> with <%s>" % (truncate(curr_template), truncate(repl_template))
+      changelog = "replace <%s> with <%s>" % (blib.truncate_string(curr_template), blib.truncate_string(repl_template))
       pagemsg("Change log = %s" % changelog)
       if args.include_what_changed:
         changelogs.append(changelog)
@@ -195,17 +178,7 @@ def undo_slash_newline(txt, repl=False):
 
 def combine_notes_with_comment(notes):
   if notes:
-    if args.comment:
-      # Wiktionary comments can be at most 500 bytes when encoded in UTF-8. If longer, they get truncated, which we
-      # don't want, because we want the comment at the end to display in full, so we need to do the truncation
-      # ourselves before adding the comment.
-      grouped_notes = "; ".join(blib.group_notes(notes))
-      comment_suffix = " (%s)" % args.comment
-      comment_suffix_len = len(comment_suffix.encode("utf-8"))
-      grouped_notes = truncate_bytes(grouped_notes, 500 - comment_suffix_len)
-      return grouped_notes + comment_suffix
-    else:
-      return notes
+    return blib.changelog_to_string(notes, args.comment)
   else:
     return args.comment or "push manual changes"
 

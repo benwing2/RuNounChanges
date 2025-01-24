@@ -461,9 +461,42 @@ def sort_params(t):
   for name, value in named_params:
     t.add(name, value)
 
-def changelog_to_string(comment):
+max_truncate_len = 80
+
+# Truncate a string so its length is <= max_truncate_len including a ... added at the end. If the string is already
+# <= max_truncate_len, return it unchanged.
+def truncate_string(text, truncate_len=max_truncate_len):
+  text = text.replace("\n", r"\n") # escape newlines
+  if len(text) <= truncate_len:
+    return text
+  return text[0:truncate_len - 3] + "..."
+
+# Truncate a string so its UTF-8 length is <= max_truncate_len including a ... added at the end. If the string's UTF-8
+# length is already <= max_truncate_len, return it unchanged.
+def truncate_bytes_of_string(text, truncate_len=max_truncate_len):
+  text = text.replace("\n", r"\n") # escape newlines
+  textbytes = text.encode("utf-8")
+  if len(textbytes) <= truncate_len:
+    return text
+  return textbytes[0:truncate_len - 3].decode("utf-8", "ignore") + "..."
+
+# Convert a changelog message (either a string or a list of notes) to a string. If `comment_tag` supplied, add it as
+# a parenthetical note, first truncating the changelog message as necessary so the overall result fits in 500 bytes
+# when encoded in UTF-8 (the maximum allowed for Wiktionary comments; longer comments will automatically get truncated
+# from the end).
+def changelog_to_string(comment, comment_tag=None):
+  if not comment:
+    if comment_tag:
+      return comment_tag
+    else:
+      return comment
   if type(comment) is list:
     comment = "; ".join(group_notes(comment))
+  if comment_tag:
+    comment_suffix = " (%s)" % comment_tag
+    comment_suffix_len = len(comment_suffix.encode("utf-8"))
+    comment = truncate_bytes_of_string(comment, 500 - comment_suffix_len)
+    return comment + comment_suffix
   return comment
 
 def show_diff(existing_text, newtext):
@@ -1220,32 +1253,43 @@ def do_handle_stdin_retval(args, retval, text, prev_comment, pagemsg, is_find_re
       pagemsg("-------- begin text --------\n%s%s-------- end text --------" % (new, final_newline))
 
 # Process a run of pages, with the set of pages specified in various possible ways, e.g. from --pagefile, --cats,
-# --refs, or (if --stdin is given) from a Wiktionary dump or find_regex.py output read from stdin. PROCESS is called
-# to process the page, and has different calling conventions depending on the EDIT, STDIN and INCLUDE_COMMENT flags:
+# --refs, or (if --stdin is given) from a Wiktionary dump or find_regex.py output read from stdin. A typical workflow is
+# like this:
 #
-# If stdin=True and include_comment=True, PROCESS should be defined like this:
+# parser = blib.create_argparser("DESCRIPTION OF WHAT SCRIPT DOES", include_pagefile=True, include_stdin=True)
+# parser.add_argument("--argument", help="DESCRIPTION OF ARGUMENT.")
+# parser.add_argument("--flag", action="store_true", help="DESCRIPTION OF BOOLEAN FLAG.")
+# args = parser.parse_args()
+# start, end = blib.parse_start_end(args.start, args.end)
+#
+# blib.do_pagefile_cats_refs(args, start, end, process_text_on_page, edit=True, stdin=True)
+
+# As shown, `args`, `start` and `end` come from the user. `process` is called to process the page, and has different
+# calling conventions depending on the `edit`, `stdin` and `include_comment` flags:
+#
+# If `stdin`=True and `include_comment`=True, `process` should be defined like this:
 #
 # def process_text_on_page(index, pagetitle, text, comment):
 #   ...
 #
-# If stdin=True and include_comment=False, PROCESS should be defined like this:
+# If `stdin`=True and `include_comment`=False, `process` should be defined like this:
 #
 # def process_text_on_page(index, pagetitle, text):
 #   ...
 #
-# If stdin=False and edit=True, PROCESS should be defined like this:
+# If `stdin`=False and `edit`=True, `process` should be defined like this:
 #
 # def process_page(page, index, parsed):
 #   ...
 #
-# If stdin=False and edit=False, PROCESS should be defined like this:
+# If `stdin`=False and `edit`=False, `process` should be defined like this:
 #
 # def process_page(page, index):
 #   ...
 #
-# FIXME: The PARSED argument is unnecessary and shouldn't be passed in.
+# FIXME: The `parsed` argument is unnecessary and shouldn't be passed in.
 #
-# The return value of PROCESS is immaterial if edit=False; otherwise it should be NEWTEXT, NOTES where NEWTEXT is the
+# The return value of `process` is immaterial if edit=False; otherwise it should be NEWTEXT, NOTES where NEWTEXT is the
 # new text of the page, and NOTES is either a string (the comment to use when saving the page) or a list of strings
 # (which are grouped together using blib.group_notes() to form the comment to use when saving the page). To make no
 # change, return None or just use `return`.
@@ -1260,18 +1304,29 @@ def do_handle_stdin_retval(args, retval, text, prev_comment, pagemsg, is_find_re
 #    default_refs[], if either argument is given.
 # 5. Else, an error is thrown.
 #
-# If only_lang is given, it should be a canonical name of a language (e.g. "Latin"), and pages not containing this
+# If `only_lang` is given, it should be a canonical name of a language (e.g. "Latin"), and pages not containing this
 # language will be skipped. (This is especially useful in conjunction with dumps on stdin, where it can greatly speed
 # up processing by avoiding the need to parse every page.) Not to be confused with the --only-lang user-specifiable
 # parameter, which causes processing over only the section of a given language.
 #
-# If filter_pages is given, it should be a function of one argument (a page title) that returns True to accept a page.
+# If `filter_pages` is given, it should be a function of one argument (a page title) that returns True to accept a page.
 #
-# If canonicalize_pagename is given, it should be a function of one argument, which is called on pagenames specified
+# If `canonicalize_pagename` is given, it should be a function of one argument, which is called on pagenames specified
 # on the command line using --pages or read from a file using --pagefile.
-def do_pagefile_cats_refs(args, start, end, process, default_pages=[], default_cats=[],
-    default_refs=[], edit=False, stdin=False, only_lang=None, include_comment=False,
-    filter_pages=None, ref_namespaces=None, canonicalize_pagename=None, skip_ignorable_pages=False):
+#
+# If `skip_ignorable_pages` is specified, 'ignorable' pages such as talk pages and user pages will be skipped. This is
+# the same as the --skip-ignorable-pages parameter.
+#
+# If `seen` is specified, it is a set that holds already-seen pages, to track pages across calls to
+# `do_pagefile_cats_refs`.
+#
+# If `process_index` is given, it should be a function of one argument that will process the page index prior to
+# displaying messages with that index. The passed-in index will be an integer or string and the return value should be
+# the same. This can be used e.g. to create multi-level indices.
+def do_pagefile_cats_refs(
+    args, start, end, process, default_pages=[], default_cats=[], default_refs=[], edit=False, stdin=False,
+    only_lang=None, include_comment=False, filter_pages=None, ref_namespaces=None, canonicalize_pagename=None,
+    skip_ignorable_pages=False, seen=None, process_index=lambda x: x):
   args_namespaces = args.namespaces and args.namespaces.split(",") or []
   args_namespaces = [0 if x == "-" else int(x) if re.search("^[0-9]+$", x) else x for x in args_namespaces]
   args_ref_namespaces = args.ref_namespaces and args.ref_namespaces.split(",")
@@ -1288,7 +1343,8 @@ def do_pagefile_cats_refs(args, start, end, process, default_pages=[], default_c
       errmsgn("Fetching pages in category '%s'..." % cat)
       cat_pages_to_skip |= set(str(page.title()) for page in raw_cat_articles(cat, seen=None))
       errmsg(" done.")
-  seen = set() if args.track_seen else None
+  if seen is None:
+    seen = set() if args.track_seen else None
 
   def page_should_be_filtered_out(pagetitle, errandpagemsg):
     if pagetitle in pages_to_skip or pagetitle in cat_pages_to_skip:
@@ -1364,6 +1420,7 @@ def do_pagefile_cats_refs(args, start, end, process, default_pages=[], default_c
   # (necessary because it can recursively process subcategories) so if we check the `seen` set we'll never process any
   # pages.
   def process_pywikibot_page(index, page, no_check_seen=False):
+    index = process_index(index)
     pagetitle = str(page.title())
     if not no_check_seen and seen is not None:
       if pagetitle in seen:
@@ -1411,6 +1468,7 @@ def do_pagefile_cats_refs(args, start, end, process, default_pages=[], default_c
       else:
         pages_to_filter |= new_pages_to_filter
     def do_process_stdin_text_on_page(index, pagetitle, text, prev_comment):
+      index = process_index(index)
       if pages_to_filter is not None and pagetitle not in pages_to_filter:
         return None
       def errandpagemsg(txt):
@@ -1427,7 +1485,7 @@ def do_pagefile_cats_refs(args, start, end, process, default_pages=[], default_c
           get_name=lambda x:x[1], get_index=None if args.ignore_embedded_page_indices else lambda x:x[0]):
         retval = do_process_stdin_text_on_page(index, pagetitle, text, prev_comment)
         def pagemsg(txt):
-          msg("Page %s %s: %s" % (index, pagetitle, txt))
+          msg("Page %s %s: %s" % (process_index(index), pagetitle, txt))
         if prev_comment:
           prev_comment = parse_grouped_notes(prev_comment)
         do_handle_stdin_retval(args, retval, text, prev_comment, pagemsg, is_find_regex=True, edit=edit)
@@ -1435,7 +1493,7 @@ def do_pagefile_cats_refs(args, start, end, process, default_pages=[], default_c
       def do_process_stdin_dump_text_on_page(index, pagetitle, text):
         retval = do_process_stdin_text_on_page(index, pagetitle, text, None)
         def pagemsg(txt):
-          msg("Page %s %s: %s" % (index, pagetitle, txt))
+          msg("Page %s %s: %s" % (process_index(index), pagetitle, txt))
         do_handle_stdin_retval(args, retval, text, None, pagemsg, is_find_regex=False, edit=edit)
       parse_dump(sys.stdin, do_process_stdin_dump_text_on_page, start, end)
 

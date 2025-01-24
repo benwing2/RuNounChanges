@@ -5,10 +5,15 @@ import pywikibot, re, sys, argparse
 
 import blib
 from blib import getparam, rmparam, msg, site, tname, pname
+from rename import rename_page
+
+templates_to_rename = set()
+template_couldnt_be_renamed = set()
+template_to_new_name_dict = {}
 
 def process_text_on_page(
     index, pagetitle, text, templates, new_names, params_to_add, params_to_prepend, params_to_insert, params_to_remove,
-    params_to_rename, from_to_regex, filters, recognized_params, comment
+    params_to_rename, from_to_regex, filters, recognized_params, comment, comment_tag
 ):
   if not any(template in text for template in templates):
     return
@@ -21,8 +26,8 @@ def process_text_on_page(
   pagemsg("Processing")
   notes = []
 
-  if new_names:
-    template_to_new_name_dict = dict(zip(templates, new_names))
+  def append_note(note):
+    notes.append(note)
 
   parsed = blib.parse_text(text)
 
@@ -106,6 +111,29 @@ def process_text_on_page(
       if must_continue:
         continue
 
+      if tn in templates_to_rename:
+        new_name = template_to_new_name_dict[tn]
+        template_page = pywikibot.Page(site, "Template:%s" % tn)
+        rename_comment = comment
+        if not rename_comment:
+          rename_comment = "rename template preparatory to renaming all uses"
+        rename_comment = blib.changelog_to_string(rename_comment, comment_tag)
+        templates_to_rename.remove(tn)
+        if not rename_page(args, index, template_page, "Template:%s" % new_name, rename_comment, None, None):
+          ignore_error = False
+          if ignore_rename_errors is True:
+            ignore_error = True # ignore all rename errors
+          elif ignore_rename_errors and tn in ignore_rename_errors:
+            ignore_error = True # ignore rename error for this template
+          else:
+            template_couldnt_be_renamed.add(tn)
+          if ignore_error:
+            pagemsg("WARNING: Ignoring rename error for Template:%s -> Template:%s" % (tn, new_name))
+
+      if tn in template_couldnt_be_renamed:
+        pagemsg("Skipping %s because template couldn't be renamed" % tn)
+        continue
+
       if from_to_regex:
         for param in t.params:
           pn = pname(param)
@@ -113,7 +141,7 @@ def process_text_on_page(
             newpn = re.sub("^" + old_param + "$", new_param, pn)
             if newpn != pn:
               param.name = newpn
-              notes.append("rename %s= to %s= in {{%s}}" % (pn, newpn, tn))
+              append_note("rename %s= to %s= in {{%s}}" % (pn, newpn, tn))
               break
       else:
         for old_param, new_param in params_to_rename:
@@ -134,29 +162,29 @@ def process_text_on_page(
             if will_overwrite:
               t.add(new_param, getparam(t, old_param), before=old_param, preserve_spacing=False)
               rmparam(t, old_param)
-              notes.append("rename %s= to %s= in {{%s}}" % (old_param, new_param, tn))
+              append_note("rename %s= to %s= in {{%s}}" % (old_param, new_param, tn))
       for param in params_to_remove:
         if t.has(param):
           rmparam(t, param)
-          notes.append("remove %s= from {{%s}}" % (param, tn))
+          append_note("remove %s= from {{%s}}" % (param, tn))
       for param, value in params_to_add:
         value = substitute_in_value(value)
         if getparam(t, param) != value:
           t.add(param, value)
-          notes.append("add %s=%s to {{%s}}" % (param, value, tn))
+          append_note("add %s=%s to {{%s}}" % (param, value, tn))
       for param, value in reversed(params_to_prepend):
         value = substitute_in_value(value)
         if getparam(t, param) != value:
           if t.has(param):
             t.add(param, value)
-            notes.append("add %s=%s to {{%s}}" % (param, value, tn))
+            append_note("add %s=%s to {{%s}}" % (param, value, tn))
           else:
             first_pn = None
             for paramobj in t.params:
               first_pn = pname(paramobj)
               break
             t.add(param, value, before=first_pn)
-            notes.append("prepend %s=%s to {{%s}}" % (param, value, tn))
+            append_note("prepend %s=%s to {{%s}}" % (param, value, tn))
       if params_to_insert:
         new_params = []
         params_to_insert = sorted(params_to_insert, key=lambda x: x[0])
@@ -180,7 +208,7 @@ def process_text_on_page(
               values_to_insert = [substitute_in_value(v) for v in values_to_insert]
               for i, value_to_insert in enumerate(values_to_insert):
                 new_params.append((str(param_to_insert + local_param_offset + i), value_to_insert))
-              notes.append("insert %s=%s into {{%s}}" % (param_to_insert, "|".join(values_to_insert), tn))
+              append_note("insert %s=%s into {{%s}}" % (param_to_insert, "|".join(values_to_insert), tn))
               local_last_param_inserted = param_to_insert
               # subtract one because we're not inserting a param after the numeric params just inserted
               local_param_offset += len(values_to_insert) - 1
@@ -196,7 +224,7 @@ def process_text_on_page(
               if param_to_insert > last_param_inserted and param_to_insert <= pnint:
                 for i, value_to_insert in enumerate(values_to_insert):
                   new_params.append((str(param_to_insert + param_offset + i), value_to_insert))
-                notes.append("insert %s=%s into {{%s}}" % (param_to_insert, "|".join(values_to_insert), tn))
+                append_note("insert %s=%s into {{%s}}" % (param_to_insert, "|".join(values_to_insert), tn))
                 last_param_inserted = param_to_insert
                 param_offset += len(values_to_insert)
             new_params.append((str(pnint + param_offset), pv))
@@ -211,17 +239,24 @@ def process_text_on_page(
       if new_names:
         new_name = template_to_new_name_dict[tn]
         blib.set_template_name(t, new_name)
-        notes.append("rename {{%s}} to {{%s}}" % (tn, new_name))
+        append_note("rename {{%s}} to {{%s}}" % (tn, new_name))
 
     if str(t) != origt:
       pagemsg("Replaced <%s> with <%s>" % (origt, str(t)))
 
-  return str(parsed), comment or notes
+  if not comment:
+    comment = notes
+  comment = blib.changelog_to_string(comment, comment_tag)
+  return str(parsed), comment
 
 pa = blib.create_argparser("Rewrite templates, possibly renaming params or the template itself, or removing params",
   include_pagefile=True, include_stdin=True)
-pa.add_argument("-t", "--template", help="Name of template; separate with a comma for multiple templates", required=True)
-pa.add_argument("-n", "--new-name", help="New name of template; separate with a comma for multiple templates")
+pa.add_argument("-t", "--template", help="Name of template; separate with a comma for multiple templates.")
+pa.add_argument("-n", "--new-name", help="New name of template; separate with a comma for multiple templates.")
+pa.add_argument("--direcfile", help="File containing templates to rewrite.")
+pa.add_argument("--rename-templates", help="Rename the templates whose references are being changed.",
+                action="store_true")
+pa.add_argument("--ignore-rename-errors", help="Comma-separated list of templates to ignore rename errors for, or 'all' for all templates.")
 pa.add_argument("-r", "--remove", help="Param to remove, can be specified multiple times",
     action="append")
 pa.add_argument("--from", help="Old name of param, can be specified multiple times",
@@ -239,6 +274,7 @@ pa.add_argument("--filter", help="Only take action on templates matching the fil
     action="append")
 pa.add_argument("--recognized-params", help="Comma-separated list of regexps matching recognized params. Use - to indicate no recognized params. If the template contains any unrecognized params, a warning will be displayed and no action taken. Regexps are auto-anchored on both ends.")
 pa.add_argument("-c", "--comment", help="Comment to use in place of auto-generated ones.")
+pa.add_argument("--comment-tag", help="Comment tag to use along with auto-generated ones.")
 args = pa.parse_args()
 start, end = blib.parse_start_end(args.start, args.end)
 
@@ -256,7 +292,7 @@ def handle_list_param(paramname, split_on_comma=False):
   argval = getattr(args, paramname)
   rawvals = list(argval) if argval else []
   if split_on_comma:
-    return [splitval for arg in rawvals for splitval in arg.split(",")]
+    return [splitval for arg in rawvals for splitval in blib.split_arg(arg)]
   else:
     return rawvals
 
@@ -275,15 +311,36 @@ def handle_params_to_add(paramname, process_parts=None):
     params_to_add.append(parts_to_add)
   return params_to_add
 
-templates = handle_single_param("template", lambda val: val.split(","))
-new_names = handle_single_param("new_name", lambda val: val.split(","))
-if new_names and len(new_names) != len(templates):
-  if len(new_names) == 1:
-    new_names = new_names * len(templates)
-  else:
-    raise ValueError("Saw %s template(s) '%s' but %s new name(s) '%s'; both must agree in number or there must be only one new name" %
-      (len(templates), ",".join(templates), len(new_names), ",".join(new_names)))
-recognized_params = handle_single_param("recognized_params", lambda val: val.split(","))
+if args.direcfile:
+  templates = []
+  new_names = []
+  for index, line in blib.iter_items_from_file(args.direcfile):
+    if " ||| " not in line:
+      msg("Line %s: WARNING: Saw bad line in --direcfile: %s" % (index, line))
+      continue
+    frompage, topage = line.split(" ||| ")
+    frompage = re.sub("^Template:", "", frompage)
+    topage = re.sub("^Template:", "", topage)
+    templates.append(frompage)
+    new_names.append(topage)
+else:
+  templates = handle_single_param("template", blib.split_arg)
+  new_names = handle_single_param("new_name", blib.split_arg)
+  if new_names and len(new_names) != len(templates):
+    if len(new_names) == 1:
+      new_names = new_names * len(templates)
+    else:
+      raise ValueError("Saw %s template(s) '%s' but %s new name(s) '%s'; both must agree in number or there must be only one new name" %
+        (len(templates), ",".join(templates), len(new_names), ",".join(new_names)))
+if not templates:
+  raise ValueError("No templates specified to process")
+if new_names:
+  template_to_new_name_dict = dict(zip(templates, new_names))
+recognized_params = handle_single_param("recognized_params", blib.split_arg)
+
+ignore_rename_errors = handle_single_param("ignore_rename_errors", blib.split_arg)
+if ignore_rename_errors == ["all"]:
+  ignore_rename_errors = True
 
 from_ = handle_list_param("from_", split_on_comma=True)
 to = handle_list_param("to", split_on_comma=True)
@@ -306,7 +363,19 @@ params_to_rename = list(zip(from_, to))
 
 def do_process_text_on_page(index, pagetitle, text):
   return process_text_on_page(index, pagetitle, text, templates, new_names, params_to_add, params_to_prepend,
-    params_to_insert, params_to_remove, params_to_rename, args.from_to_regex, filters, recognized_params, comment)
+    params_to_insert, params_to_remove, params_to_rename, args.from_to_regex, filters, recognized_params, comment,
+    args.comment_tag)
 
+if args.rename_templates:
+  templates_to_rename = set(templates)
 blib.do_pagefile_cats_refs(args, start, end, do_process_text_on_page, edit=True, stdin=True,
   default_refs=["Template:%s" % template for template in templates])
+
+for index, (template, new_name) in blib.iter_items(zip(templates, new_names), get_name=lambda x: x[0]):
+  if template in templates_to_rename:
+    template_page = pywikibot.Page(site, "Template:%s" % template)
+    rename_comment = comment
+    if not rename_comment:
+      rename_comment = "rename template preparatory to renaming all uses"
+    rename_comment = blib.changelog_to_string(rename_comment, args.comment_tag)
+    rename_page(args, index, template_page, "Template:%s" % new_name, rename_comment, None, None)
