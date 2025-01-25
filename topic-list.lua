@@ -1,11 +1,22 @@
 local export = {}
 
-local columns_module = "Module:columns"
+local columns_module = "Module:User:Benwing2/columns"
 local languages_module = "Module:languages"
 local parameters_module = "Module:parameters"
+local parameter_utilities_module = "Module:parameter utilities"
+local parse_interface_module = "Module:parse interface"
 local string_utilities_module = "Module:string utilities"
+local utilities_module = "Module:utilities"
 
-local rfind = require(string_utilities_module).find
+local m_str_utils = require(string_utilities_module)
+local rfind = m_str_utils.find
+local ucfirst = m_str_utils.ucfirst
+
+local html = mw.html.create
+
+
+local force_cat = false -- for testing
+
 
 local function letter_like_category(data)
 	return ("Category:%s letters"):format(data.lang:getCanonicalName())
@@ -120,6 +131,209 @@ local topic_list_properties = {
 	{"units of time", {sort = false}},
 }
 
+local function parse_topic_list_user_args(raw_user_args)
+	local user_params = {
+		nocat = {type = "boolean"},
+		sortbase = {},
+	}
+
+	return require(parameters_module).process(raw_user_args, user_params)
+end
+
+local function add_topic_list_params(params)
+	params["cat"] = {}
+	params["enhypernym"] = {}
+	params["hypernym"] = {}
+	params["appendix"] = {}
+	params["pagename"] = {} -- for testing of topic list
+end
+
+local function make_horiz_edit_button(topic_list_template)
+	return tostring(html("small"):node(html("sup")
+		:wikitext("&nbsp;&#91;[" .. mw.title.new(topic_list_template):fullUrl{action = "edit"} ..
+			" edit]&#93;")
+	))
+end
+
+local function analyze_template_name(topic_list_template)
+	-- Analyze template name for list name and language. Note that there are templates with names like
+	-- [[Template:list:days of the week/cim/Luserna]] (for the Luserna dialect of Cimbrian) and
+	-- [[Template:list:days of the week/cim/13]] (for the Tredici Comuni dialect of Cimbrian) so we can't just
+	-- assume there will be a single slash followed by a language code.
+	local list_name_plus_lang = topic_list_template:gsub("^Template:", ""):gsub("^list:", "")
+	local list_name, langcode_and_variant = list_name_plus_lang:match("^(.-)/(.*)$")
+	local lang, variant
+	if langcode_and_variant then
+		local langcode
+		langcode, variant = langcode_and_variant:match("^(.-)/(.*)$")
+		langcode = langcode or langcode_and_variant
+		lang = require(languages_module).getByCode(langcode, nil, "allow etym")
+		if not lang then
+			error(("Unrecognized language code '%s' in topic list template name [[%s]]"):format(
+				langcode, topic_list_template))
+		end
+	else
+		error(("Can't parse language code out of topic list template name [[%s]]; it should be of the form " ..
+			"'Template:list:LISTNAME/LANGCODE' or 'Template:list:LISTNAME/LANGCODE/VARIETY'"):format(
+			topic_list_template))
+	end
+
+	return list_name, lang, variant
+end
+
+-- FIXME: This needs to be implemented properly in [[Module:links]].
+local function get_left_side_link(link)
+	local left, right = link:match("^%[%[([^%[%]|]+)|([^%[%]|]+)%]%]$")
+	if left then
+		return left
+	end
+	local single_part = link:match("^%[%[([^%[%]|]+)%]%]$")
+	if single_part then
+		return single_part
+	end
+	if not link:match("%[%[") then
+		return link
+	end
+	return nil
+end
+
+local term_param_mods = require(parameter_utilities_module).construct_param_mods {
+	{group = "link"}, -- sc has separate_no_index = true; that's the only one
+	-- It makes no sense to have overall l=, ll=, q= or qq= params for columnar display.
+	{group = {"ref", "l", "q"}, require_index = true},
+}
+
+local function parse_term_with_delimiters(data)
+	local term, paramname, lang, sc, pagename = data.term, data.paramname, data.lang, data.sc, data.pagename
+	local function generate_obj(term, parse_err)
+		local actual_term, termlang = require(parse_interface_module).parse_term_with_lang {
+			term = term,
+			parse_err = parse_err,
+			paramname = paramname,
+		}
+		return {
+			term = actual_term ~= "" and actual_term or nil,
+			lang = termlang or lang,
+		}
+	end
+	local items = require(parse_interface_module).parse_inline_modifiers(term, {
+		paramname = paramname,
+		param_mods = term_param_mods,
+		generate_obj = generate_obj,
+		splitchar = "[,~]",
+		preserve_splitchar = true,
+		outer_container = {},
+	})
+	local item_is_page = false
+	for i, item in ipairs(items.terms) do
+		if i == 1 then
+			item.separator = nil
+		elseif item.delimiter == "~" then
+			item.separator = data.tilde_delim or " ~ "
+		else
+			item.separator = data.comma_delim or ", "
+		end
+		-- Do this afterwards rather than in generate_obj() or use of <sc:...> will trigger an error
+		-- because the modifier is already set.
+		if not item.sc and sc then
+			item.sc = sc
+		end
+		if data.notr then
+			item.tr = "-"
+		end
+		if item.term and pagename then
+			local left_side = get_left_side_link(item.term)
+			if left_side and left_side == pagename then
+				item_is_page = true
+			end
+		end
+	end
+	return items, item_is_page
+end
+
+local function get_title_and_formatted_cats(args, lang, sc, topic_list_data)
+	local title = args.title
+	local formatted_cats
+	local cats
+	local default_title = topic_list_data.list_name
+	local user_args = topic_list_data.user_args
+	local fulllangcode = lang:getFullCode()
+	if not args.cat then
+		local default_cat = ucfirst(default_title)
+		local cat_title = mw.title.new(("Category:%s"):format(default_cat))
+		if cat_title and cat_title.exists then
+			cats = {fulllangcode .. ":" .. default_cat}
+		end
+	elseif args.cat ~= "-" then
+		cats = require(parse_interface_module).split_on_comma(args.cat)
+		for i, cat in ipairs(cats) do
+			if cat:find("^Category:") then
+				cats[i] = cat:gsub("^Category:", "")
+			else
+				cats[i] = fulllangcode .. ":" .. cats[i]
+			end
+		end
+	end
+	local hypernym_is_page
+	if not title then
+		local titleparts = {}
+		local function ins(txt)
+			table.insert(titleparts, txt)
+		end
+		local enhypernym
+		if args.enhypernym then
+			enhypernym = args.enhypernym:gsub("%+", m_str_utils.replacement_escape(default_title))
+		else
+			enhypernym = default_title
+			if topic_list_data.variant then
+				enhypernym = ("%s (%s)"):format(enhypernym, topic_list_data.variant)
+			end
+		end
+		if cats and not enhypernym:find("%[%[") then
+			ins(("[[:Category:%s|%s]]"):format(cats[1], enhypernym))
+		else
+			ins(enhypernym)
+		end
+		if args.hypernym then
+			local lang_hypernyms
+			local pagename = args.pagename or mw.loadData("Module:headword/data").pagename
+			lang_hypernyms, hypernym_is_page = parse_term_with_delimiters {
+				term = args.hypernym,
+				paramname = "hypernym",
+				lang = lang,
+				sc = sc,
+				pagename = pagename,
+				-- Don't set notr= here; we still want to transliterate the hypernym if given
+			}
+			local formatted_hypernyms = require(columns_module).format_item(lang_hypernyms, {lang = lang}, "bold")
+			ins(": " .. formatted_hypernyms)
+		end
+		if args.appendix then
+			local appendices = require(parse_interface_module).split_on_comma(args.appendix)
+			for i, appendix in ipairs(appendices) do
+				if not appendix:find("%[%[") then
+					appendices[i] = ("[[%s|appendix]]"):format(appendix)
+				end
+			end
+			ins((" (<small>%s</small>)"):format(table.concat(appendices, ", ")))
+		end
+		title = table.concat(titleparts)
+	end
+
+	if not args.horiz and not topic_list_data.suppress_edit_button then
+		-- append edit button to title
+		local edit_link = html("span")
+			:addClass("plainlinks list-switcher-edit")
+			:wikitext("[" .. mw.title.new(topic_list_data.topic_list_template):fullUrl{action = "edit"} .. " edit]")
+		title = title .. tostring(edit_link)
+	end
+
+	if cats and not user_args.nocat and not hypernym_is_page then
+		formatted_cats = require(utilities_module).format_categories(cats, lang, nil, user_args.sortbase, force_cat)
+	end
+	return title, formatted_cats
+end
+
 --[==[
 This implements topic lists. A given topic list template must directly invoke this function rather than
 going through a wrapping template. A sample template implementation (e.g. for {{tl|list:continents/sw}}) is
@@ -163,7 +377,7 @@ The syntax of the params is largely the same as for {{tl|col}}, but the followin
   If a link is not specified, the display form will be `appendix`.
 * {{para|pagename}}: Override the pagename, which should normally be a template of the form
   `Template:list:<var>list name</var>/<var>langcode</var>` or
-  `Template:list:<var>list name</var>/<var>langcode</var>/<var>variety</var>`. The list name and language code are
+  `Template:list:<var>list name</var>/<var>langcode</var>/<var>variant</var>`. The list name and language code are
   parsed out of the pagename and used as the default title and language, and various other defaults are set based on the
   list name.
 ]==]
@@ -173,34 +387,9 @@ function export.show(frame)
 	local raw_user_args = frame_parent.args
 	local topic_list_template = raw_item_args.pagename or frame_parent:getTitle()
 
-	local user_params = {
-		nocat = {type = "boolean"},
-		sortbase = {},
-	}
+	local user_args = parse_topic_list_user_args(raw_user_args)
 
-	local user_args = require(parameters_module).process(raw_user_args, user_params)
-
-	-- Analyze template name for list name and language. Note that there are templates with names like
-	-- [[Template:list:days of the week/cim/Luserna]] (for the Luserna dialect of Cimbrian) and
-	-- [[Template:list:days of the week/cim/13]] (for the Tredici Comuni dialect of Cimbrian) so we can't just
-	-- assume there will be a single slash followed by a language code.
-	local list_name_plus_lang = topic_list_template:gsub("^Template:", ""):gsub("^list:", "")
-	local list_name, langcode_and_variety = list_name_plus_lang:match("^(.-)/(.*)$")
-	local lang, variety
-	if langcode_and_variety then
-		local langcode
-		langcode, variety = langcode_and_variety:match("^(.-)/(.*)$")
-		langcode = langcode or langcode_and_variety
-		lang = require(languages_module).getByCode(langcode, nil, "allow etym")
-		if not lang then
-			error(("Unrecognized language code '%s' in topic list template name [[%s]]"):format(
-				langcode, topic_list_template))
-		end
-	else
-		error(("Can't parse language code out of topic list template name [[%s]]; it should be of the form " ..
-			"'Template:list:LISTNAME/LANGCODE' or 'Template:list:LISTNAME/LANGCODE/VARIETY'"):format(
-			topic_list_template))
-	end
+	local list_name, lang, variant = analyze_template_name(topic_list_template)
 
 	local default_props
 	for _, pattern_and_props in ipairs(topic_list_properties) do
@@ -220,7 +409,7 @@ function export.show(frame)
 					topic_list_template = topic_list_template,
 					list_name = list_name,
 					lang = lang,
-					variety = variety,
+					variant = variant,
 				}
 			else
 				default_props_copy[k] = v
@@ -230,13 +419,102 @@ function export.show(frame)
 	end
 
 	return require(columns_module).handle_display_from_or_topic_list(
-		{minrows = 2, sort = true, collapse = true, lang = lang}, raw_item_args, user_args, {
+		{minrows = 2, sort = true, collapse = true, lang = lang}, raw_item_args, {
 			topic_list_template = topic_list_template,
 			list_name = list_name,
-			variety = variety,
+			variant = variant,
 			default_props = default_props,
+			get_title_and_formatted_cats = get_title_and_formatted_cats,
+			add_topic_list_params = add_topic_list_params,
+			make_horiz_edit_button = make_horiz_edit_button,
+			user_args = user_args,
 		}
 	)
+end
+
+function export.compass(frame)
+	local raw_item_args = frame.args
+	local frame_parent = frame:getParent()
+	local raw_user_args = frame_parent.args
+	local topic_list_template = raw_item_args.pagename or frame_parent:getTitle()
+
+	local user_args = parse_topic_list_user_args(raw_user_args)
+
+	local list_name, lang, variant = analyze_template_name(topic_list_template)
+
+	local params = {
+		["lang"] = {type = "language"},
+		["sc"] = {type = "script"},
+		["notr"] = boolean,
+		["title"] = {},
+
+		["n"] = {},
+		["s"] = {},
+		["e"] = {},
+		["w"] = {},
+		["ne"] = {},
+		["nw"] = {},
+		["se"] = {},
+		["sw"] = {},
+	}
+	add_topic_list_params(params)
+
+	local args = require(parameters_module).process(raw_item_args, params)
+
+	local title, formatted_cats = get_title_and_formatted_cats(args, lang, sc, {
+		topic_list_template = topic_list_template,
+		list_name = list_name,
+		variant = variant,
+		user_args = user_args,
+		suppress_edit_button = true,
+	})
+
+	local m_columns = require(columns_module)
+
+	local function parse_and_format_direction(paramname)
+		if not args[paramname] then
+			return ""
+		end
+		local terms = parse_term_with_delimiters {
+			term = args[paramname],
+			paramname = paramname,
+			lang = lang,
+			sc = sc,
+			comma_delim = "<br />",
+			notr = args.notr,
+		}
+		return m_columns.format_item(terms, {lang = lang})
+	end
+
+	local parts = {}
+	local function ins(txt)
+		table.insert(parts, txt)
+	end
+	ins(m_columns.construct_old_style_header(title, "horiz"))
+	ins(make_horiz_edit_button(topic_list_template))
+	ins("\n")
+	ins('{| frame=void border=0 rules=none style="background:var(--wikt-palette-paleblue, #f9f9f9);"')
+	ins('\n| style="text-align: left"   | ')
+	ins(parse_and_format_direction("nw"))
+	ins('\n| style="text-align: center" | ')
+	ins(parse_and_format_direction("n"))
+	ins('\n| style="text-align: right"  | ')
+	ins(parse_and_format_direction("ne"))
+	ins("\n|-")
+	ins('\n| style="text-align: left"   | ')
+	ins(parse_and_format_direction("w"))
+	ins("\n| [[File:Compass rose simple plain.svg|upright=0.31]] ")
+	ins('\n| style="text-align: right"  | ')
+	ins(parse_and_format_direction("e"))
+	ins("\n|-")
+	ins('\n| style="text-align: left"   | ')
+	ins(parse_and_format_direction("sw"))
+	ins('\n| style="text-align: center" | ')
+	ins(parse_and_format_direction("s"))
+	ins('\n| style="text-align: right"  | ')
+	ins(parse_and_format_direction("se"))
+	ins("\n|}")
+	return table.concat(parts)
 end
 
 return export

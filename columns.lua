@@ -28,9 +28,6 @@ local sub = string.sub
 local trim = m_str_utils.trim
 local u = m_str_utils.char
 local dump = mw.dumpObject
-local ucfirst = m_str_utils.ucfirst
-
-local force_cat = false -- for testing
 
 
 local function track(page)
@@ -136,7 +133,7 @@ local function format_subitem(subitem, lang, face, compute_embedded_comma)
 	return text, embedded_comma
 end
 
-local function format_item(item, args, face)
+function export.format_item(item, args, face)
 	local compute_embedded_comma = args.horiz == "comma"
 	local embedded_comma = false
 	if type(item) == "table" then
@@ -175,6 +172,20 @@ local function format_item(item, args, face)
 			return item, embedded_comma
 		end
 	end
+end
+
+function export.construct_old_style_header(header, horiz)
+	local old_style_header
+	local function ib_colon()
+		return tostring(html("span"):addClass("ib-colon"):addClass("ib-content"):wikitext(":"))
+	end
+	if horiz then
+		old_style_header = require(qualifier_module).format_qualifiers({header}, "", "") .. ib_colon() ..  " "
+	else
+		old_style_header = require(qualifier_module).format_qualifiers({header}) .. ib_colon()
+		old_style_header = tostring(html("div"):wikitext(old_style_header))
+	end
+	return old_style_header
 end
 
 -- Construct the sort base of a single item, using the display form preferentially, otherwise the term itself.
@@ -321,19 +332,10 @@ function export.create_list(args)
 		track("keeplast")
 	end
 
+	-- maybe construct old-style header
 	local old_style_header = nil
-	if args.header then
-		-- maybe construct old-style header
-		local function ib_colon()
-			return tostring(html("span"):addClass("ib-colon"):addClass("ib-content"):wikitext(":"))
-		end
-		if args.horiz then
-			old_style_header = require(qualifier_module).format_qualifiers({args.header}, "", "") .. ib_colon() ..
-				" "
-		elseif not args.title_new_style then
-			old_style_header = require(qualifier_module).format_qualifiers({args.header}) .. ib_colon()
-			old_style_header = tostring(html("div"):wikitext(old_style_header))
-		end
+	if args.header and (args.horiz or not args.title_new_style) then
+		old_style_header = export.construct_old_style_header(args.header, args.horiz)
 	end
 	if args.horiz then
 		old_style_header = "* " .. (old_style_header or "")
@@ -454,7 +456,7 @@ function export.create_list(args)
 			end
 			local formatted, listitem
 			-- Ignore embedded commas in subitems inside of parens or square brackets.
-			formatted, embedded_comma = format_item(node.item, args)
+			formatted, embedded_comma = export.format_item(node.item, args)
 			if args.horiz then
 				listitem = formatted
 				if sublist then
@@ -490,7 +492,7 @@ function export.create_list(args)
 			if item == false then
 				-- omitted item; do nothing
 			else
-				local thisitem, this_embedded_comma = format_item(item, args)
+				local thisitem, this_embedded_comma = export.format_item(item, args)
 				embedded_comma = embedded_comma or this_embedded_comma
 				if not previtem or not args.alphabetize or previtem ~= thisitem then
 					if args.horiz then
@@ -614,30 +616,14 @@ function export.display_from(frame_args, parent_args, frame)
 	local lang_param = langcode_in_lang and "lang" or 1
 	local deprecated = not iargs.lang and langcode_in_lang
 
-	local ret = export.handle_display_from_or_topic_list(iargs, parent_args, {}, nil)
+	local ret = export.handle_display_from_or_topic_list(iargs, parent_args, nil)
 
 	return deprecated and frame:expandTemplate{title = "check deprecated lang param usage",
 		args = {ret, lang = args[lang_param]}} or ret
 end
 
 
--- FIXME: This needs to be implemented properly in [[Module:links]].
-local function get_left_side_link(link)
-	local left, right = link:match("^%[%[([^%[%]|]+)|([^%[%]|]+)%]%]$")
-	if left then
-		return left
-	end
-	local single_part = link:match("^%[%[([^%[%]|]+)%]%]$")
-	if single_part then
-		return single_part
-	end
-	if not link:match("%[%[") then
-		return link
-	end
-	return nil
-end
-
-function export.handle_display_from_or_topic_list(iargs, raw_item_args, user_args, topic_list_data)
+function export.handle_display_from_or_topic_list(iargs, raw_item_args, topic_list_data)
 	local boolean = {type = "boolean"}
 	local langcode_in_lang = iargs.lang or raw_item_args.lang
 	local lang_param = langcode_in_lang and "lang" or 1
@@ -667,11 +653,7 @@ function export.handle_display_from_or_topic_list(iargs, raw_item_args, user_arg
 	}
 
 	if topic_list_data then
-		params["cat"] = {}
-		params["enhypernym"] = {}
-		params["hypernym"] = {}
-		params["appendix"] = {}
-		params["pagename"] = {} -- for testing of topic list
+		topic_list_data.add_topic_list_params(params)
 	end
 
 	local m_param_utils = require(parameter_utilities_module)
@@ -784,107 +766,7 @@ function export.handle_display_from_or_topic_list(iargs, raw_item_args, user_arg
 	local title = args.title
 	local formatted_cats
 	if topic_list_data then
-		local cats
-		local default_title = topic_list_data.list_name
-		if not args.cat then
-			local default_cat = ucfirst(default_title)
-			local cat_title = mw.title.new(("Category:%s"):format(default_cat))
-			if cat_title and cat_title.exists then
-				cats = {fulllangcode .. ":" .. default_cat}
-			end
-		elseif args.cat ~= "-" then
-			cats = require(parse_interface_module).split_on_comma(args.cat)
-			for i, cat in ipairs(cats) do
-				if cat:find("^Category:") then
-					cats[i] = cat:gsub("^Category:", "")
-				else
-					cats[i] = fulllangcode .. ":" .. cats[i]
-				end
-			end
-		end
-		local hypernym_is_page
-		if not title then
-			local titleparts = {}
-			local function ins(txt)
-				table.insert(titleparts, txt)
-			end
-			local enhypernym
-			if args.enhypernym then
-				enhypernym = args.enhypernym:gsub("%+", m_str_utils.replacement_escape(default_title))
-			else
-				enhypernym = default_title
-				if topic_list_data.variety then
-					enhypernym = ("%s (%s)"):format(enhypernym, topic_list_data.variety)
-				end
-			end
-			if cats and not enhypernym:find("%[%[") then
-				ins(("[[:Category:%s|%s]]"):format(cats[1], enhypernym))
-			else
-				ins(enhypernym)
-			end
-			if args.hypernym then
-				local function generate_obj(term, parse_err)
-					local actual_term, termlang = require(parse_interface_module).parse_term_with_lang {
-						term = term,
-						parse_err = parse_err,
-						paramname = "hypernym",
-					}
-					return {
-						term = actual_term ~= "" and actual_term or nil,
-						lang = termlang or lang,
-					}
-				end
-				local lang_hypernyms = require(parse_interface_module).parse_inline_modifiers(args.hypernym, {
-					paramname = "hypernym",
-					param_mods = param_mods,
-					generate_obj = generate_obj,
-					splitchar = "[,~]",
-					preserve_splitchar = true,
-					outer_container = {},
-				})
-				local hypernym_is_page = false
-				local pagename = args.pagename or mw.loadData("Module:headword/data").pagename
-				for i, lang_hypernym in ipairs(lang_hypernyms.terms) do
-					convert_delimiter_to_separator(lang_hypernym, i, args)
-					-- Do this afterwards rather than in generate_obj() or use of <sc:...> will trigger an error
-					-- because the modifier is already set.
-					if not lang_hypernym.sc and sc then
-						lang_hypernym.sc = sc
-					end
-					if lang_hypernym.term then
-						local left_side = get_left_side_link(lang_hypernym.term)
-						if left_side and left_side == pagename then
-							hypernym_is_page = true
-							break
-						end
-					end
-				end
-				local formatted_hypernyms = format_item(lang_hypernyms, {lang = lang}, "bold")
-				ins(": " .. formatted_hypernyms)
-			end
-			if args.appendix then
-				local appendices = require(parse_interface_module).split_on_comma(args.appendix)
-				for i, appendix in ipairs(appendices) do
-					if not appendix:find("%[%[") then
-						appendices[i] = ("[[%s|appendix]]"):format(appendix)
-					end
-				end
-				ins((" (<small>%s</small>)"):format(table.concat(appendices, ", ")))
-			end
-			title = table.concat(titleparts)
-		end
-
-		if not args.horiz then
-			-- append edit button to title
-			local edit_link = html("span")
-				:addClass("plainlinks list-switcher-edit")
-				:wikitext("[" .. mw.title.new(topic_list_data.topic_list_template):fullUrl{action = "edit"} .. " edit]")
-			title = title .. tostring(edit_link)
-		end
-
-		if cats and not user_args.nocat and not hypernym_is_page then
-			formatted_cats = require(utilities_module).format_categories(cats, lang, nil, user_args.sortbase, force_cat)
-		end
+		title, formatted_cats = topic_list_data.get_title_and_formatted_cats(args, lang, sc, topic_list_data)
 	end
 
 	local number_of_groups = 0
@@ -953,10 +835,7 @@ function export.handle_display_from_or_topic_list(iargs, raw_item_args, user_arg
 	local horiz_edit_button
 	if topic_list_data and args.horiz then
 		-- append edit button to title
-		horiz_edit_button = tostring(html("small"):node(html("sup")
-			:wikitext("&nbsp;&#91;[" .. mw.title.new(topic_list_data.topic_list_template):fullUrl{action = "edit"} ..
-				" edit]&#93;")
-		))
+		horiz_edit_button = topic_list_data.make_horiz_edit_button(topic_list_data.topic_list_template)
 	end
 
 	return export.create_list {
