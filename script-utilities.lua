@@ -1,10 +1,84 @@
 local export = {}
 
+local anchors_module = "Module:anchors"
+local debug_track_module = "Module:debug/track"
+local links_module = "Module:links"
+local munge_text_module = "Module:munge text"
+local parameters_module = "Module:parameters"
+local scripts_module = "Module:scripts"
+local string_utilities_module = "Module:string utilities"
+local utilities_module = "Module:utilities"
+
+local concat = table.concat
+local insert = table.insert
+local require = require
+local toNFD = mw.ustring.toNFD
+
+--[==[
+Loaders for functions in other modules, which overwrite themselves with the target function when called. This ensures modules are only loaded when needed, retains the speed/convenience of locally-declared pre-loaded functions, and has no overhead after the first call, since the target functions are called directly in any subsequent calls.]==]
+	local function embedded_language_links(...)
+		embedded_language_links = require(links_module).embedded_language_links
+		return embedded_language_links(...)
+	end
+	
+	local function format_categories(...)
+		format_categories = require(utilities_module).format_categories
+		return format_categories(...)
+	end
+	
+	local function get_script(...)
+		get_script = require(scripts_module).getByCode
+		return get_script(...)
+	end
+	
+	local function language_anchor(...)
+		language_anchor = require(anchors_module).language_anchor
+		return language_anchor(...)
+	end
+	
+	local function munge_text(...)
+		munge_text = require(munge_text_module)
+		return munge_text(...)
+	end
+	
+	local function process_params(...)
+		process_params = require(parameters_module).process
+		return process_params(...)
+	end
+	
+	local function track(...)
+		track = require(debug_track_module)
+		return track(...)
+	end
+	
+	local function u(...)
+		u = require(string_utilities_module).char
+		return u(...)
+	end
+	
+	local function ugsub(...)
+		ugsub = require(string_utilities_module).gsub
+		return ugsub(...)
+	end
+	
+	local function umatch(...)
+		umatch = require(string_utilities_module).match
+		return umatch(...)
+	end
+
+--[==[
+Loaders for objects, which load data (or some other object) into some variable, which can then be accessed as "foo or get_foo()", where the function get_foo sets the object to "foo" and then returns it. This ensures they are only loaded when needed, and avoids the need to check for the existence of the object each time, since once "foo" has been set, "get_foo" will not be called again.]==]
+	local m_data
+	local function get_data()
+		m_data, get_data = mw.loadData("Module:script utilities/data"), nil
+		return m_data
+	end
+
 --[=[
 	Modules used:
 	[[Module:script utilities/data]]
 	[[Module:scripts]]
-	[[Module:senseid]] (only when id's present)
+	[[Module:anchors]] (only when IDs present)
 	[[Module:string utilities]] (only when hyphens in Korean text or spaces in vertical text)
 	[[Module:languages]]
 	[[Module:parameters]]
@@ -13,75 +87,82 @@ local export = {}
 ]=]
 
 function export.is_Latin_script(sc)
-	-- Latn, Latf, Latnx, pjt-Latn
+	-- Latn, Latf, Latg, pjt-Latn
 	return sc:getCode():find("Lat") and true or false
 end
 
 --[==[{{temp|#invoke:script utilities|lang_t}}
 This is used by {{temp|lang}} to wrap portions of text in a language tag. See there for more information.]==]
-function export.lang_t(frame)
-	local plain_param = {}
+do
+	local function get_args(frame)
+		return process_params(frame:getParent().args, {
+			[1] = {required = true, type = "language", default = "und"},
+			[2] = {required = true, allow_empty = true, default = ""},
+			["sc"] = {type = "script"},
+			["face"] = true,
+			["class"] = true,
+		})
+	end
 	
-	local params = {
-		[1] = {required = true},
-		[2] = { allow_empty = true, default = "" },
-		["sc"] = plain_param,
-		["face"] = plain_param,
-		["class"] = plain_param,
-	}
-	-- Check parameters
-	local args = require("Module:parameters").process(frame:getParent().args, params, nil, "script utilities", "lang_t")
-	
-	local lang = args[1] or "und"
-	local sc = args["sc"]
-	local text = args[2]
-	
-	lang = require("Module:languages").getByCode(lang, 1, true)
-	sc = sc and require("Module:scripts").getByCode(sc, "sc") or lang:findBestScript(text)
-	
-	text = require("Module:links").embedded_language_links(
-		{
+	function export.lang_t(frame)
+		local args = get_args(frame)
+		
+		local lang = args[1]
+		local sc = args["sc"]
+		local text = args[2]
+		local cats = {}
+		
+		if sc then
+			-- Track uses of sc parameter.
+			if sc:getCode() == lang:findBestScript(text):getCode() then
+				insert(cats, lang:getFullName() .. " terms with redundant script codes")
+			else
+				insert(cats, lang:getFullName() .. " terms with non-redundant manual script codes")
+			end
+		else
+			sc = lang:findBestScript(text)
+		end
+		
+		text = embedded_language_links{
 			term = text,
 			lang = lang,
 			sc = sc
-		},
-		false
-	)
-	
-	local face = args["face"]
-	local class = args["class"]
-	
-	return export.tag_text(text, lang, sc, face, class)
+		}
+		
+		cats = #cats > 0 and format_categories(cats, lang, "-", nil, nil, sc) or ""
+		
+		local face = args["face"]
+		local class = args["class"]
+		
+		return export.tag_text(text, lang, sc, face, class) .. cats
+	end
 end
 
 -- Ustring turns on the codepoint-aware string matching. The basic string function
 -- should be used for simple sequences of characters, Ustring function for
 -- sets – [].
-local function trackPattern(text, pattern, tracking, ustring)
-	local find = ustring and mw.ustring.find or string.find
-	if pattern and find(text, pattern) then
-		require("Module:debug/track")("script/" .. tracking)
+local function trackPattern(text, pattern, tracking)
+	if pattern and umatch(text, pattern) then
+		track("script/" .. tracking)
 	end
 end
 
-local function track(text, lang, sc)
-	local u = mw.ustring.char
-	
+local function track_text(text, lang, sc)
 	if lang and text then
-		local langCode = lang:getNonEtymologicalCode()
+		local langCode = lang:getFullCode()
 		
-		-- [[Special:WhatLinksHere/Template:tracking/script/ang/acute]]
+		-- [[Special:WhatLinksHere/Wiktionary:Tracking/script/ang/acute]]
 		if langCode == "ang" then
-			local decomposed = mw.ustring.toNFD(text)
+			local decomposed = toNFD(text)
 			local acute = u(0x301)
 			
 			trackPattern(decomposed, acute, "ang/acute")
 		
 		--[=[
-		[[Special:WhatLinksHere/Template:tracking/script/Greek/wrong-phi]]
-		[[Special:WhatLinksHere/Template:tracking/script/Greek/wrong-theta]]
-		[[Special:WhatLinksHere/Template:tracking/script/Greek/wrong-kappa]]
-		[[Special:WhatLinksHere/Template:tracking/script/Greek/wrong-rho]]
+		[[Special:WhatLinksHere/Wiktionary:Tracking/script/Greek/wrong-phi]]
+		[[Special:WhatLinksHere/Wiktionary:Tracking/script/Greek/wrong-theta]]
+		[[Special:WhatLinksHere/Wiktionary:Tracking/script/Greek/wrong-kappa]]
+		[[Special:WhatLinksHere/Wiktionary:Tracking/script/Greek/wrong-rho]]
 			ϑ, ϰ, ϱ, ϕ should generally be replaced with θ, κ, ρ, φ.
 		]=]
 		elseif langCode == "el" or langCode == "grc" then
@@ -91,10 +172,10 @@ local function track(text, lang, sc)
 			trackPattern(text, "ϕ", "Greek/wrong-phi")
 		
 			--[=[
-			[[Special:WhatLinksHere/Template:tracking/script/Ancient Greek/spacing-coronis]]
-			[[Special:WhatLinksHere/Template:tracking/script/Ancient Greek/spacing-smooth-breathing]]
-			[[Special:WhatLinksHere/Template:tracking/script/Ancient Greek/wrong-apostrophe]]
-				When spacing coronis and spacing smooth breathing are used as apostrophes, 
+			[[Special:WhatLinksHere/Wiktionary:Tracking/script/Ancient Greek/spacing-coronis]]
+			[[Special:WhatLinksHere/Wiktionary:Tracking/script/Ancient Greek/spacing-smooth-breathing]]
+			[[Special:WhatLinksHere/Wiktionary:Tracking/script/Ancient Greek/wrong-apostrophe]]
+				When spacing coronis and spacing smooth breathing are used as apostrophes,
 				they should be replaced with right single quotation marks (’).
 			]=]
 			if langCode == "grc" then
@@ -103,50 +184,54 @@ local function track(text, lang, sc)
 				trackPattern(text, "[" .. u(0x1FBD) .. u(0x1FBF) .. "]", "Ancient Greek/wrong-apostrophe", true)
 			end
 		
-		-- [[Special:WhatLinksHere/Template:tracking/script/Russian/grave-accent]]
+		-- [[Special:WhatLinksHere/Wiktionary:Tracking/script/Russian/grave-accent]]
 		elseif langCode == "ru" then
-			local decomposed = mw.ustring.toNFD(text)
+			local decomposed = toNFD(text)
 			
 			trackPattern(decomposed, u(0x300), "Russian/grave-accent")
 		
-		-- [[Special:WhatLinksHere/Template:tracking/script/Tibetan/trailing-punctuation]]
+		-- [[Special:WhatLinksHere/Wiktionary:Tracking/script/Tibetan/trailing-punctuation]]
 		elseif langCode == "bo" then
-			trackPattern(text, "[་།]$", "Tibetan/trailing-punctuation", true)
-			trackPattern(text, "[་།]%]%]$", "Tibetan/trailing-punctuation", true)
+			trackPattern(text, "[་།]$", "Tibetan/trailing-punctuation")
+			trackPattern(text, "[་།]%]%]$", "Tibetan/trailing-punctuation")
 
 		--[=[
-		[[Special:WhatLinksHere/Template:tracking/script/Thai/broken-ae]]
-		[[Special:WhatLinksHere/Template:tracking/script/Thai/broken-am]]
-		[[Special:WhatLinksHere/Template:tracking/script/Thai/wrong-rue-lue]]
+		[[Special:WhatLinksHere/Wiktionary:Tracking/script/Thai/broken-ae]]
+		[[Special:WhatLinksHere/Wiktionary:Tracking/script/Thai/broken-am]]
+		[[Special:WhatLinksHere/Wiktionary:Tracking/script/Thai/wrong-rue-lue]]
 		]=]
 		elseif langCode == "th" then
 			trackPattern(text, "เ".."เ", "Thai/broken-ae")
-			trackPattern(text, "ํ[่้๊๋]?า", "Thai/broken-am", true)
-			trackPattern(text, "[ฤฦ]า", "Thai/wrong-rue-lue", true)
+			trackPattern(text, "ํ[่้๊๋]?า", "Thai/broken-am")
+			trackPattern(text, "[ฤฦ]า", "Thai/wrong-rue-lue")
 
 		--[=[
-		[[Special:WhatLinksHere/Template:tracking/script/Lao/broken-ae]]
-		[[Special:WhatLinksHere/Template:tracking/script/Lao/broken-am]]
-		[[Special:WhatLinksHere/Template:tracking/script/Lao/possible-broken-ho-no]]
-		[[Special:WhatLinksHere/Template:tracking/script/Lao/possible-broken-ho-mo]]
-		[[Special:WhatLinksHere/Template:tracking/script/Lao/possible-broken-ho-lo]]
+		[[Special:WhatLinksHere/Wiktionary:Tracking/script/Lao/broken-ae]]
+		[[Special:WhatLinksHere/Wiktionary:Tracking/script/Lao/broken-am]]
+		[[Special:WhatLinksHere/Wiktionary:Tracking/script/Lao/possible-broken-ho-no]]
+		[[Special:WhatLinksHere/Wiktionary:Tracking/script/Lao/possible-broken-ho-mo]]
+		[[Special:WhatLinksHere/Wiktionary:Tracking/script/Lao/possible-broken-ho-lo]]
 		]=]
 		elseif langCode == "lo" then
 			trackPattern(text, "ເ".."ເ", "Lao/broken-ae")
-			trackPattern(text, "ໍ[່້໊໋]?າ", "Lao/broken-am", true)
+			trackPattern(text, "ໍ[່້໊໋]?າ", "Lao/broken-am")
 			trackPattern(text, "ຫນ", "Lao/possible-broken-ho-no")
 			trackPattern(text, "ຫມ", "Lao/possible-broken-ho-mo")
 			trackPattern(text, "ຫລ", "Lao/possible-broken-ho-lo")
 
 		--[=[
-		[[Special:WhatLinksHere/Template:tracking/script/Lü/broken-ae]]
-		[[Special:WhatLinksHere/Template:tracking/script/Lü/possible-wrong-sequence]]
+		[[Special:WhatLinksHere/Wiktionary:Tracking/script/Lü/broken-ae]]
+		[[Special:WhatLinksHere/Wiktionary:Tracking/script/Lü/possible-wrong-sequence]]
 		]=]
 		elseif langCode == "khb" then
 			trackPattern(text, "ᦵ".."ᦵ", "Lü/broken-ae")
-			trackPattern(text, "[ᦀ-ᦫ][ᦵᦶᦷᦺ]", "Lü/possible-wrong-sequence", true)
+			trackPattern(text, "[ᦀ-ᦫ][ᦵᦶᦷᦺ]", "Lü/possible-wrong-sequence")
 		end
 	end
+end
+
+local function Kore_ruby(txt)
+	return (ugsub(txt, "([%-".. get_script("Hani"):getCharacters() .. "]+)%(([%-" .. get_script("Hang"):getCharacters() .. "]+)%)", "<ruby>%1<rp>(</rp><rt>%2</rt><rp>)</rp></ruby>"))
 end
 
 --[==[Wraps the given text in HTML tags with appropriate CSS classes (see [[WT:CSS]]) for the [[Module:languages#Language objects|language]] and script. This is required for all non-English text on Wiktionary.
@@ -167,82 +252,96 @@ function export.tag_text(text, lang, sc, face, class, id)
 		sc = lang:findBestScript(text)
 	end
 	
-	track(text, lang, sc)
-		
+	track_text(text, lang, sc)
+	
 	-- Replace space characters with newlines in Mongolian-script text, which is written top-to-bottom.
-	if sc:getDirection() == "down" and text:find(" ") then
-		text = require("Module:munge_text")(text, function(txt)
+	if sc:getDirection():match("vertical") and text:find(" ") then
+		text = munge_text(text, function(txt)
 			-- having extra parentheses makes sure only the first return value gets through
 			return (txt:gsub(" +", "<br>"))
 		end)
 	end
 
 	-- Hack Korean script text to remove hyphens.
-	-- XXX: This should be handled in a more general fashion, but needs to
+	-- FIXME: This should be handled in a more general fashion, but needs to
 	-- be efficient by not doing anything if no hyphens are present, and currently this is the only
 	-- language needing such processing.
 	-- 20220221: Also convert 漢字(한자) to ruby, instead of needing [[Template:Ruby]].
-	if sc:getCode() == "Kore" and (text:find("%-") or text:find("[()]")) then
-		local m_scripts = require("Module:scripts")
-		text = require("Module:munge_text")(text, function(txt)
-			txt = txt:gsub("%-", "")
-			txt = mw.ustring.gsub(txt, "([".. m_scripts.getByCode("Hani"):getCharacters() .. "]+)%(([" .. m_scripts.getByCode("Hang"):getCharacters() .. "]+)%)", "<ruby>%1<rp>(</rp><rt>%2</rt><rp>)</rp></ruby>")
-			return txt
-		end)
+	if sc:getCode() == "Kore" and text:find("[%-()g]") then
+		if lang:getCode() == "okm" then -- Middle Korean code from [[User:Chom.kwoy]]
+			-- Comment from [[User:Lunabunn]]:
+			-- In Middle Korean orthography, syllable formation is phonemic as opposed to morpheme-boundary-based a la
+			-- modern Korean. As such, for example, if you were to write nam-i, it would be rendered as na.mi so if you
+			-- then put na-mi to indicate particle boundaries as in modern Korean, the hyphen would be misplaced.
+			-- Previously, this was alleviated by specialcasing na--mi but [[User:Theknightwho]] made that resolve to -
+			-- in the Hangul (previously we used to just delete all -s in Hangul processing), so it broke.
+			-- [[User:Chom.kwoy]] implemented a different solution, which is writing -> instead using however many >s to
+			-- shift the hyphen by that number of letters in the romanization.
+			text = munge_text(text, function(txt)
+				-- By the time we are called, > signs have been converted to &gt; by a call to encode_entities() in
+				-- make_link() in [[Module:links]] (near the bottom of the function).
+				txt = txt:gsub("&gt;", "")
+				-- 'g' in Middle Korean is a special sign to treat the following ㅇ sign as /G/ instead of null.
+				txt = txt:gsub("[%-g]", "")
+				txt = Kore_ruby(txt)
+				return txt
+			end)
+		else
+			text = munge_text(text, function(txt)
+				txt = txt:gsub("%-(%-?)", "%1")
+				txt = Kore_ruby(txt)
+				return txt
+			end)
+		end
 	end
-	
-	if sc:getCode() == "Imag" then
+
+	if sc:getCode() == "Image" then
 		face = nil
 	end
 
 	local function class_attr(classes)
 		-- if the script code is hyphenated (i.e. language code-script code, add the last component as a class as well)
 		-- e.g. ota-Arab adds both Arab and ota-Arab as classes
-		if mw.ustring.find(sc:getCode(), "%-") then
-			table.insert(classes, 1, (mw.ustring.gsub(sc:getCode(), ".+%-", "")))
-			table.insert(classes, 2, sc:getCode())
+		if sc:getCode():find("-", 1, true) then
+			insert(classes, 1, (ugsub(sc:getCode(), ".+%-", "")))
+			insert(classes, 2, sc:getCode())
 		else
-			table.insert(classes, 1, sc:getCode())
+			insert(classes, 1, sc:getCode())
 		end
 		if class and class ~= '' then
-			table.insert(classes, class)
+			insert(classes, class)
 		end
-		return 'class="' .. table.concat(classes, ' ') .. '"'
+		return 'class="' .. concat(classes, ' ') .. '"'
 	end
 	
 	local function tag_attr(...)
 		local output = {}
 		if id then
-			table.insert(output, 'id="' .. require("Module:senseid").anchor(lang, id) .. '"')
+			insert(output, 'id="' .. language_anchor(lang, id) .. '"')
 		end
 		
-		table.insert(output, class_attr({...}) )
+		insert(output, class_attr({...}) )
 		
 		if lang then
 			-- FIXME: Is it OK to insert the etymology-only lang code and have it fall back to the first part of the
 			-- lang code (by chopping off the '-...' part)? It seems the :lang() selector does this; not sure about
 			-- [lang=...] attributes.
-			table.insert(output, 'lang="' .. lang:getNonEtymologicalCode() .. '"')
+			insert(output, 'lang="' .. lang:getFullCode() .. '"')
 		end
 		
-		return table.concat(output, " ")
+		return concat(output, " ")
 	end
 	
 	if face == "hypothetical" then
-	-- [[Special:WhatLinksHere/Template:tracking/script-utilities/face/hypothetical]]
-		require("Module:debug/track")("script-utilities/face/hypothetical")
+	-- [[Special:WhatLinksHere/Wiktionary:Tracking/script-utilities/face/hypothetical]]
+		track("script-utilities/face/hypothetical")
 	end
 	
-	local data = mw.loadData("Module:script utilities/data").faces[face or "nil"]
-	
-	local post = ""
-	if sc:getDirection() == "rtl" and (face == "translation" or mw.ustring.find(text, "%p$")) then
-		post = "&lrm;"
-	end
+	local data = (m_data or get_data()).faces[face or "plain"]
 	
 	-- Add a script wrapper
 	if data then
-		return ( data.prefix or "" ) .. '<' .. data.tag .. ' ' .. tag_attr(data.class) .. '>' .. text .. '</' .. data.tag .. '>' .. post
+		return ( data.prefix or "" ) .. '<' .. data.tag .. ' ' .. tag_attr(data.class) .. '>' .. text .. '</' .. data.tag .. '>'
 	else
 		error('Invalid script face "' .. face .. '".')
 	end
@@ -262,57 +361,57 @@ The optional <code>attributes</code> parameter is used to specify additional HTM
 function export.tag_translit(translit, lang, kind, attributes, is_manual)
 	if type(lang) == "table" then
 		-- FIXME: Do better support for etym languages; see https://www.rfc-editor.org/rfc/bcp/bcp47.txt
-		lang = lang.getNonEtymologicalCode and lang:getNonEtymologicalCode()
+		lang = lang.getFullCode and lang:getFullCode()
 			or error("Second argument to tag_translit should be a language code or language object.")
 	end
 	
-	local data = mw.loadData("Module:script utilities/data").translit[kind or "default"]
+	local data = (m_data or get_data()).translit[kind or "default"]
 	
 	local opening_tag = {}
 	
-	table.insert(opening_tag, data.tag)
+	insert(opening_tag, data.tag)
 	if lang == "ja" then
-		table.insert(opening_tag, 'class="' .. (data.classes and data.classes .. " " or "") .. (is_manual and "manual-tr " or "") .. 'tr"')
+		insert(opening_tag, 'class="' .. (data.classes and data.classes .. " " or "") .. (is_manual and "manual-tr " or "") .. 'tr"')
 	else
-		table.insert(opening_tag, 'lang="' .. lang .. '-Latn"')
-		table.insert(opening_tag, 'class="' .. (data.classes and data.classes .. " " or "") .. (is_manual and "manual-tr " or "") .. 'tr Latn"')
+		insert(opening_tag, 'lang="' .. lang .. '-Latn"')
+		insert(opening_tag, 'class="' .. (data.classes and data.classes .. " " or "") .. (is_manual and "manual-tr " or "") .. 'tr Latn"')
 	end
 	
 	if data.dir then
-		table.insert(opening_tag, 'dir="' .. data.dir .. '"')
+		insert(opening_tag, 'dir="' .. data.dir .. '"')
 	end
 	
-	table.insert(opening_tag, attributes)
+	insert(opening_tag, attributes)
 	
-	return "<" .. table.concat(opening_tag, " ") .. ">" .. translit .. "</" .. data.tag .. ">"
+	return "<" .. concat(opening_tag, " ") .. ">" .. translit .. "</" .. data.tag .. ">"
 end
 
 function export.tag_transcription(transcription, lang, kind, attributes)
 	if type(lang) == "table" then
 		-- FIXME: Do better support for etym languages; see https://www.rfc-editor.org/rfc/bcp/bcp47.txt
-		lang = lang.getNonEtymologicalCode and lang:getNonEtymologicalCode()
+		lang = lang.getFullCode and lang:getFullCode()
 			or error("Second argument to tag_transcription should be a language code or language object.")
 	end
 	
-	local data = mw.loadData("Module:script utilities/data").transcription[kind or "default"]
+	local data = (m_data or get_data()).transcription[kind or "default"]
 	
 	local opening_tag = {}
 	
-	table.insert(opening_tag, data.tag)
+	insert(opening_tag, data.tag)
 	if lang == "ja" then
-		table.insert(opening_tag, 'class="' .. (data.classes and data.classes .. " " or "") .. 'ts"')
+		insert(opening_tag, 'class="' .. (data.classes and data.classes .. " " or "") .. 'ts"')
 	else
-		table.insert(opening_tag, 'lang="' .. lang .. '-Latn"')
-		table.insert(opening_tag, 'class="' .. (data.classes and data.classes .. " " or "") .. 'ts Latn"')
+		insert(opening_tag, 'lang="' .. lang .. '-Latn"')
+		insert(opening_tag, 'class="' .. (data.classes and data.classes .. " " or "") .. 'ts Latn"')
 	end
 	
 	if data.dir then
-		table.insert(opening_tag, 'dir="' .. data.dir .. '"')
+		insert(opening_tag, 'dir="' .. data.dir .. '"')
 	end
 	
-	table.insert(opening_tag, attributes)
+	insert(opening_tag, attributes)
 	
-	return "<" .. table.concat(opening_tag, " ") .. ">" .. transcription .. "</" .. data.tag .. ">"	
+	return "<" .. concat(opening_tag, " ") .. ">" .. transcription .. "</" .. data.tag .. ">"	
 end
 
 --[==[Generates a request to provide a term in its native script, if it is missing. This is used by the {{temp|rfscript}} template as well as by the functions in [[Module:links]].
@@ -351,7 +450,7 @@ function export.request_script(lang, sc, usex, nocat, sort_key)
 		-- Does the language have at least one non-Latin script in its list?
 		local has_nonlatin = false
 		
-		for i, val in ipairs(scripts) do
+		for _, val in ipairs(scripts) do
 			if not export.is_Latin_script(val) then
 				has_nonlatin = true
 				break
@@ -363,48 +462,45 @@ function export.request_script(lang, sc, usex, nocat, sort_key)
 			return ""
 		end
 	end
-	
-	local category
-	
-	if usex then
-		local usex_type = usex == "quote" and "quotations" or "usage examples"
-		-- Etymology languages have their own categories, whose parents are the regular language.
-		category = "Requests for " .. cat_script .. " script in " .. lang:getCanonicalName() .. " " .. usex_type
-	else
-		category = "Requests for " .. cat_script .. " script for " .. lang:getCanonicalName() .. " terms"
-	end
-	
-	return "<small>[" .. disp_script .. " needed]</small>" ..
-		(nocat and "" or require("Module:utilities").format_categories({category}, lang, sort_key))
+	-- Etymology languages have their own categories, whose parents are the regular language.
+	return "<small>[" .. disp_script .. " needed]</small>" .. (nocat and "" or
+		format_categories("Requests for " .. cat_script .. " script " ..
+			(usex and "in" or "for") .. " " .. lang:getCanonicalName() .. " " ..
+			(usex == "quote" and "quotations" or usex and "usage examples" or "terms"),
+			lang, sort_key
+		)
+	)
 end
 
 --[==[This is used by {{temp|rfscript}}. See there for more information.]==]
-function export.template_rfscript(frame)
-	local params = {
-		[1] = { required = true, default = "und" },
-		["sc"] = {},
-		["usex"] = { type = "boolean" },
-		["quote"] = { type = "boolean" },
-		["nocat"] = { type = "boolean" },
-		["sort"] = {},
-	}
+do
+	local function get_args(frame)
+		local boolean = {type = "boolean"}
+		return process_params(frame:getParent().args, {
+			[1] = {required = true, type = "language", default = "und"},
+			["sc"] = {type = "script"},
+			["usex"] = boolean,
+			["quote"] = boolean,
+			["nocat"] = boolean,
+			["sort"] = true,
+		})
+	end
 	
-	local args = require("Module:parameters").process(frame:getParent().args, params, nil, "script utilities", "template_rfscript")
-	
-	local lang = require("Module:languages").getByCode(args[1], 1, "allow etym")
-	local sc = args.sc and require("Module:scripts").getByCode(args.sc, true)
-
-	local ret = export.request_script(lang, sc, args.quote and "quote" or args.usex, args.nocat, args.sort)
-	
-	if ret == "" then
-		error("This language is written in the Latin alphabet. It does not need a native script.")
-	else
-		return ret
+	function export.template_rfscript(frame)
+		local args = get_args(frame)
+		
+		local ret = export.request_script(args[1], args["sc"], args.quote and "quote" or args.usex, args.nocat, args.sort)
+		
+		if ret == "" then
+			error("This language is written in the Latin alphabet. It does not need a native script.")
+		else
+			return ret
+		end
 	end
 end
 
 function export.checkScript(text, scriptCode, result)
-	local scriptObject = require("Module:scripts").getByCode(scriptCode)
+	local scriptObject = get_script(scriptCode)
 	
 	if not scriptObject then
 		error('The script code "' .. scriptCode .. '" is not recognized.')
@@ -413,10 +509,10 @@ function export.checkScript(text, scriptCode, result)
 	local originalText = text
 	
 	-- Remove non-letter characters.
-	text = mw.ustring.gsub(text, "[%A]", "")
+	text = ugsub(text, "%A+", "")
 	
 	-- Remove all characters of the script in question.
-	text = mw.ustring.gsub(text, "[" .. scriptObject:getCharacters() .. "]", "")
+	text = ugsub(text, "[" .. scriptObject:getCharacters() .. "]+", "")
 	
 	if text ~= "" then
 		if type(result) == "string" then
