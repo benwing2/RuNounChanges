@@ -44,6 +44,7 @@ local letter_like_properties = {
 	appendix = letter_like_appendix,
 	notr = true,
 	allow_space_delim = true, -- allow space as a delimiter
+	tilde_delim = "~", -- use a tilde without spaces around it
 }
 
 local function letter_name_category(data)
@@ -99,7 +100,7 @@ local topic_list_properties = {
 	{"fingers", {sort = false, cat = "Terms for fingers"}},
 	{"terms for fingers", {sort = false, cat = "Terms for fingers"}},
 	{"fundamental interactions", {cat = "Physics"}},
-	{"geological time units", {sort = false, cat = "Units of time,Geology"}}, -- FIXME, add category 'Units of time'
+	{"geological time units", {sort = false, cat = "Units of time,Geology"}},
 	{"human anatomy location adjectives", {cat = "Medicine"}},
 	{"Islamic prophets", {sort = false}},
 	{"leptons", {sort = false, horiz = "bullet"}},
@@ -114,9 +115,9 @@ local topic_list_properties = {
 	{"religious texts", {cat = "Religion"}}, -- FIXME, add and use category 'Religious texts'
 	{"seasons", {horiz = "bullet", sort = false}},
 	{"sexual orientation adjectives", {cat = "Sexual orientations"}},
-	{"taxonomic ranks", {sort = false}}, -- FIXME, add category 'Taxonomic ranks'
+	{"taxonomic ranks", {sort = false}},
 	{"times of day", {sort = false}},
-	{"units of time", {sort = false}}, -- FIXME, add category 'Units of time'
+	{"units of time", {sort = false}},
 }
 
 --[==[
