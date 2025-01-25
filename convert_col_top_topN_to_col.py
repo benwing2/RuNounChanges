@@ -21,6 +21,9 @@ blib.languages_byCanonicalName = {
   "Norwegian Bokmål": {"code": "nb"},
   "Norwegian Nynorsk": {"code": "nn"},
 }
+blib.languages_byCode = {
+  y["code"]: {"canonicalName": x} for x, y in blib.languages_byCanonicalName.items()
+}
 blib.getLanguageData()
 
 shortcut_to_expansion = {
@@ -205,6 +208,80 @@ def simplify_link(is_raw, link, altval, langcode, sec_langcode, sec_langname, pa
 
   return "%s%s%s%s" % (langcode, ":" if langcode else "", link, make_inline_modifier("alt", altval, pagemsg) if altval else "")
 
+match_link_template_re = r"\{\{ *(?:[lm](?:-self)?|ll) *\|"
+
+# Convert a line/row from {{col*}} or from in between {{col-top}}/{{col-bottom}} etc. `line_non_templated` is True if
+# the row came from between {{col-top}}/{{col-bottom}}, False if it came from an argument to {{col*}}. Return two
+# values, a list of the links and any notes to add to the changelog message. If an error occurred during parsing, the
+# first value is a string to display in place of a list. If the line doesn't begin with a raw or templated link, None
+# is returned in place of the elements, indicating that the row should be left as-is.
+#
+# `langcode` is the langcode of the outer template being processed (e.g. {{col*}}), or the langcode of the section we're
+# in, and `langname` is the corresponding language name. `pagemsg` is a function of one argument to display a warning or
+# other message, and `expand_text` is a function of one argument to expand a template call.
+def convert_one_line(line, line_non_templated, langcode, langname, pagemsg, expand_text):
+  def make_inline_mod(key, val):
+    return make_inline_modifier(key, val, pagemsg)
+  this_notes = []
+  if re.search(r"^%s|\[\[" % match_link_template_re, line):
+    template_or_raw_link_split_re = (
+      r"""(%s(?:[^{}]|\{\{[^{}]*\}\})*\}\}|\[\[[^\[\]]+\]\])""" % match_link_template_re
+    )
+    line_parts = re.split(template_or_raw_link_split_re, line)
+    for i in range(0, len(line_parts), 2):
+      # The delimiter must either be a comma, slash or the word "or", or an empty string at the beginning or end of
+      # the line; otherwise, don't do any conversion.
+      if not (re.search(r"^\s*([,/]|or)\s*$", line_parts[i]) or (i == 0 or i == len(line_parts) - 1) and
+              not line_parts[i].strip()):
+        return "Unrecognized separator <%s> in line" % line_parts[i], []
+    else: # no break
+      els = []
+      has_pos = False
+      for i in range(1, len(line_parts), 2):
+        if line_parts[i].startswith("[["):
+          els.append(simplify_link(line_non_templated, line_parts[i], None, None, langcode, langname, pagemsg,
+                                   expand_text))
+          continue
+        linkt = list(blib.parse_text(line_parts[i]).filter_templates())[0]
+        def getp(param):
+          return getparam(linkt, param).strip()
+        parts = []
+        def app(val):
+          parts.append(val)
+        link_langcode = getp("1")
+        link = getp("2")
+        display = getp("3")
+        alt = getp("alt")
+        if display and alt:
+          pagemsg("WARNING: Found both 3=%s and alt=%s; this should be triggering a Lua error: %s" % (
+            display, alt, str(linkt)))
+        alt = alt or display
+        link = simplify_link(False, link, alt, link_langcode, langcode, langname, pagemsg, expand_text)
+        app(link)
+        def append_if(param):
+          val = getp(param)
+          if val:
+            if param == "tr" and val == "-" and link_langcode == "el":
+              this_notes.append("remove tr=- from Modern Greek link")
+            else:
+              app(make_inline_mod(param, val))
+        append_if("tr")
+        append_if("ts")
+        gloss = getp("t") or getp("gloss") or getp("4")
+        if gloss:
+          app(make_inline_mod("t", gloss))
+        append_if("sc")
+        append_if("pos")
+        append_if("lit")
+        append_if("id")
+        genders = blib.fetch_param_chain(linkt, "g")
+        if genders:
+          app(make_inline_mod("g", ",".join(genders)))
+        els.append("".join(parts))
+      return els, this_notes
+  else:
+    return None, []
+
 def process_text_on_page(index, pagetitle, text):
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
@@ -212,8 +289,6 @@ def process_text_on_page(index, pagetitle, text):
     return blib.expand_text(tempcall, pagetitle, pagemsg, args.verbose)
   def make_inline_mod(key, val):
     return make_inline_modifier(key, val, pagemsg)
-
-  match_link_template_re = r"\{\{ *(?:[lm](?:-self)?|ll) *\|"
 
   def extract_left_and_right_qualifiers_and_genders(line):
     left_qual = []
@@ -462,67 +537,6 @@ def process_text_on_page(index, pagetitle, text):
         vals[-1] += make_inline_mod("t", "; ".join(right_gloss))
     return ",".join(vals) + line_comment
 
-  def convert_one_line(line, line_non_templated):
-    this_notes = []
-    if re.search(r"^%s|\[\[" % match_link_template_re, line):
-      template_or_raw_link_split_re = (
-        r"""(%s(?:[^{}]|\{\{[^{}]*\}\})*\}\}|\[\[[^\[\]]+\]\])""" % match_link_template_re
-      )
-      line_parts = re.split(template_or_raw_link_split_re, line)
-      for i in range(0, len(line_parts), 2):
-        # The delimiter must either be a comma, slash or the word "or", or an empty string at the beginning or end of
-        # the line; otherwise, don't do any conversion.
-        if not (re.search(r"^\s*([,/]|or)\s*$", line_parts[i]) or (i == 0 or i == len(line_parts) - 1) and
-                not line_parts[i].strip()):
-          return "Unrecognized separator <%s> in line" % line_parts[i], []
-      else: # no break
-        els = []
-        has_pos = False
-        for i in range(1, len(line_parts), 2):
-          if line_parts[i].startswith("[["):
-            els.append(simplify_link(line_non_templated, line_parts[i], None, None, langcode, langname, pagemsg,
-                                     expand_text))
-            continue
-          linkt = list(blib.parse_text(line_parts[i]).filter_templates())[0]
-          def getp(param):
-            return getparam(linkt, param).strip()
-          parts = []
-          def app(val):
-            parts.append(val)
-          link_langcode = getp("1")
-          link = getp("2")
-          display = getp("3")
-          alt = getp("alt")
-          if display and alt:
-            pagemsg("WARNING: Found both 3=%s and alt=%s; this should be triggering a Lua error: %s" % (
-              display, alt, str(linkt)))
-          alt = alt or display
-          link = simplify_link(False, link, alt, link_langcode, langcode, langname, pagemsg, expand_text)
-          app(link)
-          def append_if(param):
-            val = getp(param)
-            if val:
-              if param == "tr" and val == "-" and link_langcode == "el":
-                this_notes.append("remove tr=- from Modern Greek link")
-              else:
-                app(make_inline_mod(param, val))
-          append_if("tr")
-          append_if("ts")
-          gloss = getp("t") or getp("gloss") or getp("4")
-          if gloss:
-            app(make_inline_mod("t", gloss))
-          append_if("sc")
-          append_if("pos")
-          append_if("lit")
-          append_if("id")
-          genders = blib.fetch_param_chain(linkt, "g")
-          if genders:
-            app(make_inline_mod("g", ",".join(genders)))
-          els.append("".join(parts))
-        return els, this_notes
-    else:
-      return None, []
-
   notes = []
 
   sections, sections_by_lang, section_langs = blib.split_text_into_sections(text, pagemsg)
@@ -558,7 +572,7 @@ def process_text_on_page(index, pagetitle, text):
                 beginspace, maintext, endspace = m.groups()
                 newmaintext, left_qual, right_qual, exterior_genders, right_gloss, line_comment = (
                   extract_left_and_right_qualifiers_and_genders(maintext))
-                newparts, new_notes = convert_one_line(newmaintext, False)
+                newparts, new_notes = convert_one_line(newmaintext, False, langcode, langname, pagemsg, expand_text)
                 if type(newparts) is str:
                   pagemsg("WARNING: %s, not changing: %s" % (newparts, pv.strip()))
                 elif newparts is not None:
@@ -668,7 +682,7 @@ def process_text_on_page(index, pagetitle, text):
 
           line, left_qual, right_qual, exterior_genders, right_gloss, line_comment = (
             extract_left_and_right_qualifiers_and_genders(line))
-          els, this_new_notes = convert_one_line(line, True)
+          els, this_new_notes = convert_one_line(line, True, langcode, langname, pagemsg, expand_text)
           if type(els) is str:
             handle_parse_error(els)
           elif els is None:
@@ -714,19 +728,20 @@ def process_text_on_page(index, pagetitle, text):
 
   return "".join(sections), notes
 
-parser = blib.create_argparser("Convert {{col-top}}/{{col-bottom}} to {{col}} when possible",
-                               include_pagefile=True, include_stdin=True)
-parser.add_argument("--do-top", action="store_true", help="Do {{top2}} through {{top6}}.")
-parser.add_argument("--do-col-top", action="store_true", help="Do {{col-top}}.")
-parser.add_argument("--do-col", action="store_true", help="Do {{col}} and {{col1}} through {{col6}}.")
-args = parser.parse_args()
-start, end = blib.parse_start_end(args.start, args.end)
+if __name__ == "__main__":
+  parser = blib.create_argparser("Convert {{col-top}}/{{col-bottom}} to {{col}} when possible",
+                                 include_pagefile=True, include_stdin=True)
+  parser.add_argument("--do-top", action="store_true", help="Do {{top2}} through {{top6}}.")
+  parser.add_argument("--do-col-top", action="store_true", help="Do {{col-top}}.")
+  parser.add_argument("--do-col", action="store_true", help="Do {{col}} and {{col1}} through {{col6}}.")
+  args = parser.parse_args()
+  start, end = blib.parse_start_end(args.start, args.end)
 
-blib.do_pagefile_cats_refs(
-  args, start, end, process_text_on_page, edit=True, stdin=True)
+  blib.do_pagefile_cats_refs(
+    args, start, end, process_text_on_page, edit=True, stdin=True)
 
-msg("")
-msg("%-50s | %s" % ("Qualifier", "Count"))
-msg("-" * 58)
-for qual, count in sorted(seen_quals.items(), key=lambda x: -x[1]):
-  msg("%-50s = %s" % (qual, count))
+  msg("")
+  msg("%-50s | %s" % ("Qualifier", "Count"))
+  msg("-" * 58)
+  for qual, count in sorted(seen_quals.items(), key=lambda x: -x[1]):
+    msg("%-50s = %s" % (qual, count))
