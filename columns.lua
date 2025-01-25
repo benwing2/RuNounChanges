@@ -49,6 +49,7 @@ local function term_already_linked(term)
 	-- Also make sure not to pass uses of {{ja-r/args}}, {{ryu-r/args}} or {{ko-l/args}} through full_link(),
 	-- which will mangle them.
 	return term:find("<span") or term:find("{{ja%-r|") or term:find("{{ryu%-r|") or term:find("{{ko%-l|")
+		or term == "?" -- ? signals an unknown term
 end
 
 local function convert_delimiter_to_separator(item, itemind, args)
@@ -434,7 +435,7 @@ function export.create_list(args)
 				for _, subnode in ipairs(node.subnodes) do
 					local thisnode, this_embedded_comma = format_node(subnode, depth + 1)
 					embedded_comma = embedded_comma or this_embedded_comma
-					if not prevnode or not deepEquals(prevnode, thisnode) then
+					if not prevnode or not args.alphabetize or not deepEquals(prevnode, thisnode) then
 						if args.horiz then
 							table.insert(sublist, thisnode)
 						else
@@ -491,7 +492,7 @@ function export.create_list(args)
 			else
 				local thisitem, this_embedded_comma = format_item(item, args)
 				embedded_comma = embedded_comma or this_embedded_comma
-				if not previtem or previtem ~= thisitem then
+				if not previtem or not args.alphabetize or previtem ~= thisitem then
 					if args.horiz then
 						table.insert(list, thisitem)
 					else
@@ -552,9 +553,7 @@ function export.create_list(args)
 					:addClass("list-switcher-wrapper")
 					
 				if args.title_new_style then
-					-- TODO styles to be moved to site CSS
 					list_switcher_wrapper
-						:node(require("Module:TemplateStyles")("Template:topN-collapsible/style.css"))
 						:node(
 						html("div")
 							:addClass("list-switcher-header")
@@ -724,6 +723,21 @@ function export.handle_display_from_or_topic_list(iargs, raw_item_args, user_arg
 		processed_args.comma_delim = processed_args.horiz and "/" or ", "
 	end
 
+	-- Check for extra term indent. Do this before calling process_list_arguments() because sometimes space is a
+	-- delimiter and the space in the indent will confuse things and get interpreted as a delimiter.
+	local extra_indent_by_termno = {}
+	local termargs = processed_args[first_content_param]
+	for i = 1, termargs.maxindex do
+		local term = termargs[i]
+		if term then
+			local extra_indent, actual_term = rmatch(term, "^(%*+)%s+(.-)$")
+			if extra_indent then
+				termargs[i] = actual_term
+				extra_indent_by_termno[i] = #extra_indent
+			end
+		end
+	end
+
 	local groups, args = m_param_utils.process_list_arguments {
 		param_mods = param_mods,
 		processed_args = processed_args,
@@ -876,17 +890,8 @@ function export.handle_display_from_or_topic_list(iargs, raw_item_args, user_arg
 	local number_of_groups = 0
 	for i, group in ipairs(groups) do
 		local number_of_items = 0
+		group.extra_indent = extra_indent_by_termno[group.orig_index]
 		for j, item in ipairs(group.terms) do
-			if j == 1 then
-				if item.term then
-					local extra_indent, actual_term = rmatch(item.term, "^(%*+)%s+(.-)$")
-					if extra_indent then
-						item.term = actual_term
-						group.extra_indent = #extra_indent
-					end
-				end
-			end
-
 			convert_delimiter_to_separator(item, j, args)
 
 			if args.notr then
