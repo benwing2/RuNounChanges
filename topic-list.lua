@@ -1,6 +1,6 @@
 local export = {}
 
-local columns_module = "Module:User:Benwing2/columns"
+local columns_module = "Module:columns"
 local languages_module = "Module:languages"
 local parameters_module = "Module:parameters"
 local parameter_utilities_module = "Module:parameter utilities"
@@ -67,7 +67,7 @@ local function letter_name_category(data)
 end
 
 local function calendar_month_adjectives_category(data)
-	local calendar = data.list_name:match("^(.*) calendar month ajdectives$")
+	local calendar = data.list_name:match("^(.*) calendar month adjectives$")
 	if not calendar then
 		error(("Internal error: Can't pull out calendar type from list name '%s'"):format(data.list_name))
 	end
@@ -85,6 +85,8 @@ end
 local topic_list_properties = {
 	{".* calendar months", {sort = false}},
 	{".* calendar month adjectives", {sort = false, cat = calendar_month_adjectives_category}},
+	{"compass point adjectives", {cat = "Compass points"}},
+	{"compass point adverbs", {cat = "Compass points"}},
 	{".* script letters", letter_like_properties},
 	{".* script vowels", letter_like_properties},
 	{".* script consonants", letter_like_properties},
@@ -148,6 +150,16 @@ local function add_topic_list_params(params)
 	params["pagename"] = {} -- for testing of topic list
 end
 
+local function set_default_arguments(args, default_props)
+	if default_props then
+		for k, v in pairs(default_props) do
+			if args[k] == nil then
+				args[k] = v
+			end
+		end
+	end
+end
+
 local function make_horiz_edit_button(topic_list_template)
 	return tostring(html("small"):node(html("sup")
 		:wikitext("&nbsp;&#91;[" .. mw.title.new(topic_list_template):fullUrl{action = "edit"} ..
@@ -156,10 +168,11 @@ local function make_horiz_edit_button(topic_list_template)
 end
 
 local function analyze_template_name(topic_list_template)
-	-- Analyze template name for list name and language. Note that there are templates with names like
-	-- [[Template:list:days of the week/cim/Luserna]] (for the Luserna dialect of Cimbrian) and
-	-- [[Template:list:days of the week/cim/13]] (for the Tredici Comuni dialect of Cimbrian) so we can't just
-	-- assume there will be a single slash followed by a language code.
+	-- Analyze template name for list name language and variant. The variant comes after the language code and a
+	-- slash and may or may not be present. Cf. [[Template:list:days of the week/cim/Luserna]] (for the Luserna dialect
+	-- of Cimbrian) and [[Template:list:days of the week/cim/13]] (for the Tredici Comuni dialect of Cimbrian).
+	--
+	-- Also compute default properties based on template name.
 	local list_name_plus_lang = topic_list_template:gsub("^Template:", ""):gsub("^list:", "")
 	local list_name, langcode_and_variant = list_name_plus_lang:match("^(.-)/(.*)$")
 	local lang, variant
@@ -178,7 +191,34 @@ local function analyze_template_name(topic_list_template)
 			topic_list_template))
 	end
 
-	return list_name, lang, variant
+	local default_props
+	for _, pattern_and_props in ipairs(topic_list_properties) do
+		local pattern, props = unpack(pattern_and_props)
+		if rfind(list_name, "^" .. pattern .. "$") then
+			default_props = props
+			break
+		end
+	end
+	if default_props then
+		-- Safest to make a copy of the default props in case we modify it, as we do when one of the values is a
+		-- function, in case we are called twice in the same Scribunto invocation (not common but possible I think).
+		local default_props_copy = {}
+		for k, v in pairs(default_props) do
+			if type(v) == "function" then
+				default_props_copy[k] = v {
+					topic_list_template = topic_list_template,
+					list_name = list_name,
+					lang = lang,
+					variant = variant,
+				}
+			else
+				default_props_copy[k] = v
+			end
+		end
+		default_props = default_props_copy
+	end
+
+	return list_name, lang, variant, default_props
 end
 
 -- FIXME: This needs to be implemented properly in [[Module:links]].
@@ -389,41 +429,16 @@ function export.show(frame)
 
 	local user_args = parse_topic_list_user_args(raw_user_args)
 
-	local list_name, lang, variant = analyze_template_name(topic_list_template)
-
-	local default_props
-	for _, pattern_and_props in ipairs(topic_list_properties) do
-		local pattern, props = unpack(pattern_and_props)
-		if rfind(list_name, "^" .. pattern .. "$") then
-			default_props = props
-			break
-		end
-	end
-	if default_props then
-		-- Make sure to make a copy of the default props as it will be overwritten with user-specified arguments in
-		-- [[Module:columns]].
-		local default_props_copy = {}
-		for k, v in pairs(default_props) do
-			if type(v) == "function" then
-				default_props_copy[k] = v {
-					topic_list_template = topic_list_template,
-					list_name = list_name,
-					lang = lang,
-					variant = variant,
-				}
-			else
-				default_props_copy[k] = v
-			end
-		end
-		default_props = default_props_copy
-	end
+	local list_name, lang, variant, default_props = analyze_template_name(topic_list_template)
 
 	return require(columns_module).handle_display_from_or_topic_list(
 		{minrows = 2, sort = true, collapse = true, lang = lang}, raw_item_args, {
 			topic_list_template = topic_list_template,
 			list_name = list_name,
 			variant = variant,
-			default_props = default_props,
+			set_default_arguments = function(args)
+				set_default_arguments(args, default_props)
+			end,
 			get_title_and_formatted_cats = get_title_and_formatted_cats,
 			add_topic_list_params = add_topic_list_params,
 			make_horiz_edit_button = make_horiz_edit_button,
@@ -432,43 +447,7 @@ function export.show(frame)
 	)
 end
 
-function export.compass(frame)
-	local raw_item_args = frame.args
-	local frame_parent = frame:getParent()
-	local raw_user_args = frame_parent.args
-	local topic_list_template = raw_item_args.pagename or frame_parent:getTitle()
-
-	local user_args = parse_topic_list_user_args(raw_user_args)
-
-	local list_name, lang, variant = analyze_template_name(topic_list_template)
-
-	local params = {
-		["lang"] = {type = "language"},
-		["sc"] = {type = "script"},
-		["notr"] = boolean,
-		["title"] = {},
-
-		["n"] = {},
-		["s"] = {},
-		["e"] = {},
-		["w"] = {},
-		["ne"] = {},
-		["nw"] = {},
-		["se"] = {},
-		["sw"] = {},
-	}
-	add_topic_list_params(params)
-
-	local args = require(parameters_module).process(raw_item_args, params)
-
-	local title, formatted_cats = get_title_and_formatted_cats(args, lang, sc, {
-		topic_list_template = topic_list_template,
-		list_name = list_name,
-		variant = variant,
-		user_args = user_args,
-		suppress_edit_button = true,
-	})
-
+function export.parse_directions_and_draw_compass(args, lang, sc, notr)
 	local m_columns = require(columns_module)
 
 	local function parse_and_format_direction(paramname)
@@ -481,7 +460,7 @@ function export.compass(frame)
 			lang = lang,
 			sc = sc,
 			comma_delim = "<br />",
-			notr = args.notr,
+			notr = notr,
 		}
 		return m_columns.format_item(terms, {lang = lang})
 	end
@@ -490,9 +469,6 @@ function export.compass(frame)
 	local function ins(txt)
 		table.insert(parts, txt)
 	end
-	ins(m_columns.construct_old_style_header(title, "horiz"))
-	ins(make_horiz_edit_button(topic_list_template))
-	ins("\n")
 	ins('{| frame=void border=0 rules=none style="background:var(--wikt-palette-paleblue, #f9f9f9);"')
 	ins('\n| style="text-align: left"   | ')
 	ins(parse_and_format_direction("nw"))
@@ -515,6 +491,81 @@ function export.compass(frame)
 	ins(parse_and_format_direction("se"))
 	ins("\n|}")
 	return table.concat(parts)
+end
+	
+function export.compass_plain(frame)
+	local parent_args = frame:getParent().args
+
+	local params = {
+		[1] = {type = "language"},
+		["sc"] = {type = "script"},
+		["notr"] = boolean,
+
+		["n"] = {},
+		["s"] = {},
+		["e"] = {},
+		["w"] = {},
+		["ne"] = {},
+		["nw"] = {},
+		["se"] = {},
+		["sw"] = {},
+	}
+
+	local args = require(parameters_module).process(parent_args, params)
+
+	return export.parse_directions_and_draw_compass(args, args[1], args.sc, args.notr)
+end
+
+function export.compass(frame)
+	local raw_item_args = frame.args
+	local frame_parent = frame:getParent()
+	local raw_user_args = frame_parent.args
+	local topic_list_template = raw_item_args.pagename or frame_parent:getTitle()
+
+	local user_args = parse_topic_list_user_args(raw_user_args)
+
+	local list_name, lang, variant, default_props = analyze_template_name(topic_list_template)
+
+	local params = {
+		["lang"] = {type = "language"},
+		["sc"] = {type = "script"},
+		["notr"] = boolean,
+		["title"] = {},
+
+		["n"] = {},
+		["s"] = {},
+		["e"] = {},
+		["w"] = {},
+		["ne"] = {},
+		["nw"] = {},
+		["se"] = {},
+		["sw"] = {},
+	}
+	add_topic_list_params(params)
+
+	local args = require(parameters_module).process(raw_item_args, params)
+
+	set_default_arguments(args, default_props)
+
+	local title, formatted_cats = get_title_and_formatted_cats(args, args.lang or lang, sc, {
+		topic_list_template = topic_list_template,
+		list_name = list_name,
+		variant = variant,
+		user_args = user_args,
+		suppress_edit_button = true,
+	})
+
+	local m_columns = require(columns_module)
+
+	local parts = {}
+	local function ins(txt)
+		table.insert(parts, txt)
+	end
+	ins(m_columns.construct_old_style_header(title, "horiz"))
+	ins(make_horiz_edit_button(topic_list_template))
+	ins("\n")
+	ins(export.parse_directions_and_draw_compass(args, args.lang or lang, sc, args.notr))
+	return table.concat(parts) .. (formatted_cats or "")
 end
 
 return export
