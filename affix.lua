@@ -17,7 +17,7 @@ local usub = m_str_utils.sub
 local ulen = m_str_utils.len
 local rfind = m_str_utils.find
 local rmatch = m_str_utils.match
-local pluralize = m_str_utils.pluralize
+local pluralize = require("Module:en-utilities").pluralize
 local u = m_str_utils.char
 local ucfirst = m_str_utils.ucfirst
 
@@ -412,10 +412,10 @@ function export.join_formatted_parts(data)
 	else
 		for i, cat in ipairs(data.categories) do
 			if type(cat) == "table" then
-				data.categories[i] = require(utilities_module).format_categories({lang:getFullName() .. " " .. cat.cat},
+				data.categories[i] = require(utilities_module).format_categories(lang:getFullName() .. " " .. cat.cat,
 					lang, cat.sort_key, cat.sort_base, force_cat)
 			else
-				data.categories[i] = require(utilities_module).format_categories({lang:getFullName() .. " " .. cat}, lang,
+				data.categories[i] = require(utilities_module).format_categories(lang:getFullName() .. " " .. cat, lang,
 					data.data.sort_key, nil, force_cat)
 			end
 		end
@@ -759,9 +759,14 @@ local function parse_term_for_affixes(term, lang, sc, affix_type, do_affix_mappi
 	end
 
 	if term:find("^%^") then
-		-- If term begins with ^, it's not an affix no matter what. Strip off the ^ and return "no affix".
-		term = usub(term, 2)
-		return nil, term, term, term
+		-- HACK! ^ at the beginning of Korean languages has a special meaning, triggering capitalization of the
+		-- transliteration. Don't interpret it as "force non-affix" for those languages.
+		local langcode = lang:getCode()
+		if langcode ~= "ko" and langcode ~= "okm" and langcode ~= "jje" then
+			-- If term begins with ^, it's not an affix no matter what. Strip off the ^ and return "no affix".
+			term = usub(term, 2)
+			return nil, term, term, term
+		end
 	end
 
 	-- Remove an asterisk if the morpheme is reconstructed and add it back at the end.
