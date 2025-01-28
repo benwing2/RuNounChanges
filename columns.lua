@@ -623,6 +623,20 @@ function export.display_from(frame_args, parent_args, frame)
 end
 
 
+--[==[
+Implement `display_from()` [the internal entry point for {{tl|col}} and variants, which enter originally through
+`display()`] as well as regular (column-oriented) topic lists, invoked through [[Module:topic list]].
+`iargs` are the invocation args of {{tl|col}}, and `raw_item_args` are the arguments specifying the values of
+each row as well as other properties, corresponding to the user-specified template arguments of {{tl|col}}. Note that
+`show()` in [[Module:topic list]] is normally invoked directly by a topic list template, whose invocation
+arguments are passed in using `raw_item_args` and are similar to the template arguments of {{tl|col}}. `iargs` for
+topic-list invocations is hard-coded, and template arguments to a topic-list template are processed in
+[[Module:topic list]] itself. Note that the handling of topic lists is currently implemented almost entirely
+through callbacks in `topic_list_data` (which is nil if we're processing {{tl|col}} rather than a topic list) in an
+attempt to reduce the coupling and keep the topic-list-specific code in [[Module:topic list]], but IMO the coupling
+is still too tight. Probably the control structure should be reversed and the following function split up into
+subfunctions, which are invoked as needed by {{tl|col}} and/or [[Module:topic list]].
+]==]
 function export.handle_display_from_or_topic_list(iargs, raw_item_args, topic_list_data)
 	local boolean = {type = "boolean"}
 	local langcode_in_lang = iargs.lang or raw_item_args.lang
@@ -682,14 +696,7 @@ function export.handle_display_from_or_topic_list(iargs, raw_item_args, topic_li
 		
 	-- If default argument values specified, set them after parsing the caller-specified arguments in `raw_item_args`.
 	if topic_list_data then
-		local default_props = topic_list_data.default_props
-		if default_props then
-			for k, v in pairs(default_props) do
-				if processed_args[k] == nil then
-					processed_args[k] = v
-				end
-			end
-		end
+		topic_list_data.set_default_arguments(processed_args)
 	end
 
 	-- Now set defaults for the various delimiters, depending in some cases on whether horiz was set.
