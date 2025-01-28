@@ -2,7 +2,7 @@ local export = {}
 
 local debug_track_module = "Module:debug/track"
 local parameters_module = "Module:parameters"
-local parse_modifiers_interface_module = "Module:parse modifiers interface"
+local parse_interface_module = "Module:parse interface"
 local parse_utilities_module = "Module:parse utilities"
 local table_module = "Module:table"
 
@@ -31,7 +31,7 @@ local function parse_term_with_lang(...)
 end
 
 local function parse_inline_modifiers(...)
-	parse_inline_modifiers = require(parse_modifiers_interface_module).parse_inline_modifiers
+	parse_inline_modifiers = require(parse_interface_module).parse_inline_modifiers
 	return parse_inline_modifiers(...)
 end
 
@@ -60,8 +60,8 @@ local function internal_error(msg, spec)
 	error(("Internal error: %s"):format(msg))
 end
 
--- Table listing the recognized special separator arguments and how they display.
-local special_separators = {
+-- Table listing the default recognized special separator arguments and how they display.
+export.default_special_separators = {
 	[";"] = "; ",
 	["_"] = " ",
 	["~"] = " ~ ",
@@ -839,6 +839,7 @@ function export.process_list_arguments(data)
 	end
 
 
+	local special_separators = data.special_separators or export.default_special_separators
 	local items, lang_cache, use_semicolon = {}, {}
 	local lang = fetch_argument(args, data.lang)
 	if lang then
@@ -863,7 +864,7 @@ function export.process_list_arguments(data)
 					-- (2) value is a table, i.e. a list;
 					-- (3) v.maxindex is set (i.e. allow_holes was used);
 					-- (4) the value has an entry at index `itemno` (the current logical index).
-					if type(k) == "string" and type(v) == "table" and v.maxindex and v[itemno] then
+					if type(k) == "string" and type(v) == "table" and v.maxindex and v[itemno] ~= nil then
 						any_param_at_index = true
 						break
 					end
@@ -898,9 +899,11 @@ function export.process_list_arguments(data)
 				-- Parse all the term-specific parameters and store in `termobj`.
 				for param_mod, param_mod_spec in pairs(data.param_mods) do
 					local dest = param_mod_spec.item_dest or param_mod
-					local arg = args[param_mod] and args[param_mod][itemno]
-					if arg then
-						termobj[dest] = arg
+					if args[param_mod] then
+						local arg = args[param_mod][itemno]
+						if arg ~= nil then
+							termobj[dest] = arg
+						end
 					end
 				end
 
@@ -939,16 +942,18 @@ function export.process_list_arguments(data)
 					return generate_subobj(data.splitchar and {} or termobj, term, parse_err)
 				end
 
-				parse_inline_modifiers(term, {
-					paramname = paramname,
-					param_mods = data.param_mods,
-					generate_obj = generate_obj,
-					splitchar = data.splitchar,
-					preserve_splitchar = true,
-					escape_fun = data.escape_fun,
-					unescape_fun = data.unescape_fun,
-					outer_container = data.splitchar and termobj or nil,
-				})
+				if term then
+					parse_inline_modifiers(term, {
+						paramname = paramname,
+						param_mods = data.param_mods,
+						generate_obj = generate_obj,
+						splitchar = data.splitchar,
+						preserve_splitchar = true,
+						escape_fun = data.escape_fun,
+						unescape_fun = data.unescape_fun,
+						outer_container = data.splitchar and termobj or nil,
+					})
+				end
 
 				local function postprocess_termobj(termobj)
 					-- Set these after parsing inline modifiers, not in generate_obj(), otherwise we'll get an error in
@@ -971,6 +976,26 @@ function export.process_list_arguments(data)
 				end
 
 				if data.splitchar then
+					-- If there are any separate indexed parameters, we need to copy them to the (presumably) only
+					-- subobject. If there are multiple subobjects, we throw an error since it's not clear which subobject
+					-- to attach the parameter value to. Do this before calling postprocess_termobj() because the latter
+					-- sets .lang and .sc and we want the user to be able to set separate langN= and scN= parameters.
+					for param_mod, param_mod_spec in pairs(data.param_mods) do
+						local dest = param_mod_spec.item_dest or param_mod
+						if termobj[dest] ~= nil then
+							if termobj.terms[2] then
+								error(("Can't set a value for separate parameter %s%s= because there are multiple " ..
+									"subitems (%s) in the corresponding item; use an inline modifier"):format(
+									param_mod, itemno, #termobj.terms))
+							end
+							-- Don't overwrite a value already set by an inline modifier.
+							if termobj.terms[1][dest] == nil then
+								termobj.terms[1][dest] = termobj[dest]
+							end
+							-- Erase the top-level separate parameter setting (regardless of whether we used it).
+							termobj[dest] = nil
+						end
+					end
 					for _, subobj in ipairs(termobj.terms) do
 						postprocess_termobj(subobj)
 					end
