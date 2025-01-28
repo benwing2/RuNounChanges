@@ -1,6 +1,7 @@
 local export = {}
 
 local m_affix = require("Module:affix")
+local m_utilities = require("Module:utilities")
 local parameter_utilities_module = "Module:parameter utilities"
 local pseudo_loan_module = "Module:affix/pseudo-loan"
 
@@ -511,7 +512,6 @@ function export.derivsee(frame)
 	local iargs = frame.args
 	local iparams = {
 		["derivtype"] = {},
-		["mode"] = {},
 	}
 	local iargs = require("Module:parameters").process(frame.args, iparams)
 
@@ -522,30 +522,13 @@ function export.derivsee(frame)
 		["pos"] = {},
 	}
 	local derivtype = iargs.derivtype
-	if derivtype == "PIE root" then
-		params[1] = {}
-	else
-		params[1] = {required = "true", type = "language", default = "und"}
-		params[2] = {}
-	end
+	params[1] = {required = "true", type = "language", default = "und"}
+	params[2] = {}
 
 	local args = require("Module:parameters").process(frame:getParent().args, params)
 
-	local lang
-	local term
-
-	if derivtype == "PIE root" then
-		lang = m_languages.getByCode("ine-pro", true)
-		term = args[1] or args.head
-
-		if term then
-			term = "*" .. term .. "-"
-		end
-	else
-		lang = args[1]
-		term = args[2] or args.head
-	end
-
+	local lang = args[1]
+	local term = args[2] or args.head
 	local id = args.id
 	local sc = args.sc
 	local pos = require("Module:string utilities").pluralize(args.pos or "term")
@@ -561,18 +544,6 @@ function export.derivsee(frame)
 		end
 	end
 
-	if derivtype == "PIE root" then
-		return frame:callParserFunction{
-			name = "#categorytree",
-			args = {
-				"Terms derived from the Proto-Indo-European root " .. term .. (id and " (" .. id .. ")" or ""),
-				depth = 0,
-				class = "\"derivedterms\"",
-				mode = iargs.mode,
-				}
-			}
-	end
-
 	local category = nil
 	local langname = lang:getFullName()
 	if (derivtype == "compound" and pos == nil) then
@@ -585,15 +556,11 @@ function export.derivsee(frame)
 		category = langname .. " " .. pos .. " " .. derivtype .. "ed with " .. term .. (id and " (" .. id .. ")" or "")
 	end
 
-	return frame:callParserFunction{
-		name = "#categorytree",
-		args = {
-			category,
-			depth = 0,
-			class = "\"derivedterms" .. (sc and " " .. sc:getCode() or "") .. "\"",
-			namespaces = "-" .. (mw.title.getCurrentTitle().nsText == "Reconstruction" and " Reconstruction" or ""),
-			}
-		}
+	return require('Module:collapsible category tree').make{
+		lang = lang,
+		sc = sc,
+		category = category,
+	}
 end
 
 return export
