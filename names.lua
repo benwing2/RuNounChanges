@@ -7,8 +7,6 @@ local export = {}
 
 local enlang = m_languages.getByCode("en")
 
-local rfind = mw.ustring.find
-local rsubn = mw.ustring.gsub
 local rsplit = mw.text.split
 
 local force_cat = false -- for testing
@@ -32,12 +30,6 @@ FIXME:
 13. fromtype= [DONE]
 14. <tr:...> and similar params [DONE]
 ]=]
-
--- version of rsubn() that discards all but the first return value
-local function rsub(term, foo, bar)
-	local retval = rsubn(term, foo, bar)
-	return retval
-end
 
 -- Used in category code
 export.personal_name_types = {
@@ -94,7 +86,8 @@ local function parse_term_with_annotations(term, pname, deflang, allow_explicit_
 			if not allow_explicit_lang then
 				parse_err("Explicit language '" .. lang .. "' not allowed for this parameter")
 			end
-			termobj.term.lang = m_languages.getByCode(lang, pname, "allow etym lang")
+			termobj.term.lang = m_languages.getByCode(lang, nil, true) or
+				require("Module:languages/errorGetBy").code(lang, pname, true)
 			termobj.term.term = form
 		else
 			termobj.term.lang = deflang
@@ -129,7 +122,8 @@ local function parse_term_with_annotations(term, pname, deflang, allow_explicit_
 				elseif prefix == "g" then
 					termobj.term.genders = rsplit(arg, ",")
 				elseif prefix == "sc" then
-					termobj.term.sc = require("Module:scripts").getByCode(arg, pname)
+					termobj.term.sc = require("Module:scripts").getByCode(arg) or
+						require("Module:languages/error")(arg, pname, "script code", nil, "not real lang")
 				elseif prefix == "eq" then
 					termobj.eq = parse_term_with_annotations(arg, pname .. ".eq", enlang, false, "allow multiple terms")
 				else
@@ -165,12 +159,11 @@ full_link() or language_link()), optional '.q' (a qualifier) and optional '.eq' 
 `termobj`).
 ]=]
 local function link_one_term(termobj, do_language_link)
-	termobj.term.lang = m_languages.getNonEtymological(termobj.term.lang)
 	local link
 	if do_language_link and termobj.term.lang:getCode() == "en" then
-		link = m_links.language_link(termobj.term, nil, true)
+		link = m_links.language_link(termobj.term)
 	else
-		link = m_links.full_link(termobj.term, nil, true)
+		link = m_links.full_link(termobj.term)
 	end
 	if termobj.q then
 		link = require("Module:qualifier").format_qualifier(termobj.q) .. " " .. link
@@ -277,15 +270,15 @@ local function get_fromtext(lang, args)
 	local function parse_from(from)
 		local unrecognized = false
 		local prefix, suffix
-  		 if from == "surnames" or from == "given names" or from == "nicknames" or from == "place names" or from == "common nouns" then
+		if from == "surnames" or from == "given names" or from == "nicknames" or from == "place names" or from == "common nouns" or from == "month names" then
 			prefix = "transferred from the "
 			suffix = from:gsub("s$", "")
 			table.insert(catparts, from)
-  		elseif from == "patronymics" or from == "matronymics" or from == "coinages" then
+		elseif from == "patronymics" or from == "matronymics" or from == "coinages" then
 			prefix = "originating "
 			suffix = "as a " .. from:gsub("s$", "")
 			table.insert(catparts, from)
-  		elseif from == "occupations" or from == "ethnonyms" then
+		elseif from == "occupations" or from == "ethnonyms" then
 			prefix = "originating "
 			suffix = "as an " .. from:gsub("s$", "")
 			table.insert(catparts, from)
@@ -305,23 +298,26 @@ local function get_fromtext(lang, args)
 					fromlangname = canonical_name .. " "
 					table.insert(catparts, canonical_name)
 				end
-				termobj.term.lang = m_languages.getNonEtymological(termobj.term.lang)
 				suffix = fromlangname .. link_one_term(termobj)
-			elseif from:find(" languages$") then
-				local family = from:match("^(.*) languages$")
-				if require("Module:families").getByCanonicalName(family) then
-					table.insert(catparts, from)
-				else
-					unrecognized = true
-				end
-				suffix = "the " .. from
 			else
-				if m_languages.getByCanonicalName(from, nil, "allow etym") then
-					table.insert(catparts, from)
+				local family = from:match("^(.+) languages$") or
+					from:match("^.+ Languages$") or
+					from:match("^.+ [Ll]ects$")
+				if family then
+					if require("Module:families").getByCanonicalName(family) then
+						table.insert(catparts, from)
+					else
+						unrecognized = true
+					end
+					suffix = "the " .. from
 				else
-					unrecognized = true
+					if m_languages.getByCanonicalName(from, nil, "allow etym") then
+						table.insert(catparts, from)
+					else
+						unrecognized = true
+					end
+					suffix = from
 				end
-				suffix = from
 			end
 		end
 		if unrecognized then
@@ -368,7 +364,7 @@ local function get_fromtext(lang, args)
 	table.insert(fromsegs, last_fromseg)
 	local fromtextsegs = {}
 	for _, fromseg in ipairs(fromsegs) do
-		table.insert(fromtextsegs, fromseg.prefix ..  m_table.serialCommaJoin(fromseg.suffixes, {conj = "or"}))
+		table.insert(fromtextsegs, fromseg.prefix .. m_table.serialCommaJoin(fromseg.suffixes, {conj = "or"}))
 	end
 	return m_table.serialCommaJoin(fromtextsegs, {conj = "or"}), catparts
 end
@@ -382,58 +378,63 @@ function export.given_name(frame)
 
 	local lang_index = compat and "lang" or 1
 
-	local params = {
-		[lang_index] = { required = true, default = "und" },
-		["gender"] = { default = "unknown-gender" },
-		[1 + offset] = { alias_of = "gender", default = "unknown-gender" },
-		-- second gender
-		["or"] = {},
-		["usage"] = {},
-		["origin"] = {},
-		["popular"] = {},
-		["populartype"] = {},
-		["meaning"] = { list = true },
-		["meaningtype"] = {},
-		["q"] = {},
+	local list = {list = true}
+	local alias_of_dimof = {alias_of = "dimof", list = true}
+	local alias_of_dimoftype = {alias_of = "dimoftype"}
+	local alias_of_augof = {alias_of = "augof", list = true}
+	local alias_of_augoftype = {alias_of = "augoftype"}
+	local args = require("Module:parameters").process(parent_args, {
+		[lang_index] = {required = true, type = "language", default = "und"},
+		["gender"] = {default = "unknown-gender"},
+		[1 + offset] = {alias_of = "gender", default = "unknown-gender"},
+		["or"] = true, -- second gender
+		["orq"] = true, -- second gender qualifier
+		["usage"] = true,
+		["origin"] = true,
+		["popular"] = true,
+		["populartype"] = true,
+		["meaning"] = list,
+		["meaningtype"] = true,
+		["q"] = true,
 		-- initial article: A or An
-		["A"] = {},
-		["sort"] = {},
-		["from"] = { list = true },
-		[2 + offset] = { alias_of = "from", list = true },
-		["fromtype"] = {},
-		["xlit"] = { list = true },
-		["eq"] = { list = true },
-		["eqtype"] = {},
-		["varof"] = { list = true },
-		["varoftype"] = {},
-		["var"] = { alias_of = "varof", list = true },
-		["vartype"] = { alias_of = "varoftype" },
-		["varform"] = { list = true },
-		["dimof"] = { list = true },
-		["dimoftype"] = {},
-		["dim"] = { alias_of = "dimof", list = true },
-		["dimtype"] = { alias_of = "dimoftype" },
-		["diminutive"] = { alias_of = "dimof", list = true },
-		["diminutivetype"] = { alias_of = "dimoftype" },
-		["dimform"] = { list = true },
-		["aug"] = { alias_of = "augof", list = true },
-		["augtype"] = { alias_of = "augoftype" },
-		["auginutive"] = { alias_of = "augof", list = true },
-		["auginutivetype"] = { alias_of = "augoftype" },
-		["augform"] = { list = true },
-		["blend"] = { list = true },
-		["blendtype"] = {},
-		["m"] = { list = true },
-		["mtype"] = {},
-		["f"] = { list = true },
-		["ftype"] = {},
-	}
-
-	local args = require("Module:parameters").process(parent_args, params)
+		["A"] = true,
+		["sort"] = true,
+		["from"] = list,
+		[2 + offset] = {alias_of = "from", list = true},
+		["fromtype"] = true,
+		["xlit"] = list,
+		["eq"] = list,
+		["eqtype"] = true,
+		["varof"] = list,
+		["varoftype"] = true,
+		["var"] = {alias_of = "varof", list = true},
+		["vartype"] = {alias_of = "varoftype"},
+		["varform"] = list,
+		["dimof"] = list,
+		["dimoftype"] = true,
+		["dim"] = alias_of_dimof,
+		["dimtype"] = alias_of_dimoftype,
+		["diminutive"] = alias_of_dimof,
+		["diminutivetype"] = alias_of_dimoftype,
+		["dimform"] = list,
+		["augof"] = list,
+		["augoftype"] = true,
+		["aug"] = alias_of_augof,
+		["augtype"] = alias_of_augoftype,
+		["augmentative"] = alias_of_augof,
+		["augmentativetype"] = alias_of_augoftype,
+		["augform"] = list,
+		["blend"] = list,
+		["blendtype"] = true,
+		["m"] = list,
+		["mtype"] = true,
+		["f"] = list,
+		["ftype"] = true,
+	})
 	
 	local textsegs = {}
-	local langcode = args[lang_index]
-	local lang = m_languages.getByCode(langcode, lang_index)
+	local lang = args[lang_index]
+	local langcode = lang:getCode()
 
 	local function fetch_typetext(param)
 		return args[param] and args[param] .. " " or ""
@@ -451,7 +452,7 @@ function export.given_name(frame)
 	local augformtext, numaugforms = join_names(lang, args, "augform", ", ")
 	local meaningsegs = {}
 	for _, meaning in ipairs(args.meaning) do
-		table.insert(meaningsegs, '"' .. meaning .. '"')
+		table.insert(meaningsegs, '“' .. meaning .. '”')
 	end
 	local meaningtext = m_table.serialCommaJoin(meaningsegs, {conj = "or"})
 	local eqtext = get_eqtext(args)
@@ -460,23 +461,21 @@ function export.given_name(frame)
 	local dimtype = args.dimtype
 	local augtype = args.augtype
 	local article = args.A
-	local need_an = false
 	if not article then
+		local get_indefinite_article = require("Module:string utilities").get_indefinite_article
 		if numdims > 0 then
-			need_an = dimtype and rfind(dimtype, "^[aeiouAEIOU]")
+			article = get_indefinite_article(dimtype)
 		elseif numaugs > 0 then
 			if augtype then
-				need_an = rfind(augtype, "^[aeiouAEIOU]")
+				article = get_indefinite_article(augtype)
 			else
-				need_an = true -- "augmentative" needs an article
+				article = "an" -- "augmentative" needs an article
 			end
 		else
-			need_an = args.gender == "unknown-gender"
+			article = args.gender == "unknown-gender" and "an" or "a"
 		end
 		if langcode == "en" then
-			article = need_an and "An" or "A"
-		else
-			article = need_an and "an" or "a"
+			article = mw.getContentLanguage():ucfirst(article)
 		end
 	end
 
@@ -496,7 +495,9 @@ function export.given_name(frame)
 	end
 	local genders = {}
 	table.insert(genders, args.gender)
-	table.insert(genders, args["or"])
+	if args["or"] then
+		table.insert(genders, (args.orq and "(" .. args.orq .. ") " or "") .. args["or"])
+	end
 	table.insert(textsegs, table.concat(genders, " or ") .. " ")
 	table.insert(textsegs, (numdims > 1 or numaugs > 1) and "[[given name|given names]]" or
 		"[[given name]]")
@@ -630,45 +631,44 @@ function export.surname(frame)
 	end
 
 	local lang_index = compat and "lang" or 1
-
-	local params = {
-		[lang_index] = { required = true, default = "und" },
-		["g"] = {list = true}, -- gender(s)
-		[1 + offset] = {}, -- adjective/qualifier
-		["usage"] = {},
-		["origin"] = {},
-		["popular"] = {},
-		["populartype"] = {},
-		["meaning"] = { list = true },
-		["meaningtype"] = {},
-		["q"] = {},
+	
+	local list = {list = true}
+	local args = require("Module:parameters").process(parent_args, {
+		[lang_index] = {required = true, type = "language", default = "und"},
+		["g"] = list, -- gender(s)
+		[1 + offset] = true, -- adjective/qualifier
+		["usage"] = true,
+		["origin"] = true,
+		["popular"] = true,
+		["populartype"] = true,
+		["meaning"] = list,
+		["meaningtype"] = true,
+		["q"] = true,
 		-- initial article: by default A or An (English), a or an (otherwise)
-		["A"] = {},
-		["sort"] = {},
-		["from"] = { list = true },
-		["fromtype"] = {},
-		["xlit"] = { list = true },
-		["eq"] = { list = true },
-		["eqtype"] = {},
-		["varof"] = { list = true },
-		["varoftype"] = {},
-		["var"] = { alias_of = "varof", list = true },
-		["vartype"] = { alias_of = "varoftype" },
-		["varform"] = { list = true },
-		["blend"] = { list = true },
-		["blendtype"] = {},
-		["m"] = { list = true },
-		["mtype"] = {},
-		["f"] = { list = true },
-		["ftype"] = {},
+		["A"] = true,
+		["sort"] = true,
+		["from"] = list,
+		["fromtype"] = true,
+		["xlit"] = list,
+		["eq"] = list,
+		["eqtype"] = true,
+		["varof"] = list,
+		["varoftype"] = true,
+		["var"] = {alias_of = "varof", list = true},
+		["vartype"] = {alias_of = "varoftype"},
+		["varform"] = list,
+		["blend"] = list,
+		["blendtype"] = true,
+		["m"] = list,
+		["mtype"] = true,
+		["f"] = list,
+		["ftype"] = true,
 		["nocat"] = {type = "boolean"},
-	}
-
-	local args = require("Module:parameters").process(parent_args, params)
+	})
 	
 	local textsegs = {}
-	local langcode = args[lang_index]
-	local lang = m_languages.getByCode(langcode, lang_index)
+	local lang = args[lang_index]
+	local langcode = lang:getCode()
 
 	local function fetch_typetext(param)
 		return args[param] and args[param] .. " " or ""
@@ -710,20 +710,21 @@ function export.surname(frame)
 		table.insert(genders, g)
 	end
 
-	local article_a, article_an
-	if langcode == "en" then
-		article_a, article_an = "A", "An"
-	else
-		article_a, article_an = "a", "an"
-	end
 	-- If gender is supplied, it goes before the specified adjective in adj=. The only value of gender that uses "an" is
 	-- "unknown-gender" (note that "unisex" wouldn't use it but in any case we map "unisex" to "common-gender"). If gender
 	-- isn't supplied, look at the first letter of the value of adj= if supplied; otherwise, the article is always "a"
 	-- because the word "surname" follows. Capitalize "A"/"An" if English.
-	local article = args.A or
-		#genders > 0 and genders[1] == "unknown-gender" and article_an or
-		#genders == 0 and adj and rfind(m_links.remove_links(adj), "^[aeiouAEIOU]") and article_an or
-		article_a
+	local article
+	if args.A then
+		article = args.A
+	else
+		article = #genders > 0 and genders[1] == "unknown-gender" and "an" or
+			#genders == 0 and adj and require("Module:string utilities").get_indefinite_article(adj) or
+			"a"
+		if langcode == "en" then
+			article = mw.getContentLanguage():ucfirst(article)
+		end
+	end
 	table.insert(textsegs, article .. " ")
 
 	if #genders > 0 then
@@ -815,7 +816,6 @@ function export.surname(frame)
 	end
 	insert_cats(nil)
 	local function insert_cats_gender(g)
-		local origg = g
 		if g == "unknown-gender" then
 			return
 		end
@@ -834,47 +834,39 @@ end
 
 -- The entry point for {{name translit}}, {{name respelling}}, {{name obor}} and {{foreign name}}.
 function export.name_translit(frame)
-    local iparams = {
-        ["desctext"] = {required = true},
-        ["obor"] = {type = "boolean"},
-        ["foreign_name"] = {type = "boolean"},
-    }
-    local iargs = require("Module:parameters").process(frame.args, iparams)
+	local boolean = {type = "boolean"}
+	local list_allow_holes = {list = true, allow_holes = true}
 
-	local parent_args = frame:getParent().args
+	local iargs = require("Module:parameters").process(frame.args, {
+		["desctext"] = {required = true},
+		["obor"] = boolean,
+		["foreign_name"] = boolean,
+	})
 
-	local params = {
-		[1] = { required = true, default = "en" },
-		[2] = { required = true, default = "ru" },
-		[3] = { list = true },
-		["type"] = { required = true, list = true, default = "patronymic" },
-		["alt"] = { list = true, allow_holes = true },
-		["t"] = { list = true, allow_holes = true },
-		["gloss"] = { list = true, alias_of = "t", allow_holes = true },
-		["tr"] = { list = true, allow_holes = true },
-		["ts"] = { list = true, allow_holes = true },
-		["id"] = { list = true, allow_holes = true },
-		["sc"] = { list = true, allow_holes = true },
-		["g"] = { list = true, allow_holes = true },
-		["q"] = { list = true, allow_holes = true },
-		["xlit"] = { list = true, allow_holes = true },
-		["eq"] = { list = true, allow_holes = true },
-		["dim"] = { type = "boolean" },
-		["aug"] = { type = "boolean" },
-		["nocap"] = { type = "boolean" },
-		["sort"] = {},
-		["pagename"] = {},
-	}
-	
-	local args = require("Module:parameters").process(parent_args, params)
-	local lang = m_languages.getByCode(args[1], 1)
-	local sources = {}
-	local source_non_etym_langs = {}
-	for _, source in ipairs(rsplit(args[2], "%s*,%s*")) do
-		local sourcelang = m_languages.getByCode(source, 2, "allow etym")
-		table.insert(sources, sourcelang)
-		table.insert(source_non_etym_langs, m_languages.getNonEtymological(sourcelang))
-	end
+	local args = require("Module:parameters").process(frame:getParent().args, {
+		[1] = {required = true, type = "language", default = "en"},
+		[2] = {required = true, type = "language", sublist = true, default = "ru"},
+		[3] = {list = true},
+		["type"] = {required = true, list = true, default = "patronymic"},
+		["alt"] = list_allow_holes,
+		["t"] = list_allow_holes,
+		["gloss"] = {list = true, alias_of = "t", allow_holes = true},
+		["tr"] = list_allow_holes,
+		["ts"] = list_allow_holes,
+		["id"] = list_allow_holes,
+		["sc"] = {type = "script", list = true, allow_holes = true},
+		["g"] = list_allow_holes,
+		["q"] = list_allow_holes,
+		["xlit"] = list_allow_holes,
+		["eq"] = list_allow_holes,
+		["dim"] = boolean,
+		["aug"] = boolean,
+		["nocap"] = boolean,
+		["sort"] = true,
+		["pagename"] = true,
+	})
+	local lang = args[1]
+	local sources = args[2]
 
 	local nametypes = {}
 	for _, typearg in ipairs(args["type"]) do
@@ -893,7 +885,7 @@ function export.name_translit(frame)
 
 	-- Find the maximum index among any of the list parameters, to determine how many names are given.
 	local maxmaxindex = #args[3]
-	for k, v in pairs(args) do
+	for _, v in pairs(args) do
 		if type(v) == "table" and v.maxindex and v.maxindex > maxmaxindex then
 			maxmaxindex = v.maxindex
 		end
@@ -930,9 +922,9 @@ function export.name_translit(frame)
 			-- spelled differently in the destination language (either transliterated or respelled), so assuming the
 			-- pagename is the name in the source language is wrong.
 			if args[3][1] and #sources > 1 or (iargs.foreign_name or iargs.obor) and not args[3][1] then
-				return m_links.language_link({
-					lang = source_non_etym_langs[i], term = term_to_link, alt = sourcename, tr = "-"
-				}, "allow self link")
+				return m_links.language_link{
+					lang = sources[i], term = term_to_link, alt = sourcename, tr = "-"
+				}
 			else
 				return sourcename
 			end
@@ -979,24 +971,24 @@ function export.name_translit(frame)
 	local embedded_comma = false
 
 	for i = 1, maxmaxindex do
-		local sc = require("Module:scripts").getByCode(args["sc"][i], true)
+		local sc = args["sc"][i]
 		
 		local terminfo = {
-			lang = source_non_etym_langs[1], term = args[3][i], alt = args["alt"][i], id = args["id"][i], sc = sc,
+			lang = sources[1], term = args[3][i], alt = args["alt"][i], id = args["id"][i], sc = sc,
 			tr = args["tr"][i], ts = args["ts"][i], gloss = args["t"][i],
 			genders = args["g"][i] and rsplit(args["g"][i], ",") or {}
 		}
-		local linked_term = m_links.full_link(terminfo, "term", "allow self link")
-		if  args["q"][i] then
+		local linked_term = m_links.full_link(terminfo, "term")
+		if args["q"][i] then
 			linked_term = require("Module:qualifier").format_qualifier(args["q"][i]) .. " " .. linked_term
 		end
 		if args["xlit"][i] then
 			embedded_comma = true
-			linked_term = linked_term .. ", " .. m_links.language_link({ lang = m_languages.getByCode("en"), term = args["xlit"][i] })
+			linked_term = linked_term .. ", " .. m_links.language_link{ lang = enlang, term = args["xlit"][i] }
 		end
 		if args["eq"][i] then
 			embedded_comma = true
-			linked_term = linked_term .. ", equivalent to " .. m_links.language_link({ lang = m_languages.getByCode("en"), term = args["eq"][i] })
+			linked_term = linked_term .. ", equivalent to " .. m_links.language_link{ lang = enlang, term = args["eq"][i] }
 		end
 		table.insert(names, linked_term)
 	end
@@ -1016,17 +1008,16 @@ function export.name_translit(frame)
 					insert_cats_type("male given name")
 					insert_cats_type("female given name")
 				end
-				for i, source in ipairs(sources) do
-					table.insert(categories, lang:getCode() .. ":" .. source:getCanonicalName() .. " " .. dimaugof .. ty .. "s")
-					table.insert(categories, lang:getCanonicalName() .. " terms derived from " .. source:getCanonicalName())
-					table.insert(categories, lang:getCanonicalName() .. " terms borrowed from " .. source:getCanonicalName())
+				for _, source in ipairs(sources) do
+					table.insert(categories, lang:getFullName() .. " renderings of " .. source:getCanonicalName() .. " " .. dimaugof .. ty .. "s")
+					table.insert(categories, lang:getFullName() .. " terms derived from " .. source:getCanonicalName())
+					table.insert(categories, lang:getFullName() .. " terms borrowed from " .. source:getCanonicalName())
 					if iargs.obor then
-						table.insert(categories, lang:getCanonicalName() .. " orthographic borrowings from " .. source:getCanonicalName())
+						table.insert(categories, lang:getFullName() .. " orthographic borrowings from " .. source:getCanonicalName())
 					end
-					local sourcelang = source_non_etym_langs[i]
-					if source:getCode() ~= sourcelang:getCode() then
+					if source:getCode() ~= source:getFullCode() then
 						-- etymology language
-						table.insert(categories, lang:getCode() .. ":" .. sourcelang:getCanonicalName() .. " " .. dimaugof .. ty .. "s")
+						table.insert(categories, lang:getFullName() .. " renderings of " .. source:getFullName() .. " " .. dimaugof .. ty .. "s")
 					end
 				end
 			end
