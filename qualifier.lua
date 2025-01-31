@@ -45,8 +45,8 @@ function export.format_qualifiers(list, open, close, opencontent, closecontent, 
 	return concat(parts)
 end
 
-function export.format_qualifier(list, open, close, opencontent, closecontent)
-	return export.format_qualifiers(list, open, close, opencontent, closecontent)
+function export.format_qualifier(list, open, close, opencontent, closecontent, no_ib_content)
+	return export.format_qualifiers(list, open, close, opencontent, closecontent, no_ib_content)
 end
 
 local function format_qualifiers_with_clarification(list, clarification, open, close)
