@@ -1,15 +1,19 @@
+local export = {}
+
 local m_languages = require("Module:languages")
 local m_links = require("Module:links")
 local m_utilities = require("Module:utilities")
 local m_table = require("Module:table")
-
-local export = {}
+local en_utilities_module = "Module:User:Benwing2/en-utilities"
+local parameter_utilities_module = "Module:parameter utilities"
+local parse_interface_module = "Module:parse interface"
+local pron_qualifier_module = "Module:User:Benwing2/pron qualifier"
 
 local enlang = m_languages.getByCode("en")
 
 local rsplit = mw.text.split
 
-local force_cat = false -- for testing
+local force_cat = true -- for testing
 
 --[=[
 
@@ -31,17 +35,59 @@ FIXME:
 14. <tr:...> and similar params [DONE]
 ]=]
 
--- Used in category code
+-- Used in category code; name types which are full-word end-matching substrings of longer name types (e.g. "surnames"
+-- of "male surnames", but not "male surnames" of "female surnames" because "male" only matches a part of the word
+-- "female") should follow the longer name.
 export.personal_name_types = {
-	"surnames", "male surnames", "female surnames", "common-gender surnames",
+	"male surnames", "female surnames", "common-gender surnames", "surnames",
 	"patronymics", "matronymics",
-	"given names", "male given names", "female given names", "unisex given names",
-	"diminutives of male given names", "diminutives of female given names",
-	"diminutives of unisex given names",
-	"augmentatives of male given names", "augmentatives of female given names",
-	"augmentatives of unisex given names"
 }
 
+export.personal_name_type_set = m_table.listToSet(export.personal_name_types)
+
+local given_name_genders = {
+	male = {type = "human"},
+	female = {type = "human"},
+	unisex = {type = "human", cat = {"male given names", "female given names", "unisex given names"}, article = "a"},
+	["unknown-gender"] = {type = "human", cat = {}, track = true},
+	animal = {type = "animal", track = true},
+	dog = {type = "animal"},
+	cat = {type = "animal"},
+	horse = {type = "animal"},
+	cow = {type = "animal"},
+}
+
+local function get_given_name_cats(gender, props)
+	local cats = props.cat
+	if not cats then
+		if props.type == "animal" then
+			cats = {gender .. " names"}
+		else
+			cats = {gender .. " given names"}
+		end
+	end
+	return cats
+end
+
+do
+	local function do_cat(cat)
+		if not export.personal_name_type_set[cat] then
+			export.personal_name_type_set[cat] = true
+			table.insert(export.personal_name_types, cat)
+		end
+	end
+	
+	for gender, props in pairs(given_name_genders) do
+		local cats = get_given_name_cats(gender, props)
+		for _, cat in ipairs(cats) do
+			do_cat("diminutives of " .. cat)
+			do_cat("augmentatives of " .. cat)
+			do_cat(cat)
+		end
+	end
+	
+	do_cat("given names")
+end
 
 local translit_name_type_list = {
 	"surname", "male given name", "female given name", "unisex given name",
@@ -57,6 +103,14 @@ local function track(page)
 	require("Module:debug").track("names/" .. page)
 end
 
+
+-- Get raw text, for use in computing the indefinite article. Use get_plaintext() in [[Module:utilities]] and also
+-- remove parens that may surround qualifier or label text preceding a term.
+local function get_rawtext(text)
+	text = m_utilities.get_plaintext(text)
+	text = text:gsub("[()%[%]]", "")
+	return text
+end
 
 
 --[=[
@@ -370,6 +424,89 @@ local function get_fromtext(lang, args)
 end
 
 
+local function parse_given_name_genders(genderspec)
+	if given_name_genders[genderspec] then -- optimization
+		return {{
+			type = genderspec,
+			props = given_name_genders[genderspec],
+		}}, given_name_genders[genderspec].type == "animal"
+	end
+	local genders = {}
+	local is_animal = nil
+	local param_mods = require(parameter_utilities_module).construct_param_mods {
+		{group = {"l", "q", "ref"}},
+		{param = {"text", "article"}},
+	}
+	local function generate_obj(term, parse_err)
+		if not given_name_genders[term] then
+			local valid_genders = {}
+			for k, _ in pairs(given_name_genders) do
+				table.insert(valid_genders, k)
+			end
+			table.sort(valid_genders)
+			parse_err(("Unrecognized gender '%s': valid genders are %s"):format(
+				term, table.concat(valid_genders, ", ")))
+		end
+		return {
+			type = term,
+			props = given_name_genders[term],
+		}
+	end
+	local retval = require(parse_interface_module).parse_inline_modifiers(genderspec, {
+		param_mods = param_mods,
+		paramname = "2",
+		generate_obj = generate_obj,
+		splitchar = ",",
+	})
+	for _, spec in ipairs(retval) do
+		local this_is_animal = spec.props.type == "animal"
+		if is_animal == nil then
+			is_animal = this_is_animal
+		elseif is_animal ~= this_is_animal then
+			error("Can't mix animal and human genders")
+		end
+	end
+	return retval, is_animal
+end
+
+
+local function generate_given_name_genders(lang, genders)
+	local parts = {}
+	for _, spec in ipairs(genders) do
+		local text
+		if spec.text then
+			-- NOTE: This assumes no % sign in the gender type, which seems safe.
+			text = spec.text:gsub("%+", spec.type)
+		else
+			text = spec.type
+		end
+		if spec.q and spec.q[1] or spec.qq and spec.qq[1] or spec.l and spec.l[1] or spec.ll and spec.ll[1] or
+			spec.refs and spec.refs[1] then
+			text = require(pron_qualifier_module).format_qualifiers {
+				lang = data.lang,
+				text = text,
+				q = spec.q,
+				qq = spec.qq,
+				l = spec.l,
+				ll = spec.ll,
+				refs = spec.refs,
+				raw = true,
+			}
+		end
+		table.insert(parts, text)
+	end
+	local retval = m_table.serialCommaJoin(parts, {conj = "or"})
+	local article = genders[1].article
+	if not article and not genders[1].text and not genders[1].q and not genders[1].l then
+		article = genders[1].props.article
+	end
+	if not article then
+		article = require(en_utilities_module).get_indefinite_article(get_rawtext(retval))
+	end
+	return retval, article
+end
+
+
 -- The entry point for {{given name}}.
 function export.given_name(frame)
 	local parent_args = frame:getParent().args
@@ -387,15 +524,16 @@ function export.given_name(frame)
 		[lang_index] = {required = true, type = "language", default = "und"},
 		["gender"] = {default = "unknown-gender"},
 		[1 + offset] = {alias_of = "gender", default = "unknown-gender"},
-		["or"] = true, -- second gender
-		["orq"] = true, -- second gender qualifier
+		["or"] = true, -- former second gender; ignored; FIXME: convert uses
+		["orq"] = true, -- second gender qualifier; ignored; FIXME: convert uses
 		["usage"] = true,
 		["origin"] = true,
 		["popular"] = true,
 		["populartype"] = true,
 		["meaning"] = list,
 		["meaningtype"] = true,
-		["q"] = true,
+		["addl"] = true,
+		["q"] = {alias_of = "addl"}, -- FIXME: obsolete me
 		-- initial article: A or An
 		["A"] = true,
 		["sort"] = true,
@@ -431,7 +569,7 @@ function export.given_name(frame)
 		["f"] = list,
 		["ftype"] = true,
 	})
-	
+
 	local textsegs = {}
 	local lang = args[lang_index]
 	local langcode = lang:getCode()
@@ -439,6 +577,8 @@ function export.given_name(frame)
 	local function fetch_typetext(param)
 		return args[param] and args[param] .. " " or ""
 	end
+
+	local genders, is_animal = parse_given_name_genders(args.gender)
 
 	local dimoftext, numdims = join_names(lang, args, "dimof")
 	local augoftext, numaugs = join_names(lang, args, "augof")
@@ -457,155 +597,147 @@ function export.given_name(frame)
 	local meaningtext = m_table.serialCommaJoin(meaningsegs, {conj = "or"})
 	local eqtext = get_eqtext(args)
 
-	table.insert(textsegs, "<span class='use-with-mention'>")
+	local function ins(txt)
+		table.insert(textsegs, txt)
+	end
 	local dimtype = args.dimtype
 	local augtype = args.augtype
+	if numdims > 0 then
+		ins((dimtype and dimtype .. " " or "") .. "[[diminutive]]" ..
+			(xlittext ~= "" and ", " .. xlittext .. "," or "") .. " of the ")
+	elseif numaugs > 0 then
+		ins((augtype and augtype .. " " or "") .. "[[augmentative]]" ..
+			(xlittext ~= "" and ", " .. xlittext .. "," or "") .. " of the ")
+	end
 	local article = args.A
-	if not article then
-		local get_indefinite_article = require("Module:string utilities").get_indefinite_article
-		if numdims > 0 then
-			article = get_indefinite_article(dimtype)
-		elseif numaugs > 0 then
-			if augtype then
-				article = get_indefinite_article(augtype)
-			else
-				article = "an" -- "augmentative" needs an article
-			end
-		else
-			article = args.gender == "unknown-gender" and "an" or "a"
-		end
-		if langcode == "en" then
-			article = mw.getContentLanguage():ucfirst(article)
-		end
+	if not article and textsegs[1] then
+		article = require(en_utilities_module).get_indefinite_article(textsegs[1])
+	end
+	if not is_animal then
+		local gendertext, gender_article = generate_given_name_genders(lang, genders)
+		article = article or gender_article
+		ins(gendertext)
+		ins(" ")
+	end
+	ins((numdims > 1 or numaugs > 1) and "[[given name|given names]]" or "[[given name]]")
+	article = article or "a" -- if no article set yet, it's "a" based on "given name"
+	if langcode == "en" then
+		article = mw.getContentLanguage():ucfirst(article)
 	end
 
-	table.insert(textsegs, article .. " ")
-	if numdims > 0 then
-		table.insert(textsegs,
-			(dimtype and dimtype .. " " or "") ..
-			"[[diminutive]]" ..
-			(xlittext ~= "" and ", " .. xlittext .. "," or "") ..
-			" of the ")
-	elseif numaugs > 0 then
-		table.insert(textsegs,
-			(augtype and augtype .. " " or "") ..
-			"[[augmentative]]" ..
-			(xlittext ~= "" and ", " .. xlittext .. "," or "") ..
-			" of the ")
-	end
-	local genders = {}
-	table.insert(genders, args.gender)
-	if args["or"] then
-		table.insert(genders, (args.orq and "(" .. args.orq .. ") " or "") .. args["or"])
-	end
-	table.insert(textsegs, table.concat(genders, " or ") .. " ")
-	table.insert(textsegs, (numdims > 1 or numaugs > 1) and "[[given name|given names]]" or
-		"[[given name]]")
 	local need_comma = false
 	if numdims > 0 then
-		table.insert(textsegs, " " .. dimoftext)
-		need_comma = true
+		ins(" " .. dimoftext)
+		need_comma = not is_animal
 	elseif numaugs > 0 then
-		table.insert(textsegs, " " .. augoftext)
-		need_comma = true
+		ins(" " .. augoftext)
+		need_comma = not is_animal
 	elseif xlittext ~= "" then
-		table.insert(textsegs, ", " .. xlittext)
+		ins(", " .. xlittext)
 		need_comma = true
 	end
+
+	if is_animal then
+		if need_comma then
+			ins(",")
+		end
+		need_comma = true
+		ins(" for ")
+		local gendertext, gender_article = generate_given_name_genders(lang, genders)
+		ins(gender_article)
+		ins(" ")
+		ins(gendertext)
+	end
+
 	local from_catparts = {}
 	if #args.from > 0 then
 		if need_comma then
-			table.insert(textsegs, ",")
+			ins(",")
 		end
 		need_comma = true
-		table.insert(textsegs, " " .. fetch_typetext("fromtype"))
+		ins(" " .. fetch_typetext("fromtype"))
 		local textseg, this_catparts = get_fromtext(lang, args)
 		for _, catpart in ipairs(this_catparts) do
 			m_table.insertIfNot(from_catparts, catpart)
 		end
-		table.insert(textsegs, textseg)
+		ins(textseg)
 	end
 	
 	if meaningtext ~= "" then
 		if need_comma then
-			table.insert(textsegs, ",")
+			ins(",")
 		end
 		need_comma = true
-		table.insert(textsegs, " " .. fetch_typetext("meaningtype") .. "meaning " .. meaningtext)
+		ins(" " .. fetch_typetext("meaningtype") .. "meaning " .. meaningtext)
 	end
 	if args.origin then
 		if need_comma then
-			table.insert(textsegs, ",")
+			ins(",")
 		end
 		need_comma = true
-		table.insert(textsegs, " of " .. args.origin .. " origin")
+		ins(" of " .. args.origin .. " origin")
 	end
 	if args.usage then
 		if need_comma then
-			table.insert(textsegs, ",")
+			ins(",")
 		end
 		need_comma = true
-		table.insert(textsegs, " of " .. args.usage .. " usage")
+		ins(" of " .. args.usage .. " usage")
 	end
 	if varoftext ~= "" then
-		table.insert(textsegs, ", " ..fetch_typetext("varoftype") .. "variant of " .. varoftext)
+		ins(", " ..fetch_typetext("varoftype") .. "variant of " .. varoftext)
 	end
 	if blendtext ~= "" then
-		table.insert(textsegs, ", " .. fetch_typetext("blendtype") .. "blend of " .. blendtext)
+		ins(", " .. fetch_typetext("blendtype") .. "blend of " .. blendtext)
 	end
 	if args.popular then
-		table.insert(textsegs, ", " .. fetch_typetext("populartype") .. "popular " .. args.popular)
+		ins(", " .. fetch_typetext("populartype") .. "popular " .. args.popular)
 	end
 	if mtext ~= "" then
-		table.insert(textsegs, ", " .. fetch_typetext("mtype") .. "masculine equivalent " .. mtext)
+		ins(", " .. fetch_typetext("mtype") .. "masculine equivalent " .. mtext)
 	end
 	if ftext ~= "" then
-		table.insert(textsegs, ", " .. fetch_typetext("ftype") .. "feminine equivalent " .. ftext)
+		ins(", " .. fetch_typetext("ftype") .. "feminine equivalent " .. ftext)
 	end
 	if eqtext ~= "" then
-		table.insert(textsegs, ", " .. fetch_typetext("eqtype") .. "equivalent to " .. eqtext)
+		ins(", " .. fetch_typetext("eqtype") .. "equivalent to " .. eqtext)
 	end
-	if args.q then
-		table.insert(textsegs, ", " .. args.q)
+	if args.addl then
+		ins(", " .. args.addl)
 	end
 	if varformtext ~= "" then
-		table.insert(textsegs, "; variant form" .. (numvarforms > 1 and "s" or "") .. " " .. varformtext)
+		ins("; variant form" .. (numvarforms > 1 and "s" or "") .. " " .. varformtext)
 	end
 	if dimformtext ~= "" then
-		table.insert(textsegs, "; diminutive form" .. (numdimforms > 1 and "s" or "") .. " " .. dimformtext)
+		ins("; diminutive form" .. (numdimforms > 1 and "s" or "") .. " " .. dimformtext)
 	end
 	if augformtext ~= "" then
-		table.insert(textsegs, "; augmentative form" .. (numaugforms > 1 and "s" or "") .. " " .. augformtext)
+		ins("; augmentative form" .. (numaugforms > 1 and "s" or "") .. " " .. augformtext)
 	end
-	table.insert(textsegs, "</span>")
+	textsegs = "<span class='use-with-mention'>" .. article .. " " .. table.concat(textsegs) .. "</span>"
 
 	local categories = {}
 	local langname = lang:getCanonicalName() .. " "
 	local function insert_cats(dimaugof)
-		if dimaugof == "" then
+		if dimaugof == "" and genders[1].props.type == "human" then
 			-- No category such as "English diminutives of given names"
 			table.insert(categories, langname .. "given names")
 		end
-		local function insert_cats_gender(g)
-			if g == "unknown-gender" then
-				track("unknown gender")
-				return
-			end
-			if g ~= "male" and g ~= "female" and g ~= "unisex" then
-				error("Unrecognized gender: " .. g)
-			end
-			if g == "unisex" then
-				insert_cats_gender("male")
-				insert_cats_gender("female")
-			end
-			table.insert(categories, langname .. dimaugof .. g .. " given names")
+		local function insert_cat(cat)
+			table.insert(categories, langname .. dimaugof .. cat)
 			for _, catpart in ipairs(from_catparts) do
-			table.insert(categories, langname .. dimaugof .. g .. " given names from " .. catpart)
+				table.insert(categories, langname .. dimaugof .. cat .. "  from " .. catpart)
 			end
 		end
-		insert_cats_gender(args.gender)
-		if args["or"] then
-			insert_cats_gender(args["or"])
+		for _, spec in ipairs(genders) do
+			local typ = spec.type
+			if spec.props.track then
+				track(typ)
+			end
+			local cats = get_given_name_cats(spec.type, spec.props)
+			for _, cat in ipairs(cats) do
+				insert_cat(cat)
+			end
 		end
 	end
 	insert_cats("")
@@ -615,8 +747,7 @@ function export.given_name(frame)
 		insert_cats("augmentatives of ")
 	end
 
-	return table.concat(textsegs, "") ..
-		m_utilities.format_categories(categories, lang, args.sort, nil, force_cat)
+	return textsegs .. m_utilities.format_categories(categories, lang, args.sort, nil, force_cat)
 end
 
 -- The entry point for {{surname}}.
@@ -719,7 +850,7 @@ function export.surname(frame)
 		article = args.A
 	else
 		article = #genders > 0 and genders[1] == "unknown-gender" and "an" or
-			#genders == 0 and adj and require("Module:string utilities").get_indefinite_article(adj) or
+			#genders == 0 and adj and require(en_utilities_module).get_indefinite_article(adj) or
 			"a"
 		if langcode == "en" then
 			article = mw.getContentLanguage():ucfirst(article)
@@ -936,7 +1067,7 @@ function export.name_translit(frame)
 			if maxmaxindex > 0 then
 				table.insert(langsegs, "the " .. get_source_link())
 			else
-				table.insert(langsegs, require("Module:string utilities").add_indefinite_article(sourcename))
+				table.insert(langsegs, require(en_utilities_module).add_indefinite_article(sourcename))
 			end
 		else
 			table.insert(langsegs, get_source_link())
