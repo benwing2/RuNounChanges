@@ -13,7 +13,7 @@ function export.show(frame)
 	local term_mode = (frame.args["term"] or "") ~= ""
 	
 	local params = {
-		[1] = {required = true, type = "language", etym_lang = true, default = "und"},
+		[1] = {required = true, type = "language", default = "und"},
 		[2] = {required = true, list = true, default = "example"},
 		["nocat"] = {type = "boolean"},
 		["sort"] = {},
@@ -40,28 +40,7 @@ function export.show(frame)
 		labels = labels,
 		sort = args.sort,
 		nocat = args.nocat,
-		term_mode = term_mode,
-	}
-end
-
---[==[
-External entry point that implements {{tl|accent}} and {{tl|a}}.
-]==]
-function export.show_accent(frame)
-	local parent_args = frame:getParent().args
-
-	local params = {
-		[1] = {type = "language", etym_lang = true, default = "und"},
-		[2] = {list = true, required = true, default = "{{{2}}}"},
-	}
-	local args = require("Module:parameters").process(parent_args, params)
-	local lang = args[1]
-	local labels = args[2]
-	return require(labels_module).show_labels {
-		lang = lang,
-		labels = labels,
-		nocat = true,
-		accent_mode = true,
+		mode = term_mode and "term-label" or nil,
 	}
 end
 
