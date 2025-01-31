@@ -6,6 +6,7 @@ local m_lang_specific_data = mw.loadData(export.lang_specific_data_list_module)
 
 local require_when_needed = require("Module:utilities/require when needed")
 local m_table = require_when_needed("Module:table")
+local load_module = "Module:load"
 local parse_utilities_module = "Module:parse utilities"
 local string_utilities_module = "Module:string utilities"
 local utilities_module = "Module:utilities"
@@ -682,7 +683,7 @@ function export.process_raw_labels(data)
 	local label_infos = {}
 
 	if not data.ok_to_destructively_modify then
-		data = m_table.shallowcopy(data)
+		data = m_table.shallowCopy(data)
 		data.ok_to_destructively_modify = true
 	end
 
@@ -733,7 +734,7 @@ fields:
 ]==]
 function export.split_and_process_raw_labels(data)
 	if not data.ok_to_destructively_modify then
-		data = m_table.shallowcopy(data)
+		data = m_table.shallowCopy(data)
 		data.ok_to_destructively_modify = true
 	end
 	data.labels = export.split_labels_on_comma(data.labels)
@@ -775,7 +776,7 @@ function export.format_processed_labels(data)
 		error("`data` must now be an object containing the params")
 	end
 	if not data.ok_to_destructively_modify then
-		data = m_table.shallowcopy(data)
+		data = m_table.shallowCopy(data)
 		data.labels = m_table.deepcopy(data.labels)
 		data.ok_to_destructively_modify = true
 	end
@@ -804,7 +805,7 @@ function export.format_processed_labels(data)
 
 	if data.lang then
 		local lang_functions_module = export.lang_specific_data_modules_prefix .. data.lang:getCode() .. "/functions"
-		local m_lang_functions = require(utilities_module).safe_require(lang_functions_module)
+		local m_lang_functions = require(load_module).safe_require(lang_functions_module)
 		if m_lang_functions and m_lang_functions.postprocess_handlers then
 			for _, handler in ipairs(m_lang_functions.postprocess_handlers) do
 				handler(data)
@@ -877,7 +878,7 @@ function export.show_labels(data)
 		error("`data` must now be an object containing the params")
 	end
 	if not data.ok_to_destructively_modify then
-		data = m_table.shallowcopy(data)
+		data = m_table.shallowCopy(data)
 		data.ok_to_destructively_modify = true
 	end
 	local labels = data.labels
@@ -950,7 +951,7 @@ end
 
 --[==[Used to finalize the data into the form that is actually returned.]==]
 function export.finalize_data(labels)
-	local shallowcopy = m_table.shallowcopy
+	local shallow_copy = m_table.shallowCopy
 	local aliases = {}
 	for label, data in pairs(labels) do
 		if type(data) == "table" then
@@ -961,7 +962,7 @@ function export.finalize_data(labels)
 				data.aliases = nil
 			end
 			if data.deprecated_aliases then
-				local data2 = shallowcopy(data)
+				local data2 = shallow_copy(data)
 				data2.deprecated = true
 				data2.canonical = label
 				for _, alias in ipairs(data2.deprecated_aliases) do
