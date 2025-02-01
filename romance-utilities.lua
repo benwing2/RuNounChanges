@@ -1,12 +1,14 @@
 local export = {}
 
-local rfind = mw.ustring.find
-local rsubn = mw.ustring.gsub
-local rmatch = mw.ustring.match
-local rsplit = mw.text.split
-local u = mw.ustring.char
-
 local put_module = "Module:parse utilities"
+local strutil_module = "Module:string utilities"
+
+local m_str_utils = require(strutil_module)
+
+local rfind = m_str_utils.find
+local rsubn = m_str_utils.gsub
+local rmatch = m_str_utils.match
+local rsplit = m_str_utils.split
 
 -- version of rsubn() that discards all but the first return value
 local function rsub(term, foo, bar)
@@ -38,7 +40,7 @@ function export.get_special_indicator(form)
 			end
 			table.sort(indicators)
 			error("Special inflection indicator beginning with '+' can only be " ..
-				require("Module:table").serialCommaJoin(indicators, {dontTag = true}) .. ": +" .. form)
+				mw.text.listToText(indicators) .. ": +" .. form)
 		end
 		return form
 	end
@@ -246,10 +248,6 @@ function export.add_links_to_multiword_term(term, splithyph, no_split_apostrophe
 end
 
 
--- Badly named older entry point. FIXME: Obsolete me!
-export.add_lemma_links = export.add_links_to_multiword_term
-
-
 -- Ensure that brackets display literally in error messages. Replacing with equivalent HTML escapes doesn't work
 -- because they are displayed literally; but inserting a Unicode word-joiner symbol works.
 local function escape_wikicode(term)
@@ -347,12 +345,12 @@ function export.apply_link_modifiers(linked_term, modifier_spec)
 				error(("Subterm '%s' in modifier spec '%s' cannot have brackets in it"):format(
 					escape_wikicode(subterm), escape_wikicode(modspec)))
 			end
-			local patut = require("Module:pattern utilities")
-			local escaped_subterm = patut.pattern_escape(subterm)
+			local strutil = require("Module:string utilities")
+			local escaped_subterm = strutil.pattern_escape(subterm)
 			local subterm_re = "%[%[" .. escaped_subterm:gsub("(%%?[ '%-])", "%%]*%1%%[*") .. "%]%]"
 			local expanded_dest
 			if dest:find("~") then
-				expanded_dest = dest:gsub("~", patut.replacement_escape(subterm))
+				expanded_dest = dest:gsub("~", strutil.replacement_escape(subterm))
 			else
 				expanded_dest = dest
 			end
@@ -370,7 +368,7 @@ function export.apply_link_modifiers(linked_term, modifier_spec)
 				subterm_replacement = "[[" .. expanded_dest .. "|" .. subterm .. "]]"
 			end
 
-			local replaced_linked_term = rsub(linked_term, subterm_re, patut.replacement_escape(subterm_replacement))
+			local replaced_linked_term = rsub(linked_term, subterm_re, strutil.replacement_escape(subterm_replacement))
 			if replaced_linked_term == linked_term then
 				error(("Subterm '%s' could not be located in %slinked expression %s, or replacement same as subterm"):format(
 					subterm, j > 1 and "intermediate " or "", escape_wikicode(linked_term)))
