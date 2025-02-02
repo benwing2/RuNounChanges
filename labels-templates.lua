@@ -41,6 +41,7 @@ function export.show(frame)
 		sort = args.sort,
 		nocat = args.nocat,
 		mode = term_mode and "term-label" or nil,
+		ok_to_destructively_modify = true,
 	}
 end
 
