@@ -4,16 +4,17 @@ local m_languages = require("Module:languages")
 local m_links = require("Module:links")
 local m_utilities = require("Module:utilities")
 local m_table = require("Module:table")
-local en_utilities_module = "Module:User:Benwing2/en-utilities"
+local en_utilities_module = "Module:en-utilities"
 local parameter_utilities_module = "Module:parameter utilities"
 local parse_interface_module = "Module:parse interface"
-local pron_qualifier_module = "Module:User:Benwing2/pron qualifier"
+local parse_utilities_module = "Module:parse utilities"
+local pron_qualifier_module = "Module:pron qualifier"
 
 local enlang = m_languages.getByCode("en")
 
 local rsplit = mw.text.split
 
-local force_cat = true -- for testing
+local force_cat = false -- for testing
 
 --[=[
 
@@ -45,16 +46,18 @@ export.personal_name_types = {
 
 export.personal_name_type_set = m_table.listToSet(export.personal_name_types)
 
-local given_name_genders = {
+export.given_name_genders = {
 	male = {type = "human"},
 	female = {type = "human"},
 	unisex = {type = "human", cat = {"male given names", "female given names", "unisex given names"}, article = "a"},
 	["unknown-gender"] = {type = "human", cat = {}, track = true},
 	animal = {type = "animal", track = true},
-	dog = {type = "animal"},
+	caribou = {type = "animal"},
 	cat = {type = "animal"},
-	horse = {type = "animal"},
 	cow = {type = "animal"},
+	dog = {type = "animal"},
+	horse = {type = "animal"},
+	pig = {type = "animal"},
 }
 
 local function get_given_name_cats(gender, props)
@@ -77,7 +80,7 @@ do
 		end
 	end
 	
-	for gender, props in pairs(given_name_genders) do
+	for gender, props in pairs(export.given_name_genders) do
 		local cats = get_given_name_cats(gender, props)
 		for _, cat in ipairs(cats) do
 			do_cat("diminutives of " .. cat)
@@ -190,10 +193,10 @@ local function parse_term_with_annotations(term, pname, deflang, allow_explicit_
 		return termobj
 	end
 
-	local iut = require("Module:inflection utilities")
-	local run = iut.parse_balanced_segment_run(term, "<", ">")
+	local put = require(parse_utilities_module)
+	local run = put.parse_balanced_segment_run(term, "<", ">")
 	if allow_multiple_terms then
-		local comma_separated_runs = iut.split_alternating_runs(run, "%s*,%s*")
+		local comma_separated_runs = put.split_alternating_runs(run, "%s*,%s*")
 		local termobjs = {}
 		for _, comma_separated_run in ipairs(comma_separated_runs) do
 			table.insert(termobjs, parse_single_run_with_annotations(comma_separated_run))
@@ -425,11 +428,11 @@ end
 
 
 local function parse_given_name_genders(genderspec)
-	if given_name_genders[genderspec] then -- optimization
+	if export.given_name_genders[genderspec] then -- optimization
 		return {{
 			type = genderspec,
-			props = given_name_genders[genderspec],
-		}}, given_name_genders[genderspec].type == "animal"
+			props = export.given_name_genders[genderspec],
+		}}, export.given_name_genders[genderspec].type == "animal"
 	end
 	local genders = {}
 	local is_animal = nil
@@ -438,9 +441,9 @@ local function parse_given_name_genders(genderspec)
 		{param = {"text", "article"}},
 	}
 	local function generate_obj(term, parse_err)
-		if not given_name_genders[term] then
+		if not export.given_name_genders[term] then
 			local valid_genders = {}
-			for k, _ in pairs(given_name_genders) do
+			for k, _ in pairs(export.given_name_genders) do
 				table.insert(valid_genders, k)
 			end
 			table.sort(valid_genders)
@@ -449,7 +452,7 @@ local function parse_given_name_genders(genderspec)
 		end
 		return {
 			type = term,
-			props = given_name_genders[term],
+			props = export.given_name_genders[term],
 		}
 	end
 	local retval = require(parse_interface_module).parse_inline_modifiers(genderspec, {
@@ -483,7 +486,7 @@ local function generate_given_name_genders(lang, genders)
 		if spec.q and spec.q[1] or spec.qq and spec.qq[1] or spec.l and spec.l[1] or spec.ll and spec.ll[1] or
 			spec.refs and spec.refs[1] then
 			text = require(pron_qualifier_module).format_qualifiers {
-				lang = data.lang,
+				lang = lang,
 				text = text,
 				q = spec.q,
 				qq = spec.qq,
@@ -524,8 +527,6 @@ function export.given_name(frame)
 		[lang_index] = {required = true, type = "language", default = "und"},
 		["gender"] = {default = "unknown-gender"},
 		[1 + offset] = {alias_of = "gender", default = "unknown-gender"},
-		["or"] = true, -- former second gender; ignored; FIXME: convert uses
-		["orq"] = true, -- second gender qualifier; ignored; FIXME: convert uses
 		["usage"] = true,
 		["origin"] = true,
 		["popular"] = true,
@@ -533,7 +534,6 @@ function export.given_name(frame)
 		["meaning"] = list,
 		["meaningtype"] = true,
 		["addl"] = true,
-		["q"] = {alias_of = "addl"}, -- FIXME: obsolete me
 		-- initial article: A or An
 		["A"] = true,
 		["sort"] = true,
@@ -646,7 +646,7 @@ function export.given_name(frame)
 		local gendertext, gender_article = generate_given_name_genders(lang, genders)
 		ins(gender_article)
 		ins(" ")
-		ins(gendertext)
+		ins("[[" .. gendertext .. "]]")
 	end
 
 	local from_catparts = {}
@@ -774,7 +774,7 @@ function export.surname(frame)
 		["populartype"] = true,
 		["meaning"] = list,
 		["meaningtype"] = true,
-		["q"] = true,
+		["addl"] = true,
 		-- initial article: by default A or An (English), a or an (otherwise)
 		["A"] = true,
 		["sort"] = true,
@@ -923,8 +923,8 @@ function export.surname(frame)
 	if eqtext ~= "" then
 		table.insert(textsegs, ", " .. fetch_typetext("eqtype") .. "equivalent to " .. eqtext)
 	end
-	if args.q then
-		table.insert(textsegs, ", " .. args.q)
+	if args.addl then
+		table.insert(textsegs, ", " .. args.addl)
 	end
 	if varformtext ~= "" then
 		table.insert(textsegs, "; variant form" .. (numvarforms > 1 and "s" or "") .. " " .. varformtext)
