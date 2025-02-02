@@ -757,11 +757,13 @@ On input `data` is an object with the following fields:
   {get_label_info()}. To enable this, set this to an empty object. If `already_seen` is {nil}, this tracking doesn't
   happen, meaning if the same label appears twice, it will be displayed twice.
 * `open`: Open bracket or parenthesis to display before the concatenated labels. If specified, it is wrapped in the
-  {"ib-brac"} CSS class. If {nil}, no open bracket is displayed.
+  {"ib-brac"} and {"label-brac"} CSS classes. If {nil}, no open bracket is displayed.
 * `close`: Close bracket or parenthesis to display after the concatenated labels. If specified, it is wrapped in the
-  {"ib-brac"} CSS class. If {nil}, no close bracket is displayed.
+  {"ib-brac"} and {"label-brac"} CSS classes. If {nil}, no close bracket is displayed.
 * `no_ib_content`: By default, the concatenated formatted labels inside of the open/close brackets are wrapped in the
-  {"ib-content"} CSS class. Specify this to suppress this wrapping.
+  {"ib-content"} and {"label-content"} CSS classes. Specify this to suppress this wrapping.
+* `raw`: Suppress all CSS wrapping of content, including open/close parentheses, content and comma delimiters (which
+  are normally wrapped in {"ib-comma"} and {"label-comma"} CSS classes).
 * `ok_to_destructively_modify`: If set, the `data` structure, and the `data.labels` table inside of it, will be
   destructively modified in the process of this function running.
 
@@ -777,7 +779,7 @@ function export.format_processed_labels(data)
 	end
 	if not data.ok_to_destructively_modify then
 		data = m_table.shallowCopy(data)
-		data.labels = m_table.deepcopy(data.labels)
+		data.labels = m_table.deepCopy(data.labels)
 		data.ok_to_destructively_modify = true
 	end
 	local labels = data.labels
@@ -813,6 +815,13 @@ function export.format_processed_labels(data)
 		end
 	end
 
+	local function wrap_css(txt, suffix)
+		if data.raw then
+			return txt
+		end
+		return ("<span class=\"ib-%s label-%s\">%s</span>"):format(suffix, suffix, txt)
+	end
+
 	for i, labelinfo in ipairs(labels) do
 		local label
 		-- Need to check for 'not raw_text' here because blank labels may legitimately occur as raw text if a double
@@ -823,7 +832,7 @@ function export.format_processed_labels(data)
 		if labelinfo.label == "" and not labelinfo.raw_text then
 			label = ""
 		else
-			label = (labelinfo.omit_comma and "" or '<span class="ib-comma">,</span>') ..
+			label = (labelinfo.omit_comma and "" or wrap_css(",", "comma")) ..
 					(labelinfo.omit_space and "" or "&#32;") ..
 					labelinfo.label
 		end
@@ -832,7 +841,7 @@ function export.format_processed_labels(data)
 
 	local function wrap_open_close(val)
 		if val then
-			return "<span class=\"ib-brac\">" .. val .. "</span>"
+			return wrap_css(val, "brac")
 		else
 			return ""
 		end
@@ -840,7 +849,7 @@ function export.format_processed_labels(data)
 
 	local concatenated_labels = table.concat(labels, "")
 	if not data.no_ib_content then
-		concatenated_labels = "<span class=\"ib-content\">" .. concatenated_labels .. "</span>"
+		concatenated_labels = wrap_css(concatenated_labels, "content")
 	end
 
 	return wrap_open_close(data.open) .. concatenated_labels .. wrap_open_close(data.close)
@@ -863,6 +872,9 @@ input `data` is an object with the following fields:
   parenthesis. Set to {false} to disable.
 * `close`: Close bracket or parenthesis to display after the concatenated labels. If {nil}, defaults to a close
   parenthesis. Set to {false} to disable.
+* `no_ib_content`: As in `format_processed_labels()`.
+* `raw`: As in `format_processed_labels()`. Also suppress wrapping the entire formatted result in a usage label CSS
+  class (see below).
 * `ok_to_destructively_modify`: If set, the `data` structure will be destructively modified in the process of this
   function running.
 
@@ -871,7 +883,7 @@ Compared with {format_processed_labels()}, this function has the following diffe
 # The open and close brackets default to parentheses ("round brackets") rather than not being displayed by default.
 # Tracking of already-seen labels is enabled unless explicitly turned off using `no_track_already_seen`.
 # The entire formatted result is wrapped in a {"usage-label-<var>type</var>"} CSS class (depending on the value of
-  `mode`).
+  `mode`), unless `raw` is given.
 ]==]
 function export.show_labels(data)
 	if not data.labels then
@@ -900,7 +912,11 @@ function export.show_labels(data)
 		data.close = ")"
 	end
 	local formatted = export.format_processed_labels(data)
-	return "<span class=\"" .. mode_to_outer_class[mode] .. "\">" .. formatted .. "</span>"
+	if data.raw then
+		return formatted
+	else
+		return "<span class=\"" .. mode_to_outer_class[mode] .. "\">" .. formatted .. "</span>"
+	end
 end
 
 --[==[Helper function for the data modules.]==]
