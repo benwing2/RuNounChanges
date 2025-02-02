@@ -312,14 +312,16 @@ function export.pluralize(str)
 	return sub(str, 1, open - 1) .. target .. "|" .. display .. "]]"
 end
 
--- Returns true if `plural` is an expected, regular plural of `term`.
--- The optional parameter `pos` can be used to specify the part of speech,
--- which is necessary because proper nouns do not change a "-y" suffix to "-ies"
--- (e.g. "Abby" → "Abbys"). By default, `pos` is set to "noun". In addition to
--- "proper noun", it can also take the special value "noun+", which means that
--- the function will first attempt the check with the "noun" setting, and will
--- then attempt it with the "proper noun" setting iff the term begins with a
--- capital letter.
+--[==[
+Returns true if `plural` is an expected, regular plural of `term`.
+The optional parameter `pos` can be used to specify the part of speech,
+which is necessary because proper nouns do not change a {"-y"} suffix to {"-ies"}
+(e.g. {"Abby"} → {"Abbys"}). By default, `pos` is set to {"noun"}. In addition to
+{"proper noun"}, it can also take the special value {"noun+"}, which means that
+the function will first attempt the check with the {"noun"} setting, and will
+then attempt it with the {"proper noun"} setting iff the term begins with a
+capital letter.
+]==]
 function export.is_regular_plural(plural, term, pos)
 	local init_plural, init_term, try_as_proper_noun = plural, term
 	if pos == "noun+" then
@@ -357,6 +359,87 @@ function export.is_regular_plural(plural, term, pos)
 	return false
 end
 is_regular_plural = export.is_regular_plural
+
+do
+	local function do_singularize(str)
+		local sing = match(str, "^(.-)ies$")
+		if sing then
+			return sing .. "y"
+		end
+		-- Handle cases like "[[parish]]es"
+		return match(str, "^(.-[cs]h%]*)es$") or -- not -zhes
+		-- Handle cases like "[[box]]es"
+			match(str, "^(.-x%]*)es$") or -- not -ses or -zes
+		-- Handle regular plurals
+			match(str, "^(.-)s$") or
+		-- Otherwise, return input
+			str
+	end
+	
+	local function collapse_link(link, linktext)
+		if link == linktext then
+			return "[[" .. link .. "]]"
+		end
+		return "[[" .. link .. "|" .. linktext .. "]]"
+	end
+	
+	--[==[
+	Singularize a word in a smart fashion, according to normal English rules. Works analogously to {pluralize()}.
+
+	'''NOTE''': This doesn't always work as well as {pluralize()}. Beware. It will mishandle cases like "passes" -> "passe", "eyries" -> "eyry".
+	# If word ends in -ies, replace -ies with -y.
+	# If the word ends in -xes, -shes, -ches, remove -es. [Does not affect -ses, cf. "houses", "impasses".]
+	# Otherwise, remove -s.
+
+	This handles links correctly:
+	# If a piped link, change the second part appropriately. Collapse the link to a simple link if both parts end up the same.
+	# If a non-piped link, singularize the link.
+	# A link like "[[parish]]es" will be handled correctly because the code that checks for -shes etc. allows ] characters between the
+	  'sh' etc. and final -es.
+	]==]
+	function export.singularize(str)
+		if type(str) == "table" then
+			-- allow calling from a template
+			str = str.args[1]
+		end
+		-- Check for a link. This pattern matches both piped and unpiped links.
+		-- If the link is not piped, the second capture (linktext) will be empty.
+		local beginning, link, linktext = match(str, "^(.*)%[%[([^|%]]+)%|?(.-)%]%]$")
+		if not link then
+			return do_singularize(str)
+		elseif linktext ~= "" then
+			return beginning .. collapse_link(link, do_singularize(linktext))
+		end
+		return beginning .. "[[" .. do_singularize(link) .. "]]"
+	end
+end
+
+--[==[
+Return the appropriate indefinite article to prefix to `str`. Correctly handles links and capitalized text.
+Does not correctly handle words like [[union]], [[uniform]] and [[university]] that take "a" despite beginning with
+a 'u'. The returned article will have its first letter capitalized if `ucfirst` is specified, otherwise lowercase.
+]==]
+function export.get_indefinite_article(str, ucfirst)
+	str = str or ""
+	-- If there's a link at the beginning, examine the first letter of the
+	-- link text. This pattern matches both piped and unpiped links.
+	-- If the link is not piped, the second capture (linktext) will be empty.
+	local link, linktext = match(str, "^%[%[([^|%]]+)%|?(.-)%]%]")
+	if match(link and (linktext ~= "" and linktext or link) or str, "^()[AEIOUaeiou]") then
+		return ucfirst and "An" or "an"
+	end
+	return ucfirst and "A" or "a"
+end
+get_indefinite_article = export.get_indefinite_article
+
+--[==[
+Prefix `text` with the appropriate indefinite article to prefix to `text`. Correctly handles links and capitalized
+text. Does not correctly handle words like [[union]], [[uniform]] and [[university]] that take "a" despite beginning
+with a 'u'. The returned article will have its first letter capitalized if `ucfirst` is specified, otherwise lowercase.
+]==]
+function export.add_indefinite_article(text, ucfirst)
+	return get_indefinite_article(text, ucfirst) .. " " .. text
+end
 
 export.vowels = vowels
 export.vowel = "[" .. vowels .. "]"
