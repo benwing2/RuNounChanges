@@ -94,8 +94,6 @@ local translit_name_type_list = {
 	"surname", "male given name", "female given name", "unisex given name",
 	"patronymic"
 }
-local translit_name_types = m_table.listToSet(translit_name_type_list)
-
 local function track(page)
 	require("Module:debug").track("names/" .. page)
 end
@@ -438,7 +436,11 @@ local function generate_given_name_genders(lang, genders)
 			-- NOTE: This assumes no % sign in the gender type, which seems safe.
 			text = spec.text:gsub("%+", spec.type)
 		else
-			text = spec.type
+			if spec.props.type == "animal" then
+				text = "[[" .. spec.type .. "]]"
+			else
+				text = spec.type
+			end
 		end
 		if spec.q and spec.q[1] or spec.qq and spec.qq[1] or spec.l and spec.l[1] or spec.ll and spec.ll[1] or
 			spec.refs and spec.refs[1] then
@@ -923,7 +925,6 @@ end
 -- The entry point for {{name translit}}, {{name respelling}}, {{name obor}} and {{foreign name}}.
 function export.name_translit(frame)
 	local boolean = {type = "boolean"}
-	local list_allow_holes = {list = true, allow_holes = true}
 
 	local iargs = require("Module:parameters").process(frame.args, {
 		["desctext"] = {required = true},
@@ -931,72 +932,62 @@ function export.name_translit(frame)
 		["foreign_name"] = boolean,
 	})
 
-	local args = require("Module:parameters").process(frame:getParent().args, {
-		[1] = {required = true, type = "language", default = "en"},
-		[2] = {required = true, type = "language", sublist = true, default = "ru"},
-		[3] = {list = true},
-		["type"] = {required = true, list = true, default = "patronymic"},
-		["alt"] = list_allow_holes,
-		["t"] = list_allow_holes,
-		["gloss"] = {list = true, alias_of = "t", allow_holes = true},
-		["tr"] = list_allow_holes,
-		["ts"] = list_allow_holes,
-		["id"] = list_allow_holes,
-		["sc"] = {type = "script", list = true, allow_holes = true},
-		["g"] = list_allow_holes,
-		["q"] = list_allow_holes,
-		["xlit"] = list_allow_holes,
-		["eq"] = list_allow_holes,
+	local parent_args = frame:getParent().args
+	local params = {
+		[1] = {required = true, type = "language", template_default = "en"},
+		[2] = {required = true, type = "language", sublist = true, template_default = "ru"},
+		[3] = {list = true, allow_holes = true},
+		["type"] = {required = true, set = translit_name_type_list, sublist = true, default = "patronymic"},
 		["dim"] = boolean,
 		["aug"] = boolean,
 		["nocap"] = boolean,
 		["sort"] = true,
 		["pagename"] = true,
-	})
+	}
+
+	local m_param_utils = require(parameter_utilities_module)
+
+	local param_mods = m_param_utils.construct_param_mods {
+		{group = {"link", "q", "l", "ref"}},
+		{param = {"xlit", "eq"}},
+	}
+
+	local names, args = m_param_utils.process_list_arguments {
+		params = params,
+		param_mods = param_mods,
+		raw_args = parent_args,
+		termarg = 3,
+		track_module = "names/name translit",
+		disallow_custom_separators = true,
+		-- Use the first source language as the language of the specified names.
+		lang = function(args) return args[2][1] end,
+		sc = "sc.default",
+	}
+
 	local lang = args[1]
 	local sources = args[2]
-
-	local nametypes = {}
-	for _, typearg in ipairs(args["type"]) do
-		for _, ty in ipairs(rsplit(typearg, "%s*,%s*")) do
-			if not translit_name_types[ty] then
-				local quoted_types = {}
-				for _, nametype in ipairs(translit_name_type_list) do
-					table.insert(quoted_types, "'" .. nametype .. "'")
-				end
-				error("Unrecognized type '" .. ty .. "': It should be one of " ..
-					m_table.serialCommaJoin(quoted_types, {conj = "or"}))
-			end
-			table.insert(nametypes, ty)
-		end
-	end
-
-	-- Find the maximum index among any of the list parameters, to determine how many names are given.
-	local maxmaxindex = #args[3]
-	for _, v in pairs(args) do
-		if type(v) == "table" and v.maxindex and v.maxindex > maxmaxindex then
-			maxmaxindex = v.maxindex
-		end
-	end
-
-	local SUBPAGENAME = args.pagename or mw.title.getCurrentTitle().subpageText
+	local pagename = args.pagename or mw.loadData("Module:headword/data").pagename
 	
 	local textsegs = {}
-	table.insert(textsegs, "<span class='use-with-mention'>")
+	local function ins(txt)
+		table.insert(textsegs, txt)
+	end
+	ins("<span class='use-with-mention'>")
 	local desctext = iargs.desctext
 	if not args.nocap then
 		desctext = mw.getContentLanguage():ucfirst(desctext)
 	end
-	table.insert(textsegs, desctext .. " ")
+	ins(desctext .. " ")
 	if not iargs.foreign_name then
-		table.insert(textsegs, "of ")
+		ins("of ")
 	end
 	local langsegs = {}
 	for i, source in ipairs(sources) do
 		local sourcename = source:getCanonicalName()
 		local function get_source_link()
-			local term_to_link = args[3][1] or SUBPAGENAME
-			-- We link the language name to either the first specified name or the pagename, in the following circumstances:
+			local term_to_link = names[1] and names[1].term or pagename
+			-- We link the language name to either the first specified name or the pagename, in the following
+			-- circumstances:
 			-- (1) More than one language was given along with at least one name; or
 			-- (2) We're handling {{foreign name}} or {{name obor}}, and no name was given.
 			-- The reason for (1) is that if more than one language was given, we want a link to the name
@@ -1005,11 +996,11 @@ function export.name_translit(frame)
 			-- The reason for (2) is that {{foreign name}} is often used when the name in the destination language
 			-- is spelled the same as the name in the source language (e.g. [[Clinton]] or [[Obama]] in Italian),
 			-- and in that case no name will be explicitly specified but we still want a link to the name in the
-			-- source language. The reason we restrict this to {{foreign name}} or {{name obor}}, not to {{name translit}}
-			-- or {{name respelling}}, is that {{name translit}} and {{name respelling}} ought to be used for names
-			-- spelled differently in the destination language (either transliterated or respelled), so assuming the
-			-- pagename is the name in the source language is wrong.
-			if args[3][1] and #sources > 1 or (iargs.foreign_name or iargs.obor) and not args[3][1] then
+			-- source language. The reason we restrict this to {{foreign name}} or {{name obor}}, not to
+			-- {{name translit}} or {{name respelling}}, is that {{name translit}} and {{name respelling}} ought to be
+			-- used for names spelled differently in the destination language (either transliterated or respelled), so
+			-- assuming the pagename is the name in the source language is wrong.
+			if names[1] and #sources > 1 or (iargs.foreign_name or iargs.obor) and not names[1] then
 				return m_links.language_link{
 					lang = sources[i], term = term_to_link, alt = sourcename, tr = "-"
 				}
@@ -1021,7 +1012,7 @@ function export.name_translit(frame)
 		if i == 1 and not iargs.foreign_name then
 			-- If at least one name is given, we say "A transliteration of the LANG surname FOO", linking LANG to FOO.
 			-- Otherwise we say "A transliteration of a LANG surname".
-			if maxmaxindex > 0 then
+			if names[1] then
 				table.insert(langsegs, "the " .. get_source_link())
 			else
 				table.insert(langsegs, require(en_utilities_module).add_indefinite_article(sourcename))
@@ -1039,57 +1030,64 @@ function export.name_translit(frame)
 	else
 		augdim_text = ""
 	end
-	local nametype_text = m_table.serialCommaJoin(nametypes) .. augdim_text
+	local nametype_text = m_table.serialCommaJoin(args.type) .. augdim_text
 
 	if not iargs.foreign_name then
-		table.insert(textsegs, langseg_text .. " ")
-		table.insert(textsegs, nametype_text)
-		if maxmaxindex > 0 then
-			table.insert(textsegs, " ")
+		ins(langseg_text .. " ")
+		ins(nametype_text)
+		if names[1] then
+			ins(" ")
 		end
 	else
-		table.insert(textsegs, nametype_text)
-		table.insert(textsegs, " in " .. langseg_text)
-		if maxmaxindex > 0 then
-			table.insert(textsegs, ", ")
+		ins(nametype_text)
+		ins(" in " .. langseg_text)
+		if names[1] then
+			ins(", ")
 		end
 	end
 
-	local names = {}
+	local linked_names = {}
 	local embedded_comma = false
 
-	for i = 1, maxmaxindex do
-		local sc = args["sc"][i]
-		
-		local terminfo = {
-			lang = sources[1], term = args[3][i], alt = args["alt"][i], id = args["id"][i], sc = sc,
-			tr = args["tr"][i], ts = args["ts"][i], gloss = args["t"][i],
-			genders = args["g"][i] and rsplit(args["g"][i], ",") or {}
-		}
-		local linked_term = m_links.full_link(terminfo, "term")
-		if args["q"][i] then
-			linked_term = require("Module:qualifier").format_qualifier(args["q"][i]) .. " " .. linked_term
+	for _, name in ipairs(names) do
+		local linked_name = m_links.full_link(name, "term")
+		if name.q and name.q[1] or name.qq and name.qq[1] or name.l and name.l[1] or name.ll and name.ll[1] or
+			name.refs and name.refs[1] then
+			linked_name = require(pron_qualifier_module).format_qualifiers {
+				lang = name.lang,
+				text = linked_name,
+				q = name.q,
+				qq = name.qq,
+				l = name.l,
+				ll = name.ll,
+				refs = name.refs,
+				raw = true,
+			}
 		end
-		if args["xlit"][i] then
+		if name.xlit then
 			embedded_comma = true
-			linked_term = linked_term .. ", " .. m_links.language_link{ lang = enlang, term = args["xlit"][i] }
+			linked_name = linked_name .. ", " .. m_links.language_link { lang = enlang, term = name.xlit }
 		end
-		if args["eq"][i] then
+		if name.eq then
 			embedded_comma = true
-			linked_term = linked_term .. ", equivalent to " .. m_links.language_link{ lang = enlang, term = args["eq"][i] }
+			linked_name = linked_name .. ", equivalent to " .. m_links.language_link { lang = enlang, term = name.eq }
 		end
-		table.insert(names, linked_term)
+		table.insert(linked_names, linked_name)
 	end
 
 	if embedded_comma then
-		table.insert(textsegs, table.concat(names, "; or of "))
+		ins(table.concat(linked_names, "; or of "))
 	else
-		table.insert(textsegs, m_table.serialCommaJoin(names, {conj = "or"}))
+		ins(m_table.serialCommaJoin(linked_names, {conj = "or"}))
 	end
-	table.insert(textsegs, "</span>")
+	ins("</span>")
 
 	local categories = {}
-	for _, nametype in ipairs(nametypes) do
+	local function inscat(cat)
+		table.insert(categories, lang:getFullName() .. " " .. cat)
+	end
+
+	for _, nametype in ipairs(args.type) do
 		local function insert_cats(dimaugof)
 			local function insert_cats_type(ty)
 				if ty == "unisex given name" then
@@ -1097,15 +1095,15 @@ function export.name_translit(frame)
 					insert_cats_type("female given name")
 				end
 				for _, source in ipairs(sources) do
-					table.insert(categories, lang:getFullName() .. " renderings of " .. source:getCanonicalName() .. " " .. dimaugof .. ty .. "s")
-					table.insert(categories, lang:getFullName() .. " terms derived from " .. source:getCanonicalName())
-					table.insert(categories, lang:getFullName() .. " terms borrowed from " .. source:getCanonicalName())
+					inscat("renderings of " .. source:getCanonicalName() .. " " .. dimaugof .. ty .. "s")
+					inscat("terms derived from " .. source:getCanonicalName())
+					inscat("terms borrowed from " .. source:getCanonicalName())
 					if iargs.obor then
-						table.insert(categories, lang:getFullName() .. " orthographic borrowings from " .. source:getCanonicalName())
+						inscat("orthographic borrowings from " .. source:getCanonicalName())
 					end
 					if source:getCode() ~= source:getFullCode() then
 						-- etymology language
-						table.insert(categories, lang:getFullName() .. " renderings of " .. source:getFullName() .. " " .. dimaugof .. ty .. "s")
+						inscat("renderings of " .. source:getFullName() .. " " .. dimaugof .. ty .. "s")
 					end
 				end
 			end
@@ -1120,8 +1118,7 @@ function export.name_translit(frame)
 		end
 	end
 
-	return table.concat(textsegs, "") ..
-		m_utilities.format_categories(categories, lang, args.sort, nil, force_cat)
+	return table.concat(textsegs, "") .. m_utilities.format_categories(categories, lang, args.sort, nil, force_cat)
 end
 
 return export
