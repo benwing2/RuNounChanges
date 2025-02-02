@@ -9,6 +9,7 @@ local pages_module = "Module:pages"
 local parameter_utilities_module = "Module:parameter utilities"
 local parameters_module = "Module:parameters"
 local parse_interface_module = "Module:parse interface"
+local parse_utilities_module = "Module:parse utilities"
 local pron_qualifier_module = "Module:pron qualifier"
 local qualifier_module = "Module:qualifier"
 local string_utilities_module = "Module:string utilities"
@@ -29,6 +30,8 @@ local trim = m_str_utils.trim
 local u = m_str_utils.char
 local dump = mw.dumpObject
 
+local TEMP_LEFT_DOUBLE_ANGLE = u(0xFFF0)
+local TEMP_RIGHT_DOUBLE_ANGLE = u(0xFFF1)
 
 local function track(page)
     require(debug_track_module)("columns/" .. page)
@@ -724,6 +727,38 @@ function export.handle_display_from_or_topic_list(iargs, raw_item_args, topic_li
 				termargs[i] = actual_term
 				extra_indent_by_termno[i] = #extra_indent
 			end
+		end
+	end
+
+	local function handle_row_with_double_angle_brackets(data)
+		if data.term:find("<<.*>>") then
+			data.termobj.terms = {}
+			local raw = data.term:gsub("<<", TEMP_LEFT_DOUBLE_ANGLE):gsub(">>", TEMP_RIGHT_DOUBLE_ANGLE)
+			local parsed = require(parse_utilities_module).parse_balanced_segment_run(
+				raw, TEMP_LEFT_DOUBLE_ANGLE, TEMP_RIGHT_DOUBLE_ANGLE)
+			local function generate_obj(term, parse_err)
+				return data.generate_subobj({}, term, parse_err)
+			end
+			for i, term_with_mods in ipairs(parsed) do
+				term_with_mods = term_with_mods:gsub(TEMP_LEFT_DOUBLE_ANGLE, "<<"):gsub(TEMP_RIGHT_DOUBLE_ANGLE, ">>")
+				if i % 2 == 1 then
+					table.insert(data.termobj.terms, {raw_text = term_with_mods})
+				else
+					local inside = term_with_mods:match("^<<(.*)>>$")
+					if not inside then
+						error(("Internal error: Something wrong, couldn't match double angle brackets in term: %s"):
+							format(term_with_mods))
+					end
+					local obj = parse_inline_modifiers(inside, {
+						paramname = data.paramname,
+						param_mods = param_mods,
+						generate_obj = generate_obj,
+					})
+					end
+					table.insert(data.termobj.terms, obj)
+				end
+			end
+			return data.termobj
 		end
 	end
 
