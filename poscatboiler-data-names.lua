@@ -2,6 +2,9 @@ local labels = {}
 local raw_categories = {}
 local handlers = {}
 
+local names_module = "Module:names"
+local en_utilities_module = "Module:en-utilities"
+local pluralize = require(en_utilities_module).pluralize
 
 
 -----------------------------------------------------------------------------
@@ -12,106 +15,48 @@ local handlers = {}
 
 
 labels["names"] = {
-	description = "{{{langname}}} terms that are used to refer to specific individuals or groups. Place names, demonyms and other kinds of names can be found in [[:Category:Names]].",
+	description = "{{{langname}}} terms that are used to refer to specific individuals or groups.",
+	additional = "Place names, demonyms and other kinds of names can be found in [[:Category:Names]].",
 	umbrella_parents = {name = "terms by semantic function", is_label = true, sort = " "},
 	parents = {"terms by semantic function", "proper nouns"},
 }
 
-labels["augmentatives of female given names"] = {
-	description = "{{{langname}}} augmentative names given to female individuals.",
-	breadcrumb = "augmentative",
-	parents = {"female given names", "augmentative nouns"},
+------------------------------------------- given names -------------------------------------------
+
+local human_genders = {
+	["male"] = "to male individuals",
+	["female"] = "to female individuals",
+	["unisex"] = "either to male or to female individuals",
 }
 
-labels["augmentatives of male given names"] = {
-	description = "{{{langname}}} augmentative names given to male individuals.",
-	breadcrumb = "augmentative",
-	parents = {"male given names", "augmentative nouns"},
-}
 
-labels["augmentatives of unisex given names"] = {
-	description = "{{{langname}}} augmentative names given either to male or to female individuals.",
-	breadcrumb = "augmentative",
-	parents = {"unisex given names", "augmentative nouns"},
-}
-
-labels["common-gender surnames"] = {
-	description = "{{{langname}}} names shared by both male and female family members, in languages that distinguish male and female surnames.",
-	breadcrumb = "common-gender",
-	parents = {"surnames"},
-}
-
-labels["diminutives of female given names"] = {
-	description = "{{{langname}}} diminutive names given to female individuals.",
-	breadcrumb = "diminutives",
-	parents = {"female given names", "diminutive nouns"},
-}
-
-labels["diminutives of male given names"] = {
-	description = "{{{langname}}} diminutive names given to male individuals.",
-	breadcrumb = "diminutives",
-	parents = {"male given names", "diminutive nouns"},
-}
-
-labels["diminutives of unisex given names"] = {
-	description = "{{{langname}}} diminutive names given either to male or to female individuals.",
-	breadcrumb = "diminutives",
-	parents = {"unisex given names", "diminutive nouns"},
-}
-
-labels["female given names"] = {
-	description = "{{{langname}}} names given to female individuals.",
-	breadcrumb = "female",
-	parents = {"given names"},
-}
-
-labels["female skin names"] = {
-	description = "{{{langname}}} skin names given to female individuals.",
-	breadcrumb = "female",
-	parents = {"skin names"},
-}
-
-labels["female surnames"] = {
-	description = "{{{langname}}} names shared by female family members.",
-	breadcrumb = "female",
-	parents = {"surnames"},
-}
+for gender, props in pairs(require(names_module).given_name_genders) do
+	if gender ~= "unknown-gender" then
+		local is_animal = props.type == "animal"
+		local cat = is_animal and gender .. " names" or gender .. " given names"
+		local desc = is_animal and " given to " .. pluralize(gender) or " given " .. human_genders[gender]
+		local function do_cat(cat, desc, breadcrumb, parents)
+			labels[cat] = {
+				description = "{{{langname}}} " .. desc .. ".",
+				breadcrumb = breadcrumb,
+				parents = parents,
+			}
+		end
+	
+		for _, dimaug in ipairs { "diminutive", "augmentative" } do
+			do_cat(dimaug .. "s of " .. cat, dimaug .. " names " .. desc, dimaug,
+				{gender .. " given names", dimaug .. " nouns"})
+		end
+		do_cat(cat, "names " .. desc, gender, is_animal and (gender == "animal" and "names" or is_animal and
+			"animal names") or "given names")
+		if not is_animal then
+			do_cat(gender .. " skin names", "skin names " .. desc, gender, {"skin names"})
+		end
+	end
+end
 
 labels["given names"] = {
 	description = "{{{langname}}} names given to individuals.",
-	parents = {"names"},
-}
-
-labels["male given names"] = {
-	description = "{{{langname}}} names given to male individuals.",
-	breadcrumb = "male",
-	parents = {"given names"},
-}
-
-labels["male skin names"] = {
-	description = "{{{langname}}} skin names given to male individuals.",
-	breadcrumb = "male",
-	parents = {"skin names"},
-}
-
-labels["male surnames"] = {
-	description = "{{{langname}}} names shared by male family members.",
-	breadcrumb = "male",
-	parents = {"surnames"},
-}
-
-labels["matronymics"] = {
-	description = "{{{langname}}} names indicating a person's mother, grandmother or earlier female ancestor.",
-	parents = {"names"},
-}
-
-labels["nomina gentilia"] = {
-	description = "A Roman [[nomen gentile]] was the \"[[family name]]\" in the [[w:Roman naming convention|convential Roman name]].",
-	parents = {"names"},
-}
-
-labels["patronymics"] = {
-	description = "{{{langname}}} names indicating a person's father, grandfather or earlier male ancestor.",
 	parents = {"names"},
 }
 
@@ -120,22 +65,47 @@ labels["skin names"] = {
 	parents = {"proper nouns", "names"},
 }
 
+------------------------------------------- surnames -------------------------------------------
+
+labels["common-gender surnames"] = {
+	description = "{{{langname}}} names shared by both male and female family members, in languages that distinguish male and female surnames.",
+	breadcrumb = "common-gender",
+	parents = {"surnames"},
+}
+
+labels["female surnames"] = {
+	description = "{{{langname}}} names shared by female family members.",
+	breadcrumb = "female",
+	parents = {"surnames"},
+}
+
+labels["male surnames"] = {
+	description = "{{{langname}}} names shared by male family members.",
+	breadcrumb = "male",
+	parents = {"surnames"},
+}
+
 labels["surnames"] = {
 	description = "{{{langname}}} names shared by family members.",
 	parents = {"names"},
 }
 
-labels["unisex given names"] = {
-	description = "{{{langname}}} names given either to male or to female individuals.",
-	breadcrumb = "unisex",
-	parents = {"given names"},
+labels["matronymics"] = {
+	description = "{{{langname}}} names indicating a person's mother, grandmother or earlier female ancestor.",
+	parents = {"names"},
 }
 
-labels["unisex skin names"] = {
-	description = "{{{langname}}} skin names given either to male or to female individuals.",
-	breadcrumb = "unisex",
-	parents = {"skin names"},
+labels["patronymics"] = {
+	description = "{{{langname}}} names indicating a person's father, grandfather or earlier male ancestor.",
+	parents = {"names"},
 }
+
+labels["nomina gentilia"] = {
+	description = "A Roman [[nomen gentile]] was the \"[[family name]]\" in the [[w:Roman naming convention|convential Roman name]].",
+	parents = {"names"},
+}
+
+------------------------------------------- misc -------------------------------------------
 
 labels["exonyms"] = {
 	description = "{{{langname}}} [[exonym]]s, i.e. terms for toponyms whose name in {{{langname}}} is different from the name in the source language.",
@@ -395,9 +365,8 @@ end
 table.insert(handlers, function(data)
 	local nametype, source_name = data.label:match("^(.*names) from (.+)$")
 	if nametype then
-		local m_table = require("Module:table")
-		local personal_name_types = m_table.listToSet(require("Module:names").personal_name_types)
-		if not personal_name_types[nametype] then
+		local personal_name_type_set = require(names_module).personal_name_type_set
+		if not personal_name_type_set[nametype] then
 			return nil
 		end
 		local source = source_name_to_source(nametype, source_name)
@@ -420,7 +389,7 @@ end)
 table.insert(handlers, function(data)
 	local label = data.label:match("^renderings of (.*)$")
 	if label then
-		local personal_name_types = require("Module:names").personal_name_types
+		local personal_name_types = require(names_module).personal_name_types
 		for _, nametype in ipairs(personal_name_types) do
 			local sourcename = label:match("^(.+) " .. nametype .. "$")
 			
