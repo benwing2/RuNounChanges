@@ -5,6 +5,7 @@ local debug_force_cat = false -- if set to true, always display categories even 
 local m_links = require("Module:links")
 local m_str_utils = require("Module:string utilities")
 local m_table = require("Module:table")
+local en_utilities_module = "Module:en-utilities"
 local etymology_module = "Module:etymology"
 local pron_qualifier_module = "Module:pron qualifier"
 local scripts_module = "Module:scripts"
@@ -17,7 +18,7 @@ local usub = m_str_utils.sub
 local ulen = m_str_utils.len
 local rfind = m_str_utils.find
 local rmatch = m_str_utils.match
-local pluralize = require("Module:en-utilities").pluralize
+local pluralize = require(en_utilities_module).pluralize
 local u = m_str_utils.char
 local ucfirst = m_str_utils.ucfirst
 
@@ -56,12 +57,11 @@ local default_pos = "term"
 
 ===About different types of affixes ("template", "display", "link", "lookup" and "category"):===
 
-* A "template affix" is an affix in its source form as it appears in a template call. Generally, a template affix has
-  an attached template hyphen (see above) to indicate that it is an affix and indicate what type of affix it is
-  (prefix, suffix, interfix/infix or circumfix), but some of the older-style templates such as {{tl|suffix}},
-  {{tl|prefix}}, {{tl|confix}}, etc. have "positional" affixes where the presence of the affix in a certain position
-  (e.g. the second or third parameter) indicates that it is a certain type of affix, whether or not it has an attached
-  template hyphen.
+* A "template affix" is an affix in its source form as it appears in a template call. Generally, a template affix has an
+  attached template hyphen (see above) to indicate that it is an affix and indicate what type of affix it is (prefix,
+  suffix, interfix or circumfix), but some of the older-style templates such as {{tl|suffix}}, {{tl|prefix}},
+  {{tl|confix}}, etc. have "positional" affixes where the presence of the affix in a certain position (e.g. the second
+  or third parameter) indicates that it is a certain type of affix, whether or not it has an attached template hyphen.
 * A "display affix" is the corresponding affix as it is actually displayed to the user. The display affix may differ
   from the template affix for various reasons:
   *# The display affix may be specified explicitly using the {{para|alt<var>N</var>}} parameter, the `<alt:...>` inline
@@ -71,7 +71,8 @@ local default_pos = "term"
   *# Even in the absence of {{para|alt<var>N</var>}} parameters, `<alt:...>` inline modifiers and piped links, certain
      languages have differences between the "template hyphen" specified in the template (which always needs to be
 	 specified somehow or other in templates like {{tl|affix}}, to indicate that the term is an affix and what type of
-	 affix it is) and the display hyphen (see above), with corresponding differences between template and display affixes.
+	 affix it is) and the display hyphen (see above), with corresponding differences between template and display
+	 affixes.
 * A (regular) "link affix" is the affix that is linked to when the affix is shown to the user. The link affix is usually
   the same as the display affix, but will differ in one of three circumstances:
   *# The display and link affixes are explicitly made different using {{para|alt<var>N</var>}} parameters, `<alt:...>`
@@ -623,7 +624,7 @@ local function reconstruct_term_per_hyphens(term, affix_type, scode, thyph_re, n
 		return new_hyphen(scode, hyph)
 	end
 
-	if not affix_type then
+	if affix_type == "non-affix" then
 		return term
 	elseif affix_type == "circumfix" then
 		local before, before_hyphen, after_hyphen, after = rmatch(term, "^(.*)" .. thyph_re .. " " .. thyph_re
@@ -739,33 +740,40 @@ end
 
 --[==[
 For a given template term in a given language (see the definition of "template affix" near the top of the file),
-possibly in an explicitly specified script `sc` (but usually nil), return the term's affix type ({"prefix"}, {"infix"},
-{"suffix"}, {"circumfix"} or {nil} for non-affix) along with the corresponding link and display affixes (see definitions
-near the top of the file); also the corresponding lookup affix (if `return_lookup_affix` is specified). The term passed
-in should already have any fragment (after the # sign) parsed off of it. Four values are returned: `affix_type`,
-`link_term`, `display_term` and `lookup_term`. The affix type can be passed in instead of autodetected (pass in {false}
-if the term is not an affix); in this case, the template term need not have any attached hyphens, and the appropriate
-hyphens will be added in the appropriate places. If `do_affix_mapping` is specified, look up the affix in the
-lang-specific affix mappings, as described in the comment at the top of the file; otherwise, the link and display terms
-will always be the same. (They will be the same in any case if the template term has a bracketed link in it or is not
-an affix.) If `return_lookup_affix` is given, the fourth return value contains the term with appropriate lookup hyphens
-in the appropriate places; otherwise, it is the same as the display term. (This functionality is used in
+possibly in an explicitly specified script `sc` (but usually nil), return the term's affix type ({"prefix"},
+{"interfix"}, {"suffix"}, {"circumfix"} or {"non-affix"}) along with the corresponding link and display affixes
+(see definitions near the top of the file); also the corresponding lookup affix (if `return_lookup_affix` is specified).
+The term passed in should already have any fragment (after the # sign) parsed off of it. Four values are returned:
+`affix_type`, `link_term`, `display_term` and `lookup_term`. The affix type can be passed in instead of autodetected; in
+this case, the template term need not have any attached hyphens, and the appropriate hyphens will be added in the
+appropriate places. If `do_affix_mapping` is specified, look up the affix in the lang-specific affix mappings, as
+described in the comment at the top of the file; otherwise, the link and display terms will always be the same. (They
+will be the same in any case if the template term has a bracketed link in it or is not an affix.) If
+`return_lookup_affix` is given, the fourth return value contains the term with appropriate lookup hyphens in the
+appropriate places; otherwise, it is the same as the display term. (This functionality is used in
 [[Module:category tree/poscatboiler/data/affixes and compounds]] to convert link affixes into lookup affixes so that
 they can be looked up in the affix mapping tables.)
 ]==]
 local function parse_term_for_affixes(term, lang, sc, affix_type, do_affix_mapping, return_lookup_affix, affix_id)
 	if not term then
-		return nil, nil, nil, nil
+		return "non-affix", nil, nil, nil
 	end
 
+	if term == "^" then
+		-- Indicates a null term to emulate the behavior of {{suffix|foo||bar}}.
+		term = ""
+		return "non-affix", term, term, term
+	end
+		
 	if term:find("^%^") then
 		-- HACK! ^ at the beginning of Korean languages has a special meaning, triggering capitalization of the
 		-- transliteration. Don't interpret it as "force non-affix" for those languages.
 		local langcode = lang:getCode()
 		if langcode ~= "ko" and langcode ~= "okm" and langcode ~= "jje" then
-			-- If term begins with ^, it's not an affix no matter what. Strip off the ^ and return "no affix".
-			term = usub(term, 2)
-			return nil, term, term, term
+			-- Formerly we allowed ^ to force non-affix type; this is now handled using an inline modifier
+			-- <naf>, <root>, etc. Throw an error for the moment when the old way is encountered.
+			error("Use of ^ to force non-affix status is no longer supported; use an inline modifier <naf> or <root> " ..
+				"after the component")
 		end
 	end
 
@@ -779,24 +787,30 @@ local function parse_term_for_affixes(term, lang, sc, affix_type, do_affix_mappi
 	local scode, thyph, dhyph, lhyph = detect_script_and_hyphens(term, lang, sc)
 	thyph = "([" .. thyph .. "])"
 
-	if affix_type == nil then
+	if not affix_type then
 		if rfind(term, thyph .. " " .. thyph) then
 			affix_type = "circumfix"
 		else
 			local has_beginning_hyphen = rfind(term, "^" .. thyph)
 			local has_ending_hyphen = rfind(term, thyph .. "$")
 			if has_beginning_hyphen and has_ending_hyphen then
-				affix_type = "infix"
+				affix_type = "interfix"
 			elseif has_ending_hyphen then
 				affix_type = "prefix"
 			elseif has_beginning_hyphen then
 				affix_type = "suffix"
+			else
+				affix_type = "non-affix"
 			end
 		end
 	end
 
 	local link_term, display_term, lookup_term
-	if affix_type then
+	if affix_type == "non-affix" then
+		link_term = term
+		display_term = term
+		lookup_term = term
+	else
 		display_term = reconstruct_term_per_hyphens(term, affix_type, scode, thyph, dhyph)
 		if do_affix_mapping then
 			link_term = lookup_affix_mapping(term, affix_type, lang, scode, thyph, lhyph, affix_id)
@@ -816,10 +830,6 @@ local function parse_term_for_affixes(term, lang, sc, affix_type, do_affix_mappi
 		else
 			lookup_term = display_term
 		end
-	else
-		link_term = term
-		display_term = term
-		lookup_term = term
 	end
 
 	link_term = reconstructed .. link_term
@@ -840,7 +850,7 @@ see the comment in `parse_term_for_affixes` for more information.
 ]==]
 function export.make_affix(term, lang, sc, affix_type, do_affix_mapping, return_lookup_affix, affix_id)
 	if not (affix_type == "prefix" or affix_type == "suffix" or affix_type == "circumfix" or affix_type == "infix" or
-		affix_type == "interfix") then
+		affix_type == "interfix" or affix_type == "non-affix") then
 		error("Internal error: Invalid affix type " .. (affix_type or "(nil)"))
 	end
 
@@ -903,7 +913,7 @@ function export.show_affix(data)
 		-- (in fields that won't clash with fields used by full_link() in [[Module:links]] or link_term()), so they
 		-- can be used in the loop below when categorizing.
 		part.affix_type, part.affix_link_term, part.affix_display_term = parse_term_for_affixes(part.term,
-			part.lang, part.sc, nil, not part.alt, nil, part.id)
+			part.lang, part.sc, part.type, not part.alt, nil, part.id)
 
 		-- If link_term is an empty string, either a bare ^ was specified or an empty term was used along with inline
 		-- modifiers. The intention in either case is not to link the term.
@@ -919,11 +929,8 @@ function export.show_affix(data)
 	-- Now do categorization.
 	for i, part in ipairs_with_gaps(data.parts) do
 		local affix_type = part.affix_type
-		if affix_type then
+		if affix_type ~= "non-affix" then
 			is_affix_or_compound = true
-			-- We cannot distinguish interfixes from infixes by appearance. Prefer interfixes; infixes will need to
-			-- use {{infix}}.
-			if affix_type == "infix" then affix_type = "interfix" end
 
 			-- Make a sort key. For the first part, use the second part as the sort key; the intention is that if the
 			-- term has a prefix, sorting by the prefix won't be very useful so we sort by what follows, which is
@@ -967,7 +974,7 @@ function export.show_affix(data)
 		end
 	end
 
-	-- Make sure there was either an affix or a compound (two or more regular terms).
+	-- Make sure there was either an affix or a compound (two or more non-affix terms).
 	if not is_affix_or_compound then
 		error("The parameters did not include any affixes, and the term is not a compound. Please provide at least one affix.")
 	end
@@ -1015,25 +1022,26 @@ function export.show_compound(data)
 		canonicalize_part(part, data.lang, data.sc)
 		-- Determine affix type and get link and display terms (see text at top of file).
 		local affix_type, link_term, display_term = parse_term_for_affixes(part.term, part.lang, part.sc,
-			nil, not part.alt, nil, part.id)
+			part.type, not part.alt, nil, part.id)
 
-		-- If the term is an infix, recognize it as such (which means e.g. that we will display the term without
-		-- hyphens for East Asian languages). Otherwise, ignore the fact that it looks like an affix and display as
-		-- specified in the template (but pay attention to the detected affix type for certain tracking purposes).
-		if affix_type == "infix" then
+		-- If the term is an interfix or the type was explicitly given, recognize it as such (which means e.g. that we
+		-- will display the term without hyphens for East Asian languages). Otherwise, ignore the fact that it looks
+		-- like an affix and display as specified in the template (but pay attention to the detected affix type for
+		-- certain tracking purposes).
+		if affix_type == "interfix" or (part.type and part.type ~= "non-affix") then
 			-- If link_term is an empty string, either a bare ^ was specified or an empty term was used along with
 			-- inline modifiers. The intention in either case is not to link the term. Don't add a '*fixed with'
 			-- category in this case, or if the term is in a different language.
 			-- If part.alt would be the same as part.term, make it nil, so that it isn't erroneously tracked as being
 			-- redundant alt text.
 			if link_term and link_term ~= "" and not part.part_lang then
-				table.insert(categories, {cat = data.pos .. " interfixed with " .. make_entry_name_no_links(part.lang,
-					link_term), sort_key = part.sort or data.sort_key})
+				table.insert(categories, {cat = data.pos .. " " .. affix_type .. "ed with " ..
+					make_entry_name_no_links(part.lang, link_term), sort_key = part.sort or data.sort_key})
 			end
 			part.term = link_term ~= "" and link_term or nil
 			part.alt = part.alt or (display_term ~= link_term and display_term) or nil
 		else
-			if affix_type then
+			if affix_type ~= "non-affix" then
 				local langcode = data.lang:getCode()
 				-- If `data.lang` is an etymology-only language, track both using its code and its full parent's code.
 				track { affix_type, affix_type .. "/lang/" .. langcode }
@@ -1128,7 +1136,7 @@ end
 
 
 local function track_wrong_affix_type(template, part, expected_affix_type)
-	if part then
+	if part and not part.type then
 		local affix_type = parse_term_for_affixes(part.term, part.lang, part.sc)
 		if affix_type ~= expected_affix_type then
 			local part_name = expected_affix_type or "base"
