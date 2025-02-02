@@ -85,22 +85,16 @@ end
 local topic_list_properties = {
 	{".* calendar months", {sort = false}},
 	{".* calendar month adjectives", {sort = false, cat = calendar_month_adjectives_category}},
+	{"Chinese solar terms", {enhypernym = "the 24 Chinese solar terms", sort = false, n = 1}},
 	{"compass point adjectives", {cat = "Compass points"}},
 	{"compass point adverbs", {cat = "Compass points"}},
-	{".* script letters", letter_like_properties},
-	{".* script vowels", letter_like_properties},
-	{".* script consonants", letter_like_properties},
-	{".* script diacritics", letter_like_properties},
-	{".* script digraphs", letter_like_properties},
-	-- FIXME: We may need to be smarter, and use a regular columnar display in some cases (e.g. when translit is
-	-- present)
-	{".* script letter names", {horiz = "bullet", sort = false, cat = letter_name_category}},
 	{"books of the.* Testament", {sort = false, cat = "Books of the Bible"}},
 	-- FIXME: Use the following instead of the previous when we create 'Books of the Old Testament' and
 	-- 'Books of the New Testament'
 	--{"books of the Old Testament", {sort = false}},
 	--{"books of the .*New Testament", {sort = false, cat = "Books of the New Testament"}},
 	{"canids", {horiz = "bullet"}}, -- only 5 items on most lists
+	{"cereals", {cat = "Grains"}},
 	{"countries in .*", {appendix = "Appendix:Countries of the world"}},
 	-- FIXME: Delete the following once we rename these categories to 'countries in ...'
 	{"countries of .*", {appendix = "Appendix:Countries of the world", cat = countries_of_category}},
@@ -118,6 +112,8 @@ local topic_list_properties = {
 	{"Islamic prophets", {sort = false}},
 	{"leptons", {sort = false, horiz = "bullet"}},
 	{"antileptons", {sort = false, horiz = "bullet", cat = "Leptons"}},
+	{"moons of .*", {sort = false}},
+	{"musical solfège notes", {sort = false, horiz = "bullet", cat = "Musical pitches"}},
 	{"oceans", {horiz = "bullet"}},
 	{"planets of the Solar System", {horiz = "bullet", sort = false}},
 	{"quarks", {sort = false, horiz = "bullet"}},
@@ -126,8 +122,17 @@ local topic_list_properties = {
 	{"religions", {cat = "Religion"}}, -- FIXME, add and use category 'Religions'
 	{"religious adherents", {cat = "Religion"}},
 	{"religious texts", {cat = "Religion"}}, -- FIXME, add and use category 'Religious texts'
+	{".* script letters", letter_like_properties},
+	{".* script vowels", letter_like_properties},
+	{".* script consonants", letter_like_properties},
+	{".* script diacritics", letter_like_properties},
+	{".* script digraphs", letter_like_properties},
+	-- FIXME: We may need to be smarter, and use a regular columnar display in some cases (e.g. when translit is
+	-- present)
+	{".* script letter names", {horiz = "bullet", sort = false, cat = letter_name_category}},
 	{"seasons", {horiz = "bullet", sort = false}},
 	{"sexual orientation adjectives", {cat = "Sexual orientations"}},
+	{"tastes", {horiz = "bullet", cat = "Taste"}},
 	{"taxonomic ranks", {sort = false}},
 	{"times of day", {sort = false}},
 	{"units of time", {sort = false}},
