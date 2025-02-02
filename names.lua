@@ -239,8 +239,10 @@ local function join_names(lang, args, pname, conj, allow_explicit_lang)
 	end
 
 	for i, term in ipairs(args[pname]) do
-		table.insert(termobjs, parse_term_with_annotations(term, pname .. (i == 1 and "" or i), lang,
-			allow_explicit_lang))
+		for _, termobj in ipairs(parse_term_with_annotations(term, pname .. (i == 1 and "" or i), lang,
+			allow_explicit_lang, "allow multiple terms")) do
+			table.insert(termobjs, termobj)
+		end
 	end
 	return join_terms(termobjs, nil, do_language_link, conj), #termobjs
 end
@@ -251,16 +253,18 @@ local function get_eqtext(args)
 	local lastlang = nil
 	local last_eqseg = {}
 	for i, term in ipairs(args.eq) do
-		local termobj = parse_term_with_annotations(term, "eq" .. (i == 1 and "" or i), enlang, "allow explicit lang")
-		local termlang = termobj.lang:getCode()
-		if lastlang and lastlang ~= termlang then
-			if #last_eqseg > 0 then
-				table.insert(eqsegs, last_eqseg)
+		for _, termobj in ipairs(parse_term_with_annotations(term, "eq" .. (i == 1 and "" or i), enlang,
+			"allow explicit lang", "allow multiple terms")) do
+			local termlang = termobj.lang:getCode()
+			if lastlang and lastlang ~= termlang then
+				if #last_eqseg > 0 then
+					table.insert(eqsegs, last_eqseg)
+				end
+				last_eqseg = {}
 			end
-			last_eqseg = {}
+			lastlang = termlang
+			table.insert(last_eqseg, termobj)
 		end
-		lastlang = termlang
-		table.insert(last_eqseg, termobj)
 	end
 	if #last_eqseg > 0 then
 		table.insert(eqsegs, last_eqseg)
@@ -709,30 +713,38 @@ function export.given_name(frame)
 	return textsegs .. m_utilities.format_categories(categories, lang, args.sort, nil, force_cat)
 end
 
--- The entry point for {{surname}}.
+-- The entry point for {{surname}}, {{patronymic}} and {{matronymic}}.
 function export.surname(frame)
+	local iargs = require("Module:parameters").process(frame.args, {
+		["type"] = {required = true, set = {"surname", "patronymic", "matronymic"}},
+	})
+
 	local parent_args = frame:getParent().args
 	local compat = parent_args.lang
 	local offset = compat and 0 or 1
 
 	if parent_args.dot or parent_args.nodot then
-		error("dot= and nodot= are no longer supported in [[Template:surname]] because a trailing period is no longer added by "
-				.. "default; if you want it, add it explicitly after the template")
+		error("dot= and nodot= are no longer supported in [[Template:" .. iargs.type .. "]] because a trailing " ..
+			"period is no longer added by default; if you want it, add it explicitly after the template")
 	end
 
 	local lang_index = compat and "lang" or 1
 	
 	local list = {list = true}
+	local gender_arg = iargs.type == "surname" and "g" or 1 + offset
+	local adj_arg = iargs.type == "surname" and 1 + offset or 2 + offset
 	local args = require("Module:parameters").process(parent_args, {
-		[lang_index] = {required = true, type = "language", default = "und"},
-		["g"] = list, -- gender(s)
-		[1 + offset] = true, -- adjective/qualifier
+		[lang_index] = {required = true, type = "language", template_default = "und"},
+		[gender_arg] = iargs.type == "surname" and true or {required = true, template_default = "unknown"}, -- gender(s)
+		[adj_arg] = true, -- adjective/qualifier
 		["usage"] = true,
 		["origin"] = true,
 		["popular"] = true,
 		["populartype"] = true,
 		["meaning"] = list,
 		["meaningtype"] = true,
+		["father"] = list,
+		["mother"] = list,
 		["addl"] = true,
 		-- initial article: by default A or An (English), a or an (otherwise)
 		["A"] = true,
@@ -764,46 +776,57 @@ function export.surname(frame)
 		return args[param] and args[param] .. " " or ""
 	end
 
-	local adj = args[1 + offset]
+	local adj = args[adj_arg]
 	local xlittext = join_names(nil, args, "xlit")
 	local blendtext = join_names(lang, args, "blend", "and")
 	local varoftext = join_names(lang, args, "varof")
 	local mtext = join_names(lang, args, "m")
 	local ftext = join_names(lang, args, "f")
+	local fathertext = join_names(lang, args, "father", nil, "allow explicit lang")
+	local mothertext = join_names(lang, args, "mother", nil, "allow explicit lang")
 	local varformtext, numvarforms = join_names(lang, args, "varform", ", ")
 	local meaningsegs = {}
 	for _, meaning in ipairs(args.meaning) do
-		table.insert(meaningsegs, '"' .. meaning .. '"')
+		table.insert(meaningsegs, '“' .. meaning .. '”')
 	end
+	if fathertext ~= "" then
+		table.insert(meaningsegs, '“son of ' .. fathertext .. '”')
+	end
+	if mothertext ~= "" then
+		table.insert(meaningsegs, '“daughter of ' .. mothertext .. '”')
+	end
+
 	local meaningtext = m_table.serialCommaJoin(meaningsegs, {conj = "or"})
 	local eqtext = get_eqtext(args)
 
 	table.insert(textsegs, "<span class='use-with-mention'>")
 
 	local genders = {}
-	for _, g in ipairs(args.g) do
-		local origg = g
-		if g == "unknown" or g == "unknown gender" or g == "?" then
-			g = "unknown-gender"
-		elseif g == "unisex" or g == "common gender" or g == "c" then
-			g = "common-gender"
-		elseif g == "m" then
-			g = "male"
-		elseif g == "f" then
-			g = "female"
+	if args[gender_arg] then
+		for _, g in ipairs(require(parse_interface_module).split_on_comma(args[gender_arg])) do
+			local origg = g
+			if g == "unknown" or g == "unknown gender" or g == "?" then
+				g = "unknown-gender"
+			elseif g == "unisex" or g == "common gender" or g == "c" then
+				g = "common-gender"
+			elseif g == "m" then
+				g = "male"
+			elseif g == "f" then
+				g = "female"
+			end
+			if g == "unknown-gender" then
+				track("unknown gender")
+			elseif g ~= "male" and g ~= "female" and g ~= "common-gender" then
+				error("Unrecognized gender: " .. origg)
+			end
+			table.insert(genders, g)
 		end
-		if g == "unknown-gender" then
-			track("unknown gender")
-		elseif g ~= "male" and g ~= "female" and g ~= "common-gender" then
-			error("Unrecognized gender: " .. origg)
-		end
-		table.insert(genders, g)
 	end
 
 	-- If gender is supplied, it goes before the specified adjective in adj=. The only value of gender that uses "an" is
 	-- "unknown-gender" (note that "unisex" wouldn't use it but in any case we map "unisex" to "common-gender"). If gender
 	-- isn't supplied, look at the first letter of the value of adj= if supplied; otherwise, the article is always "a"
-	-- because the word "surname" follows. Capitalize "A"/"An" if English.
+	-- because the word "surname", "patronymic" or "matronymic" follows. Capitalize "A"/"An" if English.
 	local article
 	if args.A then
 		article = args.A
@@ -823,7 +846,7 @@ function export.surname(frame)
 	if adj then
 		table.insert(textsegs, adj .. " ")
 	end
-	table.insert(textsegs, "[[surname]]")
+	table.insert(textsegs, "[[" .. iargs.type .. "]]")
 	local need_comma = false
 	if xlittext ~= "" then
 		table.insert(textsegs, ", " .. xlittext)
@@ -899,9 +922,9 @@ function export.surname(frame)
 	local langname = lang:getCanonicalName() .. " "
 	local function insert_cats(g)
 		g = g and g .. " " or ""
-		table.insert(categories, langname .. g .. "surnames")
+		table.insert(categories, langname .. g .. iargs.type .. "s")
 		for _, catpart in ipairs(from_catparts) do
-			table.insert(categories, langname .. g .. "surnames from " .. catpart)
+			table.insert(categories, langname .. g .. iargs.type .. "s from " .. catpart)
 		end
 	end
 	insert_cats(nil)
