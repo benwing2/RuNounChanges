@@ -7,7 +7,6 @@ local m_table = require("Module:table")
 local en_utilities_module = "Module:en-utilities"
 local parameter_utilities_module = "Module:parameter utilities"
 local parse_interface_module = "Module:parse interface"
-local parse_utilities_module = "Module:parse utilities"
 local pron_qualifier_module = "Module:pron qualifier"
 
 local enlang = m_languages.getByCode("en")
@@ -52,7 +51,6 @@ export.given_name_genders = {
 	unisex = {type = "human", cat = {"male given names", "female given names", "unisex given names"}, article = "a"},
 	["unknown-gender"] = {type = "human", cat = {}, track = true},
 	animal = {type = "animal", track = true},
-	caribou = {type = "animal"},
 	cat = {type = "animal"},
 	cow = {type = "animal"},
 	dog = {type = "animal"},
@@ -98,10 +96,6 @@ local translit_name_type_list = {
 }
 local translit_name_types = m_table.listToSet(translit_name_type_list)
 
-local param_mods = {"t", "alt", "tr", "ts", "pos", "lit", "id", "sc", "g", "q", "eq"}
-local param_mod_set = m_table.listToSet(param_mods)
-
-
 local function track(page)
 	require("Module:debug").track("names/" .. page)
 end
@@ -120,110 +114,72 @@ end
 Parse a term and associated properties. This works with parameters of the form 'Karlheinz' or
 'Kunigunde<q:medieval, now rare>' or 'non:Óláfr' or 'ru:Фру́нзе<tr:Frúnzɛ><q:rare>' where the modifying properties
 are contained in <...> specifications after the term. `term` is the full parameter value including any angle brackets
-and colons; `pname` is the name of the parameter that this value comes from, for error purposes; `deflang` is a
+and colons; `paramname` is the name of the parameter that this value comes from, for error purposes; `deflang` is a
 language object used in the return value when the language isn't specified (e.g. in the examples 'Karlheinz' and
 'Kunigunde<q:medieval, now rare>' above); `allow_explicit_lang` indicates whether the language can be explicitly given
 (e.g. in the examples 'non:Óláfr' or 'ru:Фру́нзе<tr:Frúnzɛ><q:rare>' above).
 
-Normally the return value is an object with properties '.term' (a terminfo object that can be passed to full_link() in
-[[Module:links]]) and '.q' (a qualifier). However, if `allow_multiple_terms` is given, multiple comma-separated names
-can be given in `term`, and the return value is a list of objects of the form described just above.
+Normally the return value is a terminfo object that can be passed to full_link() in [[Module:links]]), additionally
+with optional fields `.q`, `.qq`, `.l`, `.ll`, `.refs` and `.eq` (a list of objects of the same form as the returned
+terminfo object. However, if `allow_multiple_terms` is given, multiple comma-separated names can be given in `term`,
+and the return value is a list of objects of the form described just above.
 ]=]
-local function parse_term_with_annotations(term, pname, deflang, allow_explicit_lang, allow_multiple_terms)
-	local function parse_single_run_with_annotations(run)
-		local function parse_err(msg)
-			error(msg .. ": " .. pname .. "= " .. table.concat(run))
+local function parse_term_with_annotations(term, paramname, deflang, allow_explicit_lang, allow_multiple_terms)
+	local param_mods = require(parameter_utilities_module).construct_param_mods {
+		{group = {"link", "l", "q", "ref"}},
+		{param = "eq", convert = function(eqval, parse_err)
+			return parse_term_with_annotations(eqval, paramname .. ".eq", enlang, false, "allow multiple terms")
+		end},
+	}
+	local function generate_obj(term, parse_err)
+		local termlang
+		if allow_explicit_lang then
+			local actual_term
+			actual_term, termlang = require(parse_interface_module).parse_term_with_lang {
+				term = term,
+				parse_err = parse_err,
+				paramname = paramname,
+			}
+			term = actual_term or term
 		end
-		if #run == 1 and run[1] == "" then
-			error("Blank form for param '" .. pname .. "' not allowed")
-		end
-		local termobj = {term = {}}
-		local lang, form = run[1]:match("^([^%[%]]-):(.*)$")
-		if lang and lang ~= "w" then
-			if not allow_explicit_lang then
-				parse_err("Explicit language '" .. lang .. "' not allowed for this parameter")
-			end
-			termobj.term.lang = m_languages.getByCode(lang, nil, true) or
-				require("Module:languages/errorGetBy").code(lang, pname, true)
-			termobj.term.term = form
-		else
-			termobj.term.lang = deflang
-			termobj.term.term = run[1]
-		end
-
-		for i = 2, #run - 1, 2 do
-			if run[i + 1] ~= "" then
-				parse_err("Extraneous text '" .. run[i + 1] .. "' after modifier")
-			end
-			local modtext = run[i]:match("^<(.*)>$")
-			if not modtext then
-				parse_err("Internal error: Modifier '" .. modtext .. "' isn't surrounded by angle brackets")
-			end
-			local prefix, arg = modtext:match("^([a-z]+):(.*)$")
-			if not prefix then
-				parse_err("Modifier " .. run[i] .. " lacks a prefix, should begin with one of '" ..
-					table.concat(param_mods, ":', '") .. ":'")
-			end
-			if param_mod_set[prefix] then
-				local obj_to_set
-				if prefix == "q" or prefix == "eq" then
-					obj_to_set = termobj
-				else
-					obj_to_set = termobj.term
-				end
-				if obj_to_set[prefix] then
-					parse_err("Modifier '" .. prefix .. "' occurs twice, second occurrence " .. run[i])
-				end
-				if prefix == "t" then
-					termobj.term.gloss = arg
-				elseif prefix == "g" then
-					termobj.term.genders = rsplit(arg, ",")
-				elseif prefix == "sc" then
-					termobj.term.sc = require("Module:scripts").getByCode(arg) or
-						require("Module:languages/error")(arg, pname, "script code", nil, "not real lang")
-				elseif prefix == "eq" then
-					termobj.eq = parse_term_with_annotations(arg, pname .. ".eq", enlang, false, "allow multiple terms")
-				else
-					obj_to_set[prefix] = arg
-				end
-			else
-				parse_err("Unrecognized prefix '" .. prefix .. "' in modifier " .. run[i])
-			end
-		end
-		return termobj
+		return {
+			term = term,
+			lang = termlang or deflang,
+		}
 	end
-
-	local put = require(parse_utilities_module)
-	local run = put.parse_balanced_segment_run(term, "<", ">")
-	if allow_multiple_terms then
-		local comma_separated_runs = put.split_alternating_runs(run, "%s*,%s*")
-		local termobjs = {}
-		for _, comma_separated_run in ipairs(comma_separated_runs) do
-			table.insert(termobjs, parse_single_run_with_annotations(comma_separated_run))
-		end
-		return termobjs
-	else
-		return parse_single_run_with_annotations(run)
-	end
+	return require(parse_interface_module).parse_inline_modifiers(term, {
+		param_mods = param_mods,
+		paramname = paramname,
+		generate_obj = generate_obj,
+		splitchar = allow_multiple_terms and "," or nil,
+	})
 end
 
 
 --[=[
 Link a single term. If `do_language_link` is given and a given term's language is English, the link will be constructed
-using language_link() in [[Module:links]]; otherwise, with full_link(). Each term in `terms` is an object as returned
-by parse_term_with_annotations(), i.e. it contains fields '.term' (a terminfo structure suitable for passing to
-full_link() or language_link()), optional '.q' (a qualifier) and optional '.eq' (a list of objects of the same form as
-`termobj`).
+using language_link() in [[Module:links]]; otherwise, with full_link(). `termobj` is an object as returned by
+parse_term_with_annotations(), i.e. it is suitable for passing to [[Module:links]] and additionally contains optional
+fields `.q`, `.qq`, `.l`, `.ll`, `.refs` and `.eq` (a list of objects of the same form as `termobj`).
 ]=]
 local function link_one_term(termobj, do_language_link)
 	local link
-	if do_language_link and termobj.term.lang:getCode() == "en" then
-		link = m_links.language_link(termobj.term)
+	if do_language_link and termobj.lang:getCode() == "en" then
+		link = m_links.language_link(termobj)
 	else
-		link = m_links.full_link(termobj.term)
+		link = m_links.full_link(termobj)
 	end
-	if termobj.q then
-		link = require("Module:qualifier").format_qualifier(termobj.q) .. " " .. link
+	if termobj.q and termobj.q[1] or termobj.qq and termobj.qq[1] or
+		termobj.l and termobj.l[1] or termobj.ll and termobj.ll[1] or termobj.refs and termobj.refs[1] then
+		link = require(pron_qualifier_module).format_qualifiers {
+			lang = termobj.lang,
+			text = link,
+			q = termobj.q,
+			qq = termobj.qq,
+			l = termobj.l,
+			ll = termobj.ll,
+			refs = termobj.refs,
+		}
 	end
 	if termobj.eq then
 		local eqtext = {}
@@ -244,15 +200,14 @@ appropriately. (However, if `conj` is the special value ", ", joining is done di
 If `include_langname` is given, the language of the first term will be prepended to the joined terms. If
 `do_language_link` is given and a given term's language is English, the link will be constructed using language_link()
 in [[Module:links]]; otherwise, with full_link(). Each term in `terms` is an object as returned by
-parse_term_with_annotations(), i.e. it contains fields '.term' (a terminfo structure suitable for passing to full_link()
-or language_link()), optional '.q' (a qualifier) and optional '.eq' (a list of objects of the same form as in `terms`).
+parse_term_with_annotations().
 ]=]
 local function join_terms(terms, include_langname, do_language_link, conj)
 	local links = {}
 	local langnametext
 	for _, termobj in ipairs(terms) do
 		if include_langname and not langnametext then
-			langnametext = termobj.term.lang:getCanonicalName() .. " "
+			langnametext = termobj.lang:getCanonicalName() .. " "
 		end
 		table.insert(links, link_one_term(termobj, do_language_link))
 	end
@@ -286,7 +241,8 @@ local function join_names(lang, args, pname, conj, allow_explicit_lang)
 	end
 
 	for i, term in ipairs(args[pname]) do
-		table.insert(termobjs, parse_term_with_annotations(term, pname .. (i == 1 and "" or i), lang, allow_explicit_lang))
+		table.insert(termobjs, parse_term_with_annotations(term, pname .. (i == 1 and "" or i), lang,
+			allow_explicit_lang))
 	end
 	return join_terms(termobjs, nil, do_language_link, conj), #termobjs
 end
@@ -298,7 +254,7 @@ local function get_eqtext(args)
 	local last_eqseg = {}
 	for i, term in ipairs(args.eq) do
 		local termobj = parse_term_with_annotations(term, "eq" .. (i == 1 and "" or i), enlang, "allow explicit lang")
-		local termlang = termobj.term.lang:getCode()
+		local termlang = termobj.lang:getCode()
 		if lastlang and lastlang ~= termlang then
 			if #last_eqseg > 0 then
 				table.insert(eqsegs, last_eqseg)
@@ -346,12 +302,13 @@ local function get_fromtext(lang, args)
 		else
 			prefix = "from "
 			if from:find(":") then
-				local termobj = parse_term_with_annotations(from, "from" .. (i == 1 and "" or i), lang, "allow explicit lang")
+				local termobj = parse_term_with_annotations(from, "from" .. (i == 1 and "" or i), lang,
+					"allow explicit lang")
 				local fromlangname = ""
-				if termobj.term.lang:getCode() ~= lang:getCode() then
-					-- If name is derived from another name in the same language, don't include lang name after text "from "
-					-- or create a category like "German male given names derived from German".
-					local canonical_name = termobj.term.lang:getCanonicalName()
+				if termobj.lang:getCode() ~= lang:getCode() then
+					-- If name is derived from another name in the same language, don't include lang name after text
+					-- "from " or create a category like "German male given names derived from German".
+					local canonical_name = termobj.lang:getCanonicalName()
 					fromlangname = canonical_name .. " "
 					table.insert(catparts, canonical_name)
 				end
@@ -646,7 +603,7 @@ function export.given_name(frame)
 		local gendertext, gender_article = generate_given_name_genders(lang, genders)
 		ins(gender_article)
 		ins(" ")
-		ins("[[" .. gendertext .. "]]")
+		ins(gendertext)
 	end
 
 	local from_catparts = {}
