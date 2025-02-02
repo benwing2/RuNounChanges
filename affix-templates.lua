@@ -2,6 +2,7 @@ local export = {}
 
 local m_affix = require("Module:affix")
 local m_utilities = require("Module:utilities")
+local en_utilities_module = "Module:en-utilities"
 local parameter_utilities_module = "Module:parameter utilities"
 local pseudo_loan_module = "Module:affix/pseudo-loan"
 
@@ -10,6 +11,34 @@ local function is_property_key(k)
 	return require(parameter_utilities_module).item_key_is_property(k)
 end
 
+
+local recognized_affix_types = {
+	prefix = "prefix",
+	pre = "prefix",
+	suffix = "suffix",
+	suf = "suffix",
+	interfix = "interfix",
+	inter = "interfix",
+	infix = "infix",
+	["in"] = "infix",
+	circumfix = "circumfix",
+	circum = "circumfix",
+	["non-affix"] = "non-affix",
+	naf = "non-affix",
+	root = "non-affix",
+}
+
+local function pre_normalize_affix_type(data)
+	local modtext = data.modtext
+	modtext = modtext:match("^<(.*)>$")
+	if not modtext then
+		error(("Internal error: Passed-in modifier isn't surrounded by angle brackets: %s"):format(data.modtext))
+	end
+	if recognized_affix_types[modtext] then
+		modtext = "type:" .. modtext
+	end
+	return "<" .. modtext .. ">"
+end
 
 -- Parse raw arguments. A single parameter `data` is passed in, with the following fields:
 -- * `raw_args`: The raw arguments to parse, normally taken from `frame:getParent().args`.
@@ -22,6 +51,8 @@ end
 --   given).
 -- * `require_index_for_pos`: There is no separate |pos= parameter distinct from |pos1=, |pos2=, etc. Instead,
 --   specifying |pos= results in an error.
+-- * `allow_type`: Allow |type1=, |type2=, etc. or inline <type:...> for the affix type, and allow a separate |type=
+--   parameter for the etymology type (FIXME: this may be confusing; consider changing the etymology type to |etype=).
 --
 -- Note that all language parameters are allowed to be etymology-only languages.
 --
@@ -57,7 +88,7 @@ local function parse_args(data)
 	end
 
     local m_param_utils = require(parameter_utilities_module)
-	local param_mods = m_param_utils.construct_param_mods {
+	local param_mod_source = {
 		-- We want to require an index for all params (or use separate_no_index, which also requires an index for the
 		-- param corresponding to the first item).
 		{default = true, require_index = true},
@@ -66,6 +97,11 @@ local function parse_args(data)
 		{param = "lit", separate_no_index = true},
 		{param = "pos", separate_no_index = not data.require_index_for_pos, require_index = data.require_index_for_pos},
 	}
+	if data.allow_type then
+		table.insert(param_mod_source, {param = "type", separate_no_index = true})
+	end
+
+	local param_mods = m_param_utils.construct_param_mods(param_mod_source)
 	if data.extra_params then
 		data.extra_params(params)
 	end
@@ -81,6 +117,8 @@ local function parse_args(data)
 		-- For compatibility, we need to not skip completely unspecified items. It is common, for example, to do
 		-- {{suffix|lang||foo}} to generate "+ -foo".
 		dont_skip_items = true,
+		-- Allow e.g. <infix> to be specified in place of <type:infix>.
+		pre_normalize_modifiers = pre_normalize_affix_type,
 		-- Don't pass in `lang` or `sc`, as they will be used as defaults to initialize the items, which we don't want
 		-- (particularly for `lang`), as the code in [[Module:affix]] uses the presence of `lang` as an indicator that
 		-- a part-specific language was explicitly given.
@@ -106,7 +144,24 @@ local function parse_args(data)
 		end
 		if not saw_item_property then
 			items[i] = nil
+		elseif item.type then
+			-- Validate and canonicalize affix types.
+			if not recognized_affix_types[item.type] then
+				local valid_types = {}
+				for k in pairs(recognized_affix_types) do
+					insert(valid_types, ("'%s'"):format(k))
+				end
+				table.sort(recognized_affix_types)
+				error(("Unrecognized affix type '%s' in item %s; valid values are %s"):format(
+					item.type, item.itemno, table.concat(valid_types, ", ")))
+			else
+				item.type = recognized_affix_types[item.type]
+			end
 		end
+	end
+
+	if args.type and args.type.default and not m_affix.etymology_types[args.type.default] then
+		error("Unrecognized etymology type: '" .. args.type.default .. "'")
 	end
 
 	return args, items, lang, args.sc.default, source
@@ -119,7 +174,7 @@ local function augment_affix_data(data, args, lang, sc)
 	data.pos = args.pos and args.pos.default
 	data.lit = args.lit and args.lit.default
 	data.sort_key = args.sort
-	data.type = args.type
+	data.type = args.type and args.type.default
 	data.nocap = args.nocap
 	data.notext = args.notext
 	data.nocat = args.nocat
@@ -134,7 +189,6 @@ end
 
 function export.affix(frame)
 	local function extra_params(params)
-		params.type = {}
 		params.notext = {type = "boolean"}
 		params.nocat = {type = "boolean"}
 		params.force_cat = {type = "boolean"}
@@ -143,15 +197,12 @@ function export.affix(frame)
 	local args, parts, lang, sc = parse_args {
 		raw_args = frame:getParent().args,
 		extra_params = extra_params,
+		allow_type = true,
 	}
-
-	if args.type and not m_affix.etymology_types[args.type] then
-		error("Unrecognized etymology type: '" .. args.type .. "'")
-	end
 
 	-- There must be at least one part to display. If there are gaps, a term
 	-- request will be shown.
-	if not next(parts) and not args.type then
+	if not next(parts) and not args.type.default then
 		if mw.title.getCurrentTitle().nsText == "Template" then
 			parts = { {term = "prefix-"}, {term = "base"}, {term = "-suffix"} }
 		else
@@ -164,7 +215,6 @@ end
 
 function export.compound(frame)
 	local function extra_params(params)
-		params.type = {}
 		params.notext = {type = "boolean"}
 		params.nocat = {type = "boolean"}
 		params.force_cat = {type = "boolean"}
@@ -173,15 +223,12 @@ function export.compound(frame)
 	local args, parts, lang, sc = parse_args {
 		raw_args = frame:getParent().args,
 		extra_params = extra_params,
+		allow_type = true,
 	}
-
-	if args.type and not m_affix.etymology_types[args.type] then
-		error("Unrecognized etymology type: '" .. args.type .. "'")
-	end
 
 	-- There must be at least one part to display. If there are gaps, a term
 	-- request will be shown.
-	if not next(parts) and not args.type then
+	if not next(parts) and not args.type.default then
 		if mw.title.getCurrentTitle().nsText == "Template" then
 			parts = { {term = "first"}, {term = "second"} }
 		else
@@ -281,7 +328,6 @@ function export.surface_analysis(frame)
 	end
 
 	local function extra_params(params)
-		params.type = {}
 		params.notext = {type = "boolean"}
 		params.nocat = {type = "boolean"}
 		params.force_cat = {type = "boolean"}
@@ -290,11 +336,8 @@ function export.surface_analysis(frame)
 	local args, parts, lang, sc = parse_args {
 		raw_args = parent_args,
 		extra_params = extra_params,
+		allow_type = true,
 	}
-
-	if args.type and not m_affix.etymology_types[args.type] then
-		error("Unrecognized etymology type: '" .. args.type .. "'")
-	end
 
 	-- There must be at least one part to display. If there are gaps, a term
 	-- request will be shown.
@@ -531,7 +574,7 @@ function export.derivsee(frame)
 	local term = args[2] or args.head
 	local id = args.id
 	local sc = args.sc
-	local pos = require("Module:string utilities").pluralize(args.pos or "term")
+	local pos = require(en_utilities_module).pluralize(args.pos or "term")
 
 	if not term then
 		local SUBPAGE = mw.title.getCurrentTitle().subpageText
