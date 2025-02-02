@@ -37,6 +37,7 @@ exist before loading the module.
   {{cd|<nowiki><references /></nowiki>}} section.
 * `lang`: Language object for accent qualifiers.
 * `text`: The text to wrap with qualifiers.
+*` raw`: Don't do any CSS wrapping of the formatted text.
 
 The order of qualifiers and labels, on both the left and right, is (1) labels, (2) accent qualifiers, (3) regular
 qualifiers. This goes in order of relative importance.
@@ -75,6 +76,7 @@ function export.format_qualifiers(data)
 				no_ib_content = true,
 				no_track_already_seen = true,
 				ok_to_destructively_modify = true, -- doesn't apply to `labels`
+				raw = data.raw,
 			}
 		end
 		local m_qualifier = require(qualifier_module)
@@ -85,18 +87,31 @@ function export.format_qualifiers(data)
 			ins(format_label_like(accent_qualifiers, "accent"))
 		end
 		if has_qualifiers then
-			ins(m_qualifier.format_qualifiers(qualifiers, false, false, nil, nil, "no-ib-content"))
+			ins(m_qualifier.format_qualifiers {
+				qualifiers = qualifiers,
+				open = false,
+				close = false,
+				no_ib_content = true,
+				raw = data.raw,
+			})
 		end
 		local qualifier_inside
+		local function wrap_qualifier_css(txt, suffix)
+			if data.raw then
+				return txt
+			else
+				return m_qualifier.wrap_qualifier_css(txt, suffix)
+			end
+		end
 		if qualifier_like_parts[2] then
-			qualifier_inside = table.concat(qualifier_like_parts, m_qualifier.wrap_qualifier_css(",", "comma") .. " ")
+			qualifier_inside = table.concat(qualifier_like_parts, wrap_qualifier_css(",", "comma") .. " ")
 		else
 			qualifier_inside = qualifier_like_parts[1]
 		end
 		qualifier_like_parts = {}
-		ins(m_qualifier.wrap_qualifier_css("(", "brac"))
-		ins(m_qualifier.wrap_qualifier_css(qualifier_inside, "content"))
-		ins(m_qualifier.wrap_qualifier_css(")", "brac"))
+		ins(wrap_qualifier_css("(", "brac"))
+		ins(wrap_qualifier_css(qualifier_inside, "content"))
+		ins(wrap_qualifier_css(")", "brac"))
 		return table.concat(qualifier_like_parts)
 	end
 
