@@ -27,9 +27,11 @@ export.allowed_special_indicators = {
 	["+"] = true, -- requests the default behavior with preposition handling
 }
 
--- Check for special indicators (values such as "+first" or "+first-last" that are used in a `pl`, `f`, etc. argument
--- and indicate how to inflect a multiword term). If `form` is such an indicator, the return value is `form` minus
--- the initial + sign; otherwise, if form begins with a + sign, an error is thrown; otherwise the return value is nil.
+--[==[
+Check for special indicators (values such as {"+first"} or {"+first-last"} that are used in a `pl`, `f`, etc. argument
+and indicate how to inflect a multiword term). If `form` is such an indicator, the return value is `form` minus
+the initial `+` sign; otherwise, if form begins with a `+` sign, an error is thrown; otherwise the return value is nil.
+]==]
 function export.get_special_indicator(form)
 	if form:find("^%+") then
 		form = form:gsub("^%+", "")
@@ -65,22 +67,25 @@ local function add_endings(bases, endings)
 end
 
 
--- Inflect a possibly multiword or hyphenated term `form` using the function `inflect`, which is a function of one
--- argument that is called on a single word to inflect and should return either the inflected word or a list of
--- inflected words. `special` indicates how to inflect the multiword term and should be e.g. "first" to inflect only the
--- first word, "first-last" to inflect the first and last words, "each" to inflect each word, etc. See
--- `allowed_special_indicators` above for the possibilities. If `special` is '+', or is omitted and the term is
--- multiword (i.e. containing a space character), the function checks for multiword or hyphenated terms containing the
--- prepositions in `prepositions`, e.g. Italian [[senso di marcia]] or [[succo d'arancia]] or Portuguese
--- [[tartaruga-do-mar]]. If such a term is found, only the first word is inflected. Otherwise, the default is
--- "first-last". `prepositions` is a list of regular expressions matching prepositions. The regular expressions will
--- automatically have the separator character (space or hyphen) added to the left side but not the right side, so they
--- should contain a space character (which will automatically be converted to the appropriate separator) on the right
--- side unless the preposition is joined on the right side with an apostrophe. Examples of preposition regular
--- expressions for Italian are "di ", "sull'" and "d?all[oae] " (which matches "dallo ", "dalle ", "alla ", etc.).
---
--- The return value is always either a list of inflected multiword or hyphenated terms, or nil if `special` is omitted
--- and `form` is not multiword. (If `special` is specified and `form` is not multiword or hyphenated, an error results.)
+--[==[
+Inflect a possibly multiword or hyphenated term `form` using the function `inflect`, which is a function of one
+argument that is called on a single word to inflect and should return either the inflected word or a list of
+inflected words. `special` indicates how to inflect the multiword term and should be e.g. {"first"| to inflect only the
+first word, {"first-last"} to inflect the first and last words, {"each"} to inflect each word, etc. See
+`allowed_special_indicators` above for the possibilities. If `special` is `+`, or is omitted and the term is
+multiword (i.e. containing a space character), the function checks for multiword or hyphenated terms containing the
+prepositions in `prepositions`, e.g. Italian [[senso di marcia]] or [[succo d'arancia]] or Portuguese
+[[tartaruga-do-mar]]. If such a term is found, only the first word is inflected. Otherwise, the default is
+{"first-last"}. `prepositions` is a list of regular expressions matching prepositions. The regular expressions will
+automatically have the separator character (space or hyphen) added to the left side but not the right side, so they
+should contain a space character (which will automatically be converted to the appropriate separator) on the right
+side unless the preposition is joined on the right side with an apostrophe. Examples of preposition regular
+expressions for Italian are {"di "}, {"sull'"} and {"d?all[oae] "} (which matches {"dallo "}, {"dalle "}, {"alla "},
+etc.).
+
+The return value is always either a list of inflected multiword or hyphenated terms, or nil if `special` is omitted
+and `form` is not multiword. (If `special` is specified and `form` is not multiword or hyphenated, an error results.)
+]==]
 function export.handle_multiword(form, special, inflect, prepositions, sep)
 	sep = sep or form:find(" ") and " " or "%-"
 	local raw_sep = sep == " " and " " or "-"
@@ -174,11 +179,8 @@ end
 -- and apostrophes if they are in the middle of the word, not at the beginning of end (hyphens at the beginning or end
 -- indicate suffixes or prefixes, respectively, and apostrophes at the beginning or end are also possible, as in
 -- Italian [['ndrangheta]] or [[po']]). The apostrophe is included in the link to its left (so we auto-split French
--- [[l'eau]] as [[l']][[eau]]). `no_split_apostrophe_words`, if given, is a set of words that contain apostrophes but
--- which should not be split on the apostrophes, such as French [[c'est]] and [[quelqu'un]]. `include_hyphen_prefixes`,
--- if given, is a set of prefixes (not including the final hyphen) where we should include the final hyphen in the
--- prefix. Hence, e.g. if "anti" is in the set, a Portuguese word like [[anti-herói]] "anti-hero" will be split
--- [[anti-]][[herói]] (whereas a word like [[código-fonte]] "source code" will be split as [[código]]-[[fonte]]).
+-- [[l'eau]] as [[l']][[eau]]). See `add_links_to_multiword_term()` for the explanation of `no_split_apostrophe_words`
+-- and `include_hyphen_prefixes`.
 local function add_single_word_links(space_word, splithyph, no_split_apostrophe_words, include_hyphen_prefixes)
 	local space_word_no_punct, punct = rmatch(space_word, "^(.*)([,;:?!])$")
 	space_word_no_punct = space_word_no_punct or space_word
@@ -220,16 +222,24 @@ local function add_single_word_links(space_word, splithyph, no_split_apostrophe_
 	return table.concat(linked_words) .. punct
 end
 
--- Auto-add links to a multiword term. Links are not added to single-word terms. We split on spaces, and also on hyphens
--- if `splithyph` is given or the word has no spaces. In addition, we split on apostrophes, including the apostrophe in
--- the link to its left (so we auto-split "de l'eau" "[[de]] [[l']][[eau]]"). We don't always split on hyphens because
--- of cases like "boire du petit-lait" where "petit-lait" should be linked as a whole, but provide the option to do it
--- for cases like "croyez-le ou non". If there's no space, however, then it makes sense to split on hyphens by default
--- (e.g. for "avant-avant-hier"). Cases where only some of the hyphens should be split can always be handled by
--- explicitly specifying the head (e.g. "Nord-Pas-de-Calais" given as head=[[Nord]]-[[Pas-de-Calais]]).
---
--- `no_split_apostrophe_words` and `include_hyphen_prefixes` allow for special-case handling of particular words and
--- are as described in the comment above add_single_word_links().
+--[==[
+Auto-add links to a multiword term. Links are not added to single-word terms. We split on spaces, and also on hyphens
+if `splithyph` is given or the word has no spaces. In addition, we split on apostrophes, including the apostrophe in
+the link to its left (so we auto-split {"de l'eau"} {"[[de]] [[l']][[eau]]"}). We don't always split on hyphens because
+of cases like {"boire du petit-lait"} where {"petit-lait"} should be linked as a whole, but provide the option to do it
+for cases like {"croyez-le ou non"}. If there's no space, however, then it makes sense to split on hyphens by default
+(e.g. for {"avant-avant-hier"}). Cases where only some of the hyphens should be split can always be handled by
+explicitly specifying the head (e.g. {"Nord-Pas-de-Calais"} given as `head=[[Nord]]-[[Pas-de-Calais]]`).
+
+`no_split_apostrophe_words` and `include_hyphen_prefixes` allow for special-case handling of particular words and
+are as described in the comment above `add_single_word_links()`.
+
+`no_split_apostrophe_words`, if given, is a set of words that contain apostrophes but which should not be split on the
+apostrophes, such as French [[c'est]] and [[quelqu'un]]. `include_hyphen_prefixes`, if given, is a set of prefixes (not
+including the final hyphen) where we should include the final hyphen in the prefix. Hence, e.g. if {"anti"} is in the
+set, a Portuguese word like [[anti-herói]] "anti-hero" will be split [[anti-]][[herói]] (whereas a word like
+[[código-fonte]] "source code" will be split as [[código]]-[[fonte]]).
+]==]
 function export.add_links_to_multiword_term(term, splithyph, no_split_apostrophe_words, include_hyphen_prefixes)
 	if not rfind(term, " ") then
 		splithyph = true
@@ -255,36 +265,38 @@ local function escape_wikicode(term)
 end
 
 
--- Given a `linked_term` that is the output of add_links_to_multiword_term(), apply modifications as given in
--- `modifier_spec` to change the link destination of subterms (normally single-word non-lemma forms; sometimes
--- collections of adjacent words). This is usually used to link non-lemma forms to their corresponding lemma, but can
--- also be used to replace a span of adjacent separately-linked words to a single multiword lemma. The format of
--- `modifier_spec` is one or more semicolon-separated subterm specs, where each such spec is of the form
--- SUBTERM:DEST, where SUBTERM is one or more words in the `linked_term` but without brackets in them, and DEST is the
--- corresponding link destination to link the subterm to. Any occurrence of ~ in DEST is replaced with SUBTERM.
--- Alternatively, a single modifier spec can be of the form BEGIN[FROM:TO], which is equivalent to writing
--- BEGINFROM:BEGINTO (see example below).
---
--- For example, given the source phrase [[il bue che dice cornuto all'asino]] "the pot calling the kettle black"
--- (literally "the ox that calls the donkey horned/cuckolded"), the result of calling add_links_to_multiword_term()
--- is [[il]] [[bue]] [[che]] [[dice]] [[cornuto]] [[all']][[asino]]. With a modifier_spec of 'dice:dire', the result
--- is [[il]] [[bue]] [[che]] [[dire|dice]] [[cornuto]] [[all']][[asino]]. Here, based on the modifier spec, the
--- non-lemma form [[dice]] is replaced with the two-part link [[dire|dice]].
--- 
--- Another example: given the source phrase [[chi semina vento raccoglie tempesta]] "sow the wind, reap the whirlwind"
--- (literally (he) who sows wind gathers [the] tempest"). The result of calling add_links_to_multiword_term() is
--- [[chi]] [[semina]] [[vento]] [[raccoglie]] [[tempesta]], and with a modifier_spec of 'semina:~re; raccoglie:~re',
--- the result is [[chi]] [[seminare|semina]] [[vento]] [[raccogliere|raccoglie]] [[tempesta]]. Here we use the ~
--- notation to stand for the non-lemma form in the destination link.
---
--- A more complex example is [[se non hai altri moccoli puoi andare a letto al buio]], which becomes
--- [[se]] [[non]] [[hai]] [[altri]] [[moccoli]] [[puoi]] [[andare]] [[a]] [[letto]] [[al]] [[buio]] after calling
--- add_links_to_multiword_term(). With the following modifier_spec:
--- 'hai:avere; altr[i:o]; moccol[i:o]; puoi: potere; andare a letto:~; al buio:~', the result of applying the spec is
--- [[se]] [[non]] [[avere|hai]] [[altro|altri]] [[moccolo|moccoli]] [[potere|puoi]] [[andare a letto]] [[al buio]].
--- Here, we rely on the alternative notation mentioned above for e.g. 'altr[i:o]', which is equivalent to 'altri:altro',
--- and link multiword subterms using e.g. 'andare a letto:~'. (The code knows how to handle multiword subexpressions
--- properly, and if the link text and destination are the same, only a single-part link is formed.)
+--[==[
+Given a `linked_term` that is the output of add_links_to_multiword_term(), apply modifications as given in
+`modifier_spec` to change the link destination of subterms (normally single-word non-lemma forms; sometimes
+collections of adjacent words). This is usually used to link non-lemma forms to their corresponding lemma, but can
+also be used to replace a span of adjacent separately-linked words to a single multiword lemma. The format of
+`modifier_spec` is one or more semicolon-separated subterm specs, where each such spec is of the form
+`SUBTERM:DEST`, where `SUBTERM` is one or more words in the `linked_term` but without brackets in them, and `DEST` is
+the corresponding link destination to link the subterm to. Any occurrence of `~` in `DEST` is replaced with `SUBTERM`.
+Alternatively, a single modifier spec can be of the form `BEGIN[FROM:TO]`, which is equivalent to writing
+`BEGINFROM:BEGINTO` (see example below).
+
+For example, given the source phrase [[il bue che dice cornuto all'asino]] "the pot calling the kettle black"
+(literally "the ox that calls the donkey horned/cuckolded"), the result of calling `add_links_to_multiword_term()`
+is [[il]] [[bue]] [[che]] [[dice]] [[cornuto]] [[all']][[asino]]. With a modifier_spec of `dice:dire`, the result
+is [[il]] [[bue]] [[che]] [[dire|dice]] [[cornuto]] [[all']][[asino]]. Here, based on the modifier spec, the
+non-lemma form [[dice]] is replaced with the two-part link [[dire|dice]].
+
+Another example: given the source phrase [[chi semina vento raccoglie tempesta]] "sow the wind, reap the whirlwind"
+(literally "(he) who sows wind gathers [the] tempest"). The result of calling `add_links_to_multiword_term()` is
+[[chi]] [[semina]] [[vento]] [[raccoglie]] [[tempesta]], and with a modifier_spec of `semina:~re; raccoglie:~re`,
+the result is [[chi]] [[seminare|semina]] [[vento]] [[raccogliere|raccoglie]] [[tempesta]]. Here we use the `~`
+notation to stand for the non-lemma form in the destination link.
+
+A more complex example is [[se non hai altri moccoli puoi andare a letto al buio]], which becomes
+[[se]] [[non]] [[hai]] [[altri]] [[moccoli]] [[puoi]] [[andare]] [[a]] [[letto]] [[al]] [[buio]] after calling
+`add_links_to_multiword_term()`. With the following modifier_spec:
+`hai:avere; altr[i:o]; moccol[i:o]; puoi: potere; andare a letto:~; al buio:~`, the result of applying the spec is
+[[se]] [[non]] [[avere|hai]] [[altro|altri]] [[moccolo|moccoli]] [[potere|puoi]] [[andare a letto]] [[al buio]].
+Here, we rely on the alternative notation mentioned above for e.g. `altr[i:o]`, which is equivalent to `altri:altro`,
+and link multiword subterms using e.g. `andare a letto:~`. (The code knows how to handle multiword subexpressions
+properly, and if the link text and destination are the same, only a single-part link is formed.)
+]==]
 function export.apply_link_modifiers(linked_term, modifier_spec)
 	local split_modspecs = rsplit(modifier_spec, "%s*;%s*")
 	for j, modspec in ipairs(split_modspecs) do
@@ -330,10 +342,10 @@ function export.apply_link_modifiers(linked_term, modifier_spec)
 			end
 		end
 		if not subterm then
-			error(("Single modifier spec %s should be of the form SUBTERM:DEST where SUBTERM is one or more words in a multiword "
-					.. "term and DEST is the destination to link the subterm to (possibly prefixed by a language code); or of "
-					.. "the form BEGIN[FROM:TO], which is equivalent to BEGINFROM:BEGINTO; or similarly [FROM:TO]END, which is "
-					.. "equivalent to FROMEND:TOEND"):
+			error(("Single modifier spec %s should be of the form SUBTERM:DEST where SUBTERM is one or more words " ..
+				"a multiword term and DEST is the destination to link the subterm to (possibly prefixed by a " ..
+				"language code); or of the form BEGIN[FROM:TO], which is equivalent to BEGINFROM:BEGINTO; or " ..
+				"similarly [FROM:TO]END, which is equivalent to FROMEND:TOEND"):
 				format(modspec))
 		end
 		if subterm == "^" then
@@ -370,8 +382,8 @@ function export.apply_link_modifiers(linked_term, modifier_spec)
 
 			local replaced_linked_term = rsub(linked_term, subterm_re, strutil.replacement_escape(subterm_replacement))
 			if replaced_linked_term == linked_term then
-				error(("Subterm '%s' could not be located in %slinked expression %s, or replacement same as subterm"):format(
-					subterm, j > 1 and "intermediate " or "", escape_wikicode(linked_term)))
+				error(("Subterm '%s' could not be located in %slinked expression %s, or replacement same as subterm"
+					):format(subterm, j > 1 and "intermediate " or "", escape_wikicode(linked_term)))
 			else
 				linked_term = replaced_linked_term
 			end
