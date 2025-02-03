@@ -3,15 +3,25 @@ local export = {}
 local m_languages = require("Module:languages")
 local m_links = require("Module:links")
 local m_utilities = require("Module:utilities")
+local m_str_utils = require("Module:string utilities")
 local m_table = require("Module:table")
 local en_utilities_module = "Module:en-utilities"
 local parameter_utilities_module = "Module:parameter utilities"
 local parse_interface_module = "Module:parse interface"
+local parse_utilities_module = "Module:parse utilities"
 local pron_qualifier_module = "Module:pron qualifier"
 
 local enlang = m_languages.getByCode("en")
 
-local rsplit = mw.text.split
+local rsubn = m_str_utils.gsub
+local rsplit = m_str_utils.split
+local u = m_str_utils.char
+
+local function rsub(str, from, to)
+    return (rsubn(str, from, to))
+end
+
+local TEMP_LESS_THAN = u(0xFFF2)
 
 local force_cat = false -- for testing
 
@@ -238,11 +248,21 @@ local function join_names(lang, args, pname, conj, allow_explicit_lang)
 		do_language_link = true
 	end
 
-	for i, term in ipairs(args[pname]) do
+	local function process_one_term(term, i)
 		for _, termobj in ipairs(parse_term_with_annotations(term, pname .. (i == 1 and "" or i), lang,
 			allow_explicit_lang, "allow multiple terms")) do
 			table.insert(termobjs, termobj)
 		end
+	end
+
+	if not args[pname] then
+		return "", 0
+	elseif type(args[pname]) == "table" then
+		for i, term in ipairs(args[pname]) do
+			process_one_term(term, i)
+		end
+	else
+		process_one_term(args[pname], 1)
 	end
 	return join_terms(termobjs, nil, do_language_link, conj), #termobjs
 end
@@ -252,7 +272,7 @@ local function get_eqtext(args)
 	local eqsegs = {}
 	local lastlang = nil
 	local last_eqseg = {}
-	for i, term in ipairs(args.eq) do
+	local function process_one_term(term, i)
 		for _, termobj in ipairs(parse_term_with_annotations(term, "eq" .. (i == 1 and "" or i), enlang,
 			"allow explicit lang", "allow multiple terms")) do
 			local termlang = termobj.lang:getCode()
@@ -265,6 +285,13 @@ local function get_eqtext(args)
 			lastlang = termlang
 			table.insert(last_eqseg, termobj)
 		end
+	end
+	if type(args.eq) == "table" then
+		for i, term in ipairs(args.eq) do
+			process_one_term(term, i)
+		end
+	elseif type(args.eq) == "string" then
+		process_one_term(args.eq, 1)
 	end
 	if #last_eqseg > 0 then
 		table.insert(eqsegs, last_eqseg)
@@ -344,36 +371,49 @@ local function get_fromtext(lang, args)
 	end
 
 	local last_fromseg = nil
+	local put = require(parse_utilities_module)
 	while args.from[i] do
-		local rawfrom = args.from[i]
-		local froms = rsplit(rawfrom, "%s+<%s+")
-		if #froms == 1 then
-			local prefix, suffix = parse_from(froms[1])
-			if last_fromseg and (last_fromseg.has_multiple_froms or last_fromseg.prefix ~= prefix) then
-				table.insert(fromsegs, last_fromseg)
-				last_fromseg = nil
-			end
-			if not last_fromseg then
-				last_fromseg = {prefix = prefix, suffixes = {}}
-			end
-			table.insert(last_fromseg.suffixes, suffix)
-		else
-			if last_fromseg then
-				table.insert(fromsegs, last_fromseg)
-				last_fromseg = nil
-			end
-			local first_suffixpart = ""
-			local rest_suffixparts = {}
-			for j, from in ipairs(froms) do
-				local prefix, suffix = parse_from(from)
-				if j == 1 then
-					first_suffixpart = prefix .. suffix
-				else
-					table.insert(rest_suffixparts, prefix .. suffix)
+		-- We may have multiple comma-separated items, each of which may have multiple items separated by a
+		-- space-delimited < sign, each of which may have inline modifiers with embedded commas in them. To handle
+		-- this correctly, first replace space-delimited < signs with a special character, then split on balanced
+		-- <...> and [...] signs, then split on comma, then rejoin the stuff between commas. We will then split on
+		-- TEMP_LESS_THAN (the replacement for space-delimited < signs) and reparse.
+		local rawfroms = rsub(args.from[i], "%s+<%s+", TEMP_LESS_THAN)
+        local segments = put.parse_multi_delimiter_balanced_segment_run(rawfroms, {{"<", ">"}, {"[", "]"}})
+        local comma_separated_groups = put.split_alternating_runs_on_comma(segments)
+        for j, comma_separated_group in ipairs(comma_separated_groups) do
+        	comma_separated_groups[j] = table.concat(comma_separated_group)
+        end
+		for _, rawfrom in ipairs(comma_separated_groups) do
+			local froms = rsplit(rawfrom, TEMP_LESS_THAN)
+			if #froms == 1 then
+				local prefix, suffix = parse_from(froms[1])
+				if last_fromseg and (last_fromseg.has_multiple_froms or last_fromseg.prefix ~= prefix) then
+					table.insert(fromsegs, last_fromseg)
+					last_fromseg = nil
 				end
+				if not last_fromseg then
+					last_fromseg = {prefix = prefix, suffixes = {}}
+				end
+				table.insert(last_fromseg.suffixes, suffix)
+			else
+				if last_fromseg then
+					table.insert(fromsegs, last_fromseg)
+					last_fromseg = nil
+				end
+				local first_suffixpart = ""
+				local rest_suffixparts = {}
+				for j, from in ipairs(froms) do
+					local prefix, suffix = parse_from(from)
+					if j == 1 then
+						first_suffixpart = prefix .. suffix
+					else
+						table.insert(rest_suffixparts, prefix .. suffix)
+					end
+				end
+				local full_suffix = first_suffixpart .. " [in turn " .. table.concat(rest_suffixparts, ", in turn ") .. "]"
+				last_fromseg = {prefix = "", has_multiple_froms = true, suffixes = {full_suffix}}
 			end
-			local full_suffix = first_suffixpart .. " [in turn " .. table.concat(rest_suffixparts, ", in turn ") .. "]"
-			last_fromseg = {prefix = "", has_multiple_froms = true, suffixes = {full_suffix}}
 		end
 		i = i + 1
 	end
@@ -666,7 +706,11 @@ function export.given_name(frame)
 		ins(", " .. fetch_typetext("eqtype") .. "equivalent to " .. eqtext)
 	end
 	if args.addl then
-		ins(", " .. args.addl)
+		if args.addl:find("^;") then
+			ins(args.addl)
+		else
+			ins(", " .. args.addl)
+		end
 	end
 	if varformtext ~= "" then
 		ins("; variant form" .. (numvarforms > 1 and "s" or "") .. " " .. varformtext)
@@ -743,27 +787,27 @@ function export.surname(frame)
 		["populartype"] = true,
 		["meaning"] = list,
 		["meaningtype"] = true,
-		["father"] = list,
-		["mother"] = list,
+		["father"] = true,
+		["mother"] = true,
 		["addl"] = true,
 		-- initial article: by default A or An (English), a or an (otherwise)
 		["A"] = true,
 		["sort"] = true,
 		["from"] = list,
 		["fromtype"] = true,
-		["xlit"] = list,
-		["eq"] = list,
+		["xlit"] = true,
+		["eq"] = true,
 		["eqtype"] = true,
-		["varof"] = list,
+		["varof"] = true,
 		["varoftype"] = true,
-		["var"] = {alias_of = "varof", list = true},
+		["var"] = {alias_of = "varof"},
 		["vartype"] = {alias_of = "varoftype"},
-		["varform"] = list,
-		["blend"] = list,
+		["varform"] = true,
+		["blend"] = true,
 		["blendtype"] = true,
-		["m"] = list,
+		["m"] = true,
 		["mtype"] = true,
-		["f"] = list,
+		["f"] = true,
 		["ftype"] = true,
 		["nocat"] = {type = "boolean"},
 	})
@@ -906,7 +950,11 @@ function export.surname(frame)
 		table.insert(textsegs, ", " .. fetch_typetext("eqtype") .. "equivalent to " .. eqtext)
 	end
 	if args.addl then
-		table.insert(textsegs, ", " .. args.addl)
+		if args.addl:find("^;") then
+			table.insert(textsegs, args.addl)
+		else
+			table.insert(textsegs, ", " .. args.addl)
+		end
 	end
 	if varformtext ~= "" then
 		table.insert(textsegs, "; variant form" .. (numvarforms > 1 and "s" or "") .. " " .. varformtext)
