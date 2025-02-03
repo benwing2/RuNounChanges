@@ -2,145 +2,6 @@ local export = {}
 
 -- Ported from [[w:Module:Demo]] by Benwing2 on Sep 1st 2023 around 6am UTC.
 
-
-
-
-		output = frame:preprocess(code):gsub(args.nocat and '%[%[Category.-%]%]' or '', ''),
-		args = args,
-	}
-
-	local extra_params = {}
-		table.insert(extra_params, ("|%s=%s"):format(extra_arg, v))
-	extra_params = table.concat(extra_params)
-	if extra_params ~= "" then
-		code = code:gsub("^(.*)}}", "%1" .. require("Module:string utilities").replacement_escape(extra_params) .. "}}")
-	end
-
-	return {
-		source = code,
-		output = frame:preprocess(code):gsub(args.nocat and '%[%[Category.-%]%]' or '', ''),
-	}
-end
-
-function export.demo(data)
-	local frame = data.frame or mw.getCurrentFrame()
-	local args = show.args
-	args.sep = getSeparator(args, '')
-	local source = frame:extensionTag{
-		name = 'syntaxhighlight',
-		args = {
-			lang = 'wikitext',
-			style = args.style
-		},
-		content = show.source
-	}
-	return args.reverse and
-		show.output .. args.sep .. source or
-		source .. args.sep .. show.output
-end
-
-function export.demo(frame)
-	local show = demoTable or export.get(frame)
-	local args = show.args
-	args.sep = getSeparator(args, '')
-	local source = frame:extensionTag{
-		name = 'syntaxhighlight',
-		args = {
-			lang = 'wikitext',
-			style = args.style
-		},
-		content = show.source
-	}
-	return args.reverse and
-		show.output .. args.sep .. source or
-		source .. args.sep .. show.output
-end
-
--- Alternate function to return an inline result
-function export.inline(frame, demoTable)
-	local show = demoTable or export.get(frame)
-	local args = show.args
-	args.sep = getSeparator(args, args.reverse and '←' or '→')
-	local source = frame:extensionTag{
-		name = 'syntaxhighlight',
-		args = {
-			lang = 'wikitext',
-			inline = true,
-			style = args.style
-		},
-		content = show.source
-	}
-	return args.reverse and
-		show.output .. args.sep .. source or
-		source .. args.sep .. show.output
-end
-
-local function getSeparator(args, default)
-	local br = tonumber(args.br) and ("<br />"):rep(args.br) or args.br
-	local sep = args.sep or br or default
-	return #sep > 0 and " " .. sep .. " " or sep
-end
-
-function export.demo_template(frame)
-	local iparams = {
-		["type"] = {},
-	}
-	local iargs = require("Module:parameters").process(frame.args, iparams)
-
-	local params = {
-		[1] = {required = true},
-		["br"] = {},
-		["sep"] = {},
-		["reverse"] = {type = "boolean"},
-		["nocat"] = {type = "boolean"},
-		["style"] = {},
-		["type"] = {},
-	}
-	local parent_args = frame:getParent().args
-	local args, unhandled = require("Module:parameters").process(parent_args, params, "return unknown", "demo", "demo_template")
-
-	local code = args[1]
-	if code:match('UNIQ%-%-nowiki') then
-		code = mw.text.unstripNoWiki(code)
-			:gsub('&lt;', '<')
-			:gsub('&gt;', '>')
-			:gsub('&quot;', '"')
-			-- Replace `&#125;%-` with `}-` because of some server quirk leading to
-			-- =mw.text.unstripNoWiki(mw.getCurrentFrame():preprocess('<nowiki>}-</nowiki>'))
-			-- outputting `&#125;-` instead of `}-`, while it's ok with `<nowiki>} -</nowiki>`
-			:gsub('&#125;%-', '}-')
-			-- The same with `-&#123;`
-			:gsub('%-&#123;', '-{')
-	end
-
-	local extra_params = {}
-
-	for k, v in pairs(unhandled) do
-		local extra_arg = k:match("^arg_(.*)$")
-		if not extra_arg then
-			error(('Parameter "%s" is not used by this template.'):format(k))
-		end
-		extra_params[extra_arg] = v
-	end
-
-	return {
-		frame = frame,
-		source = code,
-		extra_params = extra_params,
-		br = args.br,
-		sep = args.sep,
-		reverse = args.reverse,
-		style = args.style,
-		type = args.type or iargs.type or "regular",
-	}
-end
-
-
---[===[
-
-FIXME: Leftover stuff in the Wikipedia [[Module:Demo]] that isn't currently used. Consider deleting.
-
-
 -- creates a frame object that cannot access any of the parent's args
 -- unless a table containing a list keys of not to inherit is provided
 --
@@ -165,6 +26,80 @@ local function disinherit(frame, onlyTheseKeys)
 		end
 	end
 	return orphan, parent
+end
+
+local function getSeparator(args, default)
+	local br = tonumber(args.br) and ('<br>'):rep(args.br) or args.br
+	local sep = args.sep or br or default
+	return #sep > 0 and ' ' .. sep .. ' ' or sep
+end
+
+function export.get(frame, source_param)
+	local params = {
+		[source_param or 1] = {},
+		["br"] = {},
+		["sep"] = {},
+		["reverse"] = {type = "boolean"},
+		["nocat"] = {type = "boolean"},
+		["result_arg"] = {}, -- FIXME: some sort of weird debugging arg
+		["style"] = {},
+	}
+	local parent_args = frame:getParent().args
+	local args = require("Module:parameters").process(parent_args, params, nil, "demo", "get")
+
+	local code = args[source_param or 1]
+	if code:match('UNIQ%-%-nowiki') then
+		code = mw.text.unstripNoWiki(code)
+			:gsub('&lt;', '<')
+			:gsub('&gt;', '>')
+			:gsub('&quot;', '"')
+			-- Replace `&#125;%-` with `}-` because of some server quirk leading to
+			-- =mw.text.unstripNoWiki(mw.getCurrentFrame():preprocess('<nowiki>}-</nowiki>'))
+			-- outputting `&#125;-` instead of `}-`, while it's ok with `<nowiki>} -</nowiki>`
+			:gsub('&#125;%-', '}-')
+			-- The same with `-&#123;`
+			:gsub('%-&#123;', '-{')
+	end
+	return {
+		source = code,
+		output = frame:preprocess(code):gsub(args.nocat and '%[%[Category.-%]%]' or '', ''),
+		args = args,
+	}
+end
+
+function export.main(frame, demoTable)
+	local show = demoTable or export.get(frame)
+	local args = show.args
+	if show[args.result_arg] then
+		return show[args.result_arg]
+	end
+	args.sep = getSeparator(args, '')
+	local source = frame:extensionTag('syntaxhighlight', show.source, {
+		lang = 'wikitext',
+		style = args.style
+	})
+	return args.reverse and
+		show.output .. args.sep .. source or
+		source .. args.sep .. show.output
+end
+
+-- Alternate function to return an inline result
+function export.inline(frame, demoTable)
+	local show = demoTable or export.get(frame)
+	local args = show.args
+	if show[args.result_arg] then
+		return show[args.result_arg]
+	end
+	local yesno = require('Module:yesno')
+	args.sep = getSeparator(args, args.reverse and '←' or '→')
+	local source =  frame:extensionTag('syntaxhighlight', show.source, {
+		lang = 'wikitext',
+		inline = true,
+		style = args.style
+	})
+	return args.reverse and
+		show.output .. args.sep .. source or
+		source .. args.sep .. show.output
 end
 
 --passing of args into other module without preprocessing
@@ -216,7 +151,5 @@ function export.module(frame)
 		return "ERROR: Invalid module function: "..demoFunc
 	end
 end
-
-]===]
 
 return export
