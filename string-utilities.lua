@@ -48,7 +48,6 @@ local codepoint
 local explode_utf8
 local format_fun
 local get_charset
-local get_indefinite_article
 local gsplit
 local pattern_escape
 local pattern_simplifier
@@ -1218,92 +1217,6 @@ do
 		-- I assume nobody will input all CAP text.
 		return (ugsub(str, "%S+", capitalize))
 	end
-end
-
-function export.pluralize(...) -- To be removed once all calling modules have been changed to call Module:en-utilities directly.
-	export.pluralize = require("Module:en-utilities").pluralize
-	return export.pluralize(...)
-end
-
-do
-	local function do_singularize(str)
-		local sing = match(str, "^(.-)ies$")
-		if sing then
-			return sing .. "y"
-		end
-		-- Handle cases like "[[parish]]es"
-		return match(str, "^(.-[cs]h%]*)es$") or -- not -zhes
-		-- Handle cases like "[[box]]es"
-			match(str, "^(.-x%]*)es$") or -- not -ses or -zes
-		-- Handle regular plurals
-			match(str, "^(.-)s$") or
-		-- Otherwise, return input
-			str
-	end
-	
-	local function collapse_link(link, linktext)
-		if link == linktext then
-			return "[[" .. link .. "]]"
-		end
-		return "[[" .. link .. "|" .. linktext .. "]]"
-	end
-	
-	--[==[
-	Singularize a word in a smart fashion, according to normal English rules. Works analogously to {pluralize()}.
-
-	'''NOTE''': This doesn't always work as well as {pluralize()}. Beware. It will mishandle cases like "passes" -> "passe", "eyries" -> "eyry".
-	# If word ends in -ies, replace -ies with -y.
-	# If the word ends in -xes, -shes, -ches, remove -es. [Does not affect -ses, cf. "houses", "impasses".]
-	# Otherwise, remove -s.
-
-	This handles links correctly:
-	# If a piped link, change the second part appropriately. Collapse the link to a simple link if both parts end up the same.
-	# If a non-piped link, singularize the link.
-	# A link like "[[parish]]es" will be handled correctly because the code that checks for -shes etc. allows ] characters between the
-	  'sh' etc. and final -es.
-	]==]
-	function export.singularize(str)
-		if type(str) == "table" then
-			-- allow calling from a template
-			str = str.args[1]
-		end
-		-- Check for a link. This pattern matches both piped and unpiped links.
-		-- If the link is not piped, the second capture (linktext) will be empty.
-		local beginning, link, linktext = match(str, "^(.*)%[%[([^|%]]+)%|?(.-)%]%]$")
-		if not link then
-			return do_singularize(str)
-		elseif linktext ~= "" then
-			return beginning .. collapse_link(link, do_singularize(linktext))
-		end
-		return beginning .. "[[" .. do_singularize(link) .. "]]"
-	end
-end
-
---[==[
-Return the appropriate indefinite article to prefix to `str`. Correctly handles links and capitalized text.
-Does not correctly handle words like [[union]], [[uniform]] and [[university]] that take "a" despite beginning with
-a 'u'. The returned article will have its first letter capitalized if `ucfirst` is specified, otherwise lowercase.
-]==]
-function export.get_indefinite_article(str, ucfirst)
-	str = str or ""
-	-- If there's a link at the beginning, examine the first letter of the
-	-- link text. This pattern matches both piped and unpiped links.
-	-- If the link is not piped, the second capture (linktext) will be empty.
-	local link, linktext = match(str, "^%[%[([^|%]]+)%|?(.-)%]%]")
-	if match(link and (linktext ~= "" and linktext or link) or str, "^()[AEIOUaeiou]") then
-		return ucfirst and "An" or "an"
-	end
-	return ucfirst and "A" or "a"
-end
-get_indefinite_article = export.get_indefinite_article
-
---[==[
-Prefix `text` with the appropriate indefinite article to prefix to `text`. Correctly handles links and capitalized
-text. Does not correctly handle words like [[union]], [[uniform]] and [[university]] that take "a" despite beginning
-with a 'u'. The returned article will have its first letter capitalized if `ucfirst` is specified, otherwise lowercase.
-]==]
-function export.add_indefinite_article(text, ucfirst)
-	return get_indefinite_article(text, ucfirst) .. " " .. text
 end
 
 return export
