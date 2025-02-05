@@ -10,7 +10,7 @@ import blib
 from blib import getparam, rmparam, msg, site
 
 def process_text_on_page(index, pagetitle, text, prev_comment, regex, invert, verbose,
-                         include_text, all_matches, lang, from_to, begin_end):
+                         include_text, all_matches, lang, from_to, begin_end, encode_embedded_newlines):
   def pagemsg(txt):
     msg("Page %s %s: %s" % (index, pagetitle, txt))
 
@@ -32,13 +32,18 @@ def process_text_on_page(index, pagetitle, text, prev_comment, regex, invert, ve
         text_to_search.append(sections[secind - 1] + sections[secind])
     text_to_search = "".join(text_to_search)
 
+  def encode(txt):
+    if encode_embedded_newlines:
+      return txt.replace("\n", r"\n")
+    else:
+      return txt
   def output_match(m):
     if from_to:
-      pagemsg("Found match for regex: <from> %s <to> %s <end>" % (m.group(0), m.group(0)))
+      pagemsg("Found match for regex: <from> %s <to> %s <end>" % (encode(m.group(0)), encode(m.group(0))))
     elif begin_end:
-      pagemsg("Found match for regex: <begin> %s <end>" % m.group(0))
+      pagemsg("Found match for regex: <begin> %s <end>" % encode(m.group(0)))
     else:
-      pagemsg("Found match for regex: %s" % m.group(0))
+      pagemsg("Found match for regex: %s" % encode(m.group(0)))
 
   if text_to_search:
     found_match = False
@@ -68,7 +73,7 @@ def search_pages(args, regex, invert, input_from_diff, start, end, lang):
 
   def do_process_text_on_page(index, title, text, prev_comment):
     process_text_on_page(index, title, text, prev_comment, regex, invert, args.verbose,
-        args.text, args.all, lang, args.from_to, args.begin_end)
+        args.text, args.all, lang, args.from_to, args.begin_end, args.encode_embedded_newlines)
 
   if input_from_diff:
     lines = open(input_from_diff, "r", encoding="utf-8")
@@ -90,6 +95,7 @@ if __name__ == "__main__":
   parser.add_argument('--all', help="Include all matches.", action="store_true")
   parser.add_argument('--from-to', help="Output in from-to format (single file for original and changes), for ease in pushing changes.", action="store_true")
   parser.add_argument('--begin-end', help="Output in split begin-end format (separate files for original and changes), for ease in pushing changes.", action="store_true")
+  parser.add_argument('--encode-embedded-newlines', help="Convert embedded newlines to '\\n', to keep everything on one line.", action="store_true")
   parser.add_argument('--text', help="Include full text of page or language section.", action="store_true")
   parser.add_argument('--lang', help="Only search the specified language section(s) (comma-separated).")
   args = parser.parse_args()
