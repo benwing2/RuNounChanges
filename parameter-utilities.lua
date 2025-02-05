@@ -575,10 +575,10 @@ overall (non-item-specific) parameters. Currently this only happens when `separa
 function export.augment_params_with_modifiers(params, param_mods, overall_only)
 	if overall_only then
 		for param_mod, param_mod_spec in pairs(param_mods) do
-			if param_mod_spec.separate_no_index then
+			if overall_only == "always" or param_mod_spec.separate_no_index then
 				local param_spec = {}
 				for k, v in pairs(param_mod_spec) do
-					if k ~= "separate_no_index" and not param_mod_spec_key_is_builtin(k) then
+					if k ~= "separate_no_index" and k ~= "require_index" and not param_mod_spec_key_is_builtin(k) then
 						param_spec[k] = v
 					end
 				end
@@ -647,6 +647,125 @@ local function fetch_argument(args, index_or_value)
 	else
 		return index_or_value
 	end
+end
+
+local function generate_subobj(data, paramname, term, termobj, parse_err, lang_cache)
+	local term_dest = data.term_dest or "term"
+	if data.parse_lang_prefix and term:find(":") then
+		local actual_term, termlangs = parse_term_with_lang {
+			term = term,
+			parse_err = parse_err,
+			paramname = paramname,
+			allow_bad = data.allow_bad_lang_prefix,
+			allow_multiple = data.allow_multiple_lang_prefixes,
+			lang_cache = lang_cache,
+		}
+		termobj[term_dest] = actual_term ~= "" and actual_term or nil
+		if termlangs then
+			-- If we couldn't parse a language code, don't overwrite an existing setting in `lang`
+			-- that may have originated from a separate |langN= param.
+			if data.allow_multiple_lang_prefixes then
+				termobj.termlangs = termlangs
+				termobj.lang = termlangs and termlangs[1] or nil
+			else
+				termobj.termlang = termlangs
+				termobj.lang = termlangs
+			end
+		end
+	else
+		termobj[term_dest] = term ~= "" and term or nil
+	end
+	return termobj
+end
+
+function export.parse_terms_with_inline_modifiers(data)
+	if not data.args then
+		internal_error("'.args' must be specified, containing the parsed argument structure", data)
+	end
+	if not data.termparam then
+		internal_error("'.termparam' must be given, indicating which argument contains the term to be parsed", data)
+	end
+	if not data.param_mods then
+		internal_error("'.param_mods' must be given, indicating the allowed inline modifiers and separate " ..
+			"parameters to copy", data)
+	end
+	if not data.splitchar then
+		internal_error("'.splitchar' must be given, indicating the character to use to separate multiple items " ..
+			"(must commonly a comma)", data)
+	end
+	local args, termparam = data.args, data.termparam
+	local term = args[termparam]
+	local lang = fetch_argument(args, data.lang)
+	if lang and data.lang_cache then
+		data.lang_cache[lang:getCode()] = lang
+	end
+	local sc = fetch_argument(args, data.sc)
+	local scparam = (type(data.sc) == "string" or type(data.sc) == "number") and data.sc or nil
+	local term_dest = data.term_dest or "term"
+
+	if not term then
+		track("missing-term", data.track_module)
+	end
+	local termobj = {}
+
+	local function generate_obj(term, parse_err)
+		return generate_subobj(data, termparam, term, {}, parse_err, data.lang_cache)
+	end
+
+	if term then
+		parse_inline_modifiers(term, {
+			paramname = paramname,
+			param_mods = data.param_mods,
+			generate_obj = generate_obj,
+			splitchar = data.splitchar,
+			preserve_splitchar = true,
+			escape_fun = data.escape_fun,
+			unescape_fun = data.unescape_fun,
+			outer_container = termobj,
+			pre_normalize_modifiers = data.pre_normalize_modifiers,
+		})
+	end
+
+	-- If there are any separate parameters, we need to copy them to the first, last or only subobject, depending on the
+	-- value of `data.subobject_param_handling` (which defaults to 'only', meaning it's an error if there are multiple
+	-- subobjects). Do this before the postprocessing step below because the latter sets .sc on all subobjects.
+	local subobject_param_handling = data.subobject_param_handling or "only"
+	local termind
+	if subobject_param_handling == "only" or subobject_param_handling == "first" then
+		termind = 1
+	elseif subobject_param_handling == "last" then
+		termind = #termobj.terms
+	else
+		internal_error("Unrecognized value for `data.subobject_param_handling`, should be 'first', 'last' or 'only'",
+			subobject_param_handling)
+	end
+	for param_mod, param_mod_spec in pairs(data.param_mods) do
+		local dest = param_mod_spec.item_dest or param_mod
+		-- Don't do anything with the `sc` param, which will get overwritten below; we don't want it to cause an error
+		-- if there are multiple subitems.
+		if dest ~= scparam and args[param_mod] ~= nil then
+			if subobject_param_handling == "only" then
+				if termobj.terms[2] then
+					error(("Can't set a value for separate parameter %s= because there are multiple " ..
+						"subitems (%s) in the term; use an inline modifier"):format(param_mod, #termobj.terms))
+				end
+			end
+			-- Don't overwrite a value already set by an inline modifier.
+			local destobj = termobj.terms[termind]
+			if destobj[dest] == nil or type(destobj[dest]) == "table" and next(destobj[dest]) == nil then
+				destobj[dest] = args[param_mod]
+			end
+		end
+	end
+
+	for _, subobj in ipairs(termobj.terms) do
+		-- Set these after parsing inline modifiers, not in generate_obj(), otherwise we'll get an error in
+		-- parse_inline_modifiers() if we try to use <lang:...> or <sc:...> as inline modifiers.
+		subobj.lang = subobj.lang or lang
+		subobj.sc = subobj.sc or sc
+	end
+
+	return termobj
 end
 
 --[==[
@@ -759,10 +878,11 @@ inline modifiers or separate parameters. `data` is an object containing the foll
   sequences). Note that when `splitchar` is set, the code always sets `preserve_splitchar` in the call to
   `parse_inline_modifiers()`, meaning that the delimiter preceding the subitems is always available on the `delimiter`
   key of the corresponding objects.
-* `escape_fun` and `unescape_fun` are as in split_escaping() and split_alternating_runs_escaping() in
+* `escape_fun` and `unescape_fun` are as in `split_escaping()` and `split_alternating_runs_escaping()` in
   [[Module:parse utilities]] and control the protected sequences that won't be split when `splitchar` is specified (see
   previous item). By default, `escape_comma_whitespace` and `unescape_comma_whitespace` are used, so that
   comma+whitespace sequences won't be split.
+* `pre_normalize_modifiers` is as in `parse_inline_modifiers()`.
 
 Two values are returned, the list of items and the processed `args` structure. In each returned item, there will be one
 field set for each specified property (either through inline modifiers or separate parameters). In addition, the
@@ -896,50 +1016,25 @@ function export.process_list_arguments(data)
 					termobj.separator = i == 1 and "" or special_separators[term_args[i - 1]]
 				end
 
-				-- Parse all the term-specific parameters and store in `termobj`.
+				-- Copy all the parsed term-specific parameters into `termobj`.
 				for param_mod, param_mod_spec in pairs(data.param_mods) do
 					local dest = param_mod_spec.item_dest or param_mod
-					if args[param_mod] then
-						local arg = args[param_mod][itemno]
-						if arg ~= nil then
-							termobj[dest] = arg
-						end
+					local argval = args[param_mod]
+					-- Careful with argument values that may be `false`.
+					if argval then
+						argval = argval[itemno]
+					end
+					if argval ~= nil then
+						termobj[dest] = argval
 					end
 				end
 
 				-- Add 1 because first term index starts at 2.
 				local paramname = data.termarg + i - 1
 
-				local function generate_subobj(termobj, term, parse_err)
-					if data.parse_lang_prefix and term:find(":") then
-						local actual_term, termlangs = parse_term_with_lang {
-							term = term,
-							parse_err = parse_err,
-							paramname = paramname,
-							allow_bad = data.allow_bad_lang_prefix,
-							allow_multiple = data.allow_multiple_lang_prefixes,
-							lang_cache = lang_cache,
-						}
-						termobj[term_dest] = actual_term ~= "" and actual_term or nil
-						if termlangs then
-							-- If we couldn't parse a language code, don't overwrite an existing setting in `lang`
-							-- that may have originated from a separate |langN= param.
-							if data.allow_multiple_lang_prefixes then
-								termobj.termlangs = termlangs
-								termobj.lang = termlangs and termlangs[1] or nil
-							else
-								termobj.termlang = termlangs
-								termobj.lang = termlangs
-							end
-						end
-					else
-						termobj[term_dest] = term ~= "" and term or nil
-					end
-					return termobj
-				end
-
 				local function generate_obj(term, parse_err)
-					return generate_subobj(data.splitchar and {} or termobj, term, parse_err)
+					return generate_subobj(data, paramname, term, data.splitchar and {} or termobj, parse_err,
+						lang_cache)
 				end
 
 				if term then
@@ -952,6 +1047,7 @@ function export.process_list_arguments(data)
 						escape_fun = data.escape_fun,
 						unescape_fun = data.unescape_fun,
 						outer_container = data.splitchar and termobj or nil,
+						pre_normalize_modifiers = data.pre_normalize_modifiers,
 					})
 				end
 
@@ -982,6 +1078,7 @@ function export.process_list_arguments(data)
 					-- sets .lang and .sc and we want the user to be able to set separate langN= and scN= parameters.
 					for param_mod, param_mod_spec in pairs(data.param_mods) do
 						local dest = param_mod_spec.item_dest or param_mod
+						-- FIXME: No error if 'sc' is specified as a separate param.
 						if termobj[dest] ~= nil then
 							if termobj.terms[2] then
 								error(("Can't set a value for separate parameter %s%s= because there are multiple " ..
