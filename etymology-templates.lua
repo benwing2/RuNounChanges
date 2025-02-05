@@ -1,6 +1,6 @@
 local export = {}
 
-local require_when_needed = require("Module:utilities/require when needed")
+local require_when_needed = require("Module:require when needed")
 
 local concat = table.concat
 local format_categories = require_when_needed("Module:utilities", "format_categories")
