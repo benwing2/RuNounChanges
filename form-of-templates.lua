@@ -5,9 +5,10 @@ local form_of_module = "Module:form of"
 local languages_module = "Module:languages"
 local load_module = "Module:load"
 local parameters_module = "Module:parameters"
+local parse_interface_module = "Module:parse interface"
 local parse_utilities_module = "Module:parse utilities"
-local parse_modifiers_interface_module = "Module:parse modifiers interface"
 local string_utilities_module = "Module:string utilities"
+local table_module = "Module:table"
 local utilities_module = "Module:utilities"
 
 local insert = table.insert
@@ -25,6 +26,11 @@ end
 local function decode_entities(...)
 	decode_entities = require(string_utilities_module).decode_entities
 	return decode_entities(...)
+end
+
+local function extend(...)
+	extend = require(table_module).extend
+	return extend(...)
 end
 
 local function format_categories(...)
@@ -53,7 +59,7 @@ local function load_data(...)
 end
 
 local function parse_inline_modifiers(...)
-	parse_inline_modifiers = require(parse_modifiers_interface_module).parse_inline_modifiers
+	parse_inline_modifiers = require(parse_interface_module).parse_inline_modifiers
 	return parse_inline_modifiers(...)
 end
 
@@ -128,14 +134,6 @@ This module contains code that directly implements {{tl|form of}}, {{tl|inflecti
 -- [[Wiktionary:Tracking/form-of/PAGE]].
 local function track(page, template)
 	debug_track("form-of/" .. (template and template .. "/" or "") .. page)
-end
-
-
--- Equivalent to list.extend(new_items) in Python. Appends items in `new_items` (a list) to `list`.
-local function extend_list(list, new_items)
-	for _, item in ipairs(new_items) do
-		insert(list, item)
-	end
 end
 
 
@@ -472,7 +470,7 @@ local function get_lemmas_and_categories(iargs, args, term_param, compat, base_l
 		if #args["g"] > 0 then
 			local genders = {}
 			for _, g in ipairs(args["g"]) do
-				extend_list(genders, split(g, ","))
+				extend(genders, split(g, ","))
 			end
 			lemmas[1].genders = genders
 		end
@@ -534,7 +532,7 @@ local function construct_form_of_text(iargs, args, term_param, compat, base_lemm
 	local lemma_data = get_lemmas_and_categories(iargs, args, term_param, compat, base_lemma_params)
 
 	local form_of_text, lang_cats = do_form_of(lemma_data)
-	extend_list(lemma_data.categories, lang_cats)
+	extend(lemma_data.categories, lang_cats)
 	local text = form_of_text .. (
 		args["nodot"] and "" or args["dot"] or iargs["withdot"] and "." or ""
 	)
@@ -918,18 +916,18 @@ function export.inflection_of_t(frame)
 		local split_preinfl = split_inflection_tags(iargs["preinfl"], iargs["split_tags"])
 		local split_postinfl = split_inflection_tags(iargs["postinfl"], iargs["split_tags"])
 		if not saw_semicolon then
-			extend_list(infls, split_preinfl)
-			extend_list(infls, args[tagsind])
-			extend_list(infls, split_postinfl)
+			extend(infls, split_preinfl)
+			extend(infls, args[tagsind])
+			extend(infls, split_postinfl)
 		else
 			local groups = split_tag_set(args[tagsind])
 			for _, group in ipairs(groups) do
 				if #infls > 0 then
 					insert(infls, ";")
 				end
-				extend_list(infls, split_preinfl)
-				extend_list(infls, group)
-				extend_list(infls, split_postinfl)
+				extend(infls, split_preinfl)
+				extend(infls, group)
+				extend(infls, split_postinfl)
 			end
 		end
 	end
