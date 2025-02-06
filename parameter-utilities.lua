@@ -624,7 +624,8 @@ end
 
 -- Fetch the argument in `args` corresponding to `index_or_value`, which may be a string of the form "foo.default"
 -- (requesting the value of `args["foo"].default`); a string or number (requesting the value at that key); a function of
--- one argument (`args`), which returns the argument value; or the value itself.
+-- one argument (`args`), which returns the argument value; or the value itself. Return the resulting value and the
+-- parameter in `args` that the value came from, or nil if unknown (i.e. a function or direct value was specified).
 local function fetch_argument(args, index_or_value)
 	if type(index_or_value) == "string" then
 		if index_or_value:sub(-8) == ".default" then
@@ -634,31 +635,33 @@ local function fetch_argument(args, index_or_value)
 				internal_error(("Requested that the '.default' key of argument `%s` be fetched, but argument value is undefined or not a table"):
 					format(index_without_default), arg_obj)
 			end
-			return arg_obj.default
+			return arg_obj.default, index_without_default
 		end
 		if index_or_value:match("^%d+$") then
 			index_or_value = tonumber(index_or_value)
 		end
-		return args[index_or_value]
+		return args[index_or_value], index_or_value
 	elseif type(index_or_value) == "number" then
-		return args[index_or_value]
+		return args[index_or_value], index_or_value
 	elseif type(index_or_value) == "function" then
-		return index_or_value(args)
+		return index_or_value(args), nil
 	else
-		return index_or_value
+		return index_or_value, nil
 	end
 end
 
-local function generate_subobj(data, paramname, term, termobj, parse_err, lang_cache)
+function export.generate_obj_maybe_parsing_lang_prefix(data)
+	local term = data.term
 	local term_dest = data.term_dest or "term"
+	local termobj = data.termobj or {}
 	if data.parse_lang_prefix and term:find(":") then
 		local actual_term, termlangs = parse_term_with_lang {
 			term = term,
-			parse_err = parse_err,
-			paramname = paramname,
+			parse_err = data.parse_err,
+			paramname = data.paramname,
 			allow_bad = data.allow_bad_lang_prefix,
 			allow_multiple = data.allow_multiple_lang_prefixes,
-			lang_cache = lang_cache,
+			lang_cache = data.lang_cache,
 		}
 		termobj[term_dest] = actual_term ~= "" and actual_term or nil
 		if termlangs then
@@ -678,99 +681,48 @@ local function generate_subobj(data, paramname, term, termobj, parse_err, lang_c
 	return termobj
 end
 
-function export.parse_terms_with_inline_modifiers(data)
-	if not data.args then
-		internal_error("'.args' must be specified, containing the parsed argument structure", data)
-	end
-	if not data.termparam then
-		internal_error("'.termparam' must be given, indicating which argument contains the term to be parsed", data)
-	end
-	if not data.param_mods then
-		internal_error("'.param_mods' must be given, indicating the allowed inline modifiers and separate " ..
-			"parameters to copy", data)
-	end
-	if not data.splitchar then
-		internal_error("'.splitchar' must be given, indicating the character to use to separate multiple items " ..
-			"(must commonly a comma)", data)
-	end
-	local args, termparam = data.args, data.termparam
-	local term = args[termparam]
-	local lang = fetch_argument(args, data.lang)
-	if lang and data.lang_cache then
-		data.lang_cache[lang:getCode()] = lang
-	end
-	local sc = fetch_argument(args, data.sc)
-	local scparam = (type(data.sc) == "string" or type(data.sc) == "number") and data.sc or nil
-	local term_dest = data.term_dest or "term"
-
-	if not term then
-		track("missing-term", data.track_module)
-	end
-	local termobj = {}
-
-	local function generate_obj(term, parse_err)
-		return generate_subobj(data, termparam, term, {}, parse_err, data.lang_cache)
-	end
-
-	if term then
-		parse_inline_modifiers(term, {
-			paramname = paramname,
-			param_mods = data.param_mods,
-			generate_obj = generate_obj,
-			splitchar = data.splitchar,
-			preserve_splitchar = true,
-			escape_fun = data.escape_fun,
-			unescape_fun = data.unescape_fun,
-			outer_container = termobj,
-			pre_normalize_modifiers = data.pre_normalize_modifiers,
-		})
-	end
-
-	-- If there are any separate parameters, we need to copy them to the first, last or only subobject, depending on the
-	-- value of `data.subobject_param_handling` (which defaults to 'only', meaning it's an error if there are multiple
-	-- subobjects). Do this before the postprocessing step below because the latter sets .sc on all subobjects.
-	local subobject_param_handling = data.subobject_param_handling or "only"
-	local termind
-	if subobject_param_handling == "only" or subobject_param_handling == "first" then
-		termind = 1
-	elseif subobject_param_handling == "last" then
-		termind = #termobj.terms
-	else
-		internal_error("Unrecognized value for `data.subobject_param_handling`, should be 'first', 'last' or 'only'",
-			subobject_param_handling)
-	end
-	for param_mod, param_mod_spec in pairs(data.param_mods) do
-		local dest = param_mod_spec.item_dest or param_mod
-		-- Don't do anything with the `sc` param, which will get overwritten below; we don't want it to cause an error
-		-- if there are multiple subitems.
-		if dest ~= scparam and args[param_mod] ~= nil then
-			if subobject_param_handling == "only" then
-				if termobj.terms[2] then
-					error(("Can't set a value for separate parameter %s= because there are multiple " ..
-						"subitems (%s) in the term; use an inline modifier"):format(param_mod, #termobj.terms))
-				end
-			end
-			-- Don't overwrite a value already set by an inline modifier.
-			local destobj = termobj.terms[termind]
-			if destobj[dest] == nil or type(destobj[dest]) == "table" and next(destobj[dest]) == nil then
-				destobj[dest] = args[param_mod]
-			end
-		end
-	end
-
-	for _, subobj in ipairs(termobj.terms) do
-		-- Set these after parsing inline modifiers, not in generate_obj(), otherwise we'll get an error in
-		-- parse_inline_modifiers() if we try to use <lang:...> or <sc:...> as inline modifiers.
-		subobj.lang = subobj.lang or lang
-		subobj.sc = subobj.sc or sc
-	end
-
-	return termobj
-end
-
 --[==[
-Parse inline modifiers and create corresponding item objects containing the property values specified either through
-inline modifiers or separate parameters. `data` is an object containing the following properties:
+Parse a list of terms, each of which may have properties specified using inline modifiers or separate parameters. This
+function is intended for parsing the arguments of templates like {{tl|syn}}, {{tl|ant}} and related ''*nym'' templates;
+alternative-form templates {{tl|alt}}/{{tl|alter}}; affix templates like {{tl|af}}/{{tl|affix}},
+{{tl|com}}/{{tl|compound}}, etc.; affix usex templates like {{tl|afex}}/{{tl|affixusex}}; name templates like
+{{tl|name translit}}; column templates like {{tl|col}}; pronunciation templates like {{rhyme}}/{{rhymes}} and
+{{hmp}}/{{homophones}}; etc. In these templates there are one or more terms specified using numeric parameters, and
+associated separate parameters specifying per-term properties such as {{para|t1}}, {{para|t2}}, {{para|t3}}, ... for the
+gloss of the first, second, third, ... term respectively. All such properties can also be specified through inline
+modifiers attached directly to each term (`<t:...>`, `<pos:...>`, etc.). Inline modifiers take precedence over separate parameters when both occur (FIXME: this should probably be an error).
+
+For an example of a typical workflow involving this function, see the comment at the top of this file.
+
+Some notable properties of this function:
+# Processing of the raw frame parent args using `process()` in [[Module:parameters]] can occur either inside of this
+  function (the usual workflow) or outside of this function (for more complex cases). In the former case the raw parent
+  args are passed in along with a partially built `params` structure of the sort required by [[Module:parameters]],
+  containing only the term list itself along with any other parameters that are '''not''' term properties (such as
+  a language code in {{para|1}} and boolean flags like {{para|nocat}}, {{para|nocap}}, etc.). This structure is
+  ''augmented'' with list parameters, one for each per-term property, and [[Module:parameters]] is invoked. In the
+  latter case where raw argument processing is done by the caller, they must build the partial `params` structure;
+  augment it themselves using `augment_params_with_modifiers()`; call [[Module:parameters]] themselves; and pass in the
+  processed arguments. In both cases, the return value of this function contains two values, a list of objects, one per
+  term, specifying the term and all properties; and the processed arguments structure, so that the non-term-property
+  arguments can be processed as appropriate.
+# Optionally, each term can consist of a number of ''subitems'' separated by delimiters (usually a comma, but the
+  possible delimiter or delimiters are controllable). Each subitem can have its own inline modifiers. This functionality
+  is used, for example, by {{tl|col}} and variants, which allow each row to have comma-separated or tilde-separated
+  subitems. When this feature is invoked, the format of the per-term object changes; instead of directly being an object
+  describing the term and its properties, it is an object with a `terms` field containing a list of per-subitem objects
+  along with other top-level fields describing per-term properties. By default, if there are separate parameters
+  specified along with multiple subitems, an error occurs, but this is controllable; currently, you can request that the
+  parameters be assigned to the first or last subitem.
+# By default, special ''separator'' arguments may be present, mixed in among regular term arguments. Examples of such
+  separator arguments are (by default; this can be overridden) a bare semicolon, specifying that the terms on either
+  side should be separated by a semicolon instead of a comma (indicating a higher-level grouping); a bare tilde,
+  replacing the comma separator with a tilde (indicating that the terms on either side are alternants); and a bare
+  underscore, replacing the comma separator with a space. Separator arguments are ignored when numbering the separate
+  parameters. You disable the separator argument handling entirely if it doesn't make sense to have this (e.g. in
+  {{tl|af}}/{{tl|affix}}, where the separator is always a {{cd|+}} sign).
+
+`data` is an object containing the following properties:
 * `raw_args` ('''required''' unless `processed_args` is specified): The raw arguments, normally fetched from
   {frame:getParent().args}. They are parsed using `process()` in [[Module:parameters]].
 * `processed_args`: The object of parsed arguments returned by `process()` in [[Module:parameters]]. One (but not both)
@@ -799,13 +751,13 @@ inline modifiers or separate parameters. `data` is an object containing the foll
 * `parse_lang_prefix`: If true, allow and parse off a language code prefix attached to items followed by a colon, such
   as {la:minūtia} or {grc:[[σκῶρ|σκατός]]}. Etymology-only languages are allowed. Inline modifiers can be attached to
   such items. The exact syntax allowed is as specified in the `parse_term_with_lang()` function in
-  [[Module:parse utilities]]. If `allow_multiple_lang_prefixes` is given, a comma-separated list of language prefixes
-  can be attached to an item. The resulting language object is stored into the `termlang` field, and also into the
-  `lang` field (or in the case of `allow_multiple_lang_prefixes`, the list of language objects is stored into the
+  [[Module:parse utilities]]. If `allow_multiple_lang_prefixes` is given, a {{cd|+}}-sign-separated list of language
+  prefixes can be attached to an item. The resulting language object is stored into the `termlang` field, and also into
+  the `lang` field (or in the case of `allow_multiple_lang_prefixes`, the list of language objects is stored into the
   `termlangs` field, and the first specified object is stored in the `lang` field).
-* `allow_multiple_lang_prefixes`: If given in conjunction with `parse_lang_prefix`, multiple comma-separated language
-  code prefixes can be given. See `parse_lang_prefix` above.
-* `allow_bad_lang_prefixes`: If given in conjunction with `parse_lang_prefix`, unrecognized language prefixes do not
+* `allow_multiple_lang_prefixes`: If given in conjunction with `parse_lang_prefix`, multiple language code prefixes can
+  be given, separated by a {{cd|+}} sign. See `parse_lang_prefix` above.
+* `allow_bad_lang_prefix`: If given in conjunction with `parse_lang_prefix`, unrecognized language prefixes do not
   trigger an error, but are simply ignored (and not stripped off the item). Note that, regardless of whether this is
   given, prefixes before a colon do not trigger an error if they do not have the form of a language prefix or if a space
   follows the colon. It is not recommended that this be given because typos in language prefixes will not trigger an
@@ -904,13 +856,19 @@ following fields may be set:
 * `sc`: The script object of the item. This is set when either (a) the `sc` property is allowed and specified; (b)
   `sc` isn't otherwise set and the `sc` field of the overall `data` object is set, providing a default value.
 ]==]
-function export.process_list_arguments(data)
+function export.parse_list_with_inline_modifiers_and_separate_params(data)
 	local args
 	if not data.termarg then
-		internal_error("Required value `data.termarg` not specified")
+		internal_error("`data.termarg` must be given, indicating which argument contains the terms to be parsed", data)
 	end
 	if not data.param_mods then
-		internal_error("Required value `data.param_mods` not specified")
+		internal_error("`data.param_mods` must be given, indicating the allowed inline modifiers and separate " ..
+			"parameters to copy", data)
+	end
+	local subitem_param_handling = data.subitem_param_handling or "only"
+	if subitem_param_handling ~= "only" and subitem_param_handling ~= "first" and subitem_param_handling ~= "last" then
+		internal_error("Unrecognized value for `data.subitem_param_handling`, should be 'first', 'last' or 'only'",
+			subitem_param_handling)
 	end
 	if data.raw_args then
 		-- FIXME, remove support for `data.args` in favor of `data.processed_args`
@@ -961,11 +919,11 @@ function export.process_list_arguments(data)
 
 	local special_separators = data.special_separators or export.default_special_separators
 	local items, lang_cache, use_semicolon = {}, {}
-	local lang = fetch_argument(args, data.lang)
+	local lang, langparam = fetch_argument(args, data.lang)
 	if lang then
 		lang_cache[lang:getCode()] = lang
 	end
-	local sc = fetch_argument(args, data.sc)
+	local sc, scparam = fetch_argument(args, data.sc)
 	local term_dest = data.term_dest or "term"
 
 	-- FIXME: this is vulnerable to abusive inputs like 1000000=.
@@ -976,16 +934,16 @@ function export.process_list_arguments(data)
 			itemno = itemno + 1
 
 			-- Compute whether any of the separate indexed params exist for this index.
-			local any_param_at_index = term ~= nil
+			local any_param_at_index
 			if not any_param_at_index then
-				for k, v in pairs(args) do
-					-- Look for named list parameters. We check:
-					-- (1) key is a string (excludes the term param, which is a number);
-					-- (2) value is a table, i.e. a list;
-					-- (3) v.maxindex is set (i.e. allow_holes was used);
-					-- (4) the value has an entry at index `itemno` (the current logical index).
-					if type(k) == "string" and type(v) == "table" and v.maxindex and v[itemno] ~= nil then
-						any_param_at_index = true
+				for param_mod, param_mod_spec in pairs(data.param_mods) do
+					local argval = args[param_mod]
+					-- Careful with argument values that may be `false`.
+					if argval then
+						argval = argval[itemno]
+					end
+					if argval ~= nil then
+						any_param_at_index = param_mod
 						break
 					end
 				end
@@ -993,7 +951,8 @@ function export.process_list_arguments(data)
 
 			if data.stop_when and data.stop_when {
 				term = term,
-				any_param_at_index = any_param_at_index,
+				-- FIXME, we should just pass in `any_param_at_index` directly.
+				any_param_at_index = term ~= nil or not not any_param_at_index,
 				orig_index = i,
 				itemno = itemno,
 				stored_itemno = #items + 1,
@@ -1002,7 +961,7 @@ function export.process_list_arguments(data)
 			end
 
 			-- If any of the params used for formatting this term is present, create a term and add it to the list.
-			if not data.dont_skip_items and not any_param_at_index then
+			if not data.dont_skip_items and term == nil and not any_param_at_index then
 				track("skipped-term", data.track_module)
 			else
 				if not term then
@@ -1016,24 +975,11 @@ function export.process_list_arguments(data)
 					termobj.separator = i == 1 and "" or special_separators[term_args[i - 1]]
 				end
 
-				-- Copy all the parsed term-specific parameters into `termobj`.
-				for param_mod, param_mod_spec in pairs(data.param_mods) do
-					local dest = param_mod_spec.item_dest or param_mod
-					local argval = args[param_mod]
-					-- Careful with argument values that may be `false`.
-					if argval then
-						argval = argval[itemno]
-					end
-					if argval ~= nil then
-						termobj[dest] = argval
-					end
-				end
-
 				-- Add 1 because first term index starts at 2.
 				local paramname = data.termarg + i - 1
 
 				local function generate_obj(term, parse_err)
-					return generate_subobj(data, paramname, term, data.splitchar and {} or termobj, parse_err,
+					return generate_obj_parsing_lang_prefix(data, paramname, term, data.splitchar and {} or termobj, parse_err,
 						lang_cache)
 				end
 
@@ -1071,32 +1017,71 @@ function export.process_list_arguments(data)
 					end
 				end
 
-				if data.splitchar then
-					-- If there are any separate indexed parameters, we need to copy them to the (presumably) only
-					-- subobject. If there are multiple subobjects, we throw an error since it's not clear which subobject
-					-- to attach the parameter value to. Do this before calling postprocess_termobj() because the latter
-					-- sets .lang and .sc and we want the user to be able to set separate langN= and scN= parameters.
+				local function argval_missing(val)
+					return val == nil or type(val) == "table" and next(val) == nil
+				end
+
+				local function copy_separate_params_to_termobj(data)
+					local args, destobj, itemno = data.args, data.destobj, data.itemno
 					for param_mod, param_mod_spec in pairs(data.param_mods) do
 						local dest = param_mod_spec.item_dest or param_mod
-						-- FIXME: No error if 'sc' is specified as a separate param.
-						if termobj[dest] ~= nil then
-							if termobj.terms[2] then
-								error(("Can't set a value for separate parameter %s%s= because there are multiple " ..
-									"subitems (%s) in the corresponding item; use an inline modifier"):format(
-									param_mod, itemno, #termobj.terms))
+						-- Don't do anything with the `sc` param, which will get overwritten below; we don't
+						-- want it to cause an error if there are multiple subitems.
+						if dest ~= "sc" then
+							local argval = args[param_mod]
+							-- Careful with argument values that may be `false`.
+							if argval then
+								argval = argval[itemno]
 							end
-							-- Don't overwrite a value already set by an inline modifier.
-							if termobj.terms[1][dest] == nil then
-								termobj.terms[1][dest] = termobj[dest]
+							if not argval_missing(argval) then
+								-- Don't overwrite a value already set by an inline modifier.
+								if argval_missing(destobj[dest]) then
+									destobj[dest] = argval
+								elseif not data.allow_conflicting_inline_mods_and_separate_params then
+									error(("Can't specify a value for separate parameter %s%s= because there is " ..
+										"already an inline modifier <%s:...> specifying a value for the term"):format(
+											param_mod, itemno, param_mod))
+								end
 							end
-							-- Erase the top-level separate parameter setting (regardless of whether we used it).
-							termobj[dest] = nil
 						end
 					end
-					for _, subobj in ipairs(termobj.terms) do
-						postprocess_termobj(subobj)
+
+				if data.splitchar then
+					-- If there are any separate indexed parameters, we need to copy them to the first, last or only
+					-- subitem, depending on the value of `data.subitem_param_handling` (which defaults to 'only',
+					-- meaning it's an error if there are multiple subitems). Do this before calling
+					-- postprocess_termobj() because the latter sets .lang and .sc and we want the user to be able to
+					-- set separate langN= and scN= parameters.
+					local termind
+					if subitem_param_handling == "only" or subitem_param_handling == "first" then
+						termind = 1
+					else
+						termind = #termobj.terms
+					end
+					if subitem_param_handling == "only" and termobj.terms[2] and any_param_at_index then
+						error(("Can't specify a value for separate parameter %s%s= because there are " ..
+							"multiple subitems (%s) in the term; use an inline modifier"):format(
+								any_param_at_index, itemno, #termobj.terms))
+					end
+					copy_separate_params_to_termobj(args, data.param_mods, termobj.terms[termind]
+
+					for _, subitem in ipairs(termobj.terms) do
+						postprocess_termobj(subitem)
 					end
 				else
+					-- Copy all the parsed term-specific parameters into `termobj`.
+					for param_mod, param_mod_spec in pairs(data.param_mods) do
+						local dest = param_mod_spec.item_dest or param_mod
+						local argval = args[param_mod]
+						-- Careful with argument values that may be `false`.
+						if argval then
+							argval = argval[itemno]
+						end
+						if argval ~= nil then
+							termobj[dest] = argval
+						end
+					end
+
 					postprocess_termobj(termobj)
 				end
 
@@ -1117,6 +1102,281 @@ function export.process_list_arguments(data)
 	end
 
 	return items, args
+end
+
+
+--[==[
+Parse a single term that may have properties specified through inline modifiers or separate parameters. This differs
+from `process_list_arguments()` in that the latter is for parsing a list of terms, each of which may have properties
+specified through inline modifiers or separate parameters. Both functions optionally support having multiple subitems in
+a single term.
+The return value for this function is a ''term object
+The return value (for both functions) 
+and create corresponding item objects containing the property values specified either through
+inline modifiers or separate parameters. `data` is an object containing the following properties:
+* `raw_args` ('''required''' unless `processed_args` is specified): The raw arguments, normally fetched from
+  {frame:getParent().args}. They are parsed using `process()` in [[Module:parameters]].
+* `processed_args`: The object of parsed arguments returned by `process()` in [[Module:parameters]]. One (but not both)
+  of `raw_args` and `processed_args` must be set.
+* `param_mods` ('''required'''): A structure describing the possible inline modifiers and their properties. See the
+  introductory comment above. Most often, this is generated using `construct_param_mods()` rather than specified
+  manually.
+* `params` ('''required''' unless `processed_args` is specified): A structure describing the possible parameters,
+  '''other than''' the ones that are separate-parameter equivalents of inline modifiers. This is automatically
+  "augmented" with the separate-parameter equivalents of the inline modifiers described in `param_mods` prior to parsing
+  the raw arguments with [[Module:parameters]]. '''WARNING:''' This structure is destructively modified, both by the
+  "augmentation" process of adding separate-parameter equivalents of inline modifiers, and by the processing done by
+  [[Module:parameters]] itself. (Nonetheless, substructures can safely be shared in this structure, and will be
+  correctly handled.)
+* `termarg` ('''required'''): The argument containing the first item with attached inline modifiers to be parsed.
+  Usually a numeric value such as {1} or {2}.
+* `track_module` ('''recommended'''): The name of the calling module, for use in adding tracking pages that are used
+  internally to track pages containing template invocations with certain properties. Example properties tracked are
+  missing items with corresponding properties as well as missing items without corresponding properties (which are
+  skipped entirely). To find out the exact properties tracked and the name of the tracking pages, read the code.
+* `process_args_before_parsing`: An optional function to apply further processing to the processed `args` structure
+  returned by [[Module:parameters]], before parsing inline modifiers. This is passed one argument, the processed
+  arguments. It should make modifications in-place.
+* `term_dest`: The field to store the value of the item itself into, after inline modifiers and (if allowed) language
+  prefixes are stripped off. Defaults to {"term"}.
+* `parse_lang_prefix`: If true, allow and parse off a language code prefix attached to items followed by a colon, such
+  as {la:minūtia} or {grc:[[σκῶρ|σκατός]]}. Etymology-only languages are allowed. Inline modifiers can be attached to
+  such items. The exact syntax allowed is as specified in the `parse_term_with_lang()` function in
+  [[Module:parse utilities]]. If `allow_multiple_lang_prefixes` is given, a comma-separated list of language prefixes
+  can be attached to an item. The resulting language object is stored into the `termlang` field, and also into the
+  `lang` field (or in the case of `allow_multiple_lang_prefixes`, the list of language objects is stored into the
+  `termlangs` field, and the first specified object is stored in the `lang` field).
+* `allow_multiple_lang_prefixes`: If given in conjunction with `parse_lang_prefix`, multiple comma-separated language
+  code prefixes can be given. See `parse_lang_prefix` above.
+* `allow_bad_lang_prefix`: If given in conjunction with `parse_lang_prefix`, unrecognized language prefixes do not
+  trigger an error, but are simply ignored (and not stripped off the item). Note that, regardless of whether this is
+  given, prefixes before a colon do not trigger an error if they do not have the form of a language prefix or if a space
+  follows the colon. It is not recommended that this be given because typos in language prefixes will not trigger an
+  error and will tend to remain unfixed.
+* `lang`: The language object for the language of the items, or the name of the argument to fetch the object from. In
+  general it is not necessary to specify this as `process_list_arguments()` only initializes items based on inline
+  modifiers and separate arguments and doesn't actually format the resulting items. However, if specified, it is used
+  for certain purposes:
+  *# It specifies the default for the `lang` property of returned objects if not otherwise set (e.g. by a language
+     prefix).
+  *# It is used to initialize an internal cache for speeding up language-code parsing (primarily useful if the same
+     language code may appear in several items, such as with {{tl|col}} and related templates).
+  The value of `lang` can be any of the following:
+  * If a string of the form "foo.default", it is assumed to be requesting the value of `args["foo"].default`.
+  * Otherwise, if a string or number, it is assumed to be requesting the value of `args` at that key. Note that if the
+    string is in the form of a number (e.g. "3"), it is normalized to a number prior to fetching (this also happens with
+	a spec like "2.default").
+  * Otherwise, if a function, it is assumed to be a function to return the argument value given `args`, which is passed
+    to the function as its only argument.
+  * Otherwise, it is used directly.
+* `sc`: The script object for the items, or the name of the argument to fetch the object from. The possible values and
+  their handling are the same as with `lang`. In general, as with `lang`,  it is not necessary to specify this. However,
+  if specified, it is used to supply the default for the `sc` property of returned items if not otherwise set (e.g. by
+  the {{para|sc<var>N</var>}} parameter or `<sc:...>` inline modifier).
+* `disallow_custom_separators`: If specified, disallow specifying custom separators (semicolon, underscore, tilde; see
+  the internal `special_separators` table) as an item value to override the default separator. By default, the previous
+  separator of each item is considered to be an empty string (for the first item) and otherwise the value of
+  `default_separator` (normally a comma + space), unless either the preceding item is one of the values listed in
+  `special_separators`, such as a bare semicolon (which causes the following item's previous separator to be a semicolon
+  + space) or an item has an embedded comma in it (which causes ''all'' items other than the first to have their
+  previous separator be a semicolon + space). The previous separator of each item is set on the item's `separator`
+  property. Bare semicolons and other separator arguments do not count when indexing items using separate parameters.
+  For example, the following is correct:
+  ** {{tl|template|lang|item 1|q1=qualifier 1|;|item 2|q2=qualifier 2}}
+  If `disallow_custom_separators` is specified, however, the `separator` property is not set and separator arguments are
+  not recognized.
+* `default_separator`: Override the default separator (normally {", "}).
+* `dont_skip_items`: Normally, items that are completely unspecified (have no term and no properties) are skipped and
+  not inserted into the returned list of items. (Such items cannot occur if `disallow_holes = true` is set on the term
+  specification in the `params` structure passed to `process()` in [[Module:parameters]]. It is generally recommended
+  to do so unless a specific meaning is associated the term value being missing.) If `dont_skip_items` is set, however,
+  items are never skipped, and completely unspecified items will be returned along with others. (They will not have
+  the term or any properties set, but will have the normal non-property fields set; see below.)
+* `stop_when`: If specified, a function to determine when to prematurely stop processing items. It is passed a single
+  argument, an object containing the following fields:
+  ** `term`: The raw term, prior to parsing off language prefixes and inline modifiers (since the processing of
+     `stop_when` happens before parsing the term).
+  ** `any_param_at_index`: True if any separate property parameters exist for this item.
+  ** `orig_index`: Same as `orig_index` below.
+  ** `itemno`: Same as `itemno` below.
+  ** `stored_itemno`: The index where this item will be stored into the returned items table. This may differ from
+     `itemno` due to skipped items (it will never be different if `dont_skip_items` is set).
+  The function should return true to stop processing items and return the ones processed so far (not including the item
+  currently being processed). This is used, for example, in [[Module:alternative forms]], where an unspecified item
+  signal the end of items and the start of labels.
+* `splitchar` is a Lua pattern. If specified, each user-specified argument can consist of multiple delimiter-separated
+  subitems, each of which may be followed by inline modifiers. In this case, each element in the returned list of items
+  is no longer an object describing an item, but instead an object with a `terms` field, whose value is a list
+  describing the subitems (whose format is the same as the normal format of an item in the top-level list when
+  `splitchar` is not specified). Each subitem object will have a `delimiter` field holding the actual delimiter
+  occurring before the subitem, which is useful in the case where `splitchar` matches multiple possible characters. In
+  this case, it is possible to specify that a given modifier can only occur after the last subitem and effectively
+  modifies the whole collection of subitems by setting `overall = true` on the modifier. In this case, the modifier's
+  value will be stored in the top-level object (the object with the `terms` field specifying the subitems). Likewise,
+  any modifiers specified in the form of separate parameters will be treated as overall; if you want them to apply to
+  the subitems, it is your responsibility to set the subitem properties appropriately. Note that splitting on delimiters
+  will not happen in certain protected sequences (by default comma+whitespace; see below). In addition, the algorithm to
+  split on delimiters is sensitive to inline modifier syntax and will not be confused by delimiters inside of inline
+  modifiers or inside of square brackets, which do not trigger splitting (whether or not contained within protected
+  sequences). Note that when `splitchar` is set, the code always sets `preserve_splitchar` in the call to
+  `parse_inline_modifiers()`, meaning that the delimiter preceding the subitems is always available on the `delimiter`
+  key of the corresponding objects.
+* `escape_fun` and `unescape_fun` are as in `split_escaping()` and `split_alternating_runs_escaping()` in
+  [[Module:parse utilities]] and control the protected sequences that won't be split when `splitchar` is specified (see
+  previous item). By default, `escape_comma_whitespace` and `unescape_comma_whitespace` are used, so that
+  comma+whitespace sequences won't be split.
+* `pre_normalize_modifiers` is as in `parse_inline_modifiers()`.
+
+Two values are returned, the list of items and the processed `args` structure. In each returned item, there will be one
+field set for each specified property (either through inline modifiers or separate parameters). In addition, the
+following fields may be set:
+* `term`: The term portion of the item (minus inline modifiers and language prefixes). {nil} if no term was given.
+* `orig_index`: The original index into the item in the items table returned by `process()` in [[Module:parameters]].
+  This may differ from `itemno` if there are raw semiclons and `disallow_custom_separators` is not given.
+* `itemno`: The logical index of the item. The index of separate parameters corresponds to this index. This may be
+  different from `orig_index` in the presence of raw semicolons; see above.
+* `separator`: The separator to display before the term. Always set unless `disallow_custom_separators` is given, in
+  which case it is not set.
+* `termlang`: If there is a language prefix, the corresponding language object is stored here (only if
+  `parse_lang_prefix` is set and `allow_multiple_lang_prefixes` is not set).
+* `termlangs`: If there is are language prefixes and both `parse_lang_prefix` and `allow_multiple_lang_prefixes` are
+   set, the list of corresponding language objects is stored here.
+* `lang`: The language object of the item. This is set when either (a) there is a language prefix parsed off (if
+  multiple prefixes are allowed, this corresponds to the first one); (b) the `lang` property is allowed and specified;
+  (c) neither (a) nor (b) apply and the `lang` field of the overall `data` object is set, providing a default value.
+* `sc`: The script object of the item. This is set when either (a) the `sc` property is allowed and specified; (b)
+  `sc` isn't otherwise set and the `sc` field of the overall `data` object is set, providing a default value.
+]==]
+function export.parse_term_with_inline_modifiers_and_separate_params(data)
+	local args
+	if not data.termarg then
+		internal_error("`data.termarg` must be given, indicating which argument contains the term to be parsed", data)
+	end
+	if not data.param_mods then
+		internal_error("`data.param_mods` must be given, indicating the allowed inline modifiers and separate " ..
+			"parameters to copy", data)
+	end
+	if data.raw_args then
+		if data.processed_args then
+			internal_error("Only one of `data.raw_args` and `data.processed_args` can be specified", data)
+		end
+		if not data.params then
+			internal_error("When `data.raw_args` is specified, so must `data.params`, so that the raw arguments " ..
+				"can be parsed", data)
+		end
+		local termarg_spec = data.params[data.termarg]
+		if termarg_spec == nil then
+			internal_error("There must be a spec in `data.params` corresponding to `data.termarg`", data)
+		end
+		if type(termarg_spec) == "table" and termarg_spec.list then
+			internal_error("Term spec in `data.params` must not have `list` set", termarg_spec)
+		end
+		export.augment_params_with_modifiers(data.params, data.param_mods, "always")
+		if data.make_separate_g_into_list then
+			-- HACK: g= is a list for compatibility, but sublist as an inline parameter.
+			data.params.g = {list = true, item_dest = "genders"}
+		end
+		if data.adjust_params_before_arg_processing then
+			data.adjust_params_before_arg_processing(data.params)
+		end
+		args = process_params(data.raw_args, data.params)
+	else
+		args = data.processed_args
+		if not args then
+			internal_error("Either `data.raw_args` or `data.processed_args` must be specified", data)
+		end
+		if data.params then
+			internal_error("When `data.processed_args` is specified, `data.params` should not be specified", data)
+		end
+	end
+
+	if data.process_args_before_parsing then
+		data.process_args_before_parsing(args)
+	end
+
+	local termarg = data.termarg
+	local term = args[termarg]
+	local lang = fetch_argument(args, data.lang)
+	if lang and data.lang_cache then
+		data.lang_cache[lang:getCode()] = lang
+	end
+	local sc = fetch_argument(args, data.sc)
+	local scparam = (type(data.sc) == "string" or type(data.sc) == "number") and data.sc or nil
+	local term_dest = data.term_dest or "term"
+
+	if not term then
+		track("missing-term", data.track_module)
+	end
+	local termobj = {}
+
+	local function generate_obj(term, parse_err)
+		return generate_obj_maybe_parsing_lang_prefix {
+			term = term,
+			termobj = data.splitchar and {} or termobj,
+			term_dest = data.term_dest,
+			paramname = termarg,
+			parse_lang_prefix = data.parse_lang_prefix,
+			parse_err = parse_err,
+			allow_bad_lang_prefix = data.allow_bad_lang_prefix,
+			allow_multiple_lang_prefixes = data.allow_multiple_lang_prefixes,
+			lang_cache = data.lang_cache,
+		}
+	end
+
+	if term then
+		parse_inline_modifiers(term, {
+			paramname = paramname,
+			param_mods = data.param_mods,
+			generate_obj = generate_obj,
+			splitchar = data.splitchar,
+			preserve_splitchar = true,
+			escape_fun = data.escape_fun,
+			unescape_fun = data.unescape_fun,
+			outer_container = data.splitchar and termobj or nil,
+			pre_normalize_modifiers = data.pre_normalize_modifiers,
+		})
+	end
+
+	-- If there are any separate parameters, we need to copy them to the first, last or only subitem, depending on the
+	-- value of `data.subitem_param_handling` (which defaults to 'only', meaning it's an error if there are multiple
+	-- subitems). Do this before the postprocessing step below because the latter sets .sc on all subitems.
+	local subitem_param_handling = data.subitem_param_handling or "only"
+	local termind
+	if subitem_param_handling == "only" or subitem_param_handling == "first" then
+		termind = 1
+	elseif subitem_param_handling == "last" then
+		termind = #termobj.terms
+	else
+		internal_error("Unrecognized value for `data.subitem_param_handling`, should be 'first', 'last' or 'only'",
+			subitem_param_handling)
+	end
+	for param_mod, param_mod_spec in pairs(data.param_mods) do
+		local dest = param_mod_spec.item_dest or param_mod
+		-- Don't do anything with the `sc` param, which will get overwritten below; we don't want it to cause an error
+		-- if there are multiple subitems.
+		if dest ~= scparam and args[param_mod] ~= nil then
+			if subitem_param_handling == "only" then
+				if termobj.terms[2] then
+					error(("Can't set a value for separate parameter %s= because there are multiple " ..
+						"subitems (%s) in the term; use an inline modifier"):format(param_mod, #termobj.terms))
+				end
+			end
+			-- Don't overwrite a value already set by an inline modifier.
+			local destobj = termobj.terms[termind]
+			if destobj[dest] == nil or type(destobj[dest]) == "table" and next(destobj[dest]) == nil then
+				destobj[dest] = args[param_mod]
+			end
+		end
+	end
+
+	for _, subitem in ipairs(termobj.terms) do
+		-- Set these after parsing inline modifiers, not in generate_obj(), otherwise we'll get an error in
+		-- parse_inline_modifiers() if we try to use <lang:...> or <sc:...> as inline modifiers.
+		subitem.lang = subitem.lang or lang
+		subitem.sc = subitem.sc or sc
+	end
+
+	return termobj
 end
 
 
