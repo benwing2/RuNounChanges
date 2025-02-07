@@ -2,7 +2,7 @@ local export = {}
 
 local concat = table.concat
 local insert = table.insert
-local listToSet = require("Module:table/listToSet")
+local listToSet = require("Module:table").listToSet
 local rsplit = mw.text.split
 
 local descendants_tree_module = "Module:descendants tree"
