@@ -10,90 +10,14 @@ local trim = mw.text.trim
 local lower = mw.ustring.lower
 local dump = mw.dumpObject
 
+local m_internal = require("Module:etymology/templates/internal")
+
 local etymology_module = "Module:etymology"
 local etymology_specialized_module = "Module:etymology/specialized"
-local parameter_utilities_module = "Module:User:Benwing2/parameter utilities"
+local parameter_utilities_module = "Module:parameter utilities"
 
 -- For testing
 local force_cat = false
-
-local function parse_terms_with_inline_modifiers(args, termparam, param_mods, lang)
-	return require(parameter_utilities_module).parse_terms_with_inline_modifiers {
-		args = args,
-		termparam = termparam,
-		param_mods = param_mods,
-		splitchar = ",",
-		track_module = "etymology",
-		subobject_param_handling = "last",
-		lang = lang,
-		sc = "sc",
-	}
-end
-
-do
-	local function get_params(frame, has_text, no_family)
-		local alias_of_t = {alias_of = "t"}
-		local boolean = {type = "boolean"}
-		local plain = {}
-		local params = {
-			[1] = {
-				required = true,
-				type = "language",
-				default = "und"
-			},
-			[2] = {
-				required = true,
-				sublist = true,
-				type = "language",
-				family = not no_family,
-				default = "und"
-			},
-			[3] = plain,
-			[4] = {alias_of = "alt"},
-			[5] = alias_of_t,
-
-			["alt"] = plain,
-			["cat"] = plain,
-			["g"] = {list = true},
-			["gloss"] = alias_of_t,
-			["id"] = plain,
-			["lit"] = plain,
-			["pos"] = plain,
-			["t"] = plain,
-			["tr"] = plain,
-			["ts"] = plain,
-			["sc"] = {type = "script"},
-			["senseid"] = plain,
-
-			["nocat"] = boolean,
-			["sort"] = plain,
-			["conj"] = plain,
-		}
-		if has_text then
-			params["notext"] = boolean
-			params["nocap"] = boolean
-		end
-		return process_params(frame:getParent().args, params)
-	end
-
-	function export.parse_2_lang_args(frame, has_text, no_family)
-		local args = get_params(frame, has_text, no_family)
-		local sources = args[2]
-		return args, args[1], {
-			lang = sources[#sources],
-			sc = args.sc,
-			term = args[3],
-			alt = args.alt,
-			id = args.id,
-			genders = args.g,
-			tr = args.tr,
-			ts = args.ts,
-			gloss = args.t,
-			pos = args.pos,
-			lit = args.lit
-		}, #sources > 1 and sources or nil
-	end
-end
 
 function export.etyl(frame)
 	local params = {
@@ -146,7 +70,7 @@ function export.specialized_borrowing(frame)
 	end
 
 	local lang, term, sources
-	args, lang, term, sources = export.parse_2_lang_args(frame, "has text")
+	args, lang, term, sources = m_internal.parse_2_lang_args(frame, "has text")
 	local m_etymology_specialized = require(etymology_specialized_module)
 	if sources then
 		return m_etymology_specialized.specialized_multi_borrowing {
@@ -206,14 +130,6 @@ do
 			sort = true,
 		}
 
-		local m_param_utils = require(parameter_utilities_module)
-		local param_mods = m_param_utils.construct_param_mods {
-			{group = {"link", "q", "l", "ref"}},
-		}
-		m_param_utils.augment_params_with_modifiers(params, param_mods, "always")
-		-- HACK: g= is a list for compatibility, but sublist as an inline parameter.
-		params.g = {list = true, item_dest = "genders"}
-
 		-- |ignore-params= parameter to module invocation specifies
 		-- additional parameter names to allow  in template invocation, separated by
 		-- commas. They must consist of ASCII letters or numbers or hyphens.
@@ -232,30 +148,53 @@ do
 			end
 		end
 
-		local args = process_params(frame:getParent().args, params)
+		local m_param_utils = require(parameter_utilities_module)
+		local param_mods = m_param_utils.construct_param_mods {
+			{group = {"link", "q", "l", "ref"}},
+		}
+
+		local parent_args = frame:getParent().args
+
+		local terms, args = m_param_utils.parse_term_with_inline_modifiers_and_separate_params {
+			params = params,
+			param_mods = param_mods,
+			raw_args = parent_args,
+			termarg = 2,
+			track_module = "etymology",
+			lang = 1,
+			sc = "sc",
+			parse_lang_prefix = true,
+			make_separate_g_into_list = true,
+			splitchar = ",",
+			subitem_param_handling = "last",
+		}
+
 		local lang = args[1]
 
 		local parts = {}
-		if not args.notext then
-			insert(parts, iargs.text)
+
+		local function ins(txt)
+			insert(parts, txt)
 		end
-		local terms
-		if args[2] or args.alt then
+
+		if not args.notext then
+			ins(iargs.text)
+		end
+		if terms.terms[1] then
 			if not args.notext then
-				insert(parts, " ")
-				insert(parts, iargs.oftext or "of")
-				insert(parts, " ")
+				ins(" ")
+				ins(iargs.oftext or "of")
+				ins(" ")
 			end
-			terms = parse_terms_with_inline_modifiers(args, 2, param_mods, lang)
 			for i, termobj in ipairs(terms.terms) do
 				terms.terms[i] = require("Module:links").full_link(termobj, "term", nil, "show qualifiers")
 			end
-		end
-		if terms.terms[2] then
-			local conj = args.conj or iargs.conj or "and"
-			insert(parts, require("Module:table").serialCommaJoin(terms.terms, {conj = conj}))
-		else
-			insert(parts, terms.terms[1])
+			if terms.terms[2] then
+				local conj = args.conj or iargs.conj or "and"
+				ins(require("Module:table").serialCommaJoin(terms.terms, {conj = conj}))
+			else
+				ins(terms.terms[1])
+			end
 		end
 
 		local categories = {}
@@ -265,7 +204,7 @@ do
 			end
 		end
 		if #categories > 0 then
-			insert(parts, format_categories(categories, lang, args.sort, nil, force_cat))
+			ins(format_categories(categories, lang, args.sort, nil, force_cat))
 		end
 
 		return concat(parts)
