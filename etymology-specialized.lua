@@ -1,12 +1,13 @@
 local export = {}
 
 local m_str_utils = require("Module:string utilities")
+local en_utilities_module = "Module:en-utilities"
 local etymology_module = "Module:etymology"
 local etymology_multi_module = "Module:etymology/multi"
 
 local gsub = m_str_utils.gsub
 local insert = table.insert
-local pluralize = m_str_utils.pluralize
+local pluralize = require(en_utilities_module).pluralize
 local upper = m_str_utils.upper
 
 -- This function handles all the messiness of different types of specialized borrowings. It should insert any
@@ -18,8 +19,10 @@ local function get_specialized_borrowing_text_insert_cats(data)
 
 	local function inscat(cat)
 		if not nocat then
-			local sourcedisp = source:getDisplayForm()
-			if cat:find("SOURCE") then
+			local display, sourcedisp = require(etymology_module).get_display_and_cat_name(source, "raw")
+			if cat:find("DISPLAY") then
+				cat = cat:gsub("DISPLAY", display)
+			elseif cat:find("SOURCE") then
 				cat = cat:gsub("SOURCE", sourcedisp)
 			else
 				cat = cat .. " " .. sourcedisp
@@ -51,7 +54,7 @@ local function get_specialized_borrowing_text_insert_cats(data)
 	elseif bortype == "transliteration" then
 		text, prep = "transliteration", "of"
 		inscat("terms borrowed from")
-		inscat("transliterations of SOURCE terms")
+		inscat("transliterations of DISPLAY terms")
 	elseif bortype == "phono-semantic-matching" then
 		text, prep = "phono-semantic matching", "of"
 		inscat("phono-semantic matchings from")
@@ -81,6 +84,8 @@ local function get_specialized_borrowing_text_insert_cats(data)
 			bortype == "unadapted"
 		) then
 			text, prep = bortype .. " borrowing", "from"
+		elseif bortype == "adapted" then 
+			text, prep = bortype .. " borrowing", "of"
 		else
 			error("Internal error: Unrecognized bortype: " .. bortype)
 		end
