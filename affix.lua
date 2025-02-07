@@ -137,13 +137,10 @@ don't need to do script detection. Specifically, we only need to do script detec
 
 local ZWNJ = u(0x200C) -- zero-width non-joiner
 local template_hyphens = {
+	-- This covers all Arabic scripts. See above.
 	["Arab"] = "ـ" .. ZWNJ .. "-", -- tatweel + zero-width non-joiner + regular hyphen
 	["Hebr"] = "־", -- Hebrew-specific hyphen termed "maqqef"
-	-- This covers all Arabic scripts. See above.
 	["Mong"] = "᠊",
-	["mnc-Mong"] = "᠊",
-	["sjo-Mong"] = "᠊",
-	["xwo-Mong"] = "᠊",
 	-- FIXME! What about the following right-to-left scripts?
 	-- Adlm (Adlam)
 	-- Armi (Imperial Aramaic)
