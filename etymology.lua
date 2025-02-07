@@ -48,16 +48,15 @@ function export.get_display_and_cat_name(source, raw)
 		display = "undetermined"
 		cat_name = "other languages"
 	elseif source:getCode() == "mul" then
-		display = "[[w:Translingualism|translingual]]"
+		display = raw and "translingual" or "[[w:Translingualism|translingual]]"
 		cat_name = "Translingual"
 	elseif source:getCode() == "mul-tax" then
-		display = "[[w:taxonomic name|taxonomic name]]"
+		display = raw and "taxonomic name" or "[[w:Biological nomenclature|taxonomic name]]"
 		cat_name = "taxonomic names"
 	else
 		display = raw and source:getCanonicalName() or source:makeWikipediaLink()
 		cat_name = source:getDisplayForm()
 	end
-
 	return display, cat_name
 end
 
@@ -204,7 +203,9 @@ function export.insert_borrowed_cat(categories, lang, source)
 	if not (lang:getCode() == source:getCode() or lang:getFullCode() == source:getCode()) then
 		-- If both are the same, we want e.g. [[:Category:English terms borrowed back into English]] not
 		-- [[:Category:English terms borrowed from English]]; the former is inserted automatically by format_source().
-		category = " terms borrowed from " .. source:getDisplayForm()
+		-- The second parameter here doesn't matter as it only affects `display`, which we don't use.
+		local display, cat_name = export.get_display_and_cat_name(source, "raw")
+		category = " terms borrowed from " .. cat_name
 	end
 	if category then
 		table.insert(categories, lang:getFullName() .. category)
