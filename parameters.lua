@@ -146,11 +146,6 @@ local function iterate_list(...)
 	return iterate_list(...)
 end
 
-local function list_to_set(...)
-	list_to_set = require(table_module).listToSet
-	return list_to_set(...)
-end
-
 local function num_keys(...)
 	num_keys = require(table_module).numKeys
 	return num_keys(...)
@@ -308,20 +303,38 @@ Possible parameter tags are listed below:
 :: The value is interpreted as a script code (or name, if {method = "name"}) and converted into the corresponding object
    (see [[Module:scripts]]). If the code or name is invalid, then an error is thrown.
 :; {type = "title"}
-:: The value is interpreted as a page title and converted into the corresponding object (see the [[mw:Extension:Scribunto/Lua_reference_manual#Title_library|Title library]]). If the page title is invalid, then an error is thrown; by default, external titles (i.e. those on other wikis) are not treated as valid. Options are:
+:: The value is interpreted as a page title and converted into the corresponding object (see the
+   [[mw:Extension:Scribunto/Lua_reference_manual#Title_library|Title library]]). If the page title is invalid, then an
+   error is thrown; by default, external titles (i.e. those on other wikis) are not treated as valid. Options are:
 ::; {namespace = n}
 ::: The default namespace, where {n} is a namespace number; this is treated as {0} (the mainspace) if not specified.
 ::; {allow_external = true}
 ::: External titles are treated as valid.
 ::; {prefix = "namespace override"} (default)
-::: The default namespace prefix will be prefixed to the value is already prefixed by a namespace prefix. For instance, the input {"Foo"} with namespace {10} returns {"Template:Foo"}, {"Wiktionary:Foo"} returns {"Wiktionary:Foo"}, and {"Template:Foo"} returns {"Template:Foo"}. Interwiki prefixes cannot act as overrides, however: the input {"fr:Foo"} returns {"Template:fr:Foo"}.
+::: The default namespace prefix will be prefixed to the value is already prefixed by a namespace prefix. For instance,
+    the input {"Foo"} with namespace {10} returns {"Template:Foo"}, {"Wiktionary:Foo"} returns {"Wiktionary:Foo"}, and
+    {"Template:Foo"} returns {"Template:Foo"}. Interwiki prefixes cannot act as overrides, however: the input {"fr:Foo"}
+    returns {"Template:fr:Foo"}.
 ::; {prefix = "force"}
-::: The default namespace prefix will be prefixed unconditionally, even if the value already appears to be prefixed. This is the way that {{tl|#invoke:}} works when calling modules from the module namespace ({828}): the input {"Foo"} returns {"Module:Foo"}, {"Wiktionary:Foo"} returns {"Module:Wiktionary:Foo"}, and {"Module:Foo"} returns {"Module:Module:Foo"}.
+::: The default namespace prefix will be prefixed unconditionally, even if the value already appears to be prefixed.
+    This is the way that {{tl|#invoke:}} works when calling modules from the module namespace ({828}): the input {"Foo"}
+    returns {"Module:Foo"}, {"Wiktionary:Foo"} returns {"Module:Wiktionary:Foo"}, and {"Module:Foo"} returns
+    {"Module:Module:Foo"}.
 ::; {prefix = "full override"}
-::: The same as {prefix = "namespace override"}, except that interwiki prefixes can also act as overrides. For instance, {"el:All topics"} with namespace {14} returns {"el:Category:All topics"}. Due to the limitations of MediaWiki, only the first prefix in the value may act as an override, so the namespace cannot be overridden if the first prefix is an interwiki prefix: e.g. {"el:Template:All topics"} with namespace {14} returns {"el:Category:Template:All topics"}.
+::: The same as {prefix = "namespace override"}, except that interwiki prefixes can also act as overrides. For instance,
+    {"el:All topics"} with namespace {14} returns {"el:Category:All topics"}. Due to the limitations of MediaWiki, only
+    the first prefix in the value may act as an override, so the namespace cannot be overridden if the first prefix is
+    an interwiki prefix: e.g. {"el:Template:All topics"} with namespace {14} returns {"el:Category:Template:All topics"}.
 :; {type = "parameter"}
-:: The value is interpreted as the name of a parameter, and will be normalized using the method that Scribunto uses when constructing a {frame.args} table of arguments. This means that integers will be converted to numbers, but all other arguments will remain as strings (e.g. {"1"} will be normalized to {1}, but {"foo"} and {"1.5"} will remain unchanged). Note that Scribunto also trims parmeter names, following the same trimming method that this module applies by default to all parameter types.
-:: This type is useful when one set of input arguments is used to construct a {params} table for use in a subsequent {export.process()} call with another set of input arguments; for instance, the set of valid parameters for a template might be defined as {{tl|#invoke:[some module]|args=}} in the template, where {args} is a sublist of valid parameters for the template.
+:: The value is interpreted as the name of a parameter, and will be normalized using the method that Scribunto uses when
+   constructing a {frame.args} table of arguments. This means that integers will be converted to numbers, but all other
+   arguments will remain as strings (e.g. {"1"} will be normalized to {1}, but {"foo"} and {"1.5"} will remain
+   unchanged). Note that Scribunto also trims parmeter names, following the same trimming method that this module
+   applies by default to all parameter types.
+:: This type is useful when one set of input arguments is used to construct a {params} table for use in a subsequent
+   {export.process()} call with another set of input arguments; for instance, the set of valid parameters for a template
+   might be defined as {{tl|#invoke:[some module]|args=}} in the template, where {args} is a sublist of valid parameters
+   for the template.
 :; {type = "qualifier"}
 :: The value is interpreted as a qualifier and converted into the correct format for passing into `format_qualifiers()`
    in [[Module:qualifier]] (which currently just means converting it to a one-item list).
@@ -357,8 +370,10 @@ Possible parameter tags are listed below:
 ; {set =}
 : Require that the value of the parameter be one of the specified list of values (or omitted, if {required = true} isn't
   given). The values in the specified list should be strings corresponding to the raw parameter values except when
-  {type = "number"}, in which case they should be numbers. The use of `set` is disallowed if {type = "boolean"} and
-  causes an error to be thrown.
+  {type = "number"}, in which case they should be numbers. A individual value in the list can also be an ''alias list'',
+  which is a list where the first value is the "canonical" value and the remainder are aliases. When one of the aliases
+  is used, the resulting parameter field in the returned arguments structure will have the canonical value. The use of
+  `set` is disallowed if {type = "boolean"} and causes an error to be thrown.
 ; {sublist =}
 : The value of the parameter is a delimiter-separated list of individual raw values. The resulting field in `args` will
   be a Lua list (i.e. a table with numeric indices) of the converted values. If {sublist = true} is given, the values
@@ -419,7 +434,12 @@ Possible parameter tags are listed below:
   indicate that it is in a different language). When this is used, the resulting table will contain an additional named
   value, `default`, which contains the value for the indexless argument.
 ; {demo = true}
-: This is used as a way to ensure that the parameter is only enabled on the template's own page (and its documentation page), and in the User: namespace; otherwise, it will be treated as an unknown parameter. This should only be used if special settings are required to showcase a template in its documentation (e.g. adjusting the pagename or disabling categorization). In most cases, it should be possible to do this without using demo parameters, but they may be required if a template/documentation page also contains real uses of the same template as well (e.g. {{tl|shortcut}}), as a way to distinguish them.
+: This is used as a way to ensure that the parameter is only enabled on the template's own page (and its documentation
+  page), and in the User: namespace; otherwise, it will be treated as an unknown parameter. This should only be used if
+  special settings are required to showcase a template in its documentation (e.g. adjusting the pagename or disabling
+  categorization). In most cases, it should be possible to do this without using demo parameters, but they may be
+  required if a template/documentation page also contains real uses of the same template as well (e.g. {{tl|shortcut}}),
+  as a way to distinguish them.
 ]==]
 
 -- Returns true if the current page is a template or module containing the current {{#invoke}}.
@@ -645,22 +665,28 @@ end
 
 -- For parameter named `name` with value `val` and param spec `param`, if the `set` field is specified, verify that the
 -- value is one of the one specified in `set`, and throw an error otherwise. `name` is taken directly from the
--- corresponding parameter passed into convert_val() and may be a function to signal an error. Optional `param_type` is a
--- string specifying the conversion type of `val` and is used for special-casing: If `param_type` is "boolean", an internal
--- error is thrown (since `set` cannot be used in conjunction with booleans) and if `param_type` is "number", no checking
--- happens because in this case `set` contains numbers and is checked inside the number conversion function itself,
--- after converting `val` to a number.
+-- corresponding parameter passed into convert_val() and may be a function to signal an error. Optional `param_type` is
+-- a string specifying the conversion type of `val` and is used for special-casing: If `param_type` is "boolean", an
+-- internal error is thrown (since `set` cannot be used in conjunction with booleans) and if `param_type` is "number",
+-- no checking happens because in this case `set` contains numbers and is checked inside the number conversion function
+-- itself, after converting `val` to a number. Return the canonical value of `val` (which may be different from `val`
+-- if an alias map is given).
 local function check_set(val, name, param, param_type)
 	if param_type == "boolean" then
 		error(format('Internal error: Cannot use `set` with `type = "%s"`', param_type))
 	elseif param_type == "number" then
 		-- Needs to be special cased because the check happens after conversion to numbers.
-		return
+		return val
 	end
-	if not param.set[val] then
+	local newval = param.set[val]
+	if newval == nil then
 		local list = {}
-		for k in pairs(param.set) do
-			insert(list, dump(k))
+		for k, v in pairs(param.set) do
+			if v == true then
+				insert(list, dump(k))
+			else
+				insert(list, ("%s (alias of %s)"):format(dump(k), dump(v)))
+			end
 		end
 		sort(list)
 		-- If the parameter is not required then put "or empty" at the end of the list, to avoid implying the parameter is actually required.
@@ -669,6 +695,10 @@ local function check_set(val, name, param, param_type)
 		end
 		convert_val_error(val, name, list)
 	end
+	if newval == true then
+		return val
+	end
+	return newval
 end
 
 local function convert_language(val, name, param, allow_etym)
@@ -748,7 +778,7 @@ local type_handlers = setmetatable({
 		end
 		if param.set then
 			-- Don't pass in "number" here; otherwise no checking will happen.
-			check_set(num, name, param)
+			num = check_set(num, name, param)
 		end
 		return num
 	end,
@@ -906,14 +936,14 @@ local function convert_val(val, name, param)
 				thisval = v
 				thisindex = thisindex + 1
 				if param.set then
-					check_set(v, name, param, param_type)
+					v = check_set(v, name, param, param_type)
 				end
 				insert(retlist, param.convert(type_handlers(v, name, param, param_type), parse_err))
 			end
 		else
 			for v in split_sublist(val, name, sublist) do
 				if param.set then
-					check_set(v, name, param, param_type)
+					v = check_set(v, name, param, param_type)
 				end
 				insert(retlist, type_handlers(v, name, param, param_type))
 			end
@@ -921,7 +951,7 @@ local function convert_val(val, name, param)
 		return retlist
 	else
 		if param.set then
-			check_set(val, name, param, param_type)
+			val = check_set(val, name, param, param_type)
 		end
 		local retval = type_handlers(val, name, param, param_type)
 		if param.convert then
@@ -1083,6 +1113,48 @@ local function convert_default_val(name, param, pagename_set, any_args_set)
 	end
 end
 
+
+local function is_string_or_number(item)
+	return type(item) == "string" or type(item) == "number"
+end
+
+local function list_to_alias_map(list)
+	local set, i = {}, 0
+	while true do
+		i = i + 1
+		local item = list[i]
+		if item == nil then
+			return set
+		end
+		if type(item) == "table" then
+			local canon = item[1]
+			if not is_string_or_number(canon) then
+				internal_process_error("First element of list item #%s must be a string or number: %s", i, canon)
+			end
+			set[canon] = true
+			local j = 1
+			while true do
+				j = j + 1
+				local alias = item[j]
+				if alias == nil then
+					break
+				end
+				if not is_string_or_number(alias) then
+					internal_process_error("Alias at position %s of canonical item %s at position %s must be a string or number: %s",
+						j, canon, i, alias)
+				end
+				set[alias] = canon
+			end
+		else
+			if not is_string_or_number(item) then
+				internal_process_error("Alias map element #%s must be a string or number: %s", i, item)
+			end
+			set[item] = true
+		end
+	end
+	return set
+end
+
 --[==[
 Process arguments with a given list of parameters. Return a table containing the processed arguments. The `args`
 parameter specifies the arguments to be processed; they are the arguments you might retrieve from
@@ -1134,7 +1206,7 @@ function export.process(args, params, return_unknown)
 			-- rawset avoids errors if param has been loaded via mw.loadData; however, it's probably more efficient to preconvert them, and set the `converted_set` key in advance.
 			local set = param.set
 			if set and not param.converted_set then
-				rawset(param, "set", list_to_set(set))
+				rawset(param, "set", list_to_alias_map(set))
 				rawset(param, "converted_set", true)
 			end
 
