@@ -138,25 +138,34 @@ function export.see(frame)
 	-- Make links out of all the parts
 	for _, part in ipairs(parts) do
 		local result
-		if part.q then
-			result = require("Module:qualifier").format_qualifier(part.q) .. " "
-		else
-			result = ""
-		end
 		part.sc = part.sc or sc
 		if part.lang then
-			result = result .. require(etymology_module).format_derived{
-				terminfo = part,
+			-- format_derived() processes per-part qualifiers, labels and references, but they end up on the wrong side
+			-- of the source (at least on the left), so we need to move them up.
+			local q = part.q
+			local qq = part.qq
+			local l = part.l
+			local ll = part.ll
+			local refs = part.refs
+			part.q = nil
+			part.qq = nil
+			part.l = nil
+			part.ll = nil
+			part.refs = nil
+			result = require(etymology_module).format_derived {
+				terms = {part},
+				sources = {part.lang},
 				nocat = true,
 				template_name = "see",
+				q = q,
+				qq = qq,
+				l = l,
+				ll = ll,
+				refs = refs,
 			}
 		else
 			part.lang = lang
-			result = result .. require("Module:links").full_link(part, nil, false)
-		end
-
-		if part.qq then
-			result = result .. " " .. require("Module:qualifier").format_qualifier(part.qq)
+			result = require("Module:links").full_link(part, nil, false, "show qualifiers")
 		end
 
 		table.insert(termparts, result)

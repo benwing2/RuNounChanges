@@ -62,25 +62,30 @@ function export.format_affixusex(data)
 		item.lang = item.lang or data.lang
 		item.sc = item.sc or data.sc
 		if item_lang_specific then
+			-- format_derived() processes per-item qualifiers, labels and references, but they end up on the wrong side
+			-- of the source (at least on the left), so we need to move them up.
+			local q = item.q
+			local qq = item.qq
+			local l = item.l
+			local ll = item.ll
+			local refs = item.refs
+			item.q = nil
+			item.qq = nil
+			item.l = nil
+			item.ll = nil
+			item.refs = nil
 			text = require(etymology_module).format_derived {
-				terminfo = item,
+				sources = {item.lang},
+				terms = {item},
 				template_name = "affixusex",
+				q = q,
+				qq = qq,
+				l = l,
+				ll = ll,
+				refs = refs,
 			}
 		else
-			text = require(links_module).full_link(item, "term")
-		end
-
-		if item.q and item.q[1] or item.qq and item.qq[1] or item.l and item.l[1] or item.ll and item.ll[1] or
-			item.refs and item.refs[1] then
-			text = require(pron_qualifier_module).format_qualifiers {
-				lang = item.lang,
-				text = text,
-				q = item.q,
-				qq = item.qq,
-				l = item.l,
-				ll = item.ll,
-				refs = item.refs,
-			}
+			text = require(links_module).full_link(item, "term", nil, "show qualifiers")
 		end
 		table.insert(result, text)
 	end
