@@ -341,7 +341,7 @@ function export.format_form_of(data)
 			local formatted_terms = {}
 			for _, lemma in ipairs(data.lemmas) do
 				insert(formatted_terms, wrap_in_span(
-					full_link(lemma, data.lemma_face), lemma_classes
+					full_link(lemma, data.lemma_face, nil, "show qualifiers"), lemma_classes
 				))
 			end
 			insert(parts, serial_comma_join(formatted_terms))

@@ -5,8 +5,8 @@ local form_of_module = "Module:form of"
 local languages_module = "Module:languages"
 local load_module = "Module:load"
 local parameters_module = "Module:parameters"
+local parameter_utilities_module = "Module:parameter utilities"
 local parse_interface_module = "Module:parse interface"
-local parse_utilities_module = "Module:parse utilities"
 local string_utilities_module = "Module:string utilities"
 local table_module = "Module:table"
 local utilities_module = "Module:utilities"
@@ -155,24 +155,171 @@ local function get_common_template_params()
 	}
 end
 
+-- Split TAGSPECS (inflection tag specifications) on SPLIT_REGEX, which
+-- may be nil for no splitting.
+local function split_inflection_tags(tagspecs, split_regex)
+	if not split_regex then
+		return tagspecs
+	end
+	local inflection_tags = {}
+	for _, tagspec in ipairs(tagspecs) do
+		for tag in gsplit(tagspec, split_regex) do
+			insert(inflection_tags, tag)
+		end
+	end
+	return inflection_tags
+end
+
+
+local function parse_terms_with_inline_modifiers(paramname, val, param_mods, lang)
+	local function generate_obj(term)
+		return {lang = lang, term = decode_entities(term)}
+	end
+
+	return parse_inline_modifiers(val, {
+		paramname = paramname,
+		param_mods = param_mods,
+		generate_obj = generate_obj,
+		splitchar = ",",
+	})
+end
+
+
+-- Modify PARAMS in-place by adding parameters that control the link to the
+-- main entry. TERM_PARAM is the number of the param specifying the main
+-- entry itself; TERM_PARAM + 1 will be the display text, and TERM_PARAM + 2
+-- will be the gloss, unless NO_NUMBERED_GLOSS is given.
+local function add_link_params(parent_args, params, term_param, no_numbered_gloss)
+	params[term_param + 1] = {alias_of = "alt"}
+	if not no_numbered_gloss then
+		params[term_param + 2] = {alias_of = "t"}
+	end
+	-- Numbered params controlling link display
+	params[term_param] = {}
+end
+
+-- Need to do what [[Module:parameters]] does to string arguments from parent_args as we're running this
+-- before calling [[Module:parameters]] on parent_args.
+local function ine(arg)
+	if not arg then
+		return nil
+	end
+	arg = trim(arg)
+	return arg ~= "" and arg or nil
+end
+
+local function add_base_lemma_params(parent_args, iargs, params, compat)
+	-- Check the language-specific data for additional base lemma params. But if there's no language-specific data,
+	-- attempt any parent varieties as well (i.e. superordinate varieties).
+	local lang = get_lang(ine(parent_args[compat and "lang" or 1]) or ine(iargs.lang) or "und", nil, true)
+	while lang do
+		local langdata = safe_load_data((module_prefix or get_module_prefix()) .. lang:getCode())
+		if langdata then
+			local base_lemma_params = langdata.base_lemma_params
+			if base_lemma_params then
+				for _, param in ipairs(base_lemma_params) do
+					params[param.param] = {}
+				end
+				return base_lemma_params
+			end
+		end
+		lang = lang:getParent()
+	end
+end
+
+
 --[=[
-Process parent arguments. This is similar to the following:
-	require("Module:parameters").process(parent_args, params)
-but in addition it does the following:
-(1) Supplies default values for unspecified parent arguments as specified in
-	DEFAULTS, which consist of specs of the form "ARG=VALUE". These are
-	added to the parent arguments prior to processing, so boolean and number
-	parameters will process the value appropriately.
-(2) Removes parent arguments specified in IGNORESPECS, which consist either
-	of bare argument names to remove, or list-argument names to remove of the
-	form "ARG:list".
-(3) Tracks the use of any parent arguments specified in TRACKED_PARAMS, which
-	is a set-type table where the keys are arguments as they exist after
-	processing (hence numeric arguments should be numbers, not strings)
-	and the values should be boolean true.
-]=]--
-local function process_parent_args(template, parent_args, params, defaults, ignorespecs, tracked_params, function_name)
-	if #defaults > 0 or #ignorespecs > 0 then
+Construct and return the full definition line for a form-of-type template invocation. `data` is an object with the
+following fields:
+* `template`: Approximate template name, for debug tracking;
+* `iargs`: processed invocation arguments;
+* `parent_args`: raw parent args from `frame:getParent().args`;
+* `params`: partially constructed params structure of the sort passed to `process()` in [[Module:parameters]], but
+  without any link params;
+* `ignored_tracked_params`: params that are ignored but should be tracked, to be eventually removed;
+* `term_param`: the parent argument specifying the main entry;
+* `compat`: true if the language code is found in args.lang instead of args[1];
+* `base_lemma_params`: if non-nil, a list of base lemma param objects of the sort stored in the language-specific data;
+* `do_form_of`: a function of one argument, `lemma_data`, that returns the actual definition-line text and any
+  language-specific categories. See below.
+
+This function does several things:
+# If link parameters are called for (neither `iargs.nolink` nor `iargs.linktext` are given), augment the `params`
+  structure with separate link parameters.
+# Modify the parent args as appropriate if invocation arguments def= or ignore= are given.
+# Parse the parent args, both for separate parameter properties and inline modifiers on the term parameter (which may
+  consist of multiple comma-separated terms).
+# Compute categories to add to the page, including language-specific categories and any categories requested by the
+  invocation or parent args.
+# Parse enclitic and extra base lemma parameters.
+# Construct the actual text using `do_form_of`.
+# Add a terminating period/dot as appropriate, along with the formatted categories.
+
+`do_form_of` takes one argument, `lemma_data`, which looks like this:
+{
+	lang = LANG,
+	args = {ARG = VALUE, ARG = VALUE, ...},
+	lemmas = {LEMMA_OBJ, LEMMA_OBJ, ...},
+	enclitics = {ENCLITIC_OBJ, ENCLITIC_OBJ, ...},
+	base_lemmas = {BASE_LEMMA_OBJ, BASE_LEMMA_OBJ, ...},
+	categories = {"CATEGORY", "CATEGORY", ...},
+	posttext = "POSTTEXT" or nil,
+}
+
+where
+
+* LANG is the language code;
+* ARGS is the parsed arguments, based on what the user specified;
+* LEMMAS is a sequence of objects specifying the main entries/lemmas, as passed to full_link in [[Module:links]];
+  however, if the invocation argument linktext= is given, it will be a string consisting of that text, and if the
+  invocation argument nolink= is given, it will be nil;
+* ENCLITICS is nil or a sequence of objects specifying the enclitics, as passed to full_link in [[Module:links]];
+* BASE_LEMMA_OBJ is a sequence of objects specifying the base lemma(s), which are used when the lemma is itself a
+  form of another lemma (the base lemma), e.g. a comparative, superlative or participle; each object is of the form
+  { paramobj = PARAM_OBJ, lemmas = {LEMMA_OBJ, LEMMA_OBJ, ...} } where PARAM_OBJ describes the properties of the
+  base lemma parameter (i.e. the relationship between the intermediate and base lemmas) and LEMMA_OBJ is of the same
+  format of ENCLITIC_OBJ, i.e. an object suitable to be passed to full_link in [[Module:links]]; PARAM_OBJ is of the
+  format { param = "PARAM", tags = {"TAG", "TAG", ...} } where PARAM is the name of the parameter to
+  {{inflection of}} etc. that holds the base lemma(s) of the specified relationship and the tags describe the
+  relationship, such as {"comd"} or {"past", "part"};
+* CATEGORIES is the categories to add the page to (consisting of any categories specified in the invocation or
+  parent args and any tracking categories, but not any additional lang-specific categories that may be added by
+  {{inflection of}} or similar templates);
+* POSTTEXT is text to display at the end of the form-of text, before the final </span> (or at the end of the first
+  line, before the colon, in a multiline {{infl of}} call).
+
+`do_form_of` should return two arguments:
+
+(1) The actual definition-line text, marked up appropriately with <span>...</span> but without any terminating
+    period/dot.
+(2) Any extra categories to add the page to (other than those that can be derived from parameters specified to the
+    invocation or parent arguments, which will automatically be added to the page).
+]=]
+local function construct_form_of_text(data)
+	local template, iargs, parent_args, params, ignored_tracked_params, term_param, compat, base_lemma_params,
+		do_form_of =
+		data.template, data.iargs, data.parent_args, data.params, data.ignored_tracked_params, data.term_param,
+			data.compat, data.base_lemma_params, data.do_form_of
+
+	--[=[
+	Process parent arguments. This is similar to the following:
+		require("Module:parameters").process(parent_args, params)
+	but in addition it does the following:
+	(1) Supplies default values for unspecified parent arguments as specified in
+		DEFAULTS, which consist of specs of the form "ARG=VALUE". These are
+		added to the parent arguments prior to processing, so boolean and number
+		parameters will process the value appropriately.
+	(2) Removes parent arguments specified in IGNORESPECS, which consist either
+		of bare argument names to remove, or list-argument names to remove of the
+		form "ARG:list".
+	(3) Tracks the use of any parent arguments specified in TRACKED_PARAMS, which
+		is a set-type table where the keys are arguments as they exist after
+		processing (hence numeric arguments should be numbers, not strings)
+		and the values should be boolean true.
+	]=]--
+	local defaults = iargs.def
+	local ignorespecs = iargs.ignore
+	if defaults[1] or ignorespecs[1] then
 		local new_parent_args = {}
 		for _, default in ipairs(defaults) do
 			local defparam, defval = default:match("^(.-)=(.*)$")
@@ -230,196 +377,72 @@ local function process_parent_args(template, parent_args, params, defaults, igno
 		parent_args = new_parent_args
 	end
 
-	local args = process_params(parent_args, params, nil, "form of/templates", function_name)
+	local m_param_utils, param_mods
+
+	local function init_param_mods()
+		if not m_param_utils then
+			m_param_utils = require(parameter_utilities_module)
+			param_mods = m_param_utils.construct_param_mods {
+				{group = {"link", "q", "l", "ref"}},
+			}
+		end
+	end
+
+	local terms, args
+	if iargs.nolink or iargs.linktext then
+		args = process_params(parent_args, params)
+	else
+		init_param_mods()
+		terms, args = m_param_utils.parse_term_with_inline_modifiers_and_separate_params {
+			params = params,
+			param_mods = param_mods,
+			raw_args = parent_args,
+			termarg = term_param,
+			track_module = "form-of" .. (template and "/" .. template or ""),
+			lang = compat and "lang" or 1,
+			sc = "sc",
+			-- Don't do this, doesn't seem to make sense.
+			-- parse_lang_prefix = true,
+			make_separate_g_into_list = true,
+			process_args_before_parsing = function(args)
+				-- For compatibility with the previous code, we accept a comma-separated list of genders in each of g=,
+				-- g2=, etc. in addition to separate genders in g=/g2=/etc.
+				if args.g and args.g[1] then
+					local genders = {}
+					for _, g in ipairs(args.g) do
+						extend(genders, split(g, ","))
+					end
+					args.g = genders
+				end
+			end,
+			splitchar = ",",
+			subitem_param_handling = "last",
+		}
+	end
 
 	-- Tracking for certain user-specified params. This is generally used for
 	-- parameters that we accept but ignore, so that we can eventually remove
 	-- all uses of these params and stop accepting them.
-	if tracked_params then
-		for tracked_param, _ in pairs(tracked_params) do
-			if parent_args[tracked_param] then
-				track("arg/" .. tracked_param, template)
+	if ignored_tracked_params then
+		for ignored_tracked_param, _ in pairs(ignored_tracked_params) do
+			if parent_args[ignored_tracked_param] then
+				track("arg/" .. ignored_tracked_param, template)
 			end
 		end
 	end
 
-	return args
-end
-
-
--- Split TAGSPECS (inflection tag specifications) on SPLIT_REGEX, which
--- may be nil for no splitting.
-local function split_inflection_tags(tagspecs, split_regex)
-	if not split_regex then
-		return tagspecs
-	end
-	local inflection_tags = {}
-	for _, tagspec in ipairs(tagspecs) do
-		for tag in gsplit(tagspec, split_regex) do
-			insert(inflection_tags, tag)
-		end
-	end
-	return inflection_tags
-end
-
-
-local term_param_mods = {
-	t = {
-		-- [[Module:links]] expects the gloss in the "gloss" key.
-		item_dest = "gloss",
-	},
-	gloss = {},
-	tr = {},
-	ts = {},
-	g = {
-		-- [[Module:links]] expects genders in the "genders" key.
-		item_dest = "genders",
-		sublist = true,
-	},
-	id = {},
-	alt = {},
-	q = {},
-	qq = {},
-	lit = {},
-	pos = {},
-	sc = { type = "script" },
-}
-
-
-local function parse_terms_with_inline_modifiers(paramname, val, lang)
-	local function generate_obj(term)
-		return {lang = lang, term = decode_entities(term)}
-	end
-
-	return parse_inline_modifiers(val, {
-		paramname = paramname,
-		param_mods = term_param_mods,
-		generate_obj = generate_obj,
-		splitchar = ",",
-	})
-end
-
-
-local link_params = { "term", "alt", "t", "gloss", "sc", "tr", "ts", "pos", "id", "lit" }
-local link_param_set = {}
-for _, param in ipairs(link_params) do
-	link_param_set[param] = true
-end
-
--- Modify PARAMS in-place by adding parameters that control the link to the
--- main entry. TERM_PARAM is the number of the param specifying the main
--- entry itself; TERM_PARAM + 1 will be the display text, and TERM_PARAM + 2
--- will be the gloss, unless NO_NUMBERED_GLOSS is given.
-local function add_link_params(parent_args, params, term_param, no_numbered_gloss)
-	for k in pairs(parent_args) do
-		if type(k) == "string" then
-			local base = k:match("^(%l+)(%d+)$")
-			if base and link_param_set[base] then
-				track("multiple-lemmas")
-				error("Support for the separate-parameter style of multiple lemmas in form-of templates is going away; use a comma-separated lemma param with inline modifiers")
-			end
-		end
-	end
-
-	-- If no params for the second or higher term exist, use a simpler param setup to save memory.
-	params[term_param + 1] = {alias_of = "alt"}
-	if not no_numbered_gloss then
-		params[term_param + 2] = {alias_of = "t"}
-	end
-	-- Numbered params controlling link display
-	params[term_param] = {}
-
-	-- Named params controlling link display
-	params["gloss"] = {alias_of = "t"}
-	params["g"] = {list = true}
-	params["sc"] = {type = "script"}
-
-	-- Not "term".
-	for i = 2, #link_params do
-		local param = link_params[i]
-		params[param] = params[param] or {}
-	end
-end
-
--- Need to do what [[Module:parameters]] does to string arguments from parent_args as we're running this
--- before calling [[Module:parameters]] on parent_args.
-local function ine(arg)
-	if not arg then
-		return nil
-	end
-	arg = trim(arg)
-	return arg ~= "" and arg or nil
-end
-
-local function add_base_lemma_params(parent_args, iargs, params, compat)
-	-- Check the language-specific data for additional base lemma params. But if there's no language-specific data,
-	-- attempt any parent varieties as well (i.e. superordinate varieties).
-	local lang = get_lang(ine(parent_args[compat and "lang" or 1]) or ine(iargs["lang"]) or "und", nil, true)
-	while lang do
-		local langdata = safe_load_data((module_prefix or get_module_prefix()) .. lang:getCode())
-		if langdata then
-			local base_lemma_params = langdata.base_lemma_params
-			if base_lemma_params then
-				for _, param in ipairs(base_lemma_params) do
-					params[param.param] = {}
-				end
-				return base_lemma_params
-			end
-		end
-		lang = lang:getParent()
-	end
-end
-
-
---[=[
-Given processed invocation arguments IARGS and processed parent arguments ARGS, as well as TERM_PARAM (the parent
-argument specifying the first main entry/lemma) and COMPAT (true if the language code is found in args["lang"] instead
-of args[1]), return an object as follows:
-{
-	lang = LANG,
-	lemmas = {LEMMA_OBJ, LEMMA_OBJ, ...},
-	enclitics = {ENCLITIC_OBJ, ENCLITIC_OBJ, ...},
-	base_lemmas = {BASE_LEMMA_OBJ, BASE_LEMMA_OBJ, ...},
-	categories = {"CATEGORY", "CATEGORY", ...},
-	posttext = "POSTTEXT" or nil,
-}
-
-where
-
-* LANG is the language code;
-* LEMMAS is a sequence of objects specifying the main entries/lemmas, as passed to full_link in [[Module:links]];
-  however, if the invocation argument linktext= is given, it will be a string consisting of that text, and if the
-  invocation argument nolink= is given, it will be nil;
-* ENCLITICS is nil or a sequence of objects specifying the enclitics, as passed to full_link in [[Module:links]];
-* BASE_LEMMA_OBJ is a sequence of objects specifying the base lemma(s), which are used when the lemma is itself a
-  form of another lemma (the base lemma), e.g. a comparative, superlative or participle; each object is of the form
-  { paramobj = PARAM_OBJ, lemmas = {LEMMA_OBJ, LEMMA_OBJ, ...} } where PARAM_OBJ describes the properties of the
-  base lemma parameter (i.e. the relationship between the intermediate and base lemmas) and LEMMA_OBJ is of the same
-  format of ENCLITIC_OBJ, i.e. an object suitable to be passed to full_link in [[Module:links]]; PARAM_OBJ is of the
-  format { param = "PARAM", tags = {"TAG", "TAG", ...} } where PARAM is the name of the parameter to {{inflection of}}
-  etc. that holds the base lemma(s) of the specified relationship and the tags describe the relationship, such as
-  {"comd"} or {"past", "part"};
-* CATEGORIES is the categories to add the page to (consisting of any categories specified in the invocation or
-  parent args and any tracking categories, but not any additional lang-specific categories that may be added by
-  {{inflection of}} or similar templates);
-* POSTTEXT is text to display at the end of the form-of text, before the final </span> (or at the end of the first line,
-  before the colon, in a multiline {{infl of}} call).
-
-This is a subfunction of construct_form_of_text().
-]=]
-local function get_lemmas_and_categories(iargs, args, term_param, compat, base_lemma_params)
 	local lang = args[compat and "lang" or 1]
 
 	-- Determine categories for the page, including tracking categories
 
 	local categories = {}
 
-	if not args["nocat"] then
-		for _, cat in ipairs(iargs["cat"]) do
+	if not args.nocat then
+		for _, cat in ipairs(iargs.cat) do
 			insert(categories, lang:getFullName() .. " " .. cat)
 		end
 	end
-	for _, cat in ipairs(args["cat"]) do
+	for _, cat in ipairs(args.cat) do
 		insert(categories, lang:getFullName() .. " " .. cat)
 	end
 
@@ -432,75 +455,55 @@ local function get_lemmas_and_categories(iargs, args, term_param, compat, base_l
 		end
 		-- maybe add tracking category if primary entry doesn't exist (this is an
 		-- expensive call so we don't do it by default)
-		if iargs["noprimaryentrycat"] and term and mw.title.getCurrentTitle().nsText == ""
+		if iargs.noprimaryentrycat and term and mw.title.getCurrentTitle().nsText == ""
 			and not mw.title.new(term):getContent() then
-			insert(categories, lang:getFullName() .. " " .. iargs["noprimaryentrycat"])
+			insert(categories, lang:getFullName() .. " " .. iargs.noprimaryentrycat)
 		end
 	end
 
 	local lemmas
 
-	if iargs["nolink"] then
+	if iargs.nolink then
 		lemmas = nil
-	elseif iargs["linktext"] then
-		lemmas = iargs["linktext"]
+	elseif iargs.linktext then
+		lemmas = iargs.linktext
 	else
-		local term = args[term_param]
-
-		if not term and not args["alt"] and not args["tr"] and not args["ts"] then
+		if not terms.terms[1] then
 			if mw.title.getCurrentTitle().nsText == "Template" then
-				term = "term"
+				terms.terms[1] = {
+					lang = lang,
+					term = "term"
+				}
 			else
-				error("No linked-to term specified; either specify term, alt, translit or transcription")
+				error("No linked-to term specified")
 			end
+		end
+		for _, termobj in ipairs(terms.terms) do
+			if termobj.term then
+				add_term_tracking_categories(termobj.term)
+			end
+
+			-- NOTE: Formerly, template arg sc= overrode inline modifier <sc:...>, which seems backwards, so I've
+			-- changed it. Hopefully nothing depended on the old behavior.
 		end
 
-		if term then
-			lemmas = parse_terms_with_inline_modifiers(term_param, term, lang)
-			for _, lemma in ipairs(lemmas) do
-				add_term_tracking_categories(lemma.term)
-			end
-		else
-			lemmas = {{ lang = lang }}
-		end
-
-		-- sc= but not invocation arg sc= should override inline modifier sc=.
-		if args["sc"] then
-			lemmas[1].sc = args["sc"]
-		elseif not lemmas[1].sc and iargs["sc"] then
-			lemmas[1].sc = iargs["sc"]
-		end
-
-		if #args["g"] > 0 then
-			local genders = {}
-			for _, g in ipairs(args["g"]) do
-				extend(genders, split(g, ","))
-			end
-			lemmas[1].genders = genders
-		end
-		if args["t"] then
-			lemmas[1].gloss = args["t"]
-		end
-		for _, param in ipairs(link_params) do
-			if param ~= "sc" and param ~= "term" and param ~= "g" and param ~= "gloss" and param ~= "t" and
-				args[param] then
-				lemmas[1][param] = args[param]
-			end
-		end
+		lemmas = terms.terms
 	end
 
 	local enclitics
 	if args.enclitic then
-		enclitics = parse_terms_with_inline_modifiers("enclitic", args.enclitic, lang)
+		init_param_mods()
+		enclitics = parse_terms_with_inline_modifiers("enclitic", args.enclitic, param_mods, lang)
 	end
 	local base_lemmas = {}
 	if base_lemma_params then
 		for _, base_lemma_param_obj in ipairs(base_lemma_params) do
 			local param = base_lemma_param_obj.param
 			if args[param] then
+				init_param_mods()
 				insert(base_lemmas, {
 					paramobj = base_lemma_param_obj,
-					lemmas = parse_terms_with_inline_modifiers(param, args[param], lang),
+					lemmas = parse_terms_with_inline_modifiers(param, args[param], param_mods, lang),
 				})
 			end
 		end
@@ -519,45 +522,25 @@ local function get_lemmas_and_categories(iargs, args, term_param, compat, base_l
 		end
 	end
 
-	return {
+	local lemma_data = {
 		lang = lang,
+		args = args,
 		lemmas = lemmas,
 		enclitics = enclitics,
 		base_lemmas = base_lemmas,
 		categories = categories,
 		posttext = posttext,
 	}
-end
-
-
--- Construct and return the full definition line for a form-of-type template invocation, given processed invocation
--- arguments IARGS, processed parent arguments ARGS, TERM_PARAM (the parent argument specifying the main entry), COMPAT
--- (true if the language code is found in args["lang"] instead of args[1]), and DO_FORM_OF, which is a function that
--- returns the actual definition-line text and any language-specific categories. The terminating period/dot will be
--- added as appropriate, the language-specific categories will be added to any categories requested by the invocation
--- or parent args, and then whole thing will be appropriately formatted.
---
--- DO_FORM_OF takes one argument, the return value of get_lemmas_and_categories() (an object describing the lemmas,
--- clitics, base lemmas, categories and posttext fetched).
---
--- DO_FORM_OF should return two arguments:
---
--- (1) The actual definition-line text, marked up appropriately with <span>...</span> but without any terminating
---     period/dot.
--- (2) Any extra categories to add the page to (other than those that can be derived from parameters specified to the
---     invocation or parent arguments, which will automatically be added to the page).
-local function construct_form_of_text(iargs, args, term_param, compat, base_lemma_params, do_form_of)
-	local lemma_data = get_lemmas_and_categories(iargs, args, term_param, compat, base_lemma_params)
 
 	local form_of_text, lang_cats = do_form_of(lemma_data)
 	extend(lemma_data.categories, lang_cats)
 	local text = form_of_text .. (
-		args["nodot"] and "" or args["dot"] or iargs["withdot"] and "." or ""
+		args.nodot and "" or args.dot or iargs.withdot and "." or ""
 	)
 	if #lemma_data.categories == 0 then
 		return text
 	end
-	return text .. format_categories(lemma_data.categories, lemma_data.lang, args["sort"],
+	return text .. format_categories(lemma_data.categories, lemma_data.lang, args.sort,
 		-- If lemma_is_sort_key is given, supply the first lemma term as the sort base if possible. If sort= is given,
 		-- it will override the base; otherwise, the base will be converted appropriately to a sort key using the
 		-- same algorithm applied to pagenames.
@@ -646,57 +629,64 @@ function export.form_of_t(frame)
 	local iargs = process_params(frame.args, iparams)
 	local parent_args = frame:getParent().args
 
-	local term_param = iargs["term_param"]
+	local term_param = iargs.term_param
 
-	local compat = iargs["lang"] or parent_args["lang"]
+	local compat = iargs.lang or parent_args.lang
 	term_param = term_param or compat and 1 or 2
 
 	local params = get_common_template_params()
 
 	-- Numbered params
 	params[compat and "lang" or 1] = {
-		required = not iargs["lang"],
+		required = not iargs.lang,
 		type = "language",
-		default = iargs["lang"] or "und"
+		default = iargs.lang or "und"
 	}
 
 	local base_lemma_params
-	if not iargs["nolink"] and not iargs["linktext"] then
+	if not iargs.nolink and not iargs.linktext then
 		add_link_params(parent_args, params, term_param)
 		base_lemma_params = add_base_lemma_params(parent_args, iargs, params, compat)
 	end
 
-	if next(iargs["cat"]) then
+	if next(iargs.cat) then
 		params["nocat"] = {type = "boolean"}
 	end
 
-	local ignored_params = {}
+	local ignored_tracked_params = {}
 
-	if iargs["withdot"] then
+	if iargs.withdot then
 		params["dot"] = {}
 	else
-		ignored_params["nodot"] = true
+		ignored_tracked_params["nodot"] = true
 	end
 
-	if not iargs["withcap"] then
+	if not iargs.withcap then
 		params["cap"] = {type = "boolean"}
-		ignored_params["nocap"] = true
+		ignored_tracked_params["nocap"] = true
 	end
 
-	local args = process_parent_args("form-of-t", parent_args, params, iargs["def"],
-		iargs["ignore"], ignored_params, "form_of_t")
-
-	local text = args["notext"] and "" or iargs[1]
-	if args["cap"] or iargs["withcap"] and not args["nocap"] then
-		text = ucfirst(text)
-	end
-
-	return construct_form_of_text(iargs, args, term_param, compat, base_lemma_params,
-		function(lemma_data)
-			return format_form_of{text = text, lemmas = lemma_data.lemmas, enclitics = lemma_data.enclitics,
-				base_lemmas = lemma_data.base_lemmas, lemma_face = "term", posttext = lemma_data.posttext}, {}
+	return construct_form_of_text {
+		template = "form-of-t",
+		iargs = iargs,
+		parent_args = parent_args,
+		params = params,
+		ignored_tracked_params = ignored_tracked_params,
+		term_param = term_param,
+		compat = compat,
+		base_lemma_params = base_lemma_params,
+		do_form_of = function(lemma_data)
+			local args = lemma_data.args
+			local text = args.notext and "" or iargs[1]
+			if args.cap or iargs.withcap and not args.nocap then
+				text = ucfirst(text)
+			end
+			return format_form_of {
+				text = text, lemmas = lemma_data.lemmas, enclitics = lemma_data.enclitics,
+				base_lemmas = lemma_data.base_lemmas, lemma_face = "term", posttext = lemma_data.posttext
+			}, {}
 		end
-	)
+	}
 end
 
 
@@ -704,34 +694,48 @@ end
 Construct and return the full definition line for a form-of-type template invocation that is based on inflection tags.
 This is a wrapper around construct_form_of_text() and takes the following arguments: processed invocation arguments
 IARGS, processed parent arguments ARGS, TERM_PARAM (the parent argument specifying the main entry), COMPAT (true if the
-language code is found in args["lang"] instead of args[1]), and TAGS, the list of (non-canonicalized) inflection tags.
+language code is found in args.lang instead of args[1]), and TAGS, the list of (non-canonicalized) inflection tags.
 It returns that actual definition-line text including terminating period/full-stop, formatted categories, etc. and
-should be directly returned as the template function's return value. JOINER is the optional strategy to join multipart
-tags for display; currently accepted values are "and", "slash", "en-dash"; defaults to "slash".
+should be directly returned as the template function's return value.
 ]=]
-local function construct_tagged_form_of_text(iargs, args, term_param, compat, base_lemma_params, tags, joiner)
-	return construct_form_of_text(iargs, args, term_param, compat, base_lemma_params,
-		function(lemma_data)
+local function construct_tagged_form_of_text(data)
+	local template, iargs, parent_args, params, ignored_tracked_params, term_param, compat, base_lemma_params, tags =
+		data.template, data.iargs, data.parent_args, data.params, data.ignored_tracked_params, data.term_param,
+			data.compat, data.base_lemma_params, data.tags
+
+	return construct_form_of_text {
+		template = template,
+		iargs = iargs,
+		parent_args = parent_args,
+		params = params,
+		ignored_tracked_params = ignored_tracked_params,
+		term_param = term_param,
+		compat = compat,
+		base_lemma_params = base_lemma_params,
+		do_form_of = function(lemma_data)
+			local args = lemma_data.args
+			if type(tags) == "function" then
+				tags = tags(args)
+			end
 			-- NOTE: tagged_inflections returns two values, so we do too.
-			return tagged_inflections{
+			return tagged_inflections {
 				lang = lemma_data.lang,
 				tags = tags,
 				lemmas = lemma_data.lemmas,
 				enclitics = lemma_data.enclitics,
 				base_lemmas = lemma_data.base_lemmas,
 				lemma_face = "term",
-				POS = args["p"],
-				pagename = args["pagename"],
+				POS = args.p,
+				pagename = args.pagename,
 				-- Set no_format_categories because we do it ourselves in construct_form_of_text().
 				no_format_categories = true,
-				nocat = args["nocat"],
-				notext = args["notext"],
-				capfirst = args["cap"] or iargs["withcap"] and not args["nocap"],
+				nocat = args.nocat,
+				notext = args.notext,
+				capfirst = args.cap or iargs.withcap and not args.nocap,
 				posttext = lemma_data.posttext,
-				joiner = joiner,
 			}
 		end
-	)
+	}
 end
 
 
@@ -773,17 +777,17 @@ function export.tagged_form_of_t(frame)
 	local iargs = process_params(frame.args, iparams)
 	local parent_args = frame:getParent().args
 
-	local term_param = iargs["term_param"]
+	local term_param = iargs.term_param
 
-	local compat = iargs["lang"] or parent_args["lang"]
+	local compat = iargs.lang or parent_args.lang
 	term_param = term_param or compat and 1 or 2
 
 	local params = get_common_template_params()
 	-- Numbered params
 	params[compat and "lang" or 1] = {
-		required = not iargs["lang"],
+		required = not iargs.lang,
 		type = "language",
-		default = iargs["lang"] or "und"
+		default = iargs.lang or "und"
 	}
 
 	-- Always included because lang-specific categories may be added
@@ -792,29 +796,35 @@ function export.tagged_form_of_t(frame)
 	params["POS"] = {alias_of = "p"}
 
 	local base_lemma_params
-	if not iargs["nolink"] and not iargs["linktext"] then
+	if not iargs.nolink and not iargs.linktext then
 		add_link_params(parent_args, params, term_param)
 		base_lemma_params = add_base_lemma_params(parent_args, iargs, params, compat)
 	end
 
-	local ignored_params = {}
+	local ignored_tracked_params = {}
 
-	if iargs["withdot"] then
+	if iargs.withdot then
 		params["dot"] = {}
 	else
-		ignored_params["nodot"] = true
+		ignored_tracked_params["nodot"] = true
 	end
 
-	if not iargs["withcap"] then
+	if not iargs.withcap then
 		params["cap"] = {type = "boolean"}
-		ignored_params["nocap"] = true
+		ignored_tracked_params["nocap"] = true
 	end
 
-	local args = process_parent_args("tagged-form-of-t", parent_args,
-		params, iargs["def"], iargs["ignore"], ignored_params, "tagged_form_of_t")
-
-	return construct_tagged_form_of_text(iargs, args, term_param, compat, base_lemma_params,
-		split_inflection_tags(iargs[1], iargs["split_tags"]))
+	return construct_tagged_form_of_text {
+		template = "tagged-form-of-t",
+		iargs = iargs,
+		parent_args = parent_args,
+		params = params,
+		ignored_tracked_params = ignored_tracked_params,
+		term_param = term_param,
+		compat = compat,
+		base_lemma_params = base_lemma_params,
+		tags = split_inflection_tags(iargs[1], iargs.split_tags),
+	}
 end
 
 --[==[
@@ -826,7 +836,7 @@ It works similarly to {form_of_t()} and {tagged_form_of_t()} except that the cal
 template is
 : { {{TEMPLATE|LANG|MAIN_ENTRY_LINK|MAIN_ENTRY_DISPLAY_TEXT|TAG|TAG|...}}}
 
-instead of 
+instead of
 : { {{TEMPLATE|LANG|MAIN_ENTRY_LINK|MAIN_ENTRY_DISPLAY_TEXT|GLOSS}}}
 
 Note that there isn't a numbered parameter for the gloss, but it can still be specified using {{para|t}} or
@@ -868,90 +878,95 @@ function export.inflection_of_t(frame)
 	local iargs = process_params(frame.args, iparams)
 	local parent_args = frame:getParent().args
 
-	local term_param = iargs["term_param"]
+	local term_param = iargs.term_param
 
-	local compat = iargs["lang"] or parent_args["lang"]
+	local compat = iargs.lang or parent_args.lang
 	term_param = term_param or compat and 1 or 2
 	local tagsind = term_param + 2
 
 	local params = get_common_template_params()
 	-- Numbered params
 	params[compat and "lang" or 1] = {
-		required = not iargs["lang"],
+		required = not iargs.lang,
 		type = "language",
-		default = iargs["lang"] or "und"
+		default = iargs.lang or "und"
 	}
 
 	params[tagsind] = {list = true,
 		-- at least one inflection tag is required unless preinfl or postinfl tags are given
-		required = #iargs["preinfl"] == 0 and #iargs["postinfl"] == 0}
+		required = #iargs.preinfl == 0 and #iargs.postinfl == 0}
 
 	-- Named params not controlling link display
 	-- Always included because lang-specific categories may be added
 	params["nocat"] = {type = "boolean"}
 	params["p"] = {}
 	params["POS"] = {alias_of = "p"}
-	-- Temporary, allows multipart joiner to be controlled on a template-by-template basis.
-	params["joiner"] = {}
 
 	local base_lemma_params
-	if not iargs["nolink"] and not iargs["linktext"] then
+	if not iargs.nolink and not iargs.linktext then
 		add_link_params(parent_args, params, term_param, "no-numbered-gloss")
 		base_lemma_params = add_base_lemma_params(parent_args, iargs, params, compat)
 	end
 
-	local ignored_params = {}
+	local ignored_tracked_params = {}
 
-	if iargs["withdot"] then
+	if iargs.withdot then
 		params["dot"] = {}
 	else
-		ignored_params["nodot"] = true
+		ignored_tracked_params["nodot"] = true
 	end
 
-	if not iargs["withcap"] then
+	if not iargs.withcap then
 		params["cap"] = {type = "boolean"}
-		ignored_params["nocap"] = true
+		ignored_tracked_params["nocap"] = true
 	end
 
-	local args = process_parent_args("inflection-of-t", parent_args,
-		params, iargs["def"], iargs["ignore"], ignored_params, "inflection_of_t")
-
-	local infls
-	if not next(iargs["preinfl"]) and not next(iargs["postinfl"]) then
-		-- If no preinfl or postinfl tags, just use the user-specified tags directly.
-		infls = args[tagsind]
-	else
-		-- Otherwise, we need to prepend the preinfl tags and postpend the postinfl tags. If there's only one tag set
-		-- (no semicolon), it's easier. Since this is common, we optimize for it.
-		infls = {}
-		local saw_semicolon = false
-		for _, infl in ipairs(args[tagsind]) do
-			if infl == ";" then
-				saw_semicolon = true
-				break
-			end
-		end
-		local split_preinfl = split_inflection_tags(iargs["preinfl"], iargs["split_tags"])
-		local split_postinfl = split_inflection_tags(iargs["postinfl"], iargs["split_tags"])
-		if not saw_semicolon then
-			extend(infls, split_preinfl)
-			extend(infls, args[tagsind])
-			extend(infls, split_postinfl)
-		else
-			local groups = split_tag_set(args[tagsind])
-			for _, group in ipairs(groups) do
-				if #infls > 0 then
-					insert(infls, ";")
+	return construct_tagged_form_of_text {
+		template = "inflection-of-t",
+		iargs = iargs,
+		parent_args = parent_args,
+		params = params,
+		ignored_tracked_params = ignored_tracked_params,
+		term_param = term_param,
+		compat = compat,
+		base_lemma_params = base_lemma_params,
+		tags = function(args)
+			local infls
+			if not next(iargs.preinfl) and not next(iargs.postinfl) then
+				-- If no preinfl or postinfl tags, just use the user-specified tags directly.
+				infls = args[tagsind]
+			else
+				-- Otherwise, we need to prepend the preinfl tags and postpend the postinfl tags. If there's only one tag set
+				-- (no semicolon), it's easier. Since this is common, we optimize for it.
+				infls = {}
+				local saw_semicolon = false
+				for _, infl in ipairs(args[tagsind]) do
+					if infl == ";" then
+						saw_semicolon = true
+						break
+					end
 				end
-				extend(infls, split_preinfl)
-				extend(infls, group)
-				extend(infls, split_postinfl)
+				local split_preinfl = split_inflection_tags(iargs.preinfl, iargs.split_tags)
+				local split_postinfl = split_inflection_tags(iargs.postinfl, iargs.split_tags)
+				if not saw_semicolon then
+					extend(infls, split_preinfl)
+					extend(infls, args[tagsind])
+					extend(infls, split_postinfl)
+				else
+					local groups = split_tag_set(args[tagsind])
+					for _, group in ipairs(groups) do
+						if #infls > 0 then
+							insert(infls, ";")
+						end
+						extend(infls, split_preinfl)
+						extend(infls, group)
+						extend(infls, split_postinfl)
+					end
+				end
 			end
-		end
-	end
-
-	return construct_tagged_form_of_text(iargs, args, term_param, compat, base_lemma_params, infls,
-		parent_args["joiner"])
+			return infls
+		end,
+	}
 end
 
 --[==[
@@ -965,11 +980,11 @@ function export.normalize_pos(frame)
 		["default"] = {},
 	}
 	local iargs = process_params(frame.args, iparams)
-	if not iargs[1] and not iargs["default"] then
+	if not iargs[1] and not iargs.default then
 		error("Either 1= or default= must be given in the invocation args")
 	end
 	if not iargs[1] then
-		return iargs["default"]
+		return iargs.default
 	end
 	return (m_form_of_pos or get_m_form_of_pos())[iargs[1]] or iargs[1]
 end
