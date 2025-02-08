@@ -372,13 +372,17 @@ local function get_fromtext(lang, args)
 
 	local last_fromseg = nil
 	local put = require(parse_utilities_module)
-	while args.from[i] do
+	local from_args = args.from or {}
+	if type(from_args) == "string" then
+		from_args = {from_args}
+	end
+	while from_args[i] do
 		-- We may have multiple comma-separated items, each of which may have multiple items separated by a
 		-- space-delimited < sign, each of which may have inline modifiers with embedded commas in them. To handle
 		-- this correctly, first replace space-delimited < signs with a special character, then split on balanced
 		-- <...> and [...] signs, then split on comma, then rejoin the stuff between commas. We will then split on
 		-- TEMP_LESS_THAN (the replacement for space-delimited < signs) and reparse.
-		local rawfroms = rsub(args.from[i], "%s+<%s+", TEMP_LESS_THAN)
+		local rawfroms = rsub(from_args[i], "%s+<%s+", TEMP_LESS_THAN)
         local segments = put.parse_multi_delimiter_balanced_segment_run(rawfroms, {{"<", ">"}, {"[", "]"}})
         local comma_separated_groups = put.split_alternating_runs_on_comma(segments)
         for j, comma_separated_group in ipairs(comma_separated_groups) do
@@ -522,10 +526,6 @@ function export.given_name(frame)
 	local lang_index = compat and "lang" or 1
 
 	local list = {list = true}
-	local alias_of_dimof = {alias_of = "dimof", list = true}
-	local alias_of_dimoftype = {alias_of = "dimoftype"}
-	local alias_of_augof = {alias_of = "augof", list = true}
-	local alias_of_augoftype = {alias_of = "augoftype"}
 	local args = require("Module:parameters").process(parent_args, {
 		[lang_index] = {required = true, type = "language", default = "und"},
 		["gender"] = {default = "unknown-gender"},
@@ -540,36 +540,35 @@ function export.given_name(frame)
 		-- initial article: A or An
 		["A"] = true,
 		["sort"] = true,
-		["from"] = list,
-		[2 + offset] = {alias_of = "from", list = true},
+		["from"] = true,
+		[2 + offset] = {alias_of = "from"},
 		["fromtype"] = true,
-		["xlit"] = list,
-		["eq"] = list,
+		["xlit"] = true,
+		["eq"] = true,
 		["eqtype"] = true,
-		["varof"] = list,
+		["varof"] = true,
 		["varoftype"] = true,
-		["var"] = {alias_of = "varof", list = true},
+		["var"] = {alias_of = "varof"},
 		["vartype"] = {alias_of = "varoftype"},
-		["varform"] = list,
-		["dimof"] = list,
+		["varform"] = true,
+		["varformtype"] = true,
+		["dimof"] = true,
 		["dimoftype"] = true,
-		["dim"] = alias_of_dimof,
-		["dimtype"] = alias_of_dimoftype,
-		["diminutive"] = alias_of_dimof,
-		["diminutivetype"] = alias_of_dimoftype,
-		["dimform"] = list,
-		["augof"] = list,
+		["dim"] = {alias_of = "dimof"},
+		["dimtype"] = {alias_of = "dimoftype"},
+		["dimform"] = true,
+		["dimformtype"] = true,
+		["augof"] = true,
 		["augoftype"] = true,
-		["aug"] = alias_of_augof,
-		["augtype"] = alias_of_augoftype,
-		["augmentative"] = alias_of_augof,
-		["augmentativetype"] = alias_of_augoftype,
-		["augform"] = list,
-		["blend"] = list,
+		["aug"] = {alias_of = "augof"},
+		["augtype"] = {alias_of = "augoftype"},
+		["augform"] = true,
+		["augformtype"] = true,
+		["blend"] = true,
 		["blendtype"] = true,
-		["m"] = list,
+		["m"] = true,
 		["mtype"] = true,
-		["f"] = list,
+		["f"] = true,
 		["ftype"] = true,
 	})
 
@@ -583,8 +582,8 @@ function export.given_name(frame)
 
 	local genders, is_animal = parse_given_name_genders(args.gender)
 
-	local dimoftext, numdims = join_names(lang, args, "dimof")
-	local augoftext, numaugs = join_names(lang, args, "augof")
+	local dimoftext, numdimofs = join_names(lang, args, "dimof")
+	local augoftext, numaugofs = join_names(lang, args, "augof")
 	local xlittext = join_names(nil, args, "xlit")
 	local blendtext = join_names(lang, args, "blend", "and")
 	local varoftext = join_names(lang, args, "varof")
@@ -603,13 +602,13 @@ function export.given_name(frame)
 	local function ins(txt)
 		table.insert(textsegs, txt)
 	end
-	local dimtype = args.dimtype
-	local augtype = args.augtype
-	if numdims > 0 then
-		ins((dimtype and dimtype .. " " or "") .. "[[diminutive]]" ..
+	local dimoftype = args.dimoftype
+	local augoftype = args.augoftype
+	if numdimofs > 0 then
+		ins((dimoftype and dimoftype .. " " or "") .. "[[diminutive]]" ..
 			(xlittext ~= "" and ", " .. xlittext .. "," or "") .. " of the ")
-	elseif numaugs > 0 then
-		ins((augtype and augtype .. " " or "") .. "[[augmentative]]" ..
+	elseif numaugofs > 0 then
+		ins((augoftype and augoftype .. " " or "") .. "[[augmentative]]" ..
 			(xlittext ~= "" and ", " .. xlittext .. "," or "") .. " of the ")
 	end
 	local article = args.A
@@ -622,17 +621,17 @@ function export.given_name(frame)
 		ins(gendertext)
 		ins(" ")
 	end
-	ins((numdims > 1 or numaugs > 1) and "[[given name|given names]]" or "[[given name]]")
+	ins((numdimofs > 1 or numaugofs > 1) and "[[given name|given names]]" or "[[given name]]")
 	article = article or "a" -- if no article set yet, it's "a" based on "given name"
 	if langcode == "en" then
 		article = mw.getContentLanguage():ucfirst(article)
 	end
 
 	local need_comma = false
-	if numdims > 0 then
+	if numdimofs > 0 then
 		ins(" " .. dimoftext)
 		need_comma = not is_animal
-	elseif numaugs > 0 then
+	elseif numaugofs > 0 then
 		ins(" " .. augoftext)
 		need_comma = not is_animal
 	elseif xlittext ~= "" then
@@ -653,7 +652,7 @@ function export.given_name(frame)
 	end
 
 	local from_catparts = {}
-	if #args.from > 0 then
+	if args.from then
 		if need_comma then
 			ins(",")
 		end
@@ -713,13 +712,16 @@ function export.given_name(frame)
 		end
 	end
 	if varformtext ~= "" then
-		ins("; variant form" .. (numvarforms > 1 and "s" or "") .. " " .. varformtext)
+		ins("; " .. fetch_typetext("varformtype") .. "variant form" .. (numvarforms > 1 and "s" or "") .. " " ..
+			varformtext)
 	end
 	if dimformtext ~= "" then
-		ins("; diminutive form" .. (numdimforms > 1 and "s" or "") .. " " .. dimformtext)
+		ins("; " .. fetch_typetext("dimformtype") .. "diminutive form" .. (numdimforms > 1 and "s" or "") .. " " ..
+			dimformtext)
 	end
 	if augformtext ~= "" then
-		ins("; augmentative form" .. (numaugforms > 1 and "s" or "") .. " " .. augformtext)
+		ins("; " .. fetch_typetext("augformtype") .. "augmentative form" .. (numaugforms > 1 and "s" or "") .. " " ..
+			augformtext)
 	end
 	textsegs = "<span class='use-with-mention'>" .. article .. " " .. table.concat(textsegs) .. "</span>"
 
@@ -748,9 +750,9 @@ function export.given_name(frame)
 		end
 	end
 	insert_cats("")
-	if numdims > 0 then
+	if numdimofs > 0 then
 		insert_cats("diminutives of ")
-	elseif numaugs > 0 then
+	elseif numaugofs > 0 then
 		insert_cats("augmentatives of ")
 	end
 
@@ -787,13 +789,12 @@ function export.surname(frame)
 		["populartype"] = true,
 		["meaning"] = list,
 		["meaningtype"] = true,
-		["father"] = true,
-		["mother"] = true,
+		["parent"] = true,
 		["addl"] = true,
 		-- initial article: by default A or An (English), a or an (otherwise)
 		["A"] = true,
 		["sort"] = true,
-		["from"] = list,
+		["from"] = true,
 		["fromtype"] = true,
 		["xlit"] = true,
 		["eq"] = true,
@@ -803,6 +804,7 @@ function export.surname(frame)
 		["var"] = {alias_of = "varof"},
 		["vartype"] = {alias_of = "varoftype"},
 		["varform"] = true,
+		["varformtype"] = true,
 		["blend"] = true,
 		["blendtype"] = true,
 		["m"] = true,
@@ -820,52 +822,53 @@ function export.surname(frame)
 		return args[param] and args[param] .. " " or ""
 	end
 
+	local saw_male = false
+	local saw_female = false
+	local genders = {}
+	if args[gender_arg] then
+		for _, g in ipairs(require(parse_interface_module).split_on_comma(args[gender_arg])) do
+			if g == "unknown" or g == "unknown gender" or g == "unknown-gender" or g == "?" then
+				g = "unknown-gender"
+				track("unknown gender")
+			elseif g == "unisex" or g == "common gender" or g == "common-gender" or g == "c" then
+				g = "common-gender"
+				saw_male = true
+				saw_female = true
+			elseif g == "m" or g == "male" then
+				g = "male"
+				saw_male = true
+			elseif g == "f" or g == "female" then
+				g = "female"
+				saw_female = true
+			else
+				error("Unrecognized gender: " .. g)
+			end
+			table.insert(genders, g)
+		end
+	end
+
 	local adj = args[adj_arg]
 	local xlittext = join_names(nil, args, "xlit")
 	local blendtext = join_names(lang, args, "blend", "and")
 	local varoftext = join_names(lang, args, "varof")
 	local mtext = join_names(lang, args, "m")
 	local ftext = join_names(lang, args, "f")
-	local fathertext = join_names(lang, args, "father", nil, "allow explicit lang")
-	local mothertext = join_names(lang, args, "mother", nil, "allow explicit lang")
+	local parenttext = join_names(lang, args, "parent", nil, "allow explicit lang")
 	local varformtext, numvarforms = join_names(lang, args, "varform", ", ")
 	local meaningsegs = {}
 	for _, meaning in ipairs(args.meaning) do
 		table.insert(meaningsegs, '“' .. meaning .. '”')
 	end
-	if fathertext ~= "" then
-		table.insert(meaningsegs, '“son of ' .. fathertext .. '”')
-	end
-	if mothertext ~= "" then
-		table.insert(meaningsegs, '“daughter of ' .. mothertext .. '”')
+	if parenttext ~= "" then
+		local child = saw_male and not saw_female and "son" or saw_female and not saw_male and "daughter" or
+			"son/daughter"
+		table.insert(meaningsegs, ("“%s of %s”"):format(child, parenttext))
 	end
 
 	local meaningtext = m_table.serialCommaJoin(meaningsegs, {conj = "or"})
 	local eqtext = get_eqtext(args)
 
 	table.insert(textsegs, "<span class='use-with-mention'>")
-
-	local genders = {}
-	if args[gender_arg] then
-		for _, g in ipairs(require(parse_interface_module).split_on_comma(args[gender_arg])) do
-			local origg = g
-			if g == "unknown" or g == "unknown gender" or g == "?" then
-				g = "unknown-gender"
-			elseif g == "unisex" or g == "common gender" or g == "c" then
-				g = "common-gender"
-			elseif g == "m" then
-				g = "male"
-			elseif g == "f" then
-				g = "female"
-			end
-			if g == "unknown-gender" then
-				track("unknown gender")
-			elseif g ~= "male" and g ~= "female" and g ~= "common-gender" then
-				error("Unrecognized gender: " .. origg)
-			end
-			table.insert(genders, g)
-		end
-	end
 
 	-- If gender is supplied, it goes before the specified adjective in adj=. The only value of gender that uses "an" is
 	-- "unknown-gender" (note that "unisex" wouldn't use it but in any case we map "unisex" to "common-gender"). If gender
@@ -897,7 +900,7 @@ function export.surname(frame)
 		need_comma = true
 	end
 	local from_catparts = {}
-	if #args.from > 0 then
+	if args.from then
 		if need_comma then
 			table.insert(textsegs, ",")
 		end
@@ -957,7 +960,8 @@ function export.surname(frame)
 		end
 	end
 	if varformtext ~= "" then
-		table.insert(textsegs, "; variant form" .. (numvarforms > 1 and "s" or "") .. " " .. varformtext)
+		table.insert(textsegs, "; " .. fetch_typetext("varformtype") .. "variant form" ..
+			(numvarforms > 1 and "s" or "") .. " " .. varformtext)
 	end
 	table.insert(textsegs, "</span>")
 
@@ -1012,6 +1016,7 @@ function export.name_translit(frame)
 		["dim"] = boolean,
 		["aug"] = boolean,
 		["nocap"] = boolean,
+		["addl"] = true,
 		["sort"] = true,
 		["pagename"] = true,
 	}
@@ -1023,7 +1028,7 @@ function export.name_translit(frame)
 		{param = {"xlit", "eq"}},
 	}
 
-	local names, args = m_param_utils.process_list_arguments {
+	local names, args = m_param_utils.parse_list_with_inline_modifiers_and_separate_params {
 		params = params,
 		param_mods = param_mods,
 		raw_args = parent_args,
@@ -1150,6 +1155,13 @@ function export.name_translit(frame)
 		ins(table.concat(linked_names, "; or of "))
 	else
 		ins(m_table.serialCommaJoin(linked_names, {conj = "or"}))
+	end
+	if args.addl then
+		if args.addl:find("^;") then
+			ins(args.addl)
+		else
+			ins(", " .. args.addl)
+		end
 	end
 	ins("</span>")
 
