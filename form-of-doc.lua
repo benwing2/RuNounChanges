@@ -6,62 +6,84 @@
 
 	Author: Benwing2
 ]=]
-
 local export = {}
 
-local m_template_link = require("Module:template link")
-local m_languages = require("Module:languages")
-local m_table = require("Module:table")
+local en_utilities_module = "Module:en-utilities"
 local form_of_module = "Module:form of"
-local m_form_of = require(form_of_module)
+local form_of_data_module = "Module:form of/data"
+local function_module = "Module:fun"
 local labels_module = "Module:labels"
-local strutils = require("Module:string utilities")
+local languages_module = "Module:languages"
+local load_module = "Module:load"
+local shortcut_box_module = "Module:shortcut box"
+local string_utilities_module = "Module:string utilities"
+local table_module = "Module:table"
+local template_parser_module = "Module:template parser"
 
-local usub = mw.ustring.sub
-local uupper = mw.ustring.upper
-local rfind = mw.ustring.find
-local rsubn = mw.ustring.gsub
+local require = require
 
+local m_form_of = require(form_of_module)
+local m_form_of_data = require(form_of_data_module)
+local m_cats = require(m_form_of.form_of_cats_module)
+local m_str_utils = require(string_utilities_module)
+local m_table = require(table_module)
 
--- version of rsubn() that discards all but the first return value
-local function rsub(term, foo, bar)
-	local retval = rsubn(term, foo, bar)
-	return retval
-end
+local concat = table.concat
+local format_shortcuts = require(shortcut_box_module).format_shortcuts
+local get_indefinite_article = require(en_utilities_module).get_indefinite_article
+local get_label_info = require(labels_module).get_label_info
+local get_lang = require(languages_module).getByCode
+local get_tag_display_form = m_form_of.get_tag_display_form
+local get_tag_set_display_form = m_form_of.get_tag_set_display_form
+local insert = table.insert
+local ipairs = ipairs
+local is_link_or_html = m_form_of.is_link_or_html
+local iterate_from = require(function_module).iterateFrom
+local list_to_set = m_table.listToSet
+local normalize_tag_set = m_form_of.normalize_tag_set
+local pairs = pairs
+local remove_duplicates = m_table.removeDuplicates
+local safe_require = require(load_module).safe_require
+local serial_comma_join = m_table.serialCommaJoin
+local shallow_copy = m_table.shallowCopy
+local sort = table.sort
+local str_utils_format = m_str_utils.format
+local table_extend = m_table.extend
+local template_link = require(template_parser_module).templateLink
+local tostring = tostring
+local ucfirst = m_str_utils.ucfirst
 
+local form_of_lang_data_module_prefix = m_form_of.form_of_lang_data_module_prefix
+local form_of_data1 = require(m_form_of.form_of_data1_module)
+local form_of_data2 = require(m_form_of.form_of_data2_module)
+local form_of_pos = require(m_form_of.form_of_pos_module)
+
+local SHORTCUTS = m_form_of_data.SHORTCUTS
+local TAG_TYPE = m_form_of_data.TAG_TYPE
 
 local function lang_name(langcode, param)
-	local lang = m_languages.getByCode(langcode, param)
-	return lang:getCanonicalName()
+	return get_lang(langcode, param):getCanonicalName()
 end
 
-
-local function ucfirst(text)
-	return uupper(usub(text, 1, 1)) .. usub(text, 2)
-end
-
-
-function link_box(content)
+local function link_box(content)
 	return "<div class=\"noprint plainlinks\" style=\"float: right; clear: both; margin: 0 0 .5em 1em; background: #f9f9f9; border: 1px #aaaaaa solid; margin-top: -1px; padding: 5px; font-weight: bold; font-size: small;\">"
 		.. content .. "</div>"
 end
 
-
-function show_editlink(page)
+local function show_editlink(page)
 	return link_box("[" .. tostring(mw.uri.fullUrl(page, "action=edit")) .. " Edit]")
 end
-
 
 local function template_name(preserve_lang_code)
 	-- Fetch the template name, minus the '/documentation' suffix that may follow
 	-- and without any language-specific prefixes (e.g. 'el-' or 'ine-bsl-pro-')
 	-- (unless `preserve_lang_code` is given).
-	local PAGENAME =  mw.title.getCurrentTitle().text
-	local tempname = rsub(PAGENAME, "/documentation$", "")
+	local PAGENAME = mw.title.getCurrentTitle().text
+	local tempname = PAGENAME:gsub("/documentation$", "")
 	if not preserve_lang_code then
 		while true do
 			-- Repeatedly strip off language code prefixes, in case there are multiple.
-			local newname = rsub(tempname, "^[a-z][a-z][a-z]?%-", "")
+			local newname = tempname:gsub("^%l%l%l?%-", "")
 			if newname == tempname then
 				break
 			end
@@ -71,68 +93,71 @@ local function template_name(preserve_lang_code)
 	return tempname
 end
 
-
 function export.introdoc(args)
-	local langname = args.lang and lang_name(args.lang, "lang")
+	local lang = args.lang
+	local langname = lang and lang_name(lang, "lang")
 	local exlangnames = {}
 	for _, exlang in ipairs(args.exlang) do
-		table.insert(exlangnames, lang_name(exlang, "exlang"))
+		insert(exlangnames, lang_name(exlang, "exlang"))
 	end
-	parts = {}
-	table.insert(parts, mw.getCurrentFrame():expandTemplate {title="uses lua", args={form_of_module .. "/templates"}})
-	table.insert(parts, "This template creates a definition line for ")
-	table.insert(parts, args.pldesc or rsub(template_name(), " of$", "") .. "s")
-	table.insert(parts, " ")
-	table.insert(parts, args.primaryentrytext or "of primary entries")
-	if args.lang then
-		table.insert(parts, " in " .. langname)
+	local parts = {}
+	insert(parts, mw.getCurrentFrame():expandTemplate {title="uses lua", args={form_of_module .. "/templates"}})
+	insert(parts, "This template creates a definition line for ")
+	insert(parts, args.pldesc or template_name():gsub(" of$", "") .. "s")
+	insert(parts, " ")
+	insert(parts, args.primaryentrytext or "of primary entries")
+	if lang then
+		insert(parts, " in " .. langname)
 	elseif #args.exlang > 0 then
-		table.insert(parts, ", e.g. in " .. m_table.serialCommaJoin(exlangnames, {conj = "or"}))
+		insert(parts, ", e.g. in " .. serial_comma_join(exlangnames, {conj = "or"}))
 	end
-	table.insert(parts, ".")
-	if #args.cat > 0 then
-		table.insert(parts, " It also categorizes the page into ")
+	insert(parts, ".")
+	local cats = args.cat
+	if #cats > 0 then
+		insert(parts, " It also categorizes the page into ")
 		local catparts = {}
-		for _, cat in ipairs(args.cat) do
-			if args.lang then
-				table.insert(catparts, "[[:Category:" .. langname .. " " .. cat .. "]]")
-			else
-				table.insert(catparts, "the proper language-specific subcategory of [[:Category:" .. ucfirst(cat) .. " by language]] (e.g. [[:Category:" .. (exlangnames[1] or "English") .. " " .. cat .. "]])")
+		if lang then
+			for _, cat in ipairs(cats) do
+				insert(catparts, "[[:Category:" .. langname .. " " .. cat .. "]]")
+			end
+		else
+			for _, cat in ipairs(cats) do
+				insert(catparts, "the proper language-specific subcategory of [[:Category:" .. ucfirst(cat) .. " by language]] (e.g. [[:Category:" .. (exlangnames[1] or "English") .. " " .. cat .. "]])")
 			end
 		end
-		table.insert(parts, m_table.serialCommaJoin(catparts))
-		table.insert(parts, ".")
+		insert(parts, serial_comma_join(catparts))
+		insert(parts, ".")
 	end
 	if args.addlintrotext then
-		table.insert(parts, " ")
-		table.insert(parts, args.addlintrotext)
+		insert(parts, " ")
+		insert(parts, args.addlintrotext)
 	end
-	table.insert(parts, "\n")
+	insert(parts, "\n")
 	if args.withcap and args.withdot then
-		table.insert(parts, [===[
+		insert(parts, [===[
 
 By default, this template displays its output as a full sentence, with an initial capital letter and a trailing period (full stop). This can be overridden using <code>|nocap=1</code> and/or <code>|nodot=1</code> (see below).
 ]===])
 	elseif args.withcap then
-		table.insert(parts, [===[
+		insert(parts, [===[
 
 By default, this template displays its output with an initial capital letter. This can be overridden using <code>|nocap=1</code> (see below).
 ]===])
 	end
-	table.insert(parts, [===[
+	insert(parts, [===[
 
 This template is '''not''' meant to be used in etymology sections.]===])
-	if args.etymtemp then
-		table.insert(parts, " For those sections, use <code>{{[[Template:" .. args.etymtemp .. "|" .. args.etymtemp .. "]]}}</code> instead.")
+	local etymtemp = args.etymtemp
+	if etymtemp then
+		insert(parts, " For those sections, use <code>{{[[Template:" .. etymtemp .. "|" .. etymtemp .. "]]}}</code> instead.")
 	end
-	table.insert(parts, [===[
+	insert(parts, [===[
 
 
-Note that users can customize how the output of this template displays by modifying their monobook.css files. See [[:Category:Form-of templates|“Form of” templates]] for details.
+Note that users can customize how the output of this template displays by modifying their Custom CSS files. See [[:Category:Form-of templates|“Form of” templates]] for details.
 ]===])
-	return table.concat(parts)
+	return concat(parts)
 end
-
 
 local function param(params, list, required)
 	local paramparts = {}
@@ -141,86 +166,85 @@ local function param(params, list, required)
 	end
 	for _, p in ipairs(params) do
 		local listparts = {}
-		table.insert(listparts, "<code>|" .. p .. "=</code>")
+		insert(listparts, "<code>|" .. p .. "=</code>")
 		if list then
-			table.insert(listparts, ", <code>|" .. p .. "2=</code>")
-			table.insert(listparts, ", <code>|" .. p .. "3=</code>")
-			table.insert(listparts, ", etc.")
+			insert(listparts, ", <code>|" .. p .. "2=</code>")
+			insert(listparts, ", <code>|" .. p .. "3=</code>")
+			insert(listparts, ", etc.")
 		end
-		table.insert(paramparts, table.concat(listparts))
+		insert(paramparts, concat(listparts))
 	end
 	local reqtext = required and "'''(required)'''" or "''(optional)''"
-	return table.concat(paramparts, " or ") .. " " .. reqtext
+	return concat(paramparts, " or ") .. " " .. reqtext
 end
 
+local function param_and_doc(parts, params, list, required, doc)
+	insert(parts, "; ")
+	insert(parts, param(params, list, required))
+	insert(parts, "\n")
+	insert(parts, ": ")
+	insert(parts, doc)
+	insert(parts, "\n")
+end
 
 function export.paramdoc(args)
 	local parts = {}
 
-	local function param_and_doc(params, list, required, doc)
-		table.insert(parts, "; ")
-		table.insert(parts, param(params, list, required))
-		table.insert(parts, "\n")
-		table.insert(parts, ": ")
-		table.insert(parts, doc)
-		table.insert(parts, "\n")
-	end
-
 	local tempname = template_name()
-	local art = args.art or rfind(tempname, "^[aeiouAEIOU]") and "an" or "a"
+	local art = args.art or get_indefinite_article(tempname)
 	local sgdescof = args.sgdescof or art .. " " .. tempname
-	table.insert(parts, "''Positional (unnamed) parameters:''\n")
+	insert(parts, "''Positional (unnamed) parameters:''\n")
+	local lang = args.lang
 	if args.lang then
-		param_and_doc("1", false, true, "The term to link to (which this page is " .. sgdescof .. "). This should include any needed diacritics as appropriate to " .. lang_name(args.lang, "lang") .. ". These diacritics will automatically be stripped out in the appropriate fashion in order to create the link to the page.")
-		param_and_doc("2", false, false, "The text to be shown in the link to the term. If empty or omitted, the term specified by the first parameter will be used. This parameter is normally not necessary, and should not be used solely to indicate diacritics; instead, put the diacritics in the first parameter.")
+		param_and_doc(parts, "1", false, true, "The term to link to (which this page is " .. sgdescof .. "). This should include any needed diacritics as appropriate to " .. lang_name(lang, "lang") .. ". These diacritics will automatically be stripped out in the appropriate fashion in order to create the link to the page.")
+		param_and_doc(parts, "2", false, false, "The text to be shown in the link to the term. If empty or omitted, the term specified by the first parameter will be used. This parameter is normally not necessary, and should not be used solely to indicate diacritics; instead, put the diacritics in the first parameter.")
 	else
-		param_and_doc("1", false, true, "The [[WT:LANGCODE|language code]] of the term linked to (which this page is " .. sgdescof .. "). See [[Wiktionary:List of languages]]. <small>The parameter <code>|lang=</code> is a deprecated synonym; please do not use. If this is used, all numbered parameters move down by one.</small>")
-		param_and_doc("2", false, true, "The term to link to (which this page is " .. sgdescof .. "). This should include diacritics as appropriate to the language (e.g. accents in Russian to mark the stress, vowel diacritics in Arabic, macrons in Latin to indicate vowel length, etc.). These diacritics will automatically be stripped out in a language-specific fashion in order to create the link to the page.")
-		param_and_doc("3", false, false, "The text to be shown in the link to the term. If empty or omitted, the term specified by the second parameter will be used. This parameter is normally not necessary, and should not be used solely to indicate diacritics; instead, put the diacritics in the second parameter.")
+		param_and_doc(parts, "1", false, true, "The [[WT:LANGCODE|language code]] of the term linked to (which this page is " .. sgdescof .. "). See [[Wiktionary:List of languages]]. <small>The parameter <code>|lang=</code> is a deprecated synonym; please do not use. If this is used, all numbered parameters move down by one.</small>")
+		param_and_doc(parts, "2", false, true, "The term to link to (which this page is " .. sgdescof .. "). This should include diacritics as appropriate to the language (e.g. accents in Russian to mark the stress, vowel diacritics in Arabic, macrons in Latin to indicate vowel length, etc.). These diacritics will automatically be stripped out in a language-specific fashion in order to create the link to the page.")
+		param_and_doc(parts, "3", false, false, "The text to be shown in the link to the term. If empty or omitted, the term specified by the second parameter will be used. This parameter is normally not necessary, and should not be used solely to indicate diacritics; instead, put the diacritics in the second parameter.")
 	end
-	table.insert(parts, "''Named parameters:''\n")
+	insert(parts, "''Named parameters:''\n")
 	if args.etymtemp == 'contraction' then
-		param_and_doc("mandatory", false, false, "If <code>|mandatory=1</code>, indicates that the contraction is mandatory.")
-		param_and_doc("optional", false, false, "If <code>|optional=1</code>, indicates that the contraction is optional.")
+		param_and_doc(parts, "mandatory", false, false, "If <code>|mandatory=1</code>, indicates that the contraction is mandatory.")
+		param_and_doc(parts, "optional", false, false, "If <code>|optional=1</code>, indicates that the contraction is optional.")
 	end
-	param_and_doc({"t", args.lang and "3" or "4"}, false, false, "A gloss or short translation of the term linked to. <small>The parameter <code>|gloss=</code> is a deprecated synonym; please do not use.</small>")
-	param_and_doc("tr", false, false, "Transliteration for non-Latin-script terms, if different from the automatically-generated one.")
-	param_and_doc("ts", false, false, "Transcription for non-Latin-script terms whose transliteration is markedly different from the actual pronunciation. Should not be used for IPA pronunciations.")
-	param_and_doc("sc", false, false, "Script code to use, if script detection does not work. See [[Wiktionary:Scripts]].")
+	param_and_doc(parts, {"t", lang and "3" or "4"}, false, false, "A gloss or short translation of the term linked to. <small>The parameter <code>|gloss=</code> is a deprecated synonym; please do not use.</small>")
+	param_and_doc(parts, "tr", false, false, "Transliteration for non-Latin-script terms, if different from the automatically-generated one.")
+	param_and_doc(parts, "ts", false, false, "Transcription for non-Latin-script terms whose transliteration is markedly different from the actual pronunciation. Should not be used for IPA pronunciations.")
+	param_and_doc(parts, "sc", false, false, "Script code to use, if script detection does not work. See [[Wiktionary:Scripts]].")
 	if args.withfrom then
-		param_and_doc("from", true, false, "A label (see " .. m_template_link.format_link({"label"}) .. ") that gives additional information on the dialect that the term belongs to, the place that it originates from, or something similar.")
+		param_and_doc(parts, "from", true, false, "A label (see " .. template_link("label") .. ") that gives additional information on the dialect that the term belongs to, the place that it originates from, or something similar.")
 	end
 	if args.withdot then
-		param_and_doc("dot", false, false, "A character to replace the final dot that is normally shown automatically.")
-		param_and_doc("nodot", false, false, "If <code>|nodot=1</code>, then no automatic dot will be shown.")
+		param_and_doc(parts, "dot", false, false, "A character to replace the final dot that is normally shown automatically.")
+		param_and_doc(parts, "nodot", false, false, "If <code>|nodot=1</code>, then no automatic dot will be shown.")
 	end
 	if args.withcap then
-		param_and_doc("nocap", false, false, "If <code>|nocap=1</code>, then the first letter will be in lowercase.")
+		param_and_doc(parts, "nocap", false, false, "If <code>|nocap=1</code>, then the first letter will be in lowercase.")
 	end
-	param_and_doc("id", false, false, "A sense id for the term, which links to anchors on the page set by the " .. m_template_link.format_link({"senseid"}) .. " template.")
-	return table.concat(parts)
+	param_and_doc(parts, "id", false, false, "A sense id for the term, which links to anchors on the page set by the " .. template_link("senseid") .. " template.")
+	return concat(parts)
 end
-
 
 function export.usagedoc(args)
 	local exlangs = {}
 	for _, exlang in ipairs(args.exlang) do
-		table.insert(exlangs, exlang)
+		insert(exlangs, exlang)
 	end
-	table.insert(exlangs, 'en')
-	table.insert(exlangs, 'de')
-	table.insert(exlangs, 'ja')
-	exlangs = m_table.removeDuplicates(exlangs)
+	insert(exlangs, 'en')
+	insert(exlangs, 'de')
+	insert(exlangs, 'ja')
+	exlangs = remove_duplicates(exlangs)
 	local sub = {}
 	local langparts = {}
-	for i, langcode in ipairs(exlangs) do
-		table.insert(langparts, '<code>' .. langcode .. '</code> for ' .. lang_name(langcode, "exlang"))
+	for _, langcode in ipairs(exlangs) do
+		insert(langparts, '<code>' .. langcode .. '</code> for ' .. lang_name(langcode, "exlang"))
 	end
-	sub.exlangs = m_table.serialCommaJoin(langparts, {conj = "or"})
+	sub.exlangs = serial_comma_join(langparts, {conj = "or"})
 	sub.tempname = template_name("preserve lang code")
 
 	if args.lang then
-		return strutils.format([===[
+		return str_utils_format([===[
 ==Usage==
 Use in the definition line, most commonly as follows:
  # {\op}{\op}{tempname}|<var><primary entry goes here></var>{\cl}{\cl}
@@ -228,7 +252,7 @@ Use in the definition line, most commonly as follows:
 ===Parameters===
 ]===], sub) .. export.paramdoc(args)
 	else
-		return strutils.format([===[
+		return str_utils_format([===[
 ==Usage==
 Use in the definition line, most commonly as follows:
  # {\op}{\op}{tempname}|<var><langcode></var>|<var><primary entry goes here></var>{\cl}{\cl}
@@ -239,26 +263,23 @@ where <code><var><langcode></var></code> is the [[Wiktionary:Languages|language 
 	end
 end
 
-
 function export.fulldoc(args)
 	local docsubpage = mw.getCurrentFrame():expandTemplate{title="documentation subpage", args={}}
-	local shortcuts = #args.shortcut > 0 and require("Module:shortcut box").show(args.shortcut) or ""
+	local shortcuts = #args.shortcut > 0 and format_shortcuts(args.shortcut) or ""
 	local introdoc = export.introdoc(args)
 	local usagedoc = export.usagedoc(args)
 	return docsubpage .. "\n" .. shortcuts .. introdoc .. "\n" .. usagedoc
 end
 
-
 function export.infldoc(args)
-	args = m_table.shallowcopy(args)
+	args = shallow_copy(args)
 	args.sgdesc = args.sgdesc or (args.art or "the") .. " " ..
-		rsub(template_name(), " of$", "") .. (args.form and " " .. args.form or "")
+		template_name():gsub(" of$", "") .. (args.form and " " .. args.form or "")
 	args.pldesc = args.sgdesc
 	args.sgdescof = args.sgdescof or args.sgdesc .. " of"
 	args.primaryentrytext = args.primaryentrytext or "of a primary entry"
 	return export.fulldoc(args)
 end
-
 
 local tag_type_to_description = {
 	-- If not listed, we just capitalize the first letter
@@ -270,7 +291,6 @@ local tag_type_to_description = {
 	["grammar"] = "Misc grammar",
 	["other"] = "Other tags",
 }
-
 
 local tag_type_order = {
 	"person",
@@ -294,35 +314,32 @@ local tag_type_order = {
 	"other",
 }
 
-
 local function tag_type_desc(tag_type)
-	return tag_type_to_description[tag_type] or strutils.ucfirst(tag_type)
+	return tag_type_to_description[tag_type] or ucfirst(tag_type)
 end
 
-
-local function sort_by_first(namedata1, namedata2)
-	return namedata1[1] < namedata2[1]
+local function sort_by_first(a, b)
+	return a[1] < b[1]
 end
-
 
 local function get_display_form(tag_set, lang)
-	local norm_tag_sets = m_form_of.normalize_tag_set(tag_set, lang)
+	local norm_tag_sets = normalize_tag_set(tag_set, lang)
 	if #norm_tag_sets == 1 then
-		return m_form_of.get_tag_set_display_form(norm_tag_sets[1], lang)
+		return get_tag_set_display_form(norm_tag_sets[1], lang)
 	end
 	-- If we have a conjoined shortcut that expands to multiple tag sets, display them using a numbered list.
 	-- In order to do that inside a table we need a newline before the list.
 	local display_forms = {}
 	for _, norm_tag_set in ipairs(norm_tag_sets) do
-		table.insert(display_forms, "\n# " .. m_form_of.get_tag_set_display_form(norm_tag_set, lang))
+		insert(display_forms, "\n# " .. get_tag_set_display_form(norm_tag_set, lang))
 	end
-	return table.concat(display_forms)
+	return concat(display_forms)
 end
 
 local function organize_tag_data(data_module)
 	local tab = {}
 	for name, data in pairs(data_module.tags) do
-		local tag_type = data[m_form_of.TAG_TYPE]
+		local tag_type = data[TAG_TYPE]
 		if not tag_type then
 			-- Throw an error because hopefully it will get noticed and fixed. If we just skip it, it may never get
 			-- fixed.
@@ -331,208 +348,183 @@ local function organize_tag_data(data_module)
 		if not tab[tag_type] then
 			tab[tag_type] = {}
 		end
-		table.insert(tab[tag_type], {name, data})
+		insert(tab[tag_type], {name, data})
 	end
-	local tag_type_order_set = m_table.listToSet(tag_type_order)
+	local tag_type_order_set = list_to_set(tag_type_order)
 	for tag_type, tags_of_type in pairs(tab) do
 		if not tag_type_order_set[tag_type] then
 			-- See justification above for throwing an error.
 			error("Tag type '" .. tag_type .. "' not listed in tag_type_order")
 		end
-		table.sort(tags_of_type, sort_by_first)
+		sort(tags_of_type, sort_by_first)
 	end
 
 	return tab
 end
 
+local function insert_group(parts, group)
+	for _, namedata in ipairs(group) do
+		local sparts = {}
+		local name, data = unpack(namedata)
+		insert(sparts, "| <code>" .. name .. "</code> || ")
+		local shortcuts = data[SHORTCUTS]
+		if shortcuts then
+			local ssparts = {}
+			if type(shortcuts) == "string" then
+				shortcuts = {shortcuts}
+			end
+			for _, shortcut in ipairs(shortcuts) do
+				insert(ssparts, "<code>" .. shortcut .. "</code>")
+			end
+			insert(sparts, concat(ssparts, ", ") .. " ")
+		end
+		insert(sparts, "|| " .. get_tag_display_form(name))
+		insert(parts, "|-")
+		insert(parts, concat(sparts))
+	end
+end
+
 function export.tagtable()
-	local data_tab = organize_tag_data(mw.loadData(m_form_of.form_of_data_module))
-	local data2_tab = organize_tag_data(mw.loadData(m_form_of.form_of_data2_module))
+	local data1_tab = organize_tag_data(form_of_data1)
+	local data2_tab = organize_tag_data(form_of_data2)
 
 	local parts = {}
 
-	local function ins(text)
-		table.insert(parts, text)
-	end
-
-	local function insert_group(group)
-		for _, namedata in ipairs(group) do
-			local sparts = {}
-			local name, data = unpack(namedata)
-			table.insert(sparts, "| <code>" .. name .. "</code> || ")
-			local shortcuts = data[m_form_of.SHORTCUTS]
-			if shortcuts then
-				local ssparts = {}
-				if type(shortcuts) == "string" then
-					shortcuts = {shortcuts}
-				end
-				for _, shortcut in ipairs(shortcuts) do
-					table.insert(ssparts, "<code>" .. shortcut .. "</code>")
-				end
-				table.insert(sparts, table.concat(ssparts, ", ") .. " ")
-			end
-			table.insert(sparts, "|| " .. m_form_of.get_tag_display_form(name))
-			ins("|-")
-			ins(table.concat(sparts))
-		end
-	end
-
-	ins('{|class="wikitable"')
-	ins("! Canonical tag !! Shortcut(s) !! Display form")
+	insert(parts, '{|class="wikitable"')
+	insert(parts, "! Canonical tag !! Shortcut(s) !! Display form")
 	for _, tag_type in ipairs(tag_type_order) do
-		local group_tab = data_tab[tag_type]
+		local group_tab = data1_tab[tag_type]
 		if group_tab then
-			ins("|-")
-			ins('! colspan="3" style="text-align: center; background: #dddddd;" | ' ..  tag_type_desc(tag_type) ..
+			insert(parts, "|-")
+			insert(parts, '! colspan="3" style="text-align: center; background: var(--wikt-palette-lightergrey);" | ' .. tag_type_desc(tag_type) ..
 				" (more common)")
-			insert_group(group_tab)
+			insert_group(parts, group_tab)
 		end
 		group_tab = data2_tab[tag_type]
 		if group_tab then
-			ins("|-")
-			ins('! colspan="3" style="text-align: center; background: #dddddd;" | ' ..  tag_type_desc(tag_type) ..
+			insert(parts, "|-")
+			insert(parts, '! colspan="3" style="text-align: center; background: var(--wikt-palette-lightergrey);" | ' .. tag_type_desc(tag_type) ..
 				" (less common)")
-			insert_group(group_tab)
+			insert_group(parts, group_tab)
 		end
 	end
-	ins("|}")
+	insert(parts, "|}")
 
-	return table.concat(parts, "\n")
+	return concat(parts, "\n")
 end
 
 local function organize_non_alias_shortcut_data(data_module, lang)
 	local non_alias_shortcuts = {}
 	for shortcut, full in pairs(data_module.shortcuts) do
-		if type(full) == "table" or m_form_of.is_link_or_html(full) or full:find("//") or full:find(":") then
-			table.insert(non_alias_shortcuts, {shortcut, full, get_display_form({shortcut}, lang)})
+		if type(full) == "table" or is_link_or_html(full) or full:find("//") or full:find(":") then
+			insert(non_alias_shortcuts, {shortcut, full, get_display_form({shortcut}, lang)})
 		end
 	end
 
-	table.sort(non_alias_shortcuts, sort_by_first)
+	sort(non_alias_shortcuts, sort_by_first)
 
 	return non_alias_shortcuts
 end
 
+local function insert_shortcut_group(parts, shortcuts)
+	for _, spec in ipairs(shortcuts) do
+		local shortcut, full, display = unpack(spec)
+		insert(parts, "|-")
+		if type(full) == "table" then
+			full = "{" .. concat(full, " ") .. "}"
+		end
+		insert(parts, ("| <code>%s</code> || <code>%s</code> || %s"):format(shortcut, full, display))
+	end
+end
+
 function export.non_alias_shortcut_table()
-	local non_alias_shortcuts = organize_non_alias_shortcut_data(mw.loadData(m_form_of.form_of_data_module))
-	local non_alias_shortcuts2 = organize_non_alias_shortcut_data(mw.loadData(m_form_of.form_of_data2_module))
+	local non_alias_shortcuts1 = organize_non_alias_shortcut_data(form_of_data1)
+	local non_alias_shortcuts2 = organize_non_alias_shortcut_data(form_of_data2)
 
 	local parts = {}
 
-	local function ins(text)
-		table.insert(parts, text)
-	end
-
-	local function insert_shortcut_group(shortcuts)
-		for _, spec in ipairs(shortcuts) do
-			local shortcut, full, display = unpack(spec)
-			ins("|-")
-			if type(full) == "table" then
-				-- Grrr. table.concat() doesn't work on a table that comes from loadData(); use shallowcopy() to convert to
-				-- regular table.
-				full = "{" .. table.concat(m_table.shallowcopy(full), " ") .. "}"
-			end
-			ins(("| <code>%s</code> || <code>%s</code> || %s"):format(shortcut, full, display))
-		end
-	end
-
-	ins('{|class="wikitable"')
-	ins("! Shortcut !! Expansion !! Display form")
-	if #non_alias_shortcuts > 0 then
-		ins("|-")
-		ins('! colspan="3" style="text-align: center; background: #dddddd;" | More common:')
-		insert_shortcut_group(non_alias_shortcuts)
+	insert(parts, '{|class="wikitable"')
+	insert(parts, "! Shortcut !! Expansion !! Display form")
+	if #non_alias_shortcuts1 > 0 then
+		insert(parts, "|-")
+		insert(parts, '! colspan="3" style="text-align: center; background: #dddddd;" | More common:')
+		insert_shortcut_group(parts, non_alias_shortcuts1)
 	end
 	if #non_alias_shortcuts2 > 0 then
-		ins("|-")
-		ins('! colspan="3" style="text-align: center; background: #dddddd;" | Less common:')
-		insert_shortcut_group(non_alias_shortcuts2)
+		insert(parts, "|-")
+		insert(parts, '! colspan="3" style="text-align: center; background: #dddddd;" | Less common:')
+		insert_shortcut_group(parts, non_alias_shortcuts2)
 	end
-	ins("|}")
+	insert(parts, "|}")
 
-	return table.concat(parts, "\n")
+	return concat(parts, "\n")
 end
 
+local function process_spec(spec, cats, labels)
+	if type(spec) == "string" then
+		insert(cats, spec)
+		return
+	elseif not spec or spec == true then
+		-- Ignore labels, etc.
+		return
+	elseif type(spec) ~= "table" then
+		error("Wrong type of condition " .. spec .. ": " .. type(spec))
+	elseif spec.labels then
+		table_extend(labels, spec.labels)
+		return
+	end
+	local predicate = spec[1]
+	if predicate == "multi" or predicate == "cond" then
+		for _, sp in iterate_from(2, ipairs(spec)) do -- Iterate from 2.
+			process_spec(sp, cats, labels)
+		end
+	elseif predicate == "pexists" then
+		process_spec(spec[2], cats, labels)
+		process_spec(spec[3], cats, labels)
+	elseif predicate == "has" or predicate == "hasall" or predicate == "hasany" or
+		predicate == "tags=" or predicate == "p=" or predicate == "pany" or
+		predicate == "not" then
+		process_spec(spec[3], cats, labels)
+		process_spec(spec[4], cats, labels)
+	elseif predicate == "and" or predicate == "or" then
+		process_spec(spec[3], cats, labels)
+		process_spec(spec[4], cats, labels)
+	elseif predicate == "call" then
+		return
+	else
+		error("Unrecognized predicate: " .. predicate)
+	end
+end
 
 local function find_categories_and_labels(catstruct)
-	local cats = {}
-	local labels = {}
-
-	local function process_spec(spec)
-		if type(spec) == "string" then
-			table.insert(cats, spec)
-			return
-		elseif not spec or spec == true then
-			-- Ignore labels, etc.
-			return
-		elseif type(spec) ~= "table" then
-			error("Wrong type of condition " .. spec .. ": " .. type(spec))
-		elseif spec.labels then
-			m_table.extendList(labels, spec.labels)
-			return
-		end
-		local predicate = spec[1]
-		if predicate == "multi" or predicate == "cond" then
-			-- WARNING! #spec doesn't work for objects loaded from loadData()
-			for i, sp in ipairs(spec) do
-				if i > 1 then
-					process_spec(sp)
-				end
-			end
-		elseif predicate == "pexists" then
-			process_spec(spec[2])
-			process_spec(spec[3])
-		elseif predicate == "has" or predicate == "hasall" or predicate == "hasany" or
-			predicate == "tags=" or predicate == "p=" or predicate == "pany" or
-			predicate == "not" then
-			process_spec(spec[3])
-			process_spec(spec[4])
-		elseif predicate == "and" or predicate == "or" then
-			process_spec(spec[3])
-			process_spec(spec[4])
-		elseif predicate == "call" then
-			return
-		else
-			error("Unrecognized predicate: " .. predicate)
-		end
-	end
-
+	local cats, labels = {}, {}
 	for _, spec in ipairs(catstruct) do
-		process_spec(spec)
+		process_spec(spec, cats, labels)
 	end
 	return cats, labels
 end
 
-
 local function construct_category_table(cats)
 	local category_parts = {}
-	local function ins(text)
-		table.insert(category_parts, text)
-	end
-	ins('{|class="wikitable"')
-	ins("! Category")
+	insert(category_parts, '{|class="wikitable"')
+	insert(category_parts, "! Category")
 	for _, cat in ipairs(cats) do
-		ins("|-")
-		ins("| <code>" .. cat .. "</code>")
+		insert(category_parts, "|-")
+		insert(category_parts, "| <code>" .. cat .. "</code>")
 	end
-	ins("|}")
-	return table.concat(category_parts, "\n")
+	insert(category_parts, "|}")
+	return concat(category_parts, "\n")
 end
-
 
 local function construct_label_table(labels, lang, replace_und)
 	local label_parts = {}
-	local function ins(text)
-		table.insert(label_parts, text)
-	end
-	ins('{|class="wikitable"')
-	ins("! Label !! Display form !! Associated categories")
+	insert(label_parts, '{|class="wikitable"')
+	insert(label_parts, "! Label !! Display form !! Associated categories")
 	for _, label in ipairs(labels) do
-		ins("|-")
-		local label_data = require(labels_module).get_label_info {
+		insert(label_parts, "|-")
+		local label_data = get_label_info{
 			label = label,
 			lang = lang,
-			already_seen = {},
 		}
 		local coded_categories = {}
 		for _, cat in ipairs(label_data.categories) do
@@ -540,224 +532,188 @@ local function construct_label_table(labels, lang, replace_und)
 				cat = cat:gsub("^und:", "LANGCODE:")
 				cat = cat:gsub("^Undetermined ", "LANG ")
 			end
-			table.insert(coded_categories, "<code>" .. cat .. "</code>")
+			insert(coded_categories, "<code>" .. cat .. "</code>")
 		end
-		ins(("| <code>%s</code> || %s || %s"):format(label, label_data.label,
-			table.concat(coded_categories, ",")))
+		insert(label_parts, ("| <code>%s</code> || %s || %s"):format(label, label_data.label,
+			concat(coded_categories, ",")))
 	end
-	ins("|}")
-	return table.concat(label_parts, "\n")
+	insert(label_parts, "|}")
+	return concat(label_parts, "\n")
 end
 
+local function iterate_languages(langcodes_module, data_by_lang)
+	for langcode in pairs(require(langcodes_module)) do
+		local data_module_name = form_of_lang_data_module_prefix .. langcode
+		local data_module = safe_require(data_module_name)
+		if data_module or m_cats[langcode] and langcode ~= "und" then
+			local lang = get_lang(langcode, nil, true)
+			-- First do base-lemma params.
+			local base_lemma_param_table
+			if data_module and data_module.base_lemma_params and #data_module.base_lemma_params > 0 then
+				local base_lemma_param_parts = {}
+				insert(base_lemma_param_parts, '{|class="wikitable"')
+				insert(base_lemma_param_parts, "! Parameter !! Display form")
+				for _, base_lemma_param in ipairs(data_module.base_lemma_params) do
+					insert(base_lemma_param_parts, "|-")
+					insert(base_lemma_param_parts, ("| <code>%s</code> || %s"):format(base_lemma_param.param,
+						get_display_form(base_lemma_param.tags, lang)))
+				end
+				insert(base_lemma_param_parts, "|}")
+				base_lemma_param_table = concat(base_lemma_param_parts, "\n")
+			end
+			-- Then do inflection tags.
+			local data1_tab = data_module and organize_tag_data(data_module) or {}
+			local tag_parts = {}
+			insert(tag_parts, '{|class="wikitable"')
+			insert(tag_parts, "! Canonical tag !! Shortcut(s) !! Tag type !! Display form")
+			local saw_any_tag = false
+			for _, tag_type in ipairs(tag_type_order) do
+				local group_tab = data1_tab[tag_type]
+				if group_tab then
+					for _, namedata in ipairs(group_tab) do
+						local sparts = {}
+						local name, data = unpack(namedata)
+						insert(sparts, "| <code>" .. name .. "</code> || ")
+						if data.shortcuts then
+							local ssparts = {}
+							for _, shortcut in ipairs(data.shortcuts) do
+								insert(ssparts, "<code>" .. shortcut .. "</code>")
+							end
+							insert(sparts, concat(ssparts, ", ") .. " ")
+						end
+						insert(sparts, "|| " .. tag_type_desc(tag_type) .. " || " ..
+							get_tag_display_form(name, lang))
+						insert(tag_parts, "|-")
+						insert(tag_parts, concat(sparts))
+						saw_any_tag = true
+					end
+				end
+			end
+			insert(tag_parts, "|}")
+			local tag_table = saw_any_tag and concat(tag_parts, "\n") or nil
+			-- Then do non-alias shortcuts.
+			local non_alias_shortcut_table
+			local non_alias_shortcuts = data_module and organize_non_alias_shortcut_data(data_module, lang) or {}
+			if #non_alias_shortcuts > 0 then
+				local non_alias_shortcut_parts = {}
+				insert(non_alias_shortcut_parts, '{|class="wikitable"')
+				insert(non_alias_shortcut_parts, "! Shortcut !! Expansion !! Display form")
+				for _, spec in ipairs(non_alias_shortcuts) do
+					local shortcut, full, display = unpack(spec)
+					insert(non_alias_shortcut_parts, "|-")
+					if type(full) == "table" then
+						full = "{" .. concat(full, " ") .. "}"
+					end
+					insert(non_alias_shortcut_parts, ("| <code>%s</code> || <code>%s</code> || %s"):format(shortcut, full, display))
+				end
+				insert(non_alias_shortcut_parts, "|}")
+				non_alias_shortcut_table = concat(non_alias_shortcut_parts, "\n")
+			end
+			-- Then do categories and labels.
+			local category_table, label_table
+			if m_cats[langcode] then
+				local cats, labels = find_categories_and_labels(m_cats[langcode])
+				if #cats > 0 then
+					category_table = construct_category_table(cats)
+				end
+				if #labels > 0 then
+					label_table = construct_label_table(labels, lang)
+				end
+			end
+			-- Concatenate all the tables together, with appropriate explanatory text.
+			if base_lemma_param_table or tag_table or non_alias_shortcut_table or category_table or label_table then
+				local langname, lang_parts = lang:getCanonicalName(), {}
+				insert(lang_parts, "===" .. langname .. "===")
+				insert(lang_parts, show_editlink(data_module_name))
+				if base_lemma_param_table then
+					insert(lang_parts, ("%s-specific base lemma parameters:"):format(langname))
+					insert(lang_parts, base_lemma_param_table)
+				end
+				if tag_table then
+					insert(lang_parts, ("%s-specific inflection tags:"):format(langname))
+					insert(lang_parts, tag_table)
+				end
+				if non_alias_shortcut_table then
+					insert(lang_parts, ("%s-specific non-alias shortcuts:"):format(langname))
+					insert(lang_parts, non_alias_shortcut_table)
+				end
+				if category_table then
+					insert(lang_parts, ("%s-specific categories (the exact conditions under which these are added are described in [[Module:form of/cats]]):"):
+						format(langname))
+					insert(lang_parts, category_table)
+				end
+				if label_table then
+					insert(lang_parts, ("%s-specific labels (the exact conditions under which these are added are described in [[Module:form of/cats]]):"):
+						format(langname))
+					insert(lang_parts, label_table)
+				end
+				insert(data_by_lang, {langname, concat(lang_parts, "\n")})
+			end
+		end
+	end
+end
+
+local function sort_by_first_english_first(langdata1, langdata2)
+	if langdata1[1] == "English" then
+		-- English is "less than" (goes before) all other languages
+		return true
+	elseif langdata2[1] == "English" then
+		-- All other languages are not "less than" (do not go before) English
+		return false
+	end
+	return langdata1[1] < langdata2[1]
+end
 
 function export.lang_specific_tables()
-	local m_cats = mw.loadData(m_form_of.form_of_cats_module)
-	local parts = {}
-
-	local function ins(text)
-		table.insert(parts, text)
-	end
-
+	
 	local data_by_lang = {}
+	iterate_languages("Module:languages/code to canonical name", data_by_lang)
+	iterate_languages("Module:etymology languages/code to canonical name", data_by_lang)
 
-	local langs_with_lang_specific_data = mw.clone(m_form_of.langs_with_lang_specific_tags)
-	for langcode, _ in pairs(m_cats) do
-		if langcode ~= "und" then
-			langs_with_lang_specific_data[langcode] = true
-		end
-	end
-
-	for langcode, _ in pairs(langs_with_lang_specific_data) do
-		local lang = m_languages.getByCode(langcode, true)
-		local data_module_name = m_form_of.form_of_lang_data_module_prefix .. langcode
-		local data_module = m_form_of.langs_with_lang_specific_tags[langcode] and mw.loadData(data_module_name) or nil
-
-		-- First do base-lemma params.
-		local base_lemma_param_table
-		-- Can't just call #data_module.base_lemma_params as this comes from loadData().
-		if data_module and data_module.base_lemma_params and data_module.base_lemma_params[1] then
-			local base_lemma_param_parts = {}
-			local function ins(text)
-				table.insert(base_lemma_param_parts, text)
-			end
-			ins('{|class="wikitable"')
-			ins("! Parameter !! Display form")
-			for _, base_lemma_param in ipairs(data_module.base_lemma_params) do
-				ins("|-")
-				ins(("| <code>%s</code> || %s"):format(base_lemma_param.param,
-					get_display_form(base_lemma_param.tags, lang)))
-			end
-			ins("|}")
-			base_lemma_param_table = table.concat(base_lemma_param_parts, "\n")
-		end
-
-
-		-- Then do inflection tags.
-		local data_tab = data_module and organize_tag_data(data_module) or {}
-		local tag_parts = {}
-		local function ins(text)
-			table.insert(tag_parts, text)
-		end
-		ins('{|class="wikitable"')
-		ins("! Canonical tag !! Shortcut(s) !! Tag type !! Display form")
-		local saw_any_tag = false
-		for _, tag_type in ipairs(tag_type_order) do
-			local group_tab = data_tab[tag_type]
-			if group_tab then
-				for _, namedata in ipairs(group_tab) do
-					local sparts = {}
-					local name, data = unpack(namedata)
-					table.insert(sparts, "| <code>" .. name .. "</code> || ")
-					if data.shortcuts then
-						local ssparts = {}
-						for _, shortcut in ipairs(data.shortcuts) do
-							table.insert(ssparts, "<code>" .. shortcut .. "</code>")
-						end
-						table.insert(sparts, table.concat(ssparts, ", ") .. " ")
-					end
-					table.insert(sparts, "|| " .. tag_type_desc(tag_type) .. " || " ..
-						m_form_of.get_tag_display_form(name, lang))
-					ins("|-")
-					ins(table.concat(sparts))
-					saw_any_tag = true
-				end
-			end
-		end
-		ins("|}")
-
-		local tag_table = saw_any_tag and table.concat(tag_parts, "\n") or nil
-
-		-- Then do non-alias shortcuts.
-		local non_alias_shortcut_table
-		local non_alias_shortcuts = data_module and organize_non_alias_shortcut_data(data_module, lang) or {}
-		if #non_alias_shortcuts > 0 then
-			local non_alias_shortcut_parts = {}
-			local function ins(text)
-				table.insert(non_alias_shortcut_parts, text)
-			end
-			ins('{|class="wikitable"')
-			ins("! Shortcut !! Expansion !! Display form")
-			for _, spec in ipairs(non_alias_shortcuts) do
-				local shortcut, full, display = unpack(spec)
-				ins("|-")
-				if type(full) == "table" then
-					-- Grrr. table.concat() doesn't work on a table that comes from loadData(); use shallowcopy() to
-					-- convert to regular table.
-					full = "{" .. table.concat(m_table.shallowcopy(full), " ") .. "}"
-				end
-				ins(("| <code>%s</code> || <code>%s</code> || %s"):format(shortcut, full, display))
-			end
-			ins("|}")
-			non_alias_shortcut_table = table.concat(non_alias_shortcut_parts, "\n")
-		end
-
-		-- Then do categories and labels.
-		local category_table, label_table
-		if m_cats[langcode] then
-			local cats, labels = find_categories_and_labels(m_cats[langcode])
-			if #cats > 0 then
-				category_table = construct_category_table(cats)
-			end
-			if #labels > 0 then
-				label_table = construct_label_table(labels, lang)
-			end
-		end
-
-		-- Concatenate all the tables together, with appropriate explanatory text.
-		if base_lemma_param_table or tag_table or non_alias_shortcut_table or category_table or label_table then
-			local langname = lang:getCanonicalName()
-			local lang_parts = {}
-			local function ins(text)
-				table.insert(lang_parts, text)
-			end
-			ins("===" .. langname .. "===")
-			ins(show_editlink(data_module_name))
-			if base_lemma_param_table then
-				ins(("%s-specific base lemma parameters:"):format(langname))
-				ins(base_lemma_param_table)
-			end
-			if tag_table then
-				ins(("%s-specific inflection tags:"):format(langname))
-				ins(tag_table)
-			end
-			if non_alias_shortcut_table then
-				ins(("%s-specific non-alias shortcuts:"):format(langname))
-				ins(non_alias_shortcut_table)
-			end
-			if category_table then
-				ins(("%s-specific categories (the exact conditions under which these are added are described in [[Module:form of/cats]]):"):
-					format(langname))
-				ins(category_table)
-			end
-			if label_table then
-				ins(("%s-specific labels (the exact conditions under which these are added are described in [[Module:form of/cats]]):"):
-					format(langname))
-				ins(label_table)
-			end
-			table.insert(data_by_lang, {langname, table.concat(lang_parts, "\n")})
-		end
-	end
-
-	local function sort_by_first_english_first(langdata1, langdata2)
-		if langdata1[1] == "English" then
-			-- English is "less than" (goes before) all other languages
-			return true
-		elseif langdata2[1] == "English" then
-			-- All other languages are not "less than" (do not go before) English
-			return false
-		else
-			return langdata1[1] < langdata2[1]
-		end
-	end
-
-	table.sort(data_by_lang, sort_by_first_english_first)
+	sort(data_by_lang, sort_by_first_english_first)
 
 	local parts = {}
 	for _, lang_and_data in ipairs(data_by_lang) do
-		table.insert(parts, lang_and_data[2])
+		insert(parts, lang_and_data[2])
 	end
-	return table.concat(parts, "\n")
+	return concat(parts, "\n")
 end
 
-
 function export.postable()
-	m_pos = mw.loadData(m_form_of.form_of_pos_module)
 	local shortcut_tab = {}
-	for shortcut, full in pairs(m_pos) do
+	for shortcut, full in pairs(form_of_pos) do
 		if not shortcut_tab[full] then
 			shortcut_tab[full] = {}
 		end
-		table.insert(shortcut_tab[full], shortcut)
+		insert(shortcut_tab[full], shortcut)
 	end
 	local shorcut_list = {}
 	for full, shortcuts in pairs(shortcut_tab) do
-		table.sort(shortcuts)
-		table.insert(shorcut_list, {full, shortcuts})
+		sort(shortcuts)
+		insert(shorcut_list, {full, shortcuts})
 	end
-	table.sort(shorcut_list, function(fs1, fs2) return fs1[1] < fs2[1] end)
+	sort(shorcut_list, sort_by_first)
 
 	local parts = {}
-	table.insert(parts, '{|class="wikitable"')
-	table.insert(parts, "! Canonical part of speech !! Shortcut(s)")
+	insert(parts, '{|class="wikitable"')
+	insert(parts, "! Canonical part of speech !! Shortcut(s)")
 	for _, full_shortcuts in ipairs(shorcut_list) do
 		local full = full_shortcuts[1]
 		local shortcuts = full_shortcuts[2]
-		table.insert(parts, "|-")
+		insert(parts, "|-")
 		local sparts = {}
 		for _, shortcut in ipairs(shortcuts) do
-			table.insert(sparts, "<code>" .. shortcut .. "</code>")
+			insert(sparts, "<code>" .. shortcut .. "</code>")
 		end
-		table.insert(parts, "| <code>" .. full .. "</code> || " .. table.concat(sparts, ", "))
+		insert(parts, "| <code>" .. full .. "</code> || " .. concat(sparts, ", "))
 	end
-	table.insert(parts, "|}")
-	return table.concat(parts, "\n")
+	insert(parts, "|}")
+	return concat(parts, "\n")
 end
 
-
 function export.lang_independent_category_table()
-	local m_cats = mw.loadData(m_form_of.form_of_cats_module)
 	if m_cats["und"] then
-		local cats, labels = find_categories_and_labels(m_cats["und"])
+		local cats = find_categories_and_labels(m_cats["und"])
 		if #cats > 0 then
 			return construct_category_table(cats)
 		end
@@ -765,13 +721,11 @@ function export.lang_independent_category_table()
 	return "(no language-independent categories currently)"
 end
 
-
 function export.lang_independent_label_table()
-	local m_cats = mw.loadData(m_form_of.form_of_cats_module)
 	if m_cats["und"] then
-		local cats, labels = find_categories_and_labels(m_cats["und"])
+		local labels = select(2, find_categories_and_labels(m_cats["und"]))
 		if #labels > 0 then
-			return construct_label_table(labels, m_languages.getByCode("und", true), "replace und")
+			return construct_label_table(labels, get_lang("und"), "replace und")
 		end
 	end
 	return "(no language-independent labels currently)"
