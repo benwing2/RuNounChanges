@@ -29,25 +29,26 @@ local function disinherit(frame, onlyTheseKeys)
 end
 
 local function getSeparator(args, default)
-	local br = tonumber(args.br) and ('<br>'):rep(args.br) or args.br
+	local br = tonumber(args.br) and ("<br />"):rep(args.br) or args.br
 	local sep = args.sep or br or default
-	return #sep > 0 and ' ' .. sep .. ' ' or sep
+	return #sep > 0 and " " .. sep .. " " or sep
 end
 
-function export.get(frame, source_param)
+function export.get(frame, deffmt)
 	local params = {
-		[source_param or 1] = {},
+		[1] = {},
+		["fmt"] = {set = {{"inline", "i", "1"}, {"twoline", "2"}, {"multiline", "m"}, {"compact", "c"}, "raw"},
+			default = deffmt or "compact"},
 		["br"] = {},
 		["sep"] = {},
 		["reverse"] = {type = "boolean"},
 		["nocat"] = {type = "boolean"},
-		["result_arg"] = {}, -- FIXME: some sort of weird debugging arg
 		["style"] = {},
 	}
 	local parent_args = frame:getParent().args
-	local args = require("Module:parameters").process(parent_args, params, nil, "demo", "get")
+	local args = require("Module:parameters").process(parent_args, params)
 
-	local code = args[source_param or 1]
+	local code = args[1]
 	if code:match('UNIQ%-%-nowiki') then
 		code = mw.text.unstripNoWiki(code)
 			:gsub('&lt;', '<')
@@ -68,33 +69,24 @@ function export.get(frame, source_param)
 end
 
 function export.main(frame, demoTable)
-	local show = demoTable or export.get(frame)
+	local deffmt = frame.args.fmt
+	local show = demoTable or export.get(frame, deffmt)
 	local args = show.args
-	if show[args.result_arg] then
-		return show[args.result_arg]
+	local defsep
+	if args.fmt == "inline" or args.fmt == "twoline" then
+		defsep = (args.reverse and '⇐' or '⇒') .. (args.fmt == "twoline" and "<br />" or "")
+	elseif args.fmt == "raw" then
+		defsep = ""
+	else
+		defsep = (args.reverse and "generated from" or "which produces") .. "<br />"
+		if args.fmt == "compact" then
+			defsep = "<br />" .. defsep
+		end
 	end
-	args.sep = getSeparator(args, '')
-	local source = frame:extensionTag('syntaxhighlight', show.source, {
-		lang = 'wikitext',
-		style = args.style
-	})
-	return args.reverse and
-		show.output .. args.sep .. source or
-		source .. args.sep .. show.output
-end
-
--- Alternate function to return an inline result
-function export.inline(frame, demoTable)
-	local show = demoTable or export.get(frame)
-	local args = show.args
-	if show[args.result_arg] then
-		return show[args.result_arg]
-	end
-	local yesno = require('Module:yesno')
-	args.sep = getSeparator(args, args.reverse and '←' or '→')
-	local source =  frame:extensionTag('syntaxhighlight', show.source, {
-		lang = 'wikitext',
-		inline = true,
+	args.sep = getSeparator(args, defsep)
+	local source = frame:extensionTag("syntaxhighlight", show.source, {
+		lang = "wikitext",
+		inline = (args.fmt == "inline" or args.fmt == "twoline" or args.fmt == "compact") and true or nil,
 		style = args.style
 	})
 	return args.reverse and
