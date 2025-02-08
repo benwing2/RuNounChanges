@@ -150,6 +150,7 @@ local function get_common_template_params()
 		-- FIXME! The following should only be available when withdot=1 in invocation args. Before doing that, need to
 		-- remove all uses of nodot= in other circumstances.
 		["nodot"] = {type = "boolean"},
+		["addl"] = {}, -- additional text to display at the end, before the closing </span>
 		["pagename"] = {}, -- for testing, etc.
 	}
 end
@@ -380,6 +381,7 @@ of args[1]), return an object as follows:
 	enclitics = {ENCLITIC_OBJ, ENCLITIC_OBJ, ...},
 	base_lemmas = {BASE_LEMMA_OBJ, BASE_LEMMA_OBJ, ...},
 	categories = {"CATEGORY", "CATEGORY", ...},
+	posttext = "POSTTEXT" or nil,
 }
 
 where
@@ -399,7 +401,9 @@ where
   {"comd"} or {"past", "part"};
 * CATEGORIES is the categories to add the page to (consisting of any categories specified in the invocation or
   parent args and any tracking categories, but not any additional lang-specific categories that may be added by
-  {{inflection of}} or similar templates).
+  {{inflection of}} or similar templates);
+* POSTTEXT is text to display at the end of the form-of text, before the final </span> (or at the end of the first line,
+  before the colon, in a multiline {{infl of}} call).
 
 This is a subfunction of construct_form_of_text().
 ]=]
@@ -502,12 +506,26 @@ local function get_lemmas_and_categories(iargs, args, term_param, compat, base_l
 		end
 	end
 
+	local posttext = iargs.posttext
+	local addl = args.addl
+	if addl then
+		posttext = posttext or ""
+		if addl:find("^;") then
+			posttext = posttext .. addl
+		elseif addl:find("^_") then
+			posttext = posttext .. " " .. addl:sub(2)
+		else
+			posttext = posttext .. ", " .. addl
+		end
+	end
+
 	return {
 		lang = lang,
 		lemmas = lemmas,
 		enclitics = enclitics,
 		base_lemmas = base_lemmas,
 		categories = categories,
+		posttext = posttext,
 	}
 end
 
@@ -520,7 +538,7 @@ end
 -- or parent args, and then whole thing will be appropriately formatted.
 --
 -- DO_FORM_OF takes one argument, the return value of get_lemmas_and_categories() (an object describing the lemmas,
--- clitics, base lemmas and categories fetched).
+-- clitics, base lemmas, categories and posttext fetched).
 --
 -- DO_FORM_OF should return two arguments:
 --
@@ -676,7 +694,7 @@ function export.form_of_t(frame)
 	return construct_form_of_text(iargs, args, term_param, compat, base_lemma_params,
 		function(lemma_data)
 			return format_form_of{text = text, lemmas = lemma_data.lemmas, enclitics = lemma_data.enclitics,
-				base_lemmas = lemma_data.base_lemmas, lemma_face = "term", posttext = iargs["posttext"]}, {}
+				base_lemmas = lemma_data.base_lemmas, lemma_face = "term", posttext = lemma_data.posttext}, {}
 		end
 	)
 end
@@ -709,7 +727,7 @@ local function construct_tagged_form_of_text(iargs, args, term_param, compat, ba
 				nocat = args["nocat"],
 				notext = args["notext"],
 				capfirst = args["cap"] or iargs["withcap"] and not args["nocap"],
-				posttext = iargs["posttext"],
+				posttext = lemma_data.posttext,
 				joiner = joiner,
 			}
 		end
