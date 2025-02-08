@@ -79,7 +79,7 @@ can be specified through non-indexed separate parameters (e.g. {{para|t}} or {{p
 types of templates can optionally have subitems in the term parameter(s), where the subitems are typically (but not
 necessarily) separated with commas and each subitem can have its own inline modifiers.
 
-Some examples of templates that take a list of items are {{tl|alter}}/{{tl|alt}}; {tl|synonyms}}/{{tl|syn}},
+Some examples of templates that take a list of items are {{tl|alter}}/{{tl|alt}}; {{tl|synonyms}}/{{tl|syn}},
 {{tl|antonyms}}/{{tl|ant}}, and other "nyms" templates; {{tl|col}}, {{tl|col2}}, {{tl|col3}}, {{tl|col4}} and other
 column templates; {{tl|descendant}}/{{tl|desc}}; {{tl|affix}}/{{tl|af}}, {{tl|prefix}}/{{tl|pre}} and related *fix
 templates; {{tl|affixusex}}/{{tl|afex}} and related templates; {{tl|IPA}}; {{tl|homophones}}; {{tl|rhymes}}; and several
@@ -780,7 +780,7 @@ local function copy_separate_params_to_termobj_and_postprocess(data)
 	end
 
 	-- Copy separate parameters to a given object.
-	local function copy_separate_params_to_termobj(destobj)
+	local function copy_separate_params_to_termobj(fetch_destobj)
 		for param_mod, param_mod_spec in pairs(param_mods) do
 			local dest = param_mod_spec.item_dest or param_mod
 			-- Don't do anything with the `sc` param, which will get overwritten below; we don't
@@ -788,6 +788,7 @@ local function copy_separate_params_to_termobj_and_postprocess(data)
 			if dest ~= "sc" then
 				local argval = fetch_separate_param(args, param_mod, itemno)
 				if not argval_missing(argval) then
+					local destobj = fetch_destobj(param_mod, dest)
 					-- Don't overwrite a value already set by an inline modifier.
 					if argval_missing(destobj[dest]) then
 						destobj[dest] = argval
@@ -814,15 +815,12 @@ local function copy_separate_params_to_termobj_and_postprocess(data)
 		end
 		
 		-- Compute whether any of the separate indexed params exist for this index.
-		local any_param_at_index, any_param_at_index_besides_sc
+		local any_param_at_index
 		for param_mod, param_mod_spec in pairs(param_mods) do
 			local argval = fetch_separate_param(args, param_mod, itemno)
 			if not argval_missing(argval) then
 				any_param_at_index = true
-				if param_mod ~= "sc" then
-					any_param_at_index_besides_sc = param_mod
-					break
-				end
+				break
 			end
 		end
 
@@ -830,18 +828,28 @@ local function copy_separate_params_to_termobj_and_postprocess(data)
 		if any_param_at_index and not termobj.terms[1] then
 			termobj.terms[1] = {}
 		end
-		local termind
-		if data.subitem_param_handling == "only" or data.subitem_param_handling == "first" then
-			termind = 1
-		else
-			termind = #termobj.terms
+		local function fetch_destobj(param_mod, dest)
+			if data.subitem_param_handling == "only" and termobj.terms[2] then
+				error(("Can't specify a value for separate parameter %s%s= because there are " ..
+					"multiple subitems (%s) in the term; use an inline modifier"):format(
+						param_mod, itemno or "", #termobj.terms))
+			end
+			local termind
+			-- q/a/l need to go at the beginning and qq/aa/ll/refs at the end, regardless; otherwise, respect
+			-- `data.subitem_param_handling`.
+			if dest == "q" or dest == "a" or dest == "l" then
+				termind = 1
+			elseif dest == "qq" or dest == "aa" or dest == "ll" or dest == "refs" then
+				termind = #termobj.terms
+			elseif data.subitem_param_handling == "only" or data.subitem_param_handling == "first" then
+				termind = 1
+			else
+				termind = #termobj.terms
+			end
+			return termobj.terms[termind]
 		end
-		if data.subitem_param_handling == "only" and any_param_at_index_besides_sc and termobj.terms[2] then
-			error(("Can't specify a value for separate parameter %s%s= because there are " ..
-				"multiple subitems (%s) in the term; use an inline modifier"):format(
-					any_param_at_index_besides_sc, itemno or "", #termobj.terms))
-		end
-		copy_separate_params_to_termobj(termobj.terms[termind])
+
+		copy_separate_params_to_termobj(fetch_destobj)
 		for _, subitem in ipairs(termobj.terms) do
 			set_lang_and_sc(subitem)
 			if data.postprocess_termobj then
@@ -850,7 +858,7 @@ local function copy_separate_params_to_termobj_and_postprocess(data)
 		end
 	else
 		-- Copy all the parsed term-specific parameters into `termobj`.
-		copy_separate_params_to_termobj(termobj)
+		copy_separate_params_to_termobj(function(param_mod, dest) return termobj end)
 		set_lang_and_sc(termobj)
 		if data.postprocess_termobj then
 			data.postprocess_termobj(termobj)
