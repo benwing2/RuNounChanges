@@ -3,15 +3,19 @@ local export = {}
 local data = require("Module:place/data")
 local m_links = require("Module:links")
 local m_strutils = require("Module:string utilities")
+
 local debug_track_module = "Module:debug/track"
+local en_utilities_module = "Module:en-utilities"
 local languages_module = "Module:languages"
+local parse_utilities_module = "Module:parse utilities"
 local table_module = "Module:table"
-local put_module = "Module:parse utilities"
 
 local rmatch = mw.ustring.match
 local rfind = mw.ustring.find
 local ulen = mw.ustring.len
 local split = m_strutils.split
+local dump = mw.dumpObject
+local pluralize = require(en_utilities_module).pluralize
 
 local cat_data = data.cat_data
 
@@ -201,8 +205,8 @@ end
 
 -- Return the category link for a category, given the language code and the name of the category.
 local function catlink(lang, text, sort_key)
-	return require("Module:utilities").format_categories({lang:getFullCode() .. ":" ..
-		data.remove_links_and_html(text)}, lang, sort_key, nil, force_cat or data.force_cat)
+	return require("Module:utilities").format_categories(lang:getFullCode() .. ":" ..
+		data.remove_links_and_html(text), lang, sort_key, nil, force_cat or data.force_cat)
 end
 
 
@@ -248,7 +252,7 @@ local function get_placetype_article(placetype, ucfirst)
 	if pt_data and pt_data.article then
 		art = pt_data.article
 	else
-		art = m_strutils.get_indefinite_article(placetype)
+		art = require(en_utilities_module).get_indefinite_article(placetype)
 	end
 
 	if ucfirst then
@@ -260,15 +264,15 @@ end
 
 
 -- Return the correct plural of a placetype, and (if `ucfirst` is given) make the first letter uppercase. We first look
--- up the plural in [[Module:place/data]], falling back to pluralize() in [[Module:string utilities]], which is almost
+-- up the plural in [[Module:place/data]], falling back to pluralize() in [[Module:en-utilities]], which is almost
 -- always correct.
 local function get_placetype_plural(placetype, ucfirst)
 	local pt_data, equiv_placetype_and_qualifier = data.get_equiv_placetype_prop(placetype,
 		function(pt) return cat_data[pt] end)
 	if pt_data then
-		placetype = pt_data.plural or m_strutils.pluralize(equiv_placetype_and_qualifier.placetype)
+		placetype = pt_data.plural or pluralize(equiv_placetype_and_qualifier.placetype)
 	else
-		placetype = m_strutils.pluralize(placetype)
+		placetype = pluralize(placetype)
 	end
 	if ucfirst then
 		return m_strutils.ucfirst(placetype)
@@ -285,7 +289,7 @@ end
 -- Split an argument on comma, but not comma followed by whitespace.
 local function split_on_comma(val)
 	if val:find(",%s") then
-		return require(put_module).split_on_comma(val)
+		return require(parse_utilities_module).split_on_comma(val)
 	else
 		return split(val, ",", true)
 	end
@@ -295,11 +299,11 @@ end
 -- Split an argument on slash, but not slash occurring inside of HTML tags like </span> or <br />.
 local function split_on_slash(arg)
 	if arg:find("<") then
-		local put = require(put_module)
+		local m_parse_utilities = require(parse_utilities_module)
 		-- We implement this by parsing balanced segment runs involving <...>, and splitting on slash in the remainder.
 		-- The result is a list of lists, so we have to rejoin the inner lists by concatenating.
-		local segments = put.parse_balanced_segment_run(arg, "<", ">")
-		local slash_separated_groups = put.split_alternating_runs(segments, "/")
+		local segments = m_parse_utilities.parse_balanced_segment_run(arg, "<", ">")
+		local slash_separated_groups = m_parse_utilities.split_alternating_runs(segments, "/")
 		for i, group in ipairs(slash_separated_groups) do
 			slash_separated_groups[i] = table.concat(group)
 		end
@@ -733,9 +737,11 @@ local function get_translations(transl, ids)
 end
 
 
--- Prepend the appropriate article if needed to LINKED_PLACENAME, where PLACENAME
--- is the corresponding unlinked placename and PLACETYPE its placetype.
-local function get_holonym_article(placetype, placename, linked_placename)
+-- Prepend the appropriate article if needed to LINKED_PLACENAME, where HOLONYM is the underlying holonym object
+-- that generated LINKED_PLACENAME.
+local function get_holonym_article(holonym, linked_placename)
+	local placetype = holonym.placetype
+	local placename = holonym.placename
 	placename = data.remove_links_and_html(placename)
 	local unlinked_placename = data.remove_links_and_html(linked_placename)
 	if unlinked_placename:find("^the ") then
@@ -745,9 +751,16 @@ local function get_holonym_article(placetype, placename, linked_placename)
 	if art then
 		return art
 	end
-	art = data.get_equiv_placetype_prop(placetype, function(pt) return cat_data[pt] and cat_data[pt].holonym_article end)
-	if art then
-		return art
+	if not holonym.affix_type then
+		-- See if the placetype requests an article to be placed before the holonym. This occurs e.g. with 'department', which
+		-- has the setting `affix_type = "suf"` placing the word "department" after the holonym, so that "dept/Gironde"
+		-- correctly generates "the Gironde department". But if the user overrode the affix type and e.g. specified
+		-- "dept:pref/Gironde", we'll wrongly get "the department of the Gironde", so in that case we need to ignore the
+		-- holonym article specified along with the placetype.
+		art = data.get_equiv_placetype_prop(placetype, function(pt) return cat_data[pt] and cat_data[pt].holonym_article end)
+		if art then
+			return art
+		end
 	end
 	local universal_res = data.placename_the_re["*"]
 	for _, re in ipairs(universal_res) do
@@ -836,7 +849,7 @@ local function get_holonym_description(holonym, needs_article, display_form)
 	end
 
 	if needs_article then
-		local article = get_holonym_article(placetype, holonym.placename, output)
+		local article = get_holonym_article(holonym, output)
 		if article then
 			output = article .. " " .. output
 		end
@@ -930,7 +943,7 @@ local function get_placetype_display_form(placetype)
 			else
 				-- An explicit display form was specified. It will be singular, so we need to pluralize it to match
 				-- the pluralization of the passed-in placetype.
-				return m_strutils.pluralize(linked_version)
+				return pluralize(linked_version)
 			end
 		end
 	end
@@ -1007,7 +1020,7 @@ local function get_extra_info(args, paramname, tag, ucfirst, auto_plural, with_c
 	end
 
 	if auto_plural and #values > 1 then
-		tag = m_strutils.pluralize(tag)
+		tag = pluralize(tag)
 	end
 
 	if with_colon then
@@ -1020,7 +1033,10 @@ local function get_extra_info(args, paramname, tag, ucfirst, auto_plural, with_c
 		local function generate_obj(term, parse_err)
 			local obj = {}
 			if term:find(":") then
-				local actual_term, termlang = require(put_module).parse_term_with_lang(term, parse_err)
+				local actual_term, termlang = require(parse_utilities_module).parse_term_with_lang {
+					term = term,
+					parse_err = parse_err
+				}
 				obj.term = actual_term
 				obj.lang = termlang
 			else
@@ -1037,7 +1053,7 @@ local function get_extra_info(args, paramname, tag, ucfirst, auto_plural, with_c
 		-- we see a tag on the outer level that isn't in this format, we don't try to parse it. The restriction to the
 		-- outer level is to allow generated HTML inside of e.g. qualifier tags, such as foo<q:similar to {{m|fr|bar}}>.
 		if val:find("<") and not val:find("^[^<]*<[a-z]*[^a-z:]") then
-			terms = require(put_module).parse_inline_modifiers(val, {
+			terms = require(parse_utilities_module).parse_inline_modifiers(val, {
 				paramname = paramname,
 				param_mods = term_param_mods,
 				generate_obj = generate_obj,
@@ -1254,6 +1270,7 @@ local function get_gloss(args, descs, ucfirst, drop_extra_info)
 		end
 		table.insert(ret, get_extra_info(args, "seat", placetype, ucfirst, "auto plural", "with colon"))
 		table.insert(ret, get_extra_info(args, "shire town", "shire town", ucfirst, "auto plural", "with colon"))
+		table.insert(ret, get_extra_info(args, "headquarters", "headquarters", ucfirst, false, "with colon"))
 	end
 
 	return table.concat(ret)
@@ -1374,6 +1391,7 @@ More specifically, given the following arguments:
 (3) the full place description as documented at the top of the file (used only for its holonyms);
 (4) an optional overriding holonym to use, in place of iterating through the holonyms;
 (5) if an overriding holonym was specified, either "inner" or "outer" to indicate which loop to override;
+(6) a flag to indicate whether to ignore category handlers (used by district_cat_handler);
 find the holonyms that match the outer-level and inner-level keys in the `cat_data` entry
 according to the algorithm described in the top-of-section comment, and return the resulting
 category specs. Four values are actually returned:
@@ -1392,7 +1410,8 @@ where
 	holonym matched the outer loop), or "outer" if the triggering holonym matched in the outer loop
 	only, or nil if no triggering holonym.
 ]=]
-local function find_cat_specs(entry_placetype, entry_placetype_data, place_desc, overriding_holonym, override_inner_outer)
+local function find_cat_specs(entry_placetype, entry_placetype_data, place_desc, overriding_holonym,
+	override_inner_outer, ignore_cat_handler)
 	local inner_data = nil
 	local outer_triggering_holonym
 
@@ -1405,7 +1424,7 @@ local function find_cat_specs(entry_placetype, entry_placetype_data, place_desc,
 		if inner_data then
 			return inner_data
 		end
-		if entry_placetype_data.cat_handler then
+		if not ignore_cat_handler and entry_placetype_data.cat_handler then
 			local inner_data = data.get_equiv_placetype_prop(holonym_placetype,
 				function(pt) return entry_placetype_data.cat_handler(pt, holonym_placename, place_desc) end)
 			if inner_data then
@@ -1465,12 +1484,31 @@ local function find_cat_specs(entry_placetype, entry_placetype_data, place_desc,
 	if cat_specs then
 		return cat_specs, entry_placetype, outer_triggering_holonym, "outer"
 	end
-	
+
+	-- HACK! `district_cat_handler()` needs to handle the fact that "district" can have two meanings, a "local" one
+	-- that's equivalent to a neighborhood and a "non-local" one that's a type of political subdivision (the
+	-- specifics depend on the country). In particular we need to handle both of the following cases:
+	-- {{place|te|t=Kadapa|district|city/Visakhapatnam|s/Andhra Pradesh|c/India}}
+	-- {{place|te|t=Kadapa|district|s/Andhra Pradesh|c/India}}
+	-- The first case needs to categorize into e.g. [[:Category:te:Neighborhoods in Andhra Pradesh]] while the second
+	-- categorizes into e.g. [[:Category:te:Districts of India]]. The categorization into "Districts of India" is
+	-- handled courtesy of the fact that "district" listed in [[Module:place/shared-data]] as a political subdivision
+	-- of India, which happens independently of district_cat_handler() (which is there to take care of the neighborhood
+	-- meaning of "district"). This is taken care of by having `district_cat_handler()` return a spec that handles the
+	-- various types of city-like entities (e.g. boroughs) as well as specifying `restart_ignoring_cat_handler`. If no
+	-- holonym is found matching the city-like entities, the following clause restarts skipping
+	-- `district_cat_handler()`, which eventually categorizes based on the holonym "India".
+	if inner_data.restart_ignoring_cat_handler then
+		return find_cat_specs(entry_placetype, entry_placetype_data, place_desc, overriding_holonym,
+			override_inner_outer, "ignore cat handler")
+	end
+		
 	-- If we didn't find a matching key in the inner data, and there's a fallback, look it up, as above.
 	-- This is used, for example, with "rural municipality", which has special cases for
 	-- some provinces of Canada and otherwise behaves like "municipality".
 	if entry_placetype_data.fallback then
-		return find_cat_specs(entry_placetype_data.fallback, cat_data[entry_placetype_data.fallback], place_desc, overriding_holonym, override_inner_outer)
+		return find_cat_specs(entry_placetype_data.fallback, cat_data[entry_placetype_data.fallback], place_desc,
+			overriding_holonym, override_inner_outer)
 	end
 
 	return nil, entry_placetype, nil, nil
@@ -1502,7 +1540,7 @@ local function cat_specs_to_category_wikicode(lang, cat_specs, entry_placetype, 
 			end
 
 			if cat:find("%+%+%+") then
-				local equiv_holonym = require(table_module).shallowcopy(holonym)
+				local equiv_holonym = require(table_module).shallowCopy(holonym)
 				equiv_holonym.placetype = holonym_placetype
 				cat = cat:gsub("%+%+%+", get_holonym_description(equiv_holonym, true, false))
 			end
@@ -1644,6 +1682,7 @@ function export.format(template_args, drop_extra_info)
 		["caplc"] = {},
 		["seat"] = {list = true},
 		["shire town"] = {list = true},
+		["headquarters"] = {list = true},
 	}
 
 	-- FIXME, once we've flushed out any uses, delete the following clause. That will cause def= to be ignored.
