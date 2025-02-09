@@ -1241,14 +1241,6 @@ end
 
 
 --[==[
-Older entry point name; same as `parse_list_with_inline_modifiers_and_separate_params`.
-]==]
-function export.process_list_arguments(data)
-	return export.parse_list_with_inline_modifiers_and_separate_params(data)
-end
-
-
---[==[
 Parse a single term that may have properties specified through inline modifiers or separate parameters. This differs
 from `parse_list_with_inline_modifiers_and_separate_params()` in that the latter is for parsing a list of terms, each of
 which may have properties specified through inline modifiers or separate parameters. Both functions optionally support
@@ -1475,6 +1467,11 @@ function export.parse_term_with_inline_modifiers_and_separate_params(data)
 		subitem_param_handling = data.subitem_param_handling,
 		allow_conflicting_inline_mods_and_separate_params = data.allow_conflicting_inline_mods_and_separate_params,
 	}
+
+	if data.splitchar and termobj.terms[2] then
+		track("parse-term-multiple-subitems", data.track_module)
+		track("parse-term-multiple-subitems")
+	end
 
 	return termobj, args
 end
