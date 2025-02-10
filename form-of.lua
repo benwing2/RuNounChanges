@@ -295,6 +295,14 @@ local function wrap_in_span(text, classes)
 	return ("<span class='%s'>%s</span>"):format(classes, text)
 end
 
+local function join_segments(segs, conj)
+	if not segs[2] then
+		return segs[1]
+	else
+		return require(table_module).joinSegments(segs, conj)
+	end
+end
+
 --[==[
 Lowest-level implementation of form-of templates, including the general {{tl|form of}} as well as those that deal with
 inflection tags, such as the general {{tl|inflection of}}, semi-specific variants such as {{tl|participle of}}, and
@@ -309,7 +317,11 @@ the following fields:
    `.lemmas` can be a string, which is displayed directly, or omitted, to show no lemma links and omit the connecting
    text.
 * `.lemma_face`: "Face" to use when displaying the lemma objects. Usually should be set to {"term"}.
+* `.conj`: Conjunction or separator to use when joining multiple lemma objects. See `joinSegments()` in
+   [[Module:table]]. Defaults to {"and"}.
 * `.enclitics`: List of enclitics to display after the lemmas, in parens.
+* `.enclitic_conj`: Conjunction or separator to use when joining multiple enclitics. See `joinSegments()` in
+   [[Module:table]]. Defaults to {"and"}.
 * `.base_lemmas`: List of base lemmas to display after the lemmas, in the case where the lemmas in `.lemmas` are
    themselves forms of another lemma (the base lemma), e.g. a comparative, superlative or participle. Each object is of
    the form { { paramobj = PARAM_OBJ, lemmas = {LEMMA_OBJ, LEMMA_OBJ, ...} }} where PARAM_OBJ describes the properties
@@ -344,7 +356,7 @@ function export.format_form_of(data)
 					full_link(lemma, data.lemma_face, nil, "show qualifiers"), lemma_classes
 				))
 			end
-			insert(parts, serial_comma_join(formatted_terms))
+			insert(parts, join_segments(formatted_terms, data.conj or "and"))
 		end
 	end
 	if data.enclitics and #data.enclitics > 0 then
@@ -360,7 +372,7 @@ function export.format_form_of(data)
 		end
 		insert(parts, " (")
 		insert(parts, wrap_in_span("with enclitic" .. (#data.enclitics > 1 and "s" or "") .. " ", text_classes))
-		insert(parts, serial_comma_join(formatted_terms))
+		insert(parts, join_segments(formatted_terms, data.enclitic_conj or "and"))
 		insert(parts, ")")
 		insert(parts, "<span class='" .. text_classes .. "'>")
 	end
