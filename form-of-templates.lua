@@ -142,16 +142,16 @@ local function get_common_template_params()
 		-- Named params not controlling link display
 		["cat"] = {list = true},
 		["notext"] = {type = "boolean"},
-		["sort"] = {},
-		["enclitic"] = {},
-		-- FIXME! The following should only be available when withcap=1 in invocation args. Before doing that, need to
-		-- remove all uses of nocap= in other circumstances.
+		["sort"] = true,
+		["enclitic"] = true,
+		-- FIXME! The following should only be available when withcap=1 in invocation args or when withencap=1 and the
+		-- language is "en". Before doing that, need to remove all uses of nocap= in other circumstances.
 		["nocap"] = {type = "boolean"},
 		-- FIXME! The following should only be available when withdot=1 in invocation args. Before doing that, need to
 		-- remove all uses of nodot= in other circumstances.
 		["nodot"] = {type = "boolean"},
-		["addl"] = {}, -- additional text to display at the end, before the closing </span>
-		["pagename"] = {}, -- for testing, etc.
+		["addl"] = true, -- additional text to display at the end, before the closing </span>
+		["pagename"] = true, -- for testing, etc.
 	}
 end
 
@@ -195,7 +195,7 @@ local function add_link_params(parent_args, params, term_param, no_numbered_glos
 		params[term_param + 2] = {alias_of = "t"}
 	end
 	-- Numbered params controlling link display
-	params[term_param] = {}
+	params[term_param] = true
 end
 
 -- Need to do what [[Module:parameters]] does to string arguments from parent_args as we're running this
@@ -218,13 +218,43 @@ local function add_base_lemma_params(parent_args, iargs, params, compat)
 			local base_lemma_params = langdata.base_lemma_params
 			if base_lemma_params then
 				for _, param in ipairs(base_lemma_params) do
-					params[param.param] = {}
+					params[param.param] = true
 				end
 				return base_lemma_params
 			end
 		end
 		lang = lang:getParent()
 	end
+end
+
+local function add_link_and_base_lemma_params(iargs, parent_args, params, term_param, compat, no_numbered_gloss)
+	local base_lemma_params
+	if not iargs.nolink and not iargs.linktext then
+		add_link_params(parent_args, params, term_param, no_numbered_gloss)
+		base_lemma_params = add_base_lemma_params(parent_args, iargs, params, compat)
+	end
+	return base_lemma_params
+end
+
+local function handle_withdot_withcap(iargs, params)
+	local ignored_tracked_params = {}
+
+	if iargs.withdot then
+		params.dot = true
+	else
+		ignored_tracked_params.nodot = true
+	end
+
+	if iargs.withcap and iargs.withencap then
+		error("Internal error: Can specify only one of withcap= and withencap=")
+	end
+
+	if not iargs.withcap then
+		params.cap = {type = "boolean"}
+		ignored_tracked_params.nocap = true
+	end
+
+	return ignored_tracked_params
 end
 
 
@@ -296,10 +326,23 @@ where
     invocation or parent arguments, which will automatically be added to the page).
 ]=]
 local function construct_form_of_text(data)
-	local template, iargs, parent_args, params, ignored_tracked_params, term_param, compat, base_lemma_params,
-		do_form_of =
-		data.template, data.iargs, data.parent_args, data.params, data.ignored_tracked_params, data.term_param,
-			data.compat, data.base_lemma_params, data.do_form_of
+	local template, iargs, parent_args, params, no_numbered_gloss, do_form_of =
+		data.template, data.iargs, data.parent_args, data.params, data.no_numbered_gloss, data.do_form_of
+
+	local term_param = iargs.term_param
+	local compat = iargs.lang or parent_args.lang
+	term_param = term_param or compat and 1 or 2
+
+	-- Numbered params
+	params[compat and "lang" or 1] = {
+		required = not iargs.lang,
+		type = "language",
+		default = iargs.lang or "und"
+	}
+
+	local base_lemma_params = add_link_and_base_lemma_params(iargs, parent_args, params, term_param, compat,
+		no_numbered_gloss)
+	local ignored_tracked_params = handle_withdot_withcap(iargs, params)
 
 	--[=[
 	Process parent arguments. This is similar to the following:
@@ -513,7 +556,7 @@ local function construct_form_of_text(data)
 	local addl = args.addl
 	if addl then
 		posttext = posttext or ""
-		if addl:find("^;") then
+		if addl:find("^[;:]") then
 			posttext = posttext .. addl
 		elseif addl:find("^_") then
 			posttext = posttext .. " " .. addl:sub(2)
@@ -554,19 +597,25 @@ end
 local function get_common_invocation_params()
 	return {
 		["term_param"] = {type = "number"},
-		["lang"] = {}, -- To be used as the default code in params.
+		["lang"] = true, -- To be used as the default code in params.
 		["sc"] = {type = "script"},
 		["cat"] = {list = true},
 		["ignore"] = {list = true},
 		["def"] = {list = true},
 		["withcap"] = {type = "boolean"},
+		["withencap"] = {type = "boolean"},
 		["withdot"] = {type = "boolean"},
 		["nolink"] = {type = "boolean"},
-		["linktext"] = {},
-		["posttext"] = {},
-		["noprimaryentrycat"] = {},
-		["lemma_is_sort_key"] = {},
+		["linktext"] = true,
+		["posttext"] = true,
+		["noprimaryentrycat"] = true,
+		["lemma_is_sort_key"] = true,
 	}
+end
+
+
+local function should_ucfirst_text(args, iargs, lang)
+	return args.cap or (iargs.withcap or iargs.withencap and lang:getCode() == "en") and not args.nocap
 end
 
 
@@ -600,6 +649,9 @@ Invocation params:
   for template param {{para|tr}} to be `-`. Actual template params override these defaults.
 ; {{para|withcap}}
 : Capitalize the first character of the text preceding the link, unless template param {{para|nocap}} is given.
+; {{para|withencap}}
+: Capitalize the first character of the text preceding the link if the language is English and template param
+  {{para|nocap}} is not given.
 ; {{para|withdot}}
 : Add a final period after the link, unless template param {{para|nodot}} is given to suppress the period, or
   {{para|dot}} is given to specify an alternative punctuation character.
@@ -629,41 +681,10 @@ function export.form_of_t(frame)
 	local iargs = process_params(frame.args, iparams)
 	local parent_args = frame:getParent().args
 
-	local term_param = iargs.term_param
-
-	local compat = iargs.lang or parent_args.lang
-	term_param = term_param or compat and 1 or 2
-
 	local params = get_common_template_params()
 
-	-- Numbered params
-	params[compat and "lang" or 1] = {
-		required = not iargs.lang,
-		type = "language",
-		default = iargs.lang or "und"
-	}
-
-	local base_lemma_params
-	if not iargs.nolink and not iargs.linktext then
-		add_link_params(parent_args, params, term_param)
-		base_lemma_params = add_base_lemma_params(parent_args, iargs, params, compat)
-	end
-
 	if next(iargs.cat) then
-		params["nocat"] = {type = "boolean"}
-	end
-
-	local ignored_tracked_params = {}
-
-	if iargs.withdot then
-		params["dot"] = {}
-	else
-		ignored_tracked_params["nodot"] = true
-	end
-
-	if not iargs.withcap then
-		params["cap"] = {type = "boolean"}
-		ignored_tracked_params["nocap"] = true
+		params.nocat = {type = "boolean"}
 	end
 
 	return construct_form_of_text {
@@ -671,15 +692,16 @@ function export.form_of_t(frame)
 		iargs = iargs,
 		parent_args = parent_args,
 		params = params,
-		ignored_tracked_params = ignored_tracked_params,
-		term_param = term_param,
-		compat = compat,
-		base_lemma_params = base_lemma_params,
 		do_form_of = function(lemma_data)
 			local args = lemma_data.args
-			local text = args.notext and "" or iargs[1]
-			if args.cap or iargs.withcap and not args.nocap then
-				text = ucfirst(text)
+			local text
+			if args.notext then
+				text = ""
+			else
+				text = iargs[1]
+				if should_ucfirst_text(args, iargs, lemma_data.lang) then
+					text = ucfirst(text)
+				end
 			end
 			return format_form_of {
 				text = text, lemmas = lemma_data.lemmas, enclitics = lemma_data.enclitics,
@@ -699,19 +721,21 @@ It returns that actual definition-line text including terminating period/full-st
 should be directly returned as the template function's return value.
 ]=]
 local function construct_tagged_form_of_text(data)
-	local template, iargs, parent_args, params, ignored_tracked_params, term_param, compat, base_lemma_params, tags =
-		data.template, data.iargs, data.parent_args, data.params, data.ignored_tracked_params, data.term_param,
-			data.compat, data.base_lemma_params, data.tags
+	local template, iargs, parent_args, params, no_numbered_gloss, tags =
+		data.template, data.iargs, data.parent_args, data.params, data.no_numbered_gloss, data.tags
+
+	-- Named params not controlling link display
+	-- Always included because lang-specific categories may be added
+	params.nocat = {type = "boolean"}
+	params.p = true
+	params.POS = {alias_of = "p"}
 
 	return construct_form_of_text {
 		template = template,
 		iargs = iargs,
 		parent_args = parent_args,
 		params = params,
-		ignored_tracked_params = ignored_tracked_params,
-		term_param = term_param,
-		compat = compat,
-		base_lemma_params = base_lemma_params,
+		no_numbered_gloss = no_numbered_gloss,
 		do_form_of = function(lemma_data)
 			local args = lemma_data.args
 			if type(tags) == "function" then
@@ -731,7 +755,7 @@ local function construct_tagged_form_of_text(data)
 				no_format_categories = true,
 				nocat = args.nocat,
 				notext = args.notext,
-				capfirst = args.cap or iargs.withcap and not args.nocap,
+				capfirst = should_ucfirst_text(args, iargs, lemma_data.lang),
 				posttext = lemma_data.posttext,
 			}
 		end
@@ -761,6 +785,7 @@ Invocation params:
 ; {{para|ignore}}, {{para|ignore2}}, ...
 ; {{para|def}}, {{para|def2}}, ...
 ; {{para|withcap}}
+; {{para|withencap}}
 ; {{para|withdot}}
 ; {{para|nolink}}
 ; {{para|linktext}}
@@ -772,57 +797,17 @@ Invocation params:
 function export.tagged_form_of_t(frame)
 	local iparams = get_common_invocation_params()
 	iparams[1] = {list = true, required = true}
-	iparams["split_tags"] = {}
+	iparams.split_tags = true
 
 	local iargs = process_params(frame.args, iparams)
 	local parent_args = frame:getParent().args
-
-	local term_param = iargs.term_param
-
-	local compat = iargs.lang or parent_args.lang
-	term_param = term_param or compat and 1 or 2
-
 	local params = get_common_template_params()
-	-- Numbered params
-	params[compat and "lang" or 1] = {
-		required = not iargs.lang,
-		type = "language",
-		default = iargs.lang or "und"
-	}
-
-	-- Always included because lang-specific categories may be added
-	params["nocat"] = {type = "boolean"}
-	params["p"] = {}
-	params["POS"] = {alias_of = "p"}
-
-	local base_lemma_params
-	if not iargs.nolink and not iargs.linktext then
-		add_link_params(parent_args, params, term_param)
-		base_lemma_params = add_base_lemma_params(parent_args, iargs, params, compat)
-	end
-
-	local ignored_tracked_params = {}
-
-	if iargs.withdot then
-		params["dot"] = {}
-	else
-		ignored_tracked_params["nodot"] = true
-	end
-
-	if not iargs.withcap then
-		params["cap"] = {type = "boolean"}
-		ignored_tracked_params["nocap"] = true
-	end
 
 	return construct_tagged_form_of_text {
 		template = "tagged-form-of-t",
 		iargs = iargs,
 		parent_args = parent_args,
 		params = params,
-		ignored_tracked_params = ignored_tracked_params,
-		term_param = term_param,
-		compat = compat,
-		base_lemma_params = base_lemma_params,
 		tags = split_inflection_tags(iargs[1], iargs.split_tags),
 	}
 end
@@ -861,6 +846,7 @@ Invocation params:
 ; {{para|ignore}}, {{para|ignore2}}, ...
 ; {{para|def}}, {{para|def2}}, ...
 ; {{para|withcap}}
+; {{para|withencap}}
 ; {{para|withdot}}
 ; {{para|nolink}}
 ; {{para|linktext}}
@@ -871,65 +857,27 @@ Invocation params:
 ]==]
 function export.inflection_of_t(frame)
 	local iparams = get_common_invocation_params()
-	iparams["preinfl"] = {list = true}
-	iparams["postinfl"] = {list = true}
-	iparams["split_tags"] = {}
+	iparams.preinfl = {list = true}
+	iparams.postinfl = {list = true}
+	iparams.split_tags = true
 
 	local iargs = process_params(frame.args, iparams)
 	local parent_args = frame:getParent().args
-
-	local term_param = iargs.term_param
+	local params = get_common_template_params()
 
 	local compat = iargs.lang or parent_args.lang
-	term_param = term_param or compat and 1 or 2
-	local tagsind = term_param + 2
-
-	local params = get_common_template_params()
-	-- Numbered params
-	params[compat and "lang" or 1] = {
-		required = not iargs.lang,
-		type = "language",
-		default = iargs.lang or "und"
-	}
+	local tagsind = (iargs.term_param or compat and 1 or 2) + 2
 
 	params[tagsind] = {list = true,
 		-- at least one inflection tag is required unless preinfl or postinfl tags are given
 		required = #iargs.preinfl == 0 and #iargs.postinfl == 0}
-
-	-- Named params not controlling link display
-	-- Always included because lang-specific categories may be added
-	params["nocat"] = {type = "boolean"}
-	params["p"] = {}
-	params["POS"] = {alias_of = "p"}
-
-	local base_lemma_params
-	if not iargs.nolink and not iargs.linktext then
-		add_link_params(parent_args, params, term_param, "no-numbered-gloss")
-		base_lemma_params = add_base_lemma_params(parent_args, iargs, params, compat)
-	end
-
-	local ignored_tracked_params = {}
-
-	if iargs.withdot then
-		params["dot"] = {}
-	else
-		ignored_tracked_params["nodot"] = true
-	end
-
-	if not iargs.withcap then
-		params["cap"] = {type = "boolean"}
-		ignored_tracked_params["nocap"] = true
-	end
 
 	return construct_tagged_form_of_text {
 		template = "inflection-of-t",
 		iargs = iargs,
 		parent_args = parent_args,
 		params = params,
-		ignored_tracked_params = ignored_tracked_params,
-		term_param = term_param,
-		compat = compat,
-		base_lemma_params = base_lemma_params,
+		no_numbered_gloss = true,
 		tags = function(args)
 			local infls
 			if not next(iargs.preinfl) and not next(iargs.postinfl) then
@@ -976,8 +924,8 @@ invocation arg {{para|default}}.
 ]==]
 function export.normalize_pos(frame)
 	local iparams = {
-		[1] = {},
-		["default"] = {},
+		[1] = true,
+		["default"] = true,
 	}
 	local iargs = process_params(frame.args, iparams)
 	if not iargs[1] and not iargs.default then
