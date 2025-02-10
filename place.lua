@@ -2,13 +2,19 @@ local export = {}
 
 local data = require("Module:place/data")
 local m_links = require("Module:links")
+local memoize = require("Module:memoize")
 local m_strutils = require("Module:string utilities")
 
 local debug_track_module = "Module:debug/track"
 local en_utilities_module = "Module:en-utilities"
 local languages_module = "Module:languages"
+local parse_interface_module = "Module:parse interface"
 local parse_utilities_module = "Module:parse utilities"
+local parameter_utilities_module = "Module:parameter utilities"
 local table_module = "Module:table"
+local utilities_module = "Module:utilities"
+
+local enlang = require(languages_module).getByCode("en")
 
 local rmatch = mw.ustring.match
 local rfind = mw.ustring.find
@@ -23,7 +29,7 @@ local namespace = mw.title.getCurrentTitle().nsText
 
 local force_cat = false -- set to true for testing
 
---[=[
+--[==[ intro:
 About the data structures:
 
 * A ''place'' (or ''location'') is a geographic feature (either natural or geopolitical), either on the surface of the
@@ -72,7 +78,7 @@ About the data structures:
   any additional raw text needed to properly explain the place in context. Some places have more than one place
   description. For example, [[Vatican City]] is defined both as a city-state in Southern Europe and as an enclave within
   the city of Rome. This is done as follows:
-  : {{place|en|city-state|r/Southern Europe|;,|an <<enclave>> within the city of <<city/Rome>>, <<c/Italy>>|cat=Cities in Italy|official=Vatican City State}}.
+  : {{tl|place|en|city-state|r/Southern Europe|;,|an <<enclave>> within the city of <<city/Rome>>, <<c/Italy>>|cat=Cities in Italy|official=Vatican City State}}.
   The use of two place descriptions allows for proper categorization. Similar things need to be done for places like
   [[Crimea]] that are claimed by two different countries with different definitions and administrative structures.
 * A ''full place description'' consists of all the information known about the place. It consists of one or more place
@@ -85,7 +91,8 @@ About the data structures:
   holonym can have only one placetype associated with it.
 
 A given place description is defined internally in a table of the following form:
-{
+
+```{
   placetypes = {"STRING", "STRING", ...},
   holonyms = {
 	{ -- holonym object; see below
@@ -107,7 +114,7 @@ A given place description is defined internally in a table of the following form
 	HOLONYM_PLACETYPE = {"PLACENAME", "PLACENAME", ...},
 	...
   },
-}
+}```
 
 Holonym objects have the following fields:
 * `placetype`: The canonicalized placetype of specified as e.g. "c/Australia"; nil if no slash is present.
@@ -128,14 +135,16 @@ Holonym objects have the following fields:
 Note that new-style place descs (those specified as a single argument using <<...>> to denote placetypes, placetype
 qualifiers and holonyms) have an additional `order` field to properly capture the raw text surrounding the items
 denoted in double angle brackets. The ORDER_ITEM items in the `order` field are objects of the following form:
-{
+
+```{
   type = "STRING",
   value = "STRING" or INDEX,
-}
+}```
+
 Here, the `type` field is one of "raw", "qualifier", "placetype" or "holonym":
 * "raw" is used for raw text surrounding <<...>> specs.
 * "qualifier" is used for <<...>> specs without slashes in them that consist only of qualifiers (e.g. the spec
-  <<former>> in '<<former>> French <<colony>>'). 
+  <<former>> in '<<former>> French <<colony>>').
 * "placetype" is used for <<...>> specs without slashes that do not consist only of qualifiers.
 * "holonym" is used for holonyms, i.e. <<...>> specs with a slash in them.
 For all types but "holonym", the value is a string, specifying the text in question. For "holonym", the value is a
@@ -148,8 +157,9 @@ canonicalization of qualifiers and bare placetypes happens later.
 The information under `holonyms_by_placetype` is redundant to the information in holonyms but makes categorization
 easier.
 
-For example, the call {{place|en|city|s/Pennsylvania|c/US}} will result in the return value
-{
+For example, the call {{tl|place|en|city|s/Pennsylvania|c/US}} will result in the return value
+
+```{
   placetypes = {"city"},
   holonyms = {
 	{ placetype = "state", placename = "Pennsylvania" },
@@ -159,10 +169,13 @@ For example, the call {{place|en|city|s/Pennsylvania|c/US}} will result in the r
 	state = {"Pennsylvania"},
 	country = {"United States"},
   },
-}
+}```
+
 Here, the placetype aliases "s" and "c" have been expanded into "state" and "country" respectively, and the placename
 alias "US" has been expanded into "United States". PLACETYPES is a list because there may be more than one. For example,
-the call {{place|en|city/and/county|s/California}} will result in the return value
+the call {{tl|place|en|city/and/county|s/California}} will result in the return value
+
+```
 {
   placetypes = {"city", "and", "county"},
   holonyms = {
@@ -171,8 +184,12 @@ the call {{place|en|city/and/county|s/California}} will result in the return val
   holonyms_by_placetype = {
 	state = {"California"},
   },
-}
-The value in the key/value pairs is likewise a list; e.g. the call {{place|en|city|s/Kansas|and|s/Missouri}} will return
+}```
+
+The value in the key/value pairs is likewise a list; e.g. the call {{tl|place|en|city|s/Kansas|and|s/Missouri}} will
+return
+
+```
 {
   placetypes = {"city"},
   holonyms = {
@@ -184,10 +201,10 @@ The value in the key/value pairs is likewise a list; e.g. the call {{place|en|ci
 	state = {"Kansas", "Missouri"},
   },
 }
-]=]
+```
+]==]
 
 ----------- Wikicode utility functions
-
 
 
 -- Return a wikilink link {{l|language|text}}
@@ -205,7 +222,7 @@ end
 
 -- Return the category link for a category, given the language code and the name of the category.
 local function catlink(lang, text, sort_key)
-	return require("Module:utilities").format_categories(lang:getFullCode() .. ":" ..
+	return require(utilities_module).format_categories(lang:getFullCode() .. ":" ..
 		data.remove_links_and_html(text), lang, sort_key, nil, force_cat or data.force_cat)
 end
 
@@ -288,10 +305,10 @@ end
 
 -- Split an argument on comma, but not comma followed by whitespace.
 local function split_on_comma(val)
-	if val:find(",%s") then
-		return require(parse_utilities_module).split_on_comma(val)
+	if val:find(",") then
+		return require(parse_interface_module).split_on_comma(val)
 	else
-		return split(val, ",", true)
+		return val
 	end
 end
 
@@ -508,7 +525,7 @@ local function process_excluding_html_and_links(text, fn)
 		end
 		return result
 	end
-	
+
 	local function munge_text_with_html(txt)
 		return do_munge(txt, "<[^<>]->", fn)
 	end
@@ -907,7 +924,7 @@ local function get_contextual_holonym_description(entry_placetype, prev_holonym,
 				not holonym.suppress_comma then
 				desc = desc .. ","
 			end
-	
+
 			if holonym.placetype or not holonym.placename:find("^,") then
 				desc = desc .. " "
 			end
@@ -947,7 +964,7 @@ local function get_placetype_display_form(placetype)
 			end
 		end
 	end
-	
+
 	return nil
 end
 
@@ -980,112 +997,120 @@ local function get_qualifier_description(qualifier)
 	local prev_qualifier, this_qualifier, bare_placetype = unpack(split, 1, 3)
 	return prev_qualifier and prev_qualifier .. " " .. this_qualifier or this_qualifier
 end
-	
 
-local term_param_mods = {
-	tr = {},
-	ts = {},
-	g = {
-		-- We need to store the <g:...> inline modifier into the "genders" key of the parsed part, because that is what
-		-- [[Module:links]] expects.
-		item_dest = "genders",
-		convert = function(arg, parse_err)
-			return split(arg, ",", true)
-		end,
-	},
-	id = {},
-	alt = {},
-	q = {},
-	qq = {},
-	sc = {
-		convert = function(arg, parse_err)
-			return arg and require("Module:scripts").getByCode(arg, parse_err) or nil
-		end,
+
+local get_param_mods = memoize(function()
+	local m_param_utils = require(parameter_utilities_module)
+	return m_param_utils.construct_param_mods {
+		{group = {"link", "q", "l", "ref"}},
+		{param = "conj", set = m_param_utils.allowed_conjs, overall = true},
+		{param = "after", overall = true},
 	}
-}
+end)
 
--- Return a string with extra information that is sometimes added to a definition. This consists of the tag, a
--- whitespace and the value (wikilinked if it language contains a language code; if ucfirst == true, ". " is added
--- before the string and the first character is made upper case).
-local function get_extra_info(args, paramname, tag, ucfirst, auto_plural, with_colon)
-	local values = args[paramname]
-	if not values then
-		return ""
-	end
-	if type(values) ~= "table" then
-		values = {values}
-	end
-	if #values == 0 then
-		return ""
+local function parse_term_with_inline_modifiers(term, paramname, default_lang)
+	local m_param_utils = require(parameter_utilities_module)
+	local function generate_obj(val, parse_err)
+		local obj = m_param_utils.generate_obj_maybe_parsing_lang_prefix {
+			term = val,
+			paramname = paramname,
+			parse_err = parse_err,
+			parse_lang_prefix = true,
+		}
+		obj.lang = obj.lang or default_lang
+		return obj
 	end
 
-	if auto_plural and #values > 1 then
-		tag = pluralize(tag)
+	return require(parse_interface_module).parse_inline_modifiers(term, {
+		paramname = paramname,
+		param_mods = get_param_mods(),
+		generate_obj = generate_obj,
+		splitchar = ",",
+		outer_container = {},
+	})
+end
+
+local function get_form_of_prefix(args, paramname, desc, ucfirst, lang)
+	local raw_terms = args[paramname]
+	if not raw_terms then
+		return ""
+	end
+	local terms = parse_term_with_inline_modifiers(raw_terms, paramname .. (i == 1 and "" or i), lang)
+	for i, term in ipairs(terms.terms) do
+		terms.terms[i] = m_links.full_link(term, nil, nil, "show qualifiers")
+	end
+	if ucfirst then
+		desc = m_strutils.ucfirst(desc)
+	end
+
+	desc = desc .. " of " .. require(parameter_utilities_module).join_segs(terms.terms, terms.conj or "or")
+end
+
+-- Return a string with extra information that is sometimes added to a definition, such as the capital, largest city,
+-- modern name, official name, etc. `paramname` is the parameter in `args` holding the term(s), each of which can in
+-- fact be a comma-separated list of toponyms with inline modifiers attached, and there can also be several items in the
+-- list corresponding to numbered parameters, e.g. |capital=, |capital2=, .... [FIXME: we should switch to always using
+-- the comma-separated format.] `desc` is the desecription to be displayed before the toponym(s). The toponyms will be
+-- linked appropriately, defaulting to English if a language code prefix is not explicitly given. If `ucfirst` is given,
+-- ". " is added before the string and the first character is made upper case, as is suitable for an English-language
+-- term without a translation specified using t=; otherwise, "; " is added before the string and the first character is
+-- as-is (which should be lowercase). `auto_plural`, if given, means to automatically pluralize the `desc` if there is
+-- more than one toponym. `with_colon`, if given, will add a colon directly after the description, before the following
+-- space.
+local function get_extra_info(args, paramname, desc, ucfirst, auto_plural, with_colon)
+	local raw_terms = args[paramname]
+	if not raw_terms then
+		return ""
+	end
+	if type(raw_terms) ~= "table" then
+		raw_terms = {raw_terms}
+	end
+	if not raw_terms[1] then
+		return ""
+	end
+
+	local formatted_terms = nil
+
+	local conj
+	for i, raw_term in ipairs(raw_terms) do
+		local terms = parse_term_with_inline_modifiers(raw_term, paramname .. (i == 1 and "" or i), enlang)
+		if terms.after then
+			error(("<after:...> inline modifier not supported with parameter '%s'"):format(paramname))
+		end
+		local thisconj = terms.conj
+		if not conj then
+			conj = thisconj
+		elseif thisconj and conj ~= thisconj then
+			error(("Two different conjunctions '%s' and '%s' specified for |%s=; you only need to specify the " ..
+				"conjunction once"):format(conj, thisconj))
+		end
+		for j, term in ipairs(terms.terms) do
+			terms.terms[j] = m_links.full_link(term, nil, nil, "show qualifiers")
+		end
+		if not formatted_terms then
+			formatted_terms = terms.terms
+		else
+			require(table_module.extend(formatted_terms, terms.terms))
+		end
+	end
+
+	if auto_plural and formatted_terms[2] then
+		desc = pluralize(desc)
 	end
 
 	if with_colon then
-		tag = tag .. ":"
-	end
-
-	local linked_values = {}
-
-	for _, val in ipairs(values) do
-		local function generate_obj(term, parse_err)
-			local obj = {}
-			if term:find(":") then
-				local actual_term, termlang = require(parse_utilities_module).parse_term_with_lang {
-					term = term,
-					parse_err = parse_err
-				}
-				obj.term = actual_term
-				obj.lang = termlang
-			else
-				obj.term = term
-			end
-			obj.lang = obj.lang or require(languages_module).getByCode("en")
-			return obj
-		end
-
-		local terms
-		-- Check for inline modifier, e.g. מרים<tr:Miryem>. But exclude HTML entry with <span ...>, <i ...>, <br/> or
-		-- similar in it, caused by wrapping an argument in {{l|...}}, {{af|...}} or similar. Basically, all tags of
-		-- the sort we parse here should consist of a less-than sign, plus letters, plus a colon, e.g. <tr:...>, so if
-		-- we see a tag on the outer level that isn't in this format, we don't try to parse it. The restriction to the
-		-- outer level is to allow generated HTML inside of e.g. qualifier tags, such as foo<q:similar to {{m|fr|bar}}>.
-		if val:find("<") and not val:find("^[^<]*<[a-z]*[^a-z:]") then
-			terms = require(parse_utilities_module).parse_inline_modifiers(val, {
-				paramname = paramname,
-				param_mods = term_param_mods,
-				generate_obj = generate_obj,
-				splitchar = ",",
-			})
-		else
-			if val:find(",<") then
-				-- this happens when there's an embedded {{,}} template; easiest not to try and parse the extra info
-				-- spec as multiple terms
-				terms = {val}
-			else
-				terms = split_on_comma(val)
-			end
-			for i, split in ipairs(terms) do
-				terms[i] = generate_obj(split)
-			end
-		end
-
-		for _, term in ipairs(terms) do
-			table.insert(linked_values, m_links.full_link(term, nil, "allow self link", "show qualifiers"))
-		end
+		desc = desc .. ":"
 	end
 
 	local s = ""
 
 	if ucfirst then
-		s = s .. ". " .. m_strutils.ucfirst(tag)
+		s = s .. ". " .. m_strutils.ucfirst(desc)
 	else
-		s = s .. "; " .. tag
+		s = s .. "; " .. desc
 	end
 
-	return s .. " " .. require(table_module).serialCommaJoin(linked_values)
+	return s .. " " .. require(table_module).joinSegments(formatted_terms, {conj = conj or "and"})
 end
 
 
@@ -1175,10 +1200,10 @@ local function get_old_style_gloss(args, place_desc, with_article, ucfirst)
 		end
 	end
 
-	if args["also"] then
+	if args.also then
 		ins_space()
 		ins("and ")
-		ins(args["also"])
+		ins(args.also)
 	end
 
 	if place_desc.holonyms then
@@ -1192,7 +1217,7 @@ local function get_old_style_gloss(args, place_desc, with_article, ucfirst)
 	local gloss = table.concat(parts)
 
 	if with_article then
-		gloss = (args["a"] or get_placetype_article(place_desc.placetypes[1], ucfirst)) .. " " .. gloss
+		gloss = (args.a or get_placetype_article(place_desc.placetypes[1], ucfirst)) .. " " .. gloss
 	end
 
 	return gloss
@@ -1204,8 +1229,8 @@ end
 local function get_new_style_gloss(args, place_desc, with_article)
 	local parts = {}
 
-	if with_article and args["a"] then
-		table.insert(parts, args["a"] .. " ")
+	if with_article and args.a then
+		table.insert(parts, args.a .. " ")
 	end
 
 	for _, order in ipairs(place_desc.order) do
@@ -1228,9 +1253,9 @@ end
 
 
 -- Return a string with the gloss (the description of the place itself, as opposed to translations). If `ucfirst` is
--- given, the gloss's first letter is made upper case and a period is added to the end. If `drop_extra_info` is given,
--- we don't include "extra info" (modern name, capital, largest city, etc.); this is used when transcluding into
--- another language using {{transclude sense}}.
+-- given, the gloss's first letter is made upper case (FIXME: shouldn't happen if the language isn't English). If
+-- `drop_extra_info` is given, we don't include "extra info" (modern name, capital, largest city, etc.); this is used
+-- when transcluding into another language using {{transclude sense}}.
 local function get_gloss(args, descs, ucfirst, drop_extra_info)
 	if args.def == "-" then
 		return ""
@@ -1238,26 +1263,105 @@ local function get_gloss(args, descs, ucfirst, drop_extra_info)
 		return args.def
 	end
 
-	local glosses = {}
-	for n, desc in ipairs(descs) do
-		if desc.order then
-			table.insert(glosses, get_new_style_gloss(args, desc, n == 1))
-		else
-			table.insert(glosses, get_old_style_gloss(args, desc, n == 1, ucfirst))
-		end
-		if desc.joiner then
-			table.insert(glosses, desc.joiner)
+	local parts = {}
+	local function ins(txt)
+		table.insert(parts, txt)
+	end
+
+	local prefixes = {}
+
+	local function insert_form_of_prefix(paramname, desc)
+		if args[paramname] then
+			local prefix = parse_term_with_inline_modifiers(args[paramname], paramname, args[1])
+			prefix.paramname = paramname
+			prefix.desc = desc
+			table.insert(prefixes, prefix)
 		end
 	end
 
-	local ret = {table.concat(glosses)}
+	insert_form_of_prefix("abbrof", "abbreviation of")
+	insert_form_of_prefix("initof", "initialism of")
+	insert_form_of_prefix("acronymof", "acronym of")
+	insert_form_of_prefix("clipof", "clipping of")
+	insert_form_of_prefix("ellipof", "ellipsis of")
+	insert_form_of_prefix("synof", "synonym of")
+	insert_form_of_prefix("now", "former name of")
+
+	local i = 1
+	while i <= #prefixes do
+		local prefix = prefixes[i]
+		if prefix.after or prefix.before then
+			if prefix.after == prefix.paramname or prefix.before == prefix.paramname then
+				error(("Can't move prefix '%s' before or after itself"):format(prefix.paramname))
+			end
+			if prefix.after and prefix.before then
+				error(("Can't specify both 'before' and 'after' for prefix '%s'"):format(prefix.paramname))
+			end
+			local insertion_point
+			for j, other_prefix in ipairs(prefixes) do
+				if prefix.after == other_prefix.paramname then
+					insertion_point = j + 1
+					break
+				elseif prefix.before == other_prefix.paramname then
+					insertion_point = j
+					break
+				end
+			end
+			if not insertion_point then
+				if prefix.after then
+					error(("Can't locate prefix type '%s' to move prefix '%s' after"):format(
+						prefix.after, prefix.paramname))
+				else
+					error(("Can't locate prefix type '%s' to move prefix '%s' before"):format(
+						prefix.before, prefix.paramname))
+				end
+			end
+			if insertion_point < i then
+				table.remove(prefixes, i)
+				table.insert(prefixes, insertion_point, prefix)
+				i = i + 1
+			elseif insertion_point > i then
+				table.insert(prefixes, insertion_point, prefix)
+				table.remove(prefixes, i)
+			end
+			-- Make sure we don't process the prefix again if it's moved after its current point.
+			prefix.after = nil
+			prefix.before = nil
+		else
+			i = i + 1
+		end
+	end
+
+	for i, prefix in ipairs(prefixes) do
+		
+			if prefix_terms.after
+			if prefix_terms
+			if prefix ~= "" then
+				if parts[1] then
+					ins(", ")
+					ucfirst = false
+				end
+				ins(parts)
+			end
+	end
+
+	for n, desc in ipairs(descs) do
+		if desc.order then
+			ins(get_new_style_gloss(args, desc, n == 1))
+		else
+			ins(get_old_style_gloss(args, desc, n == 1, ucfirst))
+		end
+		if desc.joiner then
+			ins(desc.joiner)
+		end
+	end
 
 	if not drop_extra_info then
-		table.insert(ret, get_extra_info(args, "modern", "modern", false, false, false))
-		table.insert(ret, get_extra_info(args, "official", "official name", ucfirst, "auto plural", "with colon"))
-		table.insert(ret, get_extra_info(args, "capital", "capital", ucfirst, "auto plural", "with colon"))
-		table.insert(ret, get_extra_info(args, "largest city", "largest city", ucfirst, "auto plural", "with colon"))
-		table.insert(ret, get_extra_info(args, "caplc", "capital and largest city", ucfirst, false, "with colon"))
+		ins(get_extra_info(args, "modern", "modern", false, false, false))
+		ins(get_extra_info(args, "official", "official name", ucfirst, "auto plural", "with colon"))
+		ins(get_extra_info(args, "capital", "capital", ucfirst, "auto plural", "with colon"))
+		ins(get_extra_info(args, "largest city", "largest city", ucfirst, "auto plural", "with colon"))
+		ins(get_extra_info(args, "caplc", "capital and largest city", ucfirst, false, "with colon"))
 		local placetype = descs[1].placetypes[1]
 		if placetype == "county" or placetype == "counties" then
 			placetype = "county seat"
@@ -1268,9 +1372,9 @@ local function get_gloss(args, descs, ucfirst, drop_extra_info)
 		else
 			placetype = "seat"
 		end
-		table.insert(ret, get_extra_info(args, "seat", placetype, ucfirst, "auto plural", "with colon"))
-		table.insert(ret, get_extra_info(args, "shire town", "shire town", ucfirst, "auto plural", "with colon"))
-		table.insert(ret, get_extra_info(args, "headquarters", "headquarters", ucfirst, false, "with colon"))
+		ins(get_extra_info(args, "seat", placetype, ucfirst, "auto plural", "with colon"))
+		ins(get_extra_info(args, "shire town", "shire town", ucfirst, "auto plural", "with colon"))
+		ins(get_extra_info(args, "headquarters", "headquarters", ucfirst, false, "with colon"))
 	end
 
 	return table.concat(ret)
@@ -1279,9 +1383,9 @@ end
 
 -- Return the definition line.
 local function get_def(args, specs, drop_extra_info)
-	if #args["t"] > 0 then
+	if #args.t > 0 then
 		local gloss = get_gloss(args, specs, false, drop_extra_info)
-		return get_translations(args["t"], args["tid"]) .. (gloss == "" and "" or " (" .. gloss .. ")")
+		return get_translations(args.t, args.tid) .. (gloss == "" and "" or " (" .. gloss .. ")")
 	else
 		return get_gloss(args, specs, true, drop_extra_info)
 	end
@@ -1457,7 +1561,7 @@ local function find_cat_specs(entry_placetype, entry_placetype_data, place_desc,
 		return find_cat_specs(entry_placetype_data.fallback, cat_data[entry_placetype_data.fallback], place_desc,
 			overriding_holonym, override_inner_outer)
 	end
-	
+
 	if not inner_data then
 		return nil, entry_placetype, nil, nil
 	end
@@ -1502,7 +1606,7 @@ local function find_cat_specs(entry_placetype, entry_placetype_data, place_desc,
 		return find_cat_specs(entry_placetype, entry_placetype_data, place_desc, overriding_holonym,
 			override_inner_outer, "ignore cat handler")
 	end
-		
+
 	-- If we didn't find a matching key in the inner data, and there's a fallback, look it up, as above.
 	-- This is used, for example, with "rural municipality", which has special cases for
 	-- some provinces of Canada and otherwise behaves like "municipality".
@@ -1618,8 +1722,11 @@ end
 
 -- Iterate through each type of place given `place_descriptions` (a list of place descriptions, as documented at the
 -- top of the file) and return a string with the links to all categories that need to be added to the entry.
-local function get_cats(lang, args, place_descriptions, additional_cats, sort_key)
+local function get_cats(args, place_descriptions)
 	local cats = {}
+	local lang = args[1]
+	local additional_cats = args.cat
+	local sort_key = args.sort
 
 	handle_implications(place_descriptions, data.cat_implications, true)
 	data.augment_holonyms_with_containing_polity(place_descriptions)
@@ -1652,37 +1759,49 @@ end
 ----------- Main entry point
 
 
--- Meant to be callable from another module (specifically, [[Module:transclude/sense]]). `drop_extra_info` means to
--- not include "extra info" (modern name, capital, largest city, etc.); this is used when transcluding into another
--- language using {{transclude sense}}.
+--[==[
+Implementation of {{tl|place}}. Meant to be callable from another module (specifically, [[Module:transclude/sense]]).
+`drop_extra_info` means to not include "extra info" (modern name, capital, largest city, etc.); this is used when
+transcluding into another language using {{tl|transclude sense}}.
+]==]
 function export.format(template_args, drop_extra_info)
+	local list_param = {list = true}
 	local params = {
-		[1] = {required = true},
+		[1] = {required = true, type = "language", default = "und"},
 		[2] = {required = true, list = true},
-		["t"] = {list = true},
+		["t"] = list_param,
 		["tid"] = {list = true, allow_holes = true},
-		["cat"] = {list = true},
-		["sort"] = {},
-		["pagename"] = {}, -- for testing or documentation purposes
+		["cat"] = list_param,
+		["sort"] = true,
+		["pagename"] = true, -- for testing or documentation purposes
 
-		["a"] = {},
-		["also"] = {},
-		["def"] = {},
+		["a"] = true,
+		["also"] = true,
+		["def"] = true,
 
 		-- params that are only used when transcluding using {{tcl}}/{{transclude}}
-		["tcl_t"] = {list = true},
-		["tcl_tid"] = {list = true},
-		["tcl_nolb"] = {},
+		["tcl_t"] = list_param,
+		["tcl_tid"] = list_param,
+		["tcl_nolb"] = true,
 
 		-- "extra info" that can be included
-		["modern"] = {list = true},
-		["official"] = {list = true},
-		["capital"] = {list = true},
-		["largest city"] = {list = true},
-		["caplc"] = {},
-		["seat"] = {list = true},
-		["shire town"] = {list = true},
-		["headquarters"] = {list = true},
+		["modern"] = list_param,
+		["official"] = list_param,
+		["capital"] = list_param,
+		["largest city"] = list_param,
+		["caplc"] = true,
+		["seat"] = list_param,
+		["shire town"] = list_param,
+		["headquarters"] = list_param,
+
+		-- for toponyms that are abbreviations, clippings, ellipses, synonyms, former names
+		["abbrof"] = true, -- same as including {{abbreviation of}} before the defn
+		["initof"] = true, -- same as including {{initialism of}} before the defn
+		["acronymof"] = true, -- same as including {{acronym of}} before the defn
+		["clipof"] = true, -- same as including {{clipping of}} before the defn
+		["ellipof"] = true, -- same as including {{ellipsis of}} before the defn
+		["synof"] = true -- same as including {{synonym of}} before the defn
+		["now"] = true, -- same as including {{former name of}} before the defn
 	}
 
 	-- FIXME, once we've flushed out any uses, delete the following clause. That will cause def= to be ignored.
@@ -1690,14 +1809,15 @@ function export.format(template_args, drop_extra_info)
 		error("Cannot currently pass def= as an empty parameter; use def=- if you want to suppress the definition display")
 	end
 	local args = require("Module:parameters").process(template_args, params)
-	local lang = require("Module:languages").getByCode(args[1], 1, "allow etym")
 	local place_descriptions = parse_place_descriptions(args[2])
 
-	return get_def(args, place_descriptions, drop_extra_info) ..
-		get_cats(lang, args, place_descriptions, args["cat"], args["sort"])
+	return get_def(args, place_descriptions, drop_extra_info) .. get_cats(args, place_descriptions)
 end
 
 
+--[==[
+Actual entry point of {{tl|place}}.
+]==]
 function export.show(frame)
 	return export.format(frame:getParent().args)
 end
