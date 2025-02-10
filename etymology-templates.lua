@@ -13,11 +13,12 @@ local dump = mw.dumpObject
 local etymology_module = "Module:etymology"
 local etymology_specialized_module = "Module:etymology/specialized"
 local parameter_utilities_module = "Module:parameter utilities"
+local table_module = "Module:table"
+
+local allowedConjsForJoinSegments = require_when_needed(table_module, "allowedConjsForJoinSegments")
 
 -- For testing
 local force_cat = false
-
-local allowed_conjs = {"and", "or", ",", "/", "~", ";"}
 
 local function parse_etym_args(parent_args, base_params, has_dest_lang)
 	local m_param_utils = require(parameter_utilities_module)
@@ -83,7 +84,7 @@ function export.parse_2_lang_args(parent_args, has_text, no_family)
 		["nocat"] = boolean,
 		["sort"] = true,
 		["sourceconj"] = true,
-		["conj"] = {set = allowed_conjs, default = ","},
+		["conj"] = {set = , default = ","},
 	}
 	if has_text then
 		params["notext"] = boolean
@@ -185,7 +186,7 @@ function export.cognate(frame)
 		[3] = {alias_of = "alt"},
 		[4] = {alias_of = "t"},
 		sourceconj = true,
-		["conj"] = {set = allowed_conjs, default = ","},
+		["conj"] = {set = allowedConjsForJoinSegments, default = ","},
 		sort = true,
 	}
 
@@ -261,7 +262,7 @@ function export.misc_variant(frame)
 		nocap = boolean, -- should be processed in the template itself
 		notext = boolean,
 		nocat = boolean,
-		conj = {set = allowed_conjs},
+		conj = {set = allowedConjsForJoinSegments},
 		sort = true,
 	}
 
@@ -339,7 +340,7 @@ function export.misc_variant_multiple_terms(frame)
 		nocap = boolean, -- should be processed in the template itself
 		notext = boolean,
 		nocat = boolean,
-		conj = {set = allowed_conjs},
+		conj = {set = allowedConjsForJoinSegments},
 		sort = true,
 	}
 
