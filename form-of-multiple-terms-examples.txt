@@ -1,0 +1,47 @@
+Page 219 sub: Found match for regex: <begin> # {{lb|en|colloquial|internet}} {{clipping of|en|subscription,subscriber<q:by extension>|addl=_to an online channel or feed}}. <end>
+Page 279 res: Found match for regex: <begin> # {{lb|en|North America|informal}} {{clipping of|en|reservation,reserve}}. <end>
+Page 355 patio: Found match for regex: <begin> # {{clipping of|es|patio de recreo,patio de juegos|t=playground}} <end>
+Page 1010 tarayıcı: Found match for regex: <begin> # {{lb|tr|Internet}} {{clipping of|tr|ağ tarayıcısı,Web tarayıcısı|t=[[Web browser]]}} <end>
+Page 1803 A-fib: Found match for regex: <begin> # {{lb|en|medicine}} {{clipping of|en|atrial fibrillation,auricular fibrillation}}. <end> 
+Page 1869 祇園: Found match for regex: <begin> # {{lb|ja|Buddhism}} {{clipping of|ja|祇園精舎<tr:Gion-shōja>,祇樹給孤独>園<tr:Giju gikkodokuon>}}: [[Jetavana]], a [[Buddhist]] [[monastery]] in [[India]] <end>
+Page 1898 Shep: Found match for regex: <begin> # {{C|en|Nicknames}} A [[nickname]], from being a {{clipping of|en|Shepherd,Shephard,Sheperd,Shepard|addl=surnames|nocap=1}}. <end>
+Page 1974 افه: Found match for regex: <begin> # {{clipping of|ota|افندی<tr:efendi>,افندم<tr:efendim>}} <end>
+Page 2231 väckare: Found match for regex: <begin> # {{lb|sv|rare}} {{clipping of|sv|väckarklocka,väckarur||alarm clock}} <end>
+Page 2478 グラボ: Found match for regex: <begin> # {{clip of|ja|[[グラフィックボード|'''グラ'''フィック'''ボ'''ード]]<tr:gurafikku bōdo>,[[グラフィックスボード|'''グラ'''フィックス'''ボ'''ード]]<tr:gurafikkusu bōdo>|t=[[graphics card]]}} <end>
+Page 2523 国連安保理: Found match for regex: <begin> # {{clip of|ja|国際連合安全保障理事会<tr:Kokusai Rengō Anzen Hoshō Rijikai>,国連安全保障理事会<tr:Kokuren Anzen Hoshō Rijikai>|sort=こくれんあんぽり|t=[[United Nations Security Council]]}}: the [[UN Security Council]] <end>
+
+misc_variant:
+
+Page 1193 Fergie: Found match for regex: <begin> {{clipping|en|Ferguson,Fergusson,Fergus}} {{suffix|en||ie}}. <end>
+Page 2160 meybuz: Found match for regex: <begin> From the [[trademark]] ''Meybuz''. Possibly a compound with {{clipping|tr|meyve<t:fruit>,meyveli<t:fruity, with fruit>|nocap=1}} + {{m|tr|buz|t=ice}}. <end>
+
+initialism:
+
+Page 3532 mfG: Found match for regex: <begin> # {{lb|de|informal}} {{initialism of|de|mit freundlichen Grüßen<t:with friendly greetings>,mit freundlichem Gruß}} <end>
+Page 4576 TLE: Found match for regex: <begin> # {{lb|en|astronautics}} {{initialism of|en|[[two-line]] [[element]],[[three-line]] [[element]]}}. <end>
+Page 6273 EFP: Found match for regex: <begin> # {{label|en|finance}} {{initialism of|en|[[exchange]] for [[physical]],exchange [[future]]s for physical,[[exchange]] [[future]]s for product|addl=a type of transaction}}. <end>
+Page 46 AA: Found match for regex: <begin> # {{lb|en|aviation}} {{initialism of|en|{{w|Ansett Australia}},{{w|Ansett Airways}}}}. <end>
+Page 7919 HVO: Found match for regex: <begin> # {{initialism of|en|[[hydrogenated]] [[vegetable]] [[oil]],[[hydro-]][[treated]] [[vegetable oil]]|qq=used as a biofuel}}. <end>
+Page 10215 BNF: Found match for regex: <begin> # {{lb|en|computing}} {{init of|en|Backus-Naur form,Backus normal form<q:originally>}}. <end>
+Page 26 CE: Found match for regex: <begin> # {{initialism of|en|Common Era,Current Era,Christian Era}}. Equivalent of [[AD]]. Like other era initialisms, often written in [[small caps]]. <end>
+Page 236 ASP: Found match for regex: <begin> # {{lb|en|finance}} {{initialism of|en|w:average selling price,[[average]] sale(s) [[price]]<q:more rarely>}}. <end>
+Page 261 ECG: Found match for regex: <begin> # {{C|en|Electrocardiography}} {{lb|en|cardiology}} {{initialism of|en|electrocardiogram,electrocardiography,electrocardiograph}}.<!--polysemic in real-world usage--> <end> 
+Page 510 RIP: Found match for regex: <begin> # {{init of|en|requiescat in pace,requiescant in pace,rest in peace}} {{gl|a blessing or expression of hope that a deceased person is at peace}}. <end> 
+Page 1443 ARM: Found match for regex: <begin> # {{lb|en|computing}} {{init of|en|{{w|ARM architecture|Acorn RISC Machine}},{{w|ARM architecture|Advanced RISC Machine}}}}. <end>
+Page 1683 AUC: Found match for regex: <begin> # {{lb|la|historical}} {{initialism of|la|ab urbe conditā,annō urbis conditae}}: [[accord]]ing to the [[Roman]] [[era]], [[reckon]]ing the [[year]]s [[pass]]ed from the [[foundation]] of the [[city]] of [[Rome]] by [[Romulus]], on April 21 in the [[various]] [[year]]s 753{{nbsp}}[[BC|{{smallcaps|bc}}]] {{qualifier|Varro, Cicero, Censorinus, most of Pliny, & most modern accounts}}, 752{{nbsp}}[[BC|{{smallcaps|bc}}]] {{qualifier|V. Flaccus}}, 751{{nbsp}}[[BC|{{smallcaps|bc}}]] {{qualifier|Cato, Dionysius of Halicarnassus, & most of Livy}}, 750{{nbsp}}[[BC|{{smallcaps|bc}}]] {{qualifier|Polybius}}, or 747{{nbsp}}[[BC|{{smallcaps|bc}}]] {{qualifier|F. Pictor & some of Livy}}. <end>
+Page 1893 SMP: Found match for regex: <begin> # {{initialism of|en|{{w|stable marriage problem}},{{w|Stable marriage problem|stable matching problem}}}}. <end>
+Page 2115 SFA: Found match for regex: <begin> # {{initialism of|de|Steuerfachangestellter,{{w|Steuerfachangestellter|Steuerfachangestellte|lang=de}}}} <end>
+Page 2341 EDC: Found match for regex: <begin> # {{lb|en|organic compound}} {{initialism of|en|{{w|1,2-dichloroethane|ethylene dichloride and 1,2-dichloroethane}}}}. <end>
+
+with place:
+
+Page 41 EU: Found match for regex: <begin> # {{place|fr|initof=États-Unis<t:United States>|country|cont/North America|t=US}} <end>
+Page 539 СССР: Found match for regex: <begin> # {{lb|mk|historical}} {{place|mk|initof=Сојуз на Советските Социјалистички Републики|former country|c/Europe,Asia|t=USSR}} <end>
+Page 1007 США: Found match for regex: <begin> # {{place|uk|initof=Сполу́чені Шта́ти Аме́рики|country|cont/North America|t1=USA}} <end>
+Page 3787 TMR: Found match for regex: <begin> # {{place|en|initof={{w|Mount Royal, Quebec|Town of Mount Royal}}|municipality|p/Quebec|c/Canada}}. <end>
+Page 8913 ЧССР: Found match for regex: <begin> # {{lb|mk|historical}} {{place|mk|initof=Чехословачка Социјалистичка Република<t:Czechoslovak Socialist Republic>|former country|c/Europe|t=CSSR}} <end>
+Page 13656 IFSC: Found match for regex: <begin> # {{place|en|initof=[[w:International Financial Services Centre, Dublin|International Financial Services Centre]]|central business district/and/[[special economic zone]]|city/Dublin|country/Ireland}}. <end>
+Page 2402 WBA: Found match for regex: <begin> # {{place|nv|initof=Wááshindoon bikéyah ałhidadiidzooígíí<lit:United Country of Washington>|country|cont/North America|t=USA}} <end>
+Page 2898 EUA: Found match for regex: <begin> # {{place|ca|initof=Emirats Àrabs Units<t:United Arab Emirates>|country|r/Western Asia|in the|r/Middle East|t1=UAE|t2=United Arab Emirates}} <end>
+Page 8455 HRD: Found match for regex: <begin> # {{place|en|region|initof=Huanghe River Delta<t:Yellow River Delta>|c/China|on the {{l|en|[[Yellow River]]/[[Huanghe]]}}, at its {{l|en|delta}} regions by the {{l|en|Shandong Peninsula}}, on the {{l|en|Bohai Sea}} and {{l|en|Yellow Sea}}, marginal seas of the {{l|en|Pacific Ocean}}}}. <end>
+
