@@ -49,22 +49,22 @@ Loaders for functions in other modules, which overwrite themselves with the targ
 		debug_track = require(debug_track_module)
 		return debug_track(...)
 	end
-	
+
 	local function is_callable(...)
 		is_callable = require(function_module).is_callable
 		return is_callable(...)
 	end
-	
+
 	local function is_integer(...)
 		is_integer = require(math_module).is_integer
 		return is_integer(...)
 	end
-	
+
 	local function is_positive_integer(...)
 		is_positive_integer = require(math_module).is_positive_integer
 		return is_positive_integer(...)
 	end
-	
+
 	local function string_sort(...)
 		string_sort = require(collation_module).string_sort
 		return string_sort(...)
@@ -90,7 +90,7 @@ end
 
 do
 	local tracked1, tracked2
-	
+
 	local function make_copy(orig, seen, mt_flag, keep_loaded_data)
 		if type(orig) ~= "table" then
 			return orig
@@ -314,7 +314,7 @@ do
 	local current
 	--[==[
 	An iterator which works like `pairs`, except that it also respects the `__index` metamethod. This works by iterating over the input table with `pairs`, followed by the table at its `__index` metamethod (if any). This is then repeated for that table's `__index` table and so on, with any repeated keys being skipped over, until there are no more tables, or a table repeats (so as to prevent an infinite loop). If `__index` is a function, however, then it is ignored, since there is no way to iterate over its return values.
-	
+
 	A `__pairs` metamethod will be respected for any given table instead of iterating over it directly, but these will be ignored if the `raw` flag is set.
 
 	Note: this function can be used as a `__pairs` metamethod. In such cases, it does not call itself, since this would cause an infinite loop, so it treats the relevant table as having no `__pairs` metamethod. Other `__pairs` metamethods on subsequent tables will still be respected.]==]
@@ -324,10 +324,10 @@ do
 		if current and current[t] or getmetatable(t) == nil then
 			return next, t, nil
 		end
-		
+
 		-- `seen_k` memoizes keys, as they should never repeat; `seen_t` memoizes tables iterated over.
 		local seen_k, seen_t, iter, state, k, v, success = {}, {[t] = true}
-		
+
 		return function()
 			while true do
 				if iter == nil then
@@ -388,7 +388,7 @@ do
 			return i, v
 		end
 	end
-	
+
 	--[==[
 	An iterator which works like `ipairs`, except that it also respects the `__index` metamethod. This works by looking up values in the table, iterating integers from key `1` until no value is found.]==]
 	function export.indexIpairs(t)
@@ -622,7 +622,7 @@ do
 	end
 
 	-- `get_2_options` and `get_4_options` extract the options keys before any processing occurs, so that any modifications to `options` during processing (e.g. by a comparison function) will not affect the current call. This allows the same `options` table to be used with different values for recursive calls, which is more efficient than creating a new table for each call.
-	
+
 	-- `contains` and `insert_if_not` are both called by other functions, so the main work is done by local functions which take the extracted options as separate arguments, which avoids the need to access the `options` again at any point.
 
 	local function get_2_options(options)
@@ -637,7 +637,7 @@ do
 		end
 		return comp_func, options.key
 	end
-	
+
 	local function get_4_options(options)
 		local pos, combine_func
 		if options ~= nil then
@@ -683,7 +683,7 @@ do
 	Given a table and a value to be found, returns the value's key if the value is in the table. Comparison is by value, using `deepEquals`.
 
 	`options` is an optional table of additional options to control the behavior of the operation. The available options are the same as those for {contains}.
-	
+
 	Note: if multiple keys have the specified value, this function returns the first key found; it is not possible to reliably predict which key this will be.]==]
 	function export.keyFor(t, x, options)
 		local comp_func, key_func = get_2_options(options)
@@ -699,7 +699,7 @@ do
 			end
 		end
 	end
-	
+
 	local function insert_if_not(list, new_item, pos, combine_func, comp_func, key_func)
 		local i = contains(list, new_item, comp_func, key_func)
 		if i then
@@ -778,11 +778,11 @@ do
 		}, nil
 		return types
 	end
-	
+
 	local function less_than(key1, key2)
 		return key1 < key2
 	end
-	
+
 	-- The default sorting function used in export.keysToList if `keySort` is not given.
 	local function default_compare(key1, key2)
 		local type1, type2 = type(key1), type(key2)
@@ -932,7 +932,7 @@ do
 		end
 		return t_new
 	end
-	
+
 	--[==[
 	Given an array `list` and function `func`, iterate through the array applying {func(k, v)} (where `k` is an index, and
 	`v` is the value at index `k`), replacing the relevant values with the result. For example,
@@ -1099,8 +1099,11 @@ function export.serialCommaJoin(seq, options)
 	return concat(seq, punc .. " ", 1, length - 1) .. comma .. conj .. seq[length]
 end
 
+
 --[==[
-A function which works like `table.concat`, but respects any `__index` metamethod. This is useful for data loaded via `mw.loadData`.]==]
+A function which works like `table.concat`, but respects any `__index` metamethod. This is useful for data loaded via
+`mw.loadData`.
+]==]
 function export.concat(t, sep, i, j)
 	local list, k = {}, 0
 	while true do
@@ -1125,6 +1128,38 @@ function export.sparseConcat(t, sep, i, j)
 	end
 	return concat(list, sep, i, j)
 end
+
+export.allowedConjsForJoinSegments = {"and", "or", ",", "/", "~", ";"}
+
+--[==[
+A combination of `serialCommaJoin` and `concat`. Option `conj` is either {"and"} or {"or"} (join `segs` using
+`serialCommaJoin`) or a punctuation delimiter (currently {","}, {"/"}, {"~"} and {";"} are allowed and converted to the appropriate displayed separator, and then `segs` joined using `concat`).
+]==]
+function export.joinSegments(segs, options)
+	local conj = options and options.conj or "and"
+	if segs[2] then
+		if conj == "and" or conj == "or" then
+			return export.serialCommaJoin(segs, options)
+		else
+			local sep
+			if conj == "," then
+				sep = ", "
+			elseif conj == "/" then
+				sep = "/"
+			elseif conj == "~" then
+				sep = " ~ "
+			elseif conj == ";" then
+				sep = "; "
+			else
+				error(("Internal error: Unrecognized conjunction '%s'"):format(conj))
+			end
+			return export.concat(segs, sep)
+		end
+	else
+		return segs[1]
+	end
+end
+
 
 --[==[
 Values of numeric keys in array portion of table are reversed: { { "a", "b", "c" }} -> { { "c", "b", "a" }}]==]
@@ -1168,7 +1203,7 @@ do
 			end
 		end
 	end
-	
+
 	--[==[
 	Given a list, which may contain sublists, flatten it into a single list. For example, {flatten({ "a", { "b", "c" }, "d" })} ->
 	{ { "a", "b", "c", "d" }}]==]
