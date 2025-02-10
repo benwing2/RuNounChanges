@@ -8,6 +8,7 @@ local require_when_needed = require("Module:utilities/require when needed")
 local debug_track_module = "Module:debug/track"
 local languages_module = "Module:languages"
 local links_module = "Module:links"
+local parameter_utilities_module = "Module:parameter utilities"
 local pron_qualifier_module = "Module:pron qualifier"
 local table_module = "Module:table"
 local utilities_module = "Module:utilities"
@@ -15,6 +16,14 @@ local utilities_module = "Module:utilities"
 local m_links = require_when_needed(links_module)
 local m_table = require_when_needed(table_module)
 local m_utilities = require_when_needed(utilities_module)
+
+local function join_segments(segs, conj)
+	if not segs[2] then
+		return segs[1]
+	else
+		return m_table.joinSegments(segs, {conj = conj})
+	end
+end
 
 local function create_one_link(termobj, template_name)
 	if termobj.lang:hasType("family") then
@@ -42,33 +51,6 @@ local function create_one_link(termobj, template_name)
 end
 
 
-local function join_segs(segs, conj)
-	if segs[2] then
-		if conj == "and" or conj == "or" then
-			return m_table.serialCommaJoin(segs, {conj = conj})
-		else
-			local sep
-			if conj == "," then
-				sep = ", "
-			elseif conj == "/" then
-				sep = "/"
-			elseif conj == "~" then
-				sep = " ~ "
-			elseif conj == ";" then
-				sep = "; "
-			elseif conj then
-				error(("Internal error: Unrecognized conjunction '%s'"):format(conj))
-			else
-				error(("Internal error: No value supplied for conjunction"):format(conj))
-			end
-			return table.concat(segs, sep)
-		end
-	else
-		return segs[1]
-	end
-end	
-
-
 -- Format one or more links as specified in `termobjs`, a list of term objects of the format accepted by full_link() in
 -- [[Module:links]], additionally with optional qualifiers, labels and references. `conj` is used to join multiple
 -- terms and must be specified if there is more than one term. `template_name` is the template name used in debug
@@ -79,7 +61,7 @@ function export.format_links(termobjs, conj, template_name)
 		termobjs[i] = create_one_link(termobj, template_name)
 	end
 
-	local retval = join_segs(termobjs, conj)
+	local retval = join_segments(termobjs, conj)
 	if retval ~= "" then
 		retval = " " .. retval
 	end
@@ -227,7 +209,7 @@ function export.format_sources(data)
 		end
 		table.insert(source_segs, seg)
 	end
-	return join_segs(source_segs, sourceconj or "and")
+	return join_segments(source_segs, sourceconj or "and")
 end
 
 
