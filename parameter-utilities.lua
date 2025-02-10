@@ -813,7 +813,7 @@ local function copy_separate_params_to_termobj_and_postprocess(data)
 		if not termobj.terms then
 			termobj.terms = {}
 		end
-		
+
 		-- Compute whether any of the separate indexed params exist for this index.
 		local any_param_at_index
 		for param_mod, param_mod_spec in pairs(param_mods) do
