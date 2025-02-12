@@ -113,7 +113,7 @@ local function get_arrow(args, index)
 		arrow = add_tooltip("→", "semi-learned borrowing")
 	elseif val("obor") then
 		arrow = add_tooltip("→", "orthographic borrowing")
-	elseif args.translit then
+	elseif val("translit") then
 		arrow = add_tooltip("→", "transliteration")
 	elseif val("clq") then
 		arrow = add_tooltip("→", "calque")
