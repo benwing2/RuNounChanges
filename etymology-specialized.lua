@@ -145,7 +145,7 @@ function export.specialized_borrowing(data)
 		terms = terms,
 		sort_key = data.sort_key,
 		categories = categories,
-		nocat = nocat,
+		nocat = data.nocat,
 		sourceconj = data.sourceconj,
 	} .. require(etymology_module).format_links(terms, data.conj, "etymology/specialized")
 end
