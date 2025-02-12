@@ -421,11 +421,13 @@ function export.escape_comma_whitespace(run, tempcomma)
 	local escaped = false
 
 	if run:find("\\,") then
-		run = run:gsub("\\,", "\\" .. tempcomma) -- assign to temp to discard second return value
+		-- FIXME: we should probably convert literal \\ to \ to allow people to put a backslash before a comma that
+		-- should be passed through; but maybe it's enough to use an HTML escape for the comma or backslash.
+		run = (run:gsub("\\,", tempcomma)) -- discard backslash before comma, doing its duty to protect the comma
 		escaped = true
 	end
 	if run:find(",%s") then
-		run = run:gsub(",(%s)", tempcomma .. "%1") -- assign to temp to discard second return value
+		run = (run:gsub(",(%s)", tempcomma .. "%1"))
 		escaped = true
 	end
 	return run, escaped
@@ -438,8 +440,7 @@ Undo the replacement of comma with a temporary char.
 function export.unescape_comma_whitespace(run, tempcomma)
 	tempcomma = tempcomma or u(0xFFF0)
 
-	run = run:gsub(tempcomma, ",") -- assign to temp to discard second return value
-	return run
+	return (run:gsub(tempcomma, ","))
 end
 
 
@@ -605,7 +606,7 @@ NOTE: Embedded links are not correctly handled currently. If an embedded link is
 as the link part (third argument), and the display part is nil. If you construct your own link from the link and
 display parts, you must check for this.
 
-The preferred calling convention is to pass in a single argument `data` containing the following fields:
+The calling convention is to pass in a single argument `data` containing the following fields:
 * `term`: The term to parse.
 * `parse_err`: An optional function of one or two arguments to display an error. (The second argument to the function is
   the number of stack frames to ignore when calling error(); if you declare your error function with only one argument,
@@ -621,24 +622,11 @@ The preferred calling convention is to pass in a single argument `data` containi
 * `lang_cache`: A table mapping language codes to language objects. If the value is `false`, the language code is
   invalid. If specified, the cache will be consulted before calling `getByCode()` in [[Module:languages]], and the
   result cached. If not specified, no cache will be used.
-
-An alternative, deprecated calling convention passes the term in the first parameter, and either `parse_err` or
-`paramname` in the second parameter. This does not allow setting any of the other fields mentioned above.
 ]==]
-function export.parse_term_with_lang(data_or_term, parse_err_or_paramname)
-	if type(data_or_term) == "string" then
-		data_or_term = {
-			term = data_or_term
-		}
-		if type(parse_err_or_paramname) == "function" then
-			data_or_term.parse_err = parse_err_or_paramname
-		else
-			data_or_term.paramname = parse_err_or_paramname
-		end
-	end
-	local term = data_or_term.term
-	local parse_err = data_or_term.parse_err or
-		data_or_term.paramname and export.make_parse_err(("%s=%s"):format(data_or_term.paramname, term)) or
+function export.parse_term_with_lang(data)
+	local term = data.term
+	local parse_err = data.parse_err or
+		data.paramname and export.make_parse_err(("%s=%s"):format(data.paramname, term)) or
 		export.make_parse_err(term)
 	-- Parse off an initial language code (e.g. 'la:minūtia' or 'grc:[[σκῶρ|σκατός]]'). First check for Wikipedia
 	-- prefixes ('w:Abatemarco' or 'w:it:Colle Val d'Elsa' or 'lw:zh:邹衡') and Wikisource prefixes
@@ -699,20 +687,20 @@ function export.parse_term_with_lang(data_or_term, parse_err_or_paramname)
 
 	local function get_by_code(code, allow_bad)
 		local lang
-		if data_or_term.lang_cache then
-			lang = data_or_term.lang_cache[code]
+		if data.lang_cache then
+			lang = data.lang_cache[code]
 		end
 		if lang == nil then
 			lang = require("Module:languages").getByCode(code, not allow_bad and parse_err or nil, "allow etym",
-				data_or_term.allow_family)
-			if data_or_term.lang_cache then
-				data_or_term.lang_cache[code] = lang or false
+				data.allow_family)
+			if data.lang_cache then
+				data.lang_cache[code] = lang or false
 			end
 		end
 		return lang or nil
 	end
 
-	if data_or_term.allow_multiple then
+	if data.allow_multiple then
 		local termlang_spec
 		termlang_spec, actual_term = term:match("^([a-zA-Z.,+-]+):([^ ].*)$")
 		if termlang_spec then
@@ -727,7 +715,7 @@ function export.parse_term_with_lang(data_or_term, parse_err_or_paramname)
 			if all_possible_code then
 				local saw_nil = false
 				for i, code in ipairs(termlang) do
-					termlang[i] = get_by_code(code, data_or_term.allow_bad)
+					termlang[i] = get_by_code(code, data.allow_bad)
 					if not termlang[i] then
 						saw_nil = true
 					end
@@ -745,7 +733,7 @@ function export.parse_term_with_lang(data_or_term, parse_err_or_paramname)
 		termlang, actual_term = term:match("^([a-zA-Z.-]+):([^ ].*)$")
 		if termlang then
 			if is_possible_lang_code(termlang) then
-				termlang = get_by_code(termlang, data_or_term.allow_bad)
+				termlang = get_by_code(termlang, data.allow_bad)
 				if termlang then
 					term = actual_term
 				end
