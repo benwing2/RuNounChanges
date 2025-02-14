@@ -1,3 +1,19 @@
+abbreviation
+
+Page 698 G: Found match for regex: <begin> # {{C|en|Recreational drugs}} {{lb|en|drug|_|slang}} {{abbrev of|en|gamma-hydroxybutyrate,gamma-butyrolactone}}. <end>
+Page 182 h: Found match for regex: <begin> # {{lb|sv|nonstandard|anglicism}} {{abbreviation of|sv|en:hour}} <end>
+Page 182 h: Found match for regex: <begin> # {{lb|sv|strictly|_|technology}} {{abbreviation of|sv|la:hōra}} <end>
+Page 180 d: Found match for regex: <begin> # {{abbreviation of|en|died,death}}. <end>
+Page 184 k: Found match for regex: <begin> # {{senseid|mul|thousand}} {{lb|mul|numbers}} {{abbreviation of|mul|fr:kilo-|t=1000}} <end>
+Page 192 t: Found match for regex: <begin> # {{lb|vi|slang|Internet|text messaging}} {{abbreviation of|vi|tao,tau,tôi<q:sometimes>,tớ}} <end>
+Page 353 cent: Found match for regex: <begin> # {{lb|en|obsolete|except in ''per cent'' and ''cent percent''}} {{abbreviation of|en|la:centum|t=one hundred}}. <end>
+Page 481 LC: Found match for regex: <begin> # {{lb|mul|[[w:IUCN Red List|IUCN Red List]]}} {{abbreviation of|mul|en:[[w:Least-concern species|Least Concern]]}} <end>
+Page 569 LP: Found match for regex: <begin> # {{lb|pl|music}} {{abbr of|pl|en:long play}}; {{m|pl|płyta długogrająca|t=a sound recording album, forming a compositional whole}} <end>
+Page 2231 FAI: Found match for regex: <begin> # {{abbreviation of|mul|fr:{{w|lang=en|Fédération Aéronautique Internationale}}}}: {{l|en|FAI}} {{gl|the world federation for aeronautics and airsports}} <end>
+Page 7580 RXR: Found match for regex: <begin> # {{abbreviation of|en|railroad,railway,rail-line,[[rail]] [[crossing]]}}: a [[level crossing]]. <end>
+
+clipping
+
 Page 219 sub: Found match for regex: <begin> # {{lb|en|colloquial|internet}} {{clipping of|en|subscription,subscriber<q:by extension>|addl=_to an online channel or feed}}. <end>
 Page 279 res: Found match for regex: <begin> # {{lb|en|North America|informal}} {{clipping of|en|reservation,reserve}}. <end>
 Page 355 patio: Found match for regex: <begin> # {{clipping of|es|patio de recreo,patio de juegos|t=playground}} <end>
@@ -9,11 +25,14 @@ Page 1974 افه: Found match for regex: <begin> # {{clipping of|ota|افندی<
 Page 2231 väckare: Found match for regex: <begin> # {{lb|sv|rare}} {{clipping of|sv|väckarklocka,väckarur||alarm clock}} <end>
 Page 2478 グラボ: Found match for regex: <begin> # {{clip of|ja|[[グラフィックボード|'''グラ'''フィック'''ボ'''ード]]<tr:gurafikku bōdo>,[[グラフィックスボード|'''グラ'''フィックス'''ボ'''ード]]<tr:gurafikkusu bōdo>|t=[[graphics card]]}} <end>
 Page 2523 国連安保理: Found match for regex: <begin> # {{clip of|ja|国際連合安全保障理事会<tr:Kokusai Rengō Anzen Hoshō Rijikai>,国連安全保障理事会<tr:Kokuren Anzen Hoshō Rijikai>|sort=こくれんあんぽり|t=[[United Nations Security Council]]}}: the [[UN Security Council]] <end>
+Page 2009 akutt: Found match for regex: <begin> # {{lb|nb|chiefly in the definite singular|colloquial|healthcare}} {{clip of|nb|akuttmottak<t:emergency room>|akuttavdeling<t:emergency department>}} <end>
 
 misc_variant:
 
 Page 1193 Fergie: Found match for regex: <begin> {{clipping|en|Ferguson,Fergusson,Fergus}} {{suffix|en||ie}}. <end>
 Page 2160 meybuz: Found match for regex: <begin> From the [[trademark]] ''Meybuz''. Possibly a compound with {{clipping|tr|meyve<t:fruit>,meyveli<t:fruity, with fruit>|nocap=1}} + {{m|tr|buz|t=ice}}. <end>
+Page 711 D: Found match for regex: <begin> * {{sense|chemistry|deuterium}} {{abbrev|mul|en:deuterium}}. <end>
+Page 711 D: Found match for regex: <begin> * {{sense|Germany}} {{abbrev|mul|de:Deutschland||Germany}}. <end>
 
 initialism:
 
@@ -44,4 +63,58 @@ Page 13656 IFSC: Found match for regex: <begin> # {{place|en|initof=[[w:Internat
 Page 2402 WBA: Found match for regex: <begin> # {{place|nv|initof=Wááshindoon bikéyah ałhidadiidzooígíí<lit:United Country of Washington>|country|cont/North America|t=USA}} <end>
 Page 2898 EUA: Found match for regex: <begin> # {{place|ca|initof=Emirats Àrabs Units<t:United Arab Emirates>|country|r/Western Asia|in the|r/Middle East|t1=UAE|t2=United Arab Emirates}} <end>
 Page 8455 HRD: Found match for regex: <begin> # {{place|en|region|initof=Huanghe River Delta<t:Yellow River Delta>|c/China|on the {{l|en|[[Yellow River]]/[[Huanghe]]}}, at its {{l|en|delta}} regions by the {{l|en|Shandong Peninsula}}, on the {{l|en|Bohai Sea}} and {{l|en|Yellow Sea}}, marginal seas of the {{l|en|Pacific Ocean}}}}. <end>
+Page 478 AQ: Found match for regex: <begin> # {{place|it|capital city|abbrof=Aquila,L'Aquila|adr/Abruzzo|c/Italy}} <end>
+
+abbreviation:
+
+Page 1791 JK: Found match for regex: <begin> # {{abbreviation of|ja|女子高生<tr:joshi kōsei>,[[女子]][[高校生]]<tr:joshi kōkōsei>|t=high-school girl}} <end>
+Page 468 v.: Found match for regex: <begin> # {{lb|sv|common}} {{abbreviation of|sv|väg<t:road>,vägen<t:the [...] road>}}. <end>
+Page 846 ed.: Found match for regex: <begin> # {{abbreviation of|en|edited,[[edited]] by}}. <end>
+Page 4315 Stuka: Found match for regex: <begin> # {{abbreviation of|de|Sturzkampfbomber,Sturzkampfflugzeug}}. <end>
+Page 5335 מצ״ב: Found match for regex: <begin> # {{lb|he|in|_|correspondence}} {{abbreviation of|he|[[מצורף בזה|מצורף בזה \ מְצֹרָף בָּזֶה]]<t:ttached [[herewith]]>,[[מצורף בזה|מצורף בזאת \ מְצֹרָף בָּזֹאת]]<t:attached [[hereby]]>}} <end>
+Page 6353 Bdf.: Found match for regex: <begin> # {{abbreviation of|en|Bedfordshire,Bedford}}. <end>
+Page 6362 Cth.: Found match for regex: <begin> # {{abbreviation of|en|Carmarthenshire,Carmarthen,Commonwealth}}. <end>
+Page 9107 parl.: Found match for regex: <begin> # {{abbreviation of|la|parlamentārius,parlamentāria|t=[[parliamentarian]], [[member of parliament]]}} <end>
+Page 2571 JGA: Found match for regex: <begin> # {{abbreviation of|de|Junggesellenabschied<t:[[stag party]]>,Junggesellinnenabschied<t:[[hen party]]>}} <end>
+Page 9104 rot.: Found match for regex: <begin> # {{abbreviation of|la|rotula,rotulus,etc.|t=[[scroll]], [[roll]]}} <end>
+Page 465 Mrs: Found match for regex: <begin> # {{abbreviation of|en|Missus,Mistress|addl=; used before an adult woman's name or surname, used for any high-status woman without regard to marital status until the 1800s, after which it began to be reserved for married, divorced and widowed women and used with their married surnames}}. <end>
+Page 740 K: Found match for regex: <begin> # {{abbreviation of|sv|källare,källarplan,källarvåning||basement level}} <end>
+Page 5021 עמ׳: Found match for regex: <begin> # {{abbreviation of|he|עַמּוּד<tr:amúd>,עַמּוּדִים<tr:amudím>|t=[[page]] or pages}}: [[p.]], [[pp.]] <end>
+Page 5138 c/w: Found match for regex: <begin> # {{lb|en|music}} {{abbreviation of|en||[[comes]] [[with]],[[coupled]] with,,[[combined]] with|addl=; commonly used with 45 [[RPM]] [[single]]s, referring to the [[flip side]] ([[B-side]]) of the record}}. <end>
+Page 5604 IOA: Found match for regex: <begin> # {{label|mul|sports}} {{abbreviation of|mul|en:[[independent]] [[Olympics]] [[athlete]]s,en:[[individual]] [[Olympics]] [[athlete]]s|addl=country code for the team}} <end>
+Page 5908 SSaDV: Found match for regex: <begin> # {{abbreviation of|en|sea star-associated densovirus,seastar-associated densovirus,sea-star-associated densovirus,seastar associated densovirus,sea star associated densovirus}}. <end>
+Page 6001 USCT: Found match for regex: <begin> # {{lb|en|radiology|countable}} {{ellipsis of|en|USCT [[machine]]}}; {{abbreviation of|en|ultrasound computer tomograph,ultrasound computed tomograph,ultrasound computerized tomograph|addl=a machine for making such ultrasound scans using such ultrasound technology}}. <end>
+Page 6295 red.: Found match for regex: <begin> # {{abbreviation of|da|redaktion,redigeret,redaktør}}: [[ed.]] <end>
+Page 7512 LSJ: Found match for regex: <begin> # {{abbreviation of|en|[[w:A Greek–English Lexicon|Liddell–Scott–Jones]],[[w:A Greek–English Lexicon|Liddell-Scott-Jones]]|addl=another name of the Greek–English dictionary ''A Greek–English Lexicon'' by Henry George Liddell, Robert Scott and Henry Stuart Jones}}. <end>
+Page 8653 JO1: Found match for regex: <begin> # {{abbreviation of|en|[[junior]] [[officer]], [[1]],junior officer, grade [[one]],junior officer, [[first]] class,etc.}} <end>
+Page 504 OMG: Found match for regex: <begin> # {{abbreviation of|de|[[oh]] [[mein Gott]],[[oh]], [[mein Gott]],[[o]] [[mein]] [[Gott]]}}: {{l|en|OMG}} <end>
+Page 4897 schediasm.: Found match for regex: <begin> # {{abbreviation of|la|schediasma,schediasmata,etc.}} <end>
+Page 6316 ASS: Found match for regex: <begin> # {{abbreviation of|de|[[Azetylsalizylsäure]]/[[Acetylsalicylsäure]],[[Acetylsalizylsäure]]/[[Azetylsalicylsäure]]|t=acetylsalicylic acid}} <end>
+
+short for
+
+Page 79 gone: Found match for regex: <begin> # {{alternative spelling of|en|gon//gon'}}: {{short for|en|gonna,going to|nocap=1}}. <end>
+Page 596 Deutschland: Found match for regex: <begin> ## {{short for|de|[[Heiliges Römisches Reich|Heiliges Römisches Reich Deutscher Nation]],[[Heiliges Römisches Reich|heiliges römisches Reich deutscher Nation]]}} {{defdate|till 1806}} <end>
+Page 1435 maiestas: Found match for regex: <begin> # {{lb|la|law}} {{short for|la|[[crīmen]] maiestātis,[[lēx]] maiestātis|t=[[treason]], [[high treason]]}} <end>
+Page 1486 安全保障理事会: Found match for regex: <begin> # {{short for|ja|国際連合安全保障理事会<tr:Kokusai Rengō Anzen Hoshō Rijikai><t:[[United Nations Security Council]]>,国連安全保障理事会<tr:Kokuren Anzen Hoshō Rijikai><t:[[UN Security Council]]>|sort=あんぜんほしょうりじかい}}: the [[Security Council]] <end>
+Page 347 金: Found match for regex: <begin> # {{lb|ja|colloquial}} {{short for|ja|金物<tr:kanamono>,金具<tr:kanagu>}}: [[metal]] [[fittings]] <end>
+Page 1751 五輪: Found match for regex: <begin> ## {{short for|ja|五輪塔<tr:gorintō>,五輪卒塔婆<tr:gorin sotoba>|t=a [[five]]-[[ringed]] [[pagoda]]}} <end>
+
+ellipsis of
+
+Page 3725 قلزم: Found match for regex: <begin> # {{lb|fa|archaic}} the [[Red Sea]]; {{ellipsis of|fa|دریای قلزم<tr:daryâ-ye qolzom>,بحر قلزم<tr:bahr-e qolzom>}} <end>
+Page 464 Aufzug: Found match for regex: <begin> # {{lb|de|gymnastics}} {{ellipsis of|de|Felgaufzug,Hüftaufzug|t=[[upward circle]], [[circle-up]]}} <end>
+Page 1032 lái: Found match for regex: <begin> # {{lb|vi|colloquial}} {{ellipsis of|vi|lái xe<t:driver>,lái đò<t:boatman>}}
+Page 73 man-of-war: Found match for regex: <begin> ## {{ellipsis of|en|man-of-war bird,man-of-war hawk<l:obsolete>|t=any of a number of [[seabird]]s, especially one which attacks other seabirds to take their food}}. <end>
+Page 202 平: Found match for regex: <begin> # {{ellipsis of|ja|平氏<tr:Heishi>,平家<tr:Heike>|t=[[Taira]] [[clan]]|sort=へい}} <end>
+Page 220 昼: Found match for regex: <begin> # {{ellipsis of|ja|昼ご飯<tr:hiru gohan>,昼飯<tr:hirumeshi>|t=lunch|sort=ひ>る}} <end>
+Page 407 tap: Found match for regex: <begin> ## {{lb|en|Britain}} {{ellisps of|en|taphouse,taproom|t=place where alcoholic beverages are served [[on tap]]}}. <end>
+Page 437 sacrifice: Found match for regex: <begin> ## {{lb|en|baseball}} {{ellipsis of|en|sacrifice bunt,sacrifice hit|t=a play in which the batter intentionally hits the ball softly with a hands-spread batting stance at the cost of an out to advance one or more [[runner]]s}}. <end>
+Page 445 public: Found match for regex: <begin> ## {{lb|en|informal}} {{ellipsis of|en|public house,public bar<l:dated>|t=an inn, a pub: the more basic bar in a public house, as contrasted with the lounge bar or [[saloon]] bar which has more comfortable seats, personalized service, etc.}}. <end>
+
+syllabic acronym of
+
+
+Page 2757 金検: Found match for regex: <begin> # {{syllabic acronym of|ja|金属検出器<tr:kinzoku tanchi-ki>,金属検知器<tr:kinzoku kenshutsu-ki>|t=metal detector}} <end>
+Page 3785 プレコン: Found match for regex: <begin> # {{lb|ja|construction}} {{syllabic acronym of|ja|プレキャスト鉄筋コ>ンクリート<tr:purekyasuto tekkin konkurīto><t:[[precast]] [[reinforced concrete]]>,プレキャストコンクリート<tr:purekyasuto konkurīto><t:[[precast]] [[concrete]]>}} <end>
 
