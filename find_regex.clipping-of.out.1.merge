@@ -2575,7 +2575,7 @@ Page 2034 pat leave: Found match for regex: <begin> # {{lb|en|informal}} {{clipp
 Page 2035 токсик: Found match for regex: <begin> # {{lb|ru|[[youth]] [[slang]]}} {{clipping of|ru|токсикома́н}}; a [[substance abuse]]r <end>
 Page 2038 trz: Found match for regex: <begin> # {{clipping of|de|trzdem}} <end>
 Page 2039 alt-pop: Found match for regex: <begin> # {{lb|en|music genre}} {{clipping of|en|alternative pop}}. <end>
-Page 2040 Gansett: Found match for regex: <begin> # {{lb|en|uncountable}} {{place|en|clipof=Narragansett|town|s/Rhode Island|c/USA}}. <end>
+Page 2040 Gansett: Found match for regex: <begin> # {{lb|en|uncountable}} {{place|en|ann=clip of:Narragansett|town|s/Rhode Island|c/USA}}. <end>
 Page 2040 Gansett: Found match for regex: <begin> # {{lb|en|countable|uncountable}} {{clipping of|en|w:Narragansett Brewing Company|Narragansett|addl=a [[brand]] of [[beer]]}}. <end>
 Page 2040 Gansett: Found match for regex: <begin> # {{lb|en|uncountable}} {{clipping of|en|w:Narragansett Park|addl=a former [[horse racing]] [[track]] in [[Pawtucket]], [[Rhode Island]]}}. <end>
 Page 2041 samgyup: Found match for regex: <begin> # {{lb|tl|colloquial}} {{clipping of|tl|samgyupsal}} <end>
@@ -2902,8 +2902,8 @@ Page 2353 physical exam: Found match for regex: <begin> # {{lb|en|medicine}} {{c
 Page 2354 direct exam: Found match for regex: <begin> # {{lb|en|law}} {{clipping of|en|direct examination}}. <end>
 Page 2355 Spöko: Found match for regex: <begin> # {{lb|de|economics|university slang}} {{clipping of|de|Sportökonomie}} <end>
 Page 2358 Festi: Found match for regex: <begin> # {{clipping of|tl|w:Festival Alabang}} {{gl|{{place|tl|mall|barangay/Alabang|city/Muntinlupa|c/Philippines}}}} <end>
-Page 2359 Don Hen: Found match for regex: <begin> # {{lb|en|Philippines|chiefly|Baguio|colloquial}} {{place|en|clipof=w:Don Henrico's|restaurant|city/Baguio|p/Benguet|c/Philippines}}. <end>
-Page 2359 Don Hen: Found match for regex: <begin> # {{place|tl|clipof=w:Don Henrico's|restaurant|city/Baguio|p/Benguet|c/Philippines}} <end>
+Page 2359 Don Hen: Found match for regex: <begin> # {{lb|en|Philippines|chiefly|Baguio|colloquial}} {{place|en|ann=clip of:w:Don Henrico's|restaurant|city/Baguio|p/Benguet|c/Philippines}}. <end>
+Page 2359 Don Hen: Found match for regex: <begin> # {{place|tl|ann=clip of:w:Don Henrico's|restaurant|city/Baguio|p/Benguet|c/Philippines}} <end>
 Page 2360 Pot Cor: Found match for regex: <begin> # {{lb|en|Philippines|colloquial}} {{clipping of|en|w:Potato Corner|addl=a franchised [[french fries]] food stall}}. <end>
 Page 2360 Pot Cor: Found match for regex: <begin> # {{clipping of|tl|w:Potato Corner|addl=a franchised [[french fries]] food stall}} <end>
 Page 2361 զալ: Found match for regex: <begin> # {{clipping of|hy|սպորտզալ|t=gym}} <end>
