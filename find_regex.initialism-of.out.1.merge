@@ -202,12 +202,12 @@ Page 40 DOS: Found match for regex: <begin> # {{lb|en|US politics}} {{initialism
 Page 41 EU: Found match for regex: <begin> # {{lb|en|politics|economics}} {{init of|en|European Union}}. <end>
 Page 41 EU: Found match for regex: <begin> # {{l|en|EU}}; {{initialism of|nl|Europese Unie||European Union}} <end>
 Page 41 EU: Found match for regex: <begin> # [[#English|EU]]; {{initialism of|fi|Euroopan unioni||European Union}} <end>
-Page 41 EU: Found match for regex: <begin> # {{place|fr|initof=États-Unis<t:United States>|country|cont/North America|t=US}} <end>
+Page 41 EU: Found match for regex: <begin> # {{place|fr|ann=init of:États-Unis<t:United States>|country|cont/North America|t=US}} <end>
 Page 41 EU: Found match for regex: <begin> # [[#English|EU]]; {{initialism of|de|Europäische Union||European Union}} <end>
 Page 41 EU: Found match for regex: <begin> # {{initialism of|de|Erwerbsunfähigkeit}} <end>
 Page 41 EU: Found match for regex: <begin> # {{l|en|EU}}; {{initialism of|hu|Európai Unió||[[European Union]]}} <end>
 Page 41 EU: Found match for regex: <begin> # {{l|en|EU}}; {{init of|nn|Den europeiske unionen}} <end>
-Page 41 EU: Found match for regex: <begin> # {{place|es|initof=Estados Unidos<t:United States>|country|cont/North America|t=US}} <end>
+Page 41 EU: Found match for regex: <begin> # {{place|es|ann=init of:Estados Unidos<t:United States>|country|cont/North America|t=US}} <end>
 Page 41 EU: Found match for regex: <begin> # {{l|en|EU}}; {{init of|sv|Europeiska unionen||[[European Union]]}} <end>
 Page 42 HTML: Found match for regex: <begin> # {{initialism of|en|Hypertext Markup Language}}. <end>
 Page 43 AFAIK: Found match for regex: <begin> # {{lb|en|informal|internet slang|text messaging}}  {{initialism of|en|[[as far as I know]]}}. <end>
@@ -529,7 +529,7 @@ Page 100 SA: Found match for regex: <begin> # {{init of|en|surface area}}. <end>
 Page 100 SA: Found match for regex: <begin> # {{init of|en|simulated annealing}}. <end>
 Page 100 SA: Found match for regex: <begin> # {{init of|en|w:Sustainability analysis|Sustainability Analysis}}. <end>
 Page 100 SA: Found match for regex: <begin> # {{init of|en|w:Scenario analysis|Scenario Analysis}}. <end>
-Page 100 SA: Found match for regex: <begin> # {{place|en|initof=North Sulawesi|province|c/Indonesia}}. <end>
+Page 100 SA: Found match for regex: <begin> # {{place|en|ann=init of:North Sulawesi|province|c/Indonesia}}. <end>
 Page 100 SA: Found match for regex: <begin> # {{lb|en|sports}} {{init of|en|San Antonio}}. <end>
 Page 100 SA: Found match for regex: <begin> # {{init of|en|South Africa}}. <end>
 Page 100 SA: Found match for regex: <begin> # {{init of|en|South America}}. <end>
@@ -631,7 +631,7 @@ Page 113 MS: Found match for regex: <begin> # {{initialism of|en|middle school}}
 Page 113 MS: Found match for regex: <begin> # {{lb|en|philately}} {{initialism of|en|[[mini]]-[[sheet]]}}. <end>
 Page 113 MS: Found match for regex: <begin> # {{lb|en|criminology}} {{initialism of|en|murder-suicide}}. <end>
 Page 113 MS: Found match for regex: <begin> # {{lb|en|broadcasting}} {{initialism of|en|[[medium]] [[shot]]}}. <end>
-Page 113 MS: Found match for regex: <begin> # {{place|en|initof=Mato Grosso do Sul|state|c/Brazil}}. <end>
+Page 113 MS: Found match for regex: <begin> # {{place|en|ann=init of:Mato Grosso do Sul|state|c/Brazil}}. <end>
 Page 113 MS: Found match for regex: <begin> # {{senseid|en|Microsoft}} {{initialism of|en|Microsoft}}: an [[American]] [[multinational]] [[technology]] [[company]] founded in 1975. <end>
 Page 113 MS: Found match for regex: <begin> # {{initialism of|sk|majstrovstvá sveta|t=world championships}} <end>
 Page 114 MT: Found match for regex: <begin> # {{initialism of|en|machine translation}}. <end>
@@ -710,7 +710,7 @@ Page 118 PI: Found match for regex: <begin> # {{lb|en|psychology}} {{init of|en|
 Page 118 PI: Found match for regex: <begin> # {{lb|en|business}} {{init of|en|[[pro forma]] [[invoice]]}}. <end>
 Page 118 PI: Found match for regex: <begin> # {{lb|tl|vulgar}} {{initialism of|tl|putang ina}}: [[FU]] <end>
 Page 119 PR: Found match for regex: <begin> # {{initialism of|en|[[Port Republic]], [[New Jersey]]}}. <end>
-Page 119 PR: Found match for regex: <begin> # {{place|en|initof=Puerto Rico|territory|c/USA}}. <end>
+Page 119 PR: Found match for regex: <begin> # {{place|en|ann=init of:Puerto Rico|territory|c/USA}}. <end>
 Page 119 PR: Found match for regex: <begin> # {{initialism of|en|public relations}}. <end>
 Page 119 PR: Found match for regex: <begin> # {{initialism of|en|proportional representation}}. <end>
 Page 119 PR: Found match for regex: <begin> # {{initialism of|en|[[permanent]] [[residence]]}}. <end>
@@ -800,7 +800,7 @@ Page 126 SE: Found match for regex: <begin> # {{lb|id|law|government}} {{initial
 Page 126 SE: Found match for regex: <begin> # {{lb|id|business}} {{initialism of|id|sertifikat ekspor|t=export certificate}} <end>
 Page 127 SP: Found match for regex: <begin> # {{lb|en|Scientology}} {{initialism of|en|suppressive person}}. <end>
 Page 127 SP: Found match for regex: <begin> # {{lb|en|Hong Kong}} {{initialism of|en|sex partner}}. <end>
-Page 127 SP: Found match for regex: <begin> # {{place|en|initof=São Paulo|state|c/Brazil}}. <end>
+Page 127 SP: Found match for regex: <begin> # {{place|en|ann=init of:São Paulo|state|c/Brazil}}. <end>
 Page 127 SP: Found match for regex: <begin> # {{initialism of|nl|[[socialistisch|Socialistische]] [[partij|Partij]]}}; the [[w:Socialist Party (Netherlands)|Socialist Party]], a [[left-wing]] [[democratic]] [[socialist]] party in the [[Netherlands]] <end>
 Page 127 SP: Found match for regex: <begin> # {{initialism of|fr|[[syntagme]] [[prépositionnel]]||prepositional phrase; [[PP]]}} <end>
 Page 127 SP: Found match for regex: <begin> # {{lb|de|Swiss politics}} {{initialism of|de|w:de:Sozialdemokratische Partei der Schweiz|t={{w|Social Democratic Party of Switzerland}}}} <end>
@@ -1188,8 +1188,8 @@ Page 172 LA: Found match for regex: <begin> # {{lb|en|inorganic compound}} {{ini
 Page 172 LA: Found match for regex: <begin> # {{lb|en|pharmacology}} {{initialism of|en|local anesthetic}}. <end>
 Page 172 LA: Found match for regex: <begin> # {{initialism of|en|lateral area}}. <end>
 Page 172 LA: Found match for regex: <begin> # {{initialism of|en|[[local]] [[authority]]}}. <end>
-Page 172 LA: Found match for regex: <begin> # {{place|en|initof=Los Angeles|city|c/USA}}. <end>
-Page 172 LA: Found match for regex: <begin> # {{place|en|initof=Las Anod|city|c/Somalia}}. <end>
+Page 172 LA: Found match for regex: <begin> # {{place|en|ann=init of:Los Angeles|city|c/USA}}. <end>
+Page 172 LA: Found match for regex: <begin> # {{place|en|ann=init of:Las Anod|city|c/Somalia}}. <end>
 Page 172 LA: Found match for regex: <begin> # {{initialism of|en|Linear A}}. <end>
 Page 173 ME: Found match for regex: <begin> # {{lb|en|linguistics}} {{initialism of|en|Middle English}}. <end>
 Page 173 ME: Found match for regex: <begin> # {{initialism of|en|{{w|Montreal Exchange}}}}, a futures and derivatives exchange (formerly also a [[stock exchange]]) <end>
@@ -2030,7 +2030,7 @@ Page 321 BDA: Found match for regex: <begin> # {{initialism of|en|{{w|lang=en|Br
 Page 321 BDA: Found match for regex: <begin> # {{lb|en|military}} {{initialism of|en|[[bomb]] [[damage]] [[assessment]]}}. <end>
 Page 322 DML: Found match for regex: <begin> # {{lb|en|computing}} {{initialism of|en|{{l|en|dimensional|Dimensional}} {{l|en|markup language|Markup Language}}}}. <end>
 Page 322 DML: Found match for regex: <begin> # {{lb|en|database}} {{initialism of|en|{{l|en|data|Data}} {{l|en|manipulation|Manipulation}} {{l|en|language|Language}}}}. <end>
-Page 322 DML: Found match for regex: <begin> # {{initialism of|en|{{u|doctor}} [[of]] {{u|modern}} [[language|Languages]]|addl=a terminal degree similar to both the [[D.A.]] (Doctor of Arts) and [[Ph.D.]] in Foreign Languages}}. <end>
+Page 322 DML: Found match for regex: <begin> # {{initialism of|en|{{U|doctor}} [[of]] {{U|modern}} [[language|Languages]]|addl=a terminal degree similar to both the [[D.A.]] (Doctor of Arts) and [[Ph.D.]] in Foreign Languages}}. <end>
 Page 323 OTO: Found match for regex: <begin> # {{initialism of|en|{{w|Ordo Templi Orientis}}}}. <end>
 Page 324 PPS: Found match for regex: <begin> # {{lb|en|organic chemistry}} {{init of|en|[[polyphenylene]] [[sulfide]]}}, [[polyphenylenesulphide]]. <end>
 Page 324 PPS: Found match for regex: <begin> # {{lb|en|UK politics}} {{initialism of|en|[[parliamentary]] [[private]] [[secretary]]}}. <end>
@@ -2277,7 +2277,7 @@ Page 368 UPS: Found match for regex: <begin> # {{lb|en|electronics}} {{initialis
 Page 368 UPS: Found match for regex: <begin> # {{initialism of|en|w:ultraviolet photoelectron spectroscopy}}. <end>
 Page 368 UPS: Found match for regex: <begin> # {{lb|en|biochemistry}} {{initialism of|en|[[ubiquitin]]-[[proteasome]] [[system]]}}. <end>
 Page 368 UPS: Found match for regex: <begin> # {{initialism of|en|w:United Parcel Service}}. <end>
-Page 368 UPS: Found match for regex: <begin> # {{lb|en|Philippines|chiefly|Parañaque}} {{place|en|initof=United Parañaque Subdivision|several <<subdivisions>> in <<barangays>> [[San Martin De Porres]], [[San Isidro]], [[BF Homes]], and [[Marcelo Green Village]], in <<city/Parañaque>>, <<r/Metro Manila>>, <<c/Philippines>>}}. <end>
+Page 368 UPS: Found match for regex: <begin> # {{lb|en|Philippines|chiefly|Parañaque}} {{place|en|ann=init of:United Parañaque Subdivision|several <<subdivisions>> in <<barangays>> [[San Martin De Porres]], [[San Isidro]], [[BF Homes]], and [[Marcelo Green Village]], in <<city/Parañaque>>, <<r/Metro Manila>>, <<c/Philippines>>}}. <end>
 Page 369 ASA: Found match for regex: <begin> # {{initialism of|en|{{w|Acoustical Society of America}}}}. <end>
 Page 369 ASA: Found match for regex: <begin> # {{initialism of|en|{{w|American Standards Association}}}}, which has changed its name to American National Standards Institute ([[ANSI]]). <end>
 Page 369 ASA: Found match for regex: <begin> # {{initialism of|en|{{w|American Society of Anesthesiologists}}}}. <end>
@@ -2323,7 +2323,7 @@ Page 378 NTSC: Found match for regex: <begin> # {{lb|en|television}} {{initialis
 Page 378 NTSC: Found match for regex: <begin> # {{lb|en|television|slang|humorous}} {{initialism of|en|never [[twice]] the [[same]] [[color]]|addl=a variant of North American TV standard for analog television, drawing attention to the standard’s shortcomings}}. <end>
 Page 379 PAL: Found match for regex: <begin> # {{lb|en|biochemistry}} {{initialism of|en|phenylalanine ammonia lyase}}. <end>
 Page 379 PAL: Found match for regex: <begin> # {{initialism of|en|[[police|Police]] [[athletic|Athletic]] [[league|League]]}}. <end>
-Page 379 PAL: Found match for regex: <begin> # {{lb|en|historical}} {{init of|en|{{u|paedophile}} {{u|action}} for {{u|liberation}}}}. <end>
+Page 379 PAL: Found match for regex: <begin> # {{lb|en|historical}} {{init of|en|{{U|paedophile}} {{U|action}} for {{U|liberation}}}}. <end>
 Page 380 VHS: Found match for regex: <begin> {{cln|en|genericized trademarks}} An initialism of {{m|en|[[vertical|Vertical]] [[helical scan|Helical Scan]]}}, later reinterpreted as {{m|en|[[video|Video]] [[home|Home]] [[system|System]]}}. {{rfv-etym|en}} <end>
 Page 380 VHS: Found match for regex: <begin> # {{initialism of|de|Volkshochschule}} <end>
 Page 381 PWM: Found match for regex: <begin> # {{lb|en|electronics}} {{initialism of|en|[[pulsewidth]] [[modulation]]}}. <end>
@@ -2890,9 +2890,9 @@ Page 535 PUC: Found match for regex: <begin> # {{init of|es|{{w|Pontificia Unive
 Page 536 ETLA: Found match for regex: <begin> # {{lb|en|humorous}} {{initialism of|en|[[extended]] [[TLA|three-letter acronym]]}}: a four-letter acronym. <end>
 Page 537 SAIC: Found match for regex: <begin> # {{initialism of|en|{{w|Science Applications International Corporation}}}}, a defense contractor, one of the largest employee-owned companies in the USA. <end>
 Page 538 DBMS: Found match for regex: <begin> # {{lb|en|databases|software}} {{initialism of|en|database management system}}. <end>
-Page 539 СССР: Found match for regex: <begin> # {{lb|mk|historical}} {{place|mk|initof=Сојуз на Советските Социјалистички Републики|former country|c/Europe,Asia|t=USSR}} <end>
-Page 539 СССР: Found match for regex: <begin> # {{place|ru|initof=Сою́з Сове́тских Социалисти́ческих Респу́блик|former country|c/Europe,Asia|t=USSR}} <end>
-Page 539 СССР: Found match for regex: <begin> # {{place|sh|initof=Савез Совјетских Социјалистичких Република|former country|c/Europe,Asia|t=USSR}} <end>
+Page 539 СССР: Found match for regex: <begin> # {{lb|mk|historical}} {{place|mk|ann=init of:Сојуз на Советските Социјалистички Републики|former country|c/Europe,Asia|t=USSR}} <end>
+Page 539 СССР: Found match for regex: <begin> # {{place|ru|ann=init of:Сою́з Сове́тских Социалисти́ческих Респу́блик|former country|c/Europe,Asia|t=USSR}} <end>
+Page 539 СССР: Found match for regex: <begin> # {{place|sh|ann=init of:Савез Совјетских Социјалистичких Република|former country|c/Europe,Asia|t=USSR}} <end>
 Page 540 DNB: Found match for regex: <begin> # {{lb|en|cricket}} {{initialism of|en|did not bat}}. <end>
 Page 540 DNB: Found match for regex: <begin> # {{lb|en|sports betting}} {{initialism of|en|draw, no bet}}, which means that if there’s a tie you get your money back <end>
 Page 540 DNB: Found match for regex: <begin> # {{lb|en|India|medical|post-nominal title}} {{initialism of|en|{{w|Diplomate of National Board}}}}. <end>
@@ -3364,7 +3364,7 @@ Page 668 RMB: Found match for regex: <begin> # {{ISO 4217|unoff=1|Renminbi|Chine
 Page 668 RMB: Found match for regex: <begin> # {{lb|en|US|Australia}} {{initialism of|en|[[roadside]] [[mailbox]]}}: part of a postal system used in [[rural]] areas where several houses collect their mail from a [[cluster]] of mailboxes at the roadside. <end>
 Page 668 RMB: Found match for regex: <begin> # {{lb|en|UK}} {{initialism of|en|[[royal|Royal]] [[Marine]] [[base|Base]]}}. <end>
 Page 668 RMB: Found match for regex: <begin> # {{lb|en|computing}} {{initialism of|en|[[right]] [[mouse]] [[button]]}}. <end>
-Page 669 IED: Found match for regex: <begin> # {{lb|en|electronics}} {{initialism of|en|{{u|intelligent}} {{u|electronic}} {{u|device}}|addl=a [[sensor]], [[actuator]], or [[PLC]] used as part of a [[SCADA]] system}}. <end>
+Page 669 IED: Found match for regex: <begin> # {{lb|en|electronics}} {{initialism of|en|{{U|intelligent}} {{U|electronic}} {{U|device}}|addl=a [[sensor]], [[actuator]], or [[PLC]] used as part of a [[SCADA]] system}}. <end>
 Page 669 IED: Found match for regex: <begin> # {{lb|en|languages}} {{initialism of|en|{{l|en|Interlingua}}-{{l|en|English}} {{l|en|dictionary|Dictionary}}|addl=the first dictionary of {{l|en|Interlingua}}}}. <end>
 Page 669 IED: Found match for regex: <begin> # {{lb|en|medicine}} {{initialism of|en|{{l|en|interictal}} {{l|en|epileptiform}} {{l|en|discharge}}|addl=a type of brain waves related to {{l|en|epilepsy}}}}. <end>
 Page 669 IED: Found match for regex: <begin> # {{lb|en|weapons}} {{initialism of|en|improvised explosive device}}. <end>
@@ -3792,7 +3792,7 @@ Page 783 CB: Found match for regex: <begin> # {{lb|en|Singapore|Malaysia}} {{ini
 Page 783 CB: Found match for regex: <begin> # {{init of|en|[[chemical]] and [[biological]]}}. <end>
 Page 783 CB: Found match for regex: <begin> # {{lb|en|Canada}} {{init of|en|[[Cape Breton]]}}. <end>
 Page 784 CDT: Found match for regex: <begin> # {{initialism of|en|w:Central Daylight Time}}. <end>
-Page 784 CDT: Found match for regex: <begin> # {{lb|en|computing}} {{init of|en|[[C]]/[[C++]] {{u|development}} {{u|toolkit}}}} {{q|a component of Eclipse}} <end>
+Page 784 CDT: Found match for regex: <begin> # {{lb|en|computing}} {{init of|en|[[C]]/[[C++]] {{U|development}} {{U|toolkit}}}} {{q|a component of Eclipse}} <end>
 Page 784 CDT: Found match for regex: <begin> # {{init of|en|w:casual decision theory}}. <end>
 Page 784 CDT: Found match for regex: <begin> # {{lb|en|medicine}} {{initialism of|en|clock draw task}}. <end>
 Page 784 CDT: Found match for regex: <begin> # {{lb|en|UK|education|historical}} {{init of|en|[[craft]], [[design]]{{,}} and [[technology]]}}. <end>
@@ -4008,7 +4008,7 @@ Page 840 ICE: Found match for regex: <begin> # {{lb|en|rail transport}} {{init o
 Page 840 ICE: Found match for regex: <begin> # {{lb|en|programming}} {{init of|en|[[internal]] [[compiler]] [[error]]}}. <end>
 Page 840 ICE: Found match for regex: <begin> # {{lb|en|computing}} {{init of|en|[[in-circuit]] [[emulator]]/[[emulation]]}}. <end>
 Page 840 ICE: Found match for regex: <begin> # {{lb|en|automotive}} {{init of|en|w:in-car entertainment}}. <end>
-Page 840 ICE: Found match for regex: <begin> # {{init of|en|{{u|international}} {{u|cultural}} {{u|exchange}}}}. <end>
+Page 840 ICE: Found match for regex: <begin> # {{init of|en|{{U|international}} {{U|cultural}} {{U|exchange}}}}. <end>
 Page 840 ICE: Found match for regex: <begin> # {{lb|en|medical}} {{init of|en|[[ice]], [[compress]], [[elevation]]|qq=first-aid}}. <end>
 Page 840 ICE: Found match for regex: <begin> # {{init of|en|[[intercontinental]] [[exchange]]}}. <end>
 Page 840 ICE: Found match for regex: <begin> # {{senseid|en|Q1420436}} {{initialism of|en|[[in case of]] [[emergency]]|addl=used in mobile phones followed by the number to call if the phone’s owner is injured}}. <end>
@@ -4019,7 +4019,7 @@ Page 841 DID: Found match for regex: <begin> # {{lb|en|filmmaking|special effect
 Page 842 POA: Found match for regex: <begin> # {{lb|en|legal}} {{initialism of|en|power of attorney}}. <end>
 Page 842 POA: Found match for regex: <begin> # {{lb|en|linguistics}} {{initialism of|en|place of articulation}}. <end>
 Page 842 POA: Found match for regex: <begin> # {{lb|en|commerce}} {{initialism of|en|[[price]] on [[application]]}}. <end>
-Page 842 POA: Found match for regex: <begin> # {{init of|en|[[prison officer|Prison Officers]] {{u|association}}}}. <end>
+Page 842 POA: Found match for regex: <begin> # {{init of|en|[[prison officer|Prison Officers]] {{U|association}}}}. <end>
 Page 843 MOW: Found match for regex: <begin> # {{initialism of|en|meals on wheels}}. <end>
 Page 844 FD: Found match for regex: <begin> # {{initialism of|en|fire department}}. <end>
 Page 844 FD: Found match for regex: <begin> # {{lb|en|computing}} {{initialism of|en|floppy disk}}. <end>
@@ -4692,8 +4692,8 @@ Page 1004 NPA: Found match for regex: <begin> # {{initialism of|tl|w:New People'
 Page 1005 IAWTC: Found match for regex: <begin> # {{lb|en|Internet slang}} {{initialism of|en|I [[agree]] with this [[comment]]}}. <end>
 Page 1006 HSN: Found match for regex: <begin> # {{init of|en|[[hereditary]] [[sensory]] [[neuropathy]]}}. <end>
 Page 1006 HSN: Found match for regex: <begin> # {{initialism of|en|{{w|Home Shopping Network}}}}, an American television channel. <end>
-Page 1007 США: Found match for regex: <begin> # {{place|ru|initof=Соединённые Шта́ты Аме́рики|country|cont/North America|t1=USA}} <end>
-Page 1007 США: Found match for regex: <begin> # {{place|uk|initof=Сполу́чені Шта́ти Аме́рики|country|cont/North America|t1=USA}} <end>
+Page 1007 США: Found match for regex: <begin> # {{place|ru|ann=init of:Соединённые Шта́ты Аме́рики|country|cont/North America|t1=USA}} <end>
+Page 1007 США: Found match for regex: <begin> # {{place|uk|ann=init of:Сполу́чені Шта́ти Аме́рики|country|cont/North America|t1=USA}} <end>
 Page 1008 PROM: Found match for regex: <begin> # {{lb|en|medicine}} {{initialism of|en|{{w|prelabor rupture of membranes}}}}. <end>
 Page 1008 PROM: Found match for regex: <begin> # {{init of|en|[[passive]] [[range]] of [[motion]]}}. <end>
 Page 1009 BCD: Found match for regex: <begin> # {{lb|en|astronomy}} {{initialism of|en|[[blue]] [[compact]] [[dwarf]]}}. <end>
@@ -5025,7 +5025,7 @@ Page 1104 TPM: Found match for regex: <begin> # {{initialism of|en|total [[preve
 Page 1104 TPM: Found match for regex: <begin> # {{initialism of|en|[[tentative]] [[parole]] [[month]]}}. <end>
 Page 1104 TPM: Found match for regex: <begin> # {{lb|en|computing}} {{initialism of|en|{{w|Trusted Platform Module}}}}. <end>
 Page 1104 TPM: Found match for regex: <begin> # [[PMT]] {{gloss|premenstrual tension}}; {{initialism of|pt|tensão premenstrual}} <end>
-Page 1104 TPM: Found match for regex: <begin> # {{place|vo|initof=Tats-Pebalöl Meropa<t:United States of America>|country|cont/North America|t=USA}} <end>
+Page 1104 TPM: Found match for regex: <begin> # {{place|vo|ann=init of:Tats-Pebalöl Meropa<t:United States of America>|country|cont/North America|t=USA}} <end>
 Page 1105 DDS: Found match for regex: <begin> # {{lb|en|medicine}} {{initialism of|en|[[doctor|Doctor]] of [[dental|Dental]] [[surgery|Surgery]]}}, a [[terminal]] higher [[education]] [[degree]]. <end>
 Page 1105 DDS: Found match for regex: <begin> # {{lb|en|electronics}} {{initialism of|en|[[direct]] [[digital]] [[synthesis]]}}. <end>
 Page 1105 DDS: Found match for regex: <begin> # {{lb|en|computing}} {{initialism of|en|[[data]] [[distribution]] [[service]]}}. <end>
@@ -5782,7 +5782,7 @@ Page 1321 SAM: Found match for regex: <begin> # {{lb|en|programming}} {{initiali
 Page 1321 SAM: Found match for regex: <begin> # {{lb|en|psychology}} {{initialism of|en|[[split attraction model]]}}. <end>
 Page 1321 SAM: Found match for regex: <begin> # {{init of|en|shared appreciation mortgage}}. <end>
 Page 1321 SAM: Found match for regex: <begin> # {{lb|en|BDSM}} {{init of|en|[[smartass]] [[masochist]]}}; a [[brat]]. <end>
-Page 1321 SAM: Found match for regex: <begin> # {{place|ga|initof=Stáit Aontaithe Mheiriceá<t:United States of America>|country|cont/North America|t=USA}} <end>
+Page 1321 SAM: Found match for regex: <begin> # {{place|ga|ann=init of:Stáit Aontaithe Mheiriceá<t:United States of America>|country|cont/North America|t=USA}} <end>
 Page 1322 AST: Found match for regex: <begin> # {{initialism of|en|{{l|en|Alaskan}} {{l|en|standard time|Standard Time}}}}. <end>
 Page 1322 AST: Found match for regex: <begin> # {{initialism of|en|{{l|en|Atlantic}} {{l|en|standard time|Standard Time}}}}. <end>
 Page 1322 AST: Found match for regex: <begin> # {{lb|en|aviation}} {{initialism of|en|{{l|en|advanced}} {{l|en|supersonic}} {{l|en|transport}}}}. <end>
@@ -5794,7 +5794,7 @@ Page 1322 AST: Found match for regex: <begin> # {{lb|en|math}} {{init of|en|alte
 Page 1323 ASV: Found match for regex: <begin> # {{initialism of|en|{{w|American Standard Version}}}} (of the [[Bible]]) <end>
 Page 1323 ASV: Found match for regex: <begin> # {{initialism of|en|autonomous surface vessel}}. <end>
 Page 1323 ASV: Found match for regex: <begin> # {{initialism of|en|autonomous surface vehicle}}. <end>
-Page 1323 ASV: Found match for regex: <begin> # {{place|lv|initof=Amerikas Savienotās Valstis<t:United States of America>|country|cont/North America|t=USA}} <end>
+Page 1323 ASV: Found match for regex: <begin> # {{place|lv|ann=init of:Amerikas Savienotās Valstis<t:United States of America>|country|cont/North America|t=USA}} <end>
 Page 1324 XPDL: Found match for regex: <begin> # {{lb|en|computing}} {{initialism of|en|[[XML]] [[process|Process]] [[definition|Definition]] [[language|Language]]}}. <end>
 Page 1325 AFT: Found match for regex: <begin> # {{initialism of|en|{{w|American Federation of Teachers}}}}. <end>
 Page 1326 NCAUR: Found match for regex: <begin> # {{lb|en|US}} {{initialism of|en|[[national|National]] [[center|Center]] for [[agricultural|Agricultural]] [[utilization|Utilization]] [[research|Research]]}}. <end>
@@ -6426,9 +6426,9 @@ Page 1507 vb: Found match for regex: <begin> # {{init of|sv||vid behov|[[on dema
 Page 1508 RTHK: Found match for regex: <begin> # {{lb|en|Hong Kong|broadcasting}} {{initialism of|en|{{w|Radio Television Hong Kong}}}}: the government broadcaster of Hong Kong. <end>
 Page 1509 TVB: Found match for regex: <begin> # {{initialism of|en|{{w|Television Broadcasts}}}}: a TV station in the Hong Kong Special Administrative Region, China. <end>
 Page 1509 TVB: Found match for regex: <begin> # {{init of|en|trivinylbenzene}}. <end>
-Page 1510 AFP: Found match for regex: <begin> # {{lb|en|Australia|law enforcement}} {{init of|en|[[Australian]] {{u|federal}} {{u|police}}}} {{defdate|Established 1979}} <end>
-Page 1510 AFP: Found match for regex: <begin> # {{lb|en|journalism}} {{C|en|France}} {{init of|en|{{u|agence}} [[France]]-{{u|presse}}}}. <end>
-Page 1510 AFP: Found match for regex: <begin> # {{lb|en|US}} {{init of|en|{{u|association}} of {{u|fundraising}} {{u|professional}}}}. <end>
+Page 1510 AFP: Found match for regex: <begin> # {{lb|en|Australia|law enforcement}} {{init of|en|[[Australian]] {{U|federal}} {{U|police}}}} {{defdate|Established 1979}} <end>
+Page 1510 AFP: Found match for regex: <begin> # {{lb|en|journalism}} {{C|en|France}} {{init of|en|{{U|agence}} [[France]]-{{U|presse}}}}. <end>
+Page 1510 AFP: Found match for regex: <begin> # {{lb|en|US}} {{init of|en|{{U|association}} of {{U|fundraising}} {{U|professional}}}}. <end>
 Page 1510 AFP: Found match for regex: <begin> # {{lb|en|Philippines|military}} {{init of|en|{{w|Armed Forces of the Philippines}}}}. <end>
 Page 1510 AFP: Found match for regex: <begin> # {{lb|en|biochemistry}} {{init of|en|[[alpha-fetoprotein]]}}. <end>
 Page 1510 AFP: Found match for regex: <begin> # {{lb|fr|journalism|in France}} {{initialism of|fr|[[agence|Agence]] [[France]]-[[presse|Presse]]}} <end>
@@ -7126,8 +7126,8 @@ Page 1737 TLPA: Found match for regex: <begin> # {{initialism of|en|[[Taiwanese]
 Page 1738 AMGN: Found match for regex: <begin> # {{lb|en|stock symbol}} {{initialism of|en|{{w|Amgen}}}}. <end>
 Page 1739 ERD: Found match for regex: <begin> # {{lb|en|databases}} {{initialism of|en|entity-relationship diagram}}. <end>
 Page 1739 ERD: Found match for regex: <begin> # {{lb|en|cycling}} {{initialism of|en|[[effective]] [[rim]] [[diameter]]}}. <end>
-Page 1740 VSA: Found match for regex: <begin> # {{place|af|initof=Verenigde State van Amerika<t:United States of America>|country|cont/North America|t=USA}} <end>
-Page 1740 VSA: Found match for regex: <begin> # {{lb|nl|chiefly|Belgium}} {{place|nl|initof=Verenigde Staten van Amerika<t:United States of America>|country|cont/North America|t=USA}} <end>
+Page 1740 VSA: Found match for regex: <begin> # {{place|af|ann=init of:Verenigde State van Amerika<t:United States of America>|country|cont/North America|t=USA}} <end>
+Page 1740 VSA: Found match for regex: <begin> # {{lb|nl|chiefly|Belgium}} {{place|nl|ann=init of:Verenigde Staten van Amerika<t:United States of America>|country|cont/North America|t=USA}} <end>
 Page 1740 VSA: Found match for regex: <begin> # {{initialism of|fr|vidéosurveillance algorithmique}} <end>
 Page 1741 LTR: Found match for regex: <begin> # {{initialism of|en|[[long-term]] [[relationship]]}}. <end>
 Page 1741 LTR: Found match for regex: <begin> # {{init of|en|{{w|long terminal repeat}}}}. <end>
@@ -7293,7 +7293,7 @@ Page 1793 ILS: Found match for regex: <begin> # {{initialism of|en|[[integrated]
 Page 1794 NLS: Found match for regex: <begin> # {{lb|en|computing}} {{initialism of|en|[[national|National]] [[language|Language]] [[support|Support]]}}. <end>
 Page 1795 VS: Found match for regex: <begin> # {{initialism of|en|[[very]] [[special]], or, [[very]] [[superior]]}}: a grade of premium [[cognac]] that has been aged in barrels for 2.5-4.5 years. <end>
 Page 1795 VS: Found match for regex: <begin> # {{lb|en|computing}} {{initialism of|en|{{w|Microsoft Visual Studio|Visual Studio}}}}: an integrated development environment. <end>
-Page 1795 VS: Found match for regex: <begin> # {{place|nl|initof=Verenigde Staten<t:United States>|country|cont/North America|t=US}} <end>
+Page 1795 VS: Found match for regex: <begin> # {{place|nl|ann=init of:Verenigde Staten<t:United States>|country|cont/North America|t=US}} <end>
 Page 1796 NBDL: Found match for regex: <begin> # {{lb|en|basketball|historical}} {{initialism of|en|{{w|NBA Development League|National Basketball Association Development League}}}}, former name of an organization within the National Basketball Association. <end>
 Page 1797 FoE: Found match for regex: <begin> # {{initialism of|en|{{w|Friends of the Earth}}}}. <end>
 Page 1798 FOE: Found match for regex: <begin> # {{initialism of|en|{{w|Friends of the Earth}}}}. <end>
@@ -7604,8 +7604,8 @@ Page 1907 EAF: Found match for regex: <begin> # {{initialism of|en|East African 
 Page 1907 EAF: Found match for regex: <begin> # {{lb|en|philately|as an [[overprint]] on British [[stamp]]s}} {{initialism of|en|East African [[force|Forces]]}}. <end>
 Page 1907 EAF: Found match for regex: <begin> # {{lb|en|religion}} {{initialism of|en|Eid al-Fitr}}. <end>
 Page 1907 EAF: Found match for regex: <begin> # {{init of|en|electric arc furnace}}. <end>
-Page 1908 MEF: Found match for regex: <begin> # {{lb|en|.NET|software}} {{initialism of|en|{{u|managed}} {{u|extensibility|Extensibility}} {{u|framework}}|addl=a component of the .NET Framework 4.0 aiming to create lightweight, extensible applications}}. <end>
-Page 1908 MEF: Found match for regex: <begin> # {{lb|en|military}} {{initialism of|en|{{u|marine}} {{u|expeditionary}} {{u|force}}|addl=one of the major subdivisions of the {{w|United States Marine Corps}}}}. <end>
+Page 1908 MEF: Found match for regex: <begin> # {{lb|en|.NET|software}} {{initialism of|en|{{U|managed}} {{U|extensibility|Extensibility}} {{U|framework}}|addl=a component of the .NET Framework 4.0 aiming to create lightweight, extensible applications}}. <end>
+Page 1908 MEF: Found match for regex: <begin> # {{lb|en|military}} {{initialism of|en|{{U|marine}} {{U|expeditionary}} {{U|force}}|addl=one of the major subdivisions of the {{w|United States Marine Corps}}}}. <end>
 Page 1908 MEF: Found match for regex: <begin> # {{lb|en|philately|''[[overprint]] on British [[stamp]]s''}} {{initialism of|en|{{l|en|Middle East}} {{l|en|force|Forces}}}}. <end>
 Page 1908 MEF: Found match for regex: <begin> # {{lb|en|Internet slang|sexology}} {{initialism of|en|[[masochistic|Masochistic]] [[emasculation|Emasculation]] [[fetish|Fetish]]}}. <end>
 Page 1909 B. I. O. T.: Found match for regex: <begin> # {{initialism of|en|[[British Indian Ocean Territory]]}}, sometimes used as an [[overprint]] on [[stamp]]s. <end>
@@ -7675,7 +7675,7 @@ Page 1933 RL: Found match for regex: <begin> # {{lb|en|machine learning}} {{init
 Page 1933 RL: Found match for regex: <begin> # {{lb|id|accounting}} {{initialism of|id|[[risalah]] [[lelang]]|t=auction report}} <end>
 Page 1934 CPUSA: Found match for regex: <begin> # {{initialism of|en|[[Communist]] [[party|Party]] of the [[United States of America]]}}. <end>
 Page 1935 YCL: Found match for regex: <begin> # {{initialism of|en|{{w|Young Communist League}}}}, the youth section of the Communist Party of the USA. <end>
-Page 1936 MK: Found match for regex: <begin> # {{place|en|initof=Milton Keynes|borough|in|co/Buckinghamshire|cc/England}}; also the first part of the [[postcode]] for the area. <end>
+Page 1936 MK: Found match for regex: <begin> # {{place|en|ann=init of:Milton Keynes|borough|in|co/Buckinghamshire|cc/England}}; also the first part of the [[postcode]] for the area. <end>
 Page 1936 MK: Found match for regex: <begin> # {{init of|en|Mong Kok}}. <end>
 Page 1936 MK: Found match for regex: <begin> # {{lb|en|countable|video games}} {{init of|en|{{w|lang=en|Mortal Kombat}}}}. <end>
 Page 1936 MK: Found match for regex: <begin> # {{lb|en|countable|video games}} {{init of|en|{{w|lang=en|Mario Kart}}}}. <end>
@@ -8173,8 +8173,8 @@ Page 2117 QPC: Found match for regex: <begin> # {{initialism of|en|[[quarter-pou
 Page 2118 OLPC: Found match for regex: <begin> # {{initialism of|en|[[one|One]] [[laptop]] [[per]] [[child]]}}, a charity <end>
 Page 2118 OLPC: Found match for regex: <begin> # {{init of|en||Outer Loop Power Control|Outer Loop Power Control}}. <end>
 Page 2119 CDN: Found match for regex: <begin> # {{lb|en|Internet}} {{initialism of|en|{{w|content delivery network|content delivery/distribution network}}}}. <end>
-Page 2119 CDN: Found match for regex: <begin> # {{place|en|initof={{w|Côte-des-Neiges}}|district|borough/{{w|Côte-des-Neiges–Notre-Dame-de-Grâce}}|city/Montréal|p/Québec|c/Canada}}. <end>
-Page 2119 CDN: Found match for regex: <begin> # {{place|fr|initof={{w|Côte-des-Neiges|lang=fr}}|district|borough/{{w|Côte-des-Neiges–Notre-Dame-de-Grâce|lang=fr}}|city/Montréal|p/Québec|c/Canada|t=CDN}}. <end>
+Page 2119 CDN: Found match for regex: <begin> # {{place|en|ann=init of:{{w|Côte-des-Neiges}}|district|borough/{{w|Côte-des-Neiges–Notre-Dame-de-Grâce}}|city/Montréal|p/Québec|c/Canada}}. <end>
+Page 2119 CDN: Found match for regex: <begin> # {{place|fr|ann=init of:{{w|Côte-des-Neiges|lang=fr}}|district|borough/{{w|Côte-des-Neiges–Notre-Dame-de-Grâce|lang=fr}}|city/Montréal|p/Québec|c/Canada|t=CDN}}. <end>
 Page 2120 STC: Found match for regex: <begin> # {{initialism of|en|[[subject]] to [[check]]}}. <end>
 Page 2120 STC: Found match for regex: <begin> # {{initialism of|en|[[said]] to [[contain]]}}. <end>
 Page 2121 BSD: Found match for regex: <begin> # {{lb|en|slang}} {{init of|en|[[big]] [[swinging dick]]}}. <end>
@@ -8671,7 +8671,7 @@ Page 2325 ONU: Found match for regex: <begin> # {{initialism of|ro|Organizația 
 Page 2326 UUP: Found match for regex: <begin> # {{lb|en|Northern Ireland|politics}} {{initialism of|en|w:Ulster Unionist Party}}. <end>
 Page 2327 N.V.: Found match for regex: <begin> # {{initialism of|nl|naamloze vennootschap}} <end>
 Page 2328 FICE: Found match for regex: <begin> # {{initialism of|en|[[field]] [[inversion]] [[capillary]] [[electrophoresis]]}}. <end>
-Page 2329 PRD: Found match for regex: <begin> # {{place|en|initof=Pearl River Delta|region|p/Guangdong|c/China|on the|sea/South China Sea}}; {{ng|An area in Southeast China, containing {{l|en|Hong Kong}}, {{l|en|Macau}}, {{l|en|Zhuhai}}, {{l|en|Shenzhen}}, {{l|en|Guangzhou||Canton City}}.}} <end>
+Page 2329 PRD: Found match for regex: <begin> # {{place|en|ann=init of:Pearl River Delta|region|p/Guangdong|c/China|on the|sea/South China Sea}}; {{ng|An area in Southeast China, containing {{l|en|Hong Kong}}, {{l|en|Macau}}, {{l|en|Zhuhai}}, {{l|en|Shenzhen}}, {{l|en|Guangzhou||Canton City}}.}} <end>
 Page 2329 PRD: Found match for regex: <begin> # {{initialism of|es|[[w:es:Partido de la Revolución Democrática]]|t={{w|Party of the Democratic Revolution}}}} <end>
 Page 2330 AN: Found match for regex: <begin> # {{initialism of|de|Arbeitnehmer}} <end>
 Page 2330 AN: Found match for regex: <begin> # {{initialism of|de|Auftragnehmer}} <end>
@@ -8773,7 +8773,7 @@ Page 2363 LCA: Found match for regex: <begin> # {{lb|en|pathology|uncountable}} 
 Page 2363 LCA: Found match for regex: <begin> # {{lb|en|pathology}} {{initialism of|en|w:Leucocyte common antigen}}. <end>
 Page 2364 JK: Found match for regex: <begin> # {{lb|en|Canada}} {{initialism of|en|[[junior]] [[kindergarten]]}}. <end>
 Page 2364 JK: Found match for regex: <begin> # {{lb|en|internet slang|texting}} {{initialism of|en|just kidding}}. <end>
-Page 2364 JK: Found match for regex: <begin> # {{place|lt|initof=Jungtinė Karalystė<t:United Kingdom>|country|cont/Europe|t=UK}} <end>
+Page 2364 JK: Found match for regex: <begin> # {{place|lt|ann=init of:Jungtinė Karalystė<t:United Kingdom>|country|cont/Europe|t=UK}} <end>
 Page 2364 JK: Found match for regex: <begin> # {{lb|pt|Brazil}} {{init of|pt|w:Juscelino Kubitschek}}, president of Brazil from 1956 to 1961. <end>
 Page 2365 VW: Found match for regex: <begin> # {{initialism of|en|Volkswagen}}, a [[German]] [[car]] [[manufacturer]]. <end>
 Page 2365 VW: Found match for regex: <begin> # {{lb|de|healthcare}} {{initialism of|de|Verbandswechsel}} <end>
@@ -8785,7 +8785,7 @@ Page 2367 T.A.: Found match for regex: <begin> # {{initialism of|en|teaching ass
 Page 2368 bnw.: Found match for regex: <begin> # {{initialism of|nl|bijvoeglijk naamwoord}} <end>
 Page 2369 RNIB: Found match for regex: <begin> # {{lb|en|UK}} {{initialism of|en|{{w|Royal National Institute of Blind People}}}}. <end>
 Page 2370 ABD: Found match for regex: <begin> # {{lb|en|academics}} {{init of|en|all but dissertation}}. <end>
-Page 2370 ABD: Found match for regex: <begin> # {{place|tr|initof=Amerika Birleşik Devletleri<t:United States of America>|country|cont/North America|t=USA}} <end>
+Page 2370 ABD: Found match for regex: <begin> # {{place|tr|ann=init of:Amerika Birleşik Devletleri<t:United States of America>|country|cont/North America|t=USA}} <end>
 Page 2371 ULDB: Found match for regex: <begin> # {{lb|en|nautical}} {{initialism of|en|ultra light displacement boat}} Ultra lightweight racing sailboat that is especially fast when running downwind under [[spinnaker]], developed and popularized in California, home of major downwind races. <end>
 Page 2372 LFB: Found match for regex: <begin> # {{initialism of|en|[[London]] [[fire brigade]]}}. <end>
 Page 2372 LFB: Found match for regex: <begin> # {{init of|vo|[[Lafab Fonetik Bevünetik]]||[[International Phonetic Alphabet]]}} <end>
@@ -8828,7 +8828,7 @@ Page 2400 PRRA: Found match for regex: <begin> # {{lb|en|US}} {{initialism of|en
 Page 2401 USHA: Found match for regex: <begin> # {{lb|en|US}} {{initialism of|en|[[United States]] [[housing|Housing]] [[authority|Authority]]}}. <end>
 Page 2402 WBA: Found match for regex: <begin> # {{init of|en|{{w|World Boxing Association}}}}. <end>
 Page 2402 WBA: Found match for regex: <begin> # {{init of|en|[[w:West Bromwich Albion|West Bromwich Albion]]}}, an English football team from [[West Bromwich]] <end>
-Page 2402 WBA: Found match for regex: <begin> # {{place|nv|initof=Wááshindoon bikéyah ałhidadiidzooígíí<lit:United Country of Washington>|country|cont/North America|t=USA}} <end>
+Page 2402 WBA: Found match for regex: <begin> # {{place|nv|ann=init of:Wááshindoon bikéyah ałhidadiidzooígíí<lit:United Country of Washington>|country|cont/North America|t=USA}} <end>
 Page 2403 WBO: Found match for regex: <begin> # {{initialism of|en|{{w|World Boxing Organization}}}}. <end>
 Page 2404 IBF: Found match for regex: <begin> # {{initialism of|en|{{w|International Boxing Federation}}}}. <end>
 Page 2405 NRFB: Found match for regex: <begin> # {{initialism of|en|[[never]] [[removed]] [[from]] [[box]]}}. <end>
@@ -9281,7 +9281,7 @@ Page 2554 ST: Found match for regex: <begin> # {{lb|en|linguistics|Egyptology}} 
 Page 2554 ST: Found match for regex: <begin> # {{lb|fr|film}} {{init of|fr|[[sous-titrée]]||[[subtitled]]; a non-French film with French subtitles}} <end>
 Page 2555 TH: Found match for regex: <begin> # {{init of|en|time-hopping}}. <end>
 Page 2555 TH: Found match for regex: <begin> # {{initialism of|en|Tim Hortons}}. <end>
-Page 2556 TJ: Found match for regex: <begin> # {{place|es|initof=Tijuana|city|s/Baja California|c/Mexico}} <end>
+Page 2556 TJ: Found match for regex: <begin> # {{place|es|ann=init of:Tijuana|city|s/Baja California|c/Mexico}} <end>
 Page 2557 UA: Found match for regex: <begin> # {{init of|en|underage}}. <end>
 Page 2557 UA: Found match for regex: <begin> # {{lbl|en|Philippines}} {{initialism of|en|w:University of Abra}}. <end>
 Page 2557 UA: Found match for regex: <begin> # {{lb|en|military}} {{initialism of|en|[[unauthorized]] [[absence]]}}. <end>
@@ -9542,7 +9542,7 @@ Page 2660 PJ: Found match for regex: <begin> # {{lb|es|politics|Argentina}} {{in
 Page 2661 mcd: Found match for regex: <begin> # {{lb|es|mathematics}} {{initialism of|es|máximo común divisor}} <end>
 Page 2662 YN: Found match for regex: <begin> # {{lb|en|AAVE|Internet slang}} {{initialism of|en|[[young]] [[nigga]]}}. <end>
 Page 2663 EK: Found match for regex: <begin> # {{lb|en|medicine}} {{init of|en|endothelial keratoplasty}}. <end>
-Page 2663 EK: Found match for regex: <begin> # {{lb|en|Philippines|colloquial}} {{place|en|initof=w:Enchanted Kingdom|amusement park|mun/Santa Rosa|p/Laguna|c/Philippines}}. <end>
+Page 2663 EK: Found match for regex: <begin> # {{lb|en|Philippines|colloquial}} {{place|en|ann=init of:w:Enchanted Kingdom|amusement park|mun/Santa Rosa|p/Laguna|c/Philippines}}. <end>
 Page 2663 EK: Found match for regex: <begin> # {{lb|fi|motor racing}} {{initialism of|fi|erikoiskoe}} <end>
 Page 2664 TK: Found match for regex: <begin> # {{initialism of|en|transitional kindergarten}}. <end>
 Page 2664 TK: Found match for regex: <begin> # {{lb|id|education}} {{initialism of|id|taman kanak-kanak|t=kindergarten}} <end>
@@ -9644,7 +9644,7 @@ Page 2708 MIS: Found match for regex: <begin> # {{init of|en|Müllerian inhibiti
 Page 2709 FOL: Found match for regex: <begin> # {{lb|en|logic}} {{initialism of|en|first-order logic}}. <end>
 Page 2710 CTFO: Found match for regex: <begin> # {{lb|en|Internet}} {{initialism of|en|[[chill out|chill the fuck out]]}}. <end>
 Page 2711 BNI: Found match for regex: <begin> # {{initialism of|en|[[batteries]] [[not]] [[included]]}}. <end>
-Page 2712 MTP: Found match for regex: <begin> # {{lb|en|internet|historical}} {{init of|en|{{u|mail}} {{u|transfer}} {{u|protocol}}}}, superseded by [[SMTP]]. <end>
+Page 2712 MTP: Found match for regex: <begin> # {{lb|en|internet|historical}} {{init of|en|{{U|mail}} {{U|transfer}} {{U|protocol}}}}, superseded by [[SMTP]]. <end>
 Page 2712 MTP: Found match for regex: <begin> # {{lb|en|computing}} {{init of|en|w:Media Transfer Protocol}}, a generalization of [[PTP]] (Picture Transfer Protocol). <end>
 Page 2712 MTP: Found match for regex: <begin> # {{lb|en|networking}} {{initialism of|en|w:Multipurpose Transaction Protocol}}, a proprietary transport protocol. <end>
 Page 2712 MTP: Found match for regex: <begin> # {{lb|en|anatomy}} {{init of|en|[[medial]] [[tibial]] [[plateau]]}}. <end>
@@ -9713,7 +9713,7 @@ Page 2733 AFV: Found match for regex: <begin> # {{lb|en|military}} {{initialism 
 Page 2733 AFV: Found match for regex: <begin> # {{initialism of|en|[[alternative]] [[fuel]] [[vehicle]]}}. <end>
 Page 2734 FSW: Found match for regex: <begin> # {{lb|en|sociology}} {{initialism of|en|[[female]] [[sex worker]]}}. <end>
 Page 2734 FSW: Found match for regex: <begin> # {{lb|en|aeronautics}} {{initialism of|en|forward swept wing}}. <end>
-Page 2735 ΗΠΑ: Found match for regex: <begin> # {{place|el|initof=Ηνωμένες Πολιτείες Αμερικής<t:United States of America>|country|cont/North America|t=USA}} <end>
+Page 2735 ΗΠΑ: Found match for regex: <begin> # {{place|el|ann=init of:Ηνωμένες Πολιτείες Αμερικής<t:United States of America>|country|cont/North America|t=USA}} <end>
 Page 2736 VRSA: Found match for regex: <begin> # {{lb|en|medicine|microbiology}} {{initialism of|en|[[vancomycin]]-[[resistant]] {{taxfmt|Staphylococcus aureus|species}}}}. <end>
 Page 2737 nvCJD: Found match for regex: <begin> # {{lb|en|medicine|obsolete}} {{initialism of|en|[[new]] [[variant]] [[CJD]]}}, a form of [[Creutzfeldt-Jakob disease]] <end>
 Page 2738 LBSCR: Found match for regex: <begin> # {{lb|en|rail transport|British}} {{initialism of|en|[[London]], [[Brighton]] and [[south|South]] [[coast|Coast]] [[railway|Railway]]}}. <end>
@@ -10047,13 +10047,13 @@ Page 2896 HA: Found match for regex: <begin> # {{lb|en|military|countable}} {{in
 Page 2897 RAIB: Found match for regex: <begin> # {{lb|en|British|rail transport}} {{initialism of|en|[[rail|Rail]] [[accident|Accident]] [[investigation|Investigation]] [[branch|Branch]]}}. <end>
 Page 2898 EUA: Found match for regex: <begin> # {{lb|en|pharmacology}} {{init of|en|w:emergency use authorization}}. <end>
 Page 2898 EUA: Found match for regex: <begin> # {{init of|en|w:EU Allowance}}. <end>
-Page 2898 EUA: Found match for regex: <begin> # {{place|ca|initof=Estats Units d'Amèrica<t:United States of America>|country|cont/North America|t=USA}} <end>
-Page 2898 EUA: Found match for regex: <begin> # {{place|ca|initof=Emirats Àrabs Units<t:United Arab Emirates>|country|r/Western Asia|in the|r/Middle East|t1=UAE|t2=United Arab Emirates}} <end>
+Page 2898 EUA: Found match for regex: <begin> # {{place|ca|ann=init of:Estats Units d'Amèrica<t:United States of America>|country|cont/North America|t=USA}} <end>
+Page 2898 EUA: Found match for regex: <begin> # {{place|ca|ann=init of:Emirats Àrabs Units<t:United Arab Emirates>|country|r/Western Asia|in the|r/Middle East|t1=UAE|t2=United Arab Emirates}} <end>
 Page 2898 EUA: Found match for regex: <begin> # {{initialism of|kw|Emireythow Unys Arabek||United Arab Emirates}} <end>
-Page 2898 EUA: Found match for regex: <begin> # {{place|gl|initof=Estados Unidos da América<t:United States of America>|country|cont/North America|t=USA}} <end>
-Page 2898 EUA: Found match for regex: <begin> # {{place|oc|initof=Estats Units d'America<t:United States of America>|country|cont/North America|t=USA}} <end>
-Page 2898 EUA: Found match for regex: <begin> # {{place|pt|initof=Estados Unidos da América<t:United States of America>|country|cont/North America|t=USA}} <end>
-Page 2898 EUA: Found match for regex: <begin> # {{place|es|initof=Estados Unidos de América<t:United States of America>|country|cont/North America|t=USA}} <end>
+Page 2898 EUA: Found match for regex: <begin> # {{place|gl|ann=init of:Estados Unidos da América<t:United States of America>|country|cont/North America|t=USA}} <end>
+Page 2898 EUA: Found match for regex: <begin> # {{place|oc|ann=init of:Estats Units d'America<t:United States of America>|country|cont/North America|t=USA}} <end>
+Page 2898 EUA: Found match for regex: <begin> # {{place|pt|ann=init of:Estados Unidos da América<t:United States of America>|country|cont/North America|t=USA}} <end>
+Page 2898 EUA: Found match for regex: <begin> # {{place|es|ann=init of:Estados Unidos de América<t:United States of America>|country|cont/North America|t=USA}} <end>
 Page 2899 tyvm: Found match for regex: <begin> # {{lb|en|Internet slang}} {{initialism of|en|thank you very much}}. <end>
 Page 2900 LLU: Found match for regex: <begin> # {{initialism of|en|{{w|local-loop unbundling}}}}. <end>
 Page 2901 SSTO: Found match for regex: <begin> # {{lb|en|astronautics}} {{initialism of|en|single-stage-to-orbit}}. <end>
@@ -10770,7 +10770,7 @@ Page 3241 TSS: Found match for regex: <begin> # {{lb|en|statistics}} {{init of|e
 Page 3242 TSH: Found match for regex: <begin> # {{lb|en|hormone}} {{initialism of|en|thyroid-stimulating hormone}}. <end>
 Page 3242 TSH: Found match for regex: <begin> # {{initialism of|fi||[[w:fi:Taru sormusten herrasta|Taru sormusten herrasta]]|Lord of the Rings}} <end>
 Page 3243 ԱՊՀ: Found match for regex: <begin> # {{initialism of|hy|Անկախ Պետությունների Համագործակցություն||[[CIS]]}} <end>
-Page 3244 ԱՄՆ: Found match for regex: <begin> # {{place|hy|initof=Ամերիկայի Միացյալ Նահանգներ<t:United States of America>|country|cont/North America|t=USA}} <end>
+Page 3244 ԱՄՆ: Found match for regex: <begin> # {{place|hy|ann=init of:Ամերիկայի Միացյալ Նահանգներ<t:United States of America>|country|cont/North America|t=USA}} <end>
 Page 3245 ՀՀ: Found match for regex: <begin> # {{initialism of|hy|Հայաստանի Հանրապետություն||[[RA]]}} <end>
 Page 3246 ՌԴ: Found match for regex: <begin> # {{initialism of|hy|Ռուսաստանի Դաշնություն||[[RF]]}} <end>
 Page 3247 ԱՄԷ: Found match for regex: <begin> # {{initialism of|hy|Արաբական Միացյալ Էմիրություններ||[[UAE]]}} <end>
@@ -10869,9 +10869,9 @@ Page 3290 pbw: Found match for regex: <begin> # {{initialism of|en|[[part]]s by 
 Page 3291 SIADH: Found match for regex: <begin> # {{lb|en|medicine}} {{initialism of|en|[[syndrome]] of [[inappropriate]] [[antidiuretic]] [[hormone]] [[hypersecretion]]}}. <end>
 Page 3292 TFT: Found match for regex: <begin> # {{initialism of|en|thin-film transistor}}: a technology used in [[flatscreen]] displays. <end>
 Page 3292 TFT: Found match for regex: <begin> # {{lb|en|medicine}} {{initialism of|en|[[thyroid]] [[function]] [[test]]}}. <end>
-Page 3293 აშშ: Found match for regex: <begin> # {{place|ka|initof=ამერიკის შეერთებული შტატები<t:United States of America>|country|cont/North America|t=USA}} <end>
+Page 3293 აშშ: Found match for regex: <begin> # {{place|ka|ann=init of:ამერიკის შეერთებული შტატები<t:United States of America>|country|cont/North America|t=USA}} <end>
 Page 3294 SUA: Found match for regex: <begin> # {{initialism of|en|[[sudden]] [[unintended]] [[acceleration]]}}. <end>
-Page 3294 SUA: Found match for regex: <begin> # {{place|kw|initof=Statys Unys Amerika<t:United States of America>|country|cont/North America|t=USA}} <end>
+Page 3294 SUA: Found match for regex: <begin> # {{place|kw|ann=init of:Statys Unys Amerika<t:United States of America>|country|cont/North America|t=USA}} <end>
 Page 3294 SUA: Found match for regex: <begin> # {{lb|it|rare}} {{initialism of|it|Stati Uniti d'America}}: [[USA]] <end>
 Page 3295 TTSN: Found match for regex: <begin> # {{lb|en|aviation}} {{initialism of|en|[[total]] [[time]] [[since]] [[new]]}}: the duration of time for which an aircraft has been in active use since its manufacture. <end>
 Page 3296 LMHO: Found match for regex: <begin> # {{lb|en|Internet slang}} {{initialism of|en|laughing my [[head]] off}}. <end>
@@ -10925,7 +10925,7 @@ Page 3324 R.I.: Found match for regex: <begin> # {{lb|en|legal}} {{initialism of
 Page 3325 C.Z.: Found match for regex: <begin> # {{lb|en|legal}} {{initialism of|en|Canal Zone|addl=as used in [[case citation]]s}}. <end>
 Page 3326 HXT: Found match for regex: <begin> # {{lb|en|astronomy}} {{initialism of|en|hard X-ray telescope}}. <end>
 Page 3327 OCMT: Found match for regex: <begin> # {{lb|en|banking|finance}} {{initialism of|en|[[original]] [[currency]] [[and]] [[amount]]|addl=describing payments between banks, in messages using the [[SWIFT]] standard}}. <end>
-Page 3328 JAV: Found match for regex: <begin> # {{place|lt|initof=Jungtinės Amerikos Valstijos<t:United States of America>|country|cont/North America|t=USA}} <end>
+Page 3328 JAV: Found match for regex: <begin> # {{place|lt|ann=init of:Jungtinės Amerikos Valstijos<t:United States of America>|country|cont/North America|t=USA}} <end>
 Page 3329 AFAIAC: Found match for regex: <begin> # {{lb|en|Internet slang}} {{initialism of|en|as far as I'm concerned|as far as I am concerned}}. <end>
 Page 3330 CFU: Found match for regex: <begin> # {{lb|en|cytology}} {{initialism of|en|colony-forming unit}}. <end>
 Page 3330 CFU: Found match for regex: <begin> # {{lb|en|microbiology}} {{initialism of|en|colony-forming unit}}. <end>
@@ -11587,7 +11587,7 @@ Page 3662 ACP: Found match for regex: <begin> # {{lb|en|biochemistry}} {{initial
 Page 3662 ACP: Found match for regex: <begin> # {{lb|en|firearms}} A class of handgun ammunition; {{initialism of|en|[[automatic]] [[Colt]] [[pistol]]}}. <end>
 Page 3662 ACP: Found match for regex: <begin> # {{lb|en|medicine}} {{initialism of|en|[[advance]] [[care]] [[planning]]}}. <end>
 Page 3663 SVGA: Found match for regex: <begin> # {{lb|en|computer graphics}} {{initialism of|en|{{w|Super Video Graphics Array}}}}. <end>
-Page 3664 YRD: Found match for regex: <begin> # {{place|en|initof=Yangtze River Delta|region|eastern|c/China|bordering the|sea/East China Sea}}; {{ng|An area on the east coast of China, containing {{l|en|Shanghai}}, {{l|en|Nanjing||Nanking}}, {{l|en|Suzhou||Soochow}}, {{l|en|Hangzhou||Hangchow}}.}} <end>
+Page 3664 YRD: Found match for regex: <begin> # {{place|en|ann=init of:Yangtze River Delta|region|eastern|c/China|bordering the|sea/East China Sea}}; {{ng|An area on the east coast of China, containing {{l|en|Shanghai}}, {{l|en|Nanjing||Nanking}}, {{l|en|Suzhou||Soochow}}, {{l|en|Hangzhou||Hangchow}}.}} <end>
 Page 3665 ԻԻՀ: Found match for regex: <begin> # {{initialism of|hy|Իրանի Իսլամական Հանրապետություն||[[IRI]]}} <end>
 Page 3666 PP&H: Found match for regex: <begin> # {{initialism of|en|[[postage]], [[processing]] and [[handling]]}}. <end>
 Page 3667 RIA: Found match for regex: <begin> # {{lb|en|computing}} {{initialism of|en|rich Internet application}}. <end>
@@ -11802,7 +11802,7 @@ Page 3785 RDP: Found match for regex: <begin> # {{lb|en|computing}} {{initialism
 Page 3785 RDP: Found match for regex: <begin> # {{lb|en|Quebec}} {{initialism of|en|[[w:Rivière-des-Prairies|Rivière-des-Prairies]]|addl=a municipality in the province of [[Quebec]], [[Canada]]}}. <end>
 Page 3785 RDP: Found match for regex: <begin> # {{lb|fr|Quebec}} {{initialism of|fr|{{w|Rivière-des-Prairies|lang=fr}}}} {{gloss|a municipality in the province of [[Quebec]], [[Canada]]}} <end>
 Page 3786 VSL: Found match for regex: <begin> # {{lb|en|statistics|economics}} {{initialism of|en|{{w|value of life|Value of Statistical Life}}}}, a measure of the monetary value of reducing the statistical likelihood of death in a population by a given amount. <end>
-Page 3787 TMR: Found match for regex: <begin> # {{place|en|initof={{w|Mount Royal, Quebec|Town of Mount Royal}}|municipality|p/Quebec|c/Canada}}. <end>
+Page 3787 TMR: Found match for regex: <begin> # {{place|en|ann=init of:{{w|Mount Royal, Quebec|Town of Mount Royal}}|municipality|p/Quebec|c/Canada}}. <end>
 Page 3788 J2RE: Found match for regex: <begin> # {{lb|en|computing}} {{initialism of|en|[[Java]] 2 [[runtime|Runtime]] [[environment|Environment]]}}. <end>
 Page 3789 SFPD: Found match for regex: <begin> # {{initialism of|en|{{w|San Francisco Police Department}}}}. <end>
 Page 3789 SFPD: Found match for regex: <begin> # {{initialism of|en|[[w:Criminal_record#Secure_Flight|Secure Flight Passenger Data]]}}. <end>
@@ -12223,7 +12223,7 @@ Page 4025 LOB: Found match for regex: <begin> # {{init of|en|line of business}}.
 Page 4025 LOB: Found match for regex: <begin> # {{lb|en|finance}} {{initialism of|en|[[limit]] [[order]] [[book]]}}, an [[order book]] of [[limit order]]s. <end>
 Page 4025 LOB: Found match for regex: <begin> # {{initialism of|en|[[live]] [[on]] [[board]]}} (i.e. [[liveaboard]]) <end>
 Page 4026 AY: Found match for regex: <begin> # {{initialism of|en|academic year}}. <end>
-Page 4026 AY: Found match for regex: <begin> # {{place|kmr|initof=Ameriqayê Yekbûyî<lit:United America>|country|cont/North America|t=USA}} <end>
+Page 4026 AY: Found match for regex: <begin> # {{place|kmr|ann=init of:Ameriqayê Yekbûyî<lit:United America>|country|cont/North America|t=USA}} <end>
 Page 4027 DTL: Found match for regex: <begin> # {{initialism of|en|[[delay]]-[[tolerant]] [[networking]]}}. <end>
 Page 4028 E.C.: Found match for regex: <begin> # {{initialism of|en|earth closet}}. <end>
 Page 4029 OCP: Found match for regex: <begin> # {{initialism of|en|[[oral]] [[contraceptive]] [[pill]]}}. <end>
@@ -12469,7 +12469,7 @@ Page 4168 IBB: Found match for regex: <begin> # {{lb|en|baseball}} {{initialism 
 Page 4169 GNA: Found match for regex: <begin> # {{lb|en|biochemistry}} {{initialism of|en|glycol nucleic acid}}. <end>
 Page 4170 BNA: Found match for regex: <begin> # {{initialism of|en|[[British]] [[North America]]}}. <end>
 Page 4170 BNA: Found match for regex: <begin> # {{lb|en|biochemistry}} {{initialism of|en|bridged nucleic acid}}. <end>
-Page 4170 BNA: Found match for regex: <begin> # {{place|is|initof=Bandaríki Norður-Ameríku<t:United States of America>|country|cont/North America|t=USA}} <end>
+Page 4170 BNA: Found match for regex: <begin> # {{place|is|ann=init of:Bandaríki Norður-Ameríku<t:United States of America>|country|cont/North America|t=USA}} <end>
 Page 4171 wth: Found match for regex: <begin> # {{lb|en|Internet slang|text messaging|mildly|vulgar}} {{initialism of|en|what the hell,what the heck}}. <end>
 Page 4172 HDI: Found match for regex: <begin> # {{initialism of|en|[[w:Human Development Index|Human Development Index]]}}, a [[United Nations]] measure of well-being in a country. <end>
 Page 4172 HDI: Found match for regex: <begin> {{trans-top|initialism of Human Development Index}} <end>
@@ -13117,7 +13117,7 @@ Page 4535 TPA: Found match for regex: <begin> # {{lb|id|education}} {{initialism
 Page 4535 TPA: Found match for regex: <begin> # {{lb|id|Islam}} {{initialism of|id|taman pengajian Al Qur'an}} <end>
 Page 4536 PUT: Found match for regex: <begin> # {{lb|en|electronics}} {{initialism of|en|programmable unijunction transistor}}. <end>
 Page 4536 PUT: Found match for regex: <begin> # {{lb|en|broadcasting}} {{init of|en|[[person]] using [[television]]}}. <end>
-Page 4537 АҠШ: Found match for regex: <begin> # {{place|ba|initof=Америка Ҡушма Штаттары<t:United States of America>|country|cont/North America|t=USA}} <end>
+Page 4537 АҠШ: Found match for regex: <begin> # {{place|ba|ann=init of:Америка Ҡушма Штаттары<t:United States of America>|country|cont/North America|t=USA}} <end>
 Page 4538 WFM: Found match for regex: <begin> # {{init of|en|[[waveform]] [[monitor]]}}. <end>
 Page 4538 WFM: Found match for regex: <begin> # {{lb|en|chess}} {{initialism of|en|w:Woman FIDE Master}}. <end>
 Page 4539 POIS: Found match for regex: <begin> # {{initialism of|en|postorgasmic illness syndrome}}. <end>
@@ -13640,7 +13640,7 @@ Page 4866 Category:Form-of templates: Found match for regex: <begin> | [[Templat
 Page 4867 DVO: Found match for regex: <begin> # {{lb|en|AU}} {{initialism of|en|[[domestic violence]] [[order]]}}: a court order to prevent another person harassing or threatening another person, especially a current or former partner or spouse. <end>
 Page 4868 ASADA: Found match for regex: <begin> # {{initialism of|en|{{w|Australian Sports Anti-Doping Authority}}}}. <end>
 Page 4869 ARPA: Found match for regex: <begin> # {{lb|en|navigation}} {{initialism of|en|w:Automatic radar plotting aid|Automatic Radar Plotting Aid}}. <end>
-Page 4869 ARPA: Found match for regex: <begin> # {{lb|en|politics}} {{init of|en|{{u|association}} for {{u|reformed}} {{u|political}} {{u|action}}}}. <end>
+Page 4869 ARPA: Found match for regex: <begin> # {{lb|en|politics}} {{init of|en|{{U|association}} for {{U|reformed}} {{U|political}} {{U|action}}}}. <end>
 Page 4870 ARPANET: Found match for regex: <begin> # {{lb|en|military|networking}} {{initialism of|en|w:Advanced Research Projects Agency Network|Advanced Research Projects Agency Network|addl=the world's first operational packet-switching network}}. <end>
 Page 4871 MoD: Found match for regex: <begin> # {{lb|en|UK politics}} {{initialism of|en|{{w|Ministry of Defence}}}}; {{n-g|also {{m|en|MOD}}.}} <end>
 Page 4872 MID: Found match for regex: <begin> # {{lb|en|computing}} {{initialism of|en|[[mobile]] [[information]] [[device]]}}. <end>
@@ -13917,7 +13917,7 @@ Page 5032 TYT: Found match for regex: <begin> # {{lb|en|internet}} {{initialism 
 Page 5032 TYT: Found match for regex: <begin> # {{initialism of|tr|Temel Yeterlilik Testi|t=Basic Proficiency Exam}} <end>
 Page 5033 IVM: Found match for regex: <begin> # {{initialism of|en|{{w|in vitro maturation}}}}. <end>
 Page 5034 HHOS: Found match for regex: <begin> # {{lb|en|internet slang}} {{initialism of|en|ha ha only serious}}. <end>
-Page 5035 ZDA: Found match for regex: <begin> # {{place|zza|initof=Zewbiyaye Dewleté Amerika<t:United States of America>|country|cont/North America|t=USA}} <end>
+Page 5035 ZDA: Found match for regex: <begin> # {{place|zza|ann=init of:Zewbiyaye Dewleté Amerika<t:United States of America>|country|cont/North America|t=USA}} <end>
 Page 5036 PPC: Found match for regex: <begin> # {{lb|en|UK politics}} {{initialism of|en|[[prospective]] [[parliamentary]] [[candidate]]}}: a candidate selected for a future [[election]] before the election [[campaign]] has officially begun. <end>
 Page 5036 PPC: Found match for regex: <begin> # {{lb|en|internet|_|marketing}} {{initialism of|en|pay-per-click}}. <end>
 Page 5036 PPC: Found match for regex: <begin> # {{lb|en|economics}} {{initialism of|en|production-possibility curve}}. <end>
@@ -14304,7 +14304,7 @@ Page 5275 ECE: Found match for regex: <begin> # {{initialism of|en|[[electrical]
 Page 5275 ECE: Found match for regex: <begin> # {{initialism of|en|[[early]] [[childhood]] [[education]]}}. <end>
 Page 5276 EECS: Found match for regex: <begin> # {{initialism of|en|[[electrical engineering]] and [[computer science]]}}. <end>
 Page 5277 IAMFI: Found match for regex: <begin> # {{initialism of|en|I [[ask]] merely for [[information]]}}. <end>
-Page 5278 ЗША: Found match for regex: <begin> # {{place|be|initof=Злу́чаныя Шта́ты Аме́рыкі<t:United States of America>|country|cont/North America|t1=USA}} <end>
+Page 5278 ЗША: Found match for regex: <begin> # {{place|be|ann=init of:Злу́чаныя Шта́ты Аме́рыкі<t:United States of America>|country|cont/North America|t1=USA}} <end>
 Page 5279 OCLC: Found match for regex: <begin> # {{initialism of|en|w:OCLC|Online Computer Library Center}} ({{non-gloss|formerly {{m|en||Ohio College Library Center}}}}). <end>
 Page 5280 OCN: Found match for regex: <begin> # {{initialism of|en|[[OCLC]] [[control number]]}}. <end>
 Page 5281 ISSN: Found match for regex: <begin> # {{initialism of|en|w:International Standard Serial Number|International Standard Serial Number}}. <end>
@@ -14736,7 +14736,7 @@ Page 5550 KAM: Found match for regex: <begin> # {{lb|en|business}} {{initialism 
 Page 5550 KAM: Found match for regex: <begin> # {{lb|en|math}} {{init of|en|Kolmogorov-Arnold-Moser theorem}}. <end>
 Page 5551 MTHFR: Found match for regex: <begin> # {{initialism of|en|methylenetetrahydrofolate reductase}}. <end>
 Page 5552 NKRO: Found match for regex: <begin> # {{lb|en|computing}} {{initialism of|en|''n''-[[key]] [[rollover]]}}: a [[keyboard]] [[feature]] that prevents [[ghosting]] and [[blocking]]. <end>
-Page 5553 ÉUA: Found match for regex: <begin> # {{place|fr|initof=États-Unis d'Amérique<t:United States of America>|country|cont/North America|t=USA}} <end>
+Page 5553 ÉUA: Found match for regex: <begin> # {{place|fr|ann=init of:États-Unis d'Amérique<t:United States of America>|country|cont/North America|t=USA}} <end>
 Page 5554 SPST: Found match for regex: <begin> # {{initialism of|en|[[single]] [[pole]], [[single]] [[throw]]}}: a type of [[electrical]] [[switch]]. <end>
 Page 5555 hcp: Found match for regex: <begin> # {{initialism of|en|[[hexagonal]] [[close-packed]]}}. <end>
 Page 5556 UAF: Found match for regex: <begin> # {{init of|en|[[Uganda]] [[athletics|Athletics]] [[federation|Federation]]}}. <end>
@@ -15839,7 +15839,7 @@ Page 6204 ACPO: Found match for regex: <begin> # {{lb|en|UK}} {{initialism of|en
 Page 6205 IAS: Found match for regex: <begin> # {{init of|en|{{w|Indian Administrative Service}}}}. <end>
 Page 6205 IAS: Found match for regex: <begin> # {{init of|en|[[international|International]] [[association|Association]] of [[sedimentologist|Sedimentologist]]s}}. <end>
 Page 6205 IAS: Found match for regex: <begin> # {{lb|en|aviation}} {{init of|en|indicated airspeed}}. <end>
-Page 6205 IAS: Found match for regex: <begin> # {{init of|en|{{w|Institute for Advanced Study (disambiguation)|Institute for Advanced Study}},{{u|institute}} of {{u|advanced}} {{u|studies|Studies}}}}. <end>
+Page 6205 IAS: Found match for regex: <begin> # {{init of|en|{{w|Institute for Advanced Study (disambiguation)|Institute for Advanced Study}},{{U|institute}} of {{U|advanced}} {{U|studies|Studies}}}}. <end>
 Page 6205 IAS: Found match for regex: <begin> # {{init of|en|[[international]] [[accounting]] [[standard]]}}. <end>
 Page 6205 IAS: Found match for regex: <begin> # {{lb|en|aviation|travel}} {{initialism of|en|[[insert]] [[after]] [[segment]]}}; GDS code, and used on older types of airline keyboards. <end>
 Page 6206 OID: Found match for regex: <begin> # {{lb|en|aviation|travel}} {{initialism of|en|[[office]] [[ID]]}}. <end>
@@ -16046,7 +16046,7 @@ Page 6336 MBM: Found match for regex: <begin> # {{initialism of|en|[[meat]] and 
 Page 6337 HOA: Found match for regex: <begin> # {{initialism of|en|Horn of Africa}}. <end>
 Page 6337 HOA: Found match for regex: <begin> # {{lb|en|countable|real estate}} {{initialism of|en|homeowner association}}. <end>
 Page 6337 HOA: Found match for regex: <begin> # {{lb|en|uncountable}} {{init of|en|hypertrophic osteoarthropathy}}. <end>
-Page 6338 ABŞ: Found match for regex: <begin> # {{place|az|initof=Amerika Birləşmiş Ştatları<t:United States of America>|country|cont/North America|t=USA}} <end>
+Page 6338 ABŞ: Found match for regex: <begin> # {{place|az|ann=init of:Amerika Birləşmiş Ştatları<t:United States of America>|country|cont/North America|t=USA}} <end>
 Page 6339 BƏƏ: Found match for regex: <begin> # {{initialism of|az|[[Birləşmiş Ərəb Əmirlikləri]]}} <end>
 Page 6340 UMPP: Found match for regex: <begin> # {{lb|en|India}} {{initialism of|en|[[ultra]] [[mega]] [[power]] [[plant]]}}. <end>
 Page 6340 UMPP: Found match for regex: <begin> # {{lb|en|India}} {{initialism of|en|[[ultra]] [[mega]] [[power]] [[project]]}}. <end>
@@ -17600,7 +17600,7 @@ Page 7360 SSRİ: Found match for regex: <begin> # {{initialism of|az|[[Sovet Sos
 Page 7361 COINTELPRO: Found match for regex: <begin> # {{initialism of|en|[[counter-intelligence|Counter-intelligence]] [[program]]}}. <end>
 Page 7362 SvD: Found match for regex: <begin> # {{initialism of|sv|w:Svenska Dagbladet}} {{gloss|a Swedish newspaper}} <end>
 Page 7363 IFK: Found match for regex: <begin> # {{initialism of|sv|w:Idrottsföreningen Kamraterna}} {{gloss|a sports organisation}} <end>
-Page 7364 АҚШ: Found match for regex: <begin> # {{place|kk|initof=Америка Құрама Штаттары<t:United States of America>|country|cont/North America|t=USA}} <end>
+Page 7364 АҚШ: Found match for regex: <begin> # {{place|kk|ann=init of:Америка Құрама Штаттары<t:United States of America>|country|cont/North America|t=USA}} <end>
 Page 7365 q. e. p. d.: Found match for regex: <begin> # {{initialism of|es|que en paz descanse||[[R.I.P.]]}} <end>
 Page 7366 GFBD: Found match for regex: <begin> # {{lb|en|military|_|slang}} {{initialism of|en|[[God]] [[forgive]]s, [[brother]]s [[don't]]}}. <end>
 Page 7367 UCGC: Found match for regex: <begin> # {{lb|en|US|military (Marine Corps)}} {{initialism of|en|[[unit]], [[corps]], [[God]], [[country]]}}: in descending order of importance. <end>
@@ -18135,10 +18135,10 @@ Page 7717 FMIC: Found match for regex: <begin> # {{initialism of|en|{{w|Fender M
 Page 7718 LFO: Found match for regex: <begin> # {{C|en|Music}} {{initialism of|en|low-frequency oscillation}}. <end>
 Page 7719 HCR: Found match for regex: <begin> # {{initialism of|en|[[high commission|High Commission]] for [[refugee|Refugees]]}}. <end>
 Page 7720 BMAC: Found match for regex: <begin> # {{lb|en|archaeology}} {{initialism of|en|Bactria–Margiana Archaeological Complex}}. <end>
-Page 7721 CSL: Found match for regex: <begin> # {{place|en|initof={{w|Côte Saint-Luc}}|city|region/Montreal|p/Quebec|c/Canada}}. <end>
-Page 7721 CSL: Found match for regex: <begin> # {{place|fr|initof={{w|Côte-Saint-Luc|lang=fr}}|city|r/Montréal|p/Québec|c/Canada|t=CSL}} <end>
-Page 7722 NDG: Found match for regex: <begin> # {{place|en|initof=Notre Dame de Grace|district|borough/Cote-des-Neiges---Notre-Dame-de-Grace|city/Montreal|p/Quebec|c/Canada}}. <end>
-Page 7722 NDG: Found match for regex: <begin> # {{place|fr|initof={{w|Notre-Dame-de-Grâce|lang=fr}}|district|borough/{{w|Côte-des-Neiges–Notre-Dame-de-Grâce|lang=fr}}|city/Montréal|p/Québec|c/Canada|t=NDG}} <end>
+Page 7721 CSL: Found match for regex: <begin> # {{place|en|ann=init of:{{w|Côte Saint-Luc}}|city|region/Montreal|p/Quebec|c/Canada}}. <end>
+Page 7721 CSL: Found match for regex: <begin> # {{place|fr|ann=init of:{{w|Côte-Saint-Luc|lang=fr}}|city|r/Montréal|p/Québec|c/Canada|t=CSL}} <end>
+Page 7722 NDG: Found match for regex: <begin> # {{place|en|ann=init of:Notre Dame de Grace|district|borough/Cote-des-Neiges---Notre-Dame-de-Grace|city/Montreal|p/Quebec|c/Canada}}. <end>
+Page 7722 NDG: Found match for regex: <begin> # {{place|fr|ann=init of:{{w|Notre-Dame-de-Grâce|lang=fr}}|district|borough/{{w|Côte-des-Neiges–Notre-Dame-de-Grâce|lang=fr}}|city/Montréal|p/Québec|c/Canada|t=NDG}} <end>
 Page 7723 USFK: Found match for regex: <begin> # {{lb|en|US|military}} {{initialism of|en|w:United States Forces Korea}}. <end>
 Page 7724 USFJ: Found match for regex: <begin> # {{lb|en|US|military}} {{initialism of|en|[[United States]] [[forces|Forces]], [[Japan]]}}. <end>
 Page 7725 USFI: Found match for regex: <begin> # {{lb|en|US|military}} {{initialism of|en|[[United States]] [[forces|Forces]] - [[Iraq]]}}. <end>
@@ -18867,7 +18867,7 @@ Page 8269 NOA: Found match for regex: <begin> # {{initialism of|en|{{w|Nintendo 
 Page 8270 NoA: Found match for regex: <begin> # {{initialism of|en|{{w|Nintendo of America}}}}. <end>
 Page 8271 NSCLC: Found match for regex: <begin> # {{lb|en|oncology}} {{initialism of|en|{{w|Non-small-cell lung carcinoma|non-small-cell lung cancer}},{{w|non-small-cell lung carcinoma}}}}. <end>
 Page 8272 UNSW: Found match for regex: <begin> # {{initialism of|en|{{w|University of New South Wales}}}}. <end>
-Page 8273 É.-U.: Found match for regex: <begin> # {{place|fr|initof=États-Unis<t:United States>|country|cont/North America|t1=US|t2=USA}} <end>
+Page 8273 É.-U.: Found match for regex: <begin> # {{place|fr|ann=init of:États-Unis<t:United States>|country|cont/North America|t1=US|t2=USA}} <end>
 Page 8274 IQP: Found match for regex: <begin> # {{lb|en|chess}} {{initialism of|en|{{w|Isolated Queen Pawn}}}}. <end>
 Page 8275 MSAA: Found match for regex: <begin> # {{initialism of|en|{{w|multisample anti-aliasing}}}}. <end>
 Page 8276 UDMH: Found match for regex: <begin> # {{initialism of|en|unsymmetrical dimethylhydrazine||{{l|en|1,1-dimethylhydrazine}}}}. <end>
@@ -19111,7 +19111,7 @@ Page 8453 DAI: Found match for regex: <begin> # {{lb|en|fandom slang}} {{initial
 Page 8454 ECV: Found match for regex: <begin> # {{lb|en|biology}} {{initialism of|en|extracellular volume}}, the volume of [[fluid]], etc., in an [[organism]] that is outside the organism's [[cell]]s. <end>
 Page 8454 ECV: Found match for regex: <begin> # {{lb|en|physiology}} {{initialism of|en|effective circulating volume}}, the volume of [[arterial]] blood effectively perfusing tissue. <end>
 Page 8454 ECV: Found match for regex: <begin> # {{lb|en|medicine}} {{initialism of|en|external cephalic version}}, a method of manually repositioning a [[foetus]] to avoid a [[breech birth]]. <end>
-Page 8455 HRD: Found match for regex: <begin> # {{place|en|region|initof=Huanghe River Delta<t:Yellow River Delta>|c/China|on the {{l|en|[[Yellow River]]/[[Huanghe]]}}, at its {{l|en|delta}} regions by the {{l|en|Shandong Peninsula}}, on the {{l|en|Bohai Sea}} and {{l|en|Yellow Sea}}, marginal seas of the {{l|en|Pacific Ocean}}}}. <end>
+Page 8455 HRD: Found match for regex: <begin> # {{place|en|region|ann=init of:Huanghe River Delta<t:Yellow River Delta>|c/China|on the {{l|en|[[Yellow River]]/[[Huanghe]]}}, at its {{l|en|delta}} regions by the {{l|en|Shandong Peninsula}}, on the {{l|en|Bohai Sea}} and {{l|en|Yellow Sea}}, marginal seas of the {{l|en|Pacific Ocean}}}}. <end>
 Page 8456 GWS: Found match for regex: <begin> # {{initialism of|en|get well soon}}. <end>
 Page 8456 GWS: Found match for regex: <begin> # {{initialism of|en|:en:wikipedia:Greater Western Sydney|Greater Western Sydney}}. <end>
 Page 8456 GWS: Found match for regex: <begin> # {{lb|en|Australian rules football}} {{initialism of|en|{{w|Greater Western Sydney Giants}}}}. <end>
@@ -19689,7 +19689,7 @@ Page 8909 DTPHP: Found match for regex: <begin> # {{initialism of|id|[[dinas]] [
 Page 8910 DPPKBPMD: Found match for regex: <begin> # {{initialism of|id|[[dinas]] [[pengendalian]] [[penduduk]], [[keluarga berencana]], [[pemberdayaan]] [[masyarakat]] dan [[desa]]|t=}} <end>
 Page 8911 DKUKMP: Found match for regex: <begin> # {{initialism of|id|[[dinas]] [[koperasi]], [[usaha kecil dan menengah]] dan [[perindustrian]]|t=department of cooperative, small and medium-sized enterprises and industry}} <end>
 Page 8912 DPMPT: Found match for regex: <begin> # {{initialism of|id|[[dinas]] [[penanaman modal]] dan [[pelayanan]] [[terpadu]]|t=department of investment and integrated services}} <end>
-Page 8913 ЧССР: Found match for regex: <begin> # {{lb|mk|historical}} {{place|mk|initof=Чехословачка Социјалистичка Република<t:Czechoslovak Socialist Republic>|former country|c/Europe|t=CSSR}} <end>
+Page 8913 ЧССР: Found match for regex: <begin> # {{lb|mk|historical}} {{place|mk|ann=init of:Чехословачка Социјалистичка Република<t:Czechoslovak Socialist Republic>|former country|c/Europe|t=CSSR}} <end>
 Page 8914 AOV: Found match for regex: <begin> # {{lb|en|visual effects|computer generated imagery}} {{initialism of|en|[[arbitrary]] [[output]] [[variable]]}}. <end>
 Page 8915 AoV: Found match for regex: <begin> # {{lb|en|photography}} {{initialism of|en|angle of view}}. <end>
 Page 8916 ASN: Found match for regex: <begin> # {{lb|en|telecommunications|_|networking|internet}} {{initialism of|en|autonomous system number}}. <end>
@@ -20300,7 +20300,7 @@ Page 9392 DJA: Found match for regex: <begin> # {{lb|id|government}} {{initialis
 Page 9392 DJA: Found match for regex: <begin> # {{initialism of|zza|Dewlet ê Jewbiyayeyê Amerika}} {{gloss|United States of America}}. <end>
 Page 9393 POCD: Found match for regex: <begin> # {{initialism of|en|[[post-operative]] [[cognitive]] [[dysfunction]]}}. <end>
 Page 9393 POCD: Found match for regex: <begin> # {{initialism of|en|[[pedophilic]] [[obsessive-compulsive disorder]]}}, an obsessive fear that one is sexually attracted to or will commit sexual offenses against children. <end>
-Page 9394 JAE: Found match for regex: <begin> # {{place|lt|initof=Jungtiniai Arabų Emyratai<t:United Arab Emirates>|country|cont/Asia|t=UAE}} <end>
+Page 9394 JAE: Found match for regex: <begin> # {{place|lt|ann=init of:Jungtiniai Arabų Emyratai<t:United Arab Emirates>|country|cont/Asia|t=UAE}} <end>
 Page 9395 uWA: Found match for regex: <begin> # {{initialism of|de|{{w|unentgeltliche Wertabgabe|lang=de}}}} <end>
 Page 9396 UWA: Found match for regex: <begin> # {{alt sp|de|uWA|t={{initialism of|de|{{w|unentgeltliche Wertabgabe|lang=de}}}}}} <end>
 Page 9397 PcD: Found match for regex: <begin> # {{initialism of|pt|[[pessoa]] com [[deficiência]]|t=person with disability}}; {{l|en|PWD}} <end>
@@ -20978,8 +20978,8 @@ Page 9950 GKE: Found match for regex: <begin> # {{lb|id|Protestantism}} {{initia
 Page 9951 GKJW: Found match for regex: <begin> # {{lb|id|Protestantism}} {{initialism of|id|{{w|lang=id|Gereja Kristen Jawi Wetan}}}} <end>
 Page 9952 PDSS: Found match for regex: <begin> # {{lb|id|education}} {{initialism of|id|[[pangkalan data]] [[sekolah]] [[dan]] [[siswa]]|lit=school and student database}} <end>
 Page 9953 IJV: Found match for regex: <begin> # {{lb|en|anatomy}} {{initialism of|en|internal jugular vein}}. <end>
-Page 9954 AUTTP: Found match for regex: <begin> # {{lb|en|internet|Internet slang}} {{initialism of|en|{{u|anti}}-UTube {{u|troll}} {{u|police}}}} an informal anti-trolling [[organization]] that is [[primarily]] active on [[social media]], such as [[YouTube]] and [[Discord]]. <end>
-Page 9955 UTTP: Found match for regex: <begin> # {{lb|en|internet|Internet slang}} # {{initialism of|en| UTube {{u|troll}} {{u|police}}}}, a [[informal]] [[trolling]] [[organization]] and [[anti-fandom]] [[group]] that is primarily active on [[social media]], such as [[YouTube]], and [[targets]] certain [[YouTubers]] by [[commenting]] on their [[videos]]. <end>
+Page 9954 AUTTP: Found match for regex: <begin> # {{lb|en|internet|Internet slang}} {{initialism of|en|{{U|anti}}-UTube {{U|troll}} {{U|police}}}} an informal anti-trolling [[organization]] that is [[primarily]] active on [[social media]], such as [[YouTube]] and [[Discord]]. <end>
+Page 9955 UTTP: Found match for regex: <begin> # {{lb|en|internet|Internet slang}} # {{initialism of|en| UTube {{U|troll}} {{U|police}}}}, a [[informal]] [[trolling]] [[organization]] and [[anti-fandom]] [[group]] that is primarily active on [[social media]], such as [[YouTube]], and [[targets]] certain [[YouTubers]] by [[commenting]] on their [[videos]]. <end>
 Page 9960 YMCA: Found match for regex: <begin> # {{init of|en|w:Young Men's Christian Association}}. <end>
 Page 9963 FBI: Found match for regex: <begin> # {{lb|en|US|law enforcement}} {{init of|en|[[Federal Bureau of Investigation]]}}. <end>
 Page 9967 RAM: Found match for regex: <begin> # {{init of|en|{{w|Royal Academy of Music}}}}. <end>
@@ -21073,13 +21073,13 @@ Page 10067 CEO: Found match for regex: <begin> # {{lb|en|countable|business}} {{
 Page 10067 CEO: Found match for regex: <begin> # {{lb|en|UK|countable}} {{init of|en|civil enforcement officer}}. <end>
 Page 10068 CCCP: Found match for regex: <begin> # {{init of|en|w:Central Committee of the Chinese Communist Party|Central Committee of the Communist Party}}. <end>
 Page 10074 WWF: Found match for regex: <begin> # {{init of|en|{{w|World Wide Fund for Nature}}}}, formerly World Wildlife Fund <end>
-Page 10074 WWF: Found match for regex: <begin> # {{lb|en|historical}} {{init of|en|{{u|world}} {{u|wrestling}} {{u|federation}}}} (became [[WWE]], ''World Wrestling Entertainment'', in May 2002) <end>
+Page 10074 WWF: Found match for regex: <begin> # {{lb|en|historical}} {{init of|en|{{U|world}} {{U|wrestling}} {{U|federation}}}} (became [[WWE]], ''World Wrestling Entertainment'', in May 2002) <end>
 Page 10080 DOJ: Found match for regex: <begin> # {{init of|en|w:United States Department of Justice}}; {{n-g|also {{m|en|DoJ}}.}} <end>
 Page 10080 DOJ: Found match for regex: <begin> # {{lb|en|law}} {{init of|en|[[date]] [[of]] [[judgment]]}}. <end>
 Page 10080 DOJ: Found match for regex: <begin> # {{lb|en|travel|aviation}} {{init of|en|double open jaw}}. <end>
 Page 10090 CBS: Found match for regex: <begin> # {{init of|en|w:Columbia Broadcasting System}}: a [[United States|U.S.]] [[television]] and [[radio]] [[network]], now officially known as {{w|CBS Broadcasting}}. <end>
 Page 10090 CBS: Found match for regex: <begin> # {{lb|en|education}} {{init of|en|{{w|List of Christian Brothers schools|Christian Brothers School}}}}. <end>
-Page 10090 CBS: Found match for regex: <begin> # {{lb|en|software}} {{init of|en|{{u|component}}-Based {{u|servicing}}}}. <end>
+Page 10090 CBS: Found match for regex: <begin> # {{lb|en|software}} {{init of|en|{{U|component}}-Based {{U|servicing}}}}. <end>
 Page 10090 CBS: Found match for regex: <begin> # {{init of|en|Charles Bonnet syndrome}}. <end>
 Page 10090 CBS: Found match for regex: <begin> # {{init of|en|combined braking system}}. <end>
 Page 10090 CBS: Found match for regex: <begin> # {{init of|en|corticobasal syndrome}}. <end>
@@ -21170,7 +21170,7 @@ Page 10132 BBL: Found match for regex: <begin> # {{init of|en|{{w|British Basket
 Page 10132 BBL: Found match for regex: <begin> # {{init of|en|{{w|Big Bash League}}}}. <end>
 Page 10132 BBL: Found match for regex: <begin> # {{init of|fr|{{w|Banque Bruxelles Lambert|lang=fr}}}} <end>
 Page 10134 LLC: Found match for regex: <begin> # {{lb|en|business|legal|US}} {{init of|en|[[limited liability company|Limited Liability Company]]}}. <end>
-Page 10134 LLC: Found match for regex: <begin> # {{lb|en|computer networking}} {{init of|en|{{u|logical}} {{u|link}} {{u|control}}}} {{q|one of the two functions of a [[NIC]].}} <end>
+Page 10134 LLC: Found match for regex: <begin> # {{lb|en|computer networking}} {{init of|en|{{U|logical}} {{U|link}} {{U|control}}}} {{q|one of the two functions of a [[NIC]].}} <end>
 Page 10135 D.B.A.: Found match for regex: <begin> # {{init of|en|database analyst}}. <end>
 Page 10135 D.B.A.: Found match for regex: <begin> # {{init of|en|database administrator}}. <end>
 Page 10135 D.B.A.: Found match for regex: <begin> # {{init of|en|Doctor of Business Administration||a terminal degree}}. <end>
@@ -21267,11 +21267,11 @@ Page 10227 VPG: Found match for regex: <begin> # {{init of|de|[[Vielseitigkeitsp
 Page 10229 NYPD: Found match for regex: <begin> # {{init of|en|[[New York]] [[police department|Police Department]]}}. <end>
 Page 10230 LAPD: Found match for regex: <begin> # {{init of|en|[[Los Angeles|Los Angeles]] [[police department|Police Department]]}}. <end>
 Page 10231 NTSB: Found match for regex: <begin> # {{lb|en|US}} {{init of|en|w:National Transportation Safety Board}}. <end>
-Page 10231 NTSB: Found match for regex: <begin> # {{lb|en|Turkey}} {{init of|en|{{u|national}} [[transport safety board|Transport Safety Board]]}}. <end>
+Page 10231 NTSB: Found match for regex: <begin> # {{lb|en|Turkey}} {{init of|en|{{U|national}} [[transport safety board|Transport Safety Board]]}}. <end>
 Page 10234 UDP: Found match for regex: <begin> # {{lb|en|chemistry}} {{init of|en|[[uridine]] [[diphosphate]]}}. <end>
 Page 10234 UDP: Found match for regex: <begin> # {{lb|en|Internet|[[Usenet]]}} {{init of|en|Usenet Death Penalty}}. <end>
 Page 10234 UDP: Found match for regex: <begin> # {{lb|en|Northern Ireland|politics}} {{init of|en|[[Ulster]] [[democratic|Democratic]] [[party|Party]]}}. <end>
-Page 10234 UDP: Found match for regex: <begin> # {{lb|en|military|US}} {{init of|en|{{u|unit}} {{u|deployment}} {{u|program}}}}. <end>
+Page 10234 UDP: Found match for regex: <begin> # {{lb|en|military|US}} {{init of|en|{{U|unit}} {{U|deployment}} {{U|program}}}}. <end>
 Page 10234 UDP: Found match for regex: <begin> # {{lb|en|networking}} {{init of|en|user datagram protocol}}. <end>
 Page 10234 UDP: Found match for regex: <begin> # {{lb|en|US politics}} {{init of|en|w:United Democracy Project}}: a [[surrogate]] of [[AIPAC]]. <end>
 Page 10237 SEO: Found match for regex: <begin> # {{lb|en|uncountable|Internet}} {{init of|en|[[search engine optimization]]}}. <end>
@@ -21524,10 +21524,10 @@ Page 10418 PPO: Found match for regex: <begin> # {{senseid|en|health}} {{lb|en|U
 Page 10418 PPO: Found match for regex: <begin> # {{lb|en|chemistry}} {{init of|en|polypropylene oxide}}. <end>
 Page 10418 PPO: Found match for regex: <begin> # {{lb|en|chemistry}} {{init of|en|polyphenol oxidase}}. <end>
 Page 10423 NYT: Found match for regex: <begin> # {{init of|en|w:New York Times|addl=a US newspaper}}. <end>
-Page 10430 FCC: Found match for regex: <begin> # {{lb|en|Canada}} {{init of|en|{{u|farm}} {{u|credit}} {{u|corporation}}}}. <end>
+Page 10430 FCC: Found match for regex: <begin> # {{lb|en|Canada}} {{init of|en|{{U|farm}} {{U|credit}} {{U|corporation}}}}. <end>
 Page 10430 FCC: Found match for regex: <begin> # {{lb|en|US}} {{init of|en|Federal Communications Commission}}. <end>
 Page 10430 FCC: Found match for regex: <begin> # {{lb|en|particle physics}} {{init of|en|w:Future Circular Collider}}. <end>
-Page 10430 FCC: Found match for regex: <begin> # {{lb|en|US}} {{init of|en|{{u|federal}} {{u|correctional}} {{u|complex}}}}. <end>
+Page 10430 FCC: Found match for regex: <begin> # {{lb|en|US}} {{init of|en|{{U|federal}} {{U|correctional}} {{U|complex}}}}. <end>
 Page 10431 AAP: Found match for regex: <begin> # {{lb|en|US|sociology|politics}} {{init of|en|[[affirmative action]] [[program]]}}. <end>
 Page 10431 AAP: Found match for regex: <begin> # {{lb|en|Indian politics}} {{init of|en|w:Aam Aadmi Party}}, a political party. <end>
 Page 10431 AAP: Found match for regex: <begin> # {{init of|en|w:Accredited ACH Professional}}. <end>
@@ -21658,11 +21658,11 @@ Page 10517 WMO: Found match for regex: <begin> # {{init of|en|w:Wayanad Muslim O
 Page 10519 BESM: Found match for regex: <begin> # {{init of|en|[[big]] [[eyes]], [[small]] [[mouth]]}}, describing the odd proportions with which much Japanese [[manga]] is drawn <end>
 Page 10521 CSI: Found match for regex: <begin> # {{init of|en|[[crime scene]] [[investigation]]}} {{gloss|a term of [[forensic science]]}}. <end>
 Page 10521 CSI: Found match for regex: <begin> # {{lb|en|informal|US}} {{init of|en|[[crime scene]] [[investigator]]}}. <end>
-Page 10521 CSI: Found match for regex: <begin> # {{init of|en|{{u|customer}} {{u|satisfaction}} {{u|index}}}}. <end>
-Page 10521 CSI: Found match for regex: <begin> # {{init of|en|{{u|companion}} of the {{w|Order of the Star of India}}}}. <end>
+Page 10521 CSI: Found match for regex: <begin> # {{init of|en|{{U|customer}} {{U|satisfaction}} {{U|index}}}}. <end>
+Page 10521 CSI: Found match for regex: <begin> # {{init of|en|{{U|companion}} of the {{w|Order of the Star of India}}}}. <end>
 Page 10521 CSI: Found match for regex: <begin> # {{init of|en|[[consumer]] [[safety]] [[inspector]]}}. <end>
-Page 10521 CSI: Found match for regex: <begin> # {{init of|en|{{u|committee}} [[for]] {{u|skeptical}} {{u|inquiry}}|addl=formerly [[CSICOP]]}}. <end>
-Page 10521 CSI: Found match for regex: <begin> # {{lb|en|India}} {{init of|en|{{u|computer}} {{u|society}} [[of]] [[India]]}}. <end>
+Page 10521 CSI: Found match for regex: <begin> # {{init of|en|{{U|committee}} [[for]] {{U|skeptical}} {{U|inquiry}}|addl=formerly [[CSICOP]]}}. <end>
+Page 10521 CSI: Found match for regex: <begin> # {{lb|en|India}} {{init of|en|{{U|computer}} {{U|society}} [[of]] [[India]]}}. <end>
 Page 10522 DHS: Found match for regex: <begin> # {{lb|en|US}} {{init of|en|{{w|Department of Homeland Security}}}}. <end>
 Page 10522 DHS: Found match for regex: <begin> # {{lb|en|US}} {{init of|en|{{w|Department of Human Services}}}}. <end>
 Page 10528 TD: Found match for regex: <begin> # {{init of|en|[[typically]] [[developed]]}}. <end>
@@ -21706,13 +21706,13 @@ Page 10556 SAB: Found match for regex: <begin> # {{init of|en|[[scientific]]/[[s
 Page 10556 SAB: Found match for regex: <begin> # {{init of|sv|[[Sverige]]s [[allmänna]] [[biblioteksförening]]||Sweden's public library association}} <end>
 Page 10557 EO: Found match for regex: <begin> # {{init of|en|equal-opportunity}}. <end>
 Page 10557 EO: Found match for regex: <begin> # {{lb|en|countable}} {{init of|en|executive order}}. <end>
-Page 10557 EO: Found match for regex: <begin> # {{init of|en|{{u|education}} {{u|otherwise}}}}, a home education charity in the UK <end>
+Page 10557 EO: Found match for regex: <begin> # {{init of|en|{{U|education}} {{U|otherwise}}}}, a home education charity in the UK <end>
 Page 10559 SBA: Found match for regex: <begin> # {{init of|en|school-based assessment}}. <end>
 Page 10559 SBA: Found match for regex: <begin> # {{lb|en|numismatic slang}} {{init of|en|Susan B. Anthony}}. <end>
 Page 10559 SBA: Found match for regex: <begin> # {{lb|en|education}} {{init of|en|{{w|Single Best Answer|single best answer}}}}. <end>
 Page 10559 SBA: Found match for regex: <begin> # {{lb|en|US}} {{init of|en|{{w|Small Business Administration}}}}. <end>
 Page 10560 DNC: Found match for regex: <begin> # {{lb|en|US politics}} {{init of|en|w:Democratic National Committee}}. <end>
-Page 10560 DNC: Found match for regex: <begin> # {{lb|en|US|legal|historical}} {{init of|en|{{u|district}} of [[North Carolina]]}}, a former {{w|United States federal court}}. <end>
+Page 10560 DNC: Found match for regex: <begin> # {{lb|en|US|legal|historical}} {{init of|en|{{U|district}} of [[North Carolina]]}}, a former {{w|United States federal court}}. <end>
 Page 10560 DNC: Found match for regex: <begin> # {{lb|en|US politics}} {{init of|en|w:Democratic National Convention}}. <end>
 Page 10560 DNC: Found match for regex: <begin> # {{init of|en|[[direct]] [[numerical]] [[control]]}}. <end>
 Page 10560 DNC: Found match for regex: <begin> # {{init of|en|[[distributed]] [[numerical]] [[control]]}}. <end>
@@ -21754,7 +21754,7 @@ Page 10583 STI: Found match for regex: <begin> # {{lb|en|disease}} {{init of|en|
 Page 10583 STI: Found match for regex: <begin> # {{lb|en|disease}} {{init of|en|[[sexually]] [[transmitted]] [[illness]]}}. <end>
 Page 10589 USD: Found match for regex: <begin> # {{init of|en|[[unified]] [[school district]]}}. <end>
 Page 10589 USD: Found match for regex: <begin> # {{init of|en|[[United States]] [[dollar]]}}. <end>
-Page 10589 USD: Found match for regex: <begin> # {{init of|en|{{u|university}} of [[San Diego]]}}. <end>
+Page 10589 USD: Found match for regex: <begin> # {{init of|en|{{U|university}} of [[San Diego]]}}. <end>
 Page 10589 USD: Found match for regex: <begin> # {{init of|en|University of [[South Dakota]]}}. <end>
 Page 10590 HUD: Found match for regex: <begin> # {{lb|en|internet slang|texting}} {{init of|en|[[how are you doing|how you doing]]}}. <end>
 Page 10595 6DOF: Found match for regex: <begin> # {{init of|en|6 [[degree|Degree]]s Of [[freedom|Freedom]]}}; the range of movements allowed in a [[virtual reality|virtual-reality]] [[system]] and related [[game]]s, namely those in the [[x-direction|''x-'']], [[y-direction|''y-'']] and [[z-direction|''z-''directions]], or [[pitch]], [[yaw]] and [[roll]] respectively <end>
@@ -21854,7 +21854,7 @@ Page 10669 CRM: Found match for regex: <begin> # {{lb|en|business|finance}} {{in
 Page 10669 CRM: Found match for regex: <begin> # {{lb|en|meteorology}} {{init of|en|{{l|en|certified}} {{l|en|reference}} {{l|en|material}}}}. <end>
 Page 10669 CRM: Found match for regex: <begin> # {{init of|en|[[cultural resource management]]}}. <end>
 Page 10669 CRM: Found match for regex: <begin> # {{init of|en|[[crew]] [[resource]] [[management]]}}. <end>
-Page 10669 CRM: Found match for regex: <begin> # {{lb|en|finance}} {{init of|en|{{u|contingent}} {{u|reimbursement}} {{u|model}}}}. <end>
+Page 10669 CRM: Found match for regex: <begin> # {{lb|en|finance}} {{init of|en|{{U|contingent}} {{U|reimbursement}} {{U|model}}}}. <end>
 Page 10675 LTC: Found match for regex: <begin> # {{lb|en|uncountable}} {{init of|en|[[long-term]] [[care]]}}. <end>
 Page 10675 LTC: Found match for regex: <begin> # {{lb|en|countable}} {{init of|en|lieutenant colonel}}. <end>
 Page 10675 LTC: Found match for regex: <begin> # {{lb|en|broadcasting}} {{init of|en|[[last]] [[telecast]]}}. <end>
@@ -21967,12 +21967,12 @@ Page 10775 CEA: Found match for regex: <begin> # {{init of|en|[[carcinoembryonic
 Page 10775 CEA: Found match for regex: <begin> # {{init of|en|collie eye anomaly}}. <end>
 Page 10775 CEA: Found match for regex: <begin> # {{init of|en|[[cumulative]] [[effect]]s [[assessment]]}}. <end>
 Page 10775 CEA: Found match for regex: <begin> # {{init of|en|w:Centre for Effective Altruism}}. <end>
-Page 10775 CEA: Found match for regex: <begin> # {{init of|en|{{u|cinema}} {{u|exhibition}} {{u|association}}}}. <end>
+Page 10775 CEA: Found match for regex: <begin> # {{init of|en|{{U|cinema}} {{U|exhibition}} {{U|association}}}}. <end>
 Page 10776 PBUH: Found match for regex: <begin> # {{lb|en|Islam|sometimes|proscribed}} {{init of|en|peace be upon him,peace be upon her}}; {{ng|an honorific phrase used by some Muslims after any mention in speech or print of the Islamic prophet [[Muhammad]] or any other prophets or chosen figures believed by the majority of Muslims to be sent by God (Allah)}}. <end>
 Page 10779 UCI: Found match for regex: <begin> # {{init of|en|w:Union Cycliste Internationale}}. <end>
 Page 10779 UCI: Found match for regex: <begin> # {{init of|en|w:University of California, Irvine}}. <end>
 Page 10779 UCI: Found match for regex: <begin> # {{init of|ca|unitat de cures intensives|t=[[intensive care unit]]; [[ICU]]}} <end>
-Page 10779 UCI: Found match for regex: <begin> # {{init of|ca|{{u|unió}} {{u|ciclista}} {{u|internacional}}|t=Union Cycliste Internationale; [[UCI#English|UCI]]}} <end>
+Page 10779 UCI: Found match for regex: <begin> # {{init of|ca|{{U|unió}} {{U|ciclista}} {{U|internacional}}|t=Union Cycliste Internationale; [[UCI#English|UCI]]}} <end>
 Page 10779 UCI: Found match for regex: <begin> # {{init of|fr|w:Union Cycliste Internationale}} <end>
 Page 10789 a.b.: Found match for regex: <begin> # {{init of|en|[[as]] [[before]]}}. <end>
 Page 10791 DIL: Found match for regex: <begin> # {{init of|en|[[dual]]-in-[[line]]}}. <end>
@@ -22279,8 +22279,8 @@ Page 11055 IBA: Found match for regex: <begin> # {{init of|en|[[indole]]-3-[[but
 Page 11055 IBA: Found match for regex: <begin> # {{init of|en|[[ion]] [[beam]] [[analysis]]}}, an analytical technique <end>
 Page 11055 IBA: Found match for regex: <begin> # {{lb|en|military|US}} {{init of|en|{{cap|interceptor}} Body Armor}}. <end>
 Page 11056 FAB: Found match for regex: <begin> # {{lb|en|Philippines}} {{init of|en|w:Freeport Area of Bataan}}. <end>
-Page 11057 CNSA: Found match for regex: <begin> # {{init of|en|[[China]] {{u|national}} {{u|space}} {{u|administration}}}}. <end>
-Page 11057 CNSA: Found match for regex: <begin> # {{init of|en|[[China]] {{u|national}} {{u|school}} [[of]] {{u|administration}}}}. <end>
+Page 11057 CNSA: Found match for regex: <begin> # {{init of|en|[[China]] {{U|national}} {{U|space}} {{U|administration}}}}. <end>
+Page 11057 CNSA: Found match for regex: <begin> # {{init of|en|[[China]] {{U|national}} {{U|school}} [[of]] {{U|administration}}}}. <end>
 Page 11058 WNBA: Found match for regex: <begin> # {{init of|en|w:Women's National Basketball Association}}. <end>
 Page 11060 RD&D: Found match for regex: <begin> # {{init of|en|[[research]], [[development]] and [[demonstration]]}}. <end>
 Page 11061 HSE: Found match for regex: <begin> # {{lb|en|Ireland}} {{init of|en|w:Health Service Executive}},  the public [[healthcare]] system in Ireland. <end>
@@ -22600,7 +22600,7 @@ Page 11336 NAFAIK: Found match for regex: <begin> # {{lb|en|chiefly|Internet sla
 Page 11339 NPF: Found match for regex: <begin> # {{lb|en|softball}} {{init of|en|The [[w:National Pro Fastpitch|National Pro Fastpitch]]}}, the senior [[softball]] league in the US. <end>
 Page 11339 NPF: Found match for regex: <begin> # {{init of|en|{{w|National Progressive Front}}}}. <end>
 Page 11339 NPF: Found match for regex: <begin> # {{init of|sv|[[neuropsykiatrisk]] [[funktionsnedsättning]]||neurodevelopmental disorder}} <end>
-Page 11340 FIDS: Found match for regex: <begin> # {{init of|en|[[Falkland Islands]] [[dependency|Dependencies]] {{u|survey}}}}. <end>
+Page 11340 FIDS: Found match for regex: <begin> # {{init of|en|[[Falkland Islands]] [[dependency|Dependencies]] {{U|survey}}}}. <end>
 Page 11340 FIDS: Found match for regex: <begin> # {{init of|en|{{w|flight information display system}}}} A key system of every airport for displaying actual flight information on several display devices (e.g. monitors, LED boards, etc.) and Intranet real-time information distribution/broadcasting for airport staff. <end>
 Page 11342 DLT: Found match for regex: <begin> # {{lb|en|computing}} {{init of|en|w:Digital Linear Tape}}: a computer storage tape format having a single spooled cartridge using multitrack linear serpentine recording on a half-inch wide tape. <end>
 Page 11342 DLT: Found match for regex: <begin> # {{lb|en|electronics}} {{init of|en|[[device]] [[layer]] [[transfer]]}}: the process of fabricating a device on one substrate, followed by transfer to target substrate. <end>
@@ -22922,7 +22922,7 @@ Page 11635 IKR: Found match for regex: <begin> # {{lb|en|internet slang|text mes
 Page 11636 GID: Found match for regex: <begin> # {{C|en|Gender|Transgender}} {{lb|en|psychology|uncountable}} {{init of|en|gender identity disorder}}. <end>
 Page 11639 GTO: Found match for regex: <begin> # {{lb|en|poker}} {{init of|en|[[game theory|Game Theory]] {{cap|optimal}}}}. <end>
 Page 11640 M-W: Found match for regex: <begin> # {{lb|en|linguistics}} {{init of|en|{{w|Merriam-Webster}}}}. <end>
-Page 11641 CTS: Found match for regex: <begin> # {{lb|en|computing}} {{init of|en|{{u|common}} {{u|time}} {{u|system}}}}. <end>
+Page 11641 CTS: Found match for regex: <begin> # {{lb|en|computing}} {{init of|en|{{U|common}} {{U|time}} {{U|system}}}}. <end>
 Page 11641 CTS: Found match for regex: <begin> # {{lb|en|disease}} {{init of|en|carpal tunnel syndrome}}. <end>
 Page 11641 CTS: Found match for regex: <begin> # {{lb|en|navigation}} {{init of|en|course to steer}}. <end>
 Page 11641 CTS: Found match for regex: <begin> # {{lb|en|academia}} {{init of|en|[[copyright]] [[transfer]] [[statement]]||a contract with which the author of a work cedes copyright to a publisher}}. <end>
@@ -22987,7 +22987,7 @@ Page 11691 HAM: Found match for regex: <begin> # {{lb|en|computer graphics}} {{i
 Page 11691 HAM: Found match for regex: <begin> # {{lb|en|chiefly|_|AAVE}} {{init of|en|[[hard]] [[as]] [[a]] [[motherfucker]]}}, [[extremely]] [[hard]], [[extremely]] [[intensely]], [[crazily]]. <end>
 Page 11693 c&b: Found match for regex: <begin> # {{lb|en|cricket|on a scorecard}} {{init of|en|[[caught and bowled|Caught and bowled]]}}. <end>
 Page 11696 NEMO: Found match for regex: <begin> # {{lb|en|protein}} {{init of|en|{{w|IKBKG|NF-kappa-B essential modulator}}}}. <end>
-Page 11697 TPS: Found match for regex: <begin> # {{init of|en|[[Toronto]] {{u|police}} {{u|service}}}}. <end>
+Page 11697 TPS: Found match for regex: <begin> # {{init of|en|[[Toronto]] {{U|police}} {{U|service}}}}. <end>
 Page 11697 TPS: Found match for regex: <begin> # {{lb|en|US|law}} {{init of|en|temporary protected status}}. <end>
 Page 11697 TPS: Found match for regex: <begin> # {{init of|en|thermal protection system}}. <end>
 Page 11697 TPS: Found match for regex: <begin> # {{lb|en|software engineering}} {{init of|en|[[test]]ing [[procedure]] [[specification]]}}. <end>
@@ -23434,7 +23434,7 @@ Page 12180 NRB: Found match for regex: <begin> # {{init of|en|w:National Religio
 Page 12183 IARTK: Found match for regex: <begin> # {{lb|en|navigation|aviation}} {{init of|en|[[inertially]]-[[aided]] [[real-time]] [[kinematic]] ([[RTK]])}}. <end>
 Page 12184 STG: Found match for regex: <begin> # {{lb|en|US|prisons}} {{init of|en|[[security]] [[threat]] [[group]]}}, a [[prison]] [[gang]] <end>
 Page 12184 STG: Found match for regex: <begin> # {{lb|en|internet slang|texting}} {{init of|en|swear to God}}. <end>
-Page 12185 LGBTQ+: Found match for regex: <begin> # {{init of|en|{{u|lesbian}}, {{u|gay}}, {{u|bisexual}}, {{u|transgender}}/{{u|transsexual}}, {{u|queer}}/{{u|questioning}} [[plus]]}} The "plus" is inclusive of other groups, such as [[asexual]], [[intersex]], etc. <end>
+Page 12185 LGBTQ+: Found match for regex: <begin> # {{init of|en|{{U|lesbian}}, {{U|gay}}, {{U|bisexual}}, {{U|transgender}}/{{U|transsexual}}, {{U|queer}}/{{U|questioning}} [[plus]]}} The "plus" is inclusive of other groups, such as [[asexual]], [[intersex]], etc. <end>
 Page 12190 BRC: Found match for regex: <begin> # {{init of|en|w:British Retail Consortium}}. <end>
 Page 12190 BRC: Found match for regex: <begin> # {{init of|en|w:British Rabbit Council}}. <end>
 Page 12190 BRC: Found match for regex: <begin> # {{lb|en|US|scouting}} {{init of|en|w:Blue Ridge Council}}. <end>
@@ -23524,7 +23524,7 @@ Page 12309 SASL: Found match for regex: <begin> # {{init of|en|South African Sig
 Page 12309 SASL: Found match for regex: <begin> # {{lb|en|historical}} {{init of|en|[[South African]] [[soccer|Soccer]] [[league|League]]}}. <end>
 Page 12309 SASL: Found match for regex: <begin> # {{lb|en|computing}} {{init of|en|{{w|Simple Authentication and Security Layer}}}}. <end>
 Page 12309 SASL: Found match for regex: <begin> # {{lb|en|programming}} {{init of|en|{{w|SASL (programming language)|St Andrews Static/Standard Language}}}}. <end>
-Page 12311 БНХАУ: Found match for regex: <begin> # {{place|mn|initof=Бүгд Найрамдах Хятад Ард Улс<t:People’s Republic of China>|t=PRC|country|r/East Asia}} <end>
+Page 12311 БНХАУ: Found match for regex: <begin> # {{place|mn|ann=init of:Бүгд Найрамдах Хятад Ард Улс<t:People’s Republic of China>|t=PRC|country|r/East Asia}} <end>
 Page 12313 RWC: Found match for regex: <begin> # {{init of|en|{{w|Rugby World Cup}}}}. <end>
 Page 12316 VVS: Found match for regex: <begin> # {{init of|sv|[[värme]], [[ventilation]], [[sanitet]]||heat, ventilation, sanitation}} <end>
 Page 12317 PABA: Found match for regex: <begin> # {{init of|en|{{w|Pan Asian Boxing Association}}}}. <end>
@@ -23755,7 +23755,7 @@ Page 12507 TLOC: Found match for regex: <begin> # {{lb|en|medicine}} {{init of|e
 Page 12509 FEP: Found match for regex: <begin> # {{lb|en|organic chemistry|engineering|uncountable}} {{init of|en|[[fluorinate]]d [[ethylene]]/[[propylene]]}} {{gloss|a type of [[fluoropolymer]]}}. <end>
 Page 12510 cpmm: Found match for regex: <begin> # {{init of|en|[[character]](s) per [[millimeter]]}}. <end>
 Page 12511 SSJ: Found match for regex: <begin> # {{lb|en|US|business}} {{init of|en|[[sole]] [[source]] [[justification]]}}. <end>
-Page 12512 АНУ: Found match for regex: <begin> # {{place|mn|initof=Америкийн Нэгдсэн Улс<t:United States of America>|t=USA|country|continent/North America}} <end>
+Page 12512 АНУ: Found match for regex: <begin> # {{place|mn|ann=init of:Америкийн Нэгдсэн Улс<t:United States of America>|t=USA|country|continent/North America}} <end>
 Page 12513 KIAS: Found match for regex: <begin> # {{lb|en|aviation}} {{init of|en|[[knot]]s [[indicated airspeed]]}}. <end>
 Page 12514 KCAS: Found match for regex: <begin> # {{lb|en|aviation}} {{init of|en|[[knot]]s [[calibrated airspeed]]}}. <end>
 Page 12515 KEAS: Found match for regex: <begin> # {{lb|en|aviation}} {{init of|en|[[knot]]s [[equivalent airspeed]]}}. <end>
@@ -24415,10 +24415,10 @@ Page 13067 RKO: Found match for regex: <begin> # {{lb|de|historical}} {{init of|
 Page 13068 OSTP: Found match for regex: <begin> # {{lb|en|US politics}} {{init of|en|w:Office of Science and Technology Policy}}. <end>
 Page 13069 УБ: Found match for regex: <begin> # {{init of|mn|Улаанбаатар||[[Ulaanbaatar]]}} <end>
 Page 13070 БХ: Found match for regex: <begin> # {{init of|mn|Баянхонгор||[[Bayankhongor]]}} <end>
-Page 13071 ОХУ: Found match for regex: <begin> # {{place|mn|initof=Оросын Холбооны Улс<t:Russian Federation>|t=Russia|country|continent/Europe,Asia}} <end>
+Page 13071 ОХУ: Found match for regex: <begin> # {{place|mn|ann=init of:Оросын Холбооны Улс<t:Russian Federation>|t=Russia|country|continent/Europe,Asia}} <end>
 Page 13072 МУИС: Found match for regex: <begin> # {{init of|mn|w:National University of Mongolia|Монгол Улсын Их Сургууль|National University of Mongolia}} <end>
 Page 13073 НХУ: Found match for regex: <begin> # {{init of|mn|нислэгийн хөдөлгөөний удирдлага||[[air traffic control]]}} <end>
-Page 13074 ЗХУ: Found match for regex: <begin> # {{lb|mn|historical}} {{place|mn|initof=Зөвлөлт Холбоот Улс<t:Soviet Union>|t=USSR|former country|continent/Europe|and|continent/Asia}} <end>
+Page 13074 ЗХУ: Found match for regex: <begin> # {{lb|mn|historical}} {{place|mn|ann=init of:Зөвлөлт Холбоот Улс<t:Soviet Union>|t=USSR|former country|continent/Europe|and|continent/Asia}} <end>
 Page 13075 EGB: Found match for regex: <begin> # {{init of|es||Educación General Básica|A former education system in Spain}} <end>
 Page 13076 NICI: Found match for regex: <begin> # {{init of|en|[[negative]] [[ion]] [[chemical]] [[ionization]]}}. <end>
 Page 13077 SANE: Found match for regex: <begin> # {{init of|en|[[sexual assault]] [[nurse]] [[examiner]]}}. <end>
@@ -24899,7 +24899,7 @@ Page 13469 EGF: Found match for regex: <begin> # {{init of|en|[[epidermal]] [[gr
 Page 13469 EGF: Found match for regex: <begin> # {{lb|en|math}} {{init of|en|exponential generating function}}. <end>
 Page 13470 ILSI: Found match for regex: <begin> # {{init of|en|w:International Life Sciences Institute}}. <end>
 Page 13471 VH: Found match for regex: <begin> # {{init of|en|[[virtual]] [[human]]}}. <end>
-Page 13472 UWS: Found match for regex: <begin> # {{place|en|initof=Upper West Side|neighborhood|borough/Manhattan|city/New York City|s/New York|c/USA}}. <end>
+Page 13472 UWS: Found match for regex: <begin> # {{place|en|ann=init of:Upper West Side|neighborhood|borough/Manhattan|city/New York City|s/New York|c/USA}}. <end>
 Page 13472 UWS: Found match for regex: <begin> # {{init of|en|w:University of Wisconsin–Superior}}. <end>
 Page 13472 UWS: Found match for regex: <begin> # {{init of|en|w:University of the West of Scotland}}. <end>
 Page 13472 UWS: Found match for regex: <begin> # {{init of|en|w:University of Western States}}. <end>
@@ -25158,7 +25158,7 @@ Page 13654 HHD: Found match for regex: <begin> # {{lb|en|medicine}} {{init of|en
 Page 13654 HHD: Found match for regex: <begin> # {{lb|en|military}} {{init of|en|[[headquarters]] and headquarters [[company]]}}. <end>
 Page 13654 HHD: Found match for regex: <begin> # {{init of|en|w:Helena Historic District}}. <end>
 Page 13655 OPW: Found match for regex: <begin> # {{lb|en|Ireland}} {{init of|en|w:Office of Public Works}}. <end>
-Page 13656 IFSC: Found match for regex: <begin> # {{place|en|initof=[[w:International Financial Services Centre, Dublin|International Financial Services Centre]]|central business district/and/[[special economic zone]]|city/Dublin|country/Ireland}}. <end>
+Page 13656 IFSC: Found match for regex: <begin> # {{place|en|ann=init of:[[w:International Financial Services Centre, Dublin|International Financial Services Centre]]|central business district/and/[[special economic zone]]|city/Dublin|country/Ireland}}. <end>
 Page 13657 ESRI: Found match for regex: <begin> # {{lb|en|Ireland}} {{init of|en|w:Economic and Social Research Institute}}. <end>
 Page 13658 HEIF: Found match for regex: <begin> # {{lb|en|computer graphics|file format}} {{init of|en|w:High Efficiency Image File Format|High Efficiency Image File}}, a container format for storing individual images and image sequences. <end>
 Page 13659 YKW: Found match for regex: <begin> # {{lb|en|internet slang|text messaging}} {{init of|en|you know what}}. <end>
@@ -25730,7 +25730,7 @@ Page 14052 QPQ: Found match for regex: <begin> # {{lb|en|somewhat|_|informal}} {
 Page 14052 QPQ: Found match for regex: <begin> # {{lb|en|metalworking}} {{init of|en|[[quench]] [[polish]] quench||a [[treatment]] [[process]] for [[harden]]ing [[steel]], i.e. [[enhance|enhancing]] its [[corrosion]] resistance}}. <end>
 Page 14053 NPRA: Found match for regex: <begin> # {{init of|en|w:National Petroleum Reserve in Alaska}}. <end>
 Page 14053 NPRA: Found match for regex: <begin> # {{init of|en|w:Norwegian Public Roads Administration}}. <end>
-Page 14053 NPRA: Found match for regex: <begin> # {{init of|en|{{u|national}} {{u|petrochemical}} and {{u|refiners}} {{u|association}}}}. <end>
+Page 14053 NPRA: Found match for regex: <begin> # {{init of|en|{{U|national}} {{U|petrochemical}} and {{U|refiners}} {{U|association}}}}. <end>
 Page 14053 NPRA: Found match for regex: <begin> # {{lb|en|biochemistry}} {{init of|en|w:natriuretic peptide receptor A}}. <end>
 Page 14054 SMSC: Found match for regex: <begin> # {{lb|en|education}} {{init of|en|[[spiritual]], [[moral]], [[social]] and [[cultural]]}}. <end>
 Page 14055 OSFA: Found match for regex: <begin> # {{lb|en|uncommon}} {{init of|en|one-size-fits-all}}. <end>
@@ -25807,7 +25807,7 @@ Page 14107 LCZ: Found match for regex: <begin> # {{lb|en|Singapore}} {{init of|e
 Page 14109 SDUK: Found match for regex: <begin> # {{init of|en|{{w|Society for the Diffusion of Useful Knowledge}}}}. <end>
 Page 14110 NIFRS: Found match for regex: <begin> # {{init of|en|w:Northern Ireland Fire and Rescue Service}}. <end>
 Page 14111 HFPA: Found match for regex: <begin> # {{lb|en|historical}} {{init of|en|w:Hollywood Foreign Press Association}}. <end>
-Page 14112 MCSS: Found match for regex: <begin> # {{lb|en|Canada}} {{init of|en|{{u|ministry}} of {{u|children}} and [[social services|Social Services]]}}. <end>
+Page 14112 MCSS: Found match for regex: <begin> # {{lb|en|Canada}} {{init of|en|{{U|ministry}} of {{U|children}} and [[social services|Social Services]]}}. <end>
 Page 14113 JCQ: Found match for regex: <begin> # {{init of|en|w:Joint Council for Qualifications}}. <end>
 Page 14114 BFLPE: Found match for regex: <begin> # {{init of|en|big-fish-little-pond effect}}. <end>
 Page 14115 KCSIE: Found match for regex: <begin> # {{lb|en|UK|education}} {{init of|en|[[keep]]ing [[child]]ren [[safe]] in [[education]]}}. <end>
@@ -25821,7 +25821,7 @@ Page 14116 LRU: Found match for regex: <begin> # {{init of|en|w:line-replaceable
 Page 14117 LRB: Found match for regex: <begin> # {{init of|en|w:London Review of Books}}. <end>
 Page 14118 Mus.B.: Found match for regex: <begin> # {{init of|en|[[bachelor]] of [[music]]}}. <end>
 Page 14119 Mus.D.: Found match for regex: <begin> # {{lb|en|dated}} {{init of|en|[[bachelor]] of [[music]]}}. <end>
-Page 14120 IBCA: Found match for regex: <begin> # {{init of|en|{{u|infected}} {{u|blood}} {{u|compensation}} {{u|authority}}}}. <end>
+Page 14120 IBCA: Found match for regex: <begin> # {{init of|en|{{U|infected}} {{U|blood}} {{U|compensation}} {{U|authority}}}}. <end>
 Page 14121 SAAF: Found match for regex: <begin> # {{lb|en|South Africa|military|aviation}} {{init of|en| {{w|South African Air Force}}}}. <end>
 Page 14122 DoLS: Found match for regex: <begin> # {{init of|en|[[deprivation]] of [[liberty]] [[safeguard]]s}}. <end>
 Page 14123 TLAM: Found match for regex: <begin> # {{lb|en|US|_|military}} {{init of|en|w:Tomahawk (missile)|Tomahawk Land Attack Missile}}. <end>
@@ -25954,7 +25954,7 @@ Page 14238 PRF: Found match for regex: <begin> # {{lb|pt|Brazil}} {{init of|pt|w
 Page 14239 UHE: Found match for regex: <begin> # {{lb|pt|Brazil}} {{init of|pt|usina hidrelétrica|gloss=hydroelectric power plant}} <end>
 Page 14240 OCIAA: Found match for regex: <begin> # {{lb|en|US politics|historical}} {{init of|en|w:Office of the Coordinator of Inter-American Affairs}}. <end>
 Page 14241 ck: Found match for regex: <begin> # {{lb|vi|slang|Internet|text messaging}} {{init of|vi|[[chuyển khoản]]}} <end>
-Page 14242 SRN: Found match for regex: <begin> # {{init of|en|{{u|shared}} {{u|rural}} {{u|network}}}}. <end>
+Page 14242 SRN: Found match for regex: <begin> # {{init of|en|{{U|shared}} {{U|rural}} {{U|network}}}}. <end>
 Page 14243 IGC: Found match for regex: <begin> # {{init of|en|w:International Gender Champions}}. <end>
 Page 14243 IGC: Found match for regex: <begin> # {{init of|en|w:International Grains Council}}. <end>
 Page 14243 IGC: Found match for regex: <begin> # {{init of|en|w:International Growth Centre}}. <end>
@@ -25995,7 +25995,7 @@ Page 14273 PGH: Found match for regex: <begin> # {{lbl|en|Philippines}} {{init o
 Page 14274 ZPE: Found match for regex: <begin> # {{init of|pt|w:pt:Zona de Proteção Especial|t={{w|Special Protection Area}}}} <end>
 Page 14274 ZPE: Found match for regex: <begin> # {{lb|pt|Brazil}} {{init of|pt|w:pt:Zona de Processamento de Exportação|lit=zone for export processing|t=free-trade zone}} <end>
 Page 14275 ZEPA: Found match for regex: <begin> # {{init of|es|w:es:Zona de Especial Protección para las Aves|t=Special Protection Area for Birds}} <end>
-Page 14277 TGIA: Found match for regex: <begin> # {{init of|en|[[Taiwan]] {{u|garment}} {{u|industry}} {{u|association}}}}. <end>
+Page 14277 TGIA: Found match for regex: <begin> # {{init of|en|[[Taiwan]] {{U|garment}} {{U|industry}} {{U|association}}}}. <end>
 Page 14278 TNVS: Found match for regex: <begin> # {{lbl|en|Philippines}} {{init of|en|transportation network vehicle service}}. <end>
 Page 14279 CIMMYT: Found match for regex: <begin> # {{init of|es|w:es:Centro Internacional de Mejoramiento de Maíz y Trigo|t={{w|International Maize and Wheat Improvement Center}}}} <end>
 Page 14280 CVRF: Found match for regex: <begin> # {{lb|en|medicine}} {{init of|en|[[cardiovascular]] [[risk factor]]}}. <end>
@@ -26011,7 +26011,7 @@ Page 14288 SPÖ: Found match for regex: <begin> # {{lb|de|Austria|politics}} {{i
 Page 14289 CDAA: Found match for regex: <begin> # {{lb|en|telecommunications}} {{init of|en|circularly disposed antenna array}}. <end>
 Page 14290 CDDA: Found match for regex: <begin> # {{lb|en|telecommunications}} {{init of|en|circularly disposed dipole array}}. <end>
 Page 14291 TRE: Found match for regex: <begin> # {{lb|pt|Brazil|politics}} {{init of|pt|w:pt:Tribunal Regional Eleitoral|t=Regional Electoral Court}} <end>
-Page 14293 AAPAA: Found match for regex: <begin> # {{lb|en|historical}} {{init of|en|{{u|association}} of [[Asian-Pacific]] [[American]] [[artist|Artists]]}}. <end>
+Page 14293 AAPAA: Found match for regex: <begin> # {{lb|en|historical}} {{init of|en|{{U|association}} of [[Asian-Pacific]] [[American]] [[artist|Artists]]}}. <end>
 Page 14294 PARQ: Found match for regex: <begin> # {{lb|en|medicine}} {{init of|en|[[procedure]]s, [[alternative]]s, [[risk]]s, and [[question]]s}}. <end>
 Page 14296 VCF: Found match for regex: <begin> # {{lb|en|medicine}} {{init of|en|[[vertebral]] [[compression fracture]]}}. <end>
 Page 14297 SEGM: Found match for regex: <begin> # {{init of|en|w:Society for Evidence-Based Gender Medicine}}. <end>
@@ -26071,7 +26071,7 @@ Page 14347 AVX: Found match for regex: <begin> # {{lb|en|computing}} {{init of|e
 Page 14348 PBIS: Found match for regex: <begin> # {{lb|en|education}} {{init of|en|[[positive]] [[behavioral]] [[intervention]]s & [[support]]s}}. <end>
 Page 14349 DVPN: Found match for regex: <begin> # {{init of|en|[[domestic violence]] [[protection]] [[notice]]}}. <end>
 Page 14350 vnt.: Found match for regex: <begin> # {{init of|lt|víenetas}} <end>
-Page 14351 VDPS: Found match for regex: <begin> # {{init of|en|{{u|vaccine}} {{u|damage}} {{u|payment}} {{u|scheme}}}}. <end>
+Page 14351 VDPS: Found match for regex: <begin> # {{init of|en|{{U|vaccine}} {{U|damage}} {{U|payment}} {{U|scheme}}}}. <end>
 Page 14352 NRR: Found match for regex: <begin> # {{lb|en|cricket}} {{init of|en|net run rate}}. <end>
 Page 14353 PVPS: Found match for regex: <begin> # {{init of|en|w:post-vasectomy pain syndrome}}. <end>
 Page 14354 UVSS: Found match for regex: <begin> # {{init of|en|w:UV-sensitive syndrome|ultraviolet-sensitive syndrome}}. <end>
@@ -26108,14 +26108,14 @@ Page 14383 CRQC: Found match for regex: <begin> # {{lb|en|cryptography}} {{init 
 Page 14384 LCFS: Found match for regex: <begin> # {{init of|en|{{w|low-carbon fuel standard}}}}. <end>
 Page 14385 JF: Found match for regex: <begin> # {{init of|pt|Juiz de Fora}} <end>
 Page 14386 DGU: Found match for regex: <begin> # {{init of|en|w:defensive gun use}}. <end>
-Page 14387 UKHSA: Found match for regex: <begin> # {{init of|en|[[United Kingdom]] {{u|health}} {{u|security}} {{u|agency}}}}. <end>
+Page 14387 UKHSA: Found match for regex: <begin> # {{init of|en|[[United Kingdom]] {{U|health}} {{U|security}} {{U|agency}}}}. <end>
 Page 14388 ASPS: Found match for regex: <begin> # {{init of|en|{{w|American Society of Plastic Surgeons}}}}. <end>
 Page 14389 WHRC: Found match for regex: <begin> # {{init of|en|w:Women's Declaration International|Women's Human Rights Campaign}}. <end>
 Page 14390 AHJ: Found match for regex: <begin> # {{init of|en|[[authority]] having [[jurisdiction]]}}. <end>
 Page 14391 IAFF: Found match for regex: <begin> # {{init of|en|w:International Association of Fire Fighters}}. <end>
 Page 14392 IFSTA: Found match for regex: <begin> # {{init of|en|w:International Fire Service Training Association}}. <end>
-Page 14393 ASRS: Found match for regex: <begin> # {{init of|en|{{u|aviation}} {{u|safety}} {{u|reporting}} {{u|system}}}}. <end>
-Page 14394 SEFU: Found match for regex: <begin> # {{init of|en|{{u|storm}} {{u|emergency}} {{u|fire}} {{u|unit}}||a kind of [[fire engine]]}}. <end>
+Page 14393 ASRS: Found match for regex: <begin> # {{init of|en|{{U|aviation}} {{U|safety}} {{U|reporting}} {{U|system}}}}. <end>
+Page 14394 SEFU: Found match for regex: <begin> # {{init of|en|{{U|storm}} {{U|emergency}} {{U|fire}} {{U|unit}}||a kind of [[fire engine]]}}. <end>
 Page 14395 UFL: Found match for regex: <begin> # {{init of|en|[[upper]] [[flammable]] [[limit]]}}. <end>
 Page 14396 USFA: Found match for regex: <begin> # {{init of|en|w:United States Fire Administration}}. <end>
 Page 14396 USFA: Found match for regex: <begin> # {{init of|en|w:United States Food Administration}}. <end>
@@ -26124,7 +26124,7 @@ Page 14396 USFA: Found match for regex: <begin> # {{lb|en|historical|military}} 
 Page 14397 FFFIPP: Found match for regex: <begin> # {{init of|en|w:Fire Fighter Fatality Investigation and Prevention Program}}. <end>
 Page 14398 NWCG: Found match for regex: <begin> # {{init of|en|w:National Wildfire Coordinating Group}}. <end>
 Page 14399 AFFF: Found match for regex: <begin> # {{init of|en|[[aqueous]] [[film]]-[[form]]ing [[foam]]}}. <end>
-Page 14400 BIFC: Found match for regex: <begin> # {{lb|en|historical}} {{init of|en|[[Boise]] {{u|interagency}} {{u|fire}} {{u|center}}}}. <end>
+Page 14400 BIFC: Found match for regex: <begin> # {{lb|en|historical}} {{init of|en|[[Boise]] {{U|interagency}} {{U|fire}} {{U|center}}}}. <end>
 Page 14401 RIT: Found match for regex: <begin> # {{init of|en|[[rapid]] [[intervention]] [[team]]}}. <end>
 Page 14402 RIG: Found match for regex: <begin> # {{init of|en|[[rapid]] [[intervention]] [[group]]}}. <end>
 Page 14403 UEL: Found match for regex: <begin> # {{init of|en|[[upper]] [[explosive]] [[limit]]}}. <end>
@@ -26135,7 +26135,7 @@ Page 14407 WFU: Found match for regex: <begin> # {{init of|en|[[wildland]] [[fir
 Page 14408 CAFS: Found match for regex: <begin> # {{init of|en|[[compressed air]] [[foam]] [[system]]}}. <end>
 Page 14409 FFFP: Found match for regex: <begin> # {{init of|en|[[film]]-[[form]]ing [[fluoroprotein]]||type of foam used in firefighting}}. <end>
 Page 14410 VEIS: Found match for regex: <begin> # {{init of|en|[[vent]], [[enter]], [[isolate]], [[search]]||a firefighting and rescue strategy}}. <end>
-Page 14411 FESHE: Found match for regex: <begin> # {{init of|en|{{u|fire}} [[emergency service|Emergency Service]] [[higher education|Higher Education]]}}. <end>
+Page 14411 FESHE: Found match for regex: <begin> # {{init of|en|{{U|fire}} [[emergency service|Emergency Service]] [[higher education|Higher Education]]}}. <end>
 Page 14412 AFCP: Found match for regex: <begin> # {{lb|en|US}} {{init of|en|w:Ambassadors Fund for Cultural Preservation}}. <end>
 Page 14413 CFE: Found match for regex: <begin> # {{init of|en|w:Treaty on Conventional Armed Forces in Europe|Conventional Armed Forces in Europe}}. <end>
 Page 14414 ㄱㅂㅈㄱ: Found match for regex: <begin> # {{lb|ko|text messaging}} {{init of|ko|가보가자||[[Let's go]]}} <end>
@@ -26157,9 +26157,9 @@ Page 14430 ZBR: Found match for regex: <begin> # {{lb|en|computing}} {{init of|e
 Page 14431 MDS: Found match for regex: <begin> # {{init of|en|myelodysplastic syndrome}}. <end>
 Page 14432 LPHS: Found match for regex: <begin> # {{init of|en|w:loin pain hematuria syndrome}}. <end>
 Page 14433 TRG: Found match for regex: <begin> # {{init of|en|tap, rack, go}}. <end>
-Page 14434 OCBC: Found match for regex: <begin> # {{init of|en|{{u|oversea}}-[[Chinese]] {{u|banking}} {{u|corporation}}}}. <end>
+Page 14434 OCBC: Found match for regex: <begin> # {{init of|en|{{U|oversea}}-[[Chinese]] {{U|banking}} {{U|corporation}}}}. <end>
 Page 14435 NMMI: Found match for regex: <begin> # {{init of|en|w:New Mexico Military Institute}}. <end>
-Page 14437 AWRT: Found match for regex: <begin> # {{init of|en|[[American]] [[woman|Women]] in {{u|radio}} and {{u|television}}}}. <end>
+Page 14437 AWRT: Found match for regex: <begin> # {{init of|en|[[American]] [[woman|Women]] in {{U|radio}} and {{U|television}}}}. <end>
 Page 14438 LPTV: Found match for regex: <begin> # {{init of|en|[[low]]-[[power]] [[television]]}}. <end>
 Page 14439 TTSL: Found match for regex: <begin> # {{lb|en|radio}} {{init of|en|[[total]] [[time]] [[spend|spent]] [[listen]]ing}}. <end>
 Page 14440 VBI: Found match for regex: <begin> # {{lb|en|television}} {{init of|en|[[vertical]] [[blanking]] [[interval]]}}. <end>
@@ -26203,7 +26203,7 @@ Page 14472 CDPH: Found match for regex: <begin> # {{init of|en|w:California Depa
 Page 14472 CDPH: Found match for regex: <begin> # {{init of|en|w:Chicago Department of Public Health}}. <end>
 Page 14473 TAE: Found match for regex: <begin> # {{init of|en|[[tilt]] [[aftereffect]]}}. <end>
 Page 14474 GFJ: Found match for regex: <begin> # {{lb|en|medicine}} {{init of|en|[[grapefruit]] [[juice]]}} {{q|known to interact with various drugs}} <end>
-Page 14475 MSLS: Found match for regex: <begin> # {{init of|en|[[Master of Science]] in {{u|library science}}}}. <end>
+Page 14475 MSLS: Found match for regex: <begin> # {{init of|en|[[Master of Science]] in {{U|library science}}}}. <end>
 Page 14476 DQSH: Found match for regex: <begin> # {{init of|en|w:Drag Queen Story Hour}}. <end>
 Page 14477 THFC: Found match for regex: <begin> # {{lb|en|soccer}} {{init of|en|{{w|Tottenham Hotspur F.C.|Tottenham Hotspur Football Club}}}}. <end>
 Page 14478 WHU: Found match for regex: <begin> # {{lb|en|soccer}} {{init of|en|{{w|West Ham United F.C.|West Ham United}}}}. <end>
@@ -26255,12 +26255,12 @@ Page 14518 D&H: Found match for regex: <begin> # {{init of|en|w:Delaware and Hud
 Page 14519 E&R: Found match for regex: <begin> # {{init of|en|w:Evangelical and Reformed Church}}. <end>
 Page 14520 HJS: Found match for regex: <begin> # {{init of|en|w:Henry Jackson Society}}. <end>
 Page 14520 HJS: Found match for regex: <begin> # {{init of|en|w:Hindu Janajagruti Samiti}}. <end>
-Page 14520 HJS: Found match for regex: <begin> # {{lb|en|India}} {{init of|en|{{u|higher}} {{u|judicial}} {{u|service}}}}. <end>
+Page 14520 HJS: Found match for regex: <begin> # {{lb|en|India}} {{init of|en|{{U|higher}} {{U|judicial}} {{U|service}}}}. <end>
 Page 14521 RVA: Found match for regex: <begin> # {{lb|en|computing}} {{init of|en|[[relative]] [[virtual address]]}}. <end>
 Page 14522 UMT: Found match for regex: <begin> # {{init of|en|[[universal]] [[military]] [[training]]}}. <end>
 Page 14523 NUJ: Found match for regex: <begin> # {{init of|en|w:National Union of Journalists}}. <end>
 Page 14523 NUJ: Found match for regex: <begin> # {{init of|en|w:Nigeria Union of Journalists}}. <end>
-Page 14524 WFPS: Found match for regex: <begin> # {{init of|en|[[Winnipeg]] {{u|fire}} {{u|paramedic}} {{u|service}}}}. <end>
+Page 14524 WFPS: Found match for regex: <begin> # {{init of|en|[[Winnipeg]] {{U|fire}} {{U|paramedic}} {{U|service}}}}. <end>
 Page 14525 HRSV: Found match for regex: <begin> # {{init of|en|w:human respiratory syncytial virus}}. <end>
 Page 14526 LAMSA: Found match for regex: <begin> # {{lb|pt|Rio de Janeiro}} {{init of|pt|w:pt:Linha Amarela S.A}} <end>
 Page 14527 BUE: Found match for regex: <begin> # {{init of|en|[[built-up]] [[edge]]}} {{q|in metal machining}} <end>
@@ -26301,7 +26301,7 @@ Page 14555 BAFF: Found match for regex: <begin> # {{lb|en|historical}} {{init of
 Page 14556 AFIP: Found match for regex: <begin> # {{lb|es|Argentina|historical}} {{init of|es|w:es:Administración Federal de Ingresos Públicos|t={{w|Administración Federal de Ingresos Públicos|Federal Administration of Public Income}}}}, the former revenue service of Argentina, replaced by {{l|es|ARCA}}. <end>
 Page 14557 TMTG: Found match for regex: <begin> # {{init of|en|w:Trump Media & Technology Group}}. <end>
 Page 14558 BitB: Found match for regex: <begin> # {{lb|en|computer security}} {{init of|en|[[browser]]-in-the-browser||a kind of [[spoofing]] attack that simulates another browser window within the real [[web browser]]}}. <end>
-Page 14559 UNWRA: Found match for regex: <begin> # {{init of|en|[[United Nations]] {{u|relief}} and {{u|works}} {{u|agency}}}}. <end>
+Page 14559 UNWRA: Found match for regex: <begin> # {{init of|en|[[United Nations]] {{U|relief}} and {{U|works}} {{U|agency}}}}. <end>
 Page 14560 DEIA: Found match for regex: <begin> # {{init of|en|[[diversity]], [[equity]], [[inclusion]]{{,}} and [[accessibility]]}}. <end>
 Page 14561 MNPD: Found match for regex: <begin> # {{init of|en|w:Metropolitan Nashville Police Department}}. <end>
 Page 14562 YOPD: Found match for regex: <begin> # {{init of|en|[[young]]-[[onset]] [[Parkinson's disease]]}}. <end>
