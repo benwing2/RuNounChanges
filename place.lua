@@ -1051,13 +1051,13 @@ end
 -- fact be a comma-separated list of toponyms with inline modifiers attached, and there can also be several items in the
 -- list corresponding to numbered parameters, e.g. |capital=, |capital2=, .... [FIXME: we should switch to always using
 -- the comma-separated format.] `desc` is the desecription to be displayed before the toponym(s). The toponyms will be
--- linked appropriately, defaulting to English if a language code prefix is not explicitly given. If `ucfirst` is given,
--- ". " is added before the string and the first character is made upper case, as is suitable for an English-language
--- term without a translation specified using t=; otherwise, "; " is added before the string and the first character is
--- as-is (which should be lowercase). `auto_plural`, if given, means to automatically pluralize the `desc` if there is
--- more than one toponym. `with_colon`, if given, will add a colon directly after the description, before the following
--- space.
-local function get_extra_info(args, paramname, desc, ucfirst, auto_plural, with_colon)
+-- linked appropriately, defaulting to English if a language code prefix is not explicitly given. If `sentence_style` is
+-- given, ". " is added before the string and the first character is made upper case, as is suitable for an
+-- English-language term without a translation specified using t=; otherwise, "; " is added before the string and the
+-- first character is as-is (which should be lowercase). `auto_plural`, if given, means to automatically pluralize the
+-- `desc` if there is more than one toponym. `with_colon`, if given, will add a colon directly after the description,
+-- before the following space.
+local function get_extra_info(args, paramname, desc, sentence_style, auto_plural, with_colon)
 	local raw_terms = args[paramname]
 	if not raw_terms then
 		return ""
@@ -1104,7 +1104,7 @@ local function get_extra_info(args, paramname, desc, ucfirst, auto_plural, with_
 
 	local s = ""
 
-	if ucfirst then
+	if sentence_style then
 		s = s .. ". " .. m_strutils.ucfirst(desc)
 	else
 		s = s .. "; " .. desc
@@ -1252,15 +1252,14 @@ local function get_new_style_gloss(args, place_desc, with_article)
 end
 
 
--- Return a string with the gloss (the description of the place itself, as opposed to translations). If `ucfirst` is
--- given, the gloss's first letter is made upper case (FIXME: shouldn't happen if the language isn't English). If
--- `drop_extra_info` is given, we don't include "extra info" (modern name, capital, largest city, etc.); this is used
--- when transcluding into another language using {{transclude sense}}.
-local function get_gloss(args, descs, ucfirst, drop_extra_info)
+-- Return a string with the gloss (the description of the place itself, as opposed to translations). If `sentence_style`
+-- is given, the "extra info"  (modern name, capital, largest city, etc.) is displayed as separated sentences;
+-- otherwise, it is displayed separated from the main definition by semicolons. If `ucfirst` is given, the gloss's first
+-- letter is made upper case. If `drop_extra_info` is given, we don't include "extra info"; this is used when
+-- transcluding into another language using {{transclude sense}}.
+local function get_gloss(args, descs, sentence_style, ucfirst, drop_extra_info)
 	if args.def == "-" then
 		return ""
-	elseif args.def then
-		return args.def
 	end
 
 	local parts = {}
@@ -1268,100 +1267,27 @@ local function get_gloss(args, descs, ucfirst, drop_extra_info)
 		table.insert(parts, txt)
 	end
 
-	local prefixes = {}
-
-	local function insert_form_of_prefix(paramname, desc)
-		if args[paramname] then
-			local prefix = parse_term_with_inline_modifiers(args[paramname], paramname, args[1])
-			prefix.paramname = paramname
-			prefix.desc = desc
-			table.insert(prefixes, prefix)
-		end
-	end
-
-	insert_form_of_prefix("abbrof", "abbreviation of")
-	insert_form_of_prefix("initof", "initialism of")
-	insert_form_of_prefix("acronymof", "acronym of")
-	insert_form_of_prefix("clipof", "clipping of")
-	insert_form_of_prefix("ellipof", "ellipsis of")
-	insert_form_of_prefix("synof", "synonym of")
-	insert_form_of_prefix("now", "former name of")
-
-	local i = 1
-	while i <= #prefixes do
-		local prefix = prefixes[i]
-		if prefix.after or prefix.before then
-			if prefix.after == prefix.paramname or prefix.before == prefix.paramname then
-				error(("Can't move prefix '%s' before or after itself"):format(prefix.paramname))
+	if args.def then
+		ins(args.def)
+	else
+		for n, desc in ipairs(descs) do
+			if desc.order then
+				ins(get_new_style_gloss(args, desc, n == 1))
+			else
+				ins(get_old_style_gloss(args, desc, n == 1, ucfirst))
 			end
-			if prefix.after and prefix.before then
-				error(("Can't specify both 'before' and 'after' for prefix '%s'"):format(prefix.paramname))
+			if desc.joiner then
+				ins(desc.joiner)
 			end
-			local insertion_point
-			for j, other_prefix in ipairs(prefixes) do
-				if prefix.after == other_prefix.paramname then
-					insertion_point = j + 1
-					break
-				elseif prefix.before == other_prefix.paramname then
-					insertion_point = j
-					break
-				end
-			end
-			if not insertion_point then
-				if prefix.after then
-					error(("Can't locate prefix type '%s' to move prefix '%s' after"):format(
-						prefix.after, prefix.paramname))
-				else
-					error(("Can't locate prefix type '%s' to move prefix '%s' before"):format(
-						prefix.before, prefix.paramname))
-				end
-			end
-			if insertion_point < i then
-				table.remove(prefixes, i)
-				table.insert(prefixes, insertion_point, prefix)
-				i = i + 1
-			elseif insertion_point > i then
-				table.insert(prefixes, insertion_point, prefix)
-				table.remove(prefixes, i)
-			end
-			-- Make sure we don't process the prefix again if it's moved after its current point.
-			prefix.after = nil
-			prefix.before = nil
-		else
-			i = i + 1
-		end
-	end
-
-	for i, prefix in ipairs(prefixes) do
-		
-			if prefix_terms.after
-			if prefix_terms
-			if prefix ~= "" then
-				if parts[1] then
-					ins(", ")
-					ucfirst = false
-				end
-				ins(parts)
-			end
-	end
-
-	for n, desc in ipairs(descs) do
-		if desc.order then
-			ins(get_new_style_gloss(args, desc, n == 1))
-		else
-			ins(get_old_style_gloss(args, desc, n == 1, ucfirst))
-		end
-		if desc.joiner then
-			ins(desc.joiner)
 		end
 	end
 
 	if not drop_extra_info then
 		ins(get_extra_info(args, "modern", "modern", false, false, false))
-		ins(get_extra_info(args, "official", "official name", ucfirst, "auto plural", "with colon"))
-		ins(get_extra_info(args, "capital", "capital", ucfirst, "auto plural", "with colon"))
-		ins(get_extra_info(args, "largest city", "largest city", ucfirst, "auto plural", "with colon"))
-		ins(get_extra_info(args, "caplc", "capital and largest city", ucfirst, false, "with colon"))
+		ins(get_extra_info(args, "official", "official name", sentence_style, "auto plural", "with colon"))
+		ins(get_extra_info(args, "capital", "capital", sentence_style, "auto plural", "with colon"))
+		ins(get_extra_info(args, "largest city", "largest city", sentence_style, "auto plural", "with colon"))
+		ins(get_extra_info(args, "caplc", "capital and largest city", sentence_style, false, "with colon"))
 		local placetype = descs[1].placetypes[1]
 		if placetype == "county" or placetype == "counties" then
 			placetype = "county seat"
@@ -1372,12 +1298,92 @@ local function get_gloss(args, descs, ucfirst, drop_extra_info)
 		else
 			placetype = "seat"
 		end
-		ins(get_extra_info(args, "seat", placetype, ucfirst, "auto plural", "with colon"))
-		ins(get_extra_info(args, "shire town", "shire town", ucfirst, "auto plural", "with colon"))
-		ins(get_extra_info(args, "headquarters", "headquarters", ucfirst, false, "with colon"))
+		ins(get_extra_info(args, "seat", placetype, sentence_style, "auto plural", "with colon"))
+		ins(get_extra_info(args, "shire town", "shire town", sentence_style, "auto plural", "with colon"))
+		ins(get_extra_info(args, "headquarters", "headquarters", sentence_style, false, "with colon"))
 	end
 
-	return table.concat(ret)
+	return table.concat(parts)
+end
+
+
+local function get_form_of_annotations(args, ucfirst)
+	local annotations = {}
+
+	local function insert_form_of_annotation(paramname, desc)
+		if args[paramname] then
+			local annotation = parse_term_with_inline_modifiers(args[paramname], paramname, args[1])
+			annotation.paramname = paramname
+			annotation.desc = desc
+			table.insert(annotations, annotation)
+		end
+	end
+
+	insert_form_of_annotation("abbrof", "abbreviation of")
+	insert_form_of_annotation("initof", "initialism of")
+	insert_form_of_annotation("acronymof", "acronym of")
+	insert_form_of_annotation("clipof", "clipping of")
+	insert_form_of_annotation("ellipof", "ellipsis of")
+	insert_form_of_annotation("synof", "synonym of")
+	insert_form_of_annotation("now", "former name of")
+
+	local i = 1
+	while i <= #annotations do
+		local annotation = annotations[i]
+		if annotation.after or annotation.before then
+			if annotation.after == annotation.paramname or annotation.before == annotation.paramname then
+				error(("Can't move annotation '%s' before or after itself"):format(annotation.paramname))
+			end
+			if annotation.after and annotation.before then
+				error(("Can't specify both 'before' and 'after' for annotation '%s'"):format(annotation.paramname))
+			end
+			local insertion_point
+			for j, other_annotation in ipairs(annotations) do
+				if annotation.after == other_annotation.paramname then
+					insertion_point = j + 1
+					break
+				elseif annotation.before == other_annotation.paramname then
+					insertion_point = j
+					break
+				end
+			end
+			if not insertion_point then
+				if annotation.after then
+					error(("Can't locate annotation type '%s' to move annotation '%s' after"):format(
+						annotation.after, annotation.paramname))
+				else
+					error(("Can't locate annotation type '%s' to move annotation '%s' before"):format(
+						annotation.before, annotation.paramname))
+				end
+			end
+			if insertion_point < i then
+				table.remove(annotations, i)
+				table.insert(annotations, insertion_point, annotation)
+				i = i + 1
+			elseif insertion_point > i then
+				table.insert(annotations, insertion_point, annotation)
+				table.remove(annotations, i)
+			end
+			-- Make sure we don't process the annotation again if it's moved after its current point.
+			annotation.after = nil
+			annotation.before = nil
+		else
+			i = i + 1
+		end
+	end
+
+	for i, annotation in ipairs(annotations) do
+		
+			if annotation_terms.after
+			if annotation_terms
+			if annotation ~= "" then
+				if parts[1] then
+					ins(", ")
+					ucfirst = false
+				end
+				ins(parts)
+			end
+	end
 end
 
 

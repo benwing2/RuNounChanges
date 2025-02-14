@@ -1,6 +1,7 @@
 local export = {}
 
 local debug_track_module = "Module:debug/track"
+local languages_module = "Module:languages"
 local parameters_module = "Module:parameters"
 local parse_interface_module = "Module:parse interface"
 local parse_utilities_module = "Module:parse utilities"
@@ -68,6 +69,11 @@ export.default_special_separators = {
 	[";"] = "; ",
 	["_"] = " ",
 	["~"] = " ~ ",
+}
+
+-- Table listing the default recognized special separator arguments and how they display.
+export.default_special_continuations = {
+	["etc."] = {display = "''etc.''"},
 }
 
 --[==[ intro:
@@ -673,6 +679,23 @@ function export.generate_obj_maybe_parsing_lang_prefix(data)
 	local term = data.term
 	local term_dest = data.term_dest or "term"
 	local termobj = data.termobj or {}
+
+	-- Check for "special continuation" such as 'etc.'. 
+	if data.special_continuations and data.special_continuations[term] then
+		local is_continuation = data.recognize_continuations_everywhere
+		if not is_continuation and data.separated_groups and data.group_index and
+			#data.separated_groups == data.group_index then
+			is_continuation = true
+		end
+		if is_continuation then
+			termobj[term_dest] = nil
+			termobj.alt = data.special_continuations[term]
+			termobj.is_continuation = true
+			termobj.lang = require(languages_module).getByCode("en")
+			return
+		end
+	end
+
 	if data.parse_lang_prefix and term:find(":") then
 		local actual_term, termlangs = parse_term_with_lang {
 			term = term,

@@ -8,7 +8,6 @@ local require_when_needed = require("Module:utilities/require when needed")
 local debug_track_module = "Module:debug/track"
 local languages_module = "Module:languages"
 local links_module = "Module:links"
-local parameter_utilities_module = "Module:parameter utilities"
 local pron_qualifier_module = "Module:pron qualifier"
 local table_module = "Module:table"
 local utilities_module = "Module:utilities"
@@ -68,25 +67,6 @@ function export.format_links(termobjs, conj, template_name)
 	return retval
 end
 	
-
-function export.get_display_and_cat_name(source, raw)
-	local display, cat_name
-	if source:getCode() == "und" then
-		display = "undetermined"
-		cat_name = "other languages"
-	elseif source:getCode() == "mul" then
-		display = raw and "translingual" or "[[w:Translingualism|translingual]]"
-		cat_name = "Translingual"
-	elseif source:getCode() == "mul-tax" then
-		display = raw and "taxonomic name" or "[[w:Biological nomenclature|taxonomic name]]"
-		cat_name = "taxonomic names"
-	else
-		display = raw and source:getCanonicalName() or source:makeWikipediaLink()
-		cat_name = source:getDisplayForm()
-	end
-	return display, cat_name
-end
-
 
 function export.insert_source_cat_get_display(data)
 	local categories, lang, source = data.categories, data.lang, data.source

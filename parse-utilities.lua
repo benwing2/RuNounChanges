@@ -756,10 +756,20 @@ Parse a term that may have inline modifiers attached (e.g. {rifiuti<q:plural-onl
 ** `paramname` is the name of the parameter where `arg` comes from, or nil if this isn't available (it is used only in
    error messages).
 ** `param_mods` is a table describing the allowed inline modifiers (see below).
-** `generate_obj` is a function of one or two arguments that should parse the argument minus the inline modifiers and
-   return a corresponding parsed object (into which the inline modifiers will be rewritten). If declared with one
-   argument, that will be the raw value to parse; if declared with two arguments, the second argument will be the
-   `parse_err` function (see below).
+** `generate_obj` is a function that should parse the argument minus the inline modifiers and return a corresponding
+   parsed object (into which the inline modifiers will be rewritten). If `generate_obj_new_format` is not given, the
+   function should accept a one or two arguments, the raw term to parse and `parse_err` (a function of one argument,
+   an error message; used for displaying errors; see below). If you don't use `parse_err`, it is OK to declare the
+   function with one argument. However, if `generate_obj_new_format` is given, the function should accept a single
+   argument, an object containining the following fields:
+*** `term`: the raw term to parse;
+*** `parse_err`: a function of one argument, an error message, used for displaying parse errors; see below;
+*** `separated_groups`: The textual groups, one per term with associated inline modifiers occurring between the
+    delimiter(s) specified using `splitchar`; each group is a list of strongs; if `splitchar` was not given, this will
+	be {nil};
+*** `group_index`: The current group being processed; using {#separated_groups == group_index} to check if we are
+    processing the last group between delimiters; if `splitchar` was not given, this will be {nil}.
+** `generate_obj_new_format`: See `generate_obj` above.
 ** `parse_err` is an optional function of one argument (an error message) and should display the error message, along
    with any desired contextual text (e.g. the argument name and value that triggered the error). If omitted, a default
    function will be generated which displays the error along with the original value of `arg` (passed through
@@ -1004,7 +1014,18 @@ function export.parse_inline_modifiers_from_segments(data)
 	end
 
 	local parse_err = props.parse_err or export.make_parse_err(get_arg_gloss())
-	local term_obj = props.generate_obj(group[1], parse_err)
+	local term_obj
+	if props.generate_obj_new_format then
+		-- FIXME: We should be using `generate_obj_new_format` everywhere, and then make it the default and remove it.
+		term_obj = props.generate_obj {
+			term = group[1],
+			parse_err = parse_err,
+			separated_groups = data.separated_groups,
+			group_index = group_index,
+		}
+	else
+		term_obj = props.generate_obj(group[1], parse_err)
+	end
 	for k = 2, #group - 1, 2 do
 		if group[k + 1] ~= "" then
 			parse_err("Extraneous text '" .. group[k + 1] .. "' after modifier")

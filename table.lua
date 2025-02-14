@@ -1129,38 +1129,6 @@ function export.sparseConcat(t, sep, i, j)
 	return concat(list, sep, i, j)
 end
 
-export.allowedConjsForJoinSegments = {"and", "or", ",", "/", "~", ";"}
-
---[==[
-A combination of `serialCommaJoin` and `concat`. Option `conj` is either {"and"} or {"or"} (join `segs` using
-`serialCommaJoin`) or a punctuation delimiter (currently {","}, {"/"}, {"~"} and {";"} are allowed and converted to the appropriate displayed separator, and then `segs` joined using `concat`).
-]==]
-function export.joinSegments(segs, options)
-	local conj = options and options.conj or "and"
-	if segs[2] then
-		if conj == "and" or conj == "or" then
-			return export.serialCommaJoin(segs, options)
-		else
-			local sep
-			if conj == "," then
-				sep = ", "
-			elseif conj == "/" then
-				sep = "/"
-			elseif conj == "~" then
-				sep = " ~ "
-			elseif conj == ";" then
-				sep = "; "
-			else
-				error(("Internal error: Unrecognized conjunction '%s'"):format(conj))
-			end
-			return export.concat(segs, sep)
-		end
-	else
-		return segs[1]
-	end
-end
-
-
 --[==[
 Values of numeric keys in array portion of table are reversed: { { "a", "b", "c" }} -> { { "c", "b", "a" }}]==]
 function export.reverse(t)
