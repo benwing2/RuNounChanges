@@ -314,7 +314,7 @@ function export.misc_variant(frame)
 		sort_key = args.sort,
 		conj = args.conj or iargs.conj or "and",
 		nocat = args.nocat,
-		cat = iargs.cat,
+		cats = iargs.cat,
 		force_cat = force_cat,
 	}
 end
@@ -376,7 +376,7 @@ function export.misc_variant_multiple_terms(frame)
 		sort_key = args.sort,
 		conj = args.conj or iargs.conj or "and",
 		nocat = args.nocat,
-		cat = iargs.cat,
+		cats = iargs.cat,
 		force_cat = force_cat,
 	}
 end
