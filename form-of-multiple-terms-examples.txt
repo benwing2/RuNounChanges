@@ -51,6 +51,12 @@ Page 1683 AUC: Found match for regex: <begin> # {{lb|la|historical}} {{initialis
 Page 1893 SMP: Found match for regex: <begin> # {{initialism of|en|{{w|stable marriage problem}},{{w|Stable marriage problem|stable matching problem}}}}. <end>
 Page 2115 SFA: Found match for regex: <begin> # {{initialism of|de|Steuerfachangestellter,{{w|Steuerfachangestellter|Steuerfachangestellte|lang=de}}}} <end>
 Page 2341 EDC: Found match for regex: <begin> # {{lb|en|organic compound}} {{initialism of|en|{{w|1,2-dichloroethane|ethylene dichloride and 1,2-dichloroethane}}}}. <end>
+Page 3254 UEA: Found match for regex: <begin> # {{initialism of|en|eo:{{w|Universala Esperanto-Asocio}}|t=World Esperanto association}}. <end>
+Page 2061 SFSR: Found match for regex: <begin> # {{initialism of|en|[[Soviet]] [[federated]] [[socialist]] [[republic]],[[socialist]] [[federated]] [[Soviet]] [[republic]]}}: <end>
+Page 2346 GMA: Found match for regex: <begin> # {{init of|tl|en:{{w|Global Media Arts}}|addl=a broadcasting company in the Philippines}}. <end>
+Page 2346 GMA: Found match for regex: <begin> # {{lb|tl|obsolete}} {{init of|tl|en:{{w|Greater Manila Area}} Network|addl=the old form of {{w|Global Media Arts}} Network}}. <end>
+Page 3569 cv: Found match for regex: <begin> # {{m|en|hp}}: {{init of|fr|cheval-vapeur,chevaux-vapeurs||steam horse(s)|addl=the unit symbol for metric {{w|tax horsepower}}, a nominal calculation of horsepower used for taxation purposes; real horsepower is abbreviated {{m|fr|ch}}}} <end>
+Page 6923 ΜΜΕ: Found match for regex: <begin> * {{initialism of|el|[[μέσα|Μέσα]] [[μαζικής|Μαζικής]] [[ενημέρωση|Ενημέρωσης]]<t:medium, mass, information>,μέσο μαζικής ενημέρωσης<g:n><t:mass medium of information>|addl=the '''E''' may also stand for {{l|el|επικοινωνία|Επικοινωνία|g=f|t=communication}}}} <end>
 
 with place:
 
@@ -117,4 +123,8 @@ syllabic acronym of
 
 Page 2757 金検: Found match for regex: <begin> # {{syllabic acronym of|ja|金属検出器<tr:kinzoku tanchi-ki>,金属検知器<tr:kinzoku kenshutsu-ki>|t=metal detector}} <end>
 Page 3785 プレコン: Found match for regex: <begin> # {{lb|ja|construction}} {{syllabic acronym of|ja|プレキャスト鉄筋コ>ンクリート<tr:purekyasuto tekkin konkurīto><t:[[precast]] [[reinforced concrete]]>,プレキャストコンクリート<tr:purekyasuto konkurīto><t:[[precast]] [[concrete]]>}} <end>
+
+obsolete form of
+
+Page 9211 Oosman: Found match for regex: <begin> # {{obsolete form of|en|Osman,Usman}}. <end>
 
