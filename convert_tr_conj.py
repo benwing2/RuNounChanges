@@ -46,6 +46,9 @@ def process_text_on_page(index, pagetitle, text):
       del t.params[:]
       blib.set_template_name(t, "tr-conj")
       t.add("1", "d")
+    elif tn == "tr-conj-v":
+      del t.params[:]
+      blib.set_template_name(t, "tr-conj")
     if str(t) != origt:
       pagemsg("Replaced <%s> with <%s>" % (origt, str(t)))
       notes.append("replace %s with new module-based %s" % (origt, str(t)))
