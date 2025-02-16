@@ -362,7 +362,7 @@ Page 239 dread: Found match for regex: <begin> # {{lb|en|slang|chiefly|in the pl
 Page 239 dread: Found match for regex: <begin> # {{lb|en|military|nautical|historical|slang}} {{clip of|en|dreadnought}}. <end>
 Page 239 dread: Found match for regex: <begin> # {{clipping of|pt|dreadlock}} <end>
 Page 240 bu: Found match for regex: <begin> # {{clipping of|en|bureau}}. <end>
-Page 241 trouble: Found match for regex: <begin> # {{lb|en|Cockney rhyming slang}} {{cap|wife}}. {{clipping of|en|trouble and strife}}. <end>
+Page 241 trouble: Found match for regex: <begin> # {{lb|en|Cockney rhyming slang}} {{U|wife}}. {{clipping of|en|trouble and strife}}. <end>
 Page 242 dough: Found match for regex: <begin> # {{lb|en|US|_|military slang|countable}} {{clipping of|en|doughboy|t=[[infantryman]]}}. <end>
 Page 243 trans: Found match for regex: <begin> # {{clipping of|en|transaction}}. <end>
 Page 243 trans: Found match for regex: <begin> # {{clipping of|en|transmission}}.<!--car part--> <end>
@@ -1402,8 +1402,8 @@ Page 985 kaksisuuntainen: Found match for regex: <begin> # {{clipping of|fi|kaks
 Page 986 esteroide: Found match for regex: <begin> # {{clipping of|pt|esteroide anabolizante}} <end>
 Page 987 meph: Found match for regex: <begin> # {{lb|en|informal}} {{clipping of|en|mephedrone}}. <end>
 Page 988 synchro: Found match for regex: <begin> # {{lb|en|sports|informal}} {{clipping of|en|synchronized|addl=any [[synchronize]]d event, such as [[synchronized swimming]]}}. <end>
-Page 989 consol: Found match for regex: <begin> # {{lb|en|business|marketing}} {{clipping of|en|consolidation}}: {{only used in|en|naming}} <end>
-Page 989 consol: Found match for regex: <begin> # {{lb|en|business|marketing}} {{clipping of|en|consolidated}}: {{only used in|en|naming}} <end>
+Page 989 consol: Found match for regex: <begin> # {{lb|en|business|marketing}} {{clipping of|en|consolidation|addl=only used in names of corporations}}. <end>
+Page 989 consol: Found match for regex: <begin> # {{lb|en|business|marketing}} {{clipping of|en|consolidated|addl=only used in names of corporations}}. <end>
 Page 990 Jeri: Found match for regex: <begin> # {{lb|pt|endearing|local}} {{clipping of|pt|Jericoacoara}} <end>
 Page 991 半夏: Found match for regex: <begin> # {{clipping of|ja|半夏生|tr=hangeshou|t=the 11th day after the summer solstice and end of the rice planting season}} <end>
 Page 992 kokelas: Found match for regex: <begin> ## {{lb|fi|military}} {{clipping of|fi|upseerikokelas|t=[[officer]] [[candidate]]}} <end>
@@ -2277,7 +2277,7 @@ Page 1757 ราชบัณฑิต: Found match for regex: <begin> # {{lb|th|
 Page 1758 situash: Found match for regex: <begin> # {{label|en|informal}} {{clipping of|en|situation}}. <end>
 Page 1759 rééd: Found match for regex: <begin> # {{clipping of|fr|réédition}} <end>
 Page 1760 fffffffuuuuuuuuuuuu: Found match for regex: <begin> [[elongated|Elongated]] form of ''fu'', a clipping of {{m|en|fuck}}. The specific elongation length was coined on {{w|Reddit}} in December 2008, in reference to [[rage comic]]s on {{w|4chan}} earlier in 2008. 7 "F"s and 12 "U"s are used as a [[reference]] to the /r/fffffffuuuuuuuuuuuu [[subreddit]] or its [[community]]. The term is sometimes shortened to {{m|en|f7u12}}. <end>
-Page 1760 fffffffuuuuuuuuuuuu: Found match for regex: <begin> # {{lb|en|Internet slang}} {{elongated form of|en|{{clipping of|en|fuck|nocap=1}}}} <end>
+Page 1760 fffffffuuuuuuuuuuuu: Found match for regex: <begin> # {{lb|en|Internet slang}} {{elongated form of|en|{{clipping of|en|fuck|nocap=1}}}}. <end>
 Page 1761 tubigan: Found match for regex: <begin> # {{clipping of|tl|natubigan}}: [[fed up]]; [[burned out]] <end>
 Page 1761 tubigan: Found match for regex: <begin> # {{clipping of|tl|natubigan}}: [[filled]] with [[water]] <end>
 Page 1762 translit: Found match for regex: <begin> # {{clipping of|en|transliteration}}. <end>
@@ -3369,7 +3369,7 @@ Page 2766 User:Mihia/test page: Found match for regex: <begin> ::There was a fam
 Page 2766 User:Mihia/test page: Found match for regex: <begin> Rfv-sense of {{m|en|go}} being {{clip of|en|[[go]] [[to]] [[the]]}} in the UK. I've heard multiple British people say "go [place]". This is attested since 2018 and does not appear to be used by immigrants. I, a Canadian, always say "go to the [place]"/"go to [proper noun]'s" except for "home". I've seen Americans teach "go [place]" to be bad grammar, but I can't find anywhere including on Wiktionary saying this British construction exists. <end>
 Page 4738 Talk:sis: Found match for regex: <begin> This is definitely used as a form of address, especially in AAVE. But perhaps "{{clipping of|en|sister}}" already covers that, since there's a similar definition at {{m|en|sister}}. [[Special:Contributions/70.172.194.25|70.172.194.25]] 06:18, 7 January 2023 (UTC) <end>
 Page 4882 Wiktionary:Word of the day/2020/October 21: Found match for regex: <begin> {{WOTD|confab|n|{{lb|en|informal}} {{clipping of|en|confabulation|t=a [[casual#Adjective|casual]] [[chat#Noun|chat]] or [[talk#Noun|talk]]}}. <end>
-Page 4882 Wiktionary:Word of the day/2020/October 21: Found match for regex: <begin> # {{lb|en|intransitive|informal}} {{clipping of|en|confabulate|t=to [[speak]] [[casually]] with somebody; to [[chat#Verb|chat]]}}|October|21}} <end>
+Page 4882 Wiktionary:Word of the day/2020/October 21: Found match for regex: <begin> # {{lb|en|intransitive|informal}} {{clipping of|en|confabulate|t=to [[speak]] [[casually]] with somebody; to [[chat#Verb|chat]]}}|October|21}}. <end>
 Page 5038 Wiktionary:Word of the day/2022/February 26: Found match for regex: <begin> # {{lb|en|informal|computing}} {{clipping of|en|gigabyte|t=[[one#Numeral|one]] [[billion]] (1,000,000,000) [[byte]]s}}. <end>
 Page 5050 User:This, that and the other/non-reciprocated form-of/10001-20000: Found match for regex: <begin> |[[fffffffuuuuuuuuuuuu]]||elongated form of||[[{{clipping of|en|fuck|nocap=1}}]] ([[Talk:{{clipping of|en|fuck|nocap=1}}|talk]]) <end>
 Page 5431 Wiktionary:Word of the day/2024/December 24: Found match for regex: <begin> ### {{lb|en|marine biology}} {{clipping of|en|marine snow|t=[[sink#Verb|sinking]] [[organic#Adjective|organic]] [[detritus]] in the [[ocean]]}}. <end>

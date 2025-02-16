@@ -190,7 +190,7 @@ Page 143 бели: Found match for regex: <begin> # {{nonstandard form of|mk|б�
 Page 144 зан: Found match for regex: <begin> # {{nonstandard form of|mn|занги}} <end>
 Page 144 зан: Found match for regex: <begin> # {{nonstandard form of|mn|жан}} <end>
 Page 145 кај: Found match for regex: <begin> # {{nonstandard form of|mk|ка́де}} <end>
-Page 146 eem: Found match for regex: <begin> # {{lb|en|AAVE}} {{nonstandard form of|en|even}}<!--or contraction?--> <end>
+Page 146 eem: Found match for regex: <begin> # {{lb|en|AAVE}} {{nonstandard form of|en|even}}.<!--or contraction?--> <end>
 Page 147 fing: Found match for regex: <begin> # {{lb|zh|Cantonese}} {{nonstandard form of|zh|揈|tr=fing{{sup|6}}|t=to [[sway]]; to [[swing]]; to [[shake]]; etc.}} <end>
 Page 148 као: Found match for regex: <begin> # {{nonstandard form of|mk|како}} <end>
 Page 149 сексипил: Found match for regex: <begin> # {{nonstandard form of|mk|сексапил}} <end>
@@ -325,7 +325,7 @@ Page 265 Flehman: Found match for regex: <begin> # {{nonstandard form of|en|fleh
 Page 266 설레이다: Found match for regex: <begin> # {{nonstandard form of|ko|설레다}} <end>
 Page 267 varitas: Found match for regex: <begin> # {{nonstandard form of|id|varietas}} <end>
 Page 268 thot: Found match for regex: <begin> # {{nonstandard form of|en|thought}}. <end>
-Page 268 thot: Found match for regex: <begin> # {{nonstandard form of|en|thought}}, {{infl of|en|think||ed-form}} <end>
+Page 268 thot: Found match for regex: <begin> # {{infl of|en|-form=nstd form:thought|think||ed-form}}. <end>
 Page 269 seterika: Found match for regex: <begin> # {{nonstandard form of|id|setrika}} <end>
 Page 270 โรฮิงยา: Found match for regex: <begin> # {{nonstandard form of|th|โรฮีนจา}} <end>
 Page 270 โรฮิงยา: Found match for regex: <begin> # {{nonstandard form of|th|โรฮีนจา}} <end>
@@ -546,7 +546,7 @@ Page 448 멕이다: Found match for regex: <begin> # {{nonstandard form of|ko|�
 Page 449 belz: Found match for regex: <begin> # {{nonstandard form of|eu|beltz}} <end>
 Page 449 belz: Found match for regex: <begin> # {{nonstandard form of|eu|beltz}} <end>
 Page 450 uhartegi: Found match for regex: <begin> # {{nonstandard form of|eu|uhartedi}} <end>
-Page 451 hinnocent: Found match for regex: <begin> # {{nonstandard form of|en|innocent}}{{n-g|, representing a [[hypercorrection]] in [[h-dropping]] accents}} <end>
+Page 451 hinnocent: Found match for regex: <begin> # {{nonstandard form of|en|innocent|addl=representing a [[hypercorrection]] in [[h-dropping]] accents}}. <end>
 Page 452 nemeukleidészi geometria: Found match for regex: <begin> # {{nonstandard form of|hu|nemeuklideszi geometria}} <end>
 Page 453 甲蠃: Found match for regex: <begin> # {{lb|ja|dialectal}} {{nonstandard form of|ja|甲蠃|tr=kase|t=[[sea urchin]]}} <end>
 Page 454 გაქ: Found match for regex: <begin> # {{lb|ka|colloquial|informal}} {{nonstandard form of|ka|გაქვს}} <end>
@@ -2133,7 +2133,7 @@ Page 336 ting: Found match for regex: <begin> # {{nonstandard spelling of|cmn|sc
 Page 336 ting: Found match for regex: <begin> # {{nonstandard spelling of|cmn|sc=Latn|tǐng}} <end>
 Page 336 ting: Found match for regex: <begin> # {{nonstandard spelling of|cmn|sc=Latn|tìng}} <end>
 Page 338 doro: Found match for regex: <begin> # {{nonstandard spelling of|jv|dara}}, {{romanization of|jv|ꦢꦫ}} <end>
-Page 340 layaway: Found match for regex: <begin> # {{nonstandard spelling of|en|lay away}}<!--merely a flawed way of writing the original verb--> <end>
+Page 340 layaway: Found match for regex: <begin> # {{nonstandard spelling of|en|lay away}}.<!--merely a flawed way of writing the original verb--> <end>
 Page 341 peng: Found match for regex: <begin> # {{nonstandard spelling of|cmn|sc=Latn|pēng}} <end>
 Page 341 peng: Found match for regex: <begin> # {{nonstandard spelling of|cmn|sc=Latn|péng}} <end>
 Page 341 peng: Found match for regex: <begin> # {{nonstandard spelling of|cmn|sc=Latn|pěng}} <end>
@@ -2976,7 +2976,7 @@ Page 679 User talk:Tooironic/xìngshì: Found match for regex: <begin> :::This i
 Page 679 User talk:Tooironic/xìngshì: Found match for regex: <begin> Please check these entries, Carl. I have converted abc123's entry into {{temp|nonstandard spelling of|lang=cmn|[[Àozhōurén]]}}, added a comment in [[WT:BP]]--[[User:Atitarev|Anatoli]] 00:25, 25 May 2010 (UTC) <end>
 Page 680 θρυπτοφάνη: Found match for regex: <begin> # {{nonstandard spelling of|el|τρυπτοφάνη}} <end>
 Page 681 Phœbë: Found match for regex: <begin> # {{nonstandard spelling of|en|Phoebe}}. <end>
-Page 682 orthœpy: Found match for regex: <begin> # {{lb|en|US|rare|obsolete|hypercorrect}} {{nonstandard spelling of|en|orthoepy}} {{defdate|19th century}} <end>
+Page 682 orthœpy: Found match for regex: <begin> # {{lb|en|US|rare|obsolete|hypercorrect}} {{nonstandard spelling of|en|orthoepy}}. {{defdate|19th century}} <end>
 Page 683 Wiktionary:Beer parlour/2010/May: Found match for regex: <begin> ::Toneless individual syllables are treated as {{temp|nonstandard spelling of}}s per [[Wiktionary talk:Votes/pl-2009-12/Treatment of toneless pinyin syllables|vote]]. I don't know about whole words, which I think are what this anon has been adding.<span class="Unicode">&#x200b;—[[User:Msh210|msh210]]℠</span> 16:35, 18 May 2010 (UTC) <end>
 Page 683 Wiktionary:Beer parlour/2010/May: Found match for regex: <begin> * Hey, does anyone remember [[Wiktionary:Votes/pl-2009-12/Treatment_of_toneless_pinyin_syllables|this vote]]? We should use {{temp|nonstandard spelling of}}. —'''[[User:Internoob|Internoob]]''' ([[User talk:Internoob|Disc]]•[[Special:Contributions/Internoob|Cont]]) 20:31, 24 May 2010 (UTC) <end>
 Page 683 Wiktionary:Beer parlour/2010/May: Found match for regex: <begin> *: {{temp|nonstandard spelling of}} seems like a good method. I have converted toneless [[Aozhouren]] using the template and created [[Àozhōurén]] (with tones) based on [[User:Tooironic/xìngshì]] suggested by [[User:Tooironic]] - subject to approval. We need some templates too. --[[User:Atitarev|Anatoli]] 00:23, 25 May 2010 (UTC) <end>

@@ -393,7 +393,7 @@ Page 247 getcha: Found match for regex: <begin> # {{lb|en|colloquial}} {{contrac
 Page 247 getcha: Found match for regex: <begin> # {{lb|en|colloquial}} {{contraction of|en|[[get]] [[your]]}}. <end>
 Page 247 getcha: Found match for regex: <begin> * {{sense|contraction of "get your"}} {{l|en|getcho}} <end>
 Page 248 hafta: Found match for regex: <begin> # {{lb|en|colloquial}} {{contraction of|en|have to}}: be [[required]] to; [[must]]. <end>
-Page 249 hasta: Found match for regex: <begin> # {{lb|en|colloquial}} {{infl of|en|hafta||s-verb-form}}: {{contraction of|en|has to}}; is required to <end>
+Page 249 hasta: Found match for regex: <begin> # {{lb|en|colloquial}} {{infl of|en|hafta||s-verb-form}}: {{contraction of|en|has to}}; is required to. <end>
 Page 250 kinda: Found match for regex: <begin> # {{lb|en|colloquial}} {{contraction of|en|[[kind]] [[of]]}}. <end>
 Page 251 kindsa: Found match for regex: <begin> # {{lb|en|colloquial}} {{contraction of|en|[[kinds]] [[of]]}}, {{plural of|en|kind of}}. <end>
 Page 252 ner: Found match for regex: <begin> # {{lb|de|colloquial}} {{contraction of|de|einer||a, an}} <end>
@@ -427,7 +427,7 @@ Page 268 shouldn't've: Found match for regex: <begin> # {{lb|en|informal}} {{con
 Page 269 'twould: Found match for regex: <begin> # {{lb|en|archaic}} {{contraction of|en|[[it]] [[would]]}}. <end>
 Page 270 にゃ: Found match for regex: <begin> # {{contraction of|ja|には|tr=ni wa}} <end>
 Page 271 leggo: Found match for regex: <begin> # {{lb|en|slang|mostly|imperative}} {{contraction of|en|let go}}. <end>
-Page 271 leggo: Found match for regex: <begin> # {{lb|en|slang|mostly|imperative}} {{contraction of|en|let's go}} {{rfex|en}} <end>
+Page 271 leggo: Found match for regex: <begin> # {{lb|en|slang|mostly|imperative}} {{contraction of|en|let's go}}. {{rfex|en}} <end>
 Page 272 here's: Found match for regex: <begin> # {{contraction of|en|[[here]] [[is]]}}. <end>
 Page 272 here's: Found match for regex: <begin> # {{lb|en|nonstandard}} {{contraction of|en|[[here]] [[are]]}}. <end>
 Page 272 here's: Found match for regex: <begin> * In some respects, sense 2 is not a distinct sense; some speakers use "here is" even where Standard English would require "here are", and "here's" may therefore be seen as a contraction of "here is" even in such cases. However, it is listed separately here because there are many speakers who do distinguish "here is" from "here are" when not using the contraction, but who use the contraction "here's" in all cases; thus, these speakers may be said to use "here's" as a general contraction for both "here is" and "here are". <end>
@@ -914,7 +914,7 @@ Page 635 they's: Found match for regex: <begin> # {{lb|en|dialect}} {{contractio
 Page 635 they's: Found match for regex: <begin> # {{lb|en|dialect}} {{contraction of|en|[[they]] ({{=}}there) [[is]]}}. <end>
 Page 636 we's: Found match for regex: <begin> # {{lb|en|AAVE|Southern US}} {{contraction of|en|[[we]] [[is]]}}. <end>
 Page 637 òs: Found match for regex: <begin> # {{lb|pt|archaic}} {{contraction of|pt|[[a]] [[os]]||to the}}: {{infl of|pt|ao||m|p}} <end>
-Page 638 Cinti: Found match for regex: <begin> # {{lb|en|informal}} {{contraction of|en|Cincinnati}} {{gloss|city in Ohio}} <end>
+Page 638 Cinti: Found match for regex: <begin> # {{lb|en|informal}} {{contraction of|en|Cincinnati}} {{gloss|city in Ohio}}. <end>
 Page 639 wasda: Found match for regex: <begin> # {{lb|nl|informal}} {{contraction of|nl|[[wat]] [[is]] [[dat]]}} <end>
 Page 640 'ere: Found match for regex: <begin> # {{lb|en|British|slang}} {{contraction of|en|look here}}, ''used for emphasis at the beginning of a sentence when expressing an opinion or want.'' <end>
 Page 641 ôn: Found match for regex: <begin> # {{contraction of|scn|[[a]] [[un]]||to a, to an}} <end>
@@ -1014,7 +1014,7 @@ Page 723 στις: Found match for regex: <begin> # {{contraction of|el|[[σε]]
 Page 724 frai: Found match for regex: <begin> # {{lb|it|dated}} {{contraction of|it|[[fra]] [[i]]}} <end>
 Page 725 logga: Found match for regex: <begin> # {{lb|sv|colloquial}} a [[logo]], a [[logotype]]; {{contraction of|sv|logotyp}} <end>
 Page 726 vorn: Found match for regex: <begin> # {{lb|de|colloquial}} {{contraction of|de|[[vor]] [[den]]}} <end>
-Page 727 whaddayathink: Found match for regex: <begin> # {{lb|en|slang}} {{contraction of|en|[[what]] do you [[think]]?}} What is your opinion? <end>
+Page 727 whaddayathink: Found match for regex: <begin> # {{lb|en|slang}} {{contraction of|en|[[what]] do you [[think]]?|t=What is your opinion?}}. <end>
 Page 728 dedi: Found match for regex: <begin> # {{contraction of|dum|[[dēde]] [[hi]]}} <end>
 Page 729 pî: Found match for regex: <begin> # {{contraction of|scn|[[pi]] [[li]]||for the}} <end>
 Page 730 짱: Found match for regex: <begin> # {{lb|ko|slang}} {{contraction of|ko|짜증|t=vexation, being annoyed}} <end>
@@ -1252,12 +1252,12 @@ Page 935 dâ: Found match for regex: <begin> # {{contraction of|scn|[[di]] [[la]
 Page 936 dî: Found match for regex: <begin> From a contraction of {{inh|lij|la|dīcō|dīcere}}, from {{inh|lij|itc-pro|*deikō}}, from {{inh|lij|ine-pro|*déyḱti||to show, point out}}. <end>
 Page 936 dî: Found match for regex: <begin> # {{contraction of|scn|[[di]] [[li]]||of the}} <end>
 Page 937 when'll: Found match for regex: <begin> # {{contraction of|en|[[when]] [[will]]}}. <end>
-Page 938 wudn't: Found match for regex: <begin> # {{pronunciation spelling of|en|wouldn't}} {{gloss|{{contraction of|en|[[would]] [[not]]}}}} <end>
-Page 938 wudn't: Found match for regex: <begin> # {{pronunciation spelling of|en|wasn't}} {{gloss|{{contraction of|en|[[was]] [[not]]}}}} <end>
-Page 939 idn't: Found match for regex: <begin> # {{pronunciation spelling of|en|isn't}} {{gloss|{{contraction of|en|[[is]] [[not]]}}}} <end>
-Page 940 naqueles: Found match for regex: <begin> # {{contraction of|pt|[[em]] [[aqueles]]||in those}}: {{infl of|pt|naquele||m|p}} <end>
-Page 941 naquelas: Found match for regex: <begin> # {{contraction of|pt|[[em]] [[aquelas]]||in those}}: {{infl of|pt|naquele||f|p}} <end>
-Page 942 naquilo: Found match for regex: <begin> # {{contraction of|pt|[[em]] [[aquilo]]||in that thing}}: {{infl of|pt|naquele||n}} <end>
+Page 938 wudn't: Found match for regex: <begin> # {{pronunciation spelling of|en|wouldn't|+form=contr of:[[would]] [[not]]}}. <end>
+Page 938 wudn't: Found match for regex: <begin> # {{pronunciation spelling of|en|wasn't|+form=contr of:[[was]] [[not]]}}. <end>
+Page 939 idn't: Found match for regex: <begin> # {{pronunciation spelling of|en|isn't|+form=contraction of:[[is]] [[not]]}}. <end>
+Page 940 naqueles: Found match for regex: <begin> # {{contraction of|pt|[[em]] [[aqueles]]||in those}}; {{infl of|pt|naquele||m|p}} <end>
+Page 941 naquelas: Found match for regex: <begin> # {{contraction of|pt|[[em]] [[aquelas]]||in those}}; {{infl of|pt|naquele||f|p}} <end>
+Page 942 naquilo: Found match for regex: <begin> # {{contraction of|pt|[[em]] [[aquilo]]||in that thing}}; {{infl of|pt|naquele||n}} <end>
 Page 943 f'rever: Found match for regex: <begin> # {{contraction of|en|forever}}. <end>
 Page 944 p'rhaps: Found match for regex: <begin> # {{contraction of|en|perhaps}}. <end>
 Page 945 밤새: Found match for regex: <begin> # {{contraction of|ko|밤사이|t=all night long; throughout the night}} <end>
@@ -1365,7 +1365,7 @@ Page 1026 yours'll: Found match for regex: <begin> # {{lb|en|colloquial}} {{cont
 Page 1027 yours'd: Found match for regex: <begin> # {{lb|en|colloquial}} {{contraction of|en|[[yours]] [[would]]}}. <end>
 Page 1027 yours'd: Found match for regex: <begin> # {{lb|en|colloquial}} {{contraction of|en|[[yours]] [[had]]}}. <end>
 Page 1028 yours've: Found match for regex: <begin> # {{lb|en|colloquial}} {{contraction of|en|[[yours]] [[have]]}}. <end>
-Page 1029 hadn't've: Found match for regex: <begin> # {{lb|en|nonstandard}} [[hadn't]] ({{contraction of|en|[[had]] [[not]] [[have]]}}) <end>
+Page 1029 hadn't've: Found match for regex: <begin> # {{lb|en|nonstandard}} {{contraction of|en|[[had]] [[not]] [[have]]|t=[[hadn't]]}}. <end>
 Page 1030 d'água: Found match for regex: <begin> # {{contraction of|pt|[[de]] [[água]]|t=pertaining or relating to the water; of water; filled with water}} <end>
 Page 1030 d'água: Found match for regex: <begin> # {{contraction of|pt|[[da]] [[água]]|t=of the water, aquatic, watery}} <end>
 Page 1031 saporra: Found match for regex: <begin> # {{lb|pt|slang|vulgar}} {{contraction of|pt|{{l|pt|essa}} {{l|pt|porra}}}} <end>
@@ -1375,47 +1375,47 @@ Page 1034 wenzetu: Found match for regex: <begin> # {{contraction of|sw|wenzi}} 
 Page 1035 wenzangu: Found match for regex: <begin> # {{contraction of|sw|wenzi}} '''{{l|sw|angu|wangu}}''': [[my]] [[friend]]s. <end>
 Page 1036 Ἀντίπας: Found match for regex: <begin> A contraction of {{m|grc|Ἀντῐ́πᾰτρος}}, from {{m|grc|ἀντῐ́πᾰτρος||the title of an initiate to the mysteries of Mithras}}. <end>
 Page 1036 Ἀντίπας: Found match for regex: <begin> # {{contraction of|grc|Ἀντῐ́πᾰτρος}} <end>
-Page 1037 dadangu: Found match for regex: <begin> # {{contraction of|sw|[[dada]] [[angu|yangu]]}}: [[my]] [[sister]]. <end>
-Page 1038 mwanangu: Found match for regex: <begin> # {{contraction of|sw|[[mwana]] [[angu|wangu]]}}: [[my]] [[child]]. <end>
-Page 1039 wanangu: Found match for regex: <begin> # {{contraction of|sw|wana}} '''{{l|sw|angu|wangu}}''': [[my]] [[child]]ren. <end>
+Page 1037 dadangu: Found match for regex: <begin> # {{contraction of|sw|[[dada]] [[angu|yangu]]}}: [[my]] [[sister]] <end>
+Page 1038 mwanangu: Found match for regex: <begin> # {{contraction of|sw|[[mwana]] [[angu|wangu]]}}: [[my]] [[child]] <end>
+Page 1039 wanangu: Found match for regex: <begin> # {{contraction of|sw|[[wana]] [[angu|wangu]]}}: [[my]] [[child]]ren <end>
 Page 1040 mwenzako: Found match for regex: <begin> # {{contraction of|sw|[[mwenzi]] [[ako|wako]]}}: [[your]] [[friend]] <end>
 Page 1041 mwenzio: Found match for regex: <begin> # {{contraction of|sw|[[mwenzi]] [[ako|wako]]}}: [[your]] [[friend]] <end>
 Page 1042 mwenzake: Found match for regex: <begin> # {{contraction of|sw|[[mwenzi]] [[ake|wake]]}}: [[his]]/[[her]] [[friend]] <end>
 Page 1043 mwenziwe: Found match for regex: <begin> # {{contraction of|sw|[[mwenzi]] [[ake|wake]]}}: [[his]]/[[her]] [[friend]] <end>
 Page 1044 mwenzetu: Found match for regex: <begin> # {{contraction of|sw|[[mwenzi]] [[etu|wetu]]}}: [[our]] [[friend]] <end>
 Page 1045 mwenzenu: Found match for regex: <begin> # {{contraction of|sw|[[mwenzi]] [[enu|wenu]]}}: [[your]] [[friend]] <end>
-Page 1046 wanetu: Found match for regex: <begin> # {{contraction of|sw|wana}} '''{{l|sw|etu|wetu}}''': [[our]] [[child]]ren. <end>
-Page 1047 wenzako: Found match for regex: <begin> # {{contraction of|sw|wenzi}} '''{{l|sw|ako|wako}}''': [[your]] [[friend]]s. <end>
-Page 1048 wenzio: Found match for regex: <begin> # {{contraction of|sw|wenzi}} '''{{l|sw|ako|wako}}''': [[your]] [[friend]]s. <end>
-Page 1049 wenzake: Found match for regex: <begin> # {{contraction of|sw|wenzi}} '''{{l|sw|ake|wake}}''': [[his]]/[[her]] [[friend]]s. <end>
-Page 1050 wenziwe: Found match for regex: <begin> # {{contraction of|sw|wenzi}} '''{{l|sw|ake|wake}}''': [[his]]/[[her]] [[friend]]s. <end>
-Page 1051 wenzenu: Found match for regex: <begin> # {{contraction of|sw|wenzi}} '''{{l|sw|enu|wenu}}''': [[your]] [[friend]]s. <end>
-Page 1052 mumeo: Found match for regex: <begin> # {{contraction of|sw|[[mume]] [[ako|wako]]}}: [[your]] [[husband]]. <end>
-Page 1053 mumewe: Found match for regex: <begin> # {{contraction of|sw|[[mume]] [[ake|wake]]}}: [[her]] [[husband]]. <end>
-Page 1054 mkeo: Found match for regex: <begin> # {{contraction of|sw|[[mke]] [[ako|wako]]}}: [[your]] [[wife]]. <end>
-Page 1055 mkewe: Found match for regex: <begin> # {{contraction of|sw|[[mke]] [[ake|wake]]}}: [[his]] [[wife]]. <end>
-Page 1056 mamangu: Found match for regex: <begin> # {{contraction of|sw|[[mama]] [[angu|yangu]]}}: [[my]] [[mother]]. <end>
-Page 1057 mamako: Found match for regex: <begin> # {{contraction of|sw|[[mama]] [[ako|yako]]}}: [[your]] [[mother]]. <end>
-Page 1058 mamake: Found match for regex: <begin> # {{contraction of|sw|[[mama]] [[ake|yake]]}}: [[his]]/[[her]] [[mother]]. <end>
-Page 1059 mamaye: Found match for regex: <begin> # {{contraction of|sw|[[mama]] [[ake|yake]]}}: [[his]]/[[her]] [[mother]]. <end>
-Page 1060 mamaetu: Found match for regex: <begin> # {{contraction of|sw|[[mama]] [[etu|yetu]]}}: [[our]] [[mother]]. <end>
-Page 1061 mamaenu: Found match for regex: <begin> # {{contraction of|sw|[[mama]] [[enu|yenu]]}}: [[your]] [[mother]]. <end>
-Page 1062 babangu: Found match for regex: <begin> # {{contraction of|sw|[[baba]] [[angu|yangu]]}}: [[my]] [[father]]. <end>
-Page 1063 babako: Found match for regex: <begin> # {{contraction of|sw|[[baba]] [[ako|yako]]}}: [[your]] [[father]]. <end>
-Page 1064 babake: Found match for regex: <begin> # {{contraction of|sw|[[baba]] [[ake|yake]]}}: [[his]]/[[her]] [[father]]. <end>
-Page 1065 babaetu: Found match for regex: <begin> # {{contraction of|sw|[[baba]] [[etu|yetu]]}}: [[our]] [[father]]. <end>
-Page 1066 babaenu: Found match for regex: <begin> # {{contraction of|sw|[[baba]] [[enu|yenu]]}}: [[your]] [[father]]. <end>
-Page 1067 nduguyo: Found match for regex: <begin> # {{contraction of|sw|[[ndugu]] [[ako|yako]]}}: [[your]] [[sibling]]. <end>
-Page 1068 nduguye: Found match for regex: <begin> # {{contraction of|sw|[[ndugu]] [[ake|yake]]}}: [[his]]/[[her]] [[sibling]]. <end>
-Page 1069 nduguzo: Found match for regex: <begin> # {{contraction of|sw|ndugu}} '''{{l|sw|ako|zako}}''': [[your]] [[sibling]]s. <end>
-Page 1070 nduguze: Found match for regex: <begin> # {{contraction of|sw|ndugu}} '''{{l|sw|ake|zake}}''': [[his]]/[[her]] [[sibling]]s. <end>
-Page 1071 rafikiyo: Found match for regex: <begin> # {{contraction of|sw|[[rafiki]] [[ako|yako]]}}: [[your]] [[friend]]. <end>
-Page 1072 rafikiye: Found match for regex: <begin> # {{contraction of|sw|[[rafiki]] [[ake|yake]]}}: [[his]]/[[her]] [[friend]]. <end>
-Page 1073 rafikizo: Found match for regex: <begin> # {{contraction of|sw|rafiki}} '''{{l|sw|ako|zako}}''': [[your]] [[friend]]s. <end>
-Page 1074 rafikize: Found match for regex: <begin> # {{contraction of|sw|rafiki}} '''{{l|sw|ake|zake}}''': [[his]]/[[her]] [[friend]]s. <end>
+Page 1046 wanetu: Found match for regex: <begin> # {{contraction of|sw|[[wana]] [[etu|wetu]]]}: [[our]] [[child]]ren <end>
+Page 1047 wenzako: Found match for regex: <begin> # {{contraction of|sw|[[wenzi]] [[ako|wako]]}}: [[your]] [[friend]]s <end>
+Page 1048 wenzio: Found match for regex: <begin> # {{contraction of|sw|[[wenzi]] [[ako|wako]]}}: [[your]] [[friend]]s <end>
+Page 1049 wenzake: Found match for regex: <begin> # {{contraction of|sw|[[wenzi]] [[ake|wake]]}}: [[his]]/[[her]] [[friend]]s <end>
+Page 1050 wenziwe: Found match for regex: <begin> # {{contraction of|sw|[[wenzi]] [[ake|wake]]}}: [[his]]/[[her]] [[friend]]s <end>
+Page 1051 wenzenu: Found match for regex: <begin> # {{contraction of|sw|[[wenzi]] [[enu|wenu]]}}: [[your]] [[friend]]s <end>
+Page 1052 mumeo: Found match for regex: <begin> # {{contraction of|sw|[[mume]] [[ako|wako]]}}: [[your]] [[husband]] <end>
+Page 1053 mumewe: Found match for regex: <begin> # {{contraction of|sw|[[mume]] [[ake|wake]]}}: [[her]] [[husband]] <end>
+Page 1054 mkeo: Found match for regex: <begin> # {{contraction of|sw|[[mke]] [[ako|wako]]}}: [[your]] [[wife]] <end>
+Page 1055 mkewe: Found match for regex: <begin> # {{contraction of|sw|[[mke]] [[ake|wake]]}}: [[his]] [[wife]] <end>
+Page 1056 mamangu: Found match for regex: <begin> # {{contraction of|sw|[[mama]] [[angu|yangu]]}}: [[my]] [[mother]] <end>
+Page 1057 mamako: Found match for regex: <begin> # {{contraction of|sw|[[mama]] [[ako|yako]]}}: [[your]] [[mother]] <end>
+Page 1058 mamake: Found match for regex: <begin> # {{contraction of|sw|[[mama]] [[ake|yake]]}}: [[his]]/[[her]] [[mother]] <end>
+Page 1059 mamaye: Found match for regex: <begin> # {{contraction of|sw|[[mama]] [[ake|yake]]}}: [[his]]/[[her]] [[mother]] <end>
+Page 1060 mamaetu: Found match for regex: <begin> # {{contraction of|sw|[[mama]] [[etu|yetu]]}}: [[our]] [[mother]] <end>
+Page 1061 mamaenu: Found match for regex: <begin> # {{contraction of|sw|[[mama]] [[enu|yenu]]}}: [[your]] [[mother]] <end>
+Page 1062 babangu: Found match for regex: <begin> # {{contraction of|sw|[[baba]] [[angu|yangu]]}}: [[my]] [[father]] <end>
+Page 1063 babako: Found match for regex: <begin> # {{contraction of|sw|[[baba]] [[ako|yako]]}}: [[your]] [[father]] <end>
+Page 1064 babake: Found match for regex: <begin> # {{contraction of|sw|[[baba]] [[ake|yake]]}}: [[his]]/[[her]] [[father]] <end>
+Page 1065 babaetu: Found match for regex: <begin> # {{contraction of|sw|[[baba]] [[etu|yetu]]}}: [[our]] [[father]] <end>
+Page 1066 babaenu: Found match for regex: <begin> # {{contraction of|sw|[[baba]] [[enu|yenu]]}}: [[your]] [[father]] <end>
+Page 1067 nduguyo: Found match for regex: <begin> # {{contraction of|sw|[[ndugu]] [[ako|yako]]}}: [[your]] [[sibling]] <end>
+Page 1068 nduguye: Found match for regex: <begin> # {{contraction of|sw|[[ndugu]] [[ake|yake]]}}: [[his]]/[[her]] [[sibling]] <end>
+Page 1069 nduguzo: Found match for regex: <begin> # {{contraction of|sw|[[ndugu]]}} [[ako|zako]]}}: [[your]] [[sibling]]s <end>
+Page 1070 nduguze: Found match for regex: <begin> # {{contraction of|sw|[[ndugu]]}} [[ake|zake]]}}: [[his]]/[[her]] [[sibling]]s <end>
+Page 1071 rafikiyo: Found match for regex: <begin> # {{contraction of|sw|[[rafiki]] [[ako|yako]]}}: [[your]] [[friend]] <end>
+Page 1072 rafikiye: Found match for regex: <begin> # {{contraction of|sw|[[rafiki]] [[ake|yake]]}}: [[his]]/[[her]] [[friend]] <end>
+Page 1073 rafikizo: Found match for regex: <begin> # {{contraction of|sw|[[rafiki]] [[ako|zako]]}}: [[your]] [[friend]]s <end>
+Page 1074 rafikize: Found match for regex: <begin> # {{contraction of|sw|[[rafiki]] [[ake|zake]]}}: [[his]]/[[her]] [[friend]]s <end>
 Page 1075 nalgum: Found match for regex: <begin> # {{contraction of|pt|[[em]] [[algum]]}} <end>
 Page 1076 דורכן: Found match for regex: <begin> # {{contraction of|yi|[[דורך]] [[דעם]]}} <end>
-Page 1077 wadn't: Found match for regex: <begin> # {{pronunciation spelling of|en|wasn't}} {{gloss|{{contraction of|en|[[was]] [[not]]}}}}. Compare [[wa'n't]]. <end>
+Page 1077 wadn't: Found match for regex: <begin> # {{pronunciation spelling of|en|wasn't|+form=contraction of:[[was]] [[not]]}}. Compare [[wa'n't]]. <end>
 Page 1078 other'n: Found match for regex: <begin> # {{contraction of|en|[[other]] [[one]]}}. <end>
 Page 1079 y'all'd've: Found match for regex: <begin> # {{lb|en|colloquial}} {{contraction of|en|[[you]] [[all]] [[would]] [[have]]}}. <end>
 Page 1080 f'rexample: Found match for regex: <begin> # {{lb|en|informal}} {{contraction of|en|[[for]] [[example]]}}. <end>
@@ -1652,7 +1652,7 @@ Page 1307 arsan: Found match for regex: <begin> # {{contraction of|ga|[[arsa]] +
 Page 1308 wouldn'ta: Found match for regex: <begin> # {{lb|en|colloquial}} {{contraction of|en|[[would]] [[not]] [[have]]}}. <end>
 Page 1309 ei'm: Found match for regex: <begin> # {{contraction of|de|einem}} <end>
 Page 1310 suête: Found match for regex: <begin> # {{lb|fr|Acadian}} [[southeast]]; {{contraction of|fr|sud-est}} <end>
-Page 1311 hadn't a: Found match for regex: <begin> # {{lb|en|nonstandard}} [[hadn't]] ({{contraction of|en|[[had]] [[not]] [[have]]}}) <end>
+Page 1311 hadn't a: Found match for regex: <begin> # {{lb|en|nonstandard}} {{contraction of|en|[[had]] [[not]] [[have]]|t=hadn't}}. <end>
 Page 1312 I'm 'onna: Found match for regex: <begin> # {{lb|en|chiefly|US}} {{contraction of|en|[[I'm]] [[gonna]]}}. <end>
 Page 1314 醬紫: Found match for regex: <begin> # {{lb|zh|Mandarin|Internet slang|cute-sounding}} {{contraction of|zh|這樣子||[[this]] [[way]]; [[like]] [[this]]|tr=zhèyàngzi}} <end>
 Page 1315 άντ': Found match for regex: <begin> # {{contraction of|el|άντε||go! (idiomatic)}} <end>
@@ -1724,7 +1724,7 @@ Page 1384 ek's: Found match for regex: <begin> # {{contraction of|af|[[ek]] [[is
 Page 1385 julle's: Found match for regex: <begin> # {{contraction of|af|[[julle]] [[is]]}} <end>
 Page 1386 hulle's: Found match for regex: <begin> # {{contraction of|af|[[hulle]] [[is]]}} <end>
 Page 1387 醬嬸兒: Found match for regex: <begin> # {{lb|zh|Internet slang}} {{contraction of|zh|[[這]][[樣式兒]]／[[这]][[样式儿]]}} (“[[this]] [[way]]; [[like]] [[this]]”). <end>
-Page 1389 can've: Found match for regex: <begin> # {{contraction of|en|[[can]] [[have]]}} (with ''have'' as auxiliary verb) <end>
+Page 1389 can've: Found match for regex: <begin> # {{contraction of|en|[[can]] [[have]]}} (with ''have'' as auxiliary verb). <end>
 Page 1390 Wiktionary:Grease pit/2019/April: Found match for regex: <begin> | '''[[Template:de-du contraction]]''' || '''[[Template:de-du contraction]]''' || 2 || Yes with {{temp|contraction of|de|<nowiki>[[{{{1}}}]] [[du]]</nowiki>}} || No || Replace <end>
 Page 1391 pa'l: Found match for regex: <begin> # {{contraction of|es|[[para]] [[el]]}} <end>
 Page 1392 τἆλλα: Found match for regex: <begin> # {{contraction of|grc|[[τά]] [[ἄλλα]]}} <end>

@@ -18,7 +18,7 @@ Page 8 RAM: Found match for regex: <begin> # {{senseid|en|radar-absorbent materi
 Page 9 NATO: Found match for regex: <begin> # {{acronym of|en|[[north|North]] [[Atlantic]] [[treaty|Treaty]] [[organization|Organization]]}}. <end>
 Page 9 NATO: Found match for regex: <begin> # {{lb|en|slang|chiefly|Malaysia|_|and|_|Singapore}} {{acronym of|en||No Action Talk Only}}. <end>
 Page 9 NATO: Found match for regex: <begin> # {{lb|en|US|cinema}} {{acronym of|en|[[national|National]] [[association|Association]] of [[theatre|Theatre]] [[owner|Owners]]}}. <end>
-Page 10 NAVO: Found match for regex: <begin> # {{acronym of|af|{{l|af|Noord-Atlanties|Noord-Atlantiese}} {{l|af|verdragsorganisasie|Verdragsorganisasie}}}}; {{l|en|NATO}} <end>
+Page 10 NAVO: Found match for regex: <begin> # {{acronym of|af|{{l|af|Noord-Atlanties|Noord-Atlantiese}} {{l|af|verdragsorganisasie|Verdragsorganisasie}}}}; [[NATO]] <end>
 Page 10 NAVO: Found match for regex: <begin> # {{acronym of|nl|Noord-Atlantische Verdragsorganisatie||[[NATO]]}} <end>
 Page 11 DOS: Found match for regex: <begin> # {{lb|en|computing|historical}} {{acronym of|en|w:Disk Operating System}}, a family of [[disk]]-based [[operating system]]s. <end>
 Page 12 AM: Found match for regex: <begin> # {{lb|de|software|development}} {{acronym of|de|w:de:Anwendungsmanagement|Anwendungsmanagement}} <end>
@@ -27,13 +27,13 @@ Page 13 SIM: Found match for regex: <begin> # {{lb|en|marketing}} {{acronym of|e
 Page 13 SIM: Found match for regex: <begin> # {{lb|en|telecommunication}} {{acronym of|en|[[Subscriber Identity Module]]}}. <end>
 Page 13 SIM: Found match for regex: <begin> # {{lb|en|microscopy}} {{acronym of|en|[[scanning ion microscope]]}}. <end>
 Page 13 SIM: Found match for regex: <begin> # {{lb|en|law|E&W}} {{acronym of|en|[[search of the index map]]}}. <end>
-Page 13 SIM: Found match for regex: <begin> # {{acronym of|id|[[surat izin mengemudi]]|t={{l|en|driving licence}}}} <end>
+Page 13 SIM: Found match for regex: <begin> # {{acronym of|id|[[surat izin mengemudi]]|t=[[driving licence]]}} <end>
 Page 13 SIM: Found match for regex: <begin> # {{lb|id|management}} {{acronym of|id|[[sistem]] [[informasi]] [[manajemen]]|t=}} <end>
 Page 14 IMSI: Found match for regex: <begin> # {{lb|en|telecommunications}} {{acronym of|en|[[international|International]] [[mobile|Mobile]] [[subscriber|Subscriber]] [[identity|Identity]]}}. <end>
 Page 15 EAN: Found match for regex: <begin> # {{lb|en|underwater diving}} {{acronym of|en|[[w:Nitrox|enriched air nitrox]]}}. <end>
 Page 16 WYSIWYG: Found match for regex: <begin> # {{acronym of|en|what you see is what you get}}. <end>
 Page 17 radar: Found match for regex: <begin> Originally spelled {{m|en|RADAR}}; an {{acronym|en|[[radio|'''ra'''dio]] [[detection|'''d'''etection]] [[and|'''a'''nd]] [[ranging|'''r'''anging]]|nocap=1}}. {{coin|en|the United States Navy|w=United States Navy|in=1940|nobycat=1}}. <end>
-Page 17 radar: Found match for regex: <begin> * {{l|en|RADAR}} {{gloss|acronym of radio detection and ranging}} <end>
+Page 17 radar: Found match for regex: <begin> * [[RADAR]] {{gloss|acronym of radio detection and ranging}} <end>
 Page 18 BID: Found match for regex: <begin> # {{acronym of|en|[[business]] [[improvement]] [[district]]}}. <end>
 Page 19 SARS: Found match for regex: <begin> # {{lb|en|medicine}} {{acronym of|en|severe acute respiratory syndrome}}; {{n-g|also {{m|en|Sars}}.}} <end>
 Page 20 NOLA: Found match for regex: <begin> # {{acronym of|en|[[New Orleans]], [[Louisiana]]}} {{ng|in the [[United States]].}} <end>
@@ -41,7 +41,7 @@ Page 21 ACT: Found match for regex: <begin> # {{lb|en|uncountable}} {{acronym of
 Page 22 MT: Found match for regex: <begin> # {{lb|en|biochemistry}} {{acronym of|en|microtubule}}. <end>
 Page 23 foe: Found match for regex: <begin> {{acronym of|en|[ten to the power of] [[fifty-one]] [[erg]]s}}, due to equalling 10<sup>51</sup> [[erg]]s; coined by Gerald Brown of Stony Brook University in his work with Hans Bethe. <end>
 Page 24 IPA: Found match for regex: <begin> # {{acronym of|id|ilmu pengetahuan alam}} <end>
-Page 25 laser: Found match for regex: <begin> * {{l|en|LASER}} {{gloss|acronym of ''light amplification by stimulated emission of radiation''}} <end>
+Page 25 laser: Found match for regex: <begin> * [[LASER]] {{gloss|acronym of ''light amplification by stimulated emission of radiation''}} <end>
 Page 26 ROM: Found match for regex: <begin> # {{lb|en|electronics|computing}} {{acronym of|en|read-only memory}}. <end>
 Page 26 ROM: Found match for regex: <begin> # {{lb|en|medical}} {{acronym of|en|rupture of membranes}}. <end>
 Page 27 CEO: Found match for regex: <begin> # {{lb|en|aviation}} {{acronym of|en|[[current]] [[engine]] [[option]]}}. <end>
@@ -82,7 +82,7 @@ Page 49 FUBAR: Found match for regex: <begin> # {{lb|en|slang}} {{acronym of|en|
 Page 50 nos: Found match for regex: <begin> # {{lb|en|countable}} {{acronym of|en|nitrous oxide system}}. <end>
 Page 51 PIN: Found match for regex: <begin> # {{acronym of|en|personal identification number|'''p'''ersonal '''i'''dentification '''n'''umber}}. <end>
 Page 52 along: Found match for regex: <begin> # {{acronym of|id|alat penolong|t=rescue equipment}} <end>
-Page 53 demon: Found match for regex: <begin> # {{lb|en|physics}} {{acronym of|en|[[distinct]] [[electron]] [[motion]] [[particle]]}}: A {{l|en|quasiparticle}}, a type of {{l|en|massless}} {{l|en|neutral}} {{l|en|electron}} {{l|en|excitation}} associated with {{l|en|superconductivity}}. <end>
+Page 53 demon: Found match for regex: <begin> # {{lb|en|physics}} {{acronym of|en|[[distinct]] [[electron]] [[motion]] [[particle]]}}: A [[quasiparticle]], a type of [[massless]] [[neutral]] [[electron]] [[excitation]] associated with [[superconductivity]]. <end>
 Page 54 DAC: Found match for regex: <begin> # {{lb|en|countable|electronics}} {{acronym of|en|[[digital]]-to-[[analog]] [[converter]]}}. <end>
 Page 55 GABA: Found match for regex: <begin> # {{lb|en|amino acid|neurotransmitter}} {{acronym of|en|gamma-aminobutyric acid}}. <end>
 Page 56 UNESCO: Found match for regex: <begin> # {{acronym of|en|{{w|UNESCO|United Nations Educational, Scientific and Cultural Organization}}}}. <end>
@@ -155,7 +155,7 @@ Page 109 sitcom: Found match for regex: <begin> # {{acronym of|en|[[single]] [[i
 Page 109 sitcom: Found match for regex: <begin> |passage="There are MINKs (multiple income, no kids) and what may be the acronym of the '90s, '''SITCOMs''' (single income, two children, outrageous mortgage)."}} <end>
 Page 110 blotto: Found match for regex: <begin> {{acronym|en|[[bovine]] [[lacto-|lacto]] [[transfer]] [[technique]] [[optimizer]]}}. <end>
 Page 111 BRAS: Found match for regex: <begin> # {{acronym of|en|[[broadband]] [[remote access]] [[server]]}}. <end>
-Page 112 SSTH: Found match for regex: <begin> # {{lb|en|nautical}} {{acronym of|en|[[super]] [[slender]] [[twin]] [[hull]]}} A [[catamaran]] with very slender hulls which are designed to reduce wake wash and increase passenger comfort, generally intended for use as fast-moving ferries, both ocean-going and operating close to shore. <end>
+Page 112 SSTH: Found match for regex: <begin> # {{lb|en|nautical}} {{acronym of|en|[[super]] [[slender]] [[twin]] [[hull]]|t=a [[catamaran]] with very slender hulls which are designed to reduce wake wash and increase passenger comfort, generally intended for use as fast-moving ferries, both ocean-going and operating close to shore}}. <end>
 Page 113 BOHICA: Found match for regex: <begin> # {{acronym of|en|[[bend over]], [[here]] [[it]] [[comes]] [[again]]}}: used [[colloquially]] to indicate that an [[adverse]] situation is about to repeat itself, and that [[acquiescence]] is the wisest or only course of action. <end>
 Page 114 SAT: Found match for regex: <begin> # {{lb|en|Australia}} {{acronym of|en|w:Scholastic Aptitude Test}}. <end>
 Page 114 SAT: Found match for regex: <begin> # {{lb|en|British}}  {{acronym of|en|w:National Curriculum assessment|Statutory Assessment Test}}, a national curriculum assessment, or exam. <end>
@@ -219,7 +219,7 @@ Page 151 RIB: Found match for regex: <begin> # {{acronym of|en|w:rigid inflatabl
 Page 152 NIST: Found match for regex: <begin> # {{lb|en|government|US}} {{acronym of|en|w:National Institute of Standards and Technology}}. <end>
 Page 153 dikti: Found match for regex: <begin> # {{lb|id|education}} {{acronym of|id|pendidikan tinggi|t=higher education}} <end>
 Page 154 PIG: Found match for regex: <begin> # {{acronym of|en|[[pipe]] [[inspection]] [[gauge]]}}. <end>
-Page 155 Alma: Found match for regex: <begin> # {{lb|en|space science}} Non-standard capitalisation of [[ALMA]] ({{acronym of|en|{{w|Atacama Large Millimeter Array}}}}) <end>
+Page 155 Alma: Found match for regex: <begin> # {{lb|en|space science}} {{nonstandard form of|en|ALMA}}, {{acronym of|en|{{w|Atacama Large Millimeter Array}}|nocap=1}}. <end>
 Page 156 Can: Found match for regex: <begin> # {{acronym of|fr||Coupe d'Afrique des nations}}; [[AFCON]] <end>
 Page 157 Dia: Found match for regex: <begin> # {{acronym of|es|w:es:Dia (supermercados)|alt=Distribuidora Internacional de Alimentación}}, a Spanish supermarket chain <end>
 Page 158 Sela: Found match for regex: <begin> # {{acronym of|es|{{w|Sistema Económico Latinoamericano}}}} <end>
@@ -232,7 +232,7 @@ Page 162 PETA: Found match for regex: <begin> # {{acronym of|en|{{w|People for t
 Page 162 PETA: Found match for regex: <begin> # {{lb|en|jocular}} {{acronym of|en|{{w|People Eating Tasty Animals}}}}. <end>
 Page 162 PETA: Found match for regex: <begin> # {{lb|en|Philippines}} {{acronym of|en|[[Philippine]] [[education|Education]] [[theater|Theater]] [[association|Association]]}}. <end>
 Page 162 PETA: Found match for regex: <begin> # {{lb|id|historical}} {{acronym of|id|{{w|lang=id|Pembela Tanah Air}}}} <end>
-Page 163 UCO: Found match for regex: <begin> # {{acronym of|es|{{w|Unidad Central Operativa}}}} It is a specialised division of the {{w|Guardia Civil}} <end>
+Page 163 UCO: Found match for regex: <begin> # {{acronym of|es|{{w|Unidad Central Operativa}}|addl=a specialised division of the {{w|Guardia Civil}}}} <end>
 Page 164 DAB: Found match for regex: <begin> # {{acronym of|fr|[[distributeur automatique de billets]]|| [[automatic teller machine]] ([[ATM]]), [[cash machine]], [[cashpoint]]}} <end>
 Page 165 cubewano: Found match for regex: <begin> From {{suffix|en|{{acronym of|en|[[Q]][[B]][[1]]}}|o}}. <end>
 Page 166 ITV: Found match for regex: <begin> # {{acronym of|es|{{w|Inspección Técnica de Vehículos|lang=es}}||[[MOT]] {{q|UK}}, [[vehicle inspection]] {{q|US}}}} <end>
@@ -287,7 +287,7 @@ Page 193 PCAST: Found match for regex: <begin> # {{lb|en|US}} {{acronym of|en|[[
 Page 194 SLAC: Found match for regex: <begin> # {{acronym of|en|[[Stanford]] [[linear]] [[accelerator]] [[center]]}}. <end>
 Page 195 NPA: Found match for regex: <begin> # {{lb|en|banking}} {{acronym of|en|[[nonperforming]] [[asset]]}}. <end>
 Page 196 TANSTAAFL: Found match for regex: <begin> # {{acronym of|en|there ain't no such thing as a free lunch}}; something advertised as being "free" will invariably have hidden costs. <end>
-Page 197 LAT: Found match for regex: <begin> # {{lb|en|firefighting|aviation}} {{acronym of|en|large airtanker|gloss=a class of {{l|en|waterbomber}}}}. <end>
+Page 197 LAT: Found match for regex: <begin> # {{lb|en|firefighting|aviation}} {{acronym of|en|large airtanker|gloss=a class of [[waterbomber]]}}. <end>
 Page 198 NHTSA: Found match for regex: <begin> # {{lb|en|US}} {{acronym of|en|{{w|National Highway Traffic Safety Administration}}}}. <end>
 Page 199 HANS: Found match for regex: <begin> # {{acronym of|en|[[head]] and [[neck]] [[support]]}}. <end>
 Page 200 NSAID: Found match for regex: <begin> # {{lb|en|pharmaceutical drug}} {{acronym of|en|nonsteroidal anti-inflammatory drug}}. <end>
@@ -299,7 +299,7 @@ Page 204 NINDS: Found match for regex: <begin> # {{lb|en|US}} {{acronym of|en||N
 Page 205 CAM: Found match for regex: <begin> # {{acronym of|es|[[Comunidad Autónoma de Madrid]]||Autonomous [[Community of Madrid]]}} <end>
 Page 206 ODS: Found match for regex: <begin> # {{acronym of|cs|[[w:Občanská demokratická strana|Občanská demokratická strana]]}}, Czech political party <end>
 Page 207 NCADD: Found match for regex: <begin> # {{acronym of|en|[[national|National]] [[council|Council]] on [[alcoholism|Alcoholism]] and [[drug|Drug]] [[dependence|Dependence]]}}. <end>
-Page 208 MAD: Found match for regex: <begin> # {{lb|en|astrophysics}} {{acronym of|en|magnetically-arrested disc}} {{ng|(a type of {{l|en|black hole}} {{l|en|accretion disc}}).}} <end>
+Page 208 MAD: Found match for regex: <begin> # {{lb|en|astrophysics}} {{acronym of|en|magnetically-arrested disc}} {{ng|(a type of [[black hole]] [[accretion disc]]).}} <end>
 Page 208 MAD: Found match for regex: <begin> # {{lb|en|programming}} {{acronym of|en||Michigan algorithm decoder}}, a programming language, a variant of [[ALGOL]], developed in 1959 at the University of Michigan. <end>
 Page 209 SUDEP: Found match for regex: <begin> # {{acronym of|en|[[sudden]] [[unexplained]] [[death]] in [[epilepsy]]}}. <end>
 Page 210 NOS: Found match for regex: <begin> # {{acronym of|en|nitrous oxide system}}. <end>
@@ -381,7 +381,7 @@ Page 265 DFAT: Found match for regex: <begin> # {{lb|en|Ireland|Australia}} {{ac
 Page 266 FIST: Found match for regex: <begin> # {{acronym of|en|Future [[infantry|Infantry]] Soldier Technology}}. <end>
 Page 267 NAFDI: Found match for regex: <begin> # {{lb|en|US}} {{acronym of|en|[[national|National]] [[foundation|Foundation]] for [[depressive|Depressive]] [[illness|Illness]]}}. <end>
 Page 268 SPAN: Found match for regex: <begin> # {{acronym of|en||Suicide Prevention Advocacy Network}}. <end>
-Page 268 SPAN: Found match for regex: <begin> # {{lb|en|computing}} {{acronym of|en|{{w|Switched Port Analyzer}}}}, a Cisco technology <end>
+Page 268 SPAN: Found match for regex: <begin> # {{lb|en|computing}} {{acronym of|en|{{w|Switched Port Analyzer}}}}, a Cisco technology. <end>
 Page 269 MoMA: Found match for regex: <begin> # {{acronym of|en|w:Museum of Modern Art}}. <end>
 Page 270 CEOSE: Found match for regex: <begin> # {{acronym of|en|[[committee|Committee]] on Equal [[opportunity|Opportunities]] in [[science|Science]] and [[engineering|Engineering]]}}. <end>
 Page 271 STEM: Found match for regex: <begin> # {{lb|en|countable}} {{acronym of|en|scanning transmission electron microscope}}. <end>
@@ -402,7 +402,7 @@ Page 281 EVA: Found match for regex: <begin> # {{lb|en|organic compound}} {{acro
 Page 281 EVA: Found match for regex: <begin> # {{acronym of|es|etilvinilacetato}} ([[ethylene-vinyl acetate]]) <end>
 Page 282 valas: Found match for regex: <begin> # {{acronym of|id|valuta asing|t=foreign currency}} <end>
 Page 283 PAP: Found match for regex: <begin> # {{lb|en|medicine}} {{acronym of|en|positive airway pressure}}. <end>
-Page 284 LIBOR: Found match for regex: <begin> # {{lb|en|finance}} {{acronym of|en|{{w|London Interbank Offered Rate}}}} (loan interest rate) <end>
+Page 284 LIBOR: Found match for regex: <begin> # {{lb|en|finance}} {{acronym of|en|{{w|London Interbank Offered Rate}}}} (loan interest rate). <end>
 Page 285 ITIL: Found match for regex: <begin> # {{lb|en|computing}} {{acronym of|en|[[IT]] [[infrastructure|Infrastructure]] [[library|Library]]}}: a set of practices for IT management in business. <end>
 Page 286 САД: Found match for regex: <begin> # {{acronym of|mk|Соединети Американски Држави}} <end>
 Page 287 BRAC: Found match for regex: <begin> # {{lb|en|military|US}} {{acronym of|en|{{w|Base Realignment and Closure Commission}}}}. <end>
@@ -422,7 +422,7 @@ Page 300 UNPROFOR: Found match for regex: <begin> # {{topics|en|Peace}} {{lb|en|
 Page 301 FURPS: Found match for regex: <begin> # {{lb|en|software engineering|mnemonic}} {{acronym of|en|[[functionality]], [[usability]], [[reliability]], [[performance]], [[supportability]]}} {{n-g|Used to help remember the major requirements of software.}} <end>
 Page 302 BART: Found match for regex: <begin> # {{acronym of|en|{{w|Bay Area Rapid Transit}}}}. <end>
 Page 303 sida: Found match for regex: <begin> # {{acronym of|fr|syndrome d'immunodéficience acquise}}; [[AIDS]] <end>
-Page 304 SIDA: Found match for regex: <begin> # {{l|en|AIDS}}; {{i|acronym of french {{l|fr|SIDA}} “{{l|fr|syndrome d'immunodéficience acquise|'''s'''yndrome d''''i'''mmuno'''d'''éficience '''a'''cquise}}” ({{l|en|AIDS}} “{{l|en|acquired immune deficiency syndrome|'''a'''cquired '''i'''mmune '''d'''eficiency '''s'''yndrome}}”)}} <end>
+Page 304 SIDA: Found match for regex: <begin> # [[AIDS]]; {{i|acronym of french {{l|fr|SIDA}} “{{l|fr|syndrome d'immunodéficience acquise|'''s'''yndrome d''''i'''mmuno'''d'''éficience '''a'''cquise}}” ([[AIDS]] “[[acquired immune deficiency syndrome|'''a'''cquired '''i'''mmune '''d'''eficiency '''s'''yndrome]]”)}} <end>
 Page 304 SIDA: Found match for regex: <begin> # {{alternative case form of|fr|sida}} ({{acronym of|fr|syndrome d'immunodéficience acquise}}; [[AIDS]]) <end>
 Page 304 SIDA: Found match for regex: <begin> # {{tlb|it|disease|rare}} {{acronym of|it|sindrome da immunodeficienza acquisita}} <end>
 Page 304 SIDA: Found match for regex: <begin> # [[AIDS]]; {{acronym of|pt|síndrome da imunodeficiência adquirida}} <end>
@@ -444,7 +444,7 @@ Page 315 DIP: Found match for regex: <begin> # {{lb|en|programming}} {{acronym o
 Page 316 ERISA: Found match for regex: <begin> # {{lb|en|US|legal}} {{acronym of|en|w:Employee Retirement Income Security Act|qq=of 1974}}. <end>
 Page 317 SIDD: Found match for regex: <begin> # {{acronym of|en|[[single]] [[integrated]] [[digital]] [[device]]}}. <end>
 Page 318 LegCo: Found match for regex: <begin> # {{lb|en|British|Hong Kong}} {{acronym of|en|{{w|Legislative Council of Hong Kong|Legislative Council}}}}, the unicameral legislature of the Hong Kong Special Administrative Region of the People's Republic of China. <end>
-Page 319 HALO: Found match for regex: <begin> # {{lb|en|parachuting}} {{acronym of|en|[[high]] [[altitude]], [[low]] [[open]]ing}} A type of [[skydiving]] where one leaves the launch platform from a high altitude and opens the parachute at a very low altitude. <end>
+Page 319 HALO: Found match for regex: <begin> # {{lb|en|parachuting}} {{acronym of|en|[[high]] [[altitude]], [[low]] [[open]]ing|t=a type of [[skydiving]] where one leaves the launch platform from a high altitude and opens the parachute at a very low altitude}}. <end>
 Page 319 HALO: Found match for regex: <begin> # {{acronym of|en|[[hazardous]] [[area]] [[life support|life-support]] [[organization]]}}. <end>
 Page 319 HALO: Found match for regex: <begin> # {{lb|en|aviation}} {{acronym of|en|high altitude, low [[orbit]]ing}}. <end>
 Page 320 COTS: Found match for regex: <begin> # {{acronym of|en|{{w|crown-of-thorns starfish}}}}. <end>
@@ -458,12 +458,12 @@ Page 323 NIC: Found match for regex: <begin> # {{lb|en|internet}} {{acronym of|e
 Page 323 NIC: Found match for regex: <begin> # {{lb|en|UK|finance}} {{acronym of|en|[[national insurance]] [[contribution]]}}. <end>
 Page 324 QDRO: Found match for regex: <begin> # {{lb|en|US|legal}} {{acronym of|en|[[qualified]] [[domestic relations]] [[order]]}}. <end>
 Page 325 EDRO: Found match for regex: <begin> # {{lb|en|US|legal}} {{acronym of|en|[[eligible]] [[domestic]] [[relations]] [[order]]}}. <end>
-Page 326 CATO: Found match for regex: <begin> # {{lb|en|Canada|military}} {{acronym of|en|{{cap|cadet}} {{cap|administrative}} and {{cap|training}} {{cap|order}}}}. <end>
+Page 326 CATO: Found match for regex: <begin> # {{lb|en|Canada|military}} {{acronym of|en|{{U|cadet}} {{U|administrative}} and {{U|training}} {{U|order}}}}. <end>
 Page 326 CATO: Found match for regex: <begin> # {{lb|en|aviation}} {{acronym of|en|[[catapult]] [[assisted]] [[takeoff]]}}. <end>
 Page 326 CATO: Found match for regex: <begin> # {{lb|en|rocketry}} {{acronym of|en|[[catastrophe]] [[at]] [[takeoff]]}}. <end>
 Page 327 HCLK: Found match for regex: <begin> # {{lb|en|electronics}} {{acronym of|en|[[high-speed]] [[clock]]}}. <end>
 Page 328 FOM: Found match for regex: <begin> # {{lb|en|motorsport}} {{acronym of|en|[[Formula One]] [[management|Management]]}}. <end>
-Page 329 VTOL: Found match for regex: <begin> # {{lb|en|aviation}} {{acronym of|en|[[vertical]] [[takeoff]] and [[landing]]}} A [[fixed-wing]] [[aircraft]] that is capable of ascending into the air straight up as opposed to needing to accelerate horizontally first. <end>
+Page 329 VTOL: Found match for regex: <begin> # {{lb|en|aviation}} {{acronym of|en|[[vertical]] [[takeoff]] and [[landing]]|t=a [[fixed-wing]] [[aircraft]] that is capable of ascending into the air straight up as opposed to needing to accelerate horizontally first}}. <end>
 Page 330 aki: Found match for regex: <begin> # {{lb|id|military}} {{acronym of|id|ayun kiri|t=left swing}} <end>
 Page 331 pati: Found match for regex: <begin> # {{acronym of|id|perwira tinggi|t=high ranking officer}} <end>
 Page 332 oe: Found match for regex: <begin> # {{lb|tr|chiefly||internet}} {{acronym of|tr|orospu evladı|tr=son of a bitch}} <end>
@@ -503,7 +503,7 @@ Page 356 UCI: Found match for regex: <begin> # {{acronym of|es|unidad de cuidado
 Page 357 WADA: Found match for regex: <begin> # {{acronym of|en|[[world|World]] [[anti-doping|Anti-Doping]] [[agency|Agency]]}}. <end>
 Page 358 USADA: Found match for regex: <begin> # {{acronym of|en|[[United States]] [[anti-doping|Anti-Doping]] [[agency|Agency]]}}. <end>
 Page 359 ZETA: Found match for regex: <begin> # {{lb|en|physics}} {{acronym of|en|[[zero]]-[[energy]] [[thermonuclear]] [[assembly]]/[[apparatus]]|t=a [[torus]]-shaped reactor used in the mid-20th century to carry out experiments in plasma physics and temperature-controlled thermonuclear reactions}}. <end>
-Page 360 USAC: Found match for regex: <begin> # {{acronym of|en|{{w|United States Auto Club}}}}, a sanctioning body for automobile motorsports in the United States of America <end>
+Page 360 USAC: Found match for regex: <begin> # {{acronym of|en|{{w|United States Auto Club}}}}, a sanctioning body for automobile motorsports in the United States of America. <end>
 Page 361 POJO: Found match for regex: <begin> # {{lb|en|Java programming language|OOP}} {{acronym of|en|w:plain old Java object}}. {{defdate|from 2000}} <end>
 Page 362 DOSRI: Found match for regex: <begin> # {{lb|en|Philippines|banking}} {{acronym of|en|[[director|Directors]], [[officer|Officers]], [[stakeholder|Stakeholders]], and other [[related|Related]] [[interest|Interests]]}}. <end>
 Page 363 sanjak: Found match for regex: <begin> # {{lb|id|geography}} {{acronym of|id|pengesanan jejak|t=}} <end>
@@ -544,8 +544,8 @@ Page 384 PUD: Found match for regex: <begin> # {{acronym of|es|[[partido|Partido
 Page 385 FUNDER: Found match for regex: <begin> # {{acronym of|es|[[fundación|Fundación]] para el [[desarrollo|Desarrollo]] [[empresarial|Empresarial]] [[rural|Rural]]}} (Honduras) <end>
 Page 386 CASM: Found match for regex: <begin> # {{lb|en|travel}} {{acronym of|en|[[cost]] [[per]] [[available]] [[seat-mile]]}}: a method of calculating [[operating cost]]s in the [[travel]] [[industry]]. It is derived by dividing total operating expenses by total [[ASM]]s. <end>
 Page 386 CASM: Found match for regex: <begin> # {{acronym of|en|[[centre|Centre]] for the [[analysis|Analysis]] of [[social media|Social Media]]}}. <end>
-Page 387 GIMP: Found match for regex: <begin> # {{lb|en|uncountable|software}} {{acronym of|en|[[GNU]] Image Manipulation Program}} A computer program capable of editing and manipulating digital images. <end>
-Page 388 habtm: Found match for regex: <begin> # {{lb|en|databases}} {{acronym of|en|[[has]] and [[belongs]] to [[many]]}} A [[many-to-many]] [[relationship]] in a [[database]]. <end>
+Page 387 GIMP: Found match for regex: <begin> # {{lb|en|uncountable|software}} {{acronym of|en|[[GNU]] Image Manipulation Program|addl=a computer program capable of editing and manipulating digital images}}. <end>
+Page 388 habtm: Found match for regex: <begin> # {{lb|en|databases}} {{acronym of|en|[[has]] and [[belongs]] to [[many]]|addl=a [[many-to-many]] [[relationship]] in a [[database]]}}. <end>
 Page 389 IKIWISI: Found match for regex: <begin> # {{acronym of|en|[[I'll]] [[know]] [[it]] [[when]] I [[see]] it}}. <end>
 Page 390 DOGSO: Found match for regex: <begin> # {{lb|en|soccer|US|Canada}} {{acronym of|en|[[deny]]ing an [[obvious]] [[goal]]-[[score|scoring]] [[opportunity]]}}. <end>
 Page 391 obs: Found match for regex: <begin> # {{acronym of|da|Oplysninger til Borgerne om Samfundet}} <end>
@@ -556,11 +556,11 @@ Page 395 ordal: Found match for regex: <begin> # {{acronym of|id|orang dalam}} <
 Page 396 saka: Found match for regex: <begin> # {{lb|id|scouting}} {{acronym of|id|satuan karya pramuka}} <end>
 Page 397 REER: Found match for regex: <begin> # {{lb|fr|Canada}} {{acronym of|fr|[[régime]] [[enregistrée]] d'[[épargne]]-[[retraite]]||registered retirement savings plan}}: [[RRSP]] <end>
 Page 398 FCA: Found match for regex: <begin> # {{lb|en|incoterm}} {{acronym of|en|Free Carrier}}. <end>
-Page 399 MGTOW: Found match for regex: <begin> # {{lb|en|neologism|sometimes|_|used attributively}} {{acronym of|en|{{w|Men Going Their Own Way}}}} {{gloss|an anti-feminist movement}} <end>
+Page 399 MGTOW: Found match for regex: <begin> # {{lb|en|neologism|sometimes|_|used attributively}} {{acronym of|en|{{w|Men Going Their Own Way}}}} {{gloss|an anti-feminist movement}}. <end>
 Page 400 RIFF: Found match for regex: <begin> # {{lb|en|computing}} {{acronym of|en|{{w|Resource Interchange File Format}}}}. <end>
 Page 401 MUGA: Found match for regex: <begin> # {{acronym of|en|[[multiple]] [[gated]] [[acquisition]] [[scan]]}}; a medical test used for assessing [[ventricular]] function of the heart. <end>
 Page 401 MUGA: Found match for regex: <begin> # {{lb|en|architecture}} {{acronym of|en|[[multiuse]] [[games]] [[area]]}}. <end>
-Page 402 LAMP: Found match for regex: <begin> # {{lb|en|Internet}} {{acronym of|en|[[Linux]], [[Apache]], {{w|MySQL}}/{{w|MariaDB}}, and [[PHP]]/[[Python]]/[[Perl]]}}: a popular combination of [[open source]] software for use as a [[web server]] <end>
+Page 402 LAMP: Found match for regex: <begin> # {{lb|en|Internet}} {{acronym of|en|[[Linux]], [[Apache]], {{w|MySQL}}/{{w|MariaDB}}, and [[PHP]]/[[Python]]/[[Perl]]}}: a popular combination of [[open source]] software for use as a [[web server]]. <end>
 Page 402 LAMP: Found match for regex: <begin> # {{lb|en|genetics}} {{acronym of|en|[[loop]]-[[mediated]] [[isothermal]] [[amplification]]}}. <end>
 Page 402 LAMP: Found match for regex: <begin> # {{lb|en|cytology}} {{acronym of|en|{{w|lysosome-associated membrane glycoprotein}}}}. <end>
 Page 403 ALP: Found match for regex: <begin> # {{acronym of|en|axion-like particle}}. <end>
@@ -625,7 +625,7 @@ Page 453 AFI: Found match for regex: <begin> # {{lb|es|Mexico}} {{acronym of|es|
 Page 454 FIDIC: Found match for regex: <begin> # {{acronym of|fr|[[fédération|Fédération]] [[international|Internationale]] [[des|Des]] [[ingénieur-conseil|Ingénieurs-Conseils]]}} <end>
 Page 455 AMF: Found match for regex: <begin> # {{lb|en|football}} {{acronym of|en|attacking midfielder}}. <end>
 Page 456 OPEX: Found match for regex: <begin> # {{lb|en|business|finance}} {{acronym of|en|[[operating expense]]/[[operating expenditure]]}}: the continuing costs of a business, in contrast to [[capital expenditure]]. <end>
-Page 457 IRINT: Found match for regex: <begin> # {{lb|en|military}} {{acronym of|en|[[infrared]] [[intelligence]]}} The gathering and processing of intelligence in the infrared [[spectrum]]. <end>
+Page 457 IRINT: Found match for regex: <begin> # {{lb|en|military}} {{acronym of|en|[[infrared]] [[intelligence]]|t=the gathering and processing of intelligence in the infrared [[spectrum]]}}. <end>
 Page 458 PMEE: Found match for regex: <begin> # {{lb|en|military|US|air force}} {{acronym of|en|[[prime]] [[mission]] [[electronic]] [[equipment]]}}. <end>
 Page 459 MENA: Found match for regex: <begin> # {{lb|es|Spain}} {{acronym of|es|[[menor]] [[extranjero]] [[no]] [[acompañado]]|g=m}}, {{m|es|[[menor]] [[extranjero|extranjera]] [[no]] [[acompañado|acompañada]]|g=f||unaccompanied foreign minor}} <end>
 Page 460 FORACS: Found match for regex: <begin> # {{lb|en|US|military|naval}} {{acronym of|en|[[fleet|Fleet]] [[operational|Operational]] [[readiness|Readiness]] [[accuracy|Accuracy]] [[check|Check]] [[site|Site]]}}: a facility for measuring the bearing and range accuracy of sensor systems on ships, submarines, and aircraft. <end>
@@ -749,9 +749,9 @@ Page 556 NSERC: Found match for regex: <begin> # {{lb|en|Canada}} {{acronym of|e
 Page 557 COIP: Found match for regex: <begin> # {{acronym of|en||Communication Over Internet Protocol}}. <end>
 Page 557 COIP: Found match for regex: <begin> # {{acronym of|en||Conferencing over Internet Protocol}} [[w:H.323|H.323]]. <end>
 Page 558 tonti: Found match for regex: <begin> # {{acronym of|id|[[peleton]] [[inti]]|t=}} <end>
-Page 559 SIMIC: Found match for regex: <begin> # {{lb|en|macroeconomics}} {{acronym of|en|severely [[indebted]] middle-income country}} A [[country]] with an [[annual]] [[income]] of between $736 and $9,075 [[per capita]], a [[debt ratio]] of at least 80%, and a debt/export ratio of at least 220%. <end>
+Page 559 SIMIC: Found match for regex: <begin> # {{lb|en|macroeconomics}} {{acronym of|en|severely [[indebted]] middle-income country|t=a [[country]] with an [[annual]] [[income]] of between $736 and $9,075 [[per capita]], a [[debt ratio]] of at least 80%, and a debt/export ratio of at least 220%}}. <end>
 Page 560 NACA: Found match for regex: <begin> # {{lb|en|US}} {{acronym of|en|[[national|National]] [[advisory|Advisory]] [[committee|Committee]] for [[aeronautics|Aeronautics]]}}. <end>
-Page 561 RELP: Found match for regex: <begin> # {{lb|en|telecommunications|dated}} {{acronym of|en|[[residual]] [[excited]] [[linear]] [[prediction]]}} A [[speech]] [[coding]] [[algorithm]]. <end>
+Page 561 RELP: Found match for regex: <begin> # {{lb|en|telecommunications|dated}} {{acronym of|en|[[residual]] [[excited]] [[linear]] [[prediction]]|addl=a [[speech]] [[coding]] [[algorithm]]}}. <end>
 Page 562 STROG: Found match for regex: <begin> # {{lb|en|military}} {{acronym of|en|Strait of Gibraltar}}. <end>
 Page 563 SOHO: Found match for regex: <begin> # {{acronym of|en|w:Small Office, Home Office|Small Office, Home Office}}. <end>
 Page 564 SoHo: Found match for regex: <begin> # {{acronym of|en|[[small]] [[office]], [[home]] [[office]]}}. <end>
@@ -782,8 +782,8 @@ Page 582 CAN: Found match for regex: <begin> # {{lb|en|South Africa|countable}} 
 Page 582 CAN: Found match for regex: <begin> # {{lb|en|AU|countable}} {{acronym of|en|[[court]] [[attendance]] [[notice]]}}. <end>
 Page 583 CHOGM: Found match for regex: <begin> # {{acronym of|en|{{w|Commonwealth Heads of Government Meeting}}}}, a [[biennial]] [[summit]] meeting of the heads of [[government]] from all [[Commonwealth]] [[nation]]s. <end>
 Page 584 DSLAM: Found match for regex: <begin> # {{acronym of|en|[[digital]] [[subscriber]] [[line]] [[access]] [[multiplexer]]}}. <end>
-Page 585 ISAF: Found match for regex: <begin> # {{acronym of|en|{{w|International Sailing Federation}}}} {{gloss|world governing body for the sport of [[sailing]]}} <end>
-Page 585 ISAF: Found match for regex: <begin> # {{acronym of|en|{{w|International Security Assistance Force}}}} {{gloss|[[NATO]]-led mission in [[Afghanistan]] which was established on 20 December 2001}} <end>
+Page 585 ISAF: Found match for regex: <begin> # {{acronym of|en|{{w|International Sailing Federation}}}} {{gloss|world governing body for the sport of [[sailing]]}}. <end>
+Page 585 ISAF: Found match for regex: <begin> # {{acronym of|en|{{w|International Security Assistance Force}}}} {{gloss|[[NATO]]-led mission in [[Afghanistan]] which was established on 20 December 2001}}. <end>
 Page 586 HUMINT: Found match for regex: <begin> # {{acronym of|en|human intelligence}}. <end>
 Page 587 ANFO: Found match for regex: <begin> # {{acronym of|en|[[ammonium nitrate]] [[fuel oil]]}}: an [[explosive]] made from [[ammonium nitrate]] fertilizer and [[fuel oil]]. <end>
 Page 588 GOBLin: Found match for regex: <begin> # {{lb|en|British|rail transport|informal}} {{acronym of|en|{{w|Gospel Oak}} to {{w|Barking}} [[line|Line]]}}, a railway line in north [[London]]. <end>
@@ -792,7 +792,7 @@ Page 589 APEX: Found match for regex: <begin> # {{lb|en|medicine|[[nephrology]]}
 Page 589 APEX: Found match for regex: <begin> # {{lb|en|British|trade union}} {{acronym of|en|{{w|Association of Professional, Executive, Clerical and Computer Staff}}}}. <end>
 Page 590 IMRO: Found match for regex: <begin> # {{acronym of|en|[[Irish]] [[music|Music]] [[right|Rights]] [[organisation|Organisation]]}}. <end>
 Page 591 OPAC: Found match for regex: <begin> # {{lb|en|library science}} {{acronym of|en|online public access catalog}}. <end>
-Page 592 STOL: Found match for regex: <begin> # {{lb|en|aviation}} {{acronym of|en|[[short]] [[takeoff]] and [[landing]]}} An aircraft that needs a shorter minimum horizontal distance to accelerate in order to ascend into the air than typical [[fixed wing]] types. <end>
+Page 592 STOL: Found match for regex: <begin> # {{lb|en|aviation}} {{acronym of|en|[[short]] [[takeoff]] and [[landing]]|addl=an aircraft that needs a shorter minimum horizontal distance to accelerate in order to ascend into the air than typical [[fixed wing]] types}}. <end>
 Page 593 VOR: Found match for regex: <begin> # {{lb|en|aviation}} {{acronym of|en|VHF omnidirectional range}}, a radio-navigation beacon operating on [[VHF]] radio. <end>
 Page 594 TEWT: Found match for regex: <begin> # {{lb|en|military}} {{acronym of|en|{{U|tactical}} {{U|exercise}} {{U|without}} {{U|troops}}}}: a [[wargame]] or [[training]] [[exercise]] not involving deployment of troops. <end>
 Page 595 DOCSIS: Found match for regex: <begin> # {{lb|en|telecommunications}} {{acronym of|en|{{w|Data Over Cable Service Interface Specification}}}}. <end>
@@ -815,7 +815,7 @@ Page 608 EDMIn: Found match for regex: <begin> # {{lb|en|organic compound}} {{ac
 Page 609 DRAGN: Found match for regex: <begin> # {{lb|en|galaxy}} {{acronym of|en|[[double]] [[radio]]-[[source]] [[associate]]d with a [[galactic]] [[nucleus]]}}. <end>
 Page 610 REIT: Found match for regex: <begin> # {{lb|en|legal}} {{acronym of|en|w:real estate investment trust}}, an investment device where the holding company uses the funds invested to hold real estate. <end>
 Page 611 aksioma: Found match for regex: <begin> # {{lb|id|education}} {{acronym of|id|[[ajang]] [[kompetensi]] [[seni]] [[dan]] [[olahraga]] [[madrasah]]|t=}} <end>
-Page 612 INFORSE: Found match for regex: <begin> # {{acronym of|en|{{cap|international}} {{cap|network}} For {{cap|sustainable}} {{cap|energy}}}}. <end>
+Page 612 INFORSE: Found match for regex: <begin> # {{acronym of|en|{{U|international}} {{U|network}} For {{U|sustainable}} {{U|energy}}}}. <end>
 Page 613 NORAD: Found match for regex: <begin> # {{acronym of|en|{{w|North American Aerospace Defense Command}}}}. <end>
 Page 613 NORAD: Found match for regex: <begin> # {{acronym of|en|{{w|Norwegian Agency for Development Cooperation}}}}. <end>
 Page 614 Usa: Found match for regex: <begin> # {{place|io|ann=acronym of:Unionita Stati di Amerika<t:United States of America>|country|cont/North America|t=USA}} <end>
@@ -847,13 +847,13 @@ Page 629 ORC: Found match for regex: <begin> # {{lb|en|astronomy}} {{acronym of|
 Page 630 lylab: Found match for regex: <begin> # {{lb|en|slang}} {{acronym of|en|[[love]] [[you]] [[like]] [[a]] [[brother]] (or like a bro)}}. <end>
 Page 631 APTA: Found match for regex: <begin> # {{acronym of|en|{{w|American Public Transportation Association}}}}. <end>
 Page 632 patas: Found match for regex: <begin> # {{acronym of|id|[[cepat]] [[dan]] [[terbatas]]|t=limited express|lit=fast and limited}} <end>
-Page 633 ETOPS: Found match for regex: <begin> # {{lb|en|aviation}} {{acronym of|en|{{cap|extended}}-range {{cap|twin}}-engine {{cap|operational}} {{cap|performance}} {{cap|standards}}}} {{ng|An aviation rule about how far two-engined aircraft can operate distant from a diversion airport at all times in case of a single-engine failure. Without ETOPS that is 60-minutes of flight time, Various ETOPS levels of qualification extend this to 90, 120, 180-minutes.}} <end>
+Page 633 ETOPS: Found match for regex: <begin> # {{lb|en|aviation}} {{acronym of|en|{{U|extended}}-range {{U|twin}}-engine {{U|operational}} {{U|performance}} {{U|standards}}}} {{ng|An aviation rule about how far two-engined aircraft can operate distant from a diversion airport at all times in case of a single-engine failure. Without ETOPS that is 60-minutes of flight time, Various ETOPS levels of qualification extend this to 90, 120, 180-minutes.}} <end>
 Page 633 ETOPS: Found match for regex: <begin> # {{lb|en|humorous|aviation}} {{acronym of|en|[[engine]]s [[turn]] [[or]] [[passenger]]s [[swim]]}} {{ng|A facetious backronym reinterpretation of ETOPS to explain the literal situation of ETOPS operations, due to the lack of range from single-engine operations on twin-engined aircraft, and circumstances over long-haul ocean routes.}} <end>
-Page 634 PUBS: Found match for regex: <begin> # {{acronym of|en|[[percutaneous]] [[umbilical]] [[blood]] [[sampling]]}} The [[removal]] of [[blood]] from an [[umbilical cord]] [[in utero]] for [[testing]]. <end>
+Page 634 PUBS: Found match for regex: <begin> # {{acronym of|en|[[percutaneous]] [[umbilical]] [[blood]] [[sampling]]|t=the [[removal]] of [[blood]] from an [[umbilical cord]] [[in utero]] for [[testing]]}}. <end>
 Page 634 PUBS: Found match for regex: <begin> # {{acronym of|en|purple urine bag syndrome}}. <end>
 Page 635 HATO: Found match for regex: <begin> # {{lb|en|British}} {{acronym of|en|[[Highways Agency]] [[traffic]] [[officer]]}}. <end>
 Page 636 otsus: Found match for regex: <begin> # {{acronym of|id|otonomi khusus|t=special autonomy}} <end>
-Page 637 LEED: Found match for regex: <begin> # {{acronym of|en|[[leadership|Leadership]] [[in]] [[energy|Energy]] [[and]] [[environmental|Environmental]] [[design|Design]]}} A system to [[categorise]] the level of environmentally sustainable construction in [[sustainable]] [[building]]s. <end>
+Page 637 LEED: Found match for regex: <begin> # {{acronym of|en|[[leadership|Leadership]] [[in]] [[energy|Energy]] [[and]] [[environmental|Environmental]] [[design|Design]]|addl=a system to [[categorise]] the level of environmentally sustainable construction in [[sustainable]] [[building]]s}}. <end>
 Page 637 LEED: Found match for regex: <begin> # {{acronym of|en|{{w|low-energy electron diffraction}}}}. <end>
 Page 638 PIP: Found match for regex: <begin> # {{lb|en|computing|historical}} {{acronym of|en|w:Peripheral Interchange Program}}. <end>
 Page 638 PIP: Found match for regex: <begin> # {{lb|en|television}} {{acronym of|en|picture-in-picture}}. <end>
@@ -873,7 +873,7 @@ Page 642 SUP: Found match for regex: <begin> # {{acronym of|en|[[w:Software Upgr
 Page 642 SUP: Found match for regex: <begin> # {{acronym of|en|{{w|standup paddleboarding}}}}. <end>
 Page 642 SUP: Found match for regex: <begin> # {{acronym of|en|{{w|standup paddleboard}}}}. <end>
 Page 642 SUP: Found match for regex: <begin> # {{acronym of|en|{{w|selective ultraviolet phototherapy}}}}. <end>
-Page 642 SUP: Found match for regex: <begin> # {{acronym of|en|[[single-use]] [[plastic|plastic(s)]]}} <!-- e.g. in the name of the relevant EU directive --> <end>
+Page 642 SUP: Found match for regex: <begin> # {{acronym of|en|[[single-use]] [[plastic|plastic(s)]]}}. <!-- e.g. in the name of the relevant EU directive --> <end>
 Page 642 SUP: Found match for regex: <begin> # {{acronym of|en|shared use path}}. <end>
 Page 643 ONG: Found match for regex: <begin> ## {{lb|pt|Brazil}} {{acronym of|pt|organização não-governamental}} <end>
 Page 644 ՀԱՀ: Found match for regex: <begin> # {{acronym of|hy|Հարավաֆրիկյան Հանրապետություն||[[RSA]]}} <end>
@@ -893,7 +893,7 @@ Page 656 IDS-DDI: Found match for regex: <begin> # {{acronym of|sh|[[w:sh:Istars
 Page 657 KOS: Found match for regex: <begin> # {{acronym of|en||key operated switch}}. <end>
 Page 657 KOS: Found match for regex: <begin> # {{acronym of|en||key-operated selector}}. <end>
 Page 657 KOS: Found match for regex: <begin> # {{acronym of|en||Knackered Old Shit}}. <end>
-Page 658 INSURV: Found match for regex: <begin> # {{acronym of|en|US Navy [[w:Board of Inspection and Survey|Board of Inspection and Survey]]}} It is an inspection that occurs on ships and submarines every 5 years and prior to commissioning. Known throughout the Navy for its gruelling intensity and difficulty to pass, it has become something to be feared by sailors and officers alike. <end>
+Page 658 INSURV: Found match for regex: <begin> # {{acronym of|en|US Navy [[w:Board of Inspection and Survey|Board of Inspection and Survey]]|addl=an inspection that occurs on ships and submarines every 5 years and prior to commissioning}}. <end>
 Page 659 Wiktionary talk:Page count: Found match for regex: <begin> :# ''Approach 1:'' A set of definitions counts as a lemma if (1) any definition has any wikitext, other than whitespace or periods, that is not inside any template other than perhaps {{temp|w|...}} or {{temp|l|en|...}}; or (2) any definition has any of the templates {{temp|non-gloss definition}}, {{temp|acronym of}}, {{temp|initialism of}}, {{temp|n-g}}, {{temp|given name}}, {{temp|surname}}, {{temp|abbreviation of}}, {{temp|short for}}. <end>
 Page 660 ZNIEFF: Found match for regex: <begin> # {{acronym of|fr|zone naturelle d'intérêt écologique, faunistique et floristique||[[SCI]]; [[SSSI]]}} <end>
 Page 661 BND: Found match for regex: <begin> # {{acronym of|en|w:Bundesnachrichtendienst}}. <end>
@@ -991,7 +991,7 @@ Page 734 AFIS: Found match for regex: <begin> # {{acronym of|en|[[w:American For
 Page 735 RED: Found match for regex: <begin> # {{acronym of|en|{{w|reverse electrodialysis}}}}. <end>
 Page 736 ԼՂԻՄ: Found match for regex: <begin> # {{acronym of|hy|Լեռնային Ղարաբաղի Ինքնավար Մարզ||[[NKAO]]}} <end>
 Page 737 PAPA: Found match for regex: <begin> # {{acronym of|en|{{w|Professional and Amateur Pinball Association}}}}. <end>
-Page 737 PAPA: Found match for regex: <begin> # {{lb|en|aviation}} {{acronym of|en|{{cap|parallax}} {{cap|aircraft}} {{cap|parking}} {{cap|aid}}}}. <end>
+Page 737 PAPA: Found match for regex: <begin> # {{lb|en|aviation}} {{acronym of|en|{{U|parallax}} {{U|aircraft}} {{U|parking}} {{U|aid}}}}. <end>
 Page 738 ABRI: Found match for regex: <begin> # {{lb|id|historical}} {{acronym of|id|Angkatan Bersenjata Republik Indonesia|t=Republic of Indonesia Armed Forces}} <end>
 Page 739 GWAS: Found match for regex: <begin> # {{acronym of|en||[[genome]][[-wide]] [[association]] [[study]]}}: an [[analysis]] of [[allelic]] [[association]] for [[gene]]s or [[genetic marker]]s [[throughout]] a [[genome]]. <end>
 Page 740 RANSAC: Found match for regex: <begin> # {{acronym of|en|{{w|RANSAC|random sample consensus}}}} {{gl|an iterative method to estimate parameters of a mathematical model from a set of observed data which contains outliers}}. <end>
@@ -1072,7 +1072,7 @@ Page 793 IDR: Found match for regex: <begin> # {{lb|en|US|countable}} {{acronym 
 Page 794 AFE: Found match for regex: <begin> # {{lb|en|US|military}} {{acronym of|en|[[armed|Armed]] [[forces|Forces]] [[entertainment|Entertainment]]}}. <end>
 Page 795 CLOS: Found match for regex: <begin> # {{lb|en|computing}} {{acronym of|en|[[common]] [[Lisp]] [[object]] [[system]]}}. <end>
 Page 796 rutan: Found match for regex: <begin> # {{acronym of|id|rumah tahanan|t=}} <end>
-Page 797 GINO: Found match for regex: <begin> # {{lb|en|neologism|fandom slang}} {{acronym of|en|{{w|Galactica}} [[in name]] [[only]]}}—a derogatory term used by partisan fans of the {{w|Battlestar Galactica (1978 TV series)|original ''Battlestar Galactica''}} to refer to the {{w|Battlestar Galactica (2004 TV series)|reimagined ''Battlestar Galactica''}} <end>
+Page 797 GINO: Found match for regex: <begin> # {{lb|en|neologism|fandom slang}} {{acronym of|en|{{w|Galactica}} [[in name]] [[only]]}}—a derogatory term used by partisan fans of the {{w|Battlestar Galactica (1978 TV series)|original ''Battlestar Galactica''}} to refer to the {{w|Battlestar Galactica (2004 TV series)|reimagined ''Battlestar Galactica''}}. <end>
 Page 798 DINO: Found match for regex: <begin> # {{lb|en|US politics|derogatory}} {{acronym of|en|[[Democrat]] [[in name]] [[only]]|addl=typically used by [[liberal]] members of the U.S. {{w|Democratic Party (United States)|Democratic Party}} to describe Democrats whose views are conservative or perceived as conservative}}. <end>
 Page 798 DINO: Found match for regex: <begin> # {{lb|en|real estate|humorous}} {{acronym of|en|[[developer]] [[in name]] [[only]]|addl=a real estate development company or individual that is still active, but does not have any developments underway due to a downturn in the market or in the economy in general}}. <end>
 Page 799 HAL: Found match for regex: <begin> # {{lb|en|software}} {{acronym of|en|[[hardware]] [[abstraction]] [[layer]]}}. <end>
@@ -1139,7 +1139,7 @@ Page 852 IFSMA: Found match for regex: <begin> # {{acronym of|en|{{w|Internation
 Page 853 MORB: Found match for regex: <begin> # {{lb|en|geology}} {{acronym of|en|[[mid-ocean ridge]] [[basalt]]}}. <end>
 Page 854 MAP: Found match for regex: <begin> # {{acronym of|en|[[methyl]]-[[acetylene]] [[propadiene]]}}. <end>
 Page 855 CETI: Found match for regex: <begin> # {{lb|en|astronomy}} {{acronym of|en|[[communication]] with [[extraterrestrial]] [[intelligence]]}}. <end>
-Page 856 OSETI: Found match for regex: <begin> # {{lb|en|astrobiology}} {{acronym of|en|[[optical]] [[search]] for [[extraterrestrial]] [[intelligence]]}} It is [[SETI]] using [[visible light]] instead of traditional [[radio]] waves. <end>
+Page 856 OSETI: Found match for regex: <begin> # {{lb|en|astrobiology}} {{acronym of|en|[[optical]] [[search]] for [[extraterrestrial]] [[intelligence]]|addl=comparable to [[SETI]], but using [[visible light]] instead of traditional [[radio]] waves}}. <end>
 Page 857 RR. HH.: Found match for regex: <begin> # {{acronym of|es|[[recursos humanos]]||[[HR]] (human resources)}} <end>
 Page 858 cUMP: Found match for regex: <begin> # {{acronym of|en|[[cyclic]] [[uridine]] [[monophosphate]]}}. <end>
 Page 859 OAJ: Found match for regex: <begin> # {{acronym of|fi|[[w:fi:Opetusalan Ammattijärjestö OAJ|Opetusalan Ammattijärjestö OAJ]]||trade union representing the majority of teachers in the public sector, excluding university professors}} <end>
@@ -1160,7 +1160,7 @@ Page 869 NAP: Found match for regex: <begin> # {{acronym of|nl|Nieuw Amsterdams 
 Page 870 KGV: Found match for regex: <begin> # {{acronym of|en|[[king|King]] [[George]] [[V]]}}. <end>
 Page 871 SoMa: Found match for regex: <begin> # {{place|en|ann=acronym of:South of Market|neighborhood|city/San Francisco|s/California|c/USA}}. <end>
 Page 871 SoMa: Found match for regex: <begin> # {{place|en|ann=acronym of:South Main|neighbourhood|city/Vancouver|s/British Columbia|c/Canada}}. <end>
-Page 872 Ofsted: Found match for regex: <begin> # {{acronym of|en|{{w|Office for Standards in Education, Children's Services and Skills}}}}: the non-ministerial government department of His Majesty's Chief Inspector of Schools In England ({{l|en|HMCI}}). <end>
+Page 872 Ofsted: Found match for regex: <begin> # {{acronym of|en|{{w|Office for Standards in Education, Children's Services and Skills}}}}: the non-ministerial government department of His Majesty's Chief Inspector of Schools In England ([[HMCI]]). <end>
 Page 873 wff: Found match for regex: <begin> # {{acronym of|en|well-formed formula}}. <end>
 Page 874 CAMP: Found match for regex: <begin> # {{acronym of|en|[[w:Central Atlantic magmatic province|Central Atlantic magmatic province]]}}. <end>
 Page 875 GURT: Found match for regex: <begin> # {{acronym of|en|[[w:Genetic use restriction technology|Genetic use restriction technology]]}}; a generic term for proposed methods to restrict use of [[genetically]] [[modified]] plants by activating modified genes only by certain stimuli, particularly to ensure the [[sterility]] of any [[seed]]s. <end>
@@ -1169,9 +1169,9 @@ Page 876 PCASP: Found match for regex: <begin> # {{acronym of|en|[[privately]] [
 Page 877 HADOPI: Found match for regex: <begin> # {{lb|fr|Internet}} {{acronym of|fr|[[haute|Haute]] [[autorité|Autorité]] [[pour]] [[la]] [[diffusion]] [[des]] [[œuvre]]s [[et]] [[la]] [[protection]] [[des]] [[droit]]s [[sur]] [[Internet]]}} {{gloss|a French organisation for protecting [[intellectual property]] on the [[Internet]]}} <end>
 Page 878 ՕԵԿ: Found match for regex: <begin> # {{acronym of|hy|«[[օրենք|Օրինաց]] [[երկիր]]» [[կուսակցություն]]||[[w:Rule of Law (Armenia)|"Rule of Law" Party]]}} <end>
 Page 879 ՀԱԿ: Found match for regex: <begin> # {{acronym of|hy|[[հայ|Հայ]] [[ազգային]] [[կոնգրես]]||[[w:Armenian National Congress|Armenian National Congress]], ANC}} <end>
-Page 880 RADAR: Found match for regex: <begin> # {{acronym of|en|{{l|en|radio}} {{l|en|detection}} {{l|en|and}} {{l|en|ranging}}}}. <end>
+Page 880 RADAR: Found match for regex: <begin> # {{acronym of|en|[[radio]] [[detection]] [[and]] [[ranging]]}}. <end>
 Page 881 YOLO: Found match for regex: <begin> # {{lb|en|slang}} {{acronym of|en||[[you only live once]]}}, i.e. expressing the view that one should make the most of the [[present]] [[moment]]. <end>
-Page 882 TRIGA: Found match for regex: <begin> # {{w|lang=en|TRIGA}}: {{acronym of|en|[[training]], [[research]], [[isotope]]s, [[general|General]] [[atomics|Atomics]]||a type of {{l|en|nuclear reactor}} originally made by {{w|lang=en|General Atomics}}}}. <end>
+Page 882 TRIGA: Found match for regex: <begin> # {{w|lang=en|TRIGA}}: {{acronym of|en|[[training]], [[research]], [[isotope]]s, [[general|General]] [[atomics|Atomics]]||a type of [[nuclear reactor]] originally made by {{w|lang=en|General Atomics}}}}. <end>
 Page 883 CAE: Found match for regex: <begin> # {{acronym of|en|[[w:Certificate in Advanced English|Certificate in Advanced English]]}}, the second highest level [[ESOL]] exam awarded by [[w:Cambridge University|Cambridge University]]. <end>
 Page 884 JUICE: Found match for regex: <begin> # {{lb|en|space|ESA}} {{acronym of|en|w:Jupiter Icy Moons Explorer|Jupiter Icy Moons Explorer}}. <end>
 Page 885 COW: Found match for regex: <begin> # {{lb|en|computing|uncountable}} {{acronym of|en|w:Copy-on-write|copy-on-write}}. <end>
@@ -1184,7 +1184,7 @@ Page 890 GRASP: Found match for regex: <begin> # {{lb|en|software|object-oriente
 Page 891 NARG: Found match for regex: <begin> # {{acronym of|en|[[not]] a [[real]] [[gentleman]]}}. <end>
 Page 892 NuSTAR: Found match for regex: <begin> # {{lb|en|astronomy}} {{acronym of|en|{{w|Nuclear Spectroscopic Telescope Array}}}}. <end>
 Page 893 COLA: Found match for regex: <begin> # {{acronym of|en|[[cost of living]] [[adjustment]]}}. <end>
-Page 894 EPICUS: Found match for regex: <begin> # {{lb|en|military}} The six principles of instruction: {{acronym of|en|[[emphasis]], [[participation]], [[interest]], [[confirmation]], [[understanding]], [[success]]}}. <end>
+Page 894 EPICUS: Found match for regex: <begin> # {{lb|en|military}} {{acronym of|en|[[emphasis]], [[participation]], [[interest]], [[confirmation]], [[understanding]], [[success]]|addl=the six principles of instruction}}. <end>
 Page 895 CREST: Found match for regex: <begin> # {{lb|en|military}} {{acronym of|en|[[comparison]]s, [[reason]]s, [[example]]s, [[statistics]], [[testimony]]}}: the five types of verbal support used to enhance an oral presentation. <end>
 Page 896 GIFT: Found match for regex: <begin> # {{lb|en|medicine}} {{acronym of|en|{{w|gamete intrafallopian transfer}}}}. <end>
 Page 897 JAXA: Found match for regex: <begin> # {{lb|en|space flight}} {{acronym of|en|w:Japan Aerospace Exploration Agency|Japan Aerospace Exploration Agency}}. <end>
@@ -1290,7 +1290,7 @@ Page 984 MERS: Found match for regex: <begin> # {{lb|en|medicine}} {{acronym of|
 Page 985 SEMP: Found match for regex: <begin> # {{lb|en|AU|historical|education}} {{acronym of|en||Social Education Materials Project}}. <end>
 Page 985 SEMP: Found match for regex: <begin> # {{lb|en|AU|education}} {{acronym of|en||School Environmental Management Plan}}. <end>
 Page 986 IDEM: Found match for regex: <begin> # {{lb|it|finance}} {{acronym of|en|[[Italian]] [[derivative]]s [[market]]|nocat=1}}. <end>
-Page 987 SWAPO: Found match for regex: <begin> # {{lb|en|Namibia|politics}} {{acronym of|en|{{w|South West Africa People's Organization}}}} {{gloss|a Namibian political party}} <end>
+Page 987 SWAPO: Found match for regex: <begin> # {{lb|en|Namibia|politics}} {{acronym of|en|{{w|South West Africa People's Organization}}}} {{gloss|a Namibian political party}}. <end>
 Page 988 FIPS: Found match for regex: <begin> # {{lb|en|government|USA}}: {{acronym of|en|w:Federal Information Processing Standards|addl=a government standard of the United States of America}}. <end>
 Page 989 OFC: Found match for regex: <begin> # {{lb|en|fandom slang}} {{acronym of|en|[[original]] [[female]] [[character]]|t=a [[female]] [[original character]]}}. <end>
 Page 990 WWOOF: Found match for regex: <begin> # {{acronym of|en|w:WWOOF|World Wide Opportunities on Organic Farms}}. <end>
@@ -1355,7 +1355,7 @@ Page 1038 PTAL: Found match for regex: <begin> # {{lb|en|software development}} 
 Page 1039 LERF: Found match for regex: <begin> # {{lb|en|mathematics}} {{acronym of|en|[[locally]] [[extended]], [[residually]] [[finite]]}}. <end>
 Page 1040 MOBA: Found match for regex: <begin> # {{lb|en|video games}} {{acronym of|en|[[multiplayer]] [[online]] [[battle]] [[arena]]}}. <end>
 Page 1041 FEDME: Found match for regex: <begin> # {{acronym of|es|w:es:Federación Española de Deportes de Montaña y Escalada|gloss={{w|Spanish Federation for Mountain and Climbing Sports}}}} <end>
-Page 1042 DETRAN: Found match for regex: <begin> # {{lb|pt|Brazil}} {{acronym of|pt|{{w|Departamento Estadual de Trânsito|lang=pt}}}} Refers to either the government body (singular-only) or to one of its offices. <end>
+Page 1042 DETRAN: Found match for regex: <begin> # {{lb|pt|Brazil}} {{acronym of|pt|{{w|Departamento Estadual de Trânsito|lang=pt}}|addl=referring to either the government body (singular-only) or to one of its offices}}. <end>
 Page 1043 js: Found match for regex: <begin> # {{lb|en|text messaging}} {{acronym of|en|just saying}}. <end>
 Page 1044 GPI: Found match for regex: <begin> # {{lb|en|medicine}} {{acronym of|en|glycosylphosphatidylinositol}}. <end>
 Page 1045 SUS: Found match for regex: <begin> # {{lb|pt|Brazil}} {{acronym of|pt|Sistema Único de Saúde}} <end>
@@ -1405,7 +1405,7 @@ Page 1067 SCOBY: Found match for regex: <begin> # {{acronym of|en|[[symbiotic]] 
 Page 1068 PAS: Found match for regex: <begin> # {{lb|ms|politics}} {{acronym of|ms|[[parti|Parti]] [[Islam]] [[se-|Se-]][[Malaysia]]|t=[[w:Pan-Malaysian Islamic Party|Pan-Malaysian Islamic Party]]|addl=an Islamist and conservative political party in Malaysia}} <end>
 Page 1068 PAS: Found match for regex: <begin> # {{lb|es|psychology}} {{acronym of|es|persona altamente sensible|gloss=[[highly sensitive person]]}}; [[HSP]] <end>
 Page 1069 APEH: Found match for regex: <begin> # {{lb|hu|historical}} {{acronym of|hu|[[adó|Adó-]] [[és]] [[pénzügyi|Pénzügyi]] [[ellenőrzési|Ellenőrzési]] [[hivatal|Hivatal]]|t=Tax and Financial Auditing Office}}, {{former name of|hu|NAV|t=National Tax and Customs Administration|nocap=y}}<!--since 2011--> <end>
-Page 1070 CC. OO.: Found match for regex: <begin> # {{acronym of|es|{{w|Comisiones Obreras}}}} A Spanish [[trade union]] with a [[Communist]] history <end>
+Page 1070 CC. OO.: Found match for regex: <begin> # {{acronym of|es|{{w|Comisiones Obreras}}|addl=a Spanish [[trade union]] with a [[Communist]] history}} <end>
 Page 1071 TUSC: Found match for regex: <begin> # {{lb|en|UK politics}} {{acronym of|en|w:Trade Unionist and Socialist Coalition|Trade Unionist and Socialist Coalition}}. <end>
 Page 1072 VLAD: Found match for regex: <begin> # {{lb|en|AU|Queensland|law}} {{acronym of|en|[[vicious|Vicious]] [[lawless|Lawless]] [[association|Association]] [[disestablishment|Disestablishment]]}}, a series of anti-[[bikie]] laws. <end>
 Page 1073 UPyD: Found match for regex: <begin> # {{acronym of|es|{{w|Unión Progreso y Democracia|lang=es}}}} <end>
@@ -1480,7 +1480,7 @@ Page 1124 PCAT: Found match for regex: <begin> # {{lb|en|North America|countable
 Page 1125 A2AD: Found match for regex: <begin> # {{acronym of|en|anti-access area denial}}. <end>
 Page 1126 SPICE: Found match for regex: <begin> # {{lb|en|software engineering}} {{acronym of|en|[[simulation#English|Simulation]] [[program#English|Program]] [[with]] [[integrated|Integrated]] [[circuit#English|Circuit]] [[emphasis|Emphasis]]|addl=a [[general-purpose]], [[open-source]] [[analog]] [[electronic circuit]] [[simulator]]}}. <end>
 Page 1127 ACAB: Found match for regex: <begin> # {{lb|en|derogatory}} {{acronym of|en|[[all]] [[cop]]s [[are]] [[bastard]]s}}: {{n-g|an anti-[[police]] [[slogan]] protesting against police [[behavior]], often used in [[graffiti]], [[tattoo]]s{{,}} and other [[imagery]].}} <end>
-Page 1128 ICEV: Found match for regex: <begin> # {{acronym of|en|[[internal combustion engine]] [[vehicle]]}} <ref>{{cite-web |url=http://insideevs.com/pm10-emissions-from-evs-equal-to-those-of-modern-icevs/ |accessdate=16 May 2016 |archiveurl=https://web.archive.org/web/20160516095137/http://insideevs.com/pm10-emissions-from-evs-equal-to-those-of-modern-icevs/ |archivedate=16 May 2016 |title=PM10 Emissions From EVs Equal To Those Of Modern ICEVs? }}</ref> <end>
+Page 1128 ICEV: Found match for regex: <begin> # {{acronym of|en|[[internal combustion engine]] [[vehicle]]}}. <ref>{{cite-web |url=http://insideevs.com/pm10-emissions-from-evs-equal-to-those-of-modern-icevs/ |accessdate=16 May 2016 |archiveurl=https://web.archive.org/web/20160516095137/http://insideevs.com/pm10-emissions-from-evs-equal-to-those-of-modern-icevs/ |archivedate=16 May 2016 |title=PM10 Emissions From EVs Equal To Those Of Modern ICEVs? }}</ref> <end>
 Page 1129 ZUI: Found match for regex: <begin> # {{lb|en|GUI}} {{acronym of|en|[[zoom]]ing [[user interface]]}}. <end>
 Page 1129 ZUI: Found match for regex: <begin> # {{lb|en|GUI}} {{acronym of|en|zero user interface}}. <end>
 Page 1130 PECA: Found match for regex: <begin> # {{lb|en|Pakistan}} {{acronym of|en|{{w|PECA Ordinance|Prevention of Electronic Crimes Act}}}}. <end>
@@ -1494,7 +1494,7 @@ Page 1135 WAL: Found match for regex: <begin> # {{lb|en|databases}} {{acronym of
 Page 1136 EMEIA: Found match for regex: <begin> # {{label|en|business}} {{acronym of|en|[[Europe]], the [[Middle East]], [[India]]{{,}} and [[Africa]]}}. <end>
 Page 1137 FAST: Found match for regex: <begin> # {{acronym of|en|w:focused assessment with sonography for trauma}}. <end>
 Page 1137 FAST: Found match for regex: <begin> # {{acronym of|en|[[firefighter]] [[assist]] and [[search]] [[team]]}}. <end>
-Page 1137 FAST: Found match for regex: <begin> # {{lb|en|medicine|pathology}} {{acronym of|en|[[facial]] [[drooping]], [[arm]] [[weakness]], [[speech]] [[difficulty]], [[time]]}} {{ng|A mnemonic for diagnosing a {{l|en|cerebrovascular accident||CVA}} or {{l|en|stroke}}.}} <end>
+Page 1137 FAST: Found match for regex: <begin> # {{lb|en|medicine|pathology}} {{acronym of|en|[[facial]] [[drooping]], [[arm]] [[weakness]], [[speech]] [[difficulty]], [[time]]}} {{ng|A mnemonic for diagnosing a [[cerebrovascular accident||CVA]] or [[stroke]].}} <end>
 Page 1138 asdet: Found match for regex: <begin> # {{label|en|football}} {{acronym of|en|[[after]] [[sudden death]] [[extra time]]}}. <end>
 Page 1139 քաղբանտարկյալ: Found match for regex: <begin> # {{acronym of|hy|քաղաքական բանտարկյալ}} <end>
 Page 1140 CENTCOM: Found match for regex: <begin> # {{lb|en|US|military}} {{acronym of|en|[[central|Central]] [[command|Command]]}} {{gloss|a global U.S. forces regional command}} <end>
@@ -1508,7 +1508,7 @@ Page 1147 EDGE: Found match for regex: <begin> # {{lb|en|mobile phones}} {{acron
 Page 1148 FedRAMP: Found match for regex: <begin> # {{label|en|security|US}} {{acronym of|en|[[federal|Federal]] [[risk#English|Risk]] [[and#English|and]] [[authorization|Authorization]] [[management#English|Management]] [[program|Program]]}} {{gloss|a U.S. government program that provides a standardized approach to security assessment, authorization, and continuous monitoring for [[cloud computing]] services used by the federal government}} <end>
 Page 1149 POCO: Found match for regex: <begin> # {{lb|en|countable|object-oriented software}} {{acronym of|en|{{w|plain old CLR object}}}}. <end>
 Page 1149 POCO: Found match for regex: <begin> # {{lb|en|uncountable|European|_|politics}} {{acronym of|en|[[political]] [[cooperation]]}}. <end>
-Page 1150 CUD: Found match for regex: <begin> # {{lb|en|database|programming}} The basic operations of a [[database management system]]; {{acronym of|en|[[create]], [[update]], [[delete]]}}. <end>
+Page 1150 CUD: Found match for regex: <begin> # {{lb|en|database|programming}} {{acronym of|en|[[create]], [[update]], [[delete]]|addl=the basic operations of a [[database management system]]}}. <end>
 Page 1151 WAR: Found match for regex: <begin> # {{lb|en|sports}} {{acronym of|en|[[win]]s [[above]] [[replacement]]}}. <end>
 Page 1152 SOCMINT: Found match for regex: <begin> # {{label|en|espionage}} {{acronym of|en|social media intelligence}}. <end>
 Page 1153 CHiP: Found match for regex: <begin> # {{acronym of|en|w:California Highway Patrol}}. <end>
@@ -1571,7 +1571,7 @@ Page 1202 SINE: Found match for regex: <begin> # {{acronym of|en|w:Epithelioid_s
 Page 1203 MSD: Found match for regex: <begin> # {{lb|en|underwater diving}} {{acronym of|en|w:Master Scuba Diver}}. <end>
 Page 1204 βίπερ: Found match for regex: <begin> # {{lb|el|colloquial}} {{acronym of|el|[[βιβλίο]] and [[περίπτερο|περιπτέρου]]}}, [[paperback]] {{qf|UK}}, [[softback]] {{qf|US}} {{qf|chiefly crime and romance novels bought in kiosks}} <end>
 Page 1205 Sars: Found match for regex: <begin> # {{lb|en|medicine}} {{acronym of|en|severe acute respiratory syndrome}}; {{n-g|also {{m|en|SARS}}.}} <end>
-Page 1206 HED: Found match for regex: <begin> # {{lb|en|geology}} {{acronym of|en|[[howardite]], [[eucrite]], [[diogenite]]}} Pertaining to [[howarditic]]/[[eucritic]]/[[diogenitic]] material. <end>
+Page 1206 HED: Found match for regex: <begin> # {{lb|en|geology}} {{acronym of|en|[[howardite]], [[eucrite]], [[diogenite]]|t=pertaining to [[howarditic]]/[[eucritic]]/[[diogenitic]] material}}. <end>
 Page 1207 א״י: Found match for regex: <begin> # {{acronym of|he|אֶרֶץ יִשְׂרָאֵל|tr='érets yisra'él}} <end>
 Page 1207 א״י: Found match for regex: <begin> # {{acronym of|yi|ארץ־ישׂראל|tr=Erets-Yisroel}} <end>
 Page 1208 FNaF: Found match for regex: <begin> # {{lb|en|video games}} {{acronym of|en|w:Five Nights at Freddy's}} {{gl|video game series}}. <end>
@@ -1590,7 +1590,7 @@ Page 1220 WOCA: Found match for regex: <begin> # {{lb|en|computing}} {{acronym o
 Page 1221 mabes: Found match for regex: <begin> # {{acronym of|id|markas besar||[[headquarters]]}}: [[HQ]] <end>
 Page 1222 pime: Found match for regex: <begin> # {{acronym of|ca|[[petita]] [[i]] [[mitjana]] [[empresa]]|t=small and medium(-sized) enterprise}}; [[SME]] <end>
 Page 1223 ACRISS: Found match for regex: <begin> # {{lb|en|car hire}} {{acronym of|en|w:ACRISS|Association of Car Rental Industry Systems Standards}}. <end>
-Page 1224 SIPP: Found match for regex: <begin> # {{lb|en|travel|car hire}} {{acronym of|en|[[standard]] [[interline]] [[passenger]] [[procedure]]}} A series of four-letter codes used to indicate a type of vehicle. <end>
+Page 1224 SIPP: Found match for regex: <begin> # {{lb|en|travel|car hire}} {{acronym of|en|[[standard]] [[interline]] [[passenger]] [[procedure]]|addl=a series of four-letter codes used to indicate a type of vehicle}}. <end>
 Page 1224 SIPP: Found match for regex: <begin> # {{lb|en|UK|pensions}} {{acronym of|en|w:self-invested personal pension}}. <end>
 Page 1225 LOH: Found match for regex: <begin> # {{lb|en|US|_|military|_|aviation}} {{acronym of|en|[[light]] [[observation]] [[helicopter]]}}. <end>
 Page 1226 LAC: Found match for regex: <begin> # {{lb|en|uncountable|chemistry}} {{acronym of|en|L-acetylcarnitine|t=acetylated L-carnitine}}. <end>
@@ -1637,7 +1637,7 @@ Page 1264 CHIRLA: Found match for regex: <begin> # {{lb|en|US}} {{acronym of|en|
 Page 1265 SCOPA: Found match for regex: <begin> # {{lb|en|UK}} {{acronym of|en|[[seed|Seed]] [[crusher|Crushers]] and [[oil|Oil]] [[processor|Processors]] [[association|Association]]}}. <end>
 Page 1266 FREEP: Found match for regex: <begin> # {{lb|en|AU|Brisbane|1980s}} {{acronym of|en|[[free|Free]] [[entertainment|Entertainment]] [[event|Event]] in the [[park|Park]]}}. <end>
 Page 1267 ESOP: Found match for regex: <begin> # {{lb|en|business|US}} {{acronym of|en|w:Employee Stock Ownership Plan}}. <end>
-Page 1268 CLAM: Found match for regex: <begin> # {{lb|en|rowing}} {{acronym of|en|[[clip-on#Adjective|Clip-on]] [[load#English|Load]] [[adjust|Adjusting]] [[mechanism|Mechanism]]}} A {{l|en|device}} that can be [[fit#Verb|fitted]] onto an [[oar#Noun|oar]] to [[adjust]] [[set#Noun|set]]. <end>
+Page 1268 CLAM: Found match for regex: <begin> # {{lb|en|rowing}} {{acronym of|en|{{U|clip-on}} {{U|load}} [[adjust|Adjusting]] {{U|mechanism}}|addl=a device that can be fitted onto an oar to adjust the set}}. <end>
 Page 1269 ABDA: Found match for regex: <begin> # {{lb|en|historical|military}} {{acronym of|en|w:American-British-Dutch-Australian Command|American-British-Dutch-Australian Command|addl=a committee of senior military officials during the expected Japanese invasion of Australia in 1942}}. <end>
 Page 1270 OPOC: Found match for regex: <begin> # {{lb|en|automotive}} {{acronym of|en|opposed piston opposed cylinder}}. <end>
 Page 1271 VISCMA: Found match for regex: <begin> # {{acronym of|en|[[vibration|Vibration]] [[isolation|Isolation]] and [[seismic|Seismic]] [[control|Control]] [[manufacturers|Manufacturers]] [[association|Association]]}}. <end>
@@ -1691,7 +1691,7 @@ Page 1313 LIF: Found match for regex: <begin> # {{lb|de|biology|medicine}} {{acr
 Page 1313 LIF: Found match for regex: <begin> # {{lb|de|technology}} {{acronym of|de|[[laserinduziert|Laserinduzierte]] [[Fluoreszenz]]}} {{gloss|[[laser-induced]] [[florescence|florescene]]}} <end>
 Page 1313 LIF: Found match for regex: <begin> # {{lb|de|Austria|politics}} {{acronym of|de|[[liberal|Liberales]] [[Forum]]}} {{gloss|liberal party between 1993 and 2004}} <end>
 Page 1313 LIF: Found match for regex: <begin> # {{lb|de|Germany|traffic}} {{acronym of|de|[[Lichtenfels]]}} {{gloss|a town in Germany}} <end>
-Page 1314 STEVE: Found match for regex: <begin> ''(2016)'' Backformation from the nickname "{{l|en|Steve}}" given to this aurora-like light. {{acronym of|en|strong thermal emission velocity enhancement}} The nickname "Steve" resulted from a meeting between citizen scientists and researchers from the University of Calgary at a bar, to discuss the purple light. 'Steve' is the namesake of a cartoon character from the 2006 animated film "Over the Hedge", where cartoon animals try to peek over a suburban hedge. The backronym resulted from researchers creating a meaning to the nickname "Steve", keeping the original nickname for the formal name.<ref> New York Times, "That Ghostly, Glowing Light Above Canada? It’s Just Steve", ''Jacey Fortin'', 25 April 2017 </ref><ref> New York Times, "Steve, a Famous Northern Light, Stays Mysterious (and Keeps His Name)", ''Jacey Fortin'', 15 March 2018 </ref><ref> NASA, [https://www.nasa.gov/image-feature/the-aurora-named-steve "The Aurora Named STEVE"], ''Yvette Smith'', 15 March 2018 </ref><ref> Popular Mechanics, "Sky Phenomenon 'Steve' Is Finally Explained", ''Sophie Weiner'', 16 March 2018 </ref><ref> The Guardian, "‘Steve’: the mystery purple aurora that rivals the northern lights", ''Emine Saner'', 19 March 2018 </ref><ref> The Telegraph, "What is Steve? Mysterious aurora seen in Scotland", ''Helena Horton'', 20 March 2018 </ref> <end>
+Page 1314 STEVE: Found match for regex: <begin> ''(2016)'' Backformation from the nickname "[[Steve]]" given to this aurora-like light. {{acronym of|en|strong thermal emission velocity enhancement}} The nickname "Steve" resulted from a meeting between citizen scientists and researchers from the University of Calgary at a bar, to discuss the purple light. 'Steve' is the namesake of a cartoon character from the 2006 animated film "Over the Hedge", where cartoon animals try to peek over a suburban hedge. The backronym resulted from researchers creating a meaning to the nickname "Steve", keeping the original nickname for the formal name.<ref> New York Times, "That Ghostly, Glowing Light Above Canada? It’s Just Steve", ''Jacey Fortin'', 25 April 2017 </ref><ref> New York Times, "Steve, a Famous Northern Light, Stays Mysterious (and Keeps His Name)", ''Jacey Fortin'', 15 March 2018 </ref><ref> NASA, [https://www.nasa.gov/image-feature/the-aurora-named-steve "The Aurora Named STEVE"], ''Yvette Smith'', 15 March 2018 </ref><ref> Popular Mechanics, "Sky Phenomenon 'Steve' Is Finally Explained", ''Sophie Weiner'', 16 March 2018 </ref><ref> The Guardian, "‘Steve’: the mystery purple aurora that rivals the northern lights", ''Emine Saner'', 19 March 2018 </ref><ref> The Telegraph, "What is Steve? Mysterious aurora seen in Scotland", ''Helena Horton'', 20 March 2018 </ref> <end>
 Page 1315 POLSA: Found match for regex: <begin> # {{lb|en|UK}} {{acronym of|en|police search advisor}}. <end>
 Page 1316 bakor: Found match for regex: <begin> # {{acronym of|id|badan koordinasi|t=coordination body}} <end>
 Page 1317 PFAS: Found match for regex: <begin> # {{acronym of|en|[[perfluoroalkyl]] or [[polyfluoroalkyl substance]]|gloss=a type of environmental pollutant}}. <end>
@@ -1837,7 +1837,7 @@ Page 1440 OSINT: Found match for regex: <begin> # {{lb|en|espionage}} {{acronym 
 Page 1441 Mers: Found match for regex: <begin> # {{lb|en|medicine}} {{acronym of|en|Middle East respiratory syndrome}}; {{n-g|also {{m|en|MERS}}.}} <end>
 Page 1442 ARDS: Found match for regex: <begin> # {{lb|en|healthcare|medicine}} {{acronym of|en|acute respiratory distress syndrome}}. <end>
 Page 1442 ARDS: Found match for regex: <begin> # {{lb|en|healthcare|medicine}} {{acronym of|en|adult respiratory distress syndrome}}. <end>
-Page 1443 kober: Found match for regex: <begin> # {{lb|id|acronym}} {{acronym of|id|kelompok bermain|t={{l|en|playgroup}}}} <end>
+Page 1443 kober: Found match for regex: <begin> # {{lb|id|acronym}} {{acronym of|id|kelompok bermain|t=[[playgroup]]}} <end>
 Page 1444 MAHA: Found match for regex: <begin> # {{lb|en|US politics}} {{acronym of|en|[[make|Make]] [[America]] [[healthy|Healthy]] [[again|Again]]}}. <end>
 Page 1445 ACAL: Found match for regex: <begin> # {{acronym of|fr|[[Alsace]]-[[Champagne-Ardenne]]-[[Lorraine]]}} <end>
 Page 1446 STEMI: Found match for regex: <begin> # {{lb|en|medicine}} {{acronym of|en|[[ST elevation]] [[myocardial infarction]]}}. <end>
@@ -1854,7 +1854,7 @@ Page 1456 User talk:JeffDoozan: Found match for regex: <begin> ::{{temp|acronym 
 Page 1457 pulkam: Found match for regex: <begin> # {{acronym of|id|pulang kampung|t=[[homecoming]]}} <end>
 Page 1458 RINT: Found match for regex: <begin> # {{lb|en|military}} {{acronym of|en|[[radiation]] [[intelligence]]}}. <end>
 Page 1459 tabulampot: Found match for regex: <begin> # {{acronym of|id|tanaman buah dalam pot|t=fruity plant in pot}} <end>
-Page 1460 LAV: Found match for regex: <begin> # {{lb|en|military}} {{acronym of|en|{{w|light armoured vehicle}}}} {{gloss|a type of military {{l|en|armoured car}}}} <end>
+Page 1460 LAV: Found match for regex: <begin> # {{lb|en|military}} {{acronym of|en|{{w|light armoured vehicle}}}} {{gloss|a type of military [[armoured car]]}}. <end>
 Page 1461 DOCS: Found match for regex: <begin> # {{acronym of|en|[[department]] [[of]] [[correctional]] [[service]]s}}. <end>
 Page 1462 JUPAS: Found match for regex: <begin> # {{lb|en|Hong Kong}} {{acronym of|en|{{w|Joint University Programmes Admissions System}}}}. <end>
 Page 1463 permen: Found match for regex: <begin> # {{lb|id|law|government}} {{acronym of|id|peraturan menteri|t=ministerial regulation}} <end>
@@ -1864,8 +1864,8 @@ Page 1466 PITI: Found match for regex: <begin> # {{lb|en|finance}} {{acronym of|
 Page 1467 CITES: Found match for regex: <begin> # {{lb|en|international law}} {{acronym of|en|[[convention|Convention]] on [[international|International]] [[trade|Trade]] in [[endangered|Endangered]] [[species|Species]]}}. <end>
 Page 1468 MAPP: Found match for regex: <begin> # {{acronym of|en|[[methylacetylene]] [[propadiene]] [[propane]]}}. <end>
 Page 1469 DALY: Found match for regex: <begin> # {{acronym of|en|disability-adjusted life year}}. <end>
-Page 1470 DACA: Found match for regex: <begin> # {{lb|en|US|politics}} {{acronym of|en|[[defer|Deferred]] [[action|Action]] for [[childhood|Childhood]] [[arrival|Arrivals]]}} From the U.S. presidential {{l|en|executive order}} "{{w|lang=en|Deferred Action for Childhood Arrivals}}". <end>
-Page 1471 VLAT: Found match for regex: <begin> # {{lb|en|firefighting|aviation}} {{acronym of|en|[[very]] [[large]] [[airtanker]]|addl=a class of {{l|en|waterbomber}}}}. <end>
+Page 1470 DACA: Found match for regex: <begin> # {{lb|en|US|politics}} {{acronym of|en|[[defer|Deferred]] [[action|Action]] for [[childhood|Childhood]] [[arrival|Arrivals]]|addl=from the U.S. presidential [[executive order]] "{{w|lang=en|Deferred Action for Childhood Arrivals}}"}}. <end>
+Page 1471 VLAT: Found match for regex: <begin> # {{lb|en|firefighting|aviation}} {{acronym of|en|[[very]] [[large]] [[airtanker]]|addl=a class of [[waterbomber]]}}. <end>
 Page 1472 LOCKSS: Found match for regex: <begin> # {{acronym of|en|lots of [[copy|copies]] keep stuff [[safe]]}}. <end>
 Page 1473 RAST: Found match for regex: <begin> # {{lb|en|medicine}} {{acronym of|en|[[radioallergosorbent]] [[test]]}}. <end>
 Page 1474 CAAP: Found match for regex: <begin> # {{lb|en|Philippines}} {{acronym of|en|{{w|Civil Aviation Authority of the Philippines}}}}. <end>
@@ -1960,7 +1960,7 @@ Page 1555 NBE: Found match for regex: <begin> # {{acronym of|eu|norbera babestek
 Page 1556 DOAC: Found match for regex: <begin> # {{lb|en|computer science}} {{acronym of|en|[[description]] of a [[career]]|addl=an [[RDF]] format describing a person's professional background}}. <end>
 Page 1557 ERCOT: Found match for regex: <begin> # {{acronym of|en|{{w|Electric Reliability Council of Texas}}}}. <end>
 Page 1558 SPED: Found match for regex: <begin> # {{acronym of|en|special education}}. <end>
-Page 1559 satker: Found match for regex: <begin> # {{acronym of|id|satuan kerja|t=({{l|en|work}}) {{l|en|unit}}}} <end>
+Page 1559 satker: Found match for regex: <begin> # {{acronym of|id|satuan kerja|t=([[work]]) [[unit]]}} <end>
 Page 1560 HVJ: Found match for regex: <begin> # {{lb|nl|internet slang|text messaging}} {{acronym of|nl|[[hou]] [[van]] [[je]],[[hou]] [[van]] [[jou]]|t=[I] love you}} <end>
 Page 1561 HJB: Found match for regex: <begin> # {{lb|nl|internet slang|text messaging}} {{acronym of|nl|[[hou]] [[je]] [[bek]]|t=shut up}} <end>
 Page 1562 PIPE: Found match for regex: <begin> # {{label|en|finance}} {{acronym of|en|[[private]] [[investment]] in [[public]] [[equity]]}}. <end>
@@ -2012,7 +2012,7 @@ Page 1599 SaaSS: Found match for regex: <begin> # {{lb|en|computing|sales manage
 Page 1599 SaaSS: Found match for regex: <begin> # {{lb|en|computing|derogatory|free software jargon}} {{acronym of|en|[[service]] [[as]] [[a]] [[software]] [[substitute]]}}. <end>
 Page 1600 ESO: Found match for regex: <begin> # {{lb|es|Spain}} {{acronym of|es|[[educación|Educación]] [[secundaria|Secundaria]] [[obligatoria|Obligatoria]]||the Spanish secondary education system that aims to prepare students between the ages of 11 and 16 for their next studies or the world of work.}} <end>
 Page 1601 SOAT: Found match for regex: <begin> # {{lb|es|Colombia|Peru}} {{acronym of|es|[[seguro|Seguro]] [[obligatorio|Obligatorio]] de [[accidente|Accidentes]] de [[tránsito|Tránsito]]||auto [[liability insurance]], [[third party]] liability insurance}} (personal injury only) <end>
-Page 1602 TIG: Found match for regex: <begin> # {{acronym of|en|[[tungsten]] [[inert gas]]}}; pertaining to {{l|en|TIG welding}}. <end>
+Page 1602 TIG: Found match for regex: <begin> # {{acronym of|en|[[tungsten]] [[inert gas]]}}; pertaining to [[TIG welding]]. <end>
 Page 1603 kloter: Found match for regex: <begin> # {{acronym of|id|kelompok terbang}} <end>
 Page 1604 EESZT: Found match for regex: <begin> # {{acronym of|hu|Elektronikus Egészségügyi Szolgáltatási Tér||National eHealth Infrastructure}}<!-- this translation is given at its English-language website: https://e-egeszsegugy.gov.hu/web/eeszt-information-portal --> <end>
 Page 1605 DEUG: Found match for regex: <begin> # {{lb|fr|France}} {{acronym of|fr|Diplôme d'études universitaires générales|t=[[General Academic Studies Degree]]}} <end>
@@ -2076,7 +2076,7 @@ Page 1659 ADOS: Found match for regex: <begin> # {{acronym of|en|{{w|Autism Diag
 Page 1660 DANA: Found match for regex: <begin> # {{lb|es|meteorology|Spain}} {{acronym of|es|[[depresión]] [[aislada]] en [[nivel]]es [[alto]]s||high-level isolated depression}}, [[cold drop]] <end>
 Page 1661 Bareskrim: Found match for regex: <begin> # {{lb|id|police}} {{acronym of|id|[[badan]] [[reserse]] [[kriminal]]|t=criminal investigation department}} <end>
 Page 1662 kanwil: Found match for regex: <begin> # {{acronym of|id|kantor wilayah|t=regional office}} <end>
-Page 1663 pinjol: Found match for regex: <begin> # {{lb|id|colloquial|finance}} {{acronym of|id|[[pinjaman]] {{l|en|online}}|t=online lending}}, {{synonym of|id|pinjaman daring}} <end>
+Page 1663 pinjol: Found match for regex: <begin> # {{lb|id|colloquial|finance}} {{acronym of|id|[[pinjaman]] [[online]]|t=online lending}}, {{synonym of|id|pinjaman daring}} <end>
 Page 1664 SPOG: Found match for regex: <begin> # {{lb|en|computing}} {{acronym of|en|single pane of glass}}. <end>
 Page 1665 sprin: Found match for regex: <begin> # {{acronym of|id|surat perintah|t=warrant, writ}} <end>
 Page 1666 զինուժ: Found match for regex: <begin> # {{acronym of|hy|զինված ուժեր|t=armed forces}} <end>
@@ -2220,7 +2220,7 @@ Page 1789 ASLEF: Found match for regex: <begin> # {{acronym of|en|w:Associated S
 Page 1790 RAVEC: Found match for regex: <begin> # {{acronym of|en|[[royal|Royal]] and [[VIP]] [[executive committee|Executive Committee]]}}. <end>
 Page 1791 VITE: Found match for regex: <begin> # {{lb|fr|medicine|pathology}} {{m|en|FAST}}, {{m|en|FASTER}}: {{acronym of|fr|[[visage]], [[incapacité]], [[trouble]] de la [[parole]], [[extrême]] [[urgence]]}} {{gloss|face, incapacity, speech problems, extreme emergency}}: {{ng|A mnemonic for diagnosing a {{l|en|cerebrovascular accident||CVA}} or [[stroke]]; the mnemonic V-I-T-E also was coined in recognition of the word {{m|fr|vite||quickly}}, as a need for speedy diagnosis and treatment}} <end>
 Page 1792 ORCID: Found match for regex: <begin> # {{acronym of|en|{{w|ORCID|Open Researcher and Contributor ID}}}}. <end>
-Page 1793 FASTER: Found match for regex: <begin> # {{lb|en|medicine|pathology}} {{acronym of|en|[[face]], [[arms]], [[stability]], [[talking]], [[eye]]s, [[react]]}} {{ng|A mnemonic for diagnosing a {{l|en|cerebrovascular accident||CVA}} or {{l|en|stroke}}. The mnemonic F-A-S-T-E-R also was coined in recognition of the word {{m|fr|faster}}, as a need for speedy diagnosis and treatment.}} <end>
+Page 1793 FASTER: Found match for regex: <begin> # {{lb|en|medicine|pathology}} {{acronym of|en|[[face]], [[arms]], [[stability]], [[talking]], [[eye]]s, [[react]]}} {{ng|A mnemonic for diagnosing a {{l|en|cerebrovascular accident||CVA}} or [[stroke]]. The mnemonic F-A-S-T-E-R also was coined in recognition of the word {{m|fr|faster}}, as a need for speedy diagnosis and treatment.}} <end>
 Page 1794 TOPS: Found match for regex: <begin> # {{acronym of|en|twin oligohydramnios-polyhydramnios sequence}}. <end>
 Page 1795 DipEd: Found match for regex: <begin> # {{acronym of|en|[[diploma]] in [[education]]}}. <end>
 Page 1796 WEFT: Found match for regex: <begin> # {{lb|en|aviation}} {{acronym of|en|[[wing]](s), [[engine]](s), [[fuselage]](s), [[tail]](s)}} {{ng|A mnemonic for airplane identification, of most the most identifiable parts of the aeroplane, that can be used to distinguish one aircraft from another.}} <end>
@@ -2360,17 +2360,17 @@ Page 1920 ATE: Found match for regex: <begin> # {{acronym of|es|{{w|lang=es|Anti
 Page 1921 DAGN: Found match for regex: <begin> # {{lb|en|astronomy}} {{acronym of|en|[[dual]] [[active]] [[galactic]] [[nuclei]]|addl=a type of merging galaxy of two source galaxies that excites both galactic cores}}. <end>
 Page 1922 dAGN: Found match for regex: <begin> # {{lb|en|astronomy}} {{alternative form of|en|DAGN}} {{acronym of|en|dual active galactic nuclei}}. <end>
 Page 1923 XBONG: Found match for regex: <begin> # {{lb|en|astronomy}} {{acronym of|en|[[X-ray]] [[bright]] [[optical]]ly [[normal]] [[galaxy]]}}. <end>
-Page 1924 GEODE: Found match for regex: <begin> # {{lb|en|physics}} {{acronym of|en|generic object of dark energy}} {{gloss|A theoretical alternative to {{l|en|black hole}}s. An object with an {{l|en|event horizon}} enclosing an interior composed of {{l|en|dark energy}}.}} <end>
+Page 1924 GEODE: Found match for regex: <begin> # {{lb|en|physics}} {{acronym of|en|generic object of dark energy}} {{gloss|A theoretical alternative to [[black hole]]s. An object with an [[event horizon]] enclosing an interior composed of [[dark energy]].}} <end>
 Page 1925 angperbekud: Found match for regex: <begin> # {{lb|id|military}} {{acronym of|id|[[angkutan]] [[perawatan]] [[dan]] [[perbekalan]] [[udara]]|t=air supply, maintenance, and transport}} <end>
 Page 1926 aswaja: Found match for regex: <begin> # {{acronym of|id|ahlusunah waljamaah}} <end>
 Page 1927 tupoksi: Found match for regex: <begin> # {{lb|id|management}} {{acronym of|id|[[tugas pokok]] dan [[fungsi]]}} <end>
 Page 1928 kahim: Found match for regex: <begin> # {{lb|id|education}} {{acronym of|id|[[ketua]] [[himpunan]] [[mahasiswa]]|t=head of student association}} <end>
-Page 1929 BORG: Found match for regex: <begin> # {{lb|en|US}} {{acronym of|en|[[blackout]] [[rage]] [[gallon]]||A cheap cocktail made for college partying, typically brightly colored and made with a full bottle of hard liquor ({{l|en|fifth}} to 750mL to 1L to 1qt), 2L to 2qt of water, water flavoring (such as Kool-Aid, Hawaiian Tropic, Mio Energy Drops), and caffeine drink powder, mixed in a gallon plastic milk jug, with electrolyte drink making the remainder of the gallon}}. <end>
+Page 1929 BORG: Found match for regex: <begin> # {{lb|en|US}} {{acronym of|en|[[blackout]] [[rage]] [[gallon]]||A cheap cocktail made for college partying, typically brightly colored and made with a full bottle of hard liquor ([[fifth]] to 750mL to 1L to 1qt), 2L to 2qt of water, water flavoring (such as Kool-Aid, Hawaiian Tropic, Mio Energy Drops), and caffeine drink powder, mixed in a gallon plastic milk jug, with electrolyte drink making the remainder of the gallon}}. <end>
 Page 1930 ITER: Found match for regex: <begin> # {{lb|en|nuclear physics}} {{acronym of|en|w:ITER|International Thermonuclear Experimental Reactor}}. <end>
 Page 1931 HEDLA: Found match for regex: <begin> # {{lb|en|astrophysics}} {{acronym of|en|[[high-energy]] [[density]] [[laboratory]] [[astrophysics]]}}. <end>
 Page 1932 MoCA: Found match for regex: <begin> # {{lb|en|medicine}} {{acronym of|en|{{w|Montreal Cognitive Assessment}}}}. <end>
 Page 1932 MoCA: Found match for regex: <begin> # {{acronym of|en|[[multimedia|Multimedia]] [[over]] [[coax|Coax]] [[alliance|Alliance]]}}. <end>
-Page 1932 MoCA: Found match for regex: <begin> # {{acronym of|en|[[multimedia]]-[[over]]-[[coaxial]] [[adaptor]]}} {{ng|A device implementing the Multimedia over Coax Alliance standard, for running {{l|en|ethernet}} over [[RG59]] and [[RG6]] coaxial cabling.}} <end>
+Page 1932 MoCA: Found match for regex: <begin> # {{acronym of|en|[[multimedia]]-[[over]]-[[coaxial]] [[adaptor]]}} {{ng|A device implementing the Multimedia over Coax Alliance standard, for running [[ethernet]] over [[RG59]] and [[RG6]] coaxial cabling.}} <end>
 Page 1933 arlindo: Found match for regex: <begin> # {{lb|id|oceanography}} {{acronym of|id|{{w|lang=id|Arus Lintas Indonesia}}|t={{w|lang=en|Indonesian Throughflow}}}} <end>
 Page 1934 artrok: Found match for regex: <begin> # {{lb|id|military}} {{acronym of|id|artileri roket|t=[[rocket artillery]]}} <end>
 Page 1935 arustama: Found match for regex: <begin> # {{acronym of|id|arus utama|t=mainstream}} <end>
@@ -2389,11 +2389,11 @@ Page 1946 BLAS: Found match for regex: <begin> # {{lb|en|computing}} {{acronym o
 Page 1947 kejar: Found match for regex: <begin> # {{lb|id|education}} {{acronym of|id|[[kelompok]] [[belajar]]|t=study group}} <end>
 Page 1948 DEXA: Found match for regex: <begin> # {{acronym of|en|dual-energy X-ray absorptiometry}}. <end>
 Page 1949 TWOT: Found match for regex: <begin> # {{lb|en|theology}} {{acronym of|en|[[theological|Theological]] [[wordbook]] of the [[Old Testament]]}}. <end>
-Page 1950 METO: Found match for regex: <begin> # {{acronym of|en|[[Middle East]] {{cap|treaty}} {{cap|organization}}}}. <end>
+Page 1950 METO: Found match for regex: <begin> # {{acronym of|en|[[Middle East]] {{U|treaty}} {{U|organization}}}}. <end>
 Page 1951 JWICS: Found match for regex: <begin> # {{lb|en|US|military|espionage}} {{acronym of|en|[[joint|Joint]] [[worldwide|Worldwide]] [[intelligence|Intelligence]] [[communication|Communications]] [[system|System]]}}. <end>
 Page 1952 Fil-Chi: Found match for regex: <begin> # {{lb|en|Philippines}} {{acronym of|en|Filipino-Chinese}}. <end>
 Page 1953 סמ״ר: Found match for regex: <begin> # {{acronym of|he|סַמָּל רִאשׁוֹן}} <end>
-Page 1954 BEAST: Found match for regex: <begin> # {{lb|en|internet}} {{acronym of|en|{{cap|browser}} {{cap|exploit}} {{cap|against}} [[SSL]]/[[TLS]]}}. <end>
+Page 1954 BEAST: Found match for regex: <begin> # {{lb|en|internet}} {{acronym of|en|{{U|browser}} {{U|exploit}} {{U|against}} [[SSL]]/[[TLS]]}}. <end>
 Page 1955 COMSATS: Found match for regex: <begin> # {{acronym of|en|{{w|Commission on Science and Technology for Sustainable Development in the South}}}}. <end>
 Page 1956 SAAL: Found match for regex: <begin> # {{lb|pt|historical|Portugal}} {{acronym of|pt|w:pt:Serviço de Apoio Ambulatório Local|gloss=social housing construction program in the 1970s}} <end>
 Page 1957 ndr: Found match for regex: <begin> # {{acronym of|it|nota della redazione}}; [[ed.]] <end>
@@ -2402,17 +2402,17 @@ Page 1959 PINS: Found match for regex: <begin> # {{lb|en|US}} {{acronym of|en|[[
 Page 1960 IMiD: Found match for regex: <begin> # {{lb|en|pharmacology}} {{acronym of|en|w:immunomodulatory imide drug}}. <end>
 Page 1961 BEAM: Found match for regex: <begin> # {{lb|en|programming|[[Erlang]]}} {{acronym of|en|w:BEAM (Erlang virtual machine)|Bogdan's Erlang Abstract Machine}}. <end>
 Page 1962 RAMAcraft: Found match for regex: <begin> # {{lb|en|physics|SETI}} {{acronym of|en|[[rapid]] [[and/or]] [[massive]] [[accelerating]] [[spacecraft]]}}. <end>
-Page 1963 RAMADAR: Found match for regex: <begin> # {{lb|en|physics|SETI}} {{acronym of|en|[[RAMAcraft]] [[detection]] [[and]] [[ranging]]}}; a system analogous to passive {{l|en|SONAR}} or passive {{l|en|RADAR}} for {{l|en|gravitational wave}} wake tracking. <end>
+Page 1963 RAMADAR: Found match for regex: <begin> # {{lb|en|physics|SETI}} {{acronym of|en|[[RAMAcraft]] [[detection]] [[and]] [[ranging]]}}; a system analogous to passive [[SONAR]] or passive [[RADAR]] for [[gravitational wave]] wake tracking. <end>
 Page 1964 QUALY: Found match for regex: <begin> # {{acronym of|en|quality-adjusted life year}}. <end>
 Page 1965 DOPE: Found match for regex: <begin> # {{lb|en|military}} {{acronym of|en|[[data]] [[on]] [[previous]] [[engagement]]}}. <end>
 Page 1966 Космет: Found match for regex: <begin> # {{acronym of|sh|Косово и Метохија||[[Kosovo and Metohia]]}} <end>
 Page 1967 Kosmet: Found match for regex: <begin> # {{acronym of|sh|Kosovo i Metohija||[[Kosovo and Metohia]]}} <end>
 Page 1968 SERPS: Found match for regex: <begin> # {{lb|en|UK|finance}} {{acronym of|en|[[state|State]] [[earnings|Earnings]]-[[related|Related]] [[pension|Pension]] [[scheme|Scheme]]}}. <end>
 Page 1969 VPOTUS: Found match for regex: <begin> # {{lb|en|US politics}} {{acronym of|en|[[vice president|Vice President]] of the [[United States]]}}. <end>
-Page 1970 MALIAT: Found match for regex: <begin> # {{acronym of|en|{{cap|multilateral}} {{cap|agreement}} on the {{cap|liberalization}} of {{cap|international}} {{cap|air}} {{cap|transportation}}}}. <end>
+Page 1970 MALIAT: Found match for regex: <begin> # {{acronym of|en|{{U|multilateral}} {{U|agreement}} on the {{U|liberalization}} of {{U|international}} {{U|air}} {{U|transportation}}}}. <end>
 Page 1971 DECA: Found match for regex: <begin> # {{acronym of|en|{{w|Defence Electronics and Components Agency}}}}. <end>
 Page 1971 DECA: Found match for regex: <begin> # {{acronym of|en|{{w|DECA Inc.|Distributive Education Clubs of America}}}}. <end>
-Page 1971 DECA: Found match for regex: <begin> # {{acronym of|en|DirecTV [[ethernet]]-over-[[coaxial]] [[adapter]]}} {{ng|A device created by DirecTV that allows for the running {{l|en|ethernet}} over [[RG59]] and [[RG6]] {{l|en|coax}} cabling.}} <end>
+Page 1971 DECA: Found match for regex: <begin> # {{acronym of|en|DirecTV [[ethernet]]-over-[[coaxial]] [[adapter]]}} {{ng|A device created by DirecTV that allows for the running [[ethernet]] over [[RG59]] and [[RG6]] [[coax]] cabling.}} <end>
 Page 1972 GOFAI: Found match for regex: <begin> # {{acronym of|en|[[good]] [[old-fashioned]] [[artificial intelligence]]||a rule-based or logic-based form of symbolic AI}}. <end>
 Page 1973 PrSM: Found match for regex: <begin> # {{acronym of|en|w:Precision Strike Missile}}, a type of [[surface-to-surface missile]] [[schedule]]d to be produced by {{w|Lockheed Martin Missiles and Fire Control|Lockheed Martin}} and fielded from the mid-[[2020s]] in replacement of [[ATACMS]]. <end>
 Page 1974 TARP: Found match for regex: <begin> # {{lb|en|US|finance}} {{acronym of|en|{{w|Troubled Asset Relief Program}}}}. <end>
@@ -2511,8 +2511,8 @@ Page 2060 warlok: Found match for regex: <begin> # {{acronym of|id|[[warga]] [[l
 Page 2060 warlok: Found match for regex: <begin> # {{acronym of|id|[[warung]] [[lokal]]|t=}} <end>
 Page 2061 IBAMA: Found match for regex: <begin> # {{lb|pt|Brazil}} {{acronym of|pt|[[instituto|Instituto]] [[brasileiro|Brasileiro]] do [[meio ambiente|Meio Ambiente]] e dos [[recurso|Recursos]] [[natural|Naturais]] [[renovável|Renováveis]]}} <end>
 Page 2062 esavi: Found match for regex: <begin> # {{lb|es|Latin America}} {{acronym of|es|[[evento]] [[supuestamente]] [[atribuido]] a la [[vacunación]] o [[inmunización]]}} <end>
-Page 2063 CThEM: Found match for regex: <begin> # {{lb|cy|during the reign of a queen}} {{acronym of|cy|[[cyllid|Cyllid]] [[a]] [[toll|Thollau]] [[ei|Ei]] [[mawrhydi|Mawrhydi]]|t=[[w:HM Revenue and Customs|Her Majesty’s Revenue and Customs]]}}: {{l|en|HMRC}} <end>
-Page 2064 CThEF: Found match for regex: <begin> # {{lb|cy|during the reign of a king}} {{acronym of|cy|[[cyllid|Cyllid]] [[a]] [[toll|Thollau]] [[ei|Ei]] [[mawrhydi|Fawrhydi]]|t=[[w:HM Revenue and Customs|His Majesty’s Revenue and Customs]]}}: {{l|en|HMRC}} <end>
+Page 2063 CThEM: Found match for regex: <begin> # {{lb|cy|during the reign of a queen}} {{acronym of|cy|[[cyllid|Cyllid]] [[a]] [[toll|Thollau]] [[ei|Ei]] [[mawrhydi|Mawrhydi]]|t=[[w:HM Revenue and Customs|Her Majesty’s Revenue and Customs]]}}: [[HMRC]] <end>
+Page 2064 CThEF: Found match for regex: <begin> # {{lb|cy|during the reign of a king}} {{acronym of|cy|[[cyllid|Cyllid]] [[a]] [[toll|Thollau]] [[ei|Ei]] [[mawrhydi|Fawrhydi]]|t=[[w:HM Revenue and Customs|His Majesty’s Revenue and Customs]]}}: [[HMRC]] <end>
 Page 2065 SIATE: Found match for regex: <begin> # {{acronym of|pt|[[serviço|Serviço]] [[integrado|Integrado]] [[de]] [[atendimento|Atendimento]] [[ao]] [[trauma|Trauma]] [[em]] [[emergência|Emergência]]}} <end>
 Page 2066 UNITA: Found match for regex: <begin> # {{acronym of|pt|w:pt:União Nacional para a Independência Total de Angola|t=National Union for the Total Independence of Angola}}, a large [[political party]] in [[Angola]] <end>
 Page 2067 RENAMO: Found match for regex: <begin> # {{acronym of|pt|[[resistência|Resistência]] [[nacional|Nacional]] [[moçambicano|Moçambicana]]}} <end>
@@ -2528,7 +2528,7 @@ Page 2075 PREN: Found match for regex: <begin> # {{acronym of|en|pitting resista
 Page 2076 SAMAE: Found match for regex: <begin> # {{lb|pt|Brazil}} {{acronym of|pt|[[serviço|Serviço]] [[autônomo|Autônomo]] [[municipal|Municipal]] de [[água|Água]] e [[esgoto|Esgoto]]}} <end>
 Page 2077 MONIAC: Found match for regex: <begin> # {{lb|en|economics}} {{acronym of|en|w:Phillips Machine|Monetary National Income Analogue Computer}}. <end>
 Page 2078 stavaza: Found match for regex: <begin> # {{lb|nl|corporate jargon}} {{acronym of|nl|stand van zaken|t=state of affairs; the current situation}} <end>
-Page 2079 NICO: Found match for regex: <begin> # {{acronym of|en|[[national insurance|National Insurance]] [[contribution|Contributions]] {{cap|office}}}}. <end>
+Page 2079 NICO: Found match for regex: <begin> # {{acronym of|en|[[national insurance|National Insurance]] [[contribution|Contributions]] {{U|office}}}}. <end>
 Page 2080 AEGIS: Found match for regex: <begin> # {{lb|en|[[NASA]]}} {{acronym of|en|w:Autonomous Exploration for Gathering Increased Science}}. <end>
 Page 2081 LACMA: Found match for regex: <begin> # {{acronym of|en|w:Los Angeles County Museum of Art}}. <end>
 Page 2082 CELS: Found match for regex: <begin> # {{acronym of|es|w:es:Centro de Estudios Legales y Sociales}} <end>
@@ -2588,7 +2588,7 @@ Page 2132 KOSA: Found match for regex: <begin> # {{lb|en|US politics}} {{acronym
 Page 2133 TANESCO: Found match for regex: <begin> # {{lb|en|Tanzania}} {{acronym of|en|w:Tanzania Electric Supply Company Limited}}. <end>
 Page 2134 Flinta: Found match for regex: <begin> # {{acronym of|de|[[Frau]], [[Lesbe]], [[inter]], [[non-binär]]e, [[trans]] oder [[agender]] [[Person]]}} <end>
 Page 2135 TARI: Found match for regex: <begin> # {{lb|en|Tanzania}} {{acronym of|en|Tanzania Agricultural Research Institute}}. <end>
-Page 2136 ARENA: Found match for regex: <begin> # {{lb|pt|politics|historical}} {{acronym of|pt|w:pt:Aliança Renovadora Nacional|t={{w|National Renewal Alliance}}}}, a {{l|en|political party}} in {{l|en|Brazil}} that existed from 1966 to 1979 <end>
+Page 2136 ARENA: Found match for regex: <begin> # {{lb|pt|politics|historical}} {{acronym of|pt|w:pt:Aliança Renovadora Nacional|t={{w|National Renewal Alliance}}}}, a [[political party]] in [[Brazil]] that existed from 1966 to 1979 <end>
 Page 2137 SIAM: Found match for regex: <begin> # {{lb|en|business}} {{acronym of|en|[[service]] [[integration]] and [[management]]}}. <end>
 Page 2138 MEXT: Found match for regex: <begin> # {{lb|en|Japan}} {{acronym of|en|w:Ministry of Education, Culture, Sports, Science and Technology|Ministry of Education, Culture, Sports, Science and Technology}}. <end>
 Page 2139 CEDEAO: Found match for regex: <begin> # {{acronym of|fr|[[communauté|Communauté]] [[économique]] des [[état|États]] de l'[[Afrique de l'Ouest]]||Economic Community of West African States}}: [[ECOWAS]] <end>

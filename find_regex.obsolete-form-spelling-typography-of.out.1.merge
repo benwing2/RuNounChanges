@@ -19,7 +19,7 @@ Page 14 accoast: Found match for regex: <begin> # {{obsolete form of|en|accost||
 Page 15 seme: Found match for regex: <begin> # {{obsolete form of|en|seem}}. <end>
 Page 15 seme: Found match for regex: <begin> # {{obsolete form of|en|seam}}. <end>
 Page 15 seme: Found match for regex: <begin> # {{obsolete form of|en|semé}}. <end>
-Page 16 scarp: Found match for regex: <begin> # {{lb|en|heraldry}} {{obsolete spelling of|en|scrape|scarpe, scrape}} <end>
+Page 16 scarp: Found match for regex: <begin> # {{lb|en|heraldry}} {{obsolete spelling of|en|scrape|scarpe, scrape}}. <end>
 Page 16 scarp: Found match for regex: <begin> # {{obsolete form of|ro|scarpă}} <end>
 Page 17 mi: Found match for regex: <begin> # {{obsolete form of|pt|mim}} <end>
 Page 18 Romania: Found match for regex: <begin> # {{obsolete form of|en|Romagna}}. <end>
@@ -170,7 +170,7 @@ Page 134 sa: Found match for regex: <begin> # {{obsolete spelling of|dsb|za}} <e
 Page 134 sa: Found match for regex: <begin> # {{lb|ms|pre-1972}} {{obsolete spelling of|ms|se}} <end>
 Page 134 sa: Found match for regex: <begin> # {{obsolete form of|tl|tsa}} <end>
 Page 135 cuti: Found match for regex: <begin> # {{obsolete form of|ro|coti}} <end>
-Page 136 cliff: Found match for regex: <begin> # {{lb|en|music}} {{obsolete form of|en|clef}} <end>
+Page 136 cliff: Found match for regex: <begin> # {{lb|en|music}} {{obsolete form of|en|clef}}. <end>
 Page 136 cliff: Found match for regex: <begin> # {{lb|cy|music}} {{obs form|cy|cleff}} <end>
 Page 137 hruška: Found match for regex: <begin> # {{obsolete form of|sh|kruška}} <end>
 Page 138 alcohol: Found match for regex: <begin> # {{obsolete form of|ro|alcool}} <end>
@@ -190,12 +190,12 @@ Page 151 wade: Found match for regex: <begin> # {{obsolete form of|en|woad}}. <e
 Page 152 frank: Found match for regex: <begin> # {{lb|en|historical}} {{obsolete form of|en|franc}}, [[former]] [[French]] [[coin]]s, [[money of account|moneys of account]], and [[currency]]. <end>
 Page 153 portmantua: Found match for regex: <begin> # {{obsolete form of|en|portmanteau|t=case}}. <end>
 Page 154 levin: Found match for regex: <begin> # {{obsolete form of|sco|eleeven}} <end>
-Page 155 letteral: Found match for regex: <begin> # {{lb|en|printing}} {{obsolete form of|en|literal||a misprint that affects a letter|id=typo}} <end>
+Page 155 letteral: Found match for regex: <begin> # {{lb|en|printing}} {{obsolete form of|en|literal||a misprint that affects a letter|id=typo}}. <end>
 Page 156 paire: Found match for regex: <begin> # {{obsolete form of|en|pair}}. <end>
 Page 157 lettre: Found match for regex: <begin> # {{obsolete form of|en|letter}}. <end>
 Page 158 fou: Found match for regex: <begin> # {{obsolete form of|ro|fă}} <end>
 Page 159 sous: Found match for regex: <begin> # {{obsolete form of|en|sou||French coin}}. <end>
-Page 161 wilk: Found match for regex: <begin> # {{lb|en|zoology}} {{obsolete form of|en|whelk}} <end>
+Page 161 wilk: Found match for regex: <begin> # {{lb|en|zoology}} {{obsolete form of|en|whelk}}. <end>
 Page 162 nerve: Found match for regex: <begin> # {{obsolete form of|nl|nerf}} <end>
 Page 163 acton: Found match for regex: <begin> # {{obsolete form of|en|actinon}}. <end>
 Page 164 ma: Found match for regex: <begin> # {{obsolete form of|ro|mai}} <end>
@@ -245,7 +245,7 @@ Page 202 rabbet: Found match for regex: <begin> # {{obsolete form of|en|rabbit}}
 Page 203 swage: Found match for regex: <begin> # {{obsolete form of|en|assuage}}. <end>
 Page 204 tic: Found match for regex: <begin> # {{obsolete form of|ro|spic}} <end>
 Page 205 etch: Found match for regex: <begin> # {{obsolete form of|en|eddish}}. <end>
-Page 206 fleet: Found match for regex: <begin> # {{lb|en|Yorkshire}} {{obsolete form of|en|flet|t=house, floor, large room}} <end>
+Page 206 fleet: Found match for regex: <begin> # {{lb|en|Yorkshire}} {{obsolete form of|en|flet|t=house, floor, large room}}. <end>
 Page 207 frisk: Found match for regex: <begin> # {{obsolete form of|sv|frisisk|t=Frisian}} <end>
 Page 208 gang: Found match for regex: <begin> # {{obsolete form of|de|geh}}, {{verb form of|de|gehen||s|imp}} <end>
 Page 209 hermetic: Found match for regex: <begin> # {{obsolete form of|ro|ermetic}} <end>
@@ -313,7 +313,7 @@ Page 263 verde: Found match for regex: <begin> # {{obsolete form of|nl|verre}} <
 Page 264 antiguo: Found match for regex: <begin> # {{obsolete form of|pt|antigo}} <end>
 Page 265 dæmon: Found match for regex: <begin> # {{obsolete form of|fr|démon}} <end>
 Page 266 præfect: Found match for regex: <begin> # {{obsolete form of|fr|préfet}} <end>
-Page 267 œsophagus: Found match for regex: <begin> # {{lb|en|chiefly|British spelling}} {{obsolete form of|en|oesophagus}} <end>
+Page 267 œsophagus: Found match for regex: <begin> # {{lb|en|chiefly|British spelling}} {{obsolete form of|en|oesophagus}}. <end>
 Page 268 yate: Found match for regex: <begin> # {{obsolete form of|en|gate}}. <end>
 Page 269 quanto: Found match for regex: <begin> # {{obsolete form of|es|cuanto}} <end>
 Page 269 quanto: Found match for regex: <begin> # {{obsolete form of|es|cuanto}} <end>
@@ -323,10 +323,10 @@ Page 271 heterogen: Found match for regex: <begin> # {{obsolete form of|ro|etero
 Page 272 travail: Found match for regex: <begin> # {{obsolete form of|en|travel}}. <!--separate ety?--> <end>
 Page 273 Sahara: Found match for regex: <begin> # {{obsolete form of|pt|Saara}} <end>
 Page 274 postal: Found match for regex: <begin> # {{obsolete form of|ro|poștal}} <end>
-Page 275 errant: Found match for regex: <begin> # {{lb|en|chiefly with a negative connotation|obsolete}} {{obsolete form of|en|arrant|t=[[complete#Adjective|complete]]; [[downright#Adjective|downright]], [[utter#Adjective|utter]]}} <end>
+Page 275 errant: Found match for regex: <begin> # {{lb|en|chiefly with a negative connotation|obsolete}} {{obsolete form of|en|arrant|t=complete; downright, utter}}. <end>
 Page 276 sacrilege: Found match for regex: <begin> # {{obsolete form of|ro|sacrileg}} <end>
 Page 277 chili: Found match for regex: <begin> # {{obsolete form of|ro|pili}} <end>
-Page 278 arrant: Found match for regex: <begin> # {{obsolete form of|en|errant|t=[[rove#Verb|roving]] around; [[wandering#Adjective|wandering]]}}. <end>
+Page 278 arrant: Found match for regex: <begin> # {{obsolete form of|en|errant|t=roving around; wandering}}. <end>
 Page 279 desperado: Found match for regex: <begin> # {{obsolete form of|es|desesperado}} <end>
 Page 280 carbone: Found match for regex: <begin> # {{obsolete form of|en|carbon}}. <end>
 Page 281 universale: Found match for regex: <begin> # {{obsolete form of|ro|universal}} <end>
@@ -350,7 +350,7 @@ Page 296 Post: Found match for regex: <begin> # {{obsolete form of|de|Porst}} <e
 Page 297 Sandwich: Found match for regex: <begin> # {{obsolete form of|en|sandwich}}. <end>
 Page 298 Seen: Found match for regex: <begin> # {{obsolete form of|lb|Seegen|t=blessing}} <end>
 Page 299 Till: Found match for regex: <begin> # {{obsolete form of|de|Dill|t=[[dill]]}} <end>
-Page 300 To: Found match for regex: <begin> # [[thoron]]; {{obsolete form of|en|Tn||thoron}} {{gloss|[[radon]]-220}} <end>
+Page 300 To: Found match for regex: <begin> # [[thoron]]; {{obsolete form of|en|Tn||thoron}} {{gloss|[[radon]]-220}}. <end>
 Page 301 Y: Found match for regex: <begin> # {{obsolete form of|en|IJ|t={{place|en|a <<lake>> (formerly a <<bay>>) adjoining the city of [[Amsterdam]], <<c/Netherlands>>}}}}. <end>
 Page 302 victoria: Found match for regex: <begin> # {{obsolete form of|pt|vitória}} <end>
 Page 303 ı: Found match for regex: <begin> # {{obsolete form of|mul|i}} {{defdate|until ca. 15th century}} <end>
@@ -481,8 +481,8 @@ Page 417 negligent: Found match for regex: <begin> # {{obsolete form of|ro|negli
 Page 418 sauter: Found match for regex: <begin> # {{obsolete form of|en|psalter}}. <end>
 Page 419 importante: Found match for regex: <begin> # {{obsolete form of|ro|important}} <end>
 Page 420 Gascoigne: Found match for regex: <begin> # {{obsolete form of|en|Gascon}}. <end>
-Page 421 baston: Found match for regex: <begin> # {{lb|en|heraldiccharge}} {{obsolete form of|en|baton}} <end>
-Page 422 rost: Found match for regex: <begin> # {{lb|en|EME}} {{obsolete form of|en|roast}} <end>
+Page 421 baston: Found match for regex: <begin> # {{lb|en|heraldiccharge}} {{obsolete form of|en|baton}}. <end>
+Page 422 rost: Found match for regex: <begin> # {{lb|en|EME}} {{obsolete form of|en|roast}}. <end>
 Page 422 rost: Found match for regex: <begin> # {{obsolete form of|en|roast}}. <end>
 Page 422 rost: Found match for regex: <begin> # {{obsolete form of|en|roast}}. <end>
 Page 423 stoup: Found match for regex: <begin> # {{obsolete form of|en|stoop}}. <end>
@@ -494,7 +494,7 @@ Page 427 nar: Found match for regex: <begin> # {{qualifier|classical, copular}} 
 Page 428 amrell: Found match for regex: <begin> # {{obsolete form of|en|admiral}}. <end>
 Page 429 hatt: Found match for regex: <begin> # {{obsolete form of|en|hat}}. <end>
 Page 430 ront: Found match for regex: <begin> # {{obsolete form of|en|runt}}. <end>
-Page 431 acquitment: Found match for regex: <begin> # {{lb|en|legal}} {{obsolete form of|en|acquittal}} <end>
+Page 431 acquitment: Found match for regex: <begin> # {{lb|en|legal}} {{obsolete form of|en|acquittal}}. <end>
 Page 432 nič: Found match for regex: <begin> # {{lb|sh|Shtokavian}} {{obsolete form of|sh|ništa}} <end>
 Page 433 trew: Found match for regex: <begin> # {{obsolete form of|en|true}}. <end>
 Page 433 trew: Found match for regex: <begin> # {{obsolete spelling of|de|treu}} <end>
@@ -549,7 +549,7 @@ Page 471 matrice: Found match for regex: <begin> # {{obsolete form of|en|matrix}
 Page 472 sweard: Found match for regex: <begin> # {{obsolete form of|en|sword}}. <end>
 Page 473 tomba: Found match for regex: <begin> # {{obsolete form of|ga|tuama}} <end>
 Page 474 chaudron: Found match for regex: <begin> # {{obsolete form of|en|chawdron}}. <end>
-Page 475 alumium: Found match for regex: <begin> # {{lb|en|obsolete}} {{obsolete form of|en|[[aluminium]]/[[aluminum]]}} {{gloss|metallic element}} <end>
+Page 475 alumium: Found match for regex: <begin> # {{lb|en|obsolete}} {{obsolete form of|en|[[aluminium]]/[[aluminum]]}} {{gloss|metallic element}}. <end>
 Page 476 foule: Found match for regex: <begin> # {{obsolete form of|en|foul}}. <end>
 Page 477 hatur: Found match for regex: <begin> # {{obsolete form of|ms|atur}} <end>
 Page 478 exemple: Found match for regex: <begin> # {{obsolete form of|en|example}}. <end>
@@ -603,7 +603,7 @@ Page 521 cote: Found match for regex: <begin> # {{obsolete form of|en|quote}}. <
 Page 522 Serbie: Found match for regex: <begin> # {{obsolete form of|cs|Srbsko}} <end>
 Page 523 maist: Found match for regex: <begin> # {{obsolete form of|en|mayst}}. <end>
 Page 524 coffa: Found match for regex: <begin> # {{obsolete form of|en|coffee}}. <end>
-Page 525 Josue: Found match for regex: <begin> # {{lb|en|biblical|Douay Version}} {{obsolete form of|en|Joshua}} <end>
+Page 525 Josue: Found match for regex: <begin> # {{lb|en|biblical|Douay Version}} {{obsolete form of|en|Joshua}}. <end>
 Page 526 potass: Found match for regex: <begin> # {{obsolete form of|en|potash}}. <end>
 Page 527 armado: Found match for regex: <begin> # {{obsolete form of|en|armada||fleet of warships}}.<ref>{{R:Webster 1913}}</ref> <end>
 Page 528 hable: Found match for regex: <begin> # {{obsolete form of|en|able}}. <end>
@@ -845,10 +845,10 @@ Page 735 ospita: Found match for regex: <begin> # {{obsolete form of|ro|ospăta}
 Page 736 Christen: Found match for regex: <begin> # {{obsolete form of|en|Christian}}. <end>
 Page 736 Christen: Found match for regex: <begin> # {{obsolete form of|en|Christian}}. <end>
 Page 737 stresse: Found match for regex: <begin> # {{obsolete form of|en|stress}}. <end>
-Page 738 frick: Found match for regex: <begin> # {{lb|en|Scotland}} {{obsolete form of|en|freak}} <end>
+Page 738 frick: Found match for regex: <begin> # {{lb|en|Scotland}} {{obsolete form of|en|freak}}. <end>
 Page 739 hys: Found match for regex: <begin> # {{obsolete form of|en|his}}. <end>
 Page 740 linnen: Found match for regex: <begin> # {{obsolete form of|en|linen}}. <end>
-Page 741 orbita: Found match for regex: <begin> # {{lb|en|anatomy}} {{obsolete form of|en|orbit}} <end>
+Page 741 orbita: Found match for regex: <begin> # {{lb|en|anatomy}} {{obsolete form of|en|orbit}}. <end>
 Page 742 ischiadic: Found match for regex: <begin> # {{obsolete form of|en|ischiatic}}. <end>
 Page 743 membre: Found match for regex: <begin> # {{obsolete form of|en|member}}. <end>
 Page 744 volcan: Found match for regex: <begin> # {{obsolete form of|ro|vulcan}} <end>
@@ -886,7 +886,7 @@ Page 768 skatt: Found match for regex: <begin> # {{obsolete form of|en|scat||rai
 Page 769 karakter: Found match for regex: <begin> # {{obsolete form of|cs|charakter}} <end>
 Page 770 narcis: Found match for regex: <begin> # {{obsolete form of|ro|narcisă}} <end>
 Page 771 nett: Found match for regex: <begin> # {{obsolete form of|en|net}}. <end>
-Page 772 oker: Found match for regex: <begin> # {{lb|en|mineralogy}} {{obsolete form of|en|ochre}}<ref>* {{R:Webster 1913}}</ref> <end>
+Page 772 oker: Found match for regex: <begin> # {{lb|en|mineralogy}} {{obsolete form of|en|ochre}}.<ref>* {{R:Webster 1913}}</ref> <end>
 Page 773 vermine: Found match for regex: <begin> # {{obsolete form of|en|vermin}}. <end>
 Page 774 чест: Found match for regex: <begin> # {{obsolete form of|sh|част|sc=Cyrl}} <end>
 Page 775 fauchon: Found match for regex: <begin> # {{obsolete form of|en|falchion}}. <end>
@@ -987,14 +987,14 @@ Page 862 bourgeon: Found match for regex: <begin> # {{obsolete form of|en|burgeo
 Page 863 germain: Found match for regex: <begin> # {{obsolete form of|en|germane}}. <end>
 Page 864 tokin: Found match for regex: <begin> # {{obsolete form of|en|tocsin}}. <end>
 Page 865 incidently: Found match for regex: <begin> # {{obsolete form of|en|incidentally}}. <end>
-Page 866 Archizoic: Found match for regex: <begin> # {{lb|en|rare}} {{obsolete form of|en|Archaeozoic}} <end>
+Page 866 Archizoic: Found match for regex: <begin> # {{lb|en|rare}} {{obsolete form of|en|Archaeozoic}}. <end>
 Page 867 suffisant: Found match for regex: <begin> # {{obsolete form of|en|sufficient}}. <end>
 Page 868 somă: Found match for regex: <begin> # {{obsolete form of|ro|sumă}} <end>
 Page 869 yeat: Found match for regex: <begin> # {{obsolete form of|en|yet}}. <end>
 Page 870 jae: Found match for regex: <begin> # {{obsolete form of|nl|ja}} <end>
 Page 871 phane: Found match for regex: <begin> # {{obsolete form of|en|fane}}. <end>
 Page 872 amiral: Found match for regex: <begin> # {{obsolete form of|en|admiral}}. <end>
-Page 873 Guienne: Found match for regex: <begin> # {{lb|en|historical}} {{obsolete form of|en|Guyenne}} <end>
+Page 873 Guienne: Found match for regex: <begin> # {{lb|en|historical}} {{obsolete form of|en|Guyenne}}. <end>
 Page 873 Guienne: Found match for regex: <begin> # {{lb|fr|historical}} {{obsolete form of|fr|Guyenne}} <end>
 Page 874 biglie: Found match for regex: <begin> # {{obsolete form of|en|bigly}}. <end>
 Page 874 biglie: Found match for regex: <begin> # {{obsolete form of|en|bigly}}. <end>
@@ -1082,7 +1082,7 @@ Page 947 biling: Found match for regex: <begin> # {{obsolete form of|ms|beleng}}
 Page 948 trip the light fantastic toe: Found match for regex: <begin> # {{obsolete form of|en|trip the light fantastic}}. <end>
 Page 949 virtuose: Found match for regex: <begin> # {{obsolete form of|en|virtuous}}. <end>
 Page 950 surja: Found match for regex: <begin> # {{lb|id|1947-1972}} {{obsolete form of|id|surya}} <end>
-Page 951 lant: Found match for regex: <begin> # {{lb|en|UK|dialect|Northern England}} {{obsolete form of|en|lanterloo}} (the card game) <end>
+Page 951 lant: Found match for regex: <begin> # {{lb|en|UK|dialect|Northern England}} {{obsolete form of|en|lanterloo}} (the card game). <end>
 Page 952 sord: Found match for regex: <begin> # {{obsolete form of|en|sward}}. <end>
 Page 953 Bœotia: Found match for regex: <begin> # {{obsolete form of|en|Boeotia}}. <end>
 Page 954 dimensie: Found match for regex: <begin> # {{obsolete form of|ro|dimensiune}} <end>
@@ -1166,7 +1166,7 @@ Page 1023 lare: Found match for regex: <begin> # {{obsolete form of|en|lair}}. <
 Page 1024 saphir: Found match for regex: <begin> # {{obsolete form of|en|sapphire}}. <end>
 Page 1025 cim: Found match for regex: <begin> # {{obsolete form of|ro|cin}} <end>
 Page 1026 corpuscule: Found match for regex: <begin> # {{obsolete form of|en|corpuscle}}. <end>
-Page 1027 exradio: Found match for regex: <begin> # {{lb|en|obsolete}} {{obsolete form of|en|radon||radon-222}}; an isotope of radon (element 86) <end>
+Page 1027 exradio: Found match for regex: <begin> # {{lb|en|obsolete}} {{obsolete form of|en|radon||radon-222}}; an isotope of radon (element 86). <end>
 Page 1028 sab: Found match for regex: <begin> # {{obsolete form of|ca|sap}} <end>
 Page 1029 maile: Found match for regex: <begin> # {{obsolete form of|en|mail||chainmail}}. <end>
 Page 1030 Æsop: Found match for regex: <begin> # {{obsolete form of|en|Aesop}}. <end>
@@ -1302,13 +1302,13 @@ Page 1139 warme: Found match for regex: <begin> # {{obsolete form of|en|warm}}. 
 Page 1139 warme: Found match for regex: <begin> # {{obsolete form of|en|warm}}. <end>
 Page 1140 dryade: Found match for regex: <begin> # {{obsolete form of|en|dryad}}. <end>
 Page 1141 equicrure: Found match for regex: <begin> # {{obsolete form of|en|equicrural}}. <end>
-Page 1142 Muskate: Found match for regex: <begin> # {{obsolete form of|de|[[Muskat]], [[Muskatnuss]]}} <end>
+Page 1142 Muskate: Found match for regex: <begin> # {{obsolete form of|de|Muskat,Muskatnuss}} <end>
 Page 1143 Scotish: Found match for regex: <begin> # {{obsolete form of|en|Scottish}}. <end>
 Page 1144 taboleiro: Found match for regex: <begin> # {{obsolete form of|pt|tabuleiro}} <end>
 Page 1145 urusa: Found match for regex: <begin> # {{obsolete form of|ga|furasta}} <end>
 Page 1146 фольга: Found match for regex: <begin> # {{obsolete form of|uk|пі́льга}} <end>
 Page 1147 Indostan: Found match for regex: <begin> # {{obsolete form of|en|Hindustan}}. <end>
-Page 1148 elve: Found match for regex: <begin> {{obsolete form of|en|elf}} <end>
+Page 1148 elve: Found match for regex: <begin> {{obsolete form of|en|elf}}. <end>
 Page 1148 elve: Found match for regex: <begin> # {{obsolete form of|en|elf}}. <end>
 Page 1149 татарка: Found match for regex: <begin> # {{obsolete form of|ru|тата́рник|t={{taxfmt|Onopordum|genus}}, {{taxlink|Cirsium eriophorum|species}}, etc.}} <end>
 Page 1150 razem: Found match for regex: <begin> # {{obsolete form of|ro|reazem}} <end>
@@ -1318,7 +1318,7 @@ Page 1152 negles: Found match for regex: <begin> # {{obsolete form of|ro|neglija
 Page 1153 byo: Found match for regex: <begin> # {{obsolete form of|en|bayou}}. <end>
 Page 1154 palanka: Found match for regex: <begin> # {{obsolete form of|en|palanquin}}. <end>
 Page 1155 abbaser: Found match for regex: <begin> # {{obsolete form of|en|abaser}}. <end>
-Page 1157 hause: Found match for regex: <begin> # {{lb|en|nautical}} {{obsolete form of|en|hawse}} <end>
+Page 1157 hause: Found match for regex: <begin> # {{lb|en|nautical}} {{obsolete form of|en|hawse}}. <end>
 Page 1158 kommunisme: Found match for regex: <begin> # {{obsolete form of|nl|communisme}} <end>
 Page 1159 admirante: Found match for regex: <begin> # {{obsolete form of|en|admiral}}. <end>
 Page 1160 pucel: Found match for regex: <begin> # {{obsolete form of|en|pucelle}}. <end>
@@ -1330,7 +1330,7 @@ Page 1165 aler: Found match for regex: <begin> # {{lb|ms|pre-1972}} {{obsolete s
 Page 1165 aler: Found match for regex: <begin> # {{lb|ms|pre-1972}} {{obsolete spelling of|ms|alir}} <end>
 Page 1165 aler: Found match for regex: <begin> # {{obsolete form of|ro|lerui}} <end>
 Page 1166 unrightwise: Found match for regex: <begin> # {{obsolete form of|en|unrighteous}}. <end>
-Page 1167 hivernate: Found match for regex: <begin> # {{lb|en|rare|intransitive}} {{obsolete form of|en|hibernate}} <end>
+Page 1167 hivernate: Found match for regex: <begin> # {{lb|en|rare|intransitive}} {{obsolete form of|en|hibernate}}. <end>
 Page 1168 disfamar: Found match for regex: <begin> # {{obsolete form of|es|difamar}} <end>
 Page 1169 Preise: Found match for regex: <begin> # {{obsolete form of|de|Prise|t=booty, captured ship}} <end>
 Page 1170 coole: Found match for regex: <begin> # {{obsolete form of|en|cool}}. <end>
@@ -1344,7 +1344,7 @@ Page 1175 ingine: Found match for regex: <begin> # {{obsolete form of|en|engine}
 Page 1176 User talk:Widsith/archive7: Found match for regex: <begin> *We have {{temp|obsolete spelling of}}, which is what I use for these cases. But someone should really create {{temp|obsolete form of}}, because "spelling" always implies to me that the words were pronounced the same, which of course they usually weren't. The verb conjugation looks good to me. As ever, citations will clear most problems up, but it just depends how much time and effort you want to put into finding them. <{{#switch:|term|ital=i|head|bold=b|span}} class="latinx">[[User:Widsith|Ƿidsiþ]]</{{#switch:|term|ital=i|head|bold=b|span}}> 15:46, 3 November 2009 (UTC) <end>
 Page 1177 proselite: Found match for regex: <begin> # {{obsolete form of|it|proselito}} <end>
 Page 1178 inadæquate: Found match for regex: <begin> # {{obsolete form of|en|inadequate}}. <end>
-Page 1179 hodometry: Found match for regex: <begin> # {{lb|en|nautical}} {{obsolete form of|en|odometry}} <end>
+Page 1179 hodometry: Found match for regex: <begin> # {{lb|en|nautical}} {{obsolete form of|en|odometry}}. <end>
 Page 1180 melancholie: Found match for regex: <begin> # {{obsolete form of|en|melancholy}}. <end>
 Page 1180 melancholie: Found match for regex: <begin> # {{obsolete form of|fr|mélancolie}} <end>
 Page 1181 Gartner: Found match for regex: <begin> # {{obsolete form of|de|Gärtner}} <end>
@@ -1456,7 +1456,7 @@ Page 1270 ian: Found match for regex: <begin> # {{obsolete form of|eo|iam}} <end
 Page 1271 larum: Found match for regex: <begin> # {{obsolete form of|en|alarum}}. <end>
 Page 1271 larum: Found match for regex: <begin> # {{obsolete form of|en|alarum}}. <end>
 Page 1272 yelk: Found match for regex: <begin> # {{obsolete form of|en|yolk}}. <end>
-Page 1273 swoln: Found match for regex: <begin> # {{lb|en|poetic}} {{obsolete form of|en|swollen}} <end>
+Page 1273 swoln: Found match for regex: <begin> # {{lb|en|poetic}} {{obsolete form of|en|swollen}}. <end>
 Page 1274 bilding: Found match for regex: <begin> # {{obsolete form of|en|building}}. <end>
 Page 1275 thein: Found match for regex: <begin> # {{obsolete form of|en|thane}}. <end>
 Page 1276 theine: Found match for regex: <begin> # {{obsolete form of|en|thane}}. <end>
@@ -1474,7 +1474,7 @@ Page 1288 equador: Found match for regex: <begin> # {{obsolete form of|es|ecuado
 Page 1289 swerd: Found match for regex: <begin> # {{obsolete form of|en|sword}}. <end>
 Page 1290 iuti: Found match for regex: <begin> # {{obsolete form of|ro|iute}} <end>
 Page 1291 plesaunt: Found match for regex: <begin> # {{obsolete form of|en|pleasant}}. <end>
-Page 1292 oystre: Found match for regex: <begin> # {{lb|en|rare}} {{obsolete form of|en|oyster}} <end>
+Page 1292 oystre: Found match for regex: <begin> # {{lb|en|rare}} {{obsolete form of|en|oyster}}. <end>
 Page 1293 doctour: Found match for regex: <begin> # {{obsolete form of|en|doctor}}. <end>
 Page 1294 daunce: Found match for regex: <begin> # {{obsolete form of|en|dance}}. <end>
 Page 1294 daunce: Found match for regex: <begin> # {{obsolete form of|en|dance}}. <end>
@@ -1565,7 +1565,7 @@ Page 1370 muskat: Found match for regex: <begin> # {{obsolete form of|en|musk ca
 Page 1371 pioner: Found match for regex: <begin> # {{obsolete form of|en|pioneer}} (military sapper or digger). <end>
 Page 1372 jambus: Found match for regex: <begin> # {{obsolete form of|en|iambus}}. <end>
 Page 1373 wiseman: Found match for regex: <begin> # {{obsolete form of|en|wise man}}. <end>
-Page 1374 Ao: Found match for regex: <begin> # {{lb|mul|obsolete}} [[acton]]; {{obsolete form of|en|An||[[actinon]]}} {{gloss|[[radon]]-219}} <end>
+Page 1374 Ao: Found match for regex: <begin> # {{lb|mul|obsolete}} [[acton]]; {{obsolete form of|en|An||[[actinon]]}} {{gloss|[[radon]]-219}}. <end>
 Page 1374 Ao: Found match for regex: <begin> # {{lb|mul|obsolete}} [[ausonium]]; {{obsolete form of|mul|Np||[[neptunium]]}} {{non-gloss|A rejected name for {{l|mul|Np||element-93}}.}} <end>
 Page 1375 pyllour: Found match for regex: <begin> # {{obsolete form of|en|piller}}. {{defdate|15th c.}} <end>
 Page 1376 aspick: Found match for regex: <begin> # {{obsolete form of|en|aspic}} {{gloss|an [[asp]], the snake}}. <end>
@@ -1690,7 +1690,7 @@ Page 1484 exstant: Found match for regex: <begin> # {{obsolete form of|en|extant
 Page 1485 læsion: Found match for regex: <begin> # {{obsolete form of|fr|lésion}} <end>
 Page 1486 leuchæmia: Found match for regex: <begin> # {{obsolete form of|en|leukemia}}. <end>
 Page 1487 paranœic: Found match for regex: <begin> # {{obsolete form of|en|paranoid#Adjective|paranoid}}. <end>
-Page 1487 paranœic: Found match for regex: <begin> # {{lb|en|rare}} {{obsolete form of|en|paranoiac}} <end>
+Page 1487 paranœic: Found match for regex: <begin> # {{lb|en|rare}} {{obsolete form of|en|paranoiac}}. <end>
 Page 1488 radient: Found match for regex: <begin> # {{obsolete form of|en|radiant}}. <end>
 Page 1489 gynæcological: Found match for regex: <begin> # {{obsolete form of|en|gynecological}}. <end>
 Page 1490 λεόπαρδος: Found match for regex: <begin> # {{obsolete form of|el|λεοπάρδαλη}} {{gloss|[[leopard]]}} <end>
@@ -1725,7 +1725,7 @@ Page 1541 oa: Found match for regex: <begin> # {{obsolete form of|ro|oac}} <end>
 Page 1542 samoun: Found match for regex: <begin> # {{obsolete form of|en|salmon}}. <end>
 Page 1544 manace: Found match for regex: <begin> # {{obsolete form of|en|menace}}. <end>
 Page 1544 manace: Found match for regex: <begin> # {{obsolete form of|en|menace}}. <end>
-Page 1547 anti-hæmorrhagic: Found match for regex: <begin> # {{lb|en|British spelling}} {{obsolete form of|en|antihemorrhagic}} <end>
+Page 1547 anti-hæmorrhagic: Found match for regex: <begin> # {{lb|en|British spelling}} {{obsolete form of|en|antihemorrhagic}}. <end>
 Page 1548 cohæsion: Found match for regex: <begin> # {{obsolete form of|fr|cohésion}} <end>
 Page 1549 præsident: Found match for regex: <begin> # {{obsolete form of|fr|président}} <end>
 Page 1549 præsident: Found match for regex: <begin> # {{obs typ|sv|president||president; chairman}} <end>
@@ -1761,7 +1761,7 @@ Page 1581 superiourly: Found match for regex: <begin> # {{obsolete form of|en|su
 Page 1582 adhæsion: Found match for regex: <begin> # {{obsolete form of|en|adhesion}}. <end>
 Page 1582 adhæsion: Found match for regex: <begin> # {{obsolete form of|fr|adhésion}} <end>
 Page 1583 fœderate: Found match for regex: <begin> # {{obsolete form of|en|federate}}. <end>
-Page 1583 fœderate: Found match for regex: <begin> # {{lb|en|rare}} {{obsolete spelling of|en|federate}} <end>
+Page 1583 fœderate: Found match for regex: <begin> # {{lb|en|rare}} {{obsolete spelling of|en|federate}}. <end>
 Page 1584 diœcese: Found match for regex: <begin> # {{obsolete form of|fr|diocèse}} <end>
 Page 1585 ætiologic: Found match for regex: <begin> # {{obsolete form of|en|aetiologic}}. <end>
 Page 1586 close stoole: Found match for regex: <begin> # {{obsolete form of|en|close-stool}}. <end>
@@ -1965,7 +1965,7 @@ Page 1805 operatour: Found match for regex: <begin> # {{obsolete form of|en|oper
 Page 1806 possessour: Found match for regex: <begin> # {{obsolete form of|en|possessor}}. <end>
 Page 1807 staur: Found match for regex: <begin> # {{obsolete form of|ro|staul}} <end>
 Page 1808 culd: Found match for regex: <begin> # {{obsolete form of|en|could}}. <end>
-Page 1809 great gun: Found match for regex: <begin> # {{lb|en|military}} {{obsolete form of|en|big gun}} <end>
+Page 1809 great gun: Found match for regex: <begin> # {{lb|en|military}} {{obsolete form of|en|big gun}}. <end>
 Page 1810 æquinoctial: Found match for regex: <begin> # {{obsolete form of|en|equinoctial}}. <end>
 Page 1810 æquinoctial: Found match for regex: <begin> # {{obsolete spelling of|en|equinoctial}}. <end>
 Page 1811 logopœic: Found match for regex: <begin> # {{obsolete form of|en|logopoeic}}. <end>
@@ -1974,7 +1974,7 @@ Page 1813 præpared: Found match for regex: <begin> # {{obsolete form of|en|prep
 Page 1814 Cænozoic: Found match for regex: <begin> # {{obsolete form of|en|Cenozoic}}. <end>
 Page 1814 Cænozoic: Found match for regex: <begin> # {{obsolete form of|en|Cenozoic}}. <end>
 Page 1815 Zacchæus: Found match for regex: <begin> # {{obsolete form of|en|Zacchaeus}}. <end>
-Page 1816 arize: Found match for regex: <begin> # {{lb|en|intransitive|rare}} {{obsolete form of|en|arise}} <end>
+Page 1816 arize: Found match for regex: <begin> # {{lb|en|intransitive|rare}} {{obsolete form of|en|arise}}. <end>
 Page 1817 authouress: Found match for regex: <begin> # {{obsolete form of|en|authoress}}. <end>
 Page 1818 Cæsar salad: Found match for regex: <begin> # {{obsolete form of|en|Caesar salad}}. <end>
 Page 1819 adereçar: Found match for regex: <begin> # {{obsolete form of|es|aderezar}} <end>
@@ -2029,7 +2029,7 @@ Page 1860 præcordium: Found match for regex: <begin> # {{obsolete form of|en|pr
 Page 1861 enclude: Found match for regex: <begin> # {{obsolete form of|en|include}}. <end>
 Page 1862 hæmorragie: Found match for regex: <begin> # {{obsolete form of|fr|hémorragie}} <end>
 Page 1863 fœdération: Found match for regex: <begin> # {{obsolete form of|fr|fédération}} <end>
-Page 1864 calorique: Found match for regex: <begin> # {{lb|en|obsolete}} {{obsolete form of|en|caloric}} <end>
+Page 1864 calorique: Found match for regex: <begin> # {{lb|en|obsolete}} {{obsolete form of|en|caloric}}. <end>
 Page 1865 cœmetière: Found match for regex: <begin> # {{obsolete form of|fr|cimetière}} <end>
 Page 1866 amœne: Found match for regex: <begin> # {{obsolete form of|en|amene}}. <end>
 Page 1866 amœne: Found match for regex: <begin> # {{obsolete form of|fr|amène}} <end>
@@ -2427,7 +2427,7 @@ Page 2201 iambick: Found match for regex: <begin> # {{obsolete form of|en|iambic
 Page 2201 iambick: Found match for regex: <begin> # {{obsolete form of|en|iambic}}. <end>
 Page 2202 identick: Found match for regex: <begin> # {{obsolete form of|en|identic}}. <end>
 Page 2203 impolitick: Found match for regex: <begin> # {{obsolete form of|en|impolitic}}. <end>
-Page 2204 enstall: Found match for regex: <begin> # {{lb|en|rare}} {{obsolete form of|en|install}} <end>
+Page 2204 enstall: Found match for regex: <begin> # {{lb|en|rare}} {{obsolete form of|en|install}}. <end>
 Page 2205 indeavor: Found match for regex: <begin> # {{obsolete form of|en|endeavor}}. <end>
 Page 2205 indeavor: Found match for regex: <begin> # {{obsolete form of|en|endeavor}}. <end>
 Page 2206 intrinsick: Found match for regex: <begin> # {{obsolete form of|en|intrinsic}}. <end>
@@ -2784,8 +2784,8 @@ Page 2527 vilany: Found match for regex: <begin> # {{obsolete form of|en|villain
 Page 2528 earldorman: Found match for regex: <begin> # {{obsolete form of|en|alderman}}. <end>
 Page 2529 pinacle: Found match for regex: <begin> # {{obsolete form of|en|pinnacle}}. <end>
 Page 2530 cizars: Found match for regex: <begin> # {{obsolete form of|en|scissors}}. <end>
-Page 2531 palisado: Found match for regex: <begin> # {{lb|en|fortification}} {{obsolete form of|en|palisade}} <end>
-Page 2531 palisado: Found match for regex: <begin> # {{lb|en|fortification}} {{obsolete form of|en|palisade}} <end>
+Page 2531 palisado: Found match for regex: <begin> # {{lb|en|fortification}} {{obsolete form of|en|palisade}}. <end>
+Page 2531 palisado: Found match for regex: <begin> # {{lb|en|fortification}} {{obsolete form of|en|palisade}}. <end>
 Page 2532 mounch: Found match for regex: <begin> # {{obsolete form of|en|munch}}. <end>
 Page 2533 turribant: Found match for regex: <begin> # {{obsolete form of|en|turban}}. <end>
 Page 2534 wevil: Found match for regex: <begin> # {{obsolete form of|en|weevil}}. <end>
@@ -2910,9 +2910,9 @@ Page 2640 paijama: Found match for regex: <begin> # {{obsolete form of|en|pajama
 Page 2641 sumph: Found match for regex: <begin> # {{obsolete form of|en|sump||lowest part of a mineshaft, into which water drains}}. <end>
 Page 2642 wesand: Found match for regex: <begin> # {{obsolete form of|en|weasand}}. <end>
 Page 2643 chronick: Found match for regex: <begin> # {{obsolete form of|en|chronic}}. <end>
-Page 2644 prophane: Found match for regex: <begin> # {{lb|en|hypercorrect}} {{obsolete form of|en|profane}} <end>
+Page 2644 prophane: Found match for regex: <begin> # {{lb|en|hypercorrect}} {{obsolete form of|en|profane}}. <end>
 Page 2644 prophane: Found match for regex: <begin> # {{obsolete spelling of|en|profane}}. <end>
-Page 2645 prophanely: Found match for regex: <begin> # {{lb|en|hypercorrect}} {{obsolete form of|en|profanely}} <end>
+Page 2645 prophanely: Found match for regex: <begin> # {{lb|en|hypercorrect}} {{obsolete form of|en|profanely}}. <end>
 Page 2646 gelly: Found match for regex: <begin> # {{obsolete form of|en|jelly}}. <end>
 Page 2647 spyrytuall: Found match for regex: <begin> # {{obsolete form of|en|spiritual}}. <end>
 Page 2648 spirituall: Found match for regex: <begin> # {{obsolete form of|en|spiritual}}. <end>
@@ -3185,7 +3185,7 @@ Page 2884 reprize: Found match for regex: <begin> # {{obsolete form of|en|repris
 Page 2885 tamburin: Found match for regex: <begin> # {{obsolete form of|en|tambourine}}. <end>
 Page 2886 ballatry: Found match for regex: <begin> # {{obsolete form of|en|balladry}}. <end>
 Page 2887 Græce: Found match for regex: <begin> # {{obsolete form of|fr|Grèce}} <end>
-Page 2888 inconscionable: Found match for regex: <begin> # {{lb|en|rare}} {{obsolete form of|en|unconscionable}} <end>
+Page 2888 inconscionable: Found match for regex: <begin> # {{lb|en|rare}} {{obsolete form of|en|unconscionable}}. <end>
 Page 2889 repræsenter: Found match for regex: <begin> # {{obsolete form of|fr|représenter}} <end>
 Page 2890 Græc: Found match for regex: <begin> # {{obsolete form of|fr|Grec}} <end>
 Page 2891 æternité: Found match for regex: <begin> # {{obsolete form of|fr|éternité}} <end>
@@ -3247,9 +3247,9 @@ Page 2944 anæmie: Found match for regex: <begin> # {{obsolete form of|fr|anémi
 Page 2945 melæna: Found match for regex: <begin> # {{obsolete form of|en|melena}}. <end>
 Page 2946 pseudoleukæmia: Found match for regex: <begin> # {{obsolete form of|en|pseudoleukaemia}}. <end>
 Page 2947 hæmorrhagically: Found match for regex: <begin> # {{obsolete form of|en|hemorrhagically}}. <end>
-Page 2948 fœcund: Found match for regex: <begin> # {{lb|en|hypercorrect}} {{obsolete form of|en|fecund}} <end>
+Page 2948 fœcund: Found match for regex: <begin> # {{lb|en|hypercorrect}} {{obsolete form of|en|fecund}}. <end>
 Page 2949 leukorrhœa: Found match for regex: <begin> # {{obsolete form of|en|leukorrhea}}. <end>
-Page 2950 phœnomenon: Found match for regex: <begin> # {{lb|en|hypercorrect}} {{obsolete form of|en|phenomenon}} <end>
+Page 2950 phœnomenon: Found match for regex: <begin> # {{lb|en|hypercorrect}} {{obsolete form of|en|phenomenon}}. <end>
 Page 2951 Lacedæmonia: Found match for regex: <begin> # {{obsolete form of|en|Lacedaemonia}}. <end>
 Page 2952 Lacedæmonian: Found match for regex: <begin> # {{obsolete form of|en|Lacedaemonian}}. <end>
 Page 2952 Lacedæmonian: Found match for regex: <begin> # {{obsolete form of|en|Lacedaemonian}}. <end>
@@ -3273,7 +3273,7 @@ Page 2967 benshee: Found match for regex: <begin> # {{obsolete form of|en|banshe
 Page 2968 trossers: Found match for regex: <begin> # {{obsolete form of|en|trousers}}. <end>
 Page 2969 æthiops: Found match for regex: <begin> # {{obsolete form of|en|aethiops}}. <end>
 Page 2970 Martlemas: Found match for regex: <begin> # {{obsolete form of|en|Martinmas}}. <end>
-Page 2971 freke: Found match for regex: <begin> # {{lb|en|Scotland}} {{obsolete form of|en|freak}} <end>
+Page 2971 freke: Found match for regex: <begin> # {{lb|en|Scotland}} {{obsolete form of|en|freak}}. <end>
 Page 2972 gurgoyle: Found match for regex: <begin> # {{obsolete form of|en|gargoyle}}. <end>
 Page 2973 imboil: Found match for regex: <begin> # {{obsolete form of|en|emboil}}. <end>
 Page 2974 bumbast: Found match for regex: <begin> # {{obsolete form of|en|bombast}}. <end>
@@ -3327,7 +3327,7 @@ Page 3016 windore: Found match for regex: <begin> # {{obsolete form of|en|window
 Page 3017 missel: Found match for regex: <begin> # {{obsolete form of|en|mesel}} ''in [[its]] [[various]] [[sense]]s''. <end>
 Page 3017 missel: Found match for regex: <begin> # {{obsolete form of|en|mesel}} ''in [[its]] [[various]] [[sense]]s''. <end>
 Page 3018 bilinguar: Found match for regex: <begin> # {{obsolete form of|en|bilingual}}. <end>
-Page 3019 goff: Found match for regex: <begin> # {{lb|en|Scotland}} {{obsolete form of|en|golf||ball game}} <end>
+Page 3019 goff: Found match for regex: <begin> # {{lb|en|Scotland}} {{obsolete form of|en|golf||ball game}}. <end>
 Page 3020 replyer: Found match for regex: <begin> # {{obsolete form of|en|replier}}. <end>
 Page 3021 margarous: Found match for regex: <begin> # {{obsolete form of|en|margaric}}. <end>
 Page 3022 sumner: Found match for regex: <begin> # {{obsolete form of|en|summoner}}. <end>
@@ -3365,7 +3365,7 @@ Page 3052 betwyxt: Found match for regex: <begin> # {{obsolete form of|en|betwix
 Page 3053 anighst: Found match for regex: <begin> # {{obsolete form of|en|anigh}}. <end>
 Page 3053 anighst: Found match for regex: <begin> # {{obsolete form of|en|anigh}}. <end>
 Page 3054 hystorie: Found match for regex: <begin> # {{obsolete form of|en|history}}. <end>
-Page 3055 phylosophick: Found match for regex: <begin> # {{lb|en|rare}} {{obsolete form of|en|philosophic}} <end>
+Page 3055 phylosophick: Found match for regex: <begin> # {{lb|en|rare}} {{obsolete form of|en|philosophic}}. <end>
 Page 3056 hystoricall: Found match for regex: <begin> # {{obsolete form of|en|historical}}. <end>
 Page 3057 phylosophie: Found match for regex: <begin> # {{obsolete form of|en|philosophy}}. <end>
 Page 3058 phylosophicall: Found match for regex: <begin> # {{obsolete form of|en|philosophical}}. <end>
@@ -3398,12 +3398,12 @@ Page 3084 seigniour: Found match for regex: <begin> # {{obsolete form of|en|seig
 Page 3085 ulteriour: Found match for regex: <begin> # {{obsolete form of|en|ulterior}}. <end>
 Page 3086 lectour: Found match for regex: <begin> # {{obsolete form of|en|lector}}. <end>
 Page 3087 projectour: Found match for regex: <begin> # {{obsolete form of|en|projector}}. <end>
-Page 3088 arbitratour: Found match for regex: <begin> # {{lb|en|rare}} {{obsolete form of|en|arbitrator}} <end>
+Page 3088 arbitratour: Found match for regex: <begin> # {{lb|en|rare}} {{obsolete form of|en|arbitrator}}. <end>
 Page 3089 auditour: Found match for regex: <begin> # {{obsolete form of|en|auditor}}. <end>
 Page 3090 conservatour: Found match for regex: <begin> # {{obsolete form of|en|conservator}}. <end>
 Page 3091 conspiratour: Found match for regex: <begin> # {{obsolete form of|en|conspirator}}. <end>
 Page 3092 curatour: Found match for regex: <begin> # {{obsolete form of|en|curator}}. <end>
-Page 3093 editour: Found match for regex: <begin> # {{lb|en|rare}} {{obsolete form of|en|editor}} <end>
+Page 3093 editour: Found match for regex: <begin> # {{lb|en|rare}} {{obsolete form of|en|editor}}. <end>
 Page 3094 correctour: Found match for regex: <begin> # {{obsolete form of|en|corrector}}. <end>
 Page 3095 interlocutour: Found match for regex: <begin> # {{obsolete form of|en|interlocutor}}. <end>
 Page 3096 persecutour: Found match for regex: <begin> # {{obsolete form of|en|persecutor}}. <end>
@@ -3490,9 +3490,9 @@ Page 3168 Dorick: Found match for regex: <begin> # {{obsolete form of|en|Doric}}
 Page 3169 oppressour: Found match for regex: <begin> # {{obsolete form of|en|oppressor}}. <end>
 Page 3170 claym: Found match for regex: <begin> # {{obsolete form of|en|claim}}. <end>
 Page 3170 claym: Found match for regex: <begin> # {{obsolete form of|en|claim}}. <end>
-Page 3171 scilent: Found match for regex: <begin> # {{lb|en|hypercorrect}} {{obsolete form of|en|silent}} <end>
-Page 3172 scituation: Found match for regex: <begin> # {{lb|en|hypercorrect}} {{obsolete form of|en|situation}} <end>
-Page 3173 scituate: Found match for regex: <begin> # {{lb|en|hypercorrect}} {{obsolete form of|en|situate}} <end>
+Page 3171 scilent: Found match for regex: <begin> # {{lb|en|hypercorrect}} {{obsolete form of|en|silent}}. <end>
+Page 3172 scituation: Found match for regex: <begin> # {{lb|en|hypercorrect}} {{obsolete form of|en|situation}}. <end>
+Page 3173 scituate: Found match for regex: <begin> # {{lb|en|hypercorrect}} {{obsolete form of|en|situate}}. <end>
 Page 3174 antecessour: Found match for regex: <begin> # {{obsolete form of|en|antecessor}}. <end>
 Page 3175 accusour: Found match for regex: <begin> # {{obsolete form of|en|accuser}}. <end>
 Page 3176 cantour: Found match for regex: <begin> # {{obsolete form of|en|cantor}}. <end>
@@ -3504,7 +3504,7 @@ Page 3181 expositour: Found match for regex: <begin> # {{obsolete form of|en|exp
 Page 3182 fautour: Found match for regex: <begin> # {{obsolete form of|en|fautor}}. <end>
 Page 3183 defendour: Found match for regex: <begin> # {{obsolete form of|en|defender}}. <end>
 Page 3184 fulgour: Found match for regex: <begin> # {{obsolete form of|en|fulgor}}. <end>
-Page 3185 informour: Found match for regex: <begin> # {{lb|en|rare}} {{obsolete form of|en|informer}} <end>
+Page 3185 informour: Found match for regex: <begin> # {{lb|en|rare}} {{obsolete form of|en|informer}}. <end>
 Page 3186 inspectour: Found match for regex: <begin> # {{obsolete form of|en|inspector}}. <end>
 Page 3187 lentour: Found match for regex: <begin> # {{obsolete form of|en|lentor}}. <end>
 Page 3188 lessour: Found match for regex: <begin> # {{obsolete form of|en|lessor}}. <end>
@@ -3623,7 +3623,7 @@ Page 3295 marmalet: Found match for regex: <begin> # {{obsolete form of|en|marma
 Page 3296 habitakle: Found match for regex: <begin> # {{obsolete form of|en|habitacle}}. <end>
 Page 3297 rhythmus: Found match for regex: <begin> # {{obsolete form of|en|rhythm}}. <end>
 Page 3298 restiffness: Found match for regex: <begin> # {{obsolete form of|en|restiveness}}. <end>
-Page 3299 gascoyne: Found match for regex: <begin> # {{obsolete form of|en|gaskin|t=[[hose#Noun|hose]]; [[trousers]]}}. <end>
+Page 3299 gascoyne: Found match for regex: <begin> # {{obsolete form of|en|gaskin|t=hose; trousers}}. <end>
 Page 3300 imbow: Found match for regex: <begin> # {{obsolete form of|en|embow}}. <end>
 Page 3301 dogget: Found match for regex: <begin> # {{obsolete form of|en|docket}}. <end>
 Page 3302 swartiness: Found match for regex: <begin> # {{obsolete form of|en|swarthiness}}. <end>
@@ -3652,7 +3652,7 @@ Page 3324 deboshment: Found match for regex: <begin> # {{obsolete form of|en|deb
 Page 3325 imbathe: Found match for regex: <begin> # {{obsolete form of|en|embathe}}. <end>
 Page 3326 ipocras: Found match for regex: <begin> # {{obsolete form of|en|hippocras}}. <end>
 Page 3327 empugn: Found match for regex: <begin> # {{obsolete form of|en|impugn}}. <end>
-Page 3328 uranometria: Found match for regex: <begin> # {{lb|en|astronomy}} {{obsolete form of|en|uranometry||star chart}} <end>
+Page 3328 uranometria: Found match for regex: <begin> # {{lb|en|astronomy}} {{obsolete form of|en|uranometry||star chart}}. <end>
 Page 3329 impolitical: Found match for regex: <begin> # {{obsolete form of|en|impolitic}}. <end>
 Page 3330 reprive: Found match for regex: <begin> # {{obsolete form of|en|reprieve}}. <end>
 Page 3331 encomber: Found match for regex: <begin> # {{obsolete form of|en|encumber}}. <end>
@@ -3792,8 +3792,8 @@ Page 3454 flidge: Found match for regex: <begin> # {{obsolete form of|en|fledge|
 Page 3455 noiance: Found match for regex: <begin> # {{obsolete form of|en|noyance}}. <end>
 Page 3456 centry: Found match for regex: <begin> # {{obsolete form of|en|sentry}}. <end>
 Page 3457 impeople: Found match for regex: <begin> # {{obsolete form of|en|empeople}}. <end>
-Page 3458 saikyr: Found match for regex: <begin> # {{lb|en|military}} {{obsolete form of|en|saker||a cannon}} <end>
-Page 3459 connusant: Found match for regex: <begin> # {{lb|en|legal}} {{obsolete form of|en|cognizant}} <end>
+Page 3458 saikyr: Found match for regex: <begin> # {{lb|en|military}} {{obsolete form of|en|saker||a cannon}}. <end>
+Page 3459 connusant: Found match for regex: <begin> # {{lb|en|legal}} {{obsolete form of|en|cognizant}}. <end>
 Page 3460 effranchise: Found match for regex: <begin> # {{obsolete form of|en|enfranchise}}. <end>
 Page 3461 sommerset: Found match for regex: <begin> # {{obsolete form of|en|somersault}}. <end>
 Page 3462 southsaying: Found match for regex: <begin> # {{obsolete form of|en|soothsaying}}. <end>
@@ -3829,7 +3829,7 @@ Page 3491 castrel: Found match for regex: <begin> # {{obsolete form of|en|kestre
 Page 3492 bunnian: Found match for regex: <begin> # {{obsolete form of|en|bunion}}. <end>
 Page 3493 prenticeship: Found match for regex: <begin> # {{obsolete form of|en|apprenticeship}}. <end>
 Page 3494 semilunary: Found match for regex: <begin> # {{obsolete form of|en|semilunar}}. <end>
-Page 3495 septane: Found match for regex: <begin> # {{lb|en|chemistry}} {{obsolete form of|en|heptane}} <end>
+Page 3495 septane: Found match for regex: <begin> # {{lb|en|chemistry}} {{obsolete form of|en|heptane}}. <end>
 Page 3496 legement: Found match for regex: <begin> # {{obsolete form of|en|ledgment}}. <end>
 Page 3497 spumeous: Found match for regex: <begin> # {{obsolete form of|en|spumous}}. <end>
 Page 3498 poulder: Found match for regex: <begin> # {{obsolete form of|en|powder}}. <end>
@@ -3945,7 +3945,7 @@ Page 3599 pensel: Found match for regex: <begin> # {{obsolete form of|en|pencel}
 Page 3599 pensel: Found match for regex: <begin> # {{obsolete form of|en|pencil}}. <end>
 Page 3600 thaught: Found match for regex: <begin> # {{obsolete form of|en|thought}}. <end>
 Page 3600 thaught: Found match for regex: <begin> # {{obsolete form of|en|thought}}. <end>
-Page 3600 thaught: Found match for regex: <begin> # {{lb|en|nautical}} {{obsolete form of|en|thwart}} <end>
+Page 3600 thaught: Found match for regex: <begin> # {{lb|en|nautical}} {{obsolete form of|en|thwart}}. <end>
 Page 3601 Cataian: Found match for regex: <begin> # {{obsolete form of|en|Cathayan}}. <end>
 Page 3602 montross: Found match for regex: <begin> # {{obsolete form of|en|matross}}. <end>
 Page 3603 christom: Found match for regex: <begin> # {{obsolete form of|en|chrisom}}. <end>
@@ -3953,7 +3953,7 @@ Page 3604 despitous: Found match for regex: <begin> # {{obsolete form of|en|desp
 Page 3605 incompetibility: Found match for regex: <begin> # {{obsolete form of|en|incompatibility}}. <end>
 Page 3606 morisk: Found match for regex: <begin> # {{obsolete form of|en|morisco||morris dance}}. <end>
 Page 3607 bockland: Found match for regex: <begin> # {{obsolete form of|en|bookland}}. <end>
-Page 3608 orgal: Found match for regex: <begin> # {{lb|en|chemistry}} {{obsolete form of|en|argol}} <end>
+Page 3608 orgal: Found match for regex: <begin> # {{lb|en|chemistry}} {{obsolete form of|en|argol}}. <end>
 Page 3609 interalls: Found match for regex: <begin> # {{obsolete form of|en|entrails}}. <end>
 Page 3610 brocage: Found match for regex: <begin> # {{obsolete form of|en|brokerage}}. <end>
 Page 3611 medly: Found match for regex: <begin> # {{obsolete form of|en|medley}}. <end>
@@ -3974,7 +3974,7 @@ Page 3625 poenology: Found match for regex: <begin> # {{obsolete form of|en|peno
 Page 3626 semiente: Found match for regex: <begin> # {{obsolete form of|es|simiente}} <end>
 Page 3627 disray: Found match for regex: <begin> # {{obsolete form of|en|disarray}}. <end>
 Page 3628 squinzey: Found match for regex: <begin> # {{obsolete form of|en|quinsy}}. <end>
-Page 3629 paritory: Found match for regex: <begin> # {{lb|en|Early Modern English}} {{obsolete form of|en|pellitory}} <end>
+Page 3629 paritory: Found match for regex: <begin> # {{lb|en|Early Modern English}} {{obsolete form of|en|pellitory}}. <end>
 Page 3630 garison: Found match for regex: <begin> # {{obsolete form of|en|garrison}}. <end>
 Page 3631 Barbarie: Found match for regex: <begin> # {{obsolete form of|en|Barbary}}. <end>
 Page 3632 triniunity: Found match for regex: <begin> # {{obsolete form of|en|triunity}}. <end>
@@ -3991,7 +3991,7 @@ Page 3641 tything: Found match for regex: <begin> # {{obsolete form of|en|tithin
 Page 3642 haulse: Found match for regex: <begin> # {{obsolete form of|en|halse}}. <end>
 Page 3643 didym: Found match for regex: <begin> # {{obsolete form of|en|didymium}}. <end>
 Page 3644 sourcrout: Found match for regex: <begin> # {{obsolete form of|en|sauerkraut}}. <end>
-Page 3645 yaird: Found match for regex: <begin> # {{lb|en|Scotland}} {{obsolete form of|en|yard}} <end>
+Page 3645 yaird: Found match for regex: <begin> # {{lb|en|Scotland}} {{obsolete form of|en|yard}}. <end>
 Page 3646 melodrame: Found match for regex: <begin> # {{obsolete form of|en|melodrama}}. <end>
 Page 3647 paterero: Found match for regex: <begin> # {{obsolete form of|en|pederero}}. <end>
 Page 3648 certeinely: Found match for regex: <begin> # {{obsolete form of|en|certainly}}. <end>
@@ -4017,10 +4017,10 @@ Page 3666 Cirenaike: Found match for regex: <begin> # {{obsolete form of|en|Cyre
 Page 3667 apprentisage: Found match for regex: <begin> # {{obsolete form of|en|apprenticeage}}. <end>
 Page 3668 Jurie: Found match for regex: <begin> # {{obsolete form of|en|Jewry}}. <end>
 Page 3670 poynard: Found match for regex: <begin> # {{obsolete form of|en|poniard}}. <end>
-Page 3671 actineon: Found match for regex: <begin> # {{lb|en|obsolete}} {{obsolete form of|en|actinon||radon-219}}, an isotope of [[radon]] <end>
+Page 3671 actineon: Found match for regex: <begin> # {{lb|en|obsolete}} {{obsolete form of|en|actinon||radon-219}}, an isotope of [[radon]]. <end>
 Page 3672 radeon: Found match for regex: <begin> # {{lb|en|obsolete}} {{obsolete form of|en|radon||radon-222}}; an isotope of radon. <end>
-Page 3673 exactinio: Found match for regex: <begin> # {{lb|en|obsolete}} {{obsolete form of|en|actinon||radon-219}} <end>
-Page 3674 exthorio: Found match for regex: <begin> # {{lb|en|obsolete}} {{obsolete form of|en|thoron||radon-220}} <end>
+Page 3673 exactinio: Found match for regex: <begin> # {{lb|en|obsolete}} {{obsolete form of|en|actinon||radon-219}}. <end>
+Page 3674 exthorio: Found match for regex: <begin> # {{lb|en|obsolete}} {{obsolete form of|en|thoron||radon-220}}. <end>
 Page 3675 undefatigable: Found match for regex: <begin> # {{obsolete form of|en|indefatigable}}. <end>
 Page 3676 cabob: Found match for regex: <begin> # {{obsolete form of|en|kebab}}. <end>
 Page 3676 cabob: Found match for regex: <begin> # {{obsolete form of|en|kebab}}. <end>
@@ -4038,7 +4038,7 @@ Page 3688 easely: Found match for regex: <begin> # {{obsolete form of|en|easily}
 Page 3689 tassell: Found match for regex: <begin> # {{obsolete form of|en|tiercel}}. <end>
 Page 3690 ranke: Found match for regex: <begin> # {{obsolete form of|en|rank}}. <end>
 Page 3691 œsophagean: Found match for regex: <begin> # {{obsolete form of|en|esophagean}}. <end>
-Page 3692 œsophagical: Found match for regex: <begin> # {{lb|en|rare}} {{obsolete form of|en|esophagical}} <end>
+Page 3692 œsophagical: Found match for regex: <begin> # {{lb|en|rare}} {{obsolete form of|en|esophagical}}. <end>
 Page 3693 œsophagic: Found match for regex: <begin> # {{obsolete form of|en|esophagic}}. <end>
 Page 3694 gonorrhœe: Found match for regex: <begin> # {{obsolete form of|fr|gonorrhée}} <end>
 Page 3695 œconomise: Found match for regex: <begin> # {{obsolete form of|en|economize}}. <end>
@@ -4152,7 +4152,7 @@ Page 3792 Æthiop: Found match for regex: <begin> # {{obsolete form of|en|Ethiop
 Page 3793 hæmerythrin: Found match for regex: <begin> # {{obsolete form of|en|hemerythrin}}. <end>
 Page 3794 pædobaptist: Found match for regex: <begin> # {{obsolete form of|en|paedobaptist}}. <end>
 Page 3794 pædobaptist: Found match for regex: <begin> # {{obsolete form of|en|paedobaptist}}. <end>
-Page 3795 fœminine: Found match for regex: <begin> # {{lb|en|hypercorrect}} {{obsolete form of|en|feminine}} <end>
+Page 3795 fœminine: Found match for regex: <begin> # {{lb|en|hypercorrect}} {{obsolete form of|en|feminine}}. <end>
 Page 3796 colledg: Found match for regex: <begin> # {{obsolete form of|en|college}}. <end>
 Page 3797 œconomiste: Found match for regex: <begin> # {{obsolete form of|fr|économiste}} <end>
 Page 3798 Eubœe: Found match for regex: <begin> # {{obsolete form of|fr|Eubée}} <end>
@@ -4279,7 +4279,7 @@ Page 3912 timbak: Found match for regex: <begin> # {{obsolete form of|ms|tembak}
 Page 3913 opuscle: Found match for regex: <begin> # {{obsolete form of|en|opuscule}}. <end>
 Page 3914 pannel: Found match for regex: <begin> # {{obsolete form of|en|panel}}. <end>
 Page 3914 pannel: Found match for regex: <begin> # {{obsolete form of|en|panel}}. <end>
-Page 3915 monadelphian: Found match for regex: <begin> # {{lb|en|botany}} {{obsolete form of|en|monadelphous}} <end>
+Page 3915 monadelphian: Found match for regex: <begin> # {{lb|en|botany}} {{obsolete form of|en|monadelphous}}. <end>
 Page 3916 هاتور: Found match for regex: <begin> # {{obsolete form of|ms|اتور|sc=Arab}} <end>
 Page 3917 ún: Found match for regex: <begin> # {{obsolete form of|es|un}} <end>
 Page 3917 ún: Found match for regex: <begin> # {{obsolete form of|es|un}} <end>
@@ -4323,7 +4323,7 @@ Page 3953 robre: Found match for regex: <begin> # {{obsolete form of|es|roble}} 
 Page 3954 Portingall: Found match for regex: <begin> # {{obsolete form of|en|Portugal}}. <end>
 Page 3955 bisoness: Found match for regex: <begin> # {{obsolete form of|en|business}}. <end>
 Page 3956 sothe: Found match for regex: <begin> # {{obsolete form of|en|sooth}}. <end>
-Page 3957 abbatie: Found match for regex: <begin> # {{lb|en|EME}} {{obsolete form of|en|abbacy}} <end>
+Page 3957 abbatie: Found match for regex: <begin> # {{lb|en|EME}} {{obsolete form of|en|abbacy}}. <end>
 Page 3958 leaprous: Found match for regex: <begin> # {{obsolete form of|en|leprous}}. <end>
 Page 3959 outherod: Found match for regex: <begin> # {{obsolete form of|en|out-Herod}}. <end>
 Page 3960 cooperidge: Found match for regex: <begin> # {{obsolete form of|en|cooperage}}. <end>
@@ -4933,7 +4933,7 @@ Page 4576 chiaous: Found match for regex: <begin> # {{obsolete form of|en|chouse
 Page 4577 chiaux: Found match for regex: <begin> # {{senseid|en|ottomanPerson}} {{obsolete spelling of|en|chiaus}} {{defdate|17th–19th c.}} <end>
 Page 4577 chiaux: Found match for regex: <begin> # {{obsolete form of|fr|chiaoux}} <end>
 Page 4578 palanqueen: Found match for regex: <begin> # {{obsolete form of|en|palanquin}}. <end>
-Page 4580 steping: Found match for regex: <begin> # {{lb|en|numismatics|historical|nocat=y}} {{obsolete form of|en|steeping}} <end>
+Page 4580 steping: Found match for regex: <begin> # {{lb|en|numismatics|historical|nocat=y}} {{obsolete form of|en|steeping}}. <end>
 Page 4583 stillyard: Found match for regex: <begin> # {{obsolete form of|en|steelyard}}. <end>
 Page 4584 mellewelle: Found match for regex: <begin> # {{obsolete form of|en|milwell}}. <end>
 Page 4585 litterally: Found match for regex: <begin> # {{obsolete form of|en|literally}}. <end>
@@ -4970,7 +4970,7 @@ Page 4622 Guiney: Found match for regex: <begin> # {{obsolete form of|en|Guinea}
 Page 4623 arytænoid: Found match for regex: <begin> # {{obsolete form of|en|arytenoid}}. <end>
 Page 4624 bezoard: Found match for regex: <begin> # {{obsolete form of|en|bezoar}}. <end>
 Page 4625 ouroscopy: Found match for regex: <begin> # {{obsolete form of|en|uroscopy}}. <end>
-Page 4626 bakstone: Found match for regex: <begin> # {{lb|en|UK|Lancashire|Yorkshire}} {{obsolete form of|en|bakestone}} <end>
+Page 4626 bakstone: Found match for regex: <begin> # {{lb|en|UK|Lancashire|Yorkshire}} {{obsolete form of|en|bakestone}}. <end>
 Page 4627 leaperous: Found match for regex: <begin> # {{obsolete form of|en|leprous}}. <end>
 Page 4628 leaporous: Found match for regex: <begin> # {{obsolete form of|en|leprous}}. <end>
 Page 4629 lothefull: Found match for regex: <begin> # {{obsolete form of|en|loathful}}. <end>
@@ -5000,7 +5000,7 @@ Page 4670 prejudize: Found match for regex: <begin> # {{obsolete form of|en|prej
 Page 4671 prouler: Found match for regex: <begin> # {{obsolete form of|en|prowler}}. <end>
 Page 4672 proul: Found match for regex: <begin> # {{obsolete form of|en|prowl}}. <end>
 Page 4673 chiancaca: Found match for regex: <begin> # {{obsolete form of|nci|chiyancaca}} <end>
-Page 4674 preasse: Found match for regex: <begin> # {{lb|en|Scotland}} {{obsolete form of|en|press}} <end>
+Page 4674 preasse: Found match for regex: <begin> # {{lb|en|Scotland}} {{obsolete form of|en|press}}. <end>
 Page 4675 celá: Found match for regex: <begin> # {{obsolete form of|pt|salá}} <end>
 Page 4676 algua: Found match for regex: <begin> # {{obsolete form of|pt|alguma}} <end>
 Page 4677 constança: Found match for regex: <begin> # {{obsolete form of|pt|constância}} <end>
@@ -5158,7 +5158,7 @@ Page 4823 ragoo: Found match for regex: <begin> # {{obsolete form of|en|ragout}}
 Page 4824 Calecut: Found match for regex: <begin> # {{obsolete form of|pt|Calecute}} <end>
 Page 4825 Sea of Azof: Found match for regex: <begin> # {{obsolete form of|en|Sea of Azov}}. <end>
 Page 4826 Sea of Azoff: Found match for regex: <begin> # {{obsolete form of|en|Sea of Azov}}. <end>
-Page 4827 invecked: Found match for regex: <begin> # {{lb|en|heraldry}} {{obsolete form of|en|invected}} <end>
+Page 4827 invecked: Found match for regex: <begin> # {{lb|en|heraldry}} {{obsolete form of|en|invected}}. <end>
 Page 4828 paranomase: Found match for regex: <begin> # {{obsolete form of|fr|paronomase}} <end>
 Page 4829 kynd: Found match for regex: <begin> # {{obsolete form of|en|kind}}. <end>
 Page 4830 meade: Found match for regex: <begin> # {{obsolete form of|en|mead}}. <end>
@@ -5240,7 +5240,7 @@ Page 4906 peinct: Found match for regex: <begin> # {{obsolete form of|en|paint}}
 Page 4907 phrentick: Found match for regex: <begin> # {{obsolete form of|en|frenetic}}. <end>
 Page 4908 zur-: Found match for regex: <begin> # {{obsolete form of|de|zer-}} <end>
 Page 4909 stearsman: Found match for regex: <begin> # {{obsolete form of|en|steersman}}. <end>
-Page 4910 stoln: Found match for regex: <begin> # {{lb|en|poetic}} {{obsolete form of|en|stolen}} <end>
+Page 4910 stoln: Found match for regex: <begin> # {{lb|en|poetic}} {{obsolete form of|en|stolen}}. <end>
 Page 4911 Africk: Found match for regex: <begin> # {{obsolete form of|en|Africa}}. <end>
 Page 4912 Taylour: Found match for regex: <begin> # {{obsolete form of|en|Taylor}}. <end>
 Page 4913 cloathes: Found match for regex: <begin> # {{obsolete form of|en|clothes}}. <end>
@@ -5293,7 +5293,7 @@ Page 4956 shalot: Found match for regex: <begin> # {{obsolete form of|en|shallot
 Page 4957 sparre: Found match for regex: <begin> # {{obsolete form of|en|spar}}. <end>
 Page 4958 spayad: Found match for regex: <begin> # {{obsolete form of|en|spayard}}. <end>
 Page 4959 appointemens: Found match for regex: <begin> # {{obsolete form of|fr|appointement}} <end>
-Page 4960 Treves: Found match for regex: <begin> # {{lb|en|obsolete}} {{place|en|city|c/Germany|t1={{obsolete form of|en|Trier}}}} <end>
+Page 4960 Treves: Found match for regex: <begin> # {{lb|en|obsolete}} {{place|en|city|c/Germany|t1={{obsolete form of|en|Trier}}}}. <end>
 Page 4961 hackbush: Found match for regex: <begin> # {{obsolete form of|en|arquebus}}. <end>
 Page 4962 hagbush: Found match for regex: <begin> # {{obsolete form of|en|arquebus}}. <end>
 Page 4963 hackbut: Found match for regex: <begin> # {{obsolete form of|en|arquebus}}. <end>
@@ -5370,7 +5370,7 @@ Page 5031 feastinge: Found match for regex: <begin> # {{obsolete form of|en|feas
 Page 5032 hidromancy: Found match for regex: <begin> # {{obsolete form of|en|hydromancy}}. <end>
 Page 5033 giantesse: Found match for regex: <begin> # {{obsolete form of|en|giantess}}. <end>
 Page 5034 giante: Found match for regex: <begin> # {{obsolete form of|en|giant}}. <end>
-Page 5035 corfe: Found match for regex: <begin> # {{lb|en|mining}} {{obsolete form of|en|corf}} {{defdate|17th century}} <end>
+Page 5035 corfe: Found match for regex: <begin> # {{lb|en|mining}} {{obsolete form of|en|corf}}. {{defdate|17th century}} <end>
 Page 5036 drunkerd: Found match for regex: <begin> # {{obsolete form of|en|drunkard}}. <end>
 Page 5037 queyn: Found match for regex: <begin> # {{obsolete form of|en|queen}}. <end>
 Page 5038 queyne: Found match for regex: <begin> # {{obsolete form of|en|queen}}. <end>
@@ -5383,7 +5383,7 @@ Page 5043 prelatick: Found match for regex: <begin> # {{obsolete form of|en|prel
 Page 5044 remainer: Found match for regex: <begin> # {{obsolete form of|en|remainder}}. <end>
 Page 5045 chichore: Found match for regex: <begin> # {{obsolete form of|en|chukar}}. <end>
 Page 5046 goodnature: Found match for regex: <begin> # {{obsolete form of|en|good nature}}. <end>
-Page 5047 gessamine: Found match for regex: <begin> # {{lb|en|rare}} {{obsolete form of|en|jasmine}} <end>
+Page 5047 gessamine: Found match for regex: <begin> # {{lb|en|rare}} {{obsolete form of|en|jasmine}}. <end>
 Page 5048 havn't: Found match for regex: <begin> # {{obsolete form of|en|haven't}}. <end>
 Page 5049 Russignon: Found match for regex: <begin> # {{obsolete form of|en|Roussillon}}. <end>
 Page 5050 leidger: Found match for regex: <begin> # {{obsolete form of|en|ledger}}. <end>
@@ -5552,7 +5552,7 @@ Page 5207 suttly: Found match for regex: <begin> # {{obsolete form of|en|subtly}
 Page 5208 precepit: Found match for regex: <begin> # {{obsolete form of|en|precept}}. <end>
 Page 5209 hartely: Found match for regex: <begin> # {{obsolete form of|en|heartily}}. <end>
 Page 5210 homuncle: Found match for regex: <begin> # {{obsolete form of|en|homunculus}}. <end>
-Page 5211 deises: Found match for regex: <begin> # {{plural of|en|deis}}. ({{obsolete form of|en|daises}}) <end>
+Page 5211 deises: Found match for regex: <begin> # {{plural of|en|deis}}; {{obsolete form of|en|daises|nocap=1}}. <end>
 Page 5212 poeticks: Found match for regex: <begin> # {{obsolete form of|en|poetics}}. <end>
 Page 5213 gnostick: Found match for regex: <begin> # {{obsolete form of|en|gnostic}}. <end>
 Page 5213 gnostick: Found match for regex: <begin> # {{obsolete form of|en|gnostic}}. <end>
@@ -5791,9 +5791,9 @@ Page 5439 aiery: Found match for regex: <begin> # {{obsolete form of|en|eyrie}}.
 Page 5439 aiery: Found match for regex: <begin> # {{obsolete form of|en|aery}}. <end>
 Page 5442 alcalizate: Found match for regex: <begin> # {{obsolete form of|en|alkalizate}}. <end>
 Page 5443 círcol: Found match for regex: <begin> # {{obsolete form of|ca|cercle}} <end>
-Page 5444 treble cliff: Found match for regex: <begin> # {{lb|en|music}} {{obsolete form of|en|treble clef}} <end>
-Page 5445 bass cliff: Found match for regex: <begin> # {{lb|en|music}} {{obsolete form of|en|bass clef}} <end>
-Page 5446 virginalls: Found match for regex: <begin> # {{lb|en|music|musical instrument}} {{obsolete form of|en|virginals}} <end>
+Page 5444 treble cliff: Found match for regex: <begin> # {{lb|en|music}} {{obsolete form of|en|treble clef}}. <end>
+Page 5445 bass cliff: Found match for regex: <begin> # {{lb|en|music}} {{obsolete form of|en|bass clef}}. <end>
+Page 5446 virginalls: Found match for regex: <begin> # {{lb|en|music|musical instrument}} {{obsolete form of|en|virginals}}. <end>
 Page 5447 in steed: Found match for regex: <begin> # {{obsolete form of|en|instead}}. <end>
 Page 5448 efeminar: Found match for regex: <begin> # {{obsolete form of|es|afeminar}} <end>
 Page 5449 mocuddum: Found match for regex: <begin> # {{obsolete form of|en|muqaddam}}. <end>
@@ -5863,7 +5863,7 @@ Page 5517 glinse: Found match for regex: <begin> # {{obsolete form of|en|glimpse
 Page 5517 glinse: Found match for regex: <begin> # {{obsolete form of|en|glimpse}}. <end>
 Page 5518 Seekh: Found match for regex: <begin> # {{obsolete form of|en|Sikh}}. <end>
 Page 5519 cattel: Found match for regex: <begin> # {{obsolete form of|en|cattle}}. <end>
-Page 5521 sasawood: Found match for regex: <begin> # {{lb|en|rare}} {{obsolete form of|en|sassywood}} <end>
+Page 5521 sasawood: Found match for regex: <begin> # {{lb|en|rare}} {{obsolete form of|en|sassywood}}. <end>
 Page 5522 auncientry: Found match for regex: <begin> # {{obsolete form of|en|ancientry}}. <end>
 Page 5523 Spaine: Found match for regex: <begin> # {{obsolete form of|en|Spain}}. <end>
 Page 5524 Milte: Found match for regex: <begin> # {{obsolete form of|de|Melde|t=saltbush}} <end>
@@ -6131,7 +6131,7 @@ Page 5801 Galic: Found match for regex: <begin> # {{obsolete form of|en|Gaelic}}
 Page 5801 Galic: Found match for regex: <begin> # {{obsolete form of|en|Gaelic}}. <end>
 Page 5803 skrętny: Found match for regex: <begin> # {{obsolete form of|pl|skrzętny}} <end>
 Page 5804 frost faire: Found match for regex: <begin> # {{obsolete form of|en|frost fair}}. <end>
-Page 5805 cleff: Found match for regex: <begin> # {{lb|en|music}} {{obsolete form of|en|clef}} <end>
+Page 5805 cleff: Found match for regex: <begin> # {{lb|en|music}} {{obsolete form of|en|clef}}. <end>
 Page 5806 mexilla: Found match for regex: <begin> # {{obsolete form of|es|mejilla}} <end>
 Page 5807 buduar: Found match for regex: <begin> # {{obsolete form of|ro|budoar}} <end>
 Page 5808 power cod: Found match for regex: <begin> # {{obsolete form of|en|poor cod}}. <end>
@@ -6160,7 +6160,7 @@ Page 5834 Clypeasterida: Found match for regex: <begin> # {{obsolete form of|mul
 Page 5835 bergmote: Found match for regex: <begin> # {{obsolete form of|en|barmote}}. <end>
 Page 5836 barghmote: Found match for regex: <begin> # {{obsolete form of|en|barmote}}. <end>
 Page 5837 berghmote: Found match for regex: <begin> # {{obsolete form of|en|barmote}}. <end>
-Page 5838 de Brienne: Found match for regex: <begin> # {{surname|en|from=French}}. {{alternative form of|en|Brienne}} {{obsolete form of|en|Bryan|gloss=[[de Bryan]]}} <end>
+Page 5838 de Brienne: Found match for regex: <begin> # {{surname|en|from=French}}. {{alternative form of|en|Brienne}} {{obsolete form of|en|Bryan|gloss=[[de Bryan]]}}. <end>
 Page 5842 Cambogian: Found match for regex: <begin> # {{obsolete form of|en|Cambodian}}. <end>
 Page 5842 Cambogian: Found match for regex: <begin> # {{obsolete form of|en|Cambodian}}. <end>
 Page 5843 meytat: Found match for regex: <begin> # {{obsolete form of|ca|meitat}} <end>
@@ -6262,7 +6262,7 @@ Page 5943 Portingale: Found match for regex: <begin> # {{obsolete form of|en|Por
 Page 5944 pruan: Found match for regex: <begin> # {{obsolete form of|en|prune||dried plum}}. <end>
 Page 5945 Biluchistan: Found match for regex: <begin> # {{obsolete form of|en|Balochistan}}. <end>
 Page 5946 labuda: Found match for regex: <begin> # {{obsolete form of|sw|labda}} <end>
-Page 5947 Accomac County: Found match for regex: <begin> # {{lb|en|historical}} {{obsolete form of|en|Accomack County}} {{place|en|county|shire/Accomac Shire|cc/Dominion of Virginia}} <end>
+Page 5947 Accomac County: Found match for regex: <begin> # {{lb|en|historical}} {{obsolete form of|en|Accomack County}} {{place|en|county|shire/Accomac Shire|cc/Dominion of Virginia}}. <end>
 Page 5948 fryar: Found match for regex: <begin> # {{obsolete form of|en|friar}}. <end>
 Page 5949 metaphysickal: Found match for regex: <begin> # {{obsolete form of|en|metaphysical}}. <end>
 Page 5950 physickal: Found match for regex: <begin> # {{obsolete form of|en|physical}}. <end>
@@ -6305,7 +6305,7 @@ Page 5990 treckskuyt: Found match for regex: <begin> # {{obsolete form of|en|tre
 Page 5991 sarabrand: Found match for regex: <begin> # {{obsolete form of|en|sarabande}}. <end>
 Page 5992 absolete: Found match for regex: <begin> # {{obsolete form of|en|obsolete}}. <end>
 Page 5993 archaick: Found match for regex: <begin> # {{obsolete form of|en|archaic}}. <end>
-Page 5994 matterate: Found match for regex: <begin> # {{lb|en|medicine}} {{obsolete form of|en|maturate}} <end>
+Page 5994 matterate: Found match for regex: <begin> # {{lb|en|medicine}} {{obsolete form of|en|maturate}}. <end>
 Page 5996 flummux: Found match for regex: <begin> # {{obsolete form of|en|flummox}}. <end>
 Page 5997 stockdollager: Found match for regex: <begin> # {{obsolete form of|en|sockdolager}}. <end>
 Page 5998 snapps: Found match for regex: <begin> # {{obsolete form of|en|schnapps}}. <end>
@@ -6445,7 +6445,7 @@ Page 6135 druggerman: Found match for regex: <begin> # {{obsolete form of|en|dra
 Page 6136 master-piece: Found match for regex: <begin> # {{obsolete form of|en|masterpiece}}. <end>
 Page 6137 schollar: Found match for regex: <begin> # {{obsolete form of|en|scholar}}. <end>
 Page 6138 alchimy: Found match for regex: <begin> # {{obsolete form of|en|alchemy}}. <end>
-Page 6139 Fraunces: Found match for regex: <begin> ## {{obsolete form of|en|Frances}} <end>
+Page 6139 Fraunces: Found match for regex: <begin> ## {{obsolete form of|en|Frances}}. <end>
 Page 6140 browdin: Found match for regex: <begin> # {{obsolete form of|sco|browden}} <end>
 Page 6141 quadran: Found match for regex: <begin> # {{obsolete form of|en|quatrain}}. <end>
 Page 6142 peny: Found match for regex: <begin> # {{obsolete form of|en|penny}}. <end>
@@ -6484,14 +6484,14 @@ Page 6177 Mantchourie: Found match for regex: <begin> # {{obsolete form of|fr|Ma
 Page 6178 Tonking: Found match for regex: <begin> # {{obsolete form of|fr|Tonkin}} <end>
 Page 6179 archæophyte: Found match for regex: <begin> From {{confix|en|archæo|pos1=obsolete form of {{m|en|archaeo-}}|phyte}}: see further at {{m|en|archaeophyte}}. <end>
 Page 6179 archæophyte: Found match for regex: <begin> # {{obsolete form of|en|archaeophyte}}. <end>
-Page 6180 archæophytes: Found match for regex: <begin> # {{plural of|en|archæophyte}} ({{obsolete form of|en|archaeophytes|nocap=1}}) <end>
+Page 6180 archæophytes: Found match for regex: <begin> # {{plural of|en|archæophyte}}; {{obsolete form of|en|archaeophytes|nocap=1}}. <end>
 Page 6181 Gironne: Found match for regex: <begin> # {{obsolete form of|fr|Gérone}} <end>
 Page 6182 saphire: Found match for regex: <begin> # {{obsolete form of|en|sapphire}}. <end>
 Page 6183 sapher: Found match for regex: <begin> # {{obsolete form of|en|sapphire}}. <end>
 Page 6184 Singan: Found match for regex: <begin> # {{obsolete form of|en|Xi'an}}. <end>
 Page 6185 molrow: Found match for regex: <begin> # {{obsolete form of|en|meow||cry of a cat}}. <end>
 Page 6185 molrow: Found match for regex: <begin> # {{obsolete form of|en|meow}}. <end>
-Page 6186 braunce: Found match for regex: <begin> # {{tlb|en|Early Modern English}} {{obsolete form of|en|braunche}} <end>
+Page 6186 braunce: Found match for regex: <begin> # {{tlb|en|Early Modern English}} {{obsolete form of|en|braunche}}. <end>
 Page 6187 braunch: Found match for regex: <begin> # {{obsolete form of|en|branch}}. <end>
 Page 6187 braunch: Found match for regex: <begin> # {{obsolete form of|en|branch}}. <end>
 Page 6188 Bottan: Found match for regex: <begin> # {{obsolete form of|en|Bhutan}}. <end>
@@ -6538,7 +6538,7 @@ Page 6227 Mowree: Found match for regex: <begin> # {{obsolete form of|en|Maori}}
 Page 6228 balneotherapia: Found match for regex: <begin> # {{obsolete form of|en|balneotherapy}}. <end>
 Page 6229 hydrotherapia: Found match for regex: <begin> # {{obsolete form of|en|hydrotherapy}}. <end>
 Page 6230 beeware: Found match for regex: <begin> # {{obsolete form of|en|beware}}. <end>
-Page 6231 Ismahel: Found match for regex: <begin> # {{lb|en|biblical|Douay bible}} {{obsolete form of|en|Ishmael}} <end>
+Page 6231 Ismahel: Found match for regex: <begin> # {{lb|en|biblical|Douay bible}} {{obsolete form of|en|Ishmael}}. <end>
 Page 6232 petronell: Found match for regex: <begin> # {{obsolete form of|en|petronel}}. <end>
 Page 6233 summ: Found match for regex: <begin> # {{obsolete form of|en|sum}}. <end>
 Page 6234 sollicitous: Found match for regex: <begin> # {{obsolete form of|en|solicitous}}. <end>
@@ -6555,7 +6555,7 @@ Page 6244 cebhe: Found match for regex: <begin> # {{obsolete form of|tr|cephe}} 
 Page 6245 Evonymus: Found match for regex: <begin> # {{obsolete form of|mul|Euonymus||spindle tree genus}} <end>
 Page 6246 effranchisement: Found match for regex: <begin> # {{obsolete form of|en|enfranchisement}}. <end>
 Page 6247 enheritour: Found match for regex: <begin> # {{obsolete form of|en|inheritor}}. <end>
-Page 6248 tallapoi: Found match for regex: <begin> # {{lb|en|Buddhism}} {{obsolete form of|en|talapoin}} <end>
+Page 6248 tallapoi: Found match for regex: <begin> # {{lb|en|Buddhism}} {{obsolete form of|en|talapoin}}. <end>
 Page 6249 quatroon: Found match for regex: <begin> # {{obsolete form of|en|quadroon}}. <end>
 Page 6250 abgeschmack: Found match for regex: <begin> # {{obsolete form of|de|abgeschmackt|t=tasteless, vulgar}} <end>
 Page 6251 ingeniör: Found match for regex: <begin> # {{obsolete form of|sv|ingenjör}} <end>
@@ -6565,7 +6565,7 @@ Page 6254 wuluk: Found match for regex: <begin> # {{obsolete form of|ha|wulik}} 
 Page 6255 Teufe: Found match for regex: <begin> # {{obsolete form of|de|Tiefe|t=depth}} <end>
 Page 6255 Teufe: Found match for regex: <begin> # {{obsolete form of|de|Taufe|t=baptism}} <end>
 Page 6256 Dalarne: Found match for regex: <begin> # {{obsolete form of|sv|Dalarna}} <end>
-Page 6257 2dly: Found match for regex: <begin> # {{abbreviation of|en|secondly}} {{obsolete form of|en|2ndly}} <end>
+Page 6257 2dly: Found match for regex: <begin> # {{abbreviation of|en|secondly}} {{obsolete form of|en|2ndly}}. <end>
 Page 6259 əskər: Found match for regex: <begin> # {{obsolete form of|az|əsgər||soldier}} <end>
 Page 6261 satru: Found match for regex: <begin> # {{obsolete form of|ms|seteru||enemy}} <end>
 Page 6262 grissly bear: Found match for regex: <begin> # {{obsolete form of|en|grizzly bear}}. <end>
@@ -6593,7 +6593,7 @@ Page 6289 geçid: Found match for regex: <begin> # {{obsolete form of|tr|geçit}
 Page 6290 carciòffula: Found match for regex: <begin> # {{obsolete form of|scn|cacòcciula}} <end>
 Page 6291 tasvib: Found match for regex: <begin> # {{obsolete form of|tr|tasvip}} <end>
 Page 6292 batogan: Found match for regex: <begin> # {{obsolete form of|tl|batugan}} <end>
-Page 6293 unskaithed: Found match for regex: <begin> # {{lb|en|Scotland}} {{obsolete form of|en|unscathed}} <end>
+Page 6293 unskaithed: Found match for regex: <begin> # {{lb|en|Scotland}} {{obsolete form of|en|unscathed}}. <end>
 Page 6294 Seljuck: Found match for regex: <begin> # {{lb|en|historical}} {{obsolete form of|en|Seljuk}}, {{w|Seljuk Bey}}. <end>
 Page 6294 Seljuck: Found match for regex: <begin> # {{lb|en|historical}} {{obsolete form of|en|Seljuk}}, a [[member]] of the [[dynasty]] or [[person]] of the [[empire]]. <end>
 Page 6294 Seljuck: Found match for regex: <begin> # {{lb|en|historical}} {{obsolete form of|en|Seljuk}}, of or [[relate]]d to [[Seljuk]], his [[dynasty]], their [[empire]], or their [[period]] of [[rule]]. <end>
@@ -6699,9 +6699,9 @@ Page 6403 admirail: Found match for regex: <begin> # {{obsolete form of|en|admir
 Page 6404 admirall: Found match for regex: <begin> # {{obsolete form of|en|admiral}}. <end>
 Page 6405 admiralle: Found match for regex: <begin> # {{obsolete form of|en|admiral}}. <end>
 Page 6406 amerall: Found match for regex: <begin> # {{obsolete form of|en|admiral}}. <end>
-Page 6407 3dly: Found match for regex: <begin> # {{abbreviation of|en|thirdly}} {{obsolete form of|en|3rdly}} <end>
-Page 6408 2ᵈˡʸ: Found match for regex: <begin> # {{abbreviation of|en|secondly}} {{obsolete form of|en|2ndly}} <end>
-Page 6409 3ᵈˡʸ: Found match for regex: <begin> # {{abbreviation of|en|thirdly}} {{obsolete form of|en|3rdly}} <end>
+Page 6407 3dly: Found match for regex: <begin> # {{abbreviation of|en|thirdly}} {{obsolete form of|en|3rdly}}. <end>
+Page 6408 2ᵈˡʸ: Found match for regex: <begin> # {{abbreviation of|en|secondly}} {{obsolete form of|en|2ndly}}. <end>
+Page 6409 3ᵈˡʸ: Found match for regex: <begin> # {{abbreviation of|en|thirdly}} {{obsolete form of|en|3rdly}}. <end>
 Page 6410 prævale: Found match for regex: <begin> # {{obsolete form of|en|prevail}}. <end>
 Page 6411 prævaling: Found match for regex: <begin> # {{obsolete form of|en|prevailing}}. <end>
 Page 6412 prævaile: Found match for regex: <begin> # {{obsolete form of|en|prevail}}. <end>
@@ -6727,16 +6727,16 @@ Page 6435 Auicen: Found match for regex: <begin> # {{obsolete form of|en|Avicenn
 Page 6437 bonyness: Found match for regex: <begin> # {{obsolete form of|en|bonniness}}. <end>
 Page 6438 palanque: Found match for regex: <begin> # {{obsolete form of|en|palanquin}}. <end>
 Page 6439 Kiang: Found match for regex: <begin> # {{obsolete form of|en|Jiang}}. <end>
-Page 6440 curchy: Found match for regex: <begin> # {{tlb|en|later|_|dialectal}} {{obsolete form of|en|curtsey}} <end>
+Page 6440 curchy: Found match for regex: <begin> # {{tlb|en|later|_|dialectal}} {{obsolete form of|en|curtsey}}. <end>
 Page 6442 floramor: Found match for regex: <begin> # {{obsolete form of|en|floramour}}. <end>
 Page 6443 boune: Found match for regex: <begin> # {{obsolete form of|en|bound}}. <end>
 Page 6444 benificence: Found match for regex: <begin> # {{obsolete form of|en|beneficence}}. <end>
-Page 6445 cutlash: Found match for regex: <begin> # {{lb|en|dialectal}} {{obsolete form of|en|cutlass}} <end>
+Page 6445 cutlash: Found match for regex: <begin> # {{lb|en|dialectal}} {{obsolete form of|en|cutlass}}. <end>
 Page 6447 divors: Found match for regex: <begin> # {{obsolete form of|ro|divorț}} <end>
 Page 6448 çəharşənbə: Found match for regex: <begin> # {{obsolete form of|az|çərşənbə }} <end>
 Page 6449 menâge: Found match for regex: <begin> # {{obsolete form of|en|ménage}}. <end>
 Page 6450 bawdric: Found match for regex: <begin> # {{obsolete form of|en|baldric}}. <end>
-Page 6451 Southpole: Found match for regex: <begin> # {{lb|en|archaic}} {{obsolete form of|en|southpole}} {{q|pole of a magnet}} <end>
+Page 6451 Southpole: Found match for regex: <begin> # {{lb|en|archaic}} {{obsolete form of|en|southpole}} {{q|pole of a magnet}}. <end>
 Page 6453 prænominal: Found match for regex: <begin> # {{obsolete form of|en|praenominal}}. <end>
 Page 6454 wherof: Found match for regex: <begin> # {{obsolete form of|en|whereof}}. <end>
 Page 6455 by long chalks: Found match for regex: <begin> # {{obsolete form of|en|by a long chalk}}. <end>
@@ -6784,7 +6784,7 @@ Page 6506 cawdron: Found match for regex: <begin> # {{obsolete form of|en|cauldr
 Page 6507 runcka: Found match for regex: <begin> # {{obsolete form of|sv|runka}} <end>
 Page 6508 ကရင်နီ: Found match for regex: <begin> # {{lb|my|historical}} {{obsolete form of|my|ကယား}} <end>
 Page 6509 their's: Found match for regex: <begin> # {{obsolete form of|en|theirs}}. <end>
-Page 6510 fa ré: Found match for regex: <begin> # {{obsolete form of|ga|[[fara]], [[frae]]|t=along with, beside}} <end>
+Page 6510 fa ré: Found match for regex: <begin> # {{obsolete form of|ga|fara,frae|t=along with, beside}} <end>
 Page 6511 afsvärja: Found match for regex: <begin> # {{obsolete form of|sv|avsvära}} <end>
 Page 6512 cheznut: Found match for regex: <begin> # {{obsolete form of|en|chestnut}}. <end>
 Page 6513 aboad: Found match for regex: <begin> # {{obsolete form of|en|abode}}. <end>
@@ -9262,8 +9262,8 @@ Page 8982 potycarye: Found match for regex: <begin> # {{obsolete form of|en|apot
 Page 8983 poticarie: Found match for regex: <begin> # {{obsolete form of|en|apothecary}}. <end>
 Page 8984 pottecary: Found match for regex: <begin> # {{obsolete form of|en|apothecary}}. <end>
 Page 8985 potticary: Found match for regex: <begin> # {{obsolete form of|en|apothecary}}. <end>
-Page 8986 ypothecar: Found match for regex: <begin> # {{lb|en|Scotland}} {{obsolete form of|en|apothecary}} <end>
-Page 8987 ypothegar: Found match for regex: <begin> # {{lb|en|Scotland}} {{obsolete form of|en|apothecary}} <end>
+Page 8986 ypothecar: Found match for regex: <begin> # {{lb|en|Scotland}} {{obsolete form of|en|apothecary}}. <end>
+Page 8987 ypothegar: Found match for regex: <begin> # {{lb|en|Scotland}} {{obsolete form of|en|apothecary}}. <end>
 Page 8988 saumerio: Found match for regex: <begin> # {{obsolete form of|es|sahumerio}} <end>
 Page 8989 unreprest: Found match for regex: <begin> # {{obsolete form of|en|unrepressed}}. <end>
 Page 8990 golot: Found match for regex: <begin> # {{obsolete form of|tl|gulot}} <end>
@@ -9352,10 +9352,10 @@ Page 9087 sporozoon: Found match for regex: <begin> # {{obsolete form of|en|spor
 Page 9090 læk: Found match for regex: <begin> # {{obsolete form of|se|leat}}, the {{inflection of|se|leat||2|s|pres|indc}} <end>
 Page 9090 læk: Found match for regex: <begin> # {{obsolete form of|se|leat}}, the {{inflection of|se|leat||3|p|pres|indc}} <end>
 Page 9090 læk: Found match for regex: <begin> # {{obsolete form of|se|leat}}, the {{inflection of|se|leat||pres|indc|conn}} <end>
-Page 9091 obliquangle: Found match for regex: <begin> # {{lb|en|geometry}} {{obsolete form of|en|oblique angle}} <end>
-Page 9092 obliquangled: Found match for regex: <begin> # {{lb|en|geometry}} {{obsolete form of|en|[[oblique]]-[[angled]]}} <end>
-Page 9093 obtusangled: Found match for regex: <begin> # {{lb|en|geometry}} {{obsolete form of|en|obtuse-angled}} <end>
-Page 9094 acutangled: Found match for regex: <begin> # {{lb|en|geometry}} {{obsolete form of|en|acute-angled}} <end>
+Page 9091 obliquangle: Found match for regex: <begin> # {{lb|en|geometry}} {{obsolete form of|en|oblique angle}}. <end>
+Page 9092 obliquangled: Found match for regex: <begin> # {{lb|en|geometry}} {{obsolete form of|en|[[oblique]]-[[angled]]}}. <end>
+Page 9093 obtusangled: Found match for regex: <begin> # {{lb|en|geometry}} {{obsolete form of|en|obtuse-angled}}. <end>
+Page 9094 acutangled: Found match for regex: <begin> # {{lb|en|geometry}} {{obsolete form of|en|acute-angled}}. <end>
 Page 9095 tendernesse: Found match for regex: <begin> # {{obsolete form of|en|tenderness}}. <end>
 Page 9096 owtside: Found match for regex: <begin> # {{obsolete form of|en|outside}}. <end>
 Page 9096 owtside: Found match for regex: <begin> # {{obsolete form of|en|outside}}. <end>
@@ -9365,7 +9365,7 @@ Page 9098 controll: Found match for regex: <begin> # {{obsolete form of|en|contr
 Page 9098 controll: Found match for regex: <begin> # {{obsolete form of|en|control}}. <end>
 Page 9099 tempestous: Found match for regex: <begin> # {{obsolete form of|en|tempestuous}}. <end>
 Page 9100 Liége: Found match for regex: <begin> # {{obsolete form of|fr|Liège}} <end>
-Page 9102 abhore: Found match for regex: <begin> # {{obsolete form of|en|abhor}} signifying [[despise]], [[detest]], [[hate]], [[loathe]], [[scorn]]. <end>
+Page 9102 abhore: Found match for regex: <begin> # {{obsolete form of|en|abhor}}. <end>
 Page 9104 etterhvert: Found match for regex: <begin> # {{obsolete form of|nb|etter hvert}} <end>
 Page 9105 hörcheln: Found match for regex: <begin> # {{obsolete form of|de|röcheln}} <end>
 Page 9106 hercheln: Found match for regex: <begin> # {{obsolete form of|de|röcheln}} <end>
@@ -9409,9 +9409,9 @@ Page 9150 knowlage: Found match for regex: <begin> # {{obsolete form of|en|knowl
 Page 9151 knowliche: Found match for regex: <begin> # {{obsolete form of|en|knowledge}}. <end>
 Page 9152 knowlych: Found match for regex: <begin> # {{obsolete form of|en|knowledge}}. <end>
 Page 9153 knowlech: Found match for regex: <begin> # {{obsolete form of|en|knowledge}}. <end>
-Page 9154 knaulege: Found match for regex: <begin> # {{lb|en|Scotland}} {{obsolete form of|en|knowledge}} <end>
-Page 9155 knaulage: Found match for regex: <begin> # {{lb|en|Scotland}} {{obsolete form of|en|knowledge}} <end>
-Page 9156 knawlage: Found match for regex: <begin> # {{lb|en|Scotland}} {{obsolete form of|en|knowledge}} <end>
+Page 9154 knaulege: Found match for regex: <begin> # {{lb|en|Scotland}} {{obsolete form of|en|knowledge}}. <end>
+Page 9155 knaulage: Found match for regex: <begin> # {{lb|en|Scotland}} {{obsolete form of|en|knowledge}}. <end>
+Page 9156 knawlage: Found match for regex: <begin> # {{lb|en|Scotland}} {{obsolete form of|en|knowledge}}. <end>
 Page 9157 knoleche: Found match for regex: <begin> # {{obsolete form of|en|knowledge}}. <end>
 Page 9158 knoleige: Found match for regex: <begin> # {{obsolete form of|en|knowledge}}. <end>
 Page 9159 knowlache: Found match for regex: <begin> # {{obsolete form of|en|knowledge}}. <end>
@@ -9488,13 +9488,13 @@ Page 9245 pentru căci: Found match for regex: <begin> # {{obsolete form of|ro|p
 Page 9246 spir't: Found match for regex: <begin> # {{obsolete form of|en|spirit}}. <end>
 Page 9247 poelsnep: Found match for regex: <begin> # {{obsolete form of|nl|poelsnip}} <end>
 Page 9248 schoonder: Found match for regex: <begin> # {{obsolete form of|nl|schoner}} <end>
-Page 9249 whiskybae: Found match for regex: <begin> # {{lb|en|chiefly|Scotland}} {{obsolete form of|en|usquebaugh}} <end>
-Page 9250 discustom: Found match for regex: <begin> # {{lb|en|rare}} {{obsolete form of|en|disaccustom}} <end>
+Page 9249 whiskybae: Found match for regex: <begin> # {{lb|en|chiefly|Scotland}} {{obsolete form of|en|usquebaugh}}. <end>
+Page 9250 discustom: Found match for regex: <begin> # {{lb|en|rare}} {{obsolete form of|en|disaccustom}}. <end>
 Page 9251 saikoloji: Found match for regex: <begin> # {{obsolete form of|ms|psikologi}} <end>
 Page 9252 saiko-: Found match for regex: <begin> # {{obsolete form of|ms|psiko-}} <end>
-Page 9253 almoste: Found match for regex: <begin> #{{obsolete form of|en|almost}} <end>
-Page 9253 almoste: Found match for regex: <begin> #{{obsolete form of|en|almost}} <end>
-Page 9254 stairkes: Found match for regex: <begin> #{{lb|en|very|_|rare}} {{obsolete form of|en|staircase}} <end>
+Page 9253 almoste: Found match for regex: <begin> #{{obsolete form of|en|almost}}. <end>
+Page 9253 almoste: Found match for regex: <begin> #{{obsolete form of|en|almost}}. <end>
+Page 9254 stairkes: Found match for regex: <begin> #{{lb|en|very|_|rare}} {{obsolete form of|en|staircase}}. <end>
 Page 9255 arcaby: Found match for regex: <begin> # {{lb|pl|board games}} {{obsolete form of|pl|warcaby}} <end>
 Page 9256 arcabnica: Found match for regex: <begin> # {{obsolete form of|pl|warcabnica}} <end>
 Page 9257 Grünland: Found match for regex: <begin> # {{obsolete form of|de|Grönland|t=[[Greenland]]}} <end>
@@ -9525,7 +9525,7 @@ Page 9367 betherel: Found match for regex: <begin> # {{obsolete form of|en|beadl
 Page 9368 belchior: Found match for regex: <begin> # {{obsolete form of|pt|brechó}} <end>
 Page 9369 berchior: Found match for regex: <begin> # {{obsolete form of|pt|brechó}} <end>
 Page 9370 freake: Found match for regex: <begin> # {{obsolete form of|en|freak}}. <end>
-Page 9371 freik: Found match for regex: <begin> # {{lb|en|Scotland}} {{obsolete form of|en|freak}} <end>
+Page 9371 freik: Found match for regex: <begin> # {{lb|en|Scotland}} {{obsolete form of|en|freak}}. <end>
 Page 9372 allmighty: Found match for regex: <begin> # {{obsolete form of|en|almighty}}. <end>
 Page 9373 all-mighty: Found match for regex: <begin> # {{obsolete form of|en|almighty}}. <end>
 Page 9374 đủ đủ: Found match for regex: <begin> # {{obsolete form of|vi|đu đủ||[[papaya]]}} <end>
@@ -10537,7 +10537,7 @@ Page 10348 cocon: Found match for regex: <begin> # {{obs form of|en|cocoon}}. <e
 Page 10349 stolle: Found match for regex: <begin> # {{obs form of|en|stole||garment consisting of a decorated band worn on the back of the neck, each end hanging over the chest}}. <end>
 Page 10350 castagnet: Found match for regex: <begin> # {{obs form of|en|castanet}}. <end>
 Page 10351 Mantchoo: Found match for regex: <begin> # {{obs form of|en|Manchu}}. <end>
-Page 10353 bretheren: Found match for regex: <begin> # {{lb|en|obsolete}} {{plural of|en|brother}}; {{obs form of|en|brethren|nocap=1}} <end>
+Page 10353 bretheren: Found match for regex: <begin> # {{lb|en|obsolete}} {{plural of|en|brother}}; {{obs form of|en|brethren|nocap=1}}. <end>
 Page 10354 zaadressować: Found match for regex: <begin> # {{lb|pl|transitive}} {{obs form of|pl|zaadresować}} <end>
 Page 10355 zadressować: Found match for regex: <begin> # {{lb|pl|transitive}} {{obs form of|pl|zadresować}} <end>
 Page 10356 セヷストーポリ: Found match for regex: <begin> # {{obs form of|ja|セヴァストポリ|tr=Sevasutopori}} <end>
@@ -10550,14 +10550,14 @@ Page 10362 cajol: Found match for regex: <begin> # {{obs form of|en|cajole}}. <e
 Page 10363 squa: Found match for regex: <begin> # {{obs form of|en|squaw}}. <end>
 Page 10364 fricandoe: Found match for regex: <begin> # {{obs form of|en|fricandeau}}. <end>
 Page 10365 Omish: Found match for regex: <begin> # {{obs form of|en|Amish}}. <end>
-Page 10366 priesthead: Found match for regex: <begin> # {{lb|en|uncommon}} {{obs form of|en|priesthood}} <end>
+Page 10366 priesthead: Found match for regex: <begin> # {{lb|en|uncommon}} {{obs form of|en|priesthood}}. <end>
 Page 10367 neather: Found match for regex: <begin> # {{obs form of|en|nether}}. <end>
 Page 10368 porgee: Found match for regex: <begin> # {{obs form of|en|porgy}}. <end>
 Page 10369 -oloji: Found match for regex: <begin> # {{obs form of|ms|-ologi}} <end>
 Page 10370 steek grass: Found match for regex: <begin> # {{obs form of|en|steekgras}}. <end>
 Page 10371 رشيا: Found match for regex: <begin> # {{obs form of|ms|Rusia,روسيا}} <end>
 Page 15498 Wiktionary:Word of the day/Archive/2017/October: Found match for regex: <begin> # {{obsolete form of|en|chasm}}|comment=The ''{{w|Cassini–Huygens}}'' [[space probe]] was launched on this day 20 years ago in 1997 to study the [[planet]] [[Saturn]]. During its closest approach to the [[moon]] [[Tethys]] on 24 September 2005, it photographed the {{w|Ithaca Chasma}}, one of the [[w:List of largest rifts and valleys in the Solar System|longer valleys]] in the [[Solar System]]. The mission was [[w:Cassini retirement|brought to an end]] on 15 September 2017 by having the probe make a [[controlled#Adjective|controlled]] [[descent]] into Saturn’s [[atmosphere]].|October|15}}. <end>
-Page 15943 User:Epichaericacianus: Found match for regex: <begin> {{obsolete form of|en|User:Desaccointier|Desaccointier}} <end>
+Page 15943 User:Epichaericacianus: Found match for regex: <begin> {{obsolete form of|en|User:Desaccointier|Desaccointier}}. <end>
 Page 16016 User:Benwing2/test-form-of: Found match for regex: <begin> # {{obsolete form of|ru|зо́нтик|tr=garfuda}} <end>
 Page 16016 User:Benwing2/test-form-of: Found match for regex: <begin> # {{obsolete form of|ru|зо́нтик<tr:garfuda>,компью́тер<tr:kompʹjútɛr><lit:ordinator>}} <end>
 Page 16016 User:Benwing2/test-form-of: Found match for regex: <begin> # {{obsolete form of|ru|зо́нтик|tr=garfuda}}, <end>
@@ -10571,10 +10571,10 @@ Page 16016 User:Benwing2/test-form-of: Found match for regex: <begin> # {{User:B
 Page 16016 User:Benwing2/test-form-of: Found match for regex: <begin> # {{User:Benwing2/obsolete form of|ru||зо́нтик|tr=garfuda}} <end>
 Page 16016 User:Benwing2/test-form-of: Found match for regex: <begin> # {{User:Benwing2/obsolete form of|ru|зо́нтик|tr=garfuda}}, <end>
 Page 16758 Wiktionary:Word of the day/2022/March 29: Found match for regex: <begin> # {{obsolete form of|en|errant|t=[[rove#Verb|roving]] around; [[wandering#Adjective|wandering]]}}|March|29}}. <end>
-Page 16761 Talk:stele: Found match for regex: <begin> * {{obsolete form of|en|stale||[[handle]], [[shaft]], [[stem]]|id=handle, shaft, stem}} <end>
+Page 16761 Talk:stele: Found match for regex: <begin> * {{obsolete form of|en|stale||[[handle]], [[shaft]], [[stem]]|id=handle, shaft, stem}}. <end>
 Page 1 abassi: Found match for regex: <begin> # {{obsolete spelling of|en|abbasi}}.<ref>{{R:MW3 1976}}</ref> <end>
 Page 2 abb: Found match for regex: <begin> # {{obsolete spelling of|ga|ab||abbot}} <end>
-Page 3 abrade: Found match for regex: <begin> # {{lb|en|transitive}} {{obsolete spelling of|en|abraid}} <end>
+Page 3 abrade: Found match for regex: <begin> # {{lb|en|transitive}} {{obsolete spelling of|en|abraid}}. <end>
 Page 4 quiz: Found match for regex: <begin> # {{obsolete spelling of|pt|quis}} <end>
 Page 5 die: Found match for regex: <begin> # {{obsolete spelling of|en|dye}}. <end>
 Page 5 die: Found match for regex: <begin> # {{obsolete spelling of|en|dye}}. <end>
@@ -10605,7 +10605,7 @@ Page 32 hole: Found match for regex: <begin> # {{obsolete spelling of|en|whole}}
 Page 33 kerosene: Found match for regex: <begin> # {{obsolete spelling of|pt|querosene}} <end>
 Page 34 pen: Found match for regex: <begin> # {{obsolete spelling of|da|pæn}} <end>
 Page 35 familia: Found match for regex: <begin> # {{obsolete spelling of|pt|família}} <end>
-Page 36 benzole: Found match for regex: <begin> # {{lb|en|organic chemistry}} {{obsolete spelling of|en|benzol}} <end>
+Page 36 benzole: Found match for regex: <begin> # {{lb|en|organic chemistry}} {{obsolete spelling of|en|benzol}}. <end>
 Page 37 ver: Found match for regex: <begin> # {{obsolete spelling of|af|vir}} <end>
 Page 38 oral: Found match for regex: <begin> # {{obsolete spelling of|sh|orao}} <end>
 Page 39 he: Found match for regex: <begin> # {{obsolete spelling of|pt|é}} <end>
@@ -10711,7 +10711,7 @@ Page 123 pays: Found match for regex: <begin> # {{obsolete spelling of|pt|país}
 Page 123 pays: Found match for regex: <begin> # {{obsolete spelling of|pt|pais}} <end>
 Page 124 amen: Found match for regex: <begin> # {{obsolete spelling of|pt|amém}} <end>
 Page 125 ancle: Found match for regex: <begin> # {{obsolete spelling of|en|ankle}}. <end>
-Page 126 -ie: Found match for regex: <begin> # {{senseid|en|inclined}} {{obsolete spelling of|en|-y}} <end>
+Page 126 -ie: Found match for regex: <begin> # {{senseid|en|inclined}} {{obsolete spelling of|en|-y}}. <end>
 Page 127 numero: Found match for regex: <begin> # {{obsolete spelling of|pt|número}} <end>
 Page 128 tee: Found match for regex: <begin> # {{obsolete spelling of|nl|thee}} <end>
 Page 129 di: Found match for regex: <begin> # {{obsolete spelling of|af|die}} <end>
@@ -10777,7 +10777,7 @@ Page 182 lier: Found match for regex: <begin> # {{obsolete spelling of|en|liar}}
 Page 182 lier: Found match for regex: <begin> * {{alt|nn|Lider|lider||obsolete spellings}} <end>
 Page 183 absolut: Found match for regex: <begin> # {{obsolete spelling of|en|absolute}}. <end>
 Page 184 vest: Found match for regex: <begin> # {{obsolete spelling of|de|fest}} <end>
-Page 185 urbane: Found match for regex: <begin> # {{obsolete spelling of|en|urban|t=of, pertaining to, or [[characteristic#Adjective|characteristic]] of a [[city]] or [[town]], or [[life#Noun|life]] in such a [[place#Noun|place]]; [[live#Verb|living]] in a city or town; having [[authority]] or [[jurisdiction]] over a city or town}}. <end>
+Page 185 urbane: Found match for regex: <begin> # {{obsolete spelling of|en|urban|t=of, pertaining to, or characteristic of a [[city]] or [[town]], or life in such a place; living in a city or town; having [[authority]] or [[jurisdiction]] over a city or town}}. <end>
 Page 186 bever: Found match for regex: <begin> # {{obsolete spelling of|en|beaver||semiaquatic rodent}}. <end>
 Page 187 poitrinal: Found match for regex: <begin> # {{obsolete spelling of|en|petronel||firearm}}. <end>
 Page 188 là: Found match for regex: <begin> # {{obsolete spelling of|pt|lá}} <end>
@@ -10848,7 +10848,7 @@ Page 249 cemento: Found match for regex: <begin> # {{obsolete spelling of|pt|cim
 Page 250 vittoria: Found match for regex: <begin> # {{obsolete spelling of|pt|vitória}} <end>
 Page 251 monogramme: Found match for regex: <begin> # {{obsolete spelling of|en|monogram}}. <end>
 Page 252 spindel: Found match for regex: <begin> # {{obsolete spelling of|en|spindle}}. <end>
-Page 253 knap: Found match for regex: <begin> # {{obsolete spelling of|en|nap|t=to [[arrest#Verb|arrest]] (someone); to [[grab#Verb|grab]] or [[nab#Verb|nab]] (someone or something); to [[steal#Verb|steal]] (something); (''obsolete'') to [[receive#Verb|receive]] ([[severe]] [[punishment]]), especially during a [[boxing#Noun|boxing]] [[match#Noun|match]] or a [[flogging#Noun|flogging]]; (''generally'') to receive (something)}}. <end>
+Page 253 knap: Found match for regex: <begin> # {{obsolete spelling of|en|nap|t=to arrest (someone); to grab or nab (someone or something); to steal (something); (''obsolete'') to receive ([[severe]] [[punishment]]), especially during a boxing match or a flogging; (''generally'') to receive (something)}}. <end>
 Page 254 -erie: Found match for regex: <begin> # {{obsolete spelling of|en|-ery}} {{gloss|other senses}}. <end>
 Page 255 moz: Found match for regex: <begin> # {{obsolete spelling of|dsb|móc}} <end>
 Page 256 monarchie: Found match for regex: <begin> # {{obsolete spelling of|en|monarchy}}. <end>
@@ -10885,7 +10885,7 @@ Page 279 affor: Found match for regex: <begin> # {{obsolete spelling of|en|afore
 Page 280 experimental: Found match for regex: <begin> # {{obsolete spelling of|fr|expérimental}} <end>
 Page 281 sone: Found match for regex: <begin> # {{obsolete spelling of|en|son}}. <end>
 Page 282 -à: Found match for regex: <begin> # {{obsolete spelling of|pt|-á}} <end>
-Page 283 churchward: Found match for regex: <begin> # {{lb|en|Christianity}} {{obsolete spelling of|en|churchwarden}} <end>
+Page 283 churchward: Found match for regex: <begin> # {{lb|en|Christianity}} {{obsolete spelling of|en|churchwarden}}. <end>
 Page 284 tragedia: Found match for regex: <begin> # {{obsolete spelling of|pt|tragédia}} <end>
 Page 285 transcendental: Found match for regex: <begin> # {{obsolete spelling of|de|transzendental}} <end>
 Page 286 pix: Found match for regex: <begin> # {{obsolete spelling of|en|pyx}}. {{defdate|Late [[Middle English]]–19th c.}} <end>
@@ -11118,7 +11118,7 @@ Page 493 User talk:Doremítzwr/Archive/01: Found match for regex: <begin> : Wiki
 Page 493 User talk:Doremítzwr/Archive/01: Found match for regex: <begin> :# <tt>Alternative spellings</tt> sections are unnecessary in entries whose definitions are limited to {{temp|alternative spelling of|2=…}}, {{temp|archaic spelling of|2=…}}, {{temp|obsolete spelling of|2=…}}, or the like, especially when the only alternative spelling given in the section is also the one given in the definition line(s). Furthermore, when there are many alternative spellings, it becomes a problem of entry [[synchronisation]]; for example, could you imagine having copies of the <tt>Alternative spellings</tt> section of {{m|en|scion}} in the entries of each of its variant spellings? (FYI, this sort of thing ''has'' been considered with a technique known as section [[transclusion]]; however, AFAIK that is not a very common practice.) <end>
 Page 493 User talk:Doremítzwr/Archive/01: Found match for regex: <begin> :# ''X'' spelling of … — ''Nota'' that we also have {{temp|archaic spelling of}} and {{temp|obsolete spelling of}} (as I mentioned above); for old spellings which are rarely or never used any more, they may be more appropriate. {{m|en||Archaic}} roughly means pre–20<sup>th</sup>-century, whereas {{m|en||obsolete}} usually means the term or spelling had fallen out of use at least two or three centuries ago (although the latter is far vaguer a term than the former, and can just mean a form that would be incomprehensible even to educated language users of today). <end>
 Page 494 själ: Found match for regex: <begin> # {{obsolete spelling of|sv|säl}} <end>
-Page 495 oxi-: Found match for regex: <begin> # {{lb|en|chemistry}} {{obsolete spelling of|en|oxy-}} <end>
+Page 495 oxi-: Found match for regex: <begin> # {{lb|en|chemistry}} {{obsolete spelling of|en|oxy-}}. <end>
 Page 496 西貢: Found match for regex: <begin> # {{obsolete spelling of|ja|サイゴン|sort=さいごん}} <end>
 Page 499 groupe: Found match for regex: <begin> # {{obsolete spelling of|en|group}}. <end>
 Page 500 mediodia: Found match for regex: <begin> # {{obsolete spelling of|es|mediodía}} <end>
@@ -11143,8 +11143,8 @@ Page 515 grammatica: Found match for regex: <begin> # {{obsolete spelling of|es|
 Page 516 contente: Found match for regex: <begin> # {{obsolete spelling of|en|content}}. <end>
 Page 517 dorus: Found match for regex: <begin> # {{obsolete spelling of|ga|doras}} <end>
 Page 518 catorze: Found match for regex: <begin> # {{obsolete spelling of|es|catorce}} <end>
-Page 519 phoetus: Found match for regex: <begin> # {{lb|en|erroneous}} {{obsolete spelling of|en|fetus}} <end>
-Page 520 phœtus: Found match for regex: <begin> # {{lb|en|erroneous}} {{obsolete spelling of|en|fetus}} <end>
+Page 519 phoetus: Found match for regex: <begin> # {{lb|en|erroneous}} {{obsolete spelling of|en|fetus}}. <end>
+Page 520 phœtus: Found match for regex: <begin> # {{lb|en|erroneous}} {{obsolete spelling of|en|fetus}}. <end>
 Page 521 selle: Found match for regex: <begin> # {{obsolete spelling of|en|sell}}. <end>
 Page 522 roquelaire: Found match for regex: <begin> # {{obsolete spelling of|en|roquelaure}}. <end>
 Page 523 callo: Found match for regex: <begin> # {{obsolete spelling of|pt|calo}} <end>
@@ -11194,7 +11194,7 @@ Page 562 estropear: Found match for regex: <begin> # {{obsolete spelling of|pt|e
 Page 563 defraude: Found match for regex: <begin> # {{obsolete spelling of|en|defraud}}. <end>
 Page 564 deposite: Found match for regex: <begin> # {{obsolete spelling of|en|deposit}}. <end>
 Page 564 deposite: Found match for regex: <begin> # {{obsolete spelling of|en|deposit}}. <end>
-Page 565 phoetal: Found match for regex: <begin> # {{lb|en|hypercorrect}} {{obsolete spelling of|en|fetal}} <end>
+Page 565 phoetal: Found match for regex: <begin> # {{lb|en|hypercorrect}} {{obsolete spelling of|en|fetal}}. <end>
 Page 566 designe: Found match for regex: <begin> # {{obsolete spelling of|en|design}}. <end>
 Page 567 mease: Found match for regex: <begin> # {{obsolete spelling of|en|mesh}} (of a fishing net). <end>
 Page 568 dicto: Found match for regex: <begin> # {{obsolete spelling of|pt|dito}} <end>
@@ -11311,8 +11311,8 @@ Page 672 sgian: Found match for regex: <begin> # {{obsolete spelling of|ga|scian
 Page 673 athl: Found match for regex: <begin> # {{obsolete spelling of|nci|atl|ātl}} <end>
 Page 674 veterinario: Found match for regex: <begin> # {{obsolete spelling of|pt|veterinário}} <end>
 Page 674 veterinario: Found match for regex: <begin> # {{obsolete spelling of|pt|veterinário}} <end>
-Page 675 faetus: Found match for regex: <begin> # {{lb|en|erroneous}} {{obsolete spelling of|en|fetus}} <end>
-Page 676 phœtal: Found match for regex: <begin> # {{lb|en|hypercorrect}} {{obsolete spelling of|en|phoetal}} <end>
+Page 675 faetus: Found match for regex: <begin> # {{lb|en|erroneous}} {{obsolete spelling of|en|fetus}}. <end>
+Page 676 phœtal: Found match for regex: <begin> # {{lb|en|hypercorrect}} {{obsolete spelling of|en|phoetal}}. <end>
 Page 677 duuren: Found match for regex: <begin> # {{obsolete spelling of|nl|duren}} <end>
 Page 678 bewaaren: Found match for regex: <begin> # {{obsolete spelling of|nl|bewaren}} <end>
 Page 679 epoca: Found match for regex: <begin> # {{obsolete spelling of|pt|época}} <end>
@@ -11363,7 +11363,7 @@ Page 717 ærose: Found match for regex: <begin> # {{obsolete spelling of|en|aero
 Page 718 færie: Found match for regex: <begin> # {{obsolete spelling of|en|faerie}} {{gloss|fairy}}. <end>
 Page 719 hæmorrhoid: Found match for regex: <begin> # {{obsolete spelling of|en|hemorrhoid}}. <end>
 Page 720 ægilops: Found match for regex: <begin> # {{obsolete spelling of|en|aegilops}}. <end>
-Page 721 ischæmia: Found match for regex: <begin> # {{lb|en|cardiology|pathology}} {{obsolete spelling of|en|ischemia}} <end>
+Page 721 ischæmia: Found match for regex: <begin> # {{lb|en|cardiology|pathology}} {{obsolete spelling of|en|ischemia}}. <end>
 Page 722 palæobotany: Found match for regex: <begin> # {{obsolete spelling of|en|palaeobotany}}. <end>
 Page 723 aillse: Found match for regex: <begin> # {{obsolete spelling of|ga|ailse||cancer}} <end>
 Page 724 chuse: Found match for regex: <begin> # {{obsolete spelling of|en|choose}}. <end>
@@ -11476,7 +11476,7 @@ Page 819 Arabick: Found match for regex: <begin> # {{obsolete spelling of|en|Ara
 Page 819 Arabick: Found match for regex: <begin> # {{obsolete spelling of|en|Arabic}}. <end>
 Page 820 dverg: Found match for regex: <begin> # {{obsolete spelling of|sv|dvärg}} <end>
 Page 821 elfe: Found match for regex: <begin> # {{obsolete spelling of|en|elf}}. <end>
-Page 822 haywain: Found match for regex: <begin> # {{obsolete spelling of|en|hay wain}} [[haywagon|Haywagons]]. <end>
+Page 822 haywain: Found match for regex: <begin> # {{obsolete spelling of|en|hay wain|t=haywagon}}. <end>
 Page 823 rodente: Found match for regex: <begin> # {{obsolete spelling of|en|rodent}}. <end>
 Page 824 tacksman: Found match for regex: <begin> # {{obsolete spelling of|en|taxman}}. <end>
 Page 825 puddock: Found match for regex: <begin> # {{obsolete spelling of|en|paddock}}. <end>
@@ -11499,10 +11499,10 @@ Page 841 anza: Found match for regex: <begin> # {{obsolete spelling of|is|ansa}}
 Page 842 perderà: Found match for regex: <begin> # {{obsolete spelling of|pt|perderá}} <end>
 Page 843 sliep: Found match for regex: <begin> # {{obsolete spelling of|sh|slijep}} <end>
 Page 844 grype: Found match for regex: <begin> # {{obsolete spelling of|en|gripe}}. <end>
-Page 845 missprision: Found match for regex: <begin> # {{lb|en|law|rare}} {{obsolete spelling of|en|misprision}} <end>
+Page 845 missprision: Found match for regex: <begin> # {{lb|en|law|rare}} {{obsolete spelling of|en|misprision}}. <end>
 Page 846 geomancie: Found match for regex: <begin> # {{obsolete spelling of|en|geomancy}}. <end>
 Page 847 deie: Found match for regex: <begin> # {{obsolete spelling of|en|dey}} (a [[dairymaid]]). <end>
-Page 848 gulph: Found match for regex: <begin> # {{lb|en|hypercorrect}} {{obsolete spelling of|en|gulf}} <end>
+Page 848 gulph: Found match for regex: <begin> # {{lb|en|hypercorrect}} {{obsolete spelling of|en|gulf}}. <end>
 Page 849 salley: Found match for regex: <begin> # {{obsolete spelling of|en|sallow}}. <end>
 Page 849 salley: Found match for regex: <begin> # {{obsolete spelling of|en|sally}}. <end>
 Page 850 chaunt: Found match for regex: <begin> # {{obsolete spelling of|en|chant}}. <end>
@@ -11666,7 +11666,7 @@ Page 984 mighte: Found match for regex: <begin> # {{obsolete spelling of|en|migh
 Page 984 mighte: Found match for regex: <begin> # {{obsolete spelling of|en|might}}. <end>
 Page 985 biuora: Found match for regex: <begin> # {{obsolete spelling of|es|víbora}} <end>
 Page 986 houre: Found match for regex: <begin> # {{obsolete spelling of|en|hour}}. <end>
-Page 987 plain sailing: Found match for regex: <begin> ## {{obsolete spelling of|en|plane sailing|t=a [[technique]] for [[navigation]] [[use#Verb|using]] the [[assumption]] that the [[journey#Noun|journey]] [[occur]]s over a [[plane#Adjective|plane]] or [[flat#Adjective|flat]] [[surface#Noun|surface]] rather than the [[actual#Adjective|actual]] [[curved#Adjective|curved]] surface of the [[Earth]], which is [[sufficiently]] [[accurate]] over [[short#Adjective|short]] [[distance#Noun|distances]]}} <end>
+Page 987 plain sailing: Found match for regex: <begin> ## {{obsolete spelling of|en|plane sailing|t=a technique for navigation using the assumption that the journey occurs over a plane or flat surface rather than the actual curved surface of the Earth, which is sufficiently accurate over short distances}}. <end>
 Page 988 thanke: Found match for regex: <begin> # {{obsolete spelling of|en|thank}}. <end>
 Page 989 aske: Found match for regex: <begin> # {{obsolete spelling of|en|ask}}. <end>
 Page 990 clocke: Found match for regex: <begin> # {{obsolete spelling of|en|clock}}. <end>
@@ -11748,7 +11748,7 @@ Page 1057 seene: Found match for regex: <begin> # {{obsolete spelling of|en|seen
 Page 1058 kinde: Found match for regex: <begin> # {{obsolete spelling of|en|kind}}. <end>
 Page 1058 kinde: Found match for regex: <begin> # {{obsolete spelling of|en|kind}}. <end>
 Page 1059 yeare: Found match for regex: <begin> # {{obsolete spelling of|en|year}}. <end>
-Page 1060 giuen: Found match for regex: <begin> # {{inflection of|en|giue||past|part}}; {{obsolete spelling of|en|given|nocap=1}} <end>
+Page 1060 giuen: Found match for regex: <begin> # {{inflection of|en|giue||past|part}}; {{obsolete spelling of|en|given|nocap=1}}. <end>
 Page 1061 worke: Found match for regex: <begin> # {{obsolete spelling of|en|work}}. <end>
 Page 1061 worke: Found match for regex: <begin> # {{obsolete spelling of|en|work}}. <end>
 Page 1062 betweene: Found match for regex: <begin> # {{obsolete spelling of|en|between}}. <end>
@@ -11854,7 +11854,7 @@ Page 1151 dafter: Found match for regex: <begin> # {{obsolete spelling of|en|dau
 Page 1152 Scopie: Found match for regex: <begin> # {{obsolete spelling of|en|Skopje}}. <end>
 Page 1153 gazeta: Found match for regex: <begin> # {{obsolete spelling of|es|gaceta}}: [[newspaper]] <end>
 Page 1154 sotelte: Found match for regex: <begin> # {{obsolete spelling of|en|subtlety}}. <end>
-Page 1155 chappel: Found match for regex: <begin> # {{lb|en|obsolete|17-18th C.}} {{obsolete spelling of|en|chapel}} <end>
+Page 1155 chappel: Found match for regex: <begin> # {{lb|en|obsolete|17-18th C.}} {{obsolete spelling of|en|chapel}}. <end>
 Page 1156 authour: Found match for regex: <begin> # {{obsolete spelling of|en|author}}. <end>
 Page 1157 coqui: Found match for regex: <begin> # {{obsolete spelling of|pua|kóki}} <end>
 Page 1158 Feejee: Found match for regex: <begin> # {{obsolete spelling of|en|Fiji}}. <end>
@@ -11955,7 +11955,7 @@ Page 1241 thorow: Found match for regex: <begin> # {{obsolete spelling of|en|thr
 Page 1242 astonie: Found match for regex: <begin> # {{obsolete spelling of|en|astony}}. <end>
 Page 1243 alleage: Found match for regex: <begin> # {{obsolete spelling of|en|allege}}. <end>
 Page 1244 warre: Found match for regex: <begin> # {{obsolete spelling of|en|war}}. <end>
-Page 1245 fift: Found match for regex: <begin> # {{cln|en|ordinal numbers}} {{obsolete spelling of|en|fifth}} <end>
+Page 1245 fift: Found match for regex: <begin> # {{cln|en|ordinal numbers}} {{obsolete spelling of|en|fifth}}. <end>
 Page 1246 conster: Found match for regex: <begin> # {{obsolete spelling of|en|construe}}. <end>
 Page 1247 hange: Found match for regex: <begin> # {{obsolete spelling of|en|hang}}. <end>
 Page 1248 quore: Found match for regex: <begin> # {{obsolete spelling of|it|cuore}} <end>
@@ -12155,7 +12155,7 @@ Page 1424 ylhuitl: Found match for regex: <begin> # {{obsolete spelling of|nci|i
 Page 1425 dedicatorio: Found match for regex: <begin> # {{obsolete spelling of|pt|dedicatório}} <end>
 Page 1426 dedicatoria: Found match for regex: <begin> # {{obsolete spelling of|pt|dedicatória}} <end>
 Page 1427 complection: Found match for regex: <begin> # {{obsolete spelling of|en|complexion}}. <end>
-Page 1428 bernacle: Found match for regex: <begin> # {{lb|en|of horses}} {{obsolete spelling of|en|barnacle}} <end>
+Page 1428 bernacle: Found match for regex: <begin> # {{lb|en|of horses}} {{obsolete spelling of|en|barnacle}}. <end>
 Page 1429 thatt: Found match for regex: <begin> # {{obsolete spelling of|en|that}}. <end>
 Page 1430 hyther: Found match for regex: <begin> # {{obsolete spelling of|en|hither}}. <end>
 Page 1431 hysterotome: Found match for regex: <begin> # {{obsolete spelling of|en|hysterotomy}}. <end>
@@ -12201,8 +12201,8 @@ Page 1467 perill: Found match for regex: <begin> # {{obsolete spelling of|en|per
 Page 1468 mòr: Found match for regex: <begin> # {{obsolete spelling of|pt|mor}} <end>
 Page 1469 onomatopœia: Found match for regex: <begin> # {{obsolete spelling of|en|onomatopoeia}}. <end>
 Page 1470 deun: Found match for regex: <begin> # {{obsolete spelling of|ga|déan}} <end>
-Page 1471 acquiting: Found match for regex: <begin> # {{infl of|en|acquite||ing-form}} ({{obsolete spelling of|en|acquitting}}.) <end>
-Page 1472 acquited: Found match for regex: <begin> # {{infl of|en|acquite||ed-form}} ({{obsolete spelling of|en|acquitted|nocap=1}}) <end>
+Page 1471 acquiting: Found match for regex: <begin> # {{infl of|en|acquite||ing-form}}; {{obsolete spelling of|en|acquitting|nocap=1}}. <end>
+Page 1472 acquited: Found match for regex: <begin> # {{infl of|en|acquite||ed-form}}; {{obsolete spelling of|en|acquitted|nocap=1}}. <end>
 Page 1473 hvilken: Found match for regex: <begin> # {{obsolete spelling of|sv|vilken}} <end>
 Page 1474 shamoy: Found match for regex: <begin> # {{obsolete spelling of|en|chamois}}. <end>
 Page 1475 Tallin: Found match for regex: <begin> # {{obsolete spelling of|nb|Tallinn}} (Mainly used between 1944 and 1991) <end>
@@ -12212,7 +12212,7 @@ Page 1478 præceded: Found match for regex: <begin> # {{obsolete spelling of|en|
 Page 1479 præceding: Found match for regex: <begin> # {{obsolete spelling of|en|preceding}}. <end>
 Page 1480 prædecessor: Found match for regex: <begin> # {{obsolete spelling of|en|predecessor}}. <end>
 Page 1481 palliativo: Found match for regex: <begin> # {{obsolete spelling of|pt|paliativo}} <end>
-Page 1482 prophanity: Found match for regex: <begin> # {{lb|en|hypercorrect}} {{obsolete spelling of|en|profanity}} <end>
+Page 1482 prophanity: Found match for regex: <begin> # {{lb|en|hypercorrect}} {{obsolete spelling of|en|profanity}}. <end>
 Page 1483 prophaneness: Found match for regex: <begin> # {{obsolete spelling of|en|profaneness}}. <end>
 Page 1484 sae: Found match for regex: <begin> # {{obsolete spelling of|pt|sai}} <end>
 Page 1485 præfer: Found match for regex: <begin> # {{obsolete spelling of|en|prefer}}. <end>
@@ -12234,7 +12234,7 @@ Page 1496 User talk:Cdhaptomos: Found match for regex: <begin> :# ''X'' spelling
 Page 1497 exercice: Found match for regex: <begin> # {{obsolete spelling of|en|exercise}}. <end>
 Page 1498 manteles: Found match for regex: <begin> # {{obsolete spelling of|nci|mantēlex}} <end>
 Page 1499 meur: Found match for regex: <begin> # {{obsolete spelling of|ga|méar||finger}} <end>
-Page 1500 thir: Found match for regex: <begin> #{{obsolete spelling of|en|their}} <end>
+Page 1500 thir: Found match for regex: <begin> #{{obsolete spelling of|en|their}}. <end>
 Page 1501 cnuic: Found match for regex: <begin> # {{obsolete spelling of|ga|cnoic}} <end>
 Page 1502 magnetimeter: Found match for regex: <begin> # {{obsolete spelling of|en|magnetometer}}. <end>
 Page 1503 prefixe: Found match for regex: <begin> # {{obsolete spelling of|en|prefix}}. <end>
@@ -12266,9 +12266,9 @@ Page 1523 catalizar: Found match for regex: <begin> # {{obsolete spelling of|pt|
 Page 1524 winglesse: Found match for regex: <begin> # {{obsolete spelling of|en|wingless}}. <end>
 Page 1525 bycause: Found match for regex: <begin> # {{obsolete spelling of|en|because}}. <end>
 Page 1526 fole: Found match for regex: <begin> # {{obsolete spelling of|en|foal}}. <end>
-Page 1527 tieing: Found match for regex: <begin> # {{lb|en|obsolete}} {{infl of|en|tie||ing-form}}; {{obsolete spelling of|en|tying|nocap=1}} <end>
+Page 1527 tieing: Found match for regex: <begin> # {{lb|en|obsolete}} {{infl of|en|tie||ing-form}}; {{obsolete spelling of|en|tying|nocap=1}}. <end>
 Page 1528 weïrd: Found match for regex: <begin> # {{obsolete spelling of|en|weird}}. <end>
-Page 1529 valourously: Found match for regex: <begin> # {{lb|en|British}} {{obsolete spelling of|en|valorously}} <end>
+Page 1529 valourously: Found match for regex: <begin> # {{lb|en|British}} {{obsolete spelling of|en|valorously}}. <end>
 Page 1530 Europæan: Found match for regex: <begin> # {{obsolete spelling of|en|European}}. <end>
 Page 1530 Europæan: Found match for regex: <begin> # {{obsolete spelling of|en|European}}. <end>
 Page 1531 prædilection: Found match for regex: <begin> # {{obsolete spelling of|en|predilection}}. <end>
@@ -12339,7 +12339,7 @@ Page 1591 dicionario: Found match for regex: <begin> # {{obsolete spelling of|pt
 Page 1592 táboa: Found match for regex: <begin> # {{obsolete spelling of|pt|tábua}} <end>
 Page 1593 колач: Found match for regex: <begin> # {{obsolete spelling of|ru|кала́ч}} <end>
 Page 1594 supra-œsophagal: Found match for regex: <begin> # {{obsolete spelling of|en|supraesophageal}}. <end>
-Page 1595 derain: Found match for regex: <begin> # {{lb|en|legal|transitive}} {{obsolete spelling of|en|deraign}} <end>
+Page 1595 derain: Found match for regex: <begin> # {{lb|en|legal|transitive}} {{obsolete spelling of|en|deraign}}. <end>
 Page 1596 darraign: Found match for regex: <begin> # {{obsolete spelling of|en|darrain}}. <end>
 Page 1597 præmium: Found match for regex: <begin> # {{obsolete spelling of|en|premium}}. <end>
 Page 1597 præmium: Found match for regex: <begin> # {{obsolete spelling of|en|premium}}. <end>
@@ -12356,7 +12356,7 @@ Page 1607 forestal: Found match for regex: <begin> # {{obsolete spelling of|en|f
 Page 1608 Peloponneso: Found match for regex: <begin> # {{obsolete spelling of|pt|Peloponeso}} <end>
 Page 1609 ribin: Found match for regex: <begin> # {{obsolete spelling of|en|ribbon}}. <end>
 Page 1610 -ella: Found match for regex: <begin> # {{obsolete spelling of|pt|-ela}} <end>
-Page 1611 jobbe: Found match for regex: <begin> # A [[cartload]] ({{obsolete spelling of|en|job}}) <end>
+Page 1611 jobbe: Found match for regex: <begin> # {{obsolete spelling of|en|job|t=cartload}}. <end>
 Page 1612 iongnaidh: Found match for regex: <begin> # {{obsolete spelling of|ga|ionaidh}} <end>
 Page 1613 tormalina: Found match for regex: <begin> # {{obsolete spelling of|pt|turmalina}} <end>
 Page 1614 romage: Found match for regex: <begin> # {{obsolete spelling of|en|rummage}}. <end>
@@ -12451,7 +12451,7 @@ Page 1689 drytt: Found match for regex: <begin> # {{obsolete spelling of|en|drit
 Page 1690 creyme: Found match for regex: <begin> # {{obsolete spelling of|en|cream}}. <end>
 Page 1691 bárd: Found match for regex: <begin> # {{obsolete spelling of|ga|bard}} <end>
 Page 1692 feóil: Found match for regex: <begin> # {{obsolete spelling of|ga|feoil}} <end>
-Page 1693 amoung: Found match for regex: <begin> #{{obsolete spelling of|en|among}} <end>
+Page 1693 amoung: Found match for regex: <begin> #{{obsolete spelling of|en|among}}. <end>
 Page 1694 affrontery: Found match for regex: <begin> # {{obsolete spelling of|en|effrontery}}. <end>
 Page 1695 angell: Found match for regex: <begin> # {{obsolete spelling of|en|angel}}. <end>
 Page 1696 inhære: Found match for regex: <begin> # {{obsolete spelling of|en|inhere}}. <end>
@@ -12557,9 +12557,9 @@ Page 1792 domestick: Found match for regex: <begin> # {{obsolete spelling of|en|
 Page 1792 domestick: Found match for regex: <begin> # {{obsolete spelling of|en|domestic}}. <end>
 Page 1793 ceudna: Found match for regex: <begin> # {{obsolete spelling of|ga|céanna||same}} <end>
 Page 1794 tiugh: Found match for regex: <begin> # {{obsolete spelling of|ga|tiubh}} <end>
-Page 1795 æquivocal: Found match for regex: <begin> # {{lb|en|rare}} {{obsolete spelling of|en|equivocal}} <end>
+Page 1795 æquivocal: Found match for regex: <begin> # {{lb|en|rare}} {{obsolete spelling of|en|equivocal}}. <end>
 Page 1796 parmacetty: Found match for regex: <begin> # {{obsolete spelling of|en|parmacety}}. <end>
-Page 1797 kyrk: Found match for regex: <begin> # {{lb|en|christianity|Northern England|Scotland}} {{obsolete spelling of|en|kirk}} <end>
+Page 1797 kyrk: Found match for regex: <begin> # {{lb|en|christianity|Northern England|Scotland}} {{obsolete spelling of|en|kirk}}. <end>
 Page 1798 reial: Found match for regex: <begin> # {{obsolete spelling of|pt|real}} <end>
 Page 1799 Pußta: Found match for regex: <begin> # {{obsolete spelling of|de|Puszta||pusta}} <end>
 Page 1800 feodatory: Found match for regex: <begin> # {{obsolete spelling of|en|feudatory}}. {{defdate|17th century}} <end>
@@ -12695,7 +12695,7 @@ Page 1911 alwayes: Found match for regex: <begin> # {{obsolete spelling of|en|al
 Page 1912 cruell: Found match for regex: <begin> # {{obsolete spelling of|en|cruel}}. <end>
 Page 1912 cruell: Found match for regex: <begin> # {{obsolete spelling of|en|crewel}}. <end>
 Page 1913 meete: Found match for regex: <begin> # {{obsolete spelling of|en|meet}}. <end>
-Page 1914 whome: Found match for regex: <begin> #{{obsolete spelling of|en|whom}} <end>
+Page 1914 whome: Found match for regex: <begin> #{{obsolete spelling of|en|whom}}. <end>
 Page 1915 souldier: Found match for regex: <begin> # {{obsolete spelling of|en|soldier}}. <end>
 Page 1915 souldier: Found match for regex: <begin> # {{obsolete spelling of|en|soldier}}. <end>
 Page 1916 naturall: Found match for regex: <begin> # {{obsolete spelling of|en|natural}}. <end>
@@ -13084,7 +13084,7 @@ Page 2270 hye: Found match for regex: <begin> # {{obsolete spelling of|en|hie}}.
 Page 2271 phisick: Found match for regex: <begin> # {{obsolete spelling of|en|physic}}. <end>
 Page 2272 User talk:76.243.44.219: Found match for regex: <begin> :Indeed, also we use the same template for all the obsolete (no longer used) spellings, and that is {{temp|obsolete spelling of}}. Templates like this are useful because they enforce consistency and categorize the entry. —'''[[User:Internoob|Internoob]]''' ([[User talk:Internoob|Disc]]•[[Special:Contributions/Internoob|Cont]]) 04:04, 15 December 2010 (UTC) <end>
 Page 2273 devision: Found match for regex: <begin> # {{obsolete spelling of|en|division}}. <end>
-Page 2274 devisions: Found match for regex: <begin> # {{plural of|en|devision}}: {{obsolete spelling of|en|divisions|nocap=1}} <end>
+Page 2274 devisions: Found match for regex: <begin> # {{plural of|en|devision}}: {{obsolete spelling of|en|divisions|nocap=1}}. <end>
 Page 2275 perplext: Found match for regex: <begin> # {{obsolete spelling of|en|perplexed}}. <end>
 Page 2277 calis: Found match for regex: <begin> # {{obsolete spelling of|tl|kalis}} <end>
 Page 2278 genausogut: Found match for regex: <begin> # {{obsolete spelling of|de|genauso gut}} <end>
@@ -13191,14 +13191,14 @@ Page 2373 predjudice: Found match for regex: <begin> # {{obsolete spelling of|en
 Page 2374 satyre: Found match for regex: <begin> # {{obsolete spelling of|en|satire}}. <end>
 Page 2375 watry: Found match for regex: <begin> # {{obsolete spelling of|en|watery}}. <end>
 Page 2376 palæogeography: Found match for regex: <begin> # {{obsolete spelling of|en|palaeogeography}}. <end>
-Page 2377 -rrhœa: Found match for regex: <begin> # {{lb|en|British spelling}} {{obsolete spelling of|en|-rrhoea}} <end>
+Page 2377 -rrhœa: Found match for regex: <begin> # {{lb|en|British spelling}} {{obsolete spelling of|en|-rrhoea}}. <end>
 Page 2378 litteratura: Found match for regex: <begin> # {{obsolete spelling of|pt|literatura}} <end>
 Page 2379 orthopnœa: Found match for regex: <begin> # {{obsolete spelling of|en|orthopnoea}}. <end>
 Page 2380 pathopœia: Found match for regex: <begin> # {{obsolete spelling of|en|pathopoeia}}. <end>
 Page 2381 mythopœia: Found match for regex: <begin> # {{obsolete spelling of|en|mythopoeia}}. <end>
 Page 2382 æternity: Found match for regex: <begin> # {{obsolete spelling of|en|eternity}}. <end>
 Page 2383 promptuario: Found match for regex: <begin> # {{obsolete spelling of|pt|prontuário}} <end>
-Page 2384 logorrhœa: Found match for regex: <begin> # {{lb|en|British spelling}} {{obsolete spelling of|en|logorrhea}} <end>
+Page 2384 logorrhœa: Found match for regex: <begin> # {{lb|en|British spelling}} {{obsolete spelling of|en|logorrhea}}. <end>
 Page 2385 -pœia: Found match for regex: <begin> # {{obsolete spelling of|en|-poeia}}. <end>
 Page 2386 dæmonolatry: Found match for regex: <begin> # {{obsolete spelling of|en|demonolatry}}. <end>
 Page 2387 pænitence: Found match for regex: <begin> # {{obsolete spelling of|en|penitence}}. <end>
@@ -13236,7 +13236,7 @@ Page 2418 jole: Found match for regex: <begin> # {{obsolete spelling of|en|jowl}
 Page 2418 jole: Found match for regex: <begin> # {{obsolete spelling of|en|jowl}}. <end>
 Page 2419 œsophagitis: Found match for regex: <begin> # {{obsolete spelling of|en|esophagitis}}. <end>
 Page 2420 Thaler: Found match for regex: <begin> # {{obsolete spelling of|de|Taler}} <end>
-Page 2421 metanœa: Found match for regex: <begin> # {{lb|en|rare}} {{obsolete spelling of|en|metanoia}} <end>
+Page 2421 metanœa: Found match for regex: <begin> # {{lb|en|rare}} {{obsolete spelling of|en|metanoia}}. <end>
 Page 2422 œstrogenic: Found match for regex: <begin> # {{obsolete spelling of|en|estrogenic}}. <end>
 Page 2423 œnanthic: Found match for regex: <begin> # {{obsolete spelling of|en|enanthic}}. <end>
 Page 2424 reache: Found match for regex: <begin> # {{obsolete spelling of|en|reach}}. <end>
@@ -13278,7 +13278,7 @@ Page 2478 prædiction: Found match for regex: <begin> # {{obsolete spelling of|e
 Page 2479 præparation: Found match for regex: <begin> # {{obsolete spelling of|en|preparation}}. <end>
 Page 2481 sphæric: Found match for regex: <begin> # {{obsolete spelling of|en|spheric}}. <end>
 Page 2482 hæmatopœtic: Found match for regex: <begin> # {{obsolete spelling of|en|haematopoietic}}. <end>
-Page 2483 synæsthesia: Found match for regex: <begin> # {{lb|en|chiefly|British spelling}} {{obsolete spelling of|en|synaesthesia}} <end>
+Page 2483 synæsthesia: Found match for regex: <begin> # {{lb|en|chiefly|British spelling}} {{obsolete spelling of|en|synaesthesia}}. <end>
 Page 2484 œdematous: Found match for regex: <begin> # {{obsolete spelling of|en|edematous}}. <end>
 Page 2485 disneur: Found match for regex: <begin> # {{obsolete spelling of|fr|dîneur}} <end>
 Page 2486 æquivocate: Found match for regex: <begin> # {{obsolete spelling of|en|equivocate}}. <end>
@@ -13310,8 +13310,8 @@ Page 2512 shappe: Found match for regex: <begin> # {{obsolete spelling of|en|sha
 Page 2513 smyth: Found match for regex: <begin> # {{obsolete spelling of|en|smith}}. <end>
 Page 2514 wishe: Found match for regex: <begin> # {{obsolete spelling of|en|wish}}. <end>
 Page 2514 wishe: Found match for regex: <begin> # {{obsolete spelling of|en|wish}}. <end>
-Page 2515 hæmorrhagic: Found match for regex: <begin> # {{lb|en|chiefly|British spelling}} {{obsolete spelling of|en|hemorrhagic}} <end>
-Page 2516 anæsthete: Found match for regex: <begin> # {{lb|en|rare}} {{obsolete spelling of|en|anaesthete}} <end>
+Page 2515 hæmorrhagic: Found match for regex: <begin> # {{lb|en|chiefly|British spelling}} {{obsolete spelling of|en|hemorrhagic}}. <end>
+Page 2516 anæsthete: Found match for regex: <begin> # {{lb|en|rare}} {{obsolete spelling of|en|anaesthete}}. <end>
 Page 2517 encountre: Found match for regex: <begin> # {{obsolete spelling of|en|encounter}}. <end>
 Page 2517 encountre: Found match for regex: <begin> # {{obsolete spelling of|en|encounter}}. <end>
 Page 2518 slumbre: Found match for regex: <begin> # {{obsolete spelling of|en|slumber}}. <end>
@@ -13321,7 +13321,7 @@ Page 2520 slaughtre: Found match for regex: <begin> # {{obsolete spelling of|en|
 Page 2520 slaughtre: Found match for regex: <begin> # {{obsolete spelling of|en|slaughter}}. <end>
 Page 2521 jeri: Found match for regex: <begin> # {{obsolete spelling of|it|ieri}} <end>
 Page 2521 jeri: Found match for regex: <begin> # {{obsolete spelling of|it|ieri}} <end>
-Page 2522 anie: Found match for regex: <begin> # {{lb|en|EME}} {{obsolete spelling of|en|any}} <end>
+Page 2522 anie: Found match for regex: <begin> # {{lb|en|EME}} {{obsolete spelling of|en|any}}. <end>
 Page 2523 byshop: Found match for regex: <begin> # {{obsolete spelling of|en|bishop}}. <end>
 Page 2524 sufficiencie: Found match for regex: <begin> # {{obsolete spelling of|en|sufficiency}}. <end>
 Page 2525 greuous: Found match for regex: <begin> # {{obsolete spelling of|en|grievous}}. <end>
@@ -13466,8 +13466,8 @@ Page 2709 raygne: Found match for regex: <begin> # {{obsolete spelling of|en|rai
 Page 2710 nigheann: Found match for regex: <begin> # {{obsolete spelling of|ga|níonn|t=washes}} <end>
 Page 2712 talliage: Found match for regex: <begin> # {{obsolete spelling of|en|tallage}} {{qualifier|tax}}. {{defdate|Middle English–19th century}} <end>
 Page 2713 begyle: Found match for regex: <begin> # {{obsolete spelling of|en|beguile}}. {{defdate|Middle English–16th century}} <end>
-Page 2714 pleace: Found match for regex: <begin> # {{lb|en|in use generally from the Middle English period to the fifteenth century and persisting in Scots until the seventeenth century}} {{obsolete spelling of|en|please}} <end>
-Page 2714 pleace: Found match for regex: <begin> # {{lb|en|in use in Scots until the seventeenth century and in some English|_|dialects|_|in the eighteenth and nineteenth centuries}} {{obsolete spelling of|en|place}} <end>
+Page 2714 pleace: Found match for regex: <begin> # {{lb|en|in use generally from the Middle English period to the fifteenth century and persisting in Scots until the seventeenth century}} {{obsolete spelling of|en|please}}. <end>
+Page 2714 pleace: Found match for regex: <begin> # {{lb|en|in use in Scots until the seventeenth century and in some English|_|dialects|_|in the eighteenth and nineteenth centuries}} {{obsolete spelling of|en|place}}. <end>
 Page 2715 tarek: Found match for regex: <begin> # {{lb|ms|pre-1972}} {{obsolete spelling of|ms|tarik}} <end>
 Page 2716 włoska: Found match for regex: <begin> # {{obsolete spelling of|dsb|łoska}} <end>
 Page 2717 włoskich: Found match for regex: <begin> # {{obsolete spelling of|dsb|łoskich}} <end>
@@ -13534,12 +13534,12 @@ Page 2770 thrue: Found match for regex: <begin> # {{obsolete spelling of|en|thro
 Page 2771 neare: Found match for regex: <begin> # {{obsolete spelling of|en|near}}. <end>
 Page 2772 theim: Found match for regex: <begin> # {{obsolete spelling of|en|them}}. <end>
 Page 2773 seye: Found match for regex: <begin> # {{obsolete spelling of|en|say}}. <end>
-Page 2774 drawne: Found match for regex: <begin> # {{past participle of|en|draw|nocat=1}}; {{obsolete spelling of|en|drawn}} <end>
+Page 2774 drawne: Found match for regex: <begin> # {{past participle of|en|draw|nocat=1}}; {{obsolete spelling of|en|drawn}}. <end>
 Page 2775 symptomatick: Found match for regex: <begin> # {{obsolete spelling of|en|symptomatic}}. <end>
 Page 2776 syndick: Found match for regex: <begin> # {{obsolete spelling of|en|syndic}}. <end>
 Page 2777 stupour: Found match for regex: <begin> # {{obsolete spelling of|en|stupor}}. <end>
-Page 2778 manœuver: Found match for regex: <begin> # {{lb|en|UK}} {{obsolete spelling of|en|maneuver}} <end>
-Page 2778 manœuver: Found match for regex: <begin> # {{lb|en|UK}} {{obsolete spelling of|en|maneuver}} <end>
+Page 2778 manœuver: Found match for regex: <begin> # {{lb|en|UK}} {{obsolete spelling of|en|maneuver}}. <end>
+Page 2778 manœuver: Found match for regex: <begin> # {{lb|en|UK}} {{obsolete spelling of|en|maneuver}}. <end>
 Page 2779 emperess: Found match for regex: <begin> # {{obsolete spelling of|en|empress}}. <end>
 Page 2780 bárda: Found match for regex: <begin> # {{obsolete spelling of|ga|barda}} <end>
 Page 2781 básamhail: Found match for regex: <begin> # {{obsolete spelling of|ga|básúil}} {{gloss|mortal}} <end>
@@ -13560,8 +13560,8 @@ Page 2791 panegyry: Found match for regex: <begin> # {{obsolete spelling of|en|p
 Page 2792 slaken: Found match for regex: <begin> # {{obsolete spelling of|en|slacken}}. <end>
 Page 2793 embrew: Found match for regex: <begin> # {{obsolete spelling of|en|imbrue}}. <end>
 Page 2794 anctiously: Found match for regex: <begin> # {{obsolete spelling of|en|anxiously}}. <end>
-Page 2795 unabasht: Found match for regex: <begin> # {{lb|en|rare}} {{obsolete spelling of|en|unabashed}} <end>
-Page 2796 unattacht: Found match for regex: <begin> # {{lb|en|rare}} {{obsolete spelling of|en|unattached}} <end>
+Page 2795 unabasht: Found match for regex: <begin> # {{lb|en|rare}} {{obsolete spelling of|en|unabashed}}. <end>
+Page 2796 unattacht: Found match for regex: <begin> # {{lb|en|rare}} {{obsolete spelling of|en|unattached}}. <end>
 Page 2797 unaccomplisht: Found match for regex: <begin> # {{obsolete spelling of|en|unaccomplished}}. <end>
 Page 2797 unaccomplisht: Found match for regex: <begin> {{cln|en|obsolete forms}} <end>
 Page 2798 botanick: Found match for regex: <begin> # {{obsolete spelling of|en|botanic}}. <end>
@@ -13629,16 +13629,16 @@ Page 2854 phylosophical: Found match for regex: <begin> # {{obsolete spelling of
 Page 2855 successour: Found match for regex: <begin> # {{obsolete spelling of|en|successor}}. <end>
 Page 2856 detractour: Found match for regex: <begin> # {{obsolete spelling of|en|detractor}}. <end>
 Page 2857 electour: Found match for regex: <begin> # {{obsolete spelling of|en|elector}}. <end>
-Page 2858 erectour: Found match for regex: <begin> # {{lb|en|rare}} {{obsolete spelling of|en|erector}} <end>
-Page 2859 hectour: Found match for regex: <begin> # {{lb|en|rare}} {{obsolete spelling of|en|hector}} <end>
+Page 2858 erectour: Found match for regex: <begin> # {{lb|en|rare}} {{obsolete spelling of|en|erector}}. <end>
+Page 2859 hectour: Found match for regex: <begin> # {{lb|en|rare}} {{obsolete spelling of|en|hector}}. <end>
 Page 2860 instigatour: Found match for regex: <begin> # {{obsolete spelling of|en|instigator}}. <end>
 Page 2861 legislatour: Found match for regex: <begin> # {{obsolete spelling of|en|legislator}}. <end>
 Page 2862 envigourate: Found match for regex: <begin> # {{obsolete spelling of|en|invigorate}}. <end>
-Page 2863 travelour: Found match for regex: <begin> # {{lb|en|rare}} {{obsolete spelling of|en|traveller}} <end>
+Page 2863 travelour: Found match for regex: <begin> # {{lb|en|rare}} {{obsolete spelling of|en|traveller}}. <end>
 Page 2864 demoliren: Found match for regex: <begin> # {{obsolete spelling of|de|demolieren}} <end>
 Page 2865 hybernate: Found match for regex: <begin> # {{obsolete spelling of|en|hibernate}}. <end>
 Page 2866 hybernation: Found match for regex: <begin> # {{obsolete spelling of|en|hibernation}}. <end>
-Page 2867 Hectour: Found match for regex: <begin> {{obsolete spelling of|en|Hector}} <end>
+Page 2867 Hectour: Found match for regex: <begin> {{obsolete spelling of|en|Hector}}. <end>
 Page 2868 Victour: Found match for regex: <begin> # {{lb|en|rare}} {{obsolete spelling of|en|Victor}}: {{given name|en|male|A=a}}. <end>
 Page 2869 incompleatly: Found match for regex: <begin> # {{obsolete spelling of|en|incompletely}}. <end>
 Page 2870 ghoast: Found match for regex: <begin> # {{obsolete spelling of|en|ghost}}. <end>
@@ -13646,18 +13646,18 @@ Page 2871 emburse: Found match for regex: <begin> # {{obsolete spelling of|en|im
 Page 2872 tornarão: Found match for regex: <begin> # {{obsolete spelling of|pt|tornaram}} <end>
 Page 2873 ascetick: Found match for regex: <begin> # {{obsolete spelling of|en|ascetic}}. <end>
 Page 2873 ascetick: Found match for regex: <begin> # {{obsolete spelling of|en|ascetic}}. <end>
-Page 2875 unpublick: Found match for regex: <begin> # {{lb|en|rare}} {{obsolete spelling of|en|unpublic}} <end>
+Page 2875 unpublick: Found match for regex: <begin> # {{lb|en|rare}} {{obsolete spelling of|en|unpublic}}. <end>
 Page 2876 porpus: Found match for regex: <begin> # {{obsolete spelling of|en|porpoise}}. <end>
 Page 2877 -ick: Found match for regex: <begin> # {{obsolete spelling of|en|-ic}}. <end>
 Page 2878 enigmatick: Found match for regex: <begin> # {{obsolete spelling of|en|enigmatic}}. <end>
 Page 2879 kydell: Found match for regex: <begin> # {{obsolete spelling of|en|kiddle}}. <end>
-Page 2880 accusatour: Found match for regex: <begin> # {{lb|en|rare}} {{obsolete spelling of|en|accusator}} <end>
-Page 2881 acceptour: Found match for regex: <begin> # {{lb|en|rare}} {{obsolete spelling of|en|acceptor}} <end>
-Page 2882 captour: Found match for regex: <begin> # {{lb|en|rare}} {{obsolete spelling of|en|captor}} <end>
+Page 2880 accusatour: Found match for regex: <begin> # {{lb|en|rare}} {{obsolete spelling of|en|accusator}}. <end>
+Page 2881 acceptour: Found match for regex: <begin> # {{lb|en|rare}} {{obsolete spelling of|en|acceptor}}. <end>
+Page 2882 captour: Found match for regex: <begin> # {{lb|en|rare}} {{obsolete spelling of|en|captor}}. <end>
 Page 2883 conjurour: Found match for regex: <begin> # {{obsolete spelling of|en|conjurer}}. <end>
-Page 2884 divinour: Found match for regex: <begin> # {{lb|en|rare}} {{obsolete spelling of|en|diviner}} <end>
+Page 2884 divinour: Found match for regex: <begin> # {{lb|en|rare}} {{obsolete spelling of|en|diviner}}. <end>
 Page 2885 grantour: Found match for regex: <begin> # {{obsolete spelling of|en|grantor}}. <end>
-Page 2886 lictour: Found match for regex: <begin> # {{lb|en|rare}} {{obsolete spelling of|en|lictor}} <end>
+Page 2886 lictour: Found match for regex: <begin> # {{lb|en|rare}} {{obsolete spelling of|en|lictor}}. <end>
 Page 2887 motour: Found match for regex: <begin> # {{obsolete spelling of|en|motor}}. <end>
 Page 2888 sallary: Found match for regex: <begin> # {{obsolete spelling of|en|salary}}. <end>
 Page 2889 absolviture: Found match for regex: <begin> # {{obsolete spelling of|en|absolvitor}}. <end>
@@ -13675,7 +13675,7 @@ Page 2902 noy: Found match for regex: <begin> # {{obsolete spelling of|ca|noi}} 
 Page 2903 booser: Found match for regex: <begin> # {{obsolete spelling of|en|boozer||heavy drinker}}. <end>
 Page 2904 暹羅: Found match for regex: <begin> # {{obsolete spelling of|ja|シャム||[[Siam]]|sort=しゃむ}}<ref name=KDJ/><ref name=DJS/><ref name=KJE/><ref name=DJR/> <end>
 Page 2905 gulphe: Found match for regex: <begin> # {{obsolete spelling of|en|gulf}}. <end>
-Page 2906 gentilly: Found match for regex: <begin> # {{lb|en|EME}} {{obsolete spelling of|en|gently}} <end>
+Page 2906 gentilly: Found match for regex: <begin> # {{lb|en|EME}} {{obsolete spelling of|en|gently}}. <end>
 Page 2907 fayle: Found match for regex: <begin> # {{obsolete spelling of|en|fail}}. <end>
 Page 2908 whyle: Found match for regex: <begin> # {{obsolete spelling of|en|while}}. <end>
 Page 2909 proude: Found match for regex: <begin> # {{obsolete spelling of|en|proud}}. <end>
@@ -13695,7 +13695,7 @@ Page 2921 chainwale: Found match for regex: <begin> # {{obsolete spelling of|en|
 Page 2922 capellane: Found match for regex: <begin> # {{obsolete spelling of|en|chaplain}}. <end>
 Page 2923 maleadministration: Found match for regex: <begin> # {{obsolete spelling of|en|maladministration}}. <end>
 Page 2924 disclame: Found match for regex: <begin> # {{obsolete spelling of|en|disclaim}}. <end>
-Page 2925 thei: Found match for regex: <begin> #{{obsolete spelling of|en|they}} <end>
+Page 2925 thei: Found match for regex: <begin> #{{obsolete spelling of|en|they}}. <end>
 Page 2926 herefore: Found match for regex: <begin> # {{obsolete spelling of|en|herefor}}. <end>
 Page 2927 heerefore: Found match for regex: <begin> # {{obsolete spelling of|en|herefore}}. <end>
 Page 2928 brassart: Found match for regex: <begin> # {{obsolete spelling of|fr|brassard}} <end>
@@ -13729,7 +13729,7 @@ Page 2954 dasz: Found match for regex: <begin> # {{obsolete spelling of|de|dass}
 Page 2955 laua: Found match for regex: <begin> # {{obsolete spelling of|tl|lawa}} <end>
 Page 2956 coendoo: Found match for regex: <begin> # {{obsolete spelling of|en|coendou}}. <end>
 Page 2957 Wiktionary talk:Votes/2012-04/Languages with limited documentation: Found match for regex: <begin> :::: Ah, it's good that you press me on that: the Aleut discussion is [[Wiktionary:BP#Entries_from_unreliable_sources|here]] (archive-proof permalink [http://en.wiktionary.org/w/index.php?title=Wiktionary:Beer_parlour&oldid=16672988#Entries_from_unreliable_sources]), and the distinction I neglected is that the deleted Aleut words were mentions in secondary sources (words in dictionaries), not uses in primary sources. I presume we would have allowed the Aleut words in question if we had been able to find them used in primary sources, even if we had tagged each as an {{temp|obsolete spelling of}}. The "inappropriate as a sole source" sentence seems to disallow both mentions (to the extent that this vote otherwises allows mentions) and uses in primary sources. Perhaps it would be better not to try to disallow questionable words from Usenet, but just to tag them as {{temp|nonstandard}} or worse, when appropriate? [[User:-sche|- -sche]] [[User talk:-sche|(discuss)]] 20:05, 12 April 2012 (UTC) <end>
-Page 2958 rolly-pooly: Found match for regex: <begin> # {{obsolete spelling of|en|roly-poly|t=[[game#Noun|game]] in which [[ball#Noun|balls]] are [[roll#Verb|rolled]] or [[bowl#Verb|bowled]] into [[hole#Noun|holes]]}}. <end>
+Page 2958 rolly-pooly: Found match for regex: <begin> # {{obsolete spelling of|en|roly-poly|t=game in which balls are rolled or bowled into holes}}. <end>
 Page 2959 twyblade: Found match for regex: <begin> # {{obsolete spelling of|en|twayblade}}. <end>
 Page 2960 battaile: Found match for regex: <begin> # {{obsolete spelling of|en|battle}}. <end>
 Page 2961 gospell: Found match for regex: <begin> # {{obsolete spelling of|en|gospel}}. <end>
@@ -13787,7 +13787,7 @@ Page 3007 grone: Found match for regex: <begin> # {{obsolete spelling of|en|groa
 Page 3008 healme: Found match for regex: <begin> # {{obsolete spelling of|en|helm}}. <end>
 Page 3009 imployment: Found match for regex: <begin> # {{obsolete spelling of|en|employment}}. <end>
 Page 3010 kaŗš: Found match for regex: <begin> # {{lb|lv|before 1946}} {{obsolete spelling of|lv|karš}} <end>
-Page 3011 avalone: Found match for regex: <begin> # {{lb|en|US}} {{obsolete spelling of|en|abalone}} <end>
+Page 3011 avalone: Found match for regex: <begin> # {{lb|en|US}} {{obsolete spelling of|en|abalone}}. <end>
 Page 3012 ingage: Found match for regex: <begin> # {{obsolete spelling of|en|engage}}. <end>
 Page 3013 boundance: Found match for regex: <begin> # {{obsolete spelling of|en|abundance}}. <end>
 Page 3016 oth: Found match for regex: <begin> # {{obsolete spelling of|en|oath}}. <end>
@@ -13952,7 +13952,7 @@ Page 3170 ploot: Found match for regex: <begin> # {{lb|en|Scottish}} {{obsolete 
 Page 3171 Aeltern: Found match for regex: <begin> # {{obsolete spelling of|de|Eltern}} <end>
 Page 3172 pastil: Found match for regex: <begin> # {{obsolete spelling of|en|pastille}}. <end>
 Page 3172 pastil: Found match for regex: <begin> # {{obsolete spelling of|en|pastel}}. <end>
-Page 3173 quho: Found match for regex: <begin> # {{lb|en|often|_|Scottish}} {{obsolete spelling of|en|who}} <end>
+Page 3173 quho: Found match for regex: <begin> # {{lb|en|often|_|Scottish}} {{obsolete spelling of|en|who}}. <end>
 Page 3174 mexicopa: Found match for regex: <begin> # {{obsolete spelling of|nci|mexihcopa|mēxihcopa}} <end>
 Page 3175 mexicopauic: Found match for regex: <begin> # {{obsolete spelling of|nci|mexihcopahuic|mēxihcopahuīc}} <end>
 Page 3176 liepota: Found match for regex: <begin> # {{obsolete spelling of|sh|ljepota}} <end>
@@ -14164,7 +14164,7 @@ Page 3329 lançarão: Found match for regex: <begin> # {{obsolete spelling of|pt
 Page 3330 coando: Found match for regex: <begin> # {{lb|pt|uncommon}} {{obsolete spelling of|pt|quando}} <end>
 Page 3331 ferirão: Found match for regex: <begin> # {{obsolete spelling of|pt|feriram}} <end>
 Page 3332 beirling: Found match for regex: <begin> # {{obsolete spelling of|ga|birling}} <end>
-Page 3333 taber: Found match for regex: <begin> # {{lb|en|musical instruments}} {{obsolete spelling of|en|tabor}} <end>
+Page 3333 taber: Found match for regex: <begin> # {{lb|en|musical instruments}} {{obsolete spelling of|en|tabor}}. <end>
 Page 3333 taber: Found match for regex: <begin> # {{obsolete spelling of|en|tabor}}. <end>
 Page 3334 cometerão: Found match for regex: <begin> # {{obsolete spelling of|pt|cometeram}} <end>
 Page 3335 durão: Found match for regex: <begin> # {{obsolete spelling of|pt|duram}} <end>
@@ -14175,11 +14175,11 @@ Page 3339 viesse: Found match for regex: <begin> # {{obsolete spelling of|es|vie
 Page 3341 prirodoslovje: Found match for regex: <begin> # {{obsolete spelling of|sh|prirodoslovlje}} <end>
 Page 3342 quartel: Found match for regex: <begin> # {{obsolete spelling of|nl|kwartel}} <end>
 Page 3342 quartel: Found match for regex: <begin> # {{obs sp|es|cuartel}} <end>
-Page 3343 quhat: Found match for regex: <begin> # {{lb|en|especially|Scottish}} {{obsolete spelling of|en|what}} <end>
-Page 3344 quhich: Found match for regex: <begin> # {{lb|en|often|_|Scottish}} {{obsolete spelling of|en|which}} <end>
-Page 3345 quhow: Found match for regex: <begin> # {{lb|en|often|_|Scottish}} {{obsolete spelling of|en|how}} <end>
-Page 3346 quhen: Found match for regex: <begin> # {{lb|en|chiefly|_|Scottish}} {{obsolete spelling of|en|when}} <end>
-Page 3347 quhere: Found match for regex: <begin> # {{lb|en|especially|Scotland}} {{obsolete spelling of|en|where}} <end>
+Page 3343 quhat: Found match for regex: <begin> # {{lb|en|especially|Scottish}} {{obsolete spelling of|en|what}}. <end>
+Page 3344 quhich: Found match for regex: <begin> # {{lb|en|often|_|Scottish}} {{obsolete spelling of|en|which}}. <end>
+Page 3345 quhow: Found match for regex: <begin> # {{lb|en|often|_|Scottish}} {{obsolete spelling of|en|how}}. <end>
+Page 3346 quhen: Found match for regex: <begin> # {{lb|en|chiefly|_|Scottish}} {{obsolete spelling of|en|when}}. <end>
+Page 3347 quhere: Found match for regex: <begin> # {{lb|en|especially|Scotland}} {{obsolete spelling of|en|where}}. <end>
 Page 3349 ventersome: Found match for regex: <begin> # {{obsolete spelling of|en|venturesome}}. {{defdate|17<sup>th</sup> C.}} <end>
 Page 3350 Cöln: Found match for regex: <begin> # {{obsolete spelling of|de|Köln}} <end>
 Page 3351 hespanhol: Found match for regex: <begin> # {{obsolete spelling of|pt|espanhol}} <end>
@@ -14211,7 +14211,7 @@ Page 3375 amber-grease: Found match for regex: <begin> # {{obsolete spelling of|
 Page 3376 Germanie: Found match for regex: <begin> # {{obsolete spelling of|en|Germany}}. <end>
 Page 3377 poeme: Found match for regex: <begin> # {{obsolete spelling of|en|poem}}. <end>
 Page 3378 poëme: Found match for regex: <begin> # {{obsolete spelling of|en|poeme}}. <end>
-Page 3379 plaier: Found match for regex: <begin> # {{lb|en|EME|obsolete}} {{obsolete spelling of|en|player}} <end>
+Page 3379 plaier: Found match for regex: <begin> # {{lb|en|EME|obsolete}} {{obsolete spelling of|en|player}}. <end>
 Page 3380 casamento de rapôsa: Found match for regex: <begin> # {{obsolete spelling of|pt|casamento de raposa}} <end>
 Page 3382 angeo: Found match for regex: <begin> # {{obsolete spelling of|es|anjeo}} <end>
 Page 3383 chorão: Found match for regex: <begin> # {{obsolete spelling of|pt|choram}} <end>
@@ -14856,7 +14856,7 @@ Page 3991 pleas'd: Found match for regex: <begin> # {{obsolete spelling of|en|pl
 Page 3992 wing'd: Found match for regex: <begin> # {{obsolete spelling of|en|winged}}. <end>
 Page 3993 hallow'd: Found match for regex: <begin> # {{obsolete spelling of|en|hallowed}}. <end>
 Page 3994 dispell: Found match for regex: <begin> # {{obsolete spelling of|en|dispel}}. <end>
-Page 3995 dispells: Found match for regex: <begin> # {{infl of|en|dispell||s-verb-form}}, {{obsolete spelling of|en|dispels}} <end>
+Page 3995 dispells: Found match for regex: <begin> # {{infl of|en|dispell||s-verb-form}}, {{obsolete spelling of|en|dispels}}. <end>
 Page 3996 reyno: Found match for regex: <begin> # {{obsolete spelling of|pt|reino}} <end>
 Page 3996 reyno: Found match for regex: <begin> # {{obs sp|es|reino}} <end>
 Page 3997 beidemal: Found match for regex: <begin> # {{obsolete spelling of|de|[[beide]] [[Mal]]||both times}} <end>
@@ -15042,7 +15042,7 @@ Page 4176 yyelli: Found match for regex: <begin> # {{obsolete spelling of|nci|iy
 Page 4177 macpalcomulli: Found match for regex: <begin> # {{obsolete spelling of|nci|macpalcomōlli}} <end>
 Page 4178 genela: Found match for regex: <begin> # {{obsolete spelling of|pt|janela}} <end>
 Page 4179 microsegundo: Found match for regex: <begin> # {{obsolete spelling of|pt|microssegundo}} <end>
-Page 4180 Brienne: Found match for regex: <begin> # {{lb|en|obsolete}} {{surname|en|from=French}}. {{ellipsis of|en|de Brienne}} {{obsolete spelling of|en|Bryan|gloss=[[de Bryan]]}} <end>
+Page 4180 Brienne: Found match for regex: <begin> # {{lb|en|obsolete}} {{surname|en|from=French}}. {{ellipsis of|en|de Brienne}} {{obsolete spelling of|en|Bryan|gloss=[[de Bryan]]}}. <end>
 Page 4181 tuçamputzalli: Found match for regex: <begin> # {{obsolete spelling of|nci|tōzampōtzalli}} <end>
 Page 4182 toçampotzalli: Found match for regex: <begin> # {{obsolete spelling of|nci|tōzampōtzalli}} <end>
 Page 4183 toçanychan: Found match for regex: <begin> # {{obsolete spelling of|nci|tōzan īchān}} <end>
@@ -15221,7 +15221,7 @@ Page 4360 izta ayutl: Found match for regex: <begin> # {{obsolete spelling of|nc
 Page 4361 yzta ayotl: Found match for regex: <begin> # {{obsolete spelling of|nci|iztaāyōtl}} <end>
 Page 4362 yztatl: Found match for regex: <begin> # {{obsolete spelling of|nci|iztatl}} <end>
 Page 4363 seldome: Found match for regex: <begin> # {{obsolete spelling of|en|seldom}}. <end>
-Page 4364 radiculous: Found match for regex: <begin> # {{lb|en|rare}} {{obsolete spelling of|en|ridiculous}} <end>
+Page 4364 radiculous: Found match for regex: <begin> # {{lb|en|rare}} {{obsolete spelling of|en|ridiculous}}. <end>
 Page 4365 performe: Found match for regex: <begin> # {{obsolete spelling of|en|perform}}. <end>
 Page 4366 folgar: Found match for regex: <begin> # {{obsolete spelling of|es|holgar}} <end>
 Page 4367 nabaja: Found match for regex: <begin> # {{obsolete spelling of|es|navaja}} <end>
@@ -15249,7 +15249,7 @@ Page 4388 ptisico: Found match for regex: <begin> # {{obsolete spelling of|es|t�
 Page 4389 cœnobitic: Found match for regex: <begin> # {{obsolete spelling of|en|cenobitic}}. <end>
 Page 4390 cœnobitical: Found match for regex: <begin> # {{obsolete spelling of|en|cenobitical}}. <end>
 Page 4391 cœnobitism: Found match for regex: <begin> # {{obsolete spelling of|en|cenobitism}}. <end>
-Page 4392 oboedience: Found match for regex: <begin> # {{lb|en|rare}} {{obsolete spelling of|en|obedience}} <end>
+Page 4392 oboedience: Found match for regex: <begin> # {{lb|en|rare}} {{obsolete spelling of|en|obedience}}. <end>
 Page 4393 võ: Found match for regex: <begin> # {{obsolete spelling of|de|von}} <end>
 Page 4394 Hofrath: Found match for regex: <begin> # {{obsolete spelling of|de|Hofrat}} <end>
 Page 4395 Reichsrath: Found match for regex: <begin> # {{obsolete spelling of|de|Reichsrat}} <end>
@@ -15277,7 +15277,7 @@ Page 4415 lôa: Found match for regex: <begin> # {{obsolete spelling of|pt|loa}}
 Page 4416 jackall: Found match for regex: <begin> # {{obsolete spelling of|en|jackal}}. <end>
 Page 4417 quachcalli: Found match for regex: <begin> # {{obsolete spelling of|nci|cuāchcalli}} <end>
 Page 4418 phœbe: Found match for regex: <begin> # {{obsolete spelling of|en|phoebe}}. <end>
-Page 4419 Chaus: Found match for regex: <begin> # {{alternative case form of|en|chaus}}; {{obsolete spelling of|en|chiaus|nocap=1}} <end>
+Page 4419 Chaus: Found match for regex: <begin> # {{alternative case form of|en|chaus}}; {{obsolete spelling of|en|chiaus|nocap=1}}. <end>
 Page 4420 finoki: Found match for regex: <begin> # {{obsolete spelling of|en|hinoki}}. {{defdate|18th C.}} <end>
 Page 4421 xoxotlato: Found match for regex: <begin> # {{obsolete spelling of|nci|xoxōtlatōn}} <end>
 Page 4422 vagão: Found match for regex: <begin> # {{obsolete spelling of|pt|vagam}} <end>
@@ -15480,7 +15480,7 @@ Page 4622 hypalbuminæmia: Found match for regex: <begin> # {{obsolete spelling 
 Page 4623 hvarken: Found match for regex: <begin> # {{obsolete spelling of|sv|varken||neither}} <end>
 Page 4624 Chaoush: Found match for regex: <begin> # {{alternative case form of|en|chaoush}}; {{obsolete spelling of|en|chiaus|nocap=1}}. <end>
 Page 4625 chaoush: Found match for regex: <begin> # {{obsolete spelling of|en|chiaus}}. <end>
-Page 4626 Chiaux: Found match for regex: <begin> # {{alternative case form of|en|chiaux}}; {{obsolete spelling of|en|chiaus|nocap=1}} <end>
+Page 4626 Chiaux: Found match for regex: <begin> # {{alternative case form of|en|chiaux}}; {{obsolete spelling of|en|chiaus|nocap=1}}. <end>
 Page 4627 snödrifva: Found match for regex: <begin> # {{obsolete spelling of|sv|snödriva}} <end>
 Page 4628 Zambese: Found match for regex: <begin> # {{obsolete spelling of|en|Zambezi}}. <end>
 Page 4628 Zambese: Found match for regex: <begin> # {{obsolete spelling of|pt|Zambezi}} <end>
@@ -15492,28 +15492,28 @@ Page 4633 chiause: Found match for regex: <begin> # {{senseid|en|ottomanPerson}}
 Page 4633 chiause: Found match for regex: <begin> # {{obsolete spelling of|en|chouse}}. <end>
 Page 4634 chiaush: Found match for regex: <begin> # {{senseid|en|ottomanPerson}}{{lb|en|historical}} {{obsolete spelling of|en|chiaus}} {{defdate|17th–18th c.}} <end>
 Page 4635 chaoux: Found match for regex: <begin> # {{senseid|en|ottomanPerson}} {{obsolete spelling of|en|chiaus}} {{defdate|early 19th c.}} <end>
-Page 4636 chiaoux: Found match for regex: <begin> # {{senseid|en|ottomanPerson}} {{obsolete spelling of|en|chiaus}} <end>
-Page 4637 tchaouch: Found match for regex: <begin> # {{lb|en|historical}} {{obsolete spelling of|en|chiaus}} <end>
+Page 4636 chiaoux: Found match for regex: <begin> # {{senseid|en|ottomanPerson}} {{obsolete spelling of|en|chiaus}}. <end>
+Page 4637 tchaouch: Found match for regex: <begin> # {{lb|en|historical}} {{obsolete spelling of|en|chiaus}}. <end>
 Page 4637 tchaouch: Found match for regex: <begin> # {{lb|fr|historical}} {{obsolete spelling of|fr|chaouch}} <end>
-Page 4638 Chiauss: Found match for regex: <begin> # {{alternative case form of|en|chiauss}}; {{obsolete spelling of|en|chiaus|nocap=1}} <end>
-Page 4639 chiauss: Found match for regex: <begin> # {{senseid|en|ottomanPerson}}{{lb|en|historical}} {{obsolete spelling of|en|chiaus}} <end>
-Page 4641 tchaous: Found match for regex: <begin> # {{lb|en|historical}} {{obsolete spelling of|en|chiaus}} <end>
+Page 4638 Chiauss: Found match for regex: <begin> # {{alternative case form of|en|chiauss}}; {{obsolete spelling of|en|chiaus|nocap=1}}. <end>
+Page 4639 chiauss: Found match for regex: <begin> # {{senseid|en|ottomanPerson}}{{lb|en|historical}} {{obsolete spelling of|en|chiaus}}. <end>
+Page 4641 tchaous: Found match for regex: <begin> # {{lb|en|historical}} {{obsolete spelling of|en|chiaus}}. <end>
 Page 4641 tchaous: Found match for regex: <begin> # {{lb|fr|historical}} {{obsolete spelling of|fr|chaouch||chiaus}} <end>
 Page 4642 User:BoBoMisiu/chiaoux: Found match for regex: <begin> # {{lb|fr|historical}} {{obsolete spelling of|fr|chaouch||chiaus}} <end>
 Page 4643 User:BoBoMisiu/chiaux: Found match for regex: <begin> #{{lb|fr|historical}} {{obsolete spelling of|fr|chaouch||chiaus}} <end>
 Page 4644 Chaoosh: Found match for regex: <begin> # {{alternative case form of|en|chaoosh}}; {{obsolete spelling of|en|chiaus|nocap=1}}. <end>
-Page 4645 chaoosh: Found match for regex: <begin> # {{senseid|en|ottomanPerson}}{{obsolete spelling of|en|chiaus}} <end>
-Page 4646 chowse: Found match for regex: <begin> # {{lb|en|transitive}} {{obsolete spelling of|en|chouse||to cheat, to swindle}} <end>
+Page 4645 chaoosh: Found match for regex: <begin> # {{senseid|en|ottomanPerson}}{{obsolete spelling of|en|chiaus}}. <end>
+Page 4646 chowse: Found match for regex: <begin> # {{lb|en|transitive}} {{obsolete spelling of|en|chouse||to cheat, to swindle}}. <end>
 Page 4647 tsak: Found match for regex: <begin> {{head|hu|lemma}} <!-- let's not add obsolete forms to POS categories --> <end>
 Page 4647 tsak: Found match for regex: <begin> # {{obsolete spelling of|hu|csak}} <end>
-Page 4649 lionine: Found match for regex: <begin> # {{obsolete spelling of|en|leonine|t=13th-[[century]] [[coin#Noun|coin]] [[mint#Verb|minted]] in [[Europe]] and [[use#Verb|used]] in [[England]] as a [[debased#Adjective|debased]] [[form#Noun|form]] of the [[sterling silver]] [[penny#Noun|penny]]}}. <end>
+Page 4649 lionine: Found match for regex: <begin> # {{obsolete spelling of|en|leonine|t=13th-[[century]] coin minted in [[Europe]] and used in [[England]] as a debased form of the [[sterling silver]] penny}}. <end>
 Page 4650 schaouch: Found match for regex: <begin> # {{senseid|fr|ottomanPerson}}{{lb|fr|historical}} {{obsolete spelling of|fr|chaouch||chiaus}} <end>
 Page 4652 knif: Found match for regex: <begin> # {{obsolete spelling of|sv|kniv}} <end>
 Page 4653 xabon: Found match for regex: <begin> # {{obsolete spelling of|es|jabón}} <end>
-Page 4658 expells: Found match for regex: <begin> # {{infl of|en|expell||s-verb-form}}, # {{obsolete spelling of|en|expels}} <end>
+Page 4658 expells: Found match for regex: <begin> # {{infl of|en|expell||s-verb-form}}, {{obsolete spelling of|en|expels}}. <end>
 Page 4659 Cassel: Found match for regex: <begin> # {{obsolete spelling of|de|Kassel}} <end>
 Page 4660 seys: Found match for regex: <begin> # {{obsolete spelling of|pt|seis}} <end>
-Page 4661 boundure: Found match for regex: <begin> # {{obsolete spelling of|en|bounder}}; [[boundary]], [[limit]]. <end>
+Page 4661 boundure: Found match for regex: <begin> # {{obsolete spelling of|en|bounder|t=boundary, limit}}. <end>
 Page 4662 undied: Found match for regex: <begin> # {{obsolete spelling of|en|undyed}}. <end>
 Page 4664 verste: Found match for regex: <begin> # {{obsolete spelling of|en|verst}}. <end>
 Page 4665 gritão: Found match for regex: <begin> # {{obsolete spelling of|pt|gritam}} <end>
@@ -16205,7 +16205,7 @@ Page 5302 beyng: Found match for regex: <begin> # {{obsolete spelling of|en|bein
 Page 5303 awaie: Found match for regex: <begin> # {{obsolete spelling of|en|away}}. <end>
 Page 5304 busie: Found match for regex: <begin> # {{obsolete spelling of|en|busy}}. <end>
 Page 5305 barke: Found match for regex: <begin> # {{obsolete spelling of|en|bark}}. <end>
-Page 5306 befoir: Found match for regex: <begin> # {{lb|en|Scotland}} {{obsolete spelling of|en|before}} <end>
+Page 5306 befoir: Found match for regex: <begin> # {{lb|en|Scotland}} {{obsolete spelling of|en|before}}. <end>
 Page 5307 iust: Found match for regex: <begin> # {{obsolete spelling of|en|just}}. <end>
 Page 5308 vppon: Found match for regex: <begin> # {{obsolete spelling of|en|upon}}. <end>
 Page 5309 twelue: Found match for regex: <begin> # {{obsolete spelling of|en|twelve}}. <end>
@@ -16216,8 +16216,8 @@ Page 5313 shewe: Found match for regex: <begin> # {{obsolete spelling of|en|show
 Page 5314 onlie: Found match for regex: <begin> # {{obsolete spelling of|en|only}}. <end>
 Page 5315 manye: Found match for regex: <begin> # {{obsolete spelling of|en|many}}. <end>
 Page 5316 fiew: Found match for regex: <begin> # {{obsolete spelling of|en|few}}. <end>
-Page 5317 boyle: Found match for regex: <begin> # {{lb|en|EME}} {{obsolete spelling of|en|boil}} <end>
-Page 5317 boyle: Found match for regex: <begin> # {{lb|en|EME}} {{obsolete spelling of|en|boil}} <end>
+Page 5317 boyle: Found match for regex: <begin> # {{lb|en|EME}} {{obsolete spelling of|en|boil}}. <end>
+Page 5317 boyle: Found match for regex: <begin> # {{lb|en|EME}} {{obsolete spelling of|en|boil}}. <end>
 Page 5318 farr: Found match for regex: <begin> # {{obsolete spelling of|en|far}}. <end>
 Page 5319 cary: Found match for regex: <begin> # {{obsolete spelling of|en|carry}}. <end>
 Page 5320 heauie: Found match for regex: <begin> # {{obsolete spelling of|en|heavy}}. <end>
@@ -16302,7 +16302,7 @@ Page 5396 quequelli: Found match for regex: <begin> # {{obsolete spelling of|nci
 Page 5397 Matozinhos: Found match for regex: <begin> # {{obsolete spelling of|pt|Matosinhos}} <end>
 Page 5398 every body: Found match for regex: <begin> # {{obsolete spelling of|en|everybody}}. <end>
 Page 5399 evrything: Found match for regex: <begin> # {{obsolete spelling of|en|everything}}. <end>
-Page 5400 everbody: Found match for regex: <begin> # {{lb|en|archaic}} {{obsolete spelling of|en|everybody}} <end>
+Page 5400 everbody: Found match for regex: <begin> # {{lb|en|archaic}} {{obsolete spelling of|en|everybody}}. <end>
 Page 5401 some body: Found match for regex: <begin> # {{obsolete spelling of|en|somebody}}. <end>
 Page 5402 some-body: Found match for regex: <begin> # {{obsolete spelling of|en|somebody}}. <end>
 Page 5403 wurship: Found match for regex: <begin> # {{obsolete spelling of|en|worship}}. <end>
@@ -16338,8 +16338,8 @@ Page 5430 produgeron: Found match for regex: <begin> # {{obsolete spelling of|es
 Page 5431 produge: Found match for regex: <begin> # {{obsolete spelling of|es|produje}} <end>
 Page 5432 regilla: Found match for regex: <begin> # {{obsolete spelling of|es|rejilla}} <end>
 Page 5433 overful: Found match for regex: <begin> # {{obsolete spelling of|en|overfull}}. <end>
-Page 5434 bastiles: Found match for regex: <begin> # {{plural of|en|bastile}} ({{obsolete spelling of|en|bastilles|nocap=1}}) <end>
-Page 5434 bastiles: Found match for regex: <begin> # {{infl of|en|en|bastile|s-verb-form}} ({{obsolete spelling of|en|bastilles|nocap=1}}) <end>
+Page 5434 bastiles: Found match for regex: <begin> # {{plural of|en|bastile}}; {{obsolete spelling of|en|bastilles|nocap=1}}. <end>
+Page 5434 bastiles: Found match for regex: <begin> # {{infl of|en|en|bastile|s-verb-form}}; {{obsolete spelling of|en|bastilles|nocap=1}}. <end>
 Page 5436 acolé: Found match for regex: <begin> # {{obsolete spelling of|fr|acolé}} <end>
 Page 5437 allucinaçaõ: Found match for regex: <begin> # {{obsolete spelling of|pt|alucinação}} <end>
 Page 5438 cespede: Found match for regex: <begin> # {{obsolete spelling of|pt|céspede}} <end>
@@ -16381,7 +16381,7 @@ Page 5471 cought: Found match for regex: <begin> # {{obsolete spelling of|en|cou
 Page 5473 Wiktionary:Beer parlour/2016/February: Found match for regex: <begin> :My intention in writing that section was to indicate when to use "superseded spelling of" and when to just say "obsolete". If something was deprecated in 1901/1902, or earlier in some states, someone might be tempted to label it "superseded", but it should just be labelled "obsolete". {{tl|de-superseded spelling of}} handles this if someone inputs <tt>used=pre-1901</tt> or an earlier date (though if someone inputs an unrecognised date, it displays "former"), but people could also use {{tl|obsolete spelling of}} on such words instead. This could probably be made clearer. (This is, IMO, separate from the question of whether ''Alfabet'' is obsolete, a misspelling, etc.) [[User:-sche|- -sche]] [[User talk:-sche|(discuss)]] 21:05, 8 February 2016 (UTC) <end>
 Page 5473 Wiktionary:Beer parlour/2016/February: Found match for regex: <begin> :::Regarding the usage of the templates "obsolete spelling of" and "de-superseded spelling of": Why should a spelling like "Conjugation" just be labeled "obsolete spelling of Konjugation" and not "superseded by Konjugation etc."? "Conjugation" is the older form, then "Conjugation", "Konjugation", sometimes "Konjugazion" and forms like "Conjugazion" were in use, and in 1902 the spellings "Conjugation" and "Konjugazion" (etc.) were deprecated, superseded by the spelling "Konjugation" and became obsolete. The template "de-superseded spelling of" has the parameter "|used=pre-1901" (<nowiki>{{de-superseded spelling of|used=pre-1901}}</nowiki>) which gives "Obsolete spelling of ''word'' which was deprecated in 1902 following ...". That is, the template is made for spellings that were deprecated in 1902 and became obsolete, and in this case gives a better text (more information). Well, obviously when "de-superseded spelling of" is used without a parameter it gives a worse text. So one maybe should point out that there are parameters. <end>
 Page 5474 смок: Found match for regex: <begin> # {{obsolete spelling of|be|цмо́к}}: [[dragon]] <end>
-Page 5475 unfilde: Found match for regex: <begin> # {{lb|en|poetic|nonce}} {{obsolete spelling of|en|unfiled|gloss=[[unpolished]]}} <end>
+Page 5475 unfilde: Found match for regex: <begin> # {{lb|en|poetic|nonce}} {{obsolete spelling of|en|unfiled|gloss=[[unpolished]]}}. <end>
 Page 5476 visch: Found match for regex: <begin> # {{obsolete spelling of|nl|vis}} <end>
 Page 5476 visch: Found match for regex: <begin> * {{U:nl:obsolete spelling|1934}} <end>
 Page 5477 Gram Bretanha: Found match for regex: <begin> # {{obsolete spelling of|pt|Grã-Bretanha}} <end>
@@ -16597,8 +16597,8 @@ Page 5681 ethnologi: Found match for regex: <begin> # {{obsolete spelling of|da|
 Page 5682 伯刺西爾: Found match for regex: <begin> # {{misspelling of|ja|伯剌西爾|t={{obsolete spelling of|ja|ブラジル|t={{place|ja|t=Brazil|country}}}}}} <end>
 Page 5683 matzaoctli: Found match for regex: <begin> # {{obsolete spelling of|nci|matzahoctli}}. <end>
 Page 5684 unnethe: Found match for regex: <begin> # {{obsolete spelling of|en|uneath}}. <end>
-Page 5685 quhatsoever: Found match for regex: <begin> # {{lb|en|especially|Scotland}} {{obsolete spelling of|en|whatsoever}} <end>
-Page 5685 quhatsoever: Found match for regex: <begin> # {{lb|en|especially|Scotland}} {{obsolete spelling of|en|whatsoever}} <end>
+Page 5685 quhatsoever: Found match for regex: <begin> # {{lb|en|especially|Scotland}} {{obsolete spelling of|en|whatsoever}}. <end>
+Page 5685 quhatsoever: Found match for regex: <begin> # {{lb|en|especially|Scotland}} {{obsolete spelling of|en|whatsoever}}. <end>
 Page 5686 howre: Found match for regex: <begin> # {{obsolete spelling of|en|hour}}. <end>
 Page 5687 degression: Found match for regex: <begin> # {{obsolete spelling of|en|digression}}. <end>
 Page 5688 yuliliztli: Found match for regex: <begin> # {{obsolete spelling of|nci|yōliliztli}}. <end>
@@ -16742,9 +16742,9 @@ Page 5828 Βρεττανό: Found match for regex: <begin> #: {{obsolete spellin
 Page 5829 Βρεττανέ: Found match for regex: <begin> #: {{obsolete spelling of|el|Βρετανέ}} <end>
 Page 5830 Βρεττανούς: Found match for regex: <begin> #: {{obsolete spelling of|el|Βρετανούς}} <end>
 Page 5831 Βρεττανοί: Found match for regex: <begin> #: {{obsolete spelling of|el|Βρετανοί}} <end>
-Page 5832 manœuvering: Found match for regex: <begin> # {{lb|en|UK}} {{obsolete spelling of|en|manoeuvering}} <end>
-Page 5832 manœuvering: Found match for regex: <begin> # {{lb|en|UK|gerund of [[manœuver]]}} {{obsolete spelling of|en|manoeuvering}} <end>
-Page 5833 manœuvered: Found match for regex: <begin> # {{lb|en|UK}} {{obsolete spelling of|en|maneuvered}} <end>
+Page 5832 manœuvering: Found match for regex: <begin> # {{lb|en|UK}} {{obsolete spelling of|en|manoeuvering}}. <end>
+Page 5832 manœuvering: Found match for regex: <begin> # {{lb|en|UK|gerund of [[manœuver]]}} {{obsolete spelling of|en|manoeuvering}}. <end>
+Page 5833 manœuvered: Found match for regex: <begin> # {{lb|en|UK}} {{obsolete spelling of|en|maneuvered}}. <end>
 Page 5834 aoinfheacht: Found match for regex: <begin> # {{obsolete spelling of|ga|éineacht}} <end>
 Page 5835 yr euog a ffu heb neb yn ei erlid: Found match for regex: <begin> # {{obsolete spelling of|cy|yr euog a ffy heb neb yn ei erlid}} <end>
 Page 5836 sloggorne: Found match for regex: <begin> # {{obsolete spelling of|en|slogan|t=a [[battle cry]] among the ancient Irish or [[highlander]]s of Scotland}}. {{defdate|16th–17th c.}} <end>
@@ -16923,7 +16923,7 @@ Page 6009 árdán: Found match for regex: <begin> # {{obsolete spelling of|ga|ar
 Page 6010 breágh: Found match for regex: <begin> # {{obsolete spelling of|ga|breá}} <end>
 Page 6011 Bearbha: Found match for regex: <begin> # {{obsolete spelling of|ga|Bearú}} <end>
 Page 6012 Bhearbha: Found match for regex: <begin> # {{obsolete spelling of|ga|Bhearú}}: {{ga-lenition of|Bearbha|nocap=1}} <end>
-Page 6013 ualaighe: Found match for regex: <begin> # {{obsolete spelling of|ga|ualaí}} {{q|plural of {{m|ga|ualach|t=load, burden}}}} <end>
+Page 6013 ualaighe: Found match for regex: <begin> # {{plural of|ga|ann=obs sp:ualaí|ualach|t=load, burden}} <end>
 Page 6014 eudach: Found match for regex: <begin> # {{obsolete spelling of|ga|éadach}} <end>
 Page 6015 órlach: Found match for regex: <begin> # {{obsolete spelling of|ga|orlach}} <end>
 Page 6016 aontaighe: Found match for regex: <begin> # {{obsolete spelling of|ga|aontaí}} <end>
@@ -17037,7 +17037,7 @@ Page 6125 Vegetarianism: Found match for regex: <begin> # {{obsolete spelling of
 Page 6126 Vegetarian: Found match for regex: <begin> # {{obsolete spelling of|en|vegetarian}}. <end>
 Page 6129 diuers: Found match for regex: <begin> # {{obsolete spelling of|en|diverse}}. <end>
 Page 6130 dyvers: Found match for regex: <begin> # {{obsolete spelling of|en|divers}}. <end>
-Page 6131 haut-boy: Found match for regex: <begin> # {{lb|en|music}} {{obsolete spelling of|en|hautboy}} <end>
+Page 6131 haut-boy: Found match for regex: <begin> # {{lb|en|music}} {{obsolete spelling of|en|hautboy}}. <end>
 Page 6132 alwayz: Found match for regex: <begin> # {{obsolete spelling of|en|always}}. <end>
 Page 6133 alwayez: Found match for regex: <begin> # {{obsolete spelling of|en|always}}. <end>
 Page 6134 paragón: Found match for regex: <begin> # {{obsolete spelling of|es|parangón}} <end>
@@ -17109,7 +17109,7 @@ Page 6198 Braband: Found match for regex: <begin> # {{obsolete spelling of|nl|Br
 Page 6199 enfeoffes: Found match for regex: <begin> # {{obsolete spelling of|en|enfeoffs}}. <end>
 Page 6201 Gottland: Found match for regex: <begin> # {{obsolete spelling of|sv|Gotland}} <end>
 Page 6202 alecie: Found match for regex: <begin> # {{obsolete spelling of|en|alecy}}. <end>
-Page 6203 παραστένω: Found match for regex: <begin> # {{obsolete spelling of|el|παρασταίνω}} {{q|[[demotic#Adjective|demotic]] spelling of 19th-20th century}} <end>
+Page 6203 παραστένω: Found match for regex: <begin> # {{obsolete spelling of|el|παρασταίνω|qq=demotic spelling of 19th-20th century}} <end>
 Page 6204 Esex: Found match for regex: <begin> # {{obsolete spelling of|es|Essex}} <end>
 Page 6205 thirtie: Found match for regex: <begin> # {{obsolete spelling of|en|thirty}}. <end>
 Page 6206 dextrochere: Found match for regex: <begin> # {{obsolete spelling of|fr|dextrochère}} <end>
@@ -17545,7 +17545,7 @@ Page 6655 faziendo: Found match for regex: <begin> # {{obsolete spelling of|es|h
 Page 6656 huvo: Found match for regex: <begin> # {{obsolete spelling of|es|hubo}} <end>
 Page 6657 fuymos: Found match for regex: <begin> # {{obsolete spelling of|es|fuimos}} <end>
 Page 6658 huviere: Found match for regex: <begin> # {{obsolete spelling of|es|hubiere}} <end>
-Page 6659 Mariolatrie: Found match for regex: <begin> # {{lb|en|rare}} {{obsolete spelling of|en|Mariolatry}} <end>
+Page 6659 Mariolatrie: Found match for regex: <begin> # {{lb|en|rare}} {{obsolete spelling of|en|Mariolatry}}. <end>
 Page 6660 extreame: Found match for regex: <begin> # {{obsolete spelling of|en|extreme}}. <end>
 Page 6660 extreame: Found match for regex: <begin> # {{obsolete spelling of|en|extreme}}. <end>
 Page 6661 extreamely: Found match for regex: <begin> # {{obsolete spelling of|en|extremely}}. <end>
@@ -17555,7 +17555,7 @@ Page 6665 Kanchow: Found match for regex: <begin> # {{obsolete spelling of|en|Ga
 Page 6666 venereall: Found match for regex: <begin> # {{obsolete spelling of|en|venereal}}. <end>
 Page 6667 mercuriall: Found match for regex: <begin> # {{obsolete spelling of|en|mercurial}}. <end>
 Page 6667 mercuriall: Found match for regex: <begin> # {{obsolete spelling of|en|mercurial}}. <end>
-Page 6668 mercurialls: Found match for regex: <begin> # {{plural of|en|mercuriall}} ({{obsolete spelling of|en|mercurials|nocap=1}}) <end>
+Page 6668 mercurialls: Found match for regex: <begin> # {{plural of|en|mercuriall}}; {{obsolete spelling of|en|mercurials|nocap=1}}. <end>
 Page 6669 tecknadt: Found match for regex: <begin> # {{obsolete spelling of|sv|tecknat}} <end>
 Page 6671 beybehalten: Found match for regex: <begin> # {{obsolete spelling of|de|beibehalten}} <end>
 Page 6672 beydemal: Found match for regex: <begin> # {{obsolete spelling of|de|[[beide]] [[Mal]]||both times}} <end>
@@ -17594,7 +17594,7 @@ Page 6706 sgîl: Found match for regex: <begin> # {{obsolete spelling of|cy|sgil
 Page 6707 iniquitie: Found match for regex: <begin> # {{obsolete spelling of|en|iniquity}}. <end>
 Page 6708 Antheil: Found match for regex: <begin> # {{obsolete spelling of|de|Anteil}} <end>
 Page 6709 সোয়ামী: Found match for regex: <begin> # {{obsolete spelling of|bn|সোয়ামি|tr=śoami}} <end>
-Page 6710 confusedlie: Found match for regex: <begin> # {{lb|en|chiefly|Scotland}} {{obsolete spelling of|en|confusedly}} <end>
+Page 6710 confusedlie: Found match for regex: <begin> # {{lb|en|chiefly|Scotland}} {{obsolete spelling of|en|confusedly}}. <end>
 Page 6711 cavallería: Found match for regex: <begin> # {{obsolete spelling of|es|caballería}} <end>
 Page 6712 wolanda: Found match for regex: <begin> # {{lb|id|archaic}} {{obsolete spelling of|id|Belanda}}. <end>
 Page 6713 seyd: Found match for regex: <begin> # {{obsolete spelling of|de|seid}} <end>
@@ -17677,7 +17677,7 @@ Page 6805 balayi: Found match for regex: <begin> # {{obsolete spelling of|tl|bal
 Page 6806 vallance: Found match for regex: <begin> # {{obsolete spelling of|en|valance}}. <end>
 Page 6808 lalebiz: Found match for regex: <begin> # {{obsolete spelling of|nhg|lalebi̱s}} <end>
 Page 6809 hæmatomania: Found match for regex: <begin> # {{obsolete spelling of|en|haematomania}}. <end>
-Page 6810 malachy: Found match for regex: <begin> # {{lb|en|rare}} {{obsolete spelling of|en|malarkey}} <end>
+Page 6810 malachy: Found match for regex: <begin> # {{lb|en|rare}} {{obsolete spelling of|en|malarkey}}. <end>
 Page 6811 espedición: Found match for regex: <begin> # {{obsolete spelling of|es|expedición}} <end>
 Page 6812 quatrocientos: Found match for regex: <begin> # {{obsolete spelling of|es|cuatrocientos}} <end>
 Page 6813 govierno: Found match for regex: <begin> # {{obsolete spelling of|es|gobierno}} <end>
@@ -17878,7 +17878,7 @@ Page 7017 tufan: Found match for regex: <begin> # {{obsolete spelling of|en|typh
 Page 7019 enamorato: Found match for regex: <begin> # {{obsolete spelling of|en|inamorato|t=lover}}. <end>
 Page 7020 dunghil: Found match for regex: <begin> # {{obsolete spelling of|en|dunghill}}. <end>
 Page 7021 Changhaï: Found match for regex: <begin> # {{obsolete spelling of|fr|Shanghaï}} <end>
-Page 7023 percunctation: Found match for regex: <begin> # {{lb|en|rare}} {{obsolete spelling of|en|percontation}} <end>
+Page 7023 percunctation: Found match for regex: <begin> # {{lb|en|rare}} {{obsolete spelling of|en|percontation}}. <end>
 Page 7025 আবীর: Found match for regex: <begin> # {{obsolete spelling of|bn|আবির}} <end>
 Page 7026 আবীর খেলা: Found match for regex: <begin> # {{obsolete spelling of|bn|আবির খেলা}} <end>
 Page 7026 আবীর খেলা: Found match for regex: <begin> # {{obsolete spelling of|bn|আবির খেলা}} <end>
@@ -18015,7 +18015,7 @@ Page 7170 Firinghee: Found match for regex: <begin> # {{obsolete spelling of|en|
 Page 7171 Wiro: Found match for regex: <begin> # {{obsolete spelling of|fi|Viro}} <end>
 Page 7174 Ouigour: Found match for regex: <begin> # {{obsolete spelling of|en|Uyghur}}. <end>
 Page 7174 Ouigour: Found match for regex: <begin> # {{obsolete spelling of|en|Uyghur}}. <end>
-Page 7177 actorney: Found match for regex: <begin> # {{lb|en|Scotland}} {{obsolete spelling of|en|attorney}} <end>
+Page 7177 actorney: Found match for regex: <begin> # {{lb|en|Scotland}} {{obsolete spelling of|en|attorney}}. <end>
 Page 7178 gestorne: Found match for regex: <begin> # {{obsolete spelling of|en|jazerant}}. <end>
 Page 7179 gestron: Found match for regex: <begin> # {{obsolete spelling of|en|jazerant}}. <end>
 Page 7180 cimiter: Found match for regex: <begin> # {{obsolete spelling of|en|scimitar}}. <end>
@@ -18026,7 +18026,7 @@ Page 7183 iaguara: Found match for regex: <begin> # {{obsolete spelling of|tpw|�
 Page 7184 helpefull: Found match for regex: <begin> # {{obsolete spelling of|en|helpful}}. <end>
 Page 7185 herselfe: Found match for regex: <begin> # {{obsolete spelling of|en|herself}}. <end>
 Page 7186 countesse: Found match for regex: <begin> # {{obsolete spelling of|en|countess}}. <end>
-Page 7187 o'rethrow: Found match for regex: <begin> # {{lb|en|poetic}} {{obsolete spelling of|en|o'erthrow}} ({{alternative form of|en|overthrow|nocap=1}}) <end>
+Page 7187 o'rethrow: Found match for regex: <begin> # {{lb|en|poetic}} {{obsolete spelling of|en|o'erthrow}}, {{alternative form of|en|overthrow|nocap=1}}. <end>
 Page 7188 couslip: Found match for regex: <begin> # {{obsolete spelling of|en|cowslip}}. <end>
 Page 7189 daffadil: Found match for regex: <begin> # {{obsolete spelling of|en|daffodil}}. <end>
 Page 7190 fillemot: Found match for regex: <begin> # {{obsolete spelling of|en|filemot}}. <end>
@@ -18060,7 +18060,7 @@ Page 7221 古倫比亜: Found match for regex: <begin> # {{obsolete spelling of|
 Page 7222 伯西児: Found match for regex: <begin> # {{obsolete spelling of|ja|ブラジル|t={{place|ja|t=Brazil|country}}}} <end>
 Page 7223 勃爾瓦利: Found match for regex: <begin> # {{obsolete spelling of|ja|ブルガリア|t={{place|ja|country|cont/Europe|t=Bulgaria}}}} <end>
 Page 7224 Chastres: Found match for regex: <begin> # {{obsolete spelling of|fr|Châtres}} <end>
-Page 7225 Citations:zwastika: Found match for regex: <begin> : {{obsolete spelling of|en|swastika}} <end>
+Page 7225 Citations:zwastika: Found match for regex: <begin> : {{obsolete spelling of|en|swastika}}. <end>
 Page 7226 央玲崑: Found match for regex: <begin> # {{obsolete spelling of|ja|オレゴン|tr=Oregon|t={{place|ja|t=Oregon|state|c/USA}}}} <end>
 Page 7227 西比利亜: Found match for regex: <begin> # {{obsolete spelling of|ja|シベリア|tr=Shiberia|t={{place|ja|t=Siberia|region|c/Russia}}}} <end>
 Page 7228 unburthensome: Found match for regex: <begin> # {{obsolete spelling of|en|unburdensome}}. <end>
@@ -18217,7 +18217,7 @@ Page 7400 Lüksenburğ: Found match for regex: <begin> # {{obsolete spelling of|
 Page 7400 Lüksenburğ: Found match for regex: <begin> # {{obsolete spelling of|tr|Lüksemburg}}, a province of [[Belgium]]. <end>
 Page 7401 Finlândiya: Found match for regex: <begin> # {{obsolete spelling of|tr|Finlandiya}}. <end>
 Page 7402 cellery: Found match for regex: <begin> # {{obsolete spelling of|en|celery}}. <end>
-Page 7403 cyborium: Found match for regex: <begin> # <!--{{lb|en|hypercorrect}}?--> {{obsolete spelling of|en|ciborium}} <end>
+Page 7403 cyborium: Found match for regex: <begin> # <!--{{lb|en|hypercorrect}}?--> {{obsolete spelling of|en|ciborium}}. <end>
 Page 7404 prà: Found match for regex: <begin> # {{obsolete spelling of|pt|pra}} <end>
 Page 7405 pròs: Found match for regex: <begin> # {{obsolete spelling of|pt|pros}} <end>
 Page 7406 pràs: Found match for regex: <begin> # {{obsolete spelling of|pt|pras}} <end>
@@ -18227,9 +18227,9 @@ Page 7410 acroamatick: Found match for regex: <begin> # {{obsolete spelling of|e
 Page 7411 foretel: Found match for regex: <begin> # {{obsolete spelling of|en|foretell}}. <end>
 Page 7413 unagreable: Found match for regex: <begin> # {{obsolete spelling of|en|unagreeable}}. <end>
 Page 7414 tyfoong: Found match for regex: <begin> # {{obsolete spelling of|en|typhoon}}. <end>
-Page 7415 tyfung: Found match for regex: <begin> # {{altform|en|tyfoong}}: {{obsolete spelling of|en|typhoon|nocap=1}} <end>
-Page 7416 ty-fung: Found match for regex: <begin> # {{altform|en|tyfoong}}: {{obsolete spelling of|en|typhoon|nocap=1}} <end>
-Page 7417 ty-foong: Found match for regex: <begin> # {{altform|en|tyfoong}}: {{obsolete spelling of|en|typhoon|nocap=1}} <end>
+Page 7415 tyfung: Found match for regex: <begin> # {{altform|en|tyfoong}}: {{obsolete spelling of|en|typhoon|nocap=1}}. <end>
+Page 7416 ty-fung: Found match for regex: <begin> # {{altform|en|tyfoong}}: {{obsolete spelling of|en|typhoon|nocap=1}}. <end>
+Page 7417 ty-foong: Found match for regex: <begin> # {{altform|en|tyfoong}}: {{obsolete spelling of|en|typhoon|nocap=1}}. <end>
 Page 7419 Castelroussillon: Found match for regex: <begin> # {{obsolete spelling of|fr|Castel-Roussillon}} <end>
 Page 7420 Bonpas: Found match for regex: <begin> # {{obsolete spelling of|fr|Bompas}} {{gloss|village near [[Perpignan]]}} <end>
 Page 7422 Clayra: Found match for regex: <begin> # {{obsolete spelling of|fr|Claira}} {{gloss|village in [[Pyrénées-Orientales]]}} <end>
@@ -18334,8 +18334,8 @@ Page 7528 Noylhiac: Found match for regex: <begin> # {{obsolete spelling of|fr|N
 Page 7531 撤羅米: Found match for regex: <begin> # {{obsolete spelling of|ja|サロメ||[[Salome]]}} <end>
 Page 7532 左久良: Found match for regex: <begin> # {{obsolete spelling of|ja|佐倉}} <end>
 Page 7533 biggoted: Found match for regex: <begin> # {{obsolete spelling of|en|bigoted}}. <end>
-Page 7536 bastiling: Found match for regex: <begin> # {{infl of|en|bastile||ing-form}} ({{obsolete spelling of|en|bastilling|nocap=1}}) <end>
-Page 7537 bastiled: Found match for regex: <begin> # {{infl of|en|bastile||ed-form}} ({{obsolete spelling of|en|bastilled|nocap=1}}) <end>
+Page 7536 bastiling: Found match for regex: <begin> # {{infl of|en|bastile||ing-form}}; {{obsolete spelling of|en|bastilling|nocap=1}}. <end>
+Page 7537 bastiled: Found match for regex: <begin> # {{infl of|en|bastile||ed-form}}; {{obsolete spelling of|en|bastilled|nocap=1}}. <end>
 Page 7538 cinople: Found match for regex: <begin> # {{obsolete spelling of|en|sinople}}. <end>
 Page 7540 wholsom: Found match for regex: <begin> # {{obsolete spelling of|en|wholesome}}. <end>
 Page 7541 Magyaar: Found match for regex: <begin> # {{obsolete spelling of|af|Magjaar}} <end>
@@ -18390,7 +18390,7 @@ Page 7593 Hälsingborg: Found match for regex: <begin> # {{obsolete spelling of|
 Page 7594 Wernamo: Found match for regex: <begin> # {{obsolete spelling of|sv|Värnamo}} <end>
 Page 7595 Arkansaw: Found match for regex: <begin> # {{obsolete spelling of|en|Arkansas}}. <end>
 Page 7597 anyorar: Found match for regex: <begin> # {{obsolete spelling of|ca|enyorar}} <end>
-Page 7600 auroræ: Found match for regex: <begin> # {{lb|en|rare}} {{obsolete spelling of|en|aurorae}} <end>
+Page 7600 auroræ: Found match for regex: <begin> # {{lb|en|rare}} {{obsolete spelling of|en|aurorae}}. <end>
 Page 7601 پانو: Found match for regex: <begin> # {{obsolete spelling of|ur|پاؤں|t=[[foot]]}} <end>
 Page 7602 Brunai: Found match for regex: <begin> # {{obsolete spelling of|en|Brunei|t={{place|en|country|r/Southeast Asia|a=a}}}}. <end>
 Page 7603 Wallentuna: Found match for regex: <begin> # {{obsolete spelling of|sv|Vallentuna}} <end>
@@ -18613,7 +18613,7 @@ Page 7841 yporu: Found match for regex: <begin> # {{obsolete spelling of|tpw|'yp
 Page 7842 oudt: Found match for regex: <begin> # {{obsolete spelling of|nl|oud}} <end>
 Page 7843 perpeyn: Found match for regex: <begin> # {{obsolete spelling of|en|perpend|t=a stone which passes through a wall from side to side, having two smooth vertical faces}}. <end>
 Page 7844 perpin: Found match for regex: <begin> # {{obsolete spelling of|en|perpend|t=a stone which passes through a wall from side to side, having two smooth vertical faces}}. <end>
-Page 7846 publicks: Found match for regex: <begin> # {{plural of|en|publick}} ({{obsolete spelling of|en|publics|nocap=1}}) <end>
+Page 7846 publicks: Found match for regex: <begin> # {{plural of|en|publick}}; {{obsolete spelling of|en|publics|nocap=1}}. <end>
 Page 7847 ocum: Found match for regex: <begin> # {{obsolete spelling of|en|oakum}}. <end>
 Page 7848 boatswen: Found match for regex: <begin> # {{obsolete spelling of|en|boatswain}}. <end>
 Page 7849 publicke: Found match for regex: <begin> # {{obsolete spelling of|en|public}}. <end>
@@ -18699,16 +18699,16 @@ Page 7957 Land-Commenthurey: Found match for regex: <begin> # {{obsolete spellin
 Page 7959 Lehengericht: Found match for regex: <begin> # {{obsolete spelling of|de|Lehnsgericht}} <end>
 Page 7960 auncientnesse: Found match for regex: <begin> # {{obsolete spelling of|en|ancientness}}. <end>
 Page 7961 releeve: Found match for regex: <begin> # {{obsolete spelling of|en|relieve}}. <end>
-Page 7962 pilfre: Found match for regex: <begin> # {{lb|en|ambitransitive}} {{obsolete spelling of|en|pilfer}} <end>
+Page 7962 pilfre: Found match for regex: <begin> # {{lb|en|ambitransitive}} {{obsolete spelling of|en|pilfer}}. <end>
 Page 7963 hautie: Found match for regex: <begin> # {{obsolete spelling of|en|haughty}}. <end>
 Page 7964 hauty: Found match for regex: <begin> # {{obsolete spelling of|en|haughty}}. <end>
 Page 7965 obloquie: Found match for regex: <begin> # {{obsolete spelling of|en|obloquy}}. <end>
 Page 7966 lowsie: Found match for regex: <begin> # {{obsolete spelling of|en|lousy}}. <end>
 Page 7967 lowsy: Found match for regex: <begin> # {{obsolete spelling of|en|lousy}}. <end>
 Page 7968 Mahumatism: Found match for regex: <begin> # {{obsolete spelling of|en|Mohammedism}}. <end>
-Page 7969 inrich: Found match for regex: <begin> # {{lb|en|transitive}} {{obsolete spelling of|en|enrich}} <end>
+Page 7969 inrich: Found match for regex: <begin> # {{lb|en|transitive}} {{obsolete spelling of|en|enrich}}. <end>
 Page 7970 secreat: Found match for regex: <begin> # {{obsolete spelling of|en|secret}}. <end>
-Page 7971 Mihilmas: Found match for regex: <begin> # {{lb|en|dialect}} {{obsolete spelling of|en|Michaelmas}} <end>
+Page 7971 Mihilmas: Found match for regex: <begin> # {{lb|en|dialect}} {{obsolete spelling of|en|Michaelmas}}. <end>
 Page 7972 Keyserswerdt: Found match for regex: <begin> # {{obsolete spelling of|de|Kaiserswerth}} <end>
 Page 7973 açab: Found match for regex: <begin> # {{obsolete spelling of|tpw|asab}} <end>
 Page 7974 Würtzburg: Found match for regex: <begin> # {{obsolete spelling of|de|Würzburg}} <end>
@@ -18744,7 +18744,7 @@ Page 8000 Wiktionary:Beer parlour/2024/December: Found match for regex: <begin> 
 Page 8001 Ayghen: Found match for regex: <begin> # {{lb|de|regional}} {{obsolete spelling of|de|Aachen}} <end>
 Page 8002 annall: Found match for regex: <begin> # {{obsolete spelling of|en|annal}}. <end>
 Page 8003 Aechen: Found match for regex: <begin> # {{lb|de|regional}} {{obsolete spelling of|de|Aachen}} <end>
-Page 8004 greatast: Found match for regex: <begin> #{{obsolete spelling of|en|greatest}} <end>
+Page 8004 greatast: Found match for regex: <begin> #{{obsolete spelling of|en|greatest}}. <end>
 Page 8005 Transumpt: Found match for regex: <begin> # {{obsolete spelling of|de|Transsumpt}} <end>
 Page 8006 natiue: Found match for regex: <begin> # {{obsolete spelling of|en|native}}. <end>
 Page 8007 natyf: Found match for regex: <begin> # {{obsolete spelling of|en|native}}. <end>
@@ -19589,7 +19589,7 @@ Page 15918 Talk:buenos dias: Found match for regex: <begin> :: For the obsolete 
 Page 15918 Talk:buenos dias: Found match for regex: <begin> * '''RFV-kept'''. The obsolete spelling is clearly attested; the misspelling is as well, and its commonness is difficult to assess, but without a standard, I can only say that it is not rare. —[[User:Metaknowledge|Μετάknowledge]]<small><sup>''[[User talk:Metaknowledge|discuss]]/[[Special:Contributions/Metaknowledge|deeds]]''</sup></small> 21:00, 4 January 2021 (UTC) <end>
 Page 16206 Talk:maselyn: Found match for regex: <begin> * {{obsolete spelling of|en|maslin}}: a kind of drinking cup. <end>
 Page 16594 Wiktionary:Word of the day/2023/July 28: Found match for regex: <begin> # {{obsolete spelling of|en|urban|t=of, pertaining to, or [[characteristic#Adjective|characteristic]] of a [[city]] or [[town]], or [[life#Noun|life]] in such a [[place#Noun|place]]; [[live#Verb|living]] in a city or town; having [[authority]] or [[jurisdiction]] over a city or town}}|July|28}}. <end>
-Page 16903 Wiktionary:Word of the day/2024/June 25: Found match for regex: <begin> ## {{obsolete spelling of|en|plane sailing|t=a [[technique]] for [[navigation]] [[use#Verb|using]] the [[assumption]] that the [[journey#Noun|journey]] [[occur]]s over a [[plane#Adjective|plane]] or [[flat#Adjective|flat]] [[surface#Noun|surface]] rather than the [[actual#Adjective|actual]] [[curved#Adjective|curved]] surface of the [[Earth]], which is [[sufficiently]] [[accurate]] over [[short#Adjective|short]] [[distance#Noun|distances]]}} <end>
+Page 16903 Wiktionary:Word of the day/2024/June 25: Found match for regex: <begin> ## {{obsolete spelling of|en|plane sailing|t=a [[technique]] for [[navigation]] [[use#Verb|using]] the [[assumption]] that the [[journey#Noun|journey]] [[occur]]s over a [[plane#Adjective|plane]] or [[flat#Adjective|flat]] [[surface#Noun|surface]] rather than the [[actual#Adjective|actual]] [[curved#Adjective|curved]] surface of the [[Earth]], which is [[sufficiently]] [[accurate]] over [[short#Adjective|short]] [[distance#Noun|distances]]}}. <end>
 Page 2 huus: Found match for regex: <begin> # {{obsolete typography of|nn|hus|t=house}} <end>
 Page 3 aal: Found match for regex: <begin> # {{obsolete typography of|nn|ål}} <end>
 Page 4 gaas: Found match for regex: <begin> # {{obsolete typography of|nn|gås}} <end>

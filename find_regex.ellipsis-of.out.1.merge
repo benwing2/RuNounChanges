@@ -67,7 +67,7 @@ Page 50 chair: Found match for regex: <begin> # {{senseid|en|electric chair}} {{
 Page 51 mustard: Found match for regex: <begin> # {{ellipsis of|en|mustard gas}}. <end>
 Page 52 scalene: Found match for regex: <begin> # {{lb|en|muscle}} {{ellipsis of|en|scalene muscle}}. <end>
 Page 52 scalene: Found match for regex: <begin> # {{lb|en|trigonometry}} {{ellipsis of|en|scalene triangle}}. <end>
-Page 53 DC: Found match for regex: <begin> # {{C|en|DC Comics}} {{ellipsis of|en|{{w|lang=en|DC Comics}}}}: {{initialism of|en|[[detective|Detective]] [[comics|Comics]]}} <end>
+Page 53 DC: Found match for regex: <begin> # {{C|en|DC Comics}} {{ellipsis of|en|{{w|lang=en|DC Comics}}}}: {{initialism of|en|[[detective|Detective]] [[comics|Comics]]}}. <end>
 Page 54 NT: Found match for regex: <begin> # {{lb|en|computing}} {{ellipsis of|en|{{w|Windows NT}}}}. <end>
 Page 55 Victoria: Found match for regex: <begin> ### {{ellipsis of|en|{{w|Victoria Line}}}} of the {{m|en|London Underground}}. <end>
 Page 55 Victoria: Found match for regex: <begin> ## {{place|en|ann=ellipsis of:Lake Victoria|the largest <<lake>> in <<cont/Africa>>}}. <end>
@@ -128,7 +128,7 @@ Page 98 singularity: Found match for regex: <begin> # {{lb|en|sometimes|capitali
 Page 99 Webster: Found match for regex: <begin> ## {{ellipsis of|en|Webster City}}. <end>
 Page 99 Webster: Found match for regex: <begin> ## {{ellipsis of|en|Webster County}}. <end>
 Page 99 Webster: Found match for regex: <begin> ## {{ellipsis of|en|Webster Parish}}. <end>
-Page 100 Dutchman: Found match for regex: <begin> # {{lb|en|nautical}} {{ellipsis of|en|Flying Dutchman}}: a [[ghost ship]] <end>
+Page 100 Dutchman: Found match for regex: <begin> # {{lb|en|nautical}} {{ellipsis of|en|Flying Dutchman}}: a [[ghost ship]]. <end>
 Page 101 Mediterranean: Found match for regex: <begin> # {{place|en|ann=ellipsis of:Mediterranean Sea|sea|between|continent/Europe|and|continent/Africa|an inland branch of the|ocean/Atlantic}}. <end>
 Page 103 Flanders: Found match for regex: <begin> # {{place|en|ann=ellipsis of:French Flanders|former province|c/France|now constituting the French department [[Nord]]}}. <end>
 Page 104 AGB: Found match for regex: <begin> # {{C|en|Stars}} {{lb|en|astronomy}} {{ellipsis of|en|AGB [[star]]|t=a [[star]] in this classification}}. <end>
@@ -293,7 +293,7 @@ Page 222 data: Found match for regex: <begin> # {{senseid|en|telephony}}{{lb|en|
 Page 223 placenta: Found match for regex: <begin> # {{lb|la|New Latin}} {{ellipsis of|la|placenta uterī}}: {{l|en|placenta}} <end>
 Page 224 chamber: Found match for regex: <begin> # {{lb|en|obsolete}} {{ellipsis of|en|chamber pot|t=a [[container]] used for [[urination]] and [[defecation]] in one's chambers}}. <end>
 Page 225 pariah: Found match for regex: <begin> # {{lb|en|zoology}} {{ellipsis of|en|pariah dog|t=an [[Indian]] [[breed]], [[any]] [[stray dog]] in [[Indian]] [[context]]s}}. <end>
-Page 226 Higgs: Found match for regex: <begin> # {{cln|en|eponyms}} {{lb|en|physics}} {{ellipsis of|en|Higgs boson}}; named for {{w|lang=en|Peter Higgs}} <end>
+Page 226 Higgs: Found match for regex: <begin> # {{cln|en|eponyms}} {{lb|en|physics}} {{ellipsis of|en|Higgs boson}}; named for {{w|lang=en|Peter Higgs}}. <end>
 Page 227 fax: Found match for regex: <begin> # {{senseid|en|machine}} {{ellipsis of|en|fax machine|t=the [[device]] for [[#Verb|faxing]]; the [[medium]] of communication that it provides}}. <end>
 Page 227 fax: Found match for regex: <begin> # {{lb|hu|historical}} {{l|en|fax|id=machine}}, {{ellipsis of|hu|faxkészülék||[[fax machine]]}} <end>
 Page 227 fax: Found match for regex: <begin> # {{lb|hu|historical}} {{ellipsis of|hu|faxüzenet||fax [[message]]/[[document]]}} <end>
@@ -471,7 +471,7 @@ Page 369 Mario: Found match for regex: <begin> # {{lb|en|automotive|motorsports|
 Page 370 Soviet Union: Found match for regex: <begin> # {{lb|en|historical}} {{ellipsis of|en|Union of Soviet Socialist Republics}}. <end>
 Page 371 ronda: Found match for regex: <begin> # {{lb|es|transport}} {{ellipsis of|es|ronda de circunvalación}}; [[ring road]] <end>
 Page 372 stunt: Found match for regex: <begin> # {{ellipsis of|en|publicity stunt}}. <end>
-Page 373 uvula: Found match for regex: <begin> # {{lb|en|anatomy}} {{ellipsis of|en|palatine uvula}}: the [[fleshy]] [[appendage]] that hangs from the back of the [[soft palate]], that closes the [[nasopharynx]] during [[swallowing]] <end>
+Page 373 uvula: Found match for regex: <begin> # {{lb|en|anatomy}} {{ellipsis of|en|palatine uvula}}: the [[fleshy]] [[appendage]] that hangs from the back of the [[soft palate]], that closes the [[nasopharynx]] during [[swallowing]]. <end>
 Page 374 Jackson: Found match for regex: <begin> ### {{ellipsis of|en|Jackson County}}. <end>
 Page 375 freestyle: Found match for regex: <begin> # {{lb|en|music genre}} {{ellipsis of|en|Latin freestyle}}, a form of [[electronic dance music]]. <end>
 Page 375 freestyle: Found match for regex: <begin> # {{lb|fr|sports}} {{m|en|freestyle}} {{q|skiing and snowboarding}} {{gloss|freestyle skiing, snowboarding}} {{ellipsis of|fr|sports de glisse freestyle}} <end>
@@ -578,7 +578,7 @@ Page 449 Lincoln: Found match for regex: <begin> # {{lb|en|Oxon|informal}} {{ell
 Page 450 Lords: Found match for regex: <begin> # {{lb|en|British|UK politics|plurale tantum}} {{ellipsis of|en|House of Lords}}. <end>
 Page 451 Madeira: Found match for regex: <begin> # {{ellipsis of|pt|vinho da Madeira}} <end>
 Page 452 Main: Found match for regex: <begin> # {{ellipsis of|en|Main Street}}: {{ng|A street named "Main Street".}} <end>
-Page 452 Main: Found match for regex: <begin> # {{ellipsis of|en|Main Street||{{m|en|main street}}}}: {{ng|A central street of a community}} <end>
+Page 452 Main: Found match for regex: <begin> # {{ellipsis of|en|Main Street||{{m|en|main street}}}}: {{ng|A central street of a community}}. <end>
 Page 453 Mango: Found match for regex: <begin> # {{ellipsis of|en|Mango Island}}. <end>
 Page 453 Mango: Found match for regex: <begin> # {{ellipsis of|en|Mango Township}}. <end>
 Page 454 Manhattan: Found match for regex: <begin> # {{place|en|ann=ellipsis of:{{w|Borough of Manhattan}}|borough|city/New York City|s/New York|c/USA|mainly on [[Manhattan Island]], coterminous with [[New York County]]}}. <end>
@@ -664,7 +664,7 @@ Page 509 colitis: Found match for regex: <begin> # {{lb|en|medicine|informal}} {
 Page 510 Cooper: Found match for regex: <begin> ## {{ellipsis of|en|Cooper County}}. <end>
 Page 511 tonsil: Found match for regex: <begin> # {{lb|en|anatomy|immunology}} {{ellipsis of|en|palatine tonsil}}. <end>
 Page 512 Square Mile: Found match for regex: <begin> * {{sense|Montreal}} {{ellipsis of|en|Golden Square Mile}}. From having a land area of roughly a mile square. <end>
-Page 513 Gutenberg: Found match for regex: <begin> # {{ellipsis of|en|{{w|lang=en|Gutenberg Bible}}}}, the first mass production printing project of the Gutenberg press <end>
+Page 513 Gutenberg: Found match for regex: <begin> # {{ellipsis of|en|{{w|lang=en|Gutenberg Bible}}}}, the first mass production printing project of the Gutenberg press. <end>
 Page 513 Gutenberg: Found match for regex: <begin> # {{ellipsis of|en|{{w|lang=en|Project Gutenberg}}}}, a [[digital]] [[library]] founded in 1971. <end>
 Page 514 Rudolph: Found match for regex: <begin> # {{ellipsis of|en|Rudolph the Red-Nosed Reindeer}}. <end>
 Page 515 mulligan: Found match for regex: <begin> # {{ellipsis of|en|mulligan stew}}. <end>
@@ -808,7 +808,7 @@ Page 626 Richardson: Found match for regex: <begin> ## {{ellipsis of|en|Richards
 Page 627 Powell: Found match for regex: <begin> ## {{ellipsis of|en|Powell County}}. <end>
 Page 628 asphalt: Found match for regex: <begin> # {{senseid|en|asphalt concrete, elliptically}} {{ellipsis of|en|asphalt concrete}}, a hard ground covering used for roads and walkways. <end>
 Page 629 Angelina: Found match for regex: <begin> # {{ellipsis of|en|Angelina County}}. <end>
-Page 629 Angelina: Found match for regex: <begin> # {{ellipsis of|en||Asteroid Angelina}}, {{w|lang=en|64 Angelina}} <end>
+Page 629 Angelina: Found match for regex: <begin> # {{ellipsis of|en||Asteroid Angelina}}, {{w|lang=en|64 Angelina}}. <end>
 Page 630 Clare: Found match for regex: <begin> # {{lb|en|Cantab|informal}} {{ellipsis of|en|{{w|Clare College, Cambridge}}}}. <end>
 Page 631 cepo: Found match for regex: <begin> # {{lb|es|Argentina|economics}} {{ellipsis of|es|cepo cambiario|t=[[foreign exchange control]]}} <end>
 Page 632 Pulitzer: Found match for regex: <begin> # {{ellipsis of|en|Pulitzer Prize}}. <end>
@@ -896,7 +896,7 @@ Page 693 sinc: Found match for regex: <begin> # {{lb|en|engineering}} {{ellipsis
 Page 694 liha: Found match for regex: <begin> # {{ellipsis of|fi|hedelmäliha||(fruit) pulp, flesh}} <end>
 Page 695 orthostasis: Found match for regex: <begin> # {{senseid|en|hypotension from standing, elliptically}} {{lb|en|science|especially|medicine|informal}} {{ellipsis of|en|orthostatic hypotension}}. <end>
 Page 696 jegy: Found match for regex: <begin> # {{ellipsis of|hu|írásjegy||character, glyph}} <end>
-Page 697 keto: Found match for regex: <begin> # {{ellipsis of|en|keto diet}}; {{abbreviation of|en|ketogenic diet}} <end>
+Page 697 keto: Found match for regex: <begin> # {{ellipsis of|en|keto diet|+form=abbr of:ketogenic diet}}. <end>
 Page 698 pune: Found match for regex: <begin> # {{lb|ro|with placeholder {{m|ro|o}}}} {{ellipsis of|ro|o pune de mămăligă||to mess up, get in trouble}} <end>
 Page 699 hazards: Found match for regex: <begin> # {{lb|en|automotive}} {{ellipsis of|en|hazard lights}}. <end>
 Page 700 wearable: Found match for regex: <begin> # {{lb|en|computing}} {{ellipsis of|en|wearable computer||small computer which can be worn on the body}}. <end>
@@ -1111,7 +1111,7 @@ Page 872 constrictor: Found match for regex: <begin> ### {{lb|en|muscle}} {{elli
 Page 872 constrictor: Found match for regex: <begin> ## {{ellipsis of|en|boa constrictor|t=a [[python]] or similar [[snake]] that kills by [[constriction]]}}. <end>
 Page 873 вампир: Found match for regex: <begin> # {{ellipsis of|ru|энергетический вампир}} <end>
 Page 874 Air Force: Found match for regex: <begin> # {{lb|en|US|military|politics}} {{ellipsis of|en|{{w|United States Air Force}}}}. <end>
-Page 874 Air Force: Found match for regex: <begin> # {{lb|en|US|sports}} {{ellipsis of|en|{{w|lang=en|Air Force Falcons}}}} {{ng|[[sport]]s [[team]]s representing the {{w|lang=en|United States Air Force Academy}}}} <end>
+Page 874 Air Force: Found match for regex: <begin> # {{lb|en|US|sports}} {{ellipsis of|en|{{w|lang=en|Air Force Falcons}}}} {{ng|[[sport]]s [[team]]s representing the {{w|lang=en|United States Air Force Academy}}}}. <end>
 Page 875 fifty-fifty: Found match for regex: <begin> # {{lb|en|skateboarding}} {{ellipsis of|en|fifty-fifty grind}}; {{ng|a rail or edge grind, using both trucks to grind along, longitudinally aligned.}} <end>
 Page 875 fifty-fifty: Found match for regex: <begin> # {{lb|en|snowboarding}} {{ellipsis of|en|fifty-fifty slide}}; {{ng|a rail slide where the snowboard is longitudinally aligned with the direction of the slide, down the centerline.}} <end>
 Page 876 nórdica: Found match for regex: <begin> # {{ellipsis of|es|funda nórdica|t=duvet cover}} <end>
@@ -1346,7 +1346,7 @@ Page 1081 kártya: Found match for regex: <begin> # {{ellipsis of|hu|[[bankkárt
 Page 1082 Azov: Found match for regex: <begin> # {{place|en|ann=ellipsis of:Sea of Azov|sea/and/gulf|sea/Black Sea|cont/Europe}}. <end>
 Page 1083 enduro: Found match for regex: <begin> # {{ellipsis of|fi|enduropyörä||enduro bike, enduro}} <end>
 Page 1084 New: Found match for regex: <begin> # {{lb|en|Oxon|informal|uncommon}} {{ellipsis of|en|{{w|New College, Oxford}}}}. <end>
-Page 1085 ramidus: Found match for regex: <begin> # {{lb|en|informal}} {{ellipsis of|en|{{taxfmt|Ardipithecus ramidus|species}}}} {{gl|an early [[hominid]] from the [[Pliocene]]}} <end>
+Page 1085 ramidus: Found match for regex: <begin> # {{lb|en|informal}} {{ellipsis of|en|{{taxfmt|Ardipithecus ramidus|species}}}} {{gl|an early [[hominid]] from the [[Pliocene]]}}. <end>
 Page 1086 Marcelo: Found match for regex: <begin> # {{place|en|ann=ellipsis of:Marcelo Green Village|barangay|city/Parañaque|r/Metro Manila|c/Philippines}}. <end>
 Page 1087 iskuri: Found match for regex: <begin> # {{ellipsis of|fi|nyrkki-iskuri||chopper (tool, archaeology)}} <end>
 Page 1087 iskuri: Found match for regex: <begin> # {{ellipsis of|fi|iskurityöläinen}} <end>
@@ -1393,7 +1393,7 @@ Page 1123 South Georgia: Found match for regex: <begin> # {{place|en|ann=ellipsi
 Page 1124 colectivo: Found match for regex: <begin> # {{lb|es|Latin America}} {{ellipsis of|es|taxi colectivo}}, [[shared taxi]], [[#English|colectivo]]. <end>
 Page 1125 semleges: Found match for regex: <begin> # {{lb|hu|grammar}} {{ellipsis of|hu|semlegesnemű||[[neuter]]}} <end>
 Page 1125 semleges: Found match for regex: <begin> # {{lb|hu|grammar}} {{ellipsis of|hu|semlegesnem||[[neuter]]}} <end>
-Page 1126 ribeye: Found match for regex: <begin> # {{ellipsis of|en|ribeye steak}}; {{qualifier|a boneless ribsteak}}; {{gloss|a cut of [[steak]] from the [[beef rib]]}} <end>
+Page 1126 ribeye: Found match for regex: <begin> # {{ellipsis of|en|ribeye steak}}; {{qualifier|a boneless ribsteak}}; {{gloss|a cut of [[steak]] from the [[beef rib]]}}. <end>
 Page 1127 petite annonce: Found match for regex: <begin> # {{ellipsis of|fr|petite annonce classée|t=a single [[classified advertisement]]}} <end>
 Page 1128 fools rush in: Found match for regex: <begin> # {{ellipsis of|en|fools rush in where angels fear to tread}}. <end>
 Page 1129 Serenissima: Found match for regex: <begin> # {{ellipsis of|it|Serenissima Repubblica di Venezia}} <end>
@@ -1799,7 +1799,7 @@ Page 1482 Salò: Found match for regex: <begin> # {{lb|it|WWII}} [[Salo Republic
 Page 1483 Kamloops: Found match for regex: <begin> # {{place|en|ann=ellipsis of:Kamloops Lake|lake|p/British Columbia|c/Canada|located at the confluence of the two branches of the {{w|Thompson River}}}}. <end>
 Page 1483 Kamloops: Found match for regex: <begin> # {{place|fr|ann=ellipsis of:lac Kamloops|lake|p/British Columbia|c/Canada|t1=Kamloops Lake}} <end>
 Page 1484 exclamação: Found match for regex: <begin> # {{ellipsis of|pt|ponto de interrogação|t=exclamation mark}} <end>
-Page 1485 Gatineau: Found match for regex: <begin> # {{ellipsis of|en|Gatineau River}}, a river in Quebec, Canada; tributary of the [[Ottawa]] river <end>
+Page 1485 Gatineau: Found match for regex: <begin> # {{ellipsis of|en|Gatineau River}}, a river in Quebec, Canada; tributary of the [[Ottawa]] river. <end>
 Page 1485 Gatineau: Found match for regex: <begin> # {{place|fr|ann=ellipsis of:rivière Gatineau|tributary|riv:Suf/Ottawa|p/Quebec|c/Canada}} <end>
 Page 1486 Dorval: Found match for regex: <begin> ## {{place|en|ann=ellipsis of:Dorval Airport|airport|r/Montreal|p/Quebec|c/Canada}}: [[YUL]] {{gloss|Montreal-Trudeau airport}}. <end>
 Page 1487 Lunenburg: Found match for regex: <begin> # {{ellipsis of|en|Lunenburg County}}. <end>
@@ -1898,7 +1898,7 @@ Page 1582 habilitação: Found match for regex: <begin> # {{lb|pt|Brazil|formal}
 Page 1583 Amerik: Found match for regex: <begin> # {{lb|ht|informal|metonymy}} {{ellipsis of|ht|Etazini nan Amerik|t=[[United States of America]]}} <end>
 Page 1584 au propre: Found match for regex: <begin> # {{lb|fr|linguistics}} {{ellipsis of|fr|[[au]] [[sens]] [[propre]]}}: [[literally]], in the [[literal]] [[sense]] <end>
 Page 1585 programming interface: Found match for regex: <begin> # {{lb|en|computing}} {{ellipsis of|en|application programming interface}}. <end>
-Page 1586 EPR: Found match for regex: <begin> # {{lb|en|uncountable|physics}} {{ellipsis of|en|{{w|EPR paradox}}}} {{initialism of|en|{{w|Einstein}} {{w|Podolsky}} {{w|Rosen}}}} <end>
+Page 1586 EPR: Found match for regex: <begin> # {{lb|en|uncountable|physics}} {{ellipsis of|en|{{w|EPR paradox}}}} {{initialism of|en|{{w|Einstein}} {{w|Podolsky}} {{w|Rosen}}}}. <end>
 Page 1587 Litchfield: Found match for regex: <begin> ### {{ellipsis of|en|Litchfield County}}. <end>
 Page 1588 pesawat: Found match for regex: <begin> # {{ellipsis of|id|pesawat terbang|t=airplane}} <end>
 Page 1589 anacardic: Found match for regex: <begin> # {{ellipsis of|en|anacardic acid}}. <end>
@@ -2022,7 +2022,7 @@ Page 1680 Torrance: Found match for regex: <begin> ## {{ellipsis of|en|Torrance 
 Page 1681 League: Found match for regex: <begin> # {{ellipsis of|en|League of Nations}}. <end>
 Page 1682 Mun: Found match for regex: <begin> # {{place|en|ann=ellipsis of:River Mun|river|c/Thailand}}. <end>
 Page 1682 Mun: Found match for regex: <begin> # {{place|en|ann=ellipsis of:Mun River|river|co/Norfolk|cc/England|c/UK}}. <end>
-Page 1683 Accomac: Found match for regex: <begin> # {{ellipsis of|en|Accomac County}}; {{dated form of|en|Accomack County}} <end>
+Page 1683 Accomac: Found match for regex: <begin> # {{ellipsis of|en|Accomac County|+form=dated form of:Accomack County}}. <end>
 Page 1683 Accomac: Found match for regex: <begin> # {{lb|en|historical}} {{ellipsis of|en|Accomac Shire}}. <end>
 Page 1684 Routt: Found match for regex: <begin> # {{ellipsis of|en|Routt County}}. <end>
 Page 1685 Elkhart: Found match for regex: <begin> # {{ellipsis of|en|Elkhart County}}. <end>
@@ -2039,8 +2039,8 @@ Page 1694 Porta: Found match for regex: <begin> # {{place|tl|ann=ellipsis of:Por
 Page 1695 Lanark: Found match for regex: <begin> # {{lb|en|historic}} {{place|en|ann=ellipsis of:County of Lanark,Lanarkshire|county|cc/Scotland}}. <end>
 Page 1696 Lytton: Found match for regex: <begin> ## {{place|en|ann=ellipsis of:Lytton Creek|stream|district/Thompson-Nicola|p/British Columbia|c/Canada}}. <end>
 Page 1696 Lytton: Found match for regex: <begin> ## {{ellipsis of|en|[[County of Lytton]] and [[Lytton County]]}}. <end>
-Page 1696 Lytton: Found match for regex: <begin> # {{ellipsis of|en|Lytton First Nation}}; an Indigenous people of Canada <end>
-Page 1696 Lytton: Found match for regex: <begin> # {{ellipsis of|en|Lytton Indian Band}}; an Indigenous government <end>
+Page 1696 Lytton: Found match for regex: <begin> # {{ellipsis of|en|Lytton First Nation}}; an Indigenous people of Canada. <end>
+Page 1696 Lytton: Found match for regex: <begin> # {{ellipsis of|en|Lytton Indian Band}}; an Indigenous government. <end>
 Page 1697 Coosa: Found match for regex: <begin> # {{ellipsis of|en|Coosa County}}. <end>
 Page 1698 Juárez: Found match for regex: <begin> # {{ellipsis of|es|Ciudad Juárez}} <end>
 Page 1699 Alliance: Found match for regex: <begin> # {{lb|en|Northern Ireland|politics}} {{ellipsis of|en|w:Alliance Party of Northern Ireland}}. <end>
@@ -2079,7 +2079,7 @@ Page 1727 reap the whirlwind: Found match for regex: <begin> # {{ellipsis of|en|
 Page 1728 reverse cowgirl: Found match for regex: <begin> # {{ellipsis of|en|reverse cowgirl position}}. <end>
 Page 1729 Fachkraft: Found match for regex: <begin> # {{tlb|de|ethnic slur|often|_|with|_|ironic|_|undertone or punctuation}} {{ellipsis of|de|Merkels Fachkräfte|eine von Merkels Fachkräften}} <end>
 Page 1730 حلقوم: Found match for regex: <begin> # {{ellipsis of|ar|رَاحَةُ ٱلْحُلْقُوم}} <end>
-Page 1731 Isuzu: Found match for regex: <begin> # {{ellipsis of|en|w:Isuzu Motors}}, a Japanese [[automotive]] [[manufacturer]] <end>
+Page 1731 Isuzu: Found match for regex: <begin> # {{ellipsis of|en|w:Isuzu Motors}}, a Japanese [[automotive]] [[manufacturer]]. <end>
 Page 1732 jalador: Found match for regex: <begin> # {{lb|es|Mexico}} {{ellipsis of|es|jalador de puerta|t=door handle}} <end>
 Page 1733 Kanaria: Found match for regex: <begin> # {{ellipsis of|fi|Kanariansaaret}} <end>
 Page 1734 Júdov: Found match for regex: <begin> # {{lb|sk|Christianity}} the Book of [[Jude]] {{ellipsis of|sk|Júdov list}} <end>
@@ -2184,7 +2184,7 @@ Page 1827 chrzestny: Found match for regex: <begin> # {{lb|pl|nominalized|Christ
 Page 1828 hidrelétrica: Found match for regex: <begin> # {{ellipsis of|pt|usina hidrelétrica}} <end>
 Page 1829 Tequixquiac: Found match for regex: <begin> # {{place|en|ann=ellipsis of:Santiago Tequixquiac|town/administrative seat|mun/Tequixquiac|s/State of Mexico|c/Mexico}}. <end>
 Page 1830 s'en faire: Found match for regex: <begin> # {{lb|fr|informal|reflexive}} {{ellipsis of|fr|se faire du mauvais sang}}: to [[worry]], to [[fret]] <end>
-Page 1831 INF: Found match for regex: <begin> # {{ellipsis of|en|{{w|Intermediate-Range Nuclear Forces Treaty}}|INF Treaty}} {{C|en|Nuclear warfare}} <end>
+Page 1831 INF: Found match for regex: <begin> # {{ellipsis of|en|{{w|Intermediate-Range Nuclear Forces Treaty}}|INF Treaty}}. {{C|en|Nuclear warfare}} <end>
 Page 1832 Belt and Road: Found match for regex: <begin> # {{ellipsis of|en|{{w|Belt and Road Initiative}}|t=a development strategy adopted by the [[Chinese]] government involving [[infrastructure]] development and [[investment]]s in countries in [[Europe]], [[Asia]] and [[Africa]]}}. <end>
 Page 1833 Wiktionary:Grease pit/2019/March: Found match for regex: <begin> | '''[[Template:ellipsis of]]''' || '''[[Template:ellipsis of]]''' || 189 || Keep <end>
 Page 1833 Wiktionary:Grease pit/2019/March: Found match for regex: <begin> | [[Template:anapodoton of]] || [[Template:ellipsis of]] || 0 || Delete <end>
@@ -2282,11 +2282,11 @@ Page 1902 Head-Smashed-In: Found match for regex: <begin> # {{l|en|Head-Smashed-
 Page 1903 Afro-Surinamer: Found match for regex: <begin> # {{lb|nl|Netherlands}} {{ellipsis of|nl|Afro-Surinaamse Nederlander||Afro-Surinamese Dutchman}} <end>
 Page 1904 Huntington's: Found match for regex: <begin> # {{lb|en|informal}} {{ellipsis of|en|Huntington's disease}}. <end>
 Page 1905 Vatira: Found match for regex: <begin> # {{ellipsis of|en|Vatira asteroid}}. <end>
-Page 1906 Vatiras: Found match for regex: <begin> # {{ellipsis of|en|Vatira asteroids}}; {{plural of|en|Vatira}} <end>
+Page 1906 Vatiras: Found match for regex: <begin> # {{ellipsis of|en|Vatira asteroids}}; {{plural of|en|Vatira}}. <end>
 Page 1907 Atira: Found match for regex: <begin> # {{ellipsis of|en|Atira asteroid}}. <end>
-Page 1908 Atiras: Found match for regex: <begin> # {{ellipsis of|en|Atira asteroids}}; {{plural of|en|Atira}} <end>
+Page 1908 Atiras: Found match for regex: <begin> # {{ellipsis of|en|Atira asteroids}}; {{plural of|en|Atira}}. <end>
 Page 1909 Apohele: Found match for regex: <begin> # {{ellipsis of|en|Apohele asteroid}}. <end>
-Page 1910 Apoheles: Found match for regex: <begin> # {{ellipsis of|en|Apohele asteroids}}; {{plural of|en|Apohele}} <end>
+Page 1910 Apoheles: Found match for regex: <begin> # {{ellipsis of|en|Apohele asteroids}}; {{plural of|en|Apohele}}. <end>
 Page 1911 إيارج: Found match for regex: <begin> # {{ellipsis of|ar|إِيَارَج فِيقْرَا}} <end>
 Page 1912 akibat: Found match for regex: <begin> # {{lb|id|mathematics|logics}} {{ellipsis of|id|teorema akibat|t=[[corollary; a proposition which follows easily from the statement or proof of another proposition}}. <end>
 Page 1913 Covid: Found match for regex: <begin> # {{ellipsis of|en|COVID-19}}. <end>
@@ -2300,7 +2300,7 @@ Page 1918 Great Firewall: Found match for regex: <begin> # {{ellipsis of|en|Grea
 Page 1919 veistäjä: Found match for regex: <begin> # {{ellipsis of|fi|kuvanveistäjä||sculptor}} <end>
 Page 1919 veistäjä: Found match for regex: <begin> # {{ellipsis of|fi|veneenveistäjä||boatwright}} <end>
 Page 1920 veistämö: Found match for regex: <begin> # {{ellipsis of|fi|veneveistämö||boatyard}} <end>
-Page 1921 net zero: Found match for regex: <begin> # {{lb|en|climate change}} {{ellipsis of|en|[[net-zero|net zero]] [[greenhouse gas]] [[emission]]s}}; [[carbon neutrality]] <end>
+Page 1921 net zero: Found match for regex: <begin> # {{lb|en|climate change}} {{ellipsis of|en|[[net-zero|net zero]] [[greenhouse gas]] [[emission]]s}}; [[carbon neutrality]]. <end>
 Page 1922 Luba: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|ann=ellipsis of:Luba Empire,Kingdom of Luba|historical country|r/Africa}}. <end>
 Page 1923 N95: Found match for regex: <begin> # {{m|mul|N95}}; {{ellipsis of|en|[[NIOSH]] N95}}. <end>
 Page 1924 Rührgerät: Found match for regex: <begin> # {{lb|de|colloquial}} {{ellipsis of|de|Handrührgerät|t=[[hand mixer]]}} <end>
@@ -2373,15 +2373,15 @@ Page 1968 Wolseley: Found match for regex: <begin> ### {{place|en|ann=ellipsis o
 Page 1968 Wolseley: Found match for regex: <begin> ### {{place|en|ann=ellipsis of:{{w|Rural Municipality of Wolseley No. 155}}|rural municpality|p/Saskatchewan|c/Canada}}. <end>
 Page 1968 Wolseley: Found match for regex: <begin> ### {{place|en|ann=ellipsis of:Wolseley River|river|region/Northeastern Ontario|p/Ontario|c/Canada}}. <end>
 Page 1969 Devil's Staircase: Found match for regex: <begin> # {{place|en|ann=ellipsis of:Devil's Staircase Wilderness|region|region/Siuslaw National Forest|s/Oregon|c/USA|; a protected 30,000 acre [[old-growth forest]] region in the [[national forest]], containing the Devil's Staircase waterfall}}. <end>
-Page 1970 Pans: Found match for regex: <begin> # {{ellipsis of|en|Peter Pans}}; {{plural of|en|Pan}} <end>
+Page 1970 Pans: Found match for regex: <begin> # {{ellipsis of|en|Peter Pans}}; {{plural of|en|Pan}}. <end>
 Page 1971 DeKalb: Found match for regex: <begin> # {{ellipsis of|en|DeKalb County}}. <end>
 Page 1972 covid party: Found match for regex: <begin> # {{ellipsis of|en|covid-19 party}}. <end>
 Page 1973 corona party: Found match for regex: <begin> # {{ellipsis of|en|coronavirus party}}. <end>
 Page 1974 con leche: Found match for regex: <begin> # {{lb|es|idiom}} {{ellipsis of|es|café con leche}} <end>
 Page 1976 Tax Day: Found match for regex: <begin> # {{lb|en|US|colloquial}} {{ellipsis of|en|Tax Freedom Day}}. <end>
 Page 1977 Blantyre: Found match for regex: <begin> # {{place|en|ann=ellipsis of:Blantyre District|district|region/Southern Region|c/Malawi}}. <end>
-Page 1978 Amhara: Found match for regex: <begin> # {{ellipsis of|en|Amhara people}}; {{synonym of|en|Amharas|nocap=1|nodot=1}}; a Semitic-speaking people of Ethiopia <end>
-Page 1978 Amhara: Found match for regex: <begin> # {{ellipsis of|en|Amhara language}}; {{synonym of|en|Amharic|nocap=1|nodot=1}}; a Semitic language spoken by the Amharas, and a lingua franca used by Ethiopia <end>
+Page 1978 Amhara: Found match for regex: <begin> # {{ellipsis of|en|Amhara people}}; {{synonym of|en|Amharas|nocap=1|nodot=1}}; a Semitic-speaking people of Ethiopia. <end>
+Page 1978 Amhara: Found match for regex: <begin> # {{ellipsis of|en|Amhara language}}; {{synonym of|en|Amharic|nocap=1|nodot=1}}; a Semitic language spoken by the Amharas, and a lingua franca used by Ethiopia. <end>
 Page 1978 Amhara: Found match for regex: <begin> # {{place|en|ann=ellipsis of:Amhara Region|state|c/Ethiopia|seat=Bahir Dar}}. <end>
 Page 1979 Wallops: Found match for regex: <begin> # {{ellipsis of|en|Wallops Island}}. <end>
 Page 1980 Accomack: Found match for regex: <begin> # {{ellipsis of|en|Accomack County}}. <end>
@@ -2411,7 +2411,7 @@ Page 1999 P100: Found match for regex: <begin> # {{m|mul|P100}}; {{ellipsis of|e
 Page 2000 Muroc: Found match for regex: <begin> # {{place|en|ann=ellipsis of:Muroc Dry Lake|dry lake bed|co/Kern County|s/California}}. <end>
 Page 2000 Muroc: Found match for regex: <begin> # {{ellipsis of|en|Muroc Field}}; the former name of an airfield built on said lake bed (its current name is {{w|lang=en|Edwards Air Force Base}}). <end>
 Page 2001 coupe choux: Found match for regex: <begin> # {{lb|fr|slang}} a [[straight razor]]; {{ellipsis of|fr|rasoir coupe-choux}}; {{synonym of|fr|rasoir droit}} <end>
-Page 2002 Cape Kennedy: Found match for regex: <begin> # {{lb|en|historical|1963-1973}} {{ellipsis of|en|Cape Kennedy [[air force|Air Force]] [[station|Station]]}}; {{former name of|en|Cape Canaveral [[spaceforce|Space Force]] Station}} <end>
+Page 2002 Cape Kennedy: Found match for regex: <begin> # {{lb|en|historical|1963-1973}} {{ellipsis of|en|Cape Kennedy [[air force|Air Force]] [[station|Station]]}}; {{former name of|en|Cape Canaveral [[spaceforce|Space Force]] Station|nocap=1}}. <end>
 Page 2003 Vista: Found match for regex: <begin> # {{lb|en|computing}} {{ellipsis of|en|{{w|Windows Vista}}}}. <end>
 Page 2004 Cypress: Found match for regex: <begin> # {{ellipsis of|en|Cypress County}}. <end>
 Page 2005 Atlacomulco: Found match for regex: <begin> # {{place|en|ann=ellipsis of:Atlacomulco de Fabela|city/administrative seat|mun/Atlacomulco|s/State of Mexico|c/Mexico}}. <end>
@@ -2421,7 +2421,7 @@ Page 2006 Necker: Found match for regex: <begin> # {{place|fr|ann=ellipsis of:î
 Page 2007 Keble: Found match for regex: <begin> # {{lb|en|Oxon|informal}} {{ellipsis of|en|{{w|Keble College, Oxford}}}}. <end>
 Page 2008 rágó: Found match for regex: <begin> # {{lb|hu|informal}} {{ellipsis of|hu|rágógumi|t=chewing gum}} <end>
 Page 2009 Rechnungshof: Found match for regex: <begin> # {{lb|de|German politics|informal}} {{ellipsis of|de|Bundesrechnungshof}} <end>
-Page 2010 Boyardee: Found match for regex: <begin> # {{ellipsis of|en|{{w|lang=en|Chef Boyardee}}}} A brand of prepackaged food, mostly canned read-to-reheat pasta products, now manufactured by ConAgra Foods. <end>
+Page 2010 Boyardee: Found match for regex: <begin> # {{ellipsis of|en|{{w|lang=en|Chef Boyardee}}|addl=a brand of prepackaged food, mostly canned read-to-reheat pasta products, now manufactured by ConAgra Foods}}. <end>
 Page 2011 Paracas: Found match for regex: <begin> ## {{place|en|ann=ellipsis of:Paracas District|district|p/Pisco|region/Ica|c/Peru}}. <end>
 Page 2011 Paracas: Found match for regex: <begin> ## {{place|en|ann=ellipsis of:Paracas Bay|bay|p/Pisco Province|region/Ica Region|c/Peru|on the|ocean/Pacific Ocean}}. <end>
 Page 2011 Paracas: Found match for regex: <begin> ## {{place|en|ann=ellipsis of:Paracas Peninsula|peninsula|p/Pisco Province|region/Ica Region|c/Peru|in the|ocean/Pacific Ocean}}. <end>
@@ -2454,7 +2454,7 @@ Page 2023 Yoro: Found match for regex: <begin> ### {{place|en|ann=ellipsis of:Yo
 Page 2024 bodol: Found match for regex: <begin> # {{ellipsis of|ceb|bodol payt}} <end>
 Page 2025 avainnus: Found match for regex: <begin> # {{ellipsis of|fi|väriavainnus||chroma key}} <end>
 Page 2026 Arecibo: Found match for regex: <begin> # {{place|mul|ann=ellipsis of:Arecibo Vallis|valley|planet/Mercury|star system/Solar System}} <end>
-Page 2026 Arecibo: Found match for regex: <begin> # {{ellipsis of|en|{{w|lang=en|Arecibo Observatory}}}}; a [[radio astronomy]] [[astronomical observatory]] located in Arecibo, Puerto Rico <end>
+Page 2026 Arecibo: Found match for regex: <begin> # {{ellipsis of|en|{{w|lang=en|Arecibo Observatory}}}}; a [[radio astronomy]] [[astronomical observatory]] located in Arecibo, Puerto Rico. <end>
 Page 2027 Contra Costa: Found match for regex: <begin> # {{ellipsis of|en|Contra Costa County}}. <end>
 Page 2027 Contra Costa: Found match for regex: <begin> # {{place|es|ann=ellipsis of:Condado de Contra Costa|county|s/California|c/USA|t1=Contra Costa}} <end>
 Page 2028 poké: Found match for regex: <begin> # {{ellipsis of|en|poké salad}}. <end>
@@ -2486,7 +2486,7 @@ Page 2047 nullás: Found match for regex: <begin> # {{lb|hu|specifically}} {{ell
 Page 2048 ötvenhatos: Found match for regex: <begin> # {{ellipsis of|hu|1956-os}}, related to the [[w:Hungarian Revolution of 1956|Hungarian Revolution of 1956]] <end>
 Page 2048 ötvenhatos: Found match for regex: <begin> # {{ellipsis of|hu|1956-os}}, someone who participated in (or is otherwise related to) the [[w:Hungarian Revolution of 1956|Hungarian Revolution of 1956]] <end>
 Page 2049 Сполучені Штати: Found match for regex: <begin> # {{place|uk|ann=ellipsis of:Сполу́чені Шта́ти Аме́рики|country|continent/North America|t=United States}} <end>
-Page 2050 von der Leyen: Found match for regex: <begin> ## {{ellipsis of|en|w:Ursula von der Leyen}}, 13th {{w|president of the European Commission}} <end>
+Page 2050 von der Leyen: Found match for regex: <begin> ## {{ellipsis of|en|w:Ursula von der Leyen}}, 13th {{w|president of the European Commission}}. <end>
 Page 2051 zrzut: Found match for regex: <begin> # {{lb|pl|computing}} {{ellipsis of|pl|zrzut ekranu|t=[[screenshot]], [[screen capture]], [[screengrab]]}} <end>
 Page 2052 data blocker: Found match for regex: <begin> # {{ellipsis of|en|USB data blocker}}. <end>
 Page 2053 Wiktionary:Tea room/2021/January: Found match for regex: <begin> ::* sense 3 of the noun of {{m|en|ledger}} is probably incompletely defined. The OED definition 1d is very long and specific. ''ledger'' may also be {{temp|ellipsis of}} of {{l|en|general ledger}}. It may be that we have to display some kind of ladder of general to specific senses. <small>About the presumed causes of the shortcomings: One would think it is not that bad a page, as having its current edition by the lawyer {{ping|Sgconlaw}}, and I admit thus much that there is nothing completely off but I concede that the page does not hit the bullseye in the art of defining, because the fines, the limits of the concepts denoted by the word are left gaping, which is also caused by SGconlaw’s [[Special:Diff/60851357/60853466|preserving]] previous uninformed page content “because it was there”; sure it’s the Wikipedia method, [[WT:WINW|but we]] can have the courage to treat glosses as demonstrably wrong: as a secondary source we aspire to make sure that the picture we make of the primary material, this great artwork, is congruous, instead of contradicting itself like the random inexact secondary sources in Wikipedia systematically do.</small> <end>
@@ -2663,8 +2663,8 @@ Page 2164 Sumas: Found match for regex: <begin> ### {{place|en|ann=ellipsis of:A
 Page 2164 Sumas: Found match for regex: <begin> ### {{place|en|ann=ellipsis of:Canadian Sumas|mountain|r/Lower Mainland|p/British Columbia|c/Canada|in the|r/Fraser Lowland|mountain range/Cascades Range|r/North American Cordillera|continent/North America|continent/Americas}}. <end>
 Page 2164 Sumas: Found match for regex: <begin> ## {{place|en|ann=ellipsis of:Sumas Peak|mountain peak|mountain/Canadian Sumas|r/Lower Mainland|p/British Columbia|c/Canada|in the|r/Fraser Lowland|mountain range/Cascades Range|r/North American Cordillera|continent/North America|continent/Americas}}. <end>
 Page 2164 Sumas: Found match for regex: <begin> ## {{place|en|ann=ellipsis of:District of Sumas|former district|r/Lower Mainland|p/British Columbia|c/Canada|in the|r/Fraser Lowland|that was merged into|city/Abbotsford}}; {{former name of|en|Sumas Prairie}} <end>
-Page 2164 Sumas: Found match for regex: <begin> # {{ellipsis of|en|Sumas First Nation}}; a tribe of Stahlo people, found in the US Pacific Northwest and the British Columbia Lower Mainland of Canada <end>
-Page 2164 Sumas: Found match for regex: <begin> # {{ellipsis of|en|Sumas Indian Band}}; a band government governing the Sumas First Nation <end>
+Page 2164 Sumas: Found match for regex: <begin> # {{ellipsis of|en|Sumas First Nation}}; a tribe of Stahlo people, found in the US Pacific Northwest and the British Columbia Lower Mainland of Canada. <end>
+Page 2164 Sumas: Found match for regex: <begin> # {{ellipsis of|en|Sumas Indian Band}}; a band government governing the Sumas First Nation. <end>
 Page 2165 Suma: Found match for regex: <begin> # {{ellipsis of|en|{{w|Suma language}}}}. <end>
 Page 2165 Suma: Found match for regex: <begin> # {{ellipsis of|en|{{w|Suma people}}}}. <end>
 Page 2165 Suma: Found match for regex: <begin> ## {{place|en|ann=ellipsis of:{{w|Suma River}}|river|region/Mbeya|c/Tanzania}}. <end>
@@ -2755,7 +2755,7 @@ Page 2228 Akasa: Found match for regex: <begin> # {{place|mul|ann=ellipsis of:Ak
 Page 2229 Ka'an: Found match for regex: <begin> # {{place|mul|ann=ellipsis of:Ka'an Arcus|region|r/Ultima|celestial body/Arrokoth|r/Kuiper Belt|star system/Solar System}} <end>
 Page 2230 Old Man: Found match for regex: <begin> # {{senseid|en|Q3881521}} {{ellipsis of|en|Old Man of Coniston<id:Q3881521>}}. <end>
 Page 2231 Zhenbao: Found match for regex: <begin> # {{ellipsis of|en|Zhenbao Island}}. <end>
-Page 2232 Chen Pao: Found match for regex: <begin> # {{ellipsis of|en|Chen Pao Island}}; {{alternative form of|en|Zhenbao|nocap=1}} <end>
+Page 2232 Chen Pao: Found match for regex: <begin> # {{ellipsis of|en|Chen Pao Island}}; {{alternative form of|en|Zhenbao|nocap=1}}. <end>
 Page 2233 hydroflight: Found match for regex: <begin> # {{lb|en|sport|recreation}} {{ellipsis of|en|hydroflight sports}}. <end>
 Page 2234 Medyka: Found match for regex: <begin> # {{place|en|ann=ellipsis of:Gmina Medyka|municipality/gmina|co/Przemyśl|p/Subcarpathia|c/Poland|seat=Medyka}}. <end>
 Page 2235 Bayraktar: Found match for regex: <begin> # {{ellipsis of|en|w:Bayraktar UAV}}, {{ng|being any one of the [[combat drone]]s from the family of the same name [[design]]ed and [[manufacture]]d by the [[Turkish]] company {{w|Baykar}}.}} <end>
@@ -2786,7 +2786,7 @@ Page 2257 Gespielin: Found match for regex: <begin> # female [[lover]]; {{lb|de|
 Page 2258 porraia: Found match for regex: <begin> # {{ellipsis of|it|erba porraia}} <end>
 Page 2259 windfall tax: Found match for regex: <begin> # {{ellipsis of|en|{{w|windfall tax|windfall profits tax}}|addl=a higher [[tax rate]] on profits from sudden gains (“[[profiteering]]”) in certain industries}}. <end>
 Page 2260 heksadesimaali: Found match for regex: <begin> # {{lb|fi|math}} {{ellipsis of|fi|heksadesimaaliluku}} <end>
-Page 2261 golden crab: Found match for regex: <begin> # {{ellipsis of|en|golden king crab}} ({{taxlink|Lithodes aequispinus|species|wplink=0}}) <end>
+Page 2261 golden crab: Found match for regex: <begin> # {{ellipsis of|en|golden king crab}} ({{taxlink|Lithodes aequispinus|species|wplink=0}}). <end>
 Page 2262 bourbon and branch: Found match for regex: <begin> # {{lb|en|US}} {{ellipsis of|en|[[bourbon]] [[and]] [[branch water]]}}; [[bourbon whiskey]] mixed with plain [[water]]. <end>
 Page 2263 Charles de Gaulle: Found match for regex: <begin> # {{ellipsis of|en|{{w|Paris Charles de Gaulle Airport}}}}. <end>
 Page 2264 swear on a stack: Found match for regex: <begin> # {{ellipsis of|en|swear on a stack of Bibles}}. <end>
@@ -2956,7 +2956,7 @@ Page 2407 Cow: Found match for regex: <begin> ## {{ellipsis of|en|Cow Lake}}. <e
 Page 2407 Cow: Found match for regex: <begin> ## {{ellipsis of|en|Cow Mountain}}. <end>
 Page 2410 disg: Found match for regex: <begin> ## {{lb|cy|computer hardware}} {{ellipsis of|cy|disg caled||hard disk}} <end>
 Page 2410 disg: Found match for regex: <begin> ## {{lb|cy|computer hardware}} {{ellipsis of|cy|disg hyblyg||floppy disk}} <end>
-Page 2411 Plains of Abraham: Found match for regex: <begin> # {{ellipsis of|en|[[battle|Battle]] of the [[plain|Plains]] of [[Abraham]]}}, an 1759 battle that resulted in the change in sovereignty of the colonial province of Canada, New France, from the French Crown to the British Crown; becoming the colonial province of Quebec, British North America (later the British colonial province of Canada, thence Dominion of Canada) <end>
+Page 2411 Plains of Abraham: Found match for regex: <begin> # {{ellipsis of|en|[[battle|Battle]] of the [[plain|Plains]] of [[Abraham]]}}, an 1759 battle that resulted in the change in sovereignty of the colonial province of Canada, New France, from the French Crown to the British Crown; becoming the colonial province of Quebec, British North America (later the British colonial province of Canada, thence Dominion of Canada). <end>
 Page 2412 Khan Younus: Found match for regex: <begin> # {{place|en|ann=ellipsis of:Khan Younus Governorate|governorate|r/Southern Gaza|r/Gaza Strip|cc/Palestine|c/Israel|r/Levant|capital=Khan Younus}}. <end>
 Page 2413 frontal nudity: Found match for regex: <begin> # {{ellipsis of|en|full frontal nudity}}. <end>
 Page 2414 one nation: Found match for regex: <begin> # {{lb|en|UK politics}} {{ellipsis of|en|one-nation conservatism}}. <end>
@@ -3053,7 +3053,7 @@ Page 2491 mainostenesto: Found match for regex: <begin> # {{lb|fi|informal}} {{e
 Page 2493 log spam: Found match for regex: <begin> # {{lb|en|internet}} {{ellipsis of|en|referrer log spam}}. <end>
 Page 2494 ꦲꦩ꧀ꦥꦺꦪꦤ꧀: Found match for regex: <begin> # {{ellipsis of|jv|ꦒꦂꦮꦲꦩ꧀ꦥꦺꦪꦤ꧀|tr=garwa ampéyan|t=[[concubine]], [[mistress]]}} <end>
 Page 2495 you can lead a horse to water: Found match for regex: <begin> # {{ellipsis of|en|you can lead a horse to water, but you can't make it drink}}. <end>
-Page 2496 Koksan: Found match for regex: <begin> # {{ellipsis of|en|w:M-1978 Koksan}}, a [[model]] of North Korean [[heavy]] [[artillery]] <end>
+Page 2496 Koksan: Found match for regex: <begin> # {{ellipsis of|en|w:M-1978 Koksan}}, a [[model]] of North Korean [[heavy]] [[artillery]]. <end>
 Page 2497 Notre: Found match for regex: <begin> # {{lb|en|Philippines|chiefly|Baguio|colloquial}} {{place|en|ann=ellipsis of:Notre Dame De Chartres Hospital|hospital|city/Baguio|p/Benguet|c/Philippines}}. <end>
 Page 2497 Notre: Found match for regex: <begin> # {{place|tl|ann=ellipsis of:Notre Dame De Chartres Hospital|hospital|city/Baguio|p/Benguet|c/Philippines}} <end>
 Page 2498 Mangingisda: Found match for regex: <begin> # {{ellipsis of|tl|Barangay ng mga Mangingisda}} <end>

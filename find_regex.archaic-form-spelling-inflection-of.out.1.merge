@@ -149,7 +149,7 @@ Page 134 cumbre: Found match for regex: <begin> # {{archaic form of|en|cumber}}.
 Page 135 ofrecer: Found match for regex: <begin> # {{archaic form of|pt|oferecer}} <end>
 Page 136 bedja: Found match for regex: <begin> # {{archaic form of|sv|be||ask, pray}} <end>
 Page 137 mær: Found match for regex: <begin> # {{archaic form of|sv|märr||mare}} <end>
-Page 138 leftenant: Found match for regex: <begin> # {{archaic form of|en|lieutenant}}<!--used only in UK and Canada or also elsewhere?--> <end>
+Page 138 leftenant: Found match for regex: <begin> # {{archaic form of|en|lieutenant}}.<!--used only in UK and Canada or also elsewhere?--> <end>
 Page 139 anile: Found match for regex: <begin> # {{archaic form of|en|anil||indigo}}. <end>
 Page 140 sulpur: Found match for regex: <begin> # {{archaic form of|la|sulphur}} <end>
 Page 141 rendre: Found match for regex: <begin> # {{archaic form of|en|render}}. <end>
@@ -437,7 +437,7 @@ Page 405 stadig: Found match for regex: <begin> # {{archaic form of|nl|gestaag}}
 Page 406 resplandor: Found match for regex: <begin> # {{archaic form of|pt|resplendor}} <end>
 Page 407 Servia: Found match for regex: <begin> # {{archaic form of|en|Serbia}}. <end>
 Page 408 lipide: Found match for regex: <begin> # {{archaic form of|en|lipid}}. <end>
-Page 409 œcumenic: Found match for regex: <begin> # {{archaic form of|en|ecumenic}}<ref name="OED"/> <end>
+Page 409 œcumenic: Found match for regex: <begin> # {{archaic form of|en|ecumenic}}.<ref name="OED"/> <end>
 Page 410 polyglotte: Found match for regex: <begin> # {{archaic form of|nl|polyglot||polyglot person}} <end>
 Page 411 ædifice: Found match for regex: <begin> # {{archaic spelling of|en|edifice}}. <end>
 Page 411 ædifice: Found match for regex: <begin> # {{archaic form of|fr|édifice}} <end>
@@ -973,7 +973,7 @@ Page 937 laniard: Found match for regex: <begin> # {{archaic form of|en|lanyard}
 Page 938 laryngean: Found match for regex: <begin> # {{archaic form of|en|laryngeal}}. <end>
 Page 939 waiwode: Found match for regex: <begin> # {{archaic form of|en|voivode}}. <end>
 Page 940 orrach: Found match for regex: <begin> # {{archaic form of|en|orach}}. <end>
-Page 941 ghole: Found match for regex: <begin> # {{archaic form of|en|ghoul}}<ref>{{R:Webster 1913}}</ref> <end>
+Page 941 ghole: Found match for regex: <begin> # {{archaic form of|en|ghoul}}.<ref>{{R:Webster 1913}}</ref> <end>
 Page 942 aliner: Found match for regex: <begin> # {{archaic form of|en|aligner}}. <end>
 Page 943 chetah: Found match for regex: <begin> # {{archaic form of|en|cheetah}}. {{defdate|rare after 1920}} <end>
 Page 944 muscarin: Found match for regex: <begin> # {{archaic form of|en|muscarine}}. <end>
@@ -1222,7 +1222,7 @@ Page 1181 Raffaelesque: Found match for regex: <begin> # {{archaic form of|en|Ra
 Page 1182 bloomary: Found match for regex: <begin> # {{archaic form of|en|bloomery}}. <end>
 Page 1183 featherfew: Found match for regex: <begin> # {{archaic form of|en|feverfew}}. <end>
 Page 1184 gisarm: Found match for regex: <begin> # {{archaic form of|en|gisarme}}. <end>
-Page 1185 frize: Found match for regex: <begin> # {{lb|en|architecture}} {{archaic form of|en|frieze}}<ref>{{R:Webster 1913}}</ref> <end>
+Page 1185 frize: Found match for regex: <begin> # {{lb|en|architecture}} {{archaic form of|en|frieze}}.<ref>{{R:Webster 1913}}</ref> <end>
 Page 1185 frize: Found match for regex: <begin> # {{lb|en|architecture}} {{archaic form of|en|frieze}}. <end>
 Page 1186 vaginism: Found match for regex: <begin> # {{archaic form of|en|vaginismus}}. <end>
 Page 1187 foussa: Found match for regex: <begin> # {{archaic form of|en|fossa||carnivorous mammal}}. <end>
@@ -1323,7 +1323,7 @@ Page 1276 loover: Found match for regex: <begin> # {{archaic form of|en|louver}}
 Page 1277 Mauresque: Found match for regex: <begin> # {{archaic form of|en|Moresque}}. <end>
 Page 1278 grakle: Found match for regex: <begin> # {{archaic form of|en|grackle}}. <end>
 Page 1279 iodid: Found match for regex: <begin> # {{archaic form of|en|iodide}}. <end>
-Page 1280 scapement: Found match for regex: <begin> # {{archaic form of|en|escapement|qq=part of a timepiece}} <end>
+Page 1280 scapement: Found match for regex: <begin> # {{archaic form of|en|escapement|qq=part of a timepiece}}. <end>
 Page 1281 blomary: Found match for regex: <begin> # {{archaic form of|en|bloomery}}. <end>
 Page 1282 Tamul: Found match for regex: <begin> # {{archaic form of|en|Tamil}}. <end>
 Page 1282 Tamul: Found match for regex: <begin> # {{archaic form of|en|Tamil}}. <end>
@@ -1448,7 +1448,7 @@ Page 1387 encyclopædiac: Found match for regex: <begin> # {{archaic form of|en|
 Page 1388 Soonee: Found match for regex: <begin> # {{archaic form of|en|Sunni}}. <end>
 Page 1389 mangostan: Found match for regex: <begin> # {{archaic form of|en|mangosteen}}. <end>
 Page 1390 opposit: Found match for regex: <begin> # {{archaic form of|en|opposite}}. <end>
-Page 1390 opposit: Found match for regex: <begin> # {{archaic form of|en|opposite}}<!--see C&D Supp, XII, page 0902--> <end>
+Page 1390 opposit: Found match for regex: <begin> # {{archaic form of|en|opposite}}.<!--see C&D Supp, XII, page 0902--> <end>
 Page 1391 anæsthetist: Found match for regex: <begin> # {{archaic form of|en|anesthetist}}. <end>
 Page 1392 efficience: Found match for regex: <begin> # {{archaic form of|en|efficiency}}. <end>
 Page 1393 flowret: Found match for regex: <begin> # {{archaic form of|en|floweret}}. <end>
@@ -1710,7 +1710,7 @@ Page 1730 æolipile: Found match for regex: <begin> # {{archaic form of|en|aeoli
 Page 1731 æolipyle: Found match for regex: <begin> # {{archaic form of|en|aeolipile}}. <end>
 Page 1732 erotick: Found match for regex: <begin> # {{archaic form of|en|erotic}}. <end>
 Page 1733 Tyrtæan: Found match for regex: <begin> # {{archaic form of|en|Tyrtaean}}. <end>
-Page 1734 williwau: Found match for regex: <begin> # {{archaic form of|en|williwaw}} <!--mainly seen in the plural--> <end>
+Page 1734 williwau: Found match for regex: <begin> # {{archaic form of|en|williwaw}}. <!--mainly seen in the plural--> <end>
 Page 1735 aggrégation: Found match for regex: <begin> # {{archaic form of|fr|agrégation}} <end>
 Page 1736 dawb: Found match for regex: <begin> # {{archaic form of|en|daub}}. <end>
 Page 1736 dawb: Found match for regex: <begin> # {{archaic form of|en|daub}}. <end>
@@ -1761,7 +1761,7 @@ Page 1784 dioxid: Found match for regex: <begin> # {{archaic form of|en|dioxide}
 Page 1786 Kasack: Found match for regex: <begin> # {{archaic form of|en|Cossack}}. <end>
 Page 1787 angustura: Found match for regex: <begin> # {{archaic form of|en|angostura}}. <end>
 Page 1788 קלמרין: Found match for regex: <begin> # {{archaic form of|he|קַלְמָר|addl=used in [[Mishnaic]] times}} {{defdate|1st–6th c.}} <end>
-Page 1790 Soffi: Found match for regex: <begin> # {{senseid|en|shah}}{{archaic form of|en|Safavi}}<ref name="OEDonline_Sophy1"/> <end>
+Page 1790 Soffi: Found match for regex: <begin> # {{senseid|en|shah}}{{archaic form of|en|Safavi}}.<ref name="OEDonline_Sophy1"/> <end>
 Page 1791 univocous: Found match for regex: <begin> # {{archaic form of|en|univocal}}. <end>
 Page 1792 ouloid: Found match for regex: <begin> # {{archaic form of|en|uloid}}. <end>
 Page 1793 ekzematous: Found match for regex: <begin> # {{archaic form of|en|eczematous}}. <end>
@@ -2373,7 +2373,7 @@ Page 2427 doatingly: Found match for regex: <begin> # {{archaic form of|en|dotin
 Page 2430 mistakedly: Found match for regex: <begin> # {{archaic form of|en|mistakenly}}. <end>
 Page 2431 strabometer: Found match for regex: <begin> # {{archaic form of|en|strabismometer}}. <end>
 Page 2432 thebaia: Found match for regex: <begin> # {{archaic form of|en|thebaine}}. <end>
-Page 2433 pentegraph: Found match for regex: <begin> # {{archaic form of|en|pantograph}} <!--which sense?--> <end>
+Page 2433 pentegraph: Found match for regex: <begin> # {{archaic form of|en|pantograph}}. <!--which sense?--> <end>
 Page 2434 suoro: Found match for regex: <begin> # {{archaic form of|it|suora|t=nun; sister}} <end>
 Page 2435 guroo: Found match for regex: <begin> # {{archaic form of|en|guru}}. <end>
 Page 2436 fub off: Found match for regex: <begin> # {{archaic form of|en|fob off}}. <end>
@@ -2447,7 +2447,7 @@ Page 2506 Touranian: Found match for regex: <begin> # {{archaic form of|en|Turan
 Page 2507 chowpatty: Found match for regex: <begin> # {{archaic form of|en|chapatti}}. <end>
 Page 2508 sentähden: Found match for regex: <begin> # {{archaic form of|fi|sentään}} <end>
 Page 2508 sentähden: Found match for regex: <begin> Considered archaic only when used as a conjunction (which is written as one word, unlike {{m|fi||sen tähden}}), or when used as an archaic form of {{m|fi||sentään}}. <end>
-Page 2509 roundle: Found match for regex: <begin> # {{archaic form of|en|roundel}} <!--various senses, e.g. music, heraldry--> <end>
+Page 2509 roundle: Found match for regex: <begin> # {{archaic form of|en|roundel}}. <!--various senses, e.g. music, heraldry--> <end>
 Page 2510 rabate: Found match for regex: <begin> # {{archaic form of|en|rebate}}. <end>
 Page 2510 rabate: Found match for regex: <begin> # {{archaic form of|en|rebate}}. <end>
 Page 2511 aigriotte: Found match for regex: <begin> # {{archaic form of|fr|griotte|t=[[sour cherry]]}} <end>
@@ -3362,7 +3362,7 @@ Page 3550 Billiton: Found match for regex: <begin> # {{archaic form of|en|Belitu
 Page 3551 spijze: Found match for regex: <begin> # {{archaic form of|nl|spijs}} <end>
 Page 3552 Stole: Found match for regex: <begin> # {{archaic form of|de|Stola}} <end>
 Page 3553 Jemmapes: Found match for regex: <begin> # {{archaic form of|en|Jemappes}}. <end>
-Page 3555 Jinsen: Found match for regex: <begin> # {{archaic form of|en|Incheon}}, {{place|en|a=a|major city|c/South Korea}} <end>
+Page 3555 Jinsen: Found match for regex: <begin> # {{place|en|ann=arch form:Inchoen|major city|c/South Korea}}. <end>
 Page 3558 pytyriasis: Found match for regex: <begin> # {{archaic form of|en|pityriasis}}. <end>
 Page 3559 alweder: Found match for regex: <begin> # {{archaic form of|nl|alweer||once again}} <end>
 Page 3561 Kadiak bear: Found match for regex: <begin> # {{archaic form of|en|Kodiak bear}}. <end>
@@ -3534,7 +3534,7 @@ Page 31 Singhalese: Found match for regex: <begin> # {{archaic spelling of|en|Si
 Page 31 Singhalese: Found match for regex: <begin> # {{archaic spelling of|en|Sinhalese}}. <end>
 Page 32 hôtel: Found match for regex: <begin> # {{archaic spelling of|en|hotel}}. <end>
 Page 33 Sophia: Found match for regex: <begin> # {{senseid|en|shah}}{{term-label|en|historical}} {{archaic spelling of|en|Safawi}}. <end>
-Page 34 Sophie: Found match for regex: <begin> # {{senseid|en|shah}} {{archaic spelling of|en|Safavi}}<ref name="OEDonline_Sophy1"/> <end>
+Page 34 Sophie: Found match for regex: <begin> # {{senseid|en|shah}} {{archaic spelling of|en|Safavi}}.<ref name="OEDonline_Sophy1"/> <end>
 Page 35 tv: Found match for regex: <begin> # {{archaic spelling of|sv|du||you}} <end>
 Page 36 phantasy: Found match for regex: <begin> # {{archaic spelling of|en|fantasy}}. <end>
 Page 36 phantasy: Found match for regex: <begin> # {{archaic spelling of|en|fantasy}}. <end>
@@ -3615,7 +3615,7 @@ Page 100 rial: Found match for regex: <begin> # {{archaic spelling of|pt|real|t=
 Page 101 mirrour: Found match for regex: <begin> # {{archaic spelling of|en|mirror}}. <end>
 Page 101 mirrour: Found match for regex: <begin> # {{archaic spelling of|en|mirror}}. <end>
 Page 102 Barbadoes: Found match for regex: <begin> # {{archaic spelling of|en|Barbados}}. <end>
-Page 103 sophism: Found match for regex: <begin> # {{archaic spelling of|en|Sufism}}<ref name="Century1911a"/> <end>
+Page 103 sophism: Found match for regex: <begin> # {{archaic spelling of|en|Sufism}}.<ref name="Century1911a"/> <end>
 Page 104 aethyr: Found match for regex: <begin> # {{archaic spelling of|en|ether}}. <end>
 Page 105 ethyr: Found match for regex: <begin> # {{archaic spelling of|en|ether}}. <end>
 Page 106 laide: Found match for regex: <begin> # {{archaic spelling of|en|laid}}. <end>
@@ -3723,7 +3723,7 @@ Page 192 expresse: Found match for regex: <begin> # {{archaic spelling of|en|exp
 Page 193 contree: Found match for regex: <begin> # {{archaic spelling of|en|country}}. <end>
 Page 194 worlde: Found match for regex: <begin> # {{archaic spelling of|en|world}}. <end>
 Page 195 colde: Found match for regex: <begin> # {{archaic spelling of|en|cold}}. <end>
-Page 196 wente: Found match for regex: <begin> # {{archaic spelling of|en|went}}, {{past participle of|en|go|nocat=1}} <end>
+Page 196 wente: Found match for regex: <begin> # {{past participle of|en|ann=arch sp:went|go}}. <end>
 Page 197 hande: Found match for regex: <begin> # {{archaic spelling of|en|hand}}. <end>
 Page 198 neede: Found match for regex: <begin> # {{archaic spelling of|en|need}}. <end>
 Page 198 neede: Found match for regex: <begin> # {{archaic spelling of|en|need}}. <end>
@@ -3796,7 +3796,7 @@ Page 254 prævent: Found match for regex: <begin> # {{archaic spelling of|en|pre
 Page 255 rowdie: Found match for regex: <begin> # {{archaic spelling of|en|rowdy}}. <end>
 Page 256 stedfast: Found match for regex: <begin> # {{archaic spelling of|en|steadfast}}. <end>
 Page 257 Æquator: Found match for regex: <begin> # {{archaic spelling of|en|Equator}}. <end>
-Page 258 æquilibrium: Found match for regex: <begin> # {{archaic spelling of|en|equilibrium}}<ref name="OED-alt">“[http://dictionary.oed.com/cgi/entry/50077253?sp=1 equilibrium]” in the '''Oxford English Dictionary''' (second edition), giving {{m|en||æquilibrium}} as a 17th–19th-century spelling.</ref> <end>
+Page 258 æquilibrium: Found match for regex: <begin> # {{archaic spelling of|en|equilibrium}}.<ref name="OED-alt">“[http://dictionary.oed.com/cgi/entry/50077253?sp=1 equilibrium]” in the '''Oxford English Dictionary''' (second edition), giving {{m|en||æquilibrium}} as a 17th–19th-century spelling.</ref> <end>
 Page 259 adorn'd: Found match for regex: <begin> # {{archaic spelling of|en|adorned}}. <end>
 Page 260 dutchy: Found match for regex: <begin> # {{archaic spelling of|en|duchy}}. <end>
 Page 261 dutchess: Found match for regex: <begin> # {{archaic spelling of|en|duchess}}. <end>
@@ -4000,7 +4000,7 @@ Page 436 Ingland: Found match for regex: <begin> # {{archaic spelling of|en|Engl
 Page 437 monkie: Found match for regex: <begin> # {{archaic spelling of|en|monkey}}. <end>
 Page 438 прикащик: Found match for regex: <begin> # {{archaic spelling of|ru|прика́зчик}} <end>
 Page 439 intrap: Found match for regex: <begin> # {{archaic spelling of|en|entrap}}. <end>
-Page 440 serpentes: Found match for regex: <begin> # {{archaic spelling of|en|serpents}}: {{plural of|en|serpent}} <end>
+Page 440 serpentes: Found match for regex: <begin> # {{plural of|en|ann=arch sp:serpents|serpent}}. <end>
 Page 441 amœbicide: Found match for regex: <begin> # {{archaic spelling of|en|amebicide}}. <end>
 Page 442 homœophony: Found match for regex: <begin> # {{archaic spelling of|en|homeophony}}. <end>
 Page 443 sovran: Found match for regex: <begin> # {{archaic spelling of|en|sovereign}}. <end>
@@ -4129,7 +4129,7 @@ Page 581 inæqual: Found match for regex: <begin> # {{archaic spelling of|en|ine
 Page 583 pœnology: Found match for regex: <begin> # {{archaic spelling of|en|penology}}. <end>
 Page 589 hemisphære: Found match for regex: <begin> # {{archaic spelling of|en|hemisphere}}. <end>
 Page 590 cæmentum: Found match for regex: <begin> # {{archaic spelling of|en|cementum}}. <end>
-Page 591 noyeau: Found match for regex: <begin> # {{archaic spelling of|en|noyau|qq=French liqueur}} <end>
+Page 591 noyeau: Found match for regex: <begin> # {{archaic spelling of|en|noyau|qq=French liqueur}}. <end>
 Page 595 incohærent: Found match for regex: <begin> # {{archaic spelling of|en|incoherent}}. <end>
 Page 596 cohærence: Found match for regex: <begin> # {{archaic spelling of|en|coherence}}. <end>
 Page 597 cohæsion: Found match for regex: <begin> # {{archaic spelling of|en|cohesion}}. <end>
@@ -4331,7 +4331,7 @@ Page 870 felte: Found match for regex: <begin> # {{archaic spelling of|en|felt}}
 Page 871 tempest-tost: Found match for regex: <begin> # {{archaic spelling of|en|tempest-tossed}}. <end>
 Page 874 obscurecer: Found match for regex: <begin> # {{archaic spelling of|es|oscurecer}} <end>
 Page 875 caterpiller: Found match for regex: <begin> # {{archaic spelling of|en|caterpillar}}. <end>
-Page 876 caterpillers: Found match for regex: <begin> # {{archaic spelling of|en|caterpillars}}; {{plural of|en|caterpiller}} <end>
+Page 876 caterpillers: Found match for regex: <begin> # {{archaic spelling of|en|caterpillars}}; {{plural of|en|caterpiller|nocap=1}}. <end>
 Page 877 Moslemess: Found match for regex: <begin> # {{archaic spelling of|en|Muslimess}}. <end>
 Page 878 quli: Found match for regex: <begin> # {{archaic spelling of|en|coolie}}. <end>
 Page 879 apostrophy: Found match for regex: <begin> # {{archaic spelling of|en|apostrophe}}. <end>
@@ -4358,8 +4358,8 @@ Page 906 กงศุล: Found match for regex: <begin> # {{archaic spelling of
 Page 907 User:BoBoMisiu/sandbox: Found match for regex: <begin> {{archaic spelling of|en|Sophy|Sophy|id=shah}}. <end>
 Page 907 User:BoBoMisiu/sandbox: Found match for regex: <begin> {{archaic spelling of|en|Sophy#shah|Sophy}}. <end>
 Page 908 Græcity: Found match for regex: <begin> # {{archaic spelling of|en|Graecity}}. <end>
-Page 910 Sophi: Found match for regex: <begin> # {{archaic spelling of|en|Sufi}}<ref name="Century 1911" /> <end>
-Page 910 Sophi: Found match for regex: <begin> # {{senseid|en|shah}}{{archaic spelling of|en|Safawi}}<ref name="OEDonline_Sophy1"/> <end>
+Page 910 Sophi: Found match for regex: <begin> # {{archaic spelling of|en|Sufi}}.<ref name="Century 1911" /> <end>
+Page 910 Sophi: Found match for regex: <begin> # {{senseid|en|shah}}{{archaic spelling of|en|Safawi}}.<ref name="OEDonline_Sophy1"/> <end>
 Page 911 صلوة: Found match for regex: <begin> # {{archaic spelling of|ar|صَلَاة||[[salat|salah]]}} <end>
 Page 912 Tchaush: Found match for regex: <begin> # {{senseid|en|grape}}{{lb|en|agriculture}} {{archaic spelling of|en|Chaush||a cultivar of ''vinifera'' grape}}. <end>
 Page 913 chawush: Found match for regex: <begin> # {{senseid|en|ottomanPerson}}{{lb|en|historical}} {{archaic spelling of|en|chiaus}}. {{defdate|19th–20th c.}} <end>

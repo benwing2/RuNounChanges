@@ -54,7 +54,7 @@ Page 36 el: Found match for regex: <begin> # {{lb|sv|school slang}} {{short for|
 Page 37 genitive: Found match for regex: <begin> The {{glossary|noun}} is derived from Late {{inh|en|enm|genetif|t=genitive case}},<ref name="MED"/> from the adjective (see above). Compare {{cog|frm|genitif}} (modern {{cog|fr|génitif}}) and {{cog|la|genetīvus}} (short for {{m|la|[[genetīvus]] [[cāsus]]|t=genitive case}}).<ref name="OED"/> <end>
 Page 37 genitive: Found match for regex: <begin> # {{lb|en|countable|uncountable}} {{short for|en|genitive case|t=a [[grammatical case]] [[use#Verb|used]] to [[express#Verb|express]] a [[relationship]] of [[origin]] or [[possession]]}}. <end>
 Page 37 genitive: Found match for regex: <begin> {{trans-see|''short for'' genitive case|genitive case}} <end>
-Page 38 article: Found match for regex: <begin> # {{short for|en|genuine article}} {{rfex|en}} <end>
+Page 38 article: Found match for regex: <begin> # {{short for|en|genuine article}}. {{rfex|en}} <end>
 Page 39 Korea: Found match for regex: <begin> ## {{short for|en||the [[Republic of Korea]]}}  ([[South Korea]]). <end>
 Page 39 Korea: Found match for regex: <begin> ## {{lb|en|recently less common}} {{short for|en|the [[Democratic People's Republic of Korea]]}} ([[North Korea]]). <end>
 Page 40 月: Found match for regex: <begin> # {{short for|ja|月囲い|tr=tsukigakoi}}: a [[mistress]] on a [[monthly]] [[allowance]] <end>
@@ -104,7 +104,7 @@ Page 66 水: Found match for regex: <begin> # {{hanja form of|수|{{short for|ko
 Page 67 蛇: Found match for regex: <begin> # {{short for|ja|蛇之助|tr=janosuke||sort=しや'}}: a [[heavy]] [[drinker]] <end>
 Page 68 米: Found match for regex: <begin> # {{short for|ja|[[アメリカ合衆国]]／[[亜米利加合衆国]]|tr=Amerika Gasshūkoku|t={{place|ja|t=United States|country}}}} <end>
 Page 68 米: Found match for regex: <begin> # {{short for|ja|[[アメリカ]]／[[亜米利加]]|tr=Amerika|t={{place|ja|t=the Americas|region}}}} <end>
-Page 69 Salvador: Found match for regex: <begin> # {{short for|en|San Salvador Island}}, {{place|en|island|c/Bahamas|a=an}} <end>
+Page 69 Salvador: Found match for regex: <begin> # {{short for|en|San Salvador Island}}, {{place|en|island|c/Bahamas|a=an}}. <end>
 Page 70 Malacca: Found match for regex: <begin> # {{short for|en|Strait of Malacca}}. <end>
 Page 70 Malacca: Found match for regex: <begin> # {{short for|en|Malacca cane}}. <end>
 Page 71 tak: Found match for regex: <begin> # {{short for|id|tidak}} <end>
@@ -133,7 +133,7 @@ Page 92 box: Found match for regex: <begin> ## {{lb|en|automotive}} {{short for|
 Page 92 box: Found match for regex: <begin> ## {{lb|en|automotive}} {{short for|en|stashbox}}. <end>
 Page 92 box: Found match for regex: <begin> ## {{lb|en|rail}} {{short for|en|signal box}}. <end>
 Page 92 box: Found match for regex: <begin> ## {{lb|en|lacrosse|informal}} {{short for|en|box lacrosse||indoor form of lacrosse}}. <end>
-Page 93 ball: Found match for regex: <begin> # {{lb|en|university slang}} To [[reject]] from a [[fraternity]] or [[sorority]]. ({{short for|en|blackball}}) <end>
+Page 93 ball: Found match for regex: <begin> # {{lb|en|university slang}} To [[reject]] from a [[fraternity]] or [[sorority]]. ({{short for|en|blackball}}). <end>
 Page 94 base: Found match for regex: <begin> # {{lb|en|aviation}} {{short for|en|base leg}}. <end>
 Page 95 flat: Found match for regex: <begin> # {{short for|en|flat ride||spinning amusement ride}}. <end>
 Page 97 八: Found match for regex: <begin> # {{short for|ja|八の[[字]]}} <end>
@@ -470,8 +470,8 @@ Page 333 要: Found match for regex: <begin> # {{defdate|1712}} {{short for|ja|�
 Page 334 記: Found match for regex: <begin> # {{short for|ja|古事記|tr={{w|Kojiki}}|sort=き}}: the oldest extant record of the history of ancient Japan <end>
 Page 335 詩: Found match for regex: <begin> # {{short for|ja|詩経||''{{w|Shijing}}'', the Book of Odes}} <end>
 Page 337 語: Found match for regex: <begin> # {{short for|ja|物語|tr=monogatari}}: [[story]], [[tale]], [[narrative]] <end>
-Page 338 alpha: Found match for regex: <begin> # {{lb|en|informal|abbreviation}} {{short for|en|alphabet}} {{rfex|en}} <end>
-Page 339 delta: Found match for regex: <begin> # {{lb|en|medicine}} {{short for|en|delta variant}} {{gloss|variant of the [[SARS-CoV-2]] virus}} <end>
+Page 338 alpha: Found match for regex: <begin> # {{lb|en|informal|abbreviation}} {{short for|en|alphabet}}. {{rfex|en}} <end>
+Page 339 delta: Found match for regex: <begin> # {{lb|en|medicine}} {{short for|en|delta variant}} {{gloss|variant of the [[SARS-CoV-2]] virus}}. <end>
 Page 340 日本: Found match for regex: <begin> # {{short for|ja|日本国|tr=Nihon-koku}}: {{place|ja|country/and/archipelago|r/East Asia|t1=Japan}} <end>
 Page 340 日本: Found match for regex: <begin> # {{short for|ja|日本国|tr=Nippon-koku||[[Japan]]|sort=にっぽん}} <end>
 Page 341 line: Found match for regex: <begin> # {{lb|en|advertising}} {{short for|en|agate line}}. <end>
@@ -566,7 +566,7 @@ Page 397 龍: Found match for regex: <begin> # {{lb|ja|sort=りゆう|astronomy}
 Page 399 real: Found match for regex: <begin> # {{lb|nn|education|historical|colloquial}} {{short for|nn|realskuleklasse}} <end>
 Page 400 ply: Found match for regex: <begin> # {{lb|en|colloquial}} {{short for|en|plywood}}. <end>
 Page 400 ply: Found match for regex: <begin> From {{m|en|apply}};<ref>{{R:OED Online|part of speech=''v.{{sup|2}}''|noformat=yes|id=146283|date=September 2006}}</ref> compare {{inh|en|enm|plīen}}, {{m|enm|pli}}, {{m|enm|plie}}, {{m|enm|pleie||to place (something) around, on, or over, to cover; to apply, use; to strive}},<ref>{{R:MED Online|entry=plīen|part of speech=''v.''(2)|noformat=yes|id=MED33738|accessdate=16 November 2018}}</ref> short for {{m|enm|aplīen}}, {{m|enm|applīen||to combine, join; to attach; to assemble; to use, be of use; to allot; to apply; to inflict; to go; to ply, steer; to comply, submit}}, from {{der|en|fro|applier}}, {{m|fro|aplier}}, {{m|fro|aploier||to bend; to apply}},<ref>{{R:MED Online|entry=ap(p)līen|part of speech=v|id=MED1943|accessdate=16 November 2018}}</ref> from {{der|en|la|applicāre}}, {{glossary|present}} {{glossary|active}} {{glossary|infinitive}} of {{m|la|applicō||to apply; to attach, join; to add}}, from {{m|la|ad-||to, towards}} + {{m|la|plicō||to bend, fold, roll up}}; ''see further at'' [[#Etymology 1|etymology 1]]. <end>
-Page 401 crash: Found match for regex: <begin> # {{lb|en|ambitransitive|slang}} {{short for|en|gatecrash}} {{defdate|from 1920s}} <end>
+Page 401 crash: Found match for regex: <begin> # {{lb|en|ambitransitive|slang}} {{short for|en|gatecrash}}. {{defdate|from 1920s}} <end>
 Page 402 dash: Found match for regex: <begin> # {{short for|en|dashboard}}. <end>
 Page 402 dash: Found match for regex: <begin> # {{short for|nb|dashbord}} <end>
 Page 402 dash: Found match for regex: <begin> # {{short for|nn|dashbord}} <end>
@@ -596,14 +596,14 @@ Page 414 hype: Found match for regex: <begin> # {{lb|en|slang}} {{short for|en|h
 Page 415 knockout: Found match for regex: <begin> # {{short for|en|knockout auction}}. <end>
 Page 416 일: Found match for regex: <begin> # {{short for|ko|일요일(日曜日)|t=[[Sunday]]}} <end>
 Page 416 일: Found match for regex: <begin> # {{short for|ko|^일본(日本)|t=[[Japan]]}} <end>
-Page 417 panda: Found match for regex: <begin> # {{lb|en|colloquial|also|attributively}} {{short for|en|giant panda|t={{taxfmt|Ailuropoda melanoleuca|species}}}} {{defdate|from 19th c.}} <end>
-Page 417 panda: Found match for regex: <begin> # {{lb|en|Britain|law enforcement|colloquial}} {{short for|en|panda car|t=a [[black-and-white]] [[police car]]}} {{defdate|from 20th c.}} <end>
+Page 417 panda: Found match for regex: <begin> # {{lb|en|colloquial|also|attributively}} {{short for|en|giant panda|t={{taxfmt|Ailuropoda melanoleuca|species}}}}. {{defdate|from 19th c.}} <end>
+Page 417 panda: Found match for regex: <begin> # {{lb|en|Britain|law enforcement|colloquial}} {{short for|en|panda car|t=a [[black-and-white]] [[police car]]}}. {{defdate|from 20th c.}} <end>
 Page 417 panda: Found match for regex: <begin> #* {{quote-book|en|author=James G. Lochtefeld|chapter=The Hardwar ''Pandas''|title=God’s Gateway: Identity and Meaning in a Hindu Pilgrimage Place|location=New York, N.Y.|publisher=w:Oxford University Press|year=2010|page=124|pageurl=https://books.google.com/books?id=V1L99XsB1gkC&pg=PA124|isbn=978-0-19-538614-1|passage=As at most Hindu pilgrimage sites, Hardwar has a group of local brahmins who serve as hereditary pilgrim guides. The most respectful name for them is ''tirtha purohit'' (a ''tirtha'' "priest'), but the more common name is '''''panda''''', a short form of ''pandita'' ("a learned man"). '''''Pandas''''' arrange for their clients' material and ritual needs, and they also officiate at certain life-cycle ceremonies (''samskaras''). In return, their clients give them fees and gifts.}} <end>
 Page 418 loft: Found match for regex: <begin> # {{short for|en|pigeon loft}}. <end>
 Page 419 lip: Found match for regex: <begin> # {{lb|en|colloquial}} {{short for|en|lipstick}}. <end>
 Page 420 main: Found match for regex: <begin> # {{lb|en|transitive|slang}} {{short for|en|mainline||to [[inject]] (a [[drug#Noun|drug]]) directly into a [[vein]]}}. <end>
 Page 420 main: Found match for regex: <begin> # {{lb|en|informal}} {{short for|en|main course||the principal [[dish#Noun|dish]] of a [[meal]]}}. <end>
-Page 420 main: Found match for regex: <begin> # {{lb|en|nautical}} {{short for|en|mainsail}} {{defdate|from 17th c.}} <end>
+Page 420 main: Found match for regex: <begin> # {{lb|en|nautical}} {{short for|en|mainsail}}. {{defdate|from 17th c.}} <end>
 Page 420 main: Found match for regex: <begin> {{trans-top|''short for'' mainsail}}<!-- Only short forms here, where they exist --> <end>
 Page 421 sein: Found match for regex: <begin> # {{short for|id|lampu sein|t=[[indicator]], [[turn signal]]}} <end>
 Page 422 ex: Found match for regex: <begin> # {{lb|en|colloquial}} A former partner or spouse, usually short for [[ex-girlfriend]], [[ex-boyfriend]], [[ex-wife]] or [[ex-husband]]. <end>
@@ -617,7 +617,7 @@ Page 425 little: Found match for regex: <begin> # {{short for|en|little go||type
 Page 426 Bicol: Found match for regex: <begin> # {{short for|en|Bicol Region}}. <end>
 Page 427 trunk: Found match for regex: <begin> # {{lb|en|in the plural}} {{short for|en|swimming trunks}}. <end>
 Page 428 collapse: Found match for regex: <begin> # {{lb|en|cricket}} {{short for|en|batting collapse}}. <end>
-Page 429 clit: Found match for regex: <begin> # {{lb|en|informal|vulgar}} {{short for|en|clitoris}} {{defdate|from 1950s}} <end>
+Page 429 clit: Found match for regex: <begin> # {{lb|en|informal|vulgar}} {{short for|en|clitoris}}. {{defdate|from 1950s}} <end>
 Page 430 top: Found match for regex: <begin> # {{short for|en|topswarm}}. <end>
 Page 431 tartan: Found match for regex: <begin> # {{lb|en|uncountable|Scotland}} {{short for|en|tartan-purry|t=a [[porridge]] made from [[cabbage#Noun|cabbage]] [[mix#Verb|mixed]] with [[oatmeal]]}}. <end>
 Page 431 tartan: Found match for regex: <begin> {{trans-see|''short for'' tartan-purry|tartan-purry}} <end>
@@ -688,7 +688,7 @@ Page 478 sinh: Found match for regex: <begin> # {{lb|vi|obsolete}} {{short for|v
 Page 479 tong: Found match for regex: <begin> # {{short for|max|torang}} <end>
 Page 480 nomen: Found match for regex: <begin> # {{lb|la|historical}} {{short for|la|nomen gentile}}, [[#English|nomen]], {{ng|the [[family name]] in a Roman name, indicating the person's {{l|la|gens}}}} <end>
 Page 481 sub: Found match for regex: <begin> # {{short for|en|submarine sandwich}}: a [[sandwich]] made on a long [[bun]]. <end>
-Page 481 sub: Found match for regex: <begin> # {{lb|en|colloquial}} {{short for|en|[[subsistence]] [[money]]}} {{gl|part of a worker's wages paid before the work is finished}} <end>
+Page 481 sub: Found match for regex: <begin> # {{lb|en|colloquial}} {{short for|en|[[subsistence]] [[money]]}} {{gl|part of a worker's wages paid before the work is finished}}. <end>
 Page 481 sub: Found match for regex: <begin> # {{lb|en|internet slang}} {{short for|en|subreddit}}. <end>
 Page 482 wait: Found match for regex: <begin> # {{lb|en|computing}} {{short for|en|wait state}}. <end>
 Page 483 super: Found match for regex: <begin> # {{lb|en|Australia|New Zealand|informal}} {{short for|en|superannuation}}. <end>
@@ -719,7 +719,7 @@ Page 494 sous: Found match for regex: <begin> # {{short for|en|sous-chef}}. <end
 Page 495 jus: Found match for regex: <begin> # {{lb|nl|Netherlands|informal}} {{short for|nl|jus d'orange}} <end>
 Page 496 telefon: Found match for regex: <begin> # {{short for|sv|telefonsamtal|t=phone call}} <end>
 Page 497 shortcut: Found match for regex: <begin> # {{lb|en|computing}} {{short for|en|keyboard shortcut}}. <end>
-Page 498 Jap: Found match for regex: <begin> # {{lb|en|informal|Hong Kong|Singapore|Australia}} {{short for|en|Japanese}} {{rfex|en}} <end>
+Page 498 Jap: Found match for regex: <begin> # {{lb|en|informal|Hong Kong|Singapore|Australia}} {{short for|en|Japanese}}. {{rfex|en}} <end>
 Page 499 porcus: Found match for regex: <begin> # {{short for|la|porcus marīnus||[[sea-hog]], [[mereswine]], [[porpoise]]}} <end>
 Page 500 omer: Found match for regex: <begin> {{short for|en|Sefirat Ha'Omer}}. <end>
 Page 501 personal: Found match for regex: <begin> # {{lb|ro|countable}} {{short for|ro|tren personal||stopping train}} <end>
@@ -802,7 +802,7 @@ Page 560 corgi: Found match for regex: <begin> {{trans-top-also|''short for'' We
 Page 561 emä: Found match for regex: <begin> # {{short for|izh|emänoora}} <end>
 Page 561 emä: Found match for regex: <begin> # {{short for|izh|emäavanto}} <end>
 Page 562 amp: Found match for regex: <begin> # {{lb|en|colloquial|countable}} {{short for|en|ampere}}. <end>
-Page 562 amp: Found match for regex: <begin> # {{lb|en|colloquial|countable}} {{short for|en|amplifier}}<ref name=COD7>{{R:Concise Oxford 1982}}</ref> <end>
+Page 562 amp: Found match for regex: <begin> # {{lb|en|colloquial|countable}} {{short for|en|amplifier}}.<ref name=COD7>{{R:Concise Oxford 1982}}</ref> <end>
 Page 562 amp: Found match for regex: <begin> # {{lb|en|colloquial|countable}} {{short for|en|ampoule}}. <end>
 Page 562 amp: Found match for regex: <begin> # {{lb|en|colloquial|countable}} {{short for|en|amputee}}. <end>
 Page 562 amp: Found match for regex: <begin> # {{lb|en|colloquial|uncountable}} {{short for|en|amphetamine}}. <end>
@@ -888,7 +888,7 @@ Page 621 wagon: Found match for regex: <begin> # {{lb|en|chiefly|Australia|US|sl
 Page 622 upright: Found match for regex: <begin> # {{short for|en|upright [[vacuum cleaner]]}}. <end>
 Page 624 proxy: Found match for regex: <begin> # {{lb|en|video game|_|slang}} {{short for|en|proximity mine}}. <end>
 Page 625 lai: Found match for regex: <begin> # {{short for|vi|lai giống||to [[crossbreed]]}} <end>
-Page 627 wampum: Found match for regex: <begin> # {{senseid|en|snake}}{{lb|en|countable|obsolete}} {{short for|en|wampum snake}} (“the [[common kingsnake]] or [[eastern kingsnake]] ({{taxlink|Lampropeltis getula|species}})”) <end>
+Page 627 wampum: Found match for regex: <begin> # {{senseid|en|snake}}{{lb|en|countable|obsolete}} {{short for|en|wampum snake}} (“the [[common kingsnake]] or [[eastern kingsnake]] ({{taxlink|Lampropeltis getula|species}})”). <end>
 Page 628 modifier: Found match for regex: <begin> # {{senseid|en|modifier key, elliptically}} {{lb|en|computing}} {{short for|en|modifier key}}. <end>
 Page 629 CP: Found match for regex: <begin> # {{short for|ja|カップリング|tr=kappuringu|t={{lb|ja|fandom slang}} [[ship]]ping}} <end>
 Page 629 CP: Found match for regex: <begin> # {{short for|ja|カップリング|tr=kappuringu|t={{lb|ja|fandom slang}} to [[ship]]}} <end>
@@ -928,7 +928,7 @@ Page 655 jumper: Found match for regex: <begin> # {{short for|en|smokejumper}}. 
 Page 656 Darlington: Found match for regex: <begin> # {{lb|en|electronics}} {{short for|en|Darlington pair}}. <end>
 Page 657 flush: Found match for regex: <begin> # {{lb|en|typography}} {{short for|en|flush left and right}}: a body of text aligned with both its left and right margins. <end>
 Page 658 ت: Found match for regex: <begin> # {{short for|ar|تِلِفون|tr=tilifōn|t=telephone (number)}} Used before phone numbers. <end>
-Page 659 tandem: Found match for regex: <begin> ### {{senseid|en|cycling}}{{lb|en|specifically|cycling}} {{short for|en|tandem bicycle|t=a [[bicycle#Noun|bicycle]] or [[tricycle#Noun|tricycle]] in which two [[person#Noun|people]] [[sit#Verb|sit]] one behind the other, both [[able#Adjective|able]] to [[pedal#Verb|pedal]] but only the person in front being able to steer}} {{defdate|from late 19th c.}} <end>
+Page 659 tandem: Found match for regex: <begin> ### {{senseid|en|cycling}}{{lb|en|specifically|cycling}} {{short for|en|tandem bicycle|t=a [[bicycle#Noun|bicycle]] or [[tricycle#Noun|tricycle]] in which two [[person#Noun|people]] [[sit#Verb|sit]] one behind the other, both [[able#Adjective|able]] to [[pedal#Verb|pedal]] but only the person in front being able to steer}}. {{defdate|from late 19th c.}} <end>
 Page 659 tandem: Found match for regex: <begin> {{trans-see|''short for'' tandem bicycle|tandem bicycle}} <end>
 Page 660 ちゅう: Found match for regex: <begin> # {{lb|ja|archaic}} {{short for|ja|と言う|tr=to iu}}: {{rfdef|ja}} <end>
 Page 661 ceilidh: Found match for regex: <begin> # {{senseid|en|dance}}{{lb|en|dances}} {{short for|en|ceilidh dance}}. <end>
@@ -947,7 +947,7 @@ Page 672 rolling: Found match for regex: <begin> # {{lb|en|slang}} {{short for|e
 Page 673 boba: Found match for regex: <begin> # {{short for|es|té de boba}} <end>
 Page 674 borderline: Found match for regex: <begin> # {{lb|en|uncountable}} {{short for|en|borderline personality disorder}}. <end>
 Page 675 flare: Found match for regex: <begin> # {{lb|en|photography}} {{short for|en|lens flare}}. <end>
-Page 676 cooler: Found match for regex: <begin> # {{lb|en|India|countable}} {{short for|en|air cooler}}; [[evaporative cooler]]; [[desert cooler]]; [[swamp cooler]] <end>
+Page 676 cooler: Found match for regex: <begin> # {{lb|en|India|countable}} {{short for|en|air cooler}}; [[evaporative cooler]]; [[desert cooler]]; [[swamp cooler]]. <end>
 Page 678 stubborn: Found match for regex: <begin> # {{short for|en|stubborn disease||a disease of citrus trees}}. <end>
 Page 679 koko: Found match for regex: <begin> # {{lb|id|colloquial}} {{short for|id|baju koko}} <end>
 Page 680 chancery: Found match for regex: <begin> # {{lb|en|writing}}  {{short for|en|chancery hand}}. <end>
@@ -1091,7 +1091,7 @@ Page 790 Gehäuse: Found match for regex: <begin> # {{short for|de|Kerngehäuse|
 Page 790 Gehäuse: Found match for regex: <begin> # {{lb|de|ball games|_|slang}} {{short for|de|Torgehäuse|t=post and crossbar of a goal}} <end>
 Page 791 Wagga: Found match for regex: <begin> # {{lb|en|slang}} {{short for|en|Wagga Wagga}}. <end>
 Page 792 consulting: Found match for regex: <begin> # {{short for|en|consulting physician}}. <end>
-Page 793 thresher: Found match for regex: <begin> # {{lb|en|zoology}} {{short for|en|thresher shark}} {{defdate|from 1880s}} <end>
+Page 793 thresher: Found match for regex: <begin> # {{lb|en|zoology}} {{short for|en|thresher shark}}. {{defdate|from 1880s}} <end>
 Page 794 patsas: Found match for regex: <begin> # {{short for|izh|mesipatsas}} <end>
 Page 795 damned: Found match for regex: <begin> # {{short for|en|I'll be damned}}. <end>
 Page 796 stony: Found match for regex: <begin> # {{lb|en|UK|_|&|_|Australian|slang}} {{short for|en|stony broke}}: without [[any]] [[money]]. <end>
@@ -1193,7 +1193,7 @@ Page 873 日向: Found match for regex: <begin> # {{short for|ja|日向湖|tr=Hi
 Page 873 日向: Found match for regex: <begin> # {{short for|ojp|日向國|tr=Pi<sub>1</sub>muka-no<sub>2</sub>-kuni|sort=ひむか}}: a [[province]] in [[ancient]] [[Japan]], [[correspond]]ing to [[modern]] [[Miyazaki]] [[prefecture|Prefecture]] on the [[east]]ern [[coast]] of [[Kyushu]] <end>
 Page 874 gippo: Found match for regex: <begin> # {{short for|en|gyppo logger}}. <end>
 Page 875 toto: Found match for regex: <begin> # {{short for|id|totalisator}} <end>
-Page 876 lotus: Found match for regex: <begin> # {{short for|en|lotus position}} {{defdate|from 1848}} <end>
+Page 876 lotus: Found match for regex: <begin> # {{short for|en|lotus position}}. {{defdate|from 1848}} <end>
 Page 877 cutthroat: Found match for regex: <begin> # {{lb|en|linguistics}} {{short for|en|cutthroat compound|t=an agentive-instrumental verb-noun compound word}}. <end>
 Page 878 三味線: Found match for regex: <begin> # {{defdate|after 1780}} {{short for|ja|sort=しゃみせん|三味線草|tr=shamisen-gusa}}: the [[shepherd's purse]], {{taxfmt|Capsella bursa-pastoris|species}} <end>
 Page 879 showbiz: Found match for regex: <begin> # {{short for|en|showbusiness}}. <end>
@@ -1253,7 +1253,7 @@ Page 925 såpa: Found match for regex: <begin> # {{short for|sv|såpopera|t=soap
 Page 926 vasikka: Found match for regex: <begin> # {{short for|izh|lehmävasikka||cow calf}} <end>
 Page 927 verkko: Found match for regex: <begin> # {{short for|izh|hämöverkko}} <end>
 Page 928 Burton: Found match for regex: <begin> ## {{place|en|cpar|in|dist/East Staffordshire|co/Staffordshire}}, which serves and is also an {{ellipsis of|en|Burton upon Trent|nocap=1}} <ref>[https://maps.walkingclub.org.uk/admin/staffordshire/east-staffordshire/burton-parish.html Parish map (Staffordshire)]</ref> <end>
-Page 929 locum: Found match for regex: <begin> # {{lb|en|British|AU|informal}} {{short for|en|locum tenens}}<ref name="COED-pron&def">The '''Concise Oxford English Dictionary''' [Eleventh Edition]</ref> <end>
+Page 929 locum: Found match for regex: <begin> # {{lb|en|British|AU|informal}} {{short for|en|locum tenens}}.<ref name="COED-pron&def">The '''Concise Oxford English Dictionary''' [Eleventh Edition]</ref> <end>
 Page 930 earworm: Found match for regex: <begin> # {{lb|en|originally|US}} {{short for|en|corn earworm}} (“[[larva]] of the [[moth]]s {{taxlink|Helicoverpa zea|species}} (syn. {{taxlink|Heliothis zea|species}}) and {{taxlink|Helicoverpa armigera|species}}, which are [[agricultural]] [[pest]]s”). <end>
 Page 930 earworm: Found match for regex: <begin> {{trans-see|''short for'' corn earworm|corn earworm}} <end>
 Page 931 Gelb: Found match for regex: <begin> # {{short for|de|Eigelb}}: [[yolk]] <end>
@@ -1570,11 +1570,11 @@ Page 1220 にゃく: Found match for regex: <begin> # {{short for|ja|蒟蒻|tr=k
 Page 1221 東方: Found match for regex: <begin> # {{short for|ja|sc=Jpan|w:ja:東方Project|東方Project|tr=Tōhō Purojekuto|{{w|Touhou Project}}, a popular bullet hell video game series}} <end>
 Page 1222 phone line: Found match for regex: <begin> # {{short for|en|telephone line}}. <end>
 Page 1223 dân tộc: Found match for regex: <begin> # {{short for|vi|dân tộc thiểu số||[[ethnic minority]] in [[Vietnam]]}} <end>
-Page 1224 Falkland: Found match for regex: <begin> # {{short for|en|Falkland Islands}} {{gloss|{{l|en|Malvinas}}}} <end>
+Page 1224 Falkland: Found match for regex: <begin> # {{short for|en|Falkland Islands}} {{gloss|{{l|en|Malvinas}}}}. <end>
 Page 1225 chargé: Found match for regex: <begin> # {{short for|en|chargé d'affaires}}. <end>
 Page 1226 supe: Found match for regex: <begin> # {{lb|en|fiction}} {{short for|en|superhero}}. <end>
 Page 1227 ソビエト: Found match for regex: <begin> # {{short for|ja|ソビエト社会主義共和国連邦|tr=Sobieto Shakai Shugi Kyōwakoku Renpō|t=Union of Soviet Socialist Republics}} <end>
-Page 1228 elem: Found match for regex: <begin> # {{lb|en|Philippines|colloquial}} {{short for|en|elementary}} {{gl|[[elementary school]]}} <end>
+Page 1228 elem: Found match for regex: <begin> # {{lb|en|Philippines|colloquial}} {{short for|en|elementary}} {{gl|[[elementary school]]}}. <end>
 Page 1229 GHQ: Found match for regex: <begin> # {{lb|ja|Japanese history}}  {{short for|en|GHQ/SCAP}}. <end>
 Page 1230 검: Found match for regex: <begin> # {{short for|ko|검찰(檢察)|t=the [[prosecutor]]'s [[office]]}} <end>
 Page 1231 украинский: Found match for regex: <begin> # [[Ukrainian]] (language), {{short for|ru|[[украи́нский]] [[язы́к]]|nocat=1}} <end>
@@ -2141,8 +2141,8 @@ Page 1735 руская: Found match for regex: <begin> # {{lb|be|colloquial}} th
 Page 1736 украінская: Found match for regex: <begin> # {{lb|be|colloquial}} the [[Ukrainian]] language, {{short for|be|[[украінскі|украі́нская]] [[мо́ва]]|nocat=1}} <end>
 Page 1737 білоруська: Found match for regex: <begin> # {{lb|uk|colloquial}} the [[Belarusian]] language, {{short for|uk|[[білоруський|білору́ська]] [[мо́ва]]|nocat=1}} <end>
 Page 1738 St. Vincent: Found match for regex: <begin> # {{short for|en|Saint Vincent}}. <end>
-Page 1739 Kel: Found match for regex: <begin> # {{short for|en|Kelly}} (female given name) <end>
-Page 1739 Kel: Found match for regex: <begin> # {{short for|en|Kellan}} (male given name) <end>
+Page 1739 Kel: Found match for regex: <begin> # {{short for|en|Kelly}} (female given name). <end>
+Page 1739 Kel: Found match for regex: <begin> # {{short for|en|Kellan}} (male given name). <end>
 Page 1741 ベル: Found match for regex: <begin> # {{short for|ja|ポケットベル|tr=poketto beru||[[pager]]|sort=へる'}} <end>
 Page 1742 ロング: Found match for regex: <begin> # {{short for|ja|ロングスカート|tr=rongu sukāto|t=long skirt}} <end>
 Page 1742 ロング: Found match for regex: <begin> # {{short for|ja|ロングヘア|tr=rongu hea|t=long hair}} <end>
@@ -2464,12 +2464,12 @@ Page 2058 平城: Found match for regex: <begin> # {{short for|ja|平城京|tr=H
 Page 2058 平城: Found match for regex: <begin> # {{short for|ja|平城宮|tr=Heijō-kyū}}: the [[imperial]] [[palace]] on the [[north]] [[end]] of ''Heijō-kyō'' <end>
 Page 2059 Corso: Found match for regex: <begin> # {{short for|en|Cane Corso||type of dog}}. <end>
 Page 2059 Corso: Found match for regex: <begin> From a short form of {{m|it|Accorso}} or {{m|it|Bonaccorso}}. <end>
-Page 2060 Kell: Found match for regex: <begin> # {{short for|en|Kelly}} (female given name) <end>
+Page 2060 Kell: Found match for regex: <begin> # {{short for|en|Kelly}} (female given name). <end>
 Page 2060 Kell: Found match for regex: <begin> * {{l|en|Kel}} (short form of female given name) <end>
 Page 2061 Marengo: Found match for regex: <begin> # {{short for|en|chicken Marengo}}. <end>
 Page 2062 中巴: Found match for regex: <begin> # {{lb|zh|Hong Kong}} {{short for|zh|[[w:zh:中華巴士|中華巴士]]|t={{w|China Motor Bus}}; [[CMB]], former bus operator and current real-estate developer in Hong Kong}} <end>
 Page 2063 비번: Found match for regex: <begin> # {{lb|ko|colloquial}} {{short for|ko|비밀번호(秘密番號)||[[password]]}} <end>
-Page 2064 Teng: Found match for regex: <begin> # {{short for|en|Teng County}} ([[Tengzhou]]) <end>
+Page 2064 Teng: Found match for regex: <begin> # {{short for|en|Teng County}} ([[Tengzhou]]). <end>
 Page 2065 điều dưỡng: Found match for regex: <begin> # {{short for|vi|điều dưỡng viên||[[nurse]]}} <end>
 Page 2066 Resto: Found match for regex: <begin> # {{lb|en|colloquial}} {{short for|en|Restoration Island}}. <end>
 Page 2067 khí cầu: Found match for regex: <begin> # {{lb|vi|aircraft}} {{short for|vi|khinh khí cầu||[[hot-air balloon]]}} <end>
@@ -2536,10 +2536,10 @@ Page 2122 Bok: Found match for regex: <begin> # {{lb|en|rugby}} {{short for|en|S
 Page 2123 オナホ: Found match for regex: <begin> # {{short for|ja|オナホール|tr=onahōru||[[onahole]]}} <end>
 Page 2124 賄い: Found match for regex: <begin> # {{short for|ja|賄い料理}} <end>
 Page 2125 dẫn: Found match for regex: <begin> # {{short for|vi|trích dẫn||to cite or quote}} <end>
-Page 2126 swords to ploughshares: Found match for regex: <begin> # {{label|en|rare}} {{short for|en|beat one's swords into ploughshares}} {{rfex|en}} <end>
+Page 2126 swords to ploughshares: Found match for regex: <begin> # {{label|en|rare}} {{short for|en|beat one's swords into ploughshares}}. {{rfex|en}} <end>
 Page 2127 swords to plowshares: Found match for regex: <begin> # {{lb|en|rare}} {{short for|en|beat one's swords into plowshares}}. <end>
 Page 2128 着メロ: Found match for regex: <begin> # {{short for|ja|着信メロディ|tr=chakushin merodi||[[ringtone]]}} <end>
-Page 2129 Surigao: Found match for regex: <begin> # {{short for|en|{{w|Surigao City}}}} {{gl|{{place|en|city/provincial capital|p/Surigao del Norte|r/Caraga|isl/Mindanao|c/Philippines}}}} <end>
+Page 2129 Surigao: Found match for regex: <begin> # {{short for|en|{{w|Surigao City}}}} {{gl|{{place|en|city/provincial capital|p/Surigao del Norte|r/Caraga|isl/Mindanao|c/Philippines}}}}. <end>
 Page 2130 alusjätelaki: Found match for regex: <begin> # {{lb|fi|law}} {{short for|fi|[[laki|Laki]] [[aluksista]] [[aiheutuva|aiheutuvan]] [[vesien]] [[pilaantumisen]] [[ehkäisemisestä]]||[[act|Act]] on the [[prevention|Prevention]] of [[pollution|Pollution]] from [[ship|Ships]]}} {{gloss|Act nr. 300/1979 in the [[statute book|Statute Book]] of Finland}} <end>
 Page 2131 附例: Found match for regex: <begin> # {{lb|zh|Hong Kong|nonstandard}} {{short for|zh|附屬法例}} <end>
 Page 2132 safety in numbers: Found match for regex: <begin> # {{short for|en|there is safety in numbers}}. <end>
@@ -3082,7 +3082,7 @@ Page 2599 電番: Found match for regex: <begin> # {{short for|ja|電話番号|t
 Page 2600 防カメ: Found match for regex: <begin> # {{lb|ja|used in news headline or title}} {{short for|ja|防犯カメラ|tr=bōhan kamera|t=[[security camera]]}} <end>
 Page 2602 四大: Found match for regex: <begin> {{C|zh|Cultural Revolution}} {{short for|zh|[[大鳴大放|大鳴、大放]]、[[大字報]]、[[大]][[辯論]]|t=[[free]] [[airing]] of [[view]]s, [[big-character poster]] and [[great]] [[debate]]}} <end>
 Page 2603 신종 코로나 감염증: Found match for regex: <begin> # {{short for|ko|신종 코로나바이러스 감염증}} <end>
-Page 2605 1600 Penn: Found match for regex: <begin> # {{short for|en|1600 Pennsylvania Avenue}} (the [[White House]]) <end>
+Page 2605 1600 Penn: Found match for regex: <begin> # {{short for|en|1600 Pennsylvania Avenue}} (the [[White House]]). <end>
 Page 2606 'rat: Found match for regex: <begin> # {{lb|en|chiefly|informal}} {{short for|en|muskrat}}. <end>
 Page 2607 Bardsey: Found match for regex: <begin> # {{short for|en|Bardsey Island}}, [[Wales]]. <end>
 Page 2608 covid: Found match for regex: <begin> # {{lb|en|colloquial}} {{short for|en|COVID-19}}, the disease caused by {{taxfmt|Severe acute respiratory syndrome-related coronavirus 2|strain}}. <end>
@@ -3276,7 +3276,7 @@ Page 2791 点竄: Found match for regex: <begin> # {{short for|ja|点竄術}} <e
 Page 2792 運痴: Found match for regex: <begin> # {{lb|ja|sort=うんち|colloquial}} {{short for|ja|sort=うんち|運動音痴}} <end>
 Page 2793 posi vibes: Found match for regex: <begin> # {{lb|en|mostly|in the plural}} {{short for|en|[[positive]] [[vibe]]s}} [[positive|Positive]] [[energy]]; [[good]] [[vibes]]. <end>
 Page 2794 漫喫: Found match for regex: <begin> # {{short for|ja|漫画喫茶|tr=manga kissa}} <end>
-Page 2795 Bisto: Found match for regex: <begin> # {{lb|en|UK}} {{short for|en|aah, Bisto}} {{rfex|en}} <end>
+Page 2795 Bisto: Found match for regex: <begin> # {{lb|en|UK}} {{short for|en|aah, Bisto}}. {{rfex|en}} <end>
 Page 2796 Krav: Found match for regex: <begin> # {{short for|en|Krav Maga}}. <end>
 Page 2797 lingkungan: Found match for regex: <begin> # {{lb|id|sociology}} {{short for|id|lingkungan tetangga|t=[[neighbourhood]]}} <end>
 Page 2799 Luishon: Found match for regex: <begin> # {{lb|oc|Gascony}} {{short for|oc|Banhèras de Luishon}} <end>
@@ -3586,7 +3586,7 @@ Page 3099 mapolsek: Found match for regex: <begin> # {{short for|id|[[markas]] [
 Page 3100 mapolsekta: Found match for regex: <begin> # {{short for|id|[[markas]] [[kepolisian]] [[sektor]] [[kota]]|t=city police headquarter}} <end>
 Page 3101 mapolwil: Found match for regex: <begin> # {{short for|id|[[markas]] [[kepolisian]] [[wilayah]]|t=area police headquarter}} <end>
 Page 3102 acrow: Found match for regex: <begin> # {{short for|en|acrow prop}}. <end>
-Page 3103 The Valley: Found match for regex: <begin> # {{short for|en|San Fernando Valley}}; {{place|en|valley|in southern|s/California|c/USA}} <end>
+Page 3103 The Valley: Found match for regex: <begin> # {{short for|en|San Fernando Valley}}; {{place|en|valley|in southern|s/California|c/USA}}. <end>
 Page 3104 老奉: Found match for regex: <begin> {{m|yue|老|t=prefix for nouns with negative impressions or connotations}} + {{short for|yue|奉旨|t=taken for granted; definitely}} <end>
 Page 3105 とりせつ: Found match for regex: <begin> # {{short for|ja|取扱説明書|tr=toriatsukai setsumeisho}} <end>
 Page 3106 ガチャ: Found match for regex: <begin> # {{short for|ja|ガチャポン}}; a [[vending machine]] that sells random toys. <end>
@@ -3733,7 +3733,7 @@ Page 3243 カポ: Found match for regex: <begin> # {{short for|ja|カポタス�
 Page 3244 なるほ: Found match for regex: <begin> # {{lb|ja|internet slang}} {{short for|ja|なるほど}} <end>
 Page 3245 DApp: Found match for regex: <begin> # {{short for|en|w:decentralized application}}. <end>
 Page 3246 Wiktionary:Tea room/2022/May: Found match for regex: <begin> :# A possibility is to define the term as {{tl|short for|[[chord change]]}}, which however requires a determination that “chord change” is not merely a sum of parts. There is a lemming: [https://www.collinsdictionary.com/us/dictionary/english/chord-change Collins]. The same definition is found [https://academickids.com/encyclopedia/index.php/Chord_progression here]. <end>
-Page 3247 Wiktionary:Etymology scriptorium/2022/April: Found match for regex: <begin> The noun {{m|en|track}} in the sense of the continuous belt of a tracked vehicle is defined as “{{lb|en|automotive}} {{short for|en|caterpillar track}}”, where the origin of the latter term is explained in a usage note (why not an etymology section?) as “The name came originally from the Caterpillar Tractor Company, but is now common in uncapitalised form.” However, the term ''track'' occurs in a patent issued for an “endless self-laying track for vehicles” issued in 1893,<sup>[https://patents.google.com/patent/US510668]</sup> while the earliest use in print I can find of {{m|en|caterpillar}} (in uncapitalised form!) in reference to this type of traction is from early 1910.<sup>[https://books.google.com/books?id=K_s9AQAAMAAJ&pg=PA364&dq=%22caterpillar+traction%22&hl=en]</sup> (The Holt Caterpillar Company was founded in 1909.<sup>[https://books.google.com/books?id=IzBxCP9QUo0C&pg=PA416&dq=1909+%22Holt+Caterpillar+Company%22&hl=en]</sup>) Wouldn’t it be better to explain this term as “{{lb|en|vehicle}} {{short for|en|self-laying track}}”? &nbsp;--[[User:Lambiam|Lambiam]] 10:26, 9 April 2022 (UTC) <end>
+Page 3247 Wiktionary:Etymology scriptorium/2022/April: Found match for regex: <begin> The noun {{m|en|track}} in the sense of the continuous belt of a tracked vehicle is defined as “{{lb|en|automotive}} {{short for|en|caterpillar track}}”, where the origin of the latter term is explained in a usage note (why not an etymology section?) as “The name came originally from the Caterpillar Tractor Company, but is now common in uncapitalised form.” However, the term ''track'' occurs in a patent issued for an “endless self-laying track for vehicles” issued in 1893,<sup>[https://patents.google.com/patent/US510668]</sup> while the earliest use in print I can find of {{m|en|caterpillar}} (in uncapitalised form!) in reference to this type of traction is from early 1910.<sup>[https://books.google.com/books?id=K_s9AQAAMAAJ&pg=PA364&dq=%22caterpillar+traction%22&hl=en]</sup> (The Holt Caterpillar Company was founded in 1909.<sup>[https://books.google.com/books?id=IzBxCP9QUo0C&pg=PA416&dq=1909+%22Holt+Caterpillar+Company%22&hl=en]</sup>) Wouldn’t it be better to explain this term as “{{lb|en|vehicle}} {{short for|en|self-laying track}}”? &nbsp;--[[User:Lambiam|Lambiam]] 10:26, 9 April 2022 (UTC). <end>
 Page 3248 Wiktionary:Beer parlour/2022/August: Found match for regex: <begin> == [[Template:short for]] - redundant? == <end>
 Page 3248 Wiktionary:Beer parlour/2022/August: Found match for regex: <begin> ::: I have added an entry for {{m|en|short for}}, which might help you to understand this phrase. ''[[User:Donnanz|DonnanZ]] ([[User talk:Donnanz|talk]]) 13:28, 13 August 2022 (UTC)'' <end>
 Page 3248 Wiktionary:Beer parlour/2022/August: Found match for regex: <begin> ::{{re|Donnanz}} It's less specific than {{tl|clipping of}} and {{tl|ellipsis of}}. Are there actually definitions using {{tl|short for}} where these two are not applicable? &mdash; [[User:Fytcha|Fytcha]]〈[[User talk:Fytcha| T ]]|[[Special:Log/Fytcha| L ]]|[[Special:Contributions/Fytcha| C ]]〉 13:36, 13 August 2022 (UTC) <end>
@@ -4440,7 +4440,7 @@ Page 3985 자캐: Found match for regex: <begin> # {{short for|ko|[[자작(自�
 Page 3986 오리캐: Found match for regex: <begin> # {{short for|ko|오리지널 캐릭터|t=[[original character]]}} <end>
 Page 3988 Colombier: Found match for regex: <begin> # {{short for|fr|Grand Colombier}} ({{place|fr|mountain|dept/Ain|r/Auvergne-Rhône-Alpes|c/France|a=a}}) <end>
 Page 3989 BACEN: Found match for regex: <begin> # {{lb|pt|Brazil}} {{short for|pt|w:pt:Banco Central do Brasil}} <end>
-Page 3990 autobike: Found match for regex: <begin> # {{short for|en|autobicycle}}: [[motorcycle]]; [[motorbike]] <end>
+Page 3990 autobike: Found match for regex: <begin> # {{short for|en|autobicycle}}: [[motorcycle]]; [[motorbike]]. <end>
 Page 3990 autobike: Found match for regex: <begin> # {{short for|en|{{w|Autobike|automatically geared bicycle}}}}. <end>
 Page 3990 autobike: Found match for regex: <begin> This term varies in usage by country, either referring to a [[motorcycle]] / [[motorbike]] or an {{w|Autobike|automatically geared bicycle}}. The term [[autobicycle]] has mostly fallen into disuse already, but its short form ''autobike'' is still used in various countries to refer to a [[motorcycle]]/[[motorbike]]. <end>
 Page 3991 só o pó: Found match for regex: <begin> # {{short for|pt|só o pó da rabiola}} <end>
@@ -4498,7 +4498,7 @@ Page 4039 ランニング: Found match for regex: <begin> # {{short for|ja|ラ�
 Page 4040 スマッシュブラザーズ: Found match for regex: <begin> # {{lb|ja|video games}} {{short for|ja|大乱闘スマッシュブラザーズ|t=the {{italic|{{w|Super Smash Bros.}}}} crossover franchise}} <end>
 Page 4041 proc-gen: Found match for regex: <begin> # {{lb|en|computing}} {{short for|en|[[procedural]] [[generation]]}}. <end>
 Page 4042 Tenbury: Found match for regex: <begin> # {{short for|en|Tenbury Wells}}, the main settlement in the parish. <end>
-Page 4043 Karnavati: Found match for regex: <begin> # {{short for|en|[[w:Karnavati University]]}} in [[Gandhinagar]] <end>
+Page 4043 Karnavati: Found match for regex: <begin> # {{short for|en|[[w:Karnavati University]]}} in [[Gandhinagar]]. <end>
 Page 4044 Grantown: Found match for regex: <begin> # {{short for|en|Grantown-on-Spey}}, [[Scotland]]. <end>
 Page 4045 Werki: Found match for regex: <begin> # {{lb|de|informal}} {{short for|de|Werkstudent}} <end>
 Page 4047 cogway: Found match for regex: <begin> # {{lb|en|rail}} {{short for|en|cog railway}}. <end>
@@ -4538,7 +4538,7 @@ Page 4404 鉄: Found match for regex: <begin> # short for {{m|ja|鉄色|tr=tetsu
 Page 4404 鉄: Found match for regex: <begin> # short for {{m|ja|鉄砲|tr=teppō|pos=literally “cannon”, but in this case, refers to the poisonous ''[[fugu]]'' blowfish or dishes made from it}} <end>
 Page 4404 鉄: Found match for regex: <begin> # short for {{m|ja|鉄道|tr=tetsudō||railway}} <end>
 Page 4526 あ: Found match for regex: <begin> From {{inh|ja|ojp|-}}, from {{inh|ja|jpx-pro|*a}}. The short form of {{m|ja|あれ|tr=are}}. <end>
-Page 4950 Wiktionary:Word of the day/January 23: Found match for regex: <begin> # {{lb|en|fashion}} {{short for|en|gigot sleeve||a type of [[sleeve]] shaped like a leg of mutton}}|January|23}} <end>
+Page 4950 Wiktionary:Word of the day/January 23: Found match for regex: <begin> # {{lb|en|fashion}} {{short for|en|gigot sleeve||a type of [[sleeve]] shaped like a leg of mutton}}|January|23}}. <end>
 Page 4990 Wiktionary:Word of the day/March 13: Found match for regex: <begin> # {{lb|en|fishing}} {{short for|en|ledger bait||fishing [[bait#Noun|bait]] attached to a [[floating#Adjective|floating]] [[line#Noun|line]] [[fasten]]ed to the [[bank#Noun|bank]] of a [[pond#Noun|pond]], [[stream#Noun|stream]], etc.}} or '''[[ledger line]]''' (“[[fishing line]] used with ledger bait for [[bottom fishing]]; [[ligger]]”).|March|13}} <end>
 Page 5001 Wiktionary:Word of the day/March 27: Found match for regex: <begin> # {{short for|en|dinner wagon||[[set#Noun|set]] of [[light#Adjective|light]] [[shelf|shelves]] [[mount#Verb|mounted]] on [[castor]]s so that it can be [[push#Verb|pushed]] around a [[dining room]] and used for [[serve#Verb|serving]]}}. <end>
 Page 5001 Wiktionary:Word of the day/March 27: Found match for regex: <begin> # {{lb|en|slang}} {{short for|en|paddy wagon||[[police#Noun|police]] [[van]] for [[transport#Verb|transporting]] [[prisoner]]s}}. <end>
@@ -4552,11 +4552,11 @@ Page 5114 Wiktionary:Word of the day/October 21: Found match for regex: <begin> 
 Page 5133 Wiktionary:Word of the day/December 16: Found match for regex: <begin> ## {{lb|en|Roman Catholicism}} {{short for|en|sacrament of reconciliation|t=a [[sacrament]] ([[sacred]] [[ritual]]) formerly called [[confession]], involving [[contrition]] by a person, [[confess]]ing [[sin#Noun|sins]] to a [[priest]], [[penance#Noun|penance]] [[perform]]ed by the person, and [[absolution]] [[grant#Verb|granted]] by the priest}}|comment=Today is the [[w:Day of Reconciliation|Day of Reconciliation]] in [[South Africa]], which aims to foster [[reconciliation]] and [[national#Adjective|national]] [[unity]] for the country.|December|16}}<!-- <end>
 Page 5134 Wiktionary:Word of the day/December 25: Found match for regex: <begin> # {{lb|en|often|marketing}} {{short for|en|Christmas season|t=the [[period of time]] before and after Christmas Day, during which [[person#Noun|people]] [[prepare#Verb|prepare]] for and celebrate Christmas}}; [[Christmastime]]. [...] <end>
 Page 5685 Talk:radio: Found match for regex: <begin> :Can we define this sense as “{{short for|en|car radio}}”? The oddly specifically utilitarian definition of the latter could be improved by generalizing it so that it covers the “on-board entertainment system” sense – which by itself unduly excludes other uses. &nbsp;--[[User:Lambiam|Lambiam]] 16:20, 27 May 2024 (UTC) <end>
-Page 6149 Wiktionary:Word of the day/Archive/2016/September: Found match for regex: <begin> ## {{short for|en|athletic supporter}}|September|22}} <end>
+Page 6149 Wiktionary:Word of the day/Archive/2016/September: Found match for regex: <begin> ## {{short for|en|athletic supporter}}|September|22}}. <end>
 Page 6207 Wiktionary:Word of the day/Archive/2017/July: Found match for regex: <begin> # {{short for|en|Breton galette}}: a [[crêpe]] or [[pancake#Noun|pancake]] made with [[buckwheat]] [[flour]], and often with a [[savoury#Adjective|savoury]] [[filling#Noun|filling]], originally from {{w|Upper Brittany}} in France.|comment=Happy [[Bastille Day]] from all of us at the Wiktionary!|July|14}} <end>
 Page 6347 Wiktionary:Word of the day/Archive/2018/July: Found match for regex: <begin> {{WOTD|acquis|n|{{short for|en|acquis communautaire}}. <end>
 Page 6347 Wiktionary:Word of the day/Archive/2018/July: Found match for regex: <begin> {{WOTD|forex|n|{{short for|en|foreign exchange}}|comment=On this day in 1944, the [[w:Bretton Woods system|Bretton Woods agreement]] was signed, establishing rules, institutions, and procedures to regulate the international monetary system.|July|22}} <end>
-Page 6387 Wiktionary:Word of the day/Archive/2019/January: Found match for regex: <begin> # {{lb|en|fashion}} {{short for|en|gigot sleeve||a type of [[sleeve]] shaped like a leg of mutton}}|January|23}} <end>
+Page 6387 Wiktionary:Word of the day/Archive/2019/January: Found match for regex: <begin> # {{lb|en|fashion}} {{short for|en|gigot sleeve||a type of [[sleeve]] shaped like a leg of mutton}}|January|23}}. <end>
 Page 6491 Wiktionary:Word of the day/Archive/2019/March: Found match for regex: <begin> # {{lb|en|fishing}} {{short for|en|ledger bait||fishing [[bait#Noun|bait]] attached to a [[floating#Adjective|floating]] [[line#Noun|line]] [[fasten]]ed to the [[bank#Noun|bank]] of a [[pond#Noun|pond]], [[stream#Noun|stream]], etc.}} or '''[[ledger line]]''' (“[[fishing line]] used with ledger bait for [[bottom fishing]]; [[ligger]]”).|March|13}} <end>
 Page 6491 Wiktionary:Word of the day/Archive/2019/March: Found match for regex: <begin> # {{short for|en|dinner wagon||[[set#Noun|set]] of [[light#Adjective|light]] [[shelf|shelves]] [[mount#Verb|mounted]] on [[castor]]s so that it can be [[push#Verb|pushed]] around a [[dining room]] and used for [[serve#Verb|serving]]}}. <end>
 Page 6491 Wiktionary:Word of the day/Archive/2019/March: Found match for regex: <begin> # {{lb|en|slang}} {{short for|en|paddy wagon||[[police#Noun|police]] [[van]] for [[transport#Verb|transporting]] [[prisoner]]s}}. <end>
@@ -4606,7 +4606,7 @@ Page 8148 Wiktionary:Word of the day/2023/November 30: Found match for regex: <b
 Page 8164 Wiktionary:Word of the day/2023/December 15: Found match for regex: <begin> # {{short for|en|shire horse|t=a [[draught horse]] of a [[tall#Adjective|tall]] [[British#Adjective|British]] [[breed#Noun|breed]], usually [[bay#Adjective|bay]], [[black#Adjective|black]], or [[gray#Adjective|grey]]}}. <end>
 Page 8167 Wiktionary:Word of the day/2023/December 25: Found match for regex: <begin> # {{lb|en|often|marketing}} {{short for|en|Christmas season|t=the [[period of time]] before and after Christmas Day, during which [[person#Noun|people]] [[prepare#Verb|prepare]] for and celebrate Christmas}}; [[Christmastime]]. [...] <end>
 Page 8260 Wiktionary:Word of the day/2024/June 3: Found match for regex: <begin> ### {{lb|en|specifically|cycling}} {{short for|en|tandem bicycle|t=a [[bicycle#Noun|bicycle]] or [[tricycle#Noun|tricycle]] in which two [[person#Noun|people]] [[sit#Verb|sit]] one behind the other, both [[able#Adjective|able]] to [[pedal#Verb|pedal]] but only the person in front being able to steer}}. <end>
-Page 8266 Wiktionary:Word of the day/2024/June 16: Found match for regex: <begin> ## {{lb|en|baseball}} {{short for|en|sacrifice bunt}} ''or'' {{l|en|'''sacrifice hit'''|t=a [[play#Noun|play]] in which the [[batter#Noun|batter]] [[intentionally]] [[hit#Verb|hits]] the [[ball#Noun|ball]] [[softly]] with a [[hand#Noun|hands]]-[[spread#Verb|spread]] [[batting#Noun|batting]] [[stance#Noun|stance]] [[at the cost of]] an [[out#Noun|out]] to [[advance#Verb|advance]] one or more [[runner]]s}} <end>
+Page 8266 Wiktionary:Word of the day/2024/June 16: Found match for regex: <begin> ## {{lb|en|baseball}} {{short for|en|sacrifice bunt}} ''or'' {{l|en|'''sacrifice hit'''|t=a [[play#Noun|play]] in which the [[batter#Noun|batter]] [[intentionally]] [[hit#Verb|hits]] the [[ball#Noun|ball]] [[softly]] with a [[hand#Noun|hands]]-[[spread#Verb|spread]] [[batting#Noun|batting]] [[stance#Noun|stance]] [[at the cost of]] an [[out#Noun|out]] to [[advance#Verb|advance]] one or more [[runner]]s}}. <end>
 Page 8288 Wiktionary:Word of the day/2024/July 12: Found match for regex: <begin> ## {{lb|en|informal}} {{short for|en|public house|t=an [[inn#Noun|inn]], a [[pub#Noun|pub]]}}; also {{lb|en|dated}}, ''in full'' '''public bar''': the more [[basic#Adjective|basic]] [[bar#Noun|bar]] in a public house, as [[contrast#Verb|contrasted]] with the [[lounge#Noun|lounge]] bar or [[saloon]] bar which has more [[comfortable#Adjective|comfortable]] [[seat#Noun|seats]], [[personalized#Adjective|personalized]] [[service#Noun|service]], etc. <end>
 Page 8319 Wiktionary:Word of the day/2024/August 27: Found match for regex: <begin> # {{lb|en|science fiction}} {{short for|en|torch drive|t=a [[spacecraft]] [[engine#Noun|engine]] which [[produce#Verb|produces]] [[thrust#Noun|thrust]] by [[nuclear fusion]]}}. <end>
 Page 8319 Wiktionary:Word of the day/2024/August 27: Found match for regex: <begin> # {{lb|en|chiefly|Canada|US}} {{short for|en|blowtorch|t=a [[tool#Noun|tool]] which [[project#Verb|projects]] a [[controlled#Adjective|controlled]] [[stream#Noun|stream]] of a [[highly]] flammable [[gas#Noun|gas]] over a [[spark#Noun|spark]] in order to produce a controlled flame}}. <end>

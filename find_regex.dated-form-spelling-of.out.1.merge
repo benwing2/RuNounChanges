@@ -581,7 +581,7 @@ Page 595 milliped: Found match for regex: <begin> # {{dated form of|en|millipede
 Page 598 sculker: Found match for regex: <begin> # {{dated form of|en|skulker}}. <end>
 Page 599 conchyliology: Found match for regex: <begin> # {{dated form of|en|conchology}}. <end>
 Page 600 conchyliologist: Found match for regex: <begin> # {{dated form of|en|conchologist}}. <end>
-Page 601 sponk: Found match for regex: <begin> # {{dated form of|en|spunk}} <!--which sense?--> <end>
+Page 601 sponk: Found match for regex: <begin> # {{dated form of|en|spunk}}. <!--which sense?--> <end>
 Page 602 cookey: Found match for regex: <begin> # {{dated form of|en|cookie}}. <end>
 Page 604 buyou: Found match for regex: <begin> # {{dated form of|en|bayou}}. <end>
 Page 605 Esthonia: Found match for regex: <begin> # {{dated form of|en|Estonia}}. <end>
@@ -922,7 +922,7 @@ Page 969 Kiangsi: Found match for regex: <begin> # {{dated form of|en|Jiangxi}}.
 Page 970 Fuchow: Found match for regex: <begin> # {{dated form of|en|Fuzhou}}. <end>
 Page 971 Chik Hom: Found match for regex: <begin> # {{dated form of|en|Chikan}}. <end>
 Page 972 Shekki: Found match for regex: <begin> # {{dated form of|en|Shiqi}}: {{non-gloss|the [[Cantonese]]-derived name}}. <end>
-Page 973 Chefoo: Found match for regex: <begin> # {{dated form of|en|Zhifu}}; {{lb|en|dated}} {{synonym of|en|Yantai}} <end>
+Page 973 Chefoo: Found match for regex: <begin> # {{dated form of|en|Zhifu}}; {{lb|en|dated}} {{synonym of|en|Yantai}}. <end>
 Page 974 dungeree: Found match for regex: <begin> # {{dated form of|en|dungaree}}. <end>
 Page 976 chaperonship: Found match for regex: <begin> # {{dated form of|en|chaperoneship}}. <end>
 Page 977 Hindōstāni: Found match for regex: <begin> # {{dated form of|en|Hindustani||language}}. <end>
@@ -1144,7 +1144,7 @@ Page 1212 Masulipatnam: Found match for regex: <begin> # {{dated form of|en|Mach
 Page 1213 Bencoolen: Found match for regex: <begin> # {{dated form of|en|Benkulen}}. <end>
 Page 1215 Port aux Basques: Found match for regex: <begin> # {{m|en|Port aux Basques}}: {{dated form of|fr|Port-aux-Basques}} <end>
 Page 1217 हिंवाळा: Found match for regex: <begin> # {{dated form of|mr|हिवाळा}} <end>
-Page 1218 -æmia: Found match for regex: <begin> # {{dated form of|en|-aemia}}; {{altform|en|-emia}} <end>
+Page 1218 -æmia: Found match for regex: <begin> # {{dated form of|en|-aemia}}; {{altform|en|-emia}}. <end>
 Page 1219 Weltenraum: Found match for regex: <begin> # {{dated form of|de|Weltraum}} <end>
 Page 1220 or-molu: Found match for regex: <begin> # {{dated form of|en|ormolu}}. <end>
 Page 1222 galloflavine: Found match for regex: <begin> # {{dated form of|en|galloflavin}}. <end>
@@ -1214,7 +1214,7 @@ Page 1299 achène: Found match for regex: <begin> # {{dated form of|fr|akène}} 
 Page 1300 abougrir: Found match for regex: <begin> # {{dated form of|fr|rabougrir}} <end>
 Page 1302 cholestérine: Found match for regex: <begin> # {{dated form of|fr|cholestérol|t=[[cholesterol]]}} <end>
 Page 1304 Paradentose: Found match for regex: <begin> # {{dated form of|de|Parodontose}} <end>
-Page 1305 southpole: Found match for regex: <begin> # {{lb|en|dated|electromagnetism}} {{dated form of|en|south pole}}; One of the two poles of a magnet <end>
+Page 1305 southpole: Found match for regex: <begin> # {{lb|en|dated|electromagnetism}} {{dated form of|en|south pole}}; One of the two poles of a magnet. <end>
 Page 1306 good heav'ns: Found match for regex: <begin> # {{dated form of|en|good heavens}}. <end>
 Page 1307 leggined: Found match for regex: <begin> # {{dated form of|en|legginged}}. <end>
 Page 1308 cayeute: Found match for regex: <begin> # {{dated form of|en|coyote}}. <end>
@@ -1406,7 +1406,7 @@ Page 1532 Suabian: Found match for regex: <begin> # {{dated form of|en|Swabian}}
 Page 1532 Suabian: Found match for regex: <begin> # {{dated form of|en|Swabian}}. <end>
 Page 1532 Suabian: Found match for regex: <begin> # {{dated form of|en|Swabian}}. <end>
 Page 1536 Arkonam: Found match for regex: <begin> # {{dated form of|en|Arakkonam}}. <end>
-Page 1541 brassiere: Found match for regex: <begin> # {{dated form|en|bra||item of underwear}} {{defdate|from 1900s}} <end>
+Page 1541 brassiere: Found match for regex: <begin> # {{dated form|en|bra||item of underwear}}. {{defdate|from 1900s}} <end>
 Page 1542 imposter: Found match for regex: <begin> # {{dated form|pl|impostor}} <end>
 Page 1543 genom: Found match for regex: <begin> # {{dated form|en|genome}}. <end>
 Page 1544 Moldavian: Found match for regex: <begin> # {{dated form|en|Moldovan}}. <end>
@@ -1450,7 +1450,7 @@ Page 6 Moslem: Found match for regex: <begin> # {{lb|en|now|often|derogatory}} {
 Page 7 東京: Found match for regex: <begin> # {{lb|ja|historical}} {{dated spelling of|ja||とうきょう|tr=Tōkyō|sort=とうけい|t=Tokyo}} <end>
 Page 8 mayonnaise: Found match for regex: <begin> # {{dated spelling of|pt|maionese}} <end>
 Page 9 boek: Found match for regex: <begin> # {{dated spelling of|jv|buk}} <end>
-Page 10 gramme: Found match for regex: <begin> # {{lb|en|UK}} {{dated spelling of|en|gram|qq=unit of mass}} <end>
+Page 10 gramme: Found match for regex: <begin> # {{lb|en|UK}} {{dated spelling of|en|gram|qq=unit of mass}}. <end>
 Page 11 mega: Found match for regex: <begin> # {{dated spelling of|jv|méga}}, {{romanization of|jv|ꦩꦺꦒ}} <end>
 Page 12 nem: Found match for regex: <begin> # {{dated spelling of|jv|nèm}} <end>
 Page 13 kilogramme: Found match for regex: <begin> # {{lb|en|UK}} {{dated spelling of|en|kilogram}}. <end>
@@ -1460,7 +1460,7 @@ Page 16 porto: Found match for regex: <begin> # {{dated spelling of|sv|port||por
 Page 17 teeth: Found match for regex: <begin> # {{dated spelling of|en|teethe|t=to grow teeth}}. <end>
 Page 18 hiccough: Found match for regex: <begin> # {{dated spelling of|en|hiccup}}. <end>
 Page 18 hiccough: Found match for regex: <begin> # {{dated spelling of|en|hiccup}}. <end>
-Page 19 socker: Found match for regex: <begin> # {{dated spelling of|en|soccer}} <!--see citation in that entry--> <end>
+Page 19 socker: Found match for regex: <begin> # {{dated spelling of|en|soccer}}. <!--see citation in that entry--> <end>
 Page 20 U.S.A.: Found match for regex: <begin> # {{dated spelling of|en|USA}}. <end>
 Page 21 gaol: Found match for regex: <begin> # {{lb|en|Commonwealth}} {{dated spelling of|en|jail}}. <end>
 Page 21 gaol: Found match for regex: <begin> # {{lb|en|Commonwealth}} {{dated spelling of|en|jail}}. <end>
@@ -1478,8 +1478,8 @@ Page 31 Arthur: Found match for regex: <begin> # {{lb|pt|Portugal}} {{dated spel
 Page 32 ditto: Found match for regex: <begin> # {{dated spelling of|nl|dito}} <end>
 Page 33 Monako: Found match for regex: <begin> # {{dated spelling of|de|Monaco}} <end>
 Page 34 Hongkong: Found match for regex: <begin> # {{dated spelling of|en|Hong Kong}}. <end>
-Page 34 Hongkong: Found match for regex: <begin> # {{dated spelling of|pt|Hong Kong}}, {{place|pt|a=a|city/island/and/special administrative region|in southeastern|c/China}} <end>
-Page 35 Bagdad: Found match for regex: <begin> # {{dated spelling of|en|Baghdad}}, {{place|en|a=the|capital city|c/Iraq}} <end>
+Page 34 Hongkong: Found match for regex: <begin> # {{place|pt|-form=dated sp:Hong Kong|city/island/and/special administrative region|in southeastern|c/China}} <end>
+Page 35 Bagdad: Found match for regex: <begin> # {{place|en|-form=dated sp:Baghdad|capital city|c/Iraq}}. <end>
 Page 36 Teheran: Found match for regex: <begin> # {{dated spelling of|en|Tehran}}. <end>
 Page 37 seta: Found match for regex: <begin> # {{dated spelling of|jv|séta}} <end>
 Page 38 ofensiva: Found match for regex: <begin> # {{dated spelling of|cs|ofenziva}} <end>
@@ -2017,7 +2017,7 @@ Page 759 mille-pertuis: Found match for regex: <begin> # {{dated spelling of|fr|
 Page 760 Wöwöchim: Found match for regex: <begin> # {{lb|en|Hopi religion}} {{dated spelling of|en|Wuwuchim}}. <end>
 Page 761 Keam's Canyon: Found match for regex: <begin> # {{dated spelling of|en|Keams Canyon}}. <end>
 Page 762 Awatobi: Found match for regex: <begin> # {{dated spelling of|en|Awat'ovi}}. <end>
-Page 764 Basrah: Found match for regex: <begin> # {{dated spelling of|en|Basra}}, {{place|en|a=a|major city|c/Iraq}} <end>
+Page 764 Basrah: Found match for regex: <begin> # {{place|en|-form=dated sp:Basra|major city|c/Iraq}}. <end>
 Page 766 play a rôle: Found match for regex: <begin> # {{dated spelling of|en|play a role}}. <end>
 Page 767 au dehors: Found match for regex: <begin> # {{dated spelling of|fr|au-dehors|t=[[outside]]}} <end>
 Page 768 au dedans: Found match for regex: <begin> # {{dated spelling of|fr|au-dedans|t=[[inside]]}} <end>
