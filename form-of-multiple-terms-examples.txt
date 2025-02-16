@@ -1,4 +1,4 @@
-abbreviation
+abbreviation of
 
 Page 698 G: Found match for regex: <begin> # {{C|en|Recreational drugs}} {{lb|en|drug|_|slang}} {{abbrev of|en|gamma-hydroxybutyrate,gamma-butyrolactone}}. <end>
 Page 182 h: Found match for regex: <begin> # {{lb|sv|nonstandard|anglicism}} {{abbreviation of|sv|en:hour}} <end>
@@ -11,8 +11,9 @@ Page 481 LC: Found match for regex: <begin> # {{lb|mul|[[w:IUCN Red List|IUCN Re
 Page 569 LP: Found match for regex: <begin> # {{lb|pl|music}} {{abbr of|pl|en:long play}}; {{m|pl|płyta długogrająca|t=a sound recording album, forming a compositional whole}} <end>
 Page 2231 FAI: Found match for regex: <begin> # {{abbreviation of|mul|fr:{{w|lang=en|Fédération Aéronautique Internationale}}}}: {{l|en|FAI}} {{gl|the world federation for aeronautics and airsports}} <end>
 Page 7580 RXR: Found match for regex: <begin> # {{abbreviation of|en|railroad,railway,rail-line,[[rail]] [[crossing]]}}: a [[level crossing]]. <end>
+Page 185 l: Found match for regex: <begin> # {{abbreviation of|en|la:libra|t=[[pound]] ([[pound sterling|sterling]])}}. <end>
 
-clipping
+clipping of
 
 Page 219 sub: Found match for regex: <begin> # {{lb|en|colloquial|internet}} {{clipping of|en|subscription,subscriber<q:by extension>|addl=_to an online channel or feed}}. <end>
 Page 279 res: Found match for regex: <begin> # {{lb|en|North America|informal}} {{clipping of|en|reservation,reserve}}. <end>
@@ -117,6 +118,7 @@ Page 220 昼: Found match for regex: <begin> # {{ellipsis of|ja|昼ご飯<tr:hir
 Page 407 tap: Found match for regex: <begin> ## {{lb|en|Britain}} {{ellisps of|en|taphouse,taproom|t=place where alcoholic beverages are served [[on tap]]}}. <end>
 Page 437 sacrifice: Found match for regex: <begin> ## {{lb|en|baseball}} {{ellipsis of|en|sacrifice bunt,sacrifice hit|t=a play in which the batter intentionally hits the ball softly with a hands-spread batting stance at the cost of an out to advance one or more [[runner]]s}}. <end>
 Page 445 public: Found match for regex: <begin> ## {{lb|en|informal}} {{ellipsis of|en|public house,public bar<l:dated>|t=an inn, a pub: the more basic bar in a public house, as contrasted with the lounge bar or [[saloon]] bar which has more comfortable seats, personalized service, etc.}}. <end>
+Page 230 ABM: Found match for regex: <begin> # {{ellipsis of|en|{{w|ABM Treaty}},{{w|Anti-Ballistic Missile Treaty}}}}. <end>
 
 syllabic acronym of
 
@@ -127,4 +129,10 @@ Page 3785 プレコン: Found match for regex: <begin> # {{lb|ja|construction}} 
 obsolete form of
 
 Page 9211 Oosman: Found match for regex: <begin> # {{obsolete form of|en|Osman,Usman}}. <end>
+Page 6510 fa ré: Found match for regex: <begin> # {{obsolete form of|ga|fara,frae|t=along with, beside}} <end>
+
+former name of
+
+Page 250 Grand Falls: Found match for regex: <begin> # {{place|en|-form=former name of:Churchill Falls;;former name of:McLean Falls|waterfall|r/Labrador|p/Newfoundland and Labrador|c/Canada|on the former|river/Grand River|now|river/Churchill River}}. <end>
+Page 317 Kuper: Found match for regex: <begin> # {{place|en|-form:ellip of:Kuper Island;;fmr of:Penelakut|island|strait/Strait of Georgia|r/Vancouver Island|p/British Columbia|c/Canada}}. <end>
 
