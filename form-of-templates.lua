@@ -1,7 +1,10 @@
 local export = {}
 
 local debug_track_module = "Module:debug/track"
+local en_utilities_module = "Module:en-utilities"
 local form_of_module = "Module:form of"
+local form_of_templates_data_module = "Module:form of/templates/data"
+local labels_module = "Module:labels"
 local languages_module = "Module:languages"
 local load_module = "Module:load"
 local parameters_module = "Module:parameters"
@@ -15,6 +18,7 @@ local insert = table.insert
 local ipairs = ipairs
 local pairs = pairs
 local require = require
+local dump = mw.dumpObject
 
 --[==[
 Loaders for functions in other modules, which overwrite themselves with the target function when called. This ensures modules are only loaded when needed, retains the speed/convenience of locally-declared pre-loaded functions, and has no overhead after the first call, since the target functions are called directly in any subsequent calls.]==]
@@ -134,6 +138,35 @@ This module contains code that directly implements {{tl|form of}}, {{tl|inflecti
 -- [[Wiktionary:Tracking/form-of/PAGE]].
 local function track(page, template)
 	debug_track("form-of/" .. (template and template .. "/" or "") .. page)
+end
+
+
+-- Construct a link to [[Appendix:Glossary]] for `entry`. If `text` is specified, it is the display text; otherwise,
+-- `entry` is used.
+local function glossary_link(entry, text)
+	text = text or entry
+	return "[[Appendix:Glossary#" .. entry .. "|" .. text .. "]]"
+end
+
+
+--[==[
+Normalize a part-of-speech tag given a possible abbreviation (passed in as {{para|1}} of the invocation args). If the
+abbreviation isn't recognized, the original POS tag is returned. If no POS tag is passed in, return the value of
+invocation arg {{para|default}}.
+]==]
+function export.normalize_pos(frame)
+	local iparams = {
+		[1] = true,
+		["default"] = true,
+	}
+	local iargs = process_params(frame.args, iparams)
+	if not iargs[1] and not iargs.default then
+		error("Either 1= or default= must be given in the invocation args")
+	end
+	if not iargs[1] then
+		return iargs.default
+	end
+	return (m_form_of_pos or get_m_form_of_pos())[iargs[1]] or iargs[1]
 end
 
 
@@ -444,8 +477,7 @@ local function construct_form_of_text(data)
 			track_module = "form-of" .. (template and "/" .. template or ""),
 			lang = compat and "lang" or 1,
 			sc = "sc",
-			-- Don't do this, doesn't seem to make sense.
-			-- parse_lang_prefix = true,
+			parse_lang_prefix = true,
 			make_separate_g_into_list = true,
 			process_args_before_parsing = function(args)
 				-- For compatibility with the previous code, we accept a comma-separated list of genders in each of g=,
@@ -917,24 +949,269 @@ function export.inflection_of_t(frame)
 	}
 end
 
---[==[
-Normalize a part-of-speech tag given a possible abbreviation (passed in as {{para|1}} of the invocation args). If the
-abbreviation isn't recognized, the original POS tag is returned. If no POS tag is passed in, return the value of
-invocation arg {{para|default}}.
-]==]
-function export.normalize_pos(frame)
-	local iparams = {
-		[1] = true,
-		["default"] = true,
+function export.parse_form_of_templates(arg)
+	local form_ofs
+	-- First split on ;;. We could split directly but it's safer not to split inside of <...> or [...].
+	if arg:find("[%[<]") then
+		-- Do it the "hard way". We first parse balanced segment runs involving either [...] or <...>. Then we split
+		-- alternating runs on ";;". Then we rejoin the split runs.
+		local put = require(parse_utilities_module)
+		local segments = put.parse_multi_delimiter_balanced_segment_run(arg, {{"<", ">"}, {"[", "]"}})
+		form_ofs = put.split_alternating_runs(segments, "%s*;;%s*")
+		for i, group in ipairs(form_ofs) do
+			form_ofs[i] = table.concat(group)
+		end
+	else
+		form_ofs = split(arg, "%s*;;%s*")
+	end
+	local parsed_templates = {}
+	for _, form_of_arg in ipairs(form_ofs) do
+		local template, args = form_of_arg:match("^(..-):(.+)$")
+		if not template then
+			error(("Can't parse off template and argument from combined form-of argument: %s"):format(form_of_arg))
+		end
+
+local get_param_mods = memoize(function()
+	local m_param_utils = require(parameter_utilities_module)
+	return m_param_utils.construct_param_mods {
+		{group = {"link", "q", "l", "ref"}},
+		{param = "conj", set = m_param_utils.allowed_conjs, overall = true},
+		{param = "after", overall = true},
 	}
-	local iargs = process_params(frame.args, iparams)
-	if not iargs[1] and not iargs.default then
-		error("Either 1= or default= must be given in the invocation args")
+end)
+
+local function parse_term_with_inline_modifiers(term, paramname, default_lang)
+	local m_param_utils = require(parameter_utilities_module)
+	local function generate_obj(val, parse_err)
+		local obj = m_param_utils.generate_obj_maybe_parsing_lang_prefix {
+			term = val,
+			paramname = paramname,
+			parse_err = parse_err,
+			parse_lang_prefix = true,
+		}
+		obj.lang = obj.lang or default_lang
+		return obj
 	end
-	if not iargs[1] then
-		return iargs.default
-	end
-	return (m_form_of_pos or get_m_form_of_pos())[iargs[1]] or iargs[1]
+
+	return require(parse_interface_module).parse_inline_modifiers(term, {
+		paramname = paramname,
+		param_mods = get_param_mods(),
+		generate_obj = generate_obj,
+		splitchar = ",",
+		outer_container = {},
+	})
 end
+
+
+end
+
+
+--[==[
+Function that implements {{tl|form of}} and the various more specific form-of templates (but not {{tl|inflection of}}
+or templates that take tagged inflection parameters).
+
+Invocation params:
+
+; {{para|1|req=1}}
+: Text to display before the link.
+; {{para|term_param}}
+: Numbered param holding the term linked to. Other numbered params come after. Defaults to 1 if invocation or template
+  param {{para|lang}} is present, otherwise 2.
+; {{para|lang}}
+: Default language code for language-specific templates. If specified, no language code needs to be specified, and if
+  specified it needs to be set using {{para|lang}}, not {{para|1}}.
+; {{para|sc}}
+: Default script code for language-specific templates. The script code can still be overridden using template param
+  {{para|sc}}.
+; {{para|cat}}, {{para|cat2}}, ...:
+: Categories to place the page into. The language name will automatically be prepended. Note that there is also a
+  template param {{para|cat}} to specify categories at the template level. Use of {{para|nocat}} disables categorization
+  of categories specified using invocation param {{para|cat}}, but not using template param {{para|cat}}.
+; {{para|ignore}}, {{para|ignore2}}, ...:
+: One or more template params to silently accept and ignore. Useful e.g. when the template takes additional parameters
+  such as {{para|from}} or {{para|POS}}. Each value is a comma-separated list of either bare parameter names or
+  specifications of the form `PARAM:list` to specify that the parameter is a list parameter.
+; {{para|def}}, {{para|def2}}, ...:
+: One or more default values to supply for template args. For example, specifying {{para|def|2=tr=-}} causes the default
+  for template param {{para|tr}} to be `-`. Actual template params override these defaults.
+; {{para|withcap}}
+: Capitalize the first character of the text preceding the link, unless template param {{para|nocap}} is given.
+; {{para|withencap}}
+: Capitalize the first character of the text preceding the link if the language is English and template param
+  {{para|nocap}} is not given.
+; {{para|withdot}}
+: Add a final period after the link, unless template param {{para|nodot}} is given to suppress the period, or
+  {{para|dot}} is given to specify an alternative punctuation character.
+; {{para|nolink}}
+: Suppress the display of the link. If specified, none of the template params that control the link
+  ({{para|<var>term_param</var>}}, {{para|<var>term_param</var> + 1}}, {{para|<var>term_param</var> + 2}}, {{para|t}},
+  {{para|gloss}}, {{para|sc}}, {{para|tr}}, {{para|ts}}, {{para|pos}}, {{para|g}}, {{para|id}}, {{para|lit}}) will be
+  available. If the calling template uses any of these parameters, they must be ignored using {{para|ignore}}.
+ {{para|linktext}}
+: Override the display of the link with the specified text. This is useful if a custom template is available to format
+  the link (e.g. in Hebrew, Chinese and Japanese). If specified, none of the template params that control the link
+  ({{para|<var>term_param</var>}}, {{para|<var>term_param</var> + 1}}, {{para|<var>term_param</var> + 2}}, {{para|t}},
+  {{para|gloss}}, {{para|sc}}, {{para|tr}}, {{para|ts}}, {{para|pos}}, {{para|g}}, {{para|id}}, {{para|lit}}) will be
+  available. If the calling template uses any of these parameters, they must be ignored using {{para|ignore}}.
+; {{para|posttext}}
+: Additional text to display directly after the formatted link, before any terminating period/dot and inside of
+  `<span class='use-with-mention'>`.
+; {{para|noprimaryentrycat}}
+: Category to add the page to if the primary entry linked to doesn't exist. The language name will automatically be
+  prepended.
+; {{para|lemma_is_sort_key}}
+: If the user didn't specify a sort key, use the lemma as the sort key (instead of the page itself).
+]==]
+function export.format_form_of_template(data)
+	local template_data = mw.loadData(form_of_templates_data_module)
+	local form_of_type = data.type
+	local typedata = template_data.templates[form_of_type]
+	if not typedata then
+		error(("Internal error: Unrecognized form-of template type '%s'"):format(form_of_type))
+	end
+	if type(typedata) == "string" then
+		local newtypedata = template_data[typedata]
+		if not newtypedata then
+			error(("Internal error: Form-of template alias '%s' points to '%s', which points nowhere"):format(
+				form_of_type, typedata))
+		end
+		if type(newtypedata) ~= "table" then
+			error(("Internal error: Form-of template alias '%s' points to '%s', whose data is not a table: %s"):format(
+				form_of_type, typedata, dump(newtypedata)))
+		end
+		form_of_type = typedata
+		typedata = newtypedata
+	end
+
+	local should_ucfirst = should_ucfirst_text(data.args, {}, data.lang)
+	local allow_from = typedata.allow_from or type(typedata.text) == "string" and typedata.text:find("<<FROM:")
+	local from = args.from
+	if type(from) == "table" and not from[1] then
+		from = nil
+	end
+	if from and not allow_from then
+		error(("|from= not allowed with form-of type '%s'"):format(form_of_type))
+	end
+	if type(from) == "string" then
+		from = {from}
+	end
+
+	local formatted_from
+	if from then
+		local processed_labels
+		for _, fromlabel in ipairs(from) do
+			local this_processed_labels = require(labels_module).split_and_process_raw_labels {
+				labels = fromlabel,
+				lang = data.lang,
+				mode = "form-of",
+				nocat = args.nocat,
+				sort = args.sort,
+				already_seen = {},
+				ok_to_destructively_modify = true,
+			}
+			if not processed_labels then
+				processed_labels = this_processed_labels
+			else
+				extend(processed_labels, this_processed_labels)
+			end
+		end
+
+		local saw_raw = false
+		for _, processed_label in ipairs(processed_labels) do
+			if processed_label.raw_text then
+				saw_raw = true
+				break
+			end
+		end
+
+		if saw_raw then
+			formatted_from = require(labels_module).format_processed_labels {
+				labels = processed_labels,
+				lang = data.lang,
+				raw = true,
+				ok_to_destructively_modify = true,
+			}
+		else
+			local formatted_labels, formatted_categories = {}, {}
+			for _, processed_label in ipairs(processed_labels) do
+				if processed_label.label ~= "" then
+					table.insert(formatted_labels, processed_label.label)
+				end
+				if processed_label.formatted_categories and processed_label.formatted_categories ~= "" then
+					table.insert(formatted_categories, processed_label.formatted_categories)
+				end
+			end
+			formatted_from = require(table_module).serialCommaJoin(formatted_labels) ..
+				table.concat(formatted_categories)
+		end
+	end
+
+	if typedata.tags then
+		...
+	else
+		if not typedata.text then
+			text = form_of_type
+		else
+			text = typedata.text
+			if type(text) == "table" then
+				text = text.func {
+					args = data.args,
+					lang = data.lang,
+					should_ucfirst = should_ucfirst,
+					formatted_from = formatted_from,
+				}
+			end
+			text = text:gsub("<<FROM:(.-)>>", function(default)
+				return formatted_from or default
+			end)
+			text = text:gsub("<<POS:(.-)>>", function(default)
+				local pos = args.p or args.POS or default
+				pos = (m_form_of_pos or get_m_form_of_pos())[pos] or pos
+				return require(en_utilities_module).pluralize(pos)
+			end)
+			if text:find("<<") then
+				text = text:gsub("<<(.-)|(.-)>>", glossary_link):gsub("<<(.-)>>", glossary_link)
+			end
+		end
+
+
+
+
+	(frame)
+	local iparams = get_common_invocation_params()
+	iparams[1] = {required = true}
+	local iargs = process_params(frame.args, { type = iparams)
+	local parent_args = frame:getParent().args
+
+	local params = get_common_template_params()
+
+	if next(iargs.cat) then
+		params.nocat = {type = "boolean"}
+	end
+
+	return construct_form_of_text {
+		template = "form-of-t",
+		iargs = iargs,
+		parent_args = parent_args,
+		params = params,
+		do_form_of = function(lemma_data)
+			local args = lemma_data.args
+			local text
+			if args.notext then
+				text = ""
+			else
+				text = iargs[1]
+				if should_ucfirst_text(args, iargs, lemma_data.lang) then
+					text = ucfirst(text)
+				end
+			end
+			return format_form_of {
+				text = text, lemmas = lemma_data.lemmas, enclitics = lemma_data.enclitics,
+				base_lemmas = lemma_data.base_lemmas, lemma_face = "term", posttext = lemma_data.posttext
+			}, {}
+		end
+	}
+end
+
 
 return export

@@ -383,7 +383,7 @@ export.templates = {
 		text = {
 			func = function(data)
 				-- FIXME: Fix ucfirst so this isn't necessary.
-				if data.should_cap then
+				if data.should_ucfirst then
 					return "[[nomen sacrum|''Nomen sacrum'']] form of"
 				else
 					return "[[nomen sacrum|''nomen sacrum'']] form of"
