@@ -4808,8 +4808,8 @@ Page 136 bhfarraigí: Found match for regex: <begin> # {{eclipsis of|ga|farraig�
 Page 137 ndiamant: Found match for regex: <begin> # {{eclipsis of|ga|diamant}} <end>
 Page 138 n-íocaí: Found match for regex: <begin> # {{eclipsis of|ga|íocaí}} <end>
 Page 139 n-íoc: Found match for regex: <begin> # {{eclipsis of|ga|íoc}} <end>
-Page 140 n-íoca: Found match for regex: <begin> # {{eclipsis of|ga|íoca|nodot=yes}} {{qualifier|both etymologies}}. <end>
-Page 140 n-íoca: Found match for regex: <begin> # {{eclipsis of|ga|íoca|nodot=yes}} {{qualifier|both etymologies}}. <end>
+Page 140 n-íoca: Found match for regex: <begin> # {{eclipsis of|ga|íoca|qq=both etymologies}} <end>
+Page 140 n-íoca: Found match for regex: <begin> # {{eclipsis of|ga|íoca|qq=both etymologies}} <end>
 Page 141 mbasanna: Found match for regex: <begin> # {{eclipsis of|ga|basanna}} <end>
 Page 142 bhfréamhacha: Found match for regex: <begin> # {{eclipsis of|ga|fréamhacha}} <end>
 Page 143 bhfréamh: Found match for regex: <begin> # {{eclipsis of|ga|fréamh}} <end>
@@ -5021,7 +5021,7 @@ Page 336 gcónaí: Found match for regex: <begin> # {{eclipsis of|ga|cónaí}} <
 Page 337 mbliana: Found match for regex: <begin> # {{eclipsis of|ga|bliana}} <end>
 Page 338 bhfad: Found match for regex: <begin> # {{eclipsis of|ga|fad}} <end>
 Page 339 mbréagriocht: Found match for regex: <begin> # {{eclipsis of|ga|bréagriocht}} <end>
-Page 340 n-acastar: Found match for regex: <begin> # {{eclipsis of|sga|·acastar|nodot=1}}; {{alternative form of|sga|·n-accastar|nocap=1}} <end>
+Page 340 n-acastar: Found match for regex: <begin> # {{eclipsis of|sga|·acastar}}; {{alternative form of|sga|·n-accastar}} <end>
 Page 341 n-accastar: Found match for regex: <begin> # {{eclipsis of|sga|·accastar}} <end>
 Page 342 n-asal: Found match for regex: <begin> # {{eclipsis of|ga|asal}} <end>
 Page 342 n-asal: Found match for regex: <begin> # {{eclipsis of|mga|asal}} <end>
@@ -5250,7 +5250,7 @@ Page 551 dtéadh: Found match for regex: <begin> # {{eclipsis of|ga|téadh}} <en
 Page 552 dtéimis: Found match for regex: <begin> # {{eclipsis of|ga|téimis}} <end>
 Page 553 dtéidís: Found match for regex: <begin> # {{eclipsis of|ga|téidís}} <end>
 Page 554 dtéití: Found match for regex: <begin> # {{eclipsis of|ga|téití}} <end>
-Page 555 bhfus: Found match for regex: <begin> # {{eclipsis of|ga|fus|nodot=1}}: {{only used in|ga|i bhfus|nocap=1}}. <end>
+Page 555 bhfus: Found match for regex: <begin> # {{eclipsis of|ga|fus}}: {{only used in|ga|i bhfus}} <end>
 Page 556 ngnóthaí: Found match for regex: <begin> # {{eclipsis of|ga|gnóthaí}} <end>
 Page 556 ngnóthaí: Found match for regex: <begin> # {{eclipsis of|ga|gnóthaí}} <end>
 Page 557 adn-áigther: Found match for regex: <begin> # {{eclipsis of|sga|ad·áigther}} <end>
@@ -5329,18 +5329,18 @@ Page 615 bhforráin: Found match for regex: <begin> # {{eclipsis of|ga|forráin}
 Page 616 gcóngar: Found match for regex: <begin> # {{eclipsis of|ga|cóngar}} <end>
 Page 617 gcomhgar: Found match for regex: <begin> # {{eclipsis of|ga|comhgar}} <end>
 Page 618 gcómhgar: Found match for regex: <begin> # {{eclipsis of|ga|cómhgar}} <end>
-Page 619 mbárd: Found match for regex: <begin> # {{obsolete spelling of|ga|mbard}}: {{eclipsis of|ga|bárd|nocap=1}} <end>
-Page 620 m-bárd: Found match for regex: <begin> # {{obsolete spelling of|ga|mbard}}: {{eclipsis of|ga|bárd|nocap=1}} <end>
+Page 619 mbárd: Found match for regex: <begin> # {{obsolete spelling of|ga|mbard}}: {{eclipsis of|ga|bárd}} <end>
+Page 620 m-bárd: Found match for regex: <begin> # {{obsolete spelling of|ga|mbard}}: {{eclipsis of|ga|bárd}} <end>
 Page 621 mbard: Found match for regex: <begin> # {{eclipsis of|ga|bard}} <end>
 Page 621 mbard: Found match for regex: <begin> # {{eclipsis of|sga|bard}} <end>
-Page 622 ttarbh: Found match for regex: <begin> # {{obsolete spelling of|ga|dtarbh}}: {{eclipsis of|ga|tarbh|nocap=1}} <end>
+Page 622 ttarbh: Found match for regex: <begin> # {{obsolete spelling of|ga|dtarbh}}: {{eclipsis of|ga|tarbh}} <end>
 Page 623 dtarbh: Found match for regex: <begin> # {{eclipsis of|ga|tarbh}} <end>
 Page 624 gcapall: Found match for regex: <begin> # {{eclipsis of|ga|capall}} <end>
 Page 625 ndán: Found match for regex: <begin> # {{eclipsis of|ga|dán}} <end>
 Page 626 ngiolla: Found match for regex: <begin> # {{eclipsis of|ga|giolla}} <end>
 Page 627 bpéin: Found match for regex: <begin> # {{eclipsis of|ga|péin}} <end>
 Page 628 dtalamh: Found match for regex: <begin> # {{eclipsis of|ga|talamh}} <end>
-Page 629 dtighearna: Found match for regex: <begin> # {{eclipsis of|ga|tighearna|nodot=1}}: {{superseded spelling of|ga|dtiarna}} <end>
+Page 629 dtighearna: Found match for regex: <begin> # {{eclipsis of|ga|tighearna}}: {{superseded spelling of|ga|dtiarna}} <end>
 Page 630 dtiarna: Found match for regex: <begin> # {{eclipsis of|ga|tiarna}} <end>
 Page 631 bhfear: Found match for regex: <begin> # {{eclipsis of|ga|fear}} <end>
 Page 632 gcaoirigh: Found match for regex: <begin> # {{eclipsis of|ga|caoirigh}} <end>
@@ -5381,7 +5381,7 @@ Page 659 mbeathaigh: Found match for regex: <begin> # {{eclipsis of|ga|beathaigh
 Page 660 gcaptaen: Found match for regex: <begin> # {{eclipsis of|ga|captaen}} <end>
 Page 661 n-oidhche: Found match for regex: <begin> # {{eclipsis of|ga|oidhche}} <end>
 Page 662 bhfillfir: Found match for regex: <begin> # {{eclipsis of|ga|fillfir}} <end>
-Page 663 gcomhnaidhe: Found match for regex: <begin> # {{eclipsis of|ga|comhnaidhe|nodot=1}}: {{superseded spelling of|ga|gcónaí}} <end>
+Page 663 gcomhnaidhe: Found match for regex: <begin> # {{eclipsis of|ga|comhnaidhe}}: {{superseded spelling of|ga|gcónaí}} <end>
 Page 664 n-ung: Found match for regex: <begin> # {{eclipsis of|ga|ung}} <end>
 Page 665 dteannta: Found match for regex: <begin> # {{eclipsis of|ga|teannta}} <end>
 Page 666 mbruíon: Found match for regex: <begin> # {{eclipsis of|ga|bruíon}} <end>
@@ -5537,11 +5537,11 @@ Page 790 n-imbed: Found match for regex: <begin> # {{eclipsis of|sga|imbed}} <en
 Page 791 nduit: Found match for regex: <begin> # {{eclipsis of|sga|duit}} <end>
 Page 792 n-ail: Found match for regex: <begin> # {{eclipsis of|ga|ail}} <end>
 Page 792 n-ail: Found match for regex: <begin> # {{eclipsis of|sga|·ail}} <end>
-Page 793 dongniat: Found match for regex: <begin> # {{alt sp|sga|do·ngníat}}: {{eclipsis of|sga|do·gniat|nocap=1}} <end>
+Page 793 dongniat: Found match for regex: <begin> # {{alt sp|sga|do·ngníat}}: {{eclipsis of|sga|do·gniat}} <end>
 Page 794 dongníat: Found match for regex: <begin> # {{eclipsis of|sga|do·gníat}} <end>
-Page 795 dungni: Found match for regex: <begin> # {{alt sp|sga|do·ngní}}: {{eclipsis of|sga|du·gni|nocap=1}} <end>
+Page 795 dungni: Found match for regex: <begin> # {{alt sp|sga|do·ngní}}: {{eclipsis of|sga|du·gni}} <end>
 Page 796 dongní: Found match for regex: <begin> # {{eclipsis of|sga|do·gní}} <end>
-Page 797 dungní: Found match for regex: <begin> # {{alt sp|sga|do·ngní}}: {{eclipsis of|sga|du·gní|nocap=1}} <end>
+Page 797 dungní: Found match for regex: <begin> # {{alt sp|sga|do·ngní}}: {{eclipsis of|sga|du·gní}} <end>
 Page 798 asmbeir: Found match for regex: <begin> # {{eclipsis of|sga|as·beir}} <end>
 Page 799 n-adarcae: Found match for regex: <begin> # {{eclipsis of|sga|adarcae}} <end>
 Page 800 n-adarcaib: Found match for regex: <begin> # {{eclipsis of|sga|adarcaib}} <end>
@@ -5557,13 +5557,13 @@ Page 807 mbás: Found match for regex: <begin> # {{eclipsis of|mga|bás}} <end>
 Page 807 mbás: Found match for regex: <begin> # {{eclipsis of|sga|bás}} <end>
 Page 808 n-adchiam: Found match for regex: <begin> # {{eclipsis of|sga|ad·chiam}} <end>
 Page 809 mbréthre: Found match for regex: <begin> # {{eclipsis of|sga|bréthre}} <end>
-Page 810 mbrethre: Found match for regex: <begin> # {{alt sp|sga|mbréthre}}: {{eclipsis of|sga|brethre|nocap=1}} <end>
+Page 810 mbrethre: Found match for regex: <begin> # {{alt sp|sga|mbréthre}}: {{eclipsis of|sga|brethre}} <end>
 Page 811 bpluma: Found match for regex: <begin> # {{eclipsis of|ga|pluma}} <end>
 Page 812 bplumaí: Found match for regex: <begin> # {{eclipsis of|ga|plumaí}} <end>
 Page 813 n-irisse: Found match for regex: <begin> # {{eclipsis of|sga|irisse}} <end>
 Page 814 nduilleach: Found match for regex: <begin> # {{eclipsis of|ga|duilleach}} <end>
 Page 815 gcaogad: Found match for regex: <begin> # {{eclipsis of|ga|caogad}} <end>
-Page 816 gcnuic: Found match for regex: <begin> # {{obsolete spelling of|ga|gcnoic}}: {{eclipsis of|ga|cnuic|nocap=1}} <end>
+Page 816 gcnuic: Found match for regex: <begin> # {{obsolete spelling of|ga|gcnoic}}: {{eclipsis of|ga|cnuic}} <end>
 Page 817 gcnoic: Found match for regex: <begin> # {{eclipsis of|ga|cnoic}} <end>
 Page 818 gcrainn: Found match for regex: <begin> # {{eclipsis of|ga|crainn}} <end>
 Page 819 gcloiche: Found match for regex: <begin> # {{eclipsis of|ga|cloiche}} <end>
@@ -5625,7 +5625,7 @@ Page 869 ndaonlathaí: Found match for regex: <begin> # {{eclipsis of|ga|daonlat
 Page 869 ndaonlathaí: Found match for regex: <begin> # {{eclipsis of|ga|daonlathaí}} <end>
 Page 869 ndaonlathaí: Found match for regex: <begin> # {{eclipsis of|ga|daonlathaí}} <end>
 Page 870 ngéineas: Found match for regex: <begin> # {{eclipsis of|ga|géineas}} <end>
-Page 871 n-isel: Found match for regex: <begin> # {{alt sp|sga|n-ísel}}: {{eclipsis of|sga|isel|nocap=1}} <end>
+Page 871 n-isel: Found match for regex: <begin> # {{alt sp|sga|n-ísel}}: {{eclipsis of|sga|isel}} <end>
 Page 872 n-ísel: Found match for regex: <begin> # {{eclipsis of|sga|ísel}} <end>
 Page 873 n-aicniud: Found match for regex: <begin> # {{eclipsis of|sga|aicniud}} <end>
 Page 874 bpóilíní: Found match for regex: <begin> # {{eclipsis of|ga|póilíní}} <end>
@@ -5646,7 +5646,7 @@ Page 883 mbí: Found match for regex: <begin> # {{eclipsis of|sga|bí}} <end>
 Page 884 dtrácht: Found match for regex: <begin> # {{eclipsis of|ga|trácht}} <end>
 Page 885 ndáileán: Found match for regex: <begin> # {{eclipsis of|ga|dáileán}} <end>
 Page 886 dungnéu: Found match for regex: <begin> # {{eclipsis of|sga|du·gnéu}} <end>
-Page 887 dungneu: Found match for regex: <begin> # {{alt sp|sga|du·ngnéu}}: {{eclipsis of|sga|du·gnéu|nocap=1}} <end>
+Page 887 dungneu: Found match for regex: <begin> # {{alt sp|sga|du·ngnéu}}: {{eclipsis of|sga|du·gnéu}} <end>
 Page 888 n-oínur: Found match for regex: <begin> # {{eclipsis of|sga|oínur}} <end>
 Page 889 n-innseóchadh: Found match for regex: <begin> # {{eclipsis of|ga|innseóchadh}} <end>
 Page 890 mbeidheadh: Found match for regex: <begin> # {{eclipsis of|ga|beidheadh}} <end>
@@ -5686,7 +5686,7 @@ Page 920 vaast: Found match for regex: <begin> # {{eclipsis of|gv|faast}} <end>
 Page 920 vaast: Found match for regex: <begin> # {{eclipsis of|gv|faast}} <end>
 Page 921 ngás: Found match for regex: <begin> # {{eclipsis of|ga|gás}} <end>
 Page 922 ndéni: Found match for regex: <begin> # {{eclipsis of|sga|·déni}} <end>
-Page 923 ndeni: Found match for regex: <begin> # {{alt sp|sga|·ndéni}}: {{eclipsis of|sga|·deni|nocap=1}} <end>
+Page 923 ndeni: Found match for regex: <begin> # {{alt sp|sga|·ndéni}}: {{eclipsis of|sga|·deni}} <end>
 Page 924 mbóithre: Found match for regex: <begin> # {{eclipsis of|ga|bóithre}} <end>
 Page 925 gceannach: Found match for regex: <begin> # {{eclipsis of|ga|ceannach}} <end>
 Page 926 gceannaigh: Found match for regex: <begin> # {{eclipsis of|ga|ceannaigh}} <end>
@@ -5705,12 +5705,12 @@ Page 936 ndreo: Found match for regex: <begin> # {{eclipsis of|ga|dreo}} <end>
 Page 937 mbruidin: Found match for regex: <begin> # {{eclipsis of|mga|bruidin}} <end>
 Page 938 ngnáth: Found match for regex: <begin> # {{eclipsis of|ga|gnáth}} <end>
 Page 938 ngnáth: Found match for regex: <begin> # {{eclipsis of|ga|gnáth}} <end>
-Page 939 nHérind: Found match for regex: <begin> # {{alt sp|mga|nÉrind}}: {{eclipsis of|mga|Hérind|nocap=1}} <end>
+Page 939 nHérind: Found match for regex: <begin> # {{alt sp|mga|nÉrind}}: {{eclipsis of|mga|Hérind}} <end>
 Page 940 nÉrind: Found match for regex: <begin> # {{eclipsis of|mga|Érind}} <end>
-Page 941 nHerind: Found match for regex: <begin> # {{alt sp|mga|nÉrind}}: {{eclipsis of|mga|Herind|nocap=1}} <end>
+Page 941 nHerind: Found match for regex: <begin> # {{alt sp|mga|nÉrind}}: {{eclipsis of|mga|Herind}} <end>
 Page 942 mbreallach: Found match for regex: <begin> # {{eclipsis of|ga|breallach}} <end>
 Page 942 mbreallach: Found match for regex: <begin> # {{eclipsis of|ga|breallach}} <end>
-Page 943 mBrefni: Found match for regex: <begin> # {{alt sp|mga|mBréfni}}: {{eclipsis of|mga|Brefni|nocap=1}} <end>
+Page 943 mBrefni: Found match for regex: <begin> # {{alt sp|mga|mBréfni}}: {{eclipsis of|mga|Brefni}} <end>
 Page 944 mBréfni: Found match for regex: <begin> # {{eclipsis of|mga|Bréfni}} <end>
 Page 945 ndig: Found match for regex: <begin> # {{eclipsis of|sga|dig}} <end>
 Page 946 mbiad: Found match for regex: <begin> # {{eclipsis of|sga|bïad}} <end>
@@ -5722,22 +5722,22 @@ Page 949 bpóilí: Found match for regex: <begin> # {{eclipsis of|ga|póilí}} <
 Page 950 bpóilíos: Found match for regex: <begin> # {{eclipsis of|ga|póilíos}} <end>
 Page 951 gcanúnacha: Found match for regex: <begin> # {{eclipsis of|ga|canúnacha}} <end>
 Page 951 gcanúnacha: Found match for regex: <begin> # {{eclipsis of|ga|canúnacha}} <end>
-Page 952 nHérinn: Found match for regex: <begin> # {{alt sp|mga|nÉrinn}}: {{eclipsis of|mga|Hérinn|nocap=1}} <end>
+Page 952 nHérinn: Found match for regex: <begin> # {{alt sp|mga|nÉrinn}}: {{eclipsis of|mga|Hérinn}} <end>
 Page 953 nÉrinn: Found match for regex: <begin> # {{eclipsis of|mga|Érinn}} <end>
 Page 954 n-óen: Found match for regex: <begin> # {{eclipsis of|mga|óen}} <end>
 Page 954 n-óen: Found match for regex: <begin> # {{eclipsis of|sga|óen}} <end>
-Page 955 n-iarthur: Found match for regex: <begin> # {{alt sp|mga|n-íarthur}}: {{eclipsis of|mga|iarthur|nocap=1}} <end>
+Page 955 n-iarthur: Found match for regex: <begin> # {{alt sp|mga|n-íarthur}}: {{eclipsis of|mga|iarthur}} <end>
 Page 956 n-íarthur: Found match for regex: <begin> # {{eclipsis of|mga|íarthur}} <end>
 Page 957 n-athar: Found match for regex: <begin> # {{eclipsis of|ga|athar}} <end>
 Page 957 n-athar: Found match for regex: <begin> # {{eclipsis of|sga|athar}} <end>
 Page 958 ndoruis: Found match for regex: <begin> # {{eclipsis of|mga|doruis}} <end>
 Page 959 n-epil: Found match for regex: <begin> # {{eclipsis of|sga|·epil}} <end>
 Page 960 mbogadh: Found match for regex: <begin> # {{eclipsis of|ga|bogadh}} <end>
-Page 961 n-ael: Found match for regex: <begin> # {{alt sp|mga|n-áel}}: {{eclipsis of|mga|ael|nocap=1}} <end>
+Page 961 n-ael: Found match for regex: <begin> # {{alt sp|mga|n-áel}}: {{eclipsis of|mga|ael}} <end>
 Page 962 n-áel: Found match for regex: <begin> # {{eclipsis of|mga|áel}} <end>
 Page 963 bhfeirm: Found match for regex: <begin> # {{eclipsis of|ga|feirm}} <end>
 Page 964 dteach: Found match for regex: <begin> # {{eclipsis of|ga|teach}} <end>
-Page 965 ndiummassach: Found match for regex: <begin> # {{alt sp|sga|ndíummusach}}: {{eclipsis of|sga|diummassach|nocap=1}} <end>
+Page 965 ndiummassach: Found match for regex: <begin> # {{alt sp|sga|ndíummusach}}: {{eclipsis of|sga|diummassach}} <end>
 Page 966 ndíummusach: Found match for regex: <begin> # {{eclipsis of|sga|díummusach}} <end>
 Page 967 gcora: Found match for regex: <begin> # {{eclipsis of|ga|cora}} <end>
 Page 968 mbíth: Found match for regex: <begin> # {{eclipsis of|sga|bíth}} <end>
@@ -5794,7 +5794,7 @@ Page 1013 dtosaí: Found match for regex: <begin> # {{eclipsis of|ga|tosaí}} <e
 Page 1014 bhfolach: Found match for regex: <begin> # {{eclipsis of|ga|folach}} <end>
 Page 1015 n-andach: Found match for regex: <begin> # {{eclipsis of|sga|andach}} <end>
 Page 1016 n-anduch: Found match for regex: <begin> # {{eclipsis of|sga|anduch}} <end>
-Page 1017 n-ires: Found match for regex: <begin> # {{alt sp|sga|n-iress}}: {{eclipsis of|sga|ires|nocap=1}} <end>
+Page 1017 n-ires: Found match for regex: <begin> # {{alt sp|sga|n-iress}}: {{eclipsis of|sga|ires}} <end>
 Page 1018 dteorann: Found match for regex: <begin> # {{eclipsis of|ga|teorann}} <end>
 Page 1019 n-íc: Found match for regex: <begin> # {{eclipsis of|sga|íc}} <end>
 Page 1020 n-uilemarbae: Found match for regex: <begin> # {{eclipsis of|sga|uilemarbae}} <end>
@@ -5804,7 +5804,7 @@ Page 1023 n-ési: Found match for regex: <begin> # {{eclipsis of|sga|ési}} <end
 Page 1024 n-indeb: Found match for regex: <begin> # {{eclipsis of|sga|indeb}} <end>
 Page 1025 frismbia: Found match for regex: <begin> # {{eclipsis of|sga|fris·bïa}} <end>
 Page 1026 mbuailfidh: Found match for regex: <begin> # {{eclipsis of|ga|buailfidh}} <end>
-Page 1027 asmber: Found match for regex: <begin> # {{alt sp|sga|as·mbeir}}: {{eclipsis of|sga|as·ber|nocap=1}} <end>
+Page 1027 asmber: Found match for regex: <begin> # {{alt sp|sga|as·mbeir}}: {{eclipsis of|sga|as·ber}} <end>
 Page 1028 dombéra: Found match for regex: <begin> # {{eclipsis of|sga|do·béra}} <end>
 Page 1029 n-epred: Found match for regex: <begin> # {{eclipsis of|sga|·epred}} <end>
 Page 1030 n-ærgarthae: Found match for regex: <begin> # {{eclipsis of|sga|ærgarthae}} <end>
