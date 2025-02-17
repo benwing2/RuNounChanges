@@ -241,22 +241,30 @@ local function ine(arg)
 	return arg ~= "" and arg or nil
 end
 
-local function add_base_lemma_params(parent_args, iargs, params, compat)
+local function get_base_lemma_params(lang)
 	-- Check the language-specific data for additional base lemma params. But if there's no language-specific data,
 	-- attempt any parent varieties as well (i.e. superordinate varieties).
-	local lang = get_lang(ine(parent_args[compat and "lang" or 1]) or ine(iargs.lang) or "und", nil, true)
 	while lang do
 		local langdata = safe_load_data((module_prefix or get_module_prefix()) .. lang:getCode())
 		if langdata then
 			local base_lemma_params = langdata.base_lemma_params
 			if base_lemma_params then
-				for _, param in ipairs(base_lemma_params) do
-					params[param.param] = true
-				end
 				return base_lemma_params
 			end
 		end
 		lang = lang:getParent()
+	end
+	return nil
+end
+
+local function add_base_lemma_params(parent_args, iargs, params, compat)
+	local lang = get_lang(ine(parent_args[compat and "lang" or 1]) or ine(iargs.lang) or "und", nil, true)
+	local base_lemma_params = get_base_lemma_params(lang)
+	if base_lemma_params then
+		for _, param in ipairs(base_lemma_params) do
+			params[param.param] = true
+		end
+		return base_lemma_params
 	end
 end
 
@@ -949,7 +957,34 @@ function export.inflection_of_t(frame)
 	}
 end
 
-function export.parse_form_of_templates(arg)
+--[==[
+Find the data describing form-of type `form_of_type`, which may be an alias. If found, return two values: the
+canonical name of the form-of type and the data structure describing the type. Otherwise, return nil.
+]==]
+function export.get_form_of_type_data(form_of_type)
+	local template_data = mw.loadData(form_of_templates_data_module)
+	local typedata = template_data.templates[form_of_type]
+	if not typedata then
+		return nil
+	end
+	if type(typedata) == "string" then
+		local newtypedata = template_data[typedata]
+		if not newtypedata then
+			error(("Internal error: Form-of template alias '%s' points to '%s', which points nowhere"):format(
+				form_of_type, typedata))
+		end
+		if type(newtypedata) ~= "table" then
+			error(("Internal error: Form-of template alias '%s' points to '%s', whose data is not a table: %s"):format(
+				form_of_type, typedata, dump(newtypedata)))
+		end
+		form_of_type = typedata
+		typedata = newtypedata
+	end
+	return form_of_type, typedata
+end
+
+
+function export.parse_form_of_templates(lang, arg)
 	local form_ofs
 	-- First split on ;;. We could split directly but it's safer not to split inside of <...> or [...].
 	if arg:find("[%[<]") then
@@ -966,40 +1001,62 @@ function export.parse_form_of_templates(arg)
 	end
 	local parsed_templates = {}
 	for _, form_of_arg in ipairs(form_ofs) do
-		local template, args = form_of_arg:match("^(..-):(.+)$")
-		if not template then
-			error(("Can't parse off template and argument from combined form-of argument: %s"):format(form_of_arg))
+		local form_of_type, args = form_of_arg:match("^(..-):(.+)$")
+		if not form_of_type then
+			error(("Can't parse off form-of type and argument from combined form-of argument: %s"):format(form_of_arg))
+		end
+		local canon_type, typedata = export.get_form_of_type_data(form_of_type)
+		if not canon_type then
+			error(("Unrecognized form-of template type '%s'"):format(form_of_type))
+		end
+		local m_param_utils = require(parameter_utilities_module)
+		local param_mod_spec = {
+			{group = {"link", "q", "l", "ref"}},
+			{param = "conj", set = m_param_utils.allowed_conjs, overall = true},
+			{param = {"addl", "enclitic", "p"}, overall = true},
+			{param = "POS", alias_of = "p"},
+			{param = {"nocap", "nocat", "notext", "cap"}, type = "boolean", overall = true},
+		}
+		if typedata.allow_from or type(typedata.text) == "string" and typedata.text:find("<<FROM:") then
+			insert(param_mod_spec, {param = "from", overall = true})
+		end
+		if typedata.allow_xlit then
+			insert(param_mod_spec, {param = "xlit"})
+		end
+		local base_lemma_params = get_base_lemma_params(lang)
+		if base_lemma_params then
+			for _, param in ipairs(base_lemma_params) do
+				insert(param_mod_spec, {param = param.param], overall = true})
+			end
 		end
 
-local get_param_mods = memoize(function()
-	local m_param_utils = require(parameter_utilities_module)
-	return m_param_utils.construct_param_mods {
-		{group = {"link", "q", "l", "ref"}},
-		{param = "conj", set = m_param_utils.allowed_conjs, overall = true},
-		{param = "after", overall = true},
-	}
-end)
-
-local function parse_term_with_inline_modifiers(term, paramname, default_lang)
-	local m_param_utils = require(parameter_utilities_module)
-	local function generate_obj(val, parse_err)
-		local obj = m_param_utils.generate_obj_maybe_parsing_lang_prefix {
-			term = val,
+		local function generate_obj(data)
+			data.parse_lang_prefix = true
+			data.special_continuations = m_param_utils.default_special_continuations
+			local obj = m_param_utils.generate_obj_maybe_parsing_lang_prefix(data)
+			obj.lang = obj.lang or lang
+			return obj
+		end
+		local parsed_template_obj = require(parse_interface_module).parse_inline_modifiers(term, {
 			paramname = paramname,
-			parse_err = parse_err,
-			parse_lang_prefix = true,
-		}
-		obj.lang = obj.lang or default_lang
-		return obj
-	end
+			param_mods = get_param_mods(),
+			generate_obj = generate_obj,
+			generate_obj_new_format = true,
+			splitchar = ",",
+			outer_container = {},
+		})
+		parsed_template_obj.form_of_type = form_of_type
+		parsed_template_obj.typedata = typedata
+		if typedata.default then
+			for _, termobj in ipairs(parsed_template_obj.terms) do
+				for k, v in pairs(typedata.default) do
+					if termobj[k] == nil then
+						termobj[k] = v
+					end
+				end
+			end
+		end
 
-	return require(parse_interface_module).parse_inline_modifiers(term, {
-		paramname = paramname,
-		param_mods = get_param_mods(),
-		generate_obj = generate_obj,
-		splitchar = ",",
-		outer_container = {},
-	})
 end
 
 
@@ -1063,26 +1120,6 @@ Invocation params:
 : If the user didn't specify a sort key, use the lemma as the sort key (instead of the page itself).
 ]==]
 function export.format_form_of_template(data)
-	local template_data = mw.loadData(form_of_templates_data_module)
-	local form_of_type = data.type
-	local typedata = template_data.templates[form_of_type]
-	if not typedata then
-		error(("Internal error: Unrecognized form-of template type '%s'"):format(form_of_type))
-	end
-	if type(typedata) == "string" then
-		local newtypedata = template_data[typedata]
-		if not newtypedata then
-			error(("Internal error: Form-of template alias '%s' points to '%s', which points nowhere"):format(
-				form_of_type, typedata))
-		end
-		if type(newtypedata) ~= "table" then
-			error(("Internal error: Form-of template alias '%s' points to '%s', whose data is not a table: %s"):format(
-				form_of_type, typedata, dump(newtypedata)))
-		end
-		form_of_type = typedata
-		typedata = newtypedata
-	end
-
 	local should_ucfirst = should_ucfirst_text(data.args, {}, data.lang)
 	local allow_from = typedata.allow_from or type(typedata.text) == "string" and typedata.text:find("<<FROM:")
 	local from = args.from

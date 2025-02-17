@@ -247,6 +247,7 @@ export.templates = {
 		cat = true,
 	},
 	["former name of"] = {
+		allow_xlit = true,
 	},
 	["frequentative of"] = {
 		tags = {"freq"},
