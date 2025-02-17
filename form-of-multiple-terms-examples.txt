@@ -12,6 +12,8 @@ Page 569 LP: Found match for regex: <begin> # {{lb|pl|music}} {{abbr of|pl|en:lo
 Page 2231 FAI: Found match for regex: <begin> # {{abbreviation of|mul|fr:{{w|lang=en|Fédération Aéronautique Internationale}}}}: {{l|en|FAI}} {{gl|the world federation for aeronautics and airsports}} <end>
 Page 7580 RXR: Found match for regex: <begin> # {{abbreviation of|en|railroad,railway,rail-line,[[rail]] [[crossing]]}}: a [[level crossing]]. <end>
 Page 185 l: Found match for regex: <begin> # {{abbreviation of|en|la:libra|t=[[pound]] ([[pound sterling|sterling]])}}. <end>
+Page 894 IMS: Found match for regex: <begin> # {{place|en|--=abbr of:[[w:en:Indianapolis Motor Speedway|Indianapolis Motor Speedway]]<t:The Brickyard>|racetrack|ward/Speedway|city/Indianapolis|twp/Wayne|co/Marion|s/Indiana|c/USA}}. <end>
+Page 1377 ארה״ב: Found match for regex: <begin> # {{place|he|--=abbr of:אַרְצוֹת הַבְּרִית<tr:ar'tsót hab'rít><eq:United States>|country|cont/North America|t=US}} <end>
 
 clipping of
 
@@ -133,6 +135,28 @@ Page 6510 fa ré: Found match for regex: <begin> # {{obsolete form of|ga|fara,fr
 
 former name of
 
-Page 250 Grand Falls: Found match for regex: <begin> # {{place|en|-form=former name of:Churchill Falls;;former name of:McLean Falls|waterfall|r/Labrador|p/Newfoundland and Labrador|c/Canada|on the former|river/Grand River|now|river/Churchill River}}. <end>
-Page 317 Kuper: Found match for regex: <begin> # {{place|en|-form:ellip of:Kuper Island;;fmr of:Penelakut|island|strait/Strait of Georgia|r/Vancouver Island|p/British Columbia|c/Canada}}. <end>
+Page 250 Grand Falls: Found match for regex: <begin> # {{place|en|--=former name of:Churchill Falls;;former name of:McLean Falls|waterfall|r/Labrador|p/Newfoundland and Labrador|c/Canada|on the former|river/Grand River|now|river/Churchill River}}. <end>
+Page 317 Kuper: Found match for regex: <begin> # {{place|en|--=ellip of:Kuper Island;;fmr of:Penelakut|island|strait/Strait of Georgia|r/Vancouver Island|p/British Columbia|c/Canada}}. <end>
+Page 606 Slavutych: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|--=fmr of:Dnipro,Dnieper|river|c/Ukraine,Belarus,Russia|in|continent/Europe|flowing into the|sea/Black Sea|; used when referring to the early Rus era}}. <end>
+
+misspelling of
+
+Page 523 etatisme: Found match for regex: <begin> # {{misspelling of|en|etatism,étatisme}}. <end>
+Page 1879 ġzira: Found match for regex: <begin> # {{misspelling of|mt|gżira,ġżira}} <end>
+
+deliberate misspelling of
+
+Page 120 mog1: Found match for regex: <begin> # {{lb|sv|nonstandard|internet slang}} {{deliberate misspelling of|sv|moget,mogen|t=mature}} <end>
+
+eye dialect of
+
+Page 5 of: Found match for regex: <begin> # {{lb|en|usually in modal perfect constructions}} {{eye dialect of|en|have,’ve|addl=chiefly in depictions of colloquial speech}}. <end>
+
+pronunciation spelling of
+
+Page 862 waint: Found match for regex: <begin> # {{lb|en|Yorkshire|Lancashire}} {{pronunciation spelling of|en|won't,wouldn't}}. <end>
+
+superseded spelling of
+
+Page 117 doze: Found match for regex: <begin> # {{superseded spelling of|an|doce,dotze}} <end>
 
