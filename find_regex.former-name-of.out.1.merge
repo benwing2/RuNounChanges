@@ -1,59 +1,59 @@
 Beginning at Sun Feb 16 03:10:16 2025
-Page 3 Trucial States: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|-form=former name of:Trucial Oman|A collection of <<former protectorates>> (since the 1820 General Maritime Treaty) of the <<c/United Kingdom>>, comprising most of the small Arab coastal states (then [[sheikhdom]]s) located along the [[Persian Gulf]]. The precursor of the [[United Arab Emirates]] (UAE)}}. <end>
-Page 4 Bolivia: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|-form=former name of:Santa Cruz|island|p/Galapagos|c/Ecuador}}. <end>
-Page 5 Norfolk Island: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|-form=former name of:Santa Cruz|island|p/Galapagos|c/Ecuador}}. <end>
+Page 3 Trucial States: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|--=former name of:Trucial Oman|A collection of <<former protectorates>> (since the 1820 General Maritime Treaty) of the <<c/United Kingdom>>, comprising most of the small Arab coastal states (then [[sheikhdom]]s) located along the [[Persian Gulf]]. The precursor of the [[United Arab Emirates]] (UAE)}}. <end>
+Page 4 Bolivia: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|--=former name of:Santa Cruz|island|p/Galapagos|c/Ecuador}}. <end>
+Page 5 Norfolk Island: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|--=former name of:Santa Cruz|island|p/Galapagos|c/Ecuador}}. <end>
 Page 6 Alberta: Found match for regex: <begin> # {{former name of|en|Rockwood}}, [[California]]. <end>
 Page 7 Newfoundland: Found match for regex: <begin> # {{lb|en|historical}} {{former name of|en|Newfoundland and Labrador}}. <end>
 Page 8 Uttaranchal: Found match for regex: <begin> # {{lb|en|historical}} {{former name of|en|Uttarakhand|t=state in northern India}} {{n-g|from 2000 to 2007.}} <end>
 Page 9 Orissa: Found match for regex: <begin> # {{former name of|en|Odisha|t=state in eastern India}}. <end>
 Page 10 Pondicherry: Found match for regex: <begin> # {{former name of|en|Puducherry}}, a union territory in southern [[India]]. <end>
 Page 10 Pondicherry: Found match for regex: <begin> # {{former name of|en|Puducherry}}, the capital of the union territory of [[Puducherry]]. <end>
-Page 11 Salvador: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|-form=former name of:Santiago|island|p/Galapagos|c/Ecuador}}. <end>
+Page 11 Salvador: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|--=former name of:Santiago|island|p/Galapagos|c/Ecuador}}. <end>
 Page 12 Trivandrum: Found match for regex: <begin> # {{former name of|en|Thiruvananthapuram}}, the state capital of [[Kerala]], [[India]]. <end>
-Page 13 Madras: Found match for regex: <begin> # {{place|en|-form=former name of:Chennai|a=the|caplc|s/Tamil Nadu|c/India}}. <end>
-Page 13 Madras: Found match for regex: <begin> # {{place|pt|former name of [[Chennai]], the <<caplc>> of <<s/Tamil Nadu>>, <<c/India>>|t1=Madras}} <end>
-Page 13 Madras: Found match for regex: <begin> # {{place|sh|former name of [[Chennai]], the <<caplc>> of <<s/Tamil Nadu>>, <<c/India>>|t1=Madras}} <end>
-Page 14 Calcutta: Found match for regex: <begin> # {{place|en|-form=former name of:Kolkata|the <<state capital>> of <<s/West Bengal>>, <<c/India>>}}. <end>
+Page 13 Madras: Found match for regex: <begin> # {{place|en|--=former name of:Chennai|caplc|s/Tamil Nadu|c/India}}. <end>
+Page 13 Madras: Found match for regex: <begin> # {{place|pt|--=former name of:Chennai|caplc|s/Tamil Nadu|c/India|t1=Madras}} <end>
+Page 13 Madras: Found match for regex: <begin> # {{place|sh|--former name of:Čenaj<xlit:Chennai>|caplc|s/Tamil Nadu|c/India|t1=Madras}} <end>
+Page 14 Calcutta: Found match for regex: <begin> # {{place|en|--=former name of:Kolkata|caplc|s/West Bengal|c/India}}. <end>
 Page 14 Calcutta: Found match for regex: <begin> {{trans-top|former name of Kolkata, the capital of West Bengal}} <end>
 Page 15 The Olgas: Found match for regex: <begin> # {{former name of|en|Kata Tjuta}}. <end>
 Page 16 Milton: Found match for regex: <begin> ### {{former name of|en|Old Milton}}, [[Hampshire]], renamed on maps by 1970. <end>
 Page 17 Webster: Found match for regex: <begin> ### {{former name of|en|Sabattus}}, [[Maine]]. <end>
-Page 33 番: Found match for regex: <begin> # {{lb|zh|historical}} {{zh-div|縣}} {{former name of|zh|鄱陽}} under the [[Qin]] [[dynasty]]. <end>
+Page 33 番: Found match for regex: <begin> # {{lb|zh|historical}} {{zh-div|縣}} {{former name of|zh|鄱陽|addl=under the [[Qin]] [[dynasty]]}} <end>
 Page 40 Arcadia: Found match for regex: <begin> ## {{former name of|en|Upperco}}, [[Maryland]]. <end>
 Page 42 ununnilium: Found match for regex: <begin> # {{lb|en|chemistry|dated}} {{former name of|en|darmstadtium}}. <end>
 Page 43 Jerusalem: Found match for regex: <begin> ### {{former name of|en|Courtland}}, [[Southampton County]], [[Virginia]]. <end>
 Page 44 Milan: Found match for regex: <begin> ## {{former name of|en|Old Milan}}, [[Ripley County]], [[Indiana]]. <end>
 Page 44 Milan: Found match for regex: <begin> ## {{former name of|en|Mercer}}, [[Mercer County]], [[Ohio]]. <end>
-Page 45 Philadelphia: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|-form=former name of:Amman|capital|c/Jordan|a=the}}. <end>
-Page 45 Philadelphia: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|-form=former name of:Alasehir|city|c/Turkey}}. <end>
+Page 45 Philadelphia: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|--=former name of:Amman|capital|c/Jordan}}. <end>
+Page 45 Philadelphia: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|--=former name of:Alasehir|city|c/Turkey}}. <end>
 Page 46 Wellington: Found match for regex: <begin> ## {{place|en|A former name of a small incorporated fishing and lumbering <<village>> in <<isl/Newfoundland>>, <<p/Newfoundland and Labrador>>}}, now called {{w|Dover, Newfoundland and Labrador|Dover}}. <end>
 Page 46 Wellington: Found match for regex: <begin> ## {{former name of|en|Tye}}, [[King County]], [[Washington]], which later became a ghost town. <end>
 Page 47 Messina: Found match for regex: <begin> # {{former name of|en|Musina}}, formerly in {{l|en|Transvaal}}, now in {{l|en|Limpopo}}, [[South Africa]]. <end>
-Page 48 Ragusa: Found match for regex: <begin> # {{former name of|en|Dubrovnik}} {{gloss|city in [[Croatia]]}}. {{defdate|before 1918}} <end>
-Page 48 Ragusa: Found match for regex: <begin> # {{place|pt|city|c/Croatia|t1=Ragusa|def=former name of Dubrovnik, Croatia}} <end>
-Page 48 Ragusa: Found match for regex: <begin> # {{former name of|scn|Dubrovnik}} {{gloss|city in [[Croatia]]}}. <end>
-Page 49 Alexandria: Found match for regex: <begin> ## {{place|en|-form=former name of:Iskandariya|city|in|central|c/Iraq}}. <end>
-Page 49 Alexandria: Found match for regex: <begin> ## {{place|en|-form=former name of:Iskenderun|city|in|southeastern|c/Turkey}}. <end>
-Page 49 Alexandria: Found match for regex: <begin> ## {{place|en|-form=former name of:Kandahar|city|in|southern|c/Afghanistan}}. <end>
-Page 49 Alexandria: Found match for regex: <begin> ## {{place|en|-form=former name of:Bagram|city|in|eastern|c/Afghanistan}}. <end>
-Page 49 Alexandria: Found match for regex: <begin> ## {{place|en|-form=former name of:Ghazni|city|in|eastern|c/Afghanistan}}. <end>
-Page 49 Alexandria: Found match for regex: <begin> ## {{place|en|-form=former name of:Mary|city|in|c/Turkmenistan}}. <end>
-Page 49 Alexandria: Found match for regex: <begin> ## {{place|en|-form=former name of:Khujand|city|in|c/Tajikistan}}. <end>
-Page 51 Kampuchea: Found match for regex: <begin> # {{senseid|en|Q424}}{{former name of|en|Cambodia}}, {{n-g|used from 1975 to 1989.}} <end>
-Page 52 Tarentum: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|-form=former name of:Taranto|city|c/Italy}}. <end>
+Page 48 Ragusa: Found match for regex: <begin> # {{place|en|--=fmr of:Dubrovnik|city|c/Croatia}}. {{defdate|before 1918}} <end>
+Page 48 Ragusa: Found match for regex: <begin> # {{place|pt|t=Ragusa|--=fmr of:Dubrovnik|city|c/Croatia}} <end>
+Page 48 Ragusa: Found match for regex: <begin> # {{place|scn|t=Ragusa|--=fmr of:Dubrovnik|city|c/Croatia}} <end>
+Page 49 Alexandria: Found match for regex: <begin> ## {{place|en|--=former name of:Iskandariya|city|in|central|c/Iraq}}. <end>
+Page 49 Alexandria: Found match for regex: <begin> ## {{place|en|--=former name of:Iskenderun|city|in|southeastern|c/Turkey}}. <end>
+Page 49 Alexandria: Found match for regex: <begin> ## {{place|en|--=former name of:Kandahar|city|in|southern|c/Afghanistan}}. <end>
+Page 49 Alexandria: Found match for regex: <begin> ## {{place|en|--=former name of:Bagram|city|in|eastern|c/Afghanistan}}. <end>
+Page 49 Alexandria: Found match for regex: <begin> ## {{place|en|--=former name of:Ghazni|city|in|eastern|c/Afghanistan}}. <end>
+Page 49 Alexandria: Found match for regex: <begin> ## {{place|en|--=former name of:Mary|city|in|c/Turkmenistan}}. <end>
+Page 49 Alexandria: Found match for regex: <begin> ## {{place|en|--=former name of:Khujand|city|in|c/Tajikistan}}. <end>
+Page 51 Kampuchea: Found match for regex: <begin> # {{senseid|en|Q424}}{{former name of|en|Cambodia|addl=used from 1975 to 1989}}. <end>
+Page 52 Tarentum: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|--=former name of:Taranto|city|c/Italy}}. <end>
 Page 53 Big Island: Found match for regex: <begin> # {{former name of|en|Imiliit||an uninhabited island in the Arctic Archipelago in the Qikiqtaaluk Region, Nunavut, Canada}}. <end>
 Page 53 Big Island: Found match for regex: <begin> # {{former name of|en|Qikiqtarjuaq||an uninhabited island located in the Qikiqtaaluk Region, Nunavut, Canada}}. <end>
-Page 54 James: Found match for regex: <begin> ## {{place|en|-form=former name of:Santiago|island|p/Galapagos|c/Ecuador}}. <end>
+Page 54 James: Found match for regex: <begin> ## {{place|en|--=former name of:Santiago|island|p/Galapagos|c/Ecuador}}. <end>
 Page 55 Dagon: Found match for regex: <begin> # {{former name of|en|Yangon}}. <end>
 Page 56 Hollywood: Found match for regex: <begin> ## {{former name of|en|MacArthur}}, [[West Virginia]]. <end>
-Page 57 Norfolk: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|-form=former name of:Santa Cruz|island|p/Galapagos|c/Ecuador}}. <end>
+Page 57 Norfolk: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|--=former name of:Santa Cruz|island|p/Galapagos|c/Ecuador}}. <end>
 Page 58 CSICOP: Found match for regex: <begin> # The Committee for the Scientific Investigation of Claims of the Paranormal. {{former name of|en|{{w|Committee for Skeptical Inquiry}}}}. <end>
-Page 59 Miami: Found match for regex: <begin> ## {{ellipsis of|en|Lake Miami}}; {{place|en|-form=former name of:Lake Okeechobee|lake|s/Florida}}, the source of the {{l|en|Miami River}}. <end>
+Page 59 Miami: Found match for regex: <begin> ## {{ellipsis of|en|Lake Miami}}; {{place|en|--=former name of:Lake Okeechobee|lake|s/Florida}}, the source of the {{l|en|Miami River}}. <end>
 Page 60 CID: Found match for regex: <begin> # {{lb|en|US|military|police|initialism}} {{former name of|en|NCIS}} {{gloss|Naval Criminal Investigation Division}}. <end>
 Page 61 Beckwith: Found match for regex: <begin> ## {{former name of|en|Beckwourth}}, [[California]], [[United States]]. <end>
 Page 62 Alma: Found match for regex: <begin> # {{former name of|en|Boudouaou}}, [[Algeria]]. <end>
 Page 63 Alpha: Found match for regex: <begin> # {{former name of|en|the {{w|International Space Station}}}}. <end>
-Page 64 Barca: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|-form=former name of:Marj|city|c/Libya}}. <end>
+Page 64 Barca: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|--=former name of:Marj|city|c/Libya}}. <end>
 Page 65 Bliss: Found match for regex: <begin> ## {{former name of|en|Old Bliss}}, [[Oklahoma]]. <end>
 Page 66 Hall: Found match for regex: <begin> ## {{former name of|en|Las Lomas}}, a CDP in [[California]]. <end>
 Page 67 Honor: Found match for regex: <begin> # {{former name of|en|Honnavar||Indian town}}. <end>
@@ -63,23 +63,23 @@ Page 70 Moss: Found match for regex: <begin> ## {{former name of|en|Moss Landing
 Page 71 Rush: Found match for regex: <begin> # {{former name of|sq|Dubrovnik}} {{gloss|city in [[Croatia]]}}. {{defdate|before 1918}} <end>
 Page 72 Thorn: Found match for regex: <begin> ## {{former name of|en|Whitethorn}}, [[Humboldt County]], [[California]]. <end>
 Page 73 Turner: Found match for regex: <begin> ### {{former name of|en|Tuttle}}, [[California]]. <end>
-Page 74 Wright: Found match for regex: <begin> ## {{place|en|-form=former name of:Paranas|a=a|mun|p/Samar|c/Philippines}}. <end>
-Page 75 York: Found match for regex: <begin> ### {{place|en|-form=former name of:Toronto<qq:used before 1834>|city|p/Ontario|c/Canada}}. <end>
+Page 74 Wright: Found match for regex: <begin> ## {{place|en|--=former name of:Paranas|mun|p/Samar|c/Philippines}}. <end>
+Page 75 York: Found match for regex: <begin> ### {{place|en|--=former name of:Toronto<qq:used before 1834>|city|p/Ontario|c/Canada}}. <end>
 Page 75 York: Found match for regex: <begin> {{trans-top|former name of Toronto}} <end>
-Page 76 Samaria: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|-form=former name of:Sebastia|city|r/West Bank|c/Palestine|;|ancient capital|kingdom:Pref/Israel}}. <end>
-Page 76 Samaria: Found match for regex: <begin> # {{lb|la|historical}} {{place|la|-form=former name of:Sebastia|city|r/West Bank|c/Palestine|;|ancient capital|kingdom:Pref/Israel|t=Samaria}} <end>
-Page 77 Kampućija: Found match for regex: <begin> # [[Kampuchea]]. {{former name of|sh|Kambodža|Kambòdža}} {{qualifier|[[Cambodia]]}} <end>
+Page 76 Samaria: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|--=former name of:Sebastia|city|r/West Bank|c/Palestine|;|ancient capital|kingdom:Pref/Israel}}. <end>
+Page 76 Samaria: Found match for regex: <begin> # {{lb|la|historical}} {{place|la|--=former name of:Sebastia|city|r/West Bank|c/Palestine|;|ancient capital|kingdom:Pref/Israel|t=Samaria}} <end>
+Page 77 Kampućija: Found match for regex: <begin> # {{place|sh|country|r/Southeast Asia|--=fmr of:Kambòdža<xlit:Cambodia>|t=Kampuchea}} <end>
 Page 78 Gutenberg: Found match for regex: <begin> ## {{place|de|village|c/Austria}}; {{former name of|de|Gutenberg an der Raabklamm}} <end>
 Page 79 Karen: Found match for regex: <begin> # {{former name of|en|Kayin||state (administrative division) of Myanmar}}. <end>
 Page 80 Prussia: Found match for regex: <begin> # {{former name of|en|Leader}}, [[Saskatchewan]], changed due to anti-German sentiment in WWI. <end>
 Page 81 Adams: Found match for regex: <begin> ## {{former name of|en|Corte Madera}}, [[California]]. <end>
 Page 82 Marshall: Found match for regex: <begin> ## {{former name of|en|Lotus}}, [[California]]. <end>
-Page 83 Sidon: Found match for regex: <begin> # {{lb|en|chiefly|historical}} {{place|en|-form=former name of:Saïda|city|c/Lebanon|;|former city-state|r/Phoenicia}}. <end>
+Page 83 Sidon: Found match for regex: <begin> # {{lb|en|chiefly|historical}} {{place|en|--=former name of:Saïda|city|c/Lebanon|;|former city-state|r/Phoenicia}}. <end>
 Page 84 Clayton's: Found match for regex: <begin> # {{place|en|city|co/Contra Costa|s/California|c/USA}}; {{former name of|en|Clayton}}. <end>
 Page 85 Jacobs: Found match for regex: <begin> ## {{former name of|en|Port Providence}}, [[Pennsylvania]]. <end>
 Page 86 Hodgkin's disease: Found match for regex: <begin> # {{lb|en|oncology|disease}} {{former name of|en|Hodgkin's lymphoma}}. <end>
-Page 87 Clifton: Found match for regex: <begin> ### {{lb|en|historical}} {{place|en|-form=former name of:Belfair|a=a|locality|co/Mason|s/Washington}}. <end>
-Page 88 Anthea: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|-form=former name of:Aydin|city|in|southwestern|c/Turkey|a=a}}. <end>
+Page 87 Clifton: Found match for regex: <begin> ### {{lb|en|historical}} {{place|en|--=former name of:Belfair|locality|co/Mason|s/Washington}}. <end>
+Page 88 Anthea: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|--=former name of:Aydin|city|in|southwestern|c/Turkey}}. <end>
 Page 89 Campbell: Found match for regex: <begin> ## {{former name of|en|Kintyre}}, [[Emmons County]], [[North Dakota]]. <end>
 Page 90 Saigon: Found match for regex: <begin> # {{lb|en|historical}} {{former name of|en|Ho Chi Minh City}}, the largest city in [[Vietnam]], and the capital of former [[South Vietnam]]. <end>
 Page 90 Saigon: Found match for regex: <begin> {{trans-top|former name of Ho Chi Minh City}} <end>
@@ -87,33 +87,33 @@ Page 91 Porto-Novo: Found match for regex: <begin> # {{former name of|en|Parangi
 Page 92 Northern Areas: Found match for regex: <begin> # {{former name of|en|Gilgit-Baltistan}}. <end>
 Page 93 Trevena: Found match for regex: <begin> # {{former name of|en|Tintagel}} {{q|until the middle of the 19th century}}. <end>
 Page 94 Ashton: Found match for regex: <begin> ## {{former name of|en|Ashton Hayes}}, [[Cheshire]], renamed by 2015. <end>
-Page 95 Salisbury: Found match for regex: <begin> ## {{lb|en|historical}} {{place|en|-form=former name of:Harare|a=the|capital city|c/Rhodesia|now called|x/Zimbabwe}}. <end>
+Page 95 Salisbury: Found match for regex: <begin> ## {{lb|en|historical}} {{place|en|--=former name of:Harare|capital city|c/Rhodesia|now called|x/Zimbabwe}}. <end>
 Page 96 Hawthorne: Found match for regex: <begin> ## {{former name of|en|Cicero}}, [[Illinois]]. <end>
-Page 97 Tausch: Found match for regex: <begin> # {{place|de|-form=former name of:Nyírtass|village|c/Hungary}} <end>
+Page 97 Tausch: Found match for regex: <begin> # {{place|de|--=former name of:Nyírtass|village|c/Hungary}} <end>
 Page 98 Devonshire: Found match for regex: <begin> ## {{former name of|en|Devon||English county}} (until 1974). <end>
-Page 99 Samosata: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|-form=former name of:Samsat|city|in|southeastern|c/Turkey|a=a}}. <end>
+Page 99 Samosata: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|--=former name of:Samsat|city|in|southeastern|c/Turkey}}. <end>
 Page 100 Waterloo: Found match for regex: <begin> ### {{former name of|en|Waterlooville}}, [[Hampshire]], although Waterloo is still the name of a council ward in Waterlooville for {{l|en|Havant}} borough. <end>
 Page 101 Hythe: Found match for regex: <begin> # {{former name of|en|Southport}}, [[Tasmania]]. <ref>[https://www.ourtasmania.com.au/tas-names-towns.html Our Tasmania]</ref> <end>
 Page 102 Celebes: Found match for regex: <begin> # {{former name of|en|Sulawesi}}. <end>
-Page 102 Celebes: Found match for regex: <begin> # {{former name of|fi|Sulawesi}}, still used in names of some animal species native to the island. <end>
-Page 103 New Pomerania: Found match for regex: <begin> # {{former name of|en|New Britain}} Used when the island was part of {{l|en|German New Guinea}}. <end>
-Page 104 Կիշինյով: Found match for regex: <begin> # {{place|hy|-form=former name of:Քիշնեւ|capital city|c/Moldova|t1=Kishinyov}} <end>
+Page 102 Celebes: Found match for regex: <begin> # {{former name of|fi|Sulawesi|addl=still used in names of some animal species native to the island}} <end>
+Page 103 New Pomerania: Found match for regex: <begin> # {{former name of|en|New Britain|addl=used when the island was part of {{l|en|German New Guinea}}}}. <end>
+Page 104 Կիշինյով: Found match for regex: <begin> # {{place|hy|--=former name of:Քիշնեւ|capital city|c/Moldova|t1=Kishinyov}} <end>
 Page 105 Aarmühle: Found match for regex: <begin> # {{former name of|de|[[Interlaken]], Switzerland}} <end>
 Page 106 Naomi: Found match for regex: <begin> # {{former name of|en|Napoleonville}}, [[Louisiana]]. <end>
 Page 107 Santa Fe: Found match for regex: <begin> ## {{former name of|en|Santa Claus}}, a town in [[Spencer County]], [[Indiana]], renamed for post office reasons. <end>
 Page 108 Roosevelt: Found match for regex: <begin> ## {{former name of|en|Carteret}}, [[New Jersey]], renamed in 1922. <end>
 Page 109 Hopkins: Found match for regex: <begin> ### {{former name of|en|Soda Springs}}, [[Nevada County]], [[California]]. <end>
-Page 110 Antioch: Found match for regex: <begin> ## {{place|en|-form=former name of:Tarsus|city|in|southeastern|c/Turkey|a=a}}. <end>
-Page 110 Antioch: Found match for regex: <begin> ## {{place|en|-form=former name of:Adana|city|in|southern|c/Turkey|a=a}}. <end>
-Page 110 Antioch: Found match for regex: <begin> ## {{place|en|-form=former name of:Nusaybin|city|in|southeastern|c/Turkey|a=a}}. <end>
-Page 110 Antioch: Found match for regex: <begin> ## {{place|en|-form=former name of:Samsat|city|in|southeastern|c/Turkey|a=a}}. <end>
-Page 110 Antioch: Found match for regex: <begin> ## {{place|en|-form=former name of:Aydin|city|in|southwestern|c/Turkey|a=a}}. <end>
-Page 110 Antioch: Found match for regex: <begin> ## {{place|en|-form=former name of:Urfa|city|in|southeastern|c/Turkey|a=a}}. <end>
-Page 110 Antioch: Found match for regex: <begin> ## {{place|en|-form=former name of:Acre|city|and|port|in|c/Israel|a=a}}. <end>
-Page 110 Antioch: Found match for regex: <begin> ## {{place|en|-form=former name of:Nahavand|city|in|c/Iran|a=a}}. <end>
-Page 110 Antioch: Found match for regex: <begin> ## {{place|en|-form=former name of:Mary|city|in|c/Turkmenistan|a=a}}. <end>
+Page 110 Antioch: Found match for regex: <begin> ## {{place|en|--=former name of:Tarsus|city|in|southeastern|c/Turkey}}. <end>
+Page 110 Antioch: Found match for regex: <begin> ## {{place|en|--=former name of:Adana|city|in|southern|c/Turkey}}. <end>
+Page 110 Antioch: Found match for regex: <begin> ## {{place|en|--=former name of:Nusaybin|city|in|southeastern|c/Turkey}}. <end>
+Page 110 Antioch: Found match for regex: <begin> ## {{place|en|--=former name of:Samsat|city|in|southeastern|c/Turkey}}. <end>
+Page 110 Antioch: Found match for regex: <begin> ## {{place|en|--=former name of:Aydin|city|in|southwestern|c/Turkey}}. <end>
+Page 110 Antioch: Found match for regex: <begin> ## {{place|en|--=former name of:Urfa|city|in|southeastern|c/Turkey}}. <end>
+Page 110 Antioch: Found match for regex: <begin> ## {{place|en|--=former name of:Acre|city|and|port|in|c/Israel}}. <end>
+Page 110 Antioch: Found match for regex: <begin> ## {{place|en|--=former name of:Nahavand|city|in|c/Iran}}. <end>
+Page 110 Antioch: Found match for regex: <begin> ## {{place|en|--=former name of:Mary|city|in|c/Turkmenistan}}. <end>
 Page 111 Porto Rico: Found match for regex: <begin> # {{former name of|en|Puerto Rico}}. <end>
-Page 112 Sina: Found match for regex: <begin> # {{lb|la|uncommon}} {{synonym of|la|Changanum}}, {{place|la|-form=former name of:Siganum|former capital|c/China|t=Xi'an}} <end>
+Page 112 Sina: Found match for regex: <begin> # {{lb|la|uncommon}} {{synonym of|la|Changanum}}, {{place|la|--=former name of:Siganum|former capital|c/China|t=Xi'an}} <end>
 Page 113 Albertville: Found match for regex: <begin> # {{former name of|en|Kalemie}}, [[Democratic Republic of the Congo]], previously the [[Belgian Congo]]. <end>
 Page 114 Randall: Found match for regex: <begin> ### {{former name of|en|White Hall}}, [[California]]. <end>
 Page 115 THREATCON: Found match for regex: <begin> # {{lb|en|US|acronym}} {{former name of|en|FPCON}}. <end>
@@ -121,10 +121,10 @@ Page 116 Wexford: Found match for regex: <begin> # {{former name of|en|Entrelacs
 Page 117 Pickering: Found match for regex: <begin> # {{former name of|en|Wool Bay}}, [[South Australia]]. <end>
 Page 118 Elsinore: Found match for regex: <begin> # {{former name of|en|Lake Elsinore}}, [[California]] {{q|the settlement was renamed in 1972}}. <end>
 Page 120 Eveline: Found match for regex: <begin> # {{former name of|en|Halls}}, [[Missouri]]. <end>
-Page 121 Μεθώνη: Found match for regex: <begin> # {{lb|grc|historical}} {{place|grc|-form=former name of:Μέθανα|city|region/Attica|c/Greece|t=Methana}} <end>
-Page 122 Plateau: Found match for regex: <begin> # {{place|en|-form=former name of:Lusong|a=a|barangay|mun/Buenavista|p/Bohol|c/Philippines}}. <end>
-Page 123 San Marcos: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|-form=former name of:Santiago|island|p/Galapagos|c/Ecuador|a=an}}. <end>
-Page 124 British Honduras: Found match for regex: <begin> # {{lb|en|historical}} {{former name of|en|Belize}} Used from 1862 to 1981. <end>
+Page 121 Μεθώνη: Found match for regex: <begin> # {{lb|grc|historical}} {{place|grc|--=former name of:Μέθανα|city|region/Attica|c/Greece|t=Methana}} <end>
+Page 122 Plateau: Found match for regex: <begin> # {{place|en|--=former name of:Lusong|barangay|mun/Buenavista|p/Bohol|c/Philippines}}. <end>
+Page 123 San Marcos: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|--=former name of:Santiago|island|p/Galapagos|c/Ecuador}}. <end>
+Page 124 British Honduras: Found match for regex: <begin> # {{lb|en|historical}} {{former name of|en|Belize|addl=used from 1862 to 1981}}. <end>
 Page 124 British Honduras: Found match for regex: <begin> {{trans-top|former name of Belize}} <end>
 Page 125 Macedónia: Found match for regex: <begin> # {{former name of|hu|Észak-Macedónia||North Macedonia}} <end>
 Page 127 Titograd: Found match for regex: <begin> # {{lb|en|historical}} {{former name of|en|Podgorica}} {{qualifier|used between 1946 and 1992}}. <end>
@@ -132,36 +132,36 @@ Page 127 Titograd: Found match for regex: <begin> {{trans-top|former name of Pod
 Page 127 Titograd: Found match for regex: <begin> # {{lb|sh|historical}} {{l|en|Titograd}}, former name of [[Podgorica]], used between 1946 and 1992. <end>
 Page 128 Angostura: Found match for regex: <begin> # {{lb|en|historical}} {{former name of|en|Ciudad Bolívar}}. <end>
 Page 128 Angostura: Found match for regex: <begin> {{trans-top|former name of Ciudad Bolívar}} <end>
-Page 129 Modon: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|-form=former name of:Methoni|city|region/Peloponnese|c/Greece|a=a}}. <end>
-Page 130 Methone: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|-form=former name of:Methana|city|region/Attica|c/Greece|a=a}}. <end>
-Page 130 Methone: Found match for regex: <begin> # {{lb|la|historical}} {{place|la|-form=former name of:Methana|city|region/Attica|c/Greece|t=Methana}} <end>
-Page 131 Cydonia: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|-form=former name of:Chania|city|on the|island:pref/Crete|c/Greece|a=a}}. <end>
-Page 132 Marcos: Found match for regex: <begin> # {{place|en|-form=former name of:Sabañgan|a=a|barangay|m/Sinait|p/Ilocos Sur|c/Philippines}}. <end>
+Page 129 Modon: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|--=former name of:Methoni|city|region/Peloponnese|c/Greece}}. <end>
+Page 130 Methone: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|--=former name of:Methana|city|region/Attica|c/Greece}}. <end>
+Page 130 Methone: Found match for regex: <begin> # {{lb|la|historical}} {{place|la|--=former name of:Methana|city|region/Attica|c/Greece|t=Methana}} <end>
+Page 131 Cydonia: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|--=former name of:Chania|city|on the|island:pref/Crete|c/Greece}}. <end>
+Page 132 Marcos: Found match for regex: <begin> # {{place|en|--=former name of:Sabañgan|barangay|m/Sinait|p/Ilocos Sur|c/Philippines}}. <end>
 Page 133 Dnipropetrovsk: Found match for regex: <begin> # {{lb|en|historical}} {{former name of|en|Dnipro}}. <end>
 Page 133 Dnipropetrovsk: Found match for regex: <begin> {{trans-top|former name of Dnipro}} <end>
 Page 133 Dnipropetrovsk: Found match for regex: <begin> # {{C|nl|Cities in Ukraine}} {{former name of|nl|Dnipro}} <end>
 Page 134 Chimera: Found match for regex: <begin> # {{lb|en|historical}} {{former name of|en|Himara}}, a [[port]] [[town]] in [[southern]] [[Albania]]. <end>
 Page 134 Chimera: Found match for regex: <begin> # {{lb|en|historical}} {{former name of|en|Ceraunian Mountains}}, the [[Albanian]] [[mountain]] [[range]] near [[Himara]]. <end>
 Page 135 渡口: Found match for regex: <begin> # {{zh-div|市}} {{former name of|zh|攀枝花|t=Panzhihua}} ({{n-g|used between 1965 and 1987}}) <end>
-Page 136 Elvira: Found match for regex: <begin> # {{place|en|-form=former name of:Granada|city|c/Spain}}; An ancient name for the city. <end>
+Page 136 Elvira: Found match for regex: <begin> # {{place|en|--=former name of:Granada|city|c/Spain}}; An ancient name for the city. <end>
 Page 137 Kirovohrad: Found match for regex: <begin> # {{former name of|en|Kropyvnytskyi}}. <end>
 Page 137 Kirovohrad: Found match for regex: <begin> # {{C|nl|Cities in Ukraine}} {{former name of|nl|Kropyvnytsky}} <end>
-Page 138 Marcelo: Found match for regex: <begin> # {{place|en|-form=former name of:Bagong Silang|a=a|barangay|mun/Don Salvador Benedicto|p/Negros Occidental|c/Philippines}}. <end>
+Page 138 Marcelo: Found match for regex: <begin> # {{place|en|--=former name of:Bagong Silang|barangay|mun/Don Salvador Benedicto|p/Negros Occidental|c/Philippines}}. <end>
 Page 139 Camulodunum: Found match for regex: <begin> # {{place|en|ancient city|p/Britannia|empire/Roman Empire|modern=Colchester}}. <end>
 Page 140 niton: Found match for regex: <begin> # {{lb|en|obsolete}} {{former name of|en|radon}}. <end>
 Page 141 Buckeye: Found match for regex: <begin> ## {{former name of|en|Carbondale}}, [[Amador County]], [[California]]. <end>
-Page 142 Tiflis: Found match for regex: <begin> # {{lb|en|chiefly|_|historical}} {{place|en|-form=former name of:Tbilisi|a=the|capital city|c:pref/Georgia}}. <end>
+Page 142 Tiflis: Found match for regex: <begin> # {{lb|en|chiefly|_|historical}} {{place|en|--=former name of:Tbilisi|capital city|c:pref/Georgia}}. <end>
 Page 143 Lepanto: Found match for regex: <begin> # {{lb|en|historical}} {{former name of|en|Naupactus}}. <end>
 Page 144 Praag: Found match for regex: <begin> # {{former name of|en|Prayagraj}}. <end>
 Page 145 Navarino: Found match for regex: <begin> # {{former name of|en|Pylos}}, [[Greece]]. <end>
 Page 146 Constantinopla: Found match for regex: <begin> # [[Constantinople]] ({{former name of|pt|Istambul}}) <end>
-Page 147 Գանձակ: Found match for regex: <begin> # {{former name of|hy|Գյանջա}} [[Gandzak]]. <end>
-Page 148 馬邑: Found match for regex: <begin> # {{lb|zh|historical}} {{former name of|zh|朔州}}, [[Shuozhou]] in [[northern]] [[Shanxi]]. <end>
+Page 147 Գանձակ: Found match for regex: <begin> # {{former name of|hy|Գյանջա}}: [[Gandzak]] <end>
+Page 148 馬邑: Found match for regex: <begin> # {{lb|zh|historical}} {{former name of|zh|朔州|xlit=Shuozhou|addl=in [[northern]] [[Shanxi]]}} <end>
 Page 150 Ceilão: Found match for regex: <begin> # [[Ceylon]] ({{former name of|pt|Sri Lanka}}) <end>
-Page 151 Caesarea: Found match for regex: <begin> ## {{place|en|-form=former name of:Kayseri|city|in central|c/Turkey|a=a}}. <end>
-Page 151 Caesarea: Found match for regex: <begin> ## {{place|en|-form=former name of:Cherchell|city|in northern|c/Algeria|;|former capital|p/Mauretania,Numidia|in the [[Roman Empire]]}}. <end>
+Page 151 Caesarea: Found match for regex: <begin> ## {{place|en|--=former name of:Kayseri|city|in central|c/Turkey}}. <end>
+Page 151 Caesarea: Found match for regex: <begin> ## {{place|en|--=former name of:Cherchell|city|in northern|c/Algeria|;|former capital|p/Mauretania,Numidia|in the [[Roman Empire]]}}. <end>
 Page 152 Akmola: Found match for regex: <begin> # {{former name of|en|Astana}}, used during 1992-1998. <end>
-Page 153 Nicaea: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|-form=former name of:Iznik|city|c/Turkey|a=a}} [[fame]]d for the AD 325 {{w|First Council of Nicaea|church council}} that [[composed]] the [[Nicene Creed]]. <end>
+Page 153 Nicaea: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|--=former name of:Iznik|city|c/Turkey}} [[fame]]d for the AD 325 {{w|First Council of Nicaea|church council}} that [[composed]] the [[Nicene Creed]]. <end>
 Page 154 Komsomolsk: Found match for regex: <begin> # {{place|en|city|obl/Poltava|c/Ukraine}}, {{former name of|en|Horishni Plavni|nocap=1}}. <end>
 Page 155 Ptolemais: Found match for regex: <begin> # {{former name of|en|Ptolemaida}}. <end>
 Page 156 Klondike: Found match for regex: <begin> ## {{former name of|en|Trotti}}, [[Texas]]. <end>
@@ -170,31 +170,31 @@ Page 158 Greenleaf: Found match for regex: <begin> ## {{former name of|en|Gregg}
 Page 159 contre-torpilleur: Found match for regex: <begin> ## {{lb|fr|France|historical|nautical|military}} {{former name of|fr|destroyer}} <end>
 Page 160 Breslau: Found match for regex: <begin> ## {{former name of|en|Lindenhurst}}, [[New York]], [[United States]]. <end>
 Page 161 Кампућија: Found match for regex: <begin> # [[Kampuchea]]. {{former name of|sh|Камбоџа|Камбо̀џа}} {{qualifier|[[Cambodia]]}} <end>
-Page 162 Konstantinopolis: Found match for regex: <begin> # {{lb|tr|historical}} {{place|tr|-form=former name of:İstanbul|former capital|of|the|c/Byzantine Empire|and|c/Ottoman Empire|t=Constantinople}}. <end>
-Page 163 Allahabad: Found match for regex: <begin> # {{place|en|-form=former name of:Prayagraj|city/and/district|s/Uttar Pradesh|c/India|a=a}}. <end>
-Page 164 Batavia: Found match for regex: <begin> # {{lb|en|historical}} {{former name of|en|Jakarta}}, used during the Dutch East Indies period. <end>
-Page 164 Batavia: Found match for regex: <begin> # {{lb|nl|historical}} {{former name of|nl|Jakarta}}, used during the Dutch East Indies period <end>
-Page 164 Batavia: Found match for regex: <begin> # {{lb|id|historical}} {{former name of|id|Jakarta}}, used during the Dutch East Indies period. <end>
-Page 164 Batavia: Found match for regex: <begin> # {{lb|id|historical}} {{former name of|id|Betawi}}, used during the Dutch East Indies period. <end>
+Page 162 Konstantinopolis: Found match for regex: <begin> # {{lb|tr|historical}} {{place|tr|--=former name of:İstanbul|former capital|of|the|c/Byzantine Empire|and|c/Ottoman Empire|t=Constantinople}}. <end>
+Page 163 Allahabad: Found match for regex: <begin> # {{place|en|--=former name of:Prayagraj|city/and/district|s/Uttar Pradesh|c/India}}. <end>
+Page 164 Batavia: Found match for regex: <begin> # {{lb|en|historical}} {{former name of|en|Jakarta|addl=used during the Dutch East Indies period}}. <end>
+Page 164 Batavia: Found match for regex: <begin> # {{lb|nl|historical}} {{former name of|nl|Jakarta|addl=used during the Dutch East Indies period}} <end>
+Page 164 Batavia: Found match for regex: <begin> # {{lb|id|historical}} {{former name of|id|Jakarta|addl=used during the Dutch East Indies period}} <end>
+Page 164 Batavia: Found match for regex: <begin> # {{lb|id|historical}} {{former name of|id|Betawi|addl=used during the Dutch East Indies period}} <end>
 Page 165 24 Sussex Street: Found match for regex: <begin> # {{former name of|en|24 Sussex Drive}}. <end>
-Page 166 Nicomedia: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|-form=former name of:Izmit|city|c/Turkey|;|ancient capital|c/Bithynia|a=a}}. <end>
-Page 167 Sardis: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|-form=former name of:Sart|town|p/Manisa|c/Turkey|;|ancient capital|kingdom:Pref/Lydia|in western|r/Asia Minor}}. <end>
+Page 166 Nicomedia: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|--=former name of:Izmit|city|c/Turkey|;|ancient capital|c/Bithynia}}. <end>
+Page 167 Sardis: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|--=former name of:Sart|town|p/Manisa|c/Turkey|;|ancient capital|kingdom:Pref/Lydia|in western|r/Asia Minor}}. <end>
 Page 168 Nikolayevsk: Found match for regex: <begin> # {{former name of|en|Nikolayevsk-on-Amur}}. <end>
 Page 168 Nikolayevsk: Found match for regex: <begin> {{trans-top|former name of Nikolayevsk-on-Amur}} <end>
 Page 169 Le Verrier: Found match for regex: <begin> # {{C|en|Planets}} {{lb|en|astronomy|obsolete}} {{former name of|en|Neptune|qq=planet}}. <end>
 Page 170 大山: Found match for regex: <begin> # {{lb|zh|obsolete}} {{former name of|zh|中央山脈}}, [[Taiwan]] [[island|Island]]'s [[Central Mountain Range]] <end>
 Page 171 Tripolis: Found match for regex: <begin> # {{lb|en|historical}} {{former name of|en|Tripoli|addl=[[various]] [[place]]s}}. <end>
-Page 171 Tripolis: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|-form=former name of:Tirebolu|town|c/Turkey|a=a}}. <end>
+Page 171 Tripolis: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|--=former name of:Tirebolu|town|c/Turkey}}. <end>
 Page 173 Palmira: Found match for regex: <begin> # {{former name of|pt|Santos Dumont}} <end>
-Page 174 Susa: Found match for regex: <begin> # {{senseid|en|Q180773}}{{lb|en|historical}} {{place|en|-form=former name of:Shush|city|c/Iran|;|ancient capital|kingdom/Elam,the [[Persian Empire]],the [[Seleucid Empire]],the [[Parthian Empire]]}}. <end>
-Page 175 Melitene: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|-form=former name of:Malatya|city|c/Turkey|a=a}}. <end>
-Page 176 Caesarea Mazaca: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|-form=former name of:Kayseri|city|in|central|c/Turkey|a=a}}. <end>
+Page 174 Susa: Found match for regex: <begin> # {{senseid|en|Q180773}}{{lb|en|historical}} {{place|en|--=former name of:Shush|city|c/Iran|;|ancient capital|kingdom/Elam,the [[Persian Empire]],the [[Seleucid Empire]],the [[Parthian Empire]]}}. <end>
+Page 175 Melitene: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|--=former name of:Malatya|city|c/Turkey}}. <end>
+Page 176 Caesarea Mazaca: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|--=former name of:Kayseri|city|in|central|c/Turkey}}. <end>
 Page 177 Днепропетровск: Found match for regex: <begin> # [[Dnipropetrovsk]] ({{former name of|ru|Днепр}}), city in [[Ukraine]] <end>
 Page 178 Arles: Found match for regex: <begin> # {{former name of|fr|Arles-sur-Tech}}<ref>{{w|Cassini map}} (1740s).</ref> <end>
 Page 179 Syriam: Found match for regex: <begin> # {{former name of|en|Thanlyin}}. <end>
 Page 180 CCITT: Found match for regex: <begin> # {{former name of|en|ITU-T}}. <end>
-Page 181 San Antonio: Found match for regex: <begin> ## {{place|en|-form=former name of:Buluang|a=a|barangay|mun/Baao|p/Camarines Sur|c/Philippines}}. <end>
-Page 182 西山: Found match for regex: <begin> # {{zh-div|鎮}} {{place|zh|-form=former name of:金庭|t=Jinting|town|on|Xishan|Island|in|prefecture-level city/Suzhou|p/Jiangsu|c/China}} <end>
+Page 181 San Antonio: Found match for regex: <begin> ## {{place|en|--=former name of:Buluang|barangay|mun/Baao|p/Camarines Sur|c/Philippines}}. <end>
+Page 182 西山: Found match for regex: <begin> # {{zh-div|鎮}} {{place|zh|--=former name of:金庭|t=Jinting|town|on|Xishan|Island|in|prefecture-level city/Suzhou|p/Jiangsu|c/China}} <end>
 Page 183 Jin: Found match for regex: <begin> # {{lb|en|historical}} {{former name of|en|Linfen}} as the [[seat]] of the [[prefecture]]. <end>
 Page 183 Jin: Found match for regex: <begin> # {{lb|en|historical}} {{former name of|en|Ankang}} as the [[seat]] of the [[prefecture]]. <end>
 Page 183 Jin: Found match for regex: <begin> # {{lb|en|historical}} {{former name of|en|Luyang}} as the [[seat]] of the [[prefecture]]. <end>
@@ -202,59 +202,59 @@ Page 184 Moscovia: Found match for regex: <begin> # {{lb|it|historical}} {{forme
 Page 184 Moscovia: Found match for regex: <begin> # {{former name of|es|Moscú|t=Moscow}} <end>
 Page 185 Bougie: Found match for regex: <begin> # {{former name of|en|Béjaïa}}, [[Algeria]]. <end>
 Page 186 Poona: Found match for regex: <begin> # {{former name of|en|Pune}}. <end>
-Page 187 Parthenope: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|-form=former name of:Naples|port city|in southwestern|c/Italy|a=a}}. <end>
-Page 188 Nicopolis: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|-form=former name of:Preveza|city|in|northwestern|c/Greece|;|former capital|p/Epirus Vetus|in the [[Roman Empire]]}}. <end>
-Page 188 Nicopolis: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|-form=former name of:Emmaus|former city|r/West Bank|cc/Palestine|a=a}}. <end>
+Page 187 Parthenope: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|--=former name of:Naples|port city|in southwestern|c/Italy}}. <end>
+Page 188 Nicopolis: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|--=former name of:Preveza|city|in|northwestern|c/Greece|;|former capital|p/Epirus Vetus|in the [[Roman Empire]]}}. <end>
+Page 188 Nicopolis: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|--=former name of:Emmaus|former city|r/West Bank|cc/Palestine}}. <end>
 Page 189 inosite: Found match for regex: <begin> # {{former name of|en|inositol}}. <end>
 Page 190 Ashby: Found match for regex: <begin> # {{former name of|en|Geelong West}}, [[Victoria]], [[Australia]]. <end>
-Page 191 Cochin: Found match for regex: <begin> # {{place|en|-form=former name of:Kochi|a=a|city|s/Kerala|c/India}}. <end>
-Page 192 Calicut: Found match for regex: <begin> # {{place|en|-form=former name of:Kozhikode|a=a|city|s/Kerala|c/India}}. <end>
-Page 193 Evanthia: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|-form=former name of:Aydin|city|in|southwestern|c/Turkey|a=a}}. <end>
+Page 191 Cochin: Found match for regex: <begin> # {{place|en|--=former name of:Kochi|city|s/Kerala|c/India}}. <end>
+Page 192 Calicut: Found match for regex: <begin> # {{place|en|--=former name of:Kozhikode|city|s/Kerala|c/India}}. <end>
+Page 193 Evanthia: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|--=former name of:Aydin|city|in|southwestern|c/Turkey}}. <end>
 Page 194 Wega: Found match for regex: <begin> # {{former name of|en|Waya||Fijian island}}. <end>
-Page 195 Seleucia: Found match for regex: <begin> ## {{place|en|-form=former name of:Aydin|city|in southwestern|c/Turkey|a=a}}. <end>
-Page 195 Seleucia: Found match for regex: <begin> ## {{place|en|-form=former name of:Silifke|city|in southern|c/Turkey|a=a}}. <end>
+Page 195 Seleucia: Found match for regex: <begin> ## {{place|en|--=former name of:Aydin|city|in southwestern|c/Turkey}}. <end>
+Page 195 Seleucia: Found match for regex: <begin> ## {{place|en|--=former name of:Silifke|city|in southern|c/Turkey}}. <end>
 Page 196 Dnepropetrovsk: Found match for regex: <begin> # {{lb|pt|historical}} {{former name of|pt|Dnipro}} <end>
 Page 197 Abingdon: Found match for regex: <begin> # {{former name of|en|Abingdon-on-Thames}}, [[Oxfordshire]], [[England]], formerly in [[Berkshire]], formally renamed in 2012, and now a short form. <end>
 Page 198 OS X: Found match for regex: <begin> # {{lb|en|computing|trademark}} {{former name of|en|macOS}}; itself formerly known as Mac OS X. <end>
-Page 199 Neapolis: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|-form=former name of:Naples|port city|in southwestern|c/Italy|a=a}}. <end>
-Page 199 Neapolis: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|-form=former name of:Kavala|port city|in northern|c/Greece|a=a}}. <end>
-Page 199 Neapolis: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|-form=former name of:Simferopol|capital|r/Crimea|generally recognized as part of the|c/Ukraine|but currently controlled by|c/Russia|a=the}}. <end>
-Page 199 Neapolis: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|-form=former name of:Nabeul|port city|on the|peninsula:Suf/Cap Bon|in|c/Tunisia|a=a}}. <end>
-Page 199 Neapolis: Found match for regex: <begin> # {{lb|la|historical}} {{place|la|-form=former name of:Cabala|port city|in northern|c/Greece|t=Kavala}} <end>
+Page 199 Neapolis: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|--=former name of:Naples|port city|in southwestern|c/Italy}}. <end>
+Page 199 Neapolis: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|--=former name of:Kavala|port city|in northern|c/Greece}}. <end>
+Page 199 Neapolis: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|--=former name of:Simferopol|capital|r/Crimea|generally recognized as part of the|c/Ukraine|but currently controlled by|c/Russia}}. <end>
+Page 199 Neapolis: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|--=former name of:Nabeul|port city|on the|peninsula:Suf/Cap Bon|in|c/Tunisia}}. <end>
+Page 199 Neapolis: Found match for regex: <begin> # {{lb|la|historical}} {{place|la|--=former name of:Cabala|port city|in northern|c/Greece|t=Kavala}} <end>
 Page 200 Barber: Found match for regex: <begin> # {{former name of|en|Maurer}}, [[New Jersey]]. <end>
 Page 201 Stubbs: Found match for regex: <begin> ## {{former name of|en|Clearlake Oaks}}, [[California]]. <end>
 Page 202 Barrow: Found match for regex: <begin> # {{former name of|en|Utqiagvik}}, the [[borough seat]] of {{l|en|North Slope Borough}}, [[Alaska]], renamed in 2016. <end>
 Page 203 Vila Real: Found match for regex: <begin> # {{former name of|pt|Sabará}} <end>
 Page 204 Corneto: Found match for regex: <begin> # {{former name of|it|Tarquinia||city in Lazio, Italy}} <end>
-Page 205 Eaton: Found match for regex: <begin> ### {{place|en|-form=former name of:Eatonia|town|municipality/Chesterfield|p/Saskatchewan}}; named in honour of {{w|lang=en|Timothy Eaton}}, founder of the Eaton's department store chain and mail-order catalogue service. <end>
+Page 205 Eaton: Found match for regex: <begin> ### {{place|en|--=former name of:Eatonia|town|municipality/Chesterfield|p/Saskatchewan}}; named in honour of {{w|lang=en|Timothy Eaton}}, founder of the Eaton's department store chain and mail-order catalogue service. <end>
 Page 206 Haywood: Found match for regex: <begin> ## {{former name of|en|Hayward}}, [[California]]. <end>
 Page 207 McBride: Found match for regex: <begin> ### {{former name of|en|Sebree}}, [[Kentucky]]. <end>
 Page 208 Category:Form-of templates: Found match for regex: <begin> | [[Template:former name of|former name of]]                                       ||                                                    ||                                                    || no        || '''yes''' || '''yes''' || no        || no <end>
-Page 209 Bato: Found match for regex: <begin> # {{place|en|-form=former name of:Poblacion Norte|a=a|barangay|mun/Burgos|p/Ilocos Sur|c/Philippines}}. <end>
-Page 209 Bato: Found match for regex: <begin> # {{place|en|-form=former name of:Tinaclipan|a=a|barangay|mun/Milagros|p/Masbate|c/Philippines}}. <end>
-Page 209 Bato: Found match for regex: <begin> # {{place|en|-form=former name of:Villasol|a=a|barangay|city/Bayawan|p/Negros Oriental|c/Philippines}}. <end>
-Page 209 Bato: Found match for regex: <begin> # {{place|tl|-form=former name of:Poblacion Norte|a=a|barangay|mun/Burgos|p/Ilocos Sur|c/Philippines}} <end>
-Page 209 Bato: Found match for regex: <begin> # {{place|tl|-form=former name of:Tinaclipan|a=a|barangay|mun/Milagros|p/Masbate|c/Philippines}} <end>
-Page 209 Bato: Found match for regex: <begin> # {{place|tl|-form=former name of:Villasol|a=a|barangay|city/Bayawan|p/Negros Oriental|c/Philippines}} <end>
+Page 209 Bato: Found match for regex: <begin> # {{place|en|--=former name of:Poblacion Norte|barangay|mun/Burgos|p/Ilocos Sur|c/Philippines}}. <end>
+Page 209 Bato: Found match for regex: <begin> # {{place|en|--=former name of:Tinaclipan|barangay|mun/Milagros|p/Masbate|c/Philippines}}. <end>
+Page 209 Bato: Found match for regex: <begin> # {{place|en|--=former name of:Villasol|barangay|city/Bayawan|p/Negros Oriental|c/Philippines}}. <end>
+Page 209 Bato: Found match for regex: <begin> # {{place|tl|--=former name of:Poblacion Norte|barangay|mun/Burgos|p/Ilocos Sur|c/Philippines}} <end>
+Page 209 Bato: Found match for regex: <begin> # {{place|tl|--=former name of:Tinaclipan|barangay|mun/Milagros|p/Masbate|c/Philippines}} <end>
+Page 209 Bato: Found match for regex: <begin> # {{place|tl|--=former name of:Villasol|barangay|city/Bayawan|p/Negros Oriental|c/Philippines}} <end>
 Page 211 Federally Administered Northern Areas: Found match for regex: <begin> # {{former name of|en|Gilgit-Baltistan}}. <end>
 Page 212 OEOB: Found match for regex: <begin> # {{lb|en|obsolete}} {{abbreviation of|en|[[old|Old]] [[executive|Executive]] [[office|Office]] [[building|Building]]}} {{former name of|en|the {{w|Eisenhower Executive Office Building}}}}, a United States government office building near to the {{w|White House}}. <end>
 Page 213 Wuchang: Found match for regex: <begin> # {{former name of|en|Ezhou}}, a city in eastern [[Hubei]] in [[China]]. <end>
 Page 214 Demodicidae: Found match for regex: <begin> # {{former name of|mul|Demodecidae}} <end>
-Page 215 Righale: Found match for regex: <begin> # {{former name of|en|Ryall}}, a village in south [[Worcestershire]], [[England]]. <end>
-Page 216 Jullundur: Found match for regex: <begin> # {{former name of|en|Jalandhar}}, a city in the north-western Indian state of [[Punjab]]. <end>
-Page 217 Adrianople: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|-form=former name of:Edirne|a=a|city|in northwestern|c/Turkey}}. <end>
+Page 215 Righale: Found match for regex: <begin> # {{place|en|--=fmr of:Ryall|village|in south|co/Worcestershire|cc/England}}. <end>
+Page 216 Jullundur: Found match for regex: <begin> # {{place|en|--=fmr of:Jalandhar|city|s/Punjab|c/India}}. <end>
+Page 217 Adrianople: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|--=former name of:Edirne|city|in northwestern|c/Turkey}}. <end>
 Page 218 Template:former name of/documentation: Found match for regex: <begin> :<code># <nowiki>{{</nowiki>former name of|en|Edirne}}</code> <end>
 Page 218 Template:former name of/documentation: Found match for regex: <begin> :# {{former name of|en|Edirne}}. <end>
-Page 219 Гадес: Found match for regex: <begin> # {{place|ru|-form=former name of:Ка́дис|city|acomm/Andalusia|in southwestern|c/Spain|t=Gades|modern=Cadiz}} <end>
-Page 220 Գադես: Found match for regex: <begin> # {{lb|hy|historical}} {{former name of|hy|Կադիս}} [[Gades]]. <end>
-Page 221 Հելսինգֆորս: Found match for regex: <begin> # {{former name of|hy|Հելսինկի}} [[Helsingfors]]. <end>
+Page 219 Гадес: Found match for regex: <begin> # {{place|ru|--=former name of:Ка́дис<xlit:Cadiz>|city|acomm/Andalusia|in southwestern|c/Spain|t=Gades}} <end>
+Page 220 Գադես: Found match for regex: <begin> # {{lb|hy|historical}} {{place|hy|--=former name of:Կադիս<xlit:Cadiz>|city|acomm/Andalusia|in southwestern|c/Spain|t=Gades}} <end>
+Page 221 Հելսինգֆորս: Found match for regex: <begin> # {{place|hy|--=fmr of:Հելսինկի<xlit:Helsinki>|t=Helsingfors|capital|c/Finland}} <end>
 Page 222 Dorpat: Found match for regex: <begin> # {{lb|en|historical}} {{former name of|en|Tartu}}. <end>
 Page 222 Dorpat: Found match for regex: <begin> {{trans-top-also|former name of Tartu|Tartu}} <end>
-Page 223 Dzaudzhikau: Found match for regex: <begin> # {{lb|en|historical}} {{former name of|en|Vladikavkaz}}. <end>
-Page 224 Дзауджикау: Found match for regex: <begin> # {{lb|ru|historical}} {{former name of|ru|Владикавка́з}} [[Dzaudzhikau]] <end>
-Page 225 Ordzhonikidze: Found match for regex: <begin> # {{lb|en|historical}} {{former name of|en|Vladikavkaz}}. <end>
-Page 225 Ordzhonikidze: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|city|oblast/Dnipropetrovsk|c/Ukraine}} {{former name of|en|Pokrov}}. <end>
-Page 226 Օրջոնիկիձե: Found match for regex: <begin> # {{former name of|hy|Վլադիկավկազ}}, [[Ordzhonikidze]] <end>
+Page 223 Dzaudzhikau: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|--=fmr of:Vladikavkaz|capital city|rep/North Ossetia-Alania|c/Russia}}. <end>
+Page 224 Дзауджикау: Found match for regex: <begin> # {{lb|ru|historical}} {{place|ru|--=fmr of:Владикавка́з<xlit:Vladikavkaz>|capital city|rep/North Ossetia-Alania|c/Russia|t=Dzaudzhikau}} <end>
+Page 225 Ordzhonikidze: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|--=fmr of:Vladikavkaz|capital city|rep/North Ossetia-Alania|c/Russia}}. <end>
+Page 225 Ordzhonikidze: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|--=fmr of:Pokrov|city|oblast/Dnipropetrovsk|c/Ukraine}}. <end>
+Page 226 Օրջոնիկիձե: Found match for regex: <begin> # {{place|hy|--=fmr of:Վլադիկավկազ<xlit:Vladikavkaz>|capital city|rep/North Ossetia-Alania|c/Russia|t=Ordzhonikidze}} <end>
 Page 227 Ղափան: Found match for regex: <begin> # {{former name of|hy|Կապան}} <end>
 Page 228 Kzyl-Orda: Found match for regex: <begin> # {{former name of|en|Kyzylorda}}. <end>
 Page 228 Kzyl-Orda: Found match for regex: <begin> {{trans-top|former name of Kyzylorda}} <end>
@@ -265,7 +265,7 @@ Page 232 Tribisonde: Found match for regex: <begin> # {{former name of|en|Trabzo
 Page 233 Trapezus: Found match for regex: <begin> # {{former name of|en|Trabzon}}. <end>
 Page 234 Conisberga: Found match for regex: <begin> # {{lb|it|historical}} [[Königsberg]] ({{former name of|it|Kaliningrad}}) <end>
 Page 234 Conisberga: Found match for regex: <begin> # {{lb|pt|historical}} [[Königsberg]] ({{former name of|pt|Kaliningrado}}) <end>
-Page 235 Chardzhou: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|-form=former name of:Türkmenabat|a=a|city|c/Turkmenistan}}. <end>
+Page 235 Chardzhou: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|--=former name of:Türkmenabat|city|c/Turkmenistan}}. <end>
 Page 235 Chardzhou: Found match for regex: <begin> {{trans-top|former name of Türkmenabat}} <end>
 Page 236 Konigsberg: Found match for regex: <begin> # {{lb|pt|historical}} [[Königsberg]] ({{former name of|pt|Kaliningrado}}) <end>
 Page 237 Pérsia: Found match for regex: <begin> # {{former name of|pt|Irão}}; [[Persia]] <end>
@@ -280,45 +280,45 @@ Page 242 Elar: Found match for regex: <begin> {{trans-top|former name of Abovyan
 Page 243 Agana: Found match for regex: <begin> # {{former name of|en|Hagåtña}}. <end>
 Page 244 Abantis: Found match for regex: <begin> # {{lb|en|poetic}} {{former name of|en|Euboea}}. <end>
 Page 245 Barke: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|-form:alt form:Barca;;former name of:Marj|city|c/Libya}}. <end>
-Page 246 Scala Nuova: Found match for regex: <begin> # {{place|en|-form=former name of:Kuşadası|city|c/Turkey}}. <end>
-Page 246 Scala Nuova: Found match for regex: <begin> # {{place|it|-form=former name of:Kuşadası|city|c/Turkey}} <end>
+Page 246 Scala Nuova: Found match for regex: <begin> # {{place|en|--=former name of:Kuşadası|city|c/Turkey}}. <end>
+Page 246 Scala Nuova: Found match for regex: <begin> # {{place|it|--=former name of:Kuşadası|city|c/Turkey}} <end>
 Page 247 Negropont: Found match for regex: <begin> # {{former name of|en|Euboea}}. <end>
 Page 248 Scutari: Found match for regex: <begin> # {{former name of|en|Üsküdar}}. <end>
 Page 248 Scutari: Found match for regex: <begin> {{trans-top-also|former name of Üsküdar|Üsküdar}} <end>
-Page 249 Lunenburg: Found match for regex: <begin> # {{lb|en|archaic}} {{place|en|-form=former name of:Lüneburg|city|s/Lower Saxony|c/Germany|a=a}}, ''in English''. <end>
-Page 250 Grand Falls: Found match for regex: <begin> # {{place|en|-form=former name of:Churchill Falls;;former name of:McLean Falls|waterfall|r/Labrador|p/Newfoundland and Labrador|c/Canada|on the former|river/Grand River|now|river/Churchill River}}. <end>
+Page 249 Lunenburg: Found match for regex: <begin> # {{lb|en|archaic}} {{place|en|--=former name of:Lüneburg|city|s/Lower Saxony|c/Germany}}, ''in English''. <end>
+Page 250 Grand Falls: Found match for regex: <begin> # {{place|en|--=former name of:Churchill Falls;;former name of:McLean Falls|waterfall|r/Labrador|p/Newfoundland and Labrador|c/Canada|on the former|river/Grand River|now|river/Churchill River}}. <end>
 Page 251 Дніпропетровськ: Found match for regex: <begin> # {{former name of|uk|Дніпро́}} <end>
 Page 252 Luso: Found match for regex: <begin> # {{former name of|en|Luena||city in Angola}}. <end>
 Page 253 Negroponte: Found match for regex: <begin> # {{former name of|pt|Eubeia}} <end>
 Page 254 Agawam: Found match for regex: <begin> # {{former name of|en|w:Westfield River}} in [[Hampden County]], western [[Massachusetts]]. <end>
-Page 256 火燒島: Found match for regex: <begin> # {{lb|zh|historical}} {{former name of|zh|綠島}}: [[Green Island]], [[Taiwan]]. <end>
+Page 256 火燒島: Found match for regex: <begin> # {{lb|zh|historical}} {{former name of|zh|綠島}}: [[Green Island]], [[Taiwan]] <end>
 Page 258 Concordia: Found match for regex: <begin> ## {{former name of|en|Walburg}}, [[Texas]]. <end>
 Page 259 Kitchawan: Found match for regex: <begin> # {{former name of|en|Croton}} {{gloss|river in New York}}. <end>
 Page 260 Lauenburg: Found match for regex: <begin> # A city in [[Pomerania]]: {{former name of|en|Lębork}}. <end>
-Page 261 Chavez: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|-form=former name of:Santa Cruz|island|p/Galapagos|c/Ecuador|a=an}}. <end>
+Page 261 Chavez: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|--=former name of:Santa Cruz|island|p/Galapagos|c/Ecuador}}. <end>
 Page 262 Congo Free State: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|former kingdom|r/Central Africa}} that was ruled by King Leopold II of Belgium as absolute ruler from 1885 until it was annexed by Belgium in 1908. {{former name of|en|Democratic Republic of the Congo}}. <end>
 Page 263 Muktsar: Found match for regex: <begin> # {{former name of|en|Sri Muktsar Sahib}}. <end>
 Page 264 Khidrana: Found match for regex: <begin> # {{former name of|en|Sri Muktsar Sahib}}. <end>
 Page 265 Artesia: Found match for regex: <begin> ## {{place|en|former village|state/Florida}}. {{former name of|en|Port Canaveral}}. <end>
 Page 266 Fontaine: Found match for regex: <begin> # {{former name of|fr|Fontaine-lès-Vervins}} {{gloss|village in [[Aisne]]}} <end>
-Page 267 Santo Niño: Found match for regex: <begin> # {{place|en|-form=former name of:Sapa|a=a|barangay|mun/Santo Tomas|p/Pampanga|c/Philippines}}. <end>
-Page 267 Santo Niño: Found match for regex: <begin> # {{place|en|-form=former name of:Calintaan|a=a|barangay|mun/Laoang|p/Northern Samar|c/Philippines}}. <end>
-Page 267 Santo Niño: Found match for regex: <begin> # {{place|en|-form=fmr of:Barangay 106|barangay|city/Tacloban|p/Leyte|c/Philippines}}. <end>
+Page 267 Santo Niño: Found match for regex: <begin> # {{place|en|--=former name of:Sapa|barangay|mun/Santo Tomas|p/Pampanga|c/Philippines}}. <end>
+Page 267 Santo Niño: Found match for regex: <begin> # {{place|en|--=former name of:Calintaan|barangay|mun/Laoang|p/Northern Samar|c/Philippines}}. <end>
+Page 267 Santo Niño: Found match for regex: <begin> # {{place|en|--=fmr of:Barangay 106|barangay|city/Tacloban|p/Leyte|c/Philippines}}. <end>
 Page 268 APEH: Found match for regex: <begin> # {{lb|hu|historical}} {{acronym of|hu|[[adó|Adó-]] [[és]] [[pénzügyi|Pénzügyi]] [[ellenőrzési|Ellenőrzési]] [[hivatal|Hivatal]]|t=Tax and Financial Auditing Office}}, {{former name of|hu|NAV|t=National Tax and Customs Administration}}<!--since 2011--> <end>
-Page 269 Duke of York's Island: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|-form=former name of:Atafu|atoll|territory/Tokelau|c/New Zealand|a=an}}. <end>
-Page 269 Duke of York's Island: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|-form=former name of:Santiago|island|p/Galapagos|c/Ecuador|a=an}}. <end>
+Page 269 Duke of York's Island: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|--=former name of:Atafu|atoll|territory/Tokelau|c/New Zealand}}. <end>
+Page 269 Duke of York's Island: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|--=former name of:Santiago|island|p/Galapagos|c/Ecuador}}. <end>
 Page 270 Gottschee: Found match for regex: <begin> # {{former name of|en|Kočevje}}, the main city of this region. <end>
 Page 271 Lichtenbach: Found match for regex: <begin> # {{former name of|de|Svetli Potok}} {{gloss|[[Gottscheer]] village in [[Carniola]]}} <end>
 Page 272 Gilman: Found match for regex: <begin> ## {{former name of|en|Issaquah}}, [[Washington]]. <end>
 Page 273 Union Islands: Found match for regex: <begin> # {{former name of|en|Tokelau}}. <end>
-Page 274 Iconium: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|-form=former name of:Konya|city|c/Turkey|a=a}}. <end>
-Page 275 Carthago Nova: Found match for regex: <begin> # {{lb|la|chiefly|_|historical}} {{place|la|-form=former name of:Carthagenna|city|c/Spain|t=Cartagena}} <end>
+Page 274 Iconium: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|--=former name of:Konya|city|c/Turkey}}. <end>
+Page 275 Carthago Nova: Found match for regex: <begin> # {{lb|la|chiefly|_|historical}} {{place|la|--=former name of:Carthagenna|city|c/Spain|t=Cartagena}} <end>
 Page 276 Bathurst: Found match for regex: <begin> ## {{lb|en|historical}} {{former name of|en|Banjul}}, the capital city of the [[Gambia]]. <end>
 Page 277 Armistice Day: Found match for regex: <begin> ## {{lb|en|US}} {{former name of|en|Veterans Day}}. <end>
 Page 277 Armistice Day: Found match for regex: <begin> ## {{lb|en|Canada}} {{former name of|en|Remembrance Day}}. <end>
 Page 278 Paiva: Found match for regex: <begin> # {{former name of|pt|Castelo de Paiva}} <end>
-Page 279 Santa Maria: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|-form=former name of:Floreana|island|p/Galapagos|c/Ecuador|a=an}}. <end>
-Page 280 San Salvador Island: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|-form=former name of:Santiago|island|p/Galapagos|c/Ecuador|a=an}}. <end>
+Page 279 Santa Maria: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|--=former name of:Floreana|island|p/Galapagos|c/Ecuador}}. <end>
+Page 280 San Salvador Island: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|--=former name of:Santiago|island|p/Galapagos|c/Ecuador}}. <end>
 Page 281 Ruan: Found match for regex: <begin> # {{former name of|fr|Ruan-sur-Egvonne}} <end>
 Page 282 Wiktionary:Templates with current language parameter: Found match for regex: <begin> # {{temp|former name of}} <end>
 Page 283 Berwyn: Found match for regex: <begin> # {{former name of|en|Gene Autry}}, [[Oklahoma]], renamed in 1941. <end>
@@ -328,13 +328,13 @@ Page 286 Bassein: Found match for regex: <begin> # {{lb|en|historical}} {{former
 Page 287 Prome: Found match for regex: <begin> # {{former name of|en|Pyay}}, [[Myanmar]]. <end>
 Page 288 Maryborough: Found match for regex: <begin> # {{former name of|en|Port Laoise}}, [[Ireland]]. <end>
 Page 289 Jonesboro: Found match for regex: <begin> ## {{former name of|en|Napton}}, [[Missouri]]. <end>
-Page 290 Hydruntum: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|-form=former name of:Otranto|city|r/Apulia|in southeastern|c/Italy|a=a}}. <end>
+Page 290 Hydruntum: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|--=former name of:Otranto|city|r/Apulia|in southeastern|c/Italy}}. <end>
 Page 291 Brixit: Found match for regex: <begin> # {{former name of|en|Brexit}}. {{defdate|c. 2011–2015}} <end>
 Page 292 Petitjean: Found match for regex: <begin> # {{former name of|en|Sidi Kacem}}, [[Morocco]], during the French era. <end>
-Page 293 按出虎: Found match for regex: <begin> # {{lb|zh|historical}} {{former name of|zh|阿什}}: the [[Ashi]] [[river|River]] within [[modern]] [[Harbin]] [[municipality|Municipality]] in [[Heilongjiang]], [[China]]. <end>
+Page 293 按出虎: Found match for regex: <begin> # {{lb|zh|historical}} {{former name of|zh|阿什}}: the [[Ashi]] [[river|River]] within [[modern]] [[Harbin]] [[municipality|Municipality]] in [[Heilongjiang]], [[China]] <end>
 Page 294 Jianchang: Found match for regex: <begin> # {{lb|en|historical}} {{former name of|en|Xichang}}. <end>
 Page 295 Jiandu: Found match for regex: <begin> # {{lb|en|historical}} {{former name of|en|Xichang}}. <end>
-Page 297 Alexandria Eschate: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|-form=former name of:Khujand|city|p/Sughd|c/Tajikistan|a=a}}. <end>
+Page 297 Alexandria Eschate: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|--=former name of:Khujand|city|p/Sughd|c/Tajikistan}}. <end>
 Page 298 Wootton Bassett: Found match for regex: <begin> # {{former name of|en|Royal Wootton Bassett}}, [[Wiltshire]], [[England]], renamed in 2011. <end>
 Page 299 San Miguel: Found match for regex: <begin> # {{lb|tl|historical}} {{former name of|tl|Cebu}} <end>
 Page 300 Burrell: Found match for regex: <begin> # {{former name of|en|Burrel}}, [[California]]. <end>
@@ -364,7 +364,7 @@ Page 321 Gumbinnen: Found match for regex: <begin> # {{former name of|en|Gusev}}
 Page 322 Mariposa: Found match for regex: <begin> # {{former name of|en|Yokuts||member of Native American group}}. <end>
 Page 323 Loa: Found match for regex: <begin> # {{lb|mul|obsolete}} {{former name of|mul|Chaetodon|''Chaetodon''}} <end>
 Page 324 Gorin: Found match for regex: <begin> # {{former name of|en|South Gorin}}, [[Missouri]]. <end>
-Page 325 Laodicea: Found match for regex: <begin> ## {{place|en|-form=former name of:Nahavand|city|c/Iran|a=a}}. <end>
+Page 325 Laodicea: Found match for regex: <begin> ## {{place|en|--=former name of:Nahavand|city|c/Iran}}. <end>
 Page 326 Beloozero: Found match for regex: <begin> # {{former name of|en|Belozersk}}. <end>
 Page 327 Lordsburg: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|city|co/County of Los Angeles|s/California|c/USA}}; {{former name of|en|La Verne}}. <end>
 Page 328 Sistan: Found match for regex: <begin> # {{former name of|en|Zabol}}. <end>
@@ -374,65 +374,65 @@ Page 331 USAAC: Found match for regex: <begin> # {{former name of|en|USAAF|gloss
 Page 332 USAAS: Found match for regex: <begin> # {{former name of|en|USAAC|gloss=United States Army Air Corps}} {{gloss|now, {{l|en|USAF|gloss=United States [[Air Force]]}}}}; {{initialism of|en|[[United States]] [[army|Army]] [[air|Air]] [[service|Service]]}}. <end>
 Page 333 Ottawa-Hull: Found match for regex: <begin> # The {{l|en|National Capital Region}} ({{l|en|NCR}}) of [[Canada]]; {{former name of|en|Ottawa-Gatineau}}. <end>
 Page 333 Ottawa-Hull: Found match for regex: <begin> # the [[National Capital Region]] ([[NCR]]) of [[Canada]]; {{former name of|fr|Ottawa-Gatineau}} <end>
-Page 334 Roxas: Found match for regex: <begin> # {{place|en|-form=former name of:Ki-Romero|a=a|barangay|mun/San Pascual|p/Masbate|c/Philippines}}. <end>
-Page 334 Roxas: Found match for regex: <begin> # {{place|en|-form=former name of:Lower Panaga|a=a|barangay|mun/Panabo|p/Davao del Norte|c/Philippines}}. <end>
-Page 335 Alexandretta: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|-form=former name of:Iskenderun|a=a|city|in southern|c/Turkey}}. <end>
+Page 334 Roxas: Found match for regex: <begin> # {{place|en|--=former name of:Ki-Romero|barangay|mun/San Pascual|p/Masbate|c/Philippines}}. <end>
+Page 334 Roxas: Found match for regex: <begin> # {{place|en|--=former name of:Lower Panaga|barangay|mun/Panabo|p/Davao del Norte|c/Philippines}}. <end>
+Page 335 Alexandretta: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|--=former name of:Iskenderun|city|in southern|c/Turkey}}. <end>
 Page 335 Alexandretta: Found match for regex: <begin> {{trans-top|former name of İskenderun}} <end>
 Page 336 Attalia: Found match for regex: <begin> # {{former name of|en|Antalya}}. <end>
 Page 336 Attalia: Found match for regex: <begin> {{trans-top|former name of Antalya}} <end>
-Page 337 Fukien: Found match for regex: <begin> # {{lb|tl|dated}} {{place|tl|-form=former name of:Fujian|a=a southeastern|province|c/China}} <end>
-Page 338 Rusadir: Found match for regex: <begin> # {{lb|la|historical}} {{place|la|-form=former name of:Melila|city|c/Spain|;|a Spanish <<exclave>> surrounded by [[Morocco]]|t=Melilla}} <end>
-Page 339 Iol: Found match for regex: <begin> # {{lb|la|historical}} {{place|la|-form=former name of:Caesarea|city|in northern|c/Algeria|t=Cherchell}}. <end>
-Page 340 Arsinoe: Found match for regex: <begin> # {{lb|la|historical}} {{place|la|-form=former name of:Crocodilopolis|ancient city|c/Egypt|modern=Fayum}}.  <end>
+Page 337 Fukien: Found match for regex: <begin> # {{lb|tl|dated}} {{place|tl|--=former name of:Fujian southeastern|province|c/China}} <end>
+Page 338 Rusadir: Found match for regex: <begin> # {{lb|la|historical}} {{place|la|--=former name of:Melila|city|c/Spain|;|a Spanish <<exclave>> surrounded by [[Morocco]]|t=Melilla}} <end>
+Page 339 Iol: Found match for regex: <begin> # {{lb|la|historical}} {{place|la|--=former name of:Caesarea|city|in northern|c/Algeria|t=Cherchell}}. <end>
+Page 340 Arsinoe: Found match for regex: <begin> # {{lb|la|historical}} {{place|la|--=former name of:Crocodilopolis|ancient city|c/Egypt|modern=Fayum}}. <end>
 Page 341 Barce: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|-form:alt form:Barca;;former name of:Marj|city|c/Libya}}. <end>
 Page 342 Deerfield: Found match for regex: <begin> ## {{former name of|en|Deerfield Beach}}, [[Florida]]. <end>
-Page 343 Emesa: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|-form=former name of:Homs|city|c/Syria|a=a}}. <end>
-Page 344 Balili: Found match for regex: <begin> # {{place|en|-form=former name of:Andres Micubo Jr.|a=a|barangay|mun/Siocon|p/Zamboanga del Norte|c/Philippines}} <end>
+Page 343 Emesa: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|--=former name of:Homs|city|c/Syria}}. <end>
+Page 344 Balili: Found match for regex: <begin> # {{place|en|--=former name of:Andres Micubo Jr.|barangay|mun/Siocon|p/Zamboanga del Norte|c/Philippines}} <end>
 Page 345 Lydda: Found match for regex: <begin> # {{former name of|en|Lod}}, [[Israel]]. <end>
-Page 346 Gadara: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|-form=former name of:Umm Qais|city|in|northwestern|c/Jordan|a=a}}. <end>
+Page 346 Gadara: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|--=former name of:Umm Qais|city|in|northwestern|c/Jordan}}. <end>
 Page 347 Prey Nokor: Found match for regex: <begin> # {{lb|en|historical}} {{former name of|en|[[Ho Chi Minh City]]/[[Saigon]]}} before annexation by the Vietnamese in the 17th century. <end>
-Page 348 Ysolo Mons: Found match for regex: <begin> # {{lb|mul|geology|astronomy|obsolete}} {{former name of|mul|Yamor Mons}} {{qualifier|2015-2017}}, {{place|mul|a <<mountain>> on [[Ceres]], a [[dwarf planet]] found in the {{w|lang=en|Main Asteroid Belt}}}}. <end>
+Page 348 Ysolo Mons: Found match for regex: <begin> # {{lb|mul|geology|astronomy|obsolete}} {{place|mul|--=fmr of:Yamor Mons<qq:2015–2017>|A <<mountain>> on [[Ceres]], a [[dwarf planet]] found in the {{w|lang=en|Main Asteroid Belt}}}} <end>
 Page 349 Ysolo: Found match for regex: <begin> # {{lb|mul|geography|geology|astronomy|obsolete}} {{ellipsis of|mul|Ysolo Mons}} {{former name of|mul|Yamor Mons}} <end>
 Page 350 Nix Olympica: Found match for regex: <begin> # {{lb|mul|planetology|astronomy|historical}} {{former name of|mul|Olympus Mons}} {{qualifier|19th c. &mdash; 20th c.}} {{gloss|an [[albedo feature]] on the planet Mars, now known to be the tallest mountain, but without a [[snowcap]]}} <end>
 Page 351 Westport: Found match for regex: <begin> #### {{former name of|en|Kansas City}}, the city in Missouri. <end>
 Page 352 European War: Found match for regex: <begin> # {{lb|en|North America|obsolete|1910s}} {{former name of|en|[[WWI]] / [[World War One]] / [[First World War]] / The [[Great War]]}}. <end>
-Page 353 Laiazzo: Found match for regex: <begin> # {{lb|it|historical}} {{place|it|-form=former name of:Yumurtalik|port town|in southeastern|c/Turkey|a=a}} <end>
+Page 353 Laiazzo: Found match for regex: <begin> # {{lb|it|historical}} {{place|it|--=former name of:Yumurtalik|port town|in southeastern|c/Turkey}} <end>
 Page 354 selective eating disorder: Found match for regex: <begin> # {{former name of|en|avoidant/restrictive food intake disorder}}. <end>
-Page 355 臨湘: Found match for regex: <begin> # {{lb|zh|historical}} {{former name of|zh|長沙}}: a [[city]] in [[China]]. <end>
+Page 355 臨湘: Found match for regex: <begin> # {{lb|zh|historical}} {{former name of|zh|長沙}}: a [[city]] in [[China]] <end>
 Page 357 Elisabethpol: Found match for regex: <begin> # {{lb|en|historical}} {{former name of|en|Ganja}}. <end>
 Page 358 Alexandropol: Found match for regex: <begin> # {{lb|en|historical}} {{former name of|en|Gyumri}}. <end>
 Page 359 Mogador: Found match for regex: <begin> # {{former name of|en|Essaouira||city in [[Morocco]]}}. <end>
 Page 360 Crassipes: Found match for regex: <begin> # {{lb|la|New Latin|obsolete}} {{former name of|la|Sclerochloa}}, the [[hardgrass]]es <end>
-Page 361 Pitogo: Found match for regex: <begin> # {{place|en|-form=former name of:President Carlos P. Garcia|a=a|mun|p/Bohol|c/Philippines}}. <end>
-Page 361 Pitogo: Found match for regex: <begin> # {{place|en|-form=former name of:Poblacion|a=a|barangay|mun/Pitogo|p/Zamboanga del Sur|c/Philippines}}. <end>
+Page 361 Pitogo: Found match for regex: <begin> # {{place|en|--=former name of:President Carlos P. Garcia|mun|p/Bohol|c/Philippines}}. <end>
+Page 361 Pitogo: Found match for regex: <begin> # {{place|en|--=former name of:Poblacion|barangay|mun/Pitogo|p/Zamboanga del Sur|c/Philippines}}. <end>
 Page 362 Macris: Found match for regex: <begin> # {{former name of|en|Euboea}}. <end>
-Page 363 Lakewood: Found match for regex: <begin> # {{place|en|-form=former name of:Poblacion|a=a|barangay|mun:pref/Lakewood|p/Zamboanga del Sur|c/Philippines}}. <end>
+Page 363 Lakewood: Found match for regex: <begin> # {{place|en|--=former name of:Poblacion|barangay|mun:pref/Lakewood|p/Zamboanga del Sur|c/Philippines}}. <end>
 Page 364 Oche: Found match for regex: <begin> # {{former name of|en|Euboea}}. <end>
-Page 365 Charax: Found match for regex: <begin> ## {{place|en|-form=former name of:Aydin|city|in|southwestern|c/Turkey|a=a}}. <end>
+Page 365 Charax: Found match for regex: <begin> ## {{place|en|--=former name of:Aydin|city|in|southwestern|c/Turkey}}. <end>
 Page 366 Urga: Found match for regex: <begin> # {{lb|en|historical}} {{former name of|en|[[Ulaanbaatar]]}}. <end>
 Page 367 Kenyatta Day: Found match for regex: <begin> # {{lb|en|Kenya}} {{former name of|en|Mashujaa Day}}, official until changed in 2010. <end>
 Page 368 ᠾᠧᠵᠢᠩ: Found match for regex: <begin> # {{former name of|mn|Hejing}} <end>
 Page 369 Urkontinent: Found match for regex: <begin> # {{former name of|de|Pangäa|gloss=[[Pangaea]]}} <end>
-Page 370 Barka: Found match for regex: <begin> # {{lb|en|historical}} {{alternative form of|en|Barqa}}, {{former name of|en|Marj|nocap=1}}, ''{{place|en|city|c/Libya|a=a}}''. <end>
+Page 370 Barka: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|--=alt form:Barqa;;fmr of:Marj|city|c/Libya}}. <end>
 Page 371 Jehol: Found match for regex: <begin> # {{lb|en|historical}} {{former name of|en|Chengde}}. <end>
-Page 372 Tass: Found match for regex: <begin> # {{former name of|en|Nyírtass}} {{gloss|{{m|hu|Nyírtass}}}}; {{place|en|village|county/Szabolcs-Szatmár-Bereg|c/Hungary}}. <end>
-Page 372 Tass: Found match for regex: <begin> # {{m|en|Nyírtass}}; {{place|fr|-form=former name of:Nyírtass|village|county/Szabolcs-Szatmár-Bereg|c/Hungary}} <end>
-Page 372 Tass: Found match for regex: <begin> # {{place|de|-form=former name of:Nyírtass|a=a|village|county/Szabolcs-Szatmár-Bereg|c/Hungary}} <end>
-Page 372 Tass: Found match for regex: <begin> # {{l|en|Tass}} {{gloss|former name of {{l|hu|Nyírtass}}, a village in [[Szabolcs-Szatmár-Bereg]] County, [[Hungary]]}} <end>
+Page 372 Tass: Found match for regex: <begin> # {{place|en|--=fmr of:Nyírtass|village|county/Szabolcs-Szatmár-Bereg|c/Hungary}}. <end>
+Page 372 Tass: Found match for regex: <begin> # {{place|fr|--=former name of:Nyírtass|village|county/Szabolcs-Szatmár-Bereg|c/Hungary|t=Tass}} <end>
+Page 372 Tass: Found match for regex: <begin> # {{place|de|--=former name of:Nyírtass|village|county/Szabolcs-Szatmár-Bereg|c/Hungary|t=Tass}} <end>
+Page 372 Tass: Found match for regex: <begin> # {{place|hu|--=former name of:Nyírtass|village|county/Szabolcs-Szatmár-Bereg|c/Hungary|t=Tass}} <end>
 Page 375 International Working Women's Day: Found match for regex: <begin> # {{former name of|en|International Women's Day}}. <end>
 Page 376 香山: Found match for regex: <begin> # {{lb|zh|historical}} {{zh-div|縣}} {{former name of|zh|中山}} {{gl|a [[county]] in [[Guangdong]], [[China]]}} <end>
-Page 378 木岡山: Found match for regex: <begin> # {{lb|zh|historical}} {{former name of|zh|玉山}}, the [[highest]] [[mountain]] on [[Taiwan]] [[island|Island]]. <end>
-Page 379 新高山: Found match for regex: <begin> # {{lb|zh|historical}} {{former name of|zh|玉山}}, the [[tallest]] [[mountain]] on [[Taiwan]] [[island|Island]], during the [[island]]'s [[Japanese]] [[occupation]]. <end>
-Page 379 新高山: Found match for regex: <begin> # {{lb|ja|historical}} {{former name of|ja|玉山}}, the [[highest]] [[mountain]] on [[Taiwan]] [[island|Island]]. <end>
-Page 381 白玉山: Found match for regex: <begin> # {{lb|zh|historical}} {{former name of|zh|玉山}}, the [[tallest]] [[mountain]] on [[Taiwan]] [[island|Island]]. <end>
-Page 383 八通關: Found match for regex: <begin> # {{lb|zh|historical}} {{former name of|zh|玉山}}, the [[tallest]] [[mountain]] on [[Taiwan]] [[island|Island]]. <end>
-Page 384 次高山: Found match for regex: <begin> # {{lb|zh|historical}} {{former name of|zh|雪山}}, the [[second|2nd]]-[[tallest]] [[mountain]] on [[Taiwan]] [[island|Island]], during the [[island]]'s [[Japanese]] [[occupation]]. <end>
-Page 384 次高山: Found match for regex: <begin> # {{lb|ja|historical}} {{former name of|ja|玉山}}, the [[second|2nd]]-[[highest]] [[mountain]] on [[Taiwan]] [[island|Island]]. <end>
-Page 385 三叉山: Found match for regex: <begin> # {{lb|zh|historical}} {{former name of|zh|雪山}}, the [[second|2nd]]-[[tallest]] [[mountain]] on [[Taiwan]] [[island|Island]]. <end>
-Page 387 貓鼻: Found match for regex: <begin> # {{lb|zh|obsolete}} {{former name of|zh|貓鼻頭}}. <end>
-Page 389 瑯嶠: Found match for regex: <begin> # {{lb|zh|historical}} {{former name of|zh|恆春}}: [[Hengchun]], [[Taiwan]]. <end>
-Page 390 紅頭嶼: Found match for regex: <begin> # {{lb|ja|historical}} {{former name of|ja|蘭嶼}}: [[Orchid Island]]. <end>
-Page 391 Nur-Sultan: Found match for regex: <begin> # {{senseid|en|Q1520}} {{former name of|en|Astana|t={{place|en|a=the|capital city|c/Kazakhstan}}}}, {{n-g|used from 2019 to 2022.}} <end>
+Page 378 木岡山: Found match for regex: <begin> # {{lb|zh|historical}} {{former name of|zh|玉山}}, the [[highest]] [[mountain]] on [[Taiwan]] [[island|Island]] <end>
+Page 379 新高山: Found match for regex: <begin> # {{lb|zh|historical}} {{former name of|zh|玉山}}, the [[tallest]] [[mountain]] on [[Taiwan]] [[island|Island]], during the [[island]]'s [[Japanese]] [[occupation]] <end>
+Page 379 新高山: Found match for regex: <begin> # {{lb|ja|historical}} {{former name of|ja|玉山}}, the [[highest]] [[mountain]] on [[Taiwan]] [[island|Island]] <end>
+Page 381 白玉山: Found match for regex: <begin> # {{lb|zh|historical}} {{former name of|zh|玉山}}, the [[tallest]] [[mountain]] on [[Taiwan]] [[island|Island]] <end>
+Page 383 八通關: Found match for regex: <begin> # {{lb|zh|historical}} {{former name of|zh|玉山}}, the [[tallest]] [[mountain]] on [[Taiwan]] [[island|Island]] <end>
+Page 384 次高山: Found match for regex: <begin> # {{lb|zh|historical}} {{former name of|zh|雪山}}, the [[second|2nd]]-[[tallest]] [[mountain]] on [[Taiwan]] [[island|Island]], during the [[island]]'s [[Japanese]] [[occupation]] <end>
+Page 384 次高山: Found match for regex: <begin> # {{lb|ja|historical}} {{former name of|ja|玉山}}, the [[second|2nd]]-[[highest]] [[mountain]] on [[Taiwan]] [[island|Island]] <end>
+Page 385 三叉山: Found match for regex: <begin> # {{lb|zh|historical}} {{former name of|zh|雪山}}, the [[second|2nd]]-[[tallest]] [[mountain]] on [[Taiwan]] [[island|Island]] <end>
+Page 387 貓鼻: Found match for regex: <begin> # {{lb|zh|obsolete}} {{former name of|zh|貓鼻頭}} <end>
+Page 389 瑯嶠: Found match for regex: <begin> # {{lb|zh|historical}} {{former name of|zh|恆春}}: [[Hengchun]], [[Taiwan]] <end>
+Page 390 紅頭嶼: Found match for regex: <begin> # {{lb|ja|historical}} {{former name of|ja|蘭嶼}}: [[Orchid Island]] <end>
+Page 391 Nur-Sultan: Found match for regex: <begin> # {{senseid|en|Q1520}} {{place|en|--=fmr of:Astana|capital city|c/Kazakhstan|addl=used from 2019 to 2022}}. <end>
 Page 391 Nur-Sultan: Found match for regex: <begin> {{trans-top-also|former name of Astana|Astana}} <end>
 Page 392 Wrekin: Found match for regex: <begin> # {{former name of|en|Telford and Wrekin||local government district in Shropshire}}, renamed in 1998. <end>
 Page 395 managed motorway: Found match for regex: <begin> # {{lb|en|UK|transport}} {{former name of|en|smart motorway}}. <end>
@@ -440,15 +440,15 @@ Page 396 National Front: Found match for regex: <begin> ## {{lb|en|French politi
 Page 397 Front National: Found match for regex: <begin> # {{former name of|fr|Rassemblement National|gloss=a far-right nationalist political party of France}}; [[National Front]] <end>
 Page 399 Saint-Eustache-sur-le-Lac: Found match for regex: <begin> # {{place|fr|village|province/Quebec|c/Canada}}; {{former name of|fr|Deux-Montagnes}} {{gloss|a town neighbouring the town Saint-Eustache and the lake Lake of Two Mountains}} <end>
 Page 400 bucket of blood: Found match for regex: <begin> # {{lb|en|food|dated|obsolete}} {{former name of|en|bloody mary|gloss=cocktail}}. <ref> 2014, John Mariani, [https://www.esquire.com/food-drink/drinks/recipes/a27481/bloody-mary-origins-recipe/ "The Secret Origins of the Bloody Mary"], Esquire </ref> <end>
-Page 402 湟陽: Found match for regex: <begin> # {{lb|zh|historical}} {{former name of|zh|城關}}, a [[town]] in [[Huangyuan]] [[county|County]], [[Qinghai]], [[China]]. <end>
-Page 403 McCool: Found match for regex: <begin> ## {{place|en|-form=former name of:McCool Junction|village|co/York|s/Nebraska|c/USA}}. <end>
+Page 402 湟陽: Found match for regex: <begin> # {{lb|zh|historical}} {{former name of|zh|城關}}, a [[town]] in [[Huangyuan]] [[county|County]], [[Qinghai]], [[China]] <end>
+Page 403 McCool: Found match for regex: <begin> ## {{place|en|--=former name of:McCool Junction|village|co/York|s/Nebraska|c/USA}}. <end>
 Page 404 Quorndon: Found match for regex: <begin> # {{former name of|en|Quorn||village in Leicestershire}}. <end>
-Page 405 San Clemente: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|-form=former name of:Santa Cruz|island|p/Galapagos|c/Ecuador|a=an}}. <end>
+Page 405 San Clemente: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|--=former name of:Santa Cruz|island|p/Galapagos|c/Ecuador}}. <end>
 Page 406 Fredericston: Found match for regex: <begin> # {{former name of|en|Fredericton}}. <end>
 Page 407 Pile of Bones: Found match for regex: <begin> # {{former name of|en|Regina}} {{gloss|capital city of Saskatchewan, Canada}}. <end>
 Page 408 White Horse: Found match for regex: <begin> # {{former name of|en|Whitehorse}}. <end>
 Page 409 Tahoma: Found match for regex: <begin> # {{former name of|en|Mount Rainier}}. <end>
-Page 410 2019-nCoV: Found match for regex: <begin> # {{former name of|mul|SARS-CoV-2}}: of the family {{taxfmt|Coronaviridae|family|i=1}}, the [[pathogen]] of [[COVID-19]], which is sometimes fatal, thought to be [[zoonotic]] and originating in the Chinese city of [[Wuhan]] in 2019, that caused a [[pandemic]]. <end>
+Page 410 2019-nCoV: Found match for regex: <begin> # {{former name of|mul|SARS-CoV-2}}: of the family {{taxfmt|Coronaviridae|family|i=1}}, the [[pathogen]] of [[COVID-19]], which is sometimes fatal, thought to be [[zoonotic]] and originating in the Chinese city of [[Wuhan]] in 2019, that caused a [[pandemic]] <end>
 Page 411 Pelly Bay: Found match for regex: <begin> # {{former name of|en|Kugaaruk}}. <end>
 Page 412 Oakdale: Found match for regex: <begin> ## {{former name of|en|Wyandotte}}, [[Louisville]], [[Kentucky]]. <end>
 Page 413 Fort Bragg: Found match for regex: <begin> # {{former name of|en|Fort Liberty}}. <end>
@@ -457,41 +457,41 @@ Page 415 Porto Rican: Found match for regex: <begin> # {{former name of|en|Puert
 Page 415 Porto Rican: Found match for regex: <begin> # {{former name of|en|Puerto Rican}}. <end>
 Page 416 Armenopolis: Found match for regex: <begin> # {{former name of|en|Gherla}}. <end>
 Page 416 Armenopolis: Found match for regex: <begin> {{trans-top-also|former name of Gherla|Gherla}} <end>
-Page 417 Հայաքաղաք: Found match for regex: <begin> # {{former name of|hy|Գեռլա}} [[Armenopolis]]. <end>
+Page 417 Հայաքաղաք: Found match for regex: <begin> # {{former name of|hy|Գեռլա}}: [[Armenopolis]] <end>
 Page 419 Towyn: Found match for regex: <begin> # {{former name of|en|Tywyn}}, in [[Gwynedd]]. <end>
 Page 420 Plagiorchiata: Found match for regex: <begin> # {{former name of|mul|{{taxlink|Xiphidiata|suborder}}}} <end>
 Page 421 Cercomeromorpha: Found match for regex: <begin> # {{lb|mul|taxonomy}} {{former name of|mul|Eucestoda}} <end>
-Page 422 Morong: Found match for regex: <begin> # {{lb|tl|historical}} {{former name of|tl|Rizal}} {{gl|{{place|tl|province|c/Philippines|a=a}}}} <end>
+Page 422 Morong: Found match for regex: <begin> # {{lb|tl|historical}} {{place|tl|--=fmr of:Rizal|province|c/Philippines}} <end>
 Page 423 Lone Pine: Found match for regex: <begin> # {{former name of|en|McFarland}}, [[California]]. <end>
 Page 424 Princetown: Found match for regex: <begin> # {{lb|en|historical}} {{former name of|en|Princeton}} ''in [[Kentucky]] and [[British Columbia]]''. <end>
 Page 425 Enoplus: Found match for regex: <begin> # {{lb|mul|taxonomy}} {{former name of|mul|Hoploryctoderus}} <end>
 Page 426 Henslow's bunting: Found match for regex: <begin> # {{former name of|en|Henslow's sparrow}}. <end>
 Page 427 Кіровоград: Found match for regex: <begin> # {{former name of|uk|Кропивни́цький|t=Kirovohrad}} <end>
-Page 428 Port Royal: Found match for regex: <begin> ### {{lb|en|historical}} {{place|en|-form=former name of:Annapolis Royal|a=a|town|co/Annapolis County|p/Nova Scotia}}. <end>
-Page 429 Port-Royal: Found match for regex: <begin> ### {{lb|fr|historical}} {{former name of|fr|Annapolis}} {{place|fr|town|co/Annapolis County|p/Nova Scotia|c/Canada|t1=Port Royal}} <end>
+Page 428 Port Royal: Found match for regex: <begin> ### {{lb|en|historical}} {{place|en|--=former name of:Annapolis Royal|town|co/Annapolis County|p/Nova Scotia}}. <end>
+Page 429 Port-Royal: Found match for regex: <begin> ### {{lb|fr|historical}} {{place|fr|--=fmr of:Annapolis|town|co/Annapolis County|p/Nova Scotia|c/Canada|t1=Port Royal}} <end>
 Page 430 Eogene: Found match for regex: <begin> # {{former name of|en|Paleogene}}. <end>
 Page 430 Eogene: Found match for regex: <begin> {{trans-top|former name of Paleogene}} <end>
 Page 430 Eogene: Found match for regex: <begin> # {{former name of|en|Paleogene}}. <end>
 Page 430 Eogene: Found match for regex: <begin> {{trans-top|former name of the Paleogene}} <end>
 Page 431 Gebal: Found match for regex: <begin> # {{former name of|en|Byblos}}. <end>
-Page 432 Shorzha: Found match for regex: <begin> # {{place|en|-form=former name of:Shoghakat|a <<village>> located on the shore of Lake [[Sevan]] in the <<p/Gegharkunik>> region of <<c/Armenia>>}}. <end>
+Page 432 Shorzha: Found match for regex: <begin> # {{place|en|--=former name of:Shoghakat|a <<village>> located on the shore of Lake [[Sevan]] in the <<p/Gegharkunik>> region of <<c/Armenia>>}}. <end>
 Page 432 Shorzha: Found match for regex: <begin> {{trans-top-also|former name of Shoghakat village|Shoghakat}} <end>
-Page 433 Շորժա: Found match for regex: <begin> # {{place|hy|-form=former name of:Շողակաթ|a <<village>> located on the shore of Lake [[Sevan]] in the <<p/Gegharkunik>> region of <<c/Armenia>>}} <end>
+Page 433 Շորժա: Found match for regex: <begin> # {{place|hy|--=former name of:Շողակաթ|a <<village>> located on the shore of Lake [[Sevan]] in the <<p/Gegharkunik>> region of <<c/Armenia>>}} <end>
 Page 434 Erythrovirus: Found match for regex: <begin> # {{former name of|mul|Erythroparvovirus}} <end>
-Page 435 Muroc: Found match for regex: <begin> # {{place|en|-form=former name of:Edwards|a=a|settlement|co/Kern County|s/California|c/USA}}. <end>
+Page 435 Muroc: Found match for regex: <begin> # {{place|en|--=former name of:Edwards|settlement|co/Kern County|s/California|c/USA}}. <end>
 Page 435 Muroc: Found match for regex: <begin> # {{ellipsis of|en|Muroc Field}}; the former name of an airfield built on said lake bed (its current name is {{w|lang=en|Edwards Air Force Base}}). <end>
-Page 436 Csongrád: Found match for regex: <begin> # {{former name of|hu|Csongrád-Csanád}} (before June 4, 2020), an administrative county of Hungary. <end>
+Page 436 Csongrád: Found match for regex: <begin> # {{former name of|hu|Csongrád-Csanád}} (before June 4, 2020), an administrative county of Hungary <end>
 Page 437 CNTRP: Found match for regex: <begin> # {{former name of|en|CDTRP|gloss=Canadian Donation and Transplant Research Program}}; {{abbreviation of|en|[[Canadian]] [[national|National]] [[transplant|Transplant]] [[research|Research]] [[program|Program]]}}. <end>
-Page 438 Cape Kennedy: Found match for regex: <begin> # {{lb|en|historical|1963-1973}} {{place|en|-form=former name of:Cape Canaveral|cape|s/Florida|c/USA}}. <end>
+Page 438 Cape Kennedy: Found match for regex: <begin> # {{lb|en|historical|1963-1973}} {{place|en|--=former name of:Cape Canaveral|cape|s/Florida|c/USA}}. <end>
 Page 438 Cape Kennedy: Found match for regex: <begin> # {{lb|en|historical|1963-1973}} {{ellipsis of|en|Cape Kennedy [[air force|Air Force]] [[station|Station]]}}; {{former name of|en|Cape Canaveral [[spaceforce|Space Force]] Station}}. <end>
-Page 439 HMRG Deep: Found match for regex: <begin> # {{place|en|-form=former name of:Sirena Deep|deep|trench/Mariana Trench|ocean/Pacific}}; second deepest place in the Mariana Trench, and third deepest place on Earth. <end>
-Page 440 Dovhe: Found match for regex: <begin> # {{former name of|en|Mostyshche|}}, {{place|en|village|obl/Ivano-Frankivsk|in eastern|c/Ukraine|a=a}}. <end>
+Page 439 HMRG Deep: Found match for regex: <begin> # {{place|en|--=former name of:Sirena Deep|deep|trench/Mariana Trench|ocean/Pacific}}; second deepest place in the Mariana Trench, and third deepest place on Earth. <end>
+Page 440 Dovhe: Found match for regex: <begin> # {{place|en|--=fmr of:Mostyshche|village|obl/Ivano-Frankivsk|in eastern|c/Ukraine}}. <end>
 Page 441 Cephaelis: Found match for regex: <begin> # {{lb|mul|obsolete}} {{former name of|mul|Psychotria||plant genus}} <end>
-Page 442 張垣: Found match for regex: <begin> # {{lb|zh|historical}} {{place|zh|-form=former name of:張家口|city|c/China|t=Zhangjiakou}} <end>
-Page 445 Asbestos: Found match for regex: <begin> # {{place|en|-form=former name of:Val des Sources|town|co/Asbestos|region/Estrie|p/Quebec|c/Canada}}. <end>
-Page 445 Asbestos: Found match for regex: <begin> # {{place|en|-form=former name of:Les Sources|regional county municipality|region/Eastern Townships|p/Quebec|c/Canada}}. <end>
-Page 445 Asbestos: Found match for regex: <begin> # {{place|fr|-form=former name of:Val-des-Sources|t1=Asbestos|town|co/Les Sources|r/Estrie|p/Quebec|c/Canada}} <end>
-Page 445 Asbestos: Found match for regex: <begin> # {{place|fr|-form=former name of:Les Sources|t1=Asbestos|regional county municipality|r/Cantons-de-l'Est|p/Quebec|c/Canada}} <end>
+Page 442 張垣: Found match for regex: <begin> # {{lb|zh|historical}} {{place|zh|--=former name of:張家口|city|c/China|t=Zhangjiakou}} <end>
+Page 445 Asbestos: Found match for regex: <begin> # {{place|en|--=former name of:Val des Sources|town|co/Asbestos|region/Estrie|p/Quebec|c/Canada}}. <end>
+Page 445 Asbestos: Found match for regex: <begin> # {{place|en|--=former name of:Les Sources|regional county municipality|region/Eastern Townships|p/Quebec|c/Canada}}. <end>
+Page 445 Asbestos: Found match for regex: <begin> # {{place|fr|--=former name of:Val-des-Sources|t1=Asbestos|town|co/Les Sources|r/Estrie|p/Quebec|c/Canada}} <end>
+Page 445 Asbestos: Found match for regex: <begin> # {{place|fr|--=former name of:Les Sources|t1=Asbestos|regional county municipality|r/Cantons-de-l'Est|p/Quebec|c/Canada}} <end>
 Page 446 Pityrosporum: Found match for regex: <begin> # {{former name of|mul|Malassezia||fungus genus}} <end>
 Page 447 Elisabethville: Found match for regex: <begin> # {{former name of|en|Lubumbashi||city in the Democratic Republic of the Congo}}. <end>
 Page 448 Claytonville: Found match for regex: <begin> # {{place|en|city|co/Contra Costa|s/California|c/USA}}; {{former name of|en|Clayton}}. <end>
@@ -502,10 +502,10 @@ Page 452 Fengtian: Found match for regex: <begin> # {{former name of|en|Liaoning
 Page 452 Fengtian: Found match for regex: <begin> # {{former name of|en|Shenyang}}. <end>
 Page 452 Fengtian: Found match for regex: <begin> {{trans-top|former name of Liaoning}} <end>
 Page 452 Fengtian: Found match for regex: <begin> {{trans-top|former name of Shenyang}} <end>
-Page 453 Hamilton Town: Found match for regex: <begin> # {{former name of|en|Brown's Town}} {{place|en|town|parish/Saint Ann Parish|co/Middlesex|c/Jamaica}}. <end>
-Page 454 Santa Gloria: Found match for regex: <begin> # {{former name of|en|Saint Ann's Bay}}. <end>
+Page 453 Hamilton Town: Found match for regex: <begin> # {{place|en|--=fmr of:Brown's Town|town|parish/Saint Ann Parish|co/Middlesex|c/Jamaica}}. <end>
+Page 454 Santa Gloria: Found match for regex: <begin> # {{place|en|--=fmr of:Saint Ann's Bay|town|parish/Saint Ann Parish|co/Middlesex|c/Jamaica}}. <end>
 Page 454 Santa Gloria: Found match for regex: <begin> {{trans-top|former name of Saint Ann's Bay}} <end>
-Page 454 Santa Gloria: Found match for regex: <begin> # {{m|en|Santa Gloria}}; {{former name of|es|Saint Ann's Bay}} <end>
+Page 454 Santa Gloria: Found match for regex: <begin> # {{place|es|--=fmr of:Saint Ann's Bay|town|parish/Saint Ann Parish|co/Middlesex|c/Jamaica|t=Santa Gloria}} <end>
 Page 456 Dihua: Found match for regex: <begin> # {{former name of|en|Ürümqi}}. <end>
 Page 456 Dihua: Found match for regex: <begin> {{trans-top|former name of Ürümqi}} <end>
 Page 457 Beiping: Found match for regex: <begin> # {{lb|en|historical}} {{former name of|en|Beijing}}. {{defdate|from late 20th c.}} <end>
@@ -513,11 +513,11 @@ Page 458 Antung: Found match for regex: <begin> # {{lb|en|historical}} {{former 
 Page 459 Kweisui: Found match for regex: <begin> # {{lb|en|historical}} {{former name of|en|[[Hohhot]]}}. <end>
 Page 460 Heungshan: Found match for regex: <begin> Borrowed from {{bor|en|yue|-}} {{zh-l|香山|tr=hoeng1 saan1}}, the former name of Zhongshan. <end>
 Page 460 Heungshan: Found match for regex: <begin> # {{lb|en|historical}} {{former name of|en|Zhongshan}} (a prefecture-level city in Guangdong, China; former county of Guangdong, China). <end>
-Page 461 Sussex Street: Found match for regex: <begin> # {{place|en|-form=former name of:Sussex Drive|street|city/Ottawa|p/Ontario|c/Canada|a=a}}. <end>
+Page 461 Sussex Street: Found match for regex: <begin> # {{place|en|--=former name of:Sussex Drive|street|city/Ottawa|p/Ontario|c/Canada}}. <end>
 Page 462 Accadân: Found match for regex: <begin> # {{former name of|ro|Alba|pos=village in Tulcea County, Romania}} <end>
 Page 463 Cotylosauria: Found match for regex: <begin> # {{former name of|mul|Captorhinida}} <end>
 Page 464 Cadi-Câșla: Found match for regex: <begin> # {{former name of|ro|Miorița|pos=village in [[Constanța]], Romania}} <end>
-Page 465 Caranlâc: Found match for regex: <begin> # {{former name of|ro|Negureni|pos=village in [[Constanța]]}}. <end>
+Page 465 Caranlâc: Found match for regex: <begin> # {{former name of|ro|Negureni|pos=village in [[Constanța]]}} <end>
 Page 466 Asarlâc: Found match for regex: <begin> # {{lb|ro|historical}} {{former name of|ro|Cetatea|pos=village in Constanța County, Romania}} <end>
 Page 467 Calotermitidae: Found match for regex: <begin> # {{former name of|mul|Kalotermitidae}} <end>
 Page 468 Lady Presidentress: Found match for regex: <begin> # {{lb|en|US|politics|obsolete}} {{former name of|en|[[First Lady]] {{q|of the [[United States]]}}}}.<ref name=ISBN-9781929175093/><ref name=SScom/> {{defdate|18th–19th c.}} <end>
@@ -532,25 +532,25 @@ Page 475 Léningrad: Found match for regex: <begin> # {{former name of|fr|Saint-
 Page 476 Bowditch Island: Found match for regex: <begin> # {{former name of|en|Fakaofo}}. <end>
 Page 477 Port Arthur: Found match for regex: <begin> # {{former name of|en|Lüshun|t=a port in China}}. <end>
 Page 478 紅毛橋: Found match for regex: <begin> # {{former name of|zh|宏茂橋|t=[[Ang Mo Kio]]}} <end>
-Page 480 Poseidonia: Found match for regex: <begin> ## {{place|en|-form=former name of:Paestum|a=a|village|r/Campania|c/Italy}}. <end>
-Page 480 Poseidonia: Found match for regex: <begin> ### {{lb|en|historical}} {{place|en|-form=former name of:Paestum|a=an|ancient city|r/Campania|p:pref/Italia|empire/Roman Empire}}. <end>
-Page 480 Poseidonia: Found match for regex: <begin> ## {{place|la|-form=former name of:Paestum|village|r/Campania|c/Italy}} <end>
-Page 481 Sputnik Planum: Found match for regex: <begin> # {{place|mul|-form=former name of:Sputnik Planitia|plain|r/Tombaugh Regio|planet/Pluto|star system/Solar System}} <end>
-Page 482 Cressy: Found match for regex: <begin> # {{place|en|-form=former name of:Cressey|CDP|co/Merced County|s/California|c/US}}. <end>
+Page 480 Poseidonia: Found match for regex: <begin> ## {{place|en|--=former name of:Paestum|village|r/Campania|c/Italy}}. <end>
+Page 480 Poseidonia: Found match for regex: <begin> ### {{lb|en|historical}} {{place|en|--=former name of:Paestumn|ancient city|r/Campania|p:pref/Italia|empire/Roman Empire}}. <end>
+Page 480 Poseidonia: Found match for regex: <begin> ## {{place|la|--=former name of:Paestum|village|r/Campania|c/Italy}} <end>
+Page 481 Sputnik Planum: Found match for regex: <begin> # {{place|mul|--=former name of:Sputnik Planitia|plain|r/Tombaugh Regio|planet/Pluto|star system/Solar System}} <end>
+Page 482 Cressy: Found match for regex: <begin> # {{place|en|--=former name of:Cressey|CDP|co/Merced County|s/California|c/US}}. <end>
 Page 483 龍津: Found match for regex: <begin> # {{zh-div|縣}} {{former name of|zh|龍州|t=Longzhou}} ({{n-g|used between 1937 and 1961}}) <end>
 Page 485 Hokchiu: Found match for regex: <begin> # {{former name of|en|Fuzhou}}. <end>
 Page 486 巴安: Found match for regex: <begin> # {{zh-div|縣}} {{former name of|zh|巴塘|t=Batang}} ({{n-g|used between 1907 and 1951}}) <end>
 Page 487 定鄉: Found match for regex: <begin> # {{zh-div|縣}} {{former name of|zh|鄉城|t=Xiangcheng}} ({{n-g|used between 1908 and 1951}}) <end>
 Page 489 Camelopardus: Found match for regex: <begin> # {{former name of|en|Camelopardalis||constellation}}. <end>
 Page 490 Camelopardalus: Found match for regex: <begin> # {{former name of|en|Camelopardalis||constellation}}. <end>
-Page 491 Changan: Found match for regex: <begin> # {{lb|en|historical|sometimes|_|proscribed}} {{alternative form of|en|Chang'an}}, {{former name of|en|Xi'an|nocap=1}}, ''{{place|en|former capital|c/China|a=a}}''. <end>
+Page 491 Changan: Found match for regex: <begin> # {{lb|en|historical|sometimes|_|proscribed}} {{place|en|--=alt form:Chang'an;;fmr of:Xi'an|city/former capital|c/China}}. <end>
 Page 492 渾江: Found match for regex: <begin> # {{zh-div|市}} {{former name of|zh|白山|t=Baishan}} ({{n-g|used between 1960 and 1994}}) <end>
-Page 494 Michelob: Found match for regex: <begin> # {{place|en|-form=former name of:Mecholupy|town|c/Czechia}}. <end>
-Page 494 Michelob: Found match for regex: <begin> # {{place|en|-form=former name of:Michalovice|town|c/Czechia}}. <end>
-Page 494 Michelob: Found match for regex: <begin> # {{place|en|-form=former name of:Michalovce|town|c/Slovakia}}. <end>
+Page 494 Michelob: Found match for regex: <begin> # {{place|en|--=former name of:Mecholupy|town|c/Czechia}}. <end>
+Page 494 Michelob: Found match for regex: <begin> # {{place|en|--=former name of:Michalovice|town|c/Czechia}}. <end>
+Page 494 Michelob: Found match for regex: <begin> # {{place|en|--=former name of:Michalovce|town|c/Slovakia}}. <end>
 Page 495 Soyoos: Found match for regex: <begin> # {{former name of|en|Osoyoos}}. <end>
 Page 496 Lourenço Marques: Found match for regex: <begin> # {{former name of|en|Maputo}}, [[Mozambique]]. <end>
-Page 497 Eastlake: Found match for regex: <begin> # {{former name of|en|{{w|Kingston, Australian Capital Territory}}}}; {{place|en|suburb|city/Canberra|s/Australian Capital Territory|c/Australia}}. <end>
+Page 497 Eastlake: Found match for regex: <begin> # {{place|en|--=fmr of:{{w|Kingston, Australian Capital Territory}}|suburb|city/Canberra|s/Australian Capital Territory|c/Australia}}. <end>
 Page 498 Côtes-du-Nord: Found match for regex: <begin> # {{former name of|en|Côtes-d'Armor}}. <end>
 Page 498 Côtes-du-Nord: Found match for regex: <begin> {{trans-top|former name of Côtes-d'Armor}} <end>
 Page 498 Côtes-du-Nord: Found match for regex: <begin> # {{former name of|fr|Côtes-d'Armor}} <end>
@@ -558,7 +558,7 @@ Page 499 Albizzia: Found match for regex: <begin> # {{former name of|mul|Albizia
 Page 500 Pietersburg: Found match for regex: <begin> # {{former name of|en|Polokwane}}, {{l|en|Limpopo}} province, [[South Africa]], officially renamed in 2005. <end>
 Page 501 Coumarouna: Found match for regex: <begin> # {{former name of|mul|Dipteryx||tree genus}} <end>
 Page 502 Kalkfontein: Found match for regex: <begin> # {{former name of|en|Karasburg}}, [[Namibia]], renamed in 1939 when it was [[South West Africa]]. <end>
-Page 503 Ujiyamada: Found match for regex: <begin> # {{former name of|en|Ise}}, {{l|en|Mie}} Prefecture, [[Japan]]. <end>
+Page 503 Ujiyamada: Found match for regex: <begin> # {{place|en|--=fmr of:Ise|city|pref/Mie|c/Japan}}. <end>
 Page 504 Umtali: Found match for regex: <begin> # {{former name of|en|Mutare}}, [[Zimbabwe]]. <end>
 Page 505 Gwelo: Found match for regex: <begin> # {{former name of|en|Gweru}}, [[Zimbabwe]], renamed in 1982. <end>
 Page 506 Selukwe: Found match for regex: <begin> # {{former name of|en|Shurugwi}}, [[Zimbabwe]]. <end>
@@ -574,12 +574,12 @@ Page 515 Vila Machado: Found match for regex: <begin> # {{former name of|en|Nham
 Page 516 Marandellas: Found match for regex: <begin> # {{former name of|en|Marondera}}, [[Zimbabwe]], renamed in 1982. <end>
 Page 517 Berar: Found match for regex: <begin> # {{former name of|en|Vidarbha}}. <end>
 Page 518 Wexcombe: Found match for regex: <begin> # {{former name of|en|Stratton}}, [[Western Australia]]. <end>
-Page 519 Gay Village: Found match for regex: <begin> # {{place|en|-form=former name of:The Village|neighbourhood|city/Ottawa|p/Ontario|c/Canada|a=a}}. <end>
+Page 519 Gay Village: Found match for regex: <begin> # {{place|en|--=former name of:The Village|neighbourhood|city/Ottawa|p/Ontario|c/Canada}}. <end>
 Page 520 Gesneraceae: Found match for regex: <begin> # {{former name of|mul|Gesneriaceae}} <end>
 Page 521 Fifeshire: Found match for regex: <begin> # {{former name of|en|Fife}}, [[Scotland]], possibly used as an alternative. <end>
-Page 522 Yenişehir: Found match for regex: <begin> # {{lb|tr|historical}} {{place|tr|-form=former name of:Karacasu|district|province/Aydın|c/Turkey|a=a}} <end>
+Page 522 Yenişehir: Found match for regex: <begin> # {{lb|tr|historical}} {{place|tr|--=former name of:Karacasu|district|province/Aydın|c/Turkey}} <end>
 Page 523 Bligh Island: Found match for regex: <begin> # {{former name of|en|Ureparapara||an island of northern Vanuatu}}. <end>
-Page 524 Lowana: Found match for regex: <begin> ## {{place|en|-form=former name of:Loyetea|locality|LGA/Central Coast|r/North-west and west|s/Tasmania|c/Australia}}. <end>
+Page 524 Lowana: Found match for regex: <begin> ## {{place|en|--=former name of:Loyetea|locality|LGA/Central Coast|r/North-west and west|s/Tasmania|c/Australia}}. <end>
 Page 525 Maymyo: Found match for regex: <begin> # {{former name of|en|Pyin Oo Lwin}}, [[Burma]]. <end>
 Page 526 Wenham: Found match for regex: <begin> # {{former name of|en|East Carver}}, {{l|en|Carver}}, [[Massachusetts]]. <end>
 Page 527 Sumas: Found match for regex: <begin> ## {{ellipsis of|en|District of Sumas}}; {{place|en|former district|r/Lower Mainland|p/British Columbia|c/Canada|in the|r/Fraser Lowland|that was merged into|city/Abbotsford}}; {{former name of|en|Sumas Prairie}}. <end>
@@ -589,16 +589,16 @@ Page 530 Tanjore: Found match for regex: <begin> # {{former name of|en|Thanjavur
 Page 531 Tinnevelly: Found match for regex: <begin> # {{former name of|en|Tirunelveli||Indian city}}. <end>
 Page 532 Bombay Marine: Found match for regex: <begin> # {{lb|en|historical}} {{former name of|en|{{w|Royal Indian Navy}}}}. <end>
 Page 533 Akyab: Found match for regex: <begin> # {{former name of|en|Sittwe||city in Myanmar}}. <end>
-Page 534 Powell River: Found match for regex: <begin> # {{ellipsis of|en|{{w|Powell River Regional District}}}}; {{place|en|-form=former name of:qathet Regional District|regional district|r/Sunshine Coast|p/British Columbia|c/Canada}}. <end>
-Page 535 Saint Michael: Found match for regex: <begin> ## {{former name of|en|Bridgetown}}; {{ellipsis of|en|Town of Saint Michael}}; {{place|en|city|parish:suf/Saint Michael|c/Barbados}}. <end>
+Page 534 Powell River: Found match for regex: <begin> {{place|en|--=ellip of:{{w|Powell River Regional District}};;former name of:qathet Regional District|regional district|r/Sunshine Coast|p/British Columbia|c/Canada}}. <end>
+Page 535 Saint Michael: Found match for regex: <begin> ## {{place|en|--=ellip of:Town of Saint Michael;;fmr of:Bridgetown|city|parish:suf/Saint Michael|c/Barbados}}. <end>
 Page 536 Hajipur: Found match for regex: <begin> # {{former name of|en|Diamond Harbour}} {{gloss|town and municipality in West Bengal, India}}. <end>
 Page 537 Seringapatam: Found match for regex: <begin> # {{former name of|en|Srirangapatna||Indian town}}. <end>
 Page 538 Tuticorin: Found match for regex: <begin> # {{former name of|en|Thoothukudi||port city in Tamil Nadu, India}}. <end>
 Page 539 Campbelltown: Found match for regex: <begin> # {{former name of|en|Bluff}}, [[New Zealand]]. <end>
 Page 540 Bandar: Found match for regex: <begin> # {{former name of|en|Machilipatnam||Indian city}}. <end>
 Page 541 Alleppey: Found match for regex: <begin> # {{former name of|en|Alappuzha||Indian city}}. <end>
-Page 542 Slave Lake: Found match for regex: <begin> # {{place|en|-form=former name of:Great Slave Lake|lake|terr/Northwest Territories|c/Canada}}. <end>
-Page 542 Slave Lake: Found match for regex: <begin> # {{place|en|-form=former name of:Lesser Slave Lake|lake|p/Alberta|c/Canada}}. <end>
+Page 542 Slave Lake: Found match for regex: <begin> # {{place|en|--=former name of:Great Slave Lake|lake|terr/Northwest Territories|c/Canada}}. <end>
+Page 542 Slave Lake: Found match for regex: <begin> # {{place|en|--=former name of:Lesser Slave Lake|lake|p/Alberta|c/Canada}}. <end>
 Page 543 Angrezabad: Found match for regex: <begin> # {{former name of|en|{{w|English Bazar Municipality}}||a municipality of West Bengal, India}}. <end>
 Page 544 Cranganore: Found match for regex: <begin> # {{former name of|en|Kodungallur||a town in Kerala, India}}. <end>
 Page 545 Negraglia: Found match for regex: <begin> # {{former name of|en|Negrais||a cape in [[Burma]]/[[Myanmar]]}}. <end>
@@ -609,10 +609,10 @@ Page 549 Niles Center: Found match for regex: <begin> # {{former name of|en|Skok
 Page 550 User talk:Chuck Entz/2021: Found match for regex: <begin> == [[Template:former name of]] == <end>
 Page 551 Tellicherry: Found match for regex: <begin> # {{former name of|en|Thalassery||part of Kerala, India}}. <end>
 Page 552 Point de Galle: Found match for regex: <begin> # {{former name of|en|Galle||city in Sri Lanka}}. <end>
-Page 553 Grand River: Found match for regex: <begin> # {{place|en|-form=former name of:Churchill River;;former name of:Hamilton River|river|r/Labrador|p/Newfoundland and Labrador|c/Canada}}. <end>
+Page 553 Grand River: Found match for regex: <begin> # {{place|en|--=former name of:Churchill River;;former name of:Hamilton River|river|r/Labrador|p/Newfoundland and Labrador|c/Canada}}. <end>
 Page 553 Grand River: Found match for regex: <begin> ## {{former name of|en|Colorado River}}, [[Colorado]]. <end>
-Page 554 McLean Falls: Found match for regex: <begin> # {{former name of|en|Churchill Falls}}. {{place|en|waterfall|r/Labrador|p/Newfoundland and Labrador|c/Canada}} <end>
-Page 555 Hamilton River: Found match for regex: <begin> # {{place|en|-form=former name of:Churchill River|river|r/Labrador|p/Newfoundland and Labrador|c/Canada}}. <end>
+Page 554 McLean Falls: Found match for regex: <begin> # {{place|en|--=fmr of:Churchill Falls|waterfall|r/Labrador|p/Newfoundland and Labrador|c/Canada}}. <end>
+Page 555 Hamilton River: Found match for regex: <begin> # {{place|en|--=former name of:Churchill River|river|r/Labrador|p/Newfoundland and Labrador|c/Canada}}. <end>
 Page 556 Dersim: Found match for regex: <begin> # {{former name of|tr|Tunceli}} <end>
 Page 557 Loire-Inférieure: Found match for regex: <begin> # {{former name of|en|Loire-Atlantique}}. <end>
 Page 557 Loire-Inférieure: Found match for regex: <begin> {{trans-top|former name of Loire-Atlantique}} <end>
@@ -647,7 +647,7 @@ Page 584 Pembroke Hall: Found match for regex: <begin> # {{lb|en|Cantab|historic
 Page 585 Katharine Hall: Found match for regex: <begin> # {{lb|en|Cantab|historic}} {{former name of|en|{{w|St Catharine's College, Cambridge}}}}. <end>
 Page 586 St Edmund's House: Found match for regex: <begin> # {{lb|en|Cantab|historic}} {{former name of|en|{{w|St Edmund's College, Cambridge}}}}. <end>
 Page 587 University College: Found match for regex: <begin> # {{lb|en|Cantab|historic}} {{former name of|en|{{w|Wolfson College, Cambridge}}}}. <end>
-Page 588 Kallipolis: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|-form=former name of:Gelibolu|city|c/Turkey|a=a}}. <end>
+Page 588 Kallipolis: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|--=former name of:Gelibolu|city|c/Turkey}}. <end>
 Page 589 Wiktionary:Grease pit/2022/December: Found match for regex: <begin> :::::: OK, it looks like the verdict is "no change". A word about full stops/periods included in some templates, it is better to eliminate them from the template and add them manually. They are a nuisance when an editor wants to add further text, with {{tl|former name of}} for example. Yes, I know it's surmountable. ''[[User:Donnanz|DonnanZ]] ([[User talk:Donnanz|talk]]) 10:36, 8 December 2022 (UTC)'' <end>
 Page 589 Wiktionary:Grease pit/2022/December: Found match for regex: <begin> :::::::::{{reply|Benwing2}} A muddled state indeed. A language-specific template like {{tl|en-third-person singular of}} has a capital letter and no full stop, {{tl|plural of}} has neither. I suggest you take the bull by the horns. Is there any objection to removing the full stop from {{tl|former name of}}? ''[[User:Donnanz|DonnanZ]] ([[User talk:Donnanz|talk]]) 11:11, 9 December 2022 (UTC)''  <end>
 Page 590 Châlons-sur-Marne: Found match for regex: <begin> # {{former name of|en|Châlons-en-Champagne}}, [[France]], renamed in 1998. <end>
@@ -663,10 +663,10 @@ Page 599 Junk Ceylon: Found match for regex: <begin> # {{former name of|en|Phuke
 Page 600 Langasaque: Found match for regex: <begin> # {{former name of|en|Nagasaki}}. <end>
 Page 601 Bisnagar: Found match for regex: <begin> # {{former name of|en|Vijayanagara}}. <end>
 Page 602 Surprise: Found match for regex: <begin> ## {{former name of|en|Surprise Station}}, [[California]]. <end>
-Page 603 Chinaman's Peak: Found match for regex: <begin> # {{place|en|-form=former name of:Ha Ling Peak|mountain peak|mountain/Mount Lawrence Grassi|massif/Ehagay Nakoda|r/Canmore|r/Kananaskis Country|p/Alberta|c/Canada}}. <end>
+Page 603 Chinaman's Peak: Found match for regex: <begin> # {{place|en|--=former name of:Ha Ling Peak|mountain peak|mountain/Mount Lawrence Grassi|massif/Ehagay Nakoda|r/Canmore|r/Kananaskis Country|p/Alberta|c/Canada}}. <end>
 Page 604 Châtres: Found match for regex: <begin> # {{former name of|fr|Arpajon}} <end>
 Page 605 Châtres-sous-Montlhéry: Found match for regex: <begin> # {{former name of|fr|Arpajon}} <end>
-Page 606 Slavutych: Found match for regex: <begin> # {{lb|en|historical}} {{former name of|en|Dnipro||Dnipro River}} {{gloss|{{l|en|Dnieper}}}} {{q|when referring to the early Rus era}} {{place|en|river|c/Ukraine|c/Belarus|c/Russia|in|continent/Europe|flowing into the|sea/Black Sea}}. <end>
+Page 606 Slavutych: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|--=fmr of:Dnipro,Dnieper|river|c/Ukraine,Belarus,Russia|in|continent/Europe|flowing into the|sea/Black Sea|; used when referring to the early Rus era}}. <end>
 Page 608 Amity: Found match for regex: <begin> ## {{former name of|en|Pocahontas}}, [[Illinois]]. <end>
 Page 609 Zhdanov: Found match for regex: <begin> # {{lb|en|historical}} {{former name of|en|Mariupol}}. <end>
 Page 610 Gombroon: Found match for regex: <begin> # {{former name of|en|Bandar Abbas}}. <end>
@@ -678,13 +678,13 @@ Page 614 Slocan City: Found match for regex: <begin> # {{former name of|en|Sloca
 Page 615 Trout Lake: Found match for regex: <begin> ## {{former name of|en|Sambaa K'e}}, a lake and community in the [[Northwest Territories]]. <end>
 Page 616 Big Shanty: Found match for regex: <begin> # {{former name of|en|Kennesaw}}, [[Cobb County]], [[Georgia]], until 1887. <end>
 Page 617 Ibris: Found match for regex: <begin> # {{former name of|en|Eyebroughy}}. <end>
-Page 618 Taras: Found match for regex: <begin> # {{lb|en|historical}} {{synonym of|en|Tarentum}}, {{former name of|en|Taranto|nocap=1}}, ''{{place|en|city|c/Italy|a=a}}''. <end>
+Page 618 Taras: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|--=syn of:Tarentum;;fmr of:Taranto|city|c/Italy}}. <end>
 Page 619 severe myoclonic epilepsy of infancy: Found match for regex: <begin> # {{former name of|en|Dravet syndrome}}. <end>
 Page 620 Fort-Lamy: Found match for regex: <begin> # {{former name of|en|N'Djamena}}, [[Chad]]. <end>
 Page 621 Karl-Marx-Stadt: Found match for regex: <begin> # {{former name of|en|Chemnitz}}, between 1953 and 1990 when it was in [[East Germany]]. <end>
-Page 621 Karl-Marx-Stadt: Found match for regex: <begin> # {{former name of|de|Chemnitz}}, between 1953 and 1990 when it was in [[East Germany]]. <end>
+Page 621 Karl-Marx-Stadt: Found match for regex: <begin> # {{former name of|de|Chemnitz}}, between 1953 and 1990 when it was in [[East Germany]] <end>
 Page 623 Gay Head: Found match for regex: <begin> # {{former name of|en|Aquinnah}}. <end>
-Page 624 Barrack Hill: Found match for regex: <begin> # {{lb|en|Canada|historical}} {{former name of|en|Parliament Hill}} {{place|en|hill|city/Ottawa|p/Ontario|c/Canada}}. <end>
+Page 624 Barrack Hill: Found match for regex: <begin> # {{lb|en|Canada|historical}} {{place|en|--=fmr of:Parliament Hill|hill|city/Ottawa|p/Ontario|c/Canada}}. <end>
 Page 625 New Connecticut: Found match for regex: <begin> # {{former name of|en|Vermont}}. <end>
 Page 626 Schmitten: Found match for regex: <begin> # {{former name of|en|{{w|Schmitten im Taunus}}}}, [[Germany]], renamed in 2021. <end>
 Page 628 Longjiang: Found match for regex: <begin> # {{former name of|en|Jiulong||Chinese river}}. <end>
@@ -692,7 +692,7 @@ Page 629 Maraş: Found match for regex: <begin> # {{lb|tr|historical}} {{former 
 Page 630 Puerto México: Found match for regex: <begin> # {{former name of|en|Coatzacoalcos}}, [[Mexico]], between 1900 and 1936. <end>
 Page 631 Dagoon: Found match for regex: <begin> # {{former name of|en|Yangon}}. <end>
 Page 632 Стаханов: Found match for regex: <begin> # {{former name of|uk|Каді́ївка|t=[[Stakhanov]]}} <end>
-Page 633 Scandaroon: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|-form=former name of:Iskenderun|a=a|city|in southern|c/Turkey}}. <end>
+Page 633 Scandaroon: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|--=former name of:Iskenderun|city|in southern|c/Turkey}}. <end>
 Page 634 Chipley: Found match for regex: <begin> # {{former name of|en|Pine Mountain}}, [[Harris County]], [[Georgia]]. <end>
 Page 635 Дніпродзержинськ: Found match for regex: <begin> # {{former name of|uk|Кам'янське́|t=[[Dniprodzerzhynsk]]}} <end>
 Page 636 Dniprodzerzhynsk: Found match for regex: <begin> # {{lb|en|historical}} {{former name of|en|Kamianske}}. <end>
@@ -728,7 +728,7 @@ Page 661 Ménerville: Found match for regex: <begin> # {{former name of|en|Thén
 Page 662 Palestro: Found match for regex: <begin> # {{former name of|en|Lakhdaria}}, [[Algeria]]. <end>
 Page 663 Souk El Arba: Found match for regex: <begin> # {{former name of|en|Jendouba}}, [[Tunisia]]. <end>
 Page 664 ဟံသာဝတီ: Found match for regex: <begin> # {{lb|my|historical}} {{lang|my|(~[[မြို့]])}} {{former name of|en|Bago}} {{gloss|a regional capital in [[Myanmar]]}}. <end>
-Page 665 Kapisa: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|-form=former name of:Bagram|former capital|a=the}} of Kapisa. <end>
+Page 665 Kapisa: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|ancient city/former capital|kingdom:Pref/Kapisa|modern=Bagram}}. <end>
 Page 666 Fraustadt: Found match for regex: <begin> # {{lb|en|historical}} {{former name of|en|Wschowa}}. <end>
 Page 667 Chiapa: Found match for regex: <begin> # {{lb|en|historical}} {{former name of|en|San Cristóbal de las Casas}}. <end>
 Page 668 Первомайськ: Found match for regex: <begin> # {{former name of|uk|Сокологірськ}} <end>
@@ -741,9 +741,9 @@ Page 674 Լենինական: Found match for regex: <begin> # {{former name of|h
 Page 675 Somers Isles: Found match for regex: <begin> # {{former name of|en|Bermuda}}. <end>
 Page 676 Pandarani: Found match for regex: <begin> # {{former name of|en|Koyilandy}}. <end>
 Page 677 Fandarina: Found match for regex: <begin> # {{former name of|en|Koyilandy}}. <end>
-Page 678 Січеслав: Found match for regex: <begin> # {{former name of|uk|Дніпро}} (during the Civil War, from 1918). <end>
+Page 678 Січеслав: Found match for regex: <begin> # {{former name of|uk|Дніпро}} (during the Civil War, from 1918) <end>
 Page 679 Narsinga: Found match for regex: <begin> # {{former name of|en|Vijayanagara}}. <end>
-Page 680 Saint Christopher: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|-form=former name of:Saint Kitts|island|c/Saint Kitts and Nevis|a=an}}. <end>
+Page 680 Saint Christopher: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|--=former name of:Saint Kitts|island|c/Saint Kitts and Nevis}}. <end>
 Page 681 Madioen: Found match for regex: <begin> # {{former name of|en|Madiun}}, [[Java]], [[Indonesia]]. <end>
 Page 682 Cheribon: Found match for regex: <begin> # {{former name of|en|Cirebon}}, [[Java]], [[Indonesia]]. <end>
 Page 683 Cajanaburg: Found match for regex: <begin> # {{lb|en|historical}} {{former name of|en|Kajaani}}, {{ng|a town in Finland}}. <end>
@@ -770,12 +770,12 @@ Page 701 Haydenville: Found match for regex: <begin> ## {{former name of|en|Bear
 Page 702 Ablon: Found match for regex: <begin> # {{former name of|fr|Ablon-sur-Seine}} <end>
 Page 703 Jinxi: Found match for regex: <begin> # {{former name of|en|Huludao}}. <end>
 Page 704 Կիրովական: Found match for regex: <begin> # {{lb|hy|historical}} {{former name of|hy|Վանաձոր}} [[Kirovakan]] <end>
-Page 705 鳳馬: Found match for regex: <begin> # {{zh-div|島}} {{former name of|zh|對馬}}, [[Tsushima]] [[island|Island]] between [[Korea]] and [[Japan]]. <end>
-Page 708 Devil's Island: Found match for regex: <begin> # {{lb|en|historical}} {{former name of|en|Bermuda}} {{place|en|archipelago|r/North America||in the|ocean/Atlantic}}. <end>
+Page 705 鳳馬: Found match for regex: <begin> # {{zh-div|島}} {{former name of|zh|對馬}}, [[Tsushima]] [[island|Island]] between [[Korea]] and [[Japan]] <end>
+Page 708 Devil's Island: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|--=fmr of:Bermuda|archipelago|r/North America||in the|ocean/Atlantic}}. <end>
 Page 709 Basses-Alpes: Found match for regex: <begin> # {{former name of|en|Alpes-de-Haute-Provence}}. <end>
 Page 710 paper factor: Found match for regex: <begin> # {{former name of|en|juvabione}}. <end>
 Page 711 Dongquan: Found match for regex: <begin> # {{former name of|en|Dongju}}. <end>
-Page 712 Peak 15: Found match for regex: <begin> # {{former name of|en|Mount Everest}}; {{alternative form of|en|Peak XV|nocap=1}}: {{place|en|mountain|range/Himalayas|r/South Asia|on the border of|c/Nepal|and|c/China|in|s/Tibet|a=a}}. <end>
+Page 712 Peak 15: Found match for regex: <begin> # {{place|en|--=alt form:Peak XV;;fmr of:Mount Everest|mountain|range/Himalayas|r/South Asia|on the border of|c/Nepal,China|in|ar/Tibet}}. <end>
 Page 713 Diyarbekir: Found match for regex: <begin> # {{former name of|tr|Diyarbakır}} <end>
 Page 714 Artemivsk: Found match for regex: <begin> # {{former name of|en|Bakhmut}}. <end>
 Page 714 Artemivsk: Found match for regex: <begin> # {{former name of|en|Kypuche}}. <end>
@@ -790,14 +790,14 @@ Page 721 Saint Marcelin: Found match for regex: <begin> # {{former name of|fr|Sa
 Page 722 Fontanes de Leques: Found match for regex: <begin> # {{former name of|fr|Fontanès}} {{gloss|village in [[Gard]]}} <end>
 Page 723 Montjoy: Found match for regex: <begin> # {{former name of|fr|Montjoie-en-Couserans}}<ref>{{w|Cassini map}} (1740s).</ref> <end>
 Page 724 Canet: Found match for regex: <begin> # {{former name of|fr|Canet-en-Roussillon}}<ref>Attested on the {{w|Cassini map}} (1740s).</ref> {{gloss|town in [[Pyrénées-Orientales]]}} <end>
-Page 725 King Charles's Island: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|-form=former name of:Floreana|island|p/Galapagos|c/Equador|a=an}}. <end>
-Page 726 Duke of Norfolk's Island: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|-form=former name of:Santa Cruz|island|p/Galapagos|c/Ecuador|a=an}}. <end>
+Page 725 King Charles's Island: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|--=former name of:Floreana|island|p/Galapagos|c/Equador}}. <end>
+Page 726 Duke of Norfolk's Island: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|--=former name of:Santa Cruz|island|p/Galapagos|c/Ecuador}}. <end>
 Page 727 Montjoie: Found match for regex: <begin> # {{former name of|fr|Montjoie-en-Couserans}} <end>
 Page 728 Monjoie: Found match for regex: <begin> # {{former name of|fr|Montjoie-en-Couserans}}<ref>{{w|lang=fr|Carte d'état-major}} (1820-1866).</ref> <end>
 Page 729 Kitega: Found match for regex: <begin> # {{former name of|af|Gitega}} <end>
 Page 730 Trein d'Ustou: Found match for regex: <begin> # {{former name of|fr|Trein}} {{gloss|village in [[Ustou]], [[Ariège]]}} <end>
 Page 731 Dingane's Day: Found match for regex: <begin> # {{former name of|en|Day of the Vow}}. <end>
-Page 732 戈特霍布: Found match for regex: <begin> # {{former name of|zh|努克||{{place|zh|t=Nuuk|capital city|aterr/Greenland}}}} <end>
+Page 732 戈特霍布: Found match for regex: <begin> # {{place|zh|--=fmr of:努克<xlit:Nuuk>|t=da:Godthåb|capital city|aterr/Greenland}} <end>
 Page 733 New Milford: Found match for regex: <begin> ## {{former name of|en|West Milford}}, [[New Jersey]], renamed for Post Office reasons. <end>
 Page 734 Cannanore: Found match for regex: <begin> # {{former name of|en|Kannur||Indian city}}. <end>
 Page 735 Ocean Island: Found match for regex: <begin> # {{former name of|en|Banaba}}, [[Kiribati]]. Named by Captain Mertho in 1804 after his vessel, the ''{{w|Ocean (1794 ship)|Ocean}}''. <end>
@@ -821,10 +821,10 @@ Page 750 Pleasant Island: Found match for regex: <begin> # {{former name of|en|N
 Page 751 Jubbulpore: Found match for regex: <begin> # {{former name of|en|Jabalpur}}, [[India]]. <end>
 Page 752 Isle of Pines: Found match for regex: <begin> # {{former name of|en|{{w|Isla de la Juventud}}, [[Cuba]]}}. <end>
 Page 753 Elopura: Found match for regex: <begin> # {{former name of|en|Sandakan}}. <end>
-Page 754 Casilagan: Found match for regex: <begin> # {{place|en|-form=former name of:Cabeseria 14 and 16|a=a|barangay|city/Ilagan|p/Isabela|c/Philippines}}. <end>
+Page 754 Casilagan: Found match for regex: <begin> # {{place|en|--=former name of:Cabeseria 14 and 16|barangay|city/Ilagan|p/Isabela|c/Philippines}}. <end>
 Page 755 Barbula: Found match for regex: <begin> # {{former name of|mul|Caryopteris||flowering plant genus}} <end>
 Page 756 Yekaterinoslav: Found match for regex: <begin> # {{lb|en|historical}} {{former name of|en|Dnipro}}. <end>
-Page 757 Canadian Falls: Found match for regex: <begin> # {{place|en|-form=former name of:Shoshone Falls|waterfall|river/Snake River|s/Idaho|c/USA}}. <end>
+Page 757 Canadian Falls: Found match for regex: <begin> # {{place|en|--=former name of:Shoshone Falls|waterfall|river/Snake River|s/Idaho|c/USA}}. <end>
 Page 758 Port Lyautey: Found match for regex: <begin> # {{former name of|en|Kenitra}}, [[Morocco]], from 1932 to 1956. <end>
 Page 759 New Caesarea: Found match for regex: <begin> # {{lb|en|historical|obsolete}} {{former name of|en|New Jersey||colonial province}}: {{place|en|former colony/former province|of the|r/13 Colonies|cc/British North America|c/British Empire}}. <end>
 Page 760 Admission Day: Found match for regex: <begin> # {{former name of|en|Nevada Day}}. <end>
@@ -836,7 +836,7 @@ Page 767 保揚河: Found match for regex: <begin> # {{lb|zh|historical}} {{plac
 Page 768 保障河: Found match for regex: <begin> # {{lb|zh|historical}} {{place|zh|t=Baozhang|former short river|in modern|district/Hanjiang|prefecture-level city/Yangzhou|p/Jiangsu|c/China}}, ''a'' {{former name of|zh|瘦西湖}} <end>
 Page 769 保障湖: Found match for regex: <begin> # {{lb|zh|historical}} {{place|zh|t=Baozhang|lake|in modern|district/Hanjiang|prefecture-level city/Yangzhou|p/Jiangsu|c/China}}, ''a'' {{former name of|zh|瘦西湖}} <end>
 Page 770 UNISDR: Found match for regex: <begin> # {{lb|en|UN}} {{init of|en|[[UN]] [[international|International]] [[strategy|Strategy]] [[for]] [[disaster|Disaster]] [[risk|Risk]] [[reduction|Reduction]]}} {{former name of|en|UNDRR}}. <end>
-Page 771 Eskimo Point: Found match for regex: <begin> # {{place|en|-form=former name of:Arviat|hamlet|r/Kivalliq|terr/Nunavut|c/Canada}}. <end>
+Page 771 Eskimo Point: Found match for regex: <begin> # {{place|en|--=former name of:Arviat|hamlet|r/Kivalliq|terr/Nunavut|c/Canada}}. <end>
 Page 772 Batang Berjuntai: Found match for regex: <begin> # {{former name of|en|Bestari Jaya}}, [[Malaysia]]. <end>
 Page 774 Arcola: Found match for regex: <begin> # {{former name of|en|Arcole}}, [[Verona]] province, [[Italy]]. <end>
 Page 774 Arcola: Found match for regex: <begin> ## {{former name of|en|Borden}}, [[California]]. <end>
@@ -879,41 +879,41 @@ Page 811 Hallandale: Found match for regex: <begin> # {{former name of|en|Hallan
 Page 812 Stanley Falls: Found match for regex: <begin> # {{former name of|en|Boyoma Falls}}. <end>
 Page 813 Ferryville: Found match for regex: <begin> # {{former name of|en|Menzel Bourguiba}}. <end>
 Page 814 Lincoln City: Found match for regex: <begin> # {{former name of|en|Lincoln}}, [[Delaware]]. <end>
-Page 815 فیلادلفیا: Found match for regex: <begin> # {{lb|ota|historical}} {{former name of|ota|عمان|tr=Amman}}, {{place|ota|capital|c/Jordan|a=the|t=Amman}} <end>
-Page 815 فیلادلفیا: Found match for regex: <begin> # {{lb|ota|historical}} {{former name of|ota|آلاشهر|tr=Alaşehir}}, {{place|ota|city|c/Turkey|a=a|t=Alasehir}} <end>
-Page 816 راغوزه: Found match for regex: <begin> # {{lb|ota|historical}} {{place|ota|-form=former name of:دوبره‌وندیك⁩|port city|c/Croatia|t=Dubrovnik}} <end>
-Page 817 Sebastia: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|-form=former name of:Sivas|city|c/Turkey|a=a}}. <end>
-Page 818 Agios Theologos: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|-form=former name of:Selcuk|town|c/Turkey|a=a}} near the [[ruin]]s of [[ancient]] [[Ephesus]]. <end>
-Page 819 Ayasoluk: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|-form=former name of:Selcuk|town|c/Turkey|a=a}} near the [[ruin]]s of [[ancient]] [[Ephesus]]. <end>
+Page 815 فیلادلفیا: Found match for regex: <begin> # {{lb|ota|historical}} {{place|ota|--=fmr of:عمان<xlit:Amman>|capital|c/Jordan|t=Philadelphia}} <end>
+Page 815 فیلادلفیا: Found match for regex: <begin> # {{lb|ota|historical}} {{place|ota|--=fmr of:آلاشهر<tr:Alaşehir><xlit:Alasehir>|city|c/Turkey}} <end>
+Page 816 راغوزه: Found match for regex: <begin> # {{lb|ota|historical}} {{place|ota|--=former name of:دوبره‌وندیك⁩<xlit:Dubrovnik>|port city|c/Croatia|t=Ragusa}} <end>
+Page 817 Sebastia: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|--=former name of:Sivas|city|c/Turkey}}. <end>
+Page 818 Agios Theologos: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|--=former name of:Selcuk|town|c/Turkey|near the [[ruin]]s of [[ancient]] [[Ephesus]]}}. <end>
+Page 819 Ayasoluk: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|--=former name of:Selcuk|town|c/Turkey|near the [[ruin]]s of [[ancient]] [[Ephesus]]}}. <end>
 Page 820 Champs: Found match for regex: <begin> # {{former name of|fr|Champs-sur-Marne}} <end>
-Page 821 آیاسلوغ: Found match for regex: <begin> # {{lb|ota|historical}} {{place|ota|-form=former name of:سلچوق|city|c/Turkey|t=Selcuk}} <end>
-Page 822 ایاصـولق: Found match for regex: <begin> # {{lb|ota|historical}} {{alternative form of|ota|آیاسلوغ}}, {{place|ota|-form=former name of:سلچوق|city|c/Turkey|t=Selcuk}} <end>
-Page 823 یكی شهر: Found match for regex: <begin> # {{lb|ota|historical}} {{place|ota|-form=former name of:قره جه صو|city|c/Turkey|near [[Denizli]]|t=Karacasu}} <end>
+Page 821 آیاسلوغ: Found match for regex: <begin> # {{lb|ota|historical}} {{place|ota|--=former name of:سلچوق|city|c/Turkey|t=Selcuk}} <end>
+Page 822 ایاصـولق: Found match for regex: <begin> # {{lb|ota|historical}} {{place|ota|t=Ayasoluk|--=alt form:آیاسلوغ<tr:Ayasuluğ>;;former name of:سلچوق<xlit:Selcuk>|city|c/Turkey}} <end>
+Page 823 یكی شهر: Found match for regex: <begin> # {{lb|ota|historical}} {{place|ota|--=former name of:قره جه صو<xlit:Karacasu>|city|c/Turkey|near [[Denizli]]|t=Yenisehir}} <end>
 Page 824 Hinaur: Found match for regex: <begin> # {{former name of|en|Honnavar||Indian town}}. <end>
 Page 825 Onor: Found match for regex: <begin> # {{former name of|en|Honnavar||Indian town}}. <end>
 Page 826 Ethanac: Found match for regex: <begin> # {{former name of|en|Romoland}}, [[California]]. Derived from the name of '''Ethan''' '''A'''llen '''C'''hase. There is still a road named Ethanac Road in Romoland. <end>
 Page 827 Bigheart: Found match for regex: <begin> # {{former name of|en|Barnsdall}}, [[Oklahoma]], named after chief {{w|James Bigheart}}. Renamed in 1922. <end>
 Page 828 Sindabur: Found match for regex: <begin> # {{lb|en|obsolete}} {{former name of|en|Goa}}. <end>
-Page 829 Barqa: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|-form=former name of:Marj|city|c/Libya|a=a}}. <end>
-Page 829 Barqa: Found match for regex: <begin> # {{lb|en|chiefly|_|historical}} {{place|en|-form=former name of:Cyrenaica|region|c/Libya|a=a}}. <end>
-Page 830 Barqah: Found match for regex: <begin> # {{lb|en|historical}} {{alternative form of|en|Barqa}}, {{former name of|en|Marj|nocap=1}}, ''{{place|en|city|c/Libya|a=a}}''. <end>
+Page 829 Barqa: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|--=former name of:Marj|city|c/Libya}}. <end>
+Page 829 Barqa: Found match for regex: <begin> # {{lb|en|chiefly|_|historical}} {{place|en|--=former name of:Cyrenaica|region|c/Libya}}. <end>
+Page 830 Barqah: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|--=alt form:Barqa;;fmr of:Marj|city|c/Libya}}. <end>
 Page 831 Cananor: Found match for regex: <begin> # {{former name of|en|Kannur||Indian city}}. <end>
 Page 832 Canonor: Found match for regex: <begin> # {{former name of|en|Kannur||Indian city}}. <end>
 Page 833 Bow Island: Found match for regex: <begin> # {{former name of|en|Hao||atoll in French Polynesia}}. <end>
-Page 834 Jingzhao: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|-form=former name of:Xi'an|capital|p:Suf/Shaanxi|c/China}}, under the [[Yuan]] [[dynasty|Dynasty]]. <end>
+Page 834 Jingzhao: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|--=former name of:Xi'an|capital|p:Suf/Shaanxi|c/China}}, under the [[Yuan]] [[dynasty|Dynasty]]. <end>
 Page 835 Unilingua: Found match for regex: <begin> # {{former name of|en|Mirad}}, an [[international auxiliary language]] created by Noubar Agopoff in 1966. <end>
-Page 836 Montreuil-sur-Mer: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|-form=former name of:Montreuil|commune|in|dept:Suf/Vendée|r/Pays de la Loire|c/France|a=a}}. <end>
-Page 837 Punta Arena: Found match for regex: <begin> # {{former name of|en|Point Arena||city in California}}. <end>
+Page 836 Montreuil-sur-Mer: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|--=former name of:Montreuil|commune|in|dept:Suf/Vendée|r/Pays de la Loire|c/France}}. <end>
+Page 837 Punta Arena: Found match for regex: <begin> # {{place|en|city|s/California|c/USA|--=fmr of:Point Arena}}. <end>
 Page 838 Юзівка: Found match for regex: <begin> # {{former name of|uk|Доне́цьк}} <end>
 Page 839 CHARGE association: Found match for regex: <begin> # {{former name of|en|CHARGE syndrome}}. <end>
 Page 840 Troppau: Found match for regex: <begin> # {{former name of|en|Opava}}. <end>
 Page 841 Bhilsa: Found match for regex: <begin> # {{former name of|en|Vidisha}}, [[India]]. <end>
-Page 842 張家口堡: Found match for regex: <begin> # {{lb|zh|historical}} {{place|zh|-form=former name of:張家口|city|c/China|t=Zhangjiakou}} <end>
-Page 844 武城: Found match for regex: <begin> # {{lb|zh|historical}} {{place|zh|-form=former name of:張家口|city|c/China|t=Zhangjiakou}} <end>
+Page 842 張家口堡: Found match for regex: <begin> # {{lb|zh|historical}} {{place|zh|--=former name of:張家口|city|c/China|t=Zhangjiakou}} <end>
+Page 844 武城: Found match for regex: <begin> # {{lb|zh|historical}} {{place|zh|--=former name of:張家口|city|c/China|t=Zhangjiakou}} <end>
 Page 845 First Lady of the Land: Found match for regex: <begin> # {{lb|en|US|politics|obsolete}} {{former name of|en|[[FLOTUS]]}}. <end>
 Page 846 First Lady of the Republic: Found match for regex: <begin> # {{lb|en|US|politics|obsolete}} {{former name of|en|[[FLOTUS]]}}. <end>
 Page 847 Mount Godwin-Austen: Found match for regex: <begin> # {{former name of|en|K2}}. <end>
-Page 848 Arsinoë: Found match for regex: <begin> # {{lb|en|historical}} {{former name of|la|Crocodilopolis}}, ''{{place|en|city|c/Egypt|t=Fayum}}''. <end>
+Page 848 Arsinoë: Found match for regex: <begin> # {{lb|en|historical}} {{former name of|la|Crocodilopolis}}, ''{{place|en|city|c/Egypt|t=Fayum}}'' <end>
 Page 849 Trucial Oman: Found match for regex: <begin> # {{lb|en|historical}} {{former name of|en|United Arab Emirates}} {{q|used until 1971}}. <end>
 Page 850 Maillé: Found match for regex: <begin> # {{former name of|fr|Luynes}} {{gl|town in [[Indre-et-Loire]]}} <end>
 Page 851 Kissingen: Found match for regex: <begin> # {{former name of|de|Bad Kissingen}} {{gl|until 1883}} <end>
@@ -926,18 +926,18 @@ Page 857 Merdançon: Found match for regex: <begin> # {{former name of|fr|Verdan
 Page 858 Miritiba: Found match for regex: <begin> # {{former name of|pt|Humberto de Campos}} <end>
 Page 859 Jadotville: Found match for regex: <begin> # {{former name of|en|Likasi}}, [[Democratic Republic of the Congo]]. <end>
 Page 860 Myklegard: Found match for regex: <begin> # {{former name of|nn|Myklestøyl}} (a [[saeter]] farm in [[Haukeli]] area) <end>
-Page 861 Town Proper: Found match for regex: <begin> # {{place|en|-form=former name of:Zone 4 Poblacion|a=a|barangay|mun/Bangued|p/Abra|c/Philippines}}. <end>
+Page 861 Town Proper: Found match for regex: <begin> # {{place|en|--=former name of:Zone 4 Poblacion|barangay|mun/Bangued|p/Abra|c/Philippines}}. <end>
 Page 863 Gulf of Siam: Found match for regex: <begin> # {{former name of|en|Gulf of Thailand}}. <end>
-Page 864 Chaupala: Found match for regex: <begin> # {{place|en|-form=former name of:Moradabad|city|s/Uttar Pradesh|c/India|a=a}}. <end>
+Page 864 Chaupala: Found match for regex: <begin> # {{place|en|--=former name of:Moradabad|city|s/Uttar Pradesh|c/India}}. <end>
 Page 865 Doliche: Found match for regex: <begin> # {{former name of|en|Ikaria}}. <end>
 Page 866 Egriboz: Found match for regex: <begin> # {{former name of|en|Euboea}}. <end>
 Page 867 Agriboz: Found match for regex: <begin> # {{former name of|en|Euboea}}. <end>
 Page 868 Euripos: Found match for regex: <begin> # {{former name of|en|Euboea}}. <end>
 Page 869 Zinovievsk: Found match for regex: <begin> # {{former name of|en|Kropyvnytskyi}}. <end>
-Page 870 Bagong Lipunan: Found match for regex: <begin> # {{place|en|-form=former name of:Kayang Hilltop|barangay|city/Baguio|p/Benguet|c/Philippines|a=a}}. <end>
+Page 870 Bagong Lipunan: Found match for regex: <begin> # {{place|en|--=former name of:Kayang Hilltop|barangay|city/Baguio|p/Benguet|c/Philippines}}. <end>
 Page 871 Hilltop: Found match for regex: <begin> ## {{former name of|en|Fuller Acres}}, [[California]]. <end>
 Page 872 El Chilamatal: Found match for regex: <begin> # {{lb|es|historical|El Salvador}} {{former name of|es|Ciudad Arce}}, [[El Salvador]] <end>
-Page 873 West Bayan Park: Found match for regex: <begin> # {{place|en|-form=former name of:Leonila Hill|a=a|barangay|city/Baguio|p/Benguet|c/Philippines}}. <end>
+Page 873 West Bayan Park: Found match for regex: <begin> # {{place|en|--=former name of:Leonila Hill|barangay|city/Baguio|p/Benguet|c/Philippines}}. <end>
 Page 874 Desterro: Found match for regex: <begin> # {{former name of|pt|Florianópolis}} <end>
 Page 875 Arraial do Tijuco: Found match for regex: <begin> # {{former name of|pt|Diamantina}} <end>
 Page 876 Homestead: Found match for regex: <begin> ## {{former name of|en|Indian Wells}}, [[Kern County]], [[California]]. <end>
@@ -946,15 +946,15 @@ Page 878 Basing: Found match for regex: <begin> # {{former name of|en|Old Basing
 Page 879 Dease Lake Post: Found match for regex: <begin> # {{former name of|en|Dease Lake}} {{q|town}}. <end>
 Page 880 Lake House: Found match for regex: <begin> # {{former name of|en|Dease Lake}} {{q|town}}. <end>
 Page 881 Landing: Found match for regex: <begin> # {{former name of|en|Dease Lake}} {{q|town}}. <end>
-Page 882 Karnavati: Found match for regex: <begin> # {{place|en|-form=former name of:Ahmedabad|the <<largest city>> in <<s/Gujarat>>, <<c/India>>}}. <end>
+Page 882 Karnavati: Found match for regex: <begin> # {{place|en|--=former name of:Ahmedabad|the <<largest city>> in <<s/Gujarat>>, <<c/India>>}}. <end>
 Page 883 Graham Land: Found match for regex: <begin> # {{former name of|en|Antarctic Peninsula}}. <end>
 Page 884 Palmer Peninsula: Found match for regex: <begin> # {{former name of|en|Antarctic Peninsula}}. <end>
-Page 885 Crossing: Found match for regex: <begin> # {{place|en|-form=former name of:Ogod|a=a|barangay|mun/Donsol|p/Sorsogon|c/Philippines}}. <end>
-Page 885 Crossing: Found match for regex: <begin> # {{place|en|-form=former name of:San Pascual|a=a|barangay|mun/Santa Rita|p/Samar|c/Philippines}}. <end>
-Page 886 Lapu-lapu: Found match for regex: <begin> # {{former name of|en||Barangay 34}} ({{place|en|a=a|barangay|city/Cavite City|p/Cavite|c/Philippines}}). <end>
-Page 886 Lapu-lapu: Found match for regex: <begin> # {{place|en|-form=former name of:Patpat|a=a|barangay|city/Malaybalay|p/Bukidnon|c/Philippines}}. <end>
-Page 887 Ciudad: Found match for regex: <begin> # {{place|en|-form=former name of:San Roque|a=a|barangay|city/Cebu City|p/Cebu|c/Philippines}}. <end>
-Page 888 Ana Cuenca: Found match for regex: <begin> # {{place|en|-form=former name of:Lumbia|a=a|barangay|mun/Estancia|p/Iloilo|c/Philippines}}. <end>
+Page 885 Crossing: Found match for regex: <begin> # {{place|en|--=former name of:Ogod|barangay|mun/Donsol|p/Sorsogon|c/Philippines}}. <end>
+Page 885 Crossing: Found match for regex: <begin> # {{place|en|--=former name of:San Pascual|barangay|mun/Santa Rita|p/Samar|c/Philippines}}. <end>
+Page 886 Lapu-lapu: Found match for regex: <begin> # {{place|en|--=fmr of:Barangay 34|barangay|city/Cavite City|p/Cavite|c/Philippines}}. <end>
+Page 886 Lapu-lapu: Found match for regex: <begin> # {{place|en|--=former name of:Patpat|barangay|city/Malaybalay|p/Bukidnon|c/Philippines}}. <end>
+Page 887 Ciudad: Found match for regex: <begin> # {{place|en|--=former name of:San Roque|barangay|city/Cebu City|p/Cebu|c/Philippines}}. <end>
+Page 888 Ana Cuenca: Found match for regex: <begin> # {{place|en|--=former name of:Lumbia|barangay|mun/Estancia|p/Iloilo|c/Philippines}}. <end>
 Page 889 Ciudad Eva Perón: Found match for regex: <begin> # {{former name of|es|La Plata}} <end>
 Page 890 Shcheglovsk: Found match for regex: <begin> # {{former name of|en|Kemerovo}}. <end>
 Page 891 Fortaleza Protectora Argentina: Found match for regex: <begin> # {{former name of|es|Bahía Blanca}} <end>
