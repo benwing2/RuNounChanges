@@ -12,8 +12,9 @@ Page 569 LP: Found match for regex: <begin> # {{lb|pl|music}} {{abbr of|pl|en:lo
 Page 2231 FAI: Found match for regex: <begin> # {{abbreviation of|mul|fr:{{w|lang=en|Fédération Aéronautique Internationale}}}}: {{l|en|FAI}} {{gl|the world federation for aeronautics and airsports}} <end>
 Page 7580 RXR: Found match for regex: <begin> # {{abbreviation of|en|railroad,railway,rail-line,[[rail]] [[crossing]]}}: a [[level crossing]]. <end>
 Page 185 l: Found match for regex: <begin> # {{abbreviation of|en|la:libra|t=[[pound]] ([[pound sterling|sterling]])}}. <end>
-Page 894 IMS: Found match for regex: <begin> # {{place|en|--=abbr of:[[w:en:Indianapolis Motor Speedway|Indianapolis Motor Speedway]]<t:The Brickyard>|racetrack|ward/Speedway|city/Indianapolis|twp/Wayne|co/Marion|s/Indiana|c/USA}}. <end>
-Page 1377 ארה״ב: Found match for regex: <begin> # {{place|he|--=abbr of:אַרְצוֹת הַבְּרִית<tr:ar'tsót hab'rít><eq:United States>|country|cont/North America|t=US}} <end>
+Page 894 IMS: Found match for regex: <begin> # {{place|en|<=abbr of:[[w:en:Indianapolis Motor Speedway|Indianapolis Motor Speedway]]<t:The Brickyard>|racetrack|ward/Speedway|city/Indianapolis|twp/Wayne|co/Marion|s/Indiana|c/USA}}. <end>
+Page 1377 ארה״ב: Found match for regex: <begin> # {{place|he|<=abbr of:אַרְצוֹת הַבְּרִית<tr:ar'tsót hab'rít><eq:United States>|country|cont/North America|t=US}} <end>
+Page 11212 UMall: Found match for regex: <begin> # {{place|tl|<=abbr of:en:[[university|University]] [[mall|Mall]]|mall|district/Malate|city/Manila|c/Philippines}} <end>
 
 clipping of
 
@@ -135,9 +136,9 @@ Page 6510 fa ré: Found match for regex: <begin> # {{obsolete form of|ga|fara,fr
 
 former name of
 
-Page 250 Grand Falls: Found match for regex: <begin> # {{place|en|--=former name of:Churchill Falls;;former name of:McLean Falls|waterfall|r/Labrador|p/Newfoundland and Labrador|c/Canada|on the former|river/Grand River|now|river/Churchill River}}. <end>
-Page 317 Kuper: Found match for regex: <begin> # {{place|en|--=ellip of:Kuper Island;;fmr of:Penelakut|island|strait/Strait of Georgia|r/Vancouver Island|p/British Columbia|c/Canada}}. <end>
-Page 606 Slavutych: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|--=fmr of:Dnipro,Dnieper|river|c/Ukraine,Belarus,Russia|in|continent/Europe|flowing into the|sea/Black Sea|; used when referring to the early Rus era}}. <end>
+Page 250 Grand Falls: Found match for regex: <begin> # {{place|en|<=former name of:Churchill Falls;;former name of:McLean Falls|waterfall|r/Labrador|p/Newfoundland and Labrador|c/Canada|on the former|river/Grand River|now|river/Churchill River}}. <end>
+Page 317 Kuper: Found match for regex: <begin> # {{place|en|<=ellip of:Kuper Island;;fmr of:Penelakut|island|strait/Strait of Georgia|r/Vancouver Island|p/British Columbia|c/Canada}}. <end>
+Page 606 Slavutych: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|<=fmr of:Dnipro,Dnieper|river|c/Ukraine,Belarus,Russia|in|continent/Europe|flowing into the|sea/Black Sea|; used when referring to the early Rus era}}. <end>
 
 misspelling of
 
