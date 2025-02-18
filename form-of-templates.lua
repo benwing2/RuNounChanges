@@ -21,6 +21,18 @@ local require = require
 local dump = mw.dumpObject
 
 --[==[
+FIXME:
+
+1. Support xlit.
+2. Document new functions.
+3. Support equivalent of inflection_of_t() in parse_form_of_templatess() and format_form_of_template().
+4. Fix use of [[Module:format utilities]].
+5. Update documentation in [[Module:form of/templates/data]].
+6. Document generate_obj_maybe_parsing_lang_prefix() in [[Module:parameter utilities]].
+]==]
+
+
+--[==[
 Loaders for functions in other modules, which overwrite themselves with the target function when called. This ensures modules are only loaded when needed, retains the speed/convenience of locally-declared pre-loaded functions, and has no overhead after the first call, since the target functions are called directly in any subsequent calls.]==]
 local function debug_track(...)
 	debug_track = require(debug_track_module)
@@ -204,20 +216,6 @@ local function split_inflection_tags(tagspecs, split_regex)
 end
 
 
-local function parse_terms_with_inline_modifiers(paramname, val, param_mods, lang)
-	local function generate_obj(term)
-		return {lang = lang, term = decode_entities(term)}
-	end
-
-	return parse_inline_modifiers(val, {
-		paramname = paramname,
-		param_mods = param_mods,
-		generate_obj = generate_obj,
-		splitchar = ",",
-	})
-end
-
-
 -- Modify PARAMS in-place by adding parameters that control the link to the
 -- main entry. TERM_PARAM is the number of the param specifying the main
 -- entry itself; TERM_PARAM + 1 will be the display text, and TERM_PARAM + 2
@@ -277,6 +275,54 @@ local function add_link_and_base_lemma_params(iargs, parent_args, params, term_p
 	return base_lemma_params
 end
 
+local get_standard_param_mods = memoize(function()
+	local m_param_utils = require(parameter_utilities_module)
+	return m_param_utils.construct_param_mods {
+		{group = {"link", "q", "l", "ref"}},
+		{param = "conj", set = m_param_utils.allowed_conjs, overall = true},
+	}
+end)
+
+
+local function parse_terms_with_inline_modifiers(paramname, term, param_mods, lang)
+	local function generate_obj(data)
+		local m_param_utils = require(parameter_utilities_module)
+		data.parse_lang_prefix = true
+		data.special_continuations = m_param_utils.default_special_continuations
+		data.default_lang = lang
+		return m_param_utils.generate_obj_maybe_parsing_lang_prefix(data)
+	end
+	return require(parse_interface_module).parse_inline_modifiers(term, {
+		paramname = paramname,
+		param_mods = param_mods,
+		generate_obj = generate_obj,
+		generate_obj_new_format = true,
+		splitchar = ",",
+		outer_container = {},
+	})
+end
+
+
+local function parse_enclitic(lang, enclitic)
+	return parse_terms_with_inline_modifiers("enclitic", enclitic, get_standard_param_mods(), lang)
+end
+
+
+local function parse_base_lemma_params(lang, args, base_lemma_params)
+	local base_lemmas = {}
+	for _, base_lemma_param_obj in ipairs(base_lemma_params) do
+		local param = base_lemma_param_obj.param
+		if args[param] then
+			insert(base_lemmas, {
+				paramobj = base_lemma_param_obj,
+				lemmas = parse_terms_with_inline_modifiers(param, args[param], get_standard_param_mods(), lang),
+			})
+		end
+	end
+	return base_lemmas
+end
+
+
 local function handle_withdot_withcap(iargs, params)
 	local ignored_tracked_params = {}
 
@@ -296,6 +342,104 @@ local function handle_withdot_withcap(iargs, params)
 	end
 
 	return ignored_tracked_params
+end
+
+
+local function construct_form_of_text(data)
+	local lang, args, terms, enclitics, base_lemmas, dot, should_ucfirst, do_form_of =
+		data.lang, data.args, data.terms, data.enclitics, data.base_lemmas, data.dot, data.should_ucfirst,
+		data.do_form_of
+	local template_cats, user_cats, nocat, noprimaryentrycat, lemma_is_sort_key, user_sort_key
+		data.template_cats, data.user_cats, data.nocat, data.noprimaryentrycat, data.lemma_is_sort_key,
+		data.user_sort_key
+	local nolink, linktext, template_posttext, user_addl = data.nolink, data.linktext, data.template_posttext,
+		data.user_addl
+
+	-- Determine categories for the page, including tracking categories
+
+	local categories = {}
+
+	if not nocat and template_cats then
+		for _, cat in ipairs(template_cats) do
+			insert(categories, lang:getFullName() .. " " .. cat)
+		end
+	end
+	if user_cats then
+		for _, cat in ipairs(user_cats) do
+			insert(categories, lang:getFullName() .. " " .. cat)
+		end
+	end
+
+	local function add_term_tracking_categories(term)
+		-- add tracking category if term is same as page title
+		if term and mw.title.getCurrentTitle().text == (lang:makeEntryName(term)) then
+			insert(categories, "Forms linking to themselves")
+		end
+		-- maybe add tracking category if primary entry doesn't exist (this is an
+		-- expensive call so we don't do it by default)
+		if noprimaryentrycat and term and mw.title.getCurrentTitle().nsText == ""
+			and not mw.title.new(term):getContent() then
+			insert(categories, lang:getFullName() .. " " .. noprimaryentrycat)
+		end
+	end
+
+	for _, termobj in ipairs(terms) do
+		if termobj.term then
+			add_term_tracking_categories(termobj.term)
+		end
+
+		-- NOTE: Formerly, template arg sc= overrode inline modifier <sc:...>, which seems backwards, so I've
+		-- changed it. Hopefully nothing depended on the old behavior.
+	end
+
+	-- Format the link, preceding text and categories
+
+	local lemmas
+
+	if nolink then
+		lemmas = nil
+	elseif linktext then
+		lemmas = linktext
+	else
+		lemmas = terms
+	end
+
+	local posttext = template_posttext
+	if user_addl then
+		posttext = posttext or ""
+		if user_addl:find("^[;:]") then
+			posttext = posttext .. user_addl
+		elseif user_addl:find("^_") then
+			posttext = posttext .. " " .. user_addl:sub(2)
+		else
+			posttext = posttext .. ", " .. user_addl
+		end
+	end
+
+	local lemma_data = {
+		lang = lang,
+		args = args,
+		lemmas = lemmas,
+		enclitics = enclitics,
+		base_lemmas = base_lemmas,
+		categories = categories,
+		posttext = posttext,
+		should_ucfirst = should_ucfirst,
+	}
+
+	local form_of_text, lang_cats = do_form_of(lemma_data)
+	extend(lemma_data.categories, lang_cats)
+	local text = form_of_text .. (dot or "")
+	if #lemma_data.categories == 0 then
+		return text
+	end
+	return text .. format_categories(lemma_data.categories, lemma_data.lang, user_sort_key,
+		-- If lemma_is_sort_key is given, supply the first lemma term as the sort base if possible. If sort= is given,
+		-- it will override the base; otherwise, the base will be converted appropriately to a sort key using the
+		-- same algorithm applied to pagenames.
+		lemma_is_sort_key and type(lemma_data.lemmas) == "table" and lemma_data.lemmas[1].term,
+		-- Supply the first lemma's script for sort key computation.
+		force_cat or get_force_cat(), type(lemma_data.lemmas) == "table" and lemma_data.lemmas[1].sc)
 end
 
 
@@ -366,7 +510,7 @@ where
 (2) Any extra categories to add the page to (other than those that can be derived from parameters specified to the
     invocation or parent arguments, which will automatically be added to the page).
 ]=]
-local function construct_form_of_text(data)
+local function parse_args_and_construct_form_of_text(data)
 	local template, iargs, parent_args, params, no_numbered_gloss, do_form_of =
 		data.template, data.iargs, data.parent_args, data.params, data.no_numbered_gloss, data.do_form_of
 
@@ -461,17 +605,6 @@ local function construct_form_of_text(data)
 		parent_args = new_parent_args
 	end
 
-	local m_param_utils, param_mods
-
-	local function init_param_mods()
-		if not m_param_utils then
-			m_param_utils = require(parameter_utilities_module)
-			param_mods = m_param_utils.construct_param_mods {
-				{group = {"link", "q", "l", "ref"}},
-			}
-		end
-	end
-
 	local terms, args
 	if iargs.nolink or iargs.linktext then
 		args = process_params(parent_args, params)
@@ -501,6 +634,16 @@ local function construct_form_of_text(data)
 			splitchar = ",",
 			subitem_param_handling = "last",
 		}
+		if not terms.terms[1] then
+			if mw.title.getCurrentTitle().nsText == "Template" then
+				terms.terms[1] = {
+					lang = lang,
+					term = "term"
+				}
+			else
+				error("No linked-to term specified")
+			end
+		end
 	end
 
 	-- Tracking for certain user-specified params. This is generally used for
@@ -516,120 +659,28 @@ local function construct_form_of_text(data)
 
 	local lang = args[compat and "lang" or 1]
 
-	-- Determine categories for the page, including tracking categories
+	local enclitics = args.enclitic and parse_enclitic(lang, args.enclitic) or nil
+	local base_lemmas = base_lemma_params and parse_base_lemma_params(lang, args, base_lemma_params) or nil
 
-	local categories = {}
-
-	if not args.nocat then
-		for _, cat in ipairs(iargs.cat) do
-			insert(categories, lang:getFullName() .. " " .. cat)
-		end
-	end
-	for _, cat in ipairs(args.cat) do
-		insert(categories, lang:getFullName() .. " " .. cat)
-	end
-
-	-- Format the link, preceding text and categories
-
-	local function add_term_tracking_categories(term)
-		-- add tracking category if term is same as page title
-		if term and mw.title.getCurrentTitle().text == (lang:makeEntryName(term)) then
-			insert(categories, "Forms linking to themselves")
-		end
-		-- maybe add tracking category if primary entry doesn't exist (this is an
-		-- expensive call so we don't do it by default)
-		if iargs.noprimaryentrycat and term and mw.title.getCurrentTitle().nsText == ""
-			and not mw.title.new(term):getContent() then
-			insert(categories, lang:getFullName() .. " " .. iargs.noprimaryentrycat)
-		end
-	end
-
-	local lemmas
-
-	if iargs.nolink then
-		lemmas = nil
-	elseif iargs.linktext then
-		lemmas = iargs.linktext
-	else
-		if not terms.terms[1] then
-			if mw.title.getCurrentTitle().nsText == "Template" then
-				terms.terms[1] = {
-					lang = lang,
-					term = "term"
-				}
-			else
-				error("No linked-to term specified")
-			end
-		end
-		for _, termobj in ipairs(terms.terms) do
-			if termobj.term then
-				add_term_tracking_categories(termobj.term)
-			end
-
-			-- NOTE: Formerly, template arg sc= overrode inline modifier <sc:...>, which seems backwards, so I've
-			-- changed it. Hopefully nothing depended on the old behavior.
-		end
-
-		lemmas = terms.terms
-	end
-
-	local enclitics
-	if args.enclitic then
-		init_param_mods()
-		enclitics = parse_terms_with_inline_modifiers("enclitic", args.enclitic, param_mods, lang)
-	end
-	local base_lemmas = {}
-	if base_lemma_params then
-		for _, base_lemma_param_obj in ipairs(base_lemma_params) do
-			local param = base_lemma_param_obj.param
-			if args[param] then
-				init_param_mods()
-				insert(base_lemmas, {
-					paramobj = base_lemma_param_obj,
-					lemmas = parse_terms_with_inline_modifiers(param, args[param], param_mods, lang),
-				})
-			end
-		end
-	end
-
-	local posttext = iargs.posttext
-	local addl = args.addl
-	if addl then
-		posttext = posttext or ""
-		if addl:find("^[;:]") then
-			posttext = posttext .. addl
-		elseif addl:find("^_") then
-			posttext = posttext .. " " .. addl:sub(2)
-		else
-			posttext = posttext .. ", " .. addl
-		end
-	end
-
-	local lemma_data = {
+	return construct_form_of_text {
 		lang = lang,
 		args = args,
-		lemmas = lemmas,
+		terms = terms and terms.terms or nil,
 		enclitics = enclitics,
 		base_lemmas = base_lemmas,
-		categories = categories,
-		posttext = posttext,
+		dot = args.nodot and "" or args.dot or iargs.withdot and "." or "",
+		should_ucfirst = args.cap or (iargs.withcap or iargs.withencap and lang:getCode() == "en") and not args.nocap,
+		do_form_of = do_form_of,
+		template_cats = iargs.cat,
+		user_cats = args.cat,
+		noprimaryentrycat = iargs.noprimaryentrycat,
+		lemma_is_sort_key = iargs.lemma_is_sort_key,
+		user_sort_key = args.sort,
+		nolink = iargs.nolink,
+		linktext = iargs.linktext,
+		template_posttext = iargs.posttext,
+		user_addl = args.addl,
 	}
-
-	local form_of_text, lang_cats = do_form_of(lemma_data)
-	extend(lemma_data.categories, lang_cats)
-	local text = form_of_text .. (
-		args.nodot and "" or args.dot or iargs.withdot and "." or ""
-	)
-	if #lemma_data.categories == 0 then
-		return text
-	end
-	return text .. format_categories(lemma_data.categories, lemma_data.lang, args.sort,
-		-- If lemma_is_sort_key is given, supply the first lemma term as the sort base if possible. If sort= is given,
-		-- it will override the base; otherwise, the base will be converted appropriately to a sort key using the
-		-- same algorithm applied to pagenames.
-		iargs.lemma_is_sort_key and type(lemma_data.lemmas) == "table" and lemma_data.lemmas[1].term,
-		-- Supply the first lemma's script for sort key computation.
-		force_cat or get_force_cat(), type(lemma_data.lemmas) == "table" and lemma_data.lemmas[1].sc)
 end
 
 
@@ -654,8 +705,21 @@ local function get_common_invocation_params()
 end
 
 
-local function should_ucfirst_text(args, iargs, lang)
-	return args.cap or (iargs.withcap or iargs.withencap and lang:getCode() == "en") and not args.nocap
+local function do_non_tagged_form_of(form_of_text, lemma_data)
+	local args = lemma_data.args
+	local text
+	if args.notext then
+		text = ""
+	else
+		text = form_of_text
+		if lemma_data.should_ucfirst then
+			text = ucfirst(text)
+		end
+	end
+	return format_form_of {
+		text = text, lemmas = lemma_data.lemmas, enclitics = lemma_data.enclitics,
+		base_lemmas = lemma_data.base_lemmas, lemma_face = "term", posttext = lemma_data.posttext
+	}, {}
 end
 
 
@@ -727,34 +791,48 @@ function export.form_of_t(frame)
 		params.nocat = {type = "boolean"}
 	end
 
-	return construct_form_of_text {
+	return parse_args_and_construct_form_of_text {
 		template = "form-of-t",
 		iargs = iargs,
 		parent_args = parent_args,
 		params = params,
 		do_form_of = function(lemma_data)
-			local args = lemma_data.args
-			local text
-			if args.notext then
-				text = ""
-			else
-				text = iargs[1]
-				if should_ucfirst_text(args, iargs, lemma_data.lang) then
-					text = ucfirst(text)
-				end
-			end
-			return format_form_of {
-				text = text, lemmas = lemma_data.lemmas, enclitics = lemma_data.enclitics,
-				base_lemmas = lemma_data.base_lemmas, lemma_face = "term", posttext = lemma_data.posttext
-			}, {}
+			return do_non_tagged_form_of(iargs[1], lemma_data)
 		end
 	}
 end
 
 
+local function do_tagged_form_of(tags, lemma_data)
+	do_form_of = function(lemma_data)
+		local args = lemma_data.args
+		if type(tags) == "function" then
+			tags = tags(args)
+		end
+		-- NOTE: tagged_inflections returns two values, so we do too.
+		return tagged_inflections {
+			lang = lemma_data.lang,
+			tags = tags,
+			lemmas = lemma_data.lemmas,
+			enclitics = lemma_data.enclitics,
+			base_lemmas = lemma_data.base_lemmas,
+			lemma_face = "term",
+			POS = args.p,
+			pagename = args.pagename,
+			-- Set no_format_categories because we do it ourselves in construct_form_of_text().
+			no_format_categories = true,
+			nocat = args.nocat,
+			notext = args.notext,
+			capfirst = lemma_data.should_ucfirst,
+			posttext = lemma_data.posttext,
+		}
+	end
+end
+
+
 --[=[
 Construct and return the full definition line for a form-of-type template invocation that is based on inflection tags.
-This is a wrapper around construct_form_of_text() and takes the following arguments: processed invocation arguments
+This is a wrapper around parse_args_and_construct_form_of_text() and takes the following arguments: processed invocation arguments
 IARGS, processed parent arguments ARGS, TERM_PARAM (the parent argument specifying the main entry), COMPAT (true if the
 language code is found in args.lang instead of args[1]), and TAGS, the list of (non-canonicalized) inflection tags.
 It returns that actual definition-line text including terminating period/full-stop, formatted categories, etc. and
@@ -770,7 +848,7 @@ local function construct_tagged_form_of_text(data)
 	params.p = true
 	params.POS = {alias_of = "p"}
 
-	return construct_form_of_text {
+	return parse_args_and_construct_form_of_text {
 		template = template,
 		iargs = iargs,
 		parent_args = parent_args,
@@ -795,7 +873,7 @@ local function construct_tagged_form_of_text(data)
 				no_format_categories = true,
 				nocat = args.nocat,
 				notext = args.notext,
-				capfirst = should_ucfirst_text(args, iargs, lemma_data.lang),
+				capfirst = lemma_data.should_ucfirst,
 				posttext = lemma_data.posttext,
 			}
 		end
@@ -984,7 +1062,7 @@ function export.get_form_of_type_data(form_of_type)
 end
 
 
-function export.parse_form_of_templates(lang, arg)
+function export.parse_form_of_templates(lang, paramname, arg)
 	local form_ofs
 	-- First split on ;;. We could split directly but it's safer not to split inside of <...> or [...].
 	if arg:find("[%[<]") then
@@ -1029,120 +1107,47 @@ function export.parse_form_of_templates(lang, arg)
 				insert(param_mod_spec, {param = param.param], overall = true})
 			end
 		end
+		local param_mods = m_param_utils.construct_param_mods(param_mod_spec)
 
-		local function generate_obj(data)
-			data.parse_lang_prefix = true
-			data.special_continuations = m_param_utils.default_special_continuations
-			local obj = m_param_utils.generate_obj_maybe_parsing_lang_prefix(data)
-			obj.lang = obj.lang or lang
-			return obj
+		local parsed_template = parse_terms_with_inline_modifiers(paramname, form_of_arg, param_mods, lang)
+		parsed_template.lang = lang
+		parsed_template.form_of_type = form_of_type
+		parsed_template.canon_type = canon_type
+		parsed_template.typedata = typedata
+		if parsed_template.enclitic then
+			parsed_template.enclitics = parse_enclitic(lang, parsed_template.enclitic)
 		end
-		local parsed_template_obj = require(parse_interface_module).parse_inline_modifiers(term, {
-			paramname = paramname,
-			param_mods = get_param_mods(),
-			generate_obj = generate_obj,
-			generate_obj_new_format = true,
-			splitchar = ",",
-			outer_container = {},
-		})
-		parsed_template_obj.form_of_type = form_of_type
-		parsed_template_obj.typedata = typedata
-		if typedata.default then
-			for _, termobj in ipairs(parsed_template_obj.terms) do
-				for k, v in pairs(typedata.default) do
-					if termobj[k] == nil then
-						termobj[k] = v
-					end
-				end
-			end
+		if base_lemma_params then
+			parsed_template.base_lemmas = parse_base_lemma_params(lang, parsed_template, base_lemma_params)
 		end
 
+		insert(parsed_templates, parsed_template)
+	end
+
+	return parsed_templates
 end
 
 
-end
-
-
---[==[
-Function that implements {{tl|form of}} and the various more specific form-of templates (but not {{tl|inflection of}}
-or templates that take tagged inflection parameters).
-
-Invocation params:
-
-; {{para|1|req=1}}
-: Text to display before the link.
-; {{para|term_param}}
-: Numbered param holding the term linked to. Other numbered params come after. Defaults to 1 if invocation or template
-  param {{para|lang}} is present, otherwise 2.
-; {{para|lang}}
-: Default language code for language-specific templates. If specified, no language code needs to be specified, and if
-  specified it needs to be set using {{para|lang}}, not {{para|1}}.
-; {{para|sc}}
-: Default script code for language-specific templates. The script code can still be overridden using template param
-  {{para|sc}}.
-; {{para|cat}}, {{para|cat2}}, ...:
-: Categories to place the page into. The language name will automatically be prepended. Note that there is also a
-  template param {{para|cat}} to specify categories at the template level. Use of {{para|nocat}} disables categorization
-  of categories specified using invocation param {{para|cat}}, but not using template param {{para|cat}}.
-; {{para|ignore}}, {{para|ignore2}}, ...:
-: One or more template params to silently accept and ignore. Useful e.g. when the template takes additional parameters
-  such as {{para|from}} or {{para|POS}}. Each value is a comma-separated list of either bare parameter names or
-  specifications of the form `PARAM:list` to specify that the parameter is a list parameter.
-; {{para|def}}, {{para|def2}}, ...:
-: One or more default values to supply for template args. For example, specifying {{para|def|2=tr=-}} causes the default
-  for template param {{para|tr}} to be `-`. Actual template params override these defaults.
-; {{para|withcap}}
-: Capitalize the first character of the text preceding the link, unless template param {{para|nocap}} is given.
-; {{para|withencap}}
-: Capitalize the first character of the text preceding the link if the language is English and template param
-  {{para|nocap}} is not given.
-; {{para|withdot}}
-: Add a final period after the link, unless template param {{para|nodot}} is given to suppress the period, or
-  {{para|dot}} is given to specify an alternative punctuation character.
-; {{para|nolink}}
-: Suppress the display of the link. If specified, none of the template params that control the link
-  ({{para|<var>term_param</var>}}, {{para|<var>term_param</var> + 1}}, {{para|<var>term_param</var> + 2}}, {{para|t}},
-  {{para|gloss}}, {{para|sc}}, {{para|tr}}, {{para|ts}}, {{para|pos}}, {{para|g}}, {{para|id}}, {{para|lit}}) will be
-  available. If the calling template uses any of these parameters, they must be ignored using {{para|ignore}}.
- {{para|linktext}}
-: Override the display of the link with the specified text. This is useful if a custom template is available to format
-  the link (e.g. in Hebrew, Chinese and Japanese). If specified, none of the template params that control the link
-  ({{para|<var>term_param</var>}}, {{para|<var>term_param</var> + 1}}, {{para|<var>term_param</var> + 2}}, {{para|t}},
-  {{para|gloss}}, {{para|sc}}, {{para|tr}}, {{para|ts}}, {{para|pos}}, {{para|g}}, {{para|id}}, {{para|lit}}) will be
-  available. If the calling template uses any of these parameters, they must be ignored using {{para|ignore}}.
-; {{para|posttext}}
-: Additional text to display directly after the formatted link, before any terminating period/dot and inside of
-  `<span class='use-with-mention'>`.
-; {{para|noprimaryentrycat}}
-: Category to add the page to if the primary entry linked to doesn't exist. The language name will automatically be
-  prepended.
-; {{para|lemma_is_sort_key}}
-: If the user didn't specify a sort key, use the lemma as the sort key (instead of the page itself).
-]==]
 function export.format_form_of_template(data)
-	local should_ucfirst = should_ucfirst_text(data.args, {}, data.lang)
-	local allow_from = typedata.allow_from or type(typedata.text) == "string" and typedata.text:find("<<FROM:")
-	local from = args.from
-	if type(from) == "table" and not from[1] then
-		from = nil
-	end
-	if from and not allow_from then
-		error(("|from= not allowed with form-of type '%s'"):format(form_of_type))
-	end
+	local lang, terms, form_of_type, canon_type, typedata = data.lang, data.terms, data.form_of_type, data.canon_type,
+		data.typedata
+	local from, notext, should_ucfirst, addl = data.from, data.notext, data.should_ucfirst, data.addl
+	local nocat, p, sort_key = data.nocat, data.p, data.sort_key
+	local enclitics, base_lemmas = data.enclitics, data.base_lemmas
+
+	local formatted_from
 	if type(from) == "string" then
 		from = {from}
 	end
-
-	local formatted_from
 	if from then
 		local processed_labels
 		for _, fromlabel in ipairs(from) do
 			local this_processed_labels = require(labels_module).split_and_process_raw_labels {
 				labels = fromlabel,
-				lang = data.lang,
+				lang = lang,
 				mode = "form-of",
-				nocat = args.nocat,
-				sort = args.sort,
+				nocat = nocat,
+				sort = sort_key,
 				already_seen = {},
 				ok_to_destructively_modify = true,
 			}
@@ -1164,7 +1169,7 @@ function export.format_form_of_template(data)
 		if saw_raw then
 			formatted_from = require(labels_module).format_processed_labels {
 				labels = processed_labels,
-				lang = data.lang,
+				lang = lang,
 				raw = true,
 				ok_to_destructively_modify = true,
 			}
@@ -1183,72 +1188,102 @@ function export.format_form_of_template(data)
 		end
 	end
 
-	if typedata.tags then
-		...
-	else
-		if not typedata.text then
-			text = form_of_type
-		else
-			text = typedata.text
-			if type(text) == "table" then
-				text = text.func {
-					args = data.args,
-					lang = data.lang,
-					should_ucfirst = should_ucfirst,
-					formatted_from = formatted_from,
-				}
+	local function fetch_typedata_value(key)
+		local val = typedata[key]
+		if type(val) == "table" and val.func then
+			val = val.func {
+				form_of_type = form_of_type,
+				canon_type = canon_type,
+				typedata = typedata,
+				lang = lang,
+				should_ucfirst = should_ucfirst,
+				formatted_from = formatted_from,
+			}
+		end
+		return val
+	end
+
+	local default = fetch_typedata_value("default")
+	if default then
+		for _, termobj in ipairs(terms) do
+			for k, v in pairs(default) do
+				if termobj[k] == nil then
+					termobj[k] = v
+				end
 			end
-			text = text:gsub("<<FROM:(.-)>>", function(default)
-				return formatted_from or default
-			end)
-			text = text:gsub("<<POS:(.-)>>", function(default)
-				local pos = args.p or args.POS or default
+		end
+	end
+
+	local cats = fetch_typedata_value("cat")
+	if cats then
+		if type(cats) ~= "table" then
+			cats = {cats}
+		end
+		for i, cat in ipairs(cats) do
+			if cat == true then
+				cat = require(en_utilities_module).pluralize((canontype:gsub(" of$", "")))
+			end
+			cat = cat:gsub("<<POS:(.-)>>", function(default)
+				local pos = p or default
+				-- canonicalize part of speech
 				pos = (m_form_of_pos or get_m_form_of_pos())[pos] or pos
 				return require(en_utilities_module).pluralize(pos)
 			end)
-			if text:find("<<") then
-				text = text:gsub("<<(.-)|(.-)>>", glossary_link):gsub("<<(.-)>>", glossary_link)
+			cats[i] = cat
+		end
+	end
+
+	local args, do_form_of
+
+	local tags = fetch_typedata_value("tags")
+	if tags then
+		args = {
+			notext = notext,
+			nocat = nocat,
+			p = p,
+			pagename = pagename,
+		}
+		do_form_of = function(lemma_data)
+			return do_tagged_form_of(tags, lemma_data)
+		end
+	else
+		local form_of_text = fetch_typedata_value("text")
+		if not form_of_text then
+			form_of_text = form_of_type
+		else
+			form_of_text = form_of_text:gsub("<<FROM:(.-)>>", function(default)
+				return formatted_from or default
+			end)
+			if form_of_text:find("<<") then
+				form_of_text = form_of_text:gsub("<<(.-)|(.-)>>", glossary_link):gsub("<<(.-)>>", glossary_link)
 			end
 		end
 
-
-
-
-	(frame)
-	local iparams = get_common_invocation_params()
-	iparams[1] = {required = true}
-	local iargs = process_params(frame.args, { type = iparams)
-	local parent_args = frame:getParent().args
-
-	local params = get_common_template_params()
-
-	if next(iargs.cat) then
-		params.nocat = {type = "boolean"}
+		args = {notext = notext}
+		do_form_of = function(lemma_data)
+			return do_non_tagged_form_of(form_of_text, lemma_data)
+		end
 	end
 
 	return construct_form_of_text {
-		template = "form-of-t",
-		iargs = iargs,
-		parent_args = parent_args,
-		params = params,
-		do_form_of = function(lemma_data)
-			local args = lemma_data.args
-			local text
-			if args.notext then
-				text = ""
-			else
-				text = iargs[1]
-				if should_ucfirst_text(args, iargs, lemma_data.lang) then
-					text = ucfirst(text)
-				end
-			end
-			return format_form_of {
-				text = text, lemmas = lemma_data.lemmas, enclitics = lemma_data.enclitics,
-				base_lemmas = lemma_data.base_lemmas, lemma_face = "term", posttext = lemma_data.posttext
-			}, {}
-		end
+		lang = lang,
+		args = args,
+		terms = terms,
+		enclitics = enclitics,
+		base_lemmas = base_lemmas,
+		dot = nil,
+		should_ucfirst = should_ucfirst,
+		do_form_of = do_form_of,
+		template_cats = cats,
+		user_cats = nil,
+		noprimaryentrycat = fetch_typedata_value("noprimaryentrycat"),
+		lemma_is_sort_key = fetch_typedata_value("lemma_is_sort_key"),
+		user_sort_key = sort_key,
+		nolink = fetch_typedata_value("nolink"),
+		linktext = fetch_typedata_value("linktext"),
+		template_posttext = fetch_typedata_value("posttext"),
+		user_addl = addl,
 	}
 end
-
 
 return export
