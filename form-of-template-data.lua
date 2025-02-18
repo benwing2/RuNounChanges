@@ -3,7 +3,7 @@ local export = {}
 
 local pronunciation_spelling_posttext = {
 	func = function pronunciation_spelling_posttext(data)
-		if data.args.from then
+		if data.formatted_from then
 			return ", representing " .. data.formatted_from .. " " .. data.lang:getCanonicalName()
 		end
 	end,
@@ -49,7 +49,6 @@ Any value can be a function object instead of its normal value. A function objec
 a function of one argument `data` to calculate the field's value, and `desc`, an English description of what the
 function's output is, which can contain template calls; used for documentation purposes. The `data` object passed into
 the function has the following fields:
-* `args`: Processed arguments.
 * `lang`: Language object.
 * `should_ucfirst`: True if the first letter of the text should be capitalized.
 * `formatted_from`: Formatted labels from {{para|from}}, {{para|from2}}, etc. if `allow_from` is given or
