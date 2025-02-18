@@ -325,7 +325,7 @@ Page 265 Flehman: Found match for regex: <begin> # {{nonstandard form of|en|fleh
 Page 266 설레이다: Found match for regex: <begin> # {{nonstandard form of|ko|설레다}} <end>
 Page 267 varitas: Found match for regex: <begin> # {{nonstandard form of|id|varietas}} <end>
 Page 268 thot: Found match for regex: <begin> # {{nonstandard form of|en|thought}}. <end>
-Page 268 thot: Found match for regex: <begin> # {{infl of|en|-form=nstd form:thought|think||ed-form}}. <end>
+Page 268 thot: Found match for regex: <begin> # {{infl of|en|<=nstd form:thought|think||ed-form}}. <end>
 Page 269 seterika: Found match for regex: <begin> # {{nonstandard form of|id|setrika}} <end>
 Page 270 โรฮิงยา: Found match for regex: <begin> # {{nonstandard form of|th|โรฮีนจา}} <end>
 Page 270 โรฮิงยา: Found match for regex: <begin> # {{nonstandard form of|th|โรฮีนจา}} <end>

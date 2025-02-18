@@ -383,7 +383,7 @@ Page 325 buz: Found match for regex: <begin> # {{obsolete form of|en|buzz||hummi
 Page 325 buz: Found match for regex: <begin> # {{obs form|en|buzz||counting game, fizz-buzz}} <end>
 Page 325 buz: Found match for regex: <begin> # {{obsolete form of|en|buzz}}. <end>
 Page 326 sii: Found match for regex: <begin> # {{obsolete form of|ro|sfii}} <end>
-Page 327 Harlem: Found match for regex: <begin> # {{place|en|ann=obs form:Haarlem|city|r/Randstad|p/North Holland|c/Netherlands}}. <end>
+Page 327 Harlem: Found match for regex: <begin> # {{place|en|<=obs form:Haarlem|city|r/Randstad|p/North Holland|c/Netherlands}}. <end>
 Page 328 hight: Found match for regex: <begin> # {{obsolete form of|en|height}}. <end>
 Page 329 brocard: Found match for regex: <begin> # {{obsolete form of|ro|brocart}} <end>
 Page 330 some one: Found match for regex: <begin> # {{obsolete form of|en|someone}}. <end>
@@ -6228,7 +6228,7 @@ Page 5905 barbacue: Found match for regex: <begin> # {{obsolete form of|en|barbe
 Page 5906 priseable: Found match for regex: <begin> # {{obsolete form of|en|prizable}}. <end>
 Page 5907 cragge: Found match for regex: <begin> # {{obsolete form of|en|crag||rocky outcrop etc.}}. <end>
 Page 5907 cragge: Found match for regex: <begin> # {{obsolete form of|en|crag||the neck or throat}}. <end>
-Page 5909 Turky: Found match for regex: <begin> # {{place|en|ann=obs form:Turkey|country|r/Middle East}}. <end>
+Page 5909 Turky: Found match for regex: <begin> # {{place|en|<=obs form:Turkey|country|r/Middle East}}. <end>
 Page 5912 blame-worthy: Found match for regex: <begin> # {{obsolete form of|en|blameworthy}}. <end>
 Page 5913 genialisch: Found match for regex: <begin> # {{obsolete form of|de|genial}} <end>
 Page 5914 crampt: Found match for regex: <begin> # {{obsolete form of|en|cramped}}. <end>
@@ -9138,7 +9138,7 @@ Page 8841 quoifed: Found match for regex: <begin> # {{obsolete form of|en|coifed
 Page 8842 faëry: Found match for regex: <begin> # {{obsolete form of|en|fairy}}. <end>
 Page 8843 strooper: Found match for regex: <begin> # {{obsolete form of|nl|stroper}} <end>
 Page 8844 common place: Found match for regex: <begin> # {{obsolete form of|en|commonplace}}. <end>
-Page 8845 Asemissen: Found match for regex: <begin> # {{place|de|ann=obs form:Asmissen|district/and/former municipality|municipality/Extertal|dist/Lippe|state/North Rhine-Westphalia|c/Germany}} <end>
+Page 8845 Asemissen: Found match for regex: <begin> # {{place|de|<=obs form:Asmissen|district/and/former municipality|municipality/Extertal|dist/Lippe|state/North Rhine-Westphalia|c/Germany}} <end>
 Page 8846 1:o: Found match for regex: <begin> # {{obsolete form of|sv|[[1:a]]||1st}}{{ng|, or simply '''[[1]]'''; used to enumerate the first item in a list.}} <end>
 Page 8847 fasant: Found match for regex: <begin> # {{obsolete form of|nl|fazant}} <end>
 Page 8848 gorgious: Found match for regex: <begin> # {{obsolete form of|en|gorgeous}}. <end>
@@ -9294,12 +9294,12 @@ Page 9014 langpas: Found match for regex: <begin> # {{obsolete form of|tl|lagpas
 Page 9015 rechlessness: Found match for regex: <begin> # {{obsolete form of|en|recklessness}}. <end>
 Page 9016 salæratus: Found match for regex: <begin> # {{obsolete form of|en|saleratus}}. <end>
 Page 9017 wezeer: Found match for regex: <begin> # {{obsolete form of|en|wazir}}. <end>
-Page 9018 Jemulpo: Found match for regex: <begin> # {{place|en|ann=obs form:Incheon|major city|c/South Korea}}. <end>
-Page 9019 Chemulpo: Found match for regex: <begin> # {{place|en|ann=obs form:Incheon|major city|c/South Korea}}. <end>
-Page 9020 Kyongsong: Found match for regex: <begin> # {{place|en|ann=obs form:Seoul|capital|c/South Korea}}. <end>
+Page 9018 Jemulpo: Found match for regex: <begin> # {{place|en|<=obs form:Incheon|major city|c/South Korea}}. <end>
+Page 9019 Chemulpo: Found match for regex: <begin> # {{place|en|<=obs form:Incheon|major city|c/South Korea}}. <end>
+Page 9020 Kyongsong: Found match for regex: <begin> # {{place|en|<=obs form:Seoul|capital|c/South Korea}}. <end>
 Page 9021 antemasque: Found match for regex: <begin> # {{obsolete form of|en|antimasque}}. <end>
 Page 9022 houp-la: Found match for regex: <begin> # {{obsolete form of|en|hoopla}}. <end>
-Page 9023 Great Ocean: Found match for regex: <begin> # {{place|en|ann=obs form:Pacific Ocean|largest ocean|c/Western Hemisphere}} <end>
+Page 9023 Great Ocean: Found match for regex: <begin> # {{place|en|<=obs form:Pacific Ocean|largest ocean|c/Western Hemisphere}} <end>
 Page 9025 Reconstruction:Old English/ans: Found match for regex: <begin> # {{obsolete form of|ang|ōs}} <end>
 Page 9026 Zutuhil: Found match for regex: <begin> # {{obsolete form of|en|Tz'utujil}}. <end>
 Page 9027 bakuwod: Found match for regex: <begin> # {{obsolete form of|tl|bakood}} <end>
@@ -16923,7 +16923,7 @@ Page 6009 árdán: Found match for regex: <begin> # {{obsolete spelling of|ga|ar
 Page 6010 breágh: Found match for regex: <begin> # {{obsolete spelling of|ga|breá}} <end>
 Page 6011 Bearbha: Found match for regex: <begin> # {{obsolete spelling of|ga|Bearú}} <end>
 Page 6012 Bhearbha: Found match for regex: <begin> # {{obsolete spelling of|ga|Bhearú}}: {{ga-lenition of|Bearbha|nocap=1}} <end>
-Page 6013 ualaighe: Found match for regex: <begin> # {{plural of|ga|ann=obs sp:ualaí|ualach|t=load, burden}} <end>
+Page 6013 ualaighe: Found match for regex: <begin> # {{plural of|ga|<=obs sp:ualaí|ualach|t=load, burden}} <end>
 Page 6014 eudach: Found match for regex: <begin> # {{obsolete spelling of|ga|éadach}} <end>
 Page 6015 órlach: Found match for regex: <begin> # {{obsolete spelling of|ga|orlach}} <end>
 Page 6016 aontaighe: Found match for regex: <begin> # {{obsolete spelling of|ga|aontaí}} <end>

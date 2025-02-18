@@ -42,9 +42,9 @@ Page 36 cigaret: Found match for regex: <begin> # {{dated form of|en|cigarette}}
 Page 37 post card: Found match for regex: <begin> # {{dated form of|en|postcard}}. <end>
 Page 38 revery: Found match for regex: <begin> # {{dated form of|en|reverie}}. <end>
 Page 39 pædophilia: Found match for regex: <begin> # {{dated form of|en|pedophilia}}. <end>
-Page 40 Peking: Found match for regex: <begin> # {{dated form of|en|Beijing}}, {{place|en|a=a|direct-administered municipality/capital city|c/China}}. <end>
+Page 40 Peking: Found match for regex: <begin> # {{place|en|<=dated form of:Beijing|direct-administered municipality/capital city|c/China}}. <end>
 Page 41 succede: Found match for regex: <begin> # {{dated form of|en|succeed}}. <end>
-Page 42 Archangel: Found match for regex: <begin> # {{place|ru|ann=dated form of:Archangel|city|in northwestern|c/Russia}}. <end>
+Page 42 Archangel: Found match for regex: <begin> # {{place|ru|<=dated form of:Archangel|city|in northwestern|c/Russia}}. <end>
 Page 43 Chou: Found match for regex: <begin> # {{dated form of|en|Zhou||dynasty, realm and era}}. <end>
 Page 44 Mosquito: Found match for regex: <begin> # {{dated form of|en|Miskito}}. <end>
 Page 45 Verbum: Found match for regex: <begin> # {{dated form of|de|Verb|t=[[verb]]}} <end>
@@ -529,7 +529,7 @@ Page 541 Sintuism: Found match for regex: <begin> # {{dated form of|en|Shintoism
 Page 542 phrenetical: Found match for regex: <begin> # {{dated form of|en|frenetic}}. <end>
 Page 543 pottern ore: Found match for regex: <begin> # {{dated form of|en|potter's ore}}. <end>
 Page 544 apašši: Found match for regex: <begin> # {{dated form of|fi|apassi}} <end>
-Page 545 Mechlin: Found match for regex: <begin> # {{place|en|ann=dated form of:Mechelen|city|c/Belgium}}. <end>
+Page 545 Mechlin: Found match for regex: <begin> # {{place|en|<=dated form of:Mechelen|city|c/Belgium}}. <end>
 Page 546 infrequence: Found match for regex: <begin> # {{dated form of|en|infrequency}}. <end>
 Page 547 alopecy: Found match for regex: <begin> # {{dated form of|en|alopecia}}. <end>
 Page 548 tetradont: Found match for regex: <begin> # {{dated form of|en|tetrodon}}. <end>
@@ -727,7 +727,7 @@ Page 761 chamisal: Found match for regex: <begin> # {{dated form of|en|chamise||
 Page 762 icterode: Found match for regex: <begin> # {{dated form of|en|icteroid}}. <end>
 Page 763 ferratin: Found match for regex: <begin> # {{dated form of|en|ferritin}}. <end>
 Page 764 fluidextract: Found match for regex: <begin> # {{dated form of|en|[[fluid]] [[extract]]}}. <end>
-Page 765 Cassel: Found match for regex: <begin> # {{place|en|ann=dated form of:Kassel|city|c/Germany}}. <end>
+Page 765 Cassel: Found match for regex: <begin> # {{place|en|<=dated form of:Kassel|city|c/Germany}}. <end>
 Page 766 eucre: Found match for regex: <begin> # {{dated form of|en|euchre}}. <end>
 Page 767 bloodserum: Found match for regex: <begin> # {{dated form of|en|blood serum}}. <end>
 Page 768 jerbil: Found match for regex: <begin> # {{dated form of|en|gerbil}}. <end>
@@ -1104,8 +1104,8 @@ Page 1174 antikathode: Found match for regex: <begin> # {{dated form of|en|antic
 Page 1175 Kiamusze: Found match for regex: <begin> # {{dated form of|en|Jiamusi}}. <end>
 Page 1176 polyaxone: Found match for regex: <begin> # {{dated form of|en|polyaxon}}. <end>
 Page 1177 micranatomy: Found match for regex: <begin> # {{dated form of|en|microanatomy}}. <end>
-Page 1178 Tsining: Found match for regex: <begin> # {{place|en|ann=dated form of:Jining|city|p/Shandong|c/China}}. <end>
-Page 1178 Tsining: Found match for regex: <begin> # {{dated form of|en|ann=dated form of:Jining|district/and/former county-level city|prefecture-level city/Ulanqab|ar/Inner Mongolia|c/China}}. <end>
+Page 1178 Tsining: Found match for regex: <begin> # {{place|en|<=dated form of:Jining|city|p/Shandong|c/China}}. <end>
+Page 1178 Tsining: Found match for regex: <begin> # {{dated form of|en|<=dated form of:Jining|district/and/former county-level city|prefecture-level city/Ulanqab|ar/Inner Mongolia|c/China}}. <end>
 Page 1179 badju: Found match for regex: <begin> # {{dated form of|en|baju}}. <end>
 Page 1180 Hindostanee: Found match for regex: <begin> # {{dated form of|en|Hindustani}}. <end>
 Page 1180 Hindostanee: Found match for regex: <begin> # {{dated form of|en|Hindustani}}. <end>
@@ -1130,8 +1130,8 @@ Page 1197 Kalapooian: Found match for regex: <begin> # {{dated form of|en|Kalapu
 Page 1197 Kalapooian: Found match for regex: <begin> # {{dated form of|en|Kalapuyan}}. <end>
 Page 1198 kookri: Found match for regex: <begin> # {{dated form of|en|kukri}}. <end>
 Page 1199 kookeree: Found match for regex: <begin> # {{dated form of|en|kukri}}. <end>
-Page 1201 Sungkiang: Found match for regex: <begin> # {{place|en|ann=dated form of:Songjiang|district/and/former county|city/Shanghai|c/China}}. <end>
-Page 1201 Sungkiang: Found match for regex: <begin> # {{place|en|ann=dated form of|Songjiang|former province|c/China}}. <end>
+Page 1201 Sungkiang: Found match for regex: <begin> # {{place|en|<=dated form of:Songjiang|district/and/former county|city/Shanghai|c/China}}. <end>
+Page 1201 Sungkiang: Found match for regex: <begin> # {{place|en|<=dated form of:Songjiang|former province|c/China}}. <end>
 Page 1202 Futsing: Found match for regex: <begin> # {{dated form of|en|Fuqing}}. <end>
 Page 1203 Deepwater: Found match for regex: <begin> # {{dated form of|en|Deep Water|addl=in [[West Virginia]]}}. <end>
 Page 1204 peptical: Found match for regex: <begin> # {{dated form of|en|peptic}}. <end>
@@ -1478,8 +1478,8 @@ Page 31 Arthur: Found match for regex: <begin> # {{lb|pt|Portugal}} {{dated spel
 Page 32 ditto: Found match for regex: <begin> # {{dated spelling of|nl|dito}} <end>
 Page 33 Monako: Found match for regex: <begin> # {{dated spelling of|de|Monaco}} <end>
 Page 34 Hongkong: Found match for regex: <begin> # {{dated spelling of|en|Hong Kong}}. <end>
-Page 34 Hongkong: Found match for regex: <begin> # {{place|pt|-form=dated sp:Hong Kong|city/island/and/special administrative region|in southeastern|c/China}} <end>
-Page 35 Bagdad: Found match for regex: <begin> # {{place|en|-form=dated sp:Baghdad|capital city|c/Iraq}}. <end>
+Page 34 Hongkong: Found match for regex: <begin> # {{place|pt|<=dated sp:Hong Kong|city/island/and/special administrative region|in southeastern|c/China}} <end>
+Page 35 Bagdad: Found match for regex: <begin> # {{place|en|<=dated sp:Baghdad|capital city|c/Iraq}}. <end>
 Page 36 Teheran: Found match for regex: <begin> # {{dated spelling of|en|Tehran}}. <end>
 Page 37 seta: Found match for regex: <begin> # {{dated spelling of|jv|séta}} <end>
 Page 38 ofensiva: Found match for regex: <begin> # {{dated spelling of|cs|ofenziva}} <end>
@@ -2017,7 +2017,7 @@ Page 759 mille-pertuis: Found match for regex: <begin> # {{dated spelling of|fr|
 Page 760 Wöwöchim: Found match for regex: <begin> # {{lb|en|Hopi religion}} {{dated spelling of|en|Wuwuchim}}. <end>
 Page 761 Keam's Canyon: Found match for regex: <begin> # {{dated spelling of|en|Keams Canyon}}. <end>
 Page 762 Awatobi: Found match for regex: <begin> # {{dated spelling of|en|Awat'ovi}}. <end>
-Page 764 Basrah: Found match for regex: <begin> # {{place|en|-form=dated sp:Basra|major city|c/Iraq}}. <end>
+Page 764 Basrah: Found match for regex: <begin> # {{place|en|<=dated sp:Basra|major city|c/Iraq}}. <end>
 Page 766 play a rôle: Found match for regex: <begin> # {{dated spelling of|en|play a role}}. <end>
 Page 767 au dehors: Found match for regex: <begin> # {{dated spelling of|fr|au-dehors|t=[[outside]]}} <end>
 Page 768 au dedans: Found match for regex: <begin> # {{dated spelling of|fr|au-dedans|t=[[inside]]}} <end>

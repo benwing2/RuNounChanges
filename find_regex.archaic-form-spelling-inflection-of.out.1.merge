@@ -29,7 +29,7 @@ Page 27 lu: Found match for regex: <begin> # {{archaic form of|en|loo||card game
 Page 27 lu: Found match for regex: <begin> # {{archaic form of|en|loo||beat at card game}}. <end>
 Page 27 lu: Found match for regex: <begin> # {{archaic form of|co|u}} <end>
 Page 27 lu: Found match for regex: <begin> # {{archaic form of|co|u}} <end>
-Page 28 es: Found match for regex: <begin> # {{inflection of|non|ann=archaic form of:er|vera||3|s|ind|pres}} <end>
+Page 28 es: Found match for regex: <begin> # {{inflection of|non|<=archaic form of:er|vera||3|s|ind|pres}} <end>
 Page 28 es: Found match for regex: <begin> # {{archaic form of|non|er|t=[[which]], [[that]]}} <end>
 Page 28 es: Found match for regex: <begin> # {{archaic form of|non|er|t=[[when]], [[where]]}} <end>
 Page 29 buss: Found match for regex: <begin> # {{archaic form of|en|bus||passenger vehicle}}. <end>
@@ -57,7 +57,7 @@ Page 51 quarto: Found match for regex: <begin> # {{archaic form of|es|cuarto}} <
 Page 51 quarto: Found match for regex: <begin> # {{archaic form of|es|cuarto}} <end>
 Page 52 ua: Found match for regex: <begin> # {{archaic form of|ga|ó||grandson, grandchild; descendant}} <end>
 Page 53 Cali: Found match for regex: <begin> # {{archaic form of|en|Kali|gloss=Hindu goddess}}. <end>
-Page 54 ward: Found match for regex: <begin> # {{verb form of|de|ann=archaic form of:wurde|werden||1//3|s|pret}} <end>
+Page 54 ward: Found match for regex: <begin> # {{verb form of|de|<=archaic form of:wurde|werden||1//3|s|pret}} <end>
 Page 55 le: Found match for regex: <begin> # {{archaic form of|co|e}} <end>
 Page 55 le: Found match for regex: <begin> # {{archaic form of|co|e}} <end>
 Page 56 cabree: Found match for regex: <begin> # {{archaic form of|en|cabri||pronghorn}}. <end>
@@ -70,7 +70,7 @@ Page 63 sagus: Found match for regex: <begin> # {{archaic form of|la|sagum}} <en
 Page 64 dose: Found match for regex: <begin> # {{archaic form of|en|doze}}. <end>
 Page 64 dose: Found match for regex: <begin> # {{archaic form of|en|doze}}. <end>
 Page 65 scarf: Found match for regex: <begin> # {{archaic form of|en|scurf||skin disease; skin flakes}}. <end>
-Page 66 pote: Found match for regex: <begin> # {{inflection of|it|ann=archaic form of:può|potere||3|s|pres|indc}} <end>
+Page 66 pote: Found match for regex: <begin> # {{inflection of|it|<=archaic form of:può|potere||3|s|pres|indc}} <end>
 Page 67 riband: Found match for regex: <begin> # {{archaic form of|en|ribbon}}. <end>
 Page 68 sallet: Found match for regex: <begin> # {{archaic form of|en|salad}}. <end>
 Page 69 vysar: Found match for regex: <begin> # {{archaic form of|en|visor}}. <end>
@@ -168,7 +168,7 @@ Page 153 courant: Found match for regex: <begin> # {{archaic form of|nl|krant}} 
 Page 154 kas: Found match for regex: <begin> # {{archaic form of|nl|kassa}} <end>
 Page 155 tatu: Found match for regex: <begin> # {{archaic form of|en|tattoo|t=decorative ink design on the skin}}. <end>
 Page 155 tatu: Found match for regex: <begin> # {{archaic form of|en|tattoo|t=decorative ink design on the skin}}. <end>
-Page 156 stund: Found match for regex: <begin> # {{verb form of|de|ann=archaic form of:stand|stehen||1//3|s|pret}} <end>
+Page 156 stund: Found match for regex: <begin> # {{verb form of|de|<=archaic form of:stand|stehen||1//3|s|pret}} <end>
 Page 157 lett: Found match for regex: <begin> # {{archaic form of|en|let}}. <end>
 Page 158 polyadelphian: Found match for regex: <begin> # {{archaic form of|en|polyadelphous}}. <end>
 Page 159 babion: Found match for regex: <begin> # {{archaic form of|en|baboon}}. <end>
@@ -225,8 +225,8 @@ Page 204 mino: Found match for regex: <begin> # {{archaic form of|en|myna||type 
 Page 205 valse: Found match for regex: <begin> # {{archaic form of|en|waltz}}. <end>
 Page 205 valse: Found match for regex: <begin> # {{archaic form of|en|waltz}}. <end>
 Page 206 batoon: Found match for regex: <begin> # {{archaic form of|en|baton}}. <end>
-Page 207 использующею: Found match for regex: <begin> # {{inflection of|ru|ann=archaic form of:испо́льзующей|испо́льзующий||f|s|ins}} <end>
-Page 207 использующею: Found match for regex: <begin> # {{inflection of|ru|ann=archaic form of:испо́льзующей|испо́льзующий||f|s|ins}} <end>
+Page 207 использующею: Found match for regex: <begin> # {{inflection of|ru|<=archaic form of:испо́льзующей|испо́льзующий||f|s|ins}} <end>
+Page 207 использующею: Found match for regex: <begin> # {{inflection of|ru|<=archaic form of:испо́льзующей|испо́льзующий||f|s|ins}} <end>
 Page 208 antre: Found match for regex: <begin> # {{archaic form of|pt|entre}} <end>
 Page 209 paradigma: Found match for regex: <begin> # {{archaic form of|en|paradigm}}. <end>
 Page 210 regreting: Found match for regex: <begin> # {{archaic form of|en|regretting}}. <end>
@@ -398,7 +398,7 @@ Page 369 damascene: Found match for regex: <begin> # {{archaic form of|en|damson
 Page 370 palæ-: Found match for regex: <begin> # {{archaic form of|en|paleo-}}. <end>
 Page 371 ænigma: Found match for regex: <begin> # {{archaic form of|en|enigma}}. <end>
 Page 372 polido: Found match for regex: <begin> # {{archaic form of|es|pulido}} <end>
-Page 373 niega: Found match for regex: <begin> # {{infl of|it|ann=archaic form of:nega|negare||3|s|pres|ind|;|2|s|imp}} <end>
+Page 373 niega: Found match for regex: <begin> # {{infl of|it|<=archaic form of:nega|negare||3|s|pres|ind|;|2|s|imp}} <end>
 Page 374 xanthane: Found match for regex: <begin> # {{archaic form of|en|xanthan}}. <end>
 Page 375 Eubœa: Found match for regex: <begin> # {{archaic form of|en|Euboea}}. <end>
 Page 376 Achæa: Found match for regex: <begin> # {{archaic form of|en|Achaea}}. <end>
@@ -510,7 +510,7 @@ Page 473 interpretor: Found match for regex: <begin> # {{archaic form of|en|inte
 Page 474 cerebel: Found match for regex: <begin> # {{archaic form of|en|cerebellum}}. <end>
 Page 475 transformator: Found match for regex: <begin> # {{lb|en|electrical engineering}} {{archaic form of|en|transformer}}. <end>
 Page 476 kelter: Found match for regex: <begin> # {{lb|en|Britain|_|dialectal|US|chiefly in the negative}} {{archaic form of|en|kilter|t=([[good#Adjective|good]]) [[condition#Noun|condition]], [[form#Noun|form]], or [[order#Noun|order]]; [[fettle#Noun|fettle]]}}. <end>
-Page 477 puote: Found match for regex: <begin> # {{inflection of|it|ann=archaic form of:può|potere||3|s|pres|indc}} <end>
+Page 477 puote: Found match for regex: <begin> # {{inflection of|it|<=archaic form of:può|potere||3|s|pres|indc}} <end>
 Page 478 digitaline: Found match for regex: <begin> # {{archaic form of|en|digitalin}}. <end>
 Page 479 jasmin: Found match for regex: <begin> # {{archaic form of|en|jasmine}}. <end>
 Page 480 palankeen: Found match for regex: <begin> # {{archaic form of|en|palanquin}}. <end>
@@ -525,7 +525,7 @@ Page 487 picknick: Found match for regex: <begin> # {{archaic form of|en|picnic}
 Page 488 blunderbush: Found match for regex: <begin> # {{archaic form of|en|blunderbuss}}. <end>
 Page 489 appretiate: Found match for regex: <begin> # {{archaic form of|en|appreciate}}. <end>
 Page 490 inspecter: Found match for regex: <begin> # {{archaic form of|en|inspector}}. <end>
-Page 491 stunden: Found match for regex: <begin> # {{verb form of|de|ann=archaic form of:standen|stehen||1//3|p|pret}} <end>
+Page 491 stunden: Found match for regex: <begin> # {{verb form of|de|<=archaic form of:standen|stehen||1//3|p|pret}} <end>
 Page 492 hippopotamos: Found match for regex: <begin> # {{archaic form of|en|hippopotamus}}. <end>
 Page 493 muce: Found match for regex: <begin> # {{archaic form of|en|muse|t=hole through which an animal passes}}. <end>
 Page 494 Jorsala: Found match for regex: <begin> # {{archaic form of|sv|Jerusalem}} <end>
@@ -1536,7 +1536,7 @@ Page 1474 Holder: Found match for regex: <begin> # {{archaic form of|de|Holunder
 Page 1475 curtein: Found match for regex: <begin> # {{archaic form of|en|curtana}}. <end>
 Page 1477 mastlin: Found match for regex: <begin> # {{archaic form of|en|maslin}}. <end>
 Page 1478 autonomasy: Found match for regex: <begin> # {{archaic form of|en|autonomasia}}. <end>
-Page 1479 Port: Found match for regex: <begin> # {{place|en|ann=archaic form of:Porto|city|c/Portugal}}. <end>
+Page 1479 Port: Found match for regex: <begin> # {{place|en|<=archaic form of:Porto|city|c/Portugal}}. <end>
 Page 1480 ไส้: Found match for regex: <begin> # {{archaic form of|th|ไสร้}} <end>
 Page 1481 ไซ้: Found match for regex: <begin> # {{archaic form of|th|ไซร้|tr=sái}} <end>
 Page 1482 algæcide: Found match for regex: <begin> # {{archaic form of|en|algicide}}. <end>
@@ -1787,7 +1787,7 @@ Page 1813 bidarkee: Found match for regex: <begin> # {{archaic form of|en|bidark
 Page 1814 copalm: Found match for regex: <begin> # {{archaic form of|en|copal}}. <end>
 Page 1815 quinin: Found match for regex: <begin> # {{archaic form of|en|quinine}}. <end>
 Page 1816 imid: Found match for regex: <begin> # {{archaic form of|en|imide}}. <end>
-Page 1817 австралийскою: Found match for regex: <begin> # {{inflection of|ru|ann=archaic form of:австрали́йской|австрали́йский||f|s|ins}} <end>
+Page 1817 австралийскою: Found match for regex: <begin> # {{inflection of|ru|<=archaic form of:австрали́йской|австрали́йский||f|s|ins}} <end>
 Page 1818 kakotrophy: Found match for regex: <begin> # {{archaic form of|en|cacotrophy}}. <end>
 Page 1819 kresol: Found match for regex: <begin> # {{archaic form of|en|cresol}}. <end>
 Page 1820 kellin: Found match for regex: <begin> # {{archaic form of|en|khellin}}. <end>
@@ -1854,9 +1854,9 @@ Page 1883 pawaw: Found match for regex: <begin> # {{archaic form of|en|powwow}}.
 Page 1884 powwaw: Found match for regex: <begin> # {{archaic form of|en|powwow}}. <end>
 Page 1884 powwaw: Found match for regex: <begin> # {{archaic form of|en|powwow}}. <end>
 Page 1887 oftem: Found match for regex: <begin> # {{lb|frr|Mooring}} {{archaic form of|frr|oofting|t=[[often]]}} <end>
-Page 1889 недавнею: Found match for regex: <begin> # {{inflection of|ru|ann=archaic form of:неда́вней|неда́вний||f|s|ins}} <end>
-Page 1890 абразивною: Found match for regex: <begin> # {{inflection of|ru|ann=archaic form of:абрази́вной|абрази́вный||ins|s|f}} <end>
-Page 1891 абсолютною: Found match for regex: <begin> # {{inflection of|ru|ann=archaic form of:абсолю́тной|абсолю́тный||f|s|ins}} <end>
+Page 1889 недавнею: Found match for regex: <begin> # {{inflection of|ru|<=archaic form of:неда́вней|неда́вний||f|s|ins}} <end>
+Page 1890 абразивною: Found match for regex: <begin> # {{inflection of|ru|<=archaic form of:абрази́вной|абрази́вный||ins|s|f}} <end>
+Page 1891 абсолютною: Found match for regex: <begin> # {{inflection of|ru|<=archaic form of:абсолю́тной|абсолю́тный||f|s|ins}} <end>
 Page 1892 Calecu: Found match for regex: <begin> # {{archaic form of|pt|Calecute}} <end>
 Page 1893 indorsor: Found match for regex: <begin> # {{archaic form of|en|endorser}}. <end>
 Page 1894 jarool: Found match for regex: <begin> # {{archaic form of|en|jarul}}. <end>
@@ -1867,47 +1867,47 @@ Page 1898 caimac: Found match for regex: <begin> # {{archaic form of|en|kaymak}}
 Page 1899 Kief: Found match for regex: <begin> # {{archaic form of|en|Kyiv}}. <end>
 Page 1900 омегою: Found match for regex: <begin> # {{archaic form of|ru|оме́гой}} <end>
 Page 1901 палеонтологическою: Found match for regex: <begin> # {{archaic form of|ru|палеонтологи́ческой}} <end>
-Page 1902 целлюлозою: Found match for regex: <begin> # {{inflection of|ru|ann=archaic form of:целлюло́зой|целлюло́за||ins|s}} <end>
-Page 1903 целлулозою: Found match for regex: <begin> # {{inflection of|ru|ann=archaic form of:целлуло́зой|целлуло́за||ins|s}} <end>
-Page 1904 целлюлозною: Found match for regex: <begin> # {{inflection of|ru|ann=archaic form of:целлюло́зной|целлюло́зный||ins|s|f}} <end>
-Page 1905 тридцатою: Found match for regex: <begin> # {{inflection of|ru|ann=archaic form of:тридца́той|тридца́тый||ins|s|f}} <end>
-Page 1906 семнадцатою: Found match for regex: <begin> # {{inflection of|ru|ann=archaic form of:семна́дцатой|семна́дцатый||ins|s|f}} <end>
-Page 1907 фонологическою: Found match for regex: <begin> # {{inflection of|ru|ann=archaic form of:фонологи́ческой|фонологи́ческий||ins|s|f}} <end>
-Page 1908 юбилейною: Found match for regex: <begin> # {{inflection of|ru|ann=archaic form of:юбиле́йной|юбиле́йный||ins|s|f}} <end>
-Page 1909 юмористическою: Found match for regex: <begin> # {{inflection of|ru|ann=archaic form of:юмористи́ческой|юмористи́ческий||ins|s|f}} <end>
-Page 1910 трудолюбивою: Found match for regex: <begin> # {{inflection of|ru|ann=archaic form of:трудолюби́вой|трудолюби́вый||ins|s|f}} <end>
+Page 1902 целлюлозою: Found match for regex: <begin> # {{inflection of|ru|<=archaic form of:целлюло́зой|целлюло́за||ins|s}} <end>
+Page 1903 целлулозою: Found match for regex: <begin> # {{inflection of|ru|<=archaic form of:целлуло́зой|целлуло́за||ins|s}} <end>
+Page 1904 целлюлозною: Found match for regex: <begin> # {{inflection of|ru|<=archaic form of:целлюло́зной|целлюло́зный||ins|s|f}} <end>
+Page 1905 тридцатою: Found match for regex: <begin> # {{inflection of|ru|<=archaic form of:тридца́той|тридца́тый||ins|s|f}} <end>
+Page 1906 семнадцатою: Found match for regex: <begin> # {{inflection of|ru|<=archaic form of:семна́дцатой|семна́дцатый||ins|s|f}} <end>
+Page 1907 фонологическою: Found match for regex: <begin> # {{inflection of|ru|<=archaic form of:фонологи́ческой|фонологи́ческий||ins|s|f}} <end>
+Page 1908 юбилейною: Found match for regex: <begin> # {{inflection of|ru|<=archaic form of:юбиле́йной|юбиле́йный||ins|s|f}} <end>
+Page 1909 юмористическою: Found match for regex: <begin> # {{inflection of|ru|<=archaic form of:юмористи́ческой|юмористи́ческий||ins|s|f}} <end>
+Page 1910 трудолюбивою: Found match for regex: <begin> # {{inflection of|ru|<=archaic form of:трудолюби́вой|трудолюби́вый||ins|s|f}} <end>
 Page 1911 мануфактурою: Found match for regex: <begin> # {{archaic form of|ru|мануфакту́рой}} <end>
 Page 1912 иностранкою: Found match for regex: <begin> # {{archaic form of|ru|иностра́нкой}} <end>
-Page 1913 золотистою: Found match for regex: <begin> # {{inflection of|ru|ann=archaic form of:золоти́стой|золоти́стый||ins|s|f}} <end>
-Page 1914 автокефальною: Found match for regex: <begin> # {{inflection of|ru|ann=archaic form of:автокефа́льной|автокефа́льный||ins|s|f}} <end>
-Page 1915 сороковою: Found match for regex: <begin> # {{inflection of|ru|ann=archaic form of:сороково́й|сороково́й||ins|s|f}} <end>
-Page 1916 семидесятою: Found match for regex: <begin> # {{inflection of|ru|ann=archaic form of:семидеся́той|семидеся́тый||ins|s|f}} <end>
-Page 1917 пятнадцатою: Found match for regex: <begin> # {{inflection of|ru|ann=archaic form of:пятна́дцатой|пятна́дцатый||ins|s|f}} <end>
-Page 1918 беспристрастною: Found match for regex: <begin> # {{inflection of|ru|ann=archaic form of:беспристра́стной|беспристра́стный||ins|s|f}} <end>
-Page 1919 преданною: Found match for regex: <begin> # {{inflection of|ru|ann=archaic form of:пре́данной|пре́данный||f|s|ins}} <end>
-Page 1919 преданною: Found match for regex: <begin> # {{inflection of|ru|ann=archaic form of:пре́данной|пре́данный||f|s|ins}} <end>
+Page 1913 золотистою: Found match for regex: <begin> # {{inflection of|ru|<=archaic form of:золоти́стой|золоти́стый||ins|s|f}} <end>
+Page 1914 автокефальною: Found match for regex: <begin> # {{inflection of|ru|<=archaic form of:автокефа́льной|автокефа́льный||ins|s|f}} <end>
+Page 1915 сороковою: Found match for regex: <begin> # {{inflection of|ru|<=archaic form of:сороково́й|сороково́й||ins|s|f}} <end>
+Page 1916 семидесятою: Found match for regex: <begin> # {{inflection of|ru|<=archaic form of:семидеся́той|семидеся́тый||ins|s|f}} <end>
+Page 1917 пятнадцатою: Found match for regex: <begin> # {{inflection of|ru|<=archaic form of:пятна́дцатой|пятна́дцатый||ins|s|f}} <end>
+Page 1918 беспристрастною: Found match for regex: <begin> # {{inflection of|ru|<=archaic form of:беспристра́стной|беспристра́стный||ins|s|f}} <end>
+Page 1919 преданною: Found match for regex: <begin> # {{inflection of|ru|<=archaic form of:пре́данной|пре́данный||f|s|ins}} <end>
+Page 1919 преданною: Found match for regex: <begin> # {{inflection of|ru|<=archaic form of:пре́данной|пре́данный||f|s|ins}} <end>
 Page 1920 брошкою: Found match for regex: <begin> # {{archaic form of|ru|бро́шкой}} <end>
-Page 1921 дорогостоящею: Found match for regex: <begin> # {{inflection of|ru|ann=archaic form of:дорогосто́ящей|дорогосто́ящий||ins|s|f}} <end>
+Page 1921 дорогостоящею: Found match for regex: <begin> # {{inflection of|ru|<=archaic form of:дорогосто́ящей|дорогосто́ящий||ins|s|f}} <end>
 Page 1922 миногою: Found match for regex: <begin> # {{archaic form of|ru|мино́гой}} <end>
 Page 1923 мимозою: Found match for regex: <begin> # {{archaic form of|ru|мимо́зой}} <end>
 Page 1924 угль: Found match for regex: <begin> # {{archaic form of|ru|у́голь}} <end>
 Page 1925 bussy: Found match for regex: <begin> # {{archaic form of|en|busy}}. <end>
-Page 1926 внематочною: Found match for regex: <begin> # {{inflection of|ru|ann=archaic form of:внема́точной|внема́точный||ins|s|f}} <end>
+Page 1926 внематочною: Found match for regex: <begin> # {{inflection of|ru|<=archaic form of:внема́точной|внема́точный||ins|s|f}} <end>
 Page 1927 лебёдкою: Found match for regex: <begin> # {{archaic form of|ru|лебёдкой}} <end>
-Page 1928 внутримолекулярною: Found match for regex: <begin> # {{inflection of|ru|ann=archaic form of:внутримолекуля́рной|внутримолекуля́рный||ins|s|f}} <end>
-Page 1929 внутриматочною: Found match for regex: <begin> # {{inflection of|ru|ann=archaic form of:внутрима́точной|внутрима́точный||ins|s|f}} <end>
-Page 1930 внутриклеточною: Found match for regex: <begin> # {{inflection of|ru|ann=archaic form of:внутрикле́точной|внутрикле́точный||ins|s|f}} <end>
-Page 1931 внутривенною: Found match for regex: <begin> # {{inflection of|ru|ann=archaic form of:внутриве́нной|внутриве́нный||ins|s|f}} <end>
+Page 1928 внутримолекулярною: Found match for regex: <begin> # {{inflection of|ru|<=archaic form of:внутримолекуля́рной|внутримолекуля́рный||ins|s|f}} <end>
+Page 1929 внутриматочною: Found match for regex: <begin> # {{inflection of|ru|<=archaic form of:внутрима́точной|внутрима́точный||ins|s|f}} <end>
+Page 1930 внутриклеточною: Found match for regex: <begin> # {{inflection of|ru|<=archaic form of:внутрикле́точной|внутрикле́точный||ins|s|f}} <end>
+Page 1931 внутривенною: Found match for regex: <begin> # {{inflection of|ru|<=archaic form of:внутриве́нной|внутриве́нный||ins|s|f}} <end>
 Page 1932 User:Cinemantique/adj+ins2: Found match for regex: <begin> # {{archaic form of|ru|{{{ins1}}}}}, {{inflection of|ru|{{{L}}}|{{{{{|subst:}}}#if: {{{C|}}}|{{<includeonly>subst:!</includeonly>}}{{{C}}}}}|{{{N}}}{{{{{|subst:}}}#if: {{{G|}}}|{{<includeonly>subst:!</includeonly>}}{{{G}}}}}{{{{{|subst:}}}#if: {{{SH|}}}|{{<includeonly>subst:!</includeonly>}}short form}}}} <end>
-Page 1933 внутриатомною: Found match for regex: <begin> # {{inflection of|ru|ann=archaic form of:внутриа́томной|внутриа́томный||ins|s|f}} <end>
-Page 1934 внутримышечною: Found match for regex: <begin> # {{inflection of|ru|ann=archaic form of:внутримы́шечной|внутримы́шечный||ins|s|f}} <end>
+Page 1933 внутриатомною: Found match for regex: <begin> # {{inflection of|ru|<=archaic form of:внутриа́томной|внутриа́томный||ins|s|f}} <end>
+Page 1934 внутримышечною: Found match for regex: <begin> # {{inflection of|ru|<=archaic form of:внутримы́шечной|внутримы́шечный||ins|s|f}} <end>
 Page 1935 подвязкою: Found match for regex: <begin> # {{archaic form of|ru|подвя́зкой}} <end>
-Page 1936 чужою: Found match for regex: <begin> # {{inflection of|ru|ann=archaic form of:чужо́й|чужо́й||ins|s|f}} <end>
-Page 1937 разумною: Found match for regex: <begin> # {{inflection of|ru|ann=archaic form of:разу́мной|разу́мный||ins|s|f}} <end>
-Page 1938 другою: Found match for regex: <begin> # {{inflection of|ru|ann=archaic form of:друго́й|друго́й||ins|s|f}} <end>
+Page 1936 чужою: Found match for regex: <begin> # {{inflection of|ru|<=archaic form of:чужо́й|чужо́й||ins|s|f}} <end>
+Page 1937 разумною: Found match for regex: <begin> # {{inflection of|ru|<=archaic form of:разу́мной|разу́мный||ins|s|f}} <end>
+Page 1938 другою: Found match for regex: <begin> # {{inflection of|ru|<=archaic form of:друго́й|друго́й||ins|s|f}} <end>
 Page 1939 courteouslie: Found match for regex: <begin> # {{archaic form of|en|courteously}}. <end>
-Page 1940 внутрипартийною: Found match for regex: <begin> # {{inflection of|ru|ann=archaic form of:внутрипарти́йной|внутрипарти́йный||ins|s|f}} <end>
-Page 1941 внутрисекреторною: Found match for regex: <begin> # {{inflection of|ru|ann=archaic form of:внутрисекрето́рной|внутрисекрето́рный||ins|s|f}} <end>
+Page 1940 внутрипартийною: Found match for regex: <begin> # {{inflection of|ru|<=archaic form of:внутрипарти́йной|внутрипарти́йный||ins|s|f}} <end>
+Page 1941 внутрисекреторною: Found match for regex: <begin> # {{inflection of|ru|<=archaic form of:внутрисекрето́рной|внутрисекрето́рный||ins|s|f}} <end>
 Page 1942 hadjee: Found match for regex: <begin> # {{archaic form of|en|hajji}}. <end>
 Page 1943 oulong: Found match for regex: <begin> # {{archaic form of|en|oolong}}. <end>
 Page 1944 foot ball: Found match for regex: <begin> # {{archaic form of|en|football}}. <end>
@@ -2079,7 +2079,7 @@ Page 2112 fhágbhadh: Found match for regex: <begin> # {{archaic form of|ga|fhá
 Page 2113 do-rinneas: Found match for regex: <begin> # {{archaic form of|ga|rinneas}} <end>
 Page 2114 do-rinne: Found match for regex: <begin> # {{archaic form of|ga|rinne}} <end>
 Page 2115 do-róine: Found match for regex: <begin> # {{archaic form of|ga|rinne}} <end>
-Page 2116 dearnaidh: Found match for regex: <begin> # {{infl of|ga|ann=archaic form of:dearna|déan||past|analytic|dependent}} <end>
+Page 2116 dearnaidh: Found match for regex: <begin> # {{infl of|ga|<=archaic form of:dearna|déan||past|analytic|dependent}} <end>
 Page 2117 do-rinneamair: Found match for regex: <begin> # {{archaic form of|ga|rinneamar}} <end>
 Page 2118 do-rinneadar: Found match for regex: <begin> # {{archaic form of|ga|rinneadar}} <end>
 Page 2119 do-rónsad: Found match for regex: <begin> # {{archaic form of|ga|rinneadar}} <end>
@@ -2250,9 +2250,9 @@ Page 2296 zabtie: Found match for regex: <begin> # {{archaic form of|en|zaptieh}
 Page 2297 xanthopsy: Found match for regex: <begin> # {{archaic form of|en|xanthopsia}}. <end>
 Page 2298 untemptible: Found match for regex: <begin> # {{archaic form of|en|untemptable}}. <end>
 Page 2299 Pushtoo: Found match for regex: <begin> # {{archaic form of|en|Pashto}}. <end>
-Page 2300 codlaim: Found match for regex: <begin> # {{inflection of|ga|ann=archaic form of:codlaím|codail||1|s|pres|indc}} <end>
+Page 2300 codlaim: Found match for regex: <begin> # {{inflection of|ga|<=archaic form of:codlaím|codail||1|s|pres|indc}} <end>
 Page 2301 innsim: Found match for regex: <begin> # {{archaic form of|ga|insím}} <end>
-Page 2302 aonaighe: Found match for regex: <begin> # {{plural of|ga|ann=archaic form of:aontaí|aonach|t=fair}} <end>
+Page 2302 aonaighe: Found match for regex: <begin> # {{plural of|ga|<=archaic form of:aontaí|aonach|t=fair}} <end>
 Page 2303 sismology: Found match for regex: <begin> # {{archaic form of|en|seismology}}. <end>
 Page 2304 uncogitable: Found match for regex: <begin> # {{archaic form of|en|incogitable}}. <end>
 Page 2305 ท้าวพญา: Found match for regex: <begin> # {{archaic form of|th|ท้าวพระยา}} <end>
@@ -2439,7 +2439,7 @@ Page 2500 terpen: Found match for regex: <begin> # {{archaic form of|en|terpene}
 Page 2501 scissars: Found match for regex: <begin> # {{archaic form of|en|scissors}}. <end>
 Page 2502 neumodig: Found match for regex: <begin> # {{archaic form of|de|neumodisch}} <end>
 Page 2503 gesmino: Found match for regex: <begin> # {{tlb|it|rare}} {{archaic form of|it|gelsomino}} <end>
-Page 2504 primigravidæ: Found match for regex: <begin> # {{plural of|en|ann=archaic form of:primigravidae|primigravida}}. <end>
+Page 2504 primigravidæ: Found match for regex: <begin> # {{plural of|en|<=archaic form of:primigravidae|primigravida}}. <end>
 Page 2505 apricock: Found match for regex: <begin> # {{archaic form of|en|apricot}}. <end>
 Page 2506 Touranian: Found match for regex: <begin> # {{archaic form of|en|Turanian}}. <end>
 Page 2506 Touranian: Found match for regex: <begin> # {{archaic form of|en|Turanian}}. <end>
@@ -2570,7 +2570,7 @@ Page 2661 chequine: Found match for regex: <begin> # {{archaic form of|en|zecchi
 Page 2662 Porsch: Found match for regex: <begin> # {{archaic form of|de|Porst}} <end>
 Page 2663 Porste: Found match for regex: <begin> # {{archaic form of|de|Porst}} <end>
 Page 2664 Дніпр: Found match for regex: <begin> # {{archaic form of|uk|Дніпро́}} <end>
-Page 2665 nieghi: Found match for regex: <begin> # {{infl of|it|ann=archaic form of:neghi|negare||2|s|pres|ind|;|1//2//3|pres|subj|;|3|s|imp}} <end>
+Page 2665 nieghi: Found match for regex: <begin> # {{infl of|it|<=archaic form of:neghi|negare||2|s|pres|ind|;|1//2//3|pres|subj|;|3|s|imp}} <end>
 Page 2670 letters patents: Found match for regex: <begin> # {{archaic form of|en|letters patent}}. <end>
 Page 2671 Halloweven: Found match for regex: <begin> # {{archaic form of|en|Halloween}}. <end>
 Page 2672 tormentilla: Found match for regex: <begin> # {{archaic form of|en|tormentil||type of herb}}. <end>
@@ -2595,7 +2595,7 @@ Page 2701 roukkio: Found match for regex: <begin> # {{archaic form of|fi|röykki
 Page 2702 as get-out: Found match for regex: <begin> # {{archaic form of|en|as all get-out}}. <end>
 Page 2704 måga: Found match for regex: <begin> # {{archaic form of|sv|må}} <end>
 Page 2705 letuario: Found match for regex: <begin> # {{archaic form of|es|electuario}} <end>
-Page 2708 niegano: Found match for regex: <begin> # {{infl of|it|ann=archaic form of:negano|negare||3|p|pres|ind}} <end>
+Page 2708 niegano: Found match for regex: <begin> # {{infl of|it|<=archaic form of:negano|negare||3|p|pres|ind}} <end>
 Page 2710 prauncer: Found match for regex: <begin> # {{archaic form of|en|prancer}}. <end>
 Page 2711 janitschar: Found match for regex: <begin> # {{archaic form of|sv|janitsjar}} <end>
 Page 2712 bandannah: Found match for regex: <begin> # {{archaic form of|en|bandanna}}. <end>
@@ -2626,9 +2626,9 @@ Page 2739 skill'd: Found match for regex: <begin> # {{archaic form of|en|skilled
 Page 2740 novelet: Found match for regex: <begin> # {{archaic form of|en|novelette||short novel}}. <end>
 Page 2741 oxaluramid: Found match for regex: <begin> # {{archaic form of|en|oxaluramide}}. <end>
 Page 2742 oxamid: Found match for regex: <begin> # {{archaic form of|en|oxamide}}. <end>
-Page 2743 avelsi: Found match for regex: <begin> # {{infl of|it|ann=archaic form of:avulsi|avellere||1|s|phis}} <end>
-Page 2744 avelse: Found match for regex: <begin> # {{infl of|it|ann=archaic form of:avulse|avellere||3|s|phis}} <end>
-Page 2745 avelsero: Found match for regex: <begin> # {{infl of|it|ann=archaic form of:avulsero|avellere||3|p|phis}} <end>
+Page 2743 avelsi: Found match for regex: <begin> # {{infl of|it|<=archaic form of:avulsi|avellere||1|s|phis}} <end>
+Page 2744 avelse: Found match for regex: <begin> # {{infl of|it|<=archaic form of:avulse|avellere||3|s|phis}} <end>
+Page 2745 avelsero: Found match for regex: <begin> # {{infl of|it|<=archaic form of:avulsero|avellere||3|p|phis}} <end>
 Page 2746 czarowitch: Found match for regex: <begin> # {{archaic form of|en|tsarevich}}. <end>
 Page 2747 cheiropodist: Found match for regex: <begin> # {{archaic form of|en|chiropodist}}. <end>
 Page 2748 cheiropody: Found match for regex: <begin> # {{archaic form of|en|chiropody}}. <end>
@@ -2677,7 +2677,7 @@ Page 2798 lashins: Found match for regex: <begin> # {{archaic form of|en|lashing
 Page 2799 that's the ticket for soup: Found match for regex: <begin> # {{archaic form of|en|that's the ticket||that is just right, or exactly what is needed}}. <end>
 Page 2800 kotwalee: Found match for regex: <begin> # {{archaic form of|en|kotwali}}. <end>
 Page 2802 emprenta: Found match for regex: <begin> # {{archaic form of|es|imprenta}} <end>
-Page 2807 nieghino: Found match for regex: <begin> # {{infl of|it|ann=archaic form of:neghino|negare||3|p|pres|subj|;|3|p|imp}} <end>
+Page 2807 nieghino: Found match for regex: <begin> # {{infl of|it|<=archaic form of:neghino|negare||3|p|pres|subj|;|3|p|imp}} <end>
 Page 2810 causticly: Found match for regex: <begin> # {{archaic form of|en|caustically}}. <end>
 Page 2811 kvävja: Found match for regex: <begin> # {{archaic form of|sv|kväva}} <end>
 Page 2812 Fuh-chau: Found match for regex: <begin> # {{archaic form of|en|Fuzhou}}. <end>
@@ -3037,7 +3037,7 @@ Page 3193 Appendix:Sindarin/Eleth: Found match for regex: <begin> # {{archaic fo
 Page 3196 chebeque: Found match for regex: <begin> # {{lb|en|nautical}} {{archaic form of|en|xebec}}. <end>
 Page 3197 Yezdee: Found match for regex: <begin> # {{archaic form of|en|Yazidi}}. <end>
 Page 3198 Appendix:Quenya/airë: Found match for regex: <begin> # {{archaic form of|qya|ëar|t=sea}} <end>
-Page 3201 борітеся: Found match for regex: <begin> # {{inflection of|uk|ann=archaic form of:борі́ться|боро́тися||2|p|imp|impfv}} <end>
+Page 3201 борітеся: Found match for regex: <begin> # {{inflection of|uk|<=archaic form of:борі́ться|боро́тися||2|p|imp|impfv}} <end>
 Page 3202 Sphakia: Found match for regex: <begin> # {{archaic form of|en|Sfakia}}. <end>
 Page 3203 Sphakiot: Found match for regex: <begin> # {{archaic form of|en|Sfakiot}}. <end>
 Page 3204 Sealandic: Found match for regex: <begin> # {{archaic form of|en|Zeelandic||of or relating to Zeeland}}. <end>
@@ -3362,7 +3362,7 @@ Page 3550 Billiton: Found match for regex: <begin> # {{archaic form of|en|Belitu
 Page 3551 spijze: Found match for regex: <begin> # {{archaic form of|nl|spijs}} <end>
 Page 3552 Stole: Found match for regex: <begin> # {{archaic form of|de|Stola}} <end>
 Page 3553 Jemmapes: Found match for regex: <begin> # {{archaic form of|en|Jemappes}}. <end>
-Page 3555 Jinsen: Found match for regex: <begin> # {{place|en|ann=arch form:Inchoen|major city|c/South Korea}}. <end>
+Page 3555 Jinsen: Found match for regex: <begin> # {{place|en|<=arch form:Inchoen|major city|c/South Korea}}. <end>
 Page 3558 pytyriasis: Found match for regex: <begin> # {{archaic form of|en|pityriasis}}. <end>
 Page 3559 alweder: Found match for regex: <begin> # {{archaic form of|nl|alweer||once again}} <end>
 Page 3561 Kadiak bear: Found match for regex: <begin> # {{archaic form of|en|Kodiak bear}}. <end>
@@ -3442,7 +3442,7 @@ Page 3657 ꠛꠣꠋꠉꠣꠟꠣ: Found match for regex: <begin> # {{archaic form
 Page 3657 ꠛꠣꠋꠉꠣꠟꠣ: Found match for regex: <begin> # {{archaic form of|syl|ꠛꠦꠋꠉꠟꠤ}} <end>
 Page 3657 ꠛꠣꠋꠉꠣꠟꠣ: Found match for regex: <begin> # {{archaic form of|syl|ꠛꠦꠋꠉꠟꠤ}} <end>
 Page 3660 undandraga: Found match for regex: <begin> # {{archaic form of|sv|undandra}} <end>
-Page 3661 avvegna: Found match for regex: <begin> # {{infl of|it|ann=archaic form of:avvenga|avvenire||1//2//3|s|pres|sub}} <end>
+Page 3661 avvegna: Found match for regex: <begin> # {{infl of|it|<=archaic form of:avvenga|avvenire||1//2//3|s|pres|sub}} <end>
 Page 3666 όσον: Found match for regex: <begin> # {{archaic form of|el|όσος}} <end>
 Page 3667 ꠛꠤꠟꠣꠔꠤ: Found match for regex: <begin> # {{archaic form of|syl|ꠟꠘ꠆ꠒꠘꠤ}} <end>
 Page 3667 ꠛꠤꠟꠣꠔꠤ: Found match for regex: <begin> # {{archaic form of|syl|ꠛꠤꠐꠤꠡ}} <end>
@@ -3597,7 +3597,7 @@ Page 86 genetive: Found match for regex: <begin> # {{archaic spelling of|en|geni
 Page 86 genetive: Found match for regex: <begin> # {{archaic spelling of|en|genitive}}. <end>
 Page 87 rit: Found match for regex: <begin> # {{archaic spelling of|fr|rite}} <end>
 Page 88 curst: Found match for regex: <begin> # {{archaic spelling of|en|cursed}}. <end>
-Page 88 curst: Found match for regex: <begin> # {{infl of|en|ann=archaic spelling of:cursed|curse||ed-form}} <end>
+Page 88 curst: Found match for regex: <begin> # {{infl of|en|<=archaic spelling of:cursed|curse||ed-form}} <end>
 Page 89 Faß: Found match for regex: <begin> # {{archaic spelling of|gsw|Fass}} <end>
 Page 90 binn: Found match for regex: <begin> # {{archaic spelling of|en|bin||storage container for wine, etc.}}. <end>
 Page 91 Dacca: Found match for regex: <begin> # {{archaic spelling of|en|Dhaka}}. <end>
@@ -3679,7 +3679,7 @@ Page 154 advancemente: Found match for regex: <begin> # {{archaic spelling of|en
 Page 155 togeather: Found match for regex: <begin> # {{archaic spelling of|en|together}}. <end>
 Page 155 togeather: Found match for regex: <begin> # {{archaic spelling of|en|together}}. <end>
 Page 156 civill: Found match for regex: <begin> # {{archaic spelling of|en|civil}}. <end>
-Page 157 mixt: Found match for regex: <begin> # {{infl of|en|ann=archaic spelling of:mixed|mix||ed-form}} <end>
+Page 157 mixt: Found match for regex: <begin> # {{infl of|en|<=archaic spelling of:mixed|mix||ed-form}} <end>
 Page 157 mixt: Found match for regex: <begin> # {{archaic spelling of|en|mixed}}. <end>
 Page 158 chebang: Found match for regex: <begin> # {{archaic spelling of|en|shebang||a lean-to or temporary shelter}}. <end>
 Page 159 Judæa: Found match for regex: <begin> # {{archaic spelling of|en|Judea}}. <end>
@@ -3723,7 +3723,7 @@ Page 192 expresse: Found match for regex: <begin> # {{archaic spelling of|en|exp
 Page 193 contree: Found match for regex: <begin> # {{archaic spelling of|en|country}}. <end>
 Page 194 worlde: Found match for regex: <begin> # {{archaic spelling of|en|world}}. <end>
 Page 195 colde: Found match for regex: <begin> # {{archaic spelling of|en|cold}}. <end>
-Page 196 wente: Found match for regex: <begin> # {{past participle of|en|ann=arch sp:went|go}}. <end>
+Page 196 wente: Found match for regex: <begin> # {{past participle of|en|<=arch sp:went|go}}. <end>
 Page 197 hande: Found match for regex: <begin> # {{archaic spelling of|en|hand}}. <end>
 Page 198 neede: Found match for regex: <begin> # {{archaic spelling of|en|need}}. <end>
 Page 198 neede: Found match for regex: <begin> # {{archaic spelling of|en|need}}. <end>
@@ -3859,8 +3859,8 @@ Page 306 præsume: Found match for regex: <begin> # {{archaic spelling of|en|pre
 Page 307 præscience: Found match for regex: <begin> # {{archaic spelling of|en|prescience}}. <end>
 Page 308 æquality: Found match for regex: <begin> # {{archaic spelling of|en|equality}}. <end>
 Page 309 præscribe: Found match for regex: <begin> # {{archaic spelling of|en|prescribe}}. <end>
-Page 310 voyent: Found match for regex: <begin> # {{inflection of|fr|ann=archaic spelling of:voient|voir||3|p|pres|indc}} <end>
-Page 310 voyent: Found match for regex: <begin> # {{inflection of|fr|ann=archaic spelling of:voient|voir||3|p|pres|subj}} <end>
+Page 310 voyent: Found match for regex: <begin> # {{inflection of|fr|<=archaic spelling of:voient|voir||3|p|pres|indc}} <end>
+Page 310 voyent: Found match for regex: <begin> # {{inflection of|fr|<=archaic spelling of:voient|voir||3|p|pres|subj}} <end>
 Page 311 scyon: Found match for regex: <begin> # {{archaic spelling of|en|scion}}. <end>
 Page 312 boikin: Found match for regex: <begin> # {{lb|en|chiefly|in the 16 <sup>th</sup> century}}<ref name="OED">“[http://dictionary.oed.com/cgi/entry/50026288 boykin, ''n.'']” listed in the '''Oxford English Dictionary''' [<span style="font-variant:small-caps">Draft revision</span>; Sept. 2008]</ref> {{archaic spelling of|en|boykin}}. <end>
 Page 314 unblest: Found match for regex: <begin> # {{archaic spelling of|en|unblessed}}. <end>
@@ -3870,7 +3870,7 @@ Page 317 amaranthe: Found match for regex: <begin> # {{archaic spelling of|fr|am
 Page 318 unmixt: Found match for regex: <begin> # {{archaic spelling of|en|unmixed}}. <end>
 Page 319 unwhipt: Found match for regex: <begin> # {{archaic spelling of|en|unwhipped}}. <end>
 Page 320 اسطرلاب: Found match for regex: <begin> # {{archaic spelling of|ar|أَسْطُرْلَاب}} <end>
-Page 321 étoient: Found match for regex: <begin> # {{inflection of|fr|ann=archaic spelling of:étaient|être||3|p|impf|indc}} <end>
+Page 321 étoient: Found match for regex: <begin> # {{inflection of|fr|<=archaic spelling of:étaient|être||3|p|impf|indc}} <end>
 Page 322 pæninsula: Found match for regex: <begin> # {{archaic spelling of|en|peninsula}}. <end>
 Page 323 estes: Found match for regex: <begin> # {{inflection of|fr|estre||2|p|pres|indc}}; {{archaic spelling of|fr|êtes}} <end>
 Page 324 palæo-: Found match for regex: <begin> # {{archaic spelling of|en|paleo-|sort=palaeo-}}. <end>
@@ -3983,15 +3983,15 @@ Page 421 serois: Found match for regex: <begin> # {{inflection of|fr|estre||2|s|
 Page 422 seroit: Found match for regex: <begin> # {{inflection of|fr|estre||3|s|cond}}; {{archaic spelling of|fr|serait}} <end>
 Page 423 seroient: Found match for regex: <begin> # {{inflection of|fr|estre||3|p|cond}}; {{archaic spelling of|fr|seraient}} <end>
 Page 424 seroi: Found match for regex: <begin> # {{inflection of|fr|estre||1|s|futr|indc}}; {{archaic spelling of|fr|serai}} <end>
-Page 425 parlois: Found match for regex: <begin> # {{inflection of|fr|ann=archaic spelling of:parlais|parler||1|s|impf|indc}} <end>
-Page 425 parlois: Found match for regex: <begin> # {{inflection of|fr|ann=archaic spelling of:parlais|parler||2|s|impf|indc}} <end>
-Page 426 parloit: Found match for regex: <begin> # {{inflection of|fr|ann=archaic spelling of:parlait|parler||3|s|impf|indc}} <end>
-Page 427 parloient: Found match for regex: <begin> # {{inflection of|fr|ann=archaic spelling of:parlaient|parler||3|p|impf|indc}} <end>
-Page 428 parleroi: Found match for regex: <begin> # {{inflection of|fr|ann=archaic spelling of:parlerai|parler||1|s|futr|indc}} <end>
-Page 429 parlerois: Found match for regex: <begin> # {{inflection of|fr|ann=archaic spelling of:parlerais|parler||1|s|cond}} <end>
-Page 429 parlerois: Found match for regex: <begin> # {{inflection of|fr|ann=archaic spelling of:parlerais|parler||2|s|cond}} <end>
-Page 430 parleroit: Found match for regex: <begin> # {{inflection of|fr|ann=archaic spelling of:parlerait|parler||3|s|cond}} <end>
-Page 431 parleroient: Found match for regex: <begin> # {{inflection of|fr|ann=archaic spelling of:parleraient|parler||3|p|cond}} <end>
+Page 425 parlois: Found match for regex: <begin> # {{inflection of|fr|<=archaic spelling of:parlais|parler||1|s|impf|indc}} <end>
+Page 425 parlois: Found match for regex: <begin> # {{inflection of|fr|<=archaic spelling of:parlais|parler||2|s|impf|indc}} <end>
+Page 426 parloit: Found match for regex: <begin> # {{inflection of|fr|<=archaic spelling of:parlait|parler||3|s|impf|indc}} <end>
+Page 427 parloient: Found match for regex: <begin> # {{inflection of|fr|<=archaic spelling of:parlaient|parler||3|p|impf|indc}} <end>
+Page 428 parleroi: Found match for regex: <begin> # {{inflection of|fr|<=archaic spelling of:parlerai|parler||1|s|futr|indc}} <end>
+Page 429 parlerois: Found match for regex: <begin> # {{inflection of|fr|<=archaic spelling of:parlerais|parler||1|s|cond}} <end>
+Page 429 parlerois: Found match for regex: <begin> # {{inflection of|fr|<=archaic spelling of:parlerais|parler||2|s|cond}} <end>
+Page 430 parleroit: Found match for regex: <begin> # {{inflection of|fr|<=archaic spelling of:parlerait|parler||3|s|cond}} <end>
+Page 431 parleroient: Found match for regex: <begin> # {{inflection of|fr|<=archaic spelling of:parleraient|parler||3|p|cond}} <end>
 Page 432 enfans: Found match for regex: <begin> # {{plural of|fr|enfant}}; {{archaic spelling of|fr|enfants}} <end>
 Page 433 æquison: Found match for regex: <begin> # {{lb|en|rare|music}} {{archaic spelling of|en|equison}}. <end>
 Page 434 Wiktionary:Misspellings: Found match for regex: <begin> # {{temp|archaic spelling of}} and {{temp|obsolete spelling of}} for spellings that are no longer used, but were not considered incorrect at a certain time. <end>
@@ -4000,7 +4000,7 @@ Page 436 Ingland: Found match for regex: <begin> # {{archaic spelling of|en|Engl
 Page 437 monkie: Found match for regex: <begin> # {{archaic spelling of|en|monkey}}. <end>
 Page 438 прикащик: Found match for regex: <begin> # {{archaic spelling of|ru|прика́зчик}} <end>
 Page 439 intrap: Found match for regex: <begin> # {{archaic spelling of|en|entrap}}. <end>
-Page 440 serpentes: Found match for regex: <begin> # {{plural of|en|ann=arch sp:serpents|serpent}}. <end>
+Page 440 serpentes: Found match for regex: <begin> # {{plural of|en|<=arch sp:serpents|serpent}}. <end>
 Page 441 amœbicide: Found match for regex: <begin> # {{archaic spelling of|en|amebicide}}. <end>
 Page 442 homœophony: Found match for regex: <begin> # {{archaic spelling of|en|homeophony}}. <end>
 Page 443 sovran: Found match for regex: <begin> # {{archaic spelling of|en|sovereign}}. <end>
@@ -4036,11 +4036,11 @@ Page 470 barbacan: Found match for regex: <begin> # {{archaic spelling of|en|bar
 Page 471 undiscernable: Found match for regex: <begin> # {{archaic spelling of|en|indiscernible}}. <end>
 Page 472 inlarge: Found match for regex: <begin> # {{archaic spelling of|en|enlarge}}. <end>
 Page 473 intice: Found match for regex: <begin> # {{archaic spelling of|en|entice}}. <end>
-Page 474 relyed: Found match for regex: <begin> # {{infl of|en|ann=archaic spelling of:relied|rely||ed-form}}. <end>
-Page 475 replyed: Found match for regex: <begin> # {{infl of|en|ann=archaic spelling of:replied|reply||ed-form}}. <end>
-Page 476 hurryed: Found match for regex: <begin> # {{infl of|en|ann=archaic spelling of:hurried|hurry||ed-form}}. <end>
-Page 477 marryed: Found match for regex: <begin> # {{infl of|en|ann=archaic spelling of:married|marry||ed-form}}. <end>
-Page 478 carryed: Found match for regex: <begin> # {{infl of|en|ann=archaic spelling of:carried|carry||ed-form}}. <end>
+Page 474 relyed: Found match for regex: <begin> # {{infl of|en|<=archaic spelling of:relied|rely||ed-form}}. <end>
+Page 475 replyed: Found match for regex: <begin> # {{infl of|en|<=archaic spelling of:replied|reply||ed-form}}. <end>
+Page 476 hurryed: Found match for regex: <begin> # {{infl of|en|<=archaic spelling of:hurried|hurry||ed-form}}. <end>
+Page 477 marryed: Found match for regex: <begin> # {{infl of|en|<=archaic spelling of:married|marry||ed-form}}. <end>
+Page 478 carryed: Found match for regex: <begin> # {{infl of|en|<=archaic spelling of:carried|carry||ed-form}}. <end>
 Page 479 Crœsus: Found match for regex: <begin> # {{archaic spelling of|sv|krösus||rich person}} <end>
 Page 480 garlicke: Found match for regex: <begin> # {{archaic spelling of|en|garlic}}. <end>
 Page 481 equipt: Found match for regex: <begin> # {{archaic spelling of|en|equipped}}. <end>
@@ -4053,7 +4053,7 @@ Page 488 ĥiroptero: Found match for regex: <begin> # {{archaic spelling of|eo|k
 Page 490 cedula: Found match for regex: <begin> # {{archaic spelling of|es|cédula}} <end>
 Page 491 growe: Found match for regex: <begin> # {{archaic spelling of|en|grow}}. <end>
 Page 492 syght: Found match for regex: <begin> # {{archaic spelling of|en|sight}}. <end>
-Page 493 dispenst: Found match for regex: <begin> # {{infl of|en|ann=archaic spelling of:dispensed|dispense||ed-form}}. <end>
+Page 493 dispenst: Found match for regex: <begin> # {{infl of|en|<=archaic spelling of:dispensed|dispense||ed-form}}. <end>
 Page 494 stormtost: Found match for regex: <begin> # {{archaic spelling of|en|stormtossed}}. <end>
 Page 496 deligent: Found match for regex: <begin> # {{archaic spelling of|en|diligent}}. <end>
 Page 497 prophetes: Found match for regex: <begin> # {{archaic spelling of|nl|profetes}} <end>
@@ -4195,12 +4195,12 @@ Page 652 sphear: Found match for regex: <begin> # {{archaic spelling of|en|spher
 Page 653 solœcisme: Found match for regex: <begin> # {{archaic spelling of|fr|solécisme}} <end>
 Page 654 qvälja: Found match for regex: <begin> # {{archaic spelling of|sv|kvälja}} <end>
 Page 655 finochia: Found match for regex: <begin> # {{archaic spelling of|en|finocchio}}. <end>
-Page 656 intermixt: Found match for regex: <begin> # {{infl of|en|ann=archaic spelling of:intermixed|intermix||ed-form}}. <end>
+Page 656 intermixt: Found match for regex: <begin> # {{infl of|en|<=archaic spelling of:intermixed|intermix||ed-form}}. <end>
 Page 657 streighten: Found match for regex: <begin> # {{archaic spelling of|en|straighten}}. <end>
 Page 657 streighten: Found match for regex: <begin> # {{archaic spelling of|en|straiten}}. <end>
-Page 658 étois: Found match for regex: <begin> # {{inflection of|fr|ann=archaic spelling of:étais|être||1|s|impf|indc}} <end>
-Page 658 étois: Found match for regex: <begin> # {{inflection of|fr|ann=archaic spelling of:étais|être||2|s|impf|indc}} <end>
-Page 659 étoit: Found match for regex: <begin> # {{inflection of|fr|ann=archaic spelling of:était|être||3|s|impf|indc}} <end>
+Page 658 étois: Found match for regex: <begin> # {{inflection of|fr|<=archaic spelling of:étais|être||1|s|impf|indc}} <end>
+Page 658 étois: Found match for regex: <begin> # {{inflection of|fr|<=archaic spelling of:étais|être||2|s|impf|indc}} <end>
+Page 659 étoit: Found match for regex: <begin> # {{inflection of|fr|<=archaic spelling of:était|être||3|s|impf|indc}} <end>
 Page 660 boastfull: Found match for regex: <begin> # {{archaic spelling of|en|boastful}}. <end>
 Page 661 helpfull: Found match for regex: <begin> # {{archaic spelling of|en|helpful}}. <end>
 Page 662 bashfull: Found match for regex: <begin> # {{archaic spelling of|en|bashful}}. <end>
@@ -4304,7 +4304,7 @@ Page 749 bebirine: Found match for regex: <begin> # {{archaic spelling of|en|beb
 Page 750 安康: Found match for regex: <begin> # {{archaic spelling of|ja|sort=あんこう|鮟鱇||[[anglerfish]]}} <end>
 Page 751 harier: Found match for regex: <begin> # {{archaic spelling of|en|harrier||a kind of hunting dog}}. <end>
 Page 754 theatr: Found match for regex: <begin> # {{archaic spelling of|sh|teatar}} <end>
-Page 756 shooke: Found match for regex: <begin> # {{infl of|en|ann=archaic spelling of:shook|shake||spast}}. <end>
+Page 756 shooke: Found match for regex: <begin> # {{infl of|en|<=archaic spelling of:shook|shake||spast}}. <end>
 Page 757 Græco-Latin: Found match for regex: <begin> # {{archaic spelling of|en|Greco-Latin}}. <end>
 Page 758 Cinghalese: Found match for regex: <begin> # {{archaic spelling of|en|Sinhalese}}. <end>
 Page 758 Cinghalese: Found match for regex: <begin> # {{archaic spelling of|en|Sinhalese}}. <end>
@@ -4605,7 +4605,7 @@ Page 1216 archaïc: Found match for regex: <begin> # {{archaic spelling of|en|ar
 Page 1217 elliptick: Found match for regex: <begin> # {{archaic spelling of|en|elliptic}}. <end>
 Page 1218 futwa: Found match for regex: <begin> # {{archaic spelling of|en|fatwa}}. <end>
 Page 1219 bloak: Found match for regex: <begin> # {{archaic spelling of|en|bloke}}. <end>
-Page 1220 faisoit: Found match for regex: <begin> # {{inflection of|fr|ann=archaic spelling of:faisait|faire||3|s|impf|indc}} <end>
+Page 1220 faisoit: Found match for regex: <begin> # {{inflection of|fr|<=archaic spelling of:faisait|faire||3|s|impf|indc}} <end>
 Page 1221 yaghourt: Found match for regex: <begin> # {{archaic spelling of|en|yogurt}}. <end>
 Page 1222 พงศาวดาน: Found match for regex: <begin> # {{archaic spelling of|th|พงศาวดาร}} <end>
 Page 1226 حيوة: Found match for regex: <begin> # {{archaic spelling of|ar|حَيَاة||[[life]]}} <end>
@@ -4694,12 +4694,12 @@ Page 1368 Talk:Іосифъ: Found match for regex: <begin> ::::: You can use {{
 Page 1375 Manilla: Found match for regex: <begin> # {{archaic spelling of|en|Manila}}. <end>
 Page 1384 ইখতিলাফ: Found match for regex: <begin> # {{archaic spelling of|bn|এখতেলাফ|tr=ekhtelaf}} <end>
 Page 1388 prión: Found match for regex: <begin> # {{archaic spelling of|es|prion}} <end>
-Page 1389 devoit: Found match for regex: <begin> # {{inflection of|fr|ann=archaic spelling of:devait|devoir||3|p|impf|indc}} <end>
-Page 1390 ajoutoit: Found match for regex: <begin> # {{inflection of|fr|ann=archaic spelling of:ajoutait|ajouter||3|p|impf|indc}} <end>
+Page 1389 devoit: Found match for regex: <begin> # {{inflection of|fr|<=archaic spelling of:devait|devoir||3|p|impf|indc}} <end>
+Page 1390 ajoutoit: Found match for regex: <begin> # {{inflection of|fr|<=archaic spelling of:ajoutait|ajouter||3|p|impf|indc}} <end>
 Page 1391 præ-mortem: Found match for regex: <begin> # {{archaic spelling of|en|premortem}}. <end>
 Page 1394 chichling vetch: Found match for regex: <begin> # {{archaic spelling of|en|chickling vetch}}. <end>
 Page 1395 feerie: Found match for regex: <begin> # {{archaic spelling of|en|fairy}}. <end>
-Page 1398 bemixt: Found match for regex: <begin> # {{infl of|en|ann=archaic spelling of:bemixed|bemix||ed-form}}. <end>
+Page 1398 bemixt: Found match for regex: <begin> # {{infl of|en|<=archaic spelling of:bemixed|bemix||ed-form}}. <end>
 Page 1402 Beerbhoom: Found match for regex: <begin> # {{archaic spelling of|en|Birbhum}}. <end>
 Page 1403 Beerbhum: Found match for regex: <begin> # {{archaic spelling of|en|Birbhum}}. <end>
 Page 1404 Birbhoom: Found match for regex: <begin> # {{archaic spelling of|en|Birbhum}}. <end>
@@ -4800,7 +4800,7 @@ Page 1570 unfruitfullness: Found match for regex: <begin> # {{archaic spelling o
 Page 1571 unlawfullness: Found match for regex: <begin> # {{archaic spelling of|en|unlawfulness}}. <end>
 Page 1572 unmindfullness: Found match for regex: <begin> # {{archaic spelling of|en|unmindfulness}}. <end>
 Page 1573 unskillfullness: Found match for regex: <begin> # {{archaic spelling of|en|unskillfulness}}. <end>
-Page 1577 consumoit: Found match for regex: <begin> # {{inflection of|fr|ann=archaic spelling of:consumait|consumer||3|s|impf|indc}} <end>
+Page 1577 consumoit: Found match for regex: <begin> # {{inflection of|fr|<=archaic spelling of:consumait|consumer||3|s|impf|indc}} <end>
 Page 1578 dretsel: Found match for regex: <begin> # {{archaic spelling of|sv|drätsel||treasury}} <end>
 Page 1579 border-land: Found match for regex: <begin> # {{archaic spelling of|en|borderland}}. <end>
 Page 1589 ditander: Found match for regex: <begin> # {{archaic spelling of|en|dittander}}. <end>
@@ -4813,7 +4813,7 @@ Page 1603 noltru: Found match for regex: <begin> # {{archaic spelling of|sdc|nos
 Page 1604 casolidá: Found match for regex: <begin> # {{archaic spelling of|es|casualidad}} <end>
 Page 1609 almocauar: Found match for regex: <begin> # {{archaic spelling of|pt|almocávar}} <end>
 Page 1611 almocouar: Found match for regex: <begin> # {{archaic spelling of|pt|almocávar}} <end>
-Page 1612 couroit: Found match for regex: <begin> # {{inflection of|fr|ann=archaic spelling of:courait|courir||3|s|impf|indc}} <end>
+Page 1612 couroit: Found match for regex: <begin> # {{inflection of|fr|<=archaic spelling of:courait|courir||3|s|impf|indc}} <end>
 Page 1616 ymp tree: Found match for regex: <begin> # {{archaic spelling of|en|imp tree}}. <end>
 Page 1617 ꦮꦸꦤ꧀ꦠꦸ: Found match for regex: <begin> # {{archaic spelling of|jv|ꦧꦸꦤ꧀ꦠꦸ}} <end>
 Page 1618 chancellary: Found match for regex: <begin> # {{archaic spelling of|en|chancellery}}. <end>
@@ -4904,62 +4904,62 @@ Page 1748 oͤoͤ: Found match for regex: <begin> # {{archaic sp|sv|ö||island}},
 Page 1749 Tungelfeldt: Found match for regex: <begin> # {{archaic sp|sv|Tungelfelt}} <end>
 Page 1750 wagge-wanton: Found match for regex: <begin> # {{archaic sp|en|wag-wanton||promiscuously}}. <end>
 Page 2545 Wiktionary:Tea room/2016/June: Found match for regex: <begin> I see that, according to the existing Wiktionary articles, [[e-mail]] is the standard spelling of the word and [[email]] is an alternative spelling! This seems wrong, as the hyphenated spelling is very rarely used nowadays. For example, [http://www.google.co.uk/trends/explore#q=email%2C%20e-mail this Google Trends graph] shows that "email" was three times as common as "e-mail" in 2005; but as of 2016, "email" is about 30 times as common as "e-mail".</br> Therefore, I would recommend changing the entry for [[e-mail]] to "{{archaic spelling of|en|email}}", and moving the definition, example usage, and etymology information over to the [[email]] article. Would there be any objections to this? [[User:Chessrat|Chessrat]] ([[User talk:Chessrat|talk]]) 06:03, 3 June 2016 (UTC) <end>
-Page 1 vala: Found match for regex: <begin> # {{infl of|hu|ann=archaic form of:volt|van|t=to be||3|sg|ind|past}} <end>
-Page 2 teve: Found match for regex: <begin> # {{infl of|hu|ann=archaic form of:tett|tesz|t=to do; to put||3|sg|ind|past|indef}} <end>
-Page 3 mén: Found match for regex: <begin> # {{lb|hu|dialectal}} {{infl of|hu|ann=archaic form of:megy|megy||3|s|indic|pres}} <end>
-Page 4 veve: Found match for regex: <begin> # {{infl of|hu|ann=archaic form of:vett|vesz||3|s|ind|past|indef}} <end>
-Page 5 vín: Found match for regex: <begin> # {{infl of|hu|ann=archaic form of:vitt|visz||past|3|s}} <end>
-Page 6 tevék: Found match for regex: <begin> # {{infl of|hu|ann=archaic form of:tettem|tesz|t=to do; to put||1|sg|ind|past|indef}} <end>
-Page 6 tevék: Found match for regex: <begin> # {{infl of|hu|ann=archaic form of:tették|tesz|t=to do; to put||3|pl|ind|past|def}} <end>
-Page 7 helyt: Found match for regex: <begin> # {{infl of|hu|ann=archaic form of:helyen|hely||locative|t=[[at]] a [[place]]}}<ref name=barcziorszagh>{{R:ErtSz|hely}}</ref> <end>
+Page 1 vala: Found match for regex: <begin> # {{infl of|hu|<=archaic form of:volt|van|t=to be||3|sg|ind|past}} <end>
+Page 2 teve: Found match for regex: <begin> # {{infl of|hu|<=archaic form of:tett|tesz|t=to do; to put||3|sg|ind|past|indef}} <end>
+Page 3 mén: Found match for regex: <begin> # {{lb|hu|dialectal}} {{infl of|hu|<=archaic form of:megy|megy||3|s|indic|pres}} <end>
+Page 4 veve: Found match for regex: <begin> # {{infl of|hu|<=archaic form of:vett|vesz||3|s|ind|past|indef}} <end>
+Page 5 vín: Found match for regex: <begin> # {{infl of|hu|<=archaic form of:vitt|visz||past|3|s}} <end>
+Page 6 tevék: Found match for regex: <begin> # {{infl of|hu|<=archaic form of:tettem|tesz|t=to do; to put||1|sg|ind|past|indef}} <end>
+Page 6 tevék: Found match for regex: <begin> # {{infl of|hu|<=archaic form of:tették|tesz|t=to do; to put||3|pl|ind|past|def}} <end>
+Page 7 helyt: Found match for regex: <begin> # {{infl of|hu|<=archaic form of:helyen|hely||locative|t=[[at]] a [[place]]}}<ref name=barcziorszagh>{{R:ErtSz|hely}}</ref> <end>
 Page 8 vagyon: Found match for regex: <begin> The archaic form of {{m|hu|van||there is}}. <end>
-Page 8 vagyon: Found match for regex: <begin> # {{infl of|hu|ann=archaic form of:van|van||3|sg|ind|pres|t=[[is]], [[there is]]}} <end>
+Page 8 vagyon: Found match for regex: <begin> # {{infl of|hu|<=archaic form of:van|van||3|sg|ind|pres|t=[[is]], [[there is]]}} <end>
 Page 9 mindenek: Found match for regex: <begin> # {{lb|hu|archaic-form}} {{inflection of|hu|minden||nom|pl}} <end>
-Page 10 tessék: Found match for regex: <begin> # {{infl of|hu|ann=archaic form of:tetsszen|tetszik||3|sg|subj|pres}} <end>
+Page 10 tessék: Found match for regex: <begin> # {{infl of|hu|<=archaic form of:tetsszen|tetszik||3|sg|subj|pres}} <end>
 Page 11 Template:archaic form of: Found match for regex: <begin> -->{{#invoke:form of/templates|form_of_t|[[Appendix:Glossary#archaic|archaic]] form of|cat=archaic forms|withcap=1|withdot=1}}<!-- <end>
-Page 13 állott: Found match for regex: <begin> # {{infl of|hu|ann=archaic form of:állt|áll||3|s|indic|past|indef}} <end>
+Page 13 állott: Found match for regex: <begin> # {{infl of|hu|<=archaic form of:állt|áll||3|s|indic|past|indef}} <end>
 Page 13 állott: Found match for regex: <begin> {{cln|hu|archaic forms}} <end>
-Page 14 nyájt: Found match for regex: <begin> # {{infl of|hu|ann=archaic form of:nyájat|nyáj||acc|s}} <end>
+Page 14 nyájt: Found match for regex: <begin> # {{infl of|hu|<=archaic form of:nyájat|nyáj||acc|s}} <end>
 Page 14 nyájt: Found match for regex: <begin> {{cln|hu|archaic forms}} <end>
-Page 15 nemesb: Found match for regex: <begin> # {{infl of|hu|ann=archaic form of:nemesebb|nemes||comparative}} <end>
-Page 16 lőn: Found match for regex: <begin> # {{infl of|hu|ann=archaic form of:lett|hu|lesz||past|3|s}} <end>
-Page 17 tevé: Found match for regex: <begin> # {{infl of|hu|ann=archaic form of:tette|tesz||3|s|ind|past|def}} <end>
-Page 18 lakol: Found match for regex: <begin> # {{infl of|hu|ann=archaic form of:laksz|lakik||2|s|indic|pres|indef}} <end>
-Page 19 idősb: Found match for regex: <begin> # {{lb|hu|formal}} {{infl of|hu|ann=archaic form of:idősebb|idős||comparativey|addl=now mostly limited to the spoken form of “{{m|hu|id.}}”}} <end>
-Page 20 jöjj: Found match for regex: <begin> # {{lb|hu|formal}} {{infl of|hu|ann=archaic form of:gyere|jön||2|s|subj|pres|indef|addl=currently used only in actual subjunctive clauses, not in the imperative sense}} <end>
-Page 21 jöjjél: Found match for regex: <begin> # {{lb|hu|formal}} {{infl of|hu|ann=archaic form of:gyere|jön||2|s|subj|pres|indef|addl=currently used only in actual subjunctive clauses, not in the imperative sense}} <end>
-Page 22 jöjjünk: Found match for regex: <begin> # {{infl of|hu|ann=archaic form of:gyerünk|jön||1|p|subj|pres|indef|addl=currently used only in actual subjunctive clauses, not in the imperative sense}} <end>
-Page 23 jöjjetek: Found match for regex: <begin> # {{lb|hu|formal}} {{infl of|hu|ann=archaic form of:gyertek|jön||2|p|subj|pres|indef|addl=currently used only in actual subjunctive clauses, not in the imperative sense}} <end>
-Page 25 valátok: Found match for regex: <begin> # {{infl of|hu|ann=archaic form of:voltatok|van|t=to be||2|pl|ind|past}} <end>
-Page 26 valának: Found match for regex: <begin> # {{infl of|hu|ann=archaic form of:voltak|van|t=to be||3|pl|ind|past}} <end>
-Page 27 valék: Found match for regex: <begin> # {{infl of|hu|ann=archaic form of:voltam|van|t=to be||1|sg|ind|past}} <end>
-Page 28 valál: Found match for regex: <begin> # {{infl of|hu|ann=archaic form of:voltál|van|t=to be||2|sg|ind|past}} <end>
-Page 29 valánk: Found match for regex: <begin> # {{infl of|hu|ann=archaic form of:voltunk|van|t=to be||1|pl|ind|past}} <end>
-Page 30 őn: Found match for regex: <begin> # {{infl of|hu|ann=archaic form of:evett|eszik|t=to eat||3|sg|past|indef}} <end>
-Page 31 essék: Found match for regex: <begin> # {{infl of|hu|ann=archaic form of:essen|esik||3|s|subj|pres|indef}} <end>
-Page 32 hallanék: Found match for regex: <begin> # {{infl of|hu|ann=archaic form of:hallatszana|hallik||3|sg|cond|pres|t=to be heard}} <end>
-Page 33 dicsértessék: Found match for regex: <begin> # {{infl of|hu|ann=archaic form of:dicsértessen|dicsértetik||3|sg|subj|pres}} <end>
-Page 34 engedtessék: Found match for regex: <begin> # {{infl of|hu|ann=archaic form of:engedtessen|engedtetik||3|s|subj|pres}}: may it be [[allow]]ed, may it be [[permit]]ted <end>
-Page 35 vígy: Found match for regex: <begin> # {{infl of|hu|ann=archaic form of:vigyél|visz||2|s|subj|pres|indef}} <end>
-Page 36 tetsszék: Found match for regex: <begin> # {{infl of|hu|ann=archaic form of:tetsszen|hu|tetszik||3|sg|subj|pres}} <end>
-Page 37 tevének: Found match for regex: <begin> # {{infl of|hu|ann=archaic form of:tettek|tesz||3|p|ind|past|indef}} <end>
-Page 38 vevé: Found match for regex: <begin> # {{infl of|hu|ann=archaic form of:vette|vesz||3|s|indic|past|def}} <end>
-Page 40 óhajtsz: Found match for regex: <begin> # {{infl of|hu|ann=archaic form of:ójahtasz|óhajt||2|s|indic|pres|indef}} <end>
+Page 15 nemesb: Found match for regex: <begin> # {{infl of|hu|<=archaic form of:nemesebb|nemes||comparative}} <end>
+Page 16 lőn: Found match for regex: <begin> # {{infl of|hu|<=archaic form of:lett|hu|lesz||past|3|s}} <end>
+Page 17 tevé: Found match for regex: <begin> # {{infl of|hu|<=archaic form of:tette|tesz||3|s|ind|past|def}} <end>
+Page 18 lakol: Found match for regex: <begin> # {{infl of|hu|<=archaic form of:laksz|lakik||2|s|indic|pres|indef}} <end>
+Page 19 idősb: Found match for regex: <begin> # {{lb|hu|formal}} {{infl of|hu|<=archaic form of:idősebb|idős||comparativey|addl=now mostly limited to the spoken form of “{{m|hu|id.}}”}} <end>
+Page 20 jöjj: Found match for regex: <begin> # {{lb|hu|formal}} {{infl of|hu|<=archaic form of:gyere|jön||2|s|subj|pres|indef|addl=currently used only in actual subjunctive clauses, not in the imperative sense}} <end>
+Page 21 jöjjél: Found match for regex: <begin> # {{lb|hu|formal}} {{infl of|hu|<=archaic form of:gyere|jön||2|s|subj|pres|indef|addl=currently used only in actual subjunctive clauses, not in the imperative sense}} <end>
+Page 22 jöjjünk: Found match for regex: <begin> # {{infl of|hu|<=archaic form of:gyerünk|jön||1|p|subj|pres|indef|addl=currently used only in actual subjunctive clauses, not in the imperative sense}} <end>
+Page 23 jöjjetek: Found match for regex: <begin> # {{lb|hu|formal}} {{infl of|hu|<=archaic form of:gyertek|jön||2|p|subj|pres|indef|addl=currently used only in actual subjunctive clauses, not in the imperative sense}} <end>
+Page 25 valátok: Found match for regex: <begin> # {{infl of|hu|<=archaic form of:voltatok|van|t=to be||2|pl|ind|past}} <end>
+Page 26 valának: Found match for regex: <begin> # {{infl of|hu|<=archaic form of:voltak|van|t=to be||3|pl|ind|past}} <end>
+Page 27 valék: Found match for regex: <begin> # {{infl of|hu|<=archaic form of:voltam|van|t=to be||1|sg|ind|past}} <end>
+Page 28 valál: Found match for regex: <begin> # {{infl of|hu|<=archaic form of:voltál|van|t=to be||2|sg|ind|past}} <end>
+Page 29 valánk: Found match for regex: <begin> # {{infl of|hu|<=archaic form of:voltunk|van|t=to be||1|pl|ind|past}} <end>
+Page 30 őn: Found match for regex: <begin> # {{infl of|hu|<=archaic form of:evett|eszik|t=to eat||3|sg|past|indef}} <end>
+Page 31 essék: Found match for regex: <begin> # {{infl of|hu|<=archaic form of:essen|esik||3|s|subj|pres|indef}} <end>
+Page 32 hallanék: Found match for regex: <begin> # {{infl of|hu|<=archaic form of:hallatszana|hallik||3|sg|cond|pres|t=to be heard}} <end>
+Page 33 dicsértessék: Found match for regex: <begin> # {{infl of|hu|<=archaic form of:dicsértessen|dicsértetik||3|sg|subj|pres}} <end>
+Page 34 engedtessék: Found match for regex: <begin> # {{infl of|hu|<=archaic form of:engedtessen|engedtetik||3|s|subj|pres}}: may it be [[allow]]ed, may it be [[permit]]ted <end>
+Page 35 vígy: Found match for regex: <begin> # {{infl of|hu|<=archaic form of:vigyél|visz||2|s|subj|pres|indef}} <end>
+Page 36 tetsszék: Found match for regex: <begin> # {{infl of|hu|<=archaic form of:tetsszen|hu|tetszik||3|sg|subj|pres}} <end>
+Page 37 tevének: Found match for regex: <begin> # {{infl of|hu|<=archaic form of:tettek|tesz||3|p|ind|past|indef}} <end>
+Page 38 vevé: Found match for regex: <begin> # {{infl of|hu|<=archaic form of:vette|vesz||3|s|indic|past|def}} <end>
+Page 40 óhajtsz: Found match for regex: <begin> # {{infl of|hu|<=archaic form of:ójahtasz|óhajt||2|s|indic|pres|indef}} <end>
 Page 40 óhajtsz: Found match for regex: <begin> {{cln|hu|archaic forms}} <end>
-Page 41 holtáiglan: Found match for regex: <begin> # {{infl of|hu|ann=archaic form of:holtáig|holta||terminative|sg||t=his/her death}}: [[till]] his/her/its [[death]], [[forever]] {{gloss|all his/her life, while he/she lives}} <end>
-Page 42 holtiglan: Found match for regex: <begin> # {{infl of|hu|ann=archaic form of:halálig|holt||terminative|sg}}: [[till]] [[death]], [[forever]] {{gloss|all one's life, while one lives}} <end>
-Page 43 legidősb: Found match for regex: <begin> # {{lb|hu|formal}} {{infl of|hu|ann=archaic form of:legidősebb|idős||superlative}} <end>
-Page 44 tevéd: Found match for regex: <begin> # {{infl of|hu|ann=archaic form of:tetted|tesz|t=to do; to put||2|sg|ind|past|def}} <end>
+Page 41 holtáiglan: Found match for regex: <begin> # {{infl of|hu|<=archaic form of:holtáig|holta||terminative|sg||t=his/her death}}: [[till]] his/her/its [[death]], [[forever]] {{gloss|all his/her life, while he/she lives}} <end>
+Page 42 holtiglan: Found match for regex: <begin> # {{infl of|hu|<=archaic form of:halálig|holt||terminative|sg}}: [[till]] [[death]], [[forever]] {{gloss|all one's life, while one lives}} <end>
+Page 43 legidősb: Found match for regex: <begin> # {{lb|hu|formal}} {{infl of|hu|<=archaic form of:legidősebb|idős||superlative}} <end>
+Page 44 tevéd: Found match for regex: <begin> # {{infl of|hu|<=archaic form of:tetted|tesz|t=to do; to put||2|sg|ind|past|def}} <end>
 Page 45 Wiktionary:Beer parlour/2022/July: Found match for regex: <begin> :{{ping|Fytcha}} The table hasn't been updated in awhile because although it's autogenerated, the input file for the autogeneration is a manually curated file. I am in the process now of writing a script to autogenerate the input file as well by parsing the template code for each of the form-of templates. As for separating them out, lemma vs. non-lemma may be a bit tricky because some templates may be used for both purposes. However, there's a natural three-way separation into those that are defined using <code>inflection_of_t</code> (which means they take inflection tags, like {{temp|inflection of}}, {{temp|archaic inflection of}}, {{temp|participle of}} and a few others); those defined using <code>form_of_t</code> (which have their text specified using an arbitrary text string like <code><nowiki>alternative {{glossary|letter case|letter-case}} form of</nowiki></code>, and which take approximately the same params as {{temp|m}} and {{temp|l}}); and those defined using <code>tagged_form_of_t</code> (which have their text specified using inflection tags, and which also take the same params as {{temp|m}} and {{temp|l}}, such as {{temp|definite singular of}}, {{temp|active participle of}}, etc.). The latter are the closest to what you probably think of as non-lemma form-of templates, although there are some weird outliers like {{temp|alternative reconstruction of}} (which is defined using the tags <code>alternative</code> and <code>reconstruction</code>; this is a holdover from an earlier format and should be corrected). So maybe we can do a first-pass split based on which function is used to define the template, and make any necessary manual corrections. [[User:Benwing2|Benwing2]] ([[User talk:Benwing2|talk]]) 01:26, 8 July 2022 (UTC) <end>
-Page 46 legnemesb: Found match for regex: <begin> # {{infl of|hu|ann=archaic form of:legnemesebb|nemes||superlative|nocat=y}} <end>
-Page 47 evé: Found match for regex: <begin> # {{infl of|hu|ann=archaic form of:ette|eszik||past|3|s|def}} <end>
+Page 46 legnemesb: Found match for regex: <begin> # {{infl of|hu|<=archaic form of:legnemesebb|nemes||superlative|nocat=y}} <end>
+Page 47 evé: Found match for regex: <begin> # {{infl of|hu|<=archaic form of:ette|eszik||past|3|s|def}} <end>
 Page 48 狭し: Found match for regex: <begin> # {{label|ja|classical}} {{archaic form of|ja|狭い|tr=semai}} <end>
 Page 49 servom: Found match for regex: <begin> # {{inflection of|la|servos||acc|s}}; {{archaic form of|la|servum}} <end>
 Page 50 Template:archaic inflection of/documentation: Found match for regex: <begin> Used in the sense line of an archaic form to link to the main form of the term. Implemented using [[Module:form of/templates]]; see its documentation for more information. <end>
 Page 50 Template:archaic inflection of/documentation: Found match for regex: <begin> : Tags to further specify what kind of archaic form it is. For example, Hungarian {{m|hu|vala}} is an archaic third-person singular indicative past form of {{m|hu|van}}, so it uses tags <var>3</var>, <var>sg</var>, <var>ind</var>, and <var>past</var>: {{temp|archaic inflection of|hu|van|t=to be||3|sg|ind|past}} <end>
-Page 51 vőn: Found match for regex: <begin> # {{infl of|hu|ann=archaic form of:vett|vesz||past|3|s}} <end>
-Page 52 tőn: Found match for regex: <begin> # {{infl of|hu|ann=archaic form of:tett|tesz||past|3|s}} <end>
+Page 51 vőn: Found match for regex: <begin> # {{infl of|hu|<=archaic form of:vett|vesz||past|3|s}} <end>
+Page 52 tőn: Found match for regex: <begin> # {{infl of|hu|<=archaic form of:tett|tesz||past|3|s}} <end>
 Page 53 hűn: Found match for regex: <begin> # {{lb|hu|archaic-form}} {{alternative form of|hu|hűen||faithfully}} <end>
-Page 53 hűn: Found match for regex: <begin> # {{infl of|hu|ann=archaic form of:hitt|hu|hisz||past|3|s}} <end>
+Page 53 hűn: Found match for regex: <begin> # {{infl of|hu|<=archaic form of:hitt|hu|hisz||past|3|s}} <end>
 Elapsed time: 8 mins 29.95 secs
 Ending at Tue Feb 11 23:28:53 2025

@@ -1307,7 +1307,7 @@ Page 885 ČSFR: Found match for regex: <begin> # {{rare spelling of|en|CSFR}}. <
 Page 892 Swergas: Found match for regex: <begin> # {{lb|en|archaic}} {{rare spelling of|en|Svarga}}. <end>
 Page 898 stomach-ache: Found match for regex: <begin> # {{rare spelling of|en|stomachache}}. <end>
 Page 901 body-hair: Found match for regex: <begin> # {{rare spelling of|en|body hair}}. <end>
-Page 904 machovskiego: Found match for regex: <begin> # {{inflection of|pl|-form:rare sp:machowskiego|machovski||gen|m//n|s|;|an|acc|m|s}} <end>
+Page 904 machovskiego: Found match for regex: <begin> # {{inflection of|pl|<=rare sp:machowskiego|machovski||gen|m//n|s|;|an|acc|m|s}} <end>
 Page 907 sulṭān: Found match for regex: <begin> # {{rare spelling of|en|sultan}}. <end>
 Page 909 mediëval: Found match for regex: <begin> # {{rare spelling of|en|medieval}}. <end>
 Page 909 mediëval: Found match for regex: <begin> # {{rare spelling of|en|medieval}}. <end>

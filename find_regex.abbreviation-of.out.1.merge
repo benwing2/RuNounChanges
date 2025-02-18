@@ -59,10 +59,10 @@ Page 18 FAC: Found match for regex: <begin> # {{lb|fr|Canada|military}} {{abbrev
 Page 18 FAC: Found match for regex: <begin> # {{lb|fr|Canada|military|aviation}} {{abbreviation of|fr|[[force|Force]] [[aérienne]] du [[Canada]]}}: {{m|en|CAF|gloss=Canadian Air Force}} <end>
 Page 18 FAC: Found match for regex: <begin> # {{lb|es|military|aviation}} {{abbreviation of|es|[[fuerza|Fuerza]] [[aérea|Aérea]] [[colombiana|Colombiana]]}}: the {{w|lang=en|Colombian Air Force}} <end>
 Page 19 BC: Found match for regex: <begin> * {{sense|British Columbia}} "B.C." is the customary abbreviation of British Columbia as used in [[case citation]]s; see e.g. ''The Bluebook: A Uniform System of Citation, Nineteenth Edition'' (2010), "Geographical Terms: Australian states and Canadian provinces and territories", Table T10.2, page 438. <end>
-Page 19 BC: Found match for regex: <begin> # {{place|ro|--=abbr of:Bacău|county|c/Romania}} <end>
+Page 19 BC: Found match for regex: <begin> # {{place|ro|<=abbr of:Bacău|county|c/Romania}} <end>
 Page 20 CE: Found match for regex: <begin> # The [[European Community]]: {{abbreviation of|mul|fr:Communauté Européenne}} <end>
-Page 20 CE: Found match for regex: <begin> # {{place|en|--=abbr of:Ceará|state|c/Brazil}}. <end>
-Page 20 CE: Found match for regex: <begin> # {{place|pt|--=abbr of:Ceará|state|c/Brazil}} <end>
+Page 20 CE: Found match for regex: <begin> # {{place|en|<=abbr of:Ceará|state|c/Brazil}}. <end>
+Page 20 CE: Found match for regex: <begin> # {{place|pt|<=abbr of:Ceará|state|c/Brazil}} <end>
 Page 20 CE: Found match for regex: <begin> # {{abbreviation of|es|Comisión Europea|t=European Commission}} <end>
 Page 21 metric: Found match for regex: <begin> # {{abbreviation of|en|metric system}}. <end>
 Page 22 cum: Found match for regex: <begin> # {{abbreviation of|en|cubic metre}}. <end>
@@ -75,10 +75,10 @@ Page 26 jour: Found match for regex: <begin> # {{lb|en|chiefly|US}} {{abbreviati
 Page 27 BM: Found match for regex: <begin> # {{abbreviation of|en|w:Bachelor of Medicine}}. <end>
 Page 27 BM: Found match for regex: <begin> # {{lb|en|US}} {{abbreviation of|en|w:Bachelor of Music}}. <end>
 Page 27 BM: Found match for regex: <begin> # {{abbreviation of|en|w:British Museum}}. <end>
-Page 28 AL: Found match for regex: <begin> # {{place|en|--=abbr of:Alabama|state|c/USA}}. <end>
-Page 28 AL: Found match for regex: <begin> # {{place|en|--=abbr of:Alagoas|state|c/Brazil}}. <end>
+Page 28 AL: Found match for regex: <begin> # {{place|en|<=abbr of:Alabama|state|c/USA}}. <end>
+Page 28 AL: Found match for regex: <begin> # {{place|en|<=abbr of:Alagoas|state|c/Brazil}}. <end>
 Page 28 AL: Found match for regex: <begin> # {{abbreviation of|id|[[angkatan laut]]}} <end>
-Page 28 AL: Found match for regex: <begin> # {{place|pt|--=abbr of:Alagoas|state|c/Brazil}} <end>
+Page 28 AL: Found match for regex: <begin> # {{place|pt|<=abbr of:Alagoas|state|c/Brazil}} <end>
 Page 29 dls: Found match for regex: <begin> # {{abbreviation of|es|dólares||[[dollar]]s}} <end>
 Page 30 BBC: Found match for regex: <begin> # {{lb|en|organic compound|uncountable}} {{abbreviation of|en|bromobenzyl cyanide}}. <end>
 Page 31 EU: Found match for regex: <begin> # {{lb|en|Star Wars}} {{abbreviation of|en|[[expanded]] [[universe]]}}. <end>
@@ -86,9 +86,9 @@ Page 32 DVD: Found match for regex: <begin> # {{lb|fr|French politics}} {{abbrev
 Page 33 SpA: Found match for regex: <begin> # {{lb|en|medicine}} {{abbreviation of|en|spondyloarthritis}}. <end>
 Page 33 SpA: Found match for regex: <begin> # {{abbreviation of|it|società per azioni|t=public limited company}}: [[PLC]] <end>
 Page 34 euro: Found match for regex: <begin> # {{abbreviation of|en|European|addl=in any sense}}. <end>
-Page 36 AM: Found match for regex: <begin> # {{place|en|--=abbr of:Amazonas|state|c/Brazil}}. <end>
+Page 36 AM: Found match for regex: <begin> # {{place|en|<=abbr of:Amazonas|state|c/Brazil}}. <end>
 Page 36 AM: Found match for regex: <begin> # {{abbreviation of|fr|ante meridiem}} <end>
-Page 36 AM: Found match for regex: <begin> # {{place|pt|--=abbr of:Amazonas|state|c/Brazil}} <end>
+Page 36 AM: Found match for regex: <begin> # {{place|pt|<=abbr of:Amazonas|state|c/Brazil}} <end>
 Page 37 AA: Found match for regex: <begin> # {{lb|en|gymnastics}} {{abbreviation of|en|all-around}}. <end>
 Page 37 AA: Found match for regex: <begin> # {{abbreviation of|fr|Alcooliques Anonymes}} <end>
 Page 38 TACS: Found match for regex: <begin> # {{abbreviation of|en|{{w|Total Access Communication System}}}}. <end>
@@ -111,7 +111,7 @@ Page 47 VB: Found match for regex: <begin> # {{abbr of|de|[[Verhandlungsbasis]]}
 Page 48 PX: Found match for regex: <begin> # {{abbreviation of|en|peroxidase}}. <end>
 Page 49 MIA: Found match for regex: <begin> # {{lb|en|sports}} {{abbreviation of|en|Miami}}. <end>
 Page 50 as: Found match for regex: <begin> # {{lb|en|stenoscript}} {{abbreviation of|en|associate,associated,associating,association,etc.}}. <end>
-Page 51 TLA: Found match for regex: <begin> # {{place|en|--=abbr of:Tlaxcala|state|c/Mexico}}. <end>
+Page 51 TLA: Found match for regex: <begin> # {{place|en|<=abbr of:Tlaxcala|state|c/Mexico}}. <end>
 Page 52 ag: Found match for regex: <begin> # {{lb|en|stenoscript}} {{abbreviation of|en|again}}. <end>
 Page 53 AC: Found match for regex: <begin> # {{lb|ja|only in compounds}} {{abbreviation of|ja|アーケード||[[arcade]], establishment with coin-operated games}} <end>
 Page 53 AC: Found match for regex: <begin> # {{abbreviation of|pl|autocasco}} <end>
@@ -120,9 +120,9 @@ Page 54 DC: Found match for regex: <begin> # {{lb|en|medicine}} {{abbreviation o
 Page 55 ba: Found match for regex: <begin> # {{lb|en|in [[real estate]] ads}} {{abbreviation of|en|bathroom}}. <end>
 Page 56 NT: Found match for regex: <begin> # {{lb|mul|[[w:IUCN Red List|IUCN Red List]]}} {{abbreviation of|mul|en:[[w:Near-threatened species|Near Threatened]]}} <end>
 Page 56 NT: Found match for regex: <begin> # {{lb|en|stock symbol}} {{abbreviation of|en|{{w|Nortel}}}}. <end>
-Page 56 NT: Found match for regex: <begin> # {{place|en|--=abbr of:East Nusa Tenggara|province|c/Indonesia}}. <end>
+Page 56 NT: Found match for regex: <begin> # {{place|en|<=abbr of:East Nusa Tenggara|province|c/Indonesia}}. <end>
 Page 56 NT: Found match for regex: <begin> # {{lb|en|chemistry}} {{abbreviation of|en|nanotube}}. <end>
-Page 56 NT: Found match for regex: <begin> # {{place|ro|--=abbr of:Neamț|county|c/Romania}} <end>
+Page 56 NT: Found match for regex: <begin> # {{place|ro|<=abbr of:Neamț|county|c/Romania}} <end>
 Page 56 NT: Found match for regex: <begin> # [[New Testament]] (Bible); {{abbreviation of|sv|Nya Testamentet}} <end>
 Page 57 Qld: Found match for regex: <begin> # {{abbreviation of|en|Queensland}}. <end>
 Page 58 SA: Found match for regex: <begin> # {{lb|en|anatomy|medicine}} {{abbreviation of|en|sinoatrial,sinoauricular}}. <end>
@@ -130,65 +130,65 @@ Page 58 SA: Found match for regex: <begin> # {{lb|en|in gay personal advertiseme
 Page 58 SA: Found match for regex: <begin> # {{abbreviation of|en|Sturmabteilung}}. <end>
 Page 58 SA: Found match for regex: <begin> # {{abbreviation of|de|Sturmabteilung}} <end>
 Page 58 SA: Found match for regex: <begin> # {{abbreviation of|ja|サービスエリア}} <end>
-Page 59 WA: Found match for regex: <begin> # {{lb|en|US}} {{place|en|--=abbr of:Washington|state|c/USA}}. <end>
+Page 59 WA: Found match for regex: <begin> # {{lb|en|US}} {{place|en|<=abbr of:Washington|state|c/USA}}. <end>
 Page 59 WA: Found match for regex: <begin> # {{abbreviation of|ja|ウイニングアンサー|tr=uiningu ansā}} <end>
 Page 60 BA: Found match for regex: <begin> # {{abbreviation of|en|bathroom}}. <end>
-Page 60 BA: Found match for regex: <begin> # {{place|en|--=abbr of:Bali|province|c/Indonesia}}. <end>
-Page 60 BA: Found match for regex: <begin> # {{place|en|--=abbr of:Bahia|state|c/Brazil}}. <end>
-Page 60 BA: Found match for regex: <begin> # {{place|pt|--=abbr of:Bahia|state|c/Brazil}} <end>
-Page 61 DF: Found match for regex: <begin> # {{place|en|--=abbr of:Distrito Federal|state|c/Brazil}}. <end>
+Page 60 BA: Found match for regex: <begin> # {{place|en|<=abbr of:Bali|province|c/Indonesia}}. <end>
+Page 60 BA: Found match for regex: <begin> # {{place|en|<=abbr of:Bahia|state|c/Brazil}}. <end>
+Page 60 BA: Found match for regex: <begin> # {{place|pt|<=abbr of:Bahia|state|c/Brazil}} <end>
+Page 61 DF: Found match for regex: <begin> # {{place|en|<=abbr of:Distrito Federal|state|c/Brazil}}. <end>
 Page 61 DF: Found match for regex: <begin> # {{lb|en|Jehovah's Witnesses}} {{abbr of|en|disfellowship}}. <end>
 Page 61 DF: Found match for regex: <begin> # {{abbreviation of|da|Dansk Folkeparti||Danish People's Party}} <end>
-Page 62 GO: Found match for regex: <begin> # {{place|en|--=abbr of:Gorontalo|province|c/Indonesia}}. <end>
-Page 62 GO: Found match for regex: <begin> # {{place|en|--=abbr of:Goiás|state|c/Brazil}}. <end>
+Page 62 GO: Found match for regex: <begin> # {{place|en|<=abbr of:Gorontalo|province|c/Indonesia}}. <end>
+Page 62 GO: Found match for regex: <begin> # {{place|en|<=abbr of:Goiás|state|c/Brazil}}. <end>
 Page 62 GO: Found match for regex: <begin> # {{abbreviation of|it|Gorizia}}, an Italian town in Friuli-Venezia Giulia <end>
-Page 62 GO: Found match for regex: <begin> # {{place|pt|--=abbr of:Goiás|state|c/Brazil}} <end>
+Page 62 GO: Found match for regex: <begin> # {{place|pt|<=abbr of:Goiás|state|c/Brazil}} <end>
 Page 63 MA: Found match for regex: <begin> # {{abbreviation of|fr|meilleur avant|t=best before}}: [[BB]] <end>
 Page 63 MA: Found match for regex: <begin> # {{lb|pt|Brazil}} {{abbreviation of|pt|Maranhão}} <end>
 Page 64 MS: Found match for regex: <begin> # {{lb|en|plural '''''[[MSS]]'''''}} {{abbreviation of|en|manuscript}}. <end>
-Page 64 MS: Found match for regex: <begin> # {{place|en|--=abbr of:Mississippi|state|c/USA}}. <end>
-Page 64 MS: Found match for regex: <begin> # {{place|pt|--=abbr of:Mato Grosso do Sul|state|c/Brazil}} <end>
-Page 64 MS: Found match for regex: <begin> # {{place|ro|--=abbr of:Mureș|county|c/Romania}} <end>
+Page 64 MS: Found match for regex: <begin> # {{place|en|<=abbr of:Mississippi|state|c/USA}}. <end>
+Page 64 MS: Found match for regex: <begin> # {{place|pt|<=abbr of:Mato Grosso do Sul|state|c/Brazil}} <end>
+Page 64 MS: Found match for regex: <begin> # {{place|ro|<=abbr of:Mureș|county|c/Romania}} <end>
 Page 65 MT: Found match for regex: <begin> # {{lb|en|US|engineering}} {{abbreviation of|en|metric ton}}. <end>
-Page 65 MT: Found match for regex: <begin> # {{place|pt|--=abbr of:Mato Grosso|state|c/Brazil}} <end>
-Page 66 PA: Found match for regex: <begin> # {{place|en|--=abbr of:Pennsylvania|state|c/USA}}. <end>
-Page 66 PA: Found match for regex: <begin> # {{place|en|--=abbr of:Papua|province|c/Indonesia}}. <end>
-Page 66 PA: Found match for regex: <begin> # {{place|en|--=abbr of:Pará|state|c/Brazil}}. <end>
-Page 66 PA: Found match for regex: <begin> # {{place|pt|--=abbr of:Pará|state|c/Brazil}} <end>
+Page 65 MT: Found match for regex: <begin> # {{place|pt|<=abbr of:Mato Grosso|state|c/Brazil}} <end>
+Page 66 PA: Found match for regex: <begin> # {{place|en|<=abbr of:Pennsylvania|state|c/USA}}. <end>
+Page 66 PA: Found match for regex: <begin> # {{place|en|<=abbr of:Papua|province|c/Indonesia}}. <end>
+Page 66 PA: Found match for regex: <begin> # {{place|en|<=abbr of:Pará|state|c/Brazil}}. <end>
+Page 66 PA: Found match for regex: <begin> # {{place|pt|<=abbr of:Pará|state|c/Brazil}} <end>
 Page 67 PB: Found match for regex: <begin> # {{lb|en|computing|formal}} {{abbrev of|en|petabyte}}. <end>
 Page 67 PB: Found match for regex: <begin> # {{lb|en|computing|informal}} {{abbrev of|en|pebibyte}}. <end>
-Page 67 PB: Found match for regex: <begin> # {{place|en|--=abbr of:Paraíba|state|c/Brazil}}. <end>
-Page 67 PB: Found match for regex: <begin> # {{place|en|--=abbr of:Punjab|state|c/India}}. <end>
-Page 67 PB: Found match for regex: <begin> # {{place|pt|--=abbr of:Paraíba|state|c/Brazil}} <end>
-Page 68 PE: Found match for regex: <begin> # {{place|en|--=abbr of:Pernambuco|state|c/Brazil}}. <end>
+Page 67 PB: Found match for regex: <begin> # {{place|en|<=abbr of:Paraíba|state|c/Brazil}}. <end>
+Page 67 PB: Found match for regex: <begin> # {{place|en|<=abbr of:Punjab|state|c/India}}. <end>
+Page 67 PB: Found match for regex: <begin> # {{place|pt|<=abbr of:Paraíba|state|c/Brazil}} <end>
+Page 68 PE: Found match for regex: <begin> # {{place|en|<=abbr of:Pernambuco|state|c/Brazil}}. <end>
 Page 68 PE: Found match for regex: <begin> # {{l|en|PE|gloss=polyethylene}}; {{abbreviation of|fr|polyéthylène}} <end>
-Page 68 PE: Found match for regex: <begin> # {{place|it|--=abbr of:Pescara|city|p/Pescara|adr/Abruzzo|c/Italy}} <end>
-Page 68 PE: Found match for regex: <begin> # {{place|pt|--=abbr of:Pernambuco|state|c/Brazil}} <end>
-Page 69 PI: Found match for regex: <begin> # {{place|en|--=abbr of:Piauí|state|c/Brazil}}. <end>
+Page 68 PE: Found match for regex: <begin> # {{place|it|<=abbr of:Pescara|city|p/Pescara|adr/Abruzzo|c/Italy}} <end>
+Page 68 PE: Found match for regex: <begin> # {{place|pt|<=abbr of:Pernambuco|state|c/Brazil}} <end>
+Page 69 PI: Found match for regex: <begin> # {{place|en|<=abbr of:Piauí|state|c/Brazil}}. <end>
 Page 69 PI: Found match for regex: <begin> # {{lb|en|biochemistry}} {{abbreviation of|en|phosphatidylinositol|addl=a phospholipid component of eukaryotic cell membranes, also abbreviated in PtdIns}}. <end>
 Page 69 PI: Found match for regex: <begin> # {{abbreviation of|en|[[prohibited]] [[immigrant]]}}. <end>
-Page 69 PI: Found match for regex: <begin> # {{place|pt|--=abbr of:Piauí|state|c/Brazil}} <end>
-Page 70 PR: Found match for regex: <begin> # {{place|en|--=abbr of:Paraná|state|c/Brazil}}. <end>
+Page 69 PI: Found match for regex: <begin> # {{place|pt|<=abbr of:Piauí|state|c/Brazil}} <end>
+Page 70 PR: Found match for regex: <begin> # {{place|en|<=abbr of:Paraná|state|c/Brazil}}. <end>
 Page 70 PR: Found match for regex: <begin> # {{lb|en|electronics}} {{abbreviation of|en|preset}}. <end>
 Page 70 PR: Found match for regex: <begin> # {{lb|de|Germany}} {{abbreviation of|de|Polizeirat}} <end>
 Page 70 PR: Found match for regex: <begin> # [[HW]]; {{abbreviation of|id|pekerjaan rumah|t=homework}} <end>
-Page 70 PR: Found match for regex: <begin> # {{lb|pt|Brazil}} {{place|pt|--=abbr of:Paraná|state|c/Brazil}} <end>
+Page 70 PR: Found match for regex: <begin> # {{lb|pt|Brazil}} {{place|pt|<=abbr of:Paraná|state|c/Brazil}} <end>
 Page 70 PR: Found match for regex: <begin> # {{abbr of|sv|poste restante||poste restante}} <end>
 Page 71 RN: Found match for regex: <begin> # {{lb|en|internet slang|text messaging}} {{abbreviation of|en|right now}}. <end>
-Page 71 RN: Found match for regex: <begin> # {{place|en|--=abbr of:Rio Grande do Norte|state|c/Brazil}}. <end>
+Page 71 RN: Found match for regex: <begin> # {{place|en|<=abbr of:Rio Grande do Norte|state|c/Brazil}}. <end>
 Page 71 RN: Found match for regex: <begin> # {{lb|fr|French politics}} {{abbrev of|fr|Rassemblement national|t=[[National Rally]]}} <end>
-Page 71 RN: Found match for regex: <begin> # {{place|pt|--=abbr of:Rio Grande do Norte|state|c/Brazil}} <end>
-Page 72 RO: Found match for regex: <begin> # {{place|en|--=abbr of:Rondônia|state|c/Brazil}}. <end>
-Page 72 RO: Found match for regex: <begin> # {{place|pt|--=abbr of:Rondônia|state|c/Brazil}} <end>
+Page 71 RN: Found match for regex: <begin> # {{place|pt|<=abbr of:Rio Grande do Norte|state|c/Brazil}} <end>
+Page 72 RO: Found match for regex: <begin> # {{place|en|<=abbr of:Rondônia|state|c/Brazil}}. <end>
+Page 72 RO: Found match for regex: <begin> # {{place|pt|<=abbr of:Rondônia|state|c/Brazil}} <end>
 Page 73 RR: Found match for regex: <begin> # {{abbreviation of|en|[[rear]]}}, where brevity is desired. <end>
-Page 73 RR: Found match for regex: <begin> # {{place|en|--=abbr of:Roraima|state|c/Brazil}}. <end>
+Page 73 RR: Found match for regex: <begin> # {{place|en|<=abbr of:Roraima|state|c/Brazil}}. <end>
 Page 73 RR: Found match for regex: <begin> # {{abbreviation of|la|rerum}}, {{ng|of things, of topics}}. <end>
 Page 73 RR: Found match for regex: <begin> # {{abbreviation of|la|reverendissimi}}, {{ng|most holy, most reverend}}. <end>
 Page 73 RR: Found match for regex: <begin> # {{abbreviation of|la|reverendissimos}} <end>
 Page 73 RR: Found match for regex: <begin> # {{abbreviation of|la|reverendissimibus}} <end>
-Page 73 RR: Found match for regex: <begin> # {{place|pt|--=abbr of:Roraima|state|c/Brazil}} <end>
+Page 73 RR: Found match for regex: <begin> # {{place|pt|<=abbr of:Roraima|state|c/Brazil}} <end>
 Page 74 SC: Found match for regex: <begin> # {{lb|en|medicine}} {{abbreviation of|en|subcutaneous}}. <end>
-Page 74 SC: Found match for regex: <begin> # {{place|pt|--=abbr of:Santa Catarina|state|c/Brazil}} <end>
+Page 74 SC: Found match for regex: <begin> # {{place|pt|<=abbr of:Santa Catarina|state|c/Brazil}} <end>
 Page 75 SE: Found match for regex: <begin> # {{abbreviation of|en|[[southeast]]}}. <end>
 Page 75 SE: Found match for regex: <begin> # {{abbreviation of|en|southeast}}. <end>
 Page 75 SE: Found match for regex: <begin> # {{abbreviation of|eo|sudeosto||southeast}} <end>
@@ -198,7 +198,7 @@ Page 75 SE: Found match for regex: <begin> # {{lb|de|education}} {{abbreviation 
 Page 75 SE: Found match for regex: <begin> # {{abbreviation of|it|sudest}}; [[southeast]] <end>
 Page 75 SE: Found match for regex: <begin> # {{abbreviation of|ja|サウンドエフェクト|tr=saundo efekuto|t=sound effect}}; a pre-recorded piece of music played at a concert, often before or after a concert <end>
 Page 75 SE: Found match for regex: <begin> # {{abbreviation of|ja|システムエンジニア|tr=shisutemu enjinia|t=system engineer}}; a type of computer engineer with work spanning from requirements definition, design, development, deployment, to project management <end>
-Page 75 SE: Found match for regex: <begin> # {{place|pt|--=abbr of:Sergipe|state|c/Brazil}} <end>
+Page 75 SE: Found match for regex: <begin> # {{place|pt|<=abbr of:Sergipe|state|c/Brazil}} <end>
 Page 75 SE: Found match for regex: <begin> # {{abbreviation of|es|sudeste}}; [[southeast]] <end>
 Page 76 SP: Found match for regex: <begin> # {{lb|en|law enforcement}} {{abbreviation of|en|superintendent}}. <end>
 Page 76 SP: Found match for regex: <begin> # {{lb|en|firearms}} {{abbreviation of|en|soft point}}. <end>
@@ -206,11 +206,11 @@ Page 76 SP: Found match for regex: <begin> # {{abbreviation of|id|serikat pekerj
 Page 76 SP: Found match for regex: <begin> # {{abbreviation of|id|surat peringatan|t=warning}} <end>
 Page 77 TO: Found match for regex: <begin> # {{lb|en|informal}} {{abbreviation of|en|Toronto}}. <end>
 Page 78 bam: Found match for regex: <begin> # {{abbreviation of|en|[[bare]]-[[arse]] [[minimum]]}}. {{rfex|en}} <end>
-Page 79 AB: Found match for regex: <begin> # {{place|en|--=abbr of:Alberta|province|c/Canada}}. <end>
+Page 79 AB: Found match for regex: <begin> # {{place|en|<=abbr of:Alberta|province|c/Canada}}. <end>
 Page 79 AB: Found match for regex: <begin> # {{lb|en|organic chemistry}} {{abbreviation of|en|alkylbenzene}}. <end>
 Page 79 AB: Found match for regex: <begin> # {{abbreviation of|de|Anrufbeantworter}} <end>
 Page 79 AB: Found match for regex: <begin> # {{lb|de|apartment listing}} {{abbreviation of|de|Altbau}} <end>
-Page 79 AB: Found match for regex: <begin> # {{place|ro|--=abbr of:Alba|county|c/Romania}} <end>
+Page 79 AB: Found match for regex: <begin> # {{place|ro|<=abbr of:Alba|county|c/Romania}} <end>
 Page 79 AB: Found match for regex: <begin> # {{abbreviation of|sv|aktiebolag|t=[[corporation]]; stock [[company]]; public limited company}} <end>
 Page 80 MB: Found match for regex: <begin> # {{lb|en|computing|formal}} {{abbrev of|en|megabyte}}. <end>
 Page 80 MB: Found match for regex: <begin> # {{lb|en|computing|informal}} {{abbrev of|en|mebibyte}}. <end>
@@ -222,7 +222,7 @@ Page 81 NB: Found match for regex: <begin> # {{abbreviation of|en|newborn}}. <en
 Page 81 NB: Found match for regex: <begin> # {{abbreviation of|en|neuroblast}}. <end>
 Page 81 NB: Found match for regex: <begin> # {{lb|en|oncology}} {{abbreviation of|en|neuroblastoma}}. <end>
 Page 81 NB: Found match for regex: <begin> # {{lb|en|LGBTQ}} {{abbr of|en|non-binary}}. <end>
-Page 81 NB: Found match for regex: <begin> # {{place|en|--=abbr of:West Nusa Tenggara|province|c/Indonesia}}. <!--etymology??--> <end>
+Page 81 NB: Found match for regex: <begin> # {{place|en|<=abbr of:West Nusa Tenggara|province|c/Indonesia}}. <!--etymology??--> <end>
 Page 81 NB: Found match for regex: <begin> # {{lb|de|apartment listing}} {{abbreviation of|de|[[Neubau]]}} <end>
 Page 81 NB: Found match for regex: <begin> # {{abbreviation of|hu|nemzeti bajnokság}} <end>
 Page 81 NB: Found match for regex: <begin> # {{abbreviation of|la|nota bene}} <end>
@@ -235,22 +235,22 @@ Page 82 NS: Found match for regex: <begin> # {{abbreviation of|de|[[Nebensatz]]|
 Page 82 NS: Found match for regex: <begin> # {{lb|de|mathematics}} {{abbreviation of|de|[[Nullstelle]]}} <end>
 Page 82 NS: Found match for regex: <begin> # {{abbreviation of|de|[[Niederschlesien]]||[[Lower Silesia]]}} <end>
 Page 82 NS: Found match for regex: <begin> # {{lb|de|now|informal}} {{abbreviation of|de|[[Niedersachsen]]||[[Lower Saxony]]|qq=compare the official abbreviation [[NI]]}} <end>
-Page 83 NU: Found match for regex: <begin> # {{place|en|--=abbr of:Nunavut|territory|c/Canada}}. <end>
-Page 83 NU: Found match for regex: <begin> # {{place|en|--=abbr of:Nuoro|ar/Sardinia|c/Italy}}. <end>
+Page 83 NU: Found match for regex: <begin> # {{place|en|<=abbr of:Nunavut|territory|c/Canada}}. <end>
+Page 83 NU: Found match for regex: <begin> # {{place|en|<=abbr of:Nuoro|ar/Sardinia|c/Italy}}. <end>
 Page 83 NU: Found match for regex: <begin> # {{abbreviation of|eo|norduesto||northwest}} <end>
-Page 84 ON: Found match for regex: <begin> # {{place|en|--=abbr of:[[Ontario]]|province|c/Canada}}. <end>
+Page 84 ON: Found match for regex: <begin> # {{place|en|<=abbr of:[[Ontario]]|province|c/Canada}}. <end>
 Page 84 ON: Found match for regex: <begin> # {{abbreviation of|se|Ovttastuvvan Našuvnnat}}, {{l|se|Ovttastahttojuvvon Našuvnnat|'''Ovttastahttojuvvon Našuvnnat'''|[[UN]]; [[United Nations]]}} <end>
-Page 85 QC: Found match for regex: <begin> # {{lb|en|Canada}} {{place|en|--=abbr of:Quebec|province|c/Canada}}. <end>
-Page 85 QC: Found match for regex: <begin> # {{lb|en|Canada}} {{place|en|--=abbr of:Quebec City|capital city|p/Quebec|c/Canada}}. <end>
-Page 85 QC: Found match for regex: <begin> # {{place|fr|--=init of:Québec|province|c/Canada}} <end>
+Page 85 QC: Found match for regex: <begin> # {{lb|en|Canada}} {{place|en|<=abbr of:Quebec|province|c/Canada}}. <end>
+Page 85 QC: Found match for regex: <begin> # {{lb|en|Canada}} {{place|en|<=abbr of:Quebec City|capital city|p/Quebec|c/Canada}}. <end>
+Page 85 QC: Found match for regex: <begin> # {{place|fr|<=init of:Québec|province|c/Canada}} <end>
 Page 86 SK: Found match for regex: <begin> # {{lb|en|handbells}} {{abbreviation of|en|shake}}. <end>
-Page 86 SK: Found match for regex: <begin> # {{place|en|--=abbr of:Saskatchewan|province|c/Canada}}. <end>
-Page 86 SK: Found match for regex: <begin> # {{place|en|--=abbr of:Sikkim|state|c/India}}. <end>
+Page 86 SK: Found match for regex: <begin> # {{place|en|<=abbr of:Saskatchewan|province|c/Canada}}. <end>
+Page 86 SK: Found match for regex: <begin> # {{place|en|<=abbr of:Sikkim|state|c/India}}. <end>
 Page 86 SK: Found match for regex: <begin> # {{abbreviation of|fr|Saskatchewan}}, a province of Canada <end>
 Page 87 YT: Found match for regex: <begin> # {{lb|en|Internet}} {{abbreviation of|en|YouTube}}, a popular [[video]] [[hosting]] website. <end>
 Page 88 AG: Found match for regex: <begin> # {{label|en|aviation|uncountable}} {{abbreviation of|en|agricultural aviation}}. <end>
-Page 88 AG: Found match for regex: <begin> # {{place|ro|--=abbr of:Argeș|county|c/Romania}} <end>
-Page 88 AG: Found match for regex: <begin> # {{place|es|--=abbr of:Aguascalientes|state|c/Mexico}} <end>
+Page 88 AG: Found match for regex: <begin> # {{place|ro|<=abbr of:Argeș|county|c/Romania}} <end>
+Page 88 AG: Found match for regex: <begin> # {{place|es|<=abbr of:Aguascalientes|state|c/Mexico}} <end>
 Page 89 BS: Found match for regex: <begin> # {{lb|en|automotive}} {{abbr of|en|{{w|Bridgestone}}}}, a tire company. <end>
 Page 89 BS: Found match for regex: <begin> # {{abbreviation of|en|:w:Bengali Sambat}}. <end>
 Page 89 BS: Found match for regex: <begin> # {{lb|en|US}} {{abbreviation of|en|Bachelor of Science}}. <end>
@@ -260,174 +260,174 @@ Page 89 BS: Found match for regex: <begin> # {{lb|en|accounting}} {{abbreviation
 Page 89 BS: Found match for regex: <begin> # {{senseid|en|bullshit}} {{lb|en|slang|euphemism|chiefly|North American}} {{abbreviation of|en|bullshit}}. <end>
 Page 89 BS: Found match for regex: <begin> # {{lb|en|slang|euphemistic}} {{abbr of|en|bullshit}}. <end>
 Page 90 CH: Found match for regex: <begin> # {{abbreviation of|en|heavy cruiser}}. <end>
-Page 90 CH: Found match for regex: <begin> # {{place|en|--=abbr of:Chandigarh|union territory|c/India}}. <end>
+Page 90 CH: Found match for regex: <begin> # {{place|en|<=abbr of:Chandigarh|union territory|c/India}}. <end>
 Page 90 CH: Found match for regex: <begin> # {{abbreviation of|fr|centre hospitalier|lit=hospital center}} <end>
 Page 90 CH: Found match for regex: <begin> ## {{abbreviation of|fr|club de [[hockey sur glace]]}} <end>
-Page 90 CH: Found match for regex: <begin> # {{place|it|--=abbr of:Chieti|city|adr/Abruzzo|c/Italy}} <end>
-Page 90 CH: Found match for regex: <begin> # {{place|es|--=abbr of:Chihuahua|state|c/Mexico}} <end>
+Page 90 CH: Found match for regex: <begin> # {{place|it|<=abbr of:Chieti|city|adr/Abruzzo|c/Italy}} <end>
+Page 90 CH: Found match for regex: <begin> # {{place|es|<=abbr of:Chihuahua|state|c/Mexico}} <end>
 Page 91 CI: Found match for regex: <begin> # {{abbreviation of|ja|コーポレートアイデンティティ|tr=kōporēto aidentiti||{{w|corporate identity}}|sort=しいあい}} <end>
-Page 91 CI: Found match for regex: <begin> # {{place|es|--=abbr of:Coahuila|state|c/Mexico}} <end>
+Page 91 CI: Found match for regex: <begin> # {{place|es|<=abbr of:Coahuila|state|c/Mexico}} <end>
 Page 92 CL: Found match for regex: <begin> # {{lb|en|astronomy}} {{abbreviation of|en|cluster}}. <end>
 Page 92 CL: Found match for regex: <begin> # {{lb|en|baseball}} {{abbreviation of|en|closer}}. <end>
 Page 92 CL: Found match for regex: <begin> # {{abbreviation of|en|Catalonia}}. <end>
 Page 92 CL: Found match for regex: <begin> # {{abbreviation of|it|Caltanissetta}}, [[Caltanisetta]] {{gloss|Italian town in Sicilia}} <end>
-Page 92 CL: Found match for regex: <begin> # {{place|ro|--=abbr of:Călărași|county|c/Romania}} <end>
-Page 92 CL: Found match for regex: <begin> # {{place|es|--=abbr of:Colima|state|c/Mexico}} <end>
+Page 92 CL: Found match for regex: <begin> # {{place|ro|<=abbr of:Călărași|county|c/Romania}} <end>
+Page 92 CL: Found match for regex: <begin> # {{place|es|<=abbr of:Colima|state|c/Mexico}} <end>
 Page 93 CM: Found match for regex: <begin> # {{abbreviation of|es|Campeche}} <end>
-Page 94 CS: Found match for regex: <begin> # {{lb|en|Mexico}} {{place|en|--=abbr of:Chiapas|state|c/Mexico}}. <end>
-Page 94 CS: Found match for regex: <begin> # {{place|ro|--=abbr of:Caraș-Severin|county|c/Romania}} <end>
-Page 94 CS: Found match for regex: <begin> # {{place|es|--=abbr of:Chiapas|state|c/Mexico}} <end>
-Page 95 DU: Found match for regex: <begin> # {{place|es|--=abbr of:Duranga|state|c/Mexico}} <end>
-Page 96 GR: Found match for regex: <begin> # {{place|ro|--=abbr of:Giurgiu|county|c/Romania}} <end>
-Page 96 GR: Found match for regex: <begin> # {{place|es|--=abbr of:Guerrero|state|c/Mexico}} <end>
-Page 97 GT: Found match for regex: <begin> # {{place|es|--=abbr of:Coahuila|state|c/Mexico}} <end>
+Page 94 CS: Found match for regex: <begin> # {{lb|en|Mexico}} {{place|en|<=abbr of:Chiapas|state|c/Mexico}}. <end>
+Page 94 CS: Found match for regex: <begin> # {{place|ro|<=abbr of:Caraș-Severin|county|c/Romania}} <end>
+Page 94 CS: Found match for regex: <begin> # {{place|es|<=abbr of:Chiapas|state|c/Mexico}} <end>
+Page 95 DU: Found match for regex: <begin> # {{place|es|<=abbr of:Duranga|state|c/Mexico}} <end>
+Page 96 GR: Found match for regex: <begin> # {{place|ro|<=abbr of:Giurgiu|county|c/Romania}} <end>
+Page 96 GR: Found match for regex: <begin> # {{place|es|<=abbr of:Guerrero|state|c/Mexico}} <end>
+Page 97 GT: Found match for regex: <begin> # {{place|es|<=abbr of:Coahuila|state|c/Mexico}} <end>
 Page 98 JA: Found match for regex: <begin> # {{abbreviation of|en|Japan|qq=NATO country code}}. <end>
 Page 98 JA: Found match for regex: <begin> # {{abbreviation of|en|Jamaica}}. <end>
-Page 98 JA: Found match for regex: <begin> # {{place|en|--=abbr of:Jalisco|state|c/Mexico}}. <end>
-Page 98 JA: Found match for regex: <begin> # {{place|en|--=abbr of:Jambi|province|c/Indonesia}}. <end>
-Page 98 JA: Found match for regex: <begin> # {{place|en|--=abbr of:Jammu and Kashmir|union territory|c/India}}. <end>
+Page 98 JA: Found match for regex: <begin> # {{place|en|<=abbr of:Jalisco|state|c/Mexico}}. <end>
+Page 98 JA: Found match for regex: <begin> # {{place|en|<=abbr of:Jambi|province|c/Indonesia}}. <end>
+Page 98 JA: Found match for regex: <begin> # {{place|en|<=abbr of:Jammu and Kashmir|union territory|c/India}}. <end>
 Page 98 JA: Found match for regex: <begin> # {{lb|en|law|postnominal}} {{abbreviation of|en|[[judge]] or [[justice]] of a [[court of appeal]]}}. <end>
 Page 99 MC: Found match for regex: <begin> # {{abbr of|en|{{w|Mastercard}}}}. <end>
-Page 99 MC: Found match for regex: <begin> # {{place|es|--=abbr of:Michoacán|state|c/Mexico}} <end>
+Page 99 MC: Found match for regex: <begin> # {{place|es|<=abbr of:Michoacán|state|c/Mexico}} <end>
 Page 99 MC: Found match for regex: <begin> # [[motorcycle]]; {{abbreviation of|sv|motorcykel}} <end>
 Page 100 ML: Found match for regex: <begin> # {{lb|en|Southeast Asia|colloquial}} {{abbr of|en|w:Mobile Legends: Bang Bang}}. <end>
 Page 100 ML: Found match for regex: <begin> # {{lb|en|slang|manga|anime}} {{abbreviation of|en|[[male]] [[lead#English: role|lead]]}}. <end>
-Page 100 ML: Found match for regex: <begin> # {{place|es|--=abbr of:Morelos|state|c/Mexico}} <end>
+Page 100 ML: Found match for regex: <begin> # {{place|es|<=abbr of:Morelos|state|c/Mexico}} <end>
 Page 101 MX: Found match for regex: <begin> # {{lb|en|Internet}} {{abbreviation of|en|mail exchanger}}. <end>
 Page 101 MX: Found match for regex: <begin> # {{lb|en|motorcycling}} {{abbreviation of|en|motocross}}. <end>
-Page 101 MX: Found match for regex: <begin> # {{place|es|--=abbr of:México|state|c/Mexico}} <end>
-Page 102 NA: Found match for regex: <begin> # {{place|es|--=abbr of:Nayarit|state|c/Mexico}} <end>
-Page 103 NL: Found match for regex: <begin> # {{place|en|--=abbr of:Newfoundland and Labrador|province|c/Canada}}. <end>
-Page 103 NL: Found match for regex: <begin> # {{place|en|--=abbr of:Nagaland|state|c/India}}. <end>
+Page 101 MX: Found match for regex: <begin> # {{place|es|<=abbr of:México|state|c/Mexico}} <end>
+Page 102 NA: Found match for regex: <begin> # {{place|es|<=abbr of:Nayarit|state|c/Mexico}} <end>
+Page 103 NL: Found match for regex: <begin> # {{place|en|<=abbr of:Newfoundland and Labrador|province|c/Canada}}. <end>
+Page 103 NL: Found match for regex: <begin> # {{place|en|<=abbr of:Nagaland|state|c/India}}. <end>
 Page 103 NL: Found match for regex: <begin> # {{abbreviation of|fi|Neuvostoliitto||The [[Soviet Union]]}} <end>
-Page 103 NL: Found match for regex: <begin> # {{place|es|--=abbr of:Nuevo León|state|c/Mexico}} <end>
-Page 104 OA: Found match for regex: <begin> # {{place|es|--=abbr of:Oaxaca|state|c/Mexico}} <end>
-Page 105 PU: Found match for regex: <begin> # {{place|es|--=abbr of:Puebla|state|c/Mexico}} <end>
-Page 106 QE: Found match for regex: <begin> # {{place|es|--=abbr of:Querétaro|state|c/Mexico}} <end>
+Page 103 NL: Found match for regex: <begin> # {{place|es|<=abbr of:Nuevo León|state|c/Mexico}} <end>
+Page 104 OA: Found match for regex: <begin> # {{place|es|<=abbr of:Oaxaca|state|c/Mexico}} <end>
+Page 105 PU: Found match for regex: <begin> # {{place|es|<=abbr of:Puebla|state|c/Mexico}} <end>
+Page 106 QE: Found match for regex: <begin> # {{place|es|<=abbr of:Querétaro|state|c/Mexico}} <end>
 Page 107 SI: Found match for regex: <begin> # {{abbreviation of|fr|Système international}}: {{l|mul|SI}} <end>
 Page 107 SI: Found match for regex: <begin> # {{abbreviation of|pt|Sistema Internacional}}: {{l|mul|SI}} <end>
-Page 107 SI: Found match for regex: <begin> # {{place|es|--=abbr of:Sinaloa|state|c/Mexico}} <end>
+Page 107 SI: Found match for regex: <begin> # {{place|es|<=abbr of:Sinaloa|state|c/Mexico}} <end>
 Page 108 SL: Found match for regex: <begin> # {{lb|en|politics}} {{abbreviation of|en|Scotland}}. <end>
-Page 108 SL: Found match for regex: <begin> # {{place|es|--=abbr of:San Luis Potosí|state|c/Mexico}} <end>
+Page 108 SL: Found match for regex: <begin> # {{place|es|<=abbr of:San Luis Potosí|state|c/Mexico}} <end>
 Page 108 SL: Found match for regex: <begin> # {{abbreviation of|sv|Storstockholms Lokaltrafik}} <end>
 Page 109 so: Found match for regex: <begin> # {{abbreviation of|en|[[someone]]}}. <end>
 Page 109 so: Found match for regex: <begin> # {{abbr of|cs|[[sobota]]||[[Saturday]]}} <end>
-Page 110 TA: Found match for regex: <begin> # {{place|es|--=abbr of:Tamaulipas|state|c/Mexico}} <end>
+Page 110 TA: Found match for regex: <begin> # {{place|es|<=abbr of:Tamaulipas|state|c/Mexico}} <end>
 Page 111 TB: Found match for regex: <begin> # {{lb|en|computing|formal}} {{abbrev of|en|terabyte}}. <end>
 Page 111 TB: Found match for regex: <begin> # {{lb|en|computing|informal}} {{abbrev of|en|tebibyte}}. <end>
 Page 111 TB: Found match for regex: <begin> # {{abbrev of|en|throwback}}. <end>
-Page 111 TB: Found match for regex: <begin> # {{place|es|--=abbr of:Tabasco|state|c/Mexico}} <end>
+Page 111 TB: Found match for regex: <begin> # {{place|es|<=abbr of:Tabasco|state|c/Mexico}} <end>
 Page 112 TL: Found match for regex: <begin> # {{lb|en|informal}} {{abbreviation of|en|translator}}. <end>
 Page 112 TL: Found match for regex: <begin> # {{lb|en|informal}} {{abbreviation of|en|translation}}. <end>
 Page 112 TL: Found match for regex: <begin> # {{lb|en|internet}} {{abbreviation of|en|timeline|addl=; also {{m|en|tl}}}}. <end>
 Page 112 TL: Found match for regex: <begin> # {{abbreviation of|en|turntable ladder}}. <end>
 Page 112 TL: Found match for regex: <begin> # {{abbreviation of|en|[[team]] [[leader]]}}. <end>
 Page 112 TL: Found match for regex: <begin> # {{abbreviation of|en|[[Turkish]] [[lira]]}}. <end>
-Page 112 TL: Found match for regex: <begin> # {{place|ro|--=abbr of:Tulcea|county|c/Romania}} <end>
-Page 112 TL: Found match for regex: <begin> # {{place|es|--=abbr of:Tlaxcala|state|c/Mexico}} <end>
+Page 112 TL: Found match for regex: <begin> # {{place|ro|<=abbr of:Tulcea|county|c/Romania}} <end>
+Page 112 TL: Found match for regex: <begin> # {{place|es|<=abbr of:Tlaxcala|state|c/Mexico}} <end>
 Page 112 TL: Found match for regex: <begin> # {{abbreviation of|tr|[[Türk]] [[lira|Lirası]]||[[Turkish]] [[lira|Lira]]}} <end>
 Page 113 VC: Found match for regex: <begin> # {{abbreviation of|en|[[vinylene]] [[carbonate]]}}. <end>
-Page 113 VC: Found match for regex: <begin> # {{place|es|--=abbr of:Veracruz|state|c/Mexico}} <end>
-Page 114 ZA: Found match for regex: <begin> # {{place|es|--=abbr of:Zacatecas|state|c/Mexico}} <end>
-Page 115 AZ: Found match for regex: <begin> # {{place|en|--=abbr of:Arizona|state|c/USA}}. <end>
+Page 113 VC: Found match for regex: <begin> # {{place|es|<=abbr of:Veracruz|state|c/Mexico}} <end>
+Page 114 ZA: Found match for regex: <begin> # {{place|es|<=abbr of:Zacatecas|state|c/Mexico}} <end>
+Page 115 AZ: Found match for regex: <begin> # {{place|en|<=abbr of:Arizona|state|c/USA}}. <end>
 Page 115 AZ: Found match for regex: <begin> # {{lb|en|neologism}} {{abbreviation of|en|AstraZeneca}}, a COVID-19 vaccine made by the {{w|AstraZeneca}} company. <end>
-Page 116 CA: Found match for regex: <begin> # {{place|en|--=abbr of:California|state|c/USA}}. <end>
-Page 116 CA: Found match for regex: <begin> # {{place|en|--=abbr of:Canada|country|cont/North America}}. <end>
+Page 116 CA: Found match for regex: <begin> # {{place|en|<=abbr of:California|state|c/USA}}. <end>
+Page 116 CA: Found match for regex: <begin> # {{place|en|<=abbr of:Canada|country|cont/North America}}. <end>
 Page 116 CA: Found match for regex: <begin> # {{lb|en|sports|cricket}} {{abbreviation of|en|{{w|lang=en|Cricket Australia}}}}, the governing body of cricket in Australia. <end>
 Page 116 CA: Found match for regex: <begin> # {{lb|en|Philippines}} {{abbreviation of|en|{{w|lang=en|Clark Airbase}}}}. <end>
 Page 116 CA: Found match for regex: <begin> # {{lb|en|Philippines}} {{abbreviation of|en|{{w|Commission on Appointments}}}}. <end>
 Page 116 CA: Found match for regex: <begin> # {{lb|en|organic compound}} {{abbreviation of|en|cyanoacrylate}}. <end>
 Page 116 CA: Found match for regex: <begin> # {{lb|pt|electricity}} {{abbreviation of|pt|corrente alternada}}: [[AC]] <end>
-Page 117 CO: Found match for regex: <begin> # {{place|en|--=abbr of:Colorado|state|c/USA}}. <end>
+Page 117 CO: Found match for regex: <begin> # {{place|en|<=abbr of:Colorado|state|c/USA}}. <end>
 Page 117 CO: Found match for regex: <begin> # {{abbreviation of|en|county}}. <end>
 Page 117 CO: Found match for regex: <begin> # {{lb|en|poker}} {{abbr of|en|cutoff}}. <end>
 Page 117 CO: Found match for regex: <begin> # {{lb|en|knitting}} {{abbr of|en|cast on}}. <end>
-Page 117 CO: Found match for regex: <begin> # {{place|it|--=abbr of:Como|city|adr/Lombardy|c/Italy}}. <end>
-Page 118 CT: Found match for regex: <begin> # {{place|en|--=abbr of:Connecticut|state|c/USA}}. <end>
+Page 117 CO: Found match for regex: <begin> # {{place|it|<=abbr of:Como|city|adr/Lombardy|c/Italy}}. <end>
+Page 118 CT: Found match for regex: <begin> # {{place|en|<=abbr of:Connecticut|state|c/USA}}. <end>
 Page 118 CT: Found match for regex: <begin> # {{lb|en|military}} {{abbreviation of|en|combat team}}. <end>
 Page 118 CT: Found match for regex: <begin> # {{place|ro|abbr=Constanța|county|c/Romania}} <end>
-Page 119 DE: Found match for regex: <begin> # {{place|en|--=abbr of:Delaware|state|c/USA}}. <end>
+Page 119 DE: Found match for regex: <begin> # {{place|en|<=abbr of:Delaware|state|c/USA}}. <end>
 Page 120 FL: Found match for regex: <begin> # {{abbreviation of|en|foreign language}}. <end>
 Page 120 FL: Found match for regex: <begin> # {{label|en|aviation}} {{abbreviation of|en|flight level}}. <end>
 Page 120 FL: Found match for regex: <begin> # {{lb|en|slang|now|chiefly|historical}} {{abbreviation of|en|French letter}}. <end>
 Page 120 FL: Found match for regex: <begin> # {{lb|en|slang|manga|anime}} {{abbreviation of|en|[[female]] [[lead#English: role|lead]]}}. <end>
 Page 121 GA: Found match for regex: <begin> # {{lb|en|<nowiki>English</nowiki>|_|phonology}} {{abbreviation of|en|General American}}. <end>
 Page 121 GA: Found match for regex: <begin> # {{lb|en|chiefly|US}} {{abbreviation of|en|Georgia}}. <end>
-Page 121 GA: Found match for regex: <begin> # {{place|en|--=abbr of:Goa|state|c/India}}. <end>
+Page 121 GA: Found match for regex: <begin> # {{place|en|<=abbr of:Goa|state|c/India}}. <end>
 Page 121 GA: Found match for regex: <begin> # {{lb|en|organic compound|military}} {{abbreviation of|en|[[German]] agent A}}, US designation for the [[nerve gas]] [[tabun]]. <end>
 Page 121 GA: Found match for regex: <begin> # {{lb|en|[[TTY]]}} {{abbreviation of|en|go ahead}}. <end>
 Page 121 GA: Found match for regex: <begin> # {{l|en|ATM|gloss=automated/automatic teller machine}}; {{abbreviation of|fr|guichet automatique}} <end>
 Page 122 HI: Found match for regex: <begin> # {{abbreviation of|en|Hawaii}}. <end>
 Page 122 HI: Found match for regex: <begin> # {{lb|en|on some [[gear lever]]s}} {{abbreviation of|en|high|gloss=high gear or high range}}. <end>
 Page 123 IL: Found match for regex: <begin> # {{abbreviation of|en|interleukin}}. <end>
-Page 123 IL: Found match for regex: <begin> # {{place|en|--=abbr of:Illinois|state|c/USA}}. <end>
+Page 123 IL: Found match for regex: <begin> # {{place|en|<=abbr of:Illinois|state|c/USA}}. <end>
 Page 123 IL: Found match for regex: <begin> # {{abbreviation of|de|[[Innsbruck]] [[Land]]|t=country code of ''Innsbruck, Land'', the surrounding circuit of [[Innsbruck]]/[[Tyrol]]/[[Austria]]}} <end>
 Page 123 IL: Found match for regex: <begin> # {{abbreviation of|no|idrettslag}} <end>
-Page 123 IL: Found match for regex: <begin> # {{place|ro|--=abbr of:Ialomița|county|c/Romania}} <end>
-Page 124 IN: Found match for regex: <begin> # {{place|en|--=abbr of:[[Indiana]]|state|c/USA}}. <end>
+Page 123 IL: Found match for regex: <begin> # {{place|ro|<=abbr of:Ialomița|county|c/Romania}} <end>
+Page 124 IN: Found match for regex: <begin> # {{place|en|<=abbr of:[[Indiana]]|state|c/USA}}. <end>
 Page 124 IN: Found match for regex: <begin> # {{lb|en|biochemistry}} {{abbreviation of|en|integrase}}. <end>
 Page 125 KS: Found match for regex: <begin> # {{abbreviation of|en|Kansas||US state}}. <end>
-Page 125 KS: Found match for regex: <begin> # {{place|en|--=abbr of:South Kalimantan|province|c/Indonesia}}. <end>
-Page 126 KY: Found match for regex: <begin> # {{place|en|--=abbr of:Kentucky|state|c/USA}}. <end>
+Page 125 KS: Found match for regex: <begin> # {{place|en|<=abbr of:South Kalimantan|province|c/Indonesia}}. <end>
+Page 126 KY: Found match for regex: <begin> # {{place|en|<=abbr of:Kentucky|state|c/USA}}. <end>
 Page 127 beg: Found match for regex: <begin> # {{lb|en|knitting}} {{abbreviation of|en|[[beginning#Noun|beginning]]}}. <end>
-Page 128 LA: Found match for regex: <begin> # {{place|en|--=abbr of:Louisiana|state|c/USA}}. <end>
-Page 128 LA: Found match for regex: <begin> # {{place|en|--=abbr of:Ladakh|state|c/India}}. <end>
-Page 128 LA: Found match for regex: <begin> # {{place|en|--=abbr of:Lampung|province|c/Indonesia}}. <end>
-Page 129 ME: Found match for regex: <begin> # {{place|en|--=abbr of:Maine|state|c/USA}}. <end>
+Page 128 LA: Found match for regex: <begin> # {{place|en|<=abbr of:Louisiana|state|c/USA}}. <end>
+Page 128 LA: Found match for regex: <begin> # {{place|en|<=abbr of:Ladakh|state|c/India}}. <end>
+Page 128 LA: Found match for regex: <begin> # {{place|en|<=abbr of:Lampung|province|c/Indonesia}}. <end>
+Page 129 ME: Found match for regex: <begin> # {{place|en|<=abbr of:Maine|state|c/USA}}. <end>
 Page 129 ME: Found match for regex: <begin> # {{abbreviation of|en|Middle East}}. <end>
 Page 129 ME: Found match for regex: <begin> # {{lb|de|real estate listing}} {{abbreviation of|de|[[Mieteinnahmen]]}} <end>
-Page 130 MI: Found match for regex: <begin> # {{place|en|--=abbr of:[[Michigan]]|state|c/USA}}. <end>
+Page 130 MI: Found match for regex: <begin> # {{place|en|<=abbr of:[[Michigan]]|state|c/USA}}. <end>
 Page 130 MI: Found match for regex: <begin> # {{abbreviation of|it|[[Milano]]}} <end>
-Page 131 MN: Found match for regex: <begin> # {{place|en|--=abbr of:Minnesota|state|c/USA}}. <end>
-Page 131 MN: Found match for regex: <begin> # {{place|en|--=abbr of:Manipur|state|c/India}}. <end>
+Page 131 MN: Found match for regex: <begin> # {{place|en|<=abbr of:Minnesota|state|c/USA}}. <end>
+Page 131 MN: Found match for regex: <begin> # {{place|en|<=abbr of:Manipur|state|c/India}}. <end>
 Page 131 MN: Found match for regex: <begin> # {{lb|en|medicine}} {{abbreviation of|en|[[master]] of/in [[nursing]]}}. <end>
 Page 131 MN: Found match for regex: <begin> # {{lb|en|modifying a numeral|twelve|Philippines}} {{abbreviation of|en|midnight}}. <end>
-Page 132 MO: Found match for regex: <begin> # {{place|en|--=abbr of:Missouri|state|c/USA}}. <end>
+Page 132 MO: Found match for regex: <begin> # {{place|en|<=abbr of:Missouri|state|c/USA}}. <end>
 Page 132 MO: Found match for regex: <begin> # {{lb|en|stock symbol}} {{abbreviation of|en||Philip Morris Companies|addl=now {{w|Altria|Altria Group}}}}. <end>
 Page 133 NE: Found match for regex: <begin> # {{lb|mul|[[w:IUCN Red List|IUCN Red List]]}} {{abbreviation of|mul|en:[[w:Not evaluated|not evaluated]]}} <end>
-Page 133 NE: Found match for regex: <begin> # {{place|en|--=abbr of:Nebraska|state|c/USA}}. <end>
+Page 133 NE: Found match for regex: <begin> # {{place|en|<=abbr of:Nebraska|state|c/USA}}. <end>
 Page 133 NE: Found match for regex: <begin> # {{abbreviation of|en|New English}}. <end>
 Page 133 NE: Found match for regex: <begin> # {{abbreviation of|eo|nordeosto||northeast}} <end>
 Page 133 NE: Found match for regex: <begin> # {{abbreviation of|fr|nord-est}}; {{l|en|NE}} <end>
 Page 133 NE: Found match for regex: <begin> # {{abbreviation of|it|nordest}}; [[northeast]] <end>
 Page 133 NE: Found match for regex: <begin> # {{abbreviation of|pt|nordeste}} <end>
 Page 133 NE: Found match for regex: <begin> # {{abbreviation of|es|nordeste}}; [[northeast]] <end>
-Page 134 NV: Found match for regex: <begin> # {{place|en|--=abbr of:[[Nevada]]|state|c/USA}}. <end>
+Page 134 NV: Found match for regex: <begin> # {{place|en|<=abbr of:[[Nevada]]|state|c/USA}}. <end>
 Page 134 NV: Found match for regex: <begin> # [[north-west]]; {{abbreviation of|sv|nordväst}} <end>
 Page 134 NV: Found match for regex: <begin> # (natural) [[sciences]], in particular as a branch of education; {{abbreviation of|sv|naturvetenskap}} <end>
-Page 135 NH: Found match for regex: <begin> # {{place|en|--=abbr of:[[New Hampshire]]|state|c/USA}}. <end>
+Page 135 NH: Found match for regex: <begin> # {{place|en|<=abbr of:[[New Hampshire]]|state|c/USA}}. <end>
 Page 135 NH: Found match for regex: <begin> # {{lb|en|athletics}} {{abbreviation of|en|no-height}}. <end>
 Page 135 NH: Found match for regex: <begin> # {{lb|en|athletics}} {{abbreviation of|en|no-height}}. <end>
 Page 136 NM: Found match for regex: <begin> # {{lb|en|athletics}} {{abbreviation of|en|no-mark}}. <end>
 Page 136 NM: Found match for regex: <begin> # {{lb|en|athletics}} {{abbreviation of|en|no-mark}}. <end>
-Page 137 NC: Found match for regex: <begin> # {{lb|en|US}} {{place|en|--=abbr of:[[North Carolina]]|state|c/USA}}. <end>
+Page 137 NC: Found match for regex: <begin> # {{lb|en|US}} {{place|en|<=abbr of:[[North Carolina]]|state|c/USA}}. <end>
 Page 137 NC: Found match for regex: <begin> # {{lb|en|organic compound}} {{abbr of|en|[[nitrocellulose]]}}. <end>
-Page 138 ND: Found match for regex: <begin> # {{place|en|--=abbr of:North Dakota|state|c/USA}}. <end>
+Page 138 ND: Found match for regex: <begin> # {{place|en|<=abbr of:North Dakota|state|c/USA}}. <end>
 Page 138 ND: Found match for regex: <begin> # {{l|en|N/A|gloss={{m|en|[[not]] [[available]]}}}} {{abbreviation of|fr|[[non]] [[disponible]]}} <end>
 Page 139 OH: Found match for regex: <begin> # {{lb|en|US}} {{abbreviation of|en|Ohio}}. <end>
 Page 140 OK: Found match for regex: <begin> Origin {{unk|en|title=disputed}}. Wikipedia lists {{w|List of proposed etymologies of OK|many possible etymologies}}, of which the most widely accepted is that it is an abbreviation of {{m|en|oll korrect|oll/orl korrect}}, a comical spelling of {{m|en|all correct}}, which first appeared in print in ''The Boston Morning Post'' on March 23, 1839, as part of a fad for similar fanciful abbreviations in the United States during the late 1830s. The expression became popular through its use in the presidential campaign of Martin Van Buren in 1840, who was nicknamed ''Old Kinderhook'', and then slowly acquired other meanings. <end>
 Page 140 OK: Found match for regex: <begin> # {{abbreviation of|nl|operatiekamer}} <end>
-Page 141 RI: Found match for regex: <begin> # {{place|en|--=abbr of:Riau|province|c/Indonesia}}. <end>
+Page 141 RI: Found match for regex: <begin> # {{place|en|<=abbr of:Riau|province|c/Indonesia}}. <end>
 Page 142 SD: Found match for regex: <begin> # {{abbreviation of|ja|スーパーデフォルメ}} <end>
 Page 143 TN: Found match for regex: <begin> # {{abbreviation of|en|Tennessee}}. <end>
 Page 143 TN: Found match for regex: <begin> # {{label|en|India}} {{abbreviation of|en|[[Tamil Nadu]]}}. <end>
 Page 143 TN: Found match for regex: <begin> # {{abbreviation of|en|telephone number}}. <end>
 Page 143 TN: Found match for regex: <begin> # {{label|en|informal}} {{abbreviation of|en|[[translator]][['s]] [[note]],[[translation]] [[note]]}}. <end>
-Page 144 TX: Found match for regex: <begin> # {{place|en|--=abbr of:Texas|state|c/USA}}.<ref>[https://web.archive.org/web/20070225150423/http://www.usps.com/ncsc/lookups/abbreviations.html Official United States Postal Service abbreviations]. Retrieved 28 Jan 2006.</ref> <end>
+Page 144 TX: Found match for regex: <begin> # {{place|en|<=abbr of:Texas|state|c/USA}}.<ref>[https://web.archive.org/web/20070225150423/http://www.usps.com/ncsc/lookups/abbreviations.html Official United States Postal Service abbreviations]. Retrieved 28 Jan 2006.</ref> <end>
 Page 144 TX: Found match for regex: <begin> # {{lb|en|telecommunications|electronics}} {{abbreviation of|en|transmit}}. <end>
 Page 144 TX: Found match for regex: <begin> # {{lb|en|telecommunications|electronics}} {{abbreviation of|en|transmitter}}. <end>
 Page 144 TX: Found match for regex: <begin> # {{lb|en|broadcasting}} {{abbr of|en|transmission}}. <end>
-Page 145 UT: Found match for regex: <begin> # {{place|en|--=abbr of:Utah|state|c/USA}}. <end>
-Page 145 UT: Found match for regex: <begin> # {{lb|en|India}} {{place|en|--=abbr of:Uttarakhand|state|c/India}}. <end>
+Page 145 UT: Found match for regex: <begin> # {{place|en|<=abbr of:Utah|state|c/USA}}. <end>
+Page 145 UT: Found match for regex: <begin> # {{lb|en|India}} {{place|en|<=abbr of:Uttarakhand|state|c/India}}. <end>
 Page 145 UT: Found match for regex: <begin> # {{lb|en|fantasy sports}} {{abbreviation of|en|utility player}}. <end>
 Page 145 UT: Found match for regex: <begin> # {{abbreviation of|de|Untertitel}} <end>
-Page 146 VT: Found match for regex: <begin> # {{place|en|--=abbr of:Vermont|state|c/USA}}. <end>
+Page 146 VT: Found match for regex: <begin> # {{place|en|<=abbr of:Vermont|state|c/USA}}. <end>
 Page 146 VT: Found match for regex: <begin> # {{lb|en|gymnastics}} {{abbreviation of|en|vault}}. <end>
-Page 147 VA: Found match for regex: <begin> # {{place|en|--=abbr of:Virginia|state|c/USA}}. <end>
+Page 147 VA: Found match for regex: <begin> # {{place|en|<=abbr of:Virginia|state|c/USA}}. <end>
 Page 148 WV: Found match for regex: <begin> # {{abbreviation of|de|Wiedervorlage}} <end>
 Page 148 WV: Found match for regex: <begin> # {{abbreviation of|de|Wirtschaftsvereinigung}} <end>
-Page 149 WI: Found match for regex: <begin> # {{place|en|--=abbr of:Wisconsin|state|c/USA}}. <end>
-Page 150 WY: Found match for regex: <begin> # {{place|en|--=abbr of:Wyoming|state|c/USA}}. <end>
+Page 149 WI: Found match for regex: <begin> # {{place|en|<=abbr of:Wisconsin|state|c/USA}}. <end>
+Page 150 WY: Found match for regex: <begin> # {{place|en|<=abbr of:Wyoming|state|c/USA}}. <end>
 Page 151 ver: Found match for regex: <begin> # {{abbreviation of|en|version}}. <end>
 Page 152 vers: Found match for regex: <begin> # {{abbreviation of|en|versine,[[versed sine]]}}. <end>
 Page 153 vert: Found match for regex: <begin> # {{abbreviation of|en|vertical}}. <end>
@@ -648,7 +648,7 @@ Page 194 w: Found match for regex: <begin> # {{abbreviation of|en|win}}. <end>
 Page 194 w: Found match for regex: <begin> # {{lb|en|Internet slang|text messaging}} {{abbreviation of|en|with}}. <end>
 Page 194 w: Found match for regex: <begin> # {{lb|id|texting|slang}} {{abbreviation of|id|gue}} <end>
 Page 195 z: Found match for regex: <begin> # {{lb|en|stenoscript}} {{abbreviation of|en|as,was,his,she}}. <end>
-Page 196 MOR: Found match for regex: <begin> # {{place|en|--=abbr of:Morelos|state|c/Mexico}}. <end>
+Page 196 MOR: Found match for regex: <begin> # {{place|en|<=abbr of:Morelos|state|c/Mexico}}. <end>
 Page 197 syn: Found match for regex: <begin> # {{abbreviation of|en|synonym}}. <end>
 Page 197 syn: Found match for regex: <begin> # {{abbreviation of|en|synthetic}}. <end>
 Page 198 imp.: Found match for regex: <begin> # {{lb|en|not comparable|grammar}} {{abbreviation of|en|imperative}}. <end>
@@ -711,10 +711,10 @@ Page 219 汢: Found match for regex: <begin> # {{lb|ja|rare|obsolete}} {{abbrevi
 Page 220 浜: Found match for regex: <begin> # {{abbreviation of|ja|横浜|tr=Yokohama}} <end>
 Page 221 silicon: Found match for regex: <begin> # {{abbreviation of|en|silicon chip}}. <end>
 Page 222 link: Found match for regex: <begin> # {{abbreviation of|en|hyperlink}}. <end>
-Page 224 甌: Found match for regex: <begin> # {{place|zh|--=abbr of:溫州<eq:Wenzhou>|prefecture-level city|p/Zhejiang|in southeastern|c/China}} <end>
+Page 224 甌: Found match for regex: <begin> # {{place|zh|<=abbr of:溫州<eq:Wenzhou>|prefecture-level city|p/Zhejiang|in southeastern|c/China}} <end>
 Page 225 GB: Found match for regex: <begin> # {{lb|en|computing|formal}} {{abbrev of|en|gigabyte}}. <end>
 Page 225 GB: Found match for regex: <begin> # {{lb|en|computing|informal}} {{abbrev of|en|gibibyte}}. <end>
-Page 225 GB: Found match for regex: <begin> # {{place|en|--=abbr of:Green Bay|city|s/Wisconsin|c/USA}}. <end>
+Page 225 GB: Found match for regex: <begin> # {{place|en|<=abbr of:Green Bay|city|s/Wisconsin|c/USA}}. <end>
 Page 226 PS: Found match for regex: <begin> # {{lb|en|telecommunications}} {{abbreviation of|en|packet-switched}}. <end>
 Page 226 PS: Found match for regex: <begin> # {{abbreviation of|de|Pferdestärke|t=horsepower}} <end>
 Page 226 PS: Found match for regex: <begin> # {{abbreviation of|de|Postskriptum|t=post scriptum}} <end>
@@ -722,7 +722,7 @@ Page 226 PS: Found match for regex: <begin> # {{lb|de|education}} {{abbreviation
 Page 226 PS: Found match for regex: <begin> # {{lb|de|economy}} {{abbreviation of|de|Personenstunde|t=man-hour}} <end>
 Page 226 PS: Found match for regex: <begin> # {{lb|de|insurance}} {{abbreviation of|de|Personenschaden|t=personal injury}} <end>
 Page 226 PS: Found match for regex: <begin> # {{lb|de|psychology}} {{abbreviation of|de|Persönlichkeitsstörung|t=personality disorder}} <end>
-Page 226 PS: Found match for regex: <begin> # {{place|it|--=abbr of:Pesaro|city|adr/Marche|c/Italy}} <end>
+Page 226 PS: Found match for regex: <begin> # {{place|it|<=abbr of:Pesaro|city|adr/Marche|c/Italy}} <end>
 Page 226 PS: Found match for regex: <begin> # {{lb|la|Late Latin|money}} {{abbreviation of|la|pustulatum,pusulatum}} <end>
 Page 227 EOD: Found match for regex: <begin> # {{abbreviation of|en|Earth Overshoot Day}}. <end>
 Page 228 緬: Found match for regex: <begin> # {{abbreviation of|ja|緬甸|tr=Menden, Biruma}}: [[Burma]] ([[Myanmar]]) <end>
@@ -768,12 +768,12 @@ Page 251 軽: Found match for regex: <begin> # {{abbreviation of|ja|軽自動車
 Page 252 遠: Found match for regex: <begin> # {{abbreviation of|ja|遠江国|tr=Tōtōmi no kuni|t={{w|Tōtōmi Province}}}} <end>
 Page 253 cm: Found match for regex: <begin> # {{lb|it|Internet slang|text messaging}} {{abbreviation of|it|come||how}} <end>
 Page 254 CYBC: Found match for regex: <begin> # {{abbreviation of|en|[[Cypriot]] [[broadcast|Broadcasting]] [[corporation|Corporation]]}} (RIK). <end>
-Page 255 鄂: Found match for regex: <begin> # {{place|ko|--=abbr of:湖北<eq:Hubei>|province|country/China}} <end>
+Page 255 鄂: Found match for regex: <begin> # {{place|ko|<=abbr of:湖北<eq:Hubei>|province|country/China}} <end>
 Page 256 ADA: Found match for regex: <begin> # {{lb|en|organic compound}} {{abbreviation of|en|azodicarbonamide}}. <end>
-Page 257 TM: Found match for regex: <begin> # {{place|ro|--=abbr of:Timiș|county|c/Romania}} <end>
+Page 257 TM: Found match for regex: <begin> # {{place|ro|<=abbr of:Timiș|county|c/Romania}} <end>
 Page 258 SM: Found match for regex: <begin> # {{lb|en|US|military}} {{abbreviation of|en|[[standard]] [[missile]]}}. <end>
 Page 258 SM: Found match for regex: <begin> # {{abbr of|id|Sebelum Masehi|t=[[before|Before]] [[Christ]]}}: [[BC]] <end>
-Page 258 SM: Found match for regex: <begin> # {{place|ro|--=abbr of:Satu Mare|county|c/Romania}} <end>
+Page 258 SM: Found match for regex: <begin> # {{place|ro|<=abbr of:Satu Mare|county|c/Romania}} <end>
 Page 259 rd: Found match for regex: <begin> # {{abbreviation of|en|road}}. <end>
 Page 259 rd: Found match for regex: <begin> # {{abbreviation of|en|rad||unit of measure}}. <end>
 Page 259 rd: Found match for regex: <begin> # {{lb|en|knitting|firearms}} {{abbreviation of|en|round}}. <end>
@@ -853,7 +853,7 @@ Page 297 sp: Found match for regex: <begin> # {{abbreviation of|nn|Senterpartiet
 Page 298 VL: Found match for regex: <begin> # {{abbreviation of|fi|vähälaktoosinen||low-lactose|qq=e.g. in restaurant menus}} <end>
 Page 298 VL: Found match for regex: <begin> # {{lb|de|education}} {{abbreviation of|de|Vorlesung}} <end>
 Page 298 VL: Found match for regex: <begin> # {{lb|de|taxation}} {{abbreviation of|de|vermögenswirksame Leistung}} <end>
-Page 298 VL: Found match for regex: <begin> # {{place|ro|--=abbr of:Vâlcea|county|c/Romania}} <end>
+Page 298 VL: Found match for regex: <begin> # {{place|ro|<=abbr of:Vâlcea|county|c/Romania}} <end>
 Page 299 PG: Found match for regex: <begin> # {{abbreviation of|en|Prince George's County}}. <end>
 Page 299 PG: Found match for regex: <begin> # {{lb|it|dated}} {{abbreviation of|it|Perugia|addl=on car number plates/license plates}} <end>
 Page 300 MF: Found match for regex: <begin> # {{lb|en|medicine}} {{abbreviation of|en|myelofibrosis}}. <end>
@@ -920,7 +920,7 @@ Page 330 VI: Found match for regex: <begin> # {{C|en|Individuals}} {{lb|en|UK}} 
 Page 331 MM: Found match for regex: <begin> # {{lb|en|finance}} {{abbr of|en|[[million]]}}. <end>
 Page 331 MM: Found match for regex: <begin> # {{abbreviation of|fi|maailmanmestaruus||[[world]] [[championship]]}} <end>
 Page 331 MM: Found match for regex: <begin> # {{lb|de|apartment listing}} {{abbreviation of|de|Monatsmiete,Monatsmieten}} <end>
-Page 331 MM: Found match for regex: <begin> # {{place|ro|--=abbr of:Maramureș|county|c/Romania}} <end>
+Page 331 MM: Found match for regex: <begin> # {{place|ro|<=abbr of:Maramureș|county|c/Romania}} <end>
 Page 332 FX: Found match for regex: <begin> # {{abbreviation of|en|factor X|t=[[clotting factor X]]}}. <end>
 Page 332 FX: Found match for regex: <begin> # {{lb|en|gymnastics}} {{abbreviation of|en|floor}}. <end>
 Page 333 pe: Found match for regex: <begin> # {{abbreviation of|fi|[[perjantai]]||[[Friday]]}} <end>
@@ -936,7 +936,7 @@ Page 336 SO: Found match for regex: <begin> # {{lb|en|politics|parliamentary}} {
 Page 336 SO: Found match for regex: <begin> # {{abbreviation of|de|Südost}}; [[southeast]] <end>
 Page 336 SO: Found match for regex: <begin> # {{abbreviation of|it|sudovest}}; [[southwest]] <end>
 Page 336 SO: Found match for regex: <begin> # {{abbreviation of|es|sudoeste}}; [[southwest]] <end>
-Page 336 SO: Found match for regex: <begin> # {{place|es|--=abbr of:Sonora|state|c/Mexico}} <end>
+Page 336 SO: Found match for regex: <begin> # {{place|es|<=abbr of:Sonora|state|c/Mexico}} <end>
 Page 336 SO: Found match for regex: <begin> # {{abbreviation of|sv|samhällsorientering|'''s'''amhälls'''o'''rientering|t=subject block involving [[social studies]]}} <end>
 Page 336 SO: Found match for regex: <begin> # {{abbreviation of|sv|sydost||south-east}} <end>
 Page 336 SO: Found match for regex: <begin> # {{lb|sv|law}} {{abbreviation of|sv|successionsordningen||the act of succession}}, one of Sweden's four [[fundamental law]]s <end>
@@ -1184,7 +1184,7 @@ Page 450 yo: Found match for regex: <begin> # {{abbreviation of|en|[[year]][[yea
 Page 450 yo: Found match for regex: <begin> ## {{abbreviation of|en|yarnover}}. <end>
 Page 450 yo: Found match for regex: <begin> ## {{abbreviation of|en|yarnover}}. <end>
 Page 451 93: Found match for regex: <begin> # {{lb|en|[[Thelema]]}} {{n-g|A numerological abbreviation of the phrase "do what thou wilt shall be the whole of the law"; used as a greeting.}} <end>
-Page 451 93: Found match for regex: <begin> # {{lb|fr|colloquial|informal}} {{place|fr|--=abbr of:Seine-Saint-Denis|department|in|r/Île-de-France|c/France}} <end>
+Page 451 93: Found match for regex: <begin> # {{lb|fr|colloquial|informal}} {{place|fr|<=abbr of:Seine-Saint-Denis|department|in|r/Île-de-France|c/France}} <end>
 Page 452 —: Found match for regex: <begin> # {{lb|en|stenoscript}} {{abbreviation of|en|the}}. <end>
 Page 453 mr.: Found match for regex: <begin> # {{abbreviation of|nl|meester}}, used by lawyers and notaries. <end>
 Page 454 dr.: Found match for regex: <begin> # {{abbr of|en|drachm||dram}}. <end>
@@ -1260,17 +1260,17 @@ Page 473 TNT: Found match for regex: <begin> # {{abbreviation of|pt|trinitrotolu
 Page 474 SKU: Found match for regex: <begin> # {{lb|de|sport}} {{abbreviation of|de|[[Sportklub|'''S'''port'''k'''lub]] [[Union|'''U'''nion]]|t=sport club union}} <end>
 Page 475 hwy: Found match for regex: <begin> # {{abbreviation of|en|highway}}. <end>
 Page 476 TIM: Found match for regex: <begin> # {{abbreviation of|en|[[time]]-[[in]]-[[minute]]s}}. <end>
-Page 477 CN: Found match for regex: <begin> # {{place|it|--=abbr of:Cuneo|province|adr/Piedmont|c/Italy}} <end>
-Page 478 AQ: Found match for regex: <begin> # {{place|it|capital city|--=abbr of:Aquila,L'Aquila|adr/Abruzzo|c/Italy}} <end>
+Page 477 CN: Found match for regex: <begin> # {{place|it|<=abbr of:Cuneo|province|adr/Piedmont|c/Italy}} <end>
+Page 478 AQ: Found match for regex: <begin> # {{place|it|capital city|<=abbr of:Aquila,L'Aquila|adr/Abruzzo|c/Italy}} <end>
 Page 479 LT: Found match for regex: <begin> # {{abbreviation of|en|lieutenant}}. <end>
 Page 479 LT: Found match for regex: <begin> # {{abbreviation of|it|Latina}} (Italian town in [[Lazio]]) <end>
 Page 480 LE: Found match for regex: <begin> # {{lb|it|government}} {{abbreviation of|it|Lecce}} {{gloss|Italian town in [[Apulia]]}} <end>
 Page 481 LC: Found match for regex: <begin> # {{lb|mul|[[w:IUCN Red List|IUCN Red List]]}} {{abbreviation of|mul|en:[[w:Least-concern species|Least Concern]]}} <end>
-Page 481 LC: Found match for regex: <begin> # {{place|it|--=abbr of:Lecco|city|adr/Lombardy|c/Italy}} <end>
+Page 481 LC: Found match for regex: <begin> # {{place|it|<=abbr of:Lecco|city|adr/Lombardy|c/Italy}} <end>
 Page 482 NO: Found match for regex: <begin> # {{abbreviation of|ca|nord-oest}} <end>
 Page 482 NO: Found match for regex: <begin> # [[NW]]; {{abbreviation of|fr|nord-ouest}} <end>
 Page 482 NO: Found match for regex: <begin> # {{abbreviation of|de|Nordost|t=northeast}} <end>
-Page 482 NO: Found match for regex: <begin> # {{place|it|--=abbr of:Novara|city|adr/Piedmont|c/Italy}} <end>
+Page 482 NO: Found match for regex: <begin> # {{place|it|<=abbr of:Novara|city|adr/Piedmont|c/Italy}} <end>
 Page 482 NO: Found match for regex: <begin> # {{abbreviation of|it|nordovest}}; [[northwest]] <end>
 Page 482 NO: Found match for regex: <begin> # {{abbreviation of|pt|noroeste}} <end>
 Page 482 NO: Found match for regex: <begin> # {{abbreviation of|es|noroeste}}; [[northwest]] <end>
@@ -1364,7 +1364,7 @@ Page 531 SN: Found match for regex: <begin> # {{lb|en|astronomy}} {{abbreviation
 Page 531 SN: Found match for regex: <begin> # {{lb|es|grammar|syntax}} {{abbreviation of|es|sintagma nominal}} <end>
 Page 532 A.D.: Found match for regex: <begin> # {{alternative form of|en|AD}}; {{abbreviation of|en|anno Domini|nocap=1}}. <end>
 Page 533 exoatmospheric: Found match for regex: <begin> # {{abbreviation of|en|[[exoplanetary]] [[atmospheric]]|t=pertaining to the atmospheres of exoplanets}}. <end>
-Page 534 BCS: Found match for regex: <begin> # {{place|en|--=abbr of:Baja California Sur|state|c/Mexico}}. <end>
+Page 534 BCS: Found match for regex: <begin> # {{place|en|<=abbr of:Baja California Sur|state|c/Mexico}}. <end>
 Page 535 c.-à-d.: Found match for regex: <begin> # {{abbreviation of|fr|c'est-à-dire}}: [[i.e.]] <end>
 Page 536 p. ex.: Found match for regex: <begin> # {{abbreviation of|ca|per exemple|t=for example}}; [[e.g.]] <end>
 Page 536 p. ex.: Found match for regex: <begin> # {{abbreviation of|fr|par exemple|t=for example}}; [[e.g.]] <end>
@@ -1376,7 +1376,7 @@ Page 538 BBQ: Found match for regex: <begin> # {{abbreviation of|en|barbecue}}. 
 Page 538 BBQ: Found match for regex: <begin> # {{lb|en|chiefly|US|informal}} {{abbreviation of|en|barbecue}}. <end>
 Page 539 CV: Found match for regex: <begin> # {{abbreviation of|en|cellevision}}. <end>
 Page 539 CV: Found match for regex: <begin> # {{abbreviation of|en|Carmel Valley}}, a city in San Diego county, immediately inland from Del Mar. <end>
-Page 539 CV: Found match for regex: <begin> # {{place|ro|--=abbr of:Covasna|county|c/Romania}} <end>
+Page 539 CV: Found match for regex: <begin> # {{place|ro|<=abbr of:Covasna|county|c/Romania}} <end>
 Page 540 chuck: Found match for regex: <begin> # {{abbreviation of|en|woodchuck}}. <end>
 Page 542 dau: Found match for regex: <begin> # {{lb|en|genealogy}} {{abbreviation of|en|daughter,[[daughter]] [[of]]}}. <end>
 Page 543 deg: Found match for regex: <begin> # {{lb|en|math|countable}} {{abbreviation of|en|degree}}. <end>
@@ -1522,7 +1522,7 @@ Page 612 DJ: Found match for regex: <begin> # {{lb|en|music}} {{abbreviation of|
 Page 612 DJ: Found match for regex: <begin> # {{lb|en|clothing}} {{abbreviation of|en|dinner jacket}}. <end>
 Page 612 DJ: Found match for regex: <begin> # {{abbreviation of|en|dust jacket}}. <end>
 Page 612 DJ: Found match for regex: <begin> # {{abbreviation of|ja|ディスクジョッキー|tr=disuku jokkī||[[disc jockey]]|sort=てぃいじぇえ'}}; a {{l|en|DJ}} <end>
-Page 612 DJ: Found match for regex: <begin> # {{place|ro|--=abbr of:Dolj|county|c/Romania}} <end>
+Page 612 DJ: Found match for regex: <begin> # {{place|ro|<=abbr of:Dolj|county|c/Romania}} <end>
 Page 613 WWWWW: Found match for regex: <begin> # {{lb|en|humorous|math}} {{abbreviation of|en|[[which]] [[was]] [[what]] [[we]] [[want]]ed}}. <end>
 Page 614 ABN: Found match for regex: <begin> # {{abbreviation of|en|airborne}}. <end>
 Page 614 ABN: Found match for regex: <begin> # {{lb|nl|superseded}} {{abbreviation of|nl|[[algemeen]] [[beschaafd]] [[Nederlands]]|t=Standard Dutch}} <end>
@@ -1575,7 +1575,7 @@ Page 643 Dr.DES.: Found match for regex: <begin> # {{abbreviation of|en|[[doctor
 Page 644 corto: Found match for regex: <begin> # {{abbreviation of|it|cortometraggio}} <end>
 Page 645 ت: Found match for regex: <begin> # {{abbreviation of|ar|تُوُفِّيَ|t=[[died]]}} <end>
 Page 646 RTA: Found match for regex: <begin> # {{abbreviation of|ja|リアルタイムアタック|tr=riaru-taimu attakku}} <end>
-Page 647 HP: Found match for regex: <begin> # {{lb|en|India}} {{place|en|--=abbr of:Himachal Pradesh|state|c/India}}. <end>
+Page 647 HP: Found match for regex: <begin> # {{lb|en|India}} {{place|en|<=abbr of:Himachal Pradesh|state|c/India}}. <end>
 Page 647 HP: Found match for regex: <begin> # {{abbreviation of|en|hydrogen peroxide}}. <end>
 Page 647 HP: Found match for regex: <begin> # {{lb|de|apartment listing}} {{abbreviation of|de|[[Hochparterre]]}} <end>
 Page 648 a into g: Found match for regex: <begin> # {{lb|en|slang|euphemistic}} {{abbreviation of|en|[[get one's ass into gear|ass into gear]]}}. <end>
@@ -1583,8 +1583,8 @@ Page 649 Donald: Found match for regex: <begin> # {{lb|en|Cockney rhyming slang}
 Page 650 attn: Found match for regex: <begin> # {{abbreviation of|en|[[attention]]}}, used as a heading in letters to indicate for whom the letter is intended. <end>
 Page 651 cc: Found match for regex: <begin> # {{abbreviation of|en|[[chapter]]s}}. <end>
 Page 652 BT: Found match for regex: <begin> # {{lb|en|electronics}} {{abbreviation of|en|Bluetooth}}. <end>
-Page 652 BT: Found match for regex: <begin> # {{place|en|--=abbr of:[[Banten]]|province|c/Indonesia}}. <end>
-Page 652 BT: Found match for regex: <begin> # {{place|ro|--=abbr of:Botoșani|county|c/Romania}} <end>
+Page 652 BT: Found match for regex: <begin> # {{place|en|<=abbr of:[[Banten]]|province|c/Indonesia}}. <end>
+Page 652 BT: Found match for regex: <begin> # {{place|ro|<=abbr of:Botoșani|county|c/Romania}} <end>
 Page 653 Brit: Found match for regex: <begin> # {{abbreviation of|en|British}}. <end>
 Page 653 Brit: Found match for regex: <begin> # {{abbreviation of|en|Britain}}. <end>
 Page 653 Brit: Found match for regex: <begin> # {{lb|en|lexicography}} {{abbreviation of|en|British English}}. <end>
@@ -1628,7 +1628,7 @@ Page 678 ff.: Found match for regex: <begin> Originally the plural of the abbrev
 Page 678 ff.: Found match for regex: <begin> # {{lb|de|of pages}} {{abbreviation of|de|folgend|folgende(n)|g=p|t=following, subsequent}}: {{l|en|ff.}}, [[et seqq.]] {{q|the word [[fortfolgend]] has been coined as a folk-etymological explanation of this abbreviation and is not commonly encountered in other use than this fanciful explanation, which is in fact a [[backronym]]}} <end>
 Page 679 SCO: Found match for regex: <begin> # {{lb|en|sports}} {{abbreviation of|en|Scotland}}. <end>
 Page 679 SCO: Found match for regex: <begin> # {{lb|en|Internet}} {{abbreviation of|en|sharable content object|addl=a standardized learning object that can communicate to learning management and content management systems}}. <end>
-Page 680 HD: Found match for regex: <begin> # {{place|ro|--=abbr of:Hunedoara|county|c/Romania}} <end>
+Page 680 HD: Found match for regex: <begin> # {{place|ro|<=abbr of:Hunedoara|county|c/Romania}} <end>
 Page 681 QA/QC: Found match for regex: <begin> # {{abbreviation of|en|[[quality assurance]]/[[quality control]]||various process management procedures employed to preserve and enhance the quality of products or services}}. <end>
 Page 682 tel: Found match for regex: <begin> # {{abbreviation of|en|telephone number}}. <end>
 Page 682 tel: Found match for regex: <begin> # {{abbreviation of|en|telegraph}}. <end>
@@ -1667,7 +1667,7 @@ Page 693 Ag: Found match for regex: <begin> # {{abbreviation of|en|agriculture}}
 Page 693 Ag: Found match for regex: <begin> # {{lb|en|immunology}} {{abbreviation of|en|antigen}}. <end>
 Page 693 Ag: Found match for regex: <begin> # {{lb|en|stenoscript}} {{abbreviation of|en|[[August]]}}. <end>
 Page 694 Ah: Found match for regex: <begin> # {{lb|mul|taxonomy}} {{abbreviation of|mul|Aetokthonos hydrillicola}} <end>
-Page 695 Alta: Found match for regex: <begin> # {{place|en|--=abbr of:Alberta|province|c/Canada}}. <end>
+Page 695 Alta: Found match for regex: <begin> # {{place|en|<=abbr of:Alberta|province|c/Canada}}. <end>
 Page 696 Apr.: Found match for regex: <begin> # {{abbreviation of|en|April}}. <end>
 Page 697 Arm: Found match for regex: <begin> # {{abbreviation of|en|Armenian}}. <end>
 Page 698 Aug.: Found match for regex: <begin> # {{abbreviation of|en|August}}. <end>
@@ -1684,7 +1684,7 @@ Page 701 B: Found match for regex: <begin> * {{sense|bitch}} abbreviation of {{m
 Page 701 B: Found match for regex: <begin> # {{lb|en|chiefly|AAVE|MLE}} {{abbreviation of|en|blood,blud}}: {{n-g|used to address a [[friend]], especially a [[male]].}}<ref>{{R:GDoS|entry=B|sense=5|pos=n|id=l27whii}}</ref> <end>
 Page 701 B: Found match for regex: <begin> # {{abbreviation of|fi|lubenter approbatur}} <end>
 Page 701 B: Found match for regex: <begin> # {{abbreviation of|nb|bass||bass}} <end>
-Page 701 B: Found match for regex: <begin> # {{place|ro|--=abbr of:București|capital city|c/Romania}} <end>
+Page 701 B: Found match for regex: <begin> # {{place|ro|<=abbr of:București|capital city|c/Romania}} <end>
 Page 702 Ba: Found match for regex: <begin> # {{lb|ja|music}} {{abbreviation of|ja|ベース|tr=b&emacr;|t=bass guitar (of a rock band)}} <end>
 Page 703 Bd: Found match for regex: <begin> # {{abbreviation of|en|board}}, in the sense of a [[board of directors]]. <end>
 Page 704 Bio: Found match for regex: <begin> # {{abbreviation of|en|biology}}. <end>
@@ -1882,7 +1882,7 @@ Page 743 L.: Found match for regex: <begin> # {{lb|en|grammar}} {{abbreviation o
 Page 743 L.: Found match for regex: <begin> # {{la-praenominal abbreviation of|Lucius}} <end>
 Page 744 La: Found match for regex: <begin> # {{abbreviation of|en|lane|qq=in street addresses}}. <end>
 Page 745 Lab: Found match for regex: <begin> # {{lb|en|UK politics}} {{abbreviation of|en|Labour}}. <end>
-Page 745 Lab: Found match for regex: <begin> # {{lb|en|Canada}} {{alternative form of|en|Lab.}}, {{place|en|--=abbr of:Labrador|region|c/Canada}}. <end>
+Page 745 Lab: Found match for regex: <begin> # {{lb|en|Canada}} {{alternative form of|en|Lab.}}, {{place|en|<=abbr of:Labrador|region|c/Canada}}. <end>
 Page 746 M: Found match for regex: <begin> # {{senseid|mul|mega-, SI prefix}} {{abbreviation of|mul|en:mega-}} <end>
 Page 746 M: Found match for regex: <begin> # {{senseid|mul|Messier}} {{lb|mul|astronomy}} {{abbreviation of|mul|fr:Messier|addl=used in {{m|en|Messier number|Messier numbers}}}} <end>
 Page 746 M: Found match for regex: <begin> # {{lb|mul|amino acid}} {{abbreviation of|mul|en:methionine|addl=as established by [[IUPAC]]}} <end>
@@ -1977,7 +1977,7 @@ Page 770 P: Found match for regex: <begin> # {{abbr of|la|patre}} <end>
 Page 770 P: Found match for regex: <begin> # {{abbreviation of|la|papa}}, {{ng|pope}}. <end>
 Page 770 P: Found match for regex: <begin> # {{abbr of|la|papae}} <end>
 Page 770 P: Found match for regex: <begin> # {{abbr of|la|papam}} <end>
-Page 771 PH: Found match for regex: <begin> # {{place|ro|--=abbr of:Prahova|county|c/Romania}} <end>
+Page 771 PH: Found match for regex: <begin> # {{place|ro|<=abbr of:Prahova|county|c/Romania}} <end>
 Page 772 Peg: Found match for regex: <begin> # {{lb|mul|astronomy}} {{abbreviation of|mul|Pegasi<pos:genitive>|t=Pegasus}} <end>
 Page 772 Peg: Found match for regex: <begin> # {{lb|en|Canada|slang}} {{clip of|en|Winnipeg|qq=city|addl=usually preceded by "the"}}. <end>
 Page 773 Pf.: Found match for regex: <begin> # {{abbreviation of|hu|postafiók||post office box}} <end>
@@ -1994,9 +1994,9 @@ Page 777 Q: Found match for regex: <begin> # ''[[w:American Library Association|
 Page 777 Q: Found match for regex: <begin> # {{lb|en|card games|chess}} {{abbreviation of|en|queen}}. <end>
 Page 777 Q: Found match for regex: <begin> # {{lb|en|Islam|followed by an [[ayah]] (verse) number}} {{abbreviation of|en|Quran}}. <end>
 Page 777 Q: Found match for regex: <begin> # {{senseid|en|QAnon}} {{lb|en|US politics}} {{abbreviation of|en|QAnon|gloss=anonymous poster on anonymous online message boards who originated a pro-Trump conspiracy theory}}. <end>
-Page 778 Que: Found match for regex: <begin> # {{place|en|--=abbr of:Querétaro|state|c/Mexico}}. <end>
-Page 778 Que: Found match for regex: <begin> # {{place|en|--=abbr of:Quebec|province|c/Canada}}. <end>
-Page 778 Que: Found match for regex: <begin> # {{place|en|--=abbr of:Quebec City|capital city|p/Quebec|c/Canada}}. <end>
+Page 778 Que: Found match for regex: <begin> # {{place|en|<=abbr of:Querétaro|state|c/Mexico}}. <end>
+Page 778 Que: Found match for regex: <begin> # {{place|en|<=abbr of:Quebec|province|c/Canada}}. <end>
+Page 778 Que: Found match for regex: <begin> # {{place|en|<=abbr of:Quebec City|capital city|p/Quebec|c/Canada}}. <end>
 Page 779 R: Found match for regex: <begin> # {{abbreviation of|en|ronna-}}. <end>
 Page 779 R: Found match for regex: <begin> # {{lb|en|US politics}} {{abbreviation of|en|Republican}}, especially preceding the constituent location. <end>
 Page 779 R: Found match for regex: <begin> # {{abbreviation of|ja|令和|tr=Reiwa}} <end>
@@ -2073,7 +2073,7 @@ Page 796 T: Found match for regex: <begin> # {{lb|de|Austria}} {{non-gloss|(on l
 Page 797 TS: Found match for regex: <begin> # {{abbreviation of|en|transsexual}}. <!--sometimes loosely including also transgender?--> <end>
 Page 797 TS: Found match for regex: <begin> # {{abbreviation of|en|transsexual}}. <end>
 Page 797 TS: Found match for regex: <begin> # {{abbreviation of|en|transcript}}. <end>
-Page 797 TS: Found match for regex: <begin> # {{place|en|--=abbr of:[[Telangana]] State|state|c/India}}. <end>
+Page 797 TS: Found match for regex: <begin> # {{place|en|<=abbr of:[[Telangana]] State|state|c/India}}. <end>
 Page 797 TS: Found match for regex: <begin> # {{abbreviation of|lt|{{w|Homeland Union|Tėvynės Sąjunga}}}} <end>
 Page 798 Tas.: Found match for regex: <begin> # {{lb|en|legal}} {{abbreviation of|en|Tasmania}}. <end>
 Page 798 Tas.: Found match for regex: <begin> This is the customary abbreviation of this term as used in [[case citation]]s. ''See, e.g.'', ''The Bluebook: A Uniform System of Citation, Nineteenth Edition'' (2010), "Geographical Terms: Australian states and Canadian provinces and territories", Table T10.2, p. 438. <end>
@@ -2174,7 +2174,7 @@ Page 836 mc: Found match for regex: <begin> # {{abbreviation of|en|millicurie}}.
 Page 836 mc: Found match for regex: <begin> # {{lb|en|informal|internet slang|text messaging}} {{abbreviation of|en|Minecraft}}. <end>
 Page 836 mc: Found match for regex: <begin> # a [[motorcycle]]; {{abbreviation of|sv|motorcykel|}} <end>
 Page 837 DB: Found match for regex: <begin> # {{lb|en|[[classics]]}} {{abbr of|en|{{w|Behistun Inscription|Inscription of Darius at Bisutun}}}}. <end>
-Page 837 DB: Found match for regex: <begin> # {{place|ro|--=abbr of:Dâmbovița|county|c/Romania}} <end>
+Page 837 DB: Found match for regex: <begin> # {{place|ro|<=abbr of:Dâmbovița|county|c/Romania}} <end>
 Page 838 lbf: Found match for regex: <begin> # {{abbreviation of|en|pound-force||unit of force}}. <end>
 Page 839 feb: Found match for regex: <begin> # [[February]]; {{abbreviation of|sv|februari}} <end>
 Page 840 ms: Found match for regex: <begin> # {{abbreviation of|en|manuscript}}. <end>
@@ -2286,7 +2286,7 @@ Page 871 MCR: Found match for regex: <begin> # {{lb|en|UK}} {{abbreviation of|en
 Page 872 PT: Found match for regex: <begin> # {{abbreviation of|en|Protactile}}. <end>
 Page 872 PT: Found match for regex: <begin> # {{lb|de|economics}} {{abbreviation of|de|Personentag|t=[[man-day]]}} <end>
 Page 872 PT: Found match for regex: <begin> # {{lb|de|theology}} {{abbreviation of|de|praktische Theologie|t=[[practical theology]]}} <end>
-Page 873 COA: Found match for regex: <begin> # {{place|en|--=abbr of:Coahuila|state|c/Mexico}}. <end>
+Page 873 COA: Found match for regex: <begin> # {{place|en|<=abbr of:Coahuila|state|c/Mexico}}. <end>
 Page 874 KO: Found match for regex: <begin> # {{lb|en|boxing}} {{abbreviation of|en|knock out}}. <end>
 Page 874 KO: Found match for regex: <begin> # {{lb|en|sport}} {{abbreviation of|en|kick-off|t=the time or manner of start of play}}. <end>
 Page 874 KO: Found match for regex: <begin> # {{abbreviation of|sv|Konsumentombudsmannen||The Consumer Ombudsman}}; ''a {{m|sv|konsumentombudsman||consumer ombudsman}}.'' <end>
@@ -2295,10 +2295,10 @@ Page 875 BAC: Found match for regex: <begin> # {{abbreviation of|ga|Baile Átha 
 Page 876 HS: Found match for regex: <begin> # {{abbreviation of|en|[[high]] [[speed]]}}. <end>
 Page 876 HS: Found match for regex: <begin> # {{lb|en|fandom}} {{abbreviation of|en|w:Homestuck}}. <end>
 Page 877 CAA: Found match for regex: <begin> # {{lb|en|geography|politics|Canada}} {{abbreviation of|en|Canadian Arctic Archipelago}}. <end>
-Page 878 CJ: Found match for regex: <begin> # {{place|ro|--=abbr of:Cluj|county|c/Romania}} <end>
+Page 878 CJ: Found match for regex: <begin> # {{place|ro|<=abbr of:Cluj|county|c/Romania}} <end>
 Page 879 PSO: Found match for regex: <begin> # {{lb|en|Pakistan}} {{abbreviation of|en|{{w|Pakistan State Oil}}}}. <end>
 Page 880 HR: Found match for regex: <begin> # {{abbreviation of|ja|ホームルーム|tr=hōmurūmu}} <end>
-Page 880 HR: Found match for regex: <begin> # {{place|ro|--=abbr of:Harghita|county|c/Romania}} <end>
+Page 880 HR: Found match for regex: <begin> # {{place|ro|<=abbr of:Harghita|county|c/Romania}} <end>
 Page 881 LOC: Found match for regex: <begin> # {{lb|en|aviation}} {{abbreviation of|en|localizer}}. <end>
 Page 882 RPM: Found match for regex: <begin> # {{abbreviation of|en|[[revolution]]s [[per]] [[minute]]}}.<!--or more rarely, revolution per minute--> <end>
 Page 882 RPM: Found match for regex: <begin> {{trans-top|abbreviation of revolutions per minute}} <end>
@@ -2314,18 +2314,18 @@ Page 889 FTA: Found match for regex: <begin> # {{lb|en|economics|North America}}
 Page 889 FTA: Found match for regex: <begin> # {{lb|en|aviation}} {{abbreviation of|en|[[flight]] [[test]] [[article]]|qq=such as a test aircraft, a prototype}}. <end>
 Page 889 FTA: Found match for regex: <begin> # {{lb|en|broadcasting|telecommunications}} {{abbreviation of|en|free to air}}. <end>
 Page 890 FC: Found match for regex: <begin> # {{abbreviation of|es|ferrocarril}} <end>
-Page 891 OT: Found match for regex: <begin> # {{place|ro|--=abbr of:Olt|county|c/Romania}} <end>
+Page 891 OT: Found match for regex: <begin> # {{place|ro|<=abbr of:Olt|county|c/Romania}} <end>
 Page 892 PV: Found match for regex: <begin> # {{lb|fr|legal}} {{abbreviation of|fr|procès-verbal}} <end>
 Page 892 PV: Found match for regex: <begin> # {{lb|fr|gaming}} {{abbreviation of|fr|point de vie||health}} <end>
 Page 892 PV: Found match for regex: <begin> # {{lb|de|apartment listing}} {{abbreviation of|de|[[Provision]]}} <end>
 Page 893 NCP: Found match for regex: <begin> # {{lb|en|pathology}} {{abbreviation of|en|neuropathic corneal pain}}. <end>
 Page 893 NCP: Found match for regex: <begin> # {{lb|en|Mainland|pathology|historical}} {{abbreviation of|en|novel coronavirus pneumonia}}; [[COVID-19]] {{gl|disease}}. <end>
-Page 894 IMS: Found match for regex: <begin> # {{place|en|--=abbr of:[[w:en:Indianapolis Motor Speedway|Indianapolis Motor Speedway]]<t:The Brickyard>|racetrack|ward/Speedway|city/Indianapolis|twp/Wayne|co/Marion|s/Indiana|c/USA}}. <end>
+Page 894 IMS: Found match for regex: <begin> # {{place|en|<=abbr of:[[w:en:Indianapolis Motor Speedway|Indianapolis Motor Speedway]]<t:The Brickyard>|racetrack|ward/Speedway|city/Indianapolis|twp/Wayne|co/Marion|s/Indiana|c/USA}}. <end>
 Page 895 WW: Found match for regex: <begin> # {{lb|en|Ireland}} {{abbreviation of|en|Wicklow}}. <end>
 Page 895 WW: Found match for regex: <begin> # {{lb|nl|Netherlands}} {{abbreviation of|nl|Werkloosheidswet}} <end>
 Page 896 dept.: Found match for regex: <begin> # {{abbreviation of|en|department}}. <end>
 Page 896 dept.: Found match for regex: <begin> # {{abbreviation of|en|deputy}}. <end>
-Page 897 Fla.: Found match for regex: <begin> # {{place|en|--=abbr of:Florida|state|c/USA}}. <end>
+Page 897 Fla.: Found match for regex: <begin> # {{place|en|<=abbr of:Florida|state|c/USA}}. <end>
 Page 898 ACC: Found match for regex: <begin> # {{lb|en|linguistics}} {{abbreviation of|en|accusative}}. <end>
 Page 898 ACC: Found match for regex: <begin> # {{lb|fr|Senegal|politics}} {{abbreviation of|fr|[[alliance|Alliance]] pour la [[conscience]] [[citoyen]]ne}} <end>
 Page 898 ACC: Found match for regex: <begin> # {{lb|fr|organic chemistry}} {{abbreviation of|fr|aminocyclopropane carboxylique|gloss=acide 1-aminocyclopropane-1-carboxylique}} <end>
@@ -2355,14 +2355,14 @@ Page 916 NIP: Found match for regex: <begin> # {{lb|en|US}} {{abbreviation of|en
 Page 916 NIP: Found match for regex: <begin> # {{abbreviation of|en|[[non-native]] [[invasive]] [[plant]]}}. <end>
 Page 916 NIP: Found match for regex: <begin> # {{lb|en|UK}} {{abbr of|en|[[notice]] of [[intended]] [[prosecution]]}}. <end>
 Page 916 NIP: Found match for regex: <begin> # {{lb|en|classified ads}} {{abbreviation of|en|new in [[package]]}}. <end>
-Page 917 CAM: Found match for regex: <begin> # {{place|en|--=abbr of:Campeche|state|c/Mexico}}. <end>
+Page 917 CAM: Found match for regex: <begin> # {{place|en|<=abbr of:Campeche|state|c/Mexico}}. <end>
 Page 918 NOS: Found match for regex: <begin> # {{abbreviation of|en|[[nitrous oxide]]}}. <end>
 Page 919 EP: Found match for regex: <begin> # {{lb|en|motorsport}} {{abbreviation of|en|[[electric]] [[prix]]; [[ePrix]]}}; from electric [[grand prix]]. <end>
 Page 919 EP: Found match for regex: <begin> # {{lb|fr|motorsports}} {{abbreviation of|fr|[[électrique]] [[prix]]; [[ePrix]]}}; from [[grand prix]] électrique <end>
 Page 920 UL: Found match for regex: <begin> # {{abbreviation of|en|[[unleaded]] fuel/gasoline/petrol/avgas}}. <end>
 Page 920 UL: Found match for regex: <begin> # {{abbreviation of|en|unleaded}}. <end>
-Page 920 UL: Found match for regex: <begin> # {{lb|en|India}} {{place|en|--=abbr of:Uttaranchal|state|c/India}}. <end>
-Page 921 CHD: Found match for regex: <begin> # {{place|en|--=abbr of:Ladakh|union territory|c/India}}. <end>
+Page 920 UL: Found match for regex: <begin> # {{lb|en|India}} {{place|en|<=abbr of:Uttaranchal|state|c/India}}. <end>
+Page 921 CHD: Found match for regex: <begin> # {{place|en|<=abbr of:Ladakh|union territory|c/India}}. <end>
 Page 922 TPM: Found match for regex: <begin> # {{abbreviation of|en|topiramate}}. <end>
 Page 923 OB: Found match for regex: <begin> # {{abbreviation of|en|obstetrician}}. <end>
 Page 923 OB: Found match for regex: <begin> # {{abbreviation of|en|obstetrics}}. <end>
@@ -2423,18 +2423,18 @@ Page 940 Prof.: Found match for regex: <begin> # {{abbreviation of|de|Professori
 Page 940 Prof.: Found match for regex: <begin> # {{abbreviation of|it|professore}} <end>
 Page 940 Prof.: Found match for regex: <begin> # {{abbreviation of|pt|professor}} <end>
 Page 941 mfg.: Found match for regex: <begin> # {{abbreviation of|en|[[manufacturing]]}}. <end>
-Page 942 Colo.: Found match for regex: <begin> # {{place|en|--=abbr of:Colorado|state|c/USA}}. <end>
+Page 942 Colo.: Found match for regex: <begin> # {{place|en|<=abbr of:Colorado|state|c/USA}}. <end>
 Page 943 adm.: Found match for regex: <begin> # {{abbreviation of|en|administrative}}. <end>
 Page 943 adm.: Found match for regex: <begin> # {{abbreviation of|en|administration}}. <end>
 Page 944 adm: Found match for regex: <begin> # {{lb|en|stenoscript}} {{abbreviation of|en|administer}} {{ng|and related forms of that word'' ('''[[administering]], [[administrate]], [[administration]]. [[administrative]], [[administrator]],''' ''etc.'')}} <end>
 Page 945 MFA: Found match for regex: <begin> # {{abbreviation of|sh|međunarodna fonetska abeceda||[[IPA]], [[International Phonetic Alphabet]]}} <end>
 Page 946 BR: Found match for regex: <begin> # {{lb|en|chiefly|North American}} {{abbreviation of|en|bedroom}}. <end>
-Page 946 BR: Found match for regex: <begin> # {{place|en|--=abbr of:Brandenburg|state|c/Germany}}. <end>
+Page 946 BR: Found match for regex: <begin> # {{place|en|<=abbr of:Brandenburg|state|c/Germany}}. <end>
 Page 946 BR: Found match for regex: <begin> # {{abbreviation of|en|Baton Rouge}}. <end>
 Page 946 BR: Found match for regex: <begin> # {{lb|de|companies|trade unions}} {{abbreviation of|de|Betriebsrat|t=works council}} <end>
 Page 946 BR: Found match for regex: <begin> # {{abbreviation of|de|Bundesrepublik|t=federal republic}} <end>
-Page 946 BR: Found match for regex: <begin> # {{place|de|--=abbr of:Brandenburg|a federal <<state>> of <<c/Germany>> near to [[Berlin]]}} <end>
-Page 946 BR: Found match for regex: <begin> # {{place|ro|--=abbr of:Brăila|county|c/Romania}} <end>
+Page 946 BR: Found match for regex: <begin> # {{place|de|<=abbr of:Brandenburg|a federal <<state>> of <<c/Germany>> near to [[Berlin]]}} <end>
+Page 946 BR: Found match for regex: <begin> # {{place|ro|<=abbr of:Brăila|county|c/Romania}} <end>
 Page 947 qt: Found match for regex: <begin> # {{abbreviation of|en|quart}}. <end>
 Page 947 qt: Found match for regex: <begin> # {{lb|en|slang}} {{abbreviation of|en|quiet|addl=used in the expression {{m|en|on the Q.T.}}, meaning [[secretly]] or in [[confidence]]}}. <end>
 Page 947 qt: Found match for regex: <begin> # {{lb|id|texting}} {{abbreviation of|id|kita}} <end>
@@ -2472,13 +2472,13 @@ Page 959 GVD: Found match for regex: <begin> # {{abbreviation of|nl|[[godverdomm
 Page 960 NIV: Found match for regex: <begin> # {{lb|en|countable|medicine}} {{abbreviation of|en|[[non-invasive]] [[ventilator]]}}. <end>
 Page 961 Sam.: Found match for regex: <begin> # {{lb|en|biblical}} {{abbreviation of|en|Samuel}}. <end>
 Page 962 SU: Found match for regex: <begin> ## {{abbreviation of|en|[[w:Seton Hall University|Seton Hall University]]}}. <end>
-Page 962 SU: Found match for regex: <begin> # {{place|en|--=abbr of:[[North Sumatra]]|province|c/Indonesia}}. <end>
+Page 962 SU: Found match for regex: <begin> # {{place|en|<=abbr of:[[North Sumatra]]|province|c/Indonesia}}. <end>
 Page 962 SU: Found match for regex: <begin> # {{lb|en|algebra}} {{abbreviation of|en|[[special unitary group]]}}. <end>
 Page 962 SU: Found match for regex: <begin> # {{abbreviation of|eo|suduesto||southwest}} <end>
 Page 963 ESP: Found match for regex: <begin> # {{lb|en|parapsychology}} {{abbreviation of|en|extrasensory perception}}. <end>
 Page 963 ESP: Found match for regex: <begin> # {{lb|en|psychology}} {{abbreviation of|en|[[emotional]], [[spiritual]], and [[psychological]]}}. <end>
 Page 963 ESP: Found match for regex: <begin> {{trans-top|abbreviation of extrasensory perception}} <end>
-Page 964 SON: Found match for regex: <begin> # {{place|en|--=abbr of:Sonora|state|c/Mexico}}. <end>
+Page 964 SON: Found match for regex: <begin> # {{place|en|<=abbr of:Sonora|state|c/Mexico}}. <end>
 Page 965 mtDNA: Found match for regex: <begin> # {{lb|en|genetics}} {{abbreviation of|en|mitochondrial DNA}}. <end>
 Page 966 Rev.: Found match for regex: <begin> # {{abbreviation of|en|Revelation}}. <end>
 Page 966 Rev.: Found match for regex: <begin> # {{lb|en|title}} {{abbreviation of|en|Reverend}}. <end>
@@ -2493,9 +2493,9 @@ Page 970 hr: Found match for regex: <begin> # {{lb|id|texting}} {{abbreviation o
 Page 970 hr: Found match for regex: <begin> # [[Mr]]. {{abbreviation of|sv|herr}}; plural {{m|sv|hrr||herrar}} <end>
 Page 971 Wd: Found match for regex: <begin> # {{abbreviation of|en|[[Wednesday]]}}. <end>
 Page 972 Ala.: Found match for regex: <begin> # {{abbreviation of|en|Alabama}}. <end>
-Page 973 MH: Found match for regex: <begin> # {{place|en|--=abbr of:Maharashtra|state|c/India}}. <end>
+Page 973 MH: Found match for regex: <begin> # {{place|en|<=abbr of:Maharashtra|state|c/India}}. <end>
 Page 973 MH: Found match for regex: <begin> # {{abbreviation of|en|methylhydrazine}}. <end>
-Page 973 MH: Found match for regex: <begin> # {{place|ro|--=abbr of:Mehedinți|county|c/Romania}} <end>
+Page 973 MH: Found match for regex: <begin> # {{place|ro|<=abbr of:Mehedinți|county|c/Romania}} <end>
 Page 974 SONET: Found match for regex: <begin> # {{abbreviation of|en|{{w|synchronous optical networking}}}}. <end>
 Page 975 ANG: Found match for regex: <begin> # {{label|mul|sports}} {{abbreviation of|mul|pt:Angola}} <end>
 Page 976 Okla.: Found match for regex: <begin> # {{abbreviation of|en|Oklahoma}}. <end>
@@ -2584,7 +2584,7 @@ Page 1019 Ore.: Found match for regex: <begin> # {{abbreviation of|en|[[Oregon]]
 Page 1020 Ark.: Found match for regex: <begin> # {{abbreviation of|en|Arkansas}}. <end>
 Page 1021 Del.: Found match for regex: <begin> # {{lb|en|legal}} {{abbreviation of|en|delegate}}. <end>
 Page 1021 Del.: Found match for regex: <begin> This is the customary abbreviation of this term as used in legal [[citation]]. ''See, e.g.'', ''The Bluebook: A Uniform System of Citation, Nineteenth Edition'' (2010), "Judges and Officials", Table T11, p. 443. <end>
-Page 1022 La.: Found match for regex: <begin> # {{place|en|--=abbr of:Louisiana|state|c/USA}}; {{alternative form of|en|LA|nocap=1}}. <end>
+Page 1022 La.: Found match for regex: <begin> # {{place|en|<=abbr of:Louisiana|state|c/USA}}; {{alternative form of|en|LA|nocap=1}}. <end>
 Page 1023 MRO: Found match for regex: <begin> # {{lb|en|biology}} {{abbreviation of|en|mitochondria-related organelle}}. <end>
 Page 1024 Va.: Found match for regex: <begin> # {{abbreviation of|en|Virginia}}. <end>
 Page 1024 Va.: Found match for regex: <begin> # {{lb|en|music}} {{abbreviation of|en|viola}}. <end>
@@ -2926,7 +2926,7 @@ Page 1201 итд.: Found match for regex: <begin> # {{abbreviation of|rsk|и т�
 Page 1201 итд.: Found match for regex: <begin> # {{abbreviation of|sh|и тако даље|sc=Cyrl}}; [[etc.]] <end>
 Page 1202 RORO: Found match for regex: <begin> # {{lb|en|nautical}} {{abbreviation of|en|roll-on roll-off#Adjective}}. <end>
 Page 1203 pres: Found match for regex: <begin> # {{abbreviation of|en|present}}. <end>
-Page 1204 IF: Found match for regex: <begin> # {{place|ro|--=abbr of:Ilfov|county|c/Romania}} <end>
+Page 1204 IF: Found match for regex: <begin> # {{place|ro|<=abbr of:Ilfov|county|c/Romania}} <end>
 Page 1204 IF: Found match for regex: <begin> # [[sport]]s [[club]], [[athletic]] club; {{abbreviation of|sv|idrottsförening}} <end>
 Page 1205 torp: Found match for regex: <begin> # {{lb|en|informal}} {{abbreviation of|en|torpedo}}. <end>
 Page 1206 proc: Found match for regex: <begin> # {{abbreviation of|en|procedure}}. <end>
@@ -2997,7 +2997,7 @@ Page 1240 AT: Found match for regex: <begin> # (medical) [[internship]]. {{abbre
 Page 1240 AT: Found match for regex: <begin> # {{abbreviation of|sv|avtändning|t=withdrawal, comedown}} <end>
 Page 1241 IS: Found match for regex: <begin> # {{abbreviation of|de|Islamischer Staat|t=[[Islamic State]], {{l|en|IS}}}} <end>
 Page 1241 IS: Found match for regex: <begin> # {{abbreviation of|de|Intensivstation|t=[[intensive care unit]], [[ICU]]}} <end>
-Page 1241 IS: Found match for regex: <begin> # {{place|ro|--=abbr of:Iași|county|c/Romania}} <end>
+Page 1241 IS: Found match for regex: <begin> # {{place|ro|<=abbr of:Iași|county|c/Romania}} <end>
 Page 1242 UG: Found match for regex: <begin> # {{lb|fr|French politics}} {{abbreviation of|fr|[[union]] [[de la]] [[gauche]]}} <end>
 Page 1242 UG: Found match for regex: <begin> # {{abbreviation of|de|Untergeschoss}} <end>
 Page 1242 UG: Found match for regex: <begin> # {{lb|de|Germany|_|since|_|2008}} {{abbreviation of|de|Unternehmergesellschaft (haftungsbeschränkt)}} <end>
@@ -3020,7 +3020,7 @@ Page 1253 sida: Found match for regex: <begin> # {{abbreviation of|es|síndrome 
 Page 1254 sus: Found match for regex: <begin> # {{lb|en|music}} {{abbreviation of|en|suspended}}. <end>
 Page 1255 SB: Found match for regex: <begin> # {{lb|en|baseball}} {{abbr of|en|stolen base}}; The statistic reporting the number of stolen bases. <end>
 Page 1255 SB: Found match for regex: <begin> # {{abbr of|en|sexbot}}. <end>
-Page 1255 SB: Found match for regex: <begin> # {{place|ro|--=abbr of:Sibiu|county|c/Romania}} <end>
+Page 1255 SB: Found match for regex: <begin> # {{place|ro|<=abbr of:Sibiu|county|c/Romania}} <end>
 Page 1256 adv: Found match for regex: <begin> # {{abbreviation of|en|adverb}}. <end>
 Page 1256 adv: Found match for regex: <begin> # {{abbreviation of|en|advanced}}. <end>
 Page 1256 adv: Found match for regex: <begin> # {{abbreviation of|en|adventure}}. <end>
@@ -3236,7 +3236,7 @@ Page 1374 rt: Found match for regex: <begin> # {{lb|en|Internet}} {{abbreviation
 Page 1375 cal: Found match for regex: <begin> From an abbreviation of {{m|en|calcium hydroxide}}. <end>
 Page 1375 cal: Found match for regex: <begin> # {{abbreviation of|gl|caloría}} <end>
 Page 1376 DES: Found match for regex: <begin> # {{abbreviation of|en|diethylstilbestrol}}. <end>
-Page 1377 ארה״ב: Found match for regex: <begin> # {{place|he|--=abbr of:אַרְצוֹת הַבְּרִית<tr:ar'tsót hab'rít><eq:United States>|country|cont/North America|t=US}} <end>
+Page 1377 ארה״ב: Found match for regex: <begin> # {{place|he|<=abbr of:אַרְצוֹת הַבְּרִית<tr:ar'tsót hab'rít><eq:United States>|country|cont/North America|t=US}} <end>
 Page 1378 NEA: Found match for regex: <begin> # {{lb|mul|planetology|geology}} {{abbreviation of|mul|en:[[northeast]] [[Africa]]}} <end>
 Page 1378 NEA: Found match for regex: <begin> # {{lb|en|Singapore}} {{abbreviation of|en|{{w|National Environment Agency}}}}. <end>
 Page 1379 wa: Found match for regex: <begin> # {{lb|en|stenoscript}} {{abbreviation of|en|where}}. <end>
@@ -3248,7 +3248,7 @@ Page 1383 qtr: Found match for regex: <begin> # {{abbreviation of|en|quarterly}}
 Page 1384 A'asia: Found match for regex: <begin> # {{abbreviation of|en|Australasia}}. <end>
 Page 1385 VS: Found match for regex: <begin> # {{abbreviation of|en|very [[slightly]] (included)}}: a degree of the [[inclusion]]s in a [[diamond]]. <end>
 Page 1385 VS: Found match for regex: <begin> # {{abbreviation of|de|[[Verhandlungssache]]}} <end>
-Page 1385 VS: Found match for regex: <begin> # {{place|ro|--=abbr of:Vaslui|county|c/Romania}} <end>
+Page 1385 VS: Found match for regex: <begin> # {{place|ro|<=abbr of:Vaslui|county|c/Romania}} <end>
 Page 1386 SoCal: Found match for regex: <begin> # {{abbreviation of|en|Southern California}}. <end>
 Page 1387 sid: Found match for regex: <begin> # [[p]], [[pg]], [[pp]] ([[page]], [[pages]]), {{abbreviation of|sv|sida}}, [[sidor]] <end>
 Page 1388 PAN: Found match for regex: <begin> # {{lb|en|linguistics}} {{abbreviation of|en|Proto-Austronesian}}. <end>
@@ -3495,9 +3495,9 @@ Page 1502 interj: Found match for regex: <begin> # {{abbreviation of|en|interjec
 Page 1503 NEP: Found match for regex: <begin> # {{label|mul|sports}} {{abbreviation of|mul|en:Nepal}} <end>
 Page 1504 CAPEX: Found match for regex: <begin> # {{lb|en|business|finance}} {{abbreviation of|en|capital expense}}. <end>
 Page 1504 CAPEX: Found match for regex: <begin> # {{lb|en|business|finance}} {{abbreviation of|en|capital expenditure}}. <end>
-Page 1505 TR: Found match for regex: <begin> # {{place|en|--=abbr of:Tripura|state|c/India}}. <end>
+Page 1505 TR: Found match for regex: <begin> # {{place|en|<=abbr of:Tripura|state|c/India}}. <end>
 Page 1505 TR: Found match for regex: <begin> # {{lb|la|money}} {{abbreviation of|la|Augusta Treverorum|t=[[Trier]]}} <end>
-Page 1505 TR: Found match for regex: <begin> # {{place|ro|--=abbr of:Teleorman|county|c/Romania}} <end>
+Page 1505 TR: Found match for regex: <begin> # {{place|ro|<=abbr of:Teleorman|county|c/Romania}} <end>
 Page 1506 G&A: Found match for regex: <begin> # {{abbreviation of|en|[[general]] and [[administrative]]}}. <end>
 Page 1507 melo: Found match for regex: <begin> # {{lb|en|informal|British}} {{abbreviation of|en|melodrama}}. <end>
 Page 1508 synth: Found match for regex: <begin> # {{abbreviation of|en|synthetic}}. <end>
@@ -3580,7 +3580,7 @@ Page 1562 PMT: Found match for regex: <begin> # {{lb|en|countable|electronics}} 
 Page 1563 totes: Found match for regex: <begin> # {{lb|en|colloquial}} {{abbreviation of|en|totally}}. <end>
 Page 1564 GDI: Found match for regex: <begin> # {{lb|en|euphemistic|slang|rare}} {{abbreviation of|en|[[goddamn]] it}}. <end>
 Page 1565 HE: Found match for regex: <begin> # {{abbreviation of|en|hydroelectricity}}. <end>
-Page 1565 HE: Found match for regex: <begin> # {{place|en|--=abbr of:Hesse|state|c/Germany}}. <end>
+Page 1565 HE: Found match for regex: <begin> # {{place|en|<=abbr of:Hesse|state|c/Germany}}. <end>
 Page 1565 HE: Found match for regex: <begin> # {{abbreviation of|en|hydroelectric}}. <end>
 Page 1566 AANBUS: Found match for regex: <begin> # {{abbreviation of|en|{{w|Australian Antarctic Building System}}}}: a [[modular]] [[construction]] [[system]] used by [[Australia]] for its [[building]]s in [[Antarctica]]. <end>
 Page 1567 Aach: Found match for regex: <begin> # {{abbreviation of|en|Aachen}}. <end>
@@ -3825,7 +3825,7 @@ Page 1724 SV: Found match for regex: <begin> # {{abbreviation of|de|Sicherungsve
 Page 1724 SV: Found match for regex: <begin> # {{abbreviation of|de|Sozialversicherung}} <end>
 Page 1724 SV: Found match for regex: <begin> # {{lb|de|sports}} {{abbreviation of|de|Sportverein}} <end>
 Page 1724 SV: Found match for regex: <begin> # {{lb|de|law}} {{abbreviation of|de|Sachverhalt}} <end>
-Page 1724 SV: Found match for regex: <begin> # {{place|ro|--=abbr of:Suceava|county|c/Romania}} <end>
+Page 1724 SV: Found match for regex: <begin> # {{place|ro|<=abbr of:Suceava|county|c/Romania}} <end>
 Page 1725 ym.: Found match for regex: <begin> # {{abbreviation of|fi|[[ynnä muuta]]||[[etc.]]}} <end>
 Page 1726 OCTG: Found match for regex: <begin> # {{lb|en|oil industry}} {{abbreviation of|en|[[oil|Oil]] [[country|Country]] [[tubular|Tubular]] [[goods|Goods]]}}. Tubing, casing and drill pipes manufactured according to API Specification 5CT. <end>
 Page 1727 FBO: Found match for regex: <begin> # {{abbreviation of|en|Facebook official}}. <end>
@@ -3916,7 +3916,7 @@ Page 1787 Wm.: Found match for regex: <begin> # {{abbreviation of|en|Westmorland
 Page 1788 zzgl.: Found match for regex: <begin> # {{abbreviation of|de|zuzüglich}} <end>
 Page 1789 aanw.vnw.: Found match for regex: <begin> # {{abbreviation of|nl|aanwijzend voornaamwoord}} <end>
 Page 1790 pasada: Found match for regex: <begin> # {{lb|es|colloquial|Chile}} {{abbreviation of|es|sopaipilla pasada}} {{gloss|a sopaipilla soaked in unrefined cane sugar syrup}} <end>
-Page 1791 JK: Found match for regex: <begin> # {{place|en|--=abbr of:Jakarta|province/special region/and/capital city|c/Indonesia}}. <end>
+Page 1791 JK: Found match for regex: <begin> # {{place|en|<=abbr of:Jakarta|province/special region/and/capital city|c/Indonesia}}. <end>
 Page 1791 JK: Found match for regex: <begin> # {{abbreviation of|en|Jammu and Kashmir}}. <end>
 Page 1791 JK: Found match for regex: <begin> # {{abbreviation of|ja|女子高生<tr:joshi kōsei>,[[女子]][[高校生]]<tr:joshi kōkōsei>|t=high-school girl}} <end>
 Page 1791 JK: Found match for regex: <begin> # {{lb|ja|rare}} {{abbreviation of|ja|常識的に考えて|tr=jōshiki-teki ni kangaete}} <end>
@@ -3933,7 +3933,7 @@ Page 1794 VW: Found match for regex: <begin> # {{lb|de|insurance}} {{abbreviatio
 Page 1795 fnc: Found match for regex: <begin> # {{abbreviation of|en|function}}. <end>
 Page 1796 jmf.: Found match for regex: <begin> # {{abbreviation of|sv|jämför||cf.}} <end>
 Page 1797 hist: Found match for regex: <begin> # {{abbreviation of|en|history}}. <end>
-Page 1798 AK: Found match for regex: <begin> # {{lb|en|US}} {{abbr of|en|[[Alaska]]}}, {{place|en|state|c/USA}}. <end>
+Page 1798 AK: Found match for regex: <begin> # {{lb|en|US}} {{place|en|<=abbr of:Alaska|state|c/USA}}. <end>
 Page 1798 AK: Found match for regex: <begin> # {{abbr of|de|[[Abendkasse]]}}, often found on concert or event tickets indicating a price that has to be paid at the venue at the evening of the event, as opposed to a presale ticket price <end>
 Page 1798 AK: Found match for regex: <begin> # {{lb|pl|historical|military}} {{abbreviation of|pl|Armia Krajowa}} <end>
 Page 1798 AK: Found match for regex: <begin> # {{lb|pl|Roman Catholicism}} {{abbreviation of|pl|{{w|Catholic Action|Akcja Katolicka}}}} <end>
@@ -4150,11 +4150,11 @@ Page 1923 Tit.: Found match for regex: <begin> # {{abbreviation of|en|Titus}}. <
 Page 1924 Zeph.: Found match for regex: <begin> # {{abbreviation of|en|Zephaniah}}. <end>
 Page 1925 Zech.: Found match for regex: <begin> # {{abbreviation of|en|Zechariah}}. <end>
 Page 1926 Wisd.: Found match for regex: <begin> # {{abbreviation of|en|Wisdom of Solomon}}. <end>
-Page 1927 BH: Found match for regex: <begin> # {{place|en|--=abbr of:Bihar|state|c/India}}. <end>
+Page 1927 BH: Found match for regex: <begin> # {{place|en|<=abbr of:Bihar|state|c/India}}. <end>
 Page 1927 BH: Found match for regex: <begin> # {{abbrev of|da|brystholder}}: [[bra]] <end>
 Page 1927 BH: Found match for regex: <begin> # {{abbrev of|nb|brystholder,bysteholder}}: [[bra]] <end>
 Page 1927 BH: Found match for regex: <begin> # {{abbrev of|nn|brysthaldar,bystehaldar}}: [[bra]] <end>
-Page 1927 BH: Found match for regex: <begin> # {{place|ro|--=abbr of:Bihor|county|c/Romania}} <end>
+Page 1927 BH: Found match for regex: <begin> # {{place|ro|<=abbr of:Bihor|county|c/Romania}} <end>
 Page 1927 BH: Found match for regex: <begin> # {{abbreviation of|sv|brösthållare,bysthållare}}: [[bra]] <end>
 Page 1928 afl.: Found match for regex: <begin> # {{abbreviation of|nl|aflevering}} <end>
 Page 1928 afl.: Found match for regex: <begin> # {{abbreviation of|nl|afleiding}} <end>
@@ -4339,8 +4339,8 @@ Page 2037 9e: Found match for regex: <begin> # {{abbreviation of|af|[[negende]]|
 Page 2037 9e: Found match for regex: <begin> # {{abbreviation of|nl|negende||ninth}}; [[9th]] <end>
 Page 2038 12e: Found match for regex: <begin> # {{abbreviation of|af|[[twaalfde]]|t=12th}} <end>
 Page 2038 12e: Found match for regex: <begin> # {{abbreviation of|nl|twaalfde||twelfth}}; [[12th]] <end>
-Page 2039 BN: Found match for regex: <begin> # {{place|ro|--=abbr of:Bistrița-Năsăud|county|c/Romania}} <end>
-Page 2040 BZ: Found match for regex: <begin> # {{place|ro|--=abbr of:Buzău|county|c/Romania}} <end>
+Page 2039 BN: Found match for regex: <begin> # {{place|ro|<=abbr of:Bistrița-Năsăud|county|c/Romania}} <end>
+Page 2040 BZ: Found match for regex: <begin> # {{place|ro|<=abbr of:Buzău|county|c/Romania}} <end>
 Page 2041 CF: Found match for regex: <begin> # {{abbreviation of|en|cluster fuck}}. <end>
 Page 2041 CF: Found match for regex: <begin> # {{lb|en|baseball}} {{abbreviation of|en|center field}}. <end>
 Page 2041 CF: Found match for regex: <begin> # {{lb|en|baseball}} {{abbreviation of|en|center fielder}}. <end>
@@ -4364,7 +4364,7 @@ Page 2046 HN: Found match for regex: <begin> # {{lb|en|military|US|nautical}} {{
 Page 2046 HN: Found match for regex: <begin> # {{abbreviation of|ja|ハンドルネーム|tr=handoru nēmu||[[screen name]]}} <end>
 Page 2047 HU: Found match for regex: <begin> # {{lb|de|automotive}} {{abbreviation of|de|Hauptuntersuchung|g=f}} <end>
 Page 2048 KN: Found match for regex: <begin> # {{lb|en|astronomy}} {{abbreviation of|en|kilonova}}. <end>
-Page 2049 KR: Found match for regex: <begin> # {{place|en|--=abbr of:Riau Islands|province|c/Indonesia}}. <end>
+Page 2049 KR: Found match for regex: <begin> # {{place|en|<=abbr of:Riau Islands|province|c/Indonesia}}. <end>
 Page 2049 KR: Found match for regex: <begin> # {{lb|de|Austria}} {{abbreviation of|de|Kommerzialrat}} <end>
 Page 2049 KR: Found match for regex: <begin> # {{lb|de|Germany}} {{abbreviation of|de|Kriminalrat}} <end>
 Page 2049 KR: Found match for regex: <begin> # {{lb|de|Bavaria|Baden-Württemberg|Saxonia}} {{abbreviation of|de|Kreisrat}} <end>
@@ -4383,39 +4383,39 @@ Page 2054 PY: Found match for regex: <begin> # {{abbreviation of|en|Puducherry}}
 Page 2055 RW: Found match for regex: <begin> # {{lb|de|law of compensation}} {{abbreviation of|de|Restwert}} <end>
 Page 2056 ST: Found match for regex: <begin> # {{lb|en|uncountable}} {{abbreviation of|en|steam}}. <end>
 Page 2056 ST: Found match for regex: <begin> # {{m|en|ST|gloss=steam}} {{abbreviation of|fr|vapeur}} <end>
-Page 2057 UA: Found match for regex: <begin> # {{place|en|--=abbr of:Uttaranchal|state|c/India}}. <end>
+Page 2057 UA: Found match for regex: <begin> # {{place|en|<=abbr of:Uttaranchal|state|c/India}}. <end>
 Page 2057 UA: Found match for regex: <begin> # {{abbreviation of|fr|unité astronomique}} <end>
 Page 2058 VN: Found match for regex: <begin> # {{abbreviation of|de|Versicherungsnehmer}} <end>
-Page 2058 VN: Found match for regex: <begin> # {{place|ro|--=abbr of:Vrancea|county|c/Romania}} <end>
+Page 2058 VN: Found match for regex: <begin> # {{place|ro|<=abbr of:Vrancea|county|c/Romania}} <end>
 Page 2059 VU: Found match for regex: <begin> # {{lb|mul|[[w:IUCN Red List|IUCN Red List]]}} {{abbreviation of|mul|en:[[w:Vulnerable species|Vulnerable]]}} <end>
 Page 2059 VU: Found match for regex: <begin> # {{lb|de|transportation}} {{abbreviation of|de|Verkehrsunternehmen}} <end>
 Page 2059 VU: Found match for regex: <begin> # {{lb|de|insurance}} {{abbreviation of|de|Versicherungsunternehmen}} <end>
 Page 2059 VU: Found match for regex: <begin> # {{lb|de|education}} {{abbreviation of|de|[[Vorlesung]] mit [[Übung]]}} <end>
 Page 2060 rangefinder: Found match for regex: <begin> # {{lb|en|photography}} {{abbreviation of|en|rangefinder camera}}. <end>
 Page 2061 QLD: Found match for regex: <begin> # {{lb|en|Australia}} {{abbreviation of|en|Queensland}}. <end>
-Page 2062 BCN: Found match for regex: <begin> # {{place|en|--=abbr of:Baja California|state|c/Mexico}}. <end>
+Page 2062 BCN: Found match for regex: <begin> # {{place|en|<=abbr of:Baja California|state|c/Mexico}}. <end>
 Page 2062 BCN: Found match for regex: <begin> # {{abbreviation of|en|Barcelona}}. <end>
 Page 2062 BCN: Found match for regex: <begin> # {{abbreviation of|ca|Barcelona}} <end>
-Page 2062 BCN: Found match for regex: <begin> # {{place|es|--=abbr of:Baja California|state|c/Mexico}} <end>
+Page 2062 BCN: Found match for regex: <begin> # {{place|es|<=abbr of:Baja California|state|c/Mexico}} <end>
 Page 2062 BCN: Found match for regex: <begin> # {{abbreviation of|es|Barcelona}} <end>
-Page 2063 CHP: Found match for regex: <begin> # {{place|en|--=abbr of:Chiapas|state|c/Mexico}}. <end>
-Page 2064 CHH: Found match for regex: <begin> # {{place|en|--=abbr of:Chihuahua|state|c/Mexico}}. <end>
-Page 2065 DIF: Found match for regex: <begin> # {{place|en|--=abbr of:Distrito Federal|federal district|c/Mexico}}. <end>
-Page 2066 JAL: Found match for regex: <begin> # {{place|en|--=abbr of:Jalisco|state|c/Mexico}}. <end>
-Page 2067 MEX: Found match for regex: <begin> # {{place|en|--=abbr of:México|state|c/Mexico}}. <end>
+Page 2063 CHP: Found match for regex: <begin> # {{place|en|<=abbr of:Chiapas|state|c/Mexico}}. <end>
+Page 2064 CHH: Found match for regex: <begin> # {{place|en|<=abbr of:Chihuahua|state|c/Mexico}}. <end>
+Page 2065 DIF: Found match for regex: <begin> # {{place|en|<=abbr of:Distrito Federal|federal district|c/Mexico}}. <end>
+Page 2066 JAL: Found match for regex: <begin> # {{place|en|<=abbr of:Jalisco|state|c/Mexico}}. <end>
+Page 2067 MEX: Found match for regex: <begin> # {{place|en|<=abbr of:México|state|c/Mexico}}. <end>
 Page 2068 AGU: Found match for regex: <begin> # {{label|en|geophysics}} {{abbreviation of|en|[[American]] [[geophysical|Geophysical]] [[union|Union]]}} {{gloss|an international organization of geoscientists}}. <end>
-Page 2068 AGU: Found match for regex: <begin> # {{label|en|politics}} {{place|en|--=abbr of:Aguascalientes|state|c/Mexico}}. <end>
-Page 2069 GUA: Found match for regex: <begin> # {{place|en|--=abbr of:Guanajuato|state|c/Mexico}}. <end>
+Page 2068 AGU: Found match for regex: <begin> # {{label|en|politics}} {{place|en|<=abbr of:Aguascalientes|state|c/Mexico}}. <end>
+Page 2069 GUA: Found match for regex: <begin> # {{place|en|<=abbr of:Guanajuato|state|c/Mexico}}. <end>
 Page 2070 HID: Found match for regex: <begin> # {{abbreviation of|en|[[human]]-[[implantable]] [[device]]}}. <end>
-Page 2070 HID: Found match for regex: <begin> # {{place|en|--=abbr of:Hidalgo|state|c/Mexico}}. <end>
+Page 2070 HID: Found match for regex: <begin> # {{place|en|<=abbr of:Hidalgo|state|c/Mexico}}. <end>
 Page 2071 nz: Found match for regex: <begin> # {{lb|cs|texting}} {{abbreviation of|cs|není zač}}: [[np]] {{gloss|no problem}} <end>
 Page 2072 OAX: Found match for regex: <begin> # {{abbreviation of|en|Oaxaca}}. <end>
-Page 2073 YUC: Found match for regex: <begin> # {{place|en|--=abbr of:Yucatán|state|c/Mexico}}. <end>
+Page 2073 YUC: Found match for regex: <begin> # {{place|en|<=abbr of:Yucatán|state|c/Mexico}}. <end>
 Page 2074 HB: Found match for regex: <begin> # {{lb|en|Internet slang|text messaging}} {{abbreviation of|en|happy birthday}}. <end>
 Page 2075 SIN: Found match for regex: <begin> # {{label|mul|sports}} {{abbreviation of|mul|en:Singapore}} <end>
-Page 2075 SIN: Found match for regex: <begin> # {{place|en|--=abbr of:Sinaloa|state|c/Mexico}}. <end>
+Page 2075 SIN: Found match for regex: <begin> # {{place|en|<=abbr of:Sinaloa|state|c/Mexico}}. <end>
 Page 2076 YO: Found match for regex: <begin> # {{abbreviation of|en|[[years]] [[old]]}}. <end>
-Page 2076 YO: Found match for regex: <begin> # {{place|en|--=abbr of:Yogyakarta|province/and/special region|c/Indonesia}}. <end>
+Page 2076 YO: Found match for regex: <begin> # {{place|en|<=abbr of:Yogyakarta|province/and/special region|c/Indonesia}}. <end>
 Page 2076 YO: Found match for regex: <begin> # {{lb|en|knitting}} {{abbreviation of|en|yarnover}}. <end>
 Page 2076 YO: Found match for regex: <begin> # {{lb|en|knitting}} {{abbreviation of|en|yarnover}}. <end>
 Page 2077 So.: Found match for regex: <begin> # {{abbr of|en|south}}. <end>
@@ -4518,7 +4518,7 @@ Page 2139 RTG: Found match for regex: <begin> # {{lb|en|aviation}} {{abbreviatio
 Page 2140 D&O: Found match for regex: <begin> # {{lb|en|insurance}} {{abbreviation of|en|[[director]]s and [[officer]]s}}. <end>
 Page 2141 impf: Found match for regex: <begin> # {{lb|en|grammar}} {{abbreviation of|en|imperfect}}. <end>
 Page 2141 impf: Found match for regex: <begin> # {{lb|en|grammar}} {{abbreviation of|en|imperfective}}. <end>
-Page 2142 PUE: Found match for regex: <begin> # {{place|en|--=abbr of:Puebla|state|c/Mexico}}. <end>
+Page 2142 PUE: Found match for regex: <begin> # {{place|en|<=abbr of:Puebla|state|c/Mexico}}. <end>
 Page 2143 μC: Found match for regex: <begin> # {{abbreviation of|en|microcontroller}}. <end>
 Page 2144 Unsupported titles/st:a: Found match for regex: <begin> # {{abbreviation of|sv|stora}} <end>
 Page 2145 g:a: Found match for regex: <begin> # {{abbreviation of|sv|gamla}} <end>
@@ -4546,14 +4546,14 @@ Page 2156 Hdt.: Found match for regex: <begin> # {{abbreviation of|de|Herodot,He
 Page 2157 Bio.: Found match for regex: <begin> # {{lb|de|cardinal}} {{abbreviation of|de|Billion,Billionen}} <end>
 Page 2158 supe: Found match for regex: <begin> # {{lb|en|informal}} {{abbreviation of|en|superintendent}}. <end>
 Page 2158 supe: Found match for regex: <begin> # {{lb|en|informal}} {{abbreviation of|en|supervisor}}. <end>
-Page 2159 COL: Found match for regex: <begin> # {{place|en|--=abbr of:Colima|state|c/Mexico}}. <end>
-Page 2159 COL: Found match for regex: <begin> # {{lb|en|sports}} {{place|en|--=abbr of:Colorado|state|c/USA}}. <end>
+Page 2159 COL: Found match for regex: <begin> # {{place|en|<=abbr of:Colima|state|c/Mexico}}. <end>
+Page 2159 COL: Found match for regex: <begin> # {{lb|en|sports}} {{place|en|<=abbr of:Colorado|state|c/USA}}. <end>
 Page 2160 rel: Found match for regex: <begin> # {{lb|en|mathematics}} {{abbreviation of|en|[[relative]] to}}. <end>
 Page 2161 bip: Found match for regex: <begin> # {{label|en|finance}} {{abbreviation of|en|basis point}}. <end>
 Page 2162 CON: Found match for regex: <begin> # {{lb|en|UK politics}} {{abbr of|en|w:Conservative Party (UK)|Conservative Party}}. <end>
 Page 2162 CON: Found match for regex: <begin> # {{lb|la|chiefly|_|money}} {{abbreviation of|la|Constantinopolis}}, [[Constantinople]], [[ancient]] and [[medieval]] [[Istanbul]]. <end>
-Page 2163 GJ: Found match for regex: <begin> # {{place|en|--=abbr of:Gujarat|state|c/India}}. <end>
-Page 2163 GJ: Found match for regex: <begin> # {{place|ro|--=abbr of:Gorj|county|c/Romania}} <end>
+Page 2163 GJ: Found match for regex: <begin> # {{place|en|<=abbr of:Gujarat|state|c/India}}. <end>
+Page 2163 GJ: Found match for regex: <begin> # {{place|ro|<=abbr of:Gorj|county|c/Romania}} <end>
 Page 2164 EJ: Found match for regex: <begin> # {{abbreviation of|en|East Jerusalem}}. <end>
 Page 2165 PJ: Found match for regex: <begin> # {{abbreviation of|en|pajama}}. <end>
 Page 2165 PJ: Found match for regex: <begin> # {{abbreviation of|en|Proto-Japonic}}. <end>
@@ -4646,7 +4646,7 @@ Page 2212 östl.: Found match for regex: <begin> # {{abbreviation of|de|östlich
 Page 2213 nördl.: Found match for regex: <begin> # {{abbreviation of|de|nördlich}} <end>
 Page 2214 südl.: Found match for regex: <begin> # {{abbreviation of|de|südlich}} <end>
 Page 2215 AH: Found match for regex: <begin> # {{lb|en|calendar terms}} {{abbreviation of|en|Anno Hegirae}}: in the [[year]] of the [[Hegira]], [[use]]d for [[date]]s [[using]] the [[Islamic calendar]]. <end>
-Page 2216 NAY: Found match for regex: <begin> # {{place|en|--=abbr of:Nayarit|state|c/Mexico}}. <end>
+Page 2216 NAY: Found match for regex: <begin> # {{place|en|<=abbr of:Nayarit|state|c/Mexico}}. <end>
 Page 2217 kcal: Found match for regex: <begin> # {{abbreviation of|en|kilocalorie}}. <end>
 Page 2218 IgE: Found match for regex: <begin> # {{abbreviation of|en|immunoglobulin E}}. <end>
 Page 2219 ENG: Found match for regex: <begin> # {{label|en|sports}} {{abbreviation of|en|England}}. <end>
@@ -4679,7 +4679,7 @@ Page 2240 CGN: Found match for regex: <begin> # {{lb|nl|linguistics}} {{abbrevia
 Page 2241 BNC: Found match for regex: <begin> # {{lb|en|Internet}} {{abbreviation of|en|bouncer}}. <end>
 Page 2242 Mtl: Found match for regex: <begin> # {{abbreviation of|en|Montreal}}. <end>
 Page 2242 Mtl: Found match for regex: <begin> # {{abbreviation of|fr|Montréal}} <end>
-Page 2243 Sask: Found match for regex: <begin> # {{place|en|--=abbr of:[[Saskatchewan]]|province|c/Canada}}. <end>
+Page 2243 Sask: Found match for regex: <begin> # {{place|en|<=abbr of:[[Saskatchewan]]|province|c/Canada}}. <end>
 Page 2244 Ont.: Found match for regex: <begin> # {{lb|en|legal}} {{abbreviation of|en|Ontario}}. <end>
 Page 2244 Ont.: Found match for regex: <begin> This is the customary abbreviation of this term as used in [[case citation]]s. ''See, e.g.'', ''The Bluebook: A Uniform System of Citation, Nineteenth Edition'' (2010), "Geographical Terms: Australian states and Canadian provinces and territories", Table T10.2, p. 438. <end>
 Page 2245 N.-É.: Found match for regex: <begin> # {{abbreviation of|fr|Nouvelle-Écosse}} (a province in Canada) <end>
@@ -5129,7 +5129,7 @@ Page 2527 TAED: Found match for regex: <begin> # {{lb|en|organic compound}} {{ab
 Page 2528 ksi: Found match for regex: <begin> # {{lb|en|materials science}} {{abbreviation of|en|[[kilopound]] per [[square inch]]}}. <end>
 Page 2529 attr: Found match for regex: <begin> # {{abbreviation of|en|attributive}}. <end>
 Page 2529 attr: Found match for regex: <begin> # {{lb|en|in [[personal ad]]s}} {{abbreviation of|en|attractive}}. <end>
-Page 2530 TAM: Found match for regex: <begin> # {{place|en|--=abbr of:Tamaulipas|state|c/Mexico}}. <end>
+Page 2530 TAM: Found match for regex: <begin> # {{place|en|<=abbr of:Tamaulipas|state|c/Mexico}}. <end>
 Page 2531 f.eks.: Found match for regex: <begin> # {{abbreviation of|da|for eksempel}} [[for example]] <end>
 Page 2532 ANN: Found match for regex: <begin> # {{lb|en|internet}} {{abbreviation of|en|announcement|addl=in e-mail or newsgroup subject lines}}. <end>
 Page 2533 scaRNA: Found match for regex: <begin> # {{lb|en|genetics}} {{abbreviation of|en|{{w|small Cajal body-specific RNA}}}}. <end>
@@ -5557,7 +5557,7 @@ Page 2813 kB/s: Found match for regex: <begin> # {{abbreviation of|en|[[kilobyte
 Page 2814 Hr.: Found match for regex: <begin> # {{abbreviation of|nl|harer||[[her]]}} <end>
 Page 2814 Hr.: Found match for regex: <begin> # {{abbreviation of|de|Herr}} <end>
 Page 2815 Zr.: Found match for regex: <begin> # {{abbreviation of|nl|zijner||[[his]]}} <end>
-Page 2816 GL: Found match for regex: <begin> # {{place|ro|--=abbr of:Galați|county|c/Romania}} <end>
+Page 2816 GL: Found match for regex: <begin> # {{place|ro|<=abbr of:Galați|county|c/Romania}} <end>
 Page 2817 jf.: Found match for regex: <begin> # {{abbreviation of|da|jævnfør|t=compare}}: [[cf.]] <end>
 Page 2817 jf.: Found match for regex: <begin> # {{abbreviation of|nn|jamfør|t=confer}} <end>
 Page 2818 mod.F.: Found match for regex: <begin> # {{lb|en|lexicography}} {{abbreviation of|en|Modern French}}. <end>
@@ -5596,7 +5596,7 @@ Page 2832 t.: Found match for regex: <begin> # {{abbreviation of|vi|tỉnh||prov
 Page 2833 B.Arch.: Found match for regex: <begin> # {{abbreviation of|en|[[bachelor]] of [[architecture]]}}. <end>
 Page 2834 B. Lit.: Found match for regex: <begin> # {{abbreviation of|en|[[bachelor|Bachelor]] of [[literature|Literature]]}}. <end>
 Page 2835 BV: Found match for regex: <begin> # {{abbreviation of|en|blood volume}}. <end>
-Page 2835 BV: Found match for regex: <begin> # {{place|ro|--=abbr of:Brașov|county|c/Romania}} <end>
+Page 2835 BV: Found match for regex: <begin> # {{place|ro|<=abbr of:Brașov|county|c/Romania}} <end>
 Page 2836 ℞: Found match for regex: <begin> {{col3|en|title=abbreviation of words starting with R| <end>
 Page 2836 ℞: Found match for regex: <begin> # {{lb|la|chiefly|_|Medieval Latin}} {{abbreviation of|la|rex}}, [[king]]. <end>
 Page 2836 ℞: Found match for regex: <begin> # {{lb|la|chiefly|_|New Latin|pharmacy}} {{abbreviation of|la|recipe}}, [[take]] {{q|as an imperative}}. <end>
@@ -5678,7 +5678,7 @@ Page 2887 MQ: Found match for regex: <begin> # {{lb|en|uncountable}} {{abbreviat
 Page 2888 SJ: Found match for regex: <begin> # {{label|en|sports}} {{abbreviation of|en|San Jose}} {{gloss|a city in California}}. <end>
 Page 2888 SJ: Found match for regex: <begin> # {{lb|en|Hong Kong|law}} {{abbreviation of|en|{{w|Secretary for Justice (Hong Kong)|Secretary for Justice}}}}. <end>
 Page 2888 SJ: Found match for regex: <begin> # {{label|fr|sports}} {{l|en|SJ|gloss=[[San Jose]]}} {{abbreviation of|fr|San Jose}} {{gloss|a city in California}} <end>
-Page 2888 SJ: Found match for regex: <begin> # {{place|ro|--=abbr of:Sălaj|county|c/Romania}} <end>
+Page 2888 SJ: Found match for regex: <begin> # {{place|ro|<=abbr of:Sălaj|county|c/Romania}} <end>
 Page 2889 Gacrux: Found match for regex: <begin> # {{abbreviation of|en|Gamma Crucis|addl=a [[red giant]] [[star]] approximately 88 [[light-year]]s away in the [[constellation]] of [[Crux]]}}. <end>
 Page 2890 IBMX: Found match for regex: <begin> # {{lb|en|organic compound}} {{abbreviation of|en|isobutylmethylxanthine}}. <end>
 Page 2891 86ed: Found match for regex: <begin> # {{abbreviation of|cy|pedwar ugain ac chweched}}: [[86th]] <end>
@@ -5979,7 +5979,7 @@ Page 3101 JSDK: Found match for regex: <begin> # {{lb|en|software}} {{abbreviati
 Page 3102 JSWDK: Found match for regex: <begin> # {{lb|en|software}} {{abbreviation of|en|[[Java#Proper noun|Java]][[server|Server]] [[World Wide Web|Web]] [[development|Development]] [[kit#Etymology 1|Kit]]}}. <end>
 Page 3103 PFCA: Found match for regex: <begin> # {{lb|en|organic chemistry}} {{abbreviation of|en|[[perfluorinated]] [[carboxylic acid]]}}. <end>
 Page 3104 MIC: Found match for regex: <begin> # {{lb|en|chemistry}} {{abbreviation of|en|[[methylisocyanate]]}}. <end>
-Page 3104 MIC: Found match for regex: <begin> # {{place|en|--=abbr of:Michoacán|state|c/Mexico}}. <end>
+Page 3104 MIC: Found match for regex: <begin> # {{place|en|<=abbr of:Michoacán|state|c/Mexico}}. <end>
 Page 3105 'rithmetic: Found match for regex: <begin> # {{abbreviation of|en|arithmetic}}. <end>
 Page 3106 VLM: Found match for regex: <begin> # {{abbreviation of|en|[[visible light]] [[microscopy]]}}. <end>
 Page 3106 VLM: Found match for regex: <begin> # {{abbreviation of|en|[[visible light]] [[microscope]]}}. <end>
@@ -6044,7 +6044,7 @@ Page 3151 bjo: Found match for regex: <begin> # {{lb|pt|Internet slang|text mess
 Page 3152 exh: Found match for regex: <begin> # {{abbreviation of|en|exhibit}}. <end>
 Page 3152 exh: Found match for regex: <begin> # {{abbreviation of|en|exhibition}}. <end>
 Page 3153 RDP: Found match for regex: <begin> # {{abbreviation of|en|[[ribavirin]] [[diphosphate]]}}. <end>
-Page 3154 PAT: Found match for regex: <begin> # {{lb|en|Quebec}} {{place|en|--=abbr of:{{w|Pointe-aux-Trembles}}|municipality|p/Quebec|c/Canada}}. <end>
+Page 3154 PAT: Found match for regex: <begin> # {{lb|en|Quebec}} {{place|en|<=abbr of:{{w|Pointe-aux-Trembles}}|municipality|p/Quebec|c/Canada}}. <end>
 Page 3155 JeOS: Found match for regex: <begin> # {{lb|en|computing}} {{abbreviation of|en|[[just enough]] [[operating system]]}}: one customised to the needs of a specific application, with other features excluded. <end>
 Page 3156 DIB: Found match for regex: <begin> # {{lb|en|astronomy|spectroscopy}} {{abbreviation of|en|diffuse interstellar band}}. <end>
 Page 3156 DIB: Found match for regex: <begin> # {{lb|en|computing}} {{abbreviation of|en|[[device]]-[[independent]] [[bitmap]]}}. <end>
@@ -6549,7 +6549,7 @@ Page 3489 PIgG: Found match for regex: <begin> # {{lb|en|medicine|biology}} {{ab
 Page 3490 UIgG: Found match for regex: <begin> # {{lb|en|medicine|biology}} {{abbreviation of|en|[[urine]] [[immunoglobulin]] [[G]]}}. <end>
 Page 3491 pIgA: Found match for regex: <begin> # {{lb|en|medicine|biology}} {{abbreviation of|en|[[polyclonal]] [[immunoglobulin]] [[A]]}}. <end>
 Page 3492 PI IgG: Found match for regex: <begin> # {{lb|en|medicine|biology}} {{abbreviation of|en|[[pre-]][[immune]] [[immunoglobulin]] [[G]]}}. <end>
-Page 3493 SHBA: Found match for regex: <begin> # {{place|sq|--=abbr of:Shtete e Bashkuara të Amerikës<eq:United States of America>|country|cont/North America|t=USA}} <end>
+Page 3493 SHBA: Found match for regex: <begin> # {{place|sq|<=abbr of:Shtete e Bashkuara të Amerikës<eq:United States of America>|country|cont/North America|t=USA}} <end>
 Page 3494 CSG: Found match for regex: <begin> # {{lb|en|military|nautical|aviation}} {{abbreviation of|en|carrier strike group}}. <end>
 Page 3494 CSG: Found match for regex: <begin> # {{lb|en|military|nautical|aviation}} {{abbreviation of|en|carrier surface group}}. <end>
 Page 3494 CSG: Found match for regex: <begin> # {{lb|en|military|nautical|aviation}} {{abbreviation of|en|carrier surface assertion group}}. <end>
@@ -8395,7 +8395,7 @@ Page 4569 exx: Found match for regex: <begin> # {{abbreviation of|en|executrix}}
 Page 4570 exrx: Found match for regex: <begin> # {{abbreviation of|en|executrix}}. <end>
 Page 4571 Es.: Found match for regex: <begin> # {{lb|la|Biblical}} {{abbreviation of|la|Ēsāiās}} <end>
 Page 4572 MFPR: Found match for regex: <begin> # {{abbreviation of|en|[[multifetal]] [[pregnancy]] [[reduction]]|addl=the abortion of one or more fetuses in a multifetal pregnancy}}. <end>
-Page 4573 Cabo: Found match for regex: <begin> # {{lb|en|US}} {{place|en|--=abbr of:Cabo San Lucas|resort city|s/Baja California del Sur|c/Mexico}}. <end>
+Page 4573 Cabo: Found match for regex: <begin> # {{lb|en|US}} {{place|en|<=abbr of:Cabo San Lucas|resort city|s/Baja California del Sur|c/Mexico}}. <end>
 Page 4574 מט״ח: Found match for regex: <begin> # {{abbreviation of|he|מַטְבֵּעַ חוּץ|tr=matbéa khuts||[[foreign currency]]}} <end>
 Page 4574 מט״ח: Found match for regex: <begin> # {{abbreviation of|he|[[מרכז]] [[ל־|ל]][[טכנולוגיה]] [[חינוכי|חינוכית]]|tr=merkáz letekhnológia khinukhít||The Center for Educational Technology}} <end>
 Page 4575 KMT: Found match for regex: <begin> # {{lb|en|politics|China|Taiwan}} {{abbreviation of|en|Kuomintang}}. <end>
@@ -8773,7 +8773,7 @@ Page 4837 HAV: Found match for regex: <begin> # {{abbreviation of|en|Hallux Abdu
 Page 4838 HHV: Found match for regex: <begin> # {{abbreviation of|en|human herpesvirus,human herpes virus}}. <end>
 Page 4838 HHV: Found match for regex: <begin> # {{abbreviation of|en|hepatitis H virus}}. <end>
 Page 4839 YSO: Found match for regex: <begin> # {{lb|en|initialism}} {{abbreviation of|en|young stellar object}}. <end>
-Page 4840 PoA: Found match for regex: <begin> # {{place|pt|--=abbr of:Porto Alegre|city|s/Rio Grande do Sul|c/Brazil}} <end>
+Page 4840 PoA: Found match for regex: <begin> # {{place|pt|<=abbr of:Porto Alegre|city|s/Rio Grande do Sul|c/Brazil}} <end>
 Page 4841 mds: Found match for regex: <begin> # {{rfv-sense|en}} {{lb|en|stenoscript}} {{abbreviation of|en|merchandise}} {{ng|and related forms of that word'' ('''[[merchandising]], [[merchandised]], [[merchandiser]],''' ''etc.'')}} <end>
 Page 4841 mds: Found match for regex: <begin> # {{lb|pt|Internet slang|text messaging}} {{abbreviation of|pt|meu Deus||[[oh my God]]}} <end>
 Page 4842 plmds: Found match for regex: <begin> # {{lb|pt|Internet slang|text messaging}} {{abbreviation of|pt|pelo amor de Deus||[[for God's sake]]}} <end>
@@ -9297,7 +9297,7 @@ Page 5265 submm: Found match for regex: <begin> # {{abbreviation of|en|submillim
 Page 5266 MLP:FiM: Found match for regex: <begin> From {{m|en|MLP|pos=abbreviation of ''[[My Little Pony]]''}}. <end>
 Page 5266 MLP:FiM: Found match for regex: <begin> # {{abbreviation of|en|{{w|My Little Pony: Friendship Is Magic}}}}. <end>
 Page 5267 CHA: Found match for regex: <begin> # {{lb|mul|sports}} {{abbrev of|mul|en:Chad}} <end>
-Page 5267 CHA: Found match for regex: <begin> # {{lb|en|sports}} {{place|en|--=abbr of:Charlotte|city|s/North Carolina|c/USA}}. <end>
+Page 5267 CHA: Found match for regex: <begin> # {{lb|en|sports}} {{place|en|<=abbr of:Charlotte|city|s/North Carolina|c/USA}}. <end>
 Page 5268 ISEE: Found match for regex: <begin> # {{lb|en|NASA|space}} {{abbreviation of|en|[[international|International]] [[Sun]] [[Earth]] [[explorer|Explorer]]}} {{gloss|later renamed to International Cometary Explorer [[ICE]]}}. <end>
 Page 5269 NGEO: Found match for regex: <begin> # {{abbreviation of|en|non-geostationary orbit}}. <end>
 Page 5269 NGEO: Found match for regex: <begin> # {{abbreviation of|en|non-geostationary Earth orbit}}. <end>
@@ -9579,8 +9579,8 @@ Page 5493 CGY: Found match for regex: <begin> # {{abbreviation of|en|Calgary}}. 
 Page 5494 Cgy.: Found match for regex: <begin> # {{abbreviation of|en|Calgary}}. <end>
 Page 5495 WPG: Found match for regex: <begin> # {{abbreviation of|en|Winnipeg}}. <end>
 Page 5496 Wpg.: Found match for regex: <begin> # {{abbreviation of|en|Winnipeg}}. <end>
-Page 5497 SYD: Found match for regex: <begin> # {{place|en|--=abbr of:Sydney|city|p/Nova Scotia|c/Canada}}. <end>
-Page 5498 Syd.: Found match for regex: <begin> # {{place|en|--=abbr of:Sydney|city|p/Nova Scotia|c/Canada}}. <end>
+Page 5497 SYD: Found match for regex: <begin> # {{place|en|<=abbr of:Sydney|city|p/Nova Scotia|c/Canada}}. <end>
+Page 5498 Syd.: Found match for regex: <begin> # {{place|en|<=abbr of:Sydney|city|p/Nova Scotia|c/Canada}}. <end>
 Page 5499 14th: Found match for regex: <begin> # {{abbreviation of|en|fourteenth}}. <end>
 Page 5499 14th: Found match for regex: <begin> {{trans-top-also|abbreviation of fourteenth|fourteenth}} <end>
 Page 5500 PWS: Found match for regex: <begin> # {{lb|en|computer security}} {{abbreviation of|en|[[password]] [[stealer]]}}. <end>
@@ -9602,7 +9602,7 @@ Page 5508 RevPAR: Found match for regex: <begin> # {{lb|en|business}} {{abbrevia
 Page 5509 23rd: Found match for regex: <begin> # {{abbreviation of|en|twenty-third}}. <end>
 Page 5509 23rd: Found match for regex: <begin> {{trans-top-also|abbreviation of twenty-third|twenty-third}} <end>
 Page 5510 BDN: Found match for regex: <begin> # {{label|mul|sports}} {{abbreviation of|mul|Brandon}} {{gloss|{{w|lang=en|Brandon, Manitoba, Canada}}}} <end>
-Page 5510 BDN: Found match for regex: <begin> # {{lb|en|sports}} {{place|en|--=abbr of:Brandon|city|p/Manitoba|c/Canada}}. <end>
+Page 5510 BDN: Found match for regex: <begin> # {{lb|en|sports}} {{place|en|<=abbr of:Brandon|city|p/Manitoba|c/Canada}}. <end>
 Page 5510 BDN: Found match for regex: <begin> # {{label|fr|sports}} {{abbreviation of|fr|Brandon}} {{gloss|{{w|lang=fr|Brandon, Manitoba, Canada}}}} <end>
 Page 5511 CAX: Found match for regex: <begin> # {{label|en|medical technology}} {{abbreviation of|en|[[central]] [[axis]]}}. <end>
 Page 5512 non-24: Found match for regex: <begin> # {{label|en|pathology}} {{abbreviation of|en|non-24-hour sleep-wake rhythm disorder}}. <end>
@@ -9812,7 +9812,7 @@ Page 5671 Τ.Θ.: Found match for regex: <begin> # {{abbreviation of|el|ταχυ
 Page 5672 NSH: Found match for regex: <begin> # {{label|en|sports}} {{abbreviation of|en|Nashville}}. <end>
 Page 5673 WSH: Found match for regex: <begin> # {{abbreviation of|en|Washington}}. <end>
 Page 5673 WSH: Found match for regex: <begin> # {{lb|fr|Internet slang|text messaging}} {{abbreviation of|fr|wesh}} <end>
-Page 5674 Wa.: Found match for regex: <begin> # {{label|en|US}} {{place|en|--=abbr of:Washington|state|c/USA}}. <end>
+Page 5674 Wa.: Found match for regex: <begin> # {{label|en|US}} {{place|en|<=abbr of:Washington|state|c/USA}}. <end>
 Page 5675 TEN: Found match for regex: <begin> # {{label|en|sports}} {{abbreviation of|en|Tennessee}}. <end>
 Page 5676 BOS: Found match for regex: <begin> # {{lb|en|sports}} {{abbreviation of|en|Boston}}. <end>
 Page 5677 S.J.: Found match for regex: <begin> # {{lb|en|Roman Catholicism}} {{abbreviation of|en|Society of Jesus}} {{gloss|the [[Jesuits]]}}. <end>
@@ -11157,7 +11157,7 @@ Page 6720 unch.: Found match for regex: <begin> # {{abbreviation of|en|unchanged
 Page 6721 Linc: Found match for regex: <begin> # {{lb|en|after a qualification}} {{abbreviation of|en|[[w:University of Lincoln|University of Lincoln]], used especially following [[post-nominal]] letters indicating status as a graduate}}.<ref>[https://web.archive.org/web/20180820010016/https://www.ox.ac.uk/media/global/wwwoxacuk/localsites/gazette/documents/universitycalendar/Calendar_Style_Guide_2015.pdf Oxford University Calendar Style Guide 2015], page 14.</ref> <end>
 Page 6722 i.z.g.st.: Found match for regex: <begin> # {{abbreviation of|nl||in [[zeer]] [[goede]] [[staat]]|in [[very good]] [[condition]]}} (used commonly in advertisements for [[second hand]] [[goods]]) <end>
 Page 6723 iwie: Found match for regex: <begin> # {{lb|de|Internet slang|texting}} {{abbreviation of|de|irgendwie}} <end>
-Page 6724 פֿש״אַ: Found match for regex: <begin> # {{place|yi|--=abbr of:פֿאַראייניקטע שטאַטן פֿון אַמעריקע<eq:United States of America>|country|cont/North America|t=USA}} <end>
+Page 6724 פֿש״אַ: Found match for regex: <begin> # {{place|yi|<=abbr of:פֿאַראייניקטע שטאַטן פֿון אַמעריקע<eq:United States of America>|country|cont/North America|t=USA}} <end>
 Page 6725 ɔboing: Found match for regex: <begin> # {{abbreviation of|sga|con·boing}} <end>
 Page 6726 in.: Found match for regex: <begin> # {{abbr of|en|inch}}. <end>
 Page 6726 in.: Found match for regex: <begin> # {{abbreviation of|kl|inuusoq||born}} <end>
@@ -12368,9 +12368,9 @@ Page 7715 pIg: Found match for regex: <begin> # {{lb|en|medicine|biology}} {{abb
 Page 7716 V2L: Found match for regex: <begin> # {{lb|en|countable|and|uncountable|automotive|electricity}} {{abbreviation of|en|[[vehicle]]-[[to]]-[[load]]}}. <end>
 Page 7717 San Juan B.: Found match for regex: <begin> # {{abbreviation of|en|San Juan Bautista}}. <end>
 Page 7718 spätmhd.: Found match for regex: <begin> # {{lb|de|relational}} {{abbreviation of|de|spätmittelhochdeutsch||late Middle High German}} <end>
-Page 7719 Sin.: Found match for regex: <begin> # {{place|es|--=abbr of:Sinaloa|state|c/Mexico}} <end>
+Page 7719 Sin.: Found match for regex: <begin> # {{place|es|<=abbr of:Sinaloa|state|c/Mexico}} <end>
 Page 7720 Calz.: Found match for regex: <begin> # {{lb|es|in addresses}} {{abbreviation of|es|calzada|Calzada|t=[[road]]}} <end>
-Page 7721 Wgton.: Found match for regex: <begin> # {{abbreviation of|en|Wellington|t={{place|en|capital city|x/New Zealand}}}}. <end>
+Page 7721 Wgton.: Found match for regex: <begin> # {{place|en|<=abbr of:Wellington|capital city|c/New Zealand}}. <end>
 Page 7722 حزب البعث: Found match for regex: <begin> # {{abbreviation of|ar|حِزْب البَعْث العَرَبِيّ الاِشْتِرَاكِيّ}} <end>
 Page 7723 wnr: Found match for regex: <begin> # {{lb|nl|informal|internet slang}} {{abbreviation of|nl|wanneer}} <end>
 Page 7725 ueV: Found match for regex: <begin> # {{alternative form of|en|μeV}}; {{abbreviation of|en|microelectronvolt}}. <end>
@@ -12407,7 +12407,7 @@ Page 7752 o. O.: Found match for regex: <begin> # {{lb|de|law|finance}} {{abbrev
 Page 7752 o. O.: Found match for regex: <begin> # {{lb|de|in bibliographies}} {{abbreviation of|de|[[ohne]] [[Ort]] / [[ohne]] [[Ortsangabe]]|t=[[n.p.]]; no place given}} <end>
 Page 7753 검스: Found match for regex: <begin> # {{lb|ko|neologism|internet slang}} {{abbreviation of|ko|[[검다|검은]] [[스타킹]]|t=[[black]] [[stocking]]}} <end>
 Page 7754 PAHO: Found match for regex: <begin> # {{abbreviation of|en|[[panamerican|Pan-American]] [[health|Health]] [[organization|Organization]]}}. <end>
-Page 7755 qRD: Found match for regex: <begin> # {{senseid|en|Q1780528}} {{abbreviation of|en|qathet Regional District}}; {{place|en|regional district|seat=Powell River|p/British Columbia|c/Canada}}. <end>
+Page 7755 qRD: Found match for regex: <begin> # {{senseid|en|Q1780528}} {{place|en|<=abbr of:qathet Regional District|regional district|seat=Powell River|p/British Columbia|c/Canada}}. <end>
 Page 7756 LEV: Found match for regex: <begin> # {{lb|en|astronautics}} {{abbreviation of|en|[[lunar]] [[excursion]] [[vehicle]]}}. <end>
 Page 7756 LEV: Found match for regex: <begin> # {{lb|en|automotive}} {{abbreviation of|en|[[low]]-[[emission]]s [[vehicle]]}}. <end>
 Page 7757 OLD: Found match for regex: <begin> # {{lb|en|internet}} {{abbreviation of|en|[[online dating]]}}. <end>
@@ -12542,7 +12542,7 @@ Page 7858 dl.: Found match for regex: <begin> # {{abbreviation of|ca|dilluns}} <
 Page 7859 dc.: Found match for regex: <begin> # {{abbreviation of|ca|dimecres}} <end>
 Page 7860 dj.: Found match for regex: <begin> # {{abbreviation of|ca|dijous}} <end>
 Page 7861 dv.: Found match for regex: <begin> # {{abbreviation of|ca|divendres}} <end>
-Page 7862 GDL: Found match for regex: <begin> # {{place|es|--=abbr of:Guadalajara|capital city|s/Jalisco|c/Mexico}} <end>
+Page 7862 GDL: Found match for regex: <begin> # {{place|es|<=abbr of:Guadalajara|capital city|s/Jalisco|c/Mexico}} <end>
 Page 7863 V2H: Found match for regex: <begin> # {{lb|en|countable|and|uncountable|automotive|power grid}} {{abbreviation of|en|[[vehicle]]-[[to]]-[[home]] technology}}. <end>
 Page 7863 V2H: Found match for regex: <begin> # {{lb|en|countable|automotive|power grid}} {{abbreviation of|en|[[vehicle]]-[[to]]-[[home]] unit}}. <end>
 Page 7864 tmrw: Found match for regex: <begin> # {{lb|en|Internet slang|text messaging}} {{abbreviation of|en|tomorrow}}. <end>
@@ -12651,8 +12651,8 @@ Page 7940 vk: Found match for regex: <begin> # {{abbreviation of|en|votekick}}. 
 Page 7940 vk: Found match for regex: <begin> # {{abbreviation of|fi|viikko||week}} <end>
 Page 7940 vk: Found match for regex: <begin> # {{lb|vi|slang|Internet|text messaging}} {{abbreviation of|vi|[[vợ]]}} <end>
 Page 7941 pvä: Found match for regex: <begin> # {{abbreviation of|fi|päivä||(a) [[day]]}} <end>
-Page 7942 Bklyn: Found match for regex: <begin> # {{abbreviation of|en|Brooklyn|t={{place|en|borough|city/New York City|s/New York|c/USA}}}}. <end>
-Page 7943 Qns: Found match for regex: <begin> # {{abbreviation of|en|Queens|t={{place|en|borough|city/New York City|s/New York|c/USA}}}}. <end>
+Page 7942 Bklyn: Found match for regex: <begin> # {{place|en|<=abbr of:Brooklyn|borough|city/New York City|s/New York|c/USA}}. <end>
+Page 7943 Qns: Found match for regex: <begin> # {{place|en|<=abbr of:Queens|borough|city/New York City|s/New York|c/USA}}}}. <end>
 Page 7944 1der: Found match for regex: <begin> # {{lb|en|Internet slang|leet}} {{abbreviation of|en|wonder}}. <end>
 Page 7944 1der: Found match for regex: <begin> # {{lb|en|Internet slang|leet|transitive|intransitive}} {{abbreviation of|en|wonder}}. <end>
 Page 7945 Guj: Found match for regex: <begin> # {{lb|en|India|journalism}} {{abbreviation of|en|Gujarat}}. <end>
@@ -12720,7 +12720,7 @@ Page 8001 ALMA: Found match for regex: <begin> # {{lb|en|astronomy}} {{abbreviat
 Page 8002 dhr.: Found match for regex: <begin> # {{abbreviation of|nl|de heer}} [[Mr.]] <end>
 Page 8003 mevr.: Found match for regex: <begin> # {{abbreviation of|nl|mevrouw}} [[Mrs.]] <end>
 Page 8004 EURES: Found match for regex: <begin> # {{lb|en|EU}} {{abbreviation of|en|[[European]] [[employment|Employment]] [[service|Services]]}}. <end>
-Page 8005 SKM: Found match for regex: <begin> # {{place|en|--=abbr of:Sikkim|state|c/India}}. <end>
+Page 8005 SKM: Found match for regex: <begin> # {{place|en|<=abbr of:Sikkim|state|c/India}}. <end>
 Page 8006 GBG: Found match for regex: <begin> # {{C|en|Galaxies}} {{lb|en|astronomy}} {{abbreviation of|en|green bean galaxy}}. <end>
 Page 8007 GBM: Found match for regex: <begin> # {{lb|en|medicine}} {{abbreviation of|en|glioblastoma multiforme}}. <end>
 Page 8008 노조원: Found match for regex: <begin> # {{abbreviation of|ko|노동조합원(勞動組合員)|t=[[union]] [[member]] (member of a labour union)}} <end>
@@ -14056,7 +14056,7 @@ Page 9123 ACRA: Found match for regex: <begin> # {{lb|en|Singapore|business}} {{
 Page 9124 PPNA: Found match for regex: <begin> # {{lb|en|archaeology}} {{abbreviation of|en|Pre-Pottery Neolithic A}}. <end>
 Page 9125 ż.: Found match for regex: <begin> # {{lb|pl|chiefly|grammar}} {{abbreviation of|pl|żeński|t=feminine}} <end>
 Page 9126 Int.: Found match for regex: <begin> # {{lb|en|US|obsolete}} {{abbreviation of|en|interstate}}. <end>
-Page 9127 Louis.: Found match for regex: <begin> # {{abbreviation of|en|Louisiana}} {{gloss|{{place|en|state|c/USA|a=a}}}}. <end>
+Page 9127 Louis.: Found match for regex: <begin> # {{place|en|<=abbr of:Louisiana|state|c/USA}}. <end>
 Page 9128 rub.: Found match for regex: <begin> # {{abbreviation of|izh|rublja}} <end>
 Page 9129 PDII: Found match for regex: <begin> # {{abbreviation of|id|Perang Dunia Kedua}} <end>
 Page 9130 DepEd: Found match for regex: <begin> # {{lb|en|Philippines|education}} {{abbreviation of|en|{{w|Department of Education (Philippines)|Department of Education}}}}. <end>
@@ -14426,7 +14426,7 @@ Page 9460 dlc: Found match for regex: <begin> # {{lb|pt|Internet slang|text mess
 Page 9461 ojol: Found match for regex: <begin> # {{abbreviation of|id|[[ojek]] [[online]]||online motorcycle-taxi  }} <end>
 Page 9462 BTPAN: Found match for regex: <begin> # {{lb|en|communication|computers}} {{abbreviation of|en|[[Bluetooth]] [[personal|Personal]] [[area|Area]] [[network|Network]]}}. <end>
 Page 9463 ר״תּ: Found match for regex: <begin> # {{abbreviation of|yi|[[ראָשי־תּיבֿות]]<tr:roshe-teyves>|t=abbreviation}} <end>
-Page 9464 נתב״ג: Found match for regex: <begin> # {{place|he|--=abbr of:[[נְמַל הַתְּעוּפָה]] בֶּן־גּוּרְיוֹן<eq:[[w:Ben Gurion Airport]]>|airport|c/Israel}} <end>
+Page 9464 נתב״ג: Found match for regex: <begin> # {{place|he|<=abbr of:[[נְמַל הַתְּעוּפָה]] בֶּן־גּוּרְיוֹן<eq:[[w:Ben Gurion Airport]]>|airport|c/Israel}} <end>
 Page 9465 plkst.: Found match for regex: <begin> # {{abbreviation of|lv|pulksten}} <end>
 Page 9466 н.: Found match for regex: <begin> # {{abbreviation of|be|[[ніякі́]] [[род]]|t=neuter gender}} <end>
 Page 9467 tte.: Found match for regex: <begin> # {{abbreviation of|es|teniente|t=lieutnant}} <end>
@@ -14464,17 +14464,17 @@ Page 9496 ans: Found match for regex: <begin> # {{abbr of|en|answer}}. <end>
 Page 9497 AP: Found match for regex: <begin> # {{lb|en|uncountable|cooking}} {{abbr of|en|all-purpose flour}}. <end>
 Page 9497 AP: Found match for regex: <begin> # {{lb|en|US|military}} {{abbr of|en|[[auxiliary|Auxiliary]] [[provision|Provisions]]}} {{gloss|a naval transport}}. <end>
 Page 9497 AP: Found match for regex: <begin> ## {{abbr of|en|Andhra Pradesh}}. <end>
-Page 9497 AP: Found match for regex: <begin> ## {{place|en|--=abbr of:Amapá|state|c/Brazil}}. <end>
+Page 9497 AP: Found match for regex: <begin> ## {{place|en|<=abbr of:Amapá|state|c/Brazil}}. <end>
 Page 9497 AP: Found match for regex: <begin> ## {{abbr of|en|Arabian Plate}}. <end>
-Page 9497 AP: Found match for regex: <begin> # {{place|pt|--=abbr of:Amapá|state|c/Brazil}} <end>
-Page 9503 HG: Found match for regex: <begin> # {{place|es|--=abbr of:Hidalgo|state|c/Mexico}} <end>
-Page 9507 YC: Found match for regex: <begin> # {{place|es|--=abbr of:Yucatán|state|c/Mexico}} <end>
+Page 9497 AP: Found match for regex: <begin> # {{place|pt|<=abbr of:Amapá|state|c/Brazil}} <end>
+Page 9503 HG: Found match for regex: <begin> # {{place|es|<=abbr of:Hidalgo|state|c/Mexico}} <end>
+Page 9507 YC: Found match for regex: <begin> # {{place|es|<=abbr of:Yucatán|state|c/Mexico}} <end>
 Page 9508 AR: Found match for regex: <begin> # {{lb|mul|alchemy|archaic}} {{abbr of|mul|la:aqua regia}} <end>
 Page 9508 AR: Found match for regex: <begin> # {{lb|mul|alchemy|archaic}} {{abbr of|mul|la:[[balneum]] [[arena]]e|t=sand bath}} <end>
 Page 9508 AR: Found match for regex: <begin> # {{lb|mul|alchemy|archaic}} {{abbr of|mul|la:[[lapis]] [[armenus]]|t=Armenian stone}} <end>
-Page 9508 AR: Found match for regex: <begin> # {{place|en|--=abbr of:Arunachal Pradesh|state|c/India}}. <end>
-Page 9508 AR: Found match for regex: <begin> # {{place|ro|--=abbr of:Arad|county|c/Romania}} <end>
-Page 9510 MD: Found match for regex: <begin> # {{place|en|--=abbr of:Maryland|state|c/USA}}. <end>
+Page 9508 AR: Found match for regex: <begin> # {{place|en|<=abbr of:Arunachal Pradesh|state|c/India}}. <end>
+Page 9508 AR: Found match for regex: <begin> # {{place|ro|<=abbr of:Arad|county|c/Romania}} <end>
+Page 9510 MD: Found match for regex: <begin> # {{place|en|<=abbr of:Maryland|state|c/USA}}. <end>
 Page 9510 MD: Found match for regex: <begin> # {{lb|en|medicine}} {{abbr of|en|[[medical]] [[device]]}}. <end>
 Page 9510 MD: Found match for regex: <begin> # {{abbr of|en|managing director}}. <end>
 Page 9510 MD: Found match for regex: <begin> # {{abbr of|en|magnetodynamics}}. <end>
@@ -14590,7 +14590,7 @@ Page 9628 Gal: Found match for regex: <begin> # {{abbr of|fr|général|qq=when u
 Page 9630 Inc.: Found match for regex: <begin> # {{lb|fr|Quebec}} {{abbr of|fr|incorporée}}: [[Inc]] <end>
 Page 9631 Jr.: Found match for regex: <begin> # {{abbr of|en|junior|addl=a title used after a son's name when his father has the same name}}. <end>
 Page 9631 Jr.: Found match for regex: <begin> # {{lb|es|Peru}} {{abbr of|es|jirón}} {{gloss|lane}} <end>
-Page 9633 KI: Found match for regex: <begin> # {{place|en|--=abbr of:East Kalimantan|province|c/Indonesia}}. <end>
+Page 9633 KI: Found match for regex: <begin> # {{place|en|<=abbr of:East Kalimantan|province|c/Indonesia}}. <end>
 Page 9636 Mass: Found match for regex: <begin> # {{abbr of|en|[[Massachusetts]]}}. <end>
 Page 9639 Nu: Found match for regex: <begin> # {{abbr of|en|Numbers}} {{gloss|a [[book]] in the Old Testament of the [[Bible]]}}. <end>
 Page 9644 Sem: Found match for regex: <begin> # {{abbr of|en|[[Semitic]]}}. <end>
@@ -14651,7 +14651,7 @@ Page 9692 FRC: Found match for regex: <begin> # {{abbr of|en|[[fibre]]/[[fiber]]
 Page 9693 101: Found match for regex: <begin> # {{lb|tr|colloquial}} {{abbr of|tr|A101}}, a retail company <end>
 Page 9693 101: Found match for regex: <begin> # {{abbr of|tr|okey 101}}, a variant of [[okey]] <end>
 Page 9694 BE: Found match for regex: <begin> # {{abbr of|en|Berlin}}, a federal state of [[Germany]]. <end>
-Page 9694 BE: Found match for regex: <begin> # {{place|en|--=abbr of:Bengkulu|province|c/Indonesia}}. <end>
+Page 9694 BE: Found match for regex: <begin> # {{place|en|<=abbr of:Bengkulu|province|c/Indonesia}}. <end>
 Page 9695 eut: Found match for regex: <begin> # {{lb|ceb|Internet slang|texting}} {{abbr of|ceb|iyot}} <end>
 Page 9695 eut: Found match for regex: <begin> # {{lb|ceb|Internet slang|texting}} {{abbr of|ceb|iyot}} <end>
 Page 9695 eut: Found match for regex: <begin> # {{lb|ilo|Internet slang|texting}} {{abbr of|ilo|iyot}} <end>
@@ -14715,11 +14715,11 @@ Page 9766 kpl: Found match for regex: <begin> # {{abbr of|fi|kappale,kappaletta|
 Page 9767 GW: Found match for regex: <begin> # {{abbr of|en|w:George Washington University}}. <end>
 Page 9767 GW: Found match for regex: <begin> # {{label|en|Japan}} {{abbr of|en|[[Golden Week]]}}. <end>
 Page 9767 GW: Found match for regex: <begin> # {{abbr of|ja|ゴールデンウィーク|tr=[[Golden Week]]}} <end>
-Page 9770 MU: Found match for regex: <begin> # {{place|en|--=abbr of:North Maluku|province|c/Indonesia}}. <end>
+Page 9770 MU: Found match for regex: <begin> # {{place|en|<=abbr of:North Maluku|province|c/Indonesia}}. <end>
 Page 9771 TJ: Found match for regex: <begin> # {{abbr of|en|Tijuana||Mexican city}}. <end>
-Page 9772 GRO: Found match for regex: <begin> # {{place|en|--=abbr of:Guerrero|state|c/Mexico}}. <end>
-Page 9773 NLE: Found match for regex: <begin> # {{place|es|--=abbr of:Nuevo León|state|c/Mexico}} <end>
-Page 9774 JR: Found match for regex: <begin> # {{place|en|--=abbr of:West Java|province|c/Indonesia}}. <end>
+Page 9772 GRO: Found match for regex: <begin> # {{place|en|<=abbr of:Guerrero|state|c/Mexico}}. <end>
+Page 9773 NLE: Found match for regex: <begin> # {{place|es|<=abbr of:Nuevo León|state|c/Mexico}} <end>
+Page 9774 JR: Found match for regex: <begin> # {{place|en|<=abbr of:West Java|province|c/Indonesia}}. <end>
 Page 9777 mi.: Found match for regex: <begin> # {{abbr of|en|[[mile]]}}. <end>
 Page 9777 mi.: Found match for regex: <begin> {{trans-top|abbreviation of mile}} <end>
 Page 9779 l8: Found match for regex: <begin> # {{lb|en|Internet slang|text messaging}} {{abbr of|en|[[late]]}}. <end>
@@ -14771,7 +14771,7 @@ Page 9835 N.D. Cal.: Found match for regex: <begin> # {{lb|en|legal}} {{abbr of|
 Page 9836 E.D. Cal.: Found match for regex: <begin> # {{lb|en|legal}} {{abbr of|en|[[w:United States District Court for the Eastern District of California|United States District Court for the Eastern District of California]]|addl=as used in [[case citation]]s}}. <end>
 Page 9837 C.D. Cal.: Found match for regex: <begin> # {{lb|en|legal}} {{abbr of|en|[[w:United States District Court for the Central District of California|United States District Court for the Central District of California]]|addl=as used in [[case citation]]s}}. <end>
 Page 9838 S.D. Cal.: Found match for regex: <begin> # {{lb|en|legal}} {{abbr of|en|[[w:United States District Court for the Southern District of California|United States District Court for the Southern District of California]]|addl=as used in [[case citation]]s}}. <end>
-Page 9839 DUR: Found match for regex: <begin> # {{place|en|--=abbr of:Durango|state|c/Mexico}}. <end>
+Page 9839 DUR: Found match for regex: <begin> # {{place|en|<=abbr of:Durango|state|c/Mexico}}. <end>
 Page 9840 N.D. Ga.: Found match for regex: <begin> # {{lb|en|legal}} {{abbr of|en|[[w:United States District Court for the Northern District of Georgia|United States District Court for the Northern District of Georgia]]|addl=as used in [[case citation]]s}}. <end>
 Page 9841 S.D. Ga.: Found match for regex: <begin> # {{lb|en|legal}} {{abbr of|en|[[w:United States District Court for the Southern District of Georgia|United States District Court for the Southern District of Georgia]]|addl=as used in [[case citation]]s}}. <end>
 Page 9842 M.D. Ga.: Found match for regex: <begin> # {{lb|en|legal}} {{abbr of|en|[[w:United States District Court for the Middle District of Georgia|United States District Court for the Middle District of Georgia]]|addl=as used in [[case citation]]s}}. <end>
@@ -14947,7 +14947,7 @@ Page 10021 fb: Found match for regex: <begin> # {{lb|en|Internet slang}} {{abbr 
 Page 10021 fb: Found match for regex: <begin> # {{lb|tr|Internet slang}} {{abbr of|tr|fuckbuddy}} <end>
 Page 10022 Meck-Pomm: Found match for regex: <begin> # {{lb|de|informal}} {{abbr of|de|Mecklenburg-Vorpommern}} <end>
 Page 10023 bida: Found match for regex: <begin> # {{lb|tr|text messaging}} {{abbr of|tr|bir daha}} <end>
-Page 10024 Zac: Found match for regex: <begin> # {{abbr of|es|[[Zacatecas]]}}, {{place|es|state|c/Mexico}} <end>
+Page 10024 Zac: Found match for regex: <begin> # {{place|es|<=abbr of:Zacatecas|state|c/Mexico}} <end>
 Page 10025 nk.: Found match for regex: <begin> # {{abbr of|en|neck}}. <end>
 Page 10026 vpk: Found match for regex: <begin> # {{abbr of|fi|vapaapalokunta||volunteer fire department}} <end>
 Page 10027 synt.: Found match for regex: <begin> # {{abbr of|fi|syntynyt||born, indicating birthdate}} <end>
@@ -15039,7 +15039,7 @@ Page 10136 halis: Found match for regex: <begin> # {{lb|tr|chiefly||internet}} {
 Page 10137 Ix: Found match for regex: <begin> # {{lb|en|medicine}} {{abbr of|en|investigation}}. <end>
 Page 10138 Sx: Found match for regex: <begin> # {{lb|en|medicine}} {{abbr of|en|surgery}}. <end>
 Page 10138 Sx: Found match for regex: <begin> # {{lb|en|medicine}} {{abbr of|en|[[symptom]](s)}}. <end>
-Page 10139 Tx: Found match for regex: <begin> # {{abbr of|en|Texas|t={{place|en|state|c/US|a=a}}}}. <end>
+Page 10139 Tx: Found match for regex: <begin> # {{place|en|<=abbr of:Texas|state|c/US}}. <end>
 Page 10139 Tx: Found match for regex: <begin> # {{lb|en|countable|uncountable|medicine}} {{abbr of|en|treatment,therapy}}. <end>
 Page 10139 Tx: Found match for regex: <begin> # {{lb|en|uncountable|electronics|telecommunications}} {{abbr of|en|transmission}}. <end>
 Page 10140 Cx: Found match for regex: <begin> # {{lb|en|medicine}} {{abbr of|en|culture}}. <end>
@@ -16193,8 +16193,8 @@ Page 11208 hll: Found match for regex: <begin> # {{lb|tr|text messaging}} {{abbr
 Page 11209 PHT: Found match for regex: <begin> # {{abbr of|en|Philippine Standard Time}}. <end>
 Page 11210 x-plat: Found match for regex: <begin> # {{lb|en|computing}} {{abbr of|en|cross-platform}}. <end>
 Page 11211 RobMan: Found match for regex: <begin> # {{abbr of|tl|w:Robinsons Place Manila}} <end>
-Page 11212 UMall: Found match for regex: <begin> # {{abbr of|en|[[university|University]] [[mall|Mall]]}} {{gl|{{place|en|mall|district/Malate|city/Manila|c/Philippines}}}}. <end>
-Page 11212 UMall: Found match for regex: <begin> # {{abbr of|tl|en:[[university|University]] [[mall|Mall]]}} {{gl|{{place|tl|mall|district/Malate|city/Manila|c/Philippines}}}} <end>
+Page 11212 UMall: Found match for regex: <begin> # {{place|en|<=abbr of:[[university|University]] [[mall|Mall]]|mall|district/Malate|city/Manila|c/Philippines}}. <end>
+Page 11212 UMall: Found match for regex: <begin> # {{place|tl|<=abbr of:en:[[university|University]] [[mall|Mall]]|mall|district/Malate|city/Manila|c/Philippines}} <end>
 Page 11213 gim.: Found match for regex: <begin> # {{abbr of|lt|gimęs|t=born (on)}} <end>
 Page 11214 val.: Found match for regex: <begin> # {{abbr of|lt|valanda|t=hour}} <end>
 Page 11215 BAWADI: Found match for regex: <begin> # {{lbl|en|Philippines|chiefly|Baguio|colloquial}} {{abbr of|en|[[Baguio]] [[water|Water]] [[district|District]]}} . <end>
@@ -16578,9 +16578,9 @@ Page 11570 jurisprud.: Found match for regex: <begin> # {{abbr of|en|jurispruden
 Page 11571 CMSgt: Found match for regex: <begin> # {{abbr of|en|chief master sergeant}}. <end>
 Page 11572 Bnss.: Found match for regex: <begin> # {{abbr of|en|baroness}}. <end>
 Page 11573 UKERNA: Found match for regex: <begin> # {{lb|en|historical}} {{abbr of|en|[[United Kingdom]] {{U|education}} and {{U|research}} {{U|networking}} {{U|association}}}}. <end>
-Page 11574 A'bad: Found match for regex: <begin> # {{place|en|--=abbr of:Ahmedabad|city|s/Gujarat|c/India}}. <end>
+Page 11574 A'bad: Found match for regex: <begin> # {{place|en|<=abbr of:Ahmedabad|city|s/Gujarat|c/India}}. <end>
 Page 11575 Patk.: Found match for regex: <begin> # {{abbr of|en|Patrick}}. <end>
-Page 11576 H'bad: Found match for regex: <begin> # {{place|en|--=abbr of:Hyderabad|city|s/Telangana|c/India}}. <end>
+Page 11576 H'bad: Found match for regex: <begin> # {{place|en|<=abbr of:Hyderabad|city|s/Telangana|c/India}}. <end>
 Page 11576 H'bad: Found match for regex: <begin> #* {{quote-book|en|year=2006|title=Headline Writing|author=Sunil Saxena|publisher={{w|Sage Publishing|Sage Publications India Pvt Ltd}}|ISBN=81-7829-564-4|pageurl=https://books.google.co.in/books?id=7MqGahiFQScC&pg=PA179|page=179|text=[An] unfortunate development in Indian newspapers is the abbreviation of the names of cities and states to meet headline requirements. Thus, ‘[[Maharashtra]]’ has become ‘[[M'rashtra|M’rashtra]]’ and ‘Hyderabad’ has become ‘'''H’bad'''’. A good headline writer must avoid [[short cut]]s in writing headlines.}} <end>
 Page 11577 M'rashtra: Found match for regex: <begin> # {{abbr of|en|Maharashtra}}. <end>
 Page 11577 M'rashtra: Found match for regex: <begin> #* {{quote-book|en|year=2006|title=Headline Writing|author=Sunil Saxena|publisher=Sage Publications India Pvt Ltd|ISBN=81-7829-564-4|pageurl=https://books.google.co.in/books?id=7MqGahiFQScC&pg=PA179|page=179|text=[An] unfortunate development in Indian newspapers is the abbreviation of the names of cities and states to meet headline requirements. Thus, ‘Maharashtra’ has become ‘'''M’rashtra'''’ and ‘[[Hyderabad]]’ has become ‘[[H'bad]]’. A good headline writer must avoid [[short cut]]s in writing headlines.}} <end>

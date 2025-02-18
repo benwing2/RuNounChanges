@@ -818,7 +818,7 @@ Page 611 aksioma: Found match for regex: <begin> # {{lb|id|education}} {{acronym
 Page 612 INFORSE: Found match for regex: <begin> # {{acronym of|en|{{U|international}} {{U|network}} For {{U|sustainable}} {{U|energy}}}}. <end>
 Page 613 NORAD: Found match for regex: <begin> # {{acronym of|en|{{w|North American Aerospace Defense Command}}}}. <end>
 Page 613 NORAD: Found match for regex: <begin> # {{acronym of|en|{{w|Norwegian Agency for Development Cooperation}}}}. <end>
-Page 614 Usa: Found match for regex: <begin> # {{place|io|ann=acronym of:Unionita Stati di Amerika<t:United States of America>|country|cont/North America|t=USA}} <end>
+Page 614 Usa: Found match for regex: <begin> # {{place|io|<=acronym of:Unionita Stati di Amerika<t:United States of America>|country|cont/North America|t=USA}} <end>
 Page 615 LIRG: Found match for regex: <begin> # {{lb|en|galaxy}} {{acronym of|en|[[luminous]] [[infra-red]] [[galaxy]]}}. <end>
 Page 616 ULIRG: Found match for regex: <begin> # {{lb|en|galaxy}} {{acronym of|en|[[ultra]]-[[luminous]] [[infra-red]] [[galaxy]]}}. <end>
 Page 617 ruko: Found match for regex: <begin> # {{lb|id|architecture|real estate}} {{acronym of|id|rumah toko|t=[[shophouse]]}} <end>
@@ -968,7 +968,7 @@ Page 717 ΜΕΘ: Found match for regex: <begin> # {{acronym of|el|[[μονάδα
 Page 718 germas: Found match for regex: <begin> # {{lb|id|healthcare}} {{acronym of|id|gerakan masyarakat hidup sehat|t=}} <end>
 Page 719 MTSO: Found match for regex: <begin> # {{lb|en|telecommunications}} {{acronym of|en|{{w|Mobile Telephone Switching Office}}}}. <end>
 Page 720 სსრკ: Found match for regex: <begin> # {{acronym of|ka|საბჭოთა სოციალისტური რესპუბლიკების კავშირი}}: [[USSR]] <end>
-Page 721 SUA: Found match for regex: <begin> # {{place|ro|ann=acronym of:Statele Unite ale Americii<t:United States of America>|country|cont/North America|t=USA}} <end>
+Page 721 SUA: Found match for regex: <begin> # {{place|ro|<=acronym of:Statele Unite ale Americii<t:United States of America>|country|cont/North America|t=USA}} <end>
 Page 722 TRIS: Found match for regex: <begin> # {{lb|en|US}} {{acronym of|en|{{w|TRIS online|Transportation Research Information Services}}}}. <end>
 Page 723 SOCOM: Found match for regex: <begin> # {{lb|en|military}} {{acronym of|en|[[special operations|Special Operations]] [[command|Command]]}}. <end>
 Page 724 EKIS: Found match for regex: <begin> # {{lb|de|Austria}} {{acronym of|de|[[elektronisch|Elektronisches]] [[kriminalpolizeilich|Kriminalpolizeiliches]] [[Informationssystem]]}}; the [[Austria]]n [[internet]] [[surveillance]] [[system]] <end>
@@ -1158,8 +1158,8 @@ Page 869 NAP: Found match for regex: <begin> # {{acronym of|en|non-aggression pr
 Page 869 NAP: Found match for regex: <begin> # {{acronym of|en|non-aggression pact}}. <end>
 Page 869 NAP: Found match for regex: <begin> # {{acronym of|nl|Nieuw Amsterdams Peil}} <end>
 Page 870 KGV: Found match for regex: <begin> # {{acronym of|en|[[king|King]] [[George]] [[V]]}}. <end>
-Page 871 SoMa: Found match for regex: <begin> # {{place|en|ann=acronym of:South of Market|neighborhood|city/San Francisco|s/California|c/USA}}. <end>
-Page 871 SoMa: Found match for regex: <begin> # {{place|en|ann=acronym of:South Main|neighbourhood|city/Vancouver|s/British Columbia|c/Canada}}. <end>
+Page 871 SoMa: Found match for regex: <begin> # {{place|en|<=acronym of:South of Market|neighborhood|city/San Francisco|s/California|c/USA}}. <end>
+Page 871 SoMa: Found match for regex: <begin> # {{place|en|<=acronym of:South Main|neighbourhood|city/Vancouver|s/British Columbia|c/Canada}}. <end>
 Page 872 Ofsted: Found match for regex: <begin> # {{acronym of|en|{{w|Office for Standards in Education, Children's Services and Skills}}}}: the non-ministerial government department of His Majesty's Chief Inspector of Schools In England ([[HMCI]]). <end>
 Page 873 wff: Found match for regex: <begin> # {{acronym of|en|well-formed formula}}. <end>
 Page 874 CAMP: Found match for regex: <begin> # {{acronym of|en|[[w:Central Atlantic magmatic province|Central Atlantic magmatic province]]}}. <end>
