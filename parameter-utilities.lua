@@ -692,7 +692,7 @@ function export.generate_obj_maybe_parsing_lang_prefix(data)
 			termobj.alt = data.special_continuations[term]
 			termobj.is_continuation = true
 			termobj.lang = require(languages_module).getByCode("en")
-			return
+			return termobj
 		end
 	end
 
@@ -720,6 +720,7 @@ function export.generate_obj_maybe_parsing_lang_prefix(data)
 	else
 		termobj[term_dest] = term ~= "" and term or nil
 	end
+	termobj.lang = termobj.lang or data.default_lang
 	return termobj
 end
 
