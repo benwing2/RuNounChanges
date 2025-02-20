@@ -109,6 +109,9 @@ Page 1435 maiestas: Found match for regex: <begin> # {{lb|la|law}} {{short for|l
 Page 1486 安全保障理事会: Found match for regex: <begin> # {{short for|ja|国際連合安全保障理事会<tr:Kokusai Rengō Anzen Hoshō Rijikai><t:[[United Nations Security Council]]>,国連安全保障理事会<tr:Kokuren Anzen Hoshō Rijikai><t:[[UN Security Council]]>|sort=あんぜんほしょうりじかい}}: the [[Security Council]] <end>
 Page 347 金: Found match for regex: <begin> # {{lb|ja|colloquial}} {{short for|ja|金物<tr:kanamono>,金具<tr:kanagu>}}: [[metal]] [[fittings]] <end>
 Page 1751 五輪: Found match for regex: <begin> ## {{short for|ja|五輪塔<tr:gorintō>,五輪卒塔婆<tr:gorin sotoba>|t=a [[five]]-[[ringed]] [[pagoda]]}} <end>
+Page 1237 đi: Found match for regex: <begin> # {{lb|vi|euphemism}} {{short for|vi|đi [[ỉa]]<t:to shit>,đi ngoài<t:to defecate>}} <end>
+Page 1239 skuter: Found match for regex: <begin> # {{short for|nn|snøskuter,vasskuter,etc.}} <end>
+Page 2920 ⳥: Found match for regex: <begin> # {{short for|cop|ⲙⲁⲣⲧⲩⲣⲓⲁ,ⲙⲁⲣⲧⲏⲣⲓⲁ,ⲙⲁⲣⲧⲩⲣⲟⲥ<l:Bohairic>|t=martyr(s)}} <end>
 
 ellipsis of
 
@@ -122,6 +125,9 @@ Page 407 tap: Found match for regex: <begin> ## {{lb|en|Britain}} {{ellisps of|e
 Page 437 sacrifice: Found match for regex: <begin> ## {{lb|en|baseball}} {{ellipsis of|en|sacrifice bunt,sacrifice hit|t=a play in which the batter intentionally hits the ball softly with a hands-spread batting stance at the cost of an out to advance one or more [[runner]]s}}. <end>
 Page 445 public: Found match for regex: <begin> ## {{lb|en|informal}} {{ellipsis of|en|public house,public bar<l:dated>|t=an inn, a pub: the more basic bar in a public house, as contrasted with the lounge bar or [[saloon]] bar which has more comfortable seats, personalized service, etc.}}. <end>
 Page 230 ABM: Found match for regex: <begin> # {{ellipsis of|en|{{w|ABM Treaty}},{{w|Anti-Ballistic Missile Treaty}}}}. <end>
+Page 676 cooler: Found match for regex: <begin> # {{lb|en|India|countable}} {{ellipsis of|en|air cooler,evaporative cooler,desert cooler,swamp cooler}}. <end>
+Page 884 ledger: Found match for regex: <begin> # {{lb|en|fishing}} {{ellipsis of|en|ledger bait<t:fishing bait attached to a floating line fastened to the bank of a pond, stream, etc.>,ledger line<t:fishing line used with ledger bait for [[bottom fishing]]; [[ligger]]>}}. <end>
+
 
 syllabic acronym of
 
@@ -160,4 +166,23 @@ Page 862 waint: Found match for regex: <begin> # {{lb|en|Yorkshire|Lancashire}} 
 superseded spelling of
 
 Page 117 doze: Found match for regex: <begin> # {{superseded spelling of|an|doce,dotze}} <end>
+
+given name
+
+Page 1739 Kel: Found match for regex: <begin> # {{given name|en|female|<=clip of:Kelly}}. <end>
+Page 1739 Kel: Found match for regex: <begin> # {{given name|en|male|<=clip of:Kellan}}. <end>
+
+tcl
+
+Page 2064 Teng: Found match for regex: <begin> # {{tcl|en|<ellip of:Teng County;;fmr of:Tengzhou|id=Q1207076}}. <end>
+Page 2066 Resto: Found match for regex: <begin> # {{lb|en|colloquial}} {{tcl|en|<clip of:Restoration Island|id=Q21905136}}. <end>
+Page 2597 Southend: Found match for regex: <begin> ## {{tcl|en|<ellip of:Southend-on-Sea|id=Q203995,Q21487155}}. <end>
+Page 2662 Peel Region: Found match for regex: <begin> # {{tcl|en|<ellip of:[[Peel|Regional Municipality of Peel]]|id=Q50811}}. <end>
+Page 3301 Cavalaire: Found match for regex: <begin> # {{tcl|en|<ellipsis of:Cavalaire-sur-Mer|id=Q475816}}. <end>
+Page 3301 Cavalaire: Found match for regex: <begin> # {{tcl|fr|Cavalaire-sur-Mer|<=ellipsis of:Cavalaire-sur-Mer|id=Q475816}} <end>
+
+place
+
+Page 2260 Semmering: Found match for regex: <begin> # {{place|en|<=ellip of:{{w|Semmering Pass}}|mountain pass|between|s/Lower Austria,s/Styria|c/Austria}}. <end>
+Page 2260 Semmering: Found match for regex: <begin> # {{place|de|<=ellip of:{{w|lang=de|Semmering-Pass}}|mountain pass|between|s/Lower Austria,s/Styria|c/Austria}} <end>
 
