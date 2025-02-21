@@ -127,6 +127,7 @@ Page 445 public: Found match for regex: <begin> ## {{lb|en|informal}} {{ellipsis
 Page 230 ABM: Found match for regex: <begin> # {{ellipsis of|en|{{w|ABM Treaty}},{{w|Anti-Ballistic Missile Treaty}}}}. <end>
 Page 676 cooler: Found match for regex: <begin> # {{lb|en|India|countable}} {{ellipsis of|en|air cooler,evaporative cooler,desert cooler,swamp cooler}}. <end>
 Page 884 ledger: Found match for regex: <begin> # {{lb|en|fishing}} {{ellipsis of|en|ledger bait<t:fishing bait attached to a floating line fastened to the bank of a pond, stream, etc.>,ledger line<t:fishing line used with ledger bait for [[bottom fishing]]; [[ligger]]>}}. <end>
+Page 4080 Llanarmon: Found match for regex: <begin> # {{ellipsis of|en|Llanarmon Dyffryn Ceiriog,Llanarmon DC,Llanarmon-yn-Ial}}. <end>
 
 
 syllabic acronym of
