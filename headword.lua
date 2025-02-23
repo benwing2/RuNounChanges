@@ -7,6 +7,7 @@ local gender_and_number_module = "Module:gender and number"
 local headword_data_module = "Module:headword/data"
 local headword_page_module = "Module:headword/page"
 local links_module = "Module:links"
+local load_module = "Module:load"
 local pages_module = "Module:pages"
 local palindromes_module = "Module:palindromes"
 local pron_qualifier_module = "Module:pron qualifier"
@@ -21,7 +22,6 @@ local utilities_module = "Module:utilities"
 local concat = table.concat
 local insert = table.insert
 local ipairs = ipairs
-local load_data = mw.loadData
 local max = math.max
 local new_title = mw.title.new
 local pairs = pairs
@@ -96,6 +96,11 @@ Loaders for functions in other modules, which overwrite themselves with the targ
 		return language_link(...)
 	end
 
+	local function load_data(...)
+		load_data = require(load_module).load_data
+		return load_data(...)
+	end
+
 	local function pattern_escape(...)
 		pattern_escape = require(string_utilities_module).pattern_escape
 		return pattern_escape(...)
@@ -116,9 +121,9 @@ Loaders for functions in other modules, which overwrite themselves with the targ
 		return remove_links(...)
 	end
 
-	local function shallowcopy(...)
-		shallowcopy = require(table_module).shallowcopy
-		return shallowcopy(...)
+	local function shallow_copy(...)
+		shallow_copy = require(table_module).shallowCopy
+		return shallow_copy(...)
 	end
 
 	local function tag_text(...)
@@ -246,7 +251,7 @@ local function format_term_with_qualifiers_and_refs(lang, part, formatted, j)
 	end
 
 	if part_non_empty("q") or part_non_empty("qq") or part_non_empty("l") or
-		part_non_empty("ll") or part_non_empty("ref") then
+		part_non_empty("ll") or part_non_empty("refs") then
 		formatted = format_pron_qualifiers {
 			lang = lang,
 			text = formatted,
@@ -735,6 +740,9 @@ do
 		end
 		if get_current_L2() ~= canonical then
 			insert(lang_cats, canonical .. " entries with incorrect language header")
+			-- [[Special:WhatLinksHere/Wiktionary:Tracking/headword/incorrect language header]]
+			-- [[Special:WhatLinksHere/Wiktionary:Tracking/headword/incorrect language header/LANGCODE]]
+			track("incorrect language header", lang)
 		end
 	end
 end
@@ -747,7 +755,7 @@ See [[#Further explanations for full_headword()]]
 ]==]
 function export.full_headword(data)
 	-- Prevent data from being destructively modified.
-	local data = shallowcopy(data)
+	local data = shallow_copy(data)
 
 	------------ 1. Basic checks for old-style (multi-arg) calling convention. ------------
 
