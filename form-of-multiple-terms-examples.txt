@@ -128,6 +128,8 @@ Page 230 ABM: Found match for regex: <begin> # {{ellipsis of|en|{{w|ABM Treaty}}
 Page 676 cooler: Found match for regex: <begin> # {{lb|en|India|countable}} {{ellipsis of|en|air cooler,evaporative cooler,desert cooler,swamp cooler}}. <end>
 Page 884 ledger: Found match for regex: <begin> # {{lb|en|fishing}} {{ellipsis of|en|ledger bait<t:fishing bait attached to a floating line fastened to the bank of a pond, stream, etc.>,ledger line<t:fishing line used with ledger bait for [[bottom fishing]]; [[ligger]]>}}. <end>
 Page 4080 Llanarmon: Found match for regex: <begin> # {{ellipsis of|en|Llanarmon Dyffryn Ceiriog,Llanarmon DC,Llanarmon-yn-Ial}}. <end>
+Page 1442 sắc: Found match for regex: <begin> # {{lb|vi|archaic}} {{ellipsis of|vi|sắc đẹp,nhan sắc||[[womanly]] [[beauty]]}} <end>
+Page 1486 安全保障理事会: Found match for regex: <begin> # {{ellipsis of|ja|国際連合安全保障理事会<tr:Kokusai Rengō Anzen Hoshō Rijikai><t:[[United Nations Security Council]]>,国連安全保障理事会<tr:Kokuren Anzen Hoshō Rijikai><t:[[UN Security Council]]>|sort=あんぜんほしょうりじかい}}: the [[Security Council]] <end>
 
 
 syllabic acronym of
@@ -181,9 +183,14 @@ Page 2597 Southend: Found match for regex: <begin> ## {{tcl|en|<ellip of:Southen
 Page 2662 Peel Region: Found match for regex: <begin> # {{tcl|en|<ellip of:[[Peel|Regional Municipality of Peel]]|id=Q50811}}. <end>
 Page 3301 Cavalaire: Found match for regex: <begin> # {{tcl|en|<ellipsis of:Cavalaire-sur-Mer|id=Q475816}}. <end>
 Page 3301 Cavalaire: Found match for regex: <begin> # {{tcl|fr|Cavalaire-sur-Mer|<=ellipsis of:Cavalaire-sur-Mer|id=Q475816}} <end>
+Page 3236 'Sconset: Found match for regex: <begin> # {{tcl|en|<aphetic form of:Siasconset|id=Q7506866}}. <end>
 
 place
 
 Page 2260 Semmering: Found match for regex: <begin> # {{place|en|<=ellip of:{{w|Semmering Pass}}|mountain pass|between|s/Lower Austria,s/Styria|c/Austria}}. <end>
 Page 2260 Semmering: Found match for regex: <begin> # {{place|de|<=ellip of:{{w|lang=de|Semmering-Pass}}|mountain pass|between|s/Lower Austria,s/Styria|c/Austria}} <end>
+
+syllabic abbreviation of
+
+Page 1983 安保: Found match for regex: <begin> # {{sylabbr of|ja|日本国とアメリカ合衆国との間の相互協力及び安全保障条約|<tr:Nihonkoku to Amerika Gasshūkoku to no Aida no Sōgō Kyōryoku Oyobi Anzen Hoshō Jōyaku>,日米安全保障条約<tr:Nichibei Anzen Hoshō Jōyaku>||{{w|Treaty of Mutual Cooperation and Security between the United States and Japan}}|sort=あんぽ}}; {{ellipsis of|ja|安保条約|tr=Anpo Jōyaku|sort=あんぽ}} <end>
 
