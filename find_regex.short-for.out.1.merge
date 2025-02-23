@@ -53,7 +53,7 @@ Page 36 el: Found match for regex: <begin> # short form of {{m|nn|elektrisitet}}
 Page 36 el: Found match for regex: <begin> # {{lb|sv|school slang}} {{short for|sv|el- och energiprogrammet}} <end>
 Page 37 genitive: Found match for regex: <begin> The {{glossary|noun}} is derived from Late {{inh|en|enm|genetif|t=genitive case}},<ref name="MED"/> from the adjective (see above). Compare {{cog|frm|genitif}} (modern {{cog|fr|génitif}}) and {{cog|la|genetīvus}} (short for {{m|la|[[genetīvus]] [[cāsus]]|t=genitive case}}).<ref name="OED"/> <end>
 Page 37 genitive: Found match for regex: <begin> # {{lb|en|countable|uncountable}} {{ellipsis of|en|genitive case|t=a [[grammatical case]] used to express a [[relationship]] of [[origin]] or [[possession]]}}. <end>
-Page 37 genitive: Found match for regex: <begin> {{trans-see|''short for'' genitive case|genitive case}} <end>
+Page 37 genitive: Found match for regex: <begin> {{trans-see|''ellipsis of'' genitive case|genitive case}} <end>
 Page 38 article: Found match for regex: <begin> # {{ellipsis of|en|genuine article}}. {{rfex|en}} <end>
 Page 39 Korea: Found match for regex: <begin> ## {{ellipsis of|en||the [[Republic of Korea]]}} ([[South Korea]]). <end>
 Page 39 Korea: Found match for regex: <begin> ## {{lb|en|recently less common}} {{ellipsis of|en|the [[Democratic People's Republic of Korea]]}} ([[North Korea]]). <end>
@@ -70,7 +70,7 @@ Page 45 pen: Found match for regex: <begin> * Spanish: {{tt+|es|pluma|f}} {{q|no
 Page 46 tower: Found match for regex: <begin> # {{lb|en|informal}} {{ellipsis of|en|interlocking tower}}. <end>
 Page 47 DC: Found match for regex: <begin> # {{lb|zh|Hong Kong|Taiwan}} {{short for|zh|en:Discord}} <end>
 Page 48 ES: Found match for regex: <begin> # {{short for|ja|エントリーシート|tr=entorī shīto|t=[[application form]]}} <end>
-Page 49 PB: Found match for regex: <begin> # {{lb|de|Internet slang}} {{short for|de|Profilbild}} <end>
+Page 49 PB: Found match for regex: <begin> # {{lb|de|Internet slang}} {{init of|de|Profilbild}} <end>
 Page 50 SC: Found match for regex: <begin> # {{init of|en|supercentenarian}}. <end>
 Page 51 BS: Found match for regex: <begin> # {{short for|ja|BS放送}} ([[broadcasting]] [[satellite]] broadcast) <end>
 Page 52 song: Found match for regex: <begin> # {{short for|vi|chấn song||[[upright]] [[post]] in a [[paling]] or [[railing]]}} <end>
@@ -126,7 +126,7 @@ Page 86 card: Found match for regex: <begin> # {{lb|en|nautical}} {{ellipsis of|
 Page 87 bubble: Found match for regex: <begin> # {{ellipsis of|en|travel bubble}}. <end>
 Page 88 ring: Found match for regex: <begin> # {{lb|en|internet}} {{ellipsis of|en|webring}}. <end>
 Page 89 freight: Found match for regex: <begin> # {{lb|en|countable|originally|US|rail transport}} {{ellipsis of|en|freight train}}. <end>
-Page 89 freight: Found match for regex: <begin> {{trans-see|''short for'' freight train|freight train}} <end>
+Page 89 freight: Found match for regex: <begin> {{trans-see|''ellipsis of'' freight train|freight train}} <end>
 Page 90 sit: Found match for regex: <begin> # {{lb|en|informal}} {{clip of|en|situation}}. <end>
 Page 92 box: Found match for regex: <begin> ## {{ellipsis of|en|horsebox||container for transporting horses}}. <end>
 Page 92 box: Found match for regex: <begin> ## {{lb|en|automotive}} {{ellipsis of|en|gearbox}}. <end>
@@ -470,7 +470,7 @@ Page 333 要: Found match for regex: <begin> # {{defdate|1712}} {{short for|ja|�
 Page 334 記: Found match for regex: <begin> # {{short for|ja|古事記|tr={{w|Kojiki}}|sort=き}}: the oldest extant record of the history of ancient Japan <end>
 Page 335 詩: Found match for regex: <begin> # {{short for|ja|詩経||''{{w|Shijing}}'', the Book of Odes}} <end>
 Page 337 語: Found match for regex: <begin> # {{short for|ja|物語|tr=monogatari}}: [[story]], [[tale]], [[narrative]] <end>
-Page 338 alpha: Found match for regex: <begin> # {{lb|en|informal|abbreviation}} {{clip of|en|alphabet}}. {{rfex|en}} <end>
+Page 338 alpha: Found match for regex: <begin> # {{lb|en|informal}} {{clip of|en|alphabet}}. {{rfex|en}} <end>
 Page 339 delta: Found match for regex: <begin> # {{lb|en|medicine}} {{ellipsis of|en|delta variant}} {{gloss|variant of the [[SARS-CoV-2]] virus}}. <end>
 Page 340 日本: Found match for regex: <begin> # {{short for|ja|日本国|tr=Nihon-koku}}: {{place|ja|country/and/archipelago|r/East Asia|t1=Japan}} <end>
 Page 340 日本: Found match for regex: <begin> # {{short for|ja|日本国|tr=Nippon-koku||[[Japan]]|sort=にっぽん}} <end>
@@ -572,17 +572,17 @@ Page 402 dash: Found match for regex: <begin> # {{short for|nb|dashbord}} <end>
 Page 402 dash: Found match for regex: <begin> # {{short for|nn|dashbord}} <end>
 Page 403 harp: Found match for regex: <begin> # {{ellipsis of|en|harp seal}}. <end>
 Page 404 Christmas: Found match for regex: <begin> # {{lb|en|often|marketing}} {{ellipsis of|en|Christmas season|t=the [[period of time]] before and after Christmas Day, during which people prepare for and celebrate Christmas}}; [[Christmastime]]. <end>
-Page 404 Christmas: Found match for regex: <begin> {{trans-see|''short for'' Christmas season|Christmas season|Christmastime}} <end>
+Page 404 Christmas: Found match for regex: <begin> {{trans-see|''ellipsis of'' Christmas season|Christmas season|Christmastime}} <end>
 Page 405 bang: Found match for regex: <begin> # {{short for|vi|bang tá||assistant district chief}} <end>
 Page 405 bang: Found match for regex: <begin> # {{short for|vi|bang biện||assistant district chief}} <end>
 Page 406 Liverpool: Found match for regex: <begin> # {{ellipsis of|en|Liverpool bit}}. <end>
 Page 407 tap: Found match for regex: <begin> ## An object with a tapering conical form like a tap ''({{senseno|en|peg}})''; specifically, {{ellipsis of|en|taproot|t=long, tapering root of a plant|nocap=1}}. <end>
 Page 407 tap: Found match for regex: <begin> ## {{lb|en|Britain}} {{ellisps of|en|taphouse,taproom|t=place where alcoholic beverages are served [[on tap]]}}. <end>
-Page 407 tap: Found match for regex: <begin> {{trans-see|''short for'' taproot|taproot}} <end>
-Page 407 tap: Found match for regex: <begin> {{trans-see|''short for'' taphouse ''or'' taproom|taphouse|taproom}} <end>
+Page 407 tap: Found match for regex: <begin> {{trans-see|''ellipsis of'' taproot|taproot}} <end>
+Page 407 tap: Found match for regex: <begin> {{trans-see|''ellipsis of'' taphouse ''or'' taproom|taphouse|taproom}} <end>
 Page 408 với: Found match for regex: <begin> # {{short for|vi|đối với||[[to]]}} <end>
 Page 409 sigma: Found match for regex: <begin> # {{lb|fi|Internet slang|neologism|often|humorous}} {{short for|fi|sigma-uros}} <end>
-Page 410 tau: Found match for regex: <begin> Sense 8.1 (“''short for'' tau lepton ''or'' tau particle”) was {{coinage|en|Martin Lewis Perl|nat=the American|occ=physicist|nobycat=1|nocap=1}} (1927–2014) after the first letter of {{noncog|grc|τρίτον|t=third}}, since the tau lepton or tauon was the third charged lepton discovered.<ref>{{cite-book|author=Martin L[ewis] Perl|authorlink=Martin Lewis Perl|title=Evidence for, and Properties of, the New Charged Heavy Lepton|url=http://slac.stanford.edu/pubs/slacpubs/1750/slac-pub-1923.pdf|archiveurl=https://web.archive.org/web/20210709185210/https://slac.stanford.edu/pubs/slacpubs/1750/slac-pub-1923.pdf|archivedate=9 July 2021|series=SLAC-PUB-1923|month=April|year=1977|section=section 1 (Introduction)|page=3|newversion=published in|editor2={{w|Trần Thanh Vân}}|title2=Proceedings of the Twelfth Rencontre de Moriond: Flaine, Haute-Savoie, France, March, 6–18, 1977|series2=Moriond Proceedings|seriesvolume2=19|volume2=1 (Leptons and Multileptons)|location2=Orsay, Paris|publisher2=Laboratoire de Physique Théorique et Particules Elémentaires [Laboratory of Theoretical Physics and Elementary Particles], [[w:Paris-Sud University|Université de Paris-Sud]]|year2=1977|pages2=75–97|oclc2=634313954|passage=Since there is now substantial evidence that it [the new elementary particle] is a lepton, we wish to designate it by a lower case Greek letter. We use <math>\tau^\pm</math> because it appears to be the third charged lepton to be found and {{lang|grc|τριτον}} means third in Greek. We feel the old use of <math>\tau</math> to designate the three pion decay mode of the K is now obsolete.}}</ref> <end>
+Page 410 tau: Found match for regex: <begin> Sense 8.1 (“''ellipsis of'' tau lepton ''or'' tau particle”) was {{coinage|en|Martin Lewis Perl|nat=the American|occ=physicist|nobycat=1|nocap=1}} (1927–2014) after the first letter of {{noncog|grc|τρίτον|t=third}}, since the tau lepton or tauon was the third charged lepton discovered.<ref>{{cite-book|author=Martin L[ewis] Perl|authorlink=Martin Lewis Perl|title=Evidence for, and Properties of, the New Charged Heavy Lepton|url=http://slac.stanford.edu/pubs/slacpubs/1750/slac-pub-1923.pdf|archiveurl=https://web.archive.org/web/20210709185210/https://slac.stanford.edu/pubs/slacpubs/1750/slac-pub-1923.pdf|archivedate=9 July 2021|series=SLAC-PUB-1923|month=April|year=1977|section=section 1 (Introduction)|page=3|newversion=published in|editor2={{w|Trần Thanh Vân}}|title2=Proceedings of the Twelfth Rencontre de Moriond: Flaine, Haute-Savoie, France, March, 6–18, 1977|series2=Moriond Proceedings|seriesvolume2=19|volume2=1 (Leptons and Multileptons)|location2=Orsay, Paris|publisher2=Laboratoire de Physique Théorique et Particules Elémentaires [Laboratory of Theoretical Physics and Elementary Particles], [[w:Paris-Sud University|Université de Paris-Sud]]|year2=1977|pages2=75–97|oclc2=634313954|passage=Since there is now substantial evidence that it [the new elementary particle] is a lepton, we wish to designate it by a lower case Greek letter. We use <math>\tau^\pm</math> because it appears to be the third charged lepton to be found and {{lang|grc|τριτον}} means third in Greek. We feel the old use of <math>\tau</math> to designate the three pion decay mode of the K is now obsolete.}}</ref> <end>
 Page 410 tau: Found match for regex: <begin> # {{senseid|en|tau protein}} {{lb|en|neurology}} {{ellipsis of|en|tau protein|t=a [[protein]] [[abundant]] especially in the [[neuron]]s of the human [[central nervous system]] that stabilizes [[microtubule]]s, and when misfolded is associated with forms of [[dementia]] such as [[Alzheimer's]] and [[Parkinson's disease]]s}}. <end>
 Page 410 tau: Found match for regex: <begin> ## {{ellipsis of|en|tau lepton,tau particle|t=an unstable [[elementary particle]] which is a type of [[lepton]], having a mass almost twice that of a [[proton]], a negative charge, and a spin of ½; it decays into [[hadron]]s (usually [[pion]]s) or other [[lepton]]s, and [[neutrino]]s; a [[tauon]]}}. <end>
 Page 410 tau: Found match for regex: <begin> ## {{lb|en|historical}} {{ellipsis of|en|tau meson|addl=now known as a [[kaon]]}}. <end>
@@ -610,8 +610,8 @@ Page 422 ex: Found match for regex: <begin> # {{lb|en|colloquial}} A former part
 Page 422 ex: Found match for regex: <begin> # {{lb|sv|colloquial}} {{short for|sv|exemplar|t=copy, specimen}} <end>
 Page 423 honeycomb: Found match for regex: <begin> ## {{senseid|en|zoology}}{{lb|en|countable|zoology}} {{ellipsis of|en|honeycomb stomach|t=the [[reticulum]] or second compartment of the stomach of a cow or other [[ruminant]]}}. <end>
 Page 423 honeycomb: Found match for regex: <begin> ## {{senseid|en|architecture}}{{lb|en|uncountable|architecture}} {{ellipsis of|en|honeycomb work|t=especially in [[Moorish]] [[architecture]]: a form of ceiling [[ornamentation]] (especially of an arch or dome) made up of small vaulted arches}}. <end>
-Page 423 honeycomb: Found match for regex: <begin> {{trans-see|''short for'' honeycomb stomach|reticulum}} <end>
-Page 423 honeycomb: Found match for regex: <begin> {{trans-see|''short for'' honeycomb work|honeycomb work}} <end>
+Page 423 honeycomb: Found match for regex: <begin> {{trans-see|''ellipsis of'' honeycomb stomach|reticulum}} <end>
+Page 423 honeycomb: Found match for regex: <begin> {{trans-see|''ellipsis of'' honeycomb work|honeycomb work}} <end>
 Page 424 sans: Found match for regex: <begin> # {{lb|en|typography}} {{ellipsis of|en|sans serif}}. <end>
 Page 425 little: Found match for regex: <begin> # {{ellipsis of|en|little go||type of examination}}. <end>
 Page 426 Bicol: Found match for regex: <begin> # {{ellipsis of|en|Bicol Region}}. <end>
@@ -620,7 +620,7 @@ Page 428 collapse: Found match for regex: <begin> # {{lb|en|cricket}} {{ellipsis
 Page 429 clit: Found match for regex: <begin> # {{lb|en|informal|vulgar}} {{clip of|en|clitoris}}. {{defdate|from 1950s}} <end>
 Page 430 top: Found match for regex: <begin> # {{ellipsis of|en|topswarm}}. <end>
 Page 431 tartan: Found match for regex: <begin> # {{lb|en|uncountable|Scotland}} {{ellipsis of|en|tartan-purry|t=a [[porridge]] made from cabbage mixed with [[oatmeal]]}}. <end>
-Page 431 tartan: Found match for regex: <begin> {{trans-see|''short for'' tartan-purry|tartan-purry}} <end>
+Page 431 tartan: Found match for regex: <begin> {{trans-see|''ellipsis of'' tartan-purry|tartan-purry}} <end>
 Page 432 rapid: Found match for regex: <begin> # {{lb|en|chess}} {{ellipsis of|en|rapid chess}}. <end>
 Page 433 lid: Found match for regex: <begin> # {{short for|fy|eachlid|t=eyelid}} <end>
 Page 434 culture: Found match for regex: <begin> # {{lb|en|archaeology}} {{ellipsis of|en|archaeological culture||[[recurring]] [[assemblage]] of [[artifact]]s from a specific time and place that may [[constitute]] the [[material]] culture [[remains]] of a particular past human society}}. <end>
@@ -633,7 +633,7 @@ Page 440 maniac: Found match for regex: <begin> # {{lb|en|Philippines}}  {{ellip
 Page 441 adopt: Found match for regex: <begin> # {{lb|en|art|informal}} {{clip of|en|adoptable}}. <end>
 Page 442 adviser: Found match for regex: <begin> # {{lb|en|Philippines|education}} {{ellipsis of|en|class adviser}}. <end>
 Page 443 shackle: Found match for regex: <begin> ### {{lb|en|Scotland|archaic}} {{ellipsis of|en|shackle-bone|t=[[wristbone]], [[carpal]]; wrist}}. <end>
-Page 443 shackle: Found match for regex: <begin> {{trans-see|''short for'' shackle-bone|wrist}} <end>
+Page 443 shackle: Found match for regex: <begin> {{trans-see|''ellipsis of'' shackle-bone|wrist}} <end>
 Page 444 wisdom: Found match for regex: <begin> # {{lb|en|countable|colloquial}} {{ellipsis of|en|wisdom tooth}}. <end>
 Page 445 public: Found match for regex: <begin> ## {{lb|en|informal}} {{ellipsis of|en|public house,public bar<l:dated>|t=an inn, a pub: the more basic bar in a public house, as contrasted with the lounge bar or [[saloon]] bar which has more comfortable seats, personalized service, etc.}}. <end>
 Page 445 public: Found match for regex: <begin> {{trans-see|''ellipsis of'' public house|pub}} <end>
@@ -665,11 +665,11 @@ Page 460 ani: Found match for regex: <begin> # {{short for|ceb|[[ing-ani]], [[in
 Page 461 prop: Found match for regex: <begin> # {{lb|en|gambling|informal}} {{clip of|en|proposition player}}. <end>
 Page 462 shovel: Found match for regex: <begin> # {{ellipsis of|en|shovel hat}}. <end>
 Page 463 cowboy: Found match for regex: <begin> # {{lb|en|uncountable}} {{ellipsis of|en|cowboy pool}}. <end>
-Page 464 Aufzug: Found match for regex: <begin> # ({{short for|de|Aufzugsanlage}}) [[lift]], [[elevator]] <end>
+Page 464 Aufzug: Found match for regex: <begin> # {{ellipsis of|de|Aufzugsanlage}}: [[lift]], [[elevator]] <end>
 Page 464 Aufzug: Found match for regex: <begin> # {{lb|de|gymnastics}} {{ellipsis of|de|Felgaufzug,Hüftaufzug|t=[[upward circle]], [[circle-up]]}} <end>
 Page 465 parsec: Found match for regex: <begin> # {{lb|en|astronomy|metrology}} {{sylabbr of|en|parallax second}}. <end>
 Page 466 approach: Found match for regex: <begin> # {{lb|en|golf|tennis}} {{ellipsis of|en|approach shot}}. <end>
-Page 466 approach: Found match for regex: <begin> {{trans-see|''short for'' approach shot|approach shot}} <end>
+Page 466 approach: Found match for regex: <begin> {{trans-see|''ellipsis of'' approach shot|approach shot}} <end>
 Page 467 natur: Found match for regex: <begin> # {{lb|sv|school slang}} {{short for|sv|naturvetenskapsprogrammet}} <end>
 Page 468 puu: Found match for regex: <begin> # {{lb|izh|in the plural}} {{short for|izh|ruumeenpuut||coffin}} <end>
 Page 469 porno: Found match for regex: <begin> # short form of {{m|da|pornografi||pornography}} {{defdate|from 1965}} <end>
@@ -727,7 +727,7 @@ Page 502 quagga: Found match for regex: <begin> # {{ellipsis of|en|quagga mussel
 Page 503 上手: Found match for regex: <begin> # {{short for|ja|sort=じょうて|上手物}} (''jōtemono''): an [[exquisite]] piece of [[workmanship]] <end>
 Page 504 camp: Found match for regex: <begin> # {{lb|en|transitive|video games}} {{ellipsis of|en|corpse camp}}. <end>
 Page 505 noodle: Found match for regex: <begin> ## {{lb|en|informal}} {{ellipsis of|en|pool noodle|t=a long, [[slender]] tube or rod, [[extrude]]d from [[buoyant]] foam and usually [[brightly]] coloured, used as an exercise tool or toy in [[swimming pool]]s}}. <end>
-Page 505 noodle: Found match for regex: <begin> {{trans-see|''short for'' pool noodle|pool noodle}} <end>
+Page 505 noodle: Found match for regex: <begin> {{trans-see|''ellipsis of'' pool noodle|pool noodle}} <end>
 Page 506 mat: Found match for regex: <begin> # {{lb|en|printing}} {{clip of|en|matrix}}. <end>
 Page 507 hanky: Found match for regex: <begin> # {{lb|en|colloquial}} {{diminutive of|en|handkerchief}}. <end>
 Page 508 visum: Found match for regex: <begin> # {{lb|id|colloquial|medicine|law}} {{ellipsis of|id|visum et repertum|t=coroner report/professional witness statement|lit=seen and discovered}} <end>
@@ -850,10 +850,10 @@ Page 592 bah: Found match for regex: <begin> # {{short for|ms|babah}} <end>
 Page 593 license: Found match for regex: <begin> # {{ellipsis of|en|driver's license}}. <end>
 Page 594 item: Found match for regex: <begin> # {{lb|en|India}} {{ellipsis of|en|item girl}}. <end>
 Page 595 goods: Found match for regex: <begin> # {{lb|en|rail|UK}} {{ellipsis of|en|goods train}}. <end>
-Page 596 Deutschland: Found match for regex: <begin> # ''short for a [[nation state]], the [[legal person]] comprising the most part of [[territory]] with [[German]] [[dominating]], or its [[territory]]'' <end>
-Page 596 Deutschland: Found match for regex: <begin> ## {{short for|de|[[Heiliges Römisches Reich|Heiliges Römisches Reich Deutscher Nation]],[[Heiliges Römisches Reich|heiliges römisches Reich deutscher Nation]]}} {{defdate|till 1806}} <end>
-Page 596 Deutschland: Found match for regex: <begin> ## {{short for|de|Deutsches Reich}} {{defdate|1871–1945, and later in historical reference}} <end>
-Page 596 Deutschland: Found match for regex: <begin> ## {{short for|de|Bundesrepublik Deutschland}} {{defdate|from 1990}} <end>
+Page 596 Deutschland: Found match for regex: <begin> # ''ellipsis of a [[nation state]], the [[legal person]] comprising the most part of [[territory]] with [[German]] [[dominating]], or its [[territory]]'' <end>
+Page 596 Deutschland: Found match for regex: <begin> ## {{ellipsis of|de|[[Heiliges Römisches Reich|Heiliges Römisches Reich Deutscher Nation]],[[Heiliges Römisches Reich|heiliges römisches Reich deutscher Nation]]}} {{defdate|till 1806}} <end>
+Page 596 Deutschland: Found match for regex: <begin> ## {{ellipsis of|de|Deutsches Reich}} {{defdate|1871–1945, and later in historical reference}} <end>
+Page 596 Deutschland: Found match for regex: <begin> ## {{ellipsis of|de|Bundesrepublik Deutschland}} {{defdate|from 1990}} <end>
 Page 597 mille: Found match for regex: <begin> # {{short for|fr|mille nautique|t=[[nautical mile]]}} <end>
 Page 598 warrant: Found match for regex: <begin> # {{lb|en|military|countable}} {{ellipsis of|en|warrant officer}}. <end>
 Page 600 ratio: Found match for regex: <begin> # {{lb|en|legal}} {{ellipsis of|en|ratio decidendi}}. <end>
@@ -956,52 +956,52 @@ Page 681 菩薩: Found match for regex: <begin> # {{lb|ja|Buddhism|obsolete}} {{
 Page 682 honeydew: Found match for regex: <begin> ## {{lb|en|countable}} {{ellipsis of|en|honeydew melon|t=a [[melon]] from the {{taxlink|Cucumis melo Inodorus group|cultivar group|''Cucumis melo Inodorus''}} [[cultivar]] group, with sweet, light green or white flesh and a smooth greenish-white or yellow rind}}. <end>
 Page 682 honeydew: Found match for regex: <begin> {{trans-see|''ellipsis of'' honeydew melon|honeydew melon}} <end>
 Page 683 relativity: Found match for regex: <begin> # {{lb|en|uncountable|physics}} {{ellipsis of|en|principle of relativity|t=the [[principle]] that the [[law]]s of [[physics]] should be the [[same]] for all [[observer]]s}}. <end>
-Page 684 Ajax: Found match for regex: <begin> # {{short for|de|Ajax [[Amsterdam]]|t=football club}} <end>
+Page 684 Ajax: Found match for regex: <begin> # {{ellipsis of|de|Ajax [[Amsterdam]]|t=football club}} <end>
 Page 685 parade: Found match for regex: <begin> # {{lb|en|UK|figurative|now|_|uncommon}} {{ellipsis of|en|programme parade}}: a [[description]] of the [[programming]] [[schedule]] [[formerly]] [[announce]]d on the [[radio]] and [[various]] [[television channel]]s. <end>
 Page 686 Afrikaner: Found match for regex: <begin> # {{short for|af|Afrikanerbees}} ({{l|en|zebu}}) <end>
 Page 687 Boiler: Found match for regex: <begin> # {{ellipsis of|en|Brompton boiler}}. <end>
-Page 688 Boulevard: Found match for regex: <begin> # {{short for|de|Boulevardpresse|t=[[yellow press]]}} <end>
-Page 689 Bund: Found match for regex: <begin> # {{lb|de|informal|Germany}} {{short for|de|Bundeswehr|gloss=German army}} <end>
-Page 690 Canadien: Found match for regex: <begin> {{short for|fr|{{w|Canadiens de Montréal|le Club de hockey Canadien}}}} <end>
-Page 691 Chevy: Found match for regex: <begin> # {{clip of|en|Chevrolet}}; a brand of car produced by General Motors. <end>
-Page 692 Colonia: Found match for regex: <begin> # {{ellipsis of|en|Colonia del Sacramento}}, [[Uruguay]]. <end>
-Page 693 Deo: Found match for regex: <begin> # {{short for|de|Deodorant||deodorant}} <end>
+Page 688 Boulevard: Found match for regex: <begin> # {{ellipsis of|de|Boulevardpresse|t=[[yellow press]]}} <end>
+Page 689 Bund: Found match for regex: <begin> # {{lb|de|informal|Germany}} {{ellipsis of|de|Bundeswehr|gloss=German army}} <end>
+Page 690 Canadien: Found match for regex: <begin> {{ellipsis of|fr|{{w|Canadiens de Montréal|le Club de hockey Canadien}}}} <end>
+Page 691 Chevy: Found match for regex: <begin> # {{clip of|en|Chevrolet|addl=a brand of car produced by General Motors}}. <end>
+Page 692 Colonia: Found match for regex: <begin> # {{tcl|en|<ellipsis of:Colonia del Sacramento|id=Q56064}}. <end>
+Page 693 Deo: Found match for regex: <begin> # {{clip of|de|Deodorant||deodorant}} <end>
 Page 694 Em: Found match for regex: <begin> # {{clip of|en|Eminem}}. <end>
-Page 695 Export: Found match for regex: <begin> # {{short for|de|Exportbier|t=kind of lager beer}} <end>
-Page 696 Faro: Found match for regex: <begin> {{short for|it|Ponta del Faro}} <end>
+Page 695 Export: Found match for regex: <begin> # {{ellipsis of|de|Exportbier|t=kind of lager beer}} <end>
+Page 696 Faro: Found match for regex: <begin> {{ellipsis of|it|Ponta del Faro}} <end>
 Page 697 Fell: Found match for regex: <begin> # {{ellipsis of|en|Fell pony}}. <end>
 Page 698 G: Found match for regex: <begin> # {{C|en|Recreational drugs}} {{lb|en|drug|_|slang}} {{abbrev of|en|gamma-hydroxybutyrate,gamma-butyrolactone}}. <end>
 Page 699 General: Found match for regex: <begin> # {{lb|en|informal|medicine}} {{ellipsis of|en|[[general hospital|General Hospital]]}}. <end>
 Page 700 Glen: Found match for regex: <begin> # {{ellipsis of|en|Glen of Imaal Terrier}}. <end>
 Page 701 God: Found match for regex: <begin> # {{ellipsis of|en|oh God}}: {{ng|expressing annoyance or frustration.}} <end>
-Page 702 Hand: Found match for regex: <begin> # {{lb|de|football|informal}} {{short for|de|Handspiel}} <end>
-Page 703 Henna: Found match for regex: <begin> # {{lb|de|countable}} {{short for|de|Hennastrauch}}, a [[shrub]], {{taxfmt|Lawsonia inermis|species}}. <end>
+Page 702 Hand: Found match for regex: <begin> # {{lb|de|football|informal}} {{ellipsis of|de|Handspiel}} <end>
+Page 703 Henna: Found match for regex: <begin> # {{lb|de|countable}} {{ellipsis of|de|Hennastrauch}}: a [[shrub]], {{taxfmt|Lawsonia inermis|species}} <end>
 Page 704 Islander: Found match for regex: <begin> # {{ellipsis of|en|Prince Edward Islander}}. <end>
 Page 704 Islander: Found match for regex: <begin> # {{ellipsis of|en|Vancouver Islander}}. <end>
 Page 704 Islander: Found match for regex: <begin> # {{ellipsis of|en|Pacific Islander}}. <end>
 Page 705 Judas: Found match for regex: <begin> # {{senseid|en|Judas-hole}} {{ellipsis of|en|Judas-hole||small hole for spying}}. <end>
-Page 706 Lager: Found match for regex: <begin> # {{lb|de|beer}} {{short for|de|Lagerbier}}: [[lager]] {{gloss|beer of low fermentation}} <end>
-Page 707 Leo: Found match for regex: <begin> # {{clip of|de|Leopold}}, a {{given name|de|male}} <end>
-Page 707 Leo: Found match for regex: <begin> # {{clip of|de|Leonhard}}, a {{given name|de|male}} <end>
-Page 708 Lore: Found match for regex: <begin> {{clip of|nl|Eleonore}}. See {{m|en|Eleanor}}. <end>
+Page 706 Lager: Found match for regex: <begin> # {{lb|de|beer}} {{ellipsis of|de|Lagerbier}}: [[lager]] {{gloss|beer of low fermentation}} <end>
+Page 707 Leo: Found match for regex: <begin> # {{given name|de|male|<=clip of:Leopold}} <end>
+Page 707 Leo: Found match for regex: <begin> # {{given name|de|male|<=clip of:Leonhard}} <end>
+Page 708 Lore: Found match for regex: <begin> {{given name|nl|female|<=clip of:Eleonore}} <end>
 Page 709 Mars: Found match for regex: <begin> # {{ellipsis of|en|{{w|Mars bar}}|addl=a [[brand]] of [[chocolate]] [[bar]] with [[caramel]] and [[nougat]] [[filling]]}}. <end>
 Page 710 O: Found match for regex: <begin> # {{lb|zh|Hong Kong Cantonese}} {{short for|zh|OK|t=alright|tr=-}} <end>
 Page 711 Oval: Found match for regex: <begin> # {{lb|en|US}} {{ellipsis of|en|Oval Office}}. <end>
-Page 712 Papier: Found match for regex: <begin> # {{lb|de|chiefly|in the plural}} a [[document]] or [[proof]], ''especially'' {{short for|de|Ausweispapier|t=identity document, papers}} <end>
-Page 712 Papier: Found match for regex: <begin> # {{lb|de|chiefly|in the plural|finance|stock market}} {{short for|de|Wertpapier|t=security}} <end>
+Page 712 Papier: Found match for regex: <begin> # {{lb|de|chiefly|in the plural}} a [[document]] or [[proof]], ''especially'' {{ellipsis of|de|Ausweispapier|t=identity document, papers}} <end>
+Page 712 Papier: Found match for regex: <begin> # {{lb|de|chiefly|in the plural|finance|stock market}} {{ellipsis of|de|Wertpapier|t=security}} <end>
 Page 713 Pass: Found match for regex: <begin> Shortening of Early New High {{m+|de|paßport}} (first recorded 15th century), borrowed from {{bor|de|frm|passe-port}} or {{bor|de|fr|passeport}}. Today chiefly used as short form of {{m|de|Reisepass}} (first recorded 17th century).   <end>
-Page 713 Pass: Found match for regex: <begin> # {{short for|de|Reisepass}} <end>
+Page 713 Pass: Found match for regex: <begin> # {{ellipsis of|de|Reisepass}} <end>
 Page 714 Passage: Found match for regex: <begin> # {{ellipsis of|en|Passage West}}, [[Ireland]]. <end>
-Page 715 Personal: Found match for regex: <begin> # {{lb|de|informal}} {{short for|de|Personalabteilung|t=human resources}} <end>
-Page 716 Pilot: Found match for regex: <begin> # {{short for|de|Pilotprojekt}}, '''{{l|de|Pilotstudie}}'''. <end>
-Page 716 Pilot: Found match for regex: <begin> # {{lb|de|film}} {{short for|de|Pilotfilm}}, '''{{l|de|Pilotfolge}}'''. <end>
+Page 715 Personal: Found match for regex: <begin> # {{lb|de|informal}} {{ellipsis of|de|Personalabteilung|t=human resources}} <end>
+Page 716 Pilot: Found match for regex: <begin> # {{ellipsis of|de|Pilotprojekt,Pilotstudie}} <end>
+Page 716 Pilot: Found match for regex: <begin> # {{lb|de|film}} {{ellipsis of|de|Pilotfilm,Pilotfolge}} <end>
 Page 717 Pool: Found match for regex: <begin> # {{ellipsis of|en|Pool-in-Wharfedale}}. <end>
 Page 718 Punch: Found match for regex: <begin> # {{ellipsis of|en|Suffolk Punch||type of horse}}. <end>
 Page 719 Q: Found match for regex: <begin> # {{lb|en|electronics}} {{ellipsis of|en|Q factor|gloss=quality factor}}. <end>
 Page 720 Ruby: Found match for regex: <begin> # {{lb|en|Cockney rhyming slang}} A [[curry]]; {{ellipsis of|en|Ruby Murray}}. <end>
-Page 721 Sack: Found match for regex: <begin> # {{lb|de|informal}} the [[sack]]; {{short for|de|Hodensack|t=scrotum}} <end>
-Page 722 Sold: Found match for regex: <begin> # {{lb|de|loosely}} {{short for|de|Besoldung|t=kind of salary for soldiers and civil servants}} <end>
-Page 723 Stein: Found match for regex: <begin> # {{lb|de|games}} {{short for|de|Spielstein|t=piece, token, tile}} <end>
+Page 721 Sack: Found match for regex: <begin> # {{lb|de|informal}} the [[sack]]; {{ellipsis of|de|Hodensack|t=scrotum}} <end>
+Page 722 Sold: Found match for regex: <begin> # {{lb|de|loosely}} {{clip of|de|Besoldung|t=kind of salary for soldiers and civil servants}} <end>
+Page 723 Stein: Found match for regex: <begin> # {{lb|de|games}} {{ellipsis of|de|Spielstein|t=piece, token, tile}} <end>
 Page 723 Stein: Found match for regex: <begin> From {{inh|nn|non|Steinn}}, from {{m|non|steinn||stone}}, whence also {{m|nn|stein}}. Also a short form of compound names with the element. Cognate with {{cog|fo|Steinur}}, {{cog|is|Steinn}}, {{cog|sv|Sten}}{{,}} and {{cog|da|Steen}}, as well as {{cog|en|Stone}}. <end>
 Page 724 Stoke: Found match for regex: <begin> # {{ellipsis of|en|Stoke-on-Trent}}, a city in [[Staffordshire]], [[England]]. <end>
 Page 725 Češka: Found match for regex: <begin> {{short for|sl|Čéška Repúblika}} <end>
@@ -1027,16 +1027,16 @@ Page 740 английский: Found match for regex: <begin> # [[English]] [[la
 Page 741 reconciliation: Found match for regex: <begin> ## {{lb|en|Roman Catholicism}} {{ellipsis of|en|sacrament of reconciliation|t=a [[sacrament]] ([[sacred]] [[ritual]]) also called [[confession]], involving [[contrition]] by a person, confessing sins to a priest, [[penance]] performed by the person, and [[absolution]] granted by the priest}}. <end>
 Page 742 to': Found match for regex: <begin> # {{short for|sdc|tóiu}}: {{l|en|your}} <end>
 Page 743 stripper: Found match for regex: <begin> # {{lb|en|manufacturing}} {{ellipsis of|en|stripper plate}}. <end>
-Page 744 Merv: Found match for regex: <begin> # {{given name|en|male}} {{clip of|en|Mervyn}}. <end>
+Page 744 Merv: Found match for regex: <begin> # {{given name|en|male|<=clip of:Mervyn}}. <end>
 Page 744 Merv: Found match for regex: <begin> {{trans-top|clipping of Mervyn}} <end>
-Page 745 SVG: Found match for regex: <begin> # {{lb|de|sports}} {{m|en|SC||{{l|en|sports club}}}}: {{synonym of|de|SV||{{l|de|Sportverein}}}}; {{short for|de|Spielvereinigung}} <end>
+Page 745 SVG: Found match for regex: <begin> # {{lb|de|sports}} {{m|en|SC||{{l|en|sports club}}}}: {{synonym of|de|SV||{{l|de|Sportverein}}}}; {{init of|de|Spielvereinigung}} <end>
 Page 746 dong: Found match for regex: <begin> # {{short for|max|dorang}} <end>
 Page 747 tuppence: Found match for regex: <begin> Same for the definition: "{{ellipsis of|en|tuppence worth||one’s opinion}}" however, this idiom is derived from this fact; in Britain it used to cost two pence ("tuppence") to post a letter, usually holding one's opinion. <end>
 Page 747 tuppence: Found match for regex: <begin> # {{lb|en|UK|Irish|idiomatic}} {{ellipsis of|en|tuppence worth||one’s opinion}}. <end>
-Page 748 Bahn: Found match for regex: <begin> # {{lb|de|informal}} {{short for|de|Autobahn}} <end>
-Page 748 Bahn: Found match for regex: <begin> # {{lb|de|informal}} {{short for|de|Fahrbahn|t=lane [of a road]}} <end>
+Page 748 Bahn: Found match for regex: <begin> # {{lb|de|informal}} {{ellipsis of|de|Autobahn}} <end>
+Page 748 Bahn: Found match for regex: <begin> # {{lb|de|informal}} {{ellipsis of|de|Fahrbahn|t=lane [of a road]}} <end>
 Page 750 buttercup: Found match for regex: <begin> # {{ellipsis of|en|buttercup squash}}. <end>
-Page 751 Wehr: Found match for regex: <begin> # {{lb|de|informal|regional}} {{short for|de|Feuerwehr}} <end>
+Page 751 Wehr: Found match for regex: <begin> # {{lb|de|informal|regional}} {{ellipsis of|de|Feuerwehr}} <end>
 Page 752 muna: Found match for regex: <begin> # {{short for|izh|maamuna}} <end>
 Page 753 Caesar: Found match for regex: <begin> # {{lb|en|medicine|colloquial}} {{clip of|en|Caesarean section}}. <end>
 Page 754 systolic: Found match for regex: <begin> # {{lb|en|medicine|colloquial}} {{ellipsis of|en|systolic blood pressure}}. <end>
@@ -1049,13 +1049,13 @@ Page 757 floater: Found match for regex: <begin> {{trans-top|''clipping of'' flo
 Page 758 potbelly: Found match for regex: <begin> # {{ellipsis of|en|potbelly stove}}. <end>
 Page 758 potbelly: Found match for regex: <begin> # {{lb|en|informal}} {{ellipsis of|en|Vietnamese pot-bellied pig}}. <end>
 Page 759 liner: Found match for regex: <begin> # {{ellipsis of|en|penny-a-liner}}. <end>
-Page 760 Aufklärung: Found match for regex: <begin> # {{short for|de|[[sexuell]]e Aufklärung,Sexualaufklärung|t=[[sex education]]}} <end>
+Page 760 Aufklärung: Found match for regex: <begin> # {{ellipsis of|de|[[sexuell]]e Aufklärung,Sexualaufklärung|t=[[sex education]]}} <end>
 Page 761 nam: Found match for regex: <begin> # {{short for|ms|enam}} <end>
 Page 762 parlor: Found match for regex: <begin> # {{lb|en|Philippines}} {{ellipsis of|en|beauty parlor}}. <end>
 Page 763 dep: Found match for regex: <begin> # {{clip of|en|department}}. <end>
 Page 763 dep: Found match for regex: <begin> # {{clip of|en|deposit}}. <end>
 Page 763 dep: Found match for regex: <begin> # {{clip of|en|departure}}. <end>
-Page 764 Abnahme: Found match for regex: <begin> # {{short for|de|Gewichtsabnahme|t=[[weight loss]]}} <end>
+Page 764 Abnahme: Found match for regex: <begin> # {{ellipsis of|de|Gewichtsabnahme|t=[[weight loss]]}} <end>
 Page 765 kivi: Found match for regex: <begin> # {{short for|izh|jauhokivi||millstone}} <end>
 Page 766 不思議: Found match for regex: <begin> # {{lb|ja|Buddhism}} {{short for|ja|不可思議|tr=fuka shigi}}: beyond [[human]] [[recognition]] or [[understanding]]; [[ineffable]] <end>
 Page 767 Hahn: Found match for regex: <begin> # {{ellisis of|de|Wasserhahn|t=[[tap]], [[faucet]]}} <end>
@@ -1065,30 +1065,30 @@ Page 768 rug: Found match for regex: <begin> # {{lb|nl|Netherlands|historical}} 
 Page 769 Trojan: Found match for regex: <begin> # {{lb|en|computing}} {{ellipsis of|en|Trojan horse}}. <end>
 Page 770 án: Found match for regex: <begin> # {{lb|vi|historical}} {{short for|vi|án sát}} <end>
 Page 771 bekkur: Found match for regex: <begin> # {{lb|is|informal}} {{short for|is|bekkpressa|t=[[bench press]]}} <end>
-Page 772 Muskatnuss: Found match for regex: <begin> # {{lb|de|countable}} {{short for|de|Muskatnussbaum|t=nutmeg tree}} <end>
-Page 773 Meile: Found match for regex: <begin> ## {{lb|de|nautical|aviation}} {{short for|de|Seemeile}}: [[nautical mile]] (≈ 1.9 km) <end>
+Page 772 Muskatnuss: Found match for regex: <begin> # {{lb|de|countable}} {{ellipsis of|de|Muskatnussbaum|t=nutmeg tree}} <end>
+Page 773 Meile: Found match for regex: <begin> ## {{lb|de|nautical|aviation}} {{ellipsis of|de|Seemeile}}: [[nautical mile]] (≈ 1.9 km) <end>
 Page 774 feeder: Found match for regex: <begin> # {{lb|en|education}} {{ellipsis of|en|feeder school}}. <end>
 Page 775 taka: Found match for regex: <begin> * {{alt|nn|ta|t=short form}} <end>
 Page 776 til: Found match for regex: <begin> # {{short for|io|til rivido||goodbye}} <end>
 Page 777 Disciple: Found match for regex: <begin> # {{ellipsis of|en|Disciple of Christ||member of a particular religious group}}. <end>
 Page 778 acquis: Found match for regex: <begin> # {{ellipsis of|en|acquis communautaire}}. <end>
 Page 778 acquis: Found match for regex: <begin> {{trans-top-also|ellipsis of ''acquis communautaire''|acquis communautaire}} <end>
-Page 779 Kanzler: Found match for regex: <begin> ## {{lb|de|Germany|Austria}} {{short for|de|Bundeskanzler}} <end>
-Page 779 Kanzler: Found match for regex: <begin> ## {{lb|de|historical}} {{short for|de|Reichskanzler}} <end>
-Page 780 Kanzlerin: Found match for regex: <begin> # {{short for|de|Bundeskanzlerin}} <end>
+Page 779 Kanzler: Found match for regex: <begin> ## {{lb|de|Germany|Austria}} {{ellipsis of|de|Bundeskanzler}} <end>
+Page 779 Kanzler: Found match for regex: <begin> ## {{lb|de|historical}} {{ellipsis of|de|Reichskanzler}} <end>
+Page 780 Kanzlerin: Found match for regex: <begin> # {{ellipsis of|de|Bundeskanzlerin}} <end>
 Page 781 ditty: Found match for regex: <begin> # {{ellipsis of|en|ditty bag}}. <end>
 Page 782 Norden: Found match for regex: <begin> # {{ellipsis of|en|Norden bombsight}}. <end>
-Page 783 Bisam: Found match for regex: <begin> # {{short for|de|Bisamratte|t=[[muskrat]]}} <end>
-Page 783 Bisam: Found match for regex: <begin> # {{short for|de|Bisamfell|t=muskrat [[pelt]]}} <end>
+Page 783 Bisam: Found match for regex: <begin> # {{ellipsis of|de|Bisamratte|t=[[muskrat]]}} <end>
+Page 783 Bisam: Found match for regex: <begin> # {{ellipsis of|de|Bisamfell|t=muskrat [[pelt]]}} <end>
 Page 784 pagi: Found match for regex: <begin> # {{ellipsis of|id|selamat pagi}} <end>
-Page 785 Raupe: Found match for regex: <begin> # {{short for|de|Planierraupe||caterpillar or caterpillar tractor}} <end>
+Page 785 Raupe: Found match for regex: <begin> # {{ellipsis of|de|Planierraupe||caterpillar or caterpillar tractor}} <end>
 Page 786 tribute: Found match for regex: <begin> # {{lb|en|internet slang|vulgar}} {{ellipsis of|en|cum tribute}}. <end>
 Page 787 perm: Found match for regex: <begin> # {{clip of|en|permanent wave||hairstyle}}. <end>
 Page 787 perm: Found match for regex: <begin> # {{lb|nb|colloquial}} {{clip of|nb|permisjon}}: a [[leave]] {{gloss|Permission to be absent from one's work}} <end>
-Page 788 Flügel: Found match for regex: <begin> # {{lb|de|chiefly as {{m|de|Flügelchen}}}} {{short for|de|Schwimmflügel|t=water wing, armband, swimmy}} <end>
+Page 788 Flügel: Found match for regex: <begin> # {{lb|de|chiefly as {{m|de|Flügelchen}}}} {{ellipsis of|de|Schwimmflügel|t=water wing, armband, swimmy}} <end>
 Page 789 meatball: Found match for regex: <begin> # {{lb|en|motorsport}} {{ellipsis of|en|meatball flag}}. <end>
-Page 790 Gehäuse: Found match for regex: <begin> # {{short for|de|Kerngehäuse|t=core of an apple, pear, etc.}} <end>
-Page 790 Gehäuse: Found match for regex: <begin> # {{lb|de|ball games|_|slang}} {{short for|de|Torgehäuse|t=post and crossbar of a goal}} <end>
+Page 790 Gehäuse: Found match for regex: <begin> # {{ellipsis of|de|Kerngehäuse|t=core of an apple, pear, etc.}} <end>
+Page 790 Gehäuse: Found match for regex: <begin> # {{lb|de|ball games|_|slang}} {{ellipsis of|de|Torgehäuse|t=post and crossbar of a goal}} <end>
 Page 791 Wagga: Found match for regex: <begin> # {{lb|en|slang}} {{ellipsis of|en|Wagga Wagga}}. <end>
 Page 792 consulting: Found match for regex: <begin> # {{ellipsis of|en|consulting physician}}. <end>
 Page 793 thresher: Found match for regex: <begin> # {{lb|en|zoology}} {{ellipsis of|en|thresher shark}}. {{defdate|from 1880s}} <end>
@@ -1139,7 +1139,7 @@ Page 833 ae: Found match for regex: <begin> # {{short for|tqu|fizu atufe ae}} <e
 Page 834 marker: Found match for regex: <begin> ## {{lb|en|linguistics}} {{ellipsis of|en|discourse marker}}. <end>
 Page 835 Tristan: Found match for regex: <begin> # {{ellipsis of|en|Tristan da Cunha}}. <end>
 Page 836 Gaza: Found match for regex: <begin> # {{short for|nl|Gazastrook}} <end>
-Page 838 erst: Found match for regex: <begin> # {{short for|de|erstmal}} <end>
+Page 838 erst: Found match for regex: <begin> # {{ellipsis of|de|erstmal}} <end>
 Page 839 gharry: Found match for regex: <begin> # {{lb|en|India|historical}} {{ellipsis of|en|palkigari}}. <end>
 Page 840 Brussel: Found match for regex: <begin> # {{short for|nl|Brussels Hoofdstedelijk Gewest}}: {{place|nl|the smallest of <<c/Belgium>>'s three federative <<regions>>|t1=Brussels-Capital Region}} <end>
 Page 841 Wiktionary:Templates: Found match for regex: <begin> * {{temp|short for}} <end>
@@ -1156,7 +1156,7 @@ Page 848 くろ: Found match for regex: <begin> # {{lb|ja|accounting|sort=くろ
 Page 848 くろ: Found match for regex: <begin> # {{lb|ja|euphemistic}} {{short for|ja|黒幕|tr=kuromaku}}: a [[black]] [[curtain]] {{gloss|someone [[influence|influencing]] or [[control]]ling matters from [[behind the scenes]]}} <end>
 Page 849 布団: Found match for regex: <begin> # {{defdate|from 1592}} {{short for|ja|sort=ふとん|座布団}} (''zabuton'', “seat / sitting cushion”) <end>
 Page 850 もつ: Found match for regex: <begin> # {{short for|ja|臓物|tr=zōmotsu}}, [[offal]] <end>
-Page 851 tote: Found match for regex: <begin> {{clip of|en|total}}, with {{m|mul||e}} to distinguish from {{m|en|tot}} in writing. <end>
+Page 851 tote: Found match for regex: <begin> {{clip of|en|total|addl=with {{m|mul||e}} to distinguish from {{m|en|tot}} in writing}}. <end>
 Page 851 tote: Found match for regex: <begin> {{clip of|en|totalizator}}. <end>
 Page 852 hypercharge: Found match for regex: <begin> # {{lb|en|physics}} {{clipcomp of|en|hyperonic charge}}: a [[quantum]] characteristic of a group of [[subatomic particle]]s governed by the [[strong force]] that is related to [[strangeness]] and is represented by a number equal to twice the average value of the [[electric charge]] of the group. <end>
 Page 853 fogo: Found match for regex: <begin> # {{short for|pt|fogo de artifício}} <end>
@@ -1170,23 +1170,23 @@ Page 859 trä: Found match for regex: <begin> # {{lb|sv|baseball}} {{short for|s
 Page 860 whipped: Found match for regex: <begin> # {{lb|en|slang}} {{ellipsis of|en|pussywhipped}}. <end>
 Page 861 sump: Found match for regex: <begin> # {{short for|sv|kaffesump||coffee grounds}} <end>
 Page 862 hot spot: Found match for regex: <begin> ## {{lb|en|ecology}} {{ellipsis of|en|biodiversity hotspot|t=a place with a significant level of [[biodiversity]], particularly if the [[flora]] and [[fauna]] are [[threaten]]ed with [[loss]] of their [[habitat]]}}. <end>
-Page 862 hot spot: Found match for regex: <begin> {{trans-see|''short for'' biodiversity hotspot|biodiversity hotspot}} <end>
+Page 862 hot spot: Found match for regex: <begin> {{trans-see|''ellipsis of'' biodiversity hotspot|biodiversity hotspot}} <end>
 Page 863 Murphy: Found match for regex: <begin> # {{lb|en|slang}} {{ellipsis of|en|Murphy game||type of confidence trick}}. <end>
 Page 864 granola: Found match for regex: <begin> # {{lb|en|slang|countable}} {{ellipsis of|en|crunchy granola}}. <end>
 Page 865 목: Found match for regex: <begin> # {{short for|ko|목요일(木曜日)|t=[[Thursday]]}} <end>
 Page 866 emote: Found match for regex: <begin> # {{lb|en|Internet|Twitch-speak}} {{clipping of|en|emoticon}}. <end>
 Page 866 emote: Found match for regex: <begin> {{trans-see|''clipping of'' emoticon|emoticon}} <end>
 Page 867 coaster: Found match for regex: <begin> # {{lb|en|Canada|US}} {{ellipsis of|en|{{vern|coaster trout}}}} (“the [[brook trout]] ({{taxfmt|Salvelinus fontinalis|species}}) in [[Lake Superior]] and [[Maine]]”). <end>
-Page 867 coaster: Found match for regex: <begin> {{trans-see|''short for'' coaster trout (''Salvelinus fontinalis'')|brook trout}} <end>
+Page 867 coaster: Found match for regex: <begin> {{trans-see|''ellipsis of'' coaster trout (''Salvelinus fontinalis'')|brook trout}} <end>
 Page 867 coaster: Found match for regex: <begin> ## {{lb|en|US|informal}} {{ellipsis of|en|rollercoaster}}. <end>
 Page 867 coaster: Found match for regex: <begin> {{trans-see|''ellipsis of'' rollercoaster|rollercoaster}} <end>
 Page 868 cocky: Found match for regex: <begin> # {{lb|en|also|attributively}} {{clip of|en|cockatoo farmer|t=[[small-scale]] [[farmer]]}}; {{lb|en|by extension}} any farmer or [[owner]] of [[rural]] [[land]]. <end>
-Page 869 Ost: Found match for regex: <begin> # the [[east]] {{q|used without article}}. {{short for|de|Osten}} <end>
-Page 870 scooter: Found match for regex: <begin> ## {{short for|it|acquascooter}}; [[water scooter]] <end>
-Page 870 scooter: Found match for regex: <begin> # {{short for|nb|[[snøscooter]], [[vannscooter]]}} <end>
-Page 870 scooter: Found match for regex: <begin> # {{short for|nn|[[snøscooter]], [[vasscooter]] etc.}} <end>
+Page 869 Ost: Found match for regex: <begin> # {{lb|used without article}} {{clip of|de|Osten}}: the [[east]] <end>
+Page 870 scooter: Found match for regex: <begin> ## {{ellipsis of|it|acquascooter}}; [[water scooter]] <end>
+Page 870 scooter: Found match for regex: <begin> # {{ellipsis of|nb|snøscooter,vannscooter}} <end>
+Page 870 scooter: Found match for regex: <begin> # {{ellipsis of|nn|snøscooter,vasscooter,etc.}} <end>
 Page 871 napa: Found match for regex: <begin> # {{short for|izh|napapuu}} <end>
-Page 872 letra: Found match for regex: <begin> # {{lb|eu|banking}} {{short for|eu|kanbio-letra|t=bill of exchange}} <end>
+Page 872 letra: Found match for regex: <begin> # {{lb|eu|banking}} {{ellipsis of|eu|kanbio-letra|t=bill of exchange}} <end>
 Page 873 日向: Found match for regex: <begin> ## {{lb|ja|sort=ひゆうが|historical}} {{short for|ja|日向国|tr=Hyūga-no-kuni|sort=ひゆうか}}: {{w|Hyūga Province}}, an old [[province]] of Japan, corresponding to modern [[Miyazaki]] [[prefecture|Prefecture]] on the [[east]]ern [[coast]] of [[Kyushu]] <end>
 Page 873 日向: Found match for regex: <begin> ## {{short for|ja|日向市|tr=Hyūga-shi}}: {{place|ja|city|t=Hyūga|pref/Miyazaki|c/Japan|sort=ひゅうが}} <end>
 Page 873 日向: Found match for regex: <begin> # {{short for|ja|日向湖|tr=Hiruga-ko}}: one of the {{m|ja|{{w|lang=ja|三方五湖}}|tr=Mikata Goko||Five [[lake|Lake]]s of Mikata}} in [[Fukui]] [[prefecture|Prefecture]] <end>
@@ -1197,8 +1197,8 @@ Page 876 lotus: Found match for regex: <begin> # {{ellipsis of|en|lotus position
 Page 877 cutthroat: Found match for regex: <begin> # {{lb|en|linguistics}} {{ellipsis of|en|cutthroat compound|t=an agentive-instrumental verb-noun compound word}}. <end>
 Page 878 三味線: Found match for regex: <begin> # {{defdate|after 1780}} {{short for|ja|sort=しゃみせん|三味線草|tr=shamisen-gusa}}: the [[shepherd's purse]], {{taxfmt|Capsella bursa-pastoris|species}} <end>
 Page 879 showbiz: Found match for regex: <begin> # {{clip of|en|showbusiness}}. <end>
-Page 880 Alexa: Found match for regex: <begin> * {{clip of|en|Alexandra}}. <end>
-Page 880 Alexa: Found match for regex: <begin> * {{clip of|fr|Alexandra}} <end>
+Page 880 Alexa: Found match for regex: <begin> * {{given name|en|female|<=clip of:Alexandra}}. <end>
+Page 880 Alexa: Found match for regex: <begin> * {{given name|fr|female|<=clip of:Alexandra}} <end>
 Page 881 sixes: Found match for regex: <begin> # {{ellipsis of|en|six of one, half a dozen of the other}}. <end>
 Page 882 garçon: Found match for regex: <begin> # {{ellipsis of|fr|garçon de café}} <end>
 Page 883 Tiffany: Found match for regex: <begin> # {{ellipsis of|en|Tiffany glass}}. <end>
@@ -1219,8 +1219,8 @@ Page 897 musca: Found match for regex: <begin> # {{ellipsis of|en|musca volitans
 Page 898 참치: Found match for regex: <begin> # {{short for|ko|참치방어}}: [[rainbow runner]] ({{taxlink|Elagatis bipinnulata|species}}) <end>
 Page 899 Bordeaux: Found match for regex: <begin> # {{ellipsis of|en|Bordeaux mixture}}. <end>
 Page 900 apo: Found match for regex: <begin> # {{lb|en|biochemistry}} {{clip of|en|apolipoprotein}}. <end>
-Page 901 Tochter: Found match for regex: <begin> * {{sense|subsidiary}} {{short for|de|Tochtergesellschaft}} <end>
-Page 902 Bruch: Found match for regex: <begin> # {{lb|de|slang}} {{short for|de|Einbruch|t=break-in}} <end>
+Page 901 Tochter: Found match for regex: <begin> * {{sense|subsidiary}} {{ellipsis of|de|Tochtergesellschaft}} <end>
+Page 902 Bruch: Found match for regex: <begin> # {{lb|de|slang}} {{ellipsis of|de|Einbruch|t=break-in}} <end>
 Page 903 Santiago: Found match for regex: <begin> ## {{place|en|<=ellip of:Santiago del Estero|city|c/Argentina}}. <end>
 Page 903 Santiago: Found match for regex: <begin> ## {{place|en|<=ellip of:Santiago del Estero|province|c/Argentina|[[surrounding]] the [[city]]}}. <end>
 Page 904 San Salvador: Found match for regex: <begin> # {{lb|en|historical}} {{place|en|<=ellip of:San Salvador Island|the first <<island>> [[discover]]ed on {{w|Christopher Columbus}}'s [[first]] [[voyage]]}}. <end>
@@ -1242,7 +1242,7 @@ Page 914 beneficium excussionis: Found match for regex: <begin> # {{lb|mul|law}}
 Page 915 海老: Found match for regex: <begin> # {{short for|ja|海老錠|tr=ebijō|sort=えび}}: a [[padlock]] <end>
 Page 916 härkä: Found match for regex: <begin> # {{short for|izh|merihärkä}} <end>
 Page 917 jer: Found match for regex: <begin> # {{clip of|en|jerfalcon}}. <end>
-Page 918 Markt: Found match for regex: <begin> # {{short for|de|Marktplatz|t=[[market square]]}} <end>
+Page 918 Markt: Found match for regex: <begin> # {{ellipsis of|de|Marktplatz|t=[[market square]]}} <end>
 Page 919 selig: Found match for regex: <begin> # {{lb|de|following mention of a dead person}} {{ellipsis of|de|Gott hab ihn selig,Gott hab sie selig}} <end>
 Page 920 lohko: Found match for regex: <begin> # {{short for|izh|munalohko}} <end>
 Page 921 lanka: Found match for regex: <begin> # {{short for|izh|rautalanka}} <end>
@@ -1256,10 +1256,10 @@ Page 928 Burton: Found match for regex: <begin> ## {{place|en|cpar|in|dist/East 
 Page 929 locum: Found match for regex: <begin> # {{lb|en|British|AU|informal}} {{ellipsis of|en|locum tenens}}.<ref name="COED-pron&def">The '''Concise Oxford English Dictionary''' [Eleventh Edition]</ref> <end>
 Page 930 earworm: Found match for regex: <begin> # {{lb|en|originally|US}} {{ellipsis of|en|corn earworm}} (“[[larva]] of the [[moth]]s {{taxlink|Helicoverpa zea|species}} (syn. {{taxlink|Heliothis zea|species}}) and {{taxlink|Helicoverpa armigera|species}}, which are [[agricultural]] [[pest]]s”). <end>
 Page 930 earworm: Found match for regex: <begin> {{trans-see|''ellipsis of'' corn earworm|corn earworm}} <end>
-Page 931 Gelb: Found match for regex: <begin> # {{short for|de|Eigelb}}: [[yolk]] <end>
-Page 932 Hammel: Found match for regex: <begin> # {{short for|de|Hammelfleisch}}: the meat of a [[wether]] used for food; [[mutton]] <end>
-Page 933 Versailles: Found match for regex: <begin> # {{short for|de|[[w:de:Schloss Versailles|Schloss Versailles]]|t=Palace of Versailles}} <end>
-Page 933 Versailles: Found match for regex: <begin> # {{lb|de|metonymically}} {{short for|de||Diktat von Versailles}}; {{l|de||Versailler Diktat}}, {{l|de||[[w:de:Versailler Vertrag|Versailler Vertrag]]|t=Treaty of Versailles}} <end>
+Page 931 Gelb: Found match for regex: <begin> # {{ellipsis of|de|Eigelb}}: [[yolk]] <end>
+Page 932 Hammel: Found match for regex: <begin> # {{ellipsis of|de|Hammelfleisch}}: the meat of a [[wether]] used for food; [[mutton]] <end>
+Page 933 Versailles: Found match for regex: <begin> # {{ellipsis of|de|[[w:de:Schloss Versailles|Schloss Versailles]]|t=Palace of Versailles}} <end>
+Page 933 Versailles: Found match for regex: <begin> # {{lb|de|metonymically}} {{ellipsis of|de|[[Diktat]] von [[Versailles]],[[Versailler]] [[Diktat]]}},[[w:de:Versailler Vertrag|Versailler Vertrag]]|t=Treaty of Versailles}} <end>
 Page 934 Vichy: Found match for regex: <begin> # {{lb|en|colloquial}} {{ellipsis of|en|Vichy water}}. <end>
 Page 935 Fil-Am: Found match for regex: <begin> # {{sylabbr of|en|[[Filipino]] [[American]]}}. <end>
 Page 935 Fil-Am: Found match for regex: <begin> # {{sylabbr of|en|[[Filipino]] [[American]]}}. <end>
@@ -1281,8 +1281,8 @@ Page 945 umbi: Found match for regex: <begin> # {{lb|en|medicine|colloquial}} {{
 Page 946 دیش: Found match for regex: <begin> # {{short for|fa|دیش ماهواره|tr=diš-e mâhvâre|t=[[satellite dish]]}} <end>
 Page 947 vérité: Found match for regex: <begin> # {{ellipsis of|en|cinéma vérité}}. <end>
 Page 949 lon: Found match for regex: <begin> # {{lb|en|geography}} {{clip of|en|longitude}}. <end>
-Page 950 Kenia: Found match for regex: <begin> # {{short for|de|Kenia-Koalition}} <end>
-Page 951 Dortmund: Found match for regex: <begin> # {{short for|de|{{w|Borussia Dortmund}}|t=football club}} <end>
+Page 950 Kenia: Found match for regex: <begin> # {{ellipsis of|de|Kenia-Koalition}} <end>
+Page 951 Dortmund: Found match for regex: <begin> # {{ellipsis of|de|{{w|Borussia Dortmund}}|t=football club}} <end>
 Page 952 Berwick: Found match for regex: <begin> ## {{place|en|<=ellip of:Berwick-upon-Tweed|town|co/Northumberland|cc/England}}. <end>
 Page 953 میزان: Found match for regex: <begin> # {{short for|fa|برج میزان|tr=borz-e mizân|t=the constellation [[Libra]]}} <end>
 Page 954 Buckley's: Found match for regex: <begin> # {{lb|en|Australia|informal}} {{ellipsis of|en|Buckley's chance}}. <end>
@@ -1291,12 +1291,12 @@ Page 957 江湖: Found match for regex: <begin> # {{lb|ja|Buddhism}} {{short for
 Page 957 江湖: Found match for regex: <begin> # {{lb|ja|Buddhism}} {{short for|ja|江湖会|tr=gōkoe}} <end>
 Page 958 vulcanizing: Found match for regex: <begin> # {{lb|en|Philippines|informal}} {{ellipsis of|en|vulcanizing shop}}. <end>
 Page 960 Merthyr: Found match for regex: <begin> # {{ellipsis of|en|Merthyr Tydfil}}. <end>
-Page 961 cathead: Found match for regex: <begin> {{senseno|en|timber|uc=1}} (“heavy piece of timber projecting from a ship on which an anchor is raised or lowered, and secured”) is from the fact that such a timber traditionally had a cat or lion’s head carved on its end.<ref>{{cite-book|author=Robert C[harles] Leslie|chapter=Figure-heads (''continued'')|title=Old Sea Wings, Ways, and Words, in the Days of Oak and Hemp|location=London|publisher=[[w:Chapman & Hall|Chapman and Hall]]|year=1890|page=154|pageurl=https://books.google.com/books?id=sZhDAAAAIAAJ&pg=PA154|oclc=458155843|passage=The term ‘cat-heads,’ used for the two stout projecting timbers on either bow, from which the anchor hung clear of the ship before it was let go, was no doubt connected with the face of a lion, or large cat, usually carved upon the square ends of them.}}</ref> {{senseno|en|biscuit|uc=1}} (“''short for'' cathead biscuit”) is apparently from the fact that the biscuit is similar in size to a cat’s head.<ref>{{cite-journal|quotee=Cara Rose|title=The Appalachian Cat Head Biscuit|journal=[[w:Pocahontas Times|The Pocahontas Times]]|archiveurl=https://web.archive.org/web/20240529235202/https://pocahontastimes.com/the-appalachian-cat-head-biscuit/|location=Marlinton, W.V.|publisher=The Pocahantas Times, Inc.|date=4 April 2019|issn=0738-8373|oclc=9694614}}.</ref> <end>
+Page 961 cathead: Found match for regex: <begin> {{senseno|en|timber|uc=1}} (“heavy piece of timber projecting from a ship on which an anchor is raised or lowered, and secured”) is from the fact that such a timber traditionally had a cat or lion’s head carved on its end.<ref>{{cite-book|author=Robert C[harles] Leslie|chapter=Figure-heads (''continued'')|title=Old Sea Wings, Ways, and Words, in the Days of Oak and Hemp|location=London|publisher=[[w:Chapman & Hall|Chapman and Hall]]|year=1890|page=154|pageurl=https://books.google.com/books?id=sZhDAAAAIAAJ&pg=PA154|oclc=458155843|passage=The term ‘cat-heads,’ used for the two stout projecting timbers on either bow, from which the anchor hung clear of the ship before it was let go, was no doubt connected with the face of a lion, or large cat, usually carved upon the square ends of them.}}</ref> {{senseno|en|biscuit|uc=1}} (“''ellipsis of'' cathead biscuit”) is apparently from the fact that the biscuit is similar in size to a cat’s head.<ref>{{cite-journal|quotee=Cara Rose|title=The Appalachian Cat Head Biscuit|journal=[[w:Pocahontas Times|The Pocahontas Times]]|archiveurl=https://web.archive.org/web/20240529235202/https://pocahontastimes.com/the-appalachian-cat-head-biscuit/|location=Marlinton, W.V.|publisher=The Pocahantas Times, Inc.|date=4 April 2019|issn=0738-8373|oclc=9694614}}.</ref> <end>
 Page 961 cathead: Found match for regex: <begin> # {{senseid|en|biscuit}}{{lb|en|US}} {{ellipsis of|en|cathead biscuit|t=a large fluffy biscuit, typically served with gravy}}. <end>
-Page 961 cathead: Found match for regex: <begin> {{trans-see|''short for'' cathead biscuit|cathead biscuit}} <end>
+Page 961 cathead: Found match for regex: <begin> {{trans-see|''ellipsis of'' cathead biscuit|cathead biscuit}} <end>
 Page 962 churchwarden: Found match for regex: <begin> # {{lb|en|Britain|slang}} {{ellipsis of|en|churchwarden pipe}}. <end>
 Page 963 dominical: Found match for regex: <begin> ## {{ellipsis of|en|dominical letter}}. <end>
-Page 965 Maastricht: Found match for regex: <begin> # {{short for|de|Maastrichter Vertrag}} <end>
+Page 965 Maastricht: Found match for regex: <begin> # {{ellipsis of|de|Maastrichter Vertrag}} <end>
 Page 966 Crimea: Found match for regex: <begin> # {{ellipsis of|en|Crimean People's Republic}}. <end>
 Page 967 Yarmouth: Found match for regex: <begin> ## {{ellipsis of|en|Great Yarmouth}}, [[Norfolk]]. <end>
 Page 968 Worcester: Found match for regex: <begin> # {{ellipsis of|en|Worcester sauce}}. <end>
@@ -1342,7 +1342,7 @@ Page 1007 SCAP: Found match for regex: <begin> # {{lb|ja|organizations|sort=ス�
 Page 1008 spermatic: Found match for regex: <begin> # {{lb|en|anatomy|archaic}} {{ellipsis of|en|spermatic artery}}. <end>
 Page 1010 各停: Found match for regex: <begin> # {{short for|ja|各駅停車|tr=kakueki teisha|t=a train that stops at every station on the line}} <end>
 Page 1011 弟子: Found match for regex: <begin> # {{short for|ja|sort=おとご|弟子月}} (''otogo-zuki'', “December” in the lunar calendar) <end>
-Page 1012 awesome: Found match for regex: <begin> # {{lb|en|uncountable|slang}} {{clip of|en|awesomeness}}: the [[quality]], [[state]], or [[essence]] of [[being]] [[#Adjective|awesome]]. <end>
+Page 1012 awesome: Found match for regex: <begin> # {{lb|en|uncountable|slang}} {{clip of|en|awesomeness|t=the [[quality]], [[state]], or [[essence]] of [[being]] [[#Adjective|awesome]]}}. <end>
 Page 1013 南極: Found match for regex: <begin> # {{short for|ja|南極圏}} south polar region <end>
 Page 1014 porr: Found match for regex: <begin> # {{short for|sv|pornografi}} <end>
 Page 1016 中華: Found match for regex: <begin> # {{short for|ja|中華料理|t=Chinese cuisine|tr=chūka ryōri}}; [[Chinese]] <end>
@@ -1352,7 +1352,7 @@ Page 1018 かも: Found match for regex: <begin> # {{short for|ja|かも知れ�
 Page 1019 Newf: Found match for regex: <begin> {{clip of|en|Newfoundlander}}. <end>
 Page 1020 arki: Found match for regex: <begin> # {{short for|izh|arkirooka}} <end>
 Page 1021 cime: Found match for regex: <begin> # {{lb|fr|France|informal}} {{short for|fr|cimetière}} <end>
-Page 1022 Jamaika: Found match for regex: <begin> # {{short for|de|Jamaika-Koalition}} <end>
+Page 1022 Jamaika: Found match for regex: <begin> # {{ellipsis of|de|Jamaika-Koalition}} <end>
 Page 1023 火車: Found match for regex: <begin> # {{short for|ja|火車婆|tr=kasha-baba|sort=かしや}}: a [[powerful]], [[evil]] [[old]] [[hag]] <end>
 Page 1024 jumbo: Found match for regex: <begin> # {{lb|en|paganism|historical}} {{ellipsis of|en|mumbo jumbo||a [deity]] or other [[supernatural]] being worshipped by certain [[West African]] peoples; an idol representing such a being}}. <end>
 Page 1025 to the: Found match for regex: <begin> # {{lb|en|mathematics}} {{ellipsis of|en|to the power of,to the ... ''([[nth]])'' power}}. <end>
@@ -1378,7 +1378,7 @@ Page 1042 清涼飲料: Found match for regex: <begin> # {{short for|ja|清涼�
 Page 1043 구리: Found match for regex: <begin> # {{short for|ko|구렁이|t=[[large]] [[snake]]}} <end>
 Page 1045 krab: Found match for regex: <begin> # {{lb|en|colloquial}} {{clip of|en|carabiner|addl=modified based on likening the shape of a carabiner to a crab's claw}}. <end>
 Page 1047 반달: Found match for regex: <begin> # {{short for|ko|반달리즘|t=[[vandalism]]}} <end>
-Page 1048 Pauli: Found match for regex: <begin> # {{short for|de|St. Pauli|t=quarter of Hamburg}}, ''especially the football club'' {{w|FC St. Pauli}} <end>
+Page 1048 Pauli: Found match for regex: <begin> # {{ellipsis of|de|St. Pauli|t=quarter of Hamburg|addl=especially the football club {{w|FC St. Pauli}}}} <end>
 Page 1049 幾何: Found match for regex: <begin> # {{defdate|1886}} {{lb|ja|sort=きか|mathematics|colloquial}} {{short for|ja|幾何学|tr=kikagaku|sort=}}: [[geometry]] <end>
 Page 1050 ゴスペル: Found match for regex: <begin> # {{defdate|after 1966}} {{short for|ja|ゴスペルソング||tr=gosuperu songu|[[gospel music]], [[gospel song]]}} <end>
 Page 1051 pan: Found match for regex: <begin> ## {{ellipsis of|en|salt pan}}: a [[flat]] [[artificial]] [[pond]] [[use]]d for [[collect]]ing [[mineral]]s from [[evaporate]]d [[water]]. <end>
@@ -1424,10 +1424,10 @@ Page 1088 독: Found match for regex: <begin> # {{short for|ko|^독일(獨逸)|t
 Page 1089 帝国: Found match for regex: <begin> # {{short for|ja|大日本帝国|tr=Dainippon Teikoku|t=[[Empire of Japan]]}} <end>
 Page 1090 São Tomé: Found match for regex: <begin> # {{lb|en|sometimes|_|proscribed}} {{ellipsis of|en|São Tomé and Príncipe}}. <end>
 Page 1091 هم: Found match for regex: <begin> # [[each other]]; {{short for|fa|همدیگر|tr=hamdigar}} <end>
-Page 1092 Kapitän: Found match for regex: <begin> # {{lb|de|military|navy}} {{short for|de|Kapitän zur See|t=[[captain]]: high-level officer rank equivalent to an army [[colonel]]}} <end>
+Page 1092 Kapitän: Found match for regex: <begin> # {{lb|de|military|navy}} {{ellipsis of|de|Kapitän zur See|t=[[captain]]: high-level officer rank equivalent to an army [[colonel]]}} <end>
 Page 1093 tín: Found match for regex: <begin> # {{lb|vi|colloquial|education}} {{short for|vi|tín chỉ}} <end>
 Page 1094 حال: Found match for regex: <begin> # {{short for|fa|زمان حال|tr=zamân-e hâl|t={{lb|fa|grammar}} the [[present tense]]}} <end>
-Page 1095 Delphin: Found match for regex: <begin> # {{lb|de|swimming}} {{short for|de|Delphinschwimmen|t=[[butterfly stroke]]}} <end>
+Page 1095 Delphin: Found match for regex: <begin> # {{lb|de|swimming}} {{ellipsis of|de|Delphinschwimmen|t=[[butterfly stroke]]}} <end>
 Page 1096 گاز: Found match for regex: <begin> # {{short for|fa|گاز طبیعی|tr=gâz-e tabi'i|t=[[natural gas]]}} <end>
 Page 1096 گاز: Found match for regex: <begin> # {{C|fa|Auto parts}} {{short for|fa|پدال گاز|tr=pedâl-e gâz|t=accelerator}} <end>
 Page 1097 سوسک: Found match for regex: <begin> # [[cockroach]]; {{ellipsis of|fa|سوسک حمام|tr=susk-e hammâm}} <end>
@@ -1448,7 +1448,7 @@ Page 1111 関西: Found match for regex: <begin> # {{short for|ja|関西地方|t
 Page 1112 rakko: Found match for regex: <begin> # {{lb|mus|Oklahoma}} {{short for|mus|corakko}} <end>
 Page 1112 rakko: Found match for regex: <begin> # {{short for|izh|vesirakko||blister}} <end>
 Page 1113 중: Found match for regex: <begin> # {{short for|ko|^중국(中國)||[[China]]}} <end>
-Page 1114 supi: Found match for regex: <begin> # {{lb|de|colloquial|often|ironic}} {{short for|de|super}} <end>
+Page 1114 supi: Found match for regex: <begin> # {{lb|de|colloquial|often|ironic}} {{clip of|de|super}} <end>
 Page 1115 생명: Found match for regex: <begin> # {{short for|ko|생명보험(生命保險)|t=[[life insurance]]}} <end>
 Page 1116 Esmé: Found match for regex: <begin> {{clip of|en|Esmerelda,Esmeralda}}. <end>
 Page 1117 lijn: Found match for regex: <begin> # {{short for|nl|waslijn}} <end>
@@ -1458,8 +1458,8 @@ Page 1119 hồ: Found match for regex: <begin> # {{short for|vi|hồ xây||morta
 Page 1120 生理: Found match for regex: <begin> # {{short for|ja|生理学|tr=seirigaku||[[physiology]]|sort=せいり}} <end>
 Page 1121 уул: Found match for regex: <begin> # {{ellipsis of|mn|уул өвс|t={{taxlink|Carex meyeriana|species}}}} <end>
 Page 1122 siha: Found match for regex: <begin> # {{short for|izh|painutossiha}} <end>
-Page 1123 Meiler: Found match for regex: <begin> ## {{short for|de|Kohlenmeiler}}: a [[charcoal pile]] or [[charcoal clamp]] {{q|(an earth mound kiln specifically as used for the manufacture of charcoal)}}.  <end>
-Page 1123 Meiler: Found match for regex: <begin> # {{lb|de|dated|or|informal}} {{short for|de|Atommeiler}}: an [[atomic pile]], a kind of [[nuclear reactor]] – {{ng|based on the design resemblance of early nuclear reactors to the traditional 'pile'}}  <end>
+Page 1123 Meiler: Found match for regex: <begin> ## {{ellipsis of|de|Kohlenmeiler}}: a [[charcoal pile]] or [[charcoal clamp]] {{gl|an earth mound kiln specifically as used for the manufacture of charcoal}}  <end>
+Page 1123 Meiler: Found match for regex: <begin> # {{lb|de|dated|or|informal}} {{ellipsis of|de|Atommeiler|t=[[atomic pile]]|qq=a kind of [[nuclear reactor]]|addl=based on the design resemblance of early nuclear reactors to the traditional 'pile'}}  <end>
 Page 1124 nước: Found match for regex: <begin> # {{short for|vi|đất nước||country; polity}} <end>
 Page 1125 mè: Found match for regex: <begin> # {{short for|vi|cá mè}} <end>
 Page 1126 gigot: Found match for regex: <begin> # {{lb|en|fashion}} {{ellipsis of|en|gigot sleeve||a type of [[sleeve]] shaped like a leg of mutton}}. <end>
@@ -1470,10 +1470,10 @@ Page 1130 古今: Found match for regex: <begin> # {{short for|ja|古今雛|tr=k
 Page 1130 古今: Found match for regex: <begin> # {{short for|ja|古今和歌集|tr=''{{w|Kokin Wakashū}}''|sort=こきん}}: a ''[[waka]]'' [[anthology]] [[compile]]d in 905 <end>
 Page 1131 half bath: Found match for regex: <begin> # {{lb|en|North America}} {{clip of|en|half bathroom}}. <end>
 Page 1132 ukko: Found match for regex: <begin> # {{short for|izh|lumiukko}} <end>
-Page 1133 Fahrstuhl: Found match for regex: <begin> # {{short for|de|Krankenfahrstuhl}}: [[wheelchair]] <end>
+Page 1133 Fahrstuhl: Found match for regex: <begin> # {{ellipsis of|de|Krankenfahrstuhl}}: [[wheelchair]] <end>
 Page 1134 brynja: Found match for regex: <begin> # {{short for|sv|nätbrynja}} <end>
 Page 1135 白土: Found match for regex: <begin> # {{short for|ja|酸性白土|tr=sansei hakudo|sort=はくと}}: {{rfdef|ja|sort=はくと}} <end>
-Page 1136 Siedlung: Found match for regex: <begin> # {{short for|de|Wohnsiedlung|t=[[housing estate]]}} <end>
+Page 1136 Siedlung: Found match for regex: <begin> # {{ellipsis of|de|Wohnsiedlung|t=[[housing estate]]}} <end>
 Page 1137 български: Found match for regex: <begin> #: {{short for|bg|бъ́лгарски [[ези́к]]||the Bulgarian language}} <end>
 Page 1138 영: Found match for regex: <begin> # {{short for|ko|영국(英國)|t=United Kingdom}} <end>
 Page 1138 영: Found match for regex: <begin> # {{short for|ko|영어(英語)|t=English language}} <end>
@@ -1482,13 +1482,13 @@ Page 1140 Margherita: Found match for regex: <begin> # {{ellipsis of|de|Pizza Ma
 Page 1141 ящик: Found match for regex: <begin> # {{lb|ru|computing|colloquial}} {{ellipsis of|ru|[[электро́нный]] [[почто́вый]] '''я́щик'''}}; (email) [[inbox]] <end>
 Page 1142 H-Bombe: Found match for regex: <begin> # {{short for|de|Wasserstoffbombe}}: [[hydrogen bomb]] <end>
 Page 1143 havu: Found match for regex: <begin> # {{short for|izh|havupuu||conifer}} <end>
-Page 1144 Karte: Found match for regex: <begin> # {{short for|de|Speisekarte}}: [[menu]] <end>
+Page 1144 Karte: Found match for regex: <begin> # {{ellipsis of|de|Speisekarte}}: [[menu]] <end>
 Page 1145 pommes: Found match for regex: <begin> # {{lb|sv|colloquial}} {{short for|sv|pommes frites||french fries; chips}}, [[fries]], [[chips]] <end>
-Page 1146 Quadrat: Found match for regex: <begin> # {{lb|de|postpositioned}} {{short for|de|[[im]]/[[zum]] Quadrat|t=squared}} <end>
+Page 1146 Quadrat: Found match for regex: <begin> # {{lb|de|postpositioned}} {{ellipsis of|de|[[im]] [[Quadrat]],[[zum]] [[Quadrat]]|t=squared}} <end>
 Page 1147 ASC: Found match for regex: <begin> # {{lb|en|underwater diving}} {{abbr of|en|[[w:Decompression theory#Time to surface|ascent time]]}}. <end>
 Page 1148 縄文: Found match for regex: <begin> # {{short for|ja|縄文時代|tr=Jōmon Jidai|t=The Jomon period}}: Period of Japanese pre-history, ca. 14000–1000 {{BCE}} <end>
 Page 1149 Apparat: Found match for regex: <begin> # {{lb|de|dated|except in expressions}} {{short for|de|Telefonapparat|t=telephone}} <end>
-Page 1150 rể: Found match for regex: <begin> # {{short for|vi|chú rể||[[groom]]; [[bridegroom]]}} {{gloss|man about to be married}}. <end>
+Page 1150 rể: Found match for regex: <begin> # {{short for|vi|chú rể||[[groom]]; [[bridegroom]]}} {{gloss|man about to be married}} <end>
 Page 1151 미: Found match for regex: <begin> # {{short for|ko|^미국(美國)|t=the [[U.S.]]}} <end>
 Page 1152 tacos: Found match for regex: <begin> # {{short for|fr|tacos français|t=[[French tacos]]}} <end>
 Page 1153 kymppi: Found match for regex: <begin> # {{lb|fi|sports|colloquial}} {{short for|fi|10 000 metrin juoksu}} <end>
@@ -1563,12 +1563,12 @@ Page 1213 bankes: Found match for regex: <begin> # {{sylabbr of|id|[[bantuan]] [
 Page 1214 지대: Found match for regex: <begin> # {{short for|ko|지대물박(地大物博)}} <end>
 Page 1215 핵: Found match for regex: <begin> # {{short for|ko|핵무기(核武器)|t=[[nuclear weapon]]s}} <end>
 Page 1216 山陽: Found match for regex: <begin> # {{short for|ja|山陽地方}} <end>
-Page 1217 versal: Found match for regex: <begin> {{clip of|en|universal}}. <end>
+Page 1217 versal: Found match for regex: <begin> {{clipping|en|universal}}. <end>
 Page 1218 ès: Found match for regex: <begin> # {{qualifier|Standard Cornish}} {{short for|kw|ages}} <end>
 Page 1219 xlnt: Found match for regex: <begin> {{abbr of|en|excellent}}. <end>
 Page 1220 にゃく: Found match for regex: <begin> # {{short for|ja|蒟蒻|tr=konnyaku}} <end>
 Page 1221 東方: Found match for regex: <begin> # {{short for|ja|sc=Jpan|w:ja:東方Project|東方Project|tr=Tōhō Purojekuto|{{w|Touhou Project}}, a popular bullet hell video game series}} <end>
-Page 1222 phone line: Found match for regex: <begin> # {{clip of|en|telephone line}}. <end>
+Page 1222 phone line: Found match for regex: <begin> # {{clipcomp of|en|telephone line}}. <end>
 Page 1223 dân tộc: Found match for regex: <begin> # {{short for|vi|dân tộc thiểu số||[[ethnic minority]] in [[Vietnam]]}} <end>
 Page 1224 Falkland: Found match for regex: <begin> # {{ellipsis of|en|Falkland Islands}}. <end>
 Page 1225 chargé: Found match for regex: <begin> # {{ellipsis of|en|chargé d'affaires}}. <end>
@@ -1620,7 +1620,7 @@ Page 1268 南蛮: Found match for regex: <begin> # {{short for|ja|南蛮煮|tr=n
 Page 1268 南蛮: Found match for regex: <begin> # {{short for|ja|南蛮船|tr=nanbansen}}: a sailing ship from Spain or Portugal {{qualifier|in the [[w:Muromachi period|Muromachi]] and [[w:Edo period|Edo]] periods}} <end>
 Page 1268 南蛮: Found match for regex: <begin> # {{short for|ja|南蛮鉄|tr=nanban tetsu}}: [[refined]] [[steel]] imported from abroad, mainly sourced from Europeans <end>
 Page 1269 telecon: Found match for regex: <begin> # {{lb|en|informal}} {{clip of|en|teleconference}}. <end>
-Page 1269 telecon: Found match for regex: <begin> # {{lb|en|informal}} {{clip of|en|[[telephone]] [[conversation]]}}. <end>
+Page 1269 telecon: Found match for regex: <begin> # {{lb|en|informal}} {{sylabbr of|en|[[telephone]] [[conversation]]}}. <end>
 Page 1270 bygg: Found match for regex: <begin> # {{lb|sv|school slang}} {{short for|sv|bygg- och anläggningsprogrammet}} <end>
 Page 1271 autoblinda: Found match for regex: <begin> # {{short for|it|autoblindata}} <end>
 Page 1272 羅漢: Found match for regex: <begin> # {{lb|ja|sort=らかん|Buddhism|colloquial}} {{short for|ja|阿羅漢|tr=arakan|sort=らかん}}: an [[arhat]], [[Buddhist]] [[saint]] <end>
@@ -1652,7 +1652,7 @@ Page 1294 nuchal: Found match for regex: <begin> # {{lb|en|medicine|colloquial}}
 Page 1295 graft-versus-host: Found match for regex: <begin> # {{ellipsis of|en|graft-versus-host disease}}. <end>
 Page 1296 Matteüs: Found match for regex: <begin> # {{lb|nl|bible}} {{ellipsis of|nl|[[evangelie]] [[naar]] [[Matteüs]]|t=the {{w|Gospel of Matthew}}}} <end>
 Page 1297 Talk:sacrifice: Found match for regex: <begin> {{reply|J3133}} I was once advised that I shouldn't manually add full stops after templates used in definitions like {{temp|clipping of}}, {{temp|short for}}, and {{temp|synonym of}} if these aren't automatically included by the templates, because the exclusion of the punctuation was probably intentional. Instead, if it is thought that there should be a full stop, then a discussion should take place to see if there is consensus, then the templates themselves updated to provide the punctuation. (I never got around to initiating a discussion&nbsp;…) Personally I think it makes sense to have a full stop automatically added (with the option to turn it off in appropriate cases), because (1) we treat our definitions for English entries like sentences, starting them with a capital letter and ending them with a full stop; and (2) it seems inconsistent that some of these templates automatically generate a full stop and others don't. — [[User:Sgconlaw|Sgconlaw]] ([[User talk:Sgconlaw|talk]]) 13:06, 6 June 2024 (UTC) <end>
-Page 1298 Hib: Found match for regex: <begin> # {{clip of|en|Hibernian}}; Someone associated with {{w|lang=en|Hibernian Football Club}}, as a player, coach, fan etc. <end>
+Page 1298 Hib: Found match for regex: <begin> # {{clip of|en|Hibernian|t=someone associated with {{w|lang=en|Hibernian Football Club}}, as a player, coach, fan etc.}} <end>
 Page 1299 fabs: Found match for regex: <begin> # {{lb|en|informal}} {{clip of|en|fabulous}}. <end>
 Page 1300 鎌倉: Found match for regex: <begin> ## {{short for|ja|鎌倉市|tr=Kamakura-shi|sort=かまくら}}: {{place|ja|city|pref/Kanagawa|c/Japan|sort=かまくら}} the [[capital city]] of the {{w|Kamakura shogunate}} <end>
 Page 1300 鎌倉: Found match for regex: <begin> ## {{short for|ja|鎌倉郡|tr=Kamakura-gun}}: {{place|ja|district|in central|p/{{w|Sagami Province}}}}, today part of Kanagawa Prefecture <end>
@@ -1800,11 +1800,11 @@ Page 1433 Zarge: Found match for regex: <begin> # {{short for|de|Türzarge}} <en
 Page 1434 軍拡: Found match for regex: <begin> {{short for|ja|軍事拡大}} <end>
 Page 1435 maiestas: Found match for regex: <begin> # {{lb|la|law}} {{short for|la|[[crīmen]] maiestātis,[[lēx]] maiestātis|t=[[treason]], [[high treason]]}} <end>
 Page 1437 Balg: Found match for regex: <begin> # {{lb|de|technology}} {{short for|de|Blasebalg|t=bellows}}, used especially with musical [[instrument]]s, such as the [[accordion]] <end>
-Page 1438 pro wrestling: Found match for regex: <begin> # {{clip of|en|professional wrestling}}. <end>
+Page 1438 pro wrestling: Found match for regex: <begin> # {{clipcomp of|en|professional wrestling}}. <end>
 Page 1439 trò: Found match for regex: <begin> # {{short for|vi|học trò||[[pupil]]}} <end>
 Page 1440 appro: Found match for regex: <begin> # {{lb|fi|colloquial}} {{short for|fi|approbatur}} {{gloss|academic syllabus}} <end>
 Page 1441 hầm: Found match for regex: <begin> # {{short for|vi|đường hầm||a tunnel}} <end>
-Page 1442 sắc: Found match for regex: <begin> # {{lb|vi|archaic}} {{short for|vi|sắc đẹp}} or {{clip of|vi|nhan sắc||[[womanly]] [[beauty]]}} <end>
+Page 1442 sắc: Found match for regex: <begin> # {{lb|vi|archaic}} {{ellipsis of|vi|sắc đẹp,nhan sắc||[[womanly]] [[beauty]]}} <end>
 Page 1443 tuyển: Found match for regex: <begin> # {{short for|vi|đội tuyển||representative team}} <end>
 Page 1444 ải: Found match for regex: <begin> # {{short for|vi|làm ải}} <end>
 Page 1445 cáp: Found match for regex: <begin> # {{lb|vi|TV}} {{short for|vi|truyền hình cáp||[[cable television]]}} <end>
@@ -1864,8 +1864,8 @@ Page 1481 金剛: Found match for regex: <begin> # {{lb|ja|theater}} {{short for
 Page 1482 khăn quàng: Found match for regex: <begin> # {{short for|vi|khăng quàng [[đỏ]]||red rectangular scarf worn by grade schoolchildren}} <end>
 Page 1483 provisi: Found match for regex: <begin> # {{lb|id|trading}} {{ellipsis of|id|provisi makelar|t=[[commission]]}}: a fee charged by an agent or broker for carrying out a transaction. <end>
 Page 1484 ubicomp: Found match for regex: <begin> # {{sylabbr of|en|ubiquitous computing}}. <end>
-Page 1485 安保理: Found match for regex: <begin> # {{clip of|ja|安全保障理事会|tr=Anzen Hoshō Rijikai||[[Security Council]]|sort=あんぽり}}; {{short for|ja|国連安保理|tr=Kokuren Anpori||[[UN Security Council]]|sort=あんぽり}} <end>
-Page 1486 安全保障理事会: Found match for regex: <begin> # {{short for|ja|国際連合安全保障理事会<tr:Kokusai Rengō Anzen Hoshō Rijikai><t:[[United Nations Security Council]]>,国連安全保障理事会<tr:Kokuren Anzen Hoshō Rijikai><t:[[UN Security Council]]>|sort=あんぜんほしょうりじかい}}: the [[Security Council]] <end>
+Page 1485 安保理: Found match for regex: <begin> # {{sylabbr of|ja|安全保障理事会|tr=Anzen Hoshō Rijikai||[[Security Council]]|sort=あんぽり}}; {{ellipsis of|ja|国連安保理|tr=Kokuren Anpori||[[UN Security Council]]|sort=あんぽり}} <end>
+Page 1486 安全保障理事会: Found match for regex: <begin> # {{ellipsis of|ja|国際連合安全保障理事会<tr:Kokusai Rengō Anzen Hoshō Rijikai><t:[[United Nations Security Council]]>,国連安全保障理事会<tr:Kokuren Anzen Hoshō Rijikai><t:[[UN Security Council]]>|sort=あんぜんほしょうりじかい}}: the [[Security Council]] <end>
 Page 1487 最高裁: Found match for regex: <begin> # {{short for|ja|最高裁判所||[[supreme court]]|tr=saikō saibansho}} <end>
 Page 1488 簡裁: Found match for regex: <begin> # {{short for|ja|簡易裁判所||[[summary]] [[court]]|tr=kan'i saibansho}} <end>
 Page 1489 高裁: Found match for regex: <begin> # {{short for|ja|高等裁判所||[[appellate]] [[court]]; [[high court]]|tr=kōtō saibansho}} <end>
@@ -1996,7 +1996,7 @@ Page 1600 нал: Found match for regex: <begin> # {{lb|ru|colloquial}} {{clip o
 Page 1601 漁協: Found match for regex: <begin> # {{short for|ja|漁業協同組合|tr=gyogyō kyōdō kumiai|sort=きよきよう}}: fishery [[cooperative]] <end>
 Page 1602 Tonkin: Found match for regex: <begin> # {{place|en|<=ellip of:Gulf of Tonkin|gulf|in northern|c/Vietnam}}. <end>
 Page 1602 Tonkin: Found match for regex: <begin> # {{ellipsis of|en|{{w|Gulf of Tonkin incident}}|addl=a 1964 [[event]] [[used]] to [[increase]] [[US]] [[involvement]] in the {{w|Vietnam War|Vietnamese Civil War}}}}. <end>
-Page 1603 syscall: Found match for regex: <begin> {{clip of|en|[[system]] [[call]]}}. <end>
+Page 1603 syscall: Found match for regex: <begin> {{clipcomp of|en|[[system]] [[call]]}}. <end>
 Page 1605 鳴門: Found match for regex: <begin> # {{short for|ja|鳴門巻き|tr=[[narutomaki]]|sort=}}: a ''[[kamaboko]]'' [[fishcake]] with a whirlpool [[design]] <end>
 Page 1605 鳴門: Found match for regex: <begin> # {{short for|ja|鳴門市|tr=Naruto-shi}}: {{place|ja|city|in northwestern|pref/Tokushima|sort=なると}} <end>
 Page 1605 鳴門: Found match for regex: <begin> # {{short for|ja|鳴門海峡|tr=Naruto-kaikyō}}: {{w|Naruto Strait}}, [[famous]] for its [[eponymous]] [[whirlpool]]s <end>
@@ -2236,7 +2236,7 @@ Page 1817 e-sport: Found match for regex: <begin> # {{abbr of|en|electronic spor
 Page 1818 TAI: Found match for regex: <begin> # {{lb|en|organic chemistry}} {{init of|en|trifluoromethylaminoindane}}. <end>
 Page 1820 di động: Found match for regex: <begin> # {{lb|vi|colloquial}} {{short for|vi|điện thoại di động||[[cell phone]]; [[mobile phone]]}} <end>
 Page 1821 downward dog: Found match for regex: <begin> # {{lb|en|yoga}} {{ellipsis of|en|downward-facing dog}}. <end>
-Page 1822 down dog: Found match for regex: <begin> # {{lb|en|yoga}} {{clip of|en|downward-facing dog}}. <end>
+Page 1822 down dog: Found match for regex: <begin> # {{lb|en|yoga}} {{clipcomp of|en|downward-facing dog}}. <end>
 Page 1823 대사: Found match for regex: <begin> # {{lb|ko|physiology}} {{short for|ko|신진대사(新陳代謝)|t=[[metabolism]]}} <end>
 Page 1824 サハリン: Found match for regex: <begin> # {{short for|ja|[[サハリン島|サハリン]][[島]]|tr=Saharin-tō}}: [[Sakhalin]] {{gl|[[island]] in [[Russia]]}} <end>
 Page 1824 サハリン: Found match for regex: <begin> # {{short for|ja|[[サハリン州|サハリン]][[州]]|tr=Saharin-shū}}: Sakhalin [[oblast|Oblast]] <end>
@@ -2260,7 +2260,7 @@ Page 1837 West Ham: Found match for regex: <begin> # {{topics|en|Football (socce
 Page 1838 下野: Found match for regex: <begin> ## {{lb|ja|sort=しもつけ|historical}} {{short for|ja|下野国|tr=Shimotsuke-no-kuni|sort=しもつけ}}: {{w|Shimotsuke Province}}, an [[old]] [[province]] of [[Japan]], now part of [[Tochigi]] [[prefecture|Prefecture]] <end>
 Page 1838 下野: Found match for regex: <begin> ## {{short for|ja|下野市|tr=Shimotsuke-shi|sort=しもつけ}}:  {{place|ja|city|pref/Tochigi|c/Japan|t=Shimotsuke|sort=しもつけ}} {{def-date|2006&ndash;}} <end>
 Page 1839 陸前: Found match for regex: <begin> # {{short for|ja|陸前国|tr=Rikuzen-no-kuni}}: {{w|Rikuzen Province}}, one of the [[province]]s of [[Japan]] [[separate]]d from the older {{m|ja|陸奥|tr=Mutsu}} Province in the early {{w|Meiji period}}; today part of [[Miyagi]] and [[Iwate]] [[prefecture]]s <end>
-Page 1840 ball pen: Found match for regex: <begin> # {{lb|en|Hong Kong|Pakistan|India|Philippines}} {{clip of|en|ballpoint pen}}. <end>
+Page 1840 ball pen: Found match for regex: <begin> # {{lb|en|Hong Kong|Pakistan|India|Philippines}} {{clipcomp of|en|ballpoint pen}}. <end>
 Page 1841 志賀: Found match for regex: <begin> # {{short for|ja|志賀島|tr=Shikanoshima}}, an area north of [[Fukuoka]] city <end>
 Page 1842 привод: Found match for regex: <begin> # {{lb|ru|aviation}} {{ellipsis of|ru|[[приводной|приводна́я]] [[радиоста́нция]] or [[приводно́й]] [[радиомая́к]]}}; [[w:Non-directional beacon|non-directional beacon]] ([[NDB]]) <end>
 Page 1843 サブ: Found match for regex: <begin> # {{lb|ja|broadcasting}} {{short for|ja|サブコントロールルーム|tr=sabu-kontorōru rūmu}} <end>
@@ -2318,7 +2318,7 @@ Page 1896 plezure: Found match for regex: <begin> # {{short for|io|vu esas plezu
 Page 1897 とど: Found match for regex: <begin> # {{short for|ja|とどのつまり|tr=todo no tsumari|t=[[in the end]]}} <end>
 Page 1898 芥子: Found match for regex: <begin> # {{defdate|from 1800s}} {{short for|ja|芥子玉|tr=keshidama|sort=けし}}: a [[dye|dyeing]] [[pattern]] with [[line]]d [[row]]s of [[dot]]s <end>
 Page 1898 芥子: Found match for regex: <begin> # {{defdate|from 1785}} {{short for|ja|芥子坊主|tr=keshi bōzu}}: an [[infant]] [[hairstyle]] with only the [[hair]] in the [[top]] of the [[head]] [[unshaven]], resembling the [[hull]] [[remains]] of a poppy [[fruit]] <end>
-Page 1899 e-cig: Found match for regex: <begin> # {{lb|en|informal}} {{clip of|en|electronic cigarette}}. <end>
+Page 1899 e-cig: Found match for regex: <begin> # {{lb|en|informal}} {{sylabbr of|en|electronic cigarette}}. <end>
 Page 1900 Darjeeling: Found match for regex: <begin> # {{ellipsis of|en|Darjeeling tea|t=[[tea]] from or [[similar]] to [[that]] from [[#Proper noun|Darjeeling]], [[India]]}}. <end>
 Page 1901 arabic: Found match for regex: <begin> # {{lb|en|rare}} {{ellipsis of|en|gum arabic}}. <end>
 Page 1902 Purbeck: Found match for regex: <begin> # {{place|en|<=ellipsis of:Isle of Purbeck|peninsula|co/Dorset|cc/England}}. <end>
@@ -2391,7 +2391,7 @@ Page 1969 イメチェン: Found match for regex: <begin> # {{short for|ja|イ�
 Page 1981 ふじこ: Found match for regex: <begin> # {{short for|ja|くぁwせdrftgyふじこlp}} <end>
 Page 1982 Citations:konsol: Found match for regex: <begin> ===Noun: "{{short for|sv|video game console}}" === <end>
 Page 1983 安保: Found match for regex: <begin> # {{short for|ja|安保闘争|tr=Anpo tōsō||{{w|Anpo protests}}|sort=あんぽ}} <end>
-Page 1983 安保: Found match for regex: <begin> # {{clip of|ja|日本国とアメリカ合衆国との間の相互協力及び安全保障条約|tr=Nihonkoku to Amerika Gasshūkoku to no Aida no Sōgō Kyōryoku Oyobi Anzen Hoshō Jōyaku}}; {{clip of|ja|日米安全保障条約|tr=Nichibei Anzen Hoshō Jōyaku||{{w|Treaty of Mutual Cooperation and Security between the United States and Japan}}|sort=あんぽ}}; {{short for|ja|安保条約|tr=Anpo Jōyaku|sort=あんぽ}} <end>
+Page 1983 安保: Found match for regex: <begin> # {{sylabbr of|ja|日本国とアメリカ合衆国との間の相互協力及び安全保障条約|<tr:Nihonkoku to Amerika Gasshūkoku to no Aida no Sōgō Kyōryoku Oyobi Anzen Hoshō Jōyaku>,日米安全保障条約<tr:Nichibei Anzen Hoshō Jōyaku>||{{w|Treaty of Mutual Cooperation and Security between the United States and Japan}}|sort=あんぽ}}; {{ellipsis of|ja|安保条約|tr=Anpo Jōyaku|sort=あんぽ}} <end>
 Page 1984 人絹: Found match for regex: <begin> {{short for|ja|sort=しんけん'|人造絹糸|tr=jinzō kenshi}}<ref name="DJR">{{R:Daijirin}}</ref> <end>
 Page 1986 ALG: Found match for regex: <begin> # {{lb|de|Germany|officialese}} {{short for|de|Arbeitslosengeld}} <end>
 Page 1987 中招: Found match for regex: <begin> # {{lb|zh|Mainland}} {{short for|zh|[[中考]][[招生]]|t=middle school graduate admissions}} <end>
@@ -2408,13 +2408,13 @@ Page 1994 デシン: Found match for regex: <begin> # {{short for|ja|sort=てし
 Page 1995 モス: Found match for regex: <begin> {{short for|ja|sort=ほおむ|モスリン}}<ref name="DJR">{{R:Daijirin}}</ref> <end>
 Page 1996 オードトワレ: Found match for regex: <begin> {{short for|ja|オードトワレット||sort=おーととわれ}} <end>
 Page 1997 lẽ: Found match for regex: <begin> # {{short for|vi|vợ lẽ||second [[wife]]; [[concubine]]}} <end>
-Page 1998 Subi: Found match for regex: <begin> # {{lb|en|slang}} {{clip of|en|{{w|Subiaco, Western Australia}}}}. <end>
+Page 1998 Subi: Found match for regex: <begin> # {{lb|en|slang}} {{tcl|en|<clip of:Subiaco|id=Q3976501}}. <end>
 Page 2000 Hay: Found match for regex: <begin> ## {{place|en|<=ellip of:Hay-on-Wye|small town|wcomm/Hay|co/Powys|cc/Wales|on the England-Wales border}}. <end>
 Page 2001 上皇: Found match for regex: <begin> # {{short for|ja|太上天皇}} <end>
 Page 2002 ネル: Found match for regex: <begin> {{short for|ja|sort=ねる|フランネル}}<ref name="DJR">{{R:Daijirin}}</ref> <end>
 Page 2003 devil to pay: Found match for regex: <begin> # {{ellipsis of|en|the devil to pay and no pitch hot or ready}}. <end>
 Page 2004 gyr: Found match for regex: <begin> # {{clip of|en|gyrfalcon}}. <end>
-Page 2005 veg box: Found match for regex: <begin> # {{lb|en|informal}} {{clip of|en|vegetable box}}. <end>
+Page 2005 veg box: Found match for regex: <begin> # {{lb|en|informal}} {{clipcomp of|en|vegetable box}}. <end>
 Page 2006 maong: Found match for regex: <begin> # {{short for|ceb|mao nga||aforementioned; therefore}} <end>
 Page 2007 JIF: Found match for regex: <begin> # {{abbr of|en|JFIF}}. <end>
 Page 2008 kardan: Found match for regex: <begin> # {{short for|sv|kardanknut|t=universal joint}} <end>
@@ -2565,7 +2565,7 @@ Page 2150 いすず: Found match for regex: <begin> # {{ja-def|いすゞ}} {{sho
 Page 2151 dragline: Found match for regex: <begin> # {{ellipsis of|en|dragline excavator}}. <end>
 Page 2151 dragline: Found match for regex: <begin> {{trans-top-also|ellipsis of ''dragline excavator''|dragline excavator}} <end>
 Page 2152 アマバン: Found match for regex: <begin> # {{short for|ja|アマチュアバンド|tr=amachua bando||amateur band}} <end>
-Page 2153 lat. dorsi: Found match for regex: <begin> # {{lb|en|colloquial}} {{clip of|en|latissimus dorsi}}. <end>
+Page 2153 lat. dorsi: Found match for regex: <begin> # {{lb|en|colloquial}} {{clipcomp of|en|latissimus dorsi}}. <end>
 Page 2155 観自在: Found match for regex: <begin> # {{lb|ja|Buddhism}} {{short for|ja|観自在菩薩|tr=Kanjizai Bosatsu||{{w|Avalokitesvara|Avalokiteśvara}} [[bodhisattva|Bodhisattva]]}} <end>
 Page 2156 いってら: Found match for regex: <begin> # {{lb|ja|internet slang}} {{short for|ja|いってらっしゃい}} <end>
 Page 2157 băm: Found match for regex: <begin> # {{lb|vi|colloquial}} {{short for|vi|[[ba]] [[mươi]]||[[thirty]] ...}} <end>
@@ -2789,7 +2789,7 @@ Page 2316 coarc: Found match for regex: <begin> # {{lb|en|medicine|colloquial}} 
 Page 2317 neurosurg: Found match for regex: <begin> # {{lb|en|medicine|colloquial}} {{clip of|en|neurosurgery}}. <end>
 Page 2317 neurosurg: Found match for regex: <begin> # {{lb|en|medicine|colloquial}} {{clip of|en|neurosurgical}}. <end>
 Page 2318 C-sec: Found match for regex: <begin> # {{lb|en|medicine|colloquial}} {{clip of|en|C-section}}. <end>
-Page 2319 crit care: Found match for regex: <begin> # {{lb|en|medicine|colloquial}} {{clip of|en|critical care}}. <end>
+Page 2319 crit care: Found match for regex: <begin> # {{lb|en|medicine|colloquial}} {{clipcomp of|en|critical care}}. <end>
 Page 2320 갈증: Found match for regex: <begin> # {{short for|ko|갈급증||[[impatience]]}} <end>
 Page 2321 大元: Found match for regex: <begin> # {{short for|ja|大元帥明王|'''大元'''帥明王|tr=Daigen Myōō}} <end>
 Page 2322 中折れ: Found match for regex: <begin> # {{short for|ja|中折れ帽子|'''中折れ'''帽子|tr=nakaore bōshi|[[fedora]]}} {{gl|felt hat}} <end>
@@ -3130,7 +3130,7 @@ Page 2650 Knaster: Found match for regex: <begin> # {{lb|de|dated}} {{short for|
 Page 2651 post-bac: Found match for regex: <begin> # {{clip of|en|postbaccalaureate}}. <end>
 Page 2652 postbacc: Found match for regex: <begin> # {{clip of|en|postbaccalaureate}}. <end>
 Page 2653 post-bacc: Found match for regex: <begin> # {{clip of|en|postbaccalaureate}}. <end>
-Page 2654 dino juice: Found match for regex: <begin> # {{lb|en|slang|humorous|automotive}} {{clip of|en|dinosaur juice}}. <end>
+Page 2654 dino juice: Found match for regex: <begin> # {{lb|en|slang|humorous|automotive}} {{clipcomp of|en|dinosaur juice}}. <end>
 Page 2656 M/L ratio: Found match for regex: <begin> # {{lb|en|astrophysics}} {{init of|en|mass-to-light ratio}}. <end>
 Page 2656 M/L ratio: Found match for regex: <begin> # {{lb|en|medicine}} {{init of|en|media-to-lumen ratio}}. <end>
 Page 2657 パリピ: Found match for regex: <begin> # {{short for|ja|パーリーピーポー|tr=pārī pīpō}} {{defdate|c. 2015&ndash;}} <end>
@@ -3168,10 +3168,10 @@ Page 2686 勢語: Found match for regex: <begin> # {{short for|ja|伊勢物語|t
 Page 2687 jɔlɔf: Found match for regex: <begin> # {{short for|kri|jɔlɔf rɛs|t=jollof rice}} <end>
 Page 2688 跏坐: Found match for regex: <begin> # {{lb|ja|Buddhism}} {{short for|ja|結跏趺坐|tr=kekkafuza|t=sitting in [[lotus position]]}} <end>
 Page 2689 St Brides: Found match for regex: <begin> # {{tcl|en|<ellip of:St Brides Wentlooge|id=Q7587366}}. <end>
-Page 2690 trop rock: Found match for regex: <begin> # {{clip of|en|tropical rock}}. <end>
+Page 2690 trop rock: Found match for regex: <begin> # {{clipcomp of|en|tropical rock}}. <end>
 Page 2691 swalayan: Found match for regex: <begin> # {{lb|id|colloquial}} {{ellipsis of|id|pasar swalayan|t=supermarket|lit=market + self-service}} <end>
 Page 2692 パシリ: Found match for regex: <begin> # {{lb|ja|slang}} {{short for|ja|使いっ走り|tr=tsukaippashiri}} <end>
-Page 2693 sus chord: Found match for regex: <begin> # {{lb|en|music|informal}} {{clip of|en|suspended chord}}. <end>
+Page 2693 sus chord: Found match for regex: <begin> # {{lb|en|music|informal}} {{clipcomp of|en|suspended chord}}. <end>
 Page 2694 Maritzburg: Found match for regex: <begin> # {{ellipsis of|en|Pietermaritzburg}}. <end>
 Page 2695 現パロ: Found match for regex: <begin> # {{short for|ja|現代パロディ|tr=gendai parodi}} <end>
 Page 2696 ちょっ: Found match for regex: <begin> # {{lb|ja|slang}} {{short for|ja|ちょっと|tr=chotto}} <end>
@@ -3213,7 +3213,7 @@ Page 2730 さらし: Found match for regex: <begin> # {{ja-def|晒|晒し|晒布
 Page 2731 ルーズ: Found match for regex: <begin> # {{short for|ja|ルーズソックス|tr=rūzu sokkusu}} <end>
 Page 2732 KPSS test: Found match for regex: <begin> # {{lb|en|econometrics}} {{init of|en|Kwiatkowski-Phillips-Schmidt-Shin test}}. <end>
 Page 2733 みずたま: Found match for regex: <begin> # {{short for|ja|水玉模様|tr=mizutama moyō|t=[[polka-dot]] [[pattern]]}} <end>
-Page 2734 Euro-Mediterranean: Found match for regex: <begin> # {{clip of|en|European Mediterranean}}. <end>
+Page 2734 Euro-Mediterranean: Found match for regex: <begin> # {{clipcomp of|en|European Mediterranean}}. <end>
 Page 2735 現国: Found match for regex: <begin> # {{lb|ja|education|school subject}} {{short for|ja|[[現代]][[国語]]|tr=gendai kokugo|t=[[Japanese]]}} <end>
 Page 2736 アピ: Found match for regex: <begin> # {{lb|ja|informal}} {{short for|ja|アピール|tr=apīru}} <end>
 Page 2737 귀걸이: Found match for regex: <begin> # {{short for|ko|귀걸이안경}} <end>
@@ -3274,7 +3274,7 @@ Page 2789 クイ研: Found match for regex: <begin> # {{short for|ja|[[クイズ
 Page 2790 Timb: Found match for regex: <begin> # {{lb|en|informal}} {{clip of|en|w:The Timberland Company|Timberland|t=boot made by {{w|the Timberland Company}}}}. <end>
 Page 2791 点竄: Found match for regex: <begin> # {{short for|ja|点竄術}} <end>
 Page 2792 運痴: Found match for regex: <begin> # {{lb|ja|sort=うんち|colloquial}} {{short for|ja|sort=うんち|運動音痴}} <end>
-Page 2793 posi vibes: Found match for regex: <begin> # {{lb|en|mostly|in the plural}} {{clip of|en|[[positive]] [[vibe]]s|t=[[positive]] [[energy]]; [[good]] [[vibes]]}}. <end>
+Page 2793 posi vibes: Found match for regex: <begin> # {{lb|en|mostly|in the plural}} {{clipcomp of|en|[[positive]] [[vibe]]s|t=[[positive]] [[energy]]; [[good]] [[vibes]]}}. <end>
 Page 2794 漫喫: Found match for regex: <begin> # {{short for|ja|漫画喫茶|tr=manga kissa}} <end>
 Page 2795 Bisto: Found match for regex: <begin> # {{lb|en|UK}} {{ellipsis of|en|aah, Bisto}}. {{rfex|en}} <end>
 Page 2796 Krav: Found match for regex: <begin> # {{ellipsis of|en|Krav Maga}}. <end>
@@ -3311,7 +3311,7 @@ Page 2826 count one's chickens: Found match for regex: <begin> # {{ellipsis of|e
 Page 2828 Luchon: Found match for regex: <begin> # {{short for|fr|Bagnères-de-Luchon}} <end>
 Page 2829 Les Sables: Found match for regex: <begin> # {{short for|fr|Les Sables-d'Olonne}} <end>
 Page 2830 バーテン: Found match for regex: <begin> # {{short for|ja|バーテンダー|tr=b&amacr;tend&amacr;|t=[[bartender]]}} <end>
-Page 2831 flex account: Found match for regex: <begin> # {{clip of|en|[[flexible]] [[spending]] [[account]]}}. <end>
+Page 2831 flex account: Found match for regex: <begin> # {{clipcomp of|en|[[flexible]] [[spending]] [[account]]}}. <end>
 Page 2832 厚田: Found match for regex: <begin> # {{short for|ja|厚田郡}}: {{place|ja|t=Atsuta District|former district|pref/Hokkaido|c/Japan|sort=あつた}} <end>
 Page 2833 SVR: Found match for regex: <begin> # {{short for|de|w:de:Sachverständigenrat zur Begutachtung der gesamtwirtschaftlichen Entwicklung}} <end>
 Page 2834 Đô-mi-ni-ca-na: Found match for regex: <begin> # {{short for|vi|Cộng hoà Đô-mi-ni-ca-na||Dominican Republic}} <end>
@@ -3374,7 +3374,7 @@ Page 2891 트젠: Found match for regex: <begin> # {{short for|ko|트랜스젠�
 Page 2892 존잘남: Found match for regex: <begin> # {{lb|ko|slang|somewhat|vulgar|}} {{short for|ko|[[존나]] [[잘생기다|잘생긴]] [[남자]]|t=a guy who is handsome as fuck}} <end>
 Page 2893 スケボー: Found match for regex: <begin> # {{short for|ja|スケートボード|tr=sukētobōdo|t=[[skateboard]]}} <end>
 Page 2894 ウルレア: Found match for regex: <begin> # {{lb|ja|informal|originally|and|chiefly|trading card games}} {{short for|ja|ウルトラレア|tr=urutora-rea|t=[[ultra-rare]]}} <end>
-Page 2895 Albronze: Found match for regex: <begin> # {{clip of|en|aluminium bronze}}. <end>
+Page 2895 Albronze: Found match for regex: <begin> # {{clipcomp of|en|aluminium bronze}}. <end>
 Page 2896 ロスジェネ: Found match for regex: <begin> # {{short for|ja|ロストジェネレーション|tr=rosuto jenerēshon}} <end>
 Page 2898 スレタイ: Found match for regex: <begin> # {{lb|ja|2ch slang|internet slang}} {{short for|ja|[[スレッド]]の[[タイトル]]|tr=sureddo no taitoru|t=[[thread]] [[title]]}} <end>
 Page 2899 스드메: Found match for regex: <begin> # {{lb|ko|wedding industry}} {{short for|ko|[[스튜디오]], [[드레스]], [[메이크업]]|t=[[studio]], [[dress]], [[makeup]]}} <end>
@@ -3448,7 +3448,7 @@ Page 2962 Gorleston: Found match for regex: <begin> # {{tcl|en|<ellipsis of:Gorl
 Page 2963 bensis: Found match for regex: <begin> # {{short for|fi|bensa-asema}} <end>
 Page 2964 エミュ: Found match for regex: <begin> # {{lb|ja|informal}} {{short for|ja|エミュレータ}} <end>
 Page 2965 đồ hoạ: Found match for regex: <begin> # {{short for|vi|thiết kế đồ hoạ||[[graphic design]]}} <end>
-Page 2966 locoshed: Found match for regex: <begin> # {{lb|en|rail}} {{clip of|en|locomotive shed}}. <end>
+Page 2966 locoshed: Found match for regex: <begin> # {{lb|en|rail}} {{clipcomp of|en|locomotive shed}}. <end>
 Page 2967 말레이: Found match for regex: <begin> # {{short for|ko|^말레이시아|t=Malaysia}} <end>
 Page 2968 geri-psych: Found match for regex: <begin> # {{sylabbr of|en|[[geriatric]]-[[psychiatric]]}}. <end>
 Page 2969 self-iso: Found match for regex: <begin> # {{lb|en|informal}} {{clip of|en|self-isolation}}. <end>
@@ -3492,9 +3492,9 @@ Page 3005 เอมิเรตส์: Found match for regex: <begin> # {{short 
 Page 3006 シチュ: Found match for regex: <begin> # {{short for|ja|シチュエーション|tr=shichuēshon}} <end>
 Page 3007 anev: Found match for regex: <begin> # {{sylabbr of|id|[[analisis]] [[dan]] [[evaluasi]]|t=analysis and evaluation}} <end>
 Page 3008 anevlap: Found match for regex: <begin> # {{sylabbr of|id|[[analisis]] [[dan]] [[evaluasi]] [[lapangan]]|t=field analysis and evaluation}} <end>
-Page 3009 angad: Found match for regex: <begin> # {{short for|id|[[angkutan]] [[angkatan darat]]|t=army transport}} <end>
-Page 3010 angair: Found match for regex: <begin> # {{short for|id|[[angkutan]] [[air]]|t=water transport}} <end>
-Page 3011 angkub: Found match for regex: <begin> # {{short for|id|[[angkutan]] [[kuda]] [[beban]]|t=}} <end>
+Page 3009 angad: Found match for regex: <begin> # {{sylabbr of|id|[[angkutan]] [[angkatan darat]]|t=army transport}} <end>
+Page 3010 angair: Found match for regex: <begin> # {{clipcomp of|id|[[angkutan]] [[air]]|t=water transport}} <end>
+Page 3011 angkub: Found match for regex: <begin> # {{sylabbr of|id|[[angkutan]] [[kuda]] [[beban]]|t=}} <end>
 Page 3012 anglamil: Found match for regex: <begin> # {{sylabbr of|id|angkutan laut militer}} <end>
 Page 3013 와리가리: Found match for regex: <begin> # {{short for|ko|왔다리 갔다리|t=back and forth}} <end>
 Page 3014 Наркомсвязь: Found match for regex: <begin> {{sylabbr of|ru|[[народный|Наро́дный]] [[комиссариат|комиссариа́т]] [[связь|свя́зи]]<t:People's Commissariat for Communications>}} <end>
@@ -3517,80 +3517,80 @@ Page 3030 labkrim: Found match for regex: <begin> # {{lb|id|police}} {{sylabbr o
 Page 3031 pansos: Found match for regex: <begin> # {{sylabbr of|id|panjat sosial|t=social climbing}} <end>
 Page 3032 dewas: Found match for regex: <begin> # {{blend of|id|dewan pengawas|t=supervisory board}} <end>
 Page 3033 hysto: Found match for regex: <begin> # {{clip of|en|hysterectomy}}. <end>
-Page 3034 Acquis: Found match for regex: <begin> # [[acquis]], {{short for|de|Acquis communautaire}} <end>
-Page 3035 bekangdam: Found match for regex: <begin> # {{lb|id|military}} {{short for|id|[[perbekalan]] [[angkutan]] [[daerah]] [[militer]]|t=military area transport supply}} <end>
-Page 3036 binawas: Found match for regex: <begin> # {{short for|id|[[pembinaan]] dan [[pengawasan]]|t=cultivation/development/promotion and supervision}} <end>
-Page 3037 binhankamnas: Found match for regex: <begin> # {{short for|id|[[pembinaan]] [[pertahanan]] dan [[keamanan]] [[nasional]]|t=national security and defence development}} <end>
-Page 3038 binjas: Found match for regex: <begin> # {{short for|id|[[pembinaan]] [[jasmani]]|t=physical development}} <end>
-Page 3039 binjasmil: Found match for regex: <begin> # {{short for|id|[[pembinaan]] [[jasmani]] [[militer]]|t=military physical development}} <end>
-Page 3040 binmas: Found match for regex: <begin> # {{short for|id|[[pembinaan]] [[masyarakat]]|t=society development}} <end>
-Page 3041 bintaldam: Found match for regex: <begin> # {{short for|id|[[pembinaan]] [[mental]] [[daerah]] [[militer]]|t=military area mental development}} <end>
-Page 3042 dandenma: Found match for regex: <begin> # {{short for|id|[[komandan]] [[detasemen]] [[markas]]|t=headquarter detachment commander}} <end>
-Page 3043 dandenmin: Found match for regex: <begin> # {{short for|id|[[komandan]] [[detasemen]] [[administrasi]]|t=administrative detachment commander}} <end>
-Page 3044 dandenpol: Found match for regex: <begin> # {{short for|id|[[komandan]] [[detasemen]] [[kepolisian]]|t=police detachment commander}} <end>
-Page 3045 dandenzipur: Found match for regex: <begin> # {{short for|id|[[komandan]] [[detasemen]] [[zeni]] [[tempur]]|t=combat engineer detachment commander}} <end>
-Page 3046 danjen: Found match for regex: <begin> # {{short for|id|[[komandan]] [[jenderal]]|t=general commander}} <end>
-Page 3047 dankiban: Found match for regex: <begin> # {{short for|id|[[komandan]] [[kompi]] [[bantuan]]|t=support company commander}} <end>
-Page 3048 dankibeng: Found match for regex: <begin> # {{short for|id|[[komandan]] [[kompi]] [[bengkel]]|t=workshop company commander}} <end>
-Page 3049 dankikes: Found match for regex: <begin> # {{short for|id|[[komandan]] [[kompi]] [[kesehatan]]|t=medical company commander}} <end>
-Page 3050 dankimas: Found match for regex: <begin> # {{short for|id|[[komandan]] [[kompi]] [[markas]] [[staf]]|t=staff headquarter company commander}} <end>
-Page 3051 dankipal: Found match for regex: <begin> # {{short for|id|[[komandan]] [[kompi]] [[peralatan]]|t=equipment company commander}} <end>
-Page 3052 danpos: Found match for regex: <begin> # {{short for|id|[[komandan]] [[pos]]|t=post commander}} <end>
-Page 3053 danpus: Found match for regex: <begin> # {{short for|id|[[komandan]] [[pusat]]|t=central commander}} <end>
-Page 3054 danpusdikpassus: Found match for regex: <begin> # {{short for|id|[[komandan]] [[pusat]] [[pendidikan]] [[pasukan]] [[khusus]]|t=special troops education center commander}} <end>
-Page 3055 danran: Found match for regex: <begin> # {{short for|id|[[komandan]] [[kendaraan]]|t=transport commander}} <end>
-Page 3056 danru: Found match for regex: <begin> # {{short for|id|[[komandan]] [[regu]]|t=squad commander}} <end>
-Page 3057 denpal: Found match for regex: <begin> # {{short for|id|[[detasemen]] [[peralatan]]|t=equipment detachment}} <end>
-Page 3058 denpol: Found match for regex: <begin> # {{short for|id|[[detasemen]] [[kepolisian]]|t=police detachment}} <end>
-Page 3059 denzi: Found match for regex: <begin> # {{short for|id|[[detasemen]] [[zeni]]|t=military engineer detachment}} <end>
-Page 3060 dikdasmil: Found match for regex: <begin> # {{short for|id|[[pendidikan]] [[dasar]] [[militer]]|t=basic military education}} <end>
-Page 3061 diklantas: Found match for regex: <begin> # {{short for|id|[[pendidikan]] [[lalu lintas]]|t=traffic education}} <end>
-Page 3062 diklatjemen: Found match for regex: <begin> # {{short for|id|[[pendidikan]] [[dan]] [[pelatihan]] [[manajemen]]|t=management education and training}} <end>
-Page 3063 faskon: Found match for regex: <begin> # {{short for|id|[[fasilitas]] [[dan]] [[konstruksi]]|t=facilities and construction}} <end>
-Page 3064 faslan: Found match for regex: <begin> # {{short for|id|[[fasilitas]] [[pangkalan]]|t=base facilities}} <end>
-Page 3065 fastel: Found match for regex: <begin> # {{short for|id|[[fasilitas]] [[telekomunikasi]]|t=telecommunication facilities}} <end>
-Page 3066 gusgas: Found match for regex: <begin> # {{short for|id|[[gugus]] [[tugas]]|t=task force}} <end>
-Page 3067 hanud: Found match for regex: <begin> # {{short for|id|[[pertahanan]] [[udara]]|t=air defence}} <end>
-Page 3068 hanwil: Found match for regex: <begin> # {{short for|id|[[pertahanan]] [[wilayah]]|t=area defence}} <end>
-Page 3069 jasmil: Found match for regex: <begin> # {{lb|id|military}} {{short for|id|[[jasmani]] [[militer]]|t=military body}} <end>
-Page 3070 jastip: Found match for regex: <begin> # {{short for|id|[[jasa]] [[titip]]|t={{w|lang=en|casual courier}} service|lit=entrusting service}} <end>
-Page 3071 jeniper: Found match for regex: <begin> # {{lb|id|cooking}} {{short for|id|[[jeruk nipis]] [[peras]]|t=squeezed lime}} <end>
-Page 3072 junpur: Found match for regex: <begin> # {{lb|id|military}} {{short for|id|[[penerjun]] [[tempur]]|t=paratrooper|lit=combat parachutist}} <end>
-Page 3073 kamla: Found match for regex: <begin> # {{short for|id|[[keamanan]] [[laut]]|t=maritime security}} <end>
-Page 3074 kejurda: Found match for regex: <begin> # {{lb|id|sport}} {{short for|id|[[kejuaraan]] [[daerah]]|t=regional championship}} <end>
-Page 3075 kejurnas: Found match for regex: <begin> # {{lb|id|sport}} {{short for|id|[[kejuaraan]] [[nasional]]|t=national championship}} <end>
-Page 3076 kimas: Found match for regex: <begin> # {{lb|id|military}} {{short for|id|[[kompi]] [[markas]] [[staf]]|t=staff headquarter company}} <end>
-Page 3077 kohanud: Found match for regex: <begin> # {{lb|id|military}} {{short for|id|[[komando]] [[pertahanan]] [[udara]]|t=air defense command}} <end>
-Page 3078 kohanwil: Found match for regex: <begin> # {{lb|id|military}} {{short for|id|[[komando]] [[pertahanan]] [[wilayah]]|t=areal defense command}} <end>
-Page 3079 kokamla: Found match for regex: <begin> # {{lb|id|military}} {{short for|id|[[komando]] [[keamanan]] [[laut]]|t=maritime security command}} <end>
-Page 3080 koserse: Found match for regex: <begin> # {{lb|id|military}} {{short for|id|[[komando]] [[reserse]]|t=crime investigation command}} <end>
-Page 3081 kopas: Found match for regex: <begin> # {{lb|id|military}} {{short for|id|[[komando]] [[pasukan]]|t=troop commander}} <end>
-Page 3082 korsik: Found match for regex: <begin> # {{short for|id|korps musik|t=musical corps}} <end>
-Page 3083 lantama: Found match for regex: <begin> # {{lb|id|military}} {{short for|id|[[pangkalan]] [[utama]]|t=main base}} <end>
-Page 3084 lantamal: Found match for regex: <begin> # {{lb|id|military}} {{short for|id|[[pangkalan]] [[utama]] [[angkatan laut]]|t=navy main base}} <end>
-Page 3085 lantamil: Found match for regex: <begin> # {{lb|id|military}} {{short for|id|[[pangkalan]] [[utama]] [[militer]]|t=military main base}} <end>
-Page 3086 latpur: Found match for regex: <begin> # {{lb|id|military}} {{short for|id|[[latihan]] [[tempur]]|t=combat exercise}} <end>
-Page 3087 パイン: Found match for regex: <begin> # {{short for|ja|パイナップル|tr=painappuru|t=[[pineapple]]}} <end>
+Page 3034 Acquis: Found match for regex: <begin> # [[acquis]], {{ellipsis of|de|Acquis communautaire}} <end>
+Page 3035 bekangdam: Found match for regex: <begin> # {{lb|id|military}} {{sylabbr of|id|[[perbekalan]] [[angkutan]] [[daerah]] [[militer]]|t=military area transport supply}} <end>
+Page 3036 binawas: Found match for regex: <begin> # {{sylabbr of|id|[[pembinaan]] dan [[pengawasan]]|t=cultivation/development/promotion and supervision}} <end>
+Page 3037 binhankamnas: Found match for regex: <begin> # {{sylabbr of|id|[[pembinaan]] [[pertahanan]] dan [[keamanan]] [[nasional]]|t=national security and defence development}} <end>
+Page 3038 binjas: Found match for regex: <begin> # {{sylabbr of|id|[[pembinaan]] [[jasmani]]|t=physical development}} <end>
+Page 3039 binjasmil: Found match for regex: <begin> # {{sylabbr of|id|[[pembinaan]] [[jasmani]] [[militer]]|t=military physical development}} <end>
+Page 3040 binmas: Found match for regex: <begin> # {{sylabbr of|id|[[pembinaan]] [[masyarakat]]|t=society development}} <end>
+Page 3041 bintaldam: Found match for regex: <begin> # {{sylabbr of|id|[[pembinaan]] [[mental]] [[daerah]] [[militer]]|t=military area mental development}} <end>
+Page 3042 dandenma: Found match for regex: <begin> # {{sylabbr of|id|[[komandan]] [[detasemen]] [[markas]]|t=headquarter detachment commander}} <end>
+Page 3043 dandenmin: Found match for regex: <begin> # {{sylabbr of|id|[[komandan]] [[detasemen]] [[administrasi]]|t=administrative detachment commander}} <end>
+Page 3044 dandenpol: Found match for regex: <begin> # {{sylabbr of|id|[[komandan]] [[detasemen]] [[kepolisian]]|t=police detachment commander}} <end>
+Page 3045 dandenzipur: Found match for regex: <begin> # {{sylabbr of|id|[[komandan]] [[detasemen]] [[zeni]] [[tempur]]|t=combat engineer detachment commander}} <end>
+Page 3046 danjen: Found match for regex: <begin> # {{sylabbr of|id|[[komandan]] [[jenderal]]|t=general commander}} <end>
+Page 3047 dankiban: Found match for regex: <begin> # {{sylabbr of|id|[[komandan]] [[kompi]] [[bantuan]]|t=support company commander}} <end>
+Page 3048 dankibeng: Found match for regex: <begin> # {{sylabbr of|id|[[komandan]] [[kompi]] [[bengkel]]|t=workshop company commander}} <end>
+Page 3049 dankikes: Found match for regex: <begin> # {{sylabbr of|id|[[komandan]] [[kompi]] [[kesehatan]]|t=medical company commander}} <end>
+Page 3050 dankimas: Found match for regex: <begin> # {{sylabbr of|id|[[komandan]] [[kompi]] [[markas]] [[staf]]|t=staff headquarter company commander}} <end>
+Page 3051 dankipal: Found match for regex: <begin> # {{sylabbr of|id|[[komandan]] [[kompi]] [[peralatan]]|t=equipment company commander}} <end>
+Page 3052 danpos: Found match for regex: <begin> # {{sylabbr of|id|[[komandan]] [[pos]]|t=post commander}} <end>
+Page 3053 danpus: Found match for regex: <begin> # {{sylabbr of|id|[[komandan]] [[pusat]]|t=central commander}} <end>
+Page 3054 danpusdikpassus: Found match for regex: <begin> # {{sylabbr of|id|[[komandan]] [[pusat]] [[pendidikan]] [[pasukan]] [[khusus]]|t=special troops education center commander}} <end>
+Page 3055 danran: Found match for regex: <begin> # {{sylabbr of|id|[[komandan]] [[kendaraan]]|t=transport commander}} <end>
+Page 3056 danru: Found match for regex: <begin> # {{sylabbr of|id|[[komandan]] [[regu]]|t=squad commander}} <end>
+Page 3057 denpal: Found match for regex: <begin> # {{sylabbr of|id|[[detasemen]] [[peralatan]]|t=equipment detachment}} <end>
+Page 3058 denpol: Found match for regex: <begin> # {{sylabbr of|id|[[detasemen]] [[kepolisian]]|t=police detachment}} <end>
+Page 3059 denzi: Found match for regex: <begin> # {{sylabbr of|id|[[detasemen]] [[zeni]]|t=military engineer detachment}} <end>
+Page 3060 dikdasmil: Found match for regex: <begin> # {{sylabbr of|id|[[pendidikan]] [[dasar]] [[militer]]|t=basic military education}} <end>
+Page 3061 diklantas: Found match for regex: <begin> # {{sylabbr of|id|[[pendidikan]] [[lalu lintas]]|t=traffic education}} <end>
+Page 3062 diklatjemen: Found match for regex: <begin> # {{sylabbr of|id|[[pendidikan]] [[dan]] [[pelatihan]] [[manajemen]]|t=management education and training}} <end>
+Page 3063 faskon: Found match for regex: <begin> # {{sylabbr of|id|[[fasilitas]] [[dan]] [[konstruksi]]|t=facilities and construction}} <end>
+Page 3064 faslan: Found match for regex: <begin> # {{sylabbr of|id|[[fasilitas]] [[pangkalan]]|t=base facilities}} <end>
+Page 3065 fastel: Found match for regex: <begin> # {{sylabbr of|id|[[fasilitas]] [[telekomunikasi]]|t=telecommunication facilities}} <end>
+Page 3066 gusgas: Found match for regex: <begin> # {{sylabbr of|id|[[gugus]] [[tugas]]|t=task force}} <end>
+Page 3067 hanud: Found match for regex: <begin> # {{sylabbr of|id|[[pertahanan]] [[udara]]|t=air defence}} <end>
+Page 3068 hanwil: Found match for regex: <begin> # {{sylabbr of|id|[[pertahanan]] [[wilayah]]|t=area defence}} <end>
+Page 3069 jasmil: Found match for regex: <begin> # {{lb|id|military}} {{sylabbr of|id|[[jasmani]] [[militer]]|t=military body}} <end>
+Page 3070 jastip: Found match for regex: <begin> # {{sylabbr of|id|[[jasa]] [[titip]]|t={{w|lang=en|casual courier}} service|lit=entrusting service}} <end>
+Page 3071 jeniper: Found match for regex: <begin> # {{lb|id|cooking}} {{sylabbr of|id|[[jeruk nipis]] [[peras]]|t=squeezed lime}} <end>
+Page 3072 junpur: Found match for regex: <begin> # {{lb|id|military}} {{sylabbr of|id|[[penerjun]] [[tempur]]|t=paratrooper|lit=combat parachutist}} <end>
+Page 3073 kamla: Found match for regex: <begin> # {{sylabbr of|id|[[keamanan]] [[laut]]|t=maritime security}} <end>
+Page 3074 kejurda: Found match for regex: <begin> # {{lb|id|sport}} {{sylabbr of|id|[[kejuaraan]] [[daerah]]|t=regional championship}} <end>
+Page 3075 kejurnas: Found match for regex: <begin> # {{lb|id|sport}} {{sylabbr of|id|[[kejuaraan]] [[nasional]]|t=national championship}} <end>
+Page 3076 kimas: Found match for regex: <begin> # {{lb|id|military}} {{sylabbr of|id|[[kompi]] [[markas]] [[staf]]|t=staff headquarter company}} <end>
+Page 3077 kohanud: Found match for regex: <begin> # {{lb|id|military}} {{sylabbr of|id|[[komando]] [[pertahanan]] [[udara]]|t=air defense command}} <end>
+Page 3078 kohanwil: Found match for regex: <begin> # {{lb|id|military}} {{sylabbr of|id|[[komando]] [[pertahanan]] [[wilayah]]|t=areal defense command}} <end>
+Page 3079 kokamla: Found match for regex: <begin> # {{lb|id|military}} {{sylabbr of|id|[[komando]] [[keamanan]] [[laut]]|t=maritime security command}} <end>
+Page 3080 koserse: Found match for regex: <begin> # {{lb|id|military}} {{sylabbr of|id|[[komando]] [[reserse]]|t=crime investigation command}} <end>
+Page 3081 kopas: Found match for regex: <begin> # {{lb|id|military}} {{sylabbr of|id|[[komando]] [[pasukan]]|t=troop commander}} <end>
+Page 3082 korsik: Found match for regex: <begin> # {{sylabbr of|id|korps musik|t=musical corps}} <end>
+Page 3083 lantama: Found match for regex: <begin> # {{lb|id|military}} {{sylabbr of|id|[[pangkalan]] [[utama]]|t=main base}} <end>
+Page 3084 lantamal: Found match for regex: <begin> # {{lb|id|military}} {{sylabbr of|id|[[pangkalan]] [[utama]] [[angkatan laut]]|t=navy main base}} <end>
+Page 3085 lantamil: Found match for regex: <begin> # {{lb|id|military}} {{sylabbr of|id|[[pangkalan]] [[utama]] [[militer]]|t=military main base}} <end>
+Page 3086 latpur: Found match for regex: <begin> # {{lb|id|military}} {{sylabbr of|id|[[latihan]] [[tempur]]|t=combat exercise}} <end>
+Page 3087 パイン: Found match for regex: <begin> # {{clip of|ja|パイナップル|tr=painappuru|t=[[pineapple]]}} <end>
 Page 3088 cybertech: Found match for regex: <begin> # {{clip of|en|cybertechnology}}. <end>
 Page 3089 it takes a village: Found match for regex: <begin> # {{ellipsis of|en|it takes a village to raise a child}}. <end>
-Page 3090 インナー: Found match for regex: <begin> # {{short for|ja|インナーカラー|tr=innā karā}} <end>
+Page 3090 インナー: Found match for regex: <begin> # {{ellipsis of|ja|インナーカラー|tr=innā karā}} <end>
 Page 3091 キャミ: Found match for regex: <begin> # {{short for|ja|キャミソール|tr=kyamisōru}} <end>
-Page 3092 mabesal: Found match for regex: <begin> # {{lb|id|military}} {{short for|id|[[markas]] [[besar]] [[angkatan laut]]|t=naval headquarter}} <end>
-Page 3093 mabesau: Found match for regex: <begin> # {{lb|id|military}} {{short for|id|[[markas]] [[besar]] [[angkatan udara]]|t=air force headquarter}} <end>
-Page 3094 mahmilgung: Found match for regex: <begin> # {{lb|id|military}} {{short for|id|[[mahkamah militer]] [[agung]]|t=supreme court martial}} <end>
-Page 3095 makodal: Found match for regex: <begin> # {{lb|id|military}} {{short for|id|[[markas]] [[komando]] [[daerah]] [[angkatan laut]]|t=naval regional command headquarter}} <end>
-Page 3096 makodim: Found match for regex: <begin> # {{lb|id|military}} {{short for|id|[[markas]] [[komando]] [[distrik]] [[militer]]|t=military district command headquarter}} <end>
-Page 3097 mapolda: Found match for regex: <begin> # {{short for|id|[[markas]] [[kepolisian]] [[daerah]]|t=provincial police headquarter}} <end>
-Page 3098 mapolres: Found match for regex: <begin> # {{short for|id|[[markas]] [[kepolisian]] [[resor]]|t=regency police headquarter}} <end>
-Page 3099 mapolsek: Found match for regex: <begin> # {{short for|id|[[markas]] [[kepolisian]] [[sektor]]|t=sector police headquarter}} <end>
-Page 3100 mapolsekta: Found match for regex: <begin> # {{short for|id|[[markas]] [[kepolisian]] [[sektor]] [[kota]]|t=city police headquarter}} <end>
-Page 3101 mapolwil: Found match for regex: <begin> # {{short for|id|[[markas]] [[kepolisian]] [[wilayah]]|t=area police headquarter}} <end>
+Page 3092 mabesal: Found match for regex: <begin> # {{lb|id|military}} {{sylabbr of|id|[[markas]] [[besar]] [[angkatan laut]]|t=naval headquarter}} <end>
+Page 3093 mabesau: Found match for regex: <begin> # {{lb|id|military}} {{sylabbr of|id|[[markas]] [[besar]] [[angkatan udara]]|t=air force headquarter}} <end>
+Page 3094 mahmilgung: Found match for regex: <begin> # {{lb|id|military}} {{sylabbr of|id|[[mahkamah militer]] [[agung]]|t=supreme court martial}} <end>
+Page 3095 makodal: Found match for regex: <begin> # {{lb|id|military}} {{sylabbr of|id|[[markas]] [[komando]] [[daerah]] [[angkatan laut]]|t=naval regional command headquarter}} <end>
+Page 3096 makodim: Found match for regex: <begin> # {{lb|id|military}} {{sylabbr of|id|[[markas]] [[komando]] [[distrik]] [[militer]]|t=military district command headquarter}} <end>
+Page 3097 mapolda: Found match for regex: <begin> # {{sylabbr of|id|[[markas]] [[kepolisian]] [[daerah]]|t=provincial police headquarter}} <end>
+Page 3098 mapolres: Found match for regex: <begin> # {{sylabbr of|id|[[markas]] [[kepolisian]] [[resor]]|t=regency police headquarter}} <end>
+Page 3099 mapolsek: Found match for regex: <begin> # {{sylabbr of|id|[[markas]] [[kepolisian]] [[sektor]]|t=sector police headquarter}} <end>
+Page 3100 mapolsekta: Found match for regex: <begin> # {{sylabbr of|id|[[markas]] [[kepolisian]] [[sektor]] [[kota]]|t=city police headquarter}} <end>
+Page 3101 mapolwil: Found match for regex: <begin> # {{sylabbr of|id|[[markas]] [[kepolisian]] [[wilayah]]|t=area police headquarter}} <end>
 Page 3102 acrow: Found match for regex: <begin> # {{ellipsis of|en|acrow prop}}. <end>
 Page 3103 The Valley: Found match for regex: <begin> # {{tcl|en|<ellipsis of:San Fernando Valley|id=Q816843}}. <end>
 Page 3104 老奉: Found match for regex: <begin> {{m|yue|老|t=prefix for nouns with negative impressions or connotations}} + {{short for|yue|奉旨|t=taken for granted; definitely}} <end>
 Page 3105 とりせつ: Found match for regex: <begin> # {{short for|ja|取扱説明書|tr=toriatsukai setsumeisho}} <end>
 Page 3106 ガチャ: Found match for regex: <begin> # {{short for|ja|ガチャポン}}; a [[vending machine]] that sells random toys. <end>
-Page 3107 suket: Found match for regex: <begin> # {{short for|id|surat keterangan|t=certificate}} <end>
+Page 3107 suket: Found match for regex: <begin> # {{sylabbr of|id|surat keterangan|t=certificate}} <end>
 Page 3108 over the left: Found match for regex: <begin> # {{lb|en|obsolete|slang}} {{ellipsis of|en|over the left shoulder}}. <end>
 Page 3109 自己中: Found match for regex: <begin> # {{lb|ja|slang}} {{short for|ja|自己中心的|tr=jiko chūshin-teki|t=[[self-centered]]}} <end>
 Page 3110 学パロ: Found match for regex: <begin> # {{short for|ja|[[学園]][[パロディ]]|t=[[school]] [[alternate universe|AU]] [[parody]]/[[spin-off]]}} <end>
@@ -3620,7 +3620,7 @@ Page 3133 天安門事件: Found match for regex: <begin> # {{short for|ja|六�
 Page 3134 졸작: Found match for regex: <begin> # {{short for|ko|졸업작품(卒業作品)|t=graduation project, especially in art schools}} <end>
 Page 3135 Balearen: Found match for regex: <begin> # {{short for|de|Balearische Inseln}} <end>
 Page 3136 문경: Found match for regex: <begin> # {{short for|ko|刎頸之交}} <end>
-Page 3137 kemenyan: Found match for regex: <begin> # {{short for|id|akar kemenyan}} ({{taxlink|Dioscorea pyrifolia|species}}) <end>
+Page 3137 kemenyan: Found match for regex: <begin> # {{ellipsis of|id|akar kemenyan}} ({{taxlink|Dioscorea pyrifolia|species}}) <end>
 Page 3138 コンピ: Found match for regex: <begin> # {{short for|ja|コンピレーションアルバム}} <end>
 Page 3139 たてかん: Found match for regex: <begin> # {{lb|ja|student slang}} {{short for|ja|立て看板|tr=tate-kanban}} <end>
 Page 3140 テレコ: Found match for regex: <begin> # {{short for|ja|テープレコーダー}} <end>
@@ -3689,7 +3689,7 @@ Page 3197 S my D: Found match for regex: <begin> # {{lb|en|vulgar}} {{init of|en
 Page 3198 おなクラ: Found match for regex: <begin> {{short for|ja|[[同じ]][[クラス]]|tr=onaji kurasu}} <end>
 Page 3199 プラマイゼロ: Found match for regex: <begin> # {{short for|ja|プラスマイナスゼロ|tr=purasu mainasu zero}} <end>
 Page 3200 inertial frame: Found match for regex: <begin> # {{lb|en|physics}} {{ellipsis of|en|inertial frame of reference}}. <end>
-Page 3201 phys plant: Found match for regex: <begin> # {{lb|en|colloquial}} {{clip of|en|physical plant}}. <end>
+Page 3201 phys plant: Found match for regex: <begin> # {{lb|en|colloquial}} {{clipcomp of|en|physical plant}}. <end>
 Page 3202 機捜: Found match for regex: <begin> # {{short for|ja|機動捜査隊|tr=kidō sōsatai|t=Mobile Investigation Unit|sort=きそう}} <end>
 Page 3203 司警: Found match for regex: <begin> # {{lb|zh|Macau|law enforcement}} {{short for|zh|司法警察|t=Judiciary Police (branch of police in Macau)}} <end>
 Page 3204 港區: Found match for regex: <begin> # {{short for|zh|香港特別行政區|t={{w|Hong Kong Special Administrative Region}}}} <end>
@@ -3712,7 +3712,7 @@ Page 3223 グレスケ: Found match for regex: <begin> # {{short for|ja|グレ�
 Page 3224 いたタブ: Found match for regex: <begin> # {{short for|ja|板タブレット|tr=ita taburetto}} <end>
 Page 3225 なべパ: Found match for regex: <begin> # {{short for|ja|[[鍋]][[パーティー]]|tr=nabe pātī}} <end>
 Page 3226 コテ: Found match for regex: <begin> # {{short for|ja|コテハン|tr=kotehan}} <end>
-Page 3227 mags court: Found match for regex: <begin> # {{lb|en|UK|informal}} {{clip of|en|magistrates' court}}. <end>
+Page 3227 mags court: Found match for regex: <begin> # {{lb|en|UK|informal}} {{clipcomp of|en|magistrates' court}}. <end>
 Page 3228 안가: Found match for regex: <begin> {{short for|ko|[[안전가옥]]|t=[[safehouse]]}} <end>
 Page 3229 Wakey: Found match for regex: <begin> # {{lb|en|slang}} {{tcl|en|<clip of:Wakefield|id=Q216638}}. <end>
 Page 3230 bentso: Found match for regex: <begin> # {{short for|fi|bentsodiatsepiini}} <end>
@@ -3722,7 +3722,7 @@ Page 3233 ハニトラ: Found match for regex: <begin> # {{short for|ja|ハニ�
 Page 3233 ハニトラ: Found match for regex: <begin> # {{short for|ja|ハニートラップ}} <end>
 Page 3234 사사오입: Found match for regex: <begin> # {{lb|ko|South Korea}} {{short for|ko|'''사사오입''' [[개]][[헌]]|lit=[[rounding off]] [[constitutional]] [[amendment]]}}; the 1954 incident where the {{w|Syngman Rhee}} administration attempted to justify a [[constitution]]al [[amendment]] with insufficient [[aye]]s through the concept of [[rounding off]] <end>
 Page 3235 Chappy: Found match for regex: <begin> # {{lb|en|colloquial}} {{tcl|en|<clip of:Chappaquiddick Island|id=Q1062779}}. <end>
-Page 3236 'Sconset: Found match for regex: <begin> # {{tcl|en|<clip of:Siasconset|id=Q7506866}}. <end>
+Page 3236 'Sconset: Found match for regex: <begin> # {{tcl|en|<aphetic form of:Siasconset|id=Q7506866}}. <end>
 Page 3237 Vermorel: Found match for regex: <begin> # {{ellipsis of|en|Vermorel sprayer}}. <end>
 Page 3238 かまちょ: Found match for regex: <begin> # {{lb|ja|slang}} {{short for|ja|[[かまう|かまっ]]て[[ちょうだい]]|tr=kamatte chōdai}} <end>
 Page 3239 いてら: Found match for regex: <begin> # {{lb|ja|internet slang}} {{short for|ja|いってらっしゃい}} <end>
@@ -3847,7 +3847,7 @@ Page 3350 Knott End: Found match for regex: <begin> # {{tcl|en|<ellipsis of:Knot
 Page 3351 のり弁: Found match for regex: <begin> # {{short for|ja|のり弁当}} <end>
 Page 3352 アルハラ: Found match for regex: <begin> # {{short for|ja|アルコールハラスメント}} <end>
 Page 3353 プルリク: Found match for regex: <begin> # {{short for|ja|プルリクエスト}} <end>
-Page 3354 infowarfare: Found match for regex: <begin> # {{clip of|en|information warfare}}. <end>
+Page 3354 infowarfare: Found match for regex: <begin> # {{clipcomp of|en|information warfare}}. <end>
 Page 3355 シンクロ: Found match for regex: <begin> # {{short for|ja|シンクロナイズ}} <end>
 Page 3355 シンクロ: Found match for regex: <begin> # {{short for|ja|シンクロナイズ}} <end>
 Page 3356 マダミス: Found match for regex: <begin> # {{short for|ja|マーダーミステリー}} <end>
@@ -3859,7 +3859,7 @@ Page 3361 ウラジオ: Found match for regex: <begin> # {{lb|ja|obsolete}} {{sh
 Page 3362 スクバ: Found match for regex: <begin> # {{lb|ja|slang}} {{short for|ja|[[スクールバッグ]]|tr=sukūru baggu|t=[[schoolbag]]}} <end>
 Page 3363 シネスコ: Found match for regex: <begin> # {{short for|ja|シネマスコープ|tr=shinemasukōpu}} <end>
 Page 3364 エロビ: Found match for regex: <begin> # {{short for|ja|エロビデオ}} <end>
-Page 3365 props master: Found match for regex: <begin> # {{lb|en|theater|TV|film}} {{clip of|en|property master}}. <end>
+Page 3365 props master: Found match for regex: <begin> # {{lb|en|theater|TV|film}} {{clipcomp of|en|property master}}. <end>
 Page 3366 lớn mật: Found match for regex: <begin> # {{short for|vi|to gan lớn mật||very [[audacious]]}} <end>
 Page 3367 新型コロナ: Found match for regex: <begin> # {{short for|ja|新型コロナウイルス|tr=shingata korona uirusu|t=novel coronavirus}} <end>
 Page 3367 新型コロナ: Found match for regex: <begin> # {{short for|ja|新型コロナウイルス感染症|tr=shingata korona uirusu kansenshō|t=novel coronavirus disease}} <end>
@@ -3875,7 +3875,7 @@ Page 3376 già cốc: Found match for regex: <begin> # {{short for|vi|già cốc
 Page 3377 gaggó: Found match for regex: <begin> # {{lb|is|dated|obsolete|colloquial}} {{short for|is|gagnfræðaskóli}} <end>
 Page 3378 國令: Found match for regex: <begin> # {{lb|zh|Mainland China|law}} {{short for|zh|[[國務院]][[令]]|t=[[decree]] of the {{w|State Council of the People's Republic of China|State Council}}}} <end>
 Page 3382 Lindal: Found match for regex: <begin> # {{tcl|en|<ellipsis of:Lindal-in-Furness|id=Q2213001}}. <end>
-Page 3383 prop master: Found match for regex: <begin> # {{lb|en|film|theatre}} {{clip of|en|property master}}. <end>
+Page 3383 prop master: Found match for regex: <begin> # {{lb|en|film|theatre}} {{clipcomp of|en|property master}}. <end>
 Page 3384 コンカフェ: Found match for regex: <begin> # {{short for|ja|コンセプトカフェ}} <end>
 Page 3385 ワーク: Found match for regex: <begin> # {{lb|ja|education}} {{short for|ja|ワークブック|tr=wākubukku|t=[[workbook]]}} <end>
 Page 3386 スカルプネイル: Found match for regex: <begin> # {{short for|ja|スカルプチュアネイル|tr=sukarupuchua neiru}} <end>
@@ -3906,11 +3906,11 @@ Page 3415 인스타: Found match for regex: <begin> # {{short for|ko|^인스타�
 Page 3416 ファンマ: Found match for regex: <begin> # {{short for|ja|ファンマーク}} <end>
 Page 3417 venetian: Found match for regex: <begin> # {{lb|en|usually|in the plural}} {{ellipsis of|en|Venetian blind}} or {{alternative case form of|en|Venetian|nocap=1}}. <end>
 Page 3418 상메: Found match for regex: <begin> # {{lb|ko|internet slang}} {{short for|ko|[[상태]] [[메시지]]|t=[[status]] [[message]]}} <end>
-Page 3419 geri chair: Found match for regex: <begin> # {{clip of|en|geriatric chair}}. <end>
+Page 3419 geri chair: Found match for regex: <begin> # {{clipcomp of|en|geriatric chair}}. <end>
 Page 3420 Verbrenner: Found match for regex: <begin> # {{lb|de|informal|automotive}} {{short for|de|Verbrennungsmotor|t=[[internal combustion engine]]}} <end>
-Page 3421 stone sub: Found match for regex: <begin> # {{clip of|en|stone subeditor}}. <end>
+Page 3421 stone sub: Found match for regex: <begin> # {{clipcomp of|en|stone subeditor}}. <end>
 Page 3422 STIKO: Found match for regex: <begin> # {{short for|de|{{w|Ständige Impfkommission|lang=de}}|t=Standing Committee on Vaccination}} <end>
-Page 3423 receh: Found match for regex: <begin> # {{lb|id|colloquial}} {{short for|id|uang receh}} <end>
+Page 3423 receh: Found match for regex: <begin> # {{lb|id|colloquial}} {{ellipsis for|id|uang receh}} <end>
 Page 3424 jollof: Found match for regex: <begin> # {{ellipsis of|en|jollof rice}}. <end>
 Page 3425 Gladbach: Found match for regex: <begin> # {{ellipsis of|de|Mönchengladbach}} <end>
 Page 3425 Gladbach: Found match for regex: <begin> # {{ellipsis of|de|Bergisch Gladbach}} <end>
@@ -3923,7 +3923,7 @@ Page 3431 ガルバ: Found match for regex: <begin> # {{short for|ja|ガール�
 Page 3431 ガルバ: Found match for regex: <begin> # {{short for|ja|ガルバリウム}} <end>
 Page 3432 絶起: Found match for regex: <begin> # {{lb|ja|internet slang}} {{short for|ja|絶望の起床}} <end>
 Page 3433 デジアナ: Found match for regex: <begin> # {{short for|ja|[[デジタル]]・[[アナログ]]}} <end>
-Page 3434 ionex: Found match for regex: <begin> # {{clip of|en|ion exchange resin}}. <end>
+Page 3434 ionex: Found match for regex: <begin> # {{clipcomp of|en|ion exchange resin}}. <end>
 Page 3435 catex: Found match for regex: <begin> # {{sylabbr of|en|cation exchange resin}}. <end>
 Page 3437 ひサロ: Found match for regex: <begin> # {{short for|ja|ひやけサロン}} <end>
 Page 3438 Diaoyutai: Found match for regex: <begin> # {{ellipsis of|en|Diaoyutai Islands}}. <end>
@@ -3980,9 +3980,9 @@ Page 3488 빽: Found match for regex: <begin> # {{short for|ko|빽빽}} <end>
 Page 3489 저러다: Found match for regex: <begin> # {{short for|ko|저리하다|t=to behave that way; to say that}} <end>
 Page 3490 Vacation Bible: Found match for regex: <begin> # {{ellipsis of|en|Vacation Bible School}}. <end>
 Page 3491 시티: Found match for regex: <begin> # {{lb|ko|medicine}} {{short for|ko|시티 촬영|t=[[CT scan]], [[CAT scan]]}} <end>
-Page 3492 Reb A: Found match for regex: <begin> # {{clip of|en|{{w|Rebaudioside A}}}}. <end>
-Page 3493 subclover: Found match for regex: <begin> # {{clip of|en|subterranean clover}}. <end>
-Page 3494 sub clover: Found match for regex: <begin> # {{clip of|en|subterranean clover}}. <end>
+Page 3492 Reb A: Found match for regex: <begin> # {{clipcomp of|en|{{w|Rebaudioside A}}}}. <end>
+Page 3493 subclover: Found match for regex: <begin> # {{clipcomp of|en|subterranean clover}}. <end>
+Page 3494 sub clover: Found match for regex: <begin> # {{clipcomp of|en|subterranean clover}}. <end>
 Page 3495 Cosne-sur-Loire: Found match for regex: <begin> # {{short for|fr|Cosne-Cours-sur-Loire}} <end>
 Page 3496 hộ lí: Found match for regex: <begin> # {{short for|vi|hộ lí viên||patient care technician}} <end>
 Page 3497 휴: Found match for regex: <begin> # {{short for|ko|후유|t=phew, whew}} <end>
@@ -3990,7 +3990,7 @@ Page 3498 강원: Found match for regex: <begin> # {{short for|ko|^강원도(江
 Page 3499 워: Found match for regex: <begin> # {{short for|ko|우어|t=[[whoa]], [[halt]], [[whoa back]]}} <end>
 Page 3500 イメトレ: Found match for regex: <begin> # {{short for|ja|イメージトレーニング}} <end>
 Page 3503 tablå: Found match for regex: <begin> # {{short for|sv|tv-tablå||TV listing}} <end>
-Page 3504 tech stack: Found match for regex: <begin> # {{clip of|en|technology stack}}. <end>
+Page 3504 tech stack: Found match for regex: <begin> # {{clipcomp of|en|technology stack}}. <end>
 Page 3505 Goualougo: Found match for regex: <begin> # {{tcl|en|<ellip of:Goualougo Triangle|id=Q5588117}}. <end>
 Page 3506 O-shot: Found match for regex: <begin> # {{lb|en|medicine}} {{abbr of|en|orgasm shot}}. <end>
 Page 3507 中小企: Found match for regex: <begin> # {{short for|zh|中小企業|t=[[small]]-to-[[medium]]-sized [[enterprise]]; [[SME]]}} <end>
@@ -4026,15 +4026,15 @@ Page 3535 美大: Found match for regex: <begin> # {{short for|ja|美術大学|t
 Page 3536 Reichsführer: Found match for regex: <begin> # {{lb|de|nazi|historical}} {{short for|de|Reichsführer SS}} <end>
 Page 3537 'spro: Found match for regex: <begin> # {{lb|en|slang}} {{aphetic form of|en|espresso}}. <end>
 Page 3538 finnan: Found match for regex: <begin> # {{ellipsis of|en|finnan haddie||cold-smoked haddock}}. <end>
-Page 3539 L'H: Found match for regex: <begin> # {{lb|ca|colloquial}} {{short for|ca|L'Hospitalet}} <end>
+Page 3539 L'H: Found match for regex: <begin> # {{lb|ca|colloquial}} {{abbr of|ca|L'Hospitalet}} <end>
 Page 3540 e-skateboard: Found match for regex: <begin> # {{abbr of|en|electric skateboard}}. <end>
-Page 3541 ta sig: Found match for regex: <begin> # {{lb|sv|vulgar}} {{short for|sv|ta sig i brasan}} <end>
-Page 3542 Pop III: Found match for regex: <begin> # {{clip of|en|Population III}}. <end>
-Page 3543 Pop II: Found match for regex: <begin> # {{clip of|en|Population II}}. <end>
-Page 3544 Pop I: Found match for regex: <begin> # {{clip of|en|Population I}}. <end>
-Page 3545 神政: Found match for regex: <begin> # {{short for|ja|神権政治|tr=shinken seiji|t=[[theocracy]]|sort=しんせい}} <end>
-Page 3546 mödom: Found match for regex: <begin> # {{short for|sv|mödomshinna|t=hymen}} <end>
-Page 3547 knackare: Found match for regex: <begin> # {{short for|sv|dörrknackare}} <end>
+Page 3541 ta sig: Found match for regex: <begin> # {{lb|sv|vulgar}} {{ellipsis of|sv|ta sig i brasan}} <end>
+Page 3542 Pop III: Found match for regex: <begin> # {{clipcomp of|en|Population III}}. <end>
+Page 3543 Pop II: Found match for regex: <begin> # {{clipcomp of|en|Population II}}. <end>
+Page 3544 Pop I: Found match for regex: <begin> # {{clipcomp of|en|Population I}}. <end>
+Page 3545 神政: Found match for regex: <begin> # {{sylabbr of|ja|神権政治|tr=shinken seiji|t=[[theocracy]]|sort=しんせい}} <end>
+Page 3546 mödom: Found match for regex: <begin> # {{ellipsis of|sv|mödomshinna|t=hymen}} <end>
+Page 3547 knackare: Found match for regex: <begin> # {{ellipsis of|sv|dörrknackare}} <end>
 Page 3548 Stumpy: Found match for regex: <begin> # {{ellipsis of|en|Australian Stumpy Tail Cattle Dog}}. <end>
 Page 3549 dầu gội: Found match for regex: <begin> # {{short for|vi|dầu gội đầu||shampoo}} <end>
 Page 3551 kolportage: Found match for regex: <begin> # {{short for|sv|kolportageroman}} <end>
@@ -4050,7 +4050,7 @@ Page 3558 Stereo: Found match for regex: <begin> # {{clip of|de|Stereofonie,Ster
 Page 3558 Stereo: Found match for regex: <begin> # {{clip of|de|Stereotypie}}: [[stereotype]], [[stereoplate]] <end>
 Page 3559 dylib: Found match for regex: <begin> # {{lb|en|computing|Apple}} {{sylabbr of|en|[[dynamic]] [[library]]}}. <end>
 Page 3560 Mil: Found match for regex: <begin> # {{lb|en|informal}} {{tcl|en|<clip of:Milwaukee|id=Q37836}}. <end>
-Page 3561 infomachine: Found match for regex: <begin> # {{lb|en|uncommon}} {{clip of|en|[[information]] [[machine]]}}. <end>
+Page 3561 infomachine: Found match for regex: <begin> # {{lb|en|uncommon}} {{clipcomp of|en|[[information]] [[machine]]}}. <end>
 Page 3562 tiêm kích: Found match for regex: <begin> # {{short for|vi|máy bay tiêm kích||fighter aircraft}} <end>
 Page 3564 BAYAN: Found match for regex: <begin> # {{lb|tl|Philippine politics}} {{short for|tl|w:Bagong Alyansang Makabayan}} <end>
 Page 3565 میرپور: Found match for regex: <begin> # {{short for|ur|میرپور خاص||[[Mirpur Khas]]}} <end>
@@ -4082,7 +4082,7 @@ Page 3592 гідроелектростанція: Found match for regex: <begin>
 Page 3593 Treppchen: Found match for regex: <begin> # {{lb|de|idiomatic|chiefly|Germany}} {{short for|de|Siegertreppchen|t=winners’ [[podium]]}} <end>
 Page 3594 Abert: Found match for regex: <begin> # {{ellipsis of|en|Abert's squirrel}}. <end>
 Page 3595 全クリ: Found match for regex: <begin> # {{lb|ja|video games}} {{short for|ja|[[全面]][[クリア]]}} {{q|all clear}} <end>
-Page 3596 ace K: Found match for regex: <begin> # {{clip of|en|acesulfame K}}. <end>
+Page 3596 ace K: Found match for regex: <begin> # {{clipcomp of|en|acesulfame K}}. <end>
 Page 3597 Glan Conwy: Found match for regex: <begin> # {{tcl|en|<ellipsis of:Llansanffraid Glan Conwy|id=Q5566589}}; it is the name of the local railway station, and also used by the community council. <end>
 Page 3598 アッシー: Found match for regex: <begin> # {{short for|ja|アッシー君|tr=asshīkun|sort=あっしい}} <end>
 Page 3599 Welsbach: Found match for regex: <begin> # {{ellipsis of|en|Welsbach mantle}}. <end>
@@ -4100,9 +4100,9 @@ Page 3610 スパコン: Found match for regex: <begin> # {{short for|ja|スー�
 Page 3611 ファンサ: Found match for regex: <begin> # {{short for|ja|ファンサービス}} <end>
 Page 3612 ハイラリ: Found match for regex: <begin> # {{short for|ja|ハイラリンクス}} <end>
 Page 3613 ローラリ: Found match for regex: <begin> # {{short for|ja|ローラリンクス}} <end>
-Page 3615 vac pack: Found match for regex: <begin> # {{clip of|en|vacuum pack}}. <end>
-Page 3615 vac pack: Found match for regex: <begin> # {{clip of|en|vacuum pack}}. <end>
-Page 3616 Jaksel: Found match for regex: <begin> # {{lb|id|informal}} {{short for|id|Jakarta Selatan|t={{place|id|t=w:South Jakarta|administrative city|c/Indonesia}}}} <end>
+Page 3615 vac pack: Found match for regex: <begin> # {{clipcomp of|en|vacuum pack}}. <end>
+Page 3615 vac pack: Found match for regex: <begin> # {{clipcomp of|en|vacuum pack}}. <end>
+Page 3616 Jaksel: Found match for regex: <begin> # {{lb|id|informal}} {{syllabbr of|id|Jakarta Selatan|t={{place|id|t=w:South Jakarta|administrative city|c/Indonesia}}}} <end>
 Page 3617 FK model: Found match for regex: <begin> # {{init of|en|Frenkel-Kontorova model}}. <end>
 Page 3618 રવિ: Found match for regex: <begin> # {{short for|gu|રવિવાર||[[Sunday]]}} <end>
 Page 3619 સોમ: Found match for regex: <begin> # {{short for|gu|સોમવાર||[[Monday]]}} <end>
@@ -4125,7 +4125,7 @@ Page 3635 あざす: Found match for regex: <begin> # {{lb|ja|slang}} {{short fo
 Page 3636 막장: Found match for regex: <begin> # {{lb|ko|mining}} {{short for|ko|막장일|tr=makjangnil||mining in a [[dead end]]}} <end>
 Page 3637 اروند: Found match for regex: <begin> # {{short for|fa|اروندرود|tr=arvandrud||t=the {{w|Shatt al-Arab}} River}} <end>
 Page 3638 禿同: Found match for regex: <begin> # {{lb|ja|2ch slang}} {{short for|ja|[[激しい|激し]]く[[同意]]|tr=hageshiku dōi|t=agree strongly}} <end>
-Page 3639 combo skin: Found match for regex: <begin> # {{lb|en|informal}} {{clip of|en|combination skin}}. <end>
+Page 3639 combo skin: Found match for regex: <begin> # {{lb|en|informal}} {{clipcomp of|en|combination skin}}. <end>
 Page 3640 Didot: Found match for regex: <begin> # {{lb|en|typography|historical}} {{ellipsis of|en|Didot point}}. <end>
 Page 3641 inside straight: Found match for regex: <begin> # {{lb|en|poker}} {{ellipsis of|en|inside straight draw}}. <end>
 Page 3642 Janmashtami: Found match for regex: <begin> # {{ellipsis of|en|Krishna Janmashtami}}. <end>
@@ -4134,7 +4134,7 @@ Page 3644 Divonne: Found match for regex: <begin> # {{tcl|en|<ellipsis of:Divonn
 Page 3645 レコスタ: Found match for regex: <begin> # {{short for|ja|レコーディングスタジオ}} <end>
 Page 3646 인소: Found match for regex: <begin> # {{lb|ko|Internet|literature}} {{short for|ko|인터넷 소설(小說)||web fiction}} <end>
 Page 3647 trimpot: Found match for regex: <begin> # {{lb|en|electronics}} {{sylabbr of|en|[[trimmer]] [[potentiometer]]}}. <end>
-Page 3648 mag tape: Found match for regex: <begin> # {{clip of|en|magnetic tape}}. <end>
+Page 3648 mag tape: Found match for regex: <begin> # {{clipcomp of|en|magnetic tape}}. <end>
 Page 3649 IIR: Found match for regex: <begin> # {{lb|en|computing}} {{init of|en|infinite impulse response}}. <end>
 Page 3650 아아: Found match for regex: <begin> # {{short for|ko|아이스 아메리카노||iced Americano}} <end>
 Page 3651 아메리카노: Found match for regex: <begin> # {{short for|ko|카페 아메리카노||Americano}} <end>
@@ -4157,7 +4157,7 @@ Page 3668 Seifenstein: Found match for regex: <begin> # {{short for|de|Dresdner 
 Page 3670 takkuus: Found match for regex: <begin> # {{short for|izh|korvantakkuus}} <end>
 Page 3671 Isca: Found match for regex: <begin> # {{lb|la|historical}} {{short for|la|Isca Augusta}}, [[Caerleon]] on the [[Usk]] <end>
 Page 3671 Isca: Found match for regex: <begin> # {{lb|la|historical}} {{short for|la|Isca Dumnoniorum}}, [[Exeter]] on the [[Exe]]{{C|la|Places in the United Kingdom}} <end>
-Page 3672 ObjC: Found match for regex: <begin> # {{clip of|en|Objective-C}}. <end>
+Page 3672 ObjC: Found match for regex: <begin> # {{clipcomp of|en|Objective-C}}. <end>
 Page 3673 스포: Found match for regex: <begin> # {{lb|ko|colloquial|neologism}} {{short for|ko|스포일러|t=[[spoiler]]}} <end>
 Page 3674 Chapter 11: Found match for regex: <begin> # {{lb|en|finance|US}} {{ellipsis of|en|{{w|Chapter 11 bankruptcy}}}}. <end>
 Page 3675 스폰: Found match for regex: <begin> # {{lb|ko|neologism|slang}} {{short for|ko|스폰서|t=sponsor}} <end>
@@ -4220,9 +4220,9 @@ Page 3731 Ab-Ex: Found match for regex: <begin> # {{lb|en|art}} {{sylabbr for|en
 Page 3732 အာဆီယံ: Found match for regex: <begin> # {{lb|my|acronym}} [[ASEAN]]: {{short for|my|အရှေ့တောင်အာရှနိုင်ငံများအသင်း <end>
 Page 3733 phi đoàn: Found match for regex: <begin> # {{lb|vi|aviation}} {{short for|vi|phi hành đoàn||cabin crew, air crew}} <end>
 Page 3734 держслужбовець: Found match for regex: <begin> # {{short for|uk|[[держа́вний]] [[службо́вець]]}}: [[civil servant]], [[government]] [[official]], [[public]] official, [[public servant]], [[state]] official <end>
-Page 3735 socrealism: Found match for regex: <begin> # {{clip of|en|socialist realism}}. <end>
-Page 3736 socrealist: Found match for regex: <begin> # {{clip of|en|socialist realist}}. <end>
-Page 3736 socrealist: Found match for regex: <begin> # {{clip of|en|socialist realist}}. <end>
+Page 3735 socrealism: Found match for regex: <begin> # {{clipcomp of|en|socialist realism}}. <end>
+Page 3736 socrealist: Found match for regex: <begin> # {{clipcomp of|en|socialist realist}}. <end>
+Page 3736 socrealist: Found match for regex: <begin> # {{clipcomp of|en|socialist realist}}. <end>
 Page 3737 solo poly: Found match for regex: <begin> # {{clip of|en|solo polyamory}}. <end>
 Page 3737 solo poly: Found match for regex: <begin> # {{clip of|en|solo polyamorous}}. <end>
 Page 3738 Chich: Found match for regex: <begin> # {{lb|en|UK|slang}} {{clip of|en|Chichester}}. <end>
@@ -4244,9 +4244,9 @@ Page 3753 여미새: Found match for regex: <begin> # {{lb|ko|derogatory|slang|n
 Page 3754 Wiktionary:Information desk/2023/November: Found match for regex: <begin> :::We are a dictionary, not an encyclopedia. The entries in Wiktionary are not “articles” as on Wikipedia; they do not ''describe'' a term, but merely ''define its meaning''. In general, the name of a university will not be a lexical term and should not have an entry. It would have been fine to define {{m|ko|연세대|tr=Yeonsedae}} as “a short name for {{m|ko||연세대학교|tr=Yeonsedaehakgyo}} ([[w:Yonsei University|Yonsei University]])” except that it falls short of our [[WT:SOP|SOP]] criterion, since it is a transparent sum of {{compound|ko|연세|대}}, with the last part have sense 3 of [[대]]: “{{lb|ko|only in university names}} {{short for|ko|대학교(大學校)|t=university}}”. &nbsp;--[[User:Lambiam|Lambiam]] 15:58, 13 November 2023 (UTC) <end>
 Page 3755 フリマ: Found match for regex: <begin> # {{short for|ja|フリーマーケット}} <end>
 Page 3756 UATX: Found match for regex: <begin> # {{init of|en|w:University of Austin}}. <end>
-Page 3757 hexi stove: Found match for regex: <begin> # {{lb|en|informal}} {{clip of|en|hexamine stove}}. <end>
+Page 3757 hexi stove: Found match for regex: <begin> # {{lb|en|informal}} {{clipcomp of|en|hexamine stove}}. <end>
 Page 3758 frontier AI: Found match for regex: <begin> # {{init of|en|frontier artificial intelligence}}. <end>
-Page 3759 epi curve: Found match for regex: <begin> # {{clip of|en|epidemic curve}}. <end>
+Page 3759 epi curve: Found match for regex: <begin> # {{clipcomp of|en|epidemic curve}}. <end>
 Page 3760 5類: Found match for regex: <begin> # {{short for|ja|五類感染症|tr=goruikasenshō}} <end>
 Page 3761 五類: Found match for regex: <begin> # {{short for|ja|五類感染症|tr=goruikasenshō}} <end>
 Page 3762 trảu: Found match for regex: <begin> # {{short for|vi|chim trảu||[[bee-eater]]}} <end>
@@ -4305,30 +4305,30 @@ Page 3815 નાગપુર: Found match for regex: <begin> # {{short for|gu|�
 Page 3816 Santa Catalina: Found match for regex: <begin> # {{ellipsis of|en|Santa Catalina Island}}. <end>
 Page 3817 de Rozier: Found match for regex: <begin> # {{ellipsis of|en|de Rozier balloon}}. <end>
 Page 3818 de-Rozier: Found match for regex: <begin> # {{ellipsis of|en|de-Rozier balloon}}. <end>
-Page 3819 litbang: Found match for regex: <begin> # {{short for|id|[[penelitian]] dan [[pengembangan]]||[[research]] and [[development]]}}: [[R&D]] <end>
-Page 3820 posyandu: Found match for regex: <begin> # {{lb|id|healthcare}} {{short for|id|[[pos]] [[pelayanan]] [[terpadu]]||integrated service post/center}} <end>
-Page 3821 dephub: Found match for regex: <begin> # {{short for|id|[[departemen]] [[perhubungan]]||department of transportation}} <end>
-Page 3822 puslitbang: Found match for regex: <begin> # {{short for|id|[[pusat]] [[penelitian]] dan [[pengembangan]]||[[research]] and [[development]] [[center]]}} <end>
+Page 3819 litbang: Found match for regex: <begin> # {{sylabbr of|id|[[penelitian]] dan [[pengembangan]]||[[research]] and [[development]]}}: [[R&D]] <end>
+Page 3820 posyandu: Found match for regex: <begin> # {{lb|id|healthcare}} {{sylabbr of|id|[[pos]] [[pelayanan]] [[terpadu]]||integrated service post/center}} <end>
+Page 3821 dephub: Found match for regex: <begin> # {{sylabbr of|id|[[departemen]] [[perhubungan]]||department of transportation}} <end>
+Page 3822 puslitbang: Found match for regex: <begin> # {{sylabbr of|id|[[pusat]] [[penelitian]] dan [[pengembangan]]||[[research]] and [[development]] [[center]]}} <end>
 Page 3829 Austrian copper: Found match for regex: <begin> # {{ellipsis of|en|Austrian copper rose}}. <end>
 Page 3830 محض: Found match for regex: <begin> # {{short for|fa|به محض|tr=be mahz-e|t=because of; as soon as}} <end>
 Page 3831 Toda: Found match for regex: <begin> # {{tcl|en|<clip of:Todaraisingh|id=Q2719131}}. <end>
 Page 3832 Axel Heiberg: Found match for regex: <begin> # {{tcl|en|<ellip of:Axel Heiberg Island|id=Q207666}}. <end>
 Page 3833 кіберзахист: Found match for regex: <begin> # {{short for|uk|[[кібернети́чний]] [[за́хист]]}}: [[cyberdefence]]/[[cyberdefense]] <end>
 Page 3834 кіберзагроза: Found match for regex: <begin> # {{short for|uk|[[кібернетичний|кібернети́чна]] [[загро́за]]}}: [[cyberthreat]] <end>
-Page 3835 pilgub: Found match for regex: <begin> # {{short for|id|[[pemilihan]] [[gubernur]]||gubernatorial election}} <end>
-Page 3836 pilbup: Found match for regex: <begin> # {{short for|id|[[pemilihan]] [[untuk]] [[bupati]]||election for [[regent]]}} <end>
+Page 3835 pilgub: Found match for regex: <begin> # {{sylabbr of|id|[[pemilihan]] [[gubernur]]||gubernatorial election}} <end>
+Page 3836 pilbup: Found match for regex: <begin> # {{sylabbr of|id|[[pemilihan]] [[untuk]] [[bupati]]||election for [[regent]]}} <end>
 Page 3837 MOAL: Found match for regex: <begin> # {{lb|en|business|_|jargon}} {{blend of|en|[[mid-term]] [[goal]]}}. <end>
 Page 3838 ユーティリティー: Found match for regex: <begin> # {{lb|ja|golf}} {{short for|ja|ユーティリティークラブ|tr=yūtiritī kurabu|t=[[hybrid]]}} <end>
 Page 3838 ユーティリティー: Found match for regex: <begin> # {{lb|ja|computing}} {{short for|ja|ユーティリティープログラム|tr=yūtiritī puroguramu|t=[[utility program]]}} <end>
 Page 3838 ユーティリティー: Found match for regex: <begin> # {{short for|ja|ユーティリティールーム|tr=yūtiritī rūmu|t=[[utility room]]}} <end>
-Page 3839 психлікарня: Found match for regex: <begin> # {{short for|uk|психіатри́чна ліка́рня||[[psychiatric hospital]]|g=f}} <end>
+Page 3839 психлікарня: Found match for regex: <begin> # {{clipcomp of|uk|психіатри́чна ліка́рня||[[psychiatric hospital]]|g=f}} <end>
 Page 3840 Snowies: Found match for regex: <begin> # {{lb|en|informal}} {{ellipsis of|en|Snowy Mountains}}. <end>
 Page 3841 Sea-Tac: Found match for regex: <begin> # {{sylabbr of|en|w:Seattle–Tacoma International Airport}}. <end>
 Page 3842 フレリク: Found match for regex: <begin> # {{short for|ja|フレンドリクエスト}} <end>
 Page 3843 Comodoro: Found match for regex: <begin> # {{ellipsis of|en|Comodoro Rivadavia}}. <end>
 Page 3844 オリトク: Found match for regex: <begin> # {{short for|ja|オリジナル特典}} <end>
 Page 3845 Kwantung: Found match for regex: <begin> # {{lb|en|historical}} {{ellipsis of|en|w:Kwantung Leased Territory}}. <end>
-Page 3846 cov-lite: Found match for regex: <begin> # {{clip of|en|covenant-lite}}. <end>
+Page 3846 cov-lite: Found match for regex: <begin> # {{clipcomp of|en|covenant-lite}}. <end>
 Page 3847 nonvet: Found match for regex: <begin> # {{clip of|en|nonveteran}}. <end>
 Page 3848 Shibin: Found match for regex: <begin> # {{ellipsis of|en|Shibin El Kom}}. <end>
 Page 3849 Agnus: Found match for regex: <begin> # {{ellipsis of|en|Agnus Dei}}. <end>
@@ -4338,7 +4338,7 @@ Page 3850 Wiktionary:Beer parlour/2024/March: Found match for regex: <begin> ::@
 Page 3851 高圧: Found match for regex: <begin> # {{short for|ja|高電圧|tr=kōden'atsu|t=high volutage}} <end>
 Page 3851 高圧: Found match for regex: <begin> # {{short for|ja|高圧力|tr=kōatsuryoku|t=high pressure}} <end>
 Page 3852 死緩: Found match for regex: <begin> # {{lb|zh|Mainland China}} {{short for|zh|[[死刑]][[緩期]][[執行]]|t={{w|Death sentence with reprieve}}}} <end>
-Page 3854 occy strap: Found match for regex: <begin> # {{lb|en|informal}} {{clip of|en|octopus strap}}. <end>
+Page 3854 occy strap: Found match for regex: <begin> # {{lb|en|informal}} {{clipcomp of|en|octopus strap}}. <end>
 Page 3855 Pen-y-bont: Found match for regex: <begin> # {{short for|cy|Pen-y-bont ar Ogwr}}: {{place|cy|t=Bridgend|town/and/county borough|cc/Wales}}{{C|cy|Towns in Bridgend, Wales|Places in Bridgend, Wales}} <end>
 Page 3856 Kaimanawa: Found match for regex: <begin> # {{ellipsis of|en|Kaimanawa horse}}. <end>
 Page 3857 メロコア: Found match for regex: <begin> # {{short for|ja|メロディックハードコア}} <end>
@@ -4356,7 +4356,7 @@ Page 3870 LCDM: Found match for regex: <begin> # {{lb|en|astrophysics}} {{short 
 Page 3871 Jarrahdale: Found match for regex: <begin> # {{ellipsis of|en|Jarrahdale pumpkin}}. <end>
 Page 3872 여순 사건: Found match for regex: <begin> {{ko-etym-sino|麗|short for [[Yeosu]]|順|short for [[Suncheon]]|事件|[[incident]]|comp=y}}. <end>
 Page 3872 여순 사건: Found match for regex: <begin> # {{lb|ko|historical}} {{short for|ko|[[여수]]·[[순천]] [[사건]]|t={{w|Yeosu–Suncheon rebellion}}}}; a [[communist]] [[mutiny]] in the South Korean Constabulary of Police Reserve <end>
-Page 3874 JuLi: Found match for regex: <begin> # {{lb|de|German politics}} {{short for|de|{{w|lang=de|Junge Liberale|Junger Liberaler}}|t=member of the youth organisation of the Liberal Party}} <end>
+Page 3874 JuLi: Found match for regex: <begin> # {{lb|de|German politics}} {{sylabbr of|de|{{w|lang=de|Junge Liberale|Junger Liberaler}}|t=member of the youth organisation of the Liberal Party}} <end>
 Page 3875 민초: Found match for regex: <begin> # {{short for|ko|민트 초콜릿|t=mint chocolate}} <end>
 Page 3876 bukaan: Found match for regex: <begin> # {{lb|id|colloquial}} {{short for|id|pembukaan|t=cervical dilation}} <end>
 Page 3877 streamcreeper: Found match for regex: <begin> # {{ellipsis of|en|sharp-tailed streamcreeper}}. <end>
@@ -4448,8 +4448,8 @@ Page 3992 dräpo: Found match for regex: <begin> # {{lb|sv|humorous|pejorative|u
 Page 3993 리겜: Found match for regex: <begin> # {{short for|ko|리듬 게임|t=[[rhythm game]]}} <end>
 Page 3994 енергоресурс: Found match for regex: <begin> # {{short for|uk|[[енергети́чний]] [[ресу́рс]]||[[energy]] [[resource]]}} <end>
 Page 3995 kotain: Found match for regex: <begin> # {{lb|izh|rare}} {{short for|izh|maonkotain}} <end>
-Page 3996 dag sandwich: Found match for regex: <begin> # {{clip of|en|dagwood sandwich}}. <end>
-Page 3997 Dag sandwich: Found match for regex: <begin> # {{clip of|en|Dagwood sandwich}}. <end>
+Page 3996 dag sandwich: Found match for regex: <begin> # {{clipcomp of|en|dagwood sandwich}}. <end>
+Page 3997 Dag sandwich: Found match for regex: <begin> # {{clipcomp of|en|Dagwood sandwich}}. <end>
 Page 3998 얌마: Found match for regex: <begin> # {{short for|ko|야 임마|t=hey dude}} <end>
 Page 3999 스샷: Found match for regex: <begin> # {{short for|ko|스크린샷|t=[[screenshot]]}} <end>
 Page 4000 얼죽아: Found match for regex: <begin> # {{short for|ko|얼어 죽어도 [[아이스 아메리카노]]/[[아이스 커피]]|t=even if I freeze to death, I want [[iced]] [[Americano]]/[[iced coffee]]}} <end>
@@ -4477,7 +4477,7 @@ Page 4016 浅葱: Found match for regex: <begin> # {{short for|ja|浅葱膾|tr=a
 Page 4017 écran bleu: Found match for regex: <begin> # {{lb|fr|computing|informal}} {{short for|fr|écran bleu de la mort|t=[[blue screen of death]]}} <end>
 Page 4018 営団: Found match for regex: <begin> # {{lb|ja|historical|specifically}} {{short for|ja|[[帝都]][[高]][[速度]][[交通]]営団|tr=Teito Kōsokudo Kōtsū Eidan|t=Teito Rapid Transit Authority}}; the predecessor of {{w|Tokyo Metro}} <end>
 Page 4019 Yatir: Found match for regex: <begin> # {{short for|fr|forêt de Yatir}} {{gloss|forest in Israel}} <end>
-Page 4020 OPTEMPO: Found match for regex: <begin> # {{lb|en|US|military}} {{clip of|en|[[operations]] [[tempo]]}}. <end>
+Page 4020 OPTEMPO: Found match for regex: <begin> # {{lb|en|US|military}} {{clipcomp of|en|[[operations]] [[tempo]]}}. <end>
 Page 4021 ꠝꠣꠇꠠ: Found match for regex: <begin> # {{short for|syl|ꠝꠣꠇꠠ ꠡꠣ}} <end>
 Page 4022 Toolik: Found match for regex: <begin> # {{ellipsis of|en|Toolik Field Station}}. <end>
 Page 4023 còmh ri: Found match for regex: <begin> # {{short for|gd|còmhla ri||with, together with}} <end>
@@ -4488,7 +4488,7 @@ Page 4027 Snicko: Found match for regex: <begin> # {{lb|en|cricket}} {{clip of|e
 Page 4029 Cley: Found match for regex: <begin> # {{tcl|en|<ellip of:Cley next the Sea|id=Q60388}}. <end>
 Page 4030 선플: Found match for regex: <begin> {{short for|ko|[[선의]]의 [[리플]]}} <end>
 Page 4031 SoFlo: Found match for regex: <begin> # {{lb|en|informal}} {{sylabbr of|en|South Florida}}. <end>
-Page 4032 ag pipe: Found match for regex: <begin> # {{clip of|en|agricultural pipe}}. <end>
+Page 4032 ag pipe: Found match for regex: <begin> # {{clipcomp of|en|agricultural pipe}}. <end>
 Page 4033 ꠀꠎꠇꠥ: Found match for regex: <begin> # {{short for|syl|ꠀꠁꠎꠇꠥ|tr=aizku}} <end>
 Page 4034 パー券: Found match for regex: <begin> # {{short for|ja|パーティー券}} <end>
 Page 4036 코스어: Found match for regex: <begin> # {{short for|ko|코스플레이어|t=[[cosplayer]]}} <end>
