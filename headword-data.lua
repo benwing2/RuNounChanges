@@ -1,36 +1,44 @@
 local headword_page_module = "Module:headword/page"
 
-local concat = table.concat
-local get_etym_lang = require("Module:etymology languages").getByCanonicalName
-local gsub = mw.ustring.gsub
-local insert = table.insert
-local set = require("Module:utilities/set")
-local split = mw.text.split
-local trim = mw.text.trim
-local type_or_class = require("Module:parser").type_or_class
-local u = require("Module:string/char")
+local list_to_set = require("Module:table").listToSet
 
 local data = {}
 
------- 1. Lists that will be converted into sets. ------
+------ 1. Lists which are converted into sets. ------
 
-data.invariable = set{
+-- Zero-plurals (i.e. invariable plurals).
+local irregular_plurals = list_to_set({
 	"cmavo",
 	"cmene",
 	"fu'ivla",
 	"gismu",
 	"Han tu",
 	"hanja",
+	"hanzi",
 	"jyutping",
+	"kana",
 	"kanji",
 	"lujvo",
 	"phrasebook",
 	"pinyin",
 	"rafsi",
-	"romaji",
-}
+}, function(_, item)
+	return item
+end)
 
-data.lemmas = set{
+-- Irregular non-zero plurals AND any regular plurals where the singular ends in "s",
+-- because the module assumes that inputs ending in "s" are plurals. The singular and
+-- plural both need to be added, as the module will generate a default plural if
+-- the input doesn't match a key in this table.
+for sg, pl in next, {
+	mora = "morae"
+} do
+	irregular_plurals[sg], irregular_plurals[pl] = pl, pl
+end
+
+data.irregular_plurals = irregular_plurals
+
+data.lemmas = list_to_set{
 	"abbreviations",
 	"acronyms",
 	"adjectives",
@@ -58,17 +66,21 @@ data.lemmas = set{
 	"Han characters",
 	"Han tu",
 	"hanja",
+	"hanzi",
 	"ideophones",
 	"idioms",
 	"infixes",
 	"initialisms",
+	"iteration marks",
 	"interfixes",
 	"interjections",
+	"kana",
 	"kanji",
 	"letters",
 	"ligatures",
 	"logograms",
 	"lujvo",
+	"morae",
 	"morphemes",
 	"non-constituents",
 	"nouns",
@@ -98,7 +110,7 @@ data.lemmas = set{
 	"verbs",
 }
 
-data.nonlemmas = set{
+data.nonlemmas = list_to_set{
 	"active participle forms",
 	"active participles",
 	"adjectival participles",
@@ -132,7 +144,6 @@ data.nonlemmas = set{
 	"infinitives",
 	"interjection forms",
 	"jyutping",
-	"kanji readings",
 	"misspellings",
 	"negative participles",
 	"nominal participles",
@@ -149,6 +160,7 @@ data.nonlemmas = set{
 	"particle forms",
 	"passive participles",
 	"past active participles",
+	"past adverbial participles",
 	"past participles",
 	"past participle forms",
 	"past passive participles",
@@ -163,8 +175,10 @@ data.nonlemmas = set{
 	"preposition forms",
 	"prepositional pronouns",
 	"present active participles",
+	"present adverbial participles",
 	"present participles",
 	"present passive participles",
+	"preverb forms",
 	"pronoun forms",
 	"pronoun possessive forms",
 	"proper noun forms",
@@ -183,12 +197,12 @@ data.nonlemmas = set{
 }
 
 -- These langauges will not have links to separate parts of the headword.
-data.no_multiword_links = set{
+data.no_multiword_links = list_to_set{
 	"zh",
 }
 
 -- These languages will not have "LANG multiword terms" categories added.
-data.no_multiword_cat = set{
+data.no_multiword_cat = list_to_set{
 	-------- Languages without spaces between words (sometimes spaces between phrases) --------
 	"blt", -- Tai Dam
 	"ja", -- Japanese
@@ -389,7 +403,7 @@ data.no_multiword_cat = set{
 }
 
 -- In these languages, the hyphen is not considered a word separator for the "multiword terms" category.
-data.hyphen_not_multiword_sep = set{
+data.hyphen_not_multiword_sep = list_to_set{
 	"akk", -- Akkadian; hyphens between syllables
 	"akl", -- Aklanon; hyphens for mid-word glottal stops
 	"ber-pro", -- Proto-Berber; morphemes separated by hyphens
@@ -400,7 +414,9 @@ data.hyphen_not_multiword_sep = set{
 	"esx-esk-pro", -- hyphen used to separate morphemes
 	"fi", -- Finnish; hyphen used to separate components in compound words if the final and initial vowels match, respectively
 	"hil", -- Hiligaynon; hyphens for mid-word glottal stops
+	"hnn", -- Hanunoo; too many false positives
 	"ilo", -- Ilocano; hyphens for mid-word glottal stops
+	"kne", -- Kankanaey; hyphens for mid-word glottal stops
 	"lcp", -- Western Lawa; dash as syllable joiner
 	"lwl", -- Eastern Lawa; dash as syllable joiner
 	"mfa", -- Pattani Malay in Thai script; dash as syllable joiner
@@ -412,40 +428,58 @@ data.hyphen_not_multiword_sep = set{
 }
 
 -- These languages will not have "LANG masculine nouns" and similar categories added.
-data.no_gender_cat = set{
+data.no_gender_cat = list_to_set{
 	-- Languages without gender but which use the gender field for other purposes
 	"ja",
 	"th",
 }
 
-data.notranslit = set{
+data.notranslit = list_to_set{
 	"ams",
 	"az",
 	"bbc",
 	"bug",
+	"cdo",
 	"cia",
 	"cjm",
+	"cjy",
 	"cmn",
+	"cnp",
 	"cpi",
+	"cpx",
+	"csp",
+	"czh",
+	"czo",
+	"gan",
 	"hak",
+	"hnm",
+	"hsn",
 	"ja",
 	"kzg",
 	"lad",
+	"ltc",
+	"luh",
 	"lzh",
+	"mnp",
 	"ms",
 	"mul",
 	"mvi",
 	"nan",
+	"nan-dat",
 	"nan-hbl",
-	"nan-hnm",
-	"nan-luh",
+	"nan-hlh",
+	"nan-lnx",
 	"nan-tws",
+	"nan-zhe",
+	"nan-zsh",
+	"och",
 	"oj",
 	"okn",
 	"ryn",
 	"rys",
 	"ryu",
 	"sh",
+	"sjc",
 	"tgt",
 	"th",
 	"tkn",
@@ -453,16 +487,19 @@ data.notranslit = set{
 	"txg",
 	"und",
 	"vi",
+	"wuu",
 	"xug",
 	"yoi",
 	"yox",
 	"yue",
 	"za",
 	"zh",
+	"zhx-sic",
+	"zhx-tai",
 }
 
 -- Script codes for which a script-tagged display title will be added.
-data.toBeTagged = set{
+data.toBeTagged = list_to_set{
 	"Ahom",
 	"Arab",
 		"fa-Arab",
@@ -557,6 +594,7 @@ data.toBeTagged = set{
 	"Mymr",
 	"Narb",
 	"Nkoo",
+	"Nshu",
 	"Ogam",
 	"Olck",
 	"Orkh",
@@ -604,31 +642,34 @@ data.toBeTagged = set{
 	"Zsym",
 
 	"Ipach",
-	"IPAchar",
 	"Music",
-	"musical",
 	"Rumin",
-	"Ruminumerals",
 }
 
 -- Parts of speech which will not be categorised in categories like "English terms spelled with É" if
 -- the term is the character in question (e.g. the letter entry for English [[é]]). This contrasts with
 -- entries like the French adjective [[m̂]], which is a one-letter word spelled with the letter.
-data.pos_not_spelled_with_self = set{
+data.pos_not_spelled_with_self = list_to_set{
 	"diacritical marks",
 	"Han characters",
 	"Han tu",
 	"hanja",
+	"hanzi",
+	"iteration marks",
+	"kana",
 	"kanji",
 	"letters",
 	"ligatures",
 	"logograms",
+	"morae",
 	"numeral symbols",
 	"numerals",
+	"punctuation marks",
+	"syllables",
 	"symbols",
 }
 
------- 2. Lists that will not be converted into sets. ------
+------ 2. Lists not converted into sets. ------
 
 -- Recognized aliases for parts of speech (param 2=). Key is the short form and value is the canonical singular (not
 -- pluralized) form. It is singular so that the same table can be used in [[Module:form of]] for the p=/POS= param
@@ -640,9 +681,10 @@ data.pos_aliases = {
 	art = "article",
 	det = "determiner",
 	cnum = "cardinal number",
+	compadj = "comparative adjective",
+	compadv = "comparative adverb",
 	conj = "conjunction",
 	conv = "converb",
-	hanzi = "Han character",
 	int = "interjection",
 	interj = "interjection",
 	intj = "interjection",
@@ -653,13 +695,17 @@ data.pos_aliases = {
 	phr = "phrase",
 	pn = "proper noun",
 	postp = "postposition",
-	pre = "preposition",
+	pref = "prefix",
 	prep = "preposition",
-	pro = "pronoun",
 	pron = "pronoun",
 	prop = "proper noun",
 	proper = "proper noun",
+	propn = "proper noun",
 	onum = "ordinal number",
+	rom = "romanization",
+	suf = "suffix",
+	supadj = "superlative adjective",
+	supadv = "superlative adverb",
 	v = "verb",
 	vb = "verb",
 	vi = "intransitive verb",
