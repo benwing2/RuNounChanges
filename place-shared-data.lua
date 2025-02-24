@@ -5,6 +5,7 @@ You must load this module using require(), not using mw.loadData().
 ]=]
 
 local m_table = require("Module:table")
+local en_utilities_module = "Module:en-utilities"
 local topic_cat_utilities_module = "Module:category tree/topic cat/utilities"
 
 -----------------------------------------------------------------------------------
@@ -34,6 +35,7 @@ export.political_subdivisions = {
 	["civil parishes"] = true,
 	["collectivities"] = true,
 	["communes"] = true,
+	["communities"] = true,
 	["constituencies"] = true,
 	["constituent countries"] = true,
 	["council areas"] = true,
@@ -79,8 +81,10 @@ export.political_subdivisions = {
 	["self-administered divisions"] = "w",
 	["self-administered zones"] = "w",
 	["special administrative regions"] = "[[w:Special administrative regions of China|special administrative regions]]",
+	["special municipality"] = "[[w:Special municipality (Taiwan)|special municipality]]",
 	["special wards"] = true,
 	["states"] = true,
+	["subdistricts"] = true,
 	["subprefectures"] = true,
 	["subregions"] = true,
 	["territorial authorities"] = "w",
@@ -262,7 +266,6 @@ export.countries = {
 	["Brunei"] = {parents = {"Asia"}, poldiv = {"districts", "mukims"}, british_spelling = true},
 	["Bulgaria"] = {parents = {"Europe"}, poldiv = {"provinces", "municipalities"}, british_spelling = true},
 	["Burkina Faso"] = {parents = {"Africa"}, poldiv = {"regions", "departments", "provinces"}},
-	["Burma"] = {parents = {"Asia"}, poldiv = {"regions", "states", "union territories", "self-administered zones", "self-administered divisions", "districts"}},
 	["Burundi"] = {parents = {"Africa"}, poldiv = {"provinces", "communes"}},
 	["Cambodia"] = {parents = {"Asia"}, poldiv = {"provinces", "districts"}},
 	["Cameroon"] = {parents = {"Africa"}, poldiv = {"regions", "departments"}},
@@ -300,8 +303,8 @@ export.countries = {
 	["the Federated States of Micronesia"] = {parents = {"Micronesia"}, poldiv = {"states"}},
 	["Fiji"] = {parents = {"Melanesia"}, poldiv = {"divisions", "provinces"}, british_spelling = true},
 	["Finland"] = {parents = {"Europe"}, poldiv = {"regions", "municipalities"}, british_spelling = true},
-	["France"] = {parents = {"Europe"}, poldiv = {"administrative regions", "departments", "collectivities", "communes", "municipalities",
-		"dependent territories", "territories"}, miscdiv = {"provinces", "regions"}, british_spelling = true},
+	["France"] = {parents = {"Europe"}, poldiv = {"administrative regions", "cantons", "collectivities", "communes", "departments",
+		"municipalities", "dependent territories", "territories"}, miscdiv = {"provinces", "regions"}, british_spelling = true},
 	["Gabon"] = {parents = {"Africa"}, poldiv = {"provinces", "departments"}},
 	["the Gambia"] = {parents = {"Africa"}, poldiv = {"divisions", "districts"}, british_spelling = true, wp = "The Gambia"},
 	["Georgia"] = {parents = {"Europe", "Asia"}, poldiv = {"regions", "districts"}, keydesc = "the country of [[Georgia]], in [[Eurasia]]", british_spelling = true},
@@ -316,14 +319,14 @@ export.countries = {
 	["Haiti"] = {parents = {"North America"}, poldiv = {"departments", "arrondissements"}},
 	["Honduras"] = {parents = {"Central America"}, poldiv = {"departments", "municipalities"}},
 	["Hungary"] = {parents = {"Europe"}, poldiv = {"counties", "districts"}, british_spelling = true},
-	["Iceland"] = {parents = {"Europe"}, poldiv = {"regions", "municipalities", "counties"}, british_spelling = true},
+	["Iceland"] = {parents = {"Europe"}, poldiv = {"administrative regions", "municipalities", "counties"}, british_spelling = true},
 	["India"] = {parents = {"Asia"}, poldiv = {"states", "union territories", "divisions", "districts", "municipalities"}, british_spelling = true},
 	["Indonesia"] = {parents = {"Asia"}, poldiv = {"regencies", "provinces"}},
 	["Iran"] = {parents = {"Asia"}, poldiv = {"provinces", "counties"}},
 	["Iraq"] = {parents = {"Asia"}, poldiv = {"governorates", "districts"}},
 	["Ireland"] = {parents = {"Europe", "British Isles"}, poldiv = {"counties", "districts"}, miscdiv = {"provinces"}, british_spelling = true},
 	["Israel"] = {parents = {"Asia"}, poldiv = {"districts"}},
-	["Italy"] = {parents = {"Europe"}, poldiv = {"regions", "provinces", "metropolitan cities"}, miscdiv = {"regions"}, british_spelling = true},
+	["Italy"] = {parents = {"Europe"}, poldiv = {"administrative regions", "provinces", "metropolitan cities", "municipalities"}, miscdiv = {"regions"}, british_spelling = true},
 	["Ivory Coast"] = {parents = {"Africa"}, poldiv = {"districts", "regions"}},
 	["Jamaica"] = {parents = {"North America"}, poldiv = {"parishes"}, british_spelling = true},
 	["Japan"] = {parents = {"Asia"}, poldiv = {"prefectures", "subprefectures", "municipalities"}},
@@ -355,15 +358,16 @@ export.countries = {
 	["Mauritius"] = {parents = {"Africa"}, poldiv = {"districts"}, british_spelling = true},
 	["Mexico"] = {parents = {"North America", "Central America"}, poldiv = {"states", "municipalities"}},
 	["Moldova"] = {parents = {"Europe"}, poldiv = {"districts", "municipalities"}, british_spelling = true},
-	["Monaco"] = {parents = {"Europe"}, is_city = true, british_spelling = true},
+	["Monaco"] = {divtype = {"city-state", "country"}, parents = {"Europe"}, is_city = true, british_spelling = true},
 	["Mongolia"] = {parents = {"Asia"}, poldiv = {"provinces", "districts"}},
 	["Montenegro"] = {parents = {"Europe"}, poldiv = {"municipalities"}},
 	["Morocco"] = {parents = {"Africa"}, poldiv = {"regions", "prefectures", "provinces"}},
 	["Mozambique"] = {parents = {"Africa"}, poldiv = {"provinces", "districts"}},
+	["Myanmar"] = {parents = {"Asia"}, poldiv = {"regions", "states", "union territories", "self-administered zones", "self-administered divisions", "districts"}},
 	["Namibia"] = {parents = {"Africa"}, poldiv = {"regions", "constituencies"}, british_spelling = true},
 	["Nauru"] = {parents = {"Micronesia"}, poldiv = {"districts"}, british_spelling = true},
 	["Nepal"] = {parents = {"Asia"}, poldiv = {"provinces", "districts"}},
-	["the Netherlands"] = {parents = {"Europe"}, poldiv = {"provinces", "municipalities", "dependent territories"}, british_spelling = true},
+	["the Netherlands"] = {divtype = {"constituent country", "country"}, parents = {"Europe"}, poldiv = {"provinces", "municipalities", "dependent territories"}, british_spelling = true},
 	["New Zealand"] = {parents = {"Polynesia"}, poldiv = {"regions", "dependent territories", "territorial authorities"}, british_spelling = true},
 	["Nicaragua"] = {parents = {"Central America"}, poldiv = {"departments", "municipalities"}},
 	["Niger"] = {parents = {"Africa"}, poldiv = {"regions", "departments"}},
@@ -374,7 +378,7 @@ export.countries = {
 		miscdiv = {"districts", "unincorporated areas"}, british_spelling = true},
 	["Oman"] = {parents = {"Asia"}, poldiv = {"governorates", "provinces"}},
 	["Pakistan"] = {parents = {"Asia"}, poldiv = {"provinces", "districts"}, british_spelling = true},
-	["Palestine"] = {parents = {"Asia"}},
+	["Palestine"] = {parents = {"Asia"}, poldiv = {"governorates"}},
 	["Palau"] = {parents = {"Micronesia"}, poldiv = {"states"}},
 	["Panama"] = {parents = {"Central America"}, poldiv = {"provinces", "districts"}},
 	["Papua New Guinea"] = {parents = {"Melanesia"}, poldiv = {"provinces", "districts"}, british_spelling = true},
@@ -385,7 +389,7 @@ export.countries = {
 	["Portugal"] = {parents = {"Europe"}, poldiv = {"districts and autonomous regions", "provinces", "municipalities"}, british_spelling = true},
 	["Qatar"] = {parents = {"Asia"}, poldiv = {"municipalities", "zones"}},
 	["the Republic of the Congo"] = {parents = {"Africa"}, poldiv = {"departments", "districts"}},
-	["Romania"] = {parents = {"Europe"}, poldiv = {"regions", "counties"}, british_spelling = true},
+	["Romania"] = {parents = {"Europe"}, poldiv = {"regions", "counties", "communes"}, british_spelling = true},
 	["Russia"] = {parents = {"Europe", "Asia"}, poldiv = {"republics", "autonomous oblasts", "autonomous okrugs", "oblasts", "krais", "federal cities", "districts"}, british_spelling = true},
 	["Rwanda"] = {parents = {"Africa"}, poldiv = {"provinces", "districts"}},
 	["Saint Kitts and Nevis"] = {parents = {"North America"}, poldiv = {"parishes"}, british_spelling = true},
@@ -419,7 +423,7 @@ export.countries = {
 	["Taiwan"] = {parents = {"Asia"}, poldiv = {"counties", "districts"}},
 	["Tajikistan"] = {parents = {"Asia"}, poldiv = {"provinces"}, miscdiv = {"regions", "districts"}},
 	["Tanzania"] = {parents = {"Africa"}, poldiv = {"provinces", "districts"}, british_spelling = true},
-	["Thailand"] = {parents = {"Asia"}, poldiv = {"provinces", "districts"}},
+	["Thailand"] = {parents = {"Asia"}, poldiv = {"provinces", "districts", "subdistricts"}},
 	["Togo"] = {parents = {"Africa"}, poldiv = {"provinces", "prefectures"}},
 	["Tonga"] = {parents = {"Polynesia"}, poldiv = {"divisions"}, british_spelling = true},
 	["Trinidad and Tobago"] = {parents = {"North America"}, poldiv = {"regions", "municipalities"}, british_spelling = true},
@@ -440,10 +444,10 @@ export.countries = {
 	["Uruguay"] = {parents = {"South America"}, poldiv = {"departments", "municipalities"}},
 	["Uzbekistan"] = {parents = {"Asia"}, poldiv = {"regions", "districts"}},
 	["Vanuatu"] = {parents = {"Melanesia"}, poldiv = {"provinces"}, british_spelling = true},
-	["Vatican City"] = {parents = {"Europe", "Rome"}, is_city = true, british_spelling = true},
+	["Vatican City"] = {divtype = {"city-state", "country"}, parents = {"Europe", "Rome"}, is_city = true, british_spelling = true},
 	["Venezuela"] = {parents = {"South America"}, poldiv = {"states", "municipalities"}},
 	["Vietnam"] = {parents = {"Asia"}, poldiv = {"provinces", "districts", "municipalities"}},
-	["Western Sahara"] = {parents = {"Africa"}},
+	["Western Sahara"] = {divtype = {"territory"}, parents = {"Africa"}},
 	["Yemen"] = {parents = {"Asia"}, poldiv = {"governorates", "districts"}},
 	["Zambia"] = {parents = {"Africa"}, poldiv = {"provinces", "districts"}, british_spelling = true},
 	["Zimbabwe"] = {parents = {"Africa"}, poldiv = {"provinces", "districts"}, british_spelling = true},
@@ -466,7 +470,7 @@ export.pseudo_countries = {
 	-- NOTE: Formerly listed Armenia as a parent; this seems politically non-neutral
 	-- so I've taken it out.
 	["Artsakh"] = {divtype = {"unrecognized state", "country"}, parents = {"Azerbaijan", "Europe", "Asia"},
-		keydesc = "the de-facto independent state of [[Artsakh]], internationally recognized as part of [[Azerbaijan]]", british_spelling = true},
+		keydesc = "the former de-facto independent state of [[Artsakh]], internationally recognized as part of [[Azerbaijan]]", british_spelling = true},
 	-- British Overseas Territory
 	["Ascension Island"] = {divtype = {"overseas territory", "territory"}, parents = {"United Kingdom", "Atlantic Ocean"}, british_spelling = true},
 	-- constituent country of the Netherlands
@@ -578,7 +582,7 @@ export.former_countries = {
 	["the Soviet Union"] = {parents = {"Europe", "Asia"}, poldiv = {"republics", "autonomous republics"}, british_spelling = true},
 	["West Germany"] = {parents = {"Europe", "Germany"}, british_spelling = true},
 	["Yugoslavia"] = {parents = {"Europe"}, poldiv = {"districts"},
-		keydesc = "the former [[Kingdom of Yugoslavia]] (1918-1943) or the former [[Socialist Federal Republic of Yugoslavia]] (1943-1992)", british_spelling = true},
+		keydesc = "the former [[Kingdom of Yugoslavia]] (1918–1943) or the former [[Socialist Federal Republic of Yugoslavia]] (1943–1992)", british_spelling = true},
 }
 
 export.australian_states_and_territories = {
@@ -740,10 +744,12 @@ export.french_administrative_regions = {
 export.german_states = {
 	["Baden-Württemberg"] = {},
 	["Bavaria"] = {},
-	["Berlin"] = {},
+	-- Berlin, Bremen and Hamburg are effectively city-states and don't have districts ([[Kreise]]), so override
+	-- the default_poldiv setting.
+	["Berlin"] = {poldiv = {}},
 	["Brandenburg"] = {},
-	["Bremen"] = {},
-	["Hamburg"] = {},
+	["Bremen"] = {poldiv = {}},
+	["Hamburg"] = {poldiv = {}},
 	["Hesse"] = {},
 	["Lower Saxony"] = {},
 	["Mecklenburg-Vorpommern"] = {},
@@ -756,46 +762,48 @@ export.german_states = {
 	["Thuringia"] = {},
 }
 
+local india_polity_with_divisions = {"divisions", "districts"}
+local india_polity_without_divisions = {"districts"}
+
 -- Indian states and union territories. Only some of them are divided into
 -- divisions.
 export.indian_states_and_union_territories = {
-	["Andaman and Nicobar Islands"] = {divtype = "union territory"},
-	["Andhra Pradesh"] = {},
-	["Arunachal Pradesh"] = {poldiv = {"divisions"}},
-	["Assam"] = {poldiv = {"divisions"}},
-	["Bihar"] = {poldiv = {"divisions"}},
-	["Chandigarh"] = {divtype = "union territory"},
-	["Chhattisgarh"] = {poldiv = {"divisions"}},
-	["Dadra and Nagar Haveli"] = {divtype = "union territory"},
-	["Daman and Diu"] = {divtype = "union territory"},
-	["Delhi"] = {divtype = "union territory", poldiv = {"divisions"}},
-	["Goa"] = {},
-	["Gujarat"] = {},
-	["Haryana"] = {poldiv = {"divisions"}},
-	["Himachal Pradesh"] = {poldiv = {"divisions"}},
-	["Jammu and Kashmir"] = {divtype = "union territory", poldiv = {"divisions"}},
-	["Jharkhand"] = {poldiv = {"divisions"}},
-	["Karnataka"] = {poldiv = {"divisions"}},
-	["Kerala"] = {},
-	["Ladakh"] = {divtype = "union territory", poldiv = {"divisions"}},
-	["Lakshadweep"] = {divtype = "union territory"},
-	["Madhya Pradesh"] = {poldiv = {"divisions"}},
-	["Maharashtra"] = {poldiv = {"divisions"}},
-	["Manipur"] = {},
-	["Meghalaya"] = {poldiv = {"divisions"}},
-	["Mizoram"] = {},
-	["Nagaland"] = {poldiv = {"divisions"}},
-	["Odisha"] = {poldiv = {"divisions"}},
-	["Puducherry"] = {divtype = "union territory"},
-	["Punjab"] = {poldiv = {"divisions"}},
-	["Rajasthan"] = {poldiv = {"divisions"}},
-	["Sikkim"] = {},
-	["Tamil Nadu"] = {},
-	["Telangana"] = {},
-	["Tripura"] = {},
-	["Uttar Pradesh"] = {poldiv = {"divisions"}},
-	["Uttarakhand"] = {poldiv = {"divisions"}},
-	["West Bengal"] = {poldiv = {"divisions"}},
+	["Andaman and Nicobar Islands"] = {divtype = "union territory", poldiv = india_polity_without_divisions},
+	["Andhra Pradesh"] = {poldiv = india_polity_without_divisions},
+	["Arunachal Pradesh"] = {poldiv = india_polity_with_divisions},
+	["Assam"] = {poldiv = india_polity_with_divisions},
+	["Bihar"] = {poldiv = india_polity_with_divisions},
+	["Chandigarh"] = {divtype = "union territory", poldiv = india_polity_without_divisions},
+	["Chhattisgarh"] = {poldiv = india_polity_with_divisions},
+	["Dadra and Nagar Haveli and Daman and Diu"] = {divtype = "union territory", poldiv = india_polity_without_divisions},
+	["Delhi"] = {divtype = "union territory", poldiv = india_polity_with_divisions},
+	["Goa"] = {poldiv = india_polity_without_divisions},
+	["Gujarat"] = {poldiv = india_polity_without_divisions},
+	["Haryana"] = {poldiv = india_polity_with_divisions},
+	["Himachal Pradesh"] = {poldiv = india_polity_with_divisions},
+	["Jammu and Kashmir"] = {divtype = "union territory", poldiv = india_polity_with_divisions},
+	["Jharkhand"] = {poldiv = india_polity_with_divisions},
+	["Karnataka"] = {poldiv = india_polity_with_divisions},
+	["Kerala"] = {poldiv = india_polity_without_divisions},
+	["Ladakh"] = {divtype = "union territory", poldiv = india_polity_with_divisions},
+	["Lakshadweep"] = {divtype = "union territory", poldiv = india_polity_without_divisions},
+	["Madhya Pradesh"] = {poldiv = india_polity_with_divisions},
+	["Maharashtra"] = {poldiv = india_polity_with_divisions},
+	["Manipur"] = {poldiv = india_polity_without_divisions},
+	["Meghalaya"] = {poldiv = india_polity_with_divisions},
+	["Mizoram"] = {poldiv = india_polity_without_divisions},
+	["Nagaland"] = {poldiv = india_polity_with_divisions},
+	["Odisha"] = {poldiv = india_polity_with_divisions},
+	["Puducherry"] = {divtype = "union territory", poldiv = india_polity_without_divisions},
+	["Punjab"] = {poldiv = india_polity_with_divisions},
+	["Rajasthan"] = {poldiv = india_polity_with_divisions},
+	["Sikkim"] = {poldiv = india_polity_without_divisions},
+	["Tamil Nadu"] = {poldiv = india_polity_without_divisions},
+	["Telangana"] = {poldiv = india_polity_without_divisions},
+	["Tripura"] = {poldiv = india_polity_without_divisions},
+	["Uttar Pradesh"] = {poldiv = india_polity_with_divisions},
+	["Uttarakhand"] = {poldiv = india_polity_with_divisions},
+	["West Bengal"] = {poldiv = india_polity_with_divisions},
 }
 
 export.indonesian_provinces = {
@@ -806,11 +814,13 @@ export.indonesian_provinces = {
 	["Bengkulu"] = {},
 	["Central Java"] = {},
 	["Central Kalimantan"] = {},
+	["Central Papua"] = {},
 	["Central Sulawesi"] = {},
 	["East Java"] = {},
 	["East Kalimantan"] = {},
 	["East Nusa Tenggara"] = {},
 	["Gorontalo"] = {},
+	["Highland Papua"] = {},
 	["Special Capital Region of Jakarta"] = {},
 	["Jambi"] = {},
 	["Lampung"] = {},
@@ -818,14 +828,17 @@ export.indonesian_provinces = {
 	["North Kalimantan"] = {},
 	["North Maluku"] = {},
 	["North Sulawesi"] = {},
+	["North Papua"] = {},
 	["North Sumatra"] = {},
 	["Papua"] = {},
 	["Riau"] = {},
 	["Riau Islands"] = {},
 	["Southeast Sulawesi"] = {},
 	["South Kalimantan"] = {},
+	["South Papua"] = {},
 	["South Sulawesi"] = {},
 	["South Sumatra"] = {},
+	["Southwest Papua"] = {},
 	["West Java"] = {},
 	["West Kalimantan"] = {},
 	["West Nusa Tenggara"] = {},
@@ -864,24 +877,24 @@ export.irish_counties = {
 	["County Wicklow, Ireland"] = {},
 }
 
-export.italian_regions = {
+export.italian_administrative_regions = {
 	["Abruzzo"] = {},
-	["Aosta Valley"] = {divtype = {"autonomous region", "region"}},
+	["Aosta Valley"] = {divtype = {"autonomous region", "administrative region", "region"}},
 	["Apulia"] = {},
 	["Basilicata"] = {},
 	["Calabria"] = {},
 	["Campania"] = {},
 	["Emilia-Romagna"] = {},
-	["Friuli-Venezia Giulia"] = {divtype = {"autonomous region", "region"}},
+	["Friuli-Venezia Giulia"] = {divtype = {"autonomous region", "administrative region", "region"}},
 	["Lazio"] = {},
 	["Liguria"] = {},
 	["Lombardy"] = {},
 	["Marche"] = {},
 	["Molise"] = {},
 	["Piedmont"] = {},
-	["Sardinia"] = {divtype = {"autonomous region", "region"}},
-	["Sicily"] = {divtype = {"autonomous region", "region"}},
-	["Trentino-Alto Adige"] = {divtype = {"autonomous region", "region"}},
+	["Sardinia"] = {divtype = {"autonomous region", "administrative region", "region"}},
+	["Sicily"] = {divtype = {"autonomous region", "administrative region", "region"}},
+	["Trentino-Alto Adige"] = {divtype = {"autonomous region", "administrative region", "region"}},
 	["Tuscany"] = {},
 	["Umbria"] = {},
 	["Veneto"] = {},
@@ -945,17 +958,90 @@ local function japanese_placename_to_key(placename)
 	return placename .. " Prefecture"
 end
 
+export.north_korean_provinces = {
+	["Chagang Province"] = {},
+	["North Hamgyong Province"] = {},
+	["South Hamgyong Province"] = {},
+	["North Hwanghae Province"] = {},
+	["South Hwanghae Province"] = {},
+	["Kangwon Province"] = {},
+	["North Pyongan Province"] = {},
+	["South Pyongan Province"] = {},
+	["Ryanggang Province"] = {},
+}
+
+export.south_korean_provinces = {
+	["North Chungcheong Province"] = {},
+	["South Chungcheong Province"] = {},
+	["Gangwon Province"] = {},
+	["Gyeonggi Province"] = {},
+	["North Gyeongsang Province"] = {},
+	["South Gyeongsang Province"] = {},
+	["North Jeolla Province"] = {},
+	["South Jeolla Province"] = {},
+	["Jeju Province"] = {},
+}
+
+export.laotian_provinces = {
+	["Attapeu Province, Laos"] = {},
+	["Bokeo Province, Laos"] = {},
+	["Bolikhamxai Province, Laos"] = {},
+	["Champasak Province, Laos"] = {},
+	["Houaphanh Province, Laos"] = {},
+	["Khammouane Province, Laos"] = {},
+	["Luang Namtha Province, Laos"] = {},
+	["Luang Prabang Province, Laos"] = {},
+	["Oudomxay Province, Laos"] = {},
+	["Phongsaly Province, Laos"] = {},
+	["Salavan Province, Laos"] = {},
+	["Savannakhet Province, Laos"] = {},
+	["Vientiane Province, Laos"] = {},
+	["Vientiane Prefecture, Laos"] = {divtype = "prefecture"},
+	["Sainyabuli Province, Laos"] = {},
+	["Sekong Province, Laos"] = {},
+	["Xaisomboun Province, Laos"] = {},
+	["Xiangkhouang Province, Laos"] = {},
+}
+
+local function laos_key_to_placename(key)
+	return (key:gsub(", Laos$", ""):gsub(" Province$", ""):gsub(" Prefecture$", ""))
+end
+
+local function laos_placename_to_key(placename)
+	if placename == "Vientiane Prefecture" then
+		return placename .. ", Laos"
+	end
+	return placename .. " Province, Laos"
+end
+
+export.malaysian_states = {
+	["Johor"] = {},
+	["Kedah"] = {},
+	["Kelantan"] = {},
+	["Malacca"] = {},
+	["Negeri Sembilan"] = {},
+	["Pahang"] = {},
+	["Penang"] = {},
+	["Perak"] = {},
+	["Perlis"] = {},
+	["Sabah"] = {},
+	["Sarawak"] = {},
+	["Selangor"] = {},
+	["Terengganu"] = {},
+}
+
 export.maltese_regions = {
-	["Central Region, Malta"] = {},
+	["Eastern Region, Malta"] = {},
 	["Gozo Region, Malta"] = {},
 	["Northern Region, Malta"] = {},
-	["South Eastern Region, Malta"] = {},
+	["Port Region, Malta"] = {},
 	["Southern Region, Malta"] = {},
+	["Western Region, Malta"] = {},
 }
 
 export.mexican_states = {
 	["Aguascalientes"] = {},
-	["Baja California Norte"] = {},
+	["Baja California"] = {},
 	["Baja California Sur"] = {},
 	["Campeche"] = {},
 	["Chiapas"] = {},
@@ -989,7 +1075,7 @@ export.mexican_states = {
 }
 		
 export.moroccan_regions = {
-	["Tanger-Tetouan-Al Hoceima"] = {},
+	["Tangier-Tetouan-Al Hoceima"] = {},
 	["Oriental"] = {},
 	["Fez-Meknes"] = {},
 	["Rabat-Sale-Kenitra"] = {},
@@ -1017,6 +1103,52 @@ export.netherlands_provinces = {
 	["Utrecht, Netherlands"] = {},
 	["Zeeland, Netherlands"] = {},
 }
+
+export.nigerian_states= {
+	["Abia State, Nigeria"] = {},
+	["Adamawa State, Nigeria"] = {},
+	["Akwa Ibom State, Nigeria"] = {},
+	["Anambra State, Nigeria"] = {},
+	["Bauchi State, Nigeria"] = {},
+	["Bayelsa State, Nigeria"] = {},
+	["Benue State, Nigeria"] = {},
+	["Borno State, Nigeria"] = {},
+	["Cross River State, Nigeria"] = {},
+	["Delta State, Nigeria"] = {},
+	["Ebonyi State, Nigeria"] = {},
+	["Edo State, Nigeria"] = {},
+	["Ekiti State, Nigeria"] = {},
+	["Enugu State, Nigeria"] = {},
+	["Gombe State, Nigeria"] = {},
+	["Imo State, Nigeria"] = {},
+	["Jigawa State, Nigeria"] = {},
+	["Kaduna State, Nigeria"] = {},
+	["Kano State, Nigeria"] = {},
+    ["Katsina State, Nigeria"] = {},
+	["Kebbi State, Nigeria"] = {},
+	["Kogi State, Nigeria"] = {},
+	["Kwara State, Nigeria"] = {},
+	["Lagos State, Nigeria"] = {},
+	["Nasarawa State, Nigeria"] = {},
+	["Niger State, Nigeria"] = {},
+	["Ogun State, Nigeria"] = {},
+	["Ondo State, Nigeria"] = {},
+	["Osun State, Nigeria"] = {},
+	["Oyo State, Nigeria"] = {},
+	["Plateau State, Nigeria"] = {},
+	["Rivers State"] = {},
+	["Sokoto State, Nigeria"] = {},
+	["Taraba State, Nigeria"] = {},
+	["Yobe State, Nigeria"] = {},
+	["Zamfara State, Nigeria"] = {},
+}
+
+local function nigeria_placename_to_key(placename)
+	if placename == "Rivers State" then
+		return placename
+	end
+	return placename .. " State, Nigeria"
+end
 
 export.norwegian_counties = {
 	["Østfold"] = {},
@@ -1085,7 +1217,8 @@ export.philippine_provinces = {
 	["Lanao del Norte, Philippines"] = {},
 	["Lanao del Sur, Philippines"] = {},
 	["Leyte, Philippines"] = {},
-	["Maguindanao, Philippines"] = {},
+	["Maguindanao del Norte, Philippines"] = {},
+    ["Maguindanao del Sur, Philippines"] = {},
 	["Marinduque, Philippines"] = {},
 	["Masbate, Philippines"] = {},
 	["Misamis Occidental, Philippines"] = {},
@@ -1121,7 +1254,8 @@ export.philippine_provinces = {
 	["Zamboanga del Norte, Philippines"] = {},
 	["Zamboanga del Sur, Philippines"] = {},
 	["Zamboanga Sibugay, Philippines"] = {},
-	["Metro Manila, Philippines"] = {},
+	--not a province but treated as a n
+	["Metro Manila, Philippines"] = {divtype="region"},
 }
 
 export.russian_federal_subjects = {
@@ -1262,12 +1396,107 @@ export.spanish_autonomous_communities = {
 	["Valencia"] = {},
 }
 
+export.taiwanese_counties = {
+	["Changhua County, Taiwan"] = {},
+	["Chiayi County, Taiwan"] = {},
+	["Hsinchu County, Taiwan"] = {},
+	["Hualien County, Taiwan"] = {},
+	["Kinmen County, Taiwan"] = {},
+	["Lienchiang County, Taiwan"] = {},
+	["Miaoli County, Taiwan"] = {},
+	["Nantou County, Taiwan"] = {},
+	["Penghu County, Taiwan"] = {},
+	["Pingtung County, Taiwan"] = {},
+	["Taitung County, Taiwan"] = {},
+	["Yilan County, Taiwan"] = {},
+	["Yunlin County, Taiwan"] = {},
+}
+
+export.thai_provinces = {
+	["Amnat Charoen Province, Thailand"] = {},
+	["Ang Thong Province, Thailand"] = {},
+	["Bueng Kan Province, Thailand"] = {},
+	["Buriram Province, Thailand"] = {},
+	["Chachoengsao Province, Thailand"] = {},
+	["Chai Nat Province, Thailand"] = {},
+	["Chaiyaphum Province, Thailand"] = {},
+	["Chanthaburi Province, Thailand"] = {},
+	["Chiang Mai Province, Thailand"] = {},
+	["Chiang Rai Province, Thailand"] = {},
+	["Chonburi Province, Thailand"] = {},
+	["Chumphon Province, Thailand"] = {},
+	["Kalasin Province, Thailand"] = {},
+	["Kamphaeng Phet Province, Thailand"] = {},
+	["Kanchanaburi Province, Thailand"] = {},
+	["Khon Kaen Province, Thailand"] = {},
+	["Krabi Province, Thailand"] = {},
+	["Lampang Province, Thailand"] = {},
+	["Lamphun Province, Thailand"] = {},
+	["Loei Province, Thailand"] = {},
+	["Lopburi Province, Thailand"] = {},
+	["Mae Hong Son Province, Thailand"] = {},
+	["Maha Sarakham Province, Thailand"] = {},
+	["Mukdahan Province, Thailand"] = {},
+	["Nakhon Nayok Province, Thailand"] = {},
+	["Nakhon Pathom Province, Thailand"] = {},
+	["Nakhon Phanom Province, Thailand"] = {},
+	["Nakhon Ratchasima Province, Thailand"] = {},
+	["Nakhon Sawon Province, Thailand"] = {},
+	["Nakhon Si Thammarat Province, Thailand"] = {},
+	["Nan Province, Thailand"] = {},
+	["Narathiwat Province, Thailand"] = {},
+	["Nong Bua Lamphu Province, Thailand"] = {},
+	["Nong Khai Province, Thailand"] = {},
+	["Nonthaburi Province, Thailand"] = {},
+	["Pathum Thani Province, Thailand"] = {},
+	["Pattani Province, Thailand"] = {},
+	["Phang Nga Province, Thailand"] = {},
+	["Phatthalung Province, Thailand"] = {},
+	["Phayao Province, Thailand"] = {},
+	["Phetchabun Province, Thailand"] = {},
+	["Phetchaburi Province, Thailand"] = {},
+	["Phichit Province, Thailand"] = {},
+	["Phitsanulok Province, Thailand"] = {},
+	["Phra Nakhon Si Ayutthaya Province, Thailand"] = {},
+	["Phrae Province, Thailand"] = {},
+	["Phuket Province, Thailand"] = {},
+	["Prachinburi Province, Thailand"] = {},
+	["Prachuap Khiri Khan Province, Thailand"] = {},
+	["Ranong Province, Thailand"] = {},
+	["Ratchaburi Province, Thailand"] = {},
+	["Rayong Province, Thailand"] = {},
+	["Roi Et Province, Thailand"] = {},
+	["Sa Kaeo Province, Thailand"] = {},
+	["Sakon Nakhon Province, Thailand"] = {},
+	["Samut Prakan Province, Thailand"] = {},
+	["Samut Sakhon Province, Thailand"] = {},
+	["Samut Songkhram Province, Thailand"] = {},
+	["Saraburi Province, Thailand"] = {},
+	["Satun Province, Thailand"] = {},
+	["Sing Buri Province, Thailand"] = {},
+	["Sisaket Province, Thailand"] = {},
+	["Songkhla Province, Thailand"] = {},
+	["Sukhothai Province, Thailand"] = {},
+	["Suphan Buri Province, Thailand"] = {},
+	["Surat Thani Province, Thailand"] = {},
+	["Surin Province, Thailand"] = {},
+	["Tak Province, Thailand"] = {},
+	["Trang Province, Thailand"] = {},
+	["Trat Province, Thailand"] = {},
+	["Ubon Ratchathani Province, Thailand"] = {},
+	["Udon Thani Province, Thailand"] = {},
+	["Uthai Thani Province, Thailand"] = {},
+	["Uttaradit Province, Thailand"] = {},
+	["Yala Province, Thailand"] = {},
+	["Yasothon Province, Thailand"] = {},
+}
+
 export.uk_constituent_countries = {
 	["England"] = {poldiv = {"regions", "counties", "districts", "civil parishes"}},
 	["Northern Ireland"] = {divtype = "province", parents = {"United Kingdom", "Ireland"},
 		poldiv = {"districts"}, miscdiv = {"traditional counties"}},
 	["Scotland"] = {poldiv = {"council areas"}, miscdiv = {"regions", "districts", "traditional counties"}},
-	["Wales"] = {poldiv = {"counties", "county boroughs"}},
+	["Wales"] = {poldiv = {"counties", "county boroughs", "communities"}},
 }
 
 -- table of US states; interpolated into the main 'places' table, but also needed separately
@@ -1457,6 +1686,34 @@ export.romanian_counties = {
 	["Vâlcea County, Romania"] = {},
 }
 
+export.saudi_arabian_provinces = {
+	["Riyadh Province, Saudi Arabia"] = {},
+	["Mecca Province, Saudi Arabia"] = {},
+	["Eastern Province, Saudi Arabia"] = {},
+	["Medina Province, Saudi Arabia"] = {},
+	["Aseer Province, Saudi Arabia"] = {},
+	["Jazan Province, Saudi Arabia"] = {},
+	["Qassim Province, Saudi Arabia"] = {},
+	["Tabuk Province, Saudi Arabia"] = {},
+	["Hail Province, Saudi Arabia"] = {},
+	["Al-Jouf Province, Saudi Arabia"] = {},
+	["Najran Province, Saudi Arabia"] = {},
+	["Northern Borders Province, Saudi Arabia"] = {},
+	["Al-Bahah Province, Saudi Arabia"] = {},
+}
+
+export.lebanese_governorates = {
+	["Akkar Governorate, Lebanon"] = {},
+	["Baalbek-Hermel Governorate, Lebanon"] = {},
+	["Beirut Governorate, Lebanon"] = {},
+	["Beqaa Governorate, Lebanon"] = {},
+	["Keserwan-Jbeil Governorate, Lebanon"] = {},
+	["Mount Lebanon Governorate, Lebanon"] = {},
+	["Nabatieh Governorate, Lebanon"] = {},
+	["North Governorate, Lebanon"] = {},
+	["South Governorate, Lebanon"] = {},
+}
+
 export.scottish_council_areas = {
 	["the City of Glasgow, Scotland"] = {},
 	["the City of Edinburgh, Scotland"] = {},
@@ -1530,11 +1787,14 @@ export.cities = {
 		default_divtype = "state",
 		containing_polities = {"Australia", divtype="country"},
 		data = {
-			["Sydney"] = {"New South Wales"},
-			["Melbourne"] = {"Victoria"},
-			["Brisbane"] = {"Queensland"},
-			["Perth"] = {"Western Australia"},
 			["Adelaide"] = {"South Australia"},
+			["Brisbane"] = {"Queensland"},
+			["Canberra"] = {"the Australian Capital Territory", divtype="territory"},
+			["Melbourne"] = {"Victoria"},
+			["Newcastle, New South Wales"] = {"New South Wales"},
+			["Newcastle"] = {alias_of="Newcastle, New South Wales"},
+			["Perth"] = {"Western Australia"},
+			["Sydney"] = {"New South Wales"},
 		},
 	},
 	{
@@ -1741,6 +2001,44 @@ export.cities = {
 		},
 	},
 	{
+		default_divtype = "province",
+		containing_polities = {"South Korea", divtype="country"},
+		data = { 
+            -- all cities listed are not associated with any province.
+            ["Seoul"] = {},
+			["Busan"] = {},
+			["Incheon"] = {},
+			["Daegu"] = {},
+			["Daejeon"] = {},
+			["Gwangju"] = {},
+			["Ulsan"] = {},
+		},
+	},
+	{
+		default_divtype = "province",
+		containing_polities = {"the Philippines", divtype="country"},
+		data = { 
+             --some cities listed independent from any province. province listed is for geographical purposes only.
+             --skipped some cities in Metro Manila (Taguig, Pasig) which don't have districts.
+             --other cities outside Metro Manila skipped as not central city in their urban area.
+            ["Quezon City"] = {"Metro Manila", divtype = "region"},
+			["Manila"] = {"Metro Manila", divtype = "region"},
+			["Davao City"] = {"Davao del Sur"},
+			["Caloocan"] = {"Metro Manila", divtype = "region"},
+			["Zamboanga City"] = {"Zamboanga del Sur"},
+			["Cebu City"] = {"Cebu"},
+			["Antipolo"] = {"Rizal"},
+			["Cagayan de Oro"] = {"Misamis Oriental"},
+			["Dasmariñas"] = {"Cavite"},
+			["General Santos"] = {"South Cotabato"},
+			["San Jose del Monte"] = {"Bulacan"},
+			["Bacolod"] = {"Negros Occidental"},
+			["Calamba"] = {"Laguna"},
+			["Angeles"] = {"Pampanga"},
+			["Iloilo City"] = {"Iloilo"},
+		},
+	},
+	{
 		default_divtype = "oblast",
 		containing_polities = {"Russia", divtype="country"},
 		data = {
@@ -1774,6 +2072,21 @@ export.cities = {
 			-- ["Valencia"] = {"Valencia"},
 			["Seville"] = {"Andalusia"},
 			["Bilbao"] = {"the Basque Country"},
+		},
+	},
+	{
+		default_divtype = "county",
+		containing_polities = {"Taiwan", divtype="country"},
+		data = { 
+            ["New Taipei"] = {},
+			["Taichung"] = {},
+			["Kaohsiung"] = {wp="%c, Taiwan"},
+			["Taipei"] = {},
+			["Taoyuan"] = {},
+			["Tainan"] = {},
+			["Chiayi"] = {},
+			["Hsinchu"] = {},
+			["Keelung"] = {},
 		},
 	},
 	{
@@ -1897,11 +2210,11 @@ export.cities = {
 			["Budapest"] = {"Hungary"},
 			-- FIXME, per Wikipedia "County Dublin" is now the "Dublin Region"
 			["Dublin"] = {{"Dublin", divtype="county"}, {"Ireland"}},
-			["Venice"] = {{"Veneto", divtype="region"}, {"Italy"}},
-			["Rome"] = {{"Lazio", divtype="region"}, {"Italy"}},
-			["Milan"] = {{"Lombardy", divtype="region"}, {"Italy"}},
-			["Naples"] = {{"Campania", divtype="region"}, {"Italy"}},
-			["Turin"] = {{"Piedmont", divtype="region"}, {"Italy"}},
+			["Venice"] = {{"Veneto", divtype="administrative region"}, {"Italy"}},
+			["Rome"] = {{"Lazio", divtype="administrative region"}, {"Italy"}},
+			["Milan"] = {{"Lombardy", divtype="administrative region"}, {"Italy"}},
+			["Naples"] = {{"Campania", divtype="administrative region"}, {"Italy"}},
+			["Turin"] = {{"Piedmont", divtype="administrative region"}, {"Italy"}},
 			["Riga"] = {"Latvia"},
 			["Amsterdam"] = {"the Netherlands"},
 			["Rotterdam"] = {"the Netherlands"},
@@ -1921,7 +2234,6 @@ export.cities = {
 			["Porto"] = {"Portugal"},
 			["Bucharest"] = {"Romania"},
 			["Belgrade"] = {"Serbia"},
-			["Seoul"] = {"South Korea"},
 			["Stockholm"] = {"Sweden"},
 			["Zürich"] = {"Switzerland"},
 			["Zurich"] = {alias_of="Zürich"},
@@ -1939,21 +2251,12 @@ export.cities = {
 --                              Helper functions                                 --
 -----------------------------------------------------------------------------------
 
-local function ucfirst(label)
-	return mw.getContentLanguage():ucfirst(label)
-end
-
-local function add_indefinite_article(label)
-	if label:find("^[aeiouAEIOU]") then
-		return "an " .. label
-	else
-		return "a " .. label
-	end
-end
-
 -- Format a description that can have the special value of 'true' or 'nil' (use link_label() in
 -- [[Module:category tree/topic cat]]) or "w" (use link_label(..., "wikify")). Any other value is returned as-is.
 function export.format_description(desc, label)
+	-- TODO: this function is the reason a bunch of place terms are linked by every category. link_label uses mw.title.new,
+	-- which counts as a link. format_description is then called by [[Module:category tree/topic cat/data/Places]].
+	-- this is not ideal.
 	if desc == nil then
 		desc = true
 	end
@@ -2010,18 +2313,23 @@ end
 local function subpolity_keydesc(key, value, containing_polity, default_divtype)
 	local divtype = value.divtype or default_divtype
 	divtype = type(divtype) == "table" and divtype[1] or divtype
-	divtype = add_indefinite_article(divtype)
+	divtype = require(en_utilities_module).add_indefinite_article(divtype)
 	local bare_key, linked_key = export.construct_bare_and_linked_version(key)
 	local bare_containing_polity, linked_containing_polity = export.construct_bare_and_linked_version(containing_polity)
 	return value.keydesc or linked_key .. ", " .. divtype .. " of " .. linked_containing_polity
 end
 
-function export.call_key_to_placename(group, key)
+-- Call the polity group's key_to_placename function if it exists (see the description of the `key_to_placename`
+-- function in the long comment just below the heading "Polities"). If there is no such function (i.e. for this group,
+-- keys and placenames are the same), the key is returned unchanged. If there is a distinction made for this group
+-- between full and elliptical placenames (e.g. full "County Durham" vs. elliptical "Durham"), the default is to
+-- return the full placename; specify `return_elliptical` to get the elliptical placename.
+function export.call_key_to_placename(group, key, return_elliptical)
 	local placename = key
 	if group.key_to_placename then
 		placename = group.key_to_placename(key)
 		if type(placename) == "table" then
-			placename = placename[1]
+			placename = return_elliptical and placename[2] or placename[1]
 		end
 	end
 	return placename
@@ -2032,10 +2340,9 @@ end
 -- equals `list_or_element`.
 local function list_or_element_contains(list_or_element, item)
 	if type(list_or_element) == "table" then
-		return m_table.contains(list_or_element, item)
-	else
-		return list_or_element == item
+		return m_table.contains(list_or_element, item) and true or false
 	end
+	return list_or_element == item
 end
 
 local function subpolity_bare_label_setter(containing_polity)
@@ -2176,7 +2483,7 @@ function export.get_city_containing_polities(group, key, value)
 	if type(containing_polities[1]) == "string" then
 		containing_polities = {containing_polities}
 	elseif value[1] then
-		containing_polities = m_table.shallowcopy(containing_polities)
+		containing_polities = m_table.shallowCopy(containing_polities)
 	end
 	local this_containing_polities = value
 	if type(value[1]) == "string" then
@@ -2265,6 +2572,21 @@ Each group consists of a table with the following keys:
   should include prefixes such as "the" and suffixes such as ", USA"). The value of a key is a property table. Its
   format is described above under "Placename Tables". Note that the property table is transformed using the group's
   `value_transformer` handler before being used.
+
+* `key_to_placename`: A function to transform a key (as it appears in categories, e.g. "Phuket Province, Thailand")
+  to the placename as it appears in holonyms and in Wiktionary entries (e.g. "Phuket", which appears in holonyms as
+  "p/Phuket" and as an entry under [[Phuket]]). Most commonly, this uses the `chop` function to chop off some portion of
+  the key. The return value is either a string (the placename) or a two-item list consisting of (respectively) the
+  "full" placename and "elliptical" placename. The distinction between full and elliptical placenames is only used for
+  certain sorts of polities such as counties in Ireland and Northern Ireland, which traditionally have the word "County"
+  before them (e.g. "County Durham") and appear as entries in Wiktionary in this form. When there is both a full form
+  and an elliptical form, the full form will be used in the category description, while both types of forms will be
+  recognized in holonyms for categorization purposes.
+
+* `placename_to_key`: This is the opposite of `key_to_placename`, converting placenames to keys (see the description
+  above for `key_to_placename` for what the difference is). If a placename comes in both full and elliptical versions
+  (e.g. full "County Durham" and elliptical "Durham"), both should be recognized and appropriately converted to the
+  corresponding key.
 
 * `value_transformer`: This function is used to transform the value of an item in `data` (an object containing
   properties of a place; see above) to the final form used by the handlers in
@@ -2427,6 +2749,7 @@ export.polities = {
 		bare_label_setter = subpolity_bare_label_setter("Germany"),
 		value_transformer = subpolity_value_transformer("Germany"),
 		default_divtype = "state",
+		default_poldiv = {{"districts", parent="districts of Germany"}},
 		british_spelling = true,
 		data = export.german_states,
 	},
@@ -2460,13 +2783,13 @@ export.polities = {
 		data = export.irish_counties,
 	},
 
-	-- regions of Italy
+	-- administrative regions of Italy
 	{
 		bare_label_setter = subpolity_bare_label_setter("Italy"),
 		value_transformer = subpolity_value_transformer("Italy"),
-		default_divtype = "region",
+		default_divtype = {"administrative region", "region"},
 		british_spelling = true,
-		data = export.italian_regions,
+		data = export.italian_administrative_regions,
 	},
 
 	-- prefectures of Japan
@@ -2487,6 +2810,45 @@ export.polities = {
 		value_transformer = subpolity_value_transformer("Japan"),
 		default_divtype = "prefecture",
 		data = export.japanese_prefectures,
+	},
+	
+
+	-- provinces of North Korea
+	{
+		key_to_placename = chop(" Province$"),
+		placename_to_key = append(" Province"),
+		bare_label_setter = subpolity_bare_label_setter("North Korea"),
+		value_transformer = subpolity_value_transformer("North Korea"),
+		default_divtype = "province",
+		data = export.north_korean_provinces,
+	},
+
+	-- provinces of South Korea
+	{
+		key_to_placename = chop(" Province$"),
+		placename_to_key = append(" Province"),
+		bare_label_setter = subpolity_bare_label_setter("South Korea"),
+		value_transformer = subpolity_value_transformer("South Korea"),
+		default_divtype = "province",
+		data = export.south_korean_provinces,
+	},
+
+	-- provinces of Laos
+	{
+		key_to_placename = laos_key_to_placename,
+		placename_to_key = laos_placename_to_key,
+		bare_label_setter = subpolity_bare_label_setter("Laos"),
+		value_transformer = subpolity_value_transformer("Laos"),
+		default_divtype = "province",
+		data = export.laotian_provinces,
+	},
+
+	-- states of Malaysia
+	{
+		bare_label_setter = subpolity_bare_label_setter("Malaysia"),
+		value_transformer = subpolity_value_transformer("Malaysia"),
+		default_divtype = "state",
+		data = export.malaysian_states,
 	},
 
 	-- regions of Malta
@@ -2532,6 +2894,17 @@ export.polities = {
 		data = export.netherlands_provinces,
 	},
 
+	-- states of Nigeria
+	{
+		key_to_placename = chop(" State, Nigeria$"),
+		placename_to_key = nigeria_placename_to_key,
+		bare_label_setter = subpolity_bare_label_setter("Nigeria"),
+		value_transformer = subpolity_value_transformer("Nigeria"),
+		default_divtype = "state",
+		british_spelling = true,
+		data = export.nigerian_states,
+	},
+
 	-- counties of Norway
 	{
 		bare_label_setter = subpolity_bare_label_setter("Norway"),
@@ -2565,8 +2938,10 @@ export.polities = {
 
 	-- federal subjects of Russia
 	{
-		-- No current need for key_to_placename because it's only used in subpolity_bare_label_setter
-		-- and subpolity_value_transformer, and we override both handlers.
+		-- No current need for key_to_placename because it's only used in subpolity_bare_label_setter and
+		-- subpolity_value_transformer, and we override both handlers. (FIXME: No longer true; we also use key_to_placename
+		-- in the category augmentation code at the bottom of [[Module:place/data]], so we should define a key_to_placename
+		-- appropriately.)
 		placename_to_key = russian_placename_to_key,
 		bare_label_setter = function(labels, group, key, value)
 			local divtype = value.divtype or group.default_divtype
@@ -2577,7 +2952,7 @@ export.polities = {
 			labels[bare_key] = {
 				type = "topic",
 				description = "{{{langname}}} terms related to " .. construct_russian_federal_subject_keydesc(linked_key, divtype) .. ".",
-				parents = {ucfirst(divtype) .. "s of Russia"},
+				parents = {mw.getContentLanguage():ucfirst(divtype) .. "s of Russia"},
 			}
 		end,
 		value_transformer = function(group, key, value)
@@ -2595,6 +2970,30 @@ export.polities = {
 		data = export.russian_federal_subjects,
 	},
 
+	-- provinces of Saudi Arabia
+	{
+		key_to_placename = chop(", Saudi Arabia$"),
+		placename_to_key = append(", Saudi Arabia"),
+		bare_label_setter = subpolity_bare_label_setter("Saudi Arabia"),
+		value_transformer = subpolity_value_transformer("Saudi Arabia"),
+		default_divtype = "province",
+		-- The regions are too generic in name. For example, "Eastern Region" exists elsewhere.
+		no_containing_polity_cat = true,
+		data = export.saudi_arabian_provinces,
+	},
+
+	-- governorates of Lebanon
+	{
+		key_to_placename = chop(", Lebanon$"),
+		placename_to_key = append(", Lebanon"),
+		bare_label_setter = subpolity_bare_label_setter("Lebanon"),
+		value_transformer = subpolity_value_transformer("Lebanon"),
+		default_divtype = "governorate",
+		-- The governorates are too generic in name. For example, "North Governorate" exists elsewhere.
+		no_containing_polity_cat = true,
+		data = export.lebanese_governorates,
+	},
+
 	-- autonomous communities of Spain
 	{
 		bare_label_setter = subpolity_bare_label_setter("Spain"),
@@ -2603,6 +3002,28 @@ export.polities = {
 		british_spelling = true,
 		data = export.spanish_autonomous_communities,
 	},
+
+	-- counties of Taiwan
+	{
+		key_to_placename = chop(" County, Taiwan$"),
+		placename_to_key = append(" County, Taiwan"),
+		bare_label_setter = subpolity_bare_label_setter("Taiwan"),
+		value_transformer = subpolity_value_transformer("Taiwan"),
+		default_divtype = "county",
+		data = export.taiwanese_counties,
+	},
+
+	-- provinces of Thailand
+	{
+		key_to_placename = chop(" Province, Thailand$"),
+		placename_to_key = append(" Province, Thailand"),
+		bare_label_setter = subpolity_bare_label_setter("Thailand"),
+		value_transformer = subpolity_value_transformer("Thailand"),
+		default_divtype = "province",
+		default_poldiv = {{"districts", parent="districts of Thailand"}},
+		data = export.thai_provinces,
+	},
+
 
 	-- states of the United States
 	{
