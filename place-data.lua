@@ -3026,92 +3026,88 @@ export.cat_data = {
 }
 
 
--- Now augment the category data with political subdivisions extracted from the
--- shared data. We don't need to do this if there's already an entry under "default"
--- for the divtype of the containing polity.
+-- Now augment the category data with political subdivisions extracted from the shared data.
 for _, group in ipairs(m_shared.polities) do
 	for key, value in pairs(group.data) do
 		value = group.value_transformer(group, key, value)
-		if value.poldiv or value.miscdiv then
-			local bare_key, _ = m_shared.construct_bare_and_linked_version(key)
-			local divtype = value.divtype or group.default_divtype
-			if type(divtype) ~= "table" then
-				divtype = {divtype}
-			end
-			for pass = 1, 2 do
-				local list
-				if pass == 1 then
-					list = value.poldiv
-				else
-					list = value.miscdiv
+		local divlists = {}
+		if value.poldiv then
+			table.insert(divlists, value.poldiv)
+		end
+		if value.miscdiv then
+			table.insert(divlists, value.miscdiv)
+		end
+		local divtype = value.divtype or group.default_divtype
+		if type(divtype) ~= "table" then
+			divtype = {divtype}
+		end
+		for _, divlist in ipairs(divlists) do
+			for _, div in ipairs(divlist) do
+				if type(div) == "string" then
+					div = {div}
 				end
-				if list then
-					for _, div in ipairs(list) do
-						if type(div) == "string" then
-							div = {div}
-						end
-						local sgdiv = require(en_utilities_module).singularize(div[1])
-						for _, dt in ipairs(divtype) do
-							if not export.cat_data[sgdiv] then
-								-- If there is an entry in placetype_equivs[], it will be ignored once
-								-- we insert an entry in cat_data. For example, "traditional county" is
-								-- listed as a miscdiv of Scotland and Northern Ireland but it's also
-								-- an entry in placetype_equivs[]. Once we insert an entry here for
-								-- "traditional county", it will override placetype_equivs[]. To get
-								-- around that, simulate the effect of placetype_equivs[] using a
-								-- fallback = "..." entry.
-								if export.placetype_equivs[sgdiv] then
-									export.cat_data[sgdiv] = {
-										preposition = "of",
-										fallback = export.placetype_equivs[sgdiv],
-									}
-								else
-									export.cat_data[sgdiv] = {
-										preposition = "of",
+				local sgdiv = require(en_utilities_module).singularize(div[1])
+				for _, dt in ipairs(divtype) do
+					if not export.cat_data[sgdiv] then
+						-- If there is an entry in placetype_equivs[], it will be ignored once we insert an entry in
+						-- cat_data. For example, "traditional county" is listed as a miscdiv of Scotland and Northern
+						-- Ireland but it's also an entry in placetype_equivs[]. Once we insert an entry here for
+						-- "traditional county", it will override placetype_equivs[]. To get around that, simulate the
+						-- effect of placetype_equivs[] using a fallback = "..." entry.
+						if export.placetype_equivs[sgdiv] then
+							export.cat_data[sgdiv] = {
+								preposition = "of",
+								fallback = export.placetype_equivs[sgdiv],
+							}
+						else
+							export.cat_data[sgdiv] = {
+								preposition = "of",
 
-										["default"] = {
-										},
-									}
-								end
+								["default"] = {
+								},
+							}
+						end
+					end
+					-- If there is a difference between full and elliptical placenames, make sure we recognize both
+					-- forms in holonyms.
+					local full_placename = m_shared.call_key_to_placename(group, key)
+					local bare_full_placename, _ = m_shared.construct_bare_and_linked_version(full_placename)
+					local elliptical_placename = m_shared.call_key_to_placename(group, key, "return elliptical")
+					local bare_elliptical_placename, _ = m_shared.construct_bare_and_linked_version(
+						elliptical_placename)
+					local placenames = bare_full_placename == bare_elliptical_placename and {bare_full_placename} or
+						{bare_full_placename, bare_elliptical_placename}
+					for _, placename in ipairs(placenames) do
+						local itself_dest = placename == key and {true} or {ucfirst(div[1]) .. " of " .. key}
+						local cat_data_spec
+						if sgdiv == "district" then
+							-- see comment above under district_cat_handler().
+							local neighborhoods_in = value.british_spelling and "Neighbourhoods in " .. key or
+								"Neighborhoods in " .. key
+							cat_data_spec = district_inner_data({neighborhoods_in}, itself_dest)
+						else
+							cat_data_spec = {
+								["itself"] = itself_dest,
+							}
+						end
+						local cat_data_holonym = dt .. "/" .. placename
+						if export.cat_data[sgdiv][cat_data_holonym] then
+							-- Make sure there isn't an existing setting in `cat_data` for this placetype and holonym,
+							-- which we would be overwriting. This clash occurs because there's a political or misc
+							-- division listed in `countries` or one of the other entries in `polities` in
+							-- [[Module:place/shared-data]], and we are trying to add categorization for toponyms that
+							-- are located in that political or misc division in that country/etc., but there's already
+							-- an entry in `cat_data`. If this occurs, we throw an error rather than overwrite the
+							-- existing entry or do nothing (either of which options may be wrong). Sometimes the
+							-- existing entry is intentional as it does something special like rename the category, e.g.
+							-- 'Counties and regions of England' instead of just 'Counties of England'); in that case
+							-- set `no_error_on_poldiv_clash = true` in the entry in `cat_data`; see existing examples.
+							if not export.cat_data[sgdiv][cat_data_holonym].no_error_on_poldiv_clash then
+								error(("Would overwrite cat_data[%s][%s] with %s; if this is intentional, set `no_error_on_poldiv_clash = true` (see comment in [[Module:place/data]])"):format(
+									sgdiv, cat_data_holonym, dump(cat_data_spec)))
 							end
-							-- If there is a difference between full and elliptical placenames, make sure we recognize
-							-- both forms in holonyms.
-							local full_placename = m_shared.call_key_to_placename(group, bare_key)
-							local elliptical_placename = m_shared.call_key_to_placename(group, bare_key, "return elliptical") 
-							local placenames = full_placename == elliptical_placename and {full_placename} or
-								{full_placename, elliptical_placename}
-							for _, placename in ipairs(placenames) do
-								local itself_dest = placename == key and {true} or {ucfirst(div[1]) .. " of " .. key}
-								local cat_data_spec
-								if sgdiv == "district" then
-									-- see comment above under district_cat_handler().
-									local neighborhoods_in = value.british_spelling and "Neighbourhoods in " .. key or "Neighborhoods in " .. key
-									cat_data_spec = district_inner_data({neighborhoods_in}, itself_dest)
-								else
-									cat_data_spec = {
-										["itself"] = itself_dest,
-									}
-								end
-								local cat_data_holonym = dt .. "/" .. placename
-								if export.cat_data[sgdiv][cat_data_holonym] then
-									-- Make sure there isn't an existing setting in `cat_data` for this placetype and holonym, which
-									-- we would be overwriting. This clash occurs because there's a political or misc division listed
-									-- in `countries` or one of the other entries in `polities` in [[Module:place/shared-data]], and
-									-- we are trying to add categorization for toponyms that are located in that political or misc
-									-- division in that country/etc., but there's already an entry in `cat_data`. If this occurs, we
-									-- throw an error rather than overwrite the existing entry or do nothing (either of which options
-									-- may be wrong). Sometimes the existing entry is intentional as it does something special like
-									-- rename the category, e.g. 'Counties and regions of England' instead of just 'Counties of England');
-									-- in that case set `no_error_on_poldiv_clash = true` in the entry in `cat_data`; see existing
-									-- examples.
-									if not export.cat_data[sgdiv][cat_data_holonym].no_error_on_poldiv_clash then
-										error(("Would overwrite cat_data[%s][%s] with %s; if this is intentional, set `no_error_on_poldiv_clash = true` (see comment in [[Module:place/data]])"):format(
-											sgdiv, cat_data_holonym, dump(cat_data_spec)))
-									end
-								else
-									export.cat_data[sgdiv][cat_data_holonym] = cat_data_spec
-								end
-							end
+						else
+							export.cat_data[sgdiv][cat_data_holonym] = cat_data_spec
 						end
 					end
 				end
