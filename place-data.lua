@@ -112,8 +112,12 @@ function export.split_qualifiers_from_placetype(placetype, no_canon_qualifiers)
 				break
 			end
 			local new_qualifier = qualifier
-			if not no_canon_qualifiers and canon ~= true then
-				new_qualifier = canon
+			if not no_canon_qualifiers and canon ~= false then
+				if canon == true then
+					new_qualifier = "[[" .. qualifier .. "]]"
+				else
+					new_qualifier = canon
+				end
 			end
 			table.insert(splits, {prev_qualifier, new_qualifier, export.resolve_placetype_aliases(bare_placetype)})
 			prev_qualifier = prev_qualifier and prev_qualifier .. " " .. new_qualifier or new_qualifier
@@ -372,54 +376,54 @@ export.placetype_aliases = {
 }
 
 
--- These qualifiers can be prepended onto any placetype and will be handled correctly.
--- For example, the placetype "large city" will be displayed as such but otherwise
--- treated exactly as if "city" were specified. Links will be added to the remainder
--- of the placetype as appropriate, e.g. "small voivodeship" will display as
--- "small [[voivoideship]]" because "voivoideship" has an entry in placetype_links.
--- If the value is a string, the qualifier will display according to the string.
--- Note that these qualifiers do not override placetypes with entries elsewhere that
--- contain those same qualifiers. For example, the entry for "former colony" in
--- placetype_equivs will apply in preference to treating "former colony" as equivalent
--- to "colony". Also note that if an entry like "former colony" appears in either
--- placetype_equivs or cat_data, the non-qualifier portion won't automatically be
--- linked, so it needs to be specifically included in placetype_links if linking is
+-- These qualifiers can be prepended onto any placetype and will be handled correctly. For example, the placetype
+-- "large city" will be displayed as such but otherwise treated exactly as if "city" were specified. Links will be added
+-- to the remainder of the placetype as appropriate, e.g. "small voivodeship" will display as "small [[voivoideship]]"
+-- because "voivoideship" has an entry in placetype_links. If the value is a string, the qualifier will display
+-- according to the string. If the value is `true`, the qualifier will be linked to its corresponding Wiktionary entry.
+-- If the value is `false`, the qualifier will not be linked but will appear as-is. Note that these qualifiers do not
+-- override placetypes with entries elsewhere that contain those same qualifiers. For example, the entry for "former
+-- colony" in placetype_equivs will apply in preference to treating "former colony" as equivalent to "colony". Also note
+-- that if an entry like "former colony" appears in either placetype_equivs or cat_data, the qualifier and non-qualifier
+-- portions won't automatically be linked, so it needs to be specifically included in placetype_links if linking is
 -- desired.
 export.placetype_qualifiers = {
 	-- generic qualifiers
-	["huge"] = true,
-	["tiny"] = true,
-	["large"] = true,
-	["small"] = true,
-	["sizable"] = true,
-	["important"] = true,
-	["long"] = true,
-	["short"] = true,
-	["major"] = true,
-	["minor"] = true,
-	["high"] = true,
-	["low"] = true,
-	["left"] = true, -- left tributary
-	["right"] = true, -- right tributary
-	["modern"] = true, -- for use in opposition to "ancient" in another definition
+	["huge"] = false,
+	["tiny"] = false,
+	["large"] = false,
+	["small"] = false,
+	["sizable"] = false,
+	["important"] = false,
+	["long"] = false,
+	["short"] = false,
+	["major"] = false,
+	["minor"] = false,
+	["high"] = false,
+	["low"] = false,
+	["left"] = false, -- left tributary
+	["right"] = false, -- right tributary
+	["modern"] = false, -- for use in opposition to "ancient" in another definition
 	-- "former" qualifiers
-	["abandoned"] = true,
-	["ancient"] = true,
-	["deserted"] = true,
-	["extinct"] = true,
-	["former"] = true,
+	-- FIXME: None of these can be set to `true` so they link, because it currently interferes with categorization.
+	-- FIXME!
+	["abandoned"] = false,
+	["ancient"] = false,
+	["deserted"] = false,
+	["extinct"] = false,
+	["former"] = false,
 	["historic"] = "historical",
-	["historical"] = true,
-	["medieval"] = true,
-	["mediaeval"] = true,
-	["traditional"] = true,
+	["historical"] = false,
+	["medieval"] = false,
+	["mediaeval"] = false,
+	["traditional"] = false,
 	-- sea qualifiers
 	["coastal"] = true,
 	["inland"] = true, -- note, we also have an entry in placetype_links for 'inland sea' to get a link to [[inland sea]]
 	["maritime"] = true,
-	["overseas"] = "[[overseas]]",
-	["seaside"] = "coastal",
-	["beachfront"] = "[[beachfront]]",
+	["overseas"] = true,
+	["seaside"] = "[[coastal]]",
+	["beachfront"] = true,
 	["beachside"] = "[[beachfront]]",
 	["riverside"] = true,
 	-- lake qualifiers
@@ -428,68 +432,74 @@ export.placetype_qualifiers = {
 	["endorheic"] = true,
 	["oxbow"] = true,
 	["ox-bow"] = true,
+	-- land qualifiers
+	["hilly"] = true,
+	["chalk"] = true,
+	["karst"] = true,
+	["limestone"] = true,
 	-- political status qualifiers
-	["autonomous"] = "[[autonomous]]",
-	["incorporated"] = "[[incorporated]]",
-	["special"] = "[[special]]",
-	["unincorporated"] = "[[unincorporated]]",
+	["autonomous"] = true,
+	["incorporated"] = true,
+	["special"] = true,
+	["unincorporated"] = true,
 	-- monetary status/etc. qualifiers
 	["fashionable"] = true,
 	["wealthy"] = true,
-	["affluent"] = "[[affluent]]",
-	["declining"] = "[[declining]]",
+	["affluent"] = true,
+	["declining"] = true,
 	-- city vs. rural qualifiers
 	["urban"] = true,
-	["suburban"] = "[[suburban]]",
+	["suburban"] = true,
 	["outlying"] = true,
 	["remote"] = true,
 	["rural"] = true,
-	["inner"] = true,
-	["outer"] = true,
+	["inner"] = false,
+	["outer"] = false,
 	-- land use qualifiers
-	["residential"] = "[[residential]]",
-	["agricultural"] = "[[agricultural]]",
+	["residential"] = true,
+	["agricultural"] = true,
 	["business"] = true,
-	["commercial"] = "[[commercial]]",
-	["industrial"] = "[[industrial]]",
+	["commercial"] = true,
+	["industrial"] = true,
 	-- business use qualifiers
-	["railroad"] = "[[railroad]]",
-	["railway"] = "[[railway]]",
-	["farming"] = "[[farming]]",
-	["fishing"] = "[[fishing]]",
-	["mining"] = "[[mining]]",
-	["logging"] = "[[logging]]",
-	["cattle"] = "[[cattle]]",
+	["railroad"] = true,
+	["railway"] = true,
+	["farming"] = true,
+	["fishing"] = true,
+	["mining"] = true,
+	["logging"] = true,
+	["cattle"] = true,
 	-- religious qualifiers
 	["holy"] = true,
 	["sacred"] = true,
 	["religious"] = true,
 	["secular"] = true,
 	-- qualifiers for nonexistent places
-	["fictional"] = true,
-	["mythological"] = true,
+	-- FIXME: Neither of these can be set to `true` so they link, because it currently interferes with categorization.
+	-- FIXME!
+	["fictional"] = false,
+	["mythological"] = false,
 	-- directional qualifiers
-	["northern"] = true,
-	["southern"] = true,
-	["eastern"] = true,
-	["western"] = true,
-	["north"] = true,
-	["south"] = true,
-	["east"] = true,
-	["west"] = true,
-	["northeastern"] = true,
-	["southeastern"] = true,
-	["northwestern"] = true,
-	["southwestern"] = true,
-	["northeast"] = true,
-	["southeast"] = true,
-	["northwest"] = true,
-	["southwest"] = true,
+	["northern"] = false,
+	["southern"] = false,
+	["eastern"] = false,
+	["western"] = false,
+	["north"] = false,
+	["south"] = false,
+	["east"] = false,
+	["west"] = false,
+	["northeastern"] = false,
+	["southeastern"] = false,
+	["northwestern"] = false,
+	["southwestern"] = false,
+	["northeast"] = false,
+	["southeast"] = false,
+	["northwest"] = false,
+	["southwest"] = false,
 	-- seasonal qualifiers
 	["summer"] = true, -- e.g. for 'summer capital'
 	["winter"] = true,
 	-- misc. qualifiers
-	["hilly"] = true,
 	["planned"] = true,
 	["chartered"] = true,
 	["landlocked"] = true,
@@ -589,12 +599,14 @@ export.placetype_links = {
 	["district headquarters"] = "[[district]] [[headquarters]]",
 	["district municipality"] = "w",
 	["division"] = true,
+	["division capital"] = "[[division]] [[capital]]",
 	["dome"] = true,
 	["dormant volcano"] = true,
 	["duchy"] = true,
 	["emirate"] = true,
 	["empire"] = true,
 	["enclave"] = true,
+	["escarpment"] = true,
 	["exclave"] = true,
 	["external territory"] = "[[external]] [[territory]]",
 	["federal city"] = "w",
@@ -609,6 +621,9 @@ export.placetype_links = {
 	["former separatist state"] = "former [[separatist]] [[state]]",
 	["frazione"] = "w", -- Italy
 	["French prefecture"] = "[[w:Prefectures in France|prefecture]]",
+	["geographic area"] = "[[geographic]] [[area]]",
+	["geographical area"] = "[[geographical]] [[area]]",
+	["geographic region"] = "w",
 	["geographical region"] = "w",
 	["geopolitical zone"] = true, -- Nigeria
 	["ghost town"] = true,
@@ -647,6 +662,7 @@ export.placetype_links = {
 	["judicial capital"] = "w",
 	["khanate"] = true,
 	["kibbutz"] = true,
+	["kingdom"] = true,
 	["krai"] = true,
 	["league"] = true,
 	["legislative capital"] = "[[legislative]] [[capital]]",
@@ -662,6 +678,7 @@ export.placetype_links = {
 	["marginal sea"] = true,
 	["market city"] = "[[market town|market city]]",
 	["market town"] = true,
+	["massif"] = true,
 	["megacity"] = true,
 	["metropolitan borough"] = true,
 	["metropolitan city"] = true,
@@ -698,6 +715,7 @@ export.placetype_links = {
 	["peak"] = true,
 	["periphery"] = true,
 	["planned community"] = true,
+	["plateau"] = true,
 	["Polish colony"] = "[[w:Colony (Poland)|colony]]",
 	["populated place"] = "[[w:populated place|locality]]",
 	["port"] = true,
@@ -875,17 +893,20 @@ export.placetype_equivs = {
 	["direct-controlled municipality"] = "municipality",
 	["district capital"] = "capital city",
 	["district headquarters"] = "administrative centre",
+	["division capital"] = "capital city",
 	["dome"] = "mountain",
 	["dormant volcano"] = "volcano",
 	["duchy"] = "polity",
 	["emirate"] = "polity",
 	["empire"] = "polity",
+	["escarpment"] = "mountain",
 	["external territory"] = "dependent territory",
 	["federal territory"] = "territory",
 	["First Nations reserve"] = "Indian reserve",
 	["frazione"] = "village", -- should be "hamlet" but hamlet in turn redirects to village
-	["geographic region"] = "region",
-	["geographical region"] = "region",
+	["geographical area"] = "geographic area",
+	["geographic region"] = "geographic area",
+	["geographical region"] = "geographic area",
 	["glen"] = "valley",
 	["group of islands"] = "island",
 	["hamlet"] = "village",
@@ -978,12 +999,12 @@ export.placetype_equivs = {
 	["league"] = "confederation",
 	["legislative capital"] = "capital city",
 	["local authority district"] = "local government district",
-	["local government district with borough status"] = "local government district",
 	["local urban district"] = "unincorporated community",
 	["locality"] = "village", -- not necessarily true, but usually is the case
 	["macroregion"] = "region",
 	["market city"] = "city",
 	["market town"] = "town",
+	["massif"] = "mountain",
 	["mediaeval capital"] = "ancient capital",
 	["medieval capital"] = "ancient capital",
 	["mediaeval city"] = "ancient settlement",
@@ -1016,6 +1037,7 @@ export.placetype_equivs = {
 	["overseas territory"] = "dependent territory",
 	["pass"] = "mountain pass",
 	["peak"] = "mountain",
+	["plateau"] = "geographic area",
 	["populated place"] = "village", -- not necessarily true, but usually is the case
 	["port city"] = "city",
 	["port town"] = "town",
@@ -1343,6 +1365,13 @@ export.cat_implications = {
 }
 
 
+-- Call the place cat handler for a given polity `group` for a holonym `placename` with possible holonym placetypes
+-- `placetypes`. The purpose of this is to check if the holonym exists in the group, and if so, return two values:
+-- the key as found in the polity tables (which is the form that the holonym would take in a category of the form
+-- "PLACETYPES in/of HOLONYM" e.g. [[Category:Districts of the West Midlands, England]]) and the "bare key", which is
+-- the same as the key except it removes any occurrence of "the" at the beginning (and hence is suitable for bare
+-- categories such as [[Category:West Midlands, England]]). This is sort of a glorified placename_to_key() for
+-- subpolities in the group, but also verifies the correct placetype(s).
 local function call_place_cat_handler(group, placetypes, placename)
 	local handler = group.place_cat_handler or m_shared.default_place_cat_handler
 	return handler(group, placetypes, placename)
@@ -1783,8 +1812,8 @@ local function district_cat_handler(placetype, holonym_placetype, holonym_placen
 end
 
 
-local function chinese_subcity_cat_handler(holonym_placetype, holonym_placename, place_desc)
-	local spec = m_shared.chinese_provinces_and_autonomous_regions[holonym_placename]
+local function china_subcity_cat_handler(holonym_placetype, holonym_placename, place_desc)
+	local spec = m_shared.china_provinces_and_autonomous_regions[holonym_placename]
 	if spec and holonym_placetype == (spec.divtype or "province") then
 		return {
 			["itself"] = {"Cities in " .. holonym_placename}
@@ -1848,19 +1877,23 @@ local function borough_display_handler(holonym_placetype, holonym_placename)
 	return suffix_display_handler("borough", holonym_placename)
 end
 
--- Display handler for Irish counties. Irish counties are displayed as e.g. "County [[Cork]]".
--- Others are displayed as-is.
 local function county_display_handler(holonym_placetype, holonym_placename)
 	local unlinked_placename = m_links.remove_links(holonym_placename)
-	if m_shared.irish_counties["County " .. unlinked_placename .. ", Ireland"] or
-		m_shared.northern_irish_counties["County " .. unlinked_placename .. ", Northern Ireland"] then
+	-- Display handler for Irish counties. Irish counties are displayed as e.g. "County [[Cork]]".
+	if m_shared.ireland_counties["County " .. unlinked_placename .. ", Ireland"] or
+		m_shared.northern_ireland_counties["County " .. unlinked_placename .. ", Northern Ireland"] then
 		return prefix_display_handler("County", holonym_placename)
 	end
 	-- Display handler for Taiwanese counties. Taiwanese counties are displayed as e.g. "[[Chiayi]] County".
-	-- Others are displayed as-is.
-	if m_shared.taiwanese_counties[unlinked_placename .. " County, Taiwan"] then
+	if m_shared.taiwan_counties[unlinked_placename .. " County, Taiwan"] then
 		return suffix_display_handler("County", holonym_placename)
 	end
+	-- Display handler for Romanian counties. Romanian counties are displayed as e.g. "[[Cluj]] County".
+	if m_shared.romania_counties[unlinked_placename .. " County, Romania"] then
+		return suffix_display_handler("County", holonym_placename)
+	end
+	-- FIXME, we need the same for US counties but need to key off the country, not the specific county.
+	-- Others are displayed as-is.
 	return holonym_placename
 end
 
@@ -1869,23 +1902,26 @@ end
 -- Others are displayed as e.g. "[[Fthiotida]] prefecture".
 local function prefecture_display_handler(holonym_placetype, holonym_placename)
 	local unlinked_placename = m_links.remove_links(holonym_placename)
-	local suffix = m_shared.japanese_prefectures[unlinked_placename .. " Prefecture"] and "Prefecture" or "prefecture"
+	local suffix = m_shared.japan_prefectures[unlinked_placename .. " Prefecture"] and "Prefecture" or "prefecture"
 	return suffix_display_handler(suffix, holonym_placename)
 end
 
--- Display handler for provinces of North and South Korea. Korean provinces are displayed as e.g. "[[Gyeonggi]] Province". Others are displayed as-is.
+-- Display handler for provinces of North and South Korea. Korean provinces are displayed as e.g.
+-- "[[Gyeonggi]] Province". Others are displayed as-is.
 local function province_display_handler(holonym_placetype, holonym_placename)
 	local unlinked_placename = m_links.remove_links(holonym_placename)
-    if m_shared.north_korean_provinces[unlinked_placename .. " Province"] or
-       m_shared.south_korean_provinces[unlinked_placename .. " Province"] then
+    if m_shared.north_korea_provinces[unlinked_placename .. " Province, North Korea"] or
+       m_shared.south_korea_provinces[unlinked_placename .. " Province, South Korea"] then
 		return suffix_display_handler("Province", holonym_placename)
 	end
-	-- Display handler for Laotian provinces. Laotian provinces are displayed as e.g. "[[Vientiane]] Province". Others are displayed as-is.
-	if m_shared.laotian_provinces[unlinked_placename .. " Province, Laos"] then
+	-- Display handler for Laotian provinces. Laotian provinces are displayed as e.g. "[[Vientiane]] Province". Others
+	-- are displayed as-is.
+	if m_shared.laos_provinces[unlinked_placename .. " Province, Laos"] then
 		return suffix_display_handler("Province", holonym_placename)
 	end
-	-- Display handler for Thai provinces. Thai provinces are displayed as e.g. "[[Chachoengsao]] Province". Others are displayed as-is.
-    if m_shared.thai_provinces[unlinked_placename .. " Province, Thailand"] then
+	-- Display handler for Thai provinces. Thai provinces are displayed as e.g. "[[Chachoengsao]] Province". Others are
+	-- displayed as-is.
+    if m_shared.thailand_provinces[unlinked_placename .. " Province, Thailand"] then
 		return suffix_display_handler("Province", holonym_placename)
 	end
 	return holonym_placename
@@ -1894,7 +1930,7 @@ end
 -- Display handler for Nigerian states. Nigerian states are display as "[[Kano]] State". Others are displayed as-is.
 local function state_display_handler(holonym_placetype, holonym_placename)
 	local unlinked_placename = m_links.remove_links(holonym_placename)
-	if m_shared.nigerian_states[unlinked_placename] then
+	if m_shared.nigeria_states[unlinked_placename .. " State, Nigeria"] then
 		return suffix_display_handler("State", holonym_placename)
 	end
 	return holonym_placename
@@ -1922,6 +1958,7 @@ export.cat_data = {
 	["administrative region"] = {
 		preposition = "of",
 		affix = "region",
+		fallback = "region",
 	},
 
 	["airport"] = {
@@ -1948,6 +1985,7 @@ export.cat_data = {
 		cat_handler = function(holonym_placetype, holonym_placename, place_desc)
 			return district_cat_handler("area", holonym_placetype, holonym_placename)
 		end,
+		fallback = "geographic area",
 	},
 
 	["arm"] = {
@@ -2017,9 +2055,9 @@ export.cat_data = {
 		cat_handler = function(holonym_placetype, holonym_placename, place_desc)
 			if holonym_placetype == "county" then
 				local cat_form = holonym_placename .. ", England"
-				if not m_shared.english_counties[cat_form] then
+				if not m_shared.england_counties[cat_form] then
 					cat_form = "the " .. cat_form
-					if not m_shared.english_counties[cat_form] then
+					if not m_shared.england_counties[cat_form] then
 						cat_form = nil
 					end
 				end
@@ -2307,6 +2345,15 @@ export.cat_data = {
 		},
 	},
 
+	["geographic area"] = {
+		preposition = "of",
+		["default"] = {
+			["itself"] = {true},
+			["country"] = {true},
+			["constituent country"] = {true},
+		},
+	},
+
 	["geopolitical zone"] = {
 		-- Nigeria
 		preposition = "of",
@@ -2329,8 +2376,8 @@ export.cat_data = {
 			end
 			return (
 				check_for_recognized(m_shared.us_states, "state", function(placename) return placename .. ", USA" end) or
-				check_for_recognized(m_shared.canadian_provinces_and_territories, "province") or
-				check_for_recognized(m_shared.australian_states_and_territories, "state")
+				check_for_recognized(m_shared.canada_provinces_and_territories, "province") or
+				check_for_recognized(m_shared.australia_states_and_territories, "state")
 			)
 		end,
 
@@ -2475,19 +2522,31 @@ export.cat_data = {
 		affix_type = "suf",
 		affix = "district",
 		cat_handler = function(holonym_placetype, holonym_placename, place_desc)
-			if holonym_placetype == "county" then
-				local cat_form = holonym_placename .. ", England"
-				if not m_shared.english_counties[cat_form] then
-					cat_form = "the " .. cat_form
-					if not m_shared.english_counties[cat_form] then
-						cat_form = nil
-					end
-				end
-				if cat_form then
+			local key, _ = call_place_cat_handler(m_shared.england_group, holonym_placetype, holonym_placename)
+			if key then
+				return {
+					["itself"] = {"Districts of " .. key, "Districts of England"}
+				}
+			end
+			if (holonym_placetype == "country" or holonym_placetype == "constituent country") and
+				holonym_placename == "England" then
 					return {
-						["itself"] = {"Districts of " .. cat_form, "Districts of England"}
+						["itself"] = {"Districts of +++"},
 					}
-				end
+			end
+		end,
+	},
+
+	["local government district with borough status"] = {
+		preposition = "of",
+		affix_type = "suf",
+		affix = "district",
+		cat_handler = function(holonym_placetype, holonym_placename, place_desc)
+			local key, _ = call_place_cat_handler(m_shared.england_group, holonym_placetype, holonym_placename)
+			if key then
+				return {
+					["itself"] = {"Districts of " .. key, "Districts of England"}
+				}
 			end
 			if (holonym_placetype == "country" or holonym_placetype == "constituent country") and
 				holonym_placename == "England" then
@@ -2669,7 +2728,7 @@ export.cat_data = {
 
 	["prefecture-level city"] = {
 		-- China
-		cat_handler = chinese_subcity_cat_handler,
+		cat_handler = china_subcity_cat_handler,
 		["default"] = {
 			["country"] = {"Cities in +++"},
 		},
@@ -2701,13 +2760,6 @@ export.cat_data = {
 		},
 		["country/Armenia"] = {
 			["country"] = {true},
-		},
-
-		["constituent country/England"] = {
-			-- Indicate that this setting is intentional (we change the category to 'Counties and regions of England'
-			-- rather than just 'Regions of England').
-			no_error_on_poldiv_clash = true,
-			["itself"] = {"Counties and regions of +++"},
 		},
 
 		["country/Greece"] = {
@@ -2857,7 +2909,7 @@ export.cat_data = {
 
 	["subprovincial city"] = {
 		-- China
-		cat_handler = chinese_subcity_cat_handler,
+		cat_handler = china_subcity_cat_handler,
 
 		["default"] = {
 			["country"] = {"Cities in +++"},
@@ -2917,6 +2969,7 @@ export.cat_data = {
 	},
 
 	["traditional region"] = {
+		preposition = "of",
 		["default"] = {
 			["itself"] = {"Historical and traditional regions"},
 		},
@@ -3070,9 +3123,8 @@ for _, group in ipairs(m_shared.polities) do
 					end
 					-- If there is a difference between full and elliptical placenames, make sure we recognize both
 					-- forms in holonyms.
-					local full_placename = m_shared.call_key_to_placename(group, key)
+					local full_placename, elliptical_placename = m_shared.call_key_to_placename(group, key)
 					local bare_full_placename, _ = m_shared.construct_bare_and_linked_version(full_placename)
-					local elliptical_placename = m_shared.call_key_to_placename(group, key, "return elliptical")
 					local bare_elliptical_placename, _ = m_shared.construct_bare_and_linked_version(
 						elliptical_placename)
 					local placenames = bare_full_placename == bare_elliptical_placename and {bare_full_placename} or
