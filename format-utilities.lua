@@ -3,8 +3,23 @@ local export = {}
 
 local debug_track_module = "Module:debug/track"
 local links_module = "Module:links"
+local table_module = "Module:table"
+local utilities_module = "Module:utilities"
 
-export.allowed_conjs_for_join_segments = {"and", "or", ",", "/", "~", ";"}
+export.allowed_conjs_for_join_segments = {
+	-- ",and" joins using serialCommaJoin(): "foo and bar", "foo, bar and baz", etc. 
+	-- ";and" should be used when there are embedded commas: "foo and bar", "foo; bar; and baz", etc.
+	-- "and" selects ";and" if there are embedded commas, ",and" otherwise.
+	-- If the final term is marked as a continuation (is_continuation = true), the conjunction "and" isn't displayed;
+	-- instead, all terms are joined with comma or semicolon as appropriate.
+	"and", ";and", ",and",
+	-- ",or", ";or" and "or" work like the corresponding "and" conjunctions.
+	"or", ";or", ",or",
+	-- ",and/or", ";and/or" and "and/or" work like the corresponding "and" conjunctions.
+	"and/or", ";and/or", ",and/or",
+	-- 
+	",", ";", "/", "~", "+",
+}
 
 
 --[==[
@@ -36,31 +51,76 @@ function export.wrap_in_span(text, classes)
 end
 
 --[==[
-A combination of `serialCommaJoin` and `concat`. Option `conj` is either {"and"} or {"or"} (join `segs` using
+A combination of `serialCommaJoin` and `concat`. Option `conj` is either {"and"}, {"or"}, (join `segs` using
 `serialCommaJoin`) or a punctuation delimiter (currently {","}, {"/"}, {"~"} and {";"} are allowed and converted to the appropriate displayed separator, and then `segs` joined using `concat`).
 ]==]
-function export.join_segments(segs, options)
-	local conj = options and options.conj or "and"
-	if segs[2] then
-		if conj == "and" or conj == "or" then
-			return export.serialCommaJoin(segs, options)
-		else
-			local sep
-			if conj == "," then
-				sep = ", "
-			elseif conj == "/" then
-				sep = "/"
-			elseif conj == "~" then
-				sep = " ~ "
-			elseif conj == ";" then
-				sep = "; "
-			else
-				error(("Internal error: Unrecognized conjunction '%s'"):format(conj))
+function export.join_segments(data)
+	local segments, conj = data.segments, data.conj
+	if not conj then
+		error("Internal error: Missing conjunction in call to join_segments()")
+	end
+	if not segments[2] then
+		return segments[1].output
+	end
+	if conj == "and" or conj == "or" or conj == "and/or" then
+		saw_embedded_comma = false
+		for _, seg in ipairs(segments) do
+			if seg.raw and require(utilities_module).get_plaintext(seg.raw):find(",") then
+				-- Saw embedded comma
+				saw_embedded_comma = true
 			end
-			return export.concat(segs, sep)
 		end
-	else
-		return segs[1]
+		if saw_embedded_comma then
+			conj = ";" .. conj
+		else
+			conj = "," .. conj
+		end
+	end
+	if conj:find("^[;,][a-z]") then
+		-- semicolon + conjunction
+		if segments[#segments].is_continuation then
+			conj = conj:sub(1, 1)
+		else
+			local punc, final_conj = conj:match("^(.)(.*)$")
+			if not segments[3] then
+				return ("%s %s %s"):format(segments[1].output, final_conj, segments[2].output)
+			end
+			if punc == "," then
+				local seg_output = {}
+				for i, seg in ipairs(segments) do
+					seg_output[i] = seg.output
+				end
+				return require(table_module).serialCommaJoin(seg_output, {dontTag = data.dont_tag})
+			else
+				local parts = {}
+				for i, seg in ipairs(segments) do
+					if i == #segments then
+						table.insert(parts, "; " .. conj)
+					elseif i > 1 then
+						table.insert(parts, "; ")
+					end
+					table.insert(parts, seg.output)
+				end
+				return table.concat(parts)
+			end
+		end
+		local sep
+		if conj == "," then
+			sep = ", "
+		elseif conj == "/" then
+			sep = "/"
+		elseif conj == "~" then
+			sep = " ~ "
+		elseif conj == ";" then
+			sep = "; "
+		else
+			error(("Internal error: Unrecognized conjunction '%s'"):format(conj))
+		end
+		local seg_output = {}
+		for i, seg in ipairs(segments) do
+			seg_output[i] = seg.output
+		end
+		return table.concat(seg_output, sep)
 	end
 end
 
@@ -85,20 +145,34 @@ function export.format_one_term(data)
 	local termobj, object_classes, link_face, no_show_qualifiers, track_module =
 		data.termobj, data.object_classes, data.link_face, data.no_show_qualifiers, data.track_module
 	if termobj.is_continuation then
-		return '<i class="Latn continuation">' .. termobj.alt .. '</i>'
+		return {
+			output = '<i class="Latn continuation">' .. termobj.alt .. '</i>',
+			raw = termobj.alt,
+			is_continuation = true,
+		}
 	end
+	local return_empty
 	if termobj.lang:hasType("family") then
 		if termobj.term and termobj.term ~= "-" then
 			track("family-with-term", track_module)
 		end
-		return ""
+		return_empty = true
 	end
 	if termobj.term == "-" then
 		track("no-term", track_module)
-		return ""
+		return_empty = true
+	end
+	if return_empty then
+		return {
+			output = "",
+			raw = "",
+		}
 	end
 	local link = full_link(termobj, link_face, nil, not no_show_qualifiers and "show qualifiers" or nil)
-	return export.wrap_in_span(link, object_classes)
+	return {
+		output = export.wrap_in_span(link, object_classes),
+		raw = termobj.alt or termobj.term,
+	}
 end
 
 
