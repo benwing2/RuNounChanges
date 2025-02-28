@@ -2,6 +2,7 @@ local export = {}
 
 local debug_track_module = "Module:debug/track"
 local en_utilities_module = "Module:en-utilities"
+local format_utilities_module = "Module:format utilities"
 local form_of_module = "Module:form of"
 local form_of_templates_data_module = "Module:form of/templates/data"
 local labels_module = "Module:labels"
@@ -25,7 +26,7 @@ FIXME:
 
 1. Support xlit.
 2. Document new functions.
-3. Support equivalent of inflection_of_t() in parse_form_of_templatess() and format_form_of_template().
+3. Support equivalent of inflection_of_t() in parse_form_of_templates() and format_form_of_template().
 4. Fix use of [[Module:format utilities]].
 5. Update documentation in [[Module:form of/templates/data]].
 6. Document generate_obj_maybe_parsing_lang_prefix() in [[Module:parameter utilities]].
@@ -275,12 +276,17 @@ local function add_link_and_base_lemma_params(iargs, parent_args, params, term_p
 	return base_lemma_params
 end
 
+local function get_standard_param_mod_spec()
+	return {
+		{group = {"link", "q", "l", "ref"}},
+		{param = "conj", set = require(format_utilities_module).allowed_conjs_for_join_segments, overall = true},
+	}
+end
+
+
 local get_standard_param_mods = memoize(function()
 	local m_param_utils = require(parameter_utilities_module)
-	return m_param_utils.construct_param_mods {
-		{group = {"link", "q", "l", "ref"}},
-		{param = "conj", set = m_param_utils.allowed_conjs, overall = true},
-	}
+	return m_param_utils.construct_param_mods(get_standard_param_mod_spec())
 end)
 
 
@@ -609,7 +615,14 @@ local function parse_args_and_construct_form_of_text(data)
 	if iargs.nolink or iargs.linktext then
 		args = process_params(parent_args, params)
 	else
-		init_param_mods()
+		local param_mods
+		if iargs.allow_xlit then
+			local param_mod_spec = get_standard_param_mod_spec()
+			insert(param_mod_spec, {param = "xlit"})
+			param_mods = m_param_utils.construct_param_mods(param_mod_spec)
+		else
+			param_mods = get_standard_param_mod_spec()
+		end
 		terms, args = m_param_utils.parse_term_with_inline_modifiers_and_separate_params {
 			params = params,
 			param_mods = param_mods,
@@ -751,6 +764,8 @@ Invocation params:
 ; {{para|def}}, {{para|def2}}, ...:
 : One or more default values to supply for template args. For example, specifying {{para|def|2=tr=-}} causes the default
   for template param {{para|tr}} to be `-`. Actual template params override these defaults.
+; {{para|allow_xlit}}
+: Allow an {{para|xlit}} parameter and corresponding <xlit:...> inline modifier, for use with {{tl|former name of}}.
 ; {{para|withcap}}
 : Capitalize the first character of the text preceding the link, unless template param {{para|nocap}} is given.
 ; {{para|withencap}}
@@ -1088,13 +1103,12 @@ function export.parse_form_of_templates(lang, paramname, arg)
 			error(("Unrecognized form-of template type '%s'"):format(form_of_type))
 		end
 		local m_param_utils = require(parameter_utilities_module)
-		local param_mod_spec = {
-			{group = {"link", "q", "l", "ref"}},
-			{param = "conj", set = m_param_utils.allowed_conjs, overall = true},
+		local param_mod_spec = get_standard_param_mod_spec()
+		extend(param_mod_spec, {
 			{param = {"addl", "enclitic", "p"}, overall = true},
 			{param = "POS", alias_of = "p"},
 			{param = {"nocap", "nocat", "notext", "cap"}, type = "boolean", overall = true},
-		}
+		})
 		if typedata.allow_from or type(typedata.text) == "string" and typedata.text:find("<<FROM:") then
 			insert(param_mod_spec, {param = "from", overall = true})
 		end
@@ -1285,5 +1299,13 @@ function export.format_form_of_template(data)
 		user_addl = addl,
 	}
 end
+
+
+function export.format_form_of_templates(data)
+	local templates, should_ucfirst = data.templates, data.should_ucfirst
+	local parts = {}
+	local function 
+end
+
 
 return export
