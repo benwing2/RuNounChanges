@@ -7,6 +7,8 @@ local m_strutils = require("Module:string utilities")
 
 local debug_track_module = "Module:debug/track"
 local en_utilities_module = "Module:en-utilities"
+local format_utilities_module = "Module:format utilities"
+local form_of_templates_module = "Module:form of/templates"
 local languages_module = "Module:languages"
 local parse_interface_module = "Module:parse interface"
 local parse_utilities_module = "Module:parse utilities"
@@ -998,52 +1000,30 @@ local function get_qualifier_description(qualifier)
 	return prev_qualifier and prev_qualifier .. " " .. this_qualifier or this_qualifier
 end
 
-
 local get_param_mods = memoize(function()
 	local m_param_utils = require(parameter_utilities_module)
 	return m_param_utils.construct_param_mods {
 		{group = {"link", "q", "l", "ref"}},
-		{param = "conj", set = m_param_utils.allowed_conjs, overall = true},
-		{param = "after", overall = true},
+		{param = "conj", set = require(format_utilities_module).allowed_conjs_for_join_segments, overall = true},
 	}
 end)
 
 local function parse_term_with_inline_modifiers(term, paramname, default_lang)
-	local m_param_utils = require(parameter_utilities_module)
-	local function generate_obj(val, parse_err)
-		local obj = m_param_utils.generate_obj_maybe_parsing_lang_prefix {
-			term = val,
-			paramname = paramname,
-			parse_err = parse_err,
-			parse_lang_prefix = true,
-		}
-		obj.lang = obj.lang or default_lang
-		return obj
+	local function generate_obj(data)
+		local m_param_utils = require(parameter_utilities_module)
+		data.parse_lang_prefix = true
+		data.special_continuations = m_param_utils.default_special_continuations
+		data.default_lang = default_lang
+		return m_param_utils.generate_obj_maybe_parsing_lang_prefix(data)
 	end
-
 	return require(parse_interface_module).parse_inline_modifiers(term, {
 		paramname = paramname,
 		param_mods = get_param_mods(),
 		generate_obj = generate_obj,
+		generate_obj_new_format = true,
 		splitchar = ",",
 		outer_container = {},
 	})
-end
-
-local function get_form_of_prefix(args, paramname, desc, ucfirst, lang)
-	local raw_terms = args[paramname]
-	if not raw_terms then
-		return ""
-	end
-	local terms = parse_term_with_inline_modifiers(raw_terms, paramname .. (i == 1 and "" or i), lang)
-	for i, term in ipairs(terms.terms) do
-		terms.terms[i] = m_links.full_link(term, nil, nil, "show qualifiers")
-	end
-	if ucfirst then
-		desc = m_strutils.ucfirst(desc)
-	end
-
-	desc = desc .. " of " .. require(parameter_utilities_module).join_segs(terms.terms, terms.conj or "or")
 end
 
 -- Return a string with extra information that is sometimes added to a definition, such as the capital, largest city,
@@ -1074,9 +1054,6 @@ local function get_extra_info(args, paramname, desc, sentence_style, auto_plural
 	local conj
 	for i, raw_term in ipairs(raw_terms) do
 		local terms = parse_term_with_inline_modifiers(raw_term, paramname .. (i == 1 and "" or i), enlang)
-		if terms.after then
-			error(("<after:...> inline modifier not supported with parameter '%s'"):format(paramname))
-		end
 		local thisconj = terms.conj
 		if not conj then
 			conj = thisconj
@@ -1307,88 +1284,13 @@ local function get_gloss(args, descs, sentence_style, ucfirst, drop_extra_info)
 end
 
 
-local function get_form_of_annotations(args, ucfirst)
-	local annotations = {}
-
-	local function insert_form_of_annotation(paramname, desc)
-		if args[paramname] then
-			local annotation = parse_term_with_inline_modifiers(args[paramname], paramname, args[1])
-			annotation.paramname = paramname
-			annotation.desc = desc
-			table.insert(annotations, annotation)
-		end
-	end
-
-	insert_form_of_annotation("abbrof", "abbreviation of")
-	insert_form_of_annotation("initof", "initialism of")
-	insert_form_of_annotation("acronymof", "acronym of")
-	insert_form_of_annotation("clipof", "clipping of")
-	insert_form_of_annotation("ellipof", "ellipsis of")
-	insert_form_of_annotation("synof", "synonym of")
-	insert_form_of_annotation("now", "former name of")
-
-	local i = 1
-	while i <= #annotations do
-		local annotation = annotations[i]
-		if annotation.after or annotation.before then
-			if annotation.after == annotation.paramname or annotation.before == annotation.paramname then
-				error(("Can't move annotation '%s' before or after itself"):format(annotation.paramname))
-			end
-			if annotation.after and annotation.before then
-				error(("Can't specify both 'before' and 'after' for annotation '%s'"):format(annotation.paramname))
-			end
-			local insertion_point
-			for j, other_annotation in ipairs(annotations) do
-				if annotation.after == other_annotation.paramname then
-					insertion_point = j + 1
-					break
-				elseif annotation.before == other_annotation.paramname then
-					insertion_point = j
-					break
-				end
-			end
-			if not insertion_point then
-				if annotation.after then
-					error(("Can't locate annotation type '%s' to move annotation '%s' after"):format(
-						annotation.after, annotation.paramname))
-				else
-					error(("Can't locate annotation type '%s' to move annotation '%s' before"):format(
-						annotation.before, annotation.paramname))
-				end
-			end
-			if insertion_point < i then
-				table.remove(annotations, i)
-				table.insert(annotations, insertion_point, annotation)
-				i = i + 1
-			elseif insertion_point > i then
-				table.insert(annotations, insertion_point, annotation)
-				table.remove(annotations, i)
-			end
-			-- Make sure we don't process the annotation again if it's moved after its current point.
-			annotation.after = nil
-			annotation.before = nil
-		else
-			i = i + 1
-		end
-	end
-
-	for i, annotation in ipairs(annotations) do
-		
-			if annotation_terms.after
-			if annotation_terms
-			if annotation ~= "" then
-				if parts[1] then
-					ins(", ")
-					ucfirst = false
-				end
-				ins(parts)
-			end
-	end
-end
-
-
 -- Return the definition line.
 local function get_def(args, specs, drop_extra_info)
+	local parsed_form_of_templates
+	if args["<"] then
+		parsed_form_of_templates = require(form_of_templates_module).parse_form_of_templates(args[1], "<", args["<"])
+	end
+
 	if #args.t > 0 then
 		local gloss = get_gloss(args, specs, false, drop_extra_info)
 		return get_translations(args.t, args.tid) .. (gloss == "" and "" or " (" .. gloss .. ")")
@@ -1800,14 +1702,8 @@ function export.format(template_args, drop_extra_info)
 		["shire town"] = list_param,
 		["headquarters"] = list_param,
 
-		-- for toponyms that are abbreviations, clippings, ellipses, synonyms, former names
-		["abbrof"] = true, -- same as including {{abbreviation of}} before the defn
-		["initof"] = true, -- same as including {{initialism of}} before the defn
-		["acronymof"] = true, -- same as including {{acronym of}} before the defn
-		["clipof"] = true, -- same as including {{clipping of}} before the defn
-		["ellipof"] = true, -- same as including {{ellipsis of}} before the defn
-		["synof"] = true -- same as including {{synonym of}} before the defn
-		["now"] = true, -- same as including {{former name of}} before the defn
+		-- for form-of templates preceding the defn
+		["<"] = true,
 	}
 
 	-- FIXME, once we've flushed out any uses, delete the following clause. That will cause def= to be ignored.

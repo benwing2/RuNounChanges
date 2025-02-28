@@ -3,23 +3,25 @@ local handlers = {}
 
 local m_shared = require("Module:place/shared-data")
 local en_utilities_module = "Module:en-utilities"
+local table_module = "Module:table"
 
---[=[
+--[==[ intro:
+This module contains specifications that are used to create labels that allow {{tl|auto cat}} and to create the
+appropriate definitions for topic categories for places (e.g. [[Category:de:Hokkaido]], [[Category:es:Cities in
+France]], [[Category:pt:Municipalities of Tocantins, Brazil]], etc.).  Note that this module doesn't actually create the
+categories; that must be done manually, with the text "{{tl|auto cat}}" as the definition of the category. (This process
+should automatically happen periodically for non-empty categories, because they will appear in
+[[Special:WantedCategories]] and a bot will periodically examine that list and create any needed category.)
 
-This module contains specifications that are used to create labels that allow {{auto cat}} and
-to create the appropriate definitions for topic categories for places (e.g. 'de:Hokkaido',
-'es:Cities in France', 'pt:Municipalities of Tocantins, Brazil', etc.). 
-Note that this module doesn't actually create the categories; that must be done manually,
-with the text "{{auto cat}}" as the definition of the category. (This process should automatically
-happen periodically for non-empty categories, because they will appear in [[Special:WantedCategories]]
-and a bot will periodically examine that list and create any needed category.)
+There are two ways that such labels are created: (1) by manually adding an entry to the `labels` table, keyed by the
+label (minus the language code) with a value consisting of a Lua table specifying the description text and the
+category's parents; (2) through handlers (pieces of Lua code) added to the `handlers` list, which recognize labels of a
+specific type (e.g. `Cities in France`) and generate the appropriate specification for that label on-the-fly.
 
-There are two ways that such labels are created: (1) by manually adding an entry to the 'labels'
-table, keyed by the label (minus the language code) with a value consisting of a Lua table
-specifying the description text and the category's parents; (2) through handlers (pieces of
-Lua code) added to the 'handlers' list, which recognize labels of a specific type (e.g.
-'Cities in France') and generate the appropriate specification for that label on-the-fly.
-]=]
+See [[Module:place]] for a general introduction to the terminology associated with places along with a list of all the
+relevant modules, and [[Module:place/shared-data]] for more specific information on types of toponyms and placetypes and
+how their categorization works.
+]==]
 
 local function lcfirst(label)
 	return mw.getContentLanguage():lcfirst(label)
@@ -28,7 +30,8 @@ end
 local function fetch_value(obj, key)
 	local val = obj[key]
 	if type(val) == "function" then
-		return val()
+		val = val()
+		obj[key] = val
 	end
 	return val
 end
@@ -39,20 +42,20 @@ labels["places"] = {
 	parents = {"names"},
 }
 
--- Generate bare labels in 'label' for all political subdivisions.
+-- Generate bare labels in 'label' for all political divisions.
 -- Do this before handling 'general_labels' so the latter can override if necessary.
-for subdiv, desc in pairs(m_shared.political_subdivisions) do
+for subdiv, desc in pairs(m_shared.political_divisions) do
 	desc = m_shared.format_description(desc, subdiv)
 	labels[subdiv] = {
 		type = "name",
 		description = "{{{langname}}} names of " .. desc .. ".",
-		parents = {"political subdivisions"},
+		parents = {"political divisions"},
 	}
 end
 
 --[=[
 General labels. These are intended for places of all sorts that are not qualified by a holonym (e.g. it does not include
-'regions in Africa'). These also do not need to include any political subdivisions listed in 'political_subdivisions' in
+'regions in Africa'). These also do not need to include any political subdivisions listed in 'political_divisions' in
 [[Module:place/shared-data]]. Each entry is {LABEL, PARENTS, DESCRIPTION, WPCAT, COMMONSCAT}:
 * PARENTS should not include "list of names", which is added automatically.
 * DESCRIPTION is the linked plural description of label, and is formatted using format_description() in
@@ -65,67 +68,67 @@ General labels. These are intended for places of all sorts that are not qualifie
   'nil' links to a category the same as the label.
 ]=]
 local general_labels = {
-	{"airports", {"places"}},
-	{"ancient settlements", {"historical settlements"}, "former [[city|cities]], [[town]]s and [[village]]s that existed in [[antiquity]]"},
-	{"atolls", {"islands"}},
-	{"bays", {"places", "bodies of water"}},
-	{"beaches", {"places", "water"}},
+	["airports"] = {{"places"}},
+	["ancient settlements"] = {{"historical settlements"}, "former [[city|cities]], [[town]]s and [[village]]s that existed in [[antiquity]]"},
+	["atolls"] = {{"islands"}},
+	["bays"] = {{"places", "bodies of water"}},
+	["beaches"] = {{"places", "water"}},
 	-- FIXME: This is a type category not a name category. There should be an option for this.
-	{"bodies of water", {"landforms", "water"}, "[[body of water|bodies of water]]"},
-	{"boroughs", {"polities"}},
-	{"capital cities", {"cities"}, "[[capital]] [[city|cities]]: the [[seat of government|seats of government]] for a country or [[political]] [[subdivision]] of a country"},
-	{"census-designated places", {"places"}},
-	{"cities", {"polities"}},
-	{"city-states", {"polities"}, "[[sovereign]] [[microstate]]s consisting of a single [[city]] and [[w:dependent territory|dependent territories]]"},
-	{"communities", {"polities"}, "[[community|communities]] of all sizes"},
-	{"continents", {"places"}, "the [[continent]]s of the world"},
-	{"countries", {"polities"}},
-	{"dependent territories", {"polities"}, "w"},
-	{"deserts", {"places"}},
-	{"forests", {"places"}},
-	{"geographic areas", {"places"}},
-	{"ghost towns", {"historical settlements"}},
-	{"gulfs", {"places", "water"}},
-	{"headlands", {"places"}},
-	{"historical and traditional regions", {"places"}, "regions that have no administrative significance"},
-	{"historical capitals", {"historical settlements"}, "former [[capital]] [[city|cities]] and [[town]]s"},
-	{"historical dependent territories", {"dependent territories"}, "[[w:dependent territory|dependent territories]] (colonies, dependencies, protectorates, etc.) that no longer exist"},
-	{"historical political subdivisions", {"polities"}, "[[political]] [[subdivision]]s (states, provinces, counties, etc.) that no longer exist"},
-	{"historical polities", {"polities"}, "[[polity|polities]] (countries, kingdoms, empires, etc.) that no longer exist"},
-	{"historical settlements", {"historical polities"}, "[[city|cities]], [[town]]s and [[village]]s that no longer exist or have been merged or reclassified"},
-	{"hills", {"places"}},
-	{"islands", {"places"}},
-	{"kibbutzim", {"places"}, "[[kibbutz]]im"},
-	{"lakes", {"places", "bodies of water"}},
-	{"landforms", {"places", "Earth"}},
-	{"micronations", {"places"}},
-	{"mountain passes", {"places"}, "[[mountain pass]]es"},
-	{"mountains", {"places"}},
-	{"moors", {"places"}},
-	{"neighborhoods", {"places"}, "[[neighborhood]]s, [[district]]s and other subportions of a [[city]]"},
+	["bodies of water"] = {{"landforms", "water"}, "[[body of water|bodies of water]]"},
+	["boroughs"] = {{"polities"}},
+	["capital cities"] = {{"cities"}, "[[capital]] [[city|cities]]: the [[seat of government|seats of government]] for a country or [[political]] [[subdivision]] of a country"},
+	["census-designated places"] = {{"places"}},
+	["cities"] = {{"polities"}},
+	["city-states"] = {{"polities"}, "[[sovereign]] [[microstate]]s consisting of a single [[city]] and [[w:dependent territory|dependent territories]]"},
+	["communities"] = {{"polities"}, "[[community|communities]] of all sizes"},
+	["continents"] = {{"places"}, "the [[continent]]s of the world"},
+	["countries"] = {{"polities"}},
+	["dependent territories"] = {{"polities"}, "w"},
+	["deserts"] = {{"places"}},
+	["forests"] = {{"places"}},
+	["geographic areas"] = {{"places"}},
+	["ghost towns"] = {{"historical settlements"}},
+	["gulfs"] = {{"places", "water"}},
+	["headlands"] = {{"places"}},
+	["historical and traditional regions"] = {{"places"}, "regions that have no administrative significance"},
+	["historical capitals"] = {{"historical settlements"}, "former [[capital]] [[city|cities]] and [[town]]s"},
+	["historical dependent territories"] = {{"dependent territories"}, "[[w:dependent territory|dependent territories]] (colonies, dependencies, protectorates, etc.) that no longer exist"},
+	["historical political subdivisions"] = {{"polities"}, "[[political]] [[subdivision]]s (states, provinces, counties, etc.) that no longer exist"},
+	["historical polities"] = {{"polities"}, "[[polity|polities]] (countries, kingdoms, empires, etc.) that no longer exist"},
+	["historical settlements"] = {{"historical polities"}, "[[city|cities]], [[town]]s and [[village]]s that no longer exist or have been merged or reclassified"},
+	["hills"] = {{"places"}},
+	["islands"] = {{"places"}},
+	["kibbutzim"] = {{"places"}, "[[kibbutz]]im"},
+	["lakes"] = {{"places", "bodies of water"}},
+	["landforms"] = {{"places", "Earth"}},
+	["micronations"] = {{"places"}},
+	["mountain passes"] = {{"places"}, "[[mountain pass]]es"},
+	["mountains"] = {{"places"}},
+	["moors"] = {{"places"}},
+	["neighborhoods"] = {{"places"}, "[[neighborhood]]s, [[district]]s and other subportions of a [[city]]"},
 	-- FIXME, is the following parent correct?
-	{"oceans", {"seas"}},
-	{"parks", {"places"}},
-	{"peninsulas", {"places"}},
-	{"plateaus", {"places"}},
-	{"political subdivisions", {"polities"}, "[[political]] [[subdivision]]s, such as [[province]]s, [[state]]s or [[region]]s"},
-	{"polities", {"places"}, "[[polity|polities]] or [[political]] [[division]]s"},
-	{"rivers", {"places", "bodies of water"}},
-	{"seas", {"places", "bodies of water"}},
-	{"straits", {"places", "bodies of water"}},
-	{"subdistricts", {"polities"}},
-	{"suburbs", {"places"}, "[[suburb]]s of a [[city]]"},
-	{"towns", {"polities"}},
-	{"townships", {"polities"}},
-	{"unincorporated communities", {"places"}},
-	{"valleys", {"places", "water"}},
-	{"villages", {"polities"}},
-	{"volcanoes", {"landforms"}, "[[volcano]]es"},
+	["oceans"] = {{"seas"}},
+	["parks"] = {{"places"}},
+	["peninsulas"] = {{"places"}},
+	["plateaus"] = {{"places"}},
+	["political divisions"] = {{"polities"}, "[[political]] [[division]]s and [[subdivision]]s, such as [[countries]], [[province]]s, [[state]]s or [[region]]s"},
+	["polities"] = {{"places"}, "[[polity|polities]] or [[political]] [[division]]s"},
+	["rivers"] = {{"places", "bodies of water"}},
+	["seas"] = {{"places", "bodies of water"}},
+	["straits"] = {{"places", "bodies of water"}},
+	["subdistricts"] = {{"polities"}},
+	["suburbs"] = {{"places"}, "[[suburb]]s of a [[city]]"},
+	["towns"] = {{"polities"}},
+	["townships"] = {{"polities"}},
+	["unincorporated communities"] = {{"places"}},
+	["valleys"] = {{"places", "water"}},
+	["villages"] = {{"polities"}},
+	["volcanoes"] = {{"landforms"}, "[[volcano]]es"},
 }
 
 -- Generate bare labels in 'label' for all "general labels" (see above).
-for _, label_spec in ipairs(general_labels) do
-	local label, parents, desc, commonscat, wpcat = unpack(label_spec)
+for label, label_spec in pairs(general_labels) do
+	local parents, desc, commonscat, wpcat = unpack(label_spec)
 	desc = m_shared.format_description(desc, label)
 	labels[label] = {
 		type = "name",
@@ -177,9 +180,9 @@ local function city_description(group, key, value)
 		if n < #city_containing_polities then
 			local divtype = polity.divtype or group.default_divtype
 			local pl_divtype = require(en_utilities_module).pluralize(divtype)
-			local pl_linked_divtype = m_shared.political_subdivisions[pl_divtype]
+			local pl_linked_divtype = m_shared.political_divisions[pl_divtype]
 			if not pl_linked_divtype then
-				error("When creating city description for " .. key .. ", encountered divtype '" .. divtype .. "' not in m_shared.political_subdivisions")
+				error("When creating city description for " .. key .. ", encountered divtype '" .. divtype .. "' not in m_shared.political_divisions")
 			end
 			pl_linked_divtype = m_shared.format_description(pl_linked_divtype, pl_divtype)
 			local linked_divtype = require(en_utilities_module).singularize(pl_linked_divtype)
@@ -254,57 +257,74 @@ end
 -- Places that begin with "the" are recognized and handled specially.
 table.insert(handlers, function(label)
 	label = lcfirst(label)
-	local place_type, in_of, place = label:match("^([a-z%- ]-) (in) (.*)$")
-	if not place_type then
-		place_type, in_of, place = label:match("^([a-z%- ]-) (of) (.*)$")
+	local placetype, in_of, place = label:match("^([a-z%- ]-) (in) (.*)$")
+	if not placetype then
+		placetype, in_of, place = label:match("^([a-z%- ]-) (of) (.*)$")
 	end
-	if place_type and m_shared.generic_place_types[place_type] then
-		local place_type_spec = m_shared.generic_place_types[place_type]
-		local should_in_of = type(place_type_spec) == "table" and place_type_spec.prep or "in"
+	if placetype and m_shared.generic_placetypes[placetype] then
+		local placetype_spec = m_shared.generic_placetypes[placetype]
+		local should_in_of = type(placetype_spec) == "table" and placetype_spec.prep or "in"
 		if should_in_of ~= in_of then
 			mw.log(("Mismatch in category name '%s', has '%s' when it should have '%s'"):format(
 				label, in_of, should_in_of))
-		else
-			for _, group in ipairs(m_shared.polities) do
-				local placedata = group.data[place]
-				if placedata then
-					placedata = group.value_transformer(group, place, placedata)
-					local allow_cat = true
-					if place_type == "neighborhoods" and placedata.british_spelling or
-						place_type == "neighbourhoods" and not placedata.british_spelling then
-						allow_cat = false
-					end
-					if placedata.is_former_place and place_type ~= "places" then
-						allow_cat = false
-					end
-					if placedata.is_city and not m_shared.generic_place_types_for_cities[place_type] then
-						allow_cat = false
-					end
-					if allow_cat then
-						local parent
-						if placedata.containing_polity then
-							parent = place_type .. " " .. in_of .. " " .. placedata.containing_polity
-						elseif place_type == "neighbourhoods" then
-							parent = "neighborhoods"
+			return nil
+		end
+		for _, group in ipairs(m_shared.polities) do
+			local group_is_top_level = group.default_divtype == "country"
+			local placedata = group.data[place]
+			if placedata then
+				placedata = group.value_transformer(group, place, placedata)
+				local allow_cat = true
+				if placetype == "neighborhoods" and placedata.british_spelling or
+					placetype == "neighbourhoods" and not placedata.british_spelling then
+					allow_cat = false
+				end
+				if placedata.is_former_place and placetype ~= "places" then
+					allow_cat = false
+				end
+				if placedata.is_city and not m_shared.generic_placetypes_for_cities[placetype] then
+					allow_cat = false
+				end
+				if allow_cat then
+					local bare_place, linked_place = m_shared.construct_bare_and_linked_version(place)
+					local keydesc = fetch_value(placedata, "keydesc") or linked_place
+					local parents = {}
+					table.insert(parents, bare_place)
+					local canon_placetype = placetype == "neighbourhoods" and "neighborhoods" or placetype
+					if placedata.containing_polity then
+						table.insert(parents, {
+							name = placetype .. " " .. in_of .. " " .. placedata.containing_polity,
+							sort = bare_place
+						})
+					else -- top-level country
+						table.insert(parents, {
+							name = canon_placetype,
+							sort = bare_place
+						})
+						local is_poldiv = not not m_shared.political_divisions[canon_placetype]
+						if not is_poldiv and canon_placetype == "places" then
+							is_poldiv = false
 						else
-							parent = place_type
+							local general_label_spec = general_labels[canon_placetype]
+							if not general_label_spec then
+								error("Saw unknown placetype '" .. placetype .. "' in label '" .. label ..
+									"; not in either `general_labels` or in `political_divisions` in " ..
+									"[[Module:place/shared-data]]")
+							end
+							local parent_labels = general_label_spec[1]
+							is_poldiv = not not require(table_module).contains(parent_labels, "polities")
 						end
-						local bare_place, linked_place = m_shared.construct_bare_and_linked_version(place)
-						local keydesc = fetch_value(placedata, "keydesc") or linked_place
-						local parents
-						if place_type == "places" then
-							parents = {{name = parent, sort = bare_place}, bare_place}
-						else
-							parents = {{name = parent, sort = bare_place}, bare_place, "places in " .. place}
+						if is_poldiv then
+							table.insert(parents, "political subdivisions of specific countries")
 						end
-						local ptdesc = type(place_type_spec) == "table" and place_type_spec.desc or place_type_spec
-						return {
-							type = "name",
-							topic = label,
-							description = "{{{langname}}} names of " .. ptdesc .. " " .. in_of .. " " .. keydesc .. ".",
-							parents = parents
-						}
 					end
+					local ptdesc = type(placetype_spec) == "table" and placetype_spec.desc or placetype_spec
+					return {
+						type = "name",
+						topic = label,
+						description = "{{{langname}}} names of " .. ptdesc .. " " .. in_of .. " " .. keydesc .. ".",
+						parents = parents,
+					}
 				end
 			end
 		end
@@ -314,145 +334,140 @@ end)
 -- Handler for "places in Paris", "neighbourhoods of Paris", etc.
 table.insert(handlers, function(label)
 	label = lcfirst(label)
-	local place_type, in_of, city = label:match("^([a-z%- ]-) (in) (.*)$")
-	if not place_type then
-		place_type, in_of, city = label:match("^([a-z%- ]-) (of) (.*)$")
+	local placetype, in_of, city = label:match("^([a-z%- ]-) (in) (.*)$")
+	if not placetype then
+		placetype, in_of, city = label:match("^([a-z%- ]-) (of) (.*)$")
 	end
-	if place_type and m_shared.generic_place_types_for_cities[place_type] then
-		local place_type_spec = m_shared.generic_place_types_for_cities[place_type]
-		local should_in_of = type(place_type_spec) == "table" and place_type_spec.prep or "of"
+	if placetype and m_shared.generic_placetypes_for_cities[placetype] then
+		local placetype_spec = m_shared.generic_placetypes_for_cities[placetype]
+		local should_in_of = type(placetype_spec) == "table" and placetype_spec.prep or "of"
 		if should_in_of ~= in_of then
 			mw.log(("Mismatch in category name '%s', has '%s' when it should have '%s'"):format(
 				label, in_of, should_in_of))
-		else
-			for _, group in ipairs(m_shared.cities) do
-				local city_data = group.data[city]
-				if city_data then
-					local spelling_matches = true
-					if place_type == "neighborhoods" or place_type == "neighbourhoods" then
-						local containing_polities = m_shared.get_city_containing_polities(group, city, city_data)
-						local polity_group, polity_key = m_shared.city_containing_polity_to_group_and_key(
-							containing_polities[1])
-						if not polity_key then
-							error("Can't find polity data for city '" .. place ..
-								"' containing polity '" .. containing_polities[1] .. "'")
-						end
-						local polity_value = polity_group.value_transformer(polity_group, polity_key, polity_group[polity_key])
-	
-						if place_type == "neighborhoods" and polity_value.british_spelling or
-							place_type == "neighbourhoods" and not polity_value.british_spelling then
-							spelling_matches = false
-						end
+			return nil
+		end
+		for _, group in ipairs(m_shared.cities) do
+			local city_data = group.data[city]
+			if city_data then
+				local spelling_matches = true
+				if placetype == "neighborhoods" or placetype == "neighbourhoods" then
+					local containing_polities = m_shared.get_city_containing_polities(group, city, city_data)
+					local polity_group, polity_key = m_shared.city_containing_polity_to_group_and_key(
+						containing_polities[1])
+					if not polity_key then
+						error("Can't find polity data for city '" .. place ..
+							"' containing polity '" .. containing_polities[1] .. "'")
 					end
-					if spelling_matches then
-						local parents
-						if place_type == "places" then
-							parents = {city}
-						else
-							parents = {city, "places in " .. city}
-						end
-						local ptdesc = type(place_type_spec) == "table" and place_type_spec.desc or place_type_spec
-						local citydesc = city_description(group, city, city_data)
-						return {
-							type = "name",
-							topic = label,
-							description = "{{{langname}}} names of " .. ptdesc .. " " .. in_of .. " " .. citydesc .. ".",
-							parents = parents
-						}
+					local polity_value = polity_group.value_transformer(polity_group, polity_key, polity_group[polity_key])
+
+					if placetype == "neighborhoods" and polity_value.british_spelling or
+						placetype == "neighbourhoods" and not polity_value.british_spelling then
+						spelling_matches = false
 					end
+				end
+				if spelling_matches then
+					local parents
+					if placetype == "places" then
+						parents = {city}
+					else
+						parents = {city, "places in " .. city}
+					end
+					local ptdesc = type(placetype_spec) == "table" and placetype_spec.desc or placetype_spec
+					local citydesc = city_description(group, city, city_data)
+					return {
+						type = "name",
+						topic = label,
+						description = "{{{langname}}} names of " .. ptdesc .. " " .. in_of .. " " .. citydesc .. ".",
+						parents = parents
+					}
 				end
 			end
 		end
 	end
 end)
 
--- Handler for "political subdivisions of the Philippines" and other "political subdivisions of X" categories.
+-- Handler for specific political and misc (non-political) subdivisions of polities and subpolities, such as
+-- "provinces of the Philippines", "counties of Wales", "municipalities of Tocantins, Brazil", etc.
+-- Places that begin with "the" are recognized and handled specially. This does not handle categories for generic
+-- placetypes (cities, rivers, etc.) of polities and subpolities.
 table.insert(handlers, function(label)
 	label = lcfirst(label)
-	local place = label:match("^political subdivisions of (.*)$")
-	if place then
-		for _, group in ipairs(m_shared.polities) do
-			local placedata = group.data[place]
-			if placedata then
-				placedata = group.value_transformer(group, place, placedata)
-				local bare_place, linked_place = m_shared.construct_bare_and_linked_version(place)
-				local keydesc = fetch_value(placedata, "keydesc") or linked_place
-				local desc = "{{{langname}}} names of [[political]] [[subdivision]]s of " .. keydesc .. "."
-				return {
-					type = "name",
-					topic = label,
-					description = desc,
-					breadcrumb = "political subdivisions",
-					parents = {bare_place, {name = "political subdivisions", sort = bare_place}},
-				}
-			end
-		end
+	local placetype, in_of, place = label:match("^([a-z%- ]-) (of) (.*)$")
+	if not placetype then
+		placetype, in_of, place = label:match("^([a-z%- ]-) (in) (.*)$")
 	end
-end)
-
--- Handler for "provinces of the Philippines", "counties of Wales", "municipalities of Tocantins, Brazil", etc.
--- Places that begin with "the" are recognized and handled specially.
-table.insert(handlers, function(label)
-	label = lcfirst(label)
-	local place_type, place = label:match("^([a-z%- ]-) of (.*)$")
 	if place then
 		for _, group in ipairs(m_shared.polities) do
 			local placedata = group.data[place]
 			if placedata then
 				placedata = group.value_transformer(group, place, placedata)
 				local divcat = nil
-				local poldiv_parent = nil
-				if placedata.poldiv then
-					for _, div in ipairs(placedata.poldiv) do
-						if type(div) == "string" then
-							div = {div}
-						end
-						if place_type == div[1] then
-							divcat = "poldiv"
-							poldiv_parent = div.parent
-							break
+				local function find_placetype(divs)
+					if divs then
+						for _, div in ipairs(divs) do
+							if type(div) == "string" then
+								div = {type = div}
+							end
+							local cat_as = div.cat_as or div.type
+							if type(cat_as) ~= "table" then
+								cat_as = {cat_as}
+							end
+							for _, pt_cat_as in ipairs(cat_as) do
+								if type(pt_cat_as) == "string" then
+									pt_cat_as = {type = pt_cat_as}
+								end
+								if placetype == pt_cat_as.type then
+									return (pt_cat_as.skip_polity_parent_type or div.skip_polity_parent_type or
+										placetype), div.prep or "of"
+								end
+							end
 						end
 					end
+
+					return nil
 				end
-				if not divcat and placedata.miscdiv then
-					for _, div in ipairs(placedata.miscdiv) do
-						if type(div) == "string" then
-							div = {div}
-						end
-						if place_type == div[1] then
-							divcat = "miscdiv"
-							break
-						end
+				local div_parent, div_prep = find_placetype(placedata.poldiv)
+				if div_parent then
+					divcat = "poldiv"
+				else
+					div_parent, div_prep = find_placetype(placedata.miscdiv)
+					if div_parent then
+						divcat = "miscdiv"
 					end
 				end
 				if divcat then
-					local linkdiv = m_shared.political_subdivisions[place_type]
-					if not linkdiv then
-						error("Saw unknown place type '" .. place_type .. "' in label '" .. label .. "'")
+					if div_prep ~= in_of then
+						mw.log(("Mismatch in category name '%s', has '%s' when it should have '%s'"):format(
+							label, in_of, div_prep))
+						return nil
 					end
-					linkdiv = m_shared.format_description(linkdiv, place_type)
+					local linkdiv = m_shared.political_divisions[placetype]
+					if not linkdiv then
+						error("Saw unknown place type '" .. placetype .. "' in label '" .. label .. "'")
+					end
+					linkdiv = m_shared.format_description(linkdiv, placetype)
 					local bare_place, linked_place = m_shared.construct_bare_and_linked_version(place)
 					local keydesc = fetch_value(placedata, "keydesc") or linked_place
-					local desc = "{{{langname}}} names of " .. linkdiv .. " of " .. keydesc .. "."
-					if divcat == "poldiv" then
-						return {
-							type = "name",
-							topic = label,
-							description = desc,
-							breadcrumb = poldiv_parent and m_shared.call_key_to_placename(group, place) or place_type,
-							parents = poldiv_parent and
-								{{name = poldiv_parent, sort = bare_place}, bare_place} or
-								{"political subdivisions of " .. place, {name = place_type, sort = bare_place}},
-						}
+					local desc = "{{{langname}}} names of " .. linkdiv .. " " .. div_prep .. " " .. keydesc .. "."
+					local parents = {}
+					table.insert(parents, bare_place)
+					if placedata.containing_polity then
+						table.insert(parents, {
+							name = div_parent .. " " .. div_prep .. " " .. placedata.containing_polity,
+							sort = bare_place
+						})
+					else -- top-level country
+						table.insert(parents, {name = placetype, sort = bare_place})
+						table.insert(parents, "political subdivisions of specific countries")
 					else
-						return {
-							type = "name",
-							topic = label,
-							description = desc,
-							breadcrumb = place_type,
-							parents = {bare_place},
-						}
 					end
+					return {
+						type = "name",
+						topic = label,
+						description = desc,
+						breadcrumb = m_shared.call_key_to_placename(group, place),
+						parents = parents,
+					}
 				end
 			end
 		end
@@ -462,7 +477,7 @@ end)
 -- Generate bare labels in 'label' for all types of capitals.
 for capital_cat, placetype in pairs(m_shared.capital_cat_to_placetype) do
 	local pl_placetype = require(en_utilities_module).pluralize(placetype)
-	local linkdiv = m_shared.political_subdivisions[pl_placetype]
+	local linkdiv = m_shared.political_divisions[pl_placetype]
 	if not linkdiv then
 		error("Saw unknown place type '" .. pl_placetype .. "' in label '" .. label .. "'")
 	end
@@ -512,7 +527,7 @@ table.insert(handlers, function(label)
 					end
 					if saw_match then
 						-- Everything checks out, construct the category description.
-						local linkdiv = m_shared.political_subdivisions[pl_placetype]
+						local linkdiv = m_shared.political_divisions[pl_placetype]
 						if not linkdiv then
 							error("Saw unknown place type '" .. pl_placetype .. "' in label '" .. label .. "'")
 						end
@@ -522,7 +537,7 @@ table.insert(handlers, function(label)
 						local variant_match_text = ""
 						if #variant_matches > 0 then
 							for i, variant_match in ipairs(variant_matches) do
-								variant_matches[i] = m_shared.political_subdivisions[variant_match]
+								variant_matches[i] = m_shared.political_divisions[variant_match]
 								if not variant_matches[i] then
 									error("Saw unknown place type '" .. variant_match .. "' in label '" .. label .. "'")
 								end
@@ -545,6 +560,12 @@ table.insert(handlers, function(label)
 end)
 
 -- "regions in (continent)", esp. for regions that span multiple countries
+
+labels["political subdivisions of specific countries"] = {
+	type = "grouping",
+	description = "{{{langname}}} categories for political subdivisions of specific countries.",
+	parents = {"places"},
+}
 
 labels["regions in the world"] = { -- for multinational regions which do not fit neatly within one continent
 	type = "name",
@@ -595,12 +616,6 @@ labels["autonomous cities of Spain"] = {
 }
 
 -- boroughs
-
-labels["boroughs in England"] = {
-	type = "name",
-	description = "{{{langname}}} names of boroughs, local government districts and unitary authorities in [[England]].",
-	parents = {{name = "boroughs", sort = "England"}, "England"},
-}
 
 labels["boroughs in Pennsylvania, USA"] = {
 	type = "name",
