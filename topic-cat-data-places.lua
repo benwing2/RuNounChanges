@@ -5,11 +5,13 @@ local m_shared = require("Module:place/shared-data")
 local en_utilities_module = "Module:en-utilities"
 local table_module = "Module:table"
 
+local dump = mw.dumpObject
+
 --[==[ intro:
 This module contains specifications that are used to create labels that allow {{tl|auto cat}} and to create the
 appropriate definitions for topic categories for places (e.g. [[Category:de:Hokkaido]], [[Category:es:Cities in
 France]], [[Category:pt:Municipalities of Tocantins, Brazil]], etc.).  Note that this module doesn't actually create the
-categories; that must be done manually, with the text "{{tl|auto cat}}" as the definition of the category. (This process
+categories; that must be done separately, with the text "{{tl|auto cat}}" as the definition of the category. (This process
 should automatically happen periodically for non-empty categories, because they will appear in
 [[Special:WantedCategories]] and a bot will periodically examine that list and create any needed category.)
 
@@ -83,9 +85,11 @@ local general_labels = {
 	["communities"] = {{"polities"}, "[[community|communities]] of all sizes"},
 	["continents"] = {{"places"}, "the [[continent]]s of the world"},
 	["countries"] = {{"polities"}},
+	["country-like entities"] = {{"polities"}, "[[polity|polities]] not normally considered [[country|countries]] but treated similarly for categorization purposes; typically, [[unrecognized]] [[de-facto]] countries or [[w:dependent territory|dependent territories]]"},
 	["dependent territories"] = {{"polities"}, "w"},
 	["deserts"] = {{"places"}},
 	["forests"] = {{"places"}},
+	["former countries and country-like entities"] = {{"polities"}, "[[country|countries]] and similar [[polity|polities]] that no longer exist"},
 	["geographic areas"] = {{"places"}},
 	["ghost towns"] = {{"historical settlements"}},
 	["gulfs"] = {{"places", "water"}},
@@ -199,20 +203,15 @@ for _, group in ipairs(m_shared.cities) do
 		if not value.alias_of then
 			local desc, label_parent = city_description(group, key, value)
 			desc = "{{{langname}}} terms related to " .. desc .. "."
-			local parents = value.parents or label_parent
-			if not parents then
+			local city_containing_polities = m_shared.get_city_containing_polities(group, key, value)
+			if not city_containing_polities or not city_containing_polities[1] then
 				error("When creating city bare label for " .. key .. ", at least one containing polity must be specified or an explicit parent must be given")
 			end
-			if type(parents) ~= "table" then
-				parents = {parents}
-			end
 			local key_parents = {}
-			for _, parent in ipairs(parents) do
-				local polity_group, key_parent = m_shared.city_containing_polity_to_group_and_key(parent)
+			for _, parent in ipairs(city_containing_polities) do
+				local polity_group, key_parent = m_shared.city_containing_polity_to_group_and_key(parent[1])
 				if key_parent then
-					local bare_key_parent, linked_key_parent =
-						m_shared.construct_bare_and_linked_version(key_parent)
-					table.insert(key_parents, bare_key_parent)
+					table.insert(key_parents, "cities in " .. key_parent)
 				else
 					error("Couldn't find entry for city '" .. key .."' parent '" .. parent .. "'")
 				end
@@ -323,6 +322,7 @@ table.insert(handlers, function(label)
 						type = "name",
 						topic = label,
 						description = "{{{langname}}} names of " .. ptdesc .. " " .. in_of .. " " .. keydesc .. ".",
+						breadcrumb = placetype,
 						parents = parents,
 					}
 				end
@@ -378,13 +378,22 @@ table.insert(handlers, function(label)
 						type = "name",
 						topic = label,
 						description = "{{{langname}}} names of " .. ptdesc .. " " .. in_of .. " " .. citydesc .. ".",
-						parents = parents
+						breadcrumb = placetype,
+						parents = parents,
 					}
 				end
 			end
 		end
 	end
 end)
+
+local overriding_descriptions = {
+	["autonomous cities of Spain"] = "{{{langname}}} names of the [[w:Autonomous communities of Spain#Autonomous_cities|autonomous cities of Spain]].",
+	["regions of Albania"] = "{{{langname}}} names of the regions ([[periphery|peripheries]]) of [[Albania]].",
+	["regions of Greece"] = "{{{langname}}} names of the regions ([[periphery|peripheries]]) of [[Greece]].",
+	["regions of North Macedonia"] = "{{{langname}}} names of the regions ([[periphery|peripheries]]) of [[North Macedonia]].",
+	["subprefectures of Japan"] = "{{{langname}}} names of [[subprefecture]]s of [[Japan]]ese [[prefecture]]s.",
+}
 
 -- Handler for specific political and misc (non-political) subdivisions of polities and subpolities, such as
 -- "provinces of the Philippines", "counties of Wales", "municipalities of Tocantins, Brazil", etc.
@@ -404,6 +413,9 @@ table.insert(handlers, function(label)
 				local divcat = nil
 				local function find_placetype(divs)
 					if divs then
+						if type(divs) ~= "table" then
+							divs = {divs}
+						end
 						for _, div in ipairs(divs) do
 							if type(div) == "string" then
 								div = {type = div}
@@ -417,8 +429,14 @@ table.insert(handlers, function(label)
 									pt_cat_as = {type = pt_cat_as}
 								end
 								if placetype == pt_cat_as.type then
-									return (pt_cat_as.skip_polity_parent_type or div.skip_polity_parent_type or
-										placetype), div.prep or "of"
+									local div_parent = pt_cat_as.skip_polity_parent_type
+									if div_parent == nil then -- allow false
+										div_parent = div.skip_polity_parent_type
+									end
+									if div_parent == nil then
+										div_parent = placetype
+									end
+									return div_parent, div.prep or "of"
 								end
 							end
 						end
@@ -427,15 +445,13 @@ table.insert(handlers, function(label)
 					return nil
 				end
 				local div_parent, div_prep = find_placetype(placedata.poldiv)
-				if div_parent then
-					divcat = "poldiv"
-				else
+				if div_parent == nil then -- allow false
 					div_parent, div_prep = find_placetype(placedata.miscdiv)
-					if div_parent then
-						divcat = "miscdiv"
-					end
 				end
-				if divcat then
+				if div_parent == nil then -- allow false
+					div_parent, div_prep = find_placetype(placedata.addl_poldiv_for_categorization)
+				end
+				if div_parent ~= nil then
 					if div_prep ~= in_of then
 						mw.log(("Mismatch in category name '%s', has '%s' when it should have '%s'"):format(
 							label, in_of, div_prep))
@@ -447,11 +463,14 @@ table.insert(handlers, function(label)
 					end
 					linkdiv = m_shared.format_description(linkdiv, placetype)
 					local bare_place, linked_place = m_shared.construct_bare_and_linked_version(place)
-					local keydesc = fetch_value(placedata, "keydesc") or linked_place
-					local desc = "{{{langname}}} names of " .. linkdiv .. " " .. div_prep .. " " .. keydesc .. "."
+					local desc = overriding_descriptions[label]
+					if not desc then
+						local keydesc = fetch_value(placedata, "keydesc") or linked_place
+						desc = "{{{langname}}} names of " .. linkdiv .. " " .. div_prep .. " " .. keydesc .. "."
+					end
 					local parents = {}
 					table.insert(parents, bare_place)
-					if placedata.containing_polity then
+					if placedata.containing_polity and div_parent then
 						table.insert(parents, {
 							name = div_parent .. " " .. div_prep .. " " .. placedata.containing_polity,
 							sort = bare_place
@@ -459,13 +478,12 @@ table.insert(handlers, function(label)
 					else -- top-level country
 						table.insert(parents, {name = placetype, sort = bare_place})
 						table.insert(parents, "political subdivisions of specific countries")
-					else
 					end
 					return {
 						type = "name",
 						topic = label,
 						description = desc,
-						breadcrumb = m_shared.call_key_to_placename(group, place),
+						breadcrumb = placetype,
 						parents = parents,
 					}
 				end
@@ -509,7 +527,7 @@ table.insert(handlers, function(label)
 					local variant_matches = {}
 					for _, div in ipairs(placedata.poldiv) do
 						if type(div) == "string" then
-							div = {div}
+							div = {type = div}
 						end
 						-- HACK. Currently if we don't find a match for the placetype, we map e.g.
 						-- 'autonomous region' -> 'regional capitals' and 'union territory' -> 'territorial capitals'.
@@ -518,10 +536,10 @@ table.insert(handlers, function(label)
 						-- To make this clearer, we record all such "variant match" cases, and down below we
 						-- insert a note into the category text indicating that such "variant matches"
 						-- are included among the category.
-						if pl_placetype == div[1] or pl_placetype == div[1]:gsub("^.* ", "") then
+						if pl_placetype == div.type or pl_placetype == div.type:gsub("^.* ", "") then
 							saw_match = true
-							if pl_placetype ~= div[1] then
-								table.insert(variant_matches, div[1])
+							if pl_placetype ~= div.type then
+								table.insert(variant_matches, div.type)
 							end
 						end
 					end
@@ -550,6 +568,7 @@ table.insert(handlers, function(label)
 							type = "name",
 							topic = label,
 							description = desc,
+							breadcrumb = bare_place,
 							parents = {{name = capital_cat, sort = bare_place}, bare_place},
 						}
 					end
@@ -576,166 +595,64 @@ labels["regions in the world"] = { -- for multinational regions which do not fit
 labels["regions in the Americas"] = {
 	type = "name",
 	description = "{{{langname}}} names of [[region]]s in the Americas.",
+	breadcrumb = "regions",
 	parents = {"America"},
 }
 
 -- "countries in (continent)", "rivers in (continent)"
 
-for _, continent in ipairs({"Africa", "Asia", "Central America", "Europe", "North America", "Oceania", "South America"}) do
+for _, continent in ipairs({"Africa", "Asia", "Central America", "Europe", "North America", "Oceania", "Melanesia", "Micronesia", "Polynesia", "South America"}) do
 	labels["countries in " .. continent] = {
 		type = "name",
 		description = "{{{langname}}} names of [[country|countries]] in [[" .. continent .. "]].",
+		breadcrumb = continent,
 		parents = {{name = "countries", sort = " "}, continent},
 	}
 	labels["rivers in " .. continent] = {
 		type = "name",
 		description = "{{{langname}}} names of [[river]]s in [[" .. continent .. "]].",
+		breadcrumb = continent,
 		parents = {{name = "rivers", sort = " "}, continent},
 	}
 	labels["regions of " .. continent] = {
 		type = "name",
 		description = "{{{langname}}} names of [[region]]s of [[" .. continent .. "]].",
+		breadcrumb = continent,
 		parents = {{name = "regions", sort = " "}, continent},
 	}
 end
 
--- autonomous communities, oblasts, etc
+-- misc
 
-labels["autonomous communities of Spain"] = {
+labels["boroughs of New York City"] = {
 	type = "name",
-	-- special-cased description
-	description = "{{{langname}}} names of the [[w:Autonomous communities of Spain|autonomous communities of Spain]].",
-	parents = {{name = "political subdivisions", sort = "Spain"}, "Spain"},
+	description = "{{{langname}}} names of boroughs of [[New York City]].",
+	breadcrumb = "boroughs",
+	parents = {"New York City", {name = "boroughs in the United States", sort = "New York City"}},
 }
-
-labels["autonomous cities of Spain"] = {
-	type = "name",
-	-- special-cased description
-	description = "{{{langname}}} names of the [[w:Autonomous communities of Spain#Autonomous_cities|autonomous cities of Spain]].",
-	parents = {{name = "political subdivisions", sort = "Spain"}, "Spain"},
-}
-
--- boroughs
-
-labels["boroughs in Pennsylvania, USA"] = {
-	type = "name",
-	description = "{{{langname}}} names of boroughs in [[Pennsylvania]], USA.",
-	parents = {{name = "boroughs in the United States", sort = "Pennsylvania"}, "Pennsylvania, USA"},
-}
-
-labels["boroughs in New Jersey, USA"] = {
-	type = "name",
-	description = "{{{langname}}} names of boroughs in [[New Jersey]], USA.",
-	parents = {{name = "boroughs in the United States", sort = "New Jersey"}, "New Jersey, USA"},
-}
-
-labels["boroughs in New York City"] = {
-	type = "name",
-	description = "{{{langname}}} names of boroughs in [[New York City]].",
-	parents = {{name = "boroughs in the United States", sort = "New York City"}, "New York City"},
-}
-
-labels["boroughs in the United States"] = {
-	type = "name",
-	description = "{{{langname}}} names of [[borough]]s in the [[United States]].",
-	-- parent is "boroughs" not "political subdivisions" and category says "in"
-	-- not "of", because boroughs aren't really political subdivisions in the US
-	-- (more like cities)
-	parents = {{name = "boroughs", sort = "United States"}, "United States"},
-}
-
--- census-designated places
-
-labels["census-designated places in the United States"] = {
-	type = "name",
-	description = "{{{langname}}} names of [[census-designated place]]s in the [[United States]].",
-	-- parent is just United States; census-designated places have no political
-	-- status and exist only in the US, so no need for a top-level
-	-- "census-designated places" category
-	parents = {"United States"},
-}
-
--- counties
-
-labels["counties of Northern Ireland"] = {
-	type = "name",
-	description = "{{{langname}}} names of the counties of [[Northern Ireland]].",
-	-- has two parents: "political subdivisions" and "counties of Ireland"
-	parents = {{name = "political subdivisions", sort = "Northern Ireland"}, {name = "counties of Ireland", sort = "Northern Ireland"}, "Northern Ireland"},
-}
-
--- nomes
 
 labels["nomes of Ancient Egypt"] = {
 	type = "name",
 	-- special-cased description
-	description = "{{{langname}}} names of the nomes of [[Ancient Egypt]].",
-	parents = {{name = "political subdivisions", sort = "Egypt"}, "Ancient Egypt"},
+	description = "{{{langname}}} names of the [[nome]]s of [[Ancient Egypt]].",
+	breadcrumb = "nomes",
+	parents = {"Ancient Egypt"},
 }
-
--- regions and "regional units"
-
-labels["regions of Albania"] = {
-	type = "name",
-	-- special-cased description
-	description = "{{{langname}}} names of the regions (peripheries) of [[Albania]].",
-	parents = {{name = "political subdivisions", sort = "Albania"}, "Albania"},
-}
-
-labels["regions of Greece"] = {
-	type = "name",
-	-- special-cased description
-	description = "{{{langname}}} names of the regions (peripheries) of [[Greece]].",
-	parents = {{name = "political subdivisions", sort = "Greece"}, "Greece"},
-}
-
-labels["regions of North Macedonia"] = {
-	type = "name",
-	-- special-cased description
-	description = "{{{langname}}} names of the regions (peripheries) of [[North Macedonia]].",
-	parents = {{name = "political subdivisions", sort = "North Macedonia"}, "North Macedonia"},
-}
-
--- subdistricts and subprefectures
 
 labels["subdistricts of Jakarta"] = {
 	type = "name",
-	description = "default",
+	description = "{{{langname}}} names of the [[subdistrict]]s of [[Jakarta]].",
 	-- not listed in the normal place because no categories like "cities in Jakarta"
-	parents = {{name = "political subdivisions", sort = "Jakarta"}, "Indonesia"},
-}
-
-labels["subprefectures of Japan"] = {
-	type = "name",
-	-- special-cased description
-	description = "{{{langname}}} names of subprefectures of Japanese prefectures.",
-	parents = {{name = "political subdivisions", sort = "Japan"}, "Japan"},
-}
-
--- towns and townships
-
-labels["townships in Canada"] = {
-	type = "name",
-	description = "{{{langname}}} names of townships in [[Canada]].",
-	parents = {{name = "townships", sort = "Canada"}, "Canada"},
-}
-
-labels["townships in Ontario"] = {
-	type = "name",
-	description = "{{{langname}}} names of townships in [[Ontario]]. Municipalities in Ontario can be called as a city, a town, a township, or a village.",
-	parents = {{name = "townships in Canada", sort = "Ontario"}, "Ontario"},
-}
-
-labels["townships in Quebec"] = {
-	type = "name",
-	description = "{{{langname}}} names of townships in [[Quebec]].",
-	parents = {{name = "townships in Canada", sort = "Quebec"}, "Quebec"},
+	breadcrumb = "subdistricts",
+	parents = {"Jakarta"},
 }
 
 -- temporary while users adjust to recent changes, also kept in case of desire to use for its topical purpose, see description; can be removed later if unused
+-- FIXME! Only used for 8 taos pseudo-placenames that should be deleted through RFV.
 labels["place names"] = {
-	type = "type",
-	description = "{{{langname}}} terms like ''hydronym'', for types geographical [[name]]s.",
+	type = "name",
+	description = "{{{langname}}} terms for place names.",
+	additional = "'''FIXME: This category needs to be deleted'''.",
 	parents = {"names"},
 }
 
