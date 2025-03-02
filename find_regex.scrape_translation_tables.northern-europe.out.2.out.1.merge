@@ -2804,8 +2804,8 @@ As England has always been the most populous part of the United Kingdom<!--i.e.,
 {{head|da|proper noun}}
 
 # {{tcl|da|England|id=Q21}}
-# {{lb|da|informal, somewhat dated}} {{place|da|island|r/Western Europe|t=Great Britain}}
-# {{lb|da|informal, somewhat dated}} {{place|da|country|r/Western Europe|t=United Kingdom}}
+# {{lb|da|informal|somewhat|dated}} {{place|da|large island|of the|c/United Kingdom|in|r/Northern Europe|t=Great Britain}}
+# {{lb|da|informal|somewhat|dated}} {{tcl|da|United Kingdom|id=Q145}}
 
 ==German==
 {{wikipedia|lang=de}}
@@ -2822,8 +2822,8 @@ From {{der|de|ang|Engaland}}.
 {{de-proper noun|toponym}}
 
 # {{tcl|de|England|id=Q21}}
-# {{lb|de|somewhat|informal}} {{place|de|island|r/Western Europe|t=Great Britain}}
-# {{lb|de|somewhat|informal}} {{place|de|country|r/Western Europe|t=United Kingdom}}
+# {{lb|de|somewhat|informal}} {{place|de|large island|of the|c/United Kingdom|in|r/Northern Europe|t=Great Britain}}
+# {{lb|de|somewhat|informal}} {{tcl|de|United Kingdom|id=Q145}}
 # {{lb|de|informal|proscribed}} {{place|de|archipelago|r/Western Europe|including|c/Ireland|t=the [[British Isles]]}}
 
 ====Usage notes====
@@ -2946,8 +2946,8 @@ From {{inh|is|non|Ęngland}}.
 {{head|nb|proper noun}}
 
 # {{tcl|nb|England|id=Q21}}
-# {{lb|nb|informal, dated}} {{place|nb|island|r/Western Europe|t=Great Britain}}
-# {{lb|nb|informal, dated}} {{place|nb|country|r/Western Europe|t=United Kingdom}}
+# {{lb|nb|informal|or|dated}} {{place|nb|large island|of the|c/United Kingdom|in|r/Northern Europe|t=Great Britain}}
+# {{lb|nb|informal|or|dated}} {{tcl|nb|United Kingdom|id=Q145}}
 
 ====Related terms====
 * {{l|nb|engelsk}}
@@ -3039,8 +3039,8 @@ From {{inh|nl|dum|engelant}}.
 {{nl-proper noun|n}}
 
 # {{tcl|nl|England|id=Q21}}
-# {{lb|nl|loosely}} {{place|nl|island|r/Northern Europe|t=Great Britain}}
-# {{lb|nl|loosely}} {{place|nl|country|r/Northern Europe|t=United Kingdom}}
+# {{lb|nl|loosely}} {{place|nl|large island|of the|c/United Kingdom|in|r/Northern Europe|t=Great Britain}}
+# {{lb|nl|loosely}} {{tcl|nl|United Kingdom|id=Q145}}
 
 =====Hypernyms=====
 * {{l|nl|Groot-Brittannië}}
@@ -3085,7 +3085,8 @@ Page 76 Angli: -------- begin text --------
 {{sq-proper noun|f|Anglia}}
 
 # {{tcl|sq|England|id=Q21}}
-# {{lb|sq|colloquial}} {{place|sq|island|c/Northern Europe|t=Great Britain}}
+# {{lb|sq|colloquial}} {{place|sq|large island|of the|c/United Kingdom|in|r/Northern Europe|t=Great Britain}}
+# {{lb|sq|colloquial}} {{tcl|sq|United Kingdom|id=Q145}}
 
 ====Declension====
 {{sq-noun-f-i-unc}}
@@ -3210,7 +3211,7 @@ Borrowed from {{bor|izh|ru|Англия}}.
 {{head|izh|proper noun}}
 
 # {{tcl|izh|England|id=Q21}}
-# {{lb|izh|colloquial}} {{place|izh|country|r/Northern Europe|t1=United Kingdom}}
+# {{lb|izh|colloquial}} {{tcl|izh|United Kingdom|id=Q145}}
 #* {{RQ:izh:Geografia-2:1936|Industrian kehityksen mukkaa '''Anglia''' ono toin maa maailmaas.|As to industrial development, '''England''' is the second country on earth.|page=123}}
 
 ====Declension====
@@ -3393,7 +3394,8 @@ Page 81 Անգլիա: -------- begin text --------
 {{hy-proper noun}}
 
 # {{tcl|hy|England|id=Q21}}
-# {{lb|hy|colloquial}} {{place|hy|island|r/Northern Europe|t=Great Britain}}
+# {{lb|hy|colloquial}} {{place|hy|large island|of the|c/United Kingdom|in|r/Northern Europe|t=Great Britain}}
+# {{lb|hy|colloquial}} {{tcl|hy|United Kingdom|id=Q145}}
 
 ====Declension====
 {{hy-noun-ի-ներ|unc=on}}
@@ -3446,7 +3448,7 @@ Page 83 Inglaterra: -------- begin text --------
 ===Noun===
 {{roa-opt-proper noun|f}}
 
-# {{place|roa-opt|constituent country|country/United Kingdom|continent/Europe|t1=England|capital=roa-opt:Londres}}
+# {{place|roa-opt|medieval kingdom|r/Northern Europe|t=England|capital=roa-opt:Londres}}
 #* {{RQ:roa-opt:Cantigas de Santa Maria|E|85|text=Onde direi / un miragre que en '''engla terra''' / demoſtrou ſanta maria aque / nunca erra / poꝛ conuerter un / iudeu que prenderan ladꝛões / a que chagas grñdes deran e pois / toꝛçillões.|translation=Where, shall I say, a miracle that, in '''England''', demonstrated [the power of] Holy Mary, who ne'er errs, for converting a Jew that had imprisoned thieves that he greatly wounded and then wrenched.}}
 #* {{RQ:roa-opt:Xeral Historia||86|Et de Jafet et dos seus lynages [sayrõ] outrosy os moytos rreys que rreynarõ [em] Rroma, et em España, et em Alamanya, et em França, et em ['''Jnglaterra'''], et ẽnas outras yslas de todaslas partidas de Europa et em cabo et em todo omũdo.|translation=And out of Japheth and his lineages [came] the many other kings who reigned [in] Rome and in Spain, Germany, France, in ['''England'''] and in other islands from all over Europe, in Cape, and in the entire world.}}
 
@@ -3476,7 +3478,8 @@ Cognate with {{cog|gl,es|Inglaterra}}.
 {{pt-proper noun|f}}
 
 # {{tcl|pt|England|id=Q21|place_caplc=Londres}}
-# {{lb|pt|proscribed|dated|or|informal}} {{place|pt|island|r/Northern Europe|t=United Kingdom}}
+# {{lb|pt|proscribed|dated|or|informal}} {{place|pt|large island|of the|c/United Kingdom|in|r/Northern Europe|t=Great Britain}}
+# {{lb|pt|proscribed|dated|or|informal}} {{tcl|pt|United Kingdom|id=Q145}}
 #: {{syn|pt|Reino Unido}}
 
 ====Usage notes====
@@ -3570,7 +3573,8 @@ Page 85 Англия: -------- begin text --------
 # {{tcl|ru|England|id=Q21}}
 #* {{quote-book|ru|year=1835|author=w:ru:Николай Гоголь<t:{{w|Nikolai Gogol}}>|title=w:ru:Записки сумасшедшего|chapter=Октября 3.|location=|publisher=|newversion=English translation from|translator2=Claud Field|title2=Memoirs of a Madman|location2=|publisher2=|year2=1916|page2=|pageurl2=
 |text=Говоря́т, в '''А́нглии''' вы́плыла ры́ба, кото́рая сказа́ла два сло́ва на тако́м стра́нном языке́, что учё́ные уже́ три го́да стара́ются определи́ть и ещё́ до сих пор ничего́ не откры́ли.|t=It is said that in '''England''' a fish put its head out of water and said a word or two in such an extra-ordinary language that learned men have been puzzling over them for three years, and have not succeeded in interpreting them yet.}}
-# {{lb|ru|colloquial}} {{place|ru|island|r/Northern Europe|t=United Kingdom}}
+# {{lb|ru|colloquial}} {{place|ru|large island|of the|c/United Kingdom|in|r/Northern Europe|t=Great Britain}}
+# {{lb|ru|colloquial}} {{tcl|ru|United Kingdom|id=Q145}}
 
 ====Declension====
 {{ru-noun-table|А́нглия|n=sg}}
@@ -3593,7 +3597,7 @@ Page 85 Англия: -------- begin text --------
 * {{l|ru|Соединённое Короле́вство Великобри́тании и Се́верной Ирла́ндии}}
 * {{l|ru|Туманный Альбион}}
 
-{{c|ru|Country nicknames}}
+{{C|ru|Country nicknames}}
 {{cln|ru|exonyms}}
 -------- end text --------
 Page 86 Ingalaterra: -------- begin text --------
@@ -3635,7 +3639,7 @@ Page 87 ইংল্যান্ড: -------- begin text --------
 {{bn-proper noun}}
 
 # {{tcl|bn|England|id=Q21}}
-# {{lb|bn|loosely}} {{place|bn|country|r/Northern Europe|t=United Kingdom}}
+# {{lb|bn|loosely}} {{tcl|bn|United Kingdom|id=Q145}}
 #: {{syn|bn|যুক্তরাজ্য|ব্রিটেন}}
 # {{lb|bn|loosely}} the [[British Empire]]
 #: {{syn|bn|ব্রিটিশ সাম্রাজ্য|ইংরেজ সাম্রাজ্য|ব্রিটেন|q3=loosely}}
@@ -3822,7 +3826,7 @@ Page 94 英國: -------- begin text --------
 ===Proper noun===
 {{head|zh|proper noun}}
 
-# {{place|zh|country|r/Northern Europe|t=United Kingdom}}
+# {{tcl|zh|United Kingdom|id=Q145}}
 #: {{meronyms|zh|英格蘭|英吉利<q:dated>|英倫<q:dated>|蘇格蘭|威爾斯<q:chiefly Taiwan and Hong Kong>|威爾士}}
 #: {{zh-x|泰晤士河 是 ^英國 第二 長 的 河流。|The River Thames is the second longest river in '''the UK'''.}}
 #: {{zh-x|英國 政府 憑.什麼 要 干涉？|On what authority can the '''British''' government interfere?}}
@@ -4137,7 +4141,7 @@ Page 104 Angleterre: -------- begin text --------
 {{fr-proper noun|f}}
 
 # {{tcl|fr|England|id=Q21}}
-# {{lb|fr|informal|often|proscribed}} {{place|fr|country|r/Northern Europe|t=United Kingdom|t2=Britain|t3=England}}
+# {{lb|fr|informal|often|proscribed}} {{tcl|fr|United Kingdom|id=Q145|t=United Kingdom|t2=Britain}}
 #: {{syn|fr|Royaume-Uni}}
 
 ====Derived terms====
@@ -4325,8 +4329,8 @@ Page 111 विलायत: -------- begin text --------
 
 # a [[foreign]] [[country]], especially one in the [[West]] ([[Europe]] and [[North America]])
 # {{lb|hi|obsolete}} {{tcl|hi|England|id=Q21}}
-# {{lb|hi|obsolete}} {{place|hi|island|r/Northern Europe|t=Great Britain}}
-# {{lb|hi|obsolete}} {{place|hi|country|r/Northern Europe|t=United Kingdom}}
+# {{lb|hi|obsolete}} {{place|hi|large island|of the|c/United Kingdom|in|r/Northern Europe|t=Great Britain}}
+# {{lb|hi|obsolete}} {{tcl|hy|United Kingdom|id=Q145}}
 # {{lb|hi|historical}} [[Persia]]
 
 ====Declension====
@@ -4501,7 +4505,7 @@ From {{bor|ja|pt|inglês||[[English]]|pos=a}}.<ref name="KDJ/><ref>{{R:Kojien}}<
 ===Proper noun===
 {{ja-pos|proper}}
 
-# {{place|ja|country|cont/Europe|t=United Kingdom}}
+# {{tcl|ja|United Kingdom|id=Q145}}
 #: {{syn|ja|英国|tr1=Eikoku|連合王国|tr2=Rengō Ōkoku}}
 # {{lb|ja|loosely|chiefly|attributive}} {{syn of|ja|ブリテン|tr=Buriten||[[Britain]]}}
 #: {{ja-usex|'''イギリス'''軍|'''^イギリス'''-ぐん|the {{w|British Armed Forces|'''British''' Armed Forces}}}}
@@ -4568,9 +4572,9 @@ From {{der|ja|ltc|-}} {{ltc-l|英國}}. The {{m|ja|漢音|tr=kan'on}} reading, s
 ===Proper noun===
 {{ja-pos|proper|えいこく}}
 
-# {{synonym of|ja|イギリス}}: {{place|ja|country|r/Northern Europe|t=United Kingdom}}
+# {{synonym of|ja|イギリス}}: {{tcl|ja|United Kingdom|id=Q145}}
 # {{synonym of|ja|イングランド}}: {{tcl|ja|England|id=Q21}}
-# {{synonym of|ja|ブリテン}}: [[Britain]], [[Great Britain]], [[United Kingdom]]
+# {{synonym of|ja|ブリテン}}: {{place|ja|large island|of the|c/United Kingdom|in|r/Northern Europe|t=Great Britain}}
 
 ===References===
 <references/>
@@ -4595,7 +4599,8 @@ From {{bor|km|fr|anglais}}.
 #: {{km-xi|ប្រទេស អង់គ្លេស|England (country)}}
 # [[English]]
 #: {{km-xi|ភាសា អង់គ្លេស|English (language)}}
-# {{lb|km|by extension}} {{place|km|island|r/Northern Europe|t=Great Britain}}
+# {{lb|km|by extension}} {{place|km|large island|of the|c/United Kingdom|in|r/Northern Europe|t=Great Britain}}
+# {{lb|km|by extension}} {{tcl|km|United Kingdom|id=Q145}}
 # {{lb|km|by extension}} [[British]]
 #: {{km-xi|ខ្ញុំ ជាតិ អង់គ្លេស|I am British}}
 # English person, British person
@@ -4802,7 +4807,7 @@ From {{suffix|lv|anglis|ija|gloss1=Englishman}}.
 #: {{ux|lv|'''Anglijas''' karogs|the flag of '''England'''|inline=1}}
 #: {{ux|lv|laipni lūdzam '''Anglijā'''|welcome to '''England'''|inline=1}}
 #: {{ux|lv|'''Anglija''' ir Apvienotās Karalistes sastāvdaļa|'''England''' is part of the United Kingdom|inline=1}}
-# {{lb|lv|by extension}} {{place|lv|country|r/Northern Europe|t=United Kingdom}}
+# {{lb|lv|by extension}} {{tcl|lv|United Kingdom|id=Q145}}
 #: {{syn|lv|Apvienotā Karaliste}}
 
 ====Declension====
@@ -4840,9 +4845,9 @@ From {{suf|lt|anglas|ija|t1=Englishman}}.
 
 # {{tcl|lt|England|id=Q21}}
 #: {{uxi|lt|sveikì atvỹkę į̃ '''Ángliją'''|welcome to '''England'''}}
-# {{lb|lt|colloquial|proscribed}} {{place|lt|island|r/Northern Europe|t=Great Britain}}
+# {{lb|lt|colloquial|proscribed}} {{place|lt|large island|of the|c/United Kingdom|in|r/Northern Europe|t=Great Britain}}
 #: {{syn|lt|Didžióji Britãnija}}
-# {{lb|lt|colloquial|proscribed}} {{place|lt|country|r/Northern Europe|t=United Kingdom}}
+# {{lb|lt|colloquial|proscribed}} {{tcl|lt|United Kingdom|id=Q145}}
 #: {{syn|lt|Didžióji Britãnija|Jungtìnė Karalỹstė|Jungtìnė Didžiõsios Britãnijos ir̃ Šiáurės Aĩrijos Karalỹstė}}
 
 ====Declension====
@@ -5044,7 +5049,7 @@ From {{inh|enm|ang|Engla land|t=land of the [[Angles]]}} by [[haplology]].
 # {{place|enm|medieval kingdom|r/Northern Europe|t=England}}
 #* '''late 14th c.''' {{w|Geoffrey Chaucer}}, ''{{w|The Canterbury Tales}}''. General Prologue: 15-16.
 #* {{RQ:Chaucer Canterbury Tales|version=Hg|title=Prologue|folio=2|url=https://viewer.library.wales/4628556#?#&cv=14&xywh=1710%2C2786%2C737%2C547|passage={{...}} and specıallẏ from euerẏ shire' ende / Of '''Engelond''' to Caunterburẏ theẏ wende / The holẏ blıſful martır foꝛ to seke / That hem hath holpen whan þᵗ theẏ weere seeke {{...}}|translation={{...}} and specially from every county's end / of '''England''' to Canterbury they went / to seek the holy blessed martyr / that had helped them when they were sick {{...}}}}
-# {{place|enm|island|r/Northern Europe|t=Britain}}
+# {{place|enm|large island|r/Northern Europe|t=Britain}}
 #* {{RQ:Chaucer Canterbury Tales|version=Hg|title=Franklin's Tale|folio=155|url=https://viewer.library.wales/4628556#?#&cv=320&xywh=406%2C1151%2C1928%2C1618|passage=A yeer and moore laﬅed this bliſful lyf, / Til that the knyght of which I ſpeke of thus, / That of Kayrrud was cleped Arveragus, / Shoop hym to goon and dwelle a yeer or twayne / In '''Engelond''', that cleped was ek Britayne|translation=A year and more lasted this blissful life, / Until the knight of whom I thus speak, / That was called Arveragus of Kayrrud, / Prepared himself to go and dwell a year or two / In '''England''', which was also called Britain}}
 #* {{Q|enm|John Wrexworth, Guyan King-of-Arms|Grant of Arms to William Swayne of Somerset|year=1461|object=Add. MS. 14295, fo. 5''b''|quote=The w{{sup|ch}} blason I the foresayd Gwyon Kinge of Armes witnesse: not then borne of any other ꝑson whatsoever he bee w{{sup|th}}in the Realme of '''England''' (otherwyse called the Ile of Great Brittaigne)|refn={{ref|{{cite-book|year=1926|title=A Collection of Miscellaneous Grants, Crests, Confirmations, Augmentations and Exemplifications of Arms in the Mss. Preserved in the British Museum, Ashmolean Library, Queen's College, Oxford, and Elsewhere|volume=77|url=https://books.google.com/books?id=GOQRAAAAIAAJ&lpg=PA192&ots=tXCuhw8_mv&pg=PA192|page=192|oclc=3986596|editor=Willoughby Aston Littledale|publisher=J. Whitehead and Son, Ltd.|location=London}}}}}}
 #: {{syn|enm|Britayne}}
@@ -5665,9 +5670,9 @@ Page 154 Anh: -------- begin text --------
 {{vi-propn|head=[[anh|Anh]]}}
 
 # {{given name|vi|unisex|from=Chinese}}
-# {{place|vi|country|r/Northern Europe|t=United Kingdom}}
+# {{tcl|vi|United Kingdom|id=Q145}}
 #: {{ux|vi|Vương quốc '''Anh'''|[[United Kingdom]]}}
-# {{place|vi|island|r/Northern Europe|t=Great Britain}}
+# {{place|vi|large island|of the|c/United Kingdom|in|r/Northern Europe|t=Great Britain}}
 #: {{ux|vi|Vương quốc Liên hiệp '''Anh''' và Bắc Ai-len|[[United Kingdom of Great Britain and Northern Ireland]]}}
 # {{tcl|vi|England|id=Q21}}
 #: {{ux|vi|'''Anh''' quốc|England}}
@@ -5872,12 +5877,12 @@ The ''[[漢音#Japanese|kan'on]]'' pronunciation, so likely a later borrowing.
 ===Proper noun===
 {{ja-pos|proper|えい}}
 
-# {{short for|ja|英吉利|tr=Igirisu}}: {{place|ja|country|r/Northern Europe|t=United Kingdom|t2=Britain}}
+# {{short for|ja|英吉利|tr=Igirisu}}: {{tcl|ja|United Kingdom|id=Q145|t=United Kingdom|t2=Britain}}
 
 ===Affix===
 {{ja-pos|affix|えい}}
 
-# {{short for|ja|英吉利|tr=Igirisu}}: {{place|ja|country|r/Northern Europe|t=United Kingdom|t2=Britain}}
+# {{short for|ja|英吉利|tr=Igirisu}}: {{tcl|ja|United Kingdom|id=Q145|t=United Kingdom|t2=Britain}}
 # {{short for|ja|英語||[[English]] (language)|tr=eigo}}
 # [[outstanding]]; outstanding [[person]]
 # [[flower]]; [[calyx]]
@@ -5954,8 +5959,8 @@ In news headlines, this is often written in the ''[[hanja]]'' form, even in cont
 {{vi-noun|sc=Hani|anh}}
 
 # {{vi-Han form of|Anh}}:
-## {{place|vi|country|r/Northern Europe|t=United Kingdom|t2=Britain}}
-## {{place|vi|island|r/Northern Europe|t=Great Britain}}
+## {{tcl|vi|United Kingdom|id=Q145}}
+## {{place|vi|large island|of the|c/United Kingdom|in|r/Northern Europe|t=Great Britain}}
 ## {{tcl|vi|England|id=Q21}}
 ## the [[English]] language
 # {{vi-Nom form of|anh|[[older brother]]}}
@@ -6050,7 +6055,7 @@ Page 158 Anh Quốc: -------- begin text --------
 ===Proper noun===
 {{vi-propn|head=[[Anh]] [[quốc|Quốc]]}}
 
-# {{syn of|vi|Anh}}: {{place|vi|country|r/Northern Europe|t=United Kingdom}}
+# {{syn of|vi|Anh}}: {{tcl|vi|United Kingdom|id=Q145}}
 -------- end text --------
 Page 159 Lloegr: -------- begin text --------
 ==Welsh==
@@ -6120,7 +6125,7 @@ From {{bor|za|cmn|-}} {{zh-l|英國}}.
 ===Proper noun===
 {{za-head|proper noun}}
 
-# {{place|za|t=United Kingdom|country|r/Northern Europe}}
+# {{tcl|za|United Kingdom|id=Q145}}
 -------- end text --------
 Page 163 Estonia: -------- begin text --------
 {{also|estonia|Estònia|Éstonia|Estónia|estónia|Èstonia|estonià|Estônia|estônia|Estonią}}
@@ -23496,7 +23501,7 @@ From {{inh|en|enm|Scotland}}, {{m|enm|Scotlond}}, from {{inh|en|ang|Scotland|t=I
 ===Proper noun===
 {{ang-proper noun|n|head=Sċotland}}
 
-# land of the Scots in [[Hibernia]], i.e. {{place|ang|island|r/Northern Europe|t=Ireland}}
+# land of the Scots in [[Hibernia]], i.e. {{place|ang|large island|r/Northern Europe|t=Ireland}}
 # land of the Scots in [[Britain]], i.e. {{place|ang|medieval kingdom|r/Northern Europe|t=Scotland}}
 
 ====Declension====
@@ -28242,7 +28247,7 @@ From {{com|en|united|kingdom}}, first attested from 1706.
 ===Proper noun===
 {{en-proper noun|head=[[united|United]] [[kingdom|Kingdom]]|def=1}}
 
-# {{senseid|en|Q145}}A [[kingdom]] and [[sovereign]] [[state]] in [[Western Europe]] comprising the four countries of [[England]], [[Scotland]] and [[Wales]] on the island of [[Great Britain]], and [[Northern Ireland]] on the northeastern portion of the island of [[Ireland]] since 1922.
+# {{senseid|en|Q145}}{{place|en|kingdom/and/country|r/Northern Europe|comprising the four countries of [[England]], [[Scotland]] and [[Wales]] on the island of [[Great Britain]], and [[Northern Ireland]] on the northeastern portion of the island of [[Ireland]] since 1922|tcl=a <<kingdom>> and <<country>> in <<r/Northern Europe>>}}.
 # {{senseid|en|Q174193}}{{lb|en|historical}} The [[United Kingdom of Great Britain and Ireland]] (1801–1922).
 # {{senseid|en|Q161885}}{{lb|en|historical|informal|nonstandard}} The [[Kingdom of Great Britain]] (1707–1801).
 # {{lb|en|nation's name}} A [[kingdom]] [[consisting]] of several [[constituency|constituencies]], either [[actual]], [[historical]], or [[hypothetical]].
@@ -28403,10 +28408,8 @@ From {{com|en|united|kingdom}}, first attested from 1706.
 {{trans-bottom}}
 
 ===See also===
-{{list:countries in Europe/en}}{{C|en|Countries in Europe}}
+{{list:countries in Europe/en}}
 * [[Appendix:Countries of the world|Countries of the world]]
-
-{{C|en|United Kingdom}}
 -------- end text --------
 Page 840 Verenigde Koninkryk: -------- begin text --------
 ==Afrikaans==
@@ -28421,7 +28424,7 @@ Page 840 Verenigde Koninkryk: -------- begin text --------
 ===Proper noun===
 {{af-proper noun|head=die [[verenigde|Verenigde]] [[koninkryk|Koninkryk]]}}
 
-# {{place|af|country|r/Western Europe|t=United Kingdom|capital=af:Londen}}
+# {{tcl|af|United Kingdom|id=Q145|place_caplc=Londen}}
 #: {{syn|af|Brittanje}}
 
 ===See also===
@@ -28438,7 +28441,7 @@ Page 841 Միացյալ Թագավորություն: -------- begin text ------
 ===Proper noun===
 {{hy-proper noun|head=[[միացյալ|Միացյալ]] [[թագավորություն|Թագավորություն]]}}
 
-# {{place|hy|country|cont/Europe|t=United Kingdom}}
+# {{tcl|hy|United Kingdom|id=Q145}}
 
 ====Declension====
 {{hy-noun-ություն|unc=on}}
@@ -28458,13 +28461,13 @@ From {{compound|as|যুক্ত|ৰাজ্য}} from {{der|as|sa|-}}.
 ===Proper noun===
 {{as-prpn}}
 
-# [[United Kingdom]]
+# {{tcl|as|United Kingdom|id=Q145}}
 
 ====Declension====
 {{as-proper noun|zuktoraizzo|ই|i}}
 
 ===See also===
-{{list:countries in Europe/as}}{{topics|as|Countries in Europe}}
+{{list:countries in Europe/as}}
 -------- end text --------
 Page 843 Reinu Xuníu: -------- begin text --------
 ==Asturian==
@@ -28473,7 +28476,7 @@ Page 843 Reinu Xuníu: -------- begin text --------
 ===Proper noun===
 {{ast-proper noun|m|head=[[reinu|Reinu]] [[xuníu|Xuníu]]}}
 
-# {{place|ast|country|cont/Europe|t=United Kingdom}}
+# {{tcl|ast|United Kingdom|id=Q145}}
 -------- end text --------
 Page 844 Birləşmiş Krallıq: -------- begin text --------
 ==Azerbaijani==
@@ -28481,7 +28484,7 @@ Page 844 Birləşmiş Krallıq: -------- begin text --------
 ===Proper noun===
 {{head|az|proper noun|head=[[birləşmiş|Birləşmiş]] [[krallıq|Krallıq]]}}
 
-# the [[United Kingdom]] {{C|az|Countries in Europe}}
+# {{tcl|az|United Kingdom|id=Q145}}
 
 ====Declension====
 {{az-decl-noun|ı|q}}
@@ -28496,7 +28499,7 @@ Page 845 Erresuma Batua: -------- begin text --------
 ===Proper noun===
 {{eu-proper noun|in|head=[[erresuma|Erresuma]] [[batu|Batua]]}}
 
-# {{place|eu|country|cont/Europe|t=United Kingdom}}
+# {{tcl|eu|United Kingdom|id=Q145}}
 
 ====Declension====
 {{eu-decl-proper-inanim|s=1|Erresuma Batu}}
@@ -28520,7 +28523,7 @@ Page 846 যুক্তরাজ্য: -------- begin text --------
 ===Proper noun===
 {{bn-proper noun|gen=যুক্তরাজ্যের|loc=যুক্তরাজ্যে}}
 
-# {{senseid|bn|Q145}}the {{place|bn|country|cont/Europe|t=United Kingdom|official=United Kingdom of Great Britain and Northern Ireland}}
+# {{tcl|bn|United Kingdom|id=Q145}}
 #* {{quote-book|bn|year=1965|author={{m|bn||হাফেজ হাবীবুর রহমান}}|title={{m|bn||পাকিস্তানের অর্থনীতি|t=Pakistan's Economy}}|publisher=Ideal Publications|page=272|url=https://books.google.co.in/books?id=_vgRAQAAIAAJ&q=%E0%A6%AF%E0%A7%81%E0%A6%95%E0%A7%8D%E0%A6%A4%E0%A6%B0%E0%A6%BE%E0%A6%9C%E0%A7%8D%E0%A6%AF&dq=%E0%A6%AF%E0%A7%81%E0%A6%95%E0%A7%8D%E0%A6%A4%E0%A6%B0%E0%A6%BE%E0%A6%9C%E0%A7%8D%E0%A6%AF&hl=en&sa=X&ved=2ahUKEwiX8tCY6vXsAhWTIbcAHZgSDK4Q6AEwCXoECAEQAg|passage=পুঁজিবাদের ত্রুটির ফলে '''যুক্তরাজ্য''' ও যুক্তরাষ্ট্রের মত দেশও বাধ্য হইয়াছে পুঁজিবাদের সংশোধন করিয়া একটি মিশ্রিত অর্থনৈতিক ব্যবস্থা গ্রহণ করিতে।|t=As a result of the flaws of capitalism, even countries like the '''United Kingdom''' and the United States have been compelled to adopt a mixed economic system by amending capitalism.|subst=মত/moto}}
 # {{lb|bn|history}} the [[United Kingdom of Great Britain and Ireland]] (1801–1922)
 
@@ -28547,7 +28550,7 @@ Page 848 यूनाइटेड किंगडम: -------- begin text ------
 ===Proper noun===
 {{hi-proper noun|g=m|ur=یونائٹڈ کنگڈم}}
 
-# {{place|hi|country|r/Western Europe|t=United Kingdom}}
+# {{tcl|hi|United Kingdom|id=Q145}}
 #: {{syn|hi|संयुक्त राजशाही|tr=sanyukta rājaśāhī}}
 
 ====Declension====
@@ -28560,13 +28563,13 @@ Page 849 Rouantelezh Unanet: -------- begin text --------
 ===Proper noun===
 {{head|br|proper noun|head=[[rouantelezh|Rouantelezh]] [[unanet|Unanet]]}}
 
-# {{place|br|country|cont/Europe|t=United Kingdom}}
+# {{tcl|br|United Kingdom|id=Q145}}
 -------- end text --------
 Page 850 ယူနိုက်တက်ကင်းဒမ်း: -------- begin text --------
 ==Burmese==
 
 ===Etymology===
-Borrowed from {{bor|my|en|United Kingdom}}.
+{{bor+|my|en|United Kingdom}}.
 
 ===Pronunciation===
 * {{my-IPA}}
@@ -28574,7 +28577,7 @@ Borrowed from {{bor|my|en|United Kingdom}}.
 ===Proper noun===
 {{my-proper noun}}
 
-# {{place|my|country|cont/Europe|t=United Kingdom}}
+# {{tcl|my|United Kingdom|id=Q145}}
 #: {{ux|my|ယူနိုက်တက်ကင်းဒမ်း[[နိုင်ငံ]]|United Kingdom (country)|inline=y}}
 -------- end text --------
 Page 851 Велика Брітанія: -------- begin text --------
@@ -28584,11 +28587,10 @@ Page 851 Велика Брітанія: -------- begin text --------
 [[File:Location-UnitedKingdom.PNG|thumb|175px|Велика Брітанія]]
 {{head|rue|proper noun|g=n|head=Велика Брітанія}}
 
-# {{place|rue|country|cont/Europe|t=United Kingdom}}
+# {{tcl|rue|United Kingdom|id=Q145|place_official=Споєне кралёвство Великой Брітанії і Северного Ірьска}}
 
 ====See also====
 * {{l|rue|Великобританія}}
-* {{l|rue|Споєне кралёвство Великой Брітанії і Северного Ірьска}}
 
 ===See also===
 * {{pedia|lang=rue}}
@@ -28604,8 +28606,7 @@ Page 852 Regne Unit: -------- begin text --------
 ===Proper noun===
 {{ca-proper noun|m|head=[[regne|Regne]] [[unit|Unit]]}}
 
-# {{place|ca|country|cont/Europe|t=United Kingdom}}
-#: {{syn|ca|Regne Unit de Gran Bretanya i Irlanda del Nord}}
+# {{tcl|ca|United Kingdom|id=Q145|place_official=Regne Unit de Gran Bretanya i Irlanda del Nord}}
 -------- end text --------
 Page 854 聯合王國: -------- begin text --------
 ==Chinese==
@@ -28621,15 +28622,13 @@ Page 854 聯合王國: -------- begin text --------
 ===Proper noun===
 {{head|zh|proper noun}}
 
-# the [[United Kingdom]]
+# {{tcl|zh|United Kingdom|id=Q145}}
 
 ====Synonyms====
 * {{zh-l|英國}}
 
 ====Derived terms====
 {{col3|zh|大不列顛及北愛爾蘭聯合王國}}
-
-{{C|zh|United Kingdom|Countries in Europe}}
 
 ==Japanese==
 {{ja-kanjitab|れん|ごう|おう|こく|yomi=goon4}}
@@ -28641,12 +28640,12 @@ Page 854 聯合王國: -------- begin text --------
 ===Proper noun===
 {{ko-propn|hangeul=연합 왕국}}
 
-# {{q|South Korea}} {{hanja form of|연합 왕국|[[United Kingdom]]}}
+# {{lb|ko|South Korea}} {{hanja form of|연합 왕국}}: {{tcl|ko|United Kingdom|id=Q145}}
 
 ===Proper noun===
 {{ko-propn|hangeul=련합 왕국}}
 
-# {{q|North Korea}} {{hanja form of|련합 왕국|[[United Kingdom]]}}
+# {{lb|ko|North Korea}} {{hanja form of|련합 왕국}}: {{tcl|ko|United Kingdom|id=Q145}}
 -------- end text --------
 Page 855 大不列顛及北愛爾蘭聯合王國: -------- begin text --------
 ==Chinese==
@@ -28664,9 +28663,7 @@ Page 855 大不列顛及北愛爾蘭聯合王國: -------- begin text --------
 ===Proper noun===
 {{head|zh|proper noun}}
 
-# the [[United Kingdom of Great Britain and Northern Ireland]]
-
-{{C|zh|United Kingdom|Countries in Europe}}
+# {{tcl|zh|United Kingdom|id=Q145|t=the [[United Kingdom of Great Britain and Northern Ireland]]}}
 -------- end text --------
 Page 856 Spojené království: -------- begin text --------
 ==Czech==
@@ -28678,7 +28675,7 @@ Page 856 Spojené království: -------- begin text --------
 ===Proper noun===
 {{cs-proper noun|n|head=[[spojený|Spojené]] [[království]]}}
 
-# {{place|cs|country|cont/Europe|t=United Kingdom|capital=London}}
+# {{tcl|cs|United Kingdom|id=Q145}}
 #: {{syn|cs|Velká Británie}}
 
 ====Declension====
@@ -28694,7 +28691,7 @@ Page 857 Forenede Kongerige: -------- begin text --------
 ===Proper noun===
 {{head|da|proper noun|g=n|head=[[forenede|Forenede]] [[kongerige|Kongerige]]}}
 
-# {{place|da|country|cont/Europe|t=United Kingdom}}
+# {{tcl|da|United Kingdom|id=Q145}}
 
 ===See also===
 {{list:countries in Europe/da}}
@@ -28711,9 +28708,9 @@ From {{com|da|stor|Britannien|t1=great}}. {{calque|da|en|Great Britain}}.
 ===Proper noun===
 {{head|da|proper noun}}
 
-# [[Great Britain]]
+# {{place|da|large island|of the|c/United Kingdom|in|r/Northern Europe|t=Great Britain}}
+# {{tcl|da|United Kingdom|id=Q145}}
 
-{{C|da|Countries in Europe|Islands}}
 {{cln|da|exonyms}}
 
 ==Swedish==
@@ -28725,7 +28722,8 @@ From {{com|da|stor|Britannien|t1=great}}. {{calque|da|en|Great Britain}}.
 ===Proper noun===
 {{sv-proper noun|n}}
 
-# [[Great Britain]]
+# {{place|sv|large island|of the|c/United Kingdom|in|r/Northern Europe|t=Great Britain}}
+# {{tcl|sv|United Kingdom|id=Q145}}
 
 ====Usage notes====
 Although formally incorrect, the most common term used when referring to the UK as a whole. The more formally correct term {{m|sv|Förenade kungariket||lit=the United Kingdom}} is almost only used in diplomatic settings.
@@ -28735,7 +28733,6 @@ Although formally incorrect, the most common term used when referring to the UK 
 * {{R:Utrikes namnbok|12}}
 * [https://mesh.kib.ki.se/term/D006113/united-kingdom Svensk MeSH]
 
-{{C|sv|Countries in Europe|Islands}}
 {{cln|sv|exonyms}}
 -------- end text --------
 Page 859 Verenigd Koninkrijk: -------- begin text --------
@@ -28751,7 +28748,7 @@ Page 859 Verenigd Koninkrijk: -------- begin text --------
 ===Proper noun===
 {{nl-proper noun|head=[[verenigd|Verenigd]] [[koninkrijk|Koninkrijk]]|n|adj=Brits|mdem=Brit|fdem=Britse}}
 
-# {{place|nl|country|cont/Europe|t=United Kingdom}}
+# {{tcl|nl|United Kingdom|id=Q145}}
 
 ===See also===
 {{list:countries in Europe/nl}}
@@ -28761,12 +28758,12 @@ Page 860 Unuiĝinta Regno: -------- begin text --------
 {{wikipedia|Unuiĝinta Reĝlando|Unuiĝinta Regno|lang=eo}}
 
 ===Etymology===
-* [[unuiĝinta]] + [[regno]]
+{{cal|eo|en|United Kingdom}}.
 
 ===Proper noun===
 {{eo-proper noun|head=[[unuiĝinta|Unuiĝinta]] [[regno|Regno]]}}
 
-# {{place|eo|country|cont/Europe|t=United Kingdom}}
+# {{tcl|eo|United Kingdom|id=Q145}}
 
 ====Synonyms====
 {{col1|eo
@@ -28787,13 +28784,11 @@ Page 861 Unuiĝinta Reĝlando: -------- begin text --------
 ===Proper noun===
 {{head|eo|proper noun|head=[[unuiĝinta|Unuiĝinta]] [[reĝlando|Reĝlando]]|accusative|Unuiĝintan Reĝlandon}}
 
-# the [[United Kingdom]]
+# {{tcl|eo|United Kingdom|id=Q145}}
 #: {{syn|eo|Britio|Britujo|Unuiĝinta Regno}}
 
 ====Holonyms====
 * {{l|eo|Komunumo de Nacioj|t=Commonwealth of Nations}}
-
-{{C|eo|United Kingdom}}
 -------- end text --------
 Page 862 Ühendkuningriik: -------- begin text --------
 ==Estonian==
@@ -28802,7 +28797,7 @@ Page 862 Ühendkuningriik: -------- begin text --------
 ===Proper noun===
 {{head|et|proper noun}}
 
-# {{place|et|country|cont/Europe|t=United Kingdom}}
+# {{tcl|et|United Kingdom|id=Q145}}
 -------- end text --------
 Page 863 Yhdistynyt kuningaskunta: -------- begin text --------
 ==Finnish==
@@ -28817,7 +28812,7 @@ Page 863 Yhdistynyt kuningaskunta: -------- begin text --------
 ===Proper noun===
 {{fi-proper noun|head=[[yhdistynyt|Yhdistynyt]] [[kuningaskunta]]}}
 
-# {{place|fi|country|cont/Europe|t=United Kingdom}}
+# {{tcl|fi|United Kingdom|id=Q145}}
 
 ====Synonyms====
 * {{l|fi|Britannia}} {{qualifier|common language}}
@@ -28837,7 +28832,7 @@ Page 864 Royaume-Uni: -------- begin text --------
 * {{alt|fr|RU|R.-U.||initialism}}
 
 ===Etymology===
-{{clq|fr|en|United Kingdom}}
+{{clq|fr|en|United Kingdom}}.
 
 ===Pronunciation===
 * {{fr-IPA|royaume‿uni}}
@@ -28846,8 +28841,7 @@ Page 864 Royaume-Uni: -------- begin text --------
 ===Proper noun===
 {{fr-proper noun|head=le [[royaume|Royaume]]-[[uni|Uni]]|m}}
 
-# {{place|fr|country|r/Western Europe|t=United Kingdom}}
-#: {{syn|fr|Royaume-Uni de Grande-Bretagne et d'Irlande du Nord}}
+# {{tcl|fr|United Kingdom|id=Q145|place_official=Royaume-Uni de Grande-Bretagne et d'Irlande du Nord}}
 
 ====See also====
 {{list:countries in Europe/fr}}
@@ -28861,7 +28855,7 @@ Page 865 Reino Unido: -------- begin text --------
 ===Proper noun===
 {{gl-proper noun|m|head=[[reino|Reino]] [[unido|Unido]]}}
 
-# {{place|gl|country|cont/Europe|t=United Kingdom}}
+# {{tcl|gl|United Kingdom|id=Q145}}
 
 ===See also===
 * {{l|gl|Gran Bretaña}}
@@ -28879,8 +28873,8 @@ From {{m|pt|reino||kingdom}} and {{m|pt|unido||united}}. {{calque|pt|en|United K
 ===Proper noun===
 {{pt-proper noun|m|head=[[reino|Reino]] [[unido|Unido]]}}
 
-# {{place|pt|country|continent/Europe|t1=United Kingdom|capital=pt:Londres}}
-#: {{syn|pt|Reino Unido da Grã-Bretanha e da Irlanda do Norte<q:official name>|Grã-Bretanha<q:informal>|Inglaterra<q:dated or informal; proscribed>}}
+# {{tcl|pt|United Kingdom|id=Q145|place_caplc=Londres|place_official=Reino Unido da Grã-Bretanha e da Irlanda do Norte}}
+#: {{syn|pt|Grã-Bretanha<l:informal>|Inglaterra<l:<<dated>> or <<informal>>; <<proscribed>>>}}
 
 ===See also===
 {{col|pt
@@ -28904,7 +28898,7 @@ From {{m|pt|reino||kingdom}} and {{m|pt|unido||united}}. {{calque|pt|en|United K
 ===Proper noun===
 {{es-proper noun|m|head=[[reino|Reino]] [[unido|Unido]]}}
 
-# {{place|es|country|cont/Europe|t=United Kingdom}}
+# {{tcl|es|United Kingdom|id=Q145}}
 
 ===See also===
 * {{l|es|Escócia}}
@@ -28924,7 +28918,7 @@ Page 866 გაერთიანებული სამეფო: -------- be
 ===Proper noun===
 {{ka-proper noun}}
 
-# {{place|ka|country|cont/Europe|t=United Kingdom}}
+# {{tcl|ka|United Kingdom|id=Q145}}
 
 ====Inflection====
 {{ka-infl-noun|-}}
@@ -28945,7 +28939,7 @@ Page 867 Vereinigtes Königreich: -------- begin text --------
 ===Proper noun===
 {{de-proper noun|[[vereinigt|Vereinigtes]]<+> [[Königreich]]<n,s:es.article>}}
 
-# {{place|de|country|r/Western Europe|t=United Kingdom}}
+# {{tcl|de|United Kingdom|id=Q145}}
 #: {{syn|de|Großbritannien<q:mildly informal>}}
 
 ====Declension====
@@ -28967,7 +28961,7 @@ Page 868 Ηνωμένο Βασίλειο: -------- begin text --------
 ===Proper noun===
 {{el-noun-proper|n|head=[[ηνωμένος|Ηνωμένο]] [[βασίλειο|Βασίλειο]]}}
 
-# {{place|el|country|cont/Europe|t=United Kingdom}}
+# {{tcl|el|United Kingdom|id=Q145}}
 
 ====Usage notes====
 {{el-GB}}
@@ -28983,16 +28977,16 @@ Page 869 Tuluit Nunaat: -------- begin text --------
 ==Greenlandic==
 
 ===Etymology===
-Lit. "land of the Englishmen".
+{{lit|land of the Englishmen}}.
 
 ===Proper noun===
 {{head|kl|proper noun|head=[[tuluit|Tuluit]] [[nunaat|Nunaat]]}}
 
-# [[England]]
+# {{tcl|kl|England|id=Q21}}
 #* 12 February '''2020''', Nukappiaaluk Hansen: "[https://sermitsiaq.ag/kl/sulorarnermi-emkalaallit-sverigemut-tulunnullu-ajorsarput Sulorarnermi EM: Kalaallit Sverigemut Tulunnullu ajorsarput]", sermitsiaq.ag
 #: {{ux|kl|'''Tuluit Nunaanni''' nunaqarpunga.|I live '''in England'''.
 }}
-# [[United Kingdom]]
+# {{tcl|kl|United Kingdom|id=Q145}}
 #* 1 February '''2019''', Walter Turnowsky: "[https://sermitsiaq.ag/kl/savalimmiut-tuluit-nunaallu-killilersugaanngitsumik-niueqatigiinnissamut-isumaqatigiissuteqarput Savalimmiut Tuluit Nunaallu killilersugaanngitsumik niueqatigiinnissamut isumaqatigiissuteqarput]", sermitsiaq.ag
 -------- end text --------
 Page 870 યુનાઇટેડ કિંગડમ: -------- begin text --------
@@ -29008,7 +29002,7 @@ Page 870 યુનાઇટેડ કિંગડમ: -------- begin text ------
 ===Proper noun===
 {{gu-proper noun}}
 
-# {{place|gu|country|continent/Europe|t=United Kingdom|capital=London}}
+# {{tcl|gu|United Kingdom|id=Q145}}
 -------- end text --------
 Page 871 Wayòm Ini: -------- begin text --------
 
@@ -29024,7 +29018,7 @@ From {{bor|ht|fr|Royaume-Uni}}.
 ===Proper noun===
 {{head|ht|proper noun}}
 
-# {{place|ht|country|continent/Europe|t1=United Kingdom}}
+# {{tcl|ht|United Kingdom|id=Q145}}
 
 ====Meronyms====
 {{col3|ht|Ekòs|Gal|Angletè|Ilann dinò}}
@@ -29043,7 +29037,7 @@ Borrowed from {{bor|ha|en|Britain}}.
 ===Proper noun===
 {{ha-proper noun|f|Bìr̃tāniyà}}
 
-# {{place|ha|country|cont/Europe|t=United Kingdom}}
+# {{tcl|ha|United Kingdom|id=Q145}}
 -------- end text --------
 Page 873 Aupuni Mōʻī Hui Pū ʻia: -------- begin text --------
 ==Hawaiian==
@@ -29054,7 +29048,7 @@ Page 873 Aupuni Mōʻī Hui Pū ʻia: -------- begin text --------
 ===Proper noun===
 {{head|haw|proper noun}}
 
-# {{place|haw|country|cont/Europe|t=United Kingdom}}
+# {{tcl|haw|United Kingdom|id=Q145}}
 -------- end text --------
 Page 874 संयुक्त राजशाही: -------- begin text --------
 ==Hindi==
@@ -29065,7 +29059,7 @@ Page 874 संयुक्त राजशाही: -------- begin text ------
 ===Proper noun===
 {{hi-proper noun|g=m|tr=sañyukta rājaśāhī}}
 
-# {{place|hi|country|cont/Europe|t=United Kingdom}}
+# {{tcl|hi|United Kingdom|id=Q145}}
 #: {{syn|hi|यूनाइटेड किंगडम}}
 
 ====Declension====
@@ -29084,7 +29078,7 @@ Page 875 Egyesült Királyság: -------- begin text --------
 ===Proper noun===
 {{head|hu|proper noun|head=[[egyesült|Egyesült]] [[királyság|Királyság]]}}
 
-# {{place|hu|country|cont/Europe|t=United Kingdom}}
+# {{tcl|hu|United Kingdom|id=Q145}}
 #: {{syn|hu|Nagy-Britannia és Észak-Írország Egyesült Királysága}}
 
 ====Declension====
@@ -29109,12 +29103,11 @@ Page 876 Nagy-Britannia és Észak-Írország Egyesült Királysága: -------- b
 ===Proper noun===
 {{head|hu|proper noun|head=[[Nagy-Britannia]] [[és]] [[Észak-Írország]] [[egyesült|Egyesült]] [[királysága|Királysága]]}}
 
-# [[United Kingdom of Great Britain and Northern Ireland]], [[United Kingdom]] (Kingdom in Europe)
+# {{tcl|hu|United Kingdom|id=Q145|t=United Kingdom of Great Britain and Northern Ireland}}
 #: {{syn|hu|Egyesült Királyság|q2=loosely|Nagy-Britannia}}
 #: {{meronyms|hu|Nagy-Britannia|Anglia|Wales|Skócia|Észak-Írország}}
 
 {{cln|hu|phrasal proper nouns}}
-{{topics|hu|United Kingdom}}
 -------- end text --------
 Page 877 Unionita Rejio: -------- begin text --------
 ==Ido==
@@ -29122,7 +29115,7 @@ Page 877 Unionita Rejio: -------- begin text --------
 ===Proper noun===
 {{head|io|proper noun|head=[[unionita|Unionita]] [[rejio|Rejio]]}}
 
-# {{place|io|country|cont/Europe|t=United Kingdom}}
+# {{tcl|io|United Kingdom|id=Q145}}
 
 ===See also===
 {{list:countries in Europe/io}}
@@ -29140,10 +29133,10 @@ Compound of {{compound|id|Britania|raya|t2=great}}, partial {{clq|id|nl|Groot-Br
 ===Proper noun===
 {{head|id|proper noun}}
 
-# {{l|en|United Kingdom of Great Britain and Northern Ireland}}, {{l|en|United Kingdom}}.
-# {{lb|id|historical}} {{l|en|United Kingdom of Great Britain and Ireland}} (1801–1922).
-# {{lb|id|historical}} The {{l|en|Kingdom of Great Britain}} (1707–1801).
-# {{l|en|Great Britain}}
+# {{tcl|id|United Kingdom|id=Q145}}
+# {{lb|id|historical}} {{l|en|United Kingdom of Great Britain and Ireland}} (1801–1922)
+# {{lb|id|historical}} The {{l|en|Kingdom of Great Britain}} (1707–1801)
+# {{place|id|large island|of the|c/United Kingdom|in|r/Northern Europe|t=Great Britain}}
 
 ====Synonyms====
 * {{l|id|Inggris}}
@@ -29151,8 +29144,6 @@ Compound of {{compound|id|Britania|raya|t2=great}}, partial {{clq|id|nl|Groot-Br
 
 ===See also===
 {{list:countries in Europe/id}}
-
-{{C|id|Countries}}
 -------- end text --------
 Page 879 Inggris Raya: -------- begin text --------
 ==Indonesian==
@@ -29167,10 +29158,10 @@ Compound of {{compound|id|Inggris|raya|t2=great}}, partial {{clq|id|nl|Groot-Bri
 ===Proper noun===
 {{head|id|proper noun}}
 
-# {{l|en|United Kingdom of Great Britain and Northern Ireland}}, {{l|en|United Kingdom}}.
+# {{tcl|id|United Kingdom|id=Q145}}
 # {{lb|id|historical}} {{l|en|United Kingdom of Great Britain and Ireland}} (1801–1922).
 # {{lb|id|historical}} The {{l|en|Kingdom of Great Britain}} (1707–1801).
-# {{l|en|Great Britain}}
+# {{place|id|large island|of the|c/United Kingdom|in|r/Northern Europe|t=Great Britain}}
 
 ====Synonyms====
 * {{l|id|Britania Raya}}
@@ -29178,8 +29169,6 @@ Compound of {{compound|id|Inggris|raya|t2=great}}, partial {{clq|id|nl|Groot-Bri
 
 ===See also===
 {{list:countries in Europe/id}}
-
-{{C|id|Countries}}
 -------- end text --------
 Page 881 Regno Unite: -------- begin text --------
 ==Interlingua==
@@ -29188,7 +29177,7 @@ Page 881 Regno Unite: -------- begin text --------
 ===Proper noun===
 {{ia-proper noun|head=[[regno|Regno]] [[unite|Unite]]}}
 
-# {{place|ia|country|cont/Europe|t=United Kingdom}}
+# {{tcl|ia|United Kingdom|id=Q145}}
 
 ====Meronyms====
 * {{l|ia|Anglaterra}}
@@ -29205,10 +29194,7 @@ Page 882 Ríocht Aontaithe: -------- begin text --------
 ===Proper noun===
 {{ga-proper noun|f|head=an [[ríocht|Ríocht]] [[aontaithe|Aontaithe]]|na [[Ríochta Aontaithe]]}}
 
-# {{place|ga|country|cont/Europe|t=United Kingdom}}
-
-====Synonyms====
-* {{l|ga|Ríocht Aontaithe na Breataine Móire agus Thuaisceart Éireann}}
+# {{tcl|ga|United Kingdom|id=Q145|place_official=Ríocht Aontaithe na Breataine Móire agus Thuaisceart Éireann}}
 -------- end text --------
 Page 883 Regno Unito: -------- begin text --------
 ==Italian==
@@ -29223,8 +29209,8 @@ Page 883 Regno Unito: -------- begin text --------
 ===Proper noun===
 {{it-proper noun|m|head=[[regno|Regno]] [[unito|Unito]]}}
 
-# {{place|it|country|cont/Europe|t=United Kingdom}}
-#: {{syn|it|Regno Unito di Gran Bretagna e Irlanda del Nord|Inghilterra|q2=colloquial, mistakenly|lit2=England|Gran Bretagna|q3=colloquial, mistakenly|lit3=Great Britain}}
+# {{tcl|it|United Kingdom|id=Q145|place_official=Regno Unito di Gran Bretagna e Irlanda del Nord}}
+#: {{syn|it|Inghilterra<ll:colloquial,mistakenly><lit:England>|Gran Bretagna<ll:colloquial,mistakenly><lit:Great Britain>}}
 
 ====Hyponyms====
 * {{l|it|Gran Bretagna|t=Great Britain}}
@@ -29243,7 +29229,7 @@ Page 884 Regno Unito di Gran Bretagna e Irlanda del Nord: -------- begin text --
 ===Proper noun===
 {{head|it|proper noun|head=[[Regno Unito]] [[di]] [[Gran Bretagna]] [[e]] [[Irlanda del Nord]]|head2=[[Regno Unito]] [[di]] [[Gran Bretagna]] [[e|ed]] [[Irlanda del Nord]]|g=m}}
 
-# {{lb|it|official|rare}} the [[United Kingdom of Great Britain and Northern Ireland]]
+# {{lb|it|official|rare}} {{tcl|it|United Kingdom|id=Q145|t=United Kingdom of Great Britain and Northern Ireland}}
 #: {{syn|it|Regno Unito|q=common}}
 
 ====Hyponyms====
@@ -29252,8 +29238,6 @@ Page 884 Regno Unito di Gran Bretagna e Irlanda del Nord: -------- begin text --
 * {{l|it|Galles|t=Wales}}
 * {{l|it|Irlanda del Nord|t=Northern Ireland}}
 * {{l|it|Scozia|t=Scotland}}
-
-{{C|it|Countries|Countries in Europe|United Kingdom}}
 -------- end text --------
 Page 887 グレートブリテン及び北アイルランド連合王国: -------- begin text --------
 ==Japanese==
@@ -29268,13 +29252,11 @@ Page 887 グレートブリテン及び北アイルランド連合王国: ------
 ===Proper noun===
 {{ja-pos|proper|^グレート ^ブリテン および ^きた ^アイルランド ^れんごう ^おうこく}}
 
-# the [[United Kingdom of Great Britain and Northern Ireland]]
+# {{tcl|ja|United Kingdom|id=Q145|t=United Kingdom of Great Britain and Northern Ireland}}
 
 ===See also===
 * {{ja-r|^イギリス}}
 * {{ja-r|グレートブリテン及びアイルランド連%合%王%国|^グレート ^ブリテン および ^アイルランド ^れん%ごう% ^おう%こく}}
-
-{{C|ja|United Kingdom|Northern Ireland|Countries in Europe}}
 -------- end text --------
 Page 888 連合王国: -------- begin text --------
 {{also|聯合王國}}
@@ -29292,7 +29274,7 @@ Page 888 連合王国: -------- begin text --------
 ===Proper noun===
 {{ja-pos|proper|れんごう おうこく|hhira=れんがふ わうこく}}
 
-# the [[United Kingdom]]
+# {{tcl|ja|United Kingdom|id=Q145}}
 
 ====Synonyms====
 * {{ja-r|イギリス|caps=y}}
@@ -29300,8 +29282,6 @@ Page 888 連合王国: -------- begin text --------
 
 ===See also===
 * {{ja-r|グレートブリテン及び北アイルランド連%合%王%国|^グレート ^ブリテン および ^きた ^アイルランド ^れん%ごう% ^おう%こく}}
-
-{{C|ja|United Kingdom|Countries in Europe}}
 -------- end text --------
 Page 889 ಯುನೈಟೆಡ್ ಕಿಂಗ್‌ಡಂ: -------- begin text --------
 ==Kannada==
@@ -29316,7 +29296,7 @@ Page 889 ಯುನೈಟೆಡ್ ಕಿಂಗ್‌ಡಂ: -------- begin text 
 ===Proper noun===
 {{kn-proper noun}}
 
-# {{place|kn|country|continent/Europe|t=United Kingdom|capital=London}}
+# {{tcl|kn|United Kingdom|id=Q145}}
 -------- end text --------
 Page 890 Біріккен Корольдік: -------- begin text --------
 ==Kazakh==
@@ -29325,7 +29305,7 @@ Page 890 Біріккен Корольдік: -------- begin text --------
 ===Proper noun===
 {{kk-prop|head=[[біріккен|Біріккен]] [[корольдік|Корольдік]]}}
 
-# {{place|kk|country|cont/Europe|t=United Kingdom}}
+# {{tcl|kk|United Kingdom|id=Q145}}
 
 ====See also====
 * {{l|kk|Ұлыбритания}}
@@ -29337,14 +29317,12 @@ Page 891 Құрама Патшалық: -------- begin text --------
 ===Proper noun===
 {{kk-prop|head=[[құрама|Құрама]] [[патшалық|Патшалық]]}}
 
-# [[United Kingdom]]
+# {{tcl|kk|United Kingdom|id=Q145}}
 
 ====Related terms====
 * {{l|kk|Біріккен Патшалық}}, {{l|kk|Біріккен Корольдігі}}
 * {{l|kk|Ұлыбритания}}
 * {{l|kk|Ұлыбритания және Солтүстік Ирландия Біріккен Корольдігі}}, {{l|kk|Ұлыбритания және Солтүстік Ирландия Біріккен Патшалығы}}
-
-{{C|kk|Countries in Europe}}
 -------- end text --------
 Page 892 ចក្រភពអង់គ្លេស: -------- begin text --------
 ==Khmer==
@@ -29358,7 +29336,7 @@ Page 892 ចក្រភពអង់គ្លេស: -------- begin text -------
 ===Proper noun===
 {{km-proper noun|head=[[ចក្រភព]][[អង់គ្លេស]]}}
 
-# {{place|km|country|cont/Europe|t=United Kingdom}}
+# {{tcl|km|United Kingdom|id=Q145}}
 #: {{syn|km|រាជាណាចក្ររួម}}
 -------- end text --------
 Page 893 សហរាជាណាចក្រ: -------- begin text --------
@@ -29373,7 +29351,7 @@ Page 893 សហរាជាណាចក្រ: -------- begin text --------
 ===Proper noun===
 {{km-proper noun}}
 
-# {{place|km|country|cont/Europe|t=United Kingdom}}
+# {{tcl|km|United Kingdom|id=Q145}}
 -------- end text --------
 Page 894 រាជាណាចក្ររួម: -------- begin text --------
 ==Khmer==
@@ -29385,12 +29363,10 @@ Page 894 រាជាណាចក្ររួម: -------- begin text --------
 ===Proper noun===
 {{km-proper noun|head=[[រាជាណាចក្រ]][[រួម]]}}
 
-# [[United Kingdom]]
+# {{tcl|km|United Kingdom|id=Q145}}
 
 ====Synonyms====
 * {{l|km|ចក្រភពអង់គ្លេស}}
-
-{{C|km|Countries in Europe}}
 -------- end text --------
 Page 895 युनायटेड किंगडम: -------- begin text --------
 ==Konkani==
@@ -29404,7 +29380,7 @@ Page 895 युनायटेड किंगडम: -------- begin text ------
 ===Proper noun===
 {{kok-pos|proper|Yunaittedd Kingddom|ಯುನಾಯ್ಟೆಡ್ ಕಿಂಗ್ಡಮ್}}
 
-# {{place|kok|country|region/Western Europe|t=United Kingdom}}
+# {{tcl|kok|United Kingdom|id=Q145}}
 #: {{syn|kok|ब्रिटन|ग्रेट ब्रिटन|यूके}}
 
 ===References===
@@ -29419,7 +29395,7 @@ Page 896 ສະຫະລາຊະອານາຈັກ: -------- begin text ----
 ===Proper noun===
 {{lo-proper noun}}
 
-# {{place|lo|country|cont/Europe|t=United Kingdom}}
+# {{tcl|lo|United Kingdom|id=Q145}}
 -------- end text --------
 Page 897 Apvienotā Karaliste: -------- begin text --------
 ==Latvian==
@@ -29433,8 +29409,8 @@ Page 897 Apvienotā Karaliste: -------- begin text --------
 ===Proper noun===
 {{lv-proper noun|f|5th|head=[[apvienotā|Apvienotā]] [[karaliste|Karaliste]]}}
 
-# {{place|lv|country|cont/Europe|t=United Kingdom}}
-#: {{ux|lv|'''Apvienotā Karaliste''' ir unitāra valsts, kas sastāv no četrām daļām: Anglijas, Ziemeļīrijas, Skotijas un Velsas|the '''United Kingdom''' is a unitary state which consists of four parts: England, Northern Ireland, Scotland and Wales|inline=1}}
+# {{tcl|lv|United Kingdom|id=Q145}}
+#: {{ux|lv|'''Apvienotā Karaliste''' ir unitāra valsts, kas sastāv no četrām daļām: Anglijas, Ziemeļīrijas, Skotijas un Velsas|the '''United Kingdom''' is a unitary state which consists of four parts: England, Northern Ireland, Scotland and Wales}}
 
 ====Declension====
 {{lv-decl-AdjN|Apvienot|def|Karali|e|5th|no-pl|st|st||proper}}
@@ -29463,8 +29439,8 @@ Page 898 Lielbritānijas un Ziemeļīrijas Apvienotā Karaliste: -------- begin 
 ===Proper noun===
 {{lv-proper noun|f|5th|head=[[Lielbritānijas]] [[un]] [[Ziemeļīrijas]] [[apvienotā|Apvienotā]] [[karaliste|Karaliste]]}}
 
-# [[official]] [[name]] of the [[United Kingdom]]
-#: {{ux|lv|Apvienotā Karaliste, oficiāli '''Lielbritānijas un Ziemeļīrijas Apvienotā Karaliste''', ir valsts Eiropas Ziemeļrietumu piekrastē|the United Kingdom, officially the '''United Kingdom of Great Britain and Northern Ireland''', is a state in the Northwest coast of Europe|inline=1}}
+# {{tcl|lv|United Kingdom|id=Q145|t=United Kingdom of Great Britain and Northern Ireland}}
+#: {{ux|lv|Apvienotā Karaliste, oficiāli '''Lielbritānijas un Ziemeļīrijas Apvienotā Karaliste''', ir valsts Eiropas Ziemeļrietumu piekrastē|the United Kingdom, officially the '''United Kingdom of Great Britain and Northern Ireland''', is a state in the Northwest coast of Europe}}
 
 ====Declension====
 {{lv-decl-AdjN|Lielbritānijas un Ziemeļīrijas Apvienot|def|Karali|e|5th|no-pl|st|st|extrawidth=120}}
@@ -29479,8 +29455,6 @@ Page 898 Lielbritānijas un Ziemeļīrijas Apvienotā Karaliste: -------- begin 
 * {{l|lv|Skotija}}
 * {{l|lv|Velsa}}
 * {{l|lv|Ziemeļīrija}}
-
-{{C|lv|Countries|Countries in Europe|United Kingdom}}
 -------- end text --------
 Page 899 Jungtinė Karalystė: -------- begin text --------
 ==Lithuanian==
@@ -29491,12 +29465,11 @@ Page 899 Jungtinė Karalystė: -------- begin text --------
 ===Proper noun===
 {{lt-proper noun|f|head=Jungtìnė Karalỹstė}}
 
-# {{place|lt|country|cont/Europe|t=United Kingdom}}
+# {{tcl|lt|United Kingdom|id=Q145|place_official=Jungtìnė Didžiõsios Britãnijos ir̃ Šiáurės Aĩrijos Karalỹstė}}
 
 ====Synonyms====
 * {{l|lt|Ánglija}}
 * {{l|lt|Didžióji Britãnija}}
-* {{l|lt|Jungtìnė Didžiõsios Britãnijos ir̃ Šiáurės Aĩrijos Karalỹstė}}
 
 ====See also====
 * {{l|lt|Ánglija}}
@@ -29514,7 +29487,7 @@ Page 900 Обединето Кралство: -------- begin text --------
 ===Proper noun===
 {{mk-proper noun|n|head=[[обединето|Обединето]] [[кралство|Кралство]]}}
 
-# {{place|mk|country|cont/Europe|t=United Kingdom}}
+# {{tcl|mk|United Kingdom|id=Q145}}
 
 ====Declension====
 {{mk-decl-adjnoun-n|Обединет|Кралств|n=sg}}
@@ -29532,7 +29505,7 @@ Page 901 संयुक्त अधिराज्य: -------- begin text ---
 ===Proper noun===
 {{ne-proper noun}}
 
-# {{place|ne|country|continent/Europe|t=United Kingdom|capital=London}}
+# {{tcl|ne|United Kingdom|id=Q145}}
 -------- end text --------
 Page 902 യുണൈറ്റഡ് കിങ്ഡം: -------- begin text --------
 ==Malayalam==
@@ -29547,7 +29520,7 @@ Page 902 യുണൈറ്റഡ് കിങ്ഡം: -------- begin text ---
 ===Proper noun===
 {{ml-proper noun}}
 
-# {{place|ml|country|continent/Europe|t=United Kingdom|capital=London}}
+# {{tcl|ml|United Kingdom|id=Q145}}
 -------- end text --------
 Page 903 Renju Unit: -------- begin text --------
 ==Maltese==
@@ -29576,7 +29549,7 @@ Page 904 युनायटेड किंग्डम: -------- begin text ---
 ===Proper noun===
 {{mr-proper noun}}
 
-# {{place|mr|country|continent/Europe|t=United Kingdom|capital=London}}
+# {{tcl|mr|United Kingdom|id=Q145}}
 -------- end text --------
 Page 905 Tótaʼ Dineʼé Bikéyah: -------- begin text --------
 ==Navajo==
@@ -29588,7 +29561,7 @@ Page 905 Tótaʼ Dineʼé Bikéyah: -------- begin text --------
 ===Proper noun===
 {{head|nv|proper noun|head=[[Tótaʼ Dineʼé]] [[bikéyah|Bikéyah]]}}
 
-# {{place|nv|country|cont/Europe|t=United Kingdom}}
+# {{tcl|nv|United Kingdom|id=Q145}}
 -------- end text --------
 Page 906 Rouoyaume Unni: -------- begin text --------
 ==Norman==
@@ -29599,10 +29572,7 @@ Page 906 Rouoyaume Unni: -------- begin text --------
 ===Proper noun===
 {{nrf-proper noun|head=Lé [[rouoyaume|Rouoyaume]] [[unni|Unni]]|m}}
 
-# {{lb|nrf|Jersey}} {{place|nrf|country|cont/Europe|t=United Kingdom}}
-
-====Derived terms====
-* {{l|nrf|Rouoyaume Unni d'la Grande Brétangne et d'l'Irlande du Nord||United Kingdom of Great Britain and Northern Ireland}}
+# {{lb|nrf|Jersey}} {{tcl|nrf|United Kingdom|id=Q145|place_official=Rouoyaume Unni d'la Grande Brétangne et d'l'Irlande du Nord}}
 -------- end text --------
 Page 907 Det forente kongerike Storbritannia og Nord-Irland: -------- begin text --------
 ==Norwegian Bokmål==
@@ -29611,7 +29581,7 @@ Page 907 Det forente kongerike Storbritannia og Nord-Irland: -------- begin text
 ===Proper noun===
 {{head|nb|proper noun|g=n}}
 
-# the [[United Kingdom of Great Britain and Northern Ireland]] ([[full name]])
+# {{tcl|nb|United Kingdom|id=Q145|t=United Kingdom of Great Britain and Northern Ireland}}
 
 ====Synonyms====
 * {{l|nb|Storbritannia}} {{q|[[short form]]}}
@@ -29622,8 +29592,6 @@ Page 907 Det forente kongerike Storbritannia og Nord-Irland: -------- begin text
 
 ===See also===
 * {{l-nn|Det sameinte kongeriket Storbritannia og Nord-Irland}}
-
-{{C|nb|Countries}}
 -------- end text --------
 Page 908 Det sameinte kongeriket Storbritannia og Nord-Irland: -------- begin text --------
 #REDIRECT [[sameinte kongeriket Storbritannia og Nord-Irland]]
@@ -29635,7 +29603,7 @@ Page 909 Reialme Unit: -------- begin text --------
 ===Proper noun===
 {{oc-proper noun|m|head=[[reialme|Reialme]] [[unit|Unit]]}}
 
-# {{place|oc|country|cont/Europe|t=United Kingdom}}
+# {{tcl|oc|United Kingdom|id=Q145}}
 -------- end text --------
 Page 910 ଯୁକ୍ତରାଜ୍ୟ: -------- begin text --------
 ==Odia==
@@ -29650,7 +29618,7 @@ From {{com|or|ଯୁକ୍ତ|ରାଜ୍ୟ}}, a {{calque|or|en|United Kingdom
 ===Proper noun===
 {{or-proper noun}}
 
-# {{place|or|country|continent/Europe|t=United Kingdom|capital=London}}
+# {{tcl|or|United Kingdom|id=Q145}}
 -------- end text --------
 Page 911 Зєдинєне Кральовство: -------- begin text --------
 ==Pannonian Rusyn==
@@ -29665,7 +29633,7 @@ Page 911 Зєдинєне Кральовство: -------- begin text --------
 ===Proper noun===
 {{head|rsk|proper noun|g=n|head=[[зєдинєни|Зєдинєне]] [[кральовство|Кральовство]]|related adjective|британски}}
 
-# {{place|rsk|country|cont/Europe|t=United Kingdom}}
+# {{tcl|psk|United Kingdom|id=Q145}}
 
 ====Declension====
 {{rsk-decl-noun-table|Зєдинєне Кральовство|Зєдинєного Кральовства|Зєдинєному Кральовству|Зєдинєне Кральовство|Зєдинєним Кральовством|[[Зєдинєним Кральовстве]] / [[Зєдинєному Кральовстве]]|Зєдинєне Кральовство}}
@@ -29695,7 +29663,7 @@ Page 912 Zjednoczone Królestwo: -------- begin text --------
 ===Proper noun===
 {{pl-proper noun|n|head=[[zjednoczony|Zjednoczone]] [[królestwo|Królestwo]]}}
 
-# {{place|pl|country|r/Western Europe|t=United Kingdom}}
+# {{tcl|pl|United Kingdom|id=Q145}}
 #: {{syn|pl|Wielka Brytania}}
 
 ====Declension====
@@ -29720,7 +29688,8 @@ Page 913 Wielka Brytania: -------- begin text --------
 ===Proper noun===
 {{pl-proper noun|f|head=[[wielki|Wielka]] [[Brytania]]}}
 
-# {{place|pl|island/and/country|r/Western Europe|t=Great Britain}}
+# {{place|pl|large island|of the|c/United Kingdom|in|r/Northern Europe|t=Great Britain}}
+# {{lb|pl|loosely}} {{tcl|pl|United Kingdom|id=Q145}}
 
 ====Declension====
 {{pl-decl-phrase|adj-f|f|tantum=s}}
@@ -29736,7 +29705,6 @@ Page 913 Wielka Brytania: -------- begin text --------
 * {{R:pl:WSJP}}
 * {{R:pl:PWN}}
 
-{{C|pl|United Kingdom}}
 {{cln|pl|exonyms}}
 -------- end text --------
 Page 914 ਸੰਯੁਕਤ ਬਾਦਸ਼ਾਹੀ: -------- begin text --------
@@ -29751,7 +29719,7 @@ Page 914 ਸੰਯੁਕਤ ਬਾਦਸ਼ਾਹੀ: -------- begin text ------
 ===Proper noun===
 {{pa-proper noun}}
 
-# {{place|pa|country|continent/Europe|t=United Kingdom|capital=London}}
+# {{tcl|pa|United Kingdom|id=Q145}}
 #: {{syn|pa|ਯੂਨਾਈਟਡ ਕਿੰਗਡਮ}}
 -------- end text --------
 Page 915 Hukllachasqa Qhapaq Suyu: -------- begin text --------
@@ -29760,7 +29728,7 @@ Page 915 Hukllachasqa Qhapaq Suyu: -------- begin text --------
 ===Proper noun===
 {{head|qu|proper noun|head=[[hukllachasqa|Hukllachasqa]] [[qhapaq|Qhapaq]] [[suyu|Suyu]]}}
 
-# {{place|qu|country|cont/Europe|t=United Kingdom}}
+# {{tcl|qu|United Kingdom|id=Q145}}
 -------- end text --------
 Page 916 Paratāne: -------- begin text --------
 ==Rarotongan==
@@ -29771,9 +29739,9 @@ Borrowed from {{bor|rar|en|Britain}}.
 ===Proper noun===
 {{head|rar|proper noun|head=Paratāne}}
 
-# {{place|rar|island|c/United Kingdom|t1=Great Britain|t2=Britain}}
-# {{place|rar|country|continent/Europe|t1=United Kingdom|t2=Britain}}
-# {{place|rar|country|c/United Kingdom|t1=England}}
+# {{place|rar|large island|of the|c/United Kingdom|in|r/Northern Europe|t=Great Britain|t2=Britain}}
+# {{tcl|rar|United Kingdom|id=Q145}}
+# {{tcl|rar|England|id=Q21}}
 
 ===References===
 {{R:CIL}}
@@ -29784,7 +29752,7 @@ Page 917 Regatul Unit al Marii Britanii și Irlandei de Nord: -------- begin tex
 ===Proper noun===
 {{head|ro|proper noun}}
 
-# [[United Kingdom of Great Britain and Northern Ireland]]
+# {{tcl|ro|United Kingdom|id=Q145|t=United Kingdom of Great Britain and Northern Ireland}}
 -------- end text --------
 Page 918 Regatul Unit: -------- begin text --------
 ==Romanian==
@@ -29798,7 +29766,7 @@ Page 918 Regatul Unit: -------- begin text --------
 ===Proper noun===
 {{ro-proper noun|n|head=[[regat|Regatul]] [[unit|Unit]]}}
 
-# {{place|ro|country|cont/Europe|t=United Kingdom}}
+# {{tcl|ro|United Kingdom|id=Q145|place_official=Regatul Unit al Marii Britanii și Irlandei de Nord}}
 
 ====See also====
 * {{l|ro|britanic}}
@@ -29810,7 +29778,7 @@ Page 919 Unitit Kinrick: -------- begin text --------
 ===Proper noun===
 {{head|sco|proper noun|head=[[unitit|Unitit]] [[kinrick|Kinrick]]}}
 
-# {{place|sco|country|cont/Europe|t=United Kingdom}}
+# {{tcl|sco|United Kingdom|id=Q145}}
 -------- end text --------
 Page 920 Rìoghachd Aonaichte: -------- begin text --------
 ==Scottish Gaelic==
@@ -29821,15 +29789,11 @@ Page 920 Rìoghachd Aonaichte: -------- begin text --------
 ===Proper noun===
 {{head|gd|proper noun|head=An [[rìoghachd|Rìoghachd]] [[aonaichte|Aonaichte]]|g=f|genitive|'''Na Rìoghachd Aonaichte'''}}
 
-# The [[United Kingdom]]
+# {{tcl|gd|United Kingdom|id=Q145|place_official=Rìoghachd Aonaichte na Breatainn Mhòr agus Eirinn a Tuath}}
 
 ====Usage notes====
 Always preceded by the article.
 
-====Synonyms====
-* {{l|gd|Rìoghachd Aonaichte na Breatainn Mhòr agus Eirinn a Tuath}}
-
-{{C|gd|Countries|United Kingdom}}
 {{cln|gd|exonyms}}
 -------- end text --------
 Page 921 Rìoghachd Aonaichte na Breatainn Mhòr agus Eirinn a Tuath: -------- begin text --------
@@ -29838,7 +29802,7 @@ Page 921 Rìoghachd Aonaichte na Breatainn Mhòr agus Eirinn a Tuath: -------- b
 ===Proper noun===
 {{head|gd|proper noun|head=An [[Rìoghachd Aonaichte]] na [[Breatainn Mhòr]] agus [[Eirinn mu Thuath|Eirinn a Tuath]]|g=f}}
 
-# [[United Kingdom|The United Kingdom of Great Britain and Northern Ireland]]
+# {{tcl|gd|United Kingdom|id=Q145|t=United Kingdom of Great Britain and Northern Ireland}}
 
 ====Usage notes====
 Always preceded by the article.
@@ -29846,7 +29810,6 @@ Always preceded by the article.
 ====Synonyms====
 * {{l|gd|Rìoghachd Aonaichte}}
 
-{{C|gd|Countries|United Kingdom}}
 {{cln|gd|exonyms}}
 -------- end text --------
 Page 922 Уједињено Краљевство: -------- begin text --------
@@ -29855,7 +29818,7 @@ Page 922 Уједињено Краљевство: -------- begin text --------
 ===Proper noun===
 {{sh-proper noun|g=n|head=[[уједињено|Уједињено]] [[краљевство|Краљевство]]}}
 
-# {{place|sh|country|cont/Europe|t=United Kingdom}}
+# {{tcl|sh|United Kingdom|id=Q145}}
 -------- end text --------
 Page 923 Ujedinjeno Kraljevstvo: -------- begin text --------
 ==Serbo-Croatian==
@@ -29863,7 +29826,7 @@ Page 923 Ujedinjeno Kraljevstvo: -------- begin text --------
 ===Proper noun===
 {{sh-proper noun|g=n|head=[[ujedinjeno|Ujedinjeno]] [[kraljevstvo|Kraljevstvo]]}}
 
-# {{place|sh|country|cont/Europe|t=United Kingdom}}
+# {{tcl|sh|United Kingdom|id=Q145}}
 -------- end text --------
 Page 925 گڏيل بادشاھت: -------- begin text --------
 ==Sindhi==
@@ -29878,7 +29841,7 @@ Page 925 گڏيل بادشاھت: -------- begin text --------
 ===Proper noun===
 {{sd-proper noun}}
 
-# {{place|sd|country|continent/Europe|t=United Kingdom|capital=London}}
+# {{tcl|sd|United Kingdom|id=Q145}}
 -------- end text --------
 Page 926 Spojené kráľovstvo: -------- begin text --------
 ==Slovak==
@@ -29890,8 +29853,7 @@ Page 926 Spojené kráľovstvo: -------- begin text --------
 ===Proper noun===
 {{sk-proper noun|n|head=[[spojený|Spojené]] [[kráľovstvo]]}}
 
-# {{place|sk|country|cont/Europe|t=United Kingdom}}
-#: {{syn|sk|Spojené kráľovstvo Veľkej Británie a Severného Írska<g:n>}}
+# {{tcl|sk|United Kingdom|id=Q145|place_official=Spojené kráľovstvo Veľkej Británie a Severného Írska<g:n>}}
 
 ====Declension====
 {{sk-ndecl|n|n=sg}}
@@ -29908,15 +29870,13 @@ Page 927 Förenade kungariket: -------- begin text --------
 ===Proper noun===
 {{sv-proper noun|n}}
 
-# {{senseid|sv|Q145}} the [[United Kingdom]]
+# {{tcl|sv|United Kingdom|id=Q145}}
 
 ====Usage notes====
 While formally correct, only used in diplomatic settings. The less formally correct term {{m|sv|Storbritannien|lit=Great Britain}} is almost always used in other settings, even when referring to the UK as a whole.
 
 ===References===
 * {{R:Utrikes namnbok|12}}
-
-{{C|sv|Countries in Europe|United Kingdom}}
 -------- end text --------
 Page 928 Reyno Unido: -------- begin text --------
 ==Tagalog==
@@ -29931,7 +29891,7 @@ Page 928 Reyno Unido: -------- begin text --------
 ===Proper noun===
 {{tl-proper noun|[[reyno|Reyno]] [[unido|Unido]]|b=+}}
 
-# {{place|tl|country|cont/Europe|t=United Kingdom}}
+# {{tcl|tl|United Kingdom|id=Q145}}
 #: {{syn|tl|Gran Britanya|Britanya|Nagkakaisang Kaharian}}
 -------- end text --------
 Page 929 Подшоҳии Муттаҳида: -------- begin text --------
@@ -29960,7 +29920,7 @@ Page 930 ஐக்கிய இராச்சியம்: -------- begin text 
 ===Proper noun===
 {{ta-proper noun|head=[[ஐக்கியம்|ஐக்கிய]] [[இராச்சியம்]]}}
 
-# {{place|ta|country|region/Europe|t=United Kingdom}}
+# {{tcl|ta|United Kingdom|id=Q145}}
 
 ====Declension====
 {{ta-decl}}
@@ -29978,7 +29938,7 @@ Page 931 యునైటెడ్ కింగ్‌డమ్: -------- begin te
 ===Proper noun===
 {{te-proper noun}}
 
-# {{place|te|country|continent/Europe|t=United Kingdom|capital=London}}
+# {{tcl|te|United Kingdom|id=Q145}}
 -------- end text --------
 Page 932 สหราชอาณาจักร: -------- begin text --------
 ==Thai==
@@ -29992,12 +29952,12 @@ Page 932 สหราชอาณาจักร: -------- begin text --------
 ===Noun===
 {{th-noun|head=[[สห]][[ราชอาณาจักร]]}}
 
-# any [[unite]]d [[kingdom]].
+# any [[unite]]d [[kingdom]]
 
 ===Proper noun===
 {{th-proper noun|head=[[สห]][[ราชอาณาจักร]]}}
 
-# {{place|th|country|cont/Europe|t=United Kingdom}}
+# {{tcl|th|United Kingdom|id=Q145|place_official=สหราชอาณาจักรเกรตบริเตนและนอร์เทิร์นไอร์แลนด์}}
 
 ====Derived terms====
 {{col-top|2|der}}
@@ -30018,7 +29978,7 @@ Page 933 Birleşik Krallık: -------- begin text --------
 ===Proper noun===
 {{tr-proper noun|head=[[birleşik|Birleşik]] [[krallık|Krallık]]}}
 
-# {{place|tr|country|cont/Europe|t=United Kingdom}}
+# {{tcl|tr|United Kingdom|id=Q145}}
 #: {{syn|tr|BK}}
 -------- end text --------
 Page 934 Birleşen Patyşalyk: -------- begin text --------
@@ -30028,7 +29988,7 @@ Page 934 Birleşen Patyşalyk: -------- begin text --------
 ===Proper noun===
 {{head|tk|proper noun}}
 
-# {{place|tk|country|cont/Europe|t=United Kingdom}}
+# {{tcl|tk|United Kingdom|id=Q145}}
 #: {{syn|tk|Beýik Britaniýa}}
 
 ====Declension====
@@ -30041,7 +30001,7 @@ Page 935 Birlashgan Qirollik: -------- begin text --------
 ===Proper noun===
 {{head|uz|proper noun|head=[[birlashgan|Birlashgan]] [[qirollik|Qirollik]]}}
 
-# {{place|uz|country|cont/Europe|t=United Kingdom}}
+# {{tcl|uz|United Kingdom|id=Q145}}
 
 ====Declension====
 {{uz-decl-noun}}
@@ -30061,11 +30021,11 @@ Page 937 Teyrnas Unedig: -------- begin text --------
 ===Proper noun===
 {{cy-noun|f|head=[[y]] [[teyrnas|Deyrnas]] [[unedig|Unedig]]}}
 
-# {{tcl|cy|United Kingdom|id=Q145}}
-#: {{syn|cy|Teyrnas Gyfunol|alt1=Y Deyrnas Gyfunol|Teyrnas Unedig Prydain Fawr a Gogledd Iwerddon}}
+# {{tcl|cy|United Kingdom|id=Q145|place_official=Teyrnas Unedig Prydain Fawr a Gogledd Iwerddon}}
+#: {{syn|cy|Teyrnas Gyfunol|alt1=Y Deyrnas Gyfunol}}
 
 ====Coordinate terms====
-{{list:countries in Europe/cy}}{{topics|cy|Countries in Europe}}
+{{list:countries in Europe/cy}}
 
 ===Mutation===
 {{cy-mut}}
@@ -30082,8 +30042,7 @@ Page 938 פֿאַראייניקט קעניגרײַך: -------- begin text ------
 ===Proper noun===
 {{yi-proper noun|g=n|head=[[דאָס]] [[פֿאַראייניקט|פֿאַראייניקטע]] [[קעניגרײַך]]}}
 
-# {{place|yi|country|cont/Europe|t=United Kingdom}}
-#: {{syn|yi|פֿאַראייניקט קעניגרײַך פֿון גרויסבריטאַניע און צפֿון־אירלאַנד|tr=fareynikt kenigraykh fun groysbritanye un tsofn-irland}}
+# {{tcl|hy|United Kingdom|id=Q145|place_official=פֿאַראייניקט קעניגרײַך פֿון גרויסבריטאַניע און צפֿון־אירלאַנד<tr:fareynikt kenigraykh fun groysbritanye un tsofn-irland>}}
 -------- end text --------
 Page 940 Wales: -------- begin text --------
 {{also|wales|Wales'}}
@@ -30685,7 +30644,7 @@ From {{m|la|Gallus|t=Gaulish}}
 ===Proper noun===
 {{la-proper noun|Gallī<2>|g=m}}
 
-# [[Celtic]] [[tribe]]s speaking Gaulish languages. {{C|la|Celtic tribes}}
+# [[Celtic]] [[tribe]]s speaking Gaulish languages {{C|la|Celtic tribes}}
 
 ====Declension====
 {{la-ndecl|Gallī<2>}}
@@ -31982,7 +31941,7 @@ Page 981 Bretland: -------- begin text --------
 ===Proper noun===
 {{ang-proper noun|g=n}}
 
-# {{tcl|is|island|r/Northern Europe|t=Britain}}
+# {{tcl|ang|large island|r/Northern Europe|t=Britain}}
 
 ====Declension====
 {{ang-decl-noun-a-n|Bretland|num=sg}}
