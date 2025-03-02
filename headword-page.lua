@@ -703,7 +703,7 @@ function export.process_page(pagename)
 	local raw_title
 	local function bad_pagename()
 		if not pagename then
-			error("Internal error: Something wrong, `data.pagename` not specified but current title containg illegal characters")
+			error("Internal error: Something wrong, `data.pagename` not specified but current title contains illegal characters")
 		else
 			error(format("Bad value for `data.pagename`: '%s', which must not contain illegal characters", pagename))
 		end
