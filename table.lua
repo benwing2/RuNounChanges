@@ -1,14 +1,33 @@
---[[
-------------------------------------------------------------------------------------
---                      table (formerly TableTools)                               --
---                                                                                --
--- This module includes a number of functions for dealing with Lua tables.        --
--- It is a meta-module, meant to be called from other Lua modules, and should     --
--- not be called directly from #invoke.                                           --
-------------------------------------------------------------------------------------
---]]
-
 local export = {}
+
+--[==[ intro:
+This module provides functions for dealing with Lua tables. All of them, except for two helper functions, take a table
+as their first argument.
+
+Some functions are available as methods in the arrays created by [[Module:array]].
+
+Functions by what they do:
+* Create a new table:
+** `shallowCopy`, `deepCopy`, `removeDuplicates`, `numKeys`, `compressSparseArray`, `keysToList`, `reverse`, `invert`, `listToSet`
+* Create an array:
+** `removeDuplicates`, `numKeys`, `compressSparseArray`, `keysToList`, `reverse`
+* Return information about the table:
+** `size`, `length`, `contains`, `keyFor`, `isArray`, `deepEquals`
+* Treat the table as an array (that is, operate on the values in the array portion of the table: values indexed by
+  consecutive integers starting at {1}):
+** `removeDuplicates`, `length`, `contains`, `serialCommaJoin`, `reverseIpairs`, `reverse`, `invert`, `listToSet`, `isArray`
+* Treat a table as a sparse array (that is, operate on values indexed by non-consecutive integers):
+** `numKeys`, `maxIndex`, `compressSparseArray`, `sparseConcat`, `sparseIpairs`
+* Generate an iterator:
+** `sparseIpairs`, `sortedPairs`, `reverseIpairs`
+* Other functions:
+** `sparseConcat`, `serialCommaJoin`, `reverseConcat`
+
+The original version was a copy of {{w|Module:TableTools}} on Wikipedia via [[c:Module:TableTools|Module:TableTools]] on
+Commons, but in the course of time this module has been almost completely rewritten, with many new functions added. The
+main legacy of this is the use of camelCase for function names rather than snake_case, as is normal in the English
+Wiktionary.
+]==]
 
 local collation_module = "Module:collation"
 local debug_track_module = "Module:debug/track"
@@ -49,22 +68,22 @@ Loaders for functions in other modules, which overwrite themselves with the targ
 		debug_track = require(debug_track_module)
 		return debug_track(...)
 	end
-	
+
 	local function is_callable(...)
 		is_callable = require(function_module).is_callable
 		return is_callable(...)
 	end
-	
+
 	local function is_integer(...)
 		is_integer = require(math_module).is_integer
 		return is_integer(...)
 	end
-	
+
 	local function is_positive_integer(...)
 		is_positive_integer = require(math_module).is_positive_integer
 		return is_positive_integer(...)
 	end
-	
+
 	local function string_sort(...)
 		string_sort = require(collation_module).string_sort
 		return string_sort(...)
@@ -90,7 +109,7 @@ end
 
 do
 	local tracked1, tracked2
-	
+
 	local function make_copy(orig, seen, mt_flag, keep_loaded_data)
 		if type(orig) ~= "table" then
 			return orig
@@ -314,7 +333,7 @@ do
 	local current
 	--[==[
 	An iterator which works like `pairs`, except that it also respects the `__index` metamethod. This works by iterating over the input table with `pairs`, followed by the table at its `__index` metamethod (if any). This is then repeated for that table's `__index` table and so on, with any repeated keys being skipped over, until there are no more tables, or a table repeats (so as to prevent an infinite loop). If `__index` is a function, however, then it is ignored, since there is no way to iterate over its return values.
-	
+
 	A `__pairs` metamethod will be respected for any given table instead of iterating over it directly, but these will be ignored if the `raw` flag is set.
 
 	Note: this function can be used as a `__pairs` metamethod. In such cases, it does not call itself, since this would cause an infinite loop, so it treats the relevant table as having no `__pairs` metamethod. Other `__pairs` metamethods on subsequent tables will still be respected.]==]
@@ -324,10 +343,10 @@ do
 		if current and current[t] or getmetatable(t) == nil then
 			return next, t, nil
 		end
-		
+
 		-- `seen_k` memoizes keys, as they should never repeat; `seen_t` memoizes tables iterated over.
 		local seen_k, seen_t, iter, state, k, v, success = {}, {[t] = true}
-		
+
 		return function()
 			while true do
 				if iter == nil then
@@ -388,7 +407,7 @@ do
 			return i, v
 		end
 	end
-	
+
 	--[==[
 	An iterator which works like `ipairs`, except that it also respects the `__index` metamethod. This works by looking up values in the table, iterating integers from key `1` until no value is found.]==]
 	function export.indexIpairs(t)
@@ -622,7 +641,7 @@ do
 	end
 
 	-- `get_2_options` and `get_4_options` extract the options keys before any processing occurs, so that any modifications to `options` during processing (e.g. by a comparison function) will not affect the current call. This allows the same `options` table to be used with different values for recursive calls, which is more efficient than creating a new table for each call.
-	
+
 	-- `contains` and `insert_if_not` are both called by other functions, so the main work is done by local functions which take the extracted options as separate arguments, which avoids the need to access the `options` again at any point.
 
 	local function get_2_options(options)
@@ -637,7 +656,7 @@ do
 		end
 		return comp_func, options.key
 	end
-	
+
 	local function get_4_options(options)
 		local pos, combine_func
 		if options ~= nil then
@@ -683,7 +702,7 @@ do
 	Given a table and a value to be found, returns the value's key if the value is in the table. Comparison is by value, using `deepEquals`.
 
 	`options` is an optional table of additional options to control the behavior of the operation. The available options are the same as those for {contains}.
-	
+
 	Note: if multiple keys have the specified value, this function returns the first key found; it is not possible to reliably predict which key this will be.]==]
 	function export.keyFor(t, x, options)
 		local comp_func, key_func = get_2_options(options)
@@ -699,7 +718,7 @@ do
 			end
 		end
 	end
-	
+
 	local function insert_if_not(list, new_item, pos, combine_func, comp_func, key_func)
 		local i = contains(list, new_item, comp_func, key_func)
 		if i then
@@ -778,11 +797,11 @@ do
 		}, nil
 		return types
 	end
-	
+
 	local function less_than(key1, key2)
 		return key1 < key2
 	end
-	
+
 	-- The default sorting function used in export.keysToList if `keySort` is not given.
 	local function default_compare(key1, key2)
 		local type1, type2 = type(key1), type(key2)
@@ -932,7 +951,7 @@ do
 		end
 		return t_new
 	end
-	
+
 	--[==[
 	Given an array `list` and function `func`, iterate through the array applying {func(k, v)} (where `k` is an index, and
 	`v` is the value at index `k`), replacing the relevant values with the result. For example,
@@ -1089,7 +1108,7 @@ function export.serialCommaJoin(seq, options)
 
 	local comma
 	if dont_tag then
-		comma = punc
+		comma = "" -- since by default the serial comma doesn't display, when we can't tag we shouldn't display it.
 		conj = " " .. conj .. " "
 	else
 		comma = "<span class=\"serial-comma\">" .. punc .. "</span>"
@@ -1168,7 +1187,7 @@ do
 			end
 		end
 	end
-	
+
 	--[==[
 	Given a list, which may contain sublists, flatten it into a single list. For example, {flatten({ "a", { "b", "c" }, "d" })} ->
 	{ { "a", "b", "c", "d" }}]==]
