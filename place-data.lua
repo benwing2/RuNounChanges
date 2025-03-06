@@ -108,7 +108,7 @@ function export.split_qualifiers_from_placetype(placetype, no_canon_qualifiers)
 		local qualifier, bare_placetype = placetype:match("^(.-) (.*)$")
 		if qualifier then
 			local canon = export.placetype_qualifiers[qualifier]
-			if not canon then
+			if canon == nil then
 				break
 			end
 			local new_qualifier = qualifier
@@ -434,6 +434,8 @@ export.placetype_qualifiers = {
 	["ox-bow"] = true,
 	-- land qualifiers
 	["hilly"] = true,
+	["insular"] = true,
+	["peninsular"] = true,
 	["chalk"] = true,
 	["karst"] = true,
 	["limestone"] = true,
@@ -610,6 +612,7 @@ export.placetype_links = {
 	["exclave"] = true,
 	["external territory"] = "[[external]] [[territory]]",
 	["federal city"] = "w",
+	["federal district"] = true,
 	["federal subject"] = "w",
 	["federal territory"] = "w",
 	["First Nations reserve"] = "[[First Nations]] [[w:Indian reserve|reserve]]", -- Canada
@@ -939,6 +942,7 @@ export.placetype_equivs = {
 	["historical commonwealth"] = "historical polity",
 	["historical commune"] = "historical political subdivision",
 	["historical confederation"] = "historical polity",
+	["historical constituent country"] = "historical political subdivision",
 	["historical council area"] = "historical political subdivision",
 	["historical county"] = "historical political subdivision",
 	["historical county borough"] = "historical political subdivision",
@@ -1754,6 +1758,7 @@ local function district_inner_data(value, itself_dest)
 		["municipality"] = value,
 		["borough"] = value,
 		["London borough"] = value,
+		["royal borough"] = value,
 		["census-designated place"] = value,
 		["village"] = value,
 	}
@@ -1983,6 +1988,7 @@ export.cat_data = {
 	},
 
 	["area"] = {
+		preposition = "of",
 		cat_handler = function(holonym_placetype, holonym_placename, place_desc)
 			return district_cat_handler("area", holonym_placetype, holonym_placename)
 		end,
@@ -2054,15 +2060,7 @@ export.cat_data = {
 		preposition = "of",
 		display_handler = borough_display_handler,
 		["city/New York City"] = {
-			["itself"] = {"Boroughs in +++"},
-		},
-
-		["state/Pennsylvania"] = {
-			["itself"] = {"Boroughs in +++, USA"},
-		},
-
-		["state/New Jersey"] = {
-			["itself"] = {"Boroughs in +++, USA"},
+			["itself"] = {"Boroughs of +++"},
 		},
 	},
 
@@ -2169,14 +2167,6 @@ export.cat_data = {
 		["country/Holy Roman Empire"] = {
 		},
 
-		["constituent country/Northern Ireland"] = {
-			["itself"] = {"Traditional counties of +++"},
-		},
-
-		["constituent country/Scotland"] = {
-			["itself"] = {"Traditional counties of +++"},
-		},
-
 		["default"] = {
 			["itself"] = {"Polities"},
 		},
@@ -2268,6 +2258,10 @@ export.cat_data = {
 		preposition = "of",
 	},
 
+	["federal district"] = {
+		preposition = "of",
+	},
+
 	["federal subject"] = {
 		preposition = "of",
 	},
@@ -2287,10 +2281,6 @@ export.cat_data = {
 	["French prefecture"] = {
 		article = "the",
 		preposition = "of",
-
-		["country/France"] = {
-			["itself"] = {"Prefectures of +++", "Departmental capitals"},
-		},
 	},
 
 	["geographic area"] = {
@@ -2457,43 +2447,12 @@ export.cat_data = {
 		preposition = "of",
 		affix_type = "suf",
 		affix = "district",
-		cat_handler = function(holonym_placetype, holonym_placename, place_desc)
-			local key, _ = call_place_cat_handler(m_shared.england_group, holonym_placetype, holonym_placename)
-			if key then
-				return {
-					["itself"] = {"Districts of " .. key, "Districts of England"}
-				}
-			end
-		end,
-
-		["constituent country/England"] = {
-			["itself"] = {"Districts of +++"},
-		},
 	},
 
 	["local government district with borough status"] = {
 		preposition = "of",
 		affix_type = "suf",
 		affix = "district",
-		cat_handler = function(holonym_placetype, holonym_placename, place_desc)
-			local key, _ = call_place_cat_handler(m_shared.england_group, holonym_placetype, holonym_placename)
-			if key then
-				return {
-					["itself"] = {"Districts of " .. key, "Boroughs of " .. key,
-						"Districts of England", "Boroughs of England"},
-				}
-			end
-			if (holonym_placetype == "country" or holonym_placetype == "constituent country") and
-				holonym_placename == "England" then
-					return {
-						["itself"] = {"Districts of +++", "Boroughs of +++"}
-					}
-			end
-		end,
-
-		["constituent country/England"] = {
-			["itself"] = {"Districts of +++", "Boroughs of +++"},
-		},
 	},
 
 	["London borough"] = {
@@ -2697,11 +2656,8 @@ export.cat_data = {
 		["default"] = {
 			["continent"] = {true},
 		},
-		["country/Armenia"] = {
-			["country"] = {true},
-		},
 
-		["country/Greece"] = {
+		["country/Armenia"] = {
 			["country"] = {true},
 		},
 
@@ -2761,7 +2717,7 @@ export.cat_data = {
 		preposition = "of",
 		affix_type = "Pref",
 		no_affix_strings = {"royal", "borough"},
-		fallback = "local government district",
+		fallback = "local government district with borough status",
 	},
 
 	["rural committee"] = {
@@ -3034,6 +2990,9 @@ for _, group in ipairs(m_shared.polities) do
 			divtype = {divtype}
 		end
 		for _, divlist in ipairs(divlists) do
+			if type(divlist) ~= "table" then
+				divlist = {divlist}
+			end
 			for _, div in ipairs(divlist) do
 				if type(div) == "string" then
 					div = {type = div}
@@ -3072,7 +3031,7 @@ for _, group in ipairs(m_shared.polities) do
 						{bare_full_placename, bare_elliptical_placename}
 					for _, placename in ipairs(placenames) do
 						local itself_dest = {}
-						for pt_cat in ipairs(cat_as) do
+						for _, pt_cat in ipairs(cat_as) do
 							if placename == key and require(en_utilities_module).pluralize(sgdiv) == pt_cat then
 								table.insert(itself_dest, true)
 							else
