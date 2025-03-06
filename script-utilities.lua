@@ -13,6 +13,7 @@ local concat = table.concat
 local insert = table.insert
 local require = require
 local toNFD = mw.ustring.toNFD
+local dump = mw.dumpObject
 
 --[==[
 Loaders for functions in other modules, which overwrite themselves with the target function when called. This ensures modules are only loaded when needed, retains the speed/convenience of locally-declared pre-loaded functions, and has no overhead after the first call, since the target functions are called directly in any subsequent calls.]==]
@@ -253,7 +254,7 @@ function export.tag_text(text, lang, sc, face, class, id)
 	end
 	
 	track_text(text, lang, sc)
-	
+
 	-- Replace space characters with newlines in Mongolian-script text, which is written top-to-bottom.
 	if sc:getDirection():match("vertical") and text:find(" ") then
 		text = munge_text(text, function(txt)
@@ -268,27 +269,38 @@ function export.tag_text(text, lang, sc, face, class, id)
 	-- language needing such processing.
 	-- 20220221: Also convert 漢字(한자) to ruby, instead of needing [[Template:Ruby]].
 	if sc:getCode() == "Kore" and text:find("[%-()g]") then
-		if lang:getCode() == "okm" then -- Middle Korean code from [[User:Chom.kwoy]]
-			-- Comment from [[User:Lunabunn]]:
-			-- In Middle Korean orthography, syllable formation is phonemic as opposed to morpheme-boundary-based a la
-			-- modern Korean. As such, for example, if you were to write nam-i, it would be rendered as na.mi so if you
-			-- then put na-mi to indicate particle boundaries as in modern Korean, the hyphen would be misplaced.
-			-- Previously, this was alleviated by specialcasing na--mi but [[User:Theknightwho]] made that resolve to -
-			-- in the Hangul (previously we used to just delete all -s in Hangul processing), so it broke.
-			-- [[User:Chom.kwoy]] implemented a different solution, which is writing -> instead using however many >s to
-			-- shift the hyphen by that number of letters in the romanization.
-			text = munge_text(text, function(txt)
+		local title, display = require("Module:links").get_wikilink_parts(text, true)
+		if title ~= nil then -- special case that the text is a single link, do not munge and preserve affix hyphens
+			if lang:getCode() == "okm" then -- Middle Korean code from [[User:Chom.kwoy]]
+				-- Comment from [[User:Lunabunn]]:
+				-- In Middle Korean orthography, syllable formation is phonemic as opposed to morpheme-boundary-based a la
+				-- modern Korean. As such, for example, if you were to write nam-i, it would be rendered as na.mi so if you
+				-- then put na-mi to indicate particle boundaries as in modern Korean, the hyphen would be misplaced.
+				-- Previously, this was alleviated by specialcasing na--mi but [[User:Theknightwho]] made that resolve to -
+				-- in the Hangul (previously we used to just delete all -s in Hangul processing), so it broke.
+				-- [[User:Chom.kwoy]] implemented a different solution, which is writing -> instead using however many >s to
+				-- shift the hyphen by that number of letters in the romanization.
+				
 				-- By the time we are called, > signs have been converted to &gt; by a call to encode_entities() in
 				-- make_link() in [[Module:links]] (near the bottom of the function).
-				txt = txt:gsub("&gt;", "")
+				display = display:gsub("&gt;", "")
 				-- 'g' in Middle Korean is a special sign to treat the following ㅇ sign as /G/ instead of null.
-				txt = txt:gsub("[%-g]", "")
-				txt = Kore_ruby(txt)
-				return txt
-			end)
+				display = display:gsub("g", "")
+			end
+			display = display:gsub("(.)%-(%-?)(.)", "%1%2%3")
+			display = Kore_ruby(display)
+			text = "[[" .. title .. "|" .. display .. "]]"
 		else
 			text = munge_text(text, function(txt)
-				txt = txt:gsub("%-(%-?)", "%1")
+				if lang:getCode() == "okm" then
+					txt = txt:gsub("&gt;", "")
+					txt = txt:gsub("g", "")
+				end
+				if txt == text then -- special case for the entire text being plain
+					txt = txt:gsub("(.)%-(%-?)(.)", "%1%2%3")
+				else
+					txt = txt:gsub("%-(%-?)", "%1")
+				end
 				txt = Kore_ruby(txt)
 				return txt
 			end)
