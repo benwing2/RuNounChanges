@@ -1,6 +1,11 @@
 local raw_categories = {}
 local raw_handlers = {}
 
+local concat = table.concat
+local insert = table.insert
+
+local string_utilities_module = "Module:string utilities"
+
 
 -----------------------------------------------------------------------------
 --                                                                         --
@@ -11,18 +16,25 @@ local raw_handlers = {}
 
 raw_categories["Wiktionary"] = {
 	description = "High level category for material about Wiktionary and its operation.",
-	parents = {
-		"Fundamental",
-	},
+	parents = "Fundamental",
+}
+
+raw_categories["Wiktionary statistics"] = {
+	description = "Categories and pages containing statistics about how Wiktionary is used.",
+	parents = {"Wiktionary", sort = "Statistics"},
 }
 
 raw_categories["Wiktionary users"] = {
 	description = "Pages listing Wiktionarians according to their user rights and categories listing Wiktionarians according to their linguistic and coding abilities.",
 	breadcrumb = "Users",
 	additional = "For an automatically generated list of all users, see [[Special:ListUsers]].",
-	parents = {
-		{name = "Wiktionary", sort = "Users"},
-	},
+	parents = {"Wiktionary", sort = "Users"},
+}
+
+raw_categories["Wikimedians banned by the WMF"] = {
+	description = "Users who have received a [[m:Global bans|global ban]] imposed by the [[m:Wikimedia Foundation|Wikimedia Foundation]], in accordance with the [[m:WMF Global Ban Policy|WMF Global Ban Policy]].",
+	breadcrumb = "Banned by the WMF",
+	parents = "Wiktionary users",
 }
 
 raw_categories["User languages"] = {
@@ -37,9 +49,7 @@ raw_categories["User languages with invalid code"] = {
 	description = "Categories listing Wiktionarians according to their linguistic abilities, where the language code is invalid for Wiktionary.",
 	additional = "Most of these codes are valid ISO 639-3 codes but are invalid in Wiktionary for various reasons, " ..
 	"typically due to different choices made regarding splitting and merging languages.",
-	parents = {
-		{name = "User languages", sort = " "},
-	},
+	parents = {"User languages", sort = " "},
 }
 
 raw_categories["User scripts"] = {
@@ -52,26 +62,59 @@ raw_categories["User scripts"] = {
 
 raw_categories["User coders"] = {
 	description = "Categories listing Wiktionarians according to their coding abilities.",
-	parents = {
-		"Wiktionary users",
-	},
+	parents = "Wiktionary users",
 }
 
+raw_categories["Pages with entries"] = {
+	description = "Pages which contain language entries.",
+	additional = "The subcategories within this category are used to determine the total number of entries on the English Wiktionary.",
+	parents = "Wiktionary",
+	can_be_empty = true,
+	hidden = true,
+}
+
+raw_categories["Redirects connected to a Wikidata item"] = {
+	description = "Redirect pages which are connected to a [[d:|Wikidata]] item.",
+	additional = "These are rarely needed, but are occasionally useful following a page merger, where other wikis may still separate the two.",
+	parents = "Wiktionary statistics",
+	can_be_empty = true,
+	hidden = true,
+}
+
+raw_categories["Unsupported titles"] = {
+	description = "Pages with titles that are not supported by the MediaWiki software.",
+	additional = "For an explanation of the reasons why certain titles are not supported, see [[Appendix:Unsupported titles]].",
+	parents = "Wiktionary",
+	can_be_empty = true,
+	hidden = true,
+}
+
+-- Tracked according to [[phab:T347324]].
+for ext, data in pairs {
+	["DynamicPageList"] = {"DynamicPageList (Wikimedia)", "T287380"},
+	["EasyTimeline"] = {"EasyTimeline", "T137291"},
+	["Graph"] = {"Graph", "T334940"},
+	["Kartographer"] = {"Kartographer"},
+	["Phonos"] = {"Phonos"},
+	["Score"] = {"Score"},
+	["WikiHiero"] = {"WikiHiero", "T344534"},
+} do
+	local link, phab = unpack(data)
+	raw_categories["Pages using the " .. ext .. " extension"] = {
+		description = ("Pages which make use of the [[mw:Extension:%s|%s]] extension."):format(link, ext),
+		additional = phab and ("See [[phab:%s|%s]] on Phabricator for background information on why this extension is tracked."):format(phab, phab) or nil,
+		breadcrumb = ("Using the %s extension"):format(ext),
+		parents = "Wiktionary statistics",
+		can_be_empty = true,
+		hidden = true,
+	}
+end
 
 -----------------------------------------------------------------------------
 --                                                                         --
 --                                RAW HANDLERS                             --
 --                                                                         --
 -----------------------------------------------------------------------------
-
-
--- Fancy version of ine() (if-not-empty). Converts empty string to nil, but also strips leading/trailing space.
-local function ine(arg)
-	if not arg then return nil end
-	arg = mw.text.trim(arg)
-	if arg == "" then return nil end
-	return arg
-end
 
 
 local function get_level_params(data)
@@ -120,13 +163,12 @@ local function get_level_params(data)
 			leftcolor = "#CCCC00",
 			rightcolor = "#FFFF99",
 			lang = "These users " .. speak_verb .. " NAME at a '''near-native''' level.",
-			lang = "These users speak NAME at a '''near native''' level.",
 			script = "These users can read NAME at a '''near native''' level.",
 			coder = "These users can write and understand '''very complex''' NAME code.",
 		},
 		["5"] = {
-			leftcolor = "#FF5E5E",
-			rightcolor = "#FF8080",
+			leftcolor = "#D6A6F0",
+			rightcolor = "#F3E4FA",
 			lang = "These users " .. speak_verb .. " NAME at a '''professional''' level.",
 			script = "These users can read NAME at a '''professional''' level.",
 			coder = "These users can write and understand NAME code at a '''professional''' level.",
@@ -164,22 +206,22 @@ local coder_links = {
 }
 
 
+-- Generic implementation of competency handler for (natural) languages, scripts, and "coders" (= programming languages).
 local function competency_handler(data)
-	local category = data.category
 	local langtext = data.langtext
 	local typ = data.typ
-	local obj = data.obj
 	local args = data.args
 	local code = data.code
 	local name = data.name
 	local namecat = data.namecat
 	local level = data.level
 	local parents = data.parents
+	local topright = data.topright
 	local data_addl = data.additional
 
 	local parts = {}
 	local function ins(txt)
-		table.insert(parts, txt)
+		insert(parts, txt)
 	end
 	local level_params = get_level_params(data)
 
@@ -219,7 +261,7 @@ local function competency_handler(data)
 		ins('</td></tr></table></div><br clear="left">')
 
 		return {
-			description = table.concat(parts),
+			description = concat(parts),
 			additional = additional,
 			breadcrumb = "Level " .. level,
 			parents = parents,
@@ -231,10 +273,11 @@ local function competency_handler(data)
 		ins(("'''%s'''\n"):format(code))
 		ins('| style="font-size:8pt;padding:4pt;line-height:1.25em;text-align:center;" | ')
 		insert_text()
-		ins("\n|}")
+		ins('\n|}</div><br clear="left">')
 
 		return {
-			description = table.concat(parts),
+			topright = topright,
+			description = concat(parts),
 			additional = additional,
 			breadcrumb = name,
 			parents = parents,
@@ -243,11 +286,8 @@ local function competency_handler(data)
 end
 
 
-table.insert(raw_handlers, function(data)
-	local code, level
-	if not code then
-		code, level = data.category:match("^User ([a-z][a-z][a-z]?)%-([0-5N])$")
-	end
+insert(raw_handlers, function(data)
+	local code, level = data.category:match("^User ([a-z][a-z][a-z]?)%-([0-5N])$")
 	if not code then
 		code, level = data.category:match("^User ([a-z][a-z][a-z]?%-[a-zA-Z-]+)%-([0-5N])$")
 	end
@@ -260,33 +300,39 @@ table.insert(raw_handlers, function(data)
 	if not code then
 		return
 	end
+
+	local args = require("Module:parameters").process(data.args, {
+		text = true,
+		verb = true,
+		langname = true,
+		commonscat = true,
+	})
+	
 	local lang = require("Module:languages").getByCode(code, nil, "allow etym")
+	local langname = args.langname
+	
 	if not lang then
 		-- If unrecognized language and called from inside, we're handling the parents and breadcrumb for a
 		-- higher-level category, so at least return something.
 		if not level and data.called_from_inside then
 			return {
 				breadcrumb = {name = code, nocap = true}, -- FIXME, scrape langname= category?
-				parents = {
-					{name = "User languages with invalid code", sort = code},
-				}
+				parents = {"User languages with invalid code", sort = code}
 			}, true
 		end
-				
-		if not ine(data.args.langname) then
-			return
+		
+		if not langname then
+			-- Check if the code matches a Wikimedia language (e.g. "ku" for Kurdish). If it does, treat
+			-- its canonical name as though it had been given as langname=.
+			local wm_lang = require("Module:wikimedia languages").getByCode(code)
+			if not wm_lang then
+				return
+			end
+			langname = wm_lang:getCanonicalName()
 		end
+	elseif not langname then
+		langname = lang:getCanonicalName()
 	end
-
-	local params = {
-		text = {},
-		verb = {},
-		langname = {},
-	}
-
-	local args = require("Module:parameters").process(data.args, params)
-
-	local langname = args.langname or lang:getCanonicalName()
 
 	-- Insert text, appropriately script-tagged, unless already script-tagged (we check for '<span'), in which case we
 	-- insert it directly. Also handle <<...>> in text and convert to bolded link to parent category.
@@ -341,11 +387,11 @@ table.insert(raw_handlers, function(data)
 			count_sort = "*" .. ("%0" .. #(tostring(uppernum)) .. "d"):format(num_pages)
 		end
 
-		table.insert(parents, {
+		insert(parents, {
 			name = "Requests for translations in user-competency categories by language",
 			sort = code,
 		})
-		table.insert(parents, {
+		insert(parents, {
 			name = count_cat,
 			sort = count_sort,
 		})
@@ -359,23 +405,32 @@ table.insert(raw_handlers, function(data)
 
 	local parents
 	if level then
-		parents = {
-			{name = ("User %s"):format(code), sort = level},
-		}
+		parents = {("User %s"):format(code), sort = level}
 	elseif lang then
-		parents = {
-			{name = "User languages", sort = code},
-			{name = lang:getCategoryName(), sort = "user"},
-		}
+		parents = {}
 		if lang:hasType("etymology-only") then
-			table.insert(parents, {name = lang:getNonEtymological():getCategoryName(), sort = " " .. code})
+			local full_code = lang:getFullCode()
+			local sort_key = code:gsub(("^%s%%-"):format(require(string_utilities_module).pattern_escape(full_code)), "")
+			insert(parents,	{name = ("User %s"):format(full_code), sort = sort_key})
+		else
+			insert(parents, {name = "User languages", sort = code})
 		end
+		insert(parents, {name = lang:getCategoryName(), sort = "user"})
 	else
-		parents = {
-			{name = "User languages with invalid code", sort = code},
-		}
+		parents = {"User languages with invalid code", sort = code}
 	end
 	insert_request_cats(parents)
+
+	local topright
+	if args.commonscat then
+		local commonscat = require("Module:yesno")(args.commonscat, "+")
+		if commonscat == "+" or commonscat == true then
+			commonscat = data.category
+		end
+		if commonscat then
+			topright = ("{{commonscat|%s}}"):format(commonscat)
+		end
+	end
 
 	local namecat
 	if level then
@@ -407,16 +462,14 @@ table.insert(raw_handlers, function(data)
 		namecat = namecat,
 		level = level,
 		parents = parents,
+		topright = topright,
 		additional = invalid_lang_warning,
 	}
 end)
 
 
-table.insert(raw_handlers, function(data)
-	local code, level
-	if not code then
-		code, level = data.category:match("^User ([A-Z][a-z][a-z][a-z][a-z]?)%-([0-5N])$")
-	end
+insert(raw_handlers, function(data)
+	local code, level = data.category:match("^User ([A-Z][a-z][a-z][a-z][a-z]?)%-([0-5N])$")
 	if not code then
 		code = data.category:match("^User ([A-Z][a-z][a-z][a-z][a-z]?)$")
 	end
@@ -436,21 +489,20 @@ table.insert(raw_handlers, function(data)
 
 	local parents
 	if level then
-		parents = {
-			{name = ("User %s"):format(code), sort = level},
-		}
+		parents = {("User %s"):format(code), sort = level}
 	else
 		parents = {
 			{name = "User scripts", sort = code},
-			{name = lang:getCategoryName(), sort = "user"},
+			{name = sc:getCategoryName(), sort = "user"},
 		}
 	end
 
 	local namecat
+	-- Better to display 'Foo script' than just 'Foo', as so many scripts are the same as language names.
 	if level then
-		namecat = ("[[:Category:User %s|%%s]]"):format(code)
+		namecat = ("[[:Category:User %s|%s]]"):format(code, sc:getCategoryName())
 	else
-		namecat = ("[[:Category:%s|%%s]]"):format(lang:getCategoryName())
+		namecat = ("[[:Category:%s|%s]]"):format(sc:getCategoryName(), sc:getCategoryName())
 	end
 
 	return competency_handler {
@@ -466,13 +518,13 @@ table.insert(raw_handlers, function(data)
 end)
 
 
-table.insert(raw_handlers, function(data)
+insert(raw_handlers, function(data)
 	local code, level
 	if not code then
-		code, level = data.category:match("^User ([A-Za-z+-]+ coder%-([0-5N])$")
+		code, level = data.category:match("^User ([A-Za-z+-]+) coder%-([0-5N])$")
 	end
 	if not code then
-		code = data.category:match("^User ([A-Za-z+-]+ coder$")
+		code = data.category:match("^User ([A-Za-z+-]+) coder$")
 	end
 	if not code or not coder_links[code] then
 		return
@@ -480,13 +532,9 @@ table.insert(raw_handlers, function(data)
 
 	local parents
 	if level then
-		parents = {
-			{name = ("User %s coder"):format(code), sort = level},
-		}
+		parents = {("User %s coder"):format(code), sort = level}
 	else
-		parents = {
-			{name = "User coders", sort = code},
-		}
+		parents = {"User coders", sort = code}
 	end
 
 	local langdata = coder_links[code]
@@ -504,6 +552,25 @@ table.insert(raw_handlers, function(data)
 		namecat = namecat,
 		level = level,
 		parents = parents,
+	}
+end)
+
+insert(raw_handlers, function(data)
+	local n, suffix = data.category:match("^Pages with (%d+) entr(.+)$")
+	-- Only match if there are no leading zeroes and the suffix is correct.
+	if not (n and not n:match("^0%d") and suffix == (n == "1" and "y" or "ies")) then
+		return
+	end
+	return {
+		breadcrumb = ("%d entr%s"):format(n, suffix),
+		description = ("Pages which contain %s language entr%s."):format(n, suffix),
+		additional = "This category, and others like it, are used to determine the total number of entries on the English Wiktionary",
+		hidden = true,
+		can_be_empty = true,
+		parents = {
+			{name = "Pages with entries", sort = require("Module:category tree").numeral_sortkey(n)},
+			n == "0" and "Wiktionary maintenance" or nil, -- "Pages with 0 entries" only contains pages with something wrong.
+		},
 	}
 end)
 
