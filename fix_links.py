@@ -181,6 +181,7 @@ language_codes_to_properties = {
     'de':["German", lambda x:x, latin_charset, "latin"],
     'dlm':["Dalmatian", lambda x:x, latin_charset, "latin"],
     'el':["Greek", lambda x:x, "Ͱ-Ͽ", True],
+    'en':["English", lambda x:x, latin_charset, "latin"],
     'eo':["Esperanto", lambda x:x, latin_charset, "latin"],
     'es':["Spanish", lambda x:x, latin_charset, "latin"],
     'et':["Estonian", lambda x:x, latin_charset, "latin"],

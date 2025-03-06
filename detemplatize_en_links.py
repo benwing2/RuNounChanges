@@ -80,10 +80,10 @@ def process_text_on_page(index, pagetitle, text):
       new_lines.append(line)
     return "\n".join(new_lines)
 
-  if args.lang:
-    retval = blib.find_modifiable_lang_section(text, None if args.partial_page else args.lang, pagemsg)
+  if args.langname:
+    retval = blib.find_modifiable_lang_section(text, None if args.partial_page else args.langname, pagemsg)
     if retval is None:
-      pagemsg("WARNING: Couldn't find %s section" % args.lang)
+      pagemsg("WARNING: Couldn't find %s section" % args.langname)
       return
     sections, j, secbody, sectail, has_non_lang = retval
 
@@ -97,7 +97,7 @@ def process_text_on_page(index, pagetitle, text):
 
 parser = blib.create_argparser("Fix raw self links to English terms on the same page",
   include_pagefile=True, include_stdin=True)
-parser.add_argument("--lang", help="Language to do (optional)")
+parser.add_argument("--langname", help="Language to do (optional)")
 parser.add_argument("--self-links-use-raw", action="store_true",
     help="Self-links use [[#English|LINK]] rather than {{l|en|LINK}}")
 parser.add_argument("--partial-page", action="store_true",
