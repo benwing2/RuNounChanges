@@ -503,7 +503,9 @@ end
 
 -- Recognized political and misc. (sub)divisions. The key is the plural division and the value is the equivalent
 -- description, with links. A value of true means to use the default linking algorithm in link_label() in
--- [[Module:category tree/topic cat]]. A value of "w" is similar but links to Wikipedia.
+-- [[Module:category tree/topic cat]]. A value of "w" is similar but links to Wikipedia. NOTE: This currently used
+-- only for category descriptions by [[Module:category tree/topic cat/data/Places]], and overlaps the information
+-- in `placetype_links` in [[Module:place/data]]. FIXME: The two should be combined somehow.
 export.political_divisions = {
 	["administrative atolls"] = true,
 	["administrative regions"] = true,
@@ -546,6 +548,7 @@ export.political_divisions = {
 	["entities"] = true,
 	["ethnographic regions"] = true,
 	["federal cities"] = true,
+	["federal districts"] = true,
 	["federal subjects"] = true,
 	["federal territories"] = true,
 	["gewogs"] = true,
@@ -950,7 +953,10 @@ export.countries = {
 	["Fiji"] = {parents = {"Melanesia"}, poldiv = {"divisions", "provinces"}, british_spelling = true},
 	["Finland"] = {parents = {"Europe"}, poldiv = {"regions", "municipalities"}, british_spelling = true},
 	["France"] = {parents = {"Europe"}, poldiv = {"administrative regions", "cantons", "collectivities", "communes", "departments",
-		"municipalities", "dependent territories", "territories"}, miscdiv = {"provinces", "regions"}, british_spelling = true},
+		"municipalities", "dependent territories", "territories",
+		{type = "prefectures", cat_as = {"prefectures", "departmental capitals"}},
+		{type = "French prefectures", cat_as = {"prefectures", "departmental capitals"}},
+	}, miscdiv = {"provinces", "regions"}, british_spelling = true},
 	["Gabon"] = {parents = {"Africa"}, poldiv = {"provinces", "departments"}},
 	["the Gambia"] = {parents = {"Africa"}, poldiv = {"divisions", "districts"}, british_spelling = true, wp = "The Gambia"},
 	["Georgia"] = {parents = {"Europe", "Asia"}, poldiv = {"regions", "districts"},
@@ -1042,7 +1048,10 @@ export.countries = {
 	["Qatar"] = {parents = {"Asia"}, poldiv = {"municipalities", "zones"}},
 	["the Republic of the Congo"] = {parents = {"Africa"}, poldiv = {"departments", "districts"}},
 	["Romania"] = {parents = {"Europe"}, poldiv = {"regions", "counties", "communes"}, british_spelling = true},
-	["Russia"] = {parents = {"Europe", "Asia"}, poldiv = {"federal subjects", "republics", "autonomous oblasts", "autonomous okrugs", "oblasts", "krais", "federal cities", "districts"}, british_spelling = true},
+	["Russia"] = {parents = {"Europe", "Asia"}, poldiv = {
+		"federal subjects", "republics", "autonomous oblasts", "autonomous okrugs", "oblasts", "krais", "federal cities",
+		"districts", "federal districts"},
+		british_spelling = true},
 	["Rwanda"] = {parents = {"Africa"}, poldiv = {"provinces", "districts"}},
 	["Saint Kitts and Nevis"] = {parents = {"North America"}, poldiv = {"parishes"}, british_spelling = true},
 	["Saint Lucia"] = {parents = {"North America"}, poldiv = {"quarters"}, british_spelling = true},
